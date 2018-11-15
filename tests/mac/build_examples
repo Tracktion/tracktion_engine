@@ -1,0 +1,44 @@
+#!/bin/sh -e
+
+ROOT=$(cd "$(dirname "$0")/../.."; pwd)
+TESTS_DIR="$ROOT/tests/mac"
+EXAMPLES_DIR="$ROOT/examples"
+JUCE_DIR="$ROOT/modules/juce"
+TRACKTION_ENGINE_DIR="$ROOT/modules"
+PROJUCER_DIR="$JUCE_DIR/extras/Projucer"
+PROJUCER_EXE=$PROJUCER_DIR/Builds/MacOSX/build/Release/Projucer.app/Contents/MacOS/Projucer
+
+#=========================================================
+# Build Projucer
+#=========================================================
+"$TESTS_DIR/build_projucer"
+
+if [ -z "$PROJUCER_EXE" ]; then
+	echo "ERROR: Projucer not built"
+	exit 1
+fi
+
+
+#============================================================
+echo "Building Examples"
+#============================================================
+function buildExample()
+{
+	echo "=========================================================="
+	echo "Building example: $1"
+	EXAMPLE_NAME=$1
+	EXAMPLE_PIP_FILE="$EXAMPLES_DIR/$1.h"
+	EXAMPLE_DEST_DIR="$EXAMPLES_DIR/projects"
+	EXAMPLE_ROOT_DIR="$EXAMPLE_DEST_DIR/$EXAMPLE_NAME"
+    "$PROJUCER_EXE" --create-project-from-pip "$EXAMPLE_PIP_FILE" "$EXAMPLE_DEST_DIR" "$JUCE_DIR/modules" "$TRACKTION_ENGINE_DIR"
+    "$PROJUCER_EXE" --resave "$EXAMPLE_ROOT_DIR/$EXAMPLE_NAME.jucer"
+
+	if [[ -z "$DISABLE_BUILD" ]]; then
+		cd "$EXAMPLE_ROOT_DIR/Builds/MacOSX"
+		xcodebuild -configuration Release
+	fi
+}
+
+buildExample "PlaybackDemo"
+buildExample "PitchAndTimeDemo"
+buildExample "StepSequencerDemo"

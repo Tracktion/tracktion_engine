@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+ROOT=$(cd "$(dirname "$0")/../.."; pwd)
+
+#=========================================================
+echo "Building Projucer"
+PROJUCER_ROOT=$ROOT/modules/juce/extras/Projucer/Builds/LinuxMakefile
+PROJUCER_EXE=$PROJUCER_ROOT/build/Release/Projucer
+cd "$PROJUCER_ROOT"
+make CONFIG=Release -j2
