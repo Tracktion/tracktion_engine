@@ -33,7 +33,7 @@ using namespace juce;
 
 #ifdef JUCE_MSVC
  #pragma warning (push)
- #pragma warning (disable: 4005 4189 4189 4267 4702)
+ #pragma warning (disable: 4005 4189 4189 4267 4702 4458)
 #endif
 
 #include "timestretch/tracktion_TimeStretch.cpp"

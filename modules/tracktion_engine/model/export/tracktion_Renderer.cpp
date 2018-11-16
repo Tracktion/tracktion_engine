@@ -47,6 +47,17 @@ struct Ditherers
 };
 
 //==============================================================================
+static bool trackLoopsBackInto (const Array<Track*>& allTracks, AudioTrack& t, const BigInteger* tracksToCheck)
+{
+    for (int j = allTracks.size(); --j >= 0;)
+        if (tracksToCheck == nullptr || (*tracksToCheck)[j])
+            if (auto other = dynamic_cast<AudioTrack*> (allTracks.getUnchecked (j)))
+                if (t.getOutput().feedsInto (other))
+                    return true;
+
+    return false;
+}
+
 static Plugin::Array findAllPlugins (AudioNode& node)
 {
     Plugin::Array plugins, insideRacks;

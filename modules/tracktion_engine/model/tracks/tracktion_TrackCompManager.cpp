@@ -545,6 +545,7 @@ private:
 
 //==============================================================================
 TrackCompManager::TrackCompManager (Edit& e) : edit (e) {}
+TrackCompManager::~TrackCompManager() {}
 
 void TrackCompManager::initialise (const ValueTree& v)
 {

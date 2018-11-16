@@ -460,6 +460,7 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
     CRASH_TRACER
     jassert (stretcher == nullptr);
 
+   #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE || TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
     switch (mode)
     {
        #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE
@@ -484,6 +485,7 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
         default:
             break;
     }
+   #endif
 
     if (stretcher != nullptr)
         if (! stretcher->isOk())

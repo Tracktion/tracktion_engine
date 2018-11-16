@@ -228,7 +228,7 @@ public:
     bool getWarpTime() const                            { return warpTime; }
     WarpTimeManager& getWarpTimeManager() const;
 
-    void setTranspose (int offset)                      { transpose = juce::jlimit (-24, 24, offset); }
+    void setTranspose (int numSemitones)                { transpose = juce::jlimit (-24, 24, numSemitones); }
     int getTransposeSemiTones (bool includeAutoPitch) const;
 
     void setPitchChange (float semitones)               { pitchChange = juce::jlimit (-48.0f, 48.0f, semitones); }

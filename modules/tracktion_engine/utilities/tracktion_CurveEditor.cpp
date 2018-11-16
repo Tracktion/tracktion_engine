@@ -751,9 +751,9 @@ void CurveEditor::selectableObjectAboutToBeDeleted (Selectable*)
     updateLineThickness();
 }
 
-void CurveEditor::changeListenerCallback (ChangeBroadcaster* source)
+void CurveEditor::changeListenerCallback (ChangeBroadcaster* cb)
 {
-    if (source == &selectionManager)
+    if (cb == &selectionManager)
     {
         const bool selectedNow = selectionManager.isSelected (getItem());
 

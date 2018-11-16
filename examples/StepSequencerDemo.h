@@ -268,7 +268,7 @@ struct StepEditor   : public Component,
             setCellAtLastMousePosition (paintSolidCells);
         }
 
-        void mouseExit (const MouseEvent& e) override
+        void mouseExit (const MouseEvent&) override
         {
             setNoteUnderMouse (-1, -1);
         }
@@ -299,7 +299,7 @@ struct StepEditor   : public Component,
             const auto proportion = position / clipRange.getEnd();
             auto r = getLocalBounds().toFloat();
 
-            return r.getWidth() * proportion;
+            return r.getWidth() * float (proportion);
         }
 
         int xToSequenceIndex (float x) const
@@ -357,7 +357,7 @@ struct StepEditor   : public Component,
     };
 
     //==============================================================================
-    void paint (Graphics& g) override
+    void paint (Graphics&) override
     {
     }
 
@@ -523,7 +523,7 @@ private:
             int dataSizeInBytes = 0;
             const char* data = getNamedResource (namedResourceList[i], dataSizeInBytes);
             jassert (data != nullptr);
-            f.replaceWithData (data, dataSizeInBytes);
+            f.replaceWithData (data, (size_t) dataSizeInBytes);
             files.add (f);
         }
 

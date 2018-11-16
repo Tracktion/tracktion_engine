@@ -17,6 +17,7 @@ class TrackCompManager
 {
 public:
     TrackCompManager (Edit&);
+    ~TrackCompManager();
 
     void initialise (const juce::ValueTree&);
     int getNumGroups() const;

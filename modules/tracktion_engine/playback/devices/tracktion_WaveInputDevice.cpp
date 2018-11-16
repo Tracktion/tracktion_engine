@@ -495,15 +495,15 @@ public:
                 return {};
 
             const AudioFile recordedFile (rc->file);
-            auto targetTrack = getTargetTrack();
+            auto destTrack = getTargetTrack();
 
-            if (discardRecordings || targetTrack == nullptr)
+            if (discardRecordings || destTrack == nullptr)
             {
                 recordedFile.deleteFile();
                 return {};
             }
 
-            auto clipsCreated = applyLastRecording (*rc, recordedFile, *targetTrack,
+            auto clipsCreated = applyLastRecording (*rc, recordedFile, *destTrack,
                                                     recordedRange, isLooping, loopRange.end);
 
             if (selectionManager != nullptr && ! clipsCreated.isEmpty())
@@ -519,7 +519,7 @@ public:
     }
 
     Clip::Array applyLastRecording (const RecordingContext& rc,
-                                    const AudioFile& recordedFile, AudioTrack& targetTrack,
+                                    const AudioFile& recordedFile, AudioTrack& destTrack,
                                     EditTimeRange recordedRange,
                                     bool isLooping, double loopEnd)
     {
@@ -564,7 +564,7 @@ public:
                                                         recordedFile.getFile().getFileNameWithoutExtension(),
                                                         {}, ProjectItem::Category::recorded, true))
             {
-                return applyLastRecording (rc, projectItem, recordedFile, targetTrack,
+                return applyLastRecording (rc, projectItem, recordedFile, destTrack,
                                            recordedFileLength, newClipLen, isLooping, loopEnd);
             }
 
@@ -580,7 +580,7 @@ public:
     }
 
     Clip::Array applyLastRecording (const RecordingContext& rc, const ProjectItem::Ptr& projectItem,
-                                    const AudioFile& recordedFile, AudioTrack& targetTrack,
+                                    const AudioFile& recordedFile, AudioTrack& destTrack,
                                     double recordedFileLength, double newClipLen,
                                     bool isLooping, double loopEnd)
     {
@@ -614,16 +614,16 @@ public:
 
         if (replaceOldClips && edit.recordingPunchInOut)
         {
-            newClip = targetTrack.insertWaveClip (getNewClipName (targetTrack), projectItem->getID(),
-                                                  { { loopRange.getStart(), endPos }, 0.0 }, true);
+            newClip = destTrack.insertWaveClip (getNewClipName (destTrack), projectItem->getID(),
+                                                { { loopRange.getStart(), endPos }, 0.0 }, true);
 
             if (newClip != nullptr)
                 newClip->setStart (rc.punchTimes.getStart(), false, false);
         }
         else
         {
-            newClip = targetTrack.insertWaveClip (getNewClipName (targetTrack), projectItem->getID(),
-                                                  { { rc.punchTimes.getStart(), endPos }, 0.0 }, replaceOldClips);
+            newClip = destTrack.insertWaveClip (getNewClipName (destTrack), projectItem->getID(),
+                                                { { rc.punchTimes.getStart(), endPos }, 0.0 }, replaceOldClips);
         }
 
         if (newClip == nullptr)
@@ -729,7 +729,7 @@ public:
 
     static bool trackContainsClipNamed (AudioTrack& targetTrack, const juce::String& name)
     {
-        for (auto* c : targetTrack.getClips())
+        for (auto c : targetTrack.getClips())
             if (c->getName().equalsIgnoreCase (name))
                 return true;
 
