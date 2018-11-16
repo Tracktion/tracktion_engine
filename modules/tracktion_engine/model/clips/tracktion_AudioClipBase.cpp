@@ -844,9 +844,9 @@ void AudioClipBase::reverseLoopPoints()
         // then the offset
         if (o.getLength() > 0.0)
         {
-            auto offset = std::fmod (getPosition().getOffset(), sourceLength);
+            auto clipOffset = std::fmod (getPosition().getOffset(), sourceLength);
             auto numLoops = getPosition().getLength() / o.getLength();
-            numLoops += offset / o.getLength();
+            numLoops += clipOffset / o.getLength();
             numLoops = numLoops - (int) numLoops;
 
             auto posAtEnd = o.getStart() + (numLoops * o.getLength());
@@ -1019,12 +1019,12 @@ void AudioClipBase::copyFadeToAutomation (bool useFadeIn, bool removeClipFade)
     AutomationCurve curve;
     curve.setOwnerParameter (param.get());
 
-    const AudioFadeCurve::Type type = useFadeIn ? getFadeInType() : getFadeOutType();
+    auto curveType = useFadeIn ? getFadeInType() : getFadeOutType();
     auto startValue = useFadeIn ? 0.0f : oldCurve.getValueAt (fadeTime.getStart());
     auto endValue   = useFadeIn ? oldCurve.getValueAt (fadeTime.getEnd()) : 0.0f;
     auto valueLimits = Range<float>::between (startValue, endValue);
 
-    switch (type)
+    switch (curveType)
     {
         case AudioFadeCurve::convex:
         case AudioFadeCurve::concave:
@@ -1038,7 +1038,7 @@ void AudioClipBase::copyFadeToAutomation (bool useFadeIn, bool removeClipFade)
                 if (! useFadeIn)
                     alpha = 1.0f - alpha;
 
-                auto volCurveGain = AudioFadeCurve::alphaToGainForType (type, alpha);
+                auto volCurveGain = AudioFadeCurve::alphaToGainForType (curveType, alpha);
                 auto value = valueLimits.getStart() + (volCurveGain * valueLimits.getLength());
                 curve.addPoint (time, (float) value, 0.0f);
             }
@@ -1305,9 +1305,9 @@ void AudioClipBase::melodyneConvertToMIDI()
                 }
             }
 
-            if (auto track = getClipTrack())
-                track->insertClipWithState (midiClip, getName(), Type::midi,
-                                            { getPosition().time, 0.0 }, true, false);
+            if (auto t = getClipTrack())
+                t->insertClipWithState (midiClip, getName(), Type::midi,
+                                        { getPosition().time, 0.0 }, true, false);
         }
         else
         {
@@ -1882,7 +1882,7 @@ AudioNode* AudioClipBase::createNode (EditTimeRange editTime, LiveClipLevel leve
 
     auto original = getAudioFile();
 
-    double offset = 0.0, speed = 1.0;
+    double nodeOffset = 0.0, speed = 1.0;
     EditTimeRange loopRange;
     const bool usesTimestretchedProxy = usesTimeStretchedProxy();
 
@@ -1895,7 +1895,7 @@ AudioNode* AudioClipBase::createNode (EditTimeRange editTime, LiveClipLevel leve
 
     if (! usesTimestretchedProxy)
     {
-        offset = getPosition().getOffset();
+		nodeOffset = getPosition().getOffset();
         loopRange = getLoopRange();
         speed = getSpeedRatio();
     }
@@ -1910,11 +1910,11 @@ AudioNode* AudioClipBase::createNode (EditTimeRange editTime, LiveClipLevel leve
 
     if ((getFadeInBehaviour() == speedRamp && fadeIn > 0.0)
          || (getFadeOutBehaviour() == speedRamp && fadeOut > 0.0))
-        return new SubSampleWaveAudioNode (edit.engine, playFile, editTime, offset,
+        return new SubSampleWaveAudioNode (edit.engine, playFile, editTime, nodeOffset,
                                            loopRange, level, speed,
                                            activeChannels);
 
-    return new WaveAudioNode (playFile, editTime, offset,
+    return new WaveAudioNode (playFile, editTime, nodeOffset,
                               loopRange, level, speed,
                               activeChannels);
 }

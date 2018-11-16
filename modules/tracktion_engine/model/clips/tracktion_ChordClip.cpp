@@ -49,15 +49,15 @@ Colour ChordClip::getDefaultColour() const
     return Colours::red.withHue (1.0f / 9.0f);
 }
 
-void ChordClip::setTrack (ClipTrack* track)
+void ChordClip::setTrack (ClipTrack* ct)
 {
-    Clip::setTrack (track);
+    Clip::setTrack (ct);
 }
 
 //==============================================================================
-bool ChordClip::canGoOnTrack (Track& track)
+bool ChordClip::canGoOnTrack (Track& t)
 {
-    return track.isChordTrack();
+    return t.isChordTrack();
 }
 
 void ChordClip::valueTreeChildAdded (ValueTree&, ValueTree& c)

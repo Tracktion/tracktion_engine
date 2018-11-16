@@ -611,20 +611,20 @@ Clip* ClipTrack::insertClipWithState (const ValueTree& stateToUse, const juce::S
 
     auto newClipID = edit.createNewItemID();
 
-    ValueTree state;
+    ValueTree newState;
 
     if (stateToUse.isValid())
     {
         jassert (stateToUse.hasType (TrackItem::clipTypeToXMLType (type)));
-        state = stateToUse;
-        updateClipState (state, name, newClipID, position);
+        newState = stateToUse;
+        updateClipState (newState, name, newClipID, position);
     }
     else
     {
-        state = createNewClipState (name, type, newClipID, position);
+        newState = createNewClipState (name, type, newClipID, position);
     }
 
-    if (auto newClip = insertClipWithState (state))
+    if (auto newClip = insertClipWithState (newState))
     {
         if (allowSpottingAdjustment)
             newClip->setStart (jmax (0.0, newClip->getPosition().getStart() - newClip->getSpottingPoint()), false, false);
@@ -652,11 +652,11 @@ WaveAudioClip::Ptr ClipTrack::insertWaveClip (const juce::String& name, const ju
 
     // Insert with a relative path if possible, otherwise an absolute
     {
-        auto state = createNewClipState (name, TrackItem::Type::wave, edit.createNewItemID(), position);
+        auto newState = createNewClipState (name, TrackItem::Type::wave, edit.createNewItemID(), position);
         const bool useRelativePath = edit.filePathResolver && edit.editFileRetriever && edit.editFileRetriever().existsAsFile();
-        state.setProperty (IDs::source, SourceFileReference::findPathFromFile (edit, sourceFile, useRelativePath), nullptr);
+        newState.setProperty (IDs::source, SourceFileReference::findPathFromFile (edit, sourceFile, useRelativePath), nullptr);
 
-        if (auto c = insertClipWithState (state, name, TrackItem::Type::wave, position, deleteExistingClips, false))
+        if (auto c = insertClipWithState (newState, name, TrackItem::Type::wave, position, deleteExistingClips, false))
         {
             if (auto wc = dynamic_cast<WaveAudioClip*> (c))
                 return *wc;
@@ -674,10 +674,10 @@ WaveAudioClip::Ptr ClipTrack::insertWaveClip (const juce::String& name, ProjectI
 {
     CRASH_TRACER
 
-    auto state = createNewClipState (name, TrackItem::Type::wave, edit.createNewItemID(), position);
-    state.setProperty (IDs::source, sourceID.toString(), nullptr);
+    auto newState = createNewClipState (name, TrackItem::Type::wave, edit.createNewItemID(), position);
+    newState.setProperty (IDs::source, sourceID.toString(), nullptr);
 
-    if (auto c = insertClipWithState (state, name, TrackItem::Type::wave, position, deleteExistingClips, false))
+    if (auto c = insertClipWithState (newState, name, TrackItem::Type::wave, position, deleteExistingClips, false))
     {
         if (auto wc = dynamic_cast<WaveAudioClip*> (c))
             return *wc;
@@ -715,10 +715,10 @@ EditClip::Ptr ClipTrack::insertEditClip (EditTimeRange position, ProjectItemID s
     CRASH_TRACER
 
     auto name = TrackItem::getSuggestedNameForNewItem (TrackItem::Type::edit);
-    auto state = createNewClipState (name, TrackItem::Type::edit, edit.createNewItemID(), { position, 0.0 });
-    state.setProperty (IDs::source, sourceID.toString(), nullptr);
+    auto newState = createNewClipState (name, TrackItem::Type::edit, edit.createNewItemID(), { position, 0.0 });
+    newState.setProperty (IDs::source, sourceID.toString(), nullptr);
 
-    if (auto c = insertClipWithState (state, name, TrackItem::Type::wave, { position, 0.0 }, false, false))
+    if (auto c = insertClipWithState (newState, name, TrackItem::Type::wave, { position, 0.0 }, false, false))
     {
         if (auto ec = dynamic_cast<EditClip*> (c))
             return *ec;

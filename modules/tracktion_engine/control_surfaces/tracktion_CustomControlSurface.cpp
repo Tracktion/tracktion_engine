@@ -898,8 +898,8 @@ void CustomControlSurface::faderBankRight16 (float val, int)  { if (isValueNonZe
 void CustomControlSurface::addMarker (float val, int)
 {
     if (isValueNonZero (val))
-        if (auto edit = getEdit())
-            edit->getMarkerManager().createMarker (-1, edit->getTransport().position, 0.0, externalControllerManager.getSelectionManager());
+        if (auto e = getEdit())
+            e->getMarkerManager().createMarker (-1, e->getTransport().position, 0.0, externalControllerManager.getSelectionManager());
 }
 
 void CustomControlSurface::prevMarker (float val, int)  { if (isValueNonZero (val)) userPressedPreviousMarker(); }

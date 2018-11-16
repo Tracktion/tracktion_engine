@@ -15,7 +15,7 @@ struct PitchShiftPlugin::Pimpl
     {
     }
 
-    void initialise (double sampleRate, float semitonesUp, TimeStretcher::Mode newMode, TimeStretcher::ElastiqueProOptions newOptions)
+    void initialise (double sr, float semitonesUp, TimeStretcher::Mode newMode, TimeStretcher::ElastiqueProOptions newOptions)
     {
         if (timestretcher == nullptr || mode != newMode || elastiqueOptions != newOptions)
         {
@@ -26,7 +26,7 @@ struct PitchShiftPlugin::Pimpl
 
         if (! timestretcher->isInitialised())
         {
-            timestretcher->initialise (sampleRate, samplesPerBlock, 2, mode, elastiqueOptions, true);
+            timestretcher->initialise (sr, samplesPerBlock, 2, mode, elastiqueOptions, true);
             jassert (timestretcher->isInitialised());
         }
 
@@ -46,7 +46,7 @@ struct PitchShiftPlugin::Pimpl
 
         outputFifo.writeSilence (latencySamples);
 
-        latencySeconds = latencySamples / sampleRate;
+        latencySeconds = latencySamples / sr;
     }
 
     void applyToBuffer (const AudioRenderContext& fc, float semis)

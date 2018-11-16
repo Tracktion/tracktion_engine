@@ -262,12 +262,12 @@ void EditClip::updateWaveInfo()
     // If the edit is empty this will cause the AudioSegmentList structure to have undefined content.
     // need to find a way around this, maybe just use a default length of 5s so silence is generated
     jassert ((! needsRender()) || getSourceLength() > 0.0);
-    const double length = getSourceLength() == 0.0 ? 5.0 : getSourceLength();
+    const double sourceLength = getSourceLength() == 0.0 ? 5.0 : getSourceLength();
 
     waveInfo.bitsPerSample      = renderOptions->getBitDepth();
     waveInfo.sampleRate         = renderOptions->getSampleRate();
     waveInfo.numChannels        = renderOptions->getStereo() ? 2 : 1;
-    waveInfo.lengthInSamples    = int64 (length * waveInfo.sampleRate);
+    waveInfo.lengthInSamples    = int64 (sourceLength * waveInfo.sampleRate);
 
     updateLoopInfoBasedOnSource (false);
 }

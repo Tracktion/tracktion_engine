@@ -440,7 +440,7 @@ Clip::Array WaveAudioClip::unpackTakes (bool toNewTracks)
     CRASH_TRACER
     Clip::Array newClips;
 
-    if (Track::Ptr track = getTrack())
+    if (Track::Ptr t = getTrack())
     {
         const bool shouldBeShowingTakes = isShowingTakes();
 
@@ -454,8 +454,8 @@ Clip::Array WaveAudioClip::unpackTakes (bool toNewTracks)
 
         clipNode.removeChild (clipNode.getChildWithName (IDs::TAKES), nullptr);
 
-        int trackIndex = track->getIndexInEditTrackList();
-        auto allTracks = getAllTracks (track->edit);
+        int trackIndex = t->getIndexInEditTrackList();
+        auto allTracks = getAllTracks (t->edit);
         auto takes = getTakes();
 
         for (int i = 0; i < takes.size(); ++i)
@@ -466,12 +466,12 @@ Clip::Array WaveAudioClip::unpackTakes (bool toNewTracks)
             AudioTrack::Ptr targetTrack (dynamic_cast<AudioTrack*> (allTracks[++trackIndex]));
 
             if (toNewTracks || targetTrack == nullptr)
-                targetTrack = track->edit.insertNewAudioTrack (TrackInsertPoint (track->getParentTrack(), track.get()), nullptr);
+                targetTrack = t->edit.insertNewAudioTrack (TrackInsertPoint (t->getParentTrack(), t.get()), nullptr);
 
             if (targetTrack != nullptr)
                 newClips.add (targetTrack->insertWaveClip (getTakeDescriptions()[i], takes[i], getPosition(), false));
 
-            track = targetTrack;
+            t = targetTrack;
         }
 
         if (shouldBeShowingTakes)

@@ -64,9 +64,9 @@ void PitchSetting::setPitch (int p)
     pitch = jlimit (0, 127, p);
 }
 
-void PitchSetting::setScaleID (Scale::ScaleType type)
+void PitchSetting::setScaleID (Scale::ScaleType st)
 {
-    scale = type;
+    scale = st;
 }
 
 void PitchSetting::removeFromEdit()

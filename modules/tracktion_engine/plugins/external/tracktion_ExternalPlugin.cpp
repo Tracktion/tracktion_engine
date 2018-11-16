@@ -1047,11 +1047,11 @@ void ExternalPlugin::reset()
     }
 }
 
-void ExternalPlugin::setEnabled (bool enabled)
+void ExternalPlugin::setEnabled (bool shouldEnable)
 {
-    Plugin::setEnabled (enabled);
+    Plugin::setEnabled (shouldEnable);
 
-    if (enabled != isEnabled())
+    if (shouldEnable != isEnabled())
     {
         if (pluginInstance)
             pluginInstance->reset();
@@ -1539,14 +1539,14 @@ void ExternalPlugin::deletePluginInstance()
 //==============================================================================
 void ExternalPlugin::buildParameterTree() const
 {
-    auto& parameterTree = getParameterTree();
+    auto& paramTree = getParameterTree();
 
-    if (parameterTree.rootNode->subNodes.size() > 0)
+    if (paramTree.rootNode->subNodes.size() > 0)
         return;
 
     CRASH_TRACER_PLUGIN (getDebugName());
-    parameterTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (getAutomatableParameter (0)));
-    parameterTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (getAutomatableParameter (1)));
+    paramTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (getAutomatableParameter (0)));
+    paramTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (getAutomatableParameter (1)));
 
     SortedSet<int> paramsInTree;
 
@@ -1556,14 +1556,14 @@ void ExternalPlugin::buildParameterTree() const
         {
             if (auto param = dynamic_cast<const VSTXML::Param*> (vstXML->paramTree[i]))
             {
-                parameterTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (autoParamForParamNumbers [param->paramID]));
+                paramTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (autoParamForParamNumbers [param->paramID]));
                 paramsInTree.add (param->paramID);
             }
 
             if (auto group = dynamic_cast<const VSTXML::Group*> (vstXML->paramTree[i]))
             {
                 auto treeNode = new AutomatableParameterTree::TreeNode (group->name);
-                parameterTree.rootNode->addSubNode (treeNode);
+                paramTree.rootNode->addSubNode (treeNode);
                 buildParameterTree (group, treeNode, paramsInTree);
             }
         }
@@ -1573,7 +1573,7 @@ void ExternalPlugin::buildParameterTree() const
     {
         if (auto vstParam = dynamic_cast<ExternalAutomatableParameter*> (getAutomatableParameter(i).get()))
             if (! paramsInTree.contains (vstParam->getParameterIndex()))
-                parameterTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (autoParamForParamNumbers [vstParam->getParameterIndex()]));
+                paramTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (autoParamForParamNumbers [vstParam->getParameterIndex()]));
     }
 }
 

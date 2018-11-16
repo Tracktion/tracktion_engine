@@ -454,7 +454,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
             localPlayhead.playLockedToEngine ({ prerollStart, streamRange.getEnd() });
         }
 
-        ThreadPoolJob::JobStatus render (AudioNode& audioNode, std::atomic<float>& progress)
+        ThreadPoolJob::JobStatus render (AudioNode& audioNode, std::atomic<float>& progressToUpdate)
         {
             CRASH_TRACER
             auto blockLength = blockSize / writer->writer->getSampleRate();
@@ -487,7 +487,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
             streamTime = blockEnd;
 
             const float prog = (float) ((streamTime - streamRange.getStart()) / streamRange.getLength()) * 0.9f;
-            progress = jlimit (0.0f, 0.9f, prog);
+            progressToUpdate = jlimit (0.0f, 0.9f, prog);
 
             // NB buffer gets trashed by this call
             if (numSamplesDone <= 0 || ! writer->isOpen()
@@ -498,7 +498,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
                 writer->closeForWriting();
 
                 if (numSamplesDone <= 0)
-                    progress = 1.0f;
+                    progressToUpdate = 1.0f;
 
                 return ThreadPoolJob::jobHasFinished;
             }

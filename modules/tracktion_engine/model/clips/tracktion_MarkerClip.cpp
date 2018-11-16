@@ -51,9 +51,9 @@ void MarkerClip::setMarkerID (int newID)
 }
 
 //==============================================================================
-bool MarkerClip::canGoOnTrack (Track& track)
+bool MarkerClip::canGoOnTrack (Track& t)
 {
-    return track.isMarkerTrack();
+    return t.isMarkerTrack();
 }
 
 void MarkerClip::valueTreePropertyChanged (ValueTree& v, const Identifier& i)

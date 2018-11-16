@@ -101,10 +101,10 @@ MidiClip::MidiClip (const ValueTree& v, EditItemID id, ClipTrack& targetTrack)
     auto grooveTree = state.getOrCreateChildWithName (IDs::GROOVE, um);
     grooveTemplate.referTo (grooveTree, IDs::current, um, {});
 
-    const int type = edit.engine.getEngineBehaviour().getDefaultLoopedSequenceType();
-    loopedSequenceType.referTo (state, IDs::loopedSequenceType, um, static_cast<LoopedSequenceType> (jlimit (0, 1, type)));
-    jassert (type == int (LoopedSequenceType::loopRangeDefinesAllRepetitions)
-             || type == int (LoopedSequenceType::loopRangeDefinesSubsequentRepetitions));
+    const int loopType = edit.engine.getEngineBehaviour().getDefaultLoopedSequenceType();
+    loopedSequenceType.referTo (state, IDs::loopedSequenceType, um, static_cast<LoopedSequenceType> (jlimit (0, 1, loopType)));
+    jassert (loopType == int (LoopedSequenceType::loopRangeDefinesAllRepetitions)
+             || loopType == int (LoopedSequenceType::loopRangeDefinesSubsequentRepetitions));
 
     auto pgen = state.getChildWithName (IDs::PATTERNGENERATOR);
 
@@ -566,7 +566,7 @@ Clip::Array MidiClip::unpackTakes (bool toNewTracks)
     CRASH_TRACER
     Clip::Array newClips;
 
-    if (Track::Ptr track = getTrack())
+    if (Track::Ptr t = getTrack())
     {
         const bool shouldBeShowingTakes = isShowingTakes();
 
@@ -581,8 +581,8 @@ Clip::Array MidiClip::unpackTakes (bool toNewTracks)
         clipNode.removeChild (clipNode.getChildWithName (IDs::TAKES), nullptr);
         clipNode.removeChild (clipNode.getChildWithName (IDs::COMPS), nullptr);
 
-        int trackIndex = track->getIndexInEditTrackList();
-        auto allTracks = getAllTracks (track->edit);
+        int trackIndex = t->getIndexInEditTrackList();
+        auto allTracks = getAllTracks (t->edit);
 
         for (int i = 0; i < channelSequence.size(); ++i)
         {
@@ -594,7 +594,7 @@ Clip::Array MidiClip::unpackTakes (bool toNewTracks)
             AudioTrack::Ptr targetTrack (dynamic_cast<AudioTrack*> (allTracks[toNewTracks ? ++trackIndex : trackIndex]));
 
             if (toNewTracks || targetTrack == nullptr)
-                targetTrack = track->edit.insertNewAudioTrack (TrackInsertPoint (track->getParentTrack(), track.get()), nullptr);
+                targetTrack = t->edit.insertNewAudioTrack (TrackInsertPoint (t->getParentTrack(), t.get()), nullptr);
 
             if (targetTrack != nullptr)
             {
@@ -610,7 +610,7 @@ Clip::Array MidiClip::unpackTakes (bool toNewTracks)
                 }
             }
 
-            track = targetTrack;
+            t = targetTrack;
         }
 
         if (shouldBeShowingTakes)
@@ -643,9 +643,9 @@ void MidiClip::mergeInMidiSequence (MidiMessageSequence& ms, MidiList::NoteAutom
 }
 
 //==============================================================================
-bool MidiClip::canGoOnTrack (Track& track)
+bool MidiClip::canGoOnTrack (Track& t)
 {
-    return track.canContainMIDI();
+    return t.canContainMIDI();
 }
 
 AudioTrack* MidiClip::getAudioTrack() const

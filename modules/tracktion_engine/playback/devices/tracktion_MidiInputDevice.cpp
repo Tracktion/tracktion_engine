@@ -803,8 +803,6 @@ public:
             double endPos    = recordingEnd;
             double maxEndPos = endPos + 0.5;
 
-            auto& edit = track->edit;
-
             if (edit.recordingPunchInOut)
             {
                 if (startPos < loopRange.end)
