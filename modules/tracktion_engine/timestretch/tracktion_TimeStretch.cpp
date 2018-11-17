@@ -452,7 +452,7 @@ bool TimeStretcher::isInitialised() const
 void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
                                 int numChannels, Mode mode, ElastiqueProOptions options, bool realtime)
 {
-    juce::ignoreUnused (sourceSampleRate, numChannels, options, realtime);
+    juce::ignoreUnused (sourceSampleRate, numChannels, mode, options, realtime);
     jassert (! isMelodyne (mode));
 
     samplesPerBlockRequested = samplesPerBlock;
