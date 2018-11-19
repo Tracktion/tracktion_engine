@@ -15,7 +15,7 @@
                     juce_gui_basics, juce_gui_extra, tracktion_engine
   exporters:        linux_make, vs2017, xcode_iphone, xcode_mac
 
-  moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1, JUCE_PLUGINHOST_AU=1
+  moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1, JUCE_PLUGINHOST_AU=1, JUCE_PLUGINHOST_VST3=1
 
   type:             Component
   mainClass:        PlaybackDemo
@@ -37,7 +37,7 @@ public:
     //==============================================================================
     PlaybackDemo()
     {
-        const auto editFilePath = JUCEApplication::getCommandLineParameterArray()[0];
+        const auto editFilePath = JUCEApplication::getCommandLineParameters().replace ("-NSDocumentRevisionsDebugMode YES", "").unquoted().trim();
         jassert (editFilePath.isNotEmpty());
         const File editFile (editFilePath);
 
@@ -58,10 +58,31 @@ public:
             jassertfalse;
         }
 
+        // Show the plugin scan dialog
+        // If you're loading an Edit with plugins in, you'll need to perform a scan first
+        pluginsButton.onClick = [this]
+        {
+            DialogWindow::LaunchOptions o;
+            o.dialogTitle                   = TRANS("Plugins");
+            o.dialogBackgroundColour        = Colours::black;
+            o.escapeKeyTriggersCloseButton  = true;
+            o.useNativeTitleBar             = true;
+            o.resizable                     = true;
+            o.useBottomRightCornerResizer   = true;
+
+            auto v = new PluginListComponent (engine.getPluginManager().pluginFormatManager,
+                                              engine.getPluginManager().knownPluginList,
+                                              engine.getTemporaryFileManager().getTempFile ("PluginScanDeadMansPedal"),
+                                              te::getApplicationSettings());
+            v->setSize (800, 600);
+            o.content.setOwned (v);
+            o.launchAsync();
+        };
+
         settingsButton.onClick  = [this] { EngineHelpers::showAudioDeviceSettings (engine); };
         updatePlayButtonText();
         editNameLabel.setJustificationType (Justification::centred);
-        Helpers::addAndMakeVisible (*this, { &settingsButton, &playPauseButton, &editNameLabel });
+        Helpers::addAndMakeVisible (*this, { &pluginsButton, &settingsButton, &playPauseButton, &editNameLabel });
 
         setSize (600, 400);
     }
@@ -81,6 +102,7 @@ public:
     {
         auto r = getLocalBounds();
         auto topR = r.removeFromTop (30);
+        pluginsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 3).reduced (2));
         settingsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 2).reduced (2));
         playPauseButton.setBounds (topR.reduced (2));
         editNameLabel.setBounds (r);
@@ -91,7 +113,7 @@ private:
     te::Engine engine { ProjectInfo::projectName };
     std::unique_ptr<te::Edit> edit;
 
-    TextButton settingsButton { "Settings" }, playPauseButton { "Play" };
+    TextButton pluginsButton { "Plugins" }, settingsButton { "Settings" }, playPauseButton { "Play" };
     Label editNameLabel { "No Edit Loaded" };
 
     //==============================================================================
