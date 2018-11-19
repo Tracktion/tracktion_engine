@@ -35,6 +35,9 @@ exit /B %ERRORLEVEL%
 
     call "%PROJUCER_EXE%" --create-project-from-pip "%EXAMPLE_PIP_FILE%" "%EXAMPLE_DEST_DIR%" "%JUCE_DIR%/modules" "%TRACKTION_ENGINE_DIR%"
     call "%PROJUCER_EXE%" --resave "%EXAMPLE_ROOT_DIR%/%EXAMPLE_NAME%.jucer"
-    cd "%EXAMPLE_ROOT_DIR%/Builds/VisualStudio2017"
-    "%MSBUILD_EXE%" %EXAMPLE_NAME%.sln /p:VisualStudioVersion=15.0 /m /t:Build /p:Configuration=Release /p:Platform=x64 /p:PreferredToolArchitecture=x64 /p:TreatWarningsAsErrors=true
+
+    if defined DISABLE_BUILD goto builtSection
+        cd "%EXAMPLE_ROOT_DIR%/Builds/VisualStudio2017"
+        "%MSBUILD_EXE%" %EXAMPLE_NAME%.sln /p:VisualStudioVersion=15.0 /m /t:Build /p:Configuration=Release /p:Platform=x64 /p:PreferredToolArchitecture=x64 /p:TreatWarningsAsErrors=true
+    :builtSection
 exit /B 0

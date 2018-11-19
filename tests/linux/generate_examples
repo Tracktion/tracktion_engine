@@ -1,0 +1,4 @@
+#!/bin/sh -e
+
+export DISABLE_BUILD=1
+$(dirname "$0")/build_examples

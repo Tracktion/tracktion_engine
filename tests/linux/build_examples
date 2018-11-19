@@ -14,8 +14,8 @@ echo "Building Projucer"
 "$TESTS_DIR/build_projucer"
 
 if [ -z "$PROJUCER_EXE" ]; then
-	echo "ERROR: Projucer not built"
-	exit 1
+    echo "ERROR: Projucer not built"
+    exit 1
 fi
 
 
@@ -24,16 +24,19 @@ echo "Building Examples"
 #============================================================
 buildExample()
 {
-	echo "=========================================================="
-	echo "Building example: $1"
-	EXAMPLE_NAME=$1
-	EXAMPLE_PIP_FILE="$EXAMPLES_DIR/$1.h"
-	EXAMPLE_DEST_DIR="$EXAMPLES_DIR/projects"
-	EXAMPLE_ROOT_DIR="$EXAMPLE_DEST_DIR/$EXAMPLE_NAME"
+    echo "=========================================================="
+    echo "Building example: $1"
+    EXAMPLE_NAME=$1
+    EXAMPLE_PIP_FILE="$EXAMPLES_DIR/$1.h"
+    EXAMPLE_DEST_DIR="$EXAMPLES_DIR/projects"
+    EXAMPLE_ROOT_DIR="$EXAMPLE_DEST_DIR/$EXAMPLE_NAME"
     "$PROJUCER_EXE" --create-project-from-pip "$EXAMPLE_PIP_FILE" "$EXAMPLE_DEST_DIR" "$JUCE_DIR/modules" "$TRACKTION_ENGINE_DIR"
     "$PROJUCER_EXE" --resave "$EXAMPLE_ROOT_DIR/$EXAMPLE_NAME.jucer"
-	cd "$EXAMPLE_ROOT_DIR/Builds/LinuxMakefile"
-	make CONFIG=Release -j2
+
+    if [[ -z "$DISABLE_BUILD" ]]; then
+        cd "$EXAMPLE_ROOT_DIR/Builds/LinuxMakefile"
+        make CONFIG=Release -j2
+    fi
 }
 
 buildExample "PlaybackDemo"
