@@ -33,6 +33,8 @@ public:
     bool setSource (juce::InputSource*) override;
     void setReader (juce::AudioFormatReader*, juce::int64 hash) override;
 
+    void releaseResources();
+
     juce::int64 getHashCode() const override;
 
     void addBlock (juce::int64 startSample, const juce::AudioBuffer<float>& incoming,

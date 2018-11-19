@@ -741,6 +741,12 @@ void TracktionThumbnail::setReader (juce::AudioFormatReader* newReader, juce::in
         setDataSource (new LevelDataSource (*this, newReader, hash));
 }
 
+void TracktionThumbnail::releaseResources()
+{
+    if (source != nullptr)
+        source->releaseResources();
+}
+
 juce::int64 TracktionThumbnail::getHashCode() const
 {
     return source == nullptr ? 0 : source->hashCode;

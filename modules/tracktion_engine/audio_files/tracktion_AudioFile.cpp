@@ -482,6 +482,8 @@ void SmartThumbnail::audioFileChanged()
 
     wasGeneratingProxy = proxyGen.isProxyBeingGenerated (file);
 
+    releaseResources();
+
     if (file.getFile().exists())
         createThumbnailReader();
     else
