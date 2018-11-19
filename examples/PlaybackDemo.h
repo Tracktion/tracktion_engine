@@ -119,7 +119,8 @@ private:
     //==============================================================================
     void updatePlayButtonText()
     {
-        playPauseButton.setButtonText (edit->getTransport().isPlaying() ? "Pause" : "Play");
+        if (edit != nullptr)
+            playPauseButton.setButtonText (edit->getTransport().isPlaying() ? "Pause" : "Play");
     }
 
     void changeListenerCallback (ChangeBroadcaster*) override
