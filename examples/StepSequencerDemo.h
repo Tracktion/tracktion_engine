@@ -422,7 +422,8 @@ private:
 
 //==============================================================================
 class StepSequencerDemo : public Component,
-                          private ChangeListener
+                          private ChangeListener,
+                          private Slider::Listener
 {
 public:
     //==============================================================================
@@ -445,7 +446,8 @@ public:
         clearButton.onClick     = [this] { getClip()->getPattern (0).clear(); };
 
         tempoSlider.setRange (30.0, 220.0, 0.1);
-        tempoSlider.getValueObject().referTo (edit.tempoSequence.getTempos()[0]->bpm.getPropertyAsValue());
+        tempoSlider.setValue (edit.tempoSequence.getTempos()[0]->getBpm(), dontSendNotification);
+        tempoSlider.addListener (this);
 
         setSize (600, 400);
     }
@@ -457,6 +459,17 @@ public:
     }
 
     //==============================================================================
+    void sliderValueChanged (Slider*) override
+    {        
+        if (! ModifierKeys::getCurrentModifiers().isAnyMouseButtonDown())
+            edit.tempoSequence.getTempos()[0]->setBpm (tempoSlider.getValue());
+    }
+
+    void sliderDragEnded (Slider*) override
+    {
+        edit.tempoSequence.getTempos()[0]->setBpm (tempoSlider.getValue());
+    }
+
     void paint (Graphics& g) override
     {
         g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
