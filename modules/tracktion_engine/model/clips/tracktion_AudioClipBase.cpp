@@ -2698,8 +2698,7 @@ void AudioClipBase::valueTreeParentChanged (ValueTree& child)
 
 void AudioClipBase::updateReversedState()
 {
-    if (auto sourceItem = sourceFileReference.getSourceProjectItem())
-        setCurrentSourceFile (sourceItem->getSourceFile());
+    setCurrentSourceFile (getOriginalFile());
 
     if (isReversed)
         updateSourceFile();
