@@ -38,8 +38,14 @@ Start with the `PitchAndTimeDemo` or `StepSequencerDemo` to see some basic apps 
 ## Tutorials
 Once you're ready to dive in to the code, open the IDE files and have a read through the tutorials in `/tutorials`. You can view these on GitHub [here](/tutorials) to see the rendered Markdown.
 
+## Contributing
+Tracktion Engine is provided in JUCE module format, for bug reports and features requests, please visit the [JUCE Forum](https://forum.juce.com/) -
+the Tracktion Engine developers are active there and will read every post and respond accordingly.
+We don't accept third party GitHub pull requests directly due to copyright restrictions
+but if you would like to contribute any changes please contact us.
+
 ## License
-Tracktion Engine is covered by a [GPL/Commercial license](https://www.gnu.org/licenses/gpl-3.0.en.html).
+Tracktion Engine is covered by a [GPL](https://www.gnu.org/licenses/gpl-3.0.en.html)/[Commercial license](https://www.tracktion.com/develop/tracktion-engine).
 
 There are multiple commercial licensing tiers for Tracktion Engine, with different terms for each.
 For prices, see the [Tracktion Developers Page](https://www.tracktion.com/develop/tracktion-engine).
