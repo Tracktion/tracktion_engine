@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct ThreadedEditFileWriter   : private Thread
 {
     ThreadedEditFileWriter()
@@ -478,4 +481,6 @@ void purgeOrphanEditTempFolders (ProjectManager& pm)
         TRACKTION_LOG ("Purging edit folder: " + filesToDelete.getReference (i).getFileName() + " - " + resonsForDeletion[i]);
         filesToDelete.getReference (i).deleteRecursively();
     }
+}
+
 }

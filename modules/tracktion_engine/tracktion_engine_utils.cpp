@@ -4,6 +4,8 @@
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
+
+    Tracktion Engine uses a GPL or Commercial licence - see LICENCE.md for details.
 */
 
 
@@ -52,24 +54,21 @@ extern "C" char MacGetMacFSRefForREXDLL (FSRef* fsRef)
 #endif
 
 //==============================================================================
-namespace tracktion_engine
-{
-  using namespace juce;
+using namespace juce;
 
-  #include "selection/tracktion_Clipboard.cpp"
-  #include "selection/tracktion_SelectionManager.cpp"
+#include "selection/tracktion_Clipboard.cpp"
+#include "selection/tracktion_SelectionManager.cpp"
 
-  #include "utilities/tracktion_AppFunctions.cpp"
-  #include "utilities/tracktion_AudioUtilities.cpp"
-  #include "utilities/tracktion_ConstrainedCachedValue.cpp"
-  #include "utilities/tracktion_CrashTracer.cpp"
-  #include "utilities/tracktion_CurveEditor.cpp"
-  #include "utilities/tracktion_FileUtilities.cpp"
-  #include "utilities/tracktion_PropertyStorage.cpp"
-  #include "utilities/tracktion_UIBehaviour.cpp"
-  #include "utilities/tracktion_TemporaryFileManager.cpp"
-  #include "utilities/tracktion_Engine.cpp"
-  #include "utilities/tracktion_BinaryData.cpp"
-}
+#include "utilities/tracktion_AppFunctions.cpp"
+#include "utilities/tracktion_AudioUtilities.cpp"
+#include "utilities/tracktion_ConstrainedCachedValue.cpp"
+#include "utilities/tracktion_CrashTracer.cpp"
+#include "utilities/tracktion_CurveEditor.cpp"
+#include "utilities/tracktion_FileUtilities.cpp"
+#include "utilities/tracktion_PropertyStorage.cpp"
+#include "utilities/tracktion_UIBehaviour.cpp"
+#include "utilities/tracktion_TemporaryFileManager.cpp"
+#include "utilities/tracktion_Engine.cpp"
+#include "utilities/tracktion_BinaryData.cpp"
 
 #endif

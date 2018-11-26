@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 AuxReturnPlugin::AuxReturnPlugin (PluginCreationInfo info)  : Plugin (info)
 {
     busNumber.referTo (state, IDs::busNum, getUndoManager());
@@ -204,4 +207,6 @@ void AuxReturnPlugin::restorePluginStateFromValueTree (const ValueTree& v)
 {
     CachedValue<int>* cvsInt[] = { &busNumber, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
+}
+
 }

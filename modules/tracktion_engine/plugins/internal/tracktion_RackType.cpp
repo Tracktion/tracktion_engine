@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 static constexpr int maxRackAudioChans = 64;
 
 static String getDefaultInputName (int i)
@@ -2222,3 +2225,5 @@ void RackType::valueTreePropertyChanged (ValueTree& v, const Identifier& ident)
 //==============================================================================
 RackType::WindowState::WindowState (RackType& r, juce::ValueTree windowStateTree)
     : PluginWindowState (r.edit.engine), rack (r), state (std::move (windowStateTree))  {}
+
+}

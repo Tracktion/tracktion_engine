@@ -19,9 +19,6 @@
 
 #include "tracktion_engine.h"
 
-namespace tracktion_engine
-{
-
 using namespace juce;
 
 #include "plugins/tracktion_Plugin.cpp"
@@ -56,8 +53,6 @@ using namespace juce;
 #include "plugins/effects/tracktion_PitchShift.cpp"
 #include "plugins/effects/tracktion_Reverb.cpp"
 #include "plugins/effects/tracktion_SamplerPlugin.cpp"
-
-}
 
 #include "plugins/ARA/tracktion_MelodyneFileReader.cpp"
 

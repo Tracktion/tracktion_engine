@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 namespace PredefinedWavetable
 {
     static float getSinSample (float phase)
@@ -179,3 +182,5 @@ struct SuffixedParameter    : public AutomatableParameter
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SuffixedParameter)
 };
+
+}

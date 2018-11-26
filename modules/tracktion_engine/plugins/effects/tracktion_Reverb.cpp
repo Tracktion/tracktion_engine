@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 static constexpr float scalewet = 3;
 static constexpr float scaledry = 2;
 static constexpr float freezemode = 0.5f;
@@ -170,3 +173,5 @@ float ReverbPlugin::getWidth()                  { return widthParam->getCurrentV
 
 void ReverbPlugin::setMode (float value)        { modeParam->setParameter (jlimit (0.0f, 1.0f, value), sendNotification); }
 float ReverbPlugin::getMode()                   { return modeParam->getCurrentValue(); }
+
+}

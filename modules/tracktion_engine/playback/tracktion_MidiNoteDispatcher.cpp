@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 MidiNoteDispatcher::MidiNoteDispatcher()
 {
 }
@@ -126,4 +129,6 @@ void MidiNoteDispatcher::hiResTimerCallback()
 
     for (auto& m : messagesToSend)
         m.device->getMidiOutput().fireMessage (m.message);
+}
+
 }

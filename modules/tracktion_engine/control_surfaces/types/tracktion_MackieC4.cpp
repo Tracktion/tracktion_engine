@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 namespace
 {
     static const float panPotSpeed = 1.0f / 40.0f;
@@ -1032,4 +1035,6 @@ void MackieC4::pluginBypass (bool b)
 {
     bypass = b;
     updateMiscLights();
+}
+
 }

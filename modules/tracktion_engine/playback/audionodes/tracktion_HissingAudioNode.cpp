@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 HissingAudioNode::HissingAudioNode (AudioNode* in)
     : SingleInputAudioNode (in)
 {
@@ -80,4 +83,6 @@ void HissingAudioNode::renderAdding (const AudioRenderContext& rc)
             }
         }
     }
+}
+
 }

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 TempoTrack::TempoTrack (Edit& edit, const ValueTree& v)
     : Track (edit, v, 40, 13, 200)
 {
@@ -94,4 +97,6 @@ juce::Array<TrackItem*> TempoTrack::buildTrackItemList() const
     items.sort (tts);
 
     return items;
+}
+
 }

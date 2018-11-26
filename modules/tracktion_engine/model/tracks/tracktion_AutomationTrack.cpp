@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 AutomationTrack::AutomationTrack (Edit& e, const ValueTree& v)
     : Track (e, v, 50, 13, 2000)
 {
@@ -30,4 +33,6 @@ String AutomationTrack::getName()
         return ap->getFullName();
 
     return {};
+}
+
 }

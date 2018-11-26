@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 namespace AppFunctions
 {
     UIBehaviour& getCurrentUIBehaviour()
@@ -562,4 +565,6 @@ namespace AppFunctions
             }
         }
     }
+}
+
 }

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct MidiTimecodeReader  : private MessageListener,
                              private Timer
 {
@@ -554,4 +557,6 @@ private:
 AudioNode* MidiInputDevice::createMidiEventSnifferNode (AudioNode* input)
 {
     return new MidiEventSnifferNode (input, *this);
+}
+
 }

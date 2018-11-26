@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 SelectedMidiEvents::SelectedMidiEvents (MidiClip& m)  : clips ({ &m })
 {
 }
@@ -493,4 +496,6 @@ void SelectedMidiEvents::sendSelectionChangedMessage (SelectionManager* sm)
 
     changed();
     sendChangeMessage();
+}
+
 }

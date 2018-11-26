@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 ExportJob::ExportJob (Edit* edit_,
                       const File& destDir_,
                       const Project::Ptr& newProject_,
@@ -299,4 +302,6 @@ void ExportJob::createArchiveFromTempFiles()
 float ExportJob::getCurrentTaskProgress()
 {
     return progress;
+}
+
 }

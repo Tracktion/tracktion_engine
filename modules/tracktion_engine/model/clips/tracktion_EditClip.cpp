@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 EditClip::EditClip (const ValueTree& v, EditItemID clipID, ClipTrack& targetTrack, ProjectItemID sourceEditID)
     : AudioClipBase (v, clipID, Type::edit, targetTrack),
       waveInfo (getAudioFile().getInfo())
@@ -429,4 +432,6 @@ void EditClip::editChanged (EditSnapshot&)
     // If any of the Edit's we are referencing have changed we need to re-check them all
     updateReferencedEdits();
     generateHash();
+}
+
 }

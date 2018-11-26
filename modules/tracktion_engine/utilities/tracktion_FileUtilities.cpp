@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 File getNonExistentSiblingWithIncrementedNumberSuffix (const File& file, bool addHashSymbol)
 {
     if (! file.existsAsFile())
@@ -75,4 +78,6 @@ var FileDragList::create (const File& file, PreferredLayout peferredLayout)
     Array<File> files;
     files.add (file);
     return create (files, peferredLayout);
+}
+
 }

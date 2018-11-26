@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct BankSet
 {
     BankSet() noexcept {}
@@ -552,4 +555,6 @@ juce::String MidiProgramManager::getPresetXml (juce::String presetName)
     }
 
     return {};
+}
+
 }

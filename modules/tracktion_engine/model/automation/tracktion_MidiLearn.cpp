@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 MidiLearnState::MidiLearnState (Engine& e)  : engine (e) {}
 MidiLearnState::~MidiLearnState() {}
 
@@ -122,4 +125,6 @@ int MidiAssignable::getFaderIndex()
     }
 
     return -1;
+}
+
 }

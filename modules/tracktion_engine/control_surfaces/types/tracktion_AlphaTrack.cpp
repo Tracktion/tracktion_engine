@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 namespace AlphaTrack
 {
     static uint8 cmdInitNativeMode[] = { 0xf0, 0x00, 0x01, 0x40, 0x20, 0x01, 0x00, 0xf7 };
@@ -1162,4 +1165,6 @@ void AlphaTrackControlSurface::timerCallback (int timerId)
         param = nullptr;
         updateDisplay();
     }
+}
+
 }

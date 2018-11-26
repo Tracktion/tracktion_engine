@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 EditInputDevices::EditInputDevices (Edit& e, const ValueTree& v)
     : edit (e), state (v), editState (e.state)
 {
@@ -228,4 +231,6 @@ void EditInputDevices::valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTre
 
     if (TrackList::isTrack (c))
         triggerAsyncUpdate();
+}
+
 }

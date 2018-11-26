@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 std::function<AudioNode*(AudioNode*)> EditPlaybackContext::insertOptionalLastStageNode = [] (AudioNode* input)    { return input; };
 
 //==============================================================================
@@ -764,3 +767,5 @@ EditPlaybackContext::RealtimePriorityDisabler::RealtimePriorityDisabler()    {}
 EditPlaybackContext::RealtimePriorityDisabler::~RealtimePriorityDisabler()   {}
 
 #endif
+
+}

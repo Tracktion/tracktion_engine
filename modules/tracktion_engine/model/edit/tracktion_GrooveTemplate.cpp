@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 const char* GrooveTemplate::grooveXmlTag = "GROOVETEMPLATE";
 
 GrooveTemplate::GrooveTemplate()
@@ -262,4 +265,6 @@ void GrooveTemplateManager::deleteTemplate (int index)
 
     save();
     TransportControl::restartAllTransports (engine, false);
+}
+
 }

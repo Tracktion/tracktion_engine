@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 //==============================================================================
 template <typename FloatType>
 static void getSumAndDiff (const AudioBuffer<FloatType>& buffer,
@@ -324,4 +327,6 @@ void LevelMeasuringAudioNode::renderOver (const AudioRenderContext& rc)
 void LevelMeasuringAudioNode::renderAdding (const AudioRenderContext& rc)
 {
     callRenderOver (rc);
+}
+
 }

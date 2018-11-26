@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 AutomationCurve::AutomationCurve()  : state (IDs::AUTOMATIONCURVE)
 {
 }
@@ -841,4 +844,6 @@ int simplify (AutomationCurve& curve, int strength, EditTimeRange time)
     auto numPointsAfter = curve.getNumPoints();
 
     return numPointsBefore - numPointsAfter;
+}
+
 }

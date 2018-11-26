@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 namespace BezierHelpers
 {
     template<typename Type>
@@ -462,4 +465,6 @@ void BreakpointOscillatorModifier::valueTreeChanged()
 {
     if (! changedTimer.isTimerRunning())
         changedTimer.startTimerHz (30);
+}
+
 }

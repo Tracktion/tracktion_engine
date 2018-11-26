@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 static void clearSetOfChannels (int** channels, int numChannels, int offset, int numSamples) noexcept
 {
     for (int i = 0; i < numChannels; ++i)
@@ -1031,3 +1034,5 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CacheAudioFormatReader)
 };
+
+}

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 //==============================================================================
 /**
     Calculates the RMS of a continuous signal.
@@ -450,4 +453,6 @@ void EnvelopeFollowerModifier::valueTreeChanged()
 {
     if (! changedTimer.isTimerRunning())
         changedTimer.startTimerHz (30);
+}
+
 }

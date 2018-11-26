@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 Clipboard::Clipboard() {}
 Clipboard::~Clipboard() { clearSingletonInstance(); }
 
@@ -1304,4 +1307,6 @@ bool Clipboard::Modifiers::pasteIntoEdit (const EditPastingOptions& options) con
     }
 
     return false;
+}
+
 }

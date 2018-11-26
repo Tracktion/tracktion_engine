@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 ParameterChangeHandler::ParameterChangeHandler (Edit& e) : edit (e)
 {
     juce::ignoreUnused (edit);
@@ -79,4 +82,6 @@ int ParameterChangeHandler::getPendingActionFunctionId (bool consumeEvent) noexc
         sendChangeMessage();
 
     return pendingActionId;
+}
+
 }

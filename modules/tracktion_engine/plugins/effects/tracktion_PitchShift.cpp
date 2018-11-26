@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct PitchShiftPlugin::Pimpl
 {
     static constexpr int samplesPerBlock = 512;
@@ -179,4 +182,6 @@ void PitchShiftPlugin::restorePluginStateFromValueTree (const ValueTree& v)
     CachedValue<int>* cvsInt[]      = { &mode, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
+}
+
 }

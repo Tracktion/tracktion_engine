@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 namespace NovationRemoteSL
 {
     const uint8 PID = 0x03;
@@ -836,3 +839,5 @@ juce::String NovationRemoteSl::padAndLimit (const String& s, int max)
 
 void NovationRemoteSl::markerChanged (int, const MarkerSetting&) {}
 void NovationRemoteSl::clearMarker (int) {}
+
+}

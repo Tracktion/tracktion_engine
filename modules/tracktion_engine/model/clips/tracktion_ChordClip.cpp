@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 ChordClip::ChordClip (const ValueTree& v, EditItemID id, ClipTrack& targetTrack)
     : Clip (v, targetTrack, id, Type::chord)
 {
@@ -131,4 +134,6 @@ void ChordClip::handleAsyncUpdate()
             if (auto* mc = dynamic_cast<MidiClip*> (t->getTrackItem (i)))
                 mc->pitchTempoTrackChanged();
     }
+}
+
 }

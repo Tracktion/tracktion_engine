@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 CollectionClip::CollectionClip (Track& t)
    : TrackItem (t.edit, {}, Type::collection),
      track (&t)
@@ -92,4 +95,6 @@ void CollectionClip::updateStartAndEnd()
 String CollectionClip::getName()
 {
     return TRANS("Collection Clip");
+}
+
 }

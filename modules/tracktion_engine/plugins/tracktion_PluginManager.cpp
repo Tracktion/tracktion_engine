@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 // Defined in ExternalPlugin.cpp to clean up plugins waiting to be deleted
 extern void cleanUpDanglingPlugins();
 
@@ -730,4 +733,6 @@ void PluginCache::timerCallback()
             }
         }
     }
+}
+
 }

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 CurveEditorPoint::~CurveEditorPoint()
 {
     notifyListenersOfDeletion();
@@ -807,4 +810,6 @@ CurveEditorPoint* CurveEditor::getSelectedPoint (int idx)
             return p;
 
     return {};
+}
+
 }

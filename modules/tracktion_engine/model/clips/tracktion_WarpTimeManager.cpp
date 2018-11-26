@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 inline int64 hashDouble (double d) noexcept
 {
     static_assert (sizeof (double) == sizeof (int64), "double and int64 different sizes");
@@ -596,4 +599,6 @@ void WarpTimeFactory::removeWarpTimeManager (WarpTimeManager& wtm)
     const ScopedLock sl (warpTimeLock);
     jassert (warpTimeManagers.contains (&wtm));
     warpTimeManagers.removeAllInstancesOf (&wtm);
+}
+
 }

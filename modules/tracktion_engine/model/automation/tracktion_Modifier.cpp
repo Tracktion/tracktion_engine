@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 Modifier::Modifier (Edit& e, const juce::ValueTree& v)
     : AutomatableEditItem (e, v),
       state (v)
@@ -194,4 +197,6 @@ Modifier::Ptr findModifierForID (ModifierList& ml, EditItemID modifierID)
             return mod;
 
     return {};
+}
+
 }

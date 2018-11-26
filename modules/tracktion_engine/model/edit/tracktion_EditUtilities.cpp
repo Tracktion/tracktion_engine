@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 juce::File getEditFileFromProjectManager (Edit& edit)
 {
     if (auto item = ProjectManager::getInstance()->getProjectItem (edit))
@@ -777,4 +780,6 @@ Array<MacroParameterElement*> getAllMacroParameterElements (const Edit& edit)
     elements.addArray (getAllPlugins (edit, false));
 
     return elements;
+}
+
 }

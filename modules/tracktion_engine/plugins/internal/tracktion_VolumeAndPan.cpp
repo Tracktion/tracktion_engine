@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct VolAutomatableParameter : public AutomatableParameter
 {
     VolAutomatableParameter (const String& xmlTag, const String& name,
@@ -298,4 +301,6 @@ void VolumeAndPanPlugin::restorePluginStateFromValueTree (const ValueTree& v)
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
     copyPropertiesToNullTerminatedCachedValues (v, cvsBool);
+}
+
 }

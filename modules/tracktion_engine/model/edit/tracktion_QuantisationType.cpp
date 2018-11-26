@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct QuantisationTypeInfo
 {
     const char* name;
@@ -265,4 +268,6 @@ void QuantisationType::applyQuantisationToSequence (juce::MidiMessageSequence& m
             m.setTimeStamp (roundUp (start + m.getTimeStamp(), ed) - start);
         }
     }
+}
+
 }

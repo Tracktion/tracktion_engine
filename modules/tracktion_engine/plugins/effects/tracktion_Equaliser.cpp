@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 class EqualiserPlugin::EQAutomatableParameter : public AutomatableParameter
 {
 public:
@@ -333,4 +336,6 @@ float EqualiserPlugin::getDBGainAtFrequency (float f)
     }
 
     return curve.getY (f / (lastSampleRate / 2));
+}
+
 }

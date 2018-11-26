@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 RenderManager::Job::Ptr EditRenderJob::getOrCreateRenderJob (Engine& e, Renderer::Parameters& params,
                                                              bool deleteEdit, bool silenceOnBackup, bool reverse)
 {
@@ -410,4 +413,6 @@ bool EditRenderJob::generateSilence (const File& fileToWriteTo)
     }
 
     return true;
+}
+
 }

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 TrackOutput::TrackOutput (AudioTrack& t)
     : owner (t)
 {
@@ -350,4 +353,6 @@ void TrackOutput::valueTreePropertyChanged (ValueTree& v, const Identifier& iden
         outputDevice.forceUpdateOfCachedValue();
         updateOutput();
     }
+}
+
 }

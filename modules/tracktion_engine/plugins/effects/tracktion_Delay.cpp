@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 DelayPlugin::DelayPlugin (PluginCreationInfo info) : Plugin (info)
 {
     feedbackDb    = addParam ("feedback", TRANS("Feedback"), { getMinDelayFeedbackDb(), 0.0f },
@@ -101,4 +104,6 @@ void DelayPlugin::restorePluginStateFromValueTree (const ValueTree& v)
     CachedValue<int>* cvsInt[]      = { &lengthMs, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
+}
+
 }

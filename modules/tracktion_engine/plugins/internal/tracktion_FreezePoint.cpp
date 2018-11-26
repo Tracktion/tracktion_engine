@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 FreezePointPlugin::ScopedTrackUnsoloer::ScopedTrackUnsoloer (Edit& e)  : edit (e)
 {
     int i = 0;
@@ -215,4 +218,6 @@ void FreezePointPlugin::freezeTrack (bool shouldBeFrozen)
     }
 
     changed();
+}
+
 }

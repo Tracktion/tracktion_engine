@@ -19,6 +19,9 @@
  #pragma comment (lib, "ippvm_l.lib")
 #endif
 
+namespace tracktion_engine
+{
+
 TimeStretcher::ElastiqueProOptions::ElastiqueProOptions (const String& string)
 {
     if (string.isEmpty())
@@ -555,4 +558,6 @@ void TimeStretcher::flush (float* const* outChannels)
 {
     if (stretcher != nullptr)
         stretcher->flush (outChannels);
+}
+
 }

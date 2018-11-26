@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 TrackCompManager::CompSection::CompSection (const ValueTree& v) : state (v)
 {
     updateTrack();
@@ -658,4 +661,6 @@ AudioNode* TrackCompManager::createTrackCompAudioNode (AudioNode* input, const A
     }
 
     return input;
+}
+
 }

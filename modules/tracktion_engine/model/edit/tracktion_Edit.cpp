@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 Edit::GlobalMacros::GlobalMacros (Edit& e)
     : MacroParameterElement (e, e.state),
       edit (e)
@@ -2901,4 +2904,6 @@ juce::Array<Edit*> ActiveEdits::getEdits() const
     juce::Array<Edit*> eds;
     eds.addArray (edits);
     return eds;
+}
+
 }

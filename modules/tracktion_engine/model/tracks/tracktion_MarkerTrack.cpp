@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 MarkerTrack::MarkerTrack (Edit& edit, const ValueTree& v)  : ClipTrack (edit, v, 40, 13, 60)
 {
 }
@@ -20,3 +23,5 @@ bool MarkerTrack::isMarkerTrack() const                  { return true; }
 juce::String MarkerTrack::getSelectableDescription()     { return getName(); }
 juce::String MarkerTrack::getName()                      { return TRANS("Markers"); }
 bool MarkerTrack::canContainPlugin (Plugin*) const       { return false; }
+
+}

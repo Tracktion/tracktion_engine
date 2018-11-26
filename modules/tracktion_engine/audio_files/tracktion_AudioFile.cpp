@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 static inline juce::int64 getAudioFileHash (const juce::File& file) noexcept
 {
     return file.getFullPathName().hashCode64();
@@ -728,4 +731,6 @@ void AudioFileManager::handleAsyncUpdate()
 
     if (! fileToCheck.isNull())
         checkFileForChanges (fileToCheck);
+}
+
 }

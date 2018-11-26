@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct MultiCPU
 {
     static void addDoublesToBuffer (const AudioRenderContext& rc, const AudioBuffer<double>& doubles)
@@ -450,4 +453,6 @@ void MixerAudioNode::updateNumCPUs (Engine& e)
     CRASH_TRACER
     MultiCPU::MixerThreadPool::getInstance()
         ->setNumThreads (e.getEngineBehaviour().getNumberOfCPUsToUseForAudio() - 1);
+}
+
 }

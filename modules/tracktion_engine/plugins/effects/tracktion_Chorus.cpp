@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 ChorusPlugin::ChorusPlugin (PluginCreationInfo info)  : Plugin (info)
 {
     auto um = getUndoManager();
@@ -116,4 +119,6 @@ void ChorusPlugin::restorePluginStateFromValueTree (const ValueTree& v)
 {
     CachedValue<float>* cvsFloat[] = { &depthMs, &width, &mixProportion, &speedHz, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+}
+
 }

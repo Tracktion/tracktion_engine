@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 MarkerManager::MarkerManager (Edit& e, const juce::ValueTree& v)
     : edit (e), state (v)
 {
@@ -156,3 +159,5 @@ void MarkerManager::valueTreePropertyChanged (ValueTree& v, const Identifier&)  
 void MarkerManager::valueTreeChildAdded (ValueTree& p, ValueTree&)              { valueTreeChanged (p); }
 void MarkerManager::valueTreeChildRemoved (ValueTree& p, ValueTree&, int)       { valueTreeChanged (p); }
 void MarkerManager::valueTreeParentChanged (ValueTree& v)                       { valueTreeChanged (v); }
+
+}

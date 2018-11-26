@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 static const uint8 cmdInitNativeMode[] = { 0xf0, 0x00, 0x01, 0x40, 0x10, 0x01, 0x00, 0xf7 };
 static const uint8 cmdInquiry[]        = { 0xf0, 0x7e, 0x00, 0x06, 0x01, 0xf7 };
 
@@ -626,4 +629,6 @@ void TranzportControlSurface::markerChanged (int, const MarkerSetting&)
 
 void TranzportControlSurface::clearMarker (int)
 {
+}
+
 }

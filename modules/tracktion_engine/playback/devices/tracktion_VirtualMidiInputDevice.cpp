@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct VirtualMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
 {
     VirtualMidiInputDeviceInstance (VirtualMidiInputDevice& d, EditPlaybackContext& c)
@@ -151,4 +154,6 @@ String VirtualMidiInputDevice::getSelectableDescription()
         return getAlias() + " (" + getType() + ")";
 
     return MidiInputDevice::getSelectableDescription();
+}
+
 }

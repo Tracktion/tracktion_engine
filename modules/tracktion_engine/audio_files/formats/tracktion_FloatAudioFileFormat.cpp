@@ -6,6 +6,8 @@
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 */
 
+namespace tracktion_engine
+{
 
 static int getFloatFileHeaderInt()  { return (int) juce::ByteOrder::littleEndianInt ("TRKF"); }
 
@@ -300,4 +302,6 @@ juce::AudioFormatWriter* FloatAudioFormat::createWriterFor (juce::OutputStream* 
                                                             int /*qualityOptionIndex*/)
 {
     return new FloatAudioFormatWriter (out, sampleRate, numChannels);
+}
+
 }

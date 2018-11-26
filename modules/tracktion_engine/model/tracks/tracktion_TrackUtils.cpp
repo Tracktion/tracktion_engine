@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 TrackInsertPoint::TrackInsertPoint (Track* parent, Track* preceding)
     : parentTrackID (parent != nullptr ? parent->itemID : EditItemID()),
       precedingTrackID (preceding != nullptr ? preceding->itemID : EditItemID())
@@ -578,4 +581,6 @@ void moveAutomation (const Array<TrackAutomationSection>& origSections, double o
             }
         }
     }
+}
+
 }

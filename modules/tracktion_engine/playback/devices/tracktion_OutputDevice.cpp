@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 OutputDevice::OutputDevice (Engine& e, const String& t, const String& n)
    : engine (e), type (t), name (n)
 {
@@ -107,4 +110,6 @@ AudioNode* OutputDeviceInstance::replaceAudioNode (AudioNode* node)
     auto oldOne = audioNode.release();
     audioNode = node;
     return oldOne;
+}
+
 }

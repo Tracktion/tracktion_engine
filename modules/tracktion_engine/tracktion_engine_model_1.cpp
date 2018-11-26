@@ -13,9 +13,6 @@
 
 #include "tracktion_engine.h"
 
-namespace tracktion_engine
-{
-
 using namespace juce;
 
 #include "timestretch/tracktion_TempoDetect.h"
@@ -58,7 +55,5 @@ using namespace juce;
 #include "model/clips/tracktion_StepClip.cpp"
 #include "model/clips/tracktion_ClipEffects.cpp"
 #include "model/clips/tracktion_WarpTimeManager.cpp"
-
-}
 
 #endif

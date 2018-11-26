@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 //==============================================================================
 Clip::Clip (const ValueTree& v, ClipTrack& targetTrack, EditItemID id, Type t)
     : TrackItem (targetTrack.edit, id, t),
@@ -549,4 +552,6 @@ TrackItem* Clip::getGroupParent() const
 Colour Clip::getColour() const
 {
     return colour.get();
+}
+
 }

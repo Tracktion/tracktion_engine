@@ -6,6 +6,9 @@
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 */
 
+namespace tracktion_engine
+{
+
 EditTimeRange::EditTimeRange (double s, double e) : start (s), end (e)
 {
     jassert (s <= e);
@@ -99,4 +102,6 @@ EditTimeRange EditTimeRange::operator+ (double amount) const
 ClipPosition ClipPosition::rescaled (double anchorTime, double factor) const
 {
     return { time.rescaled (anchorTime, factor), offset * factor };
+}
+
 }

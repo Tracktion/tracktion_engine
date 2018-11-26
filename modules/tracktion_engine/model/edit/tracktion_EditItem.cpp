@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 EditItem::EditItem (EditItemID id, Edit& ed)
     : edit (ed), itemID (id)
 {
@@ -442,3 +445,5 @@ void EditItemID::remapIDs (juce::ValueTree& v, juce::UndoManager* um, Edit& ed, 
 //==============================================================================
 std::function<void (juce::ValueTree&, const juce::Identifier&, const std::map<juce::String, EditItemID>&, juce::UndoManager*)> EditItemID::applyNewIDsToExternalValueTree;
 std::function<void (juce::XmlElement&, const juce::String&, const std::map<juce::String, EditItemID>&)> EditItemID::applyNewIDsToExternalXML;
+
+}

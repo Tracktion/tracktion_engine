@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 StepClip::Channel::Channel (StepClip& c, const ValueTree& v)
     : clip (c), state (v)
 {
@@ -48,4 +51,6 @@ String StepClip::Channel::getSelectableDescription()
 {
     jassertfalse;
     return {};
+}
+
 }

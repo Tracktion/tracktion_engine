@@ -7,10 +7,13 @@
 */
 
 
+namespace tracktion_engine
+{
+
 class MidiControllerParser  : private AsyncUpdater
 {
 public:
-    MidiControllerParser() {}
+    MidiControllerParser() = default;
 
     void processMessage (const MidiMessage& m)
     {
@@ -1301,4 +1304,6 @@ void MidiInputDevice::sendMessageToInstances (const MidiMessage& message)
     if (messageUnused && message.isNoteOn())
         if (auto&& warnOfWasted = engine.getDeviceManager().warnOfWastedMidiMessagesFunction)
             warnOfWasted (this);
+}
+
 }

@@ -6,6 +6,9 @@
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 */
 
+namespace tracktion_engine
+{
+
 static Engine* instance = nullptr;
 
 Engine::Engine (std::unique_ptr<PropertyStorage> ps, std::unique_ptr<UIBehaviour> ub, std::unique_ptr<EngineBehaviour> eb)
@@ -230,4 +233,6 @@ WarpTimeFactory& Engine::getWarpTimeFactory() const
         warpTimeFactory = std::make_unique<WarpTimeFactory>();
 
     return *warpTimeFactory;
+}
+
 }

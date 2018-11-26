@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 ParameterSetting::ParameterSetting() noexcept
 {
     clear();
@@ -423,3 +426,5 @@ void ControlSurface::userToggledVideoWindow()          { performIfNotSafeRecordi
 
 void ControlSurface::redrawSelectedPlugin()            { owner->repaintParamSource(); }
 void ControlSurface::redrawSelectedTracks()            { owner->redrawTracks(); }
+
+}

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 class ExternalAutomatableParameter   : public AutomatableParameter,
                                        private juce::AudioProcessorParameter::Listener,
                                        private juce::AsyncUpdater
@@ -320,3 +323,5 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ExternalAutomatableParameter)
 };
+
+}

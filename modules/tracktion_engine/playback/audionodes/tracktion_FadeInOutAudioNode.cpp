@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 FadeInOutAudioNode::FadeInOutAudioNode (AudioNode* inp,
                                         EditTimeRange in, EditTimeRange out,
                                         AudioFadeCurve::Type fadeInType_,
@@ -158,4 +161,6 @@ AudioNode* FadeInOutAudioNode::createForEdit (Edit& edit, AudioNode* input)
     }
 
     return input;
+}
+
 }

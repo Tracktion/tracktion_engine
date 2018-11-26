@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 Plugin::Wire::Wire (const ValueTree& v, UndoManager* um)  : state (v)
 {
     sourceChannelIndex.referTo (state, IDs::srcChan, um);
@@ -1167,4 +1170,6 @@ void Plugin::flushPluginStateToValueTree()
         state.setProperty (IDs::windowY, windowState->lastWindowBounds.getY(), um);
         state.setProperty (IDs::windowLocked, windowState->windowLocked, um);
     }
+}
+
 }

@@ -6,6 +6,9 @@
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 */
 
+namespace tracktion_engine
+{
+
 LoopInfo::LoopInfo()  : state (IDs::LOOPINFO)
 {
     initialiseMissingProps();
@@ -420,4 +423,6 @@ void LoopInfo::init (Engine& engine, const AudioFormatReader* afr, const AudioFo
     }
 
     initialiseMissingProps();
+}
+
 }

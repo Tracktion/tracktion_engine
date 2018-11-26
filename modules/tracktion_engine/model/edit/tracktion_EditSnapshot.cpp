@@ -6,6 +6,9 @@
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 */
 
+namespace tracktion_engine
+{
+
 //==============================================================================
 struct EditSnapshotList
 {
@@ -307,4 +310,6 @@ juce::ReferenceCountedArray<EditSnapshot> EditSnapshot::getNestedEditObjects()
     juce::ReferenceCountedArray<EditSnapshot> result;
     addNestedEditObjects (*this, result);
     return result;
+}
+
 }

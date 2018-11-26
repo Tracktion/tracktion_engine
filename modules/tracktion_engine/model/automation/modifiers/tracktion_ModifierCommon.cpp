@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 namespace ModifierCommon
 {
     constexpr double getBarFraction (RateType rt) noexcept
@@ -40,4 +43,6 @@ namespace ModifierCommon
             default:            return 1.0;
         };
     }
+}
+
 }

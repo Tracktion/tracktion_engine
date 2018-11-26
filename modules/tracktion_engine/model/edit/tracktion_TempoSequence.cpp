@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 template<typename ObjectType>
 struct TempoAndTimeSigListBase  : public ValueTreeObjectList<ObjectType>,
                                   private AsyncUpdater
@@ -1151,4 +1154,6 @@ void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
     for (auto& a : automation)
         for (int i = a.beats.size(); --i >= 0;)
             a.curve.setPointTime (i, tempoSequence.beatsToTime (a.beats.getUnchecked (i)));
+}
+
 }

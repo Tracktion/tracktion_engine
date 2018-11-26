@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct TimeAndName
 {
     double time;
@@ -641,4 +644,6 @@ String TimecodeDisplayIterator::getTimecodeAsString() const
 bool TimecodeDisplayIterator::isOneBarOrGreater() const noexcept
 {
     return currentSnapType.getLevel() >= currentSnapType.getOneBarLevel();
+}
+
 }

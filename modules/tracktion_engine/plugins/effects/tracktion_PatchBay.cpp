@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 PatchBayPlugin::Wire::Wire (const ValueTree& v, UndoManager* um)  : state (v)
 {
     sourceChannelIndex.referTo (state, IDs::srcChan, um);
@@ -170,4 +173,6 @@ void PatchBayPlugin::breakConnection (int inputChannel, int outputChannel)
             break;
         }
     }
+}
+
 }

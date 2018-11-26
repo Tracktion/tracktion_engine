@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 LowPassPlugin::LowPassPlugin (PluginCreationInfo info) : Plugin (info)
 {
     auto um = getUndoManager();
@@ -78,4 +81,6 @@ void LowPassPlugin::applyToBuffer (const AudioRenderContext& fc)
 
         sanitiseValues (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples, 3.0f);
     }
+}
+
 }

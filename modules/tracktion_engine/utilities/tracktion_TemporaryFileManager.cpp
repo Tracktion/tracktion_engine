@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 TemporaryFileManager::TemporaryFileManager (Engine& e)  : engine (e)
 {
     updateDir();
@@ -180,4 +183,6 @@ File TemporaryFileManager::getUniqueTempFile (const String& prefix, const String
 File TemporaryFileManager::getThumbnailsFolder() const
 {
     return getTempDirectory().getChildFile ("thumbnails");
+}
+
 }

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 //==============================================================================
 /**
     Logic for reading legacy tracktion edit files.
@@ -814,3 +817,5 @@ private:
 
 ValueTree updateLegacyEdit (const ValueTree& v)   { return OldEditConversion::convert (v); }
 void updateLegacyEdit (XmlElement& editXML)       { OldEditConversion::convert (editXML); }
+
+}

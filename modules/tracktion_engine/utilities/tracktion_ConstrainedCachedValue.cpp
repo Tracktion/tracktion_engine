@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 #if TRACKTION_UNIT_TESTS
 
 class ConstrainedCachedValueTests   : public juce::UnitTest
@@ -67,3 +70,5 @@ public:
 static ConstrainedCachedValueTests constrainedCachedValueTests;
 
 #endif // TRACKTION_UNIT_TESTS
+
+}

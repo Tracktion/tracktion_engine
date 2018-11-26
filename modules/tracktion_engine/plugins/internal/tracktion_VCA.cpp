@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 class VcaAutomatableParameter : public AutomatableParameter
 {
 public:
@@ -122,4 +125,6 @@ void VCAPlugin::restorePluginStateFromValueTree (const ValueTree& v)
 {
     CachedValue<float>* cvsFloat[]  = { &volumeValue, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+}
+
 }

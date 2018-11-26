@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 //==============================================================================
 AudioSegmentList::Segment::Segment() = default;
 
@@ -669,4 +672,6 @@ float AudioSegmentList::getPitchAt (double t)
     }
 
     return clip.getPitchChange();
+}
+
 }

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 static String controllerIDToString (int id, int channelid)
 {
     const String channel (" [" + String (channelid) + "]");
@@ -823,4 +826,6 @@ void ParameterControlMappings::deletePreset (int index)
         xmlCopy.removeChildElement (xml->getChildElement (index), true);
         edit.engine.getPropertyStorage().setXmlProperty (SettingID::filterControlMappingPresets, xmlCopy);
     }
+}
+
 }

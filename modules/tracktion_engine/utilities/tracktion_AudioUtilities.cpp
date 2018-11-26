@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 void sanitiseValues (juce::AudioBuffer<float>& buffer, int start, int numSamps,
                      float maxAbsValue, float minAbsThreshold)
 {
@@ -613,4 +616,6 @@ juce::AudioChannelSet channelSetFromSpeakerArrangmentString (const juce::String&
     }
 
     return cs;
+}
+
 }

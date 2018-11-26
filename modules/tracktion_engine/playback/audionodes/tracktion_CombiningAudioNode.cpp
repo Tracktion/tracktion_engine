@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 // how much extra time to give a track before it gets cut off - to allow for plugins
 // that ring on.
 static const double decayTimeAllowance = 5.0;
@@ -232,4 +235,6 @@ void CombiningAudioNode::prefetchGroup (const AudioRenderContext& rc, const doub
     if (auto g = groups[timeToGroupIndex (time)])
         for (auto tan : *g)
             tan->node->prepareForNextBlock (rc);
+}
+
 }

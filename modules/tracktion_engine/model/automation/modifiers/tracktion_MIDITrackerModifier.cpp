@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct MIDITrackerModifier::ModifierAudioNode    : public SingleInputAudioNode
 {
     ModifierAudioNode (AudioNode* input, MIDITrackerModifier& mtm)
@@ -298,4 +301,6 @@ void MIDITrackerModifier::valueTreePropertyChanged (juce::ValueTree& v, const ju
     }
 
     ValueTreeAllEventListener::valueTreePropertyChanged (v, i);
+}
+
 }

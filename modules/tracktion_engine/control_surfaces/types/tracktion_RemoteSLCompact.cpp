@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 RemoteSLCompact::RemoteSLCompact (ExternalControllerManager& ecm)  : ControlSurface (ecm)
 {
     deviceDescription               = "Novation ReMOTE SL Compact";
@@ -78,4 +81,6 @@ bool RemoteSLCompact::isPluginSelected (Plugin*)        { return false; }
 bool RemoteSLCompact::wantsMessage (const MidiMessage& m)
 {
     return m.isController();
+}
+
 }

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 AutomatableEditItem::AutomatableEditItem (Edit& edit, const ValueTree& v)
     : EditItem (EditItemID::readOrCreateNewID (edit, v), edit),
       elementState (v)
@@ -230,4 +233,6 @@ void AutomatableEditItem::restoreChangedParametersFromState()
                 ap->setParameter (value, dontSendNotification);
         }
     }
+}
+
 }

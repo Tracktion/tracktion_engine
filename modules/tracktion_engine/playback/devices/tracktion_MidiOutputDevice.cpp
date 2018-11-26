@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 static bool shouldSendAllControllersOffMessages = true;
 
 //==============================================================================
@@ -728,4 +731,6 @@ MidiMessageArray& MidiOutputDeviceInstance::refillBuffer (PlayHead& playhead, Ed
     midiMessages.sortByTimestamp();
 
     return midiMessages;
+}
+
 }

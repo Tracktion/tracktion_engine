@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct ExternalControllerManager::EditTreeWatcher   : private ValueTree::Listener,
                                                       private Timer
 {
@@ -870,4 +873,6 @@ void ExternalControllerManager::refreshXTOrder()
         jassertfalse;
     }
    #endif
+}
+
 }

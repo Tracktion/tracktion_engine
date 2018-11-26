@@ -7,8 +7,6 @@
 */
 
 
-}
-
 juce::AudioDeviceManager* gDeviceManager = nullptr; // TODO
 
 namespace tracktion_engine
@@ -1072,4 +1070,6 @@ void DeviceManager::setGlobalOutputAudioProcessor (juce::AudioProcessor* newProc
     if (globalOutputAudioProcessor != nullptr)
         if (auto* audioIODevice = deviceManager.getCurrentAudioDevice())
             globalOutputAudioProcessor->prepareToPlay (currentSampleRate, audioIODevice->getCurrentBufferSizeSamples());
+}
+
 }

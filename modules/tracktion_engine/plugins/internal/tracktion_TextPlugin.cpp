@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 const char* TextPlugin::xmlTypeName ("text");
 
 TextPlugin::TextPlugin (PluginCreationInfo info)  : Plugin (info)
@@ -27,4 +30,6 @@ ValueTree TextPlugin::create()
     ValueTree v (IDs::PLUGIN);
     v.setProperty (IDs::type, xmlTypeName, nullptr);
     return v;
+}
+
 }

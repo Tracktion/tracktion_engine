@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 namespace
 {
     inline double negativeAwareFmod (double a, double b)
@@ -528,4 +531,6 @@ void AbletonLink::removeListener (Listener* l)
         return;
 
     implementation->removeListener (l);
+}
+
 }

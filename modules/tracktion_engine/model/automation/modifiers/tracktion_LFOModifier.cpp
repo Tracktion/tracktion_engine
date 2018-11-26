@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct LFOModifier::LFOModifierTimer    : public ModifierTimer
 {
     LFOModifierTimer (LFOModifier& lfo)
@@ -313,4 +316,6 @@ void LFOModifier::valueTreeChanged()
 {
     if (! changedTimer.isTimerRunning())
         changedTimer.startTimerHz (30);
+}
+
 }

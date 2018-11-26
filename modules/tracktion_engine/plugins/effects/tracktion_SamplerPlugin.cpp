@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 // this must be high enough for low freq sounds not to click
 static constexpr int minimumSamplesToPlayWhenStopping = 8;
 static constexpr int maximumSimultaneousNotes = 32;
@@ -703,4 +706,6 @@ void SamplerPlugin::SamplerSound::refreshFile()
 {
     audioFile = {};
     setExcerpt (startTime, length);
+}
+
 }

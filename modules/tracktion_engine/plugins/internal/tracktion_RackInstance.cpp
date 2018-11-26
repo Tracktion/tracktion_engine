@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct RackInputAutomatableParameter   : public AutomatableParameter
 {
     RackInputAutomatableParameter (const String& xmlTag, const String& name, Plugin& owner, Range<float> valueRange)
@@ -407,4 +410,6 @@ juce::String RackInstance::getOutputName (Channel c)
         return getNoPinName();
 
     return String (ouput) + ". " + type->getOutputNames()[ouput];
+}
+
 }

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 static inline juce::int64 hashValueTree (juce::int64 startHash, const ValueTree& v)
 {
     startHash ^= v.getType().toString().hashCode64() * (v.getParent().indexOf (v) + 1);
@@ -1760,4 +1763,6 @@ RenderManager::Job::Ptr ClipEffects::createRenderJob (const AudioFile& destFile,
     AudioFile firstFile (jobs.isEmpty() ? inputFile : jobs.getFirst()->source);
 
     return new AggregateJob (clip.edit.engine, destFile, firstFile, std::move (jobs));
+}
+
 }

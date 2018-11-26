@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 void CustomControlSurface::CustomControlSurfaceManager::registerSurface (CustomControlSurface* item)
 {
     surfaces.addIfNotAlreadyThere (item);
@@ -950,4 +953,6 @@ void CustomControlSurface::markerChanged (int, const MarkerSetting&)
 
 void CustomControlSurface::clearMarker (int)
 {
+}
+
 }

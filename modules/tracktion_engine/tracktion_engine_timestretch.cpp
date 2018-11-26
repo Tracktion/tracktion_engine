@@ -16,9 +16,6 @@
  #include "elastique_pro/incl/elastiqueProV3API.h"
 #endif
 
-namespace tracktion_engine
-{
-
 using namespace juce;
 
 #ifdef __clang__
@@ -38,23 +35,26 @@ using namespace juce;
 
 #include "timestretch/tracktion_TimeStretch.cpp"
 
-#include "3rd_party/soundtouch/source/SoundTouch/BPMDetect.cpp"
-#include "3rd_party/soundtouch/source/SoundTouch/PeakFinder.cpp"
-#include "3rd_party/soundtouch/source/SoundTouch/FIFOSampleBuffer.cpp"
+namespace tracktion_engine
+{
+    #include "3rd_party/soundtouch/source/SoundTouch/BPMDetect.cpp"
+    #include "3rd_party/soundtouch/source/SoundTouch/PeakFinder.cpp"
+    #include "3rd_party/soundtouch/source/SoundTouch/FIFOSampleBuffer.cpp"
 
-#if TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
- #include "3rd_party/soundtouch/source/SoundTouch/AAFilter.cpp"
- #include "3rd_party/soundtouch/source/SoundTouch/cpu_detect_x86.cpp"
- #include "3rd_party/soundtouch/source/SoundTouch/FIRFilter.cpp"
- #include "3rd_party/soundtouch/source/SoundTouch/InterpolateCubic.cpp"
- #include "3rd_party/soundtouch/source/SoundTouch/InterpolateLinear.cpp"
- #include "3rd_party/soundtouch/source/SoundTouch/InterpolateShannon.cpp"
- #include "3rd_party/soundtouch/source/SoundTouch/mmx_optimized.cpp"
- #include "3rd_party/soundtouch/source/SoundTouch/RateTransposer.cpp"
- #include "3rd_party/soundtouch/source/SoundTouch/SoundTouch.cpp"
- #include "3rd_party/soundtouch/source/SoundTouch/sse_optimized.cpp"
- #include "3rd_party/soundtouch/source/SoundTouch/TDStretch.cpp"
-#endif
+   #if TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
+    #include "3rd_party/soundtouch/source/SoundTouch/AAFilter.cpp"
+    #include "3rd_party/soundtouch/source/SoundTouch/cpu_detect_x86.cpp"
+    #include "3rd_party/soundtouch/source/SoundTouch/FIRFilter.cpp"
+    #include "3rd_party/soundtouch/source/SoundTouch/InterpolateCubic.cpp"
+    #include "3rd_party/soundtouch/source/SoundTouch/InterpolateLinear.cpp"
+    #include "3rd_party/soundtouch/source/SoundTouch/InterpolateShannon.cpp"
+    #include "3rd_party/soundtouch/source/SoundTouch/mmx_optimized.cpp"
+    #include "3rd_party/soundtouch/source/SoundTouch/RateTransposer.cpp"
+    #include "3rd_party/soundtouch/source/SoundTouch/SoundTouch.cpp"
+    #include "3rd_party/soundtouch/source/SoundTouch/sse_optimized.cpp"
+    #include "3rd_party/soundtouch/source/SoundTouch/TDStretch.cpp"
+   #endif
+}
 
 #ifdef JUCE_MSVC
  #pragma warning (pop)
@@ -63,7 +63,5 @@ using namespace juce;
 #ifdef __clang__
  #pragma clang diagnostic pop
 #endif
-
-}
 
 #endif

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 TimeSigSetting::TimeSigSetting (TempoSequence& ts, const ValueTree& v)
     : TrackItem (ts.edit, {}, Type::timeSig),
       state (v), ownerSequence (ts)
@@ -71,4 +74,6 @@ ClipPosition TimeSigSetting::getPosition() const
 String TimeSigSetting::getName()
 {
     return getStringTimeSig();
+}
+
 }

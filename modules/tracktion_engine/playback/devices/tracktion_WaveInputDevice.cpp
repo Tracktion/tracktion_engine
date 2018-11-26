@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 class DiskSpaceCheckTask  : public ThreadPoolJob,
                             private Timer,
                             private AsyncUpdater
@@ -1844,4 +1847,6 @@ void WaveInputRecordingThread::flushAndStop()
     queue->moveAnyPendingBlocksToFree();
     hasSentStop = false;
     hasWarned = false;
+}
+
 }

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 MidiAudioNode::MidiAudioNode (MidiMessageSequence sequence,
                               Range<int> chans,
                               EditTimeRange editPos,
@@ -251,4 +254,6 @@ MidiAudioNode* getClipIfPresentInNode (AudioNode* node, Clip& c)
                           });
 
     return existingNode;
+}
+
 }

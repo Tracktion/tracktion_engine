@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 ClickNode::ClickNode (bool m, Edit& ed, double endTime)
    : edit (ed), midi (m)
 {
@@ -272,4 +275,6 @@ void ClickNode::setClickWaveFile (Engine& e, bool big, const String& filename)
         storage.setProperty (SettingID::clickTrackSampleSmall, filename);
 
     TransportControl::restartAllTransports (e, false);
+}
+
 }

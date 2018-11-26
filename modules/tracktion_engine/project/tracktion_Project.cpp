@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 // a combined version number and file identifier for the project file
 static const char* magicNumberV1 = "TP01";
 
@@ -883,4 +886,6 @@ void Project::refreshFolderStructure()
             jassertfalse;
         }
     }
+}
+
 }

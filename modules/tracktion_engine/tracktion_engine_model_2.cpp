@@ -13,9 +13,6 @@
 
 #include "tracktion_engine.h"
 
-namespace tracktion_engine
-{
-
 using namespace juce;
 
 #include "model/tracks/tracktion_TrackUtils.cpp"
@@ -60,7 +57,5 @@ using namespace juce;
 #include "project/tracktion_Project.cpp"
 #include "project/tracktion_ProjectManager.cpp"
 #include "project/tracktion_ProjectSearchIndex.cpp"
-
-}
 
 #endif

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 TempoSetting::TempoSetting (TempoSequence& ts, const ValueTree& v)
     : ReferenceCountedObject(),
       ownerSequence (ts), state (v)
@@ -115,4 +118,6 @@ TimeSigSetting& TempoSetting::getMatchingTimeSig() const
 int64 TempoSetting::getHash() const noexcept
 {
     return (int64) (startBeatNumber * 128.0) ^ (int64) (bpm * 1217.0) + (int64) (curve * 1023.0);
+}
+
 }

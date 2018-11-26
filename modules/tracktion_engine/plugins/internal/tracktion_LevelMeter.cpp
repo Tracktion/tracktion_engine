@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 LevelMeterPlugin::LevelMeterPlugin (PluginCreationInfo info)  : Plugin (info)
 {
     showMidiActivity.referTo (state, IDs::showMidi, getUndoManager());
@@ -82,4 +85,6 @@ void LevelMeterPlugin::restorePluginStateFromValueTree (const ValueTree& v)
 {
     CachedValue<bool>* cvsBool[] = { &showMidiActivity, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsBool);
+}
+
 }

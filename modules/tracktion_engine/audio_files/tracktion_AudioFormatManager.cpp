@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 AudioFileFormatManager::AudioFileFormatManager()
 {
     CRASH_TRACER
@@ -145,4 +148,6 @@ juce::AudioFormat* AudioFileFormatManager::getNamedFormat (const juce::String& f
             return format;
 
     return getDefaultFormat();
+}
+
 }

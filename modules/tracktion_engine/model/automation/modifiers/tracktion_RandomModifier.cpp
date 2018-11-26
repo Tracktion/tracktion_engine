@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct RandomModifier::RandomModifierTimer    : public ModifierTimer
 {
     RandomModifierTimer (RandomModifier& rm)
@@ -297,4 +300,6 @@ void RandomModifier::valueTreeChanged()
 {
     if (! changedTimer.isTimerRunning())
         changedTimer.startTimerHz (30);
+}
+
 }

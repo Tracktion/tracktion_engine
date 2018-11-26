@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 PlayHeadAudioNode::PlayHeadAudioNode (AudioNode* input)
    : SingleInputAudioNode (input)
 {
@@ -71,4 +74,6 @@ void PlayHeadAudioNode::renderAdding (const AudioRenderContext& rc)
             input->renderAdding (rc);
         }
     }
+}
+
 }

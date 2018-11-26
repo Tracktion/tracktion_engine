@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct StepModifier::StepModifierTimer : public ModifierTimer
 {
     StepModifierTimer (StepModifier& sm)
@@ -303,4 +306,6 @@ void StepModifier::valueTreePropertyChanged (ValueTree& v, const Identifier& i)
         restoreStepsFromProperty();
 
     ValueTreeAllEventListener::valueTreePropertyChanged (v, i);
+}
+
 }

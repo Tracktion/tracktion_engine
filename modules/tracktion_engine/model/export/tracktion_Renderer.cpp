@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 void Renderer::turnOffAllPlugins (Edit& edit)
 {
     for (auto f : getAllPlugins (edit, true))
@@ -1130,4 +1133,6 @@ bool Renderer::checkTargetFile (Engine& e, const File& file)
     }
 
     return true;
+}
+
 }

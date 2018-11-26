@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 PluginWindowState::PluginWindowState (Engine& e)
    : engine (e),
      windowLocked (e.getPluginManager().areGUIsLockedByDefault())
@@ -193,4 +196,6 @@ bool PluginWindowConnection::Slave::isWindowLocked() const
         return master->isWindowLocked();
 
     return false;
+}
+
 }

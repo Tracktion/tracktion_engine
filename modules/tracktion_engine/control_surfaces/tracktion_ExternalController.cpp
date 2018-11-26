@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 ExternalController::ExternalController (Engine& e, ControlSurface* c)  : engine (e), controlSurface (c)
 {
     CRASH_TRACER
@@ -1153,4 +1156,6 @@ juce::String ExternalController::shortenName (String s, int maxLen)
     }
 
     return result.substring (0, maxLen);
+}
+
 }

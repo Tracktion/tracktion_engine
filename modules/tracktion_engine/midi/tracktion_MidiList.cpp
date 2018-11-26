@@ -6,6 +6,9 @@
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 */
 
+namespace tracktion_engine
+{
+
 namespace
 {
     template<typename VarType>
@@ -1878,4 +1881,6 @@ void MidiList::exportToPlaybackMidiSequence (juce::MidiMessageSequence& destSequ
         if (beat >= firstNoteTime && beat < lastNoteTime)
             addToSequence (destSequence, clip, *e);
     }
+}
+
 }

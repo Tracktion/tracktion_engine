@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 CompressorPlugin::CompressorPlugin (PluginCreationInfo info)  : Plugin (info)
 {
     thresholdGain   = addParam ("threshold", TRANS("Threshold"), { 0.01f, 1.0f },
@@ -217,4 +220,6 @@ void CompressorPlugin::valueTreePropertyChanged (ValueTree& v, const Identifier&
         propertiesChanged();
 
     Plugin::valueTreePropertyChanged (v, id);
+}
+
 }

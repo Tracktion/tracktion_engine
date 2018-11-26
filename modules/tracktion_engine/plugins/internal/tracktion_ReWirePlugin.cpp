@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 #if TRACKTION_ENABLE_REWIRE
 
 #include "ReWire/ReWireSDK/ReWire.h"
@@ -1373,3 +1376,5 @@ StringArray ReWirePlugin::getDeviceChannelNames() const
 }
 
 #endif
+
+}

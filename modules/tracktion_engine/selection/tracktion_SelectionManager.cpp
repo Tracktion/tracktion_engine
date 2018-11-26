@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct SelectableUpdateTimer  : public AsyncUpdater,
                                 private DeletedAtShutdown
 {
@@ -666,4 +669,6 @@ SelectableClass* SelectableList::getSelectableClass (int index) const
 std::pair<Selectable*, SelectableClass*> SelectableList::getSelectableAndClass (int index) const
 {
     return std::pair<Selectable*, SelectableClass*> (items[index], getSelectableClass (index));
+}
+
 }

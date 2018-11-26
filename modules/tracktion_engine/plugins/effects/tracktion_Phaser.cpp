@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 PhaserPlugin::PhaserPlugin (PluginCreationInfo info)  : Plugin (info)
 {
     auto um = getUndoManager();
@@ -115,4 +118,6 @@ void PhaserPlugin::restorePluginStateFromValueTree (const ValueTree& v)
 {
     CachedValue<float>* cvsFloat[]  = { &depth, &rate, &feedbackGain, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+}
+
 }

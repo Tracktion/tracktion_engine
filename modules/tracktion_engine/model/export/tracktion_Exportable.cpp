@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 Array<Exportable*> Exportable::addAllExportables (Edit& edit)
 {
     Array<Exportable*> list;
@@ -31,4 +34,6 @@ Array<Exportable*> Exportable::addAllExportables (Edit& edit)
     list.removeAllInstancesOf (nullptr);
 
     return list;
+}
+
 }

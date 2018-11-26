@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorListener
 {
     ProcessorChangedManager (ExternalPlugin& p) : plugin (p)
@@ -1620,4 +1623,6 @@ void ExternalPlugin::valueTreePropertyChanged (ValueTree& v, const Identifier& i
     {
         Plugin::valueTreePropertyChanged (v, id);
     }
+}
+
 }

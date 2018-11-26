@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 static File getApplicationSettingsFile()
 {
     return Engine::getInstance().getPropertyStorage().getAppPrefsFolder().getChildFile ("Settings.xml");
@@ -258,4 +261,6 @@ void PropertyStorage::setDefaultLoadSaveDirectory (juce::StringRef, const juce::
 File PropertyStorage::getDefaultLoadSaveDirectory (ProjectItem::Category)
 {
     return File::getSpecialLocation (File::userDocumentsDirectory);
+}
+
 }

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 WaveAudioNode::WaveAudioNode (const AudioFile& af,
                               EditTimeRange editTime,
                               double off,
@@ -223,4 +226,6 @@ void WaveAudioNode::prepareForNextBlock (const AudioRenderContext& rc)
     // keep a local copy, because releaseAudioNodeResources may remove the reader halfway through..
     if (auto localReader = reader)
         localReader->setReadPosition (editTimeToFileSample (rc.getEditTime().editRange1.getStart()));
+}
+
 }

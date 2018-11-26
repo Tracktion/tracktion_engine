@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct CompManager::RenderTrigger   : public ValueTreeAllEventListener,
                                       private juce::Timer
 {
@@ -1491,4 +1494,6 @@ void MidiCompManager::createComp (const ValueTree& takeTree)
 
         dest->setCompList (true);
     }
+}
+
 }

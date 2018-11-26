@@ -6,6 +6,9 @@
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 */
 
+namespace tracktion_engine
+{
+
 juce::AudioFormatReader* AudioFileUtils::createReaderFor (const juce::File& file)
 {
     return Engine::getInstance().getAudioFileFormatManager().readFormatManager.createReaderFor (file);
@@ -414,4 +417,6 @@ void AudioFileUtils::applyBWAVStartTime (const juce::File& file, juce::int64 tim
             }
         }
     }
+}
+
 }

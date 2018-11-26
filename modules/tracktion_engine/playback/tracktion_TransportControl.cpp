@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 namespace IDs
 {
     #define DECLARE_ID(name)  const juce::Identifier name (#name);
@@ -1473,4 +1476,6 @@ void freePlaybackContextIfNotRecording (TransportControl& tc)
 {
     if (tc.isPlayContextActive() && ! tc.isRecording())
         tc.freePlaybackContext();
+}
+
 }

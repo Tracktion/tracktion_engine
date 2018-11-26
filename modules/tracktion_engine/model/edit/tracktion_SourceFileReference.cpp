@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 SourceFileReference::SourceFileReference (Edit& e, juce::ValueTree& v, const juce::Identifier& prop)
     : edit (e), source (v, prop, &e.getUndoManager()), state (v)
 {
@@ -153,4 +156,6 @@ void SourceFileReference::setToProjectFileReference (ProjectItemID newID)
 
     if (getFile() != oldFile)
         edit.restartPlayback();
+}
+
 }

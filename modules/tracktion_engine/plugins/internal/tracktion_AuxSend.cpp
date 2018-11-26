@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 AuxSendPlugin::AuxSendPlugin (PluginCreationInfo info) : Plugin (info)
 {
     auto um = getUndoManager();
@@ -196,4 +199,6 @@ void AuxSendPlugin::restorePluginStateFromValueTree (const ValueTree& v)
     CachedValue<int>* cvsInt[]      = { &busNumber, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
+}
+
 }

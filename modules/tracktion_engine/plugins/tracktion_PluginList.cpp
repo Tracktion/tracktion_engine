@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct PluginList::ObjectList  : public ValueTreeObjectList<Plugin>
 {
     ObjectList (PluginList& l, const ValueTree& parent)
@@ -328,4 +331,6 @@ AudioNode* PluginList::attachNodesForPluginsNeedingLivePlay (AudioNode* n)
                 n = f->createAudioNode (n, false);
 
     return n;
+}
+
 }

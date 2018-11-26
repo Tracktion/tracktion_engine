@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 WaveOutputDevice::WaveOutputDevice (Engine& e, const String& name, const std::vector<ChannelIndex>& channels)
     : OutputDevice (e, TRANS("Wave Audio Output"), name),
       deviceChannels (channels),
@@ -249,4 +252,6 @@ int WaveOutputDevice::getRightChannel() const
 bool WaveOutputDevice::isStereoPair() const
 {
     return deviceChannels.size() == 2;
+}
+
 }

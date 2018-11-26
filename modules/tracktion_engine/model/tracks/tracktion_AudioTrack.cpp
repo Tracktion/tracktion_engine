@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct LiveMidiInjectingAudioNode  : public SingleInputAudioNode
 {
     LiveMidiInjectingAudioNode (AudioTrack* t, AudioNode* source)
@@ -1435,4 +1438,6 @@ juce::Array<Track*> AudioTrack::findSidechainSourceTracks() const
     }
 
     return srcTracks;
+}
+
 }

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 static bool isWorthConvertingToOgg (AudioFile& source, int quality)
 {
     if (dynamic_cast<OggVorbisAudioFormat*> (source.getFormat()) != nullptr)
@@ -520,4 +523,6 @@ int TracktionArchiveFile::getOggQuality (CompressionType c)
     if (c == CompressionType::lossyMediumQuality)   return numOptions / 2;
 
     return numOptions / 5;
+}
+
 }

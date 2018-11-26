@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 MackieXT::MackieXT (ExternalControllerManager& ecm, MackieMCU& m, int id)
     : ControlSurface (ecm), mcu (m)
 {
@@ -82,3 +85,5 @@ void MackieXT::parameterChanged (int, const ParameterSetting&) {}
 void MackieXT::clearParameter (int) {}
 void MackieXT::markerChanged (int, const MarkerSetting&) {}
 void MackieXT::clearMarker (int) {}
+
+}

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 MacroParameter::Assignment::Assignment (const ValueTree& v, const MacroParameter& mp)
     : AutomatableParameter::ModifierAssignment (mp.edit, v),
       macroParamID (EditItemID::fromVar (mp.paramID))
@@ -240,4 +243,6 @@ Plugin::Ptr getOwnerPlugin (MacroParameterList* mpl)
 MacroParameterElement::MacroParameterElement (Edit& e, const ValueTree& v)
     : macroParameterList (e, ValueTree (v).getOrCreateChildWithName (IDs::MACROPARAMETERS, &e.getUndoManager()))
 {
+}
+
 }

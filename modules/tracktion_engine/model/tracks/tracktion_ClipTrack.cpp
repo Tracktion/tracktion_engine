@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
                               private AsyncUpdater
 {
@@ -1009,4 +1012,6 @@ bool ClipTrack::areAnyClipsUsingFile (const AudioFile& af)
                 return true;
 
     return false;
+}
+
 }

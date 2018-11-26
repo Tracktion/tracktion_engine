@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 ProjectManager::ProjectManager()
     : engine (Engine::getInstance())
 {
@@ -760,4 +763,6 @@ void ProjectManager::createNewProjectFolder (ValueTree parent, const String& nam
 void ProjectManager::deleteProjectFolder (ValueTree folder)
 {
     folder.getParent().removeChild (folder, nullptr);
+}
+
 }

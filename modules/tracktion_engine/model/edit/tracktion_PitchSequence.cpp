@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct PitchSequence::PitchList  : public ValueTreeObjectList<PitchSetting>,
                                    private AsyncUpdater
 {
@@ -226,4 +229,6 @@ void PitchSequence::sortEvents()
 {
     PitchSorter sorter;
     state.sort (sorter, getUndoManager(), true);
+}
+
 }

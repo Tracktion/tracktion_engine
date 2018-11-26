@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 ProjectItemID::ProjectItemID() noexcept {}
 ProjectItemID::~ProjectItemID() noexcept {}
 
@@ -87,4 +90,6 @@ ProjectItemID ProjectItemID::fromProperty (const juce::ValueTree& v, const juce:
 ProjectItemID ProjectItemID::withNewProjectID (int newProjectID) const
 {
     return { getItemID(), newProjectID };
+}
+
 }

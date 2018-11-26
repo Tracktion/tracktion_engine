@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 MidiModifierPlugin::MidiModifierPlugin (PluginCreationInfo info) : Plugin (info)
 {
     semitones = addParam ("semitones up", TRANS("Semitones"),
@@ -58,4 +61,6 @@ void MidiModifierPlugin::restorePluginStateFromValueTree (const ValueTree& v)
 {
     CachedValue<float>* cvsFloat[]  = { &semitonesValue, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+}
+
 }

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct IndexedWord
 {
     String word;
@@ -420,4 +423,6 @@ SearchOperation* createSearchForKeywords (const String& keywords)
         return sc;
 
     return new FalseOperation();
+}
+
 }

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 MidiPatchBayPlugin::MidiPatchBayPlugin (PluginCreationInfo info)  : Plugin (info)
 {
     if (! state.hasProperty (IDs::mappings))
@@ -162,4 +165,6 @@ std::pair<int, int> MidiPatchBayPlugin::getFirstMapping()
     }
 
     return std::pair<int, int> (-1, -1);
+}
+
 }

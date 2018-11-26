@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 AudioNode::AudioNode()
 {
 }
@@ -145,4 +148,6 @@ void SingleInputAudioNode::renderOver (const AudioRenderContext& rc)
 void SingleInputAudioNode::renderAdding (const AudioRenderContext& rc)
 {
     input->renderAdding (rc);
+}
+
 }

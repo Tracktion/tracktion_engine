@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 bool UIBehaviour::paste (const Clipboard& clipboard)
 {
     if (auto content = clipboard.getContent())
@@ -205,4 +208,6 @@ double UIBehaviour::getEditingPosition (Edit& e)
 EditTimeRange UIBehaviour::getEditingRange (Edit& e)
 {
     return e.getTransport().getLoopRange();
+}
+
 }

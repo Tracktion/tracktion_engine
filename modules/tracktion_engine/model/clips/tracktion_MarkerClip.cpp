@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 MarkerClip::MarkerClip (const ValueTree& v, EditItemID id, ClipTrack& targetTrack)
    : Clip (v, targetTrack, id, Type::marker)
 {
@@ -84,4 +87,6 @@ Colour MarkerClip::getColour() const
     }
 
     return Clip::getColour();
+}
+
 }

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct CrashStackTracer::CrashTraceThreads
 {
     CrashTraceThreads()
@@ -211,4 +214,6 @@ File DeadMansPedalMessage::getDeadMansPedalFile (PropertyStorage& propertyStorag
     auto folder = propertyStorage.getAppPrefsFolder();
     jassert (folder.exists() && folder.hasWriteAccess());
     return folder.getChildFile ("deadMansPedal");
+}
+
 }

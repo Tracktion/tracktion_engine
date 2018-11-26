@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 namespace AutomationScaleHelpers
 {
     float getQuadraticBezierControlPoint (float y1, float y2, float curve) noexcept
@@ -1221,4 +1224,6 @@ void AutomationDragDropTarget::itemDropped (const SourceDetails& dragSourceDetai
         else if (learn)
             startParameterLearn (source);
     }
+}
+
 }

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 InputDevice::InputDevice (Engine& e, const String& t, const String& n)
    : engine (e), type (t), name (n)
 {
@@ -260,4 +263,6 @@ void InputDeviceInstance::updateRecordingStatus()
 
     if (! wasRecording && recordEnabled)
         prepareAndPunchRecord();
+}
+
 }

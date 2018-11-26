@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 static const char* slashEscapeSeq = "[[slash]]";
 
 struct StringMap
@@ -874,4 +877,6 @@ StringArray ProjectItem::getSearchTokens() const
     tokenise (objectName, toks);
     tokenise (getDescription(), toks);
     return toks;
+}
+
 }

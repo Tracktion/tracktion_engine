@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 Track::Track (Edit& edit, const ValueTree& v, double defaultHeight, double minHeight, double maxHeight)
     : EditItem (EditItemID::readOrCreateNewID (edit, v), edit),
       MacroParameterElement (edit, v), // TODO: @Dave - this dumps an XML element in every track, including tempo, marker, etc - is that needed?
@@ -575,4 +578,6 @@ void Track::valueTreeParentChanged (ValueTree& v)
 {
     if (v == state)
         updateCachedParent();
+}
+
 }

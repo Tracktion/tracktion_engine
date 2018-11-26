@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 double RenderOptions::findEndAllowance (Edit& edit, Array<EditItemID>* tracks, Array<Clip*>* clips)
 {
     auto allTracks = getAllTracks (edit);
@@ -1192,4 +1195,6 @@ String RenderOptions::getCurrentFileExtension()
         return af->getFileExtensions()[0];
 
     return {};
+}
+
 }

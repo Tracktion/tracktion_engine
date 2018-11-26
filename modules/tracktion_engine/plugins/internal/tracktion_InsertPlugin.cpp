@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 static void getPossibleInputDeviceNames (Engine& e,
                                          StringArray& s, StringArray& a,
                                          BigInteger& hasAudio,
@@ -418,4 +421,6 @@ void InsertPlugin::valueTreePropertyChanged (ValueTree& v, const Identifier& i)
     }
 
     Plugin::valueTreePropertyChanged (v, i);
+}
+
 }

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 /** AudioNode that reads from a file node and timestretches its output.
 
     Annoyingly, this has to replicate a lot of the functionality in WaveAudioNode.
@@ -2760,4 +2763,6 @@ void AudioClipBase::updateClipEffectsState()
     }
 
     markAsDirty();
+}
+
 }

@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 static const juce::String flat = "b";
 static auto oslash = juce::String (juce::CharPointer_UTF8 ("\xc3\xb8"));
 
@@ -2041,4 +2044,6 @@ juce::Array<KeyResult> determineKeyOfNotes (const juce::Array<MidiNote*>& notes)
     results.sort();
 
     return results;
+}
+
 }

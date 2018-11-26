@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct StepClip::ChannelList  : public ValueTreeObjectList<StepClip::Channel>
 {
     ChannelList (StepClip& c, const ValueTree& v)
@@ -597,4 +600,6 @@ void StepClip::setCell (int patternIndex, int channelIndex,
         if (isPositiveAndBelow (noteIndex, p.getNumNotes()))
             p.setNote (channelIndex, noteIndex, value);
     }
+}
+
 }

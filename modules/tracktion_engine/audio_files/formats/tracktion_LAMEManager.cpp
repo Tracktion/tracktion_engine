@@ -6,6 +6,8 @@
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 */
 
+namespace tracktion_engine
+{
 
 #if JUCE_USE_LAME_AUDIO_FORMAT
 
@@ -49,3 +51,5 @@ void LAMEManager::registerAudioFormat (AudioFileFormatManager&) {}
 bool LAMEManager::lameIsAvailable()         { return false; }
 
 #endif
+
+}

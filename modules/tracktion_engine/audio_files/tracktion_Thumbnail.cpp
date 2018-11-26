@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 struct TracktionThumbnail::MinMaxValue
 {
     MinMaxValue() noexcept
@@ -890,4 +893,6 @@ void TracktionThumbnail::drawChannels (juce::Graphics& g, juce::Rectangle<int> a
         drawChannel (g, { area.getX(), area.getY() + y1, area.getWidth(), y2 - y1 }, useHighRes,
                      time, i, verticalZoomFactor);
     }
+}
+
 }

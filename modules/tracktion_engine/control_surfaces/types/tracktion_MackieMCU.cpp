@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 MackieMCU::MackieMCU (ExternalControllerManager& ecm)  : ControlSurface (ecm)
 {
     deviceDescription = "Mackie Control Universal";
@@ -1461,4 +1464,6 @@ void MackieMCU::undoStatusChanged (bool undo, bool redo)
 {
     lightUpButton (deviceIdx, 0x4e, undo);
     lightUpButton (deviceIdx, 0x4f, redo);
+}
+
 }

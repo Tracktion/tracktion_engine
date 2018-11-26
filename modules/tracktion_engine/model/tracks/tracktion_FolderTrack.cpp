@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 FolderTrack::FolderTrack (Edit& edit, const ValueTree& v)
     : Track (edit, v, 50, 13, 2000)
 {
@@ -541,4 +544,6 @@ void FolderTrack::valueTreeChildOrderChanged (ValueTree& p, int oldIndex, int ne
         pluginUpdater.triggerAsyncUpdate();
 
     Track::valueTreeChildOrderChanged (p, oldIndex, newIndex);
+}
+
 }

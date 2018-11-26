@@ -6,6 +6,8 @@
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 */
 
+namespace tracktion_engine
+{
 
 #if TRACKTION_ENABLE_REX
 
@@ -291,3 +293,5 @@ juce::String RexAudioFormat::getErrorLoadingDLL()
 }
 
 #endif
+
+}

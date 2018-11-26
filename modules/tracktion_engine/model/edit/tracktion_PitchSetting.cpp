@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 PitchSetting::PitchSetting (Edit& ed, const ValueTree& v)
     : TrackItem (ed, {}, Type::pitch), state (v)
 {
@@ -75,4 +78,6 @@ void PitchSetting::removeFromEdit()
 
     if (p.getNumChildren() > 1)
         p.removeChild (state, &edit.getUndoManager());
+}
+
 }

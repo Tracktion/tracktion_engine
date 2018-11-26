@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 WaveAudioClip::WaveAudioClip (const ValueTree& v, EditItemID clipID, ClipTrack& ct)
     : AudioClipBase (v, clipID, Type::wave, ct)
 {
@@ -570,4 +573,6 @@ AudioFile WaveAudioClip::getCompFileFor (int64 takeHash) const
                                              + "0_" + itemID.toString()
                                              + "_" + String::toHexString (takeHash)
                                              + ".wav"));
+}
+
 }

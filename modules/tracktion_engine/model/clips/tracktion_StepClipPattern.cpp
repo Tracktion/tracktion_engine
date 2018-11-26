@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 StepClip::Pattern::Pattern (StepClip& c, const ValueTree& v) noexcept
     : clip (c), state (v)
 {
@@ -327,4 +330,6 @@ String StepClip::PatternInstance::getSelectableDescription()
     return clip.getName() + "  -  "
          + TRANS("Section 123").replace ("123", String (getSequenceIndex() + 1)) + " ("
          + TRANS("Pattern 123").replace ("123", String (patternIndex + 1)) + ")";
+}
+
 }

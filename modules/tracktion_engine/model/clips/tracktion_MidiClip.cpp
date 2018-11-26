@@ -7,6 +7,9 @@
 */
 
 
+namespace tracktion_engine
+{
+
 static MidiList* createLoopRangeDefinesAllRepetitionsSequence (MidiClip& clip, MidiList& sourceSequence)
 {
     const double loopStartBeats = clip.getLoopStartBeats();
@@ -845,4 +848,6 @@ void MidiClip::pitchTempoTrackChanged()
 
     // for the midi editor to redraw
     state.sendPropertyChangeMessage (IDs::mute);
+}
+
 }
