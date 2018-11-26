@@ -32,8 +32,16 @@ EditPlaybackContext::EditPlaybackContext (TransportControl& tc)
 {
     rebuildDeviceList();
 
+    if (edit.isRendering())
+    {
+        jassertfalse;
+        TRACKTION_LOG_ERROR("EditPlaybackContext created whilst rendering");
+    }
+
     if (edit.shouldPlay())
+    {
         edit.engine.getDeviceManager().addContext (this);
+    }
 }
 
 EditPlaybackContext::~EditPlaybackContext()

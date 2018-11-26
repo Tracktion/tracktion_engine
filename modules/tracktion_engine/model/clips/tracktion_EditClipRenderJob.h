@@ -86,6 +86,7 @@ private:
 
     Renderer::Parameters params;
     juce::OptionalScopedPointer<Edit> editDeleter;
+    std::unique_ptr<Edit::ScopedRenderStatus> renderStatus;
     juce::OwnedArray<RenderPass> renderPasses;
     bool silenceOnBackup, reverse;
     Renderer::RenderResult result;

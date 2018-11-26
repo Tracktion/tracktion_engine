@@ -123,6 +123,7 @@ bool EditRenderJob::setUpRender()
     }
 
     CRASH_TRACER
+    callBlocking ([this] { renderStatus = std::make_unique<Edit::ScopedRenderStatus> (*params.edit, false); });
 
     if (params.separateTracks)
         renderSeparateTracks();

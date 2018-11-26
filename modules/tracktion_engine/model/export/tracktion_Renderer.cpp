@@ -40,7 +40,7 @@ struct Ditherers
         auto numChannels = buffer.getNumChannels();
 
         for (int i = 0; i < numChannels; ++i)
-            ditherers.getReference(i).process (buffer.getWritePointer (i), numSamples);
+            ditherers.getReference (i).process (buffer.getWritePointer (i), numSamples);
     }
 
     juce::Array<Ditherer> ditherers;
@@ -126,6 +126,7 @@ struct Renderer::RenderTask::RendererContext
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
         jassert (r.engine != nullptr);
+        jassert (r.edit != nullptr);
 
         if (r.edit->getTransport().isPlayContextActive())
         {
@@ -599,7 +600,7 @@ void Renderer::RenderTask::flushAllPlugins (PlayHead& playhead, const Plugin::Ar
 void Renderer::RenderTask::setAllPluginsRealtime (const Plugin::Array& plugins, bool realtime)
 {
     CRASH_TRACER
-    for (auto* af : plugins)
+    for (auto af : plugins)
         if (auto ep = dynamic_cast<ExternalPlugin*> (af))
             if (ep->isEnabled())
                 if (auto p = ep->getAudioPluginInstance())
@@ -881,7 +882,7 @@ bool Renderer::renderToFile (const String& taskDescription,
 {
     CRASH_TRACER
     auto& engine = edit.engine;
-    const Edit::ScopedRenderStatus srs (edit);
+    const Edit::ScopedRenderStatus srs (edit, true);
     Track::Array tracks;
 
     for (auto bit = tracksToDo.findNextSetBit (0); bit != -1; bit = tracksToDo.findNextSetBit (bit + 1))
@@ -966,7 +967,7 @@ juce::File Renderer::renderToFile (const String& taskDescription, const Paramete
     {
         auto& ui = r.edit->engine.getUIBehaviour();
 
-        if (auto* node = createRenderingAudioNode (r))
+        if (auto node = createRenderingAudioNode (r))
         {
             RenderTask task (taskDescription, r, node);
 
@@ -1056,7 +1057,7 @@ Renderer::Statistics Renderer::measureStatistics (const String& taskDescription,
     CRASH_TRACER
     Statistics result;
 
-    const Edit::ScopedRenderStatus srs (edit);
+    const Edit::ScopedRenderStatus srs (edit, true);
 
     TransportControl::stopAllTransports (edit.engine, false, true);
 

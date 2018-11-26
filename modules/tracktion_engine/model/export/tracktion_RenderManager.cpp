@@ -178,7 +178,7 @@ void RenderManager::cleanUp()
     jassert (jobs.isEmpty());
 
     for (int i = danglingJobs.size(); --i >= 0;)
-        if (auto* j = danglingJobs.getUnchecked (i))
+        if (auto j = danglingJobs.getUnchecked (i))
             j->cleanUpDanglingJob();
 
     jassert (danglingJobs.isEmpty());

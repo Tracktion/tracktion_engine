@@ -613,20 +613,25 @@ void Edit::setProjectItemID (ProjectItemID newID)
     state.setProperty (IDs::projectID, editProjectItemID, nullptr);
 }
 
-Edit::ScopedRenderStatus::ScopedRenderStatus (Edit& ed)  : edit (ed)
+Edit::ScopedRenderStatus::ScopedRenderStatus (Edit& ed, bool shouldReallocateOnDestruction)
+    : edit (ed), reallocateOnDestruction (shouldReallocateOnDestruction)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
-    edit.performingRender = true;
+    jassert (edit.performingRenderCount >= 0);
+    ++edit.performingRenderCount;
     edit.getTransport().freePlaybackContext();
 }
 
 Edit::ScopedRenderStatus::~ScopedRenderStatus()
 {
-    edit.performingRender = false;
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    jassert (edit.performingRenderCount > 0);
+    --edit.performingRenderCount;
 
-    if (edit.shouldPlay())
+    if (edit.performingRenderCount == 0 && reallocateOnDestruction && edit.shouldPlay())
         edit.getTransport().ensureContextAllocated();
 }
+
 
 //==============================================================================
 void Edit::initialise()
@@ -2201,7 +2206,7 @@ void Edit::updateFrozenTracks()
 
     CRASH_TRACER
     TransportControl::stopAllTransports (engine, false, true);
-    const ScopedRenderStatus srs (*this);
+    const ScopedRenderStatus srs (*this, true);
 
     deleteFrozenTrackFiles (getFrozenTracksFiles());
 

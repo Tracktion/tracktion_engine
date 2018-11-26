@@ -78,7 +78,7 @@ public:
                     AudioNode*);
 
         RenderTask (const juce::String& taskDescription,
-                    const Renderer::Parameters& ,
+                    const Renderer::Parameters&,
                     AudioNode*,
                     std::atomic<float>& progressToUpdate,
                     juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver*);
