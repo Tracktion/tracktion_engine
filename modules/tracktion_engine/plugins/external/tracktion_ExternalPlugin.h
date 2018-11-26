@@ -128,12 +128,12 @@ private:
     ActiveNoteList activeNotes;
 
     class PluginPlayHead;
-    juce::ScopedPointer<PluginPlayHead> playhead;
+    std::unique_ptr<PluginPlayHead> playhead;
 
     bool fullyInitialised = false, supportsMPE = false, isFlushingLayoutToState = false;
 
     struct MPEChannelRemapper;
-    juce::ScopedPointer<MPEChannelRemapper> mpeRemapper;
+    std::unique_ptr<MPEChannelRemapper> mpeRemapper;
 
     void prepareIncomingMidiMessages (MidiMessageArray& incoming, int numSamples, bool isPlaying);
 
