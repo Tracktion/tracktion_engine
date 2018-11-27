@@ -84,7 +84,7 @@ public:
         You shouldn't dynamically change this function's return value - just implement a
         function that always returns true or false.
     */
-    virtual bool lengthOfOneBeatDependsOnTimeSignature()                            { return false; }
+    virtual bool lengthOfOneBeatDependsOnTimeSignature()                            { return true; }
 
     struct LevelMeterSettings
     {
