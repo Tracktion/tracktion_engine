@@ -419,6 +419,7 @@ private:
             moveAttribute (*viewStateXML, *transportXML, IDs::markIn, IDs::loopPoint1);
             moveAttribute (*viewStateXML, *transportXML, IDs::markOut, IDs::loopPoint2);
 
+            moveAttribute (*viewStateXML, *transportXML, IDs::loopPlayback, IDs::looping);
             moveAttribute (*viewStateXML, *transportXML, IDs::automationRead);
             moveAttribute (*viewStateXML, *transportXML, IDs::recordPunchInOut);
             moveAttribute (*viewStateXML, *transportXML, IDs::endToEnd);
