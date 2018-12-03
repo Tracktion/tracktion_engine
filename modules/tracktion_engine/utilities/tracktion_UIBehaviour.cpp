@@ -35,13 +35,23 @@ void UIBehaviour::showWarningAlert (const String& title, const String& message)
 
 bool UIBehaviour::showOkCancelAlertBox (const String& title, const String& message, const String& ok, const String& cancel)
 {
+   #if JUCE_MODAL_LOOPS_PERMITTED
     return AlertWindow::showOkCancelBox (AlertWindow::QuestionIcon, title, message, ok, cancel);
+   #else
+    jassertfalse; // These methods are currently unsupported in non-modal mode and calls to them from within the Engine will be replaced
+    return true;
+   #endif
 }
 
 int UIBehaviour::showYesNoCancelAlertBox (const String& title, const String& message,
                                           const String& yes, const String& no, const String& cancel)
 {
+   #if JUCE_MODAL_LOOPS_PERMITTED
     return AlertWindow::showYesNoCancelBox (AlertWindow::QuestionIcon, title, message, yes, no, cancel);
+   #else
+    jassertfalse; // These methods are currently unsupported in non-modal mode and calls to them from within the Engine will be replaced
+    return 1;
+   #endif
 }
 
 void UIBehaviour::showInfoMessage (const String& message)

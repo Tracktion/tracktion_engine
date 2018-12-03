@@ -353,8 +353,6 @@ void WaveAudioClip::deleteAllUnusedTakesConfirmingWithUser (bool deleteSourceFil
 
         return;
     }
-   #else
-    juce::ignoreUnused (warn);
    #endif
 
     bool userIsSure = true;
