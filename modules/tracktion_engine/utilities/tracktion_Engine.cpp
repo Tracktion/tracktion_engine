@@ -63,7 +63,6 @@ void Engine::initialise()
     deviceManager->initialise();
 
     pluginManager->initialise();
-    pluginManager->setUsesSeparateProcessForScanning (false);
 
     ProjectManager::getInstance()->initialise();
 
