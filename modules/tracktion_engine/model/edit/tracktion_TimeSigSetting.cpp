@@ -52,8 +52,8 @@ void TimeSigSetting::setStringTimeSig (const String& s)
 
 void TimeSigSetting::removeFromEdit()
 {
-    if (Selectable::isSelectableValid (&edit))
-        ownerSequence.removeTimeSig (ownerSequence.indexOfTimeSig (this));
+    jassert (Selectable::isSelectableValid (&edit));
+    ownerSequence.removeTimeSig (ownerSequence.indexOfTimeSig (this));
 }
 
 Track* TimeSigSetting::getTrack() const

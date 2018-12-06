@@ -243,13 +243,8 @@ SelectableClass* SelectableClass::findClassFor (const Selectable* s)
 String SelectableClass::getDescriptionOfSelectedGroup (const SelectableList& selectedObjects)
 {
     if (selectedObjects.size() == 1)
-    {
         if (auto s = selectedObjects.getFirst())
-        {
-            jassert (Selectable::isSelectableValid (s));
             return s->getSelectableDescription();
-        }
-    }
 
     StringArray names;
 
@@ -342,14 +337,14 @@ SelectableClass* SelectionManager::getFirstSelectableClass() const
 
 void SelectionManager::clearList()
 {
-    for (auto s : selected)
-        if (Selectable::isSelectableValid (s))
+    for (auto s : selected.getAsWeakRefList())
+        if (s != nullptr)
             s->removeSelectableListener (this);
 
     selected.clear();
 }
 
-SelectionManager::Iterator::Iterator() noexcept  : index (-1) {}
+SelectionManager::Iterator::Iterator() {}
 
 bool SelectionManager::Iterator::next()
 {
@@ -369,7 +364,7 @@ int SelectionManager::getNumObjectsSelected() const
 Selectable* SelectionManager::getSelectedObject (int index) const
 {
     const ScopedLock sl (lock);
-    return selected [index];
+    return selected[index];
 }
 
 const SelectableList& SelectionManager::getSelectedObjects() const
@@ -393,8 +388,8 @@ void SelectionManager::deselectAll()
 
     if (selected.size() > 0)
     {
-        for (auto s : SelectableList (selected))
-            if (Selectable::isSelectableValid (s))
+        for (auto s : selected.getAsWeakRefList())
+            if (s != nullptr)
                 s->selectionStatusChanged (false);
 
         clearList();
@@ -646,6 +641,28 @@ SelectionManager::ScopedSelectionState::ScopedSelectionState (SelectionManager& 
 SelectionManager::ScopedSelectionState::~ScopedSelectionState()
 {
     manager.select (selected);
+}
+
+//==============================================================================
+bool SelectionManager::ChangedSelectionDetector::isFirstChangeSinceSelection (SelectionManager* sm)
+{
+    if (sm != nullptr)
+    {
+        int newCount = sm->selectionChangeCount;
+
+        if (lastSelectionChangeCount != newCount)
+        {
+            lastSelectionChangeCount = newCount;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void SelectionManager::ChangedSelectionDetector::reset()
+{
+    lastSelectionChangeCount = 0;
 }
 
 //==============================================================================

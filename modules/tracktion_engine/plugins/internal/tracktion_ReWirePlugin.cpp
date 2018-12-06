@@ -534,9 +534,6 @@ public:
 
     void timerCallback() override
     {
-        if (! Selectable::isSelectableValid (containerEdit))
-            containerEdit = nullptr;
-
         if (timeSigRequest)
         {
             CRASH_TRACER
@@ -751,7 +748,7 @@ private:
     int references = 0, pluginsServedThisFrame = 0;
     double sampleRate = 0, lastTime = 0, timePerBlock = 0;
     bool wasPlaying = false;
-    Edit* containerEdit = nullptr;
+    Edit::WeakRef containerEdit;
 
     double requestedPosition = 0;
     int requestedTempo = 0, requestedTimeSigNum = 0, requestedTimeSigDenom = 0;

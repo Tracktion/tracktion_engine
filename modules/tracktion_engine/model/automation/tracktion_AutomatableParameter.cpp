@@ -791,14 +791,20 @@ Selectable* AutomatableParameter::getOwnerSelectable() const
 
 EditItemID AutomatableParameter::getOwnerID() const
 {
-    // macroOwner is not a Selectable but still has an ID so only do this check for the others
-    if (plugin != nullptr || modifierOwner != nullptr)
-        if (! Selectable::isSelectableValid (getOwnerSelectable()))
-            return {};
+    if (plugin != nullptr)
+    {
+        jassert (Selectable::isSelectableValid (plugin));
+        return plugin->itemID;
+    }
 
-    return plugin != nullptr ? plugin->itemID
-                             : modifierOwner != nullptr ? modifierOwner->itemID
-                                                        : macroOwner->itemID;
+    if (modifierOwner != nullptr)
+    {
+        jassert (Selectable::isSelectableValid (modifierOwner));
+        return modifierOwner->itemID;
+    }
+
+    jassert (macroOwner != nullptr);
+    return macroOwner->itemID;
 }
 
 String AutomatableParameter::getPluginAndParamName() const

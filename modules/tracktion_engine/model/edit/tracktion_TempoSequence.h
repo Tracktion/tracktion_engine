@@ -222,7 +222,7 @@ struct EditTimecodeRemapperSnapshot
 private:
     struct ClipPos
     {
-        Clip* clip;
+        Selectable::WeakRef clip;
         double startBeat, endBeat, contentStartBeat;
     };
 

@@ -197,6 +197,16 @@ struct SelectableList
     inline bool contains (Selectable* elementToLookFor) const   { return items.contains (elementToLookFor); }
     inline int indexOf (Selectable* elementToLookFor) const     { return items.indexOf (elementToLookFor); }
 
+    juce::Array<Selectable::WeakRef> getAsWeakRefList() const
+    {
+        juce::Array<Selectable::WeakRef> result;
+
+        for (auto& i : items)
+            result.add (i);
+
+        return result;
+    }
+
     template <class OtherArrayType>
     inline bool operator== (const OtherArrayType& other) const  { return items == other; }
 

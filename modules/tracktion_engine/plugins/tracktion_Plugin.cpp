@@ -706,9 +706,8 @@ AudioNode* Plugin::createAudioNode (AudioNode* input, bool applyAntiDenormalisat
 void Plugin::changed()
 {
     Selectable::changed();
-
-    if (Selectable::isSelectableValid (&edit))
-        edit.updateMirroredPlugin (*this);
+    jassert (Selectable::isSelectableValid (&edit));
+    edit.updateMirroredPlugin (*this);
 }
 
 //==============================================================================
