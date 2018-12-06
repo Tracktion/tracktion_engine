@@ -596,7 +596,7 @@ Result EditPlaybackContext::applyRetrospectiveRecord (Array<Clip*>* clips)
         {
             if (clips != nullptr)
                 clips->add (clip);
-                
+
             clipCreated = true;
         }
     }
