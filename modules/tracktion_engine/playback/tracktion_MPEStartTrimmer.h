@@ -4,8 +4,12 @@
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
+
+    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+namespace tracktion_engine
+{
 
 /** If you need to play back MPE data from a point *after* the data starts, it's
     important to reconstruct the expression values immediately preceding the last
@@ -120,3 +124,5 @@ private:
     static constexpr int notFound = -1;
     static bool wasFound (int v) { return v != notFound; };
 };
+
+} // namespace tracktion_engine

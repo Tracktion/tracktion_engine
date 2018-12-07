@@ -4,8 +4,12 @@
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
+
+    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+namespace tracktion_engine
+{
 
 struct ActiveNoteList
 {
@@ -48,3 +52,5 @@ struct ActiveNoteList
         return juce::isPositiveAndBelow (note, 128) && channel > 0 && channel <= 16;
     }
 };
+
+} // namespace tracktion_engine
