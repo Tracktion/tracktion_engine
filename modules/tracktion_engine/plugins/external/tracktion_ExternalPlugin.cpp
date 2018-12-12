@@ -1550,8 +1550,11 @@ void ExternalPlugin::buildParameterTree() const
         {
             if (auto param = dynamic_cast<const VSTXML::Param*> (vstXML->paramTree[i]))
             {
-                paramTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (autoParamForParamNumbers [param->paramID]));
-                paramsInTree.add (param->paramID);
+                if (auto externalParameter = autoParamForParamNumbers[param->paramID])
+                {
+                    paramTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (externalParameter));
+                    paramsInTree.add (param->paramID);
+                }
             }
 
             if (auto group = dynamic_cast<const VSTXML::Group*> (vstXML->paramTree[i]))
@@ -1564,11 +1567,9 @@ void ExternalPlugin::buildParameterTree() const
     }
 
     for (int i = 0; i < getNumAutomatableParameters(); ++i)
-    {
-        if (auto vstParam = dynamic_cast<ExternalAutomatableParameter*> (getAutomatableParameter(i).get()))
+        if (auto vstParam = dynamic_cast<ExternalAutomatableParameter*> (getAutomatableParameter (i).get()))
             if (! paramsInTree.contains (vstParam->getParameterIndex()))
                 paramTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (autoParamForParamNumbers [vstParam->getParameterIndex()]));
-    }
 }
 
 void ExternalPlugin::buildParameterTree (const VSTXML::Group* group,
@@ -1579,8 +1580,11 @@ void ExternalPlugin::buildParameterTree (const VSTXML::Group* group,
     {
         if (auto param = dynamic_cast<const VSTXML::Param*> (group->paramTree[i]))
         {
-            treeNode->addSubNode (new AutomatableParameterTree::TreeNode (autoParamForParamNumbers [param->paramID]));
-            paramsInTree.add (param->paramID);
+            if (auto externalParameter = autoParamForParamNumbers[param->paramID])
+            {
+                treeNode->addSubNode (new AutomatableParameterTree::TreeNode (externalParameter));
+                paramsInTree.add (param->paramID);
+            }
         }
 
         if (auto subGroup = dynamic_cast<const VSTXML::Group*> (group->paramTree[i]))

@@ -102,6 +102,8 @@ juce::ReferenceCountedArray<AutomatableParameter> AutomatableEditItem::getFlatte
             params.addArray (getFlattenedParameterTree (*node));
     }
 
+    jassert (! params.contains (nullptr));
+
     return params;
 }
 
