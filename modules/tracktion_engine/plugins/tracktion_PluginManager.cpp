@@ -431,6 +431,8 @@ void PluginManager::initialise()
    #if TRACKTION_ENABLE_REWIRE
     createBuiltInType<ReWirePlugin>();
    #endif
+    
+    createBuiltInType<AirWindowsDeEss>();
 
     initialised = true;
     pluginFormatManager.addDefaultFormats();

@@ -490,6 +490,8 @@ namespace tracktion_engine
 #include "playback/audionodes/tracktion_TrackMutingAudioNode.h"
 #include "playback/audionodes/tracktion_SpeedRampAudioNode.h"
 
+#include "plugins/airwindows/tracktion_AirWindows.h"
+
 #include "plugins/internal/tracktion_LevelMeter.h"
 #include "plugins/internal/tracktion_FreezePoint.h"
 #include "plugins/internal/tracktion_InsertPlugin.h"
