@@ -46,6 +46,11 @@ using namespace juce;
 #pragma clang diagnostic ignored "-Wunused-private-field"
 #endif
 
+#if JUCE_WINDOWS
+#pragma warning (push)
+#pragma warning (disable : 4244 4100 4305)
+#endif
+
 namespace tracktion_engine
 {
 namespace airwindows
@@ -91,6 +96,10 @@ namespace tubedesk
 
 #if JUCE_CLANG
 #pragma clang diagnostic pop
+#endif
+
+#if JUCE_WINDOWS
+#pragma warning (pop)
 #endif
 
 #include "plugins/airwindows/tracktion_AirWindows.cpp"
