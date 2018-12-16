@@ -65,29 +65,6 @@ public:
 };
     
 //==============================================================================
-/** specialised AutomatableParameter for wet/dry.
- Having a subclass just lets it label itself more nicely.
- */
-struct AirWindowsWetDryAutomatableParam  : public AutomatableParameter
-{
-    AirWindowsWetDryAutomatableParam (const String& xmlTag, const String& name, AirWindowsPlugin& owner)
-        : AutomatableParameter (xmlTag, name, owner, { 0.0f, 1.0f })
-    {
-    }
-    
-    ~AirWindowsWetDryAutomatableParam()
-    {
-        notifyListenersOfDeletion();
-    }
-    
-    String valueToString (float value) override     { return Decibels::toString (Decibels::gainToDecibels (value), 1); }
-    float stringToValue (const String& s) override  { return dbStringToDb (s); }
-    
-    AirWindowsWetDryAutomatableParam() = delete;
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AirWindowsWetDryAutomatableParam)
-};
-    
-//==============================================================================
 AirWindowsPlugin::AirWindowsPlugin (PluginCreationInfo info, std::unique_ptr<AirWindowsBase> base)
     : Plugin (info), callback (*this), impl (std::move (base))
 {
@@ -110,8 +87,8 @@ AirWindowsPlugin::AirWindowsPlugin (PluginCreationInfo info, std::unique_ptr<Air
         param->attachToCurrentValue (*value);
     }
     
-    addAutomatableParameter (dryGain = new AirWindowsWetDryAutomatableParam ("dry level", TRANS("Dry Level"), *this));
-    addAutomatableParameter (wetGain = new AirWindowsWetDryAutomatableParam ("wet level", TRANS("Wet Level"), *this));
+    addAutomatableParameter (dryGain = new PluginWetDryAutomatableParam ("dry level", TRANS("Dry Level"), *this));
+    addAutomatableParameter (wetGain = new PluginWetDryAutomatableParam ("wet level", TRANS("Wet Level"), *this));
     
     dryValue.referTo (state, IDs::dry, um);
     wetValue.referTo (state, IDs::wet, um, 1.0f);

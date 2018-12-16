@@ -140,7 +140,7 @@
     Adds AirWindows effect plugins. Requires complaiance with AirWindows MIT license.
  */
 #ifndef TRACKTION_AIR_WINDOWS
-#define TRACKTION_AIR_WINDOWS 0
+ #define TRACKTION_AIR_WINDOWS 0
 #endif
 
 

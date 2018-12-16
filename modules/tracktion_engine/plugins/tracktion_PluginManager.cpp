@@ -432,12 +432,14 @@ void PluginManager::initialise()
     createBuiltInType<ReWirePlugin>();
    #endif
     
+   #if TRACKTION_AIR_WINDOWS
     createBuiltInType<AirWindowsDeEss>();
     createBuiltInType<AirWindowsDrive>();
     createBuiltInType<AirWindowsHardVacuum>();
     createBuiltInType<AirWindowsNonlinearSpace>();
     createBuiltInType<AirWindowsPurestDrive>();
     createBuiltInType<AirWindowsTubeDesk>();
+   #endif
 
     initialised = true;
     pluginFormatManager.addDefaultFormats();

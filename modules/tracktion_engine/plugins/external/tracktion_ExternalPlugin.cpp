@@ -178,7 +178,7 @@ struct ExtraVSTCallbacks  : public juce::VSTPluginFormat::ExtraFunctions
 */
 struct PluginWetDryAutomatableParam  : public AutomatableParameter
 {
-    PluginWetDryAutomatableParam (const String& xmlTag, const String& name, ExternalPlugin& owner)
+    PluginWetDryAutomatableParam (const String& xmlTag, const String& name, Plugin& owner)
         : AutomatableParameter (xmlTag, name, owner, { 0.0f, 1.0f })
     {
     }

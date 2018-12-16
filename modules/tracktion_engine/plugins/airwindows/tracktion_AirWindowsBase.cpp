@@ -9,7 +9,8 @@
 
 namespace tracktion_engine
 {
-    
+
+#define __audioeffect__
 #define VstInt32                int32_t
 #define AudioEffect             AirWindowsBase
 #define AudioEffectX            AirWindowsBase
