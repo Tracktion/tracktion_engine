@@ -10,15 +10,16 @@
 namespace tracktion_engine
 {
 
-class AirWindowsPlugin;
 class AirWindowsBase;
+class AirWindowsPlugin;
+class AirWindowsAutomatableParameter;
     
 //==============================================================================
-class AirWindowCallback
+class AirWindowsCallback
 {
 public:
-    AirWindowCallback (AirWindowsPlugin&);
-    virtual ~AirWindowCallback() = default;
+    AirWindowsCallback (AirWindowsPlugin&);
+    virtual ~AirWindowsCallback() = default;
     virtual double getSampleRate();
     
     AirWindowsPlugin& owner;
@@ -28,16 +29,20 @@ public:
 class AirWindowsPlugin   : public Plugin
 {
 public:
+    //==============================================================================
     AirWindowsPlugin (PluginCreationInfo, std::unique_ptr<AirWindowsBase>);
     ~AirWindowsPlugin();
     
+    //==============================================================================
     juce::String getSelectableDescription() override                        { return TRANS("Air Windows Plugin"); }
     int getNumOutputChannelsGivenInputs (int numInputChannels) override;
 
+    //==============================================================================
     void initialise (const PlaybackInitialisationInfo&) override;
     void deinitialise() override;
     void applyToBuffer (const AudioRenderContext&) override;
 
+    //==============================================================================
     bool takesAudioInput() override                  { return true; }
     bool takesMidiInput() override                   { return true; }
     bool producesAudioWhenNoAudioInput() override    { return true; }
@@ -45,18 +50,31 @@ public:
     bool canBeAddedToRack() override                 { return true; }
     bool needsConstantBufferSize() override          { return false; }
 
+    //==============================================================================
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
-
-protected:
-    friend AirWindowCallback;
     
-    AirWindowCallback callback;
+protected:
+    //==============================================================================
+    friend AirWindowsAutomatableParameter;
+    friend AirWindowsCallback;
+    
+    void processBlock (juce::AudioBuffer<float>& buffer);
+    
+    AirWindowsCallback callback;
     std::unique_ptr<AirWindowsBase> impl;
     
     double sampleRate = 44100.0;
     
+public:
+    //==============================================================================
     juce::ReferenceCountedArray<AutomatableParameter> parameters;
+    juce::OwnedArray<juce::CachedValue<float>> values;
     
+    juce::CachedValue<float> dryValue, wetValue;
+    AutomatableParameter::Ptr dryGain, wetGain;
+    
+private:
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AirWindowsPlugin)
 };
 
@@ -70,7 +88,7 @@ public:
     virtual juce::String getName() override                                 { return TRANS("DeEss"); }
     juce::String getPluginType() override                                   { return xmlTypeName; }
     
-    static const char* getPluginName()                                      { return NEEDS_TRANS("AW DeEss"); }
+    static const char* getPluginName()                                      { return NEEDS_TRANS("DeEss"); }
     static const char* xmlTypeName;
 };
     

@@ -551,8 +551,7 @@ Edit::~Edit()
     CRASH_TRACER
 
     for (auto af : pluginCache->getPlugins())
-        if (auto ep = dynamic_cast<ExternalPlugin*> (af))
-            ep->hideWindowForShutdown();
+        af->hideWindowForShutdown();
 
     engine.getActiveEdits().edits.removeFirstMatchingValue (this);
     masterReference.clear();

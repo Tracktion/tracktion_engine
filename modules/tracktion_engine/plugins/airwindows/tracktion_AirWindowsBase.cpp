@@ -13,7 +13,7 @@ namespace tracktion_engine
 #define VstInt32                int32_t
 #define AudioEffect             AirWindowsBase
 #define AudioEffectX            AirWindowsBase
-#define audioMasterCallback     AirWindowCallback*
+#define audioMasterCallback     AirWindowsCallback*
 #define VstPlugCategory         int
 #define kPlugCategEffect        1
 #define kVstMaxProgNameLen      64
@@ -33,7 +33,7 @@ class AirWindowsBase
 {
 public:
     //==============================================================================
-    AirWindowsBase (AirWindowCallback* callback_, int prog, int param)
+    AirWindowsBase (AirWindowsCallback* callback_, int prog, int param)
         : numPrograms (prog), numParams (param), callback (callback_)
     {
     }
@@ -74,7 +74,7 @@ protected:
     
     int numInputs = 0, numOutputs = 0, numPrograms = 0, numParams = 0;
     
-    AirWindowCallback* callback;
+    AirWindowsCallback* callback;
     
     double getSampleRate()              { return callback->getSampleRate(); }
 };
