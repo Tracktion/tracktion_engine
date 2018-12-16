@@ -136,6 +136,13 @@
  #define TRACKTION_CHECK_FOR_SLOW_RENDERING 0
 #endif
 
+/** Config: TRACKTION_AIR_WINDOWS
+    Adds AirWindows effect plugins. Requires complaiance with AirWindows MIT license.
+ */
+#ifndef TRACKTION_AIR_WINDOWS
+#define TRACKTION_AIR_WINDOWS 0
+#endif
+
 
 //==============================================================================
 #ifndef TRACKTION_LOG_ENABLED
@@ -490,7 +497,9 @@ namespace tracktion_engine
 #include "playback/audionodes/tracktion_TrackMutingAudioNode.h"
 #include "playback/audionodes/tracktion_SpeedRampAudioNode.h"
 
+#if TRACKTION_AIR_WINDOWS
 #include "plugins/airwindows/tracktion_AirWindows.h"
+#endif
 
 #include "plugins/internal/tracktion_LevelMeter.h"
 #include "plugins/internal/tracktion_FreezePoint.h"

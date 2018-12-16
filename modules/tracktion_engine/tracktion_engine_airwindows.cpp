@@ -9,6 +9,8 @@
 
 #if ! JUCE_PROJUCER_LIVE_BUILD
 
+#if TRACKTION_AIR_WINDOWS
+
 #include <atomic>
 #include <numeric>
 #include <set>
@@ -93,5 +95,6 @@ namespace tubedesk
 
 #include "plugins/airwindows/tracktion_AirWindows.cpp"
 
+#endif
 #endif
 
