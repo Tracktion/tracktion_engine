@@ -94,7 +94,10 @@ AirWindowsPlugin::AirWindowsPlugin (PluginCreationInfo info, std::unique_ptr<Air
     auto um = getUndoManager();
     
     for (int i = 0; i < impl->getNumParameters(); i++)
-    {        
+    {
+        if (AirWindowsAutomatableParameter::getParamName (*this, i) == "Dry/Wet")
+            continue;
+        
         auto param = new AirWindowsAutomatableParameter (*this, i);
         
         addAutomatableParameter (param);
@@ -147,8 +150,9 @@ void AirWindowsPlugin::applyToBuffer (const AudioRenderContext& fc)
 
     SCOPED_REALTIME_CHECK
     
-    for (int i = 0; i < impl->getNumParameters(); i++)
-        impl->setParameter (i, parameters[i]->getCurrentValue());
+    for (auto p : parameters)
+        if (auto awp = dynamic_cast<AirWindowsAutomatableParameter*> (p))
+            impl->setParameter (awp->index, awp->getCurrentValue());
 
     juce::AudioBuffer<float> asb (fc.destBuffer->getArrayOfWritePointers(), fc.destBuffer->getNumChannels(),
                                   fc.bufferStartSample, fc.bufferNumSamples);
@@ -215,10 +219,17 @@ void AirWindowsPlugin::restorePluginStateFromValueTree (const ValueTree& v)
     
 //==============================================================================
 const char* AirWindowsDeEss::xmlTypeName = "airwindows_deess";
-    
-AirWindowsDeEss::AirWindowsDeEss (PluginCreationInfo info)
-    : AirWindowsPlugin (info, std::make_unique<airwindows::deess::DeEss> (&callback))
-{
-}
+const char* AirWindowsDrive::xmlTypeName = "airwindows_drive";
+const char* AirWindowsHardVacuum::xmlTypeName = "airwindows_hardvacuum";
+const char* AirWindowsNonlinearSpace::xmlTypeName = "airwindows_nonlinearspace";
+const char* AirWindowsPurestDrive::xmlTypeName = "airwindows_purestdrive";
+const char* AirWindowsTubeDesk::xmlTypeName = "airwindows_tubedesk";
+
+AirWindowsDeEss::AirWindowsDeEss (PluginCreationInfo info) : AirWindowsPlugin (info, std::make_unique<airwindows::deess::DeEss> (&callback)) {}
+AirWindowsDrive::AirWindowsDrive (PluginCreationInfo info) : AirWindowsPlugin (info, std::make_unique<airwindows::drive::Drive> (&callback)) {}
+AirWindowsHardVacuum::AirWindowsHardVacuum (PluginCreationInfo info) : AirWindowsPlugin (info, std::make_unique<airwindows::hardvacuum::HardVacuum> (&callback)) {}
+AirWindowsNonlinearSpace::AirWindowsNonlinearSpace (PluginCreationInfo info) : AirWindowsPlugin (info, std::make_unique<airwindows::nonlinearspace::NonlinearSpace> (&callback)) {}
+AirWindowsPurestDrive::AirWindowsPurestDrive (PluginCreationInfo info) : AirWindowsPlugin (info, std::make_unique<airwindows::purestdrive::PurestDrive> (&callback)) {}
+AirWindowsTubeDesk::AirWindowsTubeDesk (PluginCreationInfo info) : AirWindowsPlugin (info, std::make_unique<airwindows::tubedesk::TubeDesk> (&callback)) {}
 
 }

@@ -433,6 +433,11 @@ void PluginManager::initialise()
    #endif
     
     createBuiltInType<AirWindowsDeEss>();
+    createBuiltInType<AirWindowsDrive>();
+    createBuiltInType<AirWindowsHardVacuum>();
+    createBuiltInType<AirWindowsNonlinearSpace>();
+    createBuiltInType<AirWindowsPurestDrive>();
+    createBuiltInType<AirWindowsTubeDesk>();
 
     initialised = true;
     pluginFormatManager.addDefaultFormats();

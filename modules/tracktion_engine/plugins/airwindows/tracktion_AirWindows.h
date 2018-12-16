@@ -79,17 +79,26 @@ private:
 };
 
 //==============================================================================
-class AirWindowsDeEss :   public AirWindowsPlugin
-{
-public:
-    AirWindowsDeEss (PluginCreationInfo);
-    ~AirWindowsDeEss()                                                      { notifyListenersOfDeletion(); }
-    
-    virtual juce::String getName() override                                 { return TRANS("DeEss"); }
-    juce::String getPluginType() override                                   { return xmlTypeName; }
-    
-    static const char* getPluginName()                                      { return NEEDS_TRANS("DeEss"); }
-    static const char* xmlTypeName;
-};
+#define AIRWINDOWSPLUGIN(className, pluginName) \
+class className :   public AirWindowsPlugin \
+{ \
+public: \
+    className (PluginCreationInfo); \
+    ~className()                                                            { notifyListenersOfDeletion(); } \
+    \
+    virtual juce::String getName() override                                 { return TRANS(pluginName); } \
+    juce::String getPluginType() override                                   { return xmlTypeName; } \
+    \
+    static const char* getPluginName()                                      { return NEEDS_TRANS(pluginName); } \
+    static const char* xmlTypeName; \
+}; \
+
+AIRWINDOWSPLUGIN(AirWindowsDeEss, "DeEss")
+AIRWINDOWSPLUGIN(AirWindowsDrive, "Drive")
+AIRWINDOWSPLUGIN(AirWindowsHardVacuum, "Hard Vacuum")
+AIRWINDOWSPLUGIN(AirWindowsNonlinearSpace, "Nonlinear Space")
+AIRWINDOWSPLUGIN(AirWindowsPurestDrive, "Purest Drive")
+AIRWINDOWSPLUGIN(AirWindowsTubeDesk, "Tube Desk")
+
     
 } // namespace tracktion_engine
