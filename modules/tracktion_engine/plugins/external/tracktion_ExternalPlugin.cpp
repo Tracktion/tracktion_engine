@@ -171,30 +171,6 @@ struct ExtraVSTCallbacks  : public juce::VSTPluginFormat::ExtraFunctions
 };
 #endif // JUCE_PLUGINHOST_VST
 
-
-//==============================================================================
-/** specialised AutomatableParameter for wet/dry.
-    Having a subclass just lets it label itself more nicely.
-*/
-struct PluginWetDryAutomatableParam  : public AutomatableParameter
-{
-    PluginWetDryAutomatableParam (const String& xmlTag, const String& name, Plugin& owner)
-        : AutomatableParameter (xmlTag, name, owner, { 0.0f, 1.0f })
-    {
-    }
-
-    ~PluginWetDryAutomatableParam()
-    {
-        notifyListenersOfDeletion();
-    }
-
-    String valueToString (float value) override     { return Decibels::toString (Decibels::gainToDecibels (value), 1); }
-    float stringToValue (const String& s) override  { return dbStringToDb (s); }
-
-    PluginWetDryAutomatableParam() = delete;
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginWetDryAutomatableParam)
-};
-
 //==============================================================================
 class ExternalPlugin::PluginPlayHead  : public juce::AudioPlayHead
 {
