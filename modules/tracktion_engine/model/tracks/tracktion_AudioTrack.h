@@ -78,7 +78,6 @@ public:
     void setFrozen (bool, FreezeType) override;
     void insertFreezePointAfterPlugin (const Plugin::Ptr&);
     void removeFreezePoint();
-    static juce::String getTrackFreezePrefix() noexcept             { return "trackFreeze_"; }
     void freezeTrackAsync() const;
 
     //==============================================================================

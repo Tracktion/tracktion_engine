@@ -1395,9 +1395,7 @@ void AudioTrack::unFreezeTrack()
 
 File AudioTrack::getFreezeFile() const noexcept
 {
-    // TODO: unify proxy filename handling
-    return edit.getTempDirectory (true)
-             .getChildFile (getTrackFreezePrefix() + "0_" + itemID.toString() + ".freeze");
+    return TemporaryFileManager::getFreezeFileForTrack (*this);
 }
 
 AudioNode* AudioTrack::createFreezeAudioNode (bool addAntiDenormalisationNoise)

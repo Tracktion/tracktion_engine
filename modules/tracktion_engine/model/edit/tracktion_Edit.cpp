@@ -2240,7 +2240,7 @@ void Edit::updateFrozenTracks()
 
                 Renderer::Parameters r (*this);
                 r.tracksToDo = frozen;
-                r.destFile = TemporaryFileManager::getFreezeFile (*this, *outputDevice);
+                r.destFile = TemporaryFileManager::getFreezeFileForDevice (*this, *outputDevice);
                 r.audioFormat = engine.getAudioFileFormatManager().getFrozenFileFormat();
                 r.blockSizeForAudio = dm.getBlockSize();
                 r.sampleRateForAudio = dm.getSampleRate();

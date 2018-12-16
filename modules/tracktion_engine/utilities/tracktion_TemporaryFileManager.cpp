@@ -20,7 +20,7 @@ TemporaryFileManager::~TemporaryFileManager()
 {
 }
 
-File TemporaryFileManager::getDefaultTempDir()
+static juce::File getDefaultTempFolder (Engine& engine)
 {
     return engine.getPropertyStorage().getAppCacheFolder().getChildFile ("Temporary");
 }
@@ -32,14 +32,16 @@ const juce::File& TemporaryFileManager::getTempDirectory() const
 
 bool TemporaryFileManager::setTempDirectory (const File& newFile)
 {
-    if (newFile == getDefaultTempDir())
+    auto defaultDir = getDefaultTempFolder (engine);
+
+    if (newFile == defaultDir)
     {
         ressetToDefaultLocation();
     }
     else
     {
         auto path = newFile.getFullPathName();
-        auto parent = getDefaultTempDir().getParentDirectory();
+        auto parent = defaultDir.getParentDirectory();
 
         if (newFile.isAChildOf (parent))
             path = newFile.getRelativePathFrom (parent);
@@ -55,22 +57,23 @@ bool TemporaryFileManager::setTempDirectory (const File& newFile)
 
 void TemporaryFileManager::ressetToDefaultLocation()
 {
-    tempDir = getDefaultTempDir();
+    tempDir = getDefaultTempFolder (engine);
     engine.getPropertyStorage().removeProperty (SettingID::tempDirectory);
 }
 
 void TemporaryFileManager::updateDir()
 {
+    auto defaultDir = getDefaultTempFolder (engine);
     auto userFolder = engine.getPropertyStorage().getProperty (SettingID::tempDirectory).toString().trim();
 
     if (userFolder.isEmpty())
         ressetToDefaultLocation();
     else
-        tempDir = getDefaultTempDir().getSiblingFile (userFolder);
+        tempDir = defaultDir.getSiblingFile (userFolder);
 
     if (! wasTempFolderSuccessfullyCreated())
     {
-        tempDir = getDefaultTempDir();
+        tempDir = defaultDir;
         engine.getPropertyStorage().removeProperty (SettingID::tempDirectory);
     }
 }
@@ -199,7 +202,8 @@ juce::File TemporaryFileManager::getThumbnailsFolder() const
 //==============================================================================
 static juce::String getClipProxyPrefix()                { return "clip_"; }
 static juce::String getFileProxyPrefix()                { return "proxy_"; }
-static juce::String getFreezeFilePrefix (Edit& edit)    { return "freeze_" + edit.getProjectItemID().toStringSuitableForFilename() + "_"; }
+static juce::String getDeviceFreezePrefix (Edit& edit)  { return "freeze_" + edit.getProjectItemID().toStringSuitableForFilename() + "_"; }
+static juce::String getTrackFreezePrefix()              { return "trackFreeze_"; }
 static juce::String getCompPrefix()                     { return "comp_"; }
 
 static AudioFile getCachedEditFile (Edit& edit, const juce::String& prefix, juce::int64 hash)
@@ -227,18 +231,22 @@ AudioFile TemporaryFileManager::getFileForCachedFileRender (Edit& edit, juce::in
     return getCachedEditFile (edit, getFileProxyPrefix(), hash);
 }
 
-// freeze filename format: freeze_(edit id)_(output device id).freeze
-
-juce::File TemporaryFileManager::getFreezeFile (Edit& edit, OutputDevice& device)
+juce::File TemporaryFileManager::getFreezeFileForDevice (Edit& edit, OutputDevice& device)
 {
     return edit.getTempDirectory (true)
-             .getChildFile (getFreezeFilePrefix (edit) + String (device.getDeviceID()) + ".freeze");
+             .getChildFile (getDeviceFreezePrefix (edit) + String (device.getDeviceID()) + ".freeze");
+}
+
+juce::File TemporaryFileManager::getFreezeFileForTrack (const AudioTrack& track)
+{
+    return track.edit.getTempDirectory (true)
+             .getChildFile (getTrackFreezePrefix() + "0_" + track.itemID.toString() + ".freeze");
 }
 
 juce::Array<juce::File> TemporaryFileManager::getFrozenTrackFiles (Edit& edit)
 {
     return edit.getTempDirectory (false)
-             .findChildFiles (File::findFiles, false, getFreezeFilePrefix (edit) + "*");
+             .findChildFiles (File::findFiles, false, getDeviceFreezePrefix (edit) + "*");
 }
 
 static ProjectItemID getProjectItemIDFromFilename (const juce::String& name)
@@ -257,8 +265,7 @@ void TemporaryFileManager::purgeOrphanEditTempFolders (ProjectManager& pm)
     juce::Array<juce::File> filesToDelete;
     juce::StringArray reasonsForDeletion;
 
-    for (juce::DirectoryIterator i (pm.engine.getTemporaryFileManager().getTempDirectory(), false,
-                                    "edit_*", juce::File::findDirectories); i.next();)
+    for (juce::DirectoryIterator i (getTempDirectory(), false, "edit_*", juce::File::findDirectories); i.next();)
     {
         auto itemID = getProjectItemIDFromFilename (i.getFile().getFileName());
 
@@ -332,7 +339,7 @@ void TemporaryFileManager::purgeOrphanFreezeAndProxyFiles (Edit& edit)
             {
                 // XXX
             }
-            else if (name.startsWith (AudioTrack::getTrackFreezePrefix()))
+            else if (name.startsWith (getTrackFreezePrefix()))
             {
                 if (auto at = dynamic_cast<AudioTrack*> (findTrackForID (edit, itemID)))
                     if (! at->isFrozen (Track::individualFreeze))

@@ -75,24 +75,26 @@ public:
     static AudioFile getFileForCachedFileRender (Edit&, juce::int64 hash);
 
     /** */
-    static void purgeOrphanEditTempFolders (ProjectManager&);
+    static juce::File getFreezeFileForDevice (Edit&, OutputDevice&);
+
+    /** */
+    static juce::File getFreezeFileForTrack (const AudioTrack&);
+
+    /** */
+    static juce::Array<juce::File> getFrozenTrackFiles (Edit&);
 
     /** */
     static void purgeOrphanFreezeAndProxyFiles (Edit&);
 
     /** */
-    static juce::File getFreezeFile (Edit&, OutputDevice&);
-
-    /** */
-    static juce::Array<juce::File> getFrozenTrackFiles (Edit&);
+    void purgeOrphanEditTempFolders (ProjectManager&);
 
     //==============================================================================
 private:
     Engine& engine;
-
     juce::File tempDir;
+
     void updateDir();
-    juce::File getDefaultTempDir();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TemporaryFileManager)
 };
