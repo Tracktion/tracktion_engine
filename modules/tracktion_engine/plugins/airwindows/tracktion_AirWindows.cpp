@@ -29,10 +29,10 @@ public:
         : AutomatableParameter (getParamId (p, idx), getParamName (p, idx), p, {0, 1}),
         plugin (p), index (idx)
     {
-        id = getParamId (p, idx);
-        
         valueToStringFunction = [] (float v)  { return String (v); };
         stringToValueFunction = [] (String v) { return v.getFloatValue(); };
+        
+        setParameter (plugin.impl->getParameter (idx), sendNotification);
     }
     
     ~AirWindowsAutomatableParameter()
@@ -40,11 +40,27 @@ public:
         notifyListenersOfDeletion();
     }
     
+    void parameterChanged (float newValue, bool byAutomation) override
+    {
+        if (plugin.impl->getParameter (index) != newValue)
+        {
+            if (! byAutomation)
+                markAsChanged();
+            
+            plugin.impl->setParameter (index, newValue);
+        }
+    }
+    
     String getCurrentValueAsString() override
     {
         char paramText[kVstMaxParamStrLen];
         plugin.impl->getParameterDisplay (index, paramText);
         return String (paramText).substring (0, 4);
+    }
+    
+    void markAsChanged() const noexcept
+    {
+        getEdit().pluginChanged (plugin);
     }
     
     static String getParamId (AirWindowsPlugin& p, int idx)
@@ -60,7 +76,6 @@ public:
     }
     
     AirWindowsPlugin& plugin;
-    String id;
     int index = 0;
 };
     
@@ -69,6 +84,8 @@ AirWindowsPlugin::AirWindowsPlugin (PluginCreationInfo info, std::unique_ptr<Air
     : Plugin (info), callback (*this), impl (std::move (base))
 {
     auto um = getUndoManager();
+    
+    restorePluginStateFromValueTree (state);
     
     for (int i = 0; i < impl->getNumParameters(); i++)
     {
@@ -79,12 +96,6 @@ AirWindowsPlugin::AirWindowsPlugin (PluginCreationInfo info, std::unique_ptr<Air
         
         addAutomatableParameter (param);
         parameters.add (param);
-        
-        auto* value = new CachedValue<float>();
-        value->referTo (state, Identifier (param->id), um, impl->getParameter (i));
-        values.add (value);
-        
-        param->attachToCurrentValue (*value);
     }
     
     addAutomatableParameter (dryGain = new PluginWetDryAutomatableParam ("dry level", TRANS("Dry Level"), *this));
@@ -99,9 +110,6 @@ AirWindowsPlugin::AirWindowsPlugin (PluginCreationInfo info, std::unique_ptr<Air
     
 AirWindowsPlugin::~AirWindowsPlugin()
 {
-    for (auto p : parameters)
-        p->detachFromCurrentValue();
-    
     dryGain->detachFromCurrentValue();
     wetGain->detachFromCurrentValue();
 }
@@ -182,16 +190,41 @@ void AirWindowsPlugin::processBlock (juce::AudioBuffer<float>& buffer)
     
 void AirWindowsPlugin::restorePluginStateFromValueTree (const ValueTree& v)
 {
-    for (auto* cv : values)
+    if (v.hasProperty (IDs::state))
     {
-        const juce::Identifier& prop = cv->getPropertyID();
+        MemoryBlock data;
         
-        if (v.hasProperty (prop))
-            *cv = float (v.getProperty (prop));
+        {
+            MemoryOutputStream os (data, false);
+            Base64::convertFromBase64 (os, v[IDs::state].toString());
+        }
+        
+        impl->setChunk (data.getData(), int (data.getSize()), false);
     }
     
     CachedValue<float>* cvsFloat[]  = { &wetValue, &dryValue, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+}
+    
+void AirWindowsPlugin::flushPluginStateToValueTree()
+{
+    auto* um = getUndoManager();
+    
+    Plugin::flushPluginStateToValueTree();
+    
+    void* data = nullptr;
+    int size = impl->getChunk (&data, false);
+    
+    if (data != nullptr)
+    {
+        state.setProperty (IDs::state, Base64::toBase64 (data, size_t (size)), um);
+        
+        free (data);
+    }
+    else
+    {
+        state.removeProperty (IDs::state, um);
+    }
 }
     
 //==============================================================================

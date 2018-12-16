@@ -52,6 +52,7 @@ public:
 
     //==============================================================================
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
+    void flushPluginStateToValueTree() override;
     
 protected:
     //==============================================================================
@@ -68,7 +69,6 @@ protected:
 public:
     //==============================================================================
     juce::ReferenceCountedArray<AutomatableParameter> parameters;
-    juce::OwnedArray<juce::CachedValue<float>> values;
     
     juce::CachedValue<float> dryValue, wetValue;
     AutomatableParameter::Ptr dryGain, wetGain;
