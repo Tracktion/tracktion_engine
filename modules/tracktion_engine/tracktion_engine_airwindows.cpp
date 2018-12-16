@@ -55,33 +55,33 @@ namespace airwindows
 {
 namespace deess
 {
- #include "3rd_party/airwindows/plugins/WinVST/DeEss/DeEss.cpp"
- #include "3rd_party/airwindows/plugins/WinVST/DeEss/DeEssProc.cpp"
+ #include "3rd_party/airwindows/DeEss/DeEss.cpp"
+ #include "3rd_party/airwindows/DeEss/DeEssProc.cpp"
 }
 namespace drive
 {
- #include "3rd_party/airwindows/plugins/WinVST/Drive/Drive.cpp"
- #include "3rd_party/airwindows/plugins/WinVST/Drive/DriveProc.cpp"
+ #include "3rd_party/airwindows/Drive/Drive.cpp"
+ #include "3rd_party/airwindows/Drive/DriveProc.cpp"
 }
 namespace hardvacuum
 {
- #include "3rd_party/airwindows/plugins/WinVST/HardVacuum/HardVacuum.cpp"
- #include "3rd_party/airwindows/plugins/WinVST/HardVacuum/HardVacuumProc.cpp"
+ #include "3rd_party/airwindows/HardVacuum/HardVacuum.cpp"
+ #include "3rd_party/airwindows/HardVacuum/HardVacuumProc.cpp"
 }
 namespace nonlinearspace
 {
- #include "3rd_party/airwindows/plugins/WinVST/NonlinearSpace/NonlinearSpace.cpp"
- #include "3rd_party/airwindows/plugins/WinVST/NonlinearSpace/NonlinearSpaceProc.cpp"
+ #include "3rd_party/airwindows/NonlinearSpace/NonlinearSpace.cpp"
+ #include "3rd_party/airwindows/NonlinearSpace/NonlinearSpaceProc.cpp"
 }
 namespace purestdrive
 {
- #include "3rd_party/airwindows/plugins/WinVST/PurestDrive/PurestDrive.cpp"
- #include "3rd_party/airwindows/plugins/WinVST/PurestDrive/PurestDriveProc.cpp"
+ #include "3rd_party/airwindows/PurestDrive/PurestDrive.cpp"
+ #include "3rd_party/airwindows/PurestDrive/PurestDriveProc.cpp"
 }
 namespace tubedesk
 {
- #include "3rd_party/airwindows/plugins/WinVST/TubeDesk/TubeDesk.cpp"
- #include "3rd_party/airwindows/plugins/WinVST/TubeDesk/TubeDeskProc.cpp"
+ #include "3rd_party/airwindows/TubeDesk/TubeDesk.cpp"
+ #include "3rd_party/airwindows/TubeDesk/TubeDeskProc.cpp"
 }
 }
 }
