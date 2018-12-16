@@ -233,7 +233,6 @@ namespace IDs
     DECLARE_ID (midGain2)
     DECLARE_ID (midQ2)
     DECLARE_ID (phaseInvert)
-    DECLARE_ID (CLIP)       // TODO: remove
     DECLARE_ID (AUDIOCLIP)
     DECLARE_ID (MIDICLIP)
     DECLARE_ID (MARKERCLIP)

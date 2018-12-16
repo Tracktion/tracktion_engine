@@ -451,7 +451,7 @@ private:
                 if (firstMarkerTrack == markerTrack)
                     continue;
 
-                forEachXmlChildElementWithTagName (*markerTrack, clip, IDs::CLIP)
+                forEachXmlChildElementWithTagName (*markerTrack, clip, "CLIP")
                     firstMarkerTrack->addChildElement (new XmlElement (*clip));
 
                 tracksToRemove.add (markerTrack);

@@ -325,15 +325,7 @@ AudioFile ClipEffect::getSourceFile() const
 AudioFile ClipEffect::getDestinationFile() const
 {
     if (destinationFile.isNull())
-    {
-        const File tempDir (clipEffects.clip.edit.getTempDirectory (true));
-
-        // TODO: unifying the logic around proxy file naming
-        destinationFile = AudioFile (tempDir.getChildFile (AudioClipBase::getClipProxyPrefix()
-                                                            + "0_" + clipEffects.clip.itemID.toString()
-                                                            + "_" + String::toHexString (getHash())
-                                                            + ".wav"));
-    }
+        destinationFile = TemporaryFileManager::getFileForCachedFileRender (edit, getHash());
 
     return destinationFile;
 }

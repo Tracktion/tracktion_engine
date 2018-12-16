@@ -752,10 +752,10 @@ void WaveCompManager::updateThumbnails (Component& comp, OwnedArray<SmartThumbna
 
 File WaveCompManager::getCurrentCompFile() const
 {
-    if (lastHash == 0)
-        return {};
+    if (lastHash != 0)
+        return TemporaryFileManager::getFileForCachedCompRender (clip, lastHash).getFile();
 
-    return clip.getCompFileFor (lastHash).getFile();
+    return {};
 }
 
 //==============================================================================
@@ -1212,7 +1212,7 @@ static void beginCompGeneration (WaveAudioClip& clip, int takeIndex)
     auto& cm = clip.getCompManager();
 
     clip.edit.engine.getAudioFileManager()
-       .proxyGenerator.beginJob (new CompGeneratorJob (clip, clip.getCompFileFor (cm.getTakeHash (takeIndex))));
+       .proxyGenerator.beginJob (new CompGeneratorJob (clip, TemporaryFileManager::getFileForCachedCompRender (clip, cm.getTakeHash (takeIndex))));
 }
 
 void WaveCompManager::timerCallback()
@@ -1231,13 +1231,14 @@ void WaveCompManager::timerCallback()
     if (isTakeComp (lastRenderedTake) && hash != lastHash)
     {
         // stops the last render job and deletes the source
-        clip.edit.engine.getAudioFileManager().proxyGenerator.deleteProxy (clip.getCompFileFor (lastHash));
+        clip.edit.engine.getAudioFileManager().proxyGenerator
+           .deleteProxy (TemporaryFileManager::getFileForCachedCompRender (clip, lastHash));
     }
 
     lastRenderedTake = takeIndex;
     lastHash = hash;
 
-    lastCompFile = clip.getCompFileFor (lastHash);
+    lastCompFile = TemporaryFileManager::getFileForCachedCompRender (clip, lastHash);
     const bool isComp = isTakeComp (lastRenderedTake);
 
     if (isComp && (! lastCompFile.isValid()))

@@ -250,7 +250,7 @@ static AudioNode* createPlaybackAudioNode (Edit& edit, OutputDeviceInstance& dev
                     CRASH_TRACER
                     addedFrozenTracksYet = true;
 
-                    for (auto& freezeFile : edit.getFrozenTracksFiles())
+                    for (auto& freezeFile : TemporaryFileManager::getFrozenTrackFiles (edit))
                     {
                         const String fn (freezeFile.getFileName());
                         const String outId (fn.fromLastOccurrenceOf ("_", false, false)

@@ -109,6 +109,17 @@ bool AudioFile::deleteFile() const
     return ok;
 }
 
+bool AudioFile::deleteFiles (const juce::Array<juce::File>& files)
+{
+    bool allOK = true;
+
+    for (auto& f : files)
+        if (! AudioFile (f).deleteFile())
+            allOK = false;
+
+    return allOK;
+}
+
 bool AudioFile::isWavFile() const               { return file.hasFileExtension ("wav;bwav;bwf"); }
 bool AudioFile::isAiffFile() const              { return file.hasFileExtension ("aiff;aif"); }
 bool AudioFile::isOggFile() const               { return file.hasFileExtension ("ogg"); }

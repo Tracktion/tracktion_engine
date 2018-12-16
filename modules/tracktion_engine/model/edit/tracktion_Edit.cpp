@@ -684,7 +684,7 @@ void Edit::initialise()
         t->cancelAnyPendingUpdates();
 
     initialiseControllerMappings();
-    purgeOrphanFreezeAndProxyFiles();
+    TemporaryFileManager::purgeOrphanFreezeAndProxyFiles (*this);
 
     callBlocking ([this]
                   {
@@ -2143,22 +2143,11 @@ int Edit::getNumCountInBeats() const
 }
 
 //==============================================================================
-static bool deleteFrozenTrackFiles (const Array<File>& freezeFiles)
-{
-    bool allOK = true;
-
-    for (auto& freezeFile : freezeFiles)
-        if (! AudioFile (freezeFile).deleteFile())
-            allOK = false;
-
-    return allOK;
-}
-
 void Edit::readFrozenTracksFiles()
 {
     CRASH_TRACER
 
-    auto freezeFiles = getFrozenTracksFiles();
+    auto freezeFiles = TemporaryFileManager::getFrozenTrackFiles (*this);
     bool resetFrozenness = freezeFiles.isEmpty();
 
     for (auto& freezeFile : freezeFiles)
@@ -2183,7 +2172,7 @@ void Edit::readFrozenTracksFiles()
 
     if (resetFrozenness || ! anyFrozen)
     {
-        deleteFrozenTrackFiles (freezeFiles);
+        AudioFile::deleteFiles (freezeFiles);
 
         for (auto t : getAllTracks (*this))
         {
@@ -2211,7 +2200,7 @@ void Edit::updateFrozenTracks()
     TransportControl::stopAllTransports (engine, false, true);
     const ScopedRenderStatus srs (*this, true);
 
-    deleteFrozenTrackFiles (getFrozenTracksFiles());
+    AudioFile::deleteFiles (TemporaryFileManager::getFrozenTrackFiles (*this));
 
     auto& dm = engine.getDeviceManager();
 
@@ -2246,16 +2235,11 @@ void Edit::updateFrozenTracks()
                 for (auto sm : getSelectionManagers (*this))
                     sm->deselectAll();
 
-                auto f = getTempDirectory (true)
-                           .getChildFile (getFreezeFilePrefix()
-                                           + String (outputDevice->getDeviceID())
-                                           + ".freeze");
-
                 StringPairArray metadataFound;
 
                 Renderer::Parameters r (*this);
                 r.tracksToDo = frozen;
-                r.destFile = f;
+                r.destFile = TemporaryFileManager::getFreezeFile (*this, *outputDevice);
                 r.audioFormat = engine.getAudioFileFormatManager().getFrozenFileFormat();
                 r.blockSizeForAudio = dm.getBlockSize();
                 r.sampleRateForAudio = dm.getSampleRate();
@@ -2270,7 +2254,7 @@ void Edit::updateFrozenTracks()
                 Renderer::renderToProjectItem (TRANS("Updating frozen tracks for output device \"XDVX\"")
                                                   .replace ("XDVX", outputDevice->getName()) + "...", r);
 
-                if (! f.exists())
+                if (! r.destFile.exists())
                 {
                     // failed to render properly - calling this should unfreeze all the tracks
                     readFrozenTracksFiles();
@@ -2299,39 +2283,11 @@ void Edit::updateFrozenTracks()
     SelectionManager::refreshAllPropertyPanels();
 }
 
-juce::String Edit::getFreezeFilePrefix() const
-{
-    return "freeze_" + getProjectItemID().toStringSuitableForFilename() + "_";
-}
-
-Array<File> Edit::getFrozenTracksFiles() const
-{
-    // freeze filename format: freeze_(edit id)_(output device id).freeze
-
-    Array<File> files;
-    getTempDirectory (false).findChildFiles (files, File::findFiles, false, getFreezeFilePrefix() + "*");
-    return files;
-}
-
 void Edit::needToUpdateFrozenTracks()
 {
     // ignore this until fully loaded
     if (frozenTrackCallback != nullptr && ! isLoadInProgress)
         frozenTrackCallback->triggerAsyncUpdate();
-}
-
-// TODO: move logic for creating and parsing these filenames into one place - see
-// also AudioClipBase::getProxyFileToCreate
-static EditItemID getEditItemIDFromFilename (const String& name)
-{
-   auto tokens = StringArray::fromTokens (name.fromFirstOccurrenceOf ("_", false, false), "_", {});
-
-    if (tokens.isEmpty())
-        return {};
-
-    // TODO: think about backwards-compatibility for these strings - was a two-part
-    // ID separated by an underscore
-    return EditItemID::fromVar (tokens[0] + tokens[1]);
 }
 
 bool Edit::areAnyClipsUsingFile (const AudioFile& af)
@@ -2359,58 +2315,6 @@ void Edit::cancelAllProxyGeneratorJobs() const
                     apg.deleteProxy (af);
             }
         }
-    }
-}
-
-void Edit::purgeOrphanFreezeAndProxyFiles()
-{
-    CRASH_TRACER
-    Array<File> filesToDelete;
-
-    for (DirectoryIterator i (getTempDirectory (false), false, "*"); i.next();)
-    {
-        auto name = i.getFile().getFileName();
-        auto itemID = getEditItemIDFromFilename (name);
-
-        if (itemID.isValid())
-        {
-            if (name.startsWith (AudioClipBase::getClipProxyPrefix())
-                 || name.startsWith (WaveAudioClip::getCompPrefix()))
-            {
-                auto clip = findClipForID (*this, itemID);
-
-                if (auto acb = dynamic_cast<AudioClipBase*> (clip))
-                {
-                    if (! acb->isUsingFile (AudioFile (i.getFile())))
-                        filesToDelete.add (i.getFile());
-                }
-                else if (clip == nullptr)
-                {
-                    filesToDelete.add (i.getFile());
-                }
-            }
-            else if (name.startsWith (AudioClipBase::getFileProxyPrefix()))
-            {
-                // XXX
-            }
-            else if (name.startsWith (AudioTrack::getTrackFreezePrefix()))
-            {
-                if (auto at = dynamic_cast<AudioTrack*> (findTrackForID (*this, itemID)))
-                    if (! at->isFrozen (Track::individualFreeze))
-                        filesToDelete.add (i.getFile());
-            }
-        }
-        else if (name.startsWith (RenderManager::getFileRenderPrefix()))
-        {
-            if (! areAnyClipsUsingFile (AudioFile (i.getFile())))
-                filesToDelete.add (i.getFile());
-        }
-    }
-
-    for (int i = filesToDelete.size(); --i >= 0;)
-    {
-        DBG ("Purging file: " << filesToDelete.getReference (i).getFileName());
-        AudioFile (filesToDelete.getReference (i)).deleteFile();
     }
 }
 

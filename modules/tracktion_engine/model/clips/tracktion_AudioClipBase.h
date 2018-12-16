@@ -308,9 +308,6 @@ public:
     /** Should return true if the clip is referencing the file in any way. */
     virtual bool isUsingFile (const AudioFile&);
 
-    static juce::String getClipProxyPrefix()    { return "clip_"; }
-    static juce::String getFileProxyPrefix()    { return "proxy_"; }
-
     AudioFile getProxyFileToCreate (bool renderTimestretched);
     void setUsesProxy (bool canUseProxy) noexcept;
     bool canUseProxy() const noexcept               { return proxyAllowed && edit.canRenderProxies(); }

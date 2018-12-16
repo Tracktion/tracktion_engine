@@ -10,14 +10,6 @@
 namespace tracktion_engine
 {
 
-namespace
-{
-    inline double negativeAwareFmod (double a, double b)
-    {
-        return a - b * std::floor (a / b);
-    }
-}
-
 struct AbletonLink::ImplBase  : public Timer
 {
     ImplBase (TransportControl& t) : transport (t)
@@ -83,34 +75,28 @@ struct AbletonLink::ImplBase  : public Timer
     void setTempoFromLink (double bpm)
     {
         ensureJavaEnvironmentAttachedToThread();
-
         Edit::WeakRef bailOut (&transport.edit);
-
         bpm = getTempoInRange (bpm);
 
-        MessageManager::callAsync ([this, bailOut, bpm] {
-
-            if (bailOut == nullptr)
-                return;
-
-            inhibitTimer = juce::Time::getMillisecondCounter() + 100;
-
-            listeners.call (&Listener::linkRequestedTempoChange, bpm);
+        MessageManager::callAsync ([this, bailOut, bpm]
+        {
+            if (bailOut != nullptr)
+            {
+                inhibitTimer = juce::Time::getMillisecondCounter() + 100;
+                listeners.call (&Listener::linkRequestedTempoChange, bpm);
+            }
         });
     }
 
     void callConnectionChanged()
     {
         ensureJavaEnvironmentAttachedToThread();
-
         Edit::WeakRef bailOut (&transport.edit);
 
-        MessageManager::callAsync ([this, bailOut] {
-
-            if (bailOut == nullptr)
-                return;
-
-            listeners.call (&AbletonLink::Listener::linkConnectionChanged);
+        MessageManager::callAsync ([this, bailOut]
+        {
+            if (bailOut != nullptr)
+                listeners.call (&AbletonLink::Listener::linkConnectionChanged);
         });
     }
 
@@ -151,7 +137,7 @@ struct AbletonLink::ImplBase  : public Timer
     double getTempoInRange (double bpm) const
     {
         if (bpm == 0.0)
-            return bpm;
+            return 0;
 
         const auto isTooQuick = [topBpm = allowedTempos.getEnd()] (double b) { return b >= topBpm; };
         const bool wasTooQuick = isTooQuick (bpm); // Avoid infinite loops
@@ -178,6 +164,11 @@ struct AbletonLink::ImplBase  : public Timer
 
     void addListener    (Listener* l) { listeners.add (l); }
     void removeListener (Listener* l) { listeners.remove (l); }
+
+    static inline double negativeAwareFmod (double a, double b)
+    {
+        return a - b * std::floor (a / b);
+    }
 
     TransportControl& transport;
     ListenerList<Listener> listeners;
@@ -238,13 +229,11 @@ struct AbletonLink::ImplBase  : public Timer
 
     namespace tracktion_engine
     {
-    //==========================================================================
 
-    struct LinkImpl : public AbletonLink::ImplBase
+    //==========================================================================
+    struct LinkImpl  : public AbletonLink::ImplBase
     {
-        LinkImpl (TransportControl& t)
-            : AbletonLink::ImplBase (t),
-              link (120)
+        LinkImpl (TransportControl& t)  : AbletonLink::ImplBase (t)
         {
             setupCallbacks();
         }
@@ -272,7 +261,6 @@ struct AbletonLink::ImplBase  : public Timer
         void isConnectedCallback (std::size_t numPeers)
         {
             isConnected = numPeers > 0;
-
             callConnectionChanged();
 
             if (isConnected)
@@ -282,9 +270,7 @@ struct AbletonLink::ImplBase  : public Timer
         void setTempoToLink (double bpm) override
         {
             auto timeline = link.captureAppTimeline();
-
             timeline.setTempo (bpm, clock.micros());
-
             link.commitAppTimeline (timeline);
         }
 
@@ -295,20 +281,16 @@ struct AbletonLink::ImplBase  : public Timer
 
         double getBeatNow (double quantum) override
         {
-            auto timeline = link.captureAppTimeline();
-
-            return timeline.beatAtTime (clock.micros(), quantum);
+            return link.captureAppTimeline().beatAtTime (clock.micros(), quantum);
         }
 
         double getBarPhase (double quantum) override
         {
-            auto timeline = link.captureAppTimeline();
-
-            return timeline.phaseAtTime (clock.micros(), quantum);
+            return link.captureAppTimeline().phaseAtTime (clock.micros(), quantum);
         }
 
         ableton::Link::Clock clock;
-        ableton::Link link;
+        ableton::Link link { 120 };
     };
 
 #elif JUCE_IOS
@@ -316,10 +298,9 @@ struct AbletonLink::ImplBase  : public Timer
     // To use Link on iOS you need to get access to the LinkKit repo from
     // Ableton, add its include folder to your header search paths, and link to
     // the libABLLink.a static library.
-
     #include "ABLLink.h"
 
-    struct LinkImpl : public AbletonLink::ImplBase
+    struct LinkImpl  : public AbletonLink::ImplBase
     {
         LinkImpl (TransportControl& t)
             : AbletonLink::ImplBase (t),
@@ -355,12 +336,10 @@ struct AbletonLink::ImplBase  : public Timer
             // enabling, make sure everything is up to date.
             Edit::WeakRef bailOut (&transport.edit);
 
-            Timer::callAfterDelay (500, [this, bailOut] {
-
-                if (bailOut == nullptr)
-                    return;
-
-                isConnectedCallback (ABLLinkIsConnected (link), this);
+            Timer::callAfterDelay (500, [this, bailOut]
+            {
+                if (bailOut != nullptr)
+                    isConnectedCallback (ABLLinkIsConnected (link), this);
             });
         }
 
@@ -368,8 +347,7 @@ struct AbletonLink::ImplBase  : public Timer
         {
             auto timeline = ABLLinkCaptureAppTimeline (link);
 
-            ABLLinkSetTempo (timeline, bpm, uint64 (Time::getHighResolutionTicks()));
-
+            ABLLinkSetTempo (timeline, bpm, (uint64) juce::Time::getHighResolutionTicks());
             ABLLinkCommitAppTimeline (link, timeline);
         }
 
@@ -381,21 +359,18 @@ struct AbletonLink::ImplBase  : public Timer
         double getBeatNow (double quantum) override
         {
             auto timeline = ABLLinkCaptureAppTimeline (link);
-
-            return ABLLinkBeatAtTime (timeline, uint64 (Time::getHighResolutionTicks()), quantum);
+            return ABLLinkBeatAtTime (timeline, (uint64) juce::Time::getHighResolutionTicks(), quantum);
         }
 
         double getBarPhase (double quantum) override
         {
             auto timeline = ABLLinkCaptureAppTimeline (link);
-
-            return ABLLinkPhaseAtTime (timeline, uint64 (Time::getHighResolutionTicks()), quantum);
+            return ABLLinkPhaseAtTime (timeline, (uint64) juce::Time::getHighResolutionTicks(), quantum);
         }
 
         static void tempoChangedCallback (double bpm, void *context)
         {
             auto* thisPtr = static_cast<LinkImpl*> (context);
-
             thisPtr->setTempoFromLink (bpm);
         }
 
@@ -440,9 +415,9 @@ struct AbletonLink::ImplBase  : public Timer
 //==============================================================================
 AbletonLink::AbletonLink (TransportControl& t)
 {
-#if TRACKTION_ENABLE_ABLETON_LINK
+   #if TRACKTION_ENABLE_ABLETON_LINK
     implementation.reset (new LinkImpl (t));
-#endif
+   #endif
 
     juce::ignoreUnused (t);
 }
@@ -450,87 +425,69 @@ AbletonLink::AbletonLink (TransportControl& t)
 AbletonLink::~AbletonLink() {}
 
 #if TRACKTION_ENABLE_ABLETON_LINK && JUCE_IOS
-ABLLink* AbletonLink::getLinkInstanceForIOS() { return static_cast<LinkImpl*>(implementation.get())->link; }
+ ABLLink* AbletonLink::getLinkInstanceForIOS()  { return static_cast<LinkImpl*>(implementation.get())->link; }
 #endif
 
 void AbletonLink::setEnabled (bool isEnabled)
 {
-    if (implementation == nullptr)
-        return;
-
-    implementation->setEnabled (isEnabled);
+    if (implementation != nullptr)
+        implementation->setEnabled (isEnabled);
 }
 
 bool AbletonLink::isEnabled() const
 {
-    if (implementation == nullptr)
-        return false;
-
-    return implementation->isEnabled();
+    return implementation != nullptr && implementation->isEnabled();
 }
 
 bool AbletonLink::isConnected() const
 {
-    if (implementation == nullptr)
-        return false;
-
-    return implementation->isConnected;
+    return implementation != nullptr && implementation->isConnected;
 }
 
 double AbletonLink::getBeatsUntilNextCycle (double quantum) const
 {
-    if (implementation == nullptr)
-        return 0.0;
+    if (implementation != nullptr)
+        return implementation->getBeatsUntilNextCycle (quantum);
 
-    return implementation->getBeatsUntilNextCycle (quantum);
+    return 0.0;
 }
 
 void AbletonLink::requestTempoChange (double newBpm)
 {
-    if (implementation == nullptr)
-        return;
-
-    implementation->setTempoToLink (newBpm);
+    if (implementation != nullptr)
+        implementation->setTempoToLink (newBpm);
 }
 
 void AbletonLink::setTempoConstraint (juce::Range<double> minMaxTempo)
 {
-    if (implementation == nullptr)
-        return;
-
-    implementation->setTempoConstraint (minMaxTempo);
+    if (implementation != nullptr)
+        implementation->setTempoConstraint (minMaxTempo);
 }
 
 double AbletonLink::getSessionTempo() const
 {
-    if (implementation == nullptr)
-        return 120.0;
+    if (implementation != nullptr)
+        return implementation->getTempoFromLink();
 
-    return implementation->getTempoFromLink();
+    return 120.0;
 }
 
 void AbletonLink::setCustomOffset (int offsetMs)
 {
-    if (implementation == nullptr)
-        return;
-
-    implementation->setCustomOffset (offsetMs);
+    if (implementation != nullptr)
+        implementation->setCustomOffset (offsetMs);
 }
 
 void AbletonLink::addListener (Listener* l)
 {
-    if (implementation == nullptr)
-        return;
-
-    implementation->addListener (l);
+    if (implementation != nullptr)
+        implementation->addListener (l);
 }
 
 void AbletonLink::removeListener (Listener* l)
 {
-    if (implementation == nullptr)
-        return;
-
-    implementation->removeListener (l);
+    if (implementation != nullptr)
+        implementation->removeListener (l);
 }
 
 }

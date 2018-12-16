@@ -12,28 +12,78 @@ namespace tracktion_engine
 
 /**
     Holds info about where temp files should go, and tidies up old ones when needed.
+
+    You shouldn't have to ever create your own instance of this class - the
+    Engine has a TemporaryFileManager object that is shared.
+
+    @see Engine::getTemporaryFileManager()
 */
 class TemporaryFileManager
 {
 public:
     //==============================================================================
+    /** You shouldn't have to ever create your own instance of this class - the
+        Engine itself has a TemporaryFileManager that is shared.
+    */
     TemporaryFileManager (Engine&);
+
     ~TemporaryFileManager();
 
     //==============================================================================
+    /** */
     bool wasTempFolderSuccessfullyCreated() const;
+
+    /** */
     bool isDiskSpaceDangerouslyLow() const;
+
+    /** */
+    juce::int64 getMaxSpaceAllowedForTempFiles() const;
+
+    /** */
+    int getMaxNumTempFiles() const;
+
+    /** */
     void cleanUp();
 
-    const juce::File& getTempDirectory() const    { return tempDir; }
+    /** */
+    const juce::File& getTempDirectory() const;
 
+    /** */
+    bool setTempDirectory (const juce::File& newFile);
+
+    /** */
+    void ressetToDefaultLocation();
+
+    /** */
     juce::File getThumbnailsFolder() const;
 
+    /** */
     juce::File getTempFile (const juce::String& filename) const;
+
+    /** */
     juce::File getUniqueTempFile (const juce::String& prefix, const juce::String& ext) const;
 
-    bool setTempDirectory (const juce::File& newFile);
-    void setToDefaultDirectory();
+    //==============================================================================
+    /** */
+    static AudioFile getFileForCachedClipRender (const AudioClipBase&, juce::int64 hash);
+
+    /** */
+    static AudioFile getFileForCachedCompRender (const AudioClipBase& clip, juce::int64 takeHash);
+
+    /** */
+    static AudioFile getFileForCachedFileRender (Edit&, juce::int64 hash);
+
+    /** */
+    static void purgeOrphanEditTempFolders (ProjectManager&);
+
+    /** */
+    static void purgeOrphanFreezeAndProxyFiles (Edit&);
+
+    /** */
+    static juce::File getFreezeFile (Edit&, OutputDevice&);
+
+    /** */
+    static juce::Array<juce::File> getFrozenTrackFiles (Edit&);
 
     //==============================================================================
 private:

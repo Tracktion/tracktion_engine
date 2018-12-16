@@ -2173,16 +2173,10 @@ AudioClipBase::ProxyRenderingInfo::~ProxyRenderingInfo() {}
 
 AudioFile AudioClipBase::getProxyFileToCreate (bool renderTimestretched)
 {
-    auto tempDir = edit.getTempDirectory (true);
-
-    // TODO: move logic for creating and parsing these filenames into one place - see
-    // also getEditItemIDFromFilename()
-
     if (renderTimestretched)
-        return AudioFile (tempDir.getChildFile (getClipProxyPrefix() + "0_" + itemID.toString()
-                                                 + "_" + String::toHexString (getProxyHash()) + ".wav"));
+        return TemporaryFileManager::getFileForCachedClipRender (*this, getProxyHash());
 
-    return AudioFile (tempDir.getChildFile (getFileProxyPrefix() + String (getHash()) + ".wav"));
+    return TemporaryFileManager::getFileForCachedFileRender (edit, getHash());
 }
 
 //==============================================================================

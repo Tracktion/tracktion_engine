@@ -533,7 +533,7 @@ static void fixClipTimes (ValueTree& state, const Clipboard::Clips::ClipInfo& cl
     }
 
     double srcBpm = state[IDs::bpm];   // if clip is coming from preset, it'll have this
-                                              // property, so resize it to match tempo
+                                       // property, so resize it to match tempo
     if (srcBpm > 0)
     {
         auto& destTempo = tempoSequence.getTempoAt (start);

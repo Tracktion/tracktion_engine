@@ -562,15 +562,4 @@ bool WaveAudioClip::isUsingFile (const AudioFile& af)
     return false;
 }
 
-AudioFile WaveAudioClip::getCompFileFor (int64 takeHash) const
-{
-    auto tempDir = edit.getTempDirectory (true);
-
-    // TODO: unify all proxy filename functionality..
-    return AudioFile (tempDir.getChildFile (getCompPrefix()
-                                             + "0_" + itemID.toString()
-                                             + "_" + String::toHexString (takeHash)
-                                             + ".wav"));
-}
-
 }

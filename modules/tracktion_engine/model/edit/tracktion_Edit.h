@@ -366,10 +366,6 @@ public:
     void dispatchPendingUpdatesSynchronously();
 
     //==============================================================================
-    void purgeOrphanFreezeAndProxyFiles();
-    juce::String getFreezeFilePrefix() const;
-    juce::Array<juce::File> getFrozenTracksFiles() const;
-
     bool areAnyClipsUsingFile (const AudioFile&);
     void cancelAllProxyGeneratorJobs() const;
 

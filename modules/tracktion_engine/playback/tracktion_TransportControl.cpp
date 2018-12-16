@@ -331,7 +331,7 @@ struct TransportControl::FileFlushTimer  : private Timer
                 if (! forcePurge)
                     owner.engine.getAudioFileManager().releaseAllFiles();
 
-                owner.edit.purgeOrphanFreezeAndProxyFiles();
+                TemporaryFileManager::purgeOrphanFreezeAndProxyFiles (owner.edit);
                 forcePurge = false;
             }
             else

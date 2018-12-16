@@ -81,13 +81,13 @@ UndoManager* Clip::getUndoManager() const
 //==============================================================================
 bool Clip::isClipState (const ValueTree& v)
 {
-    return v.hasType (IDs::CLIP) || v.hasType (IDs::AUDIOCLIP) || v.hasType (IDs::MIDICLIP) || v.hasType (IDs::MARKERCLIP)
+    return v.hasType (IDs::AUDIOCLIP) || v.hasType (IDs::MIDICLIP) || v.hasType (IDs::MARKERCLIP)
             || v.hasType (IDs::STEPCLIP) || v.hasType (IDs::CHORDCLIP) || v.hasType (IDs::EDITCLIP);
 }
 
 bool Clip::isClipState (const Identifier& i)
 {
-    return i == IDs::CLIP || i == IDs::AUDIOCLIP || i == IDs::MIDICLIP || i == IDs::MARKERCLIP
+    return i == IDs::AUDIOCLIP || i == IDs::MIDICLIP || i == IDs::MARKERCLIP
             || i == IDs::STEPCLIP || i == IDs::CHORDCLIP || i == IDs::EDITCLIP;
 }
 
@@ -128,7 +128,7 @@ static Clip::Ptr createNewClipObject (const ValueTree& v, EditItemID newClipID, 
     auto type = v.getType();
 
     // TODO: remove this legacy-style CLIP tag + type handling when definitely not needed
-    if (type == IDs::CLIP)
+    if (type.toString() == "CLIP")
     {
         jassertfalse;
         type = TrackItem::clipTypeToXMLType (TrackItem::stringToType (v.getProperty (IDs::type).toString()));

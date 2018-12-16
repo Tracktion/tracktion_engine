@@ -66,8 +66,4 @@ juce::ValueTree updateLegacyEdit (const juce::ValueTree&);
 void updateLegacyEdit (juce::XmlElement& editXML);
 
 
-/** */
-void purgeOrphanEditTempFolders (ProjectManager&);
-
-
 } // namespace tracktion_engine
