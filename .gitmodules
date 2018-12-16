@@ -2,6 +2,3 @@
 	path = modules/juce
 url=https://github.com/WeAreROLI/JUCE.git
 	branch = develop
-[submodule "modules/tracktion_engine/3rd_party/airwindows"]
-	path = modules/tracktion_engine/3rd_party/airwindows
-	url = git@github.com:airwindows/airwindows.git
