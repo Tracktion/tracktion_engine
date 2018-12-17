@@ -251,8 +251,9 @@ void ExportJob::copyEditFilesToTempDir()
             }
             else
             {
-                // couldn't create the new clip, so avoid pointing at the old one
-                callBlocking ([&]() { exportable->reassignReferencedItem (ref, {}, start); });
+                // Couldn't create the new clip, so avoid pointing at the old one
+                // Create a new random ID here as it could be used to reference a comp or similar
+                callBlocking ([&]() { exportable->reassignReferencedItem (ref, ProjectItemID::createNewID (newProject->getProjectID()), start); });
             }
         }
     }
