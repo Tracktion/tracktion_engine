@@ -93,12 +93,36 @@ public: \
     static const char* xmlTypeName; \
 }; \
 
+AIRWINDOWSPLUGIN(AirWindowsADClip7, "ADClip 7");
+AIRWINDOWSPLUGIN(AirWindowsAcceleration, "Acceleration");
+AIRWINDOWSPLUGIN(AirWindowsAura, "Aura");
+AIRWINDOWSPLUGIN(AirWindowsBitGlitter, "BitGlitter");
+AIRWINDOWSPLUGIN(AirWindowsButterComp2, "Butter Comp 2");
+AIRWINDOWSPLUGIN(AirWindowsChorusEnsemble, "Chorus Ensemble");
 AIRWINDOWSPLUGIN(AirWindowsDeEss, "DeEss")
+AIRWINDOWSPLUGIN(AirWindowsDeRez, "DeRez");
+AIRWINDOWSPLUGIN(AirWindowsDensity, "Density");
+AIRWINDOWSPLUGIN(AirWindowsDistance2, "Distance 2");
 AIRWINDOWSPLUGIN(AirWindowsDrive, "Drive")
+AIRWINDOWSPLUGIN(AirWindowsFathomFive, "Fathom Five");
+AIRWINDOWSPLUGIN(AirWindowsFloor, "Floor");
+AIRWINDOWSPLUGIN(AirWindowsGatelope, "Gatelope");
+AIRWINDOWSPLUGIN(AirWindowsGrooveWear, "Groove Wear");
+AIRWINDOWSPLUGIN(AirWindowsGuitarConditioner, "Guitar Conditioner");
 AIRWINDOWSPLUGIN(AirWindowsHardVacuum, "Hard Vacuum")
+AIRWINDOWSPLUGIN(AirWindowsHombre, "Hombre");
+AIRWINDOWSPLUGIN(AirWindowsNC17, "NC-17");
 AIRWINDOWSPLUGIN(AirWindowsNonlinearSpace, "Nonlinear Space")
+AIRWINDOWSPLUGIN(AirWindowsPoint, "Point");
 AIRWINDOWSPLUGIN(AirWindowsPurestDrive, "Purest Drive")
+AIRWINDOWSPLUGIN(AirWindowsPurestWarm, "Purest Warm");
+AIRWINDOWSPLUGIN(AirWindowsSingleEndedTriode, "Single Ended Triode");
+AIRWINDOWSPLUGIN(AirWindowsStereoFX, "Stereo FX");
+AIRWINDOWSPLUGIN(AirWindowsSurge, "Surge");
+AIRWINDOWSPLUGIN(AirWindowsToTape5, "To Tape 5");
+AIRWINDOWSPLUGIN(AirWindowsToVinyl4, "Vinyl 4");
 AIRWINDOWSPLUGIN(AirWindowsTubeDesk, "Tube Desk")
-
+AIRWINDOWSPLUGIN(AirWindowsUnbox, "Unbox");
+AIRWINDOWSPLUGIN(AirWindowsWider, "Wider");
     
 } // namespace tracktion_engine

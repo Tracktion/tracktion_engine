@@ -434,12 +434,37 @@ void PluginManager::initialise()
    #endif
     
    #if TRACKTION_AIR_WINDOWS
+    createBuiltInType<AirWindowsADClip7>();
+    createBuiltInType<AirWindowsAcceleration>();
+    createBuiltInType<AirWindowsAura>();
+    createBuiltInType<AirWindowsBitGlitter>();
+    createBuiltInType<AirWindowsButterComp2>();
+    createBuiltInType<AirWindowsChorusEnsemble>();
     createBuiltInType<AirWindowsDeEss>();
+    createBuiltInType<AirWindowsDeRez>();
+    createBuiltInType<AirWindowsDensity>();
+    createBuiltInType<AirWindowsDistance2>();
     createBuiltInType<AirWindowsDrive>();
+    createBuiltInType<AirWindowsFathomFive>();
+    createBuiltInType<AirWindowsFloor>();
+    createBuiltInType<AirWindowsGatelope>();
+    createBuiltInType<AirWindowsGrooveWear>();
+    createBuiltInType<AirWindowsGuitarConditioner>();
     createBuiltInType<AirWindowsHardVacuum>();
+    createBuiltInType<AirWindowsHombre>();
+    createBuiltInType<AirWindowsNC17>();
     createBuiltInType<AirWindowsNonlinearSpace>();
+    createBuiltInType<AirWindowsPoint>();
     createBuiltInType<AirWindowsPurestDrive>();
+    createBuiltInType<AirWindowsPurestWarm>();
+    createBuiltInType<AirWindowsSingleEndedTriode>();
+    createBuiltInType<AirWindowsStereoFX>();
+    createBuiltInType<AirWindowsSurge>();
+    createBuiltInType<AirWindowsToTape5>();
+    createBuiltInType<AirWindowsToVinyl4>();
     createBuiltInType<AirWindowsTubeDesk>();
+    createBuiltInType<AirWindowsUnbox>();
+    createBuiltInType<AirWindowsWider>();
    #endif
 
     initialised = true;
