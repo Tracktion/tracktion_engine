@@ -62,6 +62,25 @@ static bool trackLoopsBackInto (const Array<Track*>& allTracks, AudioTrack& t, c
     return false;
 }
 
+static Array<Track*> getTracksIncludedInRender (const Array<Track*>& allTracks, const BigInteger* tracksToCheck)
+{
+    if (tracksToCheck == nullptr)
+        return allTracks;
+
+    Array<Track*> tracks;
+
+    for (int i = 0; i < allTracks.size(); ++i)
+        if ((*tracksToCheck)[i])
+            tracks.add (allTracks[i]);
+
+    return tracks;
+}
+
+static bool isTrackIncludedInRender (const Array<Track*>& allTracks, const BigInteger* tracksToCheck, Track& trackToLookFor)
+{
+    return getTracksIncludedInRender (allTracks, tracksToCheck).contains (&trackToLookFor);
+}
+
 static Plugin::Array findAllPlugins (AudioNode& node)
 {
     Plugin::Array plugins, insideRacks;
@@ -775,7 +794,11 @@ static AudioNode* createRenderingNodeFromEdit (Edit& edit,
         {
             auto track = allTracks.getUnchecked (i);
 
-            if (! track->isProcessing (true) || track->isPartOfSubmix())
+            if (! track->isProcessing (true))
+                continue;
+
+            // Don't include tracks that will be part of a submix being rendered
+            if (track->isPartOfSubmix() && isTrackIncludedInRender (allTracks, params.allowedTracks, *track->getParentTrack()))
                 continue;
 
             if (auto at = dynamic_cast<AudioTrack*> (track))
