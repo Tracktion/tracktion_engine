@@ -149,13 +149,13 @@ namespace AppFunctions
     void markIn()
     {
         if (auto transport = getActiveTransport())
-            markIn (*transport);
+            transport->setLoopIn  (getCurrentUIBehaviour().getEditingPosition (*sm->edit))
     }
 
     void markOut()
     {
         if (auto transport = getActiveTransport())
-            markOut (*transport);
+            transport->setLoopOut  (getCurrentUIBehaviour().getEditingPosition (*sm->edit))
     }
 
     void start()
