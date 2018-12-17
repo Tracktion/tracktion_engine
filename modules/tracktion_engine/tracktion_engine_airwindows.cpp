@@ -9,8 +9,6 @@
 
 #if ! JUCE_PROJUCER_LIVE_BUILD
 
-#if TRACKTION_AIR_WINDOWS
-
 #include <atomic>
 #include <numeric>
 #include <set>
@@ -18,6 +16,8 @@
 #include <math.h>
 
 #include "tracktion_engine.h"
+
+#if TRACKTION_AIR_WINDOWS
 
 using namespace juce;
 
