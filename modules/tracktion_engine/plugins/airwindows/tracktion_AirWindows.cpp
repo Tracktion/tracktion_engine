@@ -297,7 +297,7 @@ AirWindowsFathomFive::AirWindowsFathomFive (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::fathomfive::FathomFive> (&callback)) {}
     
 AirWindowsFloor::AirWindowsFloor (PluginCreationInfo info)
-    : AirWindowsPlugin (info, std::make_unique<airwindows::floor::Floor> (&callback)) {}
+    : AirWindowsPlugin (info, std::make_unique<airwindows::awfloor::Floor> (&callback)) {}
     
 AirWindowsGatelope::AirWindowsGatelope (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::gatelope::Gatelope> (&callback)) {}
@@ -348,7 +348,7 @@ AirWindowsTubeDesk::AirWindowsTubeDesk (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::tubedesk::TubeDesk> (&callback)) {}
     
 AirWindowsUnbox::AirWindowsUnbox (PluginCreationInfo info)
-    : AirWindowsPlugin (info, std::make_unique<airwindows::unbox::Unbox> (&callback)) {}
+    : AirWindowsPlugin (info, std::make_unique<airwindows::unbox::UnBox> (&callback)) {}
 
 AirWindowsWider::AirWindowsWider (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::wider::Wider> (&callback)) {}

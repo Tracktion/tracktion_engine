@@ -46,7 +46,7 @@ using namespace juce;
 
 #if JUCE_WINDOWS
  #pragma warning (push)
- #pragma warning (disable : 4244 4100 4305)
+ #pragma warning (disable : 4244 4100 4305 4065)
 #endif
 
 namespace tracktion_engine
@@ -82,11 +82,6 @@ namespace chorusensemble
 {
  #include "3rd_party/airwindows/ChorusEnsemble/ChorusEnsemble.cpp"
  #include "3rd_party/airwindows/ChorusEnsemble/ChorusEnsembleProc.cpp"
-}
-namespace Density
-{
- #include "3rd_party/airwindows/Density/Density.cpp"
- #include "3rd_party/airwindows/Density/DensityProc.cpp"
 }
 namespace derez
 {
