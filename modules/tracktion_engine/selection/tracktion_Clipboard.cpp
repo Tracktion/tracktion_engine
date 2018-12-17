@@ -312,6 +312,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
     }
 
     int targetTrackIndex = insertPointTrack->getIndexInEditTrackList();
+    SelectableList itemsAdded;
 
     for (auto& item : itemIDs)
     {
@@ -333,14 +334,20 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
                     {
                         if (auto newClip = targetTrack->insertWaveClip (sourceItem->getName(), sourceItem->getID(),
                                                                         { { startTime, startTime + sourceItem->getLength() }, 0.0 }, false))
+                        {
                             newClipEndTime = newClip->getPosition().getEnd();
+                            itemsAdded.add (newClip.get());
+                        }
 
                     }
                     else if (sourceItem->isEdit())
                     {
                         if (auto newClip = targetTrack->insertEditClip ({ startTime, startTime + sourceItem->getLength() },
                                                                         sourceItem->getID()))
+                        {
                             newClipEndTime = newClip->getPosition().getEnd();
+                            itemsAdded.add (newClip.get());
+                        }
                     }
 
                     anythingPasted = true;
@@ -353,6 +360,10 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
             }
         }
     }
+
+    if (itemsAdded.isNotEmpty())
+        if (auto sm = options.selectionManager)
+            sm->select (itemsAdded);
 
     return anythingPasted;
 }

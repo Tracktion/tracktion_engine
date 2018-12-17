@@ -72,6 +72,9 @@ void WaveAudioClip::sourceMediaChanged()
 {
     AudioClipBase::sourceMediaChanged();
 
+    if (compManager != nullptr)
+        setCurrentSourceFile (compManager->getCurrentCompFile());
+
     sourceLength = 0.0;
     markAsDirty();
 
