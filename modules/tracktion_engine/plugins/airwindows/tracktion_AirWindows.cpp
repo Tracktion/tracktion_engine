@@ -228,127 +228,251 @@ void AirWindowsPlugin::flushPluginStateToValueTree()
 }
     
 //==============================================================================
-const char* AirWindowsADClip7::xmlTypeName = "airwindows_adclip7";
 const char* AirWindowsAcceleration::xmlTypeName = "airwindows_acceleration";
+const char* AirWindowsADClip7::xmlTypeName = "airwindows_adclip7";
+const char* AirWindowsADT::xmlTypeName = "airwindows_adt";
+const char* AirWindowsAtmosphere::xmlTypeName = "airwindows_atmosphere";
 const char* AirWindowsAura::xmlTypeName = "airwindows_aura";
-const char* AirWindowsBitGlitter::xmlTypeName = "airwindows_glitter";
+const char* AirWindowsBassKit::xmlTypeName = "airwindows_basskit";
+const char* AirWindowsBitGlitter::xmlTypeName = "airwindows_bitglitter";
+const char* AirWindowsButterComp::xmlTypeName = "airwindows_buttercomp";
 const char* AirWindowsButterComp2::xmlTypeName = "airwindows_buttercomp2";
-const char* AirWindowsChorusEnsemble::xmlTypeName = "airwindows_chorusensamble";
+const char* AirWindowsChannel4::xmlTypeName = "airwindows_channel4";
+const char* AirWindowsChannel5::xmlTypeName = "airwindows_channel5";
+const char* AirWindowsChorusEnsemble::xmlTypeName = "airwindows_chorusensemble";
+const char* AirWindowsCrunchyGrooveWear::xmlTypeName = "airwindows_crunchygroovewear";
 const char* AirWindowsDeEss::xmlTypeName = "airwindows_deess";
-const char* AirWindowsDeRez::xmlTypeName = "airwindows_derez";
 const char* AirWindowsDensity::xmlTypeName = "airwindows_density";
+const char* AirWindowsDeRez::xmlTypeName = "airwindows_derez";
+const char* AirWindowsDesk::xmlTypeName = "airwindows_desk";
+const char* AirWindowsDesk4::xmlTypeName = "airwindows_desk4";
 const char* AirWindowsDistance2::xmlTypeName = "airwindows_distance2";
 const char* AirWindowsDrive::xmlTypeName = "airwindows_drive";
+const char* AirWindowsDrumSlam::xmlTypeName = "airwindows_drumslam";
+const char* AirWindowsDubSub::xmlTypeName = "airwindows_dubsub";
+const char* AirWindowsEdIsDim::xmlTypeName = "airwindows_edisdim";
+const char* AirWindowsElectroHat::xmlTypeName = "airwindows_electrohat";
+const char* AirWindowsEnergy::xmlTypeName = "airwindows_energy";
+const char* AirWindowsEnsemble::xmlTypeName = "airwindows_ensemble";
 const char* AirWindowsFathomFive::xmlTypeName = "airwindows_fathomfive";
 const char* AirWindowsFloor::xmlTypeName = "airwindows_floor";
+const char* AirWindowsFromTape::xmlTypeName = "airwindows_fromtape";
 const char* AirWindowsGatelope::xmlTypeName = "airwindows_gatelope";
+const char* AirWindowsGolem::xmlTypeName = "airwindows_golem";
 const char* AirWindowsGrooveWear::xmlTypeName = "airwindows_groovewear";
 const char* AirWindowsGuitarConditioner::xmlTypeName = "airwindows_guitarconditioner";
 const char* AirWindowsHardVacuum::xmlTypeName = "airwindows_hardvacuum";
 const char* AirWindowsHombre::xmlTypeName = "airwindows_hombre";
+const char* AirWindowsMelt::xmlTypeName = "airwindows_melt";
 const char* AirWindowsNC17::xmlTypeName = "airwindows_nc17";
+const char* AirWindowsNoise::xmlTypeName = "airwindows_noise";
 const char* AirWindowsNonlinearSpace::xmlTypeName = "airwindows_nonlinearspace";
 const char* AirWindowsPoint::xmlTypeName = "airwindows_point";
+const char* AirWindowsPop::xmlTypeName = "airwindows_pop";
+const char* AirWindowsPressure4::xmlTypeName = "airwindows_pressure4";
 const char* AirWindowsPurestDrive::xmlTypeName = "airwindows_purestdrive";
 const char* AirWindowsPurestWarm::xmlTypeName = "airwindows_purestwarm";
-const char* AirWindowsSingleEndedTriode::xmlTypeName = "airwindows_singeendedtriode";
+const char* AirWindowsRighteous4::xmlTypeName = "airwindows_righteous4";
+const char* AirWindowsSingleEndedTriode::xmlTypeName = "airwindows_singleendedtriode";
+const char* AirWindowsSlewOnly::xmlTypeName = "airwindows_slewonly";
+const char* AirWindowsSpiral2::xmlTypeName = "airwindows_spiral2";
+const char* AirWindowsStarChild::xmlTypeName = "airwindows_starchild";
 const char* AirWindowsStereoFX::xmlTypeName = "airwindows_stereofx";
+const char* AirWindowsSubsOnly::xmlTypeName = "airwindows_subsonly";
 const char* AirWindowsSurge::xmlTypeName = "airwindows_surge";
+const char* AirWindowsSwell::xmlTypeName = "airwindows_swell";
+const char* AirWindowsTapeDust::xmlTypeName = "airwindows_tapedust";
+const char* AirWindowsThunder::xmlTypeName = "airwindows_thunder";
 const char* AirWindowsToTape5::xmlTypeName = "airwindows_totape5";
 const char* AirWindowsToVinyl4::xmlTypeName = "airwindows_tovinyl4";
 const char* AirWindowsTubeDesk::xmlTypeName = "airwindows_tubedesk";
 const char* AirWindowsUnbox::xmlTypeName = "airwindows_unbox";
+const char* AirWindowsVariMu::xmlTypeName = "airwindows_varimu";
+const char* AirWindowsVoiceOfTheStarship::xmlTypeName = "airwindows_voiceofthestarship";
 const char* AirWindowsWider::xmlTypeName = "airwindows_wider";
+
+AirWindowsAcceleration::AirWindowsAcceleration (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::acceleration::Acceleration> (&callback)) {}
 
 AirWindowsADClip7::AirWindowsADClip7 (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::adclip7::ADClip7> (&callback)) {}
-    
-AirWindowsAcceleration::AirWindowsAcceleration (PluginCreationInfo info)
-    : AirWindowsPlugin (info, std::make_unique<airwindows::acceleration::Acceleration> (&callback)) {}
-    
+
+AirWindowsADT::AirWindowsADT (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::adt::ADT> (&callback)) {}
+
+AirWindowsAtmosphere::AirWindowsAtmosphere (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::atmosphere::AtmosphereChannel> (&callback)) {}
+
 AirWindowsAura::AirWindowsAura (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::aura::Aura> (&callback)) {}
-    
+
+AirWindowsBassKit::AirWindowsBassKit (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::basskit::BassKit> (&callback)) {}
+
 AirWindowsBitGlitter::AirWindowsBitGlitter (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::bitglitter::BitGlitter> (&callback)) {}
-    
+
+AirWindowsButterComp::AirWindowsButterComp (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::buttercomp::ButterComp> (&callback)) {}
+
 AirWindowsButterComp2::AirWindowsButterComp2 (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::buttercomp2::ButterComp2> (&callback)) {}
-    
+
+AirWindowsChannel4::AirWindowsChannel4 (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::channel4::Channel4> (&callback)) {}
+
+AirWindowsChannel5::AirWindowsChannel5 (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::channel5::Channel5> (&callback)) {}
+
 AirWindowsChorusEnsemble::AirWindowsChorusEnsemble (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::chorusensemble::ChorusEnsemble> (&callback)) {}
-    
+
+AirWindowsCrunchyGrooveWear::AirWindowsCrunchyGrooveWear (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::crunchygroovewear::CrunchyGrooveWear> (&callback)) {}
+
 AirWindowsDeEss::AirWindowsDeEss (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::deess::DeEss> (&callback)) {}
 
-AirWindowsDeRez::AirWindowsDeRez (PluginCreationInfo info)
-    : AirWindowsPlugin (info, std::make_unique<airwindows::derez::DeRez> (&callback)) {}
-    
 AirWindowsDensity::AirWindowsDensity (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::density::Density> (&callback)) {}
-    
+
+AirWindowsDeRez::AirWindowsDeRez (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::derez::DeRez> (&callback)) {}
+
+AirWindowsDesk::AirWindowsDesk (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::desk::Desk> (&callback)) {}
+
+AirWindowsDesk4::AirWindowsDesk4 (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::desk4::Desk4> (&callback)) {}
+
 AirWindowsDistance2::AirWindowsDistance2 (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::distance2::Distance2> (&callback)) {}
-    
+
 AirWindowsDrive::AirWindowsDrive (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::drive::Drive> (&callback)) {}
 
+AirWindowsDrumSlam::AirWindowsDrumSlam (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::drumslam::DrumSlam> (&callback)) {}
+
+AirWindowsDubSub::AirWindowsDubSub (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::dubsub::DubSub> (&callback)) {}
+
+AirWindowsEdIsDim::AirWindowsEdIsDim (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::edisdim::EdIsDim> (&callback)) {}
+
+AirWindowsElectroHat::AirWindowsElectroHat (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::electrohat::ElectroHat> (&callback)) {}
+
+AirWindowsEnergy::AirWindowsEnergy (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::energy::Energy> (&callback)) {}
+
+AirWindowsEnsemble::AirWindowsEnsemble (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::ensemble::Ensemble> (&callback)) {}
+
 AirWindowsFathomFive::AirWindowsFathomFive (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::fathomfive::FathomFive> (&callback)) {}
-    
+
 AirWindowsFloor::AirWindowsFloor (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::awfloor::Floor> (&callback)) {}
-    
+
+AirWindowsFromTape::AirWindowsFromTape (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::fromtape::FromTape> (&callback)) {}
+
 AirWindowsGatelope::AirWindowsGatelope (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::gatelope::Gatelope> (&callback)) {}
-    
+
+AirWindowsGolem::AirWindowsGolem (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::golem::Golem> (&callback)) {}
+
 AirWindowsGrooveWear::AirWindowsGrooveWear (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::groovewear::GrooveWear> (&callback)) {}
-    
+
 AirWindowsGuitarConditioner::AirWindowsGuitarConditioner (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::guitarconditioner::GuitarConditioner> (&callback)) {}
-    
+
 AirWindowsHardVacuum::AirWindowsHardVacuum (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::hardvacuum::HardVacuum> (&callback)) {}
 
 AirWindowsHombre::AirWindowsHombre (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::hombre::Hombre> (&callback)) {}
-    
+
+AirWindowsMelt::AirWindowsMelt (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::melt::Melt> (&callback)) {}
+
 AirWindowsNC17::AirWindowsNC17 (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::nc17::NCSeventeen> (&callback)) {}
-    
+
+AirWindowsNoise::AirWindowsNoise (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::noise::Noise> (&callback)) {}
+
 AirWindowsNonlinearSpace::AirWindowsNonlinearSpace (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::nonlinearspace::NonlinearSpace> (&callback)) {}
 
 AirWindowsPoint::AirWindowsPoint (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::point::Point> (&callback)) {}
-    
+
+AirWindowsPop::AirWindowsPop (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::pop::Pop> (&callback)) {}
+
+AirWindowsPressure4::AirWindowsPressure4 (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::pressure4::Pressure4> (&callback)) {}
+
 AirWindowsPurestDrive::AirWindowsPurestDrive (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::purestdrive::PurestDrive> (&callback)) {}
-    
+
 AirWindowsPurestWarm::AirWindowsPurestWarm (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::purestwarm::PurestWarm> (&callback)) {}
-    
+
+AirWindowsRighteous4::AirWindowsRighteous4 (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::righteous4::Righteous4> (&callback)) {}
+
 AirWindowsSingleEndedTriode::AirWindowsSingleEndedTriode (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::singleendedtriode::SingleEndedTriode> (&callback)) {}
-    
+
+AirWindowsSlewOnly::AirWindowsSlewOnly (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::slewonly::SlewOnly> (&callback)) {}
+
+AirWindowsSpiral2::AirWindowsSpiral2 (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::spiral2::Spiral2> (&callback)) {}
+
+AirWindowsStarChild::AirWindowsStarChild (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::starchild::StarChild> (&callback)) {}
+
 AirWindowsStereoFX::AirWindowsStereoFX (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::stereofx::StereoFX> (&callback)) {}
-    
+
+AirWindowsSubsOnly::AirWindowsSubsOnly (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::subsonly::SubsOnly> (&callback)) {}
+
 AirWindowsSurge::AirWindowsSurge (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::surge::Surge> (&callback)) {}
-    
+
+AirWindowsSwell::AirWindowsSwell (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::swell::Swell> (&callback)) {}
+
+AirWindowsTapeDust::AirWindowsTapeDust (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::tapedust::TapeDust> (&callback)) {}
+
+AirWindowsThunder::AirWindowsThunder (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::thunder::Thunder> (&callback)) {}
+
 AirWindowsToTape5::AirWindowsToTape5 (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::totape5::ToTape5> (&callback)) {}
-    
+
 AirWindowsToVinyl4::AirWindowsToVinyl4 (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::tovinyl4::ToVinyl4> (&callback)) {}
-    
+
 AirWindowsTubeDesk::AirWindowsTubeDesk (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::tubedesk::TubeDesk> (&callback)) {}
-    
+
 AirWindowsUnbox::AirWindowsUnbox (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::unbox::UnBox> (&callback)) {}
+
+AirWindowsVariMu::AirWindowsVariMu (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::varimu::VariMu> (&callback)) {}
+
+AirWindowsVoiceOfTheStarship::AirWindowsVoiceOfTheStarship (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::voiceofthestarship::VoiceOfTheStarship> (&callback)) {}
 
 AirWindowsWider::AirWindowsWider (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::wider::Wider> (&callback)) {}

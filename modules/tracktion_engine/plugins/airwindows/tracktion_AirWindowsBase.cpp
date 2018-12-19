@@ -29,6 +29,20 @@ void float2string (float f, char* text, int len)
     str.copyToUTF8 (text, (size_t)len);
 }
     
+void int2string (float i, char* text, int len)
+{
+    String str (i);
+    str.copyToUTF8 (text, (size_t)len);
+}
+    
+void dB2string (float value, char* text, int maxLen)
+{
+    if (value <= 0)
+        vst_strncpy (text, "-oo", (size_t) maxLen);
+    else
+        float2string ((float)(20. * log10 (value)), text, maxLen);
+}
+    
 //==============================================================================
 class AirWindowsBase
 {
