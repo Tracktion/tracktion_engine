@@ -50,7 +50,7 @@ using namespace juce;
 
 #if JUCE_WINDOWS
  #pragma warning (push)
- #pragma warning (disable : 4244 4100 4305 4065 4701 4706)
+ #pragma warning (disable : 4244 4100 4305 4065 4701 4706 4723)
 #endif
 
 namespace tracktion_engine
