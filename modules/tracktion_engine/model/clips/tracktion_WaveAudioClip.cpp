@@ -72,7 +72,7 @@ void WaveAudioClip::sourceMediaChanged()
 {
     AudioClipBase::sourceMediaChanged();
 
-    if (compManager != nullptr)
+    if (compManager != nullptr && isCurrentTakeComp())
         setCurrentSourceFile (compManager->getCurrentCompFile());
 
     sourceLength = 0.0;
@@ -275,6 +275,7 @@ void WaveAudioClip::setCurrentTake (int takeIndex)
 
     auto takeSourceID = ProjectItemID::fromProperty (take, IDs::source);
     auto mo = ProjectManager::getInstance()->getProjectItem (takeSourceID);
+    invalidateCurrentTake();
 
     if (mo != nullptr || getCompManager().isTakeComp (takeIndex))
         sourceFileReference.setToProjectFileReference (takeSourceID);
