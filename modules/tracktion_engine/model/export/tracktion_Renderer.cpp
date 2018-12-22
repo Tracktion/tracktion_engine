@@ -471,7 +471,7 @@ struct Renderer::RenderTask::RendererContext
         if (needsToNormaliseAndTrim)
             prog *= 0.9f;
 
-        jassert (! std::isnan (p));
+        jassert (! std::isnan (prog));
         progressToUpdate = jlimit (0.0f, 1.0f, prog);
         --precount;
 
