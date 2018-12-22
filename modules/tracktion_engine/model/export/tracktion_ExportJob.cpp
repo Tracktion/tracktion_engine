@@ -153,6 +153,8 @@ void ExportJob::copyProjectFilesToTempDir()
 //==============================================================================
 void ExportJob::copyEditFilesToTempDir()
 {
+    jassert (edit != nullptr);
+
     if (! includeClips)
     {
         for (auto t : getClipTracks (*edit))
@@ -260,9 +262,7 @@ void ExportJob::copyEditFilesToTempDir()
 
     // put the new edit at the top of the list
     newProject->moveProjectItem (newProject->getIndexOf (edit->getProjectItemID()), 0);
-
-    if (edit != nullptr)
-        callBlocking ([this] { EditFileOperations (*edit).save (true, true, false); });
+    callBlocking ([this] { EditFileOperations (*edit).save (true, true, false); });
 }
 
 //==============================================================================

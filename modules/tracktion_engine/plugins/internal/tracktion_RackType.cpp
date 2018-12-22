@@ -1024,22 +1024,32 @@ void RackType::checkConnections()
                 continue;
             }
 
+            // Avoid stripping connections when the Edit hasn't loaded the plugins as the channels will be 0
+            if (! edit.shouldLoadPlugins())
+                continue;
+
             // Check for connections going to no longer available plugin IO pins
-            if (auto* ep = dynamic_cast<ExternalPlugin*> (getPluginForID (rc->sourceID)))
+            if (auto ep = dynamic_cast<ExternalPlugin*> (getPluginForID (rc->sourceID)))
             {
-                if (rc->sourcePin < 0 || rc->sourcePin > ep->getNumOutputs())
+                if (ep->getAudioPluginInstance() != nullptr)
                 {
-                    state.removeChild (rc->state, getUndoManager());
-                    continue;
+                    if (rc->sourcePin < 0 || rc->sourcePin > ep->getNumOutputs())
+                    {
+                        state.removeChild (rc->state, getUndoManager());
+                        continue;
+                    }
                 }
             }
 
-            if (auto* ep = dynamic_cast<ExternalPlugin*> (getPluginForID (rc->destID)))
+            if (auto ep = dynamic_cast<ExternalPlugin*> (getPluginForID (rc->destID)))
             {
-                if (rc->destPin < 0 || rc->destPin > ep->getNumInputs())
+                if (ep->getAudioPluginInstance() != nullptr)
                 {
-                    state.removeChild (rc->state, getUndoManager());
-                    continue;
+                    if (rc->destPin < 0 || rc->destPin > ep->getNumInputs())
+                    {
+                        state.removeChild (rc->state, getUndoManager());
+                        continue;
+                    }
                 }
             }
         }

@@ -80,7 +80,7 @@ public:
 
         for (const auto& v : parent)
             if (isSuitableType (v))
-                if (auto* newObject = createNewObject (v))
+                if (auto newObject = createNewObject (v))
                     objects.add (newObject);
     }
 
