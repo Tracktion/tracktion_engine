@@ -188,6 +188,15 @@ struct SelectableList
         items.addArray (arrayToAddFrom, startIndex, numElementsToAdd);
     }
 
+    template <class OtherArrayType>
+    inline void mergeArray (const OtherArrayType& arrayToMergeFrom)
+    {
+        classes.clearQuick();
+
+        for (auto& s : arrayToMergeFrom)
+            addIfNotAlreadyThere (s);
+    }
+
     inline void add (Selectable* newElement)                    { items.add (newElement); }
     inline bool addIfNotAlreadyThere (Selectable* newElement)   { return items.addIfNotAlreadyThere (newElement); }
 

@@ -492,8 +492,12 @@ namespace AppFunctions
     void split()
     {
         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
-            splitClips (getCurrentUIBehaviour().getAssociatedClipsToEdit (sm->getSelectedObjects()),
-                        getCurrentUIBehaviour().getEditingPosition (*sm->edit));
+        {
+            auto selected = sm->getSelectedObjects();
+            selected.mergeArray (splitClips (getCurrentUIBehaviour().getAssociatedClipsToEdit (selected),
+                                             getCurrentUIBehaviour().getEditingPosition (*sm->edit)));
+            sm->select (selected);
+        }
     }
 
     void toggleAutomationReadMode()
