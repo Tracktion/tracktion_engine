@@ -150,6 +150,7 @@ struct Renderer::RenderTask::RendererContext
         TRACKTION_ASSERT_MESSAGE_THREAD
         jassert (r.engine != nullptr);
         jassert (r.edit != nullptr);
+        jassert (r.time.getLength() > 0.0);
 
         if (r.edit->getTransport().isPlayContextActive())
         {
@@ -466,7 +467,7 @@ struct Renderer::RenderTask::RendererContext
                 && renderingBuffer.getMagnitude (0, r.blockSizeForAudio) <= thresholdForStopping))
             return true;
 
-        auto prog = (float) ((streamTime - r.time.getStart()) / r.time.getLength());
+        auto prog = (float) ((streamTime - r.time.getStart()) / jmax (1.0, r.time.getLength()));
 
         if (needsToNormaliseAndTrim)
             prog *= 0.9f;
