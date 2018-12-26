@@ -96,8 +96,8 @@ public:
         //==============================================================================
         struct RendererContext;
 
-        juce::ScopedPointer<AudioNode> node;
-        juce::ScopedPointer<RendererContext> context;
+        std::unique_ptr<AudioNode> node;
+        std::unique_ptr<RendererContext> context;
 
         std::atomic<float> progressInternal { 0.0f };
         std::atomic<float>& progress;

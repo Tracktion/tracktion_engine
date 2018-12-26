@@ -122,7 +122,7 @@ public:
     void setMidiChannel (int channel);
 
 private:
-    juce::ScopedPointer<TempoSequencePosition> currentTempoPosition;
+    std::unique_ptr<TempoSequencePosition> currentTempoPosition;
     int channelIndexL = 0, channelIndexR = 0;
     bool uiIsRunning = false;
 

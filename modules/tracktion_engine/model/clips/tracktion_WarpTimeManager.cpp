@@ -22,12 +22,10 @@ inline int64 hashDouble (double d) noexcept
 
 int64 WarpMarker::getHash() const noexcept    { return hashDouble (sourceTime) ^ hashDouble (warpTime); }
 
-//==============================================================================
 template <typename FloatingPointType>
-class Differentiator
+struct Differentiator
 {
-public:
-    void process (const FloatingPointType* inputSamples, int numSamples, FloatingPointType* outputSamples) noexcept
+    void process (const FloatingPointType* inputSamples, int numSamples, FloatingPointType* outputSamples)
     {
         for (int i = 0; i < numSamples; ++i)
         {
@@ -36,11 +34,12 @@ public:
             lastSample = currentSample;
         }
     }
-private:
-    FloatingPointType lastSample {(FloatingPointType)0.0};
+
+    FloatingPointType lastSample { (FloatingPointType) 0.0 };
 };
 
-struct TransientDetectionJob : public RenderManager::Job
+//==============================================================================
+struct TransientDetectionJob  : public RenderManager::Job
 {
     struct Config
     {
@@ -230,7 +229,7 @@ WarpTimeManager::WarpTimeManager (AudioClipBase& c)
 {
     state = c.state.getOrCreateChildWithName (IDs::WARPTIME, &edit.getUndoManager());
     auto markersTree = state.getOrCreateChildWithName (IDs::WARPMARKERS, &edit.getUndoManager());
-    markers = new WarpMarkerList (markersTree);
+    markers.reset (new WarpMarkerList (markersTree));
 
     const double clipLen = AudioFile (clip->getOriginalFile()).getLength();
 
@@ -242,7 +241,7 @@ WarpTimeManager::WarpTimeManager (AudioClipBase& c)
         setWarpEndMarkerTime (clipLen);
     }
 
-    editLoadedCallback = new Edit::LoadFinishedCallback<WarpTimeManager> (*this, edit);
+    editLoadedCallback.reset (new Edit::LoadFinishedCallback<WarpTimeManager> (*this, edit));
 
     edit.engine.getWarpTimeFactory().addWarpTimeManager (*this);
 }
@@ -252,7 +251,7 @@ WarpTimeManager::WarpTimeManager (Edit& e, const AudioFile& f, ValueTree parentT
 {
     state = parentTree.getOrCreateChildWithName (IDs::WARPTIME, &edit.getUndoManager());
     auto markersTree = state.getOrCreateChildWithName (IDs::WARPMARKERS, &edit.getUndoManager());
-    markers = new WarpMarkerList (markersTree);
+    markers.reset (new WarpMarkerList (markersTree));
 
     setSourceFile (f);
 
@@ -283,7 +282,7 @@ void WarpTimeManager::setSourceFile (const AudioFile& af)
             insertMarker (-1, WarpMarker (clipLen, clipLen));
             setWarpEndMarkerTime (clipLen);
 
-            editLoadedCallback = new Edit::LoadFinishedCallback<WarpTimeManager> (*this, edit);
+            editLoadedCallback.reset (new Edit::LoadFinishedCallback<WarpTimeManager> (*this, edit));
         }
     }
 }
@@ -385,7 +384,7 @@ Array<EditTimeRange> WarpTimeManager::getWarpTimeRegions (const EditTimeRange ov
 
     auto timeRegion = overallTimeRegion;
     double overallTime = 0.0;
-    double warpedClipLength = getWarpedEnd();
+    auto warpedClipLength = getWarpedEnd();
 
     // trim this region to the end of the clip content.
     if (timeRegion.getEnd() > warpedClipLength)
@@ -425,11 +424,10 @@ double WarpTimeManager::warpTimeToSourceTime (double warpTime) const
     if (markersArray.isEmpty())
         return warpTime;
 
-    WarpMarker startMarker;
-    WarpMarker endMarker;
+    WarpMarker startMarker, endMarker;
 
-    const WarpMarker first  = *markersArray.getFirst();
-    const WarpMarker last   = *markersArray.getLast();
+    auto first = *markersArray.getFirst();
+    auto last  = *markersArray.getLast();
 
     if (warpTime <= first.warpTime) //below or on the 1st marker
     {
@@ -439,13 +437,13 @@ double WarpTimeManager::warpTimeToSourceTime (double warpTime) const
     else if (warpTime > last.warpTime) // after the last marker
     {
         startMarker = last;
-        const double lib = clip->getSourceLength();
-        endMarker = WarpMarker (lib, lib);
+        auto sourceLen = clip->getSourceLength();
+        endMarker = WarpMarker (sourceLen, sourceLen);
     }
     else
     {
         int index = 0;
-        const int numMarkers = markersArray.size();
+        auto numMarkers = markersArray.size();
 
         while (index < numMarkers && markersArray.getUnchecked (index)->warpTime < warpTime)
             index++;
@@ -456,7 +454,8 @@ double WarpTimeManager::warpTimeToSourceTime (double warpTime) const
         endMarker = *markersArray.getUnchecked (index);
     }
 
-    const WarpMarker markerRanges (endMarker.sourceTime - startMarker.sourceTime, endMarker.warpTime - startMarker.warpTime);
+    const WarpMarker markerRanges (endMarker.sourceTime - startMarker.sourceTime,
+                                   endMarker.warpTime - startMarker.warpTime);
 
     double sourcePosition = 0.0;
 

@@ -176,7 +176,7 @@ private:
     juce::BigInteger outEnabled, inEnabled, activeOutChannels, outMonoChans, inStereoChans;
     int defaultWaveIndex = 0, defaultMidiIndex = 0;
 
-    juce::ScopedPointer<WaveDeviceList> lastWaveDeviceList;
+    std::unique_ptr<WaveDeviceList> lastWaveDeviceList;
 
     juce::CriticalSection contextLock;
     juce::Array<EditPlaybackContext*> activeContexts;

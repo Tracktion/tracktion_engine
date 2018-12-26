@@ -21,7 +21,8 @@ ChordClip::ChordClip (const ValueTree& v, EditItemID id, ClipTrack& targetTrack)
 
     if (pgen.isValid())
     {
-        patternGenerator = new PatternGenerator (*this, pgen);
+        patternGenerator.reset (new PatternGenerator (*this, pgen));
+
         if (patternGenerator->getChordProgression().isEmpty())
             patternGenerator->setChordProgressionFromChordNames ({ "i" });
     }
@@ -68,7 +69,7 @@ void ChordClip::valueTreeChildAdded (ValueTree&, ValueTree& c)
 {
     if (c.hasType (IDs::PATTERNGENERATOR))
     {
-        patternGenerator = new PatternGenerator (*this, c);
+        patternGenerator.reset (new PatternGenerator (*this, c));
 
         if (patternGenerator->getChordProgression().isEmpty())
             patternGenerator->setChordProgressionFromChordNames ({ "i" });
@@ -110,7 +111,7 @@ PatternGenerator* ChordClip::getPatternGenerator()
         state.addChild (ValueTree (IDs::PATTERNGENERATOR), -1, &edit.getUndoManager());
 
     jassert (patternGenerator != nullptr);
-    return patternGenerator;
+    return patternGenerator.get();
 }
 
 void ChordClip::pitchTempoTrackChanged()

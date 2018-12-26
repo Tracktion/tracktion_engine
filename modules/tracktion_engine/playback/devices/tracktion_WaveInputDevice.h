@@ -93,7 +93,7 @@ private:
     int bitDepth = 0, mergeMode = 0;
     float recordTriggerDb = 0;
     double recordAdjustMs = 0;
-    juce::ScopedPointer<RetrospectiveRecordBuffer> retrospectiveBuffer;
+    std::unique_ptr<RetrospectiveRecordBuffer> retrospectiveBuffer;
 
     void loadProps();
     void saveProps();

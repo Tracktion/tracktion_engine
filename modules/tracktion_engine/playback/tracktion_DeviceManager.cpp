@@ -470,7 +470,7 @@ void DeviceManager::rebuildWaveDeviceList()
 
     sanityCheckEnabledChannels();
 
-    lastWaveDeviceList = new WaveDeviceList (*this);
+    lastWaveDeviceList.reset (new WaveDeviceList (*this));
 
     for (const auto& d : lastWaveDeviceList->inputs)
     {

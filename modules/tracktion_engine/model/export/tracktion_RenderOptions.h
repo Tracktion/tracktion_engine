@@ -79,10 +79,10 @@ public:
 
     //==============================================================================
     /** Creates a default RenderOptions object for a general purpose exporter. */
-    static RenderOptions* forGeneralExporter (Edit&);
-    static RenderOptions* forTrackRender (juce::Array<Track*>& tracks, AddRenderOptions addOption);
-    static RenderOptions* forClipRender (juce::Array<Clip*>& clips, bool midiNotes);
-    static RenderOptions* forEditClip (Clip& editClip);
+    static std::unique_ptr<RenderOptions> forGeneralExporter (Edit&);
+    static std::unique_ptr<RenderOptions> forTrackRender (juce::Array<Track*>& tracks, AddRenderOptions addOption);
+    static std::unique_ptr<RenderOptions> forClipRender (juce::Array<Clip*>& clips, bool midiNotes);
+    static std::unique_ptr<RenderOptions> forEditClip (Clip& editClip);
 
     //==============================================================================
     /** If you've chnaged a property that will cause the UI configuration to change

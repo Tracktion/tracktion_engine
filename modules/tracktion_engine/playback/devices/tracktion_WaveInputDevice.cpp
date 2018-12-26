@@ -1215,7 +1215,7 @@ StringArray WaveInputDevice::getRecordFormatNames()
 InputDeviceInstance* WaveInputDevice::createInstance (EditPlaybackContext& ed)
 {
     if (! isTrackDevice() && retrospectiveBuffer == nullptr)
-        retrospectiveBuffer = new RetrospectiveRecordBuffer (ed.edit.engine);
+        retrospectiveBuffer.reset (new RetrospectiveRecordBuffer (ed.edit.engine));
 
     return new WaveInputDeviceInstance (*this, ed);
 }
@@ -1731,7 +1731,7 @@ struct WaveInputRecordingThread::BlockQueue
 
         while (b != nullptr)
         {
-            ScopedPointer<QueuedBlock> toDelete (b);
+            std::unique_ptr<QueuedBlock> toDelete (b);
             b = b->next;
         }
     }

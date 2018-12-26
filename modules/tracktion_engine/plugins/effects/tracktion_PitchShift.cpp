@@ -25,7 +25,7 @@ struct PitchShiftPlugin::Pimpl
         {
             mode = newMode;
             elastiqueOptions = newOptions;
-            timestretcher = new TimeStretcher();
+            timestretcher.reset (new TimeStretcher());
         }
 
         if (! timestretcher->isInitialised())
@@ -95,7 +95,7 @@ struct PitchShiftPlugin::Pimpl
 
     PitchShiftPlugin& owner;
 
-    ScopedPointer<TimeStretcher> timestretcher;
+    std::unique_ptr<TimeStretcher> timestretcher;
     TimeStretcher::Mode mode;
     TimeStretcher::ElastiqueProOptions elastiqueOptions;
 

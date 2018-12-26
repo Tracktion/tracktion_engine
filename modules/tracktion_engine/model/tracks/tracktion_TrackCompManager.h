@@ -149,7 +149,7 @@ private:
 
     Edit& edit;
     juce::ValueTree state;
-    juce::ScopedPointer<TrackCompList> trackCompList;
+    std::unique_ptr<TrackCompList> trackCompList;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackCompManager)
 };

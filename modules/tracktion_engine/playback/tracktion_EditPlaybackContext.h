@@ -82,7 +82,7 @@ private:
         ~ProcessPriorityBooster();
     };
 
-    juce::ScopedPointer<ProcessPriorityBooster> priorityBooster;
+    std::unique_ptr<ProcessPriorityBooster> priorityBooster;
 
     juce::OwnedArray<InputDeviceInstance> waveInputs, midiInputs;
     juce::OwnedArray<WaveOutputDeviceInstance> waveOutputs;

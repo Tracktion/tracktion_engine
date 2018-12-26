@@ -33,7 +33,7 @@ public:
 
     MidiList& getSequence() const noexcept;
     MidiList& getSequenceLooped();
-    MidiList* createSequenceLooped (MidiList& sourceSequence);
+    std::unique_ptr<MidiList> createSequenceLooped (MidiList& sourceSequence);
 
     const SelectedMidiEvents* getSelectedEvents() const             { return selectedEvents; }
 
@@ -158,14 +158,14 @@ private:
     juce::CachedValue<int> currentTake;
     juce::CachedValue<float> volumeDb;
     juce::CachedValue<double> loopStartBeats, loopLengthBeats, originalLength;
-    juce::ScopedPointer<QuantisationType> quantisation;
+    std::unique_ptr<QuantisationType> quantisation;
     juce::CachedValue<bool> sendPatch, mute, sendBankChange, mpeMode;
     juce::CachedValue<juce::String> grooveTemplate;
 
     bool shouldWarnAboutMultiChannel = false;
     SelectedMidiEvents* selectedEvents = nullptr;
 
-    mutable juce::ScopedPointer<MidiList> cachedLoopedSequence;
+    mutable std::unique_ptr<MidiList> cachedLoopedSequence;
     MidiCompManager::Ptr midiCompManager;
 
     //==============================================================================

@@ -92,7 +92,7 @@ private:
 
     AudioFileInfo waveInfo;
     juce::int64 hash = 0;
-    juce::ScopedPointer<RenderOptions> renderOptions;
+    std::unique_ptr<RenderOptions> renderOptions;
     bool sourceMediaReEntrancyCheck = false;
 
     //==============================================================================

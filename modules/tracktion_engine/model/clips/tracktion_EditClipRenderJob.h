@@ -79,7 +79,7 @@ private:
         const juce::String desc;
         ProjectItem::Category originalCategory;
         juce::TemporaryFile tempFile;
-        juce::ScopedPointer<Renderer::RenderTask> task;
+        std::unique_ptr<Renderer::RenderTask> task;
     };
 
     RenderOptions renderOptions;

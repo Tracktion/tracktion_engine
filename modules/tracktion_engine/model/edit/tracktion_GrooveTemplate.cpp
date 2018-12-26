@@ -21,8 +21,7 @@ GrooveTemplate::GrooveTemplate()
 }
 
 GrooveTemplate::GrooveTemplate (const XmlElement* node)
-    : numNotes (16),
-      notesPerBeat (2)
+    : GrooveTemplate()
 {
     if (node != nullptr && node->hasTagName (grooveXmlTag))
     {

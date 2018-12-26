@@ -23,9 +23,9 @@ TrackCompManager::CompSection::~CompSection()
 
 TrackCompManager::CompSection* TrackCompManager::CompSection::createAndIncRefCount (const ValueTree& v)
 {
-    ScopedPointer<CompSection> cs (new CompSection (v));
+    auto cs = new CompSection (v);
     cs->incReferenceCount();
-    return cs.release();
+    return cs;
 }
 
 void TrackCompManager::CompSection::updateFrom (ValueTree& v, const Identifier& i)
@@ -47,9 +47,9 @@ void TrackCompManager::CompSection::updateEnd()        { end = static_cast<doubl
 //==============================================================================
 TrackCompManager::TrackComp* TrackCompManager::TrackComp::createAndIncRefCount (Edit& edit, const ValueTree& v)
 {
-    ScopedPointer<TrackComp> tc (new TrackComp (edit, v));
+    auto tc = new TrackComp (edit, v);
     tc->incReferenceCount();
-    return tc.release();
+    return tc;
 }
 
 TrackCompManager::TrackComp::TrackComp (Edit& e, const ValueTree& v)
@@ -555,7 +555,7 @@ void TrackCompManager::initialise (const ValueTree& v)
 {
     jassert (v.hasType (IDs::TRACKCOMPS));
     state = v;
-    trackCompList = new TrackCompList (edit, v);
+    trackCompList.reset (new TrackCompList (edit, v));
 }
 
 int TrackCompManager::getNumGroups() const
@@ -566,14 +566,14 @@ int TrackCompManager::getNumGroups() const
 StringArray TrackCompManager::getCompNames() const
 {
     StringArray names;
-    const int numComps = state.getNumChildren();
+    auto numComps = state.getNumChildren();
 
     for (int i = 0; i < numComps; ++i)
     {
         auto v = state.getChild (i);
         jassert (v.hasType (IDs::TRACKCOMP));
 
-        String name (v.getProperty (IDs::name).toString());
+        auto name = v.getProperty (IDs::name).toString();
 
         if (name.isEmpty())
             name = String (TRANS("Comp Group")) + " " + String (i);
@@ -589,7 +589,7 @@ String TrackCompManager::getCompName (int index)
     if (index == -1)
         return "<" + TRANS("None") + ">";
 
-    const String name (getCompNames()[index]);
+    auto name = getCompNames()[index];
 
     if (name.isNotEmpty())
         return name;

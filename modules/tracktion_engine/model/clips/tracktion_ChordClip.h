@@ -40,9 +40,9 @@ protected:
     void handleAsyncUpdate() override;
 
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
-    void valueTreeChildAdded (juce::ValueTree& p, juce::ValueTree& c) override;
-    void valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree& c, int) override;
-    void valueTreeParentChanged (juce::ValueTree& treeWhoseParentHasChanged) override;
+    void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override;
+    void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override;
+    void valueTreeParentChanged (juce::ValueTree&) override;
 
 private:
 

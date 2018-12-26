@@ -31,7 +31,7 @@ void PluginWindowState::showWindow()
             pickDefaultWindowBounds();
 
         WeakReference<Component> oldFocus (Component::getCurrentlyFocusedComponent());
-        masterConnection = engine.getUIBehaviour().createPluginWindowConnection (*this);
+        masterConnection.reset (engine.getUIBehaviour().createPluginWindowConnection (*this));
 
         if (oldFocus != nullptr)
             oldFocus->grabKeyboardFocus();

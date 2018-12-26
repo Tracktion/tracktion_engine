@@ -20,7 +20,7 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
     {
         rebuildObjects();
 
-        editLoadedCallback = new Edit::LoadFinishedCallback<ClipList> (*this, ct.edit);
+        editLoadedCallback.reset (new Edit::LoadFinishedCallback<ClipList> (*this, ct.edit));
         clipTrack.trackItemsDirty = true;
     }
 
@@ -92,7 +92,7 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
     }
 
     ClipTrack& clipTrack;
-    ScopedPointer<Edit::LoadFinishedCallback<ClipList>> editLoadedCallback;
+    std::unique_ptr<Edit::LoadFinishedCallback<ClipList>> editLoadedCallback;
 
     void valueTreePropertyChanged (ValueTree& v, const Identifier& id) override
     {
@@ -309,8 +309,8 @@ ClipTrack::ClipTrack (Edit& edit, const ValueTree& v, double defaultHeight, doub
     ClipList::Sorter sorter;
     state.sort (sorter, &edit.getUndoManager(), true);
 
-    collectionClipList = new CollectionClipList (*this, state);
-    clipList = new ClipList (*this, state);
+    collectionClipList.reset (new CollectionClipList (*this, state));
+    clipList.reset (new ClipList (*this, state));
 }
 
 ClipTrack::~ClipTrack()

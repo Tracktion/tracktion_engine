@@ -11,13 +11,13 @@
 namespace tracktion_engine
 {
 
-static MidiList* createLoopRangeDefinesAllRepetitionsSequence (MidiClip& clip, MidiList& sourceSequence)
+static std::unique_ptr<MidiList> createLoopRangeDefinesAllRepetitionsSequence (MidiClip& clip, MidiList& sourceSequence)
 {
-    const double loopStartBeats = clip.getLoopStartBeats();
-    const double loopLengthBeats = clip.getLoopLengthBeats();
+    const auto loopStartBeats = clip.getLoopStartBeats();
+    const auto loopLengthBeats = clip.getLoopLengthBeats();
 
-    const int extraLoops = roundToInt (std::ceil (clip.getOffsetInBeats() / loopLengthBeats));
-    const int loopTimes  = roundToInt (std::ceil (clip.getLengthInBeats() / loopLengthBeats)) + extraLoops;
+    const auto extraLoops = roundToInt (std::ceil (clip.getOffsetInBeats() / loopLengthBeats));
+    const auto loopTimes  = roundToInt (std::ceil (clip.getLengthInBeats() / loopLengthBeats)) + extraLoops;
 
     const auto& notes = sourceSequence.getNotes();
     const auto& sysex = sourceSequence.getSysexEvents();
@@ -68,14 +68,15 @@ static MidiList* createLoopRangeDefinesAllRepetitionsSequence (MidiClip& clip, M
         }
     }
 
-    auto destSequence = new MidiList (v, nullptr);
+    std::unique_ptr<MidiList> destSequence (new MidiList (v, nullptr));
     destSequence->setMidiChannel (sourceSequence.getMidiChannel());
 
     return destSequence;
 }
 
-static MidiList* createLoopRangeDefinesSubsequentRepetitionsSequence (MidiClip& clip, MidiList& sourceSequence)
+static std::unique_ptr<MidiList> createLoopRangeDefinesSubsequentRepetitionsSequence (MidiClip& clip, MidiList& sourceSequence)
 {
+    // TODO: what's the point of this function?
     return createLoopRangeDefinesAllRepetitionsSequence (clip, sourceSequence);
 }
 
@@ -85,7 +86,7 @@ MidiClip::MidiClip (const ValueTree& v, EditItemID id, ClipTrack& targetTrack)
 {
     auto um = getUndoManager();
 
-    quantisation = new QuantisationType (state.getOrCreateChildWithName (IDs::QUANTISATION, um), um);
+    quantisation.reset (new QuantisationType (state.getOrCreateChildWithName (IDs::QUANTISATION, um), um));
 
     if (state.hasProperty (IDs::quantisation))
         quantisation->setType (state.getProperty (IDs::quantisation));
@@ -113,7 +114,7 @@ MidiClip::MidiClip (const ValueTree& v, EditItemID id, ClipTrack& targetTrack)
     auto pgen = state.getChildWithName (IDs::PATTERNGENERATOR);
 
     if (pgen.isValid())
-        patternGenerator = new PatternGenerator (*this, pgen);
+        patternGenerator.reset (new PatternGenerator (*this, pgen));
 }
 
 MidiClip::~MidiClip()
@@ -166,9 +167,9 @@ void MidiClip::initialise()
 
         if (g == nullptr && grooveTree.getNumChildren() > 0)
         {
-            ScopedPointer<XmlElement> grooveXml (grooveTree.getChild (0).createXml());
+            auto grooveXml = std::unique_ptr<XmlElement> (grooveTree.getChild (0).createXml());
 
-            GrooveTemplate gt (grooveXml);
+            GrooveTemplate gt (grooveXml.get());
 
             if (! gt.isEmpty())
                 edit.engine.getGrooveTemplateManager().updateTemplate (-1, gt);
@@ -270,7 +271,7 @@ MidiList& MidiClip::getSequenceLooped()
     return *cachedLoopedSequence;
 }
 
-MidiList* MidiClip::createSequenceLooped (MidiList& sourceSequence)
+std::unique_ptr<MidiList> MidiClip::createSequenceLooped (MidiList& sourceSequence)
 {
     switch (loopedSequenceType)
     {
@@ -280,7 +281,7 @@ MidiList* MidiClip::createSequenceLooped (MidiList& sourceSequence)
         case LoopedSequenceType::loopRangeDefinesAllRepetitions:
         default:
             return createLoopRangeDefinesAllRepetitionsSequence (*this, sourceSequence);
-    };
+    }
 }
 
 MidiClip::ScopedEventsList::ScopedEventsList (MidiClip& c, SelectedMidiEvents* e)
@@ -799,7 +800,7 @@ void MidiClip::valueTreeChildAdded (ValueTree& p, ValueTree& c)
         channelSequence.add (new MidiList (c, getUndoManager()));
 
     if (c.hasType (IDs::PATTERNGENERATOR))
-        patternGenerator = new PatternGenerator (*this, c);
+        patternGenerator.reset (new PatternGenerator (*this, c));
 }
 
 void MidiClip::valueTreeChildRemoved (ValueTree& p, ValueTree& c, int)
@@ -839,7 +840,7 @@ PatternGenerator* MidiClip::getPatternGenerator()
         state.addChild (ValueTree (IDs::PATTERNGENERATOR), -1, &edit.getUndoManager());
 
     jassert (patternGenerator != nullptr);
-    return patternGenerator;
+    return patternGenerator.get();
 }
 
 void MidiClip::pitchTempoTrackChanged()

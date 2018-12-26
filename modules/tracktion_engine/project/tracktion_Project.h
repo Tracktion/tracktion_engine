@@ -151,8 +151,8 @@ private:
     juce::NamedValueSet properties;
     juce::CriticalSection objectLock, propertyLock;
 
-    juce::ScopedPointer<juce::BufferedInputStream> stream;
-    juce::ScopedPointer<juce::FileInputStream> fileLockingStream;
+    std::unique_ptr<juce::BufferedInputStream> stream;
+    std::unique_ptr<juce::FileInputStream> fileLockingStream;
 
     struct ObjectInfo
     {

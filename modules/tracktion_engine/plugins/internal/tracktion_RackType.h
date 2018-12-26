@@ -239,7 +239,7 @@ private:
     juce::ValueTree state;
 
     struct ValueTreeList;
-    juce::ScopedPointer<ValueTreeList> list;
+    std::unique_ptr<ValueTreeList> list;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RackTypeList)
 };

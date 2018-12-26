@@ -472,8 +472,8 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
         case elastiqueEfficient:
         case elastiqueMobile:
         case elastiqueMonophonic:
-            stretcher = new ElastiqueStretcher (sourceSampleRate, samplesPerBlock, numChannels,
-                                                mode, options, realtime ? 0.25f : 0.1f);
+            stretcher.reset (new ElastiqueStretcher (sourceSampleRate, samplesPerBlock, numChannels,
+                                                     mode, options, realtime ? 0.25f : 0.1f));
             break;
        #endif
 
@@ -481,8 +481,8 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
         case soundtouchNormal:
         case soundtouchBetter:
             juce::ignoreUnused (options, realtime);
-            stretcher = new SoundTouchStretcher (sourceSampleRate, samplesPerBlock, numChannels,
-                                                 mode == soundtouchBetter);
+            stretcher.reset (new SoundTouchStretcher (sourceSampleRate, samplesPerBlock, numChannels,
+                                                      mode == soundtouchBetter));
             break;
        #endif
 
@@ -493,7 +493,7 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
 
     if (stretcher != nullptr)
         if (! stretcher->isOk())
-            stretcher = nullptr;
+            stretcher.reset();
 }
 
 bool TimeStretcher::canProcessFor (const Mode mode)
@@ -546,8 +546,8 @@ void TimeStretcher::processData (AudioFifo& inFifo, int numSamples, AudioFifo& o
 
     if (stretcher != nullptr)
     {
-        const float* const* inChannels = inBuffer.buffer.getArrayOfReadPointers();
-        float* const* outChannels = outBuffer.buffer.getArrayOfWritePointers();
+        auto inChannels = inBuffer.buffer.getArrayOfReadPointers();
+        auto outChannels = outBuffer.buffer.getArrayOfWritePointers();
 
         stretcher->processData (inChannels, numSamples, outChannels);
     }

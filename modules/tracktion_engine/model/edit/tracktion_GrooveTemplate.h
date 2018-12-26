@@ -22,7 +22,7 @@ public:
     GrooveTemplate (const GrooveTemplate&);
     ~GrooveTemplate();
 
-    const GrooveTemplate& operator= (const GrooveTemplate& other);
+    const GrooveTemplate& operator= (const GrooveTemplate&);
 
     //==============================================================================
     bool isEmpty() const;

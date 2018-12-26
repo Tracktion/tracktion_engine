@@ -332,7 +332,7 @@ private:
 
     juce::ValueTree getConnectionsTree();
     struct WireList;
-    juce::ScopedPointer<WireList> sidechainWireList;
+    std::unique_ptr<WireList> sidechainWireList;
 
     JUCE_DECLARE_WEAK_REFERENCEABLE (Plugin)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Plugin)

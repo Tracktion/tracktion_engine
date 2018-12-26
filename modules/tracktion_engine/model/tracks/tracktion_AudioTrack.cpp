@@ -1329,7 +1329,7 @@ bool AudioTrack::insertFreezePointIfRequired()
         return false;
 
     if (auto p = pluginList.insertPlugin (FreezePointPlugin::create(), getIndexOfDefaultFreezePoint()))
-        const ScopedPointer<FreezePointPlugin::ScopedTrackFreezer> freezer (FreezePointPlugin::createTrackFreezer (p));
+        auto freezer = FreezePointPlugin::createTrackFreezer (p);
 
     edit.dispatchPendingUpdatesSynchronously();
     // need to force the audio device to update before we start the render

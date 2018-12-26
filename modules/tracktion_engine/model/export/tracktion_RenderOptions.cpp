@@ -668,9 +668,9 @@ void RenderOptions::updateLastUsedRenderPath (RenderOptions& renderOptions, cons
     storage.setProperty (SettingID::lastEditRender, itemID);
 }
 
-RenderOptions* RenderOptions::forGeneralExporter (Edit& edit)
+std::unique_ptr<RenderOptions> RenderOptions::forGeneralExporter (Edit& edit)
 {
-    auto ro = new RenderOptions (edit.engine);
+    std::unique_ptr<RenderOptions> ro (new RenderOptions (edit.engine));
     ro->setToDefault();
 
     updateLastUsedRenderPath (*ro, edit.getProjectItemID().toString());
@@ -685,13 +685,13 @@ RenderOptions* RenderOptions::forGeneralExporter (Edit& edit)
     return ro;
 }
 
-RenderOptions* RenderOptions::forTrackRender (Array<Track*>& tracks, AddRenderOptions addOption)
+std::unique_ptr<RenderOptions> RenderOptions::forTrackRender (Array<Track*>& tracks, AddRenderOptions addOption)
 {
     if (auto first = tracks.getFirst())
     {
         auto& edit = first->edit;
 
-        auto ro = new RenderOptions (edit.engine);
+        std::unique_ptr<RenderOptions> ro (new RenderOptions (edit.engine));
         ro->setToDefault();
         ro->type = RenderType::track;
         updateLastUsedRenderPath (*ro, edit.getProjectItemID().toString());
@@ -709,13 +709,13 @@ RenderOptions* RenderOptions::forTrackRender (Array<Track*>& tracks, AddRenderOp
     return {};
 }
 
-RenderOptions* RenderOptions::forClipRender (Array<Clip*>& clips, bool midiNotes)
+std::unique_ptr<RenderOptions> RenderOptions::forClipRender (Array<Clip*>& clips, bool midiNotes)
 {
     if (auto first = clips.getFirst())
     {
         auto& edit = first->edit;
 
-        auto ro = new RenderOptions (edit.engine);
+        std::unique_ptr<RenderOptions> ro (new RenderOptions (edit.engine));
         ro->setToDefault();
         updateLastUsedRenderPath (*ro, edit.getProjectItemID().toString());
 
@@ -749,9 +749,9 @@ RenderOptions* RenderOptions::forClipRender (Array<Clip*>& clips, bool midiNotes
     return {};
 }
 
-RenderOptions* RenderOptions::forEditClip (Clip& clip)
+std::unique_ptr<RenderOptions> RenderOptions::forEditClip (Clip& clip)
 {
-    auto ro = new RenderOptions (clip.edit.engine, clip.state, &clip.edit.getUndoManager());
+    std::unique_ptr<RenderOptions> ro (new RenderOptions (clip.edit.engine, clip.state, &clip.edit.getUndoManager()));
     ro->type = RenderType::editClip;
     ro->updateHash();
 
@@ -857,7 +857,7 @@ int64 RenderOptions::getTracksHash() const
     int64 tracksHash = 0;
 
     for (auto& t : tracks)
-        tracksHash ^= t.getRawID();
+        tracksHash ^= t.getRawID(); // TODO: this will probably be buggy if the IDs are all low sequential integers!
 
     return tracksHash;
 }

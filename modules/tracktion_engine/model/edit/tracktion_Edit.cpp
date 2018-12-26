@@ -331,7 +331,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
     void updateTrackStatusesAsync()
     {
         if (trackStatusUpdater == nullptr)
-            trackStatusUpdater = new TrackStatusUpdater (*this);
+            trackStatusUpdater.reset (new TrackStatusUpdater (*this));
     }
 
     struct TrackStatusUpdater  : private AsyncUpdater
@@ -349,7 +349,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
         TreeWatcher& owner;
     };
 
-    ScopedPointer<TrackStatusUpdater> trackStatusUpdater;
+    std::unique_ptr<TrackStatusUpdater> trackStatusUpdater;
 
     //==============================================================================
     void linkedClipsChanged()
@@ -2611,7 +2611,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const F
 
         if (isMidi)
         {
-            if (ScopedPointer<FileInputStream> fin = file.createInputStream())
+            if (auto fin = std::unique_ptr<FileInputStream> (file.createInputStream()))
             {
                 MidiFile mf;
                 mf.readFrom (*fin);

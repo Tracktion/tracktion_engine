@@ -247,7 +247,7 @@ private:
 
     //==============================================================================
     struct ChannelList;
-    juce::ScopedPointer<ChannelList> channelList;
+    std::unique_ptr<ChannelList> channelList;
     PatternArray patternInstanceList;
 
     const PatternInstance::Ptr getPatternInstance (int index, bool repeatSequence) const;

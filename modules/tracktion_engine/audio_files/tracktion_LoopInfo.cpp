@@ -24,8 +24,8 @@ LoopInfo::LoopInfo (const File& f)  : state (IDs::LOOPINFO)
     {
         if (auto* fin = f.createInputStream())
         {
-            const ScopedPointer<AudioFormatReader> afr (af->createReaderFor (fin, true));
-            init (Engine::getInstance(), afr, af);
+            const std::unique_ptr<AudioFormatReader> afr (af->createReaderFor (fin, true));
+            init (Engine::getInstance(), afr.get(), af);
         }
     }
 }
@@ -336,9 +336,7 @@ void LoopInfo::init (Engine& engine, const AudioFormatReader* afr, const AudioFo
 
         if (s.isNotEmpty())
         {
-            const ScopedPointer<XmlElement> n (XmlDocument::parse (s));
-
-            if (n != nullptr)
+            if (auto n = std::unique_ptr<XmlElement> (XmlDocument::parse (s)))
                 copyFrom (ValueTree::fromXml (*n));
         }
         else
@@ -362,9 +360,7 @@ void LoopInfo::init (Engine& engine, const AudioFormatReader* afr, const AudioFo
 
         if (s.isNotEmpty())
         {
-            const ScopedPointer<XmlElement> n (XmlDocument::parse (s));
-
-            if (n != nullptr)
+            if (auto n = std::unique_ptr<XmlElement> (XmlDocument::parse (s)))
                 copyFrom (ValueTree::fromXml (*n));
         }
         else

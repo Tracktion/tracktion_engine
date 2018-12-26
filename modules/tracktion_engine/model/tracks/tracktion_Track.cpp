@@ -456,11 +456,11 @@ void Track::updateTrackList()
     if (TrackList::hasAnySubTracks (state))
     {
         if (trackList == nullptr)
-            trackList = new TrackList (edit, state);
+            trackList.reset (new TrackList (edit, state));
     }
     else
     {
-        trackList = nullptr;
+        trackList.reset();
     }
 }
 

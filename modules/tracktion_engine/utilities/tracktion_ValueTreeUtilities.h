@@ -413,9 +413,7 @@ static inline juce::ValueTree loadValueTree (const juce::File& file, bool asXml)
 {
     if (asXml)
     {
-        const juce::ScopedPointer<juce::XmlElement> xml (juce::XmlDocument::parse (file));
-
-        if (xml != nullptr)
+        if (auto xml = std::unique_ptr<juce::XmlElement> (juce::XmlDocument::parse (file)))
             return juce::ValueTree::fromXml (*xml);
     }
     else
@@ -442,9 +440,7 @@ static inline bool saveValueTree (const juce::File& file, const juce::ValueTree&
 
         if (asXml)
         {
-            juce::ScopedPointer<juce::XmlElement> xml (v.createXml());
-
-            if (xml != nullptr)
+            if (auto xml = std::unique_ptr<juce::XmlElement> (v.createXml()))
                 xml->writeToStream (os, {});
         }
         else

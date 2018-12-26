@@ -1321,15 +1321,15 @@ MidiList* MidiCompManager::getSequenceLooped (int index)
     if (sourceSequence == nullptr)
         return {};
 
-    return cachedLoopSequences.set (index, clip.createSequenceLooped (*sourceSequence));
+    return cachedLoopSequences.set (index, clip.createSequenceLooped (*sourceSequence).release());
 }
 
 //==============================================================================
 juce::int64 MidiCompManager::getBaseTakeHash (int takeIndex) const
 {
     return takeIndex
-        ^ (int64) (clip.getLoopLengthBeats() * 153.0)
-        ^ (int64) (clip.getLoopStartBeats() * 264.0);
+            ^ (int64) (clip.getLoopLengthBeats() * 153.0)
+            ^ (int64) (clip.getLoopStartBeats() * 264.0);
 }
 
 double MidiCompManager::getTakeLength (int takeIndex) const
@@ -1351,6 +1351,7 @@ void MidiCompManager::discardCachedData()
 void MidiCompManager::triggerCompRender()
 {
     CRASH_TRACER
+
     if (! isTakeComp (getActiveTakeIndex()))
         return;
 
@@ -1428,16 +1429,16 @@ void MidiCompManager::createComp (const ValueTree& takeTree)
         auto um = getUndoManager();
         dest->clear (um);
 
-        const int numSegments = takeTree.getNumChildren();
-        const int numTakes = getNumTakes();
-        const double loopStart = clip.getLoopStartBeats();
+        const auto numSegments = takeTree.getNumChildren();
+        const auto numTakes = getNumTakes();
+        const auto loopStart = clip.getLoopStartBeats();
         double startBeat = 0.0;
 
         for (int i = 0; i < numSegments; ++i)
         {
             auto compSegment = takeTree.getChild (i);
-            const int takeIndex = int (compSegment.getProperty (IDs::takeIndex));
-            const double endBeat = double (compSegment.getProperty (IDs::endTime));
+            const auto takeIndex = static_cast<int> (compSegment.getProperty (IDs::takeIndex));
+            const auto endBeat = static_cast<double> (compSegment.getProperty (IDs::endTime));
 
             if (isPositiveAndBelow (takeIndex, numTakes))
             {
@@ -1465,7 +1466,7 @@ void MidiCompManager::createComp (const ValueTree& takeTree)
 
                     for (auto e : src->getControllerEvents())
                     {
-                        const double b = e->getBeatPosition();
+                        auto b = e->getBeatPosition();
 
                         if (b > endBeat)
                             break;
@@ -1476,7 +1477,7 @@ void MidiCompManager::createComp (const ValueTree& takeTree)
 
                     for (auto e : src->getSysexEvents())
                     {
-                        const double b = e->getBeatPosition();
+                        auto b = e->getBeatPosition();
 
                         if (b > endBeat)
                             break;

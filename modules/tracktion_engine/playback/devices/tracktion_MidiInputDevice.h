@@ -124,7 +124,7 @@ protected:
 
     juce::CriticalSection instanceLock;
     juce::Array<MidiInputDeviceInstanceBase*> instances;
-    juce::ScopedPointer<RetrospectiveMidiBuffer> retrospectiveBuffer;
+    std::unique_ptr<RetrospectiveMidiBuffer> retrospectiveBuffer;
 
     void handleNoteOn (juce::MidiKeyboardState*, int midiChannel, int midiNoteNumber, float velocity) override;
     void handleNoteOff (juce::MidiKeyboardState*, int midiChannel, int midiNoteNumber, float velocity) override;

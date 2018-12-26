@@ -49,9 +49,9 @@ protected:
 private:
     friend struct PhysicalMidiInputDeviceInstance;
     int deviceIndex = 0;
-    juce::ScopedPointer<juce::MidiInput> inputDevice;
+    std::unique_ptr<juce::MidiInput> inputDevice;
 
-    juce::ScopedPointer<MidiControllerParser> controllerParser;
+    std::unique_ptr<MidiControllerParser> controllerParser;
     ExternalController* externalController = nullptr;
     bool isReadingMidiTimecode = false, isAcceptingMMC = false, ignoreHours = false;
 

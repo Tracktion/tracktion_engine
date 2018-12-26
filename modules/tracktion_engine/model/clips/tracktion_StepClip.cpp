@@ -53,7 +53,7 @@ StepClip::StepClip (const ValueTree& v, EditItemID id, ClipTrack& targetTrack)
     : Clip (v, targetTrack, id, Type::step)
 {
     auto um = getUndoManager();
-    channelList = new ChannelList (*this, state.getOrCreateChildWithName (IDs::CHANNELS, um));
+    channelList.reset (new ChannelList (*this, state.getOrCreateChildWithName (IDs::CHANNELS, um)));
     repeatSequence.referTo (state, IDs::repeatSequence, um);
     volumeDb.referTo (state, IDs::volDb, um, 0.0f);
     mute.referTo (state, IDs::mute, um, false);

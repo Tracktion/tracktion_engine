@@ -410,15 +410,15 @@ void EditPlaybackContext::createAudioNodes (double startTime, bool addAntiDenorm
         ScopedLock sl (edit.engine.getDeviceManager().deviceManager.getAudioCallbackLock());
 
         for (auto mo : midiOutputs)
-            removedNodes.add (mo->replaceAudioNode (allNodes.getUnchecked (i++)));
+            removedNodes.add (mo->replaceAudioNode (std::unique_ptr<AudioNode> (allNodes.getUnchecked (i++))));
 
         for (auto wo : waveOutputs)
-            removedNodes.add (wo->replaceAudioNode (allNodes.getUnchecked (i++)));
+            removedNodes.add (wo->replaceAudioNode (std::unique_ptr<AudioNode> (allNodes.getUnchecked (i++))));
 
         if (hasTempoChanged && lastTempoSections.size() > 0)
         {
-            const double lastBeats = lastTempoSections.timeToBeats (playhead.getPosition());
-            const double lastPositionRemapped = tempoSections.beatsToTime (lastBeats);
+            auto lastBeats = lastTempoSections.timeToBeats (playhead.getPosition());
+            auto lastPositionRemapped = tempoSections.beatsToTime (lastBeats);
 
             playhead.overridePosition (lastPositionRemapped);
         }
@@ -450,7 +450,7 @@ void EditPlaybackContext::startPlaying (double start)
     prepareOutputDevices (start);
 
     if (priorityBooster == nullptr)
-        priorityBooster = new ProcessPriorityBooster();
+        priorityBooster.reset (new ProcessPriorityBooster());
 
     for (auto mo : midiOutputs)
         mo->start();

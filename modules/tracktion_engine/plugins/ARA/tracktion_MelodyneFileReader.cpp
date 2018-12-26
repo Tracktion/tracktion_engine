@@ -117,7 +117,7 @@ struct ARAClipPlayer  : private SelectableListener
     //==============================================================================
     Edit& getEdit()                         { return edit; }
     AudioClipBase& getClip()                { return clip; }
-    ExternalPlugin* getPlugin() noexcept    { return melodyneInstance != nullptr ? melodyneInstance->plugin.get() : nullptr; }
+    ExternalPlugin* getPlugin()             { return melodyneInstance != nullptr ? melodyneInstance->plugin.get() : nullptr; }
 
     //==============================================================================
     bool initialise (ARAClipPlayer* clipToClone)
@@ -423,7 +423,7 @@ private:
     //==============================================================================
     struct ContentUpdater : public Timer
     {
-        ContentUpdater (ARAClipPlayer& p) noexcept : owner (p) { startTimer (100); }
+        ContentUpdater (ARAClipPlayer& p) : owner (p) { startTimer (100); }
 
         ARAClipPlayer& owner;
 
@@ -446,7 +446,7 @@ private:
     //==============================================================================
     struct ModelUpdater : private Timer
     {
-        ModelUpdater (ARADocument& d) noexcept : document (d) { startTimer (3000); }
+        ModelUpdater (ARADocument& d) : document (d) { startTimer (3000); }
 
         ARADocument& document;
 
@@ -473,7 +473,7 @@ MelodyneFileReader::MelodyneFileReader (Edit& ed, AudioClipBase& clip)
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
 
-    player = new ARAClipPlayer (ed, *this, clip);
+    player.reset (new ARAClipPlayer (ed, *this, clip));
 
     if (! player->initialise (nullptr))
         player = nullptr;
@@ -486,9 +486,9 @@ MelodyneFileReader::MelodyneFileReader (Edit& ed, AudioClipBase& clip, MelodyneF
 
     if (other.player != nullptr)
     {
-        player = new ARAClipPlayer (ed, *this, clip);
+        player.reset (new ARAClipPlayer (ed, *this, clip));
 
-        if (! player->initialise (other.player))
+        if (! player->initialise (other.player.get()))
             player = nullptr;
     }
 
@@ -505,7 +505,7 @@ MelodyneFileReader::~MelodyneFileReader()
             if (auto pi = plugin->getAudioPluginInstance())
                 pi->setPlayHead (nullptr);
 
-    std::unique_ptr<ARAClipPlayer> toDestroy (player);
+    auto toDestroy = std::move (player);
 }
 
 //==============================================================================
@@ -846,11 +846,11 @@ ARADocumentHolder::Pimpl* ARADocumentHolder::getPimpl()
     if (pimpl == nullptr)
     {
         CRASH_TRACER
-        pimpl = new Pimpl (edit);
+        pimpl.reset (new Pimpl (edit));
         callBlocking ([this]() { pimpl->initialise(); });
     }
 
-    return pimpl;
+    return pimpl.get();
 }
 
 void ARADocumentHolder::flushStateToValueTree()

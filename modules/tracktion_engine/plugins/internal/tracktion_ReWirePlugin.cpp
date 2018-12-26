@@ -1102,7 +1102,7 @@ void ReWirePlugin::initialise (const PlaybackInitialisationInfo& info)
         device->prepareToPlay (info.sampleRate, info.blockSizeSamples,
                                channelIndexL, channelIndexR, &edit);
 
-        currentTempoPosition = new TempoSequencePosition (edit.tempoSequence);
+        currentTempoPosition.reset (new TempoSequencePosition (edit.tempoSequence));
     }
 }
 

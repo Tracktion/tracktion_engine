@@ -183,7 +183,7 @@ public:
         lastBlockEndPPQ = 0;
 
         if (edit != nullptr)
-            position = new TempoSequencePosition (edit->tempoSequence);
+            position.reset (new TempoSequencePosition (edit->tempoSequence));
     }
 
     void addMessages (PlayHead& playhead, TransportControl* tc, MidiMessageArray& buffer,
@@ -253,7 +253,7 @@ private:
     bool wasPlaying = false;
     bool needsToSendPosition = false;
     CriticalSection positionLock;
-    ScopedPointer<TempoSequencePosition> position;
+    std::unique_ptr<TempoSequencePosition> position;
     double lastBlockStart = 0, lastBlockEndPPQ = 0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiClockGenerator)

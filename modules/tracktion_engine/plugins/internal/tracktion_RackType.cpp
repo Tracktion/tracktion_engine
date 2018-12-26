@@ -2057,7 +2057,7 @@ void RackTypeList::initialise (const ValueTree& v)
     state = v;
     jassert (state.hasType (IDs::RACKS));
 
-    list = new ValueTreeList (*this, v);
+    list.reset (new ValueTreeList (*this, v));
     list->rebuildObjects();
 }
 
@@ -2160,12 +2160,8 @@ void RackTypeList::importRackFiles (const Array<File>& files)
     int oldNumRacks = size();
 
     for (auto& f : files)
-    {
-        ScopedPointer<XmlElement> xml (XmlDocument::parse (f));
-
-        if (xml != nullptr)
+        if (auto xml = std::unique_ptr<XmlElement> (XmlDocument::parse (f)))
             addRackTypeFrom (ValueTree::fromXml (*xml));
-    }
 
     if (oldNumRacks < size())
         edit.engine.getUIBehaviour().showWarningMessage (TRANS("Rack types added!"));

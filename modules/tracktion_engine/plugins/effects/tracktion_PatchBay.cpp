@@ -52,7 +52,7 @@ struct PatchBayPlugin::WireList  : public ValueTreeObjectList<PatchBayPlugin::Wi
 //==============================================================================
 PatchBayPlugin::PatchBayPlugin (PluginCreationInfo info) : Plugin (info)
 {
-    list = new WireList (*this, state);
+    list.reset (new WireList (*this, state));
 
     if (info.isNewPlugin)
         for (int i = 0; i < 2; ++i)

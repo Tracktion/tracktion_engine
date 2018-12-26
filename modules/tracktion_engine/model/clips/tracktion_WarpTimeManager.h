@@ -140,10 +140,10 @@ private:
     AudioFile sourceFile;
     bool endMarkerEnabled = true, endMarkersLimited = false;
 
-    juce::ScopedPointer<WarpMarkerList> markers;
+    std::unique_ptr<WarpMarkerList> markers;
     RenderManager::Job::Ptr transientDetectionJob;
     std::pair<bool, juce::Array<double>> transientTimes { false, {} };
-    juce::ScopedPointer<Edit::LoadFinishedCallback<WarpTimeManager>> editLoadedCallback;
+    std::unique_ptr<Edit::LoadFinishedCallback<WarpTimeManager>> editLoadedCallback;
 
     juce::UndoManager* getUndoManager() const;
     void jobFinished (RenderManager::Job& job, bool completedOk) override;

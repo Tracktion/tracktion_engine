@@ -298,7 +298,7 @@ bool EditRenderJob::RenderPass::initialise()
 
         if (node != nullptr)
         {
-            task = new Renderer::RenderTask (desc, r, node, owner.progress, &owner.thumbnailToUpdate);
+            task.reset (new Renderer::RenderTask (desc, r, node, owner.progress, &owner.thumbnailToUpdate));
             return task->errorMessage.isEmpty();
         }
     }

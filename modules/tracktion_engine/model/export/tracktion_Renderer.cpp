@@ -564,7 +564,7 @@ bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
 
     if (context == nullptr)
     {
-        callBlocking ([&, this] { context = new RendererContext (*this, r, node, sourceToUpdate); });
+        callBlocking ([&, this] { context.reset (new RendererContext (*this, r, node.get(), sourceToUpdate)); });
 
         if (! context->getStatus().wasOk())
         {

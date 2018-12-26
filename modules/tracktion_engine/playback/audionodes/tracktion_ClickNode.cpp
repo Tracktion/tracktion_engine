@@ -61,7 +61,7 @@ juce::AudioBuffer<float> loadWavDataIntoMemory (const void* data, size_t size, d
    auto in = new MemoryInputStream (data, size, false);
 
     WavAudioFormat wavFormat;
-    ScopedPointer<AudioFormatReader> r (wavFormat.createReaderFor (in, true));
+    std::unique_ptr<AudioFormatReader> r (wavFormat.createReaderFor (in, true));
 
     if (r == nullptr)
         return {};
@@ -72,7 +72,7 @@ juce::AudioBuffer<float> loadWavDataIntoMemory (const void* data, size_t size, d
     juce::AudioBuffer<float> buf ((int) r->numChannels, targetLength);
 
     {
-        AudioFormatReaderSource readerSource (r, false);
+        AudioFormatReaderSource readerSource (r.get(), false);
 
         ResamplingAudioSource resamplerSource (&readerSource, false, (int) r->numChannels);
         resamplerSource.setResamplingRatio (ratio);

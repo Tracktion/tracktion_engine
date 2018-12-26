@@ -70,7 +70,7 @@ struct PluginScanMasterProcess  : private ChildProcessMaster
 
         for (;;)
         {
-            std::unique_ptr<XmlElement> reply (findReply (requestID));
+            auto reply = findReply (requestID);
 
             RelativeTime elapsed (Time::getCurrentTime() - start);
 
@@ -153,11 +153,11 @@ private:
         }
     }
 
-    XmlElement* findReply (int requestID)
+    std::unique_ptr<XmlElement> findReply (int requestID)
     {
         for (int i = replies.size(); --i >= 0;)
             if (replies.getUnchecked(i)->getIntAttribute ("id") == requestID)
-                return replies.removeAndReturn (i);
+                return std::unique_ptr<XmlElement> (replies.removeAndReturn (i));
 
         return {};
     }
@@ -432,7 +432,7 @@ void PluginManager::initialise()
    #if TRACKTION_ENABLE_REWIRE
     createBuiltInType<ReWirePlugin>();
    #endif
-    
+
    #if TRACKTION_AIR_WINDOWS
     createBuiltInType<AirWindowsAcceleration>();
     createBuiltInType<AirWindowsADClip7>();

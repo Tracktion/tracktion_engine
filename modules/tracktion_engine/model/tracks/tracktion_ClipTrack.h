@@ -107,11 +107,11 @@ protected:
 
     struct ClipList;
     friend struct ClipList;
-    juce::ScopedPointer<ClipList> clipList;
+    std::unique_ptr<ClipList> clipList;
 
     struct CollectionClipList;
     friend struct CollectionClipList;
-    juce::ScopedPointer<CollectionClipList> collectionClipList;
+    std::unique_ptr<CollectionClipList> collectionClipList;
 
     void refreshTrackItems() const;
 

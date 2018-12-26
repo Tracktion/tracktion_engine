@@ -379,7 +379,7 @@ bool TracktionArchiveFile::addFile (const File& f, const String& filenameToUse, 
 
             auto filenameRoot = filenameToUse.substring (0, filenameToUse.lastIndexOfChar ('.'));
 
-            ScopedPointer<IndexEntry> entry (new IndexEntry());
+            std::unique_ptr<IndexEntry> entry (new IndexEntry());
             entry->offset = indexOffset;
             entry->length = 0;
             entry->originalName = filenameToUse;

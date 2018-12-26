@@ -72,7 +72,7 @@ public:
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ScopedTrackFreezer)
     };
 
-    static ScopedTrackFreezer* createTrackFreezer (const Plugin::Ptr&);
+    static std::unique_ptr<ScopedTrackFreezer> createTrackFreezer (const Plugin::Ptr&);
 
     FreezePointPlugin (PluginCreationInfo);
     ~FreezePointPlugin();

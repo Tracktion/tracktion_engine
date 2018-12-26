@@ -280,11 +280,11 @@ void deleteRegionOfTracks (Edit& edit, EditTimeRange rangeToDelete, bool onlySel
     {
         if (rangeToDelete.getLength() > 0.0001)
         {
-            ScopedPointer<SelectionManager::ScopedSelectionState> selectionState;
+            std::unique_ptr<SelectionManager::ScopedSelectionState> selectionState;
 
             if (selectionManager != nullptr)
             {
-                selectionState = new SelectionManager::ScopedSelectionState (*selectionManager);
+                selectionState.reset (new SelectionManager::ScopedSelectionState (*selectionManager));
                 selectionManager->deselectAll();
             }
 

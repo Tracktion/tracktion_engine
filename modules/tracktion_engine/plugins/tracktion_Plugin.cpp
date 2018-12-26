@@ -209,7 +209,7 @@ public:
 
 protected:
     Plugin::Ptr plugin;
-    ScopedPointer<AudioNode> input;
+    std::unique_ptr<AudioNode> input;
 
     bool hasAudioInput = false, hasMidiInput = false, applyAntiDenormalisationNoise = false, hasInitialised = false;
     double latencySeconds = 0.0;
@@ -356,7 +356,7 @@ Plugin::Plugin (PluginCreationInfo info)
     auto wires = state.getChildWithName (IDs::SIDECHAINCONNECTIONS);
 
     if (wires.isValid())
-        sidechainWireList = new WireList (*this, wires);
+        sidechainWireList.reset (new WireList (*this, wires));
 
     enabled.referTo (state, IDs::enabled, um, true);
 
@@ -669,7 +669,7 @@ void Plugin::valueTreeChanged()
 void Plugin::valueTreeChildAdded (ValueTree&, ValueTree& c)
 {
     if (c.getType() == IDs::SIDECHAINCONNECTIONS)
-        sidechainWireList = new WireList (*this, c);
+        sidechainWireList.reset (new WireList (*this, c));
 
     valueTreeChanged();
 }

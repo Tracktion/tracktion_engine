@@ -29,7 +29,7 @@ struct CombiningAudioNode::TimedAudioNode
     }
 
     EditTimeRange time;
-    const ScopedPointer<AudioNode> node;
+    const std::unique_ptr<AudioNode> node;
     int lastBufferSize = 0;
 
     void render (const AudioRenderContext& rc, EditTimeRange editTime) const
@@ -78,7 +78,7 @@ void CombiningAudioNode::addInput (EditTimeRange time, AudioNode* inputNode)
 
     if (time.isEmpty())
     {
-        ScopedPointer<AudioNode> an (inputNode);
+        std::unique_ptr<AudioNode> an (inputNode);
         return;
     }
 

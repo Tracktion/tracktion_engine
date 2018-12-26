@@ -38,7 +38,7 @@ public:
 private:
     class MelodyneAudioNode;
 
-    juce::ScopedPointer<ARAClipPlayer> player;
+    std::unique_ptr<ARAClipPlayer> player;
     juce::MidiBuffer midiBuffer;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MelodyneFileReader)
@@ -59,7 +59,7 @@ struct ARADocumentHolder
 private:
     Edit& edit;
     juce::ValueTree lastState;
-    juce::ScopedPointer<Pimpl> pimpl;
+    std::unique_ptr<Pimpl> pimpl;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ARADocumentHolder)
 };
