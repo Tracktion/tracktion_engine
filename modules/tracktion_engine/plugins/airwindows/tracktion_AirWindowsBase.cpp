@@ -22,19 +22,19 @@ namespace tracktion_engine
 #define kVstMaxProductStrLen    64
 #define kVstMaxVendorStrLen     64
 #define vst_strncpy             strncpy
-    
+
 void float2string (float f, char* text, int len)
 {
     String str (f);
     str.copyToUTF8 (text, (size_t)len);
 }
-    
+
 void int2string (float i, char* text, int len)
 {
     String str (i);
     str.copyToUTF8 (text, (size_t)len);
 }
-    
+
 void dB2string (float value, char* text, int maxLen)
 {
     if (value <= 0)
@@ -42,7 +42,7 @@ void dB2string (float value, char* text, int maxLen)
     else
         float2string ((float)(20. * log10 (value)), text, maxLen);
 }
-    
+
 //==============================================================================
 class AirWindowsBase
 {
@@ -52,13 +52,13 @@ public:
         : numPrograms (prog), numParams (param), callback (callback_)
     {
     }
-    
+
     virtual ~AirWindowsBase() = default;
-    
+
     int getNumInputs()                  { return numInputs;     }
     int getNumOutputs()                 { return numOutputs;    }
     int getNumParameters()              { return numParams;     }
-    
+
     //==============================================================================
     virtual bool getEffectName(char* name)                        = 0;
     virtual VstPlugCategory getPlugCategory()                     = 0;
@@ -77,7 +77,7 @@ public:
     virtual void getParameterName(VstInt32 index, char *text)     = 0;
     virtual void getParameterDisplay(VstInt32 index, char *text)  = 0;
     virtual VstInt32 canDo(char *text)                            = 0;
-    
+
 protected:
     //==============================================================================
     void setNumInputs (int numIn)       { numInputs = numIn;    }
@@ -86,12 +86,12 @@ protected:
     void canProcessReplacing()          {}
     void canDoubleReplacing()           {}
     void programsAreChunks (bool)       {}
-    
+
     int numInputs = 0, numOutputs = 0, numPrograms = 0, numParams = 0;
-    
+
     AirWindowsCallback* callback;
-    
+
     double getSampleRate()              { return callback->getSampleRate(); }
 };
-    
+
 }

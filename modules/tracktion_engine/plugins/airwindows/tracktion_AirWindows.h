@@ -13,7 +13,7 @@ namespace tracktion_engine
 class AirWindowsBase;
 class AirWindowsPlugin;
 class AirWindowsAutomatableParameter;
-    
+
 //==============================================================================
 class AirWindowsCallback
 {
@@ -21,10 +21,10 @@ public:
     AirWindowsCallback (AirWindowsPlugin&);
     virtual ~AirWindowsCallback() = default;
     virtual double getSampleRate();
-    
+
     AirWindowsPlugin& owner;
 };
-    
+
 //==============================================================================
 class AirWindowsPlugin   : public Plugin
 {
@@ -42,11 +42,11 @@ public:
         reverb,
         utility,
     };
-    
+
     //==============================================================================
     AirWindowsPlugin (PluginCreationInfo, std::unique_ptr<AirWindowsBase>);
     ~AirWindowsPlugin();
-    
+
     //==============================================================================
     juce::String getSelectableDescription() override                        { return TRANS("Air Windows Plugin"); }
     int getNumOutputChannelsGivenInputs (int numInputChannels) override;
@@ -67,26 +67,26 @@ public:
     //==============================================================================
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
     void flushPluginStateToValueTree() override;
-    
+
 protected:
     //==============================================================================
     friend AirWindowsAutomatableParameter;
     friend AirWindowsCallback;
-    
+
     void processBlock (juce::AudioBuffer<float>& buffer);
-    
+
     AirWindowsCallback callback;
     std::unique_ptr<AirWindowsBase> impl;
-    
+
     double sampleRate = 44100.0;
-    
+
 public:
     //==============================================================================
     juce::ReferenceCountedArray<AutomatableParameter> parameters;
-    
+
     juce::CachedValue<float> dryValue, wetValue;
     AutomatableParameter::Ptr dryGain, wetGain;
-    
+
 private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AirWindowsPlugin)
@@ -172,5 +172,5 @@ AIRWINDOWSPLUGIN(AirWindowsVariMu, "Vari Mu");
 AIRWINDOWSPLUGIN(AirWindowsVoiceOfTheStarship, "Voice Of The Starship");
 AIRWINDOWSPLUGIN(AirWindowsWider, "Wider");
 
-    
+
 } // namespace tracktion_engine
