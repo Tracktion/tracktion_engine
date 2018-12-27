@@ -105,7 +105,8 @@ struct DeviceManager::WaveDeviceList
         {
             if (isInput ? dm.isDeviceInChannelStereo (i) : dm.isDeviceOutChannelStereo (i))
             {
-                descriptions.push_back (WaveDeviceDescription (mergeTwoNames (channelNames[i], channelNames[i + 1]), i, i + 1, isDeviceEnabled (i) || isDeviceEnabled (i + 1)));
+                descriptions.push_back (WaveDeviceDescription (mergeTwoNames (channelNames[i], channelNames[i + 1]),
+                                                               i, i + 1, isDeviceEnabled (i) || isDeviceEnabled (i + 1)));
                 ++i;
             }
             else

@@ -75,6 +75,7 @@ using namespace juce;
 #include "playback/devices/tracktion_VirtualMidiInputDevice.cpp"
 #include "playback/devices/tracktion_MidiOutputDevice.cpp"
 #include "playback/devices/tracktion_OutputDevice.cpp"
+#include "playback/devices/tracktion_WaveDeviceDescription.cpp"
 #include "playback/devices/tracktion_WaveInputDevice.cpp"
 #include "playback/devices/tracktion_WaveOutputDevice.cpp"
 

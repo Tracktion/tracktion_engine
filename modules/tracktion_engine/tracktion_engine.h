@@ -309,6 +309,7 @@ namespace tracktion_engine
 
 #include "playback/tracktion_PlayHead.h"
 #include "playback/audionodes/tracktion_AudioNode.h"
+#include "playback/devices/tracktion_WaveDeviceDescription.h"
 
 //==============================================================================
 #include "model/automation/tracktion_AutomationCurve.h"
