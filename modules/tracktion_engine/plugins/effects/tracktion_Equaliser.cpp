@@ -168,7 +168,7 @@ void EqualiserPlugin::resetToDefault()
     curveNeedsUpdating = true;
 }
 
-void EqualiserPlugin::restorePluginStateFromValueTree (const ValueTree& v)
+void EqualiserPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
     CachedValue<float>* cvsFloat[]  = { &loFreqValue, &loGainValue, &loQValue,
                                         &hiFreqValue, &hiGainValue, &hiQValue,
@@ -179,7 +179,7 @@ void EqualiserPlugin::restorePluginStateFromValueTree (const ValueTree& v)
     copyPropertiesToNullTerminatedCachedValues (v, cvsBool);
 }
 
-void EqualiserPlugin::valueTreePropertyChanged (ValueTree& parent, const Identifier& prop)
+void EqualiserPlugin::valueTreePropertyChanged (ValueTree& parent, const juce::Identifier& prop)
 {
     curveNeedsUpdating = true;
     Plugin::valueTreePropertyChanged (parent, prop);

@@ -293,7 +293,7 @@ void VolumeAndPanPlugin::muteOrUnmute()
     }
 }
 
-void VolumeAndPanPlugin::restorePluginStateFromValueTree (const ValueTree& v)
+void VolumeAndPanPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
     CachedValue<float>* cvsFloat[]  = { &volume, &pan, nullptr };
     CachedValue<int>* cvsInt[]      = { &panLaw, nullptr };

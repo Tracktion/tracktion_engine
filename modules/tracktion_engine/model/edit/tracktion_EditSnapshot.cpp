@@ -104,7 +104,7 @@ void EditSnapshot::refreshCacheAndNotifyListeners()
     listeners.call (&Listener::editChanged, *this);
 }
 
-void EditSnapshot::addSubTracksRecursively (const XmlElement& parent, int& audioTrackNameNumber)
+void EditSnapshot::addSubTracksRecursively (const juce::XmlElement& parent, int& audioTrackNameNumber)
 {
     forEachXmlChildElement (parent, track)
     {
@@ -145,7 +145,8 @@ void EditSnapshot::addSubTracksRecursively (const XmlElement& parent, int& audio
     }
 }
 
-void EditSnapshot::refreshFromXml (const XmlElement& xml, const juce::String& newName, double newLength)
+void EditSnapshot::refreshFromXml (const juce::XmlElement& xml,
+                                   const juce::String& newName, double newLength)
 {
     clear();
     name = newName;
@@ -262,14 +263,14 @@ void EditSnapshot::clear()
     markers.clear();
 }
 
-void EditSnapshot::addEditClips (const XmlElement& track)
+void EditSnapshot::addEditClips (const juce::XmlElement& track)
 {
     forEachXmlChildElement (track, clip)
         if (clip->hasTagName (IDs::EDITCLIP))
             editClipIDs.add (ProjectItemID (clip->getStringAttribute ("source")));
 }
 
-void EditSnapshot::addClipSources (const XmlElement& track)
+void EditSnapshot::addClipSources (const juce::XmlElement& track)
 {
     forEachXmlChildElement (track, clip)
     {
@@ -280,7 +281,7 @@ void EditSnapshot::addClipSources (const XmlElement& track)
     }
 }
 
-void EditSnapshot::addMarkers (const XmlElement& track)
+void EditSnapshot::addMarkers (const juce::XmlElement& track)
 {
     forEachXmlChildElement (track, clip)
     {

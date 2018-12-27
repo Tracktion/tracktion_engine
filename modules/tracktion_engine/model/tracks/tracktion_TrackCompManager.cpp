@@ -28,7 +28,7 @@ TrackCompManager::CompSection* TrackCompManager::CompSection::createAndIncRefCou
     return cs;
 }
 
-void TrackCompManager::CompSection::updateFrom (ValueTree& v, const Identifier& i)
+void TrackCompManager::CompSection::updateFrom (ValueTree& v, const juce::Identifier& i)
 {
     if (v == state)
     {
@@ -461,7 +461,7 @@ void TrackCompManager::TrackComp::newObjectAdded (CompSection*)                 
 void TrackCompManager::TrackComp::objectRemoved (CompSection*)                  {}
 void TrackCompManager::TrackComp::objectOrderChanged()                          {}
 
-void TrackCompManager::TrackComp::valueTreePropertyChanged (ValueTree& v, const Identifier& i)
+void TrackCompManager::TrackComp::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
 {
     if (v.hasType (IDs::COMPSECTION))
         if (CompSection* cs = getCompSectionFor (v))

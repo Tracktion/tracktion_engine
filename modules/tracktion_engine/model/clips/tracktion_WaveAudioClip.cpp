@@ -236,7 +236,7 @@ void WaveAudioClip::invalidateCurrentTake (const ValueTree& parent) noexcept
         invalidateCurrentTake();
 }
 
-void WaveAudioClip::valueTreePropertyChanged (ValueTree& treeWhosePropertyHasChanged, const Identifier& property)
+void WaveAudioClip::valueTreePropertyChanged (ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property)
 {
     AudioClipBase::valueTreePropertyChanged (treeWhosePropertyHasChanged, property);
 

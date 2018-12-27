@@ -99,7 +99,7 @@ void DelayPlugin::applyToBuffer (const AudioRenderContext& fc)
     zeroDenormalisedValuesIfNeeded (*fc.destBuffer);
 }
 
-void DelayPlugin::restorePluginStateFromValueTree (const ValueTree& v)
+void DelayPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
     CachedValue<float>* cvsFloat[]  = { &feedbackValue, &mixValue, nullptr };
     CachedValue<int>* cvsInt[]      = { &lengthMs, nullptr };

@@ -53,7 +53,7 @@ void ProjectManager::initialise()
 }
 
 //==============================================================================
-static void ensureAllItemsHaveIDs (const ValueTree& folder)
+static void ensureAllItemsHaveIDs (const juce::ValueTree& folder)
 {
     if (folder[IDs::uid].toString().isEmpty())
         ValueTree (folder).setProperty (IDs::uid, String::toHexString (Random().nextInt()), nullptr);
@@ -135,7 +135,7 @@ void ProjectManager::saveList()
     engine.getPropertyStorage().setXmlProperty (SettingID::projectList, *xml);
 }
 
-static void findProjects (ProjectManager& pm, const ValueTree& folder, ReferenceCountedArray<Project>& list)
+static void findProjects (ProjectManager& pm, const juce::ValueTree& folder, ReferenceCountedArray<Project>& list)
 {
     if (auto p = pm.getProjectFrom (folder))
         list.add (p);
@@ -144,7 +144,7 @@ static void findProjects (ProjectManager& pm, const ValueTree& folder, Reference
         findProjects (pm, folder.getChild(i), list);
 }
 
-ReferenceCountedArray<Project> ProjectManager::getAllProjects (const ValueTree& folder)
+ReferenceCountedArray<Project> ProjectManager::getAllProjects (const juce::ValueTree& folder)
 {
     ReferenceCountedArray<Project> list;
     findProjects (*this, folder, list);
@@ -155,7 +155,7 @@ ValueTree ProjectManager::getActiveProjectsFolder()     { return folders.getChil
 ValueTree ProjectManager::getLibraryProjectsFolder()    { return folders.getChildWithName (IDs::LIBRARY); }
 
 //==============================================================================
-Project::Ptr ProjectManager::findProjectWithId (const ValueTree& folder, int pid)
+Project::Ptr ProjectManager::findProjectWithId (const juce::ValueTree& folder, int pid)
 {
     if (auto p = getProjectFrom (folder))
         if (p->getProjectID() == pid)
@@ -168,7 +168,7 @@ Project::Ptr ProjectManager::findProjectWithId (const ValueTree& folder, int pid
     return {};
 }
 
-Project::Ptr ProjectManager::findProjectWithFile (const ValueTree& folder, const File& f)
+Project::Ptr ProjectManager::findProjectWithFile (const juce::ValueTree& folder, const File& f)
 {
     if (auto p = getProjectFrom (folder))
         if (p->getProjectFile() == f)
@@ -181,7 +181,7 @@ Project::Ptr ProjectManager::findProjectWithFile (const ValueTree& folder, const
     return {};
 }
 
-Project::Ptr ProjectManager::getProjectFrom (const ValueTree& v, bool createIfNotFound)
+Project::Ptr ProjectManager::getProjectFrom (const juce::ValueTree& v, bool createIfNotFound)
 {
     if (auto p = dynamic_cast<Project*> (v.getProperty (IDs::project).getObject()))
         return p;
@@ -272,7 +272,7 @@ Project::Ptr ProjectManager::addProjectToList (const File& f,
     return {};
 }
 
-static void removeProject (const ValueTree& folder, const Project::Ptr& toRemove)
+static void removeProject (const juce::ValueTree& folder, const Project::Ptr& toRemove)
 {
     if (toRemove == nullptr)
         return;
@@ -324,7 +324,8 @@ void ProjectManager::clearProjects()
     openProjects.clear();
 }
 
-static bool getValueTreeFor (const ValueTree& folder, const Project* proj, ValueTree& result, bool createIfNotFound = true)
+static bool getValueTreeFor (const juce::ValueTree& folder, const Project* proj,
+                             juce::ValueTree& result, bool createIfNotFound = true)
 {
     if (proj == nullptr)
         return false;

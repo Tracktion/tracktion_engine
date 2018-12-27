@@ -137,7 +137,7 @@ private:
 
     void objectOrderChanged() override              { macroParameterList.sendChangeMessage(); }
 
-    void valueTreePropertyChanged (ValueTree& v, const Identifier& i) override
+    void valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i) override
     {
         if (v.hasType (IDs::MACROPARAMETER) && i == IDs::name)
             macroParameterList.rebuildParameterTree();

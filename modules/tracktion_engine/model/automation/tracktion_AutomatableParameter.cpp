@@ -17,7 +17,7 @@ namespace AutomationScaleHelpers
     {
         jassert (curve >= -0.5f && curve <= 0.5f);
 
-        auto c = jlimit (-1.0f, 1.0f, curve * 2.0f);
+        auto c = juce::jlimit (-1.0f, 1.0f, curve * 2.0f);
 
         if (y2 > y1)
         {
@@ -58,9 +58,9 @@ AutomatableParameter::ModifierSource::~ModifierSource()
 }
 
 //==============================================================================
-struct AutomationSource  : public ReferenceCountedObject
+struct AutomationSource  : public juce::ReferenceCountedObject
 {
-    AutomationSource (const ValueTree& v) : state (v) {}
+    AutomationSource (const juce::ValueTree& v) : state (v) {}
     virtual ~AutomationSource() = default;
 
     /** Must return the value of automation at the given time.
@@ -86,7 +86,7 @@ struct AutomationSource  : public ReferenceCountedObject
     /** Should return the current value of the source. */
     virtual float getCurrentValue() = 0;
 
-    ValueTree state;
+    juce::ValueTree state;
 };
 
 //==============================================================================
@@ -106,7 +106,7 @@ struct AutomationModifierSource : public AutomationSource
 //==============================================================================
 struct ModifierAutomationSource : public AutomationModifierSource
 {
-    ModifierAutomationSource (Modifier::Ptr mod, const ValueTree& assignmentState)
+    ModifierAutomationSource (Modifier::Ptr mod, const juce::ValueTree& assignmentState)
         : AutomationModifierSource (mod->createAssignment (assignmentState)),
           modifier (std::move (mod))
     {
@@ -180,7 +180,7 @@ public:
         }
 
         {
-            const ScopedLock sl (parameterStreamLock);
+            const juce::ScopedLock sl (parameterStreamLock);
             automationActive.store (newStream != nullptr, std::memory_order_relaxed);
             parameterStream = std::move (newStream);
 
@@ -214,7 +214,7 @@ public:
         if (! parameter.getEdit().getAutomationRecordManager().isReadingAutomation())
             return;
 
-        const ScopedLock sl (parameterStreamLock);
+        const juce::ScopedLock sl (parameterStreamLock);
 
         if (lastTime.exchange (time) != time)
             parameterStream->setPosition (time);
@@ -227,7 +227,7 @@ public:
 
     float getCurrentValue() override
     {
-        const ScopedLock sl (parameterStreamLock);
+        const juce::ScopedLock sl (parameterStreamLock);
         return parameterStream->getCurrentValue();
     }
 
@@ -241,7 +241,7 @@ private:
     std::atomic<bool> automationActive { false };
     std::atomic<double> lastTime { -1.0 };
 
-    static ValueTree getState (AutomatableParameter& ap)
+    static juce::ValueTree getState (AutomatableParameter& ap)
     {
         auto v = ap.parentState.getChildWithProperty (IDs::paramID, ap.paramID);
 
@@ -293,7 +293,7 @@ struct MacroSource : public AutomationModifierSource
 
     void setPosition (double time) override
     {
-        const ScopedLock sl (streamPositionLock);
+        const juce::ScopedLock sl (streamPositionLock);
         macro->updateFromAutomationSources (time);
         auto macroValue = macro->getCurrentValue();
 
@@ -322,10 +322,10 @@ private:
 };
 
 //==============================================================================
-struct AutomatableParameter::AutomationSourceList  : private ValueTreeObjectList<AutomationModifierSource, CriticalSection>
+struct AutomatableParameter::AutomationSourceList  : private ValueTreeObjectList<AutomationModifierSource, juce::CriticalSection>
 {
     AutomationSourceList (const AutomatableParameter& ap)
-        : ValueTreeObjectList<AutomationModifierSource, CriticalSection> (ap.modifiersState),
+        : ValueTreeObjectList<AutomationModifierSource, juce::CriticalSection> (ap.modifiersState),
           parameter (ap)
     {
         jassert (! ap.getEdit().isLoading());
@@ -355,7 +355,7 @@ struct AutomatableParameter::AutomationSourceList  : private ValueTreeObjectList
                 f (*as);
     }
 
-    ReferenceCountedObjectPtr<AutomationModifierSource> getSourceFor (ModifierAssignment& ass)
+    juce::ReferenceCountedObjectPtr<AutomationModifierSource> getSourceFor (ModifierAssignment& ass)
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
 
@@ -366,7 +366,7 @@ struct AutomatableParameter::AutomationSourceList  : private ValueTreeObjectList
         return {};
     }
 
-    ReferenceCountedObjectPtr<AutomationModifierSource> getSourceFor (ModifierSource& mod)
+    juce::ReferenceCountedObjectPtr<AutomationModifierSource> getSourceFor (ModifierSource& mod)
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
 
@@ -385,10 +385,10 @@ private:
     // counted copy of the objects for the visit method to use in a lock free way
     struct CachedSources : public ReferenceCountedObject
     {
-        ReferenceCountedArray<AutomationModifierSource> sources;
+        juce::ReferenceCountedArray<AutomationModifierSource> sources;
     };
 
-    ReferenceCountedObjectPtr<CachedSources> cachedSources;
+    juce::ReferenceCountedObjectPtr<CachedSources> cachedSources;
 
     void updateCachedSources()
     {
@@ -421,13 +421,13 @@ private:
 
     AutomationModifierSource* createNewObject (const juce::ValueTree& v) override
     {
-        ReferenceCountedObjectPtr<AutomationModifierSource> as;
+        juce::ReferenceCountedObjectPtr<AutomationModifierSource> as;
 
         // Convert old LFO name to ID
         if (v.hasType (IDs::LFO) && v[IDs::paramID].toString() == parameter.paramName)
             juce::ValueTree (v).setProperty (IDs::paramID, parameter.paramID, nullptr);
 
-        auto getMacroForID = [this] (const String& id) -> MacroParameter*
+        auto getMacroForID = [this] (const juce::String& id) -> MacroParameter*
         {
             for (auto mpl : getAllMacroParameterLists (parameter.getEdit()))
                 for (auto mp : mpl->getMacroParameters())
@@ -483,12 +483,12 @@ private:
 };
 
 //==============================================================================
-struct AutomatableParameter::AttachedValue  : public AsyncUpdater
+struct AutomatableParameter::AttachedValue  : public juce::AsyncUpdater
 {
-    AttachedValue (AutomatableParameter& p, CachedValue<float>& v)
+    AttachedValue (AutomatableParameter& p, juce::CachedValue<float>& v)
         : parameter (p), value (v)
     {
-        p.setParameter (value, dontSendNotification);
+        p.setParameter (value, juce::dontSendNotification);
     }
 
     ~AttachedValue()
@@ -502,14 +502,14 @@ struct AutomatableParameter::AttachedValue  : public AsyncUpdater
     }
 
     AutomatableParameter& parameter;
-    CachedValue<float>& value;
+    juce::CachedValue<float>& value;
 };
 
 //==============================================================================
-AutomatableParameter::AutomatableParameter (const String& paramID_,
-                                            const String& name_,
+AutomatableParameter::AutomatableParameter (const juce::String& paramID_,
+                                            const juce::String& name_,
                                             AutomatableEditItem& owner,
-                                            NormalisableRange<float> vr)
+                                            juce::NormalisableRange<float> vr)
     : paramID (paramID_),
       valueRange (vr),
       automatableEditElement (owner),
@@ -540,8 +540,8 @@ AutomatableParameter::AutomatableParameter (const String& paramID_,
     modifiersState = parentState.getOrCreateChildWithName (IDs::MODIFIERASSIGNMENTS, &owner.edit.getUndoManager());
     curveSource = std::make_unique<AutomationCurveSource> (*this);
 
-    valueToStringFunction = [] (float value)        { return String (value, 3); };
-    stringToValueFunction = [] (const String& s)    { return s.getFloatValue(); };
+    valueToStringFunction = [] (float value)              { return juce::String (value, 3); };
+    stringToValueFunction = [] (const juce::String& s)    { return s.getFloatValue(); };
 
     parentState.addListener (this);
 }
@@ -573,16 +573,16 @@ AutomatableParameter::ModifierAssignment::Ptr AutomatableParameter::addModifier 
     if (auto existing = getAutomationSourceList().getSourceFor (source))
         return existing->assignment;
 
-    ValueTree v;
+    juce::ValueTree v;
 
     if (auto mod = dynamic_cast<Modifier*> (&source))
     {
-        v = ValueTree (mod->state.getType());
+        v = juce::ValueTree (mod->state.getType());
         mod->itemID.setProperty (v, IDs::source, nullptr);
     }
     else if (auto macro = dynamic_cast<MacroParameter*> (&source))
     {
-        v = ValueTree (IDs::MACRO);
+        v = juce::ValueTree (IDs::MACRO);
         v.setProperty (IDs::source, macro->paramID, nullptr);
     }
     else
@@ -609,6 +609,7 @@ AutomatableParameter::ModifierAssignment::Ptr AutomatableParameter::addModifier 
 void AutomatableParameter::removeModifier (ModifierAssignment& assignment)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
+
     if (auto existing = getAutomationSourceList().getSourceFor (assignment))
         existing->state.getParent().removeChild (existing->state, &getEdit().getUndoManager());
     else
@@ -618,6 +619,7 @@ void AutomatableParameter::removeModifier (ModifierAssignment& assignment)
 void AutomatableParameter::removeModifier (ModifierSource& source)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
+
     if (auto existing = getAutomationSourceList().getSourceFor (source))
         existing->state.getParent().removeChild (existing->state, &getEdit().getUndoManager());
     else
@@ -661,7 +663,7 @@ void AutomatableParameter::updateFromAutomationSources (double time)
     if (updateParametersRecursionCheck)
         return;
 
-    const ScopedValueSetter<bool> svs (updateParametersRecursionCheck, true);
+    const juce::ScopedValueSetter<bool> svs (updateParametersRecursionCheck, true);
     float newModifierValue = 0.0f;
 
     getAutomationSourceList()
@@ -687,7 +689,7 @@ void AutomatableParameter::updateFromAutomationSources (double time)
     if (newModifierValue != 0.0f)
     {
         auto normalisedBase = valueRange.convertTo0to1 (newBaseValue);
-        currentModifierValue = valueRange.convertFrom0to1 (jlimit (0.0f, 1.0f, normalisedBase + newModifierValue)) - newBaseValue;
+        currentModifierValue = valueRange.convertFrom0to1 (juce::jlimit (0.0f, 1.0f, normalisedBase + newModifierValue)) - newBaseValue;
     }
     else
     {
@@ -698,7 +700,7 @@ void AutomatableParameter::updateFromAutomationSources (double time)
 }
 
 //==============================================================================
-void AutomatableParameter::valueTreePropertyChanged (ValueTree& v, const Identifier& i)
+void AutomatableParameter::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)
 {
     if (v == getCurve().state || v.isAChildOf (getCurve().state))
     {
@@ -713,7 +715,7 @@ void AutomatableParameter::valueTreePropertyChanged (ValueTree& v, const Identif
     }
 }
 
-void AutomatableParameter::valueTreeChildAdded (ValueTree& parent, ValueTree& newChild)
+void AutomatableParameter::valueTreeChildAdded (juce::ValueTree& parent, juce::ValueTree& newChild)
 {
     if (parent == getCurve().state || parent == modifiersState)
         curveHasChanged();
@@ -721,23 +723,23 @@ void AutomatableParameter::valueTreeChildAdded (ValueTree& parent, ValueTree& ne
         getCurve().setState (newChild);
 }
 
-void AutomatableParameter::valueTreeChildRemoved (ValueTree& parent, ValueTree&, int)
+void AutomatableParameter::valueTreeChildRemoved (juce::ValueTree& parent, juce::ValueTree&, int)
 {
     if (parent == getCurve().state || parent == modifiersState)
         curveHasChanged();
 }
 
-void AutomatableParameter::valueTreeChildOrderChanged (ValueTree& parent, int, int)
+void AutomatableParameter::valueTreeChildOrderChanged (juce::ValueTree& parent, int, int)
 {
     if (parent == getCurve().state || parent == modifiersState)
         curveHasChanged();
 }
 
-void AutomatableParameter::valueTreeParentChanged (ValueTree&) {}
-void AutomatableParameter::valueTreeRedirected (ValueTree&)    { jassertfalse; } // need to handle this?
+void AutomatableParameter::valueTreeParentChanged (juce::ValueTree&) {}
+void AutomatableParameter::valueTreeRedirected (juce::ValueTree&)    { jassertfalse; } // need to handle this?
 
 //==============================================================================
-void AutomatableParameter::attachToCurrentValue (CachedValue<float>& v)
+void AutomatableParameter::attachToCurrentValue (juce::CachedValue<float>& v)
 {
     currentValue = v;
     jassert (attachedValue == nullptr);
@@ -808,9 +810,9 @@ EditItemID AutomatableParameter::getOwnerID() const
     return macroOwner->itemID;
 }
 
-String AutomatableParameter::getPluginAndParamName() const
+juce::String AutomatableParameter::getPluginAndParamName() const
 {
-    String s;
+    juce::String s;
 
     if (plugin != nullptr)
         s << plugin->getName() + " >> ";
@@ -822,9 +824,9 @@ String AutomatableParameter::getPluginAndParamName() const
     return s + getParameterName();
 }
 
-String AutomatableParameter::getFullName() const
+juce::String AutomatableParameter::getFullName() const
 {
-    String s;
+    juce::String s;
 
     if (auto t = getTrack())
         s << t->getName() << " >> ";
@@ -866,7 +868,7 @@ void AutomatableParameter::setParameterValue (float value, bool isFollowingCurve
         else
         {
             if (! getEdit().isLoading())
-                jassert (MessageManager::getInstance()->currentThreadHasLockedMessageManager());
+                jassert (juce::MessageManager::getInstance()->currentThreadHasLockedMessageManager());
 
             curveHasChanged();
 
@@ -913,14 +915,14 @@ void AutomatableParameter::setParameterValue (float value, bool isFollowingCurve
     }
 }
 
-void AutomatableParameter::setParameter (float value, NotificationType nt)
+void AutomatableParameter::setParameter (float value, juce::NotificationType nt)
 {
     currentParameterValue = value;
     setParameterValue (value, false);
 
-    if (nt != dontSendNotification)
+    if (nt != juce::dontSendNotification)
     {
-        jassert (nt != sendNotificationAsync); // Async notifications not yet supported
+        jassert (nt != juce::sendNotificationAsync); // Async notifications not yet supported
         listeners.call (&Listener::parameterChanged, *this, currentValue);
     }
 }
@@ -956,7 +958,7 @@ void AutomatableParameter::updateToFollowCurve (double time)
     if (newModifierValue != 0.0f)
     {
         auto normalisedBase = valueRange.convertTo0to1 (newBaseValue);
-        currentModifierValue = valueRange.convertFrom0to1 (jlimit (0.0f, 1.0f, normalisedBase + newModifierValue)) - newBaseValue;
+        currentModifierValue = valueRange.convertFrom0to1 (juce::jlimit (0.0f, 1.0f, normalisedBase + newModifierValue)) - newBaseValue;
     }
     else
     {
@@ -979,7 +981,7 @@ void AutomatableParameter::parameterChangeGestureEnd()
 //==============================================================================
 void AutomatableParameter::midiControllerMoved (float newPosition)
 {
-    setParameter (snapToState (valueRange.convertFrom0to1 (newPosition)), sendNotification);
+    setParameter (snapToState (valueRange.convertFrom0to1 (newPosition)), juce::sendNotification);
 }
 
 void AutomatableParameter::midiControllerPressed()
@@ -991,7 +993,7 @@ void AutomatableParameter::midiControllerPressed()
         if (state >= getNumberOfStates())
             state = 0;
 
-        setParameter (getValueForState (state), sendNotification);
+        setParameter (getValueForState (state), juce::sendNotification);
     }
 }
 
@@ -1005,7 +1007,7 @@ void AutomatableParameter::curveHasChanged()
 }
 
 //==============================================================================
-Array<AutomatableParameter*> getAllAutomatableParameter (Edit& edit)
+juce::Array<AutomatableParameter*> getAllAutomatableParameter (Edit& edit)
 {
     return edit.getAllAutomatableParams (true);
 }
@@ -1019,7 +1021,7 @@ AutomatableParameter::ModifierSource* getSourceForAssignment (const AutomatableP
     return {};
 }
 
-ReferenceCountedArray<AutomatableParameter> getAllParametersBeingModifiedBy (Edit& edit, AutomatableParameter::ModifierSource& m)
+juce::ReferenceCountedArray<AutomatableParameter> getAllParametersBeingModifiedBy (Edit& edit, AutomatableParameter::ModifierSource& m)
 {
     juce::ReferenceCountedArray<AutomatableParameter> params;
 
@@ -1149,7 +1151,7 @@ void AutomationIterator::setPosition (double newTime) noexcept
 
     auto newIndex = currentIndex;
 
-    if (! isPositiveAndBelow (newIndex, points.size()))
+    if (! juce::isPositiveAndBelow (newIndex, points.size()))
         newIndex = 0;
 
     if (newIndex > 0 && points.getReference (newIndex).time >= newTime)
@@ -1167,7 +1169,7 @@ void AutomationIterator::setPosition (double newTime) noexcept
 
     if (currentIndex != newIndex)
     {
-        jassert (isPositiveAndBelow (newIndex, points.size()));
+        jassert (juce::isPositiveAndBelow (newIndex, points.size()));
         currentIndex = newIndex;
         currentValue = points.getReference (newIndex).value;
     }
@@ -1201,7 +1203,7 @@ void AutomationDragDropTarget::itemDragEnter (const SourceDetails&)
 {
     isAutoParamCurrentlyOver = hasAnAutomatableParameter();
 
-    if (auto c = dynamic_cast<Component*> (this))
+    if (auto c = dynamic_cast<juce::Component*> (this))
         c->repaint();
 }
 
@@ -1209,7 +1211,7 @@ void AutomationDragDropTarget::itemDragExit (const SourceDetails&)
 {
     isAutoParamCurrentlyOver = false;
 
-    if (auto c = dynamic_cast<Component*> (this))
+    if (auto c = dynamic_cast<juce::Component*> (this))
         c->repaint();
 }
 
@@ -1217,7 +1219,7 @@ void AutomationDragDropTarget::itemDropped (const SourceDetails& dragSourceDetai
 {
     isAutoParamCurrentlyOver = false;
 
-    if (auto c = dynamic_cast<Component*> (this))
+    if (auto c = dynamic_cast<juce::Component*> (this))
         c->repaint();
 
     if (auto source = dynamic_cast<ParameterisableDragDropSource*> (dragSourceDetails.sourceComponent.get()))

@@ -100,7 +100,7 @@ ModifierList::~ModifierList()
     freeObjects();
 }
 
-bool ModifierList::isModifier (const Identifier& i)
+bool ModifierList::isModifier (const juce::Identifier& i)
 {
     return i == IDs::LFO || i == IDs::BREAKPOINTOSCILLATOR
         || i == IDs::STEP || i == IDs::ENVELOPEFOLLOWER

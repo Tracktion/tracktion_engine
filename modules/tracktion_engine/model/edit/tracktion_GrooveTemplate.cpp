@@ -20,7 +20,7 @@ GrooveTemplate::GrooveTemplate()
 {
 }
 
-GrooveTemplate::GrooveTemplate (const XmlElement* node)
+GrooveTemplate::GrooveTemplate (const juce::XmlElement* node)
     : GrooveTemplate()
 {
     if (node != nullptr && node->hasTagName (grooveXmlTag))
@@ -63,7 +63,7 @@ void GrooveTemplate::setName (const String& n)
 
 XmlElement* GrooveTemplate::createXml() const
 {
-    auto node = new XmlElement (grooveXmlTag);
+    auto node = new juce::XmlElement (grooveXmlTag);
     node->setAttribute ("name", name);
     node->setAttribute ("numberOfNotes", numNotes);
     node->setAttribute ("notesPerBeat", notesPerBeat);
@@ -75,7 +75,7 @@ XmlElement* GrooveTemplate::createXml() const
 
     for (int i = 0; i <= lastNonZeroNote; ++i)
     {
-        auto n = new XmlElement ("SHIFT");
+        auto n = new juce::XmlElement ("SHIFT");
         n->setAttribute ("delta", 0.001 * roundToInt (1000.0 * latenesses[i]));
         node->addChildElement (n);
     }
@@ -163,7 +163,7 @@ void GrooveTemplateManager::reload()
         reload (xml.get());
 }
 
-void GrooveTemplateManager::reload (const XmlElement* grooves)
+void GrooveTemplateManager::reload (const juce::XmlElement* grooves)
 {
     knownGrooves.clearQuick (true);
 
@@ -174,7 +174,7 @@ void GrooveTemplateManager::reload (const XmlElement* grooves)
 
 void GrooveTemplateManager::save()
 {
-    XmlElement n ("GROOVETEMPLATES");
+    juce::XmlElement n ("GROOVETEMPLATES");
 
     for (auto gt : knownGrooves)
         if (gt != nullptr)

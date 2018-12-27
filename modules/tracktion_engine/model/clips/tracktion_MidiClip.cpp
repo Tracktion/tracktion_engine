@@ -81,7 +81,7 @@ static std::unique_ptr<MidiList> createLoopRangeDefinesSubsequentRepetitionsSequ
 }
 
 //==============================================================================
-MidiClip::MidiClip (const ValueTree& v, EditItemID id, ClipTrack& targetTrack)
+MidiClip::MidiClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTrack)
     : Clip (v, targetTrack, id, Type::midi)
 {
     auto um = getUndoManager();
@@ -366,7 +366,7 @@ void MidiClip::legatoNote (MidiNote& note, const juce::Array<MidiNote*>& notesTo
 }
 
 //==============================================================================
-MidiList* MidiClip::getMidiListForState (const ValueTree& v)
+MidiList* MidiClip::getMidiListForState (const juce::ValueTree& v)
 {
     for (int i = channelSequence.size(); --i >= 0;)
         if (auto ml = channelSequence.getUnchecked (i))
@@ -739,7 +739,7 @@ void MidiClip::setSendingBankChanges (bool sendBank)
         sendBankChange = ! sendBankChange;
 }
 
-void MidiClip::valueTreePropertyChanged (ValueTree& tree, const Identifier& id)
+void MidiClip::valueTreePropertyChanged (ValueTree& tree, const juce::Identifier& id)
 {
     if (tree == state)
     {
@@ -792,7 +792,7 @@ void MidiClip::valueTreePropertyChanged (ValueTree& tree, const Identifier& id)
     }
 }
 
-void MidiClip::valueTreeChildAdded (ValueTree& p, ValueTree& c)
+void MidiClip::valueTreeChildAdded (ValueTree& p, juce::ValueTree& c)
 {
     if (p.hasType (IDs::SEQUENCE))
         clearCachedLoopSequence();
@@ -803,7 +803,7 @@ void MidiClip::valueTreeChildAdded (ValueTree& p, ValueTree& c)
         patternGenerator.reset (new PatternGenerator (*this, c));
 }
 
-void MidiClip::valueTreeChildRemoved (ValueTree& p, ValueTree& c, int)
+void MidiClip::valueTreeChildRemoved (ValueTree& p, juce::ValueTree& c, int)
 {
     if (p.hasType (IDs::SEQUENCE))
     {

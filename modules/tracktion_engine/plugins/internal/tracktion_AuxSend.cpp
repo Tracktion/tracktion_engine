@@ -194,7 +194,7 @@ StringArray AuxSendPlugin::getBusNames (Edit& edit)
     return buses;
 }
 
-void AuxSendPlugin::restorePluginStateFromValueTree (const ValueTree& v)
+void AuxSendPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
     CachedValue<float>* cvsFloat[]  = { &gainLevel, nullptr };
     CachedValue<int>* cvsInt[]      = { &busNumber, nullptr };

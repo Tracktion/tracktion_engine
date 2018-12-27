@@ -22,7 +22,7 @@ EditItemID EditItemID::fromVar (const juce::var& v)
     return fromRawID ((juce::uint64) static_cast<juce::int64> (v));
 }
 
-EditItemID EditItemID::fromString (const String& s)
+EditItemID EditItemID::fromString (const juce::String& s)
 {
     return fromRawID ((juce::uint64) s.getLargeIntValue());
 }
@@ -93,7 +93,7 @@ EditItemID EditItemID::fromXML (const juce::XmlElement& xml, const juce::Identif
     return fromVar (xml.getStringAttribute (attributeName));
 }
 
-void EditItemID::setProperty (ValueTree& v, const juce::Identifier& prop, UndoManager* um) const
+void EditItemID::setProperty (juce::ValueTree& v, const juce::Identifier& prop, juce::UndoManager* um) const
 {
     v.setProperty (prop, toVar(), um);
 }
@@ -133,8 +133,8 @@ EditItemID EditItemID::readOrCreateNewID (Edit& edit, const juce::ValueTree& v)
 
 juce::Array<EditItemID> EditItemID::parseStringList (const juce::String& list)
 {
-    Array<EditItemID> trackIDs;
-    auto items = StringArray::fromTokens (list, ",|", {});
+    juce::Array<EditItemID> trackIDs;
+    auto items = juce::StringArray::fromTokens (list, ",|", {});
     trackIDs.ensureStorageAllocated (items.size());
 
     for (auto& s : items)
@@ -151,7 +151,7 @@ juce::String EditItemID::listToString (const juce::Array<EditItemID>& items)
     if (items.size() == 1)
         return items.getFirst().toString();
 
-    StringArray ids;
+    juce::StringArray ids;
     ids.ensureStorageAllocated (items.size());
 
     for (auto& i : items)
@@ -168,7 +168,7 @@ struct IDRemapping
         return att == IDs::id || att == IDs::groupID || att == IDs::linkID;
     }
 
-    static bool isIDReference (const Identifier& parentType, juce::StringRef att)
+    static bool isIDReference (const juce::Identifier& parentType, juce::StringRef att)
     {
         for (auto p : { IDs::currentAutoParamPluginID, IDs::currentAutoParamTag,
                         IDs::targetTrack, IDs::sourceTrack, IDs::src, IDs::dst,
@@ -185,12 +185,12 @@ struct IDRemapping
         return false;
     }
 
-    static bool isIDRefOrDecl (const XmlElement& xml, juce::StringRef att)
+    static bool isIDRefOrDecl (const juce::XmlElement& xml, juce::StringRef att)
     {
         return isIDDeclaration (att) || isIDReference (xml.getTagName(), att);
     }
 
-    static bool isIDRefOrDecl (const ValueTree& v, juce::StringRef att)
+    static bool isIDRefOrDecl (const juce::ValueTree& v, juce::StringRef att)
     {
         return isIDDeclaration (att) || isIDReference (v.getType(), att);
     }
@@ -229,9 +229,9 @@ struct IDRemapping
 
     using StringToIDMap = std::map<juce::String, EditItemID>;
 
-    static juce::String remapIDList (const String& list, const StringToIDMap& newIDsToApply)
+    static juce::String remapIDList (const juce::String& list, const StringToIDMap& newIDsToApply)
     {
-        Array<EditItemID> newItemIDs;
+        juce::Array<EditItemID> newItemIDs;
 
         for (auto oldID : juce::StringArray::fromTokens (list, "|,", {}))
         {
@@ -278,7 +278,7 @@ struct IDRemapping
             applyNewIDs (*e, newIDsToApply);
     }
 
-    static void applyNewIDs (juce::ValueTree& v, const StringToIDMap& newIDsToApply, UndoManager* um)
+    static void applyNewIDs (juce::ValueTree& v, const StringToIDMap& newIDsToApply, juce::UndoManager* um)
     {
         for (int i = 0; i < v.getNumProperties(); ++i)
         {
@@ -334,7 +334,7 @@ std::vector<EditItemID> EditItemID::findAllIDs (const juce::XmlElement& xml)
 {
     std::vector<EditItemID> ids;
 
-    IDRemapping::visitAllIDDecls (xml, [&] (const String& oldID)
+    IDRemapping::visitAllIDDecls (xml, [&] (const juce::String& oldID)
     {
         auto i = EditItemID::fromString (oldID);
 
@@ -349,7 +349,7 @@ std::vector<EditItemID> EditItemID::findAllIDs (const juce::ValueTree& v)
 {
     std::vector<EditItemID> ids;
 
-    IDRemapping::visitAllIDDecls (v, [&] (const var& oldID)
+    IDRemapping::visitAllIDDecls (v, [&] (const juce::var& oldID)
     {
         auto i = EditItemID::fromVar (oldID);
 
@@ -364,7 +364,7 @@ void EditItemID::remapIDs (juce::XmlElement& xml, std::function<EditItemID()> cr
 {
     IDRemapping::StringToIDMap newIDs;
 
-    IDRemapping::visitAllIDDecls (xml, [&] (const String& oldID)
+    IDRemapping::visitAllIDDecls (xml, [&] (const juce::String& oldID)
     {
         if (oldID.isNotEmpty())
         {
@@ -387,7 +387,7 @@ void EditItemID::remapIDs (juce::ValueTree& v, juce::UndoManager* um,
 {
     IDRemapping::StringToIDMap newIDs;
 
-    IDRemapping::visitAllIDDecls (v, [&] (const var& oldID)
+    IDRemapping::visitAllIDDecls (v, [&] (const juce::var& oldID)
     {
         auto oldIDString = oldID.toString();
 

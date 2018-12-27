@@ -211,7 +211,7 @@ String QuantisationType::getDefaultType (bool translated)
                       : quantisationTypes[0].name;
 }
 
-void QuantisationType::valueTreePropertyChanged (ValueTree& vt, const Identifier& i)
+void QuantisationType::valueTreePropertyChanged (ValueTree& vt, const juce::Identifier& i)
 {
     if (vt == state)
     {

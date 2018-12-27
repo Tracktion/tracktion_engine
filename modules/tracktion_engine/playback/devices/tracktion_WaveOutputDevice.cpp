@@ -68,7 +68,7 @@ void WaveOutputDevice::loadProps()
 
 void WaveOutputDevice::saveProps()
 {
-    XmlElement n ("SETTINGS");
+    juce::XmlElement n ("SETTINGS");
 
     n.setAttribute ("dithering", ditheringEnabled);
     n.setAttribute ("reversed", leftRightReversed);

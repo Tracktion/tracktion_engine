@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-StepClip::Pattern::Pattern (StepClip& c, const ValueTree& v) noexcept
+StepClip::Pattern::Pattern (StepClip& c, const juce::ValueTree& v) noexcept
     : clip (c), state (v)
 {
 }

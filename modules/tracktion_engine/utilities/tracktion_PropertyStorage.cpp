@@ -212,7 +212,7 @@ std::unique_ptr<XmlElement> PropertyStorage::getXmlProperty (SettingID setting)
     return std::unique_ptr<XmlElement> (as.getXmlValue (PropertyStorage::settingToString (setting)));
 }
 
-void PropertyStorage::setXmlProperty (SettingID setting, const XmlElement& xml)
+void PropertyStorage::setXmlProperty (SettingID setting, const juce::XmlElement& xml)
 {
     auto& as = *ApplicationSettings::getInstance();
     as.setValue (PropertyStorage::settingToString (setting), &xml);
@@ -243,7 +243,7 @@ std::unique_ptr<XmlElement> PropertyStorage::getXmlPropertyItem (SettingID setti
     return std::unique_ptr<XmlElement> (as.getXmlValue (PropertyStorage::settingToString (setting) + "_" + item));
 }
 
-void PropertyStorage::setXmlPropertyItem (SettingID setting, StringRef item, const XmlElement& xml)
+void PropertyStorage::setXmlPropertyItem (SettingID setting, StringRef item, const juce::XmlElement& xml)
 {
     auto& as = *ApplicationSettings::getInstance();
     as.setValue (PropertyStorage::settingToString (setting) + "_" + item, &xml);

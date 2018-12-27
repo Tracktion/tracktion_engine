@@ -177,7 +177,7 @@ String PitchShiftPlugin::getSelectableDescription()
     return TRANS("Pitch Shifter Plugin");
 }
 
-void PitchShiftPlugin::restorePluginStateFromValueTree (const ValueTree& v)
+void PitchShiftPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
     CachedValue<float>* cvsFloat[]  = { &semitonesValue, nullptr };
     CachedValue<int>* cvsInt[]      = { &mode, nullptr };

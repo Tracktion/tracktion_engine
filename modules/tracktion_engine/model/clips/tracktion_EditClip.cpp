@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-EditClip::EditClip (const ValueTree& v, EditItemID clipID, ClipTrack& targetTrack, ProjectItemID sourceEditID)
+EditClip::EditClip (const juce::ValueTree& v, EditItemID clipID, ClipTrack& targetTrack, ProjectItemID sourceEditID)
     : AudioClipBase (v, clipID, Type::edit, targetTrack),
       waveInfo (getAudioFile().getInfo())
 {
@@ -232,7 +232,7 @@ bool EditClip::isUsingFile (const AudioFile& af)
     return false;
 }
 
-void EditClip::valueTreePropertyChanged (ValueTree& v, const Identifier& i)
+void EditClip::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
 {
     if (v == state && i == IDs::renderEnabled)
     {

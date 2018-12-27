@@ -18,8 +18,8 @@ Edit::GlobalMacros::GlobalMacros (Edit& e)
 }
 
 //==============================================================================
-struct Edit::UndoTransactionTimer   : private Timer,
-                                      private ChangeListener
+struct Edit::UndoTransactionTimer   : private juce::Timer,
+                                      private juce::ChangeListener
 {
     UndoTransactionTimer (Edit& e)
         : edit (e)
@@ -37,16 +37,16 @@ struct Edit::UndoTransactionTimer   : private Timer,
         if (edit.numUndoTransactionInhibitors > 0)
             return;
 
-        if (! Component::isMouseButtonDownAnywhere())
+        if (! juce::Component::isMouseButtonDownAnywhere())
         {
             stopTimer();
             edit.getUndoManager().beginNewTransaction();
         }
     }
 
-    void changeListenerCallback (ChangeBroadcaster*) override
+    void changeListenerCallback (juce::ChangeBroadcaster*) override
     {
-        if (Time::getCurrentTime() > timeToStartTransactions)
+        if (juce::Time::getCurrentTime() > timeToStartTransactions)
         {
             edit.markAsChanged();
             startTimer (350);
@@ -54,7 +54,7 @@ struct Edit::UndoTransactionTimer   : private Timer,
     }
 
     Edit& edit;
-    const Time timeToStartTransactions { Time::getCurrentTime() + RelativeTime::seconds (5.0) };
+    const juce::Time timeToStartTransactions { juce::Time::getCurrentTime() + juce::RelativeTime::seconds (5.0) };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (UndoTransactionTimer)
 };
@@ -88,7 +88,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
     Edit& edit;
     juce::ValueTree state;
 
-    void valueTreePropertyChanged (juce::ValueTree& v, const Identifier& i) override
+    void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i) override
     {
         if (v.hasType (IDs::TRANSPORT))
         {
@@ -249,12 +249,12 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
         childAddedOrRemoved (p, c);
     }
 
-    void valueTreeChildRemoved (ValueTree& p, ValueTree& c, int) override
+    void valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree& c, int) override
     {
         childAddedOrRemoved (p, c);
     }
 
-    void childAddedOrRemoved (ValueTree& p, ValueTree& c)
+    void childAddedOrRemoved (juce::ValueTree& p, juce::ValueTree& c)
     {
         if (c.hasType (IDs::NOTE)
              || c.hasType (IDs::CONTROL)
@@ -308,10 +308,10 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
         }
     }
 
-    void valueTreeChildOrderChanged (ValueTree&, int, int) override {}
-    void valueTreeParentChanged (ValueTree&) override {}
+    void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override {}
+    void valueTreeParentChanged (juce::ValueTree&) override {}
 
-    void clipMovedOrAdded (const ValueTree& v)
+    void clipMovedOrAdded (const juce::ValueTree& v)
     {
         edit.invalidateStoredLength();
 
@@ -334,7 +334,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
             trackStatusUpdater.reset (new TrackStatusUpdater (*this));
     }
 
-    struct TrackStatusUpdater  : private AsyncUpdater
+    struct TrackStatusUpdater  : private juce::AsyncUpdater
     {
         TrackStatusUpdater (TreeWatcher& o) : owner (o) { triggerAsyncUpdate(); }
 
@@ -357,7 +357,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
         linkedClipsMapDirty = true;
     }
 
-    Array<Clip*> getClipsInLinkGroup (EditItemID linkGroupid)
+    juce::Array<Clip*> getClipsInLinkGroup (EditItemID linkGroupid)
     {
         jassert (! edit.isLoading());
 
@@ -390,7 +390,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
     }
 
     bool linkedClipsMapDirty = true;
-    std::map<EditItemID, Array<Clip*>> linkedClipsMap;
+    std::map<EditItemID, juce::Array<Clip*>> linkedClipsMap;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TreeWatcher)
 };
@@ -468,12 +468,12 @@ struct Edit::MirroredPluginUpdateTimer  : public Timer
 //==============================================================================
 static int getNextInstanceId() noexcept
 {
-    static Atomic<int> nextId;
+    static juce::Atomic<int> nextId;
     return ++nextId;
 }
 
 //==============================================================================
-Edit::Edit (Engine& e, ValueTree editState, EditRole role,
+Edit::Edit (Engine& e, juce::ValueTree editState, EditRole role,
             LoadContext* sourceLoadContext, int numUndoLevelsToStore)
     : engine (e),
       tempoSequence (*this),
@@ -489,7 +489,7 @@ Edit::Edit (Engine& e, ValueTree editState, EditRole role,
     jassert (state.hasType (IDs::EDIT));
     jassert (editProjectItemID.isValid()); // is it ever OK for this to be invalid?
 
-    editFileRetriever = [this]() -> File
+    editFileRetriever = [this]() -> juce::File
     {
         if (auto item = ProjectManager::getInstance()->getProjectItem (*this))
             return item->getSourceFile();
@@ -497,11 +497,11 @@ Edit::Edit (Engine& e, ValueTree editState, EditRole role,
         return {};
     };
 
-    filePathResolver = [this] (const String& path) -> File
+    filePathResolver = [this] (const juce::String& path) -> juce::File
     {
         jassert (path.isNotEmpty());
 
-        if (File::isAbsolutePath (path))
+        if (juce::File::isAbsolutePath (path))
             return path;
 
         if (editFileRetriever)
@@ -563,7 +563,7 @@ Edit::~Edit()
 
     // must only delete an edit with the message thread locked - many things on the message thread may be in the
     // middle of using it at this point..
-    jassert (MessageManager::getInstance()->currentThreadHasLockedMessageManager());
+    jassert (juce::MessageManager::getInstance()->currentThreadHasLockedMessageManager());
     jassert (! getTransport().isPlayContextActive());
     jassert (numUndoTransactionInhibitors == 0);
 
@@ -602,7 +602,7 @@ Edit::~Edit()
 }
 
 //==============================================================================
-String Edit::getName()
+juce::String Edit::getName()
 {
     if (auto item = ProjectManager::getInstance()->getProjectItem (*this))
         return item->getName();
@@ -651,10 +651,10 @@ void Edit::initialise()
     tempDirectory = juce::File();
 
     if (! state.hasProperty (IDs::creationTime))
-        state.setProperty (IDs::creationTime, Time::getCurrentTime().toMilliseconds(), nullptr);
+        state.setProperty (IDs::creationTime, juce::Time::getCurrentTime().toMilliseconds(), nullptr);
 
     lastSignificantChange.referTo (state, IDs::lastSignificantChange, nullptr,
-                                   String::toHexString (Time::getCurrentTime().toMilliseconds()));
+                                   juce::String::toHexString (juce::Time::getCurrentTime().toMilliseconds()));
 
     globalMacros = std::make_unique<GlobalMacros> (*this);
     initialiseTempoAndPitch();
@@ -727,7 +727,7 @@ void Edit::initialiseTempoAndPitch()
     pitchSequence.initialise (*this, state.getOrCreateChildWithName (IDs::PITCHSEQUENCE, nullptr));
 }
 
-void Edit::initialiseTimecode (ValueTree& transportState)
+void Edit::initialiseTimecode (juce::ValueTree& transportState)
 {
     timecodeFormat.referTo (state, IDs::timecodeFormat, nullptr);
 
@@ -755,7 +755,7 @@ void Edit::initialiseMetadata()
     if (meta.getNumProperties() == 0)
     {
         meta.setProperty (IDs::trackNumber, 1, nullptr);
-        meta.setProperty (IDs::date, Time::getCurrentTime().getYear(), nullptr);
+        meta.setProperty (IDs::date, juce::Time::getCurrentTime().getYear(), nullptr);
     }
 }
 
@@ -803,10 +803,10 @@ void Edit::initialiseMasterVolume()
         const float masterPan = (rightGain - volGain) / volGain;
 
         getMasterSliderPosParameter()->getCurve().clear();
-        getMasterSliderPosParameter()->setParameter (masterVolumeFaderPos, dontSendNotification);
+        getMasterSliderPosParameter()->setParameter (masterVolumeFaderPos, juce::dontSendNotification);
 
         getMasterPanParameter()->getCurve().clear();
-        getMasterPanParameter()->setParameter (masterPan, dontSendNotification);
+        getMasterPanParameter()->setParameter (masterPan, juce::dontSendNotification);
     }
 }
 
@@ -979,9 +979,9 @@ void Edit::flushPluginStateIfNeeded (Plugin& p)
     changedPluginsList->flushPluginStateIfNeeded (p);
 }
 
-Time Edit::getTimeOfLastChange() const
+juce::Time Edit::getTimeOfLastChange() const
 {
-    return Time (lastSignificantChange.get().getHexValue64());
+    return juce::Time (lastSignificantChange.get().getHexValue64());
 }
 
 void Edit::resetChangedStatus()
@@ -993,7 +993,7 @@ void Edit::resetChangedStatus()
 
 void Edit::markAsChanged()
 {
-    lastSignificantChange = String::toHexString (Time::getCurrentTime().toMilliseconds());
+    lastSignificantChange = juce::String::toHexString (juce::Time::getCurrentTime().toMilliseconds());
     hasChanged = true;
 }
 
@@ -1032,9 +1032,9 @@ void Edit::warnOfWastedMidiMessages (InputDevice* d, Track* t)
 }
 
 //==============================================================================
-static Array<SelectionManager*> getSelectionManagers (const Edit& ed)
+static juce::Array<SelectionManager*> getSelectionManagers (const Edit& ed)
 {
-    Array<SelectionManager*> sms;
+    juce::Array<SelectionManager*> sms;
 
     for (SelectionManager::Iterator sm; sm.next();)
         if (sm->edit == &ed)
@@ -1164,7 +1164,7 @@ double Edit::getPreviousTimeOfInterest (double t)
 }
 
 //==============================================================================
-Track::Ptr Edit::loadTrackFrom (ValueTree& v)
+Track::Ptr Edit::loadTrackFrom (juce::ValueTree& v)
 {
     bool needsSanityCheck = false;
 
@@ -1187,14 +1187,14 @@ Track::Ptr Edit::loadTrackFrom (ValueTree& v)
 }
 
 template <typename Type>
-static Track::Ptr createAndInitialiseTrack (Edit& ed, const ValueTree& v)
+static Track::Ptr createAndInitialiseTrack (Edit& ed, const juce::ValueTree& v)
 {
     Track::Ptr t = new Type (ed, v);
     t->initialise();
     return t;
 }
 
-Track::Ptr Edit::createTrack (const ValueTree& v)
+Track::Ptr Edit::createTrack (const juce::ValueTree& v)
 {
     CRASH_TRACER
 
@@ -1388,7 +1388,7 @@ void Edit::loadOldTimeSigInfo()
     if (! oldInfoState.isValid())
         return;
 
-    std::unique_ptr<XmlElement> oldInfoXml (oldInfoState.createXml());
+    std::unique_ptr<juce::XmlElement> oldInfoXml (oldInfoState.createXml());
 
     if (auto oldInfo = oldInfoXml.get())
     {
@@ -1409,11 +1409,11 @@ void Edit::loadOldTimeSigInfo()
     }
 }
 
-void Edit::loadOldVideoInfo (const ValueTree& videoState)
+void Edit::loadOldVideoInfo (const juce::ValueTree& videoState)
 {
     CRASH_TRACER
 
-    const File videoFile (videoState["videoFile"].toString());
+    const juce::File videoFile (videoState["videoFile"].toString());
 
     if (videoFile.existsAsFile())
         if (auto proj = ProjectManager::getInstance()->getProject (*this))
@@ -1481,23 +1481,23 @@ void Edit::sendSourceFileUpdate()
 //==============================================================================
 void Edit::setMasterVolumeSliderPos (float v)
 {
-    getMasterSliderPosParameter()->setParameter (v, sendNotification);
+    getMasterSliderPosParameter()->setParameter (v, juce::sendNotification);
 }
 
 void Edit::setMasterPanPos (float p)
 {
-    getMasterPanParameter()->setParameter (p, sendNotification);
+    getMasterPanParameter()->setParameter (p, juce::sendNotification);
 }
 
 //==============================================================================
-String Edit::getAuxBusName (int bus) const
+juce::String Edit::getAuxBusName (int bus) const
 {
     return auxBusses.getChildWithProperty (IDs::bus, bus).getProperty (IDs::name);
 }
 
-void Edit::setAuxBusName (int bus, const String& nm)
+void Edit::setAuxBusName (int bus, const juce::String& nm)
 {
-    const String name (nm.substring (0, 20));
+    auto name = nm.substring (0, 20);
 
     if (getAuxBusName (bus) != name)
     {
@@ -1512,7 +1512,7 @@ void Edit::setAuxBusName (int bus, const String& nm)
         {
             if (! b.isValid())
             {
-                b = ValueTree (IDs::NAME);
+                b = juce::ValueTree (IDs::NAME);
                 auxBusses.addChild (b, -1, nullptr);
                 b.setProperty (IDs::bus, bus, nullptr);
             }
@@ -1553,7 +1553,7 @@ double Edit::getLength() const
         totalEditLength = 0;
 
         for (auto t : getClipTracks (*this))
-            totalEditLength = jmax (totalEditLength, t->getLength());
+            totalEditLength = juce::jmax (totalEditLength, t->getLength());
     }
 
     return totalEditLength;
@@ -1569,14 +1569,14 @@ double Edit::getFirstClipTime() const
         if (auto first = track->getClips().getFirst())
         {
             gotOne = true;
-            t = jmin (t, first->getPosition().getStart());
+            t = juce::jmin (t, first->getPosition().getStart());
         }
     }
 
     return gotOne ? t : 0.0;
 }
 
-Array<Clip*> Edit::findClipsInLinkGroup (EditItemID linkGroupID) const
+juce::Array<Clip*> Edit::findClipsInLinkGroup (EditItemID linkGroupID) const
 {
     if (treeWatcher != nullptr)
         return treeWatcher->getClipsInLinkGroup (linkGroupID);
@@ -1601,7 +1601,7 @@ AudioTrack::Ptr Edit::getOrInsertAudioTrackAt (int trackIndex)
     return insertNewAudioTrack (TrackInsertPoint (nullptr, getAllTracks (*this).getLast()), nullptr);
 }
 
-Track::Ptr Edit::insertTrack (TrackInsertPoint insertPoint, ValueTree v, SelectionManager* sm)
+Track::Ptr Edit::insertTrack (TrackInsertPoint insertPoint, juce::ValueTree v, SelectionManager* sm)
 {
     CRASH_TRACER
 
@@ -1619,7 +1619,8 @@ Track::Ptr Edit::insertTrack (TrackInsertPoint insertPoint, ValueTree v, Selecti
     return insertTrack (v, parent, preceeding, sm);
 }
 
-Track::Ptr Edit::insertTrack (ValueTree v, ValueTree parent, ValueTree preceeding, SelectionManager* sm)
+Track::Ptr Edit::insertTrack (juce::ValueTree v, juce::ValueTree parent,
+                              juce::ValueTree preceeding, SelectionManager* sm)
 {
     if (! parent.isValid())
         parent = state;
@@ -1674,7 +1675,7 @@ AutomationTrack::Ptr Edit::insertNewAutomationTrack (TrackInsertPoint insertPoin
 
 Track::Ptr Edit::insertNewTrack (TrackInsertPoint insertPoint, const juce::Identifier& xmlType, SelectionManager* sm)
 {
-    return insertTrack (insertPoint, ValueTree (xmlType), sm);
+    return insertTrack (insertPoint, juce::ValueTree (xmlType), sm);
 }
 
 void Edit::moveTrack (Track::Ptr t, TrackInsertPoint destination)
@@ -1835,7 +1836,7 @@ void Edit::ensureTempoTrack()
 {
     if (getTempoTrack() == nullptr)
     {
-        ValueTree v (IDs::TEMPOTRACK);
+        juce::ValueTree v (IDs::TEMPOTRACK);
         v.setProperty (IDs::name, TRANS("Global"), nullptr);
         state.addChild (v, 0, &getUndoManager());
     }
@@ -1845,7 +1846,7 @@ void Edit::ensureMarkerTrack()
 {
     if (getMarkerTrack() == nullptr)
     {
-        ValueTree v (IDs::MARKERTRACK);
+        juce::ValueTree v (IDs::MARKERTRACK);
         v.setProperty (IDs::name, TRANS("Marker"), nullptr);
         state.addChild (v, 0, &getUndoManager());
     }
@@ -1855,7 +1856,7 @@ void Edit::ensureChordTrack()
 {
     if (getChordTrack() == nullptr)
     {
-        ValueTree v (IDs::CHORDTRACK);
+        juce::ValueTree v (IDs::CHORDTRACK);
         v.setProperty (IDs::name, TRANS("Chords"), nullptr);
         state.addChild (v, 0, &getUndoManager());
     }
@@ -1950,17 +1951,17 @@ void Edit::removeModifierTimer (ModifierTimer& mt)
 
 void Edit::updateModifierTimers (PlayHead& ph, EditTimeRange streamTime, int numSamples) const
 {
-    const ScopedLock sl (modifierTimers.getLock());
+    const juce::ScopedLock sl (modifierTimers.getLock());
 
     for (auto mt : modifierTimers)
         mt->updateStreamTime (ph, streamTime, numSamples);
 }
 
 //==============================================================================
-void Edit::setLowLatencyMonitoring (bool enabled, const Array<EditItemID>& plugins)
+void Edit::setLowLatencyMonitoring (bool enabled, const juce::Array<EditItemID>& plugins)
 {
     lowLatencyMonitoring = enabled;
-    AudioDeviceManager::AudioDeviceSetup setup;
+    juce::AudioDeviceManager::AudioDeviceSetup setup;
 
     auto& deviceManager = engine.getDeviceManager().deviceManager;
     deviceManager.getAudioDeviceSetup (setup);
@@ -1970,7 +1971,7 @@ void Edit::setLowLatencyMonitoring (bool enabled, const Array<EditItemID>& plugi
         if (deviceManager.getCurrentAudioDevice() != nullptr)
         {
             normalLatencyBufferSizeSeconds = setup.bufferSize / setup.sampleRate;
-            setup.bufferSize = roundToInt ((static_cast<double> (engine.getPropertyStorage().getProperty (SettingID::lowLatencyBuffer, 5.8)) / 1000.0) * setup.sampleRate);
+            setup.bufferSize = juce::roundToInt ((static_cast<double> (engine.getPropertyStorage().getProperty (SettingID::lowLatencyBuffer, 5.8)) / 1000.0) * setup.sampleRate);
         }
         else
         {
@@ -1982,7 +1983,7 @@ void Edit::setLowLatencyMonitoring (bool enabled, const Array<EditItemID>& plugi
     else
     {
         setLowLatencyDisabledPlugins ({});
-        setup.bufferSize = roundToInt (normalLatencyBufferSizeSeconds * setup.sampleRate);
+        setup.bufferSize = juce::roundToInt (normalLatencyBufferSizeSeconds * setup.sampleRate);
     }
 
     if (auto dev = deviceManager.getCurrentAudioDevice())
@@ -2012,7 +2013,7 @@ void Edit::setLowLatencyMonitoring (bool enabled, const Array<EditItemID>& plugi
     }
 }
 
-void Edit::setLowLatencyDisabledPlugins (const Array<EditItemID>& newPlugins)
+void Edit::setLowLatencyDisabledPlugins (const juce::Array<EditItemID>& newPlugins)
 {
     for (auto p : getAllPlugins (*this, false))
     {
@@ -2043,7 +2044,7 @@ InputDeviceInstance* Edit::getCurrentInstanceForInputDevice (InputDevice* d) con
     return {};
 }
 
-Array<InputDeviceInstance*> Edit::getAllInputDevices() const
+juce::Array<InputDeviceInstance*> Edit::getAllInputDevices() const
 {
     if (auto context = getCurrentPlaybackContext())
         return context->getAllInputs();
@@ -2078,7 +2079,7 @@ EditTimeRange Edit::getClickTrackRange() const noexcept
     return EditTimeRange::between (clickMark1Time, clickMark2Time);
 }
 
-String Edit::getClickTrackDevice() const
+juce::String Edit::getClickTrackDevice() const
 {
     if (clickTrackDevice == DeviceManager::getDefaultAudioDeviceName (false)
          || clickTrackDevice == DeviceManager::getDefaultMidiDeviceName (false))
@@ -2103,7 +2104,7 @@ bool Edit::isClickTrackDevice (OutputDevice& dev) const
     return dm.getDefaultWaveOutDevice() == &dev;
 }
 
-void Edit::setClickTrackOutput (const String& deviceName)
+void Edit::setClickTrackOutput (const juce::String& deviceName)
 {
     clickTrackDevice = deviceName;
     restartPlayback();
@@ -2111,7 +2112,7 @@ void Edit::setClickTrackOutput (const String& deviceName)
 
 void Edit::setClickTrackVolume (float gain)
 {
-    clickTrackGain = jlimit (0.2f, 1.0f, gain);
+    clickTrackGain = juce::jlimit (0.2f, 1.0f, gain);
     engine.getPropertyStorage().setProperty (SettingID::lastClickTrackLevel, gain);
 }
 
@@ -2208,7 +2209,7 @@ void Edit::updateFrozenTracks()
     {
         if (auto outputDevice = dynamic_cast<WaveOutputDevice*> (dm.getOutputDeviceAt (j)))
         {
-            BigInteger frozen;
+            juce::BigInteger frozen;
             double length = 0;
             int i = 0;
 
@@ -2221,7 +2222,7 @@ void Edit::updateFrozenTracks()
                          && ! at->isMuted (true))
                     {
                         frozen.setBit (i, true);
-                        length = jmax (length, at->getLengthIncludingInputTracks());
+                        length = juce::jmax (length, at->getLengthIncludingInputTracks());
                     }
                 }
 
@@ -2235,7 +2236,7 @@ void Edit::updateFrozenTracks()
                 for (auto sm : getSelectionManagers (*this))
                     sm->deselectAll();
 
-                StringPairArray metadataFound;
+                juce::StringPairArray metadataFound;
 
                 Renderer::Parameters r (*this);
                 r.tracksToDo = frozen;
@@ -2318,11 +2319,11 @@ void Edit::cancelAllProxyGeneratorJobs() const
     }
 }
 
-File Edit::getTempDirectory (bool createIfNonExistent) const
+juce::File Edit::getTempDirectory (bool createIfNonExistent) const
 {
-    File result (tempDirectory);
+    juce::File result (tempDirectory);
 
-    if (result == File())
+    if (result == juce::File())
         result = tempDirectory = engine.getTemporaryFileManager().getTempDirectory()
                                     .getChildFile ("edit_" + getProjectItemID().toStringSuitableForFilename());
 
@@ -2332,16 +2333,16 @@ File Edit::getTempDirectory (bool createIfNonExistent) const
     return result;
 }
 
-void Edit::setTempDirectory (const File& dir)
+void Edit::setTempDirectory (const juce::File& dir)
 {
     tempDirectory = dir;
 }
 
 //==============================================================================
-void Edit::setVideoFile (const File& f, String importDesc)
+void Edit::setVideoFile (const juce::File& f, juce::String importDesc)
 {
     CRASH_TRACER
-    File currentFile;
+    juce::File currentFile;
 
     if (auto item = ProjectManager::getInstance()->getProjectItem (videoSource))
         currentFile = item->getSourceFile();
@@ -2364,7 +2365,7 @@ void Edit::setVideoFile (const File& f, String importDesc)
     }
 }
 
-File Edit::getVideoFile() const
+juce::File Edit::getVideoFile() const
 {
     if (videoSource.get().isValid())
         if (auto item = ProjectManager::getInstance()->getProjectItem (videoSource))
@@ -2374,9 +2375,9 @@ File Edit::getVideoFile() const
 }
 
 //==============================================================================
-Array<AutomatableParameter*> Edit::getAllAutomatableParams (bool includeTrackParams) const
+juce::Array<AutomatableParameter*> Edit::getAllAutomatableParams (bool includeTrackParams) const
 {
-    Array<AutomatableParameter*> list;
+    juce::Array<AutomatableParameter*> list;
 
     list.add (getMasterSliderPosParameter().get());
     list.add (getMasterPanParameter().get());
@@ -2442,7 +2443,7 @@ Edit::Metadata Edit::getEditMetadata()
     metadata.album       = meta[IDs::album];
     metadata.artist      = meta[IDs::artist];
     metadata.comment     = meta[IDs::comment];
-    metadata.date        = meta.getProperty (IDs::date, Time::getCurrentTime().getYear());
+    metadata.date        = meta.getProperty (IDs::date, juce::Time::getCurrentTime().getYear());
     metadata.genre       = meta[IDs::genre];
     metadata.title       = meta[IDs::title];
     metadata.trackNumber = meta.getProperty (IDs::trackNumber, 1);
@@ -2482,7 +2483,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
 
         if (Clip::isClipState (v))
         {
-            MemoryBlock mb;
+            juce::MemoryBlock mb;
             mb.fromBase64Encoding (v[IDs::state].toString());
 
             auto state = updateLegacyEdit (juce::ValueTree::readFromData (mb.getData(), mb.getSize()));
@@ -2593,7 +2594,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
     return edit;
 }
 
-std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const File& file, const Edit* editToMatch,
+std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const juce::File& file, const Edit* editToMatch,
                                                          bool tryToMatchTempo, bool tryToMatchPitch, bool* couldMatchTempo,
                                                          juce::ValueTree midiPreviewPlugin)
 {
@@ -2607,17 +2608,17 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const F
 
     if (auto track = getFirstAudioTrack (*edit))
     {
-        bool isMidi = file.hasFileExtension (String (midiFileWildCard).removeCharacters ("*"));
+        bool isMidi = file.hasFileExtension (juce::String (midiFileWildCard).removeCharacters ("*"));
 
         if (isMidi)
         {
-            if (auto fin = std::unique_ptr<FileInputStream> (file.createInputStream()))
+            if (auto fin = std::unique_ptr<juce::FileInputStream> (file.createInputStream()))
             {
-                MidiFile mf;
+                juce::MidiFile mf;
                 mf.readFrom (*fin);
                 mf.convertTimestampTicksToSeconds();
 
-                MidiMessageSequence sequence;
+                juce::MidiMessageSequence sequence;
 
                 for (int i = 0; i < mf.getNumTracks(); ++i)
                     sequence.addSequence (*mf.getTrack (i), 0.0, 0.0, 1.0e6);
@@ -2631,7 +2632,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const F
 
                     // Find bpm of source midi file
                     double srcBpm = 120.0;
-                    MidiMessageSequence tempos;
+                    juce::MidiMessageSequence tempos;
                     mf.findAllTempoEvents (tempos);
 
                     if (auto* evt = tempos.getEventPointer (0))

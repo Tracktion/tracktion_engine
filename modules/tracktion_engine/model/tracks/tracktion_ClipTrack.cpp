@@ -94,7 +94,7 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
     ClipTrack& clipTrack;
     std::unique_ptr<Edit::LoadFinishedCallback<ClipList>> editLoadedCallback;
 
-    void valueTreePropertyChanged (ValueTree& v, const Identifier& id) override
+    void valueTreePropertyChanged (ValueTree& v, const juce::Identifier& id) override
     {
         if (Clip::isClipState (v))
         {
@@ -170,7 +170,7 @@ struct ClipTrack::CollectionClipList  : public ValueTree::Listener
         state.removeListener (this);
     }
 
-    void valueTreePropertyChanged (ValueTree& v, const Identifier& id) override
+    void valueTreePropertyChanged (ValueTree& v, const juce::Identifier& id) override
     {
         if (id == IDs::groupID)
         {

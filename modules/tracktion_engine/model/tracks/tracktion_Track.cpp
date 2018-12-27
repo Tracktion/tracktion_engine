@@ -516,7 +516,7 @@ void Track::setTags (const StringArray& s)
     tags = s.joinIntoString ("|").replace (" ", "_");
 }
 
-void Track::valueTreePropertyChanged (ValueTree& v, const Identifier& i)
+void Track::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
 {
     if (v == state)
     {

@@ -12,7 +12,7 @@ namespace tracktion_engine
 {
 
 //==============================================================================
-Clip::Clip (const ValueTree& v, ClipTrack& targetTrack, EditItemID id, Type t)
+Clip::Clip (const juce::ValueTree& v, ClipTrack& targetTrack, EditItemID id, Type t)
     : TrackItem (targetTrack.edit, id, t),
       state (v), track (&targetTrack),
       sourceFileReference (edit, state, IDs::source)
@@ -53,7 +53,7 @@ void Clip::initialise()
 {
     jassert (track != nullptr);
 
-    const ScopedValueSetter<bool> initialiser (isInitialised, false, true);
+    const juce::ScopedValueSetter<bool> initialiser (isInitialised, false, true);
 
     if (colour.isUsingDefault())
         colour = getDefaultColour();
@@ -74,30 +74,30 @@ void Clip::initialise()
     cancelAnyPendingUpdates();
 }
 
-UndoManager* Clip::getUndoManager() const
+juce::UndoManager* Clip::getUndoManager() const
 {
     return &edit.getUndoManager();
 }
 
 //==============================================================================
-bool Clip::isClipState (const ValueTree& v)
+bool Clip::isClipState (const juce::ValueTree& v)
 {
     return v.hasType (IDs::AUDIOCLIP) || v.hasType (IDs::MIDICLIP) || v.hasType (IDs::MARKERCLIP)
             || v.hasType (IDs::STEPCLIP) || v.hasType (IDs::CHORDCLIP) || v.hasType (IDs::EDITCLIP);
 }
 
-bool Clip::isClipState (const Identifier& i)
+bool Clip::isClipState (const juce::Identifier& i)
 {
     return i == IDs::AUDIOCLIP || i == IDs::MIDICLIP || i == IDs::MARKERCLIP
             || i == IDs::STEPCLIP || i == IDs::CHORDCLIP || i == IDs::EDITCLIP;
 }
 
 //==============================================================================
-static Clip::Ptr createNewEditClip (const ValueTree& v, EditItemID newClipID, ClipTrack& targetTrack)
+static Clip::Ptr createNewEditClip (const juce::ValueTree& v, EditItemID newClipID, ClipTrack& targetTrack)
 {
     ProjectItemID sourceItemID (v.getProperty (IDs::source).toString());
     auto sourceItem = ProjectManager::getInstance()->getProjectItem (sourceItemID);
-    String warning;
+    juce::String warning;
 
     if (sourceItem != nullptr && sourceItem->getLength() > 0.0)
     {
@@ -124,7 +124,7 @@ static Clip::Ptr createNewEditClip (const ValueTree& v, EditItemID newClipID, Cl
     return {};
 }
 
-static Clip::Ptr createNewClipObject (const ValueTree& v, EditItemID newClipID, ClipTrack& targetTrack)
+static Clip::Ptr createNewClipObject (const juce::ValueTree& v, EditItemID newClipID, ClipTrack& targetTrack)
 {
     auto type = v.getType();
 
@@ -146,7 +146,7 @@ static Clip::Ptr createNewClipObject (const ValueTree& v, EditItemID newClipID, 
     return {};
 }
 
-Clip::Ptr Clip::createClipForState (const ValueTree& v, ClipTrack& targetTrack)
+Clip::Ptr Clip::createClipForState (const juce::ValueTree& v, ClipTrack& targetTrack)
 {
     jassert (Clip::isClipState (v));
     jassert (TrackList::isTrack (v.getParent()));
@@ -179,7 +179,7 @@ void Clip::flushStateToValueTree()
 }
 
 //==============================================================================
-void Clip::setName (const String& newName)
+void Clip::setName (const juce::String& newName)
 {
     if (clipName != newName)
     {
@@ -200,7 +200,7 @@ void Clip::setName (const String& newName)
                         if (i == 0)
                             source->setName (newName, ProjectItem::SetNameMode::doDefault);
                         else
-                            source->setName (newName + " #" + String (i + 1), ProjectItem::SetNameMode::doDefault);
+                            source->setName (newName + " #" + juce::String (i + 1), ProjectItem::SetNameMode::doDefault);
                     }
                 }
             }
@@ -256,9 +256,9 @@ void Clip::sourceMediaChanged()
 //==============================================================================
 void Clip::setPosition (ClipPosition newPosition)
 {
-    newPosition.time.start = jlimit (0.0, Edit::maximumLength, newPosition.time.start);
-    newPosition.time.end   = jlimit (newPosition.time.start, Edit::maximumLength, newPosition.time.end);
-    newPosition.offset = jmax (0.0, newPosition.offset);
+    newPosition.time.start = juce::jlimit (0.0, Edit::maximumLength, newPosition.time.start);
+    newPosition.time.end   = juce::jlimit (newPosition.time.start, Edit::maximumLength, newPosition.time.end);
+    newPosition.offset = juce::jmax (0.0, newPosition.offset);
 
     clipStart = newPosition.time.start;
     length = newPosition.time.getLength();
@@ -268,7 +268,7 @@ void Clip::setPosition (ClipPosition newPosition)
 void Clip::setStart (double newStart, bool preserveSync, bool keepLength)
 {
     auto pos = getPosition();
-    auto delta = jlimit (0.0, Edit::maximumLength, newStart) - pos.time.start;
+    auto delta = juce::jlimit (0.0, Edit::maximumLength, newStart) - pos.time.start;
 
     pos.time.start += delta;
 
@@ -276,7 +276,7 @@ void Clip::setStart (double newStart, bool preserveSync, bool keepLength)
         pos.time.end += delta;
 
     if (preserveSync)
-        pos.offset = jmax (0.0, pos.offset + delta);
+        pos.offset = juce::jmax (0.0, pos.offset + delta);
 
     setPosition (pos);
 }
@@ -289,7 +289,7 @@ void Clip::setLength (double newLength, bool preserveSync)
 void Clip::setEnd (double newEnd, bool preserveSync)
 {
     auto pos = getPosition();
-    auto delta = jlimit (pos.time.start, Edit::maximumLength, newEnd) - pos.time.end;
+    auto delta = juce::jlimit (pos.time.start, Edit::maximumLength, newEnd) - pos.time.end;
 
     if (! preserveSync)
         pos.offset -= delta;
@@ -301,7 +301,7 @@ void Clip::setEnd (double newEnd, bool preserveSync)
 void Clip::setOffset (double newOffset)
 {
     auto pos = getPosition();
-    pos.offset = jmax (0.0, newOffset);
+    pos.offset = juce::jmax (0.0, newOffset);
     setPosition (pos);
 }
 
@@ -345,8 +345,8 @@ double Clip::getSpottingPoint() const
 
     auto pos = getPosition();
 
-    return jlimit (0.0, pos.time.getLength(),
-                   marks.getFirst() - pos.offset);
+    return juce::jlimit (0.0, pos.time.getLength(),
+                         marks.getFirst() - pos.offset);
 }
 
 void Clip::trimAwayOverlap (EditTimeRange r)
@@ -394,7 +394,7 @@ bool Clip::moveToTrack (Track& newTrack)
 //==============================================================================
 void Clip::setSpeedRatio (double r)
 {
-    r = jlimit (ClipConstants::speedRatioMin, ClipConstants::speedRatioMax, r);
+    r = juce::jlimit (ClipConstants::speedRatioMin, ClipConstants::speedRatioMax, r);
 
     if (speedRatio != r)
         speedRatio = r;
@@ -435,7 +435,7 @@ CollectionClip* Clip::getGroupClip() const
 }
 
 //==============================================================================
-void Clip::setCurrentSourceFile (const File& f)
+void Clip::setCurrentSourceFile (const juce::File& f)
 {
     if (currentSourceFile != f)
     {
@@ -445,7 +445,7 @@ void Clip::setCurrentSourceFile (const File& f)
 }
 
 //==============================================================================
-void Clip::valueTreePropertyChanged (ValueTree& tree, const Identifier& id)
+void Clip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifier& id)
 {
     if (tree == state)
     {
@@ -475,7 +475,7 @@ void Clip::valueTreePropertyChanged (ValueTree& tree, const Identifier& id)
             clipName.forceUpdateOfCachedValue();
             changed();
 
-            MessageManager::callAsync ([weakRef]
+            juce::MessageManager::callAsync ([weakRef]
             {
                 if (weakRef != nullptr)
                     SelectionManager::refreshAllPropertyPanels();
@@ -484,7 +484,7 @@ void Clip::valueTreePropertyChanged (ValueTree& tree, const Identifier& id)
     }
 }
 
-void Clip::valueTreeParentChanged (ValueTree& v)
+void Clip::valueTreeParentChanged (juce::ValueTree& v)
 {
     if (v == state)
         updateParentTrack();
@@ -523,7 +523,7 @@ void Clip::updateLinkedClips()
 
         if (c != this && typeid (*c) == typeid (*this))
         {
-            const ScopedValueSetter<bool> setter (c->cloneInProgress, true);
+            const juce::ScopedValueSetter<bool> setter (c->cloneInProgress, true);
             c->cloneFrom (this);
         }
     }
@@ -550,7 +550,7 @@ TrackItem* Clip::getGroupParent() const
     return getGroupClip();
 }
 
-Colour Clip::getColour() const
+juce::Colour Clip::getColour() const
 {
     return colour.get();
 }

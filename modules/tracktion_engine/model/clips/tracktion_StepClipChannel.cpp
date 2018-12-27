@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-StepClip::Channel::Channel (StepClip& c, const ValueTree& v)
+StepClip::Channel::Channel (StepClip& c, const juce::ValueTree& v)
     : clip (c), state (v)
 {
     auto* um = &clip.edit.getUndoManager();

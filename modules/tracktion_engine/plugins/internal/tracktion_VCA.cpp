@@ -122,7 +122,7 @@ bool VCAPlugin::canBeMoved()
     return false;
 }
 
-void VCAPlugin::restorePluginStateFromValueTree (const ValueTree& v)
+void VCAPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
     CachedValue<float>* cvsFloat[]  = { &volumeValue, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);

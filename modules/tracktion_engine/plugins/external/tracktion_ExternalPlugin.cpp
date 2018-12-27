@@ -268,10 +268,13 @@ private:
 //==============================================================================
 namespace
 {
-    void readBusLayout (AudioProcessor::BusesLayout& busesLayout, const ValueTree& state, AudioProcessor& plugin, bool isInput)
+    void readBusLayout (AudioProcessor::BusesLayout& busesLayout,
+                        const juce::ValueTree& state,
+                        AudioProcessor& plugin, bool isInput)
     {
         jassert (state.hasType (IDs::LAYOUT));
-        Array<AudioChannelSet>& targetBuses = (isInput ? busesLayout.inputBuses : busesLayout.outputBuses);
+        auto& targetBuses = (isInput ? busesLayout.inputBuses
+                                     : busesLayout.outputBuses);
         int maxNumBuses = 0;
 
         auto buses = state.getChildWithName (isInput ? IDs::INPUTS : IDs::OUTPUTS);
@@ -798,7 +801,7 @@ void ExternalPlugin::flushPluginStateToValueTree()
     }
 }
 
-void ExternalPlugin::restorePluginStateFromValueTree (const ValueTree& v)
+void ExternalPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
     String s;
 
@@ -1585,7 +1588,7 @@ AudioPluginInstance* ExternalPlugin::getAudioPluginInstance() const
     return pluginInstance.get();
 }
 
-void ExternalPlugin::valueTreePropertyChanged (ValueTree& v, const Identifier& id)
+void ExternalPlugin::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& id)
 {
     if (v == state && id == IDs::layout)
     {

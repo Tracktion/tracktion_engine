@@ -15,7 +15,7 @@ namespace PredefinedWavetable
 {
     static float getSinSample (float phase)
     {
-        return (std::sin (phase * float_Pi * 2.0f) + 1.0f) / 2.0f;
+        return (std::sin (phase * juce::float_Pi * 2.0f) + 1.0f) / 2.0f;
     }
 
     static float getTriangleSample (float phase)
@@ -43,7 +43,7 @@ namespace PredefinedWavetable
         jassert (totalNumSteps > 1);
         const float stageAmmount = 1.0f / (totalNumSteps - 1);
 
-        const int stage = jlimit (0, totalNumSteps - 1, (int) std::floor (phase * totalNumSteps));
+        const int stage = juce::jlimit (0, totalNumSteps - 1, (int) std::floor (phase * totalNumSteps));
 
         return stageAmmount * stage;
     }
@@ -68,8 +68,8 @@ struct Ramp
 
     void setPosition (float newPosition) noexcept
     {
-        jassert (isPositiveAndBelow (newPosition, rampDuration));
-        rampPos = jlimit (0.0f, rampDuration, newPosition) / rampDuration;
+        jassert (juce::isPositiveAndBelow (newPosition, rampDuration));
+        rampPos = juce::jlimit (0.0f, rampDuration, newPosition) / rampDuration;
     }
 
     void process (float duration) noexcept
@@ -97,10 +97,12 @@ private:
 //==============================================================================
 struct DiscreteLabelledParameter  : public AutomatableParameter
 {
-    DiscreteLabelledParameter (const String& xmlTag, const String& name,
-                               AutomatableEditItem& owner, Range<float> valueRange,
+    DiscreteLabelledParameter (const juce::String& xmlTag,
+                               const juce::String& name,
+                               AutomatableEditItem& owner,
+                               juce::Range<float> valueRange,
                                int numStatesToUse = 0,
-                               StringArray labelsToUse = {})
+                               juce::StringArray labelsToUse = {})
         : AutomatableParameter (xmlTag, name, owner, valueRange),
           numStates (numStatesToUse), labels (labelsToUse)
     {
@@ -120,7 +122,7 @@ struct DiscreteLabelledParameter  : public AutomatableParameter
         if (numStates == 0)
             return 0.0;
 
-        return jmap ((float) i, 0.0f, float (numStates - 1), valueRange.start, valueRange.end);
+        return juce::jmap ((float) i, 0.0f, float (numStates - 1), valueRange.start, valueRange.end);
     }
 
     int getStateForValue (float value) const override
@@ -128,27 +130,27 @@ struct DiscreteLabelledParameter  : public AutomatableParameter
         if (numStates == 0)
             return 0;
 
-        return roundToInt (jmap (value, valueRange.start, valueRange.end, 0.0f, float (numStates - 1)));
+        return juce::roundToInt (juce::jmap (value, valueRange.start, valueRange.end, 0.0f, float (numStates - 1)));
     }
 
-    bool hasLabels()  const override             { return labels.size() > 0; }
-    StringArray getAllLabels() const override    { return labels; }
+    bool hasLabels()  const override                   { return labels.size() > 0; }
+    juce::StringArray getAllLabels() const override    { return labels; }
 
-    String getLabelForValue (float val) const override
+    juce::String getLabelForValue (float val) const override
     {
         const int s = getStateForValue (val);
 
-        return isPositiveAndBelow (s, getNumberOfStates()) ? labels[s] : String();
+        return juce::isPositiveAndBelow (s, getNumberOfStates()) ? labels[s] : juce::String();
     }
 
     float snapToState (float val) const override
     {
-        return getValueForState (jlimit (0, getNumberOfStates() - 1, roundToInt (val)));
+        return getValueForState (juce::jlimit (0, getNumberOfStates() - 1, juce::roundToInt (val)));
     }
 
 private:
     const int numStates = 0;
-    const StringArray labels;
+    const juce::StringArray labels;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DiscreteLabelledParameter)
 };
@@ -156,9 +158,9 @@ private:
 //==============================================================================
 struct SuffixedParameter    : public AutomatableParameter
 {
-    SuffixedParameter (const String& xmlTag, const String& name,
-                       AutomatableEditItem& owner, NormalisableRange<float> valueRange,
-                       String suffixToUse = {})
+    SuffixedParameter (const juce::String& xmlTag, const juce::String& name,
+                       AutomatableEditItem& owner, juce::NormalisableRange<float> valueRange,
+                       juce::String suffixToUse = {})
         : AutomatableParameter (xmlTag, name, owner, valueRange),
           suffix (suffixToUse)
     {
@@ -169,17 +171,17 @@ struct SuffixedParameter    : public AutomatableParameter
         notifyListenersOfDeletion();
     }
 
-    String valueToString (float value) override
+    juce::String valueToString (float value) override
     {
         if (valueRange.interval == 1.0f)
-            return String (roundToInt (value));
+            return juce::String (juce::roundToInt (value));
 
         return AutomatableParameter::valueToString (value);
     }
 
-    String getLabel() override                              { return suffix; }
+    juce::String getLabel() override           { return suffix; }
 
-    const String suffix;
+    const juce::String suffix;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SuffixedParameter)
 };

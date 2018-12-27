@@ -418,7 +418,7 @@ void MidiOutputDevice::loadProps()
 
 void MidiOutputDevice::saveProps()
 {
-    XmlElement n ("SETTINGS");
+    juce::XmlElement n ("SETTINGS");
 
     n.setAttribute ("enabled", enabled);
     n.setAttribute ("preDelay", preDelayMillisecs);

@@ -452,7 +452,7 @@ void PhysicalMidiInputDevice::saveProps()
     if (isTrackDevice())
         return;
 
-    XmlElement n ("SETTINGS");
+    juce::XmlElement n ("SETTINGS");
     n.setAttribute ("controllerMessages", isTakingControllerMessages);
 
     MidiInputDevice::saveProps (n);

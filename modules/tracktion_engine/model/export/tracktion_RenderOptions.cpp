@@ -250,7 +250,7 @@ void RenderOptions::relinkCachedValues (UndoManager* um)
     updateHash();
 }
 
-void RenderOptions::valueTreePropertyChanged (ValueTree& v, const Identifier& i)
+void RenderOptions::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
 {
     if (v == state && i == IDs::renderTracks)
     {

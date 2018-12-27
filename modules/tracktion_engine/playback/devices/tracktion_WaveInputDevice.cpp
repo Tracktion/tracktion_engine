@@ -1295,7 +1295,7 @@ void WaveInputDevice::loadProps()
 
 void WaveInputDevice::saveProps()
 {
-    XmlElement n ("SETTINGS");
+    juce::XmlElement n ("SETTINGS");
 
     n.setAttribute ("filename", filenameMask);
     n.setAttribute ("gainDb", inputGainDb);

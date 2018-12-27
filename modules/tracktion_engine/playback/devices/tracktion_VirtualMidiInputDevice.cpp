@@ -97,7 +97,7 @@ void VirtualMidiInputDevice::loadProps()
 
 void VirtualMidiInputDevice::saveProps()
 {
-    XmlElement n ("SETTINGS");
+    juce::XmlElement n ("SETTINGS");
 
     n.setAttribute ("inputDevices", inputDevices.joinIntoString (";"));
     MidiInputDevice::saveProps (n);

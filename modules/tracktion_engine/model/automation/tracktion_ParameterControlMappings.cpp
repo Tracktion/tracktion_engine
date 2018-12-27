@@ -702,7 +702,7 @@ void ParameterControlMappings::savePreset (int index)
    #endif
 
    #if JUCE_MODAL_LOOPS_PERMITTED
-    auto xml = new XmlElement ("filter");
+    auto xml = new juce::XmlElement ("filter");
     xml->setAttribute ("name", name);
     xml->setAttribute ("filter", plugin->getName());
 
@@ -710,7 +710,7 @@ void ParameterControlMappings::savePreset (int index)
     {
         if (auto p = parameters[i])
         {
-            auto mapping = new XmlElement ("mapping");
+            auto mapping = new juce::XmlElement ("mapping");
             mapping->setAttribute ("controller", controllerIDs[i]);
             mapping->setAttribute ("channel", channelIDs[i]);
             mapping->setAttribute ("parameter", p->paramID);
@@ -718,14 +718,14 @@ void ParameterControlMappings::savePreset (int index)
         }
     }
 
-    XmlElement xmlNew ("FILTERMAPPINGPRESETS");
+    juce::XmlElement xmlNew ("FILTERMAPPINGPRESETS");
     xmlNew.addChildElement (xml);
 
     if (auto xmlOld = edit.engine.getPropertyStorage().getXmlProperty (SettingID::filterControlMappingPresets))
     {
         forEachXmlChildElement (*xmlOld, n)
             if (n->getStringAttribute ("name") != name)
-                xmlNew.addChildElement (new XmlElement (*n));
+                xmlNew.addChildElement (new juce::XmlElement (*n));
     }
 
     edit.engine.getPropertyStorage().setXmlProperty (SettingID::filterControlMappingPresets, xmlNew);
@@ -823,7 +823,7 @@ void ParameterControlMappings::deletePreset (int index)
 {
     if (auto xml = edit.engine.getPropertyStorage().getXmlProperty (SettingID::filterControlMappingPresets))
     {
-        XmlElement xmlCopy (*xml);
+        juce::XmlElement xmlCopy (*xml);
         xmlCopy.removeChildElement (xml->getChildElement (index), true);
         edit.engine.getPropertyStorage().setXmlProperty (SettingID::filterControlMappingPresets, xmlCopy);
     }

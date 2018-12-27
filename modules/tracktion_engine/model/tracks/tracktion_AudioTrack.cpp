@@ -740,7 +740,7 @@ void AudioTrack::removeListener (Listener* l)
 }
 
 //==============================================================================
-void AudioTrack::valueTreePropertyChanged (ValueTree& v, const Identifier& i)
+void AudioTrack::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
 {
     if (v == state)
     {

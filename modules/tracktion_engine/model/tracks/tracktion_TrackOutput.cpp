@@ -347,7 +347,7 @@ bool TrackOutput::injectLiveMidiMessage (const MidiMessage& message)
     return false;
 }
 
-void TrackOutput::valueTreePropertyChanged (ValueTree& v, const Identifier& ident)
+void TrackOutput::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& ident)
 {
     if (v.hasType (IDs::DEVICE) && ident == IDs::name)
     {

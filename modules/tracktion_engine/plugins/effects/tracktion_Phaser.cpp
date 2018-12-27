@@ -115,7 +115,7 @@ String PhaserPlugin::getSelectableDescription()
     return TRANS("Phaser Plugin");
 }
 
-void PhaserPlugin::restorePluginStateFromValueTree (const ValueTree& v)
+void PhaserPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
     CachedValue<float>* cvsFloat[]  = { &depth, &rate, &feedbackGain, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);

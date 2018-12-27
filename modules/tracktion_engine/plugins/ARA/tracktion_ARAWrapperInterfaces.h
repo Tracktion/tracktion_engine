@@ -92,7 +92,7 @@ public:
     /** @note Must not be editing or already restoring the document while restoring
               from a state.
     */
-    void beginRestoringState (const ValueTree& state)
+    void beginRestoringState (const juce::ValueTree& state)
     {
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD

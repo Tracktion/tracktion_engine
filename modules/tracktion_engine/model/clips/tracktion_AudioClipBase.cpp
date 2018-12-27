@@ -423,7 +423,7 @@ private:
 };
 
 //==============================================================================
-AudioClipBase::AudioClipBase (const ValueTree& v, EditItemID id, Type t, ClipTrack& targetTrack)
+AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, ClipTrack& targetTrack)
     : Clip (v, targetTrack, id, t),
       loopInfo (state.getOrCreateChildWithName (IDs::LOOPINFO, getUndoManager()), getUndoManager()),
       pluginList (targetTrack.edit)
@@ -1501,7 +1501,7 @@ void AudioClipBase::enableEffects (bool enable, bool warn)
     }
 }
 
-void AudioClipBase::addEffect (const ValueTree& effectsTree)
+void AudioClipBase::addEffect (const juce::ValueTree& effectsTree)
 {
     auto v = state.getChildWithName (IDs::EFFECTS);
     jassert (v.isValid());
@@ -2575,7 +2575,7 @@ void AudioClipBase::timerCallback()
     }
 }
 
-void AudioClipBase::valueTreePropertyChanged (ValueTree& tree, const Identifier& id)
+void AudioClipBase::valueTreePropertyChanged (ValueTree& tree, const juce::Identifier& id)
 {
     if (tree == state)
     {
@@ -2644,7 +2644,7 @@ void AudioClipBase::valueTreePropertyChanged (ValueTree& tree, const Identifier&
     }
 }
 
-void AudioClipBase::valueTreeChildAdded (ValueTree& parent, ValueTree& child)
+void AudioClipBase::valueTreeChildAdded (ValueTree& parent, juce::ValueTree& child)
 {
     if (parent == state)
     {
@@ -2663,7 +2663,7 @@ void AudioClipBase::valueTreeChildAdded (ValueTree& parent, ValueTree& child)
     }
 }
 
-void AudioClipBase::valueTreeChildRemoved (ValueTree& parent, ValueTree& child, int oldIndex)
+void AudioClipBase::valueTreeChildRemoved (ValueTree& parent, juce::ValueTree& child, int oldIndex)
 {
     if (parent == state)
     {

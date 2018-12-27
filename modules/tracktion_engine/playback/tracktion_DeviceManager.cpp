@@ -592,7 +592,7 @@ void DeviceManager::saveSettings()
     {
         if (deviceManager.getCurrentAudioDevice() != nullptr)
         {
-            XmlElement n ("AUDIODEVICE");
+            juce::XmlElement n ("AUDIODEVICE");
 
             n.setAttribute ("outEnabled", outEnabled.toString (2));
             n.setAttribute ("inEnabled", inEnabled.toString (2));

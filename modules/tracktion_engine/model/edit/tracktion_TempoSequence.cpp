@@ -20,10 +20,10 @@ struct TempoAndTimeSigListBase  : public ValueTreeObjectList<ObjectType>,
     {
     }
 
-    void newObjectAdded (ObjectType*) override                              { sendChange(); }
-    void objectRemoved (ObjectType*) override                               { sendChange(); }
-    void objectOrderChanged() override                                      { sendChange(); }
-    void valueTreePropertyChanged (ValueTree&, const Identifier&) override  { sendChange(); }
+    void newObjectAdded (ObjectType*) override                                    { sendChange(); }
+    void objectRemoved (ObjectType*) override                                     { sendChange(); }
+    void objectOrderChanged() override                                            { sendChange(); }
+    void valueTreePropertyChanged (ValueTree&, const juce::Identifier&) override  { sendChange(); }
 
     void sendChange()
     {

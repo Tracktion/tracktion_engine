@@ -13,7 +13,7 @@ namespace tracktion_engine
 
 struct PluginList::ObjectList  : public ValueTreeObjectList<Plugin>
 {
-    ObjectList (PluginList& l, const ValueTree& parent)
+    ObjectList (PluginList& l, const juce::ValueTree& parent)
         : ValueTreeObjectList<Plugin> (parent), list (l)
     {
         // NB: rebuildObjects() is called after construction so that the edit has a valid
@@ -25,12 +25,12 @@ struct PluginList::ObjectList  : public ValueTreeObjectList<Plugin>
         freeObjects();
     }
 
-    bool isSuitableType (const ValueTree& v) const override
+    bool isSuitableType (const juce::ValueTree& v) const override
     {
         return v.hasType (IDs::PLUGIN);
     }
 
-    Plugin* createNewObject (const ValueTree& v) override
+    Plugin* createNewObject (const juce::ValueTree& v) override
     {
         if (auto p = list.edit.getPluginCache().getOrCreatePluginFor (v))
         {
@@ -54,7 +54,7 @@ struct PluginList::ObjectList  : public ValueTreeObjectList<Plugin>
     void newObjectAdded (Plugin*) override {}
     void objectRemoved (Plugin*) override {}
     void objectOrderChanged() override {}
-    void valueTreePropertyChanged (ValueTree&, const Identifier&) override  {}
+    void valueTreePropertyChanged (ValueTree&, const juce::Identifier&) override  {}
 
     PluginList& list;
 
@@ -70,7 +70,7 @@ PluginList::~PluginList()
 {
 }
 
-void PluginList::initialise (const ValueTree& v)
+void PluginList::initialise (const juce::ValueTree& v)
 {
     jassert (v.hasType (IDs::MASTERPLUGINS)
               || v.hasType (IDs::TRACK)
@@ -198,7 +198,7 @@ void PluginList::insertPlugin (const Plugin::Ptr& plugin, int index, SelectionMa
     }
 }
 
-Plugin::Ptr PluginList::insertPlugin (const ValueTree& v, int index)
+Plugin::Ptr PluginList::insertPlugin (const juce::ValueTree& v, int index)
 {
     CRASH_TRACER
 
@@ -267,7 +267,7 @@ void PluginList::clear()
             state.removeChild (i, getUndoManager());
 }
 
-void PluginList::addPluginsFrom (const ValueTree& v, bool clearFirst, bool atStart)
+void PluginList::addPluginsFrom (const juce::ValueTree& v, bool clearFirst, bool atStart)
 {
     if (clearFirst)
         clear();

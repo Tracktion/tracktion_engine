@@ -180,7 +180,7 @@ struct TransportControl::TransportState : private ValueTree::Listener
     TransportControl& transport;
 
 private:
-    void valueTreePropertyChanged (ValueTree& v, const Identifier& i) override
+    void valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i) override
     {
         if (v == state)
         {
@@ -260,8 +260,8 @@ private:
         }
     }
 
-    void valueTreeChildAdded (ValueTree&, ValueTree&) override {}
-    void valueTreeChildRemoved (ValueTree&, ValueTree&, int) override {}
+    void valueTreeChildAdded (ValueTree&, juce::ValueTree&) override {}
+    void valueTreeChildRemoved (ValueTree&, juce::ValueTree&, int) override {}
     void valueTreeChildOrderChanged (ValueTree&, int, int) override {}
     void valueTreeParentChanged (ValueTree&) override {}
 };

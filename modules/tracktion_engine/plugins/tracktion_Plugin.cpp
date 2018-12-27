@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-Plugin::Wire::Wire (const ValueTree& v, UndoManager* um)  : state (v)
+Plugin::Wire::Wire (const juce::ValueTree& v, UndoManager* um)  : state (v)
 {
     sourceChannelIndex.referTo (state, IDs::srcChan, um);
     destChannelIndex.referTo (state, IDs::dstChan, um);
@@ -20,7 +20,7 @@ Plugin::Wire::Wire (const ValueTree& v, UndoManager* um)  : state (v)
 struct Plugin::WireList : public ValueTreeObjectList<Plugin::Wire, CriticalSection>,
                           private AsyncUpdater
 {
-    WireList (Plugin& p, const ValueTree& parent)
+    WireList (Plugin& p, const juce::ValueTree& parent)
        : ValueTreeObjectList<Wire, CriticalSection> (parent), plugin (p)
     {
         rebuildObjects();
@@ -31,14 +31,14 @@ struct Plugin::WireList : public ValueTreeObjectList<Plugin::Wire, CriticalSecti
         freeObjects();
     }
 
-    bool isSuitableType (const ValueTree& v) const override { return v.hasType (IDs::SIDECHAINCONNECTION); }
-    Wire* createNewObject (const ValueTree& v) override     { return new Wire (v, plugin.getUndoManager()); }
-    void deleteObject (Wire* w) override                    { delete w; }
+    bool isSuitableType (const juce::ValueTree& v) const override { return v.hasType (IDs::SIDECHAINCONNECTION); }
+    Wire* createNewObject (const juce::ValueTree& v) override     { return new Wire (v, plugin.getUndoManager()); }
+    void deleteObject (Wire* w) override                          { delete w; }
 
     void newObjectAdded (Wire*) override                    { triggerAsyncUpdate(); }
     void objectRemoved (Wire*) override                     { triggerAsyncUpdate(); }
     void objectOrderChanged() override                      {}
-    void valueTreePropertyChanged (ValueTree&, const Identifier&) override  { triggerAsyncUpdate(); }
+    void valueTreePropertyChanged (ValueTree&, const juce::Identifier&) override  { triggerAsyncUpdate(); }
 
     void handleAsyncUpdate() override                       { plugin.changed(); }
 
@@ -653,7 +653,7 @@ bool Plugin::isClipEffectPlugin() const
     return state.getParent().hasType (IDs::EFFECT);
 }
 
-void Plugin::valueTreePropertyChanged (ValueTree&, const Identifier& i)
+void Plugin::valueTreePropertyChanged (ValueTree&, const juce::Identifier& i)
 {
     if (i == IDs::process)
         processingChanged();
@@ -666,7 +666,7 @@ void Plugin::valueTreeChanged()
     changed();
 }
 
-void Plugin::valueTreeChildAdded (ValueTree&, ValueTree& c)
+void Plugin::valueTreeChildAdded (ValueTree&, juce::ValueTree& c)
 {
     if (c.getType() == IDs::SIDECHAINCONNECTIONS)
         sidechainWireList.reset (new WireList (*this, c));
@@ -674,7 +674,7 @@ void Plugin::valueTreeChildAdded (ValueTree&, ValueTree& c)
     valueTreeChanged();
 }
 
-void Plugin::valueTreeChildRemoved (ValueTree&, ValueTree& c, int)
+void Plugin::valueTreeChildRemoved (ValueTree&, juce::ValueTree& c, int)
 {
     if (c.getType() == IDs::SIDECHAINCONNECTIONS)
         sidechainWireList = nullptr;

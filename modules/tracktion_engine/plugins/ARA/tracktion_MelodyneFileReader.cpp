@@ -23,6 +23,7 @@
  #pragma clang diagnostic ignored "-Wconversion"
  #pragma clang diagnostic ignored "-Woverloaded-virtual"
  #pragma clang diagnostic ignored "-Wshadow"
+ #pragma clang diagnostic ignored "-Wpragma-pack"
 #endif
 
 #undef PRAGMA_ALIGN_SUPPORTED
@@ -829,7 +830,7 @@ struct ARADocumentHolder::Pimpl
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pimpl)
 };
 
-ARADocumentHolder::ARADocumentHolder (Edit& e, const ValueTree& v)
+ARADocumentHolder::ARADocumentHolder (Edit& e, const juce::ValueTree& v)
     : edit (e), lastState (v)
 {
 }
@@ -894,7 +895,7 @@ MidiMessageSequence MelodyneFileReader::getAnalysedMIDISequence()   { return {};
 AudioNode* MelodyneFileReader::createAudioNode (LiveClipLevel)      { return {}; }
 void MelodyneFileReader::sourceClipChanged()                        {}
 
-ARADocumentHolder::ARADocumentHolder (Edit& e, const ValueTree&) : edit (e) { juce::ignoreUnused (edit); }
+ARADocumentHolder::ARADocumentHolder (Edit& e, const juce::ValueTree&) : edit (e) { juce::ignoreUnused (edit); }
 ARADocumentHolder::~ARADocumentHolder() {}
 ARADocumentHolder::Pimpl* ARADocumentHolder::getPimpl()             { return {}; }
 void ARADocumentHolder::flushStateToValueTree() {}

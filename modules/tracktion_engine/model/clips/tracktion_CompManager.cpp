@@ -557,7 +557,7 @@ void CompManager::addOrRemoveListenerIfNeeded()
         clip.state.addListener (this);
 }
 
-void CompManager::valueTreePropertyChanged (ValueTree& tree, const Identifier& id)
+void CompManager::valueTreePropertyChanged (ValueTree& tree, const juce::Identifier& id)
 {
     if (tree != clip.state)
         return;

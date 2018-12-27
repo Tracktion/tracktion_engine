@@ -151,7 +151,7 @@ void ReverbPlugin::applyToBuffer (const AudioRenderContext& fc)
     }
 }
 
-void ReverbPlugin::restorePluginStateFromValueTree (const ValueTree& v)
+void ReverbPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
     CachedValue<float>* cvsFloat[]  = { &roomSizeValue, &dampValue, &wetValue, &dryValue, &widthValue, &modeValue, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);

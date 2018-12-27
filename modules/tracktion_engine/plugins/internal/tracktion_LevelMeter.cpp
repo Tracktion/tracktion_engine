@@ -82,7 +82,7 @@ void LevelMeterPlugin::timerCallback()
     }
 }
 
-void LevelMeterPlugin::restorePluginStateFromValueTree (const ValueTree& v)
+void LevelMeterPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
     CachedValue<bool>* cvsBool[] = { &showMidiActivity, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsBool);

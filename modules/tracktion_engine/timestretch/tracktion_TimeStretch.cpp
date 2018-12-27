@@ -23,14 +23,14 @@
 namespace tracktion_engine
 {
 
-TimeStretcher::ElastiqueProOptions::ElastiqueProOptions (const String& string)
+TimeStretcher::ElastiqueProOptions::ElastiqueProOptions (const juce::String& string)
 {
     if (string.isEmpty())
         return;
 
     if (string.startsWith ("1/"))
     {
-        StringArray tokens;
+        juce::StringArray tokens;
         tokens.addTokens (string, "/", {});
 
         if (tokens.size() == 5)
@@ -46,14 +46,14 @@ TimeStretcher::ElastiqueProOptions::ElastiqueProOptions (const String& string)
     jassertfalse; //unknown string format
 }
 
-String TimeStretcher::ElastiqueProOptions::toString() const
+juce::String TimeStretcher::ElastiqueProOptions::toString() const
 {
     // version / midside / sync / preserve / order
-    return String::formatted ("1/%d/%d/%d/%d",
-                              midSideStereo        ? 1 : 0,
-                              syncTimeStrPitchShft ? 1 : 0,
-                              preserveFormants     ? 1 : 0,
-                              envelopeOrder);
+    return juce::String::formatted ("1/%d/%d/%d/%d",
+                                    midSideStereo        ? 1 : 0,
+                                    syncTimeStrPitchShft ? 1 : 0,
+                                    preserveFormants     ? 1 : 0,
+                                    envelopeOrder);
 }
 
 bool TimeStretcher::ElastiqueProOptions::operator== (const ElastiqueProOptions& other) const
@@ -125,7 +125,7 @@ struct ElastiqueStretcher  : public TimeStretcher::Stretcher
 
     bool setSpeedAndPitch (float speedRatio, float semitonesUp) override
     {
-        float pitch = jlimit (0.25f, 4.0f, Pitch::semitonesToRatio (semitonesUp));
+        float pitch = juce::jlimit (0.25f, 4.0f, Pitch::semitonesToRatio (semitonesUp));
         bool sync  = (elastiqueMode == TimeStretcher::elastiquePro) ? elastiqueProOptions.syncTimeStrPitchShft : false;
         int r = elastique->SetStretchPitchQFactor (speedRatio, pitch, sync);
         jassert (r == 0); juce::ignoreUnused (r);
@@ -331,13 +331,13 @@ private:
 TimeStretcher::TimeStretcher() {}
 TimeStretcher::~TimeStretcher() {}
 
-static String getMelodyne()             { return "Melodyne"; }
-static String getElastiquePro()         { return "Elastique (" + TRANS("Pro") + ")"; }
-static String getElastiqueEfficeint()   { return "Elastique (" + TRANS("Efficient") + ")"; }
-static String getElastiqueMobile()      { return "Elastique (" + TRANS("Mobile") + ")"; }
-static String getElastiqueMono()        { return "Elastique (" + TRANS("Monophonic") + ")"; }
-static String getSoundTouchNormal()     { return "SoundTouch (" + TRANS("Normal") + ")"; }
-static String getSoundTouchBetter()     { return "SoundTouch (" + TRANS("Better") + ")"; }
+static juce::String getMelodyne()             { return "Melodyne"; }
+static juce::String getElastiquePro()         { return "Elastique (" + TRANS("Pro") + ")"; }
+static juce::String getElastiqueEfficeint()   { return "Elastique (" + TRANS("Efficient") + ")"; }
+static juce::String getElastiqueMobile()      { return "Elastique (" + TRANS("Mobile") + ")"; }
+static juce::String getElastiqueMono()        { return "Elastique (" + TRANS("Monophonic") + ")"; }
+static juce::String getSoundTouchNormal()     { return "SoundTouch (" + TRANS("Normal") + ")"; }
+static juce::String getSoundTouchBetter()     { return "SoundTouch (" + TRANS("Better") + ")"; }
 
 TimeStretcher::Mode TimeStretcher::checkModeIsAvailable (Mode m)
 {
@@ -373,9 +373,9 @@ TimeStretcher::Mode TimeStretcher::checkModeIsAvailable (Mode m)
     }
 }
 
-StringArray TimeStretcher::getPossibleModes (Engine& e, bool excludeMelodyne)
+juce::StringArray TimeStretcher::getPossibleModes (Engine& e, bool excludeMelodyne)
 {
-    StringArray s;
+    juce::StringArray s;
 
    #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE
     s.add (getElastiquePro());
@@ -399,7 +399,7 @@ StringArray TimeStretcher::getPossibleModes (Engine& e, bool excludeMelodyne)
     return s;
 }
 
-TimeStretcher::Mode TimeStretcher::getModeFromName (Engine& e, const String& name)
+TimeStretcher::Mode TimeStretcher::getModeFromName (Engine& e, const juce::String& name)
 {
    #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE
     if (name == getElastiquePro())          return elastiquePro;
@@ -421,7 +421,7 @@ TimeStretcher::Mode TimeStretcher::getModeFromName (Engine& e, const String& nam
                                                        : disabled;
 }
 
-String TimeStretcher::getNameOfMode (const Mode mode)
+juce::String TimeStretcher::getNameOfMode (const Mode mode)
 {
     switch (mode)
     {

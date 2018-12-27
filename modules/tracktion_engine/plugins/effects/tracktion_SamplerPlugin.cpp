@@ -592,7 +592,7 @@ void SamplerPlugin::sourceMediaChanged()
         s->refreshFile();
 }
 
-void SamplerPlugin::restorePluginStateFromValueTree (const ValueTree& v)
+void SamplerPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
     copyValueTree (state, v, getUndoManager());
 }

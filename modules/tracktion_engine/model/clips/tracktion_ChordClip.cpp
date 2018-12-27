@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-ChordClip::ChordClip (const ValueTree& v, EditItemID id, ClipTrack& targetTrack)
+ChordClip::ChordClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTrack)
     : Clip (v, targetTrack, id, Type::chord)
 {
     if (clipName.get().isEmpty())
@@ -65,7 +65,7 @@ bool ChordClip::canGoOnTrack (Track& t)
     return t.isChordTrack();
 }
 
-void ChordClip::valueTreeChildAdded (ValueTree&, ValueTree& c)
+void ChordClip::valueTreeChildAdded (ValueTree&, juce::ValueTree& c)
 {
     if (c.hasType (IDs::PATTERNGENERATOR))
     {
@@ -79,7 +79,7 @@ void ChordClip::valueTreeChildAdded (ValueTree&, ValueTree& c)
     triggerAsyncUpdate();
 }
 
-void ChordClip::valueTreeChildRemoved (ValueTree& p, ValueTree& c, int)
+void ChordClip::valueTreeChildRemoved (ValueTree& p, juce::ValueTree& c, int)
 {
     if (p == state && c.hasType (IDs::PATTERNGENERATOR))
     {
@@ -89,7 +89,7 @@ void ChordClip::valueTreeChildRemoved (ValueTree& p, ValueTree& c, int)
     triggerAsyncUpdate();
 }
 
-void ChordClip::valueTreePropertyChanged (ValueTree& v, const Identifier& i)
+void ChordClip::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
 {
     changed();
     triggerAsyncUpdate();

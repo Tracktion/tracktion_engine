@@ -188,7 +188,7 @@ void AirWindowsPlugin::processBlock (juce::AudioBuffer<float>& buffer)
         buffer.copyFrom (i, 0, output.buffer, i, 0, samps);
 }
 
-void AirWindowsPlugin::restorePluginStateFromValueTree (const ValueTree& v)
+void AirWindowsPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
     if (v.hasProperty (IDs::state))
     {

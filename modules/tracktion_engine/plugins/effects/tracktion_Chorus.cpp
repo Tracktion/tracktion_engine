@@ -116,7 +116,7 @@ void ChorusPlugin::applyToBuffer (const AudioRenderContext& fc)
     delayBuffer.bufferPos = bufPos;
 }
 
-void ChorusPlugin::restorePluginStateFromValueTree (const ValueTree& v)
+void ChorusPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
     CachedValue<float>* cvsFloat[] = { &depthMs, &width, &mixProportion, &speedHz, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);

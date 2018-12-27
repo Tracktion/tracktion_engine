@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-EditInputDevices::EditInputDevices (Edit& e, const ValueTree& v)
+EditInputDevices::EditInputDevices (Edit& e, const juce::ValueTree& v)
     : edit (e), state (v), editState (e.state)
 {
     editState.addListener (this);
@@ -30,7 +30,7 @@ int EditInputDevices::getMaxNumInputs() const
     return 4;
 }
 
-static bool isForDevice (const ValueTree& v, const InputDevice& d)
+static bool isForDevice (const juce::ValueTree& v, const InputDevice& d)
 {
     auto typeProp = v.getPropertyPointer (IDs::type);
 
@@ -43,7 +43,7 @@ static bool isForDevice (const ValueTree& v, const InputDevice& d)
     return v[IDs::name] == d.getName();
 }
 
-static bool isTrackInputDeviceMIDI (const ValueTree& v)
+static bool isTrackInputDeviceMIDI (const juce::ValueTree& v)
 {
     return v[IDs::type].toString().trim() == "MIDI";
 }
@@ -148,7 +148,7 @@ void EditInputDevices::removeNonExistantInputDeviceStates()
                 devices.add (mid);
     }
 
-    auto isDevicePresent = [devices] (const ValueTree& v)
+    auto isDevicePresent = [devices] (const juce::ValueTree& v)
     {
         for (auto* d : devices)
             if (isForDevice (v, *d))
@@ -211,7 +211,7 @@ void EditInputDevices::handleAsyncUpdate()
     removeNonExistantInputDeviceStates();
 }
 
-static bool isTrackDevice (const ValueTree& v)
+static bool isTrackDevice (const juce::ValueTree& v)
 {
     jassert (v.hasType (IDs::INPUTDEVICE));
     return v.hasProperty (IDs::sourceTrack);
