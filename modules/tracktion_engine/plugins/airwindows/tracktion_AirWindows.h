@@ -46,6 +46,8 @@ public:
     //==============================================================================
     AirWindowsPlugin (PluginCreationInfo, std::unique_ptr<AirWindowsBase>);
     ~AirWindowsPlugin();
+    
+    virtual Type getPluginCategory() = 0;
 
     //==============================================================================
     juce::String getSelectableDescription() override                        { return TRANS("Air Windows Plugin"); }
@@ -102,6 +104,8 @@ public: \
     \
     virtual juce::String getName() override                                 { return TRANS(pluginName); } \
     juce::String getPluginType() override                                   { return xmlTypeName; } \
+    \
+    Type getPluginCategory() override                                       { return pluginType; } \
     \
     static const char* getPluginName()                                      { return NEEDS_TRANS(pluginName); } \
     static const char* xmlTypeName; \
