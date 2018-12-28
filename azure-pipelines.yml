@@ -17,6 +17,7 @@ jobs:
   steps:
   - checkout: self
     submodules: true
+    clean: false
   - script: |
       tests/linux/build_examples
     displayName: 'Linux Build'
@@ -30,6 +31,7 @@ jobs:
   steps:
   - checkout: self
     submodules: true
+    clean: false
   - script:  |
       tests/mac/build_examples
     displayName: 'macOS Build'
@@ -43,6 +45,7 @@ jobs:
   steps:
   - checkout: self
     submodules: true
+    clean: false
   - script: |
       set MSBUILD_EXE=C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\MSBuild.exe
       tests/windows/build_examples.bat
@@ -55,6 +58,6 @@ jobs:
     - agent.os -equals Darwin
   timeoutInMinutes: 15
   steps:
-  - bash: "git push git@github.com:Tracktion/tracktion_engine.git $(Build.SourceBranch)"
+  - bash: "git push git@github.com:Tracktion/tracktion_engine.git $(Build.SourceBranchName)"
     displayName: Publishing to public repo
     condition: and(succeeded(), in(variables['Build.SourceBranchName'], 'master', 'develop'))
