@@ -1,6 +1,6 @@
 /* ========================================
  *  Spiral2 - Spiral2.h
- *  Created 8/12/11 by SPIAdmin 
+ *  Created 8/12/11 by SPIAdmin
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
@@ -29,8 +29,8 @@ const int kNumInputs = 2;
 const int kNumOutputs = 2;
 const unsigned long kUniqueId = 'spis';    //Change this to what the AU identity is!
 
-class Spiral2 : 
-    public AudioEffectX 
+class Spiral2 :
+    public AudioEffectX
 {
 public:
     Spiral2(audioMasterCallback audioMaster);
@@ -50,12 +50,12 @@ public:
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
     virtual void getParameterName(VstInt32 index, char *text);    // name of the parameter
-    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value    
+    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value
     virtual VstInt32 canDo(char *text);
 private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
-    
+
 	long double iirSampleAL;
 	long double iirSampleBL;
 	long double prevSampleL;

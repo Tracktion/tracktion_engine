@@ -7,7 +7,7 @@
 #include "Highpass.h"
 #endif
 
-void Highpass::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Highpass::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -29,7 +29,7 @@ void Highpass::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
 	long double fpNew = 1.0 - fpOld;
-	
+
 	iirAmount += (iirAmount * tight * tight);
 	if (tight > 0) tight /= 1.5;
 	else tight /= 3.0;
@@ -38,7 +38,7 @@ void Highpass::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	if (iirAmount <= 0.0) iirAmount = 0.0;
 	if (iirAmount > 1.0) iirAmount = 1.0;
 	//handle the change in cutoff frequency
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -83,7 +83,7 @@ void Highpass::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		}
 		outputSampleL = inputSampleL;
 		outputSampleR = inputSampleR;
-		
+
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleL)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleL))*tight);
 		if (offset < 0) offset = 0;
@@ -98,8 +98,8 @@ void Highpass::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			iirSampleBL = (iirSampleBL * (1 - (offset * iirAmount))) + (inputSampleL * (offset * iirAmount));
 			outputSampleL = outputSampleL - iirSampleBL;
 		}
-		
-		
+
+
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleR)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleR))*tight);
 		if (offset < 0) offset = 0;
@@ -114,18 +114,18 @@ void Highpass::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			iirSampleBR = (iirSampleBR * (1 - (offset * iirAmount))) + (inputSampleR * (offset * iirAmount));
 			outputSampleR = outputSampleR - iirSampleBR;
 		}
-		
-		
-		
+
+
+
 		if (wet < 1.0) outputSampleL = (outputSampleL * wet) + (inputSampleL * dry);
 		if (wet < 1.0) outputSampleR = (outputSampleR * wet) + (inputSampleR * dry);
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = outputSampleL;
 			fpNShapeLA = (fpNShapeLA*fpOld)+((outputSampleL-fpTemp)*fpNew);
 			outputSampleL += fpNShapeLA;
-			
+
 			fpTemp = outputSampleR;
 			fpNShapeRA = (fpNShapeRA*fpOld)+((outputSampleR-fpTemp)*fpNew);
 			outputSampleR += fpNShapeRA;
@@ -134,17 +134,17 @@ void Highpass::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			fpTemp = outputSampleL;
 			fpNShapeLB = (fpNShapeLB*fpOld)+((outputSampleL-fpTemp)*fpNew);
 			outputSampleL += fpNShapeLB;
-			
+
 			fpTemp = outputSampleR;
 			fpNShapeRB = (fpNShapeRB*fpOld)+((outputSampleR-fpTemp)*fpNew);
 			outputSampleR += fpNShapeRB;
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = outputSampleL;
 		*out2 = outputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;
@@ -152,7 +152,7 @@ void Highpass::processReplacing(float **inputs, float **outputs, VstInt32 sample
     }
 }
 
-void Highpass::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Highpass::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -174,7 +174,7 @@ void Highpass::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
 	long double fpNew = 1.0 - fpOld;
-	
+
 	iirAmount += (iirAmount * tight * tight);
 	if (tight > 0) tight /= 1.5;
 	else tight /= 3.0;
@@ -183,7 +183,7 @@ void Highpass::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	if (iirAmount <= 0.0) iirAmount = 0.0;
 	if (iirAmount > 1.0) iirAmount = 1.0;
 	//handle the change in cutoff frequency
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -228,7 +228,7 @@ void Highpass::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		}
 		outputSampleL = inputSampleL;
 		outputSampleR = inputSampleR;
-		
+
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleL)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleL))*tight);
 		if (offset < 0) offset = 0;
@@ -243,8 +243,8 @@ void Highpass::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			iirSampleBL = (iirSampleBL * (1 - (offset * iirAmount))) + (inputSampleL * (offset * iirAmount));
 			outputSampleL = outputSampleL - iirSampleBL;
 		}
-		
-		
+
+
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleR)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleR))*tight);
 		if (offset < 0) offset = 0;
@@ -259,18 +259,18 @@ void Highpass::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			iirSampleBR = (iirSampleBR * (1 - (offset * iirAmount))) + (inputSampleR * (offset * iirAmount));
 			outputSampleR = outputSampleR - iirSampleBR;
 		}
-		
-		
-		
+
+
+
 		if (wet < 1.0) outputSampleL = (outputSampleL * wet) + (inputSampleL * dry);
 		if (wet < 1.0) outputSampleR = (outputSampleR * wet) + (inputSampleR * dry);
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = outputSampleL;
 			fpNShapeLA = (fpNShapeLA*fpOld)+((outputSampleL-fpTemp)*fpNew);
 			outputSampleL += fpNShapeLA;
-			
+
 			fpTemp = outputSampleR;
 			fpNShapeRA = (fpNShapeRA*fpOld)+((outputSampleR-fpTemp)*fpNew);
 			outputSampleR += fpNShapeRA;
@@ -279,17 +279,17 @@ void Highpass::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			fpTemp = outputSampleL;
 			fpNShapeLB = (fpNShapeLB*fpOld)+((outputSampleL-fpTemp)*fpNew);
 			outputSampleL += fpNShapeLB;
-			
+
 			fpTemp = outputSampleR;
 			fpNShapeRB = (fpNShapeRB*fpOld)+((outputSampleR-fpTemp)*fpNew);
 			outputSampleR += fpNShapeRB;
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = outputSampleL;
 		*out2 = outputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;

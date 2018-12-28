@@ -7,31 +7,31 @@
 #include "HermeTrim.h"
 #endif
 
-void HermeTrim::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void HermeTrim::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
     float* out1 = outputs[0];
     float* out2 = outputs[1];
-	
+
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double leftgain = pow(10.0,((A*3.0)-1.5)/20.0);
 	double rightgain = pow(10.0,((B*3.0)-1.5)/20.0);
 	double midgain = pow(10.0,((C*3.0)-1.5)/20.0);
 	double sidegain = pow(10.0,((D*3.0)-1.5)/20.0);
 	double mastergain = pow(10.0,((E*3.0)-1.5)/20.0) * 0.5;
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 	long double mid;
 	long double side;
-	
+
 	leftgain *= mastergain;
 	rightgain *= mastergain;
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -74,7 +74,7 @@ void HermeTrim::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		mid = inputSampleL + inputSampleR;
 		side = inputSampleL - inputSampleR;
 		mid *= midgain;
@@ -82,7 +82,7 @@ void HermeTrim::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		inputSampleL = (mid+side) * leftgain;
 		inputSampleR = (mid-side) * rightgain;
 		//contains mastergain and the gain trim fixing the mid/side
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -102,10 +102,10 @@ void HermeTrim::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;
@@ -113,31 +113,31 @@ void HermeTrim::processReplacing(float **inputs, float **outputs, VstInt32 sampl
     }
 }
 
-void HermeTrim::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void HermeTrim::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
     double* out1 = outputs[0];
     double* out2 = outputs[1];
-	
+
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double leftgain = pow(10.0,((A*3.0)-1.5)/20.0);
 	double rightgain = pow(10.0,((B*3.0)-1.5)/20.0);
 	double midgain = pow(10.0,((C*3.0)-1.5)/20.0);
 	double sidegain = pow(10.0,((D*3.0)-1.5)/20.0);
 	double mastergain = pow(10.0,((E*3.0)-1.5)/20.0) * 0.5;
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 	long double mid;
 	long double side;
-	
+
 	leftgain *= mastergain;
 	rightgain *= mastergain;
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -180,7 +180,7 @@ void HermeTrim::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		mid = inputSampleL + inputSampleR;
 		side = inputSampleL - inputSampleR;
 		mid *= midgain;
@@ -188,7 +188,7 @@ void HermeTrim::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		inputSampleL = (mid+side) * leftgain;
 		inputSampleR = (mid-side) * rightgain;
 		//contains mastergain and the gain trim fixing the mid/side
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -208,10 +208,10 @@ void HermeTrim::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;

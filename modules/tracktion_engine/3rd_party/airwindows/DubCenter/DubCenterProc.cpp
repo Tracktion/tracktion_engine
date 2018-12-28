@@ -7,7 +7,7 @@
 #include "DubCenter.h"
 #endif
 
-void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -45,8 +45,8 @@ void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	double dry = 1.0-wet;
 	double glitch = 0.60;
 	double tempSample;
-	
-    
+
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -56,7 +56,7 @@ void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -71,7 +71,7 @@ void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -86,11 +86,11 @@ void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
-		
+
 		// here's the plan.
 		// Grind Boost
 		// Grind Output Level
@@ -102,7 +102,7 @@ void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		// Sub Voicing
 		// Sub Output Level
 		// Dry/Wet
-		
+
 		oscGate += fabs((inputSampleL + inputSampleR) * 5.0);
 		oscGate -= 0.001;
 		if (oscGate > 1.0) oscGate = 1.0;
@@ -111,8 +111,8 @@ void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		clamp = 1.0-oscGate;
 		clamp *= 0.00001;
 		//set up the thing to choke off oscillations- belt and suspenders affair
-		
-		
+
+
 		if (flip)
 		{
 			tempSample = inputSampleL;
@@ -123,7 +123,7 @@ void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			iirDriveSampleEL = (iirDriveSampleEL * (1 - iirAmount)) + (inputSampleL * iirAmount);
 			inputSampleL -= iirDriveSampleEL;
 			ataLowpassL = tempSample - inputSampleL;
-			
+
 			tempSample = inputSampleR;
 			iirDriveSampleAR = (iirDriveSampleAR * (1 - iirAmount)) + (inputSampleR * iirAmount);
 			inputSampleR -= iirDriveSampleAR;
@@ -143,7 +143,7 @@ void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			iirDriveSampleFL = (iirDriveSampleFL * (1 - iirAmount)) + (inputSampleL * iirAmount);
 			inputSampleL -= iirDriveSampleFL;
 			ataLowpassL = tempSample - inputSampleL;
-			
+
 			tempSample = inputSampleR;
 			iirDriveSampleBR = (iirDriveSampleBR * (1 - iirAmount)) + (inputSampleR * iirAmount);
 			inputSampleR -= iirDriveSampleBR;
@@ -154,12 +154,12 @@ void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			ataLowpassR = tempSample - inputSampleR;
 		}
 		//highpass section
-		
+
 		if (inputSampleL > 1.0) {inputSampleL = 1.0;}
 		if (inputSampleL < -1.0) {inputSampleL = -1.0;}
 		if (inputSampleR > 1.0) {inputSampleR = 1.0;}
 		if (inputSampleR < -1.0) {inputSampleR = -1.0;}
-		
+
 		out = driveone;
 		while (out > glitch)
 		{
@@ -170,8 +170,8 @@ void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		//that's taken care of the really high gain stuff
 		inputSampleL -= (inputSampleL * (fabs(inputSampleL) * out) * (fabs(inputSampleL) * out) );
 		inputSampleL *= (1.0+out);
-		
-		
+
+
 		out = driveone;
 		while (out > glitch)
 		{
@@ -182,9 +182,9 @@ void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		//that's taken care of the really high gain stuff
 		inputSampleR -= (inputSampleR * (fabs(inputSampleR) * out) * (fabs(inputSampleR) * out) );
 		inputSampleR *= (1.0+out);
-		
+
 		ataLowpass = (ataLowpassL + ataLowpassR) / 2.0;
-		
+
 		if (ataLowpass > 0)
 		{if (WasNegative){SubOctave = !SubOctave;} WasNegative = false;}
 		else {WasNegative = true;}
@@ -193,7 +193,7 @@ void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		invrandy = (1.0-randy);
 		randy /= 2.0;
 		//set up the noise
-		
+
 		iirSampleA = (iirSampleA * altBmount) + (ataLowpass * iirBmount); ataLowpass -= iirSampleA;
 		iirSampleB = (iirSampleB * altBmount) + (ataLowpass * iirBmount); ataLowpass -= iirSampleB;
 		iirSampleC = (iirSampleC * altBmount) + (ataLowpass * iirBmount); ataLowpass -= iirSampleC;
@@ -216,10 +216,10 @@ void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		iirSampleT = (iirSampleT * altBmount) + (ataLowpass * iirBmount); ataLowpass -= iirSampleT;
 		iirSampleU = (iirSampleU * altBmount) + (ataLowpass * iirBmount); ataLowpass -= iirSampleU;
 		iirSampleV = (iirSampleV * altBmount) + (ataLowpass * iirBmount); ataLowpass -= iirSampleV;
-		
+
 		switch (bflip)
 		{
-			case 1:				
+			case 1:
 				iirHeadBumpA += (ataLowpass * BassGain);
 				iirHeadBumpA -= (iirHeadBumpA * iirHeadBumpA * iirHeadBumpA * HeadBumpFreq);
 				iirHeadBumpA = (invrandy * iirHeadBumpA) + (randy * iirHeadBumpB) + (randy * iirHeadBumpC);
@@ -244,19 +244,19 @@ void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				HeadBump = iirHeadBumpC;
 				break;
 		}
-		
+
 		iirSampleW = (iirSampleW * altBmount) + (HeadBump * iirBmount); HeadBump -= iirSampleW;
 		iirSampleX = (iirSampleX * altBmount) + (HeadBump * iirBmount); HeadBump -= iirSampleX;
-		
+
 		SubBump = HeadBump;
 		iirSampleY = (iirSampleY * altCmount) + (SubBump * iirCmount); SubBump -= iirSampleY;
-		
+
 		SubBump = fabs(SubBump);
 		if (SubOctave == false) {SubBump = -SubBump;}
-		
+
 		switch (bflip)
 		{
-			case 1:				
+			case 1:
 				iirSubBumpA += (SubBump * SubGain);
 				iirSubBumpA -= (iirSubBumpA * iirSubBumpA * iirSubBumpA * SubBumpFreq);
 				iirSubBumpA = (invrandy * iirSubBumpA) + (randy * iirSubBumpB) + (randy * iirSubBumpC);
@@ -281,31 +281,31 @@ void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				SubBump = iirSubBumpC;
 				break;
 		}
-		
+
 		iirSampleZ = (iirSampleZ * altCmount) + (SubBump * iirCmount); SubBump -= iirSampleZ;
-		
+
 		inputSampleL *= driveoutput; //start with the drive section then add lows and subs
 		inputSampleR *= driveoutput; //start with the drive section then add lows and subs
-		
+
 		inputSampleL += ((HeadBump + lastHeadBump) * BassOutGain);
 		inputSampleL += ((SubBump + lastSubBump) * SubOutGain);
-		
+
 		inputSampleR += ((HeadBump + lastHeadBump) * BassOutGain);
 		inputSampleR += ((SubBump + lastSubBump) * SubOutGain);
-		
+
 		lastHeadBump = HeadBump;
 		lastSubBump = SubBump;
-		
+
 		if (wet != 1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
 		//Dry/Wet control, defaults to the last slider
-		
+
 		flip = !flip;
 		bflip++;
 		if (bflip < 1 || bflip > 3) bflip = 1;
-		
+
 		//noise shaping to 32-bit floating point
 		float fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -318,7 +318,7 @@ void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -332,10 +332,10 @@ void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }
 
-void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -345,7 +345,7 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double driveone = pow(A*3.0,2);
 	double driveoutput = (B*2.0)-1.0;
 	double iirAmount = ((C*0.33)+0.1)/overallscale;
@@ -373,7 +373,7 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	double dry = 1.0-wet;
 	double glitch = 0.60;
 	double tempSample;
-	
+
 	while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -383,7 +383,7 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -398,7 +398,7 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -413,11 +413,11 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
-		
+
 		// here's the plan.
 		// Grind Boost
 		// Grind Output Level
@@ -429,7 +429,7 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		// Sub Voicing
 		// Sub Output Level
 		// Dry/Wet
-		
+
 		oscGate += fabs((inputSampleL + inputSampleR) * 5.0);
 		oscGate -= 0.001;
 		if (oscGate > 1.0) oscGate = 1.0;
@@ -438,8 +438,8 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		clamp = 1.0-oscGate;
 		clamp *= 0.00001;
 		//set up the thing to choke off oscillations- belt and suspenders affair
-		
-		
+
+
 		if (flip)
 		{
 			tempSample = inputSampleL;
@@ -450,7 +450,7 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			iirDriveSampleEL = (iirDriveSampleEL * (1 - iirAmount)) + (inputSampleL * iirAmount);
 			inputSampleL -= iirDriveSampleEL;
 			ataLowpassL = tempSample - inputSampleL;
-			
+
 			tempSample = inputSampleR;
 			iirDriveSampleAR = (iirDriveSampleAR * (1 - iirAmount)) + (inputSampleR * iirAmount);
 			inputSampleR -= iirDriveSampleAR;
@@ -470,7 +470,7 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			iirDriveSampleFL = (iirDriveSampleFL * (1 - iirAmount)) + (inputSampleL * iirAmount);
 			inputSampleL -= iirDriveSampleFL;
 			ataLowpassL = tempSample - inputSampleL;
-			
+
 			tempSample = inputSampleR;
 			iirDriveSampleBR = (iirDriveSampleBR * (1 - iirAmount)) + (inputSampleR * iirAmount);
 			inputSampleR -= iirDriveSampleBR;
@@ -481,12 +481,12 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			ataLowpassR = tempSample - inputSampleR;
 		}
 		//highpass section
-		
+
 		if (inputSampleL > 1.0) {inputSampleL = 1.0;}
 		if (inputSampleL < -1.0) {inputSampleL = -1.0;}
 		if (inputSampleR > 1.0) {inputSampleR = 1.0;}
 		if (inputSampleR < -1.0) {inputSampleR = -1.0;}
-		
+
 		out = driveone;
 		while (out > glitch)
 		{
@@ -497,8 +497,8 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		//that's taken care of the really high gain stuff
 		inputSampleL -= (inputSampleL * (fabs(inputSampleL) * out) * (fabs(inputSampleL) * out) );
 		inputSampleL *= (1.0+out);
-		
-		
+
+
 		out = driveone;
 		while (out > glitch)
 		{
@@ -509,9 +509,9 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		//that's taken care of the really high gain stuff
 		inputSampleR -= (inputSampleR * (fabs(inputSampleR) * out) * (fabs(inputSampleR) * out) );
 		inputSampleR *= (1.0+out);
-		
+
 		ataLowpass = (ataLowpassL + ataLowpassR) / 2.0;
-		
+
 		if (ataLowpass > 0)
 		{if (WasNegative){SubOctave = !SubOctave;} WasNegative = false;}
 		else {WasNegative = true;}
@@ -520,7 +520,7 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		invrandy = (1.0-randy);
 		randy /= 2.0;
 		//set up the noise
-		
+
 		iirSampleA = (iirSampleA * altBmount) + (ataLowpass * iirBmount); ataLowpass -= iirSampleA;
 		iirSampleB = (iirSampleB * altBmount) + (ataLowpass * iirBmount); ataLowpass -= iirSampleB;
 		iirSampleC = (iirSampleC * altBmount) + (ataLowpass * iirBmount); ataLowpass -= iirSampleC;
@@ -543,10 +543,10 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		iirSampleT = (iirSampleT * altBmount) + (ataLowpass * iirBmount); ataLowpass -= iirSampleT;
 		iirSampleU = (iirSampleU * altBmount) + (ataLowpass * iirBmount); ataLowpass -= iirSampleU;
 		iirSampleV = (iirSampleV * altBmount) + (ataLowpass * iirBmount); ataLowpass -= iirSampleV;
-		
+
 		switch (bflip)
 		{
-			case 1:				
+			case 1:
 				iirHeadBumpA += (ataLowpass * BassGain);
 				iirHeadBumpA -= (iirHeadBumpA * iirHeadBumpA * iirHeadBumpA * HeadBumpFreq);
 				iirHeadBumpA = (invrandy * iirHeadBumpA) + (randy * iirHeadBumpB) + (randy * iirHeadBumpC);
@@ -571,19 +571,19 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				HeadBump = iirHeadBumpC;
 				break;
 		}
-		
+
 		iirSampleW = (iirSampleW * altBmount) + (HeadBump * iirBmount); HeadBump -= iirSampleW;
 		iirSampleX = (iirSampleX * altBmount) + (HeadBump * iirBmount); HeadBump -= iirSampleX;
-		
+
 		SubBump = HeadBump;
 		iirSampleY = (iirSampleY * altCmount) + (SubBump * iirCmount); SubBump -= iirSampleY;
-		
+
 		SubBump = fabs(SubBump);
 		if (SubOctave == false) {SubBump = -SubBump;}
-		
+
 		switch (bflip)
 		{
-			case 1:				
+			case 1:
 				iirSubBumpA += (SubBump * SubGain);
 				iirSubBumpA -= (iirSubBumpA * iirSubBumpA * iirSubBumpA * SubBumpFreq);
 				iirSubBumpA = (invrandy * iirSubBumpA) + (randy * iirSubBumpB) + (randy * iirSubBumpC);
@@ -608,31 +608,31 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				SubBump = iirSubBumpC;
 				break;
 		}
-		
+
 		iirSampleZ = (iirSampleZ * altCmount) + (SubBump * iirCmount); SubBump -= iirSampleZ;
-		
+
 		inputSampleL *= driveoutput; //start with the drive section then add lows and subs
 		inputSampleR *= driveoutput; //start with the drive section then add lows and subs
-		
+
 		inputSampleL += ((HeadBump + lastHeadBump) * BassOutGain);
 		inputSampleL += ((SubBump + lastSubBump) * SubOutGain);
-		
+
 		inputSampleR += ((HeadBump + lastHeadBump) * BassOutGain);
 		inputSampleR += ((SubBump + lastSubBump) * SubOutGain);
-		
+
 		lastHeadBump = HeadBump;
 		lastSubBump = SubBump;
-		
+
 		if (wet != 1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
 		//Dry/Wet control, defaults to the last slider
-		
+
 		flip = !flip;
 		bflip++;
 		if (bflip < 1 || bflip > 3) bflip = 1;
-		
+
 		//noise shaping to 64-bit floating point
 		double fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -645,7 +645,7 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -659,5 +659,5 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }

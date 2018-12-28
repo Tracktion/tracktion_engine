@@ -7,7 +7,7 @@
 #include "Drive.h"
 #endif
 
-void Drive::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Drive::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -17,7 +17,7 @@ void Drive::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double driveone = pow(A*2.0,2);
 	double iirAmount = pow(B,3)/overallscale;
 	double output = C;
@@ -25,16 +25,16 @@ void Drive::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	double dry = 1.0-wet;
 	double glitch = 0.60;
 	double out;
-	
+
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
 	long double drySampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -79,7 +79,7 @@ void Drive::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		if (fpFlip)
 		{
 			iirSampleAL = (iirSampleAL * (1.0 - iirAmount)) + (inputSampleL * iirAmount);
@@ -95,13 +95,13 @@ void Drive::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 			inputSampleR -= iirSampleBR;
 		}
 		//highpass section
-		
-		
+
+
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
-		
+
 		out = driveone;
 		while (out > glitch)
 		{
@@ -112,12 +112,12 @@ void Drive::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 			inputSampleR *= (1.0+glitch);
 		}
 		//that's taken care of the really high gain stuff
-		
+
 		inputSampleL -= (inputSampleL * (fabs(inputSampleL) * out) * (fabs(inputSampleL) * out) );
 		inputSampleL *= (1.0+out);
 		inputSampleR -= (inputSampleR * (fabs(inputSampleR) * out) * (fabs(inputSampleR) * out) );
 		inputSampleR *= (1.0+out);
-		
+
 		if (output < 1.0) {
 			inputSampleL *= output;
 			inputSampleR *= output;
@@ -128,7 +128,7 @@ void Drive::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		}
 		//nice little output stage template: if we have another scale of floating point
 		//number, we really don't want to meaninglessly multiply that by 1.0.
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -159,7 +159,7 @@ void Drive::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
     }
 }
 
-void Drive::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Drive::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -169,7 +169,7 @@ void Drive::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double driveone = pow(A*2.0,2);
 	double iirAmount = pow(B,3)/overallscale;
 	double output = C;
@@ -177,16 +177,16 @@ void Drive::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	double dry = 1.0-wet;
 	double glitch = 0.60;
 	double out;
-	
+
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
 	long double drySampleR;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -231,7 +231,7 @@ void Drive::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		if (fpFlip)
 		{
 			iirSampleAL = (iirSampleAL * (1.0 - iirAmount)) + (inputSampleL * iirAmount);
@@ -247,13 +247,13 @@ void Drive::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 			inputSampleR -= iirSampleBR;
 		}
 		//highpass section
-		
-		
+
+
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
-		
+
 		out = driveone;
 		while (out > glitch)
 		{
@@ -264,12 +264,12 @@ void Drive::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 			inputSampleR *= (1.0+glitch);
 		}
 		//that's taken care of the really high gain stuff
-		
+
 		inputSampleL -= (inputSampleL * (fabs(inputSampleL) * out) * (fabs(inputSampleL) * out) );
 		inputSampleL *= (1.0+out);
 		inputSampleR -= (inputSampleR * (fabs(inputSampleR) * out) * (fabs(inputSampleR) * out) );
 		inputSampleR *= (1.0+out);
-		
+
 		if (output < 1.0) {
 			inputSampleL *= output;
 			inputSampleR *= output;
@@ -280,7 +280,7 @@ void Drive::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		}
 		//nice little output stage template: if we have another scale of floating point
 		//number, we really don't want to meaninglessly multiply that by 1.0.
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

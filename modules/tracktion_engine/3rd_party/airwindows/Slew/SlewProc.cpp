@@ -1,6 +1,6 @@
 /* ========================================
  *  Slew - Slew.h
- *  Created 8/12/11 by SPIAdmin 
+ *  Created 8/12/11 by SPIAdmin
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
@@ -8,7 +8,7 @@
 #include "Slew.h"
 #endif
 
-void Slew::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Slew::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -18,17 +18,17 @@ void Slew::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double inputSampleL;
 	double inputSampleR;
 	double outputSampleL;
 	double outputSampleR;
-	
+
 	double clamp;
 	double threshold = pow((1-gain),4)/overallscale;
 
 
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -87,7 +87,7 @@ void Slew::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 		if (-clamp > threshold)
 			outputSampleR = lastSampleR - threshold;
 		lastSampleR = outputSampleR;
-		
+
 		*out1 = outputSampleL;
 		*out2 = outputSampleR;
 
@@ -98,7 +98,7 @@ void Slew::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
     }
 }
 
-void Slew::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Slew::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -110,7 +110,7 @@ void Slew::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 	overallscale *= getSampleRate();
 
 	double inputSampleL;
-	double inputSampleR;    
+	double inputSampleR;
 	double outputSampleL;
 	double outputSampleR;
 
@@ -168,7 +168,7 @@ void Slew::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		if (-clamp > threshold)
 			outputSampleL = lastSampleL - threshold;
 		lastSampleL = outputSampleL;
-		
+
 		clamp = inputSampleR - lastSampleR;
 		outputSampleR = inputSampleR;
 		if (clamp > threshold)
@@ -176,7 +176,7 @@ void Slew::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		if (-clamp > threshold)
 			outputSampleR = lastSampleR - threshold;
 		lastSampleR = outputSampleR;
-		
+
 		*out1 = outputSampleL;
 		*out2 = outputSampleR;
 

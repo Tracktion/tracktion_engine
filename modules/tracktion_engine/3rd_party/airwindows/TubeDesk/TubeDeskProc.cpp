@@ -7,7 +7,7 @@
 #include "TubeDesk.h"
 #endif
 
-void TubeDesk::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void TubeDesk::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -19,19 +19,19 @@ void TubeDesk::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	overallscale *= getSampleRate();
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	double intensity = 0.4384938;
 	double depthA = 549.0;
 	int offsetA = (int)(depthA * overallscale);
 	if (offsetA < 1) offsetA = 1;
 	if (offsetA > 2440) offsetA = 2440;
-	
+
 	double clamp;
 	double thickness;
 	double out;
 	double gain = 0.5;
-	double slewgain = 0.128;	
+	double slewgain = 0.128;
 	double prevslew = 0.105;
 	double balanceB = 0.0001;
 	slewgain *= overallscale;
@@ -41,12 +41,12 @@ void TubeDesk::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	double slew;
 	double bridgerectifier;
 	double combSample;
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
 	long double drySampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -91,10 +91,10 @@ void TubeDesk::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
-		
+
+
 		if (gcount < 0 || gcount > 2450) {gcount = 2450;}
-		
+
 		//begin L
 		dL[gcount+2450] = dL[gcount] = fabs(inputSampleL)*intensity;
 		controlL += (dL[gcount] / offsetA);
@@ -106,7 +106,7 @@ void TubeDesk::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		if (clamp < 0.5) {clamp = 0.5;}
 		//control = 0 to 1
 		thickness = ((1.0 - controlL) * 2.0) - 1.0;
-		out = fabs(thickness);		
+		out = fabs(thickness);
 		bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		//max value for sine function
@@ -157,7 +157,7 @@ void TubeDesk::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		if (clamp < 0.5) {clamp = 0.5;}
 		//control = 0 to 1
 		thickness = ((1.0 - controlR) * 2.0) - 1.0;
-		out = fabs(thickness);		
+		out = fabs(thickness);
 		bridgerectifier = fabs(inputSampleR);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		//max value for sine function
@@ -196,9 +196,9 @@ void TubeDesk::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		inputSampleR /= gain;
 		//end of Desk section
 		//end R
-		
+
 		gcount--;
-				
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -229,7 +229,7 @@ void TubeDesk::processReplacing(float **inputs, float **outputs, VstInt32 sample
     }
 }
 
-void TubeDesk::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void TubeDesk::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -241,19 +241,19 @@ void TubeDesk::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	overallscale *= getSampleRate();
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double intensity = 0.4384938;
 	double depthA = 549.0;
 	int offsetA = (int)(depthA * overallscale);
 	if (offsetA < 1) offsetA = 1;
 	if (offsetA > 2440) offsetA = 2440;
-	
+
 	double clamp;
 	double thickness;
 	double out;
 	double gain = 0.5;
-	double slewgain = 0.128;	
+	double slewgain = 0.128;
 	double prevslew = 0.105;
 	double balanceB = 0.0001;
 	slewgain *= overallscale;
@@ -263,12 +263,12 @@ void TubeDesk::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	double slew;
 	double bridgerectifier;
 	double combSample;
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
 	long double drySampleR;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -313,10 +313,10 @@ void TubeDesk::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
-		
+
+
 		if (gcount < 0 || gcount > 2450) {gcount = 2450;}
-		
+
 		//begin L
 		dL[gcount+2450] = dL[gcount] = fabs(inputSampleL)*intensity;
 		controlL += (dL[gcount] / offsetA);
@@ -328,7 +328,7 @@ void TubeDesk::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		if (clamp < 0.5) {clamp = 0.5;}
 		//control = 0 to 1
 		thickness = ((1.0 - controlL) * 2.0) - 1.0;
-		out = fabs(thickness);		
+		out = fabs(thickness);
 		bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		//max value for sine function
@@ -367,7 +367,7 @@ void TubeDesk::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		inputSampleL /= gain;
 		//end of Desk section
 		//end L
-		
+
 		//begin R
 		dR[gcount+2450] = dR[gcount] = fabs(inputSampleR)*intensity;
 		controlR += (dR[gcount] / offsetA);
@@ -379,7 +379,7 @@ void TubeDesk::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		if (clamp < 0.5) {clamp = 0.5;}
 		//control = 0 to 1
 		thickness = ((1.0 - controlR) * 2.0) - 1.0;
-		out = fabs(thickness);		
+		out = fabs(thickness);
 		bridgerectifier = fabs(inputSampleR);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		//max value for sine function
@@ -418,9 +418,9 @@ void TubeDesk::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		inputSampleR /= gain;
 		//end of Desk section
 		//end R
-		
+
 		gcount--;
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

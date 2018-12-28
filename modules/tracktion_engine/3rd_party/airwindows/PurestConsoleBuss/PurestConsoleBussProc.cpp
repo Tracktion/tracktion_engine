@@ -7,7 +7,7 @@
 #include "PurestConsoleBuss.h"
 #endif
 
-void PurestConsoleBuss::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void PurestConsoleBuss::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -16,11 +16,11 @@ void PurestConsoleBuss::processReplacing(float **inputs, float **outputs, VstInt
 
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -63,17 +63,17 @@ void PurestConsoleBuss::processReplacing(float **inputs, float **outputs, VstInt
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
 		//without this, you can get a NaN condition where it spits out DC offset at full blast!
-		
+
 		inputSampleL = asin(inputSampleL);
 		inputSampleR = asin(inputSampleR);
 		//amplitude aspect
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -104,7 +104,7 @@ void PurestConsoleBuss::processReplacing(float **inputs, float **outputs, VstInt
     }
 }
 
-void PurestConsoleBuss::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void PurestConsoleBuss::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -113,8 +113,8 @@ void PurestConsoleBuss::processDoubleReplacing(double **inputs, double **outputs
 
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	long double inputSampleL;
 	long double inputSampleR;
 
@@ -160,17 +160,17 @@ void PurestConsoleBuss::processDoubleReplacing(double **inputs, double **outputs
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
 		//without this, you can get a NaN condition where it spits out DC offset at full blast!
-		
+
 		inputSampleL = asin(inputSampleL);
 		inputSampleR = asin(inputSampleR);
 		//amplitude aspect
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -190,7 +190,7 @@ void PurestConsoleBuss::processDoubleReplacing(double **inputs, double **outputs
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

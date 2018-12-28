@@ -7,7 +7,7 @@
 #include "Hermepass.h"
 #endif
 
-void Hermepass::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Hermepass::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -20,15 +20,15 @@ void Hermepass::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
 	long double fpNew = 1.0 - fpOld;
-	
+
 	double rangescale = 0.1 / overallscale;
-	
+
 	double cutoff = pow(A,3);
 	double slope = pow(B,3) * 6.0;
-	
+
 	double newA = cutoff * rangescale;
 	double newB = newA; //other part of interleaved IIR is the same
-	
+
 	double newC = cutoff * rangescale; //first extra pole is the same
 	cutoff = (cutoff * fpOld) + (0.00001 * fpNew);
 	double newD = cutoff * rangescale;
@@ -41,7 +41,7 @@ void Hermepass::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	cutoff = (cutoff * fpOld) + (0.00001 * fpNew);
 	double newH = cutoff * rangescale;
 	//converge toward the unvarying fixed cutoff value
-	
+
 	double oldA = 1.0 - newA;
 	double oldB = 1.0 - newB;
 	double oldC = 1.0 - newC;
@@ -50,14 +50,14 @@ void Hermepass::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	double oldF = 1.0 - newF;
 	double oldG = 1.0 - newG;
 	double oldH = 1.0 - newH;
-	
+
 	double polesC;
 	double polesD;
 	double polesE;
 	double polesF;
 	double polesG;
 	double polesH;
-	
+
 	polesC = slope; if (slope > 1.0) polesC = 1.0; slope -= 1.0; if (slope < 0.0) slope = 0.0;
 	polesD = slope; if (slope > 1.0) polesD = 1.0; slope -= 1.0; if (slope < 0.0) slope = 0.0;
 	polesE = slope; if (slope > 1.0) polesE = 1.0; slope -= 1.0; if (slope < 0.0) slope = 0.0;
@@ -65,13 +65,13 @@ void Hermepass::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	polesG = slope; if (slope > 1.0) polesG = 1.0; slope -= 1.0; if (slope < 0.0) slope = 0.0;
 	polesH = slope; if (slope > 1.0) polesH = 1.0; slope -= 1.0; if (slope < 0.0) slope = 0.0;
 	//each one will either be 0.0, the fractional slope value, or 1
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 	double tempSampleL;
 	double tempSampleR;
 	double correction;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -131,7 +131,7 @@ void Hermepass::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		iirGL = (iirGL * oldG) + (tempSampleL * newG); tempSampleL -= iirGL;
 		iirHL = (iirHL * oldH) + (tempSampleL * newH); tempSampleL -= iirHL;
 		//set up all the iir filters in case they are used
-		
+
 		if (polesC == 1.0) correction += iirCL; if (polesC > 0.0 && polesC < 1.0) correction += (iirCL * polesC);
 		if (polesD == 1.0) correction += iirDL; if (polesD > 0.0 && polesD < 1.0) correction += (iirDL * polesD);
 		if (polesE == 1.0) correction += iirEL; if (polesE > 0.0 && polesE < 1.0) correction += (iirEL * polesE);
@@ -143,10 +143,10 @@ void Hermepass::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		//the purpose is to do all the math at the floating point exponent nearest to the tiny value in use.
 		//also, it's formatted that way to easily substitute the next variable: this could be written as a loop
 		//with everything an array value. However, this makes just as much sense for this few poles.
-		
+
 		inputSampleL -= correction;
 		//end L channel
-		
+
 		//begin R channel
 		if (fpFlip) {
 			iirAR = (iirAR * oldA) + (tempSampleR * newA); tempSampleR -= iirAR; correction = iirAR;
@@ -160,7 +160,7 @@ void Hermepass::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		iirGR = (iirGR * oldG) + (tempSampleR * newG); tempSampleR -= iirGR;
 		iirHR = (iirHR * oldH) + (tempSampleR * newH); tempSampleR -= iirHR;
 		//set up all the iir filters in case they are used
-		
+
 		if (polesC == 1.0) correction += iirCR; if (polesC > 0.0 && polesC < 1.0) correction += (iirCR * polesC);
 		if (polesD == 1.0) correction += iirDR; if (polesD > 0.0 && polesD < 1.0) correction += (iirDR * polesD);
 		if (polesE == 1.0) correction += iirER; if (polesE > 0.0 && polesE < 1.0) correction += (iirER * polesE);
@@ -172,7 +172,7 @@ void Hermepass::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		//the purpose is to do all the math at the floating point exponent nearest to the tiny value in use.
 		//also, it's formatted that way to easily substitute the next variable: this could be written as a loop
 		//with everything an array value. However, this makes just as much sense for this few poles.
-		
+
 		inputSampleR -= correction;
 		//end R channel
 
@@ -206,7 +206,7 @@ void Hermepass::processReplacing(float **inputs, float **outputs, VstInt32 sampl
     }
 }
 
-void Hermepass::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Hermepass::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -218,16 +218,16 @@ void Hermepass::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	overallscale *= getSampleRate();
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double rangescale = 0.1 / overallscale;
-	
+
 	double cutoff = pow(A,3);
 	double slope = pow(B,3) * 6.0;
-	
+
 	double newA = cutoff * rangescale;
 	double newB = newA; //other part of interleaved IIR is the same
-	
+
 	double newC = cutoff * rangescale; //first extra pole is the same
 	cutoff = (cutoff * fpOld) + (0.00001 * fpNew);
 	double newD = cutoff * rangescale;
@@ -240,7 +240,7 @@ void Hermepass::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	cutoff = (cutoff * fpOld) + (0.00001 * fpNew);
 	double newH = cutoff * rangescale;
 	//converge toward the unvarying fixed cutoff value
-	
+
 	double oldA = 1.0 - newA;
 	double oldB = 1.0 - newB;
 	double oldC = 1.0 - newC;
@@ -249,14 +249,14 @@ void Hermepass::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	double oldF = 1.0 - newF;
 	double oldG = 1.0 - newG;
 	double oldH = 1.0 - newH;
-	
+
 	double polesC;
 	double polesD;
 	double polesE;
 	double polesF;
 	double polesG;
 	double polesH;
-	
+
 	polesC = slope; if (slope > 1.0) polesC = 1.0; slope -= 1.0; if (slope < 0.0) slope = 0.0;
 	polesD = slope; if (slope > 1.0) polesD = 1.0; slope -= 1.0; if (slope < 0.0) slope = 0.0;
 	polesE = slope; if (slope > 1.0) polesE = 1.0; slope -= 1.0; if (slope < 0.0) slope = 0.0;
@@ -264,7 +264,7 @@ void Hermepass::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	polesG = slope; if (slope > 1.0) polesG = 1.0; slope -= 1.0; if (slope < 0.0) slope = 0.0;
 	polesH = slope; if (slope > 1.0) polesH = 1.0; slope -= 1.0; if (slope < 0.0) slope = 0.0;
 	//each one will either be 0.0, the fractional slope value, or 1
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 	double tempSampleL;
@@ -313,10 +313,10 @@ void Hermepass::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		tempSampleL = inputSampleL;
 		tempSampleR = inputSampleR;
-		
+
 		//begin L channel
 		if (fpFlip) {
 			iirAL = (iirAL * oldA) + (tempSampleL * newA); tempSampleL -= iirAL; correction = iirAL;
@@ -330,7 +330,7 @@ void Hermepass::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		iirGL = (iirGL * oldG) + (tempSampleL * newG); tempSampleL -= iirGL;
 		iirHL = (iirHL * oldH) + (tempSampleL * newH); tempSampleL -= iirHL;
 		//set up all the iir filters in case they are used
-		
+
 		if (polesC == 1.0) correction += iirCL; if (polesC > 0.0 && polesC < 1.0) correction += (iirCL * polesC);
 		if (polesD == 1.0) correction += iirDL; if (polesD > 0.0 && polesD < 1.0) correction += (iirDL * polesD);
 		if (polesE == 1.0) correction += iirEL; if (polesE > 0.0 && polesE < 1.0) correction += (iirEL * polesE);
@@ -342,10 +342,10 @@ void Hermepass::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		//the purpose is to do all the math at the floating point exponent nearest to the tiny value in use.
 		//also, it's formatted that way to easily substitute the next variable: this could be written as a loop
 		//with everything an array value. However, this makes just as much sense for this few poles.
-		
+
 		inputSampleL -= correction;
 		//end L channel
-		
+
 		//begin R channel
 		if (fpFlip) {
 			iirAR = (iirAR * oldA) + (tempSampleR * newA); tempSampleR -= iirAR; correction = iirAR;
@@ -359,7 +359,7 @@ void Hermepass::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		iirGR = (iirGR * oldG) + (tempSampleR * newG); tempSampleR -= iirGR;
 		iirHR = (iirHR * oldH) + (tempSampleR * newH); tempSampleR -= iirHR;
 		//set up all the iir filters in case they are used
-		
+
 		if (polesC == 1.0) correction += iirCR; if (polesC > 0.0 && polesC < 1.0) correction += (iirCR * polesC);
 		if (polesD == 1.0) correction += iirDR; if (polesD > 0.0 && polesD < 1.0) correction += (iirDR * polesD);
 		if (polesE == 1.0) correction += iirER; if (polesE > 0.0 && polesE < 1.0) correction += (iirER * polesE);
@@ -371,10 +371,10 @@ void Hermepass::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		//the purpose is to do all the math at the floating point exponent nearest to the tiny value in use.
 		//also, it's formatted that way to easily substitute the next variable: this could be written as a loop
 		//with everything an array value. However, this makes just as much sense for this few poles.
-		
+
 		inputSampleR -= correction;
 		//end R channel
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

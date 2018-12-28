@@ -7,7 +7,7 @@
 #include "Righteous4.h"
 #endif
 
-void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -39,7 +39,7 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	double softness = 0.2135;
 	double hardness = 1.0 - softness;
 	double refclip = pow(10.0,-0.0058888);
-    
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -87,14 +87,14 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		//begin the whole distortion dealiebop
 		inputSampleL /= target;
 		inputSampleR /= target;
-		
+
 		//running shortbuss on direct sample
 		IIRsampleL *= IIRscaleback;
 		double secondharmonicL = sin((2.0 * inputSampleL * inputSampleL) * IIRsampleL);
 		IIRsampleR *= IIRscaleback;
 		double secondharmonicR = sin((2.0 * inputSampleR * inputSampleR) * IIRsampleR);
 		//secondharmonic is calculated before IIRsample is updated, to delay reaction
-		
+
 		long double bridgerectifier = inputSampleL;
 		if (bridgerectifier > 1.2533141373155) bridgerectifier = 1.2533141373155;
 		if (bridgerectifier < -1.2533141373155) bridgerectifier = -1.2533141373155;
@@ -105,7 +105,7 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		//manipulate IIRSampleL
 		inputSampleL = bridgerectifier;
 		//apply the distortion transform for reals. Has been converted back to -1/1
-		
+
 		bridgerectifier = inputSampleR;
 		if (bridgerectifier > 1.2533141373155) bridgerectifier = 1.2533141373155;
 		if (bridgerectifier < -1.2533141373155) bridgerectifier = -1.2533141373155;
@@ -116,8 +116,8 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		//manipulate IIRSampleR
 		inputSampleR = bridgerectifier;
 		//apply the distortion transform for reals. Has been converted back to -1/1
-		
-		
+
+
 		//apply resonant highpass L
 		double tempSample = inputSampleL;
 		leftSampleA = (leftSampleA * midaltAmount) + (tempSample * midAmount); tempSample -= leftSampleA; double correction = leftSampleA;
@@ -149,7 +149,7 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		correction *= fabs(secondharmonicL);
 		//scale it directly by second harmonic: DC block is now adding harmonics too
 		correction -= secondharmonicL*fpOld;
-		//apply the shortbuss processing to output DCblock by subtracting it 
+		//apply the shortbuss processing to output DCblock by subtracting it
 		//we are not a peak limiter! not using it to clip or nothin'
 		//adding it inversely, it's the same as adding to inputsample only we are accumulating 'stuff' in 'correction'
 		inputSampleL -= correction;
@@ -165,8 +165,8 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		tempSample *= gwAfactor;
 		tempSample += (gwBL * gwBfactor);
 		correction = (inputSampleL-gwPrevL) - tempSample;
-		gwPrevL = inputSampleL;		
-		inputSampleL -= correction;		
+		gwPrevL = inputSampleL;
+		inputSampleL -= correction;
 		//simplified Groove Wear L
 
 		//apply resonant highpass R
@@ -200,7 +200,7 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		correction *= fabs(secondharmonicR);
 		//scale it directly by second harmonic: DC block is now adding harmonics too
 		correction -= secondharmonicR*fpOld;
-		//apply the shortbuss processing to output DCblock by subtracting it 
+		//apply the shortbuss processing to output DCblock by subtracting it
 		//we are not a peak limiter! not using it to clip or nothin'
 		//adding it inversely, it's the same as adding to inputsample only we are accumulating 'stuff' in 'correction'
 		inputSampleR -= correction;
@@ -216,10 +216,10 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		tempSample *= gwAfactor;
 		tempSample += (gwBR * gwBfactor);
 		correction = (inputSampleR-gwPrevR) - tempSample;
-		gwPrevR = inputSampleR;		
-		inputSampleR -= correction;		
+		gwPrevR = inputSampleR;
+		inputSampleR -= correction;
 		//simplified Groove Wear R
-		
+
 		//begin simplified ADClip L
 		drySampleL = inputSampleL;
 		if (lastSampleL >= refclip)
@@ -230,7 +230,7 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			}
 			else lastSampleL = refclip;
 		}
-		
+
 		if (lastSampleL <= -refclip)
 		{
 			if (inputSampleL > -refclip)
@@ -239,7 +239,7 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			}
 			else lastSampleL = -refclip;
 		}
-		
+
 		if (inputSampleL > refclip)
 		{
 			if (lastSampleL < refclip)
@@ -248,7 +248,7 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			}
 			else inputSampleL = refclip;
 		}
-		
+
 		if (inputSampleL < -refclip)
 		{
 			if (lastSampleL > -refclip)
@@ -269,7 +269,7 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			}
 			else lastSampleR = refclip;
 		}
-		
+
 		if (lastSampleR <= -refclip)
 		{
 			if (inputSampleR > -refclip)
@@ -278,7 +278,7 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			}
 			else lastSampleR = -refclip;
 		}
-		
+
 		if (inputSampleR > refclip)
 		{
 			if (lastSampleR < refclip)
@@ -287,7 +287,7 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			}
 			else inputSampleR = refclip;
 		}
-		
+
 		if (inputSampleR < -refclip)
 		{
 			if (lastSampleR > -refclip)
@@ -297,7 +297,7 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			else inputSampleR = -refclip;
 		}
 		lastSampleR = drySampleR;
-		
+
 		//output dither section
 		if (bitDepth == 3) {
 			//noise shaping to 32-bit floating point
@@ -313,10 +313,10 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			//end noise shaping on 32 bit output
 		} else {
 			//entire Naturalize section used when not on 32 bit out
-			
+
 			inputSampleL -= noiseShapingL;
 			inputSampleR -= noiseShapingR;
-			
+
 			if (bitDepth == 2) {
 				inputSampleL *= 8388608.0; //go to dither at 24 bit
 				inputSampleR *= 8388608.0; //go to dither at 24 bit
@@ -325,7 +325,7 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 				inputSampleL *= 32768.0; //go to dither at 16 bit
 				inputSampleR *= 32768.0; //go to dither at 16 bit
 			}
-			
+
 			//begin L
 			double benfordize = floor(inputSampleL);
 			while (benfordize >= 1.0) {benfordize /= 10;}
@@ -352,7 +352,7 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 				bynL[hotbinA] -= 1;
 			} else {hotbinA = 10;}
 			//produce total number- smaller is closer to Benford real
-			
+
 			benfordize = ceil(inputSampleL);
 			while (benfordize >= 1.0) {benfordize /= 10;}
 			if (benfordize < 1.0) {benfordize *= 10;}
@@ -378,7 +378,7 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 				bynL[hotbinB] -= 1;
 			} else {hotbinB = 10;}
 			//produce total number- smaller is closer to Benford real
-			
+
 			if (totalA < totalB)
 			{
 				bynL[hotbinA] += 1;
@@ -391,7 +391,7 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			}
 			//assign the relevant one to the delay line
 			//and floor/ceil signal accordingly
-			
+
 			totalA = bynL[1] + bynL[2] + bynL[3] + bynL[4] + bynL[5] + bynL[6] + bynL[7] + bynL[8] + bynL[9];
 			totalA /= 1000;
 			if (totalA = 0) totalA = 1;
@@ -406,7 +406,7 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			bynL[9] /= totalA;
 			bynL[10] /= 2; //catchall for garbage data
 			//end L
-			
+
 			//begin R
 			benfordize = floor(inputSampleR);
 			while (benfordize >= 1.0) {benfordize /= 10;}
@@ -433,7 +433,7 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 				bynR[hotbinA] -= 1;
 			} else {hotbinA = 10;}
 			//produce total number- smaller is closer to Benford real
-			
+
 			benfordize = ceil(inputSampleR);
 			while (benfordize >= 1.0) {benfordize /= 10;}
 			if (benfordize < 1.0) {benfordize *= 10;}
@@ -459,7 +459,7 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 				bynR[hotbinB] -= 1;
 			} else {hotbinB = 10;}
 			//produce total number- smaller is closer to Benford real
-			
+
 			if (totalA < totalB)
 			{
 				bynR[hotbinA] += 1;
@@ -472,7 +472,7 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			}
 			//assign the relevant one to the delay line
 			//and floor/ceil signal accordingly
-			
+
 			totalA = bynR[1] + bynR[2] + bynR[3] + bynR[4] + bynR[5] + bynR[6] + bynR[7] + bynR[8] + bynR[9];
 			totalA /= 1000;
 			if (totalA = 0) totalA = 1;
@@ -487,7 +487,7 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			bynR[9] /= totalA;
 			bynR[10] /= 2; //catchall for garbage data
 			//end R
-			
+
 			if (bitDepth == 2) {
 				inputSampleL /= 8388608.0;
 				inputSampleR /= 8388608.0;
@@ -499,17 +499,17 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			noiseShapingL += inputSampleL - drySampleL;
 			noiseShapingR += inputSampleR - drySampleR;
 		}
-		
+
 		if (inputSampleL > refclip) inputSampleL = refclip;
 		if (inputSampleL < -refclip) inputSampleL = -refclip;
 		//iron bar prohibits any overs
 		if (inputSampleR > refclip) inputSampleR = refclip;
 		if (inputSampleR < -refclip) inputSampleR = -refclip;
 		//iron bar prohibits any overs
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;
@@ -520,10 +520,10 @@ void Righteous4::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }
 
-void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -555,7 +555,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	double softness = 0.2135;
 	double hardness = 1.0 - softness;
 	double refclip = pow(10.0,-0.0058888);
-	
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -603,14 +603,14 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		//begin the whole distortion dealiebop
 		inputSampleL /= target;
 		inputSampleR /= target;
-		
+
 		//running shortbuss on direct sample
 		IIRsampleL *= IIRscaleback;
 		double secondharmonicL = sin((2.0 * inputSampleL * inputSampleL) * IIRsampleL);
 		IIRsampleR *= IIRscaleback;
 		double secondharmonicR = sin((2.0 * inputSampleR * inputSampleR) * IIRsampleR);
 		//secondharmonic is calculated before IIRsample is updated, to delay reaction
-		
+
 		long double bridgerectifier = inputSampleL;
 		if (bridgerectifier > 1.2533141373155) bridgerectifier = 1.2533141373155;
 		if (bridgerectifier < -1.2533141373155) bridgerectifier = -1.2533141373155;
@@ -621,7 +621,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		//manipulate IIRSampleL
 		inputSampleL = bridgerectifier;
 		//apply the distortion transform for reals. Has been converted back to -1/1
-		
+
 		bridgerectifier = inputSampleR;
 		if (bridgerectifier > 1.2533141373155) bridgerectifier = 1.2533141373155;
 		if (bridgerectifier < -1.2533141373155) bridgerectifier = -1.2533141373155;
@@ -632,8 +632,8 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		//manipulate IIRSampleR
 		inputSampleR = bridgerectifier;
 		//apply the distortion transform for reals. Has been converted back to -1/1
-		
-		
+
+
 		//apply resonant highpass L
 		double tempSample = inputSampleL;
 		leftSampleA = (leftSampleA * midaltAmount) + (tempSample * midAmount); tempSample -= leftSampleA; double correction = leftSampleA;
@@ -665,7 +665,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		correction *= fabs(secondharmonicL);
 		//scale it directly by second harmonic: DC block is now adding harmonics too
 		correction -= secondharmonicL*fpOld;
-		//apply the shortbuss processing to output DCblock by subtracting it 
+		//apply the shortbuss processing to output DCblock by subtracting it
 		//we are not a peak limiter! not using it to clip or nothin'
 		//adding it inversely, it's the same as adding to inputsample only we are accumulating 'stuff' in 'correction'
 		inputSampleL -= correction;
@@ -681,10 +681,10 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		tempSample *= gwAfactor;
 		tempSample += (gwBL * gwBfactor);
 		correction = (inputSampleL-gwPrevL) - tempSample;
-		gwPrevL = inputSampleL;		
-		inputSampleL -= correction;		
+		gwPrevL = inputSampleL;
+		inputSampleL -= correction;
 		//simplified Groove Wear L
-		
+
 		//apply resonant highpass R
 		tempSample = inputSampleR;
 		rightSampleA = (rightSampleA * midaltAmount) + (tempSample * midAmount); tempSample -= rightSampleA; correction = rightSampleA;
@@ -716,7 +716,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		correction *= fabs(secondharmonicR);
 		//scale it directly by second harmonic: DC block is now adding harmonics too
 		correction -= secondharmonicR*fpOld;
-		//apply the shortbuss processing to output DCblock by subtracting it 
+		//apply the shortbuss processing to output DCblock by subtracting it
 		//we are not a peak limiter! not using it to clip or nothin'
 		//adding it inversely, it's the same as adding to inputsample only we are accumulating 'stuff' in 'correction'
 		inputSampleR -= correction;
@@ -732,10 +732,10 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		tempSample *= gwAfactor;
 		tempSample += (gwBR * gwBfactor);
 		correction = (inputSampleR-gwPrevR) - tempSample;
-		gwPrevR = inputSampleR;		
-		inputSampleR -= correction;		
+		gwPrevR = inputSampleR;
+		inputSampleR -= correction;
 		//simplified Groove Wear R
-		
+
 		//begin simplified ADClip L
 		drySampleL = inputSampleL;
 		if (lastSampleL >= refclip)
@@ -746,7 +746,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			}
 			else lastSampleL = refclip;
 		}
-		
+
 		if (lastSampleL <= -refclip)
 		{
 			if (inputSampleL > -refclip)
@@ -755,7 +755,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			}
 			else lastSampleL = -refclip;
 		}
-		
+
 		if (inputSampleL > refclip)
 		{
 			if (lastSampleL < refclip)
@@ -764,7 +764,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			}
 			else inputSampleL = refclip;
 		}
-		
+
 		if (inputSampleL < -refclip)
 		{
 			if (lastSampleL > -refclip)
@@ -774,7 +774,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			else inputSampleL = -refclip;
 		}
 		lastSampleL = drySampleL;
-		
+
 		//begin simplified ADClip R
 		drySampleR = inputSampleR;
 		if (lastSampleR >= refclip)
@@ -785,7 +785,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			}
 			else lastSampleR = refclip;
 		}
-		
+
 		if (lastSampleR <= -refclip)
 		{
 			if (inputSampleR > -refclip)
@@ -794,7 +794,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			}
 			else lastSampleR = -refclip;
 		}
-		
+
 		if (inputSampleR > refclip)
 		{
 			if (lastSampleR < refclip)
@@ -803,7 +803,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			}
 			else inputSampleR = refclip;
 		}
-		
+
 		if (inputSampleR < -refclip)
 		{
 			if (lastSampleR > -refclip)
@@ -813,7 +813,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			else inputSampleR = -refclip;
 		}
 		lastSampleR = drySampleR;
-		
+
 		//output dither section
 		if (bitDepth == 3) {
 			//noise shaping to 32-bit floating point
@@ -829,10 +829,10 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			//end noise shaping on 32 bit output
 		} else {
 			//entire Naturalize section used when not on 32 bit out
-			
+
 			inputSampleL -= noiseShapingL;
 			inputSampleR -= noiseShapingR;
-			
+
 			if (bitDepth == 2) {
 				inputSampleL *= 8388608.0; //go to dither at 24 bit
 				inputSampleR *= 8388608.0; //go to dither at 24 bit
@@ -841,7 +841,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 				inputSampleL *= 32768.0; //go to dither at 16 bit
 				inputSampleR *= 32768.0; //go to dither at 16 bit
 			}
-			
+
 			//begin L
 			double benfordize = floor(inputSampleL);
 			while (benfordize >= 1.0) {benfordize /= 10;}
@@ -868,7 +868,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 				bynL[hotbinA] -= 1;
 			} else {hotbinA = 10;}
 			//produce total number- smaller is closer to Benford real
-			
+
 			benfordize = ceil(inputSampleL);
 			while (benfordize >= 1.0) {benfordize /= 10;}
 			if (benfordize < 1.0) {benfordize *= 10;}
@@ -894,7 +894,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 				bynL[hotbinB] -= 1;
 			} else {hotbinB = 10;}
 			//produce total number- smaller is closer to Benford real
-			
+
 			if (totalA < totalB)
 			{
 				bynL[hotbinA] += 1;
@@ -907,7 +907,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			}
 			//assign the relevant one to the delay line
 			//and floor/ceil signal accordingly
-			
+
 			totalA = bynL[1] + bynL[2] + bynL[3] + bynL[4] + bynL[5] + bynL[6] + bynL[7] + bynL[8] + bynL[9];
 			totalA /= 1000;
 			if (totalA = 0) totalA = 1;
@@ -922,7 +922,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			bynL[9] /= totalA;
 			bynL[10] /= 2; //catchall for garbage data
 			//end L
-			
+
 			//begin R
 			benfordize = floor(inputSampleR);
 			while (benfordize >= 1.0) {benfordize /= 10;}
@@ -949,7 +949,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 				bynR[hotbinA] -= 1;
 			} else {hotbinA = 10;}
 			//produce total number- smaller is closer to Benford real
-			
+
 			benfordize = ceil(inputSampleR);
 			while (benfordize >= 1.0) {benfordize /= 10;}
 			if (benfordize < 1.0) {benfordize *= 10;}
@@ -975,7 +975,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 				bynR[hotbinB] -= 1;
 			} else {hotbinB = 10;}
 			//produce total number- smaller is closer to Benford real
-			
+
 			if (totalA < totalB)
 			{
 				bynR[hotbinA] += 1;
@@ -988,7 +988,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			}
 			//assign the relevant one to the delay line
 			//and floor/ceil signal accordingly
-			
+
 			totalA = bynR[1] + bynR[2] + bynR[3] + bynR[4] + bynR[5] + bynR[6] + bynR[7] + bynR[8] + bynR[9];
 			totalA /= 1000;
 			if (totalA = 0) totalA = 1;
@@ -1003,7 +1003,7 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			bynR[9] /= totalA;
 			bynR[10] /= 2; //catchall for garbage data
 			//end R
-			
+
 			if (bitDepth == 2) {
 				inputSampleL /= 8388608.0;
 				inputSampleR /= 8388608.0;
@@ -1015,17 +1015,17 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			noiseShapingL += inputSampleL - drySampleL;
 			noiseShapingR += inputSampleR - drySampleR;
 		}
-		
+
 		if (inputSampleL > refclip) inputSampleL = refclip;
 		if (inputSampleL < -refclip) inputSampleL = -refclip;
 		//iron bar prohibits any overs
 		if (inputSampleR > refclip) inputSampleR = refclip;
 		if (inputSampleR < -refclip) inputSampleR = -refclip;
 		//iron bar prohibits any overs
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;
@@ -1036,5 +1036,5 @@ void Righteous4::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }

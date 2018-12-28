@@ -1,6 +1,6 @@
 /* ========================================
  *  Ditherbox - Ditherbox.h
- *  Created 8/12/11 by SPIAdmin 
+ *  Created 8/12/11 by SPIAdmin
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
@@ -25,8 +25,8 @@ const int kNumInputs = 2;
 const int kNumOutputs = 2;
 const unsigned long kUniqueId = 'dith';    //Change this to what the AU identity is!
 
-class Ditherbox : 
-    public AudioEffectX 
+class Ditherbox :
+    public AudioEffectX
 {
 public:
     Ditherbox(audioMasterCallback audioMaster);
@@ -46,12 +46,12 @@ public:
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
     virtual void getParameterName(VstInt32 index, char *text);    // name of the parameter
-    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value    
+    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value
     virtual VstInt32 canDo(char *text);
 private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
-    
+
 	double bynL[13];
 	double bynR[13];
 	long double noiseShapingL;
@@ -72,7 +72,7 @@ private:
 	long double outSampleL;
 	long double lastSampleR;
 	long double outSampleR;
-	
+
 	double iirSampleAL;
 	double iirSampleBL;
 	double iirSampleCL;
@@ -99,7 +99,7 @@ private:
 	double iirSampleXL;
 	double iirSampleYL;
 	double iirSampleZL;
-	
+
 	double iirSampleAR;
 	double iirSampleBR;
 	double iirSampleCR;
@@ -126,7 +126,7 @@ private:
 	double iirSampleXR;
 	double iirSampleYR;
 	double iirSampleZR;
-	
+
     float A;
 };
 

@@ -7,7 +7,7 @@
 #include "Tremolo.h"
 #endif
 
-void Tremolo::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Tremolo::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -20,19 +20,19 @@ void Tremolo::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
 	long double fpNew = 1.0 - fpOld;
-	
+
 	speedChase = pow(A,4);
 	depthChase = B;
 	double speedSpeed = 300 / (fabs( lastSpeed - speedChase)+1.0);
 	double depthSpeed = 300 / (fabs( lastDepth - depthChase)+1.0);
 	lastSpeed = speedChase;
 	lastDepth = depthChase;
-	
+
 	double speed;
 	double depth;
 	double skew;
 	double density;
-	
+
 	double tupi = 3.141592653589793238;
 	double control;
 	double tempcontrol;
@@ -40,12 +40,12 @@ void Tremolo::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	double out;
 	double bridgerectifier;
 	double offset;
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
 	long double drySampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -97,7 +97,7 @@ void Tremolo::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		speed /= overallscale;
 		depth = 1.0 - pow(1.0-depthAmount,5);
 		skew = 1.0+pow(depthAmount,9);
-		density = ((1.0-depthAmount)*2.0) - 1.0;		
+		density = ((1.0-depthAmount)*2.0) - 1.0;
 
 		offset = sin(sweep);
 		sweep += speed;
@@ -115,10 +115,10 @@ void Tremolo::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		}
 		//produce either boosted or starved version of control signal
 		//will go from 0 to 1
-		
+
 		thickness = ((control * 2.0) - 1.0)*skew;
 		out = fabs(thickness);
-		
+
 		//do L
 		bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -150,7 +150,7 @@ void Tremolo::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		//apply tremolo, apply gain boost to compensate for volume loss
 		inputSampleR = (drySampleR * (1-depth)) + (inputSampleR*depth);
 		//end R
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -181,7 +181,7 @@ void Tremolo::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
     }
 }
 
-void Tremolo::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Tremolo::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -193,7 +193,7 @@ void Tremolo::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	overallscale *= getSampleRate();
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	speedChase = pow(A,4);
 	depthChase = B;
@@ -201,12 +201,12 @@ void Tremolo::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	double depthSpeed = 300 / (fabs( lastDepth - depthChase)+1.0);
 	lastSpeed = speedChase;
 	lastDepth = depthChase;
-	
+
 	double speed;
 	double depth;
 	double skew;
 	double density;
-	
+
 	double tupi = 3.141592653589793238;
 	double control;
 	double tempcontrol;
@@ -214,12 +214,12 @@ void Tremolo::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	double out;
 	double bridgerectifier;
 	double offset;
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
 	long double drySampleR;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -264,15 +264,15 @@ void Tremolo::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
-		
+
+
 		speedAmount = (((speedAmount*speedSpeed)+speedChase)/(speedSpeed + 1.0));
 		depthAmount = (((depthAmount*depthSpeed)+depthChase)/(depthSpeed + 1.0));
 		speed = 0.0001+(speedAmount/1000.0);
 		speed /= overallscale;
 		depth = 1.0 - pow(1.0-depthAmount,5);
 		skew = 1.0+pow(depthAmount,9);
-		density = ((1.0-depthAmount)*2.0) - 1.0;		
+		density = ((1.0-depthAmount)*2.0) - 1.0;
 
 		offset = sin(sweep);
 		sweep += speed;
@@ -290,10 +290,10 @@ void Tremolo::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		}
 		//produce either boosted or starved version of control signal
 		//will go from 0 to 1
-		
+
 		thickness = ((control * 2.0) - 1.0)*skew;
 		out = fabs(thickness);
-		
+
 		//do L
 		bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -309,7 +309,7 @@ void Tremolo::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		//apply tremolo, apply gain boost to compensate for volume loss
 		inputSampleL = (drySampleL * (1-depth)) + (inputSampleL*depth);
 		//end L
-		
+
 		//do R
 		bridgerectifier = fabs(inputSampleR);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -325,7 +325,7 @@ void Tremolo::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		//apply tremolo, apply gain boost to compensate for volume loss
 		inputSampleR = (drySampleR * (1-depth)) + (inputSampleR*depth);
 		//end R
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

@@ -1,6 +1,6 @@
 /* ========================================
  *  BuildATPDF - BuildATPDF.h
- *  Created 8/12/11 by SPIAdmin 
+ *  Created 8/12/11 by SPIAdmin
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
@@ -34,8 +34,8 @@ const int kNumInputs = 2;
 const int kNumOutputs = 2;
 const unsigned long kUniqueId = 'bltp';    //Change this to what the AU identity is!
 
-class BuildATPDF : 
-    public AudioEffectX 
+class BuildATPDF :
+    public AudioEffectX
 {
 public:
     BuildATPDF(audioMasterCallback audioMaster);
@@ -55,15 +55,15 @@ public:
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
     virtual void getParameterName(VstInt32 index, char *text);    // name of the parameter
-    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value    
+    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value
     virtual VstInt32 canDo(char *text);
 private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
-    
+
 	double bL[11];
 	double bR[11];
-	double f[11];		
+	double f[11];
 	//default stuff
 
     float A;

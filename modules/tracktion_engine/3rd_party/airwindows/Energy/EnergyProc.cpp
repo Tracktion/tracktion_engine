@@ -7,7 +7,7 @@
 #include "Energy.h"
 #endif
 
-void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -24,7 +24,7 @@ void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 	double nintIntensity = -pow((H*2.0)-1.0,3);
 	double mix = (I*2.0)-1.0;
 	//all types of air band are running in parallel, not series
-    
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -34,7 +34,7 @@ void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -49,7 +49,7 @@ void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -64,12 +64,12 @@ void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
 
 		long double correctionL = 0.0;
 		long double correctionR = 0.0;
-		
+
 		duoFactorL = PrevAL - inputSampleL;
 		duoFactorR = PrevAR - inputSampleR;
 		if (flip)
@@ -77,7 +77,7 @@ void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			duoEvenL += duoFactorL;
 			duoOddL -= duoFactorL;
 			duoFactorL = duoEvenL * duoIntensity;
-			
+
 			duoEvenR += duoFactorR;
 			duoOddR -= duoFactorR;
 			duoFactorR = duoEvenR * duoIntensity;
@@ -87,7 +87,7 @@ void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			duoOddL += duoFactorL;
 			duoEvenL -= duoFactorL;
 			duoFactorL = duoOddL * duoIntensity;
-			
+
 			duoOddR += duoFactorR;
 			duoEvenR -= duoFactorR;
 			duoFactorR = duoOddR * duoIntensity;
@@ -101,8 +101,8 @@ void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		correctionR = correctionR + duoFactorR;
 		flip = !flip;
 		//finished duo section
-		
-		
+
+
 		if (countA < 1 || countA > 3) countA = 1;
 		switch (countA)
 		{
@@ -151,7 +151,7 @@ void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		correctionR = correctionR + tripletFactorR;
 		countA++;
 		//finished triplet section- 15K
-		
+
 		if (countB < 1 || countB > 4) countB = 1;
 		switch (countB)
 		{
@@ -213,7 +213,7 @@ void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		correctionR = correctionR + quadFactorR;
 		countB++;
 		//finished quad section- 10K
-		
+
 		if (countC < 1 || countC > 5) countC = 1;
 		switch (countC)
 		{
@@ -288,7 +288,7 @@ void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		correctionR = correctionR + quintFactorR;
 		countC++;
 		//finished quint section- 8K
-		
+
 		if (countD < 1 || countD > 6) countD = 1;
 		switch (countD)
 		{
@@ -376,7 +376,7 @@ void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		correctionR = correctionR + sextFactorR;
 		countD++;
 		//finished sext section- 6K
-		
+
 		if (countE < 1 || countE > 7) countE = 1;
 		switch (countE)
 		{
@@ -477,7 +477,7 @@ void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		correctionR = correctionR + septFactorR;
 		countE++;
 		//finished sept section- 5K
-		
+
 		if (countF < 1 || countF > 8) countF = 1;
 		switch (countF)
 		{
@@ -591,7 +591,7 @@ void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		correctionR = correctionR + octFactorR;
 		countF++;
 		//finished oct section- 4K
-		
+
 		if (countG < 1 || countG > 9) countG = 1;
 		switch (countG)
 		{
@@ -718,7 +718,7 @@ void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		correctionR = correctionR + nintFactorR;
 		countG++;
 		//finished nint section- 3K
-		
+
 		PrevHL = PrevGL;
 		PrevGL = PrevFL;
 		PrevFL = PrevEL;
@@ -727,7 +727,7 @@ void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		PrevCL = PrevBL;
 		PrevBL = PrevAL;
 		PrevAL = inputSampleL;
-		
+
 		PrevHR = PrevGR;
 		PrevGR = PrevFR;
 		PrevFR = PrevER;
@@ -736,12 +736,12 @@ void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		PrevCR = PrevBR;
 		PrevBR = PrevAR;
 		PrevAR = inputSampleR;
-		
+
 		inputSampleL += (correctionL * mix);
 		inputSampleR += (correctionR * mix);
 		//we don't need a drySample because we never touched inputSample
 		//so, this provides the inv/dry/wet control all by itself
-		
+
 		//noise shaping to 32-bit floating point
 		float fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -754,7 +754,7 @@ void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -768,10 +768,10 @@ void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }
 
-void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -788,7 +788,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	double nintIntensity = -pow((H*2.0)-1.0,3);
 	double mix = (I*2.0)-1.0;
 	//all types of air band are running in parallel, not series
-	
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -798,7 +798,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -813,7 +813,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -828,12 +828,12 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		
+
 		long double correctionL = 0.0;
 		long double correctionR = 0.0;
-		
+
 		duoFactorL = PrevAL - inputSampleL;
 		duoFactorR = PrevAR - inputSampleR;
 		if (flip)
@@ -841,7 +841,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			duoEvenL += duoFactorL;
 			duoOddL -= duoFactorL;
 			duoFactorL = duoEvenL * duoIntensity;
-			
+
 			duoEvenR += duoFactorR;
 			duoOddR -= duoFactorR;
 			duoFactorR = duoEvenR * duoIntensity;
@@ -851,7 +851,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			duoOddL += duoFactorL;
 			duoEvenL -= duoFactorL;
 			duoFactorL = duoOddL * duoIntensity;
-			
+
 			duoOddR += duoFactorR;
 			duoEvenR -= duoFactorR;
 			duoFactorR = duoOddR * duoIntensity;
@@ -859,14 +859,14 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		duoOddL = (duoOddL - ((duoOddL - duoEvenL)/256.0)) / 2.0;
 		duoEvenL = (duoEvenL - ((duoEvenL - duoOddL)/256.0)) / 2.0;
 		correctionL = correctionL + duoFactorL;
-		
+
 		duoOddR = (duoOddR - ((duoOddR - duoEvenR)/256.0)) / 2.0;
 		duoEvenR = (duoEvenR - ((duoEvenR - duoOddR)/256.0)) / 2.0;
 		correctionR = correctionR + duoFactorR;
 		flip = !flip;
 		//finished duo section
-		
-		
+
+
 		if (countA < 1 || countA > 3) countA = 1;
 		switch (countA)
 		{
@@ -875,7 +875,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				tripletAL += tripletFactorL;
 				tripletCL -= tripletFactorL;
 				tripletFactorL = tripletAL * tripletIntensity;
-				
+
 				tripletFactorR = PrevBR - inputSampleR;
 				tripletAR += tripletFactorR;
 				tripletCR -= tripletFactorR;
@@ -886,7 +886,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				tripletBL += tripletFactorL;
 				tripletAL -= tripletFactorL;
 				tripletFactorL = tripletBL * tripletIntensity;
-				
+
 				tripletFactorR = PrevBR - inputSampleR;
 				tripletBR += tripletFactorR;
 				tripletAR -= tripletFactorR;
@@ -897,7 +897,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				tripletCL += tripletFactorL;
 				tripletBL -= tripletFactorL;
 				tripletFactorL = tripletCL * tripletIntensity;
-				
+
 				tripletFactorR = PrevBR - inputSampleR;
 				tripletCR += tripletFactorR;
 				tripletBR -= tripletFactorR;
@@ -908,14 +908,14 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		tripletBL /= 2.0;
 		tripletCL /= 2.0;
 		correctionL = correctionL + tripletFactorL;
-		
+
 		tripletAR /= 2.0;
 		tripletBR /= 2.0;
 		tripletCR /= 2.0;
 		correctionR = correctionR + tripletFactorR;
 		countA++;
 		//finished triplet section- 15K
-		
+
 		if (countB < 1 || countB > 4) countB = 1;
 		switch (countB)
 		{
@@ -924,7 +924,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				quadAL += quadFactorL;
 				quadDL -= quadFactorL;
 				quadFactorL = quadAL * quadIntensity;
-				
+
 				quadFactorR = PrevCR - inputSampleR;
 				quadAR += quadFactorR;
 				quadDR -= quadFactorR;
@@ -935,7 +935,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				quadBL += quadFactorL;
 				quadAL -= quadFactorL;
 				quadFactorL = quadBL * quadIntensity;
-				
+
 				quadFactorR = PrevCR - inputSampleR;
 				quadBR += quadFactorR;
 				quadAR -= quadFactorR;
@@ -946,7 +946,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				quadCL += quadFactorL;
 				quadBL -= quadFactorL;
 				quadFactorL = quadCL * quadIntensity;
-				
+
 				quadFactorR = PrevCR - inputSampleR;
 				quadCR += quadFactorR;
 				quadBR -= quadFactorR;
@@ -957,7 +957,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				quadDL += quadFactorL;
 				quadCL -= quadFactorL;
 				quadFactorL = quadDL * quadIntensity;
-				
+
 				quadFactorR = PrevCR - inputSampleR;
 				quadDR += quadFactorR;
 				quadCR -= quadFactorR;
@@ -969,7 +969,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		quadCL /= 2.0;
 		quadDL /= 2.0;
 		correctionL = correctionL + quadFactorL;
-		
+
 		quadAR /= 2.0;
 		quadBR /= 2.0;
 		quadCR /= 2.0;
@@ -977,7 +977,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		correctionR = correctionR + quadFactorR;
 		countB++;
 		//finished quad section- 10K
-		
+
 		if (countC < 1 || countC > 5) countC = 1;
 		switch (countC)
 		{
@@ -986,7 +986,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				quintAL += quintFactorL;
 				quintEL -= quintFactorL;
 				quintFactorL = quintAL * quintIntensity;
-				
+
 				quintFactorR = PrevDR - inputSampleR;
 				quintAR += quintFactorR;
 				quintER -= quintFactorR;
@@ -997,7 +997,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				quintBL += quintFactorL;
 				quintAL -= quintFactorL;
 				quintFactorL = quintBL * quintIntensity;
-				
+
 				quintFactorR = PrevDR - inputSampleR;
 				quintBR += quintFactorR;
 				quintAR -= quintFactorR;
@@ -1008,7 +1008,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				quintCL += quintFactorL;
 				quintBL -= quintFactorL;
 				quintFactorL = quintCL * quintIntensity;
-				
+
 				quintFactorR = PrevDR - inputSampleR;
 				quintCR += quintFactorR;
 				quintBR -= quintFactorR;
@@ -1019,7 +1019,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				quintDL += quintFactorL;
 				quintCL -= quintFactorL;
 				quintFactorL = quintDL * quintIntensity;
-				
+
 				quintFactorR = PrevDR - inputSampleR;
 				quintDR += quintFactorR;
 				quintCR -= quintFactorR;
@@ -1030,7 +1030,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				quintEL += quintFactorL;
 				quintDL -= quintFactorL;
 				quintFactorL = quintEL * quintIntensity;
-				
+
 				quintFactorR = PrevDR - inputSampleR;
 				quintER += quintFactorR;
 				quintDR -= quintFactorR;
@@ -1043,7 +1043,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		quintDL /= 2.0;
 		quintEL /= 2.0;
 		correctionL = correctionL + quintFactorL;
-		
+
 		quintAR /= 2.0;
 		quintBR /= 2.0;
 		quintCR /= 2.0;
@@ -1052,7 +1052,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		correctionR = correctionR + quintFactorR;
 		countC++;
 		//finished quint section- 8K
-		
+
 		if (countD < 1 || countD > 6) countD = 1;
 		switch (countD)
 		{
@@ -1061,7 +1061,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				sextAL += sextFactorL;
 				sextFL -= sextFactorL;
 				sextFactorL = sextAL * sextIntensity;
-				
+
 				sextFactorR = PrevER - inputSampleR;
 				sextAR += sextFactorR;
 				sextFR -= sextFactorR;
@@ -1072,7 +1072,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				sextBL += sextFactorL;
 				sextAL -= sextFactorL;
 				sextFactorL = sextBL * sextIntensity;
-				
+
 				sextFactorR = PrevER - inputSampleR;
 				sextBR += sextFactorR;
 				sextAR -= sextFactorR;
@@ -1083,7 +1083,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				sextCL += sextFactorL;
 				sextBL -= sextFactorL;
 				sextFactorL = sextCL * sextIntensity;
-				
+
 				sextFactorR = PrevER - inputSampleR;
 				sextCR += sextFactorR;
 				sextBR -= sextFactorR;
@@ -1094,7 +1094,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				sextDL += sextFactorL;
 				sextCL -= sextFactorL;
 				sextFactorL = sextDL * sextIntensity;
-				
+
 				sextFactorR = PrevER - inputSampleR;
 				sextDR += sextFactorR;
 				sextCR -= sextFactorR;
@@ -1105,7 +1105,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				sextEL += sextFactorL;
 				sextDL -= sextFactorL;
 				sextFactorL = sextEL * sextIntensity;
-				
+
 				sextFactorR = PrevER - inputSampleR;
 				sextER += sextFactorR;
 				sextDR -= sextFactorR;
@@ -1116,7 +1116,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				sextFL += sextFactorL;
 				sextEL -= sextFactorL;
 				sextFactorL = sextFL * sextIntensity;
-				
+
 				sextFactorR = PrevER - inputSampleR;
 				sextFR += sextFactorR;
 				sextER -= sextFactorR;
@@ -1130,7 +1130,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		sextEL /= 2.0;
 		sextFL /= 2.0;
 		correctionL = correctionL + sextFactorL;
-		
+
 		sextAR /= 2.0;
 		sextBR /= 2.0;
 		sextCR /= 2.0;
@@ -1140,7 +1140,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		correctionR = correctionR + sextFactorR;
 		countD++;
 		//finished sext section- 6K
-		
+
 		if (countE < 1 || countE > 7) countE = 1;
 		switch (countE)
 		{
@@ -1149,7 +1149,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				septAL += septFactorL;
 				septGL -= septFactorL;
 				septFactorL = septAL * septIntensity;
-				
+
 				septFactorR = PrevFR - inputSampleR;
 				septAR += septFactorR;
 				septGR -= septFactorR;
@@ -1160,7 +1160,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				septBL += septFactorL;
 				septAL -= septFactorL;
 				septFactorL = septBL * septIntensity;
-				
+
 				septFactorR = PrevFR - inputSampleR;
 				septBR += septFactorR;
 				septAR -= septFactorR;
@@ -1171,7 +1171,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				septCL += septFactorL;
 				septBL -= septFactorL;
 				septFactorL = septCL * septIntensity;
-				
+
 				septFactorR = PrevFR - inputSampleR;
 				septCR += septFactorR;
 				septBR -= septFactorR;
@@ -1182,7 +1182,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				septDL += septFactorL;
 				septCL -= septFactorL;
 				septFactorL = septDL * septIntensity;
-				
+
 				septFactorR = PrevFR - inputSampleR;
 				septDR += septFactorR;
 				septCR -= septFactorR;
@@ -1193,7 +1193,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				septEL += septFactorL;
 				septDL -= septFactorL;
 				septFactorL = septEL * septIntensity;
-				
+
 				septFactorR = PrevFR - inputSampleR;
 				septER += septFactorR;
 				septDR -= septFactorR;
@@ -1204,7 +1204,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				septFL += septFactorL;
 				septEL -= septFactorL;
 				septFactorL = septFL * septIntensity;
-				
+
 				septFactorR = PrevFR - inputSampleR;
 				septFR += septFactorR;
 				septER -= septFactorR;
@@ -1215,7 +1215,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				septGL += septFactorL;
 				septFL -= septFactorL;
 				septFactorL = septGL * septIntensity;
-				
+
 				septFactorR = PrevFR - inputSampleR;
 				septGR += septFactorR;
 				septFR -= septFactorR;
@@ -1230,7 +1230,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		septFL /= 2.0;
 		septGL /= 2.0;
 		correctionL = correctionL + septFactorL;
-		
+
 		septAR /= 2.0;
 		septBR /= 2.0;
 		septCR /= 2.0;
@@ -1241,7 +1241,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		correctionR = correctionR + septFactorR;
 		countE++;
 		//finished sept section- 5K
-		
+
 		if (countF < 1 || countF > 8) countF = 1;
 		switch (countF)
 		{
@@ -1250,7 +1250,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				octAL += octFactorL;
 				octHL -= octFactorL;
 				octFactorL = octAL * octIntensity;
-				
+
 				octFactorR = PrevGR - inputSampleR;
 				octAR += octFactorR;
 				octHR -= octFactorR;
@@ -1261,7 +1261,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				octBL += octFactorL;
 				octAL -= octFactorL;
 				octFactorL = octBL * octIntensity;
-				
+
 				octFactorR = PrevGR - inputSampleR;
 				octBR += octFactorR;
 				octAR -= octFactorR;
@@ -1272,7 +1272,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				octCL += octFactorL;
 				octBL -= octFactorL;
 				octFactorL = octCL * octIntensity;
-				
+
 				octFactorR = PrevGR - inputSampleR;
 				octCR += octFactorR;
 				octBR -= octFactorR;
@@ -1283,7 +1283,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				octDL += octFactorL;
 				octCL -= octFactorL;
 				octFactorL = octDL * octIntensity;
-				
+
 				octFactorR = PrevGR - inputSampleR;
 				octDR += octFactorR;
 				octCR -= octFactorR;
@@ -1294,7 +1294,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				octEL += octFactorL;
 				octDL -= octFactorL;
 				octFactorL = octEL * octIntensity;
-				
+
 				octFactorR = PrevGR - inputSampleR;
 				octER += octFactorR;
 				octDR -= octFactorR;
@@ -1305,7 +1305,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				octFL += octFactorL;
 				octEL -= octFactorL;
 				octFactorL = octFL * octIntensity;
-				
+
 				octFactorR = PrevGR - inputSampleR;
 				octFR += octFactorR;
 				octER -= octFactorR;
@@ -1316,7 +1316,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				octGL += octFactorL;
 				octFL -= octFactorL;
 				octFactorL = octGL * octIntensity;
-				
+
 				octFactorR = PrevGR - inputSampleR;
 				octGR += octFactorR;
 				octFR -= octFactorR;
@@ -1327,7 +1327,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				octHL += octFactorL;
 				octGL -= octFactorL;
 				octFactorL = octHL * octIntensity;
-				
+
 				octFactorR = PrevGR - inputSampleR;
 				octHR += octFactorR;
 				octGR -= octFactorR;
@@ -1343,7 +1343,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		octGL /= 2.0;
 		octHL /= 2.0;
 		correctionL = correctionL + octFactorL;
-		
+
 		octAR /= 2.0;
 		octBR /= 2.0;
 		octCR /= 2.0;
@@ -1355,7 +1355,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		correctionR = correctionR + octFactorR;
 		countF++;
 		//finished oct section- 4K
-		
+
 		if (countG < 1 || countG > 9) countG = 1;
 		switch (countG)
 		{
@@ -1364,7 +1364,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				nintAL += nintFactorL;
 				nintIL -= nintFactorL;
 				nintFactorL = nintAL * nintIntensity;
-				
+
 				nintFactorR = PrevHR - inputSampleR;
 				nintAR += nintFactorR;
 				nintIR -= nintFactorR;
@@ -1375,7 +1375,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				nintBL += nintFactorL;
 				nintAL -= nintFactorL;
 				nintFactorL = nintBL * nintIntensity;
-				
+
 				nintFactorR = PrevHR - inputSampleR;
 				nintBR += nintFactorR;
 				nintAR -= nintFactorR;
@@ -1386,7 +1386,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				nintCL += nintFactorL;
 				nintBL -= nintFactorL;
 				nintFactorL = nintCL * nintIntensity;
-				
+
 				nintFactorR = PrevHR - inputSampleR;
 				nintCR += nintFactorR;
 				nintBR -= nintFactorR;
@@ -1397,7 +1397,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				nintDL += nintFactorL;
 				nintCL -= nintFactorL;
 				nintFactorL = nintDL * nintIntensity;
-				
+
 				nintFactorR = PrevHR - inputSampleR;
 				nintDR += nintFactorR;
 				nintCR -= nintFactorR;
@@ -1408,7 +1408,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				nintEL += nintFactorL;
 				nintDL -= nintFactorL;
 				nintFactorL = nintEL * nintIntensity;
-				
+
 				nintFactorR = PrevHR - inputSampleR;
 				nintER += nintFactorR;
 				nintDR -= nintFactorR;
@@ -1419,7 +1419,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				nintFL += nintFactorL;
 				nintEL -= nintFactorL;
 				nintFactorL = nintFL * nintIntensity;
-				
+
 				nintFactorR = PrevHR - inputSampleR;
 				nintFR += nintFactorR;
 				nintER -= nintFactorR;
@@ -1430,7 +1430,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				nintGL += nintFactorL;
 				nintFL -= nintFactorL;
 				nintFactorL = nintGL * nintIntensity;
-				
+
 				nintFactorR = PrevHR - inputSampleR;
 				nintGR += nintFactorR;
 				nintFR -= nintFactorR;
@@ -1441,7 +1441,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				nintHL += nintFactorL;
 				nintGL -= nintFactorL;
 				nintFactorL = nintHL * nintIntensity;
-				
+
 				nintFactorR = PrevHR - inputSampleR;
 				nintHR += nintFactorR;
 				nintGR -= nintFactorR;
@@ -1452,7 +1452,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				nintIL += nintFactorL;
 				nintHL -= nintFactorL;
 				nintFactorL = nintIL * nintIntensity;
-				
+
 				nintFactorR = PrevHR - inputSampleR;
 				nintIR += nintFactorR;
 				nintHR -= nintFactorR;
@@ -1469,7 +1469,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		nintHL /= 2.0;
 		nintIL /= 2.0;
 		correctionL = correctionL + nintFactorL;
-		
+
 		nintAR /= 2.0;
 		nintBR /= 2.0;
 		nintCR /= 2.0;
@@ -1482,7 +1482,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		correctionR = correctionR + nintFactorR;
 		countG++;
 		//finished nint section- 3K
-		
+
 		PrevHL = PrevGL;
 		PrevGL = PrevFL;
 		PrevFL = PrevEL;
@@ -1491,7 +1491,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		PrevCL = PrevBL;
 		PrevBL = PrevAL;
 		PrevAL = inputSampleL;
-		
+
 		PrevHR = PrevGR;
 		PrevGR = PrevFR;
 		PrevFR = PrevER;
@@ -1500,12 +1500,12 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		PrevCR = PrevBR;
 		PrevBR = PrevAR;
 		PrevAR = inputSampleR;
-		
+
 		inputSampleL += (correctionL * mix);
 		inputSampleR += (correctionR * mix);
 		//we don't need a drySample because we never touched inputSample
 		//so, this provides the inv/dry/wet control all by itself
-		
+
 		//noise shaping to 64-bit floating point
 		double fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -1518,7 +1518,7 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -1532,5 +1532,5 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }

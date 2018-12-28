@@ -7,7 +7,7 @@
 #include "AtmosphereBuss.h"
 #endif
 
-void AtmosphereBuss::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void AtmosphereBuss::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -21,17 +21,17 @@ void AtmosphereBuss::processReplacing(float **inputs, float **outputs, VstInt32 
 	double drySampleR;
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	long double clamp;
 	double inputgain = A;
-	
+
 	if (settingchase != inputgain) {
 		chasespeed *= 2.0;
 		settingchase = inputgain;
 	}
 	if (chasespeed > 2500.0) chasespeed = 2500.0;
-	if (gainchase < 0.0) gainchase = inputgain;	
-	
+	if (gainchase < 0.0) gainchase = inputgain;
+
 	thresholdA = 0.618033988749894 / overallscale;
 	thresholdB = 0.679837387624884 / overallscale;
 	thresholdC = 0.747821126387373 / overallscale;
@@ -44,18 +44,18 @@ void AtmosphereBuss::processReplacing(float **inputs, float **outputs, VstInt32 
 	thresholdJ = 1.457291816732335 / overallscale;
 	thresholdK = 1.603020998405568 / overallscale;
 	thresholdL = 1.763323098246125 / overallscale;
-	thresholdM = 1.939655408070737 / overallscale;	
-	
+	thresholdM = 1.939655408070737 / overallscale;
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
 		inputSampleR = *in2;
-		
+
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -70,7 +70,7 @@ void AtmosphereBuss::processReplacing(float **inputs, float **outputs, VstInt32 
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -85,79 +85,79 @@ void AtmosphereBuss::processReplacing(float **inputs, float **outputs, VstInt32 
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		
+
 		chasespeed *= 0.9999;
 		chasespeed -= 0.01;
 		if (chasespeed < 350.0) chasespeed = 350.0;
 		//we have our chase speed compensated for recent fader activity
-		
+
 		gainchase = (((gainchase*chasespeed)+inputgain)/(chasespeed+1.0));
 		//gainchase is chasing the target, as a simple multiply gain factor
-		
+
 		if (1.0 != gainchase) {
 			inputSampleL *= gainchase;
 			inputSampleR *= gainchase;
 		}
 		//done with trim control
-		
+
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-				
+
 		clamp = inputSampleL - lastSampleAL;
 		if (clamp > thresholdA) inputSampleL = lastSampleAL + thresholdA;
 		if (-clamp > thresholdA) inputSampleL = lastSampleAL - thresholdA;
-		
+
 		clamp = inputSampleL - lastSampleBL;
 		if (clamp > thresholdB) inputSampleL = lastSampleBL + thresholdB;
 		if (-clamp > thresholdB) inputSampleL = lastSampleBL - thresholdB;
-		
+
 		clamp = inputSampleL - lastSampleCL;
 		if (clamp > thresholdC) inputSampleL = lastSampleCL + thresholdC;
 		if (-clamp > thresholdC) inputSampleL = lastSampleCL - thresholdC;
-		
+
 		clamp = inputSampleL - lastSampleDL;
 		if (clamp > thresholdD) inputSampleL = lastSampleDL + thresholdD;
 		if (-clamp > thresholdD) inputSampleL = lastSampleDL - thresholdD;
-		
+
 		clamp = inputSampleL - lastSampleEL;
 		if (clamp > thresholdE) inputSampleL = lastSampleEL + thresholdE;
 		if (-clamp > thresholdE) inputSampleL = lastSampleEL - thresholdE;
-		
+
 		clamp = inputSampleL - lastSampleFL;
 		if (clamp > thresholdF) inputSampleL = lastSampleFL + thresholdF;
 		if (-clamp > thresholdF) inputSampleL = lastSampleFL - thresholdF;
-		
+
 		clamp = inputSampleL - lastSampleGL;
 		if (clamp > thresholdG) inputSampleL = lastSampleGL + thresholdG;
 		if (-clamp > thresholdG) inputSampleL = lastSampleGL - thresholdG;
-		
+
 		clamp = inputSampleL - lastSampleHL;
 		if (clamp > thresholdH) inputSampleL = lastSampleHL + thresholdH;
 		if (-clamp > thresholdH) inputSampleL = lastSampleHL - thresholdH;
-		
+
 		clamp = inputSampleL - lastSampleIL;
 		if (clamp > thresholdI) inputSampleL = lastSampleIL + thresholdI;
 		if (-clamp > thresholdI) inputSampleL = lastSampleIL - thresholdI;
-		
+
 		clamp = inputSampleL - lastSampleJL;
 		if (clamp > thresholdJ) inputSampleL = lastSampleJL + thresholdJ;
 		if (-clamp > thresholdJ) inputSampleL = lastSampleJL - thresholdJ;
-		
+
 		clamp = inputSampleL - lastSampleKL;
 		if (clamp > thresholdK) inputSampleL = lastSampleKL + thresholdK;
 		if (-clamp > thresholdK) inputSampleL = lastSampleKL - thresholdK;
-		
+
 		clamp = inputSampleL - lastSampleLL;
 		if (clamp > thresholdL) inputSampleL = lastSampleLL + thresholdL;
 		if (-clamp > thresholdL) inputSampleL = lastSampleLL - thresholdL;
-		
+
 		clamp = inputSampleL - lastSampleML;
 		if (clamp > thresholdM) inputSampleL = lastSampleML + thresholdM;
 		if (-clamp > thresholdM) inputSampleL = lastSampleML - thresholdM;
-		
-		
+
+
 		lastSampleML = lastSampleLL;
 		lastSampleLL = lastSampleKL;
 		lastSampleKL = lastSampleJL;
@@ -172,69 +172,69 @@ void AtmosphereBuss::processReplacing(float **inputs, float **outputs, VstInt32 
 		lastSampleBL = lastSampleAL;
 		lastSampleAL = drySampleL;
 		//store the raw L input sample again for use next time
-		
+
 		clamp = inputSampleR - lastSampleAR;
 		if (clamp > thresholdA) inputSampleR = lastSampleAR + thresholdA;
 		if (-clamp > thresholdA) inputSampleR = lastSampleAR - thresholdA;
-		
+
 		clamp = inputSampleR - lastSampleBR;
 		if (clamp > thresholdB) inputSampleR = lastSampleBR + thresholdB;
 		if (-clamp > thresholdB) inputSampleR = lastSampleBR - thresholdB;
-		
+
 		clamp = inputSampleR - lastSampleCR;
 		if (clamp > thresholdC) inputSampleR = lastSampleCR + thresholdC;
 		if (-clamp > thresholdC) inputSampleR = lastSampleCR - thresholdC;
-		
+
 		clamp = inputSampleR - lastSampleDR;
 		if (clamp > thresholdD) inputSampleR = lastSampleDR + thresholdD;
 		if (-clamp > thresholdD) inputSampleR = lastSampleDR - thresholdD;
-		
+
 		clamp = inputSampleR - lastSampleER;
 		if (clamp > thresholdE) inputSampleR = lastSampleER + thresholdE;
 		if (-clamp > thresholdE) inputSampleR = lastSampleER - thresholdE;
-		
+
 		clamp = inputSampleR - lastSampleFR;
 		if (clamp > thresholdF) inputSampleR = lastSampleFR + thresholdF;
 		if (-clamp > thresholdF) inputSampleR = lastSampleFR - thresholdF;
-		
+
 		clamp = inputSampleR - lastSampleGR;
 		if (clamp > thresholdG) inputSampleR = lastSampleGR + thresholdG;
 		if (-clamp > thresholdG) inputSampleR = lastSampleGR - thresholdG;
-		
+
 		clamp = inputSampleR - lastSampleHR;
 		if (clamp > thresholdH) inputSampleR = lastSampleHR + thresholdH;
 		if (-clamp > thresholdH) inputSampleR = lastSampleHR - thresholdH;
-		
+
 		clamp = inputSampleR - lastSampleIR;
 		if (clamp > thresholdI) inputSampleR = lastSampleIR + thresholdI;
 		if (-clamp > thresholdI) inputSampleR = lastSampleIR - thresholdI;
-		
+
 		clamp = inputSampleR - lastSampleJR;
 		if (clamp > thresholdJ) inputSampleR = lastSampleJR + thresholdJ;
 		if (-clamp > thresholdJ) inputSampleR = lastSampleJR - thresholdJ;
-		
+
 		clamp = inputSampleR - lastSampleKR;
 		if (clamp > thresholdK) inputSampleR = lastSampleKR + thresholdK;
 		if (-clamp > thresholdK) inputSampleR = lastSampleKR - thresholdK;
-		
+
 		clamp = inputSampleR - lastSampleLR;
 		if (clamp > thresholdL) inputSampleR = lastSampleLR + thresholdL;
 		if (-clamp > thresholdL) inputSampleR = lastSampleLR - thresholdL;
-		
+
 		clamp = inputSampleR - lastSampleMR;
 		if (clamp > thresholdM) inputSampleR = lastSampleMR + thresholdM;
 		if (-clamp > thresholdM) inputSampleR = lastSampleMR - thresholdM;
-		
+
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
 		//without this, you can get a NaN condition where it spits out DC offset at full blast!
-		
+
 		inputSampleL = asin(inputSampleL);
 		inputSampleR = asin(inputSampleR);
 		//amplitude aspect
-		
+
 		lastSampleMR = lastSampleLR;
 		lastSampleLR = lastSampleKR;
 		lastSampleKR = lastSampleJR;
@@ -249,7 +249,7 @@ void AtmosphereBuss::processReplacing(float **inputs, float **outputs, VstInt32 
 		lastSampleBR = lastSampleAR;
 		lastSampleAR = drySampleR;
 		//store the raw R input sample again for use next time
-		
+
 		//noise shaping to 32-bit floating point
 		fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -262,10 +262,10 @@ void AtmosphereBuss::processReplacing(float **inputs, float **outputs, VstInt32 
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;
@@ -276,10 +276,10 @@ void AtmosphereBuss::processReplacing(float **inputs, float **outputs, VstInt32 
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }
 
-void AtmosphereBuss::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void AtmosphereBuss::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -293,17 +293,17 @@ void AtmosphereBuss::processDoubleReplacing(double **inputs, double **outputs, V
 	double drySampleR;
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	long double clamp;
 	double inputgain = A;
-	
+
 	if (settingchase != inputgain) {
 		chasespeed *= 2.0;
 		settingchase = inputgain;
 	}
 	if (chasespeed > 2500.0) chasespeed = 2500.0;
-	if (gainchase < 0.0) gainchase = inputgain;	
-	
+	if (gainchase < 0.0) gainchase = inputgain;
+
 	thresholdA = 0.618033988749894 / overallscale;
 	thresholdB = 0.679837387624884 / overallscale;
 	thresholdC = 0.747821126387373 / overallscale;
@@ -316,18 +316,18 @@ void AtmosphereBuss::processDoubleReplacing(double **inputs, double **outputs, V
 	thresholdJ = 1.457291816732335 / overallscale;
 	thresholdK = 1.603020998405568 / overallscale;
 	thresholdL = 1.763323098246125 / overallscale;
-	thresholdM = 1.939655408070737 / overallscale;	
-	
+	thresholdM = 1.939655408070737 / overallscale;
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
 		inputSampleR = *in2;
-		
+
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -342,7 +342,7 @@ void AtmosphereBuss::processDoubleReplacing(double **inputs, double **outputs, V
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -357,79 +357,79 @@ void AtmosphereBuss::processDoubleReplacing(double **inputs, double **outputs, V
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		
+
 		chasespeed *= 0.9999;
 		chasespeed -= 0.01;
 		if (chasespeed < 350.0) chasespeed = 350.0;
 		//we have our chase speed compensated for recent fader activity
-		
+
 		gainchase = (((gainchase*chasespeed)+inputgain)/(chasespeed+1.0));
 		//gainchase is chasing the target, as a simple multiply gain factor
-		
+
 		if (1.0 != gainchase) {
 			inputSampleL *= gainchase;
 			inputSampleR *= gainchase;
 		}
 		//done with trim control
-		
+
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-				
+
 		clamp = inputSampleL - lastSampleAL;
 		if (clamp > thresholdA) inputSampleL = lastSampleAL + thresholdA;
 		if (-clamp > thresholdA) inputSampleL = lastSampleAL - thresholdA;
-		
+
 		clamp = inputSampleL - lastSampleBL;
 		if (clamp > thresholdB) inputSampleL = lastSampleBL + thresholdB;
 		if (-clamp > thresholdB) inputSampleL = lastSampleBL - thresholdB;
-		
+
 		clamp = inputSampleL - lastSampleCL;
 		if (clamp > thresholdC) inputSampleL = lastSampleCL + thresholdC;
 		if (-clamp > thresholdC) inputSampleL = lastSampleCL - thresholdC;
-		
+
 		clamp = inputSampleL - lastSampleDL;
 		if (clamp > thresholdD) inputSampleL = lastSampleDL + thresholdD;
 		if (-clamp > thresholdD) inputSampleL = lastSampleDL - thresholdD;
-		
+
 		clamp = inputSampleL - lastSampleEL;
 		if (clamp > thresholdE) inputSampleL = lastSampleEL + thresholdE;
 		if (-clamp > thresholdE) inputSampleL = lastSampleEL - thresholdE;
-		
+
 		clamp = inputSampleL - lastSampleFL;
 		if (clamp > thresholdF) inputSampleL = lastSampleFL + thresholdF;
 		if (-clamp > thresholdF) inputSampleL = lastSampleFL - thresholdF;
-		
+
 		clamp = inputSampleL - lastSampleGL;
 		if (clamp > thresholdG) inputSampleL = lastSampleGL + thresholdG;
 		if (-clamp > thresholdG) inputSampleL = lastSampleGL - thresholdG;
-		
+
 		clamp = inputSampleL - lastSampleHL;
 		if (clamp > thresholdH) inputSampleL = lastSampleHL + thresholdH;
 		if (-clamp > thresholdH) inputSampleL = lastSampleHL - thresholdH;
-		
+
 		clamp = inputSampleL - lastSampleIL;
 		if (clamp > thresholdI) inputSampleL = lastSampleIL + thresholdI;
 		if (-clamp > thresholdI) inputSampleL = lastSampleIL - thresholdI;
-		
+
 		clamp = inputSampleL - lastSampleJL;
 		if (clamp > thresholdJ) inputSampleL = lastSampleJL + thresholdJ;
 		if (-clamp > thresholdJ) inputSampleL = lastSampleJL - thresholdJ;
-		
+
 		clamp = inputSampleL - lastSampleKL;
 		if (clamp > thresholdK) inputSampleL = lastSampleKL + thresholdK;
 		if (-clamp > thresholdK) inputSampleL = lastSampleKL - thresholdK;
-		
+
 		clamp = inputSampleL - lastSampleLL;
 		if (clamp > thresholdL) inputSampleL = lastSampleLL + thresholdL;
 		if (-clamp > thresholdL) inputSampleL = lastSampleLL - thresholdL;
-		
+
 		clamp = inputSampleL - lastSampleML;
 		if (clamp > thresholdM) inputSampleL = lastSampleML + thresholdM;
 		if (-clamp > thresholdM) inputSampleL = lastSampleML - thresholdM;
-		
-		
+
+
 		lastSampleML = lastSampleLL;
 		lastSampleLL = lastSampleKL;
 		lastSampleKL = lastSampleJL;
@@ -444,69 +444,69 @@ void AtmosphereBuss::processDoubleReplacing(double **inputs, double **outputs, V
 		lastSampleBL = lastSampleAL;
 		lastSampleAL = drySampleL;
 		//store the raw L input sample again for use next time
-		
+
 		clamp = inputSampleR - lastSampleAR;
 		if (clamp > thresholdA) inputSampleR = lastSampleAR + thresholdA;
 		if (-clamp > thresholdA) inputSampleR = lastSampleAR - thresholdA;
-		
+
 		clamp = inputSampleR - lastSampleBR;
 		if (clamp > thresholdB) inputSampleR = lastSampleBR + thresholdB;
 		if (-clamp > thresholdB) inputSampleR = lastSampleBR - thresholdB;
-		
+
 		clamp = inputSampleR - lastSampleCR;
 		if (clamp > thresholdC) inputSampleR = lastSampleCR + thresholdC;
 		if (-clamp > thresholdC) inputSampleR = lastSampleCR - thresholdC;
-		
+
 		clamp = inputSampleR - lastSampleDR;
 		if (clamp > thresholdD) inputSampleR = lastSampleDR + thresholdD;
 		if (-clamp > thresholdD) inputSampleR = lastSampleDR - thresholdD;
-		
+
 		clamp = inputSampleR - lastSampleER;
 		if (clamp > thresholdE) inputSampleR = lastSampleER + thresholdE;
 		if (-clamp > thresholdE) inputSampleR = lastSampleER - thresholdE;
-		
+
 		clamp = inputSampleR - lastSampleFR;
 		if (clamp > thresholdF) inputSampleR = lastSampleFR + thresholdF;
 		if (-clamp > thresholdF) inputSampleR = lastSampleFR - thresholdF;
-		
+
 		clamp = inputSampleR - lastSampleGR;
 		if (clamp > thresholdG) inputSampleR = lastSampleGR + thresholdG;
 		if (-clamp > thresholdG) inputSampleR = lastSampleGR - thresholdG;
-		
+
 		clamp = inputSampleR - lastSampleHR;
 		if (clamp > thresholdH) inputSampleR = lastSampleHR + thresholdH;
 		if (-clamp > thresholdH) inputSampleR = lastSampleHR - thresholdH;
-		
+
 		clamp = inputSampleR - lastSampleIR;
 		if (clamp > thresholdI) inputSampleR = lastSampleIR + thresholdI;
 		if (-clamp > thresholdI) inputSampleR = lastSampleIR - thresholdI;
-		
+
 		clamp = inputSampleR - lastSampleJR;
 		if (clamp > thresholdJ) inputSampleR = lastSampleJR + thresholdJ;
 		if (-clamp > thresholdJ) inputSampleR = lastSampleJR - thresholdJ;
-		
+
 		clamp = inputSampleR - lastSampleKR;
 		if (clamp > thresholdK) inputSampleR = lastSampleKR + thresholdK;
 		if (-clamp > thresholdK) inputSampleR = lastSampleKR - thresholdK;
-		
+
 		clamp = inputSampleR - lastSampleLR;
 		if (clamp > thresholdL) inputSampleR = lastSampleLR + thresholdL;
 		if (-clamp > thresholdL) inputSampleR = lastSampleLR - thresholdL;
-		
+
 		clamp = inputSampleR - lastSampleMR;
 		if (clamp > thresholdM) inputSampleR = lastSampleMR + thresholdM;
 		if (-clamp > thresholdM) inputSampleR = lastSampleMR - thresholdM;
-		
+
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
 		//without this, you can get a NaN condition where it spits out DC offset at full blast!
-		
+
 		inputSampleL = asin(inputSampleL);
 		inputSampleR = asin(inputSampleR);
 		//amplitude aspect
-		
+
 		lastSampleMR = lastSampleLR;
 		lastSampleLR = lastSampleKR;
 		lastSampleKR = lastSampleJR;
@@ -521,7 +521,7 @@ void AtmosphereBuss::processDoubleReplacing(double **inputs, double **outputs, V
 		lastSampleBR = lastSampleAR;
 		lastSampleAR = drySampleR;
 		//store the raw R input sample again for use next time
-		
+
 		//noise shaping to 64-bit floating point
 		fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -534,10 +534,10 @@ void AtmosphereBuss::processDoubleReplacing(double **inputs, double **outputs, V
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;
@@ -548,5 +548,5 @@ void AtmosphereBuss::processDoubleReplacing(double **inputs, double **outputs, V
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }

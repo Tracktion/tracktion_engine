@@ -7,7 +7,7 @@
 #include "DrumSlam.h"
 #endif
 
-void DrumSlam::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void DrumSlam::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -26,8 +26,8 @@ void DrumSlam::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	double wet = C;
 	double dry = 1.0 - wet;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -78,17 +78,17 @@ void DrumSlam::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		long double midSampleR;
 		long double highSampleL;
 		long double highSampleR;
-		
+
 
 		inputSampleL *= drive;
 		inputSampleR *= drive;
-		
+
 		if (fpFlip)
 		{
 			iirSampleAL = (iirSampleAL * (1 - iirAmountL)) + (inputSampleL * iirAmountL);
 			iirSampleBL = (iirSampleBL * (1 - iirAmountL)) + (iirSampleAL * iirAmountL);
 			lowSampleL = iirSampleBL;
-			
+
 			iirSampleAR = (iirSampleAR * (1 - iirAmountL)) + (inputSampleR * iirAmountL);
 			iirSampleBR = (iirSampleBR * (1 - iirAmountL)) + (iirSampleAR * iirAmountL);
 			lowSampleR = iirSampleBR;
@@ -134,7 +134,7 @@ void DrumSlam::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		lowSampleR -= (lowSampleR * (fabs(lowSampleR) * 0.448) * (fabs(lowSampleR) * 0.448) );
 		lowSampleL *= drive;
 		lowSampleR *= drive;
-		
+
 		if (highSampleL > 1.0) {highSampleL = 1.0;}
 		if (highSampleL < -1.0) {highSampleL = -1.0;}
 		if (highSampleR > 1.0) {highSampleR = 1.0;}
@@ -143,10 +143,10 @@ void DrumSlam::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		highSampleR -= (highSampleR * (fabs(highSampleR) * 0.599) * (fabs(highSampleR) * 0.599) );
 		highSampleL *= drive;
 		highSampleR *= drive;
-		
+
 		midSampleL = midSampleL * drive;
 		midSampleR = midSampleR * drive;
-		
+
 		long double skew = (midSampleL - lastSampleL);
 		lastSampleL = midSampleL;
 		//skew will be direction/angle
@@ -178,7 +178,7 @@ void DrumSlam::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			midSampleL = -bridgerectifier;
 		}
 		//blend according to positive and negative controls, left
-		
+
 		skew = (midSampleR - lastSampleR);
 		lastSampleR = midSampleR;
 		//skew will be direction/angle
@@ -210,15 +210,15 @@ void DrumSlam::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			midSampleR = -bridgerectifier;
 		}
 		//blend according to positive and negative controls, right
-		
+
 		inputSampleL = ((lowSampleL + midSampleL + highSampleL)/drive)*out;
 		inputSampleR = ((lowSampleR + midSampleR + highSampleR)/drive)*out;
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		float fpTemp;
 		if (fpFlip) {
@@ -250,7 +250,7 @@ void DrumSlam::processReplacing(float **inputs, float **outputs, VstInt32 sample
     }
 }
 
-void DrumSlam::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void DrumSlam::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -269,8 +269,8 @@ void DrumSlam::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	double wet = C;
 	double dry = 1.0 - wet;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -321,29 +321,29 @@ void DrumSlam::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		long double midSampleR;
 		long double highSampleL;
 		long double highSampleR;
-		
-		
+
+
 		inputSampleL *= drive;
 		inputSampleR *= drive;
-		
+
 		if (fpFlip)
 		{
 			iirSampleAL = (iirSampleAL * (1 - iirAmountL)) + (inputSampleL * iirAmountL);
 			iirSampleBL = (iirSampleBL * (1 - iirAmountL)) + (iirSampleAL * iirAmountL);
 			lowSampleL = iirSampleBL;
-			
+
 			iirSampleAR = (iirSampleAR * (1 - iirAmountL)) + (inputSampleR * iirAmountL);
 			iirSampleBR = (iirSampleBR * (1 - iirAmountL)) + (iirSampleAR * iirAmountL);
 			lowSampleR = iirSampleBR;
-			
+
 			iirSampleEL = (iirSampleEL * (1 - iirAmountH)) + (inputSampleL * iirAmountH);
 			iirSampleFL = (iirSampleFL * (1 - iirAmountH)) + (iirSampleEL * iirAmountH);
 			midSampleL = iirSampleFL - iirSampleBL;
-			
+
 			iirSampleER = (iirSampleER * (1 - iirAmountH)) + (inputSampleR * iirAmountH);
 			iirSampleFR = (iirSampleFR * (1 - iirAmountH)) + (iirSampleER * iirAmountH);
 			midSampleR = iirSampleFR - iirSampleBR;
-			
+
 			highSampleL = inputSampleL - iirSampleFL;
 			highSampleR = inputSampleR - iirSampleFR;
 		}
@@ -352,19 +352,19 @@ void DrumSlam::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			iirSampleCL = (iirSampleCL * (1 - iirAmountL)) + (inputSampleL * iirAmountL);
 			iirSampleDL = (iirSampleDL * (1 - iirAmountL)) + (iirSampleCL * iirAmountL);
 			lowSampleL = iirSampleDL;
-			
+
 			iirSampleCR = (iirSampleCR * (1 - iirAmountL)) + (inputSampleR * iirAmountL);
 			iirSampleDR = (iirSampleDR * (1 - iirAmountL)) + (iirSampleCR * iirAmountL);
 			lowSampleR = iirSampleDR;
-			
+
 			iirSampleGL = (iirSampleGL * (1 - iirAmountH)) + (inputSampleL * iirAmountH);
 			iirSampleHL = (iirSampleHL * (1 - iirAmountH)) + (iirSampleGL * iirAmountH);
 			midSampleL = iirSampleHL - iirSampleDL;
-			
+
 			iirSampleGR = (iirSampleGR * (1 - iirAmountH)) + (inputSampleR * iirAmountH);
 			iirSampleHR = (iirSampleHR * (1 - iirAmountH)) + (iirSampleGR * iirAmountH);
 			midSampleR = iirSampleHR - iirSampleDR;
-			
+
 			highSampleL = inputSampleL - iirSampleHL;
 			highSampleR = inputSampleR - iirSampleHR;
 		}
@@ -377,7 +377,7 @@ void DrumSlam::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		lowSampleR -= (lowSampleR * (fabs(lowSampleR) * 0.448) * (fabs(lowSampleR) * 0.448) );
 		lowSampleL *= drive;
 		lowSampleR *= drive;
-		
+
 		if (highSampleL > 1.0) {highSampleL = 1.0;}
 		if (highSampleL < -1.0) {highSampleL = -1.0;}
 		if (highSampleR > 1.0) {highSampleR = 1.0;}
@@ -386,10 +386,10 @@ void DrumSlam::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		highSampleR -= (highSampleR * (fabs(highSampleR) * 0.599) * (fabs(highSampleR) * 0.599) );
 		highSampleL *= drive;
 		highSampleR *= drive;
-		
+
 		midSampleL = midSampleL * drive;
 		midSampleR = midSampleR * drive;
-		
+
 		long double skew = (midSampleL - lastSampleL);
 		lastSampleL = midSampleL;
 		//skew will be direction/angle
@@ -421,7 +421,7 @@ void DrumSlam::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			midSampleL = -bridgerectifier;
 		}
 		//blend according to positive and negative controls, left
-		
+
 		skew = (midSampleR - lastSampleR);
 		lastSampleR = midSampleR;
 		//skew will be direction/angle
@@ -453,15 +453,15 @@ void DrumSlam::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			midSampleR = -bridgerectifier;
 		}
 		//blend according to positive and negative controls, right
-		
+
 		inputSampleL = ((lowSampleL + midSampleL + highSampleL)/drive)*out;
 		inputSampleR = ((lowSampleR + midSampleR + highSampleR)/drive)*out;
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 64-bit floating point
 		double fpTemp;
 		if (fpFlip) {
@@ -482,7 +482,7 @@ void DrumSlam::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

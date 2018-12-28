@@ -7,7 +7,7 @@
 #include "VoiceOfTheStarship.h"
 #endif
 
-void VoiceOfTheStarship::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void VoiceOfTheStarship::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -17,7 +17,7 @@ void VoiceOfTheStarship::processReplacing(float **inputs, float **outputs, VstIn
 	if (cutoff > 1.0) cutoff = 1.0;
 	double invcutoff = 1.0 - cutoff;
 	//this is the lowpass
-	
+
 	double overallscale = ((1.0-A)*9.0)+1.0;
 	double gain = overallscale;
 	if (gain > 1.0) {f[0] = 1.0; gain -= 1.0;} else {f[0] = gain; gain = 0.0;}
@@ -43,7 +43,7 @@ void VoiceOfTheStarship::processReplacing(float **inputs, float **outputs, VstIn
 	f[8] /= overallscale;
 	f[9] /= overallscale;
 	//and now it's neatly scaled, too
-	
+
 	int lowcut = floor(B*16.9);
 	if (lastAlgorithm != lowcut) {
 		noiseAL = 0.0; noiseBL = 0.0; noiseCL = 0.0;
@@ -73,16 +73,16 @@ void VoiceOfTheStarship::processReplacing(float **inputs, float **outputs, VstIn
 	if (lowcut == 1) {lowcut = 2; dcut= 23;}
 	if (lowcut < 1) {lowcut = 1; dcut= 11;}
 	//this is the mechanism for cutting back subs without filtering
-	
+
 	double rumbletrim = sqrt(lowcut);
 	//this among other things is just to give volume compensation
 	double inputSampleL;
 	double inputSampleR;
-	
+
 	float fpTemp;
 	double fpOld = 0.618033988749894848204586; //golden ratio!
 	double fpNew = 1.0 - fpOld;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -92,7 +92,7 @@ void VoiceOfTheStarship::processReplacing(float **inputs, float **outputs, VstIn
 		quadratic -= 1;
 		if (quadratic < 0)
 		{
-			position += 1;		
+			position += 1;
 			quadratic = position * position;
 			quadratic = quadratic % 170003; //% is C++ mod operator
 			quadratic *= quadratic;
@@ -112,13 +112,13 @@ void VoiceOfTheStarship::processReplacing(float **inputs, float **outputs, VstIn
 			//toward the center of the waveform. Without this,
 			//it's a pure random walk that will generate DC.
 		}
-		
+
 		if (flipL) noiseAL += (rand()/(double)RAND_MAX);
 		else noiseAL -= (rand()/(double)RAND_MAX);
 		if (flipR) noiseAR += (rand()/(double)RAND_MAX);
 		else noiseAR -= (rand()/(double)RAND_MAX);
 		//here's the guts of the random walk
-		
+
 		if (filterflip)
 		{
 			noiseBL *= invcutoff; noiseBL += (noiseAL*cutoff);
@@ -126,7 +126,7 @@ void VoiceOfTheStarship::processReplacing(float **inputs, float **outputs, VstIn
 			noiseBR *= invcutoff; noiseBR += (noiseAR*cutoff);
 			inputSampleR = noiseBR;
 		}
-		else 
+		else
 		{
 			noiseCL *= invcutoff; noiseCL += (noiseAL*cutoff);
 			inputSampleL = noiseCL;
@@ -135,18 +135,18 @@ void VoiceOfTheStarship::processReplacing(float **inputs, float **outputs, VstIn
 		}
 		//now we have the output of the filter as inputSample.
 		//this filter is shallower than a straight IIR: it's interleaved
-		
-		
-		
-		
+
+
+
+
 		bL[9] = bL[8]; bL[8] = bL[7]; bL[7] = bL[6]; bL[6] = bL[5];
 		bL[5] = bL[4]; bL[4] = bL[3]; bL[3] = bL[2]; bL[2] = bL[1];
 		bL[1] = bL[0]; bL[0] = inputSampleL;
-		
+
 		bR[9] = bR[8]; bR[8] = bR[7]; bR[7] = bR[6]; bR[6] = bR[5];
 		bR[5] = bR[4]; bR[4] = bR[3]; bR[3] = bR[2]; bR[2] = bR[1];
 		bR[1] = bR[0]; bR[0] = inputSampleR;
-		
+
 		inputSampleL *= f[0];
 		inputSampleL += (bL[1] * f[1]);
 		inputSampleL += (bL[2] * f[2]);
@@ -175,12 +175,12 @@ void VoiceOfTheStarship::processReplacing(float **inputs, float **outputs, VstIn
 		inputSampleR *= invcutoff;
 		inputSampleL /= rumbletrim;
 		inputSampleR /= rumbletrim;
-		
+
 		flipL = !flipL;
 		flipR = !flipR;
 		filterflip = !filterflip;
-		
-		
+
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -211,7 +211,7 @@ void VoiceOfTheStarship::processReplacing(float **inputs, float **outputs, VstIn
     }
 }
 
-void VoiceOfTheStarship::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void VoiceOfTheStarship::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -221,7 +221,7 @@ void VoiceOfTheStarship::processDoubleReplacing(double **inputs, double **output
 	if (cutoff > 1.0) cutoff = 1.0;
 	double invcutoff = 1.0 - cutoff;
 	//this is the lowpass
-	
+
 	double overallscale = ((1.0-A)*9.0)+1.0;
 	double gain = overallscale;
 	if (gain > 1.0) {f[0] = 1.0; gain -= 1.0;} else {f[0] = gain; gain = 0.0;}
@@ -247,7 +247,7 @@ void VoiceOfTheStarship::processDoubleReplacing(double **inputs, double **output
 	f[8] /= overallscale;
 	f[9] /= overallscale;
 	//and now it's neatly scaled, too
-	
+
 	int lowcut = floor(B*16.9);
 	if (lastAlgorithm != lowcut) {
 		noiseAL = 0.0; noiseBL = 0.0; noiseCL = 0.0;
@@ -277,26 +277,26 @@ void VoiceOfTheStarship::processDoubleReplacing(double **inputs, double **output
 	if (lowcut == 1) {lowcut = 2; dcut= 23;}
 	if (lowcut < 1) {lowcut = 1; dcut= 11;}
 	//this is the mechanism for cutting back subs without filtering
-	
+
 	double rumbletrim = sqrt(lowcut);
 	//this among other things is just to give volume compensation
 	double inputSampleL;
 	double inputSampleR;
-	
+
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
 		inputSampleR = *in2;
 		//we then ignore this!
-		
+
 		quadratic -= 1;
 		if (quadratic < 0)
 		{
-			position += 1;		
+			position += 1;
 			quadratic = position * position;
 			quadratic = quadratic % 170003; //% is C++ mod operator
 			quadratic *= quadratic;
@@ -316,13 +316,13 @@ void VoiceOfTheStarship::processDoubleReplacing(double **inputs, double **output
 			//toward the center of the waveform. Without this,
 			//it's a pure random walk that will generate DC.
 		}
-		
+
 		if (flipL) noiseAL += (rand()/(double)RAND_MAX);
 		else noiseAL -= (rand()/(double)RAND_MAX);
 		if (flipR) noiseAR += (rand()/(double)RAND_MAX);
 		else noiseAR -= (rand()/(double)RAND_MAX);
 		//here's the guts of the random walk
-		
+
 		if (filterflip)
 		{
 			noiseBL *= invcutoff; noiseBL += (noiseAL*cutoff);
@@ -330,7 +330,7 @@ void VoiceOfTheStarship::processDoubleReplacing(double **inputs, double **output
 			noiseBR *= invcutoff; noiseBR += (noiseAR*cutoff);
 			inputSampleR = noiseBR;
 		}
-		else 
+		else
 		{
 			noiseCL *= invcutoff; noiseCL += (noiseAL*cutoff);
 			inputSampleL = noiseCL;
@@ -339,18 +339,18 @@ void VoiceOfTheStarship::processDoubleReplacing(double **inputs, double **output
 		}
 		//now we have the output of the filter as inputSample.
 		//this filter is shallower than a straight IIR: it's interleaved
-		
-		
-		
-		
+
+
+
+
 		bL[9] = bL[8]; bL[8] = bL[7]; bL[7] = bL[6]; bL[6] = bL[5];
 		bL[5] = bL[4]; bL[4] = bL[3]; bL[3] = bL[2]; bL[2] = bL[1];
 		bL[1] = bL[0]; bL[0] = inputSampleL;
-		
+
 		bR[9] = bR[8]; bR[8] = bR[7]; bR[7] = bR[6]; bR[6] = bR[5];
 		bR[5] = bR[4]; bR[4] = bR[3]; bR[3] = bR[2]; bR[2] = bR[1];
 		bR[1] = bR[0]; bR[0] = inputSampleR;
-		
+
 		inputSampleL *= f[0];
 		inputSampleL += (bL[1] * f[1]);
 		inputSampleL += (bL[2] * f[2]);
@@ -361,7 +361,7 @@ void VoiceOfTheStarship::processDoubleReplacing(double **inputs, double **output
 		inputSampleL += (bL[7] * f[7]);
 		inputSampleL += (bL[8] * f[8]);
 		inputSampleL += (bL[9] * f[9]);
-		
+
 		inputSampleR *= f[0];
 		inputSampleR += (bR[1] * f[1]);
 		inputSampleR += (bR[2] * f[2]);
@@ -372,18 +372,18 @@ void VoiceOfTheStarship::processDoubleReplacing(double **inputs, double **output
 		inputSampleR += (bR[7] * f[7]);
 		inputSampleR += (bR[8] * f[8]);
 		inputSampleR += (bR[9] * f[9]);
-		
+
 		inputSampleL *= 0.1;
 		inputSampleR *= 0.1;
 		inputSampleL *= invcutoff;
 		inputSampleR *= invcutoff;
 		inputSampleL /= rumbletrim;
 		inputSampleR /= rumbletrim;
-		
+
 		flipL = !flipL;
 		flipR = !flipR;
 		filterflip = !filterflip;
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -403,7 +403,7 @@ void VoiceOfTheStarship::processDoubleReplacing(double **inputs, double **output
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

@@ -7,16 +7,16 @@
 #include "NotJustAnotherDither.h"
 #endif
 
-void NotJustAnotherDither::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void NotJustAnotherDither::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
     float* out1 = outputs[0];
     float* out2 = outputs[1];
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	double benfordize;
 	int hotbinA;
 	int hotbinB;
@@ -24,7 +24,7 @@ void NotJustAnotherDither::processReplacing(float **inputs, float **outputs, Vst
 	double totalB;
 	float drySampleL;
 	float drySampleR;
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -76,7 +76,7 @@ void NotJustAnotherDither::processReplacing(float **inputs, float **outputs, Vst
 		inputSampleL *= 8388608.0;
 		inputSampleR *= 8388608.0;
 		//0-1 is now one bit, now we dither
-				
+
 		//begin L
 		benfordize = floor(inputSampleL);
 		while (benfordize >= 1.0) {benfordize /= 10;}
@@ -103,7 +103,7 @@ void NotJustAnotherDither::processReplacing(float **inputs, float **outputs, Vst
 			bynL[hotbinA] -= 1;
 		} else {hotbinA = 10;}
 		//produce total number- smaller is closer to Benford real
-		
+
 		benfordize = ceil(inputSampleL);
 		while (benfordize >= 1.0) {benfordize /= 10;}
 		if (benfordize < 1.0) {benfordize *= 10;}
@@ -129,7 +129,7 @@ void NotJustAnotherDither::processReplacing(float **inputs, float **outputs, Vst
 			bynL[hotbinB] -= 1;
 		} else {hotbinB = 10;}
 		//produce total number- smaller is closer to Benford real
-		
+
 		if (totalA < totalB)
 		{
 			bynL[hotbinA] += 1;
@@ -142,7 +142,7 @@ void NotJustAnotherDither::processReplacing(float **inputs, float **outputs, Vst
 		}
 		//assign the relevant one to the delay line
 		//and floor/ceil signal accordingly
-		
+
 		totalA = bynL[1] + bynL[2] + bynL[3] + bynL[4] + bynL[5] + bynL[6] + bynL[7] + bynL[8] + bynL[9];
 		totalA /= 1000;
 		if (totalA = 0) totalA = 1;
@@ -157,7 +157,7 @@ void NotJustAnotherDither::processReplacing(float **inputs, float **outputs, Vst
 		bynL[9] /= totalA;
 		bynL[10] /= 2; //catchall for garbage data
 		//end L
-		
+
 		//begin R
 		benfordize = floor(inputSampleR);
 		while (benfordize >= 1.0) {benfordize /= 10;}
@@ -184,7 +184,7 @@ void NotJustAnotherDither::processReplacing(float **inputs, float **outputs, Vst
 			bynR[hotbinA] -= 1;
 		} else {hotbinA = 10;}
 		//produce total number- smaller is closer to Benford real
-		
+
 		benfordize = ceil(inputSampleR);
 		while (benfordize >= 1.0) {benfordize /= 10;}
 		if (benfordize < 1.0) {benfordize *= 10;}
@@ -210,7 +210,7 @@ void NotJustAnotherDither::processReplacing(float **inputs, float **outputs, Vst
 			bynR[hotbinB] -= 1;
 		} else {hotbinB = 10;}
 		//produce total number- smaller is closer to Benford real
-		
+
 		if (totalA < totalB)
 		{
 			bynR[hotbinA] += 1;
@@ -223,7 +223,7 @@ void NotJustAnotherDither::processReplacing(float **inputs, float **outputs, Vst
 		}
 		//assign the relevant one to the delay line
 		//and floor/ceil signal accordingly
-		
+
 		totalA = bynR[1] + bynR[2] + bynR[3] + bynR[4] + bynR[5] + bynR[6] + bynR[7] + bynR[8] + bynR[9];
 		totalA /= 1000;
 		if (totalA = 0) totalA = 1;
@@ -238,7 +238,7 @@ void NotJustAnotherDither::processReplacing(float **inputs, float **outputs, Vst
 		bynR[9] /= totalA;
 		bynR[10] /= 2; //catchall for garbage data
 		//end R
-		
+
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
 
@@ -247,7 +247,7 @@ void NotJustAnotherDither::processReplacing(float **inputs, float **outputs, Vst
 
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;
@@ -255,17 +255,17 @@ void NotJustAnotherDither::processReplacing(float **inputs, float **outputs, Vst
     }
 }
 
-void NotJustAnotherDither::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void NotJustAnotherDither::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
     double* out1 = outputs[0];
     double* out2 = outputs[1];
-	
-	
+
+
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	double benfordize;
 	int hotbinA;
 	int hotbinB;
@@ -273,7 +273,7 @@ void NotJustAnotherDither::processDoubleReplacing(double **inputs, double **outp
 	double totalB;
 	double drySampleL;
 	double drySampleR;
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -321,11 +321,11 @@ void NotJustAnotherDither::processDoubleReplacing(double **inputs, double **outp
 
 		inputSampleL -= noiseShapingL;
 		inputSampleR -= noiseShapingR;
-		
+
 		inputSampleL *= 8388608.0;
 		inputSampleR *= 8388608.0;
 		//0-1 is now one bit, now we dither
-		
+
 		//begin L
 		benfordize = floor(inputSampleL);
 		while (benfordize >= 1.0) {benfordize /= 10;}
@@ -352,7 +352,7 @@ void NotJustAnotherDither::processDoubleReplacing(double **inputs, double **outp
 			bynL[hotbinA] -= 1;
 		} else {hotbinA = 10;}
 		//produce total number- smaller is closer to Benford real
-		
+
 		benfordize = ceil(inputSampleL);
 		while (benfordize >= 1.0) {benfordize /= 10;}
 		if (benfordize < 1.0) {benfordize *= 10;}
@@ -378,7 +378,7 @@ void NotJustAnotherDither::processDoubleReplacing(double **inputs, double **outp
 			bynL[hotbinB] -= 1;
 		} else {hotbinB = 10;}
 		//produce total number- smaller is closer to Benford real
-		
+
 		if (totalA < totalB)
 		{
 			bynL[hotbinA] += 1;
@@ -391,7 +391,7 @@ void NotJustAnotherDither::processDoubleReplacing(double **inputs, double **outp
 		}
 		//assign the relevant one to the delay line
 		//and floor/ceil signal accordingly
-		
+
 		totalA = bynL[1] + bynL[2] + bynL[3] + bynL[4] + bynL[5] + bynL[6] + bynL[7] + bynL[8] + bynL[9];
 		totalA /= 1000;
 		if (totalA = 0) totalA = 1;
@@ -406,7 +406,7 @@ void NotJustAnotherDither::processDoubleReplacing(double **inputs, double **outp
 		bynL[9] /= totalA;
 		bynL[10] /= 2; //catchall for garbage data
 		//end L
-		
+
 		//begin R
 		benfordize = floor(inputSampleR);
 		while (benfordize >= 1.0) {benfordize /= 10;}
@@ -433,7 +433,7 @@ void NotJustAnotherDither::processDoubleReplacing(double **inputs, double **outp
 			bynR[hotbinA] -= 1;
 		} else {hotbinA = 10;}
 		//produce total number- smaller is closer to Benford real
-		
+
 		benfordize = ceil(inputSampleR);
 		while (benfordize >= 1.0) {benfordize /= 10;}
 		if (benfordize < 1.0) {benfordize *= 10;}
@@ -459,7 +459,7 @@ void NotJustAnotherDither::processDoubleReplacing(double **inputs, double **outp
 			bynR[hotbinB] -= 1;
 		} else {hotbinB = 10;}
 		//produce total number- smaller is closer to Benford real
-		
+
 		if (totalA < totalB)
 		{
 			bynR[hotbinA] += 1;
@@ -472,7 +472,7 @@ void NotJustAnotherDither::processDoubleReplacing(double **inputs, double **outp
 		}
 		//assign the relevant one to the delay line
 		//and floor/ceil signal accordingly
-		
+
 		totalA = bynR[1] + bynR[2] + bynR[3] + bynR[4] + bynR[5] + bynR[6] + bynR[7] + bynR[8] + bynR[9];
 		totalA /= 1000;
 		if (totalA = 0) totalA = 1;
@@ -487,16 +487,16 @@ void NotJustAnotherDither::processDoubleReplacing(double **inputs, double **outp
 		bynR[9] /= totalA;
 		bynR[10] /= 2; //catchall for garbage data
 		//end R
-		
+
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
-		
+
 		noiseShapingL += inputSampleL - drySampleL;
 		noiseShapingR += inputSampleR - drySampleR;
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;

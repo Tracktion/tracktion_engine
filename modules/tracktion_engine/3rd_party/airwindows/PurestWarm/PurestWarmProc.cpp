@@ -7,7 +7,7 @@
 #include "PurestWarm.h"
 #endif
 
-void PurestWarm::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void PurestWarm::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -16,13 +16,13 @@ void PurestWarm::processReplacing(float **inputs, float **outputs, VstInt32 samp
 
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	int polarity = (int) ( A * 1.999 );
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -65,10 +65,10 @@ void PurestWarm::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		if (polarity == 1)
 		{
-			if (inputSampleL < 0) 
+			if (inputSampleL < 0)
 			{
 				inputSampleL = -(sin(-inputSampleL*1.57079634)/1.57079634);
 				//noise shaping to 32-bit floating point
@@ -81,17 +81,17 @@ void PurestWarm::processReplacing(float **inputs, float **outputs, VstInt32 samp
 					fpNShapeLB = (fpNShapeLB*fpOld)+((inputSampleL-fpTemp)*fpNew);
 					inputSampleL += fpNShapeLB;
 				}
-			} else {			
+			} else {
 				if (fpFlip) {
 					fpTemp = inputSampleL;
 					fpNShapeLA = (fpNShapeLA*fpOld)+((inputSampleL-fpTemp)*fpNew);
 				} else {
 					fpTemp = inputSampleL;
 					fpNShapeLB = (fpNShapeLB*fpOld)+((inputSampleL-fpTemp)*fpNew);
-				}				
+				}
 			}
-			
-			if (inputSampleR < 0) 
+
+			if (inputSampleR < 0)
 			{
 				inputSampleR = -(sin(-inputSampleR*1.57079634)/1.57079634);
 				//noise shaping to 32-bit floating point
@@ -104,19 +104,19 @@ void PurestWarm::processReplacing(float **inputs, float **outputs, VstInt32 samp
 					fpNShapeRB = (fpNShapeRB*fpOld)+((inputSampleR-fpTemp)*fpNew);
 					inputSampleR += fpNShapeRB;
 				}
-			} else {			
+			} else {
 				if (fpFlip) {
 					fpTemp = inputSampleR;
 					fpNShapeRA = (fpNShapeRA*fpOld)+((inputSampleR-fpTemp)*fpNew);
 				} else {
 					fpTemp = inputSampleR;
 					fpNShapeRB = (fpNShapeRB*fpOld)+((inputSampleR-fpTemp)*fpNew);
-				}				
+				}
 			}
-			
+
 		} else {
-			
-			if (inputSampleL > 0) 
+
+			if (inputSampleL > 0)
 			{
 				inputSampleL = sin(inputSampleL*1.57079634)/1.57079634;
 				//noise shaping to 32-bit floating point
@@ -129,17 +129,17 @@ void PurestWarm::processReplacing(float **inputs, float **outputs, VstInt32 samp
 					fpNShapeLB = (fpNShapeLB*fpOld)+((inputSampleL-fpTemp)*fpNew);
 					inputSampleL += fpNShapeLB;
 				}
-			} else {			
+			} else {
 				if (fpFlip) {
 					fpTemp = inputSampleL;
 					fpNShapeLA = (fpNShapeLA*fpOld)+((inputSampleL-fpTemp)*fpNew);
 				} else {
 					fpTemp = inputSampleL;
 					fpNShapeLB = (fpNShapeLB*fpOld)+((inputSampleL-fpTemp)*fpNew);
-				}				
+				}
 			}
-			
-			if (inputSampleR > 0) 
+
+			if (inputSampleR > 0)
 			{
 				inputSampleR = sin(inputSampleR*1.57079634)/1.57079634;
 				//noise shaping to 32-bit floating point
@@ -152,16 +152,16 @@ void PurestWarm::processReplacing(float **inputs, float **outputs, VstInt32 samp
 					fpNShapeRB = (fpNShapeRB*fpOld)+((inputSampleR-fpTemp)*fpNew);
 					inputSampleR += fpNShapeRB;
 				}
-			} else {			
+			} else {
 				if (fpFlip) {
 					fpTemp = inputSampleR;
 					fpNShapeRA = (fpNShapeRA*fpOld)+((inputSampleR-fpTemp)*fpNew);
 				} else {
 					fpTemp = inputSampleR;
 					fpNShapeRB = (fpNShapeRB*fpOld)+((inputSampleR-fpTemp)*fpNew);
-				}				
+				}
 			}
-			
+
 		}
 		//that's it. Only applies on one half of the waveform, other half is passthrough untouched.
 		//even the floating point noise shaping to the 32 bit buss is only applied as needed.
@@ -179,7 +179,7 @@ void PurestWarm::processReplacing(float **inputs, float **outputs, VstInt32 samp
     }
 }
 
-void PurestWarm::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void PurestWarm::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -188,8 +188,8 @@ void PurestWarm::processDoubleReplacing(double **inputs, double **outputs, VstIn
 
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	int polarity = (int) ( A * 1.999 );
 
 	long double inputSampleL;
@@ -237,10 +237,10 @@ void PurestWarm::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		if (polarity == 1)
 		{
-			if (inputSampleL < 0) 
+			if (inputSampleL < 0)
 			{
 				inputSampleL = -(sin(-inputSampleL*1.57079634)/1.57079634);
 				//noise shaping to 64-bit floating point
@@ -253,17 +253,17 @@ void PurestWarm::processDoubleReplacing(double **inputs, double **outputs, VstIn
 					fpNShapeLB = (fpNShapeLB*fpOld)+((inputSampleL-fpTemp)*fpNew);
 					inputSampleL += fpNShapeLB;
 				}
-			} else {			
+			} else {
 				if (fpFlip) {
 					fpTemp = inputSampleL;
 					fpNShapeLA = (fpNShapeLA*fpOld)+((inputSampleL-fpTemp)*fpNew);
 				} else {
 					fpTemp = inputSampleL;
 					fpNShapeLB = (fpNShapeLB*fpOld)+((inputSampleL-fpTemp)*fpNew);
-				}				
+				}
 			}
-			
-			if (inputSampleR < 0) 
+
+			if (inputSampleR < 0)
 			{
 				inputSampleR = -(sin(-inputSampleR*1.57079634)/1.57079634);
 				//noise shaping to 64-bit floating point
@@ -276,19 +276,19 @@ void PurestWarm::processDoubleReplacing(double **inputs, double **outputs, VstIn
 					fpNShapeRB = (fpNShapeRB*fpOld)+((inputSampleR-fpTemp)*fpNew);
 					inputSampleR += fpNShapeRB;
 				}
-			} else {			
+			} else {
 				if (fpFlip) {
 					fpTemp = inputSampleR;
 					fpNShapeRA = (fpNShapeRA*fpOld)+((inputSampleR-fpTemp)*fpNew);
 				} else {
 					fpTemp = inputSampleR;
 					fpNShapeRB = (fpNShapeRB*fpOld)+((inputSampleR-fpTemp)*fpNew);
-				}				
+				}
 			}
-			
+
 		} else {
-			
-			if (inputSampleL > 0) 
+
+			if (inputSampleL > 0)
 			{
 				inputSampleL = sin(inputSampleL*1.57079634)/1.57079634;
 				//noise shaping to 64-bit floating point
@@ -301,17 +301,17 @@ void PurestWarm::processDoubleReplacing(double **inputs, double **outputs, VstIn
 					fpNShapeLB = (fpNShapeLB*fpOld)+((inputSampleL-fpTemp)*fpNew);
 					inputSampleL += fpNShapeLB;
 				}
-			} else {			
+			} else {
 				if (fpFlip) {
 					fpTemp = inputSampleL;
 					fpNShapeLA = (fpNShapeLA*fpOld)+((inputSampleL-fpTemp)*fpNew);
 				} else {
 					fpTemp = inputSampleL;
 					fpNShapeLB = (fpNShapeLB*fpOld)+((inputSampleL-fpTemp)*fpNew);
-				}				
+				}
 			}
-			
-			if (inputSampleR > 0) 
+
+			if (inputSampleR > 0)
 			{
 				inputSampleR = sin(inputSampleR*1.57079634)/1.57079634;
 				//noise shaping to 64-bit floating point
@@ -324,23 +324,23 @@ void PurestWarm::processDoubleReplacing(double **inputs, double **outputs, VstIn
 					fpNShapeRB = (fpNShapeRB*fpOld)+((inputSampleR-fpTemp)*fpNew);
 					inputSampleR += fpNShapeRB;
 				}
-			} else {			
+			} else {
 				if (fpFlip) {
 					fpTemp = inputSampleR;
 					fpNShapeRA = (fpNShapeRA*fpOld)+((inputSampleR-fpTemp)*fpNew);
 				} else {
 					fpTemp = inputSampleR;
 					fpNShapeRB = (fpNShapeRB*fpOld)+((inputSampleR-fpTemp)*fpNew);
-				}				
+				}
 			}
-			
+
 		}
 		//that's it. Only applies on one half of the waveform, other half is passthrough untouched.
 		//even the floating point noise shaping to the 32 bit buss is only applied as needed.
-		
+
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

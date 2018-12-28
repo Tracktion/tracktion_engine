@@ -7,7 +7,7 @@
 #include "NaturalizeDither.h"
 #endif
 
-void NaturalizeDither::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void NaturalizeDither::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -16,13 +16,13 @@ void NaturalizeDither::processReplacing(float **inputs, float **outputs, VstInt3
 
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	double benfordize;
 	int hotbinA;
 	int hotbinB;
 	double totalA;
-	double totalB;	
-    
+	double totalB;
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -69,7 +69,7 @@ void NaturalizeDither::processReplacing(float **inputs, float **outputs, VstInt3
 		inputSampleL *= 8388608.0;
 		inputSampleR *= 8388608.0;
 		//0-1 is now one bit, now we dither
-		
+
 		if (inputSampleL > 0) inputSampleL += (0.3333333333);
 		if (inputSampleL < 0) inputSampleL -= (0.3333333333);
 		inputSampleL += (rand()/(double)RAND_MAX)*0.6666666666;
@@ -77,7 +77,7 @@ void NaturalizeDither::processReplacing(float **inputs, float **outputs, VstInt3
 		if (inputSampleR > 0) inputSampleR += (0.3333333333);
 		if (inputSampleR < 0) inputSampleR -= (0.3333333333);
 		inputSampleR += (rand()/(double)RAND_MAX)*0.6666666666;
-		
+
 		//begin L
 		benfordize = floor(inputSampleL);
 		while (benfordize >= 1.0) {benfordize /= 10;}
@@ -101,7 +101,7 @@ void NaturalizeDither::processReplacing(float **inputs, float **outputs, VstInt3
 			bynL[hotbinA] -= 1;
 		} else {hotbinA = 10;}
 		//produce total number- smaller is closer to Benford real
-		
+
 		benfordize = ceil(inputSampleL);
 		while (benfordize >= 1.0) {benfordize /= 10;}
 		if (benfordize < 1.0) {benfordize *= 10;}
@@ -124,7 +124,7 @@ void NaturalizeDither::processReplacing(float **inputs, float **outputs, VstInt3
 			bynL[hotbinB] -= 1;
 		} else {hotbinB = 10;}
 		//produce total number- smaller is closer to Benford real
-		
+
 		if (totalA < totalB)
 		{
 			bynL[hotbinA] += 1;
@@ -137,7 +137,7 @@ void NaturalizeDither::processReplacing(float **inputs, float **outputs, VstInt3
 		}
 		//assign the relevant one to the delay line
 		//and floor/ceil signal accordingly
-		
+
 		totalA = bynL[1] + bynL[2] + bynL[3] + bynL[4] + bynL[5] + bynL[6] + bynL[7] + bynL[8] + bynL[9];
 		totalA /= 1000;
 		if (totalA = 0) totalA = 1;
@@ -176,7 +176,7 @@ void NaturalizeDither::processReplacing(float **inputs, float **outputs, VstInt3
 			bynR[hotbinA] -= 1;
 		} else {hotbinA = 10;}
 		//produce total number- smaller is closer to Benford real
-		
+
 		benfordize = ceil(inputSampleR);
 		while (benfordize >= 1.0) {benfordize /= 10;}
 		if (benfordize < 1.0) {benfordize *= 10;}
@@ -199,7 +199,7 @@ void NaturalizeDither::processReplacing(float **inputs, float **outputs, VstInt3
 			bynR[hotbinB] -= 1;
 		} else {hotbinB = 10;}
 		//produce total number- smaller is closer to Benford real
-		
+
 		if (totalA < totalB)
 		{
 			bynR[hotbinA] += 1;
@@ -212,7 +212,7 @@ void NaturalizeDither::processReplacing(float **inputs, float **outputs, VstInt3
 		}
 		//assign the relevant one to the delay line
 		//and floor/ceil signal accordingly
-		
+
 		totalA = bynR[1] + bynR[2] + bynR[3] + bynR[4] + bynR[5] + bynR[6] + bynR[7] + bynR[8] + bynR[9];
 		totalA /= 1000;
 		if (totalA = 0) totalA = 1;
@@ -227,10 +227,10 @@ void NaturalizeDither::processReplacing(float **inputs, float **outputs, VstInt3
 		bynR[9] /= totalA;
 		bynR[10] /= 2; //catchall for garbage data
 		//end R
-		
+
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -241,7 +241,7 @@ void NaturalizeDither::processReplacing(float **inputs, float **outputs, VstInt3
     }
 }
 
-void NaturalizeDither::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void NaturalizeDither::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -250,13 +250,13 @@ void NaturalizeDither::processDoubleReplacing(double **inputs, double **outputs,
 
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	double benfordize;
 	int hotbinA;
 	int hotbinB;
 	double totalA;
-	double totalB;	
-	
+	double totalB;
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -303,15 +303,15 @@ void NaturalizeDither::processDoubleReplacing(double **inputs, double **outputs,
 		inputSampleL *= 8388608.0;
 		inputSampleR *= 8388608.0;
 		//0-1 is now one bit, now we dither
-		
+
 		if (inputSampleL > 0) inputSampleL += (0.3333333333);
 		if (inputSampleL < 0) inputSampleL -= (0.3333333333);
 		inputSampleL += (rand()/(double)RAND_MAX)*0.6666666666;
-		
+
 		if (inputSampleR > 0) inputSampleR += (0.3333333333);
 		if (inputSampleR < 0) inputSampleR -= (0.3333333333);
 		inputSampleR += (rand()/(double)RAND_MAX)*0.6666666666;
-		
+
 		//begin L
 		benfordize = floor(inputSampleL);
 		while (benfordize >= 1.0) {benfordize /= 10;}
@@ -335,7 +335,7 @@ void NaturalizeDither::processDoubleReplacing(double **inputs, double **outputs,
 			bynL[hotbinA] -= 1;
 		} else {hotbinA = 10;}
 		//produce total number- smaller is closer to Benford real
-		
+
 		benfordize = ceil(inputSampleL);
 		while (benfordize >= 1.0) {benfordize /= 10;}
 		if (benfordize < 1.0) {benfordize *= 10;}
@@ -358,7 +358,7 @@ void NaturalizeDither::processDoubleReplacing(double **inputs, double **outputs,
 			bynL[hotbinB] -= 1;
 		} else {hotbinB = 10;}
 		//produce total number- smaller is closer to Benford real
-		
+
 		if (totalA < totalB)
 		{
 			bynL[hotbinA] += 1;
@@ -371,7 +371,7 @@ void NaturalizeDither::processDoubleReplacing(double **inputs, double **outputs,
 		}
 		//assign the relevant one to the delay line
 		//and floor/ceil signal accordingly
-		
+
 		totalA = bynL[1] + bynL[2] + bynL[3] + bynL[4] + bynL[5] + bynL[6] + bynL[7] + bynL[8] + bynL[9];
 		totalA /= 1000;
 		if (totalA = 0) totalA = 1;
@@ -386,7 +386,7 @@ void NaturalizeDither::processDoubleReplacing(double **inputs, double **outputs,
 		bynL[9] /= totalA;
 		bynL[10] /= 2; //catchall for garbage data
 		//end L
-		
+
 		//begin R
 		benfordize = floor(inputSampleR);
 		while (benfordize >= 1.0) {benfordize /= 10;}
@@ -410,7 +410,7 @@ void NaturalizeDither::processDoubleReplacing(double **inputs, double **outputs,
 			bynR[hotbinA] -= 1;
 		} else {hotbinA = 10;}
 		//produce total number- smaller is closer to Benford real
-		
+
 		benfordize = ceil(inputSampleR);
 		while (benfordize >= 1.0) {benfordize /= 10;}
 		if (benfordize < 1.0) {benfordize *= 10;}
@@ -433,7 +433,7 @@ void NaturalizeDither::processDoubleReplacing(double **inputs, double **outputs,
 			bynR[hotbinB] -= 1;
 		} else {hotbinB = 10;}
 		//produce total number- smaller is closer to Benford real
-		
+
 		if (totalA < totalB)
 		{
 			bynR[hotbinA] += 1;
@@ -446,7 +446,7 @@ void NaturalizeDither::processDoubleReplacing(double **inputs, double **outputs,
 		}
 		//assign the relevant one to the delay line
 		//and floor/ceil signal accordingly
-		
+
 		totalA = bynR[1] + bynR[2] + bynR[3] + bynR[4] + bynR[5] + bynR[6] + bynR[7] + bynR[8] + bynR[9];
 		totalA /= 1000;
 		if (totalA = 0) totalA = 1;
@@ -461,10 +461,10 @@ void NaturalizeDither::processDoubleReplacing(double **inputs, double **outputs,
 		bynR[9] /= totalA;
 		bynR[10] /= 2; //catchall for garbage data
 		//end R
-		
+
 		inputSampleL /= 8388608.0;
-		inputSampleR /= 8388608.0;		
-		
+		inputSampleR /= 8388608.0;
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

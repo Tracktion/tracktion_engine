@@ -7,7 +7,7 @@
 #include "Gatelope.h"
 #endif
 
-void Gatelope::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Gatelope::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -33,7 +33,7 @@ void Gatelope::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	double highestSample;
 	//this VST version comes from the AU, Gatelinked, because it's stereo.
 	//if used on a mono track it'll act like the mono N to N
-    
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -43,7 +43,7 @@ void Gatelope::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -58,7 +58,7 @@ void Gatelope::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -73,11 +73,11 @@ void Gatelope::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
-		
+
 		if (fabs(inputSampleL) > fabs(inputSampleR)) {
 			attackSpeed = slowAttack - (fabs(inputSampleL)*slowAttack*0.5);
 			highestSample = fabs(inputSampleL);
@@ -85,10 +85,10 @@ void Gatelope::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			attackSpeed = slowAttack - (fabs(inputSampleR)*slowAttack*0.5); //we're triggering off the highest amplitude
 			highestSample = fabs(inputSampleR); //and making highestSample the abs() of that amplitude
 		}
-		
+
 		if (attackSpeed < 0.0) attackSpeed = 0.0;
 		//softening onset click depending on how hard we're getting it
-		
+
 		if (flip)
 		{
 			if (highestSample > threshold)
@@ -112,7 +112,7 @@ void Gatelope::processReplacing(float **inputs, float **outputs, VstInt32 sample
 				bassfreq /= bassdecay;
 				bassfreq += treblefreq;
 			}
-			
+
 			if (treblefreq >= 1.0) {
 				iirLowpassAL = inputSampleL;
 				iirLowpassAR = inputSampleR;
@@ -120,9 +120,9 @@ void Gatelope::processReplacing(float **inputs, float **outputs, VstInt32 sample
 				iirLowpassAL = (iirLowpassAL * (1.0 - treblefreq)) + (inputSampleL * treblefreq);
 				iirLowpassAR = (iirLowpassAR * (1.0 - treblefreq)) + (inputSampleR * treblefreq);
 			}
-			
+
 			if (bassfreq > 1.0) bassfreq = 1.0;
-			
+
 			if (bassfreq > 0.0) {
 				iirHighpassAL = (iirHighpassAL * (1.0 - bassfreq)) + (inputSampleL * bassfreq);
 				iirHighpassAR = (iirHighpassAR * (1.0 - bassfreq)) + (inputSampleR * bassfreq);
@@ -130,7 +130,7 @@ void Gatelope::processReplacing(float **inputs, float **outputs, VstInt32 sample
 				iirHighpassAL = 0.0;
 				iirHighpassAR = 0.0;
 			}
-			
+
 			if (treblefreq > bassfreq) {
 				inputSampleL = (iirLowpassAL - iirHighpassAL);
 				inputSampleR = (iirLowpassAR - iirHighpassAR);
@@ -162,7 +162,7 @@ void Gatelope::processReplacing(float **inputs, float **outputs, VstInt32 sample
 				bassfreq /= bassdecay;
 				bassfreq += treblefreq;
 			}
-			
+
 			if (treblefreq >= 1.0) {
 				iirLowpassBL = inputSampleL;
 				iirLowpassBR = inputSampleR;
@@ -170,9 +170,9 @@ void Gatelope::processReplacing(float **inputs, float **outputs, VstInt32 sample
 				iirLowpassBL = (iirLowpassBL * (1.0 - treblefreq)) + (inputSampleL * treblefreq);
 				iirLowpassBR = (iirLowpassBR * (1.0 - treblefreq)) + (inputSampleR * treblefreq);
 			}
-			
+
 			if (bassfreq > 1.0) bassfreq = 1.0;
-			
+
 			if (bassfreq > 0.0) {
 				iirHighpassBL = (iirHighpassBL * (1.0 - bassfreq)) + (inputSampleL * bassfreq);
 				iirHighpassBR = (iirHighpassBR * (1.0 - bassfreq)) + (inputSampleR * bassfreq);
@@ -180,22 +180,22 @@ void Gatelope::processReplacing(float **inputs, float **outputs, VstInt32 sample
 				iirHighpassBL = 0.0;
 				iirHighpassBR = 0.0;
 			}
-			
+
 			if (treblefreq > bassfreq) {
 				inputSampleL = (iirLowpassBL - iirHighpassBL);
 				inputSampleR = (iirLowpassBR - iirHighpassBR);
 			} else {
 				inputSampleL = 0.0;
 				inputSampleR = 0.0;
-			}			
+			}
 		}
 		//done full gated envelope filtered effect
 		inputSampleL  = ((1-wet)*drySampleL)+(wet*inputSampleL);
 		inputSampleR  = ((1-wet)*drySampleR)+(wet*inputSampleR);
 		//we're going to set up a dry/wet control instead of a min. threshold
-		
+
 		flip = !flip;
-		
+
 		//noise shaping to 32-bit floating point
 		float fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -208,7 +208,7 @@ void Gatelope::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -222,10 +222,10 @@ void Gatelope::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }
 
-void Gatelope::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Gatelope::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -251,7 +251,7 @@ void Gatelope::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	double highestSample;
 	//this VST version comes from the AU, Gatelinked, because it's stereo.
 	//if used on a mono track it'll act like the mono N to N
-    
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -261,7 +261,7 @@ void Gatelope::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -276,7 +276,7 @@ void Gatelope::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -291,7 +291,7 @@ void Gatelope::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
@@ -303,10 +303,10 @@ void Gatelope::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			attackSpeed = slowAttack - (fabs(inputSampleR)*slowAttack*0.5); //we're triggering off the highest amplitude
 			highestSample = fabs(inputSampleR); //and making highestSample the abs() of that amplitude
 		}
-		
+
 		if (attackSpeed < 0.0) attackSpeed = 0.0;
 		//softening onset click depending on how hard we're getting it
-		
+
 		if (flip)
 		{
 			if (highestSample > threshold)
@@ -330,7 +330,7 @@ void Gatelope::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 				bassfreq /= bassdecay;
 				bassfreq += treblefreq;
 			}
-			
+
 			if (treblefreq >= 1.0) {
 				iirLowpassAL = inputSampleL;
 				iirLowpassAR = inputSampleR;
@@ -338,9 +338,9 @@ void Gatelope::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 				iirLowpassAL = (iirLowpassAL * (1.0 - treblefreq)) + (inputSampleL * treblefreq);
 				iirLowpassAR = (iirLowpassAR * (1.0 - treblefreq)) + (inputSampleR * treblefreq);
 			}
-			
+
 			if (bassfreq > 1.0) bassfreq = 1.0;
-			
+
 			if (bassfreq > 0.0) {
 				iirHighpassAL = (iirHighpassAL * (1.0 - bassfreq)) + (inputSampleL * bassfreq);
 				iirHighpassAR = (iirHighpassAR * (1.0 - bassfreq)) + (inputSampleR * bassfreq);
@@ -348,7 +348,7 @@ void Gatelope::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 				iirHighpassAL = 0.0;
 				iirHighpassAR = 0.0;
 			}
-			
+
 			if (treblefreq > bassfreq) {
 				inputSampleL = (iirLowpassAL - iirHighpassAL);
 				inputSampleR = (iirLowpassAR - iirHighpassAR);
@@ -380,7 +380,7 @@ void Gatelope::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 				bassfreq /= bassdecay;
 				bassfreq += treblefreq;
 			}
-			
+
 			if (treblefreq >= 1.0) {
 				iirLowpassBL = inputSampleL;
 				iirLowpassBR = inputSampleR;
@@ -388,9 +388,9 @@ void Gatelope::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 				iirLowpassBL = (iirLowpassBL * (1.0 - treblefreq)) + (inputSampleL * treblefreq);
 				iirLowpassBR = (iirLowpassBR * (1.0 - treblefreq)) + (inputSampleR * treblefreq);
 			}
-			
+
 			if (bassfreq > 1.0) bassfreq = 1.0;
-			
+
 			if (bassfreq > 0.0) {
 				iirHighpassBL = (iirHighpassBL * (1.0 - bassfreq)) + (inputSampleL * bassfreq);
 				iirHighpassBR = (iirHighpassBR * (1.0 - bassfreq)) + (inputSampleR * bassfreq);
@@ -398,22 +398,22 @@ void Gatelope::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 				iirHighpassBL = 0.0;
 				iirHighpassBR = 0.0;
 			}
-			
+
 			if (treblefreq > bassfreq) {
 				inputSampleL = (iirLowpassBL - iirHighpassBL);
 				inputSampleR = (iirLowpassBR - iirHighpassBR);
 			} else {
 				inputSampleL = 0.0;
 				inputSampleR = 0.0;
-			}			
+			}
 		}
 		//done full gated envelope filtered effect
 		inputSampleL  = ((1-wet)*drySampleL)+(wet*inputSampleL);
 		inputSampleR  = ((1-wet)*drySampleR)+(wet*inputSampleR);
 		//we're going to set up a dry/wet control instead of a min. threshold
-		
+
 		flip = !flip;
-		
+
 		//noise shaping to 64-bit floating point
 		double fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -426,7 +426,7 @@ void Gatelope::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -440,5 +440,5 @@ void Gatelope::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }

@@ -7,7 +7,7 @@
 #include "CStrip.h"
 #endif
 
-void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -22,39 +22,39 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 	//compscale is the one that's 1 or something like 2.2 for 96K rates
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	double highSampleL = 0.0;
 	double midSampleL = 0.0;
 	double bassSampleL = 0.0;
-	
+
 	double highSampleR = 0.0;
 	double midSampleR = 0.0;
 	double bassSampleR = 0.0;
-	
+
 	double densityA = (A*12.0)-6.0;
 	double densityB = (B*12.0)-6.0;
 	double densityC = (C*12.0)-6.0;
 	bool engageEQ = true;
 	if ( (0.0 == densityA) && (0.0 == densityB) && (0.0 == densityC) ) engageEQ = false;
-	
+
 	densityA = pow(10.0,densityA/20.0)-1.0;
 	densityB = pow(10.0,densityB/20.0)-1.0;
 	densityC = pow(10.0,densityC/20.0)-1.0;
 	//convert to 0 to X multiplier with 1.0 being O db
 	//minus one gives nearly -1 to ? (should top out at 1)
 	//calibrate so that X db roughly equals X db with maximum topping out at 1 internally
-	
+
 	double tripletIntensity = -densityA;
-	
+
 	double iirAmountC = (((D*D*15.0)+1.0)*0.0188) + 0.7;
 	if (iirAmountC > 1.0) iirAmountC = 1.0;
 	bool engageLowpass = false;
 	if (((D*D*15.0)+1.0) < 15.99) engageLowpass = true;
-	
+
 	double iirAmountA = (((E*E*15.0)+1.0)*1000)/overallscale;
 	double iirAmountB = (((F*F*1570.0)+30.0)*10)/overallscale;
 	double iirAmountD = (((G*G*1570.0)+30.0)*1.0)/overallscale;
@@ -71,7 +71,7 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 	double offthreshold = onthreshold * 1.1;
 	bool engageGate = false;
 	if (onthreshold > 0.00018) engageGate = true;
-	
+
 	double release = 0.028331119964586;
 	double absmax = 220.9;
 	//speed to be compensated w.r.t sample rate
@@ -107,8 +107,8 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 	if (inputgain > 1.0) engageComp = true;
 	//end ButterComp
 	double outputgain = pow(10.0,((L*36.0)-18.0)/20.0);
-	
-    
+
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -151,13 +151,13 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		last2SampleL = lastSampleL;
 		lastSampleL = inputSampleL;
-		
+
 		last2SampleR = lastSampleR;
 		lastSampleR = inputSampleR;
-		
+
 		//begin Gate
 		if (engageGate)
 		{
@@ -166,19 +166,19 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 				WasNegativeL = false;}
 			else
 			{ZeroCrossL += 1; WasNegativeL = true;}
-			
+
 			if (inputSampleR > 0)
 			{if (WasNegativeR == true){ZeroCrossR = absmax * 0.3;}
 				WasNegativeR = false;}
 			else
 			{ZeroCrossR += 1; WasNegativeR = true;}
-			
+
 			if (ZeroCrossL > absmax)
 			{ZeroCrossL = absmax;}
-			
+
 			if (ZeroCrossR > absmax)
 			{ZeroCrossR = absmax;}
-			
+
 			if (gateL == 0.0)
 			{
 				//if gate is totally silent
@@ -224,19 +224,19 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 				}
 				else gaterollerR -= release;
 			}
-			
+
 			if (gaterollerL < 0.0)
 			{gaterollerL = 0.0;}
 			if (gaterollerR < 0.0)
 			{gaterollerR = 0.0;}
-			
+
 			if (gaterollerL < 1.0)
 			{
 				gateL = gaterollerL;
-				bridgerectifier = 1-cos(fabs(inputSampleL));			
+				bridgerectifier = 1-cos(fabs(inputSampleL));
 				if (inputSampleL > 0) inputSampleL = (inputSampleL*gateL)+(bridgerectifier*(1.0-gateL));
 				else inputSampleL = (inputSampleL*gateL)-(bridgerectifier*(1.0-gateL));
-				if (gateL == 0.0) inputSampleL = 0.0;			
+				if (gateL == 0.0) inputSampleL = 0.0;
 			}
 			else
 			{gateL = 1.0;}
@@ -244,21 +244,21 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			if (gaterollerR < 1.0)
 			{
 				gateR = gaterollerR;
-				bridgerectifier = 1-cos(fabs(inputSampleR));			
+				bridgerectifier = 1-cos(fabs(inputSampleR));
 				if (inputSampleR > 0) inputSampleR = (inputSampleR*gateR)+(bridgerectifier*(1.0-gateR));
 				else inputSampleR = (inputSampleR*gateR)-(bridgerectifier*(1.0-gateR));
-				if (gateR == 0.0) inputSampleR = 0.0;			
+				if (gateR == 0.0) inputSampleR = 0.0;
 			}
 			else
 			{gateR = 1.0;}
 		}
 		//end Gate, begin antialiasing
-		
+
 		flip = !flip;
 		flipthree++;
 		if (flipthree < 1 || flipthree > 3) flipthree = 1;
 		//counters
-		
+
 		//begin highpass
 		if (engageHighpass)
 		{
@@ -287,8 +287,8 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			highpassSampleLE = (highpassSampleLE * (1.0 - iirAmountD)) + (inputSampleL * iirAmountD);
 			inputSampleL -= highpassSampleLE;
 			highpassSampleLF = (highpassSampleLF * (1.0 - iirAmountD)) + (inputSampleL * iirAmountD);
-			inputSampleL -= highpassSampleLF;			
-			
+			inputSampleL -= highpassSampleLF;
+
 			if (flip)
 			{
 				highpassSampleRAA = (highpassSampleRAA * (1.0 - iirAmountD)) + (inputSampleR * iirAmountD);
@@ -314,54 +314,54 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			highpassSampleRE = (highpassSampleRE * (1 - iirAmountD)) + (inputSampleR * iirAmountD);
 			inputSampleR -= highpassSampleRE;
 			highpassSampleRF = (highpassSampleRF * (1 - iirAmountD)) + (inputSampleR * iirAmountD);
-			inputSampleR -= highpassSampleRF;			
-			
+			inputSampleR -= highpassSampleRF;
+
 		}
-		//end highpass 
-		
+		//end highpass
+
 		//begin compressor
 		if (engageComp)
 		{
 			//begin L
 			inputSampleL *= inputgain;
-			
+
 			inputpos = (inputSampleL * fpOld) + (avgLA * fpNew) + 1.0;
 			avgLA = inputSampleL;
-			
+
 			if (inputpos < 0.0) inputpos = 0.0;
 			outputpos = inputpos / 2.0;
-			if (outputpos > 1.0) outputpos = 1.0;		
+			if (outputpos > 1.0) outputpos = 1.0;
 			inputpos *= inputpos;
 			targetposL *= divisor;
 			targetposL += (inputpos * remainder);
 			calcpos = pow((1.0/targetposL),2);
-			
+
 			inputneg = (-inputSampleL * fpOld) + (nvgLA * fpNew) + 1.0;
 			nvgLA = -inputSampleL;
-			
+
 			if (inputneg < 0.0) inputneg = 0.0;
 			outputneg = inputneg / 2.0;
-			if (outputneg > 1.0) outputneg = 1.0;		
+			if (outputneg > 1.0) outputneg = 1.0;
 			inputneg *= inputneg;
 			targetnegL *= divisor;
 			targetnegL += (inputneg * remainder);
 			calcneg = pow((1.0/targetnegL),2);
 			//now we have mirrored targets for comp
 			//outputpos and outputneg go from 0 to 1
-			
+
 			if (inputSampleL > 0)
 			{ //working on pos
 				if (true == flip)
 				{
 					controlAposL *= divisor;
 					controlAposL += (calcpos*remainder);
-					
+
 				}
 				else
 				{
 					controlBposL *= divisor;
 					controlBposL += (calcpos*remainder);
-				}	
+				}
 			}
 			else
 			{ //working on neg
@@ -377,57 +377,57 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 				}
 			}
 			//this causes each of the four to update only when active and in the correct 'flip'
-			
+
 			if (true == flip)
 			{totalmultiplier = (controlAposL * outputpos) + (controlAnegL * outputneg);}
 			else
 			{totalmultiplier = (controlBposL * outputpos) + (controlBnegL * outputneg);}
 			//this combines the sides according to flip, blending relative to the input value
-			
+
 			inputSampleL *= totalmultiplier;
 			inputSampleL /= compoutgain;
 			//end L
-			
+
 			//begin R
 			inputSampleR *= inputgain;
-			
+
 			inputpos = (inputSampleR * fpOld) + (avgRA * fpNew) + 1.0;
 			avgRA = inputSampleR;
-			
+
 			if (inputpos < 0.0) inputpos = 0.0;
 			outputpos = inputpos / 2.0;
-			if (outputpos > 1.0) outputpos = 1.0;		
+			if (outputpos > 1.0) outputpos = 1.0;
 			inputpos *= inputpos;
 			targetposR *= divisor;
 			targetposR += (inputpos * remainder);
 			calcpos = pow((1.0/targetposR),2);
-			
+
 			inputneg = (-inputSampleR * fpOld) + (nvgRA * fpNew) + 1.0;
 			nvgRA = -inputSampleR;
-			
+
 			if (inputneg < 0.0) inputneg = 0.0;
 			outputneg = inputneg / 2.0;
-			if (outputneg > 1.0) outputneg = 1.0;		
+			if (outputneg > 1.0) outputneg = 1.0;
 			inputneg *= inputneg;
 			targetnegR *= divisor;
 			targetnegR += (inputneg * remainder);
 			calcneg = pow((1.0/targetnegR),2);
 			//now we have mirrored targets for comp
 			//outputpos and outputneg go from 0 to 1
-			
+
 			if (inputSampleR > 0)
 			{ //working on pos
 				if (true == flip)
 				{
 					controlAposR *= divisor;
 					controlAposR += (calcpos*remainder);
-					
+
 				}
 				else
 				{
 					controlBposR *= divisor;
 					controlBposR += (calcpos*remainder);
-				}	
+				}
 			}
 			else
 			{ //working on neg
@@ -443,19 +443,19 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 				}
 			}
 			//this causes each of the four to update only when active and in the correct 'flip'
-			
+
 			if (true == flip)
 			{totalmultiplier = (controlAposR * outputpos) + (controlAnegR * outputneg);}
 			else
 			{totalmultiplier = (controlBposR * outputpos) + (controlBnegR * outputneg);}
 			//this combines the sides according to flip, blending relative to the input value
-			
+
 			inputSampleR *= totalmultiplier;
 			inputSampleR /= compoutgain;
 			//end R
 		}
 		//end compressor
-		
+
 		//begin EQ
 		if (engageEQ)
 		{
@@ -528,7 +528,7 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			tripletRB /= 2.0;
 			tripletRC /= 2.0;
 			highSampleR = highSampleR + tripletFactorR;
-			
+
 			if (flip)
 			{
 				iirHighSampleLA = (iirHighSampleLA * (1.0 - iirAmountA)) + (highSampleL * iirAmountA);
@@ -553,7 +553,7 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 				iirLowSampleRB = (iirLowSampleRB * (1.0 - iirAmountB)) + (bassSampleR * iirAmountB);
 				bassSampleR = iirLowSampleRB;
 			}
-			
+
 			iirHighSampleL = (iirHighSampleL * (1.0 - iirAmountA)) + (highSampleL * iirAmountA);
 			highSampleL -= iirHighSampleL;
 			iirLowSampleL = (iirLowSampleL * (1.0 - iirAmountB)) + (bassSampleL * iirAmountB);
@@ -563,7 +563,7 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			highSampleR -= iirHighSampleR;
 			iirLowSampleR = (iirLowSampleR * (1.0 - iirAmountB)) + (bassSampleR * iirAmountB);
 			bassSampleR = iirLowSampleR;
-			
+
 			midSampleL = (inputSampleL-bassSampleL)-highSampleL;
 			midSampleR = (inputSampleR-bassSampleR)-highSampleR;
 
@@ -578,7 +578,7 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			if (highSampleL > 0) highSampleL = (highSampleL*(1-outA))+(bridgerectifier*outA);
 			else highSampleL = (highSampleL*(1-outA))-(bridgerectifier*outA);
 			//blend according to densityA control
-			
+
 			highSampleR *= (densityA+1.0);
 			bridgerectifier = fabs(highSampleR)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -589,7 +589,7 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			if (highSampleR > 0) highSampleR = (highSampleR*(1-outA))+(bridgerectifier*outA);
 			else highSampleR = (highSampleR*(1-outA))-(bridgerectifier*outA);
 			//blend according to densityA control
-			
+
 			midSampleL *= (densityB+1.0);
 			bridgerectifier = fabs(midSampleL)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -600,7 +600,7 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			if (midSampleL > 0) midSampleL = (midSampleL*(1-outB))+(bridgerectifier*outB);
 			else midSampleL = (midSampleL*(1-outB))-(bridgerectifier*outB);
 			//blend according to densityB control
-			
+
 			midSampleR *= (densityB+1.0);
 			bridgerectifier = fabs(midSampleR)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -611,7 +611,7 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			if (midSampleR > 0) midSampleR = (midSampleR*(1-outB))+(bridgerectifier*outB);
 			else midSampleR = (midSampleR*(1-outB))-(bridgerectifier*outB);
 			//blend according to densityB control
-			
+
 			bassSampleL *= (densityC+1.0);
 			bridgerectifier = fabs(bassSampleL)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -622,7 +622,7 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			if (bassSampleL > 0) bassSampleL = (bassSampleL*(1-outC))+(bridgerectifier*outC);
 			else bassSampleL = (bassSampleL*(1-outC))-(bridgerectifier*outC);
 			//blend according to densityC control
-			
+
 			bassSampleR *= (densityC+1.0);
 			bridgerectifier = fabs(bassSampleR)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -633,7 +633,7 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			if (bassSampleR > 0) bassSampleR = (bassSampleR*(1-outC))+(bridgerectifier*outC);
 			else bassSampleR = (bassSampleR*(1-outC))-(bridgerectifier*outC);
 			//blend according to densityC control
-			
+
 			inputSampleL = midSampleL;
 			inputSampleL += highSampleL;
 			inputSampleL += bassSampleL;
@@ -643,12 +643,12 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			inputSampleR += bassSampleR;
 		}
 		//end EQ
-		
+
 		//begin Timing
 		if (engageTiming = true)
 		{
 			if (count < 1 || count > 2048) count = 2048;
-			
+
 			pL[count+2048] = pL[count] = inputSampleL;
 			pR[count+2048] = pR[count] = inputSampleR;
 
@@ -660,10 +660,10 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 
 			count -= 1;
 			//consider adding third sample just to bring out superhighs subtly, like old interpolation hacks
-			//or third and fifth samples, ditto		
+			//or third and fifth samples, ditto
 		}
 		//end Timing
-		
+
 		//EQ lowpass is after all processing like the compressor that might produce hash
 		if (engageLowpass)
 		{
@@ -702,7 +702,7 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 				lowpassSampleLDB = (lowpassSampleLDB * (1.0 - iirAmountC)) + (inputSampleL * iirAmountC);
 				inputSampleL = lowpassSampleLDB;
 				lowpassSampleLF = (lowpassSampleLF * (1.0 - iirAmountC)) + (inputSampleL * iirAmountC);
-				inputSampleL = lowpassSampleLF;			
+				inputSampleL = lowpassSampleLF;
 
 				lowpassSampleRAB = (lowpassSampleRAB * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
 				inputSampleR = lowpassSampleRAB;
@@ -713,21 +713,21 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 				lowpassSampleRDB = (lowpassSampleRDB * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
 				inputSampleR = lowpassSampleRDB;
 				lowpassSampleRF = (lowpassSampleRF * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
-				inputSampleR = lowpassSampleRF;			
+				inputSampleR = lowpassSampleRF;
 			}
 			lowpassSampleLG = (lowpassSampleLG * (1.0 - iirAmountC)) + (inputSampleL * iirAmountC);
 			lowpassSampleRG = (lowpassSampleRG * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
-			
+
 			inputSampleL = (lowpassSampleLG * (1.0 - iirAmountC)) + (inputSampleL * iirAmountC);
 			inputSampleR = (lowpassSampleRG * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
 		}
-		
+
 		//built in output trim and dry/wet if desired
 		if (outputgain != 1.0) {
 			inputSampleL *= outputgain;
 			inputSampleR *= outputgain;
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -758,7 +758,7 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
     }
 }
 
-void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -773,39 +773,39 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	//compscale is the one that's 1 or something like 2.2 for 96K rates
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	double highSampleL = 0.0;
 	double midSampleL = 0.0;
 	double bassSampleL = 0.0;
-	
+
 	double highSampleR = 0.0;
 	double midSampleR = 0.0;
 	double bassSampleR = 0.0;
-	
+
 	double densityA = (A*12.0)-6.0;
 	double densityB = (B*12.0)-6.0;
 	double densityC = (C*12.0)-6.0;
 	bool engageEQ = true;
 	if ( (0.0 == densityA) && (0.0 == densityB) && (0.0 == densityC) ) engageEQ = false;
-	
+
 	densityA = pow(10.0,densityA/20.0)-1.0;
 	densityB = pow(10.0,densityB/20.0)-1.0;
 	densityC = pow(10.0,densityC/20.0)-1.0;
 	//convert to 0 to X multiplier with 1.0 being O db
 	//minus one gives nearly -1 to ? (should top out at 1)
 	//calibrate so that X db roughly equals X db with maximum topping out at 1 internally
-	
+
 	double tripletIntensity = -densityA;
-	
+
 	double iirAmountC = (((D*D*15.0)+1.0)*0.0188) + 0.7;
 	if (iirAmountC > 1.0) iirAmountC = 1.0;
 	bool engageLowpass = false;
 	if (((D*D*15.0)+1.0) < 15.99) engageLowpass = true;
-	
+
 	double iirAmountA = (((E*E*15.0)+1.0)*1000)/overallscale;
 	double iirAmountB = (((F*F*1570.0)+30.0)*10)/overallscale;
 	double iirAmountD = (((G*G*1570.0)+30.0)*1.0)/overallscale;
@@ -822,7 +822,7 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	double offthreshold = onthreshold * 1.1;
 	bool engageGate = false;
 	if (onthreshold > 0.00018) engageGate = true;
-	
+
 	double release = 0.028331119964586;
 	double absmax = 220.9;
 	//speed to be compensated w.r.t sample rate
@@ -858,8 +858,8 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	if (inputgain > 1.0) engageComp = true;
 	//end ButterComp
 	double outputgain = pow(10.0,((L*36.0)-18.0)/20.0);
-	
-	
+
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -902,13 +902,13 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		last2SampleL = lastSampleL;
 		lastSampleL = inputSampleL;
-		
+
 		last2SampleR = lastSampleR;
 		lastSampleR = inputSampleR;
-		
+
 		//begin Gate
 		if (engageGate)
 		{
@@ -917,19 +917,19 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				WasNegativeL = false;}
 			else
 			{ZeroCrossL += 1; WasNegativeL = true;}
-			
+
 			if (inputSampleR > 0)
 			{if (WasNegativeR == true){ZeroCrossR = absmax * 0.3;}
 				WasNegativeR = false;}
 			else
 			{ZeroCrossR += 1; WasNegativeR = true;}
-			
+
 			if (ZeroCrossL > absmax)
 			{ZeroCrossL = absmax;}
-			
+
 			if (ZeroCrossR > absmax)
 			{ZeroCrossR = absmax;}
-			
+
 			if (gateL == 0.0)
 			{
 				//if gate is totally silent
@@ -952,7 +952,7 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				}
 				else gaterollerL -= release;
 			}
-			
+
 			if (gateR == 0.0)
 			{
 				//if gate is totally silent
@@ -975,41 +975,41 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				}
 				else gaterollerR -= release;
 			}
-			
+
 			if (gaterollerL < 0.0)
 			{gaterollerL = 0.0;}
 			if (gaterollerR < 0.0)
 			{gaterollerR = 0.0;}
-			
+
 			if (gaterollerL < 1.0)
 			{
 				gateL = gaterollerL;
-				bridgerectifier = 1-cos(fabs(inputSampleL));			
+				bridgerectifier = 1-cos(fabs(inputSampleL));
 				if (inputSampleL > 0) inputSampleL = (inputSampleL*gateL)+(bridgerectifier*(1.0-gateL));
 				else inputSampleL = (inputSampleL*gateL)-(bridgerectifier*(1.0-gateL));
-				if (gateL == 0.0) inputSampleL = 0.0;			
+				if (gateL == 0.0) inputSampleL = 0.0;
 			}
 			else
 			{gateL = 1.0;}
-			
+
 			if (gaterollerR < 1.0)
 			{
 				gateR = gaterollerR;
-				bridgerectifier = 1-cos(fabs(inputSampleR));			
+				bridgerectifier = 1-cos(fabs(inputSampleR));
 				if (inputSampleR > 0) inputSampleR = (inputSampleR*gateR)+(bridgerectifier*(1.0-gateR));
 				else inputSampleR = (inputSampleR*gateR)-(bridgerectifier*(1.0-gateR));
-				if (gateR == 0.0) inputSampleR = 0.0;			
+				if (gateR == 0.0) inputSampleR = 0.0;
 			}
 			else
 			{gateR = 1.0;}
 		}
 		//end Gate, begin antialiasing
-		
+
 		flip = !flip;
 		flipthree++;
 		if (flipthree < 1 || flipthree > 3) flipthree = 1;
 		//counters
-		
+
 		//begin highpass
 		if (engageHighpass)
 		{
@@ -1038,8 +1038,8 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			highpassSampleLE = (highpassSampleLE * (1.0 - iirAmountD)) + (inputSampleL * iirAmountD);
 			inputSampleL -= highpassSampleLE;
 			highpassSampleLF = (highpassSampleLF * (1.0 - iirAmountD)) + (inputSampleL * iirAmountD);
-			inputSampleL -= highpassSampleLF;			
-			
+			inputSampleL -= highpassSampleLF;
+
 			if (flip)
 			{
 				highpassSampleRAA = (highpassSampleRAA * (1.0 - iirAmountD)) + (inputSampleR * iirAmountD);
@@ -1065,54 +1065,54 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			highpassSampleRE = (highpassSampleRE * (1 - iirAmountD)) + (inputSampleR * iirAmountD);
 			inputSampleR -= highpassSampleRE;
 			highpassSampleRF = (highpassSampleRF * (1 - iirAmountD)) + (inputSampleR * iirAmountD);
-			inputSampleR -= highpassSampleRF;			
-			
+			inputSampleR -= highpassSampleRF;
+
 		}
-		//end highpass 
-		
+		//end highpass
+
 		//begin compressor
 		if (engageComp)
 		{
 			//begin L
 			inputSampleL *= inputgain;
-			
+
 			inputpos = (inputSampleL * fpOld) + (avgLA * fpNew) + 1.0;
 			avgLA = inputSampleL;
-			
+
 			if (inputpos < 0.0) inputpos = 0.0;
 			outputpos = inputpos / 2.0;
-			if (outputpos > 1.0) outputpos = 1.0;		
+			if (outputpos > 1.0) outputpos = 1.0;
 			inputpos *= inputpos;
 			targetposL *= divisor;
 			targetposL += (inputpos * remainder);
 			calcpos = pow((1.0/targetposL),2);
-			
+
 			inputneg = (-inputSampleL * fpOld) + (nvgLA * fpNew) + 1.0;
 			nvgLA = -inputSampleL;
-			
+
 			if (inputneg < 0.0) inputneg = 0.0;
 			outputneg = inputneg / 2.0;
-			if (outputneg > 1.0) outputneg = 1.0;		
+			if (outputneg > 1.0) outputneg = 1.0;
 			inputneg *= inputneg;
 			targetnegL *= divisor;
 			targetnegL += (inputneg * remainder);
 			calcneg = pow((1.0/targetnegL),2);
 			//now we have mirrored targets for comp
 			//outputpos and outputneg go from 0 to 1
-			
+
 			if (inputSampleL > 0)
 			{ //working on pos
 				if (true == flip)
 				{
 					controlAposL *= divisor;
 					controlAposL += (calcpos*remainder);
-					
+
 				}
 				else
 				{
 					controlBposL *= divisor;
 					controlBposL += (calcpos*remainder);
-				}	
+				}
 			}
 			else
 			{ //working on neg
@@ -1128,57 +1128,57 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				}
 			}
 			//this causes each of the four to update only when active and in the correct 'flip'
-			
+
 			if (true == flip)
 			{totalmultiplier = (controlAposL * outputpos) + (controlAnegL * outputneg);}
 			else
 			{totalmultiplier = (controlBposL * outputpos) + (controlBnegL * outputneg);}
 			//this combines the sides according to flip, blending relative to the input value
-			
+
 			inputSampleL *= totalmultiplier;
 			inputSampleL /= compoutgain;
 			//end L
-			
+
 			//begin R
 			inputSampleR *= inputgain;
-			
+
 			inputpos = (inputSampleR * fpOld) + (avgRA * fpNew) + 1.0;
 			avgRA = inputSampleR;
-			
+
 			if (inputpos < 0.0) inputpos = 0.0;
 			outputpos = inputpos / 2.0;
-			if (outputpos > 1.0) outputpos = 1.0;		
+			if (outputpos > 1.0) outputpos = 1.0;
 			inputpos *= inputpos;
 			targetposR *= divisor;
 			targetposR += (inputpos * remainder);
 			calcpos = pow((1.0/targetposR),2);
-			
+
 			inputneg = (-inputSampleR * fpOld) + (nvgRA * fpNew) + 1.0;
 			nvgRA = -inputSampleR;
-			
+
 			if (inputneg < 0.0) inputneg = 0.0;
 			outputneg = inputneg / 2.0;
-			if (outputneg > 1.0) outputneg = 1.0;		
+			if (outputneg > 1.0) outputneg = 1.0;
 			inputneg *= inputneg;
 			targetnegR *= divisor;
 			targetnegR += (inputneg * remainder);
 			calcneg = pow((1.0/targetnegR),2);
 			//now we have mirrored targets for comp
 			//outputpos and outputneg go from 0 to 1
-			
+
 			if (inputSampleR > 0)
 			{ //working on pos
 				if (true == flip)
 				{
 					controlAposR *= divisor;
 					controlAposR += (calcpos*remainder);
-					
+
 				}
 				else
 				{
 					controlBposR *= divisor;
 					controlBposR += (calcpos*remainder);
-				}	
+				}
 			}
 			else
 			{ //working on neg
@@ -1194,19 +1194,19 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				}
 			}
 			//this causes each of the four to update only when active and in the correct 'flip'
-			
+
 			if (true == flip)
 			{totalmultiplier = (controlAposR * outputpos) + (controlAnegR * outputneg);}
 			else
 			{totalmultiplier = (controlBposR * outputpos) + (controlBnegR * outputneg);}
 			//this combines the sides according to flip, blending relative to the input value
-			
+
 			inputSampleR *= totalmultiplier;
 			inputSampleR /= compoutgain;
 			//end R
 		}
 		//end compressor
-		
+
 		//begin EQ
 		if (engageEQ)
 		{
@@ -1221,7 +1221,7 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 					highSampleL = inputSampleL - iirHighSampleLC;
 					iirLowSampleLC = (iirLowSampleLC * (1.0 - iirAmountB)) + (inputSampleL * iirAmountB);
 					bassSampleL = iirLowSampleLC;
-					
+
 					tripletFactorR = last2SampleR - inputSampleR;
 					tripletRA += tripletFactorR;
 					tripletRC -= tripletFactorR;
@@ -1240,7 +1240,7 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 					highSampleL = inputSampleL - iirHighSampleLD;
 					iirLowSampleLD = (iirLowSampleLD * (1.0 - iirAmountB)) + (inputSampleL * iirAmountB);
 					bassSampleL = iirLowSampleLD;
-					
+
 					tripletFactorR = last2SampleR - inputSampleR;
 					tripletRB += tripletFactorR;
 					tripletRA -= tripletFactorR;
@@ -1259,7 +1259,7 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 					highSampleL = inputSampleL - iirHighSampleLE;
 					iirLowSampleLE = (iirLowSampleLE * (1.0 - iirAmountB)) + (inputSampleL * iirAmountB);
 					bassSampleL = iirLowSampleLE;
-					
+
 					tripletFactorR = last2SampleR - inputSampleR;
 					tripletRC += tripletFactorR;
 					tripletRB -= tripletFactorR;
@@ -1274,19 +1274,19 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			tripletLB /= 2.0;
 			tripletLC /= 2.0;
 			highSampleL = highSampleL + tripletFactorL;
-			
+
 			tripletRA /= 2.0;
 			tripletRB /= 2.0;
 			tripletRC /= 2.0;
 			highSampleR = highSampleR + tripletFactorR;
-			
+
 			if (flip)
 			{
 				iirHighSampleLA = (iirHighSampleLA * (1.0 - iirAmountA)) + (highSampleL * iirAmountA);
 				highSampleL -= iirHighSampleLA;
 				iirLowSampleLA = (iirLowSampleLA * (1.0 - iirAmountB)) + (bassSampleL * iirAmountB);
 				bassSampleL = iirLowSampleLA;
-				
+
 				iirHighSampleRA = (iirHighSampleRA * (1.0 - iirAmountA)) + (highSampleR * iirAmountA);
 				highSampleR -= iirHighSampleRA;
 				iirLowSampleRA = (iirLowSampleRA * (1.0 - iirAmountB)) + (bassSampleR * iirAmountB);
@@ -1298,26 +1298,26 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				highSampleL -= iirHighSampleLB;
 				iirLowSampleLB = (iirLowSampleLB * (1.0 - iirAmountB)) + (bassSampleL * iirAmountB);
 				bassSampleL = iirLowSampleLB;
-				
+
 				iirHighSampleRB = (iirHighSampleRB * (1.0 - iirAmountA)) + (highSampleR * iirAmountA);
 				highSampleR -= iirHighSampleRB;
 				iirLowSampleRB = (iirLowSampleRB * (1.0 - iirAmountB)) + (bassSampleR * iirAmountB);
 				bassSampleR = iirLowSampleRB;
 			}
-			
+
 			iirHighSampleL = (iirHighSampleL * (1.0 - iirAmountA)) + (highSampleL * iirAmountA);
 			highSampleL -= iirHighSampleL;
 			iirLowSampleL = (iirLowSampleL * (1.0 - iirAmountB)) + (bassSampleL * iirAmountB);
 			bassSampleL = iirLowSampleL;
-			
+
 			iirHighSampleR = (iirHighSampleR * (1.0 - iirAmountA)) + (highSampleR * iirAmountA);
 			highSampleR -= iirHighSampleR;
 			iirLowSampleR = (iirLowSampleR * (1.0 - iirAmountB)) + (bassSampleR * iirAmountB);
 			bassSampleR = iirLowSampleR;
-			
+
 			midSampleL = (inputSampleL-bassSampleL)-highSampleL;
 			midSampleR = (inputSampleR-bassSampleR)-highSampleR;
-			
+
 			//drive section
 			highSampleL *= (densityA+1.0);
 			bridgerectifier = fabs(highSampleL)*1.57079633;
@@ -1329,7 +1329,7 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			if (highSampleL > 0) highSampleL = (highSampleL*(1-outA))+(bridgerectifier*outA);
 			else highSampleL = (highSampleL*(1-outA))-(bridgerectifier*outA);
 			//blend according to densityA control
-			
+
 			highSampleR *= (densityA+1.0);
 			bridgerectifier = fabs(highSampleR)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -1340,7 +1340,7 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			if (highSampleR > 0) highSampleR = (highSampleR*(1-outA))+(bridgerectifier*outA);
 			else highSampleR = (highSampleR*(1-outA))-(bridgerectifier*outA);
 			//blend according to densityA control
-			
+
 			midSampleL *= (densityB+1.0);
 			bridgerectifier = fabs(midSampleL)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -1351,7 +1351,7 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			if (midSampleL > 0) midSampleL = (midSampleL*(1-outB))+(bridgerectifier*outB);
 			else midSampleL = (midSampleL*(1-outB))-(bridgerectifier*outB);
 			//blend according to densityB control
-			
+
 			midSampleR *= (densityB+1.0);
 			bridgerectifier = fabs(midSampleR)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -1362,7 +1362,7 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			if (midSampleR > 0) midSampleR = (midSampleR*(1-outB))+(bridgerectifier*outB);
 			else midSampleR = (midSampleR*(1-outB))-(bridgerectifier*outB);
 			//blend according to densityB control
-			
+
 			bassSampleL *= (densityC+1.0);
 			bridgerectifier = fabs(bassSampleL)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -1373,7 +1373,7 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			if (bassSampleL > 0) bassSampleL = (bassSampleL*(1-outC))+(bridgerectifier*outC);
 			else bassSampleL = (bassSampleL*(1-outC))-(bridgerectifier*outC);
 			//blend according to densityC control
-			
+
 			bassSampleR *= (densityC+1.0);
 			bridgerectifier = fabs(bassSampleR)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -1384,37 +1384,37 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			if (bassSampleR > 0) bassSampleR = (bassSampleR*(1-outC))+(bridgerectifier*outC);
 			else bassSampleR = (bassSampleR*(1-outC))-(bridgerectifier*outC);
 			//blend according to densityC control
-			
+
 			inputSampleL = midSampleL;
 			inputSampleL += highSampleL;
 			inputSampleL += bassSampleL;
-			
+
 			inputSampleR = midSampleR;
 			inputSampleR += highSampleR;
 			inputSampleR += bassSampleR;
 		}
 		//end EQ
-		
+
 		//begin Timing
 		if (engageTiming = true)
 		{
 			if (count < 1 || count > 2048) count = 2048;
-			
+
 			pL[count+2048] = pL[count] = inputSampleL;
 			pR[count+2048] = pR[count] = inputSampleR;
-			
+
 			inputSampleL = pL[count+near]*nearLevel;
 			inputSampleR = pR[count+near]*nearLevel;
-			
+
 			inputSampleL += pL[count+far]*farLevel;
 			inputSampleR += pR[count+far]*farLevel;
-			
+
 			count -= 1;
 			//consider adding third sample just to bring out superhighs subtly, like old interpolation hacks
-			//or third and fifth samples, ditto		
+			//or third and fifth samples, ditto
 		}
 		//end Timing
-		
+
 		//EQ lowpass is after all processing like the compressor that might produce hash
 		if (engageLowpass)
 		{
@@ -1430,7 +1430,7 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				inputSampleL = lowpassSampleLDA;
 				lowpassSampleLE = (lowpassSampleLE * (1.0 - iirAmountC)) + (inputSampleL * iirAmountC);
 				inputSampleL = lowpassSampleLE;
-				
+
 				lowpassSampleRAA = (lowpassSampleRAA * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
 				inputSampleR = lowpassSampleRAA;
 				lowpassSampleRBA = (lowpassSampleRBA * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
@@ -1453,8 +1453,8 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				lowpassSampleLDB = (lowpassSampleLDB * (1.0 - iirAmountC)) + (inputSampleL * iirAmountC);
 				inputSampleL = lowpassSampleLDB;
 				lowpassSampleLF = (lowpassSampleLF * (1.0 - iirAmountC)) + (inputSampleL * iirAmountC);
-				inputSampleL = lowpassSampleLF;			
-				
+				inputSampleL = lowpassSampleLF;
+
 				lowpassSampleRAB = (lowpassSampleRAB * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
 				inputSampleR = lowpassSampleRAB;
 				lowpassSampleRBB = (lowpassSampleRBB * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
@@ -1464,21 +1464,21 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				lowpassSampleRDB = (lowpassSampleRDB * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
 				inputSampleR = lowpassSampleRDB;
 				lowpassSampleRF = (lowpassSampleRF * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
-				inputSampleR = lowpassSampleRF;			
+				inputSampleR = lowpassSampleRF;
 			}
 			lowpassSampleLG = (lowpassSampleLG * (1.0 - iirAmountC)) + (inputSampleL * iirAmountC);
 			lowpassSampleRG = (lowpassSampleRG * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
-			
+
 			inputSampleL = (lowpassSampleLG * (1.0 - iirAmountC)) + (inputSampleL * iirAmountC);
 			inputSampleR = (lowpassSampleRG * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
 		}
-		
+
 		//built in output trim and dry/wet if desired
 		if (outputgain != 1.0) {
 			inputSampleL *= outputgain;
 			inputSampleR *= outputgain;
 		}
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -1498,7 +1498,7 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

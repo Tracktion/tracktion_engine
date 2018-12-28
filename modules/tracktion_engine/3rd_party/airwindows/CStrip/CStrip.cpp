@@ -24,12 +24,12 @@ CStrip::CStrip(audioMasterCallback audioMaster) :
 	J = 0.0; //CompSpd 0-1
 	K = 0.0; //TimeLag 0-1
 	L = 0.5; //OutGain -18 to 18
-	
+
 	lastSampleL = 0.0;
 	last2SampleL = 0.0;
 	lastSampleR = 0.0;
 	last2SampleR = 0.0;
-	
+
 	iirHighSampleLA = 0.0;
 	iirHighSampleLB = 0.0;
 	iirHighSampleLC = 0.0;
@@ -65,7 +65,7 @@ CStrip::CStrip(audioMasterCallback audioMaster) :
 	tripletRB = 0.0;
 	tripletRC = 0.0;
 	tripletFactorR = 0.0;
-	
+
 	lowpassSampleLAA = 0.0;
 	lowpassSampleLAB = 0.0;
 	lowpassSampleLBA = 0.0;
@@ -77,7 +77,7 @@ CStrip::CStrip(audioMasterCallback audioMaster) :
 	lowpassSampleLE = 0.0;
 	lowpassSampleLF = 0.0;
 	lowpassSampleLG = 0.0;
-	
+
 	lowpassSampleRAA = 0.0;
 	lowpassSampleRAB = 0.0;
 	lowpassSampleRBA = 0.0;
@@ -89,7 +89,7 @@ CStrip::CStrip(audioMasterCallback audioMaster) :
 	lowpassSampleRE = 0.0;
 	lowpassSampleRF = 0.0;
 	lowpassSampleRG = 0.0;
-	
+
 	highpassSampleLAA = 0.0;
 	highpassSampleLAB = 0.0;
 	highpassSampleLBA = 0.0;
@@ -100,7 +100,7 @@ CStrip::CStrip(audioMasterCallback audioMaster) :
 	highpassSampleLDB = 0.0;
 	highpassSampleLE = 0.0;
 	highpassSampleLF = 0.0;
-	
+
 	highpassSampleRAA = 0.0;
 	highpassSampleRAB = 0.0;
 	highpassSampleRBA = 0.0;
@@ -111,11 +111,11 @@ CStrip::CStrip(audioMasterCallback audioMaster) :
 	highpassSampleRDB = 0.0;
 	highpassSampleRE = 0.0;
 	highpassSampleRF = 0.0;
-	
+
 	flip = false;
 	flipthree = 0;
 	//end EQ
-	
+
 	//begin Gate
 	WasNegativeL = false;
 	ZeroCrossL = 0;
@@ -127,19 +127,19 @@ CStrip::CStrip(audioMasterCallback audioMaster) :
 	gaterollerR = 0.0;
 	gateR = 0.0;
 	//end Gate
-	
+
 	//begin Timing
 	for(int fcount = 0; fcount < 4098; fcount++) {pL[fcount] = 0.0; pR[fcount] = 0.0;}
 	count = 0;
 	//end Timing
-	
+
 	//begin ButterComp
 	controlAposL = 1.0;
 	controlAnegL = 1.0;
 	controlBposL = 1.0;
 	controlBnegL = 1.0;
 	targetposL = 1.0;
-	targetnegL = 1.0;	
+	targetnegL = 1.0;
 	avgLA = avgLB = 0.0;
 	nvgLA = nvgLB = 0.0;
 
@@ -148,21 +148,21 @@ CStrip::CStrip(audioMasterCallback audioMaster) :
 	controlBposR = 1.0;
 	controlBnegR = 1.0;
 	targetposR = 1.0;
-	targetnegR = 1.0;	
+	targetnegR = 1.0;
 	avgRA = avgRB = 0.0;
 	nvgRA = nvgRB = 0.0;
-	//end ButterComp	
-	
+	//end ButterComp
+
 	fpNShapeLA = 0.0;
 	fpNShapeLB = 0.0;
 	fpNShapeRA = 0.0;
 	fpNShapeRB = 0.0;
 	fpFlip = true;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -202,15 +202,15 @@ VstInt32 CStrip::getChunk (void** data, bool isPreset)
 	chunkData[10] = K;
 	chunkData[11] = L;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
+	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
 	 started with. */
-	
+
 	*data = chunkData;
 	return kNumParameters * sizeof(float);
 }
 
 VstInt32 CStrip::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	float *chunkData = (float *)data;
 	A = pinParameter(chunkData[0]);
 	B = pinParameter(chunkData[1]);
@@ -225,8 +225,8 @@ VstInt32 CStrip::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 	K = pinParameter(chunkData[10]);
 	L = pinParameter(chunkData[11]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
-	
-	/* calculate any other fields you need here - you could copy in 
+
+	/* calculate any other fields you need here - you could copy in
 	 code from setParameter() here. */
 	return 0;
 }
@@ -321,7 +321,7 @@ void CStrip::getParameterLabel(VstInt32 index, char *text) {
     }
 }
 
-VstInt32 CStrip::canDo(char *text) 
+VstInt32 CStrip::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool CStrip::getEffectName(char* name) {

@@ -1,6 +1,6 @@
 /* ========================================
  *  Logical4 - Logical4.h
- *  Created 8/12/11 by SPIAdmin 
+ *  Created 8/12/11 by SPIAdmin
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
@@ -29,8 +29,8 @@ const int kNumInputs = 2;
 const int kNumOutputs = 2;
 const unsigned long kUniqueId = 'logv';    //Change this to what the AU identity is!
 
-class Logical4 : 
-    public AudioEffectX 
+class Logical4 :
+    public AudioEffectX
 {
 public:
     Logical4(audioMasterCallback audioMaster);
@@ -50,12 +50,12 @@ public:
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
     virtual void getParameterName(VstInt32 index, char *text);    // name of the parameter
-    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value    
+    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value
     virtual VstInt32 canDo(char *text);
 private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
-	
+
 	//begin ButterComp
 	double controlAposL;
 	double controlAnegL;
@@ -88,7 +88,7 @@ private:
 	double nvgEL;
 	double nvgFL;
 	//end ButterComp
-	
+
 	//begin Power Sag
 	double dL[1000];
 	double controlL;
@@ -97,7 +97,7 @@ private:
 	double cL[1000];
 	double controlCL;
 	//end Power Sag
-	
+
 	//begin ButterComp
 	double controlAposR;
 	double controlAnegR;
@@ -130,7 +130,7 @@ private:
 	double nvgER;
 	double nvgFR;
 	//end ButterComp
-	
+
 	//begin Power Sag
 	double dR[1000];
 	double controlR;
@@ -139,10 +139,10 @@ private:
 	double cR[1000];
 	double controlCR;
 	//end Power Sag
-	
+
 	int gcount;
-	
-    
+
+
 	double fpNShapeLA;
 	double fpNShapeLB;
 	double fpNShapeRA;

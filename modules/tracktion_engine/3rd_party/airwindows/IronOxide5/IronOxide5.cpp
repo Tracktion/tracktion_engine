@@ -21,40 +21,40 @@ IronOxide5::IronOxide5(audioMasterCallback audioMaster) :
 	F = 0.5; //0.0 output trim in dB -18 to +18, default 0 ((E*36.0)-18.0)
 	G = 1.0; //1.0 inv/dry/wet -1 0 1 ((F*2.0)-1.0)
 	//needs very fussy defaults to comply with unusual defaults
-	
+
 	for (int temp = 0; temp < 263; temp++) {dL[temp] = 0.0; dR[temp] = 0.0;}
 	gcount = 0;
-	
+
 	fastIIRAL = fastIIRBL = slowIIRAL = slowIIRBL = 0.0;
 	fastIIHAL = fastIIHBL = slowIIHAL = slowIIHBL = 0.0;
 	iirSamplehAL = iirSamplehBL = 0.0;
 	iirSampleAL = iirSampleBL = 0.0;
 	prevInputSampleL = 0.0;
-	
+
 	fastIIRAR = fastIIRBR = slowIIRAR = slowIIRBR = 0.0;
 	fastIIHAR = fastIIHBR = slowIIHAR = slowIIHBR = 0.0;
 	iirSamplehAR = iirSamplehBR = 0.0;
 	iirSampleAR = iirSampleBR = 0.0;
 	prevInputSampleR = 0.0;
-		
+
 	flip = false;
 	for (int temp = 0; temp < 99; temp++) {flL[temp] = 0.0; flR[temp] = 0.0;}
-	
-	fstoredcount = 0;	
+
+	fstoredcount = 0;
 	sweep = 0.0;
 	rateof = 0.5;
 	nextmax = 0.5;
-	
+
 	fpNShapeLA = 0.0;
 	fpNShapeLB = 0.0;
 	fpNShapeRA = 0.0;
 	fpNShapeRB = 0.0;
 	fpFlip = true;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -89,15 +89,15 @@ VstInt32 IronOxide5::getChunk (void** data, bool isPreset)
 	chunkData[5] = F;
 	chunkData[6] = G;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
+	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
 	 started with. */
-	
+
 	*data = chunkData;
 	return kNumParameters * sizeof(float);
 }
 
 VstInt32 IronOxide5::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	float *chunkData = (float *)data;
 	A = pinParameter(chunkData[0]);
 	B = pinParameter(chunkData[1]);
@@ -107,8 +107,8 @@ VstInt32 IronOxide5::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 	F = pinParameter(chunkData[5]);
 	G = pinParameter(chunkData[6]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
-	
-	/* calculate any other fields you need here - you could copy in 
+
+	/* calculate any other fields you need here - you could copy in
 	 code from setParameter() here. */
 	return 0;
 }
@@ -178,7 +178,7 @@ void IronOxide5::getParameterLabel(VstInt32 index, char *text) {
     }
 }
 
-VstInt32 IronOxide5::canDo(char *text) 
+VstInt32 IronOxide5::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool IronOxide5::getEffectName(char* name) {

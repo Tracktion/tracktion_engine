@@ -7,7 +7,7 @@
 #include "Pyewacket.h"
 #endif
 
-void Pyewacket::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Pyewacket::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -19,7 +19,7 @@ void Pyewacket::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	overallscale *= getSampleRate();
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
@@ -27,7 +27,7 @@ void Pyewacket::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	double bridgerectifier;
 	double temprectifier;
 	double inputSense;
-	
+
 	double inputGain = pow(10.0,((A*24.0)-12.0)/20.0);
 	double attack = ((B+0.5)*0.006)/overallscale;
 	double decay = ((B+0.01)*0.0004)/overallscale;
@@ -37,7 +37,7 @@ void Pyewacket::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	double blurdry;
 	double out;
 	double dry;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -80,7 +80,7 @@ void Pyewacket::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		if (inputGain != 1.0) {
 			inputSampleL *= inputGain;
 			inputSampleR *= inputGain;
@@ -105,12 +105,12 @@ void Pyewacket::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		if (out > fpOld) out = fpOld - (out - fpOld);
 		if (out < 0.0) out = 0.0;
 		dry = 1.0 - wet;
-		
+
 		if (inputSampleL > 1.57079633) inputSampleL = 1.57079633;
 		if (inputSampleL < -1.57079633) inputSampleL = -1.57079633;
 		if (inputSampleR > 1.57079633) inputSampleR = 1.57079633;
 		if (inputSampleR < -1.57079633) inputSampleR = -1.57079633;
-		
+
 		bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		temprectifier = 1-cos(bridgerectifier);
@@ -119,7 +119,7 @@ void Pyewacket::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		//starved version is also blurred by one sample
 		if (inputSampleL > 0) inputSampleL = (inputSampleL*dry)+(bridgerectifier*out);
 		else inputSampleL = (inputSampleL*dry)-(bridgerectifier*out);
-		
+
 		bridgerectifier = fabs(inputSampleR);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		temprectifier = 1-cos(bridgerectifier);
@@ -128,12 +128,12 @@ void Pyewacket::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		//starved version is also blurred by one sample
 		if (inputSampleR > 0) inputSampleR = (inputSampleR*dry)+(bridgerectifier*out);
 		else inputSampleR = (inputSampleR*dry)-(bridgerectifier*out);
-		
+
 		if (outputGain != 1.0) {
 			inputSampleL *= outputGain;
 			inputSampleR *= outputGain;
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -164,7 +164,7 @@ void Pyewacket::processReplacing(float **inputs, float **outputs, VstInt32 sampl
     }
 }
 
-void Pyewacket::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Pyewacket::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -176,7 +176,7 @@ void Pyewacket::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	overallscale *= getSampleRate();
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
@@ -184,7 +184,7 @@ void Pyewacket::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	double bridgerectifier;
 	double temprectifier;
 	double inputSense;
-	
+
 	double inputGain = pow(10.0,((A*24.0)-12.0)/20.0);
 	double attack = ((B+0.5)*0.006)/overallscale;
 	double decay = ((B+0.01)*0.0004)/overallscale;
@@ -193,7 +193,7 @@ void Pyewacket::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	double maxblur;
 	double blurdry;
 	double out;
-	double dry;	
+	double dry;
 
     while (--sampleFrames >= 0)
     {
@@ -237,7 +237,7 @@ void Pyewacket::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		if (inputGain != 1.0) {
 			inputSampleL *= inputGain;
 			inputSampleR *= inputGain;
@@ -262,12 +262,12 @@ void Pyewacket::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		if (out > fpOld) out = fpOld - (out - fpOld);
 		if (out < 0.0) out = 0.0;
 		dry = 1.0 - wet;
-		
+
 		if (inputSampleL > 1.57079633) inputSampleL = 1.57079633;
 		if (inputSampleL < -1.57079633) inputSampleL = -1.57079633;
 		if (inputSampleR > 1.57079633) inputSampleR = 1.57079633;
 		if (inputSampleR < -1.57079633) inputSampleR = -1.57079633;
-		
+
 		bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		temprectifier = 1-cos(bridgerectifier);
@@ -276,7 +276,7 @@ void Pyewacket::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		//starved version is also blurred by one sample
 		if (inputSampleL > 0) inputSampleL = (inputSampleL*dry)+(bridgerectifier*out);
 		else inputSampleL = (inputSampleL*dry)-(bridgerectifier*out);
-		
+
 		bridgerectifier = fabs(inputSampleR);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		temprectifier = 1-cos(bridgerectifier);
@@ -285,12 +285,12 @@ void Pyewacket::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		//starved version is also blurred by one sample
 		if (inputSampleR > 0) inputSampleR = (inputSampleR*dry)+(bridgerectifier*out);
 		else inputSampleR = (inputSampleR*dry)-(bridgerectifier*out);
-		
+
 		if (outputGain != 1.0) {
 			inputSampleL *= outputGain;
 			inputSampleR *= outputGain;
 		}
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

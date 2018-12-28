@@ -7,7 +7,7 @@
 #include "SingleEndedTriode.h"
 #endif
 
-void SingleEndedTriode::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void SingleEndedTriode::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -20,7 +20,7 @@ void SingleEndedTriode::processReplacing(float **inputs, float **outputs, VstInt
 	double hardcrossover = pow(C,7)/8.0;
 	double wet = D;
 	double dry = 1.0 - wet;
-	
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -65,14 +65,14 @@ void SingleEndedTriode::processReplacing(float **inputs, float **outputs, VstInt
 		}
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
-		
+
 		if (triode > 0.0)
 		{
 			inputSampleL *= intensity;
 			inputSampleR *= intensity;
 			inputSampleL -= 0.5;
 			inputSampleR -= 0.5;
-			
+
 			long double bridgerectifier = fabs(inputSampleL);
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 			bridgerectifier = sin(bridgerectifier);
@@ -90,43 +90,43 @@ void SingleEndedTriode::processReplacing(float **inputs, float **outputs, VstInt
 			inputSampleL /= intensity;
 			inputSampleR /= intensity;
 		}
-		
+
 		if (softcrossover > 0.0)
 		{
 			long double bridgerectifier = fabs(inputSampleL);
 			if (bridgerectifier > 0.0) bridgerectifier -= (softcrossover*(bridgerectifier+sqrt(bridgerectifier)));
 			if (bridgerectifier < 0.0) bridgerectifier = 0;
 			if (inputSampleL > 0.0) inputSampleL = bridgerectifier;
-			else inputSampleL = -bridgerectifier;				
+			else inputSampleL = -bridgerectifier;
 
 			bridgerectifier = fabs(inputSampleR);
 			if (bridgerectifier > 0.0) bridgerectifier -= (softcrossover*(bridgerectifier+sqrt(bridgerectifier)));
 			if (bridgerectifier < 0.0) bridgerectifier = 0;
 			if (inputSampleR > 0.0) inputSampleR = bridgerectifier;
-			else inputSampleR = -bridgerectifier;				
+			else inputSampleR = -bridgerectifier;
 		}
-		
-		
+
+
 		if (hardcrossover > 0.0)
 		{
 			long double bridgerectifier = fabs(inputSampleL);
 			bridgerectifier -= hardcrossover;
 			if (bridgerectifier < 0.0) bridgerectifier = 0.0;
 			if (inputSampleL > 0.0) inputSampleL = bridgerectifier;
-			else inputSampleL = -bridgerectifier;				
+			else inputSampleL = -bridgerectifier;
 
 			bridgerectifier = fabs(inputSampleR);
 			bridgerectifier -= hardcrossover;
 			if (bridgerectifier < 0.0) bridgerectifier = 0.0;
 			if (inputSampleR > 0.0) inputSampleR = bridgerectifier;
-			else inputSampleR = -bridgerectifier;				
+			else inputSampleR = -bridgerectifier;
 		}
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		float fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -139,10 +139,10 @@ void SingleEndedTriode::processReplacing(float **inputs, float **outputs, VstInt
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;
@@ -153,10 +153,10 @@ void SingleEndedTriode::processReplacing(float **inputs, float **outputs, VstInt
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }
 
-void SingleEndedTriode::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void SingleEndedTriode::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -214,68 +214,68 @@ void SingleEndedTriode::processDoubleReplacing(double **inputs, double **outputs
 		}
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
-		
+
 		if (triode > 0.0)
 		{
 			inputSampleL *= intensity;
 			inputSampleR *= intensity;
 			inputSampleL -= 0.5;
 			inputSampleR -= 0.5;
-			
+
 			long double bridgerectifier = fabs(inputSampleL);
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 			bridgerectifier = sin(bridgerectifier);
 			if (inputSampleL > 0) inputSampleL = bridgerectifier;
 			else inputSampleL = -bridgerectifier;
-			
+
 			bridgerectifier = fabs(inputSampleR);
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 			bridgerectifier = sin(bridgerectifier);
 			if (inputSampleR > 0) inputSampleR = bridgerectifier;
 			else inputSampleR = -bridgerectifier;
-			
+
 			inputSampleL += postsine;
 			inputSampleR += postsine;
 			inputSampleL /= intensity;
 			inputSampleR /= intensity;
 		}
-		
+
 		if (softcrossover > 0.0)
 		{
 			long double bridgerectifier = fabs(inputSampleL);
 			if (bridgerectifier > 0.0) bridgerectifier -= (softcrossover*(bridgerectifier+sqrt(bridgerectifier)));
 			if (bridgerectifier < 0.0) bridgerectifier = 0;
 			if (inputSampleL > 0.0) inputSampleL = bridgerectifier;
-			else inputSampleL = -bridgerectifier;				
-			
+			else inputSampleL = -bridgerectifier;
+
 			bridgerectifier = fabs(inputSampleR);
 			if (bridgerectifier > 0.0) bridgerectifier -= (softcrossover*(bridgerectifier+sqrt(bridgerectifier)));
 			if (bridgerectifier < 0.0) bridgerectifier = 0;
 			if (inputSampleR > 0.0) inputSampleR = bridgerectifier;
-			else inputSampleR = -bridgerectifier;				
+			else inputSampleR = -bridgerectifier;
 		}
-		
-		
+
+
 		if (hardcrossover > 0.0)
 		{
 			long double bridgerectifier = fabs(inputSampleL);
 			bridgerectifier -= hardcrossover;
 			if (bridgerectifier < 0.0) bridgerectifier = 0.0;
 			if (inputSampleL > 0.0) inputSampleL = bridgerectifier;
-			else inputSampleL = -bridgerectifier;				
-			
+			else inputSampleL = -bridgerectifier;
+
 			bridgerectifier = fabs(inputSampleR);
 			bridgerectifier -= hardcrossover;
 			if (bridgerectifier < 0.0) bridgerectifier = 0.0;
 			if (inputSampleR > 0.0) inputSampleR = bridgerectifier;
-			else inputSampleR = -bridgerectifier;				
+			else inputSampleR = -bridgerectifier;
 		}
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 64-bit floating point
 		double fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -288,10 +288,10 @@ void SingleEndedTriode::processDoubleReplacing(double **inputs, double **outputs
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;
@@ -302,5 +302,5 @@ void SingleEndedTriode::processDoubleReplacing(double **inputs, double **outputs
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }

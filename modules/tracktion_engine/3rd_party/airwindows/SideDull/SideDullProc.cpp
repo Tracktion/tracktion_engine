@@ -7,7 +7,7 @@
 #include "SideDull.h"
 #endif
 
-void SideDull::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void SideDull::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -19,14 +19,14 @@ void SideDull::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	overallscale *= getSampleRate();
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
 	long double mid;
 	double side;
 	double iirAmount = pow(A,3)/overallscale;
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -72,7 +72,7 @@ void SideDull::processReplacing(float **inputs, float **outputs, VstInt32 sample
 
 		mid = inputSampleL + inputSampleR;
 		side = inputSampleL - inputSampleR;
-		
+
 		if (flip)
 		{
 			iirSampleA = (iirSampleA * (1 - iirAmount)) + (side * iirAmount);
@@ -84,16 +84,16 @@ void SideDull::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			side = iirSampleB;
 		}
 		//highpass section
-		
+
 		inputSampleL = (mid+side)/2.0;
 		inputSampleR = (mid-side)/2.0;
-		
+
 		//noise shaping to 32-bit floating point
 		if (flip) {
 			fpTemp = inputSampleL;
 			fpNShapeAL = (fpNShapeAL*fpOld)+((inputSampleL-fpTemp)*fpNew);
 			inputSampleL += fpNShapeAL;
-			
+
 			fpTemp = inputSampleR;
 			fpNShapeAR = (fpNShapeAR*fpOld)+((inputSampleR-fpTemp)*fpNew);
 			inputSampleR += fpNShapeAR;
@@ -102,14 +102,14 @@ void SideDull::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			fpTemp = inputSampleL;
 			fpNShapeBL = (fpNShapeBL*fpOld)+((inputSampleL-fpTemp)*fpNew);
 			inputSampleL += fpNShapeBL;
-			
+
 			fpTemp = inputSampleR;
 			fpNShapeBR = (fpNShapeBR*fpOld)+((inputSampleR-fpTemp)*fpNew);
 			inputSampleR += fpNShapeBR;
 		}
 		flip = !flip;
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -120,7 +120,7 @@ void SideDull::processReplacing(float **inputs, float **outputs, VstInt32 sample
     }
 }
 
-void SideDull::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void SideDull::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -132,14 +132,14 @@ void SideDull::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	overallscale *= getSampleRate();
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
 	long double mid;
 	double side;
 	double iirAmount = pow(A,3)/overallscale;
-    	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -185,7 +185,7 @@ void SideDull::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 
 		mid = inputSampleL + inputSampleR;
 		side = inputSampleL - inputSampleR;
-		
+
 		if (flip)
 		{
 			iirSampleA = (iirSampleA * (1 - iirAmount)) + (side * iirAmount);
@@ -197,16 +197,16 @@ void SideDull::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			side = iirSampleB;
 		}
 		//highpass section
-		
+
 		inputSampleL = (mid+side)/2.0;
 		inputSampleR = (mid-side)/2.0;
-		
+
 		//noise shaping to 64-bit floating point
 		if (flip) {
 			fpTemp = inputSampleL;
 			fpNShapeAL = (fpNShapeAL*fpOld)+((inputSampleL-fpTemp)*fpNew);
 			inputSampleL += fpNShapeAL;
-			
+
 			fpTemp = inputSampleR;
 			fpNShapeAR = (fpNShapeAR*fpOld)+((inputSampleR-fpTemp)*fpNew);
 			inputSampleR += fpNShapeAR;
@@ -215,14 +215,14 @@ void SideDull::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			fpTemp = inputSampleL;
 			fpNShapeBL = (fpNShapeBL*fpOld)+((inputSampleL-fpTemp)*fpNew);
 			inputSampleL += fpNShapeBL;
-			
+
 			fpTemp = inputSampleR;
 			fpNShapeBR = (fpNShapeBR*fpOld)+((inputSampleR-fpTemp)*fpNew);
 			inputSampleR += fpNShapeBR;
 		}
 		flip = !flip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

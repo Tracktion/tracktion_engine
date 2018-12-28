@@ -7,7 +7,7 @@
 #include "Console5Buss.h"
 #endif
 
-void Console5Buss::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Console5Buss::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -19,8 +19,8 @@ void Console5Buss::processReplacing(float **inputs, float **outputs, VstInt32 sa
 	overallscale *= getSampleRate();
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double inputgain = A;
 	double differenceL;
 	double differenceR;
@@ -30,14 +30,14 @@ void Console5Buss::processReplacing(float **inputs, float **outputs, VstInt32 sa
 	double bassTrim = 0.005 / overallscale;
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	if (settingchase != inputgain) {
 		chasespeed *= 2.0;
 		settingchase = inputgain;
 	}
 	if (chasespeed > 2500.0) chasespeed = 2500.0;
 	if (gainchase < 0.0) gainchase = inputgain;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -80,21 +80,21 @@ void Console5Buss::processReplacing(float **inputs, float **outputs, VstInt32 sa
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		chasespeed *= 0.9999;
 		chasespeed -= 0.01;
 		if (chasespeed < 350.0) chasespeed = 350.0;
 		//we have our chase speed compensated for recent fader activity
-		
+
 		gainchase = (((gainchase*chasespeed)+inputgain)/(chasespeed+1.0));
 		//gainchase is chasing the target, as a simple multiply gain factor
-		
+
 		if (1.0 != gainchase) {
 			inputSampleL *= gainchase;
 			inputSampleR *= gainchase;
 		}
 		//done with trim control
-		
+
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
 		inputSampleL = asin(inputSampleL);
@@ -104,13 +104,13 @@ void Console5Buss::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
 		inputSampleR = asin(inputSampleR);
 		//amplitude aspect
-		
+
 		differenceL = lastSampleBussL - inputSampleL;
 		differenceR = lastSampleBussR - inputSampleR;
 		lastSampleBussL = inputSampleL;
 		lastSampleBussR = inputSampleR;
 		//derive slew part off direct sample measurement + from last time
-		
+
 		if (differenceL > 1.57079633) differenceL = 1.57079633;
 		if (differenceL < -1.57079633) differenceL = -1.57079633;
 		if (differenceR > 1.57079633) differenceR = 1.57079633;
@@ -120,22 +120,22 @@ void Console5Buss::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		differenceR = lastFXBussR + sin(differenceR);
 		//we're about to use this twice and then not use difference again, so we'll reuse it
 		//enhance slew is arcsin(): cutting it back is sin()
-		
+
 		iirCorrectL += inputSampleL - differenceL;
 		iirCorrectR += inputSampleR - differenceR;
 		inputSampleL = differenceL;
 		inputSampleR = differenceR;
 		//apply the slew to stored value: can develop DC offsets.
 		//store the change we made so we can dial it back
-				
-		lastFXBussL = inputSampleL;		
-		lastFXBussR = inputSampleR;		
+
+		lastFXBussL = inputSampleL;
+		lastFXBussR = inputSampleR;
 		if (lastFXBussL > 1.0) lastFXBussL = 1.0;
 		if (lastFXBussL < -1.0) lastFXBussL = -1.0;
 		if (lastFXBussR > 1.0) lastFXBussR = 1.0;
 		if (lastFXBussR < -1.0) lastFXBussR = -1.0;
 		//build new signal off what was present in output last time
-		
+
 		nearZeroL = pow(fabs(fabs(lastFXBussL)-1.0), 2);
 		nearZeroR = pow(fabs(fabs(lastFXBussR)-1.0), 2);
 		//if the sample is very near zero this number is higher.
@@ -150,7 +150,7 @@ void Console5Buss::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		lastFXBussL *= (1.0 - (nearZeroL * bassTrim));
 		lastFXBussR *= (1.0 - (nearZeroR * bassTrim));
 		//this cuts back the DC offset directly, relative to how near zero we are
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -181,7 +181,7 @@ void Console5Buss::processReplacing(float **inputs, float **outputs, VstInt32 sa
     }
 }
 
-void Console5Buss::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Console5Buss::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -193,8 +193,8 @@ void Console5Buss::processDoubleReplacing(double **inputs, double **outputs, Vst
 	overallscale *= getSampleRate();
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double inputgain = A;
 	double differenceL;
 	double differenceR;
@@ -204,14 +204,14 @@ void Console5Buss::processDoubleReplacing(double **inputs, double **outputs, Vst
 	double bassTrim = 0.005 / overallscale;
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	if (settingchase != inputgain) {
 		chasespeed *= 2.0;
 		settingchase = inputgain;
 	}
 	if (chasespeed > 2500.0) chasespeed = 2500.0;
 	if (gainchase < 0.0) gainchase = inputgain;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -254,62 +254,62 @@ void Console5Buss::processDoubleReplacing(double **inputs, double **outputs, Vst
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		chasespeed *= 0.9999;
 		chasespeed -= 0.01;
 		if (chasespeed < 350.0) chasespeed = 350.0;
 		//we have our chase speed compensated for recent fader activity
-		
+
 		gainchase = (((gainchase*chasespeed)+inputgain)/(chasespeed+1.0));
 		//gainchase is chasing the target, as a simple multiply gain factor
-		
+
 		if (1.0 != gainchase) {
 			inputSampleL *= gainchase;
 			inputSampleR *= gainchase;
 		}
 		//done with trim control
-		
+
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
 		inputSampleL = asin(inputSampleL);
 		//amplitude aspect
-		
+
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
 		inputSampleR = asin(inputSampleR);
 		//amplitude aspect
-		
+
 		differenceL = lastSampleBussL - inputSampleL;
 		differenceR = lastSampleBussR - inputSampleR;
 		lastSampleBussL = inputSampleL;
 		lastSampleBussR = inputSampleR;
 		//derive slew part off direct sample measurement + from last time
-		
+
 		if (differenceL > 1.57079633) differenceL = 1.57079633;
 		if (differenceL < -1.57079633) differenceL = -1.57079633;
 		if (differenceR > 1.57079633) differenceR = 1.57079633;
 		if (differenceR < -1.57079633) differenceR = -1.57079633;
-		
+
 		differenceL = lastFXBussL + sin(differenceL);
 		differenceR = lastFXBussR + sin(differenceR);
 		//we're about to use this twice and then not use difference again, so we'll reuse it
 		//enhance slew is arcsin(): cutting it back is sin()
-		
+
 		iirCorrectL += inputSampleL - differenceL;
 		iirCorrectR += inputSampleR - differenceR;
 		inputSampleL = differenceL;
 		inputSampleR = differenceR;
 		//apply the slew to stored value: can develop DC offsets.
 		//store the change we made so we can dial it back
-		
-		lastFXBussL = inputSampleL;		
-		lastFXBussR = inputSampleR;		
+
+		lastFXBussL = inputSampleL;
+		lastFXBussR = inputSampleR;
 		if (lastFXBussL > 1.0) lastFXBussL = 1.0;
 		if (lastFXBussL < -1.0) lastFXBussL = -1.0;
 		if (lastFXBussR > 1.0) lastFXBussR = 1.0;
 		if (lastFXBussR < -1.0) lastFXBussR = -1.0;
 		//build new signal off what was present in output last time
-		
+
 		nearZeroL = pow(fabs(fabs(lastFXBussL)-1.0), 2);
 		nearZeroR = pow(fabs(fabs(lastFXBussR)-1.0), 2);
 		//if the sample is very near zero this number is higher.
@@ -324,7 +324,7 @@ void Console5Buss::processDoubleReplacing(double **inputs, double **outputs, Vst
 		lastFXBussL *= (1.0 - (nearZeroL * bassTrim));
 		lastFXBussR *= (1.0 - (nearZeroR * bassTrim));
 		//this cuts back the DC offset directly, relative to how near zero we are
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -344,7 +344,7 @@ void Console5Buss::processDoubleReplacing(double **inputs, double **outputs, Vst
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

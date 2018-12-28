@@ -7,7 +7,7 @@
 #include "Distance.h"
 #endif
 
-void Distance::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Distance::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -17,7 +17,7 @@ void Distance::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double softslew = (pow(A*2.0,3.0)*12.0)+0.6;
 	softslew *= overallscale;
 	double filtercorrect = softslew / 2.0;
@@ -26,16 +26,16 @@ void Distance::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	double postfilter;
 	double wet = B;
 	double dry = 1.0-wet;
-	double bridgerectifier;	
-	
+	double bridgerectifier;
+
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
 	long double drySampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -80,7 +80,7 @@ void Distance::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		inputSampleL *= softslew;
 		lastclampL = clampL;
 		clampL = inputSampleL - lastL;
@@ -100,7 +100,7 @@ void Distance::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		thirdresultL = prevresultL;
 		prevresultL = inputSampleL;
 		inputSampleL *= levelcorrect;
-		
+
 		inputSampleR *= softslew;
 		lastclampR = clampR;
 		clampR = inputSampleR - lastR;
@@ -120,12 +120,12 @@ void Distance::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		thirdresultR = prevresultR;
 		prevresultR = inputSampleR;
 		inputSampleR *= levelcorrect;
-		
+
 		if (wet < 1.0) {
 			inputSampleL = (drySampleL * dry)+(inputSampleL*wet);
 			inputSampleR = (drySampleR * dry)+(inputSampleR*wet);
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -156,7 +156,7 @@ void Distance::processReplacing(float **inputs, float **outputs, VstInt32 sample
     }
 }
 
-void Distance::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Distance::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -166,7 +166,7 @@ void Distance::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double softslew = (pow(A*2.0,3.0)*12.0)+0.6;
 	softslew *= overallscale;
 	double filtercorrect = softslew / 2.0;
@@ -175,11 +175,11 @@ void Distance::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	double postfilter;
 	double wet = B;
 	double dry = 1.0-wet;
-	double bridgerectifier;	
-		
+	double bridgerectifier;
+
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
@@ -249,7 +249,7 @@ void Distance::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		thirdresultL = prevresultL;
 		prevresultL = inputSampleL;
 		inputSampleL *= levelcorrect;
-		
+
 		inputSampleR *= softslew;
 		lastclampR = clampR;
 		clampR = inputSampleR - lastR;
@@ -269,12 +269,12 @@ void Distance::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		thirdresultR = prevresultR;
 		prevresultR = inputSampleR;
 		inputSampleR *= levelcorrect;
-		
+
 		if (wet < 1.0) {
 			inputSampleL = (drySampleL * dry)+(inputSampleL*wet);
 			inputSampleR = (drySampleR * dry)+(inputSampleR*wet);
 		}
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

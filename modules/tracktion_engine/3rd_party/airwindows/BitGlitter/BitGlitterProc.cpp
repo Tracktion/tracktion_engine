@@ -7,7 +7,7 @@
 #include "BitGlitter.h"
 #endif
 
-void BitGlitter::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void BitGlitter::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -36,12 +36,12 @@ void BitGlitter::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		long double inputSampleR = *in2;
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
-		
+
 
 		//first, the distortion section
 		inputSampleL *= ingain;
 		inputSampleR *= ingain;
-		
+
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
 		inputSampleL *= 1.2533141373155;
@@ -53,7 +53,7 @@ void BitGlitter::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		inputSampleR *= 1.2533141373155;
 		//clip to 1.2533141373155 to reach maximum output
 		inputSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((inputSampleR == 0.0) ?1:fabs(inputSampleR));
-		
+
 		ataDrySampleL = inputSampleL;
 		ataHalfwaySampleL = (inputSampleL + ataLastSampleL ) / 2.0;
 		ataLastSampleL = inputSampleL;
@@ -63,7 +63,7 @@ void BitGlitter::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		ataHalfwaySampleR = (inputSampleR + ataLastSampleR ) / 2.0;
 		ataLastSampleR = inputSampleR;
 		//setting up crude oversampling
-		
+
 		//begin raw sample L
 		positionAL += rateA;
 		long double outputSampleL = heldSampleAL;
@@ -92,7 +92,7 @@ void BitGlitter::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		if (fabs(outputSampleL) < rezA) outputSampleL = 0.0;
 		inputSampleL = outputSampleL;
 		//end raw sample L
-		
+
 		//begin raw sample R
 		positionAR += rateA;
 		long double outputSampleR = heldSampleAR;
@@ -121,7 +121,7 @@ void BitGlitter::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		if (fabs(outputSampleR) < rezA) outputSampleR = 0.0;
 		inputSampleR = outputSampleR;
 		//end raw sample R
-		
+
 		//begin interpolated sample L
 		positionBL += rateB;
 		outputSampleL = heldSampleBL;
@@ -150,7 +150,7 @@ void BitGlitter::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		if (fabs(outputSampleL) < rezB) outputSampleL = 0.0;
 		ataHalfwaySampleL = outputSampleL;
 		//end interpolated sample L
-		
+
 		//begin interpolated sample R
 		positionBR += rateB;
 		outputSampleR = heldSampleBR;
@@ -179,30 +179,30 @@ void BitGlitter::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		if (fabs(outputSampleR) < rezB) outputSampleR = 0.0;
 		ataHalfwaySampleR = outputSampleR;
 		//end interpolated sample R
-				
+
 		inputSampleL += ataHalfwaySampleL;
 		inputSampleL /= 2.0;
 		//plain old blend the two
-		
+
 		inputSampleR += ataHalfwaySampleR;
 		inputSampleR /= 2.0;
 		//plain old blend the two
-		
+
 		outputSampleL = (inputSampleL * (1.0-(wet/2))) + (lastOutputSampleL*(wet/2));
 		//darken to extent of wet in wet/dry, maximum 50%
 		lastOutputSampleL = inputSampleL;
 		outputSampleL *= outgain;
-		
+
 		outputSampleR = (inputSampleR * (1.0-(wet/2))) + (lastOutputSampleR*(wet/2));
 		//darken to extent of wet in wet/dry, maximum 50%
 		lastOutputSampleR = inputSampleR;
 		outputSampleR *= outgain;
-		
+
 		if (wet < 1.0) {
 			outputSampleL = (drySampleL * (1.0-wet)) + (outputSampleL * wet);
 			outputSampleR = (drySampleR * (1.0-wet)) + (outputSampleR * wet);
 		}
-		
+
 		*out1 = outputSampleL;
 		*out2 = outputSampleR;
 
@@ -213,7 +213,7 @@ void BitGlitter::processReplacing(float **inputs, float **outputs, VstInt32 samp
     }
 }
 
-void BitGlitter::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void BitGlitter::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -223,7 +223,7 @@ void BitGlitter::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double factor = B+1.0;
 	factor = pow(factor,7)+2.0;
 	int divvy = (int)(factor*overallscale);
@@ -235,40 +235,40 @@ void BitGlitter::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	double ingain = pow(10.0,((A * 36.0)-18.0)/14.0); //add adjustment factor
 	double outgain = pow(10.0,((C * 36.0)-18.0)/14.0); //add adjustment factor
 	double wet = D;
-	
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
 		long double inputSampleR = *in2;
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
-		
+
 		//first, the distortion section
 		inputSampleL *= ingain;
 		inputSampleR *= ingain;
-		
+
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
 		inputSampleL *= 1.2533141373155;
 		//clip to 1.2533141373155 to reach maximum output
 		inputSampleL = sin(inputSampleL * fabs(inputSampleL)) / ((inputSampleL == 0.0) ?1:fabs(inputSampleL));
-		
+
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
 		inputSampleR *= 1.2533141373155;
 		//clip to 1.2533141373155 to reach maximum output
 		inputSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((inputSampleR == 0.0) ?1:fabs(inputSampleR));
-		
+
 		ataDrySampleL = inputSampleL;
 		ataHalfwaySampleL = (inputSampleL + ataLastSampleL ) / 2.0;
 		ataLastSampleL = inputSampleL;
 		//setting up crude oversampling
-		
+
 		ataDrySampleR = inputSampleR;
 		ataHalfwaySampleR = (inputSampleR + ataLastSampleR ) / 2.0;
 		ataLastSampleR = inputSampleR;
 		//setting up crude oversampling
-		
+
 		//begin raw sample L
 		positionAL += rateA;
 		long double outputSampleL = heldSampleAL;
@@ -297,7 +297,7 @@ void BitGlitter::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		if (fabs(outputSampleL) < rezA) outputSampleL = 0.0;
 		inputSampleL = outputSampleL;
 		//end raw sample L
-		
+
 		//begin raw sample R
 		positionAR += rateA;
 		long double outputSampleR = heldSampleAR;
@@ -326,7 +326,7 @@ void BitGlitter::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		if (fabs(outputSampleR) < rezA) outputSampleR = 0.0;
 		inputSampleR = outputSampleR;
 		//end raw sample R
-		
+
 		//begin interpolated sample L
 		positionBL += rateB;
 		outputSampleL = heldSampleBL;
@@ -355,7 +355,7 @@ void BitGlitter::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		if (fabs(outputSampleL) < rezB) outputSampleL = 0.0;
 		ataHalfwaySampleL = outputSampleL;
 		//end interpolated sample L
-		
+
 		//begin interpolated sample R
 		positionBR += rateB;
 		outputSampleR = heldSampleBR;
@@ -384,33 +384,33 @@ void BitGlitter::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		if (fabs(outputSampleR) < rezB) outputSampleR = 0.0;
 		ataHalfwaySampleR = outputSampleR;
 		//end interpolated sample R
-		
+
 		inputSampleL += ataHalfwaySampleL;
 		inputSampleL /= 2.0;
 		//plain old blend the two
-		
+
 		inputSampleR += ataHalfwaySampleR;
 		inputSampleR /= 2.0;
 		//plain old blend the two
-		
+
 		outputSampleL = (inputSampleL * (1.0-(wet/2))) + (lastOutputSampleL*(wet/2));
 		//darken to extent of wet in wet/dry, maximum 50%
 		lastOutputSampleL = inputSampleL;
 		outputSampleL *= outgain;
-		
+
 		outputSampleR = (inputSampleR * (1.0-(wet/2))) + (lastOutputSampleR*(wet/2));
 		//darken to extent of wet in wet/dry, maximum 50%
 		lastOutputSampleR = inputSampleR;
 		outputSampleR *= outgain;
-		
+
 		if (wet < 1.0) {
 			outputSampleL = (drySampleL * (1.0-wet)) + (outputSampleL * wet);
 			outputSampleR = (drySampleR * (1.0-wet)) + (outputSampleR * wet);
 		}
-		
+
 		*out1 = outputSampleL;
 		*out2 = outputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;

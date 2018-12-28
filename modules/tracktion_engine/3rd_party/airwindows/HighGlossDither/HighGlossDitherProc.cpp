@@ -7,7 +7,7 @@
 #include "HighGlossDither.h"
 #endif
 
-void HighGlossDither::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void HighGlossDither::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -18,7 +18,7 @@ void HighGlossDither::processReplacing(float **inputs, float **outputs, VstInt32
 
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -61,11 +61,11 @@ void HighGlossDither::processReplacing(float **inputs, float **outputs, VstInt32
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		inputSampleL *= 8388608.0;
 		inputSampleR *= 8388608.0;
 		//0-1 is now one bit, now we dither
-		
+
 		Position += 1;
 		//Note- uses integer overflow as a 'mod' operator
 		hotbinA = Position * Position;
@@ -80,18 +80,18 @@ void HighGlossDither::processReplacing(float **inputs, float **outputs, VstInt32
 		hotbinA = hotbinA % 17;
 		hotbinA *= 0.0635;
 		if (flip) hotbinA = -hotbinA;
-		
+
 		inputSampleL += hotbinA;
 		inputSampleR += hotbinA;
 		inputSampleL = floor(inputSampleL);
 		inputSampleR = floor(inputSampleR);
 		//Quadratic dither
-		
+
 		flip = !flip;
-		
+
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -102,15 +102,15 @@ void HighGlossDither::processReplacing(float **inputs, float **outputs, VstInt32
     }
 }
 
-void HighGlossDither::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void HighGlossDither::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
     double* out1 = outputs[0];
     double* out2 = outputs[1];
-	
+
 	int hotbinA;
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 
@@ -160,7 +160,7 @@ void HighGlossDither::processDoubleReplacing(double **inputs, double **outputs, 
 		inputSampleL *= 8388608.0;
 		inputSampleR *= 8388608.0;
 		//0-1 is now one bit, now we dither
-		
+
 		Position += 1;
 		//Note- uses integer overflow as a 'mod' operator
 		hotbinA = Position * Position;
@@ -175,18 +175,18 @@ void HighGlossDither::processDoubleReplacing(double **inputs, double **outputs, 
 		hotbinA = hotbinA % 17;
 		hotbinA *= 0.0635;
 		if (flip) hotbinA = -hotbinA;
-		
+
 		inputSampleL += hotbinA;
 		inputSampleR += hotbinA;
 		inputSampleL = floor(inputSampleL);
 		inputSampleR = floor(inputSampleR);
 		//Quadratic dither
-		
+
 		flip = !flip;
-		
+
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

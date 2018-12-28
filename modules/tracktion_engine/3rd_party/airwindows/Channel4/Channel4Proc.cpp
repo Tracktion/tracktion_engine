@@ -7,7 +7,7 @@
 #include "Channel4.h"
 #endif
 
-void Channel4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Channel4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -20,7 +20,7 @@ void Channel4::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	float fpTemp;
 	double fpOld = 0.618033988749894848204586; //golden ratio!
 	double fpNew = 1.0 - fpOld;
-	
+
 	const double localiirAmount = iirAmount / overallscale;
 	const double localthreshold = threshold / overallscale;
 	const double density = pow(drive,2); //this doesn't relate to the plugins Density and Drive much
@@ -29,7 +29,7 @@ void Channel4::processReplacing(float **inputs, float **outputs, VstInt32 sample
 
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -88,7 +88,7 @@ void Channel4::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			inputSampleR = inputSampleR - iirSampleRB;
 		}
 		//highpass section
-		
+
 		bridgerectifier = fabs(inputSampleL)*1.57079633;
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
@@ -115,8 +115,8 @@ void Channel4::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		if (-clamp > localthreshold)
 			inputSampleR = lastSampleR - localthreshold;
 		lastSampleR = inputSampleR;
-		//slew section		
-	
+		//slew section
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -147,7 +147,7 @@ void Channel4::processReplacing(float **inputs, float **outputs, VstInt32 sample
     }
 }
 
-void Channel4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Channel4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -160,13 +160,13 @@ void Channel4::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	double fpTemp; //this is different from singlereplacing
 	double fpOld = 0.618033988749894848204586; //golden ratio!
 	double fpNew = 1.0 - fpOld;
-	
+
 	const double localiirAmount = iirAmount / overallscale;
 	const double localthreshold = threshold / overallscale;
 	const double density = pow(drive,2); //this doesn't relate to the plugins Density and Drive much
 	double clamp;
 	long double bridgerectifier;
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 
@@ -228,34 +228,34 @@ void Channel4::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			inputSampleR = inputSampleR - iirSampleRB;
 		}
 		//highpass section
-		
+
 		bridgerectifier = fabs(inputSampleL)*1.57079633;
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
 		if (inputSampleL > 0) inputSampleL = (inputSampleL*(1-density))+(bridgerectifier*density);
 		else inputSampleL = (inputSampleL*(1-density))-(bridgerectifier*density);
-		
+
 		bridgerectifier = fabs(inputSampleR)*1.57079633;
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
 		if (inputSampleR > 0) inputSampleR = (inputSampleR*(1-density))+(bridgerectifier*density);
 		else inputSampleR = (inputSampleR*(1-density))-(bridgerectifier*density);
 		//drive section
-		
+
 		clamp = inputSampleL - lastSampleL;
 		if (clamp > localthreshold)
 			inputSampleL = lastSampleL + localthreshold;
 		if (-clamp > localthreshold)
 			inputSampleL = lastSampleL - localthreshold;
 		lastSampleL = inputSampleL;
-		
+
 		clamp = inputSampleR - lastSampleR;
 		if (clamp > localthreshold)
 			inputSampleR = lastSampleR + localthreshold;
 		if (-clamp > localthreshold)
 			inputSampleR = lastSampleR - localthreshold;
 		lastSampleR = inputSampleR;
-		//slew section		
+		//slew section
 
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {

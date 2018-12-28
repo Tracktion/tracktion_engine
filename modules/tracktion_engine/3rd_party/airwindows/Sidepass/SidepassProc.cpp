@@ -7,7 +7,7 @@
 #include "Sidepass.h"
 #endif
 
-void Sidepass::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Sidepass::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -71,7 +71,7 @@ void Sidepass::processReplacing(float **inputs, float **outputs, VstInt32 sample
 
 		mid = inputSampleL + inputSampleR;
 		side = inputSampleL - inputSampleR;
-		
+
 		if (flip)
 		{
 			iirSampleA = (iirSampleA * (1 - iirAmount)) + (side * iirAmount);
@@ -83,10 +83,10 @@ void Sidepass::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			side -= iirSampleB;
 		}
 		//highpass section
-		
+
 		inputSampleL = (mid+side)/2.0;
 		inputSampleR = (mid-side)/2.0;
-		
+
 		//noise shaping to 32-bit floating point
 		if (flip) {
 			fpTemp = inputSampleL;
@@ -117,7 +117,7 @@ void Sidepass::processReplacing(float **inputs, float **outputs, VstInt32 sample
     }
 }
 
-void Sidepass::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Sidepass::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -135,7 +135,7 @@ void Sidepass::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	long double inputSampleR;
 	long double mid;
 	double side;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -181,7 +181,7 @@ void Sidepass::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 
 		mid = inputSampleL + inputSampleR;
 		side = inputSampleL - inputSampleR;
-		
+
 		if (flip)
 		{
 			iirSampleA = (iirSampleA * (1 - iirAmount)) + (side * iirAmount);
@@ -193,10 +193,10 @@ void Sidepass::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			side -= iirSampleB;
 		}
 		//highpass section
-		
+
 		inputSampleL = (mid+side)/2.0;
 		inputSampleR = (mid-side)/2.0;
-		
+
 		//noise shaping to 64-bit floating point
 		if (flip) {
 			fpTemp = inputSampleL;

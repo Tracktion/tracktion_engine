@@ -17,24 +17,24 @@ OneCornerClip::OneCornerClip(audioMasterCallback audioMaster) :
 	C = 0.966;
 	D = 0.618;
 	E = 1.0;
-	
+
 	lastSampleL = 0.0;
 	limitPosL = 0.0;
 	limitNegL = 0.0;
 	lastSampleR = 0.0;
 	limitPosR = 0.0;
 	limitNegR = 0.0;
-	
+
 	fpNShapeLA = 0.0;
 	fpNShapeLB = 0.0;
 	fpNShapeRA = 0.0;
 	fpNShapeRB = 0.0;
 	fpFlip = true;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -67,15 +67,15 @@ VstInt32 OneCornerClip::getChunk (void** data, bool isPreset)
 	chunkData[3] = D;
 	chunkData[4] = E;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
+	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
 	 started with. */
-	
+
 	*data = chunkData;
 	return kNumParameters * sizeof(float);
 }
 
 VstInt32 OneCornerClip::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	float *chunkData = (float *)data;
 	A = pinParameter(chunkData[0]);
 	B = pinParameter(chunkData[1]);
@@ -83,8 +83,8 @@ VstInt32 OneCornerClip::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 	D = pinParameter(chunkData[3]);
 	E = pinParameter(chunkData[4]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
-	
-	/* calculate any other fields you need here - you could copy in 
+
+	/* calculate any other fields you need here - you could copy in
 	 code from setParameter() here. */
 	return 0;
 }
@@ -144,7 +144,7 @@ void OneCornerClip::getParameterLabel(VstInt32 index, char *text) {
     }
 }
 
-VstInt32 OneCornerClip::canDo(char *text) 
+VstInt32 OneCornerClip::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool OneCornerClip::getEffectName(char* name) {

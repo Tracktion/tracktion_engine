@@ -41,7 +41,7 @@ Righteous4::Righteous4(audioMasterCallback audioMaster) :
 	leftSampleX = 0.0;
 	leftSampleY = 0.0;
 	leftSampleZ = 0.0;
-	
+
 	rightSampleA = 0.0;
 	rightSampleB = 0.0;
 	rightSampleC = 0.0;
@@ -68,7 +68,7 @@ Righteous4::Righteous4(audioMasterCallback audioMaster) :
 	rightSampleX = 0.0;
 	rightSampleY = 0.0;
 	rightSampleZ = 0.0;
-	
+
 	bynL[0] = 1000;
 	bynL[1] = 301;
 	bynL[2] = 176;
@@ -86,7 +86,7 @@ Righteous4::Righteous4(audioMasterCallback audioMaster) :
 	gwPrevL = 0.0;
 	gwAL = 0.0;
 	gwBL = 0.0;
-	
+
 	bynR[0] = 1000;
 	bynR[1] = 301;
 	bynR[2] = 176;
@@ -104,14 +104,14 @@ Righteous4::Righteous4(audioMasterCallback audioMaster) :
 	gwPrevR = 0.0;
 	gwAR = 0.0;
 	gwBR = 0.0;
-	
+
 	fpNShapeL = 0.0;
 	fpNShapeR = 0.0;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -141,21 +141,21 @@ VstInt32 Righteous4::getChunk (void** data, bool isPreset)
 	chunkData[0] = A;
 	chunkData[1] = B;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
+	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
 	 started with. */
-	
+
 	*data = chunkData;
 	return kNumParameters * sizeof(float);
 }
 
 VstInt32 Righteous4::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	float *chunkData = (float *)data;
 	A = pinParameter(chunkData[0]);
 	B = pinParameter(chunkData[1]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
-	
-	/* calculate any other fields you need here - you could copy in 
+
+	/* calculate any other fields you need here - you could copy in
 	 code from setParameter() here. */
 	return 0;
 }
@@ -205,7 +205,7 @@ void Righteous4::getParameterLabel(VstInt32 index, char *text) {
     }
 }
 
-VstInt32 Righteous4::canDo(char *text) 
+VstInt32 Righteous4::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool Righteous4::getEffectName(char* name) {

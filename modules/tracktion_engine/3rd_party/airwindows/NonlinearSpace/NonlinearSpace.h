@@ -1,6 +1,6 @@
 /* ========================================
  *  NonlinearSpace - NonlinearSpace.h
- *  Created 8/12/11 by SPIAdmin 
+ *  Created 8/12/11 by SPIAdmin
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
@@ -30,8 +30,8 @@ const int kNumInputs = 2;
 const int kNumOutputs = 2;
 const unsigned long kUniqueId = 'nspc';    //Change this to what the AU identity is!
 
-class NonlinearSpace : 
-    public AudioEffectX 
+class NonlinearSpace :
+    public AudioEffectX
 {
 public:
     NonlinearSpace(audioMasterCallback audioMaster);
@@ -51,12 +51,12 @@ public:
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
     virtual void getParameterName(VstInt32 index, char *text);    // name of the parameter
-    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value    
+    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value
     virtual VstInt32 canDo(char *text);
 private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
-    
+
 	double avgInputL;
 	double avgOutputL;
 	double avg2InputL;
@@ -73,26 +73,26 @@ private:
 	double a2vgOutputR;
 	double a2vg2InputR;
 	double a2vg2OutputR;
-	
+
 	double verboutL;
 	double verboutR;
 	double iirCCSampleL;
 	double iirCCSampleR;
 	double iirSampleL;
 	double iirSampleR;
-	
+
 	double dMid[2348];
 	double dSide[1334];
 	double dLeft[5924];
 	double dRight[5926];
-	
+
 	double dpreR[7575];
 	double dpreL[7575];
-	
+
 	double dA[7575];
 	double dB[7309];
 	double dC[7179];
-	double dD[6909];		
+	double dD[6909];
 	double dE[6781];
 	double dF[6523];
 	double dG[5983];
@@ -115,11 +115,11 @@ private:
 	double dX[2425];
 	double dY[2148];
 	double dZ[2090];
-	
+
 	double interpolA, pitchshiftA; //7575
 	double interpolB, pitchshiftB; //7309
 	double interpolC, pitchshiftC; //7179
-	double interpolD, pitchshiftD; //6909		
+	double interpolD, pitchshiftD; //6909
 	double interpolE, pitchshiftE; //6781
 	double interpolF, pitchshiftF; //6523
 	double interpolG, pitchshiftG; //5983
@@ -142,14 +142,14 @@ private:
 	double interpolX, pitchshiftX; //2425
 	double interpolY, pitchshiftY; //2148
 	double interpolZ, pitchshiftZ; //2090
-	
+
 	int oneMid, delayMid, maxdelayMid;
 	int oneSide, delaySide, maxdelaySide;
 	int oneLeft, delayLeft, maxdelayLeft;
 	int oneRight, delayRight, maxdelayRight;
-	
+
 	int onepre, delaypre, maxdelaypre;
-	
+
 	int oneA, twoA, treA, delayA, maxdelayA;
 	int oneB, twoB, treB, delayB, maxdelayB;
 	int oneC, twoC, treC, delayC, maxdelayC;
@@ -179,7 +179,7 @@ private:
 	double savedPredelay;
 	double savedRoomsize;
 	int countdown;
-	
+
 	double lowpassSampleAA;
 	double lowpassSampleAB;
 	double lowpassSampleBA;
@@ -191,7 +191,7 @@ private:
 	double lowpassSampleE;
 	double lowpassSampleF;
 	double lowpassSampleG;
-	
+
 	double rowpassSampleAA;
 	double rowpassSampleAB;
 	double rowpassSampleBA;
@@ -203,11 +203,11 @@ private:
 	double rowpassSampleE;
 	double rowpassSampleF;
 	double rowpassSampleG;
-	
+
 	bool flip;
-	
+
 	double nonlin;
-	
+
 	long double fpNShapeLA;
 	long double fpNShapeLB;
 	long double fpNShapeRA;

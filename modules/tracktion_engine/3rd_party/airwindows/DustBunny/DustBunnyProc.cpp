@@ -7,7 +7,7 @@
 #include "DustBunny.h"
 #endif
 
-void DustBunny::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void DustBunny::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -19,7 +19,7 @@ void DustBunny::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 
 	float inputSampleL;
 	float inputSampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -65,14 +65,14 @@ void DustBunny::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		}
 		LataDrySample = inputSampleL;
 		RataDrySample = inputSampleR;
-		
+
 		LataHalfDrySample = LataHalfwaySample = (inputSampleL + LataLast1Sample + ((-LataLast2Sample + LataLast3Sample) * LataUpsampleHighTweak)) / 2.0;
 		LataLast3Sample = LataLast2Sample; LataLast2Sample = LataLast1Sample; LataLast1Sample = inputSampleL;
 		//setting up oversampled special antialiasing
 		//begin first half- change inputSample -> LataHalfwaySample, LataDrySample -> LataHalfDrySample
 
 		if (((*(unsigned int*)&LataHalfwaySample)&bunny)==0) LataHalfwaySample=0.0;
-		
+
 		//end first half
 		//begin antialiasing section for halfway sample
 		LataC = LataHalfwaySample - LataHalfDrySample;
@@ -83,7 +83,7 @@ void DustBunny::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		//begin second half- inputSample and LataDrySample handled separately here
 
 		if (((*(unsigned int*)&inputSampleL)&bunny)==0) inputSampleL=0.0;
-		
+
 		//end second half
 		//begin antialiasing section for input sample
 		LataC = inputSampleL - LataDrySample;
@@ -94,14 +94,14 @@ void DustBunny::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		inputSampleL = LataDrySample; inputSampleL += ((LataDiffSample + LataHalfDiffSample + LataPrevDiffSample) / 2.5);
 		LataPrevDiffSample = LataDiffSample / 2.0;
 		//apply processing as difference to non-oversampled raw input
-		
+
 		RataHalfDrySample = RataHalfwaySample = (inputSampleR + RataLast1Sample + ((-RataLast2Sample + RataLast3Sample) * RataUpsampleHighTweak)) / 2.0;
 		RataLast3Sample = RataLast2Sample; RataLast2Sample = RataLast1Sample; RataLast1Sample = inputSampleR;
 		//setting up oversampled special antialiasing
 		//begin first half- change inputSample -> RataHalfwaySample, RataDrySample -> RataHalfDrySample
 
 		if (((*(unsigned int*)&RataHalfwaySample)&bunny)==0) RataHalfwaySample=0.0;
-		
+
 		//end first half
 		//begin antialiasing section for halfway sample
 		RataC = RataHalfwaySample - RataHalfDrySample;
@@ -112,7 +112,7 @@ void DustBunny::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		//begin second half- inputSample and RataDrySample handled separately here
 
 		if (((*(unsigned int*)&inputSampleR)&bunny)==0) inputSampleR=0.0;
-		
+
 		//end second half
 		//begin antialiasing section for input sample
 		RataC = inputSampleR - RataDrySample;
@@ -123,7 +123,7 @@ void DustBunny::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		inputSampleR = RataDrySample; inputSampleR += ((RataDiffSample + RataHalfDiffSample + RataPrevDiffSample) / 2.5);
 		RataPrevDiffSample = RataDiffSample / 2.0;
 		//apply processing as difference to non-oversampled raw input
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -134,16 +134,16 @@ void DustBunny::processReplacing(float **inputs, float **outputs, VstInt32 sampl
     }
 }
 
-void DustBunny::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void DustBunny::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
     double* out1 = outputs[0];
     double* out2 = outputs[1];
-	
+
 	unsigned int bunny = (unsigned int)(pow((1.255-A),5)*1000);
 	bunny = (bunny*bunny);
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 
@@ -192,14 +192,14 @@ void DustBunny::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		}
 		LataDrySample = inputSampleL;
 		RataDrySample = inputSampleR;
-		
+
 		LataHalfDrySample = LataHalfwaySample = (inputSampleL + LataLast1Sample + ((-LataLast2Sample + LataLast3Sample) * LataUpsampleHighTweak)) / 2.0;
 		LataLast3Sample = LataLast2Sample; LataLast2Sample = LataLast1Sample; LataLast1Sample = inputSampleL;
 		//setting up oversampled special antialiasing
 		//begin first half- change inputSample -> LataHalfwaySample, LataDrySample -> LataHalfDrySample
-		
+
 		if (((*(unsigned int*)&LataHalfwaySample)&bunny)==0) LataHalfwaySample=0.0;
-		
+
 		//end first half
 		//begin antialiasing section for halfway sample
 		LataC = LataHalfwaySample - LataHalfDrySample;
@@ -208,9 +208,9 @@ void DustBunny::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		LataHalfDiffSample = (LataC * LataDecay); LataFlip = !LataFlip;
 		//end antialiasing section for halfway sample
 		//begin second half- inputSample and LataDrySample handled separately here
-		
+
 		if (((*(unsigned int*)&inputSampleL)&bunny)==0) inputSampleL=0.0;
-		
+
 		//end second half
 		//begin antialiasing section for input sample
 		LataC = inputSampleL - LataDrySample;
@@ -221,14 +221,14 @@ void DustBunny::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		inputSampleL = LataDrySample; inputSampleL += ((LataDiffSample + LataHalfDiffSample + LataPrevDiffSample) / 0.734);
 		LataPrevDiffSample = LataDiffSample / 2.0;
 		//apply processing as difference to non-oversampled raw input
-		
+
 		RataHalfDrySample = RataHalfwaySample = (inputSampleR + RataLast1Sample + ((-RataLast2Sample + RataLast3Sample) * RataUpsampleHighTweak)) / 2.0;
 		RataLast3Sample = RataLast2Sample; RataLast2Sample = RataLast1Sample; RataLast1Sample = inputSampleR;
 		//setting up oversampled special antialiasing
 		//begin first half- change inputSample -> RataHalfwaySample, RataDrySample -> RataHalfDrySample
-		
+
 		if (((*(unsigned int*)&RataHalfwaySample)&bunny)==0) RataHalfwaySample=0.0;
-		
+
 		//end first half
 		//begin antialiasing section for halfway sample
 		RataC = RataHalfwaySample - RataHalfDrySample;
@@ -237,9 +237,9 @@ void DustBunny::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		RataHalfDiffSample = (RataC * RataDecay); RataFlip = !RataFlip;
 		//end antialiasing section for halfway sample
 		//begin second half- inputSample and RataDrySample handled separately here
-		
+
 		if (((*(unsigned int*)&inputSampleR)&bunny)==0) inputSampleR=0.0;
-		
+
 		//end second half
 		//begin antialiasing section for input sample
 		RataC = inputSampleR - RataDrySample;
@@ -250,10 +250,10 @@ void DustBunny::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		inputSampleR = RataDrySample; inputSampleR += ((RataDiffSample + RataHalfDiffSample + RataPrevDiffSample) / 0.734);
 		RataPrevDiffSample = RataDiffSample / 2.0;
 		//apply processing as difference to non-oversampled raw input
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;

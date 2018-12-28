@@ -7,7 +7,7 @@
 #include "Desk4.h"
 #endif
 
-void Desk4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Desk4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -20,24 +20,24 @@ void Desk4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
 	long double fpNew = 1.0 - fpOld;
-	
+
 	double gain = (pow(A,2)*10)+0.0001;
 	double gaintrim = (pow(A,2)*2)+1.0;
-	double slewgain = (pow(B,3)*40)+0.0001;	
+	double slewgain = (pow(B,3)*40)+0.0001;
 	double prevslew = 0.105;
 	double intensity = (pow(C,6)*15)+0.0001;
 	double depthA = (pow(D,4)*940)+0.00001;
 	int offsetA = (int)(depthA * overallscale);
 	if (offsetA < 1) offsetA = 1;
 	if (offsetA > 4880) offsetA = 4880;
-	double balanceB = 0.0001;	
+	double balanceB = 0.0001;
 	slewgain *= overallscale;
 	prevslew *= overallscale;
 	balanceB /= overallscale;
 	double outputgain = E;
 	double wet = F;
 	double dry = 1.0 - wet;
-	
+
 	double clampL;
 	double clampR;
 	double thicknessL;
@@ -100,7 +100,7 @@ void Desk4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		drySampleR = inputSampleR;
 
 		if (gcount < 0 || gcount > 4900) {gcount = 4900;}
-		
+
 		dL[gcount+4900] = dL[gcount] = fabs(inputSampleL)*intensity;
 		controlL += (dL[gcount] / offsetA);
 		controlL -= (dL[gcount+offsetA] / offsetA);
@@ -109,7 +109,7 @@ void Desk4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		if (controlL < 0) {controlL = 0;}
 		if (controlL > 1) {clampL -= (controlL - 1); controlL = 1;}
 		if (clampL < 0.5) {clampL = 0.5;}
-		
+
 		dR[gcount+4900] = dR[gcount] = fabs(inputSampleR)*intensity;
 		controlR += (dR[gcount] / offsetA);
 		controlR -= (dR[gcount+offsetA] / offsetA);
@@ -118,14 +118,14 @@ void Desk4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		if (controlR < 0) {controlR = 0;}
 		if (controlR > 1) {clampR -= (controlR - 1); controlR = 1;}
 		if (clampR < 0.5) {clampR = 0.5;}
-		
-		
+
+
 		gcount--;
 		//control = 0 to 1
 		thicknessL = ((1.0 - controlL) * 2.0) - 1.0;
 		thicknessR = ((1.0 - controlR) * 2.0) - 1.0;
-		
-		out = fabs(thicknessL);		
+
+		out = fabs(thicknessL);
 		bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		//max value for sine function
@@ -135,8 +135,8 @@ void Desk4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		if (inputSampleL > 0) inputSampleL = (inputSampleL*(1-out))+(bridgerectifier*out);
 		else inputSampleL = (inputSampleL*(1-out))-(bridgerectifier*out);
 		//blend according to density control
-		
-		out = fabs(thicknessR);		
+
+		out = fabs(thicknessR);
 		bridgerectifier = fabs(inputSampleR);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		//max value for sine function
@@ -146,56 +146,56 @@ void Desk4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		if (inputSampleR > 0) inputSampleR = (inputSampleR*(1-out))+(bridgerectifier*out);
 		else inputSampleR = (inputSampleR*(1-out))-(bridgerectifier*out);
 		//blend according to density control
-		
+
 		inputSampleL *= clampL;
 		inputSampleR *= clampR;
-		
+
 		slewL = inputSampleL - lastSampleL;
 		lastSampleL = inputSampleL;
 		//Set up direct reference for slew
-		
+
 		slewR = inputSampleR - lastSampleR;
 		lastSampleR = inputSampleR;
 		//Set up direct reference for slew
-		
+
 		bridgerectifier = fabs(slewL*slewgain);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
 		if (slewL > 0) slewL = bridgerectifier/slewgain;
 		else slewL = -(bridgerectifier/slewgain);
-		
+
 		bridgerectifier = fabs(slewR*slewgain);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
 		if (slewR > 0) slewR = bridgerectifier/slewgain;
 		else slewR = -(bridgerectifier/slewgain);
-		
+
 		inputSampleL = (lastOutSampleL*balanceA) + (lastSampleL*balanceB) + slewL;
 		//go from last slewed, but include some raw values
 		lastOutSampleL = inputSampleL;
 		//Set up slewed reference
-		
+
 		inputSampleR = (lastOutSampleR*balanceA) + (lastSampleR*balanceB) + slewR;
 		//go from last slewed, but include some raw values
 		lastOutSampleR = inputSampleR;
 		//Set up slewed reference
-		
+
 		combSampleL = fabs(drySampleL*lastSampleL);
 		if (combSampleL > 1.0) combSampleL = 1.0;
 		//bailout for very high input gains
-		
+
 		combSampleR = fabs(drySampleR*lastSampleR);
 		if (combSampleR > 1.0) combSampleR = 1.0;
 		//bailout for very high input gains
-		
+
 		inputSampleL -= (lastSlewL * combSampleL * prevslew);
 		lastSlewL = slewL;
 		//slew interaction with previous slew
-		
+
 		inputSampleR -= (lastSlewR * combSampleR * prevslew);
 		lastSlewR = slewR;
 		//slew interaction with previous slew
-		
+
 		inputSampleL *= gain;
 		bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
@@ -206,7 +206,7 @@ void Desk4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		inputSampleL /= gain;
 		inputSampleL *= gaintrim;
 		//end of Desk section
-		
+
 		inputSampleR *= gain;
 		bridgerectifier = fabs(inputSampleR);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
@@ -217,18 +217,18 @@ void Desk4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		inputSampleR /= gain;
 		inputSampleR *= gaintrim;
 		//end of Desk section
-		
+
 		if (outputgain != 1.0) {
 			inputSampleL *= outputgain;
 			inputSampleR *= outputgain;
 		}
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
-		
+
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -259,7 +259,7 @@ void Desk4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
     }
 }
 
-void Desk4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Desk4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -271,25 +271,25 @@ void Desk4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	overallscale *= getSampleRate();
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	double gain = (pow(A,2)*10)+0.0001;
 	double gaintrim = (pow(A,2)*2)+1.0;
-	double slewgain = (pow(B,3)*40)+0.0001;	
+	double slewgain = (pow(B,3)*40)+0.0001;
 	double prevslew = 0.105;
 	double intensity = (pow(C,6)*15)+0.0001;
 	double depthA = (pow(D,4)*940)+0.00001;
 	int offsetA = (int)(depthA * overallscale);
 	if (offsetA < 1) offsetA = 1;
 	if (offsetA > 4880) offsetA = 4880;
-	double balanceB = 0.0001;	
+	double balanceB = 0.0001;
 	slewgain *= overallscale;
 	prevslew *= overallscale;
 	balanceB /= overallscale;
 	double outputgain = E;
 	double wet = F;
 	double dry = 1.0 - wet;
-	
+
 	double clampL;
 	double clampR;
 	double thicknessL;
@@ -352,7 +352,7 @@ void Desk4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		drySampleR = inputSampleR;
 
 		if (gcount < 0 || gcount > 4900) {gcount = 4900;}
-		
+
 		dL[gcount+4900] = dL[gcount] = fabs(inputSampleL)*intensity;
 		controlL += (dL[gcount] / offsetA);
 		controlL -= (dL[gcount+offsetA] / offsetA);
@@ -361,7 +361,7 @@ void Desk4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		if (controlL < 0) {controlL = 0;}
 		if (controlL > 1) {clampL -= (controlL - 1); controlL = 1;}
 		if (clampL < 0.5) {clampL = 0.5;}
-		
+
 		dR[gcount+4900] = dR[gcount] = fabs(inputSampleR)*intensity;
 		controlR += (dR[gcount] / offsetA);
 		controlR -= (dR[gcount+offsetA] / offsetA);
@@ -370,14 +370,14 @@ void Desk4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		if (controlR < 0) {controlR = 0;}
 		if (controlR > 1) {clampR -= (controlR - 1); controlR = 1;}
 		if (clampR < 0.5) {clampR = 0.5;}
-		
-		
+
+
 		gcount--;
 		//control = 0 to 1
 		thicknessL = ((1.0 - controlL) * 2.0) - 1.0;
 		thicknessR = ((1.0 - controlR) * 2.0) - 1.0;
-		
-		out = fabs(thicknessL);		
+
+		out = fabs(thicknessL);
 		bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		//max value for sine function
@@ -388,7 +388,7 @@ void Desk4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		else inputSampleL = (inputSampleL*(1-out))-(bridgerectifier*out);
 		//blend according to density control
 
-		out = fabs(thicknessR);		
+		out = fabs(thicknessR);
 		bridgerectifier = fabs(inputSampleR);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		//max value for sine function
@@ -398,10 +398,10 @@ void Desk4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		if (inputSampleR > 0) inputSampleR = (inputSampleR*(1-out))+(bridgerectifier*out);
 		else inputSampleR = (inputSampleR*(1-out))-(bridgerectifier*out);
 		//blend according to density control
-		
+
 		inputSampleL *= clampL;
 		inputSampleR *= clampR;
-		
+
 		slewL = inputSampleL - lastSampleL;
 		lastSampleL = inputSampleL;
 		//Set up direct reference for slew
@@ -409,19 +409,19 @@ void Desk4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		slewR = inputSampleR - lastSampleR;
 		lastSampleR = inputSampleR;
 		//Set up direct reference for slew
-		
+
 		bridgerectifier = fabs(slewL*slewgain);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
 		if (slewL > 0) slewL = bridgerectifier/slewgain;
 		else slewL = -(bridgerectifier/slewgain);
-		
+
 		bridgerectifier = fabs(slewR*slewgain);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
 		if (slewR > 0) slewR = bridgerectifier/slewgain;
 		else slewR = -(bridgerectifier/slewgain);
-		
+
 		inputSampleL = (lastOutSampleL*balanceA) + (lastSampleL*balanceB) + slewL;
 		//go from last slewed, but include some raw values
 		lastOutSampleL = inputSampleL;
@@ -431,7 +431,7 @@ void Desk4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		//go from last slewed, but include some raw values
 		lastOutSampleR = inputSampleR;
 		//Set up slewed reference
-		
+
 		combSampleL = fabs(drySampleL*lastSampleL);
 		if (combSampleL > 1.0) combSampleL = 1.0;
 		//bailout for very high input gains
@@ -439,7 +439,7 @@ void Desk4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		combSampleR = fabs(drySampleR*lastSampleR);
 		if (combSampleR > 1.0) combSampleR = 1.0;
 		//bailout for very high input gains
-		
+
 		inputSampleL -= (lastSlewL * combSampleL * prevslew);
 		lastSlewL = slewL;
 		//slew interaction with previous slew
@@ -447,7 +447,7 @@ void Desk4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		inputSampleR -= (lastSlewR * combSampleR * prevslew);
 		lastSlewR = slewR;
 		//slew interaction with previous slew
-		
+
 		inputSampleL *= gain;
 		bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
@@ -469,18 +469,18 @@ void Desk4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		inputSampleR /= gain;
 		inputSampleR *= gaintrim;
 		//end of Desk section
-		
+
 		if (outputgain != 1.0) {
 			inputSampleL *= outputgain;
 			inputSampleR *= outputgain;
 		}
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
-		
+
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

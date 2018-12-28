@@ -7,29 +7,29 @@
 #include "Melt.h"
 #endif
 
-void Melt::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Melt::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
     float* out1 = outputs[0];
     float* out2 = outputs[1];
-	
+
 	double rate = 1 / (pow(A,2) + 0.001);
 	double depthB = (B * 139.5)+2;
 	double depthA = depthB * (1.0 - A);
 	double output = C * 0.05;
 	double wet = D;
-	double dry = 1.0-wet;	
+	double dry = 1.0-wet;
 
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
 	long double drySampleR;
-	
+
 	minTap[0] = floor(2 * depthA); maxTap[0] = floor(2 * depthB);
 	minTap[1] = floor(3 * depthA); maxTap[1] = floor(3 * depthB);
 	minTap[2] = floor(5 * depthA); maxTap[2] = floor(5 * depthB);
@@ -60,8 +60,8 @@ void Melt::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 	minTap[27] = floor(107 * depthA); maxTap[27] = floor(107 * depthB);
 	minTap[28] = floor(109 * depthA); maxTap[28] = floor(109 * depthB);
 	minTap[29] = floor(113 * depthA); maxTap[29] = floor(113 * depthB);
-	minTap[30] = floor(117 * depthA); maxTap[30] = floor(117 * depthB);	
-    
+	minTap[30] = floor(117 * depthA); maxTap[30] = floor(117 * depthB);
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -110,7 +110,7 @@ void Melt::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 		if (gcount < 0 || gcount > 16000) {gcount = 16000;}
 		dL[gcount+16000] = dL[gcount] = inputSampleL;
 		dR[gcount+16000] = dR[gcount] = inputSampleR;
-		
+
 		if (slowCount > rate || slowCount < 0) {
 			slowCount = 0;
 			stepCount++;
@@ -125,141 +125,141 @@ void Melt::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 				stepTap[stepCount] = -1;
 			}
 		}
-		
+
 		//begin L
 		scalefactorL *= 0.9999;
 		scalefactorL += (100.0 - fabs(combineL)) * 0.000001;
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[29]]);
 		combineL += (dL[gcount+position[28]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[27]]);
 		combineL += (dL[gcount+position[26]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[25]]);
 		combineL += (dL[gcount+position[24]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[23]]);
 		combineL += (dL[gcount+position[22]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[21]]);
 		combineL += (dL[gcount+position[20]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[19]]);
 		combineL += (dL[gcount+position[18]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[17]]);
 		combineL += (dL[gcount+position[16]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[15]]);
 		combineL += (dL[gcount+position[14]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[13]]);
 		combineL += (dL[gcount+position[12]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[11]]);
 		combineL += (dL[gcount+position[10]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[9]]);
 		combineL += (dL[gcount+position[8]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[7]]);
 		combineL += (dL[gcount+position[6]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[5]]);
 		combineL += (dL[gcount+position[4]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[3]]);
 		combineL += (dL[gcount+position[2]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[1]]);
 		combineL += (dL[gcount+position[0]]);
-		
+
 		inputSampleL = combineL;
 		//done with L
-		
+
 		//begin R
 		scalefactorR *= 0.9999;
 		scalefactorR += (100.0 - fabs(combineR)) * 0.000001;
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[29]]);
 		combineR += (dR[gcount+position[28]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[27]]);
 		combineR += (dR[gcount+position[26]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[25]]);
 		combineR += (dR[gcount+position[24]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[23]]);
 		combineR += (dR[gcount+position[22]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[21]]);
 		combineR += (dR[gcount+position[20]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[19]]);
 		combineR += (dR[gcount+position[18]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[17]]);
 		combineR += (dR[gcount+position[16]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[15]]);
 		combineR += (dR[gcount+position[14]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[13]]);
 		combineR += (dR[gcount+position[12]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[11]]);
 		combineR += (dR[gcount+position[10]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[9]]);
 		combineR += (dR[gcount+position[8]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[7]]);
 		combineR += (dR[gcount+position[6]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[5]]);
 		combineR += (dR[gcount+position[4]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[3]]);
 		combineR += (dR[gcount+position[2]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[1]]);
 		combineR += (dR[gcount+position[0]]);
-		
+
 		inputSampleR = combineR;
 		//done with R
-		
+
 		gcount--;
 		slowCount++;
 
@@ -270,7 +270,7 @@ void Melt::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 		}
 		//nice little output stage template: if we have another scale of floating point
 		//number, we really don't want to meaninglessly multiply that by 1.0.
-				
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -301,29 +301,29 @@ void Melt::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
     }
 }
 
-void Melt::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Melt::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
     double* out1 = outputs[0];
     double* out2 = outputs[1];
-	
+
 	double rate = 1 / (pow(A,2) + 0.001);
 	double depthB = (B * 139.5)+2;
 	double depthA = depthB * (1.0 - A);
 	double output = C * 0.05;
 	double wet = D;
-	double dry = 1.0-wet;	
-	
+	double dry = 1.0-wet;
+
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
 	long double drySampleR;
-	
+
 	minTap[0] = floor(2 * depthA); maxTap[0] = floor(2 * depthB);
 	minTap[1] = floor(3 * depthA); maxTap[1] = floor(3 * depthB);
 	minTap[2] = floor(5 * depthA); maxTap[2] = floor(5 * depthB);
@@ -354,7 +354,7 @@ void Melt::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 	minTap[27] = floor(107 * depthA); maxTap[27] = floor(107 * depthB);
 	minTap[28] = floor(109 * depthA); maxTap[28] = floor(109 * depthB);
 	minTap[29] = floor(113 * depthA); maxTap[29] = floor(113 * depthB);
-	minTap[30] = floor(117 * depthA); maxTap[30] = floor(117 * depthB);	
+	minTap[30] = floor(117 * depthA); maxTap[30] = floor(117 * depthB);
 
     while (--sampleFrames >= 0)
     {
@@ -400,11 +400,11 @@ void Melt::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		if (gcount < 0 || gcount > 16000) {gcount = 16000;}
 		dL[gcount+16000] = dL[gcount] = inputSampleL;
 		dR[gcount+16000] = dR[gcount] = inputSampleR;
-		
+
 		if (slowCount > rate || slowCount < 0) {
 			slowCount = 0;
 			stepCount++;
@@ -419,151 +419,151 @@ void Melt::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 				stepTap[stepCount] = -1;
 			}
 		}
-		
+
 		//begin L
 		scalefactorL *= 0.9999;
 		scalefactorL += (100.0 - fabs(combineL)) * 0.000001;
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[29]]);
 		combineL += (dL[gcount+position[28]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[27]]);
 		combineL += (dL[gcount+position[26]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[25]]);
 		combineL += (dL[gcount+position[24]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[23]]);
 		combineL += (dL[gcount+position[22]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[21]]);
 		combineL += (dL[gcount+position[20]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[19]]);
 		combineL += (dL[gcount+position[18]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[17]]);
 		combineL += (dL[gcount+position[16]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[15]]);
 		combineL += (dL[gcount+position[14]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[13]]);
 		combineL += (dL[gcount+position[12]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[11]]);
 		combineL += (dL[gcount+position[10]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[9]]);
 		combineL += (dL[gcount+position[8]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[7]]);
 		combineL += (dL[gcount+position[6]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[5]]);
 		combineL += (dL[gcount+position[4]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[3]]);
 		combineL += (dL[gcount+position[2]]);
-		
+
 		combineL *= scalefactorL;
 		combineL -= (dL[gcount+position[1]]);
 		combineL += (dL[gcount+position[0]]);
-		
+
 		inputSampleL = combineL;
 		//done with L
-		
+
 		//begin R
 		scalefactorR *= 0.9999;
 		scalefactorR += (100.0 - fabs(combineR)) * 0.000001;
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[29]]);
 		combineR += (dR[gcount+position[28]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[27]]);
 		combineR += (dR[gcount+position[26]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[25]]);
 		combineR += (dR[gcount+position[24]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[23]]);
 		combineR += (dR[gcount+position[22]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[21]]);
 		combineR += (dR[gcount+position[20]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[19]]);
 		combineR += (dR[gcount+position[18]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[17]]);
 		combineR += (dR[gcount+position[16]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[15]]);
 		combineR += (dR[gcount+position[14]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[13]]);
 		combineR += (dR[gcount+position[12]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[11]]);
 		combineR += (dR[gcount+position[10]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[9]]);
 		combineR += (dR[gcount+position[8]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[7]]);
 		combineR += (dR[gcount+position[6]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[5]]);
 		combineR += (dR[gcount+position[4]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[3]]);
 		combineR += (dR[gcount+position[2]]);
-		
+
 		combineR *= scalefactorR;
 		combineR -= (dR[gcount+position[1]]);
 		combineR += (dR[gcount+position[0]]);
-		
+
 		inputSampleR = combineR;
 		//done with R
-		
+
 		gcount--;
 		slowCount++;
-		
+
 		if (output < 1.0) {inputSampleL *= output; inputSampleR *= output;}
 		if (wet < 1.0) {
 			inputSampleL = (drySampleL * dry)+(inputSampleL*wet);
 			inputSampleR = (drySampleR * dry)+(inputSampleR*wet);
 		}
 		//nice little output stage template: if we have another scale of floating point
-		//number, we really don't want to meaninglessly multiply that by 1.0.		
+		//number, we really don't want to meaninglessly multiply that by 1.0.
 
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {

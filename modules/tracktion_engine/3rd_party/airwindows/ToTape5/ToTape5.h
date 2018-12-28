@@ -1,6 +1,6 @@
 /* ========================================
  *  ToTape5 - ToTape5.h
- *  Created 8/12/11 by SPIAdmin 
+ *  Created 8/12/11 by SPIAdmin
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
@@ -30,8 +30,8 @@ const int kNumInputs = 2;
 const int kNumOutputs = 2;
 const unsigned long kUniqueId = 'tott';    //Change this to what the AU identity is!
 
-class ToTape5 : 
-    public AudioEffectX 
+class ToTape5 :
+    public AudioEffectX
 {
 public:
     ToTape5(audioMasterCallback audioMaster);
@@ -51,24 +51,24 @@ public:
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
     virtual void getParameterName(VstInt32 index, char *text);    // name of the parameter
-    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value    
+    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value
     virtual VstInt32 canDo(char *text);
 private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
-	
+
 	int gcount;
 	double rateof;
 	double sweep;
 	double nextmax;
 	int hcount;
 	int flip;
-	
+
 	double dL[1000];
 	double eL[1000];
 	double dR[1000];
 	double eR[1000];
-	
+
 	double iirMidRollerAL;
 	double iirMidRollerBL;
 	double iirMidRollerCL;
@@ -84,7 +84,7 @@ private:
 	double iirHeadBumpBR;
 	double iirHeadBumpCR;
 	double iirMinHeadBumpR;
-	
+
 	double iirSampleAL;
 	double iirSampleBL;
 	double iirSampleCL;
@@ -111,7 +111,7 @@ private:
 	double iirSampleXL;
 	double iirSampleYL;
 	double iirSampleZL;
-	
+
 	double iirSampleAR;
 	double iirSampleBR;
 	double iirSampleCR;
@@ -138,8 +138,8 @@ private:
 	double iirSampleXR;
 	double iirSampleYR;
 	double iirSampleZR;
-   
-	
+
+
 	long double fpNShapeLA;
 	long double fpNShapeLB;
 	long double fpNShapeRA;

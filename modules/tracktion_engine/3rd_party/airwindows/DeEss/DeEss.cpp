@@ -15,30 +15,30 @@ DeEss::DeEss(audioMasterCallback audioMaster) :
 	A = 0.0;
 	B = 0.5; //-48.0 to 0.0
 	C = 0.5;
-	
+
 	s1L = s2L = s3L = s4L = s5L = s6L= s7L = 0.0;
 	m1L = m2L = m3L = m4L = m5L = m6L = 0.0;
 	c1L = c2L = c3L = c4L = c5L = 0.0;
 	ratioAL = ratioBL = 1.0;
 	iirSampleAL = 0.0;
 	iirSampleBL = 0.0;
-	
+
 	s1R = s2R = s3R = s4R = s5R = s6R = s7R = 0.0;
 	m1R = m2R = m3R = m4R = m5R = m6R = 0.0;
 	c1R = c2R = c3R = c4R = c5R = 0.0;
 	ratioAR = ratioBR = 1.0;
 	iirSampleAR = 0.0;
 	iirSampleBR = 0.0;
-	
-	flip = false;	
-	
+
+	flip = false;
+
 	fpNShapeL = 0.0;
 	fpNShapeR = 0.0;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -69,22 +69,22 @@ VstInt32 DeEss::getChunk (void** data, bool isPreset)
 	chunkData[1] = B;
 	chunkData[2] = C;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
+	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
 	 started with. */
-	
+
 	*data = chunkData;
 	return kNumParameters * sizeof(float);
 }
 
 VstInt32 DeEss::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	float *chunkData = (float *)data;
 	A = pinParameter(chunkData[0]);
 	B = pinParameter(chunkData[1]);
 	C = pinParameter(chunkData[2]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
-	
-	/* calculate any other fields you need here - you could copy in 
+
+	/* calculate any other fields you need here - you could copy in
 	 code from setParameter() here. */
 	return 0;
 }
@@ -134,7 +134,7 @@ void DeEss::getParameterLabel(VstInt32 index, char *text) {
     }
 }
 
-VstInt32 DeEss::canDo(char *text) 
+VstInt32 DeEss::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool DeEss::getEffectName(char* name) {

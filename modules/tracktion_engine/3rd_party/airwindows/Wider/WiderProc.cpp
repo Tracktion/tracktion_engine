@@ -7,7 +7,7 @@
 #include "Wider.h"
 #endif
 
-void Wider::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Wider::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -19,7 +19,7 @@ void Wider::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	overallscale *= getSampleRate();
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
@@ -44,7 +44,7 @@ void Wider::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	double nearLevel = 1.0 - farLevel;
 	double bridgerectifier;
 	//interpolating the sample
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -89,11 +89,11 @@ void Wider::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		//assign working variables		
+		//assign working variables
 		mid = inputSampleL + inputSampleR;
 		side = inputSampleL - inputSampleR;
 		//assign mid and side. Now, High Impact code
-		
+
 		if (densityside != 0.0)
 		{
 			out = fabs(densityside);
@@ -107,7 +107,7 @@ void Wider::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 			else side = (side*(1-out))-(bridgerectifier*out);
 			//blend according to density control
 		}
-		
+
 		if (densitymid != 0.0)
 		{
 			out = fabs(densitymid);
@@ -121,7 +121,7 @@ void Wider::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 			else mid = (mid*(1-out))-(bridgerectifier*out);
 			//blend according to density control
 		}
-		
+
 		if (count < 1 || count > 2048) {count = 2048;}
 		if (offset > 0)
 		{
@@ -129,7 +129,7 @@ void Wider::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 			mid = p[count+near]*nearLevel;
 			mid += p[count+far]*farLevel;
 		}
-		
+
 		if (offset < 0)
 		{
 			p[count+2048] = p[count] = side;
@@ -137,10 +137,10 @@ void Wider::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 			side += p[count+far]*farLevel;
 		}
 		count -= 1;
-		
+
 		inputSampleL = (drySampleL * dry) + ((mid+side) * wet);
 		inputSampleR = (drySampleR * dry) + ((mid-side) * wet);
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -171,7 +171,7 @@ void Wider::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
     }
 }
 
-void Wider::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Wider::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -183,8 +183,8 @@ void Wider::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	overallscale *= getSampleRate();
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	long double inputSampleL;
 	long double inputSampleR;
 	double drySampleL;
@@ -208,7 +208,7 @@ void Wider::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	double nearLevel = 1.0 - farLevel;
 	double bridgerectifier;
 	//interpolating the sample
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -253,11 +253,11 @@ void Wider::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		//assign working variables		
+		//assign working variables
 		mid = inputSampleL + inputSampleR;
 		side = inputSampleL - inputSampleR;
 		//assign mid and side. Now, High Impact code
-		
+
 		if (densityside != 0.0)
 		{
 			out = fabs(densityside);
@@ -271,7 +271,7 @@ void Wider::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 			else side = (side*(1-out))-(bridgerectifier*out);
 			//blend according to density control
 		}
-		
+
 		if (densitymid != 0.0)
 		{
 			out = fabs(densitymid);
@@ -285,7 +285,7 @@ void Wider::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 			else mid = (mid*(1-out))-(bridgerectifier*out);
 			//blend according to density control
 		}
-		
+
 		if (count < 1 || count > 2048) {count = 2048;}
 		if (offset > 0)
 		{
@@ -293,7 +293,7 @@ void Wider::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 			mid = p[count+near]*nearLevel;
 			mid += p[count+far]*farLevel;
 		}
-		
+
 		if (offset < 0)
 		{
 			p[count+2048] = p[count] = side;
@@ -301,10 +301,10 @@ void Wider::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 			side += p[count+far]*farLevel;
 		}
 		count -= 1;
-		
+
 		inputSampleL = (drySampleL * dry) + ((mid+side) * wet);
 		inputSampleR = (drySampleR * dry) + ((mid-side) * wet);
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -324,7 +324,7 @@ void Wider::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

@@ -7,7 +7,7 @@
 #include "OneCornerClip.h"
 #endif
 
-void OneCornerClip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void OneCornerClip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -20,7 +20,7 @@ void OneCornerClip::processReplacing(float **inputs, float **outputs, VstInt32 s
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
 	long double fpNew = 1.0 - fpOld;
-	
+
 	double inputGain = pow(10.0,(((A*36.0)-12.0)/20.0));
 	double posThreshold = B;
 	double posTargetL = posThreshold;
@@ -38,7 +38,7 @@ void OneCornerClip::processReplacing(float **inputs, float **outputs, VstInt32 s
 	if (voicing > 1.0) voicing = 1.0;
 	//some insanity checking
 	double inverseHardness = 1.0 - voicing;
-	bool clipEngage = false;	
+	bool clipEngage = false;
 
 	double wet = E;
 	double dry = 1.0 - wet;
@@ -46,7 +46,7 @@ void OneCornerClip::processReplacing(float **inputs, float **outputs, VstInt32 s
 	double drySampleR;
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -91,7 +91,7 @@ void OneCornerClip::processReplacing(float **inputs, float **outputs, VstInt32 s
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		if (inputGain != 1.0)
 		{
 			inputSampleL *= inputGain;
@@ -105,8 +105,8 @@ void OneCornerClip::processReplacing(float **inputs, float **outputs, VstInt32 s
 			//if we are not touching gain, we will bypass unless
 			//a clip is actively being softened.
 		}
-		
-		
+
+
 		if (inputSampleL > posTargetL)
 		{
 			inputSampleL = (lastSampleL * voicing) + (posThreshold * inverseHardness);
@@ -117,7 +117,7 @@ void OneCornerClip::processReplacing(float **inputs, float **outputs, VstInt32 s
 		{
 			posTargetL = posThreshold;
 		}
-		
+
 		if (inputSampleR > posTargetR)
 		{
 			inputSampleR = (lastSampleR * voicing) + (posThreshold * inverseHardness);
@@ -128,7 +128,7 @@ void OneCornerClip::processReplacing(float **inputs, float **outputs, VstInt32 s
 		{
 			posTargetR = posThreshold;
 		}
-		
+
 		if (inputSampleL < negTargetL)
 		{
 			inputSampleL = (lastSampleL * voicing) + (negThreshold * inverseHardness);
@@ -138,7 +138,7 @@ void OneCornerClip::processReplacing(float **inputs, float **outputs, VstInt32 s
 		else {
 			negTargetL = negThreshold;
 		}
-		
+
 		if (inputSampleR < negTargetR)
 		{
 			inputSampleR = (lastSampleR * voicing) + (negThreshold * inverseHardness);
@@ -148,15 +148,15 @@ void OneCornerClip::processReplacing(float **inputs, float **outputs, VstInt32 s
 		else {
 			negTargetR = negThreshold;
 		}
-		
+
 		lastSampleL = inputSampleL;
 		lastSampleR = inputSampleR;
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -176,7 +176,7 @@ void OneCornerClip::processReplacing(float **inputs, float **outputs, VstInt32 s
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 32 bit output
-		
+
 		if (clipEngage == false)
 		{
 			inputSampleL = *in1;
@@ -194,7 +194,7 @@ void OneCornerClip::processReplacing(float **inputs, float **outputs, VstInt32 s
     }
 }
 
-void OneCornerClip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void OneCornerClip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -206,8 +206,8 @@ void OneCornerClip::processDoubleReplacing(double **inputs, double **outputs, Vs
 	overallscale *= getSampleRate();
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double inputGain = pow(10.0,(((A*36.0)-12.0)/20.0));
 	double posThreshold = B;
 	double posTargetL = posThreshold;
@@ -225,8 +225,8 @@ void OneCornerClip::processDoubleReplacing(double **inputs, double **outputs, Vs
 	if (voicing > 1.0) voicing = 1.0;
 	//some insanity checking
 	double inverseHardness = 1.0 - voicing;
-	bool clipEngage = false;	
-	
+	bool clipEngage = false;
+
 	double wet = E;
 	double dry = 1.0 - wet;
 	double drySampleL;
@@ -279,7 +279,7 @@ void OneCornerClip::processDoubleReplacing(double **inputs, double **outputs, Vs
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		if (inputGain != 1.0)
 		{
 			inputSampleL *= inputGain;
@@ -293,8 +293,8 @@ void OneCornerClip::processDoubleReplacing(double **inputs, double **outputs, Vs
 			//if we are not touching gain, we will bypass unless
 			//a clip is actively being softened.
 		}
-		
-		
+
+
 		if (inputSampleL > posTargetL)
 		{
 			inputSampleL = (lastSampleL * voicing) + (posThreshold * inverseHardness);
@@ -305,7 +305,7 @@ void OneCornerClip::processDoubleReplacing(double **inputs, double **outputs, Vs
 		{
 			posTargetL = posThreshold;
 		}
-		
+
 		if (inputSampleR > posTargetR)
 		{
 			inputSampleR = (lastSampleR * voicing) + (posThreshold * inverseHardness);
@@ -316,7 +316,7 @@ void OneCornerClip::processDoubleReplacing(double **inputs, double **outputs, Vs
 		{
 			posTargetR = posThreshold;
 		}
-		
+
 		if (inputSampleL < negTargetL)
 		{
 			inputSampleL = (lastSampleL * voicing) + (negThreshold * inverseHardness);
@@ -326,7 +326,7 @@ void OneCornerClip::processDoubleReplacing(double **inputs, double **outputs, Vs
 		else {
 			negTargetL = negThreshold;
 		}
-		
+
 		if (inputSampleR < negTargetR)
 		{
 			inputSampleR = (lastSampleR * voicing) + (negThreshold * inverseHardness);
@@ -336,15 +336,15 @@ void OneCornerClip::processDoubleReplacing(double **inputs, double **outputs, Vs
 		else {
 			negTargetR = negThreshold;
 		}
-		
+
 		lastSampleL = inputSampleL;
 		lastSampleR = inputSampleR;
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -364,7 +364,7 @@ void OneCornerClip::processDoubleReplacing(double **inputs, double **outputs, Vs
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		if (clipEngage == false)
 		{
 			inputSampleL = *in1;

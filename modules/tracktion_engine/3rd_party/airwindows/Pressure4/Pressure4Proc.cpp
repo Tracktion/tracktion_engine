@@ -7,7 +7,7 @@
 #include "Pressure4.h"
 #endif
 
-void Pressure4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Pressure4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* inputL  =  inputs[0];
     float* inputR  =  inputs[1];
@@ -45,11 +45,11 @@ void Pressure4::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	// µ µ µ µ µ µ µ µ µ µ µ µ is the kitten song o/~
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *inputL;
@@ -92,16 +92,16 @@ void Pressure4::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		inputSampleL = inputSampleL * muMakeupGain;
 		inputSampleR = inputSampleR * muMakeupGain;
-		
+
 		inputSense = fabs(inputSampleL);
 		if (fabs(inputSampleR) > inputSense)
 			inputSense = fabs(inputSampleR);
 		//we will take the greater of either channel and just use that, then apply the result
 		//to both stereo channels.
-		
+
 		if (flip)
 		{
 			if (inputSense > threshold)
@@ -157,7 +157,7 @@ void Pressure4::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			muSpeedB = muNewSpeed / muSpeedB;
 		}
 		//got coefficients, adjusted speeds
-		
+
 		if (flip)
 		{
 			if (positivemu) coefficient = pow(muCoefficientA,2);
@@ -176,11 +176,11 @@ void Pressure4::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		}
 		//applied compression with vari-vari-µ-µ-µ-µ-µ-µ-is-the-kitten-song o/~
 		//applied gain correction to control output level- tends to constrain sound rather than inflate it
-		
+
 		if (outputGain != 1.0) {
 			inputSampleL *= outputGain;
 			inputSampleR *= outputGain;
-		}		
+		}
 
 		bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
@@ -194,13 +194,13 @@ void Pressure4::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		if (inputSampleR > 0){inputSampleR = bridgerectifier;}
 		else {inputSampleR = -bridgerectifier;}
 		//second stage of overdrive to prevent overs and allow bloody loud extremeness
-		
+
 		//noise shaping to 32-bit floating point
 		if (flip) {
 			fpTemp = inputSampleL;
 			fpNShapeAL = (fpNShapeAL*fpOld)+((inputSampleL-fpTemp)*fpNew);
 			inputSampleL += fpNShapeAL;
-			
+
 			fpTemp = inputSampleR;
 			fpNShapeAR = (fpNShapeAR*fpOld)+((inputSampleR-fpTemp)*fpNew);
 			inputSampleR += fpNShapeAR;
@@ -209,17 +209,17 @@ void Pressure4::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			fpTemp = inputSampleL;
 			fpNShapeBL = (fpNShapeBL*fpOld)+((inputSampleL-fpTemp)*fpNew);
 			inputSampleL += fpNShapeBL;
-			
+
 			fpTemp = inputSampleR;
 			fpNShapeBR = (fpNShapeBR*fpOld)+((inputSampleR-fpTemp)*fpNew);
 			inputSampleR += fpNShapeBR;
 		}
 		flip = !flip;
 		//end noise shaping on 32 bit output
-		
+
 		*outputL = inputSampleL;
 		*outputR = inputSampleR;
-		
+
 		*inputL++;
 		*inputR++;
 		*outputL++;
@@ -227,7 +227,7 @@ void Pressure4::processReplacing(float **inputs, float **outputs, VstInt32 sampl
     }
 }
 
-void Pressure4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Pressure4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* inputL  =  inputs[0];
     double* inputR  =  inputs[1];
@@ -265,11 +265,11 @@ void Pressure4::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	// µ µ µ µ µ µ µ µ µ µ µ µ is the kitten song o/~
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
- 
+
 
     while (--sampleFrames >= 0)
     {
@@ -313,16 +313,16 @@ void Pressure4::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		inputSampleL = inputSampleL * muMakeupGain;
 		inputSampleR = inputSampleR * muMakeupGain;
-		
+
 		inputSense = fabs(inputSampleL);
 		if (fabs(inputSampleR) > inputSense)
 			inputSense = fabs(inputSampleR);
 		//we will take the greater of either channel and just use that, then apply the result
 		//to both stereo channels.
-		
+
 		if (flip)
 		{
 			if (inputSense > threshold)
@@ -378,7 +378,7 @@ void Pressure4::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			muSpeedB = muNewSpeed / muSpeedB;
 		}
 		//got coefficients, adjusted speeds
-		
+
 		if (flip)
 		{
 			if (positivemu) coefficient = pow(muCoefficientA,2);
@@ -397,11 +397,11 @@ void Pressure4::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		}
 		//applied compression with vari-vari-µ-µ-µ-µ-µ-µ-is-the-kitten-song o/~
 		//applied gain correction to control output level- tends to constrain sound rather than inflate it
-		
+
 		if (outputGain != 1.0) {
 			inputSampleL *= outputGain;
 			inputSampleR *= outputGain;
-		}		
+		}
 
 		bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
@@ -415,13 +415,13 @@ void Pressure4::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		if (inputSampleR > 0){inputSampleR = bridgerectifier;}
 		else {inputSampleR = -bridgerectifier;}
 		//second stage of overdrive to prevent overs and allow bloody loud extremeness
-		
+
 		//noise shaping to 32-bit floating point
 		if (flip) {
 			fpTemp = inputSampleL;
 			fpNShapeAL = (fpNShapeAL*fpOld)+((inputSampleL-fpTemp)*fpNew);
 			inputSampleL += fpNShapeAL;
-			
+
 			fpTemp = inputSampleR;
 			fpNShapeAR = (fpNShapeAR*fpOld)+((inputSampleR-fpTemp)*fpNew);
 			inputSampleR += fpNShapeAR;
@@ -430,14 +430,14 @@ void Pressure4::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			fpTemp = inputSampleL;
 			fpNShapeBL = (fpNShapeBL*fpOld)+((inputSampleL-fpTemp)*fpNew);
 			inputSampleL += fpNShapeBL;
-			
+
 			fpTemp = inputSampleR;
 			fpNShapeBR = (fpNShapeBR*fpOld)+((inputSampleR-fpTemp)*fpNew);
 			inputSampleR += fpNShapeBR;
 		}
 		flip = !flip;
 		//end noise shaping on 32 bit output
-		
+
 		*outputL = inputSampleL;
 		*outputR = inputSampleR;
 

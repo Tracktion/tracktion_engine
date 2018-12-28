@@ -16,7 +16,7 @@ BassKit::BassKit(audioMasterCallback audioMaster) :
 	B = 0.5;
 	C = 0.5;
 	D = 0.5;
-	
+
 	WasNegative = false;
 	SubOctave = false;
 	flip = false;
@@ -27,18 +27,18 @@ BassKit::BassKit(audioMasterCallback audioMaster) :
 	iirDriveSampleD = 0.0;
 	iirDriveSampleE = 0.0;
 	iirDriveSampleF = 0.0;
-	
+
 	iirHeadBumpA = 0.0;
 	iirHeadBumpB = 0.0;
 	iirHeadBumpC = 0.0;
-	
+
 	iirSubBumpA = 0.0;
 	iirSubBumpB = 0.0;
 	iirSubBumpC = 0.0;
-	
+
 	lastHeadBump = 0.0;
 	lastSubBump = 0.0;
-	
+
 	iirSampleA = 0.0;
 	iirSampleB = 0.0;
 	iirSampleC = 0.0;
@@ -64,17 +64,17 @@ BassKit::BassKit(audioMasterCallback audioMaster) :
 	iirSampleW = 0.0;
 	iirSampleX = 0.0;
 	iirSampleY = 0.0;
-	iirSampleZ = 0.0;	
-	
+	iirSampleZ = 0.0;
+
 	oscGate = 1.0;
-		
+
 	fpNShapeL = 0.0;
 	fpNShapeR = 0.0;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -106,23 +106,23 @@ VstInt32 BassKit::getChunk (void** data, bool isPreset)
 	chunkData[2] = C;
 	chunkData[3] = D;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
+	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
 	 started with. */
-	
+
 	*data = chunkData;
 	return kNumParameters * sizeof(float);
 }
 
 VstInt32 BassKit::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	float *chunkData = (float *)data;
 	A = pinParameter(chunkData[0]);
 	B = pinParameter(chunkData[1]);
 	C = pinParameter(chunkData[2]);
 	D = pinParameter(chunkData[3]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
-	
-	/* calculate any other fields you need here - you could copy in 
+
+	/* calculate any other fields you need here - you could copy in
 	 code from setParameter() here. */
 	return 0;
 }
@@ -177,7 +177,7 @@ void BassKit::getParameterLabel(VstInt32 index, char *text) {
     }
 }
 
-VstInt32 BassKit::canDo(char *text) 
+VstInt32 BassKit::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool BassKit::getEffectName(char* name) {

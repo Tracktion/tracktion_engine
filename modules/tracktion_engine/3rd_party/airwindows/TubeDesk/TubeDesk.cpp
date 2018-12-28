@@ -14,27 +14,27 @@ TubeDesk::TubeDesk(audioMasterCallback audioMaster) :
 {
 	for(int count = 0; count < 4999; count++) {dL[count] = 0; dR[count] = 0;}
 	gcount = 0;
-	
+
 	controlL = 0;
 	lastSampleL = 0.0;
 	lastOutSampleL = 0.0;
 	lastSlewL = 0.0;
-	
+
 	controlR = 0;
 	lastSampleR = 0.0;
 	lastOutSampleR = 0.0;
 	lastSlewR = 0.0;
-	
+
 	fpNShapeLA = 0.0;
 	fpNShapeLB = 0.0;
 	fpNShapeRA = 0.0;
 	fpNShapeRB = 0.0;
 	fpFlip = true;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -57,7 +57,7 @@ VstInt32 TubeDesk::getChunk (void** data, bool isPreset)
 }
 
 VstInt32 TubeDesk::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	return 0;
 }
 
@@ -77,7 +77,7 @@ void TubeDesk::getParameterDisplay(VstInt32 index, char *text) {
 void TubeDesk::getParameterLabel(VstInt32 index, char *text) {
 }
 
-VstInt32 TubeDesk::canDo(char *text) 
+VstInt32 TubeDesk::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool TubeDesk::getEffectName(char* name) {

@@ -22,7 +22,7 @@ ToVinyl4::ToVinyl4(audioMasterCallback audioMaster) :
 	}
 	aMidPrev = 0.0; aSidePrev = 0.0;
 	bMidPrev = 0.0; bSidePrev = 0.0;
-	ataLastOutL = ataLastOutR = 0.0;	
+	ataLastOutL = ataLastOutR = 0.0;
 	midSampleA = 0.0;
 	midSampleB = 0.0;
 	midSampleC = 0.0;
@@ -49,7 +49,7 @@ ToVinyl4::ToVinyl4(audioMasterCallback audioMaster) :
 	midSampleX = 0.0;
 	midSampleY = 0.0;
 	midSampleZ = 0.0;
-	
+
 	sideSampleA = 0.0;
 	sideSampleB = 0.0;
 	sideSampleC = 0.0;
@@ -93,10 +93,10 @@ ToVinyl4::ToVinyl4(audioMasterCallback audioMaster) :
 	fpNShapeRB = 0.0;
 	fpFlip = true;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -128,23 +128,23 @@ VstInt32 ToVinyl4::getChunk (void** data, bool isPreset)
 	chunkData[2] = C;
 	chunkData[3] = D;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
+	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
 	 started with. */
-	
+
 	*data = chunkData;
 	return kNumParameters * sizeof(float);
 }
 
 VstInt32 ToVinyl4::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	float *chunkData = (float *)data;
 	A = pinParameter(chunkData[0]);
 	B = pinParameter(chunkData[1]);
 	C = pinParameter(chunkData[2]);
 	D = pinParameter(chunkData[3]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
-	
-	/* calculate any other fields you need here - you could copy in 
+
+	/* calculate any other fields you need here - you could copy in
 	 code from setParameter() here. */
 	return 0;
 }
@@ -199,7 +199,7 @@ void ToVinyl4::getParameterLabel(VstInt32 index, char *text) {
     }
 }
 
-VstInt32 ToVinyl4::canDo(char *text) 
+VstInt32 ToVinyl4::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool ToVinyl4::getEffectName(char* name) {

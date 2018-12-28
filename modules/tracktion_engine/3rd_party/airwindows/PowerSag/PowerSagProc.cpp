@@ -7,7 +7,7 @@
 #include "PowerSag.h"
 #endif
 
-void PowerSag::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void PowerSag::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -16,7 +16,7 @@ void PowerSag::processReplacing(float **inputs, float **outputs, VstInt32 sample
 
 	double intensity = pow(A,5)*80.0;
 	double depthA = pow(B,2);
-	int offsetA = (int)(depthA * 3900) + 1;	
+	int offsetA = (int)(depthA * 3900) + 1;
 	double clamp;
 	double thickness;
 	double out;
@@ -24,11 +24,11 @@ void PowerSag::processReplacing(float **inputs, float **outputs, VstInt32 sample
 
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -73,18 +73,18 @@ void PowerSag::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		}
 
 		if (gcount < 0 || gcount > 4000) {gcount = 4000;}
-		
+
 		//doing L
 		dL[gcount+4000] = dL[gcount] = fabs(inputSampleL)*intensity;
 		controlL += (dL[gcount] / offsetA);
-		controlL -= (dL[gcount+offsetA] / offsetA);		
+		controlL -= (dL[gcount+offsetA] / offsetA);
 		controlL -= 0.000001;
 		clamp = 1;
 		if (controlL < 0) {controlL = 0;}
 		if (controlL > 1) {clamp -= (controlL - 1); controlL = 1;}
 		if (clamp < 0.5) {clamp = 0.5;}
 		thickness = ((1.0 - controlL) * 2.0) - 1.0;
-		out = fabs(thickness);		
+		out = fabs(thickness);
 		bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		//max value for sine function
@@ -100,14 +100,14 @@ void PowerSag::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		//doing R
 		dR[gcount+4000] = dR[gcount] = fabs(inputSampleR)*intensity;
 		controlR += (dR[gcount] / offsetA);
-		controlR -= (dR[gcount+offsetA] / offsetA);		
+		controlR -= (dR[gcount+offsetA] / offsetA);
 		controlR -= 0.000001;
 		clamp = 1;
 		if (controlR < 0) {controlR = 0;}
 		if (controlR > 1) {clamp -= (controlR - 1); controlR = 1;}
 		if (clamp < 0.5) {clamp = 0.5;}
 		thickness = ((1.0 - controlR) * 2.0) - 1.0;
-		out = fabs(thickness);		
+		out = fabs(thickness);
 		bridgerectifier = fabs(inputSampleR);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		//max value for sine function
@@ -119,10 +119,10 @@ void PowerSag::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		//blend according to density control
 		inputSampleR *= clamp;
 		//end R
-		
+
 		gcount--;
-		
-		
+
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -153,24 +153,24 @@ void PowerSag::processReplacing(float **inputs, float **outputs, VstInt32 sample
     }
 }
 
-void PowerSag::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void PowerSag::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
     double* out1 = outputs[0];
     double* out2 = outputs[1];
-	
+
 	double intensity = pow(A,5)*80.0;
 	double depthA = pow(B,2);
-	int offsetA = (int)(depthA * 3900) + 1;	
+	int offsetA = (int)(depthA * 3900) + 1;
 	double clamp;
 	double thickness;
 	double out;
 	double bridgerectifier;
-	
+
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
@@ -217,20 +217,20 @@ void PowerSag::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		if (gcount < 0 || gcount > 4000) {gcount = 4000;}
-		
+
 		//doing L
 		dL[gcount+4000] = dL[gcount] = fabs(inputSampleL)*intensity;
 		controlL += (dL[gcount] / offsetA);
-		controlL -= (dL[gcount+offsetA] / offsetA);		
+		controlL -= (dL[gcount+offsetA] / offsetA);
 		controlL -= 0.000001;
 		clamp = 1;
 		if (controlL < 0) {controlL = 0;}
 		if (controlL > 1) {clamp -= (controlL - 1); controlL = 1;}
 		if (clamp < 0.5) {clamp = 0.5;}
 		thickness = ((1.0 - controlL) * 2.0) - 1.0;
-		out = fabs(thickness);		
+		out = fabs(thickness);
 		bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		//max value for sine function
@@ -242,18 +242,18 @@ void PowerSag::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		//blend according to density control
 		inputSampleL *= clamp;
 		//end L
-		
+
 		//doing R
 		dR[gcount+4000] = dR[gcount] = fabs(inputSampleR)*intensity;
 		controlR += (dR[gcount] / offsetA);
-		controlR -= (dR[gcount+offsetA] / offsetA);		
+		controlR -= (dR[gcount+offsetA] / offsetA);
 		controlR -= 0.000001;
 		clamp = 1;
 		if (controlR < 0) {controlR = 0;}
 		if (controlR > 1) {clamp -= (controlR - 1); controlR = 1;}
 		if (clamp < 0.5) {clamp = 0.5;}
 		thickness = ((1.0 - controlR) * 2.0) - 1.0;
-		out = fabs(thickness);		
+		out = fabs(thickness);
 		bridgerectifier = fabs(inputSampleR);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		//max value for sine function
@@ -265,10 +265,10 @@ void PowerSag::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		//blend according to density control
 		inputSampleR *= clamp;
 		//end R
-		
+
 		gcount--;
-		
-		
+
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

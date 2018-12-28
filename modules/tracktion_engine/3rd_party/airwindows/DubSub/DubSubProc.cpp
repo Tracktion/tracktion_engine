@@ -7,7 +7,7 @@
 #include "DubSub.h"
 #endif
 
-void DubSub::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void DubSub::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -50,7 +50,7 @@ void DubSub::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 	double glitch = 0.60;
 	double tempSampleL;
 	double tempSampleR;
-	
+
 	while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -60,7 +60,7 @@ void DubSub::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -75,7 +75,7 @@ void DubSub::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -90,11 +90,11 @@ void DubSub::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it aDubSub. We want a 'air' hiss
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
-		
+
 		// here's the plan.
 		// Grind Boost
 		// Grind Output Level
@@ -106,12 +106,12 @@ void DubSub::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		// Sub Voicing
 		// Sub Output Level
 		// Dry/Wet
-		
+
 		oscGateL += fabs(inputSampleL * 10.0);
 		oscGateL -= 0.001;
 		if (oscGateL > 1.0) oscGateL = 1.0;
 		if (oscGateL < 0) oscGateL = 0;
-		
+
 		oscGateR += fabs(inputSampleR * 10.0);
 		oscGateR -= 0.001;
 		if (oscGateR > 1.0) oscGateR = 1.0;
@@ -122,7 +122,7 @@ void DubSub::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		clampR = 1.0-oscGateR;
 		clampR *= 0.00001;
 		//set up the thing to choke off oscillations- belt and suspenders affair
-		
+
 		if (flip)
 		{
 			tempSampleL = inputSampleL;
@@ -168,7 +168,7 @@ void DubSub::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		if (inputSampleL < -1.0) {inputSampleL = -1.0;}
 		if (inputSampleR > 1.0) {inputSampleR = 1.0;}
 		if (inputSampleR < -1.0) {inputSampleR = -1.0;}
-		
+
 		out = driveone;
 		while (out > glitch)
 		{
@@ -179,30 +179,30 @@ void DubSub::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			inputSampleR *= (1.0+glitch);
 		}
 		//that's taken care of the really high gain stuff
-		
+
 		inputSampleL -= (inputSampleL * (fabs(inputSampleL) * out) * (fabs(inputSampleL) * out) );
 		inputSampleR -= (inputSampleR * (fabs(inputSampleR) * out) * (fabs(inputSampleR) * out) );
 		inputSampleL *= (1.0+out);
 		inputSampleR *= (1.0+out);
-		
+
 		if (ataLowpassL > 0)
 		{if (WasNegativeL){SubOctaveL = !SubOctaveL;} WasNegativeL = false;}
 		else {WasNegativeL = true;}
-		
+
 		if (ataLowpassR > 0)
 		{if (WasNegativeR){SubOctaveR = !SubOctaveR;} WasNegativeR = false;}
 		else {WasNegativeR = true;}
 		//set up polarities for sub-bass version
-		
+
 		randyL = (rand()/(double)RAND_MAX)*fuzz; //0 to 1 the noise, may not be needed
 		invrandyL = (1.0-randyL);
 		randyL /= 2.0;
-		
+
 		randyR = (rand()/(double)RAND_MAX)*fuzz; //0 to 1 the noise, may not be needed
 		invrandyR = (1.0-randyR);
 		randyR /= 2.0;
 		//set up the noise
-		
+
 		iirSampleAL = (iirSampleAL * altBmount) + (ataLowpassL * iirBmount); ataLowpassL -= iirSampleAL;
 		iirSampleBL = (iirSampleBL * altBmount) + (ataLowpassL * iirBmount); ataLowpassL -= iirSampleBL;
 		iirSampleCL = (iirSampleCL * altBmount) + (ataLowpassL * iirBmount); ataLowpassL -= iirSampleCL;
@@ -225,7 +225,7 @@ void DubSub::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		iirSampleTL = (iirSampleTL * altBmount) + (ataLowpassL * iirBmount); ataLowpassL -= iirSampleTL;
 		iirSampleUL = (iirSampleUL * altBmount) + (ataLowpassL * iirBmount); ataLowpassL -= iirSampleUL;
 		iirSampleVL = (iirSampleVL * altBmount) + (ataLowpassL * iirBmount); ataLowpassL -= iirSampleVL;
-		
+
 		iirSampleAR = (iirSampleAR * altBmount) + (ataLowpassR * iirBmount); ataLowpassR -= iirSampleAR;
 		iirSampleBR = (iirSampleBR * altBmount) + (ataLowpassR * iirBmount); ataLowpassR -= iirSampleBR;
 		iirSampleCR = (iirSampleCR * altBmount) + (ataLowpassR * iirBmount); ataLowpassR -= iirSampleCR;
@@ -248,10 +248,10 @@ void DubSub::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		iirSampleTR = (iirSampleTR * altBmount) + (ataLowpassR * iirBmount); ataLowpassR -= iirSampleTR;
 		iirSampleUR = (iirSampleUR * altBmount) + (ataLowpassR * iirBmount); ataLowpassR -= iirSampleUR;
 		iirSampleVR = (iirSampleVR * altBmount) + (ataLowpassR * iirBmount); ataLowpassR -= iirSampleVR;
-		
+
 		switch (bflip)
 		{
-			case 1:				
+			case 1:
 				iirHeadBumpAL += (ataLowpassL * BassGain);
 				iirHeadBumpAL -= (iirHeadBumpAL * iirHeadBumpAL * iirHeadBumpAL * HeadBumpFreq);
 				iirHeadBumpAL = (invrandyL * iirHeadBumpAL) + (randyL * iirHeadBumpBL) + (randyL * iirHeadBumpCL);
@@ -297,7 +297,7 @@ void DubSub::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 				HeadBumpR = iirHeadBumpCR;
 				break;
 		}
-		
+
 		iirSampleWL = (iirSampleWL * altBmount) + (HeadBumpL * iirBmount); HeadBumpL -= iirSampleWL;
 		iirSampleXL = (iirSampleXL * altBmount) + (HeadBumpL * iirBmount); HeadBumpL -= iirSampleXL;
 
@@ -312,13 +312,13 @@ void DubSub::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 
 		SubBumpL = fabs(SubBumpL);
 		if (SubOctaveL == false) {SubBumpL = -SubBumpL;}
-		
+
 		SubBumpR = fabs(SubBumpR);
 		if (SubOctaveR == false) {SubBumpR = -SubBumpR;}
-		
+
 		switch (bflip)
 		{
-			case 1:				
+			case 1:
 				iirSubBumpAL += (SubBumpL * SubGain);
 				iirSubBumpAL -= (iirSubBumpAL * iirSubBumpAL * iirSubBumpAL * SubBumpFreq);
 				iirSubBumpAL = (invrandyL * iirSubBumpAL) + (randyL * iirSubBumpBL) + (randyL * iirSubBumpCL);
@@ -364,34 +364,34 @@ void DubSub::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 				SubBumpR = iirSubBumpCR;
 				break;
 		}
-		
+
 		iirSampleZL = (iirSampleZL * altCmount) + (SubBumpL * iirCmount); SubBumpL -= iirSampleZL;
 		iirSampleZR = (iirSampleZR * altCmount) + (SubBumpR * iirCmount); SubBumpR -= iirSampleZR;
-		
+
 		inputSampleL *= driveoutput; //start with the drive section then add lows and subs
 		inputSampleR *= driveoutput; //start with the drive section then add lows and subs
-		
+
 		inputSampleL += ((HeadBumpL + lastHeadBumpL) * BassOutGain);
 		inputSampleL += ((SubBumpL + lastSubBumpL) * SubOutGain);
-		
+
 		inputSampleR += ((HeadBumpR + lastHeadBumpR) * BassOutGain);
 		inputSampleR += ((SubBumpR + lastSubBumpR) * SubOutGain);
-		
+
 		lastHeadBumpL = HeadBumpL;
 		lastSubBumpL = SubBumpL;
 		lastHeadBumpR = HeadBumpR;
 		lastSubBumpR = SubBumpR;
-				
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
 		//Dry/Wet control, defaults to the last slider
-		
+
 		flip = !flip;
 		bflip++;
 		if (bflip < 1 || bflip > 3) bflip = 1;
-		
+
 		//noise shaping to 32-bit floating point
 		float fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -404,7 +404,7 @@ void DubSub::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -418,10 +418,10 @@ void DubSub::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }
 
-void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -431,7 +431,7 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double driveone = pow(A*3.0,2);
 	double driveoutput = pow(B,2);
 	double iirAmount = ((C*0.33)+0.1)/overallscale;
@@ -464,7 +464,7 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	double glitch = 0.60;
 	double tempSampleL;
 	double tempSampleR;
-	
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -474,7 +474,7 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -489,7 +489,7 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -504,11 +504,11 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it aDubSub. We want a 'air' hiss
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
-		
+
 		// here's the plan.
 		// Grind Boost
 		// Grind Output Level
@@ -520,7 +520,7 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		// Sub Voicing
 		// Sub Output Level
 		// Dry/Wet
-		
+
 		oscGateL += fabs(inputSampleL * 10.0);
 		oscGateL -= 0.001;
 		if (oscGateL > 1.0) oscGateL = 1.0;
@@ -535,7 +535,7 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		clampR = 1.0-oscGateR;
 		clampR *= 0.00001;
 		//set up the thing to choke off oscillations- belt and suspenders affair
-		
+
 		if (flip)
 		{
 			tempSampleL = inputSampleL;
@@ -546,7 +546,7 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			iirDriveSampleEL = (iirDriveSampleEL * (1 - iirAmount)) + (inputSampleL * iirAmount);
 			inputSampleL -= iirDriveSampleEL;
 			ataLowpassL = tempSampleL - inputSampleL;
-			
+
 			tempSampleR = inputSampleR;
 			iirDriveSampleAR = (iirDriveSampleAR * (1 - iirAmount)) + (inputSampleR * iirAmount);
 			inputSampleR -= iirDriveSampleAR;
@@ -566,7 +566,7 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			iirDriveSampleFL = (iirDriveSampleFL * (1 - iirAmount)) + (inputSampleL * iirAmount);
 			inputSampleL -= iirDriveSampleFL;
 			ataLowpassL = tempSampleL - inputSampleL;
-			
+
 			tempSampleR = inputSampleR;
 			iirDriveSampleBR = (iirDriveSampleBR * (1 - iirAmount)) + (inputSampleR * iirAmount);
 			inputSampleR -= iirDriveSampleBR;
@@ -581,7 +581,7 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		if (inputSampleL < -1.0) {inputSampleL = -1.0;}
 		if (inputSampleR > 1.0) {inputSampleR = 1.0;}
 		if (inputSampleR < -1.0) {inputSampleR = -1.0;}
-		
+
 		out = driveone;
 		while (out > glitch)
 		{
@@ -592,30 +592,30 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			inputSampleR *= (1.0+glitch);
 		}
 		//that's taken care of the really high gain stuff
-		
+
 		inputSampleL -= (inputSampleL * (fabs(inputSampleL) * out) * (fabs(inputSampleL) * out) );
 		inputSampleR -= (inputSampleR * (fabs(inputSampleR) * out) * (fabs(inputSampleR) * out) );
 		inputSampleL *= (1.0+out);
 		inputSampleR *= (1.0+out);
-		
+
 		if (ataLowpassL > 0)
 		{if (WasNegativeL){SubOctaveL = !SubOctaveL;} WasNegativeL = false;}
 		else {WasNegativeL = true;}
-		
+
 		if (ataLowpassR > 0)
 		{if (WasNegativeR){SubOctaveR = !SubOctaveR;} WasNegativeR = false;}
 		else {WasNegativeR = true;}
 		//set up polarities for sub-bass version
-		
+
 		randyL = (rand()/(double)RAND_MAX)*fuzz; //0 to 1 the noise, may not be needed
 		invrandyL = (1.0-randyL);
 		randyL /= 2.0;
-		
+
 		randyR = (rand()/(double)RAND_MAX)*fuzz; //0 to 1 the noise, may not be needed
 		invrandyR = (1.0-randyR);
 		randyR /= 2.0;
 		//set up the noise
-		
+
 		iirSampleAL = (iirSampleAL * altBmount) + (ataLowpassL * iirBmount); ataLowpassL -= iirSampleAL;
 		iirSampleBL = (iirSampleBL * altBmount) + (ataLowpassL * iirBmount); ataLowpassL -= iirSampleBL;
 		iirSampleCL = (iirSampleCL * altBmount) + (ataLowpassL * iirBmount); ataLowpassL -= iirSampleCL;
@@ -638,7 +638,7 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		iirSampleTL = (iirSampleTL * altBmount) + (ataLowpassL * iirBmount); ataLowpassL -= iirSampleTL;
 		iirSampleUL = (iirSampleUL * altBmount) + (ataLowpassL * iirBmount); ataLowpassL -= iirSampleUL;
 		iirSampleVL = (iirSampleVL * altBmount) + (ataLowpassL * iirBmount); ataLowpassL -= iirSampleVL;
-		
+
 		iirSampleAR = (iirSampleAR * altBmount) + (ataLowpassR * iirBmount); ataLowpassR -= iirSampleAR;
 		iirSampleBR = (iirSampleBR * altBmount) + (ataLowpassR * iirBmount); ataLowpassR -= iirSampleBR;
 		iirSampleCR = (iirSampleCR * altBmount) + (ataLowpassR * iirBmount); ataLowpassR -= iirSampleCR;
@@ -661,17 +661,17 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		iirSampleTR = (iirSampleTR * altBmount) + (ataLowpassR * iirBmount); ataLowpassR -= iirSampleTR;
 		iirSampleUR = (iirSampleUR * altBmount) + (ataLowpassR * iirBmount); ataLowpassR -= iirSampleUR;
 		iirSampleVR = (iirSampleVR * altBmount) + (ataLowpassR * iirBmount); ataLowpassR -= iirSampleVR;
-		
+
 		switch (bflip)
 		{
-			case 1:				
+			case 1:
 				iirHeadBumpAL += (ataLowpassL * BassGain);
 				iirHeadBumpAL -= (iirHeadBumpAL * iirHeadBumpAL * iirHeadBumpAL * HeadBumpFreq);
 				iirHeadBumpAL = (invrandyL * iirHeadBumpAL) + (randyL * iirHeadBumpBL) + (randyL * iirHeadBumpCL);
 				if (iirHeadBumpAL > 0) iirHeadBumpAL -= clampL;
 				if (iirHeadBumpAL < 0) iirHeadBumpAL += clampL;
 				HeadBumpL = iirHeadBumpAL;
-				
+
 				iirHeadBumpAR += (ataLowpassR * BassGain);
 				iirHeadBumpAR -= (iirHeadBumpAR * iirHeadBumpAR * iirHeadBumpAR * HeadBumpFreq);
 				iirHeadBumpAR = (invrandyR * iirHeadBumpAR) + (randyR * iirHeadBumpBR) + (randyR * iirHeadBumpCR);
@@ -686,7 +686,7 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				if (iirHeadBumpBL > 0) iirHeadBumpBL -= clampL;
 				if (iirHeadBumpBL < 0) iirHeadBumpBL += clampL;
 				HeadBumpL = iirHeadBumpBL;
-				
+
 				iirHeadBumpBR += (ataLowpassR * BassGain);
 				iirHeadBumpBR -= (iirHeadBumpBR * iirHeadBumpBR * iirHeadBumpBR * HeadBumpFreq);
 				iirHeadBumpBR = (randyR * iirHeadBumpAR) + (invrandyR * iirHeadBumpBR) + (randyR * iirHeadBumpCR);
@@ -701,7 +701,7 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				if (iirHeadBumpCL > 0) iirHeadBumpCL -= clampL;
 				if (iirHeadBumpCL < 0) iirHeadBumpCL += clampL;
 				HeadBumpL = iirHeadBumpCL;
-				
+
 				iirHeadBumpCR += (ataLowpassR * BassGain);
 				iirHeadBumpCR -= (iirHeadBumpCR * iirHeadBumpCR * iirHeadBumpCR * HeadBumpFreq);
 				iirHeadBumpCR = (randyR * iirHeadBumpAR) + (randyR * iirHeadBumpBR) + (invrandyR * iirHeadBumpCR);
@@ -710,35 +710,35 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				HeadBumpR = iirHeadBumpCR;
 				break;
 		}
-		
+
 		iirSampleWL = (iirSampleWL * altBmount) + (HeadBumpL * iirBmount); HeadBumpL -= iirSampleWL;
 		iirSampleXL = (iirSampleXL * altBmount) + (HeadBumpL * iirBmount); HeadBumpL -= iirSampleXL;
-		
+
 		iirSampleWR = (iirSampleWR * altBmount) + (HeadBumpR * iirBmount); HeadBumpR -= iirSampleWR;
 		iirSampleXR = (iirSampleXR * altBmount) + (HeadBumpR * iirBmount); HeadBumpR -= iirSampleXR;
-		
+
 		SubBumpL = HeadBumpL;
 		iirSampleYL = (iirSampleYL * altCmount) + (SubBumpL * iirCmount); SubBumpL -= iirSampleYL;
-		
+
 		SubBumpR = HeadBumpR;
 		iirSampleYR = (iirSampleYR * altCmount) + (SubBumpR * iirCmount); SubBumpR -= iirSampleYR;
-		
+
 		SubBumpL = fabs(SubBumpL);
 		if (SubOctaveL == false) {SubBumpL = -SubBumpL;}
-		
+
 		SubBumpR = fabs(SubBumpR);
 		if (SubOctaveR == false) {SubBumpR = -SubBumpR;}
-		
+
 		switch (bflip)
 		{
-			case 1:				
+			case 1:
 				iirSubBumpAL += (SubBumpL * SubGain);
 				iirSubBumpAL -= (iirSubBumpAL * iirSubBumpAL * iirSubBumpAL * SubBumpFreq);
 				iirSubBumpAL = (invrandyL * iirSubBumpAL) + (randyL * iirSubBumpBL) + (randyL * iirSubBumpCL);
 				if (iirSubBumpAL > 0) iirSubBumpAL -= clampL;
 				if (iirSubBumpAL < 0) iirSubBumpAL += clampL;
 				SubBumpL = iirSubBumpAL;
-				
+
 				iirSubBumpAR += (SubBumpR * SubGain);
 				iirSubBumpAR -= (iirSubBumpAR * iirSubBumpAR * iirSubBumpAR * SubBumpFreq);
 				iirSubBumpAR = (invrandyR * iirSubBumpAR) + (randyR * iirSubBumpBR) + (randyR * iirSubBumpCR);
@@ -753,7 +753,7 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				if (iirSubBumpBL > 0) iirSubBumpBL -= clampL;
 				if (iirSubBumpBL < 0) iirSubBumpBL += clampL;
 				SubBumpL = iirSubBumpBL;
-				
+
 				iirSubBumpBR += (SubBumpR * SubGain);
 				iirSubBumpBR -= (iirSubBumpBR * iirSubBumpBR * iirSubBumpBR * SubBumpFreq);
 				iirSubBumpBR = (randyR * iirSubBumpAR) + (invrandyR * iirSubBumpBR) + (randyR * iirSubBumpCR);
@@ -768,7 +768,7 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				if (iirSubBumpCL > 0) iirSubBumpCL -= clampL;
 				if (iirSubBumpCL < 0) iirSubBumpCL += clampL;
 				SubBumpL = iirSubBumpCL;
-				
+
 				iirSubBumpCR += (SubBumpR * SubGain);
 				iirSubBumpCR -= (iirSubBumpCR * iirSubBumpCR * iirSubBumpCR * SubBumpFreq);
 				iirSubBumpCR = (randyR * iirSubBumpAR) + (randyR * iirSubBumpBR) + (invrandyR * iirSubBumpCR);
@@ -777,34 +777,34 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 				SubBumpR = iirSubBumpCR;
 				break;
 		}
-		
+
 		iirSampleZL = (iirSampleZL * altCmount) + (SubBumpL * iirCmount); SubBumpL -= iirSampleZL;
 		iirSampleZR = (iirSampleZR * altCmount) + (SubBumpR * iirCmount); SubBumpR -= iirSampleZR;
-		
+
 		inputSampleL *= driveoutput; //start with the drive section then add lows and subs
 		inputSampleR *= driveoutput; //start with the drive section then add lows and subs
-		
+
 		inputSampleL += ((HeadBumpL + lastHeadBumpL) * BassOutGain);
 		inputSampleL += ((SubBumpL + lastSubBumpL) * SubOutGain);
-		
+
 		inputSampleR += ((HeadBumpR + lastHeadBumpR) * BassOutGain);
 		inputSampleR += ((SubBumpR + lastSubBumpR) * SubOutGain);
-		
+
 		lastHeadBumpL = HeadBumpL;
 		lastSubBumpL = SubBumpL;
 		lastHeadBumpR = HeadBumpR;
 		lastSubBumpR = SubBumpR;
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
 		//Dry/Wet control, defaults to the last slider
-		
+
 		flip = !flip;
 		bflip++;
 		if (bflip < 1 || bflip > 3) bflip = 1;
-		
+
 		//noise shaping to 64-bit floating point
 		double fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -817,7 +817,7 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -831,5 +831,5 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }

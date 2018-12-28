@@ -7,7 +7,7 @@
 #include "PaulDither.h"
 #endif
 
-void PaulDither::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void PaulDither::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -19,7 +19,7 @@ void PaulDither::processReplacing(float **inputs, float **outputs, VstInt32 samp
 
 	long double inputSampleL;
 	long double inputSampleR;
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -66,7 +66,7 @@ void PaulDither::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		inputSampleL *= 8388608.0;
 		inputSampleR *= 8388608.0;
 		//0-1 is now one bit, now we dither
-		
+
 		currentDitherL = (rand()/(double)RAND_MAX);
 		currentDitherR = (rand()/(double)RAND_MAX);
 
@@ -81,19 +81,19 @@ void PaulDither::processReplacing(float **inputs, float **outputs, VstInt32 samp
 
 		previousDitherL = currentDitherL;
 		previousDitherR = currentDitherR;
-		
-		//Paul Frindle: It's true that the dither itself can sound different 
-		//if it's given a different freq response and you get to hear it. 
-		//The one we use most is triangular single pole high pass dither. 
-		//It not freq bent enough sound odd, but is slightly less audible than 
-		//flat dither. It can also be easily made by taking one sample of dither 
-		//away from the previous one - this gives you the triangular PDF and the 
+
+		//Paul Frindle: It's true that the dither itself can sound different
+		//if it's given a different freq response and you get to hear it.
+		//The one we use most is triangular single pole high pass dither.
+		//It not freq bent enough sound odd, but is slightly less audible than
+		//flat dither. It can also be easily made by taking one sample of dither
+		//away from the previous one - this gives you the triangular PDF and the
 		//filtering in one go :-)
-		
-		
+
+
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
-				
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -104,7 +104,7 @@ void PaulDither::processReplacing(float **inputs, float **outputs, VstInt32 samp
     }
 }
 
-void PaulDither::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void PaulDither::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -159,38 +159,38 @@ void PaulDither::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		inputSampleL *= 8388608.0;
 		inputSampleR *= 8388608.0;
 		//0-1 is now one bit, now we dither
-		
+
 		currentDitherL = (rand()/(double)RAND_MAX);
 		currentDitherR = (rand()/(double)RAND_MAX);
-		
+
 		inputSampleL += currentDitherL;
 		inputSampleR += currentDitherR;
-		
+
 		inputSampleL -= previousDitherL;
 		inputSampleR -= previousDitherR;
-		
+
 		inputSampleL = floor(inputSampleL);
 		inputSampleR = floor(inputSampleR);
-		
+
 		previousDitherL = currentDitherL;
 		previousDitherR = currentDitherR;
-		
-		//Paul Frindle: It's true that the dither itself can sound different 
-		//if it's given a different freq response and you get to hear it. 
-		//The one we use most is triangular single pole high pass dither. 
-		//It not freq bent enough sound odd, but is slightly less audible than 
-		//flat dither. It can also be easily made by taking one sample of dither 
-		//away from the previous one - this gives you the triangular PDF and the 
+
+		//Paul Frindle: It's true that the dither itself can sound different
+		//if it's given a different freq response and you get to hear it.
+		//The one we use most is triangular single pole high pass dither.
+		//It not freq bent enough sound odd, but is slightly less audible than
+		//flat dither. It can also be easily made by taking one sample of dither
+		//away from the previous one - this gives you the triangular PDF and the
 		//filtering in one go :-)
-		
-		
+
+
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

@@ -7,7 +7,7 @@
 #include "PurestEcho.h"
 #endif
 
-void PurestEcho::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void PurestEcho::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -16,25 +16,25 @@ void PurestEcho::processReplacing(float **inputs, float **outputs, VstInt32 samp
 
 	int loopLimit = (int)(totalsamples * 0.499);
 	//this is a double buffer so we will be splitting it in two
-	
+
 	double time = pow(A,2) * 0.999;
 	double tap1 = B;
 	double tap2 = C;
 	double tap3 = D;
 	double tap4 = E;
-	
+
 	double gainTrim = 1.0 / (1.0 + tap1 + tap2 + tap3 + tap4);
 	//this becomes our equal-loudness mechanic. 0.2 to 1.0 gain on all things.
 	double tapsTrim = gainTrim * 0.5;
 	//the taps interpolate and require half that gain: 0.1 to 0.5 on all taps.
-	
+
 	int position1 = (int)(loopLimit * time * 0.25);
 	int position2 = (int)(loopLimit * time * 0.5);
 	int position3 = (int)(loopLimit * time * 0.75);
 	int position4 = (int)(loopLimit * time);
 	//basic echo information: we're taking four equally spaced echoes and setting their levels as desired.
 	//position4 is what you'd have for 'just set a delay time'
-	
+
 	double volAfter1 = (loopLimit * time * 0.25) - position1;
 	double volAfter2 = (loopLimit * time * 0.5) - position2;
 	double volAfter3 = (loopLimit * time * 0.75) - position3;
@@ -48,15 +48,15 @@ void PurestEcho::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	//and if we are including a bit of the previous/next sample to interpolate, then if the sample position is 1.0001
 	//we'll be leaning most heavily on the 'before' sample which is nearer to us, and the 'after' sample is almost not used.
 	//if the sample position is 1.9999, the 'after' sample is strong and 'before' is almost not used.
-	
+
 	volAfter1 *= tap1;
 	volAfter2 *= tap2;
 	volAfter3 *= tap3;
 	volAfter4 *= tap4;
 	//and like with volBefore, we also want to scale this 'interpolate' to the loudness of this tap.
 	//We do it here because we can do it only once per audio buffer, not on every sample. This assumes we're
-	//not moving the tap every sample: if so we'd have to do this every sample as well.	
-	
+	//not moving the tap every sample: if so we'd have to do this every sample as well.
+
 	int oneBefore1 = position1 - 1;
 	int oneBefore2 = position2 - 1;
 	int oneBefore3 = position3 - 1;
@@ -72,17 +72,17 @@ void PurestEcho::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	//this is setting up the way we interpolate samples: we're doing an echo-darkening thing
 	//to make it sound better. Pretty much no acoustic delay in human-breathable air will give
 	//you zero attenuation at 22 kilohertz: forget this at your peril ;)
-	
+
 	double delaysBufferL;
 	double delaysBufferR;
-	
+
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -133,7 +133,7 @@ void PurestEcho::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		//As long as the delay tap is less than our loop limit we can always just add it to where we're
 		//at, and get a valid sample back right away, no matter where we are in the buffer.
 		//The 0.5 is taking into account the interpolation, by padding down the whole buffer.
-		
+
 		delaysBufferL = (dL[gcount+oneBefore4]*volBefore4);
 		delaysBufferL += (dL[gcount+oneAfter4]*volAfter4);
 		delaysBufferL += (dL[gcount+oneBefore3]*volBefore3);
@@ -153,7 +153,7 @@ void PurestEcho::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		delaysBufferR += (dR[gcount+oneAfter1]*volAfter1);
 		//These are the interpolated samples. We're adding them first, because we know they're smaller
 		//and while the value of delaysBuffer is small we'll add similarly small values to it. Note the order.
-		
+
 		delaysBufferL += (dL[gcount+position4]*tap4);
 		delaysBufferL += (dL[gcount+position3]*tap3);
 		delaysBufferL += (dL[gcount+position2]*tap2);
@@ -168,15 +168,15 @@ void PurestEcho::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		//from the faintest noises to the loudest, to avoid adding a bunch of teeny values at the end.
 		//You can of course put the last echo as loudest, but with diminishing echo volumes this is optimal.
 		//This technique is also present in other plugins such as Iron Oxide.
-		
+
 		inputSampleL = (inputSampleL * gainTrim) + delaysBufferL;
 		inputSampleR = (inputSampleR * gainTrim) + delaysBufferR;
 		//this could be just inputSample += d[gcount+position1];
 		//for literally a single, full volume echo combined with dry.
 		//What I'm doing is making the echoes more interesting.
-		
+
 		gcount--;
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -207,34 +207,34 @@ void PurestEcho::processReplacing(float **inputs, float **outputs, VstInt32 samp
     }
 }
 
-void PurestEcho::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void PurestEcho::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
     double* out1 = outputs[0];
     double* out2 = outputs[1];
-	
+
 	int loopLimit = (int)(totalsamples * 0.499);
 	//this is a double buffer so we will be splitting it in two
-	
+
 	double time = pow(A,2) * 0.999;
 	double tap1 = B;
 	double tap2 = C;
 	double tap3 = D;
 	double tap4 = E;
-	
+
 	double gainTrim = 1.0 / (1.0 + tap1 + tap2 + tap3 + tap4);
 	//this becomes our equal-loudness mechanic. 0.2 to 1.0 gain on all things.
 	double tapsTrim = gainTrim * 0.5;
 	//the taps interpolate and require half that gain: 0.1 to 0.5 on all taps.
-	
+
 	int position1 = (int)(loopLimit * time * 0.25);
 	int position2 = (int)(loopLimit * time * 0.5);
 	int position3 = (int)(loopLimit * time * 0.75);
 	int position4 = (int)(loopLimit * time);
 	//basic echo information: we're taking four equally spaced echoes and setting their levels as desired.
 	//position4 is what you'd have for 'just set a delay time'
-	
+
 	double volAfter1 = (loopLimit * time * 0.25) - position1;
 	double volAfter2 = (loopLimit * time * 0.5) - position2;
 	double volAfter3 = (loopLimit * time * 0.75) - position3;
@@ -248,15 +248,15 @@ void PurestEcho::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	//and if we are including a bit of the previous/next sample to interpolate, then if the sample position is 1.0001
 	//we'll be leaning most heavily on the 'before' sample which is nearer to us, and the 'after' sample is almost not used.
 	//if the sample position is 1.9999, the 'after' sample is strong and 'before' is almost not used.
-	
+
 	volAfter1 *= tap1;
 	volAfter2 *= tap2;
 	volAfter3 *= tap3;
 	volAfter4 *= tap4;
 	//and like with volBefore, we also want to scale this 'interpolate' to the loudness of this tap.
 	//We do it here because we can do it only once per audio buffer, not on every sample. This assumes we're
-	//not moving the tap every sample: if so we'd have to do this every sample as well.	
-	
+	//not moving the tap every sample: if so we'd have to do this every sample as well.
+
 	int oneBefore1 = position1 - 1;
 	int oneBefore2 = position2 - 1;
 	int oneBefore3 = position3 - 1;
@@ -272,13 +272,13 @@ void PurestEcho::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	//this is setting up the way we interpolate samples: we're doing an echo-darkening thing
 	//to make it sound better. Pretty much no acoustic delay in human-breathable air will give
 	//you zero attenuation at 22 kilohertz: forget this at your peril ;)
-	
+
 	double delaysBufferL;
 	double delaysBufferR;
-	
+
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
@@ -325,7 +325,7 @@ void PurestEcho::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		if (gcount < 0 || gcount > loopLimit) gcount = loopLimit;
 		dL[gcount+loopLimit] = dL[gcount] = inputSampleL * tapsTrim;
 		dR[gcount+loopLimit] = dR[gcount] = inputSampleR * tapsTrim; //this is how the double buffer works:
@@ -333,7 +333,7 @@ void PurestEcho::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		//As long as the delay tap is less than our loop limit we can always just add it to where we're
 		//at, and get a valid sample back right away, no matter where we are in the buffer.
 		//The 0.5 is taking into account the interpolation, by padding down the whole buffer.
-		
+
 		delaysBufferL = (dL[gcount+oneBefore4]*volBefore4);
 		delaysBufferL += (dL[gcount+oneAfter4]*volAfter4);
 		delaysBufferL += (dL[gcount+oneBefore3]*volBefore3);
@@ -342,7 +342,7 @@ void PurestEcho::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		delaysBufferL += (dL[gcount+oneAfter2]*volAfter2);
 		delaysBufferL += (dL[gcount+oneBefore1]*volBefore1);
 		delaysBufferL += (dL[gcount+oneAfter1]*volAfter1);
-		
+
 		delaysBufferR = (dR[gcount+oneBefore4]*volBefore4);
 		delaysBufferR += (dR[gcount+oneAfter4]*volAfter4);
 		delaysBufferR += (dR[gcount+oneBefore3]*volBefore3);
@@ -353,12 +353,12 @@ void PurestEcho::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		delaysBufferR += (dR[gcount+oneAfter1]*volAfter1);
 		//These are the interpolated samples. We're adding them first, because we know they're smaller
 		//and while the value of delaysBuffer is small we'll add similarly small values to it. Note the order.
-		
+
 		delaysBufferL += (dL[gcount+position4]*tap4);
 		delaysBufferL += (dL[gcount+position3]*tap3);
 		delaysBufferL += (dL[gcount+position2]*tap2);
 		delaysBufferL += (dL[gcount+position1]*tap1);
-		
+
 		delaysBufferR += (dR[gcount+position4]*tap4);
 		delaysBufferR += (dR[gcount+position3]*tap3);
 		delaysBufferR += (dR[gcount+position2]*tap2);
@@ -368,15 +368,15 @@ void PurestEcho::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		//from the faintest noises to the loudest, to avoid adding a bunch of teeny values at the end.
 		//You can of course put the last echo as loudest, but with diminishing echo volumes this is optimal.
 		//This technique is also present in other plugins such as Iron Oxide.
-		
+
 		inputSampleL = (inputSampleL * gainTrim) + delaysBufferL;
 		inputSampleR = (inputSampleR * gainTrim) + delaysBufferR;
 		//this could be just inputSample += d[gcount+position1];
 		//for literally a single, full volume echo combined with dry.
 		//What I'm doing is making the echoes more interesting.
-		
+
 		gcount--;
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

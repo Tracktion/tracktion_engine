@@ -7,7 +7,7 @@
 #include "ADClip7.h"
 #endif
 
-void ADClip7::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void ADClip7::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -19,7 +19,7 @@ void ADClip7::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	overallscale *= getSampleRate();
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	double inputGain = pow(10.0,(A*18.0)/20.0);
 	double softness = B * fpNew;
@@ -56,10 +56,10 @@ void ADClip7::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	double highsL = 0.0;
 	double highsR = 0.0;
 	int count = 0;
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -102,25 +102,25 @@ void ADClip7::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
 
-		
+
+
 		if (inputGain != 1.0) {
 			inputSampleL *= inputGain;
 			inputSampleR *= inputGain;
 		}
-		
+
 		overshootL = fabs(inputSampleL) - refclipL;
 		overshootR = fabs(inputSampleR) - refclipR;
 		if (overshootL < 0.0) overshootL = 0.0;
 		if (overshootR < 0.0) overshootR = 0.0;
-		
+
 		if (gcount < 0 || gcount > 11020) {gcount = 11020;}
 		count = gcount;
 		bL[count+11020] = bL[count] = overshootL;
 		bR[count+11020] = bR[count] = overshootR;
 		gcount--;
-		
+
 		if (highslift > 0.0)
 		{
 			//we have a big pile of b[] which is overshoots
@@ -165,26 +165,26 @@ void ADClip7::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 			//stage 1 is a negative feedback of the overshoot
 			//done with interpolated mostly negative feedback of the overshoot
 		}
-		
+
 		bridgerectifier = sin(fabs(highsL) * hardness);
 		//this will wrap around and is scaled back by softness
 		//wrap around is the same principle as Fracture: no top limit to sin()
 		if (highsL > 0) highsL = bridgerectifier;
 		else highsL = -bridgerectifier;
-		
+
 		bridgerectifier = sin(fabs(highsR) * hardness);
 		//this will wrap around and is scaled back by softness
 		//wrap around is the same principle as Fracture: no top limit to sin()
 		if (highsR > 0) highsR = bridgerectifier;
 		else highsR = -bridgerectifier;
-		
-		if (subslift > 0.0) 
+
+		if (subslift > 0.0)
 		{
 			lowsL *= subs;
 			lowsR *= subs;
 			//going in we'll reel back some of the swing
 			temp = count+refL1;
-			
+
 			lowsL -= bL[temp+127];
 			lowsL -= bL[temp+113];
 			lowsL -= bL[temp+109];
@@ -218,7 +218,7 @@ void ADClip7::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 			lowsL -= bL[temp+2];
 			lowsL -= bL[temp+1];
 			//initial negative lobe
-			
+
 			lowsR -= bR[temp+127];
 			lowsR -= bR[temp+113];
 			lowsR -= bR[temp+109];
@@ -252,14 +252,14 @@ void ADClip7::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 			lowsR -= bR[temp+2];
 			lowsR -= bR[temp+1];
 			//initial negative lobe
-			
+
 			lowsL *= subs;
 			lowsL *= subs;
 			lowsR *= subs;
 			lowsR *= subs;
 			//twice, to minimize the suckout in low boost situations
 			temp = count+refL2;
-			
+
 			lowsL += bL[temp+127];
 			lowsL += bL[temp+113];
 			lowsL += bL[temp+109];
@@ -327,12 +327,12 @@ void ADClip7::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 			lowsR += bR[temp+2];
 			lowsR += bR[temp+1];
 			//followup positive lobe
-			
+
 			lowsL *= subs;
 			lowsR *= subs;
 			//now we have the lows content to use
 		}
-		
+
 		bridgerectifier = sin(fabs(lowsL) * softness);
 		//this will wrap around and is scaled back by hardness: hard = less bass push, more treble
 		//wrap around is the same principle as Fracture: no top limit to sin()
@@ -344,7 +344,7 @@ void ADClip7::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		//wrap around is the same principle as Fracture: no top limit to sin()
 		if (lowsR > 0) lowsR = bridgerectifier;
 		else lowsR = -bridgerectifier;
-		
+
 		iirLowsAL = (iirLowsAL * invcalibsubs) + (lowsL * calibsubs);
 		lowsL = iirLowsAL;
 		bridgerectifier = sin(fabs(lowsL));
@@ -356,19 +356,19 @@ void ADClip7::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		bridgerectifier = sin(fabs(lowsR));
 		if (lowsR > 0) lowsR = bridgerectifier;
 		else lowsR = -bridgerectifier;
-		
+
 		iirLowsBL = (iirLowsBL * invcalibsubs) + (lowsL * calibsubs);
 		lowsL = iirLowsBL;
 		bridgerectifier = sin(fabs(lowsL)) * 2.0;
 		if (lowsL > 0) lowsL = bridgerectifier;
 		else lowsL = -bridgerectifier;
-		
+
 		iirLowsBR = (iirLowsBR * invcalibsubs) + (lowsR * calibsubs);
 		lowsR = iirLowsBR;
 		bridgerectifier = sin(fabs(lowsR)) * 2.0;
 		if (lowsR > 0) lowsR = bridgerectifier;
 		else lowsR = -bridgerectifier;
-		
+
 		if (highslift > 0.0) inputSampleL += (highsL * (1.0-fabs(inputSampleL*hardness)));
 		if (subslift > 0.0) inputSampleL += (lowsL * (1.0-fabs(inputSampleL*softness)));
 
@@ -384,7 +384,7 @@ void ADClip7::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		if (inputSampleR < -refclipR && refclipR > 0.9) refclipR -= 0.01;
 		if (refclipR < 0.99) refclipR += 0.00001;
 		//adjust clip level on the fly
-		
+
 		if (lastSampleL >= refclipL)
 		{
 			if (inputSampleL < refclipL) lastSampleL = ((refclipL*hardness) + (inputSampleL * softness));
@@ -396,37 +396,37 @@ void ADClip7::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 			if (inputSampleR < refclipR) lastSampleR = ((refclipR*hardness) + (inputSampleR * softness));
 			else lastSampleR = refclipR;
 		}
-		
+
 		if (lastSampleL <= -refclipL)
 		{
 			if (inputSampleL > -refclipL) lastSampleL = ((-refclipL*hardness) + (inputSampleL * softness));
 			else lastSampleL = -refclipL;
 		}
-		
+
 		if (lastSampleR <= -refclipR)
 		{
 			if (inputSampleR > -refclipR) lastSampleR = ((-refclipR*hardness) + (inputSampleR * softness));
 			else lastSampleR = -refclipR;
 		}
-		
+
 		if (inputSampleL > refclipL)
 		{
 			if (lastSampleL < refclipL) inputSampleL = ((refclipL*hardness) + (lastSampleL * softness));
 			else inputSampleL = refclipL;
 		}
-		
+
 		if (inputSampleR > refclipR)
 		{
 			if (lastSampleR < refclipR) inputSampleR = ((refclipR*hardness) + (lastSampleR * softness));
 			else inputSampleR = refclipR;
 		}
-		
+
 		if (inputSampleL < -refclipL)
 		{
 			if (lastSampleL > -refclipL) inputSampleL = ((-refclipL*hardness) + (lastSampleL * softness));
 			else inputSampleL = -refclipL;
 		}
-		
+
 		if (inputSampleR < -refclipR)
 		{
 			if (lastSampleR > -refclipR) inputSampleR = ((-refclipR*hardness) + (lastSampleR * softness));
@@ -434,7 +434,7 @@ void ADClip7::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		}
 		lastSampleL = inputSampleL;
 		lastSampleR = inputSampleR;
-		
+
 		switch (mode)
 		{
 			case 1: break; //Normal
@@ -442,13 +442,13 @@ void ADClip7::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 			case 3: inputSampleL = overshootL + highsL + lowsL; inputSampleR = overshootR + highsR + lowsR; break; //Clip Only
 		}
 		//this is our output mode switch, showing the effects
-		
+
 		if (inputSampleL > refclipL) inputSampleL = refclipL;
 		if (inputSampleL < -refclipL) inputSampleL = -refclipL;
 		if (inputSampleR > refclipR) inputSampleR = refclipR;
 		if (inputSampleR < -refclipR) inputSampleR = -refclipR;
 		//final iron bar
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -479,7 +479,7 @@ void ADClip7::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
     }
 }
 
-void ADClip7::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void ADClip7::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -491,8 +491,8 @@ void ADClip7::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	overallscale *= getSampleRate();
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double inputGain = pow(10.0,(A*18.0)/20.0);
 	double softness = B * fpNew;
 	double hardness = 1.0 - softness;
@@ -528,7 +528,7 @@ void ADClip7::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	double highsL = 0.0;
 	double highsR = 0.0;
 	int count = 0;
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 
@@ -575,25 +575,25 @@ void ADClip7::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
-		
-		
+
+
+
 		if (inputGain != 1.0) {
 			inputSampleL *= inputGain;
 			inputSampleR *= inputGain;
 		}
-		
+
 		overshootL = fabs(inputSampleL) - refclipL;
 		overshootR = fabs(inputSampleR) - refclipR;
 		if (overshootL < 0.0) overshootL = 0.0;
 		if (overshootR < 0.0) overshootR = 0.0;
-		
+
 		if (gcount < 0 || gcount > 11020) {gcount = 11020;}
 		count = gcount;
 		bL[count+11020] = bL[count] = overshootL;
 		bR[count+11020] = bR[count] = overshootR;
 		gcount--;
-		
+
 		if (highslift > 0.0)
 		{
 			//we have a big pile of b[] which is overshoots
@@ -638,26 +638,26 @@ void ADClip7::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			//stage 1 is a negative feedback of the overshoot
 			//done with interpolated mostly negative feedback of the overshoot
 		}
-		
+
 		bridgerectifier = sin(fabs(highsL) * hardness);
 		//this will wrap around and is scaled back by softness
 		//wrap around is the same principle as Fracture: no top limit to sin()
 		if (highsL > 0) highsL = bridgerectifier;
 		else highsL = -bridgerectifier;
-		
+
 		bridgerectifier = sin(fabs(highsR) * hardness);
 		//this will wrap around and is scaled back by softness
 		//wrap around is the same principle as Fracture: no top limit to sin()
 		if (highsR > 0) highsR = bridgerectifier;
 		else highsR = -bridgerectifier;
-		
-		if (subslift > 0.0) 
+
+		if (subslift > 0.0)
 		{
 			lowsL *= subs;
 			lowsR *= subs;
 			//going in we'll reel back some of the swing
 			temp = count+refL1;
-			
+
 			lowsL -= bL[temp+127];
 			lowsL -= bL[temp+113];
 			lowsL -= bL[temp+109];
@@ -691,7 +691,7 @@ void ADClip7::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			lowsL -= bL[temp+2];
 			lowsL -= bL[temp+1];
 			//initial negative lobe
-			
+
 			lowsR -= bR[temp+127];
 			lowsR -= bR[temp+113];
 			lowsR -= bR[temp+109];
@@ -725,14 +725,14 @@ void ADClip7::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			lowsR -= bR[temp+2];
 			lowsR -= bR[temp+1];
 			//initial negative lobe
-			
+
 			lowsL *= subs;
 			lowsL *= subs;
 			lowsR *= subs;
 			lowsR *= subs;
 			//twice, to minimize the suckout in low boost situations
 			temp = count+refL2;
-			
+
 			lowsL += bL[temp+127];
 			lowsL += bL[temp+113];
 			lowsL += bL[temp+109];
@@ -766,7 +766,7 @@ void ADClip7::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			lowsL += bL[temp+2];
 			lowsL += bL[temp+1];
 			//followup positive lobe
-			
+
 			lowsR += bR[temp+127];
 			lowsR += bR[temp+113];
 			lowsR += bR[temp+109];
@@ -800,106 +800,106 @@ void ADClip7::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			lowsR += bR[temp+2];
 			lowsR += bR[temp+1];
 			//followup positive lobe
-			
+
 			lowsL *= subs;
 			lowsR *= subs;
 			//now we have the lows content to use
 		}
-		
+
 		bridgerectifier = sin(fabs(lowsL) * softness);
 		//this will wrap around and is scaled back by hardness: hard = less bass push, more treble
 		//wrap around is the same principle as Fracture: no top limit to sin()
 		if (lowsL > 0) lowsL = bridgerectifier;
 		else lowsL = -bridgerectifier;
-		
+
 		bridgerectifier = sin(fabs(lowsR) * softness);
 		//this will wrap around and is scaled back by hardness: hard = less bass push, more treble
 		//wrap around is the same principle as Fracture: no top limit to sin()
 		if (lowsR > 0) lowsR = bridgerectifier;
 		else lowsR = -bridgerectifier;
-		
+
 		iirLowsAL = (iirLowsAL * invcalibsubs) + (lowsL * calibsubs);
 		lowsL = iirLowsAL;
 		bridgerectifier = sin(fabs(lowsL));
 		if (lowsL > 0) lowsL = bridgerectifier;
 		else lowsL = -bridgerectifier;
-		
+
 		iirLowsAR = (iirLowsAR * invcalibsubs) + (lowsR * calibsubs);
 		lowsR = iirLowsAR;
 		bridgerectifier = sin(fabs(lowsR));
 		if (lowsR > 0) lowsR = bridgerectifier;
 		else lowsR = -bridgerectifier;
-		
+
 		iirLowsBL = (iirLowsBL * invcalibsubs) + (lowsL * calibsubs);
 		lowsL = iirLowsBL;
 		bridgerectifier = sin(fabs(lowsL)) * 2.0;
 		if (lowsL > 0) lowsL = bridgerectifier;
 		else lowsL = -bridgerectifier;
-		
+
 		iirLowsBR = (iirLowsBR * invcalibsubs) + (lowsR * calibsubs);
 		lowsR = iirLowsBR;
 		bridgerectifier = sin(fabs(lowsR)) * 2.0;
 		if (lowsR > 0) lowsR = bridgerectifier;
 		else lowsR = -bridgerectifier;
-		
+
 		if (highslift > 0.0) inputSampleL += (highsL * (1.0-fabs(inputSampleL*hardness)));
 		if (subslift > 0.0) inputSampleL += (lowsL * (1.0-fabs(inputSampleL*softness)));
-		
+
 		if (highslift > 0.0) inputSampleR += (highsR * (1.0-fabs(inputSampleR*hardness)));
 		if (subslift > 0.0) inputSampleR += (lowsR * (1.0-fabs(inputSampleR*softness)));
-		
+
 		if (inputSampleL > refclipL && refclipL > 0.9) refclipL -= 0.01;
 		if (inputSampleL < -refclipL && refclipL > 0.9) refclipL -= 0.01;
 		if (refclipL < 0.99) refclipL += 0.00001;
 		//adjust clip level on the fly
-		
+
 		if (inputSampleR > refclipR && refclipR > 0.9) refclipR -= 0.01;
 		if (inputSampleR < -refclipR && refclipR > 0.9) refclipR -= 0.01;
 		if (refclipR < 0.99) refclipR += 0.00001;
 		//adjust clip level on the fly
-		
+
 		if (lastSampleL >= refclipL)
 		{
 			if (inputSampleL < refclipL) lastSampleL = ((refclipL*hardness) + (inputSampleL * softness));
 			else lastSampleL = refclipL;
 		}
-		
+
 		if (lastSampleR >= refclipR)
 		{
 			if (inputSampleR < refclipR) lastSampleR = ((refclipR*hardness) + (inputSampleR * softness));
 			else lastSampleR = refclipR;
 		}
-		
+
 		if (lastSampleL <= -refclipL)
 		{
 			if (inputSampleL > -refclipL) lastSampleL = ((-refclipL*hardness) + (inputSampleL * softness));
 			else lastSampleL = -refclipL;
 		}
-		
+
 		if (lastSampleR <= -refclipR)
 		{
 			if (inputSampleR > -refclipR) lastSampleR = ((-refclipR*hardness) + (inputSampleR * softness));
 			else lastSampleR = -refclipR;
 		}
-		
+
 		if (inputSampleL > refclipL)
 		{
 			if (lastSampleL < refclipL) inputSampleL = ((refclipL*hardness) + (lastSampleL * softness));
 			else inputSampleL = refclipL;
 		}
-		
+
 		if (inputSampleR > refclipR)
 		{
 			if (lastSampleR < refclipR) inputSampleR = ((refclipR*hardness) + (lastSampleR * softness));
 			else inputSampleR = refclipR;
 		}
-		
+
 		if (inputSampleL < -refclipL)
 		{
 			if (lastSampleL > -refclipL) inputSampleL = ((-refclipL*hardness) + (lastSampleL * softness));
 			else inputSampleL = -refclipL;
 		}
-		
+
 		if (inputSampleR < -refclipR)
 		{
 			if (lastSampleR > -refclipR) inputSampleR = ((-refclipR*hardness) + (lastSampleR * softness));
@@ -907,7 +907,7 @@ void ADClip7::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		}
 		lastSampleL = inputSampleL;
 		lastSampleR = inputSampleR;
-		
+
 		switch (mode)
 		{
 			case 1: break; //Normal
@@ -915,13 +915,13 @@ void ADClip7::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			case 3: inputSampleL = overshootL + highsL + lowsL; inputSampleR = overshootR + highsR + lowsR; break; //Clip Only
 		}
 		//this is our output mode switch, showing the effects
-		
+
 		if (inputSampleL > refclipL) inputSampleL = refclipL;
 		if (inputSampleL < -refclipL) inputSampleL = -refclipL;
 		if (inputSampleR > refclipR) inputSampleR = refclipR;
 		if (inputSampleR < -refclipR) inputSampleR = -refclipR;
 		//final iron bar
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -940,7 +940,7 @@ void ADClip7::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			inputSampleR += fpNShapeRB;
 		}
 		fpFlip = !fpFlip;
-		//end noise shaping on 64 bit output		
+		//end noise shaping on 64 bit output
 
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;

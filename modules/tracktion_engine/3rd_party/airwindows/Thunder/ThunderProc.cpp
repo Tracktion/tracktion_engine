@@ -7,7 +7,7 @@
 #include "Thunder.h"
 #endif
 
-void Thunder::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Thunder::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -17,7 +17,7 @@ void Thunder::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double thunder = A * 0.4;
 	double threshold = 1.0 - (thunder * 2.0);
 	if (threshold < 0.01) threshold = 0.01;
@@ -30,22 +30,22 @@ void Thunder::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	double basstrim = (0.01/EQ)+1.0;
 	//FF parameters also ride off Speed
 	double outputGain = B;
-	
+
 	double coefficient;
 	double inputSense;
-	
+
 	double resultL;
 	double resultR;
 	double resultM;
 	double resultML;
 	double resultMR;
-	
+
 	float fpTemp;
 	double fpOld = 0.618033988749894848204586; //golden ratio!
 	double fpNew = 1.0 - fpOld;
 	long double inputSampleL;
 	long double inputSampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -91,13 +91,13 @@ void Thunder::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 
 		inputSampleL = inputSampleL * muMakeupGain;
 		inputSampleR = inputSampleR * muMakeupGain;
-		
+
 		if (gateL < fabs(inputSampleL)) gateL = inputSampleL;
 		else gateL -= dcblock;
 		if (gateR < fabs(inputSampleR)) gateR = inputSampleR;
 		else gateR -= dcblock;
 		//setting up gated DC blocking to control the tendency for rumble and offset
-		
+
 		//begin three FathomFive stages
 		iirSampleAL += (inputSampleL * EQ * thunder);
 		iirSampleAL -= (iirSampleAL * iirSampleAL * iirSampleAL * EQ);
@@ -106,7 +106,7 @@ void Thunder::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		resultL = iirSampleAL*basstrim;
 		iirSampleBL = (iirSampleBL * (1 - EQ)) + (resultL * EQ);
 		resultL = iirSampleBL;
-		
+
 		iirSampleAR += (inputSampleR * EQ * thunder);
 		iirSampleAR -= (iirSampleAR * iirSampleAR * iirSampleAR * EQ);
 		if (iirSampleAR > gateR) iirSampleAR -= dcblock;
@@ -114,37 +114,37 @@ void Thunder::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		resultR = iirSampleAR*basstrim;
 		iirSampleBR = (iirSampleBR * (1 - EQ)) + (resultR * EQ);
 		resultR = iirSampleBR;
-		
+
 		iirSampleAM += ((inputSampleL + inputSampleR) * EQ * thunder);
 		iirSampleAM -= (iirSampleAM * iirSampleAM * iirSampleAM * EQ);
 		resultM = iirSampleAM*basstrim;
 		iirSampleBM = (iirSampleBM * (1 - EQ)) + (resultM * EQ);
 		resultM = iirSampleBM;
 		iirSampleCM = (iirSampleCM * (1 - EQ)) + (resultM * EQ);
-		
+
 		resultM = fabs(iirSampleCM);
 		resultML = fabs(resultL);
 		resultMR = fabs(resultR);
-		
+
 		if (resultM > resultML) resultML = resultM;
 		if (resultM > resultMR) resultMR = resultM;
 		//trying to restrict the buzziness
-		
+
 		if (resultML > 1.0) resultML = 1.0;
 		if (resultMR > 1.0) resultMR = 1.0;
 		//now we have result L, R and M the trigger modulator which must be 0-1
-		
+
 		//begin compressor section
 		inputSampleL -= (iirSampleBL * thunder);
 		inputSampleR -= (iirSampleBR * thunder);
 		//highpass the comp section by sneaking out what will be the reinforcement
-		
+
 		inputSense = fabs(inputSampleL);
 		if (fabs(inputSampleR) > inputSense)
 			inputSense = fabs(inputSampleR);
 		//we will take the greater of either channel and just use that, then apply the result
 		//to both stereo channels.
-		
+
 		if (flip)
 		{
 			if (inputSense > threshold)
@@ -200,7 +200,7 @@ void Thunder::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 			muSpeedB = muNewSpeed / muSpeedB;
 		}
 		//got coefficients, adjusted speeds
-		
+
 		if (flip)
 		{
 			coefficient = pow(muCoefficientA,2);
@@ -215,22 +215,22 @@ void Thunder::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		}
 		//applied compression with vari-vari-µ-µ-µ-µ-µ-µ-is-the-kitten-song o/~
 		//applied gain correction to control output level- tends to constrain sound rather than inflate it
-		
+
 		inputSampleL += (resultL * resultM);
 		inputSampleR += (resultR * resultM);
 		//combine the two by adding the summed channnel of lows
-		
+
 		if (outputGain != 1.0) {
 			inputSampleL *= outputGain;
 			inputSampleR *= outputGain;
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		if (flip) {
 			fpTemp = inputSampleL;
 			fpNShapeAL = (fpNShapeAL*fpOld)+((inputSampleL-fpTemp)*fpNew);
 			inputSampleL += fpNShapeAL;
-			
+
 			fpTemp = inputSampleR;
 			fpNShapeAR = (fpNShapeAR*fpOld)+((inputSampleR-fpTemp)*fpNew);
 			inputSampleR += fpNShapeAR;
@@ -239,15 +239,15 @@ void Thunder::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 			fpTemp = inputSampleL;
 			fpNShapeBL = (fpNShapeBL*fpOld)+((inputSampleL-fpTemp)*fpNew);
 			inputSampleL += fpNShapeBL;
-			
+
 			fpTemp = inputSampleR;
 			fpNShapeBR = (fpNShapeBR*fpOld)+((inputSampleR-fpTemp)*fpNew);
 			inputSampleR += fpNShapeBR;
 		}
 		flip = !flip;
 		//end noise shaping on 32 bit output
-		
-		
+
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -258,7 +258,7 @@ void Thunder::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
     }
 }
 
-void Thunder::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Thunder::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -268,7 +268,7 @@ void Thunder::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double thunder = A * 0.4;
 	double threshold = 1.0 - (thunder * 2.0);
 	if (threshold < 0.01) threshold = 0.01;
@@ -281,22 +281,22 @@ void Thunder::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	double basstrim = (0.01/EQ)+1.0;
 	//FF parameters also ride off Speed
 	double outputGain = B;
-	
+
 	double coefficient;
 	double inputSense;
-	
+
 	double resultL;
 	double resultR;
 	double resultM;
 	double resultML;
 	double resultMR;
-	
+
 	double fpTemp;
 	double fpOld = 0.618033988749894848204586; //golden ratio!
 	double fpNew = 1.0 - fpOld;
 	long double inputSampleL;
 	long double inputSampleR;
-		
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -342,13 +342,13 @@ void Thunder::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 
 		inputSampleL = inputSampleL * muMakeupGain;
 		inputSampleR = inputSampleR * muMakeupGain;
-		
+
 		if (gateL < fabs(inputSampleL)) gateL = inputSampleL;
 		else gateL -= dcblock;
 		if (gateR < fabs(inputSampleR)) gateR = inputSampleR;
 		else gateR -= dcblock;
 		//setting up gated DC blocking to control the tendency for rumble and offset
-		
+
 		//begin three FathomFive stages
 		iirSampleAL += (inputSampleL * EQ * thunder);
 		iirSampleAL -= (iirSampleAL * iirSampleAL * iirSampleAL * EQ);
@@ -357,7 +357,7 @@ void Thunder::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		resultL = iirSampleAL*basstrim;
 		iirSampleBL = (iirSampleBL * (1 - EQ)) + (resultL * EQ);
 		resultL = iirSampleBL;
-		
+
 		iirSampleAR += (inputSampleR * EQ * thunder);
 		iirSampleAR -= (iirSampleAR * iirSampleAR * iirSampleAR * EQ);
 		if (iirSampleAR > gateR) iirSampleAR -= dcblock;
@@ -365,37 +365,37 @@ void Thunder::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		resultR = iirSampleAR*basstrim;
 		iirSampleBR = (iirSampleBR * (1 - EQ)) + (resultR * EQ);
 		resultR = iirSampleBR;
-		
+
 		iirSampleAM += ((inputSampleL + inputSampleR) * EQ * thunder);
 		iirSampleAM -= (iirSampleAM * iirSampleAM * iirSampleAM * EQ);
 		resultM = iirSampleAM*basstrim;
 		iirSampleBM = (iirSampleBM * (1 - EQ)) + (resultM * EQ);
 		resultM = iirSampleBM;
 		iirSampleCM = (iirSampleCM * (1 - EQ)) + (resultM * EQ);
-		
+
 		resultM = fabs(iirSampleCM);
 		resultML = fabs(resultL);
 		resultMR = fabs(resultR);
-		
+
 		if (resultM > resultML) resultML = resultM;
 		if (resultM > resultMR) resultMR = resultM;
 		//trying to restrict the buzziness
-		
+
 		if (resultML > 1.0) resultML = 1.0;
 		if (resultMR > 1.0) resultMR = 1.0;
 		//now we have result L, R and M the trigger modulator which must be 0-1
-		
+
 		//begin compressor section
 		inputSampleL -= (iirSampleBL * thunder);
 		inputSampleR -= (iirSampleBR * thunder);
 		//highpass the comp section by sneaking out what will be the reinforcement
-		
+
 		inputSense = fabs(inputSampleL);
 		if (fabs(inputSampleR) > inputSense)
 			inputSense = fabs(inputSampleR);
 		//we will take the greater of either channel and just use that, then apply the result
 		//to both stereo channels.
-		
+
 		if (flip)
 		{
 			if (inputSense > threshold)
@@ -451,7 +451,7 @@ void Thunder::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			muSpeedB = muNewSpeed / muSpeedB;
 		}
 		//got coefficients, adjusted speeds
-		
+
 		if (flip)
 		{
 			coefficient = pow(muCoefficientA,2);
@@ -466,22 +466,22 @@ void Thunder::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		}
 		//applied compression with vari-vari-µ-µ-µ-µ-µ-µ-is-the-kitten-song o/~
 		//applied gain correction to control output level- tends to constrain sound rather than inflate it
-		
+
 		inputSampleL += (resultL * resultM);
 		inputSampleR += (resultR * resultM);
 		//combine the two by adding the summed channnel of lows
-		
+
 		if (outputGain != 1.0) {
 			inputSampleL *= outputGain;
 			inputSampleR *= outputGain;
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		if (flip) {
 			fpTemp = inputSampleL;
 			fpNShapeAL = (fpNShapeAL*fpOld)+((inputSampleL-fpTemp)*fpNew);
 			inputSampleL += fpNShapeAL;
-			
+
 			fpTemp = inputSampleR;
 			fpNShapeAR = (fpNShapeAR*fpOld)+((inputSampleR-fpTemp)*fpNew);
 			inputSampleR += fpNShapeAR;
@@ -490,15 +490,15 @@ void Thunder::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			fpTemp = inputSampleL;
 			fpNShapeBL = (fpNShapeBL*fpOld)+((inputSampleL-fpTemp)*fpNew);
 			inputSampleL += fpNShapeBL;
-			
+
 			fpTemp = inputSampleR;
 			fpNShapeBR = (fpNShapeBR*fpOld)+((inputSampleR-fpTemp)*fpNew);
 			inputSampleR += fpNShapeBR;
 		}
 		flip = !flip;
 		//end noise shaping on 32 bit output
-		
-		
+
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

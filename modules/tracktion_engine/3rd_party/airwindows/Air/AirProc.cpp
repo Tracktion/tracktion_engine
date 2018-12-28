@@ -7,7 +7,7 @@
 #include "Air.h"
 #endif
 
-void Air::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Air::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -21,10 +21,10 @@ void Air::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 	double output = E;
 	double wet = F;
 	double dry = 1.0-wet;
-	
+
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
@@ -32,7 +32,7 @@ void Air::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 	double drySampleR;
 	double correctionL;
 	double correctionR;
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -77,10 +77,10 @@ void Air::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		correctionL = 0.0;
 		correctionR = 0.0;  //from here on down, please add L and R to the code
-		
+
 		if (count < 1 || count > 3) count = 1;
 		tripletFactorL = tripletPrevL - inputSampleL;
 		tripletFactorR = tripletPrevR - inputSampleR;
@@ -92,7 +92,7 @@ void Air::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 				tripletFactorL = tripletAL * tripletintensity;
 				tripletPrevL = tripletMidL;
 				tripletMidL = inputSampleL;
-				
+
 				tripletAR += tripletFactorR;
 				tripletCR -= tripletFactorR;
 				tripletFactorR = tripletAR * tripletintensity;
@@ -105,7 +105,7 @@ void Air::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 				tripletFactorL = tripletBL * tripletintensity;
 				tripletPrevL = tripletMidL;
 				tripletMidL = inputSampleL;
-				
+
 				tripletBR += tripletFactorR;
 				tripletAR -= tripletFactorR;
 				tripletFactorR = tripletBR * tripletintensity;
@@ -118,7 +118,7 @@ void Air::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 				tripletFactorL = tripletCL * tripletintensity;
 				tripletPrevL = tripletMidL;
 				tripletMidL = inputSampleL;
-				
+
 				tripletCR += tripletFactorR;
 				tripletBR -= tripletFactorR;
 				tripletFactorR = tripletCR * tripletintensity;
@@ -135,10 +135,10 @@ void Air::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 		tripletBR /= filterQ;
 		tripletCR /= filterQ;
 		correctionR = correctionR + tripletFactorR;
-		
+
 		count++;
 		//finished Triplet section- 15K
-		
+
 		if (flop)
 		{
 			airFactorAL = airPrevAL - inputSampleL;
@@ -245,10 +245,10 @@ void Air::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 		correctionR = correctionR + airFactorCR;
 
 		flop = !flop;
-		
+
 		inputSampleL += correctionL;
 		inputSampleR += correctionR;
-		
+
 		if (output < 1.0) {
 			inputSampleL *= output;
 			inputSampleR *= output;
@@ -259,7 +259,7 @@ void Air::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 		}
 		//nice little output stage template: if we have another scale of floating point
 		//number, we really don't want to meaninglessly multiply that by 1.0.
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -290,7 +290,7 @@ void Air::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
     }
 }
 
-void Air::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Air::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -304,10 +304,10 @@ void Air::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 	double output = E;
 	double wet = F;
 	double dry = 1.0-wet;
-	
+
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
@@ -360,10 +360,10 @@ void Air::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		correctionL = 0.0;
 		correctionR = 0.0;  //from here on down, please add L and R to the code
-		
+
 		if (count < 1 || count > 3) count = 1;
 		tripletFactorL = tripletPrevL - inputSampleL;
 		tripletFactorR = tripletPrevR - inputSampleR;
@@ -375,7 +375,7 @@ void Air::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 				tripletFactorL = tripletAL * tripletintensity;
 				tripletPrevL = tripletMidL;
 				tripletMidL = inputSampleL;
-				
+
 				tripletAR += tripletFactorR;
 				tripletCR -= tripletFactorR;
 				tripletFactorR = tripletAR * tripletintensity;
@@ -388,7 +388,7 @@ void Air::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 				tripletFactorL = tripletBL * tripletintensity;
 				tripletPrevL = tripletMidL;
 				tripletMidL = inputSampleL;
-				
+
 				tripletBR += tripletFactorR;
 				tripletAR -= tripletFactorR;
 				tripletFactorR = tripletBR * tripletintensity;
@@ -401,7 +401,7 @@ void Air::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 				tripletFactorL = tripletCL * tripletintensity;
 				tripletPrevL = tripletMidL;
 				tripletMidL = inputSampleL;
-				
+
 				tripletCR += tripletFactorR;
 				tripletBR -= tripletFactorR;
 				tripletFactorR = tripletCR * tripletintensity;
@@ -413,15 +413,15 @@ void Air::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		tripletBL /= filterQ;
 		tripletCL /= filterQ;
 		correctionL = correctionL + tripletFactorL;
-		
+
 		tripletAR /= filterQ;
 		tripletBR /= filterQ;
 		tripletCR /= filterQ;
 		correctionR = correctionR + tripletFactorR;
-		
+
 		count++;
 		//finished Triplet section- 15K
-		
+
 		if (flop)
 		{
 			airFactorAL = airPrevAL - inputSampleL;
@@ -431,7 +431,7 @@ void Air::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 				airEvenAL += airFactorAL;
 				airOddAL -= airFactorAL;
 				airFactorAL = airEvenAL * airIntensity;
-				
+
 				airEvenAR += airFactorAR;
 				airOddAR -= airFactorAR;
 				airFactorAR = airEvenAR * airIntensity;
@@ -441,7 +441,7 @@ void Air::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 				airOddAL += airFactorAL;
 				airEvenAL -= airFactorAL;
 				airFactorAL = airOddAL * airIntensity;
-				
+
 				airOddAR += airFactorAR;
 				airEvenAR -= airFactorAR;
 				airFactorAR = airOddAR * airIntensity;
@@ -450,12 +450,12 @@ void Air::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 			airEvenAL = (airEvenAL - ((airEvenAL - airOddAL)/256.0)) / filterQ;
 			airPrevAL = inputSampleL;
 			correctionL = correctionL + airFactorAL;
-			
+
 			airOddAR = (airOddAR - ((airOddAR - airEvenAR)/256.0)) / filterQ;
 			airEvenAR = (airEvenAR - ((airEvenAR - airOddAR)/256.0)) / filterQ;
 			airPrevAR = inputSampleR;
 			correctionR = correctionR + airFactorAR;
-			
+
 			flipA = !flipA;
 		}
 		else
@@ -467,7 +467,7 @@ void Air::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 				airEvenBL += airFactorBL;
 				airOddBL -= airFactorBL;
 				airFactorBL = airEvenBL * airIntensity;
-				
+
 				airEvenBR += airFactorBR;
 				airOddBR -= airFactorBR;
 				airFactorBR = airEvenBR * airIntensity;
@@ -477,7 +477,7 @@ void Air::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 				airOddBL += airFactorBL;
 				airEvenBL -= airFactorBL;
 				airFactorBL = airOddBL * airIntensity;
-				
+
 				airOddBR += airFactorBR;
 				airEvenBR -= airFactorBR;
 				airFactorBR = airOddBR * airIntensity;
@@ -486,12 +486,12 @@ void Air::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 			airEvenBL = (airEvenBL - ((airEvenBL - airOddBL)/256.0)) / filterQ;
 			airPrevBL = inputSampleL;
 			correctionL = correctionL + airFactorBL;
-			
+
 			airOddBR = (airOddBR - ((airOddBR - airEvenBR)/256.0)) / filterQ;
 			airEvenBR = (airEvenBR - ((airEvenBR - airOddBR)/256.0)) / filterQ;
 			airPrevBR = inputSampleR;
 			correctionR = correctionR + airFactorBR;
-			
+
 			flipB = !flipB;
 		}
 		//11K one
@@ -502,7 +502,7 @@ void Air::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 			airEvenCL += airFactorCL;
 			airOddCL -= airFactorCL;
 			airFactorCL = airEvenCL * hiIntensity;
-			
+
 			airEvenCR += airFactorCR;
 			airOddCR -= airFactorCR;
 			airFactorCR = airEvenCR * hiIntensity;
@@ -512,7 +512,7 @@ void Air::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 			airOddCL += airFactorCL;
 			airEvenCL -= airFactorCL;
 			airFactorCL = airOddCL * hiIntensity;
-			
+
 			airOddCR += airFactorCR;
 			airEvenCR -= airFactorCR;
 			airFactorCR = airOddCR * hiIntensity;
@@ -521,17 +521,17 @@ void Air::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		airEvenCL = (airEvenCL - ((airEvenCL - airOddCL)/256.0)) / filterQ;
 		airPrevCL = inputSampleL;
 		correctionL = correctionL + airFactorCL;
-		
+
 		airOddCR = (airOddCR - ((airOddCR - airEvenCR)/256.0)) / filterQ;
 		airEvenCR = (airEvenCR - ((airEvenCR - airOddCR)/256.0)) / filterQ;
 		airPrevCR = inputSampleR;
 		correctionR = correctionR + airFactorCR;
-		
+
 		flop = !flop;
-		
+
 		inputSampleL += correctionL;
 		inputSampleR += correctionR;
-		
+
 		if (output < 1.0) {
 			inputSampleL *= output;
 			inputSampleR *= output;

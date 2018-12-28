@@ -7,7 +7,7 @@
 #include "GrooveWear.h"
 #endif
 
-void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -16,7 +16,7 @@ void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 samp
 
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	double overallscale = (pow(A,2)*19.0)+1.0;
 	double gain = overallscale;
@@ -41,8 +41,8 @@ void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	if (gain > 1.0) {fMid[17] = 1.0; gain -= 1.0;} else {fMid[17] = gain; gain = 0.0;}
 	if (gain > 1.0) {fMid[18] = 1.0; gain -= 1.0;} else {fMid[18] = gain; gain = 0.0;}
 	if (gain > 1.0) {fMid[19] = 1.0; gain -= 1.0;} else {fMid[19] = gain; gain = 0.0;}
-	//there, now we have a neat little moving average with remainders, in stereo	
-	
+	//there, now we have a neat little moving average with remainders, in stereo
+
 	if (overallscale < 1.0) overallscale = 1.0;
 	fMid[0] /= overallscale;
 	fMid[1] /= overallscale;
@@ -71,7 +71,7 @@ void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	double accumulatorSampleR;
 	double correctionR;
 
-	
+
 	double aWet = 1.0;
 	double bWet = 1.0;
 	double cWet = 1.0;
@@ -85,7 +85,7 @@ void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	//output as the control is turned up. Each one independently goes from 0-1 and stays at 1
 	//beyond that point: this is a way to progressively add a 'black box' sound processing
 	//which lets you fall through to simpler processing at lower settings.
-	
+
 	//now we set them up so each full intensity one is blended evenly with dry for each stage.
 	//That's because the GrooveWear algorithm works best combined with dry.
 	aWet *= 0.5;
@@ -93,7 +93,7 @@ void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	cWet *= 0.5;
 	dWet *= 0.5;
 	//if you are using a more typical algorithm (like a sin() or something) you won't use this part
-	
+
 	double aDry = 1.0 - aWet;
 	double bDry = 1.0 - bWet;
 	double cDry = 1.0 - cWet;
@@ -103,7 +103,7 @@ void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	double drySampleR;
 	long double inputSampleL;
 	long double inputSampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -148,7 +148,7 @@ void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		if (aWet > 0.0) {
 			aMidL[19] = aMidL[18]; aMidL[18] = aMidL[17]; aMidL[17] = aMidL[16]; aMidL[16] = aMidL[15];
 			aMidL[15] = aMidL[14]; aMidL[14] = aMidL[13]; aMidL[13] = aMidL[12]; aMidL[12] = aMidL[11];
@@ -158,7 +158,7 @@ void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			aMidL[1] = aMidL[0]; aMidL[0] = accumulatorSampleL = (inputSampleL-aMidPrevL);
 			//this is different from Aura because that is accumulating rates of change OF the rate of change
 			//this is just averaging slews directly, and we have two stages of it.
-			
+
 			accumulatorSampleL *= fMid[0];
 			accumulatorSampleL += (aMidL[1] * fMid[1]);
 			accumulatorSampleL += (aMidL[2] * fMid[2]);
@@ -181,10 +181,10 @@ void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			accumulatorSampleL += (aMidL[19] * fMid[19]);
 			//we are doing our repetitive calculations on a separate value
 			correctionL = (inputSampleL-aMidPrevL) - accumulatorSampleL;
-			aMidPrevL = inputSampleL;		
+			aMidPrevL = inputSampleL;
 			inputSampleL -= correctionL;
 			inputSampleL = (inputSampleL * aWet) + (drySampleL * aDry);
-			drySampleL = inputSampleL;		
+			drySampleL = inputSampleL;
 
 			aMidR[19] = aMidR[18]; aMidR[18] = aMidR[17]; aMidR[17] = aMidR[16]; aMidR[16] = aMidR[15];
 			aMidR[15] = aMidR[14]; aMidR[14] = aMidR[13]; aMidR[13] = aMidR[12]; aMidR[12] = aMidR[11];
@@ -194,7 +194,7 @@ void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			aMidR[1] = aMidR[0]; aMidR[0] = accumulatorSampleR = (inputSampleR-aMidPrevR);
 			//this is different from Aura because that is accumulating rates of change OF the rate of change
 			//this is just averaging slews directly, and we have two stages of it.
-			
+
 			accumulatorSampleR *= fMid[0];
 			accumulatorSampleR += (aMidR[1] * fMid[1]);
 			accumulatorSampleR += (aMidR[2] * fMid[2]);
@@ -217,12 +217,12 @@ void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			accumulatorSampleR += (aMidR[19] * fMid[19]);
 			//we are doing our repetitive calculations on a separate value
 			correctionR = (inputSampleR-aMidPrevR) - accumulatorSampleR;
-			aMidPrevR = inputSampleR;		
+			aMidPrevR = inputSampleR;
 			inputSampleR -= correctionR;
 			inputSampleR = (inputSampleR * aWet) + (drySampleR * aDry);
 			drySampleR = inputSampleR;
-		}		
-		
+		}
+
 		if (bWet > 0.0) {
 			bMidL[19] = bMidL[18]; bMidL[18] = bMidL[17]; bMidL[17] = bMidL[16]; bMidL[16] = bMidL[15];
 			bMidL[15] = bMidL[14]; bMidL[14] = bMidL[13]; bMidL[13] = bMidL[12]; bMidL[12] = bMidL[11];
@@ -230,7 +230,7 @@ void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			bMidL[9] = bMidL[8]; bMidL[8] = bMidL[7]; bMidL[7] = bMidL[6]; bMidL[6] = bMidL[5];
 			bMidL[5] = bMidL[4]; bMidL[4] = bMidL[3]; bMidL[3] = bMidL[2]; bMidL[2] = bMidL[1];
 			bMidL[1] = bMidL[0]; bMidL[0] = accumulatorSampleL = (inputSampleL-bMidPrevL);
-			
+
 			accumulatorSampleL *= fMid[0];
 			accumulatorSampleL += (bMidL[1] * fMid[1]);
 			accumulatorSampleL += (bMidL[2] * fMid[2]);
@@ -256,15 +256,15 @@ void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			bMidPrevL = inputSampleL;
 			inputSampleL -= correctionL;
 			inputSampleL = (inputSampleL * bWet) + (drySampleL * bDry);
-			drySampleL = inputSampleL;		
-			
+			drySampleL = inputSampleL;
+
 			bMidR[19] = bMidR[18]; bMidR[18] = bMidR[17]; bMidR[17] = bMidR[16]; bMidR[16] = bMidR[15];
 			bMidR[15] = bMidR[14]; bMidR[14] = bMidR[13]; bMidR[13] = bMidR[12]; bMidR[12] = bMidR[11];
 			bMidR[11] = bMidR[10]; bMidR[10] = bMidR[9];
 			bMidR[9] = bMidR[8]; bMidR[8] = bMidR[7]; bMidR[7] = bMidR[6]; bMidR[6] = bMidR[5];
 			bMidR[5] = bMidR[4]; bMidR[4] = bMidR[3]; bMidR[3] = bMidR[2]; bMidR[2] = bMidR[1];
 			bMidR[1] = bMidR[0]; bMidR[0] = accumulatorSampleR = (inputSampleR-bMidPrevR);
-			
+
 			accumulatorSampleR *= fMid[0];
 			accumulatorSampleR += (bMidR[1] * fMid[1]);
 			accumulatorSampleR += (bMidR[2] * fMid[2]);
@@ -300,7 +300,7 @@ void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			cMidL[9] = cMidL[8]; cMidL[8] = cMidL[7]; cMidL[7] = cMidL[6]; cMidL[6] = cMidL[5];
 			cMidL[5] = cMidL[4]; cMidL[4] = cMidL[3]; cMidL[3] = cMidL[2]; cMidL[2] = cMidL[1];
 			cMidL[1] = cMidL[0]; cMidL[0] = accumulatorSampleL = (inputSampleL-cMidPrevL);
-			
+
 			accumulatorSampleL *= fMid[0];
 			accumulatorSampleL += (cMidL[1] * fMid[1]);
 			accumulatorSampleL += (cMidL[2] * fMid[2]);
@@ -326,15 +326,15 @@ void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			cMidPrevL = inputSampleL;
 			inputSampleL -= correctionL;
 			inputSampleL = (inputSampleL * cWet) + (drySampleL * cDry);
-			drySampleL = inputSampleL;		
-			
+			drySampleL = inputSampleL;
+
 			cMidR[19] = cMidR[18]; cMidR[18] = cMidR[17]; cMidR[17] = cMidR[16]; cMidR[16] = cMidR[15];
 			cMidR[15] = cMidR[14]; cMidR[14] = cMidR[13]; cMidR[13] = cMidR[12]; cMidR[12] = cMidR[11];
 			cMidR[11] = cMidR[10]; cMidR[10] = cMidR[9];
 			cMidR[9] = cMidR[8]; cMidR[8] = cMidR[7]; cMidR[7] = cMidR[6]; cMidR[6] = cMidR[5];
 			cMidR[5] = cMidR[4]; cMidR[4] = cMidR[3]; cMidR[3] = cMidR[2]; cMidR[2] = cMidR[1];
 			cMidR[1] = cMidR[0]; cMidR[0] = accumulatorSampleR = (inputSampleR-cMidPrevR);
-			
+
 			accumulatorSampleR *= fMid[0];
 			accumulatorSampleR += (cMidR[1] * fMid[1]);
 			accumulatorSampleR += (cMidR[2] * fMid[2]);
@@ -370,7 +370,7 @@ void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			dMidL[9] = dMidL[8]; dMidL[8] = dMidL[7]; dMidL[7] = dMidL[6]; dMidL[6] = dMidL[5];
 			dMidL[5] = dMidL[4]; dMidL[4] = dMidL[3]; dMidL[3] = dMidL[2]; dMidL[2] = dMidL[1];
 			dMidL[1] = dMidL[0]; dMidL[0] = accumulatorSampleL = (inputSampleL-dMidPrevL);
-			
+
 			accumulatorSampleL *= fMid[0];
 			accumulatorSampleL += (dMidL[1] * fMid[1]);
 			accumulatorSampleL += (dMidL[2] * fMid[2]);
@@ -396,15 +396,15 @@ void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			dMidPrevL = inputSampleL;
 			inputSampleL -= correctionL;
 			inputSampleL = (inputSampleL * dWet) + (drySampleL * dDry);
-			drySampleL = inputSampleL;		
-			
+			drySampleL = inputSampleL;
+
 			dMidR[19] = dMidR[18]; dMidR[18] = dMidR[17]; dMidR[17] = dMidR[16]; dMidR[16] = dMidR[15];
 			dMidR[15] = dMidR[14]; dMidR[14] = dMidR[13]; dMidR[13] = dMidR[12]; dMidR[12] = dMidR[11];
 			dMidR[11] = dMidR[10]; dMidR[10] = dMidR[9];
 			dMidR[9] = dMidR[8]; dMidR[8] = dMidR[7]; dMidR[7] = dMidR[6]; dMidR[6] = dMidR[5];
 			dMidR[5] = dMidR[4]; dMidR[4] = dMidR[3]; dMidR[3] = dMidR[2]; dMidR[2] = dMidR[1];
 			dMidR[1] = dMidR[0]; dMidR[0] = accumulatorSampleR = (inputSampleR-dMidPrevR);
-			
+
 			accumulatorSampleR *= fMid[0];
 			accumulatorSampleR += (dMidR[1] * fMid[1]);
 			accumulatorSampleR += (dMidR[2] * fMid[2]);
@@ -432,7 +432,7 @@ void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			inputSampleR = (inputSampleR * dWet) + (drySampleR * dDry);
 			drySampleR = inputSampleR;
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -463,7 +463,7 @@ void GrooveWear::processReplacing(float **inputs, float **outputs, VstInt32 samp
     }
 }
 
-void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -472,8 +472,8 @@ void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstIn
 
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double overallscale = (pow(A,2)*19.0)+1.0;
 	double gain = overallscale;
 	//mid groove wear
@@ -497,8 +497,8 @@ void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	if (gain > 1.0) {fMid[17] = 1.0; gain -= 1.0;} else {fMid[17] = gain; gain = 0.0;}
 	if (gain > 1.0) {fMid[18] = 1.0; gain -= 1.0;} else {fMid[18] = gain; gain = 0.0;}
 	if (gain > 1.0) {fMid[19] = 1.0; gain -= 1.0;} else {fMid[19] = gain; gain = 0.0;}
-	//there, now we have a neat little moving average with remainders, in stereo	
-	
+	//there, now we have a neat little moving average with remainders, in stereo
+
 	if (overallscale < 1.0) overallscale = 1.0;
 	fMid[0] /= overallscale;
 	fMid[1] /= overallscale;
@@ -521,13 +521,13 @@ void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	fMid[18] /= overallscale;
 	fMid[19] /= overallscale;
 	//and now it's neatly scaled, too
-	
+
 	double accumulatorSampleL;
 	double correctionL;
 	double accumulatorSampleR;
 	double correctionR;
-	
-	
+
+
 	double aWet = 1.0;
 	double bWet = 1.0;
 	double cWet = 1.0;
@@ -541,7 +541,7 @@ void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	//output as the control is turned up. Each one independently goes from 0-1 and stays at 1
 	//beyond that point: this is a way to progressively add a 'black box' sound processing
 	//which lets you fall through to simpler processing at lower settings.
-	
+
 	//now we set them up so each full intensity one is blended evenly with dry for each stage.
 	//That's because the GrooveWear algorithm works best combined with dry.
 	aWet *= 0.5;
@@ -549,17 +549,17 @@ void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	cWet *= 0.5;
 	dWet *= 0.5;
 	//if you are using a more typical algorithm (like a sin() or something) you won't use this part
-	
+
 	double aDry = 1.0 - aWet;
 	double bDry = 1.0 - bWet;
 	double cDry = 1.0 - cWet;
 	double dDry = 1.0 - dWet;
-	
+
 	double drySampleL;
 	double drySampleR;
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -604,7 +604,7 @@ void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		if (aWet > 0.0) {
 			aMidL[19] = aMidL[18]; aMidL[18] = aMidL[17]; aMidL[17] = aMidL[16]; aMidL[16] = aMidL[15];
 			aMidL[15] = aMidL[14]; aMidL[14] = aMidL[13]; aMidL[13] = aMidL[12]; aMidL[12] = aMidL[11];
@@ -614,7 +614,7 @@ void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			aMidL[1] = aMidL[0]; aMidL[0] = accumulatorSampleL = (inputSampleL-aMidPrevL);
 			//this is different from Aura because that is accumulating rates of change OF the rate of change
 			//this is just averaging slews directly, and we have two stages of it.
-			
+
 			accumulatorSampleL *= fMid[0];
 			accumulatorSampleL += (aMidL[1] * fMid[1]);
 			accumulatorSampleL += (aMidL[2] * fMid[2]);
@@ -637,11 +637,11 @@ void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			accumulatorSampleL += (aMidL[19] * fMid[19]);
 			//we are doing our repetitive calculations on a separate value
 			correctionL = (inputSampleL-aMidPrevL) - accumulatorSampleL;
-			aMidPrevL = inputSampleL;		
+			aMidPrevL = inputSampleL;
 			inputSampleL -= correctionL;
 			inputSampleL = (inputSampleL * aWet) + (drySampleL * aDry);
-			drySampleL = inputSampleL;		
-			
+			drySampleL = inputSampleL;
+
 			aMidR[19] = aMidR[18]; aMidR[18] = aMidR[17]; aMidR[17] = aMidR[16]; aMidR[16] = aMidR[15];
 			aMidR[15] = aMidR[14]; aMidR[14] = aMidR[13]; aMidR[13] = aMidR[12]; aMidR[12] = aMidR[11];
 			aMidR[11] = aMidR[10]; aMidR[10] = aMidR[9];
@@ -650,7 +650,7 @@ void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			aMidR[1] = aMidR[0]; aMidR[0] = accumulatorSampleR = (inputSampleR-aMidPrevR);
 			//this is different from Aura because that is accumulating rates of change OF the rate of change
 			//this is just averaging slews directly, and we have two stages of it.
-			
+
 			accumulatorSampleR *= fMid[0];
 			accumulatorSampleR += (aMidR[1] * fMid[1]);
 			accumulatorSampleR += (aMidR[2] * fMid[2]);
@@ -673,12 +673,12 @@ void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			accumulatorSampleR += (aMidR[19] * fMid[19]);
 			//we are doing our repetitive calculations on a separate value
 			correctionR = (inputSampleR-aMidPrevR) - accumulatorSampleR;
-			aMidPrevR = inputSampleR;		
+			aMidPrevR = inputSampleR;
 			inputSampleR -= correctionR;
 			inputSampleR = (inputSampleR * aWet) + (drySampleR * aDry);
 			drySampleR = inputSampleR;
-		}		
-		
+		}
+
 		if (bWet > 0.0) {
 			bMidL[19] = bMidL[18]; bMidL[18] = bMidL[17]; bMidL[17] = bMidL[16]; bMidL[16] = bMidL[15];
 			bMidL[15] = bMidL[14]; bMidL[14] = bMidL[13]; bMidL[13] = bMidL[12]; bMidL[12] = bMidL[11];
@@ -686,7 +686,7 @@ void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			bMidL[9] = bMidL[8]; bMidL[8] = bMidL[7]; bMidL[7] = bMidL[6]; bMidL[6] = bMidL[5];
 			bMidL[5] = bMidL[4]; bMidL[4] = bMidL[3]; bMidL[3] = bMidL[2]; bMidL[2] = bMidL[1];
 			bMidL[1] = bMidL[0]; bMidL[0] = accumulatorSampleL = (inputSampleL-bMidPrevL);
-			
+
 			accumulatorSampleL *= fMid[0];
 			accumulatorSampleL += (bMidL[1] * fMid[1]);
 			accumulatorSampleL += (bMidL[2] * fMid[2]);
@@ -712,15 +712,15 @@ void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			bMidPrevL = inputSampleL;
 			inputSampleL -= correctionL;
 			inputSampleL = (inputSampleL * bWet) + (drySampleL * bDry);
-			drySampleL = inputSampleL;		
-			
+			drySampleL = inputSampleL;
+
 			bMidR[19] = bMidR[18]; bMidR[18] = bMidR[17]; bMidR[17] = bMidR[16]; bMidR[16] = bMidR[15];
 			bMidR[15] = bMidR[14]; bMidR[14] = bMidR[13]; bMidR[13] = bMidR[12]; bMidR[12] = bMidR[11];
 			bMidR[11] = bMidR[10]; bMidR[10] = bMidR[9];
 			bMidR[9] = bMidR[8]; bMidR[8] = bMidR[7]; bMidR[7] = bMidR[6]; bMidR[6] = bMidR[5];
 			bMidR[5] = bMidR[4]; bMidR[4] = bMidR[3]; bMidR[3] = bMidR[2]; bMidR[2] = bMidR[1];
 			bMidR[1] = bMidR[0]; bMidR[0] = accumulatorSampleR = (inputSampleR-bMidPrevR);
-			
+
 			accumulatorSampleR *= fMid[0];
 			accumulatorSampleR += (bMidR[1] * fMid[1]);
 			accumulatorSampleR += (bMidR[2] * fMid[2]);
@@ -748,7 +748,7 @@ void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			inputSampleR = (inputSampleR * bWet) + (drySampleR * bDry);
 			drySampleR = inputSampleR;
 		}
-		
+
 		if (cWet > 0.0) {
 			cMidL[19] = cMidL[18]; cMidL[18] = cMidL[17]; cMidL[17] = cMidL[16]; cMidL[16] = cMidL[15];
 			cMidL[15] = cMidL[14]; cMidL[14] = cMidL[13]; cMidL[13] = cMidL[12]; cMidL[12] = cMidL[11];
@@ -756,7 +756,7 @@ void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			cMidL[9] = cMidL[8]; cMidL[8] = cMidL[7]; cMidL[7] = cMidL[6]; cMidL[6] = cMidL[5];
 			cMidL[5] = cMidL[4]; cMidL[4] = cMidL[3]; cMidL[3] = cMidL[2]; cMidL[2] = cMidL[1];
 			cMidL[1] = cMidL[0]; cMidL[0] = accumulatorSampleL = (inputSampleL-cMidPrevL);
-			
+
 			accumulatorSampleL *= fMid[0];
 			accumulatorSampleL += (cMidL[1] * fMid[1]);
 			accumulatorSampleL += (cMidL[2] * fMid[2]);
@@ -782,15 +782,15 @@ void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			cMidPrevL = inputSampleL;
 			inputSampleL -= correctionL;
 			inputSampleL = (inputSampleL * cWet) + (drySampleL * cDry);
-			drySampleL = inputSampleL;		
-			
+			drySampleL = inputSampleL;
+
 			cMidR[19] = cMidR[18]; cMidR[18] = cMidR[17]; cMidR[17] = cMidR[16]; cMidR[16] = cMidR[15];
 			cMidR[15] = cMidR[14]; cMidR[14] = cMidR[13]; cMidR[13] = cMidR[12]; cMidR[12] = cMidR[11];
 			cMidR[11] = cMidR[10]; cMidR[10] = cMidR[9];
 			cMidR[9] = cMidR[8]; cMidR[8] = cMidR[7]; cMidR[7] = cMidR[6]; cMidR[6] = cMidR[5];
 			cMidR[5] = cMidR[4]; cMidR[4] = cMidR[3]; cMidR[3] = cMidR[2]; cMidR[2] = cMidR[1];
 			cMidR[1] = cMidR[0]; cMidR[0] = accumulatorSampleR = (inputSampleR-cMidPrevR);
-			
+
 			accumulatorSampleR *= fMid[0];
 			accumulatorSampleR += (cMidR[1] * fMid[1]);
 			accumulatorSampleR += (cMidR[2] * fMid[2]);
@@ -818,7 +818,7 @@ void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			inputSampleR = (inputSampleR * cWet) + (drySampleR * cDry);
 			drySampleR = inputSampleR;
 		}
-		
+
 		if (dWet > 0.0) {
 			dMidL[19] = dMidL[18]; dMidL[18] = dMidL[17]; dMidL[17] = dMidL[16]; dMidL[16] = dMidL[15];
 			dMidL[15] = dMidL[14]; dMidL[14] = dMidL[13]; dMidL[13] = dMidL[12]; dMidL[12] = dMidL[11];
@@ -826,7 +826,7 @@ void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			dMidL[9] = dMidL[8]; dMidL[8] = dMidL[7]; dMidL[7] = dMidL[6]; dMidL[6] = dMidL[5];
 			dMidL[5] = dMidL[4]; dMidL[4] = dMidL[3]; dMidL[3] = dMidL[2]; dMidL[2] = dMidL[1];
 			dMidL[1] = dMidL[0]; dMidL[0] = accumulatorSampleL = (inputSampleL-dMidPrevL);
-			
+
 			accumulatorSampleL *= fMid[0];
 			accumulatorSampleL += (dMidL[1] * fMid[1]);
 			accumulatorSampleL += (dMidL[2] * fMid[2]);
@@ -852,15 +852,15 @@ void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			dMidPrevL = inputSampleL;
 			inputSampleL -= correctionL;
 			inputSampleL = (inputSampleL * dWet) + (drySampleL * dDry);
-			drySampleL = inputSampleL;		
-			
+			drySampleL = inputSampleL;
+
 			dMidR[19] = dMidR[18]; dMidR[18] = dMidR[17]; dMidR[17] = dMidR[16]; dMidR[16] = dMidR[15];
 			dMidR[15] = dMidR[14]; dMidR[14] = dMidR[13]; dMidR[13] = dMidR[12]; dMidR[12] = dMidR[11];
 			dMidR[11] = dMidR[10]; dMidR[10] = dMidR[9];
 			dMidR[9] = dMidR[8]; dMidR[8] = dMidR[7]; dMidR[7] = dMidR[6]; dMidR[6] = dMidR[5];
 			dMidR[5] = dMidR[4]; dMidR[4] = dMidR[3]; dMidR[3] = dMidR[2]; dMidR[2] = dMidR[1];
 			dMidR[1] = dMidR[0]; dMidR[0] = accumulatorSampleR = (inputSampleR-dMidPrevR);
-			
+
 			accumulatorSampleR *= fMid[0];
 			accumulatorSampleR += (dMidR[1] * fMid[1]);
 			accumulatorSampleR += (dMidR[2] * fMid[2]);
@@ -888,7 +888,7 @@ void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			inputSampleR = (inputSampleR * dWet) + (drySampleR * dDry);
 			drySampleR = inputSampleR;
 		}
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -908,7 +908,7 @@ void GrooveWear::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

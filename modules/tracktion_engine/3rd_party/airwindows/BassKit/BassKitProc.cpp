@@ -7,7 +7,7 @@
 #include "BassKit.h"
 #endif
 
-void BassKit::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void BassKit::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -30,7 +30,7 @@ void BassKit::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	double SubOutGain = ((D*2.0)-1.0)*fabs(((D*2.0)-1.0))*4.0;
 	double clamp = 0.0;
 	double fuzz = 0.111;
-	
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -40,7 +40,7 @@ void BassKit::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -55,7 +55,7 @@ void BassKit::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -70,14 +70,14 @@ void BassKit::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		
+
 		ataLowpass = (inputSampleL + inputSampleR) / 2.0;
 		iirDriveSampleA = (iirDriveSampleA * (1.0 - HeadBumpFreq)) + (ataLowpass * HeadBumpFreq); ataLowpass = iirDriveSampleA;
 		iirDriveSampleB = (iirDriveSampleB * (1.0 - HeadBumpFreq)) + (ataLowpass * HeadBumpFreq); ataLowpass = iirDriveSampleB;
-		
-		
+
+
 		oscGate += fabs(ataLowpass * 10.0);
 		oscGate -= 0.001;
 		if (oscGate > 1.0) oscGate = 1.0;
@@ -86,7 +86,7 @@ void BassKit::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		clamp = 1.0-oscGate;
 		clamp *= 0.00001;
 		//set up the thing to choke off oscillations- belt and suspenders affair
-		
+
 		if (ataLowpass > 0)
 		{if (WasNegative){SubOctave = !SubOctave;} WasNegative = false;}
 		else {WasNegative = true;}
@@ -95,7 +95,7 @@ void BassKit::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		invrandy = (1.0-randy);
 		randy /= 2.0;
 		//set up the noise
-		
+
 		iirSampleA = (iirSampleA * (1.0 - iirAmount)) + (ataLowpass * iirAmount); ataLowpass -= iirSampleA;
 		iirSampleB = (iirSampleB * (1.0 - iirAmount)) + (ataLowpass * iirAmount); ataLowpass -= iirSampleB;
 		iirSampleC = (iirSampleC * (1.0 - iirAmount)) + (ataLowpass * iirAmount); ataLowpass -= iirSampleC;
@@ -118,10 +118,10 @@ void BassKit::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		iirSampleT = (iirSampleT * (1.0 - iirAmount)) + (ataLowpass * iirAmount); ataLowpass -= iirSampleT;
 		iirSampleU = (iirSampleU * (1.0 - iirAmount)) + (ataLowpass * iirAmount); ataLowpass -= iirSampleU;
 		iirSampleV = (iirSampleV * (1.0 - iirAmount)) + (ataLowpass * iirAmount); ataLowpass -= iirSampleV;
-		
+
 		switch (bflip)
 		{
-			case 1:				
+			case 1:
 				iirHeadBumpA += (ataLowpass * BassGain);
 				iirHeadBumpA -= (iirHeadBumpA * iirHeadBumpA * iirHeadBumpA * HeadBumpFreq);
 				iirHeadBumpA = (invrandy * iirHeadBumpA) + (randy * iirHeadBumpB) + (randy * iirHeadBumpC);
@@ -146,23 +146,23 @@ void BassKit::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 				HeadBump = iirHeadBumpC;
 				break;
 		}
-		
+
 		iirSampleW = (iirSampleW * (1.0 - iirAmount)) + (HeadBump * iirAmount); HeadBump -= iirSampleW;
 		iirSampleX = (iirSampleX * (1.0 - iirAmount)) + (HeadBump * iirAmount); HeadBump -= iirSampleX;
-		
+
 		SubBump = HeadBump;
 		iirSampleY = (iirSampleY * (1.0 - iirAmount)) + (SubBump * iirAmount); SubBump -= iirSampleY;
-		
+
 		iirDriveSampleC = (iirDriveSampleC * (1.0 - HeadBumpFreq)) + (SubBump * HeadBumpFreq); SubBump = iirDriveSampleC;
 		iirDriveSampleD = (iirDriveSampleD * (1.0 - HeadBumpFreq)) + (SubBump * HeadBumpFreq); SubBump = iirDriveSampleD;
-		
-		
+
+
 		SubBump = fabs(SubBump);
 		if (SubOctave == false) {SubBump = -SubBump;}
-		
+
 		switch (bflip)
 		{
-			case 1:				
+			case 1:
 				iirSubBumpA += SubBump;// * BassGain);
 				iirSubBumpA -= (iirSubBumpA * iirSubBumpA * iirSubBumpA * HeadBumpFreq);
 				iirSubBumpA = (invrandy * iirSubBumpA) + (randy * iirSubBumpB) + (randy * iirSubBumpC);
@@ -187,23 +187,23 @@ void BassKit::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 				SubBump = iirSubBumpC;
 				break;
 		}
-		
+
 		iirSampleZ = (iirSampleZ * (1.0 - HeadBumpFreq)) + (SubBump * HeadBumpFreq); SubBump = iirSampleZ;
 		iirDriveSampleE = (iirDriveSampleE * (1.0 - iirAmount)) + (SubBump * iirAmount); SubBump = iirDriveSampleE;
 		iirDriveSampleF = (iirDriveSampleF * (1.0 - iirAmount)) + (SubBump * iirAmount); SubBump = iirDriveSampleF;
-		
-		
+
+
 		inputSampleL += (HeadBump * BassOutGain);
 		inputSampleL += (SubBump * SubOutGain);
-		
+
 		inputSampleR += (HeadBump * BassOutGain);
 		inputSampleR += (SubBump * SubOutGain);
-		
-		
+
+
 		flip = !flip;
 		bflip++;
 		if (bflip < 1 || bflip > 3) bflip = 1;
-		
+
 		//noise shaping to 32-bit floating point
 		float fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -216,7 +216,7 @@ void BassKit::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -230,10 +230,10 @@ void BassKit::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }
 
-void BassKit::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void BassKit::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -256,7 +256,7 @@ void BassKit::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	double SubOutGain = ((D*2.0)-1.0)*fabs(((D*2.0)-1.0))*4.0;
 	double clamp = 0.0;
 	double fuzz = 0.111;
-		
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -266,7 +266,7 @@ void BassKit::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -281,7 +281,7 @@ void BassKit::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -296,14 +296,14 @@ void BassKit::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		
+
 		ataLowpass = (inputSampleL + inputSampleR) / 2.0;
 		iirDriveSampleA = (iirDriveSampleA * (1.0 - HeadBumpFreq)) + (ataLowpass * HeadBumpFreq); ataLowpass = iirDriveSampleA;
 		iirDriveSampleB = (iirDriveSampleB * (1.0 - HeadBumpFreq)) + (ataLowpass * HeadBumpFreq); ataLowpass = iirDriveSampleB;
-		
-		
+
+
 		oscGate += fabs(ataLowpass * 10.0);
 		oscGate -= 0.001;
 		if (oscGate > 1.0) oscGate = 1.0;
@@ -312,7 +312,7 @@ void BassKit::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		clamp = 1.0-oscGate;
 		clamp *= 0.00001;
 		//set up the thing to choke off oscillations- belt and suspenders affair
-		
+
 		if (ataLowpass > 0)
 		{if (WasNegative){SubOctave = !SubOctave;} WasNegative = false;}
 		else {WasNegative = true;}
@@ -321,7 +321,7 @@ void BassKit::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		invrandy = (1.0-randy);
 		randy /= 2.0;
 		//set up the noise
-		
+
 		iirSampleA = (iirSampleA * (1.0 - iirAmount)) + (ataLowpass * iirAmount); ataLowpass -= iirSampleA;
 		iirSampleB = (iirSampleB * (1.0 - iirAmount)) + (ataLowpass * iirAmount); ataLowpass -= iirSampleB;
 		iirSampleC = (iirSampleC * (1.0 - iirAmount)) + (ataLowpass * iirAmount); ataLowpass -= iirSampleC;
@@ -344,10 +344,10 @@ void BassKit::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		iirSampleT = (iirSampleT * (1.0 - iirAmount)) + (ataLowpass * iirAmount); ataLowpass -= iirSampleT;
 		iirSampleU = (iirSampleU * (1.0 - iirAmount)) + (ataLowpass * iirAmount); ataLowpass -= iirSampleU;
 		iirSampleV = (iirSampleV * (1.0 - iirAmount)) + (ataLowpass * iirAmount); ataLowpass -= iirSampleV;
-		
+
 		switch (bflip)
 		{
-			case 1:				
+			case 1:
 				iirHeadBumpA += (ataLowpass * BassGain);
 				iirHeadBumpA -= (iirHeadBumpA * iirHeadBumpA * iirHeadBumpA * HeadBumpFreq);
 				iirHeadBumpA = (invrandy * iirHeadBumpA) + (randy * iirHeadBumpB) + (randy * iirHeadBumpC);
@@ -372,23 +372,23 @@ void BassKit::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 				HeadBump = iirHeadBumpC;
 				break;
 		}
-		
+
 		iirSampleW = (iirSampleW * (1.0 - iirAmount)) + (HeadBump * iirAmount); HeadBump -= iirSampleW;
 		iirSampleX = (iirSampleX * (1.0 - iirAmount)) + (HeadBump * iirAmount); HeadBump -= iirSampleX;
-		
+
 		SubBump = HeadBump;
 		iirSampleY = (iirSampleY * (1.0 - iirAmount)) + (SubBump * iirAmount); SubBump -= iirSampleY;
-		
+
 		iirDriveSampleC = (iirDriveSampleC * (1.0 - HeadBumpFreq)) + (SubBump * HeadBumpFreq); SubBump = iirDriveSampleC;
 		iirDriveSampleD = (iirDriveSampleD * (1.0 - HeadBumpFreq)) + (SubBump * HeadBumpFreq); SubBump = iirDriveSampleD;
-		
-		
+
+
 		SubBump = fabs(SubBump);
 		if (SubOctave == false) {SubBump = -SubBump;}
-		
+
 		switch (bflip)
 		{
-			case 1:				
+			case 1:
 				iirSubBumpA += SubBump;// * BassGain);
 				iirSubBumpA -= (iirSubBumpA * iirSubBumpA * iirSubBumpA * HeadBumpFreq);
 				iirSubBumpA = (invrandy * iirSubBumpA) + (randy * iirSubBumpB) + (randy * iirSubBumpC);
@@ -413,23 +413,23 @@ void BassKit::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 				SubBump = iirSubBumpC;
 				break;
 		}
-		
+
 		iirSampleZ = (iirSampleZ * (1.0 - HeadBumpFreq)) + (SubBump * HeadBumpFreq); SubBump = iirSampleZ;
 		iirDriveSampleE = (iirDriveSampleE * (1.0 - iirAmount)) + (SubBump * iirAmount); SubBump = iirDriveSampleE;
 		iirDriveSampleF = (iirDriveSampleF * (1.0 - iirAmount)) + (SubBump * iirAmount); SubBump = iirDriveSampleF;
-		
-		
+
+
 		inputSampleL += (HeadBump * BassOutGain);
 		inputSampleL += (SubBump * SubOutGain);
-		
+
 		inputSampleR += (HeadBump * BassOutGain);
 		inputSampleR += (SubBump * SubOutGain);
-		
-		
+
+
 		flip = !flip;
 		bflip++;
 		if (bflip < 1 || bflip > 3) bflip = 1;
-		
+
 		//noise shaping to 64-bit floating point
 		double fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -442,7 +442,7 @@ void BassKit::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -456,5 +456,5 @@ void BassKit::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }

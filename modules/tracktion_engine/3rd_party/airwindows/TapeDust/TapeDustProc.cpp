@@ -7,7 +7,7 @@
 #include "TapeDust.h"
 #endif
 
-void TapeDust::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void TapeDust::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -15,10 +15,10 @@ void TapeDust::processReplacing(float **inputs, float **outputs, VstInt32 sample
     float* out2 = outputs[1];
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	double drySampleL;
 	double drySampleR;
 	double rRange = pow(A,2)*5.0;
@@ -30,7 +30,7 @@ void TapeDust::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	double gainR;
 	double wet = B;
 	double dry = 1.0 - wet;
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -80,7 +80,7 @@ void TapeDust::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			bL[count+1] = bL[count];
 			bR[count+1] = bR[count];
 		}
-		
+
 		bL[0] = inputSampleL;
 		bR[0] = inputSampleR;
 		inputSampleL = rand() / (double)RAND_MAX;
@@ -93,8 +93,8 @@ void TapeDust::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			inputSampleL = -inputSampleL;
 			inputSampleR = -inputSampleR;
 		}
-		
-		for(int count = 0; count < 9; count++) {			
+
+		for(int count = 0; count < 9; count++) {
 			if (gainL > 1.0) {
 				fL[count] = 1.0;
 				gainL -= 1.0;
@@ -114,12 +114,12 @@ void TapeDust::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			inputSampleL += (bL[count] * fL[count]);
 			inputSampleR += (bR[count] * fR[count]);
 		}
-		
+
 		if (wet < 1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -150,7 +150,7 @@ void TapeDust::processReplacing(float **inputs, float **outputs, VstInt32 sample
     }
 }
 
-void TapeDust::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void TapeDust::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -158,7 +158,7 @@ void TapeDust::processDoubleReplacing(double **inputs, double **outputs, VstInt3
     double* out2 = outputs[1];
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 	long double inputSampleL;
 	long double inputSampleR;
 
@@ -173,7 +173,7 @@ void TapeDust::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	double gainR;
 	double wet = B;
 	double dry = 1.0 - wet;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -218,12 +218,12 @@ void TapeDust::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		for(int count = 9; count < 0; count--) {
 			bL[count+1] = bL[count];
 			bR[count+1] = bR[count];
 		}
-		
+
 		bL[0] = inputSampleL;
 		bR[0] = inputSampleR;
 		inputSampleL = rand() / (double)RAND_MAX;
@@ -236,8 +236,8 @@ void TapeDust::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			inputSampleL = -inputSampleL;
 			inputSampleR = -inputSampleR;
 		}
-		
-		for(int count = 0; count < 9; count++) {			
+
+		for(int count = 0; count < 9; count++) {
 			if (gainL > 1.0) {
 				fL[count] = 1.0;
 				gainL -= 1.0;
@@ -257,12 +257,12 @@ void TapeDust::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			inputSampleL += (bL[count] * fL[count]);
 			inputSampleR += (bR[count] * fR[count]);
 		}
-		
+
 		if (wet < 1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-				
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

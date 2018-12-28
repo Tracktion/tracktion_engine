@@ -7,7 +7,7 @@
 #include "NCSeventeen.h"
 #endif
 
-void NCSeventeen::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void NCSeventeen::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -21,7 +21,7 @@ void NCSeventeen::processReplacing(float **inputs, float **outputs, VstInt32 sam
 	overallscale *= getSampleRate();
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	double IIRscaleback = 0.0004716;
 	double bassScaleback = 0.0002364;
@@ -56,8 +56,8 @@ void NCSeventeen::processReplacing(float **inputs, float **outputs, VstInt32 sam
 	double plusSampleR;
 	double gain = pow(10.0,(A*24.0)/20);
 	double outlevel = B;
-	
-    
+
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -103,7 +103,7 @@ void NCSeventeen::processReplacing(float **inputs, float **outputs, VstInt32 sam
 
 		inputSampleL *= gain;
 		inputSampleR *= gain;
-		
+
 		if (flip)
 		{
 			iirSampleAL = (iirSampleAL * 0.9) + (inputSampleL * 0.1);
@@ -122,7 +122,7 @@ void NCSeventeen::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		highSampleR = inputSampleR - lowSampleR;
 		flip = !flip;
 		//we now have two bands and the original source
-		
+
 		inP2 = lowSampleL * lowSampleL;
 		if (inP2 > 1.0) inP2 = 1.0; if (inP2 < -1.0) inP2 = -1.0;
 		chebyshev = (2 * inP2);
@@ -157,7 +157,7 @@ void NCSeventeen::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		lowSampleL /= (1.0+fabs(basslevL*limitingBass));
 		lowSampleL += chebyshev;
 		//apply the correction measuresL
-		
+
 		inP2 = lowSampleR * lowSampleR;
 		if (inP2 > 1.0) inP2 = 1.0; if (inP2 < -1.0) inP2 = -1.0;
 		chebyshev = (2 * inP2);
@@ -192,7 +192,7 @@ void NCSeventeen::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		lowSampleR /= (1.0+fabs(basslevR*limitingBass));
 		lowSampleR += chebyshev;
 		//apply the correction measuresR
-		
+
 		inP2 = highSampleL * highSampleL;
 		if (inP2 > 1.0) inP2 = 1.0; if (inP2 < -1.0) inP2 = -1.0;
 		chebyshev = (2 * inP2);
@@ -227,7 +227,7 @@ void NCSeventeen::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		highSampleL /= (1.0+fabs(treblevL*limitingTreb));
 		highSampleL += chebyshev;
 		//apply the correction measuresL
-		
+
 		inP2 = highSampleR * highSampleR;
 		if (inP2 > 1.0) inP2 = 1.0; if (inP2 < -1.0) inP2 = -1.0;
 		chebyshev = (2 * inP2);
@@ -262,10 +262,10 @@ void NCSeventeen::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		highSampleR /= (1.0+fabs(treblevR*limitingTreb));
 		highSampleR += chebyshev;
 		//apply the correction measuresR
-		
+
 		inputSampleL = lowSampleL + highSampleL;
 		inputSampleR = lowSampleR + highSampleR;
-		
+
 		inP2 = inputSampleL * inputSampleL;
 		if (inP2 > 1.0) inP2 = 1.0; if (inP2 < -1.0) inP2 = -1.0;
 		chebyshev = (2 * inP2);
@@ -335,12 +335,12 @@ void NCSeventeen::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		inputSampleR /= (1.0+fabs(cheblevR*limiting));
 		inputSampleR += chebyshev;
 		//apply the correction measuresR
-		
+
 		if (outlevel < 1.0) {
 			inputSampleL *= outlevel;
 			inputSampleR *= outlevel;
 		}
-		
+
 		if (inputSampleL > 0.95) inputSampleL = 0.95;
 		if (inputSampleL < -0.95) inputSampleL = -0.95;
 		if (inputSampleR > 0.95) inputSampleR = 0.95;
@@ -377,7 +377,7 @@ void NCSeventeen::processReplacing(float **inputs, float **outputs, VstInt32 sam
     }
 }
 
-void NCSeventeen::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void NCSeventeen::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -391,8 +391,8 @@ void NCSeventeen::processDoubleReplacing(double **inputs, double **outputs, VstI
 	overallscale *= getSampleRate();
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double IIRscaleback = 0.0004716;
 	double bassScaleback = 0.0002364;
 	double trebleScaleback = 0.0005484;
@@ -426,7 +426,7 @@ void NCSeventeen::processDoubleReplacing(double **inputs, double **outputs, VstI
 	double plusSampleR;
 	double gain = pow(10.0,(A*24.0)/20);
 	double outlevel = B;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -469,10 +469,10 @@ void NCSeventeen::processDoubleReplacing(double **inputs, double **outputs, VstI
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		inputSampleL *= gain;
 		inputSampleR *= gain;
-		
+
 		if (flip)
 		{
 			iirSampleAL = (iirSampleAL * 0.9) + (inputSampleL * 0.1);
@@ -491,7 +491,7 @@ void NCSeventeen::processDoubleReplacing(double **inputs, double **outputs, VstI
 		highSampleR = inputSampleR - lowSampleR;
 		flip = !flip;
 		//we now have two bands and the original source
-		
+
 		inP2 = lowSampleL * lowSampleL;
 		if (inP2 > 1.0) inP2 = 1.0; if (inP2 < -1.0) inP2 = -1.0;
 		chebyshev = (2 * inP2);
@@ -526,7 +526,7 @@ void NCSeventeen::processDoubleReplacing(double **inputs, double **outputs, VstI
 		lowSampleL /= (1.0+fabs(basslevL*limitingBass));
 		lowSampleL += chebyshev;
 		//apply the correction measuresL
-		
+
 		inP2 = lowSampleR * lowSampleR;
 		if (inP2 > 1.0) inP2 = 1.0; if (inP2 < -1.0) inP2 = -1.0;
 		chebyshev = (2 * inP2);
@@ -561,7 +561,7 @@ void NCSeventeen::processDoubleReplacing(double **inputs, double **outputs, VstI
 		lowSampleR /= (1.0+fabs(basslevR*limitingBass));
 		lowSampleR += chebyshev;
 		//apply the correction measuresR
-		
+
 		inP2 = highSampleL * highSampleL;
 		if (inP2 > 1.0) inP2 = 1.0; if (inP2 < -1.0) inP2 = -1.0;
 		chebyshev = (2 * inP2);
@@ -596,7 +596,7 @@ void NCSeventeen::processDoubleReplacing(double **inputs, double **outputs, VstI
 		highSampleL /= (1.0+fabs(treblevL*limitingTreb));
 		highSampleL += chebyshev;
 		//apply the correction measuresL
-		
+
 		inP2 = highSampleR * highSampleR;
 		if (inP2 > 1.0) inP2 = 1.0; if (inP2 < -1.0) inP2 = -1.0;
 		chebyshev = (2 * inP2);
@@ -631,10 +631,10 @@ void NCSeventeen::processDoubleReplacing(double **inputs, double **outputs, VstI
 		highSampleR /= (1.0+fabs(treblevR*limitingTreb));
 		highSampleR += chebyshev;
 		//apply the correction measuresR
-		
+
 		inputSampleL = lowSampleL + highSampleL;
 		inputSampleR = lowSampleR + highSampleR;
-		
+
 		inP2 = inputSampleL * inputSampleL;
 		if (inP2 > 1.0) inP2 = 1.0; if (inP2 < -1.0) inP2 = -1.0;
 		chebyshev = (2 * inP2);
@@ -669,7 +669,7 @@ void NCSeventeen::processDoubleReplacing(double **inputs, double **outputs, VstI
 		inputSampleL /= (1.0+fabs(cheblevL*limiting));
 		inputSampleL += chebyshev;
 		//apply the correction measuresL
-		
+
 		inP2 = inputSampleR * inputSampleR;
 		if (inP2 > 1.0) inP2 = 1.0; if (inP2 < -1.0) inP2 = -1.0;
 		chebyshev = (2 * inP2);
@@ -704,18 +704,18 @@ void NCSeventeen::processDoubleReplacing(double **inputs, double **outputs, VstI
 		inputSampleR /= (1.0+fabs(cheblevR*limiting));
 		inputSampleR += chebyshev;
 		//apply the correction measuresR
-		
+
 		if (outlevel < 1.0) {
 			inputSampleL *= outlevel;
 			inputSampleR *= outlevel;
-		}		
-		
+		}
+
 		if (inputSampleL > 0.95) inputSampleL = 0.95;
 		if (inputSampleL < -0.95) inputSampleL = -0.95;
 		if (inputSampleR > 0.95) inputSampleR = 0.95;
 		if (inputSampleR < -0.95) inputSampleR = -0.95;
 		//iron bar
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -735,7 +735,7 @@ void NCSeventeen::processDoubleReplacing(double **inputs, double **outputs, VstI
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

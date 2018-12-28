@@ -7,7 +7,7 @@
 #include "PhaseNudge.h"
 #endif
 
-void PhaseNudge::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void PhaseNudge::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -16,21 +16,21 @@ void PhaseNudge::processReplacing(float **inputs, float **outputs, VstInt32 samp
 
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	int allpasstemp;
 	double outallpass = 0.618033988749894848204586; //golden ratio!
 	//if you see 0.6180 it's not a wild stretch to wonder whether you are working with a constant
 	int maxdelayTarget = (int)(pow(A,3)*1501.0);
 	double wet = B;
 	double dry = 1.0 - wet;
-	double bridgerectifier;	
+	double bridgerectifier;
 
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
 	long double drySampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -75,38 +75,38 @@ void PhaseNudge::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		inputSampleL /= 4.0;
 		inputSampleR /= 4.0;
-		
+
 		bridgerectifier = fabs(inputSampleL);
 		bridgerectifier = sin(bridgerectifier);
 		if (inputSampleL > 0) inputSampleL = bridgerectifier;
 		else inputSampleL = -bridgerectifier;
-		
+
 		bridgerectifier = fabs(inputSampleR);
 		bridgerectifier = sin(bridgerectifier);
 		if (inputSampleR > 0) inputSampleR = bridgerectifier;
 		else inputSampleR = -bridgerectifier;
-		
+
 		if (fabs(maxdelay - maxdelayTarget) > 1500) maxdelay = maxdelayTarget;
-		
+
 		if (maxdelay < maxdelayTarget) {
 			maxdelay++;
 			dL[maxdelay] = (dL[0]+dL[maxdelay-1]) / 2.0;
 			dR[maxdelay] = (dR[0]+dR[maxdelay-1]) / 2.0;
 		}
-		
+
 		if (maxdelay > maxdelayTarget) {
 			maxdelay--;
 			dL[maxdelay] = (dL[0]+dL[maxdelay]) / 2.0;
 			dR[maxdelay] = (dR[0]+dR[maxdelay]) / 2.0;
 		}
-		
+
 		allpasstemp = one - 1;
-		
+
 		if (allpasstemp < 0 || allpasstemp > maxdelay) allpasstemp = maxdelay;
-		
+
 		inputSampleL -= dL[allpasstemp]*outallpass;
 		inputSampleR -= dR[allpasstemp]*outallpass;
 		dL[one] = inputSampleL;
@@ -117,7 +117,7 @@ void PhaseNudge::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		inputSampleL += (dL[one]);
 		inputSampleR += (dR[one]);
 
-		
+
 		bridgerectifier = fabs(inputSampleL);
 		bridgerectifier = 1.0-cos(bridgerectifier);
 		if (inputSampleL > 0) inputSampleL -= bridgerectifier;
@@ -134,8 +134,8 @@ void PhaseNudge::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		if (wet < 1.0) {
 			inputSampleL = (drySampleL * dry)+(inputSampleL * wet);
 			inputSampleR = (drySampleR * dry)+(inputSampleR * wet);
-		}		
-		
+		}
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -166,7 +166,7 @@ void PhaseNudge::processReplacing(float **inputs, float **outputs, VstInt32 samp
     }
 }
 
-void PhaseNudge::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void PhaseNudge::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -175,21 +175,21 @@ void PhaseNudge::processDoubleReplacing(double **inputs, double **outputs, VstIn
 
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	int allpasstemp;
 	double outallpass = 0.618033988749894848204586; //golden ratio!
 	//if you see 0.6180 it's not a wild stretch to wonder whether you are working with a constant
 	int maxdelayTarget = (int)(pow(A,3)*1501.0);
 	double wet = B;
 	double dry = 1.0 - wet;
-	double bridgerectifier;	
-	
+	double bridgerectifier;
+
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
 	long double drySampleR;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -234,38 +234,38 @@ void PhaseNudge::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		inputSampleL /= 4.0;
 		inputSampleR /= 4.0;
-		
+
 		bridgerectifier = fabs(inputSampleL);
 		bridgerectifier = sin(bridgerectifier);
 		if (inputSampleL > 0) inputSampleL = bridgerectifier;
 		else inputSampleL = -bridgerectifier;
-		
+
 		bridgerectifier = fabs(inputSampleR);
 		bridgerectifier = sin(bridgerectifier);
 		if (inputSampleR > 0) inputSampleR = bridgerectifier;
 		else inputSampleR = -bridgerectifier;
-		
+
 		if (fabs(maxdelay - maxdelayTarget) > 1500) maxdelay = maxdelayTarget;
-		
+
 		if (maxdelay < maxdelayTarget) {
 			maxdelay++;
 			dL[maxdelay] = (dL[0]+dL[maxdelay-1]) / 2.0;
 			dR[maxdelay] = (dR[0]+dR[maxdelay-1]) / 2.0;
 		}
-		
+
 		if (maxdelay > maxdelayTarget) {
 			maxdelay--;
 			dL[maxdelay] = (dL[0]+dL[maxdelay]) / 2.0;
 			dR[maxdelay] = (dR[0]+dR[maxdelay]) / 2.0;
 		}
-		
+
 		allpasstemp = one - 1;
-		
+
 		if (allpasstemp < 0 || allpasstemp > maxdelay) allpasstemp = maxdelay;
-		
+
 		inputSampleL -= dL[allpasstemp]*outallpass;
 		inputSampleR -= dR[allpasstemp]*outallpass;
 		dL[one] = inputSampleL;
@@ -275,24 +275,24 @@ void PhaseNudge::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		one--; if (one < 0 || one > maxdelay) {one = maxdelay;}
 		inputSampleL += (dL[one]);
 		inputSampleR += (dR[one]);
-		
+
 		bridgerectifier = fabs(inputSampleL);
 		bridgerectifier = 1.0-cos(bridgerectifier);
 		if (inputSampleL > 0) inputSampleL -= bridgerectifier;
 		else inputSampleL += bridgerectifier;
-		
+
 		bridgerectifier = fabs(inputSampleR);
 		bridgerectifier = 1.0-cos(bridgerectifier);
 		if (inputSampleR > 0) inputSampleR -= bridgerectifier;
 		else inputSampleR += bridgerectifier;
-		
+
 		inputSampleL *= 4.0;
 		inputSampleR *= 4.0;
-		
+
 		if (wet < 1.0) {
 			inputSampleL = (drySampleL * dry)+(inputSampleL * wet);
 			inputSampleR = (drySampleR * dry)+(inputSampleR * wet);
-		}		
+		}
 
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {

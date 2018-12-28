@@ -1,6 +1,6 @@
 /* ========================================
  *  Righteous4 - Righteous4.h
- *  Created 8/12/11 by SPIAdmin 
+ *  Created 8/12/11 by SPIAdmin
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
@@ -26,8 +26,8 @@ const int kNumInputs = 2;
 const int kNumOutputs = 2;
 const unsigned long kUniqueId = 'rigk';    //Change this to what the AU identity is!
 
-class Righteous4 : 
-    public AudioEffectX 
+class Righteous4 :
+    public AudioEffectX
 {
 public:
     Righteous4(audioMasterCallback audioMaster);
@@ -47,12 +47,12 @@ public:
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
     virtual void getParameterName(VstInt32 index, char *text);    // name of the parameter
-    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value    
+    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value
     virtual VstInt32 canDo(char *text);
 private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
-	
+
 	double leftSampleA;
 	double leftSampleB;
 	double leftSampleC;
@@ -79,7 +79,7 @@ private:
 	double leftSampleX;
 	double leftSampleY;
 	double leftSampleZ;
-	
+
 	double rightSampleA;
 	double rightSampleB;
 	double rightSampleC;
@@ -106,7 +106,7 @@ private:
 	double rightSampleX;
 	double rightSampleY;
 	double rightSampleZ;
-	
+
 	double bynL[13];
 	long double noiseShapingL;
 	double lastSampleL;
@@ -114,7 +114,7 @@ private:
 	double gwPrevL;
 	double gwAL;
 	double gwBL;
-    
+
 	double bynR[13];
 	long double noiseShapingR;
 	double lastSampleR;
@@ -122,7 +122,7 @@ private:
 	double gwPrevR;
 	double gwAR;
 	double gwBR;
-    
+
 	long double fpNShapeL;
 	long double fpNShapeR;
 	//default stuff

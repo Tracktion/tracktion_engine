@@ -7,7 +7,7 @@
 #include "EveryTrim.h"
 #endif
 
-void EveryTrim::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void EveryTrim::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -16,22 +16,22 @@ void EveryTrim::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	double leftgain = pow(10.0,((A*24.0)-12.0)/20.0);
 	double rightgain = pow(10.0,((B*24.0)-12.0)/20.0);
 	double midgain = pow(10.0,((C*24.0)-12.0)/20.0);
 	double sidegain = pow(10.0,((D*24.0)-12.0)/20.0);
 	double mastergain = pow(10.0,((E*24.0)-12.0)/20.0) * 0.5;
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 	long double mid;
 	long double side;
-	
+
 	leftgain *= mastergain;
 	rightgain *= mastergain;
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -82,7 +82,7 @@ void EveryTrim::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		inputSampleL = (mid+side) * leftgain;
 		inputSampleR = (mid-side) * rightgain;
 		//contains mastergain and the gain trim fixing the mid/side
-				
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -113,31 +113,31 @@ void EveryTrim::processReplacing(float **inputs, float **outputs, VstInt32 sampl
     }
 }
 
-void EveryTrim::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void EveryTrim::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
     double* out1 = outputs[0];
     double* out2 = outputs[1];
-	
+
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double leftgain = pow(10.0,((A*24.0)-12.0)/20.0);
 	double rightgain = pow(10.0,((B*24.0)-12.0)/20.0);
 	double midgain = pow(10.0,((C*24.0)-12.0)/20.0);
 	double sidegain = pow(10.0,((D*24.0)-12.0)/20.0);
 	double mastergain = pow(10.0,((E*24.0)-12.0)/20.0) * 0.5;
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 	long double mid;
 	long double side;
-	
+
 	leftgain *= mastergain;
 	rightgain *= mastergain;
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;

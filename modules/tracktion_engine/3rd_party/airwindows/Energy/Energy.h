@@ -1,6 +1,6 @@
 /* ========================================
  *  Energy - Energy.h
- *  Created 8/12/11 by SPIAdmin 
+ *  Created 8/12/11 by SPIAdmin
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
@@ -33,8 +33,8 @@ const int kNumInputs = 2;
 const int kNumOutputs = 2;
 const unsigned long kUniqueId = 'ener';    //Change this to what the AU identity is!
 
-class Energy : 
-    public AudioEffectX 
+class Energy :
+    public AudioEffectX
 {
 public:
     Energy(audioMasterCallback audioMaster);
@@ -54,12 +54,12 @@ public:
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
     virtual void getParameterName(VstInt32 index, char *text);    // name of the parameter
-    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value    
+    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value
     virtual VstInt32 canDo(char *text);
 private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
-    
+
 	long double fpNShapeL;
 	long double fpNShapeR;
 	//default stuff
@@ -68,20 +68,20 @@ private:
 	double duoOddL;
 	double duoFactorL;
 	bool flip;
-	
+
 	double tripletAL;
 	double tripletBL;
 	double tripletCL;
 	double tripletFactorL;
 	int countA;
-	
+
 	double quadAL;
 	double quadBL;
 	double quadCL;
 	double quadDL;
 	double quadFactorL;
 	int countB;
-	
+
 	double quintAL;
 	double quintBL;
 	double quintCL;
@@ -89,7 +89,7 @@ private:
 	double quintEL;
 	double quintFactorL;
 	int countC;
-	
+
 	double sextAL;
 	double sextBL;
 	double sextCL;
@@ -98,7 +98,7 @@ private:
 	double sextFL;
 	double sextFactorL;
 	int countD;
-	
+
 	double septAL;
 	double septBL;
 	double septCL;
@@ -108,7 +108,7 @@ private:
 	double septGL;
 	double septFactorL;
 	int countE;
-	
+
 	double octAL;
 	double octBL;
 	double octCL;
@@ -119,7 +119,7 @@ private:
 	double octHL;
 	double octFactorL;
 	int countF;
-	
+
 	double nintAL;
 	double nintBL;
 	double nintCL;
@@ -131,7 +131,7 @@ private:
 	double nintIL;
 	double nintFactorL;
 	int countG;
-	
+
 	double PrevHL;
 	double PrevGL;
 	double PrevFL;
@@ -140,29 +140,29 @@ private:
 	double PrevCL;
 	double PrevBL;
 	double PrevAL;
-	
+
 	double duoEvenR;
 	double duoOddR;
 	double duoFactorR;
-	
+
 	double tripletAR;
 	double tripletBR;
 	double tripletCR;
 	double tripletFactorR;
-	
+
 	double quadAR;
 	double quadBR;
 	double quadCR;
 	double quadDR;
 	double quadFactorR;
-	
+
 	double quintAR;
 	double quintBR;
 	double quintCR;
 	double quintDR;
 	double quintER;
 	double quintFactorR;
-	
+
 	double sextAR;
 	double sextBR;
 	double sextCR;
@@ -170,7 +170,7 @@ private:
 	double sextER;
 	double sextFR;
 	double sextFactorR;
-	
+
 	double septAR;
 	double septBR;
 	double septCR;
@@ -179,7 +179,7 @@ private:
 	double septFR;
 	double septGR;
 	double septFactorR;
-	
+
 	double octAR;
 	double octBR;
 	double octCR;
@@ -189,7 +189,7 @@ private:
 	double octGR;
 	double octHR;
 	double octFactorR;
-	
+
 	double nintAR;
 	double nintBR;
 	double nintCR;
@@ -200,7 +200,7 @@ private:
 	double nintHR;
 	double nintIR;
 	double nintFactorR;
-	
+
 	double PrevHR;
 	double PrevGR;
 	double PrevFR;
@@ -209,7 +209,7 @@ private:
 	double PrevCR;
 	double PrevBR;
 	double PrevAR;
-	
+
     float A;
     float B;
     float C;

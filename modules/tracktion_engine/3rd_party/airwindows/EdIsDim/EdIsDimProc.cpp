@@ -7,7 +7,7 @@
 #include "EdIsDim.h"
 #endif
 
-void EdIsDim::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void EdIsDim::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -16,13 +16,13 @@ void EdIsDim::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
 	long double mid;
 	long double side;
-	
+
 	double midgain = A * 2.0;
 	double sidegain = 2.0 - midgain;
 
@@ -71,10 +71,10 @@ void EdIsDim::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 
 		inputSampleL *= midgain;
 		inputSampleR *= sidegain;
-		
+
 		mid = (inputSampleL+inputSampleR)/2.0;
 		side = (inputSampleL-inputSampleR)/2.0;
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = mid;
@@ -94,7 +94,7 @@ void EdIsDim::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 32 bit output
-				
+
 		*out1 = mid;
 		*out2 = side;
 
@@ -105,7 +105,7 @@ void EdIsDim::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
     }
 }
 
-void EdIsDim::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void EdIsDim::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -114,15 +114,15 @@ void EdIsDim::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
  	long double mid;
 	long double side;
-	
+
 	double midgain = A * 2.0;
-	double sidegain = 2.0 - midgain;	
+	double sidegain = 2.0 - midgain;
 
     while (--sampleFrames >= 0)
     {
@@ -167,13 +167,13 @@ void EdIsDim::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			//the silence will return to being digital black again.
 		}
 
-		
+
 		inputSampleL *= midgain;
 		inputSampleR *= sidegain;
-		
+
 		mid = (inputSampleL+inputSampleR)/2.0;
 		side = (inputSampleL-inputSampleR)/2.0;
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = mid;
@@ -193,7 +193,7 @@ void EdIsDim::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = mid;
 		*out2 = side;
 

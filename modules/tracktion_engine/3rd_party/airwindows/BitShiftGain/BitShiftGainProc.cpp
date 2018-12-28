@@ -7,7 +7,7 @@
 #include "BitShiftGain.h"
 #endif
 
-void BitShiftGain::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void BitShiftGain::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -53,7 +53,7 @@ void BitShiftGain::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		case 16: gain = 65536.0; break;
 	}
 	//we are directly punching in the gain values rather than calculating them
-    
+
     while (--sampleFrames >= 0)
     {
 		*out1 = *in1 * gain;
@@ -66,7 +66,7 @@ void BitShiftGain::processReplacing(float **inputs, float **outputs, VstInt32 sa
     }
 }
 
-void BitShiftGain::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void BitShiftGain::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -112,7 +112,7 @@ void BitShiftGain::processDoubleReplacing(double **inputs, double **outputs, Vst
 		case 16: gain = 65536.0; break;
 	}
 	//we are directly punching in the gain values rather than calculating them
-	
+
     while (--sampleFrames >= 0)
     {
 		*out1 = *in1 * gain;

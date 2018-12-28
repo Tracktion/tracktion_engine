@@ -7,7 +7,7 @@
 #include "ButterComp.h"
 #endif
 
-void ButterComp::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void ButterComp::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -19,7 +19,7 @@ void ButterComp::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	overallscale *= getSampleRate();
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	double inputposL;
 	double inputnegL;
@@ -52,7 +52,7 @@ void ButterComp::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	divisor /= overallscale;
 	double remainder = divisor;
 	divisor = 1.0 - divisor;
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -97,51 +97,51 @@ void ButterComp::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		inputSampleL *= inputgain;
 		inputSampleR *= inputgain;
-		
+
 		inputposL = inputSampleL + 1.0;
 		if (inputposL < 0.0) inputposL = 0.0;
 		outputposL = inputposL / 2.0;
-		if (outputposL > 1.0) outputposL = 1.0;		
+		if (outputposL > 1.0) outputposL = 1.0;
 		inputposL *= inputposL;
 		targetposL *= divisor;
 		targetposL += (inputposL * remainder);
 		calcposL = pow((1.0/targetposL),2);
-		
+
 		inputnegL = (-inputSampleL) + 1.0;
 		if (inputnegL < 0.0) inputnegL = 0.0;
 		outputnegL = inputnegL / 2.0;
-		if (outputnegL > 1.0) outputnegL = 1.0;		
+		if (outputnegL > 1.0) outputnegL = 1.0;
 		inputnegL *= inputnegL;
 		targetnegL *= divisor;
 		targetnegL += (inputnegL * remainder);
 		calcnegL = pow((1.0/targetnegL),2);
 		//now we have mirrored targets for comp
 		//outputpos and outputneg go from 0 to 1
-		
+
 		inputposR = inputSampleR + 1.0;
 		if (inputposR < 0.0) inputposR = 0.0;
 		outputposR = inputposR / 2.0;
-		if (outputposR > 1.0) outputposR = 1.0;		
+		if (outputposR > 1.0) outputposR = 1.0;
 		inputposR *= inputposR;
 		targetposR *= divisor;
 		targetposR += (inputposR * remainder);
 		calcposR = pow((1.0/targetposR),2);
-		
+
 		inputnegR = (-inputSampleR) + 1.0;
 		if (inputnegR < 0.0) inputnegR = 0.0;
 		outputnegR = inputnegR / 2.0;
-		if (outputnegR > 1.0) outputnegR = 1.0;		
+		if (outputnegR > 1.0) outputnegR = 1.0;
 		inputnegR *= inputnegR;
 		targetnegR *= divisor;
 		targetnegR += (inputnegR * remainder);
 		calcnegR = pow((1.0/targetnegR),2);
 		//now we have mirrored targets for comp
 		//outputpos and outputneg go from 0 to 1
-		
-		
+
+
 		if (inputSampleL > 0)
 		{ //working on pos
 			controlAposL *= divisor;
@@ -153,7 +153,7 @@ void ButterComp::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			controlAnegL += (calcnegL*remainder);
 		}
 		//this causes each of the four to update only when active and in the correct 'flip'
-		
+
 		if (inputSampleR > 0)
 		{ //working on pos
 			controlAposR *= divisor;
@@ -165,22 +165,22 @@ void ButterComp::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			controlAnegR += (calcnegR*remainder);
 		}
 		//this causes each of the four to update only when active and in the correct 'flip'
-		
+
 		totalmultiplierL = (controlAposL * outputposL) + (controlAnegL * outputnegL);
 		totalmultiplierR = (controlAposR * outputposR) + (controlAnegR * outputnegR);
 		//this combines the sides according to flip, blending relative to the input value
-		
+
 		inputSampleL *= totalmultiplierL;
 		inputSampleL /= outputgain;
-		
+
 		inputSampleR *= totalmultiplierR;
 		inputSampleR /= outputgain;
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -211,7 +211,7 @@ void ButterComp::processReplacing(float **inputs, float **outputs, VstInt32 samp
     }
 }
 
-void ButterComp::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void ButterComp::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -223,8 +223,8 @@ void ButterComp::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	overallscale *= getSampleRate();
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double inputposL;
 	double inputnegL;
 	double calcposL;
@@ -234,7 +234,7 @@ void ButterComp::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	long double totalmultiplierL;
 	long double inputSampleL;
 	double drySampleL;
-	
+
 	double inputposR;
 	double inputnegR;
 	double calcposR;
@@ -244,7 +244,7 @@ void ButterComp::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	long double totalmultiplierR;
 	long double inputSampleR;
 	double drySampleR;
-	
+
 	double inputgain = pow(10.0,(A*14.0)/20.0);
 	double wet = B;
 	double dry = 1.0 - wet;
@@ -256,7 +256,7 @@ void ButterComp::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	divisor /= overallscale;
 	double remainder = divisor;
 	divisor = 1.0 - divisor;
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -301,51 +301,51 @@ void ButterComp::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		inputSampleL *= inputgain;
 		inputSampleR *= inputgain;
-		
+
 		inputposL = inputSampleL + 1.0;
 		if (inputposL < 0.0) inputposL = 0.0;
 		outputposL = inputposL / 2.0;
-		if (outputposL > 1.0) outputposL = 1.0;		
+		if (outputposL > 1.0) outputposL = 1.0;
 		inputposL *= inputposL;
 		targetposL *= divisor;
 		targetposL += (inputposL * remainder);
 		calcposL = pow((1.0/targetposL),2);
-		
+
 		inputnegL = (-inputSampleL) + 1.0;
 		if (inputnegL < 0.0) inputnegL = 0.0;
 		outputnegL = inputnegL / 2.0;
-		if (outputnegL > 1.0) outputnegL = 1.0;		
+		if (outputnegL > 1.0) outputnegL = 1.0;
 		inputnegL *= inputnegL;
 		targetnegL *= divisor;
 		targetnegL += (inputnegL * remainder);
 		calcnegL = pow((1.0/targetnegL),2);
 		//now we have mirrored targets for comp
 		//outputpos and outputneg go from 0 to 1
-		
+
 		inputposR = inputSampleR + 1.0;
 		if (inputposR < 0.0) inputposR = 0.0;
 		outputposR = inputposR / 2.0;
-		if (outputposR > 1.0) outputposR = 1.0;		
+		if (outputposR > 1.0) outputposR = 1.0;
 		inputposR *= inputposR;
 		targetposR *= divisor;
 		targetposR += (inputposR * remainder);
 		calcposR = pow((1.0/targetposR),2);
-		
+
 		inputnegR = (-inputSampleR) + 1.0;
 		if (inputnegR < 0.0) inputnegR = 0.0;
 		outputnegR = inputnegR / 2.0;
-		if (outputnegR > 1.0) outputnegR = 1.0;		
+		if (outputnegR > 1.0) outputnegR = 1.0;
 		inputnegR *= inputnegR;
 		targetnegR *= divisor;
 		targetnegR += (inputnegR * remainder);
 		calcnegR = pow((1.0/targetnegR),2);
 		//now we have mirrored targets for comp
 		//outputpos and outputneg go from 0 to 1
-		
-		
+
+
 		if (inputSampleL > 0)
 		{ //working on pos
 			controlAposL *= divisor;
@@ -357,7 +357,7 @@ void ButterComp::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			controlAnegL += (calcnegL*remainder);
 		}
 		//this causes each of the four to update only when active and in the correct 'flip'
-		
+
 		if (inputSampleR > 0)
 		{ //working on pos
 			controlAposR *= divisor;
@@ -369,22 +369,22 @@ void ButterComp::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			controlAnegR += (calcnegR*remainder);
 		}
 		//this causes each of the four to update only when active and in the correct 'flip'
-		
+
 		totalmultiplierL = (controlAposL * outputposL) + (controlAnegL * outputnegL);
 		totalmultiplierR = (controlAposR * outputposR) + (controlAnegR * outputnegR);
 		//this combines the sides according to flip, blending relative to the input value
-		
+
 		inputSampleL *= totalmultiplierL;
 		inputSampleL /= outputgain;
-		
+
 		inputSampleR *= totalmultiplierR;
 		inputSampleR /= outputgain;
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -404,7 +404,7 @@ void ButterComp::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

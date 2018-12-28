@@ -7,7 +7,7 @@
 #include "NonlinearSpace.h"
 #endif
 
-void NonlinearSpace::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void NonlinearSpace::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -16,7 +16,7 @@ void NonlinearSpace::processReplacing(float **inputs, float **outputs, VstInt32 
 
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	double drySampleL;
 	double drySampleR;
@@ -63,9 +63,9 @@ void NonlinearSpace::processReplacing(float **inputs, float **outputs, VstInt32 
 	double temp;
 	int allpasstemp;
 	double predelay = 0.222 * overallscale;
-	
+
 	//reverb setup
-	
+
 	delayA = (int(maxdelayA * roomsize));
 	delayB = (int(maxdelayB * roomsize));
 	delayC = (int(maxdelayC * roomsize));
@@ -97,7 +97,7 @@ void NonlinearSpace::processReplacing(float **inputs, float **outputs, VstInt32 
 	delayLeft = (int(maxdelayLeft * roomsize));
 	delayRight = (int(maxdelayRight * roomsize));
 	delaypre = (int(maxdelaypre * predelay));
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -142,15 +142,15 @@ void NonlinearSpace::processReplacing(float **inputs, float **outputs, VstInt32 
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
-		
+
+
 		dpreL[onepre] = inputSampleL;
 		dpreR[onepre] = inputSampleR;
 		onepre--; if (onepre < 0 || onepre > delaypre) {onepre = delaypre;}
 		inputSampleL = (dpreL[onepre]);
 		inputSampleR = (dpreR[onepre]);
 		//predelay
-		
+
 		interpolA += pitchshiftA*pspeed;
 		interpolB += pitchshiftB*pspeed;
 		interpolC += pitchshiftC*pspeed;
@@ -178,7 +178,7 @@ void NonlinearSpace::processReplacing(float **inputs, float **outputs, VstInt32 
 		interpolY += pitchshiftY*pspeed;
 		interpolZ += pitchshiftZ*pspeed;
 		//increment all the sub-sample offsets for the pitch shifting of combs
-		
+
 		if (interpolA > 1.0) {pitchshiftA = -fabs(pitchshiftA); interpolA += pitchshiftA*pspeed;}
 		if (interpolB > 1.0) {pitchshiftB = -fabs(pitchshiftB); interpolB += pitchshiftB*pspeed;}
 		if (interpolC > 1.0) {pitchshiftC = -fabs(pitchshiftC); interpolC += pitchshiftC*pspeed;}
@@ -205,7 +205,7 @@ void NonlinearSpace::processReplacing(float **inputs, float **outputs, VstInt32 
 		if (interpolX > 1.0) {pitchshiftX = -fabs(pitchshiftX); interpolX += pitchshiftX*pspeed;}
 		if (interpolY > 1.0) {pitchshiftY = -fabs(pitchshiftY); interpolY += pitchshiftY*pspeed;}
 		if (interpolZ > 1.0) {pitchshiftZ = -fabs(pitchshiftZ); interpolZ += pitchshiftZ*pspeed;}
-		
+
 		if (interpolA < 0.0) {pitchshiftA = fabs(pitchshiftA); interpolA += pitchshiftA*pspeed;}
 		if (interpolB < 0.0) {pitchshiftB = fabs(pitchshiftB); interpolB += pitchshiftB*pspeed;}
 		if (interpolC < 0.0) {pitchshiftC = fabs(pitchshiftC); interpolC += pitchshiftC*pspeed;}
@@ -233,23 +233,23 @@ void NonlinearSpace::processReplacing(float **inputs, float **outputs, VstInt32 
 		if (interpolY < 0.0) {pitchshiftY = fabs(pitchshiftY); interpolY += pitchshiftY*pspeed;}
 		if (interpolZ < 0.0) {pitchshiftZ = fabs(pitchshiftZ); interpolZ += pitchshiftZ*pspeed;}
 		//all of the sanity checks for interpol for all combs
-		
+
 		if (verboutR > 1.0) verboutR = 1.0;
 		if (verboutR < -1.0) verboutR = -1.0;
 		if (verboutL > 1.0) verboutL = 1.0;
 		if (verboutL < -1.0) verboutL = -1.0;
-		
+
 		inputSampleL += verboutR;
 		inputSampleR += verboutL;
 		verboutL = 0.0;
 		verboutR = 0.0;
 		//here we add in the cross-coupling- output of L tank to R, output of R tank to L
-		
-		
+
+
 		mid = inputSampleL + inputSampleR;
 		side = inputSampleL - inputSampleR;
-		//assign mid and side.	
-		
+		//assign mid and side.
+
 		allpasstemp = oneMid - 1;
 		if (allpasstemp < 0 || allpasstemp > delayMid) {allpasstemp = delayMid;}
 		mid -= dMid[allpasstemp]*constallpass;
@@ -258,8 +258,8 @@ void NonlinearSpace::processReplacing(float **inputs, float **outputs, VstInt32 
 		oneMid--; if (oneMid < 0 || oneMid > delayMid) {oneMid = delayMid;}
 		mid += (dMid[oneMid]);
 		nonlin += fabs(dMid[oneMid]);
-		//allpass filter mid		
-		
+		//allpass filter mid
+
 		allpasstemp = oneSide - 1;
 		if (allpasstemp < 0 || allpasstemp > delaySide) {allpasstemp = delaySide;}
 		side -= dSide[allpasstemp]*constallpass;
@@ -269,9 +269,9 @@ void NonlinearSpace::processReplacing(float **inputs, float **outputs, VstInt32 
 		side += (dSide[oneSide]);
 		nonlin += fabs(dSide[oneSide]);
 		//allpass filter side
-		
+
 		//here we do allpasses on the mid and side
-		
+
 		allpasstemp = oneLeft - 1;
 		if (allpasstemp < 0 || allpasstemp > delayLeft) {allpasstemp = delayLeft;}
 		inputSampleL -= dLeft[allpasstemp]*constallpass;
@@ -281,8 +281,8 @@ void NonlinearSpace::processReplacing(float **inputs, float **outputs, VstInt32 
 		inputSampleL += (dLeft[oneLeft]);
 		nonlin += fabs(dLeft[oneLeft]);
 		//allpass filter left
-		
-		
+
+
 		allpasstemp = oneRight - 1;
 		if (allpasstemp < 0 || allpasstemp > delayRight) {allpasstemp = delayRight;}
 		inputSampleR -= dRight[allpasstemp]*constallpass;
@@ -292,14 +292,14 @@ void NonlinearSpace::processReplacing(float **inputs, float **outputs, VstInt32 
 		inputSampleR += (dRight[oneRight]);
 		nonlin += fabs(dRight[oneRight]);
 		//allpass filter right
-		
-		
+
+
 		inputSampleL += (mid+side)/2.0;
 		inputSampleR += (mid-side)/2.0;
 		//here we get back to a L/R topology by adding the mid/side in parallel with L/R
-		
-		
-		
+
+
+
 		temp = (dA[oneA]*interpolA );
 		temp += (dA[treA]*( 1.0 - interpolA ));
 		temp += ((dA[twoA]));
@@ -470,7 +470,7 @@ void NonlinearSpace::processReplacing(float **inputs, float **outputs, VstInt32 
   		verboutL += temp;
 		//comb filter Y
 		//here we do the L delay tank, every other letter A C E G I
-		
+
 		temp = (dB[oneB]*interpolB );
 		temp += (dB[treB]*( 1.0 - interpolB ));
 		temp += ((dB[twoB]));
@@ -483,7 +483,7 @@ void NonlinearSpace::processReplacing(float **inputs, float **outputs, VstInt32 
 		temp += (dB[treB]*( 1.0 - interpolB ));
 		temp *=  (invlean + (lean*fabs(dB[twoB])));
 		verboutR += temp;
-		//comb filter B		
+		//comb filter B
 		temp = (dD[oneD]*interpolD );
 		temp += (dD[treD]*( 1.0 - interpolD ));
 		temp += ((dD[twoD]));
@@ -641,24 +641,24 @@ void NonlinearSpace::processReplacing(float **inputs, float **outputs, VstInt32 
    		verboutR += temp;
 		//comb filter Z
 		//here we do the R delay tank, every other letter B D F H J
-		
+
 		verboutL /= 8;
 		verboutR /= 8;
-		
+
 		iirSampleL = (iirSampleL * (1 - iirAmount)) + (verboutL * iirAmount);
 		verboutL = verboutL - iirSampleL;
-		
+
 		iirSampleR = (iirSampleR * (1 - iirAmount)) + (verboutR * iirAmount);
 		verboutR = verboutR - iirSampleR;
 		//we need to highpass the crosscoupling, it's making DC runaway
-		
+
 		verboutL *=  (invlean + (lean*fabs(verboutL)));
 		verboutR *=  (invlean + (lean*fabs(verboutR)));
 		//scale back the verb tank the same way we scaled the combs
-		
+
 		inputSampleL = verboutL;
 		inputSampleR = verboutR;
-		
+
 		//EQ lowpass is after all processing like the compressor that might produce hash
 		if (flip)
 		{
@@ -684,12 +684,12 @@ void NonlinearSpace::processReplacing(float **inputs, float **outputs, VstInt32 
 			lowpassSampleDB = (lowpassSampleDB * (1 - iirAmountC)) + (inputSampleL * iirAmountC);
 			inputSampleL = lowpassSampleDB;
 			lowpassSampleF = (lowpassSampleF * (1 - iirAmountC)) + (inputSampleL * iirAmountC);
-			inputSampleL = lowpassSampleF;			
+			inputSampleL = lowpassSampleF;
 		}
 		lowpassSampleG = (lowpassSampleG * (1 - iirAmountC)) + (inputSampleL * iirAmountC);
 		inputSampleL = (lowpassSampleG * (1 - iirAmountC)) + (inputSampleL * iirAmountC);
-		
-		
+
+
 		if (flip)
 		{
 			rowpassSampleAA = (rowpassSampleAA * (1 - iirAmountC)) + (inputSampleR * iirAmountC);
@@ -714,38 +714,38 @@ void NonlinearSpace::processReplacing(float **inputs, float **outputs, VstInt32 
 			rowpassSampleDB = (rowpassSampleDB * (1 - iirAmountC)) + (inputSampleR * iirAmountC);
 			inputSampleR = rowpassSampleDB;
 			rowpassSampleF = (rowpassSampleF * (1 - iirAmountC)) + (inputSampleR * iirAmountC);
-			inputSampleR = rowpassSampleF;			
+			inputSampleR = rowpassSampleF;
 		}
 		rowpassSampleG = (rowpassSampleG * (1 - iirAmountC)) + (inputSampleR * iirAmountC);
 		inputSampleR = (rowpassSampleG * (1 - iirAmountC)) + (inputSampleR * iirAmountC);
-		
+
 		iirCCSampleL = (iirCCSampleL * (1 - iirAmount)) + (verboutL * iirAmount);
 		verboutL = verboutL - iirCCSampleL;
-		
+
 		iirCCSampleR = (iirCCSampleR * (1 - iirAmount)) + (verboutR * iirAmount);
 		verboutR = verboutR - iirCCSampleR;
 		//we need to highpass the crosscoupling, it's making DC runaway
-		
+
 		verboutL *=  (invlean + (lean*fabs(verboutL)));
 		verboutR *=  (invlean + (lean*fabs(verboutR)));
 		//scale back the crosscouple the same way we scaled the combs
 		verboutL = (inputSampleL) * outcouple;
 		verboutR = (inputSampleR) * outcouple;
 		//send it off to the input again
-		
+
 		nonlin += fabs(verboutL);
 		nonlin += fabs(verboutR);//post highpassing and a lot of processing
-		
+
 		drySampleL *= dryness;
 		drySampleR *= dryness;
-		
+
 		inputSampleL *= wetness;
 		inputSampleR *= wetness;
-		
+
 		inputSampleL += drySampleL;
 		inputSampleR += drySampleR;
 		//here we combine the tanks with the dry signal
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -777,7 +777,7 @@ void NonlinearSpace::processReplacing(float **inputs, float **outputs, VstInt32 
     }
 }
 
-void NonlinearSpace::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void NonlinearSpace::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -786,8 +786,8 @@ void NonlinearSpace::processDoubleReplacing(double **inputs, double **outputs, V
 
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double drySampleL;
 	double drySampleR;
 	long double inputSampleL;
@@ -833,9 +833,9 @@ void NonlinearSpace::processDoubleReplacing(double **inputs, double **outputs, V
 	double temp;
 	int allpasstemp;
 	double predelay = 0.222 * overallscale;
-	
+
 	//reverb setup
-	
+
 	delayA = (int(maxdelayA * roomsize));
 	delayB = (int(maxdelayB * roomsize));
 	delayC = (int(maxdelayC * roomsize));
@@ -867,7 +867,7 @@ void NonlinearSpace::processDoubleReplacing(double **inputs, double **outputs, V
 	delayLeft = (int(maxdelayLeft * roomsize));
 	delayRight = (int(maxdelayRight * roomsize));
 	delaypre = (int(maxdelaypre * predelay));
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -912,15 +912,15 @@ void NonlinearSpace::processDoubleReplacing(double **inputs, double **outputs, V
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
-		
+
+
 		dpreL[onepre] = inputSampleL;
 		dpreR[onepre] = inputSampleR;
 		onepre--; if (onepre < 0 || onepre > delaypre) {onepre = delaypre;}
 		inputSampleL = (dpreL[onepre]);
 		inputSampleR = (dpreR[onepre]);
 		//predelay
-		
+
 		interpolA += pitchshiftA*pspeed;
 		interpolB += pitchshiftB*pspeed;
 		interpolC += pitchshiftC*pspeed;
@@ -948,7 +948,7 @@ void NonlinearSpace::processDoubleReplacing(double **inputs, double **outputs, V
 		interpolY += pitchshiftY*pspeed;
 		interpolZ += pitchshiftZ*pspeed;
 		//increment all the sub-sample offsets for the pitch shifting of combs
-		
+
 		if (interpolA > 1.0) {pitchshiftA = -fabs(pitchshiftA); interpolA += pitchshiftA*pspeed;}
 		if (interpolB > 1.0) {pitchshiftB = -fabs(pitchshiftB); interpolB += pitchshiftB*pspeed;}
 		if (interpolC > 1.0) {pitchshiftC = -fabs(pitchshiftC); interpolC += pitchshiftC*pspeed;}
@@ -975,7 +975,7 @@ void NonlinearSpace::processDoubleReplacing(double **inputs, double **outputs, V
 		if (interpolX > 1.0) {pitchshiftX = -fabs(pitchshiftX); interpolX += pitchshiftX*pspeed;}
 		if (interpolY > 1.0) {pitchshiftY = -fabs(pitchshiftY); interpolY += pitchshiftY*pspeed;}
 		if (interpolZ > 1.0) {pitchshiftZ = -fabs(pitchshiftZ); interpolZ += pitchshiftZ*pspeed;}
-		
+
 		if (interpolA < 0.0) {pitchshiftA = fabs(pitchshiftA); interpolA += pitchshiftA*pspeed;}
 		if (interpolB < 0.0) {pitchshiftB = fabs(pitchshiftB); interpolB += pitchshiftB*pspeed;}
 		if (interpolC < 0.0) {pitchshiftC = fabs(pitchshiftC); interpolC += pitchshiftC*pspeed;}
@@ -1003,23 +1003,23 @@ void NonlinearSpace::processDoubleReplacing(double **inputs, double **outputs, V
 		if (interpolY < 0.0) {pitchshiftY = fabs(pitchshiftY); interpolY += pitchshiftY*pspeed;}
 		if (interpolZ < 0.0) {pitchshiftZ = fabs(pitchshiftZ); interpolZ += pitchshiftZ*pspeed;}
 		//all of the sanity checks for interpol for all combs
-		
+
 		if (verboutR > 1.0) verboutR = 1.0;
 		if (verboutR < -1.0) verboutR = -1.0;
 		if (verboutL > 1.0) verboutL = 1.0;
 		if (verboutL < -1.0) verboutL = -1.0;
-		
+
 		inputSampleL += verboutR;
 		inputSampleR += verboutL;
 		verboutL = 0.0;
 		verboutR = 0.0;
 		//here we add in the cross-coupling- output of L tank to R, output of R tank to L
-		
-		
+
+
 		mid = inputSampleL + inputSampleR;
 		side = inputSampleL - inputSampleR;
-		//assign mid and side.	
-		
+		//assign mid and side.
+
 		allpasstemp = oneMid - 1;
 		if (allpasstemp < 0 || allpasstemp > delayMid) {allpasstemp = delayMid;}
 		mid -= dMid[allpasstemp]*constallpass;
@@ -1028,8 +1028,8 @@ void NonlinearSpace::processDoubleReplacing(double **inputs, double **outputs, V
 		oneMid--; if (oneMid < 0 || oneMid > delayMid) {oneMid = delayMid;}
 		mid += (dMid[oneMid]);
 		nonlin += fabs(dMid[oneMid]);
-		//allpass filter mid		
-		
+		//allpass filter mid
+
 		allpasstemp = oneSide - 1;
 		if (allpasstemp < 0 || allpasstemp > delaySide) {allpasstemp = delaySide;}
 		side -= dSide[allpasstemp]*constallpass;
@@ -1039,9 +1039,9 @@ void NonlinearSpace::processDoubleReplacing(double **inputs, double **outputs, V
 		side += (dSide[oneSide]);
 		nonlin += fabs(dSide[oneSide]);
 		//allpass filter side
-		
+
 		//here we do allpasses on the mid and side
-		
+
 		allpasstemp = oneLeft - 1;
 		if (allpasstemp < 0 || allpasstemp > delayLeft) {allpasstemp = delayLeft;}
 		inputSampleL -= dLeft[allpasstemp]*constallpass;
@@ -1051,8 +1051,8 @@ void NonlinearSpace::processDoubleReplacing(double **inputs, double **outputs, V
 		inputSampleL += (dLeft[oneLeft]);
 		nonlin += fabs(dLeft[oneLeft]);
 		//allpass filter left
-		
-		
+
+
 		allpasstemp = oneRight - 1;
 		if (allpasstemp < 0 || allpasstemp > delayRight) {allpasstemp = delayRight;}
 		inputSampleR -= dRight[allpasstemp]*constallpass;
@@ -1062,14 +1062,14 @@ void NonlinearSpace::processDoubleReplacing(double **inputs, double **outputs, V
 		inputSampleR += (dRight[oneRight]);
 		nonlin += fabs(dRight[oneRight]);
 		//allpass filter right
-		
-		
+
+
 		inputSampleL += (mid+side)/2.0;
 		inputSampleR += (mid-side)/2.0;
 		//here we get back to a L/R topology by adding the mid/side in parallel with L/R
-		
-		
-		
+
+
+
 		temp = (dA[oneA]*interpolA );
 		temp += (dA[treA]*( 1.0 - interpolA ));
 		temp += ((dA[twoA]));
@@ -1240,7 +1240,7 @@ void NonlinearSpace::processDoubleReplacing(double **inputs, double **outputs, V
   		verboutL += temp;
 		//comb filter Y
 		//here we do the L delay tank, every other letter A C E G I
-		
+
 		temp = (dB[oneB]*interpolB );
 		temp += (dB[treB]*( 1.0 - interpolB ));
 		temp += ((dB[twoB]));
@@ -1253,7 +1253,7 @@ void NonlinearSpace::processDoubleReplacing(double **inputs, double **outputs, V
 		temp += (dB[treB]*( 1.0 - interpolB ));
 		temp *=  (invlean + (lean*fabs(dB[twoB])));
 		verboutR += temp;
-		//comb filter B		
+		//comb filter B
 		temp = (dD[oneD]*interpolD );
 		temp += (dD[treD]*( 1.0 - interpolD ));
 		temp += ((dD[twoD]));
@@ -1411,24 +1411,24 @@ void NonlinearSpace::processDoubleReplacing(double **inputs, double **outputs, V
    		verboutR += temp;
 		//comb filter Z
 		//here we do the R delay tank, every other letter B D F H J
-		
+
 		verboutL /= 8;
 		verboutR /= 8;
-		
+
 		iirSampleL = (iirSampleL * (1 - iirAmount)) + (verboutL * iirAmount);
 		verboutL = verboutL - iirSampleL;
-		
+
 		iirSampleR = (iirSampleR * (1 - iirAmount)) + (verboutR * iirAmount);
 		verboutR = verboutR - iirSampleR;
 		//we need to highpass the crosscoupling, it's making DC runaway
-		
+
 		verboutL *=  (invlean + (lean*fabs(verboutL)));
 		verboutR *=  (invlean + (lean*fabs(verboutR)));
 		//scale back the verb tank the same way we scaled the combs
-		
+
 		inputSampleL = verboutL;
 		inputSampleR = verboutR;
-		
+
 		//EQ lowpass is after all processing like the compressor that might produce hash
 		if (flip)
 		{
@@ -1454,12 +1454,12 @@ void NonlinearSpace::processDoubleReplacing(double **inputs, double **outputs, V
 			lowpassSampleDB = (lowpassSampleDB * (1 - iirAmountC)) + (inputSampleL * iirAmountC);
 			inputSampleL = lowpassSampleDB;
 			lowpassSampleF = (lowpassSampleF * (1 - iirAmountC)) + (inputSampleL * iirAmountC);
-			inputSampleL = lowpassSampleF;			
+			inputSampleL = lowpassSampleF;
 		}
 		lowpassSampleG = (lowpassSampleG * (1 - iirAmountC)) + (inputSampleL * iirAmountC);
 		inputSampleL = (lowpassSampleG * (1 - iirAmountC)) + (inputSampleL * iirAmountC);
-		
-		
+
+
 		if (flip)
 		{
 			rowpassSampleAA = (rowpassSampleAA * (1 - iirAmountC)) + (inputSampleR * iirAmountC);
@@ -1484,38 +1484,38 @@ void NonlinearSpace::processDoubleReplacing(double **inputs, double **outputs, V
 			rowpassSampleDB = (rowpassSampleDB * (1 - iirAmountC)) + (inputSampleR * iirAmountC);
 			inputSampleR = rowpassSampleDB;
 			rowpassSampleF = (rowpassSampleF * (1 - iirAmountC)) + (inputSampleR * iirAmountC);
-			inputSampleR = rowpassSampleF;			
+			inputSampleR = rowpassSampleF;
 		}
 		rowpassSampleG = (rowpassSampleG * (1 - iirAmountC)) + (inputSampleR * iirAmountC);
 		inputSampleR = (rowpassSampleG * (1 - iirAmountC)) + (inputSampleR * iirAmountC);
-		
+
 		iirCCSampleL = (iirCCSampleL * (1 - iirAmount)) + (verboutL * iirAmount);
 		verboutL = verboutL - iirCCSampleL;
-		
+
 		iirCCSampleR = (iirCCSampleR * (1 - iirAmount)) + (verboutR * iirAmount);
 		verboutR = verboutR - iirCCSampleR;
 		//we need to highpass the crosscoupling, it's making DC runaway
-		
+
 		verboutL *=  (invlean + (lean*fabs(verboutL)));
 		verboutR *=  (invlean + (lean*fabs(verboutR)));
 		//scale back the crosscouple the same way we scaled the combs
 		verboutL = (inputSampleL) * outcouple;
 		verboutR = (inputSampleR) * outcouple;
 		//send it off to the input again
-		
+
 		nonlin += fabs(verboutL);
 		nonlin += fabs(verboutR);//post highpassing and a lot of processing
-		
+
 		drySampleL *= dryness;
 		drySampleR *= dryness;
-		
+
 		inputSampleL *= wetness;
 		inputSampleR *= wetness;
-		
+
 		inputSampleL += drySampleL;
 		inputSampleR += drySampleR;
 		//here we combine the tanks with the dry signal
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -1536,7 +1536,7 @@ void NonlinearSpace::processDoubleReplacing(double **inputs, double **outputs, V
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
 		flip = !flip;
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

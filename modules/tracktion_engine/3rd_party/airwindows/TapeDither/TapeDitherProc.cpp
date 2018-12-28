@@ -7,7 +7,7 @@
 #include "TapeDither.h"
 #endif
 
-void TapeDither::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void TapeDither::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -16,7 +16,7 @@ void TapeDither::processReplacing(float **inputs, float **outputs, VstInt32 samp
 
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	double currentDitherL;
 	double currentDitherR;
 
@@ -66,15 +66,15 @@ void TapeDither::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		inputSampleL *= 8388608.0;
 		inputSampleR *= 8388608.0;
 		//0-1 is now one bit, now we dither
-		
+
 		currentDitherL = (rand()/(double)RAND_MAX);
 		currentDitherR = (rand()/(double)RAND_MAX);
-		
+
 		inputSampleL += currentDitherL;
 		inputSampleR += currentDitherR;
 		inputSampleL -= previousDither4L;
 		inputSampleR -= previousDither4R;
-		
+
 		inputSampleL = floor(inputSampleL);
 		inputSampleR = floor(inputSampleR);
 
@@ -87,7 +87,7 @@ void TapeDither::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		previousDither3R = previousDither2R;
 		previousDither2R = previousDither1R;
 		previousDither1R = currentDitherR;
-		
+
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
 
@@ -101,7 +101,7 @@ void TapeDither::processReplacing(float **inputs, float **outputs, VstInt32 samp
     }
 }
 
-void TapeDither::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void TapeDither::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -156,38 +156,38 @@ void TapeDither::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		inputSampleL *= 8388608.0;
 		inputSampleR *= 8388608.0;
 		//0-1 is now one bit, now we dither
-		
+
 		currentDitherL = (rand()/(double)RAND_MAX);
 		currentDitherR = (rand()/(double)RAND_MAX);
-		
+
 		inputSampleL += currentDitherL;
 		inputSampleR += currentDitherR;
 		inputSampleL -= previousDither4L;
 		inputSampleR -= previousDither4R;
-		
+
 		inputSampleL = floor(inputSampleL);
 		inputSampleR = floor(inputSampleR);
-		
+
 		previousDither4L = previousDither3L;
 		previousDither3L = previousDither2L;
 		previousDither2L = previousDither1L;
 		previousDither1L = currentDitherL;
-		
+
 		previousDither4R = previousDither3R;
 		previousDither3R = previousDither2R;
 		previousDither2R = previousDither1R;
 		previousDither1R = currentDitherR;
-		
+
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;

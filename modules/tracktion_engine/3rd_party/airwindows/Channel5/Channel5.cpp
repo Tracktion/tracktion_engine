@@ -27,10 +27,10 @@ Channel5::Channel5(audioMasterCallback audioMaster) :
 	iirAmount = 0.005832;
 	threshold = 0.33362176; //instantiating with Neve values
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -61,22 +61,22 @@ VstInt32 Channel5::getChunk (void** data, bool isPreset)
 	chunkData[1] = drive;
 	chunkData[2] = output;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
+	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
 	 started with. */
-	
+
 	*data = chunkData;
 	return kNumParameters * sizeof(float);
 }
 
 VstInt32 Channel5::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	float *chunkData = (float *)data;
 	consoletype = pinParameter(chunkData[0]);
 	drive = pinParameter(chunkData[1]);
 	output = pinParameter(chunkData[2]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
-	
-	/* calculate any other fields you need here - you could copy in 
+
+	/* calculate any other fields you need here - you could copy in
 	 code from setParameter() here. */
 	return 0;
 }
@@ -94,10 +94,10 @@ void Channel5::setParameter(VstInt32 index, float value) {
 	//here they're set when a parameter's actually changed, which should be less frequent, but
 	//you must use global variables in the Channel4.h file to do it.
 	switch((VstInt32)( consoletype * 2.999 ))
-	{  
+	{
 		case 0: iirAmount = 0.005832; threshold = 0.33362176; break; //Neve
 		case 1: iirAmount = 0.004096; threshold = 0.59969536; break; //API
-		case 2: iirAmount = 0.004913; threshold = 0.84934656; break; //SSL			
+		case 2: iirAmount = 0.004913; threshold = 0.84934656; break; //SSL
 		default: break; //should not happen
 	}
 }
@@ -143,7 +143,7 @@ void Channel5::getParameterLabel(VstInt32 index, char *text) {
     }
 }
 
-VstInt32 Channel5::canDo(char *text) 
+VstInt32 Channel5::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool Channel5::getEffectName(char* name) {

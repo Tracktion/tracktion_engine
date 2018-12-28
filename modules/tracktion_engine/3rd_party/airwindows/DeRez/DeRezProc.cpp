@@ -7,25 +7,25 @@
 #include "DeRez.h"
 #endif
 
-void DeRez::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void DeRez::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
     float* out1 = outputs[0];
     float* out2 = outputs[1];
-	
+
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double targetA = pow(A,3)+0.0005;
 	if (targetA > 1.0) targetA = 1.0;
 	double soften = (1.0 + targetA)/2;
 	double targetB = pow(1.0-B,3) / 3;
 	targetA /= overallscale;
-	
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -70,13 +70,13 @@ void DeRez::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		}
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
-		
+
 		incrementA = ((incrementA*999.0)+targetA)/1000.0;
 		incrementB = ((incrementB*999.0)+targetB)/1000.0;
 		//incrementA is the frequency derez
 		//incrementB is the bit depth derez
 		position += incrementA;
-		
+
 		long double outputSampleL = heldSampleL;
 		long double outputSampleR = heldSampleR;
 		if (position > 1.0)
@@ -91,7 +91,7 @@ void DeRez::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		}
 		inputSampleL = outputSampleL;
 		inputSampleR = outputSampleR;
-		
+
 		long double offset;
 		if (incrementB > 0.0005)
 		{
@@ -109,7 +109,7 @@ void DeRez::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 				inputSampleR -= offset;
 				//it's below 0 so subtracting adds the remainder
 			}
-			
+
 			if (inputSampleL < 0)
 			{
 				offset = inputSampleL;
@@ -124,14 +124,14 @@ void DeRez::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 				inputSampleR -= offset;
 				//it's above 0 so subtracting subtracts the remainder
 			}
-			
+
 			inputSampleL *= (1.0 - incrementB);
 			inputSampleR *= (1.0 - incrementB);
 		}
-		
+
 		lastSampleL = drySampleL;
 		lastSampleR = drySampleR;
-		
+
 		//noise shaping to 32-bit floating point
 		float fpTemp;
 		if (fpFlip) {
@@ -152,10 +152,10 @@ void DeRez::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;
@@ -163,19 +163,19 @@ void DeRez::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
     }
 }
 
-void DeRez::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void DeRez::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
     double* out1 = outputs[0];
     double* out2 = outputs[1];
-	
+
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double targetA = pow(A,3)+0.0005;
 	if (targetA > 1.0) targetA = 1.0;
 	double soften = (1.0 + targetA)/2;
@@ -226,13 +226,13 @@ void DeRez::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		}
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
-		
+
 		incrementA = ((incrementA*999.0)+targetA)/1000.0;
 		incrementB = ((incrementB*999.0)+targetB)/1000.0;
 		//incrementA is the frequency derez
 		//incrementB is the bit depth derez
 		position += incrementA;
-		
+
 		long double outputSampleL = heldSampleL;
 		long double outputSampleR = heldSampleR;
 		if (position > 1.0)
@@ -247,7 +247,7 @@ void DeRez::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		}
 		inputSampleL = outputSampleL;
 		inputSampleR = outputSampleR;
-		
+
 		long double offset;
 		if (incrementB > 0.0005)
 		{
@@ -265,7 +265,7 @@ void DeRez::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 				inputSampleR -= offset;
 				//it's below 0 so subtracting adds the remainder
 			}
-			
+
 			if (inputSampleL < 0)
 			{
 				offset = inputSampleL;
@@ -280,14 +280,14 @@ void DeRez::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 				inputSampleR -= offset;
 				//it's above 0 so subtracting subtracts the remainder
 			}
-			
+
 			inputSampleL *= (1.0 - incrementB);
 			inputSampleR *= (1.0 - incrementB);
 		}
-		
+
 		lastSampleL = drySampleL;
 		lastSampleR = drySampleR;
-		
+
 		//noise shaping to 64-bit floating point
 		double fpTemp;
 		if (fpFlip) {
@@ -308,7 +308,7 @@ void DeRez::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

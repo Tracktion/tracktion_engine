@@ -25,10 +25,10 @@ HardVacuum::HardVacuum(audioMasterCallback audioMaster) :
 	fpNShapeRB = 0.0;
 	fpFlip = true;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -61,15 +61,15 @@ VstInt32 HardVacuum::getChunk (void** data, bool isPreset)
 	chunkData[3] = D;
 	chunkData[4] = E;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
+	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
 	 started with. */
-	
+
 	*data = chunkData;
 	return kNumParameters * sizeof(float);
 }
 
 VstInt32 HardVacuum::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	float *chunkData = (float *)data;
 	A = pinParameter(chunkData[0]);
 	B = pinParameter(chunkData[1]);
@@ -77,8 +77,8 @@ VstInt32 HardVacuum::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 	D = pinParameter(chunkData[3]);
 	E = pinParameter(chunkData[4]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
-	
-	/* calculate any other fields you need here - you could copy in 
+
+	/* calculate any other fields you need here - you could copy in
 	 code from setParameter() here. */
 	return 0;
 }
@@ -123,7 +123,7 @@ void HardVacuum::getParameterDisplay(VstInt32 index, char *text) {
         case kParamC: float2string (C, text, kVstMaxParamStrLen); break;
         case kParamD: float2string (D, text, kVstMaxParamStrLen); break;
         case kParamE: float2string (E, text, kVstMaxParamStrLen); break;
-			
+
         default: break; // unknown parameter, shouldn't happen!
 	} //this displays the values and handles 'popups' where it's discrete choices
 }
@@ -139,7 +139,7 @@ void HardVacuum::getParameterLabel(VstInt32 index, char *text) {
     }
 }
 
-VstInt32 HardVacuum::canDo(char *text) 
+VstInt32 HardVacuum::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool HardVacuum::getEffectName(char* name) {

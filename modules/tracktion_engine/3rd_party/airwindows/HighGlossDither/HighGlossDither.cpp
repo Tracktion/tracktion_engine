@@ -15,10 +15,10 @@ HighGlossDither::HighGlossDither(audioMasterCallback audioMaster) :
 	Position = 99999999;
 	flip = false;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -42,7 +42,7 @@ VstInt32 HighGlossDither::getChunk (void** data, bool isPreset)
 }
 
 VstInt32 HighGlossDither::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	return 0;
 }
 
@@ -62,7 +62,7 @@ void HighGlossDither::getParameterDisplay(VstInt32 index, char *text) {
 void HighGlossDither::getParameterLabel(VstInt32 index, char *text) {
 }
 
-VstInt32 HighGlossDither::canDo(char *text) 
+VstInt32 HighGlossDither::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool HighGlossDither::getEffectName(char* name) {

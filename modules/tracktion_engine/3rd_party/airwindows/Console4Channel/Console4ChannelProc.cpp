@@ -1,6 +1,6 @@
 /* ========================================
  *  Console4Channel - Console4Channel.h
- *  Created 8/12/11 by SPIAdmin 
+ *  Created 8/12/11 by SPIAdmin
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
@@ -8,7 +8,7 @@
 #include "Console4Channel.h"
 #endif
 
-void Console4Channel::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Console4Channel::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -20,13 +20,13 @@ void Console4Channel::processReplacing(float **inputs, float **outputs, VstInt32
 	overallscale *= getSampleRate();
 	float fpTemp;
 	double fpOld = 0.618033988749894848204586; //golden ratio!
-	double fpNew = 1.0 - fpOld;	
+	double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
 	long double half;
 	long double falf;
-	// replace inputgain with gain, serves same purpose. Stereo inputsample. 
+	// replace inputgain with gain, serves same purpose. Stereo inputsample.
 	if (settingchase != gain) {
 		chasespeed *= 2.0;
 		settingchase = gain;
@@ -34,7 +34,7 @@ void Console4Channel::processReplacing(float **inputs, float **outputs, VstInt32
 	if (chasespeed > 2500.0) chasespeed = 2500.0;
 	if (gainchase < 0.0) gainchase = gain;
 	//settings section from AU
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -83,13 +83,13 @@ void Console4Channel::processReplacing(float **inputs, float **outputs, VstInt32
 		chasespeed -= 0.01;
 		if (chasespeed < 350.0) chasespeed = 350.0;
 		//we have our chase speed compensated for recent fader activity
-		
+
 		gainchase = (((gainchase*chasespeed)+gain)/(chasespeed+1.0));
 		//gainchase is chasing the target, as a simple multiply gain factor
-		
+
 		if (1.0 != gainchase) {inputSampleL *= gainchase; inputSampleR *= gainchase;}
 		//done with trim control
-		
+
 		half = inputSampleL;
 		falf = fabs(half);
 		half *= falf;
@@ -104,7 +104,7 @@ void Console4Channel::processReplacing(float **inputs, float **outputs, VstInt32
 		//entire audio code. kthxbai!
 		//this is part of the Purest line: stuff that is on every track
 		//needs to be DAMN LOW ON MATH srsly guys
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -135,7 +135,7 @@ void Console4Channel::processReplacing(float **inputs, float **outputs, VstInt32
     }
 }
 
-void Console4Channel::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Console4Channel::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -147,8 +147,8 @@ void Console4Channel::processDoubleReplacing(double **inputs, double **outputs, 
 	overallscale *= getSampleRate();
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	long double inputSampleL;
 	long double inputSampleR;
 	long double half;
@@ -160,8 +160,8 @@ void Console4Channel::processDoubleReplacing(double **inputs, double **outputs, 
 	}
 	if (chasespeed > 2500.0) chasespeed = 2500.0;
 	if (gainchase < 0.0) gainchase = gain;
-	
-   
+
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -210,19 +210,19 @@ void Console4Channel::processDoubleReplacing(double **inputs, double **outputs, 
 		chasespeed -= 0.01;
 		if (chasespeed < 350.0) chasespeed = 350.0;
 		//we have our chase speed compensated for recent fader activity
-		
+
 		gainchase = (((gainchase*chasespeed)+gain)/(chasespeed+1.0));
 		//gainchase is chasing the target, as a simple multiply gain factor
-		
+
 		if (1.0 != gainchase) {inputSampleL *= gainchase; inputSampleR *= gainchase;}
 		//done with trim control
-		
+
 		half = inputSampleL;
 		falf = fabs(half);
 		half *= falf;
 		half *= falf;
 		inputSampleL -= half;
-		
+
 		half = inputSampleR;
 		falf = fabs(half);
 		half *= falf;
@@ -231,7 +231,7 @@ void Console4Channel::processDoubleReplacing(double **inputs, double **outputs, 
 		//entire audio code. kthxbai!
 		//this is part of the Purest line: stuff that is on every track
 		//needs to be DAMN LOW ON MATH srsly guys
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -251,7 +251,7 @@ void Console4Channel::processDoubleReplacing(double **inputs, double **outputs, 
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

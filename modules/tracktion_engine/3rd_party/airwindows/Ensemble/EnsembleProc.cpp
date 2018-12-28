@@ -7,7 +7,7 @@
 #include "Ensemble.h"
 #endif
 
-void Ensemble::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Ensemble::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -17,7 +17,7 @@ void Ensemble::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double spd = pow(0.4+(B/12),10);
 	spd *= overallscale;
 	double depth = 0.002 / spd;
@@ -30,23 +30,23 @@ void Ensemble::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	double offset;
 	double floffset;
 	double start[49];
-	double sinoffset[49];	
+	double sinoffset[49];
 	double speed[49];
 	int count;
 	int ensemble;
 	double tempL;
 	double tempR;
-	
+
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
 	double drySampleL;
 	double drySampleR;
 	//now we'll precalculate some stuff that needn't be in every sample
-	
+
 	for(count = 1; count <= taps; count++)
 	{
 		start[count] = depth * count;
@@ -54,7 +54,7 @@ void Ensemble::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		speed[count] = spd / (1 + (count/taps));
 	}
 	//that's for speeding up things in the sample-processing area
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -117,44 +117,44 @@ void Ensemble::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		airPrevR = inputSampleR;
 		inputSampleR += (airFactorR*brighten);
 		//air, compensates for loss of highs in flanger's interpolation
-		
+
 		if (gcount < 1 || gcount > 32767) {gcount = 32767;}
 		count = gcount;
 		dL[count+32767] = dL[count] = tempL = inputSampleL;
 		dR[count+32767] = dR[count] = tempR = inputSampleR;
 		//double buffer
-		
+
 		for(ensemble = 1; ensemble <= taps; ensemble++)
 		{
 			offset = start[ensemble] + (depth * sin(sweep[ensemble]+sinoffset[ensemble]));
 			floffset = offset-floor(offset);
 			count = gcount + (int)floor(offset);
-			
+
 			tempL += dL[count] * (1-floffset); //less as value moves away from .0
 			tempL += dL[count+1]; //we can assume always using this in one way or another?
 			tempL += dL[count+2] * floffset; //greater as value moves away from .0
 			tempL -= ((dL[count]-dL[count+1])-(dL[count+1]-dL[count+2]))/50; //interpolation hacks 'r us
-			
+
 			tempR += dR[count] * (1-floffset); //less as value moves away from .0
 			tempR += dR[count+1]; //we can assume always using this in one way or another?
 			tempR += dR[count+2] * floffset; //greater as value moves away from .0
 			tempR -= ((dR[count]-dR[count+1])-(dR[count+1]-dR[count+2]))/50; //interpolation hacks 'r us
-			
+
 			sweep[ensemble] += speed[ensemble];
 			if (sweep[ensemble] > tupi){sweep[ensemble] -= tupi;}
 		}
 		gcount--;
 		//still scrolling through the samples, remember
-				
+
 		inputSampleL = tempL/(4.0*sqrt(taps));
 		inputSampleR = tempR/(4.0*sqrt(taps));
-		
+
 
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -185,7 +185,7 @@ void Ensemble::processReplacing(float **inputs, float **outputs, VstInt32 sample
     }
 }
 
-void Ensemble::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Ensemble::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -195,7 +195,7 @@ void Ensemble::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double spd = pow(0.4+(B/12),10);
 	spd *= overallscale;
 	double depth = 0.002 / spd;
@@ -208,23 +208,23 @@ void Ensemble::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	double offset;
 	double floffset;
 	double start[49];
-	double sinoffset[49];	
+	double sinoffset[49];
 	double speed[49];
 	int count;
 	int ensemble;
 	double tempL;
 	double tempR;
-	
+
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
 	double drySampleL;
 	double drySampleR;
 	//now we'll precalculate some stuff that needn't be in every sample
-	
+
 	for(count = 1; count <= taps; count++)
 	{
 		start[count] = depth * count;
@@ -232,7 +232,7 @@ void Ensemble::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		speed[count] = spd / (1 + (count/taps));
 	}
 	//that's for speeding up things in the sample-processing area
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -277,7 +277,7 @@ void Ensemble::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		airFactorL = airPrevL - inputSampleL;
 		if (fpFlip) {airEvenL += airFactorL; airOddL -= airFactorL; airFactorL = airEvenL;}
 		else {airOddL += airFactorL; airEvenL -= airFactorL; airFactorL = airOddL;}
@@ -286,7 +286,7 @@ void Ensemble::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		airPrevL = inputSampleL;
 		inputSampleL += (airFactorL*brighten);
 		//air, compensates for loss of highs in flanger's interpolation
-		
+
 		airFactorR = airPrevR - inputSampleR;
 		if (fpFlip) {airEvenR += airFactorR; airOddR -= airFactorR; airFactorR = airEvenR;}
 		else {airOddR += airFactorR; airEvenR -= airFactorR; airFactorR = airOddR;}
@@ -295,44 +295,44 @@ void Ensemble::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		airPrevR = inputSampleR;
 		inputSampleR += (airFactorR*brighten);
 		//air, compensates for loss of highs in flanger's interpolation
-		
+
 		if (gcount < 1 || gcount > 32767) {gcount = 32767;}
 		count = gcount;
 		dL[count+32767] = dL[count] = tempL = inputSampleL;
 		dR[count+32767] = dR[count] = tempR = inputSampleR;
 		//double buffer
-		
+
 		for(ensemble = 1; ensemble <= taps; ensemble++)
 		{
 			offset = start[ensemble] + (depth * sin(sweep[ensemble]+sinoffset[ensemble]));
 			floffset = offset-floor(offset);
 			count = gcount + (int)floor(offset);
-			
+
 			tempL += dL[count] * (1-floffset); //less as value moves away from .0
 			tempL += dL[count+1]; //we can assume always using this in one way or another?
 			tempL += dL[count+2] * floffset; //greater as value moves away from .0
 			tempL -= ((dL[count]-dL[count+1])-(dL[count+1]-dL[count+2]))/50; //interpolation hacks 'r us
-			
+
 			tempR += dR[count] * (1-floffset); //less as value moves away from .0
 			tempR += dR[count+1]; //we can assume always using this in one way or another?
 			tempR += dR[count+2] * floffset; //greater as value moves away from .0
 			tempR -= ((dR[count]-dR[count+1])-(dR[count+1]-dR[count+2]))/50; //interpolation hacks 'r us
-			
+
 			sweep[ensemble] += speed[ensemble];
 			if (sweep[ensemble] > tupi){sweep[ensemble] -= tupi;}
 		}
 		gcount--;
 		//still scrolling through the samples, remember
-		
+
 		inputSampleL = tempL/(4.0*sqrt(taps));
 		inputSampleR = tempR/(4.0*sqrt(taps));
-		
-		
+
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

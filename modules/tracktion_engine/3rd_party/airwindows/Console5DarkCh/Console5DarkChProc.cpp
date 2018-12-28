@@ -7,7 +7,7 @@
 #include "Console5DarkCh.h"
 #endif
 
-void Console5DarkCh::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Console5DarkCh::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -19,8 +19,8 @@ void Console5DarkCh::processReplacing(float **inputs, float **outputs, VstInt32 
 	overallscale *= getSampleRate();
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double inputgain = A;
 	double differenceL;
 	double differenceR;
@@ -30,14 +30,14 @@ void Console5DarkCh::processReplacing(float **inputs, float **outputs, VstInt32 
 	double bassTrim = 0.005 / overallscale;
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	if (settingchase != inputgain) {
 		chasespeed *= 2.0;
 		settingchase = inputgain;
 	}
 	if (chasespeed > 2500.0) chasespeed = 2500.0;
 	if (gainchase < 0.0) gainchase = inputgain;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -80,45 +80,45 @@ void Console5DarkCh::processReplacing(float **inputs, float **outputs, VstInt32 
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		chasespeed *= 0.9999;
 		chasespeed -= 0.01;
 		if (chasespeed < 350.0) chasespeed = 350.0;
 		//we have our chase speed compensated for recent fader activity
-		
+
 		gainchase = (((gainchase*chasespeed)+inputgain)/(chasespeed+1.0));
 		//gainchase is chasing the target, as a simple multiply gain factor
-		
+
 		if (1.0 != gainchase) {
 			inputSampleL *= gainchase;
 			inputSampleR *= gainchase;
 		}
 		//done with trim control
-		
+
 		differenceL = lastSampleChannelL - inputSampleL;
 		lastSampleChannelL = inputSampleL;
 		differenceR = lastSampleChannelR - inputSampleR;
 		lastSampleChannelR = inputSampleR;
 		//derive slew part off direct sample measurement + from last time
-		
+
 		if (differenceL > 1.0) differenceL = 1.0;
 		if (differenceL < -1.0) differenceL = -1.0;
 		if (differenceR > 1.0) differenceR = 1.0;
 		if (differenceR < -1.0) differenceR = -1.0;
 		//clamp the slew correction to prevent invalid math results
-		
+
 		differenceL = lastFXChannelL + sin(differenceL);
 		differenceR = lastFXChannelR + sin(differenceR);
 		//we're about to use this twice and then not use difference again, so we'll reuse it
 		//enhance slew is arcsin(): cutting it back is sin()
-		
+
 		iirCorrectL += inputSampleL - differenceL;
 		inputSampleL = differenceL;
 		iirCorrectR += inputSampleR - differenceR;
 		inputSampleR = differenceR;
 		//apply the slew to stored value: can develop DC offsets.
 		//store the change we made so we can dial it back
-		
+
 		lastFXChannelL = inputSampleL;
 		lastFXChannelR = inputSampleR;
 		if (lastFXChannelL > 1.0) lastFXChannelL = 1.0;
@@ -126,7 +126,7 @@ void Console5DarkCh::processReplacing(float **inputs, float **outputs, VstInt32 
 		if (lastFXChannelR > 1.0) lastFXChannelR = 1.0;
 		if (lastFXChannelR < -1.0) lastFXChannelR = -1.0;
 		//store current sample as new base for next offset
-		
+
 		nearZeroL = pow(fabs(fabs(lastFXChannelL)-1.0), 2);
 		nearZeroR = pow(fabs(fabs(lastFXChannelR)-1.0), 2);
 		//if the sample is very near zero this number is higher.
@@ -140,18 +140,18 @@ void Console5DarkCh::processReplacing(float **inputs, float **outputs, VstInt32 
 		//apply the servo to the stored value, pulling back the DC
 		lastFXChannelL *= (1.0 - (nearZeroL * bassTrim));
 		lastFXChannelR *= (1.0 - (nearZeroR * bassTrim));
-		//this cuts back the DC offset directly, relative to how near zero we are		
-		
+		//this cuts back the DC offset directly, relative to how near zero we are
+
 		if (inputSampleL > 1.57079633) inputSampleL= 1.57079633;
 		if (inputSampleL < -1.57079633) inputSampleL = -1.57079633;
 		inputSampleL = sin(inputSampleL);
 		//amplitude aspect
-		
+
 		if (inputSampleR > 1.57079633) inputSampleR = 1.57079633;
 		if (inputSampleR < -1.57079633) inputSampleR = -1.57079633;
 		inputSampleR = sin(inputSampleR);
 		//amplitude aspect
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -182,7 +182,7 @@ void Console5DarkCh::processReplacing(float **inputs, float **outputs, VstInt32 
     }
 }
 
-void Console5DarkCh::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Console5DarkCh::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -194,8 +194,8 @@ void Console5DarkCh::processDoubleReplacing(double **inputs, double **outputs, V
 	overallscale *= getSampleRate();
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double inputgain = A;
 	double differenceL;
 	double differenceR;
@@ -205,14 +205,14 @@ void Console5DarkCh::processDoubleReplacing(double **inputs, double **outputs, V
 	double bassTrim = 0.005 / overallscale;
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	if (settingchase != inputgain) {
 		chasespeed *= 2.0;
 		settingchase = inputgain;
 	}
 	if (chasespeed > 2500.0) chasespeed = 2500.0;
 	if (gainchase < 0.0) gainchase = inputgain;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -255,45 +255,45 @@ void Console5DarkCh::processDoubleReplacing(double **inputs, double **outputs, V
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		chasespeed *= 0.9999;
 		chasespeed -= 0.01;
 		if (chasespeed < 350.0) chasespeed = 350.0;
 		//we have our chase speed compensated for recent fader activity
-		
+
 		gainchase = (((gainchase*chasespeed)+inputgain)/(chasespeed+1.0));
 		//gainchase is chasing the target, as a simple multiply gain factor
-		
+
 		if (1.0 != gainchase) {
 			inputSampleL *= gainchase;
 			inputSampleR *= gainchase;
 		}
 		//done with trim control
-		
+
 		differenceL = lastSampleChannelL - inputSampleL;
 		lastSampleChannelL = inputSampleL;
 		differenceR = lastSampleChannelR - inputSampleR;
 		lastSampleChannelR = inputSampleR;
 		//derive slew part off direct sample measurement + from last time
-		
+
 		if (differenceL > 1.0) differenceL = 1.0;
 		if (differenceL < -1.0) differenceL = -1.0;
 		if (differenceR > 1.0) differenceR = 1.0;
 		if (differenceR < -1.0) differenceR = -1.0;
 		//clamp the slew correction to prevent invalid math results
-		
+
 		differenceL = lastFXChannelL + sin(differenceL);
 		differenceR = lastFXChannelR + sin(differenceR);
 		//we're about to use this twice and then not use difference again, so we'll reuse it
 		//enhance slew is arcsin(): cutting it back is sin()
-		
+
 		iirCorrectL += inputSampleL - differenceL;
 		inputSampleL = differenceL;
 		iirCorrectR += inputSampleR - differenceR;
 		inputSampleR = differenceR;
 		//apply the slew to stored value: can develop DC offsets.
 		//store the change we made so we can dial it back
-		
+
 		lastFXChannelL = inputSampleL;
 		lastFXChannelR = inputSampleR;
 		if (lastFXChannelL > 1.0) lastFXChannelL = 1.0;
@@ -301,7 +301,7 @@ void Console5DarkCh::processDoubleReplacing(double **inputs, double **outputs, V
 		if (lastFXChannelR > 1.0) lastFXChannelR = 1.0;
 		if (lastFXChannelR < -1.0) lastFXChannelR = -1.0;
 		//store current sample as new base for next offset
-		
+
 		nearZeroL = pow(fabs(fabs(lastFXChannelL)-1.0), 2);
 		nearZeroR = pow(fabs(fabs(lastFXChannelR)-1.0), 2);
 		//if the sample is very near zero this number is higher.
@@ -315,18 +315,18 @@ void Console5DarkCh::processDoubleReplacing(double **inputs, double **outputs, V
 		//apply the servo to the stored value, pulling back the DC
 		lastFXChannelL *= (1.0 - (nearZeroL * bassTrim));
 		lastFXChannelR *= (1.0 - (nearZeroR * bassTrim));
-		//this cuts back the DC offset directly, relative to how near zero we are		
-		
+		//this cuts back the DC offset directly, relative to how near zero we are
+
 		if (inputSampleL > 1.57079633) inputSampleL= 1.57079633;
 		if (inputSampleL < -1.57079633) inputSampleL = -1.57079633;
 		inputSampleL = sin(inputSampleL);
 		//amplitude aspect
-		
+
 		if (inputSampleR > 1.57079633) inputSampleR = 1.57079633;
 		if (inputSampleR < -1.57079633) inputSampleR = -1.57079633;
 		inputSampleR = sin(inputSampleR);
 		//amplitude aspect
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -346,7 +346,7 @@ void Console5DarkCh::processDoubleReplacing(double **inputs, double **outputs, V
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

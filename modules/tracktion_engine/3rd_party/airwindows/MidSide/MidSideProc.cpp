@@ -7,7 +7,7 @@
 #include "MidSide.h"
 #endif
 
-void MidSide::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void MidSide::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -16,17 +16,17 @@ void MidSide::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	long double mid;
 	long double side;
-	
+
 	double sidegain = A * 2.0;
 	double midgain = 2.0 - sidegain;
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -69,13 +69,13 @@ void MidSide::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		mid = inputSampleL + inputSampleR;
 		side = inputSampleL - inputSampleR;
-		
+
 		mid *= midgain;
 		side *= sidegain;
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = mid;
@@ -95,7 +95,7 @@ void MidSide::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = mid;
 		*out2 = side;
 
@@ -106,7 +106,7 @@ void MidSide::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
     }
 }
 
-void MidSide::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void MidSide::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -115,17 +115,17 @@ void MidSide::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
 
 	long double mid;
 	long double side;
-	
+
 	double sidegain = A * 2.0;
 	double midgain = 2.0 - sidegain;
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -168,13 +168,13 @@ void MidSide::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		mid = inputSampleL + inputSampleR;
 		side = inputSampleL - inputSampleR;
-		
+
 		mid *= midgain;
 		side *= sidegain;
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = mid;
@@ -194,10 +194,10 @@ void MidSide::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = mid;
 		*out2 = side;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;

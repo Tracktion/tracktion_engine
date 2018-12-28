@@ -7,7 +7,7 @@
 #include "SlewOnly.h"
 #endif
 
-void SlewOnly::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void SlewOnly::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -19,7 +19,7 @@ void SlewOnly::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	long double outputSampleL;
 	long double outputSampleR;
 	double trim = 2.302585092994045684017991; //natural logarithm of 10
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -69,9 +69,9 @@ void SlewOnly::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		lastSampleR = inputSampleR;
 		if (outputSampleL > 1.0) outputSampleL = 1.0;
 		if (outputSampleR > 1.0) outputSampleR = 1.0;
-		if (outputSampleL < -1.0) outputSampleL = -1.0;		
-		if (outputSampleR < -1.0) outputSampleR = -1.0;		
-		
+		if (outputSampleL < -1.0) outputSampleL = -1.0;
+		if (outputSampleR < -1.0) outputSampleR = -1.0;
+
 		*out1 = outputSampleL;
 		*out2 = outputSampleR;
 
@@ -82,7 +82,7 @@ void SlewOnly::processReplacing(float **inputs, float **outputs, VstInt32 sample
     }
 }
 
-void SlewOnly::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void SlewOnly::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -94,7 +94,7 @@ void SlewOnly::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	long double outputSampleL;
 	long double outputSampleR;
 	double trim = 2.302585092994045684017991; //natural logarithm of 10
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -137,20 +137,20 @@ void SlewOnly::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
-		
+
+
 		outputSampleL = (inputSampleL - lastSampleL)*trim;
 		outputSampleR = (inputSampleR - lastSampleR)*trim;
 		lastSampleL = inputSampleL;
 		lastSampleR = inputSampleR;
 		if (outputSampleL > 1.0) outputSampleL = 1.0;
 		if (outputSampleR > 1.0) outputSampleR = 1.0;
-		if (outputSampleL < -1.0) outputSampleL = -1.0;		
-		if (outputSampleR < -1.0) outputSampleR = -1.0;		
-		
+		if (outputSampleL < -1.0) outputSampleL = -1.0;
+		if (outputSampleR < -1.0) outputSampleR = -1.0;
+
 		*out1 = outputSampleL;
 		*out2 = outputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;

@@ -7,7 +7,7 @@
 #include "Noise.h"
 #endif
 
-void Noise::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Noise::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -67,7 +67,7 @@ void Noise::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	if (lowcut < 2) {dcut= 3;}
 	highpass = B * 22.0;
 	lowcut = floor(highpass)+1;
-	
+
 	double decay = 0.001 - ((1.0-pow(1.0-D,3))*0.001);
 	if (decay == 0.001) decay = 0.1;
 	double wet = F;
@@ -78,7 +78,7 @@ void Noise::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	double accumulatorSampleR;
 	double overallscale = (E*9.0)+1.0;
 	double gain = overallscale;
-	
+
 	if (gain > 1.0) {f[0] = 1.0; gain -= 1.0;} else {f[0] = gain; gain = 0.0;}
 	if (gain > 1.0) {f[1] = 1.0; gain -= 1.0;} else {f[1] = gain; gain = 0.0;}
 	if (gain > 1.0) {f[2] = 1.0; gain -= 1.0;} else {f[2] = gain; gain = 0.0;}
@@ -90,7 +90,7 @@ void Noise::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	if (gain > 1.0) {f[8] = 1.0; gain -= 1.0;} else {f[8] = gain; gain = 0.0;}
 	if (gain > 1.0) {f[9] = 1.0; gain -= 1.0;} else {f[9] = gain; gain = 0.0;}
 	//there, now we have a neat little moving average with remainders
-	
+
 	if (overallscale < 1.0) overallscale = 1.0;
 	f[0] /= overallscale;
 	f[1] /= overallscale;
@@ -103,13 +103,13 @@ void Noise::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	f[8] /= overallscale;
 	f[9] /= overallscale;
 	//and now it's neatly scaled, too
-	
+
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
-	
-	
+	long double fpNew = 1.0 - fpOld;
+
+
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -154,7 +154,7 @@ void Noise::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		if (surgeL<fabs(inputSampleL))
 		{
 			surgeL += (rand()/(double)RAND_MAX)*(fabs(inputSampleL)-surgeL);
@@ -165,12 +165,12 @@ void Noise::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 			surgeL -= ((rand()/(double)RAND_MAX)*(surgeL-fabs(inputSampleL))*decay);
 			if (surgeL < 0.0) surgeL = 0.0;
 		}
-		
+
 		cutoffL = pow((cutofftarget*surgeL),5);
 		if (cutoffL > 1.0) cutoffL = 1.0;
 		invcutoffL = 1.0 - cutoffL;
 		//set up modified cutoff L
-		
+
 		if (surgeR<fabs(inputSampleR))
 		{
 			surgeR += (rand()/(double)RAND_MAX)*(fabs(inputSampleR)-surgeR);
@@ -181,19 +181,19 @@ void Noise::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 			surgeR -= ((rand()/(double)RAND_MAX)*(surgeR-fabs(inputSampleR))*decay);
 			if (surgeR < 0.0) surgeR = 0.0;
 		}
-		
+
 		cutoffR = pow((cutofftarget*surgeR),5);
 		if (cutoffR > 1.0) cutoffR = 1.0;
 		invcutoffR = 1.0 - cutoffR;
 		//set up modified cutoff R
-		
+
 		flipL = !flipL;
 		flipR = !flipR;
 		filterflip = !filterflip;
 		quadratic -= 1;
 		if (quadratic < 0)
 		{
-			position += 1;		
+			position += 1;
 			quadratic = position * position;
 			quadratic = quadratic % 170003; //% is C++ mod operator
 			quadratic *= quadratic;
@@ -210,38 +210,38 @@ void Noise::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 			if (noiseAR < 0) {flipR = true;}
 			else {flipR = false;}
 		}
-		
-		
+
+
 		if (flipL) noiseAL += (rand()/(double)RAND_MAX);
 		else noiseAL -= (rand()/(double)RAND_MAX);
 		if (flipR) noiseAR += (rand()/(double)RAND_MAX);
 		else noiseAR -= (rand()/(double)RAND_MAX);
-		
+
 		if (filterflip)
 		{
 			noiseBL *= invcutoffL; noiseBL += (noiseAL*cutoffL);
 			inputSampleL = noiseBL+noiseCL;
 			rumbleAL *= (1.0-rumblecutoff);
 			rumbleAL += (inputSampleL*rumblecutoff);
-			
+
 			noiseBR *= invcutoffR; noiseBR += (noiseAR*cutoffR);
 			inputSampleR = noiseBR+noiseCR;
 			rumbleAR *= (1.0-rumblecutoff);
 			rumbleAR += (inputSampleR*rumblecutoff);
 		}
-		else 
+		else
 		{
 			noiseCL *= invcutoffL; noiseCL += (noiseAL*cutoffL);
 			inputSampleL = noiseBL+noiseCL;
 			rumbleBL *= (1.0-rumblecutoff);
 			rumbleBL += (inputSampleL*rumblecutoff);
-			
+
 			noiseCR *= invcutoffR; noiseCR += (noiseAR*cutoffR);
 			inputSampleR = noiseBR+noiseCR;
 			rumbleBR *= (1.0-rumblecutoff);
 			rumbleBR += (inputSampleR*rumblecutoff);
 		}
-		
+
 		inputSampleL -= (rumbleAL+rumbleBL);
 		inputSampleL *= (1.0-rumblecutoff);
 
@@ -250,19 +250,19 @@ void Noise::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 
 		inputSampleL *= wet;
 		inputSampleL += (drySampleL * dry);
-		
+
 		inputSampleR *= wet;
 		inputSampleR += (drySampleR * dry);
 		//apply the dry to the noise
-		
+
 		bL[9] = bL[8]; bL[8] = bL[7]; bL[7] = bL[6]; bL[6] = bL[5];
 		bL[5] = bL[4]; bL[4] = bL[3]; bL[3] = bL[2]; bL[2] = bL[1];
 		bL[1] = bL[0]; bL[0] = accumulatorSampleL = inputSampleL;
-		
+
 		bR[9] = bR[8]; bR[8] = bR[7]; bR[7] = bR[6]; bR[6] = bR[5];
 		bR[5] = bR[4]; bR[4] = bR[3]; bR[3] = bR[2]; bR[2] = bR[1];
 		bR[1] = bR[0]; bR[0] = accumulatorSampleR = inputSampleR;
-		
+
 		accumulatorSampleL *= f[0];
 		accumulatorSampleL += (bL[1] * f[1]);
 		accumulatorSampleL += (bL[2] * f[2]);
@@ -285,7 +285,7 @@ void Noise::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		accumulatorSampleR += (bR[8] * f[8]);
 		accumulatorSampleR += (bR[9] * f[9]);
 		//we are doing our repetitive calculations on a separate value
-		
+
 		correctionSample = inputSampleL - accumulatorSampleL;
 		//we're gonna apply the total effect of all these calculations as a single subtract
 		//(formerly a more complicated algorithm)
@@ -298,7 +298,7 @@ void Noise::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		//applying the distance calculation to both the dry AND the noise output to blend them
 		//sometimes I'm really tired and can't do stuff, and I remember trying to simplify this
 		//and breaking it somehow. So, there ya go, strange obtuse code.
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -329,13 +329,13 @@ void Noise::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
     }
 }
 
-void Noise::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Noise::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
     double* out1 = outputs[0];
     double* out2 = outputs[1];
-	
+
 	double cutoffL;
 	double cutoffR;
 	double cutofftarget = (A*3.5);
@@ -389,7 +389,7 @@ void Noise::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	if (lowcut < 2) {dcut= 3;}
 	highpass = B * 22.0;
 	lowcut = floor(highpass)+1;
-	
+
 	double decay = 0.001 - ((1.0-pow(1.0-D,3))*0.001);
 	if (decay == 0.001) decay = 0.1;
 	double wet = F;
@@ -400,7 +400,7 @@ void Noise::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	double accumulatorSampleR;
 	double overallscale = (E*9.0)+1.0;
 	double gain = overallscale;
-	
+
 	if (gain > 1.0) {f[0] = 1.0; gain -= 1.0;} else {f[0] = gain; gain = 0.0;}
 	if (gain > 1.0) {f[1] = 1.0; gain -= 1.0;} else {f[1] = gain; gain = 0.0;}
 	if (gain > 1.0) {f[2] = 1.0; gain -= 1.0;} else {f[2] = gain; gain = 0.0;}
@@ -412,7 +412,7 @@ void Noise::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	if (gain > 1.0) {f[8] = 1.0; gain -= 1.0;} else {f[8] = gain; gain = 0.0;}
 	if (gain > 1.0) {f[9] = 1.0; gain -= 1.0;} else {f[9] = gain; gain = 0.0;}
 	//there, now we have a neat little moving average with remainders
-	
+
 	if (overallscale < 1.0) overallscale = 1.0;
 	f[0] /= overallscale;
 	f[1] /= overallscale;
@@ -425,11 +425,11 @@ void Noise::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	f[8] /= overallscale;
 	f[9] /= overallscale;
 	//and now it's neatly scaled, too
-	
+
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -474,7 +474,7 @@ void Noise::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		if (surgeL<fabs(inputSampleL))
 		{
 			surgeL += (rand()/(double)RAND_MAX)*(fabs(inputSampleL)-surgeL);
@@ -485,12 +485,12 @@ void Noise::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 			surgeL -= ((rand()/(double)RAND_MAX)*(surgeL-fabs(inputSampleL))*decay);
 			if (surgeL < 0.0) surgeL = 0.0;
 		}
-		
+
 		cutoffL = pow((cutofftarget*surgeL),5);
 		if (cutoffL > 1.0) cutoffL = 1.0;
 		invcutoffL = 1.0 - cutoffL;
 		//set up modified cutoff L
-		
+
 		if (surgeR<fabs(inputSampleR))
 		{
 			surgeR += (rand()/(double)RAND_MAX)*(fabs(inputSampleR)-surgeR);
@@ -501,19 +501,19 @@ void Noise::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 			surgeR -= ((rand()/(double)RAND_MAX)*(surgeR-fabs(inputSampleR))*decay);
 			if (surgeR < 0.0) surgeR = 0.0;
 		}
-		
+
 		cutoffR = pow((cutofftarget*surgeR),5);
 		if (cutoffR > 1.0) cutoffR = 1.0;
 		invcutoffR = 1.0 - cutoffR;
 		//set up modified cutoff R
-		
+
 		flipL = !flipL;
 		flipR = !flipR;
 		filterflip = !filterflip;
 		quadratic -= 1;
 		if (quadratic < 0)
 		{
-			position += 1;		
+			position += 1;
 			quadratic = position * position;
 			quadratic = quadratic % 170003; //% is C++ mod operator
 			quadratic *= quadratic;
@@ -530,59 +530,59 @@ void Noise::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 			if (noiseAR < 0) {flipR = true;}
 			else {flipR = false;}
 		}
-		
-		
+
+
 		if (flipL) noiseAL += (rand()/(double)RAND_MAX);
 		else noiseAL -= (rand()/(double)RAND_MAX);
 		if (flipR) noiseAR += (rand()/(double)RAND_MAX);
 		else noiseAR -= (rand()/(double)RAND_MAX);
-		
+
 		if (filterflip)
 		{
 			noiseBL *= invcutoffL; noiseBL += (noiseAL*cutoffL);
 			inputSampleL = noiseBL+noiseCL;
 			rumbleAL *= (1.0-rumblecutoff);
 			rumbleAL += (inputSampleL*rumblecutoff);
-			
+
 			noiseBR *= invcutoffR; noiseBR += (noiseAR*cutoffR);
 			inputSampleR = noiseBR+noiseCR;
 			rumbleAR *= (1.0-rumblecutoff);
 			rumbleAR += (inputSampleR*rumblecutoff);
 		}
-		else 
+		else
 		{
 			noiseCL *= invcutoffL; noiseCL += (noiseAL*cutoffL);
 			inputSampleL = noiseBL+noiseCL;
 			rumbleBL *= (1.0-rumblecutoff);
 			rumbleBL += (inputSampleL*rumblecutoff);
-			
+
 			noiseCR *= invcutoffR; noiseCR += (noiseAR*cutoffR);
 			inputSampleR = noiseBR+noiseCR;
 			rumbleBR *= (1.0-rumblecutoff);
 			rumbleBR += (inputSampleR*rumblecutoff);
 		}
-		
+
 		inputSampleL -= (rumbleAL+rumbleBL);
 		inputSampleL *= (1.0-rumblecutoff);
-		
+
 		inputSampleR -= (rumbleAR+rumbleBR);
 		inputSampleR *= (1.0-rumblecutoff);
-		
+
 		inputSampleL *= wet;
 		inputSampleL += (drySampleL * dry);
-		
+
 		inputSampleR *= wet;
 		inputSampleR += (drySampleR * dry);
 		//apply the dry to the noise
-		
+
 		bL[9] = bL[8]; bL[8] = bL[7]; bL[7] = bL[6]; bL[6] = bL[5];
 		bL[5] = bL[4]; bL[4] = bL[3]; bL[3] = bL[2]; bL[2] = bL[1];
 		bL[1] = bL[0]; bL[0] = accumulatorSampleL = inputSampleL;
-		
+
 		bR[9] = bR[8]; bR[8] = bR[7]; bR[7] = bR[6]; bR[6] = bR[5];
 		bR[5] = bR[4]; bR[4] = bR[3]; bR[3] = bR[2]; bR[2] = bR[1];
 		bR[1] = bR[0]; bR[0] = accumulatorSampleR = inputSampleR;
-		
+
 		accumulatorSampleL *= f[0];
 		accumulatorSampleL += (bL[1] * f[1]);
 		accumulatorSampleL += (bL[2] * f[2]);
@@ -605,7 +605,7 @@ void Noise::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		accumulatorSampleR += (bR[8] * f[8]);
 		accumulatorSampleR += (bR[9] * f[9]);
 		//we are doing our repetitive calculations on a separate value
-		
+
 		correctionSample = inputSampleL - accumulatorSampleL;
 		//we're gonna apply the total effect of all these calculations as a single subtract
 		//(formerly a more complicated algorithm)
@@ -618,7 +618,7 @@ void Noise::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		//applying the distance calculation to both the dry AND the noise output to blend them
 		//sometimes I'm really tired and can't do stuff, and I remember trying to simplify this
 		//and breaking it somehow. So, there ya go, strange obtuse code.
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -638,7 +638,7 @@ void Noise::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

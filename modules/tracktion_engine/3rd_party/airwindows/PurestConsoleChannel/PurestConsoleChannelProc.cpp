@@ -7,7 +7,7 @@
 #include "PurestConsoleChannel.h"
 #endif
 
-void PurestConsoleChannel::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void PurestConsoleChannel::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -16,7 +16,7 @@ void PurestConsoleChannel::processReplacing(float **inputs, float **outputs, Vst
 
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
@@ -63,7 +63,7 @@ void PurestConsoleChannel::processReplacing(float **inputs, float **outputs, Vst
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		inputSampleL = sin(inputSampleL);
 		inputSampleR = sin(inputSampleR);
 		//amplitude aspect
@@ -98,7 +98,7 @@ void PurestConsoleChannel::processReplacing(float **inputs, float **outputs, Vst
     }
 }
 
-void PurestConsoleChannel::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void PurestConsoleChannel::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -107,8 +107,8 @@ void PurestConsoleChannel::processDoubleReplacing(double **inputs, double **outp
 
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	long double inputSampleL;
 	long double inputSampleR;
 
@@ -158,7 +158,7 @@ void PurestConsoleChannel::processDoubleReplacing(double **inputs, double **outp
 		inputSampleL = sin(inputSampleL);
 		inputSampleR = sin(inputSampleR);
 		//amplitude aspect
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -178,7 +178,7 @@ void PurestConsoleChannel::processDoubleReplacing(double **inputs, double **outp
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

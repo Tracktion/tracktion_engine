@@ -7,7 +7,7 @@
 #include "SurgeTide.h"
 #endif
 
-void SurgeTide::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void SurgeTide::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -19,20 +19,20 @@ void SurgeTide::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	overallscale *= getSampleRate();
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
 	long double drySampleR;
-	
+
 	double intensity = A;
 	double attack = ((B+0.1)*0.0005)/overallscale;
 	double decay = ((B+0.001)*0.00005)/overallscale;
 	double wet = C;
 	double dry = 1.0 - wet;
 	double inputSense;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -82,40 +82,40 @@ void SurgeTide::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		inputSampleR *= 8.0;
 		inputSampleL *= intensity;
 		inputSampleR *= intensity;
-		
+
 		inputSense = fabs(inputSampleL);
 		if (fabs(inputSampleR) > inputSense)
 			inputSense = fabs(inputSampleR);
-		
+
 		if (chaseC < inputSense) chaseA += attack;
 		if (chaseC > inputSense) chaseA -= decay;
-		
+
 		if (chaseA > decay) chaseA = decay;
 		if (chaseA < -attack) chaseA = -attack;
-		
+
 		chaseB += (chaseA/overallscale);
-		
+
 		if (chaseB > decay) chaseB = decay;
 		if (chaseB < -attack) chaseB = -attack;
-		
+
 		chaseC += (chaseB/overallscale);
 		if (chaseC > 1.0) chaseC = 1.0;
 		if (chaseC < 0.0) chaseC = 0.0;
-		
+
 		inputSampleL *= chaseC;
 		inputSampleL = drySampleL - (inputSampleL * intensity);
 		inputSampleL = (drySampleL * dry) + (inputSampleL * wet);
-		
+
 		inputSampleR *= chaseC;
 		inputSampleR = drySampleR - (inputSampleR * intensity);
 		inputSampleR = (drySampleR * dry) + (inputSampleR * wet);
-		
+
 		//noise shaping to 32-bit floating point
 		if (flip) {
 			fpTemp = inputSampleL;
 			fpNShapeAL = (fpNShapeAL*fpOld)+((inputSampleL-fpTemp)*fpNew);
 			inputSampleL += fpNShapeAL;
-			
+
 			fpTemp = inputSampleR;
 			fpNShapeAR = (fpNShapeAR*fpOld)+((inputSampleR-fpTemp)*fpNew);
 			inputSampleR += fpNShapeAR;
@@ -124,14 +124,14 @@ void SurgeTide::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			fpTemp = inputSampleL;
 			fpNShapeBL = (fpNShapeBL*fpOld)+((inputSampleL-fpTemp)*fpNew);
 			inputSampleL += fpNShapeBL;
-			
+
 			fpTemp = inputSampleR;
 			fpNShapeBR = (fpNShapeBR*fpOld)+((inputSampleR-fpTemp)*fpNew);
 			inputSampleR += fpNShapeBR;
 		}
 		flip = !flip;
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -142,7 +142,7 @@ void SurgeTide::processReplacing(float **inputs, float **outputs, VstInt32 sampl
     }
 }
 
-void SurgeTide::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void SurgeTide::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -154,20 +154,20 @@ void SurgeTide::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	overallscale *= getSampleRate();
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
 	long double drySampleR;
-	
+
 	double intensity = A;
 	double attack = ((B+0.1)*0.0005)/overallscale;
 	double decay = ((B+0.001)*0.00005)/overallscale;
 	double wet = C;
 	double dry = 1.0 - wet;
 	double inputSense;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -217,40 +217,40 @@ void SurgeTide::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		inputSampleR *= 8.0;
 		inputSampleL *= intensity;
 		inputSampleR *= intensity;
-		
+
 		inputSense = fabs(inputSampleL);
 		if (fabs(inputSampleR) > inputSense)
 			inputSense = fabs(inputSampleR);
-		
+
 		if (chaseC < inputSense) chaseA += attack;
 		if (chaseC > inputSense) chaseA -= decay;
-		
+
 		if (chaseA > decay) chaseA = decay;
 		if (chaseA < -attack) chaseA = -attack;
-		
+
 		chaseB += (chaseA/overallscale);
-		
+
 		if (chaseB > decay) chaseB = decay;
 		if (chaseB < -attack) chaseB = -attack;
-		
+
 		chaseC += (chaseB/overallscale);
 		if (chaseC > 1.0) chaseC = 1.0;
 		if (chaseC < 0.0) chaseC = 0.0;
-		
+
 		inputSampleL *= chaseC;
 		inputSampleL = drySampleL - (inputSampleL * intensity);
 		inputSampleL = (drySampleL * dry) + (inputSampleL * wet);
-		
+
 		inputSampleR *= chaseC;
 		inputSampleR = drySampleR - (inputSampleR * intensity);
-		inputSampleR = (drySampleR * dry) + (inputSampleR * wet);		
+		inputSampleR = (drySampleR * dry) + (inputSampleR * wet);
 
 		//noise shaping to 64-bit floating point
 		if (flip) {
 			fpTemp = inputSampleL;
 			fpNShapeAL = (fpNShapeAL*fpOld)+((inputSampleL-fpTemp)*fpNew);
 			inputSampleL += fpNShapeAL;
-			
+
 			fpTemp = inputSampleR;
 			fpNShapeAR = (fpNShapeAR*fpOld)+((inputSampleR-fpTemp)*fpNew);
 			inputSampleR += fpNShapeAR;
@@ -259,14 +259,14 @@ void SurgeTide::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			fpTemp = inputSampleL;
 			fpNShapeBL = (fpNShapeBL*fpOld)+((inputSampleL-fpTemp)*fpNew);
 			inputSampleL += fpNShapeBL;
-			
+
 			fpTemp = inputSampleR;
 			fpNShapeBR = (fpNShapeBR*fpOld)+((inputSampleR-fpTemp)*fpNew);
 			inputSampleR += fpNShapeBR;
 		}
 		flip = !flip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

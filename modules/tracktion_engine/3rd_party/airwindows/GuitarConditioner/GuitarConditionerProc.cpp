@@ -7,7 +7,7 @@
 #include "GuitarConditioner.h"
 #endif
 
-void GuitarConditioner::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void GuitarConditioner::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -19,7 +19,7 @@ void GuitarConditioner::processReplacing(float **inputs, float **outputs, VstInt
 	overallscale *= getSampleRate();
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
@@ -27,7 +27,7 @@ void GuitarConditioner::processReplacing(float **inputs, float **outputs, VstInt
 	long double bassL;
 	long double trebleR;
 	long double bassR;
-	
+
 	double iirTreble = 0.287496/overallscale; //tight is -1
 	double iirBass = 0.085184/overallscale; //tight is 1
 	iirTreble += iirTreble;
@@ -38,7 +38,7 @@ void GuitarConditioner::processReplacing(float **inputs, float **outputs, VstInt
 	double clamp;
 	double threshTreble = 0.0081/overallscale;
 	double threshBass = 0.0256/overallscale;
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -86,7 +86,7 @@ void GuitarConditioner::processReplacing(float **inputs, float **outputs, VstInt
 		trebleR = bassR = inputSampleR;
 		trebleL += trebleL; //+3dB on treble as the highpass is higher
 		trebleR += trebleR; //+3dB on treble as the highpass is higher
-		
+
 		offset = (1 + tightTreble) + ((1-fabs(trebleL))*tightTreble); //treble HP
 		if (offset < 0) offset = 0;
 		if (offset > 1) offset = 1; //made offset for HP
@@ -108,7 +108,7 @@ void GuitarConditioner::processReplacing(float **inputs, float **outputs, VstInt
 			iirSampleTBR = (iirSampleTBR * (1 - (offset * iirTreble))) + (trebleR * (offset * iirTreble));
 			trebleR = trebleR - iirSampleTBR;
 		} //done trebleR HP
-		
+
 		offset = (1 - tightBass) + (fabs(bassL)*tightBass); //bass HP
 		if (offset < 0) offset = 0;
 		if (offset > 1) offset = 1;
@@ -119,7 +119,7 @@ void GuitarConditioner::processReplacing(float **inputs, float **outputs, VstInt
 			iirSampleBBL = (iirSampleBBL * (1 - (offset * iirBass))) + (bassL * (offset * iirBass));
 			bassL = bassL - iirSampleBBL;
 		} //done bassL HP
-		
+
 		offset = (1 - tightBass) + (fabs(bassR)*tightBass); //bass HP
 		if (offset < 0) offset = 0;
 		if (offset > 1) offset = 1;
@@ -130,7 +130,7 @@ void GuitarConditioner::processReplacing(float **inputs, float **outputs, VstInt
 			iirSampleBBR = (iirSampleBBR * (1 - (offset * iirBass))) + (bassR * (offset * iirBass));
 			bassR = bassR - iirSampleBBR;
 		} //done bassR HP
-		
+
 		inputSampleL = trebleL;
 		clamp = inputSampleL - lastSampleTL;
 		if (clamp > threshTreble)
@@ -138,7 +138,7 @@ void GuitarConditioner::processReplacing(float **inputs, float **outputs, VstInt
 		if (-clamp > threshTreble)
 			trebleL = lastSampleTL - threshTreble;
 		lastSampleTL = trebleL; //trebleL slew
-		
+
 		inputSampleR = trebleR;
 		clamp = inputSampleR - lastSampleTR;
 		if (clamp > threshTreble)
@@ -146,7 +146,7 @@ void GuitarConditioner::processReplacing(float **inputs, float **outputs, VstInt
 		if (-clamp > threshTreble)
 			trebleR = lastSampleTR - threshTreble;
 		lastSampleTR = trebleR; //trebleR slew
-		
+
 		inputSampleL = bassL;
 		clamp = inputSampleL - lastSampleBL;
 		if (clamp > threshBass)
@@ -154,7 +154,7 @@ void GuitarConditioner::processReplacing(float **inputs, float **outputs, VstInt
 		if (-clamp > threshBass)
 			bassL = lastSampleBL - threshBass;
 		lastSampleBL = bassL; //bassL slew
-		
+
 		inputSampleR = bassR;
 		clamp = inputSampleR - lastSampleBR;
 		if (clamp > threshBass)
@@ -162,9 +162,9 @@ void GuitarConditioner::processReplacing(float **inputs, float **outputs, VstInt
 		if (-clamp > threshBass)
 			bassR = lastSampleBR - threshBass;
 		lastSampleBR = bassR; //bassR slew
-		
+
 		inputSampleL = trebleL + bassL; //final merge
-		inputSampleR = trebleR + bassR; //final merge		
+		inputSampleR = trebleR + bassR; //final merge
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -195,7 +195,7 @@ void GuitarConditioner::processReplacing(float **inputs, float **outputs, VstInt
     }
 }
 
-void GuitarConditioner::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void GuitarConditioner::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -207,7 +207,7 @@ void GuitarConditioner::processDoubleReplacing(double **inputs, double **outputs
 	overallscale *= getSampleRate();
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
@@ -215,7 +215,7 @@ void GuitarConditioner::processDoubleReplacing(double **inputs, double **outputs
 	long double bassL;
 	long double trebleR;
 	long double bassR;
-	
+
 	double iirTreble = 0.287496/overallscale; //tight is -1
 	double iirBass = 0.085184/overallscale; //tight is 1
 	iirTreble += iirTreble;
@@ -226,7 +226,7 @@ void GuitarConditioner::processDoubleReplacing(double **inputs, double **outputs
 	double clamp;
 	double threshTreble = 0.0081/overallscale;
 	double threshBass = 0.0256/overallscale;
-	
+
 
     while (--sampleFrames >= 0)
     {
@@ -270,12 +270,12 @@ void GuitarConditioner::processDoubleReplacing(double **inputs, double **outputs
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		trebleL = bassL = inputSampleL;
 		trebleR = bassR = inputSampleR;
 		trebleL += trebleL; //+3dB on treble as the highpass is higher
-		trebleR += trebleR; //+3dB on treble as the highpass is higher		
-		
+		trebleR += trebleR; //+3dB on treble as the highpass is higher
+
 		offset = (1 + tightTreble) + ((1-fabs(trebleL))*tightTreble); //treble HP
 		if (offset < 0) offset = 0;
 		if (offset > 1) offset = 1; //made offset for HP
@@ -286,7 +286,7 @@ void GuitarConditioner::processDoubleReplacing(double **inputs, double **outputs
 			iirSampleTBL = (iirSampleTBL * (1 - (offset * iirTreble))) + (trebleL * (offset * iirTreble));
 			trebleL = trebleL - iirSampleTBL;
 		} //done trebleL HP
-		
+
 		offset = (1 + tightTreble) + ((1-fabs(trebleR))*tightTreble); //treble HP
 		if (offset < 0) offset = 0;
 		if (offset > 1) offset = 1; //made offset for HP
@@ -297,7 +297,7 @@ void GuitarConditioner::processDoubleReplacing(double **inputs, double **outputs
 			iirSampleTBR = (iirSampleTBR * (1 - (offset * iirTreble))) + (trebleR * (offset * iirTreble));
 			trebleR = trebleR - iirSampleTBR;
 		} //done trebleR HP
-		
+
 		offset = (1 - tightBass) + (fabs(bassL)*tightBass); //bass HP
 		if (offset < 0) offset = 0;
 		if (offset > 1) offset = 1;
@@ -308,7 +308,7 @@ void GuitarConditioner::processDoubleReplacing(double **inputs, double **outputs
 			iirSampleBBL = (iirSampleBBL * (1 - (offset * iirBass))) + (bassL * (offset * iirBass));
 			bassL = bassL - iirSampleBBL;
 		} //done bassL HP
-		
+
 		offset = (1 - tightBass) + (fabs(bassR)*tightBass); //bass HP
 		if (offset < 0) offset = 0;
 		if (offset > 1) offset = 1;
@@ -319,7 +319,7 @@ void GuitarConditioner::processDoubleReplacing(double **inputs, double **outputs
 			iirSampleBBR = (iirSampleBBR * (1 - (offset * iirBass))) + (bassR * (offset * iirBass));
 			bassR = bassR - iirSampleBBR;
 		} //done bassR HP
-		
+
 		inputSampleL = trebleL;
 		clamp = inputSampleL - lastSampleTL;
 		if (clamp > threshTreble)
@@ -327,7 +327,7 @@ void GuitarConditioner::processDoubleReplacing(double **inputs, double **outputs
 		if (-clamp > threshTreble)
 			trebleL = lastSampleTL - threshTreble;
 		lastSampleTL = trebleL; //trebleL slew
-		
+
 		inputSampleR = trebleR;
 		clamp = inputSampleR - lastSampleTR;
 		if (clamp > threshTreble)
@@ -335,7 +335,7 @@ void GuitarConditioner::processDoubleReplacing(double **inputs, double **outputs
 		if (-clamp > threshTreble)
 			trebleR = lastSampleTR - threshTreble;
 		lastSampleTR = trebleR; //trebleR slew
-		
+
 		inputSampleL = bassL;
 		clamp = inputSampleL - lastSampleBL;
 		if (clamp > threshBass)
@@ -343,7 +343,7 @@ void GuitarConditioner::processDoubleReplacing(double **inputs, double **outputs
 		if (-clamp > threshBass)
 			bassL = lastSampleBL - threshBass;
 		lastSampleBL = bassL; //bassL slew
-		
+
 		inputSampleR = bassR;
 		clamp = inputSampleR - lastSampleBR;
 		if (clamp > threshBass)
@@ -351,9 +351,9 @@ void GuitarConditioner::processDoubleReplacing(double **inputs, double **outputs
 		if (-clamp > threshBass)
 			bassR = lastSampleBR - threshBass;
 		lastSampleBR = bassR; //bassR slew
-				
+
 		inputSampleL = trebleL + bassL; //final merge
-		inputSampleR = trebleR + bassR; //final merge		
+		inputSampleR = trebleR + bassR; //final merge
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

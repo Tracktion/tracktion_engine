@@ -7,7 +7,7 @@
 #include "Swell.h"
 #endif
 
-void Swell::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Swell::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -19,20 +19,20 @@ void Swell::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	overallscale *= getSampleRate();
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	double thresholdOn = pow(A,2) * B;
 	double speedOn = (pow(B,2)*0.001)/overallscale;
 	double thresholdOff = thresholdOn * B;
 	double speedOff = (sin(B)*0.01)/overallscale;
 	double wet = C;
-	double dry = 1.0 - wet;	
-	
+	double dry = 1.0 - wet;
+
 	long double drySampleL;
 	long double drySampleR;
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -77,26 +77,26 @@ void Swell::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		if (fabs(inputSampleL) > thresholdOn && louderL == false) louderL = true;
 		if (fabs(inputSampleL) < thresholdOff && louderL == true) louderL = false;
 		if (louderL == true) swellL = (swellL * (1.0 - speedOn)) + speedOn;
 		else swellL *= (1.0 - speedOff);
 		//both poles are a Zeno's arrow: approach but never get to either 1.0 or 0.0
 		inputSampleL *= swellL;
-		
+
 		if (fabs(inputSampleR) > thresholdOn && louderR == false) louderR = true;
 		if (fabs(inputSampleR) < thresholdOff && louderR == true) louderR = false;
 		if (louderR == true) swellR = (swellR * (1.0 - speedOn)) + speedOn;
 		else swellR *= (1.0 - speedOff);
 		//both poles are a Zeno's arrow: approach but never get to either 1.0 or 0.0
 		inputSampleR *= swellR;
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -127,7 +127,7 @@ void Swell::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
     }
 }
 
-void Swell::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Swell::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -139,14 +139,14 @@ void Swell::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	overallscale *= getSampleRate();
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double thresholdOn = pow(A,2) * B;
 	double speedOn = (pow(B,2)*0.001)/overallscale;
 	double thresholdOff = thresholdOn * B;
 	double speedOff = (sin(B)*0.01)/overallscale;
 	double wet = C;
-	double dry = 1.0 - wet;	
+	double dry = 1.0 - wet;
 
 	long double drySampleL;
 	long double drySampleR;
@@ -197,26 +197,26 @@ void Swell::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		if (fabs(inputSampleL) > thresholdOn && louderL == false) louderL = true;
 		if (fabs(inputSampleL) < thresholdOff && louderL == true) louderL = false;
 		if (louderL == true) swellL = (swellL * (1.0 - speedOn)) + speedOn;
 		else swellL *= (1.0 - speedOff);
 		//both poles are a Zeno's arrow: approach but never get to either 1.0 or 0.0
 		inputSampleL *= swellL;
-		
+
 		if (fabs(inputSampleR) > thresholdOn && louderR == false) louderR = true;
 		if (fabs(inputSampleR) < thresholdOff && louderR == true) louderR = false;
 		if (louderR == true) swellR = (swellR * (1.0 - speedOn)) + speedOn;
 		else swellR *= (1.0 - speedOff);
 		//both poles are a Zeno's arrow: approach but never get to either 1.0 or 0.0
 		inputSampleR *= swellR;
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -236,7 +236,7 @@ void Swell::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

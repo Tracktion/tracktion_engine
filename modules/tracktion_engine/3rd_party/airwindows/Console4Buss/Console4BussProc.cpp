@@ -1,6 +1,6 @@
 /* ========================================
  *  Console4Buss - Console4Buss.h
- *  Created 8/12/11 by SPIAdmin 
+ *  Created 8/12/11 by SPIAdmin
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
@@ -8,7 +8,7 @@
 #include "Console4Buss.h"
 #endif
 
-void Console4Buss::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Console4Buss::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -20,7 +20,7 @@ void Console4Buss::processReplacing(float **inputs, float **outputs, VstInt32 sa
 	overallscale *= getSampleRate();
 	float fpTemp;
 	double fpOld = 0.618033988749894848204586; //golden ratio!
-	double fpNew = 1.0 - fpOld;	
+	double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
@@ -33,9 +33,9 @@ void Console4Buss::processReplacing(float **inputs, float **outputs, VstInt32 sa
 	}
 	if (chasespeed > 2500.0) chasespeed = 2500.0;
 	if (gainchase < 0.0) gainchase = gain;
-	
-	
-    
+
+
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -83,13 +83,13 @@ void Console4Buss::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		chasespeed -= 0.01;
 		if (chasespeed < 350.0) chasespeed = 350.0;
 		//we have our chase speed compensated for recent fader activity
-		
+
 		gainchase = (((gainchase*chasespeed)+gain)/(chasespeed+1.0));
 		//gainchase is chasing the target, as a simple multiply gain factor
-		
+
 		if (1.0 != gainchase) {inputSampleL *= gainchase; inputSampleR *= gainchase;}
 		//done with trim control
-		
+
 		half = inputSampleL;
 		falf = fabs(half);
 		half *= falf;
@@ -106,7 +106,7 @@ void Console4Buss::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		//this is the inverse processing for Console: boosts but not so much if there's slew.
 		//is this too subtle an effect?
 
-		
+
 		half = inputSampleR;
 		falf = fabs(half);
 		half *= falf;
@@ -122,7 +122,7 @@ void Console4Buss::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		inputSampleR += half;
 		//this is the inverse processing for Console: boosts but not so much if there's slew.
 		//is this too subtle an effect?
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -153,7 +153,7 @@ void Console4Buss::processReplacing(float **inputs, float **outputs, VstInt32 sa
     }
 }
 
-void Console4Buss::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Console4Buss::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -165,10 +165,10 @@ void Console4Buss::processDoubleReplacing(double **inputs, double **outputs, Vst
 	overallscale *= getSampleRate();
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	long double inputSampleL;
-	long double inputSampleR;    
+	long double inputSampleR;
 	long double half;
 	long double falf;
 	long double slewcompensation;
@@ -227,13 +227,13 @@ void Console4Buss::processDoubleReplacing(double **inputs, double **outputs, Vst
 		chasespeed -= 0.01;
 		if (chasespeed < 350.0) chasespeed = 350.0;
 		//we have our chase speed compensated for recent fader activity
-		
+
 		gainchase = (((gainchase*chasespeed)+gain)/(chasespeed+1.0));
 		//gainchase is chasing the target, as a simple multiply gain factor
-		
+
 		if (1.0 != gainchase) {inputSampleL *= gainchase; inputSampleR *= gainchase;}
 		//done with trim control
-		
+
 		half = inputSampleL;
 		falf = fabs(half);
 		half *= falf;
@@ -249,8 +249,8 @@ void Console4Buss::processDoubleReplacing(double **inputs, double **outputs, Vst
 		inputSampleL += half;
 		//this is the inverse processing for Console: boosts but not so much if there's slew.
 		//is this too subtle an effect?
-		
-		
+
+
 		half = inputSampleR;
 		falf = fabs(half);
 		half *= falf;
@@ -286,8 +286,8 @@ void Console4Buss::processDoubleReplacing(double **inputs, double **outputs, Vst
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
-		
+
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

@@ -7,7 +7,7 @@
 #include "IronOxide5.h"
 #endif
 
-void IronOxide5::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void IronOxide5::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -19,7 +19,7 @@ void IronOxide5::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	overallscale *= getSampleRate();
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	double inputgain = pow(10.0,((A*36.0)-18.0)/20.0);
 	double outputgain = pow(10.0,((F*36.0)-18.0)/20.0);
@@ -46,11 +46,11 @@ void IronOxide5::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	double depth = pow(D,2)*overallscale;
 	double fluttertrim = 0.00581/overallscale;
 	double sweeptrim = (0.0005*depth)/overallscale;
-	double offset;	
-	double flooroffset;	
+	double offset;
+	double flooroffset;
 	double tupi = 3.141592653589793238 * 2.0;
 	double newrate = 0.006/overallscale;
-	double oldrate = 1.0-newrate;	
+	double oldrate = 1.0-newrate;
 	if (overallscale == 0) {fastTaper += 1.0; slowTaper += 1.0;}
 	else
 	{
@@ -59,17 +59,17 @@ void IronOxide5::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		fastTaper = 1.0 + (fastTaper / overallscale);
 		slowTaper = 1.0 + (slowTaper / overallscale);
 	}
-	
+
 	double noise = E * 0.5;
 	double invdrywet = ((G*2.0)-1.0);
 	double dry = 1.0;
 	if (invdrywet > 0.0) dry -= invdrywet;
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 	double drySampleL;
 	double drySampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -138,7 +138,7 @@ void IronOxide5::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		inputSampleR = bridgerectifierR;
 		//apply to input signal, interpolate samples
 		//all the funky renaming is just trying to fix how I never reassigned the control numbers
-		
+
 		if (flip)
 		{
 			iirSampleAL = (iirSampleAL * (1 - iirAmount)) + (inputSampleL * iirAmount);
@@ -154,45 +154,45 @@ void IronOxide5::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			inputSampleR -= iirSampleBR;
 		}
 		//do IIR highpass for leaning out
-		
+
 		inputSampleL *= inputgain;
 		inputSampleR *= inputgain;
-		
+
 		bridgerectifierL = fabs(inputSampleL);
 		if (bridgerectifierL > 1.57079633) bridgerectifierL = 1.57079633;
 		bridgerectifierL = sin(bridgerectifierL);
 		if (inputSampleL > 0.0) inputSampleL = bridgerectifierL;
 		else inputSampleL = -bridgerectifierL;
 		//preliminary gain stage using antialiasing
-		
+
 		bridgerectifierR = fabs(inputSampleR);
 		if (bridgerectifierR > 1.57079633) bridgerectifierR = 1.57079633;
 		bridgerectifierR = sin(bridgerectifierR);
 		if (inputSampleR > 0.0) inputSampleR = bridgerectifierR;
 		else inputSampleR = -bridgerectifierR;
 		//preliminary gain stage using antialiasing
-		
+
 		//over to the Iron Oxide shaping code using inputsample
 		if (gcount < 0 || gcount > 131) {gcount = 131;}
 		count = gcount;
 		//increment the counter
-		
+
 		dL[count+131] = dL[count] = inputSampleL;
 		dR[count+131] = dR[count] = inputSampleR;
-		
+
 		if (flip)
 		{
 			fastIIRAL = fastIIRAL/fastTaper;
 			slowIIRAL = slowIIRAL/slowTaper;
 			fastIIRAL += dL[count];
 			//scale stuff down
-			
+
 			fastIIRAR = fastIIRAR/fastTaper;
 			slowIIRAR = slowIIRAR/slowTaper;
 			fastIIRAR += dR[count];
 			//scale stuff down
 			count += 3;
-			
+
 			temp = dL[count+127];
 			temp += dL[count+113];
 			temp += dL[count+109];
@@ -230,7 +230,7 @@ void IronOxide5::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			temp += dL[count+2];
 			temp += dL[count+1]; //end L
 			slowIIRAL += (temp/128);
-		
+
 			temp = dR[count+127];
 			temp += dR[count+113];
 			temp += dR[count+109];
@@ -268,7 +268,7 @@ void IronOxide5::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			temp += dR[count+2];
 			temp += dR[count+1]; //end R
 			slowIIRAR += (temp/128);
-			
+
 			inputSampleL = fastIIRAL - (slowIIRAL / slowTaper);
 			inputSampleR = fastIIRAR - (slowIIRAR / slowTaper);
 		}
@@ -278,13 +278,13 @@ void IronOxide5::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			slowIIRBL = slowIIRBL/slowTaper;
 			fastIIRBL += dL[count];
 			//scale stuff down
-			
+
 			fastIIRBR = fastIIRBR/fastTaper;
 			slowIIRBR = slowIIRBR/slowTaper;
 			fastIIRBR += dR[count];
 			//scale stuff down
 			count += 3;
-			
+
 			temp = dL[count+127];
 			temp += dL[count+113];
 			temp += dL[count+109];
@@ -322,7 +322,7 @@ void IronOxide5::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			temp += dL[count+2];
 			temp += dL[count+1];
 			slowIIRBL += (temp/128);
-		
+
 			temp = dR[count+127];
 			temp += dR[count+113];
 			temp += dR[count+109];
@@ -360,23 +360,23 @@ void IronOxide5::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			temp += dR[count+2];
 			temp += dR[count+1];
 			slowIIRBR += (temp/128);
-			
+
 			inputSampleL = fastIIRBL - (slowIIRBL / slowTaper);
 			inputSampleR = fastIIRBR - (slowIIRBR / slowTaper);
 		}
-		
+
 		inputSampleL /= fastTaper;
 		inputSampleR /= fastTaper;
 		inputSampleL /= lowspeedscale;
 		inputSampleR /= lowspeedscale;
-		
+
 		bridgerectifierL = fabs(inputSampleL);
 		if (bridgerectifierL > 1.57079633) bridgerectifierL = 1.57079633;
 		bridgerectifierL = sin(bridgerectifierL);
 		//can use as an output limiter
 		if (inputSampleL > 0.0) inputSampleL = bridgerectifierL;
 		else inputSampleL = -bridgerectifierL;
-		//second stage of overdrive to prevent overs and allow bloody loud extremeness		
+		//second stage of overdrive to prevent overs and allow bloody loud extremeness
 
 		bridgerectifierR = fabs(inputSampleR);
 		if (bridgerectifierR > 1.57079633) bridgerectifierR = 1.57079633;
@@ -384,23 +384,23 @@ void IronOxide5::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		//can use as an output limiter
 		if (inputSampleR > 0.0) inputSampleR = bridgerectifierR;
 		else inputSampleR = -bridgerectifierR;
-		//second stage of overdrive to prevent overs and allow bloody loud extremeness		
-		
+		//second stage of overdrive to prevent overs and allow bloody loud extremeness
+
 		randy = (0.55 + tempRandy + ((rand()/(double)RAND_MAX)*tempRandy))*noise; //0 to 2
-		
+
 		inputSampleL *= (1.0 - randy);
 		inputSampleL += (prevInputSampleL*randy);
 		prevInputSampleL = drySampleL;
-		
+
 		inputSampleR *= (1.0 - randy);
 		inputSampleR += (prevInputSampleR*randy);
 		prevInputSampleR = drySampleR;
 		//a slew-based noise generator: noise is only relative to how much change between samples there is.
 		//This will cause high sample rates to be a little 'smoother' and clearer. I see this mechanic as something that
 		//interacts with the sample rate. The 'dust' is scaled to the size of the samples.
-		
+
 		flip = !flip;
-		
+
 		//begin invdrywet block with outputgain
 		if (outputgain != 1.0) {
 			inputSampleL *= outputgain;
@@ -421,7 +421,7 @@ void IronOxide5::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			inputSampleR += drySampleR;
 		}
 		//end invdrywet block with outputgain
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -452,7 +452,7 @@ void IronOxide5::processReplacing(float **inputs, float **outputs, VstInt32 samp
     }
 }
 
-void IronOxide5::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void IronOxide5::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -464,8 +464,8 @@ void IronOxide5::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	overallscale *= getSampleRate();
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double inputgain = pow(10.0,((A*36.0)-18.0)/20.0);
 	double outputgain = pow(10.0,((F*36.0)-18.0)/20.0);
 	double ips = (((B*B)*(B*B)*148.5)+1.5) * 1.1;
@@ -491,11 +491,11 @@ void IronOxide5::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	double depth = pow(D,2)*overallscale;
 	double fluttertrim = 0.00581/overallscale;
 	double sweeptrim = (0.0005*depth)/overallscale;
-	double offset;	
-	double flooroffset;	
+	double offset;
+	double flooroffset;
 	double tupi = 3.141592653589793238 * 2.0;
 	double newrate = 0.006/overallscale;
-	double oldrate = 1.0-newrate;	
+	double oldrate = 1.0-newrate;
 	if (overallscale == 0) {fastTaper += 1.0; slowTaper += 1.0;}
 	else
 	{
@@ -504,17 +504,17 @@ void IronOxide5::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		fastTaper = 1.0 + (fastTaper / overallscale);
 		slowTaper = 1.0 + (slowTaper / overallscale);
 	}
-	
+
 	double noise = E * 0.5;
 	double invdrywet = ((G*2.0)-1.0);
 	double dry = 1.0;
 	if (invdrywet > 0.0) dry -= invdrywet;
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 	double drySampleL;
 	double drySampleR;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -559,7 +559,7 @@ void IronOxide5::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		flutterrandy = (rand()/(double)RAND_MAX);
 		//part of flutter section
 		//now we've got a random flutter, so we're messing with the pitch before tape effects go on
@@ -583,7 +583,7 @@ void IronOxide5::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		inputSampleR = bridgerectifierR;
 		//apply to input signal, interpolate samples
 		//all the funky renaming is just trying to fix how I never reassigned the control numbers
-		
+
 		if (flip)
 		{
 			iirSampleAL = (iirSampleAL * (1 - iirAmount)) + (inputSampleL * iirAmount);
@@ -599,45 +599,45 @@ void IronOxide5::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			inputSampleR -= iirSampleBR;
 		}
 		//do IIR highpass for leaning out
-		
+
 		inputSampleL *= inputgain;
 		inputSampleR *= inputgain;
-		
+
 		bridgerectifierL = fabs(inputSampleL);
 		if (bridgerectifierL > 1.57079633) bridgerectifierL = 1.57079633;
 		bridgerectifierL = sin(bridgerectifierL);
 		if (inputSampleL > 0.0) inputSampleL = bridgerectifierL;
 		else inputSampleL = -bridgerectifierL;
 		//preliminary gain stage using antialiasing
-		
+
 		bridgerectifierR = fabs(inputSampleR);
 		if (bridgerectifierR > 1.57079633) bridgerectifierR = 1.57079633;
 		bridgerectifierR = sin(bridgerectifierR);
 		if (inputSampleR > 0.0) inputSampleR = bridgerectifierR;
 		else inputSampleR = -bridgerectifierR;
 		//preliminary gain stage using antialiasing
-		
+
 		//over to the Iron Oxide shaping code using inputsample
 		if (gcount < 0 || gcount > 131) {gcount = 131;}
 		count = gcount;
 		//increment the counter
-		
+
 		dL[count+131] = dL[count] = inputSampleL;
 		dR[count+131] = dR[count] = inputSampleR;
-		
+
 		if (flip)
 		{
 			fastIIRAL = fastIIRAL/fastTaper;
 			slowIIRAL = slowIIRAL/slowTaper;
 			fastIIRAL += dL[count];
 			//scale stuff down
-			
+
 			fastIIRAR = fastIIRAR/fastTaper;
 			slowIIRAR = slowIIRAR/slowTaper;
 			fastIIRAR += dR[count];
 			//scale stuff down
 			count += 3;
-			
+
 			temp = dL[count+127];
 			temp += dL[count+113];
 			temp += dL[count+109];
@@ -675,7 +675,7 @@ void IronOxide5::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			temp += dL[count+2];
 			temp += dL[count+1]; //end L
 			slowIIRAL += (temp/128);
-			
+
 			temp = dR[count+127];
 			temp += dR[count+113];
 			temp += dR[count+109];
@@ -713,7 +713,7 @@ void IronOxide5::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			temp += dR[count+2];
 			temp += dR[count+1]; //end R
 			slowIIRAR += (temp/128);
-			
+
 			inputSampleL = fastIIRAL - (slowIIRAL / slowTaper);
 			inputSampleR = fastIIRAR - (slowIIRAR / slowTaper);
 		}
@@ -723,13 +723,13 @@ void IronOxide5::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			slowIIRBL = slowIIRBL/slowTaper;
 			fastIIRBL += dL[count];
 			//scale stuff down
-			
+
 			fastIIRBR = fastIIRBR/fastTaper;
 			slowIIRBR = slowIIRBR/slowTaper;
 			fastIIRBR += dR[count];
 			//scale stuff down
 			count += 3;
-			
+
 			temp = dL[count+127];
 			temp += dL[count+113];
 			temp += dL[count+109];
@@ -767,7 +767,7 @@ void IronOxide5::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			temp += dL[count+2];
 			temp += dL[count+1];
 			slowIIRBL += (temp/128);
-			
+
 			temp = dR[count+127];
 			temp += dR[count+113];
 			temp += dR[count+109];
@@ -805,47 +805,47 @@ void IronOxide5::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			temp += dR[count+2];
 			temp += dR[count+1];
 			slowIIRBR += (temp/128);
-			
+
 			inputSampleL = fastIIRBL - (slowIIRBL / slowTaper);
 			inputSampleR = fastIIRBR - (slowIIRBR / slowTaper);
 		}
-		
+
 		inputSampleL /= fastTaper;
 		inputSampleR /= fastTaper;
 		inputSampleL /= lowspeedscale;
 		inputSampleR /= lowspeedscale;
-		
+
 		bridgerectifierL = fabs(inputSampleL);
 		if (bridgerectifierL > 1.57079633) bridgerectifierL = 1.57079633;
 		bridgerectifierL = sin(bridgerectifierL);
 		//can use as an output limiter
 		if (inputSampleL > 0.0) inputSampleL = bridgerectifierL;
 		else inputSampleL = -bridgerectifierL;
-		//second stage of overdrive to prevent overs and allow bloody loud extremeness		
-		
+		//second stage of overdrive to prevent overs and allow bloody loud extremeness
+
 		bridgerectifierR = fabs(inputSampleR);
 		if (bridgerectifierR > 1.57079633) bridgerectifierR = 1.57079633;
 		bridgerectifierR = sin(bridgerectifierR);
 		//can use as an output limiter
 		if (inputSampleR > 0.0) inputSampleR = bridgerectifierR;
 		else inputSampleR = -bridgerectifierR;
-		//second stage of overdrive to prevent overs and allow bloody loud extremeness		
-		
+		//second stage of overdrive to prevent overs and allow bloody loud extremeness
+
 		randy = (0.55 + tempRandy + ((rand()/(double)RAND_MAX)*tempRandy))*noise; //0 to 2
-		
+
 		inputSampleL *= (1.0 - randy);
 		inputSampleL += (prevInputSampleL*randy);
 		prevInputSampleL = drySampleL;
-		
+
 		inputSampleR *= (1.0 - randy);
 		inputSampleR += (prevInputSampleR*randy);
 		prevInputSampleR = drySampleR;
 		//a slew-based noise generator: noise is only relative to how much change between samples there is.
 		//This will cause high sample rates to be a little 'smoother' and clearer. I see this mechanic as something that
 		//interacts with the sample rate. The 'dust' is scaled to the size of the samples.
-		
+
 		flip = !flip;
-		
+
 		//begin invdrywet block with outputgain
 		if (outputgain != 1.0) {
 			inputSampleL *= outputgain;
@@ -866,7 +866,7 @@ void IronOxide5::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			inputSampleR += drySampleR;
 		}
 		//end invdrywet block with outputgain
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

@@ -7,7 +7,7 @@
 #include "TransDesk.h"
 #endif
 
-void TransDesk::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void TransDesk::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -20,19 +20,19 @@ void TransDesk::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
 	long double fpNew = 1.0 - fpOld;
-	
+
 	double intensity = 0.02198359;
 	double depthA = 3.0;
 	int offsetA = (int)(depthA * overallscale);
 	if (offsetA < 1) offsetA = 1;
 	if (offsetA > 8) offsetA = 8;
-	
+
 	double clamp;
 	double thickness;
 	double out;
-	
+
 	double gain = 0.130;
-	double slewgain = 0.197;	
+	double slewgain = 0.197;
 	double prevslew = 0.255;
 	double balanceB = 0.0001;
 	slewgain *= overallscale;
@@ -41,13 +41,13 @@ void TransDesk::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	double balanceA = 1.0 - balanceB;
 	double slew;
 	double bridgerectifier;
-	double combSample;	
+	double combSample;
 
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
 	long double drySampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -92,10 +92,10 @@ void TransDesk::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
-		
+
+
 		if (gcount < 0 || gcount > 9) {gcount = 9;}
-		
+
 		//begin L
 		dL[gcount+9] = dL[gcount] = fabs(inputSampleL)*intensity;
 		controlL += (dL[gcount] / offsetA);
@@ -107,7 +107,7 @@ void TransDesk::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		if (clamp < 0.5) {clamp = 0.5;}
 		//control = 0 to 1
 		thickness = ((1.0 - controlL) * 2.0) - 1.0;
-		out = fabs(thickness);		
+		out = fabs(thickness);
 		bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		//max value for sine function
@@ -158,7 +158,7 @@ void TransDesk::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		if (clamp < 0.5) {clamp = 0.5;}
 		//control = 0 to 1
 		thickness = ((1.0 - controlR) * 2.0) - 1.0;
-		out = fabs(thickness);		
+		out = fabs(thickness);
 		bridgerectifier = fabs(inputSampleR);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		//max value for sine function
@@ -197,9 +197,9 @@ void TransDesk::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		inputSampleR /= gain;
 		//end of Desk section
 		//end R
-		
-		gcount--;		
-		
+
+		gcount--;
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -230,7 +230,7 @@ void TransDesk::processReplacing(float **inputs, float **outputs, VstInt32 sampl
     }
 }
 
-void TransDesk::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void TransDesk::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -242,20 +242,20 @@ void TransDesk::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	overallscale *= getSampleRate();
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double intensity = 0.02198359;
 	double depthA = 3.0;
 	int offsetA = (int)(depthA * overallscale);
 	if (offsetA < 1) offsetA = 1;
 	if (offsetA > 8) offsetA = 8;
-	
+
 	double clamp;
 	double thickness;
 	double out;
-	
+
 	double gain = 0.130;
-	double slewgain = 0.197;	
+	double slewgain = 0.197;
 	double prevslew = 0.255;
 	double balanceB = 0.0001;
 	slewgain *= overallscale;
@@ -264,8 +264,8 @@ void TransDesk::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	double balanceA = 1.0 - balanceB;
 	double slew;
 	double bridgerectifier;
-	double combSample;	
-	
+	double combSample;
+
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
@@ -315,10 +315,10 @@ void TransDesk::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
-		
+
+
 		if (gcount < 0 || gcount > 9) {gcount = 9;}
-		
+
 		//begin L
 		dL[gcount+9] = dL[gcount] = fabs(inputSampleL)*intensity;
 		controlL += (dL[gcount] / offsetA);
@@ -330,7 +330,7 @@ void TransDesk::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		if (clamp < 0.5) {clamp = 0.5;}
 		//control = 0 to 1
 		thickness = ((1.0 - controlL) * 2.0) - 1.0;
-		out = fabs(thickness);		
+		out = fabs(thickness);
 		bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		//max value for sine function
@@ -369,7 +369,7 @@ void TransDesk::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		inputSampleL /= gain;
 		//end of Desk section
 		//end L
-		
+
 		//begin R
 		dR[gcount+9] = dR[gcount] = fabs(inputSampleR)*intensity;
 		controlR += (dR[gcount] / offsetA);
@@ -381,7 +381,7 @@ void TransDesk::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		if (clamp < 0.5) {clamp = 0.5;}
 		//control = 0 to 1
 		thickness = ((1.0 - controlR) * 2.0) - 1.0;
-		out = fabs(thickness);		
+		out = fabs(thickness);
 		bridgerectifier = fabs(inputSampleR);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		//max value for sine function
@@ -420,9 +420,9 @@ void TransDesk::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		inputSampleR /= gain;
 		//end of Desk section
 		//end R
-		
-		gcount--;		
-		
+
+		gcount--;
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

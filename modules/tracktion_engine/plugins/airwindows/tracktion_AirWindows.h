@@ -46,7 +46,7 @@ public:
     //==============================================================================
     AirWindowsPlugin (PluginCreationInfo, std::unique_ptr<AirWindowsBase>);
     ~AirWindowsPlugin();
-    
+
     virtual Type getPluginCategory() = 0;
 
     //==============================================================================

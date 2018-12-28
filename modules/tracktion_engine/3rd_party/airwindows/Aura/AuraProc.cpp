@@ -7,7 +7,7 @@
 #include "Aura.h"
 #endif
 
-void Aura::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Aura::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -16,7 +16,7 @@ void Aura::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	double correctionL;
 	double correctionR;
@@ -34,7 +34,7 @@ void Aura::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 	long double inputSampleR;
 	double drySampleL;
 	double drySampleR;
-	
+
 	if (gain < 1.0) gain = 1.0;
 	if (gain > 1.0) {f[0] = 1.0; gain -= 1.0;} else {f[0] = gain; gain = 0.0;}
 	if (gain > 1.0) {f[1] = 1.0; gain -= 1.0;} else {f[1] = gain; gain = 0.0;}
@@ -56,9 +56,9 @@ void Aura::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 	if (gain > 1.0) {f[17] = 1.0; gain -= 1.0;} else {f[17] = gain; gain = 0.0;}
 	if (gain > 1.0) {f[18] = 1.0; gain -= 1.0;} else {f[18] = gain; gain = 0.0;}
 	if (gain > 1.0) {f[19] = 1.0; gain -= 1.0;} else {f[19] = gain; gain = 0.0;}
-	
+
 	//there, now we have a neat little moving average with remainders
-	
+
 	if (overallscale < 1.0) overallscale = 1.0;
 	f[0] /= overallscale;
 	f[1] /= overallscale;
@@ -81,7 +81,7 @@ void Aura::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 	f[18] /= overallscale;
 	f[19] /= overallscale;
 	//and now it's neatly scaled, too
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -129,16 +129,16 @@ void Aura::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 
 		velocityL = lastSampleL - inputSampleL;
 		correctionL = previousVelocityL - velocityL;
-		
+
 		bL[19] = bL[18]; bL[18] = bL[17]; bL[17] = bL[16]; bL[16] = bL[15];
 		bL[15] = bL[14]; bL[14] = bL[13]; bL[13] = bL[12]; bL[12] = bL[11];
 		bL[11] = bL[10]; bL[10] = bL[9];
 		bL[9] = bL[8]; bL[8] = bL[7]; bL[7] = bL[6]; bL[6] = bL[5];
 		bL[5] = bL[4]; bL[4] = bL[3]; bL[3] = bL[2]; bL[2] = bL[1];
 		bL[1] = bL[0]; bL[0] = accumulatorSampleL = correctionL;
-		
+
 		//we are accumulating rates of change of the rate of change
-		
+
 		accumulatorSampleL *= f[0];
 		accumulatorSampleL += (bL[1] * f[1]);
 		accumulatorSampleL += (bL[2] * f[2]);
@@ -159,25 +159,25 @@ void Aura::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 		accumulatorSampleL += (bL[17] * f[17]);
 		accumulatorSampleL += (bL[18] * f[18]);
 		accumulatorSampleL += (bL[19] * f[19]);
-		
-		velocityL = previousVelocityL + accumulatorSampleL;		
+
+		velocityL = previousVelocityL + accumulatorSampleL;
 		inputSampleL = lastSampleL + velocityL;
 		lastSampleL = inputSampleL;
-		previousVelocityL = -velocityL * pow(trim,2);	
+		previousVelocityL = -velocityL * pow(trim,2);
 		//left channel done
-		
+
 		velocityR = lastSampleR - inputSampleR;
 		correctionR = previousVelocityR - velocityR;
-		
+
 		bR[19] = bR[18]; bR[18] = bR[17]; bR[17] = bR[16]; bR[16] = bR[15];
 		bR[15] = bR[14]; bR[14] = bR[13]; bR[13] = bR[12]; bR[12] = bR[11];
 		bR[11] = bR[10]; bR[10] = bR[9];
 		bR[9] = bR[8]; bR[8] = bR[7]; bR[7] = bR[6]; bR[6] = bR[5];
 		bR[5] = bR[4]; bR[4] = bR[3]; bR[3] = bR[2]; bR[2] = bR[1];
 		bR[1] = bR[0]; bR[0] = accumulatorSampleR = correctionR;
-		
+
 		//we are accumulating rates of change of the rate of change
-				
+
 		accumulatorSampleR *= f[0];
 		accumulatorSampleR += (bR[1] * f[1]);
 		accumulatorSampleR += (bR[2] * f[2]);
@@ -199,18 +199,18 @@ void Aura::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 		accumulatorSampleR += (bR[18] * f[18]);
 		accumulatorSampleR += (bR[19] * f[19]);
 		//we are doing our repetitive calculations on a separate value
-		
-		velocityR = previousVelocityR + accumulatorSampleR;		
+
+		velocityR = previousVelocityR + accumulatorSampleR;
 		inputSampleR = lastSampleR + velocityR;
 		lastSampleR = inputSampleR;
-		previousVelocityR = -velocityR * pow(trim,2);		
+		previousVelocityR = -velocityR * pow(trim,2);
 		//right channel done
-				
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
-		}		
-		
+		}
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -230,7 +230,7 @@ void Aura::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -241,7 +241,7 @@ void Aura::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
     }
 }
 
-void Aura::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Aura::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
 	double* in1  =  inputs[0];
 	double* in2  =  inputs[1];
@@ -250,8 +250,8 @@ void Aura::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double correctionL;
 	double correctionR;
 	double accumulatorSampleL;
@@ -268,7 +268,7 @@ void Aura::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 	long double inputSampleR;
 	double drySampleL;
 	double drySampleR;
-	
+
 	if (gain < 1.0) gain = 1.0;
 	if (gain > 1.0) {f[0] = 1.0; gain -= 1.0;} else {f[0] = gain; gain = 0.0;}
 	if (gain > 1.0) {f[1] = 1.0; gain -= 1.0;} else {f[1] = gain; gain = 0.0;}
@@ -290,9 +290,9 @@ void Aura::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 	if (gain > 1.0) {f[17] = 1.0; gain -= 1.0;} else {f[17] = gain; gain = 0.0;}
 	if (gain > 1.0) {f[18] = 1.0; gain -= 1.0;} else {f[18] = gain; gain = 0.0;}
 	if (gain > 1.0) {f[19] = 1.0; gain -= 1.0;} else {f[19] = gain; gain = 0.0;}
-	
+
 	//there, now we have a neat little moving average with remainders
-	
+
 	if (overallscale < 1.0) overallscale = 1.0;
 	f[0] /= overallscale;
 	f[1] /= overallscale;
@@ -315,7 +315,7 @@ void Aura::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 	f[18] /= overallscale;
 	f[19] /= overallscale;
 	//and now it's neatly scaled, too
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -360,19 +360,19 @@ void Aura::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		velocityL = lastSampleL - inputSampleL;
 		correctionL = previousVelocityL - velocityL;
-		
+
 		bL[19] = bL[18]; bL[18] = bL[17]; bL[17] = bL[16]; bL[16] = bL[15];
 		bL[15] = bL[14]; bL[14] = bL[13]; bL[13] = bL[12]; bL[12] = bL[11];
 		bL[11] = bL[10]; bL[10] = bL[9];
 		bL[9] = bL[8]; bL[8] = bL[7]; bL[7] = bL[6]; bL[6] = bL[5];
 		bL[5] = bL[4]; bL[4] = bL[3]; bL[3] = bL[2]; bL[2] = bL[1];
 		bL[1] = bL[0]; bL[0] = accumulatorSampleL = correctionL;
-		
+
 		//we are accumulating rates of change of the rate of change
-		
+
 		accumulatorSampleL *= f[0];
 		accumulatorSampleL += (bL[1] * f[1]);
 		accumulatorSampleL += (bL[2] * f[2]);
@@ -393,25 +393,25 @@ void Aura::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		accumulatorSampleL += (bL[17] * f[17]);
 		accumulatorSampleL += (bL[18] * f[18]);
 		accumulatorSampleL += (bL[19] * f[19]);
-		
-		velocityL = previousVelocityL + accumulatorSampleL;		
+
+		velocityL = previousVelocityL + accumulatorSampleL;
 		inputSampleL = lastSampleL + velocityL;
 		lastSampleL = inputSampleL;
-		previousVelocityL = -velocityL * pow(trim,2);	
+		previousVelocityL = -velocityL * pow(trim,2);
 		//left channel done
-		
+
 		velocityR = lastSampleR - inputSampleR;
 		correctionR = previousVelocityR - velocityR;
-		
+
 		bR[19] = bR[18]; bR[18] = bR[17]; bR[17] = bR[16]; bR[16] = bR[15];
 		bR[15] = bR[14]; bR[14] = bR[13]; bR[13] = bR[12]; bR[12] = bR[11];
 		bR[11] = bR[10]; bR[10] = bR[9];
 		bR[9] = bR[8]; bR[8] = bR[7]; bR[7] = bR[6]; bR[6] = bR[5];
 		bR[5] = bR[4]; bR[4] = bR[3]; bR[3] = bR[2]; bR[2] = bR[1];
 		bR[1] = bR[0]; bR[0] = accumulatorSampleR = correctionR;
-		
+
 		//we are accumulating rates of change of the rate of change
-		
+
 		accumulatorSampleR *= f[0];
 		accumulatorSampleR += (bR[1] * f[1]);
 		accumulatorSampleR += (bR[2] * f[2]);
@@ -433,18 +433,18 @@ void Aura::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		accumulatorSampleR += (bR[18] * f[18]);
 		accumulatorSampleR += (bR[19] * f[19]);
 		//we are doing our repetitive calculations on a separate value
-		
-		velocityR = previousVelocityR + accumulatorSampleR;		
+
+		velocityR = previousVelocityR + accumulatorSampleR;
 		inputSampleR = lastSampleR + velocityR;
 		lastSampleR = inputSampleR;
-		previousVelocityR = -velocityR * pow(trim,2);		
+		previousVelocityR = -velocityR * pow(trim,2);
 		//right channel done
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
-		}		
-		
+		}
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -464,10 +464,10 @@ void Aura::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;

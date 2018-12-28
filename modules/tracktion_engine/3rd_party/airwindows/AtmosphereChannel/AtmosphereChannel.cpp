@@ -17,7 +17,7 @@ AtmosphereChannel::AtmosphereChannel(audioMasterCallback audioMaster) :
 	gainchase = -90.0;
 	settingchase = -90.0;
 	chasespeed = 350.0;
-	
+
 	fpNShapeL = 0.0;
 	lastSampleAL = 0.0;
 	lastSampleBL = 0.0;
@@ -32,7 +32,7 @@ AtmosphereChannel::AtmosphereChannel(audioMasterCallback audioMaster) :
 	lastSampleKL = 0.0;
 	lastSampleLL = 0.0;
 	lastSampleML = 0.0;
-	
+
 	fpNShapeR = 0.0;
 	lastSampleAR = 0.0;
 	lastSampleBR = 0.0;
@@ -47,7 +47,7 @@ AtmosphereChannel::AtmosphereChannel(audioMasterCallback audioMaster) :
 	lastSampleKR = 0.0;
 	lastSampleLR = 0.0;
 	lastSampleMR = 0.0;
-	
+
 	thresholdA = 0.618033988749894;
 	thresholdB = 0.679837387624884;
 	thresholdC = 0.747821126387373;
@@ -62,10 +62,10 @@ AtmosphereChannel::AtmosphereChannel(audioMasterCallback audioMaster) :
 	thresholdL = 1.763323098246125;
 	thresholdM = 1.939655408070737;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -94,20 +94,20 @@ VstInt32 AtmosphereChannel::getChunk (void** data, bool isPreset)
 	float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
 	chunkData[0] = A;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
+	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
 	 started with. */
-	
+
 	*data = chunkData;
 	return kNumParameters * sizeof(float);
 }
 
 VstInt32 AtmosphereChannel::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	float *chunkData = (float *)data;
 	A = pinParameter(chunkData[0]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
-	
-	/* calculate any other fields you need here - you could copy in 
+
+	/* calculate any other fields you need here - you could copy in
 	 code from setParameter() here. */
 	return 0;
 }
@@ -147,7 +147,7 @@ void AtmosphereChannel::getParameterLabel(VstInt32 index, char *text) {
     }
 }
 
-VstInt32 AtmosphereChannel::canDo(char *text) 
+VstInt32 AtmosphereChannel::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool AtmosphereChannel::getEffectName(char* name) {

@@ -7,7 +7,7 @@
 #include "NodeDither.h"
 #endif
 
-void NodeDither::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void NodeDither::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -17,19 +17,19 @@ void NodeDither::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	int offsetA = (int)((A*100) * overallscale);
 	if (offsetA < 1) offsetA = 1;
 	if (offsetA > 2440) offsetA = 2440;
-	
+
 	int phase = floor(B*1.999);
 	//0 default is out of phase, 1 is in phase
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 	double currentDitherL;
 	double currentDitherR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -72,13 +72,13 @@ void NodeDither::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		inputSampleL *= 8388608.0;
 		inputSampleR *= 8388608.0;
 		//0-1 is now one bit, now we dither
 
 		if (gcount < 0 || gcount > 2450) {gcount = 2450;}
-		
+
 		currentDitherL = (rand()/(double)RAND_MAX);
 		inputSampleL += currentDitherL;
 
@@ -95,18 +95,18 @@ void NodeDither::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			inputSampleR -= dR[gcount+offsetA];
 		}
 		//in phase means adding, otherwise we subtract
-		
-		
+
+
 		inputSampleL = floor(inputSampleL);
 		inputSampleR = floor(inputSampleR);
 		dL[gcount+2450] = dL[gcount] = currentDitherL;
 		dR[gcount+2450] = dR[gcount] = currentDitherR;
-		
+
 		gcount--;
-		
+
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -117,29 +117,29 @@ void NodeDither::processReplacing(float **inputs, float **outputs, VstInt32 samp
     }
 }
 
-void NodeDither::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void NodeDither::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
     double* out1 = outputs[0];
     double* out2 = outputs[1];
-	
+
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	int offsetA = (int)((A*100) * overallscale);
 	if (offsetA < 1) offsetA = 1;
 	if (offsetA > 2440) offsetA = 2440;
-	
+
 	int phase = floor(B*1.999);
 	//0 default is out of phase, 1 is in phase
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 	double currentDitherL;
 	double currentDitherR;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -182,19 +182,19 @@ void NodeDither::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		inputSampleL *= 8388608.0;
 		inputSampleR *= 8388608.0;
 		//0-1 is now one bit, now we dither
-		
+
 		if (gcount < 0 || gcount > 2450) {gcount = 2450;}
-		
+
 		currentDitherL = (rand()/(double)RAND_MAX);
 		inputSampleL += currentDitherL;
-		
+
 		currentDitherR = (rand()/(double)RAND_MAX);
 		inputSampleR += currentDitherR;
-		
+
 		if (phase == 1) {
 			inputSampleL -= 1.0;
 			inputSampleL += dL[gcount+offsetA];
@@ -205,18 +205,18 @@ void NodeDither::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			inputSampleR -= dR[gcount+offsetA];
 		}
 		//in phase means adding, otherwise we subtract
-		
-		
+
+
 		inputSampleL = floor(inputSampleL);
 		inputSampleR = floor(inputSampleR);
 		dL[gcount+2450] = dL[gcount] = currentDitherL;
 		dR[gcount+2450] = dR[gcount] = currentDitherR;
-		
+
 		gcount--;
-		
+
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

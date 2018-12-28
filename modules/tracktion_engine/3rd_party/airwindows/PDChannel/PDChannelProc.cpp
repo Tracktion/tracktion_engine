@@ -7,7 +7,7 @@
 #include "PDChannel.h"
 #endif
 
-void PDChannel::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void PDChannel::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -15,25 +15,25 @@ void PDChannel::processReplacing(float **inputs, float **outputs, VstInt32 sampl
     float* out2 = outputs[1];
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double inputgain = A;
 	double intensity = B;
 	double applyL;
 	double applyR;
-	
+
 	double drySampleL;
 	double drySampleR;
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	if (settingchase != inputgain) {
 		chasespeed *= 2.0;
 		settingchase = inputgain;
 	}
 	if (chasespeed > 2500.0) chasespeed = 2500.0;
 	if (gainchase < 0.0) gainchase = inputgain;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -76,45 +76,45 @@ void PDChannel::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		chasespeed *= 0.9999;
 		chasespeed -= 0.01;
 		if (chasespeed < 350.0) chasespeed = 350.0;
 		//we have our chase speed compensated for recent fader activity
-		
+
 		gainchase = (((gainchase*chasespeed)+inputgain)/(chasespeed+1.0));
 		//gainchase is chasing the target, as a simple multiply gain factor
-		
+
 		if (1.0 != gainchase) {
 			inputSampleL *= gainchase;
 			inputSampleR *= gainchase;
 		}
 		//done with trim control
-		
+
 		inputSampleL = sin(inputSampleL);
 		inputSampleR = sin(inputSampleR);
 		//amplitude aspect
-		
+
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		inputSampleL = sin(inputSampleL);
 		inputSampleR = sin(inputSampleR);
 		//basic distortion factor
-		
+
 		applyL = (fabs(previousSampleL + inputSampleL) / 2.0) * intensity;
 		applyR = (fabs(previousSampleR + inputSampleR) / 2.0) * intensity;
 		//saturate less if previous sample was undistorted and low level, or if it was
 		//inverse polarity. Lets through highs and brightness more.
-		
-		inputSampleL = (drySampleL * (1.0 - applyL)) + (inputSampleL * applyL);		
-		inputSampleR = (drySampleR * (1.0 - applyR)) + (inputSampleR * applyR);		
+
+		inputSampleL = (drySampleL * (1.0 - applyL)) + (inputSampleL * applyL);
+		inputSampleR = (drySampleR * (1.0 - applyR)) + (inputSampleR * applyR);
 		//dry-wet control for intensity also has FM modulation to clean up highs
-		
+
 		previousSampleL = sin(drySampleL);
 		previousSampleR = sin(drySampleR);
 		//apply the sine while storing previous sample
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -145,7 +145,7 @@ void PDChannel::processReplacing(float **inputs, float **outputs, VstInt32 sampl
     }
 }
 
-void PDChannel::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void PDChannel::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -153,25 +153,25 @@ void PDChannel::processDoubleReplacing(double **inputs, double **outputs, VstInt
     double* out2 = outputs[1];
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double inputgain = A;
 	double intensity = B;
 	double applyL;
 	double applyR;
-	
+
 	double drySampleL;
 	double drySampleR;
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	if (settingchase != inputgain) {
 		chasespeed *= 2.0;
 		settingchase = inputgain;
 	}
 	if (chasespeed > 2500.0) chasespeed = 2500.0;
 	if (gainchase < 0.0) gainchase = inputgain;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -214,45 +214,45 @@ void PDChannel::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		chasespeed *= 0.9999;
 		chasespeed -= 0.01;
 		if (chasespeed < 350.0) chasespeed = 350.0;
 		//we have our chase speed compensated for recent fader activity
-		
+
 		gainchase = (((gainchase*chasespeed)+inputgain)/(chasespeed+1.0));
 		//gainchase is chasing the target, as a simple multiply gain factor
-		
+
 		if (1.0 != gainchase) {
 			inputSampleL *= gainchase;
 			inputSampleR *= gainchase;
 		}
 		//done with trim control
-		
+
 		inputSampleL = sin(inputSampleL);
 		inputSampleR = sin(inputSampleR);
 		//amplitude aspect
-		
+
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		inputSampleL = sin(inputSampleL);
 		inputSampleR = sin(inputSampleR);
 		//basic distortion factor
-		
+
 		applyL = (fabs(previousSampleL + inputSampleL) / 2.0) * intensity;
 		applyR = (fabs(previousSampleR + inputSampleR) / 2.0) * intensity;
 		//saturate less if previous sample was undistorted and low level, or if it was
 		//inverse polarity. Lets through highs and brightness more.
-		
-		inputSampleL = (drySampleL * (1.0 - applyL)) + (inputSampleL * applyL);		
-		inputSampleR = (drySampleR * (1.0 - applyR)) + (inputSampleR * applyR);		
+
+		inputSampleL = (drySampleL * (1.0 - applyL)) + (inputSampleL * applyL);
+		inputSampleR = (drySampleR * (1.0 - applyR)) + (inputSampleR * applyR);
 		//dry-wet control for intensity also has FM modulation to clean up highs
-		
+
 		previousSampleL = sin(drySampleL);
 		previousSampleR = sin(drySampleR);
 		//apply the sine while storing previous sample
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -272,7 +272,7 @@ void PDChannel::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

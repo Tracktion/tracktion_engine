@@ -1,6 +1,6 @@
 /* ========================================
  *  CStrip - CStrip.h
- *  Created 8/12/11 by SPIAdmin 
+ *  Created 8/12/11 by SPIAdmin
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
@@ -36,8 +36,8 @@ const int kNumInputs = 2;
 const int kNumOutputs = 2;
 const unsigned long kUniqueId = 'cstr';    //Change this to what the AU identity is!
 
-class CStrip : 
-    public AudioEffectX 
+class CStrip :
+    public AudioEffectX
 {
 public:
     CStrip(audioMasterCallback audioMaster);
@@ -57,12 +57,12 @@ public:
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
     virtual void getParameterName(VstInt32 index, char *text);    // name of the parameter
-    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value    
+    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value
     virtual VstInt32 canDo(char *text);
 private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
-    
+
 	long double fpNShapeLA;
 	long double fpNShapeLB;
 	long double fpNShapeRA;
@@ -74,7 +74,7 @@ private:
 	double last2SampleL;
 	double lastSampleR;
 	double last2SampleR;
-	
+
 	//begin EQ
 	double iirHighSampleLA;
 	double iirHighSampleLB;
@@ -88,7 +88,7 @@ private:
 	double iirLowSampleLE;
 	double iirHighSampleL;
 	double iirLowSampleL;
-	
+
 	double iirHighSampleRA;
 	double iirHighSampleRB;
 	double iirHighSampleRC;
@@ -101,17 +101,17 @@ private:
 	double iirLowSampleRE;
 	double iirHighSampleR;
 	double iirLowSampleR;
-	
+
 	double tripletLA;
 	double tripletLB;
 	double tripletLC;
 	double tripletFactorL;
-	
+
 	double tripletRA;
 	double tripletRB;
 	double tripletRC;
 	double tripletFactorR;
-	
+
 	double lowpassSampleLAA;
 	double lowpassSampleLAB;
 	double lowpassSampleLBA;
@@ -123,7 +123,7 @@ private:
 	double lowpassSampleLE;
 	double lowpassSampleLF;
 	double lowpassSampleLG;
-	
+
 	double lowpassSampleRAA;
 	double lowpassSampleRAB;
 	double lowpassSampleRBA;
@@ -135,7 +135,7 @@ private:
 	double lowpassSampleRE;
 	double lowpassSampleRF;
 	double lowpassSampleRG;
-	
+
 	double highpassSampleLAA;
 	double highpassSampleLAB;
 	double highpassSampleLBA;
@@ -146,7 +146,7 @@ private:
 	double highpassSampleLDB;
 	double highpassSampleLE;
 	double highpassSampleLF;
-	
+
 	double highpassSampleRAA;
 	double highpassSampleRAB;
 	double highpassSampleRBA;
@@ -157,11 +157,11 @@ private:
 	double highpassSampleRDB;
 	double highpassSampleRE;
 	double highpassSampleRF;
-	
+
 	bool flip;
 	int flipthree;
 	//end EQ
-	
+
 	//begin Gate
 	bool WasNegativeL;
 	int ZeroCrossL;
@@ -173,13 +173,13 @@ private:
 	double gaterollerR;
 	double gateR;
 	//end Gate
-	
+
 	//begin Timing
 	double pL[4099];
 	double pR[4099];
 	int count;
 	//end Timing
-	
+
 	//begin ButterComp
 	double controlAposL;
 	double controlAnegL;
@@ -204,7 +204,7 @@ private:
 	double nvgRB;
 	//end ButterComp
 	//flip is already covered in EQ
-	
+
     float A;
     float B;
     float C;

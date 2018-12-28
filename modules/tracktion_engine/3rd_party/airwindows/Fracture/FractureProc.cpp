@@ -7,7 +7,7 @@
 #include "Fracture.h"
 #endif
 
-void Fracture::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Fracture::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -17,7 +17,7 @@ void Fracture::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
 	long double fpNew = 1.0 - fpOld;
-	
+
 	double density = A*4;
 	double fracture = (((B*2.999)+1)*3.14159265358979);
 	double output = C;
@@ -25,12 +25,12 @@ void Fracture::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	double dry = 1.0-wet;
 	double bridgerectifier;
 	density = density * fabs(density);
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
 	long double drySampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -94,13 +94,13 @@ void Fracture::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		if (inputSampleR > 0) inputSampleR = bridgerectifier;
 		else inputSampleR = -bridgerectifier;
 		//blend according to density control
-		
+
 		inputSampleL *= output;
 		inputSampleR *= output;
-		
+
 		inputSampleL = (drySampleL * dry)+(inputSampleL * wet);
-		inputSampleR = (drySampleR * dry)+(inputSampleR * wet);		
-		
+		inputSampleR = (drySampleR * dry)+(inputSampleR * wet);
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -131,7 +131,7 @@ void Fracture::processReplacing(float **inputs, float **outputs, VstInt32 sample
     }
 }
 
-void Fracture::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Fracture::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -143,8 +143,8 @@ void Fracture::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	overallscale *= getSampleRate();
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double density = A*4;
 	double fracture = (((B*2.999)+1)*3.14159265358979);
 	double output = C;
@@ -152,11 +152,11 @@ void Fracture::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	double dry = 1.0-wet;
 	double bridgerectifier;
 	density = density * fabs(density);
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
-	long double drySampleR;	
+	long double drySampleR;
 
     while (--sampleFrames >= 0)
     {
@@ -202,10 +202,10 @@ void Fracture::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		inputSampleL *= density;
 		inputSampleR *= density;
-		
+
 		bridgerectifier = fabs(inputSampleL)*fracture;
 		if (bridgerectifier > fracture) bridgerectifier = fracture;
 		//max value for sine function
@@ -213,7 +213,7 @@ void Fracture::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		if (inputSampleL > 0) inputSampleL = bridgerectifier;
 		else inputSampleL = -bridgerectifier;
 		//blend according to density control
-		
+
 		bridgerectifier = fabs(inputSampleR)*fracture;
 		if (bridgerectifier > fracture) bridgerectifier = fracture;
 		//max value for sine function
@@ -221,13 +221,13 @@ void Fracture::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		if (inputSampleR > 0) inputSampleR = bridgerectifier;
 		else inputSampleR = -bridgerectifier;
 		//blend according to density control
-		
+
 		inputSampleL *= output;
 		inputSampleR *= output;
-		
+
 		inputSampleL = (drySampleL * dry)+(inputSampleL * wet);
-		inputSampleR = (drySampleR * dry)+(inputSampleR * wet);		
-		
+		inputSampleR = (drySampleR * dry)+(inputSampleR * wet);
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -247,10 +247,10 @@ void Fracture::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;

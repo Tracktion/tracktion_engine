@@ -7,7 +7,7 @@
 #include "HardVacuum.h"
 #endif
 
-void HardVacuum::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void HardVacuum::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -35,13 +35,13 @@ void HardVacuum::processReplacing(float **inputs, float **outputs, VstInt32 samp
 
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	double drySampleL;
 	double drySampleR;
 	long double inputSampleL;
 	long double inputSampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -86,7 +86,7 @@ void HardVacuum::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		skewL = (inputSampleL - lastSampleL);
 		skewR = (inputSampleR - lastSampleR);
 		lastSampleL = inputSampleL;
@@ -97,7 +97,7 @@ void HardVacuum::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		if (bridgerectifierL > 3.1415926) bridgerectifierL = 3.1415926;
 		if (bridgerectifierR > 3.1415926) bridgerectifierR = 3.1415926;
 		//for skew we want it to go to zero effect again, so we use full range of the sine
-		
+
 		bridgerectifierL = sin(bridgerectifierL);
 		bridgerectifierR = sin(bridgerectifierR);
 		if (skewL > 0) skewL = bridgerectifierL*aura;
@@ -112,10 +112,10 @@ void HardVacuum::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		skewR *= 1.557079633;
 		//crank up the gain on this so we can make it sing
 		//We're doing all this here so skew isn't incremented by each stage
-		
+
 		countdown = multistage;
 		//begin the torture
-		
+
 		while (countdown > 0)
 		{
 			if (countdown > 1.0) drive = 1.557079633;
@@ -170,12 +170,12 @@ void HardVacuum::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			inputSampleL *= out;
 			inputSampleR *= out;
 		}
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -206,13 +206,13 @@ void HardVacuum::processReplacing(float **inputs, float **outputs, VstInt32 samp
     }
 }
 
-void HardVacuum::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void HardVacuum::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
     double* out1 = outputs[0];
     double* out2 = outputs[1];
-	
+
 	double multistage = A*2.0;
 	if (multistage > 1) multistage *= multistage;
 	//WE MAKE LOUD NOISE! RAWWWK!
@@ -231,11 +231,11 @@ void HardVacuum::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	double bridgerectifierR;
 	double skewL;
 	double skewR;
-	
+
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double drySampleL;
 	double drySampleR;
 	long double inputSampleL;
@@ -286,7 +286,7 @@ void HardVacuum::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		skewL = (inputSampleL - lastSampleL);
 		skewR = (inputSampleR - lastSampleR);
 		lastSampleL = inputSampleL;
@@ -297,7 +297,7 @@ void HardVacuum::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		if (bridgerectifierL > 3.1415926) bridgerectifierL = 3.1415926;
 		if (bridgerectifierR > 3.1415926) bridgerectifierR = 3.1415926;
 		//for skew we want it to go to zero effect again, so we use full range of the sine
-		
+
 		bridgerectifierL = sin(bridgerectifierL);
 		bridgerectifierR = sin(bridgerectifierR);
 		if (skewL > 0) skewL = bridgerectifierL*aura;
@@ -312,10 +312,10 @@ void HardVacuum::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		skewR *= 1.557079633;
 		//crank up the gain on this so we can make it sing
 		//We're doing all this here so skew isn't incremented by each stage
-		
+
 		countdown = multistage;
 		//begin the torture
-		
+
 		while (countdown > 0)
 		{
 			if (countdown > 1.0) drive = 1.557079633;
@@ -365,17 +365,17 @@ void HardVacuum::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			countdown -= 1.0;
 			//step down a notch and repeat.
 		}
-		
+
 		if (out != 1.0) {
 		 inputSampleL *= out;
 		 inputSampleR *= out;
 		 }
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -395,7 +395,7 @@ void HardVacuum::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

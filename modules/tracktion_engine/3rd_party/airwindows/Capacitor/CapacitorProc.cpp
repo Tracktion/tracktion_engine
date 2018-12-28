@@ -7,13 +7,13 @@
 #include "Capacitor.h"
 #endif
 
-void Capacitor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Capacitor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
     float* out1 = outputs[0];
     float* out2 = outputs[1];
-	
+
 	lowpassChase = pow(A,2);
 	highpassChase = pow(B,2);
 	wetChase = C;
@@ -25,20 +25,20 @@ void Capacitor::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	lastLowpass = lowpassChase;
 	lastHighpass = highpassChase;
 	lastWet = wetChase;
-	
+
 	double invLowpass;
 	double invHighpass;
 	double dry;
-	
+
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
 	float drySampleL;
 	float drySampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -88,7 +88,7 @@ void Capacitor::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		lowpassAmount = (((lowpassAmount*lowpassSpeed)+lowpassChase)/(lowpassSpeed + 1.0)); invLowpass = 1.0 - lowpassAmount;
 		highpassAmount = (((highpassAmount*highpassSpeed)+highpassChase)/(highpassSpeed + 1.0)); invHighpass = 1.0 - highpassAmount;
 		wet = (((wet*wetSpeed)+wetChase)/(wetSpeed+1.0)); dry = 1.0 - wet;
-		
+
 		count++; if (count > 5) count = 0; switch (count)
 		{
 			case 0:
@@ -178,7 +178,7 @@ void Capacitor::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		}
 		//Highpass Filter chunk. This is three poles of IIR highpass, with a 'gearbox' that progressively
 		//steepens the filter after minimizing artifacts.
-		
+
 		inputSampleL = (drySampleL * dry) + (inputSampleL * wet);
 		inputSampleR = (drySampleR * dry) + (inputSampleR * wet);
 
@@ -212,7 +212,7 @@ void Capacitor::processReplacing(float **inputs, float **outputs, VstInt32 sampl
     }
 }
 
-void Capacitor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Capacitor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -230,20 +230,20 @@ void Capacitor::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	lastLowpass = lowpassChase;
 	lastHighpass = highpassChase;
 	lastWet = wetChase;
-	
+
 	double invLowpass;
 	double invHighpass;
 	double dry;
-	
+
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	long double inputSampleL;
 	long double inputSampleR;
 	double drySampleL;
 	double drySampleR;
-	
+
 
     while (--sampleFrames >= 0)
     {
@@ -293,7 +293,7 @@ void Capacitor::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		lowpassAmount = (((lowpassAmount*lowpassSpeed)+lowpassChase)/(lowpassSpeed + 1.0)); invLowpass = 1.0 - lowpassAmount;
 		highpassAmount = (((highpassAmount*highpassSpeed)+highpassChase)/(highpassSpeed + 1.0)); invHighpass = 1.0 - highpassAmount;
 		wet = (((wet*wetSpeed)+wetChase)/(wetSpeed+1.0)); dry = 1.0 - wet;
-		
+
 		count++; if (count > 5) count = 0; switch (count)
 		{
 			case 0:
@@ -383,10 +383,10 @@ void Capacitor::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		}
 		//Highpass Filter chunk. This is three poles of IIR highpass, with a 'gearbox' that progressively
 		//steepens the filter after minimizing artifacts.
-		
+
 		inputSampleL = (drySampleL * dry) + (inputSampleL * wet);
 		inputSampleR = (drySampleR * dry) + (inputSampleR * wet);
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

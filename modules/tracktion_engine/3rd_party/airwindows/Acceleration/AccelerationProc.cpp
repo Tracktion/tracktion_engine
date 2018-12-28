@@ -7,7 +7,7 @@
 #include "Acceleration.h"
 #endif
 
-void Acceleration::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Acceleration::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -20,11 +20,11 @@ void Acceleration::processReplacing(float **inputs, float **outputs, VstInt32 sa
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
 	long double fpNew = 1.0 - fpOld;
-	
+
 	double intensity = pow(A,3)*(32/overallscale);
 	double wet = B;
 	double dry = 1.0 - wet;
-	
+
 	double senseL;
 	double smoothL;
 	double senseR;
@@ -34,7 +34,7 @@ void Acceleration::processReplacing(float **inputs, float **outputs, VstInt32 sa
 	double drySampleR;
 	long double inputSampleL;
 	long double inputSampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -79,7 +79,7 @@ void Acceleration::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		s3L = s2L;
 		s2L = s1L;
 		s1L = inputSampleL;
@@ -94,7 +94,7 @@ void Acceleration::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		if (o2L > senseL) senseL = o2L;
 		if (o3L > senseL) senseL = o3L;
 		//sense on the most intense
-		
+
 		s3R = s2R;
 		s2R = s1R;
 		s1R = inputSampleR;
@@ -109,32 +109,32 @@ void Acceleration::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		if (o2R > senseR) senseR = o2R;
 		if (o3R > senseR) senseR = o3R;
 		//sense on the most intense
-		
+
 		if (senseL > 1.0) senseL = 1.0;
 		if (senseR > 1.0) senseR = 1.0;
-		
+
 		inputSampleL *= (1.0-senseL);
 		inputSampleR *= (1.0-senseR);
-		
+
 		inputSampleL += (smoothL*senseL);
 		inputSampleR += (smoothR*senseR);
-		
+
 		senseL /= 2.0;
 		senseR /= 2.0;
-		
+
 		accumulatorSample = (ataLastOutL*senseL)+(inputSampleL*(1.0-senseL));
 		ataLastOutL = inputSampleL;
 		inputSampleL = accumulatorSample;
-		
+
 		accumulatorSample = (ataLastOutR*senseR)+(inputSampleR*(1.0-senseR));
 		ataLastOutR = inputSampleR;
-		inputSampleR = accumulatorSample;		
-		
+		inputSampleR = accumulatorSample;
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -165,7 +165,7 @@ void Acceleration::processReplacing(float **inputs, float **outputs, VstInt32 sa
     }
 }
 
-void Acceleration::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Acceleration::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -177,12 +177,12 @@ void Acceleration::processDoubleReplacing(double **inputs, double **outputs, Vst
 	overallscale *= getSampleRate();
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double intensity = pow(A,3)*(32/overallscale);
 	double wet = B;
 	double dry = 1.0 - wet;
-	
+
 	double senseL;
 	double smoothL;
 	double senseR;
@@ -192,7 +192,7 @@ void Acceleration::processDoubleReplacing(double **inputs, double **outputs, Vst
 	double drySampleR;
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -237,7 +237,7 @@ void Acceleration::processDoubleReplacing(double **inputs, double **outputs, Vst
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		s3L = s2L;
 		s2L = s1L;
 		s1L = inputSampleL;
@@ -252,7 +252,7 @@ void Acceleration::processDoubleReplacing(double **inputs, double **outputs, Vst
 		if (o2L > senseL) senseL = o2L;
 		if (o3L > senseL) senseL = o3L;
 		//sense on the most intense
-		
+
 		s3R = s2R;
 		s2R = s1R;
 		s1R = inputSampleR;
@@ -267,32 +267,32 @@ void Acceleration::processDoubleReplacing(double **inputs, double **outputs, Vst
 		if (o2R > senseR) senseR = o2R;
 		if (o3R > senseR) senseR = o3R;
 		//sense on the most intense
-		
+
 		if (senseL > 1.0) senseL = 1.0;
 		if (senseR > 1.0) senseR = 1.0;
-		
+
 		inputSampleL *= (1.0-senseL);
 		inputSampleR *= (1.0-senseR);
-		
+
 		inputSampleL += (smoothL*senseL);
 		inputSampleR += (smoothR*senseR);
-		
+
 		senseL /= 2.0;
 		senseR /= 2.0;
-		
+
 		accumulatorSample = (ataLastOutL*senseL)+(inputSampleL*(1.0-senseL));
 		ataLastOutL = inputSampleL;
 		inputSampleL = accumulatorSample;
-		
+
 		accumulatorSample = (ataLastOutR*senseR)+(inputSampleR*(1.0-senseR));
 		ataLastOutR = inputSampleR;
-		inputSampleR = accumulatorSample;		
-		
+		inputSampleR = accumulatorSample;
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -312,7 +312,7 @@ void Acceleration::processDoubleReplacing(double **inputs, double **outputs, Vst
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

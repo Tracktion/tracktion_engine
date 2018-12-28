@@ -7,13 +7,13 @@
 #include "FromTape.h"
 #endif
 
-void FromTape::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void FromTape::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
     float* out1 = outputs[0];
     float* out2 = outputs[1];
-	
+
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
@@ -36,14 +36,14 @@ void FromTape::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	double tempSampleR;
 	double drySampleR;
 	double randy;
-	double invrandy;	
+	double invrandy;
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 	long double inputSampleL;
 	long double inputSampleR;
-	
-    
+
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -88,12 +88,12 @@ void FromTape::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		if (inputgain != 1.0) {
 			inputSampleL *= inputgain;
 			inputSampleR *= inputgain;
-		}		
-		
+		}
+
 		randy = (rand()/(double)RAND_MAX) * SoftenControl; //for soften
 		invrandy = (1.0-randy);
 		randy /= 2.0;
@@ -130,7 +130,7 @@ void FromTape::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		iirSampleXL = (iirSampleXL * altAmount) + (tempSampleL * iirAmount); tempSampleL -= iirSampleXL; SubtractL += iirSampleXL;
 		iirSampleYL = (iirSampleYL * altAmount) + (tempSampleL * iirAmount); tempSampleL -= iirSampleYL; SubtractL += iirSampleYL;
 		iirSampleZL = (iirSampleZL * altAmount) + (tempSampleL * iirAmount); tempSampleL -= iirSampleZL; SubtractL += iirSampleZL;
-		
+
 		iirSampleAR = (iirSampleAR * altAmount) + (tempSampleR * iirAmount); tempSampleR -= iirSampleAR; SubtractR += iirSampleAR;
 		iirSampleBR = (iirSampleBR * altAmount) + (tempSampleR * iirAmount); tempSampleR -= iirSampleBR; SubtractR += iirSampleBR;
 		iirSampleCR = (iirSampleCR * altAmount) + (tempSampleR * iirAmount); tempSampleR -= iirSampleCR; SubtractR += iirSampleCR;
@@ -163,12 +163,12 @@ void FromTape::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		inputSampleL -= SubtractL;
 		inputSampleR -= SubtractR;
 		//apply stored up tiny corrections.
-		
-		
+
+
 		if (flip < 1 || flip > 3) flip = 1;
 		switch (flip)
 		{
-			case 1:				
+			case 1:
 				iirMidRollerAL = (iirMidRollerAL * (1.0 - RollAmount)) + (inputSampleL * RollAmount);
 				iirMidRollerAL = (invrandy * iirMidRollerAL) + (randy * iirMidRollerBL) + (randy * iirMidRollerCL);
 				HighsSampleL = inputSampleL - iirMidRollerAL;
@@ -194,16 +194,16 @@ void FromTape::processReplacing(float **inputs, float **outputs, VstInt32 sample
 				break;
 		}
 		flip++; //increment the triplet counter
-		
-		SubtractL = HighsSampleL;		
+
+		SubtractL = HighsSampleL;
 		bridgerectifierL = fabs(SubtractL)*1.57079633;
 		if (bridgerectifierL > 1.57079633) bridgerectifierL = 1.57079633;
 		bridgerectifierL = 1-cos(bridgerectifierL);
 		if (SubtractL > 0) SubtractL = bridgerectifierL;
 		if (SubtractL < 0) SubtractL = -bridgerectifierL;
 		inputSampleL -= SubtractL;
-		
-		SubtractR = HighsSampleR;		
+
+		SubtractR = HighsSampleR;
 		bridgerectifierR = fabs(SubtractR)*1.57079633;
 		if (bridgerectifierR > 1.57079633) bridgerectifierR = 1.57079633;
 		bridgerectifierR = 1-cos(bridgerectifierR);
@@ -212,18 +212,18 @@ void FromTape::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		inputSampleR -= SubtractR;
 		//Soften works using the MidRoller stuff, defining a bright parallel channel that we apply negative Density
 		//to, and then subtract from the main audio. That makes the 'highs channel subtract' hit only the loudest
-		//transients, plus we are subtracting any artifacts we got from the negative Density.				
-		
+		//transients, plus we are subtracting any artifacts we got from the negative Density.
+
 		if (outputgain != 1.0) {
 			inputSampleL *= outputgain;
 			inputSampleR *= outputgain;
 		}
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -243,10 +243,10 @@ void FromTape::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;
@@ -254,13 +254,13 @@ void FromTape::processReplacing(float **inputs, float **outputs, VstInt32 sample
     }
 }
 
-void FromTape::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void FromTape::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
     double* out1 = outputs[0];
     double* out2 = outputs[1];
-	
+
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
@@ -283,13 +283,13 @@ void FromTape::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	double tempSampleR;
 	double drySampleR;
 	double randy;
-	double invrandy;	
+	double invrandy;
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
 	long double fpNew = 1.0 - fpOld;
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -334,23 +334,23 @@ void FromTape::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 
 		if (inputgain != 1.0) {
 			inputSampleL *= inputgain;
 			inputSampleR *= inputgain;
-		}		
-		
+		}
+
 		randy = (rand()/(double)RAND_MAX) * SoftenControl; //for soften
 		invrandy = (1.0-randy);
 		randy /= 2.0;
 		//we've set up so that we dial in the amount of the alt sections (in pairs) with invrandy being the source section
-		
+
 		SubtractL = 0.0;
 		SubtractR = 0.0;
 		tempSampleL = inputSampleL;
 		tempSampleR = inputSampleR;
-		
+
 		iirSampleAL = (iirSampleAL * altAmount) + (tempSampleL * iirAmount); tempSampleL -= iirSampleAL; SubtractL += iirSampleAL;
 		iirSampleBL = (iirSampleBL * altAmount) + (tempSampleL * iirAmount); tempSampleL -= iirSampleBL; SubtractL += iirSampleBL;
 		iirSampleCL = (iirSampleCL * altAmount) + (tempSampleL * iirAmount); tempSampleL -= iirSampleCL; SubtractL += iirSampleCL;
@@ -377,7 +377,7 @@ void FromTape::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		iirSampleXL = (iirSampleXL * altAmount) + (tempSampleL * iirAmount); tempSampleL -= iirSampleXL; SubtractL += iirSampleXL;
 		iirSampleYL = (iirSampleYL * altAmount) + (tempSampleL * iirAmount); tempSampleL -= iirSampleYL; SubtractL += iirSampleYL;
 		iirSampleZL = (iirSampleZL * altAmount) + (tempSampleL * iirAmount); tempSampleL -= iirSampleZL; SubtractL += iirSampleZL;
-		
+
 		iirSampleAR = (iirSampleAR * altAmount) + (tempSampleR * iirAmount); tempSampleR -= iirSampleAR; SubtractR += iirSampleAR;
 		iirSampleBR = (iirSampleBR * altAmount) + (tempSampleR * iirAmount); tempSampleR -= iirSampleBR; SubtractR += iirSampleBR;
 		iirSampleCR = (iirSampleCR * altAmount) + (tempSampleR * iirAmount); tempSampleR -= iirSampleCR; SubtractR += iirSampleCR;
@@ -410,12 +410,12 @@ void FromTape::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		inputSampleL -= SubtractL;
 		inputSampleR -= SubtractR;
 		//apply stored up tiny corrections.
-		
-		
+
+
 		if (flip < 1 || flip > 3) flip = 1;
 		switch (flip)
 		{
-			case 1:				
+			case 1:
 				iirMidRollerAL = (iirMidRollerAL * (1.0 - RollAmount)) + (inputSampleL * RollAmount);
 				iirMidRollerAL = (invrandy * iirMidRollerAL) + (randy * iirMidRollerBL) + (randy * iirMidRollerCL);
 				HighsSampleL = inputSampleL - iirMidRollerAL;
@@ -441,16 +441,16 @@ void FromTape::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 				break;
 		}
 		flip++; //increment the triplet counter
-		
-		SubtractL = HighsSampleL;		
+
+		SubtractL = HighsSampleL;
 		bridgerectifierL = fabs(SubtractL)*1.57079633;
 		if (bridgerectifierL > 1.57079633) bridgerectifierL = 1.57079633;
 		bridgerectifierL = 1-cos(bridgerectifierL);
 		if (SubtractL > 0) SubtractL = bridgerectifierL;
 		if (SubtractL < 0) SubtractL = -bridgerectifierL;
 		inputSampleL -= SubtractL;
-		
-		SubtractR = HighsSampleR;		
+
+		SubtractR = HighsSampleR;
 		bridgerectifierR = fabs(SubtractR)*1.57079633;
 		if (bridgerectifierR > 1.57079633) bridgerectifierR = 1.57079633;
 		bridgerectifierR = 1-cos(bridgerectifierR);
@@ -459,18 +459,18 @@ void FromTape::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		inputSampleR -= SubtractR;
 		//Soften works using the MidRoller stuff, defining a bright parallel channel that we apply negative Density
 		//to, and then subtract from the main audio. That makes the 'highs channel subtract' hit only the loudest
-		//transients, plus we are subtracting any artifacts we got from the negative Density.				
-		
+		//transients, plus we are subtracting any artifacts we got from the negative Density.
+
 		if (outputgain != 1.0) {
 			inputSampleL *= outputgain;
 			inputSampleR *= outputgain;
 		}
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -490,10 +490,10 @@ void FromTape::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
-		
+
 		*in1++;
 		*in2++;
 		*out1++;

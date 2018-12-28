@@ -18,16 +18,16 @@ NonlinearSpace::NonlinearSpace(audioMasterCallback audioMaster) :
 	D = 0.5;
 	E = 0.5; //this is nonlin, so it produces -1 to 1: 0.5 will become 0
 	F = 1.0;
-	
+
 	int count;
 	for(count = 0; count < 2347; count++) {dMid[count] = 0.0;}
 	for(count = 0; count < 1333; count++) {dSide[count] = 0.0;}
 	for(count = 0; count < 5923; count++) {dLeft[count] = 0.0;}
 	for(count = 0; count < 5925; count++) {dRight[count] = 0.0;}
-	
+
 	for(count = 0; count < 7574; count++) {dpreR[count] = 0.0;}
 	for(count = 0; count < 7574; count++) {dpreL[count] = 0.0;}
-	
+
 	for(count = 0; count < 7574; count++) {dA[count] = 0.0;}
 	for(count = 0; count < 7308; count++) {dB[count] = 0.0;}
 	for(count = 0; count < 7178; count++) {dC[count] = 0.0;}
@@ -54,13 +54,13 @@ NonlinearSpace::NonlinearSpace(audioMasterCallback audioMaster) :
 	for(count = 0; count < 2424; count++) {dX[count] = 0.0;}
 	for(count = 0; count < 2147; count++) {dY[count] = 0.0;}
 	for(count = 0; count < 2089; count++) {dZ[count] = 0.0;}
-	
+
 	oneMid = 1; delayMid = 2346; maxdelayMid = 2346;
 	oneSide = 1; delaySide = 1332; maxdelaySide = 1332;
 	oneLeft = 1; delayLeft = 5922; maxdelayLeft = 5922;
 	oneRight = 1; delayRight = 5924; maxdelayRight = 5924;
 	onepre = 1; delaypre = 7573; maxdelaypre = 7573;
-	
+
 	oneA = 1; twoA = 2; treA = 3; delayA = 7573; maxdelayA = 7573;
 	oneB = 1; twoB = 2; treB = 3; delayB = 7307; maxdelayB = 7307;
 	oneC = 1; twoC = 2; treC = 3; delayC = 7177; maxdelayC = 7177;
@@ -87,7 +87,7 @@ NonlinearSpace::NonlinearSpace(audioMasterCallback audioMaster) :
 	oneX = 1; twoX = 2; treX = 3; delayX = 2423; maxdelayX = 2423;
 	oneY = 1; twoY = 2; treY = 3; delayY = 2146; maxdelayY = 2146;
 	oneZ = 1; twoZ = 2; treZ = 3; delayZ = 2088; maxdelayZ = 2088;
-	
+
 	avgInputL = 0.0;
 	avgInputR = 0.0;
 	avgOutputL = 0.0;
@@ -104,7 +104,7 @@ NonlinearSpace::NonlinearSpace(audioMasterCallback audioMaster) :
 	a2vg2InputR = 0.0;
 	a2vg2OutputL = 0.0;
 	a2vg2OutputR = 0.0;
-	
+
 	lowpassSampleAA = 0.0;
 	lowpassSampleAB = 0.0;
 	lowpassSampleBA = 0.0;
@@ -116,7 +116,7 @@ NonlinearSpace::NonlinearSpace(audioMasterCallback audioMaster) :
 	lowpassSampleE = 0.0;
 	lowpassSampleF = 0.0;
 	lowpassSampleG = 0.0;
-	
+
 	rowpassSampleAA = 0.0;
 	rowpassSampleAB = 0.0;
 	rowpassSampleBA = 0.0;
@@ -128,7 +128,7 @@ NonlinearSpace::NonlinearSpace(audioMasterCallback audioMaster) :
 	rowpassSampleE = 0.0;
 	rowpassSampleF = 0.0;
 	rowpassSampleG = 0.0;
-	
+
 	interpolA = 0.0;
 	interpolB = 0.0;
 	interpolC = 0.0;
@@ -155,7 +155,7 @@ NonlinearSpace::NonlinearSpace(audioMasterCallback audioMaster) :
 	interpolX = 0.0;
 	interpolY = 0.0;
 	interpolZ = 0.0;
-	
+
 	pitchshiftA = 1.0 / maxdelayA;
 	pitchshiftB = 1.0 / maxdelayB;
 	pitchshiftC = 1.0 / maxdelayC;
@@ -182,9 +182,9 @@ NonlinearSpace::NonlinearSpace(audioMasterCallback audioMaster) :
 	pitchshiftX = 1.0 / maxdelayX;
 	pitchshiftY = 1.0 / maxdelayY;
 	pitchshiftZ = 1.0 / maxdelayZ;
-	
+
 	nonlin = 0.0;
-	
+
 	verboutL = 0.0;
 	verboutR = 0.0;
 	iirCCSampleL = 0.0;
@@ -193,18 +193,18 @@ NonlinearSpace::NonlinearSpace(audioMasterCallback audioMaster) :
 	iirSampleR = 0.0;
 	savedRoomsize = -1.0; //force update to begin
 	countdown = -1;
-	flip = true;	
-	
+	flip = true;
+
 	fpNShapeLA = 0.0;
 	fpNShapeLB = 0.0;
 	fpNShapeRA = 0.0;
 	fpNShapeRB = 0.0;
 	fpFlip = true;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -238,15 +238,15 @@ VstInt32 NonlinearSpace::getChunk (void** data, bool isPreset)
 	chunkData[4] = E;
 	chunkData[5] = F;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
+	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
 	 started with. */
-	
+
 	*data = chunkData;
 	return kNumParameters * sizeof(float);
 }
 
 VstInt32 NonlinearSpace::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	float *chunkData = (float *)data;
 	A = pinParameter(chunkData[0]);
 	B = pinParameter(chunkData[1]);
@@ -255,8 +255,8 @@ VstInt32 NonlinearSpace::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 	E = pinParameter(chunkData[4]);
 	F = pinParameter(chunkData[5]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
-	
-	/* calculate any other fields you need here - you could copy in 
+
+	/* calculate any other fields you need here - you could copy in
 	 code from setParameter() here. */
 	return 0;
 }
@@ -330,7 +330,7 @@ void NonlinearSpace::getParameterLabel(VstInt32 index, char *text) {
     }
 }
 
-VstInt32 NonlinearSpace::canDo(char *text) 
+VstInt32 NonlinearSpace::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool NonlinearSpace::getEffectName(char* name) {

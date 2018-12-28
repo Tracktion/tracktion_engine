@@ -7,7 +7,7 @@
 #include "TPDFDither.h"
 #endif
 
-void TPDFDither::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void TPDFDither::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -16,7 +16,7 @@ void TPDFDither::processReplacing(float **inputs, float **outputs, VstInt32 samp
 
 	long double inputSampleL;
 	long double inputSampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -63,20 +63,20 @@ void TPDFDither::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		inputSampleL *= 8388608.0;
 		inputSampleR *= 8388608.0;
 		//0-1 is now one bit, now we dither
-		
+
 		inputSampleL -= 1.0;
 		inputSampleR -= 1.0;
-		
+
 		inputSampleL += (rand()/(double)RAND_MAX);
 		inputSampleR += (rand()/(double)RAND_MAX);
-		
+
 		inputSampleL += (rand()/(double)RAND_MAX);
 		inputSampleR += (rand()/(double)RAND_MAX);
-		
+
 		inputSampleL = floor(inputSampleL);
 		inputSampleR = floor(inputSampleR);
 		//TPDF: two 0-1 random noises
-		
+
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
 
@@ -90,7 +90,7 @@ void TPDFDither::processReplacing(float **inputs, float **outputs, VstInt32 samp
     }
 }
 
-void TPDFDither::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void TPDFDither::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -146,23 +146,23 @@ void TPDFDither::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		inputSampleL *= 8388608.0;
 		inputSampleR *= 8388608.0;
 		//0-1 is now one bit, now we dither
-		
+
 		inputSampleL -= 1.0;
 		inputSampleR -= 1.0;
-		
+
 		inputSampleL += (rand()/(double)RAND_MAX);
 		inputSampleR += (rand()/(double)RAND_MAX);
-		
+
 		inputSampleL += (rand()/(double)RAND_MAX);
 		inputSampleR += (rand()/(double)RAND_MAX);
-		
+
 		inputSampleL = floor(inputSampleL);
 		inputSampleR = floor(inputSampleR);
 		//TPDF: two 0-1 random noises
-		
+
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

@@ -1,6 +1,6 @@
 /* ========================================
  *  ClipOnly - ClipOnly.h
- *  Created 8/12/11 by SPIAdmin 
+ *  Created 8/12/11 by SPIAdmin
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
@@ -24,8 +24,8 @@ const int kNumInputs = 2;
 const int kNumOutputs = 2;
 const unsigned long kUniqueId = 'cloy';    //Change this to what the AU identity is!
 
-class ClipOnly : 
-    public AudioEffectX 
+class ClipOnly :
+    public AudioEffectX
 {
 public:
     ClipOnly(audioMasterCallback audioMaster);
@@ -43,7 +43,7 @@ public:
 private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
-    
+
 	float lastSampleL;
 	bool wasPosClipL;
 	bool wasNegClipL;
@@ -51,7 +51,7 @@ private:
 	float lastSampleR;
 	bool wasPosClipR;
 	bool wasNegClipR;
-	
+
 };
 
 #endif

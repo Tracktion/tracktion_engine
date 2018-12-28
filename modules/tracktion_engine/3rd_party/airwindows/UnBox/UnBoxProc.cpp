@@ -7,7 +7,7 @@
 #include "UnBox.h"
 #endif
 
-void UnBox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void UnBox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -23,7 +23,7 @@ void UnBox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	unbox *= unbox; //let's get some more gain into this
 	double iirAmount = (unbox*0.00052)/overallscale;
 	double output = C*2.0;
-	
+
 	double treble = unbox; //averaging taps 1-4
 	double gain = treble;
 	if (gain > 1.0) {e[0] = 1.0; gain -= 1.0;} else {e[0] = gain; gain = 0.0;}
@@ -39,7 +39,7 @@ void UnBox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	e[3] /= treble;
 	e[4] /= treble;
 	//and now it's neatly scaled, too
-	
+
 	treble = unbox*2.0; //averaging taps 1-8
 	gain = treble;
 	if (gain > 1.0) {f[0] = 1.0; gain -= 1.0;} else {f[0] = gain; gain = 0.0;}
@@ -65,7 +65,7 @@ void UnBox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	f[8] /= treble;
 	f[9] /= treble;
 	//and now it's neatly scaled, too
-    
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -77,7 +77,7 @@ void UnBox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -92,7 +92,7 @@ void UnBox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -107,11 +107,11 @@ void UnBox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it aUnBox. We want a 'air' hiss
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
-		
+
 		aL[4] = aL[3]; aL[3] = aL[2]; aL[2] = aL[1];
 		aL[1] = aL[0]; aL[0] = inputSampleL;
 		inputSampleL *= e[0];
@@ -129,7 +129,7 @@ void UnBox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		inputSampleR += (aR[3] * e[3]);
 		inputSampleR += (aR[4] * e[4]);
 		//this is now an average of inputSampleR
-		
+
 		bL[4] = bL[3]; bL[3] = bL[2]; bL[2] = bL[1];
 		bL[1] = bL[0]; bL[0] = inputSampleL;
 		inputSampleL *= e[0];
@@ -138,7 +138,7 @@ void UnBox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		inputSampleL += (bL[3] * e[3]);
 		inputSampleL += (bL[4] * e[4]);
 		//this is now an average of an average of inputSampleL. Two poles
-		
+
 		bR[4] = bR[3]; bR[3] = bR[2]; bR[2] = bR[1];
 		bR[1] = bR[0]; bR[0] = inputSampleR;
 		inputSampleR *= e[0];
@@ -147,22 +147,22 @@ void UnBox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		inputSampleR += (bR[3] * e[3]);
 		inputSampleR += (bR[4] * e[4]);
 		//this is now an average of an average of inputSampleR. Two poles
-		
+
 		inputSampleL *= unbox;
 		inputSampleR *= unbox;
 		//clip to 1.2533141373155 to reach maximum output
 		if (inputSampleL > 1.2533141373155) inputSampleL = 1.2533141373155;
 		if (inputSampleL < -1.2533141373155) inputSampleL = -1.2533141373155;
 		inputSampleL = sin(inputSampleL * fabs(inputSampleL)) / ((inputSampleL == 0.0) ?1:fabs(inputSampleL));
-		
+
 		if (inputSampleR > 1.2533141373155) inputSampleR = 1.2533141373155;
 		if (inputSampleR < -1.2533141373155) inputSampleR = -1.2533141373155;
 		inputSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((inputSampleR == 0.0) ?1:fabs(inputSampleR));
-		
-		inputSampleL /= unbox;	
-		inputSampleR /= unbox;	
+
+		inputSampleL /= unbox;
+		inputSampleR /= unbox;
 		//now we have a distorted inputSample at the correct volume relative to drySample
-		
+
 		long double accumulatorSampleL = (drySampleL - inputSampleL);
 		cL[9] = cL[8]; cL[8] = cL[7]; cL[7] = cL[6]; cL[6] = cL[5];
 		cL[5] = cL[4]; cL[4] = cL[3]; cL[3] = cL[2]; cL[2] = cL[1];
@@ -178,7 +178,7 @@ void UnBox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		accumulatorSampleL += (cL[8] * f[8]);
 		accumulatorSampleL += (cL[9] * f[9]);
 		//this is now an average of all the recent variances from dry
-		
+
 		long double accumulatorSampleR = (drySampleR - inputSampleR);
 		cR[9] = cR[8]; cR[8] = cR[7]; cR[7] = cR[6]; cR[6] = cR[5];
 		cR[5] = cR[4]; cR[4] = cR[3]; cR[3] = cR[2]; cR[2] = cR[1];
@@ -194,7 +194,7 @@ void UnBox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		accumulatorSampleR += (cR[8] * f[8]);
 		accumulatorSampleR += (cR[9] * f[9]);
 		//this is now an average of all the recent variances from dry
-		
+
 		iirSampleAL = (iirSampleAL * (1 - iirAmount)) + (accumulatorSampleL * iirAmount);
 		accumulatorSampleL -= iirSampleAL;
 		//two poles of IIR
@@ -211,13 +211,13 @@ void UnBox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		accumulatorSampleR -= iirSampleBR;
 		//highpass section
 		//this is now a highpassed average of all the recent variances from dry
-		
+
 		inputSampleL = drySampleL - accumulatorSampleL;
 		inputSampleR = drySampleR - accumulatorSampleR;
 		//we apply it as one operation, to get the result.
-		
+
 		if (output != 1.0) {inputSampleL *= output; inputSampleR *= output;}
-		
+
 		//noise shaping to 32-bit floating point
 		float fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -230,7 +230,7 @@ void UnBox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -244,10 +244,10 @@ void UnBox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }
 
-void UnBox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void UnBox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -257,13 +257,13 @@ void UnBox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double input = A*2.0;
 	double unbox = B+1.0;
 	unbox *= unbox; //let's get some more gain into this
 	double iirAmount = (unbox*0.00052)/overallscale;
 	double output = C*2.0;
-	
+
 	double treble = unbox; //averaging taps 1-4
 	double gain = treble;
 	if (gain > 1.0) {e[0] = 1.0; gain -= 1.0;} else {e[0] = gain; gain = 0.0;}
@@ -279,7 +279,7 @@ void UnBox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	e[3] /= treble;
 	e[4] /= treble;
 	//and now it's neatly scaled, too
-	
+
 	treble = unbox*2.0; //averaging taps 1-8
 	gain = treble;
 	if (gain > 1.0) {f[0] = 1.0; gain -= 1.0;} else {f[0] = gain; gain = 0.0;}
@@ -305,7 +305,7 @@ void UnBox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	f[8] /= treble;
 	f[9] /= treble;
 	//and now it's neatly scaled, too
-    
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -317,7 +317,7 @@ void UnBox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -332,7 +332,7 @@ void UnBox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -347,11 +347,11 @@ void UnBox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it aUnBox. We want a 'air' hiss
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
-		
+
 		aL[4] = aL[3]; aL[3] = aL[2]; aL[2] = aL[1];
 		aL[1] = aL[0]; aL[0] = inputSampleL;
 		inputSampleL *= e[0];
@@ -360,7 +360,7 @@ void UnBox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		inputSampleL += (aL[3] * e[3]);
 		inputSampleL += (aL[4] * e[4]);
 		//this is now an average of inputSampleL
-		
+
 		aR[4] = aR[3]; aR[3] = aR[2]; aR[2] = aR[1];
 		aR[1] = aR[0]; aR[0] = inputSampleR;
 		inputSampleR *= e[0];
@@ -369,7 +369,7 @@ void UnBox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		inputSampleR += (aR[3] * e[3]);
 		inputSampleR += (aR[4] * e[4]);
 		//this is now an average of inputSampleR
-		
+
 		bL[4] = bL[3]; bL[3] = bL[2]; bL[2] = bL[1];
 		bL[1] = bL[0]; bL[0] = inputSampleL;
 		inputSampleL *= e[0];
@@ -378,7 +378,7 @@ void UnBox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		inputSampleL += (bL[3] * e[3]);
 		inputSampleL += (bL[4] * e[4]);
 		//this is now an average of an average of inputSampleL. Two poles
-		
+
 		bR[4] = bR[3]; bR[3] = bR[2]; bR[2] = bR[1];
 		bR[1] = bR[0]; bR[0] = inputSampleR;
 		inputSampleR *= e[0];
@@ -387,22 +387,22 @@ void UnBox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		inputSampleR += (bR[3] * e[3]);
 		inputSampleR += (bR[4] * e[4]);
 		//this is now an average of an average of inputSampleR. Two poles
-		
+
 		inputSampleL *= unbox;
 		inputSampleR *= unbox;
 		//clip to 1.2533141373155 to reach maximum output
 		if (inputSampleL > 1.2533141373155) inputSampleL = 1.2533141373155;
 		if (inputSampleL < -1.2533141373155) inputSampleL = -1.2533141373155;
 		inputSampleL = sin(inputSampleL * fabs(inputSampleL)) / ((inputSampleL == 0.0) ?1:fabs(inputSampleL));
-		
+
 		if (inputSampleR > 1.2533141373155) inputSampleR = 1.2533141373155;
 		if (inputSampleR < -1.2533141373155) inputSampleR = -1.2533141373155;
 		inputSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((inputSampleR == 0.0) ?1:fabs(inputSampleR));
-		
-		inputSampleL /= unbox;	
-		inputSampleR /= unbox;	
+
+		inputSampleL /= unbox;
+		inputSampleR /= unbox;
 		//now we have a distorted inputSample at the correct volume relative to drySample
-		
+
 		long double accumulatorSampleL = (drySampleL - inputSampleL);
 		cL[9] = cL[8]; cL[8] = cL[7]; cL[7] = cL[6]; cL[6] = cL[5];
 		cL[5] = cL[4]; cL[4] = cL[3]; cL[3] = cL[2]; cL[2] = cL[1];
@@ -418,7 +418,7 @@ void UnBox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		accumulatorSampleL += (cL[8] * f[8]);
 		accumulatorSampleL += (cL[9] * f[9]);
 		//this is now an average of all the recent variances from dry
-		
+
 		long double accumulatorSampleR = (drySampleR - inputSampleR);
 		cR[9] = cR[8]; cR[8] = cR[7]; cR[7] = cR[6]; cR[6] = cR[5];
 		cR[5] = cR[4]; cR[4] = cR[3]; cR[3] = cR[2]; cR[2] = cR[1];
@@ -434,30 +434,30 @@ void UnBox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		accumulatorSampleR += (cR[8] * f[8]);
 		accumulatorSampleR += (cR[9] * f[9]);
 		//this is now an average of all the recent variances from dry
-		
+
 		iirSampleAL = (iirSampleAL * (1 - iirAmount)) + (accumulatorSampleL * iirAmount);
 		accumulatorSampleL -= iirSampleAL;
 		//two poles of IIR
-		
+
 		iirSampleAR = (iirSampleAR * (1 - iirAmount)) + (accumulatorSampleR * iirAmount);
 		accumulatorSampleR -= iirSampleAR;
 		//two poles of IIR
-		
+
 		iirSampleBL = (iirSampleBL * (1 - iirAmount)) + (accumulatorSampleL * iirAmount);
 		accumulatorSampleL -= iirSampleBL;
 		//highpass section
-		
+
 		iirSampleBR = (iirSampleBR * (1 - iirAmount)) + (accumulatorSampleR * iirAmount);
 		accumulatorSampleR -= iirSampleBR;
 		//highpass section
 		//this is now a highpassed average of all the recent variances from dry
-		
+
 		inputSampleL = drySampleL - accumulatorSampleL;
 		inputSampleR = drySampleR - accumulatorSampleR;
 		//we apply it as one operation, to get the result.
-		
+
 		if (output != 1.0) {inputSampleL *= output; inputSampleR *= output;}
-		
+
 		//noise shaping to 64-bit floating point
 		double fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -470,7 +470,7 @@ void UnBox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -484,5 +484,5 @@ void UnBox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }

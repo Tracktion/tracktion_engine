@@ -7,13 +7,13 @@
 #include "EQ.h"
 #endif
 
-void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
     float* out1 = outputs[0];
     float* out2 = outputs[1];
-	
+
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	double compscale = overallscale;
@@ -22,39 +22,39 @@ void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 	//compscale is the one that's 1 or something like 2.2 for 96K rates
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	double highSampleL = 0.0;
 	double midSampleL = 0.0;
 	double bassSampleL = 0.0;
-	
+
 	double highSampleR = 0.0;
 	double midSampleR = 0.0;
 	double bassSampleR = 0.0;
-	
+
 	double densityA = (A*12.0)-6.0;
 	double densityB = (B*12.0)-6.0;
 	double densityC = (C*12.0)-6.0;
 	bool engageEQ = true;
 	if ( (0.0 == densityA) && (0.0 == densityB) && (0.0 == densityC) ) engageEQ = false;
-	
+
 	densityA = pow(10.0,densityA/20.0)-1.0;
 	densityB = pow(10.0,densityB/20.0)-1.0;
 	densityC = pow(10.0,densityC/20.0)-1.0;
 	//convert to 0 to X multiplier with 1.0 being O db
 	//minus one gives nearly -1 to ? (should top out at 1)
 	//calibrate so that X db roughly equals X db with maximum topping out at 1 internally
-	
+
 	double tripletIntensity = -densityA;
-	
+
 	double iirAmountC = (((D*D*15.0)+1.0)*0.0188) + 0.7;
 	if (iirAmountC > 1.0) iirAmountC = 1.0;
 	bool engageLowpass = false;
 	if (((D*D*15.0)+1.0) < 15.99) engageLowpass = true;
-	
+
 	double iirAmountA = (((E*E*15.0)+1.0)*1000)/overallscale;
 	double iirAmountB = (((F*F*1570.0)+30.0)*10)/overallscale;
 	double iirAmountD = (((G*G*1570.0)+30.0)*1.0)/overallscale;
@@ -67,7 +67,7 @@ void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 	double outC = fabs(densityC);
 	//end EQ
 	double outputgain = pow(10.0,((H*36.0)-18.0)/20.0);
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -110,18 +110,18 @@ void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		last2SampleL = lastSampleL;
 		lastSampleL = inputSampleL;
-		
+
 		last2SampleR = lastSampleR;
 		lastSampleR = inputSampleR;
-		
+
 		flip = !flip;
 		flipthree++;
 		if (flipthree < 1 || flipthree > 3) flipthree = 1;
 		//counters
-		
+
 		//begin highpass
 		if (engageHighpass)
 		{
@@ -150,8 +150,8 @@ void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 			highpassSampleLE = (highpassSampleLE * (1.0 - iirAmountD)) + (inputSampleL * iirAmountD);
 			inputSampleL -= highpassSampleLE;
 			highpassSampleLF = (highpassSampleLF * (1.0 - iirAmountD)) + (inputSampleL * iirAmountD);
-			inputSampleL -= highpassSampleLF;			
-			
+			inputSampleL -= highpassSampleLF;
+
 			if (flip)
 			{
 				highpassSampleRAA = (highpassSampleRAA * (1.0 - iirAmountD)) + (inputSampleR * iirAmountD);
@@ -177,11 +177,11 @@ void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 			highpassSampleRE = (highpassSampleRE * (1 - iirAmountD)) + (inputSampleR * iirAmountD);
 			inputSampleR -= highpassSampleRE;
 			highpassSampleRF = (highpassSampleRF * (1 - iirAmountD)) + (inputSampleR * iirAmountD);
-			inputSampleR -= highpassSampleRF;			
-			
+			inputSampleR -= highpassSampleRF;
+
 		}
-		//end highpass 
-		
+		//end highpass
+
 		//begin EQ
 		if (engageEQ)
 		{
@@ -196,7 +196,7 @@ void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 					highSampleL = inputSampleL - iirHighSampleLC;
 					iirLowSampleLC = (iirLowSampleLC * (1.0 - iirAmountB)) + (inputSampleL * iirAmountB);
 					bassSampleL = iirLowSampleLC;
-					
+
 					tripletFactorR = last2SampleR - inputSampleR;
 					tripletRA += tripletFactorR;
 					tripletRC -= tripletFactorR;
@@ -215,7 +215,7 @@ void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 					highSampleL = inputSampleL - iirHighSampleLD;
 					iirLowSampleLD = (iirLowSampleLD * (1.0 - iirAmountB)) + (inputSampleL * iirAmountB);
 					bassSampleL = iirLowSampleLD;
-					
+
 					tripletFactorR = last2SampleR - inputSampleR;
 					tripletRB += tripletFactorR;
 					tripletRA -= tripletFactorR;
@@ -234,7 +234,7 @@ void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 					highSampleL = inputSampleL - iirHighSampleLE;
 					iirLowSampleLE = (iirLowSampleLE * (1.0 - iirAmountB)) + (inputSampleL * iirAmountB);
 					bassSampleL = iirLowSampleLE;
-					
+
 					tripletFactorR = last2SampleR - inputSampleR;
 					tripletRC += tripletFactorR;
 					tripletRB -= tripletFactorR;
@@ -249,19 +249,19 @@ void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 			tripletLB /= 2.0;
 			tripletLC /= 2.0;
 			highSampleL = highSampleL + tripletFactorL;
-			
+
 			tripletRA /= 2.0;
 			tripletRB /= 2.0;
 			tripletRC /= 2.0;
 			highSampleR = highSampleR + tripletFactorR;
-			
+
 			if (flip)
 			{
 				iirHighSampleLA = (iirHighSampleLA * (1.0 - iirAmountA)) + (highSampleL * iirAmountA);
 				highSampleL -= iirHighSampleLA;
 				iirLowSampleLA = (iirLowSampleLA * (1.0 - iirAmountB)) + (bassSampleL * iirAmountB);
 				bassSampleL = iirLowSampleLA;
-				
+
 				iirHighSampleRA = (iirHighSampleRA * (1.0 - iirAmountA)) + (highSampleR * iirAmountA);
 				highSampleR -= iirHighSampleRA;
 				iirLowSampleRA = (iirLowSampleRA * (1.0 - iirAmountB)) + (bassSampleR * iirAmountB);
@@ -273,26 +273,26 @@ void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 				highSampleL -= iirHighSampleLB;
 				iirLowSampleLB = (iirLowSampleLB * (1.0 - iirAmountB)) + (bassSampleL * iirAmountB);
 				bassSampleL = iirLowSampleLB;
-				
+
 				iirHighSampleRB = (iirHighSampleRB * (1.0 - iirAmountA)) + (highSampleR * iirAmountA);
 				highSampleR -= iirHighSampleRB;
 				iirLowSampleRB = (iirLowSampleRB * (1.0 - iirAmountB)) + (bassSampleR * iirAmountB);
 				bassSampleR = iirLowSampleRB;
 			}
-			
+
 			iirHighSampleL = (iirHighSampleL * (1.0 - iirAmountA)) + (highSampleL * iirAmountA);
 			highSampleL -= iirHighSampleL;
 			iirLowSampleL = (iirLowSampleL * (1.0 - iirAmountB)) + (bassSampleL * iirAmountB);
 			bassSampleL = iirLowSampleL;
-			
+
 			iirHighSampleR = (iirHighSampleR * (1.0 - iirAmountA)) + (highSampleR * iirAmountA);
 			highSampleR -= iirHighSampleR;
 			iirLowSampleR = (iirLowSampleR * (1.0 - iirAmountB)) + (bassSampleR * iirAmountB);
 			bassSampleR = iirLowSampleR;
-			
+
 			midSampleL = (inputSampleL-bassSampleL)-highSampleL;
 			midSampleR = (inputSampleR-bassSampleR)-highSampleR;
-			
+
 			//drive section
 			highSampleL *= (densityA+1.0);
 			bridgerectifier = fabs(highSampleL)*1.57079633;
@@ -304,7 +304,7 @@ void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 			if (highSampleL > 0) highSampleL = (highSampleL*(1-outA))+(bridgerectifier*outA);
 			else highSampleL = (highSampleL*(1-outA))-(bridgerectifier*outA);
 			//blend according to densityA control
-			
+
 			highSampleR *= (densityA+1.0);
 			bridgerectifier = fabs(highSampleR)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -315,7 +315,7 @@ void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 			if (highSampleR > 0) highSampleR = (highSampleR*(1-outA))+(bridgerectifier*outA);
 			else highSampleR = (highSampleR*(1-outA))-(bridgerectifier*outA);
 			//blend according to densityA control
-			
+
 			midSampleL *= (densityB+1.0);
 			bridgerectifier = fabs(midSampleL)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -326,7 +326,7 @@ void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 			if (midSampleL > 0) midSampleL = (midSampleL*(1-outB))+(bridgerectifier*outB);
 			else midSampleL = (midSampleL*(1-outB))-(bridgerectifier*outB);
 			//blend according to densityB control
-			
+
 			midSampleR *= (densityB+1.0);
 			bridgerectifier = fabs(midSampleR)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -337,7 +337,7 @@ void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 			if (midSampleR > 0) midSampleR = (midSampleR*(1-outB))+(bridgerectifier*outB);
 			else midSampleR = (midSampleR*(1-outB))-(bridgerectifier*outB);
 			//blend according to densityB control
-			
+
 			bassSampleL *= (densityC+1.0);
 			bridgerectifier = fabs(bassSampleL)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -348,7 +348,7 @@ void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 			if (bassSampleL > 0) bassSampleL = (bassSampleL*(1-outC))+(bridgerectifier*outC);
 			else bassSampleL = (bassSampleL*(1-outC))-(bridgerectifier*outC);
 			//blend according to densityC control
-			
+
 			bassSampleR *= (densityC+1.0);
 			bridgerectifier = fabs(bassSampleR)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -359,17 +359,17 @@ void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 			if (bassSampleR > 0) bassSampleR = (bassSampleR*(1-outC))+(bridgerectifier*outC);
 			else bassSampleR = (bassSampleR*(1-outC))-(bridgerectifier*outC);
 			//blend according to densityC control
-			
+
 			inputSampleL = midSampleL;
 			inputSampleL += highSampleL;
 			inputSampleL += bassSampleL;
-			
+
 			inputSampleR = midSampleR;
 			inputSampleR += highSampleR;
 			inputSampleR += bassSampleR;
 		}
 		//end EQ
-		
+
 		//EQ lowpass is after all processing like the compressor that might produce hash
 		if (engageLowpass)
 		{
@@ -385,7 +385,7 @@ void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 				inputSampleL = lowpassSampleLDA;
 				lowpassSampleLE = (lowpassSampleLE * (1.0 - iirAmountC)) + (inputSampleL * iirAmountC);
 				inputSampleL = lowpassSampleLE;
-				
+
 				lowpassSampleRAA = (lowpassSampleRAA * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
 				inputSampleR = lowpassSampleRAA;
 				lowpassSampleRBA = (lowpassSampleRBA * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
@@ -408,8 +408,8 @@ void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 				lowpassSampleLDB = (lowpassSampleLDB * (1.0 - iirAmountC)) + (inputSampleL * iirAmountC);
 				inputSampleL = lowpassSampleLDB;
 				lowpassSampleLF = (lowpassSampleLF * (1.0 - iirAmountC)) + (inputSampleL * iirAmountC);
-				inputSampleL = lowpassSampleLF;			
-				
+				inputSampleL = lowpassSampleLF;
+
 				lowpassSampleRAB = (lowpassSampleRAB * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
 				inputSampleR = lowpassSampleRAB;
 				lowpassSampleRBB = (lowpassSampleRBB * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
@@ -419,21 +419,21 @@ void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 				lowpassSampleRDB = (lowpassSampleRDB * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
 				inputSampleR = lowpassSampleRDB;
 				lowpassSampleRF = (lowpassSampleRF * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
-				inputSampleR = lowpassSampleRF;			
+				inputSampleR = lowpassSampleRF;
 			}
 			lowpassSampleLG = (lowpassSampleLG * (1.0 - iirAmountC)) + (inputSampleL * iirAmountC);
 			lowpassSampleRG = (lowpassSampleRG * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
-			
+
 			inputSampleL = (lowpassSampleLG * (1.0 - iirAmountC)) + (inputSampleL * iirAmountC);
 			inputSampleR = (lowpassSampleRG * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
 		}
-		
+
 		//built in output trim and dry/wet if desired
 		if (outputgain != 1.0) {
 			inputSampleL *= outputgain;
 			inputSampleR *= outputgain;
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -464,13 +464,13 @@ void EQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
     }
 }
 
-void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
     double* out1 = outputs[0];
     double* out2 = outputs[1];
-	
+
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	double compscale = overallscale;
@@ -479,39 +479,39 @@ void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 	//compscale is the one that's 1 or something like 2.2 for 96K rates
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	double highSampleL = 0.0;
 	double midSampleL = 0.0;
 	double bassSampleL = 0.0;
-	
+
 	double highSampleR = 0.0;
 	double midSampleR = 0.0;
 	double bassSampleR = 0.0;
-	
+
 	double densityA = (A*12.0)-6.0;
 	double densityB = (B*12.0)-6.0;
 	double densityC = (C*12.0)-6.0;
 	bool engageEQ = true;
 	if ( (0.0 == densityA) && (0.0 == densityB) && (0.0 == densityC) ) engageEQ = false;
-	
+
 	densityA = pow(10.0,densityA/20.0)-1.0;
 	densityB = pow(10.0,densityB/20.0)-1.0;
 	densityC = pow(10.0,densityC/20.0)-1.0;
 	//convert to 0 to X multiplier with 1.0 being O db
 	//minus one gives nearly -1 to ? (should top out at 1)
 	//calibrate so that X db roughly equals X db with maximum topping out at 1 internally
-	
+
 	double tripletIntensity = -densityA;
-	
+
 	double iirAmountC = (((D*D*15.0)+1.0)*0.0188) + 0.7;
 	if (iirAmountC > 1.0) iirAmountC = 1.0;
 	bool engageLowpass = false;
 	if (((D*D*15.0)+1.0) < 15.99) engageLowpass = true;
-	
+
 	double iirAmountA = (((E*E*15.0)+1.0)*1000)/overallscale;
 	double iirAmountB = (((F*F*1570.0)+30.0)*10)/overallscale;
 	double iirAmountD = (((G*G*1570.0)+30.0)*1.0)/overallscale;
@@ -524,7 +524,7 @@ void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 	double outC = fabs(densityC);
 	//end EQ
 	double outputgain = pow(10.0,((H*36.0)-18.0)/20.0);
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -567,18 +567,18 @@ void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		last2SampleL = lastSampleL;
 		lastSampleL = inputSampleL;
-		
+
 		last2SampleR = lastSampleR;
 		lastSampleR = inputSampleR;
-		
+
 		flip = !flip;
 		flipthree++;
 		if (flipthree < 1 || flipthree > 3) flipthree = 1;
 		//counters
-		
+
 		//begin highpass
 		if (engageHighpass)
 		{
@@ -607,8 +607,8 @@ void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 			highpassSampleLE = (highpassSampleLE * (1.0 - iirAmountD)) + (inputSampleL * iirAmountD);
 			inputSampleL -= highpassSampleLE;
 			highpassSampleLF = (highpassSampleLF * (1.0 - iirAmountD)) + (inputSampleL * iirAmountD);
-			inputSampleL -= highpassSampleLF;			
-			
+			inputSampleL -= highpassSampleLF;
+
 			if (flip)
 			{
 				highpassSampleRAA = (highpassSampleRAA * (1.0 - iirAmountD)) + (inputSampleR * iirAmountD);
@@ -634,11 +634,11 @@ void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 			highpassSampleRE = (highpassSampleRE * (1 - iirAmountD)) + (inputSampleR * iirAmountD);
 			inputSampleR -= highpassSampleRE;
 			highpassSampleRF = (highpassSampleRF * (1 - iirAmountD)) + (inputSampleR * iirAmountD);
-			inputSampleR -= highpassSampleRF;			
-			
+			inputSampleR -= highpassSampleRF;
+
 		}
-		//end highpass 
-		
+		//end highpass
+
 		//begin EQ
 		if (engageEQ)
 		{
@@ -653,7 +653,7 @@ void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 					highSampleL = inputSampleL - iirHighSampleLC;
 					iirLowSampleLC = (iirLowSampleLC * (1.0 - iirAmountB)) + (inputSampleL * iirAmountB);
 					bassSampleL = iirLowSampleLC;
-					
+
 					tripletFactorR = last2SampleR - inputSampleR;
 					tripletRA += tripletFactorR;
 					tripletRC -= tripletFactorR;
@@ -672,7 +672,7 @@ void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 					highSampleL = inputSampleL - iirHighSampleLD;
 					iirLowSampleLD = (iirLowSampleLD * (1.0 - iirAmountB)) + (inputSampleL * iirAmountB);
 					bassSampleL = iirLowSampleLD;
-					
+
 					tripletFactorR = last2SampleR - inputSampleR;
 					tripletRB += tripletFactorR;
 					tripletRA -= tripletFactorR;
@@ -691,7 +691,7 @@ void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 					highSampleL = inputSampleL - iirHighSampleLE;
 					iirLowSampleLE = (iirLowSampleLE * (1.0 - iirAmountB)) + (inputSampleL * iirAmountB);
 					bassSampleL = iirLowSampleLE;
-					
+
 					tripletFactorR = last2SampleR - inputSampleR;
 					tripletRC += tripletFactorR;
 					tripletRB -= tripletFactorR;
@@ -706,19 +706,19 @@ void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 			tripletLB /= 2.0;
 			tripletLC /= 2.0;
 			highSampleL = highSampleL + tripletFactorL;
-			
+
 			tripletRA /= 2.0;
 			tripletRB /= 2.0;
 			tripletRC /= 2.0;
 			highSampleR = highSampleR + tripletFactorR;
-			
+
 			if (flip)
 			{
 				iirHighSampleLA = (iirHighSampleLA * (1.0 - iirAmountA)) + (highSampleL * iirAmountA);
 				highSampleL -= iirHighSampleLA;
 				iirLowSampleLA = (iirLowSampleLA * (1.0 - iirAmountB)) + (bassSampleL * iirAmountB);
 				bassSampleL = iirLowSampleLA;
-				
+
 				iirHighSampleRA = (iirHighSampleRA * (1.0 - iirAmountA)) + (highSampleR * iirAmountA);
 				highSampleR -= iirHighSampleRA;
 				iirLowSampleRA = (iirLowSampleRA * (1.0 - iirAmountB)) + (bassSampleR * iirAmountB);
@@ -730,26 +730,26 @@ void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 				highSampleL -= iirHighSampleLB;
 				iirLowSampleLB = (iirLowSampleLB * (1.0 - iirAmountB)) + (bassSampleL * iirAmountB);
 				bassSampleL = iirLowSampleLB;
-				
+
 				iirHighSampleRB = (iirHighSampleRB * (1.0 - iirAmountA)) + (highSampleR * iirAmountA);
 				highSampleR -= iirHighSampleRB;
 				iirLowSampleRB = (iirLowSampleRB * (1.0 - iirAmountB)) + (bassSampleR * iirAmountB);
 				bassSampleR = iirLowSampleRB;
 			}
-			
+
 			iirHighSampleL = (iirHighSampleL * (1.0 - iirAmountA)) + (highSampleL * iirAmountA);
 			highSampleL -= iirHighSampleL;
 			iirLowSampleL = (iirLowSampleL * (1.0 - iirAmountB)) + (bassSampleL * iirAmountB);
 			bassSampleL = iirLowSampleL;
-			
+
 			iirHighSampleR = (iirHighSampleR * (1.0 - iirAmountA)) + (highSampleR * iirAmountA);
 			highSampleR -= iirHighSampleR;
 			iirLowSampleR = (iirLowSampleR * (1.0 - iirAmountB)) + (bassSampleR * iirAmountB);
 			bassSampleR = iirLowSampleR;
-			
+
 			midSampleL = (inputSampleL-bassSampleL)-highSampleL;
 			midSampleR = (inputSampleR-bassSampleR)-highSampleR;
-			
+
 			//drive section
 			highSampleL *= (densityA+1.0);
 			bridgerectifier = fabs(highSampleL)*1.57079633;
@@ -761,7 +761,7 @@ void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 			if (highSampleL > 0) highSampleL = (highSampleL*(1-outA))+(bridgerectifier*outA);
 			else highSampleL = (highSampleL*(1-outA))-(bridgerectifier*outA);
 			//blend according to densityA control
-			
+
 			highSampleR *= (densityA+1.0);
 			bridgerectifier = fabs(highSampleR)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -772,7 +772,7 @@ void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 			if (highSampleR > 0) highSampleR = (highSampleR*(1-outA))+(bridgerectifier*outA);
 			else highSampleR = (highSampleR*(1-outA))-(bridgerectifier*outA);
 			//blend according to densityA control
-			
+
 			midSampleL *= (densityB+1.0);
 			bridgerectifier = fabs(midSampleL)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -783,7 +783,7 @@ void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 			if (midSampleL > 0) midSampleL = (midSampleL*(1-outB))+(bridgerectifier*outB);
 			else midSampleL = (midSampleL*(1-outB))-(bridgerectifier*outB);
 			//blend according to densityB control
-			
+
 			midSampleR *= (densityB+1.0);
 			bridgerectifier = fabs(midSampleR)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -794,7 +794,7 @@ void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 			if (midSampleR > 0) midSampleR = (midSampleR*(1-outB))+(bridgerectifier*outB);
 			else midSampleR = (midSampleR*(1-outB))-(bridgerectifier*outB);
 			//blend according to densityB control
-			
+
 			bassSampleL *= (densityC+1.0);
 			bridgerectifier = fabs(bassSampleL)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -805,7 +805,7 @@ void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 			if (bassSampleL > 0) bassSampleL = (bassSampleL*(1-outC))+(bridgerectifier*outC);
 			else bassSampleL = (bassSampleL*(1-outC))-(bridgerectifier*outC);
 			//blend according to densityC control
-			
+
 			bassSampleR *= (densityC+1.0);
 			bridgerectifier = fabs(bassSampleR)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -816,17 +816,17 @@ void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 			if (bassSampleR > 0) bassSampleR = (bassSampleR*(1-outC))+(bridgerectifier*outC);
 			else bassSampleR = (bassSampleR*(1-outC))-(bridgerectifier*outC);
 			//blend according to densityC control
-			
+
 			inputSampleL = midSampleL;
 			inputSampleL += highSampleL;
 			inputSampleL += bassSampleL;
-			
+
 			inputSampleR = midSampleR;
 			inputSampleR += highSampleR;
 			inputSampleR += bassSampleR;
 		}
 		//end EQ
-		
+
 		//EQ lowpass is after all processing like the compressor that might produce hash
 		if (engageLowpass)
 		{
@@ -842,7 +842,7 @@ void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 				inputSampleL = lowpassSampleLDA;
 				lowpassSampleLE = (lowpassSampleLE * (1.0 - iirAmountC)) + (inputSampleL * iirAmountC);
 				inputSampleL = lowpassSampleLE;
-				
+
 				lowpassSampleRAA = (lowpassSampleRAA * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
 				inputSampleR = lowpassSampleRAA;
 				lowpassSampleRBA = (lowpassSampleRBA * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
@@ -865,8 +865,8 @@ void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 				lowpassSampleLDB = (lowpassSampleLDB * (1.0 - iirAmountC)) + (inputSampleL * iirAmountC);
 				inputSampleL = lowpassSampleLDB;
 				lowpassSampleLF = (lowpassSampleLF * (1.0 - iirAmountC)) + (inputSampleL * iirAmountC);
-				inputSampleL = lowpassSampleLF;			
-				
+				inputSampleL = lowpassSampleLF;
+
 				lowpassSampleRAB = (lowpassSampleRAB * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
 				inputSampleR = lowpassSampleRAB;
 				lowpassSampleRBB = (lowpassSampleRBB * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
@@ -876,21 +876,21 @@ void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 				lowpassSampleRDB = (lowpassSampleRDB * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
 				inputSampleR = lowpassSampleRDB;
 				lowpassSampleRF = (lowpassSampleRF * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
-				inputSampleR = lowpassSampleRF;			
+				inputSampleR = lowpassSampleRF;
 			}
 			lowpassSampleLG = (lowpassSampleLG * (1.0 - iirAmountC)) + (inputSampleL * iirAmountC);
 			lowpassSampleRG = (lowpassSampleRG * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
-			
+
 			inputSampleL = (lowpassSampleLG * (1.0 - iirAmountC)) + (inputSampleL * iirAmountC);
 			inputSampleR = (lowpassSampleRG * (1.0 - iirAmountC)) + (inputSampleR * iirAmountC);
 		}
-		
+
 		//built in output trim and dry/wet if desired
 		if (outputgain != 1.0) {
 			inputSampleL *= outputgain;
 			inputSampleR *= outputgain;
 		}
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -910,7 +910,7 @@ void EQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

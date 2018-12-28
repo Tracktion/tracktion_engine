@@ -1,6 +1,6 @@
 /* ========================================
  *  Slew2 - Slew2.h
- *  Created 8/12/11 by SPIAdmin 
+ *  Created 8/12/11 by SPIAdmin
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
@@ -25,8 +25,8 @@ const int kNumInputs = 2;
 const int kNumOutputs = 2;
 const unsigned long kUniqueId = 'slw2';    //Change this to what the AU identity is!
 
-class Slew2 : 
-    public AudioEffectX 
+class Slew2 :
+    public AudioEffectX
 {
 public:
     Slew2(audioMasterCallback audioMaster);
@@ -46,12 +46,12 @@ public:
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
     virtual void getParameterName(VstInt32 index, char *text);    // name of the parameter
-    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value    
+    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value
     virtual VstInt32 canDo(char *text);
 private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
-    
+
 	double LataLast3Sample;
 	double LataLast2Sample;
 	double LataLast1Sample;
@@ -66,7 +66,7 @@ private:
 	double LataDrySample;
 	double LataDiffSample;
 	double LataPrevDiffSample;
-	
+
 	double RataLast3Sample;
 	double RataLast2Sample;
 	double RataLast1Sample;
@@ -81,13 +81,13 @@ private:
 	double RataDrySample;
 	double RataDiffSample;
 	double RataPrevDiffSample;
-	
+
 	bool LataFlip; //end defining of antialiasing variables
 	bool RataFlip; //end defining of antialiasing variables
 
 	double lastSampleL;
 	double lastSampleR;
-	
+
     float A;
 
 };

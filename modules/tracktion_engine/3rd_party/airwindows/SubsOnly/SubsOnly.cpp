@@ -65,10 +65,10 @@ SubsOnly::SubsOnly(audioMasterCallback audioMaster) :
 	iirSampleXR = 0.0;
 	iirSampleYR = 0.0;
 	iirSampleZR = 0.0;
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -100,7 +100,7 @@ void SubsOnly::getParameterDisplay(VstInt32 index, char *text) {
 void SubsOnly::getParameterLabel(VstInt32 index, char *text) {
 }
 
-VstInt32 SubsOnly::canDo(char *text) 
+VstInt32 SubsOnly::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool SubsOnly::getEffectName(char* name) {

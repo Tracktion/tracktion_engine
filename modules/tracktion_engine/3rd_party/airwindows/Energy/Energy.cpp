@@ -21,7 +21,7 @@ Energy::Energy(audioMasterCallback audioMaster) :
 	G = 0.5;
 	H = 0.5;
 	I = 1.0;
-	
+
 	duoEvenL = 0.0;
 	duoOddL = 0.0;
 	duoFactorL = 0.0;
@@ -29,7 +29,7 @@ Energy::Energy(audioMasterCallback audioMaster) :
 	duoOddR = 0.0;
 	duoFactorR = 0.0;
 	flip = false;
-	
+
 	tripletAL = 0.0;
 	tripletBL = 0.0;
 	tripletCL = 0.0;
@@ -39,7 +39,7 @@ Energy::Energy(audioMasterCallback audioMaster) :
 	tripletCR = 0.0;
 	tripletFactorR = 0.0;
 	countA = 1;
-	
+
 	quadAL = 0.0;
 	quadBL = 0.0;
 	quadCL = 0.0;
@@ -51,7 +51,7 @@ Energy::Energy(audioMasterCallback audioMaster) :
 	quadDR = 0.0;
 	quadFactorR = 0.0;
 	countB = 1;
-	
+
 	quintAL = 0.0;
 	quintBL = 0.0;
 	quintCL = 0.0;
@@ -65,7 +65,7 @@ Energy::Energy(audioMasterCallback audioMaster) :
 	quintER = 0.0;
 	quintFactorR = 0.0;
 	countC = 1;
-	
+
 	sextAL = 0.0;
 	sextBL = 0.0;
 	sextCL = 0.0;
@@ -81,7 +81,7 @@ Energy::Energy(audioMasterCallback audioMaster) :
 	sextFR = 0.0;
 	sextFactorR = 0.0;
 	countD = 1;
-	
+
 	septAL = 0.0;
 	septBL = 0.0;
 	septCL = 0.0;
@@ -99,7 +99,7 @@ Energy::Energy(audioMasterCallback audioMaster) :
 	septGR = 0.0;
 	septFactorR = 0.0;
 	countE = 1;
-	
+
 	octAL = 0.0;
 	octBL = 0.0;
 	octCL = 0.0;
@@ -119,7 +119,7 @@ Energy::Energy(audioMasterCallback audioMaster) :
 	octHR = 0.0;
 	octFactorR = 0.0;
 	countF = 1;
-	
+
 	nintAL = 0.0;
 	nintBL = 0.0;
 	nintCL = 0.0;
@@ -141,7 +141,7 @@ Energy::Energy(audioMasterCallback audioMaster) :
 	nintIR = 0.0;
 	nintFactorR = 0.0;
 	countG = 1;
-	
+
 	PrevHL = 0.0;
 	PrevGL = 0.0;
 	PrevFL = 0.0;
@@ -158,15 +158,15 @@ Energy::Energy(audioMasterCallback audioMaster) :
 	PrevCR = 0.0;
 	PrevBR = 0.0;
 	PrevAR = 0.0;
-	
-	
+
+
 	fpNShapeL = 0.0;
 	fpNShapeR = 0.0;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -203,15 +203,15 @@ VstInt32 Energy::getChunk (void** data, bool isPreset)
 	chunkData[7] = H;
 	chunkData[8] = I;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
+	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
 	 started with. */
-	
+
 	*data = chunkData;
 	return kNumParameters * sizeof(float);
 }
 
 VstInt32 Energy::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	float *chunkData = (float *)data;
 	A = pinParameter(chunkData[0]);
 	B = pinParameter(chunkData[1]);
@@ -223,8 +223,8 @@ VstInt32 Energy::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 	H = pinParameter(chunkData[7]);
 	I = pinParameter(chunkData[8]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
-	
-	/* calculate any other fields you need here - you could copy in 
+
+	/* calculate any other fields you need here - you could copy in
 	 code from setParameter() here. */
 	return 0;
 }
@@ -304,7 +304,7 @@ void Energy::getParameterLabel(VstInt32 index, char *text) {
     }
 }
 
-VstInt32 Energy::canDo(char *text) 
+VstInt32 Energy::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool Energy::getEffectName(char* name) {

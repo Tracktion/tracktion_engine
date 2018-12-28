@@ -7,7 +7,7 @@
 #include "StereoFX.h"
 #endif
 
-void StereoFX::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void StereoFX::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -19,7 +19,7 @@ void StereoFX::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	overallscale *= getSampleRate();
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 	long double inputSampleL;
 	long double inputSampleR;
 	long double mid;
@@ -38,7 +38,7 @@ void StereoFX::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	double offset;
 	//we are setting it up so that to either extreme we can get an audible sound,
 	//but sort of scaled so small adjustments don't shift the cutoff frequency yet.
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -81,7 +81,7 @@ void StereoFX::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		//assign working variables		
+		//assign working variables
 		mid = inputSampleL + inputSampleR;
 		side = inputSampleL - inputSampleR;
 		//assign mid and side. Now, High Impact code
@@ -111,7 +111,7 @@ void StereoFX::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		if (side > 0) side = (side*(1-sustain))+(bridgerectifier*sustain);
 		else side = (side*(1-sustain))-(bridgerectifier*sustain);
 		//done with High Impact code
-		
+
 		//now, Highpass code
 		offset = 0.666666666666666 + ((1-fabs(side))*tight);
 		if (offset < 0) offset = 0;
@@ -127,17 +127,17 @@ void StereoFX::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			side = side - iirSampleB;
 		}
 		//done with Highpass code
-		
+
 		bridgerectifier = fabs(mid)/1.273239544735162;
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		bridgerectifier = sin(bridgerectifier)*1.273239544735162;
 		if (mid > 0) mid = (mid*(1-centersquish))+(bridgerectifier*centersquish);
 		else mid = (mid*(1-centersquish))-(bridgerectifier*centersquish);
 		//done with the mid saturating section.
-		
+
 		inputSampleL = (mid+side)/2.0;
 		inputSampleR = (mid-side)/2.0;
-		
+
 		//noise shaping to 32-bit floating point
 		if (flip) {
 			fpTemp = inputSampleL;
@@ -168,7 +168,7 @@ void StereoFX::processReplacing(float **inputs, float **outputs, VstInt32 sample
     }
 }
 
-void StereoFX::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void StereoFX::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -180,7 +180,7 @@ void StereoFX::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	overallscale *= getSampleRate();
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 	long double inputSampleL;
 	long double inputSampleR;
 	long double mid;
@@ -199,7 +199,7 @@ void StereoFX::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	double offset;
 	//we are setting it up so that to either extreme we can get an audible sound,
 	//but sort of scaled so small adjustments don't shift the cutoff frequency yet.
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -242,7 +242,7 @@ void StereoFX::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		//assign working variables		
+		//assign working variables
 		mid = inputSampleL + inputSampleR;
 		side = inputSampleL - inputSampleR;
 		//assign mid and side. Now, High Impact code
@@ -272,7 +272,7 @@ void StereoFX::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		if (side > 0) side = (side*(1-sustain))+(bridgerectifier*sustain);
 		else side = (side*(1-sustain))-(bridgerectifier*sustain);
 		//done with High Impact code
-		
+
 		//now, Highpass code
 		offset = 0.666666666666666 + ((1-fabs(side))*tight);
 		if (offset < 0) offset = 0;
@@ -288,17 +288,17 @@ void StereoFX::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			side = side - iirSampleB;
 		}
 		//done with Highpass code
-		
+
 		bridgerectifier = fabs(mid)/1.273239544735162;
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		bridgerectifier = sin(bridgerectifier)*1.273239544735162;
 		if (mid > 0) mid = (mid*(1-centersquish))+(bridgerectifier*centersquish);
 		else mid = (mid*(1-centersquish))-(bridgerectifier*centersquish);
 		//done with the mid saturating section.
-		
+
 		inputSampleL = (mid+side)/2.0;
 		inputSampleR = (mid-side)/2.0;
-		
+
 		//noise shaping to 64-bit floating point
 		if (flip) {
 			fpTemp = inputSampleL;
@@ -318,7 +318,7 @@ void StereoFX::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		}
 		flip = !flip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

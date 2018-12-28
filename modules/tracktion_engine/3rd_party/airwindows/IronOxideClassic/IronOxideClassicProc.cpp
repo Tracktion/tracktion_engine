@@ -7,7 +7,7 @@
 #include "IronOxideClassic.h"
 #endif
 
-void IronOxideClassic::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void IronOxideClassic::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -20,7 +20,7 @@ void IronOxideClassic::processReplacing(float **inputs, float **outputs, VstInt3
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
 	long double fpNew = 1.0 - fpOld;
-	
+
 	double inputgain = pow(10.0,((A*36.0)-18.0)/20.0);
 	double outputgain = pow(10.0,((C*36.0)-18.0)/20.0);
 	double ips = (((B*B)*(B*B)*148.5)+1.5) * 1.1;
@@ -43,10 +43,10 @@ void IronOxideClassic::processReplacing(float **inputs, float **outputs, VstInt3
 		fastTaper = 1.0 + (fastTaper / overallscale);
 		slowTaper = 1.0 + (slowTaper / overallscale);
 	}
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -105,47 +105,47 @@ void IronOxideClassic::processReplacing(float **inputs, float **outputs, VstInt3
 			inputSampleR -= iirSampleBR;
 		}
 		//do IIR highpass for leaning out
-		
+
 		if (inputgain != 1.0) {
 			inputSampleL *= inputgain;
 			inputSampleR *= inputgain;
 		}
-		
+
 		bridgerectifierL = fabs(inputSampleL);
 		if (bridgerectifierL > 1.57079633) bridgerectifierL = 1.57079633;
 		bridgerectifierL = sin(bridgerectifierL);
 		if (inputSampleL > 0.0) inputSampleL = bridgerectifierL;
 		else inputSampleL = -bridgerectifierL;
 		//preliminary gain stage using antialiasing
-		
+
 		bridgerectifierR = fabs(inputSampleR);
 		if (bridgerectifierR > 1.57079633) bridgerectifierR = 1.57079633;
 		bridgerectifierR = sin(bridgerectifierR);
 		if (inputSampleR > 0.0) inputSampleR = bridgerectifierR;
 		else inputSampleR = -bridgerectifierR;
 		//preliminary gain stage using antialiasing
-		
+
 		//over to the Iron Oxide shaping code using inputsample
 		if (gcount < 0 || gcount > 131) {gcount = 131;}
 		count = gcount;
 		//increment the counter
-		
+
 		dL[count+131] = dL[count] = inputSampleL;
 		dR[count+131] = dR[count] = inputSampleR;
-		
+
 		if (fpFlip)
 		{
 			fastIIRAL = fastIIRAL/fastTaper;
 			slowIIRAL = slowIIRAL/slowTaper;
 			fastIIRAL += dL[count];
 			//scale stuff down
-			
+
 			fastIIRAR = fastIIRAR/fastTaper;
 			slowIIRAR = slowIIRAR/slowTaper;
 			fastIIRAR += dR[count];
 			//scale stuff down
 			count += 3;
-			
+
 			temp = dL[count+127];
 			temp += dL[count+113];
 			temp += dL[count+109];
@@ -183,7 +183,7 @@ void IronOxideClassic::processReplacing(float **inputs, float **outputs, VstInt3
 			temp += dL[count+2];
 			temp += dL[count+1]; //end L
 			slowIIRAL += (temp/128);
-			
+
 			temp = dR[count+127];
 			temp += dR[count+113];
 			temp += dR[count+109];
@@ -221,7 +221,7 @@ void IronOxideClassic::processReplacing(float **inputs, float **outputs, VstInt3
 			temp += dR[count+2];
 			temp += dR[count+1]; //end R
 			slowIIRAR += (temp/128);
-			
+
 			inputSampleL = fastIIRAL - (slowIIRAL / slowTaper);
 			inputSampleR = fastIIRAR - (slowIIRAR / slowTaper);
 		}
@@ -231,13 +231,13 @@ void IronOxideClassic::processReplacing(float **inputs, float **outputs, VstInt3
 			slowIIRBL = slowIIRBL/slowTaper;
 			fastIIRBL += dL[count];
 			//scale stuff down
-			
+
 			fastIIRBR = fastIIRBR/fastTaper;
 			slowIIRBR = slowIIRBR/slowTaper;
 			fastIIRBR += dR[count];
 			//scale stuff down
 			count += 3;
-			
+
 			temp = dL[count+127];
 			temp += dL[count+113];
 			temp += dL[count+109];
@@ -275,7 +275,7 @@ void IronOxideClassic::processReplacing(float **inputs, float **outputs, VstInt3
 			temp += dL[count+2];
 			temp += dL[count+1];
 			slowIIRBL += (temp/128);
-			
+
 			temp = dR[count+127];
 			temp += dR[count+113];
 			temp += dR[count+109];
@@ -313,37 +313,37 @@ void IronOxideClassic::processReplacing(float **inputs, float **outputs, VstInt3
 			temp += dR[count+2];
 			temp += dR[count+1];
 			slowIIRBR += (temp/128);
-			
+
 			inputSampleL = fastIIRBL - (slowIIRBL / slowTaper);
 			inputSampleR = fastIIRBR - (slowIIRBR / slowTaper);
 		}
-		
+
 		inputSampleL /= fastTaper;
 		inputSampleR /= fastTaper;
 		inputSampleL /= lowspeedscale;
 		inputSampleR /= lowspeedscale;
-		
+
 		bridgerectifierL = fabs(inputSampleL);
 		if (bridgerectifierL > 1.57079633) bridgerectifierL = 1.57079633;
 		bridgerectifierL = sin(bridgerectifierL);
 		//can use as an output limiter
 		if (inputSampleL > 0.0) inputSampleL = bridgerectifierL;
 		else inputSampleL = -bridgerectifierL;
-		//second stage of overdrive to prevent overs and allow bloody loud extremeness		
-		
+		//second stage of overdrive to prevent overs and allow bloody loud extremeness
+
 		bridgerectifierR = fabs(inputSampleR);
 		if (bridgerectifierR > 1.57079633) bridgerectifierR = 1.57079633;
 		bridgerectifierR = sin(bridgerectifierR);
 		//can use as an output limiter
 		if (inputSampleR > 0.0) inputSampleR = bridgerectifierR;
 		else inputSampleR = -bridgerectifierR;
-		//second stage of overdrive to prevent overs and allow bloody loud extremeness		
-		
+		//second stage of overdrive to prevent overs and allow bloody loud extremeness
+
 		if (outputgain != 1.0) {
 			inputSampleL *= outputgain;
 			inputSampleR *= outputgain;
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -374,7 +374,7 @@ void IronOxideClassic::processReplacing(float **inputs, float **outputs, VstInt3
     }
 }
 
-void IronOxideClassic::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void IronOxideClassic::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -386,8 +386,8 @@ void IronOxideClassic::processDoubleReplacing(double **inputs, double **outputs,
 	overallscale *= getSampleRate();
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double inputgain = pow(10.0,((A*36.0)-18.0)/20.0);
 	double outputgain = pow(10.0,((C*36.0)-18.0)/20.0);
 	double ips = (((B*B)*(B*B)*148.5)+1.5) * 1.1;
@@ -410,7 +410,7 @@ void IronOxideClassic::processDoubleReplacing(double **inputs, double **outputs,
 		fastTaper = 1.0 + (fastTaper / overallscale);
 		slowTaper = 1.0 + (slowTaper / overallscale);
 	}
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 
@@ -472,47 +472,47 @@ void IronOxideClassic::processDoubleReplacing(double **inputs, double **outputs,
 			inputSampleR -= iirSampleBR;
 		}
 		//do IIR highpass for leaning out
-		
+
 		if (inputgain != 1.0) {
 			inputSampleL *= inputgain;
 			inputSampleR *= inputgain;
 		}
-		
+
 		bridgerectifierL = fabs(inputSampleL);
 		if (bridgerectifierL > 1.57079633) bridgerectifierL = 1.57079633;
 		bridgerectifierL = sin(bridgerectifierL);
 		if (inputSampleL > 0.0) inputSampleL = bridgerectifierL;
 		else inputSampleL = -bridgerectifierL;
 		//preliminary gain stage using antialiasing
-		
+
 		bridgerectifierR = fabs(inputSampleR);
 		if (bridgerectifierR > 1.57079633) bridgerectifierR = 1.57079633;
 		bridgerectifierR = sin(bridgerectifierR);
 		if (inputSampleR > 0.0) inputSampleR = bridgerectifierR;
 		else inputSampleR = -bridgerectifierR;
 		//preliminary gain stage using antialiasing
-		
+
 		//over to the Iron Oxide shaping code using inputsample
 		if (gcount < 0 || gcount > 131) {gcount = 131;}
 		count = gcount;
 		//increment the counter
-		
+
 		dL[count+131] = dL[count] = inputSampleL;
 		dR[count+131] = dR[count] = inputSampleR;
-		
+
 		if (fpFlip)
 		{
 			fastIIRAL = fastIIRAL/fastTaper;
 			slowIIRAL = slowIIRAL/slowTaper;
 			fastIIRAL += dL[count];
 			//scale stuff down
-			
+
 			fastIIRAR = fastIIRAR/fastTaper;
 			slowIIRAR = slowIIRAR/slowTaper;
 			fastIIRAR += dR[count];
 			//scale stuff down
 			count += 3;
-			
+
 			temp = dL[count+127];
 			temp += dL[count+113];
 			temp += dL[count+109];
@@ -550,7 +550,7 @@ void IronOxideClassic::processDoubleReplacing(double **inputs, double **outputs,
 			temp += dL[count+2];
 			temp += dL[count+1]; //end L
 			slowIIRAL += (temp/128);
-			
+
 			temp = dR[count+127];
 			temp += dR[count+113];
 			temp += dR[count+109];
@@ -588,7 +588,7 @@ void IronOxideClassic::processDoubleReplacing(double **inputs, double **outputs,
 			temp += dR[count+2];
 			temp += dR[count+1]; //end R
 			slowIIRAR += (temp/128);
-			
+
 			inputSampleL = fastIIRAL - (slowIIRAL / slowTaper);
 			inputSampleR = fastIIRAR - (slowIIRAR / slowTaper);
 		}
@@ -598,13 +598,13 @@ void IronOxideClassic::processDoubleReplacing(double **inputs, double **outputs,
 			slowIIRBL = slowIIRBL/slowTaper;
 			fastIIRBL += dL[count];
 			//scale stuff down
-			
+
 			fastIIRBR = fastIIRBR/fastTaper;
 			slowIIRBR = slowIIRBR/slowTaper;
 			fastIIRBR += dR[count];
 			//scale stuff down
 			count += 3;
-			
+
 			temp = dL[count+127];
 			temp += dL[count+113];
 			temp += dL[count+109];
@@ -642,7 +642,7 @@ void IronOxideClassic::processDoubleReplacing(double **inputs, double **outputs,
 			temp += dL[count+2];
 			temp += dL[count+1];
 			slowIIRBL += (temp/128);
-			
+
 			temp = dR[count+127];
 			temp += dR[count+113];
 			temp += dR[count+109];
@@ -680,37 +680,37 @@ void IronOxideClassic::processDoubleReplacing(double **inputs, double **outputs,
 			temp += dR[count+2];
 			temp += dR[count+1];
 			slowIIRBR += (temp/128);
-			
+
 			inputSampleL = fastIIRBL - (slowIIRBL / slowTaper);
 			inputSampleR = fastIIRBR - (slowIIRBR / slowTaper);
 		}
-		
+
 		inputSampleL /= fastTaper;
 		inputSampleR /= fastTaper;
 		inputSampleL /= lowspeedscale;
 		inputSampleR /= lowspeedscale;
-		
+
 		bridgerectifierL = fabs(inputSampleL);
 		if (bridgerectifierL > 1.57079633) bridgerectifierL = 1.57079633;
 		bridgerectifierL = sin(bridgerectifierL);
 		//can use as an output limiter
 		if (inputSampleL > 0.0) inputSampleL = bridgerectifierL;
 		else inputSampleL = -bridgerectifierL;
-		//second stage of overdrive to prevent overs and allow bloody loud extremeness		
-		
+		//second stage of overdrive to prevent overs and allow bloody loud extremeness
+
 		bridgerectifierR = fabs(inputSampleR);
 		if (bridgerectifierR > 1.57079633) bridgerectifierR = 1.57079633;
 		bridgerectifierR = sin(bridgerectifierR);
 		//can use as an output limiter
 		if (inputSampleR > 0.0) inputSampleR = bridgerectifierR;
 		else inputSampleR = -bridgerectifierR;
-		//second stage of overdrive to prevent overs and allow bloody loud extremeness		
-		
+		//second stage of overdrive to prevent overs and allow bloody loud extremeness
+
 		if (outputgain != 1.0) {
 			inputSampleL *= outputgain;
 			inputSampleR *= outputgain;
 		}
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

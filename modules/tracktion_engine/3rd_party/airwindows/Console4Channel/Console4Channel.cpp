@@ -1,6 +1,6 @@
 /* ========================================
  *  Console4Channel - Console4Channel.h
- *  Created 8/12/11 by SPIAdmin 
+ *  Created 8/12/11 by SPIAdmin
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
@@ -8,7 +8,7 @@
 #include "Console4Channel.h"
 #endif
 
-AudioEffect* createEffectInstance(audioMasterCallback audioMaster) 
+AudioEffect* createEffectInstance(audioMasterCallback audioMaster)
 {
 	return new Console4Channel(audioMaster);
 }
@@ -40,21 +40,21 @@ Console4Channel::Console4Channel(audioMasterCallback audioMaster) :
 //    _canDo.insert("noRealTime"); // no real-time processing
 //    _canDo.insert("multipass"); // unknown
 //    _canDo.insert("metapass"); // unknown
-//    _canDo.insert("x1in1out"); 
-//    _canDo.insert("x1in2out"); 
-//    _canDo.insert("x2in1out"); 
-    _canDo.insert("x2in2out"); 
-//    _canDo.insert("x2in4out"); 
-//    _canDo.insert("x4in2out"); 
-//    _canDo.insert("x4in4out"); 
+//    _canDo.insert("x1in1out");
+//    _canDo.insert("x1in2out");
+//    _canDo.insert("x2in1out");
+    _canDo.insert("x2in2out");
+//    _canDo.insert("x2in4out");
+//    _canDo.insert("x4in2out");
+//    _canDo.insert("x4in4out");
 //    _canDo.insert("x4in8out"); // 4:2 matrix to surround bus
 //    _canDo.insert("x8in4out"); // surround bus to 4:2 matrix
-//    _canDo.insert("x8in8out"); 
+//    _canDo.insert("x8in8out");
 //    _canDo.insert("midiProgramNames"); // plug-in supports function #getMidiProgramName().
 //    _canDo.insert("conformsToWindowRules"); // mac: doesn't mess with grafport.
 //    _canDo.insert("bypass"); // plug-in supports function #setBypass().
-    
-    
+
+
     // these configuration values are established in the header
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
@@ -62,18 +62,18 @@ Console4Channel::Console4Channel(audioMasterCallback audioMaster) :
     canProcessReplacing();     // supports output replacing
     canDoubleReplacing();      // supports double precision processing
  	programsAreChunks(true);
-   
+
     vst_strncpy (_programName, "Default", kVstMaxProgNameLen); // default program name
 }
 
-Console4Channel::~Console4Channel() 
+Console4Channel::~Console4Channel()
 {
 }
 
 VstInt32 Console4Channel::getVendorVersion ()
-{ 
+{
     // TODO: return version number
-	return 1000; 
+	return 1000;
 }
 
 void Console4Channel::setProgramName(char *name) {
@@ -96,20 +96,20 @@ VstInt32 Console4Channel::getChunk (void** data, bool isPreset)
 	float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
 	chunkData[0] = gain;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
+	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
 	 started with. */
-	
+
 	*data = chunkData;
 	return kNumParameters * sizeof(float);
 }
 
 VstInt32 Console4Channel::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	float *chunkData = (float *)data;
 	gain = pinParameter(chunkData[0]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
-	
-	/* calculate any other fields you need here - you could copy in 
+
+	/* calculate any other fields you need here - you could copy in
 	 code from setParameter() here. */
 	return 0;
 }
@@ -165,7 +165,7 @@ void Console4Channel::getParameterLabel(VstInt32 index, char *text) {
     }
 }
 
-VstInt32 Console4Channel::canDo(char *text) 
+VstInt32 Console4Channel::canDo(char *text)
 {
     // 1 = yes, -1 = no, 0 = don't know
     return (_canDo.find(text) == _canDo.end()) ? 0 : 1;

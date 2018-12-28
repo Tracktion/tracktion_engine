@@ -1,6 +1,6 @@
 /* ========================================
  *  Channel6 - Channel6.h
- *  Created 8/12/11 by SPIAdmin 
+ *  Created 8/12/11 by SPIAdmin
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
@@ -27,8 +27,8 @@ const int kNumInputs = 2;
 const int kNumOutputs = 2;
 const unsigned long kUniqueId = 'cha6';    //Change this to what the AU identity is!
 
-class Channel6 : 
-    public AudioEffectX 
+class Channel6 :
+    public AudioEffectX
 {
 public:
     Channel6(audioMasterCallback audioMaster);
@@ -48,12 +48,12 @@ public:
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
     virtual void getParameterName(VstInt32 index, char *text);    // name of the parameter
-    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value    
+    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value
     virtual VstInt32 canDo(char *text);
 private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
-    
+
 	long double fpNShapeL;
 	long double fpNShapeR;
 	//default stuff
@@ -66,7 +66,7 @@ private:
 	double iirAmount;
 	double threshold;
 	bool flip;
-	
+
     float consoletype;
     float drive; //parameters. Always 0-1, and we scale/alter them elsewhere.
 	float output;

@@ -43,7 +43,7 @@ Ditherbox::Ditherbox(audioMasterCallback audioMaster) :
 	bynR[9] = 46;
 	bynR[10] = 1000;
 	noiseShapingR = 0.0;
-	
+
 	NSOddL = 0.0;
 	prevL = 0.0;
 	nsL[0] = 0;
@@ -112,7 +112,7 @@ Ditherbox::Ditherbox(audioMasterCallback audioMaster) :
 	iirSampleXL = 0.0;
 	iirSampleYL = 0.0;
 	iirSampleZL = 0.0;
-	
+
 	iirSampleAR = 0.0;
 	iirSampleBR = 0.0;
 	iirSampleCR = 0.0;
@@ -140,10 +140,10 @@ Ditherbox::Ditherbox(audioMasterCallback audioMaster) :
 	iirSampleYR = 0.0;
 	iirSampleZR = 0.0;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -172,20 +172,20 @@ VstInt32 Ditherbox::getChunk (void** data, bool isPreset)
 	float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
 	chunkData[0] = A;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
+	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
 	 started with. */
-	
+
 	*data = chunkData;
 	return kNumParameters * sizeof(float);
 }
 
 VstInt32 Ditherbox::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	float *chunkData = (float *)data;
 	A = pinParameter(chunkData[0]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
-	
-	/* calculate any other fields you need here - you could copy in 
+
+	/* calculate any other fields you need here - you could copy in
 	 code from setParameter() here. */
 	return 0;
 }
@@ -241,7 +241,7 @@ void Ditherbox::getParameterDisplay(VstInt32 index, char *text) {
 			case 23: vst_strncpy (text, "SubsOnl", kVstMaxParamStrLen); break;
 			case 24: vst_strncpy (text, "Silhoue", kVstMaxParamStrLen); break;
 			default: break; // unknown parameter, shouldn't happen!
-		} break;			
+		} break;
         default: break; // unknown parameter, shouldn't happen!
 	} //this displays the values and handles 'popups' where it's discrete choices
 }
@@ -276,12 +276,12 @@ void Ditherbox::getParameterLabel(VstInt32 index, char *text) {
 			case 23: vst_strncpy (text, "y", kVstMaxParamStrLen); break;
 			case 24: vst_strncpy (text, "tte", kVstMaxParamStrLen); break;
 			default: break; // unknown parameter, shouldn't happen!
-		} break;			
+		} break;
         default: break; // unknown parameter, shouldn't happen!
 	} //this displays the values and handles 'popups' where it's discrete choices
 }
 
-VstInt32 Ditherbox::canDo(char *text) 
+VstInt32 Ditherbox::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool Ditherbox::getEffectName(char* name) {

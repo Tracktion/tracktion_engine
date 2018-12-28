@@ -7,7 +7,7 @@
 #include "ChorusEnsemble.h"
 #endif
 
-void ChorusEnsemble::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void ChorusEnsemble::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -20,7 +20,7 @@ void ChorusEnsemble::processReplacing(float **inputs, float **outputs, VstInt32 
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
 	long double fpNew = 1.0 - fpOld;
-	
+
 	double speed = pow(A,3) * 0.001;
 	speed *= overallscale;
 	int loopLimit = (int)(totalsamples * 0.499);
@@ -42,7 +42,7 @@ void ChorusEnsemble::processReplacing(float **inputs, float **outputs, VstInt32 
 	start[1] = range * 2;
 	start[2] = range * 3;
 	start[3] = range * 4;
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -96,7 +96,7 @@ void ChorusEnsemble::processReplacing(float **inputs, float **outputs, VstInt32 
 		airPrevL = inputSampleL;
 		inputSampleL += (airFactorL*wet);
 		//air, compensates for loss of highs in flanger's interpolation
-		
+
 		airFactorR = airPrevR - inputSampleR;
 		if (fpFlip) {airEvenR += airFactorR; airOddR -= airFactorR; airFactorR = airEvenR;}
 		else {airOddR += airFactorR; airEvenR -= airFactorR; airFactorR = airOddR;}
@@ -105,14 +105,14 @@ void ChorusEnsemble::processReplacing(float **inputs, float **outputs, VstInt32 
 		airPrevR = inputSampleR;
 		inputSampleR += (airFactorR*wet);
 		//air, compensates for loss of highs in flanger's interpolation
-		
+
 		if (gcount < 1 || gcount > loopLimit) {gcount = loopLimit;}
 		count = gcount;
 		dL[count+loopLimit] = dL[count] = inputSampleL;
 		dR[count+loopLimit] = dR[count] = inputSampleR;
 		gcount--;
 		//double buffer
-		
+
 		offset = start[0] + (modulation * sin(sweep));
 		count = gcount + (int)floor(offset);
 		inputSampleL = dL[count] * (1-(offset-floor(offset))); //less as value moves away from .0
@@ -124,7 +124,7 @@ void ChorusEnsemble::processReplacing(float **inputs, float **outputs, VstInt32 
 		inputSampleR += dR[count+1]; //we can assume always using this in one way or another?
 		inputSampleR += (dR[count+2] * (offset-floor(offset))); //greater as value moves away from .0
 		inputSampleR -= (((dR[count]-dR[count+1])-(dR[count+1]-dR[count+2]))/50); //interpolation hacks 'r us
-		
+
 		offset = start[1] + (modulation * sin(sweep + 1.0));
 		count = gcount + (int)floor(offset);
 		inputSampleL += dL[count] * (1-(offset-floor(offset))); //less as value moves away from .0
@@ -136,8 +136,8 @@ void ChorusEnsemble::processReplacing(float **inputs, float **outputs, VstInt32 
 		inputSampleR += dR[count+1]; //we can assume always using this in one way or another?
 		inputSampleR += (dR[count+2] * (offset-floor(offset))); //greater as value moves away from .0
 		inputSampleR -= (((dR[count]-dR[count+1])-(dR[count+1]-dR[count+2]))/50); //interpolation hacks 'r us
-		
-		
+
+
 		offset = start[2] + (modulation * sin(sweep + 2.0));
 		count = gcount + (int)floor(offset);
 		inputSampleL += dL[count] * (1-(offset-floor(offset))); //less as value moves away from .0
@@ -149,8 +149,8 @@ void ChorusEnsemble::processReplacing(float **inputs, float **outputs, VstInt32 
 		inputSampleR += dR[count+1]; //we can assume always using this in one way or another?
 		inputSampleR += (dR[count+2] * (offset-floor(offset))); //greater as value moves away from .0
 		inputSampleR -= (((dR[count]-dR[count+1])-(dR[count+1]-dR[count+2]))/50); //interpolation hacks 'r us
-		
-		
+
+
 		offset = start[3] + (modulation * sin(sweep + 3.0));
 		count = gcount + (int)floor(offset);
 		inputSampleL += dL[count] * (1-(offset-floor(offset))); //less as value moves away from .0
@@ -162,19 +162,19 @@ void ChorusEnsemble::processReplacing(float **inputs, float **outputs, VstInt32 
 		inputSampleR += dR[count+1]; //we can assume always using this in one way or another?
 		inputSampleR += (dR[count+2] * (offset-floor(offset))); //greater as value moves away from .0
 		inputSampleR -= (((dR[count]-dR[count+1])-(dR[count+1]-dR[count+2]))/50); //interpolation hacks 'r us
-		
+
 		inputSampleL *= 0.125; //to get a comparable level
 		inputSampleR *= 0.125; //to get a comparable level
-		
+
 		sweep += speed;
 		if (sweep > tupi){sweep -= tupi;}
 		//still scrolling through the samples, remember
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
@@ -206,7 +206,7 @@ void ChorusEnsemble::processReplacing(float **inputs, float **outputs, VstInt32 
     }
 }
 
-void ChorusEnsemble::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void ChorusEnsemble::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -218,7 +218,7 @@ void ChorusEnsemble::processDoubleReplacing(double **inputs, double **outputs, V
 	overallscale *= getSampleRate();
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	double speed = pow(A,3) * 0.001;
 	speed *= overallscale;
@@ -231,7 +231,7 @@ void ChorusEnsemble::processDoubleReplacing(double **inputs, double **outputs, V
 	double tupi = 3.141592653589793238 * 2.0;
 	double offset;
 	double start[4];
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
 	double drySampleL;
@@ -241,7 +241,7 @@ void ChorusEnsemble::processDoubleReplacing(double **inputs, double **outputs, V
 	start[1] = range * 2;
 	start[2] = range * 3;
 	start[3] = range * 4;
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -295,7 +295,7 @@ void ChorusEnsemble::processDoubleReplacing(double **inputs, double **outputs, V
 		airPrevL = inputSampleL;
 		inputSampleL += (airFactorL*wet);
 		//air, compensates for loss of highs in flanger's interpolation
-		
+
 		airFactorR = airPrevR - inputSampleR;
 		if (fpFlip) {airEvenR += airFactorR; airOddR -= airFactorR; airFactorR = airEvenR;}
 		else {airOddR += airFactorR; airEvenR -= airFactorR; airFactorR = airOddR;}
@@ -304,77 +304,77 @@ void ChorusEnsemble::processDoubleReplacing(double **inputs, double **outputs, V
 		airPrevR = inputSampleR;
 		inputSampleR += (airFactorR*wet);
 		//air, compensates for loss of highs in flanger's interpolation
-		
+
 		if (gcount < 1 || gcount > loopLimit) {gcount = loopLimit;}
 		count = gcount;
 		dL[count+loopLimit] = dL[count] = inputSampleL;
 		dR[count+loopLimit] = dR[count] = inputSampleR;
 		gcount--;
 		//double buffer
-		
+
 		offset = start[0] + (modulation * sin(sweep));
 		count = gcount + (int)floor(offset);
 		inputSampleL = dL[count] * (1-(offset-floor(offset))); //less as value moves away from .0
 		inputSampleL += dL[count+1]; //we can assume always using this in one way or another?
 		inputSampleL += (dL[count+2] * (offset-floor(offset))); //greater as value moves away from .0
 		inputSampleL -= (((dL[count]-dL[count+1])-(dL[count+1]-dL[count+2]))/50); //interpolation hacks 'r us
-		
+
 		inputSampleR = dR[count] * (1-(offset-floor(offset))); //less as value moves away from .0
 		inputSampleR += dR[count+1]; //we can assume always using this in one way or another?
 		inputSampleR += (dR[count+2] * (offset-floor(offset))); //greater as value moves away from .0
 		inputSampleR -= (((dR[count]-dR[count+1])-(dR[count+1]-dR[count+2]))/50); //interpolation hacks 'r us
-		
+
 		offset = start[1] + (modulation * sin(sweep + 1.0));
 		count = gcount + (int)floor(offset);
 		inputSampleL += dL[count] * (1-(offset-floor(offset))); //less as value moves away from .0
 		inputSampleL += dL[count+1]; //we can assume always using this in one way or another?
 		inputSampleL += (dL[count+2] * (offset-floor(offset))); //greater as value moves away from .0
 		inputSampleL -= (((dL[count]-dL[count+1])-(dL[count+1]-dL[count+2]))/50); //interpolation hacks 'r us
-		
+
 		inputSampleR += dR[count] * (1-(offset-floor(offset))); //less as value moves away from .0
 		inputSampleR += dR[count+1]; //we can assume always using this in one way or another?
 		inputSampleR += (dR[count+2] * (offset-floor(offset))); //greater as value moves away from .0
 		inputSampleR -= (((dR[count]-dR[count+1])-(dR[count+1]-dR[count+2]))/50); //interpolation hacks 'r us
-		
-		
+
+
 		offset = start[2] + (modulation * sin(sweep + 2.0));
 		count = gcount + (int)floor(offset);
 		inputSampleL += dL[count] * (1-(offset-floor(offset))); //less as value moves away from .0
 		inputSampleL += dL[count+1]; //we can assume always using this in one way or another?
 		inputSampleL += (dL[count+2] * (offset-floor(offset))); //greater as value moves away from .0
 		inputSampleL -= (((dL[count]-dL[count+1])-(dL[count+1]-dL[count+2]))/50); //interpolation hacks 'r us
-		
+
 		inputSampleR += dR[count] * (1-(offset-floor(offset))); //less as value moves away from .0
 		inputSampleR += dR[count+1]; //we can assume always using this in one way or another?
 		inputSampleR += (dR[count+2] * (offset-floor(offset))); //greater as value moves away from .0
 		inputSampleR -= (((dR[count]-dR[count+1])-(dR[count+1]-dR[count+2]))/50); //interpolation hacks 'r us
-		
-		
+
+
 		offset = start[3] + (modulation * sin(sweep + 3.0));
 		count = gcount + (int)floor(offset);
 		inputSampleL += dL[count] * (1-(offset-floor(offset))); //less as value moves away from .0
 		inputSampleL += dL[count+1]; //we can assume always using this in one way or another?
 		inputSampleL += (dL[count+2] * (offset-floor(offset))); //greater as value moves away from .0
 		inputSampleL -= (((dL[count]-dL[count+1])-(dL[count+1]-dL[count+2]))/50); //interpolation hacks 'r us
-		
+
 		inputSampleR += dR[count] * (1-(offset-floor(offset))); //less as value moves away from .0
 		inputSampleR += dR[count+1]; //we can assume always using this in one way or another?
 		inputSampleR += (dR[count+2] * (offset-floor(offset))); //greater as value moves away from .0
 		inputSampleR -= (((dR[count]-dR[count+1])-(dR[count+1]-dR[count+2]))/50); //interpolation hacks 'r us
-		
+
 		inputSampleL *= 0.125; //to get a comparable level
 		inputSampleR *= 0.125; //to get a comparable level
-		
+
 		sweep += speed;
 		if (sweep > tupi){sweep -= tupi;}
 		//still scrolling through the samples, remember
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
-		
+
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

@@ -1,6 +1,6 @@
 /* ========================================
  *  Thunder - Thunder.h
- *  Created 8/12/11 by SPIAdmin 
+ *  Created 8/12/11 by SPIAdmin
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
@@ -26,8 +26,8 @@ const int kNumInputs = 2;
 const int kNumOutputs = 2;
 const unsigned long kUniqueId = 'thun';    //Change this to what the AU identity is!
 
-class Thunder : 
-    public AudioEffectX 
+class Thunder :
+    public AudioEffectX
 {
 public:
     Thunder(audioMasterCallback audioMaster);
@@ -47,12 +47,12 @@ public:
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
     virtual void getParameterName(VstInt32 index, char *text);    // name of the parameter
-    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value    
+    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value
     virtual VstInt32 canDo(char *text);
 private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
-    
+
 	double muVary;
 	double muAttack;
 	double muNewSpeed;
@@ -74,7 +74,7 @@ private:
 	long double fpNShapeAR;
 	long double fpNShapeBR;
 	bool flip;
-	
+
     float A;
     float B;
 

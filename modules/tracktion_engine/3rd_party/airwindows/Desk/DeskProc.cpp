@@ -7,15 +7,15 @@
 #include "Desk.h"
 #endif
 
-void Desk::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Desk::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
     float* out1 = outputs[0];
     float* out2 = outputs[1];
-	
+
 	double gain = 0.135;
-	double slewgain = 0.208;	
+	double slewgain = 0.208;
 	double prevslew = 0.333;
 	double balanceB = 0.0001;
 	double overallscale = 1.0;
@@ -28,16 +28,16 @@ void Desk::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 	double slew;
 	double bridgerectifier;
 	double combsample;
-	
+
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
 	long double drySampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -82,75 +82,75 @@ void Desk::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		//begin L
 		slew = inputSampleL - lastSampleL;
 		lastSampleL = inputSampleL;
 		//Set up direct reference for slew
-		
+
 		bridgerectifier = fabs(slew*slewgain);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
 		if (slew > 0) slew = bridgerectifier/slewgain;
 		else slew = -(bridgerectifier/slewgain);
-		
+
 		inputSampleL = (lastOutSampleL*balanceA) + (lastSampleL*balanceB) + slew;
 		//go from last slewed, but include some raw values
 		lastOutSampleL = inputSampleL;
 		//Set up slewed reference
-		
+
 		combsample = fabs(drySampleL*lastSampleL);
 		if (combsample > 1.0) combsample = 1.0;
 		//bailout for very high input gains
 		inputSampleL -= (lastSlewL * combsample * prevslew);
 		lastSlewL = slew;
 		//slew interaction with previous slew
-		
+
 		inputSampleL *= gain;
 		bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
-		
+
 		if (inputSampleL > 0) inputSampleL = bridgerectifier;
 		else inputSampleL = -bridgerectifier;
 		//drive section
 		inputSampleL /= gain;
 		//end L
-		
+
 		//begin R
 		slew = inputSampleR - lastSampleR;
 		lastSampleR = inputSampleR;
 		//Set up direct reference for slew
-		
+
 		bridgerectifier = fabs(slew*slewgain);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
 		if (slew > 0) slew = bridgerectifier/slewgain;
 		else slew = -(bridgerectifier/slewgain);
-		
+
 		inputSampleR = (lastOutSampleR*balanceA) + (lastSampleR*balanceB) + slew;
 		//go from last slewed, but include some raw values
 		lastOutSampleR = inputSampleR;
 		//Set up slewed reference
-		
+
 		combsample = fabs(drySampleR*lastSampleR);
 		if (combsample > 1.0) combsample = 1.0;
 		//bailout for very high input gains
 		inputSampleR -= (lastSlewR * combsample * prevslew);
 		lastSlewR = slew;
 		//slew interaction with previous slew
-		
+
 		inputSampleR *= gain;
 		bridgerectifier = fabs(inputSampleR);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
-		
+
 		if (inputSampleR > 0) inputSampleR = bridgerectifier;
 		else inputSampleR = -bridgerectifier;
 		//drive section
 		inputSampleR /= gain;
 		//end R
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -181,7 +181,7 @@ void Desk::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
     }
 }
 
-void Desk::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Desk::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -189,7 +189,7 @@ void Desk::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
     double* out2 = outputs[1];
 
 	double gain = 0.135;
-	double slewgain = 0.208;	
+	double slewgain = 0.208;
 	double prevslew = 0.333;
 	double balanceB = 0.0001;
 	double overallscale = 1.0;
@@ -202,16 +202,16 @@ void Desk::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 	double slew;
 	double bridgerectifier;
 	double combsample;
-	
+
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
 	long double drySampleR;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -261,64 +261,64 @@ void Desk::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		slew = inputSampleL - lastSampleL;
 		lastSampleL = inputSampleL;
 		//Set up direct reference for slew
-		
+
 		bridgerectifier = fabs(slew*slewgain);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
 		if (slew > 0) slew = bridgerectifier/slewgain;
 		else slew = -(bridgerectifier/slewgain);
-		
+
 		inputSampleL = (lastOutSampleL*balanceA) + (lastSampleL*balanceB) + slew;
 		//go from last slewed, but include some raw values
 		lastOutSampleL = inputSampleL;
 		//Set up slewed reference
-		
+
 		combsample = fabs(drySampleL*lastSampleL);
 		if (combsample > 1.0) combsample = 1.0;
 		//bailout for very high input gains
 		inputSampleL -= (lastSlewL * combsample * prevslew);
 		lastSlewL = slew;
 		//slew interaction with previous slew
-		
+
 		inputSampleL *= gain;
 		bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
-		
+
 		if (inputSampleL > 0) inputSampleL = bridgerectifier;
 		else inputSampleL = -bridgerectifier;
 		//drive section
 		inputSampleL /= gain;
 		//end L
-		
+
 		//begin R
 		slew = inputSampleR - lastSampleR;
 		lastSampleR = inputSampleR;
 		//Set up direct reference for slew
-		
+
 		bridgerectifier = fabs(slew*slewgain);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
 		if (slew > 0) slew = bridgerectifier/slewgain;
 		else slew = -(bridgerectifier/slewgain);
-		
+
 		inputSampleR = (lastOutSampleR*balanceA) + (lastSampleR*balanceB) + slew;
 		//go from last slewed, but include some raw values
 		lastOutSampleR = inputSampleR;
 		//Set up slewed reference
-		
+
 		combsample = fabs(drySampleR*lastSampleR);
 		if (combsample > 1.0) combsample = 1.0;
 		//bailout for very high input gains
 		inputSampleR -= (lastSlewR * combsample * prevslew);
 		lastSlewR = slew;
 		//slew interaction with previous slew
-		
+
 		inputSampleR *= gain;
 		bridgerectifier = fabs(inputSampleR);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
-		
+
 		if (inputSampleR > 0) inputSampleR = bridgerectifier;
 		else inputSampleR = -bridgerectifier;
 		//drive section

@@ -22,14 +22,14 @@ DubSub::DubSub(audioMasterCallback audioMaster) :
 	H = 0.2;
 	I = 0.5;
 	J = 1.0;
-	
+
 	WasNegativeL = false;
 	SubOctaveL = false;
 	WasNegativeR = false;
 	SubOctaveR = false;
 	flip = false;
 	bflip = 0;
-	
+
 	iirDriveSampleAL = 0.0;
 	iirDriveSampleBL = 0.0;
 	iirDriveSampleCL = 0.0;
@@ -42,26 +42,26 @@ DubSub::DubSub(audioMasterCallback audioMaster) :
 	iirDriveSampleDR = 0.0;
 	iirDriveSampleER = 0.0;
 	iirDriveSampleFR = 0.0;
-	
+
 	iirHeadBumpAL = 0.0;
 	iirHeadBumpBL = 0.0;
 	iirHeadBumpCL = 0.0;
 	iirHeadBumpAR = 0.0;
 	iirHeadBumpBR = 0.0;
 	iirHeadBumpCR = 0.0;
-	
+
 	iirSubBumpAL = 0.0;
 	iirSubBumpBL = 0.0;
 	iirSubBumpCL = 0.0;
 	iirSubBumpAR = 0.0;
 	iirSubBumpBR = 0.0;
 	iirSubBumpCR = 0.0;
-	
+
 	lastHeadBumpL = 0.0;
 	lastSubBumpL = 0.0;
 	lastHeadBumpR = 0.0;
 	lastSubBumpR = 0.0;
-	
+
 	iirSampleAL = 0.0;
 	iirSampleBL = 0.0;
 	iirSampleCL = 0.0;
@@ -87,7 +87,7 @@ DubSub::DubSub(audioMasterCallback audioMaster) :
 	iirSampleWL = 0.0;
 	iirSampleXL = 0.0;
 	iirSampleYL = 0.0;
-	iirSampleZL = 0.0;	
+	iirSampleZL = 0.0;
 	iirSampleAR = 0.0;
 	iirSampleBR = 0.0;
 	iirSampleCR = 0.0;
@@ -113,18 +113,18 @@ DubSub::DubSub(audioMasterCallback audioMaster) :
 	iirSampleWR = 0.0;
 	iirSampleXR = 0.0;
 	iirSampleYR = 0.0;
-	iirSampleZR = 0.0;	
-	
+	iirSampleZR = 0.0;
+
 	oscGateL = 1.0;
-	oscGateR = 1.0;	
-	
+	oscGateR = 1.0;
+
 	fpNShapeL = 0.0;
 	fpNShapeR = 0.0;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -162,15 +162,15 @@ VstInt32 DubSub::getChunk (void** data, bool isPreset)
 	chunkData[8] = I;
 	chunkData[9] = J;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
+	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
 	 started with. */
-	
+
 	*data = chunkData;
 	return kNumParameters * sizeof(float);
 }
 
 VstInt32 DubSub::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	float *chunkData = (float *)data;
 	A = pinParameter(chunkData[0]);
 	B = pinParameter(chunkData[1]);
@@ -183,8 +183,8 @@ VstInt32 DubSub::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 	I = pinParameter(chunkData[8]);
 	J = pinParameter(chunkData[9]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
-	
-	/* calculate any other fields you need here - you could copy in 
+
+	/* calculate any other fields you need here - you could copy in
 	 code from setParameter() here. */
 	return 0;
 }
@@ -269,7 +269,7 @@ void DubSub::getParameterLabel(VstInt32 index, char *text) {
     }
 }
 
-VstInt32 DubSub::canDo(char *text) 
+VstInt32 DubSub::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool DubSub::getEffectName(char* name) {

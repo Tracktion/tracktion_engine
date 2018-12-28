@@ -7,7 +7,7 @@
 #include "Slew2.h"
 #endif
 
-void Slew2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Slew2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -21,7 +21,7 @@ void Slew2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	double threshold = pow((1-A),4)/overallscale;
 	double inputSampleL;
 	double inputSampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -64,10 +64,10 @@ void Slew2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		LataDrySample = inputSampleL;
 		RataDrySample = inputSampleR;
-		
+
 		LataHalfDrySample = LataHalfwaySample = (inputSampleL + LataLast1Sample + ((-LataLast2Sample + LataLast3Sample) * LataUpsampleHighTweak)) / 2.0;
 		LataLast3Sample = LataLast2Sample; LataLast2Sample = LataLast1Sample; LataLast1Sample = inputSampleL;
 		//setting up oversampled special antialiasing
@@ -103,9 +103,9 @@ void Slew2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		LataPrevDiffSample = LataDiffSample / 2.0;
 		//apply processing as difference to non-oversampled raw input
 
-		
-		
-		
+
+
+
 		RataHalfDrySample = RataHalfwaySample = (inputSampleR + RataLast1Sample + ((-RataLast2Sample + RataLast3Sample) * RataUpsampleHighTweak)) / 2.0;
 		RataLast3Sample = RataLast2Sample; RataLast2Sample = RataLast1Sample; RataLast1Sample = inputSampleR;
 		//setting up oversampled special antialiasing
@@ -140,10 +140,10 @@ void Slew2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		inputSampleR = RataDrySample; inputSampleR += ((RataDiffSample + RataHalfDiffSample + RataPrevDiffSample) / 0.734);
 		RataPrevDiffSample = RataDiffSample / 2.0;
 		//apply processing as difference to non-oversampled raw input
-		
 
 
-		
+
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -154,7 +154,7 @@ void Slew2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
     }
 }
 
-void Slew2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Slew2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -211,10 +211,10 @@ void Slew2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		LataDrySample = inputSampleL;
 		RataDrySample = inputSampleR;
-		
+
 		LataHalfDrySample = LataHalfwaySample = (inputSampleL + LataLast1Sample + ((-LataLast2Sample + LataLast3Sample) * LataUpsampleHighTweak)) / 2.0;
 		LataLast3Sample = LataLast2Sample; LataLast2Sample = LataLast1Sample; LataLast1Sample = inputSampleL;
 		//setting up oversampled special antialiasing
@@ -249,10 +249,10 @@ void Slew2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		inputSampleL = LataDrySample; inputSampleL += ((LataDiffSample + LataHalfDiffSample + LataPrevDiffSample) / 0.734);
 		LataPrevDiffSample = LataDiffSample / 2.0;
 		//apply processing as difference to non-oversampled raw input
-		
-		
-		
-		
+
+
+
+
 		RataHalfDrySample = RataHalfwaySample = (inputSampleR + RataLast1Sample + ((-RataLast2Sample + RataLast3Sample) * RataUpsampleHighTweak)) / 2.0;
 		RataLast3Sample = RataLast2Sample; RataLast2Sample = RataLast1Sample; RataLast1Sample = inputSampleR;
 		//setting up oversampled special antialiasing
@@ -287,7 +287,7 @@ void Slew2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		inputSampleR = RataDrySample; inputSampleR += ((RataDiffSample + RataHalfDiffSample + RataPrevDiffSample) / 0.734);
 		RataPrevDiffSample = RataDiffSample / 2.0;
 		//apply processing as difference to non-oversampled raw input
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

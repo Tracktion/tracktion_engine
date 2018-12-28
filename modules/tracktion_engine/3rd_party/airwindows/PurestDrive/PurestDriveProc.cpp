@@ -7,7 +7,7 @@
 #include "PurestDrive.h"
 #endif
 
-void PurestDrive::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void PurestDrive::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -16,7 +16,7 @@ void PurestDrive::processReplacing(float **inputs, float **outputs, VstInt32 sam
 
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	double intensity = A;
 	double drySampleL;
@@ -24,7 +24,7 @@ void PurestDrive::processReplacing(float **inputs, float **outputs, VstInt32 sam
 	long double inputSampleL;
 	long double inputSampleR;
 	double apply;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -69,27 +69,27 @@ void PurestDrive::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		inputSampleL = sin(inputSampleL);
 		//basic distortion factor
 		apply = (fabs(previousSampleL + inputSampleL) / 2.0) * intensity;
 		//saturate less if previous sample was undistorted and low level, or if it was
 		//inverse polarity. Lets through highs and brightness more.
-		inputSampleL = (drySampleL * (1.0 - apply)) + (inputSampleL * apply);		
+		inputSampleL = (drySampleL * (1.0 - apply)) + (inputSampleL * apply);
 		//dry-wet control for intensity also has FM modulation to clean up highs
 		previousSampleL = sin(drySampleL);
 		//apply the sine while storing previous sample
-		
+
 		inputSampleR = sin(inputSampleR);
 		//basic distortion factor
 		apply = (fabs(previousSampleR + inputSampleR) / 2.0) * intensity;
 		//saturate less if previous sample was undistorted and low level, or if it was
 		//inverse polarity. Lets through highs and brightness more.
-		inputSampleR = (drySampleR * (1.0 - apply)) + (inputSampleR * apply);		
+		inputSampleR = (drySampleR * (1.0 - apply)) + (inputSampleR * apply);
 		//dry-wet control for intensity also has FM modulation to clean up highs
 		previousSampleR = sin(drySampleR);
 		//apply the sine while storing previous sample
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -120,7 +120,7 @@ void PurestDrive::processReplacing(float **inputs, float **outputs, VstInt32 sam
     }
 }
 
-void PurestDrive::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void PurestDrive::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -129,8 +129,8 @@ void PurestDrive::processDoubleReplacing(double **inputs, double **outputs, VstI
 
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	double intensity = A;
 	double drySampleL;
 	double drySampleR;
@@ -183,27 +183,27 @@ void PurestDrive::processDoubleReplacing(double **inputs, double **outputs, VstI
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		inputSampleL = sin(inputSampleL);
 		//basic distortion factor
 		apply = (fabs(previousSampleL + inputSampleL) / 2.0) * intensity;
 		//saturate less if previous sample was undistorted and low level, or if it was
 		//inverse polarity. Lets through highs and brightness more.
-		inputSampleL = (drySampleL * (1.0 - apply)) + (inputSampleL * apply);		
+		inputSampleL = (drySampleL * (1.0 - apply)) + (inputSampleL * apply);
 		//dry-wet control for intensity also has FM modulation to clean up highs
 		previousSampleL = sin(drySampleL);
 		//apply the sine while storing previous sample
-		
+
 		inputSampleR = sin(inputSampleR);
 		//basic distortion factor
 		apply = (fabs(previousSampleR + inputSampleR) / 2.0) * intensity;
 		//saturate less if previous sample was undistorted and low level, or if it was
 		//inverse polarity. Lets through highs and brightness more.
-		inputSampleR = (drySampleR * (1.0 - apply)) + (inputSampleR * apply);		
+		inputSampleR = (drySampleR * (1.0 - apply)) + (inputSampleR * apply);
 		//dry-wet control for intensity also has FM modulation to clean up highs
 		previousSampleR = sin(drySampleR);
 		//apply the sine while storing previous sample
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -223,7 +223,7 @@ void PurestDrive::processDoubleReplacing(double **inputs, double **outputs, VstI
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

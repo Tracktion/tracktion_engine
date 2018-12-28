@@ -7,13 +7,13 @@
 #include "Ditherbox.h"
 #endif
 
-void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
     float* out1 = outputs[0];
     float* out2 = outputs[1];
-	
+
 	int dtype = (int)(A * 24.999)+1; // +1 for Reaper bug workaround
 	long double overallscale = 1.0;
 	overallscale /= 44100.0;
@@ -44,8 +44,8 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	bool dithering = true;
 	if (dtype > 11){highRes = true; dtype -= 11;}
 	if (dtype > 11){dithering = false; highRes = false;}
-	//follow up by switching high res back off for the monitoring	
-	
+	//follow up by switching high res back off for the monitoring
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -90,22 +90,22 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		}
 		float drySampleL = inputSampleL;
 		float drySampleR = inputSampleR;
-				
+
 		if (dtype == 8) {inputSampleL -= noiseShapingL; inputSampleR -= noiseShapingR;}
 
 		if (dithering) {inputSampleL *= 32768.0; inputSampleR *= 32768.0;}
 		//denormalizing as way of controlling insane detail boosting
 		if (highRes) {inputSampleL *= 256.0; inputSampleR *= 256.0;} //256 for 16/24 version
-		
+
 		switch (dtype)
 		{
-			case 1: 
+			case 1:
 				inputSampleL = floor(inputSampleL);
 				inputSampleR = floor(inputSampleR);
 				//truncate
 				break;
-				
-			case 2: 
+
+			case 2:
 				inputSampleL += (rand()/(double)RAND_MAX);
 				inputSampleL -= 0.5;
 				inputSampleL = floor(inputSampleL);
@@ -114,7 +114,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				inputSampleR = floor(inputSampleR);
 				//flat dither
 				break;
-				
+
 			case 3:
 				inputSampleL += (rand()/(double)RAND_MAX);
 				inputSampleL += (rand()/(double)RAND_MAX);
@@ -126,7 +126,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				inputSampleR = floor(inputSampleR);
 				//TPDF dither
 				break;
-				
+
 			case 4:
 				currentDitherL = (rand()/(double)RAND_MAX);
 				inputSampleL += currentDitherL;
@@ -140,12 +140,12 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				lastSampleR = currentDitherR;
 				//Paul dither
 				break;
-				
-			case 5:				
+
+			case 5:
 				nsL[9] = nsL[8]; nsL[8] = nsL[7]; nsL[7] = nsL[6]; nsL[6] = nsL[5];
 				nsL[5] = nsL[4]; nsL[4] = nsL[3]; nsL[3] = nsL[2]; nsL[2] = nsL[1];
 				nsL[1] = nsL[0]; nsL[0] = (rand()/(double)RAND_MAX);
-				
+
 				currentDitherL  = (nsL[0] * 0.061);
 				currentDitherL -= (nsL[1] * 0.11);
 				currentDitherL += (nsL[8] * 0.126);
@@ -161,14 +161,14 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				//Therefore we add the most significant components LAST.
 				//trying to keep values on like exponents of the floating point value.
 				inputSampleL += currentDitherL;
-				
+
 				inputSampleL = floor(inputSampleL);
 				//done with L
-				
+
 				nsR[9] = nsR[8]; nsR[8] = nsR[7]; nsR[7] = nsR[6]; nsR[6] = nsR[5];
 				nsR[5] = nsR[4]; nsR[4] = nsR[3]; nsR[3] = nsR[2]; nsR[2] = nsR[1];
 				nsR[1] = nsR[0]; nsR[0] = (rand()/(double)RAND_MAX);
-				
+
 				currentDitherR  = (nsR[0] * 0.061);
 				currentDitherR -= (nsR[1] * 0.11);
 				currentDitherR += (nsR[8] * 0.126);
@@ -184,38 +184,38 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				//Therefore we add the most significant components LAST.
 				//trying to keep values on like exponents of the floating point value.
 				inputSampleR += currentDitherR;
-				
+
 				inputSampleR = floor(inputSampleR);
 				//done with R
-				
+
 				//DoublePaul dither
 				break;
-				
+
 			case 6:
 				currentDitherL = (rand()/(double)RAND_MAX);
 				currentDitherR = (rand()/(double)RAND_MAX);
-				
+
 				inputSampleL += currentDitherL;
 				inputSampleR += currentDitherR;
 				inputSampleL -= nsL[4];
 				inputSampleR -= nsR[4];
-				
+
 				inputSampleL = floor(inputSampleL);
 				inputSampleR = floor(inputSampleR);
-				
+
 				nsL[4] = nsL[3];
 				nsL[3] = nsL[2];
 				nsL[2] = nsL[1];
 				nsL[1] = currentDitherL;
-				
+
 				nsR[4] = nsR[3];
 				nsR[3] = nsR[2];
 				nsR[2] = nsR[1];
-				nsR[1] = currentDitherR;				
+				nsR[1] = currentDitherR;
 				//Tape dither
 				break;
-				
-			case 7: 
+
+			case 7:
 				Position += 1;
 				//Note- uses integer overflow as a 'mod' operator
 				hotbinA = Position * Position;
@@ -236,7 +236,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				inputSampleR = floor(inputSampleR);
 				//Quadratic dither
 				break;
-				
+
 			case 8:
 				absSample = ((rand()/(double)RAND_MAX) - 0.5);
 				nsL[0] += absSample; nsL[0] /= 2; absSample -= nsL[0];
@@ -272,19 +272,19 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				nsL[15] += absSample; nsL[15] /= 2; absSample -= nsL[15];
 				//install noise and then shape it
 				absSample += inputSampleL;
-				
+
 				if (NSOddL > 0) NSOddL -= 0.97;
 				if (NSOddL < 0) NSOddL += 0.97;
-				
+
 				NSOddL -= (NSOddL * NSOddL * NSOddL * 0.475);
-				
+
 				NSOddL += prevL;
 				absSample += (NSOddL*0.475);
 				prevL = floor(absSample) - inputSampleL;
 				inputSampleL = floor(absSample);
 				//TenNines dither L
-				
-				
+
+
 				absSample = ((rand()/(double)RAND_MAX) - 0.5);
 				nsR[0] += absSample; nsR[0] /= 2; absSample -= nsR[0];
 				absSample += ((rand()/(double)RAND_MAX) - 0.5);
@@ -319,26 +319,26 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				nsR[15] += absSample; nsR[15] /= 2; absSample -= nsR[15];
 				//install noise and then shape it
 				absSample += inputSampleR;
-				
+
 				if (NSOddR > 0) NSOddR -= 0.97;
 				if (NSOddR < 0) NSOddR += 0.97;
-				
+
 				NSOddR -= (NSOddR * NSOddR * NSOddR * 0.475);
-				
+
 				NSOddR += prevR;
 				absSample += (NSOddR*0.475);
 				prevR = floor(absSample) - inputSampleR;
 				inputSampleR = floor(absSample);
 				//TenNines dither R
 				break;
-				
-			case 9: 
+
+			case 9:
 				if (inputSampleL > 0) inputSampleL += 0.383;
 				if (inputSampleL < 0) inputSampleL -= 0.383;
 				if (inputSampleR > 0) inputSampleR += 0.383;
 				if (inputSampleR < 0) inputSampleR -= 0.383;
 				//adjusting to permit more information drug outta the noisefloor
-				
+
 				contingentRnd = (((rand()/(double)RAND_MAX)+(rand()/(double)RAND_MAX))-1.0) * randyConstant; //produce TPDF dist, scale
 				contingentRnd -= contingentErrL*omegaConstant; //include err
 				absSample = fabs(inputSampleL);
@@ -352,7 +352,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				inputSampleL += (contingentRnd * contingent);
 				//Contingent Dither
 				inputSampleL = floor(inputSampleL);
-				
+
 				contingentRnd = (((rand()/(double)RAND_MAX)+(rand()/(double)RAND_MAX))-1.0) * randyConstant; //produce TPDF dist, scale
 				contingentRnd -= contingentErrR*omegaConstant; //include err
 				absSample = fabs(inputSampleR);
@@ -366,21 +366,21 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				inputSampleR += (contingentRnd * contingent);
 				//Contingent Dither
 				inputSampleR = floor(inputSampleR);
-				
+
 				//note: this does not dither for values exactly the same as 16 bit values-
 				//which forces the dither to gate at 0.0. It goes to digital black,
 				//and does a teeny parallel-compression thing when almost at digital black.
 				break;
-				
+
 			case 10: //this one is the original Naturalize
 				if (inputSampleL > 0) inputSampleL += (0.3333333333);
 				if (inputSampleL < 0) inputSampleL -= (0.3333333333);
 				inputSampleL += (rand()/(double)RAND_MAX)*0.6666666666;
-				
+
 				if (inputSampleR > 0) inputSampleR += (0.3333333333);
 				if (inputSampleR < 0) inputSampleR -= (0.3333333333);
 				inputSampleR += (rand()/(double)RAND_MAX)*0.6666666666;
-				
+
 				//begin L
 				benfordize = floor(inputSampleL);
 				while (benfordize >= 1.0) {benfordize /= 10;}
@@ -404,7 +404,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 					bynL[hotbinA] -= 1;
 				} else {hotbinA = 10;}
 				//produce total number- smaller is closer to Benford real
-				
+
 				benfordize = ceil(inputSampleL);
 				while (benfordize >= 1.0) {benfordize /= 10;}
 				if (benfordize < 1.0) {benfordize *= 10;}
@@ -427,7 +427,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 					bynL[hotbinB] -= 1;
 				} else {hotbinB = 10;}
 				//produce total number- smaller is closer to Benford real
-				
+
 				if (totalA < totalB)
 				{
 					bynL[hotbinA] += 1;
@@ -440,7 +440,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				}
 				//assign the relevant one to the delay line
 				//and floor/ceil signal accordingly
-				
+
 				totalA = bynL[1] + bynL[2] + bynL[3] + bynL[4] + bynL[5] + bynL[6] + bynL[7] + bynL[8] + bynL[9];
 				totalA /= 1000;
 				if (totalA = 0) totalA = 1;
@@ -455,7 +455,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				bynL[9] /= totalA;
 				bynL[10] /= 2; //catchall for garbage data
 				//end L
-				
+
 				//begin R
 				benfordize = floor(inputSampleR);
 				while (benfordize >= 1.0) {benfordize /= 10;}
@@ -479,7 +479,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 					bynR[hotbinA] -= 1;
 				} else {hotbinA = 10;}
 				//produce total number- smaller is closer to Benford real
-				
+
 				benfordize = ceil(inputSampleR);
 				while (benfordize >= 1.0) {benfordize /= 10;}
 				if (benfordize < 1.0) {benfordize *= 10;}
@@ -502,7 +502,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 					bynR[hotbinB] -= 1;
 				} else {hotbinB = 10;}
 				//produce total number- smaller is closer to Benford real
-				
+
 				if (totalA < totalB)
 				{
 					bynR[hotbinA] += 1;
@@ -515,7 +515,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				}
 				//assign the relevant one to the delay line
 				//and floor/ceil signal accordingly
-				
+
 				totalA = bynR[1] + bynR[2] + bynR[3] + bynR[4] + bynR[5] + bynR[6] + bynR[7] + bynR[8] + bynR[9];
 				totalA /= 1000;
 				if (totalA = 0) totalA = 1;
@@ -531,9 +531,9 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				bynR[10] /= 2; //catchall for garbage data
 				//end R
 				break;
-				
+
 			case 11: //this one is the Not Just Another Dither
-				
+
 				//begin L
 				benfordize = floor(inputSampleL);
 				while (benfordize >= 1.0) {benfordize /= 10;}
@@ -560,7 +560,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 					bynL[hotbinA] -= 1;
 				} else {hotbinA = 10;}
 				//produce total number- smaller is closer to Benford real
-				
+
 				benfordize = ceil(inputSampleL);
 				while (benfordize >= 1.0) {benfordize /= 10;}
 				if (benfordize < 1.0) {benfordize *= 10;}
@@ -586,7 +586,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 					bynL[hotbinB] -= 1;
 				} else {hotbinB = 10;}
 				//produce total number- smaller is closer to Benford real
-				
+
 				if (totalA < totalB)
 				{
 					bynL[hotbinA] += 1;
@@ -599,7 +599,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				}
 				//assign the relevant one to the delay line
 				//and floor/ceil signal accordingly
-				
+
 				totalA = bynL[1] + bynL[2] + bynL[3] + bynL[4] + bynL[5] + bynL[6] + bynL[7] + bynL[8] + bynL[9];
 				totalA /= 1000;
 				if (totalA = 0) totalA = 1;
@@ -614,7 +614,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				bynL[9] /= totalA;
 				bynL[10] /= 2; //catchall for garbage data
 				//end L
-				
+
 				//begin R
 				benfordize = floor(inputSampleR);
 				while (benfordize >= 1.0) {benfordize /= 10;}
@@ -641,7 +641,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 					bynR[hotbinA] -= 1;
 				} else {hotbinA = 10;}
 				//produce total number- smaller is closer to Benford real
-				
+
 				benfordize = ceil(inputSampleR);
 				while (benfordize >= 1.0) {benfordize /= 10;}
 				if (benfordize < 1.0) {benfordize *= 10;}
@@ -667,7 +667,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 					bynR[hotbinB] -= 1;
 				} else {hotbinB = 10;}
 				//produce total number- smaller is closer to Benford real
-				
+
 				if (totalA < totalB)
 				{
 					bynR[hotbinA] += 1;
@@ -680,7 +680,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				}
 				//assign the relevant one to the delay line
 				//and floor/ceil signal accordingly
-				
+
 				totalA = bynR[1] + bynR[2] + bynR[3] + bynR[4] + bynR[5] + bynR[6] + bynR[7] + bynR[8] + bynR[9];
 				totalA /= 1000;
 				if (totalA = 0) totalA = 1;
@@ -696,8 +696,8 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				bynR[10] /= 2; //catchall for garbage data
 				//end R
 				break;
-				
-			case 12: 
+
+			case 12:
 				//slew only
 				outputSampleL = (inputSampleL - lastSampleL)*trim;
 				outputSampleR = (inputSampleR - lastSampleR)*trim;
@@ -705,16 +705,16 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				lastSampleR = inputSampleR;
 				if (outputSampleL > 1.0) outputSampleL = 1.0;
 				if (outputSampleR > 1.0) outputSampleR = 1.0;
-				if (outputSampleL < -1.0) outputSampleL = -1.0;		
-				if (outputSampleR < -1.0) outputSampleR = -1.0;		
+				if (outputSampleL < -1.0) outputSampleL = -1.0;
+				if (outputSampleR < -1.0) outputSampleR = -1.0;
 				inputSampleL = outputSampleL;
 				inputSampleR = outputSampleR;
 				break;
-				
-			case 13: 
+
+			case 13:
 				//subs only
 				gain = gaintarget;
-				
+
 				inputSampleL *= gain; gain = ((gain-1)*0.75)+1;
 				iirSampleAL = (iirSampleAL * altAmount) + (inputSampleL * iirAmount); inputSampleL = iirSampleAL;
 				inputSampleL *= gain; gain = ((gain-1)*0.75)+1;
@@ -820,7 +820,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				if (inputSampleL > 1.0) inputSampleL = 1.0;
 				if (inputSampleL < -1.0) inputSampleL = -1.0;
 				gain = gaintarget;
-				
+
 				inputSampleR *= gain; gain = ((gain-1)*0.75)+1;
 				iirSampleAR = (iirSampleAR * altAmount) + (inputSampleR * iirAmount); inputSampleR = iirSampleAR;
 				inputSampleR *= gain; gain = ((gain-1)*0.75)+1;
@@ -924,10 +924,10 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				if (inputSampleR < -1.0) inputSampleR = -1.0;
 				iirSampleZR = (iirSampleZR * altAmount) + (inputSampleR * iirAmount); inputSampleR = iirSampleZR;
 				if (inputSampleR > 1.0) inputSampleR = 1.0;
-				if (inputSampleR < -1.0) inputSampleR = -1.0;		
+				if (inputSampleR < -1.0) inputSampleR = -1.0;
 				break;
-				
-			case 14: 
+
+			case 14:
 				//silhouette
 				//begin L
 				bridgerectifier = fabs(inputSampleL)*1.57079633;
@@ -935,73 +935,73 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				bridgerectifier = 1.0-cos(bridgerectifier);
 				if (inputSampleL > 0.0) inputSampleL = bridgerectifier;
 				else inputSampleL = -bridgerectifier;
-				
+
 				silhouette = rand()/(double)RAND_MAX;
 				silhouette -= 0.5;
 				silhouette *= 2.0;
 				silhouette *= fabs(inputSampleL);
-				
+
 				smoother = rand()/(double)RAND_MAX;
 				smoother -= 0.5;
 				smoother *= 2.0;
 				smoother *= fabs(lastSampleL);
 				lastSampleL = inputSampleL;
-				
+
 				silhouette += smoother;
-				
+
 				bridgerectifier = fabs(silhouette)*1.57079633;
 				if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 				bridgerectifier = sin(bridgerectifier);
 				if (silhouette > 0.0) silhouette = bridgerectifier;
 				else silhouette = -bridgerectifier;
-				
+
 				inputSampleL = (silhouette + outSampleL) / 2.0;
 				outSampleL = silhouette;
 				//end L
-				
-				//begin R				
+
+				//begin R
 				bridgerectifier = fabs(inputSampleR)*1.57079633;
 				if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 				bridgerectifier = 1.0-cos(bridgerectifier);
 				if (inputSampleR > 0.0) inputSampleR = bridgerectifier;
 				else inputSampleR = -bridgerectifier;
-				
+
 				silhouette = rand()/(double)RAND_MAX;
 				silhouette -= 0.5;
 				silhouette *= 2.0;
 				silhouette *= fabs(inputSampleR);
-				
+
 				smoother = rand()/(double)RAND_MAX;
 				smoother -= 0.5;
 				smoother *= 2.0;
 				smoother *= fabs(lastSampleR);
 				lastSampleR = inputSampleR;
-				
+
 				silhouette += smoother;
-				
+
 				bridgerectifier = fabs(silhouette)*1.57079633;
 				if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 				bridgerectifier = sin(bridgerectifier);
 				if (silhouette > 0.0) silhouette = bridgerectifier;
 				else silhouette = -bridgerectifier;
-				
+
 				inputSampleR = (silhouette + outSampleR) / 2.0;
 				outSampleR = silhouette;
 				//end R
 				break;
 		}
-		
+
 		flip = !flip;
 		//several dithers use this
-		
+
 		if (highRes) {inputSampleL /= 256.0; inputSampleR /= 256.0;} //256 for 16/24 version
 		if (dithering) {inputSampleL /= 32768.0; inputSampleR /= 32768.0;}
-		
+
 		if (dtype == 8) {
 			noiseShapingL += inputSampleL - drySampleL;
 			noiseShapingR += inputSampleR - drySampleR;
 		}
-				
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -1012,13 +1012,13 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
     }
 }
 
-void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
     double* out1 = outputs[0];
     double* out2 = outputs[1];
-	
+
 	int dtype = (int)(A * 24.999)+1; // +1 for Reaper bug workaround
 	long double overallscale = 1.0;
 	overallscale /= 44100.0;
@@ -1049,8 +1049,8 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	bool dithering = true;
 	if (dtype > 11){highRes = true; dtype -= 11;}
 	if (dtype > 11){dithering = false; highRes = false;}
-	//follow up by switching high res back off for the monitoring	
-	
+	//follow up by switching high res back off for the monitoring
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -1095,22 +1095,22 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		}
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
-		
+
 		if (dtype == 8) {inputSampleL -= noiseShapingL; inputSampleR -= noiseShapingR;}
-		
+
 		if (dithering) {inputSampleL *= 32768.0; inputSampleR *= 32768.0;}
 		//denormalizing as way of controlling insane detail boosting
 		if (highRes) {inputSampleL *= 256.0; inputSampleR *= 256.0;} //256 for 16/24 version
-		
+
 		switch (dtype)
 		{
-			case 1: 
+			case 1:
 				inputSampleL = floor(inputSampleL);
 				inputSampleR = floor(inputSampleR);
 				//truncate
 				break;
-				
-			case 2: 
+
+			case 2:
 				inputSampleL += (rand()/(double)RAND_MAX);
 				inputSampleL -= 0.5;
 				inputSampleL = floor(inputSampleL);
@@ -1119,7 +1119,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				inputSampleR = floor(inputSampleR);
 				//flat dither
 				break;
-				
+
 			case 3:
 				inputSampleL += (rand()/(double)RAND_MAX);
 				inputSampleL += (rand()/(double)RAND_MAX);
@@ -1131,7 +1131,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				inputSampleR = floor(inputSampleR);
 				//TPDF dither
 				break;
-				
+
 			case 4:
 				currentDitherL = (rand()/(double)RAND_MAX);
 				inputSampleL += currentDitherL;
@@ -1145,12 +1145,12 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				lastSampleR = currentDitherR;
 				//Paul dither
 				break;
-				
+
 			case 5:
 				nsL[9] = nsL[8]; nsL[8] = nsL[7]; nsL[7] = nsL[6]; nsL[6] = nsL[5];
 				nsL[5] = nsL[4]; nsL[4] = nsL[3]; nsL[3] = nsL[2]; nsL[2] = nsL[1];
 				nsL[1] = nsL[0]; nsL[0] = (rand()/(double)RAND_MAX);
-				
+
 				currentDitherL  = (nsL[0] * 0.061);
 				currentDitherL -= (nsL[1] * 0.11);
 				currentDitherL += (nsL[8] * 0.126);
@@ -1166,14 +1166,14 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				//Therefore we add the most significant components LAST.
 				//trying to keep values on like exponents of the floating point value.
 				inputSampleL += currentDitherL;
-				
+
 				inputSampleL = floor(inputSampleL);
 				//done with L
-				
+
 				nsR[9] = nsR[8]; nsR[8] = nsR[7]; nsR[7] = nsR[6]; nsR[6] = nsR[5];
 				nsR[5] = nsR[4]; nsR[4] = nsR[3]; nsR[3] = nsR[2]; nsR[2] = nsR[1];
 				nsR[1] = nsR[0]; nsR[0] = (rand()/(double)RAND_MAX);
-				
+
 				currentDitherR  = (nsR[0] * 0.061);
 				currentDitherR -= (nsR[1] * 0.11);
 				currentDitherR += (nsR[8] * 0.126);
@@ -1189,37 +1189,37 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				//Therefore we add the most significant components LAST.
 				//trying to keep values on like exponents of the floating point value.
 				inputSampleR += currentDitherR;
-				
+
 				inputSampleR = floor(inputSampleR);
 				//done with R
 				//DoublePaul dither
 				break;
-				
+
 			case 6:
 				currentDitherL = (rand()/(double)RAND_MAX);
 				currentDitherR = (rand()/(double)RAND_MAX);
-				
+
 				inputSampleL += currentDitherL;
 				inputSampleR += currentDitherR;
 				inputSampleL -= nsL[4];
 				inputSampleR -= nsR[4];
-				
+
 				inputSampleL = floor(inputSampleL);
 				inputSampleR = floor(inputSampleR);
-				
+
 				nsL[4] = nsL[3];
 				nsL[3] = nsL[2];
 				nsL[2] = nsL[1];
 				nsL[1] = currentDitherL;
-				
+
 				nsR[4] = nsR[3];
 				nsR[3] = nsR[2];
 				nsR[2] = nsR[1];
-				nsR[1] = currentDitherR;				
+				nsR[1] = currentDitherR;
 				//Tape dither
 				break;
-				
-			case 7: 
+
+			case 7:
 				Position += 1;
 				//Note- uses integer overflow as a 'mod' operator
 				hotbinA = Position * Position;
@@ -1240,7 +1240,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				inputSampleR = floor(inputSampleR);
 				//Quadratic dither
 				break;
-				
+
 			case 8:
 				absSample = ((rand()/(double)RAND_MAX) - 0.5);
 				nsL[0] += absSample; nsL[0] /= 2; absSample -= nsL[0];
@@ -1276,19 +1276,19 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				nsL[15] += absSample; nsL[15] /= 2; absSample -= nsL[15];
 				//install noise and then shape it
 				absSample += inputSampleL;
-				
+
 				if (NSOddL > 0) NSOddL -= 0.97;
 				if (NSOddL < 0) NSOddL += 0.97;
-				
+
 				NSOddL -= (NSOddL * NSOddL * NSOddL * 0.475);
-				
+
 				NSOddL += prevL;
 				absSample += (NSOddL*0.475);
 				prevL = floor(absSample) - inputSampleL;
 				inputSampleL = floor(absSample);
 				//TenNines dither L
-				
-				
+
+
 				absSample = ((rand()/(double)RAND_MAX) - 0.5);
 				nsR[0] += absSample; nsR[0] /= 2; absSample -= nsR[0];
 				absSample += ((rand()/(double)RAND_MAX) - 0.5);
@@ -1323,26 +1323,26 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				nsR[15] += absSample; nsR[15] /= 2; absSample -= nsR[15];
 				//install noise and then shape it
 				absSample += inputSampleR;
-				
+
 				if (NSOddR > 0) NSOddR -= 0.97;
 				if (NSOddR < 0) NSOddR += 0.97;
-				
+
 				NSOddR -= (NSOddR * NSOddR * NSOddR * 0.475);
-				
+
 				NSOddR += prevR;
 				absSample += (NSOddR*0.475);
 				prevR = floor(absSample) - inputSampleR;
 				inputSampleR = floor(absSample);
 				//TenNines dither R
 				break;
-				
-			case 9: 
+
+			case 9:
 				if (inputSampleL > 0) inputSampleL += 0.383;
 				if (inputSampleL < 0) inputSampleL -= 0.383;
 				if (inputSampleR > 0) inputSampleR += 0.383;
 				if (inputSampleR < 0) inputSampleR -= 0.383;
 				//adjusting to permit more information drug outta the noisefloor
-				
+
 				contingentRnd = (((rand()/(double)RAND_MAX)+(rand()/(double)RAND_MAX))-1.0) * randyConstant; //produce TPDF dist, scale
 				contingentRnd -= contingentErrL*omegaConstant; //include err
 				absSample = fabs(inputSampleL);
@@ -1356,7 +1356,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				inputSampleL += (contingentRnd * contingent);
 				//Contingent Dither
 				inputSampleL = floor(inputSampleL);
-				
+
 				contingentRnd = (((rand()/(double)RAND_MAX)+(rand()/(double)RAND_MAX))-1.0) * randyConstant; //produce TPDF dist, scale
 				contingentRnd -= contingentErrR*omegaConstant; //include err
 				absSample = fabs(inputSampleR);
@@ -1370,21 +1370,21 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				inputSampleR += (contingentRnd * contingent);
 				//Contingent Dither
 				inputSampleR = floor(inputSampleR);
-				
+
 				//note: this does not dither for values exactly the same as 16 bit values-
 				//which forces the dither to gate at 0.0. It goes to digital black,
 				//and does a teeny parallel-compression thing when almost at digital black.
 				break;
-				
+
 			case 10: //this one is the original Naturalize
 				if (inputSampleL > 0) inputSampleL += (0.3333333333);
 				if (inputSampleL < 0) inputSampleL -= (0.3333333333);
 				inputSampleL += (rand()/(double)RAND_MAX)*0.6666666666;
-				
+
 				if (inputSampleR > 0) inputSampleR += (0.3333333333);
 				if (inputSampleR < 0) inputSampleR -= (0.3333333333);
 				inputSampleR += (rand()/(double)RAND_MAX)*0.6666666666;
-				
+
 				//begin L
 				benfordize = floor(inputSampleL);
 				while (benfordize >= 1.0) {benfordize /= 10;}
@@ -1408,7 +1408,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 					bynL[hotbinA] -= 1;
 				} else {hotbinA = 10;}
 				//produce total number- smaller is closer to Benford real
-				
+
 				benfordize = ceil(inputSampleL);
 				while (benfordize >= 1.0) {benfordize /= 10;}
 				if (benfordize < 1.0) {benfordize *= 10;}
@@ -1431,7 +1431,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 					bynL[hotbinB] -= 1;
 				} else {hotbinB = 10;}
 				//produce total number- smaller is closer to Benford real
-				
+
 				if (totalA < totalB)
 				{
 					bynL[hotbinA] += 1;
@@ -1444,7 +1444,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				}
 				//assign the relevant one to the delay line
 				//and floor/ceil signal accordingly
-				
+
 				totalA = bynL[1] + bynL[2] + bynL[3] + bynL[4] + bynL[5] + bynL[6] + bynL[7] + bynL[8] + bynL[9];
 				totalA /= 1000;
 				if (totalA = 0) totalA = 1;
@@ -1459,7 +1459,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				bynL[9] /= totalA;
 				bynL[10] /= 2; //catchall for garbage data
 				//end L
-				
+
 				//begin R
 				benfordize = floor(inputSampleR);
 				while (benfordize >= 1.0) {benfordize /= 10;}
@@ -1483,7 +1483,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 					bynR[hotbinA] -= 1;
 				} else {hotbinA = 10;}
 				//produce total number- smaller is closer to Benford real
-				
+
 				benfordize = ceil(inputSampleR);
 				while (benfordize >= 1.0) {benfordize /= 10;}
 				if (benfordize < 1.0) {benfordize *= 10;}
@@ -1506,7 +1506,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 					bynR[hotbinB] -= 1;
 				} else {hotbinB = 10;}
 				//produce total number- smaller is closer to Benford real
-				
+
 				if (totalA < totalB)
 				{
 					bynR[hotbinA] += 1;
@@ -1519,7 +1519,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				}
 				//assign the relevant one to the delay line
 				//and floor/ceil signal accordingly
-				
+
 				totalA = bynR[1] + bynR[2] + bynR[3] + bynR[4] + bynR[5] + bynR[6] + bynR[7] + bynR[8] + bynR[9];
 				totalA /= 1000;
 				if (totalA = 0) totalA = 1;
@@ -1535,9 +1535,9 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				bynR[10] /= 2; //catchall for garbage data
 				//end R
 				break;
-				
+
 			case 11: //this one is the Not Just Another Dither
-				
+
 				//begin L
 				benfordize = floor(inputSampleL);
 				while (benfordize >= 1.0) {benfordize /= 10;}
@@ -1564,7 +1564,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 					bynL[hotbinA] -= 1;
 				} else {hotbinA = 10;}
 				//produce total number- smaller is closer to Benford real
-				
+
 				benfordize = ceil(inputSampleL);
 				while (benfordize >= 1.0) {benfordize /= 10;}
 				if (benfordize < 1.0) {benfordize *= 10;}
@@ -1590,7 +1590,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 					bynL[hotbinB] -= 1;
 				} else {hotbinB = 10;}
 				//produce total number- smaller is closer to Benford real
-				
+
 				if (totalA < totalB)
 				{
 					bynL[hotbinA] += 1;
@@ -1603,7 +1603,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				}
 				//assign the relevant one to the delay line
 				//and floor/ceil signal accordingly
-				
+
 				totalA = bynL[1] + bynL[2] + bynL[3] + bynL[4] + bynL[5] + bynL[6] + bynL[7] + bynL[8] + bynL[9];
 				totalA /= 1000;
 				if (totalA = 0) totalA = 1;
@@ -1618,7 +1618,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				bynL[9] /= totalA;
 				bynL[10] /= 2; //catchall for garbage data
 				//end L
-				
+
 				//begin R
 				benfordize = floor(inputSampleR);
 				while (benfordize >= 1.0) {benfordize /= 10;}
@@ -1645,7 +1645,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 					bynR[hotbinA] -= 1;
 				} else {hotbinA = 10;}
 				//produce total number- smaller is closer to Benford real
-				
+
 				benfordize = ceil(inputSampleR);
 				while (benfordize >= 1.0) {benfordize /= 10;}
 				if (benfordize < 1.0) {benfordize *= 10;}
@@ -1671,7 +1671,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 					bynR[hotbinB] -= 1;
 				} else {hotbinB = 10;}
 				//produce total number- smaller is closer to Benford real
-				
+
 				if (totalA < totalB)
 				{
 					bynR[hotbinA] += 1;
@@ -1684,7 +1684,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				}
 				//assign the relevant one to the delay line
 				//and floor/ceil signal accordingly
-				
+
 				totalA = bynR[1] + bynR[2] + bynR[3] + bynR[4] + bynR[5] + bynR[6] + bynR[7] + bynR[8] + bynR[9];
 				totalA /= 1000;
 				if (totalA = 0) totalA = 1;
@@ -1700,8 +1700,8 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				bynR[10] /= 2; //catchall for garbage data
 				//end R
 				break;
-				
-			case 12: 
+
+			case 12:
 				//slew only
 				outputSampleL = (inputSampleL - lastSampleL)*trim;
 				outputSampleR = (inputSampleR - lastSampleR)*trim;
@@ -1709,16 +1709,16 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				lastSampleR = inputSampleR;
 				if (outputSampleL > 1.0) outputSampleL = 1.0;
 				if (outputSampleR > 1.0) outputSampleR = 1.0;
-				if (outputSampleL < -1.0) outputSampleL = -1.0;		
-				if (outputSampleR < -1.0) outputSampleR = -1.0;		
+				if (outputSampleL < -1.0) outputSampleL = -1.0;
+				if (outputSampleR < -1.0) outputSampleR = -1.0;
 				inputSampleL = outputSampleL;
 				inputSampleR = outputSampleR;
 				break;
-				
-			case 13: 
+
+			case 13:
 				//subs only
 				gain = gaintarget;
-				
+
 				inputSampleL *= gain; gain = ((gain-1)*0.75)+1;
 				iirSampleAL = (iirSampleAL * altAmount) + (inputSampleL * iirAmount); inputSampleL = iirSampleAL;
 				inputSampleL *= gain; gain = ((gain-1)*0.75)+1;
@@ -1824,7 +1824,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				if (inputSampleL > 1.0) inputSampleL = 1.0;
 				if (inputSampleL < -1.0) inputSampleL = -1.0;
 				gain = gaintarget;
-				
+
 				inputSampleR *= gain; gain = ((gain-1)*0.75)+1;
 				iirSampleAR = (iirSampleAR * altAmount) + (inputSampleR * iirAmount); inputSampleR = iirSampleAR;
 				inputSampleR *= gain; gain = ((gain-1)*0.75)+1;
@@ -1928,10 +1928,10 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				if (inputSampleR < -1.0) inputSampleR = -1.0;
 				iirSampleZR = (iirSampleZR * altAmount) + (inputSampleR * iirAmount); inputSampleR = iirSampleZR;
 				if (inputSampleR > 1.0) inputSampleR = 1.0;
-				if (inputSampleR < -1.0) inputSampleR = -1.0;		
+				if (inputSampleR < -1.0) inputSampleR = -1.0;
 				break;
-				
-			case 14: 
+
+			case 14:
 				//silhouette
 				//begin L
 				bridgerectifier = fabs(inputSampleL)*1.57079633;
@@ -1939,73 +1939,73 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				bridgerectifier = 1.0-cos(bridgerectifier);
 				if (inputSampleL > 0.0) inputSampleL = bridgerectifier;
 				else inputSampleL = -bridgerectifier;
-				
+
 				silhouette = rand()/(double)RAND_MAX;
 				silhouette -= 0.5;
 				silhouette *= 2.0;
 				silhouette *= fabs(inputSampleL);
-				
+
 				smoother = rand()/(double)RAND_MAX;
 				smoother -= 0.5;
 				smoother *= 2.0;
 				smoother *= fabs(lastSampleL);
 				lastSampleL = inputSampleL;
-				
+
 				silhouette += smoother;
-				
+
 				bridgerectifier = fabs(silhouette)*1.57079633;
 				if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 				bridgerectifier = sin(bridgerectifier);
 				if (silhouette > 0.0) silhouette = bridgerectifier;
 				else silhouette = -bridgerectifier;
-				
+
 				inputSampleL = (silhouette + outSampleL) / 2.0;
 				outSampleL = silhouette;
 				//end L
-				
-				//begin R				
+
+				//begin R
 				bridgerectifier = fabs(inputSampleR)*1.57079633;
 				if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 				bridgerectifier = 1.0-cos(bridgerectifier);
 				if (inputSampleR > 0.0) inputSampleR = bridgerectifier;
 				else inputSampleR = -bridgerectifier;
-				
+
 				silhouette = rand()/(double)RAND_MAX;
 				silhouette -= 0.5;
 				silhouette *= 2.0;
 				silhouette *= fabs(inputSampleR);
-				
+
 				smoother = rand()/(double)RAND_MAX;
 				smoother -= 0.5;
 				smoother *= 2.0;
 				smoother *= fabs(lastSampleR);
 				lastSampleR = inputSampleR;
-				
+
 				silhouette += smoother;
-				
+
 				bridgerectifier = fabs(silhouette)*1.57079633;
 				if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 				bridgerectifier = sin(bridgerectifier);
 				if (silhouette > 0.0) silhouette = bridgerectifier;
 				else silhouette = -bridgerectifier;
-				
+
 				inputSampleR = (silhouette + outSampleR) / 2.0;
 				outSampleR = silhouette;
 				//end R
 				break;
 		}
-		
+
 		flip = !flip;
 		//several dithers use this
-		
+
 		if (highRes) {inputSampleL /= 256.0; inputSampleR /= 256.0;} //256 for 16/24 version
 		if (dithering) {inputSampleL /= 32768.0; inputSampleR /= 32768.0;}
-		
+
 		if (dtype == 8) {
 			noiseShapingL += inputSampleL - drySampleL;
 			noiseShapingR += inputSampleR - drySampleR;
 		}
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

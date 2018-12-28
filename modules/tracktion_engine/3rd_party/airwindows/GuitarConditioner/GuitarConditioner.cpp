@@ -17,7 +17,7 @@ GuitarConditioner::GuitarConditioner(audioMasterCallback audioMaster) :
 	fpNShapeRA = 0.0;
 	fpNShapeRB = 0.0;
 	fpFlip = true;
-	
+
 	lastSampleTL = 0.0;
 	lastSampleBL = 0.0; //for Slews. T for treble, B for bass
 	iirSampleTAL = 0.0;
@@ -32,10 +32,10 @@ GuitarConditioner::GuitarConditioner(audioMasterCallback audioMaster) :
 	iirSampleBAR = 0.0;
 	iirSampleBBR = 0.0; //for Highpasses
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -86,7 +86,7 @@ void GuitarConditioner::getParameterLabel(VstInt32 index, char *text) {
     }
 }
 
-VstInt32 GuitarConditioner::canDo(char *text) 
+VstInt32 GuitarConditioner::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1 : 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool GuitarConditioner::getEffectName(char* name) {

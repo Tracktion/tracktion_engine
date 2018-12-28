@@ -7,7 +7,7 @@
 #include "Floor.h"
 #endif
 
-void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -17,7 +17,7 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double setting = pow(A,2);
 	double iirAmount = (setting/4.0)/overallscale;
 	double tight = -1.0;
@@ -33,7 +33,7 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	if (iirAmount > 1.0) iirAmount = 1.0;
 	double wet = C;
 	double dry = 1.0-wet;
-	
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -43,7 +43,7 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -58,7 +58,7 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -73,11 +73,11 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
-		
+
 		//begin left channel
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleL)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleL))*tight);
@@ -92,7 +92,7 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		lows -= temp;
 		inputSampleL += lows;
 		inputSampleL *= gaintrim;
-				
+
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleL)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleL))*tight);
 		if (offset < 0) offset = 0;
@@ -106,7 +106,7 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		lows -= temp;
 		inputSampleL += lows;
 		inputSampleL *= gaintrim;
-		
+
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleL)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleL))*tight);
 		if (offset < 0) offset = 0;
@@ -120,7 +120,7 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		lows -= temp;
 		inputSampleL += lows;
 		inputSampleL *= gaintrim;
-		
+
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleL)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleL))*tight);
 		if (offset < 0) offset = 0;
@@ -134,7 +134,7 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		lows -= temp;
 		inputSampleL += lows;
 		inputSampleL *= gaintrim;
-		
+
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleL)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleL))*tight);
 		if (offset < 0) offset = 0;
@@ -149,7 +149,7 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		inputSampleL += lows;
 		inputSampleL *= gaintrim;
 		//end left channel
-		
+
 		//begin right channel
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleR)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleR))*tight);
@@ -164,7 +164,7 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		lows -= temp;
 		inputSampleR += lows;
 		inputSampleR *= gaintrim;
-		
+
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleR)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleR))*tight);
 		if (offset < 0) offset = 0;
@@ -178,7 +178,7 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		lows -= temp;
 		inputSampleR += lows;
 		inputSampleR *= gaintrim;
-		
+
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleR)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleR))*tight);
 		if (offset < 0) offset = 0;
@@ -192,7 +192,7 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		lows -= temp;
 		inputSampleR += lows;
 		inputSampleR *= gaintrim;
-		
+
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleR)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleR))*tight);
 		if (offset < 0) offset = 0;
@@ -206,7 +206,7 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		lows -= temp;
 		inputSampleR += lows;
 		inputSampleR *= gaintrim;
-		
+
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleR)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleR))*tight);
 		if (offset < 0) offset = 0;
@@ -221,7 +221,7 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		inputSampleR += lows;
 		inputSampleR *= gaintrim;
 		//end right channel
-				
+
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
 		bridgerectifier = fabs(inputSampleL)*1.57079633;
@@ -231,7 +231,7 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		if (inputSampleL > 0) inputSampleL = (inputSampleL*(1-density))+(bridgerectifier*density);
 		else inputSampleL = (inputSampleL*(1-density))-(bridgerectifier*density);
 		//drive section, left
-		
+
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
 		bridgerectifier = fabs(inputSampleR)*1.57079633;
@@ -241,12 +241,12 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		if (inputSampleR > 0) inputSampleR = (inputSampleR*(1-density))+(bridgerectifier*density);
 		else inputSampleR = (inputSampleR*(1-density))-(bridgerectifier*density);
 		//drive section, right
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		float fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -259,7 +259,7 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -273,10 +273,10 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }
 
-void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -286,7 +286,7 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double setting = pow(A,2);
 	double iirAmount = (setting/4.0)/overallscale;
 	double tight = -1.0;
@@ -302,7 +302,7 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	if (iirAmount > 1.0) iirAmount = 1.0;
 	double wet = C;
 	double dry = 1.0-wet;
-	
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -312,7 +312,7 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -327,7 +327,7 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -342,11 +342,11 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
-		
+
 		//begin left channel
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleL)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleL))*tight);
@@ -361,7 +361,7 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		lows -= temp;
 		inputSampleL += lows;
 		inputSampleL *= gaintrim;
-		
+
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleL)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleL))*tight);
 		if (offset < 0) offset = 0;
@@ -375,7 +375,7 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		lows -= temp;
 		inputSampleL += lows;
 		inputSampleL *= gaintrim;
-		
+
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleL)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleL))*tight);
 		if (offset < 0) offset = 0;
@@ -389,7 +389,7 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		lows -= temp;
 		inputSampleL += lows;
 		inputSampleL *= gaintrim;
-		
+
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleL)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleL))*tight);
 		if (offset < 0) offset = 0;
@@ -403,7 +403,7 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		lows -= temp;
 		inputSampleL += lows;
 		inputSampleL *= gaintrim;
-		
+
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleL)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleL))*tight);
 		if (offset < 0) offset = 0;
@@ -418,7 +418,7 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		inputSampleL += lows;
 		inputSampleL *= gaintrim;
 		//end left channel
-		
+
 		//begin right channel
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleR)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleR))*tight);
@@ -433,7 +433,7 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		lows -= temp;
 		inputSampleR += lows;
 		inputSampleR *= gaintrim;
-		
+
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleR)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleR))*tight);
 		if (offset < 0) offset = 0;
@@ -447,7 +447,7 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		lows -= temp;
 		inputSampleR += lows;
 		inputSampleR *= gaintrim;
-		
+
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleR)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleR))*tight);
 		if (offset < 0) offset = 0;
@@ -461,7 +461,7 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		lows -= temp;
 		inputSampleR += lows;
 		inputSampleR *= gaintrim;
-		
+
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleR)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleR))*tight);
 		if (offset < 0) offset = 0;
@@ -475,7 +475,7 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		lows -= temp;
 		inputSampleR += lows;
 		inputSampleR *= gaintrim;
-		
+
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleR)*tight);
 		else offset = (1 + tight) + ((1-fabs(inputSampleR))*tight);
 		if (offset < 0) offset = 0;
@@ -490,7 +490,7 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		inputSampleR += lows;
 		inputSampleR *= gaintrim;
 		//end right channel
-		
+
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
 		bridgerectifier = fabs(inputSampleL)*1.57079633;
@@ -500,7 +500,7 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		if (inputSampleL > 0) inputSampleL = (inputSampleL*(1-density))+(bridgerectifier*density);
 		else inputSampleL = (inputSampleL*(1-density))-(bridgerectifier*density);
 		//drive section, left
-		
+
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
 		bridgerectifier = fabs(inputSampleR)*1.57079633;
@@ -510,12 +510,12 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		if (inputSampleR > 0) inputSampleR = (inputSampleR*(1-density))+(bridgerectifier*density);
 		else inputSampleR = (inputSampleR*(1-density))-(bridgerectifier*density);
 		//drive section, right
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 64-bit floating point
 		double fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -528,7 +528,7 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -542,5 +542,5 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }

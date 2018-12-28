@@ -7,7 +7,7 @@
 #include "SubsOnly.h"
 #endif
 
-void SubsOnly::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void SubsOnly::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -24,7 +24,7 @@ void SubsOnly::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	double altAmount = 1.0 - iirAmount;
 	long double inputSampleL;
 	long double inputSampleR;
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -279,8 +279,8 @@ void SubsOnly::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
 		iirSampleZR = (iirSampleZR * altAmount) + (inputSampleR * iirAmount); inputSampleR = iirSampleZR;
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
-		if (inputSampleR < -1.0) inputSampleR = -1.0;		
-		
+		if (inputSampleR < -1.0) inputSampleR = -1.0;
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -291,7 +291,7 @@ void SubsOnly::processReplacing(float **inputs, float **outputs, VstInt32 sample
     }
 }
 
-void SubsOnly::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void SubsOnly::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -353,7 +353,7 @@ void SubsOnly::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		}
 
 		gain = gaintarget;
-		
+
 		inputSampleL *= gain; gain = ((gain-1)*0.75)+1;
 		iirSampleAL = (iirSampleAL * altAmount) + (inputSampleL * iirAmount); inputSampleL = iirSampleAL;
 		inputSampleL *= gain; gain = ((gain-1)*0.75)+1;
@@ -564,7 +564,7 @@ void SubsOnly::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		iirSampleZR = (iirSampleZR * altAmount) + (inputSampleR * iirAmount); inputSampleR = iirSampleZR;
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

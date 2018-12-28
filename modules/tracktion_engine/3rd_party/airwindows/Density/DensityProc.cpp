@@ -7,7 +7,7 @@
 #include "Density.h"
 #endif
 
-void Density::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Density::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -28,13 +28,13 @@ void Density::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	double count;
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
 	long double drySampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -95,7 +95,7 @@ void Density::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 			inputSampleR -= iirSampleBR;
 		}
 		//highpass section
-		
+
 		count = density;
 		while (count > 1.0)
 		{
@@ -111,14 +111,14 @@ void Density::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 			//max value for sine function
 			bridgerectifier = sin(bridgerectifier);
 			if (inputSampleR > 0.0) inputSampleR = bridgerectifier;
-			else inputSampleR = -bridgerectifier;			
-			
+			else inputSampleR = -bridgerectifier;
+
 			count = count - 1.0;
 		}
 		//we have now accounted for any really high density settings.
 
 		while (out > 1.0) out = out - 1.0;
-		
+
 		bridgerectifier = fabs(inputSampleL)*1.57079633;
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		//max value for sine function
@@ -138,7 +138,7 @@ void Density::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		if (inputSampleR > 0) inputSampleR = (inputSampleR*(1.0-out))+(bridgerectifier*out);
 		else inputSampleR = (inputSampleR*(1.0-out))-(bridgerectifier*out);
 		//blend according to density control
-		
+
 		if (output < 1.0) {
 			inputSampleL *= output;
 			inputSampleR *= output;
@@ -180,7 +180,7 @@ void Density::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
     }
 }
 
-void Density::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Density::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -201,13 +201,13 @@ void Density::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	double count;
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	long double inputSampleL;
 	long double inputSampleR;
 	long double drySampleL;
 	long double drySampleR;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -268,7 +268,7 @@ void Density::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			inputSampleR -= iirSampleBR;
 		}
 		//highpass section
-		
+
 		count = density;
 		while (count > 1.0)
 		{
@@ -278,20 +278,20 @@ void Density::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			bridgerectifier = sin(bridgerectifier);
 			if (inputSampleL > 0.0) inputSampleL = bridgerectifier;
 			else inputSampleL = -bridgerectifier;
-			
+
 			bridgerectifier = fabs(inputSampleR)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 			//max value for sine function
 			bridgerectifier = sin(bridgerectifier);
 			if (inputSampleR > 0.0) inputSampleR = bridgerectifier;
-			else inputSampleR = -bridgerectifier;			
-			
+			else inputSampleR = -bridgerectifier;
+
 			count = count - 1.0;
 		}
 		//we have now accounted for any really high density settings.
-		
+
 		while (out > 1.0) out = out - 1.0;
-		
+
 		bridgerectifier = fabs(inputSampleL)*1.57079633;
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		//max value for sine function
@@ -301,7 +301,7 @@ void Density::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		if (inputSampleL > 0) inputSampleL = (inputSampleL*(1-out))+(bridgerectifier*out);
 		else inputSampleL = (inputSampleL*(1-out))-(bridgerectifier*out);
 		//blend according to density control
-		
+
 		bridgerectifier = fabs(inputSampleR)*1.57079633;
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		//max value for sine function
@@ -311,7 +311,7 @@ void Density::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		if (inputSampleR > 0) inputSampleR = (inputSampleR*(1.0-out))+(bridgerectifier*out);
 		else inputSampleR = (inputSampleR*(1.0-out))-(bridgerectifier*out);
 		//blend according to density control
-		
+
 		if (output < 1.0) {
 			inputSampleL *= output;
 			inputSampleR *= output;
@@ -321,8 +321,8 @@ void Density::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			inputSampleR = (drySampleR * dry)+(inputSampleR * wet);
 		}
 		//nice little output stage template: if we have another scale of floating point
-		//number, we really don't want to meaninglessly multiply that by 1.0.		
-		
+		//number, we really don't want to meaninglessly multiply that by 1.0.
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

@@ -13,13 +13,13 @@ DustBunny::DustBunny(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
 	A = 0.0;
-	
+
 	LataLast3Sample = LataLast2Sample = LataLast1Sample = 0.0;
 	LataHalfwaySample = LataHalfDrySample = LataHalfDiffSample = 0.0;
 	LataA = LataB = LataC = LataDrySample = LataDiffSample = LataPrevDiffSample = 0.0;
 	LataUpsampleHighTweak = 0.0414213562373095048801688; //more adds treble to upsampling
 	LataDecay = 0.915965594177219015; //Catalan's constant, more adds focus and clarity
-	
+
 	RataLast3Sample = RataLast2Sample = RataLast1Sample = 0.0;
 	RataHalfwaySample = RataHalfDrySample = RataHalfDiffSample = 0.0;
 	RataA = RataB = RataC = RataDrySample = RataDiffSample = RataPrevDiffSample = 0.0;
@@ -28,10 +28,10 @@ DustBunny::DustBunny(audioMasterCallback audioMaster) :
 	LataFlip = false; //end reset of antialias parameters
 	RataFlip = false; //end reset of antialias parameters
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -60,20 +60,20 @@ VstInt32 DustBunny::getChunk (void** data, bool isPreset)
 	float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
 	chunkData[0] = A;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
+	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
 	 started with. */
-	
+
 	*data = chunkData;
 	return kNumParameters * sizeof(float);
 }
 
 VstInt32 DustBunny::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	float *chunkData = (float *)data;
 	A = pinParameter(chunkData[0]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
-	
-	/* calculate any other fields you need here - you could copy in 
+
+	/* calculate any other fields you need here - you could copy in
 	 code from setParameter() here. */
 	return 0;
 }
@@ -113,7 +113,7 @@ void DustBunny::getParameterLabel(VstInt32 index, char *text) {
     }
 }
 
-VstInt32 DustBunny::canDo(char *text) 
+VstInt32 DustBunny::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool DustBunny::getEffectName(char* name) {

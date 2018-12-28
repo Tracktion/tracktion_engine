@@ -7,7 +7,7 @@
 #include "FathomFive.h"
 #endif
 
-void FathomFive::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void FathomFive::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -24,10 +24,10 @@ void FathomFive::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	double basstrim = (0.01/EQ)+1.0;
 	if (wet > 1.0) wet = 1.0;
 	if (dry > 1.0) dry = 1.0;
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -77,7 +77,7 @@ void FathomFive::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		if (inputSampleR > 0)
 		{if (WasNegativeR){SubOctaveR = !SubOctaveR;} WasNegativeR = false;}
 		else {WasNegativeR = true;}
-		
+
 		iirSampleLD = (iirSampleLD * (1 - EQ)) + (inputSampleL * EQ);
 		bridgerectifier = fabs(iirSampleLD);
 		if (SubOctaveL) tempL = bridgerectifier*B;
@@ -86,10 +86,10 @@ void FathomFive::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		bridgerectifier = fabs(iirSampleRD);
 		if (SubOctaveR) tempR = bridgerectifier*B;
 		else tempR = -bridgerectifier*B;
-		
+
 		tempL += (inputSampleL*A);
 		tempR += (inputSampleR*A);
-		
+
 		iirSampleLA += (tempL * EQ);
 		iirSampleLA -= (iirSampleLA * iirSampleLA * iirSampleLA * EQ);
 		if (iirSampleLA > 0) iirSampleLA -= dcblock;
@@ -101,20 +101,20 @@ void FathomFive::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		if (iirSampleRA > 0) iirSampleRA -= dcblock;
 		else iirSampleRA += dcblock;
 		tempR = iirSampleRA*basstrim;
-		
+
 		iirSampleLB = (iirSampleLB * (1 - EQ)) + (tempL * EQ);
 		tempL = iirSampleLB;
 		iirSampleRB = (iirSampleRB * (1 - EQ)) + (tempR * EQ);
 		tempR = iirSampleRB;
-		
+
 		iirSampleLC = (iirSampleLC * (1 - EQ)) + (tempL * EQ);
 		tempL = iirSampleLC;
 		iirSampleRC = (iirSampleRC * (1 - EQ)) + (tempR * EQ);
 		tempR = iirSampleRC;
-		
+
         inputSampleL = (inputSampleL*dry) + (tempL*wet);
         inputSampleR = (inputSampleR*dry) + (tempR*wet);
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -125,7 +125,7 @@ void FathomFive::processReplacing(float **inputs, float **outputs, VstInt32 samp
     }
 }
 
-void FathomFive::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void FathomFive::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -142,10 +142,10 @@ void FathomFive::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	double basstrim = (0.01/EQ)+1.0;
 	if (wet > 1.0) wet = 1.0;
 	if (dry > 1.0) dry = 1.0;
-	
+
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -188,14 +188,14 @@ void FathomFive::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		if (inputSampleL > 0)
 		{if (WasNegativeL){SubOctaveL = !SubOctaveL;} WasNegativeL = false;}
 		else {WasNegativeL = true;}
 		if (inputSampleR > 0)
 		{if (WasNegativeR){SubOctaveR = !SubOctaveR;} WasNegativeR = false;}
 		else {WasNegativeR = true;}
-		
+
 		iirSampleLD = (iirSampleLD * (1 - EQ)) + (inputSampleL * EQ);
 		bridgerectifier = fabs(iirSampleLD);
 		if (SubOctaveL) tempL = bridgerectifier*B;
@@ -204,35 +204,35 @@ void FathomFive::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		bridgerectifier = fabs(iirSampleRD);
 		if (SubOctaveR) tempR = bridgerectifier*B;
 		else tempR = -bridgerectifier*B;
-		
+
 		tempL += (inputSampleL*A);
 		tempR += (inputSampleR*A);
-		
+
 		iirSampleLA += (tempL * EQ);
 		iirSampleLA -= (iirSampleLA * iirSampleLA * iirSampleLA * EQ);
 		if (iirSampleLA > 0) iirSampleLA -= dcblock;
 		else iirSampleLA += dcblock;
 		tempL = iirSampleLA*basstrim;
-		
+
 		iirSampleRA += (tempR * EQ);
 		iirSampleRA -= (iirSampleRA * iirSampleRA * iirSampleRA * EQ);
 		if (iirSampleRA > 0) iirSampleRA -= dcblock;
 		else iirSampleRA += dcblock;
 		tempR = iirSampleRA*basstrim;
-		
+
 		iirSampleLB = (iirSampleLB * (1 - EQ)) + (tempL * EQ);
 		tempL = iirSampleLB;
 		iirSampleRB = (iirSampleRB * (1 - EQ)) + (tempR * EQ);
 		tempR = iirSampleRB;
-		
+
 		iirSampleLC = (iirSampleLC * (1 - EQ)) + (tempL * EQ);
 		tempL = iirSampleLC;
 		iirSampleRC = (iirSampleRC * (1 - EQ)) + (tempR * EQ);
 		tempR = iirSampleRC;
-		
+
         inputSampleL = (inputSampleL*dry) + (tempL*wet);
         inputSampleR = (inputSampleR*dry) + (tempR*wet);
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

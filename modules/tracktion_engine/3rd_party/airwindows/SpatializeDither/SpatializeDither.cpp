@@ -16,10 +16,10 @@ SpatializeDither::SpatializeDither(audioMasterCallback audioMaster) :
 	contingentErrR = 0.0;
 	flip = false;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -42,7 +42,7 @@ VstInt32 SpatializeDither::getChunk (void** data, bool isPreset)
 }
 
 VstInt32 SpatializeDither::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	return 0;
 }
 
@@ -62,7 +62,7 @@ void SpatializeDither::getParameterDisplay(VstInt32 index, char *text) {
 void SpatializeDither::getParameterLabel(VstInt32 index, char *text) {
 }
 
-VstInt32 SpatializeDither::canDo(char *text) 
+VstInt32 SpatializeDither::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool SpatializeDither::getEffectName(char* name) {

@@ -7,7 +7,7 @@
 #include "Pop.h"
 #endif
 
-void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -31,7 +31,7 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 	double output = B;
 	double wet = C;
 	// µ µ µ µ µ µ µ µ µ µ µ µ is the kitten song o/~
-    
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -41,7 +41,7 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -56,7 +56,7 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -71,11 +71,11 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it aPop. We want a 'air' hiss
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
-		
+
 		dL[delay] = inputSampleL;
 		dR[delay] = inputSampleR;
 		delay--;
@@ -83,7 +83,7 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 		//yes this is a second bounds check. it's cheap, check EVERY time
 		inputSampleL = (inputSampleL * thickenL) + (dL[delay] * (1.0-thickenL));
 		inputSampleR = (inputSampleR * thickenR) + (dR[delay] * (1.0-thickenR));
-				
+
 		long double lowestSampleL = inputSampleL;
 		if (fabs(inputSampleL) > fabs(previousL)) lowestSampleL = previousL;
 		if (fabs(lowestSampleL) > fabs(previous2L)) lowestSampleL = (lowestSampleL + previous2L) / 1.99;
@@ -98,7 +98,7 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 		inputSampleL *= muMakeupGain;
 		double punchinessL = 0.95-fabs(inputSampleL*0.08);
 		if (punchinessL < 0.65) punchinessL = 0.65;
-		
+
 		long double lowestSampleR = inputSampleR;
 		if (fabs(inputSampleR) > fabs(previousR)) lowestSampleR = previousR;
 		if (fabs(lowestSampleR) > fabs(previous2R)) lowestSampleR = (lowestSampleR + previous2R) / 1.99;
@@ -113,7 +113,7 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 		inputSampleR *= muMakeupGain;
 		double punchinessR = 0.95-fabs(inputSampleR*0.08);
 		if (punchinessR < 0.65) punchinessR = 0.65;
-		
+
 		//adjust coefficients for L
 		if (flip)
 		{
@@ -170,7 +170,7 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 			muSpeedBL = muNewSpeedL / muSpeedBL;
 		}
 		//got coefficients, adjusted speeds for L
-		
+
 		//adjust coefficients for R
 		if (flip)
 		{
@@ -227,7 +227,7 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 			muSpeedBR = muNewSpeedR / muSpeedBR;
 		}
 		//got coefficients, adjusted speeds for R
-		
+
 		long double coefficientL = highGainOffset;
 		if (flip) coefficientL += pow(muCoefficientAL,2);
 		else coefficientL += pow(muCoefficientBL,2);
@@ -243,7 +243,7 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 		thickenR = (1.0-wet)+(wet*thickenR);
 		//applied compression with vari-vari-µ-µ-µ-µ-µ-µ-is-the-kitten-song o/~
 		//applied gain correction to control output level- tends to constrain sound rather than inflate it
-		
+
 		long double bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.2533141373155) bridgerectifier = 1.2533141373155;
 		bridgerectifier = sin(bridgerectifier * fabs(bridgerectifier)) / ((bridgerectifier == 0.0) ?1:fabs(bridgerectifier));
@@ -259,15 +259,15 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 		if (inputSampleR > 0) inputSampleR = (inputSampleR*coefficientR)+(bridgerectifier*(1-coefficientR));
 		else inputSampleR = (inputSampleR*coefficientR)-(bridgerectifier*(1-coefficientR));
 		//second stage of overdrive to prevent overs and allow bloody loud extremeness
-		
+
 		flip = !flip;
-		
+
 		if (output < 1.0) {inputSampleL *= output;inputSampleR *= output;}
 		if (wet<1.0) {
 			inputSampleL = (drySampleL*(1.0-wet))+(inputSampleL*wet);
 			inputSampleR = (drySampleR*(1.0-wet))+(inputSampleR*wet);
 		}
-				
+
 		//noise shaping to 32-bit floating point
 		float fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -280,7 +280,7 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -294,10 +294,10 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }
 
-void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -307,7 +307,7 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double highGainOffset = pow(A,2)*0.023;
 	double threshold = 1.001 - (1.0-pow(1.0-A,5));
 	double muMakeupGain = sqrt(1.0 / threshold);
@@ -321,7 +321,7 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 	double output = B;
 	double wet = C;
 	// µ µ µ µ µ µ µ µ µ µ µ µ is the kitten song o/~
-    
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -331,7 +331,7 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -346,7 +346,7 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -361,11 +361,11 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it aPop. We want a 'air' hiss
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
-		
+
 		dL[delay] = inputSampleL;
 		dR[delay] = inputSampleR;
 		delay--;
@@ -373,7 +373,7 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		//yes this is a second bounds check. it's cheap, check EVERY time
 		inputSampleL = (inputSampleL * thickenL) + (dL[delay] * (1.0-thickenL));
 		inputSampleR = (inputSampleR * thickenR) + (dR[delay] * (1.0-thickenR));
-		
+
 		long double lowestSampleL = inputSampleL;
 		if (fabs(inputSampleL) > fabs(previousL)) lowestSampleL = previousL;
 		if (fabs(lowestSampleL) > fabs(previous2L)) lowestSampleL = (lowestSampleL + previous2L) / 1.99;
@@ -388,7 +388,7 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		inputSampleL *= muMakeupGain;
 		double punchinessL = 0.95-fabs(inputSampleL*0.08);
 		if (punchinessL < 0.65) punchinessL = 0.65;
-		
+
 		long double lowestSampleR = inputSampleR;
 		if (fabs(inputSampleR) > fabs(previousR)) lowestSampleR = previousR;
 		if (fabs(lowestSampleR) > fabs(previous2R)) lowestSampleR = (lowestSampleR + previous2R) / 1.99;
@@ -403,7 +403,7 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		inputSampleR *= muMakeupGain;
 		double punchinessR = 0.95-fabs(inputSampleR*0.08);
 		if (punchinessR < 0.65) punchinessR = 0.65;
-		
+
 		//adjust coefficients for L
 		if (flip)
 		{
@@ -460,7 +460,7 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 			muSpeedBL = muNewSpeedL / muSpeedBL;
 		}
 		//got coefficients, adjusted speeds for L
-		
+
 		//adjust coefficients for R
 		if (flip)
 		{
@@ -517,14 +517,14 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 			muSpeedBR = muNewSpeedR / muSpeedBR;
 		}
 		//got coefficients, adjusted speeds for R
-		
+
 		long double coefficientL = highGainOffset;
 		if (flip) coefficientL += pow(muCoefficientAL,2);
 		else coefficientL += pow(muCoefficientBL,2);
 		inputSampleL *= coefficientL;
 		thickenL = (coefficientL/5)+punchinessL;//0.80;
 		thickenL = (1.0-wet)+(wet*thickenL);
-		
+
 		long double coefficientR = highGainOffset;
 		if (flip) coefficientR += pow(muCoefficientAR,2);
 		else coefficientR += pow(muCoefficientBR,2);
@@ -533,7 +533,7 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		thickenR = (1.0-wet)+(wet*thickenR);
 		//applied compression with vari-vari-µ-µ-µ-µ-µ-µ-is-the-kitten-song o/~
 		//applied gain correction to control output level- tends to constrain sound rather than inflate it
-		
+
 		long double bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.2533141373155) bridgerectifier = 1.2533141373155;
 		bridgerectifier = sin(bridgerectifier * fabs(bridgerectifier)) / ((bridgerectifier == 0.0) ?1:fabs(bridgerectifier));
@@ -541,7 +541,7 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		if (inputSampleL > 0) inputSampleL = (inputSampleL*coefficientL)+(bridgerectifier*(1-coefficientL));
 		else inputSampleL = (inputSampleL*coefficientL)-(bridgerectifier*(1-coefficientL));
 		//second stage of overdrive to prevent overs and allow bloody loud extremeness
-		
+
 		bridgerectifier = fabs(inputSampleR);
 		if (bridgerectifier > 1.2533141373155) bridgerectifier = 1.2533141373155;
 		bridgerectifier = sin(bridgerectifier * fabs(bridgerectifier)) / ((bridgerectifier == 0.0) ?1:fabs(bridgerectifier));
@@ -549,15 +549,15 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		if (inputSampleR > 0) inputSampleR = (inputSampleR*coefficientR)+(bridgerectifier*(1-coefficientR));
 		else inputSampleR = (inputSampleR*coefficientR)-(bridgerectifier*(1-coefficientR));
 		//second stage of overdrive to prevent overs and allow bloody loud extremeness
-		
+
 		flip = !flip;
-		
+
 		if (output < 1.0) {inputSampleL *= output;inputSampleR *= output;}
 		if (wet<1.0) {
 			inputSampleL = (drySampleL*(1.0-wet))+(inputSampleL*wet);
 			inputSampleR = (drySampleR*(1.0-wet))+(inputSampleR*wet);
 		}
-		
+
 		//noise shaping to 64-bit floating point
 		double fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -570,7 +570,7 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -584,5 +584,5 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }

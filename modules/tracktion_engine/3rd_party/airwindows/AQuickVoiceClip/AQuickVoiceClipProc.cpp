@@ -7,7 +7,7 @@
 #include "AQuickVoiceClip.h"
 #endif
 
-void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -17,7 +17,7 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double softness = 0.484416;
 	double hardness = 1.0 - softness;
 	double iirAmount = ((pow(A,3)*2070)+30)/8000.0;
@@ -28,26 +28,26 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 	double lpSpeed = 0.0009;
 	double cliplevel = 0.98;
 	double refclip = 0.5; //preset to cut out gain quite a lot. 91%? no touchy unless clip
-	
+
 	double LmaxRecent;
 	bool LclipOnset;
 	double LpassThrough;
 	double LoutputSample;
 	double LdrySample;
-	
+
 	double RmaxRecent;
 	bool RclipOnset;
 	double RpassThrough;
 	double RoutputSample;
 	double RdrySample;
-	
+
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -92,7 +92,7 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 		}
 		LpassThrough = LataDrySample = inputSampleL;
 		RpassThrough = RataDrySample = inputSampleR;
-		
+
 		LataHalfDrySample = LataHalfwaySample = (inputSampleL + LataLast1Sample + (LataLast2Sample*ataK1) + (LataLast3Sample*ataK2) + (LataLast4Sample*ataK6) + (LataLast5Sample*ataK7) + (LataLast6Sample*ataK8)) / 2.0;
 		LataLast6Sample = LataLast5Sample; LataLast5Sample = LataLast4Sample; LataLast4Sample = LataLast3Sample; LataLast3Sample = LataLast2Sample; LataLast2Sample = LataLast1Sample; LataLast1Sample = inputSampleL;
 		//setting up oversampled special antialiasing
@@ -101,8 +101,8 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 		//setting up oversampled special antialiasing
 		LclipOnset = false;
 		RclipOnset = false;
-		
-		
+
+
 		LmaxRecent = fabs( LataLast6Sample );
 		if (fabs( LataLast5Sample ) > LmaxRecent ) LmaxRecent = fabs( LataLast5Sample );
 		if (fabs( LataLast4Sample ) > LmaxRecent ) LmaxRecent = fabs( LataLast4Sample );
@@ -111,7 +111,7 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 		if (fabs( LataLast1Sample ) > LmaxRecent ) LmaxRecent = fabs( LataLast1Sample );
 		if (fabs( inputSampleL ) > LmaxRecent ) LmaxRecent = fabs( inputSampleL );
 		//this gives us something that won't cut out in zero crossings, to interpolate with
-		
+
 		RmaxRecent = fabs( RataLast6Sample );
 		if (fabs( RataLast5Sample ) > RmaxRecent ) RmaxRecent = fabs( RataLast5Sample );
 		if (fabs( RataLast4Sample ) > RmaxRecent ) RmaxRecent = fabs( RataLast4Sample );
@@ -120,22 +120,22 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 		if (fabs( RataLast1Sample ) > RmaxRecent ) RmaxRecent = fabs( RataLast1Sample );
 		if (fabs( inputSampleR ) > RmaxRecent ) RmaxRecent = fabs( inputSampleR );
 		//this gives us something that won't cut out in zero crossings, to interpolate with
-		
+
 		LmaxRecent *= 2.0;
 		RmaxRecent *= 2.0;
 		//by refclip this is 1.0 and fully into the antialiasing
 		if (LmaxRecent > 1.0) LmaxRecent = 1.0;
 		if (RmaxRecent > 1.0) RmaxRecent = 1.0;
 		//and it tops out at 1. Higher means more antialiasing, lower blends into passThrough without antialiasing
-		
+
 		LataHalfwaySample -= Loverall;
 		RataHalfwaySample -= Roverall;
 		//subtract dist-cancel from input after getting raw input, before doing anything
-		
+
 		LdrySample = LataHalfwaySample;
 		RdrySample = RataHalfwaySample;
-		
-		
+
+
 		//begin L channel for the clipper
 		if (LlastSample >= refclip)
 		{
@@ -146,7 +146,7 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 			}
 			else LlastSample = refclip;
 		}
-		
+
 		if (LlastSample <= -refclip)
 		{
 			LlpDepth += 0.1;
@@ -156,7 +156,7 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 			}
 			else LlastSample = -refclip;
 		}
-		
+
 		if (LataHalfwaySample > refclip)
 		{
 			LlpDepth += 0.1;
@@ -166,7 +166,7 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 			}
 			else LataHalfwaySample = refclip;
 		}
-		
+
 		if (LataHalfwaySample < -refclip)
 		{
 			LlpDepth += 0.1;
@@ -177,7 +177,7 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 			else LataHalfwaySample = -refclip;
 		}
 		///end L channel for the clipper
-		
+
 		//begin R channel for the clipper
 		if (RlastSample >= refclip)
 		{
@@ -188,7 +188,7 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 			}
 			else RlastSample = refclip;
 		}
-		
+
 		if (RlastSample <= -refclip)
 		{
 			RlpDepth += 0.1;
@@ -198,7 +198,7 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 			}
 			else RlastSample = -refclip;
 		}
-		
+
 		if (RataHalfwaySample > refclip)
 		{
 			RlpDepth += 0.1;
@@ -208,7 +208,7 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 			}
 			else RataHalfwaySample = refclip;
 		}
-		
+
 		if (RataHalfwaySample < -refclip)
 		{
 			RlpDepth += 0.1;
@@ -219,10 +219,10 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 			else RataHalfwaySample = -refclip;
 		}
 		///end R channel for the clipper
-		
+
         LoutputSample = LlastSample;
         RoutputSample = RlastSample;
-		
+
 		LlastSample = LataHalfwaySample;
 		RlastSample = RataHalfwaySample;
 
@@ -230,16 +230,16 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 		RataHalfwaySample = RoutputSample;
 		//swap around in a circle for one final ADClip,
 		//this time not tracking overshoot anymore
-		//end interpolated sample		
+		//end interpolated sample
 		//begin raw sample- inputSample and ataDrySample handled separately here
-		
+
 		inputSampleL -= Loverall;
 		inputSampleR -= Roverall;
 		//subtract dist-cancel from input after getting raw input, before doing anything
-		
+
 		LdrySample = inputSampleL;
 		RdrySample = inputSampleR;
-		
+
 		//begin second L clip
 		if (LlastSample >= refclip)
 		{
@@ -250,7 +250,7 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 			}
 			else LlastSample = refclip;
 		}
-		
+
 		if (LlastSample <= -refclip)
 		{
 			LlpDepth += 0.1;
@@ -260,7 +260,7 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 			}
 			else LlastSample = -refclip;
 		}
-		
+
 		if (inputSampleL > refclip)
 		{
 			LlpDepth += 0.1;
@@ -270,7 +270,7 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 			}
 			else inputSampleL = refclip;
 		}
-		
+
 		if (inputSampleL < -refclip)
 		{
 			LlpDepth += 0.1;
@@ -279,9 +279,9 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 				inputSampleL = ((-refclip*hardness) + (LlastSample * softness));
 			}
 			else inputSampleL = -refclip;
-		}		
+		}
 		//end second L clip
-		
+
 		//begin second R clip
 		if (RlastSample >= refclip)
 		{
@@ -292,7 +292,7 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 			}
 			else RlastSample = refclip;
 		}
-		
+
 		if (RlastSample <= -refclip)
 		{
 			RlpDepth += 0.1;
@@ -302,7 +302,7 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 			}
 			else RlastSample = -refclip;
 		}
-		
+
 		if (inputSampleR > refclip)
 		{
 			RlpDepth += 0.1;
@@ -312,7 +312,7 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 			}
 			else inputSampleR = refclip;
 		}
-		
+
 		if (inputSampleR < -refclip)
 		{
 			RlpDepth += 0.1;
@@ -321,16 +321,16 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 				inputSampleR = ((-refclip*hardness) + (RlastSample * softness));
 			}
 			else inputSampleR = -refclip;
-		}		
+		}
 		//end second R clip
-		
+
 		LoutputSample = LlastSample;
 		RoutputSample = RlastSample;
 		LlastSample = inputSampleL;
 		RlastSample = inputSampleR;
 		inputSampleL = LoutputSample;
 		inputSampleR = RoutputSample;
-		
+
 		LataHalfDrySample = (LataDrySample*ataK3)+(LataHalfDrySample*ataK4);
 		LataHalfDiffSample = (LataHalfwaySample - LataHalfDrySample)/2.0;
 		LataLastDiffSample = LataDiffSample*ataK5;
@@ -339,7 +339,7 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 		LataDiffSample -= LataLastDiffSample;
 		inputSampleL = LataDrySample;
 		inputSampleL += LataDiffSample;
-		
+
 		RataHalfDrySample = (RataDrySample*ataK3)+(RataHalfDrySample*ataK4);
 		RataHalfDiffSample = (RataHalfwaySample - RataHalfDrySample)/2.0;
 		RataLastDiffSample = RataDiffSample*ataK5;
@@ -348,19 +348,19 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 		RataDiffSample -= RataLastDiffSample;
 		inputSampleR = RataDrySample;
 		inputSampleR += RataDiffSample;
-		
+
 		Loverall = (Loverall * cancelold) + (LataDiffSample * cancelnew);
 		Roverall = (Roverall * cancelold) + (RataDiffSample * cancelnew);
 		//apply all the diffs to a lowpassed IIR
 
-		
+
 		if (flip)
 		{
 			LiirSampleA = (LiirSampleA * altAmount) + (inputSampleL * iirAmount);
 			inputSampleL -= LiirSampleA;
 			LiirSampleC = (LiirSampleC * altAmount) + (LpassThrough * iirAmount);
 			LpassThrough -= LiirSampleC;
-			
+
 			RiirSampleA = (RiirSampleA * altAmount) + (inputSampleR * iirAmount);
 			inputSampleR -= RiirSampleA;
 			RiirSampleC = (RiirSampleC * altAmount) + (RpassThrough * iirAmount);
@@ -372,24 +372,24 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 			inputSampleL -= LiirSampleB;
 			LiirSampleD = (LiirSampleD * altAmount) + (LpassThrough * iirAmount);
 			LpassThrough -= LiirSampleD;
-			
+
 			RiirSampleB = (RiirSampleB * altAmount) + (inputSampleR * iirAmount);
 			inputSampleR -= RiirSampleB;
 			RiirSampleD = (RiirSampleD * altAmount) + (RpassThrough * iirAmount);
 			RpassThrough -= RiirSampleD;
 		}
 		flip = !flip;
-		//highpass section 
-		
+		//highpass section
+
 		LlastOut3Sample = LlastOut2Sample;
 		LlastOut2Sample = LlastOutSample;
 		LlastOutSample = inputSampleL;
-		
+
 		RlastOut3Sample = RlastOut2Sample;
 		RlastOut2Sample = RlastOutSample;
 		RlastOutSample = inputSampleR;
-		
-		
+
+
 		LlpDepth -= lpSpeed;
 		RlpDepth -= lpSpeed;
 
@@ -399,17 +399,17 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 			inputSampleL *= (1.0-LlpDepth);
 			inputSampleL += (((LlastOutSample + LlastOut2Sample + LlastOut3Sample) / 3.6)*LlpDepth);
 		}
-		
+
 		if (RlpDepth > 0.0)
 		{
 			if (RlpDepth > 1.0) RlpDepth = 1.0;
 			inputSampleR *= (1.0-RlpDepth);
 			inputSampleR += (((RlastOutSample + RlastOut2Sample + RlastOut3Sample) / 3.6)*RlpDepth);
 		}
-		
+
 		if (LlpDepth < 0.0) LlpDepth = 0.0;
 		if (RlpDepth < 0.0) RlpDepth = 0.0;
-				
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -429,19 +429,19 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 32 bit output
-		
+
 		inputSampleL *= (1.0-LmaxRecent);
 		inputSampleR *= (1.0-RmaxRecent);
 		inputSampleL += (LpassThrough * LmaxRecent);
 		inputSampleR += (RpassThrough * RmaxRecent);
 		//there's our raw signal, without antialiasing. Brings up low level stuff and softens more when hot
-		
+
 		if (inputSampleL > cliplevel) inputSampleL = cliplevel;
 		if (inputSampleL < -cliplevel) inputSampleL = -cliplevel;
 		if (inputSampleR > cliplevel) inputSampleR = cliplevel;
 		if (inputSampleR < -cliplevel) inputSampleR = -cliplevel;
 		//final iron bar
-		
+
 
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
@@ -453,7 +453,7 @@ void AQuickVoiceClip::processReplacing(float **inputs, float **outputs, VstInt32
     }
 }
 
-void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -463,7 +463,7 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double softness = 0.484416;
 	double hardness = 1.0 - softness;
 	double iirAmount = ((pow(A,3)*2070)+30)/8000.0;
@@ -474,22 +474,22 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 	double lpSpeed = 0.0009;
 	double cliplevel = 0.98;
 	double refclip = 0.5; //preset to cut out gain quite a lot. 91%? no touchy unless clip
-	
+
 	double LmaxRecent;
 	bool LclipOnset;
 	double LpassThrough;
 	double LoutputSample;
 	double LdrySample;
-	
+
 	double RmaxRecent;
 	bool RclipOnset;
 	double RpassThrough;
 	double RoutputSample;
 	double RdrySample;
-	
+
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
@@ -538,7 +538,7 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 		}
 		LpassThrough = LataDrySample = inputSampleL;
 		RpassThrough = RataDrySample = inputSampleR;
-		
+
 		LataHalfDrySample = LataHalfwaySample = (inputSampleL + LataLast1Sample + (LataLast2Sample*ataK1) + (LataLast3Sample*ataK2) + (LataLast4Sample*ataK6) + (LataLast5Sample*ataK7) + (LataLast6Sample*ataK8)) / 2.0;
 		LataLast6Sample = LataLast5Sample; LataLast5Sample = LataLast4Sample; LataLast4Sample = LataLast3Sample; LataLast3Sample = LataLast2Sample; LataLast2Sample = LataLast1Sample; LataLast1Sample = inputSampleL;
 		//setting up oversampled special antialiasing
@@ -547,8 +547,8 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 		//setting up oversampled special antialiasing
 		LclipOnset = false;
 		RclipOnset = false;
-		
-		
+
+
 		LmaxRecent = fabs( LataLast6Sample );
 		if (fabs( LataLast5Sample ) > LmaxRecent ) LmaxRecent = fabs( LataLast5Sample );
 		if (fabs( LataLast4Sample ) > LmaxRecent ) LmaxRecent = fabs( LataLast4Sample );
@@ -557,7 +557,7 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 		if (fabs( LataLast1Sample ) > LmaxRecent ) LmaxRecent = fabs( LataLast1Sample );
 		if (fabs( inputSampleL ) > LmaxRecent ) LmaxRecent = fabs( inputSampleL );
 		//this gives us something that won't cut out in zero crossings, to interpolate with
-		
+
 		RmaxRecent = fabs( RataLast6Sample );
 		if (fabs( RataLast5Sample ) > RmaxRecent ) RmaxRecent = fabs( RataLast5Sample );
 		if (fabs( RataLast4Sample ) > RmaxRecent ) RmaxRecent = fabs( RataLast4Sample );
@@ -566,22 +566,22 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 		if (fabs( RataLast1Sample ) > RmaxRecent ) RmaxRecent = fabs( RataLast1Sample );
 		if (fabs( inputSampleR ) > RmaxRecent ) RmaxRecent = fabs( inputSampleR );
 		//this gives us something that won't cut out in zero crossings, to interpolate with
-		
+
 		LmaxRecent *= 2.0;
 		RmaxRecent *= 2.0;
 		//by refclip this is 1.0 and fully into the antialiasing
 		if (LmaxRecent > 1.0) LmaxRecent = 1.0;
 		if (RmaxRecent > 1.0) RmaxRecent = 1.0;
 		//and it tops out at 1. Higher means more antialiasing, lower blends into passThrough without antialiasing
-		
+
 		LataHalfwaySample -= Loverall;
 		RataHalfwaySample -= Roverall;
 		//subtract dist-cancel from input after getting raw input, before doing anything
-		
+
 		LdrySample = LataHalfwaySample;
 		RdrySample = RataHalfwaySample;
-		
-		
+
+
 		//begin L channel for the clipper
 		if (LlastSample >= refclip)
 		{
@@ -592,7 +592,7 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 			}
 			else LlastSample = refclip;
 		}
-		
+
 		if (LlastSample <= -refclip)
 		{
 			LlpDepth += 0.1;
@@ -602,7 +602,7 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 			}
 			else LlastSample = -refclip;
 		}
-		
+
 		if (LataHalfwaySample > refclip)
 		{
 			LlpDepth += 0.1;
@@ -612,7 +612,7 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 			}
 			else LataHalfwaySample = refclip;
 		}
-		
+
 		if (LataHalfwaySample < -refclip)
 		{
 			LlpDepth += 0.1;
@@ -623,7 +623,7 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 			else LataHalfwaySample = -refclip;
 		}
 		///end L channel for the clipper
-		
+
 		//begin R channel for the clipper
 		if (RlastSample >= refclip)
 		{
@@ -634,7 +634,7 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 			}
 			else RlastSample = refclip;
 		}
-		
+
 		if (RlastSample <= -refclip)
 		{
 			RlpDepth += 0.1;
@@ -644,7 +644,7 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 			}
 			else RlastSample = -refclip;
 		}
-		
+
 		if (RataHalfwaySample > refclip)
 		{
 			RlpDepth += 0.1;
@@ -654,7 +654,7 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 			}
 			else RataHalfwaySample = refclip;
 		}
-		
+
 		if (RataHalfwaySample < -refclip)
 		{
 			RlpDepth += 0.1;
@@ -665,27 +665,27 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 			else RataHalfwaySample = -refclip;
 		}
 		///end R channel for the clipper
-		
+
         LoutputSample = LlastSample;
         RoutputSample = RlastSample;
-		
+
 		LlastSample = LataHalfwaySample;
 		RlastSample = RataHalfwaySample;
-		
+
 		LataHalfwaySample = LoutputSample;
 		RataHalfwaySample = RoutputSample;
 		//swap around in a circle for one final ADClip,
 		//this time not tracking overshoot anymore
-		//end interpolated sample		
+		//end interpolated sample
 		//begin raw sample- inputSample and ataDrySample handled separately here
-		
+
 		inputSampleL -= Loverall;
 		inputSampleR -= Roverall;
 		//subtract dist-cancel from input after getting raw input, before doing anything
-		
+
 		LdrySample = inputSampleL;
 		RdrySample = inputSampleR;
-		
+
 		//begin second L clip
 		if (LlastSample >= refclip)
 		{
@@ -696,7 +696,7 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 			}
 			else LlastSample = refclip;
 		}
-		
+
 		if (LlastSample <= -refclip)
 		{
 			LlpDepth += 0.1;
@@ -706,7 +706,7 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 			}
 			else LlastSample = -refclip;
 		}
-		
+
 		if (inputSampleL > refclip)
 		{
 			LlpDepth += 0.1;
@@ -716,7 +716,7 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 			}
 			else inputSampleL = refclip;
 		}
-		
+
 		if (inputSampleL < -refclip)
 		{
 			LlpDepth += 0.1;
@@ -725,9 +725,9 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 				inputSampleL = ((-refclip*hardness) + (LlastSample * softness));
 			}
 			else inputSampleL = -refclip;
-		}		
+		}
 		//end second L clip
-		
+
 		//begin second R clip
 		if (RlastSample >= refclip)
 		{
@@ -738,7 +738,7 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 			}
 			else RlastSample = refclip;
 		}
-		
+
 		if (RlastSample <= -refclip)
 		{
 			RlpDepth += 0.1;
@@ -748,7 +748,7 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 			}
 			else RlastSample = -refclip;
 		}
-		
+
 		if (inputSampleR > refclip)
 		{
 			RlpDepth += 0.1;
@@ -758,7 +758,7 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 			}
 			else inputSampleR = refclip;
 		}
-		
+
 		if (inputSampleR < -refclip)
 		{
 			RlpDepth += 0.1;
@@ -767,16 +767,16 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 				inputSampleR = ((-refclip*hardness) + (RlastSample * softness));
 			}
 			else inputSampleR = -refclip;
-		}		
+		}
 		//end second R clip
-		
+
 		LoutputSample = LlastSample;
 		RoutputSample = RlastSample;
 		LlastSample = inputSampleL;
 		RlastSample = inputSampleR;
 		inputSampleL = LoutputSample;
 		inputSampleR = RoutputSample;
-		
+
 		LataHalfDrySample = (LataDrySample*ataK3)+(LataHalfDrySample*ataK4);
 		LataHalfDiffSample = (LataHalfwaySample - LataHalfDrySample)/2.0;
 		LataLastDiffSample = LataDiffSample*ataK5;
@@ -785,7 +785,7 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 		LataDiffSample -= LataLastDiffSample;
 		inputSampleL = LataDrySample;
 		inputSampleL += LataDiffSample;
-		
+
 		RataHalfDrySample = (RataDrySample*ataK3)+(RataHalfDrySample*ataK4);
 		RataHalfDiffSample = (RataHalfwaySample - RataHalfDrySample)/2.0;
 		RataLastDiffSample = RataDiffSample*ataK5;
@@ -794,19 +794,19 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 		RataDiffSample -= RataLastDiffSample;
 		inputSampleR = RataDrySample;
 		inputSampleR += RataDiffSample;
-		
+
 		Loverall = (Loverall * cancelold) + (LataDiffSample * cancelnew);
 		Roverall = (Roverall * cancelold) + (RataDiffSample * cancelnew);
 		//apply all the diffs to a lowpassed IIR
-		
-		
+
+
 		if (flip)
 		{
 			LiirSampleA = (LiirSampleA * altAmount) + (inputSampleL * iirAmount);
 			inputSampleL -= LiirSampleA;
 			LiirSampleC = (LiirSampleC * altAmount) + (LpassThrough * iirAmount);
 			LpassThrough -= LiirSampleC;
-			
+
 			RiirSampleA = (RiirSampleA * altAmount) + (inputSampleR * iirAmount);
 			inputSampleR -= RiirSampleA;
 			RiirSampleC = (RiirSampleC * altAmount) + (RpassThrough * iirAmount);
@@ -818,44 +818,44 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 			inputSampleL -= LiirSampleB;
 			LiirSampleD = (LiirSampleD * altAmount) + (LpassThrough * iirAmount);
 			LpassThrough -= LiirSampleD;
-			
+
 			RiirSampleB = (RiirSampleB * altAmount) + (inputSampleR * iirAmount);
 			inputSampleR -= RiirSampleB;
 			RiirSampleD = (RiirSampleD * altAmount) + (RpassThrough * iirAmount);
 			RpassThrough -= RiirSampleD;
 		}
 		flip = !flip;
-		//highpass section 
-		
+		//highpass section
+
 		LlastOut3Sample = LlastOut2Sample;
 		LlastOut2Sample = LlastOutSample;
 		LlastOutSample = inputSampleL;
-		
+
 		RlastOut3Sample = RlastOut2Sample;
 		RlastOut2Sample = RlastOutSample;
 		RlastOutSample = inputSampleR;
-		
-		
+
+
 		LlpDepth -= lpSpeed;
 		RlpDepth -= lpSpeed;
-		
+
 		if (LlpDepth > 0.0)
 		{
 			if (LlpDepth > 1.0) LlpDepth = 1.0;
 			inputSampleL *= (1.0-LlpDepth);
 			inputSampleL += (((LlastOutSample + LlastOut2Sample + LlastOut3Sample) / 3.6)*LlpDepth);
 		}
-		
+
 		if (RlpDepth > 0.0)
 		{
 			if (RlpDepth > 1.0) RlpDepth = 1.0;
 			inputSampleR *= (1.0-RlpDepth);
 			inputSampleR += (((RlastOutSample + RlastOut2Sample + RlastOut3Sample) / 3.6)*RlpDepth);
 		}
-		
+
 		if (LlpDepth < 0.0) LlpDepth = 0.0;
 		if (RlpDepth < 0.0) RlpDepth = 0.0;
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -875,20 +875,20 @@ void AQuickVoiceClip::processDoubleReplacing(double **inputs, double **outputs, 
 		}
 		fpFlip = !fpFlip;
 		//end noise shaping on 64 bit output
-		
+
 		inputSampleL *= (1.0-LmaxRecent);
 		inputSampleR *= (1.0-RmaxRecent);
 		inputSampleL += (LpassThrough * LmaxRecent);
 		inputSampleR += (RpassThrough * RmaxRecent);
 		//there's our raw signal, without antialiasing. Brings up low level stuff and softens more when hot
-		
+
 		if (inputSampleL > cliplevel) inputSampleL = cliplevel;
 		if (inputSampleL < -cliplevel) inputSampleL = -cliplevel;
 		if (inputSampleR > cliplevel) inputSampleR = cliplevel;
 		if (inputSampleR < -cliplevel) inputSampleR = -cliplevel;
 		//final iron bar
-				
-		
+
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

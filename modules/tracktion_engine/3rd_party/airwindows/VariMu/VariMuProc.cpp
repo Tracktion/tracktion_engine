@@ -7,7 +7,7 @@
 #include "VariMu.h"
 #endif
 
-void VariMu::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void VariMu::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -33,9 +33,9 @@ void VariMu::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 	double wet = D;
 	long double squaredSampleL;
 	long double squaredSampleR;
-	
+
 	// µ µ µ µ µ µ µ µ µ µ µ µ is the kitten song o/~
-    
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -45,7 +45,7 @@ void VariMu::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -60,7 +60,7 @@ void VariMu::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -75,11 +75,11 @@ void VariMu::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it aVariMu. We want a 'air' hiss
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
-		
+
 		if (fabs(inputSampleL) > fabs(previousL)) squaredSampleL = previousL * previousL;
 		else squaredSampleL = inputSampleL * inputSampleL;
 		previousL = inputSampleL;
@@ -89,7 +89,7 @@ void VariMu::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		else squaredSampleR = inputSampleR * inputSampleR;
 		previousR = inputSampleR;
 		inputSampleR *= muMakeupGain;
-		
+
 		//adjust coefficients for L
 		if (flip)
 		{
@@ -146,7 +146,7 @@ void VariMu::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			muSpeedBL = muNewSpeedL / muSpeedBL;
 		}
 		//got coefficients, adjusted speeds for L
-		
+
 		//adjust coefficients for R
 		if (flip)
 		{
@@ -203,7 +203,7 @@ void VariMu::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			muSpeedBR = muNewSpeedR / muSpeedBR;
 		}
 		//got coefficients, adjusted speeds for R
-				
+
 		if (flip)
 		{
 			coefficient = (muCoefficientAL + pow(muCoefficientAL,2))/2.0;
@@ -220,7 +220,7 @@ void VariMu::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		}
 		//applied compression with vari-vari-µ-µ-µ-µ-µ-µ-is-the-kitten-song o/~
 		//applied gain correction to control output level- tends to constrain sound rather than inflate it
-		flip = !flip;		
+		flip = !flip;
 
 		if (output < 1.0) {
 			inputSampleL *= output;
@@ -245,7 +245,7 @@ void VariMu::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -259,10 +259,10 @@ void VariMu::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }
 
-void VariMu::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void VariMu::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -272,7 +272,7 @@ void VariMu::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	double overallscale = 2.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double threshold = 1.001 - (1.0-pow(1.0-A,3));
 	double muMakeupGain = sqrt(1.0 / threshold);
 	muMakeupGain = (muMakeupGain + sqrt(muMakeupGain))/2.0;
@@ -288,9 +288,9 @@ void VariMu::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	double wet = D;
 	long double squaredSampleL;
 	long double squaredSampleR;
-	
+
 	// µ µ µ µ µ µ µ µ µ µ µ µ is the kitten song o/~
-    
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -300,7 +300,7 @@ void VariMu::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -315,7 +315,7 @@ void VariMu::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -330,21 +330,21 @@ void VariMu::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it aVariMu. We want a 'air' hiss
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
-		
+
 		if (fabs(inputSampleL) > fabs(previousL)) squaredSampleL = previousL * previousL;
 		else squaredSampleL = inputSampleL * inputSampleL;
 		previousL = inputSampleL;
 		inputSampleL *= muMakeupGain;
-		
+
 		if (fabs(inputSampleR) > fabs(previousR)) squaredSampleR = previousR * previousR;
 		else squaredSampleR = inputSampleR * inputSampleR;
 		previousR = inputSampleR;
 		inputSampleR *= muMakeupGain;
-		
+
 		//adjust coefficients for L
 		if (flip)
 		{
@@ -401,7 +401,7 @@ void VariMu::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			muSpeedBL = muNewSpeedL / muSpeedBL;
 		}
 		//got coefficients, adjusted speeds for L
-		
+
 		//adjust coefficients for R
 		if (flip)
 		{
@@ -458,7 +458,7 @@ void VariMu::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			muSpeedBR = muNewSpeedR / muSpeedBR;
 		}
 		//got coefficients, adjusted speeds for R
-		
+
 		if (flip)
 		{
 			coefficient = (muCoefficientAL + pow(muCoefficientAL,2))/2.0;
@@ -475,8 +475,8 @@ void VariMu::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		}
 		//applied compression with vari-vari-µ-µ-µ-µ-µ-µ-is-the-kitten-song o/~
 		//applied gain correction to control output level- tends to constrain sound rather than inflate it
-		flip = !flip;		
-		
+		flip = !flip;
+
 		if (output < 1.0) {
 			inputSampleL *= output;
 			inputSampleR *= output;
@@ -487,7 +487,7 @@ void VariMu::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		}
 		//nice little output stage template: if we have another scale of floating point
 		//number, we really don't want to meaninglessly multiply that by 1.0.
-		
+
 		//noise shaping to 64-bit floating point
 		double fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -500,7 +500,7 @@ void VariMu::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -514,5 +514,5 @@ void VariMu::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }

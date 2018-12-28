@@ -14,10 +14,10 @@ SlewOnly::SlewOnly(audioMasterCallback audioMaster) :
 {
 	lastSampleL = 0.0;
 	lastSampleR = 0.0;
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -49,7 +49,7 @@ void SlewOnly::getParameterDisplay(VstInt32 index, char *text) {
 void SlewOnly::getParameterLabel(VstInt32 index, char *text) {
 }
 
-VstInt32 SlewOnly::canDo(char *text) 
+VstInt32 SlewOnly::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool SlewOnly::getEffectName(char* name) {

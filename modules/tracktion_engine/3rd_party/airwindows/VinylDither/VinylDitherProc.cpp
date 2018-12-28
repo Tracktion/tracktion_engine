@@ -7,7 +7,7 @@
 #include "VinylDither.h"
 #endif
 
-void VinylDither::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void VinylDither::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -18,7 +18,7 @@ void VinylDither::processReplacing(float **inputs, float **outputs, VstInt32 sam
 
 	long double inputSampleL;
 	long double inputSampleR;
-    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -65,7 +65,7 @@ void VinylDither::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		inputSampleL *= 8388608.0;
 		inputSampleR *= 8388608.0;
 		//0-1 is now one bit, now we dither
-		
+
 		absSample = ((rand()/(double)RAND_MAX) - 0.5);
 		nsL[0] += absSample; nsL[0] /= 2; absSample -= nsL[0];
 		absSample += ((rand()/(double)RAND_MAX) - 0.5);
@@ -100,19 +100,19 @@ void VinylDither::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		nsL[15] += absSample; nsL[15] /= 2; absSample -= nsL[15];
 		//install noise and then shape it
 		absSample += inputSampleL;
-		
+
 		if (NSOddL > 0) NSOddL -= 0.97;
 		if (NSOddL < 0) NSOddL += 0.97;
-		
+
 		NSOddL -= (NSOddL * NSOddL * NSOddL * 0.475);
-		
+
 		NSOddL += prevL;
 		absSample += (NSOddL*0.475);
 		prevL = floor(absSample) - inputSampleL;
 		inputSampleL = floor(absSample);
 		//TenNines dither L
 
-		
+
 		absSample = ((rand()/(double)RAND_MAX) - 0.5);
 		nsR[0] += absSample; nsR[0] /= 2; absSample -= nsR[0];
 		absSample += ((rand()/(double)RAND_MAX) - 0.5);
@@ -147,21 +147,21 @@ void VinylDither::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		nsR[15] += absSample; nsR[15] /= 2; absSample -= nsR[15];
 		//install noise and then shape it
 		absSample += inputSampleR;
-		
+
 		if (NSOddR > 0) NSOddR -= 0.97;
 		if (NSOddR < 0) NSOddR += 0.97;
-		
+
 		NSOddR -= (NSOddR * NSOddR * NSOddR * 0.475);
-		
+
 		NSOddR += prevR;
 		absSample += (NSOddR*0.475);
 		prevR = floor(absSample) - inputSampleR;
 		inputSampleR = floor(absSample);
 		//TenNines dither R
-		
+
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
-		
+
 
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
@@ -173,7 +173,7 @@ void VinylDither::processReplacing(float **inputs, float **outputs, VstInt32 sam
     }
 }
 
-void VinylDither::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void VinylDither::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -231,7 +231,7 @@ void VinylDither::processDoubleReplacing(double **inputs, double **outputs, VstI
 		inputSampleL *= 8388608.0;
 		inputSampleR *= 8388608.0;
 		//0-1 is now one bit, now we dither
-		
+
 		absSample = ((rand()/(double)RAND_MAX) - 0.5);
 		nsL[0] += absSample; nsL[0] /= 2; absSample -= nsL[0];
 		absSample += ((rand()/(double)RAND_MAX) - 0.5);
@@ -266,19 +266,19 @@ void VinylDither::processDoubleReplacing(double **inputs, double **outputs, VstI
 		nsL[15] += absSample; nsL[15] /= 2; absSample -= nsL[15];
 		//install noise and then shape it
 		absSample += inputSampleL;
-		
+
 		if (NSOddL > 0) NSOddL -= 0.97;
 		if (NSOddL < 0) NSOddL += 0.97;
-		
+
 		NSOddL -= (NSOddL * NSOddL * NSOddL * 0.475);
-		
+
 		NSOddL += prevL;
 		absSample += (NSOddL*0.475);
 		prevL = floor(absSample) - inputSampleL;
 		inputSampleL = floor(absSample);
 		//TenNines dither L
-		
-		
+
+
 		absSample = ((rand()/(double)RAND_MAX) - 0.5);
 		nsR[0] += absSample; nsR[0] /= 2; absSample -= nsR[0];
 		absSample += ((rand()/(double)RAND_MAX) - 0.5);
@@ -313,22 +313,22 @@ void VinylDither::processDoubleReplacing(double **inputs, double **outputs, VstI
 		nsR[15] += absSample; nsR[15] /= 2; absSample -= nsR[15];
 		//install noise and then shape it
 		absSample += inputSampleR;
-		
+
 		if (NSOddR > 0) NSOddR -= 0.97;
 		if (NSOddR < 0) NSOddR += 0.97;
-		
+
 		NSOddR -= (NSOddR * NSOddR * NSOddR * 0.475);
-		
+
 		NSOddR += prevR;
 		absSample += (NSOddR*0.475);
 		prevR = floor(absSample) - inputSampleR;
 		inputSampleR = floor(absSample);
 		//TenNines dither R
-		
+
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
-		
-		
+
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

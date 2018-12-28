@@ -7,7 +7,7 @@
 #include "ToneSlant.h"
 #endif
 
-void ToneSlant::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void ToneSlant::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -16,7 +16,7 @@ void ToneSlant::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	double inputSampleL;
 	double inputSampleR;
@@ -28,8 +28,8 @@ void ToneSlant::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	double drySampleR;
 	double overallscale = (A*99.0)+1.0;
 	double applySlant = (B*2.0)-1.0;
-	
-	
+
+
 	f[0] = 1.0 / overallscale;
 	//count to f(gain) which will be 0. f(0) is x1
 	for (int count = 1; count < 102; count++) {
@@ -41,14 +41,14 @@ void ToneSlant::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			bR[count] = 0.0; //blank the unused buffer so when we return to it, no pops
 		}
 	}
-    
+
     while (--sampleFrames >= 0)
     {
 		for (int count = overallscale; count >= 0; count--) {
 			bL[count+1] = bL[count];
 			bR[count+1] = bR[count];
 		}
-		
+
 		inputSampleL = *in1;
 		inputSampleR = *in2;
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
@@ -89,10 +89,10 @@ void ToneSlant::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		bL[0] = accumulatorSampleL = drySampleL = inputSampleL;
 		bR[0] = accumulatorSampleR = drySampleR = inputSampleR;
-		
+
 		accumulatorSampleL *= f[0];
 		accumulatorSampleR *= f[0];
 
@@ -100,11 +100,11 @@ void ToneSlant::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			accumulatorSampleL += (bL[count] * f[count]);
 			accumulatorSampleR += (bR[count] * f[count]);
 		}
-		
+
 		correctionSampleL = inputSampleL - (accumulatorSampleL*2.0);
 		correctionSampleR = inputSampleR - (accumulatorSampleR*2.0);
 		//we're gonna apply the total effect of all these calculations as a single subtract
-		
+
 		inputSampleL += (correctionSampleL * applySlant);
 		inputSampleR += (correctionSampleR * applySlant);
 		//our one math operation on the input data coming in
@@ -139,7 +139,7 @@ void ToneSlant::processReplacing(float **inputs, float **outputs, VstInt32 sampl
     }
 }
 
-void ToneSlant::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void ToneSlant::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -148,7 +148,7 @@ void ToneSlant::processDoubleReplacing(double **inputs, double **outputs, VstInt
 
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	double inputSampleL;
 	double inputSampleR;
@@ -160,7 +160,7 @@ void ToneSlant::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	double drySampleR;
 	double overallscale = (A*99.0)+1.0;
 	double applySlant = (B*2.0)-1.0;
-	
+
 	f[0] = 1.0 / overallscale;
 	//count to f(gain) which will be 0. f(0) is x1
 	for (int count = 1; count < 102; count++) {
@@ -172,14 +172,14 @@ void ToneSlant::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			bR[count] = 0.0; //blank the unused buffer so when we return to it, no pops
 		}
 	}
-	
+
     while (--sampleFrames >= 0)
     {
 		for (int count = overallscale; count >= 0; count--) {
 			bL[count+1] = bL[count];
 			bR[count+1] = bR[count];
 		}
-		
+
 		inputSampleL = *in1;
 		inputSampleR = *in2;
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
@@ -220,26 +220,26 @@ void ToneSlant::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		bL[0] = accumulatorSampleL = drySampleL = inputSampleL;
 		bR[0] = accumulatorSampleR = drySampleR = inputSampleR;
-		
+
 		accumulatorSampleL *= f[0];
 		accumulatorSampleR *= f[0];
-		
+
 		for (int count = 1; count < overallscale; count++) {
 			accumulatorSampleL += (bL[count] * f[count]);
 			accumulatorSampleR += (bR[count] * f[count]);
 		}
-		
+
 		correctionSampleL = inputSampleL - (accumulatorSampleL*2.0);
 		correctionSampleR = inputSampleR - (accumulatorSampleR*2.0);
 		//we're gonna apply the total effect of all these calculations as a single subtract
-		
+
 		inputSampleL += (correctionSampleL * applySlant);
 		inputSampleR += (correctionSampleR * applySlant);
 		//our one math operation on the input data coming in
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

@@ -7,7 +7,7 @@
 #include "Distance2.h"
 #endif
 
-void Distance2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Distance2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -29,7 +29,7 @@ void Distance2::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	thresholdJ = 1.457291816732335 / overallscale;
 	thresholdK = 1.603020998405568 / overallscale;
 	thresholdL = 1.763323098246125 / overallscale;
-	thresholdM = 1.939655408070737 / overallscale;	
+	thresholdM = 1.939655408070737 / overallscale;
 	double softslew = (pow(A,3)*24)+.6;
 	softslew *= overallscale;
 	double filter = softslew * B;
@@ -40,7 +40,7 @@ void Distance2::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	//bring in top slider again to manage boost level for lower settings
 	double wet = C;
 	double dry = 1.0 - wet;
-	
+
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -50,7 +50,7 @@ void Distance2::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -65,7 +65,7 @@ void Distance2::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -80,13 +80,13 @@ void Distance2::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
-		
-		double offsetL = offsetScale - (lastSampleL - inputSampleL);		
-		double offsetR = offsetScale - (lastSampleR - inputSampleR);		
+
+		double offsetL = offsetScale - (lastSampleL - inputSampleL);
+		double offsetR = offsetScale - (lastSampleR - inputSampleR);
 
 		inputSampleL += (offsetL*offsetScale); //extra bit from Loud: offset air compression
 		inputSampleL *= wet; //clean up w. dry introduced
@@ -95,114 +95,114 @@ void Distance2::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		inputSampleR += (offsetR*offsetScale); //extra bit from Loud: offset air compression
 		inputSampleR *= wet; //clean up w. dry introduced
 		inputSampleR *= softslew; //scale into Atmosphere algorithm
-		
+
 		//left
 		long double clamp = inputSampleL - lastSampleAL;
 		if (clamp > thresholdA) inputSampleL = lastSampleAL + thresholdA;
 		if (-clamp > thresholdA) inputSampleL = lastSampleAL - thresholdA;
-		
+
 		clamp = inputSampleL - lastSampleBL;
 		if (clamp > thresholdB) inputSampleL = lastSampleBL + thresholdB;
 		if (-clamp > thresholdB) inputSampleL = lastSampleBL - thresholdB;
-		
+
 		clamp = inputSampleL - lastSampleCL;
 		if (clamp > thresholdC) inputSampleL = lastSampleCL + thresholdC;
 		if (-clamp > thresholdC) inputSampleL = lastSampleCL - thresholdC;
-		
+
 		clamp = inputSampleL - lastSampleDL;
 		if (clamp > thresholdD) inputSampleL = lastSampleDL + thresholdD;
 		if (-clamp > thresholdD) inputSampleL = lastSampleDL - thresholdD;
-		
+
 		clamp = inputSampleL - lastSampleEL;
 		if (clamp > thresholdE) inputSampleL = lastSampleEL + thresholdE;
 		if (-clamp > thresholdE) inputSampleL = lastSampleEL - thresholdE;
-		
+
 		clamp = inputSampleL - lastSampleFL;
 		if (clamp > thresholdF) inputSampleL = lastSampleFL + thresholdF;
 		if (-clamp > thresholdF) inputSampleL = lastSampleFL - thresholdF;
-		
+
 		clamp = inputSampleL - lastSampleGL;
 		if (clamp > thresholdG) inputSampleL = lastSampleGL + thresholdG;
 		if (-clamp > thresholdG) inputSampleL = lastSampleGL - thresholdG;
-		
+
 		clamp = inputSampleL - lastSampleHL;
 		if (clamp > thresholdH) inputSampleL = lastSampleHL + thresholdH;
 		if (-clamp > thresholdH) inputSampleL = lastSampleHL - thresholdH;
-		
+
 		clamp = inputSampleL - lastSampleIL;
 		if (clamp > thresholdI) inputSampleL = lastSampleIL + thresholdI;
 		if (-clamp > thresholdI) inputSampleL = lastSampleIL - thresholdI;
-		
+
 		clamp = inputSampleL - lastSampleJL;
 		if (clamp > thresholdJ) inputSampleL = lastSampleJL + thresholdJ;
 		if (-clamp > thresholdJ) inputSampleL = lastSampleJL - thresholdJ;
-		
+
 		clamp = inputSampleL - lastSampleKL;
 		if (clamp > thresholdK) inputSampleL = lastSampleKL + thresholdK;
 		if (-clamp > thresholdK) inputSampleL = lastSampleKL - thresholdK;
-		
+
 		clamp = inputSampleL - lastSampleLL;
 		if (clamp > thresholdL) inputSampleL = lastSampleLL + thresholdL;
 		if (-clamp > thresholdL) inputSampleL = lastSampleLL - thresholdL;
-		
+
 		clamp = inputSampleL - lastSampleML;
 		if (clamp > thresholdM) inputSampleL = lastSampleML + thresholdM;
 		if (-clamp > thresholdM) inputSampleL = lastSampleML - thresholdM;
-		
+
 		//right
 		clamp = inputSampleR - lastSampleAR;
 		if (clamp > thresholdA) inputSampleR = lastSampleAR + thresholdA;
 		if (-clamp > thresholdA) inputSampleR = lastSampleAR - thresholdA;
-		
+
 		clamp = inputSampleR - lastSampleBR;
 		if (clamp > thresholdB) inputSampleR = lastSampleBR + thresholdB;
 		if (-clamp > thresholdB) inputSampleR = lastSampleBR - thresholdB;
-		
+
 		clamp = inputSampleR - lastSampleCR;
 		if (clamp > thresholdC) inputSampleR = lastSampleCR + thresholdC;
 		if (-clamp > thresholdC) inputSampleR = lastSampleCR - thresholdC;
-		
+
 		clamp = inputSampleR - lastSampleDR;
 		if (clamp > thresholdD) inputSampleR = lastSampleDR + thresholdD;
 		if (-clamp > thresholdD) inputSampleR = lastSampleDR - thresholdD;
-		
+
 		clamp = inputSampleR - lastSampleER;
 		if (clamp > thresholdE) inputSampleR = lastSampleER + thresholdE;
 		if (-clamp > thresholdE) inputSampleR = lastSampleER - thresholdE;
-		
+
 		clamp = inputSampleR - lastSampleFR;
 		if (clamp > thresholdF) inputSampleR = lastSampleFR + thresholdF;
 		if (-clamp > thresholdF) inputSampleR = lastSampleFR - thresholdF;
-		
+
 		clamp = inputSampleR - lastSampleGR;
 		if (clamp > thresholdG) inputSampleR = lastSampleGR + thresholdG;
 		if (-clamp > thresholdG) inputSampleR = lastSampleGR - thresholdG;
-		
+
 		clamp = inputSampleR - lastSampleHR;
 		if (clamp > thresholdH) inputSampleR = lastSampleHR + thresholdH;
 		if (-clamp > thresholdH) inputSampleR = lastSampleHR - thresholdH;
-		
+
 		clamp = inputSampleR - lastSampleIR;
 		if (clamp > thresholdI) inputSampleR = lastSampleIR + thresholdI;
 		if (-clamp > thresholdI) inputSampleR = lastSampleIR - thresholdI;
-		
+
 		clamp = inputSampleR - lastSampleJR;
 		if (clamp > thresholdJ) inputSampleR = lastSampleJR + thresholdJ;
 		if (-clamp > thresholdJ) inputSampleR = lastSampleJR - thresholdJ;
-		
+
 		clamp = inputSampleR - lastSampleKR;
 		if (clamp > thresholdK) inputSampleR = lastSampleKR + thresholdK;
 		if (-clamp > thresholdK) inputSampleR = lastSampleKR - thresholdK;
-		
+
 		clamp = inputSampleR - lastSampleLR;
 		if (clamp > thresholdL) inputSampleR = lastSampleLR + thresholdL;
 		if (-clamp > thresholdL) inputSampleR = lastSampleLR - thresholdL;
-		
+
 		clamp = inputSampleR - lastSampleMR;
 		if (clamp > thresholdM) inputSampleR = lastSampleMR + thresholdM;
 		if (-clamp > thresholdM) inputSampleR = lastSampleMR - thresholdM;
-		
-		
+
+
 		lastSampleML = lastSampleLL;
 		lastSampleLL = lastSampleKL;
 		lastSampleKL = lastSampleJL;
@@ -217,7 +217,7 @@ void Distance2::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		lastSampleBL = lastSampleAL;
 		lastSampleAL = drySampleL;
 		//store the raw input sample again for use next time
-		
+
 		lastSampleMR = lastSampleLR;
 		lastSampleLR = lastSampleKR;
 		lastSampleKR = lastSampleJR;
@@ -232,7 +232,7 @@ void Distance2::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		lastSampleBR = lastSampleAR;
 		lastSampleAR = drySampleR;
 		//store the raw input sample again for use next time
-		
+
 		inputSampleL *= levelcorrect;
 		inputSampleL /= softslew;
 		inputSampleL -= (offsetL*offsetScale);
@@ -254,18 +254,18 @@ void Distance2::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		//do an IIR like thing to further squish superdistant stuff
 
 		thirdSampleL = lastSampleL;
-		lastSampleL = inputSampleL;		
+		lastSampleL = inputSampleL;
 		inputSampleL *= levelcorrect;
-		
+
 		thirdSampleR = lastSampleR;
-		lastSampleR = inputSampleR;		
+		lastSampleR = inputSampleR;
 		inputSampleR *= levelcorrect;
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		float fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -278,7 +278,7 @@ void Distance2::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 32 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -292,10 +292,10 @@ void Distance2::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }
 
-void Distance2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Distance2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -317,7 +317,7 @@ void Distance2::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	thresholdJ = 1.457291816732335 / overallscale;
 	thresholdK = 1.603020998405568 / overallscale;
 	thresholdL = 1.763323098246125 / overallscale;
-	thresholdM = 1.939655408070737 / overallscale;	
+	thresholdM = 1.939655408070737 / overallscale;
 	double softslew = (pow(A,3)*24)+.6;
 	softslew *= overallscale;
 	double filter = softslew * B;
@@ -325,7 +325,7 @@ void Distance2::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	double thirdfilter = filter / 5.0;
 	double offsetScale = A * 0.1618;
 	double levelcorrect = 1.0 + ((filter / 12.0) * A);
-	//bring in top slider again to manage boost level for lower settings	
+	//bring in top slider again to manage boost level for lower settings
 	double wet = C;
 	double dry = 1.0 - wet;
 
@@ -338,7 +338,7 @@ void Distance2::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		static int noisesourceR = 850010;
 		int residue;
 		double applyresidue;
-		
+
 		noisesourceL = noisesourceL % 1700021; noisesourceL++;
 		residue = noisesourceL * noisesourceL;
 		residue = residue % 170003; residue *= residue;
@@ -353,7 +353,7 @@ void Distance2::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
 			inputSampleL -= applyresidue;
 		}
-		
+
 		noisesourceR = noisesourceR % 1700021; noisesourceR++;
 		residue = noisesourceR * noisesourceR;
 		residue = residue % 170003; residue *= residue;
@@ -368,129 +368,129 @@ void Distance2::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
 			inputSampleR -= applyresidue;
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
+		//for live air, we always apply the dither noise. Then, if our result is
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
-		
-		double offsetL = offsetScale - (lastSampleL - inputSampleL);		
-		double offsetR = offsetScale - (lastSampleR - inputSampleR);		
-		
+
+		double offsetL = offsetScale - (lastSampleL - inputSampleL);
+		double offsetR = offsetScale - (lastSampleR - inputSampleR);
+
 		inputSampleL += (offsetL*offsetScale); //extra bit from Loud: offset air compression
 		inputSampleL *= wet; //clean up w. dry introduced
 		inputSampleL *= softslew; //scale into Atmosphere algorithm
-		
+
 		inputSampleR += (offsetR*offsetScale); //extra bit from Loud: offset air compression
 		inputSampleR *= wet; //clean up w. dry introduced
 		inputSampleR *= softslew; //scale into Atmosphere algorithm
-		
+
 		//left
 		long double clamp = inputSampleL - lastSampleAL;
 		if (clamp > thresholdA) inputSampleL = lastSampleAL + thresholdA;
 		if (-clamp > thresholdA) inputSampleL = lastSampleAL - thresholdA;
-		
+
 		clamp = inputSampleL - lastSampleBL;
 		if (clamp > thresholdB) inputSampleL = lastSampleBL + thresholdB;
 		if (-clamp > thresholdB) inputSampleL = lastSampleBL - thresholdB;
-		
+
 		clamp = inputSampleL - lastSampleCL;
 		if (clamp > thresholdC) inputSampleL = lastSampleCL + thresholdC;
 		if (-clamp > thresholdC) inputSampleL = lastSampleCL - thresholdC;
-		
+
 		clamp = inputSampleL - lastSampleDL;
 		if (clamp > thresholdD) inputSampleL = lastSampleDL + thresholdD;
 		if (-clamp > thresholdD) inputSampleL = lastSampleDL - thresholdD;
-		
+
 		clamp = inputSampleL - lastSampleEL;
 		if (clamp > thresholdE) inputSampleL = lastSampleEL + thresholdE;
 		if (-clamp > thresholdE) inputSampleL = lastSampleEL - thresholdE;
-		
+
 		clamp = inputSampleL - lastSampleFL;
 		if (clamp > thresholdF) inputSampleL = lastSampleFL + thresholdF;
 		if (-clamp > thresholdF) inputSampleL = lastSampleFL - thresholdF;
-		
+
 		clamp = inputSampleL - lastSampleGL;
 		if (clamp > thresholdG) inputSampleL = lastSampleGL + thresholdG;
 		if (-clamp > thresholdG) inputSampleL = lastSampleGL - thresholdG;
-		
+
 		clamp = inputSampleL - lastSampleHL;
 		if (clamp > thresholdH) inputSampleL = lastSampleHL + thresholdH;
 		if (-clamp > thresholdH) inputSampleL = lastSampleHL - thresholdH;
-		
+
 		clamp = inputSampleL - lastSampleIL;
 		if (clamp > thresholdI) inputSampleL = lastSampleIL + thresholdI;
 		if (-clamp > thresholdI) inputSampleL = lastSampleIL - thresholdI;
-		
+
 		clamp = inputSampleL - lastSampleJL;
 		if (clamp > thresholdJ) inputSampleL = lastSampleJL + thresholdJ;
 		if (-clamp > thresholdJ) inputSampleL = lastSampleJL - thresholdJ;
-		
+
 		clamp = inputSampleL - lastSampleKL;
 		if (clamp > thresholdK) inputSampleL = lastSampleKL + thresholdK;
 		if (-clamp > thresholdK) inputSampleL = lastSampleKL - thresholdK;
-		
+
 		clamp = inputSampleL - lastSampleLL;
 		if (clamp > thresholdL) inputSampleL = lastSampleLL + thresholdL;
 		if (-clamp > thresholdL) inputSampleL = lastSampleLL - thresholdL;
-		
+
 		clamp = inputSampleL - lastSampleML;
 		if (clamp > thresholdM) inputSampleL = lastSampleML + thresholdM;
 		if (-clamp > thresholdM) inputSampleL = lastSampleML - thresholdM;
-		
+
 		//right
 		clamp = inputSampleR - lastSampleAR;
 		if (clamp > thresholdA) inputSampleR = lastSampleAR + thresholdA;
 		if (-clamp > thresholdA) inputSampleR = lastSampleAR - thresholdA;
-		
+
 		clamp = inputSampleR - lastSampleBR;
 		if (clamp > thresholdB) inputSampleR = lastSampleBR + thresholdB;
 		if (-clamp > thresholdB) inputSampleR = lastSampleBR - thresholdB;
-		
+
 		clamp = inputSampleR - lastSampleCR;
 		if (clamp > thresholdC) inputSampleR = lastSampleCR + thresholdC;
 		if (-clamp > thresholdC) inputSampleR = lastSampleCR - thresholdC;
-		
+
 		clamp = inputSampleR - lastSampleDR;
 		if (clamp > thresholdD) inputSampleR = lastSampleDR + thresholdD;
 		if (-clamp > thresholdD) inputSampleR = lastSampleDR - thresholdD;
-		
+
 		clamp = inputSampleR - lastSampleER;
 		if (clamp > thresholdE) inputSampleR = lastSampleER + thresholdE;
 		if (-clamp > thresholdE) inputSampleR = lastSampleER - thresholdE;
-		
+
 		clamp = inputSampleR - lastSampleFR;
 		if (clamp > thresholdF) inputSampleR = lastSampleFR + thresholdF;
 		if (-clamp > thresholdF) inputSampleR = lastSampleFR - thresholdF;
-		
+
 		clamp = inputSampleR - lastSampleGR;
 		if (clamp > thresholdG) inputSampleR = lastSampleGR + thresholdG;
 		if (-clamp > thresholdG) inputSampleR = lastSampleGR - thresholdG;
-		
+
 		clamp = inputSampleR - lastSampleHR;
 		if (clamp > thresholdH) inputSampleR = lastSampleHR + thresholdH;
 		if (-clamp > thresholdH) inputSampleR = lastSampleHR - thresholdH;
-		
+
 		clamp = inputSampleR - lastSampleIR;
 		if (clamp > thresholdI) inputSampleR = lastSampleIR + thresholdI;
 		if (-clamp > thresholdI) inputSampleR = lastSampleIR - thresholdI;
-		
+
 		clamp = inputSampleR - lastSampleJR;
 		if (clamp > thresholdJ) inputSampleR = lastSampleJR + thresholdJ;
 		if (-clamp > thresholdJ) inputSampleR = lastSampleJR - thresholdJ;
-		
+
 		clamp = inputSampleR - lastSampleKR;
 		if (clamp > thresholdK) inputSampleR = lastSampleKR + thresholdK;
 		if (-clamp > thresholdK) inputSampleR = lastSampleKR - thresholdK;
-		
+
 		clamp = inputSampleR - lastSampleLR;
 		if (clamp > thresholdL) inputSampleR = lastSampleLR + thresholdL;
 		if (-clamp > thresholdL) inputSampleR = lastSampleLR - thresholdL;
-		
+
 		clamp = inputSampleR - lastSampleMR;
 		if (clamp > thresholdM) inputSampleR = lastSampleMR + thresholdM;
 		if (-clamp > thresholdM) inputSampleR = lastSampleMR - thresholdM;
-		
-		
+
+
 		lastSampleML = lastSampleLL;
 		lastSampleLL = lastSampleKL;
 		lastSampleKL = lastSampleJL;
@@ -505,7 +505,7 @@ void Distance2::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		lastSampleBL = lastSampleAL;
 		lastSampleAL = drySampleL;
 		//store the raw input sample again for use next time
-		
+
 		lastSampleMR = lastSampleLR;
 		lastSampleLR = lastSampleKR;
 		lastSampleKR = lastSampleJR;
@@ -520,7 +520,7 @@ void Distance2::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		lastSampleBR = lastSampleAR;
 		lastSampleAR = drySampleR;
 		//store the raw input sample again for use next time
-		
+
 		inputSampleL *= levelcorrect;
 		inputSampleL /= softslew;
 		inputSampleL -= (offsetL*offsetScale);
@@ -529,7 +529,7 @@ void Distance2::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		inputSampleR /= softslew;
 		inputSampleR -= (offsetR*offsetScale);
 		//begin IIR stage
-		
+
 		inputSampleL += (thirdSampleL * thirdfilter);
 		inputSampleL /= (thirdfilter + 1.0);
 		inputSampleL += (lastSampleL * secondfilter);
@@ -540,20 +540,20 @@ void Distance2::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		inputSampleR += (lastSampleR * secondfilter);
 		inputSampleR /= (secondfilter + 1.0);
 		//do an IIR like thing to further squish superdistant stuff
-		
+
 		thirdSampleL = lastSampleL;
-		lastSampleL = inputSampleL;		
+		lastSampleL = inputSampleL;
 		inputSampleL *= levelcorrect;
-		
+
 		thirdSampleR = lastSampleR;
-		lastSampleR = inputSampleR;		
+		lastSampleR = inputSampleR;
 		inputSampleR *= levelcorrect;
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 64-bit floating point
 		double fpTemp = inputSampleL;
 		fpNShapeL += (inputSampleL-fpTemp);
@@ -566,7 +566,7 @@ void Distance2::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		//that is kind of ruthless: it will forever retain the rounding errors
 		//except we'll dial it back a hair at the end of every buffer processed
 		//end noise shaping on 64 bit output
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -580,5 +580,5 @@ void Distance2::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	//we will just delicately dial back the FP noise shaping, not even every sample
 	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
 	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
+	//So, very low latency operation will call these calculations more often.
 }

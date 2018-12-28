@@ -1,6 +1,6 @@
 /* ========================================
  *  DubCenter - DubCenter.h
- *  Created 8/12/11 by SPIAdmin 
+ *  Created 8/12/11 by SPIAdmin
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
@@ -34,8 +34,8 @@ const int kNumInputs = 2;
 const int kNumOutputs = 2;
 const unsigned long kUniqueId = 'dbct';    //Change this to what the AU identity is!
 
-class DubCenter : 
-    public AudioEffectX 
+class DubCenter :
+    public AudioEffectX
 {
 public:
     DubCenter(audioMasterCallback audioMaster);
@@ -55,12 +55,12 @@ public:
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
     virtual void getParameterName(VstInt32 index, char *text);    // name of the parameter
-    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value    
+    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value
     virtual VstInt32 canDo(char *text);
 private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
-    
+
 	double iirDriveSampleAL;
 	double iirDriveSampleBL;
 	double iirDriveSampleCL;
@@ -74,21 +74,21 @@ private:
 	double iirDriveSampleER;
 	double iirDriveSampleFR;
 	bool flip; //drive things
-	
+
 	int bflip;
 	bool WasNegative;
 	bool SubOctave;
 	double iirHeadBumpA;
 	double iirHeadBumpB;
 	double iirHeadBumpC;
-	
+
 	double iirSubBumpA;
 	double iirSubBumpB;
 	double iirSubBumpC;
-	
+
 	double lastHeadBump;
 	double lastSubBump;
-	
+
 	double iirSampleA;
 	double iirSampleB;
 	double iirSampleC;
@@ -114,13 +114,13 @@ private:
 	double iirSampleW;
 	double iirSampleX;
 	double iirSampleY;
-	double iirSampleZ;		
+	double iirSampleZ;
 	double oscGate;
-	
+
 	long double fpNShapeL;
 	long double fpNShapeR;
 	//default stuff
-	
+
     float A;
     float B;
     float C;
@@ -131,7 +131,7 @@ private:
     float H;
     float I;
     float J;
-	
+
 };
 
 #endif

@@ -1,6 +1,6 @@
 /* ========================================
  *  ToVinyl4 - ToVinyl4.h
- *  Created 8/12/11 by SPIAdmin 
+ *  Created 8/12/11 by SPIAdmin
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
@@ -28,8 +28,8 @@ const int kNumInputs = 2;
 const int kNumOutputs = 2;
 const unsigned long kUniqueId = 'tovb';    //Change this to what the AU identity is!
 
-class ToVinyl4 : 
-    public AudioEffectX 
+class ToVinyl4 :
+    public AudioEffectX
 {
 public:
     ToVinyl4(audioMasterCallback audioMaster);
@@ -49,15 +49,15 @@ public:
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
     virtual void getParameterName(VstInt32 index, char *text);    // name of the parameter
-    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value    
+    virtual void getParameterDisplay(VstInt32 index, char *text); // text description of the current value
     virtual VstInt32 canDo(char *text);
 private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
-    
+
 	double ataLastOutL;
 	double ataLastOutR;
-	
+
 	double s1L;
 	double s2L;
 	double s3L;
@@ -76,7 +76,7 @@ private:
 	double m2R;
 	double desL;
 	double desR;
-	
+
 	double midSampleA;
 	double midSampleB;
 	double midSampleC;
@@ -103,7 +103,7 @@ private:
 	double midSampleX;
 	double midSampleY;
 	double midSampleZ;
-	
+
 	double sideSampleA;
 	double sideSampleB;
 	double sideSampleC;
@@ -130,18 +130,18 @@ private:
 	double sideSampleX;
 	double sideSampleY;
 	double sideSampleZ;
-	
+
 	double aMid[11];
 	double bMid[11];
-	double fMid[11];		
+	double fMid[11];
 	double aSide[11];
 	double bSide[11];
-	double fSide[11];		
+	double fSide[11];
 	double aMidPrev;
 	double aSidePrev;
 	double bMidPrev;
 	double bSidePrev;
-	
+
 	long double fpNShapeLA;
 	long double fpNShapeLB;
 	long double fpNShapeRA;

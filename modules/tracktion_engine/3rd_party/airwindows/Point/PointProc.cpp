@@ -7,7 +7,7 @@
 #include "Point.h"
 #endif
 
-void Point::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void Point::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -17,7 +17,7 @@ void Point::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double gaintrim = pow(10.0,((A*24.0)-12.0)/20);
 	double nibDiv = 1 / pow(C+0.2,7);
 	nibDiv /= overallscale;
@@ -26,13 +26,13 @@ void Point::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	else nobDiv = nibDiv * (1.001-pow(((B*2.0)-1.0)*0.75,2));
 	double nibnobFactor = 0.0; //start with the fallthrough value, why not
 	double absolute;
-	
+
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 	long double inputSampleL;
 	long double inputSampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -98,11 +98,11 @@ void Point::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 			if (nobBL > 0)
 			{
 				nibnobFactor = nibBL / nobBL;
-			}		
+			}
 		}
 		inputSampleL *= nibnobFactor;
-		
-		
+
+
 		inputSampleR *= gaintrim;
 		absolute = fabs(inputSampleR);
 		if (fpFlip)
@@ -125,10 +125,10 @@ void Point::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 			if (nobBR > 0)
 			{
 				nibnobFactor = nibBR / nobBR;
-			}		
+			}
 		}
 		inputSampleR *= nibnobFactor;
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -159,7 +159,7 @@ void Point::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
     }
 }
 
-void Point::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void Point::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -169,7 +169,7 @@ void Point::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double gaintrim = pow(10.0,((A*24.0)-12.0)/20);
 	double nibDiv = 1 / pow(C+0.2,7);
 	nibDiv /= overallscale;
@@ -178,10 +178,10 @@ void Point::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	else nobDiv = nibDiv * (1.001-pow(((B*2.0)-1.0)*0.75,2));
 	double nibnobFactor = 0.0; //start with the fallthrough value, why not
 	double absolute;
-	
+
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 	long double inputSampleL;
 	long double inputSampleR;
 
@@ -227,7 +227,7 @@ void Point::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
 		}
-		
+
 		inputSampleL *= gaintrim;
 		absolute = fabs(inputSampleL);
 		if (fpFlip)
@@ -250,11 +250,11 @@ void Point::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 			if (nobBL > 0)
 			{
 				nibnobFactor = nibBL / nobBL;
-			}		
+			}
 		}
 		inputSampleL *= nibnobFactor;
-		
-		
+
+
 		inputSampleR *= gaintrim;
 		absolute = fabs(inputSampleR);
 		if (fpFlip)
@@ -277,10 +277,10 @@ void Point::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 			if (nobBR > 0)
 			{
 				nibnobFactor = nibBR / nobBR;
-			}		
+			}
 		}
 		inputSampleR *= nibnobFactor;
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

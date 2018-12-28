@@ -7,7 +7,7 @@
 #include "ToTape5.h"
 #endif
 
-void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -17,7 +17,7 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double inputgain = pow(A+1.0,3);
 	double outputgain = E;
 	double wet = F;
@@ -38,7 +38,7 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	double depth = pow(D,2)*overallscale;
 	double fluttertrim = 0.005/overallscale;
 	double sweeptrim = (0.0006*depth)/overallscale;
-	double offset;	
+	double offset;
 	double tupi = 3.141592653589793238 * 2.0;
 	double newrate = 0.005/overallscale;
 	double oldrate = 1.0-newrate;
@@ -46,7 +46,7 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	double randy;
 	double invrandy;
 	int count;
-	
+
 	double HighsSampleL = 0.0;
 	double NonHighsSampleL = 0.0;
 	double HeadBumpL = 0.0;
@@ -62,14 +62,14 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	double bridgerectifierR;
 	double tempSampleR;
 	double drySampleR;
-	
+
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 	long double inputSampleL;
 	long double inputSampleR;
-	
-    
+
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -114,14 +114,14 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
-		
+
+
 		flutterrandy = (rand()/(double)RAND_MAX);
 		randy = flutterrandy * tempRandy; //for soften
 		invrandy = (1.0-randy);
 		randy /= 2.0;
 		//we've set up so that we dial in the amount of the alt sections (in pairs) with invrandy being the source section
-		
+
 		//now we've got a random flutter, so we're messing with the pitch before tape effects go on
 		if (gcount < 0 || gcount > 300) {gcount = 300;}
 		count = gcount;
@@ -129,19 +129,19 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		dR[count+301] = dR[count] = inputSampleR;
 		gcount--;
 		//we will also keep the buffer going, even when not in use
-		
+
 		if (depth != 0.0) {
 			offset = (1.0 + sin(sweep)) * depth;
 			count += (int)floor(offset);
-			
+
 			bridgerectifierL = (dL[count] * (1-(offset-floor(offset))));
 			bridgerectifierL += (dL[count+1] * (offset-floor(offset)));
 			bridgerectifierL -= ((dL[count+2] * (offset-floor(offset)))*trim);
-			
+
 			bridgerectifierR = (dR[count] * (1-(offset-floor(offset))));
 			bridgerectifierR += (dR[count+1] * (offset-floor(offset)));
 			bridgerectifierR -= ((dR[count+2] * (offset-floor(offset)))*trim);
-			
+
 			rateof = (nextmax * newrate) + (rateof * oldrate);
 			sweep += rateof * fluttertrim;
 			sweep += sweep * sweeptrim;
@@ -150,21 +150,21 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 			inputSampleR = bridgerectifierR;
 			//apply to input signal only when flutter is present, interpolate samples
 		}
-		
+
 		if (inputgain != 1.0) {
 			inputSampleL *= inputgain;
 			inputSampleR *= inputgain;
 		}
-		
+
 		if (flip < 1 || flip > 3) flip = 1;
 		switch (flip)
 		{
-			case 1:				
+			case 1:
 				iirMidRollerAL = (iirMidRollerAL * (1.0 - RollAmount)) + (inputSampleL * RollAmount);
 				iirMidRollerAL = (invrandy * iirMidRollerAL) + (randy * iirMidRollerBL) + (randy * iirMidRollerCL);
 				HighsSampleL = inputSampleL - iirMidRollerAL;
 				NonHighsSampleL = iirMidRollerAL;
-				
+
 				iirHeadBumpAL += (inputSampleL * 0.05);
 				iirHeadBumpAL -= (iirHeadBumpAL * iirHeadBumpAL * iirHeadBumpAL * HeadBumpFreq);
 				iirHeadBumpAL = (invrandy * iirHeadBumpAL) + (randy * iirHeadBumpBL) + (randy * iirHeadBumpCL);
@@ -173,7 +173,7 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 				iirMidRollerAR = (invrandy * iirMidRollerAR) + (randy * iirMidRollerBR) + (randy * iirMidRollerCR);
 				HighsSampleR = inputSampleR - iirMidRollerAR;
 				NonHighsSampleR = iirMidRollerAR;
-				
+
 				iirHeadBumpAR += (inputSampleR * 0.05);
 				iirHeadBumpAR -= (iirHeadBumpAR * iirHeadBumpAR * iirHeadBumpAR * HeadBumpFreq);
 				iirHeadBumpAR = (invrandy * iirHeadBumpAR) + (randy * iirHeadBumpBR) + (randy * iirHeadBumpCR);
@@ -183,7 +183,7 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 				iirMidRollerBL = (randy * iirMidRollerAL) + (invrandy * iirMidRollerBL) + (randy * iirMidRollerCL);
 				HighsSampleL = inputSampleL - iirMidRollerBL;
 				NonHighsSampleL = iirMidRollerBL;
-				
+
 				iirHeadBumpBL += (inputSampleL * 0.05);
 				iirHeadBumpBL -= (iirHeadBumpBL * iirHeadBumpBL * iirHeadBumpBL * HeadBumpFreq);
 				iirHeadBumpBL = (randy * iirHeadBumpAL) + (invrandy * iirHeadBumpBL) + (randy * iirHeadBumpCL);
@@ -192,7 +192,7 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 				iirMidRollerBR = (randy * iirMidRollerAR) + (invrandy * iirMidRollerBR) + (randy * iirMidRollerCR);
 				HighsSampleR = inputSampleR - iirMidRollerBR;
 				NonHighsSampleR = iirMidRollerBR;
-				
+
 				iirHeadBumpBR += (inputSampleR * 0.05);
 				iirHeadBumpBR -= (iirHeadBumpBR * iirHeadBumpBR * iirHeadBumpBR * HeadBumpFreq);
 				iirHeadBumpBR = (randy * iirHeadBumpAR) + (invrandy * iirHeadBumpBR) + (randy * iirHeadBumpCR);
@@ -202,7 +202,7 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 				iirMidRollerCL = (randy * iirMidRollerAL) + (randy * iirMidRollerBL) + (invrandy * iirMidRollerCL);
 				HighsSampleL = inputSampleL - iirMidRollerCL;
 				NonHighsSampleL = iirMidRollerCL;
-				
+
 				iirHeadBumpCL += (inputSampleL * 0.05);
 				iirHeadBumpCL -= (iirHeadBumpCL * iirHeadBumpCL * iirHeadBumpCL * HeadBumpFreq);
 				iirHeadBumpCL = (randy * iirHeadBumpAL) + (randy * iirHeadBumpBL) + (invrandy * iirHeadBumpCL);
@@ -211,15 +211,15 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 				iirMidRollerCR = (randy * iirMidRollerAR) + (randy * iirMidRollerBR) + (invrandy * iirMidRollerCR);
 				HighsSampleR = inputSampleR - iirMidRollerCR;
 				NonHighsSampleR = iirMidRollerCR;
-				
+
 				iirHeadBumpCR += (inputSampleR * 0.05);
 				iirHeadBumpCR -= (iirHeadBumpCR * iirHeadBumpCR * iirHeadBumpCR * HeadBumpFreq);
 				iirHeadBumpCR = (randy * iirHeadBumpAR) + (randy * iirHeadBumpBR) + (invrandy * iirHeadBumpCR);
 				break;
 		}
 		flip++; //increment the triplet counter
-		
-		SubtractL = HighsSampleL;		
+
+		SubtractL = HighsSampleL;
 		bridgerectifierL = fabs(SubtractL)*1.57079633;
 		if (bridgerectifierL > 1.57079633) bridgerectifierL = 1.57079633;
 		bridgerectifierL = 1-cos(bridgerectifierL);
@@ -227,7 +227,7 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		if (SubtractL < 0) SubtractL = -bridgerectifierL;
 		inputSampleL -= SubtractL;
 
-		SubtractR = HighsSampleR;		
+		SubtractR = HighsSampleR;
 		bridgerectifierR = fabs(SubtractR)*1.57079633;
 		if (bridgerectifierR > 1.57079633) bridgerectifierR = 1.57079633;
 		bridgerectifierR = 1-cos(bridgerectifierR);
@@ -236,8 +236,8 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		inputSampleR -= SubtractR;
 		//Soften works using the MidRoller stuff, defining a bright parallel channel that we apply negative Density
 		//to, and then subtract from the main audio. That makes the 'highs channel subtract' hit only the loudest
-		//transients, plus we are subtracting any artifacts we got from the negative Density.		
-		
+		//transients, plus we are subtracting any artifacts we got from the negative Density.
+
 		bridgerectifierL = fabs(inputSampleL);
 		if (bridgerectifierL > 1.57079633) bridgerectifierL = 1.57079633;
 		bridgerectifierL = sin(bridgerectifierL);
@@ -251,34 +251,34 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		if (inputSampleR < 0) inputSampleR = -bridgerectifierR;
 		//drive section: the tape sound includes a very gentle saturation curve, which is always an attenuation.
 		//we cut back on highs before hitting this, and then we're going to subtract highs a second time after.
-		
+
 		HeadBumpL = iirHeadBumpAL + iirHeadBumpBL + iirHeadBumpCL;
 		HeadBumpR = iirHeadBumpAR + iirHeadBumpBR + iirHeadBumpCR;
 		//begin PhaseNudge
 		allpasstemp = hcount - 1;
 		if (allpasstemp < 0 || allpasstemp > maxdelay) {allpasstemp = maxdelay;}
-		
+
 		HeadBumpL -= eL[allpasstemp] * fpOld;
 		eL[hcount] = HeadBumpL;
 		inputSampleL *= fpOld;
-		
+
 		HeadBumpR -= eR[allpasstemp] * fpOld;
 		eR[hcount] = HeadBumpR;
 		inputSampleR *= fpOld;
-		
+
 		hcount--; if (hcount < 0 || hcount > maxdelay) {hcount = maxdelay;}
 		HeadBumpL += (eL[hcount]);
 		HeadBumpR += (eR[hcount]);
-		//end PhaseNudge on head bump in lieu of delay. 
+		//end PhaseNudge on head bump in lieu of delay.
 		SubtractL -= (HeadBumpL * (HeadBumpControl+iirMinHeadBumpL));
 		SubtractR -= (HeadBumpR * (HeadBumpControl+iirMinHeadBumpR));
 		//makes a second soften and a single head bump after saturation.
 		//we are going to retain this, and then feed it into the highpass filter. That way, we can skip a subtract.
 		//Head Bump retains a trace which is roughly as large as what the highpass will do.
-		
+
 		tempSampleL = inputSampleL;
 		tempSampleR = inputSampleR;
-		
+
 		iirMinHeadBumpL = (iirMinHeadBumpL * altHBoostAmount) + (fabs(inputSampleL) * iirHBoostAmount);
 		if (iirMinHeadBumpL > 0.01) iirMinHeadBumpL = 0.01;
 
@@ -286,7 +286,7 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		if (iirMinHeadBumpR > 0.01) iirMinHeadBumpR = 0.01;
 		//we want this one rectified so that it's a relatively steady positive value. Boosts can cause it to be
 		//greater than 1 so we clamp it in that case.
-		
+
 		iirSampleAL = (iirSampleAL * altAmount) + (tempSampleL * iirAmount); tempSampleL -= iirSampleAL; SubtractL += iirSampleAL;
 		iirSampleBL = (iirSampleBL * altAmount) + (tempSampleL * iirAmount); tempSampleL -= iirSampleBL; SubtractL += iirSampleBL;
 		iirSampleCL = (iirSampleCL * altAmount) + (tempSampleL * iirAmount); tempSampleL -= iirSampleCL; SubtractL += iirSampleCL;
@@ -343,21 +343,21 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		//do the IIR on a dummy sample, and store up the correction in a variable at the same scale as the very low level
 		//numbers being used. Don't keep doing it against the possibly high level signal number.
 		//This has been known to add a resonant quality to the cutoff, which we're using on purpose.
-		
+
 		inputSampleL -= SubtractL;
 		inputSampleR -= SubtractR;
 		//apply stored up tiny corrections.
-		
+
 		if (outputgain != 1.0) {
 			inputSampleL *= outputgain;
 			inputSampleR *= outputgain;
 		}
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -388,7 +388,7 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
     }
 }
 
-void ToTape5::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void ToTape5::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -398,7 +398,7 @@ void ToTape5::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
+
 	double inputgain = pow(A+1.0,3);
 	double outputgain = E;
 	double wet = F;
@@ -419,7 +419,7 @@ void ToTape5::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	double depth = pow(D,2)*overallscale;
 	double fluttertrim = 0.005/overallscale;
 	double sweeptrim = (0.0006*depth)/overallscale;
-	double offset;	
+	double offset;
 	double tupi = 3.141592653589793238 * 2.0;
 	double newrate = 0.005/overallscale;
 	double oldrate = 1.0-newrate;
@@ -427,7 +427,7 @@ void ToTape5::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	double randy;
 	double invrandy;
 	int count;
-	
+
 	double HighsSampleL = 0.0;
 	double NonHighsSampleL = 0.0;
 	double HeadBumpL = 0.0;
@@ -435,7 +435,7 @@ void ToTape5::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	double bridgerectifierL;
 	double tempSampleL;
 	double drySampleL;
-	
+
 	double HighsSampleR = 0.0;
 	double NonHighsSampleR = 0.0;
 	double HeadBumpR = 0.0;
@@ -443,7 +443,7 @@ void ToTape5::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	double bridgerectifierR;
 	double tempSampleR;
 	double drySampleR;
-	
+
 	double fpTemp; //this is different from singlereplacing
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
 	long double fpNew = 1.0 - fpOld;
@@ -494,14 +494,14 @@ void ToTape5::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
-		
+
+
 		flutterrandy = (rand()/(double)RAND_MAX);
 		randy = flutterrandy * tempRandy; //for soften
 		invrandy = (1.0-randy);
 		randy /= 2.0;
 		//we've set up so that we dial in the amount of the alt sections (in pairs) with invrandy being the source section
-		
+
 		//now we've got a random flutter, so we're messing with the pitch before tape effects go on
 		if (gcount < 0 || gcount > 300) {gcount = 300;}
 		count = gcount;
@@ -509,19 +509,19 @@ void ToTape5::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		dR[count+301] = dR[count] = inputSampleR;
 		gcount--;
 		//we will also keep the buffer going, even when not in use
-		
+
 		if (depth != 0.0) {
 			offset = (1.0 + sin(sweep)) * depth;
 			count += (int)floor(offset);
-			
+
 			bridgerectifierL = (dL[count] * (1-(offset-floor(offset))));
 			bridgerectifierL += (dL[count+1] * (offset-floor(offset)));
 			bridgerectifierL -= ((dL[count+2] * (offset-floor(offset)))*trim);
-			
+
 			bridgerectifierR = (dR[count] * (1-(offset-floor(offset))));
 			bridgerectifierR += (dR[count+1] * (offset-floor(offset)));
 			bridgerectifierR -= ((dR[count+2] * (offset-floor(offset)))*trim);
-			
+
 			rateof = (nextmax * newrate) + (rateof * oldrate);
 			sweep += rateof * fluttertrim;
 			sweep += sweep * sweeptrim;
@@ -530,30 +530,30 @@ void ToTape5::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			inputSampleR = bridgerectifierR;
 			//apply to input signal only when flutter is present, interpolate samples
 		}
-		
+
 		if (inputgain != 1.0) {
 			inputSampleL *= inputgain;
 			inputSampleR *= inputgain;
 		}
-		
+
 		if (flip < 1 || flip > 3) flip = 1;
 		switch (flip)
 		{
-			case 1:				
+			case 1:
 				iirMidRollerAL = (iirMidRollerAL * (1.0 - RollAmount)) + (inputSampleL * RollAmount);
 				iirMidRollerAL = (invrandy * iirMidRollerAL) + (randy * iirMidRollerBL) + (randy * iirMidRollerCL);
 				HighsSampleL = inputSampleL - iirMidRollerAL;
 				NonHighsSampleL = iirMidRollerAL;
-				
+
 				iirHeadBumpAL += (inputSampleL * 0.05);
 				iirHeadBumpAL -= (iirHeadBumpAL * iirHeadBumpAL * iirHeadBumpAL * HeadBumpFreq);
 				iirHeadBumpAL = (invrandy * iirHeadBumpAL) + (randy * iirHeadBumpBL) + (randy * iirHeadBumpCL);
-				
+
 				iirMidRollerAR = (iirMidRollerAR * (1.0 - RollAmount)) + (inputSampleR * RollAmount);
 				iirMidRollerAR = (invrandy * iirMidRollerAR) + (randy * iirMidRollerBR) + (randy * iirMidRollerCR);
 				HighsSampleR = inputSampleR - iirMidRollerAR;
 				NonHighsSampleR = iirMidRollerAR;
-				
+
 				iirHeadBumpAR += (inputSampleR * 0.05);
 				iirHeadBumpAR -= (iirHeadBumpAR * iirHeadBumpAR * iirHeadBumpAR * HeadBumpFreq);
 				iirHeadBumpAR = (invrandy * iirHeadBumpAR) + (randy * iirHeadBumpBR) + (randy * iirHeadBumpCR);
@@ -563,16 +563,16 @@ void ToTape5::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 				iirMidRollerBL = (randy * iirMidRollerAL) + (invrandy * iirMidRollerBL) + (randy * iirMidRollerCL);
 				HighsSampleL = inputSampleL - iirMidRollerBL;
 				NonHighsSampleL = iirMidRollerBL;
-				
+
 				iirHeadBumpBL += (inputSampleL * 0.05);
 				iirHeadBumpBL -= (iirHeadBumpBL * iirHeadBumpBL * iirHeadBumpBL * HeadBumpFreq);
 				iirHeadBumpBL = (randy * iirHeadBumpAL) + (invrandy * iirHeadBumpBL) + (randy * iirHeadBumpCL);
-				
+
 				iirMidRollerBR = (iirMidRollerBR * (1.0 - RollAmount)) + (inputSampleR * RollAmount);
 				iirMidRollerBR = (randy * iirMidRollerAR) + (invrandy * iirMidRollerBR) + (randy * iirMidRollerCR);
 				HighsSampleR = inputSampleR - iirMidRollerBR;
 				NonHighsSampleR = iirMidRollerBR;
-				
+
 				iirHeadBumpBR += (inputSampleR * 0.05);
 				iirHeadBumpBR -= (iirHeadBumpBR * iirHeadBumpBR * iirHeadBumpBR * HeadBumpFreq);
 				iirHeadBumpBR = (randy * iirHeadBumpAR) + (invrandy * iirHeadBumpBR) + (randy * iirHeadBumpCR);
@@ -582,32 +582,32 @@ void ToTape5::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 				iirMidRollerCL = (randy * iirMidRollerAL) + (randy * iirMidRollerBL) + (invrandy * iirMidRollerCL);
 				HighsSampleL = inputSampleL - iirMidRollerCL;
 				NonHighsSampleL = iirMidRollerCL;
-				
+
 				iirHeadBumpCL += (inputSampleL * 0.05);
 				iirHeadBumpCL -= (iirHeadBumpCL * iirHeadBumpCL * iirHeadBumpCL * HeadBumpFreq);
 				iirHeadBumpCL = (randy * iirHeadBumpAL) + (randy * iirHeadBumpBL) + (invrandy * iirHeadBumpCL);
-				
+
 				iirMidRollerCR = (iirMidRollerCR * (1.0 - RollAmount)) + (inputSampleR * RollAmount);
 				iirMidRollerCR = (randy * iirMidRollerAR) + (randy * iirMidRollerBR) + (invrandy * iirMidRollerCR);
 				HighsSampleR = inputSampleR - iirMidRollerCR;
 				NonHighsSampleR = iirMidRollerCR;
-				
+
 				iirHeadBumpCR += (inputSampleR * 0.05);
 				iirHeadBumpCR -= (iirHeadBumpCR * iirHeadBumpCR * iirHeadBumpCR * HeadBumpFreq);
 				iirHeadBumpCR = (randy * iirHeadBumpAR) + (randy * iirHeadBumpBR) + (invrandy * iirHeadBumpCR);
 				break;
 		}
 		flip++; //increment the triplet counter
-		
-		SubtractL = HighsSampleL;		
+
+		SubtractL = HighsSampleL;
 		bridgerectifierL = fabs(SubtractL)*1.57079633;
 		if (bridgerectifierL > 1.57079633) bridgerectifierL = 1.57079633;
 		bridgerectifierL = 1-cos(bridgerectifierL);
 		if (SubtractL > 0) SubtractL = bridgerectifierL;
 		if (SubtractL < 0) SubtractL = -bridgerectifierL;
 		inputSampleL -= SubtractL;
-		
-		SubtractR = HighsSampleR;		
+
+		SubtractR = HighsSampleR;
 		bridgerectifierR = fabs(SubtractR)*1.57079633;
 		if (bridgerectifierR > 1.57079633) bridgerectifierR = 1.57079633;
 		bridgerectifierR = 1-cos(bridgerectifierR);
@@ -616,14 +616,14 @@ void ToTape5::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		inputSampleR -= SubtractR;
 		//Soften works using the MidRoller stuff, defining a bright parallel channel that we apply negative Density
 		//to, and then subtract from the main audio. That makes the 'highs channel subtract' hit only the loudest
-		//transients, plus we are subtracting any artifacts we got from the negative Density.		
-		
+		//transients, plus we are subtracting any artifacts we got from the negative Density.
+
 		bridgerectifierL = fabs(inputSampleL);
 		if (bridgerectifierL > 1.57079633) bridgerectifierL = 1.57079633;
 		bridgerectifierL = sin(bridgerectifierL);
 		if (inputSampleL > 0) inputSampleL = bridgerectifierL;
 		if (inputSampleL < 0) inputSampleL = -bridgerectifierL;
-		
+
 		bridgerectifierR = fabs(inputSampleR);
 		if (bridgerectifierR > 1.57079633) bridgerectifierR = 1.57079633;
 		bridgerectifierR = sin(bridgerectifierR);
@@ -631,42 +631,42 @@ void ToTape5::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		if (inputSampleR < 0) inputSampleR = -bridgerectifierR;
 		//drive section: the tape sound includes a very gentle saturation curve, which is always an attenuation.
 		//we cut back on highs before hitting this, and then we're going to subtract highs a second time after.
-		
+
 		HeadBumpL = iirHeadBumpAL + iirHeadBumpBL + iirHeadBumpCL;
 		HeadBumpR = iirHeadBumpAR + iirHeadBumpBR + iirHeadBumpCR;
 		//begin PhaseNudge
 		allpasstemp = hcount - 1;
 		if (allpasstemp < 0 || allpasstemp > maxdelay) {allpasstemp = maxdelay;}
-		
+
 		HeadBumpL -= eL[allpasstemp] * fpOld;
 		eL[hcount] = HeadBumpL;
 		inputSampleL *= fpOld;
-		
+
 		HeadBumpR -= eR[allpasstemp] * fpOld;
 		eR[hcount] = HeadBumpR;
 		inputSampleR *= fpOld;
-		
+
 		hcount--; if (hcount < 0 || hcount > maxdelay) {hcount = maxdelay;}
 		HeadBumpL += (eL[hcount]);
 		HeadBumpR += (eR[hcount]);
-		//end PhaseNudge on head bump in lieu of delay. 
+		//end PhaseNudge on head bump in lieu of delay.
 		SubtractL -= (HeadBumpL * (HeadBumpControl+iirMinHeadBumpL));
 		SubtractR -= (HeadBumpR * (HeadBumpControl+iirMinHeadBumpR));
 		//makes a second soften and a single head bump after saturation.
 		//we are going to retain this, and then feed it into the highpass filter. That way, we can skip a subtract.
 		//Head Bump retains a trace which is roughly as large as what the highpass will do.
-		
+
 		tempSampleL = inputSampleL;
 		tempSampleR = inputSampleR;
-		
+
 		iirMinHeadBumpL = (iirMinHeadBumpL * altHBoostAmount) + (fabs(inputSampleL) * iirHBoostAmount);
 		if (iirMinHeadBumpL > 0.01) iirMinHeadBumpL = 0.01;
-		
+
 		iirMinHeadBumpR = (iirMinHeadBumpR * altHBoostAmount) + (fabs(inputSampleR) * iirHBoostAmount);
 		if (iirMinHeadBumpR > 0.01) iirMinHeadBumpR = 0.01;
 		//we want this one rectified so that it's a relatively steady positive value. Boosts can cause it to be
 		//greater than 1 so we clamp it in that case.
-		
+
 		iirSampleAL = (iirSampleAL * altAmount) + (tempSampleL * iirAmount); tempSampleL -= iirSampleAL; SubtractL += iirSampleAL;
 		iirSampleBL = (iirSampleBL * altAmount) + (tempSampleL * iirAmount); tempSampleL -= iirSampleBL; SubtractL += iirSampleBL;
 		iirSampleCL = (iirSampleCL * altAmount) + (tempSampleL * iirAmount); tempSampleL -= iirSampleCL; SubtractL += iirSampleCL;
@@ -693,7 +693,7 @@ void ToTape5::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		iirSampleXL = (iirSampleXL * altAmount) + (tempSampleL * iirAmount); tempSampleL -= iirSampleXL; SubtractL += iirSampleXL;
 		iirSampleYL = (iirSampleYL * altAmount) + (tempSampleL * iirAmount); tempSampleL -= iirSampleYL; SubtractL += iirSampleYL;
 		iirSampleZL = (iirSampleZL * altAmount) + (tempSampleL * iirAmount); tempSampleL -= iirSampleZL; SubtractL += iirSampleZL;
-		
+
 		iirSampleAR = (iirSampleAR * altAmount) + (tempSampleR * iirAmount); tempSampleR -= iirSampleAR; SubtractR += iirSampleAR;
 		iirSampleBR = (iirSampleBR * altAmount) + (tempSampleR * iirAmount); tempSampleR -= iirSampleBR; SubtractR += iirSampleBR;
 		iirSampleCR = (iirSampleCR * altAmount) + (tempSampleR * iirAmount); tempSampleR -= iirSampleCR; SubtractR += iirSampleCR;
@@ -723,21 +723,21 @@ void ToTape5::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		//do the IIR on a dummy sample, and store up the correction in a variable at the same scale as the very low level
 		//numbers being used. Don't keep doing it against the possibly high level signal number.
 		//This has been known to add a resonant quality to the cutoff, which we're using on purpose.
-		
+
 		inputSampleL -= SubtractL;
 		inputSampleR -= SubtractR;
 		//apply stored up tiny corrections.
-		
+
 		if (outputgain != 1.0) {
 			inputSampleL *= outputgain;
 			inputSampleR *= outputgain;
 		}
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

@@ -7,7 +7,7 @@
 #include "BussColors4.h"
 #endif
 
-void BussColors4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void BussColors4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -30,14 +30,14 @@ void BussColors4::processReplacing(float **inputs, float **outputs, VstInt32 sam
 	double dynamicconvR = 3.0;
 	double gain = 0.436;
 	double outgain = 1.0;
-	double bridgerectifier;	
+	double bridgerectifier;
 	float fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
+	long double fpNew = 1.0 - fpOld;
 
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	int console = (int)( A * 7.999 )+1; //the AU used a 1-8 index, will just keep it
 	switch (console)
 	{
@@ -56,7 +56,7 @@ void BussColors4::processReplacing(float **inputs, float **outputs, VstInt32 sam
 	outgain *= pow(10.0,(((C * 36.0)-18.0)+3.3)/14.0); //add adjustment factor
 	double wet = D;
 	double dry = 1.0 - wet;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -106,15 +106,15 @@ void BussColors4::processReplacing(float **inputs, float **outputs, VstInt32 sam
 			inputSampleL *= gain;
 			inputSampleR *= gain;
 		}
-		
-		
+
+
 		bridgerectifier = fabs(inputSampleL);
 		slowdynL *= 0.999;
 		slowdynL += bridgerectifier;
 		if (slowdynL > 1.5) {slowdynL = 1.5;}
 		//before the iron bar- fry console for crazy behavior
 		dynamicconvL = 2.5 + slowdynL;
-		
+
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
 		if (inputSampleL > 0) inputSampleL = bridgerectifier;
@@ -127,19 +127,19 @@ void BussColors4::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		if (slowdynR > 1.5) {slowdynR = 1.5;}
 		//before the iron bar- fry console for crazy behavior
 		dynamicconvR = 2.5 + slowdynR;
-		
+
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
 		if (inputSampleR > 0) inputSampleR = bridgerectifier;
 		else inputSampleR = -bridgerectifier;
 		//end pre saturation stage R
-		
+
 		if (gcount < 0 || gcount > 44) gcount = 44;
-		
+
 		dL[gcount+44] = dL[gcount] = fabs(inputSampleL);
 		controlL += (dL[gcount] / offsetA);
 		controlL -= (dL[gcount+offsetA] / offsetA);
-		controlL -= 0.000001;				
+		controlL -= 0.000001;
 		if (controlL < 0) controlL = 0;
 		if (controlL > 100) controlL = 100;
 		applyconvL = (controlL / offsetA) * dynamicconvL;
@@ -148,20 +148,20 @@ void BussColors4::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		dR[gcount+44] = dR[gcount] = fabs(inputSampleR);
 		controlR += (dR[gcount] / offsetA);
 		controlR -= (dR[gcount+offsetA] / offsetA);
-		controlR -= 0.000001;				
+		controlR -= 0.000001;
 		if (controlR < 0) controlR = 0;
 		if (controlR > 100) controlR = 100;
 		applyconvR = (controlR / offsetA) * dynamicconvR;
 		//now we have a 'sag' style average to apply to the conv, R
-		
+
 		gcount--;
-		
+
 		//now the convolution
 		for (int count = maxConvolutionBufferSize; count > 0; --count) {bL[count] = bL[count-1];} //was 173
 		//we're only doing assigns, and it saves us an add inside the convolution calculation
 		//therefore, we'll just assign everything one step along and have our buffer that way.
 		bL[0] = inputSampleL;
-		
+
 		for (int count = maxConvolutionBufferSize; count > 0; --count) {bR[count] = bR[count-1];} //was 173
 		//we're only doing assigns, and it saves us an add inside the convolution calculation
 		//therefore, we'll just assign everything one step along and have our buffer that way.
@@ -171,9 +171,9 @@ void BussColors4::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		//that the compiler wouldn't know to do 'em in batches or whatever. Just a thought, profiling would
 		//be the correct way to find out this (or indeed, whether doing another add insode the convolutions would
 		//be the best bet,
-		
+
 		//The convolutions!
-		
+
 		switch (console)
 		{
 			case 1:
@@ -773,7 +773,7 @@ void BussColors4::processReplacing(float **inputs, float **outputs, VstInt32 sam
 				//end Tube (Manley) conv
 				break;
 		}
-		
+
 		bridgerectifier = fabs(inputSampleL);
 		bridgerectifier = 1.0-cos(bridgerectifier);
 		if (inputSampleL > 0) inputSampleL -= bridgerectifier;
@@ -783,18 +783,18 @@ void BussColors4::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		bridgerectifier = 1.0-cos(bridgerectifier);
 		if (inputSampleR > 0) inputSampleR -= bridgerectifier;
 		else inputSampleR += bridgerectifier;
-		
-		
+
+
 		if (outgain != 1.0) {
 			inputSampleL *= outgain;
 			inputSampleR *= outgain;
 		}
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 32-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;
@@ -825,7 +825,7 @@ void BussColors4::processReplacing(float **inputs, float **outputs, VstInt32 sam
     }
 }
 
-void BussColors4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void BussColors4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -848,14 +848,14 @@ void BussColors4::processDoubleReplacing(double **inputs, double **outputs, VstI
 	double dynamicconvR = 3.0;
 	double gain = 0.436;
 	double outgain = 1.0;
-	double bridgerectifier;	
+	double bridgerectifier;
 	double fpTemp;
 	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	long double fpNew = 1.0 - fpOld;
+
 	long double inputSampleL;
 	long double inputSampleR;
-	
+
 	int console = (int)( A * 7.999 )+1; //the AU used a 1-8 index, will just keep it
 	switch (console)
 	{
@@ -874,7 +874,7 @@ void BussColors4::processDoubleReplacing(double **inputs, double **outputs, VstI
 	outgain *= pow(10.0,(((C * 36.0)-18.0)+3.3)/14.0); //add adjustment factor
 	double wet = D;
 	double dry = 1.0 - wet;
-	
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -919,67 +919,67 @@ void BussColors4::processDoubleReplacing(double **inputs, double **outputs, VstI
 		}
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
-		
+
 		if (gain != 1.0) {
 			inputSampleL *= gain;
 			inputSampleR *= gain;
 		}
-		
-		
+
+
 		bridgerectifier = fabs(inputSampleL);
 		slowdynL *= 0.999;
 		slowdynL += bridgerectifier;
 		if (slowdynL > 1.5) {slowdynL = 1.5;}
 		//before the iron bar- fry console for crazy behavior
 		dynamicconvL = 2.5 + slowdynL;
-		
+
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
 		if (inputSampleL > 0) inputSampleL = bridgerectifier;
 		else inputSampleL = -bridgerectifier;
 		//end pre saturation stage L
-		
+
 		bridgerectifier = fabs(inputSampleR);
 		slowdynR *= 0.999;
 		slowdynR += bridgerectifier;
 		if (slowdynR > 1.5) {slowdynR = 1.5;}
 		//before the iron bar- fry console for crazy behavior
 		dynamicconvR = 2.5 + slowdynR;
-		
+
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
 		if (inputSampleR > 0) inputSampleR = bridgerectifier;
 		else inputSampleR = -bridgerectifier;
 		//end pre saturation stage R
-		
+
 		if (gcount < 0 || gcount > 44) gcount = 44;
-		
+
 		dL[gcount+44] = dL[gcount] = fabs(inputSampleL);
 		controlL += (dL[gcount] / offsetA);
 		controlL -= (dL[gcount+offsetA] / offsetA);
-		controlL -= 0.000001;				
+		controlL -= 0.000001;
 		if (controlL < 0) controlL = 0;
 		if (controlL > 100) controlL = 100;
 		applyconvL = (controlL / offsetA) * dynamicconvL;
 		//now we have a 'sag' style average to apply to the conv, L
-		
+
 		dR[gcount+44] = dR[gcount] = fabs(inputSampleR);
 		controlR += (dR[gcount] / offsetA);
 		controlR -= (dR[gcount+offsetA] / offsetA);
-		controlR -= 0.000001;				
+		controlR -= 0.000001;
 		if (controlR < 0) controlR = 0;
 		if (controlR > 100) controlR = 100;
 		applyconvR = (controlR / offsetA) * dynamicconvR;
 		//now we have a 'sag' style average to apply to the conv, R
-		
+
 		gcount--;
-		
+
 		//now the convolution
 		for (int count = maxConvolutionBufferSize; count > 0; --count) {bL[count] = bL[count-1];} //was 173
 		//we're only doing assigns, and it saves us an add inside the convolution calculation
 		//therefore, we'll just assign everything one step along and have our buffer that way.
 		bL[0] = inputSampleL;
-		
+
 		for (int count = maxConvolutionBufferSize; count > 0; --count) {bR[count] = bR[count-1];} //was 173
 		//we're only doing assigns, and it saves us an add inside the convolution calculation
 		//therefore, we'll just assign everything one step along and have our buffer that way.
@@ -989,9 +989,9 @@ void BussColors4::processDoubleReplacing(double **inputs, double **outputs, VstI
 		//that the compiler wouldn't know to do 'em in batches or whatever. Just a thought, profiling would
 		//be the correct way to find out this (or indeed, whether doing another add insode the convolutions would
 		//be the best bet,
-		
+
 		//The convolutions!
-		
+
 		switch (console)
 		{
 			case 1:
@@ -1291,7 +1291,7 @@ void BussColors4::processDoubleReplacing(double **inputs, double **outputs, VstI
 				//end Tube (Manley) conv
 				break;
 		}
-		
+
 		switch (console)
 		{
 			case 1:
@@ -1591,28 +1591,28 @@ void BussColors4::processDoubleReplacing(double **inputs, double **outputs, VstI
 				//end Tube (Manley) conv
 				break;
 		}
-		
+
 		bridgerectifier = fabs(inputSampleL);
 		bridgerectifier = 1.0-cos(bridgerectifier);
 		if (inputSampleL > 0) inputSampleL -= bridgerectifier;
 		else inputSampleL += bridgerectifier;
-		
+
 		bridgerectifier = fabs(inputSampleR);
 		bridgerectifier = 1.0-cos(bridgerectifier);
 		if (inputSampleR > 0) inputSampleR -= bridgerectifier;
 		else inputSampleR += bridgerectifier;
-		
-		
+
+
 		if (outgain != 1.0) {
 			inputSampleL *= outgain;
 			inputSampleR *= outgain;
 		}
-		
+
 		if (wet !=1.0) {
 			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
-		
+
 		//noise shaping to 64-bit floating point
 		if (fpFlip) {
 			fpTemp = inputSampleL;

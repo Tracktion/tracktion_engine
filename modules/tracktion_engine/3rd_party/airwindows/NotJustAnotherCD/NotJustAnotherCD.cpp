@@ -24,7 +24,7 @@ NotJustAnotherCD::NotJustAnotherCD(audioMasterCallback audioMaster) :
 	bynL[9] = 46;
 	bynL[10] = 1000;
 	noiseShapingL = 0.0;
-	
+
 	bynR[0] = 1000;
 	bynR[1] = 301;
 	bynR[2] = 176;
@@ -38,10 +38,10 @@ NotJustAnotherCD::NotJustAnotherCD(audioMasterCallback audioMaster) :
 	bynR[10] = 1000;
 	noiseShapingR = 0.0;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -65,7 +65,7 @@ VstInt32 NotJustAnotherCD::getChunk (void** data, bool isPreset)
 }
 
 VstInt32 NotJustAnotherCD::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	return 0;
 }
 
@@ -85,7 +85,7 @@ void NotJustAnotherCD::getParameterDisplay(VstInt32 index, char *text) {
 void NotJustAnotherCD::getParameterLabel(VstInt32 index, char *text) {
 }
 
-VstInt32 NotJustAnotherCD::canDo(char *text) 
+VstInt32 NotJustAnotherCD::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool NotJustAnotherCD::getEffectName(char* name) {

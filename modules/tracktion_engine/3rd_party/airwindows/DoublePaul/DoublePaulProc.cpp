@@ -7,7 +7,7 @@
 #include "DoublePaul.h"
 #endif
 
-void DoublePaul::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) 
+void DoublePaul::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     float* in1  =  inputs[0];
     float* in2  =  inputs[1];
@@ -19,7 +19,7 @@ void DoublePaul::processReplacing(float **inputs, float **outputs, VstInt32 samp
 
 	long double inputSampleL;
 	long double inputSampleR;
-	    
+
     while (--sampleFrames >= 0)
     {
 		inputSampleL = *in1;
@@ -66,11 +66,11 @@ void DoublePaul::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		inputSampleL *= 8388608.0;
 		inputSampleR *= 8388608.0;
 		//0-1 is now one bit, now we dither
-		
+
 		bL[9] = bL[8]; bL[8] = bL[7]; bL[7] = bL[6]; bL[6] = bL[5];
 		bL[5] = bL[4]; bL[4] = bL[3]; bL[3] = bL[2]; bL[2] = bL[1];
 		bL[1] = bL[0]; bL[0] = (rand()/(double)RAND_MAX);
-		
+
 		currentDitherL  = (bL[0] * 0.061);
 		currentDitherL -= (bL[1] * 0.11);
 		currentDitherL += (bL[8] * 0.126);
@@ -86,14 +86,14 @@ void DoublePaul::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		//Therefore we add the most significant components LAST.
 		//trying to keep values on like exponents of the floating point value.
 		inputSampleL += currentDitherL;
-		
+
 		inputSampleL = floor(inputSampleL);
 			//done with L
-		
+
 		bR[9] = bR[8]; bR[8] = bR[7]; bR[7] = bR[6]; bR[6] = bR[5];
 		bR[5] = bR[4]; bR[4] = bR[3]; bR[3] = bR[2]; bR[2] = bR[1];
 		bR[1] = bR[0]; bR[0] = (rand()/(double)RAND_MAX);
-		
+
 		currentDitherR  = (bR[0] * 0.061);
 		currentDitherR -= (bR[1] * 0.11);
 		currentDitherR += (bR[8] * 0.126);
@@ -109,13 +109,13 @@ void DoublePaul::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		//Therefore we add the most significant components LAST.
 		//trying to keep values on like exponents of the floating point value.
 		inputSampleR += currentDitherR;
-		
+
 		inputSampleR = floor(inputSampleR);
 			//done with R
-		
+
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
-		
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -126,7 +126,7 @@ void DoublePaul::processReplacing(float **inputs, float **outputs, VstInt32 samp
     }
 }
 
-void DoublePaul::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
+void DoublePaul::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames)
 {
     double* in1  =  inputs[0];
     double* in2  =  inputs[1];
@@ -185,11 +185,11 @@ void DoublePaul::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		inputSampleL *= 8388608.0;
 		inputSampleR *= 8388608.0;
 		//0-1 is now one bit, now we dither
-		
+
 		bL[9] = bL[8]; bL[8] = bL[7]; bL[7] = bL[6]; bL[6] = bL[5];
 		bL[5] = bL[4]; bL[4] = bL[3]; bL[3] = bL[2]; bL[2] = bL[1];
 		bL[1] = bL[0]; bL[0] = (rand()/(double)RAND_MAX);
-		
+
 		currentDitherL  = (bL[0] * 0.061);
 		currentDitherL -= (bL[1] * 0.11);
 		currentDitherL += (bL[8] * 0.126);
@@ -205,14 +205,14 @@ void DoublePaul::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		//Therefore we add the most significant components LAST.
 		//trying to keep values on like exponents of the floating point value.
 		inputSampleL += currentDitherL;
-		
+
 		inputSampleL = floor(inputSampleL);
 		//done with L
-		
+
 		bR[9] = bR[8]; bR[8] = bR[7]; bR[7] = bR[6]; bR[6] = bR[5];
 		bR[5] = bR[4]; bR[4] = bR[3]; bR[3] = bR[2]; bR[2] = bR[1];
 		bR[1] = bR[0]; bR[0] = (rand()/(double)RAND_MAX);
-		
+
 		currentDitherR  = (bR[0] * 0.061);
 		currentDitherR -= (bR[1] * 0.11);
 		currentDitherR += (bR[8] * 0.126);
@@ -228,10 +228,10 @@ void DoublePaul::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		//Therefore we add the most significant components LAST.
 		//trying to keep values on like exponents of the floating point value.
 		inputSampleR += currentDitherR;
-		
+
 		inputSampleR = floor(inputSampleR);
 		//done with R
-		
+
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
 

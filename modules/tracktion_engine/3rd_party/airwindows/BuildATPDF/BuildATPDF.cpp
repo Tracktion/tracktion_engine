@@ -23,10 +23,10 @@ BuildATPDF::BuildATPDF(audioMasterCallback audioMaster) :
 	I = 0.5;
 	J = 0.5;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
-	
+
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
-    _canDo.insert("x2in2out"); 
+    _canDo.insert("x2in2out");
     setNumInputs(kNumInputs);
     setNumOutputs(kNumOutputs);
     setUniqueID(kUniqueId);
@@ -64,15 +64,15 @@ VstInt32 BuildATPDF::getChunk (void** data, bool isPreset)
 	chunkData[8] = I;
 	chunkData[9] = J;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
+	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
 	 started with. */
-	
+
 	*data = chunkData;
 	return kNumParameters * sizeof(float);
 }
 
 VstInt32 BuildATPDF::setChunk (void* data, VstInt32 byteSize, bool isPreset)
-{	
+{
 	float *chunkData = (float *)data;
 	A = pinParameter(chunkData[0]);
 	B = pinParameter(chunkData[1]);
@@ -85,8 +85,8 @@ VstInt32 BuildATPDF::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 	I = pinParameter(chunkData[8]);
 	J = pinParameter(chunkData[9]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
-	
-	/* calculate any other fields you need here - you could copy in 
+
+	/* calculate any other fields you need here - you could copy in
 	 code from setParameter() here. */
 	return 0;
 }
@@ -151,7 +151,7 @@ void BuildATPDF::getParameterDisplay(VstInt32 index, char *text) {
         case kParamH: float2string ((H*2)-1, text, kVstMaxParamStrLen); break;
         case kParamI: float2string ((I*2)-1, text, kVstMaxParamStrLen); break;
         case kParamJ: float2string ((J*2)-1, text, kVstMaxParamStrLen); break;
-		
+
         default: break; // unknown parameter, shouldn't happen!
 	} //this displays the values and handles 'popups' where it's discrete choices
 }
@@ -172,7 +172,7 @@ void BuildATPDF::getParameterLabel(VstInt32 index, char *text) {
     }
 }
 
-VstInt32 BuildATPDF::canDo(char *text) 
+VstInt32 BuildATPDF::canDo(char *text)
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
 bool BuildATPDF::getEffectName(char* name) {
