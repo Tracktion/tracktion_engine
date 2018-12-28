@@ -62,4 +62,4 @@ jobs:
       git checkout $(Build.SourceBranchName)
       git push git@github.com:Tracktion/tracktion_engine.git $(Build.SourceBranchName)
     displayName: Publishing to public repo
-    condition: and(succeeded(), in(variables['Build.SourceBranchName'], 'master', 'develop'))
+    condition: and(in(variables['Agent.JobStatus'], 'Succeeded'), in(variables['Build.SourceBranchName'], 'master', 'develop'))
