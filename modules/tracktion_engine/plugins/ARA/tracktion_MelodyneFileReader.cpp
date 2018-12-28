@@ -23,7 +23,9 @@
  #pragma clang diagnostic ignored "-Wconversion"
  #pragma clang diagnostic ignored "-Woverloaded-virtual"
  #pragma clang diagnostic ignored "-Wshadow"
- #pragma clang diagnostic ignored "-Wpragma-pack"
+ #if __clang_major__ >= 10
+  #pragma clang diagnostic ignored "-Wpragma-pack"
+ #endif
 #endif
 
 #undef PRAGMA_ALIGN_SUPPORTED
