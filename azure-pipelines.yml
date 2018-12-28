@@ -1,0 +1,60 @@
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+    - develop
+    - feature/*
+    - bugfix/*
+
+jobs:
+- job: linux
+  pool:
+    name: Default
+    demands:
+    - agent.os -equals Linux
+  timeoutInMinutes: 180
+  steps:
+  - checkout: self
+    submodules: true
+  - script: |
+      tests/linux/build_examples
+    displayName: 'Linux Build'
+
+- job: macOS
+  pool: 
+    name: Default
+    demands:
+    - agent.os -equals Darwin
+  timeoutInMinutes: 180
+  steps:
+  - checkout: self
+    submodules: true
+  - script:  |
+      tests/mac/build_examples
+    displayName: 'macOS Build'
+
+- job: windows
+  pool:
+    name: Default
+    demands:
+    - agent.os -equals Windows_NT
+  timeoutInMinutes: 180
+  steps:
+  - checkout: self
+    submodules: true
+  - script: |
+      set MSBUILD_EXE=C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\MSBuild.exe
+      tests/windows/build_examples.bat
+    displayName: 'Windows Build'
+
+- job: publish
+  pool: 
+    name: Default
+    demands:
+    - agent.os -equals Darwin
+  timeoutInMinutes: 15
+  steps:
+  - bash: "git push git@github.com:Tracktion/tracktion_engine.git $(Build.SourceBranch)"
+    displayName: Publishing to public repo
+    condition: and(succeeded(), in(variables['Build.SourceBranchName'], 'master', 'develop'))
