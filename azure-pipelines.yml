@@ -32,7 +32,7 @@ jobs:
   - checkout: self
     submodules: true
     clean: false
-  - script:  |
+  - script: |
       tests/mac/build_examples
     displayName: 'macOS Build'
 
@@ -58,6 +58,8 @@ jobs:
     - agent.os -equals Darwin
   timeoutInMinutes: 15
   steps:
-  - bash: "git push git@github.com:Tracktion/tracktion_engine.git $(Build.SourceBranchName)"
+  - bash: |
+      git checkout $(Build.SourceBranchName)
+      git push git@github.com:Tracktion/tracktion_engine.git $(Build.SourceBranchName)
     displayName: Publishing to public repo
     condition: and(succeeded(), in(variables['Build.SourceBranchName'], 'master', 'develop'))
