@@ -63,7 +63,8 @@ jobs:
   timeoutInMinutes: 15
   steps:
   - bash: |
-      git checkout -b $(Build.SourceBranchName) origin/$(Build.SourceBranchName) || git checkout $(Build.SourceBranchName)
+      git branch -d $(Build.SourceBranchName) || true
+      git checkout -b $(Build.SourceBranchName)
       git push git@github.com:Tracktion/tracktion_engine.git $(Build.SourceBranchName)
     displayName: Publishing to public repo
     condition: and(succeeded(), in(variables['Build.SourceBranchName'], 'master', 'develop'))
