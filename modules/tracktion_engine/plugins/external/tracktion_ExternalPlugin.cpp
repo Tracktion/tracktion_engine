@@ -432,7 +432,7 @@ namespace
     void flushBusesLayoutToValueTree (ExternalPlugin& plugin, UndoManager* um)
     {
         // Save buses layout
-        if (auto* ap = plugin.getAudioPluginInstance())
+        if (auto ap = plugin.getAudioPluginInstance())
         {
             auto mb = createBusesLayoutProperty (ap->getBusesLayout());
 
@@ -1499,7 +1499,10 @@ String ExternalPlugin::createPluginInstance (const PluginDescription& descriptio
                             .createPluginInstance (description, dm.getSampleRate(), dm.getBlockSize(), error));
 
     if (pluginInstance != nullptr)
+    {
+        pluginInstance->enableAllBuses();
         processorChangedManager = std::make_unique<ProcessorChangedManager> (*this);
+    }
 
     return error;
 }
@@ -1595,7 +1598,7 @@ void ExternalPlugin::valueTreePropertyChanged (ValueTree& v, const juce::Identif
         if (isFlushingLayoutToState)
             return;
 
-        if (auto* ap = getAudioPluginInstance())
+        if (auto ap = getAudioPluginInstance())
         {
             auto stateLayout = readBusesLayout (v.getProperty(IDs::layout), *ap);
 
