@@ -138,14 +138,6 @@ public:
         return parameterIndex;
     }
 
-    struct LengthComp
-    {
-        static int compareElements (const juce::String& first, const juce::String& second) noexcept
-        {
-            return first.length() - second.length();
-        }
-    };
-
     juce::String getParameterShortName (int suggestedLength) const override
     {
         if (auto p = getParam())

@@ -61,41 +61,27 @@ void TempoTrack::insertSpaceIntoTrack (double time, double amountOfSpace)
     edit.tempoSequence.insertSpaceIntoSequence (time, amountOfSpace, false);
 }
 
-struct TempoTrackSorter
-{
-    static int compareElements (TrackItem* first, TrackItem* second)
-    {
-        auto t1 = first->getPosition().getStart();
-        auto t2 = second->getPosition().getStart();
-
-        if (t1 < t2)  return -1;
-        if (t1 > t2)  return 1;
-
-        if (typeid (*first) == typeid (*second))
-            return 0;
-
-        if (typeid (*first) == typeid (TimeSigSetting))
-            return -1;
-
-        return 1;
-    }
-};
-
 juce::Array<TrackItem*> TempoTrack::buildTrackItemList() const
 {
     juce::Array<TrackItem*> items;
 
-    auto& ts = edit.tempoSequence;
-    auto& ps = edit.pitchSequence;
+    items.addArray (edit.tempoSequence.getTimeSigs());
+    items.addArray (edit.pitchSequence.getPitches());
 
-    for (int i = 0; i < ts.getNumTimeSigs(); ++i)
-        items.add (ts.getTimeSig (i));
+    std::sort (items.begin(), items.end(),
+               [] (TrackItem* a, TrackItem* b)
+               {
+                   auto t1 = a->getPosition().getStart();
+                   auto t2 = b->getPosition().getStart();
 
-    for (int i = 0; i < ps.getNumPitches(); ++i)
-        items.add (ps.getPitch (i));
+                   if (t1 != t2)
+                       return t1 < t2;
 
-    TempoTrackSorter tts;
-    items.sort (tts);
+                   if (typeid (*a) == typeid (*b))
+                       return false;
+
+                   return typeid (*a) == typeid (TimeSigSetting);
+               });
 
     return items;
 }

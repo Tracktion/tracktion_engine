@@ -28,6 +28,7 @@ public:
     void copyFrom (const PitchSequence&);
     void clear();
 
+    const juce::Array<PitchSetting*>& getPitches() const;
     int getNumPitches() const;
     PitchSetting* getPitch (int index) const;
     PitchSetting& getPitchAt (double time) const;

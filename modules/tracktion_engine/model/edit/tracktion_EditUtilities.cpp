@@ -413,8 +413,7 @@ void moveSelectedClips (const SelectableList& selectedObjectsIn, Edit& edit, Mov
 
             if (! clipsInTrack.isEmpty())
             {
-                TrackItemStartTimeSorter sorter;
-                clipsInTrack.sort (sorter);
+                TrackItem::sortByTime (clipsInTrack);
 
                 if (mode == MoveClipAction::moveToEndOfLast)
                 {
@@ -553,8 +552,7 @@ void mergeMidiClips (juce::Array<MidiClip*> clips)
         if (c->getClipTrack() == nullptr || c->getClipTrack()->isFrozen (Track::anyFreeze))
             return;
 
-    TrackItemStartTimeSorter sorter;
-    clips.sort (sorter);
+    TrackItem::sortByTime (clips);
 
     if (auto first = clips.getFirst())
     {

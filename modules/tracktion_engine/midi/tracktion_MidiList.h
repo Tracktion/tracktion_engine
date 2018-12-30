@@ -149,29 +149,19 @@ public:
                                             bool importAsNoteExpression);
 
     //==============================================================================
-    template<typename EventType>
-    struct MidiPositionComparator
+    template <typename Type>
+    static void sortMidiEventsByTime (juce::Array<Type>& notes)
     {
-        static int compareElements (const EventType* first, const EventType* second) noexcept
-        {
-            auto p1 = first->getBeatPosition();
-            auto p2 = second->getBeatPosition();
+        std::sort (notes.begin(), notes.end(),
+                   [] (const Type& a, const Type& b) { return a->getBeatPosition() < b->getBeatPosition(); });
+    }
 
-            return p1 == p2 ? 0 : (p1 > p2 ? 1 : -1);
-        }
-    };
-
-    struct MidiNoteNumberComparator
+    template <typename Type>
+    static void sortMidiEventsByNoteNumber (juce::Array<Type>& notes)
     {
-        static int compareElements (const MidiNote* first, const MidiNote* second) noexcept
-        {
-            auto p1 = first->getNoteNumber();
-            auto p2 = second->getNoteNumber();
-
-            return p1 == p2 ? 0 : (p1 > p2 ? 1 : -1);
-        }
-    };
-
+        std::sort (notes.begin(), notes.end(),
+                   [] (const Type& a, const Type& b) { return a->getNoteNumber() < b->getNoteNumber(); });
+    }
 
     //==============================================================================
     juce::ValueTree state;
@@ -246,11 +236,8 @@ private:
             if (needsSorting)
             {
                 needsSorting = false;
-
                 sortedEvents = ValueTreeObjectList<EventType>::objects;
-
-                MidiPositionComparator<EventType> sorter;
-                sortedEvents.sort (sorter);
+                sortMidiEventsByTime (sortedEvents);
             }
 
             return sortedEvents;

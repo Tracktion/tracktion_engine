@@ -108,8 +108,44 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
 
     void handleAsyncUpdate() override
     {
+        sortClips (clipTrack.state, &clipTrack.edit.getUndoManager());
+    }
+
+    static void sortClips (ValueTree& state, UndoManager* um)
+    {
+        struct Sorter
+        {
+            static int getPriority (const juce::Identifier& i)
+            {
+                if (i == IDs::AUTOMATIONTRACK)  return 0;
+                if (Clip::isClipState (i))      return 1;
+                if (i == IDs::PLUGIN)           return 2;
+                if (i == IDs::OUTPUTDEVICES)    return 3;
+                if (i == IDs::LFOS)             return 4;
+
+                return -1;
+            }
+
+            int compareElements (const juce::ValueTree& first, const juce::ValueTree& second) const noexcept
+            {
+                auto priority = getPriority (first.getType()) - getPriority (second.getType());
+
+                if (priority != 0)
+                    return priority;
+
+                if (Clip::isClipState (first) && Clip::isClipState (second))
+                {
+                    double t1 = first[IDs::start];
+                    double t2 = second[IDs::start];
+                    return t1 < t2 ? -1 : (t2 < t1 ? 1 : 0);
+                }
+
+                return 0;
+            }
+        };
+
         Sorter clipSorter;
-        clipTrack.state.sort (clipSorter, &clipTrack.edit.getUndoManager(), true);
+        state.sort (clipSorter, um, true);
     }
 
     void editFinishedLoading()
@@ -122,37 +158,6 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
 
         clipTrack.trackItemsDirty = true;
     }
-
-    struct Sorter
-    {
-        static int getPriority (const juce::Identifier& i)
-        {
-            if (i == IDs::AUTOMATIONTRACK)  return 0;
-            if (Clip::isClipState (i))      return 1;
-            if (i == IDs::PLUGIN)           return 2;
-            if (i == IDs::OUTPUTDEVICES)    return 3;
-            if (i == IDs::LFOS)             return 4;
-
-            return -1;
-        }
-
-        int compareElements (const juce::ValueTree& first, const juce::ValueTree& second) const noexcept
-        {
-            auto priority = getPriority (first.getType()) - getPriority (second.getType());
-
-            if (priority != 0)
-                return priority;
-
-            if (Clip::isClipState (first) && Clip::isClipState (second))
-            {
-                double t1 = first[IDs::start];
-                double t2 = second[IDs::start];
-                return t1 < t2 ? -1 : (t2 < t1 ? 1 : 0);
-            }
-
-            return 0;
-        }
-    };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ClipList)
 };
@@ -306,8 +311,7 @@ struct ClipTrack::CollectionClipList  : public ValueTree::Listener
 ClipTrack::ClipTrack (Edit& edit, const ValueTree& v, double defaultHeight, double minHeight, double maxHeight)
     : Track (edit, v, defaultHeight, minHeight, maxHeight)
 {
-    ClipList::Sorter sorter;
-    state.sort (sorter, &edit.getUndoManager(), true);
+    ClipList::sortClips (state, &edit.getUndoManager());
 
     collectionClipList.reset (new CollectionClipList (*this, state));
     clipList.reset (new ClipList (*this, state));
@@ -343,8 +347,7 @@ void ClipTrack::refreshTrackItems() const
         for (auto cc : collectionClipList->collectionClips)
             trackItems.add (cc);
 
-        TrackItemStartTimeSorter sorter;
-        trackItems.sort (sorter);
+        TrackItem::sortByTime (trackItems);
     }
 }
 

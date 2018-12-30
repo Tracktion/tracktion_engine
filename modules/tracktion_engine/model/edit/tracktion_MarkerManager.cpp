@@ -26,13 +26,13 @@ ReferenceCountedArray<MarkerClip> MarkerManager::getMarkers() const
 {
     CRASH_TRACER
     ReferenceCountedArray<MarkerClip> results;
-    TrackItemStartTimeSorter sorter;
 
     if (auto mt = edit.getMarkerTrack())
         for (auto clip : mt->getClips())
             if (auto mc = dynamic_cast<MarkerClip*> (clip))
-                results.addSorted (sorter, mc);
+                results.add (mc);
 
+    TrackItem::sortByTime (results);
     return results;
 }
 

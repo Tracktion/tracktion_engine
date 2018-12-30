@@ -289,14 +289,6 @@ public:
         pluginsServedThisFrame = 0;
     }
 
-    struct ReWireMidiMessageSorter
-    {
-        static int compareElements (ReWireMIDIEvent* first, ReWireMIDIEvent* second) noexcept
-        {
-            return first->fRelativeSamplePos - second->fRelativeSamplePos;
-        }
-    };
-
     void getAudioOutput (const AudioRenderContext& fc,
                          int leftChannelIndex, int rightChannelIndex,
                          int bus, int channel)
@@ -345,8 +337,8 @@ public:
 
             if (storedMessages.size() > 0)
             {
-                ReWireMidiMessageSorter sorter;
-                storedMessages.sort (sorter);
+                std::sort (storedMessages.begin(), storedMessages.end(),
+                           [] (ReWireMIDIEvent* a, ReWireMIDIEvent* b) { return a->fRelativeSamplePos < b->fRelativeSamplePos; });
 
                 auto* event = &in.fEventInBuffer.fEventBuffer [in.fEventInBuffer.fCount];
                 const int num = jmin (storedMessages.size(), (int) inputEventBufferSize);

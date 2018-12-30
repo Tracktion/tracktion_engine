@@ -2521,10 +2521,16 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
                 *couldMatchTempo = true;
 
             auto& targetPitch = editToMatch->pitchSequence.getPitchAt (0.01);
-            auto firstPitch = edit->pitchSequence.getPitch (0);
 
-            firstPitch->setPitch (targetPitch.getPitch());
-            firstPitch->setScaleID (targetPitch.getScale());
+            if (auto firstPitch = edit->pitchSequence.getPitch (0))
+            {
+                firstPitch->setPitch (targetPitch.getPitch());
+                firstPitch->setScaleID (targetPitch.getScale());
+            }
+            else
+            {
+                jassertfalse;
+            }
         }
 
         if (resizeClip)

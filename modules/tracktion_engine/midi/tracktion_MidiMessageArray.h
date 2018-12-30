@@ -40,12 +40,12 @@ struct MidiMessageArray
     bool isNotEmpty() const noexcept                                { return ! messages.isEmpty(); }
 
     int size() const noexcept                                       { return messages.size(); }
-    MidiMessageWithSource& operator[] (int i) const noexcept        { return messages.getReference(i); }
+    MidiMessageWithSource& operator[] (int i) const                 { return messages.getReference(i); }
 
     MidiMessageWithSource* begin() const noexcept                   { return messages.begin(); }
     MidiMessageWithSource* end() const noexcept                     { return messages.end(); }
 
-    void remove (int index) noexcept                                { messages.remove (index); }
+    void remove (int index)                                         { messages.remove (index); }
 
     void swapWith (MidiMessageArray& other) noexcept
     {
@@ -207,18 +207,10 @@ struct MidiMessageArray
             m.multiplyVelocity (factor);
     }
 
-    void sortByTimestamp() noexcept
+    void sortByTimestamp()
     {
-        struct MidiMessageSorter
-        {
-            static int compareElements (const juce::MidiMessage& first, const juce::MidiMessage& second) noexcept
-            {
-                return first.getTimeStamp() >= second.getTimeStamp() ? 1 : -1;
-            }
-        };
-
-        MidiMessageSorter sorter;
-        messages.sort (sorter);
+        std::sort (messages.begin(), messages.end(),
+                   [] (const juce::MidiMessage& a, const juce::MidiMessage& b) { return a.getTimeStamp() < b.getTimeStamp(); });
     }
 
     void reserve (int size)

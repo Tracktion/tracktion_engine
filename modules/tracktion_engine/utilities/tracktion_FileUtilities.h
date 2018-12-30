@@ -54,21 +54,6 @@ private:
 };
 
 //==============================================================================
-struct SortFilesFoldersFirst
-{
-    static int compareElements (const juce::File& first, const juce::File& second)
-    {
-        const bool d1 = first.isDirectory();
-        const bool d2 = second.isDirectory();
-
-        if (d1 == d2)
-            return first.getFileName().compareNatural (second.getFileName());
-
-        return d1 ? -1 : 1;
-    }
-};
-
-//==============================================================================
 struct FileDragList  : public juce::ReferenceCountedObject
 {
     enum PreferredLayout

@@ -64,19 +64,22 @@ public:
 
     const Type type;
 
+    template <typename ArrayType>
+    static void sortByTime (ArrayType& items)
+    {
+        std::sort (items.begin(), items.end(),
+                   [] (const TrackItem* a, const TrackItem* b) { return a->getPosition().time.start < b->getPosition().time.start; });
+    }
+
+    template <typename ArrayType>
+    static void stableSortByTime (ArrayType& items)
+    {
+        std::stable_sort (items.begin(), items.end(),
+                          [] (const TrackItem* a, const TrackItem* b) { return a->getPosition().time.start < b->getPosition().time.start; });
+    }
+
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackItem)
-};
-
-//==============================================================================
-struct TrackItemStartTimeSorter
-{
-    static int compareElements (const TrackItem* first, const TrackItem* second) noexcept
-    {
-        auto t1 = first->getPosition().time.start;
-        auto t2 = second->getPosition().time.start;
-        return t1 < t2 ? -1 : (t2 < t1 ? 1 : 0);
-    }
 };
 
 

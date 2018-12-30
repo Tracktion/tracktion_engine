@@ -336,8 +336,7 @@ void FolderTrack::generateCollectionClips (SelectionManager& sm)
         for (auto at : getAllAudioSubTracks (true))
             clips.addArray (at->getClips());
 
-        TrackItemStartTimeSorter sorter;
-        clips.sort (sorter);
+        TrackItem::sortByTime (clips);
 
         // remove any that are already in a collection clip
         for (int i = clips.size(); --i >= 0;)
