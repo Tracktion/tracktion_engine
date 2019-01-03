@@ -106,13 +106,16 @@ public:
     Scale (ScaleType type = major);
 
     ScaleType getType() const { return type; }
+    
     juce::String getName() const;
+    juce::String getShortName() const;
 
     static juce::StringArray getIntervalNames();
 
     static juce::Array<ScaleType> getAllScaleTypes();
     static juce::StringArray getScaleStrings();
     static juce::String getNameForType (ScaleType type);
+    static juce::String getShortNameForType (ScaleType type);
     static ScaleType getTypeFromName (juce::String name);
 
     juce::Array<int> getSteps (int octaves = 1) const;

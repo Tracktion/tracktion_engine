@@ -325,6 +325,11 @@ juce::String Scale::getName() const
 {
     return getNameForType (type);
 }
+    
+juce::String Scale::getShortName() const
+{
+    return getShortNameForType (type);
+}
 
 juce::String Scale::getNameForType (ScaleType type)
 {
@@ -341,6 +346,25 @@ juce::String Scale::getNameForType (ScaleType type)
         case minor:             return TRANS("Minor");
         case melodicMinor:      return TRANS("Melodic Minor");
         case harmonicMinor:     return TRANS("Harmonic Minor");
+        default: jassertfalse;  return {};
+    }
+}
+    
+juce::String Scale::getShortNameForType (ScaleType type)
+{
+    switch (type)
+    {
+        case ionian:            return TRANS("Ion");
+        case dorian:            return TRANS("Dor");
+        case phrygian:          return TRANS("Phr");
+        case lydian:            return TRANS("Lyd");
+        case mixolydian:        return TRANS("Mix");
+        case aeolian:           return TRANS("Aeo");
+        case locrian:           return TRANS("Loc");
+        case major:             return TRANS("Maj");
+        case minor:             return TRANS("Min");
+        case melodicMinor:      return TRANS("Mel");
+        case harmonicMinor:     return TRANS("Har");
         default: jassertfalse;  return {};
     }
 }
