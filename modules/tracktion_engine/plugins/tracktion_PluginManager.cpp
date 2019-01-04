@@ -470,6 +470,7 @@ void PluginManager::initialise()
     createBuiltInType<AirWindowsHardVacuum>();
     createBuiltInType<AirWindowsHombre>();
     createBuiltInType<AirWindowsMelt>();
+    createBuiltInType<AirWindowsMidSide>();
     createBuiltInType<AirWindowsNC17>();
     createBuiltInType<AirWindowsNoise>();
     createBuiltInType<AirWindowsNonlinearSpace>();

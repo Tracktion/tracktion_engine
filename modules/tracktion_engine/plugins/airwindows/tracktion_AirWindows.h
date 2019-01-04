@@ -149,6 +149,7 @@ AIRWINDOWSPLUGIN(AirWindowsGuitarConditioner, "Guitar Conditioner");
 AIRWINDOWSPLUGIN(AirWindowsHardVacuum, "Hard Vacuum");
 AIRWINDOWSPLUGIN(AirWindowsHombre, "Hombre");
 AIRWINDOWSPLUGIN(AirWindowsMelt, "Melt");
+AIRWINDOWSPLUGIN(AirWindowsMidSide, "Mid Side");
 AIRWINDOWSPLUGIN(AirWindowsNC17, "NC-17");
 AIRWINDOWSPLUGIN(AirWindowsNoise, "Noise");
 AIRWINDOWSPLUGIN(AirWindowsNonlinearSpace, "Nonlinear Space");

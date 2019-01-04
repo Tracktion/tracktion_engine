@@ -237,6 +237,11 @@ namespace melt
  #include "3rd_party/airwindows/Melt/Melt.cpp"
  #include "3rd_party/airwindows/Melt/MeltProc.cpp"
 }
+namespace midside
+{
+ #include "3rd_party/airwindows/MidSide/MidSide.cpp"
+ #include "3rd_party/airwindows/MidSide/MidSideProc.cpp"
+}
 namespace nc17
 {
  #include "3rd_party/airwindows/NCSeventeen/NCSeventeen.cpp"
