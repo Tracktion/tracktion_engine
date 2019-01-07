@@ -57,6 +57,8 @@ public:
     void initialise (const PlaybackInitialisationInfo&) override;
     void deinitialise() override;
     void applyToBuffer (const AudioRenderContext&) override;
+    
+    void resetToDefault();
 
     //==============================================================================
     bool takesAudioInput() override                  { return true; }
@@ -75,6 +77,7 @@ protected:
     friend AirWindowsAutomatableParameter;
     friend AirWindowsCallback;
 
+    void setConversionRange (int param, juce::NormalisableRange<float> range);
     void processBlock (juce::AudioBuffer<float>& buffer);
 
     AirWindowsCallback callback;

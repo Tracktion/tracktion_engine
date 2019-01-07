@@ -32,12 +32,48 @@ public:
         valueToStringFunction = [] (float v)  { return String (v); };
         stringToValueFunction = [] (String v) { return v.getFloatValue(); };
 
-        setParameter (plugin.impl->getParameter (idx), sendNotification);
+        defaultValue = plugin.impl->getParameter (idx);
+        
+        setParameter (defaultValue, sendNotification);
+        
+        autodetectRange();
     }
 
     ~AirWindowsAutomatableParameter()
     {
         notifyListenersOfDeletion();
+    }
+    
+    void resetToDefault()
+    {
+        setParameter (defaultValue, sendNotificationSync);
+    }
+    
+    void autodetectRange()
+    {
+        float current = plugin.impl->getParameter (index);
+        
+        plugin.impl->setParameter (index, 0.0f);
+        float v1 = getCurrentValueAsString().retainCharacters ("1234567890-.").getFloatValue();
+        plugin.impl->setParameter (index, 1.0f);
+        float v2 = getCurrentValueAsString().retainCharacters ("1234567890-.").getFloatValue();
+        
+        if (v2 > v1 && (v1 != 0.0f || v2 != 1.0f))
+            setConversionRange ({v1, v2});
+        
+        plugin.impl->setParameter (index, current);
+    }
+    
+    void refresh()
+    {
+        currentValue = currentParameterValue = plugin.impl->getParameter (index);
+    }
+    
+    void setConversionRange (juce::NormalisableRange<float> range)
+    {
+        conversionRange = range;
+        
+        stringToValueFunction = [this] (String v) { return conversionRange.convertTo0to1 (v.getFloatValue()); };
     }
 
     void parameterChanged (float newValue, bool byAutomation) override
@@ -55,7 +91,15 @@ public:
     {
         char paramText[kVstMaxParamStrLen];
         plugin.impl->getParameterDisplay (index, paramText);
-        return String (paramText).substring (0, 4);
+        auto t1 = String (paramText);
+        
+        char labelText[kVstMaxParamStrLen];
+        plugin.impl->getParameterLabel (index, labelText);
+        auto t2 = String (labelText);
+        
+        if (t2.isNotEmpty())
+            return t1 + " " + t2;
+        return t1;
     }
 
     void markAsChanged() const noexcept
@@ -77,6 +121,8 @@ public:
 
     AirWindowsPlugin& plugin;
     int index = 0;
+    float defaultValue = 0.0f;
+    juce::NormalisableRange<float> conversionRange;
 };
 
 //==============================================================================
@@ -84,8 +130,6 @@ AirWindowsPlugin::AirWindowsPlugin (PluginCreationInfo info, std::unique_ptr<Air
     : Plugin (info), callback (*this), impl (std::move (base))
 {
     auto um = getUndoManager();
-
-    restorePluginStateFromValueTree (state);
 
     for (int i = 0; i < impl->getNumParameters(); i++)
     {
@@ -97,6 +141,12 @@ AirWindowsPlugin::AirWindowsPlugin (PluginCreationInfo info, std::unique_ptr<Air
         addAutomatableParameter (param);
         parameters.add (param);
     }
+    
+    restorePluginStateFromValueTree (state);
+    
+    for (auto p : parameters)
+        if (auto awp = dynamic_cast<AirWindowsAutomatableParameter*> (p))
+            awp->refresh();
 
     addAutomatableParameter (dryGain = new PluginWetDryAutomatableParam ("dry level", TRANS("Dry Level"), *this));
     addAutomatableParameter (wetGain = new PluginWetDryAutomatableParam ("wet level", TRANS("Wet Level"), *this));
@@ -112,6 +162,24 @@ AirWindowsPlugin::~AirWindowsPlugin()
 {
     dryGain->detachFromCurrentValue();
     wetGain->detachFromCurrentValue();
+}
+    
+void AirWindowsPlugin::setConversionRange (int paramIdx, juce::NormalisableRange<float> range)
+{
+    if (auto p = dynamic_cast<AirWindowsAutomatableParameter*> (parameters[paramIdx].get()))
+        p->setConversionRange (range);
+    else
+        jassertfalse;
+}
+    
+void AirWindowsPlugin::resetToDefault()
+{
+    for (auto p : parameters)
+        if (auto awp = dynamic_cast<AirWindowsAutomatableParameter*> (p))
+            awp->resetToDefault();
+    
+    dryGain->setParameter (0.0f, sendNotificationSync);
+    wetGain->setParameter (1.0f, sendNotificationSync);
 }
 
 int AirWindowsPlugin::getNumOutputChannelsGivenInputs (int)

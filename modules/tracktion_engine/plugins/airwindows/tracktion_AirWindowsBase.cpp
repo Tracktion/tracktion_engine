@@ -25,7 +25,15 @@ namespace tracktion_engine
 
 void float2string (float f, char* text, int len)
 {
-    String str (f);
+    int decimals = 0;
+    if (std::fabs (f) >= 10.0)
+        decimals = 1;
+    else if (std::fabs (f) > 1.0)
+        decimals = 2;
+    else
+        decimals = 3;
+    
+    String str (f, decimals);
     str.copyToUTF8 (text, (size_t)len);
 }
 
