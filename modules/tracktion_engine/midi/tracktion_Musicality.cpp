@@ -604,8 +604,9 @@ juce::String PatternGenerator::ProgressionItem::getChordSymbol()
         Scale scale = generator.getScaleAtBeat (beat);
         const int root = getRootNote (generator.getNoteAtBeat (beat), scale);
         Chord chord = getChord (scale);
+        bool sharp = generator.clip.edit.pitchSequence.getPitchAtBeat (generator.clip.getStartBeat() + beat).accidentalsSharp;
 
-        return juce::MidiMessage::getMidiNoteName (root, true, false, 0) + chord.getSymbol();
+        return juce::MidiMessage::getMidiNoteName (root, sharp, false, 0) + chord.getSymbol();
     }
 
     return chordName;

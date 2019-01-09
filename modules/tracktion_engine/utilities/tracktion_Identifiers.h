@@ -99,6 +99,7 @@ namespace IDs
     DECLARE_ID (title)
     DECLARE_ID (start)
     DECLARE_ID (pitch)
+    DECLARE_ID (accidentalsSharp)
     DECLARE_ID (scale)
     DECLARE_ID (trackNumber)
     DECLARE_ID (automationRead)

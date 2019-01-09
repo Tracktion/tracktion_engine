@@ -44,6 +44,7 @@ public:
     juce::ValueTree state;
     juce::CachedValue<double> startBeat;
     juce::CachedValue<int> pitch;
+    juce::CachedValue<bool> accidentalsSharp;
     juce::CachedValue<Scale::ScaleType> scale;
 
 private:

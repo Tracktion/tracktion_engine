@@ -18,6 +18,7 @@ PitchSetting::PitchSetting (Edit& ed, const ValueTree& v)
 
     startBeat.referTo (state, IDs::startBeat, um);
     pitch.referTo (state, IDs::pitch, um, 60);
+    accidentalsSharp.referTo (state, IDs::accidentalsSharp, um, true);
     scale.referTo (state, IDs::scale, um, Scale::major);
 
     state.addListener (this);
@@ -32,7 +33,7 @@ PitchSetting::~PitchSetting()
 
 String PitchSetting::getName()
 {
-    return MidiMessage::getMidiNoteName (pitch, true, false, edit.engine.getEngineBehaviour().getMiddleCOctave());
+    return MidiMessage::getMidiNoteName (pitch, accidentalsSharp, false, edit.engine.getEngineBehaviour().getMiddleCOctave());
 }
 
 String PitchSetting::getSelectableDescription()
