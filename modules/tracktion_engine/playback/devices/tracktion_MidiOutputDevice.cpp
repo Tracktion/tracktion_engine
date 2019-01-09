@@ -368,10 +368,10 @@ bool MidiOutputDevice::getControllerOffMessagesSent (Engine& e)
     return e.getPropertyStorage().getProperty (SettingID::sendControllerOffMessages, true);
 }
 
-String MidiOutputDevice::getNameForMidiNoteNumber (int note, int midiChannel) const
+String MidiOutputDevice::getNameForMidiNoteNumber (int note, int midiChannel, bool useSharp) const
 {
     return midiChannel == 10 ? TRANS(MidiMessage::getRhythmInstrumentName (note))
-                             : MidiMessage::getMidiNoteName (note, true, true,
+                             : MidiMessage::getMidiNoteName (note, useSharp, true,
                                                              engine.getEngineBehaviour().getMiddleCOctave());
 }
 

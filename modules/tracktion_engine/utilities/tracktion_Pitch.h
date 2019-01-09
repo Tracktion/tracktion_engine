@@ -55,12 +55,22 @@ struct Pitch
         return 60;
     }
 
-    static juce::StringArray getPitchStrings (Engine& engine)
+    static juce::StringArray getPitchStrings (Engine& engine, bool separateSharpFlat)
     {
         juce::StringArray pitchChoices;
 
-        for (int i = 0; i < 12; ++i)
-            pitchChoices.add (getPitchAsString (engine, i + 60));
+        if (separateSharpFlat)
+        {
+            for (int i = 0; i < 12; ++i)
+                for (auto s : getPitchAsStrings (engine, i + 60))
+                    if (! s.contains ("/"))
+                        pitchChoices.add (s);
+        }
+        else
+        {
+            for (int i = 0; i < 12; ++i)
+                pitchChoices.add (getPitchAsString (engine, i + 60));
+        }
 
         return pitchChoices;
     }

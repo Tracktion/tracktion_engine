@@ -31,7 +31,7 @@ public:
     static void setControllerOffMessagesSent (Engine&, bool);
     static bool getControllerOffMessagesSent (Engine&);
 
-    juce::String getNameForMidiNoteNumber (int note, int midiChannel) const;
+    juce::String getNameForMidiNoteNumber (int note, int midiChannel, bool useSharp = true) const;
 
     bool isConnectedToExternalController() const;
 
