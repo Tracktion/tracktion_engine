@@ -205,6 +205,7 @@ public:
     juce::StringArray getPossibleTriadNames() const;
     juce::StringArray getPossibleSeventhNames() const;
 
+    int getChordProgressionLength() const;
     const juce::Array<ProgressionItem*>& getChordProgression() const noexcept;
     void setChordProgression (juce::ValueTree v);
 

@@ -589,27 +589,22 @@ bool PatternGenerator::ProgressionItem::isRomanNumeral() const
 
 juce::String PatternGenerator::ProgressionItem::getChordSymbol()
 {
-    if (isRomanNumeral())
+    double beat = 0;
+
+    for (auto itm : generator.getChordProgression())
     {
-        double beat = 0;
+        if (itm == this)
+            break;
 
-        for (auto itm : generator.getChordProgression())
-        {
-            if (itm == this)
-                break;
-
-            beat += itm->lengthInBeats;
-        }
-
-        Scale scale = generator.getScaleAtBeat (beat);
-        const int root = getRootNote (generator.getNoteAtBeat (beat), scale);
-        Chord chord = getChord (scale);
-        bool sharp = generator.clip.edit.pitchSequence.getPitchAtBeat (generator.clip.getStartBeat() + beat).accidentalsSharp;
-
-        return juce::MidiMessage::getMidiNoteName (root, sharp, false, 0) + chord.getSymbol();
+        beat += itm->lengthInBeats;
     }
 
-    return chordName;
+    Scale scale = generator.getScaleAtBeat (beat);
+    const int root = getRootNote (generator.getNoteAtBeat (beat), scale);
+    Chord chord = getChord (scale);
+    bool sharp = generator.clip.edit.pitchSequence.getPitchAtBeat (generator.clip.getStartBeat() + beat).accidentalsSharp;
+
+    return juce::MidiMessage::getMidiNoteName (root, sharp, false, 0) + chord.getSymbol();
 }
 
 int PatternGenerator::ProgressionItem::getRootNote (int key, const Scale& scale)
@@ -728,6 +723,11 @@ void PatternGenerator::validateChordLengths()
             break;
         }
     }
+}
+    
+int PatternGenerator::getChordProgressionLength() const
+{
+    return progressionList->size();
 }
 
 const juce::Array<PatternGenerator::ProgressionItem*>& PatternGenerator::getChordProgression() const noexcept
@@ -924,26 +924,17 @@ juce::String PatternGenerator::formatChordName (juce::String simplifiedChordName
 juce::StringArray PatternGenerator::getChordProgressionChordNames (bool simplified) const
 {
     juce::StringArray res;
-
-    auto progression = state.getChildWithName (IDs::PROGRESSION);
-
-    if (progression.isValid())
+    
+    for (auto item : *progressionList)
     {
-        for (int i = 0; i < progression.getNumChildren(); i++)
-        {
-            auto progressionItem = progression.getChild (i);
-
-            if (progressionItem.hasType (IDs::PROGRESSIONITEM))
-            {
-                auto name = progressionItem.getProperty (IDs::name);
-
-                if (simplified)
-                    res.add (name);
-                else
-                    res.add (formatChordName (name));
-            }
-        }
+        if (simplified)
+            res.add (item->chordName);
+        else if (item->isRomanNumeral())
+            res.add (item->getChordName());
+        else
+            res.add (item->getChordSymbol());
     }
+    
     return res;
 }
 
