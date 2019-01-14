@@ -48,11 +48,12 @@ CustomControlSurface::CustomControlSurface (ExternalControllerManager& ecm, cons
 CustomControlSurface::CustomControlSurface (ExternalControllerManager& ecm, const juce::XmlElement& xml)
    : ControlSurface (ecm)
 {
+    protocol = xml.getStringAttribute ("protocol") == "osc" ? ExternalControllerManager::osc :
+                                                              ExternalControllerManager::midi;
+
     init();
 
     deviceDescription = xml.getStringAttribute ("name");
-    protocol = xml.getStringAttribute ("protocol") == "osc" ? ExternalControllerManager::osc :
-                                                              ExternalControllerManager::midi;
     
     loadFromXml (xml);
 
@@ -378,10 +379,6 @@ void CustomControlSurface::oscMessageReceived (const juce::OSCMessage& m)
 {
     if (m.size() >= 1)
     {
-        auto addr = m.getAddressPattern().toString();
-        if (addr.endsWith ("/z"))
-            return;
-        
         auto arg = m[0];
         float val = 0;
         
@@ -392,24 +389,58 @@ void CustomControlSurface::oscMessageReceived (const juce::OSCMessage& m)
         else
             return;
         
-        lastControllerAddr = addr;
-        lastControllerValue = 1.0f;
-    
-        if (listeningOnRow >= 0)
-            triggerAsyncUpdate();
+        auto addr = m.getAddressPattern().toString();
         
-        if (auto ed = getEdit())
+        DBG("In: " + addr + " " + String (val));
+        
+        if (addr.endsWith ("/z"))
         {
-            for (auto* mapping : mappings)
+            addr = addr.dropLastCharacters (2);
+            if (val != 0.0f)
             {
-                if (lastControllerAddr == mapping->addr)
+                oscControlTouched[addr] = true;
+            }
+            else
+            {
+                oscControlTouched[addr] = false;
+                
+                auto itr = oscLastValue.find (addr);
+                if (itr != oscLastValue.end())
                 {
-                    for (auto* actionFunction : actionFunctionList)
+                    if (oscSender)
                     {
-                        if (actionFunction->id == mapping->function)
+                        OSCMessage mo (addr);
+                        mo.addFloat32 (itr->second);
+                        oscSender->send (mo);
+                        
+                        DBG("Out: " + addr + " " + String (itr->second));
+                    }
+                    
+                    oscLastValue.erase (itr);
+                }
+            }
+        }
+        else
+        {
+            lastControllerAddr = addr;
+            lastControllerValue = val;
+        
+            if (listeningOnRow >= 0)
+                triggerAsyncUpdate();
+            
+            if (auto ed = getEdit())
+            {
+                for (auto* mapping : mappings)
+                {
+                    if (lastControllerAddr == mapping->addr)
+                    {
+                        for (auto* actionFunction : actionFunctionList)
                         {
-                            auto actionFunc = actionFunction->actionFunc;
-                            (this->*actionFunc) (lastControllerValue, actionFunction->param);
+                            if (actionFunction->id == mapping->function)
+                            {
+                                auto actionFunc = actionFunction->actionFunc;
+                                (this->*actionFunc) (lastControllerValue, actionFunction->param);
+                            }
                         }
                     }
                 }
@@ -610,15 +641,29 @@ void CustomControlSurface::sendCommandToControllerForActionID (int actionID, flo
             const int midiNote          = mapping->note;                           // MIDI Note
             const int midiChannel       = mapping->channel;                        // MIDI Channel
 
-            if (oscAddr.isNotEmpty())
+            if (needsOSCSocket && oscAddr.isNotEmpty())
             {
-                if (oscSender)
+                // Only send a value if the control is currently not being touched
+                auto itr = oscControlTouched.find (oscAddr);
+                if (itr == oscControlTouched.end() || ! itr->second)
                 {
-                    auto m = OSCMessage (oscAddr).addFloat32 (value);
-                    oscSender->send (m);
+                    if (oscSender)
+                    {
+                        OSCMessage m (oscAddr);
+                        m.addFloat32 (value);
+                        oscSender->send (m);
+                        
+                        DBG("Out: " + oscAddr + " " + String (value));
+                    }
+                }
+                else
+                {
+                    oscLastValue[oscAddr] = value;
+                    
+                    DBG("Later: " + oscAddr + " " + String (value));
                 }
             }
-            else if (midiChannel != -1)
+            else if (needsMidiBackChannel && midiChannel != -1)
             {
                 if (midiNote != -1)
                 {
@@ -656,7 +701,7 @@ bool CustomControlSurface::removeMapping (ActionID id, int controllerID, int not
 void CustomControlSurface::showMappingsEditor (DialogWindow::LaunchOptions& o)
 {
    #if JUCE_MODAL_LOOPS_PERMITTED
-    if (owner->getMidiInputDevice().isEmpty())
+    if (needsMidiChannel && owner->getMidiInputDevice().isEmpty())
     {
         engine.getUIBehaviour().showWarningAlert (TRANS("Error"),
                                                   TRANS("You must set a MIDI input device!"));
@@ -824,7 +869,7 @@ void CustomControlSurface::setLearntParam (bool keepListening)
 {
     if (listeningOnRow >= 0)
     {
-        if (lastControllerID > 0 || lastControllerNote != -1)
+        if (lastControllerID > 0 || lastControllerNote != -1 || lastControllerAddr.isNotEmpty())
         {
             if (listeningOnRow >= mappings.size())
                 mappings.add (new Mapping());
@@ -1063,19 +1108,21 @@ void CustomControlSurface::addTrackFunction (PopupMenu& menu,
     commandGroups[nextCmdGroupIndex++] = subMenuSet;
 }
 
-static bool isValueNonZero (float val) noexcept
+bool CustomControlSurface::shouldActOnValue (float val)
 {
+    if (needsOSCSocket)
+        return true;
     return val > 0.001f;
 }
 
-void CustomControlSurface::play (float val, int)    { if (isValueNonZero (val)) userPressedPlay(); }
-void CustomControlSurface::stop (float val, int)    { if (isValueNonZero (val)) userPressedStop(); }
-void CustomControlSurface::record (float val, int)  { if (isValueNonZero (val)) userPressedRecord(); }
-void CustomControlSurface::home (float val, int)    { if (isValueNonZero (val)) userPressedHome(); }
-void CustomControlSurface::end (float val, int)     { if (isValueNonZero (val)) userPressedEnd(); }
+void CustomControlSurface::play (float val, int)    { if (shouldActOnValue (val)) userPressedPlay(); }
+void CustomControlSurface::stop (float val, int)    { if (shouldActOnValue (val)) userPressedStop(); }
+void CustomControlSurface::record (float val, int)  { if (shouldActOnValue (val)) userPressedRecord(); }
+void CustomControlSurface::home (float val, int)    { if (shouldActOnValue (val)) userPressedHome(); }
+void CustomControlSurface::end (float val, int)     { if (shouldActOnValue (val)) userPressedEnd(); }
 
-void CustomControlSurface::rewind (float val, int)          { userChangedRewindButton (isValueNonZero (val)); }
-void CustomControlSurface::fastForward (float val, int)     { userChangedFastForwardButton (isValueNonZero (val)); }
+void CustomControlSurface::rewind (float val, int)          { userChangedRewindButton (shouldActOnValue (val)); }
+void CustomControlSurface::fastForward (float val, int)     { userChangedFastForwardButton (shouldActOnValue (val)); }
 
 void CustomControlSurface::masterVolume (float val, int)    { userMovedMasterLevelFader (val); }
 void CustomControlSurface::masterPan (float val, int)       { userMovedMasterPanPot (val); }
@@ -1084,78 +1131,78 @@ void CustomControlSurface::quickParam (float val, int)      { userMovedQuickPara
 void CustomControlSurface::volTrack (float val, int param)  { userMovedFader (param, val); }
 
 void CustomControlSurface::panTrack (float val, int param)  { userMovedPanPot (param, val * 2.0f - 1.0f); }
-void CustomControlSurface::muteTrack (float val, int param) { if (isValueNonZero (val)) userPressedMute (param, false); }
-void CustomControlSurface::soloTrack (float val, int param) { if (isValueNonZero (val)) userPressedSolo (param); }
+void CustomControlSurface::muteTrack (float val, int param) { if (shouldActOnValue (val)) userPressedMute (param, false); }
+void CustomControlSurface::soloTrack (float val, int param) { if (shouldActOnValue (val)) userPressedSolo (param); }
 
-void CustomControlSurface::armTrack (float val, int param)      { if (isValueNonZero (val)) userPressedRecEnable (param, false); }
-void CustomControlSurface::selectTrack (float val, int param)   { if (isValueNonZero (val)) userSelectedTrack (param); }
+void CustomControlSurface::armTrack (float val, int param)      { if (shouldActOnValue (val)) userPressedRecEnable (param, false); }
+void CustomControlSurface::selectTrack (float val, int param)   { if (shouldActOnValue (val)) userSelectedTrack (param); }
 
-void CustomControlSurface::auxTrack (float val, int param)              { if (isValueNonZero (val)) userMovedAux (param, val); }
-void CustomControlSurface::selectClipInTrack (float val, int param)     { if (isValueNonZero (val)) userSelectedClipInTrack (param); }
-void CustomControlSurface::selectFilterInTrack (float val, int param)   { if (isValueNonZero (val)) userSelectedPluginInTrack (param); }
+void CustomControlSurface::auxTrack (float val, int param)              { if (shouldActOnValue (val)) userMovedAux (param, val); }
+void CustomControlSurface::selectClipInTrack (float val, int param)     { if (shouldActOnValue (val)) userSelectedClipInTrack (param); }
+void CustomControlSurface::selectFilterInTrack (float val, int param)   { if (shouldActOnValue (val)) userSelectedPluginInTrack (param); }
 
-void CustomControlSurface::markIn (float val, int)                  { if (isValueNonZero (val)) userPressedMarkIn(); }
-void CustomControlSurface::markOut (float val, int)                 { if (isValueNonZero (val)) userPressedMarkOut(); }
-void CustomControlSurface::automationReading (float val, int)       { if (isValueNonZero (val)) userPressedAutomationReading(); }
-void CustomControlSurface::automationWriting (float val, int)       { if (isValueNonZero (val)) userPressedAutomationWriting(); }
-void CustomControlSurface::toggleBeatsSecondsMode (float val, int)  { if (isValueNonZero (val)) userToggledBeatsSecondsMode(); }
-void CustomControlSurface::toggleLoop (float val, int)              { if (isValueNonZero (val)) userToggledLoopOnOff(); }
-void CustomControlSurface::togglePunch (float val, int)             { if (isValueNonZero (val)) userToggledPunchOnOff(); }
-void CustomControlSurface::toggleClick (float val, int)             { if (isValueNonZero (val)) userToggledClickOnOff(); }
-void CustomControlSurface::toggleSnap (float val, int)              { if (isValueNonZero (val)) userToggledSnapOnOff(); }
-void CustomControlSurface::toggleSlave (float val, int)             { if (isValueNonZero (val)) userToggledSlaveOnOff(); }
-void CustomControlSurface::toggleEtoE (float val, int)              { if (isValueNonZero (val)) userToggledEtoE(); }
-void CustomControlSurface::toggleScroll (float val, int)            { if (isValueNonZero (val)) userToggledScroll(); }
-void CustomControlSurface::zoomIn (float val, int)                  { if (isValueNonZero (val)) userZoomedIn(); }
-void CustomControlSurface::zoomOut (float val, int)                 { if (isValueNonZero (val)) userZoomedOut(); }
-void CustomControlSurface::scrollTracksUp (float val, int)          { if (isValueNonZero (val)) userScrolledTracksUp(); }
-void CustomControlSurface::scrollTracksDown (float val, int)        { if (isValueNonZero (val)) userScrolledTracksDown(); }
-void CustomControlSurface::scrollTracksLeft (float val, int)        { if (isValueNonZero (val)) userScrolledTracksLeft(); }
-void CustomControlSurface::scrollTracksRight (float val, int)       { if (isValueNonZero (val)) userScrolledTracksRight(); }
-void CustomControlSurface::zoomTracksIn (float val, int)            { if (isValueNonZero (val)) userZoomedTracksIn(); }
-void CustomControlSurface::zoomTracksOut (float val, int)           { if (isValueNonZero (val)) userZoomedTracksOut(); }
+void CustomControlSurface::markIn (float val, int)                  { if (shouldActOnValue (val)) userPressedMarkIn(); }
+void CustomControlSurface::markOut (float val, int)                 { if (shouldActOnValue (val)) userPressedMarkOut(); }
+void CustomControlSurface::automationReading (float val, int)       { if (shouldActOnValue (val)) userPressedAutomationReading(); }
+void CustomControlSurface::automationWriting (float val, int)       { if (shouldActOnValue (val)) userPressedAutomationWriting(); }
+void CustomControlSurface::toggleBeatsSecondsMode (float val, int)  { if (shouldActOnValue (val)) userToggledBeatsSecondsMode(); }
+void CustomControlSurface::toggleLoop (float val, int)              { if (shouldActOnValue (val)) userToggledLoopOnOff(); }
+void CustomControlSurface::togglePunch (float val, int)             { if (shouldActOnValue (val)) userToggledPunchOnOff(); }
+void CustomControlSurface::toggleClick (float val, int)             { if (shouldActOnValue (val)) userToggledClickOnOff(); }
+void CustomControlSurface::toggleSnap (float val, int)              { if (shouldActOnValue (val)) userToggledSnapOnOff(); }
+void CustomControlSurface::toggleSlave (float val, int)             { if (shouldActOnValue (val)) userToggledSlaveOnOff(); }
+void CustomControlSurface::toggleEtoE (float val, int)              { if (shouldActOnValue (val)) userToggledEtoE(); }
+void CustomControlSurface::toggleScroll (float val, int)            { if (shouldActOnValue (val)) userToggledScroll(); }
+void CustomControlSurface::zoomIn (float val, int)                  { if (shouldActOnValue (val)) userZoomedIn(); }
+void CustomControlSurface::zoomOut (float val, int)                 { if (shouldActOnValue (val)) userZoomedOut(); }
+void CustomControlSurface::scrollTracksUp (float val, int)          { if (shouldActOnValue (val)) userScrolledTracksUp(); }
+void CustomControlSurface::scrollTracksDown (float val, int)        { if (shouldActOnValue (val)) userScrolledTracksDown(); }
+void CustomControlSurface::scrollTracksLeft (float val, int)        { if (shouldActOnValue (val)) userScrolledTracksLeft(); }
+void CustomControlSurface::scrollTracksRight (float val, int)       { if (shouldActOnValue (val)) userScrolledTracksRight(); }
+void CustomControlSurface::zoomTracksIn (float val, int)            { if (shouldActOnValue (val)) userZoomedTracksIn(); }
+void CustomControlSurface::zoomTracksOut (float val, int)           { if (shouldActOnValue (val)) userZoomedTracksOut(); }
 
-void CustomControlSurface::toggleSelectionMode (float val, int)     { if (isValueNonZero (val)) pluginMoveMode = ! pluginMoveMode; }
+void CustomControlSurface::toggleSelectionMode (float val, int)     { if (shouldActOnValue (val)) pluginMoveMode = ! pluginMoveMode; }
 
-void CustomControlSurface::selectLeft (float val, int)  { if (isValueNonZero (val)) selectOtherObject (SelectableClass::Relationship::moveLeft, pluginMoveMode); }
-void CustomControlSurface::selectRight (float val, int) { if (isValueNonZero (val)) selectOtherObject (SelectableClass::Relationship::moveRight, pluginMoveMode); }
-void CustomControlSurface::selectUp (float val, int)    { if (isValueNonZero (val)) selectOtherObject (SelectableClass::Relationship::moveUp, pluginMoveMode); }
-void CustomControlSurface::selectDown (float val, int)  { if (isValueNonZero (val)) selectOtherObject (SelectableClass::Relationship::moveDown, pluginMoveMode); }
+void CustomControlSurface::selectLeft (float val, int)  { if (shouldActOnValue (val)) selectOtherObject (SelectableClass::Relationship::moveLeft, pluginMoveMode); }
+void CustomControlSurface::selectRight (float val, int) { if (shouldActOnValue (val)) selectOtherObject (SelectableClass::Relationship::moveRight, pluginMoveMode); }
+void CustomControlSurface::selectUp (float val, int)    { if (shouldActOnValue (val)) selectOtherObject (SelectableClass::Relationship::moveUp, pluginMoveMode); }
+void CustomControlSurface::selectDown (float val, int)  { if (shouldActOnValue (val)) selectOtherObject (SelectableClass::Relationship::moveDown, pluginMoveMode); }
 
-void CustomControlSurface::faderBankLeft   (float val, int)   { if (isValueNonZero (val)) userChangedFaderBanks (-numberOfFaderChannels); }
-void CustomControlSurface::faderBankLeft1  (float val, int)   { if (isValueNonZero (val)) userChangedFaderBanks (-1); }
-void CustomControlSurface::faderBankLeft4  (float val, int)   { if (isValueNonZero (val)) userChangedFaderBanks (-4); }
-void CustomControlSurface::faderBankLeft8  (float val, int)   { if (isValueNonZero (val)) userChangedFaderBanks (-8); }
-void CustomControlSurface::faderBankLeft16 (float val, int)   { if (isValueNonZero (val)) userChangedFaderBanks (-16); }
+void CustomControlSurface::faderBankLeft   (float val, int)   { if (shouldActOnValue (val)) userChangedFaderBanks (-numberOfFaderChannels); }
+void CustomControlSurface::faderBankLeft1  (float val, int)   { if (shouldActOnValue (val)) userChangedFaderBanks (-1); }
+void CustomControlSurface::faderBankLeft4  (float val, int)   { if (shouldActOnValue (val)) userChangedFaderBanks (-4); }
+void CustomControlSurface::faderBankLeft8  (float val, int)   { if (shouldActOnValue (val)) userChangedFaderBanks (-8); }
+void CustomControlSurface::faderBankLeft16 (float val, int)   { if (shouldActOnValue (val)) userChangedFaderBanks (-16); }
 
-void CustomControlSurface::faderBankRight   (float val, int)  { if (isValueNonZero (val)) userChangedFaderBanks (numberOfFaderChannels); }
-void CustomControlSurface::faderBankRight1  (float val, int)  { if (isValueNonZero (val)) userChangedFaderBanks (1); }
-void CustomControlSurface::faderBankRight4  (float val, int)  { if (isValueNonZero (val)) userChangedFaderBanks (4); }
-void CustomControlSurface::faderBankRight8  (float val, int)  { if (isValueNonZero (val)) userChangedFaderBanks (8); }
-void CustomControlSurface::faderBankRight16 (float val, int)  { if (isValueNonZero (val)) userChangedFaderBanks (16); }
+void CustomControlSurface::faderBankRight   (float val, int)  { if (shouldActOnValue (val)) userChangedFaderBanks (numberOfFaderChannels); }
+void CustomControlSurface::faderBankRight1  (float val, int)  { if (shouldActOnValue (val)) userChangedFaderBanks (1); }
+void CustomControlSurface::faderBankRight4  (float val, int)  { if (shouldActOnValue (val)) userChangedFaderBanks (4); }
+void CustomControlSurface::faderBankRight8  (float val, int)  { if (shouldActOnValue (val)) userChangedFaderBanks (8); }
+void CustomControlSurface::faderBankRight16 (float val, int)  { if (shouldActOnValue (val)) userChangedFaderBanks (16); }
 
 void CustomControlSurface::addMarker (float val, int)
 {
-    if (isValueNonZero (val))
+    if (shouldActOnValue (val))
         if (auto e = getEdit())
             e->getMarkerManager().createMarker (-1, e->getTransport().position, 0.0, externalControllerManager.getSelectionManager());
 }
 
-void CustomControlSurface::prevMarker (float val, int)  { if (isValueNonZero (val)) userPressedPreviousMarker(); }
-void CustomControlSurface::nextMarker (float val, int)  { if (isValueNonZero (val)) userPressedNextMarker(); }
-void CustomControlSurface::nudgeLeft  (float val, int)  { if (isValueNonZero (val)) userNudgedLeft(); }
-void CustomControlSurface::nudgeRight (float val, int)  { if (isValueNonZero (val)) userNudgedRight(); }
+void CustomControlSurface::prevMarker (float val, int)  { if (shouldActOnValue (val)) userPressedPreviousMarker(); }
+void CustomControlSurface::nextMarker (float val, int)  { if (shouldActOnValue (val)) userPressedNextMarker(); }
+void CustomControlSurface::nudgeLeft  (float val, int)  { if (shouldActOnValue (val)) userNudgedLeft(); }
+void CustomControlSurface::nudgeRight (float val, int)  { if (shouldActOnValue (val)) userNudgedRight(); }
 
 void CustomControlSurface::paramTrack (float val, int param)
 {
     userMovedParameterControl (param + 2, val);
 }
 
-void CustomControlSurface::abort (float val, int)           { if (isValueNonZero (val)) userPressedAbort(); }
-void CustomControlSurface::abortRestart (float val, int)    { if (isValueNonZero (val)) userPressedAbortRestart(); }
+void CustomControlSurface::abort (float val, int)           { if (shouldActOnValue (val)) userPressedAbort(); }
+void CustomControlSurface::abortRestart (float val, int)    { if (shouldActOnValue (val)) userPressedAbortRestart(); }
 
-void CustomControlSurface::jumpToMarkIn  (float val, int)   { if (isValueNonZero (val)) userPressedJumpToMarkIn(); }
-void CustomControlSurface::jumpToMarkOut (float val, int)   { if (isValueNonZero (val)) userPressedJumpToMarkOut(); }
+void CustomControlSurface::jumpToMarkIn  (float val, int)   { if (shouldActOnValue (val)) userPressedJumpToMarkIn(); }
+void CustomControlSurface::jumpToMarkOut (float val, int)   { if (shouldActOnValue (val)) userPressedJumpToMarkOut(); }
 
 void CustomControlSurface::jog (float val, int)
 {

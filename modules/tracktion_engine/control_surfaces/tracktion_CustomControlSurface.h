@@ -15,7 +15,7 @@ namespace tracktion_engine
 class CustomControlSurface  : public ControlSurface,
                               public juce::ChangeBroadcaster,
                               private juce::AsyncUpdater,
-                              private juce::OSCReceiver::Listener<juce::OSCReceiver::RealtimeCallback>
+                              private juce::OSCReceiver::Listener<juce::OSCReceiver::MessageLoopCallback>
 {
 public:
     //==============================================================================
@@ -307,6 +307,8 @@ private:
     bool online = false;
     int oscInputPort = 0, oscOutputPort = 0;
     juce::String oscOutputAddr;
+    std::map<juce::String, bool> oscControlTouched;
+    std::map<juce::String, float> oscLastValue;
     
     std::unique_ptr<juce::OSCSender> oscSender;
     std::unique_ptr<juce::OSCReceiver> oscReceiver;
@@ -378,6 +380,8 @@ private:
 
     void handleAsyncUpdate() override;
     void recreateOSCSockets();
+    
+    bool shouldActOnValue (float v);
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CustomControlSurface)
