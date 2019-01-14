@@ -39,7 +39,7 @@ private:
         {
             if (i == IDs::volume || i == IDs::pan)
                 pluginsToUpdate.addIfNotAlreadyThere (v);
-            else if (i == IDs::gain && v.getProperty (IDs::type) == AuxSendPlugin::xmlTypeName)
+            else if (i == IDs::auxSendSliderPos && v.getProperty (IDs::type) == AuxSendPlugin::xmlTypeName)
                 updateAux.set (1);
         }
     }

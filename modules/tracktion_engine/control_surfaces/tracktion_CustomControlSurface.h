@@ -360,6 +360,9 @@ private:
     void addPluginFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, int id, ActionFunction);
     void createContextMenu (juce::PopupMenu&);
     void addAllCommandItem (juce::PopupMenu&);
+    
+    void sendCommandToControllerForActionID (int actionID, bool);
+    void sendCommandToControllerForActionID (int actionID, float value);
 
     juce::String controllerIDToString (int id, int channelid) const;
     juce::String noteIDToString (int note, int channelid) const;

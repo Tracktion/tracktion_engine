@@ -25,7 +25,7 @@ void CustomControlSurface::CustomControlSurfaceManager::saveAllSettings()
 {
     juce::XmlElement root ("MIDICUSTOMCONTROLSURFACES");
 
-    for (auto* s : surfaces)
+    for (auto s : surfaces)
         root.addChildElement (s->createXml());
 
     Engine::getInstance().getPropertyStorage().setXmlProperty (SettingID::customMidiControllers, root);
@@ -460,13 +460,13 @@ void CustomControlSurface::acceptMidiMessage (const MidiMessage& m)
         }
         else
         {
-            for (auto* mapping : mappings)
+            for (auto mapping : mappings)
             {
                 if (((lastControllerID    == mapping->id   && lastControllerID   != 0) ||
                     (lastControllerNote   == mapping->note && lastControllerNote != -1)) &&
                     lastControllerChannel == mapping->channel)
                 {
-                    for (auto* actionFunction : actionFunctionList)
+                    for (auto actionFunction : actionFunctionList)
                     {
                         if (actionFunction->id == mapping->function)
                         {
@@ -480,28 +480,106 @@ void CustomControlSurface::acceptMidiMessage (const MidiMessage& m)
     }
 }
 
-void CustomControlSurface::moveFader (int, float) {}
-void CustomControlSurface::moveMasterLevelFader (float, float) {}
-void CustomControlSurface::movePanPot (int, float) {}
-void CustomControlSurface::moveAux (int, const char*, float) {}
-void CustomControlSurface::updateSoloAndMute (int, Track::MuteAndSoloLightState, bool) {}
+void CustomControlSurface::moveFader (int faderIndex, float v)
+{
+    sendCommandToControllerForActionID (volTrackId + faderIndex, v);
+}
+
+void CustomControlSurface::moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos)
+{
+    const float panApproximation = ((newLeftSliderPos - newRightSliderPos) * 0.5f) + 0.5f;
+    sendCommandToControllerForActionID (masterPanId, panApproximation);
+    sendCommandToControllerForActionID (masterVolumeId, jmax (newLeftSliderPos, newRightSliderPos));
+}
+
+void CustomControlSurface::movePanPot (int faderIndex, float v)
+{
+    sendCommandToControllerForActionID (panTrackId + faderIndex, (v * 0.5f) + 0.5f);
+}
+
+void CustomControlSurface::moveAux (int faderIndex, const char*, float v)
+{
+    sendCommandToControllerForActionID (auxTrackId + faderIndex, v);
+}
+
+void CustomControlSurface::updateSoloAndMute (int faderIndex, Track::MuteAndSoloLightState state, bool isBright)
+{
+    const bool muteLit      = (state & Track::muteLit) != 0;
+    const bool muteFlashing = (state & Track::muteFlashing) != 0;
+    const bool soloLit      = (state & Track::soloLit) != 0;
+    const bool soloFlashing = (state & Track::soloFlashing) != 0;
+    sendCommandToControllerForActionID (muteTrackId + faderIndex, muteLit || (isBright && muteFlashing) ? 1.0f : 0.0f);
+    sendCommandToControllerForActionID (soloTrackId + faderIndex, soloLit || (isBright && soloFlashing) ? 1.0f : 0.0f);
+}
+
 void CustomControlSurface::soloCountChanged (bool) {}
-void CustomControlSurface::playStateChanged (bool) {}
-void CustomControlSurface::recordStateChanged (bool) {}
-void CustomControlSurface::automationReadModeChanged (bool) {}
-void CustomControlSurface::automationWriteModeChanged (bool) {}
+
+void CustomControlSurface::playStateChanged (bool isPlaying)
+{
+    sendCommandToControllerForActionID (playId, isPlaying);
+}
+
+void CustomControlSurface::recordStateChanged (bool isRecording)
+{
+    sendCommandToControllerForActionID (recordId, isRecording);
+}
+
+void CustomControlSurface::automationReadModeChanged (bool isReading)
+{
+    sendCommandToControllerForActionID (automationReadId, isReading);
+}
+
+void CustomControlSurface::automationWriteModeChanged (bool isWriting)
+{
+    sendCommandToControllerForActionID (automationRecordId, isWriting);
+}
+    
 void CustomControlSurface::faderBankChanged (int, const StringArray&) {}
 void CustomControlSurface::channelLevelChanged (int, float) {}
-void CustomControlSurface::trackSelectionChanged (int, bool) {}
-void CustomControlSurface::trackRecordEnabled (int, bool) {}
+
+void CustomControlSurface::trackSelectionChanged (int faderIndex, bool isSelected)
+{
+    sendCommandToControllerForActionID (selectTrackId + faderIndex, isSelected);
+}
+
+void CustomControlSurface::trackRecordEnabled (int faderIndex, bool recordEnabled)
+{
+    sendCommandToControllerForActionID (armTrackId + faderIndex, recordEnabled);
+}
+    
 void CustomControlSurface::masterLevelsChanged (float, float) {}
 void CustomControlSurface::timecodeChanged (int, int, int, int, bool, bool) {}
-void CustomControlSurface::clickOnOffChanged (bool) {}
-void CustomControlSurface::snapOnOffChanged (bool) {}
-void CustomControlSurface::loopOnOffChanged (bool) {}
-void CustomControlSurface::slaveOnOffChanged (bool) {}
-void CustomControlSurface::punchOnOffChanged (bool) {}
-void CustomControlSurface::parameterChanged (int, const ParameterSetting&) {}
+
+void CustomControlSurface::clickOnOffChanged (bool enabled)
+{
+    sendCommandToControllerForActionID (toggleClickId, enabled);
+}
+
+void CustomControlSurface::snapOnOffChanged (bool enabled)
+{
+    sendCommandToControllerForActionID (toggleSnapId, enabled);
+}
+
+void CustomControlSurface::loopOnOffChanged (bool enabled)
+{
+    sendCommandToControllerForActionID (toggleLoopId, enabled);
+}
+
+void CustomControlSurface::slaveOnOffChanged (bool enabled)
+{
+    sendCommandToControllerForActionID (toggleSlaveId, enabled);
+}
+
+void CustomControlSurface::punchOnOffChanged (bool enabled)
+{
+    sendCommandToControllerForActionID (togglePunchId, enabled);
+}
+
+void CustomControlSurface::parameterChanged (int paramIndex, const ParameterSetting& setting)
+{
+    sendCommandToControllerForActionID (paramTrackId + paramIndex, setting.value);
+}
+    
 void CustomControlSurface::clearParameter (int) {}
 void CustomControlSurface::currentSelectionChanged() {}
 
@@ -514,6 +592,45 @@ void CustomControlSurface::deleteController()
 {
     manager->unregisterSurface (this);
     manager->saveAllSettings();
+}
+    
+void CustomControlSurface::sendCommandToControllerForActionID (int actionID, bool value)
+{
+    sendCommandToControllerForActionID (actionID, value ? 1.0f : 0.0f);
+}
+
+void CustomControlSurface::sendCommandToControllerForActionID (int actionID, float value)
+{
+    for (auto mapping : mappings)
+    {
+        if (mapping->function == actionID)
+        {
+            const auto oscAddr          = mapping->addr;
+            const int midiController    = getControllerNumberFromId (mapping->id); // MIDI CC
+            const int midiNote          = mapping->note;                           // MIDI Note
+            const int midiChannel       = mapping->channel;                        // MIDI Channel
+
+            if (oscAddr.isNotEmpty())
+            {
+                if (oscSender)
+                {
+                    auto m = OSCMessage (oscAddr).addFloat32 (value);
+                    oscSender->send (m);
+                }
+            }
+            else if (midiChannel != -1)
+            {
+                if (midiNote != -1)
+                {
+                    if (value <= 0.0f)  sendMidiCommandToController (MidiMessage::noteOff (midiChannel, midiNote, value));
+                    else                sendMidiCommandToController (MidiMessage::noteOn (midiChannel, midiNote, value));
+                }
+
+                if (midiController != -1)
+                    sendMidiCommandToController (MidiMessage::controllerEvent (midiChannel, midiController, MidiMessage::floatValueToMidiByte (value)));
+            }
+        }
+    }
 }
 
 //==============================================================================
@@ -624,7 +741,7 @@ std::pair<String, String> CustomControlSurface::getTextForRow (int rowNumber) co
     const int numMappings = mappings.size();
     jassert (isPositiveAndNotGreaterThan (rowNumber, numMappings));
 
-    auto* mappingForRow = mappings[rowNumber];
+    auto mappingForRow = mappings[rowNumber];
 
     auto getLeftText = [&] () -> String
     {
