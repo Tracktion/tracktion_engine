@@ -22,6 +22,7 @@ ExternalController::ExternalController (Engine& e, ControlSurface* c)  : engine 
     maxTrackNameChars = cs.numCharactersForTrackNames;
     needsBackChannel = cs.needsMidiBackChannel;
     needsChannel = cs.needsMidiChannel;
+    needsOSC = cs.needsOSCSocket;
     wantsClock = cs.wantsClock;
     followsTrackSelection = cs.followsTrackSelection;
     deletable = cs.deletable;
@@ -29,12 +30,18 @@ ExternalController::ExternalController (Engine& e, ControlSurface* c)  : engine 
 
     inputDeviceName  = storage.getPropertyItem (SettingID::externControlIn, getName());
     outputDeviceName = storage.getPropertyItem (SettingID::externControlOut, getName());
+    
+    oscInputPort     = storage.getPropertyItem (SettingID::externOscInputPort, getName());
+    oscOutputPort    = storage.getPropertyItem (SettingID::externOscOutputPort, getName());
+    oscOutputAddr    = storage.getPropertyItem (SettingID::externOscOutputAddr, getName());
+
     showSelection    = storage.getPropertyItem (SettingID::externControlShowSelection, getName());
     selectionColour  = Colour::fromString (storage.getPropertyItem (SettingID::externControlSelectionColour, getName(),
                                                                     Colours::red.withHue (0.0f).withSaturation (0.7f).toString()).toString());
     enabled          = storage.getPropertyItem (SettingID::externControlEnable, getName());
 
     midiInOutDevicesChanged();
+    oscSettingsChanged();
 
     cs.initialiseDevice (isEnabled());
 
@@ -183,6 +190,9 @@ int ExternalController::getNumParameterControls() const noexcept
 
 void ExternalController::midiInOutDevicesChanged()
 {
+    if (! needsMidiChannel())
+        return;
+    
     auto& dm = engine.getDeviceManager();
 
     for (int i = dm.getNumMidiInDevices(); --i >= 0;)
@@ -220,6 +230,21 @@ void ExternalController::midiInOutDevicesChanged()
     updateDeviceState();
     changeParamBank (0);
 }
+    
+void ExternalController::oscSettingsChanged()
+{
+    if (! needsOSCSocket())
+        return;
+    
+    CRASH_TRACER
+    if (controlSurface != nullptr)
+        getControlSurface().initialiseDevice (isEnabled());
+    
+    getControlSurface().updateOSCSettings (oscInputPort, oscOutputPort, oscOutputAddr);
+    
+    updateDeviceState();
+    changeParamBank (0);
+}
 
 void ExternalController::setBackChannelDevice (const String& nameOfMidiOutput)
 {
@@ -236,6 +261,30 @@ void ExternalController::setBackChannelDevice (const String& nameOfMidiOutput)
     engine.getPropertyStorage().setPropertyItem (SettingID::externControlOut, getName(), outputDeviceName);
 
     midiInOutDevicesChanged();
+}
+    
+void ExternalController::setOSCInputPort (int port)
+{
+    oscInputPort = port;
+    
+    engine.getPropertyStorage().setPropertyItem (SettingID::externOscInputPort, getName(), oscInputPort);
+    oscSettingsChanged();
+}
+    
+void ExternalController::setOSCOutputPort (int port)
+{
+    oscOutputPort = port;
+    
+    engine.getPropertyStorage().setPropertyItem (SettingID::externOscOutputPort, getName(), oscOutputPort);
+    oscSettingsChanged();
+}
+    
+void ExternalController::setOSCOutputAddress (const juce::String addr)
+{
+    oscOutputAddr = addr;
+    
+    engine.getPropertyStorage().setPropertyItem (SettingID::externOscOutputAddr, getName(), oscOutputAddr);
+    oscSettingsChanged();
 }
 
 void ExternalController::setSelectionColour (Colour c)

@@ -74,6 +74,9 @@ String PropertyStorage::settingToString (SettingID setting)
         case SettingID::externControlShowSelection:    return "externControlShowSelection";
         case SettingID::externControlSelectionColour:  return "externControlSelectionColour";
         case SettingID::externControlEnable:           return "externControlEnable";
+        case SettingID::externOscInputPort:            return "externOscInputPort";
+        case SettingID::externOscOutputPort:           return "externOscOutputPort";
+        case SettingID::externOscOutputAddr:           return "externOscOutputAddr";
         case SettingID::filterControlMappingPresets:   return "FilterControlMappingPresets";
         case SettingID::filterGui:                     return "filterGui";
         case SettingID::findExamples:                  return "findExamples";

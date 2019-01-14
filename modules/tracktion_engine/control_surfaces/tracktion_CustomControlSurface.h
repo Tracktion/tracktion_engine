@@ -14,7 +14,8 @@ namespace tracktion_engine
 /** */
 class CustomControlSurface  : public ControlSurface,
                               public juce::ChangeBroadcaster,
-                              private juce::AsyncUpdater
+                              private juce::AsyncUpdater,
+                              private juce::OSCReceiver::Listener<juce::OSCReceiver::RealtimeCallback>
 {
 public:
     //==============================================================================
@@ -102,13 +103,14 @@ public:
         MappingSet& operator= (const MappingSet&) = default;
 
         ActionID id = none;
+        juce::String addr;
         int controllerID = -1, note = -1, channel = -1;
         juce::Colour colour { juce::Colours::transparentWhite };
         juce::String surfaceName;
     };
 
     //==============================================================================
-    CustomControlSurface (ExternalControllerManager&, const juce::String& name);
+    CustomControlSurface (ExternalControllerManager&, const juce::String& name, ExternalControllerManager::Protocol);
     CustomControlSurface (ExternalControllerManager&, const juce::XmlElement&);
     ~CustomControlSurface();
 
@@ -121,6 +123,8 @@ public:
     //==============================================================================
     void initialiseDevice (bool connect) override;
     void shutDownDevice() override;
+    
+    void updateOSCSettings (int oscInputPort, int oscOutputPort, juce::String oscOutputAddr) override;
 
     /** Saves the settings of all open custom surfaces. */
     static void saveAllSettings();
@@ -172,6 +176,7 @@ public:
     struct Mapping
     {
         int id = 0;
+        juce::String addr;
         int note = -1;
         int channel = 0;
         int function = 0;
@@ -283,10 +288,12 @@ private:
     };
 
     //==============================================================================
+    ExternalControllerManager::Protocol protocol;
     juce::OwnedArray<Mapping> mappings;
     std::map<int, juce::SortedSet<int>*> commandGroups;
     int nextCmdGroupIndex = 50000;
 
+    juce::String lastControllerAddr;
     int lastControllerNote = -1;
     int lastControllerID = 0;
     float lastControllerValue = 0;
@@ -297,6 +304,12 @@ private:
     juce::PopupMenu contextMenu;
     bool pluginMoveMode = true;
     bool eatsAllMidi = false;
+    bool online = false;
+    int oscInputPort = 0, oscOutputPort = 0;
+    juce::String oscOutputAddr;
+    
+    std::unique_ptr<juce::OSCSender> oscSender;
+    std::unique_ptr<juce::OSCReceiver> oscReceiver;
 
     //==============================================================================
     struct RPNParser
@@ -338,6 +351,10 @@ private:
     juce::SharedResourcePointer<CustomControlSurfaceManager> manager;
 
     //==============================================================================
+    void oscMessageReceived (const juce::OSCMessage&) override;
+    void oscBundleReceived (const juce::OSCBundle&) override;
+    
+    //==============================================================================
     void addFunction (juce::PopupMenu&, juce::SortedSet<int>& commandSet, const juce::String& group, const juce::String& name, int id, ActionFunction);
     void addTrackFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, int id, ActionFunction);
     void addPluginFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, int id, ActionFunction);
@@ -353,10 +370,11 @@ private:
     void clearCommandGroups();
 
     bool isPendingEventAssignable();
-    void updateOrCreateMappingForID (int id, int channel, int noteNum, int controllerID);
+    void updateOrCreateMappingForID (int id, juce::String addr, int channel, int noteNum, int controllerID);
     void addMappingSetsForID (ActionID, juce::Array<MappingSet>& mappingSet);
 
     void handleAsyncUpdate() override;
+    void recreateOSCSockets();
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CustomControlSurface)

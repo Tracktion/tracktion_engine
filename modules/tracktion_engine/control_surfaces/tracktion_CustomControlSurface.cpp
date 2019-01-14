@@ -32,8 +32,10 @@ void CustomControlSurface::CustomControlSurfaceManager::saveAllSettings()
 }
 
 //==============================================================================
-CustomControlSurface::CustomControlSurface (ExternalControllerManager& ecm, const String& name)
-   : ControlSurface (ecm)
+CustomControlSurface::CustomControlSurface (ExternalControllerManager& ecm, const String& name,
+                                            ExternalControllerManager::Protocol protocol_)
+    : ControlSurface (ecm),
+    protocol (protocol_)
 {
     init();
 
@@ -49,6 +51,9 @@ CustomControlSurface::CustomControlSurface (ExternalControllerManager& ecm, cons
     init();
 
     deviceDescription = xml.getStringAttribute ("name");
+    protocol = xml.getStringAttribute ("protocol") == "osc" ? ExternalControllerManager::osc :
+                                                              ExternalControllerManager::midi;
+    
     loadFromXml (xml);
 
     loadFunctions();
@@ -58,8 +63,18 @@ void CustomControlSurface::init()
 {
     manager->registerSurface (this);
 
-    needsMidiChannel                = true;
-    needsMidiBackChannel            = false;
+    if (protocol == ExternalControllerManager::osc)
+    {
+        needsMidiChannel            = false;
+        needsMidiBackChannel        = false;
+        needsOSCSocket              = true;
+    }
+    else
+    {
+        needsMidiChannel            = true;
+        needsMidiBackChannel        = true;
+        needsOSCSocket              = false;
+    }
     numberOfFaderChannels           = 8;
     numCharactersForTrackNames      = 0;
     numParameterControls            = 18;
@@ -93,7 +108,7 @@ bool CustomControlSurface::isPendingEventAssignable()
     return false;
 }
 
-void CustomControlSurface::updateOrCreateMappingForID (int id, int channel, int noteNum, int controllerID)
+void CustomControlSurface::updateOrCreateMappingForID (int id, String addr, int channel, int noteNum, int controllerID)
 {
     Mapping* mappingToUpdate = nullptr;
 
@@ -111,6 +126,7 @@ void CustomControlSurface::updateOrCreateMappingForID (int id, int channel, int 
         mappingToUpdate = mappings.add (new Mapping());
 
     mappingToUpdate->id         = controllerID;
+    mappingToUpdate->addr       = addr;
     mappingToUpdate->note       = noteNum;
     mappingToUpdate->channel    = channel;
     mappingToUpdate->function   = id;
@@ -135,6 +151,7 @@ void CustomControlSurface::addMappingSetsForID (ActionID id, Array<MappingSet>& 
 
             matchedMapping.id               = id;
             matchedMapping.controllerID     = mapping->id;
+            matchedMapping.addr             = mapping->addr;
             matchedMapping.note             = mapping->note;
             matchedMapping.channel          = mapping->channel;
             matchedMapping.colour           = selectionColour;
@@ -188,6 +205,7 @@ XmlElement* CustomControlSurface::createXml()
 {
     auto element = new juce::XmlElement ("MIDICUSTOMCONTROLSURFACE");
     element->setAttribute ("name", deviceDescription);
+    element->setAttribute ("protocol", protocol == ExternalControllerManager::osc ? "osc" : "midi");
     element->setAttribute ("eatsMidi", eatsAllMidi);
     element->setAttribute ("channels", numberOfFaderChannels);
     element->setAttribute ("parameters", numParameterControls);
@@ -196,6 +214,7 @@ XmlElement* CustomControlSurface::createXml()
     {
         auto mapping = element->createNewChildElement ("MAPPING");
         mapping->setAttribute ("id",       m->id);
+        mapping->setAttribute ("addr",     m->addr);
         mapping->setAttribute ("channel",  m->channel);
         mapping->setAttribute ("function", m->function);
         mapping->setAttribute ("note",     m->note);
@@ -206,17 +225,18 @@ XmlElement* CustomControlSurface::createXml()
 
 bool CustomControlSurface::loadFromXml (const juce::XmlElement& xml)
 {
-    eatsAllMidi                 = xml.getBoolAttribute("eatsMidi", false);
-    numberOfFaderChannels       = xml.getIntAttribute("channels", 8);
-    numParameterControls        = xml.getIntAttribute("parameters", 18);
+    eatsAllMidi                 = xml.getBoolAttribute ("eatsMidi", false);
+    numberOfFaderChannels       = xml.getIntAttribute ("channels", 8);
+    numParameterControls        = xml.getIntAttribute ("parameters", 18);
 
     forEachXmlChildElementWithTagName (xml, node, "MAPPING")
     {
         auto mapping = mappings.add (new Mapping());
-        mapping->id       = node->getIntAttribute("id");
-        mapping->channel  = node->getIntAttribute("channel");
-        mapping->function = node->getIntAttribute("function");
-        mapping->note     = node->getIntAttribute("note", -1);
+        mapping->id       = node->getIntAttribute ("id");
+        mapping->addr     = node->getStringAttribute ("addr");
+        mapping->channel  = node->getIntAttribute ("channel");
+        mapping->function = node->getIntAttribute ("function");
+        mapping->note     = node->getIntAttribute ("note", -1);
     }
 
     return true;
@@ -260,8 +280,47 @@ void CustomControlSurface::exportSettings (const File& file)
         engine.getUIBehaviour().showWarningAlert (TRANS("Export"), TRANS("Export failed"));
 }
 
-void CustomControlSurface::initialiseDevice (bool) {}
-void CustomControlSurface::shutDownDevice() {}
+void CustomControlSurface::initialiseDevice (bool online_)
+{
+    online = online_;
+    recreateOSCSockets();
+}
+    
+void CustomControlSurface::shutDownDevice()
+{
+    online = false;
+    recreateOSCSockets();
+}
+    
+void CustomControlSurface::updateOSCSettings (int in, int out, juce::String addr)
+{
+    oscInputPort = in;
+    oscOutputPort = out;
+    oscOutputAddr = addr;
+    
+    recreateOSCSockets();
+}
+    
+void CustomControlSurface::recreateOSCSockets()
+{
+    oscSender.reset();
+    oscReceiver.reset();
+    
+    if (online && oscInputPort > 0)
+    {
+        oscReceiver = std::make_unique<OSCReceiver>();
+        if (! oscReceiver->connect (oscInputPort))
+            oscReceiver.reset();
+        else
+            oscReceiver->addListener (this);
+    }
+    if (online && oscOutputPort > 0 && oscOutputAddr.isNotEmpty())
+    {
+        oscSender = std::make_unique<OSCSender>();
+        if (! oscSender->connect (oscOutputAddr, oscOutputPort))
+            oscSender.reset();
+    }
+}
 
 void CustomControlSurface::saveAllSettings()
 {
@@ -314,6 +373,57 @@ bool CustomControlSurface::wantsMessage (const MidiMessage& m)
 
     return false;
 }
+    
+void CustomControlSurface::oscMessageReceived (const juce::OSCMessage& m)
+{
+    if (m.size() >= 1)
+    {
+        auto addr = m.getAddressPattern().toString();
+        if (addr.endsWith ("/z"))
+            return;
+        
+        auto arg = m[0];
+        float val = 0;
+        
+        if (arg.isFloat32())
+            val = arg.getFloat32();
+        else if (arg.isInt32())
+            val = arg.getInt32();
+        else
+            return;
+        
+        lastControllerAddr = addr;
+        lastControllerValue = 1.0f;
+    
+        if (listeningOnRow >= 0)
+            triggerAsyncUpdate();
+        
+        if (auto ed = getEdit())
+        {
+            for (auto* mapping : mappings)
+            {
+                if (lastControllerAddr == mapping->addr)
+                {
+                    for (auto* actionFunction : actionFunctionList)
+                    {
+                        if (actionFunction->id == mapping->function)
+                        {
+                            auto actionFunc = actionFunction->actionFunc;
+                            (this->*actionFunc) (lastControllerValue, actionFunction->param);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+    
+void CustomControlSurface::oscBundleReceived (const juce::OSCBundle& b)
+{
+    for (auto e : b)
+        if (e.isMessage())
+            oscMessageReceived (e.getMessage());
+}
 
 void CustomControlSurface::acceptMidiMessage (const MidiMessage& m)
 {
@@ -346,7 +456,7 @@ void CustomControlSurface::acceptMidiMessage (const MidiMessage& m)
         {
             const MidiLearnState::ScopedChangeCaller changeCaller (engine.getMidiLearnState(), MidiLearnState::added);
             updateOrCreateMappingForID (ed->getParameterChangeHandler().getPendingActionFunctionId (true),
-                                        lastControllerChannel, lastControllerNote, lastControllerID);
+                                        lastControllerAddr, lastControllerChannel, lastControllerNote, lastControllerID);
         }
         else
         {
@@ -520,15 +630,21 @@ std::pair<String, String> CustomControlSurface::getTextForRow (int rowNumber) co
     {
         if (rowNumber == listeningOnRow)
         {
+            if (lastControllerAddr.isNotEmpty())
+                return lastControllerAddr;
+            
             if (lastControllerID > 0 && lastControllerNote == -1)
                 return controllerIDToString (lastControllerID, lastControllerChannel) + ": " + String (roundToInt (lastControllerValue * 100.0f)) + "%";
 
             if (lastControllerNote != -1 && lastControllerID == 0)
                 return noteIDToString (lastControllerNote, lastControllerChannel);
 
-            return "(" + TRANS("Move a MIDI controller") + ")";
+            return "(" + TRANS("Move a controller") + ")";
         }
 
+        if (rowNumber < numMappings && mappingForRow->addr.isNotEmpty())
+            return mappingForRow->addr;
+        
         if (rowNumber < numMappings && mappingForRow->id != 0)
             return controllerIDToString (mappingForRow->id, mappingForRow->channel);
 
@@ -597,6 +713,7 @@ void CustomControlSurface::setLearntParam (bool keepListening)
                 mappings.add (new Mapping());
 
             mappings[listeningOnRow]->id      = lastControllerID;
+            mappings[listeningOnRow]->addr    = lastControllerAddr;
             mappings[listeningOnRow]->note    = lastControllerNote;
             mappings[listeningOnRow]->channel = lastControllerChannel;
         }
@@ -605,6 +722,7 @@ void CustomControlSurface::setLearntParam (bool keepListening)
         {
             listeningOnRow        = -1;
             lastControllerID      = 0;
+            lastControllerAddr    = {};
             lastControllerNote    = -1;
             lastControllerChannel = 0;
         }
@@ -848,7 +966,7 @@ void CustomControlSurface::masterPan (float val, int)       { userMovedMasterPan
 void CustomControlSurface::quickParam (float val, int)      { userMovedQuickParam (val); }
 void CustomControlSurface::volTrack (float val, int param)  { userMovedFader (param, val); }
 
-void CustomControlSurface::panTrack (float val, int param)  { userMovedPanPot(param, val * 2.0f - 1.0f); }
+void CustomControlSurface::panTrack (float val, int param)  { userMovedPanPot (param, val * 2.0f - 1.0f); }
 void CustomControlSurface::muteTrack (float val, int param) { if (isValueNonZero (val)) userPressedMute (param, false); }
 void CustomControlSurface::soloTrack (float val, int param) { if (isValueNonZero (val)) userPressedSolo (param); }
 

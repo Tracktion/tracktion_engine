@@ -212,10 +212,10 @@ void ExternalControllerManager::detachFromSelectionManager (SelectionManager* sm
         setCurrentEdit (currentEdit, nullptr);
 }
 
-bool ExternalControllerManager::createCustomController (const String& name)
+bool ExternalControllerManager::createCustomController (const String& name, Protocol protocol)
 {
     CRASH_TRACER
-    addNewController (new CustomControlSurface (*this, name));
+    addNewController (new CustomControlSurface (*this, name, protocol));
     sendChangeMessage();
     return true;
 }
