@@ -7,4 +7,4 @@ echo "Building Projucer"
 PROJUCER_ROOT=$ROOT/modules/juce/extras/Projucer/Builds/MacOSX
 PROJUCER_EXE=$PROJUCER_ROOT/build/Release/Projucer.app/Contents/MacOS/Projucer
 cd "$PROJUCER_ROOT"
-xcodebuild -configuration Release GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS JUCER_ENABLE_GPL_MODE=1'
+xcodebuild -configuration Release GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS JUCER_ENABLE_GPL_MODE=1' LLVM_LTO=NO

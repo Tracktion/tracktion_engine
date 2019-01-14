@@ -38,6 +38,7 @@ exit /B %ERRORLEVEL%
 
     if defined DISABLE_BUILD goto builtSection
         cd "%EXAMPLE_ROOT_DIR%/Builds/VisualStudio2017"
+        set CL=/DJUCER_ENABLE_GPL_MODE /GL
         "%MSBUILD_EXE%" %EXAMPLE_NAME%.sln /p:VisualStudioVersion=15.0 /m /t:Build /p:Configuration=Release /p:Platform=x64 /p:PreferredToolArchitecture=x64 /p:TreatWarningsAsErrors=true
     :builtSection
 exit /B 0
