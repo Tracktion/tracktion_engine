@@ -863,7 +863,8 @@ Clip* ClipTrack::splitClip (Clip& clip, const double time)
 
             // need to do this after setting the fades, so the fades don't
             // get mucked around with..
-            newClip->setStart (time, true, false);
+            const bool isChord = dynamic_cast<ChordClip*> (&clip) != nullptr;
+            newClip->setStart (time, ! isChord, false);
             clip.setEnd (time, true);
 
             // special case for marker clips, set the marker number

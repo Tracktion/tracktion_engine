@@ -11,6 +11,6 @@ echo "Building Projucer"
 set PROJUCER_ROOT=%ROOT%/modules/juce/extras/Projucer/Builds/VisualStudio2017
 set PROJUCER_EXE=%PROJUCER_ROOT%/x64/Release/App/Projucer.exe
 cd "%PROJUCER_ROOT%"
-set CL=/DJUCER_ENABLE_GPL_MODE
+set CL=/DJUCER_ENABLE_GPL_MODE /GL
 "%MSBUILD_EXE%" Projucer.sln /p:VisualStudioVersion=15.0 /m /p:Configuration=Release /p:Platform=x64 /p:PreferredToolArchitecture=x64
 if not exist "%PROJUCER_EXE%" exit 1

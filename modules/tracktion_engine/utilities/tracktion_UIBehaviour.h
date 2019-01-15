@@ -137,6 +137,10 @@ public:
     */
     virtual EditTimeRange getEditingRange (Edit&);
 
+    /** Can return a range of tracks which used be used for edit operations such as coping or deleting.
+    */
+    virtual juce::Array<Track*> getEditingTracks (Edit&)                            { return {}; }
+
     //==============================================================================
     /** If your UI has the concept of edit groups, you should return an expanded list of
         selected items that includes all clips that should be edited with the selected

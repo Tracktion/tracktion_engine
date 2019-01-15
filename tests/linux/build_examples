@@ -35,6 +35,7 @@ buildExample()
 
     if [ -z "$DISABLE_BUILD" ]; then
         cd "$EXAMPLE_ROOT_DIR/Builds/LinuxMakefile"
+        make clean
         make CONFIG=Release -j2
     fi
 }

@@ -600,6 +600,14 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
                 jassertfalse;
             }
         }
+        else if (newClipState.hasType (IDs::CHORDCLIP))
+        {
+            if (auto chordTrack = options.edit.getChordTrack())
+            {
+                if (auto newClip = chordTrack->insertClipWithState (newClipState))
+                    itemsAdded.add (newClip);
+            }
+        }
         else
         {
             if (auto clipTrack = dynamic_cast<ClipTrack*> (targetTrack->getSiblingTrack (clip.trackOffset, false)))

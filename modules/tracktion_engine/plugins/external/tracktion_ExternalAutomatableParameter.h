@@ -141,7 +141,7 @@ public:
     juce::String getParameterShortName (int suggestedLength) const override
     {
         if (auto p = getParam())
-            p->getName (suggestedLength);
+            return p->getName (suggestedLength);
 
         return {};
     }
