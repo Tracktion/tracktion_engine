@@ -73,7 +73,7 @@ namespace AppFunctions
 
     void zoomVertical (float amount)
     {
-        getCurrentUIBehaviour().zoomHorizontal (amount);
+        getCurrentUIBehaviour().zoomVertical (amount);
     }
 
     void cut()
