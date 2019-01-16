@@ -322,7 +322,7 @@ void CustomControlSurface::recreateOSCSockets()
         if (! oscReceiver->connect (oscInputPort))
         {
             oscReceiver.reset();
-            engine.getUIBehaviour().showWarningAlert (TRANS("OSC"), TRANS("Failed to open OSC input port"));
+            engine.getUIBehaviour().showInfoMessage (TRANS("Failed to open OSC input port"));
         }
         else
         {
@@ -336,7 +336,7 @@ void CustomControlSurface::recreateOSCSockets()
         if (! oscSender->connect (oscOutputAddr, oscOutputPort))
         {
             oscSender.reset();
-            engine.getUIBehaviour().showWarningAlert (TRANS("OSC"), TRANS("Failed to open OSC output port"));
+            engine.getUIBehaviour().showInfoMessage (TRANS("Failed to open OSC output port"));
         }
     }
 }
@@ -1320,9 +1320,19 @@ bool CustomControlSurface::shouldActOnValue (float val)
 {
     if (needsOSCSocket)
     {
-        // If the control doesn't track touches, always act on it
+        // If the control doesn't track touches, try and debounce via time
         if (oscControlTouched.find (oscActiveAddr) == oscControlTouched.end())
-            return true;
+        {
+            double now = Time::getMillisecondCounterHiRes() / 1000.0;
+            double lastUsed = oscLastUsedTime[oscActiveAddr];
+            
+            if (now - lastUsed > 0.75)
+            {
+                oscLastUsedTime[oscActiveAddr] = now;
+                return true;
+            }
+            return false;
+        }
         
         // Otherwise, only act on press
         if (oscControlTapsWhileTouched[oscActiveAddr] == 1)

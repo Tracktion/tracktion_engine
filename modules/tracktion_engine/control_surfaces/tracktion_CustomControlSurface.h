@@ -356,6 +356,7 @@ private:
     std::map<juce::String, bool> oscControlTouched;
     std::map<juce::String, int> oscControlTapsWhileTouched;
     std::map<juce::String, float> oscLastValue;
+    std::map<juce::String, double> oscLastUsedTime;
     
     std::unique_ptr<juce::OSCSender> oscSender;
     std::unique_ptr<juce::OSCReceiver> oscReceiver;
