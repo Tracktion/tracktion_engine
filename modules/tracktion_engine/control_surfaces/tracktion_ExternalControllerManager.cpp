@@ -290,6 +290,7 @@ void ExternalControllerManager::changeListenerCallback (ChangeBroadcaster* sourc
                     if (num != -1 && num != device->channelStart)
                         device->changeFaderBank (num - device->channelStart, false);
         }
+        FOR_EACH_DEVICE (updateTrackSelectLights());
     }
 }
 

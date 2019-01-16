@@ -43,6 +43,7 @@ public:
         jogId                       = 20,
         jumpToMarkInId              = 21,
         jumpToMarkOutId             = 22,
+        timecodeId                  = 25,
 
         toggleBeatsSecondsModeId    = 50,
         toggleLoopId                = 51,
@@ -52,13 +53,18 @@ public:
         toggleSlaveId               = 55,
         toggleEtoEId                = 56,
         toggleScrollId              = 57,
+        toggleAllArmId              = 58,
 
         masterVolumeId              = 8,
+        masterVolumeTextId          = 26,
         masterPanId                 = 9,
         quickParamId                = 24,
         paramTrackId                = 1600,
+        clearAllSoloId              = 27,
 
+        nameTrackId                 = 2100,
         volTrackId                  = 1800,
+        volTextTrackId              = 2200,
         panTrackId                  = 1700,
         muteTrackId                 = 1100,
         soloTrackId                 = 1200,
@@ -93,6 +99,7 @@ public:
         faderBankRight8Id           = 205,
         faderBankRight16Id          = 207,
 
+        emptyTextId                 = 9998,
         none                        = 9999
     };
 
@@ -185,6 +192,7 @@ public:
     int getNumMappings() const;
     void listenToRow (int);
     int getRowBeingListenedTo() const;
+    bool allowsManualEditing() const { return needsOSCSocket; }
     void showMappingsListForRow (int);
     void setLearntParam(bool keepListening);
     void removeMapping (int index);
@@ -214,6 +222,7 @@ public:
     void jog (float val, int param);
     void jumpToMarkIn (float val, int param);
     void jumpToMarkOut (float val, int param);
+    void clearAllSolo (float val, int param);
 
     // options
     void toggleBeatsSecondsMode (float val, int param);
@@ -224,6 +233,7 @@ public:
     void toggleSlave (float val, int param);
     void toggleEtoE (float val, int param);
     void toggleScroll (float val, int param);
+    void toggleAllArm (float val, int param);
 
     // plugins
     void masterVolume (float val, int param);
@@ -268,6 +278,8 @@ public:
     void faderBankRight4  (float val, int param);
     void faderBankRight8  (float val, int param);
     void faderBankRight16 (float val, int param);
+    
+    void null (float, int) {} // null action for outgoing only actions
 
     void loadFunctions();
 
@@ -306,8 +318,9 @@ private:
     bool eatsAllMidi = false;
     bool online = false;
     int oscInputPort = 0, oscOutputPort = 0;
-    juce::String oscOutputAddr;
+    juce::String oscOutputAddr, oscActiveAddr;
     std::map<juce::String, bool> oscControlTouched;
+    std::map<juce::String, int> oscControlTapsWhileTouched;
     std::map<juce::String, float> oscLastValue;
     
     std::unique_ptr<juce::OSCSender> oscSender;
@@ -356,6 +369,8 @@ private:
     void oscMessageReceived (const juce::OSCMessage&) override;
     void oscBundleReceived (const juce::OSCBundle&) override;
     
+    bool isTextAction (ActionID);
+    
     //==============================================================================
     void addFunction (juce::PopupMenu&, juce::SortedSet<int>& commandSet, const juce::String& group, const juce::String& name, int id, ActionFunction);
     void addTrackFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, int id, ActionFunction);
@@ -365,6 +380,7 @@ private:
     
     void sendCommandToControllerForActionID (int actionID, bool);
     void sendCommandToControllerForActionID (int actionID, float value);
+    void sendCommandToControllerForActionID (int actionID, juce::String);
 
     juce::String controllerIDToString (int id, int channelid) const;
     juce::String noteIDToString (int note, int channelid) const;
