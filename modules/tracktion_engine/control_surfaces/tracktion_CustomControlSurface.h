@@ -60,6 +60,8 @@ public:
         masterPanId                 = 9,
         quickParamId                = 24,
         paramTrackId                = 1600,
+        paramNameTrackId            = 2500,
+        paramTextTrackId            = 2600,
         clearAllSoloId              = 27,
 
         nameTrackId                 = 2100,

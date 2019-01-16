@@ -677,10 +677,24 @@ void CustomControlSurface::punchOnOffChanged (bool enabled)
 
 void CustomControlSurface::parameterChanged (int paramIndex, const ParameterSetting& setting)
 {
-    sendCommandToControllerForActionID (paramTrackId + paramIndex, setting.value);
+    if (paramIndex - 2 >= 0)
+    {
+        sendCommandToControllerForActionID (paramTrackId + paramIndex - 2, setting.value);
+        sendCommandToControllerForActionID (paramNameTrackId + paramIndex - 2, String (setting.label));
+        sendCommandToControllerForActionID (paramTextTrackId + paramIndex - 2, String (setting.valueDescription));
+    }
 }
     
-void CustomControlSurface::clearParameter (int) {}
+void CustomControlSurface::clearParameter (int paramIndex)
+{
+    if (paramIndex - 2 >= 0)
+    {
+        sendCommandToControllerForActionID (paramTrackId + paramIndex - 2, 0.0f);
+        sendCommandToControllerForActionID (paramNameTrackId + paramIndex - 2, String());
+        sendCommandToControllerForActionID (paramTextTrackId + paramIndex - 2, String());
+    }
+}
+    
 void CustomControlSurface::currentSelectionChanged() {}
 
 bool CustomControlSurface::canChangeSelectedPlugin()
@@ -721,6 +735,8 @@ void CustomControlSurface::sendCommandToControllerForActionID (int actionID, flo
                         OSCMessage m (oscAddr);
                         m.addFloat32 (value);
                         oscSender->send (m);
+                        
+                        DBG("Out: " + oscAddr + " " + String (value));
                     }
                 }
                 else
@@ -1059,6 +1075,8 @@ void CustomControlSurface::loadFunctions()
     addFunction (pluginSubMenu, *pluginSubMenuSet, TRANS("Plugin"), TRANS("Quick control parameter"), 24, &CustomControlSurface::quickParam);
     commandGroups [nextCmdGroupIndex++] = pluginSubMenuSet;
     addPluginFunction (pluginSubMenu, TRANS("Plugin"), TRANS("Automatable parameters"), 1600, &CustomControlSurface::paramTrack);
+    addPluginFunction (pluginSubMenu, TRANS("Plugin"), TRANS("Automatable parameter name"), 2500, &CustomControlSurface::paramTrack);
+    addPluginFunction (pluginSubMenu, TRANS("Plugin"), TRANS("Automatable parameter text"), 2600, &CustomControlSurface::paramTrack);
 
     PopupMenu trackSubMenu;
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Name"), 2100, &CustomControlSurface::null);
@@ -1161,7 +1179,7 @@ void CustomControlSurface::addPluginFunction (PopupMenu& menu,
 
     auto subMenuSet = new SortedSet<int>();
 
-    for (int i = 0; i < 16; ++i)
+    for (int i = 0; i < numParameterControls; ++i)
     {
         ActionFunctionInfo* afi = new ActionFunctionInfo();
 
@@ -1324,7 +1342,7 @@ void CustomControlSurface::abortRestart (float val, int)    { if (shouldActOnVal
 void CustomControlSurface::jumpToMarkIn  (float val, int)   { if (shouldActOnValue (val)) userPressedJumpToMarkIn(); }
 void CustomControlSurface::jumpToMarkOut (float val, int)   { if (shouldActOnValue (val)) userPressedJumpToMarkOut(); }
     
-void CustomControlSurface::clearAllSolo (float val, int)  { if (shouldActOnValue (val)) userPressedClearAllSolo(); }
+void CustomControlSurface::clearAllSolo (float val, int)    { if (shouldActOnValue (val)) userPressedClearAllSolo(); }
 
 void CustomControlSurface::jog (float val, int)
 {
