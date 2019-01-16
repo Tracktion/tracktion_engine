@@ -1147,12 +1147,30 @@ void CustomControlSurface::loadFunctions()
     addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Right") + " 16", faderBankRight16Id, &CustomControlSurface::faderBankRight16);
     commandGroups [nextCmdGroupIndex++] = bankSubMenuSet;
 
+    PopupMenu paramBankSubMenu;
+    auto paramBankSubMenuSet = new SortedSet<int>();
+    addAllCommandItem (paramBankSubMenu);
+    addFunction (paramBankSubMenu, *paramBankSubMenuSet, TRANS("Switch param bank"), TRANS("Left"), paramBankLeftId, &CustomControlSurface::paramBankLeft);
+    addFunction (paramBankSubMenu, *paramBankSubMenuSet, TRANS("Switch param bank"), TRANS("Left") + " 1", paramBankLeft1Id, &CustomControlSurface::paramBankLeft1);
+    addFunction (paramBankSubMenu, *paramBankSubMenuSet, TRANS("Switch param bank"), TRANS("Left") + " 4", paramBankLeft4Id, &CustomControlSurface::paramBankLeft4);
+    addFunction (paramBankSubMenu, *paramBankSubMenuSet, TRANS("Switch param bank"), TRANS("Left") + " 8", paramBankLeft8Id, &CustomControlSurface::paramBankLeft8);
+    addFunction (paramBankSubMenu, *paramBankSubMenuSet, TRANS("Switch param bank"), TRANS("Left") + " 16", paramBankLeft16Id, &CustomControlSurface::paramBankLeft16);
+    addFunction (paramBankSubMenu, *paramBankSubMenuSet, TRANS("Switch param bank"), TRANS("Left") + " 24", paramBankLeft24Id, &CustomControlSurface::paramBankLeft24);
+    addFunction (paramBankSubMenu, *paramBankSubMenuSet, TRANS("Switch param bank"), TRANS("Right"), paramBankRightId, &CustomControlSurface::paramBankRight);
+    addFunction (paramBankSubMenu, *paramBankSubMenuSet, TRANS("Switch param bank"), TRANS("Right") + " 1", paramBankRight1Id, &CustomControlSurface::paramBankRight1);
+    addFunction (paramBankSubMenu, *paramBankSubMenuSet, TRANS("Switch param bank"), TRANS("Right") + " 4", paramBankRight4Id, &CustomControlSurface::paramBankRight4);
+    addFunction (paramBankSubMenu, *paramBankSubMenuSet, TRANS("Switch param bank"), TRANS("Right") + " 8", paramBankRight8Id, &CustomControlSurface::paramBankRight8);
+    addFunction (paramBankSubMenu, *paramBankSubMenuSet, TRANS("Switch param bank"), TRANS("Right") + " 16", paramBankRight16Id, &CustomControlSurface::paramBankRight16);
+    addFunction (paramBankSubMenu, *paramBankSubMenuSet, TRANS("Switch param bank"), TRANS("Right") + " 24", paramBankRight24Id, &CustomControlSurface::paramBankRight24);
+    commandGroups [nextCmdGroupIndex++] = paramBankSubMenuSet;
+    
     contextMenu.addSubMenu (TRANS("Transport"),  transportSubMenu);
     contextMenu.addSubMenu (TRANS("Options"),    optionsSubMenu);
     contextMenu.addSubMenu (TRANS("Plugin"),     pluginSubMenu);
     contextMenu.addSubMenu (TRANS("Track"),      trackSubMenu);
     contextMenu.addSubMenu (TRANS("Navigation"), navigationSubMenu);
     contextMenu.addSubMenu (TRANS("Switch fader bank"), bankSubMenu);
+    contextMenu.addSubMenu (TRANS("Switch param bank"), paramBankSubMenu);
 
    #if JUCE_DEBUG
     // check for duplicate ids that some sloppy programmer put in
@@ -1352,6 +1370,20 @@ void CustomControlSurface::faderBankRight4  (float val, int)  { if (shouldActOnV
 void CustomControlSurface::faderBankRight8  (float val, int)  { if (shouldActOnValue (val)) userChangedFaderBanks (8); }
 void CustomControlSurface::faderBankRight16 (float val, int)  { if (shouldActOnValue (val)) userChangedFaderBanks (16); }
 
+void CustomControlSurface::paramBankLeft   (float val, int)   { if (shouldActOnValue (val)) userChangedParameterBank (-numParameterControls); }
+void CustomControlSurface::paramBankLeft1  (float val, int)   { if (shouldActOnValue (val)) userChangedParameterBank (-1); }
+void CustomControlSurface::paramBankLeft4  (float val, int)   { if (shouldActOnValue (val)) userChangedParameterBank (-4); }
+void CustomControlSurface::paramBankLeft8  (float val, int)   { if (shouldActOnValue (val)) userChangedParameterBank (-8); }
+void CustomControlSurface::paramBankLeft16 (float val, int)   { if (shouldActOnValue (val)) userChangedParameterBank (-16); }
+void CustomControlSurface::paramBankLeft24 (float val, int)   { if (shouldActOnValue (val)) userChangedParameterBank (-24); }
+    
+void CustomControlSurface::paramBankRight   (float val, int)  { if (shouldActOnValue (val)) userChangedParameterBank (numParameterControls); }
+void CustomControlSurface::paramBankRight1  (float val, int)  { if (shouldActOnValue (val)) userChangedParameterBank (1); }
+void CustomControlSurface::paramBankRight4  (float val, int)  { if (shouldActOnValue (val)) userChangedParameterBank (4); }
+void CustomControlSurface::paramBankRight8  (float val, int)  { if (shouldActOnValue (val)) userChangedParameterBank (8); }
+void CustomControlSurface::paramBankRight16 (float val, int)  { if (shouldActOnValue (val)) userChangedParameterBank (16); }
+void CustomControlSurface::paramBankRight24 (float val, int)  { if (shouldActOnValue (val)) userChangedParameterBank (24); }
+    
 void CustomControlSurface::addMarker (float val, int)
 {
     if (shouldActOnValue (val))

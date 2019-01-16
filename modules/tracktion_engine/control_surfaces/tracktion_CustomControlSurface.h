@@ -102,6 +102,19 @@ public:
         faderBankRight4Id           = 204,
         faderBankRight8Id           = 205,
         faderBankRight16Id          = 207,
+        
+        paramBankLeftId             = 220,
+        paramBankLeft1Id            = 221,
+        paramBankLeft4Id            = 222,
+        paramBankLeft8Id            = 223,
+        paramBankLeft16Id           = 224,
+        paramBankLeft24Id           = 225,
+        paramBankRightId            = 226,
+        paramBankRight1Id           = 227,
+        paramBankRight4Id           = 228,
+        paramBankRight8Id           = 229,
+        paramBankRight16Id          = 230,
+        paramBankRight24Id          = 231,
 
         emptyTextId                 = 9998,
         none                        = 9999
@@ -282,6 +295,20 @@ public:
     void faderBankRight4  (float val, int param);
     void faderBankRight8  (float val, int param);
     void faderBankRight16 (float val, int param);
+
+    void paramBankLeft    (float val, int param);
+    void paramBankLeft1   (float val, int param);
+    void paramBankLeft4   (float val, int param);
+    void paramBankLeft8   (float val, int param);
+    void paramBankLeft16  (float val, int param);
+    void paramBankLeft24  (float val, int param);
+    void paramBankRight   (float val, int param);
+    void paramBankRight1  (float val, int param);
+    void paramBankRight4  (float val, int param);
+    void paramBankRight8  (float val, int param);
+    void paramBankRight16 (float val, int param);
+    void paramBankRight24 (float val, int param);
+
     
     void null (float, int) {} // null action for outgoing only actions
 
