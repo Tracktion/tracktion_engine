@@ -385,7 +385,7 @@ void CustomControlSurface::oscMessageReceived (const juce::OSCMessage& m)
         if (arg.isFloat32())
             val = arg.getFloat32();
         else if (arg.isInt32())
-            val = arg.getInt32();
+            val = float (arg.getInt32());
         else
             return;
         
