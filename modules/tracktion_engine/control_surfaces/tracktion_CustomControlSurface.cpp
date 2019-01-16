@@ -472,6 +472,10 @@ bool CustomControlSurface::isTextAction (ActionID id)
         case timecodeId:
         case masterVolumeTextId:
         case emptyTextId:
+        case auxTextTrackId:
+        case panTextTrackId:
+        case paramNameTrackId:
+        case paramTextTrackId:
             return true;
         default:
             return false;
@@ -1157,6 +1161,9 @@ void CustomControlSurface::addFunction (PopupMenu& menu, SortedSet<int>& command
                                         const String& group, const String& name,
                                         int id, ActionFunction actionFunc)
 {
+    if (isTextAction ((ActionID)id) && ! needsOSCSocket)
+        return;
+
     ActionFunctionInfo* afi = new ActionFunctionInfo();
 
     afi->name       = name;
@@ -1174,6 +1181,9 @@ void CustomControlSurface::addPluginFunction (PopupMenu& menu,
                                               const String& group, const String& name,
                                               int id, ActionFunction actionFunc)
 {
+    if (isTextAction ((ActionID)id) && ! needsOSCSocket)
+        return;
+
     PopupMenu subMenu;
     addAllCommandItem (subMenu);
 
