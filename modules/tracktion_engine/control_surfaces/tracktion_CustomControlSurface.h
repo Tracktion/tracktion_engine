@@ -66,11 +66,13 @@ public:
         volTrackId                  = 1800,
         volTextTrackId              = 2200,
         panTrackId                  = 1700,
+        panTextTrackId              = 2400,
         muteTrackId                 = 1100,
         soloTrackId                 = 1200,
         armTrackId                  = 1300,
         selectTrackId               = 1400,
         auxTrackId                  = 1500,
+        auxTextTrackId              = 2300,
 
         zoomInId                    = 100,
         zoomOutId                   = 101,

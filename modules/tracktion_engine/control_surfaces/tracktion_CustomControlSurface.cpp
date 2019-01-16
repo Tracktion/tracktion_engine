@@ -554,11 +554,25 @@ void CustomControlSurface::moveMasterLevelFader (float newLeftSliderPos, float n
 void CustomControlSurface::movePanPot (int faderIndex, float v)
 {
     sendCommandToControllerForActionID (panTrackId + faderIndex, (v * 0.5f) + 0.5f);
+    
+    String panText;
+    int p = roundToInt (v * 100);
+    if (p == 0)
+        panText = "C";
+    else if (p < 0)
+        panText = String (-p) + "L";
+    else
+        panText = String (p) + "R";
+    
+    sendCommandToControllerForActionID (panTextTrackId + faderIndex, panText);
 }
 
 void CustomControlSurface::moveAux (int faderIndex, const char*, float v)
 {
     sendCommandToControllerForActionID (auxTrackId + faderIndex, v);
+    
+    auto dbText = Decibels::toString (volumeFaderPositionToDB (v));
+    sendCommandToControllerForActionID (auxTextTrackId + faderIndex, dbText);
 }
 
 void CustomControlSurface::updateSoloAndMute (int faderIndex, Track::MuteAndSoloLightState state, bool isBright)
@@ -1051,11 +1065,13 @@ void CustomControlSurface::loadFunctions()
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Volume"), 1800, &CustomControlSurface::volTrack);
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Volume text"), 2200, &CustomControlSurface::null);
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Pan"), 1700, &CustomControlSurface::panTrack);
+    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Pan Text"), 2400, &CustomControlSurface::null);
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Mute"), 1100, &CustomControlSurface::muteTrack);
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Solo"), 1200, &CustomControlSurface::soloTrack);
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Arm"), 1300, &CustomControlSurface::armTrack);
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Select"), 1400, &CustomControlSurface::selectTrack);
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Aux"), 1500, &CustomControlSurface::auxTrack);
+    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Aux Text"), 2300, &CustomControlSurface::null);
 
     PopupMenu navigationSubMenu;
     auto navigationSubMenuSet = new SortedSet<int>();
@@ -1240,7 +1256,7 @@ void CustomControlSurface::soloTrack (float val, int param) { if (shouldActOnVal
 void CustomControlSurface::armTrack (float val, int param)      { if (shouldActOnValue (val)) userPressedRecEnable (param, false); }
 void CustomControlSurface::selectTrack (float val, int param)   { if (shouldActOnValue (val)) userSelectedTrack (param); }
 
-void CustomControlSurface::auxTrack (float val, int param)              { if (shouldActOnValue (val)) userMovedAux (param, val); }
+void CustomControlSurface::auxTrack (float val, int param)              { userMovedAux (param, val); }
 void CustomControlSurface::selectClipInTrack (float val, int param)     { if (shouldActOnValue (val)) userSelectedClipInTrack (param); }
 void CustomControlSurface::selectFilterInTrack (float val, int param)   { if (shouldActOnValue (val)) userSelectedPluginInTrack (param); }
 
