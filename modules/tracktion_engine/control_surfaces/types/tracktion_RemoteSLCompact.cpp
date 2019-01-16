@@ -72,7 +72,7 @@ bool RemoteSLCompact::eatsAllMessages()                 { return false; }
 bool RemoteSLCompact::canSetEatsAllMessages()           { return false; }
 void RemoteSLCompact::setEatsAllMessages (bool)         {}
 bool RemoteSLCompact::canChangeSelectedPlugin()         { return true; }
-void RemoteSLCompact::currentSelectionChanged()         {}
+void RemoteSLCompact::currentSelectionChanged (juce::String) {}
 bool RemoteSLCompact::showingPluginParams()             { return true; }
 bool RemoteSLCompact::showingMarkers()                  { return false; }
 bool RemoteSLCompact::showingTracks()                   { return false; }

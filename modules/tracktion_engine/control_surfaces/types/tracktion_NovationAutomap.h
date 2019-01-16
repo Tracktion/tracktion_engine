@@ -64,7 +64,7 @@ public:
     bool canSetEatsAllMessages() override;
     void setEatsAllMessages(bool eatAll) override;
     bool canChangeSelectedPlugin() override;
-    void currentSelectionChanged() override;
+    void currentSelectionChanged (juce::String) override;
     bool showingPluginParams() override;
     bool showingMarkers() override;
     bool showingTracks() override;

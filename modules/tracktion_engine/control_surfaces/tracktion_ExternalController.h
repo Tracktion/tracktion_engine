@@ -166,6 +166,7 @@ private:
     bool needsOSC = false;
     bool usesSettings = false;
     bool deletable = false;
+    bool allowBankingOffEnd = false;
     AutomatableParameter::Array currentParams;
     Selectable::WeakRef currentParamSource, lastRegisteredSelectable;
     bool showSelection = false;

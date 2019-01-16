@@ -48,7 +48,7 @@ public:
     bool wantsMessage (const juce::MidiMessage&) override;
     bool eatsAllMessages() override;
     bool canChangeSelectedPlugin() override;
-    void currentSelectionChanged() override;
+    void currentSelectionChanged (juce::String) override;
     bool showingPluginParams() override;
     bool showingTracks() override;
     void markerChanged (int parameterNumber, const MarkerSetting&) override;

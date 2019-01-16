@@ -1138,7 +1138,7 @@ bool NovationAutomap::eatsAllMessages()                         { return false; 
 bool NovationAutomap::canSetEatsAllMessages()                   { return false; }
 void NovationAutomap::setEatsAllMessages (bool)                 {}
 bool NovationAutomap::canChangeSelectedPlugin()                 { return true; }
-void NovationAutomap::currentSelectionChanged()                 {}
+void NovationAutomap::currentSelectionChanged (juce::String)    {}
 bool NovationAutomap::showingPluginParams()                     { return true; }
 bool NovationAutomap::showingMarkers()                          { return false; }
 bool NovationAutomap::showingTracks()                           { return true; }

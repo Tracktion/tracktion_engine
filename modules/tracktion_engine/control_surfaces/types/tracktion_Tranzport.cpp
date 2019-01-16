@@ -525,7 +525,7 @@ bool TranzportControlSurface::canChangeSelectedPlugin()
     return false;
 }
 
-void TranzportControlSurface::currentSelectionChanged()
+void TranzportControlSurface::currentSelectionChanged (juce::String)
 {
 }
 

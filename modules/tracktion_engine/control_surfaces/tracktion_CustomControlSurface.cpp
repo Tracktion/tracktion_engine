@@ -85,6 +85,7 @@ void CustomControlSurface::init()
     pluginMoveMode                  = true;
     eatsAllMidi                     = false;
     wantsClock                      = false;
+    allowBankingOffEnd              = true;
 }
 
 CustomControlSurface::~CustomControlSurface()
@@ -408,8 +409,6 @@ void CustomControlSurface::oscMessageReceived (const juce::OSCMessage& m)
         
         auto addr = m.getAddressPattern().toString();
         
-        DBG("In: " + addr + " " + String (val));
-        
         if (addr.endsWith ("/z"))
         {
             // Track control touches and releases
@@ -429,11 +428,16 @@ void CustomControlSurface::oscMessageReceived (const juce::OSCMessage& m)
                 {
                     if (oscSender)
                     {
-                        OSCMessage mo (addr);
-                        mo.addFloat32 (itr->second);
-                        oscSender->send (mo);
-                        
-                        DBG("Out: " + addr + " " + String (itr->second));
+                        try
+                        {
+                            OSCMessage mo (addr);
+                            mo.addFloat32 (itr->second);
+                            oscSender->send (mo);
+                        }
+                        catch (OSCException err)
+                        {
+                            DBG("OSC Error: " + err.description);
+                        }
                     }
                     
                     oscLastValue.erase (itr);
@@ -485,6 +489,7 @@ bool CustomControlSurface::isTextAction (ActionID id)
     switch (id)
     {
         case nameTrackId:
+        case numberTrackId:
         case volTextTrackId:
         case timecodeId:
         case masterVolumeTextId:
@@ -493,6 +498,7 @@ bool CustomControlSurface::isTextAction (ActionID id)
         case panTextTrackId:
         case paramNameTrackId:
         case paramTextTrackId:
+        case selectedPluginNameId:
             return true;
         default:
             return false;
@@ -631,12 +637,13 @@ void CustomControlSurface::automationWriteModeChanged (bool isWriting)
     sendCommandToControllerForActionID (automationRecordId, isWriting);
 }
     
-void CustomControlSurface::faderBankChanged (int, const StringArray& trackNames)
+void CustomControlSurface::faderBankChanged (int newStartChannelNumber, const StringArray& trackNames)
 {
     int idx = 0;
     for (auto name : trackNames)
     {
         sendCommandToControllerForActionID (nameTrackId + idx, name);
+        sendCommandToControllerForActionID (numberTrackId + idx, String (newStartChannelNumber + idx + 1));
         idx++;
     }
 }
@@ -698,25 +705,28 @@ void CustomControlSurface::punchOnOffChanged (bool enabled)
 
 void CustomControlSurface::parameterChanged (int paramIndex, const ParameterSetting& setting)
 {
-    if (paramIndex - 2 >= 0)
+    if (paramIndex >= 0)
     {
-        sendCommandToControllerForActionID (paramTrackId + paramIndex - 2, setting.value);
-        sendCommandToControllerForActionID (paramNameTrackId + paramIndex - 2, String (setting.label));
-        sendCommandToControllerForActionID (paramTextTrackId + paramIndex - 2, String (setting.valueDescription));
+        sendCommandToControllerForActionID (paramTrackId + paramIndex, setting.value);
+        sendCommandToControllerForActionID (paramNameTrackId + paramIndex, String (setting.label));
+        sendCommandToControllerForActionID (paramTextTrackId + paramIndex, String (setting.valueDescription));
     }
 }
     
 void CustomControlSurface::clearParameter (int paramIndex)
 {
-    if (paramIndex - 2 >= 0)
+    if (paramIndex >= 0)
     {
-        sendCommandToControllerForActionID (paramTrackId + paramIndex - 2, 0.0f);
-        sendCommandToControllerForActionID (paramNameTrackId + paramIndex - 2, String());
-        sendCommandToControllerForActionID (paramTextTrackId + paramIndex - 2, String());
+        sendCommandToControllerForActionID (paramTrackId + paramIndex, 0.0f);
+        sendCommandToControllerForActionID (paramNameTrackId + paramIndex, String());
+        sendCommandToControllerForActionID (paramTextTrackId + paramIndex, String());
     }
 }
     
-void CustomControlSurface::currentSelectionChanged() {}
+void CustomControlSurface::currentSelectionChanged (juce::String pluginName)
+{
+    sendCommandToControllerForActionID (selectedPluginNameId, pluginName);
+}
 
 bool CustomControlSurface::canChangeSelectedPlugin()
 {
@@ -753,11 +763,16 @@ void CustomControlSurface::sendCommandToControllerForActionID (int actionID, flo
                 {
                     if (oscSender)
                     {
-                        OSCMessage m (oscAddr);
-                        m.addFloat32 (value);
-                        oscSender->send (m);
-                        
-                        DBG("Out: " + oscAddr + " " + String (value));
+                        try
+                        {
+                            OSCMessage m (oscAddr);
+                            m.addFloat32 (value);
+                            oscSender->send (m);
+                        }
+                        catch (OSCException err)
+                        {
+                            DBG("OSC Error: " + err.description);
+                        }
                     }
                 }
                 else
@@ -792,9 +807,16 @@ void CustomControlSurface::sendCommandToControllerForActionID (int actionID, juc
             {
                 if (oscSender)
                 {
-                    OSCMessage m (oscAddr);
-                    m.addString (value);
-                    oscSender->send (m);
+                    try
+                    {
+                        OSCMessage m (oscAddr);
+                        m.addString (value);
+                        oscSender->send (m);
+                    }
+                    catch (OSCException err)
+                    {
+                        DBG("OSC Error: " + err.description);
+                    }
                 }
             }
         }
@@ -866,7 +888,18 @@ int CustomControlSurface::getRowBeingListenedTo() const
 void CustomControlSurface::showMappingsListForRow (int row)
 {
    #if JUCE_MODAL_LOOPS_PERMITTED
-    int r = contextMenu.show();
+    int r = 0;
+    auto mouse = juce::Desktop::getInstance().getMainMouseSource();
+    if (auto underMouse = mouse.getComponentUnderMouse())
+    {
+        auto pt = mouse.getScreenPosition();
+        auto opts = PopupMenu::Options().withTargetComponent (underMouse).withTargetScreenArea ({int (pt.x), int (pt.y), 1, 1});
+        r = contextMenu.showMenu (opts);
+    }
+    else
+    {
+        r = contextMenu.show();
+    }
    #else
     int r = 0;
    #endif
@@ -1101,6 +1134,7 @@ void CustomControlSurface::loadFunctions()
 
     PopupMenu trackSubMenu;
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Name"), nameTrackId, &CustomControlSurface::null);
+    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Number text"), numberTrackId, &CustomControlSurface::null);
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Volume"), volTrackId, &CustomControlSurface::volTrack);
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Volume text"), volTextTrackId, &CustomControlSurface::null);
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Pan"), panTrackId, &CustomControlSurface::panTrack);
@@ -1128,6 +1162,8 @@ void CustomControlSurface::loadFunctions()
     addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Select right"), selectRightId, &CustomControlSurface::selectRight);
     addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Select up"), selectUpId, &CustomControlSurface::selectUp);
     addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Select down"), selectDownId, &CustomControlSurface::selectDown);
+    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Selected plugin name"), selectedPluginNameId, &CustomControlSurface::null);
+    
     commandGroups [nextCmdGroupIndex++] = navigationSubMenuSet;
     addTrackFunction (navigationSubMenu, TRANS("Navigation"), TRANS("Select clip in track"), selectClipInTrackId, &CustomControlSurface::selectClipInTrack);
     addTrackFunction (navigationSubMenu, TRANS("Navigation"), TRANS("Select plugin in track"), selectPluginInTrackId, &CustomControlSurface::selectFilterInTrack);
@@ -1398,7 +1434,7 @@ void CustomControlSurface::nudgeRight (float val, int)  { if (shouldActOnValue (
 
 void CustomControlSurface::paramTrack (float val, int param)
 {
-    userMovedParameterControl (param + 2, val);
+    userMovedParameterControl (param, val);
 }
 
 void CustomControlSurface::abort (float val, int)           { if (shouldActOnValue (val)) userPressedAbort(); }

@@ -653,7 +653,7 @@ void AlphaTrackControlSurface::clearMarker (int)
 {
 }
 
-void AlphaTrackControlSurface::currentSelectionChanged()
+void AlphaTrackControlSurface::currentSelectionChanged (juce::String)
 {
 }
 

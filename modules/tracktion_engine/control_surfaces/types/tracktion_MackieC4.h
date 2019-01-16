@@ -27,7 +27,7 @@ public:
     void shutDownDevice() override;
     void updateMiscFeatures() override;
     void acceptMidiMessage (const juce::MidiMessage&) override;
-    void currentSelectionChanged() override;
+    void currentSelectionChanged (juce::String) override;
     void parameterChanged (int parameterNumber, const ParameterSetting& newValue) override;
     void clearParameter (int parameterNumber) override;
     void moveFader (int channelNum, float newSliderPos) override;

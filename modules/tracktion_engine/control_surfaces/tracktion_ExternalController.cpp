@@ -27,6 +27,7 @@ ExternalController::ExternalController (Engine& e, ControlSurface* c)  : engine 
     followsTrackSelection = cs.followsTrackSelection;
     deletable = cs.deletable;
     auxBank = cs.wantsAuxBanks ? 0 : -1;
+    allowBankingOffEnd = cs.allowBankingOffEnd;
 
     inputDeviceName  = storage.getPropertyItem (SettingID::externControlIn, getName());
     outputDeviceName = storage.getPropertyItem (SettingID::externControlOut, getName());
@@ -476,7 +477,7 @@ void ExternalController::changeFaderBank (int delta, bool moveSelection)
                 selectedChannels.add(i);
 
             channelStart = jmin (jlimit (0, 127, channelStart + delta),
-                                 jmax (0, ecm.getNumChannelTracks() - getNumFaderChannels()));
+                                 jmax (0, ecm.getNumChannelTracks() - (allowBankingOffEnd ? 1 : getNumFaderChannels())));
 
             for (int i = channelStart; i < (channelStart + getNumFaderChannels()); ++i)
                 if (selectedChannels.contains(i))
@@ -536,8 +537,9 @@ void ExternalController::updateParamList()
             else
            #endif
             {
-                for (int i = 0; i < 2; ++i)
-                    possibleParams.add (nullptr);
+                if (getControlSurfaceIfType<CustomControlSurface>() == nullptr)
+                    for (int i = 0; i < 2; ++i)
+                        possibleParams.add (nullptr);
             }
 
             for (auto p : params)
@@ -703,12 +705,16 @@ void ExternalController::selectedPluginChanged()
             lastRegisteredSelectable = nullptr;
 
             if (auto sm = getExternalControllerManager().getSelectionManager())
-                lastRegisteredSelectable = sm->getSelectedObject(0);
+                lastRegisteredSelectable = sm->getSelectedObject (0);
 
             if (lastRegisteredSelectable != nullptr)
                 lastRegisteredSelectable->addSelectableListener (this);
+            
+            juce::String pluginName;
+            if (auto plugin = dynamic_cast<Plugin*> (lastRegisteredSelectable.get()))
+                pluginName = plugin->getName();
 
-            getControlSurface().currentSelectionChanged();
+            getControlSurface().currentSelectionChanged (pluginName);
             updateParameters();
             updateTrackSelectLights();
         }

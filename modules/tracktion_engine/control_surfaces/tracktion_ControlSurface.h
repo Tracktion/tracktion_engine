@@ -169,7 +169,7 @@ public:
     virtual bool canSetEatsAllMessages()                { return false; }
     virtual void setEatsAllMessages(bool)               {}
     virtual bool canChangeSelectedPlugin()              { return true; }
-    virtual void currentSelectionChanged()              {}
+    virtual void currentSelectionChanged (juce::String) {}
 
     juce::String getSelectableDescription() override;
 
@@ -342,6 +342,9 @@ public:
     // number of physical faders
     int numberOfFaderChannels = 0;
     int numCharactersForTrackNames = 0;
+    
+    // is banking to the right allowed to show empty tracks
+    bool allowBankingOffEnd = false;
 
     // number of labelled rotary dials that can control things like plugin parameters
     int numParameterControls = 0;

@@ -65,6 +65,7 @@ public:
         clearAllSoloId              = 27,
 
         nameTrackId                 = 2100,
+        numberTrackId               = 2700,
         volTrackId                  = 1800,
         volTextTrackId              = 2200,
         panTrackId                  = 1700,
@@ -91,6 +92,7 @@ public:
         selectDownId                = 112,
         selectClipInTrackId         = 1900,
         selectPluginInTrackId       = 2000,
+        selectedPluginNameId        = 113,
 
         faderBankLeftId             = 208,
         faderBankLeft1Id            = 200,
@@ -183,7 +185,7 @@ public:
     void parameterChanged (int parameterNumber, const ParameterSetting& newValue) override;
     void clearParameter (int parameterNumber) override;
     bool canChangeSelectedPlugin() override;
-    void currentSelectionChanged() override;
+    void currentSelectionChanged (juce::String) override;
     void deleteController() override;
     void markerChanged (int parameterNumber, const MarkerSetting& newValue) override;
     void clearMarker (int parameterNumber) override;

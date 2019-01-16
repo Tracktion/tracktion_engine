@@ -541,7 +541,7 @@ bool NovationRemoteSl::canChangeSelectedPlugin()
     return ! isLocked;
 }
 
-void NovationRemoteSl::currentSelectionChanged()
+void NovationRemoteSl::currentSelectionChanged (juce::String)
 {
     if (online)
     {

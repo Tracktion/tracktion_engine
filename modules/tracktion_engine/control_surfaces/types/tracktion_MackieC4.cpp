@@ -828,7 +828,7 @@ void MackieC4::acceptMidiMessage (const MidiMessage& m)
     }
 }
 
-void MackieC4::currentSelectionChanged()
+void MackieC4::currentSelectionChanged (juce::String)
 {
     if (mode == PluginMode1 || mode == PluginMode2)
     {
