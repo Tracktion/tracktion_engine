@@ -230,6 +230,8 @@ bool CustomControlSurface::loadFromXml (const juce::XmlElement& xml)
     numberOfFaderChannels       = xml.getIntAttribute ("channels", 8);
     numParameterControls        = xml.getIntAttribute ("parameters", 18);
 
+    mappings.clear();
+    
     forEachXmlChildElementWithTagName (xml, node, "MAPPING")
     {
         auto mapping = mappings.add (new Mapping());
@@ -245,19 +247,25 @@ bool CustomControlSurface::loadFromXml (const juce::XmlElement& xml)
 
 void CustomControlSurface::importSettings (const File& file)
 {
+    importSettings (file.loadFileAsString());
+}
+    
+void CustomControlSurface::importSettings (const juce::String& xmlText)
+{
     bool ok = false;
     mappings.clearQuick (true);
-
-    std::unique_ptr<XmlElement> xml (XmlDocument::parse (file));
-
+    
+    std::unique_ptr<XmlElement> xml (XmlDocument::parse (xmlText));
+    
     if (xml != nullptr)
     {
         loadFromXml (*xml);
+        loadFunctions();
         ok = true;
     }
-
+    
     manager->saveAllSettings();
-
+    
     if (! ok)
         engine.getUIBehaviour().showWarningAlert (TRANS("Import"), TRANS("Import failed"));
 }
@@ -311,15 +319,24 @@ void CustomControlSurface::recreateOSCSockets()
     {
         oscReceiver = std::make_unique<OSCReceiver>();
         if (! oscReceiver->connect (oscInputPort))
+        {
             oscReceiver.reset();
+            engine.getUIBehaviour().showWarningAlert (TRANS("OSC"), TRANS("Failed to open OSC input port"));
+        }
         else
+        {
             oscReceiver->addListener (this);
+        }
     }
+    
     if (online && oscOutputPort > 0 && oscOutputAddr.isNotEmpty())
     {
         oscSender = std::make_unique<OSCSender>();
         if (! oscSender->connect (oscOutputAddr, oscOutputPort))
+        {
             oscSender.reset();
+            engine.getUIBehaviour().showWarningAlert (TRANS("OSC"), TRANS("Failed to open OSC output port"));
+        }
     }
 }
 
@@ -1030,104 +1047,104 @@ void CustomControlSurface::loadFunctions()
 
     auto transportSubMenuSet = new SortedSet<int>();
     addAllCommandItem (transportSubMenu);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Play"), 1, &CustomControlSurface::play);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Stop"), 2, &CustomControlSurface::stop);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Record"), 3, &CustomControlSurface::record);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Home"), 4, &CustomControlSurface::home);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("End"), 5, &CustomControlSurface::end);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Rewind"), 6, &CustomControlSurface::rewind);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Fast Forward"), 7, &CustomControlSurface::fastForward);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Mark-In"), 10, &CustomControlSurface::markIn);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Mark-Out"), 11, &CustomControlSurface::markOut);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Automation Read"), 12, &CustomControlSurface::automationReading);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Automation Record"), 23, &CustomControlSurface::automationWriting);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Add Marker"), 17, &CustomControlSurface::addMarker);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Next Marker"), 13, &CustomControlSurface::nextMarker);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Previous Marker"), 14, &CustomControlSurface::prevMarker);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Nudge Left"), 15, &CustomControlSurface::nudgeLeft);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Nudge Right"), 16, &CustomControlSurface::nudgeRight);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Abort"), 18, &CustomControlSurface::abort);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Abort & Restart"), 19, &CustomControlSurface::abortRestart);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Jog"), 20, &CustomControlSurface::jog);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Jump to the Mark-In Point"), 21, &CustomControlSurface::jumpToMarkIn);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Jump to the Mark-Out Point"), 22, &CustomControlSurface::jumpToMarkOut);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Timecode"), 25, &CustomControlSurface::null);
-    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Clear all solos"), 27, &CustomControlSurface::clearAllSolo);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Play"), playId, &CustomControlSurface::play);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Stop"), stopId, &CustomControlSurface::stop);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Record"), recordId, &CustomControlSurface::record);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Home"), homeId, &CustomControlSurface::home);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("End"), endId, &CustomControlSurface::end);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Rewind"), rewindId, &CustomControlSurface::rewind);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Fast Forward"), fastForwardId, &CustomControlSurface::fastForward);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Mark-In"), markInId, &CustomControlSurface::markIn);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Mark-Out"), markOutId, &CustomControlSurface::markOut);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Automation Read"), automationReadId, &CustomControlSurface::automationReading);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Automation Record"), automationRecordId, &CustomControlSurface::automationWriting);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Add Marker"), addMarkerId, &CustomControlSurface::addMarker);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Next Marker"), nextMarkerId, &CustomControlSurface::nextMarker);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Previous Marker"), previousMarkerId, &CustomControlSurface::prevMarker);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Nudge Left"), nudgeLeftId, &CustomControlSurface::nudgeLeft);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Nudge Right"), nudgeRightId, &CustomControlSurface::nudgeRight);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Abort"), abortId, &CustomControlSurface::abort);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Abort & Restart"), abortRestartId, &CustomControlSurface::abortRestart);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Jog"), jogId, &CustomControlSurface::jog);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Jump to the Mark-In Point"), jumpToMarkInId, &CustomControlSurface::jumpToMarkIn);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Jump to the Mark-Out Point"), jumpToMarkOutId, &CustomControlSurface::jumpToMarkOut);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Timecode"), timecodeId, &CustomControlSurface::null);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Clear all solos"), clearAllSoloId, &CustomControlSurface::clearAllSolo);
     commandGroups [nextCmdGroupIndex++] = transportSubMenuSet;
 
     PopupMenu optionsSubMenu;
     auto optionsSubMenuSet = new SortedSet<int>();
     addAllCommandItem (optionsSubMenu);
-    addFunction (optionsSubMenu, *optionsSubMenuSet, TRANS("Options"), TRANS("Toggle beats/seconds mode"), 50, &CustomControlSurface::toggleBeatsSecondsMode);
-    addFunction (optionsSubMenu, *optionsSubMenuSet, TRANS("Options"), TRANS("Toggle loop"), 51, &CustomControlSurface::toggleLoop);
-    addFunction (optionsSubMenu, *optionsSubMenuSet, TRANS("Options"), TRANS("Toggle punch"), 52, &CustomControlSurface::togglePunch);
-    addFunction (optionsSubMenu, *optionsSubMenuSet, TRANS("Options"), TRANS("Toggle click"), 53, &CustomControlSurface::toggleClick);
-    addFunction (optionsSubMenu, *optionsSubMenuSet, TRANS("Options"), TRANS("Toggle snap"), 54, &CustomControlSurface::toggleSnap);
-    addFunction (optionsSubMenu, *optionsSubMenuSet, TRANS("Options"), TRANS("Toggle slave"), 55, &CustomControlSurface::toggleSlave);
-    addFunction (optionsSubMenu, *optionsSubMenuSet, TRANS("Options"), TRANS("Toggle E-to-E"), 56, &CustomControlSurface::toggleEtoE);
-    addFunction (optionsSubMenu, *optionsSubMenuSet, TRANS("Options"), TRANS("Toggle scroll"), 57, &CustomControlSurface::toggleScroll);
-    addFunction (optionsSubMenu, *optionsSubMenuSet, TRANS("Options"), TRANS("Toggle all arm"), 58, &CustomControlSurface::toggleAllArm);
-    addFunction (optionsSubMenu, *optionsSubMenuSet, TRANS("Options"), TRANS("Empty Text"), 9998, &CustomControlSurface::null);
+    addFunction (optionsSubMenu, *optionsSubMenuSet, TRANS("Options"), TRANS("Toggle beats/seconds mode"), toggleBeatsSecondsModeId, &CustomControlSurface::toggleBeatsSecondsMode);
+    addFunction (optionsSubMenu, *optionsSubMenuSet, TRANS("Options"), TRANS("Toggle loop"), toggleLoopId, &CustomControlSurface::toggleLoop);
+    addFunction (optionsSubMenu, *optionsSubMenuSet, TRANS("Options"), TRANS("Toggle punch"), togglePunchId, &CustomControlSurface::togglePunch);
+    addFunction (optionsSubMenu, *optionsSubMenuSet, TRANS("Options"), TRANS("Toggle click"), toggleClickId, &CustomControlSurface::toggleClick);
+    addFunction (optionsSubMenu, *optionsSubMenuSet, TRANS("Options"), TRANS("Toggle snap"), toggleSnapId, &CustomControlSurface::toggleSnap);
+    addFunction (optionsSubMenu, *optionsSubMenuSet, TRANS("Options"), TRANS("Toggle slave"), toggleSlaveId, &CustomControlSurface::toggleSlave);
+    addFunction (optionsSubMenu, *optionsSubMenuSet, TRANS("Options"), TRANS("Toggle E-to-E"), toggleEtoEId, &CustomControlSurface::toggleEtoE);
+    addFunction (optionsSubMenu, *optionsSubMenuSet, TRANS("Options"), TRANS("Toggle scroll"), toggleScrollId, &CustomControlSurface::toggleScroll);
+    addFunction (optionsSubMenu, *optionsSubMenuSet, TRANS("Options"), TRANS("Toggle all arm"), toggleAllArmId, &CustomControlSurface::toggleAllArm);
+    addFunction (optionsSubMenu, *optionsSubMenuSet, TRANS("Options"), TRANS("Empty Text"), emptyTextId, &CustomControlSurface::null);
     commandGroups [nextCmdGroupIndex++] = optionsSubMenuSet;
 
     PopupMenu pluginSubMenu;
     auto pluginSubMenuSet = new SortedSet<int>();
     addAllCommandItem (pluginSubMenu);
-    addFunction (pluginSubMenu, *pluginSubMenuSet, TRANS("Plugin"), TRANS("Master volume"), 8, &CustomControlSurface::masterVolume);
-    addFunction (pluginSubMenu, *pluginSubMenuSet, TRANS("Plugin"), TRANS("Master volume text"), 26, &CustomControlSurface::null);
-    addFunction (pluginSubMenu, *pluginSubMenuSet, TRANS("Plugin"), TRANS("Master pan"), 9, &CustomControlSurface::masterPan);
-    addFunction (pluginSubMenu, *pluginSubMenuSet, TRANS("Plugin"), TRANS("Quick control parameter"), 24, &CustomControlSurface::quickParam);
+    addFunction (pluginSubMenu, *pluginSubMenuSet, TRANS("Plugin"), TRANS("Master volume"), masterVolumeId, &CustomControlSurface::masterVolume);
+    addFunction (pluginSubMenu, *pluginSubMenuSet, TRANS("Plugin"), TRANS("Master volume text"), masterVolumeTextId, &CustomControlSurface::null);
+    addFunction (pluginSubMenu, *pluginSubMenuSet, TRANS("Plugin"), TRANS("Master pan"), masterPanId, &CustomControlSurface::masterPan);
+    addFunction (pluginSubMenu, *pluginSubMenuSet, TRANS("Plugin"), TRANS("Quick control parameter"), quickParamId, &CustomControlSurface::quickParam);
     commandGroups [nextCmdGroupIndex++] = pluginSubMenuSet;
-    addPluginFunction (pluginSubMenu, TRANS("Plugin"), TRANS("Automatable parameters"), 1600, &CustomControlSurface::paramTrack);
-    addPluginFunction (pluginSubMenu, TRANS("Plugin"), TRANS("Automatable parameter name"), 2500, &CustomControlSurface::paramTrack);
-    addPluginFunction (pluginSubMenu, TRANS("Plugin"), TRANS("Automatable parameter text"), 2600, &CustomControlSurface::paramTrack);
+    addPluginFunction (pluginSubMenu, TRANS("Plugin"), TRANS("Automatable parameters"), paramTrackId, &CustomControlSurface::paramTrack);
+    addPluginFunction (pluginSubMenu, TRANS("Plugin"), TRANS("Automatable parameter name"), paramNameTrackId, &CustomControlSurface::paramTrack);
+    addPluginFunction (pluginSubMenu, TRANS("Plugin"), TRANS("Automatable parameter text"), paramTextTrackId, &CustomControlSurface::paramTrack);
 
     PopupMenu trackSubMenu;
-    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Name"), 2100, &CustomControlSurface::null);
-    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Volume"), 1800, &CustomControlSurface::volTrack);
-    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Volume text"), 2200, &CustomControlSurface::null);
-    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Pan"), 1700, &CustomControlSurface::panTrack);
-    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Pan Text"), 2400, &CustomControlSurface::null);
-    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Mute"), 1100, &CustomControlSurface::muteTrack);
-    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Solo"), 1200, &CustomControlSurface::soloTrack);
-    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Arm"), 1300, &CustomControlSurface::armTrack);
-    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Select"), 1400, &CustomControlSurface::selectTrack);
-    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Aux"), 1500, &CustomControlSurface::auxTrack);
-    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Aux Text"), 2300, &CustomControlSurface::null);
+    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Name"), nameTrackId, &CustomControlSurface::null);
+    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Volume"), volTrackId, &CustomControlSurface::volTrack);
+    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Volume text"), volTextTrackId, &CustomControlSurface::null);
+    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Pan"), panTrackId, &CustomControlSurface::panTrack);
+    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Pan Text"), panTextTrackId, &CustomControlSurface::null);
+    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Mute"), muteTrackId, &CustomControlSurface::muteTrack);
+    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Solo"), soloTrackId, &CustomControlSurface::soloTrack);
+    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Arm"), armTrackId, &CustomControlSurface::armTrack);
+    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Select"), selectTrackId, &CustomControlSurface::selectTrack);
+    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Aux"), auxTrackId, &CustomControlSurface::auxTrack);
+    addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Aux Text"), auxTextTrackId, &CustomControlSurface::null);
 
     PopupMenu navigationSubMenu;
     auto navigationSubMenuSet = new SortedSet<int>();
     addAllCommandItem (navigationSubMenu);
-    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Zoom in"), 100, &CustomControlSurface::zoomIn);
-    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Zoom out"), 101, &CustomControlSurface::zoomOut);
-    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Scroll tracks up"), 102, &CustomControlSurface::scrollTracksUp);
-    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Scroll tracks down"), 103, &CustomControlSurface::scrollTracksDown);
-    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Scroll tracks left"), 104, &CustomControlSurface::scrollTracksLeft);
-    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Scroll tracks right"), 105, &CustomControlSurface::scrollTracksRight);
-    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Zoom tracks in"), 106, &CustomControlSurface::zoomTracksIn);
-    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Zoom tracks out"), 107, &CustomControlSurface::zoomTracksOut);
-    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Toggle selection mode"), 108, &CustomControlSurface::toggleSelectionMode);
-    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Select left"), 109, &CustomControlSurface::selectLeft);
-    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Select right"), 110, &CustomControlSurface::selectRight);
-    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Select up"), 111, &CustomControlSurface::selectUp);
-    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Select down"), 112, &CustomControlSurface::selectDown);
+    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Zoom in"), zoomInId, &CustomControlSurface::zoomIn);
+    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Zoom out"), zoomOutId, &CustomControlSurface::zoomOut);
+    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Scroll tracks up"), scrollTracksUpId, &CustomControlSurface::scrollTracksUp);
+    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Scroll tracks down"), scrollTracksDownId, &CustomControlSurface::scrollTracksDown);
+    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Scroll tracks left"), scrollTracksLeftId, &CustomControlSurface::scrollTracksLeft);
+    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Scroll tracks right"), scrollTracksRightId, &CustomControlSurface::scrollTracksRight);
+    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Zoom tracks in"), zoomTracksInId, &CustomControlSurface::zoomTracksIn);
+    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Zoom tracks out"), zoomTracksOutId, &CustomControlSurface::zoomTracksOut);
+    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Toggle selection mode"), toggleSelectionModeId, &CustomControlSurface::toggleSelectionMode);
+    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Select left"), selectLeftId, &CustomControlSurface::selectLeft);
+    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Select right"), selectRightId, &CustomControlSurface::selectRight);
+    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Select up"), selectUpId, &CustomControlSurface::selectUp);
+    addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Select down"), selectDownId, &CustomControlSurface::selectDown);
     commandGroups [nextCmdGroupIndex++] = navigationSubMenuSet;
-    addTrackFunction (navigationSubMenu, TRANS("Navigation"), TRANS("Select clip in track"), 1900, &CustomControlSurface::selectClipInTrack);
-    addTrackFunction (navigationSubMenu, TRANS("Navigation"), TRANS("Select plugin in track"), 2000, &CustomControlSurface::selectFilterInTrack);
+    addTrackFunction (navigationSubMenu, TRANS("Navigation"), TRANS("Select clip in track"), selectClipInTrackId, &CustomControlSurface::selectClipInTrack);
+    addTrackFunction (navigationSubMenu, TRANS("Navigation"), TRANS("Select plugin in track"), selectPluginInTrackId, &CustomControlSurface::selectFilterInTrack);
 
     PopupMenu bankSubMenu;
     auto bankSubMenuSet = new SortedSet<int>();
     addAllCommandItem (bankSubMenu);
-    addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Left"), 208, &CustomControlSurface::faderBankLeft);
-    addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Left") + " 1", 200, &CustomControlSurface::faderBankLeft1);
-    addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Left") + " 4", 201, &CustomControlSurface::faderBankLeft4);
-    addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Left") + " 8", 202, &CustomControlSurface::faderBankLeft8);
-    addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Left") + " 16", 206, &CustomControlSurface::faderBankLeft16);
-    addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Right"), 209, &CustomControlSurface::faderBankRight);
-    addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Right") + " 1", 203, &CustomControlSurface::faderBankRight1);
-    addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Right") + " 4", 204, &CustomControlSurface::faderBankRight4);
-    addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Right") + " 8", 205, &CustomControlSurface::faderBankRight8);
-    addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Right") + " 16", 207, &CustomControlSurface::faderBankRight16);
+    addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Left"), faderBankLeftId, &CustomControlSurface::faderBankLeft);
+    addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Left") + " 1", faderBankLeft1Id, &CustomControlSurface::faderBankLeft1);
+    addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Left") + " 4", faderBankLeft4Id, &CustomControlSurface::faderBankLeft4);
+    addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Left") + " 8", faderBankLeft8Id, &CustomControlSurface::faderBankLeft8);
+    addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Left") + " 16", faderBankLeft16Id, &CustomControlSurface::faderBankLeft16);
+    addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Right"), faderBankRightId, &CustomControlSurface::faderBankRight);
+    addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Right") + " 1", faderBankRight1Id, &CustomControlSurface::faderBankRight1);
+    addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Right") + " 4", faderBankRight4Id, &CustomControlSurface::faderBankRight4);
+    addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Right") + " 8", faderBankRight8Id, &CustomControlSurface::faderBankRight8);
+    addFunction (bankSubMenu, *bankSubMenuSet, TRANS("Switch fader bank"), TRANS("Right") + " 16", faderBankRight16Id, &CustomControlSurface::faderBankRight16);
     commandGroups [nextCmdGroupIndex++] = bankSubMenuSet;
 
     contextMenu.addSubMenu (TRANS("Transport"),  transportSubMenu);
@@ -1159,10 +1176,12 @@ void CustomControlSurface::addAllCommandItem (PopupMenu& menu)
 
 void CustomControlSurface::addFunction (PopupMenu& menu, SortedSet<int>& commandSet,
                                         const String& group, const String& name,
-                                        int id, ActionFunction actionFunc)
+                                        ActionID aid, ActionFunction actionFunc)
 {
-    if (isTextAction ((ActionID)id) && ! needsOSCSocket)
+    if (isTextAction (aid) && ! needsOSCSocket)
         return;
+    
+    int id = (int) aid;
 
     ActionFunctionInfo* afi = new ActionFunctionInfo();
 
@@ -1179,10 +1198,12 @@ void CustomControlSurface::addFunction (PopupMenu& menu, SortedSet<int>& command
 
 void CustomControlSurface::addPluginFunction (PopupMenu& menu,
                                               const String& group, const String& name,
-                                              int id, ActionFunction actionFunc)
+                                              ActionID aid, ActionFunction actionFunc)
 {
-    if (isTextAction ((ActionID)id) && ! needsOSCSocket)
+    if (isTextAction (aid) && ! needsOSCSocket)
         return;
+    
+    int id = (int) aid;
 
     PopupMenu subMenu;
     addAllCommandItem (subMenu);
@@ -1210,10 +1231,12 @@ void CustomControlSurface::addPluginFunction (PopupMenu& menu,
 
 void CustomControlSurface::addTrackFunction (PopupMenu& menu,
                                              const String& group, const String& name,
-                                             int id, ActionFunction actionFunc)
+                                             ActionID aid, ActionFunction actionFunc)
 {
-    if (isTextAction ((ActionID)id) && ! needsOSCSocket)
+    if (isTextAction (aid) && ! needsOSCSocket)
         return;
+    
+    int id = (int) aid;
     
     PopupMenu subMenu;
     addAllCommandItem (subMenu);

@@ -289,6 +289,7 @@ public:
 
     juce::XmlElement* createXml();
     void importSettings (const juce::File&);
+    void importSettings (const juce::String&);
     void exportSettings (const juce::File&);
 
 private:
@@ -376,9 +377,9 @@ private:
     bool isTextAction (ActionID);
     
     //==============================================================================
-    void addFunction (juce::PopupMenu&, juce::SortedSet<int>& commandSet, const juce::String& group, const juce::String& name, int id, ActionFunction);
-    void addTrackFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, int id, ActionFunction);
-    void addPluginFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, int id, ActionFunction);
+    void addFunction (juce::PopupMenu&, juce::SortedSet<int>& commandSet, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
+    void addTrackFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
+    void addPluginFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
     void createContextMenu (juce::PopupMenu&);
     void addAllCommandItem (juce::PopupMenu&);
     

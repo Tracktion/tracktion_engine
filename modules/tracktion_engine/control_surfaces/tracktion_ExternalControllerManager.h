@@ -169,7 +169,7 @@ private:
 
     std::unique_ptr<BlinkTimer> blinkTimer;
 
-    void addNewController (ControlSurface*);
+    ExternalController* addNewController (ControlSurface*);
 
     void blinkNow();
     void timerCallback() override;
