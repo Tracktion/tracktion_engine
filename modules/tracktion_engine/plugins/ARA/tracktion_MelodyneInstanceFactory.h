@@ -267,7 +267,7 @@ private:
 
         const ARAInterfaceConfiguration interfaceConfig =
         {
-            kARAInterfaceConfigurationMinSize, kARACurrentAPIGeneration, &assertFunction
+            kARAInterfaceConfigurationMinSize, kARAAPIGeneration_1_0_Final, &assertFunction
         };
 
         factory->initializeARAWithConfiguration (&interfaceConfig);

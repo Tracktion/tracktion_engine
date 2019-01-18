@@ -39,11 +39,11 @@
 // If you get an error here, in order to build with ARA support you'll need
 // to include the SDK in your header search paths!
 #if JUCE_MAC
- #include "ARASDK/ARAAudioUnit.h"
+ #include "ARA_API/ARAAudioUnit.h"
 #endif
 
-#include "ARASDK/ARAVST2.h"
-#include "ARASDK/ARAVST3.h"
+#include "ARA_SDK/ARAVST2.h"
+#include "ARA_API/ARAVST3.h"
 
 #include "pluginterfaces/vst2.x/aeffectx.h"
 #include "pluginterfaces/vst/ivstcomponent.h"

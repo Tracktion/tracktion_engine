@@ -22,7 +22,7 @@ struct ArchivingFunctions
     static ARABool ARA_CALL readBytesFromArchive (ARAArchivingControllerHostRef,
                                                   ARAArchiveReaderHostRef ref,
                                                   ARASize pos, ARASize length,
-                                                  void* const buffer)
+                                                  ARAByte buffer[])
     {
         CRASH_TRACER
 
@@ -41,7 +41,7 @@ struct ArchivingFunctions
     static ARABool ARA_CALL writeBytesToArchive (ARAArchivingControllerHostRef,
                                                  ARAArchiveWriterHostRef ref,
                                                  ARASize position, ARASize length,
-                                                 const void* const buffer)
+                                                 const ARAByte buffer[])
     {
         CRASH_TRACER
         if (auto m = (MemoryOutputStream*) ref)
