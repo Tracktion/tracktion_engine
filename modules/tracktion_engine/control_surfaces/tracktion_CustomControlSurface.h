@@ -320,6 +320,9 @@ public:
     void importSettings (const juce::File&);
     void importSettings (const juce::String&);
     void exportSettings (const juce::File&);
+    
+    int getPacketsIn()  { return packetsIn; }
+    int getPacketsOut() { return packetsOut; }
 
 private:
     //==============================================================================
@@ -352,6 +355,7 @@ private:
     bool eatsAllMidi = false;
     bool online = false;
     int oscInputPort = 0, oscOutputPort = 0;
+    int packetsIn = 0, packetsOut = 0;
     juce::String oscOutputAddr, oscActiveAddr;
     std::map<juce::String, bool> oscControlTouched;
     std::map<juce::String, int> oscControlTapsWhileTouched;

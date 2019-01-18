@@ -395,6 +395,8 @@ bool CustomControlSurface::wantsMessage (const MidiMessage& m)
     
 void CustomControlSurface::oscMessageReceived (const juce::OSCMessage& m)
 {
+    packetsIn++;
+    
     if (m.size() >= 1)
     {
         auto arg = m[0];
@@ -432,7 +434,8 @@ void CustomControlSurface::oscMessageReceived (const juce::OSCMessage& m)
                         {
                             OSCMessage mo (addr);
                             mo.addFloat32 (itr->second);
-                            oscSender->send (mo);
+                            if (oscSender->send (mo))
+                                packetsOut++;
                         }
                         catch (OSCException err)
                         {
@@ -767,7 +770,8 @@ void CustomControlSurface::sendCommandToControllerForActionID (int actionID, flo
                         {
                             OSCMessage m (oscAddr);
                             m.addFloat32 (value);
-                            oscSender->send (m);
+                            if (oscSender->send (m))
+                                packetsOut++;
                         }
                         catch (OSCException err)
                         {
@@ -811,7 +815,8 @@ void CustomControlSurface::sendCommandToControllerForActionID (int actionID, juc
                     {
                         OSCMessage m (oscAddr);
                         m.addString (value);
-                        oscSender->send (m);
+                        if (oscSender->send (m))
+                            packetsOut++;
                     }
                     catch (OSCException err)
                     {
