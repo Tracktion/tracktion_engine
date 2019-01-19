@@ -133,14 +133,8 @@ private:
     {
         String type (plugin->getPluginDescription().pluginFormatName);
 
-        if (type == "VST3") factory = getFactoryVST3();
-
-      #if 0 // These other formats don't work so well
-       #if JUCE_MAC
-        else if (type == "AudioUnit") factory = getFactoryAU();
-       #endif
-        else if (type == "VST") factory = getFactoryVST();
-      #endif
+        if (type == "VST3")
+            factory = getFactoryVST3();
     }
 
     bool setExtensionInstance (MelodyneInstance& w, ARADocumentControllerRef dcRef)
@@ -153,14 +147,8 @@ private:
 
         String type (plugin->getPluginDescription().pluginFormatName);
 
-        if (type == "VST3") return setExtensionInstanceVST3 (w, dcRef);
-
-      #if 0 // These other formats don't work so well
-       #if JUCE_MAC
-        if (type == "AudioUnit") return setExtensionInstanceAU (w, dcRef);
-       #endif
-        if (type == "VST") return setExtensionInstanceVST (w, dcRef);
-      #endif
+        if (type == "VST3")
+            return setExtensionInstanceVST3 (w, dcRef);
 
         return false;
     }
@@ -199,61 +187,6 @@ private:
 
         return w.extensionInstance != nullptr;
     }
-
-    static pointer_sized_int dispatchVST (AudioPluginInstance& p, VstIntPtr value, void* ptr)
-    {
-        return juce::VSTPluginFormat::dispatcher (&p, effVendorSpecific, kARAVendorID, value, ptr, 0.0f);
-    }
-
-    ARAFactory* getFactoryVST()
-    {
-        return (ARAFactory*) dispatchVST (*plugin, kARAEffGetFactory, nullptr);
-    }
-
-    bool setExtensionInstanceVST (MelodyneInstance& w, ARADocumentControllerRef dcRef)
-    {
-        if (auto p = w.plugin->getAudioPluginInstance())
-            w.extensionInstance = (const ARAPlugInExtensionInstance*) dispatchVST (*p, kARAEffBindToDocumentController, (void*) dcRef);
-
-        return w.extensionInstance != nullptr;
-    }
-
-   #if JUCE_MAC
-    ARAFactory* getFactoryAU()
-    {
-        if (auto audioUnit = (AudioUnit) plugin->getPlatformSpecificData())
-        {
-            ARAAudioUnitFactory auFactory = { kARAAudioUnitMagic, nullptr };
-            UInt32 size = sizeof (auFactory);
-
-            AudioUnitGetProperty (audioUnit, kAudioUnitProperty_ARAFactory,
-                                  kAudioUnitScope_Global, 0, &auFactory, &size);
-
-            return const_cast<ARAFactory*> (auFactory.outFactory);
-        }
-
-        return {};
-    }
-
-    bool setExtensionInstanceAU (MelodyneInstance& w, ARADocumentControllerRef dcRef)
-    {
-        if (auto p = w.plugin->getAudioPluginInstance())
-        {
-            if (auto audioUnit = (AudioUnit) p->getPlatformSpecificData())
-            {
-                ARAAudioUnitPlugInExtensionBinding binding = { kARAAudioUnitMagic, dcRef, nullptr };
-                UInt32 size = sizeof (binding);
-
-                AudioUnitGetProperty (audioUnit, kAudioUnitProperty_ARAPlugInExtensionBinding,
-                                      kAudioUnitScope_Global, 0, &binding, &size);
-
-                w.extensionInstance = binding.outPlugInExtension;
-            }
-        }
-
-        return w.extensionInstance != nullptr;
-    }
-   #endif
 
     static bool canBeUsedAsTimeStretchEngine (const ARAFactory& factory) noexcept
     {
@@ -317,19 +250,8 @@ static std::unique_ptr<AudioPluginInstance> createMelodynePlugin()
 
     auto araDescs = Engine::getInstance().getPluginManager().getARACompatiblePlugDescriptions();
 
-    // Search in order of preference, as stated by Celemony:
     if (auto p = createMelodynePlugin ("VST3", araDescs))
         return p;
-
-  #if 0 // These other formats don't work so well
-   #if JUCE_MAC
-    if (auto p = createMelodynePlugin ("AudioUnit", araDescs))
-        return p;
-   #endif
-
-    if (auto p = createMelodynePlugin ("VST", araDescs))
-        return p;
-  #endif
 
     return {};
 }
