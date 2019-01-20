@@ -9,6 +9,7 @@
 */
 
 class MusicalContextWrapper;
+class RegionSequenceWrapper;
 
 /**
     As specified by the Celmony:
@@ -41,6 +42,7 @@ public:
         if (musicalContext != nullptr)
         {
             beginEditing (true);
+            regionSequences.clear();
             musicalContext = nullptr;
             endEditing (true);
         }
@@ -125,10 +127,29 @@ public:
         lastArchiveState = nullptr;
     }
 
+    void willCreatePlaybackRegionOnTrack (Track* track) 
+    {
+        if (regionSequences.count (track) == 0)
+            regionSequences[track] = std::make_unique<RegionSequenceWrapper> (*this, track);
+        regionSequencePlaybackRegionCount[track]++;
+    }
+
+    void willDestroyPlaybackRegionOnTrack (Track* track)
+    {
+        jassert (regionSequencePlaybackRegionCount.count (track) > 0);
+        if (--regionSequencePlaybackRegionCount[track] == 0)
+        {
+            regionSequences.erase (track);
+            regionSequencePlaybackRegionCount.erase (track);
+        }
+    }
+
     Edit& edit;
     const ARADocumentControllerInterface* dci;
     ARADocumentControllerRef dcRef;
     std::unique_ptr<MusicalContextWrapper> musicalContext;
+    std::map<Track*, std::unique_ptr<RegionSequenceWrapper>> regionSequences;
+    std::map<Track*, int> regionSequencePlaybackRegionCount;
     std::unique_ptr<MemoryBlock> lastArchiveState;
 
 private:
@@ -693,6 +714,52 @@ public:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioModificationWrapper)
 };
 
+class RegionSequenceWrapper
+{
+public:
+    RegionSequenceWrapper(ARADocument& d, Track* track)
+        : doc (d),
+          name (track->getName()),
+          orderIndex (track->getIndexInEditTrackList()),
+          colour (track->getColour())
+    {
+        CRASH_TRACER
+        TRACKTION_ASSERT_MESSAGE_THREAD
+
+        ARAColor regionSequenceColor { colour.getFloatRed(), colour.getFloatGreen(), colour.getFloatBlue() };
+
+        ARARegionSequenceProperties props =
+        {
+            ARA_IMPLEMENTED_STRUCT_SIZE(ARARegionSequenceProperties, color),
+            name.toRawUTF8(),
+            orderIndex,
+            doc.musicalContext->musicalContextRef,
+            &regionSequenceColor
+        };
+
+        regionSequenceProperties = props;
+
+        regionSequenceRef = doc.dci->createRegionSequence (doc.dcRef, (ARARegionSequenceHostRef) &doc.edit, &regionSequenceProperties);
+    }
+
+    ~RegionSequenceWrapper()
+    {
+        if (regionSequenceRef != nullptr)
+            doc.dci->destroyRegionSequence (doc.dcRef, regionSequenceRef);
+    }
+
+    ARARegionSequenceRef regionSequenceRef = nullptr;
+
+private:
+    ARADocument& doc;
+    String name;
+    int orderIndex;
+    Colour colour;
+    ARARegionSequenceProperties regionSequenceProperties;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RegionSequenceWrapper)
+};
+
 //==============================================================================
 class PlaybackRegionWrapper
 {
@@ -723,6 +790,10 @@ public:
         {
             CRASH_TRACER
             TRACKTION_ASSERT_MESSAGE_THREAD
+            // TODO ARA2
+            // At this point the track has already been destroyed, so this
+            // function won't work properly. What to do?
+            doc.willDestroyPlaybackRegionOnTrack (clip.getTrack());
             doc.dci->destroyPlaybackRegion (doc.dcRef, playbackRegionRef);
         }
     }
@@ -748,6 +819,9 @@ private:
     /** NB: This is where time-stretching is setup */
     void updatePlaybackProperties (ARAMusicalContextRef musicalContextRef)
     {
+        doc.willCreatePlaybackRegionOnTrack (clip.getTrack());
+        auto regionSequenceRef = doc.regionSequences[clip.getTrack()]->regionSequenceRef;
+
         auto pos = clip.getPosition();
 
         ARAPlaybackRegionProperties props =
@@ -758,7 +832,8 @@ private:
             pos.getLength() * clip.getSpeedRatio(),   // Duration in modification time
             pos.getStart(),                           // Start in playback time
             pos.getLength(),                          // Duration in playback time
-            musicalContextRef
+            musicalContextRef,
+            regionSequenceRef
         };
 
         jassert (props.startInPlaybackTime >= 0.0);
