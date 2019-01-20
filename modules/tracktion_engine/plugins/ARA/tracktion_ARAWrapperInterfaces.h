@@ -926,10 +926,9 @@ private:
     const ARAPlugInExtensionInstance& pluginInstance;
     std::unique_ptr<AudioModificationWrapper> audioModification;
 
-    const ARAPlugInExtensionInterface& getInterface() noexcept
+    bool supportsARAPlugInInstanceRoles() const
     {
-        jassert (pluginInstance.plugInExtensionInterface != nullptr);
-        return *pluginInstance.plugInExtensionInterface;
+        return (ARA_IMPLEMENTED_STRUCT_SIZE(ARAPlugInExtensionInstance, plugInExtensionInterface) < pluginInstance.structSize);
     }
 
     void setPlaybackRegion()
@@ -937,7 +936,19 @@ private:
         CRASH_TRACER
 
         if (playbackRegion != nullptr && playbackRegion->playbackRegionRef != nullptr)
-            getInterface().setPlaybackRegion (pluginInstance.plugInExtensionRef, playbackRegion->playbackRegionRef);
+        {
+            if (supportsARAPlugInInstanceRoles())
+            {
+                if (pluginInstance.playbackRendererInterface != nullptr)
+                    pluginInstance.playbackRendererInterface->addPlaybackRegion (pluginInstance.playbackRendererRef, playbackRegion->playbackRegionRef);
+                if (pluginInstance.editorRendererInterface != nullptr)
+                    pluginInstance.editorRendererInterface->addPlaybackRegion (pluginInstance.editorRendererRef, playbackRegion->playbackRegionRef);
+            }
+            else if (pluginInstance.plugInExtensionInterface != nullptr)
+            {
+                pluginInstance.plugInExtensionInterface->setPlaybackRegion (pluginInstance.plugInExtensionRef, playbackRegion->playbackRegionRef);
+            }
+        }
     }
 
     void removePlaybackRegion()
@@ -945,7 +956,19 @@ private:
         CRASH_TRACER
 
         if (playbackRegion != nullptr && playbackRegion->playbackRegionRef != nullptr)
-            getInterface().removePlaybackRegion (pluginInstance.plugInExtensionRef, playbackRegion->playbackRegionRef);
+        {
+            if (supportsARAPlugInInstanceRoles())
+            {
+                if (pluginInstance.playbackRendererInterface != nullptr)
+                    pluginInstance.playbackRendererInterface->removePlaybackRegion (pluginInstance.playbackRendererRef, playbackRegion->playbackRegionRef);
+                if (pluginInstance.editorRendererInterface != nullptr)
+                    pluginInstance.editorRendererInterface->removePlaybackRegion (pluginInstance.editorRendererRef, playbackRegion->playbackRegionRef);
+            }
+            else if (pluginInstance.plugInExtensionInterface != nullptr)
+            {
+                pluginInstance.plugInExtensionInterface->removePlaybackRegion (pluginInstance.plugInExtensionRef, playbackRegion->playbackRegionRef);
+            }
+        }
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlaybackRegionAndSource)

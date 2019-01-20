@@ -48,6 +48,7 @@ namespace ARA
 {
     DEF_CLASS_IID (IMainFactory)
     DEF_CLASS_IID (IPlugInEntryPoint)
+    DEF_CLASS_IID (IPlugInEntryPoint2)
 }
 
 #if JUCE_MSVC

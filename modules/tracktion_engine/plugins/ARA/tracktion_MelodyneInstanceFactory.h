@@ -10,16 +10,9 @@
 
 struct MelodyneInstance
 {
-    ~MelodyneInstance()
-    {
-        if (vst3EntryPoint != nullptr)
-            vst3EntryPoint->release();
-    }
-
     ExternalPlugin::Ptr plugin;
     const ARAFactory* factory = nullptr;
     const ARAPlugInExtensionInstance* extensionInstance = nullptr;
-    IPlugInEntryPoint* vst3EntryPoint = nullptr;
 };
 
 //==============================================================================
@@ -170,22 +163,22 @@ private:
         return false;
     }
 
-    IPlugInEntryPoint* getVST3EntryPoint (AudioPluginInstance& p)
+    template<typename entrypoint_t>
+    Steinberg::IPtr<entrypoint_t> getVST3EntryPoint (AudioPluginInstance& p)
     {
-        IPlugInEntryPoint* ep = nullptr;
+        entrypoint_t* ep = nullptr;
 
         if (Steinberg::Vst::IComponent* component = (Steinberg::Vst::IComponent*) p.getPlatformSpecificData())
-            component->queryInterface (IPlugInEntryPoint::iid, (void**) &ep);
+            component->queryInterface (entrypoint_t::iid, (void**) &ep);
 
-        return ep;
+        return { ep };
     }
 
     ARAFactory* getFactoryVST3()
     {
-        if (auto ep = getVST3EntryPoint (*plugin))
+        if (auto ep = getVST3EntryPoint<IPlugInEntryPoint> (*plugin))
         {
             ARAFactory* f = const_cast<ARAFactory*> (ep->getFactory());
-            ep->release();
             return f;
         }
 
@@ -196,10 +189,20 @@ private:
     {
         if (auto p = w.plugin->getAudioPluginInstance())
         {
-            w.vst3EntryPoint = getVST3EntryPoint (*p);
+            auto vst3EntryPoint = getVST3EntryPoint<IPlugInEntryPoint> (*p);
+            auto vst3EntryPoint2 = getVST3EntryPoint<IPlugInEntryPoint2> (*p);
 
-            if (w.vst3EntryPoint != nullptr)
-                w.extensionInstance = w.vst3EntryPoint->bindToDocumentController (dcRef);
+            // first try to use the ARA2 bindToDocumentControllerWithRoles interface
+            // for now we use all roles, so this should be equivalent to calling the ARA1 bindToDocumentController
+            // (which we fall back to if we don't have the ARA2 VST3 entry point) 
+            if (vst3EntryPoint2 != nullptr) 
+            {
+                ARAPlugInInstanceRoleFlags allRoles = kARAPlaybackRendererRole | kARAEditorRendererRole | kARAEditorViewRole;
+                w.extensionInstance = vst3EntryPoint2->bindToDocumentControllerWithRoles (dcRef, allRoles, allRoles);
+            }
+            else if (vst3EntryPoint != nullptr)
+                w.extensionInstance = vst3EntryPoint->bindToDocumentController(dcRef);
+
         }
 
         return w.extensionInstance != nullptr;
