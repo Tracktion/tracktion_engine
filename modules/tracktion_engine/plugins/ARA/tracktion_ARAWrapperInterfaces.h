@@ -770,6 +770,8 @@ public:
                            const AudioModificationWrapper& audioModification)
       : doc (d),
         clip (audioClip),
+        name (clip.getName()),
+        colour (clip.getColour()),
         flags (factory.supportedPlaybackTransformationFlags)
     {
         CRASH_TRACER
@@ -813,6 +815,8 @@ public:
 private:
     ARADocument& doc;
     AudioClipBase& clip;
+    String name;
+    Colour colour;
     const ARAPlaybackTransformationFlags flags;
     ARAPlaybackRegionProperties playbackRegionProperties;
 
@@ -822,18 +826,22 @@ private:
         doc.willCreatePlaybackRegionOnTrack (clip.getTrack());
         auto regionSequenceRef = doc.regionSequences[clip.getTrack()]->regionSequenceRef;
 
+        ARAColor playbackRegionColor { colour.getFloatRed(), colour.getFloatGreen(), colour.getFloatBlue() };
+
         auto pos = clip.getPosition();
 
         ARAPlaybackRegionProperties props =
         {
-            kARAPlaybackRegionPropertiesMinSize,
+            ARA_IMPLEMENTED_STRUCT_SIZE(ARAPlaybackRegionProperties, color),
             flags,
             pos.getOffset() * clip.getSpeedRatio(),   // Start in modification time
             pos.getLength() * clip.getSpeedRatio(),   // Duration in modification time
             pos.getStart(),                           // Start in playback time
             pos.getLength(),                          // Duration in playback time
             musicalContextRef,
-            regionSequenceRef
+            regionSequenceRef,
+            name.toRawUTF8(),
+            &playbackRegionColor
         };
 
         jassert (props.startInPlaybackTime >= 0.0);
