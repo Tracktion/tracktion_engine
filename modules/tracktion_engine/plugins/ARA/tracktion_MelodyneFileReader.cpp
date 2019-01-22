@@ -117,6 +117,7 @@ struct ARAClipPlayer  : private SelectableListener
     Edit& getEdit()                         { return edit; }
     AudioClipBase& getClip()                { return clip; }
     ExternalPlugin* getPlugin()             { return melodyneInstance != nullptr ? melodyneInstance->plugin.get() : nullptr; }
+    const ARAFactory* getARAFactory() const { return melodyneInstance != nullptr ? melodyneInstance->factory : nullptr; }
 
     //==============================================================================
     bool initialise (ARAClipPlayer* clipToClone)
@@ -274,14 +275,32 @@ struct ARAClipPlayer  : private SelectableListener
             {
                 if (firstCall)
                 {
-                    firstCall = false;
+                    auto araFactory = pimpl.getARAFactory();
+                    for (ARAContentType contentType : { kARAContentTypeBarSignatures, kARAContentTypeTempoEntries })
+                    {
+                        for (int i = 0; i < araFactory->analyzeableContentTypesCount; i++)
+                        {
+                            if (araFactory->analyzeableContentTypes[i] == contentType)
+                            {
+                                typesBeingAnalyzed.push_back (contentType);
+                                break;
+                            }
+                        }
+                    }
 
-                    ARAContentType types[] = { kARAContentTypeSignatures, kARAContentTypeTempoEntries };
-                    dci->requestAudioSourceContentAnalysis (dcRef, audioSourceRef, (ARASize) numElementsInArray (types), types);
+                    if (!typesBeingAnalyzed.empty())
+                        dci->requestAudioSourceContentAnalysis (dcRef, audioSourceRef, (ARASize)typesBeingAnalyzed.size(), typesBeingAnalyzed.data());
+                    
+                    firstCall = false;
                 }
 
-                analysingContent = dci->isAudioSourceContentAnalysisIncomplete (dcRef, audioSourceRef, kARAContentTypeSignatures) != kARAFalse
-                                || dci->isAudioSourceContentAnalysisIncomplete (dcRef, audioSourceRef, kARAContentTypeTempoEntries) != kARAFalse;
+                analysingContent = false;
+                for (ARAContentType contentType : typesBeingAnalyzed)
+                {
+                    analysingContent = (dci->isAudioSourceContentAnalysisIncomplete (dcRef, audioSourceRef, contentType) != kARAFalse);
+                    if (analysingContent)
+                        break;
+                }
             }
             else
             {
@@ -291,6 +310,7 @@ struct ARAClipPlayer  : private SelectableListener
 
     private:
         const ARAClipPlayer& pimpl;
+        std::vector<ARAContentType> typesBeingAnalyzed;
         volatile bool analysingContent = false;
         bool firstCall = true;
 
