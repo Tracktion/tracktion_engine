@@ -292,7 +292,7 @@ struct ARAClipPlayer  : private SelectableListener
     private:
         const ARAClipPlayer& pimpl;
         volatile bool analysingContent = false;
-        bool firstCall = false;
+        bool firstCall = true;
 
         ContentAnalyser() = delete;
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ContentAnalyser)
