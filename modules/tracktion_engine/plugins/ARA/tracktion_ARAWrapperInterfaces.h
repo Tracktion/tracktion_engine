@@ -277,9 +277,8 @@ static ARADocument* createDocumentInternal (Edit& edit)
         if (name.isEmpty()) name = edit.getName().trim();
         if (name.isEmpty()) name = getEditFileFromProjectManager (edit).getFullPathName().trim();
 
-        ARADocumentProperties documentProperties =
+        const ARA::Host::Properties<ARA_MEMBER_PTR_ARGS (ARADocumentProperties, name)> documentProperties =
         {
-            kARADocumentPropertiesMinSize,
             name.toRawUTF8()
         };
 
@@ -311,12 +310,11 @@ public:
         if (document.dci != nullptr)
         {
             doc.beginEditing (true);
-            const ARAMusicalContextProperties musicalContextProperties = { kARAMusicalContextPropertiesMinSize };
+            auto musicalContextProperties = updateAndGetProperties();
             musicalContextRef = document.dci->createMusicalContext (document.dcRef, (ARAMusicalContextHostRef) &doc.edit, &musicalContextProperties);
             doc.endEditing (true);
         }
     }
-
     ~MusicalContextWrapper()
     {
         CRASH_TRACER
@@ -334,6 +332,16 @@ public:
         if (document.dci != nullptr && musicalContextRef != nullptr)
             document.dci->updateMusicalContextContent (document.dcRef, musicalContextRef,
                                                        nullptr, kARAContentUpdateEverythingChanged);
+    }
+
+    ARA::Host::Properties<ARA_MEMBER_PTR_ARGS (ARAMusicalContextProperties, color)> updateAndGetProperties()
+    {
+        return 
+        { 
+            nullptr, // name
+            0,       // index
+            nullptr  // color
+        };
     }
 
     //==============================================================================
@@ -572,33 +580,14 @@ public:
     AudioSourceWrapper (ARADocument& d, AudioClipBase& audioClip)
       : doc (d),
         clip (audioClip),
-        sourceName (audioClip.getAudioFile().getFile().getFileName()),
-        itemID (audioClip.getAudioFile().getHashString() + "_" + audioClip.itemID.toString()),
-        lengthSamples (audioClip.getAudioFile().getLengthInSamples())
+        itemID (audioClip.getAudioFile().getHashString() + "_" + audioClip.itemID.toString())
     {
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
 
-        {
-            std::unique_ptr<NodeReader> reader (createReader());
-
-            ARAAudioSourceProperties props =
-            {
-                kARAAudioSourcePropertiesMinSize,
-                sourceName.toRawUTF8(),
-                itemID.toRawUTF8(),
-                (ARASampleCount) lengthSamples,
-                (ARASampleRate) (reader != nullptr ? reader->getSampleRate() : 0.0),
-                (ARAChannelCount) (reader != nullptr ? reader->getNumChannels() : 0),
-                kARAFalse //merits64BitSamples
-            };
-
-            audioSourceProperties = props;
-        }
-
+        auto audioSourceProperties = updateAndGetProperties();
         audioSourceRef = doc.dci->createAudioSource (doc.dcRef, (ARAAudioSourceHostRef) this, &audioSourceProperties);
     }
-
     ~AudioSourceWrapper()
     {
         CRASH_TRACER
@@ -655,16 +644,30 @@ public:
         delete (NodeReader*) hostReaderRef;
     }
 
+    ARA::Host::Properties<ARA_MEMBER_PTR_ARGS (ARAAudioSourceProperties, merits64BitSamples)> updateAndGetProperties()
+    {
+        name = clip.getAudioFile().getFile().getFileName();
+        std::unique_ptr<NodeReader> reader (createReader());
+        return
+        {
+            name.toRawUTF8(),
+            itemID.toRawUTF8(),
+            (ARASampleCount)clip.getAudioFile().getLengthInSamples(),
+            (ARASampleRate)(reader != nullptr ? reader->getSampleRate() : 0.0),
+            (ARAChannelCount)(reader != nullptr ? reader->getNumChannels() : 0),
+            kARAFalse //merits64BitSamples
+        };
+    }
+
     //==============================================================================
     ARADocument& doc;
     AudioClipBase& clip;
     ARAAudioSourceRef audioSourceRef = {};
-    ARAAudioSourceProperties audioSourceProperties;
-    const String sourceName, itemID;
 
 private:
-    const int64 lengthSamples;
-
+    const String itemID;
+    String name;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioSourceWrapper)
 };
 
@@ -673,25 +676,17 @@ class AudioModificationWrapper
 {
 public:
     AudioModificationWrapper (ARADocument& d,
-                              const AudioSourceWrapper& audioSource,
+                              AudioSourceWrapper& source,
                               const String& itemID,
                               AudioModificationWrapper* instanceToClone)
       : doc (d),
-        name (audioSource.sourceName),
+        audioSource (source),
         persistentID (itemID)
     {
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
 
-        ARAAudioModificationProperties props =
-        {
-            kARAAudioModificationPropertiesMinSize,
-            name.toRawUTF8(),
-            persistentID.toRawUTF8()
-        };
-
-        audioModificationProperties = props;
-
+        auto audioModificationProperties = updateAndGetProperties();
         if (instanceToClone != nullptr)
             audioModificationRef = doc.dci->cloneAudioModification (doc.dcRef, instanceToClone->audioModificationRef,
                                                                      (ARAAudioModificationHostRef) &doc.edit, &audioModificationProperties);
@@ -699,17 +694,30 @@ public:
             audioModificationRef = doc.dci->createAudioModification (doc.dcRef, audioSource.audioSourceRef,
                                                                      (ARAAudioModificationHostRef) &doc.edit, &audioModificationProperties);
     }
-
     ~AudioModificationWrapper()
     {
         if (audioModificationRef != nullptr)
             doc.dci->destroyAudioModification (doc.dcRef, audioModificationRef);
     }
 
+    ARA::Host::Properties<ARA_MEMBER_PTR_ARGS (ARAAudioModificationProperties, persistentID)> updateAndGetProperties()
+    {
+        auto audioSourceProperties = audioSource.updateAndGetProperties();
+        name = audioSourceProperties.name;
+        return
+        {
+            name.toRawUTF8(),
+            persistentID.toRawUTF8()
+        };
+    }
+
     ARADocument& doc;
-    ARAAudioModificationProperties audioModificationProperties;
+    AudioSourceWrapper& audioSource;
     ARAAudioModificationRef audioModificationRef = nullptr;
-    const String name, persistentID;
+    
+private:
+    String name;
+    const String persistentID;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioModificationWrapper)
 };
@@ -717,45 +725,46 @@ public:
 class RegionSequenceWrapper
 {
 public:
-    RegionSequenceWrapper(ARADocument& d, Track* track)
+    RegionSequenceWrapper(ARADocument& d, Track* track_)
         : doc (d),
-          name (track->getName()),
-          orderIndex (track->getIndexInEditTrackList()),
-          colour (track->getColour())
+          track (track_)
     {
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
 
-        ARAColor regionSequenceColor { colour.getFloatRed(), colour.getFloatGreen(), colour.getFloatBlue() };
-
-        ARARegionSequenceProperties props =
-        {
-            ARA_IMPLEMENTED_STRUCT_SIZE(ARARegionSequenceProperties, color),
-            name.toRawUTF8(),
-            orderIndex,
-            doc.musicalContext->musicalContextRef,
-            &regionSequenceColor
-        };
-
-        regionSequenceProperties = props;
-
+        auto regionSequenceProperties = updateAndGetProperties();
         regionSequenceRef = doc.dci->createRegionSequence (doc.dcRef, (ARARegionSequenceHostRef) &doc.edit, &regionSequenceProperties);
     }
-
     ~RegionSequenceWrapper()
     {
         if (regionSequenceRef != nullptr)
             doc.dci->destroyRegionSequence (doc.dcRef, regionSequenceRef);
     }
 
+    ARA::Host::Properties<ARA_MEMBER_PTR_ARGS (ARARegionSequenceProperties, color)> updateAndGetProperties()
+    {
+        name = track->getName();
+        orderIndex = track->getIndexInEditTrackList();
+        Colour trackColour = track->getColour();
+        colour = { trackColour.getFloatRed(), trackColour.getFloatGreen(), trackColour.getFloatBlue() };
+        return
+        {
+            name.toRawUTF8(),
+            orderIndex,
+            doc.musicalContext->musicalContextRef,
+            &colour
+        };
+    }
+
     ARARegionSequenceRef regionSequenceRef = nullptr;
 
-private:
     ARADocument& doc;
-    String name;
+    Track* track;
+
+private:
     int orderIndex;
-    Colour colour;
-    ARARegionSequenceProperties regionSequenceProperties;
+    String name;
+    ARAColor colour;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RegionSequenceWrapper)
 };
@@ -770,15 +779,15 @@ public:
                            const AudioModificationWrapper& audioModification)
       : doc (d),
         clip (audioClip),
-        name (clip.getName()),
-        colour (clip.getColour()),
         flags (factory.supportedPlaybackTransformationFlags)
     {
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
 
+        doc.willCreatePlaybackRegionOnTrack (clip.getTrack());
+
         jassert (d.musicalContext != nullptr && d.musicalContext->musicalContextRef != nullptr);
-        updatePlaybackProperties (d.musicalContext->musicalContextRef);
+        auto playbackRegionProperties = updateAndGetProperties (d.musicalContext->musicalContextRef);
 
         playbackRegionRef = doc.dci->createPlaybackRegion (doc.dcRef,
                                                            audioModification.audioModificationRef,
@@ -805,34 +814,27 @@ public:
         if (playbackRegionRef != nullptr)
         {
             CRASH_TRACER
-            updatePlaybackProperties (playbackRegionProperties.musicalContextRef);
+            
+            auto playbackRegionProperties = updateAndGetProperties (doc.musicalContext->musicalContextRef);
             doc.dci->updatePlaybackRegionProperties (doc.dcRef, playbackRegionRef, &playbackRegionProperties);
         }
     }
 
     ARAPlaybackRegionRef playbackRegionRef = nullptr;
 
-private:
-    ARADocument& doc;
-    AudioClipBase& clip;
-    String name;
-    Colour colour;
-    const ARAPlaybackTransformationFlags flags;
-    ARAPlaybackRegionProperties playbackRegionProperties;
-
     /** NB: This is where time-stretching is setup */
-    void updatePlaybackProperties (ARAMusicalContextRef musicalContextRef)
+    ARA::Host::Properties<ARA_MEMBER_PTR_ARGS (ARAPlaybackRegionProperties, color)> updateAndGetProperties (ARAMusicalContextRef musicalContextRef)
     {
-        doc.willCreatePlaybackRegionOnTrack (clip.getTrack());
         auto regionSequenceRef = doc.regionSequences[clip.getTrack()]->regionSequenceRef;
-
-        ARAColor playbackRegionColor { colour.getFloatRed(), colour.getFloatGreen(), colour.getFloatBlue() };
+        
+        name = clip.getName();
+        Colour clipColour = clip.getColour();
+        colour = { clip.getColour().getFloatRed(), clip.getColour().getFloatGreen(), clip.getColour().getFloatBlue() };
 
         auto pos = clip.getPosition();
 
-        ARAPlaybackRegionProperties props =
+        return
         {
-            ARA_IMPLEMENTED_STRUCT_SIZE(ARAPlaybackRegionProperties, color),
             flags,
             pos.getOffset() * clip.getSpeedRatio(),   // Start in modification time
             pos.getLength() * clip.getSpeedRatio(),   // Duration in modification time
@@ -841,16 +843,18 @@ private:
             musicalContextRef,
             regionSequenceRef,
             name.toRawUTF8(),
-            &playbackRegionColor
+            &colour
         };
-
-        jassert (props.startInPlaybackTime >= 0.0);
-        jassert (props.durationInPlaybackTime >= 0.0);
-        jassert (props.startInModificationTime >= 0.0);
-        jassert (props.durationInModificationTime >= 0.0);
-
-        playbackRegionProperties = props;
     }
+
+    //==============================================================================
+    ARADocument& doc;
+    AudioClipBase& clip;
+
+private:
+    String name;
+    ARAColor colour;
+    const ARAPlaybackTransformationFlags flags;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlaybackRegionWrapper)
 };

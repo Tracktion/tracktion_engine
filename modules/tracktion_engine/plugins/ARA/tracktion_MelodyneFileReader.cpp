@@ -39,6 +39,7 @@
 // If you get an error here, in order to build with ARA support you'll need
 // to include the SDK in your header search paths!
 #include "ARA_API/ARAVST3.h"
+#include "ARA_Library/Dispatch/ARAHostDispatch.h"
 
 #include "pluginterfaces/vst/ivstcomponent.h"
 #include "pluginterfaces/vst/ivstaudioprocessor.h"
