@@ -99,11 +99,11 @@ bool TrackOutput::outputsToDevice (const String& deviceName, bool compareDefault
             {
                 auto defWaveName = defaultWave->getName();
 
-                bool b1 = deviceName.equalsIgnoreCase (DeviceManager::getDefaultAudioDeviceName (false))
+                bool b1 = deviceName.equalsIgnoreCase (DeviceManager::getDefaultAudioOutDeviceName (false))
                            && outputDevice.get().equalsIgnoreCase (defWaveName);
 
                 bool b2 = deviceName.equalsIgnoreCase (defWaveName)
-                           && outputDevice.get().equalsIgnoreCase (DeviceManager::getDefaultAudioDeviceName (false));
+                           && outputDevice.get().equalsIgnoreCase (DeviceManager::getDefaultAudioOutDeviceName (false));
 
                 if (b1 || b2)
                     return true;
@@ -116,10 +116,10 @@ bool TrackOutput::outputsToDevice (const String& deviceName, bool compareDefault
             {
                 auto defMidiName = defaultMIDI->getName();
 
-                if ((deviceName.equalsIgnoreCase (DeviceManager::getDefaultMidiDeviceName (false))
+                if ((deviceName.equalsIgnoreCase (DeviceManager::getDefaultMidiOutDeviceName (false))
                        && outputDevice.get().equalsIgnoreCase (defMidiName))
                      || (deviceName.equalsIgnoreCase (defMidiName)
-                           && outputDevice.get().equalsIgnoreCase (DeviceManager::getDefaultMidiDeviceName (false))))
+                           && outputDevice.get().equalsIgnoreCase (DeviceManager::getDefaultMidiOutDeviceName (false))))
                     return true;
             }
         }
@@ -224,8 +224,8 @@ void TrackOutput::setOutputToTrack (AudioTrack* track)
 
 void TrackOutput::setOutputToDefaultDevice (bool isMidi)
 {
-    outputDevice = isMidi ? DeviceManager::getDefaultMidiDeviceName (false)
-                          : DeviceManager::getDefaultAudioDeviceName (false);
+    outputDevice = isMidi ? DeviceManager::getDefaultMidiOutDeviceName (false)
+                          : DeviceManager::getDefaultAudioOutDeviceName (false);
 }
 
 static bool feedsIntoAnyOf (AudioTrack* t, const Array<AudioTrack*>& tracks)
@@ -250,12 +250,12 @@ void TrackOutput::getPossibleOutputDeviceNames (const Array<AudioTrack*>& tracks
     if (tracks.isEmpty())
         return;
 
-    s.add (DeviceManager::getDefaultAudioDeviceName (false));
-    a.add (DeviceManager::getDefaultAudioDeviceName (true));
+    s.add (DeviceManager::getDefaultAudioOutDeviceName (false));
+    a.add (DeviceManager::getDefaultAudioOutDeviceName (true));
     hasAudio.setBit (0);
 
-    s.add (DeviceManager::getDefaultMidiDeviceName (false));
-    a.add (DeviceManager::getDefaultMidiDeviceName (true));
+    s.add (DeviceManager::getDefaultMidiOutDeviceName (false));
+    a.add (DeviceManager::getDefaultMidiOutDeviceName (true));
     hasMidi.setBit (1);
 
     auto& dm = tracks.getFirst()->edit.engine.getDeviceManager();

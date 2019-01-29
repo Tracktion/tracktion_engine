@@ -2081,14 +2081,14 @@ EditTimeRange Edit::getClickTrackRange() const noexcept
 
 juce::String Edit::getClickTrackDevice() const
 {
-    if (clickTrackDevice == DeviceManager::getDefaultAudioDeviceName (false)
-         || clickTrackDevice == DeviceManager::getDefaultMidiDeviceName (false))
+    if (clickTrackDevice == DeviceManager::getDefaultAudioOutDeviceName (false)
+         || clickTrackDevice == DeviceManager::getDefaultMidiOutDeviceName (false))
         return clickTrackDevice;
 
     if (auto out = engine.getDeviceManager().findOutputDeviceWithName (clickTrackDevice))
         return out->getName();
 
-    return DeviceManager::getDefaultAudioDeviceName (false);
+    return DeviceManager::getDefaultAudioOutDeviceName (false);
 }
 
 bool Edit::isClickTrackDevice (OutputDevice& dev) const
@@ -2098,7 +2098,7 @@ bool Edit::isClickTrackDevice (OutputDevice& dev) const
     if (auto out = dm.findOutputDeviceWithName (clickTrackDevice))
         return out == &dev;
 
-    if (clickTrackDevice == DeviceManager::getDefaultMidiDeviceName (false))
+    if (clickTrackDevice == DeviceManager::getDefaultMidiOutDeviceName (false))
         return dm.getDefaultMidiOutDevice() == &dev;
 
     return dm.getDefaultWaveOutDevice() == &dev;

@@ -149,18 +149,31 @@ DeviceManager::~DeviceManager()
     deviceManager.removeChangeListener (this);
 }
 
-String DeviceManager::getDefaultAudioDeviceName (bool translated)
+String DeviceManager::getDefaultAudioOutDeviceName (bool translated)
 {
     return translated ? ("(" + TRANS("Default audio output") + ")")
                       : "(default audio output)";
 }
 
-String DeviceManager::getDefaultMidiDeviceName (bool translated)
+String DeviceManager::getDefaultMidiOutDeviceName (bool translated)
 {
     return translated ? ("(" + TRANS("Default MIDI output") + ")")
                       : "(default MIDI output)";
 }
 
+String DeviceManager::getDefaultAudioInDeviceName (bool translated)
+{
+    return translated ? ("(" + TRANS("Default audio input") + ")")
+                      : "(default audio input)";
+}
+
+String DeviceManager::getDefaultMidiInDeviceName (bool translated)
+{
+    return translated ? ("(" + TRANS("Default MIDI input") + ")")
+                      : "(default MIDI input)";
+}
+
+    
 void DeviceManager::closeDevices()
 {
     CRASH_TRACER
@@ -207,7 +220,8 @@ void DeviceManager::initialiseMidi()
 
     auto& storage = engine.getPropertyStorage();
 
-    defaultMidiIndex = storage.getProperty (SettingID::defaultMidiDevice);
+    defaultMidiOutIndex = storage.getProperty (SettingID::defaultMidiOutDevice);
+    defaultMidiInIndex = storage.getProperty (SettingID::defaultMidiInDevice);
 
     TRACKTION_LOG ("Finding MIDI I/O");
     lastMidiInNames = MidiInput::getDevices();
@@ -508,10 +522,16 @@ void DeviceManager::rebuildWaveDeviceList()
 
   #if TRACKTION_LOG_ENABLED
     auto wo = getDefaultWaveOutDevice();
-    TRACKTION_LOG ("Default Wave: " + (wo != nullptr ? wo->getName() : String()));
+    TRACKTION_LOG ("Default Wave Out: " + (wo != nullptr ? wo->getName() : String()));
 
     auto mo = getDefaultMidiOutDevice();
-    TRACKTION_LOG ("Default MIDI: " + (mo != nullptr ? mo->getName() : String()));
+    TRACKTION_LOG ("Default MIDI Out: " + (mo != nullptr ? mo->getName() : String()));
+    
+    auto wi = getDefaultWaveInDevice();
+    TRACKTION_LOG ("Default Wave In: " + (wi != nullptr ? wi->getName() : String()));
+    
+    auto mi = getDefaultMidiInDevice();
+    TRACKTION_LOG ("Default MIDI In: " + (mi != nullptr ? mi->getName() : String()));
   #endif
 
     sendChangeMessage();
@@ -614,37 +634,73 @@ void DeviceManager::checkDefaultDevicesAreValid()
     if (getDefaultWaveOutDevice() == nullptr
          || ! getDefaultWaveOutDevice()->isEnabled())
     {
-        defaultWaveIndex = -1;
+        defaultWaveOutIndex = -1;
 
         for (int i = 0; i < getNumWaveOutDevices(); ++i)
         {
             if (getWaveOutDevice(i) != 0 && getWaveOutDevice(i)->isEnabled())
             {
-                defaultWaveIndex = i;
+                defaultWaveOutIndex = i;
                 break;
             }
         }
 
-        if (defaultWaveIndex >= 0)
-            storage.setPropertyItem (SettingID::defaultWaveDevice, deviceManager.getCurrentAudioDeviceType(), defaultWaveIndex);
+        if (defaultWaveOutIndex >= 0)
+            storage.setPropertyItem (SettingID::defaultWaveOutDevice, deviceManager.getCurrentAudioDeviceType(), defaultWaveOutIndex);
     }
 
     if (getDefaultMidiOutDevice() == nullptr
          || ! getDefaultMidiOutDevice()->isEnabled())
     {
-        defaultMidiIndex = -1;
+        defaultMidiOutIndex = -1;
 
         for (int i = 0; i < getNumMidiOutDevices(); ++i)
         {
             if (getMidiOutDevice(i) != 0 && getMidiOutDevice(i)->isEnabled())
             {
-                defaultMidiIndex = i;
+                defaultMidiOutIndex = i;
                 break;
             }
         }
 
-        if (defaultMidiIndex >= 0)
-            storage.setProperty (SettingID::defaultMidiDevice, defaultMidiIndex);
+        if (defaultMidiOutIndex >= 0)
+            storage.setProperty (SettingID::defaultMidiOutDevice, defaultMidiOutIndex);
+    }
+    
+    if (getDefaultWaveInDevice() == nullptr
+        || ! getDefaultWaveInDevice()->isEnabled())
+    {
+        defaultWaveInIndex = -1;
+        
+        for (int i = 0; i < getNumWaveInDevices(); ++i)
+        {
+            if (getWaveInDevice(i) != 0 && getWaveInDevice(i)->isEnabled())
+            {
+                defaultWaveInIndex = i;
+                break;
+            }
+        }
+        
+        if (defaultWaveInIndex >= 0)
+            storage.setPropertyItem (SettingID::defaultWaveInDevice, deviceManager.getCurrentAudioDeviceType(), defaultWaveInIndex);
+    }
+    
+    if (getDefaultMidiInDevice() == nullptr
+        || ! getDefaultMidiInDevice()->isEnabled())
+    {
+        defaultMidiInIndex = -1;
+        
+        for (int i = 0; i < getNumMidiInDevices(); ++i)
+        {
+            if (getMidiInDevice(i) != 0 && getMidiInDevice(i)->isEnabled())
+            {
+                defaultMidiInIndex = i;
+                break;
+            }
+        }
+        
+        if (defaultMidiInIndex >= 0)
+            storage.setProperty (SettingID::defaultMidiInDevice, defaultMidiInIndex);
     }
 }
 
@@ -683,8 +739,24 @@ void DeviceManager::setDefaultWaveOutDevice (int index)
     {
         if (wod->isEnabled())
         {
-            defaultWaveIndex = index;
-            engine.getPropertyStorage().setPropertyItem (SettingID::defaultWaveDevice,
+            defaultWaveOutIndex = index;
+            engine.getPropertyStorage().setPropertyItem (SettingID::defaultWaveOutDevice,
+                                                         deviceManager.getCurrentAudioDeviceType(), index);
+        }
+    }
+
+    checkDefaultDevicesAreValid();
+    rebuildWaveDeviceList();
+}
+
+void DeviceManager::setDefaultWaveInDevice (int index)
+{
+    if (auto wod = getWaveInDevice (index))
+    {
+        if (wod->isEnabled())
+        {
+            defaultWaveInIndex = index;
+            engine.getPropertyStorage().setPropertyItem (SettingID::defaultWaveInDevice,
                                                          deviceManager.getCurrentAudioDeviceType(), index);
         }
     }
@@ -771,8 +843,20 @@ void DeviceManager::setDefaultMidiOutDevice (int index)
 {
     if (midiOutputs[index] != 0 && midiOutputs[index]->isEnabled())
     {
-        defaultMidiIndex = index;
-        engine.getPropertyStorage().setProperty (SettingID::defaultMidiDevice, defaultMidiIndex);
+        defaultMidiOutIndex = index;
+        engine.getPropertyStorage().setProperty (SettingID::defaultMidiOutDevice, defaultMidiOutIndex);
+    }
+
+    checkDefaultDevicesAreValid();
+    rebuildWaveDeviceList();
+}
+    
+void DeviceManager::setDefaultMidiInDevice (int index)
+{
+    if (midiInputs[index] != 0 && midiInputs[index]->isEnabled())
+    {
+        defaultMidiInIndex = index;
+        engine.getPropertyStorage().setProperty (SettingID::defaultMidiInDevice, defaultMidiInIndex);
     }
 
     checkDefaultDevicesAreValid();
@@ -840,8 +924,8 @@ OutputDevice* DeviceManager::findOutputDeviceForID (const String& id) const
 
 OutputDevice* DeviceManager::findOutputDeviceWithName (const String& name) const
 {
-    if (name == getDefaultAudioDeviceName (false))     return getDefaultWaveOutDevice();
-    if (name == getDefaultMidiDeviceName (false))      return getDefaultMidiOutDevice();
+    if (name == getDefaultAudioOutDeviceName (false))     return getDefaultWaveOutDevice();
+    if (name == getDefaultMidiOutDeviceName (false))      return getDefaultMidiOutDevice();
 
     for (auto d : waveOutputs)
         if (d->getName() == name)
@@ -982,7 +1066,8 @@ void DeviceManager::audioDeviceAboutToStart (AudioIODevice* device)
     currentSampleRate = device->getCurrentSampleRate();
     currentLatencyMs  = device->getCurrentBufferSizeSamples() * 1000.0f / currentSampleRate;
     outputLatencyTime = device->getOutputLatencyInSamples() / currentSampleRate;
-    defaultWaveIndex = engine.getPropertyStorage().getPropertyItem (SettingID::defaultWaveDevice, device->getTypeName(), 0);
+    defaultWaveOutIndex = engine.getPropertyStorage().getPropertyItem (SettingID::defaultWaveOutDevice, device->getTypeName(), 0);
+    defaultWaveInIndex = engine.getPropertyStorage().getPropertyItem (SettingID::defaultWaveInDevice, device->getTypeName(), 0);
 
     if (waveDeviceListNeedsRebuilding())
         rebuildWaveDeviceList();

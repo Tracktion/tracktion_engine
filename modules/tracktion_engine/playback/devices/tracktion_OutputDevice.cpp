@@ -31,11 +31,11 @@ void OutputDevice::initialiseDefaultAlias()
 {
     defaultAlias = getName();
 
-    if (defaultAlias == DeviceManager::getDefaultAudioDeviceName (false))
-        defaultAlias = DeviceManager::getDefaultAudioDeviceName (true);
+    if (defaultAlias == DeviceManager::getDefaultAudioOutDeviceName (false))
+        defaultAlias = DeviceManager::getDefaultAudioOutDeviceName (true);
 
-    if (defaultAlias == DeviceManager::getDefaultMidiDeviceName (false))
-        defaultAlias = DeviceManager::getDefaultMidiDeviceName (true);
+    if (defaultAlias == DeviceManager::getDefaultMidiOutDeviceName (false))
+        defaultAlias = DeviceManager::getDefaultMidiOutDeviceName (true);
 
     defaultAlias = findDefaultAliasNameNotClashingWithInputDevices (engine, isMidi(), getName(), defaultAlias);
 }

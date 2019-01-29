@@ -67,8 +67,10 @@ String PropertyStorage::settingToString (SettingID setting)
         case SettingID::customMidiControllers:         return "customMidiControllers";
         case SettingID::deadMansPedal:                 return "deadMansPedal";
         case SettingID::cpu:                           return "cpu";
-        case SettingID::defaultMidiDevice:             return "defaultMidiDevice";
-        case SettingID::defaultWaveDevice:             return "defaultWaveDevice";
+        case SettingID::defaultMidiOutDevice:          return "defaultMidiDevice";
+        case SettingID::defaultWaveOutDevice:          return "defaultWaveDevice";
+        case SettingID::defaultMidiInDevice:           return "defaultMidiInDevice";
+        case SettingID::defaultWaveInDevice:           return "defaultWaveInDevice";
         case SettingID::externControlIn:               return "externControlIn";
         case SettingID::externControlOut:              return "externControlOut";
         case SettingID::externControlShowSelection:    return "externControlShowSelection";
