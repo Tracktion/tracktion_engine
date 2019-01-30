@@ -91,12 +91,15 @@ private:
         if (plugin != nullptr)
         {
             getFactoryForPlugin();
-            jassert (factory != nullptr);
 
             if (factory != nullptr)
             {
                 if (canBeUsedAsTimeStretchEngine (*factory))
                 {
+                    ARAInt32 apiGeneration = kARAAPIGeneration_1_0_Final;
+                    if (factory->highestSupportedApiGeneration >= kARAAPIGeneration_2_0_Final)
+                        apiGeneration = kARAAPIGeneration_2_0_Final;
+
                     ARAAssertFunction* assertFuncPtr = nullptr;
                    #if JUCE_LOG_ASSERTIONS || JUCE_DEBUG
                     static ARAAssertFunction assertFunction = assertCallback;
@@ -105,7 +108,7 @@ private:
 
                     const ARAInterfaceConfiguration interfaceConfig =
                     {
-                        kARAInterfaceConfigurationMinSize, kARAAPIGeneration_1_0_Final, assertFuncPtr
+                        kARAInterfaceConfigurationMinSize, apiGeneration, assertFuncPtr
                     };
 
                     factory->initializeARAWithConfiguration (&interfaceConfig);
@@ -146,6 +149,9 @@ private:
 
         if (type == "VST3")
             factory = getFactoryVST3();
+
+        if (factory != nullptr && factory->lowestSupportedApiGeneration > kARAAPIGeneration_2_0_Final)
+            factory = nullptr;
     }
 
     bool setExtensionInstance (MelodyneInstance& w, ARADocumentControllerRef dcRef)
