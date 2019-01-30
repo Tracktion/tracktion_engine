@@ -97,7 +97,18 @@ private:
             {
                 if (canBeUsedAsTimeStretchEngine (*factory))
                 {
-                    setAssertionCallback();
+                    ARAAssertFunction* assertFuncPtr = nullptr;
+                   #if JUCE_LOG_ASSERTIONS || JUCE_DEBUG
+                    static ARAAssertFunction assertFunction = assertCallback;
+                    assertFuncPtr = &assertFunction;
+                   #endif
+
+                    const ARAInterfaceConfiguration interfaceConfig =
+                    {
+                        kARAInterfaceConfigurationMinSize, kARAAPIGeneration_1_0_Final, assertFuncPtr
+                    };
+
+                    factory->initializeARAWithConfiguration (&interfaceConfig);
                 }
                 else
                 {
@@ -192,18 +203,6 @@ private:
     {
         return (factory.supportedPlaybackTransformationFlags & kARAPlaybackTransformationTimestretch) != 0
             && (factory.supportedPlaybackTransformationFlags & kARAPlaybackTransformationTimestretchReflectingTempo) != 0;
-    }
-
-    void setAssertionCallback()
-    {
-        static ARAAssertFunction assertFunction = assertCallback;
-
-        const ARAInterfaceConfiguration interfaceConfig =
-        {
-            kARAInterfaceConfigurationMinSize, kARAAPIGeneration_1_0_Final, &assertFunction
-        };
-
-        factory->initializeARAWithConfiguration (&interfaceConfig);
     }
 
     static void ARA_CALL assertCallback (ARAAssertCategory category, const void*, const char* diagnosis)
