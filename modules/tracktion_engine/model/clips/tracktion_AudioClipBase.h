@@ -131,14 +131,14 @@ public:
 
     //==============================================================================
     void setGainDB (float dB);
-    float getGainDB() const noexcept                    { return dbGain; }
-    float getGain() const noexcept                      { return gain; }
+    float getGainDB() const noexcept                    { return level->dbGain; }
+    float getGain() const noexcept                      { return dbToGain (level->dbGain); }
 
     void setPan (float pan);
-    float getPan() const noexcept                       { return pan; }
+    float getPan() const noexcept                       { return level->pan; }
 
-    void setMuted (bool shouldBeMuted) override         { mute = shouldBeMuted; }
-    bool isMuted() const override                       { return mute; }
+    void setMuted (bool shouldBeMuted) override         { level->mute = shouldBeMuted; }
+    bool isMuted() const override                       { return level->mute; }
 
     LiveClipLevel getLiveClipLevel();
 
@@ -344,9 +344,7 @@ protected:
     friend class WaveCompManager;
 
     //==============================================================================
-    float gain = 1.0f;
-    juce::CachedValue<float> dbGain, pan;
-    juce::CachedValue<bool> mute;
+    std::shared_ptr<ClipLevel> level { std::make_shared<ClipLevel>() };
     juce::CachedValue<juce::String> channels;
 
     juce::CachedValue<double> fadeIn, fadeOut;
