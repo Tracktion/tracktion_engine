@@ -13,7 +13,7 @@ namespace tracktion_engine
 
 template<typename ObjectType>
 struct TempoAndTimeSigListBase  : public ValueTreeObjectList<ObjectType>,
-                                  private AsyncUpdater
+                                  public AsyncUpdater
 {
     TempoAndTimeSigListBase (TempoSequence& ts, const ValueTree& parent)
         : ValueTreeObjectList<ObjectType> (parent), sequence (ts)
@@ -485,6 +485,7 @@ int TempoSequence::indexOfTempo (const TempoSetting* const t) const
 
 double TempoSequence::getBpmAt (double time) const
 {
+    jassert (! tempos->isUpdatePending());
     for (int i = internalTempos.size(); --i >= 0;)
     {
         auto& it = internalTempos.getReference (i);
@@ -507,6 +508,7 @@ double TempoSequence::BarsAndBeats::getFractionalBeats() const  { return beats -
 
 TempoSequence::BarsAndBeats TempoSequence::timeToBarsBeats (double t) const
 {
+    jassert (! tempos->isUpdatePending());
     for (int i = internalTempos.size(); --i >= 0;)
     {
         auto& it = internalTempos.getReference (i);
@@ -535,6 +537,7 @@ TempoSequence::BarsAndBeats TempoSequence::timeToBarsBeats (double t) const
 
 double TempoSequence::barsBeatsToTime (BarsAndBeats barsBeats) const
 {
+    jassert (! tempos->isUpdatePending());
     for (int i = internalTempos.size(); --i >= 0;)
     {
         auto& it = internalTempos.getReference(i);
@@ -557,6 +560,7 @@ double TempoSequence::barsBeatsToBeats (BarsAndBeats barsBeats) const
 
 double TempoSequence::timeToBeats (double time) const
 {
+    jassert (! tempos->isUpdatePending());
     return internalTempos.timeToBeats (time);
 }
 
@@ -568,6 +572,7 @@ juce::Range<double> TempoSequence::timeToBeats (EditTimeRange range) const
 
 double TempoSequence::beatsToTime (double beats) const
 {
+    jassert (! tempos->isUpdatePending());
     return internalTempos.beatsToTime (beats);
 }
 
@@ -714,6 +719,7 @@ static double calcCurveBpm (double beat, const TempoSetting& t1, const TempoSett
 
 void TempoSequence::updateTempoData()
 {
+    tempos->cancelPendingUpdate();
     jassert (getNumTempos() > 0 && getNumTimeSigs() > 0);
 
     SortedSet<double> beatsWithObjects;
