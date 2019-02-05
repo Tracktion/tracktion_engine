@@ -87,8 +87,8 @@ Engine::~Engine()
     deviceManager.reset();
     midiProgramManager.reset();
 
-    pluginManager.reset();
     MelodyneFileReader::cleanUpOnShutdown();
+    pluginManager.reset();
 
     temporaryFileManager.reset();
     ProjectManager::deleteInstance();
