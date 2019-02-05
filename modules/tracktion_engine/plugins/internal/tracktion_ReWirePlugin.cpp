@@ -1142,6 +1142,7 @@ juce::String ReWirePlugin::openDevice (const String& newDev)
             if (device == nullptr || newDev != device->deviceName)
             {
                 edit.getTransport().stop (false, true);
+                edit.getTransport().freePlaybackContext();
 
                 if (auto newDevice = rewireSystemInstance->openDevice (newDev, error))
                 {
