@@ -32,6 +32,7 @@
 *******************************************************************************/
 
 #pragma once
+#define TRACKTION_ENGINE_H_INCLUDED
 
 #if ! JUCE_PROJUCER_LIVE_BUILD
 
