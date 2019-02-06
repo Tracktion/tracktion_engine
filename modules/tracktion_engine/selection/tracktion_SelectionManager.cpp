@@ -117,6 +117,7 @@ void Selectable::addSelectableListener (SelectableListener* l)
     TRACKTION_ASSERT_MESSAGE_THREAD
     jassert (l != nullptr);
     jassert (! isCallingListeners);
+    jassert (! hasNotifiedListenersOfDeletion);
     selectableListeners.add (l);
 }
 
@@ -174,13 +175,26 @@ void Selectable::notifyListenersOfDeletion()
 
             WeakRef self (this);
 
-            selectableListeners.call ([self] (SelectableListener& l)
-                                      {
-                                          if (auto s = self.get())
-                                              l.selectableObjectAboutToBeDeleted (s);
-                                          else
-                                              jassertfalse;
-                                      });
+            // Use a local copy in case any listeners get deleted during the callbacks
+            juce::ListenerList<SelectableListener> copy;
+
+            for (auto l : selectableListeners.getListeners())
+                copy.add (l);
+
+            copy.call ([self] (SelectableListener& l)
+                       {
+                           if (auto s = self.get())
+                           {
+                               if (! s->selectableListeners.contains (&l))
+                                   return;
+
+                               l.selectableObjectAboutToBeDeleted (s);
+                           }
+                           else
+                           {
+                               jassertfalse;
+                           }
+                       });
         }
 
         selectableAboutToBeDeleted();
