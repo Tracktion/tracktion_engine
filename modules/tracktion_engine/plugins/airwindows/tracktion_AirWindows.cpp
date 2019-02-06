@@ -251,18 +251,16 @@ void AirWindowsPlugin::processBlock (juce::AudioBuffer<float>& buffer)
         AudioScratchBuffer input (pluginChans, samps);
         AudioScratchBuffer output (pluginChans, samps);
 
-        input.buffer.copyFrom (0, 0, buffer, 0, 0, samps);
-        input.buffer.copyFrom (1, 0, buffer, 0, 0, samps);
-
+        input.buffer.clear();
         output.buffer.clear();
+        
+        input.buffer.copyFrom (0, 0, buffer, 0, 0, samps);
 
         impl->processReplacing (input.buffer.getArrayOfWritePointers(),
                                 output.buffer.getArrayOfWritePointers(),
                                 samps);
 
         buffer.copyFrom (0, 0, output.buffer, 0, 0, samps);
-        buffer.applyGain (0, 0, samps, 0.5f);
-        buffer.addFrom (0, 0, output.buffer, 1, 0, samps, 0.5f);
     }
     else
     {
