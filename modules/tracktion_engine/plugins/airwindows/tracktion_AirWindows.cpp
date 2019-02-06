@@ -242,18 +242,40 @@ void AirWindowsPlugin::applyToBuffer (const AudioRenderContext& fc)
 
 void AirWindowsPlugin::processBlock (juce::AudioBuffer<float>& buffer)
 {
-    const int numChans = buffer.getNumChannels();
-    const int samps    = buffer.getNumSamples();
+    const int numChans    = buffer.getNumChannels();
+    const int samps       = buffer.getNumSamples();
+    const int pluginChans = jmax (impl->getNumOutputs(), impl->getNumInputs());
+    
+    if (pluginChans > numChans)
+    {
+        AudioScratchBuffer input (pluginChans, samps);
+        AudioScratchBuffer output (pluginChans, samps);
 
-    AudioScratchBuffer output (numChans, samps);
-    output.buffer.clear();
+        input.buffer.copyFrom (0, 0, buffer, 0, 0, samps);
+        input.buffer.copyFrom (1, 0, buffer, 0, 0, samps);
 
-    impl->processReplacing (buffer.getArrayOfWritePointers(),
-                            output.buffer.getArrayOfWritePointers(),
-                            samps);
+        output.buffer.clear();
 
-    for (int i = 0; i < numChans; ++i)
-        buffer.copyFrom (i, 0, output.buffer, i, 0, samps);
+        impl->processReplacing (input.buffer.getArrayOfWritePointers(),
+                                output.buffer.getArrayOfWritePointers(),
+                                samps);
+
+        buffer.copyFrom (0, 0, output.buffer, 0, 0, samps);
+        buffer.applyGain (0, 0, samps, 0.5f);
+        buffer.addFrom (0, 0, output.buffer, 1, 0, samps, 0.5f);
+    }
+    else
+    {
+        AudioScratchBuffer output (numChans, samps);
+        output.buffer.clear();
+
+        impl->processReplacing (buffer.getArrayOfWritePointers(),
+                                output.buffer.getArrayOfWritePointers(),
+                                samps);
+
+        for (int i = 0; i < numChans; ++i)
+            buffer.copyFrom (i, 0, output.buffer, i, 0, samps);
+    }
 }
 
 void AirWindowsPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
