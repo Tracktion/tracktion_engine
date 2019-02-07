@@ -824,7 +824,7 @@ void ParameterControlMappings::deletePreset (int index)
     if (auto xml = edit.engine.getPropertyStorage().getXmlProperty (SettingID::filterControlMappingPresets))
     {
         juce::XmlElement xmlCopy (*xml);
-        xmlCopy.removeChildElement (xml->getChildElement (index), true);
+        xmlCopy.removeChildElement (xmlCopy.getChildElement (index), true);
         edit.engine.getPropertyStorage().setXmlProperty (SettingID::filterControlMappingPresets, xmlCopy);
     }
 }
