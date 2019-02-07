@@ -535,15 +535,15 @@ void ParameterControlMappings::showMappingsListForRow (int row)
 
     if (r >= 50000 && r < 51000)
     {
-        savePreset (50000 - r);
+        savePreset (r - 50000);
     }
     else if (r >= 60000 && r < 61000)
     {
-        loadPreset (60000 - r);
+        loadPreset (r - 60000);
     }
     else if (r >= 70000 && r < 71000)
     {
-        deletePreset (70000 - r);
+        deletePreset (r - 70000);
     }
     else if (r != 0)
     {
@@ -710,11 +710,14 @@ void ParameterControlMappings::savePreset (int index)
     {
         if (auto p = parameters[i])
         {
-            auto mapping = new juce::XmlElement ("mapping");
-            mapping->setAttribute ("controller", controllerIDs[i]);
-            mapping->setAttribute ("channel", channelIDs[i]);
-            mapping->setAttribute ("parameter", p->paramID);
-            xml->addChildElement(mapping);
+            if (p->getPlugin() == plugin)
+            {
+                auto mapping = new juce::XmlElement ("mapping");
+                mapping->setAttribute ("controller", controllerIDs[i]);
+                mapping->setAttribute ("channel", channelIDs[i]);
+                mapping->setAttribute ("parameter", p->paramID);
+                xml->addChildElement (mapping);
+            }
         }
     }
 
