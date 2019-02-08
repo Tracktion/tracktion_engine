@@ -132,7 +132,7 @@ public:
     //==============================================================================
     juce::Array<AutomatableParameter*> getAllAutomatableParams() const;
 
-    AutomatableParameter* getCurrentlyShownAutoParam() const noexcept   { return currentAutoParam; }
+    AutomatableParameter* getCurrentlyShownAutoParam() const noexcept;
     void setCurrentlyShownAutoParam (const AutomatableParameter::Ptr&);
     void hideAutomatableParametersForSource (EditItemID pluginOrParameterID);
     AutomatableParameter* chooseDefaultAutomationCurve() const;
@@ -188,7 +188,7 @@ protected:
     virtual bool isTrackAudible (bool areAnyTracksSolo) const;
 
 private:
-    AutomatableParameter* currentAutoParam = nullptr;
+    juce::WeakReference<Selectable> currentAutoParam;
     std::unique_ptr<TrackList> trackList;
     std::unique_ptr<ModifierList> modifierList;
 

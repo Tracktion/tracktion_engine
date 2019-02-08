@@ -45,7 +45,7 @@ Track::~Track()
     state.removeListener (this);
 
     pluginList.releaseObjects();
-    currentAutoParam = nullptr;
+    currentAutoParam = {};
 }
 
 void Track::flushStateToValueTree()
@@ -355,7 +355,7 @@ static AutomatableParameter::Ptr findAutomatableParam (Edit& edit, EditItemID pl
                         return p;
 
         for (auto mpl : getAllMacroParameterLists (edit))
-            for (auto* p : mpl->getMacroParameters())
+            for (auto p : mpl->getMacroParameters())
                 if (p->getOwnerID() == pluginID && p->paramID == paramID)
                     return p;
     }
@@ -368,9 +368,18 @@ void Track::refreshCurrentAutoParam()
     currentAutoParamPlugin.forceUpdateOfCachedValue();
     currentAutoParamID.forceUpdateOfCachedValue();
 
-    if (setIfDifferent (currentAutoParam, findAutomatableParam (edit, currentAutoParamPlugin.get(),
-                                                                currentAutoParamID.get()).get()))
+    auto newParam = findAutomatableParam (edit, currentAutoParamPlugin.get(), currentAutoParamID.get()).get();
+
+    if (currentAutoParam != newParam)
+    {
+        currentAutoParam = newParam;
         changed();
+    }
+}
+
+AutomatableParameter* Track::getCurrentlyShownAutoParam() const noexcept
+{
+    return dynamic_cast<AutomatableParameter*> (currentAutoParam.get());
 }
 
 void Track::setCurrentlyShownAutoParam (const AutomatableParameter::Ptr& param)
