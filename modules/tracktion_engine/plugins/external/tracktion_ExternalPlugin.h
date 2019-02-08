@@ -33,6 +33,7 @@ public:
     static const char* xmlTypeName;
 
     void flushPluginStateToValueTree() override;
+    void flushBusesLayoutToValueTree();
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
     void getPluginStateFromTree (juce::MemoryBlock&);
 
