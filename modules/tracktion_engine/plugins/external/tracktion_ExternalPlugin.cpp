@@ -800,6 +800,7 @@ void ExternalPlugin::flushPluginStateToValueTree()
         else
             state.removeProperty (IDs::state, um);
 
+        const ScopedValueSetter<bool> svs (isFlushingLayoutToState, true);
         flushBusesLayoutToValueTree (*this, um);
     }
 }
