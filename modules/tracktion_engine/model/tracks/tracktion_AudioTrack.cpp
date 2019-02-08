@@ -863,6 +863,7 @@ static AudioNode* createFilterAudioNode (AudioTrack& track, AudioNode* node, con
 AudioNode* AudioTrack::createAudioNode (const CreateAudioNodeParams& params)
 {
     CRASH_TRACER
+    jassert (isProcessing (false));
 
     if (! params.forRendering && frozenIndividually)
         return createFreezeAudioNode (params.addAntiDenormalisationNoise);

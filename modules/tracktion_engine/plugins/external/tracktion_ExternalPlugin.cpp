@@ -680,6 +680,9 @@ void ExternalPlugin::processingChanged()
         {
             fullyInitialised = false;
             initialiseFully();
+
+            if (auto t = getOwnerTrack())
+                t->refreshCurrentAutoParam();
         }
     }
     else

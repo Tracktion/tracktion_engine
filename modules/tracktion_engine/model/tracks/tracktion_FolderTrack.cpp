@@ -155,7 +155,8 @@ AudioNode* FolderTrack::createAudioNode (const CreateAudioNodeParams& params)
     // Then add any audio tracks
     for (auto at : subTracks)
         if (params.allowedTracks == nullptr || (*params.allowedTracks)[allTracks.indexOf (at)])
-            mixer->addInput (at->createAudioNode (params));
+            if (at->isProcessing (true))
+                mixer->addInput (at->createAudioNode (params));
 
     // And finally the effects
     AudioNode* finalNode = mixer;
