@@ -67,6 +67,8 @@ public:
     void refresh()
     {
         currentValue = currentParameterValue = plugin.impl->getParameter (index);
+        curveHasChanged();
+        listeners.call (&Listener::currentValueChanged, *this, currentValue);
     }
     
     void setConversionRange (juce::NormalisableRange<float> range)
@@ -144,10 +146,6 @@ AirWindowsPlugin::AirWindowsPlugin (PluginCreationInfo info, std::unique_ptr<Air
     
     restorePluginStateFromValueTree (state);
     
-    for (auto p : parameters)
-        if (auto awp = dynamic_cast<AirWindowsAutomatableParameter*> (p))
-            awp->refresh();
-
     addAutomatableParameter (dryGain = new PluginWetDryAutomatableParam ("dry level", TRANS("Dry Level"), *this));
     addAutomatableParameter (wetGain = new PluginWetDryAutomatableParam ("wet level", TRANS("Wet Level"), *this));
 
@@ -198,6 +196,11 @@ void AirWindowsPlugin::deinitialise()
 
 void AirWindowsPlugin::applyToBuffer (const AudioRenderContext& fc)
 {
+    // We need to lock the processing while a preset is being loaded or the parameters 
+    // will overwrite the plugin state before we can update the parameters from the 
+    // plugin state
+    juce::ScopedLock sl (lock);
+
     if (fc.destBuffer == nullptr)
         return;
 
@@ -278,6 +281,8 @@ void AirWindowsPlugin::processBlock (juce::AudioBuffer<float>& buffer)
 
 void AirWindowsPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
+    juce::ScopedLock sl (lock);
+
     if (v.hasProperty (IDs::state))
     {
         MemoryBlock data;
@@ -292,6 +297,10 @@ void AirWindowsPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v
 
     CachedValue<float>* cvsFloat[]  = { &wetValue, &dryValue, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+
+    for (auto p : parameters)
+        if (auto awp = dynamic_cast<AirWindowsAutomatableParameter*> (p))
+            awp->refresh();
 }
 
 void AirWindowsPlugin::flushPluginStateToValueTree()

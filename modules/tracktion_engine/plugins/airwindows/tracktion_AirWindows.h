@@ -80,6 +80,7 @@ protected:
     void setConversionRange (int param, juce::NormalisableRange<float> range);
     void processBlock (juce::AudioBuffer<float>& buffer);
 
+    juce::CriticalSection lock;
     AirWindowsCallback callback;
     std::unique_ptr<AirWindowsBase> impl;
 
