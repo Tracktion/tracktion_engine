@@ -1024,11 +1024,10 @@ bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& w
             jassert (takeID.isValid());
 
             const AudioFile takeFile (ProjectManager::getInstance()->findSourceFile (takeID));
-            auto segmentTimes = EditTimeRange (startTime - halfCrossfade, endTime + halfCrossfade) + offset;
-
             AudioNode* node = new WaveAudioNode (takeFile, takeRange, 0.0, {}, {},
                                                  1.0, AudioChannelSet::stereo());
 
+            auto segmentTimes = EditTimeRange (startTime, endTime).expanded (halfCrossfade) + offset;
             EditTimeRange fadeIn, fadeOut;
 
             if (i != 0)
@@ -1037,7 +1036,7 @@ bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& w
             if (i != (numSegments - 1))
                 fadeOut = { segmentTimes.getEnd() - crossfadeLength, segmentTimes.getEnd() };
 
-            if (! (fadeIn.isEmpty() || fadeOut.isEmpty()))
+            if (! (fadeIn.isEmpty() && fadeOut.isEmpty()))
                 node = new FadeInOutAudioNode (node, fadeIn, fadeOut, AudioFadeCurve::convex, AudioFadeCurve::convex);
 
             compNode.addInput ({ jmax (0.0, segmentTimes.getStart()), jmin (segmentTimes.getEnd(), context.maxLength) }, node);
