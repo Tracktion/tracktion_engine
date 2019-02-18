@@ -94,7 +94,7 @@ Array<EditTimeRange> TrackCompManager::TrackComp::getMuteTimes (const Array<Edit
 
     if (! nonMuteTimes.isEmpty())
     {
-        lastTime = nonMuteTimes.getFirst().getStart();
+        lastTime = jmin (lastTime, nonMuteTimes.getFirst().getStart());
 
         for (auto r : nonMuteTimes)
         {
