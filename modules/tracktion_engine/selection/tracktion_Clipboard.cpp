@@ -933,12 +933,12 @@ Clipboard::AutomationPoints::AutomationPoints (const AutomationCurve& curve, Edi
 
     for (int i = 0; i < curve.getNumPoints(); ++i)
     {
-        auto p = curve.getPoint(i);
+        auto p = curve.getPoint (i);
 
         if (p.time == range.getStart())  pointAtStart = true;
         if (p.time == range.getEnd())    pointAtEnd = true;
 
-        if (range.contains (p.time))
+        if (range.containsInclusive (p.time))
         {
             p.time -= range.getStart();
             points.push_back (p);

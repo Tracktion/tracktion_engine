@@ -39,6 +39,7 @@ struct EditTimeRange
     bool overlaps (const EditTimeRange& other) const    { return other.start < end && start < other.end; }
     bool contains (const EditTimeRange& other) const    { return other.start >= start && other.end <= end; }
     bool contains (double time) const                   { return time >= start && time < end; }
+    bool containsInclusive (double time) const          { return time >= start && time <= end; }
 
     EditTimeRange getUnionWith (EditTimeRange other) const;
     EditTimeRange getIntersectionWith (EditTimeRange other) const;
