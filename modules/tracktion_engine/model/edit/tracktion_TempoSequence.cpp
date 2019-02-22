@@ -485,7 +485,7 @@ int TempoSequence::indexOfTempo (const TempoSetting* const t) const
 
 double TempoSequence::getBpmAt (double time) const
 {
-    jassert (! tempos->isUpdatePending());
+    updateTempoDataIfNeeded();
     for (int i = internalTempos.size(); --i >= 0;)
     {
         auto& it = internalTempos.getReference (i);
@@ -508,7 +508,7 @@ double TempoSequence::BarsAndBeats::getFractionalBeats() const  { return beats -
 
 TempoSequence::BarsAndBeats TempoSequence::timeToBarsBeats (double t) const
 {
-    jassert (! tempos->isUpdatePending());
+    updateTempoDataIfNeeded();
     for (int i = internalTempos.size(); --i >= 0;)
     {
         auto& it = internalTempos.getReference (i);
@@ -537,7 +537,7 @@ TempoSequence::BarsAndBeats TempoSequence::timeToBarsBeats (double t) const
 
 double TempoSequence::barsBeatsToTime (BarsAndBeats barsBeats) const
 {
-    jassert (! tempos->isUpdatePending());
+    updateTempoDataIfNeeded();
     for (int i = internalTempos.size(); --i >= 0;)
     {
         auto& it = internalTempos.getReference(i);
@@ -560,7 +560,7 @@ double TempoSequence::barsBeatsToBeats (BarsAndBeats barsBeats) const
 
 double TempoSequence::timeToBeats (double time) const
 {
-    jassert (! tempos->isUpdatePending());
+    updateTempoDataIfNeeded();
     return internalTempos.timeToBeats (time);
 }
 
@@ -572,7 +572,7 @@ juce::Range<double> TempoSequence::timeToBeats (EditTimeRange range) const
 
 double TempoSequence::beatsToTime (double beats) const
 {
-    jassert (! tempos->isUpdatePending());
+    updateTempoDataIfNeeded();
     return internalTempos.beatsToTime (beats);
 }
 
@@ -850,6 +850,12 @@ void TempoSequence::updateTempoData()
         ScopedLock sl (edit.engine.getDeviceManager().deviceManager.getAudioCallbackLock());
         internalTempos.swapWith (newSections);
     }
+}
+
+void TempoSequence::updateTempoDataIfNeeded() const
+{
+    if (tempos->isUpdatePending())
+        tempos->handleAsyncUpdate();
 }
 
 void TempoSequence::handleAsyncUpdate()

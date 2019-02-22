@@ -159,6 +159,7 @@ private:
     TempoSections internalTempos;
 
     //==============================================================================
+    void updateTempoDataIfNeeded() const;
     void handleAsyncUpdate() override;
 
     TempoSetting::Ptr insertTempo (double beatNum, double bpm, float curve, juce::UndoManager*);
