@@ -10,6 +10,13 @@
 
 class MusicalContextWrapper;
 class RegionSequenceWrapper;
+class AudioSourceWrapper;
+
+ARA_MAP_HOST_REF(juce::MemoryOutputStream, ARAArchiveWriterHostRef)
+ARA_MAP_HOST_REF(juce::MemoryBlock, ARAArchiveReaderHostRef)
+ARA_MAP_HOST_REF(Edit, ARAContentAccessControllerHostRef, ARAModelUpdateControllerHostRef, ARAMusicalContextHostRef, ARARegionSequenceHostRef, ARAAudioModificationHostRef, ARAPlaybackRegionHostRef)
+ARA_MAP_HOST_REF(TransportControl, ARAPlaybackControllerHostRef)
+ARA_MAP_HOST_REF(AudioSourceWrapper, ARAAudioSourceHostRef)
 
 /**
     As specified by the Celmony:
@@ -82,7 +89,7 @@ public:
         MemoryBlock data;
         MemoryOutputStream out (data, false);
 
-        if (dci->storeDocumentToArchive (dcRef, (ARAArchiveWriterHostRef) &out) != kARAFalse)
+        if (dci->storeDocumentToArchive (dcRef, toHostRef (&out)) != kARAFalse)
         {
             out.flush();
 
@@ -108,7 +115,7 @@ public:
             lastArchiveState = std::make_unique<MemoryBlock>();
             lastArchiveState->fromBase64Encoding (data);
 
-            dci->beginRestoringDocumentFromArchive (dcRef, (ARAArchiveReaderHostRef) lastArchiveState.get());
+            dci->beginRestoringDocumentFromArchive (dcRef, toHostRef (lastArchiveState.get()));
         }
         else
         {
@@ -122,7 +129,7 @@ public:
         TRACKTION_ASSERT_MESSAGE_THREAD
 
         if (lastArchiveState != nullptr)
-            dci->endRestoringDocumentFromArchive (dcRef, (ARAArchiveReaderHostRef) lastArchiveState.get());
+            dci->endRestoringDocumentFromArchive (dcRef, toHostRef (lastArchiveState.get()));
 
         lastArchiveState = nullptr;
     }
@@ -265,11 +272,11 @@ static ARADocument* createDocumentInternal (Edit& edit)
         hostInstance->audioAccessControllerInterface    = &audioAccess;
         hostInstance->archivingControllerHostRef        = nullptr;
         hostInstance->archivingControllerInterface      = &hostArchiving;
-        hostInstance->contentAccessControllerHostRef    = (ARAContentAccessControllerHostRef) &edit;
+        hostInstance->contentAccessControllerHostRef    = toHostRef (&edit);
         hostInstance->contentAccessControllerInterface  = &content;
-        hostInstance->modelUpdateControllerHostRef      = (ARAModelUpdateControllerHostRef) &edit;
+        hostInstance->modelUpdateControllerHostRef      = toHostRef (&edit);
         hostInstance->modelUpdateControllerInterface    = &modelUpdating;
-        hostInstance->playbackControllerHostRef         = (ARAPlaybackControllerHostRef) &edit.getTransport();
+        hostInstance->playbackControllerHostRef         = toHostRef (&edit.getTransport());
         hostInstance->playbackControllerInterface       = &playback;
 
         auto name = edit.getProjectItemID().toString().trim();
@@ -301,6 +308,13 @@ static ARADocument* createDocumentInternal (Edit& edit)
 //==============================================================================
 class MusicalContextWrapper
 {
+    struct TimeEventReaderBase;
+    ARA_MAP_HOST_REF(TimeEventReaderBase, ARAContentReaderHostRef)
+
+    // we  redeclare the mapping between Edit and ARAMusicalContextHostRef here because
+    // otherwise accessing the static functions declared above requires qualified names
+    ARA_MAP_HOST_REF(Edit, ARAContentAccessControllerHostRef, ARAMusicalContextHostRef)
+
 public:
     MusicalContextWrapper (ARADocument& doc)  : document (doc)
     {
@@ -311,7 +325,7 @@ public:
         {
             doc.beginEditing (true);
             auto musicalContextProperties = updateAndGetProperties();
-            musicalContextRef = document.dci->createMusicalContext (document.dcRef, (ARAMusicalContextHostRef) &doc.edit, &musicalContextProperties);
+            musicalContextRef = document.dci->createMusicalContext (document.dcRef, toHostRef (&doc.edit), &musicalContextProperties);
             doc.endEditing (true);
         }
     }
@@ -363,12 +377,12 @@ public:
                                                                            ARAContentType type,
                                                                            const ARAContentTimeRange* range)
     {
-        if (auto edit = (Edit*) controllerHostRef)
+        if (auto edit = fromHostRef (controllerHostRef))
         {
             switch (type)
             {
-                case kARAContentTypeTempoEntries:   return (ARAContentReaderHostRef) new TempoReader (*edit, range);
-                case kARAContentTypeBarSignatures:     return (ARAContentReaderHostRef) new TimeSigReader (*edit, range);
+                case kARAContentTypeTempoEntries:   return toHostRef (new TempoReader (*edit, range));
+                case kARAContentTypeBarSignatures:     return toHostRef (new TimeSigReader (*edit, range));
                 default: break;
             }
         }
@@ -394,11 +408,11 @@ public:
                                                                         ARAContentType type,
                                                                         const ARAContentTimeRange* range)
     {
-        if (auto edit = (Edit*) controllerHostRef)
+        if (auto edit = fromHostRef (controllerHostRef))
         {
             switch (type)
             {
-                case kARAContentTypeNotes:  return (ARAContentReaderHostRef) new MidiNoteReader (*edit, range);
+                case kARAContentTypeNotes:  return toHostRef (new MidiNoteReader (*edit, range));
                 default: break;
             }
         }
@@ -412,7 +426,7 @@ public:
     {
         CRASH_TRACER
 
-        if (auto t = (TimeEventReaderBase*) contentReaderRef)
+        if (auto t = fromHostRef (contentReaderRef))
             return (ARAInt32) t->getNumEvents();
 
         return 0;
@@ -423,7 +437,7 @@ public:
     {
         CRASH_TRACER
 
-        if (auto t = (TimeEventReaderBase*) contentReaderRef)
+        if (auto t = fromHostRef (contentReaderRef))
             return t->getDataForEvent ((int) eventIndex);
 
         return {};
@@ -432,7 +446,7 @@ public:
     static void ARA_CALL destroyContentReader (ARAContentAccessControllerHostRef, ARAContentReaderHostRef contentReaderRef)
     {
         CRASH_TRACER
-        delete (TimeEventReaderBase*) contentReaderRef;
+        delete fromHostRef (contentReaderRef);
     }
 
     //==============================================================================
@@ -586,7 +600,7 @@ public:
         TRACKTION_ASSERT_MESSAGE_THREAD
 
         auto audioSourceProperties = updateAndGetProperties();
-        audioSourceRef = doc.dci->createAudioSource (doc.dcRef, (ARAAudioSourceHostRef) this, &audioSourceProperties);
+        audioSourceRef = doc.dci->createAudioSource (doc.dcRef, toHostRef (this), &audioSourceProperties);
     }
     ~AudioSourceWrapper()
     {
@@ -620,7 +634,7 @@ public:
     {
         CRASH_TRACER
 
-        if (auto source = (AudioSourceWrapper*) hostAudioSourceRef)
+        if (auto source = fromHostRef (hostAudioSourceRef))
             return (ARAAudioReaderHostRef) source->createReader();
 
         return {};
@@ -689,10 +703,10 @@ public:
         auto audioModificationProperties = updateAndGetProperties();
         if (instanceToClone != nullptr)
             audioModificationRef = doc.dci->cloneAudioModification (doc.dcRef, instanceToClone->audioModificationRef,
-                                                                     (ARAAudioModificationHostRef) &doc.edit, &audioModificationProperties);
+                                                                     toHostRef (&doc.edit), &audioModificationProperties);
         else
             audioModificationRef = doc.dci->createAudioModification (doc.dcRef, audioSource.audioSourceRef,
-                                                                     (ARAAudioModificationHostRef) &doc.edit, &audioModificationProperties);
+                                                                     toHostRef (&doc.edit), &audioModificationProperties);
     }
     ~AudioModificationWrapper()
     {
@@ -733,7 +747,7 @@ public:
         TRACKTION_ASSERT_MESSAGE_THREAD
 
         auto regionSequenceProperties = updateAndGetProperties();
-        regionSequenceRef = doc.dci->createRegionSequence (doc.dcRef, (ARARegionSequenceHostRef) &doc.edit, &regionSequenceProperties);
+        regionSequenceRef = doc.dci->createRegionSequence (doc.dcRef, toHostRef (&doc.edit), &regionSequenceProperties);
     }
     ~RegionSequenceWrapper()
     {
@@ -791,7 +805,7 @@ public:
 
         playbackRegionRef = doc.dci->createPlaybackRegion (doc.dcRef,
                                                            audioModification.audioModificationRef,
-                                                           (ARAPlaybackRegionHostRef) &doc.edit,
+                                                           toHostRef (&doc.edit),
                                                            &playbackRegionProperties);
     }
 
