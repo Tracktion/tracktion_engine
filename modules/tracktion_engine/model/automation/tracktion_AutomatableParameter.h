@@ -75,6 +75,7 @@ public:
 
     // should be called to change a parameter when a user is actively moving it
     void setParameter (float value, juce::NotificationType);
+    void setNormalisedParameter (float value, juce::NotificationType);
     void updateToFollowCurve (double time);
 
     /** Call to indicate this parameter is about to be changed. */

@@ -167,7 +167,7 @@ EditFileOperations::~EditFileOperations()
 
 File EditFileOperations::getEditFile() const
 {
-    return getEditFileFromProjectManager (edit);
+    return edit.editFileRetriever();
 }
 
 bool EditFileOperations::writeToFile (const File& file, bool writeQuickBinaryVersion)
@@ -306,12 +306,12 @@ bool EditFileOperations::saveAs()
     return false;
 }
 
-bool EditFileOperations::saveAs (const File& f)
+bool EditFileOperations::saveAs (const File& f, bool forceOverwriteExisting)
 {
     if (f == getEditFile())
         return save (true, false, false);
 
-    if (f.existsAsFile())
+    if (f.existsAsFile() && ! forceOverwriteExisting)
     {
         if (! edit.engine.getUIBehaviour().showOkCancelAlertBox (TRANS("Save Edit") + "...",
                                                                  TRANS("The file XFNX already exists. Do you want to overwrite it?")
@@ -354,6 +354,33 @@ bool EditFileOperations::saveAs (const File& f)
             }
         }
     }
+    else
+    {
+        CRASH_TRACER
+        
+        CustomControlSurface::saveAllSettings();
+        auto controllerMappings = state.getOrCreateChildWithName (IDs::CONTROLLERMAPPINGS, nullptr);
+        edit.getParameterControlMappings().saveTo (controllerMappings);
+        
+        const File tempFile (getTempVersionFile());
+        
+        if (! saveTempVersion (true))
+            return editSaveError (edit, tempFile, true);
+        
+        if (editSnapshot != nullptr)
+            editSnapshot->refreshCacheAndNotifyListeners();
+        
+        if (f.existsAsFile())
+            f.deleteFile();
+        
+        if (! tempFile.moveFileTo (f))
+            return editSaveError (edit, f, true);
+        
+        tempFile.deleteFile();
+        
+        edit.resetChangedStatus();
+        return true;
+    }
 
     jassertfalse;
     return false;
@@ -371,8 +398,8 @@ bool EditFileOperations::saveTempVersion (bool forceSaveEvenIfUnchanged)
 
 File EditFileOperations::getTempVersionOfEditFile (const File& f)
 {
-    return f.exists() ? f.getSiblingFile (".tmp_" + f.getFileNameWithoutExtension())
-                      : File();
+    return f != File() ? f.getSiblingFile (".tmp_" + f.getFileNameWithoutExtension())
+                       : File();
 }
 
 File EditFileOperations::getTempVersionFile() const

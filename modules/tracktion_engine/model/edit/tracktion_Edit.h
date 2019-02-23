@@ -432,7 +432,7 @@ public:
     juce::CachedValue<AudioFadeCurve::Type> masterFadeInType, masterFadeOutType;
     juce::CachedValue<bool> midiTimecodeSourceDeviceEnabled, midiTimecodeIgnoringHours, videoMuted,
                             clickTrackEnabled, clickTrackEmphasiseBars, clickTrackRecordingOnly,
-                            recordingPunchInOut, playInStopEnabled;
+                            recordingPunchInOut, playInStopEnabled, processMutedTracks;
     juce::CachedValue<float> clickTrackGain;
     juce::CachedValue<ProjectItemID> videoSource;
 

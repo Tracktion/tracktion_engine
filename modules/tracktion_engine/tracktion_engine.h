@@ -42,6 +42,7 @@
 #include <set>
 #include <unordered_map>
 #include <atomic>
+#include <random>
 
 #include <juce_audio_basics/juce_audio_basics.h>
 #include <juce_audio_utils/juce_audio_utils.h>
@@ -306,6 +307,7 @@ namespace tracktion_engine
 #include "utilities/tracktion_SettingID.h"
 #include "utilities/tracktion_MouseHoverDetector.h"
 #include "utilities/tracktion_CurveEditor.h"
+#include "utilities/tracktion_Oscillators.h"
 
 #include "project/tracktion_ProjectItemID.h"
 
@@ -515,6 +517,7 @@ namespace tracktion_engine
 #include "plugins/effects/tracktion_Compressor.h"
 #include "plugins/effects/tracktion_Delay.h"
 #include "plugins/effects/tracktion_Chorus.h"
+#include "plugins/effects/tracktion_FourOscPlugin.h"
 #include "plugins/effects/tracktion_LowPass.h"
 #include "plugins/effects/tracktion_MidiModifier.h"
 #include "plugins/effects/tracktion_MidiPatchBay.h"

@@ -681,6 +681,12 @@ void Plugin::valueTreeChildRemoved (ValueTree&, juce::ValueTree& c, int)
 
     valueTreeChanged();
 }
+    
+void Plugin::valueTreeParentChanged (juce::ValueTree& v)
+{
+    if (v.hasType (IDs::PLUGIN))
+        hideWindowForShutdown();
+}
 
 //==============================================================================
 AudioNode* Plugin::createAudioNode (AudioNode* input, bool applyAntiDenormalisationNoise)
@@ -793,6 +799,7 @@ void Plugin::baseClassDeinitialise()
 //==============================================================================
 void Plugin::deleteFromParent()
 {
+    hideWindowForShutdown();
     deselect();
     removeFromParent();
 }
@@ -846,14 +853,14 @@ PluginList* Plugin::getOwnerList() const
 }
 
 //==============================================================================
-AutomatableParameter* Plugin::addParam (const String& paramID, const String& name, Range<float> valueRange)
+AutomatableParameter* Plugin::addParam (const String& paramID, const String& name,  juce::NormalisableRange<float> valueRange)
 {
     auto p = new AutomatableParameter (paramID, name, *this, valueRange);
     addAutomatableParameter (*p);
     return p;
 }
 
-AutomatableParameter* Plugin::addParam (const String& paramID, const String& name, Range<float> valueRange,
+AutomatableParameter* Plugin::addParam (const String& paramID, const String& name, juce::NormalisableRange<float> valueRange,
                                         std::function<String(float)> valueToStringFn,
                                         std::function<float(const String&)> stringToValueFn)
 {

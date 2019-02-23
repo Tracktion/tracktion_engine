@@ -65,6 +65,7 @@ using namespace juce;
 #include "utilities/tracktion_CrashTracer.cpp"
 #include "utilities/tracktion_CurveEditor.cpp"
 #include "utilities/tracktion_FileUtilities.cpp"
+#include "utilities/tracktion_Oscillators.cpp"
 #include "utilities/tracktion_PropertyStorage.cpp"
 #include "utilities/tracktion_UIBehaviour.cpp"
 #include "utilities/tracktion_TemporaryFileManager.cpp"

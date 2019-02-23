@@ -44,15 +44,15 @@ public:
 
         if (wasJustMuted (isPlayingNow))
         {
-
             // send midi off events if we don't want to process midi while muted
-            sendAllNotesOffIfDesired (rc);
+            if (! callInputWhileMuted && ! processMidiWhileMuted)
+                sendAllNotesOffIfDesired (rc);
 
             input->renderOver (rc);
 
             rampOver (rc, 1.0f, 0.0f);
 
-            if (! processMidiWhileMuted)
+            if (! callInputWhileMuted && ! processMidiWhileMuted)
             {
                 rc.clearMidiBuffer();
                 sendAllNotesOffIfDesired (rc);
@@ -92,7 +92,8 @@ public:
         if (wasJustMuted (isPlayingNow))
         {
             // just been muted, so send some midi off events
-            sendAllNotesOffIfDesired (rc);
+            if (! callInputWhileMuted && ! processMidiWhileMuted)
+                sendAllNotesOffIfDesired (rc);
 
             rampAdd (rc, 1.0f, 0.0f);
         }

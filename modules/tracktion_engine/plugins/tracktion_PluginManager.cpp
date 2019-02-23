@@ -420,6 +420,7 @@ void PluginManager::initialise()
     createBuiltInType<PitchShiftPlugin>();
     createBuiltInType<LowPassPlugin>();
     createBuiltInType<SamplerPlugin>();
+    createBuiltInType<FourOscPlugin>();
     createBuiltInType<MidiModifierPlugin>();
     createBuiltInType<MidiPatchBayPlugin>();
     createBuiltInType<PatchBayPlugin>();

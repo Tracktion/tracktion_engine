@@ -534,6 +534,8 @@ static void copyPropertiesToNullTerminatedCachedValues (const juce::ValueTree& v
 
             if (v.hasProperty (prop))
                 *cv = ValueType (v.getProperty (prop));
+            else
+                cv->resetToDefault();
         }
         else
         {

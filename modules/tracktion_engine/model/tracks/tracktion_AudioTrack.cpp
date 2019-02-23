@@ -373,7 +373,7 @@ VolumeAndPanPlugin* AudioTrack::getVolumePlugin()     { return pluginList.getPlu
 LevelMeterPlugin* AudioTrack::getLevelMeterPlugin()   { return pluginList.getPluginsOfType<LevelMeterPlugin>().getLast(); }
 EqualiserPlugin* AudioTrack::getEqualiserPlugin()     { return pluginList.getPluginsOfType<EqualiserPlugin>().getLast(); }
 
-AuxSendPlugin* AudioTrack::getAuxSendPlugin (int bus)
+AuxSendPlugin* AudioTrack::getAuxSendPlugin (int bus) const
 {
     for (auto p : pluginList)
         if (auto f = dynamic_cast<AuxSendPlugin*> (p))

@@ -1587,7 +1587,6 @@ void ExternalPlugin::buildParameterTree (const VSTXML::Group* group,
 void ExternalPlugin::deleteFromParent()
 {
     CRASH_TRACER_PLUGIN (getDebugName());
-    hideWindowForShutdown();
     Plugin::deleteFromParent();
 }
 

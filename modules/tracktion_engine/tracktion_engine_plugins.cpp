@@ -45,6 +45,7 @@ using namespace juce;
 #include "plugins/effects/tracktion_Chorus.cpp"
 #include "plugins/effects/tracktion_Compressor.cpp"
 #include "plugins/effects/tracktion_Delay.cpp"
+#include "plugins/effects/tracktion_FourOscPlugin.cpp"
 #include "plugins/effects/tracktion_Equaliser.cpp"
 #include "plugins/effects/tracktion_LowPass.cpp"
 #include "plugins/effects/tracktion_MidiModifier.cpp"

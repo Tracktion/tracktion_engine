@@ -307,12 +307,13 @@ protected:
 
     void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override;
     void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override;
-
+    void valueTreeParentChanged (juce::ValueTree&) override;
+    
     virtual void processingChanged();
 
     //==============================================================================
-    AutomatableParameter* addParam (const juce::String& paramID, const juce::String& name, juce::Range<float> valueRange);
-    AutomatableParameter* addParam (const juce::String& paramID, const juce::String& name, juce::Range<float> valueRange,
+    AutomatableParameter* addParam (const juce::String& paramID, const juce::String& name, juce::NormalisableRange<float> valueRange);
+    AutomatableParameter* addParam (const juce::String& paramID, const juce::String& name, juce::NormalisableRange<float> valueRange,
                                     std::function<juce::String(float)> valueToStringFunction,
                                     std::function<float(const juce::String&)> stringToValueFunction);
 

@@ -35,7 +35,7 @@ public:
     juce::String getName() override;
 
     bool canContainPlugin (Plugin*) const override;
-    bool processAudioNodesWhileMuted() const override       { return isSidechainSource(); }
+    bool processAudioNodesWhileMuted() const override       { return edit.processMutedTracks || isSidechainSource() || getAuxSendPlugin() !=nullptr; }
 
     //==============================================================================
     /** returns a warning message about this track not being playable, or "" if it's ok */
@@ -45,7 +45,7 @@ public:
     VolumeAndPanPlugin* getVolumePlugin();
     LevelMeterPlugin* getLevelMeterPlugin();
     EqualiserPlugin* getEqualiserPlugin();
-    AuxSendPlugin* getAuxSendPlugin (int bus = -1); // -1 == any bus, first aux found
+    AuxSendPlugin* getAuxSendPlugin (int bus = -1) const; // -1 == any bus, first aux found
 
     //==============================================================================
     /** looks for a name for a midi note by trying all the plugins, and returning a
