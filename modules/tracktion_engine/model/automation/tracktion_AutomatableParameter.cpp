@@ -713,7 +713,6 @@ void AutomatableParameter::valueTreePropertyChanged (juce::ValueTree& v, const j
         attachedValue->value.forceUpdateOfCachedValue();
         currentValue = attachedValue->value.get();
         
-        // TODO: rmr -- is this ok?
         SCOPED_REALTIME_CHECK
         listeners.call (&Listener::currentValueChanged, *this, currentValue);
     }
