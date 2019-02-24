@@ -553,7 +553,7 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
 
     Clip::Ptr newClip;
 
-    if (isMidiRender())
+    if (isMidiRender() || format == midi)
         newClip = trackToUse->insertMIDIClip (newClipName, insertPos, nullptr);
     else
         newClip = trackToUse->insertWaveClip (newClipName, projectItem->getID(), { insertPos, 0.0 }, false);
