@@ -279,7 +279,7 @@ public:
     //==============================================================================
     juce::CachedValue<float> ampAttackValue, ampDecayValue, ampSustainValue, ampReleaseValue;
     juce::CachedValue<float> filterAttackValue, filterDecayValue, filterSustainValue, filterReleaseValue, filterFreqValue, filterQValue, filterAmountValue, filterKeyValue;
-    juce::CachedValue<int> filterTypeValue;
+    juce::CachedValue<int> filterTypeValue, filterSlopeValue;
     
     AutomatableParameter::Ptr ampAttack, ampDecay, ampSustain, ampRelease;
     AutomatableParameter::Ptr filterAttack, filterDecay, filterSustain, filterRelease, filterFreq, filterQ, filterAmount, filterKey;

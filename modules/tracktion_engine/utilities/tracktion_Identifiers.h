@@ -575,6 +575,7 @@ namespace IDs
     DECLARE_ID (filterAmount)
     DECLARE_ID (filterKey)
     DECLARE_ID (filterType)
+    DECLARE_ID (filterSlope)
     DECLARE_ID (waveShape)
     DECLARE_ID (tune)
     DECLARE_ID (fineTune)

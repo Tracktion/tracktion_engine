@@ -315,9 +315,11 @@ public:
             lfo1.reset();
             lfo2.reset();
             
-            filterL.reset();
-            filterR.reset();
-            
+            filterL1.reset();
+            filterR1.reset();
+            filterL2.reset();
+            filterR2.reset();
+
             for (auto& o : oscillators)
                 o.start();
             
@@ -395,8 +397,14 @@ public:
         // Apply filter
         if (synth.filterTypeValue != 0)
         {
-            filterL.processSamples (renderBuffer.getWritePointer (0), numSamples);
-            filterR.processSamples (renderBuffer.getWritePointer (1), numSamples);
+            filterL1.processSamples (renderBuffer.getWritePointer (0), numSamples);
+            filterR1.processSamples (renderBuffer.getWritePointer (1), numSamples);
+
+            if (synth.filterSlopeValue == 24)
+            {
+                filterL2.processSamples (renderBuffer.getWritePointer (0), numSamples);
+                filterR2.processSamples (renderBuffer.getWritePointer (1), numSamples);
+            }
         }
         
         // Apply ADSR
@@ -563,8 +571,10 @@ public:
             else if (type == 4)
                 coefs = IIRCoefficients::makeNotchFilter (currentSampleRate, lastFilterFreq, q);
             
-            filterL.setCoefficients (coefs);
-            filterR.setCoefficients (coefs);
+            filterL1.setCoefficients (coefs);
+            filterR1.setCoefficients (coefs);
+            filterL2.setCoefficients (coefs);
+            filterR2.setCoefficients (coefs);
         }
         
         // Oscillators
@@ -644,7 +654,7 @@ private:
     MultiVoiceOscillator oscillators[4];
     juce::ADSR ampAdsr, filterAdsr, modAdsr1, modAdsr2;
     SimpleLFO lfo1, lfo2;
-    juce::IIRFilter filterL, filterR;
+    juce::IIRFilter filterL1, filterR1, filterL2, filterR2;
     
     bool retrigger = false, isPlaying = false, isQuickStop = false;
     LinearSmoothedValue<float> activeNote;
@@ -835,6 +845,7 @@ FourOscPlugin::FourOscPlugin (PluginCreationInfo info)  : Plugin (info)
     filterAmountValue.referTo (state, IDs::filterAmount, um, 0.0f);
     filterKeyValue.referTo (state, IDs::filterKey, um, 0.0f);
     filterTypeValue.referTo (state, IDs::filterType, um, 0);
+    filterSlopeValue.referTo (state, IDs::filterSlope, um, 12);
 
     filterAttack  = addParam ("filterAttack",  TRANS("Filter Attack"),  {0.001f, 10.0f, 0.0f, 0.3f});
     filterDecay   = addParam ("filterDecay",   TRANS("Filter Decay"),   {0.001f, 10.0f, 0.0f, 0.3f});
@@ -1474,7 +1485,7 @@ void FourOscPlugin::restorePluginStateFromValueTree (const ValueTree& v)
         &chorusSpeedValue, &chorusDepthValue, &chorusWidthValue, &chorusMixValue, &legatoValue,
         &masterLevelValue, nullptr };
 
-    juce::CachedValue<int>* cvsInt[] { &voiceModeValue, &voicesValue, &filterTypeValue, nullptr };
+    juce::CachedValue<int>* cvsInt[] { &voiceModeValue, &voicesValue, &filterTypeValue, &filterSlopeValue, nullptr };
     
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
