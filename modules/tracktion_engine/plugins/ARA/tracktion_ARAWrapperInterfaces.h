@@ -324,7 +324,8 @@ public:
         if (document.dci != nullptr)
         {
             doc.beginEditing (true);
-            auto musicalContextProperties = updateAndGetProperties();
+            updateMusicalContextProperties ();
+            auto musicalContextProperties = getMusicalContextProperties();
             musicalContextRef = document.dci->createMusicalContext (document.dcRef, toHostRef (&doc.edit), &musicalContextProperties);
             doc.endEditing (true);
         }
@@ -347,8 +348,8 @@ public:
             document.dci->updateMusicalContextContent (document.dcRef, musicalContextRef,
                                                        nullptr, kARAContentUpdateEverythingChanged);
     }
-
-    ARA::Host::Properties<ARA_MEMBER_PTR_ARGS (ARAMusicalContextProperties, color)> updateAndGetProperties()
+    
+    ARA::Host::Properties<ARA_MEMBER_PTR_ARGS (ARAMusicalContextProperties, color)> getMusicalContextProperties()
     {
         return 
         { 
@@ -538,6 +539,9 @@ private:
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TempoReader)
     };
 
+    // TODO ARA2 does anything need to be updated here?
+    void updateMusicalContextProperties () {}
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MusicalContextWrapper)
 };
@@ -599,7 +603,8 @@ public:
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
 
-        auto audioSourceProperties = updateAndGetProperties();
+        updateAudioSourceProperties();
+        auto audioSourceProperties = getAudioSourceProperties();
         audioSourceRef = doc.dci->createAudioSource (doc.dcRef, toHostRef (this), &audioSourceProperties);
     }
     ~AudioSourceWrapper()
@@ -658,9 +663,8 @@ public:
         delete (NodeReader*) hostReaderRef;
     }
 
-    ARA::Host::Properties<ARA_MEMBER_PTR_ARGS (ARAAudioSourceProperties, merits64BitSamples)> updateAndGetProperties()
+    ARA::Host::Properties<ARA_MEMBER_PTR_ARGS (ARAAudioSourceProperties, merits64BitSamples)> getAudioSourceProperties()
     {
-        name = clip.getAudioFile().getFile().getFileName();
         std::unique_ptr<NodeReader> reader (createReader());
         return
         {
@@ -679,6 +683,11 @@ public:
     ARAAudioSourceRef audioSourceRef = {};
 
 private:
+    void updateAudioSourceProperties ()
+    {
+        name = clip.getAudioFile ().getFile ().getFileName ();
+    }
+
     const String itemID;
     String name;
     
@@ -700,7 +709,8 @@ public:
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
 
-        auto audioModificationProperties = updateAndGetProperties();
+        updateAudioModificationProperties();
+        auto audioModificationProperties = getAudioModificationProperties();
         if (instanceToClone != nullptr)
             audioModificationRef = doc.dci->cloneAudioModification (doc.dcRef, instanceToClone->audioModificationRef,
                                                                      toHostRef (&doc.edit), &audioModificationProperties);
@@ -714,10 +724,8 @@ public:
             doc.dci->destroyAudioModification (doc.dcRef, audioModificationRef);
     }
 
-    ARA::Host::Properties<ARA_MEMBER_PTR_ARGS (ARAAudioModificationProperties, persistentID)> updateAndGetProperties()
+    ARA::Host::Properties<ARA_MEMBER_PTR_ARGS (ARAAudioModificationProperties, persistentID)> getAudioModificationProperties()
     {
-        auto audioSourceProperties = audioSource.updateAndGetProperties();
-        name = audioSourceProperties.name;
         return
         {
             name.toRawUTF8(),
@@ -730,6 +738,13 @@ public:
     ARAAudioModificationRef audioModificationRef = nullptr;
     
 private:
+    void updateAudioModificationProperties ()
+    {
+        // TODO ARA2 do the audio source properties need to be updated?
+        auto audioSourceProperties = audioSource.getAudioSourceProperties();
+        name = audioSourceProperties.name;
+    }
+
     String name;
     const String persistentID;
 
@@ -746,7 +761,8 @@ public:
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
 
-        auto regionSequenceProperties = updateAndGetProperties();
+        updateRegionSequenceProperties();
+        auto regionSequenceProperties = getRegionSequenceProperties();
         regionSequenceRef = doc.dci->createRegionSequence (doc.dcRef, toHostRef (&doc.edit), &regionSequenceProperties);
     }
     ~RegionSequenceWrapper()
@@ -755,12 +771,8 @@ public:
             doc.dci->destroyRegionSequence (doc.dcRef, regionSequenceRef);
     }
 
-    ARA::Host::Properties<ARA_MEMBER_PTR_ARGS (ARARegionSequenceProperties, color)> updateAndGetProperties()
+    ARA::Host::Properties<ARA_MEMBER_PTR_ARGS (ARARegionSequenceProperties, color)> getRegionSequenceProperties()
     {
-        name = track->getName();
-        orderIndex = track->getIndexInEditTrackList();
-        Colour trackColour = track->getColour();
-        colour = { trackColour.getFloatRed(), trackColour.getFloatGreen(), trackColour.getFloatBlue() };
         return
         {
             name.toRawUTF8(),
@@ -776,6 +788,14 @@ public:
     Track* track;
 
 private:
+    void updateRegionSequenceProperties ()
+    {
+        name = track->getName();
+        orderIndex = track->getIndexInEditTrackList();
+        Colour trackColour = track->getColour();
+        colour = { trackColour.getFloatRed(), trackColour.getFloatGreen(), trackColour.getFloatBlue() };
+    }
+
     int orderIndex;
     String name;
     ARAColor colour;
@@ -801,8 +821,8 @@ public:
         doc.willCreatePlaybackRegionOnTrack (clip.getTrack());
 
         jassert (d.musicalContext != nullptr && d.musicalContext->musicalContextRef != nullptr);
-        auto playbackRegionProperties = updateAndGetProperties (d.musicalContext->musicalContextRef);
-
+        updatePlaybackRegionProperties();
+        auto playbackRegionProperties = getPlaybackRegionProperties();
         playbackRegionRef = doc.dci->createPlaybackRegion (doc.dcRef,
                                                            audioModification.audioModificationRef,
                                                            toHostRef (&doc.edit),
@@ -829,7 +849,8 @@ public:
         {
             CRASH_TRACER
             
-            auto playbackRegionProperties = updateAndGetProperties (doc.musicalContext->musicalContextRef);
+            updatePlaybackRegionProperties();
+            auto playbackRegionProperties = getPlaybackRegionProperties();
             doc.dci->updatePlaybackRegionProperties (doc.dcRef, playbackRegionRef, &playbackRegionProperties);
         }
     }
@@ -837,14 +858,9 @@ public:
     ARAPlaybackRegionRef playbackRegionRef = nullptr;
 
     /** NB: This is where time-stretching is setup */
-    ARA::Host::Properties<ARA_MEMBER_PTR_ARGS (ARAPlaybackRegionProperties, color)> updateAndGetProperties (ARAMusicalContextRef musicalContextRef)
+    ARA::Host::Properties<ARA_MEMBER_PTR_ARGS (ARAPlaybackRegionProperties, color)> getPlaybackRegionProperties()
     {
         auto regionSequenceRef = doc.regionSequences[clip.getTrack()]->regionSequenceRef;
-        
-        name = clip.getName();
-        Colour clipColour = clip.getColour();
-        colour = { clip.getColour().getFloatRed(), clip.getColour().getFloatGreen(), clip.getColour().getFloatBlue() };
-
         auto pos = clip.getPosition();
 
         return
@@ -854,7 +870,7 @@ public:
             pos.getLength() * clip.getSpeedRatio(),   // Duration in modification time
             pos.getStart(),                           // Start in playback time
             pos.getLength(),                          // Duration in playback time
-            musicalContextRef,
+            doc.musicalContext->musicalContextRef,
             regionSequenceRef,
             name.toRawUTF8(),
             &colour
@@ -866,6 +882,13 @@ public:
     AudioClipBase& clip;
 
 private:
+    void updatePlaybackRegionProperties ()
+    {
+        name = clip.getName();
+        Colour clipColour = clip.getColour();
+        colour = { clipColour.getFloatRed(), clipColour.getFloatGreen(), clipColour.getFloatBlue() };
+    }
+
     String name;
     ARAColor colour;
     const ARAPlaybackTransformationFlags flags;
