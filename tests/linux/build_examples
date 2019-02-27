@@ -43,3 +43,4 @@ buildExample()
 buildExample "PlaybackDemo"
 buildExample "PitchAndTimeDemo"
 buildExample "StepSequencerDemo"
+buildExample "PatternGeneratorDemo"
