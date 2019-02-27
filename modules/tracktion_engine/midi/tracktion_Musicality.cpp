@@ -444,7 +444,7 @@ juce::String Scale::getIntervalName (Intervals interval) const
     switch (triads[(int)interval].getType())
     {
         case Chord::majorTriad:        name = name.toUpperCase(); break;
-        case Chord::minorTriad:        name = name; break;
+        case Chord::minorTriad:        break;
         case Chord::augmentedTriad:    name = name.toUpperCase() + "+"; break;
         case Chord::diminishedTriad:   name = name + juce::String::charToString (176); break;
         default: jassertfalse; break;

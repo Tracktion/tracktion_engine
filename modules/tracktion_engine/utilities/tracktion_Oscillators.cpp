@@ -174,8 +174,8 @@ void Oscillator::processSquare (juce::AudioSampleBuffer& buffer, int startSample
             float phaseUp   = phase + 0.5f * pulseWidth;
             float phaseDown = phase - 0.5f * pulseWidth;
             
-            if (phaseUp   > 1.0) phaseUp   -= 1.0;
-            if (phaseDown < 0.0) phaseDown += 1.0;
+            if (phaseUp   > 1.0f) phaseUp   -= 1.0f;
+            if (phaseDown < 0.0f) phaseDown += 1.0f;
             
             float value = (saw1->processSampleUnchecked (phaseUp) +
                            saw2->processSampleUnchecked (phaseDown)) * gain;
