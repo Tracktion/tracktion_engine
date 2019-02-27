@@ -772,7 +772,7 @@ void ProjectItem::changeProjectId (int oldID, int newID)
 
             for (auto& item : exp->getReferencedItems())
             {
-                 if (item.itemID == oldID)
+                 if (item.itemID.getProjectID() == oldID)
                      exp->reassignReferencedItem (item, item.itemID.withNewProjectID (newID), 0.0);
 
                 ++i;

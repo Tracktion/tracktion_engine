@@ -575,7 +575,7 @@ void SamplerPlugin::reassignReferencedItem (const ReferencedItem& item, ProjectI
         auto um = getUndoManager();
 
         auto v = getSound (index);
-        v.setProperty (IDs::source, newID, um);
+        v.setProperty (IDs::source, newID.toString(), um);
         v.setProperty (IDs::startTime, static_cast<double> (v[IDs::startTime]) - newStartTime, um);
     }
     else

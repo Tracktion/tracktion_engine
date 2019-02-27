@@ -613,7 +613,7 @@ juce::String Edit::getName()
 void Edit::setProjectItemID (ProjectItemID newID)
 {
     editProjectItemID = newID;
-    state.setProperty (IDs::projectID, editProjectItemID, nullptr);
+    state.setProperty (IDs::projectID, editProjectItemID.toString(), nullptr);
 }
 
 Edit::ScopedRenderStatus::ScopedRenderStatus (Edit& ed, bool shouldReallocateOnDestruction)
@@ -955,7 +955,7 @@ void Edit::flushState()
 
     state.setProperty (IDs::appVersion, engine.getPropertyStorage().getApplicationVersion(), nullptr);
     state.setProperty (IDs::modifiedBy, engine.getPropertyStorage().getUserName(), nullptr);
-    state.setProperty (IDs::projectID, editProjectItemID, nullptr);
+    state.setProperty (IDs::projectID, editProjectItemID.toString(), nullptr);
 
     for (auto p : getAllPlugins (*this, true))
         p->flushPluginStateToValueTree();

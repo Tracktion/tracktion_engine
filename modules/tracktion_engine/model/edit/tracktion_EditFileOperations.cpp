@@ -452,7 +452,7 @@ ValueTree loadEditFromFile (const File& f, ProjectItemID itemID)
         state.setProperty (IDs::appVersion, Engine::getInstance().getPropertyStorage().getApplicationVersion(), nullptr);
     }
 
-    state.setProperty (IDs::projectID, itemID, nullptr);
+    state.setProperty (IDs::projectID, itemID.toString(), nullptr);
 
     return state;
 }

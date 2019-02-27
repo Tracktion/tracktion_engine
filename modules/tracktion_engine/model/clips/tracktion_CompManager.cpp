@@ -721,7 +721,7 @@ WaveCompManager::WaveCompManager (WaveAudioClip& owner)
     for (auto take : takesTree)
         if (isTakeComp (take))
             if (! ProjectItemID::fromProperty (take, IDs::source).isValid())
-                take.setProperty (IDs::source, ProjectItemID::createNewID (clip.edit.getProjectItemID().getProjectID()), &owner.edit.getUndoManager());
+                take.setProperty (IDs::source, ProjectItemID::createNewID (clip.edit.getProjectItemID().getProjectID()).toString(), &owner.edit.getUndoManager());
 }
 
 WaveCompManager::~WaveCompManager() {}
@@ -900,7 +900,7 @@ void WaveCompManager::setProjectItemIDForTake (int takeIndex, ProjectItemID newI
     jassert (takeTree.isValid());
 
     if (takeTree.isValid())
-        takeTree.setProperty (IDs::source, newID, getUndoManager());
+        takeTree.setProperty (IDs::source, newID.toString(), getUndoManager());
 }
 
 ProjectItemID WaveCompManager::getProjectItemIDForTake (int takeIndex) const
@@ -973,7 +973,7 @@ ValueTree WaveCompManager::addNewComp()
     auto newTake = getNewCompTree();
     auto newID = ProjectItemID::createNewID (clip.edit.getProjectItemID().getProjectID());
 
-    newTake.setProperty (IDs::source, newID, nullptr);
+    newTake.setProperty (IDs::source, newID.toString(), nullptr);
     newTake.setProperty (IDs::isComp, true, nullptr);
 
     // Add last so all the properties are set

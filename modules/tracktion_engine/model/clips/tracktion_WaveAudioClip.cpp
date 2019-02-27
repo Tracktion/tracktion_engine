@@ -145,7 +145,7 @@ void WaveAudioClip::reassignReferencedItem (const ReferencedItem& item,
         auto take = getTakesTree().getChild (indexInList);
 
         if (take.isValid())
-            take.setProperty (IDs::source, newItemID, getUndoManager());
+            take.setProperty (IDs::source, newItemID.toString(), getUndoManager());
 
         if (indexInList == 0)
         {
@@ -168,7 +168,7 @@ void WaveAudioClip::addTake (ProjectItemID id)
     auto takesTree = state.getOrCreateChildWithName (IDs::TAKES, um);
 
     ValueTree take (IDs::TAKE);
-    take.setProperty (IDs::source, id, um);
+    take.setProperty (IDs::source, id.toString(), um);
     takesTree.addChild (take, -1, um);
 }
 

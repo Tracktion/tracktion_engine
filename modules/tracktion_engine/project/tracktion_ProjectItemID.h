@@ -56,8 +56,6 @@ public:
     juce::String toString() const;
     juce::String toStringSuitableForFilename() const;
 
-    operator juce::var() const noexcept                 { return toString(); }
-
     //==============================================================================
     bool operator== (ProjectItemID other) const         { return combinedID == other.combinedID; }
     bool operator!= (ProjectItemID other) const         { return combinedID != other.combinedID; }
@@ -78,6 +76,6 @@ namespace juce
     struct VariantConverter<tracktion_engine::ProjectItemID>
     {
         static tracktion_engine::ProjectItemID fromVar (const var& v)   { return tracktion_engine::ProjectItemID (v.toString()); }
-        static var toVar (const tracktion_engine::ProjectItemID& v)     { return v; }
+        static var toVar (const tracktion_engine::ProjectItemID& v)     { return v.toString(); }
     };
 }
