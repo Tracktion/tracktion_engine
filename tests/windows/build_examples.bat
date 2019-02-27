@@ -23,7 +23,7 @@ call "%TESTS_DIR%/build_projucer.bat" || exit 1
 call :BuildExample "PlaybackDemo"
 call :BuildExample "PitchAndTimeDemo"
 call :BuildExample "StepSequencerDemo"
-clas :BuildExample "PatternGeneratorDemo"
+call :BuildExample "PatternGeneratorDemo"
 exit /B %ERRORLEVEL%
 
 :BuildExample
