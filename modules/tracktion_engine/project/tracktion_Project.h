@@ -132,6 +132,8 @@ public:
     //==============================================================================
     juce::String getSelectableDescription() override;
 
+    void changed() override;
+
     /** Stops anyone writing/moving the project file */
     void lockFile();
     void unlockFile();
@@ -168,7 +170,6 @@ private:
 
     juce::BufferedInputStream* getInputStream();
 
-    void changed() override;
     void load();
     void saveTo (juce::FileOutputStream&);
     bool readProjectHeader (juce::InputStream&, bool clearObjectInfo = true);
