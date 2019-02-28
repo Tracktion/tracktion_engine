@@ -946,7 +946,7 @@ void Plugin::applyToBufferWithAutomation (const AudioRenderContext& fc)
         else
         {
             SCOPED_REALTIME_CHECK
-            updateParameterStreams (fc.getEditTime().editRange1.getEnd());
+            updateParameterStreams (fc.getEditTime().editRange1.getStart());
             applyToBuffer (fc);
         }
     }

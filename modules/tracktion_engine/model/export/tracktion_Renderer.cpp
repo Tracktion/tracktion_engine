@@ -1100,7 +1100,7 @@ Renderer::Statistics Renderer::measureStatistics (const String& taskDescription,
         cnp.includePlugins = true;
         cnp.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (edit.engine);
 
-        if (auto* node = createRenderingNodeFromEdit (edit, cnp, true))
+        if (auto node = createRenderingNodeFromEdit (edit, cnp, true))
         {
             Parameters r (edit);
 
