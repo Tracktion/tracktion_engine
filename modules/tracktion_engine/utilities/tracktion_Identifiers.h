@@ -571,7 +571,7 @@ namespace IDs
     DECLARE_ID (filterSustain)
     DECLARE_ID (filterRelease)
     DECLARE_ID (filterFreq)
-    DECLARE_ID (filterQ)
+    DECLARE_ID (filterResonance)
     DECLARE_ID (filterAmount)
     DECLARE_ID (filterKey)
     DECLARE_ID (filterType)

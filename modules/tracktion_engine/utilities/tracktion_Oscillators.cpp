@@ -59,6 +59,12 @@ static float sawDown (float phase, float freq, double sampleRate)
 };
 
 //==============================================================================
+void Oscillator::start()
+{
+    static Random r;
+    phase = r.nextFloat();
+}
+    
 void Oscillator::setSampleRate (double sr)
 {
     sampleRate = sr;
@@ -76,8 +82,7 @@ void Oscillator::process (AudioSampleBuffer& buffer, int startSample, int numSam
             case none:      break;
             case sine:      processSine (buffer, startSample, numSamples);  break;
             case square:    processSquare (buffer, startSample, numSamples);  break;
-            case sawUp:     processLookup (buffer, startSample, numSamples, lookupTables->sawUpFunctions);    break;
-            case sawDown:   processLookup (buffer, startSample, numSamples, lookupTables->sawDownFunctions);  break;
+            case saw:       processLookup (buffer, startSample, numSamples, lookupTables->sawUpFunctions);    break;
             case triangle:  processLookup (buffer, startSample, numSamples, lookupTables->triangleFunctions); break;
             case noise:     processNoise (buffer, startSample, numSamples); break;
         }
@@ -199,8 +204,14 @@ MultiVoiceOscillator::MultiVoiceOscillator (int maxVoices)
 
 void MultiVoiceOscillator::start()
 {
-    for (auto o : oscillators)
-        o->start();
+    static Random r;
+    
+    for (int i = 0; i < oscillators.size(); i += 2)
+    {
+        float phase = r.nextFloat();
+        oscillators[i + 0]->start (phase);
+        oscillators[i + 1]->start (phase);
+    }
 }
     
 void MultiVoiceOscillator::setSampleRate (double sr)

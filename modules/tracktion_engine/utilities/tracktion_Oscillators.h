@@ -40,11 +40,10 @@ public:
     //==============================================================================
     enum Waves
     {
-        none,
+        none = 0,
         sine,
         square,
-        sawUp,
-        sawDown,
+        saw,
         triangle,
         noise,
     };
@@ -52,7 +51,9 @@ public:
     //==============================================================================
     Oscillator() = default;
     
-    void start()                    { phase = 0;        }
+    void start();
+    void start (float p)            { phase = p;        }
+    
     void setSampleRate (double sr);
     void setWave (Waves w)          { wave  = w;        }
     void setNote (float n)          { note = n;         }
