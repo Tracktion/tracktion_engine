@@ -40,6 +40,7 @@ public:
     /** true if it's got a proper project ID. */
     bool isValid() const;
     bool isReadOnly() const;
+    bool isTemporary() const                                  { return temporary; }
 
     int getProjectID() const;
     juce::String getName() const;
@@ -132,8 +133,6 @@ public:
     //==============================================================================
     juce::String getSelectableDescription() override;
 
-    void changed() override;
-
     /** Stops anyone writing/moving the project file */
     void lockFile();
     void unlockFile();
@@ -164,7 +163,7 @@ private:
 
     juce::Array<ObjectInfo> objects;
     int objectOffset = 0, indexOffset = 0;
-    bool readOnly = false, hasChanged = false;
+    bool readOnly = false, hasChanged = false, temporary = false;
 
     Project (Engine&, ProjectManager&, const juce::File&);
 
@@ -176,6 +175,7 @@ private:
     void loadAllProjectItems();
     bool loadProjectItem (ObjectInfo&);
     void ensureFolderCreated (ProjectItem::Category);
+    void changed() override;
 
     /** adds an item without checking */
     ProjectItem::Ptr quickAddProjectItem (const juce::String& relPathName,

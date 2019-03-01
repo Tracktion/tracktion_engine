@@ -49,6 +49,9 @@ public:
     virtual int getMiddleCOctave()                                                  { return 4; }
     virtual void setMiddleCOctave (int /*newOctave*/)                               {}
 
+    // Notifies the host application that an edit has just been saved
+    virtual void editHasBeenSaved (Edit& /*edit*/, juce::File /*path*/)             {}
+
     //==============================================================================
     /** Should return true if the incoming timestamp for MIDI messages should be used.
         If this returns false, the current system time will be used (which could be less accurate).

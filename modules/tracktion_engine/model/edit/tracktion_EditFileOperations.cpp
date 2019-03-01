@@ -277,6 +277,8 @@ bool EditFileOperations::save (bool warnOfFailure,
 
         if (! tempFile.moveFileTo (editFile))
             return editSaveError (edit, editFile, warnOfFailure);
+
+        edit.engine.getEngineBehaviour().editHasBeenSaved (edit, editFile);
     }
 
     tempFile.deleteFile();
@@ -379,6 +381,8 @@ bool EditFileOperations::saveAs (const File& f, bool forceOverwriteExisting)
         tempFile.deleteFile();
         
         edit.resetChangedStatus();
+        edit.engine.getEngineBehaviour().editHasBeenSaved (edit, f);
+
         return true;
     }
 
