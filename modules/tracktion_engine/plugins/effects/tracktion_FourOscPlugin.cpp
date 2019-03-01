@@ -481,7 +481,7 @@ public:
     void getLiveFilterFrequency (Array<float>& positions)
     {
         if (isActive())
-             positions.add ((12.0f * std::log2 (lastFilterFreq / 440.0f) + 69.0f) / 137.0f);
+             positions.add ((12.0f * std::log2 (lastFilterFreq / 440.0f) + 69.0f) / 135.076232f);
     }
     
     void updateParams (int numSamples)
@@ -587,11 +587,11 @@ public:
         freqNote += (currentlyPlayingNote.initialNote - 60) * paramValue (synth.filterKey) / 100.0f;
         freqNote += filterEnv * (paramValue (synth.filterAmount) * 137);
         
-        filterFrequencySmoother.setValue (freqNote / 137.0f);
-        freqNote = filterFrequencySmoother.getCurrentValue() * 137.0f;
+        filterFrequencySmoother.setValue (freqNote / 135.076232f);
+        freqNote = filterFrequencySmoother.getCurrentValue() * 135.076232f;
         filterFrequencySmoother.process (numSamples);
         
-        lastFilterFreq = jlimit (0.0f, float (currentSampleRate) / 2.0f, getMidiNoteInHertz (freqNote));
+        lastFilterFreq = jlimit (0.0f, jmin (20000.0f, float (currentSampleRate) / 2.0f), getMidiNoteInHertz (freqNote));
         float q = paramValue (synth.filterResonance) / 100.0f * 3.5f  + 0.5f;
         
         if (type != 0)
@@ -902,7 +902,7 @@ FourOscPlugin::FourOscPlugin (PluginCreationInfo info)  : Plugin (info)
     filterDecay     = addParam ("filterDecay",      TRANS("Filter Decay"),      {0.001f, 10.0f, 0.0f, 0.3f});
     filterSustain   = addParam ("filterSustain",    TRANS("Filter Sustain"),    {0.0f,   100.0f}, "%");
     filterRelease   = addParam ("filterRelease",    TRANS("Filter Release"),    {0.001f, 10.0f, 0.0f, 0.3f});
-    filterFreq      = addParam ("filterFreq",       TRANS("Filter Freq"),       {0.0f, 137.0f});
+    filterFreq      = addParam ("filterFreq",       TRANS("Filter Freq"),       {0.0f, 135.076232f});
     filterResonance = addParam ("filterResonance",  TRANS("Filter Resonance"),  {0.0f, 100.0f}, "%");
     filterAmount    = addParam ("filterAmount",     TRANS("Filter Amount"),     {-1.0f, 1.0f});
     filterKey       = addParam ("filterKey",        TRANS("Filter Key"),        {0.0f, 100.0f}, "%");

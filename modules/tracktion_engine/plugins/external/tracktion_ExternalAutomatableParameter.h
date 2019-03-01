@@ -58,6 +58,14 @@ public:
             p->removeListener (this);
     }
 
+    float getDefaultValue() const override
+    {
+        if (auto p = getParam())
+            return p->getDefaultValue();
+        
+        return 0.0f;
+    }
+    
     void parameterChanged (float newValue, bool byAutomation) override
     {
         if (auto p = getParam())

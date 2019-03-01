@@ -166,6 +166,7 @@ public:
     virtual int getNumberOfStates() const                           { return 0; }
     virtual float getValueForState (int) const                      { return 0; }
     virtual int getStateForValue (float) const                      { return 0; }
+    virtual float getDefaultValue() const;
 
     virtual bool hasLabels()  const                                 { return false; }
     virtual juce::String getLabelForValue (float) const             { return {}; }
