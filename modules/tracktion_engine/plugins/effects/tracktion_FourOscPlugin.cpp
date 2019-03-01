@@ -387,6 +387,12 @@ public:
         }
     }
     
+    float velocityToGain (float velocity, float velocitySensitivity = 1.0f)
+    {
+        float v = velocity * velocitySensitivity + 1.0f - velocitySensitivity;
+        return v * std::pow (25.0f, v) * 0.04f;
+    }
+    
     void renderNextBlock (juce::AudioBuffer<float>& outputBuffer, int startSample, int numSamples) override
     {
         updateParams (numSamples);
@@ -401,8 +407,7 @@ public:
             o.process (renderBuffer, 0, numSamples);
         
         // Apply velocity
-        int velocity = currentlyPlayingNote.noteOnVelocity.as7BitInt();
-        float velocityGain = (velocity * velocity) / (127.0f * 127.0f);
+        float velocityGain = velocityToGain (currentlyPlayingNote.noteOnVelocity.asUnsignedFloat());
         velocityGain = jlimit (0.0f, 1.0f, velocityGain);
         renderBuffer.applyGain (velocityGain);
         
