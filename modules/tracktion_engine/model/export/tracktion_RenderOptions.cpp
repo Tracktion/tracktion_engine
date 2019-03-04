@@ -1001,6 +1001,9 @@ StringArray RenderOptions::getFormatTypes()
         formats.add (am.getOggFormat()->getFormatName());
 
       #if JUCE_USE_LAME_AUDIO_FORMAT
+        auto& afm = engine.getAudioFileFormatManager();
+        LAMEManager::registerAudioFormat (afm);
+
         if (LAMEManager::lameIsAvailable() && am.getLameFormat() != nullptr)
             formats.add (am.getLameFormat()->getFormatName());
       #endif
