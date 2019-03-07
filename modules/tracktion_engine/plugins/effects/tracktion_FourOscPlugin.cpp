@@ -706,7 +706,8 @@ private:
     
     juce::AudioSampleBuffer renderBuffer {2, 512};
     MultiVoiceOscillator oscillators[4];
-    juce::ADSR ampAdsr, filterAdsr, modAdsr1, modAdsr2;
+    Envelope ampAdsr;
+    juce::ADSR filterAdsr, modAdsr1, modAdsr2;
     SimpleLFO lfo1, lfo2;
     juce::IIRFilter filterL1, filterR1, filterL2, filterR2;
     

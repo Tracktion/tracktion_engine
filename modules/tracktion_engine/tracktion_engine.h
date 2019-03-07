@@ -307,6 +307,7 @@ namespace tracktion_engine
 #include "utilities/tracktion_SettingID.h"
 #include "utilities/tracktion_MouseHoverDetector.h"
 #include "utilities/tracktion_CurveEditor.h"
+#include "utilities/tracktion_Envelope.h"
 #include "utilities/tracktion_Oscillators.h"
 
 #include "project/tracktion_ProjectItemID.h"
