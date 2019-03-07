@@ -410,11 +410,13 @@ struct Renderer::RenderTask::RendererContext
         if (precount <= 0)
         {
             CRASH_TRACER
+            int numSamplesDone = (int) jmin (samplesToWrite, (int64) r.blockSizeForAudio);
+            samplesToWrite -= numSamplesDone;
 
             if (r.ditheringEnabled && r.bitDepth < 32)
                 ditherers.apply (renderingBuffer, r.blockSizeForAudio);
 
-            auto mag = renderingBuffer.getMagnitude (0, r.blockSizeForAudio);
+            auto mag = renderingBuffer.getMagnitude (0, numSamplesDone);
             peak = jmax (peak, mag);
 
             if (! hasStartedSavingToFile)
@@ -422,21 +424,16 @@ struct Renderer::RenderTask::RendererContext
 
             for (int i = renderingBuffer.getNumChannels(); --i >= 0;)
             {
-                rmsTotal += renderingBuffer.getRMSLevel (i, 0, r.blockSizeForAudio);
+                rmsTotal += renderingBuffer.getRMSLevel (i, 0, numSamplesDone);
                 ++rmsNumSamps;
             }
 
-            for (int i = renderingBuffer.getNumSamples(); --i >= 0;)
-            {
+            for (int i = numSamplesDone; --i >= 0;)
                 if (renderingBuffer.getMagnitude (i, 1) > 0.0001)
                     numNonZeroSamps++;
-            }
 
             if (! hasStartedSavingToFile)
                 samplesTrimmed += r.blockSizeForAudio;
-
-            int numSamplesDone = (int) jmin (samplesToWrite, (int64) r.blockSizeForAudio);
-            samplesToWrite -= numSamplesDone;
 
             if (sourceToUpdate != nullptr && numSamplesDone > 0)
             {
