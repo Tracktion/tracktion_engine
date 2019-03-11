@@ -262,10 +262,10 @@ static void askUserAboutProjectItemPastingOptions (const Clipboard::ProjectItems
     }
     else if (numAudioClips == 1 && numAudioClipsWithBWAV == 1)
     {
-        options.snapBWavsToOriginalTime = ui.showOkCancelAlertBox (TRANS("BWAV Clip"),
-                                                                   TRANS("Do you want clip placed at BWAV timestamp or cursor position?"),
-                                                                   TRANS("BWAV timestamp"),
-                                                                   TRANS("Cursor position"));
+        options.snapBWavsToOriginalTime = ! ui.showOkCancelAlertBox (TRANS("BWAV Clip"),
+                                                                     TRANS("Do you want clip placed at BWAV timestamp or cursor position?"),
+                                                                     TRANS("BWAV timestamp"),
+                                                                     TRANS("Cursor position"));
     }
 }
 
