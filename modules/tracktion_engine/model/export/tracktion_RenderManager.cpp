@@ -179,7 +179,7 @@ void RenderManager::cleanUp()
     for (int i = jobs.size(); --i >= 0;)
         pool.removeJob (jobs.getUnchecked (i), true, 10000);
 
-    //jassert (jobs.isEmpty());
+    jassert (jobs.isEmpty());
 
     for (int i = danglingJobs.size(); --i >= 0;)
         if (auto j = danglingJobs.getUnchecked (i))
