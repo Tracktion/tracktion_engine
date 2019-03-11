@@ -409,9 +409,9 @@ protected:
         // need to call setSampleRate() first!
         jassert (sampleRate > 0.0);
         
-        attackRate  = (parameters.attack  > 0.0f ? static_cast<float> (1.0f                  / (parameters.attack * sampleRate))  : 0.0f);
-        decayRate   = (parameters.decay   > 0.0f ? static_cast<float> ((1.0f - sustainLevel) / (parameters.decay * sampleRate))   : 0.0f);
-        releaseRate = (parameters.release > 0.0f ? static_cast<float> (1.0f                  / (parameters.release * sampleRate)) : 0.0f);
+        attackRate  = (parameters.attack  > 0.0f ? static_cast<float> (1.0f / (parameters.attack * sampleRate))  : 0.0f);
+        decayRate   = (parameters.decay   > 0.0f ? static_cast<float> (1.0f / (parameters.decay * sampleRate))   : 0.0f);
+        releaseRate = (parameters.release > 0.0f ? static_cast<float> (1.0f / (parameters.release * sampleRate)) : 0.0f);
     }
     
 	State currentState = State::idle;
