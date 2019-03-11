@@ -316,7 +316,10 @@ public:
             modAdsr2.reset();
             lfo1.reset();
             lfo2.reset();
-
+            
+            ScopedValueSetter<bool> svs (snapAllValues, true);
+            updateParams (0);
+            
             ampAdsr.noteOn();
             filterAdsr.noteOn();
             modAdsr1.noteOn();
@@ -332,12 +335,9 @@ public:
             for (auto& o : oscillators)
                 o.start();
             
-            updateParams (0);
-            
-            for (auto& itr : smoothers)
-                itr.second.snapToValue();
-            
             filterFrequencySmoother.snapToValue();
+            
+            firstBlock = true;
         }
     }
     
@@ -395,7 +395,15 @@ public:
     
     void renderNextBlock (juce::AudioBuffer<float>& outputBuffer, int startSample, int numSamples) override
     {
+        ScopedValueSetter<bool> svs (snapAllValues, firstBlock ? true : snapAllValues);
+        
         updateParams (numSamples);
+        
+        if (firstBlock)
+        {
+            filterFrequencySmoother.snapToValue();
+            firstBlock = false;
+        }
         
         if (numSamples > renderBuffer.getNumSamples())
             renderBuffer.setSize (2, numSamples, false, false, true);
@@ -407,7 +415,7 @@ public:
             o.process (renderBuffer, 0, numSamples);
         
         // Apply velocity
-        float velocityGain = velocityToGain (currentlyPlayingNote.noteOnVelocity.asUnsignedFloat());
+        float velocityGain = velocityToGain (currentlyPlayingNote.noteOnVelocity.asUnsignedFloat(), paramValue (synth.ampVelocity) / 100.0f);
         velocityGain = jlimit (0.0f, 1.0f, velocityGain);
         renderBuffer.applyGain (velocityGain);
         
@@ -428,7 +436,6 @@ public:
         }
         
         // Apply ADSR
-        //applyEnvelopeToBuffer (ampAdsr, renderBuffer, 0, numSamples);
         ampAdsr.applyEnvelopeToBuffer (renderBuffer, 0, numSamples);
         
         // Add to output
@@ -494,11 +501,8 @@ public:
         // Update mod values
         currentModValue[(int)FourOscPlugin::lfo1] = lfo1.getCurrentValue();
         currentModValue[(int)FourOscPlugin::lfo2] = lfo2.getCurrentValue();
-        if (numSamples > 0)
-        {
-            currentModValue[(int)FourOscPlugin::env1] = modAdsr1.getNextSample();
-            currentModValue[(int)FourOscPlugin::env2] = modAdsr2.getNextSample();
-        }
+        currentModValue[(int)FourOscPlugin::env1] = modAdsr1.getEnvelopeValue();
+        currentModValue[(int)FourOscPlugin::env2] = modAdsr2.getEnvelopeValue();
         
         currentModValue[FourOscPlugin::mpePressure]   = currentlyPlayingNote.pressure.asUnsignedFloat();
         currentModValue[FourOscPlugin::mpeTimbre]     = currentlyPlayingNote.timbre.asUnsignedFloat();
@@ -511,7 +515,7 @@ public:
         // Flush the LFOs and envelopes
         lfo1.process (numSamples);
         lfo2.process (numSamples);
-        for (int i = 0; i < numSamples - 1; i++)
+        for (int i = 0; i < numSamples; i++)
         {
             modAdsr1.getNextSample();
             modAdsr2.getNextSample();
@@ -563,6 +567,8 @@ public:
         });
 
         // Amp
+        ampAdsr.setAnalog (synth.ampAnalogValue);
+        
         ampAdsr.setParameters ({
             paramValue (synth.ampAttack),
             paramValue (synth.ampDecay),
@@ -579,8 +585,12 @@ public:
         });
         
         int type = synth.filterTypeValue;
-        float filterEnv = filterAdsr.getNextSample();
-        for (int i = 0; i < numSamples - 1; i++)
+        float filterEnv = filterAdsr.getEnvelopeValue();
+        float filterSens = paramValue (synth.filterVelocity) / 100.0f;
+        filterSens = currentlyPlayingNote.noteOnVelocity.asUnsignedFloat() * filterSens + 1.0f - filterSens;
+        filterEnv *= filterSens;
+        
+        for (int i = 0; i < numSamples; i++)
             filterAdsr.getNextSample();
         
         auto getMidiNoteInHertz = [](float noteNumber)
@@ -593,10 +603,13 @@ public:
         freqNote += filterEnv * (paramValue (synth.filterAmount) * 137);
         
         filterFrequencySmoother.setValue (freqNote / 135.076232f);
+        if (snapAllValues)
+            filterFrequencySmoother.snapToValue();
+        
         freqNote = filterFrequencySmoother.getCurrentValue() * 135.076232f;
         filterFrequencySmoother.process (numSamples);
         
-        lastFilterFreq = jlimit (0.0f, jmin (20000.0f, float (currentSampleRate) / 2.0f), getMidiNoteInHertz (freqNote));
+        lastFilterFreq = jlimit (8.0f, jmin (20000.0f, float (currentSampleRate) / 2.0f), getMidiNoteInHertz (freqNote));
         float q = paramValue (synth.filterResonance) / 100.0f * 3.5f  + 0.5f;
         
         if (type != 0)
@@ -680,6 +693,10 @@ private:
         if (modItr == synth.modMatrix.end() || ! modItr->second.isModulated())
         {
             smoothItr->second.setValue (param->getCurrentNormalisedValue());
+            
+            if (snapAllValues)
+                smoothItr->second.snapToValue();
+            
             return param->valueRange.convertFrom0to1 (smoothItr->second.getCurrentValue());
         }
         else
@@ -698,6 +715,10 @@ private:
             val = jlimit (0.0f, 1.0f, val);
             
             smoothItr->second.setValue (val);
+            
+            if (snapAllValues)
+                smoothItr->second.snapToValue();
+            
             return param->valueRange.convertFrom0to1 (smoothItr->second.getCurrentValue());
         }
     }
@@ -706,14 +727,14 @@ private:
     
     juce::AudioSampleBuffer renderBuffer {2, 512};
     MultiVoiceOscillator oscillators[4];
-    Envelope ampAdsr;
-    juce::ADSR filterAdsr, modAdsr1, modAdsr2;
+    ExpEnvelope ampAdsr;
+    LinEnvelope filterAdsr, modAdsr1, modAdsr2;
     SimpleLFO lfo1, lfo2;
     juce::IIRFilter filterL1, filterR1, filterL2, filterR2;
     
     ValueSmoother<float> filterFrequencySmoother;
     
-    bool retrigger = false, isPlaying = false, isQuickStop = false;
+    bool retrigger = false, isPlaying = false, isQuickStop = false, snapAllValues = false, firstBlock = false;
     LinearSmoothedValue<float> activeNote;
     float lastLegato = -1.0f, lastFilterFreq = 0;
     
@@ -835,8 +856,8 @@ FourOscPlugin::MODEnvParams::MODEnvParams (FourOscPlugin& plugin, int modNum)
         return Identifier (i.toString() + String (num)).toString();
     };
     
-    modAttack   = plugin.addParam (paramID (IDs::modAttack, modNum),  TRANS("Mod Attack") + " " + String (modNum),  {0.001f, 10.0f, 0.0f, 0.3f});
-    modDecay    = plugin.addParam (paramID (IDs::modDecay, modNum),   TRANS("Mod Decay") + " " + String (modNum),   {0.001f, 10.0f, 0.0f, 0.3f});
+    modAttack   = plugin.addParam (paramID (IDs::modAttack, modNum),  TRANS("Mod Attack") + " " + String (modNum),  {0.0f, 10.0f, 0.0f, 0.3f});
+    modDecay    = plugin.addParam (paramID (IDs::modDecay, modNum),   TRANS("Mod Decay") + " " + String (modNum),   {0.0f, 10.0f, 0.0f, 0.3f});
     modSustain  = plugin.addParam (paramID (IDs::modSustain, modNum), TRANS("Mod Sustain") + " " + String (modNum), {0.0f,   100.0f}, "%");
     modRelease  = plugin.addParam (paramID (IDs::modRelease, modNum), TRANS("Mod Release") + " " + String (modNum), {0.001f, 10.0f, 0.0f, 0.3f});
 }
@@ -881,16 +902,20 @@ FourOscPlugin::FourOscPlugin (PluginCreationInfo info)  : Plugin (info)
     ampDecayValue.referTo (state, IDs::ampDecay, um, 0.1f);
     ampSustainValue.referTo (state, IDs::ampSustain, um, 80.0f);
     ampReleaseValue.referTo (state, IDs::ampRelease, um, 0.1f);
+    ampVelocityValue.referTo (state, IDs::ampVelocity, um, 100.0f);
+    ampAnalogValue.referTo (state, IDs::ampAnalog, um, true);
 
-    ampAttack  = addParam ("ampAttack",  TRANS("Amp Attack"),  {0.001f, 10.0f, 0.0f, 0.3f});
-    ampDecay   = addParam ("ampDecay",   TRANS("Amp Decay"),   {0.001f, 10.0f, 0.0f, 0.3f});
-    ampSustain = addParam ("ampSustain", TRANS("Amp Sustain"), {0.0f,   100.0f}, "%");
-    ampRelease = addParam ("ampRelease", TRANS("Amp Release"), {0.001f, 10.0f, 0.0f, 0.3f});
+    ampAttack   = addParam ("ampAttack",   TRANS("Amp Attack"),   {0.001f, 10.0f, 0.0f, 0.3f});
+    ampDecay    = addParam ("ampDecay",    TRANS("Amp Decay"),    {0.001f, 10.0f, 0.0f, 0.3f});
+    ampSustain  = addParam ("ampSustain",  TRANS("Amp Sustain"),  {0.0f,   100.0f}, "%");
+    ampRelease  = addParam ("ampRelease",  TRANS("Amp Release"),  {0.001f, 10.0f, 0.0f, 0.3f});
+    ampVelocity = addParam ("ampVelocity", TRANS("Amp Velocity"), {0.0f, 100.0f}, "%");
 
     ampAttack->attachToCurrentValue (ampAttackValue);
     ampDecay->attachToCurrentValue (ampDecayValue);
     ampSustain->attachToCurrentValue (ampSustainValue);
     ampRelease->attachToCurrentValue (ampReleaseValue);
+    ampVelocity->attachToCurrentValue (ampVelocityValue);
 
     // Filter
     filterAttackValue.referTo (state, IDs::filterAttack, um, 0.1f);
@@ -901,17 +926,19 @@ FourOscPlugin::FourOscPlugin (PluginCreationInfo info)  : Plugin (info)
     filterResonanceValue.referTo (state, IDs::filterResonance, um, 0.5f);
     filterAmountValue.referTo (state, IDs::filterAmount, um, 0.0f);
     filterKeyValue.referTo (state, IDs::filterKey, um, 0.0f);
+    filterVelocityValue.referTo (state, IDs::filterVelocity, um, 0.0f);
     filterTypeValue.referTo (state, IDs::filterType, um, 0);
     filterSlopeValue.referTo (state, IDs::filterSlope, um, 12);
 
-    filterAttack    = addParam ("filterAttack",     TRANS("Filter Attack"),     {0.001f, 10.0f, 0.0f, 0.3f});
-    filterDecay     = addParam ("filterDecay",      TRANS("Filter Decay"),      {0.001f, 10.0f, 0.0f, 0.3f});
-    filterSustain   = addParam ("filterSustain",    TRANS("Filter Sustain"),    {0.0f,   100.0f}, "%");
-    filterRelease   = addParam ("filterRelease",    TRANS("Filter Release"),    {0.001f, 10.0f, 0.0f, 0.3f});
+    filterAttack    = addParam ("filterAttack",     TRANS("Filter Attack"),     {0.0f, 10.0f, 0.0f, 0.3f});
+    filterDecay     = addParam ("filterDecay",      TRANS("Filter Decay"),      {0.0f, 10.0f, 0.0f, 0.3f});
+    filterSustain   = addParam ("filterSustain",    TRANS("Filter Sustain"),    {0.0f, 100.0f}, "%");
+    filterRelease   = addParam ("filterRelease",    TRANS("Filter Release"),    {0.0f, 10.0f, 0.0f, 0.3f});
     filterFreq      = addParam ("filterFreq",       TRANS("Filter Freq"),       {0.0f, 135.076232f});
     filterResonance = addParam ("filterResonance",  TRANS("Filter Resonance"),  {0.0f, 100.0f}, "%");
     filterAmount    = addParam ("filterAmount",     TRANS("Filter Amount"),     {-1.0f, 1.0f});
     filterKey       = addParam ("filterKey",        TRANS("Filter Key"),        {0.0f, 100.0f}, "%");
+    filterVelocity  = addParam ("filterVelocity",   TRANS("Filter Velocity"),   {0.0f, 100.0f}, "%");
 
     filterAttack->attachToCurrentValue (filterAttackValue);
     filterDecay->attachToCurrentValue (filterDecayValue);
@@ -921,6 +948,7 @@ FourOscPlugin::FourOscPlugin (PluginCreationInfo info)  : Plugin (info)
     filterResonance->attachToCurrentValue (filterResonanceValue);
     filterAmount->attachToCurrentValue (filterAmountValue);
     filterKey->attachToCurrentValue (filterKeyValue);
+    filterVelocity->attachToCurrentValue (filterVelocityValue);
     
     // Build the mod matrix before we add any global params
     for (auto p : getAutomatableParameters())
@@ -1034,6 +1062,7 @@ FourOscPlugin::~FourOscPlugin()
     ampDecay->detachFromCurrentValue();
     ampSustain->detachFromCurrentValue();
     ampRelease->detachFromCurrentValue();
+    ampVelocity->detachFromCurrentValue();
     
     // Filter
     filterAttack->detachFromCurrentValue();
@@ -1044,6 +1073,7 @@ FourOscPlugin::~FourOscPlugin()
     filterResonance->detachFromCurrentValue();
     filterAmount->detachFromCurrentValue();
     filterKey->detachFromCurrentValue();
+    filterVelocity->detachFromCurrentValue();
     
     // Effects: Distortion
     distortion->detachFromCurrentValue();
@@ -1535,17 +1565,19 @@ void FourOscPlugin::updateParams (AudioSampleBuffer& buffer)
 //==============================================================================
 void FourOscPlugin::restorePluginStateFromValueTree (const ValueTree& v)
 {
-    juce::CachedValue<float>* cvsFloat[]  = { &ampAttackValue, &ampDecayValue, &ampSustainValue, &ampReleaseValue,
+    juce::CachedValue<float>* cvsFloat[]  = { &ampAttackValue, &ampDecayValue, &ampSustainValue, &ampReleaseValue, &ampVelocityValue,
         &filterAttackValue, &filterDecayValue, &filterSustainValue, &filterReleaseValue, &filterFreqValue, &filterResonanceValue,
-        &filterAmountValue, &filterKeyValue, &distortionValue, &reverbSizeValue, &reverbDampingValue, &reverbWidthValue,
+        &filterAmountValue, &filterKeyValue, &filterVelocityValue, &distortionValue, &reverbSizeValue, &reverbDampingValue, &reverbWidthValue,
         &reverbMixValue, &delayValue, &delayFeedbackValue, &delayCrossfeedValue, &delayMixValue,
         &chorusSpeedValue, &chorusDepthValue, &chorusWidthValue, &chorusMixValue, &legatoValue,
         &masterLevelValue, nullptr };
 
     juce::CachedValue<int>* cvsInt[] { &voiceModeValue, &voicesValue, &filterTypeValue, &filterSlopeValue, nullptr };
+    juce::CachedValue<bool>* cvsBool[] { &ampAnalogValue, nullptr };
     
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
+    copyPropertiesToNullTerminatedCachedValues (v, cvsBool);
     
     auto um = getUndoManager();
     
