@@ -76,7 +76,15 @@ static String expandPatterns (Edit& ed, const String& s, Track* track, int take)
         trackName = File::createLegalFileName (track->getName());
 
     if (auto proj = ProjectManager::getInstance()->getProject (ed))
+    {
         projDir = proj->getDirectoryForMedia (ProjectItem::Category::recorded).getFullPathName();
+    }
+    else if (ed.editFileRetriever)
+    {
+        File editFile = ed.editFileRetriever();
+        if (editFile != File() && editFile.getParentDirectory().isDirectory())
+            projDir = editFile.getParentDirectory().getFullPathName();
+    }
 
     auto now = Time::getCurrentTime();
 
@@ -577,13 +585,15 @@ public:
         }
         else
         {
-            jassertfalse; // TODO
+            
+            return applyLastRecording (rc, nullptr, recordedFile, destTrack,
+                                       recordedFileLength, newClipLen, isLooping, loopEnd);
         }
 
         return {};
     }
 
-    Clip::Array applyLastRecording (const RecordingContext& rc, const ProjectItem::Ptr& projectItem,
+    Clip::Array applyLastRecording (const RecordingContext& rc, const ProjectItem::Ptr projectItem,
                                     const AudioFile& recordedFile, AudioTrack& destTrack,
                                     double recordedFileLength, double newClipLen,
                                     bool isLooping, double loopEnd)
@@ -618,16 +628,24 @@ public:
 
         if (replaceOldClips && edit.recordingPunchInOut)
         {
-            newClip = destTrack.insertWaveClip (getNewClipName (destTrack), projectItem->getID(),
-                                                { { loopRange.getStart(), endPos }, 0.0 }, true);
+            if (projectItem != nullptr)
+                newClip = destTrack.insertWaveClip (getNewClipName (destTrack), projectItem->getID(),
+                                                    { { loopRange.getStart(), endPos }, 0.0 }, true);
+            else
+                newClip = destTrack.insertWaveClip (getNewClipName (destTrack), recordedFile.getFile(),
+                                                    { { loopRange.getStart(), endPos }, 0.0 }, true);
 
             if (newClip != nullptr)
                 newClip->setStart (rc.punchTimes.getStart(), false, false);
         }
         else
         {
-            newClip = destTrack.insertWaveClip (getNewClipName (destTrack), projectItem->getID(),
-                                                { { rc.punchTimes.getStart(), endPos }, 0.0 }, replaceOldClips);
+            if (projectItem != nullptr)
+                newClip = destTrack.insertWaveClip (getNewClipName (destTrack), projectItem->getID(),
+                                                    { { rc.punchTimes.getStart(), endPos }, 0.0 }, replaceOldClips);
+            else
+                newClip = destTrack.insertWaveClip (getNewClipName (destTrack), recordedFile.getFile(),
+                                                    { { rc.punchTimes.getStart(), endPos }, 0.0 }, replaceOldClips);
         }
 
         if (newClip == nullptr)
@@ -662,8 +680,18 @@ public:
         }
 
         if (auto wc = dynamic_cast<WaveAudioClip*> (newClip.get()))
-            for (auto& take : extraTakes)
-                wc->addTake (take->getID());
+        {
+            if (extraTakes.size() > 0)
+            {
+                for (auto& take : extraTakes)
+                    wc->addTake (take->getID());
+            }
+            else if (filesCreated.size() > 1)
+            {
+                for (auto& f : filesCreated)
+                    wc->addTake (f);
+            }
+        }
 
         Clip::Array clips;
         clips.add (newClip.get());
@@ -676,7 +704,8 @@ public:
         auto& afm = edit.engine.getAudioFileManager();
 
         // break the wave into separate takes..
-        extraTakes.add (projectItem);
+        if (projectItem != nullptr)
+            extraTakes.add (projectItem);
 
         int take = 1;
         auto loopLength = context.transport.getLoopRange().getLength();
@@ -710,6 +739,10 @@ public:
                     extraTakes.add (takeObject);
                     filesCreated.add (takeFile);
                 }
+            }
+            else
+            {
+                filesCreated.add (takeFile);
             }
 
             ++take;

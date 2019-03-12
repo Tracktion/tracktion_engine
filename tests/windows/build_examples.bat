@@ -24,6 +24,7 @@ call :BuildExample "PlaybackDemo"
 call :BuildExample "PitchAndTimeDemo"
 call :BuildExample "StepSequencerDemo"
 call :BuildExample "PatternGeneratorDemo"
+call :BuildExample "RecordingDemo"
 exit /B %ERRORLEVEL%
 
 :BuildExample

@@ -289,7 +289,7 @@ public:
         {
             if (synth.isLegato())
             {
-                activeNote.setValue (currentlyPlayingNote.initialNote, false);
+                activeNote.setTargetValue (currentlyPlayingNote.initialNote);
                 
                 ampAdsr.noteOn();
                 filterAdsr.noteOn();
@@ -305,7 +305,7 @@ public:
         }
         else
         {
-            activeNote.setValue (currentlyPlayingNote.initialNote, true);
+            activeNote.setCurrentAndTargetValue (currentlyPlayingNote.initialNote);
             
             isPlaying = true;
             isQuickStop = false;
