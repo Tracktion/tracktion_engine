@@ -158,7 +158,7 @@ static double pasteMIDIFileIntoEdit (Edit& edit, const File& midiFile, int& targ
             if (list->state.isValid())
                 clipState.addChild (list->state, -1, nullptr);
 
-            if (auto at = edit.getOrInsertAudioTrackAt (targetTrackIndex))
+            if (auto at = getOrInsertAudioTrackNearestIndex (edit, targetTrackIndex))
             {
                 auto time = tempoSequence.beatsToTime ({ startBeat, endBeat });
 
@@ -323,7 +323,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
 
             if (file.exists())
             {
-                if (auto targetTrack = options.edit.getOrInsertAudioTrackAt (targetTrackIndex))
+                if (auto targetTrack = getOrInsertAudioTrackNearestIndex (options.edit, targetTrackIndex))
                 {
                     if (sourceItem->isMidi())
                     {

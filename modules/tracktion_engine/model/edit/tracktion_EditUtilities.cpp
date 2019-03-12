@@ -76,6 +76,23 @@ AudioTrack* getFirstAudioTrack (const Edit& edit)
     return getAudioTracks (edit).getFirst();
 }
 
+AudioTrack* getOrInsertAudioTrackNearestIndex (Edit& edit, int trackIndex)
+{
+    int i = 0;
+    
+    // find the next audio track on or after the given index..
+    for (auto t : getAllTracks (edit))
+    {
+        if (i >= trackIndex)
+            if (auto at = dynamic_cast<AudioTrack*> (t))
+                return at;
+        
+        ++i;
+    }
+    
+    return edit.insertNewAudioTrack (TrackInsertPoint (nullptr, getAllTracks (edit).getLast()), nullptr).get();
+}
+    
 bool containsTrack (const Edit& edit, const Track& track)
 {
     return findTrackForPredicate (edit, [&track] (Track& t) { return &track == &t; }) != nullptr;

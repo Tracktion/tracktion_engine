@@ -1587,19 +1587,8 @@ juce::Array<Clip*> Edit::findClipsInLinkGroup (EditItemID linkGroupID) const
 
 AudioTrack::Ptr Edit::getOrInsertAudioTrackAt (int trackIndex)
 {
-    int i = 0;
-
-    // find the next audio track on or after the given index..
-    for (auto t : getAllTracks (*this))
-    {
-        if (i >= trackIndex)
-            if (auto at = dynamic_cast<AudioTrack*> (t))
-                return at;
-
-        ++i;
-    }
-
-    return insertNewAudioTrack (TrackInsertPoint (nullptr, getAllTracks (*this).getLast()), nullptr);
+    ensureNumberOfAudioTracks (trackIndex + 1);
+    return getAudioTracks (*this)[trackIndex];
 }
 
 Track::Ptr Edit::insertTrack (TrackInsertPoint insertPoint, juce::ValueTree v, SelectionManager* sm)

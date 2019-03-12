@@ -53,6 +53,11 @@ Track* findTrackForState (const Edit&, const juce::ValueTree&);
 
 /** */
 AudioTrack* getFirstAudioTrack (const Edit&);
+    
+/** Returns the AudioTrack with an overall index nearest the given index. If the
+    given index if greatest than the last tracks, an audio track will be appended
+    and returned */
+AudioTrack* getOrInsertAudioTrackNearestIndex (Edit&, int index);
 
 /** */
 juce::Array<Track*> findAllTracksContainingSelectedItems (const SelectableList&);
