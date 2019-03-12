@@ -610,7 +610,7 @@ public:
         filterFrequencySmoother.process (numSamples);
         
         lastFilterFreq = jlimit (8.0f, jmin (20000.0f, float (currentSampleRate) / 2.0f), getMidiNoteInHertz (freqNote));
-        float q = paramValue (synth.filterResonance) / 100.0f * 3.5f  + 0.5f;
+        float q = paramValue (synth.filterResonance) / 100.0f * 15.5f + 0.5f;
         
         if (type != 0)
         {
