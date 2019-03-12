@@ -640,7 +640,9 @@ void PluginManager::setNumberOfThreadsForScanning (int numThreads)
 
 bool PluginManager::usesSeparateProcessForScanning()
 {
-    return engine.getPropertyStorage().getProperty (SettingID::useSeparateProcessForScanning, true);
+    if (engine.getEngineBehaviour().canScanPluginsOutOfProcess())
+        return engine.getPropertyStorage().getProperty (SettingID::useSeparateProcessForScanning, true);
+    return false;
 }
 
 void PluginManager::setUsesSeparateProcessForScanning (bool b)

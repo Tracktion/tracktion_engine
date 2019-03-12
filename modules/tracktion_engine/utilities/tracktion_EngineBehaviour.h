@@ -43,6 +43,21 @@ public:
 
     /** Gives plugins an opportunity to save custom data when the plugin state gets flushed. */
     virtual void saveCustomPluginProperties (juce::ValueTree&, juce::AudioPluginInstance&, juce::UndoManager*) {}
+    
+    /** Return true if your application supports scanning plugins out of process.
+     
+        If you want to support scanning out of process, the allowing should be added
+        to you JUCEApplication::initialise() function:
+     
+        void initialise (const String& commandLine) override
+        {
+            if (PluginManager::startChildProcessPluginScan (commandLine))
+                return;
+     
+             // continue like normal
+     
+      */
+    virtual bool canScanPluginsOutOfProcess()                                       { return false; }
 
     // some debate surrounds whether middle-C is C3, C4 or C5. In Tracktion we
     // default this value to 4
