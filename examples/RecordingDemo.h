@@ -212,7 +212,7 @@ private:
         {
             if (instance->getInputDevice().getDeviceType() == te::InputDevice::waveDevice)
             {
-                if (auto t = edit->getOrInsertAudioTrackAt (trackNum))
+                if (auto t = EngineHelpers::getOrInsertAudioTrackAt (*edit, trackNum))
                 {
                     instance->setTargetTrack (t.get(), 0);
                     instance->setRecordingEnabled (true);

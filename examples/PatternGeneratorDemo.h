@@ -105,7 +105,7 @@ public:
         if (b == &midiInputsBox)
         {
             auto& dm = engine.getDeviceManager();
-            if (auto t = edit.getOrInsertAudioTrackAt (1))
+            if (auto t = EngineHelpers::getOrInsertAudioTrackAt (edit, 1))
                 if (auto dev = dm.getMidiInDevice (midiInputsBox.getSelectedItemIndex()))
                     for (auto instance : edit.getAllInputDevices())
                         if (&instance->getInputDevice() == dev)
@@ -237,7 +237,7 @@ private:
                     synth->restorePluginStateFromValueTree (vt);
             }
             
-            if (auto t = edit.getOrInsertAudioTrackAt (0))
+            if (auto t = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
                 t->pluginList.insertPlugin (*synth, 0, nullptr);
         }
         
@@ -252,14 +252,14 @@ private:
                     synth->restorePluginStateFromValueTree (vt);
             }
             
-            if (auto t = edit.getOrInsertAudioTrackAt (1))
+            if (auto t = EngineHelpers::getOrInsertAudioTrackAt (edit, 1))
                 t->pluginList.insertPlugin (*synth, 0, nullptr);
         }
     }
     
     te::MidiClip::Ptr createMIDIClip()
     {
-        if (auto track = edit.getOrInsertAudioTrackAt (0))
+        if (auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
         {
             // Find length of 8 bars
             const te::EditTimeRange editTimeRange (0, edit.tempoSequence.barsBeatsToTime ({ 8, 0.0 }));
@@ -290,7 +290,7 @@ private:
     
     te::MidiClip::Ptr getClip()
     {
-        if (auto track = edit.getOrInsertAudioTrackAt (0))
+        if (auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
             if (auto clip = dynamic_cast<te::MidiClip*> (track->getClips()[0]))
                 return *clip;
         

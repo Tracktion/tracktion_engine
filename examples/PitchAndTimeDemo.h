@@ -131,7 +131,7 @@ private:
     //==============================================================================
     te::WaveAudioClip::Ptr getClip()
     {
-        if (auto track = edit.getOrInsertAudioTrackAt (0))
+        if (auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
             if (auto clip = dynamic_cast<te::WaveAudioClip*> (track->getClips()[0]))
                 return *clip;
 

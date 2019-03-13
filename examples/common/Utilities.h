@@ -71,11 +71,17 @@ namespace EngineHelpers
         for (int i = clips.size(); --i >= 0;)
             clips.getUnchecked (i)->removeFromParentTrack();
     }
+    
+    AudioTrack* getOrInsertAudioTrackAt (te::Edit& edit, int index)
+    {
+        edit.ensureNumberOfAudioTrack (index + 1);
+        return getAllAudioTracks (edit, index);
+    }
 
     te::WaveAudioClip::Ptr loadAudioFileAsClip (te::Edit& edit, const File& file)
     {
         // Find the first track and delete all clips from it
-        if (auto track = edit.getOrInsertAudioTrackAt (0))
+        if (auto track = getOrInsertAudioTrackAt (edit, 0))
         {
             removeAllClips (*track);
 
