@@ -1585,12 +1585,6 @@ juce::Array<Clip*> Edit::findClipsInLinkGroup (EditItemID linkGroupID) const
     return {};
 }
 
-AudioTrack::Ptr Edit::getOrInsertAudioTrackAt (int trackIndex)
-{
-    ensureNumberOfAudioTracks (trackIndex + 1);
-    return getAudioTracks (*this)[trackIndex];
-}
-
 Track::Ptr Edit::insertTrack (TrackInsertPoint insertPoint, juce::ValueTree v, SelectionManager* sm)
 {
     CRASH_TRACER

@@ -78,6 +78,23 @@ bool Clipboard::ContentType::pasteIntoEdit (const EditPastingOptions&) const    
 //==============================================================================
 Clipboard::ProjectItems::ProjectItems() {}
 Clipboard::ProjectItems::~ProjectItems() {}
+    
+static AudioTrack* getOrInsertAudioTrackNearestIndex (Edit& edit, int trackIndex)
+{
+    int i = 0;
+    
+    // find the next audio track on or after the given index..
+    for (auto t : getAllTracks (edit))
+    {
+        if (i >= trackIndex)
+            if (auto at = dynamic_cast<AudioTrack*> (t))
+                return at;
+        
+        ++i;
+    }
+    
+    return edit.insertNewAudioTrack (TrackInsertPoint (nullptr, getAllTracks (edit).getLast()), nullptr).get();
+};
 
 static double pasteMIDIFileIntoEdit (Edit& edit, const File& midiFile, int& targetTrackIndex,
                                      double startTime, bool importTempoChanges)

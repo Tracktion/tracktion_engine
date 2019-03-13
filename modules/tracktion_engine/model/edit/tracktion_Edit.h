@@ -191,7 +191,6 @@ public:
     Track::Ptr insertNewTrack (TrackInsertPoint, const juce::Identifier& xmlType, SelectionManager* selectionMnagerToSelectWith);
     Track::Ptr insertTrack (TrackInsertPoint, juce::ValueTree, SelectionManager* selectionMnagerToSelectWith);
     Track::Ptr insertTrack (juce::ValueTree, juce::ValueTree parent, juce::ValueTree preceeding, SelectionManager* selectionMnagerToSelectWith);
-    juce::ReferenceCountedObjectPtr<AudioTrack> getOrInsertAudioTrackAt (int trackIndex);
 
     void moveTrack (Track::Ptr, TrackInsertPoint);
     void deleteTrack (Track*);
