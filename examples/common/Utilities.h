@@ -72,10 +72,10 @@ namespace EngineHelpers
             clips.getUnchecked (i)->removeFromParentTrack();
     }
     
-    AudioTrack* getOrInsertAudioTrackAt (te::Edit& edit, int index)
+    te::AudioTrack* getOrInsertAudioTrackAt (te::Edit& edit, int index)
     {
-        edit.ensureNumberOfAudioTrack (index + 1);
-        return getAllAudioTracks (edit, index);
+        edit.ensureNumberOfAudioTracks (index + 1);
+        return te::getAudioTracks (edit)[index];
     }
 
     te::WaveAudioClip::Ptr loadAudioFileAsClip (te::Edit& edit, const File& file)
