@@ -238,6 +238,9 @@ public:
         zeroDenormalisedValuesIfNeeded (buffer);
         
         phase = ph;
+        if (phase >= MathConstants<float>::pi)
+            phase -= MathConstants<float>::pi;
+        
         delayBuffer.bufferPos = bufPos;
     }
     
