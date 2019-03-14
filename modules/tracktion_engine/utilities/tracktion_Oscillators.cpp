@@ -264,15 +264,14 @@ void MultiVoiceOscillator::setSpread (float s)
 
 void MultiVoiceOscillator::process (juce::AudioSampleBuffer& buffer, int startSample, int numSamples)
 {
-    float leftGain  = 1.0f - pan;
-    float rightGain = 1.0f + pan;
-    
     if (voices == 1)
     {
+        float leftGain  = 1.0f - pan;
+        float rightGain = 1.0f + pan;
+
         for (int i = 0; i < 2; i++)
         {
             bool left = (i % 2) == 0;
-            float lrDiff = left ? (-spread / 200000.0f) : (spread / 200000.0f);
             float panGain = left ? leftGain : rightGain;
             
             float* data = buffer.getWritePointer (left ? 0 : 1, startSample);
@@ -281,7 +280,7 @@ void MultiVoiceOscillator::process (juce::AudioSampleBuffer& buffer, int startSa
             juce::AudioSampleBuffer channelBuffer (dataPointers, 1, numSamples);
             
             oscillators[i]->setGain (gain * panGain / voices);
-            oscillators[i]->setNote (note + lrDiff);
+            oscillators[i]->setNote (note);
             oscillators[i]->process (channelBuffer, 0, numSamples);
         }
     }
@@ -289,10 +288,15 @@ void MultiVoiceOscillator::process (juce::AudioSampleBuffer& buffer, int startSa
     {
         for (int i = 0; i < voices * 2; i++)
         {
+            int voiceIndex = (i / 2);
+            float localPan = jlimit (-1.0f, 1.0f, ((voiceIndex % 2 == 0) ? 1 : -1) * spread);
+            
+            float leftGain  = 1.0f - localPan;
+            float rightGain = 1.0f + localPan;
+            
             float base = note - detune / 2;
             float delta = detune / (voices - 1);
             bool left = (i % 2) == 0;
-            float lrDiff = left ? (-spread / 200000.0f) : (spread / 200000.0f);
             float panGain = left ? leftGain : rightGain;
             
             float* data = buffer.getWritePointer (left ? 0 : 1, startSample);
@@ -301,7 +305,7 @@ void MultiVoiceOscillator::process (juce::AudioSampleBuffer& buffer, int startSa
             juce::AudioSampleBuffer channelBuffer (dataPointers, 1, numSamples);
             
             oscillators[i]->setGain (gain * panGain / voices);
-            oscillators[i]->setNote (base + delta * (i / 2) + lrDiff);
+            oscillators[i]->setNote (base + delta * (i / 2));
             oscillators[i]->process (channelBuffer, 0, numSamples);
         }
     }

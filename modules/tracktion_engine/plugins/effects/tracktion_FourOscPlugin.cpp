@@ -664,7 +664,7 @@ public:
             o.setPulseWidth (paramValue (synth.oscParams[idx]->pulseWidth));
             o.setNumVoices (synth.oscParams[idx]->voicesValue);
             o.setDetune (paramValue (synth.oscParams[idx]->detune));
-            o.setSpread (paramValue (synth.oscParams[idx]->spread));
+            o.setSpread (paramValue (synth.oscParams[idx]->spread) / 100.0f);
             o.setPan (paramValue (synth.oscParams[idx]->pan));
 
             idx++;
