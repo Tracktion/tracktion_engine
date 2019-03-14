@@ -214,7 +214,7 @@ private:
             {
                 if (auto t = EngineHelpers::getOrInsertAudioTrackAt (*edit, trackNum))
                 {
-                    instance->setTargetTrack (t.get(), 0);
+                    instance->setTargetTrack (t, 0);
                     instance->setRecordingEnabled (true);
                     
                     trackNum++;
