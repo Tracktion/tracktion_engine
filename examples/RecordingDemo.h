@@ -44,7 +44,7 @@ public:
         updateRecordButtonText();
         editNameLabel.setJustificationType (Justification::centred);
         Helpers::addAndMakeVisible (*this, { &settingsButton, &newEditButton, &playPauseButton, &recordButton, &showEditButton,
-                                             &newTrackButton, &deleteButton, &editNameLabel, &showWaveformButton });
+                                             &newTrackButton, &clearTracksButton, &deleteButton, &editNameLabel, &showWaveformButton });
 
         deleteButton.setEnabled (false);
         createNewEdit (File::getSpecialLocation (File::tempDirectory).getNonexistentChildFile ("Test", ".tracktionedit", false));
@@ -52,7 +52,7 @@ public:
         
         setupButtons();
         
-        setSize (600, 400);
+        setSize (700, 500);
     }
 
     ~RecordingDemo()
@@ -69,7 +69,7 @@ public:
     void resized() override
     {
         auto r = getLocalBounds();
-        int w = r.getWidth() / 7;
+        int w = r.getWidth() / 8;
         auto topR = r.removeFromTop (30);
         settingsButton.setBounds (topR.removeFromLeft (w).reduced (2));
         newEditButton.setBounds (topR.removeFromLeft (w).reduced (2));
@@ -77,6 +77,7 @@ public:
         recordButton.setBounds (topR.removeFromLeft (w).reduced (2));
         showEditButton.setBounds (topR.removeFromLeft (w).reduced (2));
         newTrackButton.setBounds (topR.removeFromLeft (w).reduced (2));
+        clearTracksButton.setBounds (topR.removeFromLeft (w).reduced (2));
         deleteButton.setBounds (topR.removeFromLeft (w).reduced (2));
         topR = r.removeFromTop (30);
         showWaveformButton.setBounds (topR.removeFromLeft (w * 2).reduced (2));
@@ -94,7 +95,7 @@ private:
     std::unique_ptr<EditComponent> editComponent;
 
     TextButton settingsButton { "Settings" }, newEditButton { "New" }, playPauseButton { "Play" }, recordButton { "Record" },
-               showEditButton { "Show Edit" }, newTrackButton { "New Track" }, deleteButton { "Delete" };
+               showEditButton { "Show Edit" }, newTrackButton { "New Track" }, clearTracksButton { "Clear Tracks" }, deleteButton { "Delete" };
     Label editNameLabel { "No Edit Loaded" };
     ToggleButton showWaveformButton { "Show Waveforms" };
 
@@ -118,6 +119,12 @@ private:
         newTrackButton.onClick = [this]
         {
             edit->ensureNumberOfAudioTracks (getAudioTracks (*edit).size() + 1);
+        };
+        clearTracksButton.onClick = [this]
+        {
+            for (auto t : te::getAudioTracks (*edit))
+                edit->deleteTrack (t);
+                
         };
         deleteButton.onClick = [this]
         {
@@ -186,6 +193,7 @@ private:
         
         editComponent = std::make_unique<EditComponent> (*edit, selectionManager);
         addAndMakeVisible (*editComponent);
+        resized();
     }
     
     void createTracksAndAssignInputs()
