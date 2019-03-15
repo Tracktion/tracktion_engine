@@ -509,7 +509,7 @@ void ExternalPlugin::buildParameterList()
         {
             auto* parameter = parameters.getUnchecked (i);
 
-            if (parameter->isAutomatable())
+            if (parameter->isAutomatable() && ! isParameterBlacklisted (*this, *pluginInstance, *parameter))
             {
                 String nm (parameter->getName (1024));
 

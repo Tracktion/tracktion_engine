@@ -28,6 +28,7 @@ using namespace juce;
 #include "plugins/tracktion_PluginWindowState.cpp"
 
 #include "plugins/external/tracktion_ExternalAutomatableParameter.h"
+#include "plugins/external/tracktion_ExternalPluginBlacklist.h"
 #include "plugins/external/tracktion_ExternalPlugin.cpp"
 
 #include "plugins/internal/tracktion_AuxReturn.cpp"
