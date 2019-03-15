@@ -206,6 +206,7 @@ private:
     EditViewState& editViewState;
     
     int xPosition = 0;
+    bool firstTimer = true;
 };
 
 //==============================================================================

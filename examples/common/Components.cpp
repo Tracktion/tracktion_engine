@@ -601,7 +601,6 @@ PlayheadComponent::PlayheadComponent (te::Edit& e , EditViewState& evs)
     : edit (e), editViewState (evs)
 {
     startTimerHz (30);
-    setMouseCursor (MouseCursor::LeftRightResizeCursor);
 }
 
 void PlayheadComponent::paint (Graphics& g)
@@ -637,6 +636,13 @@ void PlayheadComponent::mouseDrag (const MouseEvent& e)
 
 void PlayheadComponent::timerCallback()
 {
+    if (firstTimer)
+    {
+        // On Linux, don't set the mouse cursor until after the Component has appeared
+        firstTimer = false;
+        setMouseCursor (MouseCursor::LeftRightResizeCursor);
+    }
+
     int newX = editViewState.timeToX (edit.getTransport().getCurrentPosition(), getWidth());
     if (newX != xPosition)
     {
