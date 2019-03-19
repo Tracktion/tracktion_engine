@@ -497,6 +497,7 @@ private:
     bool isPreviewEdit = false;
     std::atomic<double> clickMark1Time { 0.0 }, clickMark2Time { 0.0 };
     std::atomic<bool> isFullyConstructed { false };
+    mutable std::unordered_set<EditItemID> usedIDs;
 
     const EditRole editRole;
 

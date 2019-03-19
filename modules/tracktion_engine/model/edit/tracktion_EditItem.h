@@ -156,3 +156,14 @@ namespace juce
         static var toVar (const tracktion_engine::EditItemID& v)     { return var ((int64) v.getRawID()); }
     };
 }
+
+#if ! DOXYGEN
+namespace std
+{
+    template<>
+    struct hash<tracktion_engine::EditItemID>
+    {
+        size_t operator() (const tracktion_engine::EditItemID& e) const noexcept   { return (size_t) e.getRawID(); }
+    };
+}
+#endif

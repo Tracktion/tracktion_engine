@@ -1077,13 +1077,17 @@ EditItemID Edit::createNewItemID (const std::vector<EditItemID>& idsToAvoid) con
     auto existingIDs = EditItemID::findAllIDs (state);
 
     existingIDs.insert (existingIDs.end(), idsToAvoid.begin(), idsToAvoid.end());
+    existingIDs.insert (existingIDs.end(), usedIDs.begin(), usedIDs.end());
 
     trackCache.visitItems ([&] (auto i)  { existingIDs.push_back (i->itemID); });
     clipCache.visitItems ([&] (auto i)   { existingIDs.push_back (i->itemID); });
 
     std::sort (existingIDs.begin(), existingIDs.end());
+    auto newID = EditItemID::findFirstIDNotIn (existingIDs);
+    jassert (usedIDs.find (newID) == usedIDs.end());
+    usedIDs.insert (newID);
 
-    return EditItemID::findFirstIDNotIn (existingIDs);
+    return newID;
 }
 
 EditItemID Edit::createNewItemID() const
