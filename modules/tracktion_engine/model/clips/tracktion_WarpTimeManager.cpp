@@ -234,10 +234,10 @@ WarpTimeManager::WarpTimeManager (AudioClipBase& c)
     const double clipLen = AudioFile (clip->getOriginalFile()).getLength();
 
     // If this is the first time that we've built the Manager
-    if (getMarkers().isEmpty())
+    if (markers->isEmpty())
     {
-        insertMarker (-1, WarpMarker (0, 0));
-        insertMarker (-1, WarpMarker (clipLen, clipLen));
+        insertMarker (WarpMarker (0, 0));
+        insertMarker (WarpMarker (clipLen, clipLen));
         setWarpEndMarkerTime (clipLen);
     }
 
@@ -272,14 +272,14 @@ void WarpTimeManager::setSourceFile (const AudioFile& af)
     jassert (clip == nullptr);
     sourceFile = af;
 
-    if (getMarkers().isEmpty())
+    if (markers->isEmpty())
     {
         const double clipLen = sourceFile.getLength();
 
         if (sourceFile.isValid())
         {
-            insertMarker (-1, WarpMarker (0, 0));
-            insertMarker (-1, WarpMarker (clipLen, clipLen));
+            insertMarker (WarpMarker (0, 0));
+            insertMarker (WarpMarker (clipLen, clipLen));
             setWarpEndMarkerTime (clipLen);
 
             editLoadedCallback.reset (new Edit::LoadFinishedCallback<WarpTimeManager> (*this, edit));
@@ -297,18 +297,25 @@ double WarpTimeManager::getSourceLength() const
     return getSourceFile().getLength();
 }
 
-void WarpTimeManager::insertMarker (int index, WarpMarker marker)
+int WarpTimeManager::insertMarker (WarpMarker marker)
 {
+    int index = 0;
+
+    while (index < markers->objects.size() && markers->objects.getUnchecked (index)->warpTime < marker.warpTime)
+        index++;
+
     ValueTree v (IDs::WARPMARKER);
     v.setProperty (IDs::sourceTime, marker.sourceTime, nullptr);
     v.setProperty (IDs::warpTime, marker.warpTime, nullptr);
     markers->state.addChild (v, index, getUndoManager());
+
+    return index;
 }
 
 void WarpTimeManager::removeMarker (int index)
 {
-    if (index == 0 || index == getMarkers().size() - 1)
-        moveMarker (index, getMarkers().getUnchecked (index)->sourceTime);
+    if (index == 0 || index == markers->size() - 1)
+        moveMarker (index, markers->objects.getUnchecked (index)->sourceTime);
     else
         markers->state.removeChild (index, getUndoManager());
 }
@@ -318,8 +325,8 @@ void WarpTimeManager::removeAllMarkers()
     markers->state.removeAllChildren (getUndoManager());
     const double clipLen = getSourceLength();
 
-    insertMarker (-1, WarpMarker (0, 0));
-    insertMarker (-1, WarpMarker (clipLen, clipLen));
+    insertMarker (WarpMarker (0, 0));
+    insertMarker (WarpMarker (clipLen, clipLen));
     setWarpEndMarkerTime (clipLen);
 }
 
@@ -374,7 +381,7 @@ void WarpTimeManager::setWarpEndMarkerTime (double endTime)
 Array<EditTimeRange> WarpTimeManager::getWarpTimeRegions (const EditTimeRange overallTimeRegion) const
 {
     Array<EditTimeRange> visibleWarpRegions;
-    auto& markersArray = getMarkers();
+    auto& markersArray = markers->objects;
 
     if (markersArray.isEmpty())
     {
@@ -419,7 +426,7 @@ Array<EditTimeRange> WarpTimeManager::getWarpTimeRegions (const EditTimeRange ov
 
 double WarpTimeManager::warpTimeToSourceTime (double warpTime) const
 {
-    auto& markersArray = getMarkers();
+    auto& markersArray = markers->objects;
 
     if (markersArray.isEmpty())
         return warpTime;
@@ -474,7 +481,7 @@ double WarpTimeManager::warpTimeToSourceTime (double warpTime) const
 
 double WarpTimeManager::sourceTimeToWarpTime (double sourceTime) const
 {
-    auto& markersArray = getMarkers();
+    auto& markersArray = markers->objects;
 
     if (markersArray.isEmpty())
         return sourceTime;
@@ -508,23 +515,23 @@ double WarpTimeManager::sourceTimeToWarpTime (double sourceTime) const
 
 double WarpTimeManager::getWarpedStart() const
 {
-    jassert (getMarkers().size() != 0);
+    jassert (markers->size() != 0);
 
-    return getMarkers().getFirst()->warpTime;
+    return markers->objects.getFirst()->warpTime;
 }
 
 double WarpTimeManager::getWarpedEnd() const
 {
-    jassert (getMarkers().size() != 0);
+    jassert (markers->size() != 0);
 
-    return getMarkers().getLast()->warpTime;
+    return markers->objects.getLast()->warpTime;
 }
 
 int64 WarpTimeManager::getHash() const
 {
     int64 h = 0;
 
-    for (auto wm : getMarkers())
+    for (auto wm : markers->objects)
         h ^= wm->getHash();
 
     h ^= hashDouble (getWarpEndMarkerTime());

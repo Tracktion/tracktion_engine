@@ -64,8 +64,7 @@ public:
 
     const juce::Array<WarpMarker*>& getMarkers() const          { return markers->objects; }
 
-    /** if index is -1 it will go on the end of the list */
-    void insertMarker (int index, WarpMarker marker);
+    int insertMarker (WarpMarker);
     void removeMarker (int index);
     void removeAllMarkers();
     double moveMarker (int index, double newWarpTime);
@@ -118,7 +117,7 @@ private:
         void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i) override
         {
             if (v.hasType (IDs::WARPMARKER))
-                if (WarpMarker* wm = getWarpMarkerFor (v))
+                if (auto wm = getWarpMarkerFor (v))
                     wm->updateFrom (v, i);
         }
 
