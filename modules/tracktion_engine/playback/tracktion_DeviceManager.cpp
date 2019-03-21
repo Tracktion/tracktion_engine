@@ -1085,7 +1085,10 @@ void DeviceManager::audioDeviceAboutToStart (AudioIODevice* device)
     if (globalOutputAudioProcessor != nullptr)
         globalOutputAudioProcessor->prepareToPlay (currentSampleRate, device->getCurrentBufferSizeSamples());
 
-    cpuAvgCounter = cpuReportingInterval = jmax (1, static_cast<int> (device->getCurrentSampleRate()) / device->getCurrentBufferSizeSamples());
+    if (device->getCurrentBufferSizeSamples() > 0)
+        cpuAvgCounter = cpuReportingInterval = jmax (1, static_cast<int> (device->getCurrentSampleRate()) / device->getCurrentBufferSizeSamples());
+    else
+        cpuAvgCounter = cpuReportingInterval = 1;
 
    #if JUCE_ANDROID
     steadyLoadContext.setSampleRate (device->getCurrentSampleRate());
