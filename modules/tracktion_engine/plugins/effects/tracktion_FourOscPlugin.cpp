@@ -292,10 +292,8 @@ public:
         {
             if (synth.isLegato())
             {
-                // replace this line when upgrading to latest juce
-                // activeNote.setTargetValue (currentlyPlayingNote.initialNote);
-                activeNote.setValue (currentlyPlayingNote.initialNote, false);
-                
+                activeNote.setTargetValue (currentlyPlayingNote.initialNote);
+
                 ampAdsr.noteOn();
                 filterAdsr.noteOn();
                 modAdsr1.noteOn();
@@ -310,9 +308,7 @@ public:
         }
         else
         {
-            // replace this line when upgrading to latest juce
-            // activeNote.setCurrentAndTargetValue (currentlyPlayingNote.initialNote);
-            activeNote.setValue (currentlyPlayingNote.initialNote, true);
+            activeNote.setCurrentAndTargetValue (currentlyPlayingNote.initialNote);
             
             isPlaying = true;
             isQuickStop = false;
