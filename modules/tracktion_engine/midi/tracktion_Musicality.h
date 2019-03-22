@@ -49,7 +49,7 @@ public:
 
     Chord (ChordType type = majorTriad);
 
-    Chord (juce::Array<int> steps); // creates a custom chord with steps
+    Chord (juce::Array<int> steps, juce::String symbol); // creates a custom chord with steps
 
     static juce::Array<ChordType> getAllChordType();
 
@@ -63,7 +63,8 @@ public:
 
 private:
     ChordType type;
-    juce::Array<int> steps;
+    juce::Array<int> steps; // for custom chords
+    juce::String symbol;    // for custom chords
 };
 
 //==============================================================================

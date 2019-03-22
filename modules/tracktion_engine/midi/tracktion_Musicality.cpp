@@ -86,7 +86,8 @@ Chord::Chord (ChordType c) : type (c)
 {
 }
 
-Chord::Chord (juce::Array<int> steps_)  : type (Chord::customChord), steps (steps_)
+Chord::Chord (juce::Array<int> steps_, juce::String symbol_)
+    : type (Chord::customChord), steps (steps_), symbol (symbol_)
 {
 }
 
@@ -130,6 +131,7 @@ juce::String Chord::getName() const
         case halfDiminishedMinorNinthChord: return TRANS("Half Diminished Minor Ninth");
         case diminishedNinthChord:          return TRANS("Diminished Ninth");
         case diminishedMinorNinthChord:     return TRANS("Diminished Minor Ninth");
+        case customChord:                   jassert (symbol.isNotEmpty()); return symbol;
         default: jassertfalse;              return {};
     }
 }
@@ -164,6 +166,7 @@ juce::String Chord::getSymbol() const
         case halfDiminishedMinorNinthChord: return oslash + flat + "9";
         case diminishedNinthChord:          return "o9";
         case diminishedMinorNinthChord:     return "o" + flat + "9";
+        case customChord:                   jassert (symbol.isNotEmpty()); return symbol;
         default: jassertfalse;              return {};
     }
 }
@@ -568,7 +571,7 @@ Chord PatternGenerator::ProgressionItem::getChord (const Scale& scale) const
             if (p.isNotEmpty())
                 steps.add (p.getIntValue());
 
-        return Chord (steps);
+        return Chord (steps, chordSymbol (chordName));
     }
 
     for (Chord::ChordType type : Chord::getAllChordType())
