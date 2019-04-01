@@ -18,7 +18,7 @@ public:
     ProjectManager();
     ~ProjectManager();
 
-    JUCE_DECLARE_SINGLETON (ProjectManager, true)
+    JUCE_DECLARE_SINGLETON (ProjectManager, false)
 
     void initialise();
 

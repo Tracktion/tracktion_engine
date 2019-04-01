@@ -490,6 +490,7 @@ namespace tracktion_engine
 #endif
 
 #include "playback/tracktion_DeviceManager.h"
+#include "playback/tracktion_HostedAudioDevice.h"
 #include "playback/tracktion_MidiNoteDispatcher.h"
 #include "playback/tracktion_EditPlaybackContext.h"
 #include "playback/tracktion_EditInputDevices.h"

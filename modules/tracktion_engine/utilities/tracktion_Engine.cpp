@@ -62,8 +62,9 @@ void Engine::initialise()
     backgroundJobManager.reset (new BackgroundJobManager());
     pluginManager.reset (new PluginManager (*this));
 
-    deviceManager->initialise();
-
+    if (engineBehaviour->autoInitialiseDeviceManager())
+        deviceManager->initialise();
+    
     pluginManager->initialise();
 
     ProjectManager::getInstance()->initialise();

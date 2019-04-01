@@ -148,6 +148,14 @@ DeviceManager::~DeviceManager()
     CRASH_TRACER
     deviceManager.removeChangeListener (this);
 }
+    
+HostedAudioDeviceInterface& DeviceManager::getHostedAudioDeviceInterface()
+{
+    if (hostedAudioDeviceInterface == nullptr)
+        hostedAudioDeviceInterface = std::make_unique<HostedAudioDeviceInterface> (engine);
+    
+    return *hostedAudioDeviceInterface;
+}
 
 String DeviceManager::getDefaultAudioOutDeviceName (bool translated)
 {
@@ -222,12 +230,16 @@ void DeviceManager::initialiseMidi()
 
     defaultMidiOutIndex = storage.getProperty (SettingID::defaultMidiOutDevice);
     defaultMidiInIndex = storage.getProperty (SettingID::defaultMidiInDevice);
+    
+    bool openHardwareMidi = hostedAudioDeviceInterface == nullptr || hostedAudioDeviceInterface->parameters.useMidiDevices;
 
     TRACKTION_LOG ("Finding MIDI I/O");
-    lastMidiInNames = MidiInput::getDevices();
+    if (openHardwareMidi)
+        lastMidiInNames = MidiInput::getDevices();
     lastMidiInNames.appendNumbersToDuplicates (true, false);
 
-    lastMidiOutNames = MidiOutput::getDevices();
+    if (openHardwareMidi)
+        lastMidiOutNames = MidiOutput::getDevices();
     lastMidiOutNames.appendNumbersToDuplicates (true, false);
 
     int enabledMidiIns = 0, enabledMidiOuts = 0;
@@ -236,8 +248,15 @@ void DeviceManager::initialiseMidi()
     for (int i = 0; i < lastMidiOutNames.size(); ++i)  midiOutputs.add (new MidiOutputDevice (engine, lastMidiOutNames[i], i));
     for (int i = 0; i < lastMidiInNames.size(); ++i)   midiInputs.add (new PhysicalMidiInputDevice (engine, lastMidiInNames[i], i));
 
+    if (hostedAudioDeviceInterface != nullptr)
+    {
+        midiOutputs.add (hostedAudioDeviceInterface->createMidiOutput());
+        midiInputs.add (hostedAudioDeviceInterface->createMidiInput());
+    }
+    
    #if JUCE_MAC && JUCE_DEBUG
-    midiOutputs.add (new MidiOutputDevice (engine, "Tracktion MIDI Device", -1));
+    if (openHardwareMidi)
+        midiOutputs.add (new MidiOutputDevice (engine, "Tracktion MIDI Device", -1));
    #endif
 
     StringArray virtualDevices;

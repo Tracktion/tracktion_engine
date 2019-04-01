@@ -11,6 +11,8 @@
 namespace tracktion_engine
 {
 
+class HostedAudioDeviceInterface;
+
 /**
 */
 class DeviceManager     : public juce::ChangeBroadcaster,
@@ -28,6 +30,11 @@ public:
                      int defaultNumOutputChannelsToOpen = 512);
     void closeDevices();
     void saveSettings();
+    
+    // If you are using the engine in a plugin or an application
+    // that accesses the audio device directly, use this interface
+    // to pass audio and midi to the DeviceManager.
+    HostedAudioDeviceInterface& getHostedAudioDeviceInterface();
 
     //==============================================================================
     float getCpuUsage() const noexcept                  { return (float) currentCpuUsage; }
@@ -136,6 +143,7 @@ public:
 
     double getOutputLatencySeconds() const;
 
+    std::unique_ptr<HostedAudioDeviceInterface> hostedAudioDeviceInterface;
     juce::AudioDeviceManager deviceManager;
 
     juce::OwnedArray<MidiInputDevice, juce::CriticalSection> midiInputs;
