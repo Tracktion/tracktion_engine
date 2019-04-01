@@ -145,7 +145,7 @@ bool PluginWindowConnection::Master::isShowing() const
 
 bool PluginWindowConnection::Master::shouldBeShowing() const
 {
-    return Engine::getInstance().getUIBehaviour().isEditVisibleOnScreen (edit);
+    return edit.engine.getUIBehaviour().isEditVisibleOnScreen (edit);
 }
 
 void PluginWindowConnection::Master::setWindowLocked (bool isLocked)
