@@ -312,6 +312,7 @@ public:
             
             isPlaying = true;
             isQuickStop = false;
+            retrigger = false;
             
             ampAdsr.reset();
             filterAdsr.reset();
