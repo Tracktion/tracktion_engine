@@ -22,7 +22,7 @@ static inline bool isParameterBlacklisted (ExternalPlugin& plugin, juce::AudioPl
     {
         if (plugin.desc.fileOrIdentifier.endsWith ("Trigger_2.dll"))
             if (parameter.getParameterIndex() >= 117)
-                return false;
+                return true;
     }
    #endif
 
