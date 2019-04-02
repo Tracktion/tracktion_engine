@@ -212,6 +212,7 @@ private:
         
         bool purgeSubNodes (bool keepAudio, bool keepMidi) override
         {
+            ignoreUnused (keepAudio);
             return keepMidi;
         }
         
