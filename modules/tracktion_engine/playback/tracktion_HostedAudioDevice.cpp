@@ -253,7 +253,9 @@ private:
     public:
         HostedMidiInputDeviceInstance (HostedMidiInputDevice& owner_, EditPlaybackContext& epc)
             : MidiInputDeviceInstanceBase (owner_, epc), owner (owner_), context (epc)
-        {}
+        {
+            ignoreUnused (owner, context);
+        }
         
         bool startRecording() override              { return false; }
         AudioNode* createLiveInputNode() override   { return new HostedMidiInputAudioNode (midi); }
