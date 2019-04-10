@@ -351,6 +351,9 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
                     }
                     else if (sourceItem->isWave())
                     {
+                        sourceItem->verifyLength();
+                        jassert (sourceItem->getLength() > 0);
+                        
                         if (auto newClip = targetTrack->insertWaveClip (sourceItem->getName(), sourceItem->getID(),
                                                                         { { startTime, startTime + sourceItem->getLength() }, 0.0 }, false))
                         {
@@ -364,6 +367,9 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
                     }
                     else if (sourceItem->isEdit())
                     {
+                        sourceItem->verifyLength();
+                        jassert (sourceItem->getLength() > 0);
+                        
                         if (auto newClip = targetTrack->insertEditClip ({ startTime, startTime + sourceItem->getLength() },
                                                                         sourceItem->getID()))
                         {
