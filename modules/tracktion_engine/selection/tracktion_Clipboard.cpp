@@ -306,6 +306,8 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
 
     ProjectItemPastingOptions pastingOptions;
 
+    pastingOptions.separateTracks = options.preferredLayout == FileDragList::vertical;
+    
     if (! options.silent)
         askUserAboutProjectItemPastingOptions (*this, ui, pastingOptions);
 
