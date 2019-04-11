@@ -91,7 +91,7 @@ void Oscillator::process (AudioSampleBuffer& buffer, int startSample, int numSam
     
 void Oscillator::processSine (AudioSampleBuffer& buffer, int startSample, int numSamples)
 {
-    const float frequency = 440.0f * std::pow (2.0f, (note - 69.0f) / 12.0f);
+    const float frequency = jmin (float (sampleRate) / 2.0f, 440.0f * std::pow (2.0f, (note - 69.0f) / 12.0f));
     const float period = 1.0f / float (frequency);
     const float periodInSamples = float (period * sampleRate);
     const float delta = 1.0f / periodInSamples;
@@ -106,7 +106,7 @@ void Oscillator::processSine (AudioSampleBuffer& buffer, int startSample, int nu
             channels[ch][startSample + samp] += value;
         
         phase += delta;
-        if (phase >= 1.0f)
+        while (phase >= 1.0f)
             phase -= 1.0f;
     }
 }
@@ -127,7 +127,7 @@ void Oscillator::processNoise (AudioSampleBuffer& buffer, int startSample, int n
 void Oscillator::processLookup (juce::AudioSampleBuffer& buffer, int startSample, int numSamples,
                                 const juce::OwnedArray<juce::dsp::LookupTableTransform<float>>& tableSet)
 {
-    const float frequency = 440.0f * std::pow (2.0f, (note - 69.0f) / 12.0f);
+    const float frequency = jmin (float (sampleRate) / 2.0f, 440.0f * std::pow (2.0f, (note - 69.0f) / 12.0f));
     const float period = 1.0f / float (frequency);
     const float periodInSamples = float (period * sampleRate);
     const float delta = 1.0f / periodInSamples;
@@ -149,7 +149,7 @@ void Oscillator::processLookup (juce::AudioSampleBuffer& buffer, int startSample
                 channels[ch][startSample + samp] += value;
             
             phase += delta;
-            if (phase >= 1.0f)
+            while (phase >= 1.0f)
                 phase -= 1.0f;
         }
     }
@@ -157,7 +157,7 @@ void Oscillator::processLookup (juce::AudioSampleBuffer& buffer, int startSample
 
 void Oscillator::processSquare (juce::AudioSampleBuffer& buffer, int startSample, int numSamples)
 {
-    const float frequency = 440.0f * std::pow (2.0f, (note - 69.0f) / 12.0f);
+    const float frequency = jmin (float (sampleRate) / 2.0f, 440.0f * std::pow (2.0f, (note - 69.0f) / 12.0f));
     const float period = 1.0f / float (frequency);
     const float periodInSamples = float (period * sampleRate);
     const float delta = 1.0f / periodInSamples;
@@ -189,7 +189,7 @@ void Oscillator::processSquare (juce::AudioSampleBuffer& buffer, int startSample
                 channels[ch][startSample + samp] += value;
             
             phase += delta;
-            if (phase >= 1.0f)
+            while (phase >= 1.0f)
                 phase -= 1.0f;
         }
     }
