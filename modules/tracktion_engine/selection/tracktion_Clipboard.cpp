@@ -203,7 +203,7 @@ struct ProjectItemPastingOptions
 {
     bool shouldImportTempoChangesFromMIDI = false;
     bool separateTracks = false;
-    bool snapBWavsToOriginalTime = true;
+    bool snapBWavsToOriginalTime = false;
 };
 
 static void askUserAboutProjectItemPastingOptions (const Clipboard::ProjectItems& items, UIBehaviour& ui,
