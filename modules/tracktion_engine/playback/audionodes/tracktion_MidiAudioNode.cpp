@@ -194,7 +194,8 @@ void MidiAudioNode::createNoteOffs (MidiMessageArray& destination, const MidiMes
     {
         if ((activeChannels & (1 << i)) != 0)
         {
-            destination.addMidiMessage (MidiMessage::allControllersOff (i), midiTimeOffset, midiSourceID);
+            destination.addMidiMessage (MidiMessage::controllerEvent (i, 66 /* sustain pedal off */, 0), midiTimeOffset, midiSourceID);
+            destination.addMidiMessage (MidiMessage::controllerEvent (i, 64 /* hold pedal off */, 0), midiTimeOffset, midiSourceID);
             destination.addMidiMessage (MidiMessage::allNotesOff (i), midiTimeOffset, midiSourceID);
         }
     }
