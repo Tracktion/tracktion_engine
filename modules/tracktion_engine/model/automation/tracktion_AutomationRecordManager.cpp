@@ -117,6 +117,14 @@ void AutomationRecordManager::punchOut (bool toEnd)
     {
         auto endTime = edit.getTransport().getCurrentPosition();
 
+        // If the punch out was triggered by a position change, we want to make
+        // sure the playhead position is used as the end time
+        if (auto ph = edit.getTransport().getCurrentPlayhead())
+        {
+            endTime = ph->isLooping() ? jmax (ph->getUnloopedPosition(), ph->getLoopTimes().getEnd())
+                                      : ph->getPosition();
+        }
+
         for (auto param : recordedParams)
         {
             if (toEnd)
@@ -138,12 +146,11 @@ void AutomationRecordManager::applyChangesToParameter (AutomationParamData* para
 
     {
         std::unique_ptr<AutomationCurve> curve (new AutomationCurve());
-
         curve->setOwnerParameter (parameter->parameter);
 
         for (int i = 0; i < parameter->changes.size(); ++i)
         {
-            auto& change = parameter->changes.getReference(i);
+            auto& change = parameter->changes.getReference (i);
 
             if (i > 0 && change.time < parameter->changes.getReference (i - 1).time - 0.1)
             {
@@ -156,7 +163,8 @@ void AutomationRecordManager::applyChangesToParameter (AutomationParamData* para
                 }
             }
 
-            const float oldVal = (i == 0) ? parameter->parameter->getCurve().getValueAt (change.time)
+            const float oldVal = (i == 0) ? (parameter->parameter->getCurve().getNumPoints() > 0 ? parameter->parameter->getCurve().getValueAt (change.time)
+                                                                                                 : parameter->originalValue)
                                           : curve->getValueAt (change.time);
 
             const float newVal = parameter->parameter->snapToState (change.value);
@@ -202,12 +210,12 @@ void AutomationRecordManager::applyChangesToParameter (AutomationParamData* para
                 parameter->parameter->setParameter (parameter->originalValue, sendNotification);
 
             auto& c = parameter->parameter->getCurve();
-
-            c.mergeOtherCurve (curve, { startTime, endTime + glideLength },
+            EditTimeRange curveRange (juce::Range<double> (startTime, endTime + glideLength));
+            c.mergeOtherCurve (curve, curveRange,
                                startTime, glideLength, false, toEnd);
 
             if (engine.getPropertyStorage().getProperty (SettingID::simplifyAfterRecording, true))
-                c.simplify (EditTimeRange (startTime, endTime + glideLength).expanded (0.001), 0.01, 0.002f);
+                c.simplify (curveRange.expanded (0.001), 0.01, 0.002f);
         }
     }
 }
@@ -219,12 +227,11 @@ void AutomationRecordManager::toggleWriteAutomationMode()
     setWritingAutomation (! isWritingAutomation());
 }
 
-void AutomationRecordManager::postFirstAutomationChange (AutomatableParameter* param, float originalValue)
+void AutomationRecordManager::postFirstAutomationChange (AutomatableParameter& param, float originalValue)
 {
-    jassert (param != nullptr);
-
+    TRACKTION_ASSERT_MESSAGE_THREAD
     auto entry = new AutomationParamData();
-    entry->parameter = param;
+    entry->parameter = &param;
     entry->originalValue = originalValue;
 
     // recording status has changed, so inform our listeners
@@ -234,13 +241,14 @@ void AutomationRecordManager::postFirstAutomationChange (AutomatableParameter* p
     recordedParams.add (entry);
 }
 
-void AutomationRecordManager::postAutomationChange (AutomatableParameter* param, double time, float value)
+void AutomationRecordManager::postAutomationChange (AutomatableParameter& param, double time, float value)
 {
+    TRACKTION_ASSERT_MESSAGE_THREAD
     const ScopedLock sl (lock);
 
     for (auto p : recordedParams)
     {
-        if (p->parameter == param)
+        if (p->parameter == &param)
         {
             p->changes.add (AutomationParamData::Change (time, value));
             break;
@@ -248,12 +256,12 @@ void AutomationRecordManager::postAutomationChange (AutomatableParameter* param,
     }
 }
 
-void AutomationRecordManager::parameterBeingDeleted (AutomatableParameter* param)
+void AutomationRecordManager::parameterBeingDeleted (AutomatableParameter& param)
 {
     const ScopedLock sl (lock);
 
     for (int i = recordedParams.size(); --i >= 0;)
-        if (recordedParams.getUnchecked (i)->parameter == param)
+        if (recordedParams.getUnchecked (i)->parameter == &param)
             recordedParams.remove (i);
 }
 

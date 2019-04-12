@@ -549,7 +549,7 @@ AutomatableParameter::AutomatableParameter (const juce::String& paramID_,
 AutomatableParameter::~AutomatableParameter()
 {
     if (editRef != nullptr)
-        editRef->getAutomationRecordManager().parameterBeingDeleted (this);
+        editRef->getAutomationRecordManager().parameterBeingDeleted (*this);
 
     notifyListenersOfDeletion();
 
@@ -897,10 +897,10 @@ void AutomatableParameter::setParameterValue (float value, bool isFollowingCurve
                         if (! isRecording)
                         {
                             isRecording = true;
-                            arm.postFirstAutomationChange (this, currentValue);
+                            arm.postFirstAutomationChange (*this, currentValue);
                         }
 
-                        arm.postAutomationChange (this, time, value);
+                        arm.postAutomationChange (*this, time, value);
                     }
                     else
                     {
