@@ -75,8 +75,6 @@ private:
     juce::Array<MidiSysexEvent*> selectedSysexes;
     juce::Array<MidiControllerEvent*> selectedControllers;
 
-    MidiNote* lastNoteForNoteAutomation = nullptr;
-
     void sendSelectionChangedMessage (SelectionManager*);
 
     bool contains (const MidiNote&) const noexcept;
