@@ -192,6 +192,7 @@ public:
     //==============================================================================
     bool takesMidiInput() override                      { return true; }
     bool takesAudioInput() override                     { return false; }
+    bool isSynth() override                             { return true; }
     bool producesAudioWhenNoAudioInput() override       { return true; }
 
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;

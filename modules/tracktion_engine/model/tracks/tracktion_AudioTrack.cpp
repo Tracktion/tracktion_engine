@@ -615,6 +615,24 @@ bool AudioTrack::canPlayMidi() const
 
     return false;
 }
+    
+bool AudioTrack::isMidiTrack() const
+{
+    if (getOutput().canPlayMidi())
+        return true;
+    
+    for (auto p : pluginList)
+        if (p->isSynth())
+            return getOutput().canPlayAudio();
+    
+    if (isPartOfSubmix())
+        for (auto ft = getParentFolderTrack(); ft != nullptr; ft = ft->getParentFolderTrack())
+            for (auto p : ft->pluginList)
+                if (p->isSynth())
+                    return getOutput().canPlayAudio();
+    
+    return false;
+}
 
 void AudioTrack::setMidiVerticalPos (double visibleProp, double offset)
 {
