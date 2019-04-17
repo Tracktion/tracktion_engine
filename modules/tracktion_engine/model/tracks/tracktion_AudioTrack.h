@@ -72,11 +72,6 @@ public:
         the plugins, and is the track going to an audio output */
     bool canPlayAudio() const;
     bool canPlayMidi() const;
-
-    /** This track is primarily for playing midi i.e. it contains a synth
-        or outputs to a midi output. This is different from canPlayMidi in which
-        case the midi may be control data to an audio plugin */
-    bool isMidiTrack() const;
     
     //==============================================================================
     bool isFrozen (FreezeType) const override;
