@@ -1039,7 +1039,11 @@ juce::Array<MidiNote*> Clipboard::MIDINotes::pasteIntoClip (MidiClip& clip, cons
     for (auto& n : midiNotes)
         beatRange = beatRange.getUnionWith (n.getRangeBeats());
 
-    auto insertPos = clip.getContentBeatAtTime (cursorPosition);
+    double insertPos = 0.0;
+    if (clip.isLooping())
+        insertPos = clip.getContentBeatAtTime (cursorPosition) + clip.getLoopStartBeats();
+    else
+        insertPos = clip.getContentBeatAtTime (cursorPosition);
 
     if (! selectedNotes.isEmpty())
     {
@@ -1053,12 +1057,16 @@ juce::Array<MidiNote*> Clipboard::MIDINotes::pasteIntoClip (MidiClip& clip, cons
 
     if (clip.isLooping())
     {
-        if (insertPos < 0 || insertPos >= clip.getLoopLengthBeats() - 0.001)
+        const double offsetBeats = clip.getOffsetInBeats() + clip.getLoopStartBeats();
+
+        if (insertPos - offsetBeats < 0 || insertPos - offsetBeats >= clip.getLoopLengthBeats() - 0.001)
             return {};
     }
     else
     {
-        if (insertPos < 0 || insertPos >= clip.getLengthInBeats() - 0.001)
+        const double offsetBeats = clip.getOffsetInBeats();
+
+        if (insertPos - offsetBeats < 0 || insertPos - offsetBeats >= clip.getLengthInBeats() - 0.001)
             return {};
     }
 
