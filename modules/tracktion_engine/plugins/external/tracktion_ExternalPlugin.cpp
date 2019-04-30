@@ -1500,8 +1500,7 @@ String ExternalPlugin::createPluginInstance (const PluginDescription& descriptio
     auto& dm = engine.getDeviceManager();
 
     String error;
-    pluginInstance.reset (engine.getPluginManager().pluginFormatManager
-                            .createPluginInstance (description, dm.getSampleRate(), dm.getBlockSize(), error));
+    pluginInstance = engine.getPluginManager().createPluginInstance (description, dm.getSampleRate(), dm.getBlockSize(), error);
 
     if (pluginInstance != nullptr)
     {

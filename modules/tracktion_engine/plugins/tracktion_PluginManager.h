@@ -69,6 +69,14 @@ public:
     void createBuiltInType()  { registerBuiltInType (new BuiltInTypeBase<Type>()); }
 
     //==============================================================================
+    /** Callback that is used to create plugin instances from a PluginDescription.
+        By default this simply uses the PluginManager's pluginFormatManager but it
+        can be set to provide custom behaviour.
+    */
+    std::function<std::unique_ptr<juce::AudioPluginInstance> (const juce::PluginDescription&,
+                                                              double rate, int blockSize,
+                                                              juce::String& errorMessage)> createPluginInstance;
+
     // this can be set to provide a function that gets called when a scan finishes
     std::function<void()> scanCompletedCallback;
 

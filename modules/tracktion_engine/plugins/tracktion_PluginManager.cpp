@@ -402,8 +402,13 @@ PluginManager::BuiltInType::BuiltInType (const juce::String& t) : type (t) {}
 PluginManager::BuiltInType::~BuiltInType() {}
 
 //==============================================================================
-PluginManager::PluginManager (Engine& e)  : engine (e)
+PluginManager::PluginManager (Engine& e)
+    : engine (e)
 {
+    createPluginInstance = [this] (const PluginDescription& description, double rate, int blockSize, String& errorMessage)
+                           {
+                               return std::unique_ptr<AudioPluginInstance> (pluginFormatManager.createPluginInstance (description, rate, blockSize, errorMessage));
+                           };
 }
 
 void PluginManager::initialise()
