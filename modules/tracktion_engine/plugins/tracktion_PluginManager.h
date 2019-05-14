@@ -77,6 +77,9 @@ public:
                                                               double rate, int blockSize,
                                                               juce::String& errorMessage)> createPluginInstance;
 
+    /** Callback that is used to determine if a plugin should use fine-grain automation or not. */
+    std::function<bool (Plugin&)> canUseFineGrainAutomation;
+
     // this can be set to provide a function that gets called when a scan finishes
     std::function<void()> scanCompletedCallback;
 

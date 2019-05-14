@@ -232,7 +232,11 @@ public:
             return false;
 
         if (auto pl = p.getOwnerList())
-            return ! pl->needsConstantBufferSize();
+            if (pl->needsConstantBufferSize())
+                return false;
+
+        if (p.engine.getPluginManager().canUseFineGrainAutomation)
+            return p.engine.getPluginManager().canUseFineGrainAutomation (p);
 
         return true;
     }
