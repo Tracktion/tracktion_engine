@@ -196,7 +196,7 @@ bool EditFileOperations::writeToFile (const File& file, bool writeQuickBinaryVer
                 editSnapshot->setState (edit.state, edit.getLength());
 
             if (auto xml = std::unique_ptr<XmlElement> (edit.state.createXml()))
-                ok = xml->writeToFile (file, {});
+                ok = xml->writeTo (file);
 
             jassert (ok);
         }
