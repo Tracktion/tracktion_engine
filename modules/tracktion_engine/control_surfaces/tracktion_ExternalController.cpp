@@ -580,7 +580,7 @@ void ExternalController::updateParameters()
 {
     CRASH_TRACER
 
-    if (controlSurface == nullptr)
+    if (controlSurface == nullptr || ! isEnabled())
         return;
 
     auto& cs = getControlSurface();
