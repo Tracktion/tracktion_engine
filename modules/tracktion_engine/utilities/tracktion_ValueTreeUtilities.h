@@ -441,8 +441,8 @@ static inline bool saveValueTree (const juce::File& file, const juce::ValueTree&
 
         if (asXml)
         {
-            if (auto xml = std::unique_ptr<juce::XmlElement> (v.createXml()))
-                xml->writeToStream (os, {});
+            if (auto xml = v.createXml())
+                xml->writeTo (os);
         }
         else
         {
