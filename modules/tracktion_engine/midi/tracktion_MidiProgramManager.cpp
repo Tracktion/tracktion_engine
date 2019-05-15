@@ -497,7 +497,7 @@ bool MidiProgramManager::exportSet (int set, const juce::File& file)
     if (auto programSet = programSets[set - 1])
         xml.reset (programSet->createXml());
 
-    return xml != nullptr && xml->writeToFile (file, {});
+    return xml != nullptr && xml->writeTo (file);
 }
 
 static juce::File getPatchNamesZipFile (Engine& engine)
