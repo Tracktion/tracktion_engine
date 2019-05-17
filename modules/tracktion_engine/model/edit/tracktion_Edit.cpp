@@ -473,42 +473,47 @@ static int getNextInstanceId() noexcept
 }
 
 //==============================================================================
-Edit::Edit (Engine& e, juce::ValueTree editState, EditRole role,
-            LoadContext* sourceLoadContext, int numUndoLevelsToStore)
-    : engine (e),
+Edit::Edit (Options options)
+    : engine (options.engine),
       tempoSequence (*this),
-      state (editState),
+      state (options.editState),
       instanceId (getNextInstanceId()),
-      editProjectItemID (ProjectItemID::fromProperty (editState, IDs::projectID)),
-      loadContext (sourceLoadContext),
-      editRole (role)
+      editProjectItemID (options.editProjectItemID),
+      loadContext (options.loadContext),
+      editRole (options.role)
 {
     CRASH_TRACER
 
     jassert (state.isValid());
     jassert (state.hasType (IDs::EDIT));
-    jassert (editProjectItemID.isValid()); // is it ever OK for this to be invalid?
+    jassert (editProjectItemID.isValid()); // This must be valid or it won't be able to create temp files etc.
 
-    editFileRetriever = [this]() -> juce::File
-    {
-        if (auto item = ProjectManager::getInstance()->getProjectItem (*this))
-            return item->getSourceFile();
+    if (options.editFileRetriever)
+        editFileRetriever = std::move (options.editFileRetriever);
+    else
+        editFileRetriever = [this]() -> juce::File
+        {
+            if (auto item = ProjectManager::getInstance()->getProjectItem (*this))
+                return item->getSourceFile();
 
-        return {};
-    };
+            return {};
+        };
 
-    filePathResolver = [this] (const juce::String& path) -> juce::File
-    {
-        jassert (path.isNotEmpty());
+    if (options.filePathResolver)
+        filePathResolver = std::move (options.filePathResolver);
+    else
+        filePathResolver = [this] (const juce::String& path) -> juce::File
+        {
+            jassert (path.isNotEmpty());
 
-        if (juce::File::isAbsolutePath (path))
-            return path;
+            if (juce::File::isAbsolutePath (path))
+                return path;
 
-        if (editFileRetriever)
-            return editFileRetriever().getSiblingFile (path);
+            if (editFileRetriever)
+                return editFileRetriever().getSiblingFile (path);
 
-        return {};
-    };
+            return {};
+        };
 
     pluginCache                 = std::make_unique<PluginCache> (*this);
     mirroredPluginUpdateTimer   = std::make_unique<MirroredPluginUpdateTimer> (*this);
@@ -525,7 +530,7 @@ Edit::Edit (Engine& e, juce::ValueTree editState, EditRole role,
     trackCompManager            = std::make_unique<TrackCompManager> (*this);
     changedPluginsList          = std::make_unique<ChangedPluginsList>();
 
-    undoManager.setMaxNumberOfStoredUnits (1000 * numUndoLevelsToStore, numUndoLevelsToStore);
+    undoManager.setMaxNumberOfStoredUnits (1000 * options.numUndoLevelsToStore, options.numUndoLevelsToStore);
 
     initialise();
 
@@ -545,6 +550,13 @@ Edit::Edit (Engine& e, juce::ValueTree editState, EditRole role,
     engine.getActiveEdits().edits.add (this);
 
     isFullyConstructed.store (true, std::memory_order_relaxed);
+}
+
+Edit::Edit (Engine& e, juce::ValueTree editState, EditRole role,
+            LoadContext* sourceLoadContext, int numUndoLevelsToStore)
+    : Edit ({ e, editState, ProjectItemID::fromProperty (editState, IDs::projectID),
+              role, sourceLoadContext, numUndoLevelsToStore })
+{
 }
 
 Edit::~Edit()
