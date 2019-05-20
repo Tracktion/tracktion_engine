@@ -229,10 +229,10 @@ private:
         //==============================================================================
         if (auto synth = dynamic_cast<te::FourOscPlugin*> (edit.getPluginCache().createNewPlugin (te::FourOscPlugin::xmlTypeName, {}).get()))
         {
-            XmlDocument doc (organPatch);
-            if (ScopedPointer<XmlElement> e = doc.getDocumentElement())
+            if (auto e = parseXML (organPatch))
             {
                 auto vt = ValueTree::fromXml (*e);
+
                 if (vt.isValid())
                     synth->restorePluginStateFromValueTree (vt);
             }
@@ -244,10 +244,10 @@ private:
         //==============================================================================
         if (auto synth = dynamic_cast<te::FourOscPlugin*> (edit.getPluginCache().createNewPlugin (te::FourOscPlugin::xmlTypeName, {}).get()))
         {
-            XmlDocument doc (leadPatch);
-            if (ScopedPointer<XmlElement> e = doc.getDocumentElement())
+            if (auto e = parseXML (leadPatch))
             {
                 auto vt = ValueTree::fromXml (*e);
+
                 if (vt.isValid())
                     synth->restorePluginStateFromValueTree (vt);
             }
