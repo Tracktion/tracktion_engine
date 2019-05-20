@@ -202,7 +202,7 @@ struct PluginScanSlaveProcess  : public ChildProcessSlave,
                 format->findAllTypesForFile (found, fileOrIdentifier);
 
                 for (auto pd : found)
-                    result.addChildElement (pd->createXml());
+                    result.addChildElement (pd->createXml().release());
 
                 break;
             }
