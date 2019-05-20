@@ -32,6 +32,21 @@ AuxSendPlugin::~AuxSendPlugin()
     gain->detachFromCurrentValue();
 }
 
+bool AuxSendPlugin::shouldProcess()
+{
+    if (ownerTrack != nullptr)
+    {
+        // If this track gets disabled when muted,
+        // we don't need to worry about this since
+        // our plugin will be disabled anyway
+        if (! ownerTrack->processAudioNodesWhileMuted())
+            return true;
+        
+        return ! ownerTrack->isMuted (true);
+    }
+    return true;
+}
+    
 const char* AuxSendPlugin::xmlTypeName = "auxsend";
 
 String AuxSendPlugin::getName()
@@ -66,6 +81,8 @@ void AuxSendPlugin::initialise (const PlaybackInitialisationInfo& info)
 
 void AuxSendPlugin::initialiseWithoutStopping (const PlaybackInitialisationInfo& info)
 {
+    ownerTrack = getOwnerTrack();
+
     juce::Array<AuxReturnPlugin*> result;
 
     for (auto node : *info.rootNodes)
@@ -94,18 +111,21 @@ void AuxSendPlugin::applyToBuffer (const AudioRenderContext& fc)
 
     auto gainScalar = volumeFaderPositionToGain (gain->getCurrentValue());
 
-    for (auto f : allAuxReturns)
+    if (shouldProcess())
     {
-        if (f->busNumber == busNumber)
+        for (auto f : allAuxReturns)
         {
-            if (lastGain != gainScalar)
+            if (f->busNumber == busNumber)
             {
-                f->applyAudioFromSend (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples, lastGain, gainScalar);
-                lastGain = gainScalar;
-            }
-            else
-            {
-                f->applyAudioFromSend (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples, gainScalar);
+                if (lastGain != gainScalar)
+                {
+                    f->applyAudioFromSend (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples, lastGain, gainScalar);
+                    lastGain = gainScalar;
+                }
+                else
+                {
+                    f->applyAudioFromSend (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples, gainScalar);
+                }
             }
         }
     }

@@ -35,7 +35,7 @@ public:
     juce::String getName() override;
 
     bool canContainPlugin (Plugin*) const override;
-    bool processAudioNodesWhileMuted() const override       { return edit.processMutedTracks || isSidechainSource() || getAuxSendPlugin() !=nullptr; }
+    bool processAudioNodesWhileMuted() const override       { return edit.processMutedTracks || isSidechainSource(); }
 
     //==============================================================================
     /** returns a warning message about this track not being playable, or "" if it's ok */

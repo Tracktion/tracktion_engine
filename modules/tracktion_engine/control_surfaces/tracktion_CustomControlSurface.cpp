@@ -280,7 +280,7 @@ void CustomControlSurface::exportSettings (const File& file)
     {
         file.deleteFile();
         file.create();
-        file.appendText (xml->createDocument ({}));
+        file.appendText (xml->toString());
 
         if (file.getSize() > 10)
             ok = true;
