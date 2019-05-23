@@ -328,7 +328,7 @@ String PhysicalMidiInputDevice::openDevice()
     if (inputDevice == nullptr)
     {
         CRASH_TRACER
-        inputDevice.reset (MidiInput::openDevice (deviceIndex, this));
+        inputDevice = MidiInput::openDevice (deviceIndex, this);
 
         if (inputDevice != nullptr)
         {

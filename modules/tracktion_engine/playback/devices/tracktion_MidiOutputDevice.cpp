@@ -440,12 +440,12 @@ String MidiOutputDevice::openDevice()
 
             if (deviceIndex >= 0)
             {
-                outputDevice.reset (MidiOutput::openDevice (deviceIndex));
+                outputDevice = MidiOutput::openDevice (deviceIndex);
             }
             else
             {
                #if JUCE_MAC
-                outputDevice.reset (MidiOutput::createNewDevice (getName()));
+                outputDevice = MidiOutput::createNewDevice (getName());
                #else
                 outputDevice.reset();
                 jassertfalse;
