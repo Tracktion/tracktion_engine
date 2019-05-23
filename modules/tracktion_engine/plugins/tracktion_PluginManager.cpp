@@ -439,7 +439,31 @@ void PluginManager::initialise()
     createBuiltInType<ReWirePlugin>();
    #endif
 
-   #if TRACKTION_AIR_WINDOWS
+    initialised = true;
+    pluginFormatManager.addDefaultFormats();
+
+    if (usesSeparateProcessForScanning())
+        knownPluginList.setCustomScanner (new CustomScanner (engine));
+    else
+        knownPluginList.setCustomScanner (new BasicScanner (engine));
+
+    auto xml = engine.getPropertyStorage().getXmlProperty (getPluginListPropertyName());
+
+    if (xml != nullptr)
+        knownPluginList.recreateFromXml (*xml);
+
+    knownPluginList.addChangeListener (this);
+}
+
+PluginManager::~PluginManager()
+{
+    knownPluginList.removeChangeListener (this);
+    cleanUpDanglingPlugins();
+}
+    
+#if TRACKTION_AIR_WINDOWS
+void PluginManager::initialiseAirWindows()
+{
     createBuiltInType<AirWindowsAcceleration>();
     createBuiltInType<AirWindowsADClip7>();
     createBuiltInType<AirWindowsADT>();
@@ -503,29 +527,8 @@ void PluginManager::initialise()
     createBuiltInType<AirWindowsVariMu>();
     createBuiltInType<AirWindowsVoiceOfTheStarship>();
     createBuiltInType<AirWindowsWider>();
-   #endif
-
-    initialised = true;
-    pluginFormatManager.addDefaultFormats();
-
-    if (usesSeparateProcessForScanning())
-        knownPluginList.setCustomScanner (new CustomScanner (engine));
-    else
-        knownPluginList.setCustomScanner (new BasicScanner (engine));
-
-    auto xml = engine.getPropertyStorage().getXmlProperty (getPluginListPropertyName());
-
-    if (xml != nullptr)
-        knownPluginList.recreateFromXml (*xml);
-
-    knownPluginList.addChangeListener (this);
 }
-
-PluginManager::~PluginManager()
-{
-    knownPluginList.removeChangeListener (this);
-    cleanUpDanglingPlugins();
-}
+#endif
 
 void PluginManager::changeListenerCallback (ChangeBroadcaster*)
 {

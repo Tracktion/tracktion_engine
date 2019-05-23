@@ -19,6 +19,10 @@ public:
 
     void initialise();
 
+   #if TRACKTION_AIR_WINDOWS
+    void initialiseAirWindows();
+   #endif
+
     //==============================================================================
     static bool startChildProcessPluginScan (const juce::String& commandLine);
 
