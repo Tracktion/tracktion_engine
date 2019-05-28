@@ -21,7 +21,8 @@ struct CrashStackTracer
 
     static juce::StringArray getCrashedPlugins();
     static void dump();
-    static void dump (juce::OutputStream& os);
+    static void dump (juce::OutputStream&);
+    static void dump (juce::OutputStream&, juce::Thread::ThreadID);
 
     static juce::String getCrashedPlugin (juce::Thread::ThreadID);
     static juce::String getCrashLocation (juce::Thread::ThreadID);
