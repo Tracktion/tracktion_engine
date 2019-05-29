@@ -11,76 +11,9 @@
 namespace tracktion_engine
 {
 
-struct PluginWindowConnection
-{
-    struct Slave;
-
-    struct Master
-    {
-        Master (PluginWindowState&, Edit&);
-        Master (PluginWindowState&, Edit&, juce::Component* pluginWindow, Slave* pluginSlaveConnection);
-        ~Master();
-
-        bool isVisible() const;
-        void setVisible (bool);
-        void toFront (bool setAsForeground);
-        void hide();
-
-        bool isShowing() const;
-        bool shouldBeShowing() const;
-
-        void setWindowLocked (bool isLocked);
-        bool isWindowLocked() const;
-
-        PluginInstanceWrapper* getWrapper() const;
-
-        Plugin* plugin = nullptr;
-        PluginWindowState& state;
-        Edit& edit;
-
-        // Slave should only be set in Rack windows or in non IPC mode
-        Slave* slave = nullptr;
-
-    private:
-        std::unique_ptr<juce::Component> pluginWindow;
-
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Master)
-    };
-
-    struct Slave
-    {
-        Slave (juce::Component& pluginWindow);
-
-        bool isVisible() const;
-        void setVisible (bool);
-        void toFront (bool setAsForeground);
-        void hide();
-
-        bool isShowing() const;
-        bool shouldBeShowing() const;
-
-        void setWindowLocked (bool isLocked);
-        bool isWindowLocked() const;
-
-        juce::Component& pluginWindow;
-        Master* master = nullptr;
-
-        // This is a void* because it will actually be a
-        // SharedMemoryManager<TracktionArgs> which we can't forward declare
-        void* sharedMemoryManager = nullptr;
-        juce::int64 pluginID = -1;
-
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Slave)
-    };
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginWindowConnection)
-};
-
-//=============================================================================
 struct PluginWindowState  : private juce::Timer
 {
-    PluginWindowState (Engine&);
-    ~PluginWindowState() {}
+    PluginWindowState (Edit&);
 
     void incRefCount()
     {
@@ -108,7 +41,7 @@ struct PluginWindowState  : private juce::Timer
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
 
-        if (masterConnection != nullptr && masterConnection->isVisible())
+        if (pluginWindow && pluginWindow->isVisible())
         {
             wasExplicitlyClosed = true;
             deleteWindow();
@@ -118,7 +51,7 @@ struct PluginWindowState  : private juce::Timer
 
     void hideWindowForShutdown()
     {
-        masterConnection = nullptr;
+        pluginWindow.reset();
         stopTimer();
     }
 
@@ -126,15 +59,16 @@ struct PluginWindowState  : private juce::Timer
     {
         lastWindowBounds = { 100, 100, 600, 500 };
 
-        if (auto* focused = juce::Component::getCurrentlyFocusedComponent())
+        if (auto focused = juce::Component::getCurrentlyFocusedComponent())
             lastWindowBounds.setPosition (focused->getTopLevelComponent()->getPosition()
                                             + juce::Point<int> (80, 80));
     }
 
-    void pluginClicked (const juce::MouseEvent& e);
+    void pluginClicked (const juce::MouseEvent&);
 
+    Edit& edit;
     Engine& engine;
-    std::unique_ptr<PluginWindowConnection::Master> masterConnection;
+    std::unique_ptr<juce::Component> pluginWindow;
     int windowShowerCount = 0;
     bool windowLocked;
     bool wasExplicitlyClosed = false;
@@ -148,7 +82,7 @@ private:
 
     void deleteWindow()
     {
-        masterConnection = nullptr;
+        pluginWindow.reset();
     }
 
     JUCE_DECLARE_WEAK_REFERENCEABLE (PluginWindowState)

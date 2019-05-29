@@ -2231,6 +2231,7 @@ void RackType::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i
 
 //==============================================================================
 RackType::WindowState::WindowState (RackType& r, juce::ValueTree windowStateTree)
-    : PluginWindowState (r.edit.engine), rack (r), state (std::move (windowStateTree))  {}
+    : PluginWindowState (r.edit), rack (r), state (std::move (windowStateTree))
+{}
 
 }

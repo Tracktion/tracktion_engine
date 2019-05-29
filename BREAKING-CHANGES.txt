@@ -1,0 +1,29 @@
+Tracktion Engine breaking changes
+=====================
+
+Develop
+=======
+
+Change
+------
+The PluginWindowConnection class has been removed to simplify the process of
+creating plugin windows and connecting them to a PluginWindowState.
+
+Possible Issues
+---------------
+PluginWindowState now takes an Edit in its constructor rather than an Engine.
+The UIBehaviour method createPluginWindowConnection has been changed to
+createPluginWindow which now simply needs to create and return a Component
+which will be used to show your plugin UI.
+
+Workaround
+----------
+You'll have to update your code to use the new APIs.
+
+Rationale
+---------
+The old PluginWindowConnection class was an attempt at communicating via IPC
+for sandboxed plugins. However, this is no longer necessary as it's possible
+to encapsulate a sandboxed plugin completely within the juice::AudioProcessor
+classes.
+The new API is much simpler for the standard use cases.

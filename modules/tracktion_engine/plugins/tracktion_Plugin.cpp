@@ -342,7 +342,7 @@ private:
 };
 
 //==============================================================================
-Plugin::WindowState::WindowState (Plugin& p) : PluginWindowState (p.edit.engine), plugin (p)  {}
+Plugin::WindowState::WindowState (Plugin& p) : PluginWindowState (p.edit), plugin (p)  {}
 
 //==============================================================================
 Plugin::Plugin (PluginCreationInfo info)

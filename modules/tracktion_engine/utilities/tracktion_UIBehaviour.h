@@ -45,11 +45,11 @@ public:
     /** Should show the new plugin window and creates the Plugin the user selects. */
     virtual Plugin::Ptr showMenuAndCreatePlugin (Plugin::Type, Edit&)               { return {}; }
 
-    /** Must create a suitable PluginWindowConnection::Master for the given PluginWindowState.
+    /** Must create a suitable Component plugin window for the given PluginWindowState.
         The type of state should be checked and used accordingly e.g. Plugin::WindowState
         or RackType::WindowsState
     */
-    virtual PluginWindowConnection::Master* createPluginWindowConnection (PluginWindowState&) { return {}; }
+    virtual std::unique_ptr<juce::Component> createPluginWindow (PluginWindowState&){ return {}; }
 
     /** Called when a new track is created from some kind of user action i.e. not from an Edit load. */
     virtual void newTrackCreated (Track&) {}
