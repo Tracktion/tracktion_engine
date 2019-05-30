@@ -28,7 +28,7 @@ public:
     virtual Plugin::Ptr createCustomPlugin (PluginCreationInfo)                { return {}; }
 
     /** Gives an opportunity to load custom plugins for those that have been registered as custom formats but not added to the list.  */
-    virtual const juce::PluginDescription* findDescriptionForFileOrID (const juce::String&)     { return {}; }
+    virtual std::unique_ptr<juce::PluginDescription> findDescriptionForFileOrID (const juce::String&) { return {}; }
 
     /** Should return if the given plugin is disabled or not.
         ExternalPlugins will use this to determine if they should load themselves or not.

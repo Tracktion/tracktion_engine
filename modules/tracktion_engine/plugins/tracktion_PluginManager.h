@@ -43,7 +43,7 @@ public:
     Plugin::Ptr createNewPlugin (Edit&, const juce::ValueTree&);
     Plugin::Ptr createNewPlugin (Edit&, const juce::String& type, const juce::PluginDescription&);
 
-    juce::Array<juce::PluginDescription*> getARACompatiblePlugDescriptions();
+    juce::Array<juce::PluginDescription> getARACompatiblePlugDescriptions();
 
     juce::AudioPluginFormatManager pluginFormatManager;
     juce::KnownPluginList knownPluginList;

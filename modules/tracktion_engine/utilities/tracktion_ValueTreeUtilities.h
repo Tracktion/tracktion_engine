@@ -71,8 +71,10 @@ public:
     inline bool isEmpty() const noexcept    { return size() == 0;       }
     ObjectType* operator[] (int idx) const  { return objects[idx];      }
     ObjectType* at (int idx)                { return objects[idx];      }
-    ObjectType** begin() const              { return objects.begin();   }
-    ObjectType** end() const                { return objects.end();     }
+    ObjectType** begin()                    { return objects.begin();   }
+    ObjectType* const* begin() const        { return objects.begin();   }
+    ObjectType** end()                      { return objects.end();     }
+    ObjectType* const* end() const          { return objects.end();     }
 
     // call in the sub-class when being created
     void rebuildObjects()

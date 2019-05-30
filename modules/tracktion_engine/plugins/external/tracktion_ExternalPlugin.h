@@ -155,9 +155,9 @@ private:
     void updateDebugName();
     void processPluginBlock (const AudioRenderContext&);
 
-    const juce::PluginDescription* findMatchingPlugin() const;
-    const juce::PluginDescription* findDescForUID (int uid) const;
-    const juce::PluginDescription* findDescForFileOrID (const juce::String&) const;
+    std::unique_ptr<juce::PluginDescription> findMatchingPlugin() const;
+    std::unique_ptr<juce::PluginDescription> findDescForUID (int uid) const;
+    std::unique_ptr<juce::PluginDescription> findDescForFileOrID (const juce::String&) const;
 
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
 

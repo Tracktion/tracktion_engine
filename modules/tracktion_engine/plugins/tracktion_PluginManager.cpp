@@ -443,9 +443,9 @@ void PluginManager::initialise()
     pluginFormatManager.addDefaultFormats();
 
     if (usesSeparateProcessForScanning())
-        knownPluginList.setCustomScanner (new CustomScanner (engine));
+        knownPluginList.setCustomScanner (std::make_unique<CustomScanner> (engine));
     else
-        knownPluginList.setCustomScanner (new BasicScanner (engine));
+        knownPluginList.setCustomScanner (std::make_unique<BasicScanner> (engine));
 
     auto xml = engine.getPropertyStorage().getXmlProperty (getPluginListPropertyName());
 
@@ -592,23 +592,20 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const String& type, const 
     return {};
 }
 
-Array<PluginDescription*> PluginManager::getARACompatiblePlugDescriptions()
+Array<PluginDescription> PluginManager::getARACompatiblePlugDescriptions()
 {
     jassert (initialised); // must call PluginManager::initialise() before this!
 
-    Array<PluginDescription*> descs;
+    Array<PluginDescription> descs;
 
-    for (int i = 0; i < knownPluginList.getNumTypes(); ++i)
+    for (const auto& p : knownPluginList.getTypes())
     {
-        if (auto p = knownPluginList.getType (i))
+        if (p.name.containsIgnoreCase ("Melodyne"))
         {
-            if (p->name.containsIgnoreCase ("Melodyne"))
-            {
-                auto version = p->version.trim().removeCharacters ("V").upToFirstOccurrenceOf (".", false, true);
+            auto version = p.version.trim().removeCharacters ("V").upToFirstOccurrenceOf (".", false, true);
 
-                if (version.getIntValue() >= 2)
-                    descs.add (p);
-            }
+            if (version.getIntValue() >= 2)
+                descs.add (p);
         }
     }
 
@@ -658,9 +655,9 @@ void PluginManager::setUsesSeparateProcessForScanning (bool b)
     engine.getPropertyStorage().setProperty (SettingID::useSeparateProcessForScanning, b);
 
     if (usesSeparateProcessForScanning())
-        engine.getPluginManager().knownPluginList.setCustomScanner (new CustomScanner (engine));
+        engine.getPluginManager().knownPluginList.setCustomScanner (std::make_unique<CustomScanner> (engine));
     else
-        engine.getPluginManager().knownPluginList.setCustomScanner (new BasicScanner (engine));
+        engine.getPluginManager().knownPluginList.setCustomScanner (std::make_unique<BasicScanner> (engine));
 }
 
 Plugin::Ptr PluginManager::createPlugin (Edit& ed, const juce::ValueTree& v, bool isNew)
