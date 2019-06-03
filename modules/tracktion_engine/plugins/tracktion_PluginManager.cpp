@@ -297,32 +297,6 @@ bool PluginManager::startChildProcessPluginScan (const String& commandLine)
 }
 
 //==============================================================================
-struct BasicScanner  : public KnownPluginList::CustomScanner
-{
-    BasicScanner (Engine& e) : engine (e) {}
-
-    bool findPluginTypesFor (AudioPluginFormat& format,
-        OwnedArray<PluginDescription>& result,
-        const String& fileOrIdentifier) override
-    {
-        CRASH_TRACER
-
-        format.findAllTypesForFile (result, fileOrIdentifier);
-        return true;
-    }
-
-    void scanFinished() override
-    {
-        TRACKTION_LOG ("----- Ended Plugin Scan");
-
-        if (auto callback = engine.getPluginManager().scanCompletedCallback)
-            callback();
-    }
-
-    Engine& engine;
-};
-
-//==============================================================================
 struct CustomScanner  : public KnownPluginList::CustomScanner
 {
     CustomScanner (Engine& e) : engine (e) {}
@@ -333,51 +307,56 @@ struct CustomScanner  : public KnownPluginList::CustomScanner
     {
         CRASH_TRACER
 
-        if (masterProcess != nullptr && masterProcess->crashed)
-            masterProcess = nullptr;
-
-        if (masterProcess == nullptr)
-            masterProcess = std::make_unique<PluginScanMasterProcess> (engine);
-
-        int requestID = Random().nextInt();
-
-        if (! masterProcess->ensureSlaveIsLaunched())
+        if (engine.getPluginManager().usesSeparateProcessForScanning())
         {
-            // panic! Can't run the slave for some reason, so just do it here..
-            TRACKTION_LOG_ERROR ("Falling back to scanning in main process..");
-            format.findAllTypesForFile (result, fileOrIdentifier);
-            return true;
-        }
-
-        if (! shouldExit()
-             && masterProcess->sendScanRequest (format, fileOrIdentifier, requestID)
-             && ! shouldExit())
-        {
-            if (masterProcess->waitForReply (requestID, fileOrIdentifier, result, *this))
-                return true;
-
-            // if there's a crash, give it a second chance with a fresh child process,
-            // in case the real culprit was whatever plugin preceded this one.
-            if (masterProcess->crashed && ! shouldExit())
-            {
+            if (masterProcess != nullptr && masterProcess->crashed)
                 masterProcess = nullptr;
+
+            if (masterProcess == nullptr)
                 masterProcess = std::make_unique<PluginScanMasterProcess> (engine);
 
-                return masterProcess->ensureSlaveIsLaunched()
-                         && ! shouldExit()
-                         && masterProcess->sendScanRequest (format, fileOrIdentifier, requestID)
-                         && ! shouldExit()
-                         && masterProcess->waitForReply (requestID, fileOrIdentifier, result, *this);
+            if (masterProcess->ensureSlaveIsLaunched())
+            {
+                auto requestID = Random().nextInt();
+
+                if (! shouldExit()
+                     && masterProcess->sendScanRequest (format, fileOrIdentifier, requestID)
+                     && ! shouldExit())
+                {
+                    if (masterProcess->waitForReply (requestID, fileOrIdentifier, result, *this))
+                        return true;
+
+                    // if there's a crash, give it a second chance with a fresh child process,
+                    // in case the real culprit was whatever plugin preceded this one.
+                    if (masterProcess->crashed && ! shouldExit())
+                    {
+                        masterProcess = nullptr;
+                        masterProcess = std::make_unique<PluginScanMasterProcess> (engine);
+
+                        return masterProcess->ensureSlaveIsLaunched()
+                                 && ! shouldExit()
+                                 && masterProcess->sendScanRequest (format, fileOrIdentifier, requestID)
+                                 && ! shouldExit()
+                                 && masterProcess->waitForReply (requestID, fileOrIdentifier, result, *this);
+                    }
+                }
+
+                return false;
             }
+
+            // panic! Can't run the slave for some reason, so just do it here..
+            TRACKTION_LOG_ERROR ("Falling back to scanning in main process..");
+            masterProcess.reset();
         }
 
-        return false;
+        format.findAllTypesForFile (result, fileOrIdentifier);
+        return true;
     }
 
     void scanFinished() override
     {
         TRACKTION_LOG ("----- Ended Plugin Scan");
-        masterProcess = nullptr;
+        masterProcess.reset();
 
         if (auto callback = engine.getPluginManager().scanCompletedCallback)
             callback();
@@ -441,11 +420,7 @@ void PluginManager::initialise()
 
     initialised = true;
     pluginFormatManager.addDefaultFormats();
-
-    if (usesSeparateProcessForScanning())
-        knownPluginList.setCustomScanner (std::make_unique<CustomScanner> (engine));
-    else
-        knownPluginList.setCustomScanner (std::make_unique<BasicScanner> (engine));
+    knownPluginList.setCustomScanner (std::make_unique<CustomScanner> (engine));
 
     auto xml = engine.getPropertyStorage().getXmlProperty (getPluginListPropertyName());
 
@@ -653,11 +628,6 @@ bool PluginManager::usesSeparateProcessForScanning()
 void PluginManager::setUsesSeparateProcessForScanning (bool b)
 {
     engine.getPropertyStorage().setProperty (SettingID::useSeparateProcessForScanning, b);
-
-    if (usesSeparateProcessForScanning())
-        engine.getPluginManager().knownPluginList.setCustomScanner (std::make_unique<CustomScanner> (engine));
-    else
-        engine.getPluginManager().knownPluginList.setCustomScanner (std::make_unique<BasicScanner> (engine));
 }
 
 Plugin::Ptr PluginManager::createPlugin (Edit& ed, const juce::ValueTree& v, bool isNew)
