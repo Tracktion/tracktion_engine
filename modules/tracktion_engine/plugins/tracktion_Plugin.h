@@ -208,6 +208,8 @@ public:
 
     bool isClipEffectPlugin() const;
 
+    virtual juce::AudioProcessor* getWrappedAudioProcessor() const      { return {}; }
+
     //==============================================================================
     AutomatableParameter::Ptr getQuickControlParameter() const;
     void setQuickControlParameter (AutomatableParameter*);

@@ -673,9 +673,9 @@ Plugin::Ptr PluginCache::getPluginFor (EditItemID pluginID) const
 
     const ScopedLock sl (lock);
 
-    for (auto f : activePlugins)
-        if (EditItemID::fromProperty (f->state, IDs::id) == pluginID)
-            return *f;
+    for (auto p : activePlugins)
+        if (EditItemID::fromProperty (p->state, IDs::id) == pluginID)
+            return *p;
 
     return {};
 }
@@ -684,13 +684,24 @@ Plugin::Ptr PluginCache::getPluginFor (const juce::ValueTree& v) const
 {
     const ScopedLock sl (lock);
 
-    for (auto f : activePlugins)
+    for (auto p : activePlugins)
     {
-        if (f->state == v)
-            return *f;
+        if (p->state == v)
+            return *p;
 
-        jassert (v[IDs::id].toString() != f->itemID.toString());
+        jassert (v[IDs::id].toString() != p->itemID.toString());
     }
+
+    return {};
+}
+
+Plugin::Ptr PluginCache::getPluginFor (juce::AudioProcessor& ap) const
+{
+    const ScopedLock sl (lock);
+
+    for (auto p : activePlugins)
+        if (p->getWrappedAudioProcessor() == &ap)
+            return *p;
 
     return {};
 }

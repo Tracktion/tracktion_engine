@@ -29,6 +29,7 @@ public:
 
     //==============================================================================
     void initialiseFully() override;
+    void forceFullReinitialise();
 
     static const char* xmlTypeName;
 
@@ -68,6 +69,7 @@ public:
     double getTailLength() const override;
     bool needsConstantBufferSize() override { return false; }
 
+    juce::AudioProcessor* getWrappedAudioProcessor() const override     { return pluginInstance.get(); }
     void deleteFromParent() override;
 
     //==============================================================================

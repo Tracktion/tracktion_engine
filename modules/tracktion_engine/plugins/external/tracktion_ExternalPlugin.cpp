@@ -477,15 +477,18 @@ const char* ExternalPlugin::xmlTypeName = "vst";
 void ExternalPlugin::initialiseFully()
 {
     if (! fullyInitialised)
-    {
-        CRASH_TRACER_PLUGIN (getDebugName());
-        fullyInitialised = true;
+        forceFullReinitialise();
+}
 
-        doFullInitialisation();
-        restorePluginStateFromValueTree (state);
-        buildParameterList();
-        restoreChannelLayout (*this);
-    }
+void ExternalPlugin::forceFullReinitialise()
+{
+    CRASH_TRACER_PLUGIN (getDebugName());
+    fullyInitialised = true;
+
+    doFullInitialisation();
+    restorePluginStateFromValueTree (state);
+    buildParameterList();
+    restoreChannelLayout (*this);
 }
 
 void ExternalPlugin::updateDebugName()
@@ -662,10 +665,9 @@ void ExternalPlugin::processingChanged()
 
     if (processing)
     {
-        if (! pluginInstance)
+        if (pluginInstance == nullptr)
         {
-            fullyInitialised = false;
-            initialiseFully();
+            forceFullReinitialise();
 
             if (auto t = getOwnerTrack())
                 t->refreshCurrentAutoParam();
