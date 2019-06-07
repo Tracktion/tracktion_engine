@@ -70,6 +70,7 @@ protected:
     virtual void buildParameterTree() const;
 
     void updateLastPlaybackTime();
+    void clearParameterList();
     void addAutomatableParameter (const AutomatableParameter::Ptr&);
     void rebuildParameterTree();
 

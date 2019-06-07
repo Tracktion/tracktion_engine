@@ -112,7 +112,7 @@ public:
     juce::CachedValue<float> dryValue, wetValue;
     AutomatableParameter::Ptr dryGain, wetGain;
 
-    ActiveNoteList getActiveNotes() const { return activeNotes; }
+    ActiveNoteList getActiveNotes() const           { return activeNotes; }
 
 private:
     //==============================================================================
@@ -173,18 +173,11 @@ private:
  */
 struct PluginWetDryAutomatableParam  : public AutomatableParameter
 {
-    PluginWetDryAutomatableParam (const juce::String& xmlTag, const juce::String& name, Plugin& owner)
-        : AutomatableParameter (xmlTag, name, owner, { 0.0f, 1.0f })
-    {
-    }
+    PluginWetDryAutomatableParam (const juce::String& xmlTag, const juce::String& name, Plugin&);
+    ~PluginWetDryAutomatableParam();
 
-    ~PluginWetDryAutomatableParam()
-    {
-        notifyListenersOfDeletion();
-    }
-
-    juce::String valueToString (float value) override     { return juce::Decibels::toString (juce::Decibels::gainToDecibels (value), 1); }
-    float stringToValue (const juce::String& s) override  { return dbStringToDb (s); }
+    juce::String valueToString (float value) override;
+    float stringToValue (const juce::String& s) override;
 
     PluginWetDryAutomatableParam() = delete;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginWetDryAutomatableParam)

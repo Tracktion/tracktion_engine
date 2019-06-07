@@ -279,7 +279,7 @@ private:
     juce::AudioProcessorParameter* getParam() const noexcept
     {
         if (auto pi = getPlugin())
-            return pi->getParameters().getUnchecked (parameterIndex);
+            return pi->getParameters()[parameterIndex];
 
         return {};
     }

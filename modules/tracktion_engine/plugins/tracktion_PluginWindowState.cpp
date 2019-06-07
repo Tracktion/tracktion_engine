@@ -18,6 +18,71 @@ PluginWindowState::PluginWindowState (Edit& e)
 {
 }
 
+void PluginWindowState::deleteWindow()
+{
+    pluginWindow.reset();
+}
+
+void PluginWindowState::incRefCount()
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    ++windowShowerCount;
+    startTimer (100);
+}
+
+void PluginWindowState::decRefCount()
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    --windowShowerCount;
+    startTimer (100);
+}
+
+void PluginWindowState::showWindowExplicitly()
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    wasExplicitlyClosed = false;
+    stopTimer();
+    showWindow();
+}
+
+void PluginWindowState::closeWindowExplicitly()
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+
+    if (pluginWindow && pluginWindow->isVisible())
+    {
+        wasExplicitlyClosed = true;
+        deleteWindow();
+        stopTimer();
+    }
+}
+
+bool PluginWindowState::isWindowShowing() const
+{
+    return pluginWindow != nullptr && pluginWindow->isShowing();
+}
+
+void PluginWindowState::recreateWindowIfShowing()
+{
+    deleteWindow();
+    startTimer (100);
+}
+
+void PluginWindowState::hideWindowForShutdown()
+{
+    deleteWindow();
+    stopTimer();
+}
+
+void PluginWindowState::pickDefaultWindowBounds()
+{
+    lastWindowBounds = { 100, 100, 600, 500 };
+
+    if (auto focused = juce::Component::getCurrentlyFocusedComponent())
+        lastWindowBounds.setPosition (focused->getTopLevelComponent()->getPosition()
+                                        + juce::Point<int> (80, 80));
+}
+
 void PluginWindowState::showWindow()
 {
     if (! pluginWindow)
@@ -48,19 +113,19 @@ void PluginWindowState::showWindow()
 
 void PluginWindowState::pluginClicked (const MouseEvent& e)
 {
-    bool isWindowShowing = pluginWindow && pluginWindow->isShowing();
+    bool isShowing = isWindowShowing();
 
     if (e.getNumberOfClicks() >= 2)
     {
         if ((Time::getCurrentTime() - windowOpenTime).inMilliseconds() < 300)
             return;
 
-        if (isWindowShowing)
+        if (isShowing)
             closeWindowExplicitly();
         else
             showWindowExplicitly();
     }
-    else if (! (isWindowShowing || engine.getPluginManager().doubleClickToOpenWindows()))
+    else if (! (isShowing || engine.getPluginManager().doubleClickToOpenWindows()))
     {
         showWindowExplicitly();
     }

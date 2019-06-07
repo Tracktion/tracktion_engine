@@ -154,6 +154,12 @@ void AutomatableEditItem::updateLastPlaybackTime()
     systemTimeOfLastPlayedBlock = juce::Time::getApproximateMillisecondCounter();
 }
 
+void AutomatableEditItem::clearParameterList()
+{
+    automatableParams.clear();
+    rebuildParameterTree();
+}
+
 void AutomatableEditItem::addAutomatableParameter (const AutomatableParameter::Ptr& param)
 {
     jassert (param != nullptr);

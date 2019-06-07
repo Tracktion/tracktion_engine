@@ -15,54 +15,17 @@ struct PluginWindowState  : private juce::Timer
 {
     PluginWindowState (Edit&);
 
-    void incRefCount()
-    {
-        TRACKTION_ASSERT_MESSAGE_THREAD
-        ++windowShowerCount;
-        startTimer (100);
-    }
+    void pickDefaultWindowBounds();
 
-    void decRefCount()
-    {
-        TRACKTION_ASSERT_MESSAGE_THREAD
-        --windowShowerCount;
-        startTimer (100);
-    }
+    void incRefCount();
+    void decRefCount();
 
-    void showWindowExplicitly()
-    {
-        TRACKTION_ASSERT_MESSAGE_THREAD
-        wasExplicitlyClosed = false;
-        stopTimer();
-        showWindow();
-    }
+    void showWindowExplicitly();
+    void closeWindowExplicitly();
 
-    void closeWindowExplicitly()
-    {
-        TRACKTION_ASSERT_MESSAGE_THREAD
-
-        if (pluginWindow && pluginWindow->isVisible())
-        {
-            wasExplicitlyClosed = true;
-            deleteWindow();
-            stopTimer();
-        }
-    }
-
-    void hideWindowForShutdown()
-    {
-        pluginWindow.reset();
-        stopTimer();
-    }
-
-    void pickDefaultWindowBounds()
-    {
-        lastWindowBounds = { 100, 100, 600, 500 };
-
-        if (auto focused = juce::Component::getCurrentlyFocusedComponent())
-            lastWindowBounds.setPosition (focused->getTopLevelComponent()->getPosition()
-                                            + juce::Point<int> (80, 80));
-    }
+    bool isWindowShowing() const;
+    void recreateWindowIfShowing();
+    void hideWindowForShutdown();
 
     void pluginClicked (const juce::MouseEvent&);
 
@@ -79,11 +42,7 @@ private:
     void timerCallback() override;
 
     void showWindow();
-
-    void deleteWindow()
-    {
-        pluginWindow.reset();
-    }
+    void deleteWindow();
 
     JUCE_DECLARE_WEAK_REFERENCEABLE (PluginWindowState)
     JUCE_DECLARE_NON_COPYABLE (PluginWindowState)

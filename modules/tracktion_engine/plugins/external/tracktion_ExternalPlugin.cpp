@@ -437,8 +437,8 @@ ExternalPlugin::ExternalPlugin (PluginCreationInfo info)  : Plugin (info)
 
     auto um = getUndoManager();
 
-    addAutomatableParameter (dryGain = new PluginWetDryAutomatableParam ("dry level", TRANS("Dry Level"), *this));
-    addAutomatableParameter (wetGain = new PluginWetDryAutomatableParam ("wet level", TRANS("Wet Level"), *this));
+    dryGain = new PluginWetDryAutomatableParam ("dry level", TRANS("Dry Level"), *this);
+    wetGain = new PluginWetDryAutomatableParam ("wet level", TRANS("Wet Level"), *this);
 
     dryValue.referTo (state, IDs::dry, um);
     wetValue.referTo (state, IDs::wet, um, 1.0f);
@@ -500,7 +500,11 @@ void ExternalPlugin::buildParameterList()
 {
     CRASH_TRACER_PLUGIN (getDebugName());
     autoParamForParamNumbers.clear();
+    clearParameterList();
     std::unordered_map<std::string, int> alreadyUsedParamNames;
+
+    addAutomatableParameter (dryGain);
+    addAutomatableParameter (wetGain);
 
     if (pluginInstance)
     {
@@ -514,7 +518,7 @@ void ExternalPlugin::buildParameterList()
 
             if (parameter->isAutomatable() && ! isParameterBlacklisted (*this, *pluginInstance, *parameter))
             {
-                String nm (parameter->getName (1024));
+                auto nm = parameter->getName (1024);
 
                 if (nm.isNotEmpty())
                 {
@@ -675,10 +679,7 @@ void ExternalPlugin::processingChanged()
     }
     else
     {
-        // Remove all the parameters except the wet/dry as these are created in the constructor
-        for (int i = autoParamForParamNumbers.size(); --i >= 0;)
-            deleteParameter (autoParamForParamNumbers.getUnchecked (i));
-
+        clearParameterList();
         autoParamForParamNumbers.clear();
         getParameterTree().clear();
 
@@ -1615,6 +1616,27 @@ void ExternalPlugin::valueTreePropertyChanged (ValueTree& v, const juce::Identif
     {
         Plugin::valueTreePropertyChanged (v, id);
     }
+}
+
+//==============================================================================
+PluginWetDryAutomatableParam::PluginWetDryAutomatableParam (const juce::String& xmlTag, const juce::String& name, Plugin& owner)
+    : AutomatableParameter (xmlTag, name, owner, { 0.0f, 1.0f })
+{
+}
+
+PluginWetDryAutomatableParam::~PluginWetDryAutomatableParam()
+{
+    notifyListenersOfDeletion();
+}
+
+juce::String PluginWetDryAutomatableParam::valueToString (float value)
+{
+    return juce::Decibels::toString (juce::Decibels::gainToDecibels (value), 1);
+}
+
+float PluginWetDryAutomatableParam::stringToValue (const juce::String& s)
+{
+    return dbStringToDb (s);
 }
 
 }
