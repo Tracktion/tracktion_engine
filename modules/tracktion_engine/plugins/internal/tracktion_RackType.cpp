@@ -1217,9 +1217,7 @@ void RackType::createInstanceForSideChain (Track& at, const BigInteger& channelM
         rack->wetGain->setParameter (0.0f, dontSendNotification);
         rack->dryGain->setParameter (1.0f, dontSendNotification);
 
-        for (SelectionManager::Iterator sm; sm.next();)
-            if (sm->isSelected (rack))
-                sm->refreshDetailComponent();
+        SelectionManager::refreshAllPropertyPanelsShowing (*rack);
     }
     else
     {

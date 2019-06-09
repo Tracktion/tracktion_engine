@@ -519,7 +519,7 @@ void SelectionManager::selectableObjectAboutToBeDeleted (Selectable* s)
     }
 }
 
-void SelectionManager::refreshDetailComponent()
+void SelectionManager::refreshPropertyPanel()
 {
     selectionChanged();
 }
@@ -527,7 +527,14 @@ void SelectionManager::refreshDetailComponent()
 void SelectionManager::refreshAllPropertyPanels()
 {
     for (SelectionManager::Iterator sm; sm.next();)
-        sm->refreshDetailComponent();
+        sm->refreshPropertyPanel();
+}
+
+void SelectionManager::refreshAllPropertyPanelsShowing (Selectable& s)
+{
+    for (SelectionManager::Iterator sm; sm.next();)
+        if (sm->isSelected (s))
+            sm->refreshPropertyPanel();
 }
 
 void SelectionManager::deselectAllFromAllWindows()

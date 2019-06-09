@@ -1070,7 +1070,7 @@ void Edit::undoOrRedo (bool isUndo)
     for (auto sm : getSelectionManagers (*this))
     {
         sm->keepSelectedObjectsOnScreen();
-        sm->refreshDetailComponent();
+        sm->refreshPropertyPanel();
     }
 }
 
@@ -1466,10 +1466,9 @@ void Edit::toggleTimecodeMode()
 
     setTimecodeFormat (f);
 
-    for (SelectionManager::Iterator sm; sm.next();)
-        if (sm->edit == this)
-            if (! sm->containsType<ExternalPlugin>())
-                sm->refreshDetailComponent();
+    for (auto sm : getSelectionManagers (*this))
+        if (! sm->containsType<ExternalPlugin>())
+            sm->refreshPropertyPanel();
 }
 
 //==============================================================================
@@ -1717,9 +1716,8 @@ void Edit::moveTrack (Track::Ptr t, TrackInsertPoint destination)
         newParent.moveChild (currentIndex, newIndex, &undoManager);
     }
 
-    for (SelectionManager::Iterator sm; sm.next();)
-        if (sm->edit == this)
-            sm->keepSelectedObjectsOnScreen();
+    for (auto sm : getSelectionManagers (*this))
+        sm->keepSelectedObjectsOnScreen();
 }
 
 void Edit::updateTrackStatuses()
@@ -1731,7 +1729,7 @@ void Edit::updateTrackStatuses()
 
     // Only refresh if this Edit is being shown or it can cancel things like file previews
     for (auto sm : getSelectionManagers (*this))
-        sm->refreshDetailComponent();
+        sm->refreshPropertyPanel();
 }
 
 void Edit::updateTrackStatusesAsync()

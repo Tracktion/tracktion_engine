@@ -92,17 +92,13 @@ void SelectedMidiEvents::addSelectedEvent (MidiNote* note, bool addToCurrent)
     if (selectedSysexes.size() > 0)
     {
         selectedSysexes.clearQuick();
-
-        if (auto sm = SelectionManager::findSelectionManagerContaining (this))
-            sm->refreshDetailComponent();
+        SelectionManager::refreshAllPropertyPanelsShowing (*this);
     }
 
     if (selectedControllers.size() > 0)
     {
         selectedControllers.clearQuick();
-
-        if (auto sm = SelectionManager::findSelectionManagerContaining (this))
-            sm->refreshDetailComponent();
+        SelectionManager::refreshAllPropertyPanelsShowing (*this);
     }
 }
 
@@ -126,16 +122,12 @@ void SelectedMidiEvents::addSelectedEvent (MidiSysexEvent* sysex, bool addToCurr
     if (selectedNotes.size() > 0)
     {
         selectedNotes.clearQuick();
-
-        if (auto sm = SelectionManager::findSelectionManagerContaining (this))
-            sm->refreshDetailComponent();
+        SelectionManager::refreshAllPropertyPanelsShowing (*this);
     }
     if (selectedControllers.size() > 0)
     {
         selectedControllers.clearQuick();
-
-        if (auto sm = SelectionManager::findSelectionManagerContaining (this))
-            sm->refreshDetailComponent();
+        SelectionManager::refreshAllPropertyPanelsShowing (*this);
     }
 }
 
@@ -159,16 +151,12 @@ void SelectedMidiEvents::addSelectedEvent (MidiControllerEvent* controller, bool
     if (selectedNotes.size() > 0)
     {
         selectedNotes.clearQuick();
-
-        if (auto sm = SelectionManager::findSelectionManagerContaining (this))
-            sm->refreshDetailComponent();
+        SelectionManager::refreshAllPropertyPanelsShowing (*this);
     }
     if (selectedSysexes.size() > 0)
     {
         selectedSysexes.clearQuick();
-
-        if (auto sm = SelectionManager::findSelectionManagerContaining (this))
-            sm->refreshDetailComponent();
+        SelectionManager::refreshAllPropertyPanelsShowing (*this);
     }
 }
 

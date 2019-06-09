@@ -477,18 +477,30 @@ const char* ExternalPlugin::xmlTypeName = "vst";
 void ExternalPlugin::initialiseFully()
 {
     if (! fullyInitialised)
-        forceFullReinitialise();
+    {
+        CRASH_TRACER_PLUGIN (getDebugName());
+        fullyInitialised = true;
+
+        doFullInitialisation();
+        restorePluginStateFromValueTree (state);
+        buildParameterList();
+        restoreChannelLayout (*this);
+    }
 }
 
 void ExternalPlugin::forceFullReinitialise()
 {
-    CRASH_TRACER_PLUGIN (getDebugName());
-    fullyInitialised = true;
+    TransportControl::ScopedPlaybackRestarter restarter (edit.getTransport());
+    windowState->recreateWindowIfShowing();
+    edit.getTransport().stop (false, true);
+    fullyInitialised = false;
+    initialiseFully();
+    changed();
+    edit.restartPlayback();
+    SelectionManager::refreshAllPropertyPanelsShowing (*this);
 
-    doFullInitialisation();
-    restorePluginStateFromValueTree (state);
-    buildParameterList();
-    restoreChannelLayout (*this);
+    if (auto t = getOwnerTrack())
+        t->refreshCurrentAutoParam();
 }
 
 void ExternalPlugin::updateDebugName()
@@ -670,12 +682,7 @@ void ExternalPlugin::processingChanged()
     if (processing)
     {
         if (pluginInstance == nullptr)
-        {
             forceFullReinitialise();
-
-            if (auto t = getOwnerTrack())
-                t->refreshCurrentAutoParam();
-        }
     }
     else
     {
@@ -689,14 +696,14 @@ void ExternalPlugin::processingChanged()
 
 void ExternalPlugin::doFullInitialisation()
 {
-    if (processing && pluginInstance == nullptr && edit.shouldLoadPlugins())
+    if (auto foundDesc = findMatchingPlugin())
     {
-        if (auto foundDesc = findMatchingPlugin())
-        {
-            desc = *foundDesc;
-            identiferString = desc.createIdentifierString();
-            updateDebugName();
+        desc = *foundDesc;
+        identiferString = desc.createIdentifierString();
+        updateDebugName();
 
+        if (processing && pluginInstance == nullptr && edit.shouldLoadPlugins())
+        {
             if (isDisabled())
                 return;
 
