@@ -125,6 +125,7 @@ private:
     std::unique_ptr<VSTXML> vstXML;
     int latencySamples = 0;
     double latencySeconds = 0;
+    bool isInstancePrepared = false;
 
     juce::MidiBuffer midiBuffer;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();

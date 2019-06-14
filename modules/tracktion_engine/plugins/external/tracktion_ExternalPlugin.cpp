@@ -496,6 +496,13 @@ void ExternalPlugin::forceFullReinitialise()
     fullyInitialised = false;
     initialiseFully();
     changed();
+
+    if (isInstancePrepared && pluginInstance->getSampleRate() > 0 && pluginInstance->getBlockSize() > 0)
+    {
+        pluginInstance->releaseResources();
+        pluginInstance->prepareToPlay (pluginInstance->getSampleRate(), pluginInstance->getBlockSize());
+    }
+
     edit.restartPlayback();
     SelectionManager::refreshAllPropertyPanelsShowing (*this);
 
@@ -518,7 +525,7 @@ void ExternalPlugin::buildParameterList()
     addAutomatableParameter (dryGain);
     addAutomatableParameter (wetGain);
 
-    if (pluginInstance)
+    if (pluginInstance != nullptr)
     {
         auto& parameters = pluginInstance->getParameters();
         jassert (parameters.size() < 80000);
@@ -716,7 +723,7 @@ void ExternalPlugin::doFullInitialisation()
                 error = createPluginInstance (*foundDesc);
             });
 
-            if (pluginInstance)
+            if (pluginInstance != nullptr)
             {
                #if JUCE_PLUGINHOST_VST
                 if (auto xml = juce::VSTPluginFormat::getVSTXML (pluginInstance.get()))
@@ -777,7 +784,7 @@ void ExternalPlugin::flushPluginStateToValueTree()
         state.setProperty (IDs::filename, desc.fileOrIdentifier, um);
     }
 
-    if (pluginInstance)
+    if (pluginInstance != nullptr)
     {
         state.setProperty (IDs::programNum, pluginInstance->getCurrentProgram(), um);
 
@@ -839,7 +846,7 @@ void ExternalPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
         }
     }
 
-    if (pluginInstance && s.isNotEmpty())
+    if (pluginInstance != nullptr && s.isNotEmpty())
     {
         CRASH_TRACER_PLUGIN (getDebugName());
 
@@ -987,10 +994,14 @@ void ExternalPlugin::initialise (const PlaybackInitialisationInfo& info)
 
     mpeRemapper->reset();
 
-    if (pluginInstance)
+    if (pluginInstance != nullptr)
     {
-        pluginInstance->releaseResources();
+        if (isInstancePrepared)
+            pluginInstance->releaseResources();
+
         pluginInstance->prepareToPlay (info.sampleRate, info.blockSizeSamples);
+        isInstancePrepared = true;
+
         latencySamples = pluginInstance->getLatencySamples();
         latencySeconds = latencySamples / info.sampleRate;
 
@@ -1009,12 +1020,13 @@ void ExternalPlugin::initialise (const PlaybackInitialisationInfo& info)
         playhead.reset();
         latencySamples = 0;
         latencySeconds = 0.0;
+        isInstancePrepared = false;
     }
 }
 
 void ExternalPlugin::deinitialise()
 {
-    if (pluginInstance)
+    if (pluginInstance != nullptr)
     {
         CRASH_TRACER_PLUGIN (getDebugName());
 
@@ -1025,12 +1037,13 @@ void ExternalPlugin::deinitialise()
             playhead->setCurrentContext (nullptr);
 
         pluginInstance->releaseResources();
+        isInstancePrepared = false;
     }
 }
 
 void ExternalPlugin::reset()
 {
-    if (pluginInstance)
+    if (pluginInstance != nullptr)
     {
         CRASH_TRACER_PLUGIN (getDebugName());
         const ScopedLock sl (lock);
@@ -1044,7 +1057,7 @@ void ExternalPlugin::setEnabled (bool shouldEnable)
 
     if (shouldEnable != isEnabled())
     {
-        if (pluginInstance)
+        if (pluginInstance != nullptr)
             pluginInstance->reset();
 
         propertiesChanged();
@@ -1135,7 +1148,7 @@ void ExternalPlugin::prepareIncomingMidiMessages (MidiMessageArray& incoming, in
 
 void ExternalPlugin::applyToBuffer (const AudioRenderContext& fc)
 {
-    if (pluginInstance && isEnabled())
+    if (pluginInstance != nullptr && isEnabled())
     {
         CRASH_TRACER_PLUGIN (getDebugName());
         const ScopedLock sl (lock);
@@ -1275,7 +1288,7 @@ int ExternalPlugin::getNumOutputChannelsGivenInputs (int)
 
 void ExternalPlugin::getChannelNames (StringArray* ins, StringArray* outs)
 {
-    if (pluginInstance)
+    if (pluginInstance != nullptr)
     {
         CRASH_TRACER_PLUGIN (getDebugName());
 
@@ -1355,7 +1368,7 @@ String ExternalPlugin::getProgramName (int index)
     if (index == getCurrentProgram())
         return getCurrentProgramName();
 
-    if (pluginInstance)
+    if (pluginInstance != nullptr)
         return pluginInstance->getProgramName (index);
 
     return {};
@@ -1396,13 +1409,13 @@ void ExternalPlugin::setCurrentProgramName (const String& name)
 {
     CRASH_TRACER_PLUGIN (getDebugName());
 
-    if (pluginInstance)
+    if (pluginInstance != nullptr)
         pluginInstance->changeProgramName (pluginInstance->getCurrentProgram(), name);
 }
 
 void ExternalPlugin::setCurrentProgram (int index, bool sendChangeMessage)
 {
-    if (pluginInstance && getNumPrograms() > 0)
+    if (pluginInstance != nullptr && getNumPrograms() > 0)
     {
         CRASH_TRACER_PLUGIN (getDebugName());
 
@@ -1445,7 +1458,7 @@ int ExternalPlugin::getNumOutputs() const    { return pluginInstance ? pluginIns
 
 bool ExternalPlugin::setBusesLayout (juce::AudioProcessor::BusesLayout layout)
 {
-    if (pluginInstance)
+    if (pluginInstance != nullptr)
     {
         std::unique_ptr<Edit::ScopedRenderStatus> srs;
 
@@ -1473,7 +1486,7 @@ bool ExternalPlugin::setBusesLayout (juce::AudioProcessor::BusesLayout layout)
 
 bool ExternalPlugin::setBusLayout (AudioChannelSet set, bool isInput, int busIndex)
 {
-    if (pluginInstance)
+    if (pluginInstance != nullptr)
     {
         if (auto* bus = pluginInstance->getBus (isInput, busIndex))
         {
