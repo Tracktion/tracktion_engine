@@ -63,9 +63,11 @@ public:
     float getCurrentValue() const noexcept                      { return currentValue; }
     float getCurrentNormalisedValue() const noexcept            { return valueRange.convertTo0to1 (currentValue); }
 
-    virtual juce::String getCurrentValueAsString()              { return valueToString (getCurrentValue()); }
     virtual juce::String valueToString (float value)            { return valueToStringFunction (value); }
     virtual float stringToValue (const juce::String& s)         { return stringToValueFunction (s); }
+
+    virtual juce::String getCurrentValueAsString()              { return valueToString (getCurrentValue()); }
+    juce::String getCurrentValueAsStringWithLabel();
 
     std::function<juce::String(float)> valueToStringFunction;
     std::function<float(const juce::String&)> stringToValueFunction;

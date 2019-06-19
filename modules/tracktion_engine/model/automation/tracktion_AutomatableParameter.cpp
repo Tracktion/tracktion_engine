@@ -943,6 +943,17 @@ void AutomatableParameter::setNormalisedParameter (float value, juce::Notificati
     setParameter (valueRange.convertFrom0to1 (jlimit (0.0f, 1.0f, value)), nt);
 }
 
+juce::String AutomatableParameter::getCurrentValueAsStringWithLabel()
+{
+    auto text = getCurrentValueAsString();
+    auto label = getLabel();
+
+    if (! (label.isEmpty() || text.endsWith (label)))
+        return text + ' ' + label;
+
+    return text;
+}
+
 AutomatableParameter::AutomationSourceList& AutomatableParameter::getAutomationSourceList() const
 {
     if (! automationSourceList)
