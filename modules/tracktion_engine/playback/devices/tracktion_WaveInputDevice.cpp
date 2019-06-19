@@ -585,7 +585,6 @@ public:
         }
         else
         {
-            
             return applyLastRecording (rc, nullptr, recordedFile, destTrack,
                                        recordedFileLength, newClipLen, isLooping, loopEnd);
         }

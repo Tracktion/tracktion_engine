@@ -16,7 +16,7 @@ struct SelectableUpdateTimer  : public AsyncUpdater,
 {
     SelectableUpdateTimer (std::function<void ()> onDelete_)
         : onDelete (onDelete_) {}
-    
+
     ~SelectableUpdateTimer()
     {
         if (onDelete)

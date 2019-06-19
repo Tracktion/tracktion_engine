@@ -72,7 +72,7 @@ public:
         the plugins, and is the track going to an audio output */
     bool canPlayAudio() const;
     bool canPlayMidi() const;
-    
+
     //==============================================================================
     bool isFrozen (FreezeType) const override;
     void setFrozen (bool, FreezeType) override;

@@ -328,7 +328,7 @@ juce::String Scale::getName() const
 {
     return getNameForType (type);
 }
-    
+
 juce::String Scale::getShortName() const
 {
     return getShortNameForType (type);
@@ -352,7 +352,7 @@ juce::String Scale::getNameForType (ScaleType type)
         default: jassertfalse;  return {};
     }
 }
-    
+
 juce::String Scale::getShortNameForType (ScaleType type)
 {
     switch (type)
@@ -727,7 +727,7 @@ void PatternGenerator::validateChordLengths()
         }
     }
 }
-    
+
 int PatternGenerator::getChordProgressionLength() const
 {
     return progressionList->size();
@@ -927,7 +927,7 @@ juce::String PatternGenerator::formatChordName (juce::String simplifiedChordName
 juce::StringArray PatternGenerator::getChordProgressionChordNames (bool simplified) const
 {
     juce::StringArray res;
-    
+
     for (auto item : *progressionList)
     {
         if (simplified)
@@ -937,7 +937,7 @@ juce::StringArray PatternGenerator::getChordProgressionChordNames (bool simplifi
         else
             res.add (item->getChordSymbol());
     }
-    
+
     return res;
 }
 

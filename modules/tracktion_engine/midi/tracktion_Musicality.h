@@ -107,7 +107,7 @@ public:
     Scale (ScaleType type = major);
 
     ScaleType getType() const { return type; }
-    
+
     juce::String getName() const;
     juce::String getShortName() const;
 

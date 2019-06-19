@@ -114,7 +114,7 @@ inline bool removeIf (Vector& v, Predicate&& pred)
     v.erase (newEnd, oldEnd);
     return true;
 }
-    
+
 //==============================================================================
 /** Checks to see if two values are equal within a given precision. */
 template <typename FloatingPointType>

@@ -171,19 +171,19 @@ void WaveAudioClip::addTake (ProjectItemID id)
     take.setProperty (IDs::source, id.toString(), um);
     takesTree.addChild (take, -1, um);
 }
-    
+
 void WaveAudioClip::addTake (const juce::File& f)
 {
     auto um = getUndoManager();
     auto takesTree = state.getOrCreateChildWithName (IDs::TAKES, um);
-    
+
     ValueTree take (IDs::TAKE);
-    
+
     {
         SourceFileReference sfr (edit, take, IDs::source);
         sfr.setToDirectFileReference (f, true);
     }
-    
+
     takesTree.addChild (take, -1, um);
 }
 

@@ -58,7 +58,7 @@ public:
     ExternalController* getActiveCustomController();
 
     void midiInOutDevicesChanged();
-    
+
     enum Protocol
     {
         midi,

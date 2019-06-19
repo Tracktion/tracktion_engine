@@ -148,12 +148,12 @@ DeviceManager::~DeviceManager()
     CRASH_TRACER
     deviceManager.removeChangeListener (this);
 }
-    
+
 HostedAudioDeviceInterface& DeviceManager::getHostedAudioDeviceInterface()
 {
     if (hostedAudioDeviceInterface == nullptr)
         hostedAudioDeviceInterface = std::make_unique<HostedAudioDeviceInterface> (engine);
-    
+
     return *hostedAudioDeviceInterface;
 }
 
@@ -181,7 +181,7 @@ String DeviceManager::getDefaultMidiInDeviceName (bool translated)
                       : "(default MIDI input)";
 }
 
-    
+
 void DeviceManager::closeDevices()
 {
     CRASH_TRACER
@@ -230,7 +230,7 @@ void DeviceManager::initialiseMidi()
 
     defaultMidiOutIndex = storage.getProperty (SettingID::defaultMidiOutDevice);
     defaultMidiInIndex = storage.getProperty (SettingID::defaultMidiInDevice);
-    
+
     bool openHardwareMidi = hostedAudioDeviceInterface == nullptr || hostedAudioDeviceInterface->parameters.useMidiDevices;
 
     TRACKTION_LOG ("Finding MIDI I/O");
@@ -253,7 +253,7 @@ void DeviceManager::initialiseMidi()
         midiOutputs.add (hostedAudioDeviceInterface->createMidiOutput());
         midiInputs.add (hostedAudioDeviceInterface->createMidiInput());
     }
-    
+
    #if JUCE_MAC && JUCE_DEBUG
     if (openHardwareMidi)
         midiOutputs.add (new MidiOutputDevice (engine, "Tracktion MIDI Device", -1));
@@ -545,10 +545,10 @@ void DeviceManager::rebuildWaveDeviceList()
 
     auto mo = getDefaultMidiOutDevice();
     TRACKTION_LOG ("Default MIDI Out: " + (mo != nullptr ? mo->getName() : String()));
-    
+
     auto wi = getDefaultWaveInDevice();
     TRACKTION_LOG ("Default Wave In: " + (wi != nullptr ? wi->getName() : String()));
-    
+
     auto mi = getDefaultMidiInDevice();
     TRACKTION_LOG ("Default MIDI In: " + (mi != nullptr ? mi->getName() : String()));
   #endif
@@ -685,12 +685,12 @@ void DeviceManager::checkDefaultDevicesAreValid()
         if (defaultMidiOutIndex >= 0)
             storage.setProperty (SettingID::defaultMidiOutDevice, defaultMidiOutIndex);
     }
-    
+
     if (getDefaultWaveInDevice() == nullptr
         || ! getDefaultWaveInDevice()->isEnabled())
     {
         defaultWaveInIndex = -1;
-        
+
         for (int i = 0; i < getNumWaveInDevices(); ++i)
         {
             if (getWaveInDevice(i) != 0 && getWaveInDevice(i)->isEnabled())
@@ -699,16 +699,16 @@ void DeviceManager::checkDefaultDevicesAreValid()
                 break;
             }
         }
-        
+
         if (defaultWaveInIndex >= 0)
             storage.setPropertyItem (SettingID::defaultWaveInDevice, deviceManager.getCurrentAudioDeviceType(), defaultWaveInIndex);
     }
-    
+
     if (getDefaultMidiInDevice() == nullptr
         || ! getDefaultMidiInDevice()->isEnabled())
     {
         defaultMidiInIndex = -1;
-        
+
         for (int i = 0; i < getNumMidiInDevices(); ++i)
         {
             if (getMidiInDevice(i) != 0 && getMidiInDevice(i)->isEnabled())
@@ -717,7 +717,7 @@ void DeviceManager::checkDefaultDevicesAreValid()
                 break;
             }
         }
-        
+
         if (defaultMidiInIndex >= 0)
             storage.setProperty (SettingID::defaultMidiInDevice, defaultMidiInIndex);
     }
@@ -869,7 +869,7 @@ void DeviceManager::setDefaultMidiOutDevice (int index)
     checkDefaultDevicesAreValid();
     rebuildWaveDeviceList();
 }
-    
+
 void DeviceManager::setDefaultMidiInDevice (int index)
 {
     if (midiInputs[index] != 0 && midiInputs[index]->isEnabled())

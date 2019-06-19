@@ -33,9 +33,9 @@ public:
         stringToValueFunction = [] (String v) { return v.getFloatValue(); };
 
         defaultValue = plugin.impl->getParameter (idx);
-        
+
         setParameter (defaultValue, sendNotification);
-        
+
         autodetectRange();
     }
 
@@ -43,38 +43,38 @@ public:
     {
         notifyListenersOfDeletion();
     }
-    
+
     void resetToDefault()
     {
         setParameter (defaultValue, sendNotificationSync);
     }
-    
+
     void autodetectRange()
     {
         float current = plugin.impl->getParameter (index);
-        
+
         plugin.impl->setParameter (index, 0.0f);
         float v1 = getCurrentValueAsString().retainCharacters ("1234567890-.").getFloatValue();
         plugin.impl->setParameter (index, 1.0f);
         float v2 = getCurrentValueAsString().retainCharacters ("1234567890-.").getFloatValue();
-        
+
         if (v2 > v1 && (v1 != 0.0f || v2 != 1.0f))
             setConversionRange ({v1, v2});
-        
+
         plugin.impl->setParameter (index, current);
     }
-    
+
     void refresh()
     {
         currentValue = currentParameterValue = plugin.impl->getParameter (index);
         curveHasChanged();
         listeners.call (&Listener::currentValueChanged, *this, currentValue);
     }
-    
+
     void setConversionRange (juce::NormalisableRange<float> range)
     {
         conversionRange = range;
-        
+
         stringToValueFunction = [this] (String v) { return conversionRange.convertTo0to1 (v.getFloatValue()); };
     }
 
@@ -94,11 +94,11 @@ public:
         char paramText[kVstMaxParamStrLen];
         plugin.impl->getParameterDisplay (index, paramText);
         auto t1 = String (paramText);
-        
+
         char labelText[kVstMaxParamStrLen];
         plugin.impl->getParameterLabel (index, labelText);
         auto t2 = String (labelText);
-        
+
         if (t2.isNotEmpty())
             return t1 + " " + t2;
         return t1;
@@ -143,9 +143,9 @@ AirWindowsPlugin::AirWindowsPlugin (PluginCreationInfo info, std::unique_ptr<Air
         addAutomatableParameter (param);
         parameters.add (param);
     }
-    
+
     restorePluginStateFromValueTree (state);
-    
+
     addAutomatableParameter (dryGain = new PluginWetDryAutomatableParam ("dry level", TRANS("Dry Level"), *this));
     addAutomatableParameter (wetGain = new PluginWetDryAutomatableParam ("wet level", TRANS("Wet Level"), *this));
 
@@ -161,7 +161,7 @@ AirWindowsPlugin::~AirWindowsPlugin()
     dryGain->detachFromCurrentValue();
     wetGain->detachFromCurrentValue();
 }
-    
+
 void AirWindowsPlugin::setConversionRange (int paramIdx, juce::NormalisableRange<float> range)
 {
     if (auto p = dynamic_cast<AirWindowsAutomatableParameter*> (parameters[paramIdx].get()))
@@ -169,13 +169,13 @@ void AirWindowsPlugin::setConversionRange (int paramIdx, juce::NormalisableRange
     else
         jassertfalse;
 }
-    
+
 void AirWindowsPlugin::resetToDefault()
 {
     for (auto p : parameters)
         if (auto awp = dynamic_cast<AirWindowsAutomatableParameter*> (p))
             awp->resetToDefault();
-    
+
     dryGain->setParameter (0.0f, sendNotificationSync);
     wetGain->setParameter (1.0f, sendNotificationSync);
 }
@@ -196,8 +196,8 @@ void AirWindowsPlugin::deinitialise()
 
 void AirWindowsPlugin::applyToBuffer (const AudioRenderContext& fc)
 {
-    // We need to lock the processing while a preset is being loaded or the parameters 
-    // will overwrite the plugin state before we can update the parameters from the 
+    // We need to lock the processing while a preset is being loaded or the parameters
+    // will overwrite the plugin state before we can update the parameters from the
     // plugin state
     juce::ScopedLock sl (lock);
 
@@ -248,7 +248,7 @@ void AirWindowsPlugin::processBlock (juce::AudioBuffer<float>& buffer)
     const int numChans    = buffer.getNumChannels();
     const int samps       = buffer.getNumSamples();
     const int pluginChans = jmax (impl->getNumOutputs(), impl->getNumInputs());
-    
+
     if (pluginChans > numChans)
     {
         AudioScratchBuffer input (pluginChans, samps);
@@ -256,7 +256,7 @@ void AirWindowsPlugin::processBlock (juce::AudioBuffer<float>& buffer)
 
         input.buffer.clear();
         output.buffer.clear();
-        
+
         input.buffer.copyFrom (0, 0, buffer, 0, 0, samps);
 
         impl->processReplacing (input.buffer.getArrayOfWritePointers(),

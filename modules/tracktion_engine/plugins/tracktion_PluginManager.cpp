@@ -435,7 +435,7 @@ PluginManager::~PluginManager()
     knownPluginList.removeChangeListener (this);
     cleanUpDanglingPlugins();
 }
-    
+
 #if TRACKTION_AIR_WINDOWS
 void PluginManager::initialiseAirWindows()
 {
@@ -556,7 +556,7 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const String& type, const 
         {
             ValueTree v (IDs::PLUGIN);
             v.setProperty (IDs::type, type, nullptr);
-            
+
             if (ed.engine.getPluginManager().areGUIsLockedByDefault())
                 v.setProperty (IDs::windowLocked, true, nullptr);
 

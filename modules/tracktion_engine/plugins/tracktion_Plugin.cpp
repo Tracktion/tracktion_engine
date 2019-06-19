@@ -685,7 +685,7 @@ void Plugin::valueTreeChildRemoved (ValueTree&, juce::ValueTree& c, int)
 
     valueTreeChanged();
 }
-    
+
 void Plugin::valueTreeParentChanged (juce::ValueTree& v)
 {
     if (v.hasType (IDs::PLUGIN))

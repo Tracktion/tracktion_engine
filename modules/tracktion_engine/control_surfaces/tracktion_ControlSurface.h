@@ -53,7 +53,7 @@ public:
 
     virtual void initialiseDevice (bool connect) = 0;
     virtual void shutDownDevice() = 0;
-    
+
     // If the device communicates via OSC, then this tells the device the new settings
     virtual void updateOSCSettings (int /*oscInputPort*/, int /*oscOutputPort*/, juce::String /*oscOutputAddr*/) {}
 
@@ -329,7 +329,7 @@ public:
     // does this driver need to be able to send MIDI messages back to the
     // controller as well as receive them?
     bool needsMidiBackChannel = false;
-        
+
     // does this driver need to be able to communicate via OSC
     bool needsOSCSocket = false;
 
@@ -342,7 +342,7 @@ public:
     // number of physical faders
     int numberOfFaderChannels = 0;
     int numCharactersForTrackNames = 0;
-    
+
     // is banking to the right allowed to show empty tracks
     bool allowBankingOffEnd = false;
 

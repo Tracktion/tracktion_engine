@@ -428,7 +428,7 @@ struct AudioFileManager::KnownFile
         : file (f), info (AudioFileInfo::parse (file))
     {
     }
-    
+
     AudioFile file;
     AudioFileInfo info;
 

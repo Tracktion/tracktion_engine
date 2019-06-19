@@ -64,7 +64,7 @@ void Engine::initialise()
 
     if (engineBehaviour->autoInitialiseDeviceManager())
         deviceManager->initialise();
-    
+
     pluginManager->initialise();
 
     ProjectManager::getInstance()->initialise();

@@ -41,12 +41,12 @@ bool AuxSendPlugin::shouldProcess()
         // our plugin will be disabled anyway
         if (! ownerTrack->processAudioNodesWhileMuted())
             return true;
-        
+
         return ! ownerTrack->isMuted (true);
     }
     return true;
 }
-    
+
 const char* AuxSendPlugin::xmlTypeName = "auxsend";
 
 String AuxSendPlugin::getName()

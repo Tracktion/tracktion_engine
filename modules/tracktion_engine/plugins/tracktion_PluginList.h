@@ -60,16 +60,16 @@ public:
 
         return {};
     }
-    
+
     template <typename PluginType>
     juce::Array<PluginType*> getPluginsOfType() const
     {
         juce::Array<PluginType*> plugins;
-        
+
         for (auto af : *this)
             if (auto f = dynamic_cast<PluginType*> (af))
                 plugins.add (f);
-        
+
         return plugins;
     }
 

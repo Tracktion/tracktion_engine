@@ -30,7 +30,7 @@ public:
                      int defaultNumOutputChannelsToOpen = 512);
     void closeDevices();
     void saveSettings();
-    
+
     // If you are using the engine in a plugin or an application
     // that accesses the audio device directly, use this interface
     // to pass audio and midi to the DeviceManager.
@@ -105,7 +105,7 @@ public:
     int getNumMidiInDevices() const;
     MidiInputDevice* getMidiInDevice (int index) const;
     MidiInputDevice* getDefaultMidiInDevice() const             { return getMidiInDevice (defaultMidiInIndex); }
-    
+
     void setDefaultMidiInDevice (int index);
 
     void broadcastStreamTimeToMidiDevices (double streamTime);
@@ -133,7 +133,7 @@ public:
 
     static juce::String getDefaultAudioInDeviceName (bool translated);
     static juce::String getDefaultMidiInDeviceName (bool translated);
-    
+
     juce::Result createVirtualMidiDevice (const juce::String& name);
     void deleteVirtualMidiDevice (VirtualMidiInputDevice*);
 

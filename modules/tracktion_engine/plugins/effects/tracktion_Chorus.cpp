@@ -115,7 +115,7 @@ void ChorusPlugin::applyToBuffer (const AudioRenderContext& fc)
     phase = ph;
     if (phase >= MathConstants<float>::pi * 2)
         phase -= MathConstants<float>::pi * 2;
-    
+
     delayBuffer.bufferPos = bufPos;
 }
 

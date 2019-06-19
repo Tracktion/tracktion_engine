@@ -310,7 +310,7 @@ protected:
     void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override;
     void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override;
     void valueTreeParentChanged (juce::ValueTree&) override;
-    
+
     virtual void processingChanged();
 
     //==============================================================================

@@ -200,7 +200,7 @@ void SelectedMidiEvents::setSelected (SelectionManager& sm, const juce::Array<Mi
 {
     if (! addToSelection)
         selectedNotes.clearQuick();
-    
+
     for (auto n : notes)
     {
         if (n != nullptr && clipForEvent (n) == nullptr)

@@ -359,27 +359,27 @@ bool EditFileOperations::saveAs (const File& f, bool forceOverwriteExisting)
     else
     {
         CRASH_TRACER
-        
+
         CustomControlSurface::saveAllSettings();
         auto controllerMappings = state.getOrCreateChildWithName (IDs::CONTROLLERMAPPINGS, nullptr);
         edit.getParameterControlMappings().saveTo (controllerMappings);
-        
+
         const File tempFile (getTempVersionFile());
-        
+
         if (! saveTempVersion (true))
             return editSaveError (edit, tempFile, true);
-        
+
         if (editSnapshot != nullptr)
             editSnapshot->refreshCacheAndNotifyListeners();
-        
+
         if (f.existsAsFile())
             f.deleteFile();
-        
+
         if (! tempFile.moveFileTo (f))
             return editSaveError (edit, f, true);
-        
+
         tempFile.deleteFile();
-        
+
         edit.resetChangedStatus();
         edit.engine.getEngineBehaviour().editHasBeenSaved (edit, f);
 

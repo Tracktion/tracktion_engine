@@ -53,7 +53,7 @@ Track* findTrackForState (const Edit&, const juce::ValueTree&);
 
 /** */
 AudioTrack* getFirstAudioTrack (const Edit&);
-    
+
 /** */
 juce::Array<Track*> findAllTracksContainingSelectedItems (const SelectableList&);
 

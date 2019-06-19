@@ -68,7 +68,7 @@ private:
     juce::AudioBuffer<float> delayBuffer { 2, 32 };
     double latencySeconds = 0.0;
     Track* ownerTrack = nullptr;
-    
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AuxSendPlugin)
 };

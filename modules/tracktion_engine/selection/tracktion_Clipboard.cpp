@@ -78,21 +78,21 @@ bool Clipboard::ContentType::pasteIntoEdit (const EditPastingOptions&) const    
 //==============================================================================
 Clipboard::ProjectItems::ProjectItems() {}
 Clipboard::ProjectItems::~ProjectItems() {}
-    
+
 static AudioTrack* getOrInsertAudioTrackNearestIndex (Edit& edit, int trackIndex)
 {
     int i = 0;
-    
+
     // find the next audio track on or after the given index..
     for (auto t : getAllTracks (edit))
     {
         if (i >= trackIndex)
             if (auto at = dynamic_cast<AudioTrack*> (t))
                 return at;
-        
+
         ++i;
     }
-    
+
     return edit.insertNewAudioTrack (TrackInsertPoint (nullptr, getAllTracks (edit).getLast()), nullptr).get();
 };
 
@@ -307,7 +307,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
     ProjectItemPastingOptions pastingOptions;
 
     pastingOptions.separateTracks = options.preferredLayout == FileDragList::vertical;
-    
+
     if (! options.silent)
         askUserAboutProjectItemPastingOptions (*this, ui, pastingOptions);
 
@@ -353,13 +353,13 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
                     {
                         sourceItem->verifyLength();
                         jassert (sourceItem->getLength() > 0);
-                        
+
                         if (auto newClip = targetTrack->insertWaveClip (sourceItem->getName(), sourceItem->getID(),
                                                                         { { startTime, startTime + sourceItem->getLength() }, 0.0 }, false))
                         {
                             newClipEndTime = newClip->getPosition().getEnd();
                             itemsAdded.add (newClip.get());
-                            
+
                             if (pastingOptions.snapBWavsToOriginalTime)
                                 newClip->snapToOriginalBWavTime();
                         }
@@ -369,7 +369,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
                     {
                         sourceItem->verifyLength();
                         jassert (sourceItem->getLength() > 0);
-                        
+
                         if (auto newClip = targetTrack->insertEditClip ({ startTime, startTime + sourceItem->getLength() },
                                                                         sourceItem->getID()))
                         {

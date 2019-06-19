@@ -75,7 +75,7 @@ AudioTrack* getFirstAudioTrack (const Edit& edit)
 {
     return getAudioTracks (edit).getFirst();
 }
-    
+
 bool containsTrack (const Edit& edit, const Track& track)
 {
     return findTrackForPredicate (edit, [&track] (Track& t) { return &track == &t; }) != nullptr;
