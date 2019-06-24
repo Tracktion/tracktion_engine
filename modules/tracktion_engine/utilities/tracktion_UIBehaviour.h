@@ -51,6 +51,11 @@ public:
     */
     virtual std::unique_ptr<juce::Component> createPluginWindow (PluginWindowState&){ return {}; }
 
+    /** Should trigger an asynchronous refresh of any editor components showing for this plugin.
+        The default implementation just causes a new instance of the whole window to be created.
+    */
+    virtual void recreatePluginWindowContentAsync (Plugin&);
+
     /** Called when a new track is created from some kind of user action i.e. not from an Edit load. */
     virtual void newTrackCreated (Track&) {}
 

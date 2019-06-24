@@ -491,7 +491,7 @@ void ExternalPlugin::initialiseFully()
 void ExternalPlugin::forceFullReinitialise()
 {
     TransportControl::ScopedPlaybackRestarter restarter (edit.getTransport());
-    windowState->recreateWindowIfShowing();
+    engine.getUIBehaviour().recreatePluginWindowContentAsync (*this);
     edit.getTransport().stop (false, true);
     fullyInitialised = false;
     initialiseFully();

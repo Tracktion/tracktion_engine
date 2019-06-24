@@ -221,4 +221,9 @@ EditTimeRange UIBehaviour::getEditingRange (Edit& e)
     return e.getTransport().getLoopRange();
 }
 
+void UIBehaviour::recreatePluginWindowContentAsync (Plugin& p)
+{
+    p.windowState->recreateWindowIfShowing();
+}
+
 }
