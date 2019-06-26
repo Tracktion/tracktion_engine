@@ -584,7 +584,7 @@ void TransportControl::ensureContextAllocated (bool alwaysReallocate)
     if (! edit.shouldPlay())
         return;
 
-    const double start = position;
+    const auto start = position;
 
     if (playbackContext == nullptr)
     {
@@ -593,15 +593,10 @@ void TransportControl::ensureContextAllocated (bool alwaysReallocate)
         transportState->playbackContextAllocation = transportState->playbackContextAllocation + 1;
     }
 
-    if (isPlaying() || isRecording() || edit.playInStopEnabled)
-    {
-        if (alwaysReallocate)
-            playbackContext->createPlayAudioNodes (start);
-        else
-            playbackContext->createPlayAudioNodesIfNeeded (start);
-    }
+    if (alwaysReallocate)
+        playbackContext->createPlayAudioNodes (start);
     else
-        playbackContext->clearNodes();
+        playbackContext->createPlayAudioNodesIfNeeded (start);
 }
 
 void TransportControl::freePlaybackContext()
