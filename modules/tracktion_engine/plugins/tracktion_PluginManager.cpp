@@ -307,7 +307,8 @@ struct CustomScanner  : public KnownPluginList::CustomScanner
     {
         CRASH_TRACER
 
-        if (engine.getPluginManager().usesSeparateProcessForScanning())
+        if (engine.getPluginManager().usesSeparateProcessForScanning()
+             && shouldUseSeparateProcessToScan (format))
         {
             if (masterProcess != nullptr && masterProcess->crashed)
                 masterProcess = nullptr;
@@ -351,6 +352,15 @@ struct CustomScanner  : public KnownPluginList::CustomScanner
 
         format.findAllTypesForFile (result, fileOrIdentifier);
         return true;
+    }
+
+    static bool shouldUseSeparateProcessToScan (AudioPluginFormat& format)
+    {
+        auto name = format.getName();
+
+        return name.containsIgnoreCase ("VST")
+                || name.containsIgnoreCase ("AudioUnit")
+                || name.containsIgnoreCase ("LADSPA");
     }
 
     void scanFinished() override
