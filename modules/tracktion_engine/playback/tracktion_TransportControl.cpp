@@ -584,7 +584,7 @@ void TransportControl::ensureContextAllocated (bool alwaysReallocate)
     if (! edit.shouldPlay())
         return;
 
-    const auto start = position;
+    const double start = position;
 
     if (playbackContext == nullptr)
     {
