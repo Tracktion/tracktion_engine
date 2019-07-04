@@ -322,6 +322,26 @@ public:
 
             plugin->applyToBufferWithAutomation (rc2);
 
+			if (rc.destBuffer != nullptr)
+			{
+				auto pointersAreDifferent = [](const float** a, const float** b, int n)
+				{
+					for (int i = 0; i < n; i++)
+						if (a[i] != b[i])
+							return true;
+
+					return false;
+				};
+
+				// The plugin has re-allocated the audio buffer. Now we need to copy back to the source buffer
+				if (asb.getNumChannels() != rc.destBuffer->getNumChannels() ||
+					pointersAreDifferent (asb.getArrayOfReadPointers(), rc.destBuffer->getArrayOfReadPointers(), asb.getNumChannels()))
+				{
+					for (int i = 0; i < jmin (asb.getNumChannels(), rc.destBuffer->getNumChannels()); i++)
+						rc.destBuffer->copyFrom (i, rc.bufferStartSample + numSamplesDone, asb, i, 0, numThisTime);
+				}
+			}
+
             midiOutputScratch.mergeFromAndClearWithOffset (midiInputScratch, timeOffset);
             midiInputScratch.clear();
 
