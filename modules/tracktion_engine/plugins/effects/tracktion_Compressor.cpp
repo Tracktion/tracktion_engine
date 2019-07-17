@@ -102,8 +102,6 @@ void CompressorPlugin::applyToBuffer (const AudioRenderContext& fc)
 
     SCOPED_REALTIME_CHECK
 
-    fc.setMaxNumChannels (3);
-
     const double logThreshold = std::log10 (0.01);
     const double attackFactor = std::pow (10.0, logThreshold / (attackMs->getCurrentValue() * sampleRate / 1000.0));
     const double releaseFactor = std::pow (10.0, logThreshold / (releaseMs->getCurrentValue() * sampleRate / 1000.0));
@@ -114,6 +112,9 @@ void CompressorPlugin::applyToBuffer (const AudioRenderContext& fc)
     const float sidechainGain = dbToGain (sidechainDb->getCurrentValue());
 
     float* b1 = fc.destBuffer->getWritePointer (0, fc.bufferStartSample);
+
+    for (int chan = fc.destBuffer->getNumChannels(); --chan >= 2;)
+        fc.destBuffer->clear (chan, fc.bufferStartSample, fc.bufferNumSamples);
 
     if (fc.destBuffer->getNumChannels() >= 2)
     {

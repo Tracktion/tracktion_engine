@@ -155,13 +155,6 @@ struct AudioRenderContext
     {
         jassert (destBuffer == nullptr || bufferStartSample + bufferNumSamples <= destBuffer->getNumSamples());
     }
-
-    /** Ensures that the buffer has at least the requested number of channels */
-    void setMaxNumChannels (int num) const
-    {
-        jassert (destBuffer != nullptr);
-        destBuffer->setSize (juce::jmin (destBuffer->getNumChannels(), num), destBuffer->getNumSamples(), true);
-    }
 };
 
 //==============================================================================

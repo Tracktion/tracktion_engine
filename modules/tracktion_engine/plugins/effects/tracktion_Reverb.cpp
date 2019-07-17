@@ -110,8 +110,6 @@ void ReverbPlugin::applyToBuffer (const AudioRenderContext& fc)
     {
         SCOPED_REALTIME_CHECK
 
-        fc.setMaxNumChannels (2);
-
         Reverb::Parameters params;
         params.roomSize   = roomSizeParam->getCurrentValue();
         params.damping    = dampParam->getCurrentValue();
@@ -128,6 +126,9 @@ void ReverbPlugin::applyToBuffer (const AudioRenderContext& fc)
 
         if (fc.destBuffer->getNumChannels() >= 2)
         {
+            for (int chan = fc.destBuffer->getNumChannels(); --chan >= 2;)
+                fc.destBuffer->clear (chan, fc.bufferStartSample, fc.bufferNumSamples);
+
             float* const right = fc.destBuffer->getWritePointer (1, fc.bufferStartSample);
 
             if (outputSilent && isSilent (left, num) && isSilent (right, num))

@@ -172,4 +172,41 @@ public:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioMidiFifo)
 };
 
+//================================================================================================
+// Takes a snapshot of a buffer state, and then case be used later
+// to tell if the buffer has had it's channels reallocated
+class AudioBufferSnapshot
+{
+public:
+    AudioBufferSnapshot (juce::AudioSampleBuffer& b)
+        : buffer (b)
+    {
+        numChannels = buffer.getNumChannels();
+        numSamples = buffer.getNumSamples();
+
+        auto readPointers = buffer.getArrayOfReadPointers();
+        for (int i = 0; i < std::min (10, numChannels); i++)
+            channels[i] = readPointers[i];
+    }
+
+    bool hasBufferBeenReallocated()
+    {
+        if (numChannels != buffer.getNumChannels()
+            || numSamples != buffer.getNumSamples())
+            return true;
+
+        auto readPointers = buffer.getArrayOfReadPointers();
+        for (int i = 0; i < std::min (10, numChannels); i++)
+            if (channels[i] != readPointers[i])
+                return true;
+
+        return false;
+    }
+
+private:
+    juce::AudioSampleBuffer& buffer;
+    int numChannels = 0, numSamples = 0;
+    const float* channels[10] = { nullptr }; // assume buffers have no more than 10 channels
+};
+
 } // namespace tracktion_engine

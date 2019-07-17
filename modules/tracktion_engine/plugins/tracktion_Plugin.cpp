@@ -320,27 +320,24 @@ public:
             rc2.bufferNumSamples = numThisTime;
             rc2.streamTime = EditTimeRange (Range<double>::withStartAndLength (rc.streamTime.getStart() + timeOffset, timeForBlock));
 
-            plugin->applyToBufferWithAutomation (rc2);
+            if (rc.destBuffer != nullptr)
+            {
+                AudioBufferSnapshot abs (asb);
+                plugin->applyToBufferWithAutomation (rc2);
 
-			if (rc.destBuffer != nullptr)
-			{
-				auto pointersAreDifferent = [](const float** a, const float** b, int n)
-				{
-					for (int i = 0; i < n; i++)
-						if (a[i] != b[i])
-							return true;
+                if (abs.hasBufferBeenReallocated())
+                {
+                    // The plugin has re-allocated the audio buffer. This is NOT ok!
+                    jassertfalse;
 
-					return false;
-				};
-
-				// The plugin has re-allocated the audio buffer. Now we need to copy back to the source buffer
-				if (asb.getNumChannels() != rc.destBuffer->getNumChannels() ||
-					pointersAreDifferent (asb.getArrayOfReadPointers(), rc.destBuffer->getArrayOfReadPointers(), asb.getNumChannels()))
-				{
-					for (int i = 0; i < jmin (asb.getNumChannels(), rc.destBuffer->getNumChannels()); i++)
-						rc.destBuffer->copyFrom (i, rc.bufferStartSample + numSamplesDone, asb, i, 0, numThisTime);
-				}
-			}
+                    for (int i = 0; i < jmin (asb.getNumChannels(), rc.destBuffer->getNumChannels()); i++)
+                        rc.destBuffer->copyFrom (i, rc.bufferStartSample + numSamplesDone, asb, i, 0, numThisTime);
+                }
+            }
+            else
+            {
+                plugin->applyToBufferWithAutomation (rc2);
+            }
 
             midiOutputScratch.mergeFromAndClearWithOffset (midiInputScratch, timeOffset);
             midiInputScratch.clear();

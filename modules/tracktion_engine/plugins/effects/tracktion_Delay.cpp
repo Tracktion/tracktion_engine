@@ -75,9 +75,10 @@ void DelayPlugin::applyToBuffer (const AudioRenderContext& fc)
 
     const int offset = delayBuffer.bufferPos;
 
-    fc.setMaxNumChannels (2);
+    for (int chan = fc.destBuffer->getNumChannels(); --chan >= 2;)
+        fc.destBuffer->clear (chan, fc.bufferStartSample, fc.bufferNumSamples);
 
-    for (int chan = fc.destBuffer->getNumChannels(); --chan >= 0;)
+    for (int chan = jmin (2, fc.destBuffer->getNumChannels()); --chan >= 0;)
     {
         float* const d = fc.destBuffer->getWritePointer (chan, fc.bufferStartSample);
         float* const buf = (float*) delayBuffer.buffers[chan].getData();
