@@ -561,10 +561,6 @@ void Plugin::setSidechainSourceByName (const String& name)
 
 	if (!found)
 	{
-		// juce does not call listeners correctly when using 
-		// resetToDefault. So first set it to default value
-		// manually and then remove it from value tree.
-		sidechainSourceID = sidechainSourceID.getDefault();
 		sidechainSourceID.resetToDefault();
 	}
 }
