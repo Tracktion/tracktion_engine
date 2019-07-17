@@ -54,6 +54,7 @@ public:
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getShortName (int) override            { return "Smplr"; }
     juce::String getSelectableDescription() override    { return TRANS("Sampler"); }
+    bool isSynth() override                             { return true; }
     bool needsConstantBufferSize() override             { return false; }
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }
