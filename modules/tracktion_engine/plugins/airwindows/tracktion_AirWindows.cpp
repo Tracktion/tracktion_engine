@@ -328,7 +328,8 @@ void AirWindowsPlugin::flushPluginStateToValueTree()
 const char* AirWindowsAcceleration::xmlTypeName = "airwindows_acceleration";
 const char* AirWindowsADClip7::xmlTypeName = "airwindows_adclip7";
 const char* AirWindowsADT::xmlTypeName = "airwindows_adt";
-const char* AirWindowsAtmosphere::xmlTypeName = "airwindows_atmosphere";
+const char* AirWindowsAtmosphereBuss::xmlTypeName = "airwindows_atmosphere_buss";
+const char* AirWindowsAtmosphereChannel::xmlTypeName = "airwindows_atmosphere";
 const char* AirWindowsAura::xmlTypeName = "airwindows_aura";
 const char* AirWindowsBassKit::xmlTypeName = "airwindows_basskit";
 const char* AirWindowsBitGlitter::xmlTypeName = "airwindows_bitglitter";
@@ -392,7 +393,8 @@ const char* AirWindowsWider::xmlTypeName = "airwindows_wider";
 AirWindowsAcceleration::Type AirWindowsAcceleration::pluginType = AirWindowsPlugin::filter;
 AirWindowsADClip7::Type AirWindowsADClip7::pluginType = AirWindowsPlugin::dynamics;
 AirWindowsADT::Type AirWindowsADT::pluginType = AirWindowsPlugin::delay;
-AirWindowsAtmosphere::Type AirWindowsAtmosphere::pluginType = AirWindowsPlugin::emulation;
+AirWindowsAtmosphereBuss::Type AirWindowsAtmosphereBuss::pluginType = AirWindowsPlugin::emulation;
+AirWindowsAtmosphereChannel::Type AirWindowsAtmosphereChannel::pluginType = AirWindowsPlugin::emulation;
 AirWindowsAura::Type AirWindowsAura::pluginType = AirWindowsPlugin::eq;
 AirWindowsBassKit::Type AirWindowsBassKit::pluginType = AirWindowsPlugin::utility;
 AirWindowsBitGlitter::Type AirWindowsBitGlitter::pluginType = AirWindowsPlugin::distortion;
@@ -462,8 +464,11 @@ AirWindowsADClip7::AirWindowsADClip7 (PluginCreationInfo info)
 AirWindowsADT::AirWindowsADT (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::adt::ADT> (&callback)) {}
 
-AirWindowsAtmosphere::AirWindowsAtmosphere (PluginCreationInfo info)
-    : AirWindowsPlugin (info, std::make_unique<airwindows::atmosphere::AtmosphereChannel> (&callback)) {}
+AirWindowsAtmosphereBuss::AirWindowsAtmosphereBuss (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::atmospherebuss::AtmosphereBuss> (&callback)) {}
+
+AirWindowsAtmosphereChannel::AirWindowsAtmosphereChannel (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::atmospherechannel::AtmosphereChannel> (&callback)) {}
 
 AirWindowsAura::AirWindowsAura (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::aura::Aura> (&callback)) {}

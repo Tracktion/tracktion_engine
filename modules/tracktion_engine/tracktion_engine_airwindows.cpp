@@ -72,7 +72,12 @@ namespace adt
  #include "3rd_party/airwindows/ADT/ADT.cpp"
  #include "3rd_party/airwindows/ADT/ADTProc.cpp"
 }
-namespace atmosphere
+namespace atmospherebuss
+{
+ #include "3rd_party/airwindows/AtmosphereBuss/AtmosphereBuss.cpp"
+ #include "3rd_party/airwindows/AtmosphereBuss/AtmosphereBussProc.cpp"
+}
+namespace atmospherechannel
 {
  #include "3rd_party/airwindows/AtmosphereChannel/AtmosphereChannel.cpp"
  #include "3rd_party/airwindows/AtmosphereChannel/AtmosphereChannelProc.cpp"

@@ -452,7 +452,8 @@ void PluginManager::initialiseAirWindows()
     createBuiltInType<AirWindowsAcceleration>();
     createBuiltInType<AirWindowsADClip7>();
     createBuiltInType<AirWindowsADT>();
-    createBuiltInType<AirWindowsAtmosphere>();
+    createBuiltInType<AirWindowsAtmosphereBuss>();
+    createBuiltInType<AirWindowsAtmosphereChannel>();
     createBuiltInType<AirWindowsAura>();
     createBuiltInType<AirWindowsBassKit>();
     createBuiltInType<AirWindowsBitGlitter>();
