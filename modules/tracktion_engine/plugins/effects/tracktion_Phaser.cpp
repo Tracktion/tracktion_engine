@@ -58,8 +58,7 @@ void PhaserPlugin::applyToBuffer (const AudioRenderContext& fc)
     double swpFactor = sweepFactor > 1.0 ? sweepUp : sweepDown;
     double swp = sweep;
 
-    for (int chan = fc.destBuffer->getNumChannels(); --chan >= 2;)
-        fc.destBuffer->clear (chan, fc.bufferStartSample, fc.bufferNumSamples);
+    clearChannels (*fc.destBuffer, 2, -1, fc.bufferStartSample, fc.bufferNumSamples);
 
     for (int chan = jmin (2, fc.destBuffer->getNumChannels()); --chan >= 0;)
     {

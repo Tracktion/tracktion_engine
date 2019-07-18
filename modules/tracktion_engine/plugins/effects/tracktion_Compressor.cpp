@@ -113,9 +113,6 @@ void CompressorPlugin::applyToBuffer (const AudioRenderContext& fc)
 
     float* b1 = fc.destBuffer->getWritePointer (0, fc.bufferStartSample);
 
-    for (int chan = fc.destBuffer->getNumChannels(); --chan >= 2;)
-        fc.destBuffer->clear (chan, fc.bufferStartSample, fc.bufferNumSamples);
-
     if (fc.destBuffer->getNumChannels() >= 2)
     {
         float* b2 = fc.destBuffer->getWritePointer (1, fc.bufferStartSample);
@@ -186,6 +183,8 @@ void CompressorPlugin::applyToBuffer (const AudioRenderContext& fc)
             *b1++ = samp * r;
         }
     }
+
+    clearChannels (*fc.destBuffer, 2, -1, fc.bufferStartSample, fc.bufferNumSamples);
 }
 
 float CompressorPlugin::getThreshold() const

@@ -276,8 +276,7 @@ void EqualiserPlugin::applyToBuffer (const AudioRenderContext& fc)
 
         jassert (fc.bufferStartSample + fc.bufferNumSamples <= fc.destBuffer->getNumSamples());
 
-        for (int chan = fc.destBuffer->getNumChannels(); --chan >= EQ_CHANS;)
-            fc.destBuffer->clear (chan, fc.bufferStartSample, fc.bufferNumSamples);
+        clearChannels (*fc.destBuffer, EQ_CHANS, -1, fc.bufferStartSample, fc.bufferNumSamples);
 
         addAntiDenormalisationNoise (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples);
 

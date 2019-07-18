@@ -209,4 +209,15 @@ private:
     const float* channels[10] = { nullptr }; // assume buffers have no more than 10 channels
 };
 
+inline void clearChannels (juce::AudioSampleBuffer& buffer, int startChannel, int endChannel = -1, int startSample = 0, int endSample = -1)
+{
+    if (endChannel == -1)
+        endChannel = buffer.getNumChannels();
+    if (endSample == -1)
+        endSample = buffer.getNumSamples();
+
+    for (int ch = startChannel; ch < endChannel; ch++)
+        buffer.clear (ch, startSample, endSample);
+}
+
 } // namespace tracktion_engine

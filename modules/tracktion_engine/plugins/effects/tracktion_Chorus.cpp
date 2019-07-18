@@ -70,8 +70,7 @@ void ChorusPlugin::applyToBuffer (const AudioRenderContext& fc)
 
     AudioFadeCurve::CrossfadeLevels wetDry (mixProportion);
 
-    for (int chan = fc.destBuffer->getNumChannels(); --chan >= 2;)
-        fc.destBuffer->clear (chan, fc.bufferStartSample, fc.bufferNumSamples);
+    clearChannels (*fc.destBuffer, 2, -1, fc.bufferStartSample, fc.bufferNumSamples);
 
     for (int chan = jmin (2, fc.destBuffer->getNumChannels()); --chan >= 0;)
     {

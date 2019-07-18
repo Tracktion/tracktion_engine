@@ -291,8 +291,7 @@ void SamplerPlugin::applyToBuffer (const AudioRenderContext& fc)
 
         const ScopedLock sl (lock);
 
-        for (int chan = fc.destBuffer->getNumChannels(); --chan >= 2;)
-            fc.destBuffer->clear (chan, fc.bufferStartSample, fc.bufferNumSamples);
+        clearChannels (*fc.destBuffer, 2, -1, fc.bufferStartSample, fc.bufferNumSamples);
 
         if (fc.bufferForMidiMessages != nullptr)
         {

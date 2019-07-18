@@ -320,21 +320,18 @@ public:
             rc2.bufferNumSamples = numThisTime;
             rc2.streamTime = EditTimeRange (Range<double>::withStartAndLength (rc.streamTime.getStart() + timeOffset, timeForBlock));
 
+          #if JUCE_DEBUG
+            // Assert on any plugin that re-allocates buffers. That is NOT ok.
             if (rc.destBuffer != nullptr)
             {
                 AudioBufferSnapshot abs (asb);
                 plugin->applyToBufferWithAutomation (rc2);
 
                 if (abs.hasBufferBeenReallocated())
-                {
-                    // The plugin has re-allocated the audio buffer. This is NOT ok!
                     jassertfalse;
-
-                    for (int i = 0; i < jmin (asb.getNumChannels(), rc.destBuffer->getNumChannels()); i++)
-                        rc.destBuffer->copyFrom (i, rc.bufferStartSample + numSamplesDone, asb, i, 0, numThisTime);
-                }
             }
             else
+           #endif
             {
                 plugin->applyToBufferWithAutomation (rc2);
             }

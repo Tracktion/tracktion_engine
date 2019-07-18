@@ -75,8 +75,7 @@ void LowPassPlugin::applyToBuffer (const AudioRenderContext& fc)
 
         updateFilters();
 
-        for (int chan = fc.destBuffer->getNumChannels(); --chan >= 2;)
-            fc.destBuffer->clear (chan, fc.bufferStartSample, fc.bufferNumSamples);
+        clearChannels (*fc.destBuffer, 2, -1, fc.bufferStartSample, fc.bufferNumSamples);
 
         for (int i = jmin (2, fc.destBuffer->getNumChannels()); --i >= 0;)
             filter[i].processSamples (fc.destBuffer->getWritePointer (i, fc.bufferStartSample), fc.bufferNumSamples);
