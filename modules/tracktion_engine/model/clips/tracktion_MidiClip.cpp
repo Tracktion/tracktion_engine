@@ -607,7 +607,7 @@ Clip::Array MidiClip::unpackTakes (bool toNewTracks)
                                                            getEditTimeRange(), nullptr))
                 {
                     mc->getSequence().copyFrom (*srcList, nullptr);
-                    newClips.add (mc);
+                    newClips.add (mc.get());
                 }
                 else
                 {

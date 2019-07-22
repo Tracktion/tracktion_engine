@@ -490,7 +490,7 @@ Clip::Array WaveAudioClip::unpackTakes (bool toNewTracks)
                 targetTrack = t->edit.insertNewAudioTrack (TrackInsertPoint (t->getParentTrack(), t.get()), nullptr);
 
             if (targetTrack != nullptr)
-                newClips.add (targetTrack->insertWaveClip (getTakeDescriptions()[i], takes[i], getPosition(), false));
+                newClips.add (targetTrack->insertWaveClip (getTakeDescriptions()[i], takes[i], getPosition(), false).get());
 
             t = targetTrack;
         }
