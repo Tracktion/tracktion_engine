@@ -95,9 +95,10 @@ private:
                     assertFuncPtr = &assertFunction;
                    #endif
 
-                    const ARAInterfaceConfiguration interfaceConfig =
+                    const SizedStruct<ARA_MEMBER_PTR_ARGS (ARAInterfaceConfiguration, assertFunctionAddress)> interfaceConfig =
                     {
-                        kARAInterfaceConfigurationMinSize, jmin<ARAAPIGeneration> (factory->highestSupportedApiGeneration, kARAAPIGeneration_2_0_Final), assertFuncPtr
+                        jmin<ARAAPIGeneration> (factory->highestSupportedApiGeneration, kARAAPIGeneration_2_0_Final),
+                        assertFuncPtr
                     };
 
                     factory->initializeARAWithConfiguration (&interfaceConfig);
