@@ -90,8 +90,8 @@ private:
                 if (canBeUsedAsTimeStretchEngine (*factory))
                 {
                     ARAInt32 apiGeneration = kARAAPIGeneration_1_0_Final;
-                    if (factory->highestSupportedApiGeneration >= kARAAPIGeneration_2_0_Final)
-                        apiGeneration = kARAAPIGeneration_2_0_Final;
+                    if (factory->highestSupportedApiGeneration >= kARAAPIGeneration_2_0_Draft)
+                        apiGeneration = kARAAPIGeneration_2_0_Draft;
 
                     ARAAssertFunction* assertFuncPtr = nullptr;
                    #if JUCE_LOG_ASSERTIONS || JUCE_DEBUG
