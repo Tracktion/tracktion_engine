@@ -591,7 +591,7 @@ Array<PluginDescription> PluginManager::getARACompatiblePlugDescriptions()
         {
             auto version = p.version.trim().removeCharacters ("V").upToFirstOccurrenceOf (".", false, true);
 
-            if (version.getIntValue() >= 2)
+            if (version.getIntValue() >= 4)
                 descs.add (p);
         }
     }
