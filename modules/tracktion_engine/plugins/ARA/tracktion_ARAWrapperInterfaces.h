@@ -722,7 +722,7 @@ public:
     {
         return
         {
-            name.toRawUTF8(),
+            nullptr,    // name
             persistentID.toRawUTF8()
         };
     }
@@ -732,14 +732,8 @@ public:
     ARAAudioModificationRef audioModificationRef = nullptr;
     
 private:
-    void updateAudioModificationProperties ()
-    {
-        // TODO ARA2 do the audio source properties need to be updated?
-        auto audioSourceProperties = audioSource.getAudioSourceProperties();
-        name = audioSourceProperties.name;
-    }
+    void updateAudioModificationProperties () {}
 
-    String name;
     const String persistentID;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioModificationWrapper)
