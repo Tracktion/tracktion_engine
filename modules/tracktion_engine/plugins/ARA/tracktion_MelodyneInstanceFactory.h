@@ -89,10 +89,6 @@ private:
             {
                 if (canBeUsedAsTimeStretchEngine (*factory))
                 {
-                    ARAInt32 apiGeneration = kARAAPIGeneration_1_0_Final;
-                    if (factory->highestSupportedApiGeneration >= kARAAPIGeneration_2_0_Draft)
-                        apiGeneration = kARAAPIGeneration_2_0_Draft;
-
                     ARAAssertFunction* assertFuncPtr = nullptr;
                    #if JUCE_LOG_ASSERTIONS || JUCE_DEBUG
                     static ARAAssertFunction assertFunction = assertCallback;
@@ -101,7 +97,7 @@ private:
 
                     const ARAInterfaceConfiguration interfaceConfig =
                     {
-                        kARAInterfaceConfigurationMinSize, apiGeneration, assertFuncPtr
+                        kARAInterfaceConfigurationMinSize, jmin<ARAAPIGeneration> (factory->highestSupportedApiGeneration, kARAAPIGeneration_2_0_Final), assertFuncPtr
                     };
 
                     factory->initializeARAWithConfiguration (&interfaceConfig);
@@ -143,7 +139,7 @@ private:
         if (type == "VST3")
             factory = getFactoryVST3();
 
-        if (factory != nullptr && factory->lowestSupportedApiGeneration > kARAAPIGeneration_2_0_Final)
+        if (factory != nullptr && factory->lowestSupportedApiGeneration > kARAAPIGeneration_2_0_Draft)
             factory = nullptr;
     }
 
@@ -189,20 +185,13 @@ private:
     {
         if (auto p = w.plugin->getAudioPluginInstance())
         {
-            auto vst3EntryPoint = getVST3EntryPoint<IPlugInEntryPoint> (*p);
             auto vst3EntryPoint2 = getVST3EntryPoint<IPlugInEntryPoint2> (*p);
 
-            // first try to use the ARA2 bindToDocumentControllerWithRoles interface
-            // for now we use all roles, so this should be equivalent to calling the ARA1 bindToDocumentController
-            // (which we fall back to if we don't have the ARA2 VST3 entry point) 
-            if (vst3EntryPoint2 != nullptr) 
+            if (vst3EntryPoint2 != nullptr)
             {
-                ARAPlugInInstanceRoleFlags allRoles = kARAPlaybackRendererRole | kARAEditorRendererRole | kARAEditorViewRole;
-                w.extensionInstance = vst3EntryPoint2->bindToDocumentControllerWithRoles (dcRef, allRoles, allRoles);
+                ARAPlugInInstanceRoleFlags roles = kARAPlaybackRendererRole | kARAEditorRendererRole | kARAEditorViewRole;
+                w.extensionInstance = vst3EntryPoint2->bindToDocumentControllerWithRoles (dcRef, roles, roles);
             }
-            else if (vst3EntryPoint != nullptr)
-                w.extensionInstance = vst3EntryPoint->bindToDocumentController(dcRef);
-
         }
 
         return w.extensionInstance != nullptr;

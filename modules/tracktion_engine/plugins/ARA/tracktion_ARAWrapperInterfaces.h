@@ -963,28 +963,16 @@ private:
     const ARAPlugInExtensionInstance& pluginInstance;
     std::unique_ptr<AudioModificationWrapper> audioModification;
 
-    bool supportsARAPlugInInstanceRoles() const
-    {
-        return (ARA_IMPLEMENTED_STRUCT_SIZE(ARAPlugInExtensionInstance, plugInExtensionInterface) < pluginInstance.structSize);
-    }
-
     void setPlaybackRegion()
     {
         CRASH_TRACER
 
         if (playbackRegion != nullptr && playbackRegion->playbackRegionRef != nullptr)
         {
-            if (supportsARAPlugInInstanceRoles())
-            {
-                if (pluginInstance.playbackRendererInterface != nullptr)
-                    pluginInstance.playbackRendererInterface->addPlaybackRegion (pluginInstance.playbackRendererRef, playbackRegion->playbackRegionRef);
-                if (pluginInstance.editorRendererInterface != nullptr)
-                    pluginInstance.editorRendererInterface->addPlaybackRegion (pluginInstance.editorRendererRef, playbackRegion->playbackRegionRef);
-            }
-            else if (pluginInstance.plugInExtensionInterface != nullptr)
-            {
-                pluginInstance.plugInExtensionInterface->setPlaybackRegion (pluginInstance.plugInExtensionRef, playbackRegion->playbackRegionRef);
-            }
+            if (pluginInstance.playbackRendererInterface != nullptr)
+                pluginInstance.playbackRendererInterface->addPlaybackRegion (pluginInstance.playbackRendererRef, playbackRegion->playbackRegionRef);
+            if (pluginInstance.editorRendererInterface != nullptr)
+                pluginInstance.editorRendererInterface->addPlaybackRegion (pluginInstance.editorRendererRef, playbackRegion->playbackRegionRef);
         }
     }
 
@@ -994,17 +982,10 @@ private:
 
         if (playbackRegion != nullptr && playbackRegion->playbackRegionRef != nullptr)
         {
-            if (supportsARAPlugInInstanceRoles())
-            {
-                if (pluginInstance.playbackRendererInterface != nullptr)
-                    pluginInstance.playbackRendererInterface->removePlaybackRegion (pluginInstance.playbackRendererRef, playbackRegion->playbackRegionRef);
-                if (pluginInstance.editorRendererInterface != nullptr)
-                    pluginInstance.editorRendererInterface->removePlaybackRegion (pluginInstance.editorRendererRef, playbackRegion->playbackRegionRef);
-            }
-            else if (pluginInstance.plugInExtensionInterface != nullptr)
-            {
-                pluginInstance.plugInExtensionInterface->removePlaybackRegion (pluginInstance.plugInExtensionRef, playbackRegion->playbackRegionRef);
-            }
+            if (pluginInstance.playbackRendererInterface != nullptr)
+                pluginInstance.playbackRendererInterface->removePlaybackRegion (pluginInstance.playbackRendererRef, playbackRegion->playbackRegionRef);
+            if (pluginInstance.editorRendererInterface != nullptr)
+                pluginInstance.editorRendererInterface->removePlaybackRegion (pluginInstance.editorRendererRef, playbackRegion->playbackRegionRef);
         }
     }
 
