@@ -214,7 +214,7 @@ private:
             && (factory.supportedPlaybackTransformationFlags & kARAPlaybackTransformationTimestretchReflectingTempo) != 0;
     }
 
-    static void ARA_CALL assertCallback (ARAAssertCategory category, const void*, const char* diagnosis)
+    static void ARA_CALL assertCallback (ARAAssertCategory category, const void* problematicArgument, const char* diagnosis)
     {
         String categoryName;
 
@@ -227,7 +227,7 @@ private:
             default:                        categoryName = "(Unknown)"; break;
         };
 
-        TRACKTION_LOG_ERROR ("ARA assertion -> \"" + categoryName + "\": " + String::fromUTF8 (diagnosis));
+        TRACKTION_LOG_ERROR ("ARA assertion -> \"" + categoryName + "\": " + String::fromUTF8 (diagnosis) + ": " + String (pointer_sized_int (problematicArgument)));
         jassertfalse;
     }
 
