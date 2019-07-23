@@ -533,7 +533,6 @@ private:
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TempoReader)
     };
 
-    // TODO ARA2 does anything need to be updated here?
     void updateMusicalContextProperties () {}
 
     //==============================================================================
