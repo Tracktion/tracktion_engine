@@ -91,6 +91,35 @@ Chord::Chord (juce::Array<int> steps_, juce::String symbol_)
 {
 }
 
+juce::String Chord::toString()
+{
+    juce::String res;
+    res += juce::String ((int)type) + "|";
+    res += symbol + "|";
+
+    for (auto s : steps)
+        res += juce::String (s);
+
+    return res;
+}
+
+Chord Chord::fromString (const juce::String& s)
+{
+    Chord chord;
+
+    auto tokens = juce::StringArray::fromTokens (s, "|", "");
+    jassert (tokens.size() >= 2);
+
+    chord.type = (ChordType) tokens[0].getIntValue();
+    chord.symbol = tokens[1];
+
+    for (int i = 2; i < tokens.size(); i++)
+        if (tokens[i].isNotEmpty())
+            chord.steps.add (tokens[i].getIntValue());
+
+    return chord;
+}
+
 juce::Array<Chord::ChordType> Chord::getAllChordType()
 {
     juce::Array<ChordType> res;
