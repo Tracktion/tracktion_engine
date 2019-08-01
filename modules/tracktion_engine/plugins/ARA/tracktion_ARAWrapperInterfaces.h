@@ -488,15 +488,27 @@ private:
     {
         TimeSigReader (Edit& ed, const ARAContentTimeRange* range)
         {
-            for (auto t : ed.tempoSequence.getTimeSigs())
-            {
-                auto time = t->getPosition().getStart();
+            jassert (ed.tempoSequence.getNumTimeSigs() > 0);
 
-                if (range == nullptr || (time >= range->start && time < range->start + range->duration))
-                {
-                    ARAContentBarSignature item = { t->numerator, t->denominator, (ARAQuarterPosition) t->getStartBeat() };
-                    items.add (item);
-                }
+            // compute the range of time signature indices given the specified
+            // range, or walk all time signatures if no range is specified
+            int beginTimeSig, endTimeSig;
+            if (range) 
+            {
+                beginTimeSig = ed.tempoSequence.indexOfTimeSigAt (range->start);
+                endTimeSig = ed.tempoSequence.indexOfTimeSigAt (range->start + range->duration) + 1;
+            }
+            else 
+            {
+                beginTimeSig = 0;
+                endTimeSig = ed.tempoSequence.getNumTimeSigs();
+            }
+
+            for (int t = beginTimeSig; t < endTimeSig; t++)
+            {
+                auto timeSig = ed.tempoSequence.getTimeSig (t);
+                ARAContentBarSignature item = { timeSig->numerator, timeSig->denominator, (ARAQuarterPosition)timeSig->getStartBeat() };
+                items.add (item);
             }
         }
 
