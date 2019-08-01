@@ -354,11 +354,17 @@ public:
     }
 
     //==============================================================================
-    static ARABool ARA_CALL isMusicalContextContentAvailable (ARAContentAccessControllerHostRef,
+    static ARABool ARA_CALL isMusicalContextContentAvailable (ARAContentAccessControllerHostRef editRef,
                                                               ARAMusicalContextHostRef, ARAContentType type)
     {
+        if (type == kARAContentTypeSheetChords)
+        {
+            return ! fromHostRef (editRef)->getChordTrack ()->getClips ().isEmpty();
+        }
+
         return type == kARAContentTypeTempoEntries
-            || type == kARAContentTypeBarSignatures;
+            || type == kARAContentTypeBarSignatures
+            || type == kARAContentTypeKeySignatures;
     }
 
     static ARAContentGrade ARA_CALL getMusicalContextContentGrade (ARAContentAccessControllerHostRef,
@@ -378,6 +384,8 @@ public:
             {
                 case kARAContentTypeTempoEntries:   return toHostRef (new TempoReader (*edit, range));
                 case kARAContentTypeBarSignatures:     return toHostRef (new TimeSigReader (*edit, range));
+                case kARAContentTypeKeySignatures:     return toHostRef (new KeySignatureReader (*edit, range));
+                case kARAContentTypeSheetChords:     return toHostRef (new ChordReader (*edit, range));
                 default: break;
             }
         }
@@ -521,7 +529,6 @@ private:
         {
             jassert (ed.tempoSequence.getNumTempos() > 0);
 
-
             // find the range of indices enclosing the desired range
             int beginTempo, endTempo;
             if (range)
@@ -592,6 +599,126 @@ private:
         }
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TempoReader)
+    };
+
+    // make sure updates are coming when the chord track changes
+    struct ChordReader : public TimeEventReaderHelper<ARAContentChord>
+    {
+        // store chord names in a set to maintain valid UTF8 buffer pointers
+        std::set<String> chordNames;
+
+        ChordReader (Edit& ed, const ARAContentTimeRange* range)
+        {
+            auto chordTrack = ed.getChordTrack();
+            jassert (! chordTrack->getClips().isEmpty());
+
+            double rangeStartBeat = range ? ed.tempoSequence.beatsToTime (range->start) : -std::numeric_limits<float>::max();
+            double rangeEndBeat = range ? ed.tempoSequence.beatsToTime (range->start + range->duration) : std::numeric_limits<float>::max();
+            double endBeatOfPreviousClip = -std::numeric_limits<float>::max();
+
+            // construct a "no chord" for representing gaps in the chord track
+            ARAContentChord noChord{};
+            noChord.name = chordNames.insert ("NoChord").first->toRawUTF8();
+
+            for (auto chordClip : chordTrack->getClips())
+            {
+                // auto position = chordClip->getPosition();
+                double chordStartBeat = chordClip->getStartBeat();
+                double chordEndBeat = chordClip->getEndBeat();
+                if (range == nullptr || (chordStartBeat < rangeEndBeat && rangeStartBeat < chordEndBeat))
+                {
+                    // insert a no chord between gaps in chord clips
+                    if (endBeatOfPreviousClip < chordStartBeat)
+                    {
+                        ARAContentChord noChordCopy = noChord;
+                        noChordCopy.position = endBeatOfPreviousClip;
+                        items.add (noChordCopy);
+                    }
+                    endBeatOfPreviousClip = chordEndBeat;
+
+                    double patternBeat = 0;
+                    auto ptnGen = chordClip->getPatternGenerator();
+                    jassert (ptnGen);
+                    for (auto itm : ptnGen->getChordProgression())
+                    {
+                        ARAContentChord item{};
+                        double timelineBeat = patternBeat + chordStartBeat;
+
+                        bool sharp = ed.pitchSequence.getPitchAtBeat (timelineBeat).accidentalsSharp;
+                        Scale scale = ptnGen->getScaleAtBeat (patternBeat);
+                        int rootNote = itm->getRootNote (ptnGen->getNoteAtBeat (patternBeat), scale);
+                        item.root = MusicalContextFunctions::getCircleOfFifthsIndexforMIDINote (rootNote, sharp);
+                        item.bass = item.root;
+
+                        auto chordIntervals = MusicalContextFunctions::getChordARAIntervalUsage (itm->getChord (scale));
+                        memcpy (item.intervals, chordIntervals.data(), sizeof (item.intervals));
+
+                        item.name = chordNames.insert (itm->getChordSymbol()).first->toRawUTF8();
+
+                        item.position = timelineBeat;
+                        items.add (item);
+
+                        patternBeat += itm->lengthInBeats;
+                    }
+                }
+            }
+
+            // if the range is null or goes beyond the last chord clip, 
+            // add the no chord here
+            if (items.isEmpty() || endBeatOfPreviousClip < rangeEndBeat)
+            {
+                noChord.position = endBeatOfPreviousClip;
+                items.add (noChord);
+            }
+        }
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ChordReader)
+    };
+
+    struct KeySignatureReader : public TimeEventReaderHelper<ARAContentKeySignature>
+    {
+        // store scale names in a set to maintain valid UTF8 buffer pointers
+        std::set<String> scaleNames;
+
+        KeySignatureReader (Edit& ed, const ARAContentTimeRange* range)
+        {
+            jassert (ed.pitchSequence.getNumPitches() > 0);
+
+            // compute the range of time signature indices given the specified
+            // range, or walk all time signatures if no range is specified
+            int beginKeySig, endKeySig;
+            if (range)
+            {
+                // TODO ARA2: if indexOfPitchAt() was public, we could use that instead
+                beginKeySig = ed.pitchSequence.indexOfPitch (&ed.pitchSequence.getPitchAt (range->start));
+                endKeySig = ed.pitchSequence.indexOfPitch (&ed.pitchSequence.getPitchAt (range->start + range->duration)) + 1;
+            }
+            else
+            {
+                beginKeySig = 0;
+                endKeySig = ed.pitchSequence.getNumPitches();
+            }
+
+            for (int t = beginKeySig; t < endKeySig; t++)
+            {
+                auto pitchSetting = ed.pitchSequence.getPitch (t);
+                ARAContentKeySignature item{};
+
+                item.root = MusicalContextFunctions::getCircleOfFifthsIndexforMIDINote (pitchSetting->getPitch(), pitchSetting->accidentalsSharp);
+
+                Scale scale (pitchSetting->getScale());
+                for (auto s : scale.getSteps())
+                    item.intervals[s] = ARA::kARAKeySignatureIntervalUsed;
+
+                String scaleName = juce::MidiMessage::getMidiNoteName (pitchSetting->getPitch(), pitchSetting->accidentalsSharp, false, 0) + " " + scale.getName();
+                item.name = scaleNames.insert (scaleName).first->toRawUTF8();
+
+                item.position = pitchSetting->getStartBeatNumber();
+                items.add (item);
+            }
+        }
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (KeySignatureReader)
     };
 
     void updateMusicalContextProperties () {}
