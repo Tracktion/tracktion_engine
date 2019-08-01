@@ -519,26 +519,75 @@ private:
     {
         TempoReader (Edit& ed, const ARAContentTimeRange* range)
         {
-            TempoSequencePosition seq (ed.tempoSequence);
+            jassert (ed.tempoSequence.getNumTempos() > 0);
 
-            const double length = jmax (ed.getLength(), 30.0);
 
-            for (;;)
+            // find the range of indices enclosing the desired range
+            int beginTempo, endTempo;
+            if (range)
             {
-                const double time = seq.getTime();
+                beginTempo = ed.tempoSequence.indexOfTempoAt (range->start);
+                endTempo = ed.tempoSequence.indexOfTempoAt (range->start + range->duration) + 1;
 
-                if (time > length)
-                    break;
+                // include the entry after the end of our range, if it exists,
+                // so that plug-ins can calculate tempo at the range boundary
+                if (endTempo < ed.tempoSequence.getNumTempos())
+                    ++endTempo;
+            }
+            else
+            {
+                beginTempo = 0;
+                endTempo = ed.tempoSequence.getNumTempos();
+            }
 
-                const double ppq = seq.getPPQTime();
+            // handle curves between entries using tempoSections and a running index
+            int tS = 0;
+            auto tempoSections = ed.tempoSequence.getTempoSections();
 
-                if (range == nullptr || (time >= range->start && time < range->start + range->duration))
+            for (int t = beginTempo; t < endTempo; t++) 
+            {
+                auto tempoSetting = ed.tempoSequence.getTempo (t);
+
+                // check for a curve, but only if this isn't the last entry
+                // TODO ARA2 should we skip values of -1?
+                float C = tempoSetting->getCurve();
+                if ((t != (endTempo - 1)) && (C < 1.0f))
                 {
-                    ARAContentTempoEntry item = { time, ppq };
+                    int nextTempo = t + 1;
+                    jassert (nextTempo < ed.tempoSequence.getNumTempos());
+                    auto nextTempoSetting = ed.tempoSequence.getTempo (nextTempo);
+
+                    for (; tS < tempoSections.size(); tS++)
+                    {
+                        // search for the first entry after the curve start
+                        auto tempoSection = tempoSections.getReference (tS);
+                        if (tempoSection.startBeatInEdit < tempoSetting->getStartBeat())
+                            continue;
+
+                        // end iteration at nextTempoSeting's corresponding section
+                        auto beatDiff = nextTempoSetting->getStartBeat() - tempoSection.startBeatInEdit;
+                        if (beatDiff < 0 || isWithin(beatDiff, 0.0, 0.001)) // constant from TempoSequence::updateTempoData
+                            break;
+
+                        ARAContentTempoEntry item = { tempoSection.startTime, tempoSection.startBeatInEdit };
+                        items.add (item);
+                    }
+                }
+                else 
+                {
+                    ARAContentTempoEntry item = { tempoSetting->getStartTime(), tempoSetting->getStartBeat() };
                     items.add (item);
                 }
+            }
 
-                seq.addBeats (1.0);
+            // if the last tempo setting is included, extrapolate a new entry 
+            // so that plug-ins can calculate tempo at the range boundary
+            if (endTempo == ed.tempoSequence.getNumTempos())
+            {
+                auto extrapolatedTempoEntry = items.getLast();
+                extrapolatedTempoEntry.timePosition += 60;
+                extrapolatedTempoEntry.quarterPosition += ed.tempoSequence.getBpmAt (items.getLast().timePosition);
+                items.add (extrapolatedTempoEntry);
             }
         }
 
