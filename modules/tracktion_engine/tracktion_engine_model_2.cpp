@@ -19,6 +19,7 @@ using namespace juce;
 #include "model/tracks/tracktion_Track.cpp"
 #include "model/tracks/tracktion_FolderTrack.cpp"
 #include "model/tracks/tracktion_AudioTrack.cpp"
+#include "model/tracks/tracktion_ArrangerTrack.cpp"
 #include "model/tracks/tracktion_AutomationTrack.cpp"
 #include "model/tracks/tracktion_ChordTrack.cpp"
 #include "model/tracks/tracktion_ClipTrack.cpp"

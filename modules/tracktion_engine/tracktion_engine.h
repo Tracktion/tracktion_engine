@@ -190,6 +190,7 @@ namespace tracktion_engine
     class FolderTrack;
     class ClipTrack;
     class AutomationTrack;
+    class ArrangerTrack;
     class ChordTrack;
     class MarkerTrack;
     class TempoTrack;
@@ -264,6 +265,7 @@ namespace tracktion_engine
     class RackEditorWindow;
     class PitchShiftPlugin;
     struct PluginUnloadInhibitor;
+    class ArrangerClip;
     class ChordClip;
     struct TimecodeSnapType;
     class MidiNote;
@@ -446,6 +448,7 @@ namespace tracktion_engine
 #include "model/edit/tracktion_QuantisationType.h"
 
 #include "model/clips/tracktion_WarpTimeManager.h"
+#include "model/clips/tracktion_ArrangerClip.h"
 #include "model/clips/tracktion_AudioClipBase.h"
 #include "model/clips/tracktion_ChordClip.h"
 #include "model/clips/tracktion_ClipEffects.h"
@@ -468,6 +471,7 @@ namespace tracktion_engine
 #include "playback/audionodes/tracktion_TimedMutingAudioNode.h"
 
 #include "model/tracks/tracktion_TrackUtils.h"
+#include "model/tracks/tracktion_ArrangerTrack.h"
 #include "model/tracks/tracktion_AutomationTrack.h"
 #include "model/tracks/tracktion_ChordTrack.h"
 #include "model/tracks/tracktion_FolderTrack.h"

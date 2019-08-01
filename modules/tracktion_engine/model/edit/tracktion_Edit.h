@@ -230,10 +230,12 @@ public:
     void moveTrack (Track::Ptr, TrackInsertPoint);
     void deleteTrack (Track*);
     void ensureNumberOfAudioTracks (int minimumNumTracks);
+    void ensureArrangerTrack();
     void ensureTempoTrack();
     void ensureMarkerTrack();
     void ensureChordTrack();
 
+    ArrangerTrack* getArrangerTrack() const;
     MarkerTrack* getMarkerTrack() const;
     TempoTrack* getTempoTrack() const;
     ChordTrack* getChordTrack() const;

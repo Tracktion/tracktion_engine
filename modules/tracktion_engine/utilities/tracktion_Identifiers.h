@@ -617,7 +617,9 @@ namespace IDs
     DECLARE_ID (chorusDepth)
     DECLARE_ID (chrousWidth)
     DECLARE_ID (chorusMix)
-
+    DECLARE_ID (ARRANGERTRACK)
+    DECLARE_ID (ARRANGERCLIP)
+    
     #undef DECLARE_ID
 }
 

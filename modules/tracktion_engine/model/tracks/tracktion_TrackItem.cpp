@@ -34,6 +34,7 @@ const char* TrackItem::typeToString (TrackItem::Type t)
         case Type::collection:    return "collection";
         case Type::video:         return "video";
         case Type::chord:         return "chord";
+        case Type::arranger:      return "arranger";
         default:                  return "unknown";
     }
 }
@@ -52,6 +53,7 @@ TrackItem::Type TrackItem::stringToType (const String& s)
     if (s == "collection")      return Type::collection;
     if (s == "video")           return Type::video;
     if (s == "chord")           return Type::chord;
+    if (s == "arranger")        return Type::arranger;
 
     return Type::unknown;
 }
@@ -66,18 +68,20 @@ juce::Identifier TrackItem::clipTypeToXMLType (TrackItem::Type t)
         case Type::step:          return IDs::STEPCLIP;
         case Type::marker:        return IDs::MARKERCLIP;
         case Type::chord:         return IDs::CHORDCLIP;
+        case Type::arranger:      return IDs::ARRANGERCLIP;
         default:                  jassertfalse; return nullptr;
     }
 }
 
 TrackItem::Type TrackItem::xmlTagToType (StringRef tag)
 {
-    if (tag == IDs::AUDIOCLIP)   return Type::wave;
-    if (tag == IDs::MIDICLIP)    return Type::midi;
-    if (tag == IDs::EDITCLIP)    return Type::edit;
-    if (tag == IDs::STEPCLIP)    return Type::step;
-    if (tag == IDs::MARKERCLIP)  return Type::marker;
-    if (tag == IDs::CHORDCLIP)   return Type::chord;
+    if (tag == IDs::AUDIOCLIP)      return Type::wave;
+    if (tag == IDs::MIDICLIP)       return Type::midi;
+    if (tag == IDs::EDITCLIP)       return Type::edit;
+    if (tag == IDs::STEPCLIP)       return Type::step;
+    if (tag == IDs::MARKERCLIP)     return Type::marker;
+    if (tag == IDs::CHORDCLIP)      return Type::chord;
+    if (tag == IDs::ARRANGERCLIP)   return Type::arranger;
 
     jassertfalse;
     return Type::unknown;
@@ -92,7 +96,8 @@ String TrackItem::getSuggestedNameForNewItem (Type t)
         case Type::edit:          return TRANS("New Edit Clip");
         case Type::step:          return TRANS("New Step Clip");
         case Type::marker:        return TRANS("New Marker");
-        case Type::chord:         return {};
+        case Type::chord:
+        case Type::arranger:      return {};
         case Type::pitch:
         case Type::timeSig:
         case Type::collection:

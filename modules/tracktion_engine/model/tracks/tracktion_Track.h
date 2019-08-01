@@ -44,6 +44,7 @@ public:
     virtual bool isMarkerTrack() const                          { return false; }
     virtual bool isTempoTrack() const                           { return false; }
     virtual bool isChordTrack() const                           { return false; }
+    virtual bool isArrangerTrack() const                        { return false; }
 
     bool canContainMarkers() const                              { return isMarkerTrack(); }
     bool canContainMIDI() const                                 { return isAudioTrack(); }
@@ -52,10 +53,10 @@ public:
 
     bool canContainPlugins() const                              { return isAudioTrack() || isFolderTrack(); }
     bool isMovable() const                                      { return isAudioTrack() || isFolderTrack(); }
-    bool isOnTop() const                                        { return isMarkerTrack() || isTempoTrack() || isChordTrack(); }
+    bool isOnTop() const                                        { return isMarkerTrack() || isTempoTrack() || isChordTrack() || isArrangerTrack(); }
     bool acceptsInput() const                                   { return isAudioTrack(); }
     bool createsOutput() const                                  { return isAudioTrack(); }
-    bool wantsAutomation() const                                { return ! (isMarkerTrack() || isChordTrack());  }
+    bool wantsAutomation() const                                { return ! (isMarkerTrack() || isChordTrack() || isArrangerTrack());  }
 
     virtual bool canContainPlugin (Plugin*) const = 0;
 

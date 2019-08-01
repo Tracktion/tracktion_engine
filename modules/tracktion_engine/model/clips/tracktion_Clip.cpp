@@ -82,14 +82,13 @@ juce::UndoManager* Clip::getUndoManager() const
 //==============================================================================
 bool Clip::isClipState (const juce::ValueTree& v)
 {
-    return v.hasType (IDs::AUDIOCLIP) || v.hasType (IDs::MIDICLIP) || v.hasType (IDs::MARKERCLIP)
-            || v.hasType (IDs::STEPCLIP) || v.hasType (IDs::CHORDCLIP) || v.hasType (IDs::EDITCLIP);
+    return isClipState (v.getType());
 }
 
 bool Clip::isClipState (const juce::Identifier& i)
 {
     return i == IDs::AUDIOCLIP || i == IDs::MIDICLIP || i == IDs::MARKERCLIP
-            || i == IDs::STEPCLIP || i == IDs::CHORDCLIP || i == IDs::EDITCLIP;
+        || i == IDs::STEPCLIP || i == IDs::CHORDCLIP || i == IDs::ARRANGERCLIP || i == IDs::EDITCLIP;
 }
 
 //==============================================================================
@@ -140,6 +139,7 @@ static Clip::Ptr createNewClipObject (const juce::ValueTree& v, EditItemID newCl
     if (type == IDs::MARKERCLIP)    return new MarkerClip (v, newClipID, targetTrack);
     if (type == IDs::STEPCLIP)      return new StepClip (v, newClipID, targetTrack);
     if (type == IDs::CHORDCLIP)     return new ChordClip (v, newClipID, targetTrack);
+    if (type == IDs::ARRANGERCLIP)  return new ArrangerClip (v, newClipID, targetTrack);
     if (type == IDs::EDITCLIP)      return createNewEditClip (v, newClipID, targetTrack);
 
     jassertfalse;

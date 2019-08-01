@@ -33,7 +33,8 @@ public:
         collection,
         video,
         recording,
-        chord
+        chord,
+        arranger
     };
 
     TrackItem (Edit&, EditItemID, Type);

@@ -35,6 +35,7 @@ struct TrackList    : public ValueTreeObjectList<Track>,
     void visitAllTracks (const std::function<bool(Track&)>& f, bool recursive) const;
 
     static bool isMovableTrack (const juce::ValueTree&) noexcept;
+    static bool isArrangerTrack (const juce::ValueTree&) noexcept;
     static bool isChordTrack (const juce::ValueTree&) noexcept;
     static bool isMarkerTrack (const juce::ValueTree&) noexcept;
     static bool isTempoTrack (const juce::ValueTree&) noexcept;
