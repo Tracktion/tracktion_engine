@@ -108,16 +108,18 @@ Chord Chord::fromString (const juce::String& s)
     Chord chord;
 
     auto tokens = juce::StringArray::fromTokens (s, "|", "");
-    jassert (tokens.size() >= 2);
+    if (tokens.size() >= 2)
+    {
+        chord.type = (ChordType) tokens[0].getIntValue();
+        chord.symbol = tokens[1];
 
-    chord.type = (ChordType) tokens[0].getIntValue();
-    chord.symbol = tokens[1];
+        for (int i = 2; i < tokens.size(); i++)
+            if (tokens[i].isNotEmpty())
+                chord.steps.add (tokens[i].getIntValue());
 
-    for (int i = 2; i < tokens.size(); i++)
-        if (tokens[i].isNotEmpty())
-            chord.steps.add (tokens[i].getIntValue());
-
-    return chord;
+        return chord;
+    }
+    return { Chord::invalidChord };
 }
 
 juce::Array<Chord::ChordType> Chord::getAllChordType()
@@ -160,6 +162,41 @@ juce::String Chord::getName() const
         case halfDiminishedMinorNinthChord: return TRANS("Half Diminished Minor Ninth");
         case diminishedNinthChord:          return TRANS("Diminished Ninth");
         case diminishedMinorNinthChord:     return TRANS("Diminished Minor Ninth");
+        case customChord:                   jassert (symbol.isNotEmpty()); return symbol;
+        default: jassertfalse;              return {};
+    }
+}
+
+juce::String Chord::getShortName() const
+{
+    switch (type)
+    {
+        case majorTriad:                    return TRANS("major");
+        case minorTriad:                    return TRANS("minor");
+        case diminishedTriad:               return TRANS("dim");
+        case augmentedTriad:                return TRANS("aug");
+        case majorSixthChord:               return TRANS("major 6");
+        case minorSixthChord:               return TRANS("minor 6");
+        case dominatSeventhChord:           return TRANS("dom 7");
+        case majorSeventhChord:             return TRANS("major 7");
+        case minorSeventhChord:             return TRANS("minor 7");
+        case augmentedSeventhChord:         return TRANS("aug 7");
+        case diminishedSeventhChord:        return TRANS("dim 7");
+        case halfDiminishedSeventhChord:    return TRANS("half dim 7");
+        case minorMajorSeventhChord:        return TRANS("min maj 7");
+        case powerChord:                    return TRANS("power");
+        case suspendedSecond:               return TRANS("sus 2");
+        case suspendedFourth:               return TRANS("sus 4");
+        case majorNinthChord:               return TRANS("major 9");
+        case dominantNinthChord:            return TRANS("dom 9");
+        case minorMajorNinthChord:          return TRANS("min maj 9");
+        case minorDominantNinthChord:       return TRANS("min dom 9");
+        case augmentedMajorNinthChord:      return TRANS("aug maj 9");
+        case augmentedDominantNinthChord:   return TRANS("aug dom 9");
+        case halfDiminishedNinthChord:      return TRANS("half dim 9");
+        case halfDiminishedMinorNinthChord: return TRANS("half dim min 9");
+        case diminishedNinthChord:          return TRANS("dim 9");
+        case diminishedMinorNinthChord:     return TRANS("dim min 9");
         case customChord:                   jassert (symbol.isNotEmpty()); return symbol;
         default: jassertfalse;              return {};
     }

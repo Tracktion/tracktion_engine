@@ -59,6 +59,7 @@ public:
     bool isValid() const        { return type != invalidChord; }
 
     juce::String getName() const;
+    juce::String getShortName() const;
     juce::String getSymbol() const;
     juce::Array<int> getSteps() const;
     juce::Array<int> getSteps (int inversion) const;
