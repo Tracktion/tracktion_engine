@@ -442,7 +442,7 @@ private:
         else if (auto macro = getMacroForID (v[IDs::source].toString()))
             as = new MacroSource (new MacroParameter::Assignment (v, *macro), *macro);
         else
-            jassertfalse;
+            return nullptr;
 
         as->incReferenceCount();
         ++numSources;
