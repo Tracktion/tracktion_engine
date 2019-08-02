@@ -96,8 +96,8 @@ String TrackItem::getSuggestedNameForNewItem (Type t)
         case Type::edit:          return TRANS("New Edit Clip");
         case Type::step:          return TRANS("New Step Clip");
         case Type::marker:        return TRANS("New Marker");
-        case Type::chord:
-        case Type::arranger:      return {};
+        case Type::arranger:      return TRANS("New Arranger");
+        case Type::chord:         return {};
         case Type::pitch:
         case Type::timeSig:
         case Type::collection:

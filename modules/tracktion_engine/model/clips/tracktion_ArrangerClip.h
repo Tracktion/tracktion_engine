@@ -20,6 +20,8 @@ public:
     ArrangerClip (const juce::ValueTree&, EditItemID, ClipTrack& targetTrack);
     ~ArrangerClip();
 
+    using Ptr = juce::ReferenceCountedObjectPtr<ArrangerClip>;
+
     bool isSyncAbsolute() const noexcept                            { return syncType == syncAbsolute; }
     bool isSyncBarsBeats() const noexcept                           { return syncType == syncBarsBeats; }
 
