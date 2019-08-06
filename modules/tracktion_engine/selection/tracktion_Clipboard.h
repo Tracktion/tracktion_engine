@@ -91,7 +91,8 @@ public:
         {
             juce::String pluginName, paramID;
             int trackOffset = 0;
-            juce::Array<AutomationCurve::AutomationPoint> points;
+            std::vector<AutomationCurve::AutomationPoint> points;
+            juce::Range<float> valueRange;
         };
 
         juce::Array<AutomationCurveSection> automationCurves;
