@@ -27,6 +27,12 @@ EditTimeRange EditTimeRange::between (double time1, double time2)
                           : EditTimeRange (time2, time1);
 }
 
+EditTimeRange EditTimeRange::withStartAndLength (double startValue, double length)
+{
+    jassert (length >= 0.0);
+    return Range<double>::withStartAndLength (startValue, length);
+}
+
 EditTimeRange EditTimeRange::getUnionWith (EditTimeRange other) const
 {
     return { std::min (start, other.start),

@@ -22,6 +22,12 @@ struct EditTimeRange
     EditTimeRange (double start, double end);
     EditTimeRange (juce::Range<double> timeRange);
 
+    /** Returns the range that lies between two positions (in either order). */
+    static EditTimeRange between (double time1, double time2);
+
+    /** Returns a range with a given start and length. */
+    static EditTimeRange withStartAndLength (double time1, double length);
+
     double start = 0;
     double end = 0;
 
@@ -52,8 +58,6 @@ struct EditTimeRange
     EditTimeRange withStart (double newStart) const;
     EditTimeRange withEnd (double newEnd) const;
     EditTimeRange withLength (double newLength) const;
-
-    static EditTimeRange between (double time1, double time2);
 
     EditTimeRange operator+ (double amount) const;
     EditTimeRange operator- (double amount) const       { return operator+ (-amount); }

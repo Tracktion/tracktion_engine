@@ -64,6 +64,7 @@ Track* TimeSigSetting::getTrack() const
 
 ClipPosition TimeSigSetting::getPosition() const
 {
+    ownerSequence.updateTempoDataIfNeeded();
     auto s = startTime;
 
     if (auto nextTimeSig = ownerSequence.getTimeSig (ownerSequence.indexOfTimeSig (this) + 1))

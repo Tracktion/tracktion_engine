@@ -53,4 +53,9 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PitchSetting)
 };
 
+inline bool operator< (const PitchSetting& p1, const PitchSetting& p2) noexcept
+{
+    return p1.startBeat.get() < p2.startBeat.get();
+}
+
 } // namespace tracktion_engine
