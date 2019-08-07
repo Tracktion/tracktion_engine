@@ -370,7 +370,7 @@ public:
     static ARAContentGrade ARA_CALL getMusicalContextContentGrade (ARAContentAccessControllerHostRef,
                                                                    ARAMusicalContextHostRef, ARAContentType)
     {
-        return kARAContentGradeApproved;
+        return kARAContentGradeAdjusted;
     }
 
     static ARAContentReaderHostRef ARA_CALL createMusicalContextContentReader (ARAContentAccessControllerHostRef controllerHostRef,
@@ -383,9 +383,9 @@ public:
             switch (type)
             {
                 case kARAContentTypeTempoEntries:   return toHostRef (new TempoReader (*edit, range));
-                case kARAContentTypeBarSignatures:     return toHostRef (new TimeSigReader (*edit, range));
-                case kARAContentTypeKeySignatures:     return toHostRef (new KeySignatureReader (*edit, range));
-                case kARAContentTypeSheetChords:     return toHostRef (new ChordReader (*edit, range));
+                case kARAContentTypeBarSignatures:  return toHostRef (new TimeSigReader (*edit, range));
+                case kARAContentTypeKeySignatures:  return toHostRef (new KeySignatureReader (*edit, range));
+                case kARAContentTypeSheetChords:    return toHostRef (new ChordReader (*edit, range));
                 default: break;
             }
         }
