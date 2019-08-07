@@ -28,6 +28,9 @@ struct EditTimeRange
     /** Returns a range with a given start and length. */
     static EditTimeRange withStartAndLength (double time1, double length);
 
+    /** Returns a range with the specified start position and a length of zero. */
+    static EditTimeRange emptyRange (double start);
+
     double start = 0;
     double end = 0;
 

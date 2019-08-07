@@ -33,6 +33,11 @@ EditTimeRange EditTimeRange::withStartAndLength (double startValue, double lengt
     return Range<double>::withStartAndLength (startValue, length);
 }
 
+EditTimeRange EditTimeRange::emptyRange (double start)
+{
+    return EditTimeRange (start, start);
+}
+
 EditTimeRange EditTimeRange::getUnionWith (EditTimeRange other) const
 {
     return { std::min (start, other.start),
