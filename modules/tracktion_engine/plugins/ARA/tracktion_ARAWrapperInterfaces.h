@@ -395,31 +395,22 @@ public:
 
     //==============================================================================
     static ARABool ARA_CALL isAudioSourceContentAvailable (ARAContentAccessControllerHostRef,
-                                                           ARAAudioSourceHostRef, ARAContentType type)
+                                                           ARAAudioSourceHostRef, ARAContentType)
     {
-        return type == kARAContentTypeNotes;
+        return kARAFalse;
     }
 
     static ARAContentGrade ARA_CALL getAudioSourceContentGrade (ARAContentAccessControllerHostRef,
                                                                 ARAAudioSourceHostRef, ARAContentType)
     {
-        return kARAContentGradeApproved;
+        return kARAContentGradeInitial;
     }
 
-    static ARAContentReaderHostRef ARA_CALL createAudioSourceContentReader (ARAContentAccessControllerHostRef controllerHostRef,
-                                                                        ARAAudioSourceHostRef /*audioSourceRef*/,
-                                                                        ARAContentType type,
-                                                                        const ARAContentTimeRange* range)
+    static ARAContentReaderHostRef ARA_CALL createAudioSourceContentReader (ARAContentAccessControllerHostRef,
+                                                                        ARAAudioSourceHostRef,
+                                                                        ARAContentType,
+                                                                        const ARAContentTimeRange*)
     {
-        if (auto edit = fromHostRef (controllerHostRef))
-        {
-            switch (type)
-            {
-                case kARAContentTypeNotes:  return toHostRef (new MidiNoteReader (*edit, range));
-                default: break;
-            }
-        }
-
         return {};
     }
 
