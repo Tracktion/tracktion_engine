@@ -518,17 +518,17 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects, 
                         section.trackOffset = jmax (0, allTracks.indexOf (trackSection.track) - firstTrackIndex);
                         section.valueRange = param->getCurve().getValueLimits();
 
+                        const double endTolerence = 0.0001;
                         auto intersection = trackSection.range.getIntersectionWith (range);
+                        auto reducedIntersection = intersection.reduced (endTolerence);
                         auto clippedStart = intersection.getStart();
                         auto clippedEnd   = intersection.getEnd();
-
-                        const double endTolerence = 0.0001;
 
                         for (int l = 0; l < param->getCurve().getNumPoints(); ++l)
                         {
                             auto pt = param->getCurve().getPoint (l);
 
-                            if (pt.time >= clippedStart - endTolerence && pt.time <= clippedEnd + endTolerence)
+                            if (reducedIntersection.containsInclusive (pt.time))
                                 section.points.push_back ({ pt.time, pt.value, pt.curve });
                         }
 
@@ -540,10 +540,10 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects, 
                         else
                         {
                             if (section.points[0].time > clippedStart + endTolerence)
-                                section.points.insert (section.points.begin(), { clippedStart, param->getCurve().getValueAt (clippedStart), 0.0f });
+                                section.points.insert (section.points.begin(), { clippedStart + endTolerence, param->getCurve().getValueAt (clippedStart + endTolerence), 0.0f });
 
                             if (section.points[section.points.size() - 1].time < clippedEnd - endTolerence)
-                                section.points.push_back ({ clippedEnd, param->getCurve().getValueAt (clippedEnd), 0.0f });
+                                section.points.push_back ({ clippedEnd - endTolerence, param->getCurve().getValueAt (clippedEnd - endTolerence), 0.0f });
                         }
 
                         for (auto& p : section.points)
