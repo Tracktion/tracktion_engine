@@ -66,6 +66,21 @@ Track* findTrackForID (const Edit& edit, EditItemID id)
     return findTrackForPredicate (edit, [id] (Track& t) { return t.itemID == id; });
 }
 
+Array<Track*> findTracksForIDs (const Edit& edit, Array<EditItemID> ids)
+{
+    Array<Track*> tracks;
+
+    edit.visitAllTracksRecursive ([&] (Track& t)
+                                  {
+                                      if (ids.contains (t.itemID))
+                                          tracks.add (&t);
+
+                                      return true;
+                                  });
+
+    return tracks;
+}
+
 Track* findTrackForState (const Edit& edit, const juce::ValueTree& v)
 {
     return findTrackForPredicate (edit, [&] (Track& t) { return t.state == v; });

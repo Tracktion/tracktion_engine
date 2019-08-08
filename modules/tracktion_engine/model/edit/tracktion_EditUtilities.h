@@ -49,6 +49,9 @@ int getTotalNumTracks (const Edit&);
 Track* findTrackForID (const Edit&, EditItemID);
 
 /** */
+juce::Array<Track*> findTracksForIDs (const Edit&, juce::Array<EditItemID>);
+
+/** */
 Track* findTrackForState (const Edit&, const juce::ValueTree&);
 
 /** */
