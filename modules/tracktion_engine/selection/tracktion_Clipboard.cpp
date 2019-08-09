@@ -567,8 +567,7 @@ static void fixClipTimes (ValueTree& state, const Clipboard::Clips::ClipInfo& cl
         auto range = tempoSequence.beatsToTime ({ clip.startBeats, clip.startBeats + clip.lengthBeats }) + startOffset;
         start  = range.getStart();
         length = range.getLength();
-        // TODO: this offset calculation isn't right - fix when we have a structure for start/length/offset which can be converted to beats as a whole
-        offset = tempoSequence.beatsToTime (clip.offsetBeats) / tempoSequence.getBeatsPerSecondAt (start);
+        offset = clip.offsetBeats / tempoSequence.getBeatsPerSecondAt (start);
     }
     else
     {
