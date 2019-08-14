@@ -22,9 +22,6 @@ public:
 
     using Ptr = juce::ReferenceCountedObjectPtr<ArrangerClip>;
 
-    bool isSyncAbsolute() const noexcept                            { return syncType == syncAbsolute; }
-    bool isSyncBarsBeats() const noexcept                           { return syncType == syncBarsBeats; }
-
     juce::String getSelectableDescription() override;
     bool canGoOnTrack (Track&) override;
     juce::Colour getDefaultColour() const override;
