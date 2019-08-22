@@ -103,7 +103,10 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
             {
                 if (! edit.getTransport().isPlaying())
                 {
-                    edit.getTransport().ensureContextAllocated();
+                    if (v[IDs::endToEnd])
+                        edit.getTransport().ensureContextAllocated();
+                    else
+                        edit.getTransport().freePlaybackContext();
 
                     auto& ecm = edit.engine.getExternalControllerManager();
 
