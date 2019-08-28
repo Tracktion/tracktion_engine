@@ -28,6 +28,7 @@ public:
 
     ExternalPlugin* getPlugin();
     void showPluginWindow();
+    void hidePluginWindow();
 
     bool isAnalysingContent();
     juce::MidiMessageSequence getAnalysedMIDISequence();

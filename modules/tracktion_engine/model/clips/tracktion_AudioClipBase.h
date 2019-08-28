@@ -334,6 +334,7 @@ public:
     bool isUsingMelodyne() const;
     void loadMelodyneState (Edit&);
     void showMelodyneWindow();
+    void hideMelodyneWindow();
     void melodyneConvertToMIDI();
 
     juce::CachedValue<TimeStretcher::ElastiqueProOptions> elastiqueProOptions;

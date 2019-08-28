@@ -1260,6 +1260,12 @@ void AudioClipBase::showMelodyneWindow()
         melodyneProxy->showPluginWindow();
 }
 
+void AudioClipBase::hideMelodyneWindow()
+{
+    if (melodyneProxy != nullptr)
+        melodyneProxy->hidePluginWindow();
+}
+
 void AudioClipBase::melodyneConvertToMIDI()
 {
     if (melodyneProxy != nullptr)

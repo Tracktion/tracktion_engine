@@ -77,6 +77,7 @@ struct ARAClipPlayer  : private SelectableListener
         edit (ed)
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
+        jassert (file.getFile().existsAsFile());
         edit.tempoSequence.addSelectableListener (this);
     }
 
@@ -533,6 +534,12 @@ void MelodyneFileReader::showPluginWindow()
 {
     if (auto p = getPlugin())
         p->showWindowExplicitly();
+}
+
+void MelodyneFileReader::hidePluginWindow()
+{
+    if (auto p = getPlugin())
+        p->hideWindowForShutdown();
 }
 
 ExternalPlugin* MelodyneFileReader::getPlugin()
