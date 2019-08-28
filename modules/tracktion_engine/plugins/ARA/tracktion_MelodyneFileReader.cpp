@@ -23,6 +23,7 @@
  #pragma clang diagnostic ignored "-Wconversion"
  #pragma clang diagnostic ignored "-Woverloaded-virtual"
  #pragma clang diagnostic ignored "-Wshadow"
+ #pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
  #if __clang_major__ >= 10
   #pragma clang diagnostic ignored "-Wpragma-pack"
  #endif
@@ -278,7 +279,7 @@ struct ARAClipPlayer  : private SelectableListener
                     auto araFactory = pimpl.getARAFactory();
                     for (ARAContentType contentType : { kARAContentTypeBarSignatures, kARAContentTypeTempoEntries })
                     {
-                        for (int i = 0; i < araFactory->analyzeableContentTypesCount; i++)
+                        for (int i = 0; i < (int) araFactory->analyzeableContentTypesCount; i++)
                         {
                             if (araFactory->analyzeableContentTypes[i] == contentType)
                             {

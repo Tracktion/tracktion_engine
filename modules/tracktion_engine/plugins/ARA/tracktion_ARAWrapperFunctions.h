@@ -187,7 +187,7 @@ struct MusicalContextFunctions
             {
                 std::array<ARA::ARAChordIntervalUsage, 12> chordIntervals{};
                 for (auto s : c.getSteps())
-                    chordIntervals[s] = ARA::kARAKeySignatureIntervalUsed;
+                    chordIntervals[(std::size_t)s] = ARA::kARAKeySignatureIntervalUsed;
                 return chordIntervals;
             }
         }
