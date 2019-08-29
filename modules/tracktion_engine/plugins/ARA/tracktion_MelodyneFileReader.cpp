@@ -916,6 +916,7 @@ MelodyneFileReader::~MelodyneFileReader() {}
 void MelodyneFileReader::cleanUpOnShutdown()                        {}
 ExternalPlugin* MelodyneFileReader::getPlugin()                     { return {}; }
 void MelodyneFileReader::showPluginWindow()                         {}
+void MelodyneFileReader::hidePluginWindow()                         {}
 bool MelodyneFileReader::isAnalysingContent()                       { return false; }
 MidiMessageSequence MelodyneFileReader::getAnalysedMIDISequence()   { return {}; }
 AudioNode* MelodyneFileReader::createAudioNode (LiveClipLevel)      { return {}; }
