@@ -240,6 +240,13 @@ struct ARAClipPlayer  : private SelectableListener
     }
 
     //==============================================================================
+    void setViewSelection()
+    {
+        if (playbackRegionAndSource != nullptr)
+            playbackRegionAndSource->setViewSelection();
+    }
+
+    //==============================================================================
     void startProcessing()  { TRACKTION_ASSERT_MESSAGE_THREAD if (playbackRegionAndSource != nullptr) playbackRegionAndSource->enable(); }
     void stopProcessing()   { TRACKTION_ASSERT_MESSAGE_THREAD if (playbackRegionAndSource != nullptr) playbackRegionAndSource->disable(); }
 
@@ -532,6 +539,9 @@ MelodyneFileReader::~MelodyneFileReader()
 //==============================================================================
 void MelodyneFileReader::showPluginWindow()
 {
+    if (player != nullptr)
+        player->setViewSelection();
+
     if (auto p = getPlugin())
         p->showWindowExplicitly();
 }

@@ -1122,6 +1122,28 @@ public:
             audioSource->enableAccess (false);
     }
 
+    void setViewSelection()
+    {
+        if (pluginInstance.editorViewInterface != nullptr)
+        {
+            ARAViewSelection selection;
+
+            ARAPlaybackRegionRef refs[1];
+            refs[0] = playbackRegion->playbackRegionRef;
+
+            selection.structSize = sizeof (selection);
+
+            selection.playbackRegionRefsCount = 1;
+            selection.playbackRegionRefs = refs;
+
+            selection.regionSequenceRefsCount = 0;
+            selection.regionSequenceRefs = nullptr;
+            selection.timeRange = nullptr;
+
+            pluginInstance.editorViewInterface->notifySelection (pluginInstance.editorViewRef, &selection);
+        }
+    }
+
     std::unique_ptr<PlaybackRegionWrapper> playbackRegion;
     std::unique_ptr<AudioSourceWrapper> audioSource;
 
