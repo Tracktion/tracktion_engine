@@ -347,6 +347,7 @@ namespace IDs
     DECLARE_ID (stretchMode)
     DECLARE_ID (pitchChange)
     DECLARE_ID (autoPitch)
+    DECLARE_ID (autoPitchMode)
     DECLARE_ID (autoTempo)
     DECLARE_ID (warpTime)
     DECLARE_ID (isReversed)

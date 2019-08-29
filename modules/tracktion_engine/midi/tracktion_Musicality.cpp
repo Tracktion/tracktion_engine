@@ -1156,7 +1156,7 @@ PatternGenerator::NoteType PatternGenerator::getTypeForNote (const MidiClip& mc,
     return NotInKeyNote;
 }
 
-double PatternGenerator::getFlattenedChordProgression (juce::OwnedArray<ProgressionItem>& progression)
+double PatternGenerator::getFlattenedChordProgression (juce::OwnedArray<ProgressionItem>& progression, bool globalTime)
 {
     if (mode == Mode::off || scaleRoot == scaleRootChordTrack)
     {
@@ -1271,18 +1271,21 @@ double PatternGenerator::getFlattenedChordProgression (juce::OwnedArray<Progress
         newItem->lengthInBeats = 100000;
         progression.add (newItem);
 
-        double toChop = clip.getStartBeat();
-        while (toChop > 0)
+        if (! globalTime)
         {
-            auto itm = progression[0];
-            if (itm->lengthInBeats <= toChop)
+            double toChop = clip.getStartBeat();
+            while (toChop > 0)
             {
-                toChop -= itm->lengthInBeats;
-                progression.remove (0);
-            }
-            else
-            {
-                return toChop;
+                auto itm = progression[0];
+                if (itm->lengthInBeats <= toChop)
+                {
+                    toChop -= itm->lengthInBeats;
+                    progression.remove (0);
+                }
+                else
+                {
+                    return toChop;
+                }
             }
         }
         return 0;

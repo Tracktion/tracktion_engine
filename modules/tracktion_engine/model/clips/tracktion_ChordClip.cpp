@@ -129,13 +129,7 @@ Colour ChordClip::getColour() const
 
 void ChordClip::handleAsyncUpdate()
 {
-    // notify midi clips of chord changes
-    for (auto t : getAudioTracks (edit))
-    {
-        for (int i = t->getNumTrackItems(); --i >= 0;)
-            if (auto* mc = dynamic_cast<MidiClip*> (t->getTrackItem (i)))
-                mc->pitchTempoTrackChanged();
-    }
+    edit.sendTempoOrPitchSequenceChangedUpdates();
 }
 
 }

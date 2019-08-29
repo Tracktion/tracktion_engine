@@ -129,6 +129,8 @@ public:
 
     void cancelCurrentRender();
 
+    PatternGenerator* getPatternGenerator() override;
+
     //==============================================================================
     void setGainDB (float dB);
     float getGainDB() const noexcept                    { return level->dbGain; }
@@ -221,10 +223,20 @@ public:
     TimeStretcher::Mode getTimeStretchMode() const noexcept;
     TimeStretcher::Mode getActualTimeStretchMode() const noexcept;
 
+    //==============================================================================
+    enum AutoPitchMode
+    {
+        pitchTrack = 0,
+        chordTrackMono,
+        chordTrackPoly
+    };
+
     void setAutoTempo (bool shouldUseAutoTempo)         { autoTempo = shouldUseAutoTempo; }
     bool getAutoTempo() const                           { return autoTempo; }
     void setAutoPitch (bool shouldUseAutoPitch)         { autoPitch = shouldUseAutoPitch; }
     bool getAutoPitch() const                           { return autoPitch; }
+    void setAutoPitchMode (AutoPitchMode m)             { autoPitchMode = m; }
+    AutoPitchMode getAutoPitchMode()                    { return autoPitchMode; }
     void setWarpTime (bool shouldUseWarpTime)           { warpTime = shouldUseWarpTime; }
     bool getWarpTime() const                            { return warpTime; }
     WarpTimeManager& getWarpTimeManager() const;
@@ -364,6 +376,7 @@ protected:
     juce::CachedValue<float> beatSensitivity;
     juce::CachedValue<TimeStretcher::Mode> timeStretchMode;
     juce::CachedValue<bool> autoPitch, autoTempo, isReversed, autoDetectBeats, warpTime, clipEffectsVisible;
+    juce::CachedValue<AutoPitchMode> autoPitchMode;
 
     mutable WarpTimeManager::Ptr warpTimeManager;
     std::unique_ptr<AudioSegmentList> audioSegmentList;
@@ -451,5 +464,12 @@ namespace juce
     {
         static tracktion_engine::AudioClipBase::FadeBehaviour fromVar (const var& v)   { return (tracktion_engine::AudioClipBase::FadeBehaviour) static_cast<int> (v); }
         static var toVar (tracktion_engine::AudioClipBase::FadeBehaviour v)            { return static_cast<int> (v); }
+    };
+
+    template <>
+    struct VariantConverter<tracktion_engine::AudioClipBase::AutoPitchMode>
+    {
+        static tracktion_engine::AudioClipBase::AutoPitchMode fromVar (const var& v)   { return (tracktion_engine::AudioClipBase::AutoPitchMode) static_cast<int> (v); }
+        static var toVar (tracktion_engine::AudioClipBase::AutoPitchMode v)            { return static_cast<int> (v); }
     };
 }

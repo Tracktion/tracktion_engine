@@ -271,6 +271,8 @@ public:
 
     void editFinishedLoading();
 
+    double getFlattenedChordProgression (juce::OwnedArray<ProgressionItem>& progression, bool globalTime = false);
+
 private:
     const int maxChords = 64;
 
@@ -282,7 +284,6 @@ private:
 
     ChordClip* getChordClipAt (double beat) const;
 
-    double getFlattenedChordProgression (juce::OwnedArray<ProgressionItem>& progression);
     MidiNote* addNote (MidiList& sequence, int pitch, double startBeat, double lengthInBeats,
                        int velocity, int colourIndex, juce::UndoManager*);
 

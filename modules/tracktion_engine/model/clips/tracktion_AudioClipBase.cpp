@@ -469,6 +469,7 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
     timeStretchMode = TimeStretcher::checkModeIsAvailable (timeStretchMode);
 
     autoPitch.referTo (state, IDs::autoPitch, um);
+    autoPitchMode.referTo (state, IDs::autoPitchMode, um);
     autoTempo.referTo (state, IDs::autoTempo, um);
     warpTime.referTo (state, IDs::warpTime, um);
     isReversed.referTo (state, IDs::isReversed, um);
@@ -487,6 +488,11 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
 
     asyncFunctionCaller.addFunction (updateCrossfadesFlag, [this]           { updateAutoCrossfades (false); });
     asyncFunctionCaller.addFunction (updateCrossfadesOverlappedFlag, [this] { updateAutoCrossfades (true); });
+
+    auto pgen = state.getChildWithName (IDs::PATTERNGENERATOR);
+
+    if (pgen.isValid())
+        patternGenerator.reset (new PatternGenerator (*this, pgen));
 }
 
 AudioClipBase::~AudioClipBase()
@@ -546,6 +552,7 @@ void AudioClipBase::cloneFrom (Clip* c)
         timeStretchMode     .setValue (other->timeStretchMode, nullptr);
         elastiqueProOptions .setValue (other->elastiqueProOptions, nullptr);
         autoPitch           .setValue (other->autoPitch, nullptr);
+        autoPitchMode       .setValue (other->autoPitchMode, nullptr);
         autoTempo           .setValue (other->autoTempo, nullptr);
         isReversed          .setValue (other->isReversed, nullptr);
         autoDetectBeats     .setValue (other->autoDetectBeats, nullptr);
@@ -580,6 +587,15 @@ void AudioClipBase::flushStateToValueTree()
 
     if (clipEffects != nullptr)
         clipEffects->flushStateToValueTree();
+}
+
+PatternGenerator* AudioClipBase::getPatternGenerator()
+{
+    if (! state.getChildWithName (IDs::PATTERNGENERATOR).isValid())
+        state.addChild (ValueTree (IDs::PATTERNGENERATOR), -1, &edit.getUndoManager());
+
+    jassert (patternGenerator != nullptr);
+    return patternGenerator.get();
 }
 
 //==============================================================================
@@ -2580,7 +2596,7 @@ void AudioClipBase::valueTreePropertyChanged (ValueTree& tree, const juce::Ident
             || id == IDs::transpose || id == IDs::pitchChange
             || id == IDs::elastiqueMode || id == IDs::autoPitch
             || id == IDs::elastiqueOptions || id == IDs::warpTime
-            || id == IDs::effectsVisible)
+            || id == IDs::effectsVisible || id == IDs::autoPitchMode)
         {
             changed();
         }
@@ -2643,6 +2659,8 @@ void AudioClipBase::valueTreeChildAdded (ValueTree& parent, juce::ValueTree& chi
             Selectable::changed();
         else if (child.hasType (IDs::EFFECTS))
             updateClipEffectsState();
+        else if (child.hasType (IDs::PATTERNGENERATOR))
+            patternGenerator.reset (new PatternGenerator (*this, child));
     }
     else if (parent.hasType (IDs::LOOPINFO) || child.hasType (IDs::WARPMARKER))
     {
@@ -2662,6 +2680,8 @@ void AudioClipBase::valueTreeChildRemoved (ValueTree& parent, juce::ValueTree& c
             Selectable::changed();
         else if (child.hasType (IDs::EFFECTS))
             updateClipEffectsState();
+        else if (child.hasType (IDs::PATTERNGENERATOR))
+            patternGenerator = nullptr;
     }
     else if (parent.hasType (IDs::LOOPINFO) || child.hasType (IDs::WARPMARKER))
     {
