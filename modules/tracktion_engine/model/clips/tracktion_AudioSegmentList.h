@@ -69,6 +69,9 @@ private:
     AudioSegmentList (AudioClipBase&);
     AudioSegmentList (AudioClipBase&, bool relativeTime, bool crossfade);
 
+    void chopSegmentsForChords();
+    void chopSegment (Segment& seg, double at, int insertPos);
+
     AudioClipBase& clip;
     juce::Array<Segment> segments;
     double crossfadeTime = 0;
@@ -84,7 +87,6 @@ private:
     void initialiseSegment (Segment&, double startBeat, double endBeat, double sampleRate);
 
     juce::OwnedArray<PatternGenerator::ProgressionItem> progression;
-    double progressionOffset = 0.0;
 };
 
 } // namespace tracktion_engine
