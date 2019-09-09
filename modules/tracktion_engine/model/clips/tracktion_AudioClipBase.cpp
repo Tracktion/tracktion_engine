@@ -1231,6 +1231,9 @@ void AudioClipBase::pitchTempoTrackChanged()
 {
     clearCachedAudioSegmentList();
     createNewProxyAsync();
+
+    if (melodyneProxy != nullptr)
+        melodyneProxy->sourceClipChanged();
 }
 
 void AudioClipBase::clearCachedAudioSegmentList()

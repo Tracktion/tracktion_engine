@@ -250,21 +250,25 @@ struct ARAClipPlayer  : private SelectableListener
     void startProcessing()  { TRACKTION_ASSERT_MESSAGE_THREAD if (playbackRegionAndSource != nullptr) playbackRegionAndSource->enable(); }
     void stopProcessing()   { TRACKTION_ASSERT_MESSAGE_THREAD if (playbackRegionAndSource != nullptr) playbackRegionAndSource->disable(); }
 
-    class ContentAnalyser  : public Timer
+    class ContentAnalyser
     {
     public:
         ContentAnalyser (const ARAClipPlayer& p)  : pimpl (p)
         {
-            startTimer (100);
         }
 
-        bool isAnalysing() const noexcept       { return analysingContent; }
+        bool isAnalysing()
+        {
+            callBlocking ([this] { updateAnalysingContent(); });
 
-        void timerCallback() override
+            return analysingContent;
+        }
+
+        void updateAnalysingContent()
         {
             CRASH_TRACER
 
-            ARADocument* doc = pimpl.getDocument();
+            auto doc = pimpl.getDocument();
 
             if (doc == nullptr)
             {
@@ -333,7 +337,6 @@ struct ARAClipPlayer  : private SelectableListener
 
     bool isAnalysingContent() const
     {
-        jassert (contentAnalyserChecker->isTimerRunning());
         return contentAnalyserChecker->isAnalysing();
     }
 
@@ -642,7 +645,10 @@ public:
 
     void visitNodes (const VisitorFn& v) override               { v (*this); }
     bool purgeSubNodes (bool keepAudio, bool) override          { return keepAudio; }
-    bool isReadyToRender() override                             { return ! melodyneProxy->isAnalysingContent(); }
+    bool isReadyToRender() override
+    {
+        return ! melodyneProxy->isAnalysingContent();
+    }
     void renderAdding (const AudioRenderContext& rc) override   { callRenderOver (rc); }
     void renderOver (const AudioRenderContext& rc) override     { invokeSplitRender (rc, *this); }
 
