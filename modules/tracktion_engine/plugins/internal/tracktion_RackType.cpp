@@ -2202,8 +2202,15 @@ void RackType::valueTreeChildRemoved (ValueTree&, juce::ValueTree& c, int)
 }
 
 void RackType::valueTreeChildOrderChanged (ValueTree&, int, int)   {}
-void RackType::valueTreeParentChanged (ValueTree&)                 { triggerUpdate(); }
 void RackType::valueTreeRedirected (ValueTree&)                    { triggerUpdate(); }
+
+void RackType::valueTreeParentChanged (ValueTree&)
+{
+    if (! state.getParent().isValid())
+        hideWindowForShutdown();
+
+    triggerUpdate();
+}
 
 void RackType::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& ident)
 {
