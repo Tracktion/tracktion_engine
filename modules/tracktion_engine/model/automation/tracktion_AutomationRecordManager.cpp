@@ -16,16 +16,22 @@ AutomationRecordManager::AutomationRecordManager (Edit& ed)
 {
     if (edit.shouldPlay())
     {
-        const MessageManagerLock mml (Thread::getCurrentThread());
+        std::unique_ptr<juce::MessageManagerLock> mml;
 
-        if (mml.lockWasGained())
+        if (auto job = juce::ThreadPoolJob::getCurrentThreadPoolJob())
+            mml = std::make_unique<juce::MessageManagerLock> (job);
+        else if (auto t = Thread::getCurrentThread())
+            mml = std::make_unique<juce::MessageManagerLock> (t);
+        else
+            jassert (MessageManager::getInstance()->isThisTheMessageThread());
+
+        if (mml == nullptr || mml->lockWasGained())
             edit.getTransport().addChangeListener (this);
         else
             jassertfalse;
     }
 
     glideLength = engine.getPropertyStorage().getProperty (SettingID::glideLength);
-
     readingAutomation.referTo (edit.getTransport().state, IDs::automationRead, nullptr, true);
 }
 
