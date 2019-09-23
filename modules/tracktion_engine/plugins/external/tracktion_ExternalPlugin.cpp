@@ -567,7 +567,7 @@ void ExternalPlugin::buildParameterList()
 				autoParamForParamNumbers.add (p);
 				p->valueChangedByPlugin();
 
-				if (emptyName || count >= 2)
+				if (count >= 2 && ! emptyName)
 					p->setDisplayName (nm);
 
             }
