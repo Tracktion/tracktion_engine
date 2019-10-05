@@ -109,7 +109,7 @@ private:
     std::unique_ptr<te::Edit> edit;
     std::unique_ptr<EditComponent> editComponent;
 
-    TextButton settingsButton { "Settings" }, pluginsButton { "Plugin" }, newEditButton { "New" }, playPauseButton { "Play" },
+    TextButton settingsButton { "Settings" }, pluginsButton { "Plugins" }, newEditButton { "New" }, playPauseButton { "Play" },
                showEditButton { "Show Edit" }, newTrackButton { "New Track" }, deleteButton { "Delete" };
     Label editNameLabel { "No Edit Loaded" };
     ToggleButton showWaveformButton { "Show Waveforms" };
@@ -183,6 +183,8 @@ private:
         te::EditFileOperations (*edit).save (true, true, false);
         
         editComponent = std::make_unique<EditComponent> (*edit, selectionManager);
+        editComponent->getEditViewState().showFooters = true;
+        
         addAndMakeVisible (*editComponent);
     }
     
