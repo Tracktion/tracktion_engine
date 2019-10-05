@@ -77,8 +77,6 @@ struct AudioRenderContext
 
     AudioRenderContext (const AudioRenderContext&) = default;
     AudioRenderContext (AudioRenderContext&&) = default;
-    AudioRenderContext& operator= (const AudioRenderContext&) = default;
-    AudioRenderContext& operator= (AudioRenderContext&&) = default;
 
     //==============================================================================
     /** The playhead provides information about current time, tempo etc at the block
