@@ -709,6 +709,16 @@ PluginComponent::~PluginComponent()
 void PluginComponent::clicked (const ModifierKeys& modifiers)
 {
     editViewState.selectionManager.selectOnly (plugin.get());
+    if (modifiers.isPopupMenu())
+    {
+        PopupMenu m;
+        m.addItem ("Delete", [this] { plugin->deleteFromParent(); });
+        m.showAt (this);
+    }
+    else
+    {
+        plugin->showWindowExplicitly();
+    }
 }
 
 //==============================================================================
