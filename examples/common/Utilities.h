@@ -178,7 +178,7 @@ namespace EngineHelpers
         return false;
     }
 
-    static std::unique_ptr<juce::KnownPluginList::PluginTree> createPluginTree (te::Engine& engine)
+    inline std::unique_ptr<juce::KnownPluginList::PluginTree> createPluginTree (te::Engine& engine)
     {
         auto& list = engine.getPluginManager().knownPluginList;
 
