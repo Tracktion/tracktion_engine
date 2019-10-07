@@ -19,6 +19,8 @@ namespace IDs
     DECLARE_ID (viewX2)
     DECLARE_ID (viewY)
     DECLARE_ID (drawWaveforms)
+    DECLARE_ID (showHeaders)
+    DECLARE_ID (showFooters)
     #undef DECLARE_ID
 }
 
@@ -39,6 +41,8 @@ public:
         showMarkerTrack.referTo (state, IDs::showMarkerTrack, um, false);
         showChordTrack.referTo (state, IDs::showChordTrack, um, false);
         drawWaveforms.referTo (state, IDs::drawWaveforms, um, true);
+        showHeaders.referTo (state, IDs::showHeaders, um, true);
+        showFooters.referTo (state, IDs::showFooters, um, false);
 
         viewX1.referTo (state, IDs::viewX1, um, 0);
         viewX2.referTo (state, IDs::viewX2, um, 60);
@@ -58,7 +62,8 @@ public:
     te::Edit& edit;
     te::SelectionManager& selectionManager;
     
-    CachedValue<bool> showGlobalTrack, showMarkerTrack, showChordTrack, drawWaveforms;
+    CachedValue<bool> showGlobalTrack, showMarkerTrack, showChordTrack, drawWaveforms,
+                      showHeaders, showFooters;
     CachedValue<double> viewX1, viewX2, viewY;
     
     ValueTree state;
@@ -93,7 +98,7 @@ public:
 private:
     void updateThumbnail();
     void drawWaveform (Graphics& g, te::AudioClipBase& c, te::SmartThumbnail& thumb, Colour colour,
-                       int left, int right, int y, int h, int xOffset, bool drawLoopMarkers);
+                       int left, int right, int y, int h, int xOffset);
     void drawChannels (Graphics& g, te::SmartThumbnail& thumb, Rectangle<int> area, bool useHighRes,
                        te::EditTimeRange time, bool useLeft, bool useRight,
                        float leftGain, float rightGain);
@@ -146,6 +151,52 @@ private:
     ValueTree inputsState;
     Label trackName;
     TextButton armButton {"A"}, muteButton {"M"}, soloButton {"S"}, inputButton {"I"};
+};
+
+//==============================================================================
+class PluginComponent : public TextButton
+{
+public:
+    PluginComponent (EditViewState&, te::Plugin::Ptr);
+    ~PluginComponent();
+    
+    void clicked (const ModifierKeys& modifiers) override;
+    
+private:
+    EditViewState& editViewState;
+    te::Plugin::Ptr plugin;
+};
+
+//==============================================================================
+class TrackFooterComponent : public Component,
+                             private FlaggedAsyncUpdater,
+                             private te::ValueTreeAllEventListener
+{
+public:
+    TrackFooterComponent (EditViewState&, te::Track::Ptr);
+    ~TrackFooterComponent();
+    
+    void paint (Graphics& g) override;
+    void mouseDown (const MouseEvent& e) override;
+    void resized() override;
+    
+private:
+    void valueTreeChanged() override {}
+    void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override;
+    void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override;
+    void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override;
+
+    void handleAsyncUpdate() override;
+    
+    void buildPlugins();
+    
+    EditViewState& editViewState;
+    te::Track::Ptr track;
+    
+    TextButton addButton {"+"};
+    OwnedArray<PluginComponent> plugins;
+    
+    bool updatePlugins = false;
 };
 
 //==============================================================================
@@ -244,6 +295,7 @@ private:
     PlayheadComponent playhead {edit, editViewState};
     OwnedArray<TrackComponent> tracks;
     OwnedArray<TrackHeaderComponent> headers;
+    OwnedArray<TrackFooterComponent> footers;
     
     bool updateTracks = false, updateZoom = false;
 };

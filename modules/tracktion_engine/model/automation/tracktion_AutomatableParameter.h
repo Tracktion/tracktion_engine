@@ -40,6 +40,8 @@ public:
     AutomationCurve& getCurve() const noexcept;
 
     void attachToCurrentValue (juce::CachedValue<float>&);
+    void attachToCurrentValue (juce::CachedValue<int>&);
+    void attachToCurrentValue (juce::CachedValue<bool>&);
     void detachFromCurrentValue();
 
     //==============================================================================
@@ -221,6 +223,9 @@ public:
 
 protected:
     struct AttachedValue;
+    struct AttachedFloatValue;
+    struct AttachedIntValue;
+    struct AttachedBoolValue;
     std::unique_ptr<AttachedValue> attachedValue;
     juce::ListenerList<Listener> listeners;
 

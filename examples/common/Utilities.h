@@ -177,6 +177,17 @@ namespace EngineHelpers
         
         return false;
     }
+
+    inline std::unique_ptr<juce::KnownPluginList::PluginTree> createPluginTree (te::Engine& engine)
+    {
+        auto& list = engine.getPluginManager().knownPluginList;
+
+        if (auto tree = list.createTree (list.getTypes(), KnownPluginList::sortByManufacturer))
+            return tree;
+
+        return {};
+    }
+
 }
 
 //==============================================================================
