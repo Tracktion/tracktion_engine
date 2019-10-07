@@ -56,7 +56,7 @@ struct AudioProcessorEditorContentComp : public PluginEditor
                 editor.reset (pi->createEditorIfNeeded());
 
                 if (editor == nullptr)
-                    editor = std::make_unique<GenericAudioProcessorEditor> (pi);
+                    editor = std::make_unique<GenericAudioProcessorEditor> (*pi);
 
                 addAndMakeVisible (*editor);
             }
