@@ -35,7 +35,7 @@ exit /B %ERRORLEVEL%
     set EXAMPLE_DEST_DIR=%EXAMPLES_DIR%/projects
     set EXAMPLE_ROOT_DIR=%EXAMPLE_DEST_DIR%/%EXAMPLE_NAME%
 
-    rmdir /s /q %EXAMPLE_DEST_DIR%
+    rmdir /s /q "%EXAMPLE_DEST_DIR%"
 
     call "%PROJUCER_EXE%" --create-project-from-pip "%EXAMPLE_PIP_FILE%" "%EXAMPLE_DEST_DIR%" "%JUCE_DIR%/modules" "%TRACKTION_ENGINE_DIR%"
     call "%PROJUCER_EXE%" --resave "%EXAMPLE_ROOT_DIR%/%EXAMPLE_NAME%.jucer"
