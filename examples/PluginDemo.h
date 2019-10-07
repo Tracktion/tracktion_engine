@@ -29,6 +29,13 @@
 #include "common/Utilities.h"
 #include "common/Components.h"
 
+bool isDPIAware (te::Plugin&)
+{
+	// You should keep a DB of if plugins are DPI aware or not and recall that value
+	// here. You should let the user toggle the value if the plugin appears tiny
+	return true;
+}
+
 //==============================================================================
 class PluginEditor : public Component
 {

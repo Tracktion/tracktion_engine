@@ -531,13 +531,13 @@ struct AutomatableParameter::AttachedIntValue : public AutomatableParameter::Att
     AttachedIntValue (AutomatableParameter& p, juce::CachedValue<int>& v)
         : AttachedValue (p), value (v)
     {
-        parameter.setParameter (value, juce::dontSendNotification);
+        parameter.setParameter ((float) value.get(), juce::dontSendNotification);
     }
 
     void handleAsyncUpdate() override               { value.setValue (roundToInt (parameter.currentValue), nullptr); }
-    float getValue() override                       { return value; }
+    float getValue() override                       { return (float) value.get(); }
     void setValue (float v) override                { value = roundToInt (v); }
-    float getDefault() override                     { return value.getDefault(); }
+    float getDefault() override                     { return (float) value.getDefault(); }
     void detach (ValueTree::Listener* l) override   { value.getValueTree().removeListener (l); }
 
     bool updateIfMatches (ValueTree& v, const Identifier& i) override
@@ -833,7 +833,7 @@ void AutomatableParameter::attachToCurrentValue (juce::CachedValue<float>& v)
 
 void AutomatableParameter::attachToCurrentValue (juce::CachedValue<int>& v)
 {
-    currentValue = v;
+    currentValue = (float) v.get();
     jassert (attachedValue == nullptr);
     attachedValue.reset (new AttachedIntValue (*this, v));
     v.getValueTree().addListener (this);

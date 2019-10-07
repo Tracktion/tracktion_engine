@@ -98,7 +98,7 @@ public:
 private:
     void updateThumbnail();
     void drawWaveform (Graphics& g, te::AudioClipBase& c, te::SmartThumbnail& thumb, Colour colour,
-                       int left, int right, int y, int h, int xOffset, bool drawLoopMarkers);
+                       int left, int right, int y, int h, int xOffset);
     void drawChannels (Graphics& g, te::SmartThumbnail& thumb, Rectangle<int> area, bool useHighRes,
                        te::EditTimeRange time, bool useLeft, bool useRight,
                        float leftGain, float rightGain);
@@ -182,7 +182,6 @@ public:
     
 private:
     void valueTreeChanged() override {}
-    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
     void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override;
     void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override;
     void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override;

@@ -288,11 +288,11 @@ void AudioClipComponent::paint (Graphics& g)
     
     if (editViewState.drawWaveforms && thumbnail != nullptr)
         drawWaveform (g, *getWaveAudioClip(), *thumbnail, Colours::black.withAlpha (0.5f),
-                      0, getWidth(), 0, getHeight(), 0, false);
+                      0, getWidth(), 0, getHeight(), 0);
 }
 
 void AudioClipComponent::drawWaveform (Graphics& g, te::AudioClipBase& c, te::SmartThumbnail& thumb, Colour colour,
-                                       int left, int right, int y, int h, int xOffset, bool drawLoopMarkers)
+                                       int left, int right, int y, int h, int xOffset)
 {
     auto getTimeRangeForDrawing = [this] (const int left, const int right) -> te::EditTimeRange
     {
@@ -743,10 +743,6 @@ TrackFooterComponent::~TrackFooterComponent()
     track->state.removeListener (this);
 }
 
-void TrackFooterComponent::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)
-{
-}
-
 void TrackFooterComponent::valueTreeChildAdded (juce::ValueTree&, juce::ValueTree& c)
 {
     if (c.hasType (te::IDs::PLUGIN))
@@ -1095,7 +1091,7 @@ void EditComponent::resized()
     
     playhead.setBounds (getLocalBounds().withTrimmedLeft (headerWidth).withTrimmedRight (footerWidth));
     
-    int y = editViewState.viewY;
+    int y = roundToInt (editViewState.viewY.get());
     for (int i = 0; i < jmin (headers.size(), tracks.size()); i++)
     {
         auto h = headers[i];
