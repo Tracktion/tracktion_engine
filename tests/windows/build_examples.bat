@@ -21,11 +21,27 @@ call "%TESTS_DIR%/build_projucer.bat" || exit 1
 ::   Build examples
 ::============================================================
 call :BuildExample "PlaybackDemo"
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
 call :BuildExample "PitchAndTimeDemo"
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
 call :BuildExample "StepSequencerDemo"
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
 call :BuildExample "PatternGeneratorDemo"
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
 call :BuildExample "RecordingDemo"
-exit /B %ERRORLEVEL%
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+call :BuildExample "PluginDemo"
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+call :BuildExample "EngineInPluginDemo"
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+exit /b 0
 
 :BuildExample
     echo "=========================================================="
@@ -43,4 +59,4 @@ exit /B %ERRORLEVEL%
         set CL=/DJUCER_ENABLE_GPL_MODE /GL
         "%MSBUILD_EXE%" %EXAMPLE_NAME%.sln /p:VisualStudioVersion=15.0 /m /t:Build /p:Configuration=Release /p:Platform=x64 /p:PreferredToolArchitecture=x64 /p:TreatWarningsAsErrors=true
     :builtSection
-exit /B 0
+exit /B %ERRORLEVEL%
