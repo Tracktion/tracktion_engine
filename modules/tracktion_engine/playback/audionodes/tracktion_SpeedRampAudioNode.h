@@ -264,12 +264,12 @@ private:
 class SpeedRampAudioNode : public SingleInputAudioNode
 {
 public:
-    SpeedRampAudioNode (AudioNode* input,
+    SpeedRampAudioNode (AudioNode* source,
                         EditTimeRange in,
                         EditTimeRange out,
                         AudioFadeCurve::Type fadeInType_,
                         AudioFadeCurve::Type fadeOutType_)
-        : SingleInputAudioNode (input),
+        : SingleInputAudioNode (source),
           fadeIn (in), fadeOut (out),
           fadeInType (fadeInType_),
           fadeOutType (fadeOutType_)

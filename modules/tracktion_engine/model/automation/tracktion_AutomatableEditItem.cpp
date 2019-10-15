@@ -11,8 +11,8 @@
 namespace tracktion_engine
 {
 
-AutomatableEditItem::AutomatableEditItem (Edit& edit, const juce::ValueTree& v)
-    : EditItem (EditItemID::readOrCreateNewID (edit, v), edit),
+AutomatableEditItem::AutomatableEditItem (Edit& ed, const juce::ValueTree& v)
+    : EditItem (EditItemID::readOrCreateNewID (ed, v), ed),
       elementState (v)
 {
     remapOnTempoChange.referTo (elementState, IDs::remapOnTempoChange, &edit.getUndoManager(), false);

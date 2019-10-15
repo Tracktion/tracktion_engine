@@ -21,8 +21,8 @@ PatchBayPlugin::Wire::Wire (const juce::ValueTree& v, UndoManager* um)  : state 
 struct PatchBayPlugin::WireList  : public ValueTreeObjectList<PatchBayPlugin::Wire, CriticalSection>,
                                    private AsyncUpdater
 {
-    WireList (PatchBayPlugin& pb, const juce::ValueTree& parent)
-        : ValueTreeObjectList<Wire, CriticalSection> (parent), patchbay (pb)
+    WireList (PatchBayPlugin& pb, const juce::ValueTree& parentTree)
+        : ValueTreeObjectList<Wire, CriticalSection> (parentTree), patchbay (pb)
     {
         rebuildObjects();
     }

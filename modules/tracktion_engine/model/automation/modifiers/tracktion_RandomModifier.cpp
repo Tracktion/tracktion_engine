@@ -96,8 +96,8 @@ struct RandomModifier::RandomModifierTimer    : public ModifierTimer
 //==============================================================================
 struct RandomModifier::ModifierAudioNode    : public SingleInputAudioNode
 {
-    ModifierAudioNode (AudioNode* input, RandomModifier& rm)
-        : SingleInputAudioNode (input),
+    ModifierAudioNode (AudioNode* source, RandomModifier& rm)
+        : SingleInputAudioNode (source),
           modifier (&rm)
     {
     }

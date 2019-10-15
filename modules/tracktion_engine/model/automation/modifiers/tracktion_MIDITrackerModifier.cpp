@@ -13,8 +13,8 @@ namespace tracktion_engine
 
 struct MIDITrackerModifier::ModifierAudioNode    : public SingleInputAudioNode
 {
-    ModifierAudioNode (AudioNode* input, MIDITrackerModifier& mtm)
-        : SingleInputAudioNode (input),
+    ModifierAudioNode (AudioNode* source, MIDITrackerModifier& mtm)
+        : SingleInputAudioNode (source),
           modifier (&mtm)
     {
     }

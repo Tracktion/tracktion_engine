@@ -13,9 +13,8 @@ namespace tracktion_engine
 
 struct VolAutomatableParameter : public AutomatableParameter
 {
-    VolAutomatableParameter (const String& xmlTag, const String& name,
-                             Plugin& owner, Range<float> valueRange)
-        : AutomatableParameter (xmlTag, name, owner, valueRange)
+    VolAutomatableParameter (const String& xmlTag, const String& name, Plugin& owner, Range<float> r)
+        : AutomatableParameter (xmlTag, name, owner, r)
     {
     }
 
@@ -38,8 +37,8 @@ struct VolAutomatableParameter : public AutomatableParameter
 //==============================================================================
 struct PanAutomatableParameter : public AutomatableParameter
 {
-    PanAutomatableParameter (const String& xmlTag, const String& name, Plugin& owner, Range<float> valueRange)
-        : AutomatableParameter (xmlTag, name, owner, valueRange)
+    PanAutomatableParameter (const String& xmlTag, const String& name, Plugin& owner, Range<float> r)
+        : AutomatableParameter (xmlTag, name, owner, r)
     {
     }
 
@@ -63,8 +62,8 @@ struct PanAutomatableParameter : public AutomatableParameter
 //==============================================================================
 struct MasterVolParameter  : public VolAutomatableParameter
 {
-    MasterVolParameter (const String& xmlTag, const String& name, Plugin& owner, Range<float> valueRange)
-        : VolAutomatableParameter (xmlTag, name, owner, valueRange)
+    MasterVolParameter (const String& xmlTag, const String& name, Plugin& owner, Range<float> r)
+        : VolAutomatableParameter (xmlTag, name, owner, r)
     {
     }
 
@@ -80,8 +79,8 @@ struct MasterVolParameter  : public VolAutomatableParameter
 //==============================================================================
 struct MasterPanParameter  : public PanAutomatableParameter
 {
-    MasterPanParameter (const String& xmlTag, const String& name, Plugin& owner, Range<float> valueRange)
-        : PanAutomatableParameter (xmlTag, name, owner, valueRange)
+    MasterPanParameter (const String& xmlTag, const String& name, Plugin& owner, Range<float> r)
+        : PanAutomatableParameter (xmlTag, name, owner, r)
     {
     }
 

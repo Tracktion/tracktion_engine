@@ -369,7 +369,6 @@ public:
 
     float getLevel (int channel);
 
-    //==============================================================================
 private:
     //==============================================================================
     void valueTreeChanged() override;
@@ -395,7 +394,6 @@ private:
     std::unique_ptr<FOChorus> chorus;
     std::unordered_map<AutomatableParameter*, ValueSmoother<float>> smoothers;
 
-    juce::CriticalSection voicesLock;
     bool flushingState = false;
     float currentTempo = 0.0f;
     LevelMeasurer levelMeasurer;

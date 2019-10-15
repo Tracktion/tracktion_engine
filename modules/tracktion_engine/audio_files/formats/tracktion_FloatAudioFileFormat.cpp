@@ -154,8 +154,8 @@ private:
 class MemoryMappedFloatReader   : public juce::MemoryMappedAudioFormatReader
 {
 public:
-    MemoryMappedFloatReader (const juce::File& file, const FloatAudioFormatReader& reader)
-        : MemoryMappedAudioFormatReader (file, reader,
+    MemoryMappedFloatReader (const juce::File& f, const FloatAudioFormatReader& reader)
+        : MemoryMappedAudioFormatReader (f, reader,
                                          reader.dataStartOffset,
                                          reader.lengthInSamples * 4 * reader.numChannels,
                                          4 * (int) reader.numChannels),

@@ -15,10 +15,10 @@ class EqualiserPlugin::EQAutomatableParameter : public AutomatableParameter
 {
 public:
     EQAutomatableParameter (EqualiserPlugin& p, const String& xmlTag, const String& name,
-                            Plugin& owner, Range<float> valueRange, int paramNumber_,
+                            Plugin& owner, Range<float> valueRangeToUse, int paramNumberToUse,
                             bool isGain_, bool isFreq_, bool isQ_)
-        : AutomatableParameter (xmlTag, name, owner, valueRange),
-          equaliser (p), paramNumber (paramNumber_),
+        : AutomatableParameter (xmlTag, name, owner, valueRangeToUse),
+          equaliser (p), paramNumber (paramNumberToUse),
           isGain (isGain_), isFreq (isFreq_), isQ (isQ_)
     {
     }

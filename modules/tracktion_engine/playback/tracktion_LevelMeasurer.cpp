@@ -296,8 +296,8 @@ void SharedLevelMeasurer::addBuffer (const juce::AudioBuffer<float>& inBuffer, i
 }
 
 //==============================================================================
-LevelMeasuringAudioNode::LevelMeasuringAudioNode (SharedLevelMeasurer::Ptr lm, AudioNode* input)
-   : SingleInputAudioNode (input), levelMeasurer (lm)
+LevelMeasuringAudioNode::LevelMeasuringAudioNode (SharedLevelMeasurer::Ptr lm, AudioNode* source)
+   : SingleInputAudioNode (source), levelMeasurer (lm)
 {
 }
 

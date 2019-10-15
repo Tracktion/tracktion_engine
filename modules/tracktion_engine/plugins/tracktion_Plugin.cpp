@@ -20,8 +20,8 @@ Plugin::Wire::Wire (const juce::ValueTree& v, UndoManager* um)  : state (v)
 struct Plugin::WireList : public ValueTreeObjectList<Plugin::Wire, CriticalSection>,
                           private AsyncUpdater
 {
-    WireList (Plugin& p, const juce::ValueTree& parent)
-       : ValueTreeObjectList<Wire, CriticalSection> (parent), plugin (p)
+    WireList (Plugin& p, const juce::ValueTree& parentTree)
+       : ValueTreeObjectList<Wire, CriticalSection> (parentTree), plugin (p)
     {
         rebuildObjects();
     }

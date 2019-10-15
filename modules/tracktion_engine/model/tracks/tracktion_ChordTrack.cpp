@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-ChordTrack::ChordTrack (Edit& edit, const ValueTree& v)  : ClipTrack (edit, v, 20, 13, 60)
+ChordTrack::ChordTrack (Edit& ed, const ValueTree& v)  : ClipTrack (ed, v, 20, 13, 60)
 {
 }
 

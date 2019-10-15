@@ -13,8 +13,8 @@ namespace tracktion_engine
 
 struct RackInputAutomatableParameter   : public AutomatableParameter
 {
-    RackInputAutomatableParameter (const String& xmlTag, const String& name, Plugin& owner, Range<float> valueRange)
-        : AutomatableParameter (xmlTag, name, owner, valueRange)
+    RackInputAutomatableParameter (const String& xmlTag, const String& name, Plugin& owner, Range<float> valueRangeToUse)
+        : AutomatableParameter (xmlTag, name, owner, valueRangeToUse)
     {
     }
 
@@ -34,8 +34,8 @@ struct RackInputAutomatableParameter   : public AutomatableParameter
 
 struct RackOutputAutomatableParameter   : public AutomatableParameter
 {
-    RackOutputAutomatableParameter (const String& xmlTag, const String& name, Plugin& owner, Range<float> valueRange)
-        : AutomatableParameter (xmlTag, name, owner, valueRange)
+    RackOutputAutomatableParameter (const String& xmlTag, const String& name, Plugin& owner, Range<float> valueRangeToUse)
+        : AutomatableParameter (xmlTag, name, owner, valueRangeToUse)
     {
     }
 
@@ -55,8 +55,8 @@ struct RackOutputAutomatableParameter   : public AutomatableParameter
 
 struct RackWetDryAutomatableParam  : public AutomatableParameter
 {
-    RackWetDryAutomatableParam (const String& xmlTag, const String& name, RackInstance& owner, Range<float> valueRange)
-        : AutomatableParameter (xmlTag, name, owner, valueRange)
+    RackWetDryAutomatableParam (const String& xmlTag, const String& name, RackInstance& owner, Range<float> valueRangeToUse)
+        : AutomatableParameter (xmlTag, name, owner, valueRangeToUse)
     {
     }
 

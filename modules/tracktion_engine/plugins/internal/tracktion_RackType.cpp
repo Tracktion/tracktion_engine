@@ -343,8 +343,8 @@ struct RackType::PluginRenderingInfo
 //==============================================================================
 struct RackType::RackPluginList  : public ValueTreeObjectList<RackType::PluginInfo>
 {
-    RackPluginList (RackType& t, const juce::ValueTree& parent)
-        : ValueTreeObjectList<PluginInfo> (parent), type (t)
+    RackPluginList (RackType& t, const juce::ValueTree& parentTree)
+        : ValueTreeObjectList<PluginInfo> (parentTree), type (t)
     {
         CRASH_TRACER
         callBlocking ([this] { this->rebuildObjects(); });
@@ -392,8 +392,8 @@ struct RackType::RackPluginList  : public ValueTreeObjectList<RackType::PluginIn
 
 struct RackType::ConnectionList  : public ValueTreeObjectList<RackConnection>
 {
-    ConnectionList (RackType& t, const juce::ValueTree& parent)
-        : ValueTreeObjectList<RackConnection> (parent), type (t)
+    ConnectionList (RackType& t, const juce::ValueTree& parentTree)
+        : ValueTreeObjectList<RackConnection> (parentTree), type (t)
     {
         CRASH_TRACER
         rebuildObjects();
@@ -1998,8 +1998,8 @@ ModifierList& RackType::getModifierList() const noexcept
 //==============================================================================
 struct RackTypeList::ValueTreeList  : public ValueTreeObjectList<RackType>
 {
-    ValueTreeList (RackTypeList& l, const juce::ValueTree& parent)
-        : ValueTreeObjectList<RackType> (parent), list (l)
+    ValueTreeList (RackTypeList& l, const juce::ValueTree& parentTree)
+        : ValueTreeObjectList<RackType> (parentTree), list (l)
     {
         // NB: rebuildObjects() is called after construction so that the edit has a valid
         // list while they're being created

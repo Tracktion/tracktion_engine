@@ -179,8 +179,8 @@ struct BreakpointOscillatorModifier::BreakpointOscillatorModifierTimer    : publ
 //==============================================================================
 struct BreakpointOscillatorModifier::ModifierAudioNode    : public SingleInputAudioNode
 {
-    ModifierAudioNode (AudioNode* input, BreakpointOscillatorModifier& rm)
-        : SingleInputAudioNode (input),
+    ModifierAudioNode (AudioNode* source, BreakpointOscillatorModifier& rm)
+        : SingleInputAudioNode (source),
           modifier (&rm)
     {
     }

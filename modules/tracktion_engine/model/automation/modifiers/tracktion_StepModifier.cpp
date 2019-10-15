@@ -100,8 +100,8 @@ struct StepModifier::StepModifierTimer : public ModifierTimer
 //==============================================================================
 struct StepModifier::StepModifierAudioNode    : public SingleInputAudioNode
 {
-    StepModifierAudioNode (AudioNode* input, StepModifier& sm)
-        : SingleInputAudioNode (input),
+    StepModifierAudioNode (AudioNode* source, StepModifier& sm)
+        : SingleInputAudioNode (source),
           stepModifier (&sm)
     {
     }

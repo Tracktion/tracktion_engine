@@ -149,8 +149,8 @@ struct LFOModifier::LFOModifierTimer    : public ModifierTimer
 //==============================================================================
 struct LFOModifier::ModifierAudioNode    : public SingleInputAudioNode
 {
-    ModifierAudioNode (AudioNode* input, LFOModifier& lfo)
-        : SingleInputAudioNode (input),
+    ModifierAudioNode (AudioNode* source, LFOModifier& lfo)
+        : SingleInputAudioNode (source),
           modifier (&lfo)
     {
     }

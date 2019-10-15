@@ -19,8 +19,8 @@ public:
     ExternalAutomatableParameter (const juce::String& paramID,
                                   const juce::String& name,
                                   ExternalPlugin& owner, int parameterIndex_,
-                                  juce::Range<float> valueRange)
-        : AutomatableParameter (paramID, name, owner, valueRange),
+                                  juce::Range<float> valueRangeToUse)
+        : AutomatableParameter (paramID, name, owner, valueRangeToUse),
           parameterIndex (parameterIndex_)
     {
         if (auto vstXML = owner.getVSTXML())

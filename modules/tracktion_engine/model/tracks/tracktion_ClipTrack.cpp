@@ -14,8 +14,8 @@ namespace tracktion_engine
 struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
                               private AsyncUpdater
 {
-    ClipList (ClipTrack& ct, const ValueTree& parent)
-        : ValueTreeObjectList<Clip> (parent),
+    ClipList (ClipTrack& ct, const ValueTree& parentTree)
+        : ValueTreeObjectList<Clip> (parentTree),
           clipTrack (ct)
     {
         rebuildObjects();
@@ -308,8 +308,8 @@ struct ClipTrack::CollectionClipList  : public ValueTree::Listener
 };
 
 //==============================================================================
-ClipTrack::ClipTrack (Edit& edit, const ValueTree& v, double defaultHeight, double minHeight, double maxHeight)
-    : Track (edit, v, defaultHeight, minHeight, maxHeight)
+ClipTrack::ClipTrack (Edit& ed, const ValueTree& v, double defaultHeight, double minHeight, double maxHeight)
+    : Track (ed, v, defaultHeight, minHeight, maxHeight)
 {
     ClipList::sortClips (state, &edit.getUndoManager());
 

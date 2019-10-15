@@ -15,8 +15,8 @@ template<typename ObjectType>
 struct TempoAndTimeSigListBase  : public ValueTreeObjectList<ObjectType>,
                                   public AsyncUpdater
 {
-    TempoAndTimeSigListBase (TempoSequence& ts, const ValueTree& parent)
-        : ValueTreeObjectList<ObjectType> (parent), sequence (ts)
+    TempoAndTimeSigListBase (TempoSequence& ts, const ValueTree& parentTree)
+        : ValueTreeObjectList<ObjectType> (parentTree), sequence (ts)
     {
     }
 
@@ -42,8 +42,8 @@ struct TempoAndTimeSigListBase  : public ValueTreeObjectList<ObjectType>,
 //==============================================================================
 struct TempoSequence::TempoSettingList  : public TempoAndTimeSigListBase<TempoSetting>
 {
-    TempoSettingList (TempoSequence& ts, const ValueTree& parent)
-        : TempoAndTimeSigListBase<TempoSetting> (ts, parent)
+    TempoSettingList (TempoSequence& ts, const ValueTree& parentTree)
+        : TempoAndTimeSigListBase<TempoSetting> (ts, parentTree)
     {
         rebuildObjects();
     }
@@ -75,8 +75,8 @@ struct TempoSequence::TempoSettingList  : public TempoAndTimeSigListBase<TempoSe
 //==============================================================================
 struct TempoSequence::TimeSigList  : public TempoAndTimeSigListBase<TimeSigSetting>
 {
-    TimeSigList (TempoSequence& ts, const ValueTree& parent)
-        : TempoAndTimeSigListBase<TimeSigSetting> (ts, parent)
+    TimeSigList (TempoSequence& ts, const ValueTree& parentTree)
+        : TempoAndTimeSigListBase<TimeSigSetting> (ts, parentTree)
     {
         rebuildObjects();
     }

@@ -200,7 +200,7 @@ struct WordMatchOperation : public SearchOperation
 
 struct OrOperation : public SearchOperation
 {
-    OrOperation (SearchOperation* in1, SearchOperation* in2)  : SearchOperation (in1, in2) {}
+    OrOperation (SearchOperation* a, SearchOperation* b)  : SearchOperation (a, b) {}
 
     Array<int> getMatches (ProjectSearchIndex& psi) override
     {
@@ -222,7 +222,7 @@ struct OrOperation : public SearchOperation
 
 struct AndOperation : public SearchOperation
 {
-    AndOperation (SearchOperation* in1, SearchOperation* in2) : SearchOperation (in1, in2) {}
+    AndOperation (SearchOperation* a, SearchOperation* b) : SearchOperation (a, b) {}
 
     Array<int> getMatches (ProjectSearchIndex& psi) override
     {
@@ -243,7 +243,7 @@ struct AndOperation : public SearchOperation
 
 struct NotOperation : public SearchOperation
 {
-    NotOperation (SearchOperation* in1) : SearchOperation (in1, nullptr) {}
+    NotOperation (SearchOperation* in) : SearchOperation (in, nullptr) {}
 
     Array<int> getMatches (ProjectSearchIndex& psi)
     {
