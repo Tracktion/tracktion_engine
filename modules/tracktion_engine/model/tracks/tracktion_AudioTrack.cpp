@@ -272,7 +272,7 @@ AudioTrack::AudioTrack (Edit& ed, const ValueTree& v)
     std::vector<ChannelIndex> channels = { ChannelIndex (0, juce::AudioChannelSet::left),
                                            ChannelIndex (1, juce::AudioChannelSet::right) };
 
-    callBlocking ([this, &ed, &channels]
+    callBlocking ([this, &channels]
     {
         waveInputDevice = std::make_unique<WaveInputDevice> (edit.engine, itemID.toString(),
                                                              TRANS("Track Wave Input"), channels,
