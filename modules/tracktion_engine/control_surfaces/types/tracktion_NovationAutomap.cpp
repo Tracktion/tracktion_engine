@@ -240,7 +240,8 @@ public:
                 {
                     if (auto in = at->edit.getEditInputDevices().getInputInstance (*at, 0))
                     {
-                        const bool armed = in->isRecordingEnabled();
+                        auto t = dynamic_cast<AudioTrack*> (in->getTargetTracks().getFirst());
+                        const bool armed = t != nullptr ? in->isRecordingEnabled (*t) : false;
                         strcpy (valueTextOut, armed ? "On" : "Off");
                         return armed ? 1.0f : 0.0f;
                     }
@@ -313,7 +314,8 @@ public:
                 case Param::Arm:
                     if (at != nullptr)
                         if (auto in = at->edit.getEditInputDevices().getInputInstance (*at, 0))
-                            in->setRecordingEnabled (value == 1.0f);
+                            for (auto t : in->getTargetTracks())
+                                in->setRecordingEnabled (*t, value == 1.0f);
 
                     break;
 

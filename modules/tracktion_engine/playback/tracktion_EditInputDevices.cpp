@@ -60,7 +60,7 @@ bool EditInputDevices::isInputDeviceAssigned (const InputDevice& d)
 void EditInputDevices::clearAllInputs (const AudioTrack& at)
 {
     for (auto* idi : getDevicesForTargetTrack (at))
-        idi->clearFromTrack();
+        idi->clearFromTracks();
 }
 
 static bool isInstanceRecording (InputDeviceInstance* idi)
@@ -79,13 +79,13 @@ void EditInputDevices::clearInputsOfDevice (const AudioTrack& at, const InputDev
     for (auto* idi : getDevicesForTargetTrack (at))
         if (&idi->owner == &d)
             if (! isInstanceRecording (idi))
-                idi->clearFromTrack();
+                idi->clearFromTracks();
 }
 
 InputDeviceInstance* EditInputDevices::getInputInstance (const AudioTrack& at, int index) const
 {
     for (auto* idi : getDevicesForTargetTrack (at))
-        if (idi->targetTrack == at.itemID && idi->targetIndex == index)
+        if (idi->isOnTargetTrack (at, index))
             return idi;
 
     return {};
@@ -96,7 +96,7 @@ Array<InputDeviceInstance*> EditInputDevices::getDevicesForTargetTrack (const Au
     Array<InputDeviceInstance*> devices;
 
     for (auto* idi : edit.getAllInputDevices())
-        if (idi->getTargetTrack() == &at)
+        if (idi->isOnTargetTrack (at))
             devices.add (idi);
 
     return devices;

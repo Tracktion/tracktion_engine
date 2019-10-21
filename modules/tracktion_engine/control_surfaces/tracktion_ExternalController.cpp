@@ -783,10 +783,13 @@ void ExternalController::updateTrackRecordLights()
 
                 for (auto in : ed->getAllInputDevices())
                 {
-                    if (in->isRecordingActive() && in->getTargetTrack() == t)
+                    if (auto at = dynamic_cast<AudioTrack*> (t))
                     {
-                        isRecording = true;
-                        break;
+                        if (in->isRecordingActive (*at) && in->getTargetTracks().contains (at))
+                        {
+                            isRecording = true;
+                            break;
+                        }
                     }
                 }
 

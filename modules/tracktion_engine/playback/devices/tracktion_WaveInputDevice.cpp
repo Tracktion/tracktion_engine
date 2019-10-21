@@ -224,6 +224,11 @@ public:
         return getWaveInput().mergeMode != 2 && InputDeviceInstance::isRecordingActive();
     }
 
+    bool isRecordingActive (const Track& t) const override
+    {
+        return getWaveInput().mergeMode != 2 && InputDeviceInstance::isRecordingActive (t);
+    }
+    
     bool shouldTrackContentsBeMuted() override
     {
         const ScopedLock sl (contextLock);
@@ -253,7 +258,7 @@ public:
 
         do
         {
-            recordedFile = File (expandPatterns (edit, getWaveInput().filenameMask, getTargetTrack(), take++)
+            recordedFile = File (expandPatterns (edit, getWaveInput().filenameMask, getTargetTracks().getFirst(), take++)
                                     + format.getFileExtensions()[0]);
         } while (recordedFile.exists());
 
@@ -491,6 +496,8 @@ public:
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         CRASH_TRACER
+        
+        Clip::Array clips;
 
         std::unique_ptr<RecordingContext> rc;
 
@@ -507,24 +514,32 @@ public:
                 return {};
 
             const AudioFile recordedFile (rc->file);
-            auto destTrack = getTargetTrack();
+            auto destTracks = getTargetTracks();
 
-            if (discardRecordings || destTrack == nullptr)
+            if (discardRecordings || destTracks.size() == 0)
             {
                 recordedFile.deleteFile();
                 return {};
             }
 
-            auto clipsCreated = applyLastRecording (*rc, recordedFile, *destTrack,
-                                                    recordedRange, isLooping, loopRange.end);
-
-            if (selectionManager != nullptr && ! clipsCreated.isEmpty())
+            for (auto destTrack : destTracks)
             {
-                selectionManager->selectOnly (*clipsCreated.getLast());
-                selectionManager->keepSelectedObjectsOnScreen();
+                if (isRecordingActive (*destTrack))
+                {
+                    auto clipsCreated = applyLastRecording (*rc, recordedFile, *destTrack,
+                                                            recordedRange, isLooping, loopRange.end);
+
+                    if (selectionManager != nullptr && ! clipsCreated.isEmpty())
+                    {
+                        selectionManager->selectOnly (*clipsCreated.getLast());
+                        selectionManager->keepSelectedObjectsOnScreen();
+                    }
+                    
+                    clips.addArray (clipsCreated);
+                }
             }
 
-            return clipsCreated;
+            return clips;
         }
 
         return {};
@@ -783,130 +798,132 @@ public:
         }
     }
 
-    Clip* applyRetrospectiveRecord (SelectionManager* selectionManager) override
+    juce::Array<Clip*> applyRetrospectiveRecord (SelectionManager* selectionManager) override
     {
-        auto dstTrack = getTargetTrack();
-
-        if (dstTrack == nullptr)
-            return nullptr;
-
-        auto& wi = getWaveInput();
-
-        auto recordBuffer = wi.getRetrospectiveRecordBuffer();
-
-        if (recordBuffer == nullptr)
-            return nullptr;
-
-        auto format = getFormatToUse();
-        File recordedFile;
-
-        auto res = getRecordingFile (recordedFile, *format);
-
-        if (res.failed())
-            return nullptr;
-
-        StringPairArray metadata;
-
+        juce::Array<Clip*> clips;
+        
+        for (auto dstTrack : getTargetTracks())
         {
-            AudioFileWriter writer (AudioFile (recordedFile), format,
-                                    recordBuffer->numChannels,
-                                    recordBuffer->sampleRate,
-                                    wi.bitDepth, metadata, 0);
+            auto& wi = getWaveInput();
 
-            if (writer.isOpen())
+            auto recordBuffer = wi.getRetrospectiveRecordBuffer();
+
+            if (recordBuffer == nullptr)
+                return nullptr;
+
+            auto format = getFormatToUse();
+            File recordedFile;
+
+            auto res = getRecordingFile (recordedFile, *format);
+
+            if (res.failed())
+                return nullptr;
+
+            StringPairArray metadata;
+
             {
-                int numReady;
-                juce::AudioBuffer<float> scratchBuffer (recordBuffer->numChannels, 1000);
+                AudioFileWriter writer (AudioFile (recordedFile), format,
+                                        recordBuffer->numChannels,
+                                        recordBuffer->sampleRate,
+                                        wi.bitDepth, metadata, 0);
 
-                while ((numReady = recordBuffer->fifo.getNumReady()) > 0)
+                if (writer.isOpen())
                 {
-                    auto toRead = jmin (numReady, scratchBuffer.getNumSamples());
+                    int numReady;
+                    juce::AudioBuffer<float> scratchBuffer (recordBuffer->numChannels, 1000);
 
-                    if (! recordBuffer->fifo.read (scratchBuffer, 0, toRead)
-                         || ! writer.appendBuffer (scratchBuffer, toRead))
-                        return nullptr;
+                    while ((numReady = recordBuffer->fifo.getNumReady()) > 0)
+                    {
+                        auto toRead = jmin (numReady, scratchBuffer.getNumSamples());
+
+                        if (! recordBuffer->fifo.read (scratchBuffer, 0, toRead)
+                             || ! writer.appendBuffer (scratchBuffer, toRead))
+                            return nullptr;
+                    }
                 }
             }
-        }
 
-        auto proj = ProjectManager::getInstance()->getProject (edit);
+            auto proj = ProjectManager::getInstance()->getProject (edit);
 
-        if (proj == nullptr)
-        {
-            jassertfalse; // TODO
-            return nullptr;
-        }
-
-        auto projectItem = proj->createNewItem (recordedFile, ProjectItem::waveItemType(),
-                                                recordedFile.getFileNameWithoutExtension(),
-                                                {}, ProjectItem::Category::recorded, true);
-
-        if (projectItem == nullptr)
-            return nullptr;
-
-        jassert (projectItem->getID().isValid());
-
-        auto clipName = getNewClipName (*dstTrack);
-        double start = 0;
-        double recordedLength = AudioFile (recordedFile).getLength();
-
-        if (context.playhead.isPlaying() || recordBuffer->wasRecentlyPlaying (edit))
-        {
-            auto adjust = -wi.getAdjustmentSeconds() + edit.engine.getDeviceManager().getBlockSizeMs() / 1000.0;
-
-            if (context.playhead.isPlaying())
+            if (proj == nullptr)
             {
-                start = context.playhead.streamTimeToSourceTime (recordBuffer->lastStreamTime) - recordedLength + adjust;
+                jassertfalse; // TODO
+                return nullptr;
+            }
+
+            auto projectItem = proj->createNewItem (recordedFile, ProjectItem::waveItemType(),
+                                                    recordedFile.getFileNameWithoutExtension(),
+                                                    {}, ProjectItem::Category::recorded, true);
+
+            if (projectItem == nullptr)
+                continue;
+
+            jassert (projectItem->getID().isValid());
+
+            auto clipName = getNewClipName (*dstTrack);
+            double start = 0;
+            double recordedLength = AudioFile (recordedFile).getLength();
+
+            if (context.playhead.isPlaying() || recordBuffer->wasRecentlyPlaying (edit))
+            {
+                auto adjust = -wi.getAdjustmentSeconds() + edit.engine.getDeviceManager().getBlockSizeMs() / 1000.0;
+
+                if (context.playhead.isPlaying())
+                {
+                    start = context.playhead.streamTimeToSourceTime (recordBuffer->lastStreamTime) - recordedLength + adjust;
+                }
+                else
+                {
+                    auto& pei = recordBuffer->editInfo[edit.getProjectItemID()];
+                    start = pei.lastEditTime + pei.pausedTime - recordedLength + adjust;
+                    pei.lastEditTime = -1;
+                }
             }
             else
             {
-                auto& pei = recordBuffer->editInfo[edit.getProjectItemID()];
-                start = pei.lastEditTime + pei.pausedTime - recordedLength + adjust;
-                pei.lastEditTime = -1;
+                auto position = context.playhead.getPosition();
+
+                if (position >= 5)
+                    start = position - recordedLength;
+                else
+                    start = jmax (0.0, position);
             }
-        }
-        else
-        {
-            auto position = context.playhead.getPosition();
 
-            if (position >= 5)
-                start = position - recordedLength;
-            else
-                start = jmax (0.0, position);
-        }
+            ClipPosition clipPos = { { start, start + recordedLength }, 0.0 };
 
-        ClipPosition clipPos = { { start, start + recordedLength }, 0.0 };
+            if (start < 0)
+            {
+                clipPos.offset = -start;
+                clipPos.time.start = 0;
+            }
 
-        if (start < 0)
-        {
-            clipPos.offset = -start;
-            clipPos.time.start = 0;
-        }
+            auto newClip = dstTrack->insertWaveClip (clipName, projectItem->getID(), clipPos, false);
 
-        auto newClip = dstTrack->insertWaveClip (clipName, projectItem->getID(), clipPos, false);
+            if (newClip == nullptr)
+                continue;
 
-        if (newClip == nullptr)
-            return nullptr;
+            CRASH_TRACER
 
-        CRASH_TRACER
+            AudioFileUtils::applyBWAVStartTime (recordedFile, (int64) (newClip->getPosition().getStartOfSource() * recordBuffer->sampleRate));
+            edit.engine.getAudioFileManager().forceFileUpdate (AudioFile (recordedFile));
 
-        AudioFileUtils::applyBWAVStartTime (recordedFile, (int64) (newClip->getPosition().getStartOfSource() * recordBuffer->sampleRate));
-        edit.engine.getAudioFileManager().forceFileUpdate (AudioFile (recordedFile));
-
-        if (selectionManager != nullptr)
-        {
-            selectionManager->selectOnly (*newClip);
-            selectionManager->keepSelectedObjectsOnScreen();
+            if (selectionManager != nullptr)
+            {
+                selectionManager->selectOnly (*newClip);
+                selectionManager->keepSelectedObjectsOnScreen();
+            }
+            
+            clips.add (newClip.get());
         }
 
-        return newClip.get();
+        return clips;
     }
 
-    bool isLivePlayEnabled() const override
+    bool isLivePlayEnabled (const Track& t) const override
     {
         return owner.isEndToEndEnabled()
-                && isRecordingEnabled()
-                && InputDeviceInstance::isLivePlayEnabled();
+                && isRecordingEnabled (t)
+                && InputDeviceInstance::isLivePlayEnabled (t);
     }
 
     AudioNode* createLiveInputNode() override

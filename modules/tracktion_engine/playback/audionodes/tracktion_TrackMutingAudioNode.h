@@ -22,11 +22,12 @@ public:
     {
         callInputWhileMuted = t.processAudioNodesWhileMuted();
         processMidiWhileMuted = track->state.getProperty (IDs::processMidiWhenMuted, false);
-
-        if (muteForInputsWhenRecording)
-            for (InputDeviceInstance* in : edit.getAllInputDevices())
-                if (in->isRecordingActive() && in->getTargetTrack() == &t)
-                    inputDevicesToMuteFor.add (in);
+        
+        if (auto at = dynamic_cast<AudioTrack*> (&t))
+            if (muteForInputsWhenRecording)
+                for (auto in : edit.getAllInputDevices())
+                    if (in->isRecordingActive (t) && in->getTargetTracks().contains (at))
+                        inputDevicesToMuteFor.add (in);
 
         wasBeingPlayed = t.shouldBePlayed();
     }
