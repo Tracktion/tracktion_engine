@@ -617,6 +617,10 @@ void DeviceManager::loadSettings()
         }
     }
 
+    auto currentDeviceType = deviceManager.getCurrentAudioDeviceType();
+    defaultWaveOutIndex = storage.getPropertyItem (SettingID::defaultWaveOutDevice, currentDeviceType, 0);
+    defaultWaveInIndex = storage.getPropertyItem (SettingID::defaultWaveInDevice, currentDeviceType, 0);
+
     TRACKTION_LOG ("Audio block size: " + String (getBlockSize()) + "  Rate: " + String ((int) getSampleRate()));
 }
 
