@@ -12,8 +12,8 @@
 
   dependencies:     juce_audio_basics, juce_audio_devices, juce_audio_formats, juce_audio_plugin_client, 
                     juce_audio_processors, juce_audio_utils, juce_core, juce_data_structures, juce_events, 
-                    juce_graphics, juce_gui_basics, juce_gui_extra, juce_dsp, tracktion_engine
-  exporters:        vs2017, xcode_mac
+                    juce_graphics, juce_gui_basics, juce_gui_extra, juce_dsp, juce_osc, tracktion_engine
+  exporters:        vs2017, xcode_mac, linux_make
 
   moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1
 
@@ -66,10 +66,10 @@ public:
     }
 
     //==============================================================================
-    void prepareToPlay (double sampleRate, int blockSize) override
+    void prepareToPlay (double sampleRate, int expectedBlockSize) override
     {
-        setLatencySamples (blockSize);
-        audioInterface.prepareToPlay (sampleRate, blockSize);
+        setLatencySamples (expectedBlockSize);
+        audioInterface.prepareToPlay (sampleRate, expectedBlockSize);
     }
 
     void releaseResources() override {}
@@ -105,8 +105,8 @@ public:
     void changeProgramName (int, const String&) override   {}
 
     //==============================================================================
-    void getStateInformation (MemoryBlock& destData) override {}
-    void setStateInformation (const void* data, int sizeInBytes) override {}
+    void getStateInformation (MemoryBlock&) override {}
+    void setStateInformation (const void*, int) override {}
 
     //==============================================================================
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override
@@ -149,7 +149,7 @@ private:
         if (auto synth = dynamic_cast<te::FourOscPlugin*> (edit.getPluginCache().createNewPlugin (te::FourOscPlugin::xmlTypeName, {}).get()))
         {
             XmlDocument doc (organPatch);
-            if (ScopedPointer<XmlElement> e = doc.getDocumentElement())
+            if (auto e = doc.getDocumentElement())
             {
                 auto vt = ValueTree::fromXml (*e);
                 if (vt.isValid())

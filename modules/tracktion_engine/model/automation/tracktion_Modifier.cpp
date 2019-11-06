@@ -87,8 +87,8 @@ StringArray Modifier::getEnabledNames()
 }
 
 //==============================================================================
-ModifierList::ModifierList (Edit& e, const ValueTree& parent)
-    : ValueTreeObjectList<Modifier> (parent),
+ModifierList::ModifierList (Edit& e, const ValueTree& parentTree)
+    : ValueTreeObjectList<Modifier> (parentTree),
       edit (e), state (parent)
 {
     jassert (parent.hasType (IDs::MODIFIERS));

@@ -47,6 +47,8 @@ public:
 
     /** Returns true if the output is a stereo pair. I.e. has two channels. */
     bool isStereoPair() const;
+    
+    void setStereoPair (bool);
 
     WaveOutputDeviceInstance* createInstance (EditPlaybackContext&);
 

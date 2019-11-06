@@ -11,8 +11,8 @@
 namespace tracktion_engine
 {
 
-PlayHeadAudioNode::PlayHeadAudioNode (AudioNode* input)
-   : SingleInputAudioNode (input)
+PlayHeadAudioNode::PlayHeadAudioNode (AudioNode* source)
+   : SingleInputAudioNode (source)
 {
 }
 

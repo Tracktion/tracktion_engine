@@ -484,8 +484,8 @@ void PhysicalMidiInputDevice::setReadingControllerMessages (bool b)
 class MidiInputDevice::MidiEventSnifferNode  : public SingleInputAudioNode
 {
 public:
-    MidiEventSnifferNode (AudioNode* input, MidiInputDevice& d)
-        : SingleInputAudioNode (input), owner (d)
+    MidiEventSnifferNode (AudioNode* source, MidiInputDevice& d)
+        : SingleInputAudioNode (source), owner (d)
     {
     }
 

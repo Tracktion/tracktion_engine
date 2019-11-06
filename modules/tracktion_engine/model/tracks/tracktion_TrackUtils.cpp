@@ -68,8 +68,8 @@ TrackInsertPoint::TrackInsertPoint (const ValueTree& v)
 }
 
 //==============================================================================
-TrackList::TrackList (Edit& e, const juce::ValueTree& parent)
-    : ValueTreeObjectList<Track> (parent), edit (e)
+TrackList::TrackList (Edit& e, const juce::ValueTree& parentTree)
+    : ValueTreeObjectList<Track> (parentTree), edit (e)
 {
     rebuildObjects();
     rebuilding = false;

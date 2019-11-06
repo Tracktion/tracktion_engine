@@ -64,6 +64,16 @@ Edit (Engine&, juce::ValueTree editState, EditRole, LoadContext*, int numUndoLev
 ```
 so we have to make sure to pass in our `engine` instance, the Edit state we've just loaded from the file and `Edit::forEditing` to make sure we can play it back (as opposed to just being used to examine or render). We can optionally specify an `Edit::LoadContext` here to be notified of load progress and a number of undo levels.
 
+If the Edit File does not exist, we will create a sample Edit by taking an .ogg file and adding it to Track 1 as a clip and then setting the loop markers around the clip.
+```
+auto f = File::createTempFile (".ogg");
+f.replaceWithData (PlaybackDemoAudio::BITs_Export_2_ogg, PlaybackDemoAudio::BITs_Export_2_oggSize);
+
+edit = std::make_unique<te::Edit> (engine, te::createEmptyEdit(), te::Edit::forEditing, nullptr, 0);
+auto clip = EngineHelpers::loadAudioFileAsClip (*edit, f);
+EngineHelpers::loopAroundClip (*clip);
+```
+
 - Once we've got our Edit instance and stored it in our member unique_ptr, we can set up the transport to play the whole thing back.
 First we get the `TransportControl` instance from the `Edit` which is used to control playback.
 Then we set its loop range based on the length of the `Edit`.

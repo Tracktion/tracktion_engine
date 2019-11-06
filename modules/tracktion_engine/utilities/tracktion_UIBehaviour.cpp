@@ -61,7 +61,7 @@ void UIBehaviour::showInfoMessage (const String& message)
     {
         auto bmc = new BubbleMessageComponent();
         bmc->addToDesktop (0);
-        bmc->showAt (c, AttributedString (message), 2000);
+        bmc->showAt (c, AttributedString (message), 2000, true, true);
     }
 }
 

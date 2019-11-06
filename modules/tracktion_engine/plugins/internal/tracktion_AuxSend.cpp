@@ -197,7 +197,7 @@ String AuxSendPlugin::getDefaultBusName (int index)
     return "Bus #" + String (index + 1);
 }
 
-StringArray AuxSendPlugin::getBusNames (Edit& edit)
+StringArray AuxSendPlugin::getBusNames (Edit& ed)
 {
     StringArray buses;
 
@@ -205,8 +205,8 @@ StringArray AuxSendPlugin::getBusNames (Edit& edit)
     {
         auto nm = getDefaultBusName (i);
 
-        if (edit.getAuxBusName (i).isNotEmpty())
-            nm << " (" << edit.getAuxBusName (i) << ")";
+        if (ed.getAuxBusName (i).isNotEmpty())
+            nm << " (" << ed.getAuxBusName (i) << ")";
 
         buses.add (nm);
     }

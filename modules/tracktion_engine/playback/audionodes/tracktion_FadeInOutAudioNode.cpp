@@ -148,20 +148,20 @@ void FadeInOutAudioNode::renderAdding (const AudioRenderContext& rc)
         input->renderAdding (rc);
 }
 
-AudioNode* FadeInOutAudioNode::createForEdit (Edit& edit, AudioNode* input)
+AudioNode* FadeInOutAudioNode::createForEdit (Edit& edit, AudioNode* source)
 {
     if (edit.masterFadeIn > 0 || edit.masterFadeOut > 0)
     {
-        const double length = edit.getLength();
+        auto length = edit.getLength();
 
-        return new FadeInOutAudioNode (input,
+        return new FadeInOutAudioNode (source,
                                        { 0.0, edit.masterFadeIn },
                                        { length - edit.masterFadeOut, length },
                                        edit.masterFadeInType,
                                        edit.masterFadeOutType);
     }
 
-    return input;
+    return source;
 }
 
 }

@@ -15,8 +15,8 @@ class VcaAutomatableParameter : public AutomatableParameter
 {
 public:
     VcaAutomatableParameter (const String& xmlTag, const String& name,
-                             Plugin& owner, Range<float> valueRange)
-        : AutomatableParameter (xmlTag, name, owner, valueRange)
+                             Plugin& owner, Range<float> valueRangeToUse)
+        : AutomatableParameter (xmlTag, name, owner, valueRangeToUse)
     {
     }
 

@@ -100,10 +100,10 @@ struct DiscreteLabelledParameter  : public AutomatableParameter
     DiscreteLabelledParameter (const juce::String& xmlTag,
                                const juce::String& name,
                                AutomatableEditItem& owner,
-                               juce::Range<float> valueRange,
+                               juce::Range<float> valueRangeToUse,
                                int numStatesToUse = 0,
                                juce::StringArray labelsToUse = {})
-        : AutomatableParameter (xmlTag, name, owner, valueRange),
+        : AutomatableParameter (xmlTag, name, owner, valueRangeToUse),
           numStates (numStatesToUse), labels (labelsToUse)
     {
         jassert (labels.isEmpty() || labels.size() == numStates);
@@ -159,9 +159,9 @@ private:
 struct SuffixedParameter    : public AutomatableParameter
 {
     SuffixedParameter (const juce::String& xmlTag, const juce::String& name,
-                       AutomatableEditItem& owner, juce::NormalisableRange<float> valueRange,
+                       AutomatableEditItem& owner, juce::NormalisableRange<float> valueRangeToUse,
                        juce::String suffixToUse = {})
-        : AutomatableParameter (xmlTag, name, owner, valueRange),
+        : AutomatableParameter (xmlTag, name, owner, valueRangeToUse),
           suffix (suffixToUse)
     {
     }

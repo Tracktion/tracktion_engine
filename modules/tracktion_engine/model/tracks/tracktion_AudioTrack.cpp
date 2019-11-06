@@ -255,8 +255,8 @@ private:
 };
 
 //==============================================================================
-AudioTrack::AudioTrack (Edit& edit, const ValueTree& v)
-    : ClipTrack (edit, v, 50, 13, 2000)
+AudioTrack::AudioTrack (Edit& ed, const ValueTree& v)
+    : ClipTrack (ed, v, 50, 13, 2000)
 {
     soloed.referTo (state, IDs::solo, nullptr);
     soloIsolated.referTo (state, IDs::soloIsolate, nullptr);
@@ -272,7 +272,7 @@ AudioTrack::AudioTrack (Edit& edit, const ValueTree& v)
     std::vector<ChannelIndex> channels = { ChannelIndex (0, juce::AudioChannelSet::left),
                                            ChannelIndex (1, juce::AudioChannelSet::right) };
 
-    callBlocking ([this, &edit, &channels]
+    callBlocking ([this, &channels]
     {
         waveInputDevice = std::make_unique<WaveInputDevice> (edit.engine, itemID.toString(),
                                                              TRANS("Track Wave Input"), channels,

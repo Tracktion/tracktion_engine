@@ -11,14 +11,14 @@
 namespace tracktion_engine
 {
 
-Track::Track (Edit& edit, const ValueTree& v, double defaultHeight, double minHeight, double maxHeight)
-    : EditItem (EditItemID::readOrCreateNewID (edit, v), edit),
-      MacroParameterElement (edit, v), // TODO: @Dave - this dumps an XML element in every track, including tempo, marker, etc - is that needed?
+Track::Track (Edit& ed, const ValueTree& v, double defaultHeight, double minHeight, double maxHeight)
+    : EditItem (EditItemID::readOrCreateNewID (ed, v), ed),
+      MacroParameterElement (ed, v), // TODO: @Dave - this dumps an XML element in every track, including tempo, marker, etc - is that needed?
       defaultTrackHeight (defaultHeight),
       minTrackHeight (minHeight),
       maxTrackHeight (maxHeight),
       state (v),
-      pluginList (edit)
+      pluginList (ed)
 {
     edit.trackCache.addItem (*this);
     auto um = &edit.getUndoManager();

@@ -1540,8 +1540,8 @@ void WaveInputDevice::consumeNextAudioBlock (const float** allChannels, int numC
 class WaveInputDevice::WaveInputDeviceAudioNode : public SingleInputAudioNode
 {
 public:
-    WaveInputDeviceAudioNode (AudioNode* input, WaveInputDevice& d)
-        : SingleInputAudioNode (input),
+    WaveInputDeviceAudioNode (AudioNode* source, WaveInputDevice& d)
+        : SingleInputAudioNode (source),
           owner (d)
     {
     }

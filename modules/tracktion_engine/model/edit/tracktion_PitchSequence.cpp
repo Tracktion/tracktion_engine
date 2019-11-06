@@ -14,8 +14,8 @@ namespace tracktion_engine
 struct PitchSequence::PitchList  : public ValueTreeObjectList<PitchSetting>,
                                    private AsyncUpdater
 {
-    PitchList (PitchSequence& s, const ValueTree& parent)
-        : ValueTreeObjectList<PitchSetting> (parent), pitchSequence (s)
+    PitchList (PitchSequence& s, const ValueTree& parentTree)
+        : ValueTreeObjectList<PitchSetting> (parentTree), pitchSequence (s)
     {
         rebuildObjects();
     }

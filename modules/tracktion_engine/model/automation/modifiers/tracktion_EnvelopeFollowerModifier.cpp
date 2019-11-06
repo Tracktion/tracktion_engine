@@ -216,8 +216,8 @@ protected:
 //==============================================================================
 struct EnvelopeFollowerModifier::EnvelopeFollowerModifierAudioNode  : public SingleInputAudioNode
 {
-    EnvelopeFollowerModifierAudioNode (AudioNode* input, EnvelopeFollowerModifier& efm)
-        : SingleInputAudioNode (input),
+    EnvelopeFollowerModifierAudioNode (AudioNode* source, EnvelopeFollowerModifier& efm)
+        : SingleInputAudioNode (source),
           envelopeFollowerModifier (&efm)
     {
     }

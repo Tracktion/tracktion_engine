@@ -11,8 +11,8 @@
 namespace tracktion_engine
 {
 
-FolderTrack::FolderTrack (Edit& edit, const ValueTree& v)
-    : Track (edit, v, 50, 13, 2000)
+FolderTrack::FolderTrack (Edit& ed, const ValueTree& v)
+    : Track (ed, v, 50, 13, 2000)
 {
     soloed.referTo (state, IDs::solo, nullptr);
     muted.referTo (state, IDs::mute, nullptr);

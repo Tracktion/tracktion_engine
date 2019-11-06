@@ -11,8 +11,8 @@
 namespace tracktion_engine
 {
 
-BufferingAudioNode::BufferingAudioNode (AudioNode* input, int bufferSize_)
-    : SingleInputAudioNode (input), bufferSize (bufferSize_), numSamplesLeft (0),
+BufferingAudioNode::BufferingAudioNode (AudioNode* source, int bufferSize_)
+    : SingleInputAudioNode (source), bufferSize (bufferSize_), numSamplesLeft (0),
       sampleRate (44100.0), tempBuffer (2, 0)
 {
 }

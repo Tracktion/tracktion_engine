@@ -247,6 +247,7 @@ private:
         double sampleRate = 44100.0;
         MidiMessageArray::MPESourceID mpeSource { MidiMessageArray::createUniqueMPESourceID() };
     };
+
     //==============================================================================
     class HostedMidiInputDeviceInstance : public MidiInputDeviceInstanceBase
     {
@@ -266,6 +267,7 @@ private:
         EditPlaybackContext& context;
         MidiBuffer midi;
     };
+    
     //==============================================================================
     HostedAudioDeviceInterface& audioIf;
 };

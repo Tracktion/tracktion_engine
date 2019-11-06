@@ -15,7 +15,7 @@ struct PluginCreationInfo
 {
     PluginCreationInfo (const PluginCreationInfo&) = default;
     PluginCreationInfo (PluginCreationInfo&&) = default;
-    PluginCreationInfo& operator= (PluginCreationInfo&&) = default;
+    PluginCreationInfo& operator= (PluginCreationInfo&&) = delete;
 
     PluginCreationInfo (Edit& ed, const juce::ValueTree& s, bool isNew) noexcept
         : edit (ed), state (s), isNewPlugin (isNew) {}

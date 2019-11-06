@@ -14,10 +14,10 @@ namespace tracktion_engine
 class SidechainSendAudioNode  : public SingleInputAudioNode
 {
 public:
-    SidechainSendAudioNode (AudioNode* input, EditItemID sourceTrackID)
-        : SingleInputAudioNode (input), srcTrackID (sourceTrackID)
+    SidechainSendAudioNode (AudioNode* source, EditItemID sourceTrackID)
+        : SingleInputAudioNode (source), srcTrackID (sourceTrackID)
     {
-        jassert (input != nullptr);
+        jassert (source != nullptr);
     }
 
     void prepareAudioNodeToPlay (const PlaybackInitialisationInfo& info) override

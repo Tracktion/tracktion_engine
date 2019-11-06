@@ -255,4 +255,14 @@ bool WaveOutputDevice::isStereoPair() const
     return deviceChannels.size() == 2;
 }
 
+void WaveOutputDevice::setStereoPair (bool stereo)
+{
+    auto& dm = engine.getDeviceManager();
+    
+    if (deviceChannels.size() == 2)
+        dm.setDeviceOutChannelStereo (jmax (getLeftChannel(), getRightChannel()), stereo);
+    else if (deviceChannels.size() == 1)
+        dm.setDeviceOutChannelStereo (getLeftChannel(), stereo);
+}
+    
 }

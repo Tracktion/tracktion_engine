@@ -13,8 +13,8 @@ namespace tracktion_engine
 
 struct PluginList::ObjectList  : public ValueTreeObjectList<Plugin>
 {
-    ObjectList (PluginList& l, const juce::ValueTree& parent)
-        : ValueTreeObjectList<Plugin> (parent), list (l)
+    ObjectList (PluginList& l, const juce::ValueTree& parentTree)
+        : ValueTreeObjectList<Plugin> (parentTree), list (l)
     {
         // NB: rebuildObjects() is called after construction so that the edit has a valid
         // list while they're being created
