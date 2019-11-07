@@ -925,9 +925,15 @@ public:
 
         for (const auto& ci : wi.getChannels())
         {
-            jassert (isPositiveAndBelow (ci.indexInDevice, numChannels));
-            const int inputIndex = channelSet.getChannelIndexForType (ci.channel);
-            FloatVectorOperations::copy (inputBuffer.getWritePointer (inputIndex), allChannels[ci.indexInDevice], numSamples);
+            if (! isPositiveAndBelow (ci.indexInDevice, numChannels))
+            {
+                const int inputIndex = channelSet.getChannelIndexForType (ci.channel);
+                FloatVectorOperations::copy (inputBuffer.getWritePointer (inputIndex), allChannels[ci.indexInDevice], numSamples);
+            }
+            else
+            {
+                jassertfalse; // Is an input device getting created with more channels than the total number of device channels?
+            }
         }
     }
 
