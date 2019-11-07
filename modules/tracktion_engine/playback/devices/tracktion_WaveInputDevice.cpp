@@ -932,7 +932,7 @@ public:
             }
             else
             {
-                jasserfalse; // Is an input device getting created with more channels than the total number of device channels?
+                jassertfalse; // Is an input device getting created with more channels than the total number of device channels?
             }
         }
     }
