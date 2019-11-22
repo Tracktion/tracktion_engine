@@ -224,7 +224,6 @@ String InsertPlugin::getName()                                               { r
 String InsertPlugin::getPluginType()                                         { return xmlTypeName; }
 String InsertPlugin::getShortName (int)                                      { return TRANS("Insert"); }
 double InsertPlugin::getLatencySeconds()                                     { return latencySeconds; }
-int InsertPlugin::getLatencySamples()                                        { return latencySamples; }
 void InsertPlugin::getChannelNames (StringArray*, StringArray*)              {}
 bool InsertPlugin::takesAudioInput()                                         { return true; }
 bool InsertPlugin::takesMidiInput()                                          { return true; }
@@ -246,7 +245,6 @@ void InsertPlugin::initialiseWithoutStopping (const PlaybackInitialisationInfo& 
 {
     // This latency number is from trial and error, may need more testing
     latencySeconds = manualAdjustMs / 1000.0 + (double)info.blockSizeSamples / info.sampleRate;
-    latencySamples = (int) (manualAdjustMs * info.sampleRate / 1000 + info.blockSizeSamples);
 }
 
 void InsertPlugin::deinitialise()

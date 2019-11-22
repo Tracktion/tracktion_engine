@@ -25,7 +25,6 @@ public:
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getShortName (int) override            { return getName(); }
 
-    int getLatencySamples() override                    { return latencySamples; }
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }
     void initialise (const PlaybackInitialisationInfo&) override;
     void deinitialise() override;

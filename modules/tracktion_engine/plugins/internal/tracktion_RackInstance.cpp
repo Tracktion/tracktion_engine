@@ -281,9 +281,11 @@ void RackInstance::initialise (const PlaybackInitialisationInfo& info)
 
 void RackInstance::initialiseWithoutStopping (const PlaybackInitialisationInfo& info)
 {
-    if (getLatencySeconds() > 0.0)
+    auto latencySeconds = getLatencySeconds();
+    
+    if (latencySeconds > 0.0)
     {
-        delaySize = getLatencySamples();
+        delaySize = roundToInt (latencySeconds * sampleRate);
         delayBuffer.setSize (2, delaySize);
         delayBuffer.clear();
     }
@@ -325,11 +327,6 @@ double RackInstance::getLatencySeconds()
         return type->getLatencySeconds (sampleRate, blockSizeSamples);
 
     return 0.0;
-}
-
-int RackInstance::getLatencySamples()
-{
-    return roundToInt (getLatencySeconds() * sampleRate);
 }
 
 void RackInstance::prepareForNextBlock (const AudioRenderContext& rc)

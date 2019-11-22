@@ -38,7 +38,7 @@ struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorLis
         if (plugin.edit.isLoading())
             return;
 
-        if (plugin.getLatencySamples() != ap->getLatencySamples())
+        if (plugin.latencySamples != ap->getLatencySamples())
             plugin.edit.getTransport().triggerClearDevicesOnStop();
 
         if (auto pi = plugin.getAudioPluginInstance())
