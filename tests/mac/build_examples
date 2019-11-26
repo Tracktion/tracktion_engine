@@ -35,7 +35,7 @@ function buildExample()
 
 	if [ -z "$DISABLE_BUILD" ]; then
 		cd "$EXAMPLE_ROOT_DIR/Builds/MacOSX"
-		xcodebuild -configuration Release LLVM_LTO=NO
+		xcodebuild -configuration Release LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
 	fi
 }
 
