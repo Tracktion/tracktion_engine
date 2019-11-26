@@ -38,11 +38,11 @@ In theory this isn't too difficult, it's more a case of efficiently being able t
 ### 4) Allow Dynamic Time-stretched Playback
 For optimal audio file playback, time-stretched WAV proxy files are created for each audio clip that needs to be played back. This works very well when the content is largely static. However, editing a large clip in this way, or having a more dynamic tempo track can lead to lengthly proxy rebuilds. Being able to read from the original source file and time-stretch it at playback time would greatly improve flexibility in this regard.
 
-### 4) Refactor `Project`
+### 5) Refactor `Project`
 Currently projects are stored as a binary format. This was originally devised to store huge sample libraries but has never fully be used in this way. Moving to a XML back ValueTree format will greatly improve readability and extensibility in the same way Edit files can be extended.
 
 It should be noted that most users of the Engine won't need to use the `Project` class. A simpler approach is to use an Edit with an appropriate `Edit::Options::filePathResolver` set. This means you can keep files relative to your Edit file without having to maintain a `Project` as well.
 
-### 5) Refactor Archiving
+### 6) Refactor Archiving
 This won't be a huge change but at the moment, archives are saved as compressed binary blobs. A more straight-forward approach would be to split the archiving process in to several individual steps: consolidate, optimise, zip.
 Doing this not only give the intermediate stage benefits but also allow archives to be manually unzipped and examined without having to go via the Engine as a tool.
