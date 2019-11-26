@@ -37,7 +37,6 @@ public:
     bool canBeAddedToRack() override                    { return false; }
     int getNumOutputChannelsGivenInputs (int) override  { return 2; }
     double getLatencySeconds() override;
-    int getLatencySamples() override;
     bool needsConstantBufferSize() override             { return true; }
 
     void prepareForNextBlock (const AudioRenderContext&) override;

@@ -35,13 +35,11 @@ void ChorusPlugin::initialise (const PlaybackInitialisationInfo& info)
     int bufferSizeSamples = roundToInt ((maxLengthMs * info.sampleRate) / 1000.0);
     delayBuffer.ensureMaxBufferSize (bufferSizeSamples);
     delayBuffer.clearBuffer();
-    latencySamples = bufferSizeSamples;
     phase = 0.0f;
 }
 
 void ChorusPlugin::deinitialise()
 {
-    latencySamples = 0;
     delayBuffer.releaseBuffer();
 }
 

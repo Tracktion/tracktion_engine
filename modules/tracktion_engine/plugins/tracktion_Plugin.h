@@ -148,7 +148,6 @@ public:
     virtual bool takesAudioInput()                      { return ! isSynth(); }
     virtual bool takesMidiInput()                       { return false; }
     virtual bool isSynth()                              { return false; }
-    virtual int getLatencySamples()                     { return 0; }
     virtual double getLatencySeconds()                  { return 0.0; }
     virtual double getTailLength() const                { return 0.0; }
     virtual bool mustBePlayedLiveWhenOnAClip() const    { return false; }

@@ -34,7 +34,6 @@ public:
     juce::String getPluginType() override;
     juce::String getShortName (int) override;
     double getLatencySeconds() override;
-    int getLatencySamples() override;
     void getChannelNames (juce::StringArray*, juce::StringArray*) override;
     bool takesAudioInput() override;
     bool takesMidiInput() override;
@@ -71,7 +70,6 @@ private:
     MidiMessageArray sendMidiBuffer, returnMidiBuffer;
 
     double latencySeconds = 0.0;
-    int latencySamples = 0;
     DeviceType sendDeviceType = noDevice, returnDeviceType = noDevice;
 
     bool hasAudio() const;

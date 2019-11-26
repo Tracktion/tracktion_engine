@@ -925,9 +925,9 @@ public:
 
         for (const auto& ci : wi.getChannels())
         {
-            if (! isPositiveAndBelow (ci.indexInDevice, numChannels))
+            if (isPositiveAndBelow (ci.indexInDevice, numChannels))
             {
-                const int inputIndex = channelSet.getChannelIndexForType (ci.channel);
+                auto inputIndex = channelSet.getChannelIndexForType (ci.channel);
                 FloatVectorOperations::copy (inputBuffer.getWritePointer (inputIndex), allChannels[ci.indexInDevice], numSamples);
             }
             else

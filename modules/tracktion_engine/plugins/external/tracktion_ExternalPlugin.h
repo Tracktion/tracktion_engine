@@ -63,7 +63,6 @@ public:
     bool takesAudioInput() override         { return (! isSynth()) || (dryGain->getCurrentValue() > 0.0f); }
     bool isMissing() override;
     bool isDisabled() override;
-    int getLatencySamples() override        { return latencySamples; }
     double getLatencySeconds() override     { return latencySeconds; }
     bool noTail() override;
     double getTailLength() const override;
