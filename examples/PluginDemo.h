@@ -122,9 +122,9 @@ public:
 
 private:
     void moved() override;
-    void userTriedToCloseWindow() override  { plugin.windowState->closeWindowExplicitly(); }
-    void closeButtonPressed() override      { userTriedToCloseWindow(); }
-    float getDesktopScaleFactor() const     { return 1.0f; }
+    void userTriedToCloseWindow() override          { plugin.windowState->closeWindowExplicitly(); }
+    void closeButtonPressed() override              { userTriedToCloseWindow(); }
+    float getDesktopScaleFactor() const override    { return 1.0f; }
 
     std::unique_ptr<PluginEditor> createContentComp();
 
