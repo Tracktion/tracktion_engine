@@ -41,8 +41,6 @@ private:
     DelayBufferBase delayBuffer;
     float phase = 0;
 
-    int latencySamples = 0;
-
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ChorusPlugin)
 };
 
