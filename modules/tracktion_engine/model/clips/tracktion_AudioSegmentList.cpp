@@ -11,6 +11,23 @@
 namespace tracktion_engine
 {
 
+void dumpSegments (const Array<AudioSegmentList::Segment>& segments)
+{
+
+    DBG ("******************************************");
+    for (auto& s : segments)
+    {
+        String text;
+
+        text += "Start: " + String (s.start) + "(" + String (s.startSample) + ")\n";
+        text += "Length: " + String (s.length) + "(" + String (s.lengthSample) + ")\n";
+        text += "Transpose: " + String (s.transpose) + "\n";
+        text += "===============================================";
+
+        DBG(text);
+    }
+}
+
 //==============================================================================
 AudioSegmentList::Segment::Segment() = default;
 
@@ -169,6 +186,10 @@ bool AudioSegmentList::operator!= (const AudioSegmentList& other) const noexcept
 
 void AudioSegmentList::build (bool crossfade)
 {
+    if (clip.getAutoPitch() && clip.getAutoPitchMode() == AudioClipBase::chordTrackMono)
+        if (auto pg = clip.getPatternGenerator())
+            pg->getFlattenedChordProgression (progression, true);
+
     if (clip.getAutoTempo())
         buildAutoTempo (crossfade);
     else
@@ -181,6 +202,34 @@ void AudioSegmentList::build (bool crossfade)
         for (auto& s : segments)
             s.start -= offset;
     }
+}
+
+void AudioSegmentList::chopSegment (Segment& seg, double at, int insertPos)
+{
+    Segment newSeg;
+
+    newSeg.start  = at;
+    newSeg.length = seg.getRange().end - newSeg.getRange().start;
+
+    newSeg.transpose = getPitchAt (newSeg.start + 0.0001);
+    newSeg.stretchRatio = (float) clip.getSpeedRatio();
+
+    newSeg.fadeIn  = true;
+    newSeg.fadeOut = seg.fadeOut;
+
+    newSeg.lengthSample = roundToInt (seg.lengthSample * newSeg.length / seg.length);
+    newSeg.startSample  = seg.getSampleRange().getEnd() - newSeg.lengthSample;
+
+    seg.length = seg.length - newSeg.length;
+    seg.lengthSample = newSeg.startSample - seg.startSample;
+
+    seg.fadeOut = true;
+    seg.followedBySilence = false;
+
+    jassert (newSeg.length > 0.01);
+    jassert (seg.length > 0.01);
+
+    segments.insert (insertPos, newSeg);
 }
 
 void AudioSegmentList::buildNormal (bool crossfade)
@@ -306,41 +355,54 @@ void AudioSegmentList::buildNormal (bool crossfade)
             {
                 for (int j = 0; j < segments.size(); ++j)
                 {
-                    auto& seg = segments.getReference(j);
+                    auto& seg = segments.getReference (j);
 
                     if (seg.getRange().reduced (0.01).contains (pitchTm)
-                         && std::abs (getPitchAt(pitchTm) - getPitchAt (seg.getRange().start)) > 0.0001)
+                         && std::abs (getPitchAt (pitchTm) - getPitchAt (seg.getRange().start)) > 0.0001)
                     {
-                        Segment newSeg;
-
-                        newSeg.start  = pitchTm;
-                        newSeg.length = seg.getRange().end - newSeg.getRange().start;
-
-                        newSeg.transpose = getPitchAt (newSeg.start + 0.0001);
-                        newSeg.stretchRatio = (float) clip.getSpeedRatio();
-
-                        newSeg.fadeIn  = true;
-                        newSeg.fadeOut = seg.fadeOut;
-
-                        newSeg.lengthSample = roundToInt (seg.lengthSample * newSeg.length / seg.length);
-                        newSeg.startSample  = seg.getSampleRange().getEnd() - newSeg.lengthSample;
-
-                        seg.length = seg.length - newSeg.length;
-                        seg.lengthSample = newSeg.startSample - seg.startSample;
-
-                        seg.fadeOut = true;
-                        seg.followedBySilence = false;
-
-                        segments.insert (j + 1, newSeg);
+                        chopSegment (seg, pitchTm, j + 1);
                         break;
                     }
                 }
             }
         }
+
+        chopSegmentsForChords();
     }
 
     if (crossfade)
         crossFadeSegments();
+}
+
+void AudioSegmentList::chopSegmentsForChords()
+{
+    if (clip.getAutoPitchMode() == AudioClipBase::chordTrackMono && progression.size() > 0)
+    {
+        auto& ts = clip.edit.tempoSequence;
+
+        double pos = 0.0;
+        for (auto& p : progression)
+        {
+            double chordTime = ts.beatsToTime (pos);
+
+            if (chordTime > getStart() + 0.01 && chordTime < getEnd() - 0.01)
+            {
+                for (int j = 0; j < segments.size(); ++j)
+                {
+                    auto& seg = segments.getReference (j);
+
+                    if (seg.getRange().reduced (0.01).contains (chordTime))
+                    {
+                        chopSegment (seg, chordTime, j + 1);
+                        break;
+                    }
+                }
+
+            }
+
+            pos += p->lengthInBeats;
+        }
+    }
 }
 
 static juce::Array<int64> findSyncSamples (const LoopInfo& loopInfo, juce::Range<juce::int64> range)
@@ -634,6 +696,7 @@ void AudioSegmentList::buildAutoTempo (bool crossfade)
         }
     }
 
+    chopSegmentsForChords();
     removeExtraSegments();
     mergeSegments (wi.sampleRate);
 
@@ -659,6 +722,41 @@ double AudioSegmentList::getEnd() const
 
 float AudioSegmentList::getPitchAt (double t)
 {
+    if (clip.getAutoPitch() && clip.getAutoPitchMode() == AudioClipBase::chordTrackMono && progression.size() > 0)
+    {
+        auto& ts = clip.edit.tempoSequence;
+
+        auto& ps = clip.edit.pitchSequence;
+        auto& pitchSetting = ps.getPitchAt (t);
+
+        double beat = ts.timeToBeats (t);
+
+        double pos = 0.0;
+        for (auto& p : progression)
+        {
+            if (beat >= pos && beat < pos + p->lengthInBeats)
+            {
+                int key = pitchSetting.getPitch() % 12;
+
+                auto scale = pitchSetting.getScale();
+
+                if (p->chordName.get().isNotEmpty())
+                {
+                    int rootNote = p->getRootNote (key, scale);
+
+                    int transposeBase = rootNote - (clip.getLoopInfo().getRootNote() % 12);
+
+                    if (key > 6)
+                        transposeBase -= 12;
+
+                    return (float) (transposeBase + clip.getTransposeSemiTones (false));
+                }
+            }
+
+            pos += p->lengthInBeats;
+        }
+    }
+
     if (clip.getAutoPitch())
     {
         auto& ps = clip.edit.pitchSequence;
