@@ -308,19 +308,19 @@ void HostedAudioDeviceInterface::initialise (const Parameters& p)
     dm.initialise (parameters.inputChannels, parameters.outputChannels);
 
     for (int i = 0; i < dm.getNumWaveOutDevices(); i++)
-        if (auto* wo = dm.getWaveOutDevice (i))
+        if (auto wo = dm.getWaveOutDevice (i))
             wo->setEnabled (true);
 
     for (int i = 0; i < dm.getNumWaveInDevices(); i++)
-        if (auto* wi = dm.getWaveInDevice (i))
+        if (auto wi = dm.getWaveInDevice (i))
             wi->setStereoPair (false);
 
     for (int i = 0; i < dm.getNumWaveInDevices(); i++)
     {
-        if (auto* wi = dm.getWaveInDevice (i))
+        if (auto wi = dm.getWaveInDevice (i))
         {
-            wi->setEnabled (true);
             wi->setEndToEnd (true);
+            wi->setEnabled (true);
         }
     }
 }
