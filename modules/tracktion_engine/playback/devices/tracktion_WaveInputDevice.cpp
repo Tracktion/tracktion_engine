@@ -258,7 +258,17 @@ public:
 
         do
         {
-            recordedFile = File (expandPatterns (edit, getWaveInput().filenameMask, getTargetTracks().getFirst(), take++)
+            AudioTrack* firstActiveTarget = getTargetTracks().getFirst();
+            for (auto t : getTargetTracks())
+            {
+                if (isRecordingActive (*t))
+                {
+                    firstActiveTarget = t;
+                    break;
+                }
+            }
+
+            recordedFile = File (expandPatterns (edit, getWaveInput().filenameMask, firstActiveTarget, take++)
                                     + format.getFileExtensions()[0]);
         } while (recordedFile.exists());
 
@@ -522,11 +532,34 @@ public:
                 return {};
             }
 
+            bool firstTrack = true;
             for (auto destTrack : destTracks)
             {
                 if (isRecordingActive (*destTrack))
                 {
-                    auto clipsCreated = applyLastRecording (*rc, recordedFile, *destTrack,
+                    AudioFile trackRecordedFile;
+                    if (firstTrack)
+                    {
+                        trackRecordedFile = recordedFile;
+                    }
+                    else
+                    {
+                        // If this audio input is recording to multiple tracks, make
+                        // a copy of the source audio for each additional track
+                        int take = 1;
+
+                        File f;
+                        do
+                        {
+                            f = File (expandPatterns (edit, getWaveInput().filenameMask, destTrack, take++) + rc->file.getFileExtension());
+                        } while (f.exists());
+
+                        rc->file.copyFileTo (f);
+
+                        trackRecordedFile = AudioFile (f);
+                    }
+
+                    auto clipsCreated = applyLastRecording (*rc, trackRecordedFile, *destTrack,
                                                             recordedRange, isLooping, loopRange.end);
 
                     if (selectionManager != nullptr && ! clipsCreated.isEmpty())
@@ -536,6 +569,8 @@ public:
                     }
                     
                     clips.addArray (clipsCreated);
+
+                    firstTrack = false;
                 }
             }
 
