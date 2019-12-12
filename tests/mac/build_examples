@@ -39,6 +39,7 @@ function buildExample()
 	fi
 }
 
+buildExample "TestRunner"
 buildExample "PlaybackDemo"
 buildExample "PitchAndTimeDemo"
 buildExample "StepSequencerDemo"
