@@ -46,6 +46,8 @@ extern "C"
  #include <cstdarg>
 #endif
 
+#include <thread>
+
 using namespace juce;
 
 #include "playback/tracktion_DeviceManager.cpp"
@@ -53,6 +55,7 @@ using namespace juce;
 #include "playback/tracktion_EditInputDevices.cpp"
 #include "playback/tracktion_LevelMeasurer.cpp"
 #include "playback/tracktion_MidiNoteDispatcher.cpp"
+#include "playback/tracktion_tests_TransportControl.cpp"
 #include "playback/tracktion_TransportControl.cpp"
 #include "playback/tracktion_AbletonLink.cpp"
 
