@@ -84,7 +84,7 @@ public:
     void updateRetrospectiveBufferLength (double length) override;
     double getAdjustSecs() const                                    { return adjustSecs; }
 
-    AudioTrack* getDestinationTrack();
+    juce::Array<AudioTrack*> getDestinationTracks();
 
     MidiChannel getMidiChannelFor (int rawChannelNumber) const;
 

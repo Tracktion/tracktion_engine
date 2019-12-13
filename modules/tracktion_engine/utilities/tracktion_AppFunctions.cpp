@@ -307,16 +307,20 @@ namespace AppFunctions
             {
                 if (in->isAttachedToTrack())
                 {
-                    if (in->isRecordingEnabled())
-                        ++numArmed;
-                    else
-                        ++numDisarmed;
+                    for (auto t : in->getTargetTracks())
+                    {
+                        if (in->isRecordingEnabled (*t))
+                            ++numArmed;
+                        else
+                            ++numDisarmed;
+                    }
                 }
             }
 
             for (auto in : ed->getAllInputDevices())
                 if (in->isAttachedToTrack())
-                    in->setRecordingEnabled (numArmed <= numDisarmed);
+                    for (auto t : in->getTargetTracks())
+                        in->setRecordingEnabled (*t, numArmed <= numDisarmed);
         }
     }
 

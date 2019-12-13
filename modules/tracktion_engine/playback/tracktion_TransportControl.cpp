@@ -1242,10 +1242,12 @@ bool TransportControl::performRecord()
                 // Set the playhead loop times before preparing the context as this will be used by
                 // the RecordingContext to initialise itself
                 playbackContext->playhead.setLoopTimes (false, { prerollStart, transportState->endTime });
-                playbackContext->prepareForRecording (prerollStart, transportState->startTime);
                 playbackContext->playhead.play ({ prerollStart, transportState->endTime }, false);
                 playbackContext->playhead.setPosition (prerollStart);
                 position = prerollStart;
+
+                // Prepare the recordings after the playhead has been setup to avoid synchronisation problems
+                playbackContext->prepareForRecording (prerollStart, transportState->startTime);
 
                 if (edit.getNumCountInBeats() > 0)
                     edit.setClickTrackRange ({ prerollStart, transportState->startTime });

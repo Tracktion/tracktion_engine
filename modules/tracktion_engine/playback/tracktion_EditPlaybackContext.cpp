@@ -593,7 +593,7 @@ Result EditPlaybackContext::applyRetrospectiveRecord (Array<Clip*>* clips)
 
     for (auto in : getAllInputs())
     {
-        if (auto clip = in->applyRetrospectiveRecord (findAppropriateSelectionManager (edit)))
+        for (auto clip : in->applyRetrospectiveRecord (findAppropriateSelectionManager (edit)))
         {
             if (clips != nullptr)
                 clips->add (clip);

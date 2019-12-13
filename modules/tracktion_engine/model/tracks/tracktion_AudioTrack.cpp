@@ -838,7 +838,7 @@ static juce::Array<AudioNode*> createLiveInputs (AudioTrack& track, const Create
     if (! params.forRendering)
         if (auto context = track.edit.getCurrentPlaybackContext())
             for (auto in : context->getAllInputs())
-                if (in->isLivePlayEnabled() && in->getTargetTrack() == &track)
+                if (in->isLivePlayEnabled (track) && in->isOnTargetTrack (track))
                     if (auto node = in->createLiveInputNode())
                         destArray.add (node);
 
@@ -1083,7 +1083,7 @@ AudioNode* AudioTrack::createAudioNode (const CreateAudioNodeParams& params)
 bool AudioTrack::hasAnyLiveInputs()
 {
     for (auto in : edit.getAllInputDevices())
-        if (in->isRecordingActive() && this == in->getTargetTrack())
+        if (in->isRecordingActive (*this) && in->isOnTargetTrack (*this))
             return true;
 
     return false;

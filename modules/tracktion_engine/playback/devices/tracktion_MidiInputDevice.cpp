@@ -297,11 +297,11 @@ void MidiInputDevice::saveProps (juce::XmlElement& n)
     n.setAttribute ("disallowedChannels", disallowedChannels.toString (2));
 }
 
-AudioTrack* MidiInputDevice::getDestinationTrack()
+juce::Array<AudioTrack*> MidiInputDevice::getDestinationTracks()
 {
     if (auto edit = engine.getUIBehaviour().getLastFocusedEdit())
         if (auto in = edit->getCurrentInstanceForInputDevice (this))
-            return in->getTargetTrack();
+            return in->getTargetTracks();
 
     return {};
 }
@@ -415,7 +415,7 @@ void MidiInputDevice::connectionStateChanged()
     {
         int bankID;
 
-        if (auto destTrack = getDestinationTrack())
+        if (auto destTrack = getDestinationTracks().getFirst())
             bankID = destTrack->getIdForBank (bankToUse);
         else
             bankID = engine.getMidiProgramManager().getBankID (0, bankToUse);
@@ -450,7 +450,7 @@ void MidiInputDevice::timerCallback()
 {
     stopTimer();
 
-    if (auto t = getDestinationTrack())
+    for (auto t : getDestinationTracks())
     {
         Array<int> keys, vels;
 
@@ -587,10 +587,14 @@ public:
 
     bool isRecordingActive() const override
     {
-        return getMidiInput().recordingEnabled
-                && InputDeviceInstance::isRecordingActive();
+        return getMidiInput().recordingEnabled && InputDeviceInstance::isRecordingActive();
     }
 
+    bool isRecordingActive (const Track& t) const override
+    {
+        return getMidiInput().recordingEnabled && InputDeviceInstance::isRecordingActive (t);
+    }
+    
     bool shouldTrackContentsBeMuted() override      { return recording && ! getMidiInput().mergeRecordings; }
 
     virtual void handleMMCMessage (const MidiMessage&) {}
@@ -687,9 +691,7 @@ public:
         if (discardRecordings)
             recorded.clear();
 
-        auto track = getTargetTrack();
-
-        if (recorded.getNumEvents() == 0 || track == nullptr)
+        if (recorded.getNumEvents() == 0)
             return {};
 
         Clip::Array createdClips;
@@ -705,225 +707,231 @@ public:
 
         bool createTakes = mi.recordingEnabled && ! (mi.mergeRecordings || mi.replaceExistingClips);
 
-        if (isLooping && recordingEnd > loopRange.end)
+        for (auto track : getTargetTracks())
         {
-            juce::MidiMessageSequence replaceSequence;
-            const auto loopLen = loopRange.getLength();
-            const auto maxNumLoops = 2 + (int) ((recordingEnd - recordingStart) / loopLen);
-
-            Clip* takeClip = nullptr;
-
-            for (int loopNum = 0; loopNum < maxNumLoops; ++loopNum)
+            if (! isRecordingActive (*track))
+                continue;
+                
+            if (isLooping && recordingEnd > loopRange.end)
             {
-                juce::MidiMessageSequence loopSequence;
-                const double thisLoopStart = loopRange.start + loopNum * loopLen;
-                const double thisLoopEnd = thisLoopStart + loopLen;
+                juce::MidiMessageSequence replaceSequence;
+                const auto loopLen = loopRange.getLength();
+                const auto maxNumLoops = 2 + (int) ((recordingEnd - recordingStart) / loopLen);
 
-                for (int i = 0; i < recorded.getNumEvents(); ++i)
+                Clip* takeClip = nullptr;
+
+                for (int loopNum = 0; loopNum < maxNumLoops; ++loopNum)
                 {
-                    auto& m = recorded.getEventPointer (i)->message;
+                    juce::MidiMessageSequence loopSequence;
+                    const double thisLoopStart = loopRange.start + loopNum * loopLen;
+                    const double thisLoopEnd = thisLoopStart + loopLen;
 
-                    if (m.isNoteOn())
+                    for (int i = 0; i < recorded.getNumEvents(); ++i)
                     {
-                        double s = m.getTimeStamp();
-                        double e = s;
+                        auto& m = recorded.getEventPointer (i)->message;
 
-                        if (auto* noteOff = recorded.getEventPointer (i)->noteOffObject)
-                            e = noteOff->message.getTimeStamp();
-
-                        if (e > thisLoopStart && s < thisLoopEnd)
+                        if (m.isNoteOn())
                         {
-                            if (s < thisLoopStart)
-                                s = 0.0;
-                            else
-                                s = std::fmod (s - loopRange.start, loopLen);
+                            double s = m.getTimeStamp();
+                            double e = s;
 
-                            if (e > thisLoopEnd)
-                                e = loopLen;
-                            else
-                                e = std::fmod (e - loopRange.start, loopLen);
+                            if (auto* noteOff = recorded.getEventPointer (i)->noteOffObject)
+                                e = noteOff->message.getTimeStamp();
 
-                            loopSequence.addEvent (MidiMessage (m, s));
-                            loopSequence.addEvent (MidiMessage (MidiMessage::noteOff (m.getChannel(), m.getNoteNumber()), e));
+                            if (e > thisLoopStart && s < thisLoopEnd)
+                            {
+                                if (s < thisLoopStart)
+                                    s = 0.0;
+                                else
+                                    s = std::fmod (s - loopRange.start, loopLen);
+
+                                if (e > thisLoopEnd)
+                                    e = loopLen;
+                                else
+                                    e = std::fmod (e - loopRange.start, loopLen);
+
+                                loopSequence.addEvent (MidiMessage (m, s));
+                                loopSequence.addEvent (MidiMessage (MidiMessage::noteOff (m.getChannel(), m.getNoteNumber()), e));
+                            }
+                        }
+                        else if (! m.isNoteOff())
+                        {
+                            const double t = m.getTimeStamp();
+
+                            if (t >= thisLoopStart && t < thisLoopEnd)
+                                loopSequence.addEvent (MidiMessage (m, std::fmod (t - loopRange.start, loopLen)));
                         }
                     }
-                    else if (! m.isNoteOff())
+
+                    if (loopSequence.getNumEvents() > 0)
                     {
-                        const double t = m.getTimeStamp();
+                        loopSequence.updateMatchedPairs();
 
-                        if (t >= thisLoopStart && t < thisLoopEnd)
-                            loopSequence.addEvent (MidiMessage (m, std::fmod (t - loopRange.start, loopLen)));
-                    }
-                }
-
-                if (loopSequence.getNumEvents() > 0)
-                {
-                    loopSequence.updateMatchedPairs();
-
-                    if (createTakes)
-                    {
-                        if (auto* clip = mi.addMidiToTrackAsTransaction (takeClip, *track,
-                                                                         loopSequence, loopRange,
-                                                                         MidiInputDevice::MergeMode::optional,
-                                                                         channelToApply,
-                                                                         selectionManager))
+                        if (createTakes)
                         {
-                            takeClip = clip;
-                            createdClips.add (clip);
+                            if (auto* clip = mi.addMidiToTrackAsTransaction (takeClip, *track,
+                                                                             loopSequence, loopRange,
+                                                                             MidiInputDevice::MergeMode::optional,
+                                                                             channelToApply,
+                                                                             selectionManager))
+                            {
+                                takeClip = clip;
+                                createdClips.add (clip);
+                            }
                         }
-                    }
-                    else if (mi.replaceExistingClips)
-                    {
-                        replaceSequence = loopSequence;
-                    }
-                    else
-                    {
-                        if (auto* clip = mi.addMidiToTrackAsTransaction (nullptr, *track,
-                                                                         loopSequence, loopRange,
-                                                                         MidiInputDevice::MergeMode::always,
-                                                                         channelToApply,
-                                                                         selectionManager))
+                        else if (mi.replaceExistingClips)
                         {
-                            createdClips.add (clip);
+                            replaceSequence = loopSequence;
+                        }
+                        else
+                        {
+                            if (auto* clip = mi.addMidiToTrackAsTransaction (nullptr, *track,
+                                                                             loopSequence, loopRange,
+                                                                             MidiInputDevice::MergeMode::always,
+                                                                             channelToApply,
+                                                                             selectionManager))
+                            {
+                                createdClips.add (clip);
+                            }
                         }
                     }
                 }
-            }
 
-            if (mi.replaceExistingClips && replaceSequence.getNumEvents() > 0)
-            {
-                if (auto* clip = mi.addMidiToTrackAsTransaction (nullptr, *track,
-                                                                 replaceSequence, loopRange,
-                                                                 MidiInputDevice::MergeMode::optional,
-                                                                 channelToApply, selectionManager))
+                if (mi.replaceExistingClips && replaceSequence.getNumEvents() > 0)
                 {
-                    createdClips.add (clip);
-                }
-            }
-        }
-        else
-        {
-            double startPos  = recordingStart;
-            double endPos    = recordingEnd;
-            double maxEndPos = endPos + 0.5;
-
-            if (edit.recordingPunchInOut)
-            {
-                if (startPos < loopRange.end)
-                {
-                    // if we didn't get as far as the punch-in
-                    if (endPos <= loopRange.start)
-                        return createdClips;
-
-                    startPos  = jmax (startPos, loopRange.start);
-                    endPos    = jlimit (startPos + 0.1, loopRange.end, endPos);
-                    maxEndPos = endPos;
-                }
-                else if (edit.getNumCountInBeats() > 0)
-                {
-                    startPos = jmax (startPos, loopRange.start);
-                }
-            }
-
-            Array<int> eventsToDelete;
-            Array<MidiMessage> noteOffMessagesToAdd;
-            Array<MidiMessage> mpeMessagesToAddAtStartPos;
-
-            const auto ensureNoteOffIsInsideClip = [&noteOffMessagesToAdd, endPos] (juce::MidiMessageSequence::MidiEventHolder& m)
-            {
-                jassert (m.message.isNoteOn());
-
-                if (m.noteOffObject == nullptr)
-                    noteOffMessagesToAdd.add (MidiMessage (MidiMessage::noteOff (m.message.getChannel(), m.message.getNoteNumber()), endPos));
-
-                else if (m.noteOffObject->message.getTimeStamp() > endPos)
-                    m.noteOffObject->message.setTimeStamp (endPos);
-            };
-
-            const auto isNoteOnThatEndsAfterClipStart = [startPos] (juce::MidiMessageSequence::MidiEventHolder& m)
-            {
-                return m.message.isNoteOn() && (m.noteOffObject == nullptr || m.noteOffObject->message.getTimeStamp() > startPos);
-            };
-
-            const auto isOutsideClipAndNotNoteOff = [startPos, maxEndPos] (const juce::MidiMessage& m)
-            {
-                return m.getTimeStamp() < startPos || (m.getTimeStamp() > maxEndPos && ! m.isNoteOff());
-            };
-
-            if (mi.recordToNoteAutomation)
-            {
-                auto clipStartIndex = recorded.getNextIndexAtTime (startPos);
-
-                for (int i = recorded.getNumEvents(); --i >= 0;)
-                {
-                    auto& m = *recorded.getEventPointer (i);
-
-                    if (m.message.getTimeStamp() < startPos && isNoteOnThatEndsAfterClipStart (m))
+                    if (auto* clip = mi.addMidiToTrackAsTransaction (nullptr, *track,
+                                                                     replaceSequence, loopRange,
+                                                                     MidiInputDevice::MergeMode::optional,
+                                                                     channelToApply, selectionManager))
                     {
-                        MPEStartTrimmer::reconstructExpression (mpeMessagesToAddAtStartPos, recorded, clipStartIndex, m.message.getChannel());
-
-                        ensureNoteOffIsInsideClip (m);
-                        eventsToDelete.add (i); // Remove original noteOn, findInitialNoteExpression makes new one in correct order
-                        m.noteOffObject = nullptr; // Prevent deletion of original note off, it will be paird with the new note-on later
-                    }
-                    else if (isOutsideClipAndNotNoteOff (m.message))
-                    {
-                        eventsToDelete.add (i);
-                    }
-                    else if (m.message.getTimeStamp() < endPos && m.message.isNoteOn())
-                    {
-                        ensureNoteOffIsInsideClip (m);
+                        createdClips.add (clip);
                     }
                 }
             }
             else
             {
-                for (int i = recorded.getNumEvents(); --i >= 0;)
+                double startPos  = recordingStart;
+                double endPos    = recordingEnd;
+                double maxEndPos = endPos + 0.5;
+
+                if (edit.recordingPunchInOut)
                 {
-                    auto& m = *recorded.getEventPointer (i);
+                    if (startPos < loopRange.end)
+                    {
+                        // if we didn't get as far as the punch-in
+                        if (endPos <= loopRange.start)
+                            return createdClips;
 
-                    if (m.message.getTimeStamp() < startPos && isNoteOnThatEndsAfterClipStart (m))
-                        m.message.setTimeStamp (startPos);
-
-                    if (isOutsideClipAndNotNoteOff (m.message))
-                        eventsToDelete.add (i);
-
-                    else if (m.message.getTimeStamp() < endPos && m.message.isNoteOn())
-                        ensureNoteOffIsInsideClip (m);
+                        startPos  = jmax (startPos, loopRange.start);
+                        endPos    = jlimit (startPos + 0.1, loopRange.end, endPos);
+                        maxEndPos = endPos;
+                    }
+                    else if (edit.getNumCountInBeats() > 0)
+                    {
+                        startPos = jmax (startPos, loopRange.start);
+                    }
                 }
-            }
 
-            if (! eventsToDelete.isEmpty())
-            {
-                // N.B. eventsToDelete is in reverse order so iterate forwards when deleting
-                for (int index : eventsToDelete)
-                    recorded.deleteEvent (index, true);
-            }
+                Array<int> eventsToDelete;
+                Array<MidiMessage> noteOffMessagesToAdd;
+                Array<MidiMessage> mpeMessagesToAddAtStartPos;
 
-            if (! noteOffMessagesToAdd.isEmpty())
-            {
-                for (const auto& m : noteOffMessagesToAdd)
-                    recorded.addEvent (m);
-            }
-
-            if (! mpeMessagesToAddAtStartPos.isEmpty())
-            {
-                for (const auto& m : mpeMessagesToAddAtStartPos)
-                    recorded.addEvent (m, startPos);
-            }
-
-            recorded.sort();
-            recorded.updateMatchedPairs();
-            recorded.addTimeToMessages (-startPos);
-
-            if (recorded.getNumEvents() > 0)
-            {
-                if (auto* clip = mi.addMidiToTrackAsTransaction (nullptr, *track, recorded,
-                                                                 { startPos, endPos },
-                                                                 MidiInputDevice::MergeMode::optional,
-                                                                 channelToApply, selectionManager))
+                const auto ensureNoteOffIsInsideClip = [&noteOffMessagesToAdd, endPos] (juce::MidiMessageSequence::MidiEventHolder& m)
                 {
-                    createdClips.add (clip);
+                    jassert (m.message.isNoteOn());
+
+                    if (m.noteOffObject == nullptr)
+                        noteOffMessagesToAdd.add (MidiMessage (MidiMessage::noteOff (m.message.getChannel(), m.message.getNoteNumber()), endPos));
+
+                    else if (m.noteOffObject->message.getTimeStamp() > endPos)
+                        m.noteOffObject->message.setTimeStamp (endPos);
+                };
+
+                const auto isNoteOnThatEndsAfterClipStart = [startPos] (juce::MidiMessageSequence::MidiEventHolder& m)
+                {
+                    return m.message.isNoteOn() && (m.noteOffObject == nullptr || m.noteOffObject->message.getTimeStamp() > startPos);
+                };
+
+                const auto isOutsideClipAndNotNoteOff = [startPos, maxEndPos] (const juce::MidiMessage& m)
+                {
+                    return m.getTimeStamp() < startPos || (m.getTimeStamp() > maxEndPos && ! m.isNoteOff());
+                };
+
+                if (mi.recordToNoteAutomation)
+                {
+                    auto clipStartIndex = recorded.getNextIndexAtTime (startPos);
+
+                    for (int i = recorded.getNumEvents(); --i >= 0;)
+                    {
+                        auto& m = *recorded.getEventPointer (i);
+
+                        if (m.message.getTimeStamp() < startPos && isNoteOnThatEndsAfterClipStart (m))
+                        {
+                            MPEStartTrimmer::reconstructExpression (mpeMessagesToAddAtStartPos, recorded, clipStartIndex, m.message.getChannel());
+
+                            ensureNoteOffIsInsideClip (m);
+                            eventsToDelete.add (i); // Remove original noteOn, findInitialNoteExpression makes new one in correct order
+                            m.noteOffObject = nullptr; // Prevent deletion of original note off, it will be paird with the new note-on later
+                        }
+                        else if (isOutsideClipAndNotNoteOff (m.message))
+                        {
+                            eventsToDelete.add (i);
+                        }
+                        else if (m.message.getTimeStamp() < endPos && m.message.isNoteOn())
+                        {
+                            ensureNoteOffIsInsideClip (m);
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = recorded.getNumEvents(); --i >= 0;)
+                    {
+                        auto& m = *recorded.getEventPointer (i);
+
+                        if (m.message.getTimeStamp() < startPos && isNoteOnThatEndsAfterClipStart (m))
+                            m.message.setTimeStamp (startPos);
+
+                        if (isOutsideClipAndNotNoteOff (m.message))
+                            eventsToDelete.add (i);
+
+                        else if (m.message.getTimeStamp() < endPos && m.message.isNoteOn())
+                            ensureNoteOffIsInsideClip (m);
+                    }
+                }
+
+                if (! eventsToDelete.isEmpty())
+                {
+                    // N.B. eventsToDelete is in reverse order so iterate forwards when deleting
+                    for (int index : eventsToDelete)
+                        recorded.deleteEvent (index, true);
+                }
+
+                if (! noteOffMessagesToAdd.isEmpty())
+                {
+                    for (const auto& m : noteOffMessagesToAdd)
+                        recorded.addEvent (m);
+                }
+
+                if (! mpeMessagesToAddAtStartPos.isEmpty())
+                {
+                    for (const auto& m : mpeMessagesToAddAtStartPos)
+                        recorded.addEvent (m, startPos);
+                }
+
+                recorded.sort();
+                recorded.updateMatchedPairs();
+                recorded.addTimeToMessages (-startPos);
+
+                if (recorded.getNumEvents() > 0)
+                {
+                    if (auto* clip = mi.addMidiToTrackAsTransaction (nullptr, *track, recorded,
+                                                                     { startPos, endPos },
+                                                                     MidiInputDevice::MergeMode::optional,
+                                                                     channelToApply, selectionManager))
+                    {
+                        createdClips.add (clip);
+                    }
                 }
             }
         }
@@ -933,81 +941,85 @@ public:
         return createdClips;
     }
 
-    Clip* applyRetrospectiveRecord (SelectionManager* selectionManager) override
+    juce::Array<Clip*> applyRetrospectiveRecord (SelectionManager* selectionManager) override
     {
         CRASH_TRACER
+        
+        juce::Array<Clip*> clips;
 
         auto& mi = getMidiInput();
         auto retrospective = mi.getRetrospectiveMidiBuffer();
 
         if (retrospective == nullptr)
-            return nullptr;
+            return {};
 
-        auto sequence = retrospective->getMidiMessages();
-        auto track = getTargetTrack();
-
-        if (sequence.getNumEvents() == 0 || track == nullptr)
-            return nullptr;
-
-        sequence.updateMatchedPairs();
-        auto channelToApply = mi.recordToNoteAutomation ? mi.getChannelToUse()
-                                                        : applyChannel (sequence, mi.getChannelToUse());
-        applyTimeAdjustment (sequence, mi.getManualAdjustmentMs());
-
-        auto clipStart = Time::getMillisecondCounterHiRes() * 0.001 - retrospective->lengthInSeconds + mi.getAdjustSecs();
-        sequence.addTimeToMessages (-clipStart);
-
-        double start;
-        double length = retrospective->lengthInSeconds;
-        double offset = 0;
-
-        if (context.playhead.isPlaying())
+        for (auto track : getTargetTracks())
         {
-            start = jmax (0.0, context.playhead.getPosition()) - length;
-        }
-        else if (lastEditTime >= 0 && pausedTime < 20)
-        {
-            start = lastEditTime + pausedTime - length;
-            lastEditTime = -1;
-        }
-        else
-        {
-            auto position = context.playhead.getPosition();
+            auto sequence = retrospective->getMidiMessages();
 
-            if (position >= 5)
-                start = position - length;
+            if (sequence.getNumEvents() == 0)
+                return {};
+
+            sequence.updateMatchedPairs();
+            auto channelToApply = mi.recordToNoteAutomation ? mi.getChannelToUse()
+                                                            : applyChannel (sequence, mi.getChannelToUse());
+            applyTimeAdjustment (sequence, mi.getManualAdjustmentMs());
+
+            auto clipStart = Time::getMillisecondCounterHiRes() * 0.001 - retrospective->lengthInSeconds + mi.getAdjustSecs();
+            sequence.addTimeToMessages (-clipStart);
+
+            double start;
+            double length = retrospective->lengthInSeconds;
+            double offset = 0;
+
+            if (context.playhead.isPlaying())
+            {
+                start = jmax (0.0, context.playhead.getPosition()) - length;
+            }
+            else if (lastEditTime >= 0 && pausedTime < 20)
+            {
+                start = lastEditTime + pausedTime - length;
+                lastEditTime = -1;
+            }
             else
-                start = jmax (0.0, context.playhead.getPosition());
+            {
+                auto position = context.playhead.getPosition();
+
+                if (position >= 5)
+                    start = position - length;
+                else
+                    start = jmax (0.0, context.playhead.getPosition());
+            }
+
+            if (sequence.getNumEvents() > 0)
+            {
+                auto firstEventTime = std::floor (sequence.getStartTime());
+                sequence.addTimeToMessages (-firstEventTime);
+                start += firstEventTime;
+                length -= firstEventTime;
+            }
+
+            if (start < 0)
+            {
+                offset = -start;
+                start = 0;
+                length -= offset;
+            }
+
+            retrospective->sequence.clear();
+
+            if (sequence.getNumEvents() > 0)
+            {
+                auto clip = mi.addMidiToTrackAsTransaction (nullptr, *track, sequence,
+                                                            { start, start + length },
+                                                            MidiInputDevice::MergeMode::never,
+                                                            channelToApply, selectionManager);
+                clip->setOffset (offset);
+                clips.add (clip);
+            }
         }
 
-        if (sequence.getNumEvents() > 0)
-        {
-            auto firstEventTime = std::floor (sequence.getStartTime());
-            sequence.addTimeToMessages (-firstEventTime);
-            start += firstEventTime;
-            length -= firstEventTime;
-        }
-
-        if (start < 0)
-        {
-            offset = -start;
-            start = 0;
-            length -= offset;
-        }
-
-        retrospective->sequence.clear();
-
-        if (sequence.getNumEvents() > 0)
-        {
-            auto clip = mi.addMidiToTrackAsTransaction (nullptr, *track, sequence,
-                                                        { start, start + length },
-                                                        MidiInputDevice::MergeMode::never,
-                                                        channelToApply, selectionManager);
-            clip->setOffset (offset);
-            return clip;
-        }
-
-        return nullptr;
+        return clips;
     }
 
     void masterTimeUpdate (double time)
@@ -1023,9 +1035,9 @@ public:
         }
     }
 
-    bool isLivePlayEnabled() const override
+    bool isLivePlayEnabled (const Track& t) const override
     {
-        return owner.isEndToEndEnabled() && InputDeviceInstance::isLivePlayEnabled();
+        return owner.isEndToEndEnabled() && InputDeviceInstance::isLivePlayEnabled (t);
     }
 
     AudioNode* createLiveInputNode() override
