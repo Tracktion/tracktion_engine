@@ -138,7 +138,7 @@ private:
             if (auto dev = dm.getMidiInDevice (0))
                 for (auto instance : edit.getAllInputDevices())
                     if (&instance->getInputDevice() == dev)
-                        instance->setTargetTrack (t, 0);
+                        instance->setTargetTrack (*t, 0, true);
         
         edit.restartPlayback();
     }

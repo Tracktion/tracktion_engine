@@ -587,7 +587,7 @@ TrackHeaderComponent::TrackHeaderComponent (EditViewState& evs, te::Track::Ptr t
             {
                 if (instance->getInputDevice().getDeviceType() == te::InputDevice::waveDevice)
                 {
-                    bool ticked = instance->getTargetTrack() == at;
+                    bool ticked = instance->getTargetTracks().getFirst() == at;
                     m.addItem (id++, instance->getInputDevice().getName(), true, ticked);
                 }
             }
@@ -606,7 +606,7 @@ TrackHeaderComponent::TrackHeaderComponent (EditViewState& evs, te::Track::Ptr t
                     if (instance->getInputDevice().getDeviceType() == te::InputDevice::waveDevice)
                     {
                         if (id == res)
-                            instance->setTargetTrack (at, 0);
+                            instance->setTargetTrack (*at, 0, true);
                         id++;
                     }
                 }
@@ -939,7 +939,7 @@ void TrackComponent::buildRecordClips()
     {
         for (auto in : track->edit.getAllInputDevices())
         {
-            if (in->isRecordingActive() && track == in->getTargetTrack())
+            if (in->isRecordingActive() && track == in->getTargetTracks().getFirst())
             {
                 needed = true;
                 break;

@@ -133,16 +133,16 @@ namespace EngineHelpers
     {
         auto& edit = t.edit;
         for (auto instance : edit.getAllInputDevices())
-            if (instance->getTargetTrack() == &t && instance->getTargetIndex() == position)
-                instance->setRecordingEnabled (arm);
+            if (instance->isOnTargetTrack (t, position))
+                instance->setRecordingEnabled (t, arm);
     }
     
     bool isTrackArmed (te::AudioTrack& t, int position = 0)
     {
         auto& edit = t.edit;
         for (auto instance : edit.getAllInputDevices())
-            if (instance->getTargetTrack() == &t && instance->getTargetIndex() == position)
-                return instance->isRecordingEnabled();
+            if (instance->isOnTargetTrack (t, position))
+                return instance->isRecordingEnabled (t);
         
         return false;
     }
@@ -151,7 +151,7 @@ namespace EngineHelpers
     {
         auto& edit = t.edit;
         for (auto instance : edit.getAllInputDevices())
-            if (instance->getTargetTrack() == &t && instance->getTargetIndex() == position)
+            if (instance->isOnTargetTrack (t, position))
                 return instance->getInputDevice().isEndToEndEnabled();
         
         return false;
@@ -163,7 +163,7 @@ namespace EngineHelpers
         {
             auto& edit = t.edit;
             for (auto instance : edit.getAllInputDevices())
-                if (instance->getTargetTrack() == &t && instance->getTargetIndex() == position)                    
+                if (instance->isOnTargetTrack (t, position))
                     instance->getInputDevice().flipEndToEnd();
         }
     }
@@ -172,7 +172,7 @@ namespace EngineHelpers
     {
         auto& edit = t.edit;
         for (auto instance : edit.getAllInputDevices())
-            if (instance->getTargetTrack() == &t && instance->getTargetIndex() == position)
+            if (instance->isOnTargetTrack (t, position))
                 return true;
         
         return false;
