@@ -302,8 +302,12 @@ void HostedAudioDeviceInterface::initialise (const Parameters& p)
 
     auto& dm = engine.getDeviceManager();
 
-    deviceType = new HostedAudioDeviceType (*this);
-    dm.deviceManager.addAudioDeviceType (deviceType);
+    if (deviceType == nullptr)
+    {
+        deviceType = new HostedAudioDeviceType (*this);
+        dm.deviceManager.addAudioDeviceType (deviceType);
+    }
+
     dm.deviceManager.setCurrentAudioDeviceType ("Hosted Device", true);
     dm.initialise (parameters.inputChannels, parameters.outputChannels);
 
