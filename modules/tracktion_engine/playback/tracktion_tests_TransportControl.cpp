@@ -132,8 +132,8 @@ public:
     //==============================================================================
     struct ProcessThread
     {
-        ProcessThread (HostedAudioDeviceInterface& interface, const HostedAudioDeviceInterface::Parameters& params)
-            : audioIO (interface)
+        ProcessThread (HostedAudioDeviceInterface& deviceInterface, const HostedAudioDeviceInterface::Parameters& params)
+            : audioIO (deviceInterface)
         {
             silenceBuffer.setSize (params.inputChannels, params.blockSize);
             silenceBuffer.clear();
