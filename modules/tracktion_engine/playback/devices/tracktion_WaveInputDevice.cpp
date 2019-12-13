@@ -524,16 +524,16 @@ public:
                 return {};
 
             const AudioFile recordedFile (rc->file);
-            auto destTracks = getTargetTracks();
+            auto recordingDestTracks = getTargetTracks();
 
-            if (discardRecordings || destTracks.size() == 0)
+            if (discardRecordings || recordingDestTracks.size() == 0)
             {
                 recordedFile.deleteFile();
                 return {};
             }
 
             bool firstTrack = true;
-            for (auto destTrack : destTracks)
+            for (auto destTrack : recordingDestTracks)
             {
                 if (isRecordingActive (*destTrack))
                 {
