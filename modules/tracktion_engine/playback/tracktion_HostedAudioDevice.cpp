@@ -310,6 +310,8 @@ void HostedAudioDeviceInterface::initialise (const Parameters& p)
 
     dm.deviceManager.setCurrentAudioDeviceType ("Hosted Device", true);
     dm.initialise (parameters.inputChannels, parameters.outputChannels);
+    jassert (dm.deviceManager.getCurrentAudioDeviceType() == "Hosted Device");
+    jassert (dm.deviceManager.getCurrentDeviceTypeObject() == deviceType);
 
     for (int i = 0; i < dm.getNumWaveOutDevices(); i++)
         if (auto wo = dm.getWaveOutDevice (i))
