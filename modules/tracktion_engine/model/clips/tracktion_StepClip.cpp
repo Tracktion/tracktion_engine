@@ -158,6 +158,19 @@ void StepClip::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i
         updatePatternList();
 
     changed();
+
+    if (v.hasType (IDs::PATTERN))
+    {
+        for (auto patternInstance : patternInstanceList)
+            if (v == patternInstance->getPattern().state)
+                patternInstance->changed();
+    }
+    else if (v.hasType (IDs::CHANNEL))
+    {
+        for (auto channel : *channelList)
+            if (v == channel->state)
+                channel->changed();
+    }
 }
 
 void StepClip::valueTreeChildAdded (ValueTree& p, juce::ValueTree& c)
