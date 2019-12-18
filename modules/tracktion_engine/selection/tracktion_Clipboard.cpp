@@ -1255,7 +1255,10 @@ bool Clipboard::Plugins::pasteIntoEdit (const EditPastingOptions& options) const
     CRASH_TRACER
     bool anyPasted = false;
 
-    for (auto& item : plugins)
+    auto pluginsToPaste = plugins;
+    std::reverse (pluginsToPaste.begin(), pluginsToPaste.end()); // Reverse the array so they get pasted in the correct order
+
+    for (auto& item : pluginsToPaste)
     {
         auto stateCopy = item.createCopy();
         EditItemID::remapIDs (stateCopy, nullptr, options.edit);
