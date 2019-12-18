@@ -40,6 +40,7 @@ public:
         UnitTestRunner testRunner;
         testRunner.setAssertOnFailure (false);
         testRunner.runTestsInCategory ("Tracktion");
+        testRunner.runTestsInCategory ("Tracktion:Longer");
 
         int numFailues = 0;
 

@@ -119,7 +119,11 @@ public:
     bool hasSeparateInputsAndOutputs() const override                       { return false;                             }
     AudioIODevice* createDevice (const String&, const String&) override
     {
-        auto device = new HostedAudioDevice (audioIf, [this] (HostedAudioDevice* d) { devices.removeFirstMatchingValue (d); });
+        auto device = new HostedAudioDevice (audioIf, [ptr = WeakReference<HostedAudioDeviceType> (this)] (HostedAudioDevice* d)
+                                                      {
+                                                          if (ptr != nullptr)
+                                                              ptr->devices.removeFirstMatchingValue (d);
+                                                      });
         devices.add (device);
         return device;
     }
@@ -139,6 +143,8 @@ public:
 private:
     HostedAudioDeviceInterface& audioIf;
     juce::Array<HostedAudioDevice*> devices;
+
+    JUCE_DECLARE_WEAK_REFERENCEABLE (HostedAudioDeviceType)
 };
 
 //==============================================================================
@@ -302,10 +308,17 @@ void HostedAudioDeviceInterface::initialise (const Parameters& p)
 
     auto& dm = engine.getDeviceManager();
 
+    // First check for an existing hosted device
+    if (deviceType == nullptr)
+        for (auto device : dm.deviceManager.getAvailableDeviceTypes())
+            if (auto hostedAudioDeviceType = dynamic_cast<HostedAudioDeviceType*> (device))
+                deviceType = hostedAudioDeviceType;
+
+    // Otherwise add a new hosted device type
     if (deviceType == nullptr)
     {
         deviceType = new HostedAudioDeviceType (*this);
-        dm.deviceManager.addAudioDeviceType (deviceType);
+        dm.deviceManager.addAudioDeviceType (std::unique_ptr<HostedAudioDeviceType> (deviceType));
     }
 
     dm.deviceManager.setCurrentAudioDeviceType ("Hosted Device", true);

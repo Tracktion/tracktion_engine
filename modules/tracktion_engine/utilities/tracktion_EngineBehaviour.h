@@ -59,7 +59,7 @@ public:
       */
     virtual bool canScanPluginsOutOfProcess()                                       { return false; }
 
-    // You may want to disable auto initialisation of the device manaer if you
+    // You may want to disable auto initialisation of the device manager if you
     // are using the engine in a plugin
     virtual bool autoInitialiseDeviceManager()                                      { return true; }
 

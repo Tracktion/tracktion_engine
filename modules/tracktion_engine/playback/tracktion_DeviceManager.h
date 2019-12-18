@@ -31,10 +31,20 @@ public:
     void closeDevices();
     void saveSettings();
 
-    // If you are using the engine in a plugin or an application
-    // that accesses the audio device directly, use this interface
-    // to pass audio and midi to the DeviceManager.
+    /** If you are using the engine in a plugin or an application
+        that accesses the audio device directly, use this interface
+        to pass audio and midi to the DeviceManager.
+    */
     HostedAudioDeviceInterface& getHostedAudioDeviceInterface();
+
+    /** Returns true if the hosted interface is available and in use. */
+    bool isHostedAudioDeviceInterfaceInUse() const;
+
+    /** Removes the hosted audio device.
+        You shouldn't normally need to call this but can be useful for running tests.
+        Afterwards, you'll need to call initialise again.
+    */
+    void removeHostedAudioDeviceInterface();
 
     //==============================================================================
     float getCpuUsage() const noexcept                  { return (float) currentCpuUsage; }

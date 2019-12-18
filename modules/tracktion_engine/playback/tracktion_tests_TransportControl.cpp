@@ -17,7 +17,7 @@ class RecordingSyncTests    : public juce::UnitTest
 {
 public:
     RecordingSyncTests()
-        : juce::UnitTest ("RecordingSyncTests ", "Tracktion") {}
+        : juce::UnitTest ("RecordingSyncTests ", "Tracktion:Longer") {}
 
     //==============================================================================
     void runTest() override
@@ -27,17 +27,25 @@ public:
         params.blockSize = 256;
         params.inputChannels = 16;
         params.fixedBlockSize = true;
-        runSyncronisationTest (params);
+        runSynchronisationTest (params);
 
         params.sampleRate = 96000.0;
         params.blockSize = 512;
-        runSyncronisationTest (params);
+        runSynchronisationTest (params);
 
         params.blockSize = 64;
-        runSyncronisationTest (params);
+        runSynchronisationTest (params);
+
+        cleanUp();
+
+        // Test reinitialisation and clean-up
+        params.sampleRate = 44100.0;
+        runSynchronisationTest (params);
+
+        cleanUp();
     }
 
-    void runSyncronisationTest (const HostedAudioDeviceInterface::Parameters& params)
+    void runSynchronisationTest (const HostedAudioDeviceInterface::Parameters& params)
     {
         using namespace std::chrono_literals;
 
@@ -51,7 +59,8 @@ public:
         beginTest ("Test device setup");
         {
             expectEquals (deviceManager.getNumWaveInDevices(), params.inputChannels);
-            expectEquals (deviceManager.getNumWaveOutDevices(), 1);
+            expect ((deviceManager.getNumWaveOutDevices() == 1 && deviceManager.getWaveOutDevice (0)->isStereoPair())
+                    || (deviceManager.getNumWaveOutDevices() == 2 && ! deviceManager.getWaveOutDevice (0)->isStereoPair()));
         }
 
         TempCurrentWorkingDirectory tempDir;
@@ -92,6 +101,13 @@ public:
                             .replace ("SECOND", String (sampleIndicies[0]))
                             .replace ("DIFF", String (index - sampleIndicies[0])));
         }
+    }
+
+    void cleanUp()
+    {
+        auto& deviceManager = Engine::getInstance().getDeviceManager();
+        deviceManager.removeHostedAudioDeviceInterface();
+        deviceManager.initialise();
     }
 
     //==============================================================================

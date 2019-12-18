@@ -157,6 +157,26 @@ HostedAudioDeviceInterface& DeviceManager::getHostedAudioDeviceInterface()
     return *hostedAudioDeviceInterface;
 }
 
+bool DeviceManager::isHostedAudioDeviceInterfaceInUse() const
+{
+    return hostedAudioDeviceInterface != nullptr
+        && deviceManager.getCurrentAudioDeviceType() == "Hosted Device";
+}
+
+void DeviceManager::removeHostedAudioDeviceInterface()
+{
+    for (auto device : deviceManager.getAvailableDeviceTypes())
+    {
+        if (device->getTypeName() == "Hosted Device")
+        {
+            deviceManager.removeAudioDeviceType (device);
+            break;
+        }
+    }
+
+    hostedAudioDeviceInterface.reset();
+}
+
 String DeviceManager::getDefaultAudioOutDeviceName (bool translated)
 {
     return translated ? ("(" + TRANS("Default audio output") + ")")
@@ -585,13 +605,21 @@ void DeviceManager::loadSettings()
     auto& storage = engine.getPropertyStorage();
 
     {
-        auto audioXml = storage.getXmlProperty (SettingID::audio_device_setup);
 
         CRASH_TRACER
-        if (audioXml != nullptr)
-            error = deviceManager.initialise (defaultNumInputChannelsToOpen, defaultNumOutputChannelsToOpen, audioXml.get(), true);
-        else
+        if (isHostedAudioDeviceInterfaceInUse())
+        {
             error = deviceManager.initialiseWithDefaultDevices (defaultNumInputChannelsToOpen, defaultNumOutputChannelsToOpen);
+        }
+        else
+        {
+            auto audioXml = storage.getXmlProperty (SettingID::audio_device_setup);
+
+            if (audioXml != nullptr)
+                error = deviceManager.initialise (defaultNumInputChannelsToOpen, defaultNumOutputChannelsToOpen, audioXml.get (), true);
+            else
+                error = deviceManager.initialiseWithDefaultDevices (defaultNumInputChannelsToOpen, defaultNumOutputChannelsToOpen);
+        }
 
         if (error.isNotEmpty())
             TRACKTION_LOG_ERROR ("AudioDeviceManager init: " + error);
