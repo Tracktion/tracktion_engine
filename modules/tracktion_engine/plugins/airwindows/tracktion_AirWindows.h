@@ -32,6 +32,7 @@ public:
     enum Type
     {
         delay,
+        dither,
         distortion,
         dynamics,
         emulation,
@@ -41,7 +42,6 @@ public:
         modulation,
         reverb,
         utility,
-        unknown
     };
 
     //==============================================================================
