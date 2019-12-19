@@ -56,6 +56,7 @@ VstInt32 Spiral::getChunk (void** data, bool isPreset)
 VstInt32 Spiral::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {
     float *chunkData = (float *)data;
+    (void)chunkData;
     /* We're ignoring byteSize as we found it to be a filthy liar */
 
     /* calculate any other fields you need here - you could copy in
