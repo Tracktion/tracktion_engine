@@ -12,19 +12,16 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new P
 PurestEcho::PurestEcho(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	A = 1.0;
-	B = 1.0;
-	C = 0.0;
-	D = 0.0;
-	E = 0.0;
-	for(int count = 0; count < totalsamples-1; count++) {dL[count] = 0;dR[count] = 0;}
-	gcount = 0;
-	fpNShapeLA = 0.0;
-	fpNShapeLB = 0.0;
-	fpNShapeRA = 0.0;
-	fpNShapeRB = 0.0;
-	fpFlip = true;
-	//this is reset: values being initialized only once. Startup values, whatever they are.
+    A = 1.0;
+    B = 1.0;
+    C = 0.0;
+    D = 0.0;
+    E = 0.0;
+    for(int count = 0; count < totalsamples-1; count++) {dL[count] = 0;dR[count] = 0;}
+    gcount = 0;
+    fpNShapeL = 0.0;
+    fpNShapeR = 0.0;
+    //this is reset: values being initialized only once. Startup values, whatever they are.
 
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
@@ -34,7 +31,7 @@ PurestEcho::PurestEcho(audioMasterCallback audioMaster) :
     setUniqueID(kUniqueId);
     canProcessReplacing();     // supports output replacing
     canDoubleReplacing();      // supports double precision processing
-	programsAreChunks(true);
+    programsAreChunks(true);
     vst_strncpy (_programName, "Default", kVstMaxProgNameLen); // default program name
 }
 
@@ -47,40 +44,40 @@ void PurestEcho::getProgramName(char *name) {vst_strncpy (name, _programName, kV
 
 static float pinParameter(float data)
 {
-	if (data < 0.0f) return 0.0f;
-	if (data > 1.0f) return 1.0f;
-	return data;
+    if (data < 0.0f) return 0.0f;
+    if (data > 1.0f) return 1.0f;
+    return data;
 }
 
 VstInt32 PurestEcho::getChunk (void** data, bool isPreset)
 {
-	float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
-	chunkData[0] = A;
-	chunkData[1] = B;
-	chunkData[2] = C;
-	chunkData[3] = D;
-	chunkData[4] = E;
-	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
-	 started with. */
+    float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
+    chunkData[0] = A;
+    chunkData[1] = B;
+    chunkData[2] = C;
+    chunkData[3] = D;
+    chunkData[4] = E;
+    /* Note: The way this is set up, it will break if you manage to save settings on an Intel
+     machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
+     started with. */
 
-	*data = chunkData;
-	return kNumParameters * sizeof(float);
+    *data = chunkData;
+    return kNumParameters * sizeof(float);
 }
 
 VstInt32 PurestEcho::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {
-	float *chunkData = (float *)data;
-	A = pinParameter(chunkData[0]);
-	B = pinParameter(chunkData[1]);
-	C = pinParameter(chunkData[2]);
-	D = pinParameter(chunkData[3]);
-	E = pinParameter(chunkData[4]);
-	/* We're ignoring byteSize as we found it to be a filthy liar */
+    float *chunkData = (float *)data;
+    A = pinParameter(chunkData[0]);
+    B = pinParameter(chunkData[1]);
+    C = pinParameter(chunkData[2]);
+    D = pinParameter(chunkData[3]);
+    E = pinParameter(chunkData[4]);
+    /* We're ignoring byteSize as we found it to be a filthy liar */
 
-	/* calculate any other fields you need here - you could copy in
-	 code from setParameter() here. */
-	return 0;
+    /* calculate any other fields you need here - you could copy in
+     code from setParameter() here. */
+    return 0;
 }
 
 void PurestEcho::setParameter(VstInt32 index, float value) {
@@ -108,10 +105,10 @@ float PurestEcho::getParameter(VstInt32 index) {
 void PurestEcho::getParameterName(VstInt32 index, char *text) {
     switch (index) {
         case kParamA: vst_strncpy (text, "Time", kVstMaxParamStrLen); break;
-		case kParamB: vst_strncpy (text, "Tap 1", kVstMaxParamStrLen); break;
-		case kParamC: vst_strncpy (text, "Tap 2", kVstMaxParamStrLen); break;
-		case kParamD: vst_strncpy (text, "Tap 3", kVstMaxParamStrLen); break;
-		case kParamE: vst_strncpy (text, "Tap 4", kVstMaxParamStrLen); break;
+        case kParamB: vst_strncpy (text, "Tap 1", kVstMaxParamStrLen); break;
+        case kParamC: vst_strncpy (text, "Tap 2", kVstMaxParamStrLen); break;
+        case kParamD: vst_strncpy (text, "Tap 3", kVstMaxParamStrLen); break;
+        case kParamE: vst_strncpy (text, "Tap 4", kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
     } //this is our labels for displaying in the VST host
 }
@@ -124,8 +121,8 @@ void PurestEcho::getParameterDisplay(VstInt32 index, char *text) {
         case kParamD: float2string (D, text, kVstMaxParamStrLen); break;
         case kParamE: float2string (E, text, kVstMaxParamStrLen); break;
 
-		default: break; // unknown parameter, shouldn't happen!
-	} //this displays the values and handles 'popups' where it's discrete choices
+        default: break; // unknown parameter, shouldn't happen!
+    } //this displays the values and handles 'popups' where it's discrete choices
 }
 
 void PurestEcho::getParameterLabel(VstInt32 index, char *text) {
@@ -149,9 +146,9 @@ bool PurestEcho::getEffectName(char* name) {
 VstPlugCategory PurestEcho::getPlugCategory() {return kPlugCategEffect;}
 
 bool PurestEcho::getProductString(char* text) {
-  	vst_strncpy (text, "airwindows PurestEcho", kVstMaxProductStrLen); return true;
+    vst_strncpy (text, "airwindows PurestEcho", kVstMaxProductStrLen); return true;
 }
 
 bool PurestEcho::getVendorString(char* text) {
-  	vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
+    vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
 }

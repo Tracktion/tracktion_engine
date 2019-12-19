@@ -16,9 +16,9 @@
 #include <math.h>
 
 enum {
-	kParamA = 0,
-	kParamB = 1,
-	kParamC = 2,
+    kParamA = 0,
+    kParamB = 1,
+    kParamC = 2,
   kNumParameters = 3
 }; //
 
@@ -42,8 +42,8 @@ public:
     virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames);
     virtual void getProgramName(char *name);                      // read the name from the host
     virtual void setProgramName(char *name);                      // changes the name of the preset displayed in the host
-	virtual VstInt32 getChunk (void** data, bool isPreset);
-	virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
+    virtual VstInt32 getChunk (void** data, bool isPreset);
+    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
     virtual float getParameter(VstInt32 index);                   // get the parameter value at the specified index
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
@@ -54,58 +54,58 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
 
-	double s1L;
-	double s2L;
-	double s3L;
-	double s4L;
-	double s5L;
-	double s6L;
-	double s7L;
-	double m1L;
-	double m2L;
-	double m3L;
-	double m4L;
-	double m5L;
-	double m6L;
-	double c1L;
-	double c2L;
-	double c3L;
-	double c4L;
-	double c5L;
-	double ratioAL;
-	double ratioBL;
-	double iirSampleAL;
-	double iirSampleBL;
+    double s1L;
+    double s2L;
+    double s3L;
+    double s4L;
+    double s5L;
+    double s6L;
+    double s7L;
+    double m1L;
+    double m2L;
+    double m3L;
+    double m4L;
+    double m5L;
+    double m6L;
+    double c1L;
+    double c2L;
+    double c3L;
+    double c4L;
+    double c5L;
+    double ratioAL;
+    double ratioBL;
+    double iirSampleAL;
+    double iirSampleBL;
 
-	double s1R;
-	double s2R;
-	double s3R;
-	double s4R;
-	double s5R;
-	double s6R;
-	double s7R;
-	double m1R;
-	double m2R;
-	double m3R;
-	double m4R;
-	double m5R;
-	double m6R;
-	double c1R;
-	double c2R;
-	double c3R;
-	double c4R;
-	double c5R;
-	double ratioAR;
-	double ratioBR;
-	double iirSampleAR;
-	double iirSampleBR;
+    double s1R;
+    double s2R;
+    double s3R;
+    double s4R;
+    double s5R;
+    double s6R;
+    double s7R;
+    double m1R;
+    double m2R;
+    double m3R;
+    double m4R;
+    double m5R;
+    double m6R;
+    double c1R;
+    double c2R;
+    double c3R;
+    double c4R;
+    double c5R;
+    double ratioAR;
+    double ratioBR;
+    double iirSampleAR;
+    double iirSampleBR;
 
 
-	bool flip;
+    bool flip;
 
-	long double fpNShapeL;
-	long double fpNShapeR;
-	//default stuff
+    long double fpNShapeL;
+    long double fpNShapeR;
+    //default stuff
 
     float A;
     float B;

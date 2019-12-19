@@ -49,26 +49,23 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
 
-	long double fpNShapeLA;
-	long double fpNShapeLB;
-	long double fpNShapeRA;
-	long double fpNShapeRB;
-	bool fpFlip;
-	//default stuff
+    long double fpNShapeL;
+    long double fpNShapeR;
+    //default stuff
+    bool fpFlip;
+    double lastSampleTL;
+    double lastSampleBL; //for Slews
+    double iirSampleTAL;
+    double iirSampleTBL;
+    double iirSampleBAL;
+    double iirSampleBBL; //for Highpasses
 
-	double lastSampleTL;
-	double lastSampleBL; //for Slews
-	double iirSampleTAL;
-	double iirSampleTBL;
-	double iirSampleBAL;
-	double iirSampleBBL; //for Highpasses
-
-	double lastSampleTR;
-	double lastSampleBR; //for Slews
-	double iirSampleTAR;
-	double iirSampleTBR;
-	double iirSampleBAR;
-	double iirSampleBBR; //for Highpasses
+    double lastSampleTR;
+    double lastSampleBR; //for Slews
+    double iirSampleTAR;
+    double iirSampleTBR;
+    double iirSampleBAR;
+    double iirSampleBBR; //for Highpasses
 
 };
 

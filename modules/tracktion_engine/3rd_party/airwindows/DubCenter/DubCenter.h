@@ -16,17 +16,17 @@
 #include <math.h>
 
 enum {
-	kParamA = 0,
-	kParamB = 1,
-	kParamC = 2,
-	kParamD = 3,
-	kParamE = 4,
-	kParamF = 5,
-	kParamG = 6,
-	kParamH = 7,
-	kParamI = 8,
-	kParamJ = 9,
-	kNumParameters = 10
+    kParamA = 0,
+    kParamB = 1,
+    kParamC = 2,
+    kParamD = 3,
+    kParamE = 4,
+    kParamF = 5,
+    kParamG = 6,
+    kParamH = 7,
+    kParamI = 8,
+    kParamJ = 9,
+    kNumParameters = 10
 }; //
 
 const int kNumPrograms = 0;
@@ -49,8 +49,8 @@ public:
     virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames);
     virtual void getProgramName(char *name);                      // read the name from the host
     virtual void setProgramName(char *name);                      // changes the name of the preset displayed in the host
-	virtual VstInt32 getChunk (void** data, bool isPreset);
-	virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
+    virtual VstInt32 getChunk (void** data, bool isPreset);
+    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
     virtual float getParameter(VstInt32 index);                   // get the parameter value at the specified index
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
@@ -61,65 +61,65 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
 
-	double iirDriveSampleAL;
-	double iirDriveSampleBL;
-	double iirDriveSampleCL;
-	double iirDriveSampleDL;
-	double iirDriveSampleEL;
-	double iirDriveSampleFL;
-	double iirDriveSampleAR;
-	double iirDriveSampleBR;
-	double iirDriveSampleCR;
-	double iirDriveSampleDR;
-	double iirDriveSampleER;
-	double iirDriveSampleFR;
-	bool flip; //drive things
+    double iirDriveSampleAL;
+    double iirDriveSampleBL;
+    double iirDriveSampleCL;
+    double iirDriveSampleDL;
+    double iirDriveSampleEL;
+    double iirDriveSampleFL;
+    double iirDriveSampleAR;
+    double iirDriveSampleBR;
+    double iirDriveSampleCR;
+    double iirDriveSampleDR;
+    double iirDriveSampleER;
+    double iirDriveSampleFR;
+    bool flip; //drive things
 
-	int bflip;
-	bool WasNegative;
-	bool SubOctave;
-	double iirHeadBumpA;
-	double iirHeadBumpB;
-	double iirHeadBumpC;
+    int bflip;
+    bool WasNegative;
+    bool SubOctave;
+    double iirHeadBumpA;
+    double iirHeadBumpB;
+    double iirHeadBumpC;
 
-	double iirSubBumpA;
-	double iirSubBumpB;
-	double iirSubBumpC;
+    double iirSubBumpA;
+    double iirSubBumpB;
+    double iirSubBumpC;
 
-	double lastHeadBump;
-	double lastSubBump;
+    double lastHeadBump;
+    double lastSubBump;
 
-	double iirSampleA;
-	double iirSampleB;
-	double iirSampleC;
-	double iirSampleD;
-	double iirSampleE;
-	double iirSampleF;
-	double iirSampleG;
-	double iirSampleH;
-	double iirSampleI;
-	double iirSampleJ;
-	double iirSampleK;
-	double iirSampleL;
-	double iirSampleM;
-	double iirSampleN;
-	double iirSampleO;
-	double iirSampleP;
-	double iirSampleQ;
-	double iirSampleR;
-	double iirSampleS;
-	double iirSampleT;
-	double iirSampleU;
-	double iirSampleV;
-	double iirSampleW;
-	double iirSampleX;
-	double iirSampleY;
-	double iirSampleZ;
-	double oscGate;
+    double iirSampleA;
+    double iirSampleB;
+    double iirSampleC;
+    double iirSampleD;
+    double iirSampleE;
+    double iirSampleF;
+    double iirSampleG;
+    double iirSampleH;
+    double iirSampleI;
+    double iirSampleJ;
+    double iirSampleK;
+    double iirSampleL;
+    double iirSampleM;
+    double iirSampleN;
+    double iirSampleO;
+    double iirSampleP;
+    double iirSampleQ;
+    double iirSampleR;
+    double iirSampleS;
+    double iirSampleT;
+    double iirSampleU;
+    double iirSampleV;
+    double iirSampleW;
+    double iirSampleX;
+    double iirSampleY;
+    double iirSampleZ;
+    double oscGate;
 
-	long double fpNShapeL;
-	long double fpNShapeR;
-	//default stuff
+    long double fpNShapeL;
+    long double fpNShapeR;
+    //default stuff
 
     float A;
     float B;

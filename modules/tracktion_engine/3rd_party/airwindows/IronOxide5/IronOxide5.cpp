@@ -12,45 +12,42 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new I
 IronOxide5::IronOxide5(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	A = 0.5; //0.0 input trim in dB -18 to +18, default 0 ((A*36.0)-18.0)
-	B = 0.562341325190349; //15.0 ips 1.5 to 150.0 logarithmic. B*B
-	C = 0.562341325190349; // (C*C) * (C*C) * 150 gives 15 ips (clamp to 1.5 minimum)
-	//15.0  (0.316227766016838)squared * 150 gives 15 ips
-	D = 0.5; //0.5 flutter 0 to 1
-	E = 0.5; //0.5 noise 0 to 1
-	F = 0.5; //0.0 output trim in dB -18 to +18, default 0 ((E*36.0)-18.0)
-	G = 1.0; //1.0 inv/dry/wet -1 0 1 ((F*2.0)-1.0)
-	//needs very fussy defaults to comply with unusual defaults
+    A = 0.5; //0.0 input trim in dB -18 to +18, default 0 ((A*36.0)-18.0)
+    B = 0.562341325190349; //15.0 ips 1.5 to 150.0 logarithmic. B*B
+    C = 0.562341325190349; // (C*C) * (C*C) * 150 gives 15 ips (clamp to 1.5 minimum)
+    //15.0  (0.316227766016838)squared * 150 gives 15 ips
+    D = 0.5; //0.5 flutter 0 to 1
+    E = 0.5; //0.5 noise 0 to 1
+    F = 0.5; //0.0 output trim in dB -18 to +18, default 0 ((E*36.0)-18.0)
+    G = 1.0; //1.0 inv/dry/wet -1 0 1 ((F*2.0)-1.0)
+    //needs very fussy defaults to comply with unusual defaults
 
-	for (int temp = 0; temp < 263; temp++) {dL[temp] = 0.0; dR[temp] = 0.0;}
-	gcount = 0;
+    for (int temp = 0; temp < 263; temp++) {dL[temp] = 0.0; dR[temp] = 0.0;}
+    gcount = 0;
 
-	fastIIRAL = fastIIRBL = slowIIRAL = slowIIRBL = 0.0;
-	fastIIHAL = fastIIHBL = slowIIHAL = slowIIHBL = 0.0;
-	iirSamplehAL = iirSamplehBL = 0.0;
-	iirSampleAL = iirSampleBL = 0.0;
-	prevInputSampleL = 0.0;
+    fastIIRAL = fastIIRBL = slowIIRAL = slowIIRBL = 0.0;
+    fastIIHAL = fastIIHBL = slowIIHAL = slowIIHBL = 0.0;
+    iirSamplehAL = iirSamplehBL = 0.0;
+    iirSampleAL = iirSampleBL = 0.0;
+    prevInputSampleL = 0.0;
 
-	fastIIRAR = fastIIRBR = slowIIRAR = slowIIRBR = 0.0;
-	fastIIHAR = fastIIHBR = slowIIHAR = slowIIHBR = 0.0;
-	iirSamplehAR = iirSamplehBR = 0.0;
-	iirSampleAR = iirSampleBR = 0.0;
-	prevInputSampleR = 0.0;
+    fastIIRAR = fastIIRBR = slowIIRAR = slowIIRBR = 0.0;
+    fastIIHAR = fastIIHBR = slowIIHAR = slowIIHBR = 0.0;
+    iirSamplehAR = iirSamplehBR = 0.0;
+    iirSampleAR = iirSampleBR = 0.0;
+    prevInputSampleR = 0.0;
 
-	flip = false;
-	for (int temp = 0; temp < 99; temp++) {flL[temp] = 0.0; flR[temp] = 0.0;}
+    flip = false;
+    for (int temp = 0; temp < 99; temp++) {flL[temp] = 0.0; flR[temp] = 0.0;}
 
-	fstoredcount = 0;
-	sweep = 0.0;
-	rateof = 0.5;
-	nextmax = 0.5;
+    fstoredcount = 0;
+    sweep = 0.0;
+    rateof = 0.5;
+    nextmax = 0.5;
 
-	fpNShapeLA = 0.0;
-	fpNShapeLB = 0.0;
-	fpNShapeRA = 0.0;
-	fpNShapeRB = 0.0;
-	fpFlip = true;
-	//this is reset: values being initialized only once. Startup values, whatever they are.
+    fpNShapeL = 0.0;
+    fpNShapeR = 0.0;
+    //this is reset: values being initialized only once. Startup values, whatever they are.
 
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
@@ -60,7 +57,7 @@ IronOxide5::IronOxide5(audioMasterCallback audioMaster) :
     setUniqueID(kUniqueId);
     canProcessReplacing();     // supports output replacing
     canDoubleReplacing();      // supports double precision processing
-	programsAreChunks(true);
+    programsAreChunks(true);
     vst_strncpy (_programName, "Default", kVstMaxProgNameLen); // default program name
 }
 
@@ -73,44 +70,44 @@ void IronOxide5::getProgramName(char *name) {vst_strncpy (name, _programName, kV
 
 static float pinParameter(float data)
 {
-	if (data < 0.0f) return 0.0f;
-	if (data > 1.0f) return 1.0f;
-	return data;
+    if (data < 0.0f) return 0.0f;
+    if (data > 1.0f) return 1.0f;
+    return data;
 }
 
 VstInt32 IronOxide5::getChunk (void** data, bool isPreset)
 {
-	float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
-	chunkData[0] = A;
-	chunkData[1] = B;
-	chunkData[2] = C;
-	chunkData[3] = D;
-	chunkData[4] = E;
-	chunkData[5] = F;
-	chunkData[6] = G;
-	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
-	 started with. */
+    float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
+    chunkData[0] = A;
+    chunkData[1] = B;
+    chunkData[2] = C;
+    chunkData[3] = D;
+    chunkData[4] = E;
+    chunkData[5] = F;
+    chunkData[6] = G;
+    /* Note: The way this is set up, it will break if you manage to save settings on an Intel
+     machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
+     started with. */
 
-	*data = chunkData;
-	return kNumParameters * sizeof(float);
+    *data = chunkData;
+    return kNumParameters * sizeof(float);
 }
 
 VstInt32 IronOxide5::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {
-	float *chunkData = (float *)data;
-	A = pinParameter(chunkData[0]);
-	B = pinParameter(chunkData[1]);
-	C = pinParameter(chunkData[2]);
-	D = pinParameter(chunkData[3]);
-	E = pinParameter(chunkData[4]);
-	F = pinParameter(chunkData[5]);
-	G = pinParameter(chunkData[6]);
-	/* We're ignoring byteSize as we found it to be a filthy liar */
+    float *chunkData = (float *)data;
+    A = pinParameter(chunkData[0]);
+    B = pinParameter(chunkData[1]);
+    C = pinParameter(chunkData[2]);
+    D = pinParameter(chunkData[3]);
+    E = pinParameter(chunkData[4]);
+    F = pinParameter(chunkData[5]);
+    G = pinParameter(chunkData[6]);
+    /* We're ignoring byteSize as we found it to be a filthy liar */
 
-	/* calculate any other fields you need here - you could copy in
-	 code from setParameter() here. */
-	return 0;
+    /* calculate any other fields you need here - you could copy in
+     code from setParameter() here. */
+    return 0;
 }
 
 void IronOxide5::setParameter(VstInt32 index, float value) {
@@ -142,12 +139,12 @@ float IronOxide5::getParameter(VstInt32 index) {
 void IronOxide5::getParameterName(VstInt32 index, char *text) {
     switch (index) {
         case kParamA: vst_strncpy (text, "Input Trim", kVstMaxParamStrLen); break;
-		case kParamB: vst_strncpy (text, "Tape High", kVstMaxParamStrLen); break;
-		case kParamC: vst_strncpy (text, "Tape Low", kVstMaxParamStrLen); break;
-		case kParamD: vst_strncpy (text, "Flutter", kVstMaxParamStrLen); break;
-		case kParamE: vst_strncpy (text, "Noise", kVstMaxParamStrLen); break;
-		case kParamF: vst_strncpy (text, "Output Trim", kVstMaxParamStrLen); break;
-		case kParamG: vst_strncpy (text, "Inv/Dry/Wet", kVstMaxParamStrLen); break;
+        case kParamB: vst_strncpy (text, "Tape High", kVstMaxParamStrLen); break;
+        case kParamC: vst_strncpy (text, "Tape Low", kVstMaxParamStrLen); break;
+        case kParamD: vst_strncpy (text, "Flutter", kVstMaxParamStrLen); break;
+        case kParamE: vst_strncpy (text, "Noise", kVstMaxParamStrLen); break;
+        case kParamF: vst_strncpy (text, "Output Trim", kVstMaxParamStrLen); break;
+        case kParamG: vst_strncpy (text, "Inv/Dry/Wet", kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
     } //this is our labels for displaying in the VST host
 }
@@ -162,7 +159,7 @@ void IronOxide5::getParameterDisplay(VstInt32 index, char *text) {
         case kParamF: float2string (((F*36.0)-18.0), text, kVstMaxParamStrLen); break;
         case kParamG: float2string (((G*2.0)-1.0), text, kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
-	} //this displays the values and handles 'popups' where it's discrete choices
+    } //this displays the values and handles 'popups' where it's discrete choices
 }
 
 void IronOxide5::getParameterLabel(VstInt32 index, char *text) {
@@ -188,9 +185,9 @@ bool IronOxide5::getEffectName(char* name) {
 VstPlugCategory IronOxide5::getPlugCategory() {return kPlugCategEffect;}
 
 bool IronOxide5::getProductString(char* text) {
-  	vst_strncpy (text, "airwindows IronOxide5", kVstMaxProductStrLen); return true;
+    vst_strncpy (text, "airwindows IronOxide5", kVstMaxProductStrLen); return true;
 }
 
 bool IronOxide5::getVendorString(char* text) {
-  	vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
+    vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
 }

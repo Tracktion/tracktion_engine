@@ -12,21 +12,19 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new P
 Pressure4::Pressure4(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	A = 0.0;
-	B = 0.2;
-	C = 1.0;
-	D = 1.0;
-	fpNShapeAL = 0.0;
-	fpNShapeBL = 0.0;
-	fpNShapeAR = 0.0;
-	fpNShapeBR = 0.0;
-	muSpeedA = 10000;
-	muSpeedB = 10000;
-	muCoefficientA = 1;
-	muCoefficientB = 1;
-	muVary = 1;
-	flip = false;
-	//this is reset: values being initialized only once. Startup values, whatever they are.
+    A = 0.0;
+    B = 0.2;
+    C = 1.0;
+    D = 1.0;
+    fpNShapeL = 0.0;
+    fpNShapeR = 0.0;
+    muSpeedA = 10000;
+    muSpeedB = 10000;
+    muCoefficientA = 1;
+    muCoefficientB = 1;
+    muVary = 1;
+    flip = false;
+    //this is reset: values being initialized only once. Startup values, whatever they are.
 
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
@@ -36,7 +34,7 @@ Pressure4::Pressure4(audioMasterCallback audioMaster) :
     setUniqueID(kUniqueId);
     canProcessReplacing();     // supports output replacing
     canDoubleReplacing();      // supports double precision processing
-	programsAreChunks(true);
+    programsAreChunks(true);
     vst_strncpy (_programName, "Default", kVstMaxProgNameLen); // default program name
 }
 
@@ -49,38 +47,38 @@ void Pressure4::getProgramName(char *name) {vst_strncpy (name, _programName, kVs
 
 static float pinParameter(float data)
 {
-	if (data < 0.0f) return 0.0f;
-	if (data > 1.0f) return 1.0f;
-	return data;
+    if (data < 0.0f) return 0.0f;
+    if (data > 1.0f) return 1.0f;
+    return data;
 }
 
 VstInt32 Pressure4::getChunk (void** data, bool isPreset)
 {
-	float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
-	chunkData[0] = A;
-	chunkData[1] = B;
-	chunkData[2] = C;
-	chunkData[3] = D;
-	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
-	 started with. */
+    float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
+    chunkData[0] = A;
+    chunkData[1] = B;
+    chunkData[2] = C;
+    chunkData[3] = D;
+    /* Note: The way this is set up, it will break if you manage to save settings on an Intel
+     machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
+     started with. */
 
-	*data = chunkData;
-	return kNumParameters * sizeof(float);
+    *data = chunkData;
+    return kNumParameters * sizeof(float);
 }
 
 VstInt32 Pressure4::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {
-	float *chunkData = (float *)data;
-	A = pinParameter(chunkData[0]);
-	B = pinParameter(chunkData[1]);
-	C = pinParameter(chunkData[2]);
-	D = pinParameter(chunkData[3]);
-	/* We're ignoring byteSize as we found it to be a filthy liar */
+    float *chunkData = (float *)data;
+    A = pinParameter(chunkData[0]);
+    B = pinParameter(chunkData[1]);
+    C = pinParameter(chunkData[2]);
+    D = pinParameter(chunkData[3]);
+    /* We're ignoring byteSize as we found it to be a filthy liar */
 
-	/* calculate any other fields you need here - you could copy in
-	 code from setParameter() here. */
-	return 0;
+    /* calculate any other fields you need here - you could copy in
+     code from setParameter() here. */
+    return 0;
 }
 
 void Pressure4::setParameter(VstInt32 index, float value) {
@@ -91,11 +89,11 @@ void Pressure4::setParameter(VstInt32 index, float value) {
         case kParamD: D = value; break; //this is the popup, stored as a float
         default: throw; // unknown parameter, shouldn't happen!
     }
-	//we can also set other defaults here, and do calculations that only have to happen
-	//once when parameters actually change. Here is the 'popup' setting its (global) values.
-	//variables can also be set in the processreplacing loop, and there they'll be set every buffersize
-	//here they're set when a parameter's actually changed, which should be less frequent, but
-	//you must use global variables in the Pressure4.h file to do it.
+    //we can also set other defaults here, and do calculations that only have to happen
+    //once when parameters actually change. Here is the 'popup' setting its (global) values.
+    //variables can also be set in the processreplacing loop, and there they'll be set every buffersize
+    //here they're set when a parameter's actually changed, which should be less frequent, but
+    //you must use global variables in the Pressure4.h file to do it.
 }
 
 float Pressure4::getParameter(VstInt32 index) {
@@ -103,7 +101,7 @@ float Pressure4::getParameter(VstInt32 index) {
         case kParamA: return A; break;
         case kParamB: return B; break;
         case kParamC: return C; break;
-		case kParamD: return D; break;
+        case kParamD: return D; break;
         default: break; // unknown parameter, shouldn't happen!
     } return 0.0; //we only need to update the relevant name, this is simple to manage
 }
@@ -111,9 +109,9 @@ float Pressure4::getParameter(VstInt32 index) {
 void Pressure4::getParameterName(VstInt32 index, char *text) {
     switch (index) {
         case kParamA: vst_strncpy (text, "Pressure", kVstMaxParamStrLen); break;
-		case kParamB: vst_strncpy (text, "Speed", kVstMaxParamStrLen); break;
-		case kParamC: vst_strncpy (text, "Mewiness", kVstMaxParamStrLen); break;
-		case kParamD: vst_strncpy (text, "Output Gain", kVstMaxParamStrLen); break;
+        case kParamB: vst_strncpy (text, "Speed", kVstMaxParamStrLen); break;
+        case kParamC: vst_strncpy (text, "Mewiness", kVstMaxParamStrLen); break;
+        case kParamD: vst_strncpy (text, "Output Gain", kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
     } //this is our labels for displaying in the VST host
 }
@@ -125,7 +123,7 @@ void Pressure4::getParameterDisplay(VstInt32 index, char *text) {
         case kParamC: float2string ((C*2.0)-1.0, text, kVstMaxParamStrLen); break;
         case kParamD: float2string (D, text, kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
-	} //this displays the values and handles 'popups' where it's discrete choices
+    } //this displays the values and handles 'popups' where it's discrete choices
 }
 
 void Pressure4::getParameterLabel(VstInt32 index, char *text) {
@@ -148,9 +146,9 @@ bool Pressure4::getEffectName(char* name) {
 VstPlugCategory Pressure4::getPlugCategory() {return kPlugCategEffect;}
 
 bool Pressure4::getProductString(char* text) {
-  	vst_strncpy (text, "airwindows Pressure4", kVstMaxProductStrLen); return true;
+    vst_strncpy (text, "airwindows Pressure4", kVstMaxProductStrLen); return true;
 }
 
 bool Pressure4::getVendorString(char* text) {
-  	vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
+    vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
 }

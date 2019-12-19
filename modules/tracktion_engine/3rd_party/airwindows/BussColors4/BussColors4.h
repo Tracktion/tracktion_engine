@@ -16,10 +16,10 @@
 #include <math.h>
 
 enum {
-	kParamA = 0,
-	kParamB = 1,
-	kParamC = 2,
-	kParamD = 3,
+    kParamA = 0,
+    kParamB = 1,
+    kParamC = 2,
+    kParamD = 3,
   kNumParameters = 4
 }; //
 
@@ -43,8 +43,8 @@ public:
     virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames);
     virtual void getProgramName(char *name);                      // read the name from the host
     virtual void setProgramName(char *name);                      // changes the name of the preset displayed in the host
-	virtual VstInt32 getChunk (void** data, bool isPreset);
-	virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
+    virtual VstInt32 getChunk (void** data, bool isPreset);
+    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
     virtual float getParameter(VstInt32 index);                   // get the parameter value at the specified index
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
@@ -55,25 +55,22 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
 
-	double bL[175]; //full buffer for high sample rates. Scales to 192K
-	double bR[175]; //full buffer for high sample rates. Scales to 192K
-	double dL[100]; //buffer for calculating sag as it relates to the dynamic impulse synthesis. To 192K.
-	double dR[100]; //buffer for calculating sag as it relates to the dynamic impulse synthesis. To 192K.
-	int c[35]; //just the number of taps we use, doesn't have to scale
-	double g[9]; //console model
-	double outg[9]; //console model
-	double controlL;
-	double controlR;
-	double slowdynL;
-	double slowdynR;
-	int gcount;
+    double bL[175]; //full buffer for high sample rates. Scales to 192K
+    double bR[175]; //full buffer for high sample rates. Scales to 192K
+    double dL[100]; //buffer for calculating sag as it relates to the dynamic impulse synthesis. To 192K.
+    double dR[100]; //buffer for calculating sag as it relates to the dynamic impulse synthesis. To 192K.
+    int c[35]; //just the number of taps we use, doesn't have to scale
+    double g[9]; //console model
+    double outg[9]; //console model
+    double controlL;
+    double controlR;
+    double slowdynL;
+    double slowdynR;
+    int gcount;
 
-	long double fpNShapeLA;
-	long double fpNShapeLB;
-	long double fpNShapeRA;
-	long double fpNShapeRB;
-	bool fpFlip;
-	//default stuff
+    long double fpNShapeL;
+    long double fpNShapeR;
+    //default stuff
 
     float A;
     float B;

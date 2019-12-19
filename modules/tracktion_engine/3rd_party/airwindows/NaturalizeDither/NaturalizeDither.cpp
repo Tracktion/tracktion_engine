@@ -12,30 +12,30 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new N
 NaturalizeDither::NaturalizeDither(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	bynL[0] = 1000;
-	bynL[1] = 301;
-	bynL[2] = 176;
-	bynL[3] = 125;
-	bynL[4] = 97;
-	bynL[5] = 79;
-	bynL[6] = 67;
-	bynL[7] = 58;
-	bynL[8] = 51;
-	bynL[9] = 46;
-	bynL[10] = 1000;
+    bynL[0] = 1000;
+    bynL[1] = 301;
+    bynL[2] = 176;
+    bynL[3] = 125;
+    bynL[4] = 97;
+    bynL[5] = 79;
+    bynL[6] = 67;
+    bynL[7] = 58;
+    bynL[8] = 51;
+    bynL[9] = 46;
+    bynL[10] = 1000;
 
-	bynR[0] = 1000;
-	bynR[1] = 301;
-	bynR[2] = 176;
-	bynR[3] = 125;
-	bynR[4] = 97;
-	bynR[5] = 79;
-	bynR[6] = 67;
-	bynR[7] = 58;
-	bynR[8] = 51;
-	bynR[9] = 46;
-	bynR[10] = 1000;
-	//this is reset: values being initialized only once. Startup values, whatever they are.
+    bynR[0] = 1000;
+    bynR[1] = 301;
+    bynR[2] = 176;
+    bynR[3] = 125;
+    bynR[4] = 97;
+    bynR[5] = 79;
+    bynR[6] = 67;
+    bynR[7] = 58;
+    bynR[8] = 51;
+    bynR[9] = 46;
+    bynR[10] = 1000;
+    //this is reset: values being initialized only once. Startup values, whatever they are.
 
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
@@ -45,7 +45,7 @@ NaturalizeDither::NaturalizeDither(audioMasterCallback audioMaster) :
     setUniqueID(kUniqueId);
     canProcessReplacing();     // supports output replacing
     canDoubleReplacing();      // supports double precision processing
-	programsAreChunks(true);
+    programsAreChunks(true);
     vst_strncpy (_programName, "Default", kVstMaxProgNameLen); // default program name
 }
 
@@ -58,19 +58,19 @@ void NaturalizeDither::getProgramName(char *name) {vst_strncpy (name, _programNa
 
 VstInt32 NaturalizeDither::getChunk (void** data, bool isPreset)
 {
-	return kNumParameters * sizeof(float);
+    return kNumParameters * sizeof(float);
 }
 
 VstInt32 NaturalizeDither::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {
-	return 0;
+    return 0;
 }
 
 void NaturalizeDither::setParameter(VstInt32 index, float value) {
 }
 
 float NaturalizeDither::getParameter(VstInt32 index) {
-	return 0.0; //we only need to update the relevant name, this is simple to manage
+    return 0.0; //we only need to update the relevant name, this is simple to manage
 }
 
 void NaturalizeDither::getParameterName(VstInt32 index, char *text) {
@@ -92,9 +92,9 @@ bool NaturalizeDither::getEffectName(char* name) {
 VstPlugCategory NaturalizeDither::getPlugCategory() {return kPlugCategEffect;}
 
 bool NaturalizeDither::getProductString(char* text) {
-  	vst_strncpy (text, "airwindows NaturalizeDither", kVstMaxProductStrLen); return true;
+    vst_strncpy (text, "airwindows NaturalizeDither", kVstMaxProductStrLen); return true;
 }
 
 bool NaturalizeDither::getVendorString(char* text) {
-  	vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
+    vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
 }

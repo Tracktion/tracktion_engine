@@ -16,16 +16,16 @@
 #include <math.h>
 
 enum {
-	kParamA = 0,
-	kParamB = 1,
-	kParamC = 2,
-	kParamD = 3,
-	kParamE = 4,
-	kParamF = 5,
-	kParamG = 6,
-	kParamH = 7,
-	kParamI = 8,
-	kParamJ = 9,
+    kParamA = 0,
+    kParamB = 1,
+    kParamC = 2,
+    kParamD = 3,
+    kParamE = 4,
+    kParamF = 5,
+    kParamG = 6,
+    kParamH = 7,
+    kParamI = 8,
+    kParamJ = 9,
   kNumParameters = 10
 }; //
 
@@ -49,8 +49,8 @@ public:
     virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames);
     virtual void getProgramName(char *name);                      // read the name from the host
     virtual void setProgramName(char *name);                      // changes the name of the preset displayed in the host
-	virtual VstInt32 getChunk (void** data, bool isPreset);
-	virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
+    virtual VstInt32 getChunk (void** data, bool isPreset);
+    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
     virtual float getParameter(VstInt32 index);                   // get the parameter value at the specified index
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
@@ -63,105 +63,105 @@ private:
 
 
 private:
-	double iirDriveSampleAL;
-	double iirDriveSampleBL;
-	double iirDriveSampleCL;
-	double iirDriveSampleDL;
-	double iirDriveSampleEL;
-	double iirDriveSampleFL;
-	double iirDriveSampleAR;
-	double iirDriveSampleBR;
-	double iirDriveSampleCR;
-	double iirDriveSampleDR;
-	double iirDriveSampleER;
-	double iirDriveSampleFR;
-	bool flip; //drive things
+    double iirDriveSampleAL;
+    double iirDriveSampleBL;
+    double iirDriveSampleCL;
+    double iirDriveSampleDL;
+    double iirDriveSampleEL;
+    double iirDriveSampleFL;
+    double iirDriveSampleAR;
+    double iirDriveSampleBR;
+    double iirDriveSampleCR;
+    double iirDriveSampleDR;
+    double iirDriveSampleER;
+    double iirDriveSampleFR;
+    bool flip; //drive things
 
-	int bflip;
-	bool WasNegativeL;
-	bool SubOctaveL;
-	bool WasNegativeR;
-	bool SubOctaveR;
+    int bflip;
+    bool WasNegativeL;
+    bool SubOctaveL;
+    bool WasNegativeR;
+    bool SubOctaveR;
 
-	double iirHeadBumpAL;
-	double iirHeadBumpBL;
-	double iirHeadBumpCL;
-	double iirHeadBumpAR;
-	double iirHeadBumpBR;
-	double iirHeadBumpCR;
+    double iirHeadBumpAL;
+    double iirHeadBumpBL;
+    double iirHeadBumpCL;
+    double iirHeadBumpAR;
+    double iirHeadBumpBR;
+    double iirHeadBumpCR;
 
-	double iirSubBumpAL;
-	double iirSubBumpBL;
-	double iirSubBumpCL;
-	double iirSubBumpAR;
-	double iirSubBumpBR;
-	double iirSubBumpCR;
+    double iirSubBumpAL;
+    double iirSubBumpBL;
+    double iirSubBumpCL;
+    double iirSubBumpAR;
+    double iirSubBumpBR;
+    double iirSubBumpCR;
 
-	double lastHeadBumpL;
-	double lastSubBumpL;
-	double lastHeadBumpR;
-	double lastSubBumpR;
+    double lastHeadBumpL;
+    double lastSubBumpL;
+    double lastHeadBumpR;
+    double lastSubBumpR;
 
-	double iirSampleAL;
-	double iirSampleBL;
-	double iirSampleCL;
-	double iirSampleDL;
-	double iirSampleEL;
-	double iirSampleFL;
-	double iirSampleGL;
-	double iirSampleHL;
-	double iirSampleIL;
-	double iirSampleJL;
-	double iirSampleKL;
-	double iirSampleLL;
-	double iirSampleML;
-	double iirSampleNL;
-	double iirSampleOL;
-	double iirSamplePL;
-	double iirSampleQL;
-	double iirSampleRL;
-	double iirSampleSL;
-	double iirSampleTL;
-	double iirSampleUL;
-	double iirSampleVL;
-	double iirSampleWL;
-	double iirSampleXL;
-	double iirSampleYL;
-	double iirSampleZL;
-	double iirSampleAR;
-	double iirSampleBR;
-	double iirSampleCR;
-	double iirSampleDR;
-	double iirSampleER;
-	double iirSampleFR;
-	double iirSampleGR;
-	double iirSampleHR;
-	double iirSampleIR;
-	double iirSampleJR;
-	double iirSampleKR;
-	double iirSampleLR;
-	double iirSampleMR;
-	double iirSampleNR;
-	double iirSampleOR;
-	double iirSamplePR;
-	double iirSampleQR;
-	double iirSampleRR;
-	double iirSampleSR;
-	double iirSampleTR;
-	double iirSampleUR;
-	double iirSampleVR;
-	double iirSampleWR;
-	double iirSampleXR;
-	double iirSampleYR;
-	double iirSampleZR;
+    double iirSampleAL;
+    double iirSampleBL;
+    double iirSampleCL;
+    double iirSampleDL;
+    double iirSampleEL;
+    double iirSampleFL;
+    double iirSampleGL;
+    double iirSampleHL;
+    double iirSampleIL;
+    double iirSampleJL;
+    double iirSampleKL;
+    double iirSampleLL;
+    double iirSampleML;
+    double iirSampleNL;
+    double iirSampleOL;
+    double iirSamplePL;
+    double iirSampleQL;
+    double iirSampleRL;
+    double iirSampleSL;
+    double iirSampleTL;
+    double iirSampleUL;
+    double iirSampleVL;
+    double iirSampleWL;
+    double iirSampleXL;
+    double iirSampleYL;
+    double iirSampleZL;
+    double iirSampleAR;
+    double iirSampleBR;
+    double iirSampleCR;
+    double iirSampleDR;
+    double iirSampleER;
+    double iirSampleFR;
+    double iirSampleGR;
+    double iirSampleHR;
+    double iirSampleIR;
+    double iirSampleJR;
+    double iirSampleKR;
+    double iirSampleLR;
+    double iirSampleMR;
+    double iirSampleNR;
+    double iirSampleOR;
+    double iirSamplePR;
+    double iirSampleQR;
+    double iirSampleRR;
+    double iirSampleSR;
+    double iirSampleTR;
+    double iirSampleUR;
+    double iirSampleVR;
+    double iirSampleWR;
+    double iirSampleXR;
+    double iirSampleYR;
+    double iirSampleZR;
 
-	double oscGateL;
-	double oscGateR;
+    double oscGateL;
+    double oscGateR;
 
 
-	long double fpNShapeL;
-	long double fpNShapeR;
-	//default stuff
+    long double fpNShapeL;
+    long double fpNShapeR;
+    //default stuff
 
     float A;
     float B;

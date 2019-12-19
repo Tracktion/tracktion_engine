@@ -12,17 +12,14 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new P
 PurestDrive::PurestDrive(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	A = 0.0;
+    A = 0.0;
 
-	previousSampleL = 0.0;
-	previousSampleR = 0.0;
+    previousSampleL = 0.0;
+    previousSampleR = 0.0;
 
-	fpNShapeLA = 0.0;
-	fpNShapeLB = 0.0;
-	fpNShapeRA = 0.0;
-	fpNShapeRB = 0.0;
-	fpFlip = true;
-	//this is reset: values being initialized only once. Startup values, whatever they are.
+    fpNShapeL = 0.0;
+    fpNShapeR = 0.0;
+    //this is reset: values being initialized only once. Startup values, whatever they are.
 
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
@@ -32,7 +29,7 @@ PurestDrive::PurestDrive(audioMasterCallback audioMaster) :
     setUniqueID(kUniqueId);
     canProcessReplacing();     // supports output replacing
     canDoubleReplacing();      // supports double precision processing
-	programsAreChunks(true);
+    programsAreChunks(true);
     vst_strncpy (_programName, "Default", kVstMaxProgNameLen); // default program name
 }
 
@@ -45,32 +42,32 @@ void PurestDrive::getProgramName(char *name) {vst_strncpy (name, _programName, k
 
 static float pinParameter(float data)
 {
-	if (data < 0.0f) return 0.0f;
-	if (data > 1.0f) return 1.0f;
-	return data;
+    if (data < 0.0f) return 0.0f;
+    if (data > 1.0f) return 1.0f;
+    return data;
 }
 
 VstInt32 PurestDrive::getChunk (void** data, bool isPreset)
 {
-	float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
-	chunkData[0] = A;
-	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
-	 started with. */
+    float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
+    chunkData[0] = A;
+    /* Note: The way this is set up, it will break if you manage to save settings on an Intel
+     machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
+     started with. */
 
-	*data = chunkData;
-	return kNumParameters * sizeof(float);
+    *data = chunkData;
+    return kNumParameters * sizeof(float);
 }
 
 VstInt32 PurestDrive::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {
-	float *chunkData = (float *)data;
-	A = pinParameter(chunkData[0]);
-	/* We're ignoring byteSize as we found it to be a filthy liar */
+    float *chunkData = (float *)data;
+    A = pinParameter(chunkData[0]);
+    /* We're ignoring byteSize as we found it to be a filthy liar */
 
-	/* calculate any other fields you need here - you could copy in
-	 code from setParameter() here. */
-	return 0;
+    /* calculate any other fields you need here - you could copy in
+     code from setParameter() here. */
+    return 0;
 }
 
 void PurestDrive::setParameter(VstInt32 index, float value) {
@@ -98,13 +95,13 @@ void PurestDrive::getParameterDisplay(VstInt32 index, char *text) {
     switch (index) {
         case kParamA: float2string (A, text, kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
-	} //this displays the values and handles 'popups' where it's discrete choices
+    } //this displays the values and handles 'popups' where it's discrete choices
 }
 
 void PurestDrive::getParameterLabel(VstInt32 index, char *text) {
     switch (index) {
         case kParamA: vst_strncpy (text, "", kVstMaxParamStrLen); break;
-		default: break; // unknown parameter, shouldn't happen!
+        default: break; // unknown parameter, shouldn't happen!
     }
 }
 
@@ -118,9 +115,9 @@ bool PurestDrive::getEffectName(char* name) {
 VstPlugCategory PurestDrive::getPlugCategory() {return kPlugCategEffect;}
 
 bool PurestDrive::getProductString(char* text) {
-  	vst_strncpy (text, "airwindows PurestDrive", kVstMaxProductStrLen); return true;
+    vst_strncpy (text, "airwindows PurestDrive", kVstMaxProductStrLen); return true;
 }
 
 bool PurestDrive::getVendorString(char* text) {
-  	vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
+    vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
 }

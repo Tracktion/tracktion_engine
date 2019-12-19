@@ -16,7 +16,7 @@
 #include <math.h>
 
 enum {
-	kParamA = 0,
+    kParamA = 0,
   kNumParameters = 1
 }; //
 
@@ -40,8 +40,8 @@ public:
     virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames);
     virtual void getProgramName(char *name);                      // read the name from the host
     virtual void setProgramName(char *name);                      // changes the name of the preset displayed in the host
-	virtual VstInt32 getChunk (void** data, bool isPreset);
-	virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
+    virtual VstInt32 getChunk (void** data, bool isPreset);
+    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
     virtual float getParameter(VstInt32 index);                   // get the parameter value at the specified index
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
@@ -52,53 +52,53 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
 
-	double gainchase;
-	double settingchase;
-	double chasespeed;
+    double gainchase;
+    double settingchase;
+    double chasespeed;
 
-	long double fpNShapeL;
-	long double lastSampleAL;
-	long double lastSampleBL;
-	long double lastSampleCL;
-	long double lastSampleDL;
-	long double lastSampleEL;
-	long double lastSampleFL;
-	long double lastSampleGL;
-	long double lastSampleHL;
-	long double lastSampleIL;
-	long double lastSampleJL;
-	long double lastSampleKL;
-	long double lastSampleLL;
-	long double lastSampleML;
+    long double fpNShapeL;
+    long double lastSampleAL;
+    long double lastSampleBL;
+    long double lastSampleCL;
+    long double lastSampleDL;
+    long double lastSampleEL;
+    long double lastSampleFL;
+    long double lastSampleGL;
+    long double lastSampleHL;
+    long double lastSampleIL;
+    long double lastSampleJL;
+    long double lastSampleKL;
+    long double lastSampleLL;
+    long double lastSampleML;
 
-	long double fpNShapeR;
-	long double lastSampleAR;
-	long double lastSampleBR;
-	long double lastSampleCR;
-	long double lastSampleDR;
-	long double lastSampleER;
-	long double lastSampleFR;
-	long double lastSampleGR;
-	long double lastSampleHR;
-	long double lastSampleIR;
-	long double lastSampleJR;
-	long double lastSampleKR;
-	long double lastSampleLR;
-	long double lastSampleMR;
+    long double fpNShapeR;
+    long double lastSampleAR;
+    long double lastSampleBR;
+    long double lastSampleCR;
+    long double lastSampleDR;
+    long double lastSampleER;
+    long double lastSampleFR;
+    long double lastSampleGR;
+    long double lastSampleHR;
+    long double lastSampleIR;
+    long double lastSampleJR;
+    long double lastSampleKR;
+    long double lastSampleLR;
+    long double lastSampleMR;
 
-	long double thresholdA;
-	long double thresholdB;
-	long double thresholdC;
-	long double thresholdD;
-	long double thresholdE;
-	long double thresholdF;
-	long double thresholdG;
-	long double thresholdH;
-	long double thresholdI;
-	long double thresholdJ;
-	long double thresholdK;
-	long double thresholdL;
-	long double thresholdM;
+    long double thresholdA;
+    long double thresholdB;
+    long double thresholdC;
+    long double thresholdD;
+    long double thresholdE;
+    long double thresholdF;
+    long double thresholdG;
+    long double thresholdH;
+    long double thresholdI;
+    long double thresholdJ;
+    long double thresholdK;
+    long double thresholdL;
+    long double thresholdM;
 
     float A;
 };

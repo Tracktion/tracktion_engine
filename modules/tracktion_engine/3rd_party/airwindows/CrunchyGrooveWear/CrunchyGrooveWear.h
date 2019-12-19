@@ -16,9 +16,9 @@
 #include <math.h>
 
 enum {
-	kParamA = 0,
-	kParamB = 1,
-	kNumParameters = 2
+    kParamA = 0,
+    kParamB = 1,
+    kNumParameters = 2
 }; //
 
 const int kNumPrograms = 0;
@@ -41,8 +41,8 @@ public:
     virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames);
     virtual void getProgramName(char *name);                      // read the name from the host
     virtual void setProgramName(char *name);                      // changes the name of the preset displayed in the host
-	virtual VstInt32 getChunk (void** data, bool isPreset);
-	virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
+    virtual VstInt32 getChunk (void** data, bool isPreset);
+    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
     virtual float getParameter(VstInt32 index);                   // get the parameter value at the specified index
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
@@ -53,32 +53,29 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
 
-	long double fpNShapeLA;
-	long double fpNShapeLB;
-	long double fpNShapeRA;
-	long double fpNShapeRB;
-	bool fpFlip;
-	//default stuff
+    long double fpNShapeL;
+    long double fpNShapeR;
+    //default stuff
 
-	double aMidL[21];
-	double aMidPrevL;
-	double bMidL[21];
-	double bMidPrevL;
-	double cMidL[21];
-	double cMidPrevL;
-	double dMidL[21];
-	double dMidPrevL;
+    double aMidL[21];
+    double aMidPrevL;
+    double bMidL[21];
+    double bMidPrevL;
+    double cMidL[21];
+    double cMidPrevL;
+    double dMidL[21];
+    double dMidPrevL;
 
-	double aMidR[21];
-	double aMidPrevR;
-	double bMidR[21];
-	double bMidPrevR;
-	double cMidR[21];
-	double cMidPrevR;
-	double dMidR[21];
-	double dMidPrevR;
+    double aMidR[21];
+    double aMidPrevR;
+    double bMidR[21];
+    double bMidPrevR;
+    double cMidR[21];
+    double cMidPrevR;
+    double dMidR[21];
+    double dMidPrevR;
 
-	double fMid[21];
+    double fMid[21];
 
     float A;
     float B;

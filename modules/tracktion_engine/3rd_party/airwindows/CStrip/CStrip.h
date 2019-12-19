@@ -16,18 +16,18 @@
 #include <math.h>
 
 enum {
-	kParamA = 0,
-	kParamB = 1,
-	kParamC = 2,
-	kParamD = 3,
-	kParamE = 4,
-	kParamF = 5,
-	kParamG = 6,
-	kParamH = 7,
-	kParamI = 8,
-	kParamJ = 9,
-	kParamK = 10,
-	kParamL = 11,
+    kParamA = 0,
+    kParamB = 1,
+    kParamC = 2,
+    kParamD = 3,
+    kParamE = 4,
+    kParamF = 5,
+    kParamG = 6,
+    kParamH = 7,
+    kParamI = 8,
+    kParamJ = 9,
+    kParamK = 10,
+    kParamL = 11,
   kNumParameters = 12
 }; //
 
@@ -51,8 +51,8 @@ public:
     virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames);
     virtual void getProgramName(char *name);                      // read the name from the host
     virtual void setProgramName(char *name);                      // changes the name of the preset displayed in the host
-	virtual VstInt32 getChunk (void** data, bool isPreset);
-	virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
+    virtual VstInt32 getChunk (void** data, bool isPreset);
+    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
     virtual float getParameter(VstInt32 index);                   // get the parameter value at the specified index
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
@@ -63,147 +63,144 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
 
-	long double fpNShapeLA;
-	long double fpNShapeLB;
-	long double fpNShapeRA;
-	long double fpNShapeRB;
-	bool fpFlip;
-	//default stuff
+    long double fpNShapeL;
+    long double fpNShapeR;
+    //default stuff
 
-	double lastSampleL;
-	double last2SampleL;
-	double lastSampleR;
-	double last2SampleR;
+    double lastSampleL;
+    double last2SampleL;
+    double lastSampleR;
+    double last2SampleR;
 
-	//begin EQ
-	double iirHighSampleLA;
-	double iirHighSampleLB;
-	double iirHighSampleLC;
-	double iirHighSampleLD;
-	double iirHighSampleLE;
-	double iirLowSampleLA;
-	double iirLowSampleLB;
-	double iirLowSampleLC;
-	double iirLowSampleLD;
-	double iirLowSampleLE;
-	double iirHighSampleL;
-	double iirLowSampleL;
+    //begin EQ
+    double iirHighSampleLA;
+    double iirHighSampleLB;
+    double iirHighSampleLC;
+    double iirHighSampleLD;
+    double iirHighSampleLE;
+    double iirLowSampleLA;
+    double iirLowSampleLB;
+    double iirLowSampleLC;
+    double iirLowSampleLD;
+    double iirLowSampleLE;
+    double iirHighSampleL;
+    double iirLowSampleL;
 
-	double iirHighSampleRA;
-	double iirHighSampleRB;
-	double iirHighSampleRC;
-	double iirHighSampleRD;
-	double iirHighSampleRE;
-	double iirLowSampleRA;
-	double iirLowSampleRB;
-	double iirLowSampleRC;
-	double iirLowSampleRD;
-	double iirLowSampleRE;
-	double iirHighSampleR;
-	double iirLowSampleR;
+    double iirHighSampleRA;
+    double iirHighSampleRB;
+    double iirHighSampleRC;
+    double iirHighSampleRD;
+    double iirHighSampleRE;
+    double iirLowSampleRA;
+    double iirLowSampleRB;
+    double iirLowSampleRC;
+    double iirLowSampleRD;
+    double iirLowSampleRE;
+    double iirHighSampleR;
+    double iirLowSampleR;
 
-	double tripletLA;
-	double tripletLB;
-	double tripletLC;
-	double tripletFactorL;
+    double tripletLA;
+    double tripletLB;
+    double tripletLC;
+    double tripletFactorL;
 
-	double tripletRA;
-	double tripletRB;
-	double tripletRC;
-	double tripletFactorR;
+    double tripletRA;
+    double tripletRB;
+    double tripletRC;
+    double tripletFactorR;
 
-	double lowpassSampleLAA;
-	double lowpassSampleLAB;
-	double lowpassSampleLBA;
-	double lowpassSampleLBB;
-	double lowpassSampleLCA;
-	double lowpassSampleLCB;
-	double lowpassSampleLDA;
-	double lowpassSampleLDB;
-	double lowpassSampleLE;
-	double lowpassSampleLF;
-	double lowpassSampleLG;
+    double lowpassSampleLAA;
+    double lowpassSampleLAB;
+    double lowpassSampleLBA;
+    double lowpassSampleLBB;
+    double lowpassSampleLCA;
+    double lowpassSampleLCB;
+    double lowpassSampleLDA;
+    double lowpassSampleLDB;
+    double lowpassSampleLE;
+    double lowpassSampleLF;
+    double lowpassSampleLG;
 
-	double lowpassSampleRAA;
-	double lowpassSampleRAB;
-	double lowpassSampleRBA;
-	double lowpassSampleRBB;
-	double lowpassSampleRCA;
-	double lowpassSampleRCB;
-	double lowpassSampleRDA;
-	double lowpassSampleRDB;
-	double lowpassSampleRE;
-	double lowpassSampleRF;
-	double lowpassSampleRG;
+    double lowpassSampleRAA;
+    double lowpassSampleRAB;
+    double lowpassSampleRBA;
+    double lowpassSampleRBB;
+    double lowpassSampleRCA;
+    double lowpassSampleRCB;
+    double lowpassSampleRDA;
+    double lowpassSampleRDB;
+    double lowpassSampleRE;
+    double lowpassSampleRF;
+    double lowpassSampleRG;
 
-	double highpassSampleLAA;
-	double highpassSampleLAB;
-	double highpassSampleLBA;
-	double highpassSampleLBB;
-	double highpassSampleLCA;
-	double highpassSampleLCB;
-	double highpassSampleLDA;
-	double highpassSampleLDB;
-	double highpassSampleLE;
-	double highpassSampleLF;
+    double highpassSampleLAA;
+    double highpassSampleLAB;
+    double highpassSampleLBA;
+    double highpassSampleLBB;
+    double highpassSampleLCA;
+    double highpassSampleLCB;
+    double highpassSampleLDA;
+    double highpassSampleLDB;
+    double highpassSampleLE;
+    double highpassSampleLF;
 
-	double highpassSampleRAA;
-	double highpassSampleRAB;
-	double highpassSampleRBA;
-	double highpassSampleRBB;
-	double highpassSampleRCA;
-	double highpassSampleRCB;
-	double highpassSampleRDA;
-	double highpassSampleRDB;
-	double highpassSampleRE;
-	double highpassSampleRF;
+    double highpassSampleRAA;
+    double highpassSampleRAB;
+    double highpassSampleRBA;
+    double highpassSampleRBB;
+    double highpassSampleRCA;
+    double highpassSampleRCB;
+    double highpassSampleRDA;
+    double highpassSampleRDB;
+    double highpassSampleRE;
+    double highpassSampleRF;
 
-	bool flip;
-	int flipthree;
-	//end EQ
+    bool flip;
+    int flipthree;
+    //end EQ
 
-	//begin Gate
-	bool WasNegativeL;
-	int ZeroCrossL;
-	double gaterollerL;
-	double gateL;
+    //begin Gate
+    bool WasNegativeL;
+    int ZeroCrossL;
+    double gaterollerL;
+    double gateL;
 
-	bool WasNegativeR;
-	int ZeroCrossR;
-	double gaterollerR;
-	double gateR;
-	//end Gate
+    bool WasNegativeR;
+    int ZeroCrossR;
+    double gaterollerR;
+    double gateR;
+    //end Gate
 
-	//begin Timing
-	double pL[4099];
-	double pR[4099];
-	int count;
-	//end Timing
+    //begin Timing
+    double pL[4099];
+    double pR[4099];
+    int count;
+    //end Timing
 
-	//begin ButterComp
-	double controlAposL;
-	double controlAnegL;
-	double controlBposL;
-	double controlBnegL;
-	double targetposL;
-	double targetnegL;
-	double avgLA;
-	double avgLB;
-	double nvgLA;
-	double nvgLB;
+    //begin ButterComp
+    double controlAposL;
+    double controlAnegL;
+    double controlBposL;
+    double controlBnegL;
+    double targetposL;
+    double targetnegL;
+    double avgLA;
+    double avgLB;
+    double nvgLA;
+    double nvgLB;
 
-	double controlAposR;
-	double controlAnegR;
-	double controlBposR;
-	double controlBnegR;
-	double targetposR;
-	double targetnegR;
-	double avgRA;
-	double avgRB;
-	double nvgRA;
-	double nvgRB;
-	//end ButterComp
-	//flip is already covered in EQ
+    double controlAposR;
+    double controlAnegR;
+    double controlBposR;
+    double controlBnegR;
+    double targetposR;
+    double targetnegR;
+    double avgRA;
+    double avgRB;
+    double nvgRA;
+    double nvgRB;
+    //end ButterComp
+    //flip is already covered in EQ
 
     float A;
     float B;

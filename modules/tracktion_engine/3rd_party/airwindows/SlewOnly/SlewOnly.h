@@ -49,8 +49,8 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
 
-	double lastSampleL;
-	double lastSampleR;
+    double lastSampleL;
+    double lastSampleR;
 };
 
 #endif

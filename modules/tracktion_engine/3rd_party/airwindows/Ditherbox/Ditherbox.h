@@ -16,7 +16,7 @@
 #include <math.h>
 
 enum {
-	kParamA = 0,
+    kParamA = 0,
   kNumParameters = 1
 }; //
 
@@ -40,8 +40,8 @@ public:
     virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames);
     virtual void getProgramName(char *name);                      // read the name from the host
     virtual void setProgramName(char *name);                      // changes the name of the preset displayed in the host
-	virtual VstInt32 getChunk (void** data, bool isPreset);
-	virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
+    virtual VstInt32 getChunk (void** data, bool isPreset);
+    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
     virtual float getParameter(VstInt32 index);                   // get the parameter value at the specified index
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
@@ -52,80 +52,80 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
 
-	double bynL[13];
-	double bynR[13];
-	long double noiseShapingL;
-	long double noiseShapingR;
-	double contingentErrL;
-	double contingentErrR;
-	double currentDitherL;
-	double currentDitherR;
-	int Position;
-	bool flip;
-	double NSOddL;
-	double prevL;
-	double nsL[16];
-	double NSOddR;
-	double prevR;
-	double nsR[16];
-	long double lastSampleL;
-	long double outSampleL;
-	long double lastSampleR;
-	long double outSampleR;
+    double bynL[13];
+    double bynR[13];
+    long double noiseShapingL;
+    long double noiseShapingR;
+    double contingentErrL;
+    double contingentErrR;
+    double currentDitherL;
+    double currentDitherR;
+    int Position;
+    bool flip;
+    double NSOddL;
+    double prevL;
+    double nsL[16];
+    double NSOddR;
+    double prevR;
+    double nsR[16];
+    long double lastSampleL;
+    long double outSampleL;
+    long double lastSampleR;
+    long double outSampleR;
 
-	double iirSampleAL;
-	double iirSampleBL;
-	double iirSampleCL;
-	double iirSampleDL;
-	double iirSampleEL;
-	double iirSampleFL;
-	double iirSampleGL;
-	double iirSampleHL;
-	double iirSampleIL;
-	double iirSampleJL;
-	double iirSampleKL;
-	double iirSampleLL;
-	double iirSampleML;
-	double iirSampleNL;
-	double iirSampleOL;
-	double iirSamplePL;
-	double iirSampleQL;
-	double iirSampleRL;
-	double iirSampleSL;
-	double iirSampleTL;
-	double iirSampleUL;
-	double iirSampleVL;
-	double iirSampleWL;
-	double iirSampleXL;
-	double iirSampleYL;
-	double iirSampleZL;
+    double iirSampleAL;
+    double iirSampleBL;
+    double iirSampleCL;
+    double iirSampleDL;
+    double iirSampleEL;
+    double iirSampleFL;
+    double iirSampleGL;
+    double iirSampleHL;
+    double iirSampleIL;
+    double iirSampleJL;
+    double iirSampleKL;
+    double iirSampleLL;
+    double iirSampleML;
+    double iirSampleNL;
+    double iirSampleOL;
+    double iirSamplePL;
+    double iirSampleQL;
+    double iirSampleRL;
+    double iirSampleSL;
+    double iirSampleTL;
+    double iirSampleUL;
+    double iirSampleVL;
+    double iirSampleWL;
+    double iirSampleXL;
+    double iirSampleYL;
+    double iirSampleZL;
 
-	double iirSampleAR;
-	double iirSampleBR;
-	double iirSampleCR;
-	double iirSampleDR;
-	double iirSampleER;
-	double iirSampleFR;
-	double iirSampleGR;
-	double iirSampleHR;
-	double iirSampleIR;
-	double iirSampleJR;
-	double iirSampleKR;
-	double iirSampleLR;
-	double iirSampleMR;
-	double iirSampleNR;
-	double iirSampleOR;
-	double iirSamplePR;
-	double iirSampleQR;
-	double iirSampleRR;
-	double iirSampleSR;
-	double iirSampleTR;
-	double iirSampleUR;
-	double iirSampleVR;
-	double iirSampleWR;
-	double iirSampleXR;
-	double iirSampleYR;
-	double iirSampleZR;
+    double iirSampleAR;
+    double iirSampleBR;
+    double iirSampleCR;
+    double iirSampleDR;
+    double iirSampleER;
+    double iirSampleFR;
+    double iirSampleGR;
+    double iirSampleHR;
+    double iirSampleIR;
+    double iirSampleJR;
+    double iirSampleKR;
+    double iirSampleLR;
+    double iirSampleMR;
+    double iirSampleNR;
+    double iirSampleOR;
+    double iirSamplePR;
+    double iirSampleQR;
+    double iirSampleRR;
+    double iirSampleSR;
+    double iirSampleTR;
+    double iirSampleUR;
+    double iirSampleVR;
+    double iirSampleWR;
+    double iirSampleXR;
+    double iirSampleYR;
+    double iirSampleZR;
 
     float A;
 };

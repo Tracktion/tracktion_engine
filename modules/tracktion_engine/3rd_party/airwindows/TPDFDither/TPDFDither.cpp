@@ -21,7 +21,7 @@ TPDFDither::TPDFDither(audioMasterCallback audioMaster) :
     setUniqueID(kUniqueId);
     canProcessReplacing();     // supports output replacing
     canDoubleReplacing();      // supports double precision processing
-	programsAreChunks(true);
+    programsAreChunks(true);
     vst_strncpy (_programName, "Default", kVstMaxProgNameLen); // default program name
 }
 
@@ -34,12 +34,12 @@ void TPDFDither::getProgramName(char *name) {vst_strncpy (name, _programName, kV
 
 VstInt32 TPDFDither::getChunk (void** data, bool isPreset)
 {
-	return kNumParameters * sizeof(float);
+    return kNumParameters * sizeof(float);
 }
 
 VstInt32 TPDFDither::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {
-	return 0;
+    return 0;
 }
 
 void TPDFDither::setParameter(VstInt32 index, float value) {
@@ -68,9 +68,9 @@ bool TPDFDither::getEffectName(char* name) {
 VstPlugCategory TPDFDither::getPlugCategory() {return kPlugCategEffect;}
 
 bool TPDFDither::getProductString(char* text) {
-  	vst_strncpy (text, "airwindows TPDFDither", kVstMaxProductStrLen); return true;
+    vst_strncpy (text, "airwindows TPDFDither", kVstMaxProductStrLen); return true;
 }
 
 bool TPDFDither::getVendorString(char* text) {
-  	vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
+    vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
 }

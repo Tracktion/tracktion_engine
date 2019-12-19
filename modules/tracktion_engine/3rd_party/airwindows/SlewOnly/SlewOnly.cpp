@@ -12,8 +12,8 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new S
 SlewOnly::SlewOnly(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	lastSampleL = 0.0;
-	lastSampleR = 0.0;
+    lastSampleL = 0.0;
+    lastSampleR = 0.0;
 
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
@@ -37,7 +37,7 @@ void SlewOnly::setParameter(VstInt32 index, float value) {
 }
 
 float SlewOnly::getParameter(VstInt32 index) {
-	return 0.0; //we only need to update the relevant name, this is simple to manage
+    return 0.0; //we only need to update the relevant name, this is simple to manage
 }
 
 void SlewOnly::getParameterName(VstInt32 index, char *text) {
@@ -59,9 +59,9 @@ bool SlewOnly::getEffectName(char* name) {
 VstPlugCategory SlewOnly::getPlugCategory() {return kPlugCategEffect;}
 
 bool SlewOnly::getProductString(char* text) {
-  	vst_strncpy (text, "airwindows SlewOnly", kVstMaxProductStrLen); return true;
+    vst_strncpy (text, "airwindows SlewOnly", kVstMaxProductStrLen); return true;
 }
 
 bool SlewOnly::getVendorString(char* text) {
-  	vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
+    vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
 }

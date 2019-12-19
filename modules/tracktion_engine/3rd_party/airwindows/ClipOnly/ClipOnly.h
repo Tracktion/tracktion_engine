@@ -44,13 +44,13 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
 
-	float lastSampleL;
-	bool wasPosClipL;
-	bool wasNegClipL;
+    float lastSampleL;
+    bool wasPosClipL;
+    bool wasNegClipL;
 
-	float lastSampleR;
-	bool wasPosClipR;
-	bool wasNegClipR;
+    float lastSampleR;
+    bool wasPosClipR;
+    bool wasNegClipR;
 
 };
 

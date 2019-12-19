@@ -12,25 +12,22 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new T
 TransDesk::TransDesk(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	for(int count = 0; count < 19; count++) {dL[count] = 0; dR[count] = 0;}
-	gcount = 0;
+    for(int count = 0; count < 19; count++) {dL[count] = 0; dR[count] = 0;}
+    gcount = 0;
 
-	controlL = 0;
-	lastSampleL = 0.0;
-	lastOutSampleL = 0.0;
-	lastSlewL = 0.0;
+    controlL = 0;
+    lastSampleL = 0.0;
+    lastOutSampleL = 0.0;
+    lastSlewL = 0.0;
 
-	controlR = 0;
-	lastSampleR = 0.0;
-	lastOutSampleR = 0.0;
-	lastSlewR = 0.0;
+    controlR = 0;
+    lastSampleR = 0.0;
+    lastOutSampleR = 0.0;
+    lastSlewR = 0.0;
 
-	fpNShapeLA = 0.0;
-	fpNShapeLB = 0.0;
-	fpNShapeRA = 0.0;
-	fpNShapeRB = 0.0;
-	fpFlip = true;
-	//this is reset: values being initialized only once. Startup values, whatever they are.
+    fpNShapeL = 0.0;
+    fpNShapeR = 0.0;
+    //this is reset: values being initialized only once. Startup values, whatever they are.
 
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
@@ -40,7 +37,7 @@ TransDesk::TransDesk(audioMasterCallback audioMaster) :
     setUniqueID(kUniqueId);
     canProcessReplacing();     // supports output replacing
     canDoubleReplacing();      // supports double precision processing
-	programsAreChunks(true);
+    programsAreChunks(true);
     vst_strncpy (_programName, "Default", kVstMaxProgNameLen); // default program name
 }
 
@@ -53,19 +50,19 @@ void TransDesk::getProgramName(char *name) {vst_strncpy (name, _programName, kVs
 
 VstInt32 TransDesk::getChunk (void** data, bool isPreset)
 {
-	return kNumParameters * sizeof(float);
+    return kNumParameters * sizeof(float);
 }
 
 VstInt32 TransDesk::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {
-	return 0;
+    return 0;
 }
 
 void TransDesk::setParameter(VstInt32 index, float value) {
 }
 
 float TransDesk::getParameter(VstInt32 index) {
-	return 0.0; //we only need to update the relevant name, this is simple to manage
+    return 0.0; //we only need to update the relevant name, this is simple to manage
 }
 
 void TransDesk::getParameterName(VstInt32 index, char *text) {
@@ -87,9 +84,9 @@ bool TransDesk::getEffectName(char* name) {
 VstPlugCategory TransDesk::getPlugCategory() {return kPlugCategEffect;}
 
 bool TransDesk::getProductString(char* text) {
-  	vst_strncpy (text, "airwindows TransDesk", kVstMaxProductStrLen); return true;
+    vst_strncpy (text, "airwindows TransDesk", kVstMaxProductStrLen); return true;
 }
 
 bool TransDesk::getVendorString(char* text) {
-  	vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
+    vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
 }

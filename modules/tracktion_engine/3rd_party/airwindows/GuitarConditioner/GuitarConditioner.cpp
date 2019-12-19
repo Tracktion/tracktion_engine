@@ -12,26 +12,23 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new G
 GuitarConditioner::GuitarConditioner(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	fpNShapeLA = 0.0;
-	fpNShapeLB = 0.0;
-	fpNShapeRA = 0.0;
-	fpNShapeRB = 0.0;
-	fpFlip = true;
-
-	lastSampleTL = 0.0;
-	lastSampleBL = 0.0; //for Slews. T for treble, B for bass
-	iirSampleTAL = 0.0;
-	iirSampleTBL = 0.0;
-	iirSampleBAL = 0.0;
-	iirSampleBBL = 0.0; //for Highpasses
-	//this is reset: values being initialized only once. Startup values, whatever they are.
-	lastSampleTR = 0.0;
-	lastSampleBR = 0.0; //for Slews. T for treble, B for bass
-	iirSampleTAR = 0.0;
-	iirSampleTBR = 0.0;
-	iirSampleBAR = 0.0;
-	iirSampleBBR = 0.0; //for Highpasses
-	//this is reset: values being initialized only once. Startup values, whatever they are.
+    fpNShapeL = 0.0;
+    fpNShapeR = 0.0;
+    fpFlip = true;
+    lastSampleTL = 0.0;
+    lastSampleBL = 0.0; //for Slews. T for treble, B for bass
+    iirSampleTAL = 0.0;
+    iirSampleTBL = 0.0;
+    iirSampleBAL = 0.0;
+    iirSampleBBL = 0.0; //for Highpasses
+    //this is reset: values being initialized only once. Startup values, whatever they are.
+    lastSampleTR = 0.0;
+    lastSampleBR = 0.0; //for Slews. T for treble, B for bass
+    iirSampleTAR = 0.0;
+    iirSampleTBR = 0.0;
+    iirSampleBAR = 0.0;
+    iirSampleBBR = 0.0; //for Highpasses
+    //this is reset: values being initialized only once. Startup values, whatever they are.
 
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
@@ -55,11 +52,11 @@ void GuitarConditioner::setParameter(VstInt32 index, float value) {
     switch (index) {
         default: throw; // unknown parameter, shouldn't happen!
     }
-	//we can also set other defaults here, and do calculations that only have to happen
-	//once when parameters actually change. Here is the 'popup' setting its (global) values.
-	//variables can also be set in the processreplacing loop, and there they'll be set every buffersize
-	//here they're set when a parameter's actually changed, which should be less frequent, but
-	//you must use global variables in the GuitarConditioner.h file to do it.
+    //we can also set other defaults here, and do calculations that only have to happen
+    //once when parameters actually change. Here is the 'popup' setting its (global) values.
+    //variables can also be set in the processreplacing loop, and there they'll be set every buffersize
+    //here they're set when a parameter's actually changed, which should be less frequent, but
+    //you must use global variables in the GuitarConditioner.h file to do it.
 }
 
 float GuitarConditioner::getParameter(VstInt32 index) {
@@ -77,7 +74,7 @@ void GuitarConditioner::getParameterName(VstInt32 index, char *text) {
 void GuitarConditioner::getParameterDisplay(VstInt32 index, char *text) {
     switch (index) {
         default: break; // unknown parameter, shouldn't happen!
-	} //this displays the values and handles 'popups' where it's discrete choices
+    } //this displays the values and handles 'popups' where it's discrete choices
 }
 
 void GuitarConditioner::getParameterLabel(VstInt32 index, char *text) {
@@ -96,9 +93,9 @@ bool GuitarConditioner::getEffectName(char* name) {
 VstPlugCategory GuitarConditioner::getPlugCategory() {return kPlugCategEffect;}
 
 bool GuitarConditioner::getProductString(char* text) {
-  	vst_strncpy (text, "airwindows GuitarConditioner", kVstMaxProductStrLen); return true;
+    vst_strncpy (text, "airwindows GuitarConditioner", kVstMaxProductStrLen); return true;
 }
 
 bool GuitarConditioner::getVendorString(char* text) {
-  	vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
+    vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
 }

@@ -16,8 +16,8 @@
 #include <math.h>
 
 enum {
-	kParamA = 0,
-	kParamB = 1,
+    kParamA = 0,
+    kParamB = 1,
   kNumParameters = 2
 }; //
 
@@ -41,8 +41,8 @@ public:
     virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames);
     virtual void getProgramName(char *name);                      // read the name from the host
     virtual void setProgramName(char *name);                      // changes the name of the preset displayed in the host
-	virtual VstInt32 getChunk (void** data, bool isPreset);
-	virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
+    virtual VstInt32 getChunk (void** data, bool isPreset);
+    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
     virtual float getParameter(VstInt32 index);                   // get the parameter value at the specified index
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
@@ -53,31 +53,28 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
 
-	long double fpNShapeLA;
-	long double fpNShapeLB;
-	long double fpNShapeRA;
-	long double fpNShapeRB;
-	bool fpFlip;
-	//default stuff
-	double sampleAL;
-	double sampleBL;
-	double sampleCL;
-	double sampleDL;
-	double sampleEL;
-	double sampleFL;
-	double sampleGL;
-	double sampleHL;
-	double sampleIL;
+    long double fpNShapeL;
+    long double fpNShapeR;
+    //default stuff
+    double sampleAL;
+    double sampleBL;
+    double sampleCL;
+    double sampleDL;
+    double sampleEL;
+    double sampleFL;
+    double sampleGL;
+    double sampleHL;
+    double sampleIL;
 
-	double sampleAR;
-	double sampleBR;
-	double sampleCR;
-	double sampleDR;
-	double sampleER;
-	double sampleFR;
-	double sampleGR;
-	double sampleHR;
-	double sampleIR;
+    double sampleAR;
+    double sampleBR;
+    double sampleCR;
+    double sampleDR;
+    double sampleER;
+    double sampleFR;
+    double sampleGR;
+    double sampleHR;
+    double sampleIR;
 
     float A;
     float B;

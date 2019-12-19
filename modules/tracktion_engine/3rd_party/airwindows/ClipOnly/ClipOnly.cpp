@@ -12,14 +12,14 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new C
 ClipOnly::ClipOnly(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	lastSampleL = 0.0;
-	wasPosClipL = false;
-	wasNegClipL = false;
+    lastSampleL = 0.0;
+    wasPosClipL = false;
+    wasNegClipL = false;
 
-	lastSampleR = 0.0;
-	wasPosClipR = false;
-	wasNegClipR = false;
-	//this is reset: values being initialized only once. Startup values, whatever they are.
+    lastSampleR = 0.0;
+    wasPosClipR = false;
+    wasNegClipR = false;
+    //this is reset: values being initialized only once. Startup values, whatever they are.
 
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
@@ -29,7 +29,7 @@ ClipOnly::ClipOnly(audioMasterCallback audioMaster) :
     setUniqueID(kUniqueId);
     canProcessReplacing();     // supports output replacing
     canDoubleReplacing();      // supports double precision processing
-	programsAreChunks(true);
+    programsAreChunks(true);
     vst_strncpy (_programName, "Default", kVstMaxProgNameLen); // default program name
 }
 
@@ -51,9 +51,9 @@ bool ClipOnly::getEffectName(char* name) {
 VstPlugCategory ClipOnly::getPlugCategory() {return kPlugCategEffect;}
 
 bool ClipOnly::getProductString(char* text) {
-  	vst_strncpy (text, "airwindows ClipOnly", kVstMaxProductStrLen); return true;
+    vst_strncpy (text, "airwindows ClipOnly", kVstMaxProductStrLen); return true;
 }
 
 bool ClipOnly::getVendorString(char* text) {
-  	vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
+    vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
 }

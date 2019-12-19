@@ -16,7 +16,7 @@
 #include <math.h>
 
 enum {
-	kParamA = 0,
+    kParamA = 0,
   kNumParameters = 1
 }; //
 
@@ -40,8 +40,8 @@ public:
     virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames);
     virtual void getProgramName(char *name);                      // read the name from the host
     virtual void setProgramName(char *name);                      // changes the name of the preset displayed in the host
-	virtual VstInt32 getChunk (void** data, bool isPreset);
-	virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
+    virtual VstInt32 getChunk (void** data, bool isPreset);
+    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
     virtual float getParameter(VstInt32 index);                   // get the parameter value at the specified index
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
@@ -53,74 +53,71 @@ private:
     std::set< std::string > _canDo;
 
 
-	double LataLast6Sample;
-	double LataLast5Sample;
-	double LataLast4Sample;
-	double LataLast3Sample;
-	double LataLast2Sample;
-	double LataLast1Sample;
-	double LataHalfwaySample;
-	double LataHalfDrySample;
-	double LataHalfDiffSample;
-	double LataLastDiffSample;
-	double LataDrySample;
-	double LataDiffSample;
-	double LataPrevDiffSample;
+    double LataLast6Sample;
+    double LataLast5Sample;
+    double LataLast4Sample;
+    double LataLast3Sample;
+    double LataLast2Sample;
+    double LataLast1Sample;
+    double LataHalfwaySample;
+    double LataHalfDrySample;
+    double LataHalfDiffSample;
+    double LataLastDiffSample;
+    double LataDrySample;
+    double LataDiffSample;
+    double LataPrevDiffSample;
 
-	double RataLast6Sample;
-	double RataLast5Sample;
-	double RataLast4Sample;
-	double RataLast3Sample;
-	double RataLast2Sample;
-	double RataLast1Sample;
-	double RataHalfwaySample;
-	double RataHalfDrySample;
-	double RataHalfDiffSample;
-	double RataLastDiffSample;
-	double RataDrySample;
-	double RataDiffSample;
-	double RataPrevDiffSample;
+    double RataLast6Sample;
+    double RataLast5Sample;
+    double RataLast4Sample;
+    double RataLast3Sample;
+    double RataLast2Sample;
+    double RataLast1Sample;
+    double RataHalfwaySample;
+    double RataHalfDrySample;
+    double RataHalfDiffSample;
+    double RataLastDiffSample;
+    double RataDrySample;
+    double RataDiffSample;
+    double RataPrevDiffSample;
 
-	double ataK1;
-	double ataK2;
-	double ataK3;
-	double ataK4;
-	double ataK5;
-	double ataK6;
-	double ataK7;
-	double ataK8; //end antialiasing variables
+    double ataK1;
+    double ataK2;
+    double ataK3;
+    double ataK4;
+    double ataK5;
+    double ataK6;
+    double ataK7;
+    double ataK8; //end antialiasing variables
 
-	double LlastSample;
-	double LlastOutSample;
-	double LlastOut2Sample;
-	double LlastOut3Sample;
-	double LlpDepth;
-	double Lovershoot;
-	double Loverall;
-	double LiirSampleA;
-	double LiirSampleB;
-	double LiirSampleC;
-	double LiirSampleD;
+    double LlastSample;
+    double LlastOutSample;
+    double LlastOut2Sample;
+    double LlastOut3Sample;
+    double LlpDepth;
+    double Lovershoot;
+    double Loverall;
+    double LiirSampleA;
+    double LiirSampleB;
+    double LiirSampleC;
+    double LiirSampleD;
 
-	double RlastSample;
-	double RlastOutSample;
-	double RlastOut2Sample;
-	double RlastOut3Sample;
-	double RlpDepth;
-	double Rovershoot;
-	double Roverall;
-	double RiirSampleA;
-	double RiirSampleB;
-	double RiirSampleC;
-	double RiirSampleD;
-	bool flip;
+    double RlastSample;
+    double RlastOutSample;
+    double RlastOut2Sample;
+    double RlastOut3Sample;
+    double RlpDepth;
+    double Rovershoot;
+    double Roverall;
+    double RiirSampleA;
+    double RiirSampleB;
+    double RiirSampleC;
+    double RiirSampleD;
+    bool flip;
 
-	long double fpNShapeLA;
-	long double fpNShapeLB;
-	long double fpNShapeRA;
-	long double fpNShapeRB;
-	bool fpFlip;
-	//default stuff
+    long double fpNShapeL;
+    long double fpNShapeR;
+    //default stuff
 
     float A;
 };

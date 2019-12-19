@@ -12,25 +12,22 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new T
 TubeDesk::TubeDesk(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	for(int count = 0; count < 4999; count++) {dL[count] = 0; dR[count] = 0;}
-	gcount = 0;
+    for(int count = 0; count < 4999; count++) {dL[count] = 0; dR[count] = 0;}
+    gcount = 0;
 
-	controlL = 0;
-	lastSampleL = 0.0;
-	lastOutSampleL = 0.0;
-	lastSlewL = 0.0;
+    controlL = 0;
+    lastSampleL = 0.0;
+    lastOutSampleL = 0.0;
+    lastSlewL = 0.0;
 
-	controlR = 0;
-	lastSampleR = 0.0;
-	lastOutSampleR = 0.0;
-	lastSlewR = 0.0;
+    controlR = 0;
+    lastSampleR = 0.0;
+    lastOutSampleR = 0.0;
+    lastSlewR = 0.0;
 
-	fpNShapeLA = 0.0;
-	fpNShapeLB = 0.0;
-	fpNShapeRA = 0.0;
-	fpNShapeRB = 0.0;
-	fpFlip = true;
-	//this is reset: values being initialized only once. Startup values, whatever they are.
+    fpNShapeL = 0.0;
+    fpNShapeR = 0.0;
+    //this is reset: values being initialized only once. Startup values, whatever they are.
 
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
@@ -40,7 +37,7 @@ TubeDesk::TubeDesk(audioMasterCallback audioMaster) :
     setUniqueID(kUniqueId);
     canProcessReplacing();     // supports output replacing
     canDoubleReplacing();      // supports double precision processing
-	programsAreChunks(true);
+    programsAreChunks(true);
     vst_strncpy (_programName, "Default", kVstMaxProgNameLen); // default program name
 }
 
@@ -53,19 +50,19 @@ void TubeDesk::getProgramName(char *name) {vst_strncpy (name, _programName, kVst
 
 VstInt32 TubeDesk::getChunk (void** data, bool isPreset)
 {
-	return kNumParameters * sizeof(float);
+    return kNumParameters * sizeof(float);
 }
 
 VstInt32 TubeDesk::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {
-	return 0;
+    return 0;
 }
 
 void TubeDesk::setParameter(VstInt32 index, float value) {
 }
 
 float TubeDesk::getParameter(VstInt32 index) {
-	return 0.0; //we only need to update the relevant name, this is simple to manage
+    return 0.0; //we only need to update the relevant name, this is simple to manage
 }
 
 void TubeDesk::getParameterName(VstInt32 index, char *text) {
@@ -87,9 +84,9 @@ bool TubeDesk::getEffectName(char* name) {
 VstPlugCategory TubeDesk::getPlugCategory() {return kPlugCategEffect;}
 
 bool TubeDesk::getProductString(char* text) {
-  	vst_strncpy (text, "airwindows TubeDesk", kVstMaxProductStrLen); return true;
+    vst_strncpy (text, "airwindows TubeDesk", kVstMaxProductStrLen); return true;
 }
 
 bool TubeDesk::getVendorString(char* text) {
-  	vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
+    vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
 }

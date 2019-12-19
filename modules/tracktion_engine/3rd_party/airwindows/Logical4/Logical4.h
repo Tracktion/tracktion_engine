@@ -16,11 +16,11 @@
 #include <math.h>
 
 enum {
-	kParamA = 0,
-	kParamB = 1,
-	kParamC = 2,
-	kParamD = 3,
-	kParamE = 4,
+    kParamA = 0,
+    kParamB = 1,
+    kParamC = 2,
+    kParamD = 3,
+    kParamE = 4,
   kNumParameters = 5
 }; //
 
@@ -44,8 +44,8 @@ public:
     virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames);
     virtual void getProgramName(char *name);                      // read the name from the host
     virtual void setProgramName(char *name);                      // changes the name of the preset displayed in the host
-	virtual VstInt32 getChunk (void** data, bool isPreset);
-	virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
+    virtual VstInt32 getChunk (void** data, bool isPreset);
+    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
     virtual float getParameter(VstInt32 index);                   // get the parameter value at the specified index
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
@@ -56,105 +56,103 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
 
-	//begin ButterComp
-	double controlAposL;
-	double controlAnegL;
-	double controlBposL;
-	double controlBnegL;
-	double targetposL;
-	double targetnegL;
-	double controlAposBL;
-	double controlAnegBL;
-	double controlBposBL;
-	double controlBnegBL;
-	double targetposBL;
-	double targetnegBL;
-	double controlAposCL;
-	double controlAnegCL;
-	double controlBposCL;
-	double controlBnegCL;
-	double targetposCL;
-	double targetnegCL;
-	double avgAL;
-	double avgBL;
-	double avgCL;
-	double avgDL;
-	double avgEL;
-	double avgFL;
-	double nvgAL;
-	double nvgBL;
-	double nvgCL;
-	double nvgDL;
-	double nvgEL;
-	double nvgFL;
-	//end ButterComp
+    //begin ButterComp
+    double controlAposL;
+    double controlAnegL;
+    double controlBposL;
+    double controlBnegL;
+    double targetposL;
+    double targetnegL;
+    double controlAposBL;
+    double controlAnegBL;
+    double controlBposBL;
+    double controlBnegBL;
+    double targetposBL;
+    double targetnegBL;
+    double controlAposCL;
+    double controlAnegCL;
+    double controlBposCL;
+    double controlBnegCL;
+    double targetposCL;
+    double targetnegCL;
+    double avgAL;
+    double avgBL;
+    double avgCL;
+    double avgDL;
+    double avgEL;
+    double avgFL;
+    double nvgAL;
+    double nvgBL;
+    double nvgCL;
+    double nvgDL;
+    double nvgEL;
+    double nvgFL;
+    //end ButterComp
 
-	//begin Power Sag
-	double dL[1000];
-	double controlL;
-	double bL[1000];
-	double controlBL;
-	double cL[1000];
-	double controlCL;
-	//end Power Sag
+    //begin Power Sag
+    double dL[1000];
+    double controlL;
+    double bL[1000];
+    double controlBL;
+    double cL[1000];
+    double controlCL;
+    //end Power Sag
 
-	//begin ButterComp
-	double controlAposR;
-	double controlAnegR;
-	double controlBposR;
-	double controlBnegR;
-	double targetposR;
-	double targetnegR;
-	double controlAposBR;
-	double controlAnegBR;
-	double controlBposBR;
-	double controlBnegBR;
-	double targetposBR;
-	double targetnegBR;
-	double controlAposCR;
-	double controlAnegCR;
-	double controlBposCR;
-	double controlBnegCR;
-	double targetposCR;
-	double targetnegCR;
-	double avgAR;
-	double avgBR;
-	double avgCR;
-	double avgDR;
-	double avgER;
-	double avgFR;
-	double nvgAR;
-	double nvgBR;
-	double nvgCR;
-	double nvgDR;
-	double nvgER;
-	double nvgFR;
-	//end ButterComp
+    //begin ButterComp
+    double controlAposR;
+    double controlAnegR;
+    double controlBposR;
+    double controlBnegR;
+    double targetposR;
+    double targetnegR;
+    double controlAposBR;
+    double controlAnegBR;
+    double controlBposBR;
+    double controlBnegBR;
+    double targetposBR;
+    double targetnegBR;
+    double controlAposCR;
+    double controlAnegCR;
+    double controlBposCR;
+    double controlBnegCR;
+    double targetposCR;
+    double targetnegCR;
+    double avgAR;
+    double avgBR;
+    double avgCR;
+    double avgDR;
+    double avgER;
+    double avgFR;
+    double nvgAR;
+    double nvgBR;
+    double nvgCR;
+    double nvgDR;
+    double nvgER;
+    double nvgFR;
+    //end ButterComp
 
-	//begin Power Sag
-	double dR[1000];
-	double controlR;
-	double bR[1000];
-	double controlBR;
-	double cR[1000];
-	double controlCR;
-	//end Power Sag
+    //begin Power Sag
+    double dR[1000];
+    double controlR;
+    double bR[1000];
+    double controlBR;
+    double cR[1000];
+    double controlCR;
+    //end Power Sag
 
-	int gcount;
+    int gcount;
 
 
-	double fpNShapeLA;
-	double fpNShapeLB;
-	double fpNShapeRA;
-	double fpNShapeRB;
-	bool fpFlip;
-	//default stuff
+    double fpNShapeL;
+    double fpNShapeR;
+    bool fpFlip;
+    //default stuff
 
     float A;
     float B;
     float C;
     float D;
-	float E;
+    float E;
 };
 
 #endif

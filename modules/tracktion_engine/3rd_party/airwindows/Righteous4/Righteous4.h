@@ -16,8 +16,8 @@
 #include <math.h>
 
 enum {
-	kParamA = 0,
-	kParamB = 1,
+    kParamA = 0,
+    kParamB = 1,
   kNumParameters = 2
 }; //
 
@@ -41,8 +41,8 @@ public:
     virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames);
     virtual void getProgramName(char *name);                      // read the name from the host
     virtual void setProgramName(char *name);                      // changes the name of the preset displayed in the host
-	virtual VstInt32 getChunk (void** data, bool isPreset);
-	virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
+    virtual VstInt32 getChunk (void** data, bool isPreset);
+    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
     virtual float getParameter(VstInt32 index);                   // get the parameter value at the specified index
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
@@ -53,79 +53,79 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
 
-	double leftSampleA;
-	double leftSampleB;
-	double leftSampleC;
-	double leftSampleD;
-	double leftSampleE;
-	double leftSampleF;
-	double leftSampleG;
-	double leftSampleH;
-	double leftSampleI;
-	double leftSampleJ;
-	double leftSampleK;
-	double leftSampleL;
-	double leftSampleM;
-	double leftSampleN;
-	double leftSampleO;
-	double leftSampleP;
-	double leftSampleQ;
-	double leftSampleR;
-	double leftSampleS;
-	double leftSampleT;
-	double leftSampleU;
-	double leftSampleV;
-	double leftSampleW;
-	double leftSampleX;
-	double leftSampleY;
-	double leftSampleZ;
+    double leftSampleA;
+    double leftSampleB;
+    double leftSampleC;
+    double leftSampleD;
+    double leftSampleE;
+    double leftSampleF;
+    double leftSampleG;
+    double leftSampleH;
+    double leftSampleI;
+    double leftSampleJ;
+    double leftSampleK;
+    double leftSampleL;
+    double leftSampleM;
+    double leftSampleN;
+    double leftSampleO;
+    double leftSampleP;
+    double leftSampleQ;
+    double leftSampleR;
+    double leftSampleS;
+    double leftSampleT;
+    double leftSampleU;
+    double leftSampleV;
+    double leftSampleW;
+    double leftSampleX;
+    double leftSampleY;
+    double leftSampleZ;
 
-	double rightSampleA;
-	double rightSampleB;
-	double rightSampleC;
-	double rightSampleD;
-	double rightSampleE;
-	double rightSampleF;
-	double rightSampleG;
-	double rightSampleH;
-	double rightSampleI;
-	double rightSampleJ;
-	double rightSampleK;
-	double rightSampleL;
-	double rightSampleM;
-	double rightSampleN;
-	double rightSampleO;
-	double rightSampleP;
-	double rightSampleQ;
-	double rightSampleR;
-	double rightSampleS;
-	double rightSampleT;
-	double rightSampleU;
-	double rightSampleV;
-	double rightSampleW;
-	double rightSampleX;
-	double rightSampleY;
-	double rightSampleZ;
+    double rightSampleA;
+    double rightSampleB;
+    double rightSampleC;
+    double rightSampleD;
+    double rightSampleE;
+    double rightSampleF;
+    double rightSampleG;
+    double rightSampleH;
+    double rightSampleI;
+    double rightSampleJ;
+    double rightSampleK;
+    double rightSampleL;
+    double rightSampleM;
+    double rightSampleN;
+    double rightSampleO;
+    double rightSampleP;
+    double rightSampleQ;
+    double rightSampleR;
+    double rightSampleS;
+    double rightSampleT;
+    double rightSampleU;
+    double rightSampleV;
+    double rightSampleW;
+    double rightSampleX;
+    double rightSampleY;
+    double rightSampleZ;
 
-	double bynL[13];
-	long double noiseShapingL;
-	double lastSampleL;
-	double IIRsampleL;
-	double gwPrevL;
-	double gwAL;
-	double gwBL;
+    double bynL[13];
+    long double noiseShapingL;
+    double lastSampleL;
+    double IIRsampleL;
+    double gwPrevL;
+    double gwAL;
+    double gwBL;
 
-	double bynR[13];
-	long double noiseShapingR;
-	double lastSampleR;
-	double IIRsampleR;
-	double gwPrevR;
-	double gwAR;
-	double gwBR;
+    double bynR[13];
+    long double noiseShapingR;
+    double lastSampleR;
+    double IIRsampleR;
+    double gwPrevR;
+    double gwAR;
+    double gwBR;
 
-	long double fpNShapeL;
-	long double fpNShapeR;
-	//default stuff
+    long double fpNShapeL;
+    long double fpNShapeR;
+    //default stuff
 
     float A;
     float B;

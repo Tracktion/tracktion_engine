@@ -12,12 +12,9 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new P
 PurestConsoleBuss::PurestConsoleBuss(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	fpNShapeLA = 0.0;
-	fpNShapeLB = 0.0;
-	fpNShapeRA = 0.0;
-	fpNShapeRB = 0.0;
-	fpFlip = true;
-	//this is reset: values being initialized only once. Startup values, whatever they are.
+    fpNShapeL = 0.0;
+    fpNShapeR = 0.0;
+    //this is reset: values being initialized only once. Startup values, whatever they are.
 
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
@@ -27,7 +24,7 @@ PurestConsoleBuss::PurestConsoleBuss(audioMasterCallback audioMaster) :
     setUniqueID(kUniqueId);
     canProcessReplacing();     // supports output replacing
     canDoubleReplacing();      // supports double precision processing
-	programsAreChunks(true);
+    programsAreChunks(true);
     vst_strncpy (_programName, "Default", kVstMaxProgNameLen); // default program name
 }
 
@@ -40,18 +37,18 @@ void PurestConsoleBuss::getProgramName(char *name) {vst_strncpy (name, _programN
 
 VstInt32 PurestConsoleBuss::getChunk (void** data, bool isPreset)
 {
-	float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
-	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
-	 started with. */
+    float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
+    /* Note: The way this is set up, it will break if you manage to save settings on an Intel
+     machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
+     started with. */
 
-	*data = chunkData;
-	return kNumParameters * sizeof(float);
+    *data = chunkData;
+    return kNumParameters * sizeof(float);
 }
 
 VstInt32 PurestConsoleBuss::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {
-	return 0;
+    return 0;
 }
 
 void PurestConsoleBuss::setParameter(VstInt32 index, float value) {
@@ -75,12 +72,12 @@ void PurestConsoleBuss::getParameterName(VstInt32 index, char *text) {
 void PurestConsoleBuss::getParameterDisplay(VstInt32 index, char *text) {
     switch (index) {
         default: break; // unknown parameter, shouldn't happen!
-	} //this displays the values and handles 'popups' where it's discrete choices
+    } //this displays the values and handles 'popups' where it's discrete choices
 }
 
 void PurestConsoleBuss::getParameterLabel(VstInt32 index, char *text) {
     switch (index) {
-		default: break; // unknown parameter, shouldn't happen!
+        default: break; // unknown parameter, shouldn't happen!
     }
 }
 
@@ -94,9 +91,9 @@ bool PurestConsoleBuss::getEffectName(char* name) {
 VstPlugCategory PurestConsoleBuss::getPlugCategory() {return kPlugCategEffect;}
 
 bool PurestConsoleBuss::getProductString(char* text) {
-  	vst_strncpy (text, "airwindows PurestConsoleBuss", kVstMaxProductStrLen); return true;
+    vst_strncpy (text, "airwindows PurestConsoleBuss", kVstMaxProductStrLen); return true;
 }
 
 bool PurestConsoleBuss::getVendorString(char* text) {
-  	vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
+    vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
 }

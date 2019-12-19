@@ -16,7 +16,7 @@
 #include <math.h>
 
 enum {
-	kParamA = 0,
+    kParamA = 0,
   kNumParameters = 1
 }; //
 
@@ -40,8 +40,8 @@ public:
     virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames);
     virtual void getProgramName(char *name);                      // read the name from the host
     virtual void setProgramName(char *name);                      // changes the name of the preset displayed in the host
-	virtual VstInt32 getChunk (void** data, bool isPreset);
-	virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
+    virtual VstInt32 getChunk (void** data, bool isPreset);
+    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
     virtual float getParameter(VstInt32 index);                   // get the parameter value at the specified index
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
@@ -52,38 +52,38 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
 
-	float LataLast3Sample;
-	float LataLast2Sample;
-	float LataLast1Sample;
-	float LataHalfwaySample;
-	float LataHalfDrySample;
-	float LataHalfDiffSample;
-	float LataA;
-	float LataB;
-	float LataC;
-	float LataDecay;
-	float LataUpsampleHighTweak;
-	float LataDrySample;
-	float LataDiffSample;
-	float LataPrevDiffSample;
+    float LataLast3Sample;
+    float LataLast2Sample;
+    float LataLast1Sample;
+    float LataHalfwaySample;
+    float LataHalfDrySample;
+    float LataHalfDiffSample;
+    float LataA;
+    float LataB;
+    float LataC;
+    float LataDecay;
+    float LataUpsampleHighTweak;
+    float LataDrySample;
+    float LataDiffSample;
+    float LataPrevDiffSample;
 
-	float RataLast3Sample;
-	float RataLast2Sample;
-	float RataLast1Sample;
-	float RataHalfwaySample;
-	float RataHalfDrySample;
-	float RataHalfDiffSample;
-	float RataA;
-	float RataB;
-	float RataC;
-	float RataDecay;
-	float RataUpsampleHighTweak;
-	float RataDrySample;
-	float RataDiffSample;
-	float RataPrevDiffSample;
+    float RataLast3Sample;
+    float RataLast2Sample;
+    float RataLast1Sample;
+    float RataHalfwaySample;
+    float RataHalfDrySample;
+    float RataHalfDiffSample;
+    float RataA;
+    float RataB;
+    float RataC;
+    float RataDecay;
+    float RataUpsampleHighTweak;
+    float RataDrySample;
+    float RataDiffSample;
+    float RataPrevDiffSample;
 
-	bool LataFlip; //end defining of antialiasing variables
-	bool RataFlip; //end defining of antialiasing variables
+    bool LataFlip; //end defining of antialiasing variables
+    bool RataFlip; //end defining of antialiasing variables
 
     float A;
 };

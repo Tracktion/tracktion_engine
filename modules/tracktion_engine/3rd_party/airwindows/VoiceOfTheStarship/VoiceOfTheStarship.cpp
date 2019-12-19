@@ -12,28 +12,25 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new V
 VoiceOfTheStarship::VoiceOfTheStarship(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	A = 0.5;
-	B = 0.0;
-	position = 99999999;
-	quadratic = 0;
-	noiseAL = 0.0;
-	noiseBL = 0.0;
-	noiseCL = 0.0;
-	flipL = false;
-	noiseAR = 0.0;
-	noiseBR = 0.0;
-	noiseCR = 0.0;
-	flipR = false;
-	filterflip = false;
-	for(int count = 0; count < 11; count++) {bL[count] = 0.0; bR[count] = 0.0; f[count] = 0.0;}
-	lastAlgorithm = 0;
+    A = 0.5;
+    B = 0.0;
+    position = 99999999;
+    quadratic = 0;
+    noiseAL = 0.0;
+    noiseBL = 0.0;
+    noiseCL = 0.0;
+    flipL = false;
+    noiseAR = 0.0;
+    noiseBR = 0.0;
+    noiseCR = 0.0;
+    flipR = false;
+    filterflip = false;
+    for(int count = 0; count < 11; count++) {bL[count] = 0.0; bR[count] = 0.0; f[count] = 0.0;}
+    lastAlgorithm = 0;
 
-	fpNShapeLA = 0.0;
-	fpNShapeLB = 0.0;
-	fpNShapeRA = 0.0;
-	fpNShapeRB = 0.0;
-	fpFlip = true;
-	//this is reset: values being initialized only once. Startup values, whatever they are.
+    fpNShapeL = 0.0;
+    fpNShapeR = 0.0;
+    //this is reset: values being initialized only once. Startup values, whatever they are.
 
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
@@ -43,7 +40,7 @@ VoiceOfTheStarship::VoiceOfTheStarship(audioMasterCallback audioMaster) :
     setUniqueID(kUniqueId);
     canProcessReplacing();     // supports output replacing
     canDoubleReplacing();      // supports double precision processing
-	programsAreChunks(true);
+    programsAreChunks(true);
     vst_strncpy (_programName, "Default", kVstMaxProgNameLen); // default program name
 }
 
@@ -56,34 +53,34 @@ void VoiceOfTheStarship::getProgramName(char *name) {vst_strncpy (name, _program
 
 static float pinParameter(float data)
 {
-	if (data < 0.0f) return 0.0f;
-	if (data > 1.0f) return 1.0f;
-	return data;
+    if (data < 0.0f) return 0.0f;
+    if (data > 1.0f) return 1.0f;
+    return data;
 }
 
 VstInt32 VoiceOfTheStarship::getChunk (void** data, bool isPreset)
 {
-	float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
-	chunkData[0] = A;
-	chunkData[1] = B;
-	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
-	 started with. */
+    float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
+    chunkData[0] = A;
+    chunkData[1] = B;
+    /* Note: The way this is set up, it will break if you manage to save settings on an Intel
+     machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
+     started with. */
 
-	*data = chunkData;
-	return kNumParameters * sizeof(float);
+    *data = chunkData;
+    return kNumParameters * sizeof(float);
 }
 
 VstInt32 VoiceOfTheStarship::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {
-	float *chunkData = (float *)data;
-	A = pinParameter(chunkData[0]);
-	B = pinParameter(chunkData[1]);
-	/* We're ignoring byteSize as we found it to be a filthy liar */
+    float *chunkData = (float *)data;
+    A = pinParameter(chunkData[0]);
+    B = pinParameter(chunkData[1]);
+    /* We're ignoring byteSize as we found it to be a filthy liar */
 
-	/* calculate any other fields you need here - you could copy in
-	 code from setParameter() here. */
-	return 0;
+    /* calculate any other fields you need here - you could copy in
+     code from setParameter() here. */
+    return 0;
 }
 
 void VoiceOfTheStarship::setParameter(VstInt32 index, float value) {
@@ -105,7 +102,7 @@ float VoiceOfTheStarship::getParameter(VstInt32 index) {
 void VoiceOfTheStarship::getParameterName(VstInt32 index, char *text) {
     switch (index) {
         case kParamA: vst_strncpy (text, "Filter", kVstMaxParamStrLen); break;
-		case kParamB: vst_strncpy (text, "Algrthm", kVstMaxParamStrLen); break;
+        case kParamB: vst_strncpy (text, "Algrthm", kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
     } //this is our labels for displaying in the VST host
 }
@@ -115,14 +112,14 @@ void VoiceOfTheStarship::getParameterDisplay(VstInt32 index, char *text) {
         case kParamA: float2string (A, text, kVstMaxParamStrLen); break;
         case kParamB: float2string (floor(B*16.9), text, kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
-	} //this displays the values and handles 'popups' where it's discrete choices
+    } //this displays the values and handles 'popups' where it's discrete choices
 }
 
 void VoiceOfTheStarship::getParameterLabel(VstInt32 index, char *text) {
     switch (index) {
         case kParamA: vst_strncpy (text, "", kVstMaxParamStrLen); break;
         case kParamB: vst_strncpy (text, "", kVstMaxParamStrLen); break;
-		default: break; // unknown parameter, shouldn't happen!
+        default: break; // unknown parameter, shouldn't happen!
     }
 }
 
@@ -136,9 +133,9 @@ bool VoiceOfTheStarship::getEffectName(char* name) {
 VstPlugCategory VoiceOfTheStarship::getPlugCategory() {return kPlugCategEffect;}
 
 bool VoiceOfTheStarship::getProductString(char* text) {
-  	vst_strncpy (text, "airwindows VoiceOfTheStarship", kVstMaxProductStrLen); return true;
+    vst_strncpy (text, "airwindows VoiceOfTheStarship", kVstMaxProductStrLen); return true;
 }
 
 bool VoiceOfTheStarship::getVendorString(char* text) {
-  	vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
+    vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
 }

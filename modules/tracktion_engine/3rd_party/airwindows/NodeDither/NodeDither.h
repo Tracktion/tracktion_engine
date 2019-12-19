@@ -16,8 +16,8 @@
 #include <math.h>
 
 enum {
-	kParamA = 0,
-	kParamB = 1,
+    kParamA = 0,
+    kParamB = 1,
   kNumParameters = 2
 }; //
 
@@ -41,8 +41,8 @@ public:
     virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames);
     virtual void getProgramName(char *name);                      // read the name from the host
     virtual void setProgramName(char *name);                      // changes the name of the preset displayed in the host
-	virtual VstInt32 getChunk (void** data, bool isPreset);
-	virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
+    virtual VstInt32 getChunk (void** data, bool isPreset);
+    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
     virtual float getParameter(VstInt32 index);                   // get the parameter value at the specified index
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
@@ -53,10 +53,10 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
 
-	double dL[5000];
-	double dR[5000];
-	int gcount;
-	//default stuff
+    double dL[5000];
+    double dR[5000];
+    int gcount;
+    //default stuff
 
     float A;
     float B;

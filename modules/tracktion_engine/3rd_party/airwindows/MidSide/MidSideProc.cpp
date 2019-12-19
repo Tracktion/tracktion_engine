@@ -14,95 +14,81 @@ void MidSide::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
     float* out1 = outputs[0];
     float* out2 = outputs[1];
 
-	float fpTemp;
-	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;
 
-	long double inputSampleL;
-	long double inputSampleR;
+    long double inputSampleL;
+    long double inputSampleR;
 
-	long double mid;
-	long double side;
+    long double mid;
+    long double side;
 
-	double sidegain = A * 2.0;
-	double midgain = 2.0 - sidegain;
+    double sidegain = A * 2.0;
+    double midgain = 2.0 - sidegain;
 
     while (--sampleFrames >= 0)
     {
-		inputSampleL = *in1;
-		inputSampleR = *in2;
-		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
-			static int noisesource = 0;
-			//this declares a variable before anything else is compiled. It won't keep assigning
-			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
-			//but it lets me add this denormalization fix in a single place rather than updating
-			//it in three different locations. The variable isn't thread-safe but this is only
-			//a random seed and we can share it with whatever.
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleL = applyresidue;
-		}
-		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
-			static int noisesource = 0;
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleR = applyresidue;
-			//this denormalization routine produces a white noise at -300 dB which the noise
-			//shaping will interact with to produce a bipolar output, but the noise is actually
-			//all positive. That should stop any variables from going denormal, and the routine
-			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
-			//the silence will return to being digital black again.
-		}
+        inputSampleL = *in1;
+        inputSampleR = *in2;
+        if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
+            static int noisesource = 0;
+            //this declares a variable before anything else is compiled. It won't keep assigning
+            //it to 0 for every sample, it's as if the declaration doesn't exist in this context,
+            //but it lets me add this denormalization fix in a single place rather than updating
+            //it in three different locations. The variable isn't thread-safe but this is only
+            //a random seed and we can share it with whatever.
+            noisesource = noisesource % 1700021; noisesource++;
+            int residue = noisesource * noisesource;
+            residue = residue % 170003; residue *= residue;
+            residue = residue % 17011; residue *= residue;
+            residue = residue % 1709; residue *= residue;
+            residue = residue % 173; residue *= residue;
+            residue = residue % 17;
+            double applyresidue = residue;
+            applyresidue *= 0.00000001;
+            applyresidue *= 0.00000001;
+            inputSampleL = applyresidue;
+        }
+        if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
+            static int noisesource = 0;
+            noisesource = noisesource % 1700021; noisesource++;
+            int residue = noisesource * noisesource;
+            residue = residue % 170003; residue *= residue;
+            residue = residue % 17011; residue *= residue;
+            residue = residue % 1709; residue *= residue;
+            residue = residue % 173; residue *= residue;
+            residue = residue % 17;
+            double applyresidue = residue;
+            applyresidue *= 0.00000001;
+            applyresidue *= 0.00000001;
+            inputSampleR = applyresidue;
+            //this denormalization routine produces a white noise at -300 dB which the noise
+            //shaping will interact with to produce a bipolar output, but the noise is actually
+            //all positive. That should stop any variables from going denormal, and the routine
+            //only kicks in if digital black is input. As a final touch, if you save to 24-bit
+            //the silence will return to being digital black again.
+        }
 
-		mid = inputSampleL + inputSampleR;
-		side = inputSampleL - inputSampleR;
+        mid = inputSampleL + inputSampleR;
+        side = inputSampleL - inputSampleR;
 
-		mid *= midgain;
-		side *= sidegain;
+        mid *= midgain;
+        side *= sidegain;
 
-		//noise shaping to 32-bit floating point
-		if (fpFlip) {
-			fpTemp = mid;
-			fpNShapeLA = (fpNShapeLA*fpOld)+((mid-fpTemp)*fpNew);
-			mid += fpNShapeLA;
-			fpTemp = side;
-			fpNShapeRA = (fpNShapeRA*fpOld)+((side-fpTemp)*fpNew);
-			side += fpNShapeRA;
-		}
-		else {
-			fpTemp = mid;
-			fpNShapeLB = (fpNShapeLB*fpOld)+((mid-fpTemp)*fpNew);
-			mid += fpNShapeLB;
-			fpTemp = side;
-			fpNShapeRB = (fpNShapeRB*fpOld)+((side-fpTemp)*fpNew);
-			side += fpNShapeRB;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 32 bit output
+        //stereo 32 bit dither, made small and tidy.
+        int expon; frexpf((float)mid, &expon);
+        long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+        mid += (dither-fpNShapeL); fpNShapeL = dither;
+        frexpf((float)side, &expon);
+        dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+        side += (dither-fpNShapeR); fpNShapeR = dither;
+        //end 32 bit dither
 
-		*out1 = mid;
-		*out2 = side;
+        *out1 = mid;
+        *out2 = side;
 
-		*in1++;
-		*in2++;
-		*out1++;
-		*out2++;
+        *in1++;
+        *in2++;
+        *out1++;
+        *out2++;
     }
 }
 
@@ -113,94 +99,82 @@ void MidSide::processDoubleReplacing(double **inputs, double **outputs, VstInt32
     double* out1 = outputs[0];
     double* out2 = outputs[1];
 
-	double fpTemp; //this is different from singlereplacing
-	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;
 
-	long double inputSampleL;
-	long double inputSampleR;
+    long double inputSampleL;
+    long double inputSampleR;
 
-	long double mid;
-	long double side;
+    long double mid;
+    long double side;
 
-	double sidegain = A * 2.0;
-	double midgain = 2.0 - sidegain;
+    double sidegain = A * 2.0;
+    double midgain = 2.0 - sidegain;
 
     while (--sampleFrames >= 0)
     {
-		inputSampleL = *in1;
-		inputSampleR = *in2;
-		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
-			static int noisesource = 0;
-			//this declares a variable before anything else is compiled. It won't keep assigning
-			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
-			//but it lets me add this denormalization fix in a single place rather than updating
-			//it in three different locations. The variable isn't thread-safe but this is only
-			//a random seed and we can share it with whatever.
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleL = applyresidue;
-		}
-		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
-			static int noisesource = 0;
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleR = applyresidue;
-			//this denormalization routine produces a white noise at -300 dB which the noise
-			//shaping will interact with to produce a bipolar output, but the noise is actually
-			//all positive. That should stop any variables from going denormal, and the routine
-			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
-			//the silence will return to being digital black again.
-		}
+        inputSampleL = *in1;
+        inputSampleR = *in2;
+        if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
+            static int noisesource = 0;
+            //this declares a variable before anything else is compiled. It won't keep assigning
+            //it to 0 for every sample, it's as if the declaration doesn't exist in this context,
+            //but it lets me add this denormalization fix in a single place rather than updating
+            //it in three different locations. The variable isn't thread-safe but this is only
+            //a random seed and we can share it with whatever.
+            noisesource = noisesource % 1700021; noisesource++;
+            int residue = noisesource * noisesource;
+            residue = residue % 170003; residue *= residue;
+            residue = residue % 17011; residue *= residue;
+            residue = residue % 1709; residue *= residue;
+            residue = residue % 173; residue *= residue;
+            residue = residue % 17;
+            double applyresidue = residue;
+            applyresidue *= 0.00000001;
+            applyresidue *= 0.00000001;
+            inputSampleL = applyresidue;
+        }
+        if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
+            static int noisesource = 0;
+            noisesource = noisesource % 1700021; noisesource++;
+            int residue = noisesource * noisesource;
+            residue = residue % 170003; residue *= residue;
+            residue = residue % 17011; residue *= residue;
+            residue = residue % 1709; residue *= residue;
+            residue = residue % 173; residue *= residue;
+            residue = residue % 17;
+            double applyresidue = residue;
+            applyresidue *= 0.00000001;
+            applyresidue *= 0.00000001;
+            inputSampleR = applyresidue;
+            //this denormalization routine produces a white noise at -300 dB which the noise
+            //shaping will interact with to produce a bipolar output, but the noise is actually
+            //all positive. That should stop any variables from going denormal, and the routine
+            //only kicks in if digital black is input. As a final touch, if you save to 24-bit
+            //the silence will return to being digital black again.
+        }
 
-		mid = inputSampleL + inputSampleR;
-		side = inputSampleL - inputSampleR;
+        mid = inputSampleL + inputSampleR;
+        side = inputSampleL - inputSampleR;
 
-		mid *= midgain;
-		side *= sidegain;
+        mid *= midgain;
+        side *= sidegain;
 
-		//noise shaping to 64-bit floating point
-		if (fpFlip) {
-			fpTemp = mid;
-			fpNShapeLA = (fpNShapeLA*fpOld)+((mid-fpTemp)*fpNew);
-			mid += fpNShapeLA;
-			fpTemp = side;
-			fpNShapeRA = (fpNShapeRA*fpOld)+((side-fpTemp)*fpNew);
-			side += fpNShapeRA;
-		}
-		else {
-			fpTemp = mid;
-			fpNShapeLB = (fpNShapeLB*fpOld)+((mid-fpTemp)*fpNew);
-			mid += fpNShapeLB;
-			fpTemp = side;
-			fpNShapeRB = (fpNShapeRB*fpOld)+((side-fpTemp)*fpNew);
-			side += fpNShapeRB;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 64 bit output
+        //stereo 64 bit dither, made small and tidy.
+        int expon; frexp((double)mid, &expon);
+        long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+        dither /= 536870912.0; //needs this to scale to 64 bit zone
+        mid += (dither-fpNShapeL); fpNShapeL = dither;
+        frexp((double)side, &expon);
+        dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+        dither /= 536870912.0; //needs this to scale to 64 bit zone
+        side += (dither-fpNShapeR); fpNShapeR = dither;
+        //end 64 bit dither
 
-		*out1 = mid;
-		*out2 = side;
+        *out1 = mid;
+        *out2 = side;
 
-		*in1++;
-		*in2++;
-		*out1++;
-		*out2++;
+        *in1++;
+        *in2++;
+        *out1++;
+        *out2++;
     }
 }

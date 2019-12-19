@@ -51,8 +51,8 @@ public:
     virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames);
 
     // Programs and parameters
- 	virtual VstInt32 getChunk (void** data, bool isPreset);
-	virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
+    virtual VstInt32 getChunk (void** data, bool isPreset);
+    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
 
     virtual void getProgramName(char *name);                      // read the name from the host
     virtual void setProgramName(char *name);                      // changes the name of the preset displayed in the host
@@ -71,17 +71,14 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
 
-	double fpNShapeLA;
-	double fpNShapeLB;
-	double fpNShapeRA;
-	double fpNShapeRB;
-	bool fpFlip;
-	//default stuff
-	double lastSampleL;
-	double lastSampleR;
-	double gainchase;
-	double settingchase;
-	double chasespeed;
+    double fpNShapeL;
+    double fpNShapeR;
+    //default stuff
+    double lastSampleL;
+    double lastSampleR;
+    double gainchase;
+    double settingchase;
+    double chasespeed;
 
     float gain;
 

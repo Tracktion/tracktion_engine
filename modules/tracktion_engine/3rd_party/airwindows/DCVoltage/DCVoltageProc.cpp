@@ -14,17 +14,17 @@ void DCVoltage::processReplacing(float **inputs, float **outputs, VstInt32 sampl
     float* out1 = outputs[0];
     float* out2 = outputs[1];
 
-	double voltage = (A*2.0)-1.0;
+    double voltage = (A*2.0)-1.0;
 
     while (--sampleFrames >= 0)
     {
-		*out1 = *in1 + voltage;
-		*out2 = *in2 + voltage;
+        *out1 = *in1 + voltage;
+        *out2 = *in2 + voltage;
 
-		*in1++;
-		*in2++;
-		*out1++;
-		*out2++;
+        *in1++;
+        *in2++;
+        *out1++;
+        *out2++;
     }
 }
 
@@ -35,16 +35,16 @@ void DCVoltage::processDoubleReplacing(double **inputs, double **outputs, VstInt
     double* out1 = outputs[0];
     double* out2 = outputs[1];
 
-	double voltage = (A*2.0)-1.0;
+    double voltage = (A*2.0)-1.0;
 
     while (--sampleFrames >= 0)
     {
-		*out1 = *in1 + voltage;
-		*out2 = *in2 + voltage;
+        *out1 = *in1 + voltage;
+        *out2 = *in2 + voltage;
 
-		*in1++;
-		*in2++;
-		*out1++;
-		*out2++;
+        *in1++;
+        *in2++;
+        *out1++;
+        *out2++;
     }
 }

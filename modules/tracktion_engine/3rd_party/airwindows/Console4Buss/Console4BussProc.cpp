@@ -15,141 +15,126 @@ void Console4Buss::processReplacing(float **inputs, float **outputs, VstInt32 sa
     float* out1 = outputs[0];
     float* out2 = outputs[1];
 
-	double overallscale = 1.0;
-	overallscale /= 44100.0;
-	overallscale *= getSampleRate();
-	float fpTemp;
-	double fpOld = 0.618033988749894848204586; //golden ratio!
-	double fpNew = 1.0 - fpOld;
-
-	long double inputSampleL;
-	long double inputSampleR;
-	long double half;
-	long double falf;
-	long double slewcompensation;
-	if (settingchase != gain) {
-		chasespeed *= 2.0;
-		settingchase = gain;
-	}
-	if (chasespeed > 2500.0) chasespeed = 2500.0;
-	if (gainchase < 0.0) gainchase = gain;
+    double overallscale = 1.0;
+    overallscale /= 44100.0;
+    overallscale *= getSampleRate();
+    long double inputSampleL;
+    long double inputSampleR;
+    long double half;
+    long double falf;
+    long double slewcompensation;
+    if (settingchase != gain) {
+        chasespeed *= 2.0;
+        settingchase = gain;
+    }
+    if (chasespeed > 2500.0) chasespeed = 2500.0;
+    if (gainchase < 0.0) gainchase = gain;
 
 
 
     while (--sampleFrames >= 0)
     {
-		inputSampleL = *in1;
-		inputSampleR = *in2;
-		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
-			static int noisesource = 0;
-			//this declares a variable before anything else is compiled. It won't keep assigning
-			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
-			//but it lets me add this denormalization fix in a single place rather than updating
-			//it in three different locations. The variable isn't thread-safe but this is only
-			//a random seed and we can share it with whatever.
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleL = applyresidue;
-		}
-		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
-			static int noisesource = 0;
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleR = applyresidue;
-			//this denormalization routine produces a white noise at -300 dB which the noise
-			//shaping will interact with to produce a bipolar output, but the noise is actually
-			//all positive. That should stop any variables from going denormal, and the routine
-			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
-			//the silence will return to being digital black again.
-		}
+        inputSampleL = *in1;
+        inputSampleR = *in2;
+        if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
+            static int noisesource = 0;
+            //this declares a variable before anything else is compiled. It won't keep assigning
+            //it to 0 for every sample, it's as if the declaration doesn't exist in this context,
+            //but it lets me add this denormalization fix in a single place rather than updating
+            //it in three different locations. The variable isn't thread-safe but this is only
+            //a random seed and we can share it with whatever.
+            noisesource = noisesource % 1700021; noisesource++;
+            int residue = noisesource * noisesource;
+            residue = residue % 170003; residue *= residue;
+            residue = residue % 17011; residue *= residue;
+            residue = residue % 1709; residue *= residue;
+            residue = residue % 173; residue *= residue;
+            residue = residue % 17;
+            double applyresidue = residue;
+            applyresidue *= 0.00000001;
+            applyresidue *= 0.00000001;
+            inputSampleL = applyresidue;
+        }
+        if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
+            static int noisesource = 0;
+            noisesource = noisesource % 1700021; noisesource++;
+            int residue = noisesource * noisesource;
+            residue = residue % 170003; residue *= residue;
+            residue = residue % 17011; residue *= residue;
+            residue = residue % 1709; residue *= residue;
+            residue = residue % 173; residue *= residue;
+            residue = residue % 17;
+            double applyresidue = residue;
+            applyresidue *= 0.00000001;
+            applyresidue *= 0.00000001;
+            inputSampleR = applyresidue;
+            //this denormalization routine produces a white noise at -300 dB which the noise
+            //shaping will interact with to produce a bipolar output, but the noise is actually
+            //all positive. That should stop any variables from going denormal, and the routine
+            //only kicks in if digital black is input. As a final touch, if you save to 24-bit
+            //the silence will return to being digital black again.
+        }
 
-		chasespeed *= 0.9999;
-		chasespeed -= 0.01;
-		if (chasespeed < 350.0) chasespeed = 350.0;
-		//we have our chase speed compensated for recent fader activity
+        chasespeed *= 0.9999;
+        chasespeed -= 0.01;
+        if (chasespeed < 350.0) chasespeed = 350.0;
+        //we have our chase speed compensated for recent fader activity
 
-		gainchase = (((gainchase*chasespeed)+gain)/(chasespeed+1.0));
-		//gainchase is chasing the target, as a simple multiply gain factor
+        gainchase = (((gainchase*chasespeed)+gain)/(chasespeed+1.0));
+        //gainchase is chasing the target, as a simple multiply gain factor
 
-		if (1.0 != gainchase) {inputSampleL *= gainchase; inputSampleR *= gainchase;}
-		//done with trim control
+        if (1.0 != gainchase) {inputSampleL *= gainchase; inputSampleR *= gainchase;}
+        //done with trim control
 
-		half = inputSampleL;
-		falf = fabs(half);
-		half *= falf;
-		half *= falf;
-		slewcompensation = fabs(inputSampleL - lastSampleL) * overallscale;
-		//magnify effect at high sample rate so it will still register when inter-sample changes
-		//are very small at high rates.
-		if (slewcompensation > 1.0) slewcompensation = 1.0;
-		//let's not invert the effect: maximum application is to cancel out half entirely
-		half *= (1.0 - slewcompensation);
-		//apply it
-		lastSampleL = inputSampleL;
-		inputSampleL += half;
-		//this is the inverse processing for Console: boosts but not so much if there's slew.
-		//is this too subtle an effect?
+        half = inputSampleL;
+        falf = fabs(half);
+        half *= falf;
+        half *= falf;
+        slewcompensation = fabs(inputSampleL - lastSampleL) * overallscale;
+        //magnify effect at high sample rate so it will still register when inter-sample changes
+        //are very small at high rates.
+        if (slewcompensation > 1.0) slewcompensation = 1.0;
+        //let's not invert the effect: maximum application is to cancel out half entirely
+        half *= (1.0 - slewcompensation);
+        //apply it
+        lastSampleL = inputSampleL;
+        inputSampleL += half;
+        //this is the inverse processing for Console: boosts but not so much if there's slew.
+        //is this too subtle an effect?
 
 
-		half = inputSampleR;
-		falf = fabs(half);
-		half *= falf;
-		half *= falf;
-		slewcompensation = fabs(inputSampleR - lastSampleR) * overallscale;
-		//magnify effect at high sample rate so it will still register when inter-sample changes
-		//are very small at high rates.
-		if (slewcompensation > 1.0) slewcompensation = 1.0;
-		//let's not invert the effect: maximum application is to cancel out half entirely
-		half *= (1.0 - slewcompensation);
-		//apply it
-		lastSampleR = inputSampleR;
-		inputSampleR += half;
-		//this is the inverse processing for Console: boosts but not so much if there's slew.
-		//is this too subtle an effect?
+        half = inputSampleR;
+        falf = fabs(half);
+        half *= falf;
+        half *= falf;
+        slewcompensation = fabs(inputSampleR - lastSampleR) * overallscale;
+        //magnify effect at high sample rate so it will still register when inter-sample changes
+        //are very small at high rates.
+        if (slewcompensation > 1.0) slewcompensation = 1.0;
+        //let's not invert the effect: maximum application is to cancel out half entirely
+        half *= (1.0 - slewcompensation);
+        //apply it
+        lastSampleR = inputSampleR;
+        inputSampleR += half;
+        //this is the inverse processing for Console: boosts but not so much if there's slew.
+        //is this too subtle an effect?
 
-		//noise shaping to 32-bit floating point
-		if (fpFlip) {
-			fpTemp = inputSampleL;
-			fpNShapeLA = (fpNShapeLA*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeLA;
-			fpTemp = inputSampleR;
-			fpNShapeRA = (fpNShapeRA*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeRA;
-		}
-		else {
-			fpTemp = inputSampleL;
-			fpNShapeLB = (fpNShapeLB*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeLB;
-			fpTemp = inputSampleR;
-			fpNShapeRB = (fpNShapeRB*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeRB;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 32 bit output
+        //stereo 32 bit dither, made small and tidy.
+        int expon; frexpf((float)inputSampleL, &expon);
+        long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+        inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+        frexpf((float)inputSampleR, &expon);
+        dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+        inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
+        //end 32 bit dither
 
-		*out1 = inputSampleL;
-		*out2 = inputSampleR;
+        *out1 = inputSampleL;
+        *out2 = inputSampleR;
 
-		*in1++;
-		*in2++;
-		*out1++;
-		*out2++;
+        *in1++;
+        *in2++;
+        *out1++;
+        *out2++;
     }
 }
 
@@ -160,140 +145,128 @@ void Console4Buss::processDoubleReplacing(double **inputs, double **outputs, Vst
     double* out1 = outputs[0];
     double* out2 = outputs[1];
 
-	double overallscale = 1.0;
-	overallscale /= 44100.0;
-	overallscale *= getSampleRate();
-	double fpTemp; //this is different from singlereplacing
-	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;
+    double overallscale = 1.0;
+    overallscale /= 44100.0;
+    overallscale *= getSampleRate();
 
-	long double inputSampleL;
-	long double inputSampleR;
-	long double half;
-	long double falf;
-	long double slewcompensation;
-	if (settingchase != gain) {
-		chasespeed *= 2.0;
-		settingchase = gain;
-	}
-	if (chasespeed > 2500.0) chasespeed = 2500.0;
-	if (gainchase < 0.0) gainchase = gain;
+    long double inputSampleL;
+    long double inputSampleR;
+    long double half;
+    long double falf;
+    long double slewcompensation;
+    if (settingchase != gain) {
+        chasespeed *= 2.0;
+        settingchase = gain;
+    }
+    if (chasespeed > 2500.0) chasespeed = 2500.0;
+    if (gainchase < 0.0) gainchase = gain;
 
 
     while (--sampleFrames >= 0)
     {
-		inputSampleL = *in1;
-		inputSampleR = *in2;
-		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
-			static int noisesource = 0;
-			//this declares a variable before anything else is compiled. It won't keep assigning
-			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
-			//but it lets me add this denormalization fix in a single place rather than updating
-			//it in three different locations. The variable isn't thread-safe but this is only
-			//a random seed and we can share it with whatever.
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleL = applyresidue;
-		}
-		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
-			static int noisesource = 0;
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleR = applyresidue;
-			//this denormalization routine produces a white noise at -300 dB which the noise
-			//shaping will interact with to produce a bipolar output, but the noise is actually
-			//all positive. That should stop any variables from going denormal, and the routine
-			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
-			//the silence will return to being digital black again.
-		}
+        inputSampleL = *in1;
+        inputSampleR = *in2;
+        if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
+            static int noisesource = 0;
+            //this declares a variable before anything else is compiled. It won't keep assigning
+            //it to 0 for every sample, it's as if the declaration doesn't exist in this context,
+            //but it lets me add this denormalization fix in a single place rather than updating
+            //it in three different locations. The variable isn't thread-safe but this is only
+            //a random seed and we can share it with whatever.
+            noisesource = noisesource % 1700021; noisesource++;
+            int residue = noisesource * noisesource;
+            residue = residue % 170003; residue *= residue;
+            residue = residue % 17011; residue *= residue;
+            residue = residue % 1709; residue *= residue;
+            residue = residue % 173; residue *= residue;
+            residue = residue % 17;
+            double applyresidue = residue;
+            applyresidue *= 0.00000001;
+            applyresidue *= 0.00000001;
+            inputSampleL = applyresidue;
+        }
+        if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
+            static int noisesource = 0;
+            noisesource = noisesource % 1700021; noisesource++;
+            int residue = noisesource * noisesource;
+            residue = residue % 170003; residue *= residue;
+            residue = residue % 17011; residue *= residue;
+            residue = residue % 1709; residue *= residue;
+            residue = residue % 173; residue *= residue;
+            residue = residue % 17;
+            double applyresidue = residue;
+            applyresidue *= 0.00000001;
+            applyresidue *= 0.00000001;
+            inputSampleR = applyresidue;
+            //this denormalization routine produces a white noise at -300 dB which the noise
+            //shaping will interact with to produce a bipolar output, but the noise is actually
+            //all positive. That should stop any variables from going denormal, and the routine
+            //only kicks in if digital black is input. As a final touch, if you save to 24-bit
+            //the silence will return to being digital black again.
+        }
 
-		chasespeed *= 0.9999;
-		chasespeed -= 0.01;
-		if (chasespeed < 350.0) chasespeed = 350.0;
-		//we have our chase speed compensated for recent fader activity
+        chasespeed *= 0.9999;
+        chasespeed -= 0.01;
+        if (chasespeed < 350.0) chasespeed = 350.0;
+        //we have our chase speed compensated for recent fader activity
 
-		gainchase = (((gainchase*chasespeed)+gain)/(chasespeed+1.0));
-		//gainchase is chasing the target, as a simple multiply gain factor
+        gainchase = (((gainchase*chasespeed)+gain)/(chasespeed+1.0));
+        //gainchase is chasing the target, as a simple multiply gain factor
 
-		if (1.0 != gainchase) {inputSampleL *= gainchase; inputSampleR *= gainchase;}
-		//done with trim control
+        if (1.0 != gainchase) {inputSampleL *= gainchase; inputSampleR *= gainchase;}
+        //done with trim control
 
-		half = inputSampleL;
-		falf = fabs(half);
-		half *= falf;
-		half *= falf;
-		slewcompensation = fabs(inputSampleL - lastSampleL) * overallscale;
-		//magnify effect at high sample rate so it will still register when inter-sample changes
-		//are very small at high rates.
-		if (slewcompensation > 1.0) slewcompensation = 1.0;
-		//let's not invert the effect: maximum application is to cancel out half entirely
-		half *= (1.0 - slewcompensation);
-		//apply it
-		lastSampleL = inputSampleL;
-		inputSampleL += half;
-		//this is the inverse processing for Console: boosts but not so much if there's slew.
-		//is this too subtle an effect?
-
-
-		half = inputSampleR;
-		falf = fabs(half);
-		half *= falf;
-		half *= falf;
-		slewcompensation = fabs(inputSampleR - lastSampleR) * overallscale;
-		//magnify effect at high sample rate so it will still register when inter-sample changes
-		//are very small at high rates.
-		if (slewcompensation > 1.0) slewcompensation = 1.0;
-		//let's not invert the effect: maximum application is to cancel out half entirely
-		half *= (1.0 - slewcompensation);
-		//apply it
-		lastSampleR = inputSampleR;
-		inputSampleR += half;
-		//this is the inverse processing for Console: boosts but not so much if there's slew.
-		//is this too subtle an effect?
-
-		//noise shaping to 64-bit floating point
-		if (fpFlip) {
-			fpTemp = inputSampleL;
-			fpNShapeLA = (fpNShapeLA*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeLA;
-			fpTemp = inputSampleR;
-			fpNShapeRA = (fpNShapeRA*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeRA;
-		}
-		else {
-			fpTemp = inputSampleL;
-			fpNShapeLB = (fpNShapeLB*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeLB;
-			fpTemp = inputSampleR;
-			fpNShapeRB = (fpNShapeRB*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeRB;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 64 bit output
+        half = inputSampleL;
+        falf = fabs(half);
+        half *= falf;
+        half *= falf;
+        slewcompensation = fabs(inputSampleL - lastSampleL) * overallscale;
+        //magnify effect at high sample rate so it will still register when inter-sample changes
+        //are very small at high rates.
+        if (slewcompensation > 1.0) slewcompensation = 1.0;
+        //let's not invert the effect: maximum application is to cancel out half entirely
+        half *= (1.0 - slewcompensation);
+        //apply it
+        lastSampleL = inputSampleL;
+        inputSampleL += half;
+        //this is the inverse processing for Console: boosts but not so much if there's slew.
+        //is this too subtle an effect?
 
 
-		*out1 = inputSampleL;
-		*out2 = inputSampleR;
+        half = inputSampleR;
+        falf = fabs(half);
+        half *= falf;
+        half *= falf;
+        slewcompensation = fabs(inputSampleR - lastSampleR) * overallscale;
+        //magnify effect at high sample rate so it will still register when inter-sample changes
+        //are very small at high rates.
+        if (slewcompensation > 1.0) slewcompensation = 1.0;
+        //let's not invert the effect: maximum application is to cancel out half entirely
+        half *= (1.0 - slewcompensation);
+        //apply it
+        lastSampleR = inputSampleR;
+        inputSampleR += half;
+        //this is the inverse processing for Console: boosts but not so much if there's slew.
+        //is this too subtle an effect?
 
-		*in1++;
-		*in2++;
-		*out1++;
-		*out2++;
+        //stereo 64 bit dither, made small and tidy.
+        int expon; frexp((double)inputSampleL, &expon);
+        long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+        dither /= 536870912.0; //needs this to scale to 64 bit zone
+        inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+        frexp((double)inputSampleR, &expon);
+        dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+        dither /= 536870912.0; //needs this to scale to 64 bit zone
+        inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
+        //end 64 bit dither
+
+
+        *out1 = inputSampleL;
+        *out2 = inputSampleR;
+
+        *in1++;
+        *in2++;
+        *out1++;
+        *out2++;
     }
 }

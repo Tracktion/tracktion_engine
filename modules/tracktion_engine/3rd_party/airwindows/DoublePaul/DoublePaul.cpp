@@ -12,8 +12,8 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new D
 DoublePaul::DoublePaul(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	for(int count = 0; count < 11; count++) {bL[count] = 0.0;bR[count] = 0.0;}
-	//this is reset: values being initialized only once. Startup values, whatever they are.
+    for(int count = 0; count < 11; count++) {bL[count] = 0.0;bR[count] = 0.0;}
+    //this is reset: values being initialized only once. Startup values, whatever they are.
 
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
@@ -23,7 +23,7 @@ DoublePaul::DoublePaul(audioMasterCallback audioMaster) :
     setUniqueID(kUniqueId);
     canProcessReplacing();     // supports output replacing
     canDoubleReplacing();      // supports double precision processing
-	programsAreChunks(true);
+    programsAreChunks(true);
     vst_strncpy (_programName, "Default", kVstMaxProgNameLen); // default program name
 }
 
@@ -37,19 +37,19 @@ void DoublePaul::getProgramName(char *name) {vst_strncpy (name, _programName, kV
 
 VstInt32 DoublePaul::getChunk (void** data, bool isPreset)
 {
-	return kNumParameters * sizeof(float);
+    return kNumParameters * sizeof(float);
 }
 
 VstInt32 DoublePaul::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {
-	return 0;
+    return 0;
 }
 
 void DoublePaul::setParameter(VstInt32 index, float value) {
 }
 
 float DoublePaul::getParameter(VstInt32 index) {
-	return 0.0; //we only need to update the relevant name, this is simple to manage
+    return 0.0; //we only need to update the relevant name, this is simple to manage
 }
 
 void DoublePaul::getParameterName(VstInt32 index, char *text) {
@@ -71,9 +71,9 @@ bool DoublePaul::getEffectName(char* name) {
 VstPlugCategory DoublePaul::getPlugCategory() {return kPlugCategEffect;}
 
 bool DoublePaul::getProductString(char* text) {
-  	vst_strncpy (text, "airwindows DoublePaul", kVstMaxProductStrLen); return true;
+    vst_strncpy (text, "airwindows DoublePaul", kVstMaxProductStrLen); return true;
 }
 
 bool DoublePaul::getVendorString(char* text) {
-  	vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
+    vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
 }

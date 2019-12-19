@@ -16,14 +16,14 @@
 #include <math.h>
 
 enum {
-	kParamA = 0,
-	kParamB = 1,
-	kParamC = 2,
-	kParamD = 3,
-	kParamE = 4,
-	kParamF = 5,
-	kParamG = 6,
-	kNumParameters = 7
+    kParamA = 0,
+    kParamB = 1,
+    kParamC = 2,
+    kParamD = 3,
+    kParamE = 4,
+    kParamF = 5,
+    kParamG = 6,
+    kNumParameters = 7
 
 }; //
 
@@ -47,8 +47,8 @@ public:
     virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames);
     virtual void getProgramName(char *name);                      // read the name from the host
     virtual void setProgramName(char *name);                      // changes the name of the preset displayed in the host
-	virtual VstInt32 getChunk (void** data, bool isPreset);
-	virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
+    virtual VstInt32 getChunk (void** data, bool isPreset);
+    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
     virtual float getParameter(VstInt32 index);                   // get the parameter value at the specified index
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
@@ -59,54 +59,51 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
 
-	double iirSamplehAL;
-	double iirSamplehBL;
-	double iirSampleAL;
-	double iirSampleBL;
-	double dL[264];
-	double fastIIRAL;
-	double fastIIRBL;
-	double slowIIRAL;
-	double slowIIRBL;
-	double fastIIHAL;
-	double fastIIHBL;
-	double slowIIHAL;
-	double slowIIHBL;
-	double prevInputSampleL;
+    double iirSamplehAL;
+    double iirSamplehBL;
+    double iirSampleAL;
+    double iirSampleBL;
+    double dL[264];
+    double fastIIRAL;
+    double fastIIRBL;
+    double slowIIRAL;
+    double slowIIRBL;
+    double fastIIHAL;
+    double fastIIHBL;
+    double slowIIHAL;
+    double slowIIHBL;
+    double prevInputSampleL;
 
-	double iirSamplehAR;
-	double iirSamplehBR;
-	double iirSampleAR;
-	double iirSampleBR;
-	double dR[264];
-	double fastIIRAR;
-	double fastIIRBR;
-	double slowIIRAR;
-	double slowIIRBR;
-	double fastIIHAR;
-	double fastIIHBR;
-	double slowIIHAR;
-	double slowIIHBR;
-	double prevInputSampleR;
+    double iirSamplehAR;
+    double iirSamplehBR;
+    double iirSampleAR;
+    double iirSampleBR;
+    double dR[264];
+    double fastIIRAR;
+    double fastIIRBR;
+    double slowIIRAR;
+    double slowIIRBR;
+    double fastIIHAR;
+    double fastIIHBR;
+    double slowIIHAR;
+    double slowIIHBR;
+    double prevInputSampleR;
 
-	int gcount;
-	bool flip;
+    int gcount;
+    bool flip;
 
-	double flL[100];
-	double flR[100];
+    double flL[100];
+    double flR[100];
 
-	int fstoredcount;
-	double rateof;
-	double sweep;
-	double nextmax;
+    int fstoredcount;
+    double rateof;
+    double sweep;
+    double nextmax;
 
 
-	long double fpNShapeLA;
-	long double fpNShapeLB;
-	long double fpNShapeRA;
-	long double fpNShapeRB;
-	bool fpFlip;
-	//default stuff
+    long double fpNShapeL;
+    long double fpNShapeR;
+    //default stuff
 
     float A;
     float B;

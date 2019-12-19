@@ -16,11 +16,11 @@
 #include <math.h>
 
 enum {
-	kParamA = 0,
-	kParamB = 1,
-	kParamC = 2,
-	kParamD = 3,
-	kParamE = 4,
+    kParamA = 0,
+    kParamB = 1,
+    kParamC = 2,
+    kParamD = 3,
+    kParamE = 4,
   kNumParameters = 5
 }; //
 
@@ -44,8 +44,8 @@ public:
     virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames);
     virtual void getProgramName(char *name);                      // read the name from the host
     virtual void setProgramName(char *name);                      // changes the name of the preset displayed in the host
-	virtual VstInt32 getChunk (void** data, bool isPreset);
-	virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
+    virtual VstInt32 getChunk (void** data, bool isPreset);
+    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset);
     virtual float getParameter(VstInt32 index);                   // get the parameter value at the specified index
     virtual void setParameter(VstInt32 index, float value);       // set the parameter at index to value
     virtual void getParameterLabel(VstInt32 index, char *text);  // label for the parameter (eg dB)
@@ -56,20 +56,20 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
 
-	double iirLowpassAR;
-	double iirLowpassBR;
-	double iirHighpassAR;
-	double iirHighpassBR;
-	double iirLowpassAL;
-	double iirLowpassBL;
-	double iirHighpassAL;
-	double iirHighpassBL;
-	double treblefreq;
-	double bassfreq;
-	bool flip;
-	long double fpNShapeL;
-	long double fpNShapeR;
-	//default stuff
+    double iirLowpassAR;
+    double iirLowpassBR;
+    double iirHighpassAR;
+    double iirHighpassBR;
+    double iirLowpassAL;
+    double iirLowpassBL;
+    double iirHighpassAL;
+    double iirHighpassBL;
+    double treblefreq;
+    double bassfreq;
+    bool flip;
+    long double fpNShapeL;
+    long double fpNShapeR;
+    //default stuff
 
     float A;
     float B;

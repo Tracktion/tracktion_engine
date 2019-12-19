@@ -12,13 +12,13 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new D
 DitherMeDiskers::DitherMeDiskers(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	noiseShapingL = 0.0;
-	noiseShapingR = 0.0;
-	lastSampleL = 0.0;
-	lastSample2L = 0.0;
-	lastSampleR = 0.0;
-	lastSample2R = 0.0;
-	//this is reset: values being initialized only once. Startup values, whatever they are.
+    noiseShapingL = 0.0;
+    noiseShapingR = 0.0;
+    lastSampleL = 0.0;
+    lastSample2L = 0.0;
+    lastSampleR = 0.0;
+    lastSample2R = 0.0;
+    //this is reset: values being initialized only once. Startup values, whatever they are.
 
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
@@ -28,7 +28,7 @@ DitherMeDiskers::DitherMeDiskers(audioMasterCallback audioMaster) :
     setUniqueID(kUniqueId);
     canProcessReplacing();     // supports output replacing
     canDoubleReplacing();      // supports double precision processing
-	programsAreChunks(true);
+    programsAreChunks(true);
     vst_strncpy (_programName, "Default", kVstMaxProgNameLen); // default program name
 }
 
@@ -42,14 +42,14 @@ void DitherMeDiskers::getProgramName(char *name) {vst_strncpy (name, _programNam
 
 VstInt32 DitherMeDiskers::getChunk (void** data, bool isPreset)
 {
-	float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
-	*data = chunkData;
-	return kNumParameters * sizeof(float);
+    float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
+    *data = chunkData;
+    return kNumParameters * sizeof(float);
 }
 
 VstInt32 DitherMeDiskers::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {
-	return 0;
+    return 0;
 }
 
 void DitherMeDiskers::setParameter(VstInt32 index, float value) {
@@ -78,9 +78,9 @@ bool DitherMeDiskers::getEffectName(char* name) {
 VstPlugCategory DitherMeDiskers::getPlugCategory() {return kPlugCategEffect;}
 
 bool DitherMeDiskers::getProductString(char* text) {
-  	vst_strncpy (text, "airwindows DitherMeDiskers", kVstMaxProductStrLen); return true;
+    vst_strncpy (text, "airwindows DitherMeDiskers", kVstMaxProductStrLen); return true;
 }
 
 bool DitherMeDiskers::getVendorString(char* text) {
-  	vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
+    vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
 }

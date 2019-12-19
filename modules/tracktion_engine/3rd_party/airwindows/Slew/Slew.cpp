@@ -10,14 +10,14 @@
 
 AudioEffect* createEffectInstance(audioMasterCallback audioMaster)
 {
-	return new Slew(audioMaster);
+    return new Slew(audioMaster);
 }
 
 Slew::Slew(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	lastSampleL = 0.0;
-	lastSampleR = 0.0;
+    lastSampleL = 0.0;
+    lastSampleR = 0.0;
 
 // TODO: uncomment canDo entries according to your plugin's capabilities
 //    _canDo.insert("sendVstEvents"); // plug-in will send Vst events to Host.
@@ -54,7 +54,7 @@ Slew::Slew(audioMasterCallback audioMaster) :
     setUniqueID(kUniqueId);
     canProcessReplacing();     // supports output replacing
     canDoubleReplacing();      // supports double precision processing
- 	programsAreChunks(true);
+    programsAreChunks(true);
 
     vst_strncpy (_programName, "Default", kVstMaxProgNameLen); // default program name
 }
@@ -66,7 +66,7 @@ Slew::~Slew()
 VstInt32 Slew::getVendorVersion ()
 {
     // TODO: return version number
-	return 1000;
+    return 1000;
 }
 
 void Slew::setProgramName(char *name) {
@@ -79,32 +79,32 @@ void Slew::getProgramName(char *name) {
 
 static float pinParameter(float data)
 {
-	if (data < 0.0f) return 0.0f;
-	if (data > 1.0f) return 1.0f;
-	return data;
+    if (data < 0.0f) return 0.0f;
+    if (data > 1.0f) return 1.0f;
+    return data;
 }
 
 VstInt32 Slew::getChunk (void** data, bool isPreset)
 {
-	float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
-	chunkData[0] = gain;
-	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
-	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
-	 started with. */
+    float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
+    chunkData[0] = gain;
+    /* Note: The way this is set up, it will break if you manage to save settings on an Intel
+     machine and load them on a PPC Mac. However, it's fine if you stick to the machine you
+     started with. */
 
-	*data = chunkData;
-	return kNumParameters * sizeof(float);
+    *data = chunkData;
+    return kNumParameters * sizeof(float);
 }
 
 VstInt32 Slew::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {
-	float *chunkData = (float *)data;
-	gain = pinParameter(chunkData[0]);
-	/* We're ignoring byteSize as we found it to be a filthy liar */
+    float *chunkData = (float *)data;
+    gain = pinParameter(chunkData[0]);
+    /* We're ignoring byteSize as we found it to be a filthy liar */
 
-	/* calculate any other fields you need here - you could copy in
-	 code from setParameter() here. */
-	return 0;
+    /* calculate any other fields you need here - you could copy in
+     code from setParameter() here. */
+    return 0;
 }
 
 void Slew::setParameter(VstInt32 index, float value) {
@@ -125,7 +125,7 @@ float Slew::getParameter(VstInt32 index) {
         default: // unknown parameter, shouldn't happen!
             break;
     }
-	return 0.0;
+    return 0.0;
 }
 
 void Slew::getParameterName(VstInt32 index, char *text) {
@@ -174,11 +174,11 @@ VstPlugCategory Slew::getPlugCategory() {
 }
 
 bool Slew::getProductString(char* text) {
-  	vst_strncpy (text, "Slew", kVstMaxProductStrLen);
+    vst_strncpy (text, "Slew", kVstMaxProductStrLen);
     return true;
 }
 
 bool Slew::getVendorString(char* text) {
-  	vst_strncpy (text, "airwindows", kVstMaxVendorStrLen);
+    vst_strncpy (text, "airwindows", kVstMaxVendorStrLen);
     return true;
 }
