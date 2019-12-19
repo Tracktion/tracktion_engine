@@ -35,12 +35,14 @@ void Spiral::getProgramName(char *name) {vst_strncpy (name, _programName, kVstMa
 //airwindows likes to ignore this stuff. Make your own programs, and make a different plugin rather than
 //trying to do versioning and preventing people from using older versions. Maybe they like the old one!
 
+/*
 static float pinParameter(float data)
 {
     if (data < 0.0f) return 0.0f;
     if (data > 1.0f) return 1.0f;
     return data;
 }
+*/
 
 VstInt32 Spiral::getChunk (void** data, bool isPreset)
 {
