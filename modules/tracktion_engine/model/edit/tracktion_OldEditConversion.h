@@ -43,6 +43,7 @@ struct OldEditConversion
         convertMidiVersion (editXML);
         convertMpeVersion (editXML);
         convertPluginsAndClips (editXML);
+        fixTrackTags (editXML);
         convertFolderTracks (editXML);
         convertLegacyLFOs (editXML);
         convertLegacyIDsIfNeeded (editXML);
@@ -483,6 +484,28 @@ private:
                 tracks.add (e);
                 addTracks (tracks, *e);
             }
+        }
+    }
+
+    static void fixTrackTags (juce::XmlElement& xml)
+    {
+        juce::Array<juce::XmlElement*> tracks;
+        addTracks (tracks, xml);
+
+        for (auto e : tracks)
+        {
+            if (! e->hasAttribute (IDs::tags))
+                continue;
+
+            auto tagsString = e->getStringAttribute (IDs::tags);
+            auto tags = juce::StringArray::fromTokens (tagsString, "|", "\"");
+
+            for (auto& tag : tags)
+                tag = tag.trimCharactersAtStart ("_").trimCharactersAtEnd ("_");
+
+            tags.trim();
+            tags.removeEmptyStrings();
+            e->setAttribute (IDs::tags, tags.joinIntoString ("|"));
         }
     }
 
