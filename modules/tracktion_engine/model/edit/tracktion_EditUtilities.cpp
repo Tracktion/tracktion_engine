@@ -291,57 +291,67 @@ void deleteRegionOfTracks (Edit& edit, EditTimeRange rangeToDelete, bool onlySel
         tracks = getAllTracks (edit);
     }
 
-    if (tracks.size() > 0)
+    if (tracks.size() == 0 || rangeToDelete.getLength() <= 0.0001)
+        return;
+
+    std::unique_ptr<SelectionManager::ScopedSelectionState> selectionState;
+
+    if (selectionManager != nullptr)
     {
-        if (rangeToDelete.getLength() > 0.0001)
+        selectionState.reset (new SelectionManager::ScopedSelectionState (*selectionManager));
+        selectionManager->deselectAll();
+    }
+
+    Plugin::Array pluginsInRacks;
+
+    auto addPluginsInRack = [&] (RackInstance& r)
+    {
+        if (r.type != nullptr)
+            for (auto p : r.type->getPlugins())
+                pluginsInRacks.addIfNotAlreadyThere (p);
+    };
+
+    auto removeAutomationRangeOfPlugin = [&] (Plugin& p)
+    {
+        for (auto param : p.getAutomatableParameters())
+            param->getCurve().removeRegionAndCloseGap (rangeToDelete);
+    };
+
+    auto removeAutomationRangeFindingRackPlugins = [&] (Track& t)
+    {
+        for (auto p : t.pluginList)
         {
-            std::unique_ptr<SelectionManager::ScopedSelectionState> selectionState;
+            removeAutomationRangeOfPlugin (*p);
 
-            if (selectionManager != nullptr)
+            // find all the plugins in racks
+            if (auto rf = dynamic_cast<RackInstance*> (p))
+                addPluginsInRack (*rf);
+        }
+    };
+
+    for (int i = tracks.size(); --i >= 0;)
+    {
+        if (auto t = dynamic_cast<ClipTrack*> (tracks[i]))
+        {
+            t->deleteRegion (rangeToDelete, selectionManager);
+
+            if (closeGap)
             {
-                selectionState.reset (new SelectionManager::ScopedSelectionState (*selectionManager));
-                selectionManager->deselectAll();
+                for (auto& c : t->getClips())
+                    if (c->getPosition().getStart() > rangeToDelete.getCentre())
+                        c->setStart (c->getPosition().getStart() - rangeToDelete.getLength(), false, true);
+
+                removeAutomationRangeFindingRackPlugins (*t);
             }
-
-            Plugin::Array pluginsInRacks;
-
-            for (int i = tracks.size(); --i >= 0;)
-            {
-                if (auto t = dynamic_cast<ClipTrack*> (tracks[i]))
-                {
-                    t->deleteRegion (rangeToDelete, selectionManager);
-
-                    if (closeGap)
-                    {
-                        for (auto& c : t->getClips())
-                            if (c->getPosition().getStart() > rangeToDelete.getCentre())
-                                c->setStart (c->getPosition().getStart() - rangeToDelete.getLength(), false, true);
-
-                        if (auto at = dynamic_cast<AudioTrack*> (t))
-                        {
-                            for (auto p : at->pluginList)
-                            {
-                                for (int j = p->getNumAutomatableParameters(); --j >= 0;)
-                                    if (auto param = p->getAutomatableParameter(j))
-                                        param->getCurve().removeRegionAndCloseGap (rangeToDelete);
-
-                                // find all the plugins in racks
-                                if (auto rf = dynamic_cast<RackInstance*> (p))
-                                    if (rf->type != nullptr)
-                                        for (auto p2 : rf->type->getPlugins())
-                                            pluginsInRacks.addIfNotAlreadyThere (p2);
-                            }
-                        }
-                    }
-                }
-            }
-
-            for (auto p : pluginsInRacks)
-                for (int j = 0; j < p->getNumAutomatableParameters(); j++)
-                    if (auto param = p->getAutomatableParameter(j))
-                        param->getCurve().removeRegionAndCloseGap (rangeToDelete);
+        }
+        else if (auto ft = dynamic_cast<FolderTrack*> (tracks[i]))
+        {
+            removeAutomationRangeFindingRackPlugins (*ft);
         }
     }
+
+    for (auto p : pluginsInRacks)
+        removeAutomationRangeOfPlugin (*p);
 }
 
 void moveSelectedClips (const SelectableList& selectedObjectsIn, Edit& edit, MoveClipAction mode, bool automationLocked)
