@@ -1177,6 +1177,27 @@ public:
     //==============================================================================
     void runTest() override
     {
+        runPositionTests();
+        runModificationTests();
+    }
+
+private:
+    void expectBarsAndBeats (TempoSequencePosition& pos, int bars, int beats)
+    {
+        auto barsBeats = pos.getBarsBeatsTime();
+        expectEquals (barsBeats.bars, bars);
+        expectEquals (barsBeats.getWholeBeats(), beats);
+    }
+
+    void expectTempoSetting (TempoSetting& tempo, double startTime, double bpm, float curve)
+    {
+        expectWithinAbsoluteError (tempo.getStartTime(), startTime, 0.001);
+        expectWithinAbsoluteError (tempo.getBpm(), bpm, 0.001);
+        expectWithinAbsoluteError (tempo.getCurve(), curve, 0.001f);
+    }
+
+    void runPositionTests()
+    {
         auto edit = Edit::createSingleTrackEdit (Engine::getInstance());
 
         beginTest ("Defaults");
@@ -1259,12 +1280,29 @@ public:
         }
     }
 
-private:
-    void expectBarsAndBeats (TempoSequencePosition& pos, int bars, int beats)
+    void runModificationTests()
     {
-        auto barsBeats = pos.getBarsBeatsTime();
-        expectEquals (barsBeats.bars, bars);
-        expectEquals (barsBeats.getWholeBeats(), beats);
+        auto edit = Edit::createSingleTrackEdit (Engine::getInstance());
+        auto& ts = edit->tempoSequence;
+
+        beginTest ("Insertions");
+        {
+            expectWithinAbsoluteError (ts.getTempoAt (0.0).getBpm(), 120.0, 0.001);
+            expectWithinAbsoluteError (ts.getTempoAt (0.0).getCurve(), 1.0f, 0.001f);
+
+            ts.insertTempo (4.0, 120, 0.0);
+            ts.insertTempo (4.0, 300, 0.0);
+            ts.insertTempo (8.0, 300, 0.0);
+
+            expectTempoSetting (*ts.getTempo (0), 0.0, 120.0, 1.0f);
+            expectTempoSetting (*ts.getTempo (1), 2.0, 120.0, 0.0f);
+            expectTempoSetting (*ts.getTempo (2), 2.0, 300.0, 0.0f);
+            expectTempoSetting (*ts.getTempo (3), 2.8, 300.0, 0.0f);
+
+            expectTempoSetting (ts.getTempoAt (0.0), 0.0, 120.0, 1.0f);
+            expectTempoSetting (ts.getTempoAt (2.0), 2.0, 300.0, 0.0f);
+            expectTempoSetting (ts.getTempoAt (3.0), 2.8, 300.0, 0.0f);
+        }
     }
 };
 

@@ -53,6 +53,12 @@ String TempoSetting::getSelectableDescription()
 }
 
 //==============================================================================
+double TempoSetting::getStartTime() const
+{
+    ownerSequence.updateTempoDataIfNeeded();
+    return startTime;
+}
+    
 void TempoSetting::set (double newStartBeat, double newBPM, float newCurve, bool remapEditPositions)
 {
     startBeatNumber.forceUpdateOfCachedValue();
