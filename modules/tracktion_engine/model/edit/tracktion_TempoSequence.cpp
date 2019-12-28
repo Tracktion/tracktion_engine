@@ -297,7 +297,7 @@ void TempoSequence::removeTempo (int index, bool remapEdit)
     if (index == 0)
         return;
 
-    if (auto* ts = getTempo (index))
+    if (auto ts = getTempo (index))
     {
         if (getNumTempos() > 1)
         {
@@ -856,6 +856,9 @@ void TempoSequence::updateTempoDataIfNeeded() const
 {
     if (tempos->isUpdatePending())
         tempos->handleAsyncUpdate();
+
+    if (timeSigs->isUpdatePending())
+        timeSigs->handleAsyncUpdate();
 }
 
 void TempoSequence::handleAsyncUpdate()
