@@ -75,7 +75,7 @@ private:
     juce::int64 totalSamples = 0, numSamplesFinished = 0;
     juce::int32 numChannels = 0;
     double sampleRate = 0;
-    juce::CriticalSection lock;
+    juce::CriticalSection lock, sourceLock;
 
     bool setDataSource (LevelDataSource*);
     void setLevels (const MinMaxValue* const* values, int thumbIndex, int numChans, int numValues);

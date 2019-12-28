@@ -614,13 +614,17 @@ TracktionThumbnail::~TracktionThumbnail()
 
 void TracktionThumbnail::clear()
 {
-    source = nullptr;
-    const juce::ScopedLock sl (lock);
+    {
+        const juce::ScopedLock sl2 (sourceLock);
+        source.reset();
+    }
+
     clearChannelData();
 }
 
 void TracktionThumbnail::clearChannelData()
 {
+    const juce::ScopedLock sl (lock);
     window->invalidate();
     channels.clear();
     totalSamples = numSamplesFinished = 0;
@@ -706,6 +710,7 @@ bool TracktionThumbnail::setDataSource (LevelDataSource* newSource)
 
     if (cache.loadThumb (*this, newSource->hashCode) && isFullyLoaded())
     {
+        const juce::ScopedLock sl (sourceLock);
         source.reset (newSource); // (make sure this isn't done before loadThumb is called)
 
         source->lengthInSamples = totalSamples;
@@ -715,9 +720,10 @@ bool TracktionThumbnail::setDataSource (LevelDataSource* newSource)
     }
     else
     {
+        const juce::ScopedLock sl (sourceLock);
         source.reset (newSource); // (make sure this isn't done before loadThumb is called)
 
-        const juce::ScopedLock sl (lock);
+        const juce::ScopedLock sl2 (lock);
         source->initialise (numSamplesFinished);
 
         totalSamples = source->lengthInSamples;
@@ -747,12 +753,15 @@ void TracktionThumbnail::setReader (juce::AudioFormatReader* newReader, juce::in
 
 void TracktionThumbnail::releaseResources()
 {
+    const juce::ScopedLock sl (sourceLock);
+
     if (source != nullptr)
         source->releaseResources();
 }
 
 juce::int64 TracktionThumbnail::getHashCode() const
 {
+    const juce::ScopedLock sl (sourceLock);
     return source == nullptr ? 0 : source->hashCode;
 }
 
@@ -811,26 +820,31 @@ void TracktionThumbnail::setLevels (const MinMaxValue* const* values, int thumbI
 //==============================================================================
 int TracktionThumbnail::getNumChannels() const noexcept
 {
+    const juce::ScopedLock sl (lock);
     return numChannels;
 }
 
 double TracktionThumbnail::getTotalLength() const noexcept
 {
+    const juce::ScopedLock sl (lock);
     return sampleRate > 0 ? (totalSamples / sampleRate) : 0;
 }
 
 bool TracktionThumbnail::isFullyLoaded() const noexcept
 {
+    const juce::ScopedLock sl (lock);
     return numSamplesFinished >= totalSamples - samplesPerThumbSample;
 }
 
 double TracktionThumbnail::getProportionComplete() const noexcept
 {
+    const juce::ScopedLock sl (lock);
     return juce::jlimit (0.0, 1.0, numSamplesFinished / (double) std::max ((juce::int64) 1, totalSamples));
 }
 
 juce::int64 TracktionThumbnail::getNumSamplesFinished() const noexcept
 {
+    const juce::ScopedLock sl (lock);
     return numSamplesFinished;
 }
 
@@ -877,6 +891,7 @@ void TracktionThumbnail::drawChannels (juce::Graphics& g, const juce::Rectangle<
 void TracktionThumbnail::drawChannel (juce::Graphics& g, juce::Rectangle<int> area, bool useHighRes,
                                       EditTimeRange time, int channelNum, float verticalZoomFactor)
 {
+    const juce::ScopedLock sl2 (sourceLock);
     const juce::ScopedLock sl (lock);
 
     window->drawChannel (g, area, useHighRes, time, channelNum, verticalZoomFactor,

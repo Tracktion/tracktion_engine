@@ -56,6 +56,7 @@ private:
     friend class SmartThumbnail;
     std::unique_ptr<juce::AudioThumbnailCache> thumbnailCache;
     juce::Array<SmartThumbnail*> activeThumbnails;
+    juce::CriticalSection activeThumbnailLock;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioFileManager)
 };

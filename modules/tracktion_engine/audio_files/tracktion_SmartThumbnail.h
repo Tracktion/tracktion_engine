@@ -63,7 +63,8 @@ public:
 private:
     //==============================================================================
     juce::Component& component;
-    bool wasGeneratingProxy = false, thumbnailIsInvalid = true;
+    bool wasGeneratingProxy = false;
+    std::atomic<bool> thumbnailIsInvalid { true };
     float lastProgress = 0.0f;
 
     void timerCallback() override;
@@ -72,6 +73,7 @@ private:
 
     static bool enabled;
 
+    JUCE_DECLARE_WEAK_REFERENCEABLE(SmartThumbnail)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SmartThumbnail)
 };
 
