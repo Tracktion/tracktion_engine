@@ -53,10 +53,9 @@ LevelMeasurer::~LevelMeasurer()
 }
 
 //==============================================================================
-LevelMeasurer::Client::Client() {}
-
 void LevelMeasurer::Client::reset() noexcept
 {
+    juce::SpinLock::ScopedLockType sl (mutex);
     for (auto& l : audioLevels)
         l = {};
 
@@ -69,6 +68,7 @@ void LevelMeasurer::Client::reset() noexcept
 
 bool LevelMeasurer::Client::getAndClearOverload() noexcept
 {
+    juce::SpinLock::ScopedLockType sl (mutex);
     auto result = clearOverload;
     clearOverload = false;
     return result;
@@ -76,6 +76,7 @@ bool LevelMeasurer::Client::getAndClearOverload() noexcept
 
 DbTimePair LevelMeasurer::Client::getAndClearMidiLevel() noexcept
 {
+    juce::SpinLock::ScopedLockType sl (mutex);
     auto result = midiLevels;
     midiLevels.dB = -100.0f;
     return result;
@@ -83,15 +84,51 @@ DbTimePair LevelMeasurer::Client::getAndClearMidiLevel() noexcept
 
 DbTimePair LevelMeasurer::Client::getAndClearAudioLevel (int chan) noexcept
 {
+    juce::SpinLock::ScopedLockType sl (mutex);
     jassert (chan >= 0 && chan < maxNumChannels);
     auto result = audioLevels[chan];
     audioLevels[chan].dB = -100.0f;
     return result;
 }
 
+void LevelMeasurer::Client::setNumChannelsUsed (int numChannels) noexcept
+{
+    juce::SpinLock::ScopedLockType sl (mutex);
+    numChannelsUsed = numChannels;
+}
+
+void LevelMeasurer::Client::setOverload (int channel, bool hasOverloaded) noexcept
+{
+    juce::SpinLock::ScopedLockType sl (mutex);
+    overload[channel] = hasOverloaded;
+}
+
+void LevelMeasurer::Client::setClearOverload (bool clear) noexcept
+{
+    juce::SpinLock::ScopedLockType sl (mutex);
+    clearOverload = clear;
+}
+
+void LevelMeasurer::Client::updateAudioLevel (int channel, DbTimePair newAudioLevel) noexcept
+{
+    juce::SpinLock::ScopedLockType sl (mutex);
+
+    if (newAudioLevel.dB >= audioLevels[channel].dB)
+        audioLevels[channel] = newAudioLevel;
+}
+
+void LevelMeasurer::Client::updateMidiLevel (DbTimePair newMidiLevel) noexcept
+{
+    if (midiLevels.dB >= midiLevels.dB)
+        midiLevels = newMidiLevel;
+}
+
+
 //==============================================================================
 void LevelMeasurer::processBuffer (juce::AudioBuffer<float>& buffer, int start, int numSamples)
 {
+    const ScopedLock sl (clientsMutex);
+
     if (clients.isEmpty())
         return;
 
@@ -109,18 +146,14 @@ void LevelMeasurer::processBuffer (juce::AudioBuffer<float>& buffer, int start, 
             bool overloaded = gain > 0.999f;
             auto newDB = gainToDb (gain);
 
-            for (auto* c : clients)
+            for (auto c : clients)
             {
-                if (newDB >= c->audioLevels[i].dB)
-                {
-                    c->audioLevels[i].dB = newDB;
-                    c->audioLevels[i].time = now;
-                }
+                c->updateAudioLevel (i, { now, newDB });
 
                 if (overloaded)
-                    c->overload[i] = true;
+                    c->setOverload (i, true);
 
-                c->numChannelsUsed = numChans;
+                c->setNumChannelsUsed (numChans);
             }
         }
     }
@@ -134,18 +167,14 @@ void LevelMeasurer::processBuffer (juce::AudioBuffer<float>& buffer, int start, 
             bool overloaded = gain > 0.999f;
             auto newDB = gainToDb (gain);
 
-            for (auto* c : clients)
+            for (auto c : clients)
             {
-                if (newDB >= c->audioLevels[i].dB)
-                {
-                    c->audioLevels[i].dB = newDB;
-                    c->audioLevels[i].time = now;
-                }
+                c->updateAudioLevel (i, { now, newDB });
 
                 if (overloaded)
-                    c->overload[i] = true;
+                    c->setOverload (i, true);
 
-                c->numChannelsUsed = numChans;
+                c->setNumChannelsUsed (numChans);
             }
         }
     }
@@ -160,30 +189,23 @@ void LevelMeasurer::processBuffer (juce::AudioBuffer<float>& buffer, int start, 
         auto sumDB  = gainToDb (sum);
         auto diffDB = gainToDb (diff);
 
-        for (auto* c : clients)
+        for (auto c : clients)
         {
-            if (sumDB >= c->audioLevels[0].dB)
-            {
-                c->audioLevels[0].dB   = sumDB;
-                c->audioLevels[0].time = now;
-            }
+            c->updateAudioLevel (0, { now, sumDB });
+            c->updateAudioLevel (1, { now, diffDB });
 
-            if (diffDB >= c->audioLevels[1].dB)
-            {
-                c->audioLevels[1].dB   = diffDB;
-                c->audioLevels[1].time = now;
-            }
+            if (sum  > 0.999f) c->setOverload (0, true);
+            if (diff > 0.999f) c->setOverload (1, true);
 
-            if (sum  > 0.999f) c->overload[0] = true;
-            if (diff > 0.999f) c->overload[1] = true;
-
-            c->numChannelsUsed = 2;
+            c->setNumChannelsUsed (2);
         }
     }
 }
 
 void LevelMeasurer::processMidi (MidiMessageArray& midiBuffer, const float*)
 {
+    const ScopedLock sl (clientsMutex);
+
     if (clients.isEmpty() || ! showMidi)
         return;
 
@@ -196,44 +218,34 @@ void LevelMeasurer::processMidi (MidiMessageArray& midiBuffer, const float*)
     auto now = Time::getApproximateMillisecondCounter();
 
     for (auto c : clients)
-    {
-        auto db = gainToDb (max);
-
-        if (db > c->midiLevels.dB)
-        {
-            c->midiLevels.dB = db;
-            c->midiLevels.time = now;
-        }
-    }
+        c->updateMidiLevel ({ now, gainToDb (max) });
 }
 
 void LevelMeasurer::processMidiLevel (float level)
 {
+    const ScopedLock sl (clientsMutex);
+
     if (clients.isEmpty() || ! showMidi)
         return;
 
     auto now = Time::getApproximateMillisecondCounter();
 
     for (auto c : clients)
-    {
-        auto db = gainToDb (level);
-
-        if (db > c->midiLevels.dB)
-        {
-            c->midiLevels.dB = db;
-            c->midiLevels.time = now;
-        }
-    }
+        c->updateMidiLevel ({ now, gainToDb (level) });
 }
 
 void LevelMeasurer::clearOverload()
 {
+    const ScopedLock sl (clientsMutex);
+
     for (auto c : clients)
-        c->clearOverload = true;
+        c->setClearOverload (true);
 }
 
 void LevelMeasurer::clear()
 {
+    const ScopedLock sl (clientsMutex);
+
     for (auto c : clients)
         c->reset();
 
@@ -249,12 +261,14 @@ void LevelMeasurer::setMode (LevelMeasurer::Mode m)
 
 void LevelMeasurer::addClient (Client& c)
 {
+    const ScopedLock sl (clientsMutex);
     jassert (! clients.contains (&c));
     clients.add (&c);
 }
 
 void LevelMeasurer::removeClient (Client& c)
 {
+    const ScopedLock sl (clientsMutex);
     clients.removeFirstMatchingValue (&c);
 }
 
@@ -297,7 +311,7 @@ void SharedLevelMeasurer::addBuffer (const juce::AudioBuffer<float>& inBuffer, i
 
 //==============================================================================
 LevelMeasuringAudioNode::LevelMeasuringAudioNode (SharedLevelMeasurer::Ptr lm, AudioNode* source)
-   : SingleInputAudioNode (source), levelMeasurer (lm)
+    : SingleInputAudioNode (source), levelMeasurer (lm)
 {
 }
 

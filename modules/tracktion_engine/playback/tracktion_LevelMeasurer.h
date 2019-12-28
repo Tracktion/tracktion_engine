@@ -55,7 +55,7 @@ public:
     //==============================================================================
     struct Client
     {
-        Client();
+        Client() = default;
 
         void reset() noexcept;
         bool getAndClearOverload() noexcept;
@@ -64,11 +64,22 @@ public:
 
         static constexpr auto maxNumChannels = 8;
 
+        /** @internal */
+        void setNumChannelsUsed (int) noexcept;
+        void setOverload (int channel, bool hasOverloaded) noexcept;
+        void setClearOverload (bool) noexcept;
+
+        void updateAudioLevel (int channel, DbTimePair) noexcept;
+        void updateMidiLevel (DbTimePair) noexcept;
+
+    private:
         DbTimePair audioLevels[maxNumChannels];
         bool overload[maxNumChannels];
         DbTimePair midiLevels;
         int numChannelsUsed = 0;
         bool clearOverload = true;
+
+        juce::SpinLock mutex;
     };
 
     //==============================================================================
@@ -85,6 +96,7 @@ private:
     float levelCache = -100.0f;
 
     juce::Array<Client*> clients;
+    juce::CriticalSection clientsMutex;
 
     JUCE_DECLARE_WEAK_REFERENCEABLE(LevelMeasurer)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevelMeasurer)
