@@ -186,6 +186,7 @@ public:
 
 private:
     struct WaveDeviceList;
+    struct ContextDeviceClearer;
     bool finishedInitialising = false;
     bool sendMidiTimecode = false;
 
@@ -203,6 +204,7 @@ private:
     int defaultWaveOutIndex = 0, defaultMidiOutIndex = 0, defaultWaveInIndex = 0, defaultMidiInIndex = 0;
 
     std::unique_ptr<WaveDeviceList> lastWaveDeviceList;
+    std::unique_ptr<ContextDeviceClearer> contextDeviceClearer;
 
     juce::CriticalSection contextLock;
     juce::Array<EditPlaybackContext*> activeContexts;

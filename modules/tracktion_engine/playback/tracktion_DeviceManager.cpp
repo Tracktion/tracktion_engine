@@ -130,10 +130,53 @@ struct DeviceManager::WaveDeviceList
 
 
 //==============================================================================
+struct DeviceManager::ContextDeviceClearer : private juce::AsyncUpdater
+{
+    ContextDeviceClearer (DeviceManager& owner)
+        : deviceManager (owner)
+    {}
+
+    ~ContextDeviceClearer()
+    {
+        handleUpdateNowIfNeeded();
+    }
+
+    void triggerClearDevices()
+    {
+        if (juce::MessageManager::getInstance()->isThisTheMessageThread())
+            clearDevices();
+        else
+            triggerAsyncUpdate();
+    }
+
+    void dispatchPendingUpdates()
+    {
+        JUCE_ASSERT_MESSAGE_THREAD
+        handleUpdateNowIfNeeded();
+    }
+
+private:
+    DeviceManager& deviceManager;
+
+    void clearDevices()
+    {
+        deviceManager.clearAllContextDevices();
+    }
+
+    void handleAsyncUpdate() override
+    {
+        clearDevices();
+    }
+};
+
+
+//==============================================================================
+//==============================================================================
 DeviceManager::DeviceManager (Engine& e) : engine (e)
 {
     CRASH_TRACER
 
+    contextDeviceClearer = std::make_unique<ContextDeviceClearer> (*this);
     setInternalBufferMultiplier (engine.getPropertyStorage().getProperty (SettingID::internalBuffer, 1));
 
     deviceManager.addChangeListener (this);
@@ -513,6 +556,7 @@ void DeviceManager::rebuildWaveDeviceList()
 
     TRACKTION_LOG ("Rebuilding Wave Device List...");
 
+    contextDeviceClearer->dispatchPendingUpdates();
     TransportControl::stopAllTransports (engine, false, true);
 
     ContextDeviceListRebuilder deviceRebuilder (*this);
@@ -1111,6 +1155,7 @@ void DeviceManager::audioDeviceIOCallback (const float** inputChannelData, int n
 void DeviceManager::audioDeviceAboutToStart (AudioIODevice* device)
 {
     FloatVectorOperations::disableDenormalisedNumberSupport();
+    contextDeviceClearer->dispatchPendingUpdates();
 
     streamTime = 0;
     currentCpuUsage = 0.0f;
@@ -1149,7 +1194,7 @@ void DeviceManager::audioDeviceAboutToStart (AudioIODevice* device)
 void DeviceManager::audioDeviceStopped()
 {
     currentCpuUsage = 0.0f;
-    callBlocking ([this] { clearAllContextDevices(); });
+    contextDeviceClearer->triggerClearDevices();
 
     if (globalOutputAudioProcessor != nullptr)
         globalOutputAudioProcessor->releaseResources();
