@@ -57,7 +57,7 @@ struct LiveMidiInjectingAudioNode  : public SingleInputAudioNode
 
     void renderOver (const AudioRenderContext& rc) override
     {
-        if (rc.bufferForMidiMessages != nullptr && ! liveMidiMessages.isEmpty())
+        if (rc.bufferForMidiMessages != nullptr && anyLiveMidiMessages())
             callRenderAdding (rc);
         else
             input->renderOver (rc);
@@ -65,7 +65,7 @@ struct LiveMidiInjectingAudioNode  : public SingleInputAudioNode
 
     void renderAdding (const AudioRenderContext& rc) override
     {
-        if (rc.bufferForMidiMessages != nullptr && ! liveMidiMessages.isEmpty())
+        if (rc.bufferForMidiMessages != nullptr && anyLiveMidiMessages())
         {
             MidiMessageArray messages;
 
@@ -112,6 +112,12 @@ private:
     static juce::Array<LiveMidiInjectingAudioNode*> activeNodes;
     static CriticalSection activeNodeLock;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
+
+    bool anyLiveMidiMessages() const
+    {
+        const ScopedLock sl (liveMidiLock);
+        return ! liveMidiMessages.isEmpty();
+    };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LiveMidiInjectingAudioNode)
 };

@@ -96,7 +96,7 @@ public:
             {
                 if (failedToOpenFile
                      && juce::Time::getApproximateMillisecondCounter()
-                            < lastFailedOpenAttempt + 4000 + (juce::uint32) juce::Random::getSystemRandom().nextInt (3000))
+                            < lastFailedOpenAttempt + 4000 + (juce::uint32) random.nextInt (3000))
                     return false;
 
                 const juce::ScopedWriteLock sl (readerLock);
@@ -450,7 +450,8 @@ private:
     bool mapEntireFile = false;
     bool failedToOpenFile = false;
     juce::uint32 lastFailedOpenAttempt = 0;
-
+    juce::Random random;
+    
     juce::ReadWriteLock clientListLock, readerLock;
 
     juce::MemoryMappedAudioFormatReader* findReaderFor (juce::int64 sample) const

@@ -351,7 +351,7 @@ private:
     {
         CRASH_TRACER
 
-        AudioFile tempFile (proxy.getFile().getSiblingFile ("temp_proxy_" + String::toHexString (Random::getSystemRandom().nextInt64()))
+        AudioFile tempFile (proxy.getFile().getSiblingFile ("temp_proxy_" + String::toHexString (Random().nextInt64()))
                             .withFileExtension (proxy.getFile().getFileExtension()));
 
         bool ok = render (tempFile);

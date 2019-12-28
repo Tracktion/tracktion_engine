@@ -534,7 +534,7 @@ struct AutomatableParameter::AttachedIntValue : public AutomatableParameter::Att
         parameter.setParameter ((float) value.get(), juce::dontSendNotification);
     }
 
-    void handleAsyncUpdate() override               { value.setValue (roundToInt (parameter.currentValue), nullptr); }
+    void handleAsyncUpdate() override               { value.setValue (roundToInt (parameter.getCurrentValue()), nullptr); }
     float getValue() override                       { return (float) value.get(); }
     void setValue (float v) override                { value = roundToInt (v); }
     float getDefault() override                     { return (float) value.getDefault(); }
@@ -767,7 +767,7 @@ void AutomatableParameter::updateFromAutomationSources (double time)
                                        return curveSource->getCurrentValue();
                                    }
 
-                                   return currentParameterValue;
+                                   return currentParameterValue.load();
                                }();
 
     if (newModifierValue != 0.0f)
@@ -1068,7 +1068,7 @@ void AutomatableParameter::updateToFollowCurve (double time)
                                    if (hasAutomationPoints() && ! isRecording)
                                        return curveSource->getValueAt (time);
 
-                                   return currentParameterValue;
+                                   return currentParameterValue.load();
                                }();
 
     if (newModifierValue != 0.0f)
