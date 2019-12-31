@@ -395,6 +395,41 @@ void AudioClipComponent::updateThumbnail()
 }
 
 //==============================================================================
+MidiClipComponent::MidiClipComponent (EditViewState& evs, te::Clip::Ptr c)
+    : ClipComponent (evs, c)
+{
+}
+
+void MidiClipComponent::paint (Graphics& g)
+{
+    ClipComponent::paint (g);
+    
+    if (auto mc = getMidiClip())
+    {
+        auto& seq = mc->getSequence();
+        for (auto n : seq.getNotes())
+        {
+            double sBeat = mc->getStartBeat() + n->getStartBeat();
+            double eBeat = mc->getStartBeat() + n->getEndBeat();
+            
+            auto s = editViewState.beatToTime (sBeat);
+            auto e = editViewState.beatToTime (eBeat);
+            
+            if (auto p = getParentComponent())
+            {
+                double t1 = editViewState.timeToX (s, p->getWidth()) - getX();
+                double t2 = editViewState.timeToX (e, p->getWidth()) - getX();
+                
+                double y = (1.0 - double (n->getNoteNumber()) / 127.0) * getHeight();
+                
+                g.setColour (Colours::white.withAlpha (n->getVelocity() / 127.0f));
+                g.drawLine (t1, y, t2, y);
+            }
+        }
+    }
+}
+
+//==============================================================================
 RecordingClipComponent::RecordingClipComponent (te::Track::Ptr t, EditViewState& evs)
     : track (t), editViewState (evs)
 {
@@ -953,6 +988,8 @@ void TrackComponent::buildClips()
             
             if (dynamic_cast<te::WaveAudioClip*> (c))
                 cc = new AudioClipComponent (editViewState, c);
+            else if (dynamic_cast<te::MidiClip*> (c))
+                cc = new MidiClipComponent (editViewState, c);
             else
                 cc = new ClipComponent (editViewState, c);
             

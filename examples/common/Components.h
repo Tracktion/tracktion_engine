@@ -65,6 +65,12 @@ public:
         return (double (x) / width) * (viewX2 - viewX1) + viewX1;
     }
     
+    double beatToTime (double b) const
+    {
+        auto& ts = edit.tempoSequence;
+        return ts.beatsToTime (b);
+    }
+    
     te::Edit& edit;
     te::SelectionManager& selectionManager;
     
@@ -111,6 +117,17 @@ private:
                        float leftGain, float rightGain);
 
     std::unique_ptr<te::SmartThumbnail> thumbnail;
+};
+
+//==============================================================================
+class MidiClipComponent : public ClipComponent
+{
+public:
+    MidiClipComponent (EditViewState&, te::Clip::Ptr);
+    
+    te::MidiClip* getMidiClip() { return dynamic_cast<te::MidiClip*> (clip.get()); }
+    
+    void paint (Graphics& g) override;
 };
 
 //==============================================================================
