@@ -15,12 +15,15 @@ namespace IDs
     DECLARE_ID (showGlobalTrack)
     DECLARE_ID (showMarkerTrack)
     DECLARE_ID (showChordTrack)
+    DECLARE_ID (showMidiDevices)
+    DECLARE_ID (showWaveDevices)
     DECLARE_ID (viewX1)
     DECLARE_ID (viewX2)
     DECLARE_ID (viewY)
     DECLARE_ID (drawWaveforms)
     DECLARE_ID (showHeaders)
     DECLARE_ID (showFooters)
+    DECLARE_ID (showArranger)
     #undef DECLARE_ID
 }
 
@@ -40,9 +43,12 @@ public:
         showGlobalTrack.referTo (state, IDs::showGlobalTrack, um, false);
         showMarkerTrack.referTo (state, IDs::showMarkerTrack, um, false);
         showChordTrack.referTo (state, IDs::showChordTrack, um, false);
+        showArrangerTrack.referTo (state, IDs::showArranger, um, false);
         drawWaveforms.referTo (state, IDs::drawWaveforms, um, true);
         showHeaders.referTo (state, IDs::showHeaders, um, true);
         showFooters.referTo (state, IDs::showFooters, um, false);
+        showMidiDevices.referTo (state, IDs::showMidiDevices, um, false);
+        showWaveDevices.referTo (state, IDs::showWaveDevices, um, true);
 
         viewX1.referTo (state, IDs::viewX1, um, 0);
         viewX2.referTo (state, IDs::viewX2, um, 60);
@@ -62,8 +68,9 @@ public:
     te::Edit& edit;
     te::SelectionManager& selectionManager;
     
-    CachedValue<bool> showGlobalTrack, showMarkerTrack, showChordTrack, drawWaveforms,
-                      showHeaders, showFooters;
+    CachedValue<bool> showGlobalTrack, showMarkerTrack, showChordTrack, showArrangerTrack,
+                      drawWaveforms, showHeaders, showFooters, showMidiDevices, showWaveDevices;
+    
     CachedValue<double> viewX1, viewX2, viewY;
     
     ValueTree state;

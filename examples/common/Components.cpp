@@ -582,25 +582,56 @@ TrackHeaderComponent::TrackHeaderComponent (EditViewState& evs, te::Track::Ptr t
                 m.addSeparator();
             }
             
-            int id = 1;
-            for (auto instance : at->edit.getAllInputDevices())
+            if (editViewState.showWaveDevices)
             {
-                if (instance->getInputDevice().getDeviceType() == te::InputDevice::waveDevice)
+                int id = 1;
+                for (auto instance : at->edit.getAllInputDevices())
                 {
-                    bool ticked = instance->getTargetTracks().getFirst() == at;
-                    m.addItem (id++, instance->getInputDevice().getName(), true, ticked);
+                    if (instance->getInputDevice().getDeviceType() == te::InputDevice::waveDevice)
+                    {
+                        bool ticked = instance->getTargetTracks().getFirst() == at;
+                        m.addItem (id++, instance->getInputDevice().getName(), true, ticked);
+                    }
                 }
             }
             
+            if (editViewState.showMidiDevices)
+            {
+                m.addSeparator();
+                
+                int id = 100;
+                for (auto instance : at->edit.getAllInputDevices())
+                {
+                    if (instance->getInputDevice().getDeviceType() == te::InputDevice::physicalMidiDevice)
+                    {
+                        bool ticked = instance->getTargetTracks().getFirst() == at;
+                        m.addItem (id++, instance->getInputDevice().getName(), true, ticked);
+                    }
+                }
+            }
+
             int res = m.show();
 
             if (res == 1000)
             {
                 EngineHelpers::enableInputMonitoring (*at, ! EngineHelpers::isInputMonitoringEnabled (*at));
             }
-            else if (res > 0)
+            else if (res >= 100)
             {
-                id = 1;
+                int id = 100;
+                for (auto instance : at->edit.getAllInputDevices())
+                {
+                    if (instance->getInputDevice().getDeviceType() == te::InputDevice::physicalMidiDevice)
+                    {
+                        if (id == res)
+                            instance->setTargetTrack (*at, 0, true);
+                        id++;
+                    }
+                }
+            }
+            else if (res >= 1)
+            {
+                int id = 1;
                 for (auto instance : at->edit.getAllInputDevices())
                 {
                     if (instance->getInputDevice().getDeviceType() == te::InputDevice::waveDevice)
@@ -652,7 +683,9 @@ void TrackHeaderComponent::valueTreePropertyChanged (juce::ValueTree& v, const j
         else if (i == te::IDs::solo)
             soloButton.setToggleState ((bool)v[i], dontSendNotification);
     }
-    else if (v.hasType (te::IDs::INPUTDEVICES) || v.hasType (te::IDs::INPUTDEVICE))
+    else if (v.hasType (te::IDs::INPUTDEVICES)
+             || v.hasType (te::IDs::INPUTDEVICE)
+             || v.hasType (te::IDs::INPUTDEVICEDESTINATION))
     {
         if (auto at = dynamic_cast<te::AudioTrack*> (track.get()))
         {
@@ -1132,6 +1165,11 @@ void EditComponent::buildTracks()
         else if (t->isChordTrack())
         {
             if (editViewState.showChordTrack)
+                c = new TrackComponent (editViewState, t);
+        }
+        else if (t->isArrangerTrack())
+        {
+            if (editViewState.showArrangerTrack)
                 c = new TrackComponent (editViewState, t);
         }
         else

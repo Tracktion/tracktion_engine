@@ -44,6 +44,9 @@ if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 call :BuildExample "EngineInPluginDemo"
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
+call :BuildExample "MidiRecordingDemo"
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
 exit /b 0
 
 :BuildExample
