@@ -57,7 +57,7 @@ public:
             o.content.setOwned (v);
             o.launchAsync();
         };
-        newEditButton.onClick = [this] { createNewEdit(); };
+        newEditButton.onClick = [this] { createOrLoadEdit(); };
         
         updatePlayButtonText();
         editNameLabel.setJustificationType (Justification::centred);
@@ -65,7 +65,16 @@ public:
                                              &newTrackButton, &deleteButton, &editNameLabel });
 
         deleteButton.setEnabled (false);
-        createNewEdit (File::getSpecialLocation (File::tempDirectory).getNonexistentChildFile ("Test", ".tracktionedit", false));
+        
+        auto d = File::getSpecialLocation (File::tempDirectory).getChildFile ("PluginDemo");
+        d.createDirectory();
+
+        auto f = Helpers::findRecentEdit (d);
+        if (f.existsAsFile())
+            createOrLoadEdit (f);
+        else
+            createOrLoadEdit (d.getNonexistentChildFile ("Test", ".tracktionedit", false));
+        
         selectionManager.addChangeListener (this);
         
         setupButtons();
@@ -75,6 +84,7 @@ public:
 
     ~PluginDemo()
     {
+        te::EditFileOperations (*edit).save (true, true, false);
         engine.getTemporaryFileManager().getTempDirectory().deleteRecursively();
     }
 
@@ -157,7 +167,7 @@ private:
             playPauseButton.setButtonText (edit->getTransport().isPlaying() ? "Stop" : "Play");
     }
     
-    void createNewEdit (File editFile = {})
+    void createOrLoadEdit (File editFile = {})
     {
         if (editFile == File())
         {
@@ -171,7 +181,10 @@ private:
         selectionManager.deselectAll();
         editComponent = nullptr;
         
-        edit = std::make_unique<te::Edit> (engine, te::createEmptyEdit(), te::Edit::forEditing, nullptr, 0);
+        if (editFile.existsAsFile())
+            edit = std::make_unique<te::Edit> (engine, ValueTree::fromXml (editFile.loadFileAsString()), te::Edit::forEditing, nullptr, 0);
+        else
+            edit = std::make_unique<te::Edit> (engine, te::createEmptyEdit(), te::Edit::forEditing, nullptr, 0);
         
         edit->editFileRetriever = [editFile] { return editFile; };
         edit->playInStopEnabled = true;
@@ -180,17 +193,51 @@ private:
         transport.addChangeListener (this);
         
         editNameLabel.setText (editFile.getFileNameWithoutExtension(), dontSendNotification);
-        showEditButton.onClick = [editFile]
+        showEditButton.onClick = [this, editFile]
         {
+            te::EditFileOperations (*edit).save (true, true, false);
             editFile.revealToUser();
         };
         
         te::EditFileOperations (*edit).save (true, true, false);
         
+        enableAllInputs();
+        
         editComponent = std::make_unique<EditComponent> (*edit, selectionManager);
         editComponent->getEditViewState().showFooters = true;
+        editComponent->getEditViewState().showMidiDevices = true;
+        editComponent->getEditViewState().showWaveDevices = true;
         
         addAndMakeVisible (*editComponent);
+    }
+    
+    void enableAllInputs()
+    {
+        auto& dm = engine.getDeviceManager();
+        
+        for (int i = 0; i < dm.getNumMidiInDevices(); i++)
+        {
+            if (auto mip = dm.getMidiInDevice (i))
+            {
+                mip->setEndToEndEnabled (true);
+                mip->setEnabled (true);
+            }
+        }
+        
+        for (int i = 0; i < dm.getNumWaveInDevices(); i++)
+            if (auto wip = dm.getWaveInDevice (i))
+                wip->setStereoPair (false);
+        
+        for (int i = 0; i < dm.getNumWaveInDevices(); i++)
+        {
+            if (auto wip = dm.getWaveInDevice (i))
+            {
+                wip->setEndToEnd (true);
+                wip->setEnabled (true);
+            }
+        }
+        
+        edit->getTransport().ensureContextAllocated();
     }
     
     void changeListenerCallback (ChangeBroadcaster* source) override

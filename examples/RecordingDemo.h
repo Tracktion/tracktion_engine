@@ -38,7 +38,7 @@ public:
     RecordingDemo()
     {
         settingsButton.onClick  = [this] { EngineHelpers::showAudioDeviceSettings (engine); createTracksAndAssignInputs(); };
-        newEditButton.onClick = [this] { createNewEdit(); };
+        newEditButton.onClick = [this] { createOrLoadEdit(); };
         
         updatePlayButtonText();
         updateRecordButtonText();
@@ -47,7 +47,16 @@ public:
                                              &newTrackButton, &clearTracksButton, &deleteButton, &editNameLabel, &showWaveformButton });
 
         deleteButton.setEnabled (false);
-        createNewEdit (File::getSpecialLocation (File::tempDirectory).getNonexistentChildFile ("Test", ".tracktionedit", false));
+        
+        auto d = File::getSpecialLocation (File::tempDirectory).getChildFile ("RecordingDemo");
+        d.createDirectory();
+        
+        auto f = Helpers::findRecentEdit (d);
+        if (f.existsAsFile())
+            createOrLoadEdit (f);
+        else
+            createOrLoadEdit (d.getNonexistentChildFile ("Test", ".tracktionedit", false));
+        
         selectionManager.addChangeListener (this);
         
         setupButtons();
@@ -57,6 +66,7 @@ public:
 
     ~RecordingDemo()
     {
+        te::EditFileOperations (*edit).save (true, true, false);
         engine.getTemporaryFileManager().getTempDirectory().deleteRecursively();
     }
 
@@ -159,7 +169,7 @@ private:
             recordButton.setButtonText (edit->getTransport().isRecording() ? "Abort" : "Record");
     }
 
-    void createNewEdit (File editFile = {})
+    void createOrLoadEdit (File editFile = {})
     {
         if (editFile == File())
         {
@@ -173,7 +183,10 @@ private:
         selectionManager.deselectAll();
         editComponent = nullptr;
         
-        edit = std::make_unique<te::Edit> (engine, te::createEmptyEdit(), te::Edit::forEditing, nullptr, 0);
+        if (editFile.existsAsFile())
+            edit = std::make_unique<te::Edit> (engine, ValueTree::fromXml (editFile.loadFileAsString()), te::Edit::forEditing, nullptr, 0);
+        else
+            edit = std::make_unique<te::Edit> (engine, te::createEmptyEdit(), te::Edit::forEditing, nullptr, 0);
         
         edit->editFileRetriever = [editFile] { return editFile; };
         edit->playInStopEnabled = true;
@@ -182,8 +195,9 @@ private:
         transport.addChangeListener (this);
         
         editNameLabel.setText (editFile.getFileNameWithoutExtension(), dontSendNotification);
-        showEditButton.onClick = [editFile]
+        showEditButton.onClick = [this, editFile]
         {
+            te::EditFileOperations (*edit).save (true, true, false);
             editFile.revealToUser();
         };
         
@@ -213,7 +227,7 @@ private:
             }
         }
         
-        edit->restartPlayback();
+        edit->getTransport().ensureContextAllocated();
         
         int trackNum = 0;
         for (auto instance : edit->getAllInputDevices())
