@@ -23,6 +23,18 @@ namespace Helpers
     {
         return stringToTest.isEmpty() ? stringToReturnIfEmpty : stringToTest;
     }
+    
+    static inline File findRecentEdit (const File& dir)
+    {
+        auto files = dir.findChildFiles (File::findFiles, "*.tracktionedit");
+        
+        if (files.size() > 0)
+        {
+            files.sort ();
+            return files.getLast();
+        }
+        return {};
+    }
 }
 
 //==============================================================================

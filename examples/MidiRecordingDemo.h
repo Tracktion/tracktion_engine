@@ -57,15 +57,27 @@ public:
             o.content.setOwned (v);
             o.launchAsync();
         };
-        newEditButton.onClick = [this] { createNewEdit(); };
+        newEditButton.onClick = [this] { createOrLoadEdit(); };
         
         updatePlayButtonText();
+        updateRecordButtonText();
+        
         editNameLabel.setJustificationType (Justification::centred);
+        
         Helpers::addAndMakeVisible (*this, { &settingsButton, &pluginsButton, &newEditButton, &playPauseButton, &showEditButton,
                                              &recordButton, &newTrackButton, &deleteButton, &editNameLabel });
 
         deleteButton.setEnabled (false);
-        createNewEdit (File::getSpecialLocation (File::tempDirectory).getNonexistentChildFile ("Test", ".tracktionedit", false));
+        
+        auto d = File::getSpecialLocation (File::tempDirectory).getChildFile ("MidiRecordingDemo");
+        d.createDirectory();
+        
+        auto f = Helpers::findRecentEdit (d);
+        if (f.existsAsFile())
+            createOrLoadEdit (f);
+        else
+            createOrLoadEdit (d.getNonexistentChildFile ("Test", ".tracktionedit", false));
+        
         selectionManager.addChangeListener (this);
         
         setupButtons();
@@ -172,7 +184,7 @@ private:
             recordButton.setButtonText (edit->getTransport().isRecording() ? "Abort" : "Record");
     }
     
-    void createNewEdit (File editFile = {})
+    void createOrLoadEdit (File editFile = {})
     {
         if (editFile == File())
         {
@@ -186,7 +198,10 @@ private:
         selectionManager.deselectAll();
         editComponent = nullptr;
         
-        edit = std::make_unique<te::Edit> (engine, te::createEmptyEdit(), te::Edit::forEditing, nullptr, 0);
+        if (editFile.existsAsFile())
+            edit = std::make_unique<te::Edit> (engine, ValueTree::fromXml (editFile.loadFileAsString()), te::Edit::forEditing, nullptr, 0);
+        else
+            edit = std::make_unique<te::Edit> (engine, te::createEmptyEdit(), te::Edit::forEditing, nullptr, 0);
         
         edit->editFileRetriever = [editFile] { return editFile; };
         edit->playInStopEnabled = true;
@@ -200,6 +215,11 @@ private:
             te::EditFileOperations (*edit).save (true, true, false);
             editFile.revealToUser();
         };
+        
+        if (! editFile.existsAsFile())
+            createTracksAndAssignInputs();
+        else
+            edit->getTransport().ensureContextAllocated();
         
         te::EditFileOperations (*edit).save (true, true, false);
         
@@ -225,6 +245,39 @@ private:
                                      || dynamic_cast<te::Track*> (sel) != nullptr
                                      || dynamic_cast<te::Plugin*> (sel));
         }
+    }
+    
+    void createTracksAndAssignInputs()
+    {
+        auto& dm = engine.getDeviceManager();
+        
+        for (int i = 0; i < dm.getNumMidiInDevices(); i++)
+        {
+            if (auto mip = dm.getMidiInDevice (i))
+            {
+                mip->setEndToEndEnabled (true);
+                mip->setEnabled (true);
+            }
+        }
+        
+        edit->getTransport().ensureContextAllocated();
+        
+        int trackNum = 0;
+        for (auto instance : edit->getAllInputDevices())
+        {
+            if (instance->getInputDevice().getDeviceType() == te::InputDevice::physicalMidiDevice)
+            {
+                if (auto t = EngineHelpers::getOrInsertAudioTrackAt (*edit, trackNum))
+                {
+                    instance->setTargetTrack (*t, 0, true);
+                    instance->setRecordingEnabled (*t, true);
+                    
+                    trackNum++;
+                }
+            }
+        }
+        
+        edit->restartPlayback();
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiRecordingDemo)

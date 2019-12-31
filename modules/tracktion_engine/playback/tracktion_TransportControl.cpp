@@ -104,6 +104,12 @@ struct TransportControl::TransportState : private ValueTree::Listener
 
         videoPosition.referTo (transientState, IDs::videoPosition, um);
         forceVideoJump.referTo (transientState, IDs::forceVideoJump, um);
+        
+        // CachedValues need to be set so they aren't using their default values
+        // to avoid spurious listener callbacks
+        playing = playing.get();
+        recording = recording.get();
+        safeRecording = safeRecording.get();
 
         state.addListener (this);
         transientState.addListener (this);
