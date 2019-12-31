@@ -28,7 +28,7 @@
 
 #include "common/Utilities.h"
 #include "common/Components.h"
-#include "common/PlginWindow.h"
+#include "common/PluginWindow.h"
 
 //==============================================================================
 class PluginDemo  : public Component,
