@@ -423,7 +423,7 @@ void MidiClipComponent::paint (Graphics& g)
                 double y = (1.0 - double (n->getNoteNumber()) / 127.0) * getHeight();
                 
                 g.setColour (Colours::white.withAlpha (n->getVelocity() / 127.0f));
-                g.drawLine (t1, y, t2, y);
+                g.drawLine (float (t1), float (y), float (t2), float (y));
             }
         }
     }
