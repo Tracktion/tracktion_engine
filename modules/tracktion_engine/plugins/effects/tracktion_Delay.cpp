@@ -107,4 +107,60 @@ void DelayPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
 }
 
+#if TRACKTION_UNIT_TESTS
+
+//==============================================================================
+//==============================================================================
+class DelayPluginTests : public UnitTest
+{
+public:
+    DelayPluginTests() : UnitTest ("DelayPlugin", "Tracktion") {}
+
+    //==============================================================================
+    void runTest() override
+    {
+        runRestoreStateTests();
+    }
+
+private:
+
+    void runRestoreStateTests()
+    {
+        auto edit = Edit::createSingleTrackEdit (Engine::getInstance());
+
+        beginTest ("delay plugin instantiation");
+        {
+            Plugin::Ptr pluginPtr = edit->getPluginCache().createNewPlugin ("delay", PluginDescription());
+            DelayPlugin* delay = dynamic_cast<DelayPlugin*> (pluginPtr.get());
+            expect (delay);
+        }
+
+        beginTest ("restore feedback parameter from ValueTree");
+        {
+            Plugin::Ptr pluginPtr = edit->getPluginCache().createNewPlugin ("delay", PluginDescription());
+            DelayPlugin* delay = dynamic_cast<DelayPlugin*> (pluginPtr.get());
+
+            float desiredValue = -30;
+
+            ValueTree preset(IDs::PLUGIN);
+            preset.setProperty (IDs::type, "delay", nullptr);
+            preset.setProperty (IDs::feedback, desiredValue, nullptr);
+
+            pluginPtr->restorePluginStateFromValueTree (preset);
+            pluginPtr->flushPluginStateToValueTree();
+
+            auto feedback = delay->feedbackDb;
+
+            expectEquals (feedback->getCurrentExplicitValue(), desiredValue);
+            expectEquals (feedback->getCurrentValue(), desiredValue);
+            expectEquals (feedback->getCurrentValue(), feedback->getCurrentExplicitValue());
+            expect (!pluginPtr->state.hasProperty (IDs::parameters), "State has erroneous parameters property");
+        }
+    }
+};
+
+static DelayPluginTests delayPluginTests;
+
+#endif // TRACKTION_UNIT_TESTS
+
 }
