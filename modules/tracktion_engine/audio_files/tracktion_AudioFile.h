@@ -21,6 +21,7 @@ struct AudioFileInfo
 
     static AudioFileInfo parse (const AudioFile&);
 
+    bool wasParsedOk = false;
     juce::int64 hashCode = 0;
     juce::AudioFormat* format = nullptr;
     double sampleRate = 0;

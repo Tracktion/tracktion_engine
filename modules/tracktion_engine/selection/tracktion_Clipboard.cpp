@@ -79,6 +79,23 @@ bool Clipboard::ContentType::pasteIntoEdit (const EditPastingOptions&) const    
 Clipboard::ProjectItems::ProjectItems() {}
 Clipboard::ProjectItems::~ProjectItems() {}
 
+static AudioTrack* getOrInsertAudioTrackNearestIndex (Edit& edit, int trackIndex)
+{
+    int i = 0;
+
+    // find the next audio track on or after the given index..
+    for (auto t : getAllTracks (edit))
+    {
+        if (i >= trackIndex)
+            if (auto at = dynamic_cast<AudioTrack*> (t))
+                return at;
+
+        ++i;
+    }
+
+    return edit.insertNewAudioTrack (TrackInsertPoint (nullptr, getAllTracks (edit).getLast()), nullptr).get();
+};
+
 static double pasteMIDIFileIntoEdit (Edit& edit, const File& midiFile, int& targetTrackIndex,
                                      double startTime, bool importTempoChanges)
 {
@@ -158,7 +175,7 @@ static double pasteMIDIFileIntoEdit (Edit& edit, const File& midiFile, int& targ
             if (list->state.isValid())
                 clipState.addChild (list->state, -1, nullptr);
 
-            if (auto at = edit.getOrInsertAudioTrackAt (targetTrackIndex))
+            if (auto at = getOrInsertAudioTrackNearestIndex (edit, targetTrackIndex))
             {
                 auto time = tempoSequence.beatsToTime ({ startBeat, endBeat });
 
@@ -186,7 +203,7 @@ struct ProjectItemPastingOptions
 {
     bool shouldImportTempoChangesFromMIDI = false;
     bool separateTracks = false;
-    bool snapBWavsToOriginalTime = true;
+    bool snapBWavsToOriginalTime = false;
 };
 
 static void askUserAboutProjectItemPastingOptions (const Clipboard::ProjectItems& items, UIBehaviour& ui,
@@ -234,7 +251,7 @@ static void askUserAboutProjectItemPastingOptions (const Clipboard::ProjectItems
         {
            #if JUCE_MODAL_LOOPS_PERMITTED
             ToggleButton toggle (TRANS("Snap to BWAV"));
-            toggle.setSize(200,20);
+            toggle.setSize (200, 20);
 
             std::unique_ptr<AlertWindow> aw (LookAndFeel::getDefaultLookAndFeel().createAlertWindow (TRANS("Add multiple files"),
                                                                                                      TRANS("Do you want to add multiple files to one track or to separate tracks?"),
@@ -289,6 +306,8 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
 
     ProjectItemPastingOptions pastingOptions;
 
+    pastingOptions.separateTracks = options.preferredLayout == FileDragList::vertical;
+
     if (! options.silent)
         askUserAboutProjectItemPastingOptions (*this, ui, pastingOptions);
 
@@ -323,7 +342,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
 
             if (file.exists())
             {
-                if (auto targetTrack = options.edit.getOrInsertAudioTrackAt (targetTrackIndex))
+                if (auto targetTrack = getOrInsertAudioTrackNearestIndex (options.edit, targetTrackIndex))
                 {
                     if (sourceItem->isMidi())
                     {
@@ -332,16 +351,25 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
                     }
                     else if (sourceItem->isWave())
                     {
+                        sourceItem->verifyLength();
+                        jassert (sourceItem->getLength() > 0);
+
                         if (auto newClip = targetTrack->insertWaveClip (sourceItem->getName(), sourceItem->getID(),
                                                                         { { startTime, startTime + sourceItem->getLength() }, 0.0 }, false))
                         {
                             newClipEndTime = newClip->getPosition().getEnd();
                             itemsAdded.add (newClip.get());
+
+                            if (pastingOptions.snapBWavsToOriginalTime)
+                                newClip->snapToOriginalBWavTime();
                         }
 
                     }
                     else if (sourceItem->isEdit())
                     {
+                        sourceItem->verifyLength();
+                        jassert (sourceItem->getLength() > 0);
+
                         if (auto newClip = targetTrack->insertEditClip ({ startTime, startTime + sourceItem->getLength() },
                                                                         sourceItem->getID()))
                         {
@@ -933,12 +961,12 @@ Clipboard::AutomationPoints::AutomationPoints (const AutomationCurve& curve, Edi
 
     for (int i = 0; i < curve.getNumPoints(); ++i)
     {
-        auto p = curve.getPoint(i);
+        auto p = curve.getPoint (i);
 
         if (p.time == range.getStart())  pointAtStart = true;
         if (p.time == range.getEnd())    pointAtEnd = true;
 
-        if (range.contains (p.time))
+        if (range.containsInclusive (p.time))
         {
             p.time -= range.getStart();
             points.push_back (p);
@@ -1011,7 +1039,11 @@ juce::Array<MidiNote*> Clipboard::MIDINotes::pasteIntoClip (MidiClip& clip, cons
     for (auto& n : midiNotes)
         beatRange = beatRange.getUnionWith (n.getRangeBeats());
 
-    auto insertPos = clip.getContentBeatAtTime (cursorPosition);
+    double insertPos = 0.0;
+    if (clip.isLooping())
+        insertPos = clip.getContentBeatAtTime (cursorPosition) + clip.getLoopStartBeats();
+    else
+        insertPos = clip.getContentBeatAtTime (cursorPosition);
 
     if (! selectedNotes.isEmpty())
     {
@@ -1025,12 +1057,16 @@ juce::Array<MidiNote*> Clipboard::MIDINotes::pasteIntoClip (MidiClip& clip, cons
 
     if (clip.isLooping())
     {
-        if (insertPos < 0 || insertPos >= clip.getLoopLengthBeats() - 0.001)
+        const double offsetBeats = clip.getOffsetInBeats() + clip.getLoopStartBeats();
+
+        if (insertPos - offsetBeats < 0 || insertPos - offsetBeats >= clip.getLoopLengthBeats() - 0.001)
             return {};
     }
     else
     {
-        if (insertPos < 0 || insertPos >= clip.getLengthInBeats() - 0.001)
+        const double offsetBeats = clip.getOffsetInBeats();
+
+        if (insertPos - offsetBeats < 0 || insertPos - offsetBeats >= clip.getLengthInBeats() - 0.001)
             return {};
     }
 

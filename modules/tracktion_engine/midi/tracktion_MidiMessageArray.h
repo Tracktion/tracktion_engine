@@ -40,10 +40,13 @@ struct MidiMessageArray
     bool isNotEmpty() const noexcept                                { return ! messages.isEmpty(); }
 
     int size() const noexcept                                       { return messages.size(); }
-    MidiMessageWithSource& operator[] (int i) const                 { return messages.getReference(i); }
+    MidiMessageWithSource& operator[] (int i)                       { return messages.getReference (i); }
+    const MidiMessageWithSource& operator[] (int i) const           { return messages.getReference (i); }
 
-    MidiMessageWithSource* begin() const noexcept                   { return messages.begin(); }
-    MidiMessageWithSource* end() const noexcept                     { return messages.end(); }
+    MidiMessageWithSource* begin() noexcept                         { return messages.begin(); }
+    const MidiMessageWithSource* begin() const noexcept             { return messages.begin(); }
+    MidiMessageWithSource* end() noexcept                           { return messages.end(); }
+    const MidiMessageWithSource* end() const noexcept               { return messages.end(); }
 
     void remove (int index)                                         { messages.remove (index); }
 

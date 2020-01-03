@@ -232,7 +232,11 @@ public:
             return false;
 
         if (auto pl = p.getOwnerList())
-            return ! pl->needsConstantBufferSize();
+            if (pl->needsConstantBufferSize())
+                return false;
+
+        if (p.engine.getPluginManager().canUseFineGrainAutomation)
+            return p.engine.getPluginManager().canUseFineGrainAutomation (p);
 
         return true;
     }
@@ -316,7 +320,21 @@ public:
             rc2.bufferNumSamples = numThisTime;
             rc2.streamTime = EditTimeRange (Range<double>::withStartAndLength (rc.streamTime.getStart() + timeOffset, timeForBlock));
 
-            plugin->applyToBufferWithAutomation (rc2);
+          #if JUCE_DEBUG
+            // Assert on any plugin that re-allocates buffers. That is NOT ok.
+            if (rc.destBuffer != nullptr)
+            {
+                AudioBufferSnapshot abs (asb);
+                plugin->applyToBufferWithAutomation (rc2);
+
+                if (abs.hasBufferBeenReallocated())
+                    jassertfalse;
+            }
+            else
+           #endif
+            {
+                plugin->applyToBufferWithAutomation (rc2);
+            }
 
             midiOutputScratch.mergeFromAndClearWithOffset (midiInputScratch, timeOffset);
             midiInputScratch.clear();
@@ -338,7 +356,7 @@ private:
 };
 
 //==============================================================================
-Plugin::WindowState::WindowState (Plugin& p) : PluginWindowState (p.edit.engine), plugin (p)  {}
+Plugin::WindowState::WindowState (Plugin& p) : PluginWindowState (p.edit), plugin (p)  {}
 
 //==============================================================================
 Plugin::Plugin (PluginCreationInfo info)
@@ -535,8 +553,10 @@ void Plugin::setSidechainSourceByName (const String& name)
         }
     }
 
-    if (! found)
-        sidechainSourceID.resetToDefault();
+	if (!found)
+	{
+		sidechainSourceID.resetToDefault();
+	}
 }
 
 void Plugin::guessSidechainRouting()
@@ -682,6 +702,12 @@ void Plugin::valueTreeChildRemoved (ValueTree&, juce::ValueTree& c, int)
     valueTreeChanged();
 }
 
+void Plugin::valueTreeParentChanged (juce::ValueTree& v)
+{
+    if (v.hasType (IDs::PLUGIN))
+        hideWindowForShutdown();
+}
+
 //==============================================================================
 AudioNode* Plugin::createAudioNode (AudioNode* input, bool applyAntiDenormalisationNoise)
 {
@@ -793,6 +819,7 @@ void Plugin::baseClassDeinitialise()
 //==============================================================================
 void Plugin::deleteFromParent()
 {
+    hideWindowForShutdown();
     deselect();
     removeFromParent();
 }
@@ -846,14 +873,14 @@ PluginList* Plugin::getOwnerList() const
 }
 
 //==============================================================================
-AutomatableParameter* Plugin::addParam (const String& paramID, const String& name, Range<float> valueRange)
+AutomatableParameter* Plugin::addParam (const String& paramID, const String& name,  juce::NormalisableRange<float> valueRange)
 {
     auto p = new AutomatableParameter (paramID, name, *this, valueRange);
     addAutomatableParameter (*p);
     return p;
 }
 
-AutomatableParameter* Plugin::addParam (const String& paramID, const String& name, Range<float> valueRange,
+AutomatableParameter* Plugin::addParam (const String& paramID, const String& name, juce::NormalisableRange<float> valueRange,
                                         std::function<String(float)> valueToStringFn,
                                         std::function<float(const String&)> stringToValueFn)
 {
@@ -939,7 +966,7 @@ void Plugin::applyToBufferWithAutomation (const AudioRenderContext& fc)
         else
         {
             SCOPED_REALTIME_CHECK
-            updateParameterStreams (fc.getEditTime().editRange1.getEnd());
+            updateParameterStreams (fc.getEditTime().editRange1.getStart());
             applyToBuffer (fc);
         }
     }

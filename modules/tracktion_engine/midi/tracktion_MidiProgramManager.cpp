@@ -92,7 +92,7 @@ juce::XmlElement* convertMidnamToXml (const juce::File& src)
         if (firstidx != -1 && lastidx != -1)
             str = str.substring(firstidx, lastidx);
 
-        rootXml.reset (juce::XmlDocument::parse (str));
+        rootXml = juce::XmlDocument::parse (str);
 
         if (rootXml == nullptr)
             return {};
@@ -473,7 +473,7 @@ bool MidiProgramManager::importSet (int set, const juce::File& file)
     if (file.hasFileExtension("midnam"))
         xml.reset (convertMidnamToXml (file));
     else
-        xml.reset (juce::XmlDocument::parse (file));
+        xml = juce::XmlDocument::parse (file);
 
     if (xml != nullptr)
     {
@@ -497,7 +497,7 @@ bool MidiProgramManager::exportSet (int set, const juce::File& file)
     if (auto programSet = programSets[set - 1])
         xml.reset (programSet->createXml());
 
-    return xml != nullptr && xml->writeToFile (file, {});
+    return xml != nullptr && xml->writeTo (file);
 }
 
 static juce::File getPatchNamesZipFile (Engine& engine)

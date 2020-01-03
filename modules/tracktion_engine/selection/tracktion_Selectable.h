@@ -172,9 +172,12 @@ struct SelectableList
     bool isEmpty() const                                        { return items.isEmpty(); }
     bool isNotEmpty() const                                     { return ! isEmpty(); }
 
-    inline Selectable** begin() const                           { return items.begin(); }
-    inline Selectable** end() const                             { return items.end(); }
-    inline Selectable** data() const                            { return begin(); }
+    inline Selectable** begin()                                 { return items.begin(); }
+    inline Selectable* const* begin() const                     { return items.begin(); }
+    inline Selectable** end()                                   { return items.end(); }
+    inline Selectable* const* end() const                       { return items.end(); }
+    inline Selectable** data()                                  { return begin(); }
+    inline Selectable* const* data() const                      { return begin(); }
 
     Selectable* operator[] (int index) const                    { return items[index]; }
     inline Selectable* getUnchecked (int index) const           { return items.getUnchecked (index); }

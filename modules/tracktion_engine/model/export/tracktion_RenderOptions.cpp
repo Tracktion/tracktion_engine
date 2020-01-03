@@ -553,7 +553,7 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
 
     Clip::Ptr newClip;
 
-    if (isMidiRender())
+    if (isMidiRender() || format == midi)
         newClip = trackToUse->insertMIDIClip (newClipName, insertPos, nullptr);
     else
         newClip = trackToUse->insertWaveClip (newClipName, projectItem->getID(), { insertPos, 0.0 }, false);
@@ -1001,6 +1001,9 @@ StringArray RenderOptions::getFormatTypes()
         formats.add (am.getOggFormat()->getFormatName());
 
       #if JUCE_USE_LAME_AUDIO_FORMAT
+        auto& afm = engine.getAudioFileFormatManager();
+        LAMEManager::registerAudioFormat (afm);
+
         if (LAMEManager::lameIsAvailable() && am.getLameFormat() != nullptr)
             formats.add (am.getLameFormat()->getFormatName());
       #endif

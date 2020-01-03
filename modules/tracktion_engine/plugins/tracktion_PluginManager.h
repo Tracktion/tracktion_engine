@@ -19,6 +19,10 @@ public:
 
     void initialise();
 
+   #if TRACKTION_AIR_WINDOWS
+    void initialiseAirWindows();
+   #endif
+
     //==============================================================================
     static bool startChildProcessPluginScan (const juce::String& commandLine);
 
@@ -39,7 +43,7 @@ public:
     Plugin::Ptr createNewPlugin (Edit&, const juce::ValueTree&);
     Plugin::Ptr createNewPlugin (Edit&, const juce::String& type, const juce::PluginDescription&);
 
-    juce::Array<juce::PluginDescription*> getARACompatiblePlugDescriptions();
+    juce::Array<juce::PluginDescription> getARACompatiblePlugDescriptions();
 
     juce::AudioPluginFormatManager pluginFormatManager;
     juce::KnownPluginList knownPluginList;
@@ -69,6 +73,17 @@ public:
     void createBuiltInType()  { registerBuiltInType (new BuiltInTypeBase<Type>()); }
 
     //==============================================================================
+    /** Callback that is used to create plugin instances from a PluginDescription.
+        By default this simply uses the PluginManager's pluginFormatManager but it
+        can be set to provide custom behaviour.
+    */
+    std::function<std::unique_ptr<juce::AudioPluginInstance> (const juce::PluginDescription&,
+                                                              double rate, int blockSize,
+                                                              juce::String& errorMessage)> createPluginInstance;
+
+    /** Callback that is used to determine if a plugin should use fine-grain automation or not. */
+    std::function<bool (Plugin&)> canUseFineGrainAutomation;
+
     // this can be set to provide a function that gets called when a scan finishes
     std::function<void()> scanCompletedCallback;
 
@@ -96,6 +111,7 @@ public:
     //==============================================================================
     Plugin::Ptr getPluginFor (EditItemID pluginID) const;
     Plugin::Ptr getPluginFor (const juce::ValueTree&) const;
+    Plugin::Ptr getPluginFor (juce::AudioProcessor&) const;
     Plugin::Ptr getOrCreatePluginFor (const juce::ValueTree&);
     Plugin::Ptr createNewPlugin (const juce::ValueTree&);
     Plugin::Ptr createNewPlugin (const juce::String& type, const juce::PluginDescription&);

@@ -31,7 +31,7 @@ ExternalController::ExternalController (Engine& e, ControlSurface* c)  : engine 
 
     inputDeviceName  = storage.getPropertyItem (SettingID::externControlIn, getName());
     outputDeviceName = storage.getPropertyItem (SettingID::externControlOut, getName());
-    
+
     oscInputPort     = storage.getPropertyItem (SettingID::externOscInputPort, getName());
     oscOutputPort    = storage.getPropertyItem (SettingID::externOscOutputPort, getName());
     oscOutputAddr    = storage.getPropertyItem (SettingID::externOscOutputAddr, getName());
@@ -193,7 +193,7 @@ void ExternalController::midiInOutDevicesChanged()
 {
     if (! needsMidiChannel())
         return;
-    
+
     auto& dm = engine.getDeviceManager();
 
     for (int i = dm.getNumMidiInDevices(); --i >= 0;)
@@ -231,18 +231,18 @@ void ExternalController::midiInOutDevicesChanged()
     updateDeviceState();
     changeParamBank (0);
 }
-    
+
 void ExternalController::oscSettingsChanged()
 {
     if (! needsOSCSocket())
         return;
-    
+
     CRASH_TRACER
     if (controlSurface != nullptr)
         getControlSurface().initialiseDevice (isEnabled());
-    
+
     getControlSurface().updateOSCSettings (oscInputPort, oscOutputPort, oscOutputAddr);
-    
+
     updateDeviceState();
     changeParamBank (0);
 }
@@ -263,27 +263,27 @@ void ExternalController::setBackChannelDevice (const String& nameOfMidiOutput)
 
     midiInOutDevicesChanged();
 }
-    
+
 void ExternalController::setOSCInputPort (int port)
 {
     oscInputPort = port;
-    
+
     engine.getPropertyStorage().setPropertyItem (SettingID::externOscInputPort, getName(), oscInputPort);
     oscSettingsChanged();
 }
-    
+
 void ExternalController::setOSCOutputPort (int port)
 {
     oscOutputPort = port;
-    
+
     engine.getPropertyStorage().setPropertyItem (SettingID::externOscOutputPort, getName(), oscOutputPort);
     oscSettingsChanged();
 }
-    
+
 void ExternalController::setOSCOutputAddress (const juce::String addr)
 {
     oscOutputAddr = addr;
-    
+
     engine.getPropertyStorage().setPropertyItem (SettingID::externOscOutputAddr, getName(), oscOutputAddr);
     oscSettingsChanged();
 }
@@ -580,7 +580,7 @@ void ExternalController::updateParameters()
 {
     CRASH_TRACER
 
-    if (controlSurface == nullptr)
+    if (controlSurface == nullptr || ! isEnabled())
         return;
 
     auto& cs = getControlSurface();
@@ -709,7 +709,7 @@ void ExternalController::selectedPluginChanged()
 
             if (lastRegisteredSelectable != nullptr)
                 lastRegisteredSelectable->addSelectableListener (this);
-            
+
             juce::String pluginName;
             if (auto plugin = dynamic_cast<Plugin*> (lastRegisteredSelectable.get()))
                 pluginName = plugin->getName();

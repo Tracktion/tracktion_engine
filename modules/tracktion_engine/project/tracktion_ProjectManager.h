@@ -18,7 +18,7 @@ public:
     ProjectManager();
     ~ProjectManager();
 
-    JUCE_DECLARE_SINGLETON (ProjectManager, true)
+    JUCE_DECLARE_SINGLETON (ProjectManager, false)
 
     void initialise();
 
@@ -97,6 +97,7 @@ public:
             if (f.exists() || f.create())
             {
                 auto p = pm.createNewProject (f);
+                p->temporary = true;
 
                 if (createNewProjectID)
                 {

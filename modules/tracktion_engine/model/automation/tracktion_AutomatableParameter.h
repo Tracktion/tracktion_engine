@@ -40,6 +40,8 @@ public:
     AutomationCurve& getCurve() const noexcept;
 
     void attachToCurrentValue (juce::CachedValue<float>&);
+    void attachToCurrentValue (juce::CachedValue<int>&);
+    void attachToCurrentValue (juce::CachedValue<bool>&);
     void detachFromCurrentValue();
 
     //==============================================================================
@@ -63,9 +65,11 @@ public:
     float getCurrentValue() const noexcept                      { return currentValue; }
     float getCurrentNormalisedValue() const noexcept            { return valueRange.convertTo0to1 (currentValue); }
 
-    virtual juce::String getCurrentValueAsString()              { return valueToString (getCurrentValue()); }
     virtual juce::String valueToString (float value)            { return valueToStringFunction (value); }
     virtual float stringToValue (const juce::String& s)         { return stringToValueFunction (s); }
+
+    virtual juce::String getCurrentValueAsString()              { return valueToString (getCurrentValue()); }
+    juce::String getCurrentValueAsStringWithLabel();
 
     std::function<juce::String(float)> valueToStringFunction;
     std::function<float(const juce::String&)> stringToValueFunction;
@@ -75,6 +79,7 @@ public:
 
     // should be called to change a parameter when a user is actively moving it
     void setParameter (float value, juce::NotificationType);
+    void setNormalisedParameter (float value, juce::NotificationType);
     void updateToFollowCurve (double time);
 
     /** Call to indicate this parameter is about to be changed. */
@@ -165,6 +170,7 @@ public:
     virtual int getNumberOfStates() const                           { return 0; }
     virtual float getValueForState (int) const                      { return 0; }
     virtual int getStateForValue (float) const                      { return 0; }
+    virtual float getDefaultValue() const;
 
     virtual bool hasLabels()  const                                 { return false; }
     virtual juce::String getLabelForValue (float) const             { return {}; }
@@ -217,6 +223,9 @@ public:
 
 protected:
     struct AttachedValue;
+    struct AttachedFloatValue;
+    struct AttachedIntValue;
+    struct AttachedBoolValue;
     std::unique_ptr<AttachedValue> attachedValue;
     juce::ListenerList<Listener> listeners;
 

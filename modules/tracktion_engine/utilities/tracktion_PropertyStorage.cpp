@@ -31,7 +31,7 @@ struct ApplicationSettings : public PropertiesFile,
     ApplicationSettings() : PropertiesFile (getApplicationSettingsFile(), getSettingsOptions()) {}
     ~ApplicationSettings() { clearSingletonInstance(); }
 
-    JUCE_DECLARE_SINGLETON (ApplicationSettings, true);
+    JUCE_DECLARE_SINGLETON (ApplicationSettings, false);
 };
 
 PropertiesFile* getApplicationSettings()

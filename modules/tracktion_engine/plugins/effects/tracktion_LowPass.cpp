@@ -73,11 +73,11 @@ void LowPassPlugin::applyToBuffer (const AudioRenderContext& fc)
     {
         SCOPED_REALTIME_CHECK
 
-        fc.setMaxNumChannels (2);
-
         updateFilters();
 
-        for (int i = fc.destBuffer->getNumChannels(); --i >= 0;)
+        clearChannels (*fc.destBuffer, 2, -1, fc.bufferStartSample, fc.bufferNumSamples);
+
+        for (int i = jmin (2, fc.destBuffer->getNumChannels()); --i >= 0;)
             filter[i].processSamples (fc.destBuffer->getWritePointer (i, fc.bufferStartSample), fc.bufferNumSamples);
 
         sanitiseValues (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples, 3.0f);

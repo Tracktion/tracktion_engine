@@ -76,6 +76,8 @@ void AutomatableEditItem::deleteAutomatableParameters()
 
     const juce::ScopedLock sl (activeParameterLock);
     activeParameters.clear();
+
+    sendListChangeMessage();
 }
 
 int AutomatableEditItem::indexOfAutomatableParameter (const AutomatableParameter::Ptr& param) const
@@ -86,7 +88,11 @@ int AutomatableEditItem::indexOfAutomatableParameter (const AutomatableParameter
 AutomatableParameterTree& AutomatableEditItem::getParameterTree() const
 {
     if (setIfDifferent (parameterTreeBuilt, true))
+    {
         buildParameterTree();
+        sendListChangeMessage();
+    }
+
 
     return parameterTree;
 }
@@ -152,6 +158,12 @@ void AutomatableEditItem::buildParameterTree() const
 void AutomatableEditItem::updateLastPlaybackTime()
 {
     systemTimeOfLastPlayedBlock = juce::Time::getApproximateMillisecondCounter();
+}
+
+void AutomatableEditItem::clearParameterList()
+{
+    automatableParams.clear();
+    rebuildParameterTree();
 }
 
 void AutomatableEditItem::addAutomatableParameter (const AutomatableParameter::Ptr& param)
@@ -236,6 +248,33 @@ void AutomatableEditItem::restoreChangedParametersFromState()
                 ap->setParameter (value, juce::dontSendNotification);
         }
     }
+}
+
+AutomatableEditItem::ParameterChangeListeners::ParameterChangeListeners (AutomatableEditItem& e) : owner (e) {}
+
+void AutomatableEditItem::ParameterChangeListeners::handleAsyncUpdate()
+{
+    listeners.call ([this] (ParameterListChangeListener& l) { l.parameterListChanged (owner); });
+}
+
+void AutomatableEditItem::sendListChangeMessage() const
+{
+    if (parameterChangeListeners != nullptr)
+        parameterChangeListeners->triggerAsyncUpdate();
+}
+
+void AutomatableEditItem::addParameterListChangeListener (ParameterListChangeListener* l)
+{
+    if (parameterChangeListeners == nullptr)
+        parameterChangeListeners = std::make_unique<ParameterChangeListeners> (*this);
+
+    parameterChangeListeners->listeners.add (l);
+}
+
+void AutomatableEditItem::removeParameterListChangeListener (ParameterListChangeListener* l)
+{
+    if (parameterChangeListeners != nullptr)
+        parameterChangeListeners->listeners.remove (l);
 }
 
 }

@@ -38,6 +38,15 @@ public:
     AutomatableParameterTree& getParameterTree() const;
     juce::ReferenceCountedArray<AutomatableParameter> getFlattenedParameterTree() const;
 
+    struct ParameterListChangeListener
+    {
+        virtual ~ParameterListChangeListener() {}
+        virtual void parameterListChanged (AutomatableEditItem&) = 0;
+    };
+
+    void addParameterListChangeListener (ParameterListChangeListener*);
+    void removeParameterListChangeListener (ParameterListChangeListener*);
+
     //==============================================================================
     // true if it's got any points on any params
     bool isAutomationNeeded() const noexcept                    { return automationActive.load (std::memory_order_relaxed); }
@@ -70,6 +79,7 @@ protected:
     virtual void buildParameterTree() const;
 
     void updateLastPlaybackTime();
+    void clearParameterList();
     void addAutomatableParameter (const AutomatableParameter::Ptr&);
     void rebuildParameterTree();
 
@@ -88,6 +98,17 @@ private:
     std::atomic<bool> automationActive { false };
     juce::uint32 systemTimeOfLastPlayedBlock = 0;
     double lastTime = 0.0;
+
+    struct ParameterChangeListeners  : public juce::AsyncUpdater
+    {
+        ParameterChangeListeners (AutomatableEditItem&);
+        AutomatableEditItem& owner;
+        juce::ListenerList<ParameterListChangeListener> listeners;
+        void handleAsyncUpdate() override;
+    };
+
+    std::unique_ptr<ParameterChangeListeners> parameterChangeListeners;
+    void sendListChangeMessage() const;
 
     //==============================================================================
     juce::ReferenceCountedArray<AutomatableParameter> getFlattenedParameterTree (AutomatableParameterTree::TreeNode&) const;

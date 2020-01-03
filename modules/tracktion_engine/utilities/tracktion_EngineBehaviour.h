@@ -28,7 +28,7 @@ public:
     virtual Plugin::Ptr createCustomPlugin (PluginCreationInfo)                { return {}; }
 
     /** Gives an opportunity to load custom plugins for those that have been registered as custom formats but not added to the list.  */
-    virtual const juce::PluginDescription* findDescriptionForFileOrID (const juce::String&)     { return {}; }
+    virtual std::unique_ptr<juce::PluginDescription> findDescriptionForFileOrID (const juce::String&) { return {}; }
 
     /** Should return if the given plugin is disabled or not.
         ExternalPlugins will use this to determine if they should load themselves or not.
@@ -44,10 +44,32 @@ public:
     /** Gives plugins an opportunity to save custom data when the plugin state gets flushed. */
     virtual void saveCustomPluginProperties (juce::ValueTree&, juce::AudioPluginInstance&, juce::UndoManager*) {}
 
+    /** Return true if your application supports scanning plugins out of process.
+
+        If you want to support scanning out of process, the allowing should be added
+        to you JUCEApplication::initialise() function:
+
+        void initialise (const String& commandLine) override
+        {
+            if (PluginManager::startChildProcessPluginScan (commandLine))
+                return;
+
+             // continue like normal
+
+      */
+    virtual bool canScanPluginsOutOfProcess()                                       { return false; }
+
+    // You may want to disable auto initialisation of the device manaer if you
+    // are using the engine in a plugin
+    virtual bool autoInitialiseDeviceManager()                                      { return true; }
+
     // some debate surrounds whether middle-C is C3, C4 or C5. In Tracktion we
     // default this value to 4
     virtual int getMiddleCOctave()                                                  { return 4; }
     virtual void setMiddleCOctave (int /*newOctave*/)                               {}
+
+    // Notifies the host application that an edit has just been saved
+    virtual void editHasBeenSaved (Edit& /*edit*/, juce::File /*path*/)             {}
 
     //==============================================================================
     /** Should return true if the incoming timestamp for MIDI messages should be used.

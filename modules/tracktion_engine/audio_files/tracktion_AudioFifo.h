@@ -67,8 +67,7 @@ public:
             buffer.copyFrom (i, start2, src.getReadPointer (i, startSample) + size1, size2);
         }
 
-        for (int i = juce::jmax (buffer.getNumChannels(), src.getNumChannels());
-             --i >= juce::jmin (buffer.getNumChannels(), src.getNumChannels());)
+        for (int i = buffer.getNumChannels(); --i >= src.getNumChannels();)
         {
             buffer.clear (i, start1, size1);
             buffer.clear (i, start2, size1 + size2);

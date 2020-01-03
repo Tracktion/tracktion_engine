@@ -91,9 +91,9 @@ private:
     double glideLength = 0;
 
     friend class AutomatableParameter;
-    void postFirstAutomationChange (AutomatableParameter*, float originalValue);
-    void postAutomationChange (AutomatableParameter*, double time, float value);
-    void parameterBeingDeleted (AutomatableParameter*);
+    void postFirstAutomationChange (AutomatableParameter&, float originalValue);
+    void postAutomationChange (AutomatableParameter&, double time, float value);
+    void parameterBeingDeleted (AutomatableParameter&);
 
     void applyChangesToParameter (AutomationParamData*, double endTime, bool toEnd);
 

@@ -85,7 +85,10 @@ void EditInsertPoint::chooseInsertPoint (Track::Ptr& track, double& start, bool 
             track = findFirstClipTrackFromSelection (sm->getSelectedObjects());
 
         if (track == nullptr)
-            track = edit.getOrInsertAudioTrackAt (0);
+        {
+            edit.ensureNumberOfAudioTracks (1);
+            track = getAudioTracks (edit).getFirst();
+        }
     }
 
     jassert (track != nullptr);

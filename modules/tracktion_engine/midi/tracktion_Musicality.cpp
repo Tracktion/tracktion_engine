@@ -86,8 +86,40 @@ Chord::Chord (ChordType c) : type (c)
 {
 }
 
-Chord::Chord (juce::Array<int> steps_)  : type (Chord::customChord), steps (steps_)
+Chord::Chord (juce::Array<int> steps_, juce::String symbol_)
+    : type (Chord::customChord), steps (steps_), symbol (symbol_)
 {
+}
+
+juce::String Chord::toString()
+{
+    juce::String res;
+    res += juce::String ((int)type) + "|";
+    res += symbol + "|";
+
+    for (auto s : steps)
+        res += juce::String (s);
+
+    return res;
+}
+
+Chord Chord::fromString (const juce::String& s)
+{
+    Chord chord;
+
+    auto tokens = juce::StringArray::fromTokens (s, "|", "");
+    if (tokens.size() >= 2)
+    {
+        chord.type = (ChordType) tokens[0].getIntValue();
+        chord.symbol = tokens[1];
+
+        for (int i = 2; i < tokens.size(); i++)
+            if (tokens[i].isNotEmpty())
+                chord.steps.add (tokens[i].getIntValue());
+
+        return chord;
+    }
+    return { Chord::invalidChord };
 }
 
 juce::Array<Chord::ChordType> Chord::getAllChordType()
@@ -130,6 +162,42 @@ juce::String Chord::getName() const
         case halfDiminishedMinorNinthChord: return TRANS("Half Diminished Minor Ninth");
         case diminishedNinthChord:          return TRANS("Diminished Ninth");
         case diminishedMinorNinthChord:     return TRANS("Diminished Minor Ninth");
+        case customChord:                   jassert (symbol.isNotEmpty()); return symbol;
+        default: jassertfalse;              return {};
+    }
+}
+
+juce::String Chord::getShortName() const
+{
+    switch (type)
+    {
+        case majorTriad:                    return TRANS("major");
+        case minorTriad:                    return TRANS("minor");
+        case diminishedTriad:               return TRANS("dim");
+        case augmentedTriad:                return TRANS("aug");
+        case majorSixthChord:               return TRANS("major 6");
+        case minorSixthChord:               return TRANS("minor 6");
+        case dominatSeventhChord:           return TRANS("dom 7");
+        case majorSeventhChord:             return TRANS("major 7");
+        case minorSeventhChord:             return TRANS("minor 7");
+        case augmentedSeventhChord:         return TRANS("aug 7");
+        case diminishedSeventhChord:        return TRANS("dim 7");
+        case halfDiminishedSeventhChord:    return TRANS("half dim 7");
+        case minorMajorSeventhChord:        return TRANS("min maj 7");
+        case powerChord:                    return TRANS("power");
+        case suspendedSecond:               return TRANS("sus 2");
+        case suspendedFourth:               return TRANS("sus 4");
+        case majorNinthChord:               return TRANS("major 9");
+        case dominantNinthChord:            return TRANS("dom 9");
+        case minorMajorNinthChord:          return TRANS("min maj 9");
+        case minorDominantNinthChord:       return TRANS("min dom 9");
+        case augmentedMajorNinthChord:      return TRANS("aug maj 9");
+        case augmentedDominantNinthChord:   return TRANS("aug dom 9");
+        case halfDiminishedNinthChord:      return TRANS("half dim 9");
+        case halfDiminishedMinorNinthChord: return TRANS("half dim min 9");
+        case diminishedNinthChord:          return TRANS("dim 9");
+        case diminishedMinorNinthChord:     return TRANS("dim min 9");
+        case customChord:                   jassert (symbol.isNotEmpty()); return symbol;
         default: jassertfalse;              return {};
     }
 }
@@ -164,6 +232,7 @@ juce::String Chord::getSymbol() const
         case halfDiminishedMinorNinthChord: return oslash + flat + "9";
         case diminishedNinthChord:          return "o9";
         case diminishedMinorNinthChord:     return "o" + flat + "9";
+        case customChord:                   jassert (symbol.isNotEmpty()); return symbol;
         default: jassertfalse;              return {};
     }
 }
@@ -325,7 +394,7 @@ juce::String Scale::getName() const
 {
     return getNameForType (type);
 }
-    
+
 juce::String Scale::getShortName() const
 {
     return getShortNameForType (type);
@@ -349,7 +418,7 @@ juce::String Scale::getNameForType (ScaleType type)
         default: jassertfalse;  return {};
     }
 }
-    
+
 juce::String Scale::getShortNameForType (ScaleType type)
 {
     switch (type)
@@ -444,7 +513,7 @@ juce::String Scale::getIntervalName (Intervals interval) const
     switch (triads[(int)interval].getType())
     {
         case Chord::majorTriad:        name = name.toUpperCase(); break;
-        case Chord::minorTriad:        name = name; break;
+        case Chord::minorTriad:        break;
         case Chord::augmentedTriad:    name = name.toUpperCase() + "+"; break;
         case Chord::diminishedTriad:   name = name + juce::String::charToString (176); break;
         default: jassertfalse; break;
@@ -568,7 +637,7 @@ Chord PatternGenerator::ProgressionItem::getChord (const Scale& scale) const
             if (p.isNotEmpty())
                 steps.add (p.getIntValue());
 
-        return Chord (steps);
+        return Chord (steps, chordSymbol (chordName));
     }
 
     for (Chord::ChordType type : Chord::getAllChordType())
@@ -724,7 +793,7 @@ void PatternGenerator::validateChordLengths()
         }
     }
 }
-    
+
 int PatternGenerator::getChordProgressionLength() const
 {
     return progressionList->size();
@@ -924,7 +993,7 @@ juce::String PatternGenerator::formatChordName (juce::String simplifiedChordName
 juce::StringArray PatternGenerator::getChordProgressionChordNames (bool simplified) const
 {
     juce::StringArray res;
-    
+
     for (auto item : *progressionList)
     {
         if (simplified)
@@ -934,7 +1003,7 @@ juce::StringArray PatternGenerator::getChordProgressionChordNames (bool simplifi
         else
             res.add (item->getChordSymbol());
     }
-    
+
     return res;
 }
 

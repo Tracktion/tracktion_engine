@@ -121,7 +121,8 @@ std::unique_ptr<AudioSegmentList> AudioSegmentList::create (AudioClipBase& acb, 
     {
         EditTimeRange region (jmax (0.0, wtm.getWarpedStart()), wtm.getWarpEndMarkerTime());
 
-        auto warpTimeRegions = wtm.getWarpTimeRegions (region);
+        Array<EditTimeRange> warpTimeRegions;
+        callBlocking ([&] { warpTimeRegions = wtm.getWarpTimeRegions (region); });
         double position = warpTimeRegions.size() > 0 ? warpTimeRegions.getUnchecked (0).getStart() : 0.0;
 
         for (auto warpRegion : warpTimeRegions)
@@ -330,7 +331,7 @@ void AudioSegmentList::buildNormal (bool crossfade)
                         seg.fadeOut = true;
                         seg.followedBySilence = false;
 
-                        segments.insert (j + i, newSeg);
+                        segments.insert (j + 1, newSeg);
                         break;
                     }
                 }

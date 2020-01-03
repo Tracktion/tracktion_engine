@@ -42,6 +42,7 @@ public:
 
     //==============================================================================
     void addTake (ProjectItemID);
+    void addTake (const juce::File&);
     bool hasAnyTakes() const override                           { return getTakesTree().getNumChildren() > 0; }
     int getNumTakes (bool includeComps) override;
 

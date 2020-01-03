@@ -1,8 +1,8 @@
 ![](tutorials/images/tracktion_engine_powered.png)
 
-master: [![Build Status](https://travis-ci.org/Tracktion/tracktion_engine.svg?branch=master)](https://travis-ci.org/Tracktion/tracktion_engine.svg?branch=master)
+master: [![Build Status](https://dev.azure.com/TracktionDev/tracktion_engine_dev/_apis/build/status/Tracktion.tracktion_engine_dev?branchName=master)](https://dev.azure.com/TracktionDev/tracktion_engine_dev/_apis/build/status/Tracktion.tracktion_engine_dev?branchName=master)
 
-develop: [![Build Status](https://travis-ci.org/Tracktion/tracktion_engine.svg?branch=develop)](https://travis-ci.org/Tracktion/tracktion_engine.svg?branch=develop)
+develop: [![Build Status](https://dev.azure.com/TracktionDev/tracktion_engine_dev/_apis/build/status/Tracktion.tracktion_engine_dev?branchName=develop)](https://dev.azure.com/TracktionDev/tracktion_engine_dev/_apis/build/status/Tracktion.tracktion_engine_dev?branchName=develop)
 
 # tracktion_engine
 ##### Welcome to the Tracktion Engine repository!

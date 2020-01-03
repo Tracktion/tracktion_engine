@@ -98,9 +98,10 @@ public:
     /** Scrolls whatever is necessary to keep the selected stuff visible. */
     void keepSelectedObjectsOnScreen();
 
-    void refreshDetailComponent();
-
+    void refreshPropertyPanel();
     static void refreshAllPropertyPanels();
+    static void refreshAllPropertyPanelsShowing (Selectable&);
+
     static void deselectAllFromAllWindows();
 
     //==============================================================================

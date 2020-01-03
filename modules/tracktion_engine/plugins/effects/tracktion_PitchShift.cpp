@@ -163,8 +163,9 @@ void PitchShiftPlugin::deinitialise()
 
 void PitchShiftPlugin::applyToBuffer (const AudioRenderContext& fc)
 {
-    fc.setMaxNumChannels (2);
     pimpl->applyToBuffer (fc, semitones->getCurrentValue());
+
+    clearChannels (*fc.destBuffer, 2, -1, fc.bufferStartSample, fc.bufferNumSamples);
 }
 
 double PitchShiftPlugin::getLatencySeconds()

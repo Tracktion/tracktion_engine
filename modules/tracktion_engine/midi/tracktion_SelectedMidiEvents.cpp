@@ -77,6 +77,10 @@ void SelectedMidiEvents::addSelectedEvent (MidiNote* note, bool addToCurrent)
     if (! addToCurrent)
         selectedNotes.clearQuick();
 
+    // don't allow notes that don't belong to this set of clips to be selected
+    if (note != nullptr && clipForEvent (note) == nullptr)
+        return;
+
     if (note != nullptr && ! contains (*note))
         selectedNotes.add (note);
 
@@ -88,17 +92,13 @@ void SelectedMidiEvents::addSelectedEvent (MidiNote* note, bool addToCurrent)
     if (selectedSysexes.size() > 0)
     {
         selectedSysexes.clearQuick();
-
-        if (auto sm = SelectionManager::findSelectionManagerContaining (this))
-            sm->refreshDetailComponent();
+        SelectionManager::refreshAllPropertyPanelsShowing (*this);
     }
 
     if (selectedControllers.size() > 0)
     {
         selectedControllers.clearQuick();
-
-        if (auto sm = SelectionManager::findSelectionManagerContaining (this))
-            sm->refreshDetailComponent();
+        SelectionManager::refreshAllPropertyPanelsShowing (*this);
     }
 }
 
@@ -106,6 +106,10 @@ void SelectedMidiEvents::addSelectedEvent (MidiSysexEvent* sysex, bool addToCurr
 {
     if (! addToCurrent)
         selectedSysexes.clearQuick();
+
+    // don't allow sysexes that don't belong to this set of clips to be selected
+    if (sysex != nullptr && clipForEvent (sysex) == nullptr)
+        return;
 
     if (sysex != nullptr && ! contains (*sysex))
         selectedSysexes.add (sysex);
@@ -118,16 +122,12 @@ void SelectedMidiEvents::addSelectedEvent (MidiSysexEvent* sysex, bool addToCurr
     if (selectedNotes.size() > 0)
     {
         selectedNotes.clearQuick();
-
-        if (auto sm = SelectionManager::findSelectionManagerContaining (this))
-            sm->refreshDetailComponent();
+        SelectionManager::refreshAllPropertyPanelsShowing (*this);
     }
     if (selectedControllers.size() > 0)
     {
         selectedControllers.clearQuick();
-
-        if (auto sm = SelectionManager::findSelectionManagerContaining (this))
-            sm->refreshDetailComponent();
+        SelectionManager::refreshAllPropertyPanelsShowing (*this);
     }
 }
 
@@ -135,6 +135,10 @@ void SelectedMidiEvents::addSelectedEvent (MidiControllerEvent* controller, bool
 {
     if (! addToCurrent)
         selectedControllers.clearQuick();
+
+    // don't allow controllers that don't belong to this set of clips to be selected
+    if (controller != nullptr && clipForEvent (controller) == nullptr)
+        return;
 
     if (controller != nullptr && ! contains (*controller))
         selectedControllers.add (controller);
@@ -147,16 +151,12 @@ void SelectedMidiEvents::addSelectedEvent (MidiControllerEvent* controller, bool
     if (selectedNotes.size() > 0)
     {
         selectedNotes.clearQuick();
-
-        if (auto sm = SelectionManager::findSelectionManagerContaining (this))
-            sm->refreshDetailComponent();
+        SelectionManager::refreshAllPropertyPanelsShowing (*this);
     }
     if (selectedSysexes.size() > 0)
     {
         selectedSysexes.clearQuick();
-
-        if (auto sm = SelectionManager::findSelectionManagerContaining (this))
-            sm->refreshDetailComponent();
+        SelectionManager::refreshAllPropertyPanelsShowing (*this);
     }
 }
 
@@ -198,19 +198,19 @@ void SelectedMidiEvents::removeSelectedEvent (MidiControllerEvent* controller)
 
 void SelectedMidiEvents::setSelected (SelectionManager& sm, const juce::Array<MidiNote*>& notes, bool addToSelection)
 {
-    if (addToSelection)
-    {
-        for (auto n : notes)
-            if (n != nullptr && ! contains (*n))
-                selectedNotes.add (n);
+    if (! addToSelection)
+        selectedNotes.clearQuick();
 
-        sendSelectionChangedMessage (&sm);
-    }
-    else if (selectedNotes != notes)
+    for (auto n : notes)
     {
-        selectedNotes = notes;
-        sendSelectionChangedMessage (&sm);
+        if (n != nullptr && clipForEvent (n) == nullptr)
+            continue;
+
+        if (n != nullptr && ! contains (*n))
+            selectedNotes.add (n);
     }
+
+    sendSelectionChangedMessage (&sm);
 
     if (selectedSysexes.size() > 0)
     {
@@ -234,19 +234,19 @@ void SelectedMidiEvents::setSelected (SelectionManager& sm, const juce::Array<Mi
 {
     selectedNotes.clearQuick();
 
-    if (addToSelection)
-    {
-        for (auto e : events)
-            if (e != nullptr && ! contains (*e))
-                selectedSysexes.add (e);
+    if (! addToSelection)
+        selectedSysexes.clearQuick();
 
-        sendSelectionChangedMessage (&sm);
-    }
-    else if (selectedSysexes != events)
+    for (auto e : events)
     {
-        selectedSysexes = events;
-        sendSelectionChangedMessage (&sm);
+        if (e != nullptr && clipForEvent (e) == nullptr)
+            continue;
+
+        if (e != nullptr && ! contains (*e))
+            selectedSysexes.add (e);
     }
+
+    sendSelectionChangedMessage (&sm);
 
     if (selectedNotes.size() > 0)
     {
@@ -268,19 +268,19 @@ void SelectedMidiEvents::setSelected (SelectionManager& sm, const juce::Array<Mi
 
 void SelectedMidiEvents::setSelected (SelectionManager& sm, const juce::Array<MidiControllerEvent*>& events, bool addToSelection)
 {
-    if (addToSelection)
-    {
-        for (auto e : events)
-            if (e != nullptr && ! contains (*e))
-                selectedControllers.add (e);
+    if (! addToSelection)
+        selectedControllers.clearQuick();
 
-        sendSelectionChangedMessage (&sm);
-    }
-    else if (selectedControllers != events)
+    for (auto e : events)
     {
-        selectedControllers = events;
-        sendSelectionChangedMessage (&sm);
+        if (e != nullptr && clipForEvent (e) == nullptr)
+            continue;
+
+        if (e != nullptr && ! contains (*e))
+            selectedControllers.add (e);
     }
+
+    sendSelectionChangedMessage (&sm);
 
     if (selectedNotes.size() > 0)
     {
@@ -497,6 +497,28 @@ void SelectedMidiEvents::sendSelectionChangedMessage (SelectionManager* sm)
 
     changed();
     sendChangeMessage();
+}
+
+void SelectedMidiEvents::setClips (juce::Array<MidiClip*> clips_)
+{
+    // You should try and avoid changing the list of clips, instead
+    // create a new SelectedMidiEvents for the new clips. If you do
+    // change the clips, then this fuction will deselect and events
+    // that no longer belong to a clip in the clip list.
+
+    clips = clips_;
+
+    for (int i = selectedNotes.size(); --i >= 0;)
+        if (clipForEvent (selectedNotes[i]) == nullptr)
+            selectedNotes.remove (i);
+
+    for (int i = selectedSysexes.size(); --i >= 0;)
+        if (clipForEvent (selectedSysexes[i]) == nullptr)
+            selectedSysexes.remove (i);
+
+    for (int i = selectedControllers.size(); --i >= 0;)
+        if (clipForEvent (selectedControllers[i]) == nullptr)
+            selectedControllers.remove (i);
 }
 
 }

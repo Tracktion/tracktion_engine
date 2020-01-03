@@ -104,7 +104,7 @@ public:
         faderBankRight4Id           = 204,
         faderBankRight8Id           = 205,
         faderBankRight16Id          = 207,
-        
+
         paramBankLeftId             = 220,
         paramBankLeft1Id            = 221,
         paramBankLeft4Id            = 222,
@@ -149,7 +149,7 @@ public:
     //==============================================================================
     void initialiseDevice (bool connect) override;
     void shutDownDevice() override;
-    
+
     void updateOSCSettings (int oscInputPort, int oscOutputPort, juce::String oscOutputAddr) override;
 
     /** Saves the settings of all open custom surfaces. */
@@ -311,7 +311,7 @@ public:
     void paramBankRight16 (float val, int param);
     void paramBankRight24 (float val, int param);
 
-    
+
     void null (float, int) {} // null action for outgoing only actions
 
     void loadFunctions();
@@ -320,7 +320,7 @@ public:
     void importSettings (const juce::File&);
     void importSettings (const juce::String&);
     void exportSettings (const juce::File&);
-    
+
     int getPacketsIn()  { return packetsIn; }
     int getPacketsOut() { return packetsOut; }
 
@@ -361,7 +361,7 @@ private:
     std::map<juce::String, int> oscControlTapsWhileTouched;
     std::map<juce::String, float> oscLastValue;
     std::map<juce::String, double> oscLastUsedTime;
-    
+
     std::unique_ptr<juce::OSCSender> oscSender;
     std::unique_ptr<juce::OSCReceiver> oscReceiver;
 
@@ -407,16 +407,16 @@ private:
     //==============================================================================
     void oscMessageReceived (const juce::OSCMessage&) override;
     void oscBundleReceived (const juce::OSCBundle&) override;
-    
+
     bool isTextAction (ActionID);
-    
+
     //==============================================================================
     void addFunction (juce::PopupMenu&, juce::SortedSet<int>& commandSet, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
     void addTrackFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
     void addPluginFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
     void createContextMenu (juce::PopupMenu&);
     void addAllCommandItem (juce::PopupMenu&);
-    
+
     void sendCommandToControllerForActionID (int actionID, bool);
     void sendCommandToControllerForActionID (int actionID, float value);
     void sendCommandToControllerForActionID (int actionID, juce::String);
@@ -435,7 +435,7 @@ private:
 
     void handleAsyncUpdate() override;
     void recreateOSCSockets();
-    
+
     bool shouldActOnValue (float v);
 
     //==============================================================================

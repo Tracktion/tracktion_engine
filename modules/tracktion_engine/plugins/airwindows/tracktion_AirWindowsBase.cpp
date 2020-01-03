@@ -32,7 +32,7 @@ void float2string (float f, char* text, int len)
         decimals = 2;
     else
         decimals = 3;
-    
+
     String str (f, decimals);
     str.copyToUTF8 (text, (size_t)len);
 }

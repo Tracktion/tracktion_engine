@@ -27,7 +27,7 @@
 #pragma once
 
 #include "common/Utilities.h"
-
+#include "common/PlaybackDemoAudio.h"
 
 //==============================================================================
 class PlaybackDemo  : public Component,
@@ -38,7 +38,7 @@ public:
     PlaybackDemo()
     {
         const auto editFilePath = JUCEApplication::getCommandLineParameters().replace ("-NSDocumentRevisionsDebugMode YES", "").unquoted().trim();
-        jassert (editFilePath.isNotEmpty());
+        
         const File editFile (editFilePath);
 
         if (editFile.existsAsFile())
@@ -51,12 +51,20 @@ public:
             transport.addChangeListener (this);
 
             editNameLabel.setText (editFile.getFileNameWithoutExtension(), dontSendNotification);
-            playPauseButton.onClick = [this] { EngineHelpers::togglePlay (*edit); };
         }
         else
         {
-            jassertfalse;
+            auto f = File::createTempFile (".ogg");
+            f.replaceWithData (PlaybackDemoAudio::BITs_Export_2_ogg, PlaybackDemoAudio::BITs_Export_2_oggSize);
+            
+            edit = std::make_unique<te::Edit> (engine, te::createEmptyEdit(), te::Edit::forEditing, nullptr, 0);
+            auto clip = EngineHelpers::loadAudioFileAsClip (*edit, f);
+            EngineHelpers::loopAroundClip (*clip);
+            
+            editNameLabel.setText ("Demo Song", dontSendNotification);
         }
+        
+        playPauseButton.onClick = [this] { EngineHelpers::togglePlay (*edit); };
 
         // Show the plugin scan dialog
         // If you're loading an Edit with plugins in, you'll need to perform a scan first

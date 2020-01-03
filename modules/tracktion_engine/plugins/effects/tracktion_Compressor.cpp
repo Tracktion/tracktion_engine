@@ -102,8 +102,6 @@ void CompressorPlugin::applyToBuffer (const AudioRenderContext& fc)
 
     SCOPED_REALTIME_CHECK
 
-    fc.setMaxNumChannels (3);
-
     const double logThreshold = std::log10 (0.01);
     const double attackFactor = std::pow (10.0, logThreshold / (attackMs->getCurrentValue() * sampleRate / 1000.0));
     const double releaseFactor = std::pow (10.0, logThreshold / (releaseMs->getCurrentValue() * sampleRate / 1000.0));
@@ -185,6 +183,8 @@ void CompressorPlugin::applyToBuffer (const AudioRenderContext& fc)
             *b1++ = samp * r;
         }
     }
+
+    clearChannels (*fc.destBuffer, 2, -1, fc.bufferStartSample, fc.bufferNumSamples);
 }
 
 float CompressorPlugin::getThreshold() const

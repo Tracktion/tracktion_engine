@@ -382,7 +382,7 @@ void Project::redirectIDsFromProject (int oldProjId, int newProjId)
 
                     for (auto& item : exportable->getReferencedItems())
                     {
-                         if (item.itemID == oldProjId)
+                         if (item.itemID.getProjectID() == oldProjId)
                              exportable->reassignReferencedItem (item, item.itemID.withNewProjectID (newProjId), 0.0);
 
                         ++i;

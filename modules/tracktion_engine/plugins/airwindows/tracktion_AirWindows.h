@@ -57,7 +57,7 @@ public:
     void initialise (const PlaybackInitialisationInfo&) override;
     void deinitialise() override;
     void applyToBuffer (const AudioRenderContext&) override;
-    
+
     void resetToDefault();
 
     //==============================================================================
@@ -120,7 +120,8 @@ public: \
 AIRWINDOWSPLUGIN(AirWindowsAcceleration, "Acceleration");
 AIRWINDOWSPLUGIN(AirWindowsADClip7, "AD Clip 7");
 AIRWINDOWSPLUGIN(AirWindowsADT, "ADT");
-AIRWINDOWSPLUGIN(AirWindowsAtmosphere, "Atmosphere");
+AIRWINDOWSPLUGIN(AirWindowsAtmosphereBuss, "Atmosphere Buss");
+AIRWINDOWSPLUGIN(AirWindowsAtmosphereChannel, "Atmosphere Channel");
 AIRWINDOWSPLUGIN(AirWindowsAura, "Aura");
 AIRWINDOWSPLUGIN(AirWindowsBassKit, "BassKit");
 AIRWINDOWSPLUGIN(AirWindowsBitGlitter, "Bit Glitter");

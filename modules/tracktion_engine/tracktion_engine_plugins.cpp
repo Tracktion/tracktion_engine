@@ -28,6 +28,7 @@ using namespace juce;
 #include "plugins/tracktion_PluginWindowState.cpp"
 
 #include "plugins/external/tracktion_ExternalAutomatableParameter.h"
+#include "plugins/external/tracktion_ExternalPluginBlacklist.h"
 #include "plugins/external/tracktion_ExternalPlugin.cpp"
 
 #include "plugins/internal/tracktion_AuxReturn.cpp"
@@ -45,6 +46,7 @@ using namespace juce;
 #include "plugins/effects/tracktion_Chorus.cpp"
 #include "plugins/effects/tracktion_Compressor.cpp"
 #include "plugins/effects/tracktion_Delay.cpp"
+#include "plugins/effects/tracktion_FourOscPlugin.cpp"
 #include "plugins/effects/tracktion_Equaliser.cpp"
 #include "plugins/effects/tracktion_LowPass.cpp"
 #include "plugins/effects/tracktion_MidiModifier.cpp"

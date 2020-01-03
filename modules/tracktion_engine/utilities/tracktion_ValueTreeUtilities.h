@@ -67,11 +67,14 @@ public:
         jassert (objects.isEmpty()); // must call freeObjects() in the subclass destructor!
     }
 
-    int size() const                        { return objects.size();    }
+    inline int size() const                 { return objects.size();    }
+    inline bool isEmpty() const noexcept    { return size() == 0;       }
     ObjectType* operator[] (int idx) const  { return objects[idx];      }
     ObjectType* at (int idx)                { return objects[idx];      }
-    ObjectType** begin() const              { return objects.begin();   }
-    ObjectType** end() const                { return objects.end();     }
+    ObjectType** begin()                    { return objects.begin();   }
+    ObjectType* const* begin() const        { return objects.begin();   }
+    ObjectType** end()                      { return objects.end();     }
+    ObjectType* const* end() const          { return objects.end();     }
 
     // call in the sub-class when being created
     void rebuildObjects()
@@ -440,8 +443,8 @@ static inline bool saveValueTree (const juce::File& file, const juce::ValueTree&
 
         if (asXml)
         {
-            if (auto xml = std::unique_ptr<juce::XmlElement> (v.createXml()))
-                xml->writeToStream (os, {});
+            if (auto xml = v.createXml())
+                xml->writeTo (os);
         }
         else
         {
@@ -534,6 +537,8 @@ static void copyPropertiesToNullTerminatedCachedValues (const juce::ValueTree& v
 
             if (v.hasProperty (prop))
                 *cv = ValueType (v.getProperty (prop));
+            else
+                cv->resetToDefault();
         }
         else
         {

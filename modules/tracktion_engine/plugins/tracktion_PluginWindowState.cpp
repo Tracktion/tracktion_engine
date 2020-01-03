@@ -11,15 +11,81 @@
 namespace tracktion_engine
 {
 
-PluginWindowState::PluginWindowState (Engine& e)
-   : engine (e),
-     windowLocked (e.getPluginManager().areGUIsLockedByDefault())
+PluginWindowState::PluginWindowState (Edit& e)
+   : edit (e),
+     engine (e.engine),
+     windowLocked (engine.getPluginManager().areGUIsLockedByDefault())
 {
+}
+
+void PluginWindowState::deleteWindow()
+{
+    pluginWindow.reset();
+}
+
+void PluginWindowState::incRefCount()
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    ++windowShowerCount;
+    startTimer (100);
+}
+
+void PluginWindowState::decRefCount()
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    --windowShowerCount;
+    startTimer (100);
+}
+
+void PluginWindowState::showWindowExplicitly()
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    wasExplicitlyClosed = false;
+    stopTimer();
+    showWindow();
+}
+
+void PluginWindowState::closeWindowExplicitly()
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+
+    if (pluginWindow && pluginWindow->isVisible())
+    {
+        wasExplicitlyClosed = true;
+        deleteWindow();
+        stopTimer();
+    }
+}
+
+bool PluginWindowState::isWindowShowing() const
+{
+    return pluginWindow != nullptr && pluginWindow->isShowing();
+}
+
+void PluginWindowState::recreateWindowIfShowing()
+{
+    deleteWindow();
+    startTimer (100);
+}
+
+void PluginWindowState::hideWindowForShutdown()
+{
+    deleteWindow();
+    stopTimer();
+}
+
+void PluginWindowState::pickDefaultWindowBounds()
+{
+    lastWindowBounds = { 100, 100, 600, 500 };
+
+    if (auto focused = juce::Component::getCurrentlyFocusedComponent())
+        lastWindowBounds.setPosition (focused->getTopLevelComponent()->getPosition()
+                                        + juce::Point<int> (80, 80));
 }
 
 void PluginWindowState::showWindow()
 {
-    if (masterConnection == nullptr)
+    if (! pluginWindow)
     {
         // Ensure the top middle 8th stays on screen
         bool windowBoundsIsOnScreen = Desktop::getInstance().getDisplays().getRectangleList (true)
@@ -31,35 +97,35 @@ void PluginWindowState::showWindow()
             pickDefaultWindowBounds();
 
         WeakReference<Component> oldFocus (Component::getCurrentlyFocusedComponent());
-        masterConnection.reset (engine.getUIBehaviour().createPluginWindowConnection (*this));
+        pluginWindow = engine.getUIBehaviour().createPluginWindow (*this);
 
         if (oldFocus != nullptr)
             oldFocus->grabKeyboardFocus();
     }
 
-    if (masterConnection != nullptr)
+    if (pluginWindow)
     {
         windowOpenTime = Time::getCurrentTime();
-        masterConnection->setVisible (true);
-        masterConnection->toFront (false);
+        pluginWindow->setVisible (true);
+        pluginWindow->toFront (false);
     }
 }
 
 void PluginWindowState::pluginClicked (const MouseEvent& e)
 {
-    bool isWindowShowing = masterConnection != nullptr && masterConnection->isShowing();
+    bool isShowing = isWindowShowing();
 
     if (e.getNumberOfClicks() >= 2)
     {
         if ((Time::getCurrentTime() - windowOpenTime).inMilliseconds() < 300)
             return;
 
-        if (isWindowShowing)
+        if (isShowing)
             closeWindowExplicitly();
         else
             showWindowExplicitly();
     }
-    else if (! (isWindowShowing || engine.getPluginManager().doubleClickToOpenWindows()))
+    else if (! (isShowing || engine.getPluginManager().doubleClickToOpenWindows()))
     {
         showWindowExplicitly();
     }
@@ -71,7 +137,7 @@ void PluginWindowState::timerCallback()
 
     if (windowShowerCount > 0)
     {
-        if ((masterConnection == nullptr || ! masterConnection->isVisible())
+        if ((pluginWindow == nullptr || ! pluginWindow->isVisible())
              && ! (engine.getPluginManager().doubleClickToOpenWindows() || wasExplicitlyClosed))
             showWindow();
     }
@@ -79,124 +145,6 @@ void PluginWindowState::timerCallback()
     {
         deleteWindow();
     }
-}
-
-//==============================================================================
-PluginWindowConnection::Master::Master (PluginWindowState& s, Edit& e)
-    : state (s), edit (e)
-{
-}
-
-PluginWindowConnection::Master::Master (PluginWindowState& s, Edit& e,
-                                        Component* w, Slave* windowConnectionSlave)
-    : state (s), edit (e), pluginWindow (w)
-{
-    jassert (w != nullptr);
-
-    if (w != nullptr)
-    {
-        slave = windowConnectionSlave;
-        slave->master = this;
-    }
-}
-
-PluginWindowConnection::Master::~Master()
-{
-}
-
-bool PluginWindowConnection::Master::isVisible() const
-{
-    CRASH_TRACER
-    if (slave != nullptr)
-        return slave->isVisible();
-
-    return true;
-}
-
-void PluginWindowConnection::Master::setVisible (bool visible)
-{
-    CRASH_TRACER
-    if (slave != nullptr)
-        slave->setVisible (visible);
-}
-
-void PluginWindowConnection::Master::toFront (bool setAsForeground)
-{
-    CRASH_TRACER
-    if (slave != nullptr)
-        slave->toFront (setAsForeground);
-}
-
-void PluginWindowConnection::Master::hide()
-{
-    CRASH_TRACER
-    if (slave != nullptr)
-        slave->hide();
-}
-
-bool PluginWindowConnection::Master::isShowing() const
-{
-    CRASH_TRACER
-    if (slave != nullptr)
-        return slave->isShowing();
-
-    return false;
-}
-
-bool PluginWindowConnection::Master::shouldBeShowing() const
-{
-    return Engine::getInstance().getUIBehaviour().isEditVisibleOnScreen (edit);
-}
-
-void PluginWindowConnection::Master::setWindowLocked (bool isLocked)
-{
-    state.windowLocked = isLocked;
-}
-
-bool PluginWindowConnection::Master::isWindowLocked() const
-{
-    return state.windowLocked;
-}
-
-PluginInstanceWrapper* PluginWindowConnection::Master::getWrapper() const
-{
-    return {};
-}
-
-//==============================================================================
-PluginWindowConnection::Slave::Slave (Component& b) : pluginWindow (b)
-{
-}
-
-bool PluginWindowConnection::Slave::isVisible() const                   { return pluginWindow.isVisible(); }
-void PluginWindowConnection::Slave::setVisible (bool visible)           { pluginWindow.setVisible (visible); }
-void PluginWindowConnection::Slave::toFront (bool setAsForeground)      { pluginWindow.toFront (setAsForeground); }
-void PluginWindowConnection::Slave::hide()                              { pluginWindow.setVisible (false); }
-bool PluginWindowConnection::Slave::isShowing() const                   { return pluginWindow.isShowing(); }
-
-bool PluginWindowConnection::Slave::shouldBeShowing() const
-{
-    CRASH_TRACER
-    if (master != nullptr)
-        return master->shouldBeShowing();
-
-    return true;
-}
-
-void PluginWindowConnection::Slave::setWindowLocked (bool isLocked)
-{
-    CRASH_TRACER
-    if (master != nullptr)
-        master->setWindowLocked (isLocked);
-}
-
-bool PluginWindowConnection::Slave::isWindowLocked() const
-{
-    CRASH_TRACER
-    if (master != nullptr)
-        return master->isWindowLocked();
-
-    return false;
 }
 
 }

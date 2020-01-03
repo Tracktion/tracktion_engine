@@ -62,18 +62,23 @@ struct CrashStackTracer::CrashTraceThreads
       #endif
     }
 
-    void dump (OutputStream& os) const
+    void dump (OutputStream& os, juce::Thread::ThreadID threadIDToDump) const
     {
         Array<Thread::ThreadID> threads;
 
         for (int i = entries.size(); --i >= 0;)
-            threads.addIfNotAlreadyThere (entries.getUnchecked (i)->threadID);
+        {
+            auto entryThreadID = entries.getUnchecked (i)->threadID;
+
+            if (entryThreadID == threadIDToDump || entryThreadID == juce::Thread::ThreadID())
+                threads.addIfNotAlreadyThere (entryThreadID);
+        }
 
         for (int j = 0; j < threads.size(); ++j)
         {
             os.writeText ("Thread " + String (j) + ":\n", false, false, nullptr);
 
-            auto thread = threads.getUnchecked(j);
+            auto thread = threads.getUnchecked (j);
             int n = 0;
 
             for (int i = entries.size(); --i >= 0;)
@@ -167,9 +172,14 @@ void CrashStackTracer::dump()
 
 void CrashStackTracer::dump (OutputStream& os)
 {
+    dump (os, juce::Thread::ThreadID());
+}
+
+void CrashStackTracer::dump (juce::OutputStream& os, juce::Thread::ThreadID threadID)
+{
     os.writeText ("Crashed", false, false, nullptr);
     os.writeText (newLine, false, false, nullptr);
-    crashStack.dump (os);
+    crashStack.dump (os, threadID);
 }
 
 String CrashStackTracer::getCrashedPlugin (juce::Thread::ThreadID threadID)

@@ -485,7 +485,7 @@ int TempoSequence::indexOfTempo (const TempoSetting* const t) const
 
 double TempoSequence::getBpmAt (double time) const
 {
-    jassert (! tempos->isUpdatePending());
+    updateTempoDataIfNeeded();
     for (int i = internalTempos.size(); --i >= 0;)
     {
         auto& it = internalTempos.getReference (i);
@@ -508,7 +508,7 @@ double TempoSequence::BarsAndBeats::getFractionalBeats() const  { return beats -
 
 TempoSequence::BarsAndBeats TempoSequence::timeToBarsBeats (double t) const
 {
-    jassert (! tempos->isUpdatePending());
+    updateTempoDataIfNeeded();
     for (int i = internalTempos.size(); --i >= 0;)
     {
         auto& it = internalTempos.getReference (i);
@@ -537,7 +537,7 @@ TempoSequence::BarsAndBeats TempoSequence::timeToBarsBeats (double t) const
 
 double TempoSequence::barsBeatsToTime (BarsAndBeats barsBeats) const
 {
-    jassert (! tempos->isUpdatePending());
+    updateTempoDataIfNeeded();
     for (int i = internalTempos.size(); --i >= 0;)
     {
         auto& it = internalTempos.getReference(i);
@@ -560,7 +560,7 @@ double TempoSequence::barsBeatsToBeats (BarsAndBeats barsBeats) const
 
 double TempoSequence::timeToBeats (double time) const
 {
-    jassert (! tempos->isUpdatePending());
+    updateTempoDataIfNeeded();
     return internalTempos.timeToBeats (time);
 }
 
@@ -572,7 +572,7 @@ juce::Range<double> TempoSequence::timeToBeats (EditTimeRange range) const
 
 double TempoSequence::beatsToTime (double beats) const
 {
-    jassert (! tempos->isUpdatePending());
+    updateTempoDataIfNeeded();
     return internalTempos.beatsToTime (beats);
 }
 
@@ -852,6 +852,12 @@ void TempoSequence::updateTempoData()
     }
 }
 
+void TempoSequence::updateTempoDataIfNeeded() const
+{
+    if (tempos->isUpdatePending())
+        tempos->handleAsyncUpdate();
+}
+
 void TempoSequence::handleAsyncUpdate()
 {
     edit.sendTempoOrPitchSequenceChangedUpdates();
@@ -908,8 +914,8 @@ TempoSequence::BarsAndBeats TempoSequencePosition::getBarsBeatsTime() const
     auto beatsSinceFirstBar = (time - it.timeOfFirstBar) * it.beatsPerSecond;
 
     if (beatsSinceFirstBar < 0)
-        return { it.barNumberOfFirstBar - 1,
-                 it.prevNumerator + beatsSinceFirstBar };
+        return { it.barNumberOfFirstBar + (int) std::floor (beatsSinceFirstBar / it.numerator),
+                 std::fmod (std::fmod (beatsSinceFirstBar, it.numerator) + it.numerator, it.numerator) };
 
     return { it.barNumberOfFirstBar + (int) std::floor (beatsSinceFirstBar / it.numerator),
              std::fmod (beatsSinceFirstBar, it.numerator) };
@@ -1160,5 +1166,108 @@ void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
         for (int i = a.beats.size(); --i >= 0;)
             a.curve.setPointTime (i, tempoSequence.beatsToTime (a.beats.getUnchecked (i)));
 }
+
+//==============================================================================
+//==============================================================================
+class TempoSequenceTests : public UnitTest
+{
+public:
+    TempoSequenceTests() : UnitTest ("TempoSequence", "Tracktion") {}
+
+    //==============================================================================
+    void runTest() override
+    {
+        auto edit = Edit::createSingleTrackEdit (Engine::getInstance());
+
+        beginTest ("Defaults");
+        {
+            TempoSequencePosition pos (edit->tempoSequence);
+            auto& section = pos.getCurrentTempo();
+
+            expectEquals (section.bpm, 120.0);
+            expectEquals (section.startTime, 0.0);
+            expectEquals (section.startBeatInEdit, 0.0);
+            expectEquals (section.secondsPerBeat, 0.5);
+            expectEquals (section.beatsPerSecond, 2.0);
+            expectEquals (section.ppqAtStart, 0.0);
+            expectEquals (section.timeOfFirstBar, 0.0);
+            expectEquals (section.beatsUntilFirstBar, 0.0);
+            expectEquals (section.barNumberOfFirstBar, 0);
+            expectEquals (section.numerator, 4);
+            expectEquals (section.prevNumerator, 4);
+            expectEquals (section.denominator, 4);
+            expect (! section.triplets);
+        }
+
+        beginTest ("Positive sequences");
+        {
+            TempoSequencePosition pos (edit->tempoSequence);
+            pos.setTime (0.0);
+
+            expectBarsAndBeats (pos, 0, 0);
+            pos.addBeats (1.0);
+            expectBarsAndBeats (pos, 0, 1);
+            pos.addBeats (1.0);
+            expectBarsAndBeats (pos, 0, 2);
+            pos.addBeats (1.0);
+            expectBarsAndBeats (pos, 0, 3);
+            pos.addBeats (1.0);
+            expectBarsAndBeats (pos, 1, 0);
+
+            pos.addBars (1);
+            expectBarsAndBeats (pos, 2, 0);
+            pos.addBeats (1.0);
+            expectBarsAndBeats (pos, 2, 1);
+            pos.addBeats (1.0);
+            expectBarsAndBeats (pos, 2, 2);
+            pos.addBeats (1.0);
+            expectBarsAndBeats (pos, 2, 3);
+        }
+
+        beginTest ("Negative sequences");
+        {
+            TempoSequencePosition pos (edit->tempoSequence);
+            pos.setTime (0.0);
+            pos.addBars (-2);
+
+            expectBarsAndBeats (pos, -2, 0);
+            pos.addBeats (1.0);
+            expectBarsAndBeats (pos, -2, 1);
+            pos.addBeats (1.0);
+            expectBarsAndBeats (pos, -2, 2);
+            pos.addBeats (1.0);
+            expectBarsAndBeats (pos, -2, 3);
+            pos.addBeats (1.0);
+            expectBarsAndBeats (pos, -1, 0);
+            pos.addBeats (1.0);
+            expectBarsAndBeats (pos, -1, 1);
+            pos.addBeats (1.0);
+            expectBarsAndBeats (pos, -1, 2);
+            pos.addBeats (1.0);
+            expectBarsAndBeats (pos, -1, 3);
+            pos.addBeats (1.0);
+            expectBarsAndBeats (pos, 0, 0);
+            pos.addBeats (1.0);
+            expectBarsAndBeats (pos, 0, 1);
+            pos.addBeats (1.0);
+            expectBarsAndBeats (pos, 0, 2);
+            pos.addBeats (1.0);
+            expectBarsAndBeats (pos, 0, 3);
+            pos.addBeats (1.0);
+            expectBarsAndBeats (pos, 1, 0);
+            pos.addBeats (1.0);
+        }
+    }
+
+private:
+    void expectBarsAndBeats (TempoSequencePosition& pos, int bars, int beats)
+    {
+        auto barsBeats = pos.getBarsBeatsTime();
+        expectEquals (barsBeats.bars, bars);
+        expectEquals (barsBeats.getWholeBeats(), beats);
+    }
+};
+
+static TempoSequenceTests tempoSequenceTests;
 
 }

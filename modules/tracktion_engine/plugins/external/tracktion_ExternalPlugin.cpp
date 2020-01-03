@@ -437,8 +437,8 @@ ExternalPlugin::ExternalPlugin (PluginCreationInfo info)  : Plugin (info)
 
     auto um = getUndoManager();
 
-    addAutomatableParameter (dryGain = new PluginWetDryAutomatableParam ("dry level", TRANS("Dry Level"), *this));
-    addAutomatableParameter (wetGain = new PluginWetDryAutomatableParam ("wet level", TRANS("Wet Level"), *this));
+    dryGain = new PluginWetDryAutomatableParam ("dry level", TRANS("Dry Level"), *this);
+    wetGain = new PluginWetDryAutomatableParam ("wet level", TRANS("Wet Level"), *this);
 
     dryValue.referTo (state, IDs::dry, um);
     wetValue.referTo (state, IDs::wet, um, 1.0f);
@@ -488,6 +488,28 @@ void ExternalPlugin::initialiseFully()
     }
 }
 
+void ExternalPlugin::forceFullReinitialise()
+{
+    TransportControl::ScopedPlaybackRestarter restarter (edit.getTransport());
+    engine.getUIBehaviour().recreatePluginWindowContentAsync (*this);
+    edit.getTransport().stop (false, true);
+    fullyInitialised = false;
+    initialiseFully();
+    changed();
+
+    if (isInstancePrepared && pluginInstance->getSampleRate() > 0 && pluginInstance->getBlockSize() > 0)
+    {
+        pluginInstance->releaseResources();
+        pluginInstance->prepareToPlay (pluginInstance->getSampleRate(), pluginInstance->getBlockSize());
+    }
+
+    edit.restartPlayback();
+    SelectionManager::refreshAllPropertyPanelsShowing (*this);
+
+    if (auto t = getOwnerTrack())
+        t->refreshCurrentAutoParam();
+}
+
 void ExternalPlugin::updateDebugName()
 {
     debugName = desc.name + " (" + desc.pluginFormatName + ")";
@@ -497,9 +519,13 @@ void ExternalPlugin::buildParameterList()
 {
     CRASH_TRACER_PLUGIN (getDebugName());
     autoParamForParamNumbers.clear();
+    clearParameterList();
     std::unordered_map<std::string, int> alreadyUsedParamNames;
 
-    if (pluginInstance)
+    addAutomatableParameter (dryGain);
+    addAutomatableParameter (wetGain);
+
+    if (pluginInstance != nullptr)
     {
         auto& parameters = pluginInstance->getParameters();
         jassert (parameters.size() < 80000);
@@ -509,43 +535,41 @@ void ExternalPlugin::buildParameterList()
         {
             auto* parameter = parameters.getUnchecked (i);
 
-            if (parameter->isAutomatable())
+            if (parameter->isAutomatable() && ! isParameterBlacklisted (*this, *pluginInstance, *parameter))
             {
-                String nm (parameter->getName (1024));
+                auto nm = parameter->getName (1024);
 
-                if (nm.isNotEmpty())
-                {
-                    int count = 1;
+				bool emptyName = nm.isEmpty();
+				if (emptyName)
+					nm = "Unnamed";
 
-                    if (alreadyUsedParamNames.find (nm.toStdString()) != alreadyUsedParamNames.end())
-                    {
-                        count = alreadyUsedParamNames[nm.toStdString()] + 1;
-                        alreadyUsedParamNames[nm.toStdString()] = count;
-                        nm << " (" << count << ")";
-                    }
-                    else
-                    {
-                        alreadyUsedParamNames[nm.toStdString()] = count;
-                    }
+				int count = 1;
 
-                    // Just use the index for the ID for now until this has been added to JUCE
-                    auto parameterID = String (i);
+				if (alreadyUsedParamNames.find (nm.toStdString()) != alreadyUsedParamNames.end())
+				{
+					count = alreadyUsedParamNames[nm.toStdString()] + 1;
+					alreadyUsedParamNames[nm.toStdString()] = count;
+					nm << " (" << count << ")";
+				}
+				else
+				{
+					alreadyUsedParamNames[nm.toStdString()] = count;
+				}
 
-                    if (auto paramWithID = dynamic_cast<AudioProcessorParameterWithID*> (parameter))
-                        parameterID = paramWithID->paramID;
+				// Just use the index for the ID for now until this has been added to JUCE
+				auto parameterID = String (i);
 
-                    auto p = new ExternalAutomatableParameter (parameterID, nm, *this, i, { 0.0f, 1.0f });
-                    addAutomatableParameter (*p);
-                    autoParamForParamNumbers.add (p);
-                    p->valueChangedByPlugin();
+				if (auto paramWithID = dynamic_cast<AudioProcessorParameterWithID*> (parameter))
+					parameterID = paramWithID->paramID;
 
-                    if (count >= 2)
-                        p->setDisplayName (nm);
-                }
-                else
-                {
-                    autoParamForParamNumbers.add (nullptr);
-                }
+				auto p = new ExternalAutomatableParameter (parameterID, nm, *this, i, { 0.0f, 1.0f });
+				addAutomatableParameter (*p);
+				autoParamForParamNumbers.add (p);
+				p->valueChangedByPlugin();
+
+				if (count >= 2 && ! emptyName)
+					p->setDisplayName (nm);
+
             }
             else
             {
@@ -558,25 +582,25 @@ void ExternalPlugin::buildParameterList()
     buildParameterTree();
 }
 
-const PluginDescription* ExternalPlugin::findDescForUID (int uid) const
+std::unique_ptr<PluginDescription> ExternalPlugin::findDescForUID (int uid) const
 {
     if (uid != 0)
-        for (auto d : engine.getPluginManager().knownPluginList)
-            if (d->uid == uid)
-                return d;
+        for (auto d : engine.getPluginManager().knownPluginList.getTypes())
+            if (d.uid == uid)
+                return std::make_unique<PluginDescription> (d);
 
     return {};
 }
 
-const PluginDescription* ExternalPlugin::findDescForFileOrID (const String& fileOrID) const
+std::unique_ptr<PluginDescription> ExternalPlugin::findDescForFileOrID (const String& fileOrID) const
 {
     if (fileOrID.isNotEmpty())
     {
         auto& pm = engine.getPluginManager();
 
-        for (auto d : pm.knownPluginList)
-            if (d->fileOrIdentifier == fileOrID)
-                return d;
+        for (auto d : pm.knownPluginList.getTypes())
+            if (d.fileOrIdentifier == fileOrID)
+                return std::make_unique<PluginDescription> (d);
 
         return engine.getEngineBehaviour().findDescriptionForFileOrID (fileOrID);
     }
@@ -584,72 +608,72 @@ const PluginDescription* ExternalPlugin::findDescForFileOrID (const String& file
     return {};
 }
 
-static const PluginDescription* findDescForName (Engine& engine, const String& name)
+static std::unique_ptr<PluginDescription> findDescForName (Engine& engine, const String& name)
 {
     if (name.isEmpty())
         return {};
 
     auto& pm = engine.getPluginManager();
 
-    auto findName = [&pm] (const String& nameToFind) -> const PluginDescription*
+    auto findName = [&pm] (const String& nameToFind) -> std::unique_ptr<PluginDescription>
     {
-        for (auto* d : pm.knownPluginList)
-            if (d->name == nameToFind)
-                return d;
+        for (auto d : pm.knownPluginList.getTypes())
+            if (d.name == nameToFind)
+                return std::make_unique<PluginDescription> (d);
 
         return {};
     };
 
-    if (auto* p = findName (name))
+    if (auto p = findName (name))
         return p;
 
    #if JUCE_64BIT
-    if (auto* p = findName (name + " (64 bit)"))
+    if (auto p = findName (name + " (64 bit)"))
         return p;
 
-    if (auto* p = findName (name + " (64-bit)"))
+    if (auto p = findName (name + " (64-bit)"))
         return p;
    #endif
 
     return {};
 }
 
-const PluginDescription* ExternalPlugin::findMatchingPlugin() const
+std::unique_ptr<PluginDescription> ExternalPlugin::findMatchingPlugin() const
 {
     CRASH_TRACER
     auto& pm = engine.getPluginManager();
 
-    if (auto* p = pm.knownPluginList.getTypeForIdentifierString (desc.createIdentifierString()))
+    if (auto p = pm.knownPluginList.getTypeForIdentifierString (desc.createIdentifierString()))
         return p;
 
     if (desc.pluginFormatName.isEmpty())
     {
-        if (auto* p = pm.knownPluginList.getTypeForIdentifierString ("VST" + desc.createIdentifierString()))
+        if (auto p = pm.knownPluginList.getTypeForIdentifierString ("VST" + desc.createIdentifierString()))
             return p;
 
-        if (auto* p = pm.knownPluginList.getTypeForIdentifierString ("AudioUnit" + desc.createIdentifierString()))
+        if (auto p = pm.knownPluginList.getTypeForIdentifierString ("AudioUnit" + desc.createIdentifierString()))
             return p;
     }
 
-    if (auto* p = findDescForFileOrID (desc.fileOrIdentifier))
+    if (auto p = findDescForFileOrID (desc.fileOrIdentifier))
         return p;
 
-    if (auto* p = findDescForUID (desc.uid))
+    if (auto p = findDescForUID (desc.uid))
         return p;
 
-    if (auto* p = findDescForName (engine, desc.name))
+    if (auto p = findDescForName (engine, desc.name))
         return p;
 
-    for (auto* d : pm.knownPluginList)
-        if (d->name == desc.name)
-            return d;
+    for (auto d : pm.knownPluginList.getTypes())
+        if (d.name == desc.name)
+            return std::make_unique<PluginDescription> (d);
 
-    for (auto* d : pm.knownPluginList)
-        if (File::createFileWithoutCheckingPath (d->fileOrIdentifier).getFileNameWithoutExtension() == desc.name)
-            return d;
+    for (auto d : pm.knownPluginList.getTypes())
+        if (File::createFileWithoutCheckingPath (d.fileOrIdentifier).getFileNameWithoutExtension() == desc.name)
+            return std::make_unique<PluginDescription> (d);
 
     if (desc.uid == 0x4d44416a) // old JX-10: hack to update to JX-16
-        if (auto* p = findDescForUID (0x4D44414A))
+        if (auto p = findDescForUID (0x4D44414A))
             return p;
 
     return {};
@@ -662,21 +686,12 @@ void ExternalPlugin::processingChanged()
 
     if (processing)
     {
-        if (! pluginInstance)
-        {
-            fullyInitialised = false;
-            initialiseFully();
-
-            if (auto t = getOwnerTrack())
-                t->refreshCurrentAutoParam();
-        }
+        if (pluginInstance == nullptr)
+            forceFullReinitialise();
     }
     else
     {
-        // Remove all the parameters except the wet/dry as these are created in the constructor
-        for (int i = autoParamForParamNumbers.size(); --i >= 0;)
-            deleteParameter (autoParamForParamNumbers.getUnchecked (i));
-
+        clearParameterList();
         autoParamForParamNumbers.clear();
         getParameterTree().clear();
 
@@ -686,27 +701,27 @@ void ExternalPlugin::processingChanged()
 
 void ExternalPlugin::doFullInitialisation()
 {
-    if (processing && pluginInstance == nullptr && edit.shouldLoadPlugins())
+    if (auto foundDesc = findMatchingPlugin())
     {
-        if (auto* foundDesc = findMatchingPlugin())
-        {
-            desc = *foundDesc;
-            identiferString = desc.createIdentifierString();
-            updateDebugName();
+        desc = *foundDesc;
+        identiferString = desc.createIdentifierString();
+        updateDebugName();
 
+        if (processing && pluginInstance == nullptr && edit.shouldLoadPlugins())
+        {
             if (isDisabled())
                 return;
 
             CRASH_TRACER_PLUGIN (getDebugName());
             String error;
 
-            callBlocking ([this, &error, foundDesc]
+            callBlocking ([this, &error, &foundDesc]
             {
                 CRASH_TRACER_PLUGIN (getDebugName());
                 error = createPluginInstance (*foundDesc);
             });
 
-            if (pluginInstance)
+            if (pluginInstance != nullptr)
             {
                #if JUCE_PLUGINHOST_VST
                 if (auto xml = juce::VSTPluginFormat::getVSTXML (pluginInstance.get()))
@@ -767,7 +782,7 @@ void ExternalPlugin::flushPluginStateToValueTree()
         state.setProperty (IDs::filename, desc.fileOrIdentifier, um);
     }
 
-    if (pluginInstance)
+    if (pluginInstance != nullptr)
     {
         state.setProperty (IDs::programNum, pluginInstance->getCurrentProgram(), um);
 
@@ -829,7 +844,7 @@ void ExternalPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
         }
     }
 
-    if (pluginInstance && s.isNotEmpty())
+    if (pluginInstance != nullptr && s.isNotEmpty())
     {
         CRASH_TRACER_PLUGIN (getDebugName());
 
@@ -977,10 +992,14 @@ void ExternalPlugin::initialise (const PlaybackInitialisationInfo& info)
 
     mpeRemapper->reset();
 
-    if (pluginInstance)
+    if (pluginInstance != nullptr)
     {
-        pluginInstance->releaseResources();
+        if (isInstancePrepared)
+            pluginInstance->releaseResources();
+
         pluginInstance->prepareToPlay (info.sampleRate, info.blockSizeSamples);
+        isInstancePrepared = true;
+
         latencySamples = pluginInstance->getLatencySamples();
         latencySeconds = latencySamples / info.sampleRate;
 
@@ -999,12 +1018,13 @@ void ExternalPlugin::initialise (const PlaybackInitialisationInfo& info)
         playhead.reset();
         latencySamples = 0;
         latencySeconds = 0.0;
+        isInstancePrepared = false;
     }
 }
 
 void ExternalPlugin::deinitialise()
 {
-    if (pluginInstance)
+    if (pluginInstance != nullptr)
     {
         CRASH_TRACER_PLUGIN (getDebugName());
 
@@ -1015,12 +1035,13 @@ void ExternalPlugin::deinitialise()
             playhead->setCurrentContext (nullptr);
 
         pluginInstance->releaseResources();
+        isInstancePrepared = false;
     }
 }
 
 void ExternalPlugin::reset()
 {
-    if (pluginInstance)
+    if (pluginInstance != nullptr)
     {
         CRASH_TRACER_PLUGIN (getDebugName());
         const ScopedLock sl (lock);
@@ -1034,7 +1055,7 @@ void ExternalPlugin::setEnabled (bool shouldEnable)
 
     if (shouldEnable != isEnabled())
     {
-        if (pluginInstance)
+        if (pluginInstance != nullptr)
             pluginInstance->reset();
 
         propertiesChanged();
@@ -1125,7 +1146,7 @@ void ExternalPlugin::prepareIncomingMidiMessages (MidiMessageArray& incoming, in
 
 void ExternalPlugin::applyToBuffer (const AudioRenderContext& fc)
 {
-    if (pluginInstance && isEnabled())
+    if (pluginInstance != nullptr && isEnabled())
     {
         CRASH_TRACER_PLUGIN (getDebugName());
         const ScopedLock sl (lock);
@@ -1265,7 +1286,7 @@ int ExternalPlugin::getNumOutputChannelsGivenInputs (int)
 
 void ExternalPlugin::getChannelNames (StringArray* ins, StringArray* outs)
 {
-    if (pluginInstance)
+    if (pluginInstance != nullptr)
     {
         CRASH_TRACER_PLUGIN (getDebugName());
 
@@ -1345,7 +1366,7 @@ String ExternalPlugin::getProgramName (int index)
     if (index == getCurrentProgram())
         return getCurrentProgramName();
 
-    if (pluginInstance)
+    if (pluginInstance != nullptr)
         return pluginInstance->getProgramName (index);
 
     return {};
@@ -1386,13 +1407,13 @@ void ExternalPlugin::setCurrentProgramName (const String& name)
 {
     CRASH_TRACER_PLUGIN (getDebugName());
 
-    if (pluginInstance)
+    if (pluginInstance != nullptr)
         pluginInstance->changeProgramName (pluginInstance->getCurrentProgram(), name);
 }
 
 void ExternalPlugin::setCurrentProgram (int index, bool sendChangeMessage)
 {
-    if (pluginInstance && getNumPrograms() > 0)
+    if (pluginInstance != nullptr && getNumPrograms() > 0)
     {
         CRASH_TRACER_PLUGIN (getDebugName());
 
@@ -1435,7 +1456,7 @@ int ExternalPlugin::getNumOutputs() const    { return pluginInstance ? pluginIns
 
 bool ExternalPlugin::setBusesLayout (juce::AudioProcessor::BusesLayout layout)
 {
-    if (pluginInstance)
+    if (pluginInstance != nullptr)
     {
         std::unique_ptr<Edit::ScopedRenderStatus> srs;
 
@@ -1463,7 +1484,7 @@ bool ExternalPlugin::setBusesLayout (juce::AudioProcessor::BusesLayout layout)
 
 bool ExternalPlugin::setBusLayout (AudioChannelSet set, bool isInput, int busIndex)
 {
-    if (pluginInstance)
+    if (pluginInstance != nullptr)
     {
         if (auto* bus = pluginInstance->getBus (isInput, busIndex))
         {
@@ -1500,8 +1521,7 @@ String ExternalPlugin::createPluginInstance (const PluginDescription& descriptio
     auto& dm = engine.getDeviceManager();
 
     String error;
-    pluginInstance.reset (engine.getPluginManager().pluginFormatManager
-                            .createPluginInstance (description, dm.getSampleRate(), dm.getBlockSize(), error));
+    pluginInstance = engine.getPluginManager().createPluginInstance (description, dm.getSampleRate(), dm.getBlockSize(), error);
 
     if (pluginInstance != nullptr)
     {
@@ -1587,7 +1607,6 @@ void ExternalPlugin::buildParameterTree (const VSTXML::Group* group,
 void ExternalPlugin::deleteFromParent()
 {
     CRASH_TRACER_PLUGIN (getDebugName());
-    hideWindowForShutdown();
     Plugin::deleteFromParent();
 }
 
@@ -1615,6 +1634,27 @@ void ExternalPlugin::valueTreePropertyChanged (ValueTree& v, const juce::Identif
     {
         Plugin::valueTreePropertyChanged (v, id);
     }
+}
+
+//==============================================================================
+PluginWetDryAutomatableParam::PluginWetDryAutomatableParam (const juce::String& xmlTag, const juce::String& name, Plugin& owner)
+    : AutomatableParameter (xmlTag, name, owner, { 0.0f, 1.0f })
+{
+}
+
+PluginWetDryAutomatableParam::~PluginWetDryAutomatableParam()
+{
+    notifyListenersOfDeletion();
+}
+
+juce::String PluginWetDryAutomatableParam::valueToString (float value)
+{
+    return juce::Decibels::toString (juce::Decibels::gainToDecibels (value), 1);
+}
+
+float PluginWetDryAutomatableParam::stringToValue (const juce::String& s)
+{
+    return dbStringToDb (s);
 }
 
 }

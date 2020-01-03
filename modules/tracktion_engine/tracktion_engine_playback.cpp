@@ -79,6 +79,8 @@ using namespace juce;
 #include "playback/devices/tracktion_WaveInputDevice.cpp"
 #include "playback/devices/tracktion_WaveOutputDevice.cpp"
 
+#include "playback/tracktion_HostedAudioDevice.cpp"
+
 static inline void sprintf (char* dest, size_t maxLength, const char* format, ...) noexcept
 {
     va_list list;

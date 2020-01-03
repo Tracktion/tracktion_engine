@@ -36,7 +36,7 @@ public:
     juce::String getBackChannelDevice() const;
     void setBackChannelDevice (const juce::String& nameOfMidiOutput);
     bool isUsingMidiOutputDevice (const MidiOutputDevice* d) const noexcept   { return d == outputDevice; }
-    
+
     int getOSCInputPort()                       { return oscInputPort; }
     void setOSCInputPort (int port);
     int getOSCOutputPort()                      { return oscOutputPort; }

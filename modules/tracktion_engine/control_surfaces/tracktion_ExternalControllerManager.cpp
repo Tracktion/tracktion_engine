@@ -215,7 +215,7 @@ void ExternalControllerManager::detachFromSelectionManager (SelectionManager* sm
 bool ExternalControllerManager::createCustomController (const String& name, Protocol protocol)
 {
     CRASH_TRACER
-    
+
     int outPort = 9000, inPort = 8000;
     // Find free UDP ports for OSC input and output
     if (protocol == osc)
@@ -229,7 +229,7 @@ bool ExternalControllerManager::createCustomController (const String& name, Prot
             }
         }
     }
-    
+
     if (auto ec = addNewController (new CustomControlSurface (*this, name, protocol)))
     {
         if (protocol == osc)
@@ -238,7 +238,7 @@ bool ExternalControllerManager::createCustomController (const String& name, Prot
             ec->setOSCInputPort (inPort);
         }
     }
-    
+
     sendChangeMessage();
     return true;
 }

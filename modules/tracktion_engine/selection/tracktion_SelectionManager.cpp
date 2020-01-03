@@ -14,8 +14,14 @@ namespace tracktion_engine
 struct SelectableUpdateTimer  : public AsyncUpdater,
                                 private DeletedAtShutdown
 {
-    SelectableUpdateTimer() {}
+    SelectableUpdateTimer (std::function<void ()> onDelete_)
+        : onDelete (onDelete_) {}
 
+    ~SelectableUpdateTimer()
+    {
+        if (onDelete)
+            onDelete();
+    }
     void add (Selectable* s)
     {
         const ScopedLock sl (lock);
@@ -57,6 +63,7 @@ struct SelectableUpdateTimer  : public AsyncUpdater,
 private:
     SortedSet<Selectable*> selectables;
     CriticalSection lock;
+    std::function<void ()> onDelete;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SelectableUpdateTimer)
 };
@@ -66,7 +73,7 @@ static SelectableUpdateTimer* updateTimerInstance = nullptr;
 void Selectable::initialise()
 {
     if (updateTimerInstance == nullptr)
-        updateTimerInstance = new SelectableUpdateTimer();
+        updateTimerInstance = new SelectableUpdateTimer ([]() { updateTimerInstance = nullptr; });
 }
 
 //==============================================================================
@@ -512,7 +519,7 @@ void SelectionManager::selectableObjectAboutToBeDeleted (Selectable* s)
     }
 }
 
-void SelectionManager::refreshDetailComponent()
+void SelectionManager::refreshPropertyPanel()
 {
     selectionChanged();
 }
@@ -520,7 +527,14 @@ void SelectionManager::refreshDetailComponent()
 void SelectionManager::refreshAllPropertyPanels()
 {
     for (SelectionManager::Iterator sm; sm.next();)
-        sm->refreshDetailComponent();
+        sm->refreshPropertyPanel();
+}
+
+void SelectionManager::refreshAllPropertyPanelsShowing (Selectable& s)
+{
+    for (SelectionManager::Iterator sm; sm.next();)
+        if (sm->isSelected (s))
+            sm->refreshPropertyPanel();
 }
 
 void SelectionManager::deselectAllFromAllWindows()

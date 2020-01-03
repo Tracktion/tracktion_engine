@@ -208,9 +208,8 @@ int EditSnapshot::audioToGlobalTrackIndex (int audioIndex) const
 //==============================================================================
 void EditSnapshot::refreshFromProjectManager()
 {
-    auto pi = ProjectManager::getInstance()->getProjectItem (itemID);
-    jassert (pi != nullptr);
-    refreshFromProjectItem (pi);
+    if (auto pi = ProjectManager::getInstance()->getProjectItem (itemID))
+        refreshFromProjectItem (pi);
 }
 
 void EditSnapshot::refreshFromProjectItem (ProjectItem::Ptr pi)

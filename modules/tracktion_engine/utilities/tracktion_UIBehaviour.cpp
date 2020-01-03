@@ -61,7 +61,7 @@ void UIBehaviour::showInfoMessage (const String& message)
     {
         auto bmc = new BubbleMessageComponent();
         bmc->addToDesktop (0);
-        bmc->showAt (c, AttributedString (message), 2000);
+        bmc->showAt (c, AttributedString (message), 2000, true, true);
     }
 }
 
@@ -219,6 +219,11 @@ double UIBehaviour::getEditingPosition (Edit& e)
 EditTimeRange UIBehaviour::getEditingRange (Edit& e)
 {
     return e.getTransport().getLoopRange();
+}
+
+void UIBehaviour::recreatePluginWindowContentAsync (Plugin& p)
+{
+    p.windowState->recreateWindowIfShowing();
 }
 
 }

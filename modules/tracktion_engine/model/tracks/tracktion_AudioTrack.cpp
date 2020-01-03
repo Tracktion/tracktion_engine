@@ -369,11 +369,11 @@ int AudioTrack::getAudioTrackNumber() noexcept
     return getAudioTracks (edit).indexOf (this) + 1;
 }
 
-VolumeAndPanPlugin* AudioTrack::getVolumePlugin()     { return pluginList.findFirstPluginOfType<VolumeAndPanPlugin>(); }
-LevelMeterPlugin* AudioTrack::getLevelMeterPlugin()   { return pluginList.findFirstPluginOfType<LevelMeterPlugin>(); }
-EqualiserPlugin* AudioTrack::getEqualiserPlugin()     { return pluginList.findFirstPluginOfType<EqualiserPlugin>(); }
+VolumeAndPanPlugin* AudioTrack::getVolumePlugin()     { return pluginList.getPluginsOfType<VolumeAndPanPlugin>().getLast(); }
+LevelMeterPlugin* AudioTrack::getLevelMeterPlugin()   { return pluginList.getPluginsOfType<LevelMeterPlugin>().getLast(); }
+EqualiserPlugin* AudioTrack::getEqualiserPlugin()     { return pluginList.getPluginsOfType<EqualiserPlugin>().getLast(); }
 
-AuxSendPlugin* AudioTrack::getAuxSendPlugin (int bus)
+AuxSendPlugin* AudioTrack::getAuxSendPlugin (int bus) const
 {
     for (auto p : pluginList)
         if (auto f = dynamic_cast<AuxSendPlugin*> (p))

@@ -508,7 +508,7 @@ private:
     //==============================================================================
     te::StepClip::Ptr createStepClip()
     {
-        if (auto track = edit.getOrInsertAudioTrackAt (0))
+        if (auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
         {
             // Find length of 1 bar
             const te::EditTimeRange editTimeRange (0, edit.tempoSequence.barsBeatsToTime ({ 1, 0.0 }));
@@ -573,7 +573,7 @@ private:
     //==============================================================================
     te::StepClip::Ptr getClip()
     {
-        if (auto track = edit.getOrInsertAudioTrackAt (0))
+        if (auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
             if (auto clip = dynamic_cast<te::StepClip*> (track->getClips()[0]))
                 return *clip;
 

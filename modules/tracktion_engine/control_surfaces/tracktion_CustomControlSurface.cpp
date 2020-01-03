@@ -54,7 +54,7 @@ CustomControlSurface::CustomControlSurface (ExternalControllerManager& ecm, cons
     init();
 
     deviceDescription = xml.getStringAttribute ("name");
-    
+
     loadFromXml (xml);
 
     loadFunctions();
@@ -232,7 +232,7 @@ bool CustomControlSurface::loadFromXml (const juce::XmlElement& xml)
     numParameterControls        = xml.getIntAttribute ("parameters", 18);
 
     mappings.clear();
-    
+
     forEachXmlChildElementWithTagName (xml, node, "MAPPING")
     {
         auto mapping = mappings.add (new Mapping());
@@ -250,23 +250,23 @@ void CustomControlSurface::importSettings (const File& file)
 {
     importSettings (file.loadFileAsString());
 }
-    
+
 void CustomControlSurface::importSettings (const juce::String& xmlText)
 {
     bool ok = false;
     mappings.clearQuick (true);
-    
+
     std::unique_ptr<XmlElement> xml (XmlDocument::parse (xmlText));
-    
+
     if (xml != nullptr)
     {
         loadFromXml (*xml);
         loadFunctions();
         ok = true;
     }
-    
+
     manager->saveAllSettings();
-    
+
     if (! ok)
         engine.getUIBehaviour().showWarningAlert (TRANS("Import"), TRANS("Import failed"));
 }
@@ -280,7 +280,7 @@ void CustomControlSurface::exportSettings (const File& file)
     {
         file.deleteFile();
         file.create();
-        file.appendText (xml->createDocument ({}));
+        file.appendText (xml->toString());
 
         if (file.getSize() > 10)
             ok = true;
@@ -295,27 +295,27 @@ void CustomControlSurface::initialiseDevice (bool online_)
     online = online_;
     recreateOSCSockets();
 }
-    
+
 void CustomControlSurface::shutDownDevice()
 {
     online = false;
     recreateOSCSockets();
 }
-    
+
 void CustomControlSurface::updateOSCSettings (int in, int out, juce::String addr)
 {
     oscInputPort = in;
     oscOutputPort = out;
     oscOutputAddr = addr;
-    
+
     recreateOSCSockets();
 }
-    
+
 void CustomControlSurface::recreateOSCSockets()
 {
     oscSender.reset();
     oscReceiver.reset();
-    
+
     if (online && oscInputPort > 0)
     {
         oscReceiver = std::make_unique<OSCReceiver>();
@@ -329,7 +329,7 @@ void CustomControlSurface::recreateOSCSockets()
             oscReceiver->addListener (this);
         }
     }
-    
+
     if (online && oscOutputPort > 0 && oscOutputAddr.isNotEmpty())
     {
         oscSender = std::make_unique<OSCSender>();
@@ -392,25 +392,25 @@ bool CustomControlSurface::wantsMessage (const MidiMessage& m)
 
     return false;
 }
-    
+
 void CustomControlSurface::oscMessageReceived (const juce::OSCMessage& m)
 {
     packetsIn++;
-    
+
     if (m.size() >= 1)
     {
         auto arg = m[0];
         float val = 0;
-        
+
         if (arg.isFloat32())
             val = arg.getFloat32();
         else if (arg.isInt32())
             val = float (arg.getInt32());
         else
             return;
-        
+
         auto addr = m.getAddressPattern().toString();
-        
+
         if (addr.endsWith ("/z"))
         {
             // Track control touches and releases
@@ -424,7 +424,7 @@ void CustomControlSurface::oscMessageReceived (const juce::OSCMessage& m)
             {
                 oscControlTouched[addr] = false;
                 oscControlTapsWhileTouched[addr] = 0;
-                
+
                 auto itr = oscLastValue.find (addr);
                 if (itr != oscLastValue.end())
                 {
@@ -442,7 +442,7 @@ void CustomControlSurface::oscMessageReceived (const juce::OSCMessage& m)
                             DBG("OSC Error: " + err.description);
                         }
                     }
-                    
+
                     oscLastValue.erase (itr);
                 }
             }
@@ -452,13 +452,13 @@ void CustomControlSurface::oscMessageReceived (const juce::OSCMessage& m)
             // Track control values
             lastControllerAddr = addr;
             lastControllerValue = val;
-        
+
             if (listeningOnRow >= 0)
                 triggerAsyncUpdate();
-            
+
             oscControlTapsWhileTouched[addr]++;
             oscActiveAddr = addr;
-            
+
             if (auto ed = getEdit())
             {
                 for (auto* mapping : mappings)
@@ -479,14 +479,14 @@ void CustomControlSurface::oscMessageReceived (const juce::OSCMessage& m)
         }
     }
 }
-    
+
 void CustomControlSurface::oscBundleReceived (const juce::OSCBundle& b)
 {
     for (auto e : b)
         if (e.isMessage())
             oscMessageReceived (e.getMessage());
 }
-    
+
 bool CustomControlSurface::isTextAction (ActionID id)
 {
     switch (id)
@@ -566,7 +566,7 @@ void CustomControlSurface::acceptMidiMessage (const MidiMessage& m)
 void CustomControlSurface::moveFader (int faderIndex, float v)
 {
     sendCommandToControllerForActionID (volTrackId + faderIndex, v);
-    
+
     auto dbText = Decibels::toString (volumeFaderPositionToDB (v));
     sendCommandToControllerForActionID (volTextTrackId + faderIndex, dbText);
 }
@@ -576,7 +576,7 @@ void CustomControlSurface::moveMasterLevelFader (float newLeftSliderPos, float n
     const float panApproximation = ((newLeftSliderPos - newRightSliderPos) * 0.5f) + 0.5f;
     sendCommandToControllerForActionID (masterPanId, panApproximation);
     sendCommandToControllerForActionID (masterVolumeId, jmax (newLeftSliderPos, newRightSliderPos));
-    
+
     auto dbText = Decibels::toString (volumeFaderPositionToDB (jmax (newLeftSliderPos, newRightSliderPos)));
     sendCommandToControllerForActionID (masterVolumeTextId, dbText);
 }
@@ -584,7 +584,7 @@ void CustomControlSurface::moveMasterLevelFader (float newLeftSliderPos, float n
 void CustomControlSurface::movePanPot (int faderIndex, float v)
 {
     sendCommandToControllerForActionID (panTrackId + faderIndex, (v * 0.5f) + 0.5f);
-    
+
     String panText;
     int p = roundToInt (v * 100);
     if (p == 0)
@@ -593,14 +593,14 @@ void CustomControlSurface::movePanPot (int faderIndex, float v)
         panText = String (-p) + "L";
     else
         panText = String (p) + "R";
-    
+
     sendCommandToControllerForActionID (panTextTrackId + faderIndex, panText);
 }
 
 void CustomControlSurface::moveAux (int faderIndex, const char*, float v)
 {
     sendCommandToControllerForActionID (auxTrackId + faderIndex, v);
-    
+
     auto dbText = Decibels::toString (volumeFaderPositionToDB (v));
     sendCommandToControllerForActionID (auxTextTrackId + faderIndex, dbText);
 }
@@ -639,7 +639,7 @@ void CustomControlSurface::automationWriteModeChanged (bool isWriting)
 {
     sendCommandToControllerForActionID (automationRecordId, isWriting);
 }
-    
+
 void CustomControlSurface::faderBankChanged (int newStartChannelNumber, const StringArray& trackNames)
 {
     int idx = 0;
@@ -650,7 +650,7 @@ void CustomControlSurface::faderBankChanged (int newStartChannelNumber, const St
         idx++;
     }
 }
-    
+
 void CustomControlSurface::channelLevelChanged (int, float) {}
 
 void CustomControlSurface::trackSelectionChanged (int faderIndex, bool isSelected)
@@ -662,14 +662,14 @@ void CustomControlSurface::trackRecordEnabled (int faderIndex, bool recordEnable
 {
     sendCommandToControllerForActionID (armTrackId + faderIndex, recordEnabled);
 }
-    
+
 void CustomControlSurface::masterLevelsChanged (float, float) {}
-    
+
 void CustomControlSurface::timecodeChanged (int barsOrHours, int beatsOrMinutes,
                                             int ticksOrSeconds, int millisecs, bool isBarsBeats, bool isFrames)
 {
     char d[32];
-    
+
     if (isBarsBeats)
         sprintf (d, sizeof (d), "%3d %02d %03d", barsOrHours, beatsOrMinutes, ticksOrSeconds);
     else if (isFrames)
@@ -715,7 +715,7 @@ void CustomControlSurface::parameterChanged (int paramIndex, const ParameterSett
         sendCommandToControllerForActionID (paramTextTrackId + paramIndex, String (setting.valueDescription));
     }
 }
-    
+
 void CustomControlSurface::clearParameter (int paramIndex)
 {
     if (paramIndex >= 0)
@@ -725,7 +725,7 @@ void CustomControlSurface::clearParameter (int paramIndex)
         sendCommandToControllerForActionID (paramTextTrackId + paramIndex, String());
     }
 }
-    
+
 void CustomControlSurface::currentSelectionChanged (juce::String pluginName)
 {
     sendCommandToControllerForActionID (selectedPluginNameId, pluginName);
@@ -741,7 +741,7 @@ void CustomControlSurface::deleteController()
     manager->unregisterSurface (this);
     manager->saveAllSettings();
 }
-    
+
 void CustomControlSurface::sendCommandToControllerForActionID (int actionID, bool value)
 {
     sendCommandToControllerForActionID (actionID, value ? 1.0f : 0.0f);
@@ -806,7 +806,7 @@ void CustomControlSurface::sendCommandToControllerForActionID (int actionID, juc
         if (mapping->function == actionID)
         {
             const auto oscAddr = mapping->addr;
-            
+
             if (needsOSCSocket && oscAddr.isNotEmpty())
             {
                 if (oscSender)
@@ -827,7 +827,7 @@ void CustomControlSurface::sendCommandToControllerForActionID (int actionID, juc
         }
     }
 }
-    
+
 //==============================================================================
 bool CustomControlSurface::removeMapping (ActionID id, int controllerID, int note, int channel)
 {
@@ -955,7 +955,7 @@ std::pair<String, String> CustomControlSurface::getTextForRow (int rowNumber) co
         {
             if (lastControllerAddr.isNotEmpty())
                 return lastControllerAddr;
-            
+
             if (lastControllerID > 0 && lastControllerNote == -1)
                 return controllerIDToString (lastControllerID, lastControllerChannel) + ": " + String (roundToInt (lastControllerValue * 100.0f)) + "%";
 
@@ -969,7 +969,7 @@ std::pair<String, String> CustomControlSurface::getTextForRow (int rowNumber) co
 
         if (rowNumber < numMappings && mappingForRow->addr.isNotEmpty())
             return mappingForRow->addr;
-        
+
         if (rowNumber < numMappings && mappingForRow->id != 0)
             return controllerIDToString (mappingForRow->id, mappingForRow->channel);
 
@@ -978,7 +978,7 @@ std::pair<String, String> CustomControlSurface::getTextForRow (int rowNumber) co
 
         if (rowNumber < numMappings && needsOSCSocket)
             return TRANS("Click here to choose a controller, double click to type OSC path");
-            
+
         return TRANS("Click here to choose a controller");
     };
 
@@ -1168,7 +1168,7 @@ void CustomControlSurface::loadFunctions()
     addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Select up"), selectUpId, &CustomControlSurface::selectUp);
     addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Select down"), selectDownId, &CustomControlSurface::selectDown);
     addFunction (navigationSubMenu, *navigationSubMenuSet, TRANS("Navigation"), TRANS("Selected plugin name"), selectedPluginNameId, &CustomControlSurface::null);
-    
+
     commandGroups [nextCmdGroupIndex++] = navigationSubMenuSet;
     addTrackFunction (navigationSubMenu, TRANS("Navigation"), TRANS("Select clip in track"), selectClipInTrackId, &CustomControlSurface::selectClipInTrack);
     addTrackFunction (navigationSubMenu, TRANS("Navigation"), TRANS("Select plugin in track"), selectPluginInTrackId, &CustomControlSurface::selectFilterInTrack);
@@ -1204,7 +1204,7 @@ void CustomControlSurface::loadFunctions()
     addFunction (paramBankSubMenu, *paramBankSubMenuSet, TRANS("Switch param bank"), TRANS("Right") + " 16", paramBankRight16Id, &CustomControlSurface::paramBankRight16);
     addFunction (paramBankSubMenu, *paramBankSubMenuSet, TRANS("Switch param bank"), TRANS("Right") + " 24", paramBankRight24Id, &CustomControlSurface::paramBankRight24);
     commandGroups [nextCmdGroupIndex++] = paramBankSubMenuSet;
-    
+
     contextMenu.addSubMenu (TRANS("Transport"),  transportSubMenu);
     contextMenu.addSubMenu (TRANS("Options"),    optionsSubMenu);
     contextMenu.addSubMenu (TRANS("Plugin"),     pluginSubMenu);
@@ -1239,7 +1239,7 @@ void CustomControlSurface::addFunction (PopupMenu& menu, SortedSet<int>& command
 {
     if (isTextAction (aid) && ! needsOSCSocket)
         return;
-    
+
     int id = (int) aid;
 
     ActionFunctionInfo* afi = new ActionFunctionInfo();
@@ -1261,7 +1261,7 @@ void CustomControlSurface::addPluginFunction (PopupMenu& menu,
 {
     if (isTextAction (aid) && ! needsOSCSocket)
         return;
-    
+
     int id = (int) aid;
 
     PopupMenu subMenu;
@@ -1294,9 +1294,9 @@ void CustomControlSurface::addTrackFunction (PopupMenu& menu,
 {
     if (isTextAction (aid) && ! needsOSCSocket)
         return;
-    
+
     int id = (int) aid;
-    
+
     PopupMenu subMenu;
     addAllCommandItem (subMenu);
 
@@ -1330,7 +1330,7 @@ bool CustomControlSurface::shouldActOnValue (float val)
         {
             double now = Time::getMillisecondCounterHiRes() / 1000.0;
             double lastUsed = oscLastUsedTime[oscActiveAddr];
-            
+
             if (now - lastUsed > 0.75)
             {
                 oscLastUsedTime[oscActiveAddr] = now;
@@ -1338,17 +1338,17 @@ bool CustomControlSurface::shouldActOnValue (float val)
             }
             return false;
         }
-        
+
         // Otherwise, only act on press
         if (oscControlTapsWhileTouched[oscActiveAddr] == 1)
             return true;
-        
+
         return false;
     }
-        
+
     return val > 0.001f;
 }
-    
+
 static bool isValueNonZero (float val) noexcept
 {
     return val > 0.001f;
@@ -1427,14 +1427,14 @@ void CustomControlSurface::paramBankLeft4  (float val, int)   { if (shouldActOnV
 void CustomControlSurface::paramBankLeft8  (float val, int)   { if (shouldActOnValue (val)) userChangedParameterBank (-8); }
 void CustomControlSurface::paramBankLeft16 (float val, int)   { if (shouldActOnValue (val)) userChangedParameterBank (-16); }
 void CustomControlSurface::paramBankLeft24 (float val, int)   { if (shouldActOnValue (val)) userChangedParameterBank (-24); }
-    
+
 void CustomControlSurface::paramBankRight   (float val, int)  { if (shouldActOnValue (val)) userChangedParameterBank (numParameterControls); }
 void CustomControlSurface::paramBankRight1  (float val, int)  { if (shouldActOnValue (val)) userChangedParameterBank (1); }
 void CustomControlSurface::paramBankRight4  (float val, int)  { if (shouldActOnValue (val)) userChangedParameterBank (4); }
 void CustomControlSurface::paramBankRight8  (float val, int)  { if (shouldActOnValue (val)) userChangedParameterBank (8); }
 void CustomControlSurface::paramBankRight16 (float val, int)  { if (shouldActOnValue (val)) userChangedParameterBank (16); }
 void CustomControlSurface::paramBankRight24 (float val, int)  { if (shouldActOnValue (val)) userChangedParameterBank (24); }
-    
+
 void CustomControlSurface::addMarker (float val, int)
 {
     if (shouldActOnValue (val))
@@ -1457,7 +1457,7 @@ void CustomControlSurface::abortRestart (float val, int)    { if (shouldActOnVal
 
 void CustomControlSurface::jumpToMarkIn  (float val, int)   { if (shouldActOnValue (val)) userPressedJumpToMarkIn(); }
 void CustomControlSurface::jumpToMarkOut (float val, int)   { if (shouldActOnValue (val)) userPressedJumpToMarkOut(); }
-    
+
 void CustomControlSurface::clearAllSolo (float val, int)    { if (shouldActOnValue (val)) userPressedClearAllSolo(); }
 
 void CustomControlSurface::jog (float val, int)

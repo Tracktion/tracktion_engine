@@ -442,7 +442,7 @@ private:
         else if (auto macro = getMacroForID (v[IDs::source].toString()))
             as = new MacroSource (new MacroParameter::Assignment (v, *macro), *macro);
         else
-            jassertfalse;
+            return nullptr;
 
         as->incReferenceCount();
         ++numSources;
@@ -485,25 +485,101 @@ private:
 //==============================================================================
 struct AutomatableParameter::AttachedValue  : public juce::AsyncUpdater
 {
-    AttachedValue (AutomatableParameter& p, juce::CachedValue<float>& v)
-        : parameter (p), value (v)
-    {
-        p.setParameter (value, juce::dontSendNotification);
-    }
+    AttachedValue (AutomatableParameter& p)
+        : parameter (p) {}
 
-    ~AttachedValue()
-    {
-        cancelPendingUpdate();
-    }
+    virtual ~AttachedValue() { cancelPendingUpdate(); }
 
-    void handleAsyncUpdate() override
-    {
-        value.setValue (parameter.currentValue, nullptr);
-    }
+    virtual void setValue (float v) = 0;
+    virtual float getValue() = 0;
+    virtual float getDefault() = 0;
+    virtual void detach (ValueTree::Listener* l) = 0;
+    virtual bool updateIfMatches (ValueTree& v, const Identifier& i) = 0;
 
     AutomatableParameter& parameter;
-    juce::CachedValue<float>& value;
 };
+
+struct AutomatableParameter::AttachedFloatValue : public AutomatableParameter::AttachedValue
+{
+    AttachedFloatValue (AutomatableParameter& p, juce::CachedValue<float>& v)
+        : AttachedValue (p), value (v)
+    {
+        parameter.setParameter (value, juce::dontSendNotification);
+    }
+
+    void handleAsyncUpdate() override               { value.setValue (parameter.currentValue, nullptr); }
+    float getValue() override                       { return value; }
+    void setValue (float v) override                { value = v; }
+    float getDefault() override                     { return value.getDefault(); }
+    void detach (ValueTree::Listener* l) override   { value.getValueTree().removeListener (l); }
+
+    bool updateIfMatches (ValueTree& v, const Identifier& i) override
+    {
+        if (i == value.getPropertyID() && v == value.getValueTree())
+        {
+            value.forceUpdateOfCachedValue();
+            return true;
+        }
+        return false;
+    }
+
+    CachedValue<float>& value;
+};
+
+struct AutomatableParameter::AttachedIntValue : public AutomatableParameter::AttachedValue
+{
+    AttachedIntValue (AutomatableParameter& p, juce::CachedValue<int>& v)
+        : AttachedValue (p), value (v)
+    {
+        parameter.setParameter ((float) value.get(), juce::dontSendNotification);
+    }
+
+    void handleAsyncUpdate() override               { value.setValue (roundToInt (parameter.currentValue), nullptr); }
+    float getValue() override                       { return (float) value.get(); }
+    void setValue (float v) override                { value = roundToInt (v); }
+    float getDefault() override                     { return (float) value.getDefault(); }
+    void detach (ValueTree::Listener* l) override   { value.getValueTree().removeListener (l); }
+
+    bool updateIfMatches (ValueTree& v, const Identifier& i) override
+    {
+        if (i == value.getPropertyID() && v == value.getValueTree())
+        {
+            value.forceUpdateOfCachedValue();
+            return true;
+        }
+        return false;
+    }
+
+    CachedValue<int>& value;
+};
+
+struct AutomatableParameter::AttachedBoolValue : public AutomatableParameter::AttachedValue
+{
+    AttachedBoolValue (AutomatableParameter& p, juce::CachedValue<bool>& v)
+        : AttachedValue (p), value (v)
+    {
+        parameter.setParameter (value.get() ? 1.0f : 0.0f, juce::dontSendNotification);
+    }
+
+    void handleAsyncUpdate() override               { value.setValue (parameter.currentValue != 0.0f, nullptr); }
+    float getValue() override                       { return value; }
+    void setValue (float v) override                { value = v != 0 ? true : false; }
+    float getDefault() override                     { return value.getDefault() ? 1.0f : 0.0f; }
+    void detach (ValueTree::Listener* l) override   { value.getValueTree().removeListener (l); }
+
+    bool updateIfMatches (ValueTree& v, const Identifier& i) override
+    {
+        if (i == value.getPropertyID() && v == value.getValueTree())
+        {
+            value.forceUpdateOfCachedValue();
+            return true;
+        }
+        return false;
+    }
+
+    CachedValue<bool>& value;
+};
+
 
 //==============================================================================
 AutomatableParameter::AutomatableParameter (const juce::String& paramID_,
@@ -549,14 +625,14 @@ AutomatableParameter::AutomatableParameter (const juce::String& paramID_,
 AutomatableParameter::~AutomatableParameter()
 {
     if (editRef != nullptr)
-        editRef->getAutomationRecordManager().parameterBeingDeleted (this);
+        editRef->getAutomationRecordManager().parameterBeingDeleted (*this);
 
     notifyListenersOfDeletion();
 
     automationSourceList.reset();
 
     if (attachedValue != nullptr)
-        attachedValue->value.getValueTree().removeListener (this);
+        attachedValue->detach (this);
 }
 
 AutomatableParameter::ModifierAssignment::ModifierAssignment (Edit& e, const juce::ValueTree& v)
@@ -653,6 +729,14 @@ bool AutomatableParameter::isAutomationActive() const
     return curveSource->isActive() || getAutomationSourceList().isActive();
 }
 
+float AutomatableParameter::getDefaultValue() const
+{
+    if (attachedValue != nullptr)
+        return attachedValue->getDefault();
+
+    return 0.0f;
+}
+
 void AutomatableParameter::updateStream()
 {
     curveSource->updateInterpolatedPoints();
@@ -706,12 +790,12 @@ void AutomatableParameter::valueTreePropertyChanged (juce::ValueTree& v, const j
     {
         curveHasChanged();
     }
-    else if (attachedValue != nullptr
-              && i == attachedValue->value.getPropertyID()
-              && v == attachedValue->value.getValueTree())
+    else if (attachedValue != nullptr && attachedValue->updateIfMatches (v, i))
     {
-        attachedValue->value.forceUpdateOfCachedValue();
-        currentValue = attachedValue->value.get();
+        currentValue = attachedValue->getValue();
+
+        SCOPED_REALTIME_CHECK
+        listeners.call (&Listener::currentValueChanged, *this, currentValue);
     }
 }
 
@@ -743,7 +827,23 @@ void AutomatableParameter::attachToCurrentValue (juce::CachedValue<float>& v)
 {
     currentValue = v;
     jassert (attachedValue == nullptr);
-    attachedValue = std::make_unique<AttachedValue> (*this, v);
+    attachedValue.reset (new AttachedFloatValue (*this, v));
+    v.getValueTree().addListener (this);
+}
+
+void AutomatableParameter::attachToCurrentValue (juce::CachedValue<int>& v)
+{
+    currentValue = (float) v.get();
+    jassert (attachedValue == nullptr);
+    attachedValue.reset (new AttachedIntValue (*this, v));
+    v.getValueTree().addListener (this);
+}
+
+void AutomatableParameter::attachToCurrentValue (juce::CachedValue<bool>& v)
+{
+    currentValue = v;
+    jassert (attachedValue == nullptr);
+    attachedValue.reset (new AttachedBoolValue (*this, v));
     v.getValueTree().addListener (this);
 }
 
@@ -752,7 +852,7 @@ void AutomatableParameter::detachFromCurrentValue()
     if (attachedValue == nullptr)
         return;
 
-    attachedValue->value.getValueTree().removeListener (this);
+    attachedValue->detach (this);
     attachedValue.reset();
 }
 
@@ -886,10 +986,10 @@ void AutomatableParameter::setParameterValue (float value, bool isFollowingCurve
                         if (! isRecording)
                         {
                             isRecording = true;
-                            arm.postFirstAutomationChange (this, currentValue);
+                            arm.postFirstAutomationChange (*this, currentValue);
                         }
 
-                        arm.postAutomationChange (this, time, value);
+                        arm.postAutomationChange (*this, time, value);
                     }
                     else
                     {
@@ -904,7 +1004,7 @@ void AutomatableParameter::setParameterValue (float value, bool isFollowingCurve
             if (attachedValue != nullptr)
             {
                 attachedValue->cancelPendingUpdate();
-                attachedValue->value = value;
+                attachedValue->setValue (value);
             }
         }
 
@@ -925,6 +1025,22 @@ void AutomatableParameter::setParameter (float value, juce::NotificationType nt)
         jassert (nt != juce::sendNotificationAsync); // Async notifications not yet supported
         listeners.call (&Listener::parameterChanged, *this, currentValue);
     }
+}
+
+void AutomatableParameter::setNormalisedParameter (float value, juce::NotificationType nt)
+{
+    setParameter (valueRange.convertFrom0to1 (jlimit (0.0f, 1.0f, value)), nt);
+}
+
+juce::String AutomatableParameter::getCurrentValueAsStringWithLabel()
+{
+    auto text = getCurrentValueAsString();
+    auto label = getLabel();
+
+    if (! (label.isEmpty() || text.endsWith (label)))
+        return text + ' ' + label;
+
+    return text;
 }
 
 AutomatableParameter::AutomationSourceList& AutomatableParameter::getAutomationSourceList() const

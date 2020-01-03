@@ -48,8 +48,6 @@ void PhaserPlugin::applyToBuffer (const AudioRenderContext& fc)
 
     SCOPED_REALTIME_CHECK
 
-    fc.setMaxNumChannels (2);
-
     const double range = pow (2.0, (double) depth);
     const double sweepUp = pow (range, rate / (sampleRate / 2));
     const double sweepDown = 1.0 / sweepUp;
@@ -60,7 +58,9 @@ void PhaserPlugin::applyToBuffer (const AudioRenderContext& fc)
     double swpFactor = sweepFactor > 1.0 ? sweepUp : sweepDown;
     double swp = sweep;
 
-    for (int chan = fc.destBuffer->getNumChannels(); --chan >= 0;)
+    clearChannels (*fc.destBuffer, 2, -1, fc.bufferStartSample, fc.bufferNumSamples);
+
+    for (int chan = jmin (2, fc.destBuffer->getNumChannels()); --chan >= 0;)
     {
         float* b = fc.destBuffer->getWritePointer (chan, fc.bufferStartSample);
         swp = sweep;

@@ -40,6 +40,17 @@ struct PluginComponent
         return {};
     }
 
+    static juce::Array<PluginComponent*> getComponentsFor (const Plugin& p) noexcept
+    {
+        juce::Array<PluginComponent*> comps;
+
+        for (auto fc : getActiveComps())
+            if (&fc->plugin == &p)
+                comps.add (fc);
+
+        return comps;
+    }
+
 private:
     static juce::Array<PluginComponent*>& getActiveComps()
     {

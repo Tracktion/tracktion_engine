@@ -29,6 +29,7 @@ public:
 
     //==============================================================================
     void initialiseFully() override;
+    void forceFullReinitialise();
 
     static const char* xmlTypeName;
 
@@ -68,6 +69,7 @@ public:
     double getTailLength() const override;
     bool needsConstantBufferSize() override { return false; }
 
+    juce::AudioProcessor* getWrappedAudioProcessor() const override     { return pluginInstance.get(); }
     void deleteFromParent() override;
 
     //==============================================================================
@@ -110,7 +112,7 @@ public:
     juce::CachedValue<float> dryValue, wetValue;
     AutomatableParameter::Ptr dryGain, wetGain;
 
-    ActiveNoteList getActiveNotes() const { return activeNotes; }
+    ActiveNoteList getActiveNotes() const           { return activeNotes; }
 
 private:
     //==============================================================================
@@ -123,6 +125,7 @@ private:
     std::unique_ptr<VSTXML> vstXML;
     int latencySamples = 0;
     double latencySeconds = 0;
+    bool isInstancePrepared = false;
 
     juce::MidiBuffer midiBuffer;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
@@ -155,9 +158,9 @@ private:
     void updateDebugName();
     void processPluginBlock (const AudioRenderContext&);
 
-    const juce::PluginDescription* findMatchingPlugin() const;
-    const juce::PluginDescription* findDescForUID (int uid) const;
-    const juce::PluginDescription* findDescForFileOrID (const juce::String&) const;
+    std::unique_ptr<juce::PluginDescription> findMatchingPlugin() const;
+    std::unique_ptr<juce::PluginDescription> findDescForUID (int uid) const;
+    std::unique_ptr<juce::PluginDescription> findDescForFileOrID (const juce::String&) const;
 
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
 
@@ -171,18 +174,11 @@ private:
  */
 struct PluginWetDryAutomatableParam  : public AutomatableParameter
 {
-    PluginWetDryAutomatableParam (const juce::String& xmlTag, const juce::String& name, Plugin& owner)
-        : AutomatableParameter (xmlTag, name, owner, { 0.0f, 1.0f })
-    {
-    }
+    PluginWetDryAutomatableParam (const juce::String& xmlTag, const juce::String& name, Plugin&);
+    ~PluginWetDryAutomatableParam();
 
-    ~PluginWetDryAutomatableParam()
-    {
-        notifyListenersOfDeletion();
-    }
-
-    juce::String valueToString (float value) override     { return juce::Decibels::toString (juce::Decibels::gainToDecibels (value), 1); }
-    float stringToValue (const juce::String& s) override  { return dbStringToDb (s); }
+    juce::String valueToString (float value) override;
+    float stringToValue (const juce::String& s) override;
 
     PluginWetDryAutomatableParam() = delete;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginWetDryAutomatableParam)

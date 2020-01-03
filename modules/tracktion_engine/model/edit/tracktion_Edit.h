@@ -14,6 +14,20 @@ namespace tracktion_engine
 //==============================================================================
 /**
     The Tracktion Edit class!
+
+    An Edit is the containing class for an arrangement that can be played back.
+    It contains all the per-session objects such as tracks, tempo sequences,
+    pitches, input devices, Racks, master plugins etc. and any per-Edit management
+    objects such as UndoManager, PluginCache etc.
+
+    Most sub-objects suchs as Tracks, Clips etc. will all know which Edit they
+    belong to by having a reference to this Edit.
+
+    To create an Edit to you need construct one with an Edit::Options instance
+    supplying at least the Engine to use, the ValueTree state and a ProjectItemID
+    to uniquely identify this Edit.
+
+    @see EditFileOperations
 */
 class Edit  : public Selectable,
               private juce::Timer
@@ -41,7 +55,28 @@ public:
     };
 
     //==============================================================================
+    /** Determines how the Edit will be created */
+    struct Options
+    {
+        Engine& engine;                                                     /**< The Engine to use. */
+        juce::ValueTree editState;                                          /**< The Edit state. @see createEmptyEdit */
+        ProjectItemID editProjectItemID;                                    /**< The editProjectItemID, must be valid. */
+
+        EditRole role = forEditing;                                         /**< An optional role to open the Edit with. */
+        LoadContext* loadContext = nullptr;                                 /**< An optional context to be monitor for loading status. */
+        int numUndoLevelsToStore = Edit::getDefaultNumUndoLevels();         /**< The number of undo levels to use. */
+
+        std::function<juce::File()> editFileRetriever;                      /**< An optional editFileRetriever to use. */
+        std::function<juce::File (const juce::String&)> filePathResolver;   /**< An optional filePathResolver to use. */
+    };
+
+    /** Creates an Edit from a set of Options. */
+    Edit (Options);
+
+    /** Legacy Edit constructor, will be deprecated soon, use the other consturctor that takes an Options. */
     Edit (Engine&, juce::ValueTree, EditRole, LoadContext*, int numUndoLevelsToStore);
+
+    /** Destructor. */
     ~Edit();
 
     Engine& engine;
@@ -191,7 +226,6 @@ public:
     Track::Ptr insertNewTrack (TrackInsertPoint, const juce::Identifier& xmlType, SelectionManager* selectionMnagerToSelectWith);
     Track::Ptr insertTrack (TrackInsertPoint, juce::ValueTree, SelectionManager* selectionMnagerToSelectWith);
     Track::Ptr insertTrack (juce::ValueTree, juce::ValueTree parent, juce::ValueTree preceeding, SelectionManager* selectionMnagerToSelectWith);
-    juce::ReferenceCountedObjectPtr<AudioTrack> getOrInsertAudioTrackAt (int trackIndex);
 
     void moveTrack (Track::Ptr, TrackInsertPoint);
     void deleteTrack (Track*);
@@ -432,7 +466,7 @@ public:
     juce::CachedValue<AudioFadeCurve::Type> masterFadeInType, masterFadeOutType;
     juce::CachedValue<bool> midiTimecodeSourceDeviceEnabled, midiTimecodeIgnoringHours, videoMuted,
                             clickTrackEnabled, clickTrackEmphasiseBars, clickTrackRecordingOnly,
-                            recordingPunchInOut, playInStopEnabled;
+                            recordingPunchInOut, playInStopEnabled, processMutedTracks;
     juce::CachedValue<float> clickTrackGain;
     juce::CachedValue<ProjectItemID> videoSource;
 
@@ -498,6 +532,7 @@ private:
     bool isPreviewEdit = false;
     std::atomic<double> clickMark1Time { 0.0 }, clickMark2Time { 0.0 };
     std::atomic<bool> isFullyConstructed { false };
+    mutable std::unordered_set<EditItemID> usedIDs;
 
     const EditRole editRole;
 

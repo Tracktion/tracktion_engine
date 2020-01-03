@@ -48,8 +48,10 @@ public:
     };
 
     Chord (ChordType type = majorTriad);
+    Chord (juce::Array<int> steps, juce::String symbol); // creates a custom chord with steps
 
-    Chord (juce::Array<int> steps); // creates a custom chord with steps
+    juce::String toString();
+    static Chord fromString (const juce::String&);
 
     static juce::Array<ChordType> getAllChordType();
 
@@ -57,13 +59,15 @@ public:
     bool isValid() const        { return type != invalidChord; }
 
     juce::String getName() const;
+    juce::String getShortName() const;
     juce::String getSymbol() const;
     juce::Array<int> getSteps() const;
     juce::Array<int> getSteps (int inversion) const;
 
 private:
     ChordType type;
-    juce::Array<int> steps;
+    juce::Array<int> steps; // for custom chords
+    juce::String symbol;    // for custom chords
 };
 
 //==============================================================================
@@ -106,7 +110,7 @@ public:
     Scale (ScaleType type = major);
 
     ScaleType getType() const { return type; }
-    
+
     juce::String getName() const;
     juce::String getShortName() const;
 

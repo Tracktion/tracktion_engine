@@ -295,7 +295,7 @@ private:
 
 //==============================================================================
 static std::unique_ptr<AudioPluginInstance> createMelodynePlugin (const char* formatToTry,
-                                                                  const Array<PluginDescription*>& araDescs)
+                                                                  const Array<PluginDescription>& araDescs)
 {
     CRASH_TRACER
 
@@ -303,8 +303,8 @@ static std::unique_ptr<AudioPluginInstance> createMelodynePlugin (const char* fo
     auto& pfm = Engine::getInstance().getPluginManager().pluginFormatManager;
 
     for (auto pd : araDescs)
-        if (pd->pluginFormatName == formatToTry)
-            if (auto p = std::unique_ptr<AudioPluginInstance> (pfm.createPluginInstance (*pd, 44100.0, 512, error)))
+        if (pd.pluginFormatName == formatToTry)
+            if (auto p = std::unique_ptr<AudioPluginInstance> (pfm.createPluginInstance (pd, 44100.0, 512, error)))
                 return p;
 
     return {};

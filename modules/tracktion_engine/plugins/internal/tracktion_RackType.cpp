@@ -1217,9 +1217,7 @@ void RackType::createInstanceForSideChain (Track& at, const BigInteger& channelM
         rack->wetGain->setParameter (0.0f, dontSendNotification);
         rack->dryGain->setParameter (1.0f, dontSendNotification);
 
-        for (SelectionManager::Iterator sm; sm.next();)
-            if (sm->isSelected (rack))
-                sm->refreshDetailComponent();
+        SelectionManager::refreshAllPropertyPanelsShowing (*rack);
     }
     else
     {
@@ -2204,8 +2202,15 @@ void RackType::valueTreeChildRemoved (ValueTree&, juce::ValueTree& c, int)
 }
 
 void RackType::valueTreeChildOrderChanged (ValueTree&, int, int)   {}
-void RackType::valueTreeParentChanged (ValueTree&)                 { triggerUpdate(); }
 void RackType::valueTreeRedirected (ValueTree&)                    { triggerUpdate(); }
+
+void RackType::valueTreeParentChanged (ValueTree&)
+{
+    if (! state.getParent().isValid())
+        hideWindowForShutdown();
+
+    triggerUpdate();
+}
 
 void RackType::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& ident)
 {
@@ -2231,6 +2236,7 @@ void RackType::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i
 
 //==============================================================================
 RackType::WindowState::WindowState (RackType& r, juce::ValueTree windowStateTree)
-    : PluginWindowState (r.edit.engine), rack (r), state (std::move (windowStateTree))  {}
+    : PluginWindowState (r.edit), rack (r), state (std::move (windowStateTree))
+{}
 
 }

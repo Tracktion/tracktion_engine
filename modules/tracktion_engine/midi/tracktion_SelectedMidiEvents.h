@@ -64,19 +64,18 @@ public:
     juce::String getSelectableDescription() override;
     void selectionStatusChanged (bool isNowSelected) override;
 
-    juce::Array<MidiClip*> clips;
+    const juce::Array<MidiClip*>& getClips()                                            { return clips; }
+
+    void setClips (juce::Array<MidiClip*> clips);
 
 private:
+    juce::Array<MidiClip*> clips;
+
     juce::Array<MidiNote*> selectedNotes;
     juce::Array<MidiSysexEvent*> selectedSysexes;
     juce::Array<MidiControllerEvent*> selectedControllers;
 
-    MidiNote* lastNoteForNoteAutomation = nullptr;
-
     void sendSelectionChangedMessage (SelectionManager*);
-
-    void legatoNote (MidiNote*, juce::Array<MidiNote*>& notesToUse,
-                     double maxEndBeat, juce::UndoManager&);
 
     bool contains (const MidiNote&) const noexcept;
     bool contains (const MidiSysexEvent&) const noexcept;

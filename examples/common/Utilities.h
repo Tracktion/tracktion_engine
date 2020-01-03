@@ -71,11 +71,17 @@ namespace EngineHelpers
         for (int i = clips.size(); --i >= 0;)
             clips.getUnchecked (i)->removeFromParentTrack();
     }
+    
+    te::AudioTrack* getOrInsertAudioTrackAt (te::Edit& edit, int index)
+    {
+        edit.ensureNumberOfAudioTracks (index + 1);
+        return te::getAudioTracks (edit)[index];
+    }
 
     te::WaveAudioClip::Ptr loadAudioFileAsClip (te::Edit& edit, const File& file)
     {
         // Find the first track and delete all clips from it
-        if (auto track = edit.getOrInsertAudioTrackAt (0))
+        if (auto track = getOrInsertAudioTrackAt (edit, 0))
         {
             removeAllClips (*track);
 
@@ -112,8 +118,94 @@ namespace EngineHelpers
         else
             transport.play (false);
     }
+    
+    void toggleRecord (te::Edit& edit)
+    {
+        auto& transport = edit.getTransport();
+        
+        if (transport.isRecording())
+            transport.stop (true, false);
+        else
+            transport.record (false);
+    }
+    
+    void armTrack (te::AudioTrack& t, bool arm, int position = 0)
+    {
+        auto& edit = t.edit;
+        for (auto instance : edit.getAllInputDevices())
+            if (instance->getTargetTrack() == &t && instance->getTargetIndex() == position)
+                instance->setRecordingEnabled (arm);
+    }
+    
+    bool isTrackArmed (te::AudioTrack& t, int position = 0)
+    {
+        auto& edit = t.edit;
+        for (auto instance : edit.getAllInputDevices())
+            if (instance->getTargetTrack() == &t && instance->getTargetIndex() == position)
+                return instance->isRecordingEnabled();
+        
+        return false;
+    }
+    
+    bool isInputMonitoringEnabled (te::AudioTrack& t, int position = 0)
+    {
+        auto& edit = t.edit;
+        for (auto instance : edit.getAllInputDevices())
+            if (instance->getTargetTrack() == &t && instance->getTargetIndex() == position)
+                return instance->getInputDevice().isEndToEndEnabled();
+        
+        return false;
+    }
+    
+    void enableInputMonitoring (te::AudioTrack& t, bool im, int position = 0)
+    {
+        if (isInputMonitoringEnabled (t, position) != im)
+        {
+            auto& edit = t.edit;
+            for (auto instance : edit.getAllInputDevices())
+                if (instance->getTargetTrack() == &t && instance->getTargetIndex() == position)                    
+                    instance->getInputDevice().flipEndToEnd();
+        }
+    }
+    
+    bool trackHasInput (te::AudioTrack& t, int position = 0)
+    {
+        auto& edit = t.edit;
+        for (auto instance : edit.getAllInputDevices())
+            if (instance->getTargetTrack() == &t && instance->getTargetIndex() == position)
+                return true;
+        
+        return false;
+    }
+
+    inline std::unique_ptr<juce::KnownPluginList::PluginTree> createPluginTree (te::Engine& engine)
+    {
+        auto& list = engine.getPluginManager().knownPluginList;
+
+        if (auto tree = list.createTree (list.getTypes(), KnownPluginList::sortByManufacturer))
+            return tree;
+
+        return {};
+    }
+
 }
 
+//==============================================================================
+class FlaggedAsyncUpdater : public AsyncUpdater
+{
+public:
+    //==============================================================================
+    void markAndUpdate (bool& flag)     { flag = true; triggerAsyncUpdate(); }
+    
+    bool compareAndReset (bool& flag) noexcept
+    {
+        if (! flag)
+            return false;
+        
+        flag = false;
+        return true;
+    }
+};
 
 //==============================================================================
 struct Thumbnail    : public Component

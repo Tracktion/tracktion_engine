@@ -145,7 +145,7 @@ void WaveAudioClip::reassignReferencedItem (const ReferencedItem& item,
         auto take = getTakesTree().getChild (indexInList);
 
         if (take.isValid())
-            take.setProperty (IDs::source, newItemID, getUndoManager());
+            take.setProperty (IDs::source, newItemID.toString(), getUndoManager());
 
         if (indexInList == 0)
         {
@@ -168,7 +168,22 @@ void WaveAudioClip::addTake (ProjectItemID id)
     auto takesTree = state.getOrCreateChildWithName (IDs::TAKES, um);
 
     ValueTree take (IDs::TAKE);
-    take.setProperty (IDs::source, id, um);
+    take.setProperty (IDs::source, id.toString(), um);
+    takesTree.addChild (take, -1, um);
+}
+
+void WaveAudioClip::addTake (const juce::File& f)
+{
+    auto um = getUndoManager();
+    auto takesTree = state.getOrCreateChildWithName (IDs::TAKES, um);
+
+    ValueTree take (IDs::TAKE);
+
+    {
+        SourceFileReference sfr (edit, take, IDs::source);
+        sfr.setToDirectFileReference (f, true);
+    }
+
     takesTree.addChild (take, -1, um);
 }
 
@@ -475,7 +490,7 @@ Clip::Array WaveAudioClip::unpackTakes (bool toNewTracks)
                 targetTrack = t->edit.insertNewAudioTrack (TrackInsertPoint (t->getParentTrack(), t.get()), nullptr);
 
             if (targetTrack != nullptr)
-                newClips.add (targetTrack->insertWaveClip (getTakeDescriptions()[i], takes[i], getPosition(), false));
+                newClips.add (targetTrack->insertWaveClip (getTakeDescriptions()[i], takes[i], getPosition(), false).get());
 
             t = targetTrack;
         }

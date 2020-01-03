@@ -24,7 +24,7 @@ ClickNode::ClickNode (bool m, Edit& ed, double endTime)
     {
         auto barsBeats = pos.getBarsBeatsTime();
 
-        if (roundToInt (barsBeats.beats) == 0)
+        if (barsBeats.getWholeBeats() == 0)
             loudBeats.setBit (beatTimes.size());
 
         beatTimes.add (pos.getTime());
