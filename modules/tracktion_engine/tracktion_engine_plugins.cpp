@@ -42,6 +42,7 @@ using namespace juce;
 #include "plugins/internal/tracktion_TextPlugin.cpp"
 #include "plugins/internal/tracktion_VCA.cpp"
 #include "plugins/internal/tracktion_VolumeAndPan.cpp"
+#include "plugins/internal/tracktion_tests_InternalPlugins.cpp"
 
 #include "plugins/effects/tracktion_Chorus.cpp"
 #include "plugins/effects/tracktion_Compressor.cpp"

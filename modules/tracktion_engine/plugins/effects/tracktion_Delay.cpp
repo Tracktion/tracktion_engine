@@ -105,6 +105,65 @@ void DelayPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
     CachedValue<int>* cvsInt[]      = { &lengthMs, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
+
+    feedbackDb->setParameter (feedbackValue, sendNotification);
+    mixProportion->setParameter (mixValue, sendNotification);
 }
+
+#if TRACKTION_UNIT_TESTS
+
+//==============================================================================
+//==============================================================================
+class DelayPluginTests : public UnitTest
+{
+public:
+    DelayPluginTests() : UnitTest ("DelayPlugin", "Tracktion") {}
+
+    //==============================================================================
+    void runTest() override
+    {
+        runRestoreStateTests();
+    }
+
+private:
+    void runRestoreStateTests()
+    {
+        auto edit = Edit::createSingleTrackEdit (Engine::getInstance());
+
+        beginTest ("Delay plugin instantiation");
+        {
+            Plugin::Ptr pluginPtr = edit->getPluginCache().createNewPlugin (DelayPlugin::xmlTypeName, {});
+            auto delay = dynamic_cast<DelayPlugin*> (pluginPtr.get());
+            expect (delay != nullptr);
+        }
+
+        beginTest ("Restore feedback parameter from ValueTree");
+        {
+            Plugin::Ptr pluginPtr = edit->getPluginCache().createNewPlugin (DelayPlugin::xmlTypeName, {});
+            auto delay = dynamic_cast<DelayPlugin*> (pluginPtr.get());
+            expect (delay != nullptr);
+
+            float desiredValue = -30.0f;
+
+            ValueTree preset (IDs::PLUGIN);
+            preset.setProperty (IDs::type, delay->getPluginName(), nullptr);
+            preset.setProperty (IDs::feedback, desiredValue, nullptr);
+
+            pluginPtr->restorePluginStateFromValueTree (preset);
+            pluginPtr->flushPluginStateToValueTree();
+
+            auto feedbackParam = delay->feedbackDb;
+
+            expectWithinAbsoluteError (feedbackParam->getCurrentExplicitValue(), desiredValue, 0.001f);
+            expectWithinAbsoluteError (feedbackParam->getCurrentValue(), desiredValue, 0.001f);
+            expectWithinAbsoluteError (feedbackParam->getCurrentValue(), feedbackParam->getCurrentExplicitValue(), 0.001f);
+            expect (! pluginPtr->state.hasProperty (IDs::parameters), "State has erroneous parameters property");
+        }
+    }
+};
+
+static DelayPluginTests delayPluginTests;
+
+#endif // TRACKTION_UNIT_TESTS
 
 }
