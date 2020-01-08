@@ -1445,8 +1445,9 @@ void FourOscPlugin::applyToBuffer (const AudioRenderContext& fc)
         SCOPED_REALTIME_CHECK
 
         // find the tempo
-        double now = fc.playhead.streamTimeToSourceTime (fc.streamTime.getStart());
-        currentTempo = float (edit.tempoSequence.getTempoAt (now).getBpm());
+        double now = fc.getEditTime().editRange1.getStart();
+		currentPos.setTime (now);
+		currentTempo = float (currentPos.getCurrentTempo().bpm);
 
         // Handle all notes off first
         if (fc.bufferForMidiMessages != nullptr)

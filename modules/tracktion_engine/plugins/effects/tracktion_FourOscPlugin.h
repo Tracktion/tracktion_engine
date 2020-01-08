@@ -389,6 +389,7 @@ private:
     void applyEffects (juce::AudioSampleBuffer& buffer);
     float paramValue (AutomatableParameter::Ptr param);
 
+    TempoSequencePosition currentPos {edit.tempoSequence};
     juce::Reverb reverb;
     std::unique_ptr<FODelay> delay;
     std::unique_ptr<FOChorus> chorus;
