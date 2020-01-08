@@ -46,7 +46,7 @@ public:
         Assignment (const juce::ValueTree&, const EnvelopeFollowerModifier&);
 
         bool isForModifierSource (const ModifierSource&) const override;
-		EnvelopeFollowerModifier::Ptr getEnvelopeFollowerModifier() const;
+        EnvelopeFollowerModifier::Ptr getEnvelopeFollowerModifier() const;
 
         const EditItemID envelopeFollowerModifierID;
 

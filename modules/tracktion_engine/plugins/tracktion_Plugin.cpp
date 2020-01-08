@@ -553,10 +553,10 @@ void Plugin::setSidechainSourceByName (const String& name)
         }
     }
 
-	if (!found)
-	{
-		sidechainSourceID.resetToDefault();
-	}
+    if (!found)
+    {
+        sidechainSourceID.resetToDefault();
+    }
 }
 
 void Plugin::guessSidechainRouting()

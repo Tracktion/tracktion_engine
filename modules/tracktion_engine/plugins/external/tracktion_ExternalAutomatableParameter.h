@@ -136,11 +136,11 @@ public:
             return displayName;
 
         if (auto p = getParam())
-		{
+        {
             auto name = p->getName (1024);
-			if (name.isNotEmpty())
-				return name;
-		}
+            if (name.isNotEmpty())
+                return name;
+        }
 
         return TRANS("Unnamed") + " " + String (parameterIndex + 1);
     }

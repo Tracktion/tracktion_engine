@@ -1915,7 +1915,7 @@ AudioNode* AudioClipBase::createNode (EditTimeRange editTime, LiveClipLevel lcl,
 
     if (! usesTimestretchedProxy)
     {
-		nodeOffset = getPosition().getOffset();
+        nodeOffset = getPosition().getOffset();
         loopRange = getLoopRange();
         speed = getSpeedRatio();
     }

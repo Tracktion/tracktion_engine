@@ -274,10 +274,10 @@ int InterpolateLinearFloat::transposeMulti(SAMPLETYPE *dest, const SAMPLETYPE *s
         float temp, vol1, fract_float;
 
         vol1 = (float)(1.0 - fract);
-		fract_float = (float)fract;
+        fract_float = (float)fract;
         for (int c = 0; c < numChannels; c ++)
         {
-			temp = vol1 * src[c] + fract_float * src[c + numChannels];
+            temp = vol1 * src[c] + fract_float * src[c + numChannels];
             *dest = (SAMPLETYPE)temp;
             dest ++;
         }

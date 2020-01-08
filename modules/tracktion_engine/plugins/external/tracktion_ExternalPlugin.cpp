@@ -539,36 +539,36 @@ void ExternalPlugin::buildParameterList()
             {
                 auto nm = parameter->getName (1024);
 
-				bool emptyName = nm.isEmpty();
-				if (emptyName)
-					nm = "Unnamed";
+                bool emptyName = nm.isEmpty();
+                if (emptyName)
+                    nm = "Unnamed";
 
-				int count = 1;
+                int count = 1;
 
-				if (alreadyUsedParamNames.find (nm.toStdString()) != alreadyUsedParamNames.end())
-				{
-					count = alreadyUsedParamNames[nm.toStdString()] + 1;
-					alreadyUsedParamNames[nm.toStdString()] = count;
-					nm << " (" << count << ")";
-				}
-				else
-				{
-					alreadyUsedParamNames[nm.toStdString()] = count;
-				}
+                if (alreadyUsedParamNames.find (nm.toStdString()) != alreadyUsedParamNames.end())
+                {
+                    count = alreadyUsedParamNames[nm.toStdString()] + 1;
+                    alreadyUsedParamNames[nm.toStdString()] = count;
+                    nm << " (" << count << ")";
+                }
+                else
+                {
+                    alreadyUsedParamNames[nm.toStdString()] = count;
+                }
 
-				// Just use the index for the ID for now until this has been added to JUCE
-				auto parameterID = String (i);
+                // Just use the index for the ID for now until this has been added to JUCE
+                auto parameterID = String (i);
 
-				if (auto paramWithID = dynamic_cast<AudioProcessorParameterWithID*> (parameter))
-					parameterID = paramWithID->paramID;
+                if (auto paramWithID = dynamic_cast<AudioProcessorParameterWithID*> (parameter))
+                    parameterID = paramWithID->paramID;
 
-				auto p = new ExternalAutomatableParameter (parameterID, nm, *this, i, { 0.0f, 1.0f });
-				addAutomatableParameter (*p);
-				autoParamForParamNumbers.add (p);
-				p->valueChangedByPlugin();
+                auto p = new ExternalAutomatableParameter (parameterID, nm, *this, i, { 0.0f, 1.0f });
+                addAutomatableParameter (*p);
+                autoParamForParamNumbers.add (p);
+                p->valueChangedByPlugin();
 
-				if (count >= 2 && ! emptyName)
-					p->setDisplayName (nm);
+                if (count >= 2 && ! emptyName)
+                    p->setDisplayName (nm);
 
             }
             else

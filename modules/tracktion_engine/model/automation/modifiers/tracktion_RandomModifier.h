@@ -45,7 +45,7 @@ public:
         Assignment (const juce::ValueTree&, const RandomModifier&);
 
         bool isForModifierSource (const ModifierSource&) const override;
-		juce::ReferenceCountedObjectPtr<RandomModifier> getRandomModifier() const;
+        juce::ReferenceCountedObjectPtr<RandomModifier> getRandomModifier() const;
 
         const EditItemID randomModifierID;
 

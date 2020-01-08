@@ -48,7 +48,7 @@ public:
         Assignment (const juce::ValueTree&, const BreakpointOscillatorModifier&);
 
         bool isForModifierSource (const ModifierSource&) const override;
-		juce::ReferenceCountedObjectPtr<BreakpointOscillatorModifier> getModifier() const;
+        juce::ReferenceCountedObjectPtr<BreakpointOscillatorModifier> getModifier() const;
 
         const EditItemID breakpointOscillatorModifierID;
 

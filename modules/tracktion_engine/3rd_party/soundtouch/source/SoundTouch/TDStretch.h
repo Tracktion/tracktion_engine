@@ -241,11 +241,11 @@ public:
         return seekWindowLength - overlapLength;
     }
 
-	/// return approximate initial input-output latency
-	int getLatency() const
-	{
-		return sampleReq;
-	}
+    /// return approximate initial input-output latency
+    int getLatency() const
+    {
+        return sampleReq;
+    }
 };
 
 

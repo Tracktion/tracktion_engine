@@ -177,9 +177,9 @@ public:
     }
 
 private:
-	double sampleRate = 44100.0;
+    double sampleRate = 44100.0;
 
-	float envelopeVal = 0.0f;
+    float envelopeVal = 0.0f;
 
     float attackTime = 0.1f, decayTime = 0.1f, releaseTime = 0.1f;
     float sustainLevel = 0.0f;
@@ -193,39 +193,39 @@ private:
     enum class State { idle, attack, decay, sustain, release };
     State currentState = State::idle;
 
-	void calculateAttackTime();
-	void calculateDecayTime();
-	void calculateReleaseTime();
+    void calculateAttackTime();
+    void calculateDecayTime();
+    void calculateReleaseTime();
 
-	inline void setAttackTime (float d)
-	{
+    inline void setAttackTime (float d)
+    {
         if (! almostEqual (attackTime, d))
         {
             attackTime = d;
             calculateAttackTime();
         }
-	}
+    }
 
-	inline void setDecayTime (float d)
-	{
+    inline void setDecayTime (float d)
+    {
         if (! almostEqual (decayTime, d))
         {
             decayTime = d;
             calculateDecayTime();
         }
-	}
+    }
 
-	inline void setReleaseTime (float d)
-	{
+    inline void setReleaseTime (float d)
+    {
         if (! almostEqual (releaseTime, d))
         {
             releaseTime = d;
             calculateReleaseTime();
         }
-	}
+    }
 
-	inline void setSustainLevel (float d)
-	{
+    inline void setSustainLevel (float d)
+    {
         if (! almostEqual (sustainLevel, d))
         {
             sustainLevel = d;
@@ -233,7 +233,7 @@ private:
             if (currentState != State::release)
                 calculateReleaseTime();
         }
-	}
+    }
 };
 
 //==============================================================================
@@ -414,7 +414,7 @@ protected:
         releaseRate = (parameters.release > 0.0f ? static_cast<float> (1.0f / (parameters.release * sampleRate)) : 0.0f);
     }
 
-	State currentState = State::idle;
+    State currentState = State::idle;
     Parameters currentParameters;
     double sampleRate = 44100.0;
     float envelopeVal = 0.0f;

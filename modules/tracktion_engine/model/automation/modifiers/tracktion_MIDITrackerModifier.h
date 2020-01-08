@@ -46,7 +46,7 @@ public:
         Assignment (const juce::ValueTree&, const MIDITrackerModifier&);
 
         bool isForModifierSource (const ModifierSource&) const override;
-		juce::ReferenceCountedObjectPtr<MIDITrackerModifier> getMIDITrackerModifier() const;
+        juce::ReferenceCountedObjectPtr<MIDITrackerModifier> getMIDITrackerModifier() const;
 
         const EditItemID midiTrackerModifierID;
 

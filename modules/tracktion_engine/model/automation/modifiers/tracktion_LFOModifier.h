@@ -46,7 +46,7 @@ public:
         Assignment (const juce::ValueTree&, const LFOModifier&);
 
         bool isForModifierSource (const ModifierSource&) const override;
-		juce::ReferenceCountedObjectPtr<LFOModifier> getLFOModifier() const;
+        juce::ReferenceCountedObjectPtr<LFOModifier> getLFOModifier() const;
 
         const EditItemID lfoModifierID;
 

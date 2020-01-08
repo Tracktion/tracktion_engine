@@ -20,18 +20,18 @@ ExpEnvelope::ExpEnvelope()
 
 void ExpEnvelope::calculateAttackTime()
 {
-	float samples = float (sampleRate * attackTime);
+    float samples = float (sampleRate * attackTime);
 
     attackCoeff = std::exp (-std::log ((1.0f + attackTCO) / attackTCO) / float (samples));
-	attackOffset = (1.0f + attackTCO) * (1.0f - attackCoeff);
+    attackOffset = (1.0f + attackTCO) * (1.0f - attackCoeff);
 }
 
 void ExpEnvelope::calculateDecayTime()
 {
-	float samples = float (sampleRate * decayTime);
+    float samples = float (sampleRate * decayTime);
 
     decayCoeff = std::exp (-std::log ((1.0f + decayTCO) / decayTCO) / samples);
-	decayOffset = (sustainLevel - decayTCO) * (1.0f - decayCoeff);
+    decayOffset = (sustainLevel - decayTCO) * (1.0f - decayCoeff);
 }
 
 void ExpEnvelope::calculateReleaseTime()
@@ -39,7 +39,7 @@ void ExpEnvelope::calculateReleaseTime()
     float samples = float (sampleRate * releaseTime);
 
     releaseCoeff = std::exp (-std::log ((1.0f + releaseTCO) / releaseTCO) / samples);
-	releaseOffset = -releaseTCO * (1.0f - releaseCoeff);
+    releaseOffset = -releaseTCO * (1.0f - releaseCoeff);
 }
 
 }

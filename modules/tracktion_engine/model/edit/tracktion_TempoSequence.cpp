@@ -443,7 +443,7 @@ int TempoSequence::indexOfTimeSig (const TimeSigSetting* timeSigSetting) const
     return timeSigs->objects.indexOf (const_cast<TimeSigSetting*> (timeSigSetting));
 }
 
-//==============================================================================c
+//==============================================================================
 TempoSetting& TempoSequence::getTempoAt (double time) const
 {
     return *getTempo (indexOfTempoAt (time));

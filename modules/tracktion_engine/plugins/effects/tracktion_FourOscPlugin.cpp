@@ -1446,8 +1446,8 @@ void FourOscPlugin::applyToBuffer (const AudioRenderContext& fc)
 
         // find the tempo
         double now = fc.getEditTime().editRange1.getStart();
-		currentPos.setTime (now);
-		currentTempo = float (currentPos.getCurrentTempo().bpm);
+        currentPos.setTime (now);
+        currentTempo = float (currentPos.getCurrentTempo().bpm);
 
         // Handle all notes off first
         if (fc.bufferForMidiMessages != nullptr)

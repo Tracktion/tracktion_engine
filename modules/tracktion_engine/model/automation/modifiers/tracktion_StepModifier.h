@@ -45,7 +45,7 @@ public:
         Assignment (const juce::ValueTree&, const StepModifier&);
 
         bool isForModifierSource (const ModifierSource&) const override;
-		juce::ReferenceCountedObjectPtr<StepModifier> getStepModifier() const;
+        juce::ReferenceCountedObjectPtr<StepModifier> getStepModifier() const;
 
         const EditItemID stepModifierID;
 
