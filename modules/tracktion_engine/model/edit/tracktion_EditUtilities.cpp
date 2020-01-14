@@ -335,6 +335,16 @@ void deleteRegionOfTracks (Edit& edit, EditTimeRange rangeToDelete, bool onlySel
         {
             t->deleteRegion (rangeToDelete, selectionManager);
 
+            // Remove any tiny clips that might be left over
+            Array<Clip*> clipsToRemove;
+
+            for (auto& c : t->getClips())
+                if (c->getPosition().getLength() < 0.0001)
+                    clipsToRemove.add (c);
+
+            for (auto c : clipsToRemove)
+                c->removeFromParentTrack();
+
             if (closeGap)
             {
                 for (auto& c : t->getClips())
