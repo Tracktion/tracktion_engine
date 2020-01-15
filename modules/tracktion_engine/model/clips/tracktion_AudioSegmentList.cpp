@@ -742,14 +742,19 @@ float AudioSegmentList::getPitchAt (double t)
 
                 if (p->chordName.get().isNotEmpty())
                 {
-                    int rootNote = p->getRootNote (key, scale);
+                    int scaleNote = key;
+                    int chordNote = p->getRootNote (key, scale);
 
-                    int transposeBase = rootNote - (clip.getLoopInfo().getRootNote() % 12);
+                    int delta = chordNote - scaleNote;
 
-                    if (key > 6)
-                        transposeBase -= 12;
+                    int transposeBase = scaleNote - (clip.getLoopInfo().getRootNote() % 12);
 
-                    return (float) (transposeBase + clip.getTransposeSemiTones (false));
+                    while (transposeBase > 6)  transposeBase -= 12;
+                    while (transposeBase < -6) transposeBase += 12;
+
+                    transposeBase += p->octave * 12;
+
+                    return (float) (transposeBase + delta + clip.getTransposeSemiTones (false));
                 }
             }
 
