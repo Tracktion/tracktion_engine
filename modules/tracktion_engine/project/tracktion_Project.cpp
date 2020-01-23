@@ -366,7 +366,7 @@ void Project::createNewProjectId()
 
 void Project::redirectIDsFromProject (int oldProjId, int newProjId)
 {
-    for (int k = 0; k < getNumMediaItems(); ++k)
+    for (int k = 0; k < getNumProjectItems(); ++k)
     {
         if (auto mo = getProjectItemAt (k))
         {
@@ -409,7 +409,7 @@ void Project::changed()
     Selectable::changed();
 }
 
-int Project::getNumMediaItems()
+int Project::getNumProjectItems()
 {
     return objects.size();
 }
@@ -646,7 +646,7 @@ ProjectItem::Ptr Project::createNewEdit()
 {
     int maxSuffix = 0;
 
-    for (int i = 0; i < getNumMediaItems(); ++i)
+    for (int i = 0; i < getNumProjectItems(); ++i)
     {
         if (auto p = getProjectItemAt (i))
         {
@@ -739,7 +739,7 @@ void Project::mergeOtherProjectIntoThis (const File& f)
     {
         if (p->isValid())
         {
-            for (int i = 0; i < p->getNumMediaItems(); ++i)
+            for (int i = 0; i < p->getNumProjectItems(); ++i)
             {
                 if (auto src = p->getProjectItemAt (i))
                 {
@@ -766,7 +766,7 @@ Array<ProjectItemID> Project::findOrphanItems()
 
     auto unreffed = getAllProjectItemIDs();
 
-    for (int j = 0; j < getNumMediaItems(); ++j)
+    for (int j = 0; j < getNumProjectItems(); ++j)
     {
         if (unreffed.isEmpty())
             break;

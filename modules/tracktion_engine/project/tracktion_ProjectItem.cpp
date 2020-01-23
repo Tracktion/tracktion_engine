@@ -810,7 +810,7 @@ ProjectItem::Ptr ProjectItem::createCopy()
         {
             bool alreadyThere = false;
 
-            for (int i = pp->getNumMediaItems(); --i >= 0;)
+            for (int i = pp->getNumProjectItems(); --i >= 0;)
             {
                 if (pp->getProjectItemAt (i)->getName().equalsIgnoreCase (newName))
                 {

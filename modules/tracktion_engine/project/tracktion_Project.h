@@ -65,7 +65,7 @@ public:
     juce::Array<ProjectItemID> findOrphanItems();
 
     //==============================================================================
-    int getNumMediaItems();
+    int getNumProjectItems();
     ProjectItemID getProjectItemID (int index);
     juce::Array<ProjectItemID> getAllProjectItemIDs() const;
     juce::Array<int> getAllItemIDs() const;
