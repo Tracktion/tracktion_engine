@@ -101,7 +101,7 @@ void CombiningAudioNode::addInput (EditTimeRange time, AudioNode* inputNode)
 
     auto tan = inputs.insert (i, new TimedAudioNode (time, inputNode));
 
-    jassert (time.end < Edit::maximumLength);
+    jassert (time.end <= Edit::maximumLength);
 
     // add the node to any groups it's near to.
     auto start = jmax (0, timeToGroupIndex (time.start - (secondsPerGroup / 2 + 2)));
