@@ -409,7 +409,8 @@ AutomatableParameter* Track::chooseDefaultAutomationCurve() const
 
 void Track::hideAutomatableParametersForSource (EditItemID pluginOrParameterID)
 {
-    if (currentAutoParamPlugin == pluginOrParameterID)
+    if (currentAutoParamPlugin == pluginOrParameterID
+        || currentAutoParamID == pluginOrParameterID.toString())
     {
         if (isAutomationTrack())
             edit.deleteTrack (this);

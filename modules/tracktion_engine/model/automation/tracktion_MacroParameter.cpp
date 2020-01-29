@@ -187,6 +187,14 @@ void MacroParameterList::removeMacroParameter (MacroParameter& mp)
     jassert (list != nullptr);
     auto* um = &edit.getUndoManager();
 
+    // Remove any tracks which might be showing automation for this param
+    {
+        auto paramID = EditItemID::fromVar (mp.paramID);
+
+        for (auto t : getAllTracks (edit))
+            t->hideAutomatableParametersForSource (paramID);
+    }
+
     // Remove the child from the parent
     if (mp.state.getParent() == state)
         state.removeChild (mp.state, um);
