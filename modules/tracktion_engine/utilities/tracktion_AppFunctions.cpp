@@ -394,7 +394,7 @@ namespace AppFunctions
     void stopRecordingAndDiscard()
     {
         if (auto transport = getActiveTransport())
-            transport->stop (true, true);
+            transport->stop (true, false);
     }
 
     void stopRecordingAndRestart()
