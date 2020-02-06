@@ -33,9 +33,6 @@ public:
 
     using Ptr = juce::ReferenceCountedObjectPtr<TempoSetting>;
 
-    /** Sets the selection status of this setting. */
-    void selectionStatusChanged (bool isNowSelected) override;
-
     /** Returns the Edit this setting belongs to. */
     Edit& getEdit() const;
 
