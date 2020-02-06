@@ -119,7 +119,8 @@ public:
                                           result.add (srcNode);
                               });
 
-        jassert (result.size() == 1);
+        // This may be empty if the source track has been pruned due to no content
+        jassert (result.isEmpty() || result.size() == 1);
         send = result.size() == 1 ? result.getFirst() : nullptr;
     }
 

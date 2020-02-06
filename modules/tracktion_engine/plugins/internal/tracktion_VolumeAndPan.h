@@ -69,7 +69,7 @@ public:
     AutomatableParameter::Ptr volParam, panParam;
 
 private:
-    float lastGainL = 0.0f, lastGainR = 0.0f, lastVolumeBeforeMute = 0.0f;
+    float lastGainL = 0.0f, lastGainR = 0.0f, lastGainS = 0.0f, lastVolumeBeforeMute = 0.0f;
 
     juce::ReferenceCountedObjectPtr<AudioTrack> vcaTrack;
 
