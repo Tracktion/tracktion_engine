@@ -800,8 +800,8 @@ ProjectItem::Ptr ProjectItem::createCopy()
                 newName = newName.dropLastCharacters (1);
         }
 
-        if (! newName.startsWithIgnoreCase (TRANS("Copy of ")))
-            newName = TRANS("Copy of ") + newName;
+        if (! newName.endsWithIgnoreCase (TRANS("Copy")))
+            newName = newName + " - " + TRANS("Copy");
 
         auto nameStem = newName;
         int index = 2;
