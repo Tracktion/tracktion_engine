@@ -669,7 +669,7 @@ bool Renderer::RenderTask::renderMidi (Renderer::Parameters& r)
             localPlayhead
         };
 
-        node->prepareAudioNodeToPlay (info);
+        callBlocking ([this, &info] { node->prepareAudioNodeToPlay (info); });
     }
 
     localPlayhead.stop();
@@ -690,7 +690,7 @@ bool Renderer::RenderTask::renderMidi (Renderer::Parameters& r)
 
             if (shouldExit())
             {
-                node->releaseAudioNodeResources();
+                callBlocking ([this] { node->releaseAudioNodeResources(); });
                 return false;
             }
 
@@ -723,7 +723,7 @@ bool Renderer::RenderTask::renderMidi (Renderer::Parameters& r)
         }
     }
 
-    node->releaseAudioNodeResources();
+    callBlocking ([this] { node->releaseAudioNodeResources(); });
     localPlayhead.stop();
 
     outputSequence.updateMatchedPairs();
