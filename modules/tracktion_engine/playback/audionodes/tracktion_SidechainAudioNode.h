@@ -46,22 +46,29 @@ public:
     void renderOver (const AudioRenderContext& rc) override
     {
         input->renderOver (rc);
-        currentMidiMessages.swapWith (*rc.bufferForMidiMessages);
-        jassert (currentBlock.getNumChannels() == lastBlock.getNumChannels());
-        const int numChans = juce::jmin (rc.destBuffer->getNumChannels(), currentBlock.getNumChannels());
 
-        // Copy as many channels as we have
-        for (int i = numChans; --i >= 0;)
+        if (rc.bufferForMidiMessages != nullptr)
+            currentMidiMessages.swapWith (*rc.bufferForMidiMessages);
+
+        if (rc.destBuffer != nullptr)
         {
-            currentBlock.copyFrom (i, 0, *rc.destBuffer, i, rc.bufferStartSample, rc.bufferNumSamples);
-            rc.destBuffer->copyFrom (i, rc.bufferStartSample, lastBlock, i, 0, rc.bufferNumSamples);
+            jassert (currentBlock.getNumChannels() == lastBlock.getNumChannels());
+            const int numChans = juce::jmin (rc.destBuffer->getNumChannels(), currentBlock.getNumChannels());
+
+            // Copy as many channels as we have
+            for (int i = numChans; --i >= 0;)
+            {
+                currentBlock.copyFrom (i, 0, *rc.destBuffer, i, rc.bufferStartSample, rc.bufferNumSamples);
+                rc.destBuffer->copyFrom (i, rc.bufferStartSample, lastBlock, i, 0, rc.bufferNumSamples);
+            }
+
+            // Silence any left over
+            for (int i = rc.destBuffer->getNumChannels(); --i >= numChans;)
+                rc.destBuffer->clear (i, rc.bufferStartSample, rc.bufferNumSamples);
         }
 
-        // Silence any left over
-        for (int i = rc.destBuffer->getNumChannels(); --i >= numChans;)
-            rc.destBuffer->clear (i, rc.bufferStartSample, rc.bufferNumSamples);
-
-        rc.bufferForMidiMessages->swapWith (lastMidiMessages);
+        if (rc.bufferForMidiMessages != nullptr)
+            rc.bufferForMidiMessages->swapWith (lastMidiMessages);
     }
 
     void renderAdding (const AudioRenderContext& rc) override
