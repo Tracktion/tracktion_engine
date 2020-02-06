@@ -133,26 +133,29 @@ public:
     {
         input->renderOver (rc);
 
-        AudioScratchBuffer inputBufferCopy (*rc.destBuffer);
-
-        jassert (rc.destBuffer->getNumChannels() == pluginInputs);
-        rc.destBuffer->setSize (pluginInputs, rc.destBuffer->getNumSamples());
-        rc.destBuffer->clear();
-
-        auto getSrcBuffer = [this, &inputBufferCopy] (int idx) -> const float*
+        if (rc.destBuffer != nullptr)
         {
-            if (idx < 2)
-                return inputBufferCopy.buffer.getReadPointer (idx);
+            AudioScratchBuffer inputBufferCopy (*rc.destBuffer);
 
-            if (send != nullptr)
-                return send->lastBlock.getReadPointer (idx - 2);
+            jassert (rc.destBuffer->getNumChannels() == pluginInputs);
+            rc.destBuffer->setSize (pluginInputs, rc.destBuffer->getNumSamples());
+            rc.destBuffer->clear();
 
-            return {};
-        };
+            auto getSrcBuffer = [this, &inputBufferCopy] (int idx) -> const float*
+            {
+                if (idx < 2)
+                    return inputBufferCopy.buffer.getReadPointer (idx);
 
-        for (auto r : routes)
-            if (const float* srcData = getSrcBuffer (r.src))
-                rc.destBuffer->addFrom (r.dst, rc.bufferStartSample, srcData, rc.destBuffer->getNumSamples());
+                if (send != nullptr)
+                    return send->lastBlock.getReadPointer (idx - 2);
+
+                return {};
+            };
+
+            for (auto r : routes)
+                if (const float* srcData = getSrcBuffer (r.src))
+                    rc.destBuffer->addFrom (r.dst, rc.bufferStartSample, srcData, rc.destBuffer->getNumSamples());
+        }
     }
 
 private:
@@ -202,7 +205,8 @@ public:
 
     void renderOver (const AudioRenderContext& rc) override
     {
-        if (workBuffer.getNumChannels() == rc.destBuffer->getNumChannels())
+        if (rc.destBuffer == nullptr
+            || workBuffer.getNumChannels() == rc.destBuffer->getNumChannels())
         {
             input->renderOver (rc);
             return;
