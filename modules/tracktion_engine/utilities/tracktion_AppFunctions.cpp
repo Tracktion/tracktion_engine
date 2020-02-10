@@ -443,7 +443,7 @@ namespace AppFunctions
 
     void insertTimeSigChange()
     {
-        if (auto sm = getCurrentUIBehaviour().getCurrentlyFocusedSelectionManager())
+        if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
         {
             auto& edit = *sm->edit;
             auto& tempoSequence = edit.tempoSequence;
