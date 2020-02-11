@@ -46,22 +46,29 @@ public:
     void renderOver (const AudioRenderContext& rc) override
     {
         input->renderOver (rc);
-        currentMidiMessages.swapWith (*rc.bufferForMidiMessages);
-        jassert (currentBlock.getNumChannels() == lastBlock.getNumChannels());
-        const int numChans = juce::jmin (rc.destBuffer->getNumChannels(), currentBlock.getNumChannels());
 
-        // Copy as many channels as we have
-        for (int i = numChans; --i >= 0;)
+        if (rc.bufferForMidiMessages != nullptr)
+            currentMidiMessages.swapWith (*rc.bufferForMidiMessages);
+
+        if (rc.destBuffer != nullptr)
         {
-            currentBlock.copyFrom (i, 0, *rc.destBuffer, i, rc.bufferStartSample, rc.bufferNumSamples);
-            rc.destBuffer->copyFrom (i, rc.bufferStartSample, lastBlock, i, 0, rc.bufferNumSamples);
+            jassert (currentBlock.getNumChannels() == lastBlock.getNumChannels());
+            const int numChans = juce::jmin (rc.destBuffer->getNumChannels(), currentBlock.getNumChannels());
+
+            // Copy as many channels as we have
+            for (int i = numChans; --i >= 0;)
+            {
+                currentBlock.copyFrom (i, 0, *rc.destBuffer, i, rc.bufferStartSample, rc.bufferNumSamples);
+                rc.destBuffer->copyFrom (i, rc.bufferStartSample, lastBlock, i, 0, rc.bufferNumSamples);
+            }
+
+            // Silence any left over
+            for (int i = rc.destBuffer->getNumChannels(); --i >= numChans;)
+                rc.destBuffer->clear (i, rc.bufferStartSample, rc.bufferNumSamples);
         }
 
-        // Silence any left over
-        for (int i = rc.destBuffer->getNumChannels(); --i >= numChans;)
-            rc.destBuffer->clear (i, rc.bufferStartSample, rc.bufferNumSamples);
-
-        rc.bufferForMidiMessages->swapWith (lastMidiMessages);
+        if (rc.bufferForMidiMessages != nullptr)
+            rc.bufferForMidiMessages->swapWith (lastMidiMessages);
     }
 
     void renderAdding (const AudioRenderContext& rc) override
@@ -119,7 +126,8 @@ public:
                                           result.add (srcNode);
                               });
 
-        jassert (result.size() == 1);
+        // This may be empty if the source track has been pruned due to no content
+        jassert (result.isEmpty() || result.size() == 1);
         send = result.size() == 1 ? result.getFirst() : nullptr;
     }
 
@@ -132,26 +140,29 @@ public:
     {
         input->renderOver (rc);
 
-        AudioScratchBuffer inputBufferCopy (*rc.destBuffer);
-
-        jassert (rc.destBuffer->getNumChannels() == pluginInputs);
-        rc.destBuffer->setSize (pluginInputs, rc.destBuffer->getNumSamples());
-        rc.destBuffer->clear();
-
-        auto getSrcBuffer = [this, &inputBufferCopy] (int idx) -> const float*
+        if (rc.destBuffer != nullptr)
         {
-            if (idx < 2)
-                return inputBufferCopy.buffer.getReadPointer (idx);
+            AudioScratchBuffer inputBufferCopy (*rc.destBuffer);
 
-            if (send != nullptr)
-                return send->lastBlock.getReadPointer (idx - 2);
+            jassert (rc.destBuffer->getNumChannels() == pluginInputs);
+            rc.destBuffer->setSize (pluginInputs, rc.destBuffer->getNumSamples());
+            rc.destBuffer->clear();
 
-            return {};
-        };
+            auto getSrcBuffer = [this, &inputBufferCopy] (int idx) -> const float*
+            {
+                if (idx < 2)
+                    return inputBufferCopy.buffer.getReadPointer (idx);
 
-        for (auto r : routes)
-            if (const float* srcData = getSrcBuffer (r.src))
-                rc.destBuffer->addFrom (r.dst, rc.bufferStartSample, srcData, rc.destBuffer->getNumSamples());
+                if (send != nullptr)
+                    return send->lastBlock.getReadPointer (idx - 2);
+
+                return {};
+            };
+
+            for (auto r : routes)
+                if (const float* srcData = getSrcBuffer (r.src))
+                    rc.destBuffer->addFrom (r.dst, rc.bufferStartSample, srcData, rc.destBuffer->getNumSamples());
+        }
     }
 
 private:
@@ -201,7 +212,8 @@ public:
 
     void renderOver (const AudioRenderContext& rc) override
     {
-        if (workBuffer.getNumChannels() == rc.destBuffer->getNumChannels())
+        if (rc.destBuffer == nullptr
+            || workBuffer.getNumChannels() == rc.destBuffer->getNumChannels())
         {
             input->renderOver (rc);
             return;

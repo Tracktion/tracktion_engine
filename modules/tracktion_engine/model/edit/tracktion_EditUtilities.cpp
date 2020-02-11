@@ -581,11 +581,11 @@ MidiNote* findNoteForState (const Edit& edit, const juce::ValueTree& v)
     return result;
 }
 
-void mergeMidiClips (juce::Array<MidiClip*> clips)
+juce::Result mergeMidiClips (juce::Array<MidiClip*> clips)
 {
     for (auto c : clips)
         if (c->getClipTrack() == nullptr || c->getClipTrack()->isFrozen (Track::anyFreeze))
-            return;
+            return juce::Result::fail (TRANS("Unable to merge clips on frozen tracks"));
 
     TrackItem::sortByTime (clips);
 
@@ -628,10 +628,14 @@ void mergeMidiClips (juce::Array<MidiClip*> clips)
                 newClip->getSequence().addFrom (destinationList, &track->edit.getUndoManager());
 
                 for (int i = clips.size(); --i >= 0;)
-                    clips.getUnchecked(i)->removeFromParentTrack();
+                    clips.getUnchecked (i)->removeFromParentTrack();
             }
+
+            return juce::Result::ok();
         }
     }
+
+    return juce::Result::fail (TRANS("No clips to merge"));
 }
 
 //==============================================================================

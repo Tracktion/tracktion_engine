@@ -439,7 +439,7 @@ Project::Ptr ProjectManager::createNewProject (const File& projectFile, ValueTre
 
         if (newProj != nullptr)
         {
-            if (newProj->getNumMediaItems() == 0)
+            if (newProj->getNumProjectItems() == 0)
             {
                 if (auto newEditProjectItem = newProj->createNewEdit())
                 {
@@ -506,7 +506,7 @@ Project::Ptr ProjectManager::createNewProjectFromTemplate (const String& name, c
                     engine.getUIBehaviour().selectProjectInFocusedWindow (proj);
                     int editNum = 1;
 
-                    for (int i = 0; i < proj->getNumMediaItems(); ++i)
+                    for (int i = 0; i < proj->getNumProjectItems(); ++i)
                     {
                         auto mo = proj->getProjectItemAt (i);
 
@@ -520,7 +520,7 @@ Project::Ptr ProjectManager::createNewProjectFromTemplate (const String& name, c
                     saveList();
 
                    #if JUCE_DEBUG
-                    for (int i = 0; i < proj->getNumMediaItems(); ++i)
+                    for (int i = 0; i < proj->getNumProjectItems(); ++i)
                         jassert (proj->getProjectItemAt (i));
                    #endif
                 }

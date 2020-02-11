@@ -800,8 +800,8 @@ ProjectItem::Ptr ProjectItem::createCopy()
                 newName = newName.dropLastCharacters (1);
         }
 
-        if (! newName.startsWithIgnoreCase (TRANS("Copy of ")))
-            newName = TRANS("Copy of ") + newName;
+        if (! newName.endsWithIgnoreCase (TRANS("Copy")))
+            newName = newName + " - " + TRANS("Copy");
 
         auto nameStem = newName;
         int index = 2;
@@ -810,7 +810,7 @@ ProjectItem::Ptr ProjectItem::createCopy()
         {
             bool alreadyThere = false;
 
-            for (int i = pp->getNumMediaItems(); --i >= 0;)
+            for (int i = pp->getNumProjectItems(); --i >= 0;)
             {
                 if (pp->getProjectItemAt (i)->getName().equalsIgnoreCase (newName))
                 {

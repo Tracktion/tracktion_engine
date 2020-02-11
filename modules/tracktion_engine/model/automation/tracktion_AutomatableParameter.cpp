@@ -881,10 +881,7 @@ AutomationCurve& AutomatableParameter::getCurve() const noexcept
 Selectable* AutomatableParameter::getOwnerSelectable() const
 {
     if (macroOwner != nullptr)
-    {
-        jassertfalse;
         return {};
-    }
 
     if (plugin != nullptr)
         return plugin;

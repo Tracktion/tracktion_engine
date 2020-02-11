@@ -35,12 +35,6 @@ ValueTree TempoSetting::create (double beat, double newBPM, float curveVal)
     return v;
 }
 
-void TempoSetting::selectionStatusChanged (bool)
-{
-    if (editor != nullptr)
-        editor->repaint();
-}
-
 Edit& TempoSetting::getEdit() const
 {
     return ownerSequence.edit;

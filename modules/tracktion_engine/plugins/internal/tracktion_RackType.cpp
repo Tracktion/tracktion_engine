@@ -1411,12 +1411,10 @@ void RackType::initialisePluginsIfNeeded (const PlaybackInitialisationInfo& info
     latencyCalculation.reset();
 
     for (auto f : getPlugins())
-        if (f->baseClassNeedsInitialising())
-            f->baseClassInitialise (info);
+        f->baseClassInitialise (info);
 
     for (auto& m : getModifierList().getModifiers())
-        if (m->baseClassNeedsInitialising())
-            m->baseClassInitialise (info);
+        m->baseClassInitialise (info);
 }
 
 void RackType::deregisterInstance (RackInstance* instance)
@@ -1440,12 +1438,10 @@ void RackType::deregisterInstance (RackInstance* instance)
     if (activeRackInstances.isEmpty())
     {
         for (auto f : getPlugins())
-            if (! f->baseClassNeedsInitialising())
-                f->baseClassDeinitialise();
+            f->baseClassDeinitialise();
 
         for (auto m : getModifierList().getModifiers())
-            if (! m->baseClassNeedsInitialising())
-                m->baseClassDeinitialise();
+            m->baseClassDeinitialise();
     }
 
     countInstancesInEdit();

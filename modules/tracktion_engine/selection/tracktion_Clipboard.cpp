@@ -671,6 +671,14 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
                     itemsAdded.add (newClip);
             }
         }
+        else if (newClipState.hasType (IDs::ARRANGERCLIP))
+        {
+            if (auto arrangerTrack = options.edit.getArrangerTrack())
+            {
+                if (auto newClip = arrangerTrack->insertClipWithState (newClipState))
+                    itemsAdded.add (newClip);
+            }
+        }
         else
         {
             if (auto clipTrack = dynamic_cast<ClipTrack*> (targetTrack->getSiblingTrack (clip.trackOffset, false)))

@@ -94,10 +94,10 @@ void ExportJob::copyProjectFilesToTempDir()
         auto destProject = srcProject->projectManager.createNewProject (newProjectFile);
         destProject->createNewProjectId();
 
-        for (int i = 0; i < destProject->getNumMediaItems(); ++i)
+        for (int i = 0; i < destProject->getNumProjectItems(); ++i)
         {
             progress = ((archive != nullptr) ? 0.5f : 1.0f) * i
-                          / (float) destProject->getNumMediaItems();
+                          / (float) destProject->getNumProjectItems();
 
             if (shouldExit())
                 break;

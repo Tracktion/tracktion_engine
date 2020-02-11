@@ -125,7 +125,7 @@ SelectableList getClipSelectionWithCollectionClipContents (const SelectableList&
 MidiNote* findNoteForState (const Edit&, const juce::ValueTree&);
 
 /** */
-void mergeMidiClips (juce::Array<MidiClip*> clips);
+juce::Result mergeMidiClips (juce::Array<MidiClip*>);
 
 
 //==============================================================================

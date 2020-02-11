@@ -162,7 +162,7 @@ public:
         defaultNoteValue    = 96,
 
         minNumNotes         = 2,
-        maxNumNotes         = 128,
+        maxNumNotes         = 512,
 
         minNumChannels      = 2,
         maxNumChannels      = 60

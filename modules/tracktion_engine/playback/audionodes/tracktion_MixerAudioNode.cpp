@@ -398,7 +398,7 @@ void MixerAudioNode::renderAdding (const AudioRenderContext& rc)
 
         if (use64bitMixing && rc.destBuffer != nullptr)
         {
-            set64bitBufferSize (rc.bufferNumSamples, 2);
+            set64bitBufferSize (rc.bufferNumSamples, jmax (2, rc.destBuffer->getNumChannels()));
 
             for (int i = rc.destBuffer->getNumChannels(); --i >= 0;)
                 temp64bitBuffer.clear (i, 0, rc.bufferNumSamples);
@@ -406,8 +406,6 @@ void MixerAudioNode::renderAdding (const AudioRenderContext& rc)
             for (auto input : inputs)
             {
                 input->renderOver (localContext);
-
-                jassert (rc.destBuffer->getNumChannels() <= 2);
 
                 if (! rc.destBuffer->hasBeenCleared())
                 {
@@ -433,7 +431,7 @@ void MixerAudioNode::renderAdding (const AudioRenderContext& rc)
     }
     else if (inputs.size() == 1)
     {
-        inputs.getUnchecked(0)->renderAdding (rc);
+        inputs.getUnchecked (0)->renderAdding (rc);
     }
 }
 

@@ -146,7 +146,9 @@ const char* VolumeAndPanPlugin::xmlTypeName = "volume";
 void VolumeAndPanPlugin::initialise (const PlaybackInitialisationInfo&)
 {
     refreshVCATrack();
-    getGainsFromVolumeFaderPositionAndPan (getSliderPos(), getPan(), getPanLaw(), lastGainL, lastGainR);
+    auto sliderPos = getSliderPos();
+    getGainsFromVolumeFaderPositionAndPan (sliderPos, getPan(), getPanLaw(), lastGainL, lastGainR);
+    lastGainS = volumeFaderPositionToGain (sliderPos);
 }
 
 void VolumeAndPanPlugin::initialiseWithoutStopping (const PlaybackInitialisationInfo&)
@@ -187,41 +189,33 @@ void VolumeAndPanPlugin::applyToBuffer (const AudioRenderContext& fc)
         if (fc.destBuffer != nullptr)
         {
             const int numChansIn = fc.destBuffer->getNumChannels();
+            const float vcaPosDelta = vcaTrack != nullptr
+                                    ? decibelsToVolumeFaderPosition (getParentVcaDb (*vcaTrack, fc.getEditTime().editRange1.getStart()))
+                                        - decibelsToVolumeFaderPosition (0.0f)
+                                    : 0.0f;
 
-            // If we have more than a stereo set of channel, ignore the pan
+            float lgain, rgain;
+            getGainsFromVolumeFaderPositionAndPan (getSliderPos() + vcaPosDelta, getPan(), getPanLaw(), lgain, rgain);
+            lgain *= (polarity ? -1 : 1);
+            rgain *= (polarity ? -1 : 1);
+
+            fc.destBuffer->applyGainRamp (0, fc.bufferStartSample, fc.bufferNumSamples, lastGainL, lgain);
+
+            if (numChansIn > 1)
+                fc.destBuffer->applyGainRamp (1, fc.bufferStartSample, fc.bufferNumSamples, lastGainR, rgain);
+
+            lastGainL = lgain;
+            lastGainR = rgain;
+
+            // If the number of channels is greater than two, just apply volume
             if (numChansIn > 2)
             {
-                // If the number of channels is greater than two, just apply volume
-                const float vcaPosDelta = vcaTrack != nullptr
-                                            ? decibelsToVolumeFaderPosition (getParentVcaDb (*vcaTrack, fc.getEditTime().editRange1.getStart()))
-                                            - decibelsToVolumeFaderPosition (0.0f)
-                                            : 0.0f;
                 const float gain = volumeFaderPositionToGain (getSliderPos() + vcaPosDelta) * (polarity ? -1 : 1);
 
-                for (int i = 0; i < numChansIn; ++i)
-                    fc.destBuffer->applyGainRamp (i, fc.bufferStartSample, fc.bufferNumSamples, lastGainL, gain);
+                for (int i = 2; i < numChansIn; ++i)
+                    fc.destBuffer->applyGainRamp (i, fc.bufferStartSample, fc.bufferNumSamples, lastGainS, gain);
 
-                lastGainL = gain;
-            }
-            else
-            {
-                const float vcaPosDelta = vcaTrack != nullptr
-                                        ? decibelsToVolumeFaderPosition (getParentVcaDb (*vcaTrack, fc.getEditTime().editRange1.getStart()))
-                                            - decibelsToVolumeFaderPosition (0.0f)
-                                        : 0.0f;
-
-                float lgain, rgain;
-                getGainsFromVolumeFaderPositionAndPan (getSliderPos() + vcaPosDelta, getPan(), getPanLaw(), lgain, rgain);
-                lgain *= (polarity ? -1 : 1);
-                rgain *= (polarity ? -1 : 1);
-
-                fc.destBuffer->applyGainRamp (0, fc.bufferStartSample, fc.bufferNumSamples, lastGainL, lgain);
-
-                if (numChansIn > 1)
-                    fc.destBuffer->applyGainRamp (1, fc.bufferStartSample, fc.bufferNumSamples, lastGainR, rgain);
-
-                lastGainL = lgain;
-                lastGainR = rgain;
+                lastGainS = gain;
             }
         }
 

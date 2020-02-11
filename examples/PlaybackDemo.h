@@ -31,7 +31,8 @@
 
 //==============================================================================
 class PlaybackDemo  : public Component,
-                      private ChangeListener
+                      private ChangeListener,
+                      private Timer
 {
 public:
     //==============================================================================
@@ -90,9 +91,11 @@ public:
         settingsButton.onClick  = [this] { EngineHelpers::showAudioDeviceSettings (engine); };
         updatePlayButtonText();
         editNameLabel.setJustificationType (Justification::centred);
-        Helpers::addAndMakeVisible (*this, { &pluginsButton, &settingsButton, &playPauseButton, &editNameLabel });
+        cpuLabel.setJustificationType (Justification::centred);
+        Helpers::addAndMakeVisible (*this, { &pluginsButton, &settingsButton, &playPauseButton, &editNameLabel, &cpuLabel });
 
         setSize (600, 400);
+        startTimerHz (5);
     }
 
     ~PlaybackDemo()
@@ -113,7 +116,11 @@ public:
         pluginsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 3).reduced (2));
         settingsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 2).reduced (2));
         playPauseButton.setBounds (topR.reduced (2));
-        editNameLabel.setBounds (r);
+
+        auto middleR = r.withSizeKeepingCentre (r.getWidth(), 40);
+
+        cpuLabel.setBounds (middleR.removeFromBottom (20));
+        editNameLabel.setBounds (middleR);
     }
 
 private:
@@ -122,7 +129,7 @@ private:
     std::unique_ptr<te::Edit> edit;
 
     TextButton pluginsButton { "Plugins" }, settingsButton { "Settings" }, playPauseButton { "Play" };
-    Label editNameLabel { "No Edit Loaded" };
+    Label editNameLabel { "No Edit Loaded" }, cpuLabel;
 
     //==============================================================================
     void updatePlayButtonText()
@@ -134,6 +141,11 @@ private:
     void changeListenerCallback (ChangeBroadcaster*) override
     {
         updatePlayButtonText();
+    }
+
+    void timerCallback() override
+    {
+        cpuLabel.setText (String::formatted ("CPU: %d%%", int (engine.getDeviceManager().getCpuUsage() * 100)), dontSendNotification);
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlaybackDemo)
