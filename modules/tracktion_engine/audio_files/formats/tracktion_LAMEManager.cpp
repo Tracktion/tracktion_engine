@@ -19,7 +19,7 @@ juce::File LAMEManager::getLameEncoderExe()
    #if JUCE_WINDOWS
     auto defaultLame = juce::File::getSpecialLocation (juce::File::currentExecutableFile).getSiblingFile ("lame.exe");
    #elif JUCE_MAC
-    auto defaultLame = juce::File::getSpecialLocation (juce::File::currentExecutableFile).getSiblingFile ("lame");
+    auto defaultLame = juce::File::getSpecialLocation (juce::File::currentExecutableFile).getSiblingFile ("../Resources/lame");
    #else
     juce::File defaultLame ("/usr/bin/lame");
    #endif
