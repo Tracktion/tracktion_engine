@@ -258,10 +258,10 @@ public:
 
         do
         {
-            AudioTrack* firstActiveTarget = getTargetTracks().getFirst();
+            auto firstActiveTarget = getTargetTracks().getFirst();
             for (auto t : getTargetTracks())
             {
-                if (isRecordingActive (*t))
+                if (activeTracks.contains (t))
                 {
                     firstActiveTarget = t;
                     break;
@@ -405,6 +405,14 @@ public:
         const ScopedLock sl (consumerLock);
         // This is probably where we should set up our recording context
 
+        // We need to keep a list of tracks the are being recorded to
+        // here, since user may un-arm track to stop recording
+        activeTracks.clear();
+
+        for (auto destTrack : getTargetTracks())
+            if (isRecordingActive (*destTrack))
+                activeTracks.add (destTrack);
+
         return true;
     }
 
@@ -535,7 +543,7 @@ public:
             bool firstTrack = true;
             for (auto destTrack : recordingDestTracks)
             {
-                if (isRecordingActive (*destTrack))
+                if (activeTracks.contains (destTrack))
                 {
                     AudioFile trackRecordedFile;
                     if (firstTrack)

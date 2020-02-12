@@ -20,6 +20,14 @@ struct VirtualMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
 
     bool startRecording() override
     {
+        // We need to keep a list of tracks the are being recorded to
+        // here, since user may un-arm track to stop recording
+        activeTracks.clear();
+
+        for (auto destTrack : getTargetTracks())
+            if (isRecordingActive (*destTrack))
+                activeTracks.add (destTrack);
+
         if (! recording)
         {
             getVirtualMidiInput().masterTimeUpdate (startTime);

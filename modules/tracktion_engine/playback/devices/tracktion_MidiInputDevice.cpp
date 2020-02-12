@@ -709,7 +709,7 @@ public:
 
         for (auto track : getTargetTracks())
         {
-            if (! isRecordingActive (*track))
+            if (! activeTracks.contains (track))
                 continue;
                 
             if (isLooping && recordingEnd > loopRange.end)

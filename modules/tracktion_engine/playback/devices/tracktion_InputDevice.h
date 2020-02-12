@@ -252,6 +252,8 @@ protected:
     void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override {}
     void valueTreeParentChanged (juce::ValueTree&) override {}
 
+    juce::Array<AudioTrack*> activeTracks;
+
 private:
     mutable AsyncCaller trackDeviceEnabler;
     bool wasLivePlayActive = false;
