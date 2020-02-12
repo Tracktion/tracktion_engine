@@ -495,6 +495,7 @@ struct AutomatableParameter::AttachedValue  : public juce::AsyncUpdater
     virtual float getDefault() = 0;
     virtual void detach (ValueTree::Listener* l) = 0;
     virtual bool updateIfMatches (ValueTree& v, const Identifier& i) = 0;
+    virtual void updateParameterFromValue() = 0;
 
     AutomatableParameter& parameter;
 };
@@ -521,6 +522,11 @@ struct AutomatableParameter::AttachedFloatValue : public AutomatableParameter::A
             return true;
         }
         return false;
+    }
+
+    void updateParameterFromValue() override
+    {
+        parameter.setParameter (value, juce::dontSendNotification);
     }
 
     CachedValue<float>& value;
@@ -550,6 +556,11 @@ struct AutomatableParameter::AttachedIntValue : public AutomatableParameter::Att
         return false;
     }
 
+    void updateParameterFromValue() override
+    {
+        parameter.setParameter ((float) value.get(), juce::dontSendNotification);
+    }
+
     CachedValue<int>& value;
 };
 
@@ -575,6 +586,11 @@ struct AutomatableParameter::AttachedBoolValue : public AutomatableParameter::At
             return true;
         }
         return false;
+    }
+
+    void updateParameterFromValue() override
+    {
+        parameter.setParameter (value.get() ? 1.0f : 0.0f, juce::dontSendNotification);
     }
 
     CachedValue<bool>& value;
@@ -845,6 +861,12 @@ void AutomatableParameter::attachToCurrentValue (juce::CachedValue<bool>& v)
     jassert (attachedValue == nullptr);
     attachedValue.reset (new AttachedBoolValue (*this, v));
     v.getValueTree().addListener (this);
+}
+
+void AutomatableParameter::updateFromAttachedValue()
+{
+    if (attachedValue)
+        attachedValue->updateParameterFromValue();
 }
 
 void AutomatableParameter::detachFromCurrentValue()

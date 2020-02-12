@@ -121,6 +121,9 @@ void ChorusPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
     CachedValue<float>* cvsFloat[] = { &depthMs, &width, &mixProportion, &speedHz, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+
+    for (auto p : getAutomatableParameters())
+        p->updateFromAttachedValue();
 }
 
 }

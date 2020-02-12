@@ -295,6 +295,9 @@ void VolumeAndPanPlugin::restorePluginStateFromValueTree (const juce::ValueTree&
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
     copyPropertiesToNullTerminatedCachedValues (v, cvsBool);
+
+    for (auto p : getAutomatableParameters())
+        p->updateFromAttachedValue();
 }
 
 }

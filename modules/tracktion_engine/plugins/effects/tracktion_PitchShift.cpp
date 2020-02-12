@@ -184,6 +184,9 @@ void PitchShiftPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v
     CachedValue<int>* cvsInt[]      = { &mode, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
+
+    for (auto p : getAutomatableParameters())
+        p->updateFromAttachedValue();
 }
 
 }

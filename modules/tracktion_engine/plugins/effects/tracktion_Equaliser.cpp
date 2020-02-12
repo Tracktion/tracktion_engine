@@ -177,6 +177,9 @@ void EqualiserPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
     CachedValue<bool>* cvsBool[]    = { &phaseInvert, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     copyPropertiesToNullTerminatedCachedValues (v, cvsBool);
+
+    for (auto p : getAutomatableParameters())
+        p->updateFromAttachedValue();
 }
 
 void EqualiserPlugin::valueTreePropertyChanged (ValueTree& parent, const juce::Identifier& prop)

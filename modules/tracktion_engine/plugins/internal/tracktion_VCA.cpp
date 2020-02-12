@@ -126,6 +126,9 @@ void VCAPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
     CachedValue<float>* cvsFloat[]  = { &volumeValue, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+
+    for (auto p : getAutomatableParameters())
+        p->updateFromAttachedValue();
 }
 
 }

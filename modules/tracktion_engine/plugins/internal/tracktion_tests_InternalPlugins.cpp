@@ -31,8 +31,54 @@ private:
     {
         testPreset (DelayPlugin::xmlTypeName,
                     {
-                        { "feedback",       -30.0f, IDs::feedback },
-                        { "mix proportion", 0.5f,   IDs::mix }
+                        { "feedback",       -30.0f,     IDs::feedback },
+                        { "mix proportion", 0.5f,       IDs::mix }
+                    });
+        testPreset (CompressorPlugin::xmlTypeName,
+                    {
+                        { "threshold",      0.9f,       IDs::threshold },
+                        { "ratio",          0.6f,       IDs::ratio },
+                        { "attack",         150.0f,     IDs::attack },
+                        { "release",        200.0f,     IDs::release },
+                        { "output gain",    10.0f,      IDs::outputDb },
+                        { "input gain",     6.0f,       IDs::inputDb }
+                    });
+        testPreset (EqualiserPlugin::xmlTypeName,
+                    {
+                        { "Low-pass freq",  30.0f,      IDs::loFreq },
+                        { "Low-pass gain",  -10.0f,     IDs::loGain },
+                        { "Low-pass Q",     0.2f,       IDs::loQ },
+                        { "Mid freq 1",     10000.0f,   IDs::midFreq1 },
+                        { "Mid gain 1",     1.0f,       IDs::midGain1 },
+                        { "Mid Q 1",        2.0f,       IDs::midQ1 },
+                        { "Mid freq 2",     6000.0f,    IDs::midFreq2 },
+                        { "Mid gain 2",     6.0f,       IDs::midGain2 },
+                        { "Mid Q 2",        3.5f,       IDs::midQ2 },
+                        { "High-pass freq", 15000.0f,   IDs::hiFreq },
+                        { "High-pass gain", -6.0f,      IDs::hiGain },
+                        { "High-pass Q",    0.1f,       IDs::hiQ }
+                    });
+        testPreset (PitchShiftPlugin::xmlTypeName,
+                    {
+                        { "semitones up",   -12.0f,     IDs::semitonesUp },
+                    });
+        testPreset (PitchShiftPlugin::xmlTypeName,
+                    {
+                        { "semitones up",   6.0f,       IDs::semitonesUp },
+                    });
+        testPreset (ReverbPlugin::xmlTypeName,
+                    {
+                        { "room size",      0.2f,       IDs::roomSize },
+                        { "damping",        0.3f,       IDs::damp },
+                        { "wet level",      0.9f,       IDs::wet },
+                        { "dry level",      0.5f,       IDs::dry },
+                        { "width",          0.7f,       IDs::width },
+                        { "mode",           0.0f,       IDs::mode },
+                    });
+        testPreset (VolumeAndPanPlugin::xmlTypeName,
+                    {
+                        { "volume",         0.5f,       IDs::volume },
+                        { "pan",            -0.25f,     IDs::pan }
                     });
     }
 

@@ -42,6 +42,7 @@ public:
     void attachToCurrentValue (juce::CachedValue<float>&);
     void attachToCurrentValue (juce::CachedValue<int>&);
     void attachToCurrentValue (juce::CachedValue<bool>&);
+    void updateFromAttachedValue();
     void detachFromCurrentValue();
 
     //==============================================================================

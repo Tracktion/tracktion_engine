@@ -155,6 +155,9 @@ void ReverbPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
     CachedValue<float>* cvsFloat[]  = { &roomSizeValue, &dampValue, &wetValue, &dryValue, &widthValue, &modeValue, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+
+    for (auto p : getAutomatableParameters())
+        p->updateFromAttachedValue();
 }
 
 void ReverbPlugin::setRoomSize (float value)    { roomSizeParam->setParameter (jlimit (0.0f, 1.0f, value), sendNotification); }

@@ -213,6 +213,9 @@ void CompressorPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v
     CachedValue<bool>* cvsBool[]    = { &useSidechainTrigger, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     copyPropertiesToNullTerminatedCachedValues (v, cvsBool);
+
+    for (auto p : getAutomatableParameters())
+        p->updateFromAttachedValue();
 }
 
 void CompressorPlugin::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& id)

@@ -315,6 +315,9 @@ void InsertPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 
     if (v.hasProperty (IDs::inputDevice))
         inputDevice = v.getProperty (IDs::inputDevice).toString();
+
+    for (auto p : getAutomatableParameters())
+        p->updateFromAttachedValue();
 }
 
 void InsertPlugin::updateDeviceTypes()
