@@ -328,6 +328,12 @@ bool InputDeviceInstance::isRecordingEnabled (const Track& t) const
 
 void InputDeviceInstance::setRecordingEnabled (const Track& t, bool b)
 {
+    if (edit.getTransport().isRecording() && destTracks.size() > 1)
+    {
+        edit.engine.getUIBehaviour().showWarningMessage (TRANS("Punch is only supported for inputs on one track"));
+        return;
+    }
+
     for (auto dest : destTracks)
         if (dest->targetTrack == t.itemID)
             dest->recordEnabled = b;
