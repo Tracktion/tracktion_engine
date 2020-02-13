@@ -274,6 +274,9 @@ AudioTrack::AudioTrack (Edit& ed, const ValueTree& v)
     compGroup.referTo (state, IDs::compGroup, &edit.getUndoManager(), -1);
     midiVisibleProportion.referTo (state, IDs::midiVProp, nullptr);
     midiVerticalOffset.referTo (state, IDs::midiVOffset, nullptr);
+    midiNoteMap.referTo (state, IDs::midiNoteMap, nullptr);
+
+    updateMidiNoteMapCache();
 
     std::vector<ChannelIndex> channels = { ChannelIndex (0, juce::AudioChannelSet::left),
                                            ChannelIndex (1, juce::AudioChannelSet::right) };
@@ -395,6 +398,17 @@ String AudioTrack::getNameForMidiNoteNumber (int note, int midiChannel, bool pre
     jassert (midiChannel > 0);
     String s;
 
+    if (midiNoteMapCache.size() > 0)
+    {
+        auto itr = midiNoteMapCache.find (note);
+        if (itr != midiNoteMapCache.end())
+        {
+            return itr->second;
+        }
+
+        return {};
+    }
+
     for (auto af : pluginList)
         if (af->hasNameForMidiNoteNumber (note, midiChannel, s))
             return s;
@@ -413,6 +427,34 @@ String AudioTrack::getNameForMidiNoteNumber (int note, int midiChannel, bool pre
     return midiChannel == 10 ? TRANS(MidiMessage::getRhythmInstrumentName (note))
                              : MidiMessage::getMidiNoteName (note, preferSharp, true,
                                                              edit.engine.getEngineBehaviour().getMiddleCOctave());
+}
+
+void AudioTrack::updateMidiNoteMapCache()
+{
+    midiNoteMapCache.clear();
+
+    auto m = midiNoteMap.get();
+
+    auto lines = StringArray::fromLines (m);
+    for (auto l : lines)
+    {
+        if (l.startsWith ("//"))
+            continue;
+
+        int digits = 0;
+        for (int i = 0; i < l.length(); i++)
+        {
+            auto c = l[i];
+            
+            if (CharacterFunctions::isDigit (c))
+                digits++;
+            else
+                break;
+        }
+
+        if (digits > 0)
+            midiNoteMapCache[l.substring (0, digits).getIntValue()] = l.substring (digits).trim();
+    }
 }
 
 bool AudioTrack::areMidiPatchesZeroBased() const
@@ -785,6 +827,10 @@ void AudioTrack::valueTreePropertyChanged (ValueTree& v, const juce::Identifier&
             const String devName (getName());
             waveInputDevice->setAlias (devName);
             midiInputDevice->setAlias (devName);
+        }
+        else if (i == IDs::midiNoteMap)
+        {
+            updateMidiNoteMapCache();
         }
     }
     else if (Clip::isClipState (v))

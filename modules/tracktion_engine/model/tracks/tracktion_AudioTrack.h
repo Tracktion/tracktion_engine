@@ -120,6 +120,11 @@ public:
     void setCompGroup (int groupIndex)                              { compGroup = groupIndex; }
 
     //==============================================================================
+    bool hasMidiNoteNames()                                         { return midiNoteMapCache.size() > 0; }
+    void clearMidiNoteNames()                                       { midiNoteMap = juce::String(); }
+    void loadMidiNoteNames (const juce::String namesFile)           { midiNoteMap = namesFile; }
+
+    //==============================================================================
     /** try to add this MIDI sequence to any MIDI clips that are already in the track.
 
         @returns False if there's no existing clips in the places it needs them.
@@ -191,6 +196,9 @@ private:
 
     juce::CachedValue<double> midiVisibleProportion, midiVerticalOffset;
     juce::CachedValue<juce::String> ghostTracks;
+    juce::CachedValue<juce::String> midiNoteMap;
+
+    std::map<int, juce::String> midiNoteMapCache;
 
     juce::Array<int> currentlyPlayingGuideNotes;
 
@@ -216,6 +224,8 @@ private:
 
     void updateTracksToGhost();
     bool isSidechainSource() const;
+
+    void updateMidiNoteMapCache();
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioTrack)

@@ -465,6 +465,7 @@ namespace IDs
     DECLARE_ID (compGroup)
     DECLARE_ID (midiVProp)
     DECLARE_ID (midiVOffset)
+    DECLARE_ID (midiNoteMap)
     DECLARE_ID (ghostTracks)
     DECLARE_ID (OUTPUTDEVICES)
     DECLARE_ID (DEVICE)
