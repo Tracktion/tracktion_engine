@@ -27,7 +27,7 @@ static inline juce::int64 hashValueTree (juce::int64 startHash, const ValueTree&
 static inline juce::int64 hashPlugin (const ValueTree& effectState, Plugin& plugin)
 {
     CRASH_TRACER
-    juce::int64 h = (effectState.getParent().indexOf (effectState) + 1) * 6356;
+    juce::int64 h = String (effectState.getParent().indexOf (effectState) + 1).hashCode64();
 
     for (int param = plugin.getNumAutomatableParameters(); --param >= 0;)
     {
@@ -37,14 +37,15 @@ static inline juce::int64 hashPlugin (const ValueTree& effectState, Plugin& plug
 
             if (ac.getNumPoints() == 0)
             {
-                h ^= (juce::int64) (ap->getCurrentValue() * 635);
+                h = String (ap->getCurrentValue()).hashCode64();
             }
             else
             {
                 for (int i = 0; i < ac.getNumPoints(); ++i)
                 {
                     const auto p = ac.getPoint (i);
-                    h ^= (juce::int64) (p.time * 63542) ^ (juce::int64) (p.value * 72634) ^ (juce::int64) (p.curve * 82635);
+                    auto pointH = String (p.time) + String (p.value) + String (p.curve);
+                    h = (String (h) + pointH).hashCode64();
                 }
             }
         }
