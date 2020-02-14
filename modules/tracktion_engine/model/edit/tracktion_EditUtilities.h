@@ -144,6 +144,8 @@ Track* getTrackContainingPlugin (const Edit&, const Plugin*);
 /** */
 bool areAnyPluginsMissing (const Edit&);
 
+/** Returns all of the instances of a specific RackType in an Edit. */
+juce::Array<RackInstance*> getRackInstancesInEditForType (const RackType&);
 
 //==============================================================================
 // Automation and parameters

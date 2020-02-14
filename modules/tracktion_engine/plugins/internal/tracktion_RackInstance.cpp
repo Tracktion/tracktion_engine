@@ -146,6 +146,9 @@ void RackInstance::replaceRackWithPluginSequence (SelectionManager* sm)
 {
     if (RackType::Ptr thisType = type) // (keep a local reference)
     {
+        const bool replaceRack = getRackInstancesInEditForType (*type).size() == 1;
+        jassert (! replaceRack || getRackInstancesInEditForType (*type).getFirst() == this);
+
         struct PluginIndexAndPos
         {
             bool operator< (const PluginIndexAndPos& other) const     { return x < other.x; }
@@ -168,18 +171,26 @@ void RackInstance::replaceRackWithPluginSequence (SelectionManager* sm)
             for (int i = pluginLocations.size(); --i >= 0;)
             {
                 auto srcPlugin = thisType->getPlugins()[pluginLocations.getUnchecked (i).index];
-
                 srcPlugin->flushPluginStateToValueTree();
-                auto newState = srcPlugin->state.createCopy();
-                EditItemID::remapIDs (newState, nullptr, edit);
-                jassert (EditItemID::fromID (newState) != EditItemID::fromID (srcPlugin->state));
+                auto pluginState = srcPlugin->state;
 
-                if (auto p = list->insertPlugin (newState, index))
+                if (! replaceRack)
+                {
+                    auto newState = srcPlugin->state.createCopy();
+                    EditItemID::remapIDs (newState, nullptr, edit);
+                    jassert (EditItemID::fromID (newState) != EditItemID::fromID (srcPlugin->state));
+                    pluginState = newState;
+                }
+
+                if (auto p = list->insertPlugin (pluginState, index))
                     if (sm != nullptr)
                         sm->selectOnly (*p);
             }
 
             removeFromParent();
+
+            if (replaceRack)
+                edit.getRackList().removeRackType (thisType);
         }
         else
         {

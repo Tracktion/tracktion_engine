@@ -684,6 +684,19 @@ bool areAnyPluginsMissing (const Edit& edit)
     return false;
 }
 
+juce::Array<RackInstance*> getRackInstancesInEditForType (const RackType& rt)
+{
+    Array<RackInstance*> instances;
+
+    for (auto p : getAllPlugins (rt.edit, false))
+        if (auto ri = dynamic_cast<RackInstance*> (p))
+            if (ri->type == &rt)
+                instances.add (ri);
+
+    return instances;
+}
+
+
 //==============================================================================
 juce::Array<AutomatableEditItem*> getAllAutomatableEditItems (const Edit& edit)
 {
