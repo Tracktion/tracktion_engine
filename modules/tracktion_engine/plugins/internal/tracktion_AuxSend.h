@@ -64,7 +64,8 @@ private:
     bool shouldProcess();
     //==============================================================================
     juce::Array<AuxReturnPlugin*> allAuxReturns;
-    float lastVolumeBeforeMute = 0.0f, lastGain = 1.0f;
+    juce::CachedValue<float> lastVolumeBeforeMute;
+    float lastGain = 1.0f;
     juce::AudioBuffer<float> delayBuffer { 2, 32 };
     double latencySeconds = 0.0;
     Track* ownerTrack = nullptr;

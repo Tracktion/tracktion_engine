@@ -185,6 +185,7 @@ namespace IDs
     DECLARE_ID (panLaw)
     DECLARE_ID (busNum)
     DECLARE_ID (auxSendSliderPos)
+    DECLARE_ID (lastVolumeBeforeMuteDb)
     DECLARE_ID (depthMs)
     DECLARE_ID (speedHz)
     DECLARE_ID (width)

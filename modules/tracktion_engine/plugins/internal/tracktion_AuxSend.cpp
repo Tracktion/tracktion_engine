@@ -16,6 +16,7 @@ AuxSendPlugin::AuxSendPlugin (PluginCreationInfo info) : Plugin (info)
     auto um = getUndoManager();
     busNumber.referTo (state, IDs::busNum, um);
     gainLevel.referTo (state, IDs::auxSendSliderPos, um, decibelsToVolumeFaderPosition (0.0f));
+    lastVolumeBeforeMute.referTo (state, IDs::lastVolumeBeforeMuteDb, um, 0.0f);
 
     gain = addParam ("send level", TRANS("Send level"), { 0.0f, 1.0f },
                      [] (float value)       { return Decibels::toString (volumeFaderPositionToDB (value)); },
