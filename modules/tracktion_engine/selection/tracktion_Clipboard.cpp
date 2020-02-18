@@ -971,7 +971,7 @@ bool Clipboard::TempoChanges::pasteTempoSequence (TempoSequence& ts, EditTimeRan
         ts.insertTempo (roundToInt ((tc.beat / lengthInBeats) * (endBeat - startBeat) + startBeat),
                         tc.bpm, tc.curve);
 
-//ddd    ts.insertTempo (endBeat, finalBPM, 1.0f);
+    ts.insertTempo (endBeat, finalBPM, 1.0f);
 
     for (int i = ts.getNumTempos(); --i >= 1;)
     {
