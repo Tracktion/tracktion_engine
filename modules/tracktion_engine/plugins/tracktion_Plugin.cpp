@@ -636,11 +636,6 @@ void Plugin::initialiseFully()
 
 void Plugin::removeFromParent()
 {
-    macroParameterList.hideMacroParametersFromTracks();
-
-    for (auto t : getAllTracks (edit))
-        t->hideAutomatableParametersForSource (itemID);
-
     auto* um = getUndoManager();
 
     auto parent = state.getParent();
@@ -819,6 +814,11 @@ void Plugin::baseClassDeinitialise()
 //==============================================================================
 void Plugin::deleteFromParent()
 {
+    macroParameterList.hideMacroParametersFromTracks();
+
+    for (auto t : getAllTracks (edit))
+        t->hideAutomatableParametersForSource (itemID);
+    
     hideWindowForShutdown();
     deselect();
     removeFromParent();

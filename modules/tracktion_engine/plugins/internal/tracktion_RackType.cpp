@@ -2103,7 +2103,7 @@ void RackTypeList::removeRackType (const RackType::Ptr& type)
         for (auto f : getAllPlugins (edit, false))
             if (auto rf = dynamic_cast<RackInstance*> (f))
                 if (rf->type == type)
-                    rf->removeFromParent();
+                    rf->deleteFromParent();
 
         type->hideWindowForShutdown();
         state.removeChild (type->state, &edit.getUndoManager());

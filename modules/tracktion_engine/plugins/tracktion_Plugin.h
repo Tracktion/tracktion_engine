@@ -214,11 +214,17 @@ public:
     void setQuickControlParameter (AutomatableParameter*);
 
     //==============================================================================
-    /** Attempts to delete this plugin, whether it's a master plugin, track plugin, etc. */
+    /** Attempts to delete this plugin, whether it's a master plugin, track plugin, etc.
+        This will call removeFromParent but also hide any automation parameters etc. being
+        shown on tracks and hide plugin windows etc.
+        Use this method if the plugin is being fully deleted from the Edit.
+    */
     virtual void deleteFromParent();
 
-    // Detaches the plugin from any parent it might be in. This is a little more complicated
-    // than just removing its ValueTree from its parent one.
+    /** Detaches the plugin from any parent it might be in. This is a little more complicated
+        than just removing its ValueTree from its parent one.
+        Use this method if the plugin is to be inserted somewhere else in the Edit.
+    */
     void removeFromParent();
 
     //==============================================================================

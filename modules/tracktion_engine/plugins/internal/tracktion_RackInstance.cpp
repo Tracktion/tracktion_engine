@@ -187,7 +187,7 @@ void RackInstance::replaceRackWithPluginSequence (SelectionManager* sm)
                         sm->selectOnly (*p);
             }
 
-            removeFromParent();
+            deleteFromParent();
 
             if (replaceRack)
                 edit.getRackList().removeRackType (thisType);
