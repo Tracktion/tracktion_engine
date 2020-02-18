@@ -564,7 +564,8 @@ static void fixClipTimes (ValueTree& state, const Clipboard::Clips::ClipInfo& cl
 
     if (clip.hasBeatTimes)
     {
-        auto range = tempoSequence.beatsToTime ({ clip.startBeats, clip.startBeats + clip.lengthBeats }) + startOffset;
+        auto offsetInBeats = tempoSequence.timeToBeats (startOffset);
+        auto range = tempoSequence.beatsToTime ({ offsetInBeats + clip.startBeats, offsetInBeats + clip.startBeats + clip.lengthBeats });
         start  = range.getStart();
         length = range.getLength();
         offset = clip.offsetBeats / tempoSequence.getBeatsPerSecondAt (start);
@@ -915,10 +916,8 @@ Clipboard::TempoChanges::TempoChanges (const TempoSequence& ts, EditTimeRange ra
     bool pointAtStart = false;
     bool pointAtEnd   = false;
 
-    for (int i = 0; i < ts.getNumTempos(); ++i)
+    for (auto t : ts.getTempos())
     {
-        auto t = ts.getTempo(i);
-
         if (t->startBeatNumber == startBeat) pointAtStart = true;
         if (t->startBeatNumber == endBeat)   pointAtEnd   = true;
 
@@ -944,36 +943,37 @@ Clipboard::TempoChanges::~TempoChanges() {}
 
 bool Clipboard::TempoChanges::pasteIntoEdit (const EditPastingOptions& options) const
 {
-    return pasteTempoSequence (options.edit.tempoSequence, options.edit, {});
+    return pasteTempoSequence (options.edit.tempoSequence, EditTimeRange::emptyRange (options.startTime));
 }
 
-bool Clipboard::TempoChanges::pasteTempoSequence (TempoSequence& ts, Edit& edit, EditTimeRange targetRange) const
+bool Clipboard::TempoChanges::pasteTempoSequence (TempoSequence& ts, EditTimeRange targetRange) const
 {
     if (changes.empty())
         return false;
 
-    auto startTime = edit.getTransport().position.get();
-
     EditTimecodeRemapperSnapshot snap;
     snap.savePreChangeState (ts.edit);
 
-    auto length = changes.back().beat;
+    auto lengthInBeats = changes.back().beat;
 
     if (targetRange.isEmpty())
-        targetRange = { startTime, startTime + length };
+        targetRange = targetRange.withEnd (ts.beatsToTime (ts.timeToBeats (targetRange.getStart()) + lengthInBeats));
 
     auto startBeat = std::floor (ts.timeToBeats (targetRange.getStart()) + 0.5);
     auto endBeat   = std::floor (ts.timeToBeats (targetRange.getEnd())   + 0.5);
 
+    double finalBPM = ts.getBpmAt (ts.beatsToTime (endBeat));
     ts.removeTemposBetween (ts.beatsToTime ({ startBeat, endBeat }), false);
     ts.insertTempo (ts.beatsToTime (startBeat));
     ts.insertTempo (ts.beatsToTime (endBeat));
 
     for (auto& tc : changes)
-        ts.insertTempo (roundToInt ((tc.beat / length) * (endBeat - startBeat) + startBeat),
+        ts.insertTempo (roundToInt ((tc.beat / lengthInBeats) * (endBeat - startBeat) + startBeat),
                         tc.bpm, tc.curve);
 
-    for (int i = ts.getNumTempos(); --i >= 0;)
+//ddd    ts.insertTempo (endBeat, finalBPM, 1.0f);
+
+    for (int i = ts.getNumTempos(); --i >= 1;)
     {
         auto tcurr = ts.getTempo (i);
         auto tprev = ts.getTempo (i - 1);

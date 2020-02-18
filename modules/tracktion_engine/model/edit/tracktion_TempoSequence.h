@@ -81,6 +81,9 @@ public:
     /** Inserts space in to a sequence, shifting TempoSettings and TimeSigs. */
     void insertSpaceIntoSequence (double time, double amountOfSpaceInSeconds, bool snapToBeat);
 
+    /** Removes a region in a sequence, shifting TempoSettings and TimeSigs. */
+    void deleteRegion (EditTimeRange);
+
     //==============================================================================
     double timeToBeats (double time) const;
     juce::Range<double> timeToBeats (EditTimeRange timeRange) const;

@@ -329,6 +329,8 @@ void deleteRegionOfTracks (Edit& edit, EditTimeRange rangeToDelete, bool onlySel
         }
     };
 
+    edit.tempoSequence.deleteRegion (rangeToDelete);
+
     for (int i = tracks.size(); --i >= 0;)
     {
         if (auto t = dynamic_cast<ClipTrack*> (tracks[i]))

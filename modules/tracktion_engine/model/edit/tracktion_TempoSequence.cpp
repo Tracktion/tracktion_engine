@@ -364,7 +364,7 @@ void TempoSequence::moveTempoStart (int index, double deltaBeats, bool snapToBea
             const double nextBeat = (next != 0) ? next->startBeatNumber : 0x7ffffff;
 
             const double newStart = jlimit (prevBeat, nextBeat, t->startBeatNumber + deltaBeats);
-            t->set (snapToBeat ? roundToInt (newStart) : newStart, t->bpm, t->curve, true);
+            t->set (snapToBeat ? roundToInt (newStart) : newStart, t->bpm, t->curve, false);
         }
     }
 }
@@ -409,6 +409,32 @@ void TempoSequence::insertSpaceIntoSequence (double time, double amountOfSpaceIn
 
         for (int i = getNumTempos(); --i >= endIndex;)
             moveTempoStart (i, beatsToInsert, snapToBeat);
+    }
+}
+
+void TempoSequence::deleteRegion (EditTimeRange range)
+{
+    removeTemposBetween (range, false);
+    removeTimeSigsBetween (range);
+
+    const bool snapToBeat = false;
+    const double start = range.getStart();
+    const double deltaBeats = -(getBeatsPerSecondAt (start) * range.getLength());
+
+    // Move timesig settings
+    {
+        const int startIndex = indexOfTimeSigAt (start) + 1;
+
+        for (int i = startIndex; i < getNumTimeSigs(); ++i)
+            moveTimeSigStart (i, deltaBeats, snapToBeat);
+    }
+
+    // Move tempo settings
+    {
+        const int startIndex = indexOfNextTempoAt (start);
+
+        for (int i = startIndex; i < getNumTempos(); ++i)
+            moveTempoStart (i, deltaBeats, snapToBeat);
     }
 }
 

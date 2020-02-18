@@ -115,7 +115,7 @@ public:
 
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
-        bool pasteTempoSequence (TempoSequence&, Edit&, EditTimeRange targetRange) const;
+        bool pasteTempoSequence (TempoSequence&, EditTimeRange targetRange) const;
 
         struct TempoChange
         {
