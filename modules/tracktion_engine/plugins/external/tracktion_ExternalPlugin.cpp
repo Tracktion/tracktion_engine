@@ -784,7 +784,8 @@ void ExternalPlugin::flushPluginStateToValueTree()
 
     if (pluginInstance != nullptr)
     {
-        state.setProperty (IDs::programNum, pluginInstance->getCurrentProgram(), um);
+		if (pluginInstance->getNumPrograms() > 0)
+			state.setProperty (IDs::programNum,  pluginInstance->getCurrentProgram(), um);
 
         TRACKTION_ASSERT_MESSAGE_THREAD
         MemoryBlock chunk;
