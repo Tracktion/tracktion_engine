@@ -45,7 +45,7 @@ void MidiAudioNode::renderSection (const AudioRenderContext& rc, EditTimeRange e
             if (mute != wasMute)
             {
                 wasMute = mute;
-                createNoteOffs (*rc.bufferForMidiMessages, ms, localTime.getStart(), rc.midiBufferOffset);
+                createNoteOffs (*rc.bufferForMidiMessages, ms, localTime.getStart(), rc.midiBufferOffset, rc.playhead.isPlaying());
             }
 
             return;
@@ -102,7 +102,7 @@ void MidiAudioNode::renderSection (const AudioRenderContext& rc, EditTimeRange e
         }
 
         if (rc.isLastBlockOfLoop())
-            createNoteOffs (*rc.bufferForMidiMessages, ms, localTime.getEnd(), rc.midiBufferOffset + localTime.getLength());
+            createNoteOffs (*rc.bufferForMidiMessages, ms, localTime.getEnd(), rc.midiBufferOffset + localTime.getLength(), rc.playhead.isPlaying());
     }
 }
 
@@ -166,7 +166,7 @@ void MidiAudioNode::createMessagesForTime (double time, MidiMessageArray& buffer
 }
 
 void MidiAudioNode::createNoteOffs (MidiMessageArray& destination, const MidiMessageSequence& source,
-                                    double time, double midiTimeOffset)
+                                    double time, double midiTimeOffset, bool isPlaying)
 {
     int activeChannels = 0;
 
@@ -196,7 +196,11 @@ void MidiAudioNode::createNoteOffs (MidiMessageArray& destination, const MidiMes
         {
             destination.addMidiMessage (MidiMessage::controllerEvent (i, 66 /* sustain pedal off */, 0), midiTimeOffset, midiSourceID);
             destination.addMidiMessage (MidiMessage::controllerEvent (i, 64 /* hold pedal off */, 0), midiTimeOffset, midiSourceID);
-            destination.addMidiMessage (MidiMessage::allNotesOff (i), midiTimeOffset, midiSourceID);
+
+			// NB: Some buggy plugins seem to fail to respond to note-ons if they are preceded
+            // by an all-notes-off, so avoid this while playing.
+			if (! isPlaying)
+	            destination.addMidiMessage (MidiMessage::allNotesOff (i), midiTimeOffset, midiSourceID);
         }
     }
 }

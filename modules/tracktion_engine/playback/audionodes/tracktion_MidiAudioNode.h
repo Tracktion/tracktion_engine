@@ -51,7 +51,7 @@ private:
     //==============================================================================
     void createMessagesForTime (double time, MidiMessageArray&, double midiTimeOffset);
     void createNoteOffs (MidiMessageArray& destination, const juce::MidiMessageSequence& source,
-                         double time, double midiTimeOffset);
+                         double time, double midiTimeOffset, bool isPlaying);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiAudioNode)
 };
