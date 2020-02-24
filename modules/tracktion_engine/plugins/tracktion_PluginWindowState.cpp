@@ -87,11 +87,18 @@ void PluginWindowState::showWindow()
 {
     if (! pluginWindow)
     {
-        // Ensure the top middle 8th stays on screen
-        bool windowBoundsIsOnScreen = Desktop::getInstance().getDisplays().getRectangleList (true)
-                                        .containsRectangle (lastWindowBounds.withTrimmedTop (40)
-                                                                            .reduced (lastWindowBounds.getWidth() / 4, 0)
-                                                                            .withTrimmedBottom (3 * (lastWindowBounds.getHeight() / 4)));
+        // Ensure at least 40px of the window is on screen
+        const auto displayRects = []
+        {
+            RectangleList<int> trimmedDisplays;
+            
+            for (auto rect : Desktop::getInstance().getDisplays().getRectangleList (true))
+                trimmedDisplays.addWithoutMerging (rect.withTrimmedLeft (100).withTrimmedRight (100).withTrimmedBottom (100));
+            
+            return trimmedDisplays;
+        }();
+        
+        const bool windowBoundsIsOnScreen = displayRects.intersectsRectangle (lastWindowBounds);
 
         if (lastWindowBounds.isEmpty() || ! windowBoundsIsOnScreen)
             pickDefaultWindowBounds();
