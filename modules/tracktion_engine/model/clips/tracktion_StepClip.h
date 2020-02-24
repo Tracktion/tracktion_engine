@@ -38,6 +38,8 @@ public:
         int getIndex() const;
         juce::String getDisplayName() const;
 
+        bool usesGrooveStrength() const;
+
         StepClip& clip;
         juce::ValueTree state;
 
@@ -45,6 +47,7 @@ public:
         juce::CachedValue<int> noteNumber;       // Range: 0 - 127
         juce::CachedValue<int> noteValue;        // Most likely to be ranged from 0 to 127
         juce::CachedValue<juce::String> grooveTemplate, name;
+        juce::CachedValue<float> grooveStrength;
 
     private:
         JUCE_LEAK_DETECTOR (Channel)

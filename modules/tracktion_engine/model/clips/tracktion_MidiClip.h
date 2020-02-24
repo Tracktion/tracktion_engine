@@ -58,6 +58,11 @@ public:
     juce::String getGrooveTemplate() const noexcept                 { return grooveTemplate; }
     void setGrooveTemplate (const juce::String& templateName)       { grooveTemplate = templateName; }
 
+    bool usesGrooveStrength() const;
+
+    float getGrooveStrength() const                                 { return grooveStrength; }
+    void setGrooveStrength (float g)                                { grooveStrength = juce::jlimit (0.0f, 1.0f, g); }
+
     //==============================================================================
     void mergeInMidiSequence (juce::MidiMessageSequence&, MidiList::NoteAutomationType);
 
@@ -156,7 +161,7 @@ private:
     juce::OwnedArray<MidiList> channelSequence;
 
     juce::CachedValue<int> currentTake;
-    juce::CachedValue<float> volumeDb;
+    juce::CachedValue<float> volumeDb, grooveStrength;
     juce::CachedValue<double> loopStartBeats, loopLengthBeats, originalLength;
     std::unique_ptr<QuantisationType> quantisation;
     juce::CachedValue<bool> sendPatch, mute, sendBankChange, mpeMode;

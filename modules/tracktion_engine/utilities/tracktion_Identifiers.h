@@ -387,6 +387,7 @@ namespace IDs
     DECLARE_ID (current)
     DECLARE_ID (volDb)
     DECLARE_ID (sendBankChange)
+    DECLARE_ID (grooveStrength)
     DECLARE_ID (showingNoteAutomation)
     DECLARE_ID (mpeMode)
     DECLARE_ID (originalLength)

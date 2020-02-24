@@ -96,6 +96,7 @@ MidiClip::MidiClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTr
     sendPatch.referTo (state, IDs::sendProgramChange, um, true);
     sendBankChange.referTo (state, IDs::sendBankChange, um, true);
     mpeMode.referTo (state, IDs::mpeMode, um, false);
+    grooveStrength.referTo (state, IDs::grooveStrength, um, 0.1f);
 
     loopStartBeats.referTo (state, IDs::loopStartBeats, um, 0.0);
     loopLengthBeats.referTo (state, IDs::loopLengthBeats, um, 0.0);
@@ -200,6 +201,7 @@ void MidiClip::cloneFrom (Clip* c)
         mute                    .setValue (other->mute, nullptr);
         sendBankChange          .setValue (other->sendBankChange, nullptr);
         grooveTemplate          .setValue (other->grooveTemplate, nullptr);
+        grooveStrength          .setValue (other->grooveStrength, nullptr);
 
         quantisation->setType (other->quantisation->getType (false));
         quantisation->setProportion (other->quantisation->getProportion());
@@ -229,13 +231,26 @@ Colour MidiClip::getDefaultColour() const
     return Colours::red.withHue (3.0f / 9.0f);
 }
 
+bool MidiClip::usesGrooveStrength() const
+{
+    auto gt = edit.engine.getGrooveTemplateManager().getTemplateByName (getGrooveTemplate());
+
+    if (gt != nullptr && gt->isEmpty())
+        gt = nullptr;
+
+    if (gt != nullptr)
+        return gt->isParameterized();
+
+    return false;
+}
+
 AudioNode* MidiClip::createAudioNode (const CreateAudioNodeParams& params)
 {
     CRASH_TRACER
     MidiMessageSequence sequence;
     getSequenceLooped().exportToPlaybackMidiSequence (sequence, *this, mpeMode);
 
-    const auto* nodeToReplace = getClipIfPresentInNode (params.audioNodeToBeReplaced, *this);
+    const auto nodeToReplace = getClipIfPresentInNode (params.audioNodeToBeReplaced, *this);
 
     auto channels = mpeMode ? Range<int> (2, 15)
                             : Range<int>::withStartAndLength (getMidiChannel().getChannelNumber(), 1);
@@ -755,7 +770,8 @@ void MidiClip::valueTreePropertyChanged (ValueTree& tree, const juce::Identifier
         }
         else if (id == IDs::volDb || id == IDs::mpeMode
                  || id == IDs::loopStartBeats || id == IDs::loopLengthBeats
-                 || id == IDs::loopedSequenceType)
+                 || id == IDs::loopedSequenceType
+                 || id == IDs::grooveStrength)
         {
             clearCachedLoopSequence();
         }

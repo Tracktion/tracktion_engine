@@ -158,7 +158,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
                          || i == IDs::autoPitch || i == IDs::autoTempo
                          || i == IDs::channels || i == IDs::isReversed
                          || i == IDs::currentTake || i == IDs::sequence || i == IDs::repeatSequence
-                         || i == IDs::loopedSequenceType)
+                         || i == IDs::loopedSequenceType || i == IDs::grooveStrength)
                 {
                     restart();
                 }
@@ -191,7 +191,8 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
             {
                 if (i == IDs::pattern || i == IDs::channel
                      || i == IDs::velocities || i == IDs::gates
-                     || i == IDs::note || i == IDs::velocity || i == IDs::groove)
+                     || i == IDs::note || i == IDs::velocity || i == IDs::groove
+                     || i == IDs::grooveStrength)
                     restart();
             }
             else if (v.hasType (IDs::PATTERN))

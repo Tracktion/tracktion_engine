@@ -20,6 +20,7 @@ StepClip::Channel::Channel (StepClip& c, const juce::ValueTree& v)
     noteNumber.referTo (state, IDs::note, um, defaultNoteNumber);
     noteValue.referTo (state, IDs::velocity, um, defaultNoteValue);
     grooveTemplate.referTo (state, IDs::groove, um);
+    grooveStrength.referTo (state, IDs::grooveStrength, um, 0.1f);
     name.referTo (state, IDs::name, um);
 }
 
@@ -34,7 +35,21 @@ bool StepClip::Channel::operator== (const Channel& other) const noexcept
             && noteNumber == other.noteNumber
             && noteValue == other.noteValue
             && grooveTemplate == other.grooveTemplate
-            && name == other.name;
+            && name == other.name
+            && grooveStrength == other.grooveStrength;
+}
+
+bool StepClip::Channel::usesGrooveStrength() const
+{
+    auto gt = clip.edit.engine.getGrooveTemplateManager().getTemplateByName (grooveTemplate.get());
+
+    if (gt != nullptr && gt->isEmpty())
+        gt = nullptr;
+
+    if (gt != nullptr)
+        return gt->isParameterized();
+
+    return false;
 }
 
 int StepClip::Channel::getIndex() const

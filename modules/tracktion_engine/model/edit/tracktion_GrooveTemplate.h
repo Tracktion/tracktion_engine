@@ -26,13 +26,15 @@ public:
 
     //==============================================================================
     bool isEmpty() const;
+    bool isParameterized() const;
+	void setParameterized (bool p)							{ parameterized = p; }
 
     //==============================================================================
     /** Apply this groove to a time, in beats */
-    double beatsTimeToGroovyTime (double beatsTime) const;
+    double beatsTimeToGroovyTime (double beatsTime, float strength) const;
 
     /** Apply this groove to a time, in seconds */
-    double editTimeToGroovyTime (double editTime, Edit& edit) const;
+    double editTimeToGroovyTime (double editTime, float strength, Edit& edit) const;
 
     //==============================================================================
     const juce::String& getName() const                     { return name; }
@@ -46,8 +48,8 @@ public:
     void setNotesPerBeat (int notes);
 
     // value is 0 to 1.0 of the length of a note
-    float getLatenessProportion (int noteNumber) const;
-    void setLatenessProportion (int noteNumber, float p);
+    float getLatenessProportion (int noteNumber, float strength) const;
+    void setLatenessProportion (int noteNumber, float p, float strength);
     void clearLatenesses();
 
     //==============================================================================
@@ -56,9 +58,10 @@ public:
 
 private:
     //==============================================================================
-    juce::Array<float> latenesses;
+	juce::Array<float> latenesses;
     int numNotes, notesPerBeat;
     juce::String name;
+    bool parameterized = false;
 
     //==============================================================================
     JUCE_LEAK_DETECTOR (GrooveTemplate)
@@ -73,6 +76,8 @@ class GrooveTemplateManager
 public:
     //==============================================================================
     GrooveTemplateManager (Engine&);
+
+	void useParameterizedGrooves (bool b);
 
     //==============================================================================
     int getNumTemplates() const;
@@ -93,11 +98,13 @@ private:
     //==============================================================================
     Engine& engine;
     juce::OwnedArray<GrooveTemplate> knownGrooves;
+	juce::Array<GrooveTemplate*> activeGrooves;
 
     //==============================================================================
     void save();
     void reload (const juce::XmlElement*);
 
+	bool useParameterized = false;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GrooveTemplateManager)
 };

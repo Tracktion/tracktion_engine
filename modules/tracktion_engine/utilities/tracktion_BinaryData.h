@@ -25,6 +25,9 @@ namespace TracktionBinaryData
     extern const char*   groove_templates_xml;
     const int            groove_templates_xmlSize = 45262;
 
+    extern const char*   groove_templates_2_xml;
+    const int            groove_templates_2_xmlSize = 6024;
+
     // Points to the start of a list of resource names.
     extern const char* namedResourceList[];
 

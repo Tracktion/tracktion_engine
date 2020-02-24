@@ -326,16 +326,16 @@ void StepClip::generateMidiSequenceForChannels (MidiMessageSequence& result,
 
                             if (auto gt = gtm.getTemplateByName (c.grooveTemplate))
                             {
-                                start = gt->editTimeToGroovyTime (start, edit);
-                                end = gt->editTimeToGroovyTime (end, edit);
+                                start = gt->editTimeToGroovyTime (start, c.grooveStrength, edit);
+                                end = gt->editTimeToGroovyTime (end, c.grooveStrength, edit);
                             }
                         }
                         else
                         {
                             if (auto gt = gtm.getTemplateByName (c.grooveTemplate))
                             {
-                                start = gt->beatsTimeToGroovyTime (start);
-                                end = gt->beatsTimeToGroovyTime (end);
+                                start = gt->beatsTimeToGroovyTime (start, c.grooveStrength);
+                                end = gt->beatsTimeToGroovyTime (end, c.grooveStrength);
                             }
                         }
 

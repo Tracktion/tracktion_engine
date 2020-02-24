@@ -760,7 +760,7 @@ double MidiNote::getPlaybackTime (NoteEdge edge, const MidiClip& clip, const Gro
                                   : std::min (getEditEndTime (clip), pos.getEnd()) - 0.0001;
 
     if (grooveTemplate != nullptr)
-        time = grooveTemplate->editTimeToGroovyTime (time, clip.edit);
+        time = grooveTemplate->editTimeToGroovyTime (time, clip.getGrooveStrength(), clip.edit);
 
     return time - pos.getStart();
 }
