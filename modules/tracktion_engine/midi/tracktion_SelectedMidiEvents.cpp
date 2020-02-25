@@ -88,6 +88,8 @@ void SelectedMidiEvents::addSelectedEvent (MidiNote* note, bool addToCurrent)
 
     if (selectedNotes.isEmpty())
         deselect();
+    else
+        SelectionManager::refreshAllPropertyPanelsShowing (*this);
 
     if (selectedSysexes.size() > 0)
     {
