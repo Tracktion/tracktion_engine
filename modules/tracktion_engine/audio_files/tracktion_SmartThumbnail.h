@@ -36,6 +36,9 @@ public:
     /** Enable/disable all smart thumbnail generation. */
     static void setEnabled (bool e)             { enabled = e; }
 
+    /** Returns true if any thumbnails are currently being generated for the given Edit. */
+    static bool areThumbnailsFullyLoaded (Engine&);
+
     //==============================================================================
     /** Sets a new file to display. */
     void setNewFile (const AudioFile&);

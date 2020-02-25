@@ -327,9 +327,17 @@ struct TransportControl::FileFlushTimer  : private Timer
             hasBeenDeactivated = true;
             active = false;
         }
+        
+        auto canPurge = [this]
+        {
+            if (owner.isPlaying() || owner.isRecording())
+                return false;
+            
+            return SmartThumbnail::areThumbnailsFullyLoaded (owner.engine);
+        };
 
         if (active != hasBeenDeactivated
-             && ! (owner.isPlaying() || owner.isRecording()))
+            && canPurge())
         {
             hasBeenDeactivated = active;
 

@@ -458,6 +458,17 @@ SmartThumbnail::~SmartThumbnail()
     clear();
 }
 
+bool SmartThumbnail::areThumbnailsFullyLoaded (Engine& engine)
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+
+    for (auto thumb : engine.getAudioFileManager().activeThumbnails)
+        if (! thumb->isFullyLoaded())
+            return false;
+    
+    return true;
+}
+
 void SmartThumbnail::setNewFile (const AudioFile& newFile)
 {
     if (file != newFile)
