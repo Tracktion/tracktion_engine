@@ -154,6 +154,7 @@ private:
     //==============================================================================
     void doFullInitialisation();
     void buildParameterList();
+    void refreshParameterValues();
     void updateDebugName();
     void processPluginBlock (const AudioRenderContext&);
 

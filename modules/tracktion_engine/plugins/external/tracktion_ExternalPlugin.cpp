@@ -46,6 +46,7 @@ struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorLis
         else
             jassertfalse;
 
+        plugin.refreshParameterValues();
         plugin.changed();
         plugin.edit.pluginChanged (plugin);
     }
@@ -580,6 +581,13 @@ void ExternalPlugin::buildParameterList()
 
     restoreChangedParametersFromState();
     buildParameterTree();
+}
+
+void ExternalPlugin::refreshParameterValues()
+{
+    for (auto p : autoParamForParamNumbers)
+        if (p != nullptr)
+            p->valueChangedByPlugin();
 }
 
 std::unique_ptr<PluginDescription> ExternalPlugin::findDescForUID (int uid) const
@@ -1428,10 +1436,7 @@ void ExternalPlugin::setCurrentProgram (int index, bool sendChangeMessage)
             if (sendChangeMessage)
             {
                 changed();
-
-                for (auto p : autoParamForParamNumbers)
-                    if (p != nullptr)
-                        p->valueChangedByPlugin();
+                refreshParameterValues();
             }
         }
     }
