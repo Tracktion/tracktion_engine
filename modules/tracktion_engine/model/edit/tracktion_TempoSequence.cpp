@@ -414,16 +414,18 @@ void TempoSequence::insertSpaceIntoSequence (double time, double amountOfSpaceIn
 
 void TempoSequence::deleteRegion (EditTimeRange range)
 {
+    const auto beatRange = timeToBeats (range);
+    
     removeTemposBetween (range, false);
     removeTimeSigsBetween (range);
 
     const bool snapToBeat = false;
-    const double start = range.getStart();
-    const double deltaBeats = -(getBeatsPerSecondAt (start) * range.getLength());
+    const double startTime = beatsToTime (beatRange.getStart());
+    const double deltaBeats = -beatRange.getLength();
 
     // Move timesig settings
     {
-        const int startIndex = indexOfTimeSigAt (start) + 1;
+        const int startIndex = indexOfTimeSigAt (startTime) + 1;
 
         for (int i = startIndex; i < getNumTimeSigs(); ++i)
             moveTimeSigStart (i, deltaBeats, snapToBeat);
@@ -431,7 +433,7 @@ void TempoSequence::deleteRegion (EditTimeRange range)
 
     // Move tempo settings
     {
-        const int startIndex = indexOfNextTempoAt (start);
+        const int startIndex = indexOfNextTempoAt (startTime);
 
         for (int i = startIndex; i < getNumTempos(); ++i)
             moveTempoStart (i, deltaBeats, snapToBeat);
