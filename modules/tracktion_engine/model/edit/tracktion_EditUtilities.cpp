@@ -30,6 +30,37 @@ bool referencesProjectItem (Edit& edit, ProjectItemID itemID)
 }
 
 //==============================================================================
+//==============================================================================
+void insertSpaceIntoEdit (Edit& edit, EditTimeRange timeRange)
+{
+    const bool doTempoTrackFirst = ! edit.getTimecodeFormat().isBarsBeats();
+    const auto time = timeRange.getStart();
+    const auto length = timeRange.getLength();
+
+    if (doTempoTrackFirst)
+        edit.getTempoTrack()->insertSpaceIntoTrack (time, length);
+
+    for (auto ct : getTracksOfType<ClipTrack> (edit, true))
+    {
+        ct->splitAt (time);
+        ct->insertSpaceIntoTrack (time, length);
+    }
+
+    if (! doTempoTrackFirst)
+        edit.getTempoTrack()->insertSpaceIntoTrack (time, length);
+}
+
+void insertSpaceIntoEditFromBeatRange (Edit& edit, juce::Range<double> beatRange)
+{
+    auto& ts = edit.tempoSequence;
+    const double timeToInsertAt = ts.beatsToTime (beatRange.getStart());
+    auto& tempoAtInsertionPoint = ts.getTempoAt (timeToInsertAt);
+
+    const double lengthInTimeToInsert = beatRange.getLength() * tempoAtInsertionPoint.getApproxBeatLength();
+    insertSpaceIntoEdit (edit, EditTimeRange::withStartAndLength (timeToInsertAt, lengthInTimeToInsert));
+}
+
+//==============================================================================
 juce::Array<Track*> getAllTracks (const Edit& edit)
 {
     juce::Array<Track*> tracks;
@@ -329,8 +360,6 @@ void deleteRegionOfTracks (Edit& edit, EditTimeRange rangeToDelete, bool onlySel
         }
     };
 
-    edit.tempoSequence.deleteRegion (rangeToDelete);
-
     for (int i = tracks.size(); --i >= 0;)
     {
         if (auto t = dynamic_cast<ClipTrack*> (tracks[i]))
@@ -364,6 +393,9 @@ void deleteRegionOfTracks (Edit& edit, EditTimeRange rangeToDelete, bool onlySel
 
     for (auto p : pluginsInRacks)
         removeAutomationRangeOfPlugin (*p);
+
+    // N.B. Delete tempo last
+    edit.tempoSequence.deleteRegion (rangeToDelete);
 }
 
 void moveSelectedClips (const SelectableList& selectedObjectsIn, Edit& edit, MoveClipAction mode, bool automationLocked)

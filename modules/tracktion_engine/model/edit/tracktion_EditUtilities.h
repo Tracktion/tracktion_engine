@@ -23,6 +23,16 @@ bool referencesProjectItem (Edit&, ProjectItemID);
 
 
 //==============================================================================
+// Edit
+//==============================================================================
+
+/** Inserts blank space in to an Edit, splitting clips if necessary. */
+void insertSpaceIntoEdit (Edit&, EditTimeRange timeRangeToInsert);
+
+/** Inserts a number of blank beats in to the Edit. */
+void insertSpaceIntoEditFromBeatRange (Edit&, juce::Range<double> beatRange);
+
+//==============================================================================
 // Tracks
 //==============================================================================
 
