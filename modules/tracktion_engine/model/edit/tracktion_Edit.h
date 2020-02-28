@@ -628,7 +628,7 @@ private:
     friend class Edit;
     friend class TransportControl;
     juce::Array<Edit*, juce::CriticalSection> edits;
-    std::atomic<int> numTransportsPlaying;
+    std::atomic<int> numTransportsPlaying { 0 };
 
     ActiveEdits();
 };
