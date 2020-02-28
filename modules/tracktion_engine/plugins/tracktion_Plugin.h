@@ -87,23 +87,29 @@ public:
     bool isProcessingEnabled() const noexcept               { return processing; }
 
     //==============================================================================
-    /** Gives the plugin a chance to set itself up before being played
+    /** Gives the plugin a chance to set itself up before being played.
 
-        the sample rate and the average block size - although the blocks
-        won't always be the same, and may be bigger
+        The sample rate and the average block size - although the blocks
+        won't always be the same, and may be bigger.
+        
+        Don't call this directly or the initialise count will become out of sync.
+        @see baseClassInitialise
     */
     virtual void initialise (const PlaybackInitialisationInfo&) = 0;
 
-    /** tells the plugin that the audio graph has changed but the plugin isn't being
+    /** Tells the plugin that the audio graph has changed but the plugin isn't being
         re-initialised - i.e. it's being re-used, maybe by being moved to a different
         track, etc.
     */
     virtual void initialiseWithoutStopping (const PlaybackInitialisationInfo&)  {}
 
-    /** called after play stops */
+    /** Called after play stops to release resources.
+        Don't call this directly or the initialise count will become out of sync.
+        @see baseClassDeinitialise
+    */
     virtual void deinitialise() = 0;
 
-    /** should reset synth voices, tails, clear delay buffers, etc. */
+    /** Should reset synth voices, tails, clear delay buffers, etc. */
     virtual void reset();
 
     //==============================================================================

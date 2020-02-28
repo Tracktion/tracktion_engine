@@ -1159,6 +1159,7 @@ void ExternalPlugin::applyToBuffer (const AudioRenderContext& fc)
     {
         CRASH_TRACER_PLUGIN (getDebugName());
         const ScopedLock sl (lock);
+        jassert (isInstancePrepared);
 
         if (playhead != nullptr)
             playhead->setCurrentContext (&fc);

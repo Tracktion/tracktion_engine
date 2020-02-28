@@ -14,7 +14,8 @@ namespace tracktion_engine
 void Renderer::turnOffAllPlugins (Edit& edit)
 {
     for (auto f : getAllPlugins (edit, true))
-        f->deinitialise();
+        while (! f->baseClassNeedsInitialising())
+            f->baseClassDeinitialise();
 }
 
 static void resetFPU() noexcept
