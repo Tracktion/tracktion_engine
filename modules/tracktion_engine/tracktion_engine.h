@@ -298,6 +298,7 @@ namespace tracktion_engine
 #include "utilities/tracktion_AudioFadeCurve.h"
 #include "utilities/tracktion_Spline.h"
 #include "utilities/tracktion_Ditherer.h"
+#include "utilities/tracktion_ExternalPlayheadSynchroniser.h"
 #include "selection/tracktion_Selectable.h"
 #include "selection/tracktion_SelectableClass.h"
 #include "selection/tracktion_SelectionManager.h"

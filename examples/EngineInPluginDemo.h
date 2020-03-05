@@ -16,7 +16,8 @@
   exporters:        vs2017, xcode_mac, linux_make
 
   moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1
-  defines:          JucePlugin_IsSynth=1, JucePlugin_WantsMidiInput=1
+  defines:          JucePlugin_IsSynth=1, JucePlugin_WantsMidiInput=1,
+                    JucePlugin_Vst3Category="Instrument", JucePlugin_AUMainType='aumu', JucePlugin_VSTCategory=kPlugCategSynth
 
   type:             AudioProcessor
   mainClass:        EngineInPluginDemo
@@ -29,23 +30,10 @@
 
 #include "common/Utilities.h"
 
-static String organPatch = "<PLUGIN type=\"4osc\" windowLocked=\"1\" id=\"1069\" enabled=\"1\" filterType=\"1\" presetDirty=\"0\" presetName=\"4OSC: Organ\" filterFreq=\"127.00000000000000000000\" ampAttack=\"0.60000002384185791016\" ampDecay=\"10.00000000000000000000\" ampSustain=\"100.00000000000000000000\" ampRelease=\"0.40000000596046447754\" waveShape1=\"4\" tune2=\"-24.00000000000000000000\" waveShape2=\"4\"> <MACROPARAMETERS id=\"1069\"/> <MODIFIERASSIGNMENTS/> <MODMATRIX/> </PLUGIN>";
 
 //==============================================================================
-class PluginEditor : public AudioProcessorEditor
-{
-public:
-    PluginEditor (AudioProcessor& p) : AudioProcessorEditor (p)
-    {
-        setSize (400, 300);
-    }
-    
-    void paint (Graphics& g) override
-    {
-        g.fillAll (Colours::darkgrey);
-    }
-};
-
+//==============================================================================
+static String organPatch = "<PLUGIN type=\"4osc\" windowLocked=\"1\" id=\"1069\" enabled=\"1\" filterType=\"1\" presetDirty=\"0\" presetName=\"4OSC: Organ\" filterFreq=\"127.00000000000000000000\" ampAttack=\"0.60000002384185791016\" ampDecay=\"10.00000000000000000000\" ampSustain=\"100.00000000000000000000\" ampRelease=\"0.40000000596046447754\" waveShape1=\"4\" tune2=\"-24.00000000000000000000\" waveShape2=\"4\"> <MACROPARAMETERS id=\"1069\"/> <MODIFIERASSIGNMENTS/> <MODMATRIX/> </PLUGIN>";
 
 //==============================================================================
 class EngineInPluginDemo  : public AudioProcessor
@@ -73,6 +61,9 @@ public:
 
     void processBlock (AudioBuffer<float>& buffer, MidiBuffer& midi) override
     {
+        // Update position info first
+        engineWrapper->playheadSynchroniser.synchronise (*this);
+
         ScopedNoDenormals noDenormals;
         
         auto totalNumInputChannels  = getTotalNumInputChannels();
@@ -180,6 +171,7 @@ private:
         te::Edit edit { engine, te::createEmptyEdit(), te::Edit::forEditing, nullptr, 0 };
         te::TransportControl& transport { edit.getTransport() };
         te::HostedAudioDeviceInterface& audioInterface;
+        te::ExternalPlayheadSynchroniser playheadSynchroniser { edit };
     };
     
     template<typename Function>
@@ -213,9 +205,70 @@ private:
         jassert (engineWrapper);
         callFunctionOnMessageThread ([&] { engineWrapper->audioInterface.prepareToPlay (sampleRate, expectedBlockSize); });
     }
-
+    
     //==============================================================================
     std::unique_ptr<EngineWrapper> engineWrapper;
+
+    //==============================================================================
+    //==============================================================================
+    class PluginEditor : public AudioProcessorEditor
+    {
+    public:
+        PluginEditor (EngineInPluginDemo& p)
+            : AudioProcessorEditor (p),
+              plugin (p)
+        {
+            addAndMakeVisible (clickTrackButton);
+
+            pluginPositionInfo.resetToDefault();
+            editPositionInfo.resetToDefault();
+            
+            repaintTimer.startTimerHz (25);
+            update();
+
+            setSize (400, 300);
+        }
+        
+        void paint (Graphics& g) override
+        {
+            g.fillAll (Colours::darkgrey);
+            
+            auto r = getLocalBounds();
+            String text;
+            text << "Host Info:" << newLine
+                 << PlayHeadHelpers::getTimecodeDisplay (pluginPositionInfo) << newLine
+                 << newLine
+                 << "Tracktion Engine Info:" << newLine
+                 << PlayHeadHelpers::getTimecodeDisplay (editPositionInfo) << newLine;
+            g.setColour (Colours::white);
+            g.setFont (15.0f);
+            g.drawFittedText (text, r.reduced (10), Justification::topLeft, 5);
+        }
+        
+        void resized() override
+        {
+            auto r = getLocalBounds();
+            clickTrackButton.setBounds (r.reduced (10).removeFromBottom (26));
+        }
+        
+    private:
+        EngineInPluginDemo& plugin;
+        AudioPlayHead::CurrentPositionInfo pluginPositionInfo, editPositionInfo;
+        te::LambdaTimer repaintTimer { [this] { update(); } };
+        ToggleButton clickTrackButton { "Enable Click Track" };
+        
+        void update()
+        {
+            if (plugin.engineWrapper)
+            {
+                pluginPositionInfo = plugin.engineWrapper->playheadSynchroniser.getPositionInfo();
+                editPositionInfo = getCurrentPositionInfo (plugin.engineWrapper->edit);
+                clickTrackButton.getToggleStateValue().referTo (plugin.engineWrapper->edit.clickTrackEnabled.getPropertyAsValue());
+            }
+            
+            repaint();
+        }
+    };
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EngineInPluginDemo)

@@ -64,6 +64,7 @@ using namespace juce;
 #include "utilities/tracktion_ConstrainedCachedValue.cpp"
 #include "utilities/tracktion_CrashTracer.cpp"
 #include "utilities/tracktion_CurveEditor.cpp"
+#include "utilities/tracktion_ExternalPlayheadSynchroniser.cpp"
 #include "utilities/tracktion_Envelope.cpp"
 #include "utilities/tracktion_FileUtilities.cpp"
 #include "utilities/tracktion_Oscillators.cpp"
