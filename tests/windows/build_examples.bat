@@ -20,7 +20,7 @@ call "%TESTS_DIR%/build_projucer.bat" || exit 1
 ::============================================================
 ::   Build examples
 ::============================================================
-call :BuildExample "TestRunner"
+call :BuildExample "TestRunner" "RUN"
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
 call :BuildExample "PlaybackDemo"
@@ -67,5 +67,10 @@ exit /b 0
         set CL=/DJUCER_ENABLE_GPL_MODE /GL
         "%MSBUILD_EXE%" %EXAMPLE_NAME%.sln /p:VisualStudioVersion=15.0 /m /t:Build /p:Configuration=Release /p:Platform=x64 /p:PreferredToolArchitecture=x64 /p:TreatWarningsAsErrors="true" /warnaserror
         if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+        if "%~2%" equ "RUN" (
+            "%EXAMPLE_ROOT_DIR%/Builds/VisualStudio2017/x64/Release/App/%EXAMPLE_NAME%.exe"
+            if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+        )
     :builtSection
 exit /B %ERRORLEVEL%

@@ -27,6 +27,13 @@
 
 #pragma once
 
+struct CoutLogger : public Logger
+{
+    void logMessage (const String& message) override
+    {
+        std::cout << message << "\n";
+    }
+};
 
 //==============================================================================
 class TestRunner  : public Component
@@ -36,6 +43,9 @@ public:
     TestRunner()
     {
         setSize (600, 400);
+
+        CoutLogger logger;
+        Logger::setCurrentLogger (&logger);
 
         UnitTestRunner testRunner;
         testRunner.setAssertOnFailure (false);
@@ -47,6 +57,8 @@ public:
         for (int i = 0; i <= testRunner.getNumResults(); ++i)
             if (auto result = testRunner.getResult (i))
                 numFailues += result->failures;
+
+        Logger::setCurrentLogger (nullptr);
 
         if (numFailues > 0)
             JUCEApplication::getInstance()->setApplicationReturnValue (1);
