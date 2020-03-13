@@ -526,6 +526,7 @@ namespace tracktion_engine
 #include "plugins/effects/tracktion_Delay.h"
 #include "plugins/effects/tracktion_Chorus.h"
 #include "plugins/effects/tracktion_FourOscPlugin.h"
+#include "plugins/effects/tracktion_LatencyPlugin.h"
 #include "plugins/effects/tracktion_LowPass.h"
 #include "plugins/effects/tracktion_MidiModifier.h"
 #include "plugins/effects/tracktion_MidiPatchBay.h"

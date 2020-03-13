@@ -48,6 +48,7 @@ using namespace juce;
 #include "plugins/effects/tracktion_Compressor.cpp"
 #include "plugins/effects/tracktion_Delay.cpp"
 #include "plugins/effects/tracktion_FourOscPlugin.cpp"
+#include "plugins/effects/tracktion_LatencyPlugin.cpp"
 #include "plugins/effects/tracktion_Equaliser.cpp"
 #include "plugins/effects/tracktion_LowPass.cpp"
 #include "plugins/effects/tracktion_MidiModifier.cpp"
@@ -59,5 +60,7 @@ using namespace juce;
 #include "plugins/effects/tracktion_SamplerPlugin.cpp"
 
 #include "plugins/ARA/tracktion_MelodyneFileReader.cpp"
+
+#include "plugins/tracktion_tests_Plugins.cpp"
 
 #endif

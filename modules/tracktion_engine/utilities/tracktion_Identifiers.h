@@ -624,6 +624,7 @@ namespace IDs
     DECLARE_ID (chorusMix)
     DECLARE_ID (ARRANGERTRACK)
     DECLARE_ID (ARRANGERCLIP)
+    DECLARE_ID (apply)
     
     #undef DECLARE_ID
 }

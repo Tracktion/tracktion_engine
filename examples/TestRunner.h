@@ -27,6 +27,54 @@
 
 #pragma once
 
+using namespace tracktion_engine;
+
+//==============================================================================
+//==============================================================================
+class TestUIBehaviour : public UIBehaviour
+{
+public:
+    TestUIBehaviour() = default;
+    
+private:
+    void runTaskWithProgressBar (ThreadPoolJobWithProgress& t)
+    {
+        TaskRunner runner (t);
+
+         while (runner.isThreadRunning())
+             if (! MessageManager::getInstance()->runDispatchLoopUntil (10))
+                 break;
+    }
+
+    //==============================================================================
+    struct TaskRunner  : public Thread
+    {
+        TaskRunner (ThreadPoolJobWithProgress& t)
+            : Thread (t.getJobName()), task (t)
+        {
+            startThread();
+        }
+
+        ~TaskRunner()
+        {
+            task.signalJobShouldExit();
+            waitForThreadToExit (10000);
+        }
+
+        void run() override
+        {
+            while (! threadShouldExit())
+                if (task.runJob() == ThreadPoolJob::jobHasFinished)
+                    break;
+        }
+
+        ThreadPoolJobWithProgress& task;
+    };
+};
+
+
+//==============================================================================
+//==============================================================================
 struct CoutLogger : public Logger
 {
     void logMessage (const String& message) override
@@ -35,6 +83,8 @@ struct CoutLogger : public Logger
     }
 };
 
+
+//==============================================================================
 //==============================================================================
 class TestRunner  : public Component
 {
@@ -74,7 +124,7 @@ public:
 
 private:
     //==============================================================================
-    tracktion_engine::Engine engine { ProjectInfo::projectName };
+    tracktion_engine::Engine engine { ProjectInfo::projectName, std::make_unique<TestUIBehaviour>(), nullptr };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TestRunner)
 };
