@@ -31,7 +31,7 @@ public:
             bufferIndex = 0;
             buffer.malloc ((size_t) maxSize);
             maxBufferSize = maxSize;
-            bufferSize = (float) jmin ((int) bufferSize, maxBufferSize);
+            bufferSize = jmin (bufferSize, maxBufferSize);
         }
 
         clear();
@@ -43,11 +43,8 @@ public:
         buffer.clear ((size_t) maxBufferSize);
     }
 
-    /** Sets the size of delay in samples.
-        Note that if this is a non-integer you should make sure you are using a
-        suitable interpolation policy.
-     */
-    void setSize (float newSize)
+    /** Sets the size of delay in samples. */
+    void setSize (int newSize)
     {
         lastBufferSize = bufferSize;
         jassert (newSize < maxBufferSize);
@@ -55,11 +52,11 @@ public:
         if (newSize < bufferSize)
             bufferIndex = 0;
 
-        bufferSize = jmin ((float) maxBufferSize, newSize);
+        bufferSize = jmin (maxBufferSize, newSize);
     }
 
-    /** Gets the buffer size */
-    float getSize() const
+    /** Gets the buffer size. */
+    int getSize() const
     {
         return bufferSize;
     }
@@ -72,12 +69,12 @@ public:
             bufferWritePos = ++bufferWritePos % maxBufferSize;
             buffer[bufferWritePos] = samples[i];
 
-            float bufferReadPos = bufferWritePos - bufferSize;
+            int bufferReadPos = bufferWritePos - bufferSize;
 
             if (bufferReadPos < 0)
                 bufferReadPos += maxBufferSize;
 
-            samples[i] = buffer[(int) bufferReadPos];
+            samples[i] = buffer[bufferReadPos];
         }
     }
 
@@ -99,8 +96,8 @@ public:
             bufferWritePos = ++bufferWritePos % maxBufferSize;
             buffer[bufferWritePos] = samples[i];
 
-            float bufferReadPos = bufferWritePos - bufferSize;
-            float bufferReadOld = bufferWritePos - lastBufferSize;
+            int bufferReadPos = bufferWritePos - bufferSize;
+            int bufferReadOld = bufferWritePos - lastBufferSize;
 
             if (bufferReadPos < 0)  bufferReadPos += maxBufferSize;
             if (bufferReadOld < 0)  bufferReadOld += maxBufferSize;
@@ -121,7 +118,7 @@ private:
     //==============================================================================
     HeapBlock<float> buffer;
     int bufferIndex = 0, maxBufferSize = 0, bufferWritePos = 0;
-    int bufferSize = 0.0f, lastBufferSize = 0.0f;
+    int bufferSize = 0, lastBufferSize = 0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DelayRegister)
 };
@@ -177,7 +174,7 @@ void LatencyPlugin::applyToBuffer (const AudioRenderContext& rc)
     if (rc.destBuffer == nullptr)
         return;
 
-    const float delayCompensationSamples =  latencyTimeSeconds.get() * (float) sampleRate;
+    const int delayCompensationSamples =  roundToInt (latencyTimeSeconds.get() * (float) sampleRate);
 
     if (delayCompensationSamples != 0)
     {
