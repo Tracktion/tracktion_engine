@@ -59,6 +59,7 @@ public:
             expectPeak (*edit, { 0.5, 1.0 }, { track1 }, 0.0f);
         }
 
+		engine.getAudioFileManager().releaseAllFiles();
         edit->getTempDirectory (false).deleteRecursively();
     }
 
