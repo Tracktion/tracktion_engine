@@ -61,6 +61,7 @@ public:
             edit = std::make_unique<te::Edit> (engine, te::createEmptyEdit(), te::Edit::forEditing, nullptr, 0);
             auto clip = EngineHelpers::loadAudioFileAsClip (*edit, f);
             EngineHelpers::loopAroundClip (*clip);
+            edit->getTransport().addChangeListener(this);
             
             editNameLabel.setText ("Demo Song", dontSendNotification);
         }
