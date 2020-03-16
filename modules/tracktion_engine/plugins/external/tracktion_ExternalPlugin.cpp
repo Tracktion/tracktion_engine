@@ -1128,13 +1128,20 @@ void ExternalPlugin::prepareIncomingMidiMessages (MidiMessageArray& incoming, in
         if (supportsMPE)
             mpeRemapper->remapMidiChannelIfNeeded (m);
 
+        if (m.isNoteOn())
+        {
+            if (activeNotes.isNoteActive (m.getChannel(), m.getNoteNumber()))
+                continue;
+            
+            activeNotes.startNote (m.getChannel(), m.getNoteNumber());
+        }
+        else if (m.isNoteOff())
+        {
+            activeNotes.clearNote (m.getChannel(), m.getNoteNumber());
+        }
+
         auto sample = jlimit (0, numSamples - 1, (int) (m.getTimeStamp() * sampleRate));
         midiBuffer.addEvent (m, sample);
-
-        if (m.isNoteOn())
-            activeNotes.startNote (m.getChannel(), m.getNoteNumber());
-        else if (m.isNoteOff())
-            activeNotes.clearNote (m.getChannel(), m.getNoteNumber());
     }
 
    #if 0
