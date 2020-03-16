@@ -59,6 +59,7 @@ public:
             f.replaceWithData (PlaybackDemoAudio::BITs_Export_2_ogg, PlaybackDemoAudio::BITs_Export_2_oggSize);
             
             edit = std::make_unique<te::Edit> (engine, te::createEmptyEdit(), te::Edit::forEditing, nullptr, 0);
+            edit->getTransport().addChangeListener (this);
             auto clip = EngineHelpers::loadAudioFileAsClip (*edit, f);
             EngineHelpers::loopAroundClip (*clip);
             
