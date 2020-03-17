@@ -1062,7 +1062,7 @@ bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& w
         PlaybackInitialisationInfo info =
         {
             takeRange.getStart(),
-            writer.writer->getSampleRate(),
+            writer.getSampleRate(),
             blockSize,
             &allNodes,
             localPlayhead
@@ -1072,7 +1072,7 @@ bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& w
     }
 
     // now prepare the render context
-    juce::AudioBuffer<float> renderingBuffer (writer.writer->getNumChannels(), blockSize + 256);
+    juce::AudioBuffer<float> renderingBuffer (writer.getNumChannels(), blockSize + 256);
     auto renderingBufferChannels = AudioChannelSet::canonicalChannelSet (renderingBuffer.getNumChannels());
 
     AudioRenderContext rc (localPlayhead, takeRange,
@@ -1088,8 +1088,8 @@ bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& w
 
     // now perform the render
     auto streamTime = takeRange.getStart();
-    auto blockLength = blockSize / writer.writer->getSampleRate();
-    int64 samplesToWrite = roundToInt (takeRange.getLength() * writer.writer->getSampleRate());
+    auto blockLength = blockSize / writer.getSampleRate();
+    int64 samplesToWrite = roundToInt (takeRange.getLength() * writer.getSampleRate());
 
     for (;;)
     {

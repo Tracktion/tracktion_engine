@@ -145,9 +145,12 @@ AudioFileWriter::AudioFileWriter (const AudioFile& f,
     Engine::getInstance().getAudioFileManager().releaseFile (file);
 
     if (file.getFile().getParentDirectory().createDirectory())
+    {
+        const juce::ScopedLock sl (writerLock);
         writer.reset (AudioFileUtils::createWriterFor (formatToUse, file.getFile(), sampleRate,
                                                        (unsigned int) numChannels, bitsPerSample,
                                                        metadata, quality));
+    }
 }
 
 AudioFileWriter::~AudioFileWriter()
@@ -155,15 +158,24 @@ AudioFileWriter::~AudioFileWriter()
     closeForWriting();
 }
 
+bool AudioFileWriter::isOpen() const noexcept               { const juce::ScopedLock sl (writerLock); return writer != nullptr; }
+double AudioFileWriter::getSampleRate() const noexcept      { jassert (isOpen()); const juce::ScopedLock sl (writerLock); return writer->getSampleRate(); }
+int AudioFileWriter::getNumChannels() const noexcept        { jassert (isOpen()); const juce::ScopedLock sl (writerLock); return writer->getNumChannels(); }
+
 void AudioFileWriter::closeForWriting()
 {
-    writer = nullptr;
+    {
+        const juce::ScopedLock sl (writerLock);
+        writer.reset();
+    }
+    
     Engine::getInstance().getAudioFileManager().releaseFile (file);
 }
 
 bool AudioFileWriter::appendBuffer (juce::AudioBuffer<float>& buffer, int num)
 {
     num = std::min (num, buffer.getNumSamples());
+    const juce::ScopedLock sl (writerLock);
 
     if (writer != nullptr && writer->writeFromAudioSampleBuffer (buffer, 0, num))
     {
@@ -183,7 +195,16 @@ bool AudioFileWriter::appendBuffer (juce::AudioBuffer<float>& buffer, int num)
 
 bool AudioFileWriter::appendBuffer (const int** buffer, int num)
 {
+    const juce::ScopedLock sl (writerLock);
     return writer != nullptr && writer->write (buffer, num);
+}
+
+bool AudioFileWriter::writeFromAudioReader (juce::AudioFormatReader& reader,
+                                            juce::int64 startSample,
+                                            juce::int64 numSamples)
+{
+    const juce::ScopedLock sl (writerLock);
+    return writer != nullptr && writer->writeFromAudioReader (reader, startSample, numSamples);
 }
 
 //==============================================================================

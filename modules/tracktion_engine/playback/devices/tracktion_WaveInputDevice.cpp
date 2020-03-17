@@ -303,7 +303,6 @@ public:
         CRASH_TRACER
 
         String error;
-        inputBuffer.setSize (2, blockSizeSamples);
 
         JUCE_TRY
         {
@@ -1113,9 +1112,8 @@ protected:
     static void closeFileWriter (RecordingContext& rc)
     {
         CRASH_TRACER
-        auto localCopy = std::move (rc.fileWriter);
 
-        if (localCopy != nullptr)
+        if (auto localCopy = std::move (rc.fileWriter))
             rc.engine.getWaveInputRecordingThread().waitForWriterToFinish (*localCopy);
     }
 
@@ -1720,7 +1718,7 @@ struct WaveInputRecordingThread::BlockQueue
 
     struct QueuedBlock
     {
-        QueuedBlock() {}
+        QueuedBlock() = default;
 
         void load (AudioFileWriter& w, const juce::AudioBuffer<float>& newBuffer,
                    int start, int numSamples, const RecordingThumbnailManager::Thumbnail::Ptr& thumb)
@@ -1734,7 +1732,7 @@ struct WaveInputRecordingThread::BlockQueue
             thumbnail = thumb;
         }
 
-        AudioFileWriter* writer = nullptr;
+        std::atomic<AudioFileWriter*> writer { nullptr };
         QueuedBlock* next = nullptr;
         juce::AudioBuffer<float> buffer { 2, 512 };
         RecordingThumbnailManager::Thumbnail::Ptr thumbnail;
@@ -1746,7 +1744,7 @@ struct WaveInputRecordingThread::BlockQueue
     QueuedBlock* firstPending = nullptr;
     QueuedBlock* lastPending = nullptr;
     QueuedBlock* firstFree = nullptr;
-    int numPending = 0;
+    std::atomic<int> numPending { 0 };
 
     QueuedBlock* findFreeBlock()
     {
@@ -1765,6 +1763,7 @@ struct WaveInputRecordingThread::BlockQueue
     {
         jassert (b != nullptr);
         const ScopedLock sl (freeQueueLock);
+        b->writer = nullptr;
         b->next = firstFree;
         firstFree = b;
     }
@@ -1788,7 +1787,7 @@ struct WaveInputRecordingThread::BlockQueue
     {
         const ScopedLock sl (pendingQueueLock);
 
-        if (auto* b = firstPending)
+        if (auto b = firstPending)
         {
             firstPending = b->next;
 
@@ -1804,7 +1803,7 @@ struct WaveInputRecordingThread::BlockQueue
 
     void moveAnyPendingBlocksToFree() noexcept
     {
-        while (auto* b = removeFirstPending())
+        while (auto b = removeFirstPending())
             addToFreeQueue (b);
 
         jassert (numPending == 0);
@@ -1815,7 +1814,7 @@ struct WaveInputRecordingThread::BlockQueue
     {
         const ScopedLock sl (pendingQueueLock);
 
-        for (auto* b = firstPending; b != nullptr; b = b->next)
+        for (auto b = firstPending; b != nullptr; b = b->next)
             if (b->writer == &writer)
                 return true;
 
@@ -1824,7 +1823,7 @@ struct WaveInputRecordingThread::BlockQueue
 
     void deleteFreeQueue() noexcept
     {
-        auto* b = firstFree;
+        auto b = firstFree;
         firstFree = nullptr;
 
         while (b != nullptr)
@@ -1868,7 +1867,7 @@ void WaveInputRecordingThread::addBlockToRecord (AudioFileWriter& writer, const 
 {
     if (! threadShouldExit())
     {
-        auto* block = queue->findFreeBlock();
+        auto block = queue->findFreeBlock();
         block->load (writer, buffer, start, numSamples, thumbnail);
         queue->addToPendingQueue (block);
         notify();
@@ -1894,9 +1893,9 @@ void WaveInputRecordingThread::run()
             TRACKTION_LOG_ERROR ("Audio recording can't keep up!");
         }
 
-        if (auto* block = queue->removeFirstPending())
+        if (auto block = queue->removeFirstPending())
         {
-            if (! block->writer->appendBuffer (block->buffer, block->buffer.getNumSamples()))
+            if (! block->writer.load()->appendBuffer (block->buffer, block->buffer.getNumSamples()))
             {
                 if (! hasSentStop)
                 {

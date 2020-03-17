@@ -204,7 +204,7 @@ private:
     juce::StringArray tagsArray;
 
     bool imageChanged = false;
-    bool isAudible = true;
+    std::atomic<bool> isAudible { true };
 
     juce::WeakReference<Track> cachedParentTrack;
     FolderTrack* cachedParentFolderTrack = nullptr;

@@ -139,7 +139,7 @@ struct AudioFileUtils
                                     (int) reader->bitsPerSample,
                                     reader->metadataValues, 0);
 
-            if (writer.isOpen() && writer.writer->writeFromAudioReader (*reader, 0, -1))
+            if (writer.isOpen() && writer.writeFromAudioReader (*reader, 0, -1))
                 return true;
         }
 

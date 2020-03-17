@@ -428,7 +428,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
                                                jmax (16, sourceInfo.bitsPerSample),
                                                sourceInfo.metadata, 0));
 
-            renderingBuffer.reset (new juce::AudioBuffer<float> (writer->writer->getNumChannels(), blockSize + 256));
+            renderingBuffer.reset (new juce::AudioBuffer<float> (writer->getNumChannels(), blockSize + 256));
             auto renderingBufferChannels = AudioChannelSet::canonicalChannelSet (renderingBuffer->getNumChannels());
 
             // now prepare the render context
@@ -441,7 +441,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
             // round pre roll timr to nearest block
             numPreBlocks = (int) std::ceil ((prerollTimeS * sourceInfo.sampleRate) / blockSize);
 
-            auto prerollTimeRounded = numPreBlocks * blockSizeToUse / writer->writer->getSampleRate();
+            auto prerollTimeRounded = numPreBlocks * blockSizeToUse / writer->getSampleRate();
 
             streamTime = -prerollTimeRounded;
 
@@ -454,8 +454,8 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
         ThreadPoolJob::JobStatus render (AudioNode& audioNode, std::atomic<float>& progressToUpdate)
         {
             CRASH_TRACER
-            auto blockLength = blockSize / writer->writer->getSampleRate();
-            juce::int64 samplesToWrite = roundToInt ((streamRange.getEnd() - streamTime) * writer->writer->getSampleRate());
+            auto blockLength = blockSize / writer->getSampleRate();
+            juce::int64 samplesToWrite = roundToInt ((streamRange.getEnd() - streamTime) * writer->getSampleRate());
             auto blockEnd = jmin (streamTime + blockLength, streamRange.getEnd());
             rc->streamTime = { streamTime, blockEnd };
 
@@ -536,7 +536,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
             PlaybackInitialisationInfo info =
             {
                 0.0,
-                renderContext->writer->writer->getSampleRate(),
+                renderContext->writer->getSampleRate(),
                 renderContext->blockSize,
                 &allNodes,
                 renderContext->rc->playhead

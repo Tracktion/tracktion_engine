@@ -407,7 +407,7 @@ private:
             if (numThisTime <= 0)
                 return true;
 
-            if (! writer.writer->writeFromAudioReader (*reader, sourceSample, numThisTime))
+            if (! writer.writeFromAudioReader (*reader, sourceSample, numThisTime))
                 break;
 
             samplesToDo -= numThisTime;
