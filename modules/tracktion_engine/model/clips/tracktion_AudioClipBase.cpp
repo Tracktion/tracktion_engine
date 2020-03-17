@@ -359,6 +359,7 @@ private:
         if (ok)
         {
             ok = proxy.deleteFile();
+            (void) ok;
             jassert (ok);
             ok = tempFile.getFile().moveFileTo (proxy.getFile());
             jassert (ok);

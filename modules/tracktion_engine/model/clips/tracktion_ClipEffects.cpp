@@ -392,6 +392,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
         if (ok)
         {
             ok = destination.deleteFile();
+            (void) ok;
             jassert (ok);
             ok = renderContext->writer->file.getFile().moveFileTo (destination.getFile());
             jassert (ok);
