@@ -298,7 +298,7 @@ public:
         return Result::ok();
     }
 
-    String prepareToRecord (double playStart, double punchIn, double sr, int blockSizeSamples, bool isLivePunch) override
+    String prepareToRecord (double playStart, double punchIn, double sr, int /*blockSizeSamples*/, bool isLivePunch) override
     {
         CRASH_TRACER
 
