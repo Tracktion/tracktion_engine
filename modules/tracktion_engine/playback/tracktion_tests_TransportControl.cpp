@@ -106,6 +106,7 @@ public:
     void cleanUp()
     {
         auto& deviceManager = Engine::getInstance().getDeviceManager();
+        deviceManager.closeDevices();
         deviceManager.removeHostedAudioDeviceInterface();
         deviceManager.initialise();
     }
