@@ -80,9 +80,9 @@ public:
     {
         if (callback != nullptr)
             callback->audioDeviceIOCallback (buffer.getArrayOfReadPointers(),
-                                             jmin (buffer.getNumSamples(), audioIf.parameters.inputChannels),
+                                             jmin (buffer.getNumChannels(), audioIf.parameters.inputChannels),
                                              buffer.getArrayOfWritePointers(),
-                                             jmin (buffer.getNumSamples(), audioIf.parameters.inputChannels),
+                                             jmin (buffer.getNumChannels(), audioIf.parameters.inputChannels),
                                              buffer.getNumSamples());
     }
 
