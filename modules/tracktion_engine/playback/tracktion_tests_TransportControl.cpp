@@ -67,28 +67,34 @@ public:
         auto edit = createEditWithTracksForInputs (engine, params);
         auto& transport = edit->getTransport();
 
-        // Start recording, add an impulse after 1s then wait another 1s and stop recording
+        beginTest ("Test injected impulses align");
         {
+            // Start recording, add an impulse after 1s then wait another 1s and stop recording
             ProcessThread processThread (audioIO, params);
 
             transport.stop (false, false);
 
             transport.record (false, false);
-            std::this_thread::sleep_for (1s);
+            auto& playhead = *transport.getCurrentPlayhead();
+            processThread.waitForThreadToStart();
+            waitUntilPlayheadPosition (playhead, 1.0);
 
             processThread.insertImpulseIntoNextBlock();
-            std::this_thread::sleep_for (1s);
+            waitUntilPlayheadPosition (playhead, 2.0);
+            expect (! processThread.needsToInsertImpulse(), "Impulse not inserted");
 
             transport.stop (false, true);
         }
 
-        beginTest ("Test injected impulses align");
         {
             // Get recorded audio files and check the impulse is in the same place
             auto clips = getAllClipsFromTracks<WaveAudioClip> (*edit);
             expectEquals (clips.size(), getAudioTracks (*edit).size());
             auto audioFiles = getSourceFilesFromClips (clips);
             auto sampleIndicies = getSampleIndiciesOfImpulse (audioFiles);
+
+            for (const auto& f : audioFiles)
+                expectGreaterOrEqual (getFileLength (f), 2.0, "File length less then 2 seconds");
 
             expectEquals ((int) std::count_if (sampleIndicies.begin(), sampleIndicies.end(),
                                                [] (auto index) { return index != - 1; }),
@@ -108,7 +114,7 @@ public:
         auto& deviceManager = Engine::getInstance().getDeviceManager();
         deviceManager.closeDevices();
         deviceManager.removeHostedAudioDeviceInterface();
-        deviceManager.initialise();
+        deviceManager.deviceManager.closeAudioDevice();
     }
 
     //==============================================================================
@@ -117,6 +123,14 @@ public:
     {
         while (Clock::now() < sleep_time)
             std::this_thread::yield();
+    }
+    
+    void waitUntilPlayheadPosition (const PlayHead& playhead, double time)
+    {
+        using namespace std::chrono_literals;
+        
+        while (playhead.getUnloopedPosition() < time)
+            std::this_thread::sleep_for (1ms);
     }
 
     //==============================================================================
@@ -158,6 +172,8 @@ public:
 
             processThread = std::thread ([&, msPerBlock]
                                          {
+                                             hasStarted = true;
+                
                                              while (! shouldStop.load())
                                              {
                                                  auto endTime = std::chrono::steady_clock::now() + std::chrono::milliseconds (msPerBlock);
@@ -180,10 +196,21 @@ public:
             shouldStop.store (true);
             processThread.join();
         }
+        
+        void waitForThreadToStart()
+        {
+            while (! hasStarted)
+                std::this_thread::yield();
+        }
 
         void insertImpulseIntoNextBlock()
         {
             insertImpulse.store (true);
+        }
+        
+        bool needsToInsertImpulse() const
+        {
+            return insertImpulse;
         }
 
     private:
@@ -194,7 +221,7 @@ public:
         MidiBuffer emptyMidiBuffer;
 
         std::thread processThread;
-        std::atomic<bool> shouldStop { false }, insertImpulse { false };
+        std::atomic<bool> hasStarted { false }, shouldStop { false }, insertImpulse { false };
     };
 
     //==============================================================================
@@ -260,6 +287,15 @@ public:
             sampleIndicies.push_back (findImpulseSampleIndex (file));
 
         return sampleIndicies;
+    }
+    
+    double getFileLength (const File& file)
+    {
+        if (auto reader = std::unique_ptr<AudioFormatReader> (tracktion_engine::AudioFileUtils::createReaderFor (file)))
+            if (reader->sampleRate > 0.0)
+                return reader->lengthInSamples / reader->sampleRate;
+
+        return 0.0;
     }
 };
 
