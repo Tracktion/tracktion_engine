@@ -36,14 +36,10 @@ function buildExample()
 	if [ -z "$DISABLE_BUILD" ]; then
 		cd "$EXAMPLE_ROOT_DIR/Builds/MacOSX"
 		xcodebuild -configuration Release LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
-
-        if [ "$2" == "RUN" ]; then
-            "$EXAMPLE_ROOT_DIR/Builds/MacOSX/build/Release/$EXAMPLE_NAME.app/Contents/MacOS/$EXAMPLE_NAME"
-        fi
 	fi
 }
 
-buildExample "TestRunner" "RUN"
+buildExample "TestRunner"
 buildExample "PlaybackDemo"
 buildExample "PitchAndTimeDemo"
 buildExample "StepSequencerDemo"

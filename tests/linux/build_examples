@@ -37,14 +37,10 @@ buildExample()
         cd "$EXAMPLE_ROOT_DIR/Builds/LinuxMakefile"
         make clean
         make CONFIG=Release -j2
-
-        if [ "$2" == "RUN" ]; then
-            "$EXAMPLE_ROOT_DIR/Builds/LinuxMakefile/build/$EXAMPLE_NAME"
-        fi
     fi
 }
 
-buildExample "TestRunner" "RUN"
+buildExample "TestRunner"
 buildExample "PlaybackDemo"
 buildExample "PitchAndTimeDemo"
 buildExample "StepSequencerDemo"

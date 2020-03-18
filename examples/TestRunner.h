@@ -36,8 +36,7 @@ class TestUIBehaviour : public UIBehaviour
 public:
     TestUIBehaviour() = default;
     
-private:
-    void runTaskWithProgressBar (ThreadPoolJobWithProgress& t)
+    void runTaskWithProgressBar (ThreadPoolJobWithProgress& t) override
     {
         TaskRunner runner (t);
 
@@ -46,6 +45,7 @@ private:
                  break;
     }
 
+private:
     //==============================================================================
     struct TaskRunner  : public Thread
     {
@@ -70,6 +70,20 @@ private:
 
         ThreadPoolJobWithProgress& task;
     };
+};
+
+
+//==============================================================================
+//==============================================================================
+class TestEngineBehaviour : public EngineBehaviour
+{
+public:
+    TestEngineBehaviour() = default;
+    
+    bool autoInitialiseDeviceManager() override
+    {
+        return false;
+    }
 };
 
 
@@ -124,7 +138,7 @@ public:
 
 private:
     //==============================================================================
-    tracktion_engine::Engine engine { ProjectInfo::projectName, std::make_unique<TestUIBehaviour>(), nullptr };
+    tracktion_engine::Engine engine { ProjectInfo::projectName, std::make_unique<TestUIBehaviour>(), std::make_unique<TestEngineBehaviour>() };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TestRunner)
 };

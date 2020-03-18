@@ -19,7 +19,7 @@ jobs:
     submodules: true
     clean: false
   - script: |
-      tests/linux/build_examples
+      tests/run_tests
     displayName: 'Linux Build'
 
 - job: macOS
@@ -33,7 +33,7 @@ jobs:
     submodules: true
     clean: false
   - script: |
-      tests/mac/build_examples
+      tests/run_tests
     displayName: 'macOS Build'
 
 - job: windows
@@ -46,9 +46,9 @@ jobs:
   - checkout: self
     submodules: true
     clean: false
-  - script: |
-      set MSBUILD_EXE=C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\MSBuild.exe
-      tests/windows/build_examples.bat
+  - bash: |
+      export MSBUILD_EXE="C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\MSBuild.exe"
+      tests/run_tests
     displayName: 'Windows Build'
 
 - job: publish
