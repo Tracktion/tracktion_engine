@@ -27,7 +27,7 @@ if [ "$PLATFORM" == "mac" ]; then
     "$ROOT/tests/mac/build_examples"
 
     TESTRUNNER_ROOT=$ROOT/examples/projects/TestRunner/Builds/MacOSX
-    TESTRUNNER_EXE=$TESTRUNNER_ROOT/build/Release/TestRunner.app/Contents/MacOS/TestRunner
+    TESTRUNNER_EXE=$TESTRUNNER_ROOT/build/Release/TestRunner
     cd "$TESTRUNNER_ROOT"
 
     # xcodebuild -configuration Release LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
@@ -51,7 +51,7 @@ if [ "$PLATFORM" == "windows" ]; then
     "$ROOT/tests/windows/build_examples.bat"
 
     TESTRUNNER_ROOT=$ROOT/examples/projects/TestRunner/Builds/VisualStudio2017
-    TESTRUNNER_EXE=$TESTRUNNER_ROOT/x64/Release/App/TestRunner.exe
+    TESTRUNNER_EXE=$TESTRUNNER_ROOT/x64/Release/ConsoleApp/TestRunner.exe
     cd "$TESTRUNNER_ROOT"
 
     # "$MSBUILD_EXE" TestRunner.sln -p:VisualStudioVersion=15.0 -m -p:Configuration=Release -p:Platform=x64 -p:PreferredToolArchitecture=x64
@@ -71,5 +71,8 @@ if [ "$PLATFORM" == "linux" ]; then
     # make CONFIG=Release -j$(nproc)
 
     "$TESTRUNNER_EXE"
-    valgrind "$TESTRUNNER_EXE"
+    
+    if [ -z "$DISABLE_VALGRIND" ]; then
+        valgrind "$TESTRUNNER_EXE"
+    fi
 fi
