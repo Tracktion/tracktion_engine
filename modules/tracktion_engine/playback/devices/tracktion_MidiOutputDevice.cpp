@@ -283,7 +283,7 @@ void MidiOutputDevice::setEnabled (bool b)
     if (b != enabled || firstSetEnabledCall)
     {
         enabled = b;
-        MouseCursor::showWaitCursor();
+        ScopedWaitCursor waitCursor;
 
         if (b)
         {

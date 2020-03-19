@@ -123,4 +123,28 @@ inline bool almostEqual (FloatingPointType firstValue, FloatingPointType secondV
     return std::abs (firstValue - secondValue) < precision;
 }
 
+
+//==============================================================================
+//==============================================================================
+/**
+    Shows and hides the mouse wait cursor where appropriate.
+*/
+class ScopedWaitCursor
+{
+public:
+    /** Shows the wait cursor. */
+    ScopedWaitCursor()
+    {
+        if (juce::JUCEApplicationBase::getInstance() != nullptr)
+            juce::MouseCursor::showWaitCursor();
+    }
+    
+    /** Hides the wait cursor. */
+    ~ScopedWaitCursor()
+    {
+        if (juce::JUCEApplicationBase::getInstance() != nullptr)
+            juce::MouseCursor::hideWaitCursor();
+    }
+};
+
 } // namespace tracktion_engine

@@ -207,8 +207,8 @@ void MidiInputDevice::setEnabled (bool b)
     {
         CRASH_TRACER
         enabled = b;
-        MouseCursor::showWaitCursor();
-
+        ScopedWaitCursor waitCursor;
+        
         if (b)
         {
             enabled = false;
@@ -238,8 +238,6 @@ void MidiInputDevice::setEnabled (bool b)
 
         if (! isTrackDevice())
             engine.getExternalControllerManager().midiInOutDevicesChanged();
-
-        MouseCursor::hideWaitCursor();
     }
 }
 

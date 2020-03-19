@@ -174,11 +174,12 @@ bool EditFileOperations::writeToFile (const File& file, bool writeQuickBinaryVer
 {
     CRASH_TRACER
     bool ok = false;
-
+    std::unique_ptr<ScopedWaitCursor> waitCursor;
+    
     if (! writeQuickBinaryVersion)
     {
         EditPlaybackContext::RealtimePriorityDisabler realtimeDisabler;
-        MouseCursor::showWaitCursor();
+        waitCursor = std::make_unique<ScopedWaitCursor>();
         sharedDataPimpl->editFileWriter->flushAllFiles();
     }
 
@@ -201,9 +202,6 @@ bool EditFileOperations::writeToFile (const File& file, bool writeQuickBinaryVer
             jassert (ok);
         }
     }
-
-    if (! writeQuickBinaryVersion)
-        MouseCursor::hideWaitCursor();
 
     if (ok)
         timeOfLastSave = Time::getCurrentTime();
