@@ -36,7 +36,7 @@ steps:
   displayName: 'Install dependencies'
 - bash: |
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
-      DISABLE_VALGRIND=1
+      export DISABLE_VALGRIND=1
       xvfb-run -a tests/run_tests
     else
       if [[ "$(imageName)" == "windows-2019" ]]; then
