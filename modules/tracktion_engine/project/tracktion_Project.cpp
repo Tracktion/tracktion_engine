@@ -42,7 +42,7 @@ Project::~Project()
 void Project::lockFile()
 {
     if (fileLockingStream == nullptr)
-        fileLockingStream.reset (file.createInputStream());
+        fileLockingStream = file.createInputStream();
 }
 
 void Project::unlockFile()
@@ -165,7 +165,7 @@ BufferedInputStream* Project::getInputStream()
 {
     if (stream == nullptr && file.getSize() > 0)
         if (auto in = file.createInputStream())
-            stream.reset (new BufferedInputStream (in, 16384, true));
+            stream.reset (new BufferedInputStream (in.release(), 16384, true));
 
     return stream.get();
 }

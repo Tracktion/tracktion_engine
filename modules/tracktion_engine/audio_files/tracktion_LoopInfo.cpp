@@ -20,11 +20,11 @@ LoopInfo::LoopInfo (const File& f)  : state (IDs::LOOPINFO)
 {
     auto& formatManager = Engine::getInstance().getAudioFileFormatManager();
 
-    if (auto* af = formatManager.getFormatFromFileName (f))
+    if (auto af = formatManager.getFormatFromFileName (f))
     {
-        if (auto* fin = f.createInputStream())
+        if (auto fin = f.createInputStream())
         {
-            const std::unique_ptr<AudioFormatReader> afr (af->createReaderFor (fin, true));
+            const std::unique_ptr<AudioFormatReader> afr (af->createReaderFor (fin.release(), true));
             init (Engine::getInstance(), afr.get(), af);
         }
     }

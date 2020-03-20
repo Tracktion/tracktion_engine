@@ -197,8 +197,8 @@ private:
     void createReader()
     {
         if (reader == nullptr && source != nullptr)
-            if (auto* audioFileStream = source->createInputStream())
-                reader.reset (owner.formatManagerToUse.createReaderFor (audioFileStream));
+            if (auto audioFileStream = source->createInputStream())
+                reader.reset (owner.formatManagerToUse.createReaderFor (std::unique_ptr<juce::InputStream> (audioFileStream)));
     }
 
     bool readNextBlock()

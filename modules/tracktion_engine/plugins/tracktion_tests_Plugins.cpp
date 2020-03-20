@@ -118,8 +118,15 @@ public:
 
         // Then write it to a temp file
         auto f = std::make_unique<TemporaryFile> (".wav");
-        std::unique_ptr<AudioFormatWriter> writer (WavAudioFormat().createWriterFor (f->getFile().createOutputStream(), (double) 44100, 1, 16, {}, 0));
-        writer->writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());
+        
+        if (auto fileStream = f->getFile().createOutputStream())
+        {
+            if (auto writer = std::unique_ptr<AudioFormatWriter> (WavAudioFormat().createWriterFor (fileStream.get(), (double) 44100, 1, 16, {}, 0)))
+            {
+                fileStream.release();
+                writer->writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());
+            }
+        }
 
         return f;
     }

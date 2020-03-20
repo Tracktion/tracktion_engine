@@ -167,7 +167,7 @@ std::unique_ptr<InputStream> TracktionArchiveFile::createStoredInputStream (int 
 {
     if (entries[index] != nullptr)
         if (auto f = file.createInputStream())
-            return std::make_unique<SubregionStream> (f,
+            return std::make_unique<SubregionStream> (f.release(),
                                                       entries[index]->offset,
                                                       entries[index]->length,
                                                       true);
