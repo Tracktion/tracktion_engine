@@ -42,9 +42,24 @@ struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorLis
             plugin.edit.getTransport().triggerClearDevicesOnStop();
 
         if (auto pi = plugin.getAudioPluginInstance())
+        {
             pi->refreshParameterList();
+            
+            // refreshParameterList can delete the AudioProcessorParameter that our ExternalAutomatableParameters
+            // are listening too so re-attach any possibly deleted listeners here
+            for (auto p : plugin.autoParamForParamNumbers)
+            {
+                if (p != nullptr)
+                {
+                    p->unregisterAsListener();
+                    p->registerAsListener();
+                }
+            }
+        }
         else
+        {
             jassertfalse;
+        }
 
         plugin.refreshParameterValues();
         plugin.changed();

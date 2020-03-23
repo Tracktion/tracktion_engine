@@ -38,10 +38,7 @@ public:
             }
         }
 
-        if (auto p = getParam())
-            p->addListener (this);
-        else
-            jassertfalse;
+        registerAsListener();
     }
 
     ~ExternalAutomatableParameter()
@@ -50,6 +47,14 @@ public:
         cancelPendingUpdate();
         unregisterAsListener();
         notifyListenersOfDeletion();
+    }
+    
+    void registerAsListener()
+    {
+        if (auto p = getParam())
+            p->addListener (this);
+        else
+            jassertfalse;
     }
 
     void unregisterAsListener()
