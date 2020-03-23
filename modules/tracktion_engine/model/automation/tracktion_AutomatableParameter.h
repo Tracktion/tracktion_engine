@@ -236,7 +236,8 @@ protected:
     MacroParameterList* macroOwner = nullptr;
     std::unique_ptr<AutomationCurveSource> curveSource;
     std::atomic<float> currentValue { 0.0f }, currentParameterValue { 0.0f },  currentBaseValue { 0.0f }, currentModifierValue { 0.0f };
-    bool isRecording = false, updateParametersRecursionCheck = false;
+    std::atomic<bool> isRecording { false };
+    bool updateParametersRecursionCheck = false;
 
     juce::ValueTree modifiersState;
     struct AutomationSourceList;

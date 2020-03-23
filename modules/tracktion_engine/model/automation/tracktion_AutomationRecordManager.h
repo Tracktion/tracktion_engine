@@ -68,7 +68,10 @@ private:
 
     struct AutomationParamData
     {
-        AutomatableParameter* parameter;
+        AutomationParamData (AutomatableParameter& p, float value)
+            : parameter (p), originalValue (value)
+        {
+        }
 
         struct Change
         {
@@ -78,6 +81,7 @@ private:
             float value;
         };
 
+        AutomatableParameter& parameter;
         juce::Array<Change> changes;
         float originalValue;
     };

@@ -101,6 +101,7 @@ void AutomationRecordManager::changeListenerCallback (ChangeBroadcaster* source)
 
 bool AutomationRecordManager::isRecordingAutomation() const
 {
+    const ScopedLock sl (lock);
     return recordedParams.size() > 0;
 }
 
@@ -109,7 +110,7 @@ bool AutomationRecordManager::isParameterRecording (AutomatableParameter* param)
     const ScopedLock sl (lock);
 
     for (auto p : recordedParams)
-        if (p->parameter == param)
+        if (&p->parameter == param)
             return true;
 
     return false;
@@ -134,10 +135,10 @@ void AutomationRecordManager::punchOut (bool toEnd)
         for (auto param : recordedParams)
         {
             if (toEnd)
-                endTime = jmax (endTime, param->parameter->getCurve().getLength() + 1.0);
+                endTime = jmax (endTime, param->parameter.getCurve().getLength() + 1.0);
 
             applyChangesToParameter (param, endTime, toEnd);
-            param->parameter->resetRecordingStatus();
+            param->parameter.resetRecordingStatus();
         }
 
         recordedParams.clear();
@@ -152,7 +153,7 @@ void AutomationRecordManager::applyChangesToParameter (AutomationParamData* para
 
     {
         std::unique_ptr<AutomationCurve> curve (new AutomationCurve());
-        curve->setOwnerParameter (parameter->parameter);
+        curve->setOwnerParameter (&parameter->parameter);
 
         for (int i = 0; i < parameter->changes.size(); ++i)
         {
@@ -165,24 +166,24 @@ void AutomationRecordManager::applyChangesToParameter (AutomationParamData* para
                 {
                     newCurves.add (curve.release());
                     curve.reset (new AutomationCurve());
-                    curve->setOwnerParameter (parameter->parameter);
+                    curve->setOwnerParameter (&parameter->parameter);
                 }
             }
 
-            const float oldVal = (i == 0) ? (parameter->parameter->getCurve().getNumPoints() > 0 ? parameter->parameter->getCurve().getValueAt (change.time)
-                                                                                                 : parameter->originalValue)
+            const float oldVal = (i == 0) ? (parameter->parameter.getCurve().getNumPoints() > 0 ? parameter->parameter.getCurve().getValueAt (change.time)
+                                                                                                : parameter->originalValue)
                                           : curve->getValueAt (change.time);
 
-            const float newVal = parameter->parameter->snapToState (change.value);
+            const float newVal = parameter->parameter.snapToState (change.value);
 
-            if (parameter->parameter->isDiscrete())
+            if (parameter->parameter.isDiscrete())
             {
                 curve->addPoint (change.time, oldVal, 0.0f);
                 curve->addPoint (change.time, newVal, 0.0f);
             }
             else
             {
-                if (std::abs (oldVal - newVal) > (parameter->parameter->getValueRange().getLength() * 0.21f))
+                if (std::abs (oldVal - newVal) > (parameter->parameter.getValueRange().getLength() * 0.21f))
                 {
                     if (i == 0)
                         curve->addPoint (change.time - 0.000001, oldVal, 0.0f);
@@ -212,10 +213,10 @@ void AutomationRecordManager::applyChangesToParameter (AutomationParamData* para
 
             // if the curve is empty, set the parameter so that the bits outside the new curve
             // are set to the levels they were at when we started recording..
-            if (parameter->parameter->getCurve().getNumPoints() == 0)
-                parameter->parameter->setParameter (parameter->originalValue, sendNotification);
+            if (parameter->parameter.getCurve().getNumPoints() == 0)
+                parameter->parameter.setParameter (parameter->originalValue, sendNotification);
 
-            auto& c = parameter->parameter->getCurve();
+            auto& c = parameter->parameter.getCurve();
             EditTimeRange curveRange (juce::Range<double> (startTime, endTime + glideLength));
             c.mergeOtherCurve (curve, curveRange,
                                startTime, glideLength, false, toEnd);
@@ -236,15 +237,13 @@ void AutomationRecordManager::toggleWriteAutomationMode()
 void AutomationRecordManager::postFirstAutomationChange (AutomatableParameter& param, float originalValue)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
-    auto entry = new AutomationParamData();
-    entry->parameter = &param;
-    entry->originalValue = originalValue;
+    auto entry = std::make_unique<AutomationParamData> (param, originalValue);
 
     // recording status has changed, so inform our listeners
     sendChangeMessage();
 
     const ScopedLock sl (lock);
-    recordedParams.add (entry);
+    recordedParams.add (entry.release());
 }
 
 void AutomationRecordManager::postAutomationChange (AutomatableParameter& param, double time, float value)
@@ -254,7 +253,7 @@ void AutomationRecordManager::postAutomationChange (AutomatableParameter& param,
 
     for (auto p : recordedParams)
     {
-        if (p->parameter == &param)
+        if (&p->parameter == &param)
         {
             p->changes.add (AutomationParamData::Change (time, value));
             break;
@@ -267,7 +266,7 @@ void AutomationRecordManager::parameterBeingDeleted (AutomatableParameter& param
     const ScopedLock sl (lock);
 
     for (int i = recordedParams.size(); --i >= 0;)
-        if (recordedParams.getUnchecked (i)->parameter == &param)
+        if (&recordedParams.getUnchecked (i)->parameter == &param)
             recordedParams.remove (i);
 }
 
