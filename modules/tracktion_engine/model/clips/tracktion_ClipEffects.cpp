@@ -37,7 +37,7 @@ static inline juce::int64 hashPlugin (const ValueTree& effectState, Plugin& plug
 
             if (ac.getNumPoints() == 0)
             {
-                h = String (ap->getCurrentValue()).hashCode64();
+                h = (String (h) + String (ap->getCurrentValue())).hashCode64();
             }
             else
             {
