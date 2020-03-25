@@ -400,7 +400,7 @@ void CurveEditor::mouseDrag (const MouseEvent& e)
                 auto c2 = getPointCurve (lineUnderMouse + 1);
 
                 addPoint (t1, v1, c1);
-                addPoint (t2, v2, c2);
+                addPoint (t2 - 0.0000001, v2, c2); // Shift this a fraction forwards so it inserts before any existing points
 
                 lineUnderMouse++;
 
