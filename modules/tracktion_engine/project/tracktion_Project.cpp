@@ -696,7 +696,7 @@ void Project::searchFor (Array<ProjectItemID>& results, SearchOperation& searchO
 
 void Project::mergeArchiveContents (const File& archiveFile)
 {
-    TracktionArchiveFile archive (archiveFile);
+    TracktionArchiveFile archive (engine, archiveFile);
 
     if (! archive.isValidArchive())
     {

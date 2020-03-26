@@ -11,37 +11,41 @@
 namespace tracktion_engine
 {
 
-LoopInfo::LoopInfo()  : state (IDs::LOOPINFO)
+LoopInfo::LoopInfo (Engine& e)
+    : engine (e), state (IDs::LOOPINFO)
 {
     initialiseMissingProps();
 }
 
-LoopInfo::LoopInfo (const File& f)  : state (IDs::LOOPINFO)
+LoopInfo::LoopInfo (Engine& e, const File& f)
+    : engine (e), state (IDs::LOOPINFO)
 {
-    auto& formatManager = Engine::getInstance().getAudioFileFormatManager();
+    auto& formatManager = engine.getAudioFileFormatManager();
 
     if (auto af = formatManager.getFormatFromFileName (f))
     {
         if (auto fin = f.createInputStream())
         {
             const std::unique_ptr<AudioFormatReader> afr (af->createReaderFor (fin.release(), true));
-            init (Engine::getInstance(), afr.get(), af);
+            init (afr.get(), af);
         }
     }
 }
 
-LoopInfo::LoopInfo (const AudioFormatReader* afr, const AudioFormat* af)  : state (IDs::LOOPINFO)
+LoopInfo::LoopInfo (Engine& e, const AudioFormatReader* afr, const AudioFormat* af)
+    : engine (e), state (IDs::LOOPINFO)
 {
-    init (Engine::getInstance(), afr, af);
+    init (afr, af);
 }
 
-LoopInfo::LoopInfo (const juce::ValueTree& v, juce::UndoManager* u)
-    : state (v), um (u), maintainParent (v.getParent().isValid())
+LoopInfo::LoopInfo (Engine& e, const juce::ValueTree& v, juce::UndoManager* u)
+    : engine (e), state (v), um (u), maintainParent (v.getParent().isValid())
 {
     initialiseMissingProps();
 }
 
 LoopInfo::LoopInfo (const LoopInfo& other)
+    : engine (other.engine)
 {
     *this = other;
 }
@@ -283,7 +287,7 @@ static bool isSameFormat (const AudioFormat* af1, const AudioFormat* af2)
     return af2 != nullptr && af1->getFormatName() == af2->getFormatName();
 }
 
-void LoopInfo::init (Engine& engine, const AudioFormatReader* afr, const AudioFormat* af)
+void LoopInfo::init (const AudioFormatReader* afr, const AudioFormat* af)
 {
     if (afr == nullptr || af == nullptr)
         return;

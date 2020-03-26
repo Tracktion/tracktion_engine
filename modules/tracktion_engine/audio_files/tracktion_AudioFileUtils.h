@@ -16,11 +16,11 @@ namespace tracktion_engine
 */
 struct AudioFileUtils
 {
-    static juce::AudioFormatReader* createReaderFor (const juce::File&);
-    static juce::AudioFormatReader* createReaderFindingFormat (const juce::File&, juce::AudioFormat*&);
-    static juce::MemoryMappedAudioFormatReader* createMemoryMappedReader (const juce::File&, juce::AudioFormat*&);
+    static juce::AudioFormatReader* createReaderFor (Engine&, const juce::File&);
+    static juce::AudioFormatReader* createReaderFindingFormat (Engine&, const juce::File&, juce::AudioFormat*&);
+    static juce::MemoryMappedAudioFormatReader* createMemoryMappedReader (Engine&, const juce::File&, juce::AudioFormat*&);
 
-    static juce::AudioFormatWriter* createWriterFor (const juce::File&,
+    static juce::AudioFormatWriter* createWriterFor (Engine&, const juce::File&,
                                                      double sampleRate, unsigned int numChannels, int bitsPerSample,
                                                      const juce::StringPairArray& metadata, int quality);
 
@@ -28,25 +28,28 @@ struct AudioFileUtils
                                                      double sampleRate, unsigned int numChannels, int bitsPerSample,
                                                      const juce::StringPairArray& metadata, int quality);
 
-    static juce::Range<juce::int64> scanForNonZeroSamples (const juce::File&, float maxZeroLevelDb);
+    static juce::Range<juce::int64> scanForNonZeroSamples (Engine&, const juce::File&, float maxZeroLevelDb);
 
-    static juce::Range<juce::int64> copyNonSilentSectionToNewFile (const juce::File& sourceFile,
+    static juce::Range<juce::int64> copyNonSilentSectionToNewFile (Engine& e,
+                                                                   const juce::File& sourceFile,
                                                                    const juce::File& destFile,
                                                                    float maxZeroLevelDb);
 
-    static juce::Range<juce::int64> trimSilence (const juce::File&, float maxZeroLevelDb);
+    static juce::Range<juce::int64> trimSilence (Engine& e, const juce::File&, float maxZeroLevelDb);
 
     /** Reverses a file updating a progress value and checking the exit status of a given job. */
-    static bool reverse (const juce::File& source, const juce::File& destination,
+    static bool reverse (Engine&, const juce::File& source, const juce::File& destination,
                          std::atomic<float>& progress, juce::ThreadPoolJob* job = nullptr,
                          bool canCreateWavIntermediate = true);
 
     // returns length of file created, or -1
-    static juce::int64 copySectionToNewFile (const juce::File& sourceFile,
+    static juce::int64 copySectionToNewFile (Engine& e,
+                                             const juce::File& sourceFile,
                                              const juce::File& destFile,
                                              const juce::Range<juce::int64>& range);
 
-    static juce::int64 copySectionToNewFile (const juce::File& sourceFile,
+    static juce::int64 copySectionToNewFile (Engine& e,
+                                             const juce::File& sourceFile,
                                              const juce::File& destFile,
                                              EditTimeRange range);
 
@@ -54,14 +57,14 @@ struct AudioFileUtils
 
     static void applyBWAVStartTime (const juce::File&, juce::int64 time);
 
-    static juce::int64 getFileLengthSamples (const juce::File&);
+    static juce::int64 getFileLengthSamples (Engine& e, const juce::File&);
 
     //==============================================================================
     template<class TargetFormat>
-    static bool convertToFormat (const juce::File& sourceFile, juce::OutputStream& destStream,
+    static bool convertToFormat (Engine& e, const juce::File& sourceFile, juce::OutputStream& destStream,
                                  int quality, const juce::StringPairArray& metadata)
     {
-        std::unique_ptr<juce::AudioFormatReader> reader (createReaderFor (sourceFile));
+        std::unique_ptr<juce::AudioFormatReader> reader (createReaderFor (e, sourceFile));
         return convertToFormat<TargetFormat> (reader.get(), destStream, quality, metadata);
     }
 
@@ -107,7 +110,7 @@ struct AudioFileUtils
 
     //==============================================================================
     template <typename SourceFormat>
-    inline static bool readFromFormat (juce::InputStream& source, const juce::File& dest)
+    inline static bool readFromFormat (Engine& engine, juce::InputStream& source, const juce::File& dest)
     {
         struct ForwardingInputStream  : public juce::InputStream
         {
@@ -126,14 +129,14 @@ struct AudioFileUtils
 
         if (auto reader = std::unique_ptr<juce::AudioFormatReader> (sourceFormat.createReaderFor (new ForwardingInputStream (source), true)))
         {
-            auto& manager = Engine::getInstance().getAudioFileFormatManager().writeFormatManager;
+            auto& manager = engine.getAudioFileFormatManager().writeFormatManager;
 
             auto* destFormat = manager.findFormatForFileExtension (dest.getFileExtension());
 
             if (destFormat == nullptr)
                 destFormat = manager.findFormatForFileExtension ("wav");
 
-            AudioFileWriter writer (AudioFile (dest), destFormat,
+            AudioFileWriter writer (AudioFile (engine, dest), destFormat,
                                     (int) reader->numChannels,
                                     reader->sampleRate,
                                     (int) reader->bitsPerSample,

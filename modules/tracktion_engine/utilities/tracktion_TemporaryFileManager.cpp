@@ -119,9 +119,9 @@ static bool shouldDeleteTempFile (const File& f, bool spaceIsShort)
     return daysOld > 10.0 || (spaceIsShort && daysOld > 1.0);
 }
 
-static void deleteEditPreviewsNotInUse (juce::Array<juce::File>& files)
+static void deleteEditPreviewsNotInUse (Engine& engine, juce::Array<juce::File>& files)
 {
-    auto& pm = *ProjectManager::getInstance();
+    auto& pm = engine.getProjectManager();
     juce::StringArray ids;
 
     for (auto& p : pm.getAllProjects (pm.folders))
@@ -150,7 +150,7 @@ void TemporaryFileManager::cleanUp()
     juce::Array<juce::File> tempFiles;
     tempDir.findChildFiles (tempFiles, File::findFiles, true);
 
-    deleteEditPreviewsNotInUse (tempFiles);
+    deleteEditPreviewsNotInUse (engine, tempFiles);
 
     juce::int64 totalBytes = 0;
 
@@ -208,7 +208,7 @@ static juce::String getCompPrefix()                     { return "comp_"; }
 
 static AudioFile getCachedEditFile (Edit& edit, const juce::String& prefix, juce::int64 hash)
 {
-    return AudioFile (edit.getTempDirectory (true).getChildFile (prefix + String::toHexString (hash) + ".wav"));
+    return AudioFile (edit.engine, edit.getTempDirectory (true).getChildFile (prefix + String::toHexString (hash) + ".wav"));
 }
 
 static AudioFile getCachedClipFileWithPrefix (const AudioClipBase& clip, const juce::String& prefix, juce::int64 hash)
@@ -327,7 +327,7 @@ void TemporaryFileManager::purgeOrphanFreezeAndProxyFiles (Edit& edit)
 
                 if (auto acb = dynamic_cast<AudioClipBase*> (clip))
                 {
-                    if (! acb->isUsingFile (AudioFile (i.getFile())))
+                    if (! acb->isUsingFile (AudioFile (edit.engine, i.getFile())))
                         filesToDelete.add (i.getFile());
                 }
                 else if (clip == nullptr)
@@ -348,7 +348,7 @@ void TemporaryFileManager::purgeOrphanFreezeAndProxyFiles (Edit& edit)
         }
         else if (name.startsWith (RenderManager::getFileRenderPrefix()))
         {
-            if (! edit.areAnyClipsUsingFile (AudioFile (i.getFile())))
+            if (! edit.areAnyClipsUsingFile (AudioFile (edit.engine, i.getFile())))
                 filesToDelete.add (i.getFile());
         }
     }
@@ -356,7 +356,7 @@ void TemporaryFileManager::purgeOrphanFreezeAndProxyFiles (Edit& edit)
     for (auto& f : filesToDelete)
     {
         DBG ("Purging temp file: " << f.getFileName());
-        AudioFile (f).deleteFile();
+        AudioFile (edit.engine, f).deleteFile();
     }
 }
 

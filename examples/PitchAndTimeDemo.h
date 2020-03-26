@@ -65,7 +65,7 @@ public:
 
                                               if (auto clip = getClip())
                                               {
-                                                  const auto audioFileInfo = te::AudioFile (clip->getSourceFileReference().getFile()).getInfo();
+                                                  const auto audioFileInfo = te::AudioFile (engine, clip->getSourceFileReference().getFile()).getInfo();
                                                   const auto rootNote = audioFileInfo.loopInfo.getRootNote();
 
                                                   if (rootNote <= 0)
@@ -116,7 +116,7 @@ public:
 private:
     //==============================================================================
     te::Engine engine { ProjectInfo::projectName };
-    te::Edit edit { engine, te::createEmptyEdit(), te::Edit::forEditing, nullptr, 0 };
+    te::Edit edit { engine, te::createEmptyEdit (engine), te::Edit::forEditing, nullptr, 0 };
     te::TransportControl& transport { edit.getTransport() };
 
     FileChooser audioFileChooser { "Please select an audio file to load...",
@@ -160,7 +160,7 @@ private:
 
             thumbnail.setFile (EngineHelpers::loopAroundClip (*clip)->getPlaybackFile());
 
-            const auto audioFileInfo = te::AudioFile (f).getInfo();
+            const auto audioFileInfo = te::AudioFile (engine, f).getInfo();
             const auto loopInfo = audioFileInfo.loopInfo;
             const auto tempo = loopInfo.getBpm (audioFileInfo);
             rootNoteEditor.setText (TRANS("Root Key: ") + Helpers::getStringOrDefault (MidiMessage::getMidiNoteName (loopInfo.getRootNote(), true, false, 3), "Unknown"), false);
@@ -174,7 +174,7 @@ private:
         }
         else
         {
-            thumbnail.setFile ({});
+            thumbnail.setFile ({engine});
             rootNoteEditor.setText (TRANS("Root Key: Unknown"));
             rootTempoEditor.setText (TRANS("Root Tempo:  Unknown"));
         }
@@ -185,7 +185,7 @@ private:
         if (auto clip = getClip())
         {
             auto f = getSourceFile();
-            const auto audioFileInfo = te::AudioFile (f).getInfo();
+            const auto audioFileInfo = te::AudioFile (engine, f).getInfo();
             const double baseTempo = rootTempoEditor.getText().retainCharacters ("+-.0123456789").getDoubleValue();
 
             // First update the tempo based on the ratio between the root tempo and tempo slider value

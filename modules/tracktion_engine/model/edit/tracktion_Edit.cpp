@@ -497,7 +497,7 @@ Edit::Edit (Options options)
     else
         editFileRetriever = [this]() -> juce::File
         {
-            if (auto item = ProjectManager::getInstance()->getProjectItem (*this))
+            if (auto item = engine.getProjectManager().getProjectItem (*this))
                 return item->getSourceFile();
 
             return {};
@@ -625,7 +625,7 @@ Edit::~Edit()
 //==============================================================================
 juce::String Edit::getName()
 {
-    if (auto item = ProjectManager::getInstance()->getProjectItem (*this))
+    if (auto item = engine.getProjectManager().getProjectItem (*this))
         return item->getName();
 
     return {};
@@ -1444,7 +1444,7 @@ void Edit::loadOldVideoInfo (const juce::ValueTree& videoState)
     const juce::File videoFile (videoState["videoFile"].toString());
 
     if (videoFile.existsAsFile())
-        if (auto proj = ProjectManager::getInstance()->getProject (*this))
+        if (auto proj = engine.getProjectManager().getProject (*this))
             if (auto newItem = proj->createNewItem (videoFile, ProjectItem::videoItemType(),
                                                     videoFile.getFileNameWithoutExtension(),
                                                     {}, ProjectItem::Category::video, false))
@@ -2192,7 +2192,7 @@ void Edit::readFrozenTracksFiles()
 
     if (resetFrozenness || ! anyFrozen)
     {
-        AudioFile::deleteFiles (freezeFiles);
+        AudioFile::deleteFiles (engine, freezeFiles);
 
         for (auto t : getAllTracks (*this))
         {
@@ -2220,7 +2220,7 @@ void Edit::updateFrozenTracks()
     TransportControl::stopAllTransports (engine, false, true);
     const ScopedRenderStatus srs (*this, true);
 
-    AudioFile::deleteFiles (TemporaryFileManager::getFrozenTrackFiles (*this));
+    AudioFile::deleteFiles (engine, TemporaryFileManager::getFrozenTrackFiles (*this));
 
     auto& dm = engine.getDeviceManager();
 
@@ -2363,14 +2363,14 @@ void Edit::setVideoFile (const juce::File& f, juce::String importDesc)
     CRASH_TRACER
     juce::File currentFile;
 
-    if (auto item = ProjectManager::getInstance()->getProjectItem (videoSource))
+    if (auto item = engine.getProjectManager().getProjectItem (videoSource))
         currentFile = item->getSourceFile();
 
     if (f != currentFile)
     {
         videoSource.resetToDefault();
 
-        if (auto proj = ProjectManager::getInstance()->getProject (*this))
+        if (auto proj = engine.getProjectManager().getProject (*this))
         {
             auto item = proj->getProjectItemForFile (f);
 
@@ -2387,7 +2387,7 @@ void Edit::setVideoFile (const juce::File& f, juce::String importDesc)
 juce::File Edit::getVideoFile() const
 {
     if (videoSource.get().isValid())
-        if (auto item = ProjectManager::getInstance()->getProjectItem (videoSource))
+        if (auto item = engine.getProjectManager().getProjectItem (videoSource))
             return item->getSourceFile();
 
     return {};
@@ -2493,7 +2493,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
                                                            bool tryToMatchTempo, bool* couldMatchTempo, juce::ValueTree midiPreviewPlugin)
 {
     CRASH_TRACER
-    auto edit = std::make_unique<Edit> (engine, createEmptyEdit(), forEditing, nullptr, 1);
+    auto edit = std::make_unique<Edit> (engine, createEmptyEdit (engine), forEditing, nullptr, 1);
     edit->ensureNumberOfAudioTracks (1);
     edit->isPreviewEdit = true;
 
@@ -2629,7 +2629,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
                                                          juce::ValueTree midiPreviewPlugin)
 {
     CRASH_TRACER
-    auto edit = std::make_unique<Edit> (engine, createEmptyEdit(), forEditing, nullptr, 1);
+    auto edit = std::make_unique<Edit> (engine, createEmptyEdit (engine), forEditing, nullptr, 1);
     edit->ensureNumberOfAudioTracks (1);
     edit->isPreviewEdit = true;
 
@@ -2701,7 +2701,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
         }
         else
         {
-            const AudioFile af (file);
+            const AudioFile af (engine, file);
             auto length = af.getLength();
 
             if (auto wc = dynamic_cast<WaveAudioClip*> (track->insertNewClip (TrackItem::Type::wave, { 0.0, 1.0 }, nullptr)))
@@ -2764,7 +2764,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
 std::unique_ptr<Edit> Edit::createEditForPreviewingClip (Clip& clip)
 {
     CRASH_TRACER
-    auto edit = std::make_unique<Edit> (clip.edit.engine, createEmptyEdit(), forEditing, nullptr, 1);
+    auto edit = std::make_unique<Edit> (clip.edit.engine, createEmptyEdit (clip.edit.engine), forEditing, nullptr, 1);
     edit->setTempDirectory (clip.edit.getTempDirectory (false));
     edit->ensureNumberOfAudioTracks (1);
     edit->tempoSequence.copyFrom (clip.edit.tempoSequence);
@@ -2804,7 +2804,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingClip (Clip& clip)
 std::unique_ptr<Edit> Edit::createSingleTrackEdit (Engine& engine)
 {
     CRASH_TRACER
-    auto edit = std::make_unique<Edit> (engine, createEmptyEdit(), forEditing, nullptr, 1);
+    auto edit = std::make_unique<Edit> (engine, createEmptyEdit (engine), forEditing, nullptr, 1);
 
     edit->ensureNumberOfAudioTracks (1);
 

@@ -75,7 +75,7 @@ static String expandPatterns (Edit& ed, const String& s, Track* track, int take)
     if (track != nullptr)
         trackName = File::createLegalFileName (track->getName());
 
-    if (auto proj = ProjectManager::getInstance()->getProject (ed))
+    if (auto proj = ed.engine.getProjectManager().getProject (ed))
     {
         projDir = proj->getDirectoryForMedia (ProjectItem::Category::recorded).getFullPathName();
     }
@@ -308,7 +308,7 @@ public:
         {
             closeFileWriter();
 
-            if (auto proj = ProjectManager::getInstance()->getProject (edit))
+            if (auto proj = owner.engine.getProjectManager().getProject (edit))
                 if (proj->isReadOnly())
                     return TRANS("The current project is read-only, so new clips can't be recorded into it!");
 
@@ -327,7 +327,7 @@ public:
             AudioFileUtils::addBWAVStartToMetadata (metadata, (int64) (playStart * sr));
             auto& wi = getWaveInput();
 
-            rc->fileWriter.reset (new AudioFileWriter (AudioFile (recordedFile), format,
+            rc->fileWriter.reset (new AudioFileWriter (AudioFile (edit.engine, recordedFile), format,
                                                        wi.isStereoPair() ? 2 : 1,
                                                        sr, wi.bitDepth, metadata, 0));
 
@@ -530,7 +530,7 @@ public:
             if (! rc->file.existsAsFile() || rc->file.getSize() == 0)
                 return {};
 
-            const AudioFile recordedFile (rc->file);
+            const AudioFile recordedFile (edit.engine, rc->file);
             auto recordingDestTracks = getTargetTracks();
 
             if (discardRecordings || recordingDestTracks.size() == 0)
@@ -544,7 +544,7 @@ public:
             {
                 if (activeTracks.contains (destTrack))
                 {
-                    AudioFile trackRecordedFile;
+                    AudioFile trackRecordedFile (edit.engine);
                     if (firstTrack)
                     {
                         trackRecordedFile = recordedFile;
@@ -563,7 +563,7 @@ public:
 
                         rc->file.copyFileTo (f);
 
-                        trackRecordedFile = AudioFile (f);
+                        trackRecordedFile = AudioFile (edit.engine, f);
                     }
 
                     auto clipsCreated = applyLastRecording (*rc, trackRecordedFile, *destTrack,
@@ -626,7 +626,7 @@ public:
             return {};
         }
 
-        if (auto proj = ProjectManager::getInstance()->getProject (edit))
+        if (auto proj = engine.getProjectManager().getProject (edit))
         {
             if (auto projectItem = proj->createNewItem (recordedFile.getFile(),
                                                         ProjectItem::waveItemType(),
@@ -732,7 +732,7 @@ public:
         for (auto& f : filesCreated)
         {
             AudioFileUtils::applyBWAVStartTime (f, (int64) (newClip->getPosition().getStartOfSource() * rc.sampleRate));
-            afm.forceFileUpdate (AudioFile (f));
+            afm.forceFileUpdate (AudioFile (edit.engine, f));
         }
 
         if (auto wc = dynamic_cast<WaveAudioClip*> (newClip.get()))
@@ -781,7 +781,7 @@ public:
 
             afm.releaseFile (recordedFile);
 
-            if (AudioFileUtils::copySectionToNewFile (recordedFile.getFile(), takeFile, takeRange) < 0)
+            if (AudioFileUtils::copySectionToNewFile (edit.engine, recordedFile.getFile(), takeFile, takeRange) < 0)
                 return false;
 
             if (projectItem != nullptr)
@@ -807,7 +807,7 @@ public:
         // chop down the original wave file..
         auto tempFile = recordedFile.getFile().getNonexistentSibling (false);
 
-        if (AudioFileUtils::copySectionToNewFile (recordedFile.getFile(), tempFile, EditTimeRange (0.0, loopLength)) > 0)
+        if (AudioFileUtils::copySectionToNewFile (edit.engine, recordedFile.getFile(), tempFile, EditTimeRange (0.0, loopLength)) > 0)
         {
             afm.releaseFile (recordedFile);
             tempFile.moveFileTo (recordedFile.getFile());
@@ -864,7 +864,7 @@ public:
             StringPairArray metadata;
 
             {
-                AudioFileWriter writer (AudioFile (recordedFile), format,
+                AudioFileWriter writer (AudioFile (dstTrack->edit.engine, recordedFile), format,
                                         recordBuffer->numChannels,
                                         recordBuffer->sampleRate,
                                         wi.bitDepth, metadata, 0);
@@ -885,7 +885,7 @@ public:
                 }
             }
 
-            auto proj = ProjectManager::getInstance()->getProject (edit);
+            auto proj = owner.engine.getProjectManager().getProject (edit);
 
             if (proj == nullptr)
             {
@@ -904,7 +904,7 @@ public:
 
             auto clipName = getNewClipName (*dstTrack);
             double start = 0;
-            double recordedLength = AudioFile (recordedFile).getLength();
+            double recordedLength = AudioFile (dstTrack->edit.engine, recordedFile).getLength();
 
             if (context.playhead.isPlaying() || recordBuffer->wasRecentlyPlaying (edit))
             {
@@ -947,7 +947,7 @@ public:
             CRASH_TRACER
 
             AudioFileUtils::applyBWAVStartTime (recordedFile, (int64) (newClip->getPosition().getStartOfSource() * recordBuffer->sampleRate));
-            edit.engine.getAudioFileManager().forceFileUpdate (AudioFile (recordedFile));
+            edit.engine.getAudioFileManager().forceFileUpdate (AudioFile (dstTrack->edit.engine, recordedFile));
 
             if (selectionManager != nullptr)
             {

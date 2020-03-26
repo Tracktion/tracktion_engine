@@ -400,7 +400,7 @@ File ProjectItem::getEditPreviewFile() const
 //==============================================================================
 Project::Ptr ProjectItem::getProject() const
 {
-    return ProjectManager::getInstance()->getProject (getID().getProjectID());
+    return engine.getProjectManager().getProject (getID().getProjectID());
 }
 
 bool ProjectItem::hasBeenDeleted() const
@@ -460,12 +460,12 @@ void ProjectItem::timerCallback()
     TransportControl::stopAllTransports (engine, false, true);
 
     auto& afm = engine.getAudioFileManager();
-    afm.releaseFile (AudioFile (src));
+    afm.releaseFile (AudioFile (engine, src));
 
     if (! dst.existsAsFile() && src.moveFileTo (dst))
     {
-        afm.checkFileForChanges (AudioFile (dst));
-        afm.checkFileForChanges (AudioFile (src));
+        afm.checkFileForChanges (AudioFile (engine, dst));
+        afm.checkFileForChanges (AudioFile (engine, src));
 
         setSourceFile (dst);
 
@@ -661,7 +661,7 @@ void ProjectItem::verifyLength()
 
     if (isWave())
     {
-        len = AudioFile (getSourceFile()).getLength();
+        len = AudioFile (engine, getSourceFile()).getLength();
     }
     else if (isMidi())
     {
@@ -697,7 +697,8 @@ bool ProjectItem::copySectionToNewFile (const File& destFile,
     if (isWave())
     {
         actualFileCreated = destFile;
-        return AudioFileUtils::copySectionToNewFile (getSourceFile(), actualFileCreated,
+        return AudioFileUtils::copySectionToNewFile (engine,
+                                                     getSourceFile(), actualFileCreated,
                                                      EditTimeRange (startTime, startTime + lengthToCopy)) > 0;
     }
 
@@ -718,7 +719,7 @@ bool ProjectItem::deleteSourceFile()
         TransportControl::stopAllTransports (engine, false, true);
         auto& afm = engine.getAudioFileManager();
 
-        AudioFile af (f);
+        AudioFile af (engine, f);
 
         for (int attempts = 3; --attempts >= 0;)
         {
@@ -760,9 +761,9 @@ void ProjectItem::changeProjectId (int oldID, int newID)
 
     if (isEdit())
     {
-        auto& pm = *ProjectManager::getInstance();
+        auto& pm = engine.getProjectManager();
 
-        Edit ed (pm.engine,
+        Edit ed (engine,
                  loadEditFromProjectManager (pm, getID()),
                  Edit::forExamining, nullptr, 1);
 

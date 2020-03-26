@@ -21,7 +21,7 @@ public:
                                      const juce::File& source,
                                      const juce::File& destination)
     {
-        AudioFile targetFile (destination);
+        AudioFile targetFile (clip.edit.engine, destination);
 
         if (auto ptr = clip.edit.engine.getRenderManager().getRenderJobWithoutCreating (targetFile))
             return ptr;
@@ -69,7 +69,7 @@ protected:
 
 private:
     WarpTimeRenderJob (AudioClipBase& clip, const juce::File& sourceFile, const AudioFile& destination)
-        : Job (clip.edit.engine, destination), source (sourceFile)
+        : Job (clip.edit.engine, destination), source (clip.edit.engine, sourceFile)
     {
         auto tm = clip.getTimeStretchMode();
         proxyInfo = std::make_unique<AudioClipBase::ProxyRenderingInfo>();

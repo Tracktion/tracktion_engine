@@ -69,8 +69,10 @@ public:
     // Only implemented on Windows
     struct RealtimePriorityDisabler
     {
-        RealtimePriorityDisabler();
+        RealtimePriorityDisabler (Engine& engine);
         ~RealtimePriorityDisabler();
+
+        Engine& engine;
     };
 
 private:
@@ -78,8 +80,10 @@ private:
 
     struct ProcessPriorityBooster
     {
-        ProcessPriorityBooster();
+        ProcessPriorityBooster (Engine& engine);
         ~ProcessPriorityBooster();
+
+        Engine& engine;
     };
 
     std::unique_ptr<ProcessPriorityBooster> priorityBooster;

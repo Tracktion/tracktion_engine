@@ -95,12 +95,12 @@ bool Clip::isClipState (const juce::Identifier& i)
 static Clip::Ptr createNewEditClip (const juce::ValueTree& v, EditItemID newClipID, ClipTrack& targetTrack)
 {
     ProjectItemID sourceItemID (v.getProperty (IDs::source).toString());
-    auto sourceItem = ProjectManager::getInstance()->getProjectItem (sourceItemID);
+    auto sourceItem = targetTrack.edit.engine.getProjectManager().getProjectItem (sourceItemID);
     juce::String warning;
 
     if (sourceItem != nullptr && sourceItem->getLength() > 0.0)
     {
-        if (auto snapshot = EditSnapshot::getEditSnapshot (sourceItemID))
+        if (auto snapshot = EditSnapshot::getEditSnapshot (targetTrack.edit.engine, sourceItemID))
         {
             // check for recursion
             auto referencedEdits = snapshot->getNestedEditObjects();
@@ -195,7 +195,7 @@ void Clip::setName (const juce::String& newName)
 
                 for (int i = 0; i < takes.size(); ++i)
                 {
-                    if (auto source = ProjectManager::getInstance()->getProjectItem (takes.getReference (i)))
+                    if (auto source = edit.engine.getProjectManager().getProjectItem (takes.getReference (i)))
                     {
                         if (i == 0)
                             source->setName (newName, ProjectItem::SetNameMode::doDefault);

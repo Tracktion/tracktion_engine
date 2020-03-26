@@ -1229,7 +1229,7 @@ private:
 
     void runPositionTests()
     {
-        auto edit = Edit::createSingleTrackEdit (Engine::getInstance());
+        auto edit = Edit::createSingleTrackEdit (*Engine::getEngines().getFirst());
 
         beginTest ("Defaults");
         {
@@ -1313,7 +1313,7 @@ private:
 
     void runModificationTests()
     {
-        auto edit = Edit::createSingleTrackEdit (Engine::getInstance());
+        auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
         auto& ts = edit->tempoSequence;
 
         beginTest ("Insertions");

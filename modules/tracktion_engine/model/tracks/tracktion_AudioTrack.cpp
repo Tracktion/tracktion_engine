@@ -1453,7 +1453,7 @@ File AudioTrack::getFreezeFile() const noexcept
 
 AudioNode* AudioTrack::createFreezeAudioNode (bool addAntiDenormalisationNoise)
 {
-    AudioNode* node = new WaveAudioNode (AudioFile (getFreezeFile()),
+    AudioNode* node = new WaveAudioNode (AudioFile (edit.engine, getFreezeFile()),
                                          { 0.0, getLengthIncludingInputTracks() },
                                          0.0, {}, {},
                                          1.0, AudioChannelSet::stereo());

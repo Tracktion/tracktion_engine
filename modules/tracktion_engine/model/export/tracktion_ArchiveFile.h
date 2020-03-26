@@ -17,7 +17,7 @@ namespace tracktion_engine
 class TracktionArchiveFile
 {
 public:
-    TracktionArchiveFile (const juce::File& file);
+    TracktionArchiveFile (Engine&, const juce::File& file);
     ~TracktionArchiveFile();
 
     bool isValidArchive() const;
@@ -82,6 +82,7 @@ public:
     };
 
 private:
+    Engine& engine;
     juce::File file;
     juce::int64 indexOffset = 8;
     bool valid = false, needToWriteIndex;

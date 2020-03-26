@@ -15,7 +15,8 @@ namespace AppFunctions
 {
     UIBehaviour& getCurrentUIBehaviour()
     {
-        return Engine::getInstance().getUIBehaviour();
+        // TODO: RMR
+        return Engine::getEngines()[0]->getUIBehaviour();
     }
 
     Edit* getCurrentlyFocusedEdit()

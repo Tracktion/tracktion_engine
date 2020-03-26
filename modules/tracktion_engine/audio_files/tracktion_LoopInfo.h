@@ -16,11 +16,11 @@ namespace tracktion_engine
 class LoopInfo
 {
 public:
-    LoopInfo();
+    LoopInfo (Engine&);
     LoopInfo (const LoopInfo&);
-    LoopInfo (const juce::ValueTree&, juce::UndoManager*);
-    LoopInfo (const juce::File&);
-    LoopInfo (const juce::AudioFormatReader*, const juce::AudioFormat*);
+    LoopInfo (Engine&, const juce::ValueTree&, juce::UndoManager*);
+    LoopInfo (Engine&, const juce::File&);
+    LoopInfo (Engine&, const juce::AudioFormatReader*, const juce::AudioFormat*);
 
     LoopInfo& operator= (const LoopInfo&);
 
@@ -83,6 +83,7 @@ public:
     void addTag (const juce::String& tag);
     void addTags (const juce::StringArray& tags);
 
+    Engine& engine;
     juce::ValueTree state;
 
 private:
@@ -90,7 +91,7 @@ private:
     juce::UndoManager* um = nullptr;
     bool maintainParent = false;
 
-    void init (Engine&, const juce::AudioFormatReader*, const juce::AudioFormat*);
+    void init (const juce::AudioFormatReader*, const juce::AudioFormat*);
     void initialiseMissingProps();
     void duplicateIfShared();
     LoopInfo& copyFrom (const juce::ValueTree&);

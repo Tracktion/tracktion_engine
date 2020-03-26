@@ -98,7 +98,7 @@ namespace EngineHelpers
     te::Project::Ptr createTempProject (te::Engine& engine)
     {
         auto file = engine.getTemporaryFileManager().getTempDirectory().getChildFile ("temp_project").withFileExtension (te::projectFileSuffix);
-        te::ProjectManager::TempProject tempProject (*te::ProjectManager::getInstance(), file, true);
+        te::ProjectManager::TempProject tempProject (engine.getProjectManager(), file, true);
         return tempProject.project;
     }
 
@@ -153,7 +153,7 @@ namespace EngineHelpers
             removeAllClips (*track);
 
             // Add a new clip to this track
-            te::AudioFile audioFile (file);
+            te::AudioFile audioFile (edit.engine, file);
 
             if (audioFile.isValid())
                 if (auto newClip = track->insertWaveClip (file.getFileNameWithoutExtension(), file,
@@ -338,7 +338,7 @@ struct Thumbnail    : public Component
 
 private:
     te::TransportControl& transport;
-    te::SmartThumbnail smartThumbnail { transport.engine, te::AudioFile(), *this, nullptr };
+    te::SmartThumbnail smartThumbnail { transport.engine, te::AudioFile (transport.engine), *this, nullptr };
     DrawableRectangle cursor;
     te::LambdaTimer cursorUpdater;
 

@@ -262,7 +262,7 @@ private:
             if (c.getAutoTempo())
             {
                 // need to find the tempo changes between the source start and  how long the result will be
-                auto info = AudioFile (c.getOriginalFile()).getInfo();
+                auto info = AudioFile (c.edit.engine, c.getOriginalFile()).getInfo();
                 auto sourceTempo = c.getLoopInfo().getBpm (info);
                 speedRatio = c.edit.tempoSequence.getTempoAt (c.getPosition().time.start).getBpm() / sourceTempo;
             }

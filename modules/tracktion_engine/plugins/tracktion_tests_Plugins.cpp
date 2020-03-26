@@ -27,7 +27,7 @@ public:
     {
         auto sinFile = getSinFile();
 
-        auto& engine = Engine::getInstance();
+        auto& engine = *Engine::getEngines()[0];
         engine.getPluginManager().createBuiltInType<LatencyPlugin>();
         
         auto edit = createTestEdit (engine);
@@ -39,7 +39,7 @@ public:
         {
             // Add sin file
             {
-                AudioFile af (sinFile->getFile());
+                AudioFile af (engine, sinFile->getFile());
                 expect (af.isValid());
                 expect (af.getLength() == 1.0);
 

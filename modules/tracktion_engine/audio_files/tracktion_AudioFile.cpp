@@ -17,13 +17,13 @@ static inline juce::int64 getAudioFileHash (const juce::File& file) noexcept
 }
 
 //==============================================================================
-AudioFile::AudioFile (const juce::File& f) noexcept
-    : file (f), hash (getAudioFileHash (f))
+AudioFile::AudioFile (Engine& e, const juce::File& f) noexcept
+    : engine (&e), file (f), hash (getAudioFileHash (f))
 {
 }
 
 AudioFile::AudioFile (const AudioFile& other) noexcept
-    : file (other.file), hash (other.hash)
+    : engine (other.engine), file (other.file), hash (other.hash)
 {
 }
 
@@ -41,12 +41,12 @@ AudioFileInfo AudioFile::getInfo() const
     CRASH_TRACER
 
     if (file == juce::File())
-        return {};
+        return AudioFileInfo (*engine);
 
-    return Engine::getInstance().getAudioFileManager().getInfo (*this);
+    return engine->getAudioFileManager().getInfo (*this);
 }
 
-juce::String AudioFileInfo::getLongDescription (Engine& engine) const
+juce::String AudioFileInfo::getLongDescription() const
 {
     juce::String desc;
 
@@ -78,7 +78,7 @@ juce::String AudioFileInfo::getLongDescription (Engine& engine) const
 
         if (loopInfo.getRootNote() != -1)
             items.add (juce::MidiMessage::getMidiNoteName (loopInfo.getRootNote(), true, true,
-                                                           engine.getEngineBehaviour().getMiddleCOctave()));
+                                                           engine->getEngineBehaviour().getMiddleCOctave()));
 
         if (items.size() > 0)
             desc << "\n" << items.joinIntoString (", ");
@@ -101,7 +101,7 @@ bool AudioFile::deleteFile() const
 {
     CRASH_TRACER
 
-    auto& afm = Engine::getInstance().getAudioFileManager();
+    auto& afm = engine->getAudioFileManager();
     afm.checkFileForChangesAsync (*this);
     afm.releaseFile (*this);
 
@@ -110,12 +110,12 @@ bool AudioFile::deleteFile() const
     return ok;
 }
 
-bool AudioFile::deleteFiles (const juce::Array<juce::File>& files)
+bool AudioFile::deleteFiles (Engine& engine, const juce::Array<juce::File>& files)
 {
     bool allOK = true;
 
     for (auto& f : files)
-        if (! AudioFile (f).deleteFile())
+        if (! AudioFile (engine, f).deleteFile())
             allOK = false;
 
     return allOK;
@@ -142,7 +142,7 @@ AudioFileWriter::AudioFileWriter (const AudioFile& f,
     : file (f), samplesUntilFlush (numSamplesPerFlush)
 {
     CRASH_TRACER
-    Engine::getInstance().getAudioFileManager().releaseFile (file);
+    f.engine->getAudioFileManager().releaseFile (file);
 
     if (file.getFile().getParentDirectory().createDirectory())
     {
@@ -169,7 +169,7 @@ void AudioFileWriter::closeForWriting()
         writer.reset();
     }
     
-    Engine::getInstance().getAudioFileManager().releaseFile (file);
+    file.engine->getAudioFileManager().releaseFile (file);
 }
 
 bool AudioFileWriter::appendBuffer (juce::AudioBuffer<float>& buffer, int num)
@@ -216,14 +216,14 @@ AudioProxyGenerator::GeneratorJob::GeneratorJob (const AudioFile& p)
 AudioProxyGenerator::GeneratorJob::~GeneratorJob()
 {
     prepareForJobDeletion();
-    callBlocking ([this] { Engine::getInstance().getAudioFileManager().validateFile (proxy, false); });
+    callBlocking ([this] { proxy.engine->getAudioFileManager().validateFile (proxy, false); });
 }
 
 juce::ThreadPoolJob::JobStatus AudioProxyGenerator::GeneratorJob::runJob()
 {
     CRASH_TRACER
 
-    auto& afm = Engine::getInstance().getAudioFileManager();
+    auto& afm = proxy.engine->getAudioFileManager();
     juce::FloatVectorOperations::disableDenormalisedNumberSupport();
     proxy.deleteFile();
 
@@ -282,7 +282,7 @@ void AudioProxyGenerator::beginJob (GeneratorJob* j)
         if (findJob (job->proxy) == nullptr)
         {
             activeJobs.add (job.release());
-            Engine::getInstance().getBackgroundJobs().addJob (j, true);
+            job->proxy.engine->getBackgroundJobs().addJob (j, true);
         }
     }
 }
@@ -320,21 +320,22 @@ void AudioProxyGenerator::deleteProxy (const AudioFile& proxyFile)
     }
 
     if (j != nullptr)
-        Engine::getInstance().getBackgroundJobs().removeJob (j, true, 10000);
+        proxyFile.engine->getBackgroundJobs().removeJob (j, true, 10000);
 
     proxyFile.deleteFile();
 }
 
 
 //==============================================================================
-AudioFileInfo::AudioFileInfo()
+AudioFileInfo::AudioFileInfo (Engine& e)
+    : engine (&e), loopInfo (e)
 {
 }
 
 AudioFileInfo::AudioFileInfo (const AudioFile& file, juce::AudioFormatReader* reader, juce::AudioFormat* f)
-    : hashCode (file.getHash()), format (f),
+    : engine (file.engine), hashCode (file.getHash()), format (f),
       fileModificationTime (file.getFile().getLastModificationTime()),
-      loopInfo (reader, f)
+      loopInfo (*file.engine, reader, f)
 {
     if (reader != nullptr)
     {
@@ -368,7 +369,7 @@ AudioFileInfo AudioFileInfo::parse (const AudioFile& file)
     {
         juce::AudioFormat* format = nullptr;
 
-        if (auto reader = std::unique_ptr<juce::AudioFormatReader> (AudioFileUtils::createReaderFindingFormat (file.getFile(), format)))
+        if (auto reader = std::unique_ptr<juce::AudioFormatReader> (AudioFileUtils::createReaderFindingFormat (*file.engine, file.getFile(), format)))
             return AudioFileInfo (file, reader.get(), format);
     }
 
@@ -379,12 +380,13 @@ AudioFileInfo AudioFileInfo::parse (const AudioFile& file)
 class TracktionThumbnailCache  : public juce::AudioThumbnailCache
 {
 public:
-    TracktionThumbnailCache()
+    TracktionThumbnailCache (Engine& e)
        #if JUCE_DEBUG
         : juce::AudioThumbnailCache (3)
        #else
         : juce::AudioThumbnailCache (50)
        #endif
+        , engine (e)
     {
     }
 
@@ -426,12 +428,14 @@ public:
     }
 
 private:
+    Engine& engine;
+
     juce::File getThumbFolder (Edit* edit) const
     {
         if (edit != nullptr)
             return edit->getTempDirectory (false);
 
-        return Engine::getInstance().getTemporaryFileManager().getThumbnailsFolder();
+        return engine.getTemporaryFileManager().getThumbnailsFolder();
     }
 
     juce::File getThumbFile (const SmartThumbnail* st, juce::int64 hash) const
@@ -519,7 +523,7 @@ void SmartThumbnail::createThumbnailReader()
 
     if (enabled)
     {
-        setReader (AudioFileUtils::createReaderFor (file.getFile()), file.getHash());
+        setReader (AudioFileUtils::createReaderFor (engine, file.getFile()), file.getHash());
         thumbnailIsInvalid = false;
     }
     else
@@ -596,7 +600,7 @@ void SmartThumbnail::timerCallback()
 
 //==============================================================================
 AudioFileManager::AudioFileManager (Engine& e)
-    : engine (e), cache (e), thumbnailCache (new TracktionThumbnailCache())
+    : engine (e), cache (e), thumbnailCache (new TracktionThumbnailCache (e))
 {
 }
 
@@ -639,7 +643,7 @@ void AudioFileManager::removeFile (juce::int64 hash)
 
 AudioFile AudioFileManager::getAudioFile (ProjectItemID sourceID)
 {
-    return AudioFile (ProjectManager::getInstance()->findSourceFile (sourceID));
+    return AudioFile (engine, engine.getProjectManager().findSourceFile (sourceID));
 }
 
 AudioFileInfo AudioFileManager::getInfo (const AudioFile& file)
@@ -775,11 +779,11 @@ void AudioFileManager::checkFileForChangesAsync (const AudioFile& file)
 void AudioFileManager::handleAsyncUpdate()
 {
     CRASH_TRACER
-    AudioFile fileToCheck;
+    AudioFile fileToCheck (engine);
 
     {
         const juce::ScopedLock sl (knownFilesLock);
-        fileToCheck = filesToCheck.getLast();
+        fileToCheck = filesToCheck.getUnchecked (filesToCheck.size() - 1);
         filesToCheck.removeLast();
 
         if (filesToCheck.size() > 0)

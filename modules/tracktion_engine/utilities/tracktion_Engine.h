@@ -27,7 +27,11 @@ public:
     Engine (std::unique_ptr<PropertyStorage>, std::unique_ptr<UIBehaviour>, std::unique_ptr<EngineBehaviour>);
     ~Engine();
 
-    static Engine& getInstance(); // Temporary, until all singleton uses are cleaned up
+   #if TRACKTION_ENABLE_SINGLETONS
+    // Do not use in new projects
+    static Engine& getInstance();
+   #endif
+    static juce::Array<Engine*> getEngines();
 
     TemporaryFileManager& getTemporaryFileManager() const;
     AudioFileFormatManager& getAudioFileFormatManager() const;
@@ -49,12 +53,14 @@ public:
     GrooveTemplateManager& getGrooveTemplateManager();
     CompFactory& getCompFactory() const;
     WarpTimeFactory& getWarpTimeFactory() const;
+    ProjectManager& getProjectManager() const;
 
     using WeakRef = juce::WeakReference<Engine>;
 
 private:
     void initialise();
 
+    std::unique_ptr<ProjectManager> projectManager;
     std::unique_ptr<TemporaryFileManager> temporaryFileManager;
     std::unique_ptr<AudioFileFormatManager> audioFileFormatManager;
     std::unique_ptr<DeviceManager> deviceManager;

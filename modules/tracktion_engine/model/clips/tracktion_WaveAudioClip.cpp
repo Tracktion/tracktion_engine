@@ -60,7 +60,7 @@ double WaveAudioClip::getSourceLength() const
         // However, we know that the effects will produce an audio file of the same length as the originial so we'll return this
         // This could however be a problem with standard warp time, Edit clips and reverse etc...
 
-        sourceLength = clipEffects != nullptr ? AudioFile (getOriginalFile()).getLength()
+        sourceLength = clipEffects != nullptr ? AudioFile (edit.engine, getOriginalFile()).getLength()
                                               : getAudioFile().getLength();
     }
 
@@ -94,12 +94,12 @@ bool WaveAudioClip::needsRender() const
 {
     return ! isUsingMelodyne()
         && (isReversed || warpTime || (clipEffects != nullptr && canHaveEffects()))
-        && AudioFile (getOriginalFile()).isValid();
+        && AudioFile (edit.engine, getOriginalFile()).isValid();
 }
 
 int64 WaveAudioClip::getHash() const
 {
-    return AudioFile (getOriginalFile()).getHash()
+    return AudioFile (edit.engine, getOriginalFile()).getHash()
          ^ (int64) (getWarpTime() ? getWarpTimeManager().getHash() : 0)
          ^ (int64) (getIsReversed() * 768)
          ^ (int64) ((clipEffects == nullptr || ! canHaveEffects())  ? 0 : clipEffects->getHash());
@@ -289,7 +289,7 @@ void WaveAudioClip::setCurrentTake (int takeIndex)
     jassert (take.isValid());
 
     auto takeSourceID = ProjectItemID::fromProperty (take, IDs::source);
-    auto mo = ProjectManager::getInstance()->getProjectItem (takeSourceID);
+    auto mo = edit.engine.getProjectManager().getProjectItem (takeSourceID);
     invalidateCurrentTake();
 
     if (mo != nullptr || getCompManager().isTakeComp (takeIndex))
@@ -319,7 +319,7 @@ StringArray WaveAudioClip::getTakeDescriptions() const
     {
         if (compManager == nullptr || ! compManager->isTakeComp (i))
         {
-            if (auto projectItem = ProjectManager::getInstance()->getProjectItem (takes.getReference (i)))
+            if (auto projectItem = edit.engine.getProjectManager().getProjectItem (takes.getReference (i)))
                 s.add (String (i + 1) + ". " + projectItem->getName());
             else
                 s.add (String (i + 1) + ". <" + TRANS("Deleted") + ">");
@@ -415,7 +415,7 @@ void WaveAudioClip::deleteAllUnusedTakes (bool deleteSourceFiles)
     auto takes = getTakes();
     bool errors = false;
 
-    if (auto proj = ProjectManager::getInstance()->getProject (edit))
+    if (auto proj = edit.engine.getProjectManager().getProject (edit))
     {
         for (int i = takes.size(); --i >= 0;)
         {
@@ -532,7 +532,7 @@ RenderManager::Job::Ptr WaveAudioClip::getRenderJob (const AudioFile& destFile)
 
     if (clipEffects != nullptr && canHaveEffects())
     {
-        auto j = clipEffects->createRenderJob (AudioFile (destFile.getFile()), AudioFile (getOriginalFile()));
+        auto j = clipEffects->createRenderJob (AudioFile (*destFile.engine, destFile.getFile()), AudioFile (*destFile.engine, getOriginalFile()));
         j->setName (TRANS("Rendering Clip Effects") + ": " + getName());
         return j;
     }

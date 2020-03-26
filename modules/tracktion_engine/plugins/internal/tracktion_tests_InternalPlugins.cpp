@@ -94,7 +94,7 @@ private:
         beginTest ("Testing plugin parameters: " + pluginName);
 
         // Create Edit for testing and a plugin instance
-        auto edit = Edit::createSingleTrackEdit (Engine::getInstance());
+        auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
 
         Plugin::Ptr pluginPtr = edit->getPluginCache().createNewPlugin (pluginName, {});
         expect (pluginPtr != nullptr);

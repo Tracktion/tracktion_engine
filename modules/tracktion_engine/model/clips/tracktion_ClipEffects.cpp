@@ -207,7 +207,7 @@ struct ClipEffect::ClipEffectRenderJob  : public ReferenceCountedObject
 
 //==============================================================================
 ClipEffect::ClipEffect (const ValueTree& v, ClipEffects& o)
-    : edit (o.clip.edit), state (v), clipEffects (o)
+    : edit (o.clip.edit), state (v), clipEffects (o), destinationFile (edit.engine)
 {
     state.addListener (this);
 }
@@ -321,7 +321,7 @@ AudioFile ClipEffect::getSourceFile() const
     if (auto ce = clipEffects.getClipEffect (state.getSibling (-1)))
         return ce->getDestinationFile();
 
-    return AudioFile (clipEffects.clip.getOriginalFile());
+    return AudioFile (clipEffects.clip.edit.engine, clipEffects.clip.getOriginalFile());
 }
 
 AudioFile ClipEffect::getDestinationFile() const
@@ -354,7 +354,7 @@ void ClipEffect::valueTreeChanged()
 
 void ClipEffect::invalidateDestination()
 {
-    destinationFile = AudioFile();
+    destinationFile = AudioFile (edit.engine);
     sourceChanged();
 }
 
@@ -417,14 +417,14 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
             auto sourceInfo = source.getInfo();
             jassert (sourceInfo.numChannels > 0 && sourceInfo.sampleRate > 0.0 && sourceInfo.bitsPerSample > 0);
 
-            AudioFile tempFile (destination.getFile().getSiblingFile ("temp_effect_" + String::toHexString (Random::getSystemRandom().nextInt64()))
+            AudioFile tempFile (*destination.engine, destination.getFile().getSiblingFile ("temp_effect_" + String::toHexString (Random::getSystemRandom().nextInt64()))
                                 .withFileExtension (destination.getFile().getFileExtension()));
 
             // need to strip AIFF metadata to write to wav files
             if (sourceInfo.metadata.getValue ("MetaDataSource", "None") == "AIFF")
                 sourceInfo.metadata.clear();
 
-            writer.reset (new AudioFileWriter (tempFile, Engine::getInstance().getAudioFileFormatManager().getWavFormat(),
+            writer.reset (new AudioFileWriter (tempFile, destination.engine->getAudioFileFormatManager().getWavFormat(),
                                                sourceInfo.numChannels, sourceInfo.sampleRate,
                                                jmax (16, sourceInfo.bitsPerSample),
                                                sourceInfo.metadata, 0));
@@ -568,7 +568,7 @@ struct BlockBasedRenderJob : public ClipEffect::ClipEffectRenderJob
         if (sourceInfo.metadata.getValue ("MetaDataSource", "None") == "AIFF")
             sourceInfo.metadata.clear();
 
-        reader.reset (AudioFileUtils::createReaderFor (source.getFile()));
+        reader.reset (AudioFileUtils::createReaderFor (engine, source.getFile()));
 
         if (reader == nullptr || reader->lengthInSamples == 0)
             return false;
@@ -1123,7 +1123,7 @@ WarpTimeEffect::WarpTimeEffect (const ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
     CRASH_TRACER
-    warpTimeManager = new WarpTimeManager (edit, {}, state);
+    warpTimeManager = new WarpTimeManager (edit, AudioFile (edit.engine), state);
     editLoadedCallback = std::make_unique<Edit::LoadFinishedCallback<WarpTimeEffect>> (*this, edit);
 }
 
@@ -1461,7 +1461,7 @@ struct MakeMonoEffect::MakeMonoRenderJob : public BlockBasedRenderJob
         if (sourceInfo.metadata.getValue ("MetaDataSource", "None") == "AIFF")
             sourceInfo.metadata.clear();
 
-        reader.reset (AudioFileUtils::createReaderFor (source.getFile()));
+        reader.reset (AudioFileUtils::createReaderFor (engine, source.getFile()));
 
         if (reader == nullptr || reader->lengthInSamples == 0)
             return false;

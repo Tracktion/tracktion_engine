@@ -37,7 +37,7 @@ EditClip::~EditClip()
 AudioFile EditClip::getAudioFile() const
 {
     if (isTracktionEditFile (getCurrentSourceFile()))
-        return {};
+        return AudioFile (edit.engine);
 
     return AudioClipBase::getAudioFile();
 }
@@ -179,7 +179,7 @@ void EditClip::sourceMediaChanged()
     const bool resetTracksToDefault = (! edit.isLoading() && ! lastSourceId.isValid());
 
     lastSourceId = newID;
-    editSnapshot = EditSnapshot::getEditSnapshot (newID);
+    editSnapshot = EditSnapshot::getEditSnapshot (edit.engine, newID);
     const bool invalidSource = editSnapshot == nullptr || ! editSnapshot->isValid();
 
     if (invalidSource)
@@ -224,7 +224,7 @@ bool EditClip::isUsingFile (const AudioFile& af)
     if (AudioClipBase::isUsingFile (af))
         return true;
 
-    auto audioFile = RenderManager::getAudioFileForHash (edit.getTempDirectory (false), getHash());
+    auto audioFile = RenderManager::getAudioFileForHash (edit.engine, edit.getTempDirectory (false), getHash());
 
     if (audioFile == af)
         return true;

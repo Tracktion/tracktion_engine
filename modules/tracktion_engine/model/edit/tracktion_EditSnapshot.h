@@ -21,7 +21,7 @@ public:
     //==============================================================================
     using Ptr = juce::ReferenceCountedObjectPtr<EditSnapshot>;
 
-    static Ptr getEditSnapshot (ProjectItemID);
+    static Ptr getEditSnapshot (Engine&, ProjectItemID);
 
     //==============================================================================
     struct Marker
@@ -107,6 +107,8 @@ public:
     void addListener (Listener* l)          { listeners.add (l); }
     void removeListener (Listener* l)       { listeners.remove (l); }
 
+    Engine& engine;
+
 private:
     //==============================================================================
     struct ListHolder;
@@ -132,7 +134,7 @@ private:
     juce::ListenerList<Listener> listeners;
 
     //==============================================================================
-    EditSnapshot (ProjectItemID);
+    EditSnapshot (Engine&, ProjectItemID);
     void refreshFromProjectItem (ProjectItem::Ptr);
     void refreshFromXml (const juce::XmlElement&, const juce::String&, double newLength);
     void refreshFromState();

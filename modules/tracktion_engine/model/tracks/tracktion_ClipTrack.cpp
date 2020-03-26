@@ -540,7 +540,7 @@ Clip* ClipTrack::insertClipWithState (juce::ValueTree clipState)
 
             if (sourceFile.exists())
             {
-                auto loopInfo = AudioFile (sourceFile).getInfo().loopInfo;
+                auto loopInfo = AudioFile (edit.engine, sourceFile).getInfo().loopInfo;
 
                 if (loopInfo.getRootNote() != -1)
                     clipState.setProperty (IDs::autoPitch, true, nullptr);
@@ -647,7 +647,7 @@ WaveAudioClip::Ptr ClipTrack::insertWaveClip (const juce::String& name, const ju
 {
     CRASH_TRACER
 
-    if (auto proj = ProjectManager::getInstance()->getProject (edit))
+    if (auto proj = edit.engine.getProjectManager().getProject (edit))
     {
         if (auto source = proj->createNewItem (sourceFile, ProjectItem::waveItemType(),
                                                name, {}, ProjectItem::Category::imported, true))

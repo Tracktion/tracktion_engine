@@ -11,14 +11,12 @@
 namespace tracktion_engine
 {
 
-class ProjectManager    : private juce::DeletedAtShutdown
+class ProjectManager
 {
 public:
     //==============================================================================
-    ProjectManager();
+    ProjectManager (Engine&);
     ~ProjectManager();
-
-    JUCE_DECLARE_SINGLETON (ProjectManager, false)
 
     void initialise();
 

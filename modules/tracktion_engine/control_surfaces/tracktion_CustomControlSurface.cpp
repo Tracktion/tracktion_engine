@@ -21,14 +21,14 @@ void CustomControlSurface::CustomControlSurfaceManager::unregisterSurface (Custo
     surfaces.removeAllInstancesOf (item);
 }
 
-void CustomControlSurface::CustomControlSurfaceManager::saveAllSettings()
+void CustomControlSurface::CustomControlSurfaceManager::saveAllSettings (Engine& e)
 {
     juce::XmlElement root ("MIDICUSTOMCONTROLSURFACES");
 
     for (auto s : surfaces)
         root.addChildElement (s->createXml());
 
-    Engine::getInstance().getPropertyStorage().setXmlProperty (SettingID::customMidiControllers, root);
+    e.getPropertyStorage().setXmlProperty (SettingID::customMidiControllers, root);
 }
 
 //==============================================================================
@@ -40,7 +40,7 @@ CustomControlSurface::CustomControlSurface (ExternalControllerManager& ecm, cons
     init();
 
     deviceDescription = name;
-    manager->saveAllSettings();
+    manager->saveAllSettings (engine);
 
     loadFunctions();
 }
@@ -265,7 +265,7 @@ void CustomControlSurface::importSettings (const juce::String& xmlText)
         ok = true;
     }
 
-    manager->saveAllSettings();
+    manager->saveAllSettings (engine);
 
     if (! ok)
         engine.getUIBehaviour().showWarningAlert (TRANS("Import"), TRANS("Import failed"));
@@ -341,10 +341,10 @@ void CustomControlSurface::recreateOSCSockets()
     }
 }
 
-void CustomControlSurface::saveAllSettings()
+void CustomControlSurface::saveAllSettings (Engine& engine)
 {
     SharedResourcePointer<CustomControlSurfaceManager> manager;
-    manager->saveAllSettings();
+    manager->saveAllSettings (engine);
 }
 
 void CustomControlSurface::updateMiscFeatures()
@@ -739,7 +739,7 @@ bool CustomControlSurface::canChangeSelectedPlugin()
 void CustomControlSurface::deleteController()
 {
     manager->unregisterSurface (this);
-    manager->saveAllSettings();
+    manager->saveAllSettings (engine);
 }
 
 void CustomControlSurface::sendCommandToControllerForActionID (int actionID, bool value)
@@ -863,7 +863,7 @@ void CustomControlSurface::showMappingsEditor (DialogWindow::LaunchOptions& o)
     listenToRow (-1);
 
     setLearntParam (false);
-    manager->saveAllSettings();
+    manager->saveAllSettings (engine);
    #else
     juce::ignoreUnused (o);
    #endif
@@ -1483,7 +1483,7 @@ bool CustomControlSurface::canSetEatsAllMessages()
 void CustomControlSurface::setEatsAllMessages (bool eatAll)
 {
     eatsAllMidi = eatAll;
-    manager->saveAllSettings();
+    manager->saveAllSettings (engine);
 }
 
 void CustomControlSurface::markerChanged (int, const MarkerSetting&)

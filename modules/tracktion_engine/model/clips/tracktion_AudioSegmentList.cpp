@@ -79,7 +79,7 @@ AudioSegmentList::AudioSegmentList (AudioClipBase& acb, bool relTime, bool shoul
     if (shouldCrossfade)
         crossfadeTime = clip.edit.engine.getPropertyStorage().getProperty (SettingID::crossfadeBlock, 12.0 / 1000.0);
 
-    auto& pm = *ProjectManager::getInstance();
+    auto& pm = acb.edit.engine.getProjectManager();
 
     auto anyTakesValid = [&]
     {

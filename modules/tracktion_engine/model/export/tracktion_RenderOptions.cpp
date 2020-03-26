@@ -967,7 +967,7 @@ void RenderOptions::setFilename (String value, bool canPromptToOverwriteExisting
          #endif
         )
     {
-        AudioFile (f).deleteFile();
+        AudioFile (engine, f).deleteFile();
 
         if (f.existsAsFile())
             f.moveToTrash();

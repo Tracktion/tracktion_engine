@@ -80,7 +80,7 @@ struct SharedEditFileDataCache
             jassert (Selectable::isSelectableValid (&edit));
 
             // If we managed to shutdown cleanly (i.e. without crashing) then delete the temp file
-            if (auto item = ProjectManager::getInstance()->getProjectItem (edit))
+            if (auto item = edit.engine.getProjectManager().getProjectItem (edit))
                 EditFileOperations::getTempVersionOfEditFile (item->getSourceFile()).deleteFile();
         }
 
@@ -91,7 +91,7 @@ struct SharedEditFileDataCache
 
         Edit& edit;
         Time timeOfLastSave { Time::getCurrentTime() };
-        EditSnapshot::Ptr editSnapshot { EditSnapshot::getEditSnapshot (edit.getProjectItemID()) };
+        EditSnapshot::Ptr editSnapshot { EditSnapshot::getEditSnapshot (edit.engine, edit.getProjectItemID()) };
     };
 
     SharedEditFileDataCache() = default;
@@ -178,7 +178,7 @@ bool EditFileOperations::writeToFile (const File& file, bool writeQuickBinaryVer
     
     if (! writeQuickBinaryVersion)
     {
-        EditPlaybackContext::RealtimePriorityDisabler realtimeDisabler;
+        EditPlaybackContext::RealtimePriorityDisabler realtimeDisabler (edit.engine);
         waitCursor = std::make_unique<ScopedWaitCursor>();
         sharedDataPimpl->editFileWriter->flushAllFiles();
     }
@@ -240,7 +240,7 @@ bool EditFileOperations::save (bool warnOfFailure,
     if (editFile == File())
         return false;
 
-    CustomControlSurface::saveAllSettings();
+    CustomControlSurface::saveAllSettings (edit.engine);
     auto controllerMappings = state.getOrCreateChildWithName (IDs::CONTROLLERMAPPINGS, nullptr);
     edit.getParameterControlMappings().saveTo (controllerMappings);
 
@@ -252,7 +252,7 @@ bool EditFileOperations::save (bool warnOfFailure,
     if (forceSaveEvenIfNotModified || edit.hasChangedSinceSaved())
     {
         // Updates the project list if showing
-        if (auto proj = ProjectManager::getInstance()->getProject (edit))
+        if (auto proj = edit.engine.getProjectManager().getProject (edit))
             proj->Selectable::changed();
 
         if (offerToDiscardChanges)
@@ -281,7 +281,7 @@ bool EditFileOperations::save (bool warnOfFailure,
 
     tempFile.deleteFile();
 
-    if (auto item = ProjectManager::getInstance()->getProjectItem (edit))
+    if (auto item = edit.engine.getProjectManager().getProjectItem (edit))
         item->setLength (edit.getLength());
 
     edit.resetChangedStatus();
@@ -320,7 +320,7 @@ bool EditFileOperations::saveAs (const File& f, bool forceOverwriteExisting)
             return false;
     }
 
-    auto& pm = *ProjectManager::getInstance();
+    auto& pm = edit.engine.getProjectManager();
 
     if (auto project = pm.getProject (edit))
     {
@@ -341,7 +341,7 @@ bool EditFileOperations::saveAs (const File& f, bool forceOverwriteExisting)
 
                     jassert (edit.getProjectItemID() != newItem->getID());
                     edit.setProjectItemID (newItem->getID());
-                    editSnapshot = EditSnapshot::getEditSnapshot (edit.getProjectItemID());
+                    editSnapshot = EditSnapshot::getEditSnapshot (edit.engine, edit.getProjectItemID());
 
                     const bool ok = save (true, true, false);
 
@@ -358,7 +358,7 @@ bool EditFileOperations::saveAs (const File& f, bool forceOverwriteExisting)
     {
         CRASH_TRACER
 
-        CustomControlSurface::saveAllSettings();
+        CustomControlSurface::saveAllSettings (edit.engine);
         auto controllerMappings = state.getOrCreateChildWithName (IDs::CONTROLLERMAPPINGS, nullptr);
         edit.getParameterControlMappings().saveTo (controllerMappings);
 
@@ -424,12 +424,12 @@ void EditFileOperations::updateEditFiles()
 ValueTree loadEditFromProjectManager (ProjectManager& pm, ProjectItemID itemID)
 {
     if (auto item = pm.getProjectItem (itemID))
-        return loadEditFromFile (item->getSourceFile(), itemID);
+        return loadEditFromFile (pm.engine, item->getSourceFile(), itemID);
 
     return {};
 }
 
-ValueTree loadEditFromFile (const File& f, ProjectItemID itemID)
+ValueTree loadEditFromFile (Engine& e, const File& f, ProjectItemID itemID)
 {
     CRASH_TRACER
     ValueTree state;
@@ -451,7 +451,7 @@ ValueTree loadEditFromFile (const File& f, ProjectItemID itemID)
     if (! state.isValid())
     {
         state = ValueTree (IDs::EDIT);
-        state.setProperty (IDs::appVersion, Engine::getInstance().getPropertyStorage().getApplicationVersion(), nullptr);
+        state.setProperty (IDs::appVersion, e.getPropertyStorage().getApplicationVersion(), nullptr);
     }
 
     state.setProperty (IDs::projectID, itemID.toString(), nullptr);
@@ -459,9 +459,9 @@ ValueTree loadEditFromFile (const File& f, ProjectItemID itemID)
     return state;
 }
 
-ValueTree createEmptyEdit()
+ValueTree createEmptyEdit (Engine& e)
 {
-    return loadEditFromFile ({}, ProjectItemID::createNewID (0));
+    return loadEditFromFile (e, {}, ProjectItemID::createNewID (0));
 }
 
 }

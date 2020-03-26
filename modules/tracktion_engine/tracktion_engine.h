@@ -53,6 +53,13 @@
 
 #undef __TEXT
 
+/** Config: TRACKTION_ENABLE_SINGLETONS
+    Enables singleton access to Engine and ProjectManager. Legacy use only
+*/
+#ifndef TRACKTION_ENABLE_SINGLETONS
+ #define TRACKTION_ENABLE_SINGLETONS 0
+#endif
+
 /** Config: TRACKTION_ENABLE_ARA
     Enables ARA support.
     You must have the ARA SDK in the search path in order to use this.

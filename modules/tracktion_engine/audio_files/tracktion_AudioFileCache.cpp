@@ -231,7 +231,7 @@ public:
     juce::MemoryMappedAudioFormatReader* createNewReader (const juce::Range<juce::int64>* range)
     {
         juce::AudioFormat* af;
-        std::unique_ptr<juce::MemoryMappedAudioFormatReader> r (AudioFileUtils::createMemoryMappedReader (file.getFile(), af));
+        std::unique_ptr<juce::MemoryMappedAudioFormatReader> r (AudioFileUtils::createMemoryMappedReader (cache.engine, file.getFile(), af));
 
         if (r != nullptr
              && (range != nullptr ? r->mapSectionOfFile (*range)
@@ -725,7 +725,7 @@ AudioFileCache::Reader::Ptr AudioFileCache::createReader (const AudioFile& file)
         return r;
     }
 
-    if (auto reader = AudioFileUtils::createReaderFor (file.getFile()))
+    if (auto reader = AudioFileUtils::createReaderFor (engine, file.getFile()))
     {
         backgroundReaderThread.startThread (4);
 
@@ -1012,7 +1012,7 @@ struct CacheAudioFormatReader  :  public juce::AudioFormatReader
         usesFloatingPointData = info.isFloatingPoint;
         metadataValues = info.metadata;
 
-        reader = Engine::getInstance().getAudioFileManager().cache.createReader (file);
+        reader = file.engine->getAudioFileManager().cache.createReader (file);
     }
 
     void readMaxLevels (juce::int64 startSample, juce::int64 numSamples,

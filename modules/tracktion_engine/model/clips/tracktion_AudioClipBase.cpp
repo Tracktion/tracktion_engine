@@ -253,9 +253,9 @@ class AudioClipBase::TempoDetectTask   : public ThreadPoolJobWithProgress
 {
 public:
     /** Creates a task for a given file. */
-    TempoDetectTask (const File& file)
+    TempoDetectTask (Engine& e, const File& file)
         : ThreadPoolJobWithProgress (TRANS("Detecting tempo")),
-          sourceFile (file)
+          engine (e), sourceFile (file)
     {
     }
 
@@ -269,7 +269,7 @@ public:
     /** Performs the actual detection. */
     JobStatus runJob() override
     {
-        std::unique_ptr<AudioFormatReader> reader (AudioFileUtils::createReaderFor (sourceFile));
+        std::unique_ptr<AudioFormatReader> reader (AudioFileUtils::createReaderFor (engine, sourceFile));
 
         if (reader == nullptr)
             return jobHasFinished;
@@ -319,6 +319,7 @@ public:
 
 private:
     //==============================================================================
+    Engine& engine;
     File sourceFile;
     float progress = 0;
     bool isSensible = false;
@@ -351,7 +352,7 @@ private:
     {
         CRASH_TRACER
 
-        AudioFile tempFile (proxy.getFile().getSiblingFile ("temp_proxy_" + String::toHexString (Random().nextInt64()))
+        AudioFile tempFile (engine, proxy.getFile().getSiblingFile ("temp_proxy_" + String::toHexString (Random().nextInt64()))
                             .withFileExtension (proxy.getFile().getFileExtension()));
 
         bool ok = render (tempFile);
@@ -393,7 +394,7 @@ private:
     bool renderNormalSpeed (AudioFileWriter& writer)
     {
         CRASH_TRACER
-        std::unique_ptr<AudioFormatReader> reader (AudioFileUtils::createReaderFor (original.getFile()));
+        std::unique_ptr<AudioFormatReader> reader (AudioFileUtils::createReaderFor (engine, original.getFile()));
 
         if (reader == nullptr)
             return false;
@@ -426,8 +427,9 @@ private:
 //==============================================================================
 AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, ClipTrack& targetTrack)
     : Clip (v, targetTrack, id, t),
-      loopInfo (state.getOrCreateChildWithName (IDs::LOOPINFO, getUndoManager()), getUndoManager()),
-      pluginList (targetTrack.edit)
+      loopInfo (edit.engine, state.getOrCreateChildWithName (IDs::LOOPINFO, getUndoManager()), getUndoManager()),
+      pluginList (targetTrack.edit),
+      lastProxy (targetTrack.edit.engine)
 {
     auto um = getUndoManager();
 
@@ -515,7 +517,7 @@ void AudioClipBase::initialise()
 
     if (shouldAttemptRender())
     {
-        auto audioFile = RenderManager::getAudioFileForHash (edit.getTempDirectory (false), getHash());
+        auto audioFile = RenderManager::getAudioFileForHash (edit.engine, edit.getTempDirectory (false), getHash());
 
         if (currentSourceFile != audioFile.getFile())
             setCurrentSourceFile (audioFile.getFile());
@@ -824,7 +826,7 @@ void AudioClipBase::reverseLoopPoints()
 
     if (isReversed)
         if (auto sourceItem = sourceFileReference.getSourceProjectItem())
-            wi = AudioFile (sourceItem->getSourceFile()).getInfo();
+            wi = AudioFile (edit.engine, sourceItem->getSourceFile()).getInfo();
 
     if (wi.lengthInSamples == 0)
         return;
@@ -1384,7 +1386,7 @@ LoopInfo AudioClipBase::autoDetectBeatMarkers (const LoopInfo& current, bool aut
 
     if (autoBeat)
     {
-        if (auto reader = std::unique_ptr<AudioFormatReader> (AudioFileUtils::createReaderFor (getCurrentSourceFile())))
+        if (auto reader = std::unique_ptr<AudioFormatReader> (AudioFileUtils::createReaderFor (edit.engine, getCurrentSourceFile())))
         {
             int64 out = (loopInfo.getOutMarker() == -1) ? reader->lengthInSamples
                                                         : loopInfo.getOutMarker();
@@ -1437,14 +1439,14 @@ LoopInfo AudioClipBase::autoDetectBeatMarkers (const LoopInfo& current, bool aut
 
 bool AudioClipBase::performTempoDetect()
 {
-    TempoDetectTask tempoDetectTask (getCurrentSourceFile());
+    TempoDetectTask tempoDetectTask (edit.engine, getCurrentSourceFile());
 
     edit.engine.getUIBehaviour().runTaskWithProgressBar (tempoDetectTask);
 
     if (! tempoDetectTask.isResultSensible())
         return false;
 
-    const AudioFileInfo wi = AudioFile (getCurrentSourceFile()).getInfo();
+    const AudioFileInfo wi = AudioFile (edit.engine, getCurrentSourceFile()).getInfo();
     loopInfo.setBpm (tempoDetectTask.getBpm(), wi);
 
     return true;
@@ -1963,7 +1965,7 @@ void AudioClipBase::updateSourceFile()
 
     // check to see if our source file already exists, it may have been created by another clip
     // if it does exist, we will just use that, otherwise we need to start our own render operation
-    const AudioFile audioFile (RenderManager::getAudioFileForHash (edit.getTempDirectory (false), getHash()));
+    const AudioFile audioFile (RenderManager::getAudioFileForHash (edit.engine, edit.getTempDirectory (false), getHash()));
 
     if (getCurrentSourceFile() != audioFile.getFile())
         setCurrentSourceFile (audioFile.getFile());
@@ -1987,7 +1989,7 @@ void AudioClipBase::renderSource()
     TRACKTION_ASSERT_MESSAGE_THREAD
     jassert (isInitialised);
 
-    const AudioFile audioFile (getCurrentSourceFile());
+    const AudioFile audioFile (edit.engine, getCurrentSourceFile());
     const bool isValid = audioFile.isValid();
 
     if (audioFile.getFile().existsAsFile() && isValid)
@@ -2463,7 +2465,7 @@ AudioFileInfo AudioClipBase::getWaveInfo()
 
     if (needsRender())
         if (auto sourceItem = sourceFileReference.getSourceProjectItem())
-            return AudioFile (sourceItem->getSourceFile()).getInfo();
+            return AudioFile (edit.engine, sourceItem->getSourceFile()).getInfo();
 
     return getAudioFile().getInfo();
 }

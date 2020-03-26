@@ -311,7 +311,7 @@ PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine& e, const String& name,
    : MidiInputDevice (e, TRANS("MIDI Input"), name),
      deviceIndex (deviceIndexToUse)
 {
-    controllerParser.reset (new MidiControllerParser());
+    controllerParser.reset (new MidiControllerParser (e));
     loadProps();
 }
 

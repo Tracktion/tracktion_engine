@@ -153,7 +153,7 @@ public:
     void updateOSCSettings (int oscInputPort, int oscOutputPort, juce::String oscOutputAddr) override;
 
     /** Saves the settings of all open custom surfaces. */
-    static void saveAllSettings();
+    static void saveAllSettings (Engine& engine);
 
     void updateMiscFeatures() override;
     void acceptMidiMessage (const juce::MidiMessage&) override;
@@ -397,7 +397,7 @@ private:
     {
         void registerSurface (CustomControlSurface*);
         void unregisterSurface (CustomControlSurface*);
-        void saveAllSettings();
+        void saveAllSettings (Engine&);
 
         juce::Array<CustomControlSurface*> surfaces;
     };

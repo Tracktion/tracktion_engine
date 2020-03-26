@@ -618,14 +618,15 @@ void CompFactory::removeComp (CompManager& cm)
 //==============================================================================
 struct WaveCompManager::CompRenderContext
 {
-    CompRenderContext (const juce::Array<ProjectItemID> takesIDs_, const juce::ValueTree& takeTree_, int activeTakeIndex_,
+    CompRenderContext (Engine& e, const juce::Array<ProjectItemID> takesIDs_, const juce::ValueTree& takeTree_, int activeTakeIndex_,
                        double sourceTimeMultiplier_, double offset_, double maxLength_, double xFade)
-        : takesIDs (takesIDs_), takeTree (takeTree_.createCopy()),
+        : engine (e), takesIDs (takesIDs_), takeTree (takeTree_.createCopy()),
           activeTakeIndex (activeTakeIndex_),
           sourceTimeMultiplier (sourceTimeMultiplier_), offset (offset_), maxLength (maxLength_), crossfadeLength (xFade)
     {
     }
 
+    Engine& engine;
     juce::Array<ProjectItemID> takesIDs;
     const juce::ValueTree takeTree;
     const int activeTakeIndex;
@@ -664,7 +665,8 @@ private:
 /** Updates a strip during a comp render and notifies the Clip when it finishes. */
 struct WaveCompManager::CompUpdater  : private Timer
 {
-    CompUpdater (Clip& c) : clip (c) {}
+    CompUpdater (Clip& c)
+        : clip (c), compFile (c.edit.engine) {}
 
     void setStrip (juce::Component* s)
     {
@@ -716,7 +718,7 @@ private:
 //==============================================================================
 WaveCompManager::WaveCompManager (WaveAudioClip& owner)
     : CompManager (owner, owner.state.getOrCreateChildWithName (IDs::TAKES, &owner.edit.getUndoManager())),
-      clip (owner), compUpdater (new CompUpdater (clip))
+      clip (owner), lastCompFile (clip.edit.engine), compUpdater (new CompUpdater (clip))
 {
     for (auto take : takesTree)
         if (isTakeComp (take))
@@ -910,12 +912,13 @@ ProjectItemID WaveCompManager::getProjectItemIDForTake (int takeIndex) const
 
 AudioFile WaveCompManager::getSourceFileForTake (int takeIndex) const
 {
-    return AudioFile (ProjectManager::getInstance()->findSourceFile (getProjectItemIDForTake (takeIndex)));
+    auto& e = clip.edit.engine;
+    return AudioFile (e, e.getProjectManager().findSourceFile (getProjectItemIDForTake (takeIndex)));
 }
 
 File WaveCompManager::getDefaultTakeFile (int takeIndex) const
 {
-    if (auto project = ProjectManager::getInstance()->getProject (clip.edit))
+    if (auto project = clip.edit.engine.getProjectManager().getProject (clip.edit))
     {
         auto firstTakeItem = project->getProjectItemForID (clip.getTakes()[0]);
 
@@ -946,7 +949,7 @@ File WaveCompManager::getDefaultTakeFile (int takeIndex) const
 
 ProjectItem::Ptr WaveCompManager::getOrCreateProjectItemForTake (ValueTree& takeTree)
 {
-    if (auto project = ProjectManager::getInstance()->getProject (clip.edit))
+    if (auto project = clip.edit.engine.getProjectManager().getProject (clip.edit))
     {
         auto takeIndex = takeTree.getParent().indexOf (takeTree);
 
@@ -988,7 +991,7 @@ WaveCompManager::CompRenderContext* WaveCompManager::createRenderContext() const
 {
     const double xFadeMs = clip.edit.engine.getPropertyStorage().getProperty (SettingID::compCrossfadeMs, 20.0);
 
-    return new CompRenderContext (clip.getTakes(), getActiveTakeTree(), getActiveTakeIndex(),
+    return new CompRenderContext (clip.edit.engine, clip.getTakes(), getActiveTakeTree(), getActiveTakeIndex(),
                                   getSourceTimeMultiplier(), getOffset(), getMaxCompLength(), xFadeMs / 1000.0);
 }
 
@@ -1023,7 +1026,7 @@ bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& w
             const ProjectItemID takeID (context.takesIDs[takeIndex]);
             jassert (takeID.isValid());
 
-            const AudioFile takeFile (ProjectManager::getInstance()->findSourceFile (takeID));
+            const AudioFile takeFile (context.engine, context.engine.getProjectManager().findSourceFile (takeID));
             AudioNode* node = new WaveAudioNode (takeFile, takeRange, 0.0, {}, {},
                                                  1.0, AudioChannelSet::stereo());
 
@@ -1151,7 +1154,8 @@ private:
     bool render() override
     {
         CRASH_TRACER
-        AudioFile tempFile (proxy.getFile().getSiblingFile ("temp_comp_" + String::toHexString (Random::getSystemRandom().nextInt64()))
+        AudioFile tempFile (*proxy.engine,
+                            proxy.getFile().getSiblingFile ("temp_comp_" + String::toHexString (Random::getSystemRandom().nextInt64()))
                             .withFileExtension (proxy.getFile().getFileExtension()));
 
         bool ok = render (tempFile);
@@ -1180,7 +1184,7 @@ private:
 
         for (auto& takeID : context->takesIDs)
         {
-            takeFile = ProjectManager::getInstance()->findSourceFile (takeID);
+            takeFile = engine.getProjectManager().findSourceFile (takeID);
 
             if (takeFile.existsAsFile())
                 break;
@@ -1189,7 +1193,7 @@ private:
         if (! takeFile.existsAsFile())
             return false;
 
-        const AudioFile firstTakeAudioFile (takeFile);
+        const AudioFile firstTakeAudioFile (engine, takeFile);
         AudioFileInfo sourceInfo (firstTakeAudioFile.getInfo());
 
         // need to strip AIFF metadata to write to wav files

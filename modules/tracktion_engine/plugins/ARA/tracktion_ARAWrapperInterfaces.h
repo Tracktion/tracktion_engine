@@ -208,12 +208,12 @@ static ARADocument* createDocumentInternal (Edit& edit)
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
 
-    ReferenceCountedObjectPtr<ExternalPlugin> plugin (MelodyneInstanceFactory::getInstance().createPlugin (edit));
+    ReferenceCountedObjectPtr<ExternalPlugin> plugin (MelodyneInstanceFactory::getInstance (edit.engine).createPlugin (edit));
 
     if (plugin == nullptr || plugin->getAudioPluginInstance() == nullptr)
         return {};
 
-    if (auto factory = MelodyneInstanceFactory::getInstance().factory)
+    if (auto factory = MelodyneInstanceFactory::getInstance (edit.engine).factory)
     {
         static const SizedStruct<ARA_MEMBER_PTR_ARGS (ARAAudioAccessControllerInterface, destroyAudioReader)> audioAccess =
         {
@@ -285,7 +285,7 @@ static ARADocument* createDocumentInternal (Edit& edit)
 
         if (auto dci = factory->createDocumentControllerWithDocument (hostInstance.get(), &documentProperties))
         {
-            if (auto wrapper = std::unique_ptr<MelodyneInstance> (MelodyneInstanceFactory::getInstance()
+            if (auto wrapper = std::unique_ptr<MelodyneInstance> (MelodyneInstanceFactory::getInstance (edit.engine)
                                                                     .createInstance (*plugin, dci->documentControllerRef)))
             {
                 auto d = new ARADocument (edit, wrapper.get(), *wrapper->extensionInstance,
@@ -723,7 +723,7 @@ class NodeReader
 {
 public:
     NodeReader (const AudioFile& af)
-        : reader (Engine::getInstance().getAudioFileManager().cache.createReader (af))
+        : reader (af.engine->getAudioFileManager().cache.createReader (af))
     {
         if (reader != nullptr)
             buffer.setSize (reader->getNumChannels(), 8096, false, true, true);

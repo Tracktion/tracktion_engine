@@ -66,7 +66,7 @@ struct WaveAudioNode::PerChannelState
 
 void WaveAudioNode::prepareAudioNodeToPlay (const PlaybackInitialisationInfo& info)
 {
-    reader = Engine::getInstance().getAudioFileManager().cache.createReader (audioFile);
+    reader = audioFile.engine->getAudioFileManager().cache.createReader (audioFile);
     outputSampleRate = info.sampleRate;
     updateFileSampleRate();
 
@@ -86,7 +86,7 @@ bool WaveAudioNode::isReadyToRender()
 
     if (reader == nullptr)
     {
-        reader = Engine::getInstance().getAudioFileManager().cache.createReader (audioFile);
+        reader = audioFile.engine->getAudioFileManager().cache.createReader (audioFile);
 
         if (reader == nullptr)
             return false;

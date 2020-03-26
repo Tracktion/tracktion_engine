@@ -19,12 +19,12 @@ struct MelodyneInstance
 struct MelodyneInstanceFactory
 {
 public:
-    static MelodyneInstanceFactory& getInstance()
+    static MelodyneInstanceFactory& getInstance (Engine& engine)
     {
         auto& p = getInstancePointer();
 
         if (p == nullptr)
-            p = new MelodyneInstanceFactory();
+            p = new MelodyneInstanceFactory (engine);
 
         return *p;
     }
@@ -74,12 +74,12 @@ private:
     // pretty, but not sure how else we could handle this.
     std::unique_ptr<AudioPluginInstance> plugin;
 
-    MelodyneInstanceFactory()
+    MelodyneInstanceFactory (Engine& engine)
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         CRASH_TRACER
 
-        plugin = createMelodynePlugin();
+        plugin = createMelodynePlugin (engine);
 
         if (plugin != nullptr)
         {
@@ -225,13 +225,14 @@ private:
 };
 
 //==============================================================================
-static std::unique_ptr<AudioPluginInstance> createMelodynePlugin (const char* formatToTry,
+static std::unique_ptr<AudioPluginInstance> createMelodynePlugin (Engine& engine,
+                                                                  const char* formatToTry,
                                                                   const Array<PluginDescription>& araDescs)
 {
     CRASH_TRACER
 
     String error;
-    auto& pfm = Engine::getInstance().getPluginManager().pluginFormatManager;
+    auto& pfm = engine.getPluginManager().pluginFormatManager;
 
     for (auto pd : araDescs)
         if (pd.pluginFormatName == formatToTry)
@@ -241,14 +242,14 @@ static std::unique_ptr<AudioPluginInstance> createMelodynePlugin (const char* fo
     return {};
 }
 
-static std::unique_ptr<AudioPluginInstance> createMelodynePlugin()
+static std::unique_ptr<AudioPluginInstance> createMelodynePlugin (Engine& engine)
 {
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
 
-    auto araDescs = Engine::getInstance().getPluginManager().getARACompatiblePlugDescriptions();
+    auto araDescs = engine.getPluginManager().getARACompatiblePlugDescriptions();
 
-    if (auto p = createMelodynePlugin ("VST3", araDescs))
+    if (auto p = createMelodynePlugin (Engine::getInstance(), "VST3", araDescs))
         return p;
 
     return {};

@@ -151,7 +151,7 @@ private:
     bool findingNormaliseLevel = true;
 
     TransientDetectionJob (Engine& e, const AudioFile& af, Config c)
-        : Job (e, {}), file (af), config (c),
+        : Job (e, AudioFile (e)), file (af), config (c),
           totalNumSamples (af.getLengthInSamples()),
           numChannels (af.getNumChannels()),
           reader (e.getAudioFileManager().cache.createReader (af))
@@ -225,13 +225,13 @@ private:
 
 //==============================================================================
 WarpTimeManager::WarpTimeManager (AudioClipBase& c)
-    : edit (c.edit), clip (&c)
+    : edit (c.edit), clip (&c), sourceFile (c.edit.engine)
 {
     state = c.state.getOrCreateChildWithName (IDs::WARPTIME, &edit.getUndoManager());
     auto markersTree = state.getOrCreateChildWithName (IDs::WARPMARKERS, &edit.getUndoManager());
     markers.reset (new WarpMarkerList (markersTree));
 
-    const double clipLen = AudioFile (clip->getOriginalFile()).getLength();
+    const double clipLen = AudioFile (c.edit.engine, clip->getOriginalFile()).getLength();
 
     // If this is the first time that we've built the Manager
     if (markers->isEmpty())
@@ -289,7 +289,7 @@ void WarpTimeManager::setSourceFile (const AudioFile& af)
 
 AudioFile WarpTimeManager::getSourceFile() const
 {
-    return clip != nullptr ? AudioFile (clip->getOriginalFile()) : sourceFile;
+    return clip != nullptr ? AudioFile (clip->edit.engine, clip->getOriginalFile()) : sourceFile;
 }
 
 double WarpTimeManager::getSourceLength() const

@@ -190,9 +190,9 @@ void RenderManager::cleanUp()
 }
 
 //==============================================================================
-AudioFile RenderManager::getAudioFileForHash (const File& directory, int64 hash)
+AudioFile RenderManager::getAudioFileForHash (Engine& engine, const File& directory, int64 hash)
 {
-    return AudioFile (directory.getChildFile (getFileRenderPrefix() + String (hash) + ".wav"));
+    return AudioFile (engine, directory.getChildFile (getFileRenderPrefix() + String (hash) + ".wav"));
 }
 
 ReferenceCountedArray<RenderManager::Job> RenderManager::getRenderJobsWithoutCreating (const AudioFile& af)

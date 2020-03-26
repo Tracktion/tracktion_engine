@@ -16,11 +16,12 @@ namespace tracktion_engine
 */
 struct AudioFileInfo
 {
-    AudioFileInfo();
+    AudioFileInfo (Engine&);
     AudioFileInfo (const AudioFile&, juce::AudioFormatReader*, juce::AudioFormat*);
 
     static AudioFileInfo parse (const AudioFile&);
 
+    Engine* engine = nullptr;
     bool wasParsedOk = false;
     juce::int64 hashCode = 0;
     juce::AudioFormat* format = nullptr;
@@ -42,7 +43,7 @@ struct AudioFileInfo
         return 0.0;
     }
 
-    juce::String getLongDescription (Engine&) const;
+    juce::String getLongDescription() const;
 };
 
 //==============================================================================
@@ -51,8 +52,9 @@ struct AudioFileInfo
 class AudioFile
 {
 public:
-    inline AudioFile() noexcept {}
-    explicit AudioFile (const juce::File&) noexcept;
+    AudioFile() = delete;
+    inline AudioFile (Engine& e) noexcept : engine (&e) {}
+    explicit AudioFile (Engine&, const juce::File&) noexcept;
     AudioFile (const AudioFile&) noexcept;
     AudioFile& operator= (const AudioFile&) noexcept;
     ~AudioFile();
@@ -65,7 +67,7 @@ public:
     inline bool operator!= (const AudioFile& other) const noexcept      { return hash != other.hash; }
 
     bool deleteFile() const;
-    static bool deleteFiles (const juce::Array<juce::File>& files);
+    static bool deleteFiles (Engine&, const juce::Array<juce::File>& files);
 
     //==============================================================================
     bool isNull() const noexcept                { return hash == 0; }
@@ -89,6 +91,8 @@ public:
     bool isMp3File() const;
     bool isFlacFile() const;
     bool isRexFile() const;
+
+    Engine* engine = nullptr;
 
 private:
     juce::File file;

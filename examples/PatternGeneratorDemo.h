@@ -318,7 +318,7 @@ private:
 
     //==============================================================================
     te::Engine engine { ProjectInfo::projectName };
-    te::Edit edit { engine, te::createEmptyEdit(), te::Edit::forEditing, nullptr, 0 };
+    te::Edit edit { engine, te::createEmptyEdit (engine), te::Edit::forEditing, nullptr, 0 };
     te::TransportControl& transport { edit.getTransport() };
 
     TextButton settingsButton { "Settings" }, playPauseButton { "Play" };

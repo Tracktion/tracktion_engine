@@ -23,7 +23,7 @@ public:
     void loadFrom (const juce::ValueTree&);
     void saveTo (juce::ValueTree&);
 
-    static ParameterControlMappings* getCurrentlyFocusedMappings();
+    static ParameterControlMappings* getCurrentlyFocusedMappings (Engine&);
 
     //==============================================================================
     void checkForDeletedParams();

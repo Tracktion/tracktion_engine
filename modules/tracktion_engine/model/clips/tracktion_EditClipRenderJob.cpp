@@ -14,7 +14,7 @@ namespace tracktion_engine
 RenderManager::Job::Ptr EditRenderJob::getOrCreateRenderJob (Engine& e, Renderer::Parameters& params,
                                                              bool deleteEdit, bool silenceOnBackup, bool reverse)
 {
-    AudioFile targetFile (params.destFile);
+    AudioFile targetFile (e, params.destFile);
 
     if (auto ptr = e.getRenderManager().getRenderJobWithoutCreating (targetFile))
     {
@@ -43,7 +43,7 @@ RenderManager::Job::Ptr EditRenderJob::getOrCreateRenderJob (Engine& e, const Au
 //==============================================================================
 EditRenderJob::EditRenderJob (Engine& e, const Renderer::Parameters& p, bool deleteEdit,
                               bool silenceOnBackup_, bool reverse_)
-    : Job (e, AudioFile (p.destFile)),
+    : Job (e, AudioFile (e, p.destFile)),
       renderOptions (e),
       params (p),
       editDeleter (p.edit, deleteEdit),
@@ -109,7 +109,7 @@ bool EditRenderJob::setUpRender()
                                           });
         ignoreUnused (contextUpdater);
         auto edit = new Edit (*params.engine,
-                              loadEditFromProjectManager (*ProjectManager::getInstance(), itemID),
+                              loadEditFromProjectManager (params.engine->getProjectManager(), itemID),
                               Edit::forRendering, &context, 1); // always use saved version!
         editDeleter.setOwned (edit);
 
@@ -203,7 +203,7 @@ EditRenderJob::RenderPass::~RenderPass()
         TemporaryFile tempReverseFile (r.destFile);
 
         if (r.destFile.existsAsFile())
-            if (AudioFileUtils::reverse (r.destFile, tempReverseFile.getFile(), owner.progress, nullptr))
+            if (AudioFileUtils::reverse (owner.engine, r.destFile, tempReverseFile.getFile(), owner.progress, nullptr))
                 if (tempReverseFile.getFile().existsAsFile())
                     tempReverseFile.overwriteTargetFileWithTemporary();
     }
@@ -215,7 +215,7 @@ EditRenderJob::RenderPass::~RenderPass()
     {
         CRASH_TRACER
 
-        auto proj = ProjectManager::getInstance()->getProject (*r.edit);
+        auto proj = owner.engine.getProjectManager().getProject (*r.edit);
 
         if (proj == nullptr)
         {
@@ -263,7 +263,7 @@ EditRenderJob::RenderPass::~RenderPass()
     }
 
     // validates the AudioFile by giving it a sample rate etc.
-    owner.engine.getAudioFileManager().checkFileForChangesAsync (AudioFile (r.destFile));
+    owner.engine.getAudioFileManager().checkFileForChangesAsync (AudioFile (owner.engine, r.destFile));
 }
 
 bool EditRenderJob::RenderPass::initialise()

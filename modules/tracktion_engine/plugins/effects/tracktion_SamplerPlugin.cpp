@@ -424,7 +424,7 @@ AudioFile SamplerPlugin::getSoundFile (int index) const
     if (auto s = soundList[index])
         return s->audioFile;
 
-    return {};
+    return AudioFile (edit.engine);
 }
 
 juce::String SamplerPlugin::getSoundMedia (int index) const
@@ -610,7 +610,7 @@ SamplerPlugin::SamplerSound::SamplerSound (SamplerPlugin& sf,
       gainDb (jlimit (-48.0f, 48.0f, gainDb_)),
       startTime (startTime_),
       length (length_),
-      audioFile (SourceFileReference::findFileFromString (owner.edit, source))
+      audioFile (owner.edit.engine, SourceFileReference::findFileFromString (owner.edit, source))
 {
     setExcerpt (startTime_, length_);
 
@@ -629,7 +629,7 @@ void SamplerPlugin::SamplerSound::setExcerpt (double startTime_, double length_)
 
     if (! audioFile.isValid())
     {
-        audioFile = AudioFile (SourceFileReference::findFileFromString (owner.edit, source));
+        audioFile = AudioFile (owner.edit.engine, SourceFileReference::findFileFromString (owner.edit, source));
 
        #if JUCE_DEBUG
         if (! audioFile.isValid() && ProjectItemID (source).isValid())
@@ -697,13 +697,13 @@ void SamplerPlugin::SamplerSound::setExcerpt (double startTime_, double length_)
     }
     else
     {
-        audioFile = AudioFile();
+        audioFile = AudioFile (owner.edit.engine);
     }
 }
 
 void SamplerPlugin::SamplerSound::refreshFile()
 {
-    audioFile = {};
+    audioFile = AudioFile (owner.edit.engine);
     setExcerpt (startTime, length);
 }
 

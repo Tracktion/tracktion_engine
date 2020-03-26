@@ -46,7 +46,7 @@ juce::File SourceFileReference::findFileFromString (Edit& edit, const juce::Stri
 
     if (pid.isValid())
     {
-        if (auto projectItem = ProjectManager::getInstance()->getProjectItem (pid))
+        if (auto projectItem = edit.engine.getProjectManager().getProjectItem (pid))
             return projectItem->getSourceFile();
 
         return {};
@@ -81,7 +81,7 @@ ProjectItem::Ptr SourceFileReference::getSourceProjectItem() const
     ProjectItemID pid (source.get());
 
     if (pid.isValid())
-        return ProjectManager::getInstance()->getProjectItem (pid);
+        return edit.engine.getProjectManager().getProjectItem (pid);
 
     return {};
 }
@@ -94,7 +94,7 @@ void SourceFileReference::setToDirectFileReference (const juce::File& newFile, b
 void SourceFileReference::setToProjectFileReference (const juce::File& file, bool updateProjectItem)
 {
     auto oldFile = getFile();
-    auto project = ProjectManager::getInstance()->getProject (edit);
+    auto project = edit.engine.getProjectManager().getProject (edit);
 
     if (updateProjectItem)
     {

@@ -168,7 +168,7 @@ private:
         }
 
         te::Engine engine { ProjectInfo::projectName, nullptr, std::make_unique<PluginEngineBehaviour>() };
-        te::Edit edit { engine, te::createEmptyEdit(), te::Edit::forEditing, nullptr, 0 };
+        te::Edit edit { engine, te::createEmptyEdit (engine), te::Edit::forEditing, nullptr, 0 };
         te::TransportControl& transport { edit.getTransport() };
         te::HostedAudioDeviceInterface& audioInterface;
         te::ExternalPlayheadSynchroniser playheadSynchroniser { edit };

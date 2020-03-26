@@ -13,7 +13,7 @@ namespace tracktion_engine
 
 juce::File getEditFileFromProjectManager (Edit& edit)
 {
-    if (auto item = ProjectManager::getInstance()->getProjectItem (edit))
+    if (auto item = edit.engine.getProjectManager().getProjectItem (edit))
         return item->getSourceFile();
 
     return {};

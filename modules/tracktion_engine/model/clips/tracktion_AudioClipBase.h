@@ -66,7 +66,7 @@ public:
     virtual double getSourceLength() const = 0;
 
     /** Returns the file used to play back the source and will get proxied etc. */
-    virtual AudioFile getAudioFile() const  { return AudioFile (getCurrentSourceFile()); }
+    virtual AudioFile getAudioFile() const  { return AudioFile (edit.engine, getCurrentSourceFile()); }
 
     /** Returns the current AudioFile being used by the Clip, either the
         original source or a proxy.

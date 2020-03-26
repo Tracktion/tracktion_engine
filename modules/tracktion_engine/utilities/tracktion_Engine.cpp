@@ -12,10 +12,12 @@ namespace tracktion_engine
 {
 
 static Engine* instance = nullptr;
+static Array<Engine*> engines;
 
 Engine::Engine (std::unique_ptr<PropertyStorage> ps, std::unique_ptr<UIBehaviour> ub, std::unique_ptr<EngineBehaviour> eb)
 {
     instance = this;
+    engines.add (this);
 
     jassert (ps != nullptr);
     propertyStorage = std::move (ps);
@@ -46,6 +48,7 @@ void Engine::initialise()
 {
     Selectable::initialise();
 
+    projectManager.reset (new ProjectManager (*this));
     activeEdits.reset (new ActiveEdits());
     temporaryFileManager.reset (new TemporaryFileManager (*this));
     recordingThumbnailManager.reset (new RecordingThumbnailManager (*this));
@@ -66,14 +69,15 @@ void Engine::initialise()
         deviceManager->initialise();
 
     pluginManager->initialise();
-
-    ProjectManager::getInstance()->initialise();
+    getProjectManager().initialise();
 
     externalControllerManager->initialise();
 }
 
 Engine::~Engine()
 {
+    getProjectManager().saveList();
+
     getExternalControllerManager().shutdown();
     getDeviceManager().closeDevices();
     getBackgroundJobs().stopAndDeleteAllRunningJobs();
@@ -91,7 +95,7 @@ Engine::~Engine()
     pluginManager.reset();
 
     temporaryFileManager.reset();
-    ProjectManager::deleteInstance();
+    projectManager.reset();
 
     renderManager.reset();
     externalControllerManager.reset();
@@ -103,12 +107,26 @@ Engine::~Engine()
     audioFileFormatManager.reset();
 
     instance = nullptr;
+    engines.removeFirstMatchingValue (this);
 }
 
+Array<Engine*> Engine::getEngines()
+{
+    return engines;
+}
+
+#if TRACKTION_ENABLE_SINGLETONS
 Engine& Engine::getInstance()
 {
     jassert (instance != nullptr);
     return *instance;
+}
+#endif
+
+ProjectManager& Engine::getProjectManager() const
+{
+    jassert (projectManager != nullptr);
+    return *projectManager;
 }
 
 AudioFileFormatManager& Engine::getAudioFileFormatManager() const

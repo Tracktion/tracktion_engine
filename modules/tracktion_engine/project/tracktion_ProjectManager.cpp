@@ -11,21 +11,17 @@
 namespace tracktion_engine
 {
 
-ProjectManager::ProjectManager()
-    : engine (Engine::getInstance())
+ProjectManager::ProjectManager (Engine& e)
+    : engine (e)
 {
 }
 
 ProjectManager::~ProjectManager()
 {
     CRASH_TRACER
-    saveList();
     folders = {};
     jassert (openProjects.isEmpty());
-    clearSingletonInstance();
 }
-
-JUCE_IMPLEMENT_SINGLETON (ProjectManager)
 
 //==============================================================================
 void ProjectManager::initialise()
@@ -469,7 +465,7 @@ Project::Ptr ProjectManager::createNewProjectFromTemplate (const String& name, c
     if (! extractPath.createDirectory())
         return {};
 
-    TracktionArchiveFile archive (archiveFile);
+    TracktionArchiveFile archive (engine, archiveFile);
 
     Project::Ptr proj;
     bool aborted = false;
@@ -617,7 +613,7 @@ Project::Ptr ProjectManager::createNewProjectInteractively (const String& name, 
 
 void ProjectManager::unpackArchiveAndAddToList (const File& archiveFile, ValueTree folder)
 {
-    TracktionArchiveFile archive (archiveFile);
+    TracktionArchiveFile archive (engine, archiveFile);
 
     if (! archive.isValidArchive())
     {

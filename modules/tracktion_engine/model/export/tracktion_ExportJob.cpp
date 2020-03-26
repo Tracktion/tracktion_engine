@@ -120,8 +120,8 @@ void ExportJob::copyProjectFilesToTempDir()
                      && ! showedSpaceWarning)
                 {
                     showedSpaceWarning = true;
-                    Engine::getInstance().getUIBehaviour().showWarningAlert (TRANS("Exporting"),
-                                                                             TRANS("Disk space is critically low!")
+                    edit->engine.getUIBehaviour().showWarningAlert (TRANS("Exporting"),
+                                                                    TRANS("Disk space is critically low!")
                                                                                + "\n\n"
                                                                                + TRANS("Not all files may be exported correctly."));
                 }
@@ -288,7 +288,7 @@ void ExportJob::createArchiveFromTempFiles()
             auto compression = TracktionArchiveFile::CompressionType::zip;
             const File f (filesForDeletion[i]);
 
-            if (AudioFile (f).isValid())
+            if (AudioFile (edit->engine, f).isValid())
                 compression = compressionType;
 
             if (! archive->addFile (f, destDir, compression))

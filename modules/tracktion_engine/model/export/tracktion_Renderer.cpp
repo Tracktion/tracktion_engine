@@ -193,7 +193,7 @@ struct Renderer::RenderTask::RendererContext
 
         AudioFileUtils::addBWAVStartToMetadata (r.metadata, (int64) (r.time.getStart() * r.sampleRateForAudio));
 
-        writer = std::make_unique<AudioFileWriter> (AudioFile (r.destFile),
+        writer = std::make_unique<AudioFileWriter> (AudioFile (*originalParams.engine, r.destFile),
                                                     r.audioFormat, numOutputChans, r.sampleRateForAudio,
                                                     r.bitDepth, r.metadata, r.quality);
 
@@ -489,7 +489,7 @@ bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parame
         setJobName (TRANS("Trimming silence") + "...");
         progress = 0.94f;
 
-        auto doneRange = AudioFileUtils::trimSilence (intermediate.destFile, -70.0f);
+        auto doneRange = AudioFileUtils::trimSilence (params.edit->engine, intermediate.destFile, -70.0f);
 
         if (doneRange.getLength() == 0)
         {
@@ -505,7 +505,7 @@ bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parame
     if (target.shouldNormalise || target.shouldNormaliseByRMS)
         setJobName (TRANS("Normalising") + "...");
 
-    std::unique_ptr<AudioFormatReader> reader (AudioFileUtils::createReaderFor (intermediate.destFile));
+    std::unique_ptr<AudioFormatReader> reader (AudioFileUtils::createReaderFor (params.edit->engine, intermediate.destFile));
 
     if (reader == nullptr)
     {
@@ -513,7 +513,7 @@ bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parame
         return false;
     }
 
-    AudioFileWriter writer (AudioFile (target.destFile),
+    AudioFileWriter writer (AudioFile (params.edit->engine, target.destFile),
                             target.audioFormat, (int) reader->numChannels, target.sampleRateForAudio,
                             target.bitDepth, target.metadata, target.quality);
 
@@ -932,7 +932,7 @@ bool Renderer::renderToFile (const String& taskDescription,
         {
             Parameters r (edit);
             r.destFile = outputFile;
-            r.audioFormat = Engine::getInstance().getAudioFileFormatManager().getDefaultFormat();
+            r.audioFormat = edit.engine.getAudioFileFormatManager().getDefaultFormat();
             r.bitDepth = 24;
             r.sampleRateForAudio = edit.engine.getDeviceManager().getSampleRate();
             r.blockSizeForAudio  = edit.engine.getDeviceManager().getBlockSize();
@@ -1030,7 +1030,7 @@ ProjectItem::Ptr Renderer::renderToProjectItem (const String& taskDescription, c
 {
     CRASH_TRACER
 
-    auto proj = ProjectManager::getInstance()->getProject (*r.edit);
+    auto proj = r.engine->getProjectManager().getProject (*r.edit);
 
     if (proj == nullptr)
     {
@@ -1102,7 +1102,7 @@ Renderer::Statistics Renderer::measureStatistics (const String& taskDescription,
         {
             Parameters r (edit);
 
-            r.audioFormat = Engine::getInstance().getAudioFileFormatManager().getDefaultFormat();
+            r.audioFormat = edit.engine.getAudioFileFormatManager().getDefaultFormat();
             r.blockSizeForAudio = blockSizeForAudio;
             r.time = range;
             r.addAntiDenormalisationNoise = cnp.addAntiDenormalisationNoise;

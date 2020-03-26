@@ -128,7 +128,7 @@ public:
 private:
     void runRestoreStateTests()
     {
-        auto edit = Edit::createSingleTrackEdit (Engine::getInstance());
+        auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
 
         beginTest ("Delay plugin instantiation");
         {

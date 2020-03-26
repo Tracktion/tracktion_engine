@@ -49,7 +49,7 @@ public:
     {
         using namespace std::chrono_literals;
 
-        Engine& engine = Engine::getInstance();
+        Engine& engine = *Engine::getEngines()[0];
         auto& deviceManager = engine.getDeviceManager();
         auto& audioIO = deviceManager.getHostedAudioDeviceInterface();
 
@@ -91,10 +91,10 @@ public:
             auto clips = getAllClipsFromTracks<WaveAudioClip> (*edit);
             expectEquals (clips.size(), getAudioTracks (*edit).size());
             auto audioFiles = getSourceFilesFromClips (clips);
-            auto sampleIndicies = getSampleIndiciesOfImpulse (audioFiles);
+            auto sampleIndicies = getSampleIndiciesOfImpulse (engine, audioFiles);
 
             for (const auto& f : audioFiles)
-                expectGreaterOrEqual (getFileLength (f), 2.0, "File length less then 2 seconds");
+                expectGreaterOrEqual (getFileLength (engine, f), 2.0, "File length less then 2 seconds");
 
             expectEquals ((int) std::count_if (sampleIndicies.begin(), sampleIndicies.end(),
                                                [] (auto index) { return index != - 1; }),
@@ -111,7 +111,7 @@ public:
 
     void cleanUp()
     {
-        auto& deviceManager = Engine::getInstance().getDeviceManager();
+        auto& deviceManager = Engine::getEngines()[0]->getDeviceManager();
         deviceManager.closeDevices();
         deviceManager.removeHostedAudioDeviceInterface();
         deviceManager.deviceManager.closeAudioDevice();
@@ -136,7 +136,7 @@ public:
     //==============================================================================
     std::unique_ptr<Edit> createEditWithTracksForInputs (Engine& engine, const HostedAudioDeviceInterface::Parameters& params)
     {
-        auto edit = std::make_unique<Edit> (Edit::Options { engine, createEmptyEdit(), ProjectItemID::createNewID (0) });
+        auto edit = std::make_unique<Edit> (Edit::Options { engine, createEmptyEdit (engine), ProjectItemID::createNewID (0) });
         auto& transport = edit->getTransport();
         transport.ensureContextAllocated();
         auto context = transport.getCurrentPlaybackContext();
@@ -269,9 +269,9 @@ public:
         return files;
     }
 
-    int64_t findImpulseSampleIndex (File& file)
+    int64_t findImpulseSampleIndex (Engine& engine, File& file)
     {
-        if (auto reader = std::unique_ptr<AudioFormatReader> (tracktion_engine::AudioFileUtils::createReaderFor (file)))
+        if (auto reader = std::unique_ptr<AudioFormatReader> (tracktion_engine::AudioFileUtils::createReaderFor (engine, file)))
             return reader->searchForLevel (0, reader->lengthInSamples,
                                            0.9f, 1.1f,
                                            0);
@@ -279,19 +279,19 @@ public:
         return -1;
     }
 
-    std::vector<int64_t> getSampleIndiciesOfImpulse (const Array<File>& files)
+    std::vector<int64_t> getSampleIndiciesOfImpulse (Engine& engine, const Array<File>& files)
     {
         std::vector<int64_t> sampleIndicies;
 
         for (auto file : files)
-            sampleIndicies.push_back (findImpulseSampleIndex (file));
+            sampleIndicies.push_back (findImpulseSampleIndex (engine, file));
 
         return sampleIndicies;
     }
     
-    double getFileLength (const File& file)
+    double getFileLength (Engine& engine, const File& file)
     {
-        if (auto reader = std::unique_ptr<AudioFormatReader> (tracktion_engine::AudioFileUtils::createReaderFor (file)))
+        if (auto reader = std::unique_ptr<AudioFormatReader> (tracktion_engine::AudioFileUtils::createReaderFor (engine, file)))
             if (reader->sampleRate > 0.0)
                 return reader->lengthInSamples / reader->sampleRate;
 

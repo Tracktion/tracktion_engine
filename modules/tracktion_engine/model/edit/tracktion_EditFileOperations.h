@@ -55,10 +55,10 @@ juce::ValueTree loadEditFromProjectManager (ProjectManager&, ProjectItemID);
 /** Loads a ValueTree from a file to load an Edit.
     If the file is empty, a new Edit state will be created with the given ProjectItemID.
 */
-juce::ValueTree loadEditFromFile (const juce::File&, ProjectItemID);
+juce::ValueTree loadEditFromFile (Engine&, const juce::File&, ProjectItemID);
 
 /** Creates an empty Edit with no project. */
-juce::ValueTree createEmptyEdit();
+juce::ValueTree createEmptyEdit (Engine&);
 
 /** Converts old edit formats to the latest structure */
 juce::ValueTree updateLegacyEdit (const juce::ValueTree&);

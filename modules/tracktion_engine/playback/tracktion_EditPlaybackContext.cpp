@@ -259,7 +259,7 @@ static AudioNode* createPlaybackAudioNode (Edit& edit, OutputDeviceInstance& dev
 
                         if (device.getDeviceID() == outId)
                         {
-                            AudioFile af (freezeFile);
+                            AudioFile af (edit.engine, freezeFile);
                             const double length = af.getLength();
 
                             if (length > 0)
@@ -450,7 +450,7 @@ void EditPlaybackContext::startPlaying (double start)
     prepareOutputDevices (start);
 
     if (priorityBooster == nullptr)
-        priorityBooster.reset (new ProcessPriorityBooster());
+        priorityBooster.reset (new ProcessPriorityBooster (edit.engine));
 
     for (auto mo : midiOutputs)
         mo->start();
@@ -745,27 +745,27 @@ void EditPlaybackContext::setAddAntiDenormalisationNoise (Engine& e, bool b)
 #if JUCE_WINDOWS
 static int numHighPriorityPlayers = 0, numRealtimeDefeaters = 0;
 
-void updateProcessPriority()
+void updateProcessPriority (Engine& engine)
 {
     int level = 0;
 
     if (numHighPriorityPlayers > 0)
-        level = numRealtimeDefeaters == 0 && Engine::getInstance().getPropertyStorage().getProperty (SettingID::useRealtime, false) ? 2 : 1;
+        level = numRealtimeDefeaters == 0 && engine.getPropertyStorage().getProperty (SettingID::useRealtime, false) ? 2 : 1;
 
-    Engine::getInstance().getEngineBehaviour().setProcessPriority (level);
+    engine.getEngineBehaviour().setProcessPriority (level);
 }
 
-EditPlaybackContext::ProcessPriorityBooster::ProcessPriorityBooster()        { ++numHighPriorityPlayers; updateProcessPriority(); }
-EditPlaybackContext::ProcessPriorityBooster::~ProcessPriorityBooster()       { --numHighPriorityPlayers; updateProcessPriority(); }
-EditPlaybackContext::RealtimePriorityDisabler::RealtimePriorityDisabler()    { ++numRealtimeDefeaters; updateProcessPriority(); }
-EditPlaybackContext::RealtimePriorityDisabler::~RealtimePriorityDisabler()   { --numRealtimeDefeaters; updateProcessPriority(); }
+EditPlaybackContext::ProcessPriorityBooster::ProcessPriorityBooster (Engine& e) : engine (e)        { ++numHighPriorityPlayers; updateProcessPriority (engine); }
+EditPlaybackContext::ProcessPriorityBooster::~ProcessPriorityBooster()                              { --numHighPriorityPlayers; updateProcessPriority (engine); }
+EditPlaybackContext::RealtimePriorityDisabler::RealtimePriorityDisabler (Engine& e) : engine (e)    { ++numRealtimeDefeaters; updateProcessPriority (engine); }
+EditPlaybackContext::RealtimePriorityDisabler::~RealtimePriorityDisabler()                          { --numRealtimeDefeaters; updateProcessPriority (engine); }
 
 #else
 
-EditPlaybackContext::ProcessPriorityBooster::ProcessPriorityBooster()        {}
-EditPlaybackContext::ProcessPriorityBooster::~ProcessPriorityBooster()       {}
-EditPlaybackContext::RealtimePriorityDisabler::RealtimePriorityDisabler()    {}
-EditPlaybackContext::RealtimePriorityDisabler::~RealtimePriorityDisabler()   {}
+EditPlaybackContext::ProcessPriorityBooster::ProcessPriorityBooster (Engine& e) : engine (e)        {}
+EditPlaybackContext::ProcessPriorityBooster::~ProcessPriorityBooster()                              {}
+EditPlaybackContext::RealtimePriorityDisabler::RealtimePriorityDisabler (Engine& e) : engine (e)    {}
+EditPlaybackContext::RealtimePriorityDisabler::~RealtimePriorityDisabler()                          {}
 
 #endif
 

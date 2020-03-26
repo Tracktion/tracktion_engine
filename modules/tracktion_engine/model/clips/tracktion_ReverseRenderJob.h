@@ -26,7 +26,7 @@ public:
                                      const juce::File& source,
                                      const juce::File& destination)
     {
-        AudioFile targetFile (destination);
+        AudioFile targetFile (e, destination);
 
         if (auto ptr = e.getRenderManager().getRenderJobWithoutCreating (targetFile))
             return ptr;
@@ -43,7 +43,7 @@ protected:
         CRASH_TRACER
 
         juce::TemporaryFile tempFile (proxy.getFile(), juce::TemporaryFile::useHiddenFile);
-        success = AudioFileUtils::reverse (source, tempFile.getFile(), progress, this);
+        success = AudioFileUtils::reverse (engine, source, tempFile.getFile(), progress, this);
 
         if (success)
         {

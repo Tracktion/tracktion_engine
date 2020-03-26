@@ -13,7 +13,7 @@ namespace tracktion_engine
 
 static File getApplicationSettingsFile()
 {
-    return Engine::getInstance().getPropertyStorage().getAppPrefsFolder().getChildFile ("Settings.xml");
+    return Engine::getEngines()[0]->getPropertyStorage().getAppPrefsFolder().getChildFile ("Settings.xml");
 }
 
 static PropertiesFile::Options getSettingsOptions()

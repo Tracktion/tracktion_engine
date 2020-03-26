@@ -59,9 +59,9 @@ ParameterControlMappings::~ParameterControlMappings()
 {
 }
 
-ParameterControlMappings* ParameterControlMappings::getCurrentlyFocusedMappings()
+ParameterControlMappings* ParameterControlMappings::getCurrentlyFocusedMappings (Engine& engine)
 {
-    if (auto ed = Engine::getInstance().getUIBehaviour().getLastFocusedEdit())
+    if (auto ed = engine.getUIBehaviour().getLastFocusedEdit())
         return &ed->getParameterControlMappings();
 
     return {};

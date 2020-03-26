@@ -63,7 +63,8 @@ void TracktionArchiveFile::IndexEntry::write (OutputStream& out)
 
 
 //==============================================================================
-TracktionArchiveFile::TracktionArchiveFile (const File& f)  : file (f)
+TracktionArchiveFile::TracktionArchiveFile (Engine& e, const File& f)
+    : engine (e), file (f)
 {
     readIndex();
 }
@@ -185,7 +186,7 @@ bool TracktionArchiveFile::extractFile (int index, const File& destDirectory, Fi
 
     if (askBeforeOverwriting && destFile.existsAsFile())
     {
-        auto r = Engine::getInstance().getUIBehaviour()
+        auto r = engine.getUIBehaviour()
                     .showYesNoCancelAlertBox (TRANS("Unpacking archive"),
                                               TRANS("The file XZZX already exists - do you want to overwrite it?")
                                                 .replace ("XZZX", destFile.getFullPathName()),
@@ -212,10 +213,10 @@ bool TracktionArchiveFile::extractFile (int index, const File& destDirectory, Fi
     if (storedName != entries[index]->originalName)
     {
         if (storedName.endsWithIgnoreCase (".flac"))
-            return AudioFileUtils::readFromFormat<FlacAudioFormat> (*source, destFile);
+            return AudioFileUtils::readFromFormat<FlacAudioFormat> (engine, *source, destFile);
 
         if (storedName.endsWithIgnoreCase (".ogg"))
-            return AudioFileUtils::readFromFormat<OggVorbisAudioFormat> (*source, destFile);
+            return AudioFileUtils::readFromFormat<OggVorbisAudioFormat> (engine, *source, destFile);
 
         if (storedName.endsWithIgnoreCase (".gz"))
             source = std::make_unique<GZIPDecompressorInputStream> (source.release(), true);
@@ -325,7 +326,7 @@ bool TracktionArchiveFile::extractAllAsTask (const File& destDirectory, bool war
 {
     ExtractionTask task (*this, destDirectory, warnAboutOverwrite, filesCreated, wasAborted);
 
-    Engine::getInstance().getUIBehaviour().runTaskWithProgressBar (task);
+    engine.getUIBehaviour().runTaskWithProgressBar (task);
 
     return task.ok;
 }
@@ -404,7 +405,7 @@ bool TracktionArchiveFile::addFile (const File& f, const String& filenameToUse, 
 
                 case CompressionType::lossless:
                 {
-                    AudioFile af (f);
+                    AudioFile af (engine, f);
 
                     if (af.isOggFile() || af.isMp3File() || af.isFlacFile())
                     {
@@ -424,7 +425,7 @@ bool TracktionArchiveFile::addFile (const File& f, const String& filenameToUse, 
                         {
                             entry->storedName = filenameRoot + ".flac";
 
-                            if (! AudioFileUtils::convertToFormat<FlacAudioFormat> (f, out, 0, StringPairArray()))
+                            if (! AudioFileUtils::convertToFormat<FlacAudioFormat> (engine, f, out, 0, StringPairArray()))
                             {
                                 needToWriteIndex = true;
                                 TRACKTION_LOG_ERROR ("Failed to add file to archive flac: " + f.getFileName());
@@ -444,7 +445,7 @@ bool TracktionArchiveFile::addFile (const File& f, const String& filenameToUse, 
                     entry->originalName = entry->storedName;  // oggs get extracted as oggs, not named back to how they were
 
                     auto quality = getOggQuality (compression);
-                    AudioFile af (f);
+                    AudioFile af (engine, f);
 
                     if (! isWorthConvertingToOgg (af, quality))
                     {
@@ -459,7 +460,7 @@ bool TracktionArchiveFile::addFile (const File& f, const String& filenameToUse, 
 
                         out.writeFromInputStream (fin, -1);
                     }
-                    else if (! AudioFileUtils::convertToFormat<OggVorbisAudioFormat> (f, out, quality, StringPairArray()))
+                    else if (! AudioFileUtils::convertToFormat<OggVorbisAudioFormat> (engine, f, out, quality, StringPairArray()))
                     {
                         needToWriteIndex = true;
                         TRACKTION_LOG_ERROR ("Failed to add file to archive ogg: " + f.getFileName());

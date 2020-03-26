@@ -129,12 +129,12 @@ struct ARAClipPlayer  : private SelectableListener
 
         if (auto doc = getDocument())
         {
-            ExternalPlugin::Ptr p = MelodyneInstanceFactory::getInstance().createPlugin (edit);
+            ExternalPlugin::Ptr p = MelodyneInstanceFactory::getInstance (edit.engine).createPlugin (edit);
 
             if (p == nullptr || getDocument() == nullptr)
                 return false;
 
-            melodyneInstance.reset (MelodyneInstanceFactory::getInstance().createInstance (*p, doc->dcRef));
+            melodyneInstance.reset (MelodyneInstanceFactory::getInstance (edit.engine).createInstance (*p, doc->dcRef));
 
             if (melodyneInstance == nullptr)
                 return false;

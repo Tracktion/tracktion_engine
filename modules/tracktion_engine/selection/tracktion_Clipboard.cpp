@@ -206,10 +206,12 @@ struct ProjectItemPastingOptions
     bool snapBWavsToOriginalTime = false;
 };
 
-static void askUserAboutProjectItemPastingOptions (const Clipboard::ProjectItems& items, UIBehaviour& ui,
+static void askUserAboutProjectItemPastingOptions (Engine& engine,
+                                                   const Clipboard::ProjectItems& items,
                                                    ProjectItemPastingOptions& options)
 {
-    auto& pm = *ProjectManager::getInstance();
+    auto& pm = engine.getProjectManager();
+    auto& ui = engine.getUIBehaviour();
 
     bool importedMIDIFilesHaveTempoChanges = false;
     int numAudioClips = 0;
@@ -232,7 +234,7 @@ static void askUserAboutProjectItemPastingOptions (const Clipboard::ProjectItems
                 {
                     ++numAudioClips;
 
-                    if (AudioFile (file).getMetadata()[WavAudioFormat::bwavTimeReference].isNotEmpty())
+                    if (AudioFile (engine, file).getMetadata()[WavAudioFormat::bwavTimeReference].isNotEmpty())
                         ++numAudioClipsWithBWAV;
                 }
             }
@@ -288,7 +290,7 @@ static void askUserAboutProjectItemPastingOptions (const Clipboard::ProjectItems
 
 bool isRecursiveEditClipPaste (const Clipboard::ProjectItems& items, Edit& edit)
 {
-    auto& pm = *ProjectManager::getInstance();
+    auto& pm = edit.engine.getProjectManager();
 
     for (auto& item : items.itemIDs)
         if (auto source = pm.getProjectItem (item.itemID))
@@ -300,7 +302,8 @@ bool isRecursiveEditClipPaste (const Clipboard::ProjectItems& items, Edit& edit)
 
 bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) const
 {
-    auto& pm = *ProjectManager::getInstance();
+    auto& e  = options.edit.engine;
+    auto& pm = e.getProjectManager();
     auto& ui = options.edit.engine.getUIBehaviour();
     bool anythingPasted = false;
 
@@ -309,7 +312,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
     pastingOptions.separateTracks = options.preferredLayout == FileDragList::vertical;
 
     if (! options.silent)
-        askUserAboutProjectItemPastingOptions (*this, ui, pastingOptions);
+        askUserAboutProjectItemPastingOptions (e, *this, pastingOptions);
 
     if (isRecursiveEditClipPaste (*this, options.edit))
     {
@@ -399,7 +402,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
 bool Clipboard::ProjectItems::pasteIntoProject (Project& project) const
 {
     for (auto& item : itemIDs)
-        if (auto source = ProjectManager::getInstance()->getProjectItem (item.itemID))
+        if (auto source = project.engine.getProjectManager().getProjectItem (item.itemID))
             if (auto newItem = project.createNewItem (source->getSourceFile(),
                                                       source->getType(),
                                                       source->getName(),
@@ -1011,7 +1014,7 @@ private:
 
     void runCopyTests()
     {
-        auto edit = Edit::createSingleTrackEdit (Engine::getInstance());
+        auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
         auto& ts = edit->tempoSequence;
         
         beginTest ("Simple copy/paste");
@@ -1072,7 +1075,7 @@ private:
     
     void runCopyTestsUsingBeatInsertion()
     {
-        auto edit = Edit::createSingleTrackEdit (Engine::getInstance());
+        auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
         auto& ts = edit->tempoSequence;
         
         beginTest ("Simple copy/paste");

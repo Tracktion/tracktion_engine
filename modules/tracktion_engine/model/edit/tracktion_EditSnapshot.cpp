@@ -54,7 +54,7 @@ struct EditSnapshot::ListHolder
 };
 
 //==============================================================================
-EditSnapshot::Ptr EditSnapshot::getEditSnapshot (ProjectItemID itemID)
+EditSnapshot::Ptr EditSnapshot::getEditSnapshot (Engine& engine, ProjectItemID itemID)
 {
     SharedResourcePointer<EditSnapshotList> list;
     const ScopedLock sl (list->getLock());
@@ -65,12 +65,13 @@ EditSnapshot::Ptr EditSnapshot::getEditSnapshot (ProjectItemID itemID)
     if (auto snapshot = list->getEditSnapshot (itemID))
         return snapshot;
 
-    return new EditSnapshot (itemID);
+    return new EditSnapshot (engine, itemID);
 }
 
 //==============================================================================
-EditSnapshot::EditSnapshot (ProjectItemID pid)
-    : listHolder (std::make_unique<ListHolder>()),
+EditSnapshot::EditSnapshot (Engine& e, ProjectItemID pid)
+    : engine (e),
+      listHolder (std::make_unique<ListHolder>()),
       itemID (pid)
 {
     listHolder->list->addSnapshot (*this);
@@ -208,7 +209,7 @@ int EditSnapshot::audioToGlobalTrackIndex (int audioIndex) const
 //==============================================================================
 void EditSnapshot::refreshFromProjectManager()
 {
-    if (auto pi = ProjectManager::getInstance()->getProjectItem (itemID))
+    if (auto pi = engine.getProjectManager().getProjectItem (itemID))
         refreshFromProjectItem (pi);
 }
 
@@ -302,7 +303,7 @@ static void addNestedEditObjects (EditSnapshot& baseEdit, juce::ReferenceCounted
     edits.addIfNotAlreadyThere (&baseEdit);
 
     for (auto itemID : baseEdit.getEditClips())
-        if (auto ptr = EditSnapshot::getEditSnapshot (itemID))
+        if (auto ptr = EditSnapshot::getEditSnapshot (baseEdit.engine, itemID))
             addNestedEditObjects (*ptr, edits);
 }
 
