@@ -11,8 +11,12 @@
 #if ! JUCE_PROJUCER_LIVE_BUILD
 
 #ifdef __APPLE__
+ #define Point CarbonDummyPointName
+ #define AudioBuffer DummyAudioBufferName
  #include <AudioUnit/AudioUnit.h>
  #include <AudioUnit/AUComponent.h>
+ #undef AudioBuffer
+ #undef Point
 #endif
 
 #include <atomic>
