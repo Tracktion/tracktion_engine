@@ -281,8 +281,8 @@ void AudioProxyGenerator::beginJob (GeneratorJob* j)
 
         if (findJob (job->proxy) == nullptr)
         {
-            activeJobs.add (job.release());
             job->proxy.engine->getBackgroundJobs().addJob (j, true);
+            activeJobs.add (job.release());
         }
     }
 }
