@@ -25,18 +25,19 @@ public:
 
     void runTest() override
     {
-        auto sinFile = getSinFile();
+        auto sinFile = getSinFile<WavAudioFormat> (44100.0);
 
         auto& engine = *Engine::getEngines()[0];
         engine.getPluginManager().createBuiltInType<LatencyPlugin>();
         
-        auto edit = createTestEdit (engine);
-        auto track1 = getAudioTracks (*edit)[0];
-        auto track2 = getAudioTracks (*edit)[1];
-        expect (track1 != track2);
-
         beginTest ("No latency");
         {
+            expectEquals (sinFile->getFile().getFileExtension(), String (".wav"));
+            auto edit = createTestEdit (engine);
+            auto track1 = getAudioTracks (*edit)[0];
+            auto track2 = getAudioTracks (*edit)[1];
+            expect (track1 != track2);
+            
             // Add sin file
             {
                 AudioFile af (engine, sinFile->getFile());
@@ -57,17 +58,44 @@ public:
             track1->getClips()[0]->setPosition ({{ 0.0, 0.5 }});
             expectPeak (*edit, { 0.0, 0.5 }, { track1 }, 1.0f);
             expectPeak (*edit, { 0.5, 1.0 }, { track1 }, 0.0f);
-        }
 
-		engine.getAudioFileManager().releaseAllFiles();
-        edit->getTempDirectory (false).deleteRecursively();
+            engine.getAudioFileManager().releaseAllFiles();
+            edit->getTempDirectory (false).deleteRecursively();
+        }
+        
+        beginTest ("Source file with different sample rate");
+        {
+            auto sinFile96Ogg = getSinFile<OggVorbisAudioFormat> (96000.0);
+            expectEquals (sinFile96Ogg->getFile().getFileExtension(), String (".ogg"));
+            auto edit = createTestEdit (engine);
+            auto track1 = getAudioTracks (*edit)[0];
+
+            // Add sin file
+            {
+                AudioFile af (engine, sinFile96Ogg->getFile());
+                expect (af.isValid());
+                expect (af.getLength() == 1.0);
+
+                for (auto t : { track1 })
+                {
+                    auto clip = t->insertWaveClip ("sin", af.getFile(), {{ 0.0, af.getLength() }}, false);
+                    expectEquals (clip->getPosition().getStart(), 0.0);
+                    expectEquals (clip->getPosition().getEnd(), 1.0);
+                }
+            }
+
+            expectPeak (*edit, { 0.0, 1.0 }, { track1 }, 1.0f);
+
+            engine.getAudioFileManager().releaseAllFiles();
+            edit->getTempDirectory (false).deleteRecursively();
+        }
     }
 
     void expectPeak (Edit& edit, EditTimeRange tr, Array<Track*> tracks, float expectedPeak)
     {
         auto blockSize = edit.engine.getDeviceManager().getBlockSize();
         auto stats = logStats (Renderer::measureStatistics ("PDC Tests", edit, tr, getTracksMask (tracks), blockSize));
-        expect (juce::isWithin (stats.peak, expectedPeak, 0.0001f), String ("Expected peak: ") + String (expectedPeak, 4));
+        expect (juce::isWithin (stats.peak, expectedPeak, 0.001f), String ("Expected peak: ") + String (expectedPeak, 4));
     }
 
     Renderer::Statistics logStats (Renderer::Statistics stats)
@@ -101,11 +129,11 @@ public:
         return edit;
     }
 
-    static std::unique_ptr<TemporaryFile> getSinFile()
+    template<typename AudioFormatType>
+    std::unique_ptr<TemporaryFile> getSinFile (double sampleRate)
     {
         // Create a 1s sin buffer
-        auto sampleRate = 44100;
-        AudioBuffer<float> buffer (1, sampleRate);
+        AudioBuffer<float> buffer (1, (int) sampleRate);
         juce::dsp::Oscillator<float> osc ([] (float in) { return std::sin (in); });
         osc.setFrequency (220.0);
         osc.prepare ({ double (sampleRate), uint32 (sampleRate), 1 });
@@ -117,11 +145,16 @@ public:
             samples[i] = osc.processSample (0.0);
 
         // Then write it to a temp file
-        auto f = std::make_unique<TemporaryFile> (".wav");
+        AudioFormatType format;
+        auto f = std::make_unique<TemporaryFile> (format.getFileExtensions()[0]);
         
         if (auto fileStream = f->getFile().createOutputStream())
         {
-            if (auto writer = std::unique_ptr<AudioFormatWriter> (WavAudioFormat().createWriterFor (fileStream.get(), (double) 44100, 1, 16, {}, 0)))
+            const int numQualityOptions = format.getQualityOptions().size();
+            const int qualityOptionIndex = numQualityOptions == 0 ? 0 : (numQualityOptions / 2);
+            const int bitDepth = format.getPossibleBitDepths().contains (16) ? 16 : 32;
+            
+            if (auto writer = std::unique_ptr<AudioFormatWriter> (AudioFormatType().createWriterFor (fileStream.get(), sampleRate, 1, bitDepth, {}, qualityOptionIndex)))
             {
                 fileStream.release();
                 writer->writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());
