@@ -97,7 +97,7 @@ private:
 
                     const SizedStruct<ARA_MEMBER_PTR_ARGS (ARAInterfaceConfiguration, assertFunctionAddress)> interfaceConfig =
                     {
-                        jmin<ARAAPIGeneration> (factory->highestSupportedApiGeneration, kARAAPIGeneration_2_0_Final),
+                        jmin<ARAAPIGeneration> (factory->highestSupportedApiGeneration, kARAAPIGeneration_2_0_Draft),
                         assertFuncPtr
                     };
 
