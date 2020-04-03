@@ -173,8 +173,9 @@ private:
 
     void updateJobs()
     {
-        if (juce::JUCEApplicationBase::getInstance()->isInitialising())
-            return;
+        if (auto app = juce::JUCEApplicationBase::getInstance())
+            if (app->isInitialising())
+                return;
 
         float newTotal = 0.0f;
         int numJobs = 0;
