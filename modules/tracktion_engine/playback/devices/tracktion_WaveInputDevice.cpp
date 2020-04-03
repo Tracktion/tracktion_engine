@@ -211,6 +211,8 @@ public:
 
     ~WaveInputDeviceInstance()
     {
+        stop();
+
         auto& wi = getWaveInput();
 
         if (wi.retrospectiveBuffer)
