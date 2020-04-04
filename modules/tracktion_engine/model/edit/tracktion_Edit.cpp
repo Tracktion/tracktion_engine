@@ -2490,271 +2490,359 @@ void Edit::setEditMetadata (Metadata metadata)
 
 //==============================================================================
 std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce::ValueTree v, const Edit* editToMatch,
-                                                           bool tryToMatchTempo, bool* couldMatchTempo, juce::ValueTree midiPreviewPlugin)
+                                                           bool tryToMatchTempo, bool* couldMatchTempo, juce::ValueTree midiPreviewPlugin,
+														   juce::ValueTree midiDrumPreviewPlugin, bool forceMidiToDrums, Edit* editToUpdate)
 {
     CRASH_TRACER
-    auto edit = std::make_unique<Edit> (engine, createEmptyEdit (engine), forEditing, nullptr, 1);
-    edit->ensureNumberOfAudioTracks (1);
+	std::unique_ptr<Edit> edit;
+	if (editToUpdate != nullptr)
+		edit.reset (editToUpdate);
+	else
+		edit = std::make_unique<Edit> (engine, createEmptyEdit (engine), forEditing, nullptr, 1);
+
+	edit->ensureNumberOfAudioTracks (2);
     edit->isPreviewEdit = true;
+	edit->getTransport().setCurrentPosition (0);
 
     if (couldMatchTempo != nullptr)
         *couldMatchTempo = false;
 
-    if (auto track = getFirstAudioTrack (*edit))
-    {
-        bool resizeClip = false;
-        double clipTempo = 120.0;
+	auto tracks = getAudioTracks (*edit);
+	if (tracks.size() < 2)
+		return {};
 
-        if (Clip::isClipState (v))
-        {
-            juce::MemoryBlock mb;
-            mb.fromBase64Encoding (v[IDs::state].toString());
+	for (auto t : tracks)
+	{
+		auto clips = t->getClips();
+		for (auto c : clips)
+			c->removeFromParentTrack();
+	}
 
-            auto state = updateLegacyEdit (juce::ValueTree::readFromData (mb.getData(), mb.getSize()));
+	auto& master = edit->getMasterPluginList();
+	while (master.size() > 0)
+		master[0]->removeFromParent();
 
-            if (state.isValid())
-                track->state.addChild (state, -1, nullptr);
+	bool isDrums = false;
 
-            clipTempo = state[IDs::bpm];
+	auto midiTrack  = tracks[0];
+	auto drumTrack  = tracks[1];
 
-            if (clipTempo < 20.0)
-                clipTempo = 120.0;
+	bool resizeClip = false;
+	double clipTempo = 120.0;
 
-            resizeClip = true;
-        }
+	if (Clip::isClipState (v))
+	{
+		juce::MemoryBlock mb;
+		mb.fromBase64Encoding (v[IDs::state].toString());
 
-        if (midiPreviewPlugin.isValid())
-            track->pluginList.insertPlugin (midiPreviewPlugin, 0);
+		auto state = updateLegacyEdit (juce::ValueTree::readFromData (mb.getData(), mb.getSize()));
 
-        double songTempo = 120.0;
-        double length = 1.0;
+		if (state.isValid())
+			midiTrack->state.addChild (state, -1, nullptr);
 
-        if (auto firstClip = track->getClips().getFirst())
-            length = firstClip->getPosition().getLength();
+		clipTempo = state[IDs::bpm];
 
-        // change tempo to match main edit
-        if (tryToMatchTempo && editToMatch != nullptr)
-        {
-            auto& targetTempo = editToMatch->tempoSequence.getTempoAt (0.01);
-            auto firstTempo = edit->tempoSequence.getTempo (0);
-            firstTempo->setBpm (targetTempo.getBpm());
+		if (clipTempo < 20.0)
+			clipTempo = 120.0;
 
-            songTempo = targetTempo.getBpm();
+		resizeClip = true;
+	}
 
-            if (couldMatchTempo != nullptr)
-                *couldMatchTempo = true;
+	if (auto firstClip = midiTrack->getClips().getFirst())
+	{
+		if (auto sc = dynamic_cast<StepClip*> (firstClip))
+			isDrums = true;
+		else if (auto mc = dynamic_cast<MidiClip*> (firstClip))
+			isDrums = forceMidiToDrums || mc->isRhythm();
+	}
 
-            auto& targetPitch = editToMatch->pitchSequence.getPitchAt (0.01);
+	auto track = midiTrack;
+	if (isDrums)
+	{
+		track = drumTrack;
 
-            if (auto firstPitch = edit->pitchSequence.getPitch (0))
-            {
-                firstPitch->setPitch (targetPitch.getPitch());
-                firstPitch->setScaleID (targetPitch.getScale());
-            }
-            else
-            {
-                jassertfalse;
-            }
-        }
+		if (auto firstClip = midiTrack->getClips().getFirst())
+			firstClip->moveToTrack (*track);
+	}
 
-        if (resizeClip)
-        {
-            if (auto firstClip = track->getClips().getFirst())
-            {
-                length = length * clipTempo / songTempo;
-                firstClip->setStart (0.0, false, true);
-                firstClip->setLength (length, true);
+	if (track->pluginList.size() < 3)
+	{
+		if (isDrums && midiDrumPreviewPlugin.isValid())
+			track->pluginList.insertPlugin (midiDrumPreviewPlugin, 0);
+		if (! isDrums && midiPreviewPlugin.isValid())
+			track->pluginList.insertPlugin (midiPreviewPlugin, 0);
+	}
 
-                edit->getTransport().setLoopRange ({ 0.0, length });
-            }
-        }
+	double songTempo = 120.0;
+	double length = 1.0;
 
-        if (v.hasType (IDs::PROGRESSION))
-        {
-            auto clipLength = edit->tempoSequence.beatsToTime (32 * 4);
-            edit->getTransport().setLoopRange ({ 0.0, clipLength });
+	// change tempo to match main edit
+	if (tryToMatchTempo && editToMatch != nullptr)
+	{
+		auto& targetTempo = editToMatch->tempoSequence.getTempoAt (0.01);
+		auto firstTempo = edit->tempoSequence.getTempo (0);
+		firstTempo->setBpm (targetTempo.getBpm());
 
-            if (auto mc = track->insertMIDIClip ({ 0, clipLength }, nullptr))
-            {
-                if (auto pg = mc->getPatternGenerator())
-                {
-                    pg->mode = PatternGenerator::Mode::chords;
-                    pg->octave = 6;
-                    pg->setChordProgression (v.createCopy());
-                    pg->generatePattern();
-                }
-            }
-        }
-        else if (v.hasType (IDs::BASSPATTERN))
-        {
-            auto clipLength = edit->tempoSequence.beatsToTime (32 * 4);
-            edit->getTransport().setLoopRange ({ 0.0, clipLength });
+		songTempo = targetTempo.getBpm();
 
-            if (auto mc = track->insertMIDIClip ({ 0, clipLength }, nullptr))
-            {
-                if (auto pg = mc->getPatternGenerator())
-                {
-                    pg->mode = PatternGenerator::Mode::bass;
-                    pg->octave = 6;
-                    pg->setChordProgressionFromChordNames ({"i"});
-                    pg->setBassPattern (v.createCopy());
-                    pg->generatePattern();
-                }
-            }
-        }
-        else if (v.hasType (IDs::CHORDPATTERN))
-        {
-            auto clipLength = edit->tempoSequence.beatsToTime (32 * 4);
-            edit->getTransport().setLoopRange ({ 0.0, clipLength });
+		if (couldMatchTempo != nullptr)
+			*couldMatchTempo = true;
 
-            if (auto mc = track->insertMIDIClip ({ 0, clipLength }, nullptr))
-            {
-                if (auto pg = mc->getPatternGenerator())
-                {
-                    pg->mode = PatternGenerator::Mode::chords;
-                    pg->octave = 6;
-                    pg->setChordProgressionFromChordNames ({"i"});
-                    pg->setChordPattern (v.createCopy());
-                    pg->generatePattern();
-                }
-            }
-        }
-    }
+		auto& targetPitch = editToMatch->pitchSequence.getPitchAt (0.01);
+
+		if (auto firstPitch = edit->pitchSequence.getPitch (0))
+		{
+			firstPitch->setPitch (targetPitch.getPitch());
+			firstPitch->setScaleID (targetPitch.getScale());
+		}
+		else
+		{
+			jassertfalse;
+		}
+	}
+
+	if (resizeClip)
+	{
+		if (auto firstClip = track->getClips().getFirst())
+		{
+			length = length * clipTempo / songTempo;
+			firstClip->setStart (0.0, false, true);
+			firstClip->setLength (length, true);
+
+			edit->getTransport().setLoopRange ({ 0.0, length });
+		}
+	}
+
+	if (v.hasType (IDs::PROGRESSION))
+	{
+		auto clipLength = edit->tempoSequence.beatsToTime (32 * 4);
+		edit->getTransport().setLoopRange ({ 0.0, clipLength });
+
+		if (auto mc = track->insertMIDIClip ({ 0, clipLength }, nullptr))
+		{
+			if (auto pg = mc->getPatternGenerator())
+			{
+				pg->mode = PatternGenerator::Mode::chords;
+				pg->octave = 6;
+				pg->setChordProgression (v.createCopy());
+				pg->generatePattern();
+			}
+		}
+	}
+	else if (v.hasType (IDs::BASSPATTERN))
+	{
+		auto clipLength = edit->tempoSequence.beatsToTime (32 * 4);
+		edit->getTransport().setLoopRange ({ 0.0, clipLength });
+
+		if (auto mc = track->insertMIDIClip ({ 0, clipLength }, nullptr))
+		{
+			if (auto pg = mc->getPatternGenerator())
+			{
+				pg->mode = PatternGenerator::Mode::bass;
+				pg->octave = 6;
+				pg->setChordProgressionFromChordNames ({"i"});
+				pg->setBassPattern (v.createCopy());
+				pg->generatePattern();
+			}
+		}
+	}
+	else if (v.hasType (IDs::CHORDPATTERN))
+	{
+		auto clipLength = edit->tempoSequence.beatsToTime (32 * 4);
+		edit->getTransport().setLoopRange ({ 0.0, clipLength });
+
+		if (auto mc = track->insertMIDIClip ({ 0, clipLength }, nullptr))
+		{
+			if (auto pg = mc->getPatternGenerator())
+			{
+				pg->mode = PatternGenerator::Mode::chords;
+				pg->octave = 6;
+				pg->setChordProgressionFromChordNames ({"i"});
+				pg->setChordPattern (v.createCopy());
+				pg->generatePattern();
+			}
+		}
+	}
 
     return edit;
 }
 
 std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const juce::File& file, const Edit* editToMatch,
                                                          bool tryToMatchTempo, bool tryToMatchPitch, bool* couldMatchTempo,
-                                                         juce::ValueTree midiPreviewPlugin)
+                                                         juce::ValueTree midiPreviewPlugin,
+                                                         juce::ValueTree midiDrumPreviewPlugin,
+														 bool forceMidiToDrums,
+                                                         Edit* editToUpdate)
 {
     CRASH_TRACER
-    auto edit = std::make_unique<Edit> (engine, createEmptyEdit (engine), forEditing, nullptr, 1);
-    edit->ensureNumberOfAudioTracks (1);
+    std::unique_ptr<Edit> edit;
+    if (editToUpdate != nullptr)
+        edit.reset (editToUpdate);
+    else
+        edit = std::make_unique<Edit> (engine, createEmptyEdit (engine), forEditing, nullptr, 1);
+
+    edit->ensureNumberOfAudioTracks (3);
     edit->isPreviewEdit = true;
+	edit->getTransport().setCurrentPosition (0);
 
     if (couldMatchTempo != nullptr)
         *couldMatchTempo = false;
 
-    if (auto track = getFirstAudioTrack (*edit))
+    auto tracks = getAudioTracks (*edit);
+    if (tracks.size() < 3)
+        return {};
+
+    for (auto t : tracks)
     {
-        bool isMidi = file.hasFileExtension (juce::String (midiFileWildCard).removeCharacters ("*"));
+        auto clips = t->getClips();
+        for (auto c : clips)
+            c->removeFromParentTrack();
+    }
 
-        if (isMidi)
+	auto& master = edit->getMasterPluginList();
+	while (master.size() > 0)
+		master[0]->removeFromParent();
+
+    auto audioTrack = tracks[0];
+    auto midiTrack  = tracks[1];
+    auto drumTrack  = tracks[2];
+
+    bool isMidi = file.hasFileExtension (juce::String (midiFileWildCard).removeCharacters ("*"));
+
+    if (isMidi)
+    {
+        if (auto fin = std::unique_ptr<juce::FileInputStream> (file.createInputStream()))
         {
-            if (auto fin = std::unique_ptr<juce::FileInputStream> (file.createInputStream()))
+            juce::MidiFile mf;
+            mf.readFrom (*fin);
+            mf.convertTimestampTicksToSeconds();
+
+            juce::MidiMessageSequence sequence;
+
+            for (int i = 0; i < mf.getNumTracks(); ++i)
+                sequence.addSequence (*mf.getTrack (i), 0.0, 0.0, 1.0e6);
+
+            sequence.updateMatchedPairs();
+
+            int ch10Count = 0, allCount = 0;
+            for (auto m : sequence)
             {
-                juce::MidiFile mf;
-                mf.readFrom (*fin);
-                mf.convertTimestampTicksToSeconds();
-
-                juce::MidiMessageSequence sequence;
-
-                for (int i = 0; i < mf.getNumTracks(); ++i)
-                    sequence.addSequence (*mf.getTrack (i), 0.0, 0.0, 1.0e6);
-
-                sequence.updateMatchedPairs();
-
-                if (auto mc = track->insertMIDIClip ({ 0.0, 1.0 }, nullptr))
+                auto msg = m->message;
+                if (msg.isNoteOn())
                 {
-                    if (midiPreviewPlugin.isValid())
-                        track->pluginList.insertPlugin (midiPreviewPlugin, 0);
-
-                    // Find bpm of source midi file
-                    double srcBpm = 120.0;
-                    juce::MidiMessageSequence tempos;
-                    mf.findAllTempoEvents (tempos);
-
-                    if (auto* evt = tempos.getEventPointer (0))
-                        if (evt->message.isTempoMetaEvent())
-                            srcBpm = 4.0 * 60.0 / (4 * evt->message.getTempoSecondsPerQuarterNote());
-
-                    // set tempo to that of midi file
-                    edit->tempoSequence.getTempo (0)->setBpm (srcBpm);
-
-                    // add midi notes
-                    mc->mergeInMidiSequence (sequence, MidiList::NoteAutomationType::none);
-                    auto length = sequence.getEndTime();
-
-                    // change tempo to match main edit
-                    if (tryToMatchTempo && editToMatch != nullptr)
-                    {
-                        auto& targetTempo = editToMatch->tempoSequence.getTempoAt (0.01);
-                        auto firstTempo = edit->tempoSequence.getTempo (0);
-                        firstTempo->setBpm (targetTempo.getBpm());
-
-                        if (couldMatchTempo != nullptr)
-                            *couldMatchTempo = true;
-                    }
-
-                    auto dstBpm = edit->tempoSequence.getTempo (0)->getBpm();
-
-                    length *= srcBpm / dstBpm;
-
-                    if (length < 0.001)
-                        length = 2;
-
-                    mc->setPosition ({ { 0.0, length }, 0.0 });
-                    edit->getTransport().setLoopRange ({ 0.0, length });
+                    allCount++;
+                    if (msg.getChannel() == 10)
+                        ch10Count++;
                 }
             }
-        }
-        else
-        {
-            const AudioFile af (engine, file);
-            auto length = af.getLength();
 
-            if (auto wc = dynamic_cast<WaveAudioClip*> (track->insertNewClip (TrackItem::Type::wave, { 0.0, 1.0 }, nullptr)))
+            bool isDrums = forceMidiToDrums || (float (ch10Count) / allCount > 90.0f);
+            auto track = isDrums ? drumTrack : midiTrack;
+
+            if (auto mc = track->insertMIDIClip ({ 0.0, 1.0 }, nullptr))
             {
-                wc->setUsesProxy (false);
-                wc->getSourceFileReference().setToDirectFileReference (file, false);
-
-                if (editToMatch != nullptr)
+                if (track->pluginList.size() < 3)
                 {
-                    if (tryToMatchTempo || tryToMatchPitch)
-                    {
-                        wc->setUsesTimestretchedPreview (true);
-                        wc->setLoopInfo (af.getInfo().loopInfo);
-                        wc->setTimeStretchMode (TimeStretcher::defaultMode);
-                    }
-
-                    auto& targetTempo = editToMatch->tempoSequence.getTempoAt (0.01);
-                    auto targetPitch = editToMatch->pitchSequence.getPitch (0);
-
-                    if (tryToMatchTempo)
-                    {
-                        auto firstTempo = edit->tempoSequence.getTempo (0);
-                        firstTempo->setBpm (targetTempo.getBpm());
-
-                        edit->setTimecodeFormat (editToMatch->getTimecodeFormat());
-                        AudioFileInfo wi = wc->getWaveInfo();
-
-                        if (wi.sampleRate > 0.0)
-                        {
-                            if (wc->getLoopInfo().getNumBeats() > 0)
-                            {
-                                length *= wc->getLoopInfo().getBpm (wi) / targetTempo.getBpm();
-                                wc->setAutoTempo (true);
-
-                                if (couldMatchTempo != nullptr)
-                                    *couldMatchTempo = true;
-                            }
-                        }
-                    }
-
-                    if (tryToMatchPitch)
-                    {
-                        auto firstPitch = edit->pitchSequence.getPitch (0);
-                        firstPitch->setPitch (targetPitch->getPitch());
-
-                        edit->pitchSequence.copyFrom (editToMatch->pitchSequence);
-                        wc->setAutoPitch (wc->getLoopInfo().getRootNote() != -1);
-                    }
+                    if (isDrums && midiDrumPreviewPlugin.isValid())
+                        track->pluginList.insertPlugin (midiDrumPreviewPlugin, 0);
+                    if (! isDrums && midiPreviewPlugin.isValid())
+                        track->pluginList.insertPlugin (midiPreviewPlugin, 0);
                 }
 
-                wc->setPosition ({ { 0.0, length }, 0.0 });
+                // Find bpm of source midi file
+                double srcBpm = 120.0;
+                juce::MidiMessageSequence tempos;
+                mf.findAllTempoEvents (tempos);
+
+                if (auto* evt = tempos.getEventPointer (0))
+                    if (evt->message.isTempoMetaEvent())
+                        srcBpm = 4.0 * 60.0 / (4 * evt->message.getTempoSecondsPerQuarterNote());
+
+                // set tempo to that of midi file
+                edit->tempoSequence.getTempo (0)->setBpm (srcBpm);
+
+                // add midi notes
+                mc->mergeInMidiSequence (sequence, MidiList::NoteAutomationType::none);
+                auto length = sequence.getEndTime();
+
+                // change tempo to match main edit
+                if (tryToMatchTempo && editToMatch != nullptr)
+                {
+                    auto& targetTempo = editToMatch->tempoSequence.getTempoAt (0.01);
+                    auto firstTempo = edit->tempoSequence.getTempo (0);
+                    firstTempo->setBpm (targetTempo.getBpm());
+
+                    if (couldMatchTempo != nullptr)
+                        *couldMatchTempo = true;
+                }
+
+                auto dstBpm = edit->tempoSequence.getTempo (0)->getBpm();
+
+                length *= srcBpm / dstBpm;
+
+                if (length < 0.001)
+                    length = 2;
+
+                mc->setPosition ({ { 0.0, length }, 0.0 });
                 edit->getTransport().setLoopRange ({ 0.0, length });
             }
+        }
+    }
+    else
+    {
+        const AudioFile af (engine, file);
+        auto length = af.getLength();
+
+        if (auto wc = dynamic_cast<WaveAudioClip*> (audioTrack->insertNewClip (TrackItem::Type::wave, { 0.0, 1.0 }, nullptr)))
+        {
+            wc->setUsesProxy (false);
+            wc->getSourceFileReference().setToDirectFileReference (file, false);
+
+            if (editToMatch != nullptr)
+            {
+                if (tryToMatchTempo || tryToMatchPitch)
+                {
+                    wc->setUsesTimestretchedPreview (true);
+                    wc->setLoopInfo (af.getInfo().loopInfo);
+                    wc->setTimeStretchMode (TimeStretcher::defaultMode);
+                }
+
+                auto& targetTempo = editToMatch->tempoSequence.getTempoAt (0.01);
+                auto targetPitch = editToMatch->pitchSequence.getPitch (0);
+
+                if (tryToMatchTempo)
+                {
+                    auto firstTempo = edit->tempoSequence.getTempo (0);
+                    firstTempo->setBpm (targetTempo.getBpm());
+
+                    edit->setTimecodeFormat (editToMatch->getTimecodeFormat());
+                    AudioFileInfo wi = wc->getWaveInfo();
+
+                    if (wi.sampleRate > 0.0)
+                    {
+                        if (wc->getLoopInfo().getNumBeats() > 0)
+                        {
+                            length *= wc->getLoopInfo().getBpm (wi) / targetTempo.getBpm();
+                            wc->setAutoTempo (true);
+
+                            if (couldMatchTempo != nullptr)
+                                *couldMatchTempo = true;
+                        }
+                    }
+                }
+
+                if (tryToMatchPitch)
+                {
+                    auto firstPitch = edit->pitchSequence.getPitch (0);
+                    firstPitch->setPitch (targetPitch->getPitch());
+
+                    edit->pitchSequence.copyFrom (editToMatch->pitchSequence);
+                    wc->setAutoPitch (wc->getLoopInfo().getRootNote() != -1);
+                }
+            }
+
+            wc->setPosition ({ { 0.0, length }, 0.0 });
+            edit->getTransport().setLoopRange ({ 0.0, length });
         }
     }
 

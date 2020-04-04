@@ -138,11 +138,17 @@ public:
 
     static std::unique_ptr<Edit> createEditForPreviewingFile (Engine&, const juce::File&, const Edit* editToMatch,
                                                               bool tryToMatchTempo, bool tryToMatchPitch, bool* couldMatchTempo,
-                                                              juce::ValueTree midiPreviewPlugin);
+                                                              juce::ValueTree midiPreviewPlugin,
+                                                              juce::ValueTree midiDrumPreviewPlugin = {},
+															  bool forceMidiToDrums = false,
+                                                              Edit* editToUpdate = {});
 
     static std::unique_ptr<Edit> createEditForPreviewingPreset (Engine& engine, juce::ValueTree, const Edit* editToMatch,
                                                                 bool tryToMatchTempo, bool* couldMatchTempo,
-                                                                juce::ValueTree midiPreviewPlugin);
+                                                                juce::ValueTree midiPreviewPlugin,
+																juce::ValueTree midiDrumPreviewPlugin = {},
+																bool forceMidiToDrums = false,
+																Edit* editToUpdate = {});
 
     static std::unique_ptr<Edit> createEditForPreviewingClip (Clip&);
     static std::unique_ptr<Edit> createSingleTrackEdit (Engine&);

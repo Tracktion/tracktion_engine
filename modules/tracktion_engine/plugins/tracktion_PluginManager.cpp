@@ -823,7 +823,7 @@ Plugin::Ptr PluginCache::getPluginFor (const juce::ValueTree& v) const
         if (p->state == v)
             return *p;
 
-        jassert (v[IDs::id].toString() != p->itemID.toString());
+        //jassert (v[IDs::id].toString() != p->itemID.toString());
     }
 
     return {};
