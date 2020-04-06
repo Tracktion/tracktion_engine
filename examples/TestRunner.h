@@ -97,12 +97,72 @@ struct CoutLogger : public Logger
     }
 };
 
+//==============================================================================
+//==============================================================================
+namespace JUnit
+{
+    /** Creates a JUnit formatted ValueTree from a UnitTestRunner's results. */
+    ValueTree createJUnitResultValueTree (const UnitTestRunner::TestResult& result)
+    {
+        ValueTree testcase ("testcase");
+        testcase.setProperty ("classname", result.unitTestName, nullptr);
+        testcase.setProperty ("name", result.subcategoryName, nullptr);
+        
+        for (auto message : result.messages)
+            testcase.appendChild (ValueTree { "failure", {{ "message", message }}}, nullptr);
+        
+        return testcase;
+    }
+
+    /** Creates a JUnit formatted 'testsuite' ValueTree from a UnitTestRunner's results. */
+    ValueTree createJUnitValueTree (const String& testSuiteName, const UnitTestRunner& runner, RelativeTime duration)
+    {
+        ValueTree suite ("testsuite");
+        suite.setProperty ("name", testSuiteName, nullptr);
+        suite.setProperty ("tests", runner.getNumResults(), nullptr);
+        suite.setProperty ("timestamp", Time::getCurrentTime().toISO8601 (true), nullptr);
+        
+        if (duration.inSeconds() > 0.0)
+            suite.setProperty ("time", duration.inSeconds(), nullptr);
+
+        int numFailures = 0;
+        
+        for (int i = 0; i < runner.getNumResults(); ++i)
+        {
+            if (auto result = runner.getResult (i))
+            {
+                suite.appendChild (createJUnitResultValueTree (*result), nullptr);
+                numFailures += result->failures;
+            }
+        }
+        
+        suite.setProperty ("failures", numFailures, nullptr);
+
+        return suite;
+    }
+
+    /** Creates a JUnit formatted 'testsuite' XmlElement from a UnitTestRunner's results. */
+    std::unique_ptr<XmlElement> createJUnitXML (const String& testSuiteName, const UnitTestRunner& runner, RelativeTime duration)
+    {
+        return createJUnitValueTree (testSuiteName, runner, duration).createXml();
+    }
+
+    /** Converts a UnitTestRunner's results to a JUnit formatted XML file. */
+    Result createJUnitXMLFile (const File& destinationFile, const String& testSuiteName, const UnitTestRunner& runner, RelativeTime duration)
+    {
+        if (auto xml = createJUnitXML (testSuiteName, runner, duration))
+            if (! xml->writeTo (destinationFile))
+                return Result::fail ("Unable to write to file at: " + destinationFile.getFullPathName());
+        
+        return Result::ok();
+    }
+}
 
 //==============================================================================
 //==============================================================================
 namespace TestRunner
 {
-    int runTests()
+    int runTests (const File& junitResultsFile)
     {
         CoutLogger logger;
         Logger::setCurrentLogger (&logger);
@@ -111,14 +171,31 @@ namespace TestRunner
 
         UnitTestRunner testRunner;
         testRunner.setAssertOnFailure (false);
-        testRunner.runTestsInCategory ("Tracktion");
-        testRunner.runTestsInCategory ("Tracktion:Longer");
+
+        Array<UnitTest*> tests;
+        tests.addArray (UnitTest::getTestsInCategory ("Tracktion"));
+        tests.addArray (UnitTest::getTestsInCategory ("Tracktion:Longer"));
+        
+        const auto startTime = Time::getCurrentTime();
+        testRunner.runTests (tests);
+        const auto endTime = Time::getCurrentTime();
 
         int numFailues = 0;
 
         for (int i = 0; i <= testRunner.getNumResults(); ++i)
             if (auto result = testRunner.getResult (i))
                 numFailues += result->failures;
+
+        if (junitResultsFile != File())
+        {
+            junitResultsFile.create();
+            auto res = JUnit::createJUnitXMLFile (junitResultsFile, "Tracktion", testRunner, endTime - startTime);
+            
+            if (res)
+                Logger::writeToLog ("Wrote junit results to :" + junitResultsFile.getFullPathName());
+            else
+                Logger::writeToLog (res.getErrorMessage());
+        }
 
         Logger::setCurrentLogger (nullptr);
 
@@ -129,8 +206,15 @@ namespace TestRunner
 
 //==============================================================================
 //==============================================================================
-int main (int, char**)
+int main (int argv, char** argc)
 {
+    File junitFile;
+    
+    for (int i = 1; i < argv; ++i)
+        if (String (argc[i]) == "--junit-xml-file")
+            if ((i + 1) < argv)
+                junitFile = String (argc[i + 1]);
+    
     ScopedJuceInitialiser_GUI init;
-    return TestRunner::runTests();
+    return TestRunner::runTests (junitFile);
 }

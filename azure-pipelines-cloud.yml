@@ -48,3 +48,10 @@ steps:
       tests/run_tests
     fi
   displayName: 'Build'
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/TEST-*.xml' 
+    searchFolder: '$(System.DefaultWorkingDirectory)/bin/test_results'
+    buildPlatform: $(imageName)
+  condition: succeededOrFailed()

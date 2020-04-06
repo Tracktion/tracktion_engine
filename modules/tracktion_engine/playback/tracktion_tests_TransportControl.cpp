@@ -17,7 +17,7 @@ class RecordingSyncTests    : public juce::UnitTest
 {
 public:
     RecordingSyncTests()
-        : juce::UnitTest ("RecordingSyncTests ", "Tracktion:Longer") {}
+        : juce::UnitTest ("RecordingSyncTests", "Tracktion:Longer") {}
 
     //==============================================================================
     void runTest() override

@@ -21,6 +21,13 @@ jobs:
   - script: |
       tests/run_tests
     displayName: 'Linux Build'
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/TEST-*.xml' 
+      searchFolder: '$(System.DefaultWorkingDirectory)/bin/test_results'
+      buildPlatform: linux
+    condition: succeededOrFailed()
 
 - job: macOS
   pool: 
@@ -35,6 +42,13 @@ jobs:
   - script: |
       tests/run_tests
     displayName: 'macOS Build'
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/TEST-*.xml' 
+      searchFolder: '$(System.DefaultWorkingDirectory)/bin/test_results'
+      buildPlatform: mac
+    condition: succeededOrFailed()
 
 - job: windows
   pool:
@@ -50,6 +64,13 @@ jobs:
       export MSBUILD_EXE="C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\MSBuild.exe"
       tests/run_tests
     displayName: 'Windows Build'
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/TEST-*.xml' 
+      searchFolder: '$(System.DefaultWorkingDirectory)/bin/test_results'
+      buildPlatform: windows
+    condition: succeededOrFailed()
 
 - job: publish
   dependsOn:

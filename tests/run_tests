@@ -31,13 +31,13 @@ if [ "$PLATFORM" == "mac" ]; then
     cd "$TESTRUNNER_ROOT"
 
     # xcodebuild -configuration Release LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
-    "$TESTRUNNER_EXE"
+    "$TESTRUNNER_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-TestRunner.xml"
     
     xcodebuild -configuration Release -enableAddressSanitizer YES LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
-    "$TESTRUNNER_EXE"
+    "$TESTRUNNER_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-TestRunner_asan.xml"
 
     xcodebuild -configuration Release -enableThreadSanitizer YES LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
-    "$TESTRUNNER_EXE"
+    "$TESTRUNNER_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-TestRunner_tsan.xml"
 
     xcodebuild analyze -quiet -configuration Release LLVM_LTO=NO
 fi
@@ -56,7 +56,7 @@ if [ "$PLATFORM" == "windows" ]; then
 
     # "$MSBUILD_EXE" TestRunner.sln -p:VisualStudioVersion=15.0 -m -p:Configuration=Release -p:Platform=x64 -p:PreferredToolArchitecture=x64
 
-    "$TESTRUNNER_EXE"
+    "$TESTRUNNER_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-TestRunner.xml"
 fi
 
 # ==========================================================
@@ -70,9 +70,9 @@ if [ "$PLATFORM" == "linux" ]; then
     # make clean
     # make CONFIG=Release -j$(nproc)
 
-    "$TESTRUNNER_EXE"
+    "$TESTRUNNER_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-TestRunner.xml"
     
     if [ -z "$DISABLE_VALGRIND" ]; then
-        valgrind "$TESTRUNNER_EXE"
+        valgrind "$TESTRUNNER_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-TestRunner_valgrind.xml"
     fi
 fi
