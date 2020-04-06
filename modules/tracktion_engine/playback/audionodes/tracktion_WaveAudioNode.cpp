@@ -167,7 +167,7 @@ void WaveAudioNode::renderSection (const AudioRenderContext& rc, EditTimeRange e
                                       channelsToUse,
                                       rc.isRendering ? 5000 : 3))
         {
-            if (rc.isFirstBlockOfLoop() || ! rc.isContiguousWithPreviousBlock())
+            if (! rc.isContiguousWithPreviousBlock() && ! rc.isFirstBlockOfLoop())
                 lastSampleFadeLength = std::min (rc.bufferNumSamples, rc.playhead.isUserDragging() ? 40 : 10);
         }
         else
