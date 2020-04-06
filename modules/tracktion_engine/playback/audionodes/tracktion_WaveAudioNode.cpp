@@ -200,22 +200,29 @@ void WaveAudioNode::renderSection (const AudioRenderContext& rc, EditTimeRange e
 
         for (int channel = 0; channel < numDestChannels; ++channel)
         {
-            const auto src = fileData.buffer.getReadPointer (channel);
-            const auto dest = rc.destBuffer->getWritePointer (channel, rc.bufferStartSample);
-
-            auto& state = *channelState.getUnchecked (channel);
-            state.resampler.processAdding (ratio, src, dest, rc.bufferNumSamples, gains[channel & 1]);
-
-            if (lastSampleFadeLength > 0)
+            if (channel < channelState.size())
             {
-                for (int i = 0; i < lastSampleFadeLength; ++i)
-                {
-                    auto alpha = i / (float) lastSampleFadeLength;
-                    dest[i] = alpha * dest[i] + state.lastSample * (1.0f - alpha);
-                }
-            }
+                const auto src = fileData.buffer.getReadPointer (channel);
+                const auto dest = rc.destBuffer->getWritePointer (channel, rc.bufferStartSample);
 
-            state.lastSample = dest[rc.bufferNumSamples - 1];
+                auto& state = *channelState.getUnchecked (channel);
+                state.resampler.processAdding (ratio, src, dest, rc.bufferNumSamples, gains[channel & 1]);
+
+                if (lastSampleFadeLength > 0)
+                {
+                    for (int i = 0; i < lastSampleFadeLength; ++i)
+                    {
+                        auto alpha = i / (float) lastSampleFadeLength;
+                        dest[i] = alpha * dest[i] + state.lastSample * (1.0f - alpha);
+                    }
+                }
+
+                state.lastSample = dest[rc.bufferNumSamples - 1];
+            }
+            else
+            {
+                rc.destBuffer->clear (channel, rc.bufferStartSample, rc.bufferNumSamples);
+            }
         }
     }
 }
