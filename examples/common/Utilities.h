@@ -26,13 +26,14 @@ namespace Helpers
     
     static inline File findRecentEdit (const File& dir)
     {
-        auto files = dir.findChildFiles (File::findFiles, "*.tracktionedit");
+        auto files = dir.findChildFiles (File::findFiles, false, "*.tracktionedit");
         
         if (files.size() > 0)
         {
-            files.sort ();
+            files.sort();
             return files.getLast();
         }
+        
         return {};
     }
 }
