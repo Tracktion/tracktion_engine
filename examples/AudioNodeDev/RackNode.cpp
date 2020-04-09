@@ -38,15 +38,95 @@ public:
     AudioNode() = default;
     virtual ~AudioNode() = default;
     
+    //==============================================================================
+    /** Call once after the graph has been constructed to initialise buffers etc. */
+    void initialise (double sampleRate, int blockSize);
+    
+    /** Call before processing the next block, used to reset the process status. */
+    void prepareForNextBlock();
+    
+    /** Call to process the node, which will in turn call the process method with the buffers to fill. */
+    void process();
+    
+    /** Returns true if this node has processed and its outputs can be retrieved. */
+    bool hasProcessed() const;
+    
+    /** Returns the processed audio output. Must only be called after hasProcessed returns true. */
+    AudioBuffer<float>& getProcessedAudioOutput();
+
+    /** Returns the processed MIDI output. Must only be called after hasProcessed returns true. */
+    MidiBuffer& getProcessedMidiOutput();
+    
+    //==============================================================================
+    /** Should return the properties of the node. */
     virtual tracktion_engine::AudioNodeProperties getAudioNodeProperties() = 0;
 
+    /** Should return all the inputs feeding in to this node. */
+    virtual std::vector<AudioNode*> getAllInputNodes() { return {}; }
+
+    /** Called once before playback begins for each node.
+        Use this to allocate buffers etc.
+    */
+    virtual void prepareToPlay (double sampleRate, int blockSize) = 0;
+
+    /** Should return true when this node is ready to be processed.
+        This is usually when its input's output buffers are ready.
+    */
     virtual bool isReadyToProcess() = 0;
     
-    virtual void prepareToPlay (double sampleRate, int blockSize) = 0;
-    virtual void process (AudioBuffer<float>&, MidiBuffer&) = 0;
-    
+    /** Called when the node is to be processed.
+        This should add in to the buffers available making sure not to change their size at all.
+    */
+    virtual void process (AudioBuffer<float>& destAudio, MidiBuffer& destMidi) = 0;
+
 private:
+    std::atomic<bool> hasBeenProcessed { false };
+    AudioBuffer<float> audioBuffer;
+    MidiBuffer midiBuffer;
 };
+
+void AudioNode::initialise (double sampleRate, int blockSize)
+{
+    auto props = getAudioNodeProperties();
+    audioBuffer.setSize (props.numberOfChannels, blockSize);
+}
+
+void AudioNode::prepareForNextBlock()
+{
+    hasBeenProcessed = false;
+}
+
+void AudioNode::process()
+{
+    audioBuffer.clear();
+    midiBuffer.clear();
+    const int numChannelsBeforeProcessing = audioBuffer.getNumChannels();
+    const int numSamplesBeforeProcessing = audioBuffer.getNumSamples();
+    ignoreUnused (numChannelsBeforeProcessing, numSamplesBeforeProcessing);
+
+    process (audioBuffer, midiBuffer);
+    hasBeenProcessed = true;
+    
+    jassert (numChannelsBeforeProcessing == audioBuffer.getNumChannels());
+    jassert (numSamplesBeforeProcessing == audioBuffer.getNumSamples());
+}
+
+bool AudioNode::hasProcessed() const
+{
+    return hasBeenProcessed;
+}
+
+AudioBuffer<float>& AudioNode::getProcessedAudioOutput()
+{
+    jassert (hasProcessed());
+    return audioBuffer;
+}
+
+MidiBuffer& AudioNode::getProcessedMidiOutput()
+{
+    jassert (hasProcessed());
+    return midiBuffer;
+}
 
 
 //==============================================================================
@@ -118,15 +198,28 @@ public:
             props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);
         }
 
-        tempBuffer.setSize (props.numberOfChannels, 32);
-        
         return props;
+    }
+    
+    std::vector<AudioNode*> getAllInputNodes() override
+    {
+        std::vector<AudioNode*> inputNodes;
+        
+        for (auto& node : nodes)
+        {
+            inputNodes.push_back (node.get());
+            
+            auto nodeInputs = node->getAllInputNodes();
+            inputNodes.insert (inputNodes.end(), nodeInputs.begin(), nodeInputs.end());
+        }
+
+        return inputNodes;
     }
 
     bool isReadyToProcess() override
     {
         for (auto& node : nodes)
-            if (! node->isReadyToProcess())
+            if (! node->hasProcessed())
                 return false;
         
         return true;
@@ -136,36 +229,29 @@ public:
     {
         for (auto& node : nodes)
             node->prepareToPlay (sampleRate, blockSize);
-        
-        tempBuffer.setSize (tempBuffer.getNumChannels(), blockSize);
     }
     
     void process (AudioBuffer<float>& dest, MidiBuffer& midi) override
     {
-        jassert (tempBuffer.getNumChannels() <= dest.getNumChannels()); // numChannels can be more than our nodes have
-        jassert (dest.getNumSamples() <= tempBuffer.getNumSamples());   // numSamples must be no greater than we have been prepared for
-        
         const int numSamples = dest.getNumSamples();
-        
+
         for (auto& node : nodes)
         {
-            tempBuffer.clear();
-            tempMidi.clear();
+            // get each of the inputs and add them to dest
+            auto& inputBuffer = node->getProcessedAudioOutput();
+            jassert (dest.getNumSamples() == inputBuffer.getNumSamples());
             
-            AudioBuffer<float> bufferToFill (tempBuffer.getArrayOfWritePointers(), tempBuffer.getNumChannels(), numSamples);
-            node->process (bufferToFill, tempMidi);
-            
-            for (int i = 0; i < dest.getNumChannels(); ++i)
-                dest.addFrom (i, 0, bufferToFill, i, 0, numSamples);
+            const int numChannels = std::min (dest.getNumChannels(), inputBuffer.getNumChannels());
 
-            midi.addEvents (tempMidi, 0, dest.getNumSamples(), 0);
+            for (int i = 0; i < numChannels; ++i)
+                dest.addFrom (i, 0, inputBuffer, i, 0, numSamples);
         }
+        
+        //TODO:  MIDI
     }
 
 private:
     std::vector<std::unique_ptr<AudioNode>> nodes;
-    AudioBuffer<float> tempBuffer;
-    MidiBuffer tempMidi;
 };
 
 
@@ -187,9 +273,20 @@ public:
         return node->getAudioNodeProperties();
     }
     
+    std::vector<AudioNode*> getAllInputNodes() override
+    {
+        std::vector<AudioNode*> inputNodes;
+        inputNodes.push_back (node.get());
+        
+        auto nodeInputs = node->getAllInputNodes();
+        inputNodes.insert (inputNodes.end(), nodeInputs.begin(), nodeInputs.end());
+
+        return inputNodes;
+    }
+
     bool isReadyToProcess() override
     {
-        return node->isReadyToProcess();
+        return node->hasProcessed();
     }
     
     void prepareToPlay (double sampleRate, int blockSize) override
@@ -197,18 +294,21 @@ public:
         node->prepareToPlay (sampleRate, blockSize);
     }
     
-    void process (AudioBuffer<float>& buffer, MidiBuffer& midi) override
+    void process (AudioBuffer<float>& outputBuffer, MidiBuffer&) override
     {
-        node->process (buffer, midi);
+        auto& inputBuffer = node->getProcessedAudioOutput();
+        jassert (inputBuffer.getNumSamples() == outputBuffer.getNumSamples());
 
-        int numSamples = buffer.getNumSamples();
+        const int numSamples = outputBuffer.getNumSamples();
+        const int numChannels = std::min (inputBuffer.getNumChannels(), outputBuffer.getNumChannels());
 
-        for (int c = 0; c < buffer.getNumChannels(); ++c)
+        for (int c = 0; c < numChannels; ++c)
         {
-            float* samples = buffer.getWritePointer (c);
+            const float* inputSamples = inputBuffer.getReadPointer (c);
+            float* outputSamples = outputBuffer.getWritePointer (c);
             
             for (int i = 0; i < numSamples; ++i)
-                samples[i] = function (samples[i]);
+                outputSamples[i] = function (inputSamples[i]);
         }
     }
     
@@ -226,22 +326,62 @@ public:
     AudioNodeProcessor (std::unique_ptr<AudioNode> nodeToProcess)
         : node (std::move (nodeToProcess))
     {
-        node->getAudioNodeProperties();
+        auto nodes = node->getAllInputNodes();
+        nodes.push_back (node.get());
+        std::unique_copy (nodes.begin(), nodes.end(), std::back_inserter (allNodes),
+                          [] (auto n1, auto n2) { return n1 == n2; });
     }
 
     void prepareToPlay (double sampleRate, int blockSize)
     {
-        node->prepareToPlay (sampleRate, blockSize);
+        for (auto& node : allNodes)
+        {
+            node->initialise (sampleRate, blockSize);
+            node->prepareToPlay (sampleRate, blockSize);
+        }
     }
 
     void process (AudioBuffer<float>& audio, MidiBuffer& midi)
     {
-        node->process (audio, midi);
+        for (auto node : allNodes)
+            node->prepareForNextBlock();
+        
+        for (;;)
+        {
+            int processedAnyNodes = false;
+            
+            for (auto node : allNodes)
+            {
+                if (! node->hasProcessed() && node->isReadyToProcess())
+                {
+                    node->process();
+                    processedAnyNodes = true;
+                }
+            }
+            
+            if (! processedAnyNodes)
+            {
+                copyAudioBuffer (audio, node->getProcessedAudioOutput());
+                //TODO: MIDI
+                
+                break;
+            }
+        }
     }
     
 private:
     std::unique_ptr<AudioNode> node;
     std::vector<AudioNode*> allNodes;
+    
+    void copyAudioBuffer (AudioBuffer<float>& dest, const AudioBuffer<float>& source)
+    {
+        jassert (source.getNumSamples() == dest.getNumSamples());
+        const int numSamples = dest.getNumSamples();
+        const int numChannels = std::min (dest.getNumChannels(), source.getNumChannels());
+
+        for (int i = 0; i < numChannels; ++i)
+            dest.copyFrom (i, 0, source, i, 0, numSamples);
+    }
 };
 
 //==============================================================================
@@ -252,7 +392,6 @@ public:
     AudioNodeTests()
         : juce::UnitTest ("AudioNode", "AudioNode")
     {
-        
     }
     
     void runTest() override
