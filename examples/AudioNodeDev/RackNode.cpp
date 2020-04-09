@@ -30,6 +30,32 @@
     - A method to process it
 */
 
+namespace utilities
+{
+    void copyAudioBuffer (AudioBuffer<float>& dest, const AudioBuffer<float>& source)
+    {
+        jassert (source.getNumSamples() == dest.getNumSamples());
+        const int numSamples = dest.getNumSamples();
+        const int numChannels = std::min (dest.getNumChannels(), source.getNumChannels());
+
+        for (int i = 0; i < numChannels; ++i)
+            dest.copyFrom (i, 0, source, i, 0, numSamples);
+    }
+}
+
+class AudioNode;
+
+//==============================================================================
+/** Passed into AudioNodes when they are being initialised, to give them useful
+    contextual information that they may need
+*/
+struct PlaybackInitialisationInfo
+{
+    double sampleRate;
+    int blockSize;
+    const std::vector<AudioNode*>& allNodes;
+};
+
 //==============================================================================
 //==============================================================================
 class AudioNode
@@ -40,7 +66,7 @@ public:
     
     //==============================================================================
     /** Call once after the graph has been constructed to initialise buffers etc. */
-    void initialise (double sampleRate, int blockSize);
+    void initialise (const PlaybackInitialisationInfo&);
     
     /** Call before processing the next block, used to reset the process status. */
     void prepareForNextBlock();
@@ -67,7 +93,7 @@ public:
     /** Called once before playback begins for each node.
         Use this to allocate buffers etc.
     */
-    virtual void prepareToPlay (double sampleRate, int blockSize) = 0;
+    virtual void prepareToPlay (const PlaybackInitialisationInfo&) {}
 
     /** Should return true when this node is ready to be processed.
         This is usually when its input's output buffers are ready.
@@ -85,10 +111,10 @@ private:
     MidiBuffer midiBuffer;
 };
 
-void AudioNode::initialise (double sampleRate, int blockSize)
+void AudioNode::initialise (const PlaybackInitialisationInfo& info)
 {
     auto props = getAudioNodeProperties();
-    audioBuffer.setSize (props.numberOfChannels, blockSize);
+    audioBuffer.setSize (props.numberOfChannels, info.blockSize);
 }
 
 void AudioNode::prepareForNextBlock()
@@ -154,9 +180,9 @@ public:
         return true;
     }
     
-    void prepareToPlay (double sampleRate, int blockSize) override
+    void prepareToPlay (const PlaybackInitialisationInfo& info) override
     {
-        osc.prepare ({ double (sampleRate), uint32 (blockSize), 1 });
+        osc.prepare ({ double (info.sampleRate), uint32 (info.blockSize), 1 });
     }
     
     void process (AudioBuffer<float>& buffer, MidiBuffer&) override
@@ -225,12 +251,6 @@ public:
         return true;
     }
     
-    void prepareToPlay (double sampleRate, int blockSize) override
-    {
-        for (auto& node : nodes)
-            node->prepareToPlay (sampleRate, blockSize);
-    }
-    
     void process (AudioBuffer<float>& dest, MidiBuffer& midi) override
     {
         const int numSamples = dest.getNumSamples();
@@ -289,11 +309,6 @@ public:
         return node->hasProcessed();
     }
     
-    void prepareToPlay (double sampleRate, int blockSize) override
-    {
-        node->prepareToPlay (sampleRate, blockSize);
-    }
-    
     void process (AudioBuffer<float>& outputBuffer, MidiBuffer&) override
     {
         auto& inputBuffer = node->getProcessedAudioOutput();
@@ -320,6 +335,119 @@ private:
 
 //==============================================================================
 //==============================================================================
+class SendAudioNode : public AudioNode
+{
+public:
+    SendAudioNode (std::unique_ptr<AudioNode> inputNode, int busIDToUse)
+        : input (std::move (inputNode)), busID (busIDToUse)
+    {
+    }
+    
+    int getBusID() const
+    {
+        return busID;
+    }
+    
+    tracktion_engine::AudioNodeProperties getAudioNodeProperties() override
+    {
+        return input->getAudioNodeProperties();
+    }
+    
+    std::vector<AudioNode*> getAllInputNodes() override
+    {
+        std::vector<AudioNode*> inputNodes;
+        inputNodes.push_back (input.get());
+        
+        auto nodeInputs = input->getAllInputNodes();
+        inputNodes.insert (inputNodes.end(), nodeInputs.begin(), nodeInputs.end());
+
+        return inputNodes;
+    }
+
+    bool isReadyToProcess() override
+    {
+        return input->hasProcessed();
+    }
+    
+    void process (AudioBuffer<float>& outputBuffer, MidiBuffer& outputMidi) override
+    {
+        // Just pass out input on to our output
+        utilities::copyAudioBuffer (outputBuffer, input->getProcessedAudioOutput());
+        outputMidi.addEvents (input->getProcessedMidiOutput(), 0, outputBuffer.getNumSamples(), 0);
+    }
+    
+private:
+    std::unique_ptr<AudioNode> input;
+    const int busID;
+};
+
+
+//==============================================================================
+//==============================================================================
+class ReturnAudioNode : public AudioNode
+{
+public:
+    ReturnAudioNode (std::unique_ptr<AudioNode> inputNode, int busIDToUse)
+        : input (std::move (inputNode)), busID (busIDToUse)
+    {
+    }
+    
+    tracktion_engine::AudioNodeProperties getAudioNodeProperties() override
+    {
+        return input->getAudioNodeProperties();
+    }
+    
+    std::vector<AudioNode*> getAllInputNodes() override
+    {
+        std::vector<AudioNode*> inputNodes;
+        inputNodes.push_back (input.get());
+        
+        auto nodeInputs = input->getAllInputNodes();
+        inputNodes.insert (inputNodes.end(), nodeInputs.begin(), nodeInputs.end());
+
+        return inputNodes;
+    }
+
+    bool isReadyToProcess() override
+    {
+        for (auto send : sendNodes)
+            if (! send->hasProcessed())
+                return false;
+        
+        return input->hasProcessed();
+    }
+    
+    void prepareToPlay (const PlaybackInitialisationInfo& info) override
+    {
+        for (auto node : info.allNodes)
+            if (auto send = dynamic_cast<SendAudioNode*> (node))
+                if (send->getBusID() == busID)
+                    sendNodes.push_back (send);
+    }
+    
+    void process (AudioBuffer<float>& outputBuffer, MidiBuffer& outputMidi) override
+    {
+        // Copy the input on to our output
+        utilities::copyAudioBuffer (outputBuffer, input->getProcessedAudioOutput());
+        outputMidi.addEvents (input->getProcessedMidiOutput(), 0, outputBuffer.getNumSamples(), 0);
+        
+        // And a copy of all the send nodes
+        for (auto send : sendNodes)
+        {
+            utilities::copyAudioBuffer (outputBuffer, send->getProcessedAudioOutput());
+            outputMidi.addEvents (send->getProcessedMidiOutput(), 0, outputBuffer.getNumSamples(), 0);
+        }
+    }
+    
+private:
+    std::unique_ptr<AudioNode> input;
+    std::vector<AudioNode*> sendNodes;
+    const int busID;
+};
+
+
+//==============================================================================
+//==============================================================================
 class AudioNodeProcessor
 {
 public:
@@ -334,10 +462,12 @@ public:
 
     void prepareToPlay (double sampleRate, int blockSize)
     {
+        const PlaybackInitialisationInfo info { sampleRate, blockSize, allNodes };
+        
         for (auto& node : allNodes)
         {
-            node->initialise (sampleRate, blockSize);
-            node->prepareToPlay (sampleRate, blockSize);
+            node->initialise (info);
+            node->prepareToPlay (info);
         }
     }
 
@@ -361,7 +491,7 @@ public:
             
             if (! processedAnyNodes)
             {
-                copyAudioBuffer (audio, node->getProcessedAudioOutput());
+                utilities::copyAudioBuffer (audio, node->getProcessedAudioOutput());
                 //TODO: MIDI
                 
                 break;
@@ -372,16 +502,6 @@ public:
 private:
     std::unique_ptr<AudioNode> node;
     std::vector<AudioNode*> allNodes;
-    
-    void copyAudioBuffer (AudioBuffer<float>& dest, const AudioBuffer<float>& source)
-    {
-        jassert (source.getNumSamples() == dest.getNumSamples());
-        const int numSamples = dest.getNumSamples();
-        const int numChannels = std::min (dest.getNumChannels(), source.getNumChannels());
-
-        for (int i = 0; i < numChannels; ++i)
-            dest.copyFrom (i, 0, source, i, 0, numSamples);
-    }
 };
 
 //==============================================================================
@@ -399,6 +519,7 @@ public:
         runSinTest();
         runSinCancellingTest();
         runSinOctaveTest();
+        runSendReturnTest();
     }
 
 private:
@@ -516,6 +637,67 @@ private:
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.885f, 0.001f);
             expectWithinAbsoluteError (buffer.getRMSLevel (0, 0, buffer.getNumSamples()), 0.5f, 0.001f);
+        }
+    }
+    
+    void runSendReturnTest()
+    {
+        beginTest ("Sin send/return");
+        {
+            // Track 1 sends a sin tone to a send and then gets muted
+            auto sinLowerNode = std::make_unique<SinAudioNode> (220.0);
+            auto sendNode = std::make_unique<SendAudioNode> (std::move (sinLowerNode), 1);
+            auto track1Node = std::make_unique<FunctionAudioNode> (std::move (sendNode), [] (float) { return 0.0f; });
+
+            // Track 2 has a silent source and receives input from the send
+            auto sinUpperNode = std::make_unique<SinAudioNode> (440.0);
+            auto silentNode = std::make_unique<FunctionAudioNode> (std::move (sinUpperNode), [] (float) { return 0.0f; });
+            auto track2Node = std::make_unique<ReturnAudioNode> (std::move (silentNode), 1);
+
+            // Track 1 & 2 then get summed together
+            std::vector<std::unique_ptr<AudioNode>> nodes;
+            nodes.push_back (std::move (track1Node));
+            nodes.push_back (std::move (track2Node));
+
+            auto node = std::make_unique<SummingAudioNode> (std::move (nodes));
+            
+            auto testContext = createTestContext (std::move (node),
+                                                  44100.0, 512,
+                                                  1, 5.0);
+            auto& buffer = testContext->buffer;
+
+            expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 1.0f, 0.001f);
+            expectWithinAbsoluteError (buffer.getRMSLevel (0, 0, buffer.getNumSamples()), 0.707f, 0.001f);
+        }
+
+        beginTest ("Sin send/return different bus#");
+        {
+            // This test is the same as before but uses a different bus number for the return so the output should be silent
+
+            // Track 1 sends a sin tone to a send and then gets muted
+            auto sinLowerNode = std::make_unique<SinAudioNode> (220.0);
+            auto sendNode = std::make_unique<SendAudioNode> (std::move (sinLowerNode), 1);
+            auto track1Node = std::make_unique<FunctionAudioNode> (std::move (sendNode), [] (float) { return 0.0f; });
+
+            // Track 2 has a silent source and receives input from the send
+            auto sinUpperNode = std::make_unique<SinAudioNode> (440.0);
+            auto silentNode = std::make_unique<FunctionAudioNode> (std::move (sinUpperNode), [] (float) { return 0.0f; });
+            auto track2Node = std::make_unique<ReturnAudioNode> (std::move (silentNode), 2);
+
+            // Track 1 & 2 then get summed together
+            std::vector<std::unique_ptr<AudioNode>> nodes;
+            nodes.push_back (std::move (track1Node));
+            nodes.push_back (std::move (track2Node));
+
+            auto node = std::make_unique<SummingAudioNode> (std::move (nodes));
+            
+            auto testContext = createTestContext (std::move (node),
+                                                  44100.0, 512,
+                                                  1, 5.0);
+            auto& buffer = testContext->buffer;
+
+            expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.0f, 0.001f);
+            expectWithinAbsoluteError (buffer.getRMSLevel (0, 0, buffer.getNumSamples()), 0.0f, 0.001f);
         }
     }
 };
