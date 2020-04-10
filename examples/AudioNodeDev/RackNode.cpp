@@ -41,6 +41,16 @@ namespace utilities
         for (int i = 0; i < numChannels; ++i)
             dest.copyFrom (i, 0, source, i, 0, numSamples);
     }
+
+    void addAudioBuffer (AudioBuffer<float>& dest, const AudioBuffer<float>& source)
+    {
+        jassert (source.getNumSamples() == dest.getNumSamples());
+        const int numSamples = dest.getNumSamples();
+        const int numChannels = std::min (dest.getNumChannels(), source.getNumChannels());
+
+        for (int i = 0; i < numChannels; ++i)
+            dest.addFrom (i, 0, source, i, 0, numSamples);
+    }
 }
 
 class AudioNode;
@@ -434,7 +444,7 @@ public:
         // And a copy of all the send nodes
         for (auto send : sendNodes)
         {
-            utilities::copyAudioBuffer (outputBuffer, send->getProcessedAudioOutput());
+            utilities::addAudioBuffer (outputBuffer, send->getProcessedAudioOutput());
             outputMidi.addEvents (send->getProcessedMidiOutput(), 0, outputBuffer.getNumSamples(), 0);
         }
     }
@@ -586,9 +596,7 @@ private:
         {
             auto sinNode = std::make_unique<SinAudioNode> (220.0);
             
-            auto testContext = createTestContext (std::move (sinNode),
-                                                  44100.0, 512,
-                                                  1, 5.0);
+            auto testContext = createTestContext (std::move (sinNode), 44100.0, 512, 1, 5.0);
             auto& buffer = testContext->buffer;
             
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 1.0f, 0.001f);
@@ -609,9 +617,7 @@ private:
 
             auto sumNode = std::make_unique<SummingAudioNode> (std::move (nodes));
             
-            auto testContext = createTestContext (std::move (sumNode),
-                                                  44100.0, 512,
-                                                  1, 5.0);
+            auto testContext = createTestContext (std::move (sumNode), 44100.0, 512, 1, 5.0);
             auto& buffer = testContext->buffer;
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.0f, 0.001f);
@@ -630,9 +636,7 @@ private:
             auto sumNode = std::make_unique<SummingAudioNode> (std::move (nodes));
             auto node = std::make_unique<FunctionAudioNode> (std::move (sumNode), [] (float s) { return s * 0.5f; });
             
-            auto testContext = createTestContext (std::move (node),
-                                                  44100.0, 512,
-                                                  1, 5.0);
+            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0);
             auto& buffer = testContext->buffer;
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.885f, 0.001f);
@@ -661,9 +665,7 @@ private:
 
             auto node = std::make_unique<SummingAudioNode> (std::move (nodes));
             
-            auto testContext = createTestContext (std::move (node),
-                                                  44100.0, 512,
-                                                  1, 5.0);
+            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0);
             auto& buffer = testContext->buffer;
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 1.0f, 0.001f);
@@ -691,13 +693,37 @@ private:
 
             auto node = std::make_unique<SummingAudioNode> (std::move (nodes));
             
-            auto testContext = createTestContext (std::move (node),
-                                                  44100.0, 512,
-                                                  1, 5.0);
+            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0);
             auto& buffer = testContext->buffer;
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.0f, 0.001f);
             expectWithinAbsoluteError (buffer.getRMSLevel (0, 0, buffer.getNumSamples()), 0.0f, 0.001f);
+        }
+        
+        beginTest ("Sin send/return non-blocking");
+        {
+            // Track 1 sends a sin tone to a send with a gain of 0.25
+            auto sinLowerNode = std::make_unique<SinAudioNode> (220.0);
+            auto attenuatedSinLowerNode = std::make_unique<FunctionAudioNode> (std::move (sinLowerNode), [] (float s) { return s * 0.25f; });
+            auto track1Node = std::make_unique<SendAudioNode> (std::move (attenuatedSinLowerNode), 1);
+
+            // Track 2 has a sin source  of gain 0.5 and receives input from the send
+            auto sinUpperNode = std::make_unique<SinAudioNode> (440.0);
+            auto attenuatedSinUpperNode = std::make_unique<FunctionAudioNode> (std::move (sinUpperNode), [] (float s) { return s * 0.5f; });
+            auto track2Node = std::make_unique<ReturnAudioNode> (std::move (attenuatedSinUpperNode), 1);
+
+            // Track 1 & 2 then get summed together
+            std::vector<std::unique_ptr<AudioNode>> nodes;
+            nodes.push_back (std::move (track1Node));
+            nodes.push_back (std::move (track2Node));
+
+            auto node = std::make_unique<SummingAudioNode> (std::move (nodes));
+
+            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0);
+            auto& buffer = testContext->buffer;
+
+            expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.885f, 0.001f);
+            expectWithinAbsoluteError (buffer.getRMSLevel (0, 0, buffer.getNumSamples()), 0.5f, 0.001f);
         }
     }
 };
