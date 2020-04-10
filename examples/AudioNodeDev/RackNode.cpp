@@ -51,6 +51,15 @@ namespace utilities
         for (int i = 0; i < numChannels; ++i)
             dest.addFrom (i, 0, source, i, 0, numSamples);
     }
+
+    void writeToFile (File file, const AudioBuffer<float>& buffer, double sampleRate)
+    {
+        if (auto writer = std::unique_ptr<AudioFormatWriter> (WavAudioFormat().createWriterFor (file.createOutputStream().release(),
+                                                                                                sampleRate, buffer.getNumChannels(), 16, {}, 0)))
+        {
+            writer->writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());
+        }
+    }
 }
 
 class AudioNode;
@@ -163,6 +172,124 @@ MidiBuffer& AudioNode::getProcessedMidiOutput()
     jassert (hasProcessed());
     return midiBuffer;
 }
+
+
+//==============================================================================
+//==============================================================================
+class AudioNodeProcessor
+{
+public:
+    AudioNodeProcessor (std::unique_ptr<AudioNode> nodeToProcess)
+        : node (std::move (nodeToProcess))
+    {
+        auto nodes = node->getAllInputNodes();
+        nodes.push_back (node.get());
+        std::unique_copy (nodes.begin(), nodes.end(), std::back_inserter (allNodes),
+                          [] (auto n1, auto n2) { return n1 == n2; });
+    }
+
+    void prepareToPlay (double sampleRate, int blockSize)
+    {
+        const PlaybackInitialisationInfo info { sampleRate, blockSize, allNodes };
+        
+        for (auto& node : allNodes)
+        {
+            node->initialise (info);
+            node->prepareToPlay (info);
+        }
+    }
+
+    void process (AudioBuffer<float>& audio, MidiBuffer& midi)
+    {
+        for (auto node : allNodes)
+            node->prepareForNextBlock();
+        
+        for (;;)
+        {
+            int processedAnyNodes = false;
+            
+            for (auto node : allNodes)
+            {
+                if (! node->hasProcessed() && node->isReadyToProcess())
+                {
+                    node->process();
+                    processedAnyNodes = true;
+                }
+            }
+            
+            if (! processedAnyNodes)
+            {
+                utilities::copyAudioBuffer (audio, node->getProcessedAudioOutput());
+                //TODO: MIDI
+                
+                break;
+            }
+        }
+    }
+    
+private:
+    std::unique_ptr<AudioNode> node;
+    std::vector<AudioNode*> allNodes;
+};
+
+
+//==============================================================================
+//==============================================================================
+class LatencyAudioNode  : public AudioNode
+{
+public:
+    LatencyAudioNode (std::unique_ptr<AudioNode> inputNode, int numSamplesToDelay)
+        : input (std::move (inputNode)), latencyNumSamples (numSamplesToDelay)
+    {
+    }
+    
+    tracktion_engine::AudioNodeProperties getAudioNodeProperties() override
+    {
+        return input->getAudioNodeProperties();
+    }
+    
+    std::vector<AudioNode*> getAllInputNodes() override
+    {
+        std::vector<AudioNode*> inputNodes;
+        inputNodes.push_back (input.get());
+        
+        auto nodeInputs = input->getAllInputNodes();
+        inputNodes.insert (inputNodes.end(), nodeInputs.begin(), nodeInputs.end());
+
+        return inputNodes;
+    }
+    
+    bool isReadyToProcess() override
+    {
+        return input->hasProcessed();
+    }
+    
+    void prepareToPlay (const PlaybackInitialisationInfo& info) override
+    {
+        fifo.setSize (getAudioNodeProperties().numberOfChannels, latencyNumSamples + info.blockSize + 1);
+        fifo.writeSilence (latencyNumSamples);
+        jassert (fifo.getNumReady() == latencyNumSamples);
+    }
+    
+    void process (AudioBuffer<float>& outputBuffer, MidiBuffer&) override
+    {
+        auto& inputBuffer = input->getProcessedAudioOutput();
+        jassert (fifo.getNumChannels() == inputBuffer.getNumChannels());
+        fifo.write (inputBuffer);
+        
+        jassert (fifo.getNumReady() >= outputBuffer.getNumSamples());
+        jassert (inputBuffer.getNumSamples() == outputBuffer.getNumSamples());
+
+        fifo.readAdding (outputBuffer, 0);
+        
+        //TODO: MIDI
+    }
+    
+private:
+    std::unique_ptr<AudioNode> input;
+    const int latencyNumSamples;
+    tracktion_engine::AudioFifo fifo { 1, 32 };
+};
 
 
 //==============================================================================
@@ -456,63 +583,7 @@ private:
 };
 
 
-//==============================================================================
-//==============================================================================
-class AudioNodeProcessor
-{
-public:
-    AudioNodeProcessor (std::unique_ptr<AudioNode> nodeToProcess)
-        : node (std::move (nodeToProcess))
-    {
-        auto nodes = node->getAllInputNodes();
-        nodes.push_back (node.get());
-        std::unique_copy (nodes.begin(), nodes.end(), std::back_inserter (allNodes),
-                          [] (auto n1, auto n2) { return n1 == n2; });
-    }
 
-    void prepareToPlay (double sampleRate, int blockSize)
-    {
-        const PlaybackInitialisationInfo info { sampleRate, blockSize, allNodes };
-        
-        for (auto& node : allNodes)
-        {
-            node->initialise (info);
-            node->prepareToPlay (info);
-        }
-    }
-
-    void process (AudioBuffer<float>& audio, MidiBuffer& midi)
-    {
-        for (auto node : allNodes)
-            node->prepareForNextBlock();
-        
-        for (;;)
-        {
-            int processedAnyNodes = false;
-            
-            for (auto node : allNodes)
-            {
-                if (! node->hasProcessed() && node->isReadyToProcess())
-                {
-                    node->process();
-                    processedAnyNodes = true;
-                }
-            }
-            
-            if (! processedAnyNodes)
-            {
-                utilities::copyAudioBuffer (audio, node->getProcessedAudioOutput());
-                //TODO: MIDI
-                
-                break;
-            }
-        }
-    }
-    
-private:
-    std::unique_ptr<AudioNode> node;
-    std::vector<AudioNode*> allNodes;
-};
 
 //==============================================================================
 //==============================================================================
@@ -530,6 +601,7 @@ public:
         runSinCancellingTest();
         runSinOctaveTest();
         runSendReturnTest();
+        runLatencyTests();
     }
 
 private:
@@ -724,6 +796,36 @@ private:
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.885f, 0.001f);
             expectWithinAbsoluteError (buffer.getRMSLevel (0, 0, buffer.getNumSamples()), 0.5f, 0.001f);
+        }
+    }
+    
+    void runLatencyTests()
+    {
+        beginTest ("Basic latency test cancelling sin");
+        {
+            const double sampleRate = 44100.0;
+            const double sinFrequency = sampleRate / 100.0;
+            const double numSamplesPerCycle = sampleRate / sinFrequency;
+            const int numLatencySamples = roundToInt (numSamplesPerCycle / 2.0);
+
+            std::vector<std::unique_ptr<AudioNode>> nodes;
+            nodes.push_back (std::make_unique<SinAudioNode> (sinFrequency));
+
+            auto sinNode = std::make_unique<SinAudioNode> (sinFrequency);
+            auto latencySinNode = std::make_unique<LatencyAudioNode> (std::move (sinNode), numLatencySamples);
+            nodes.push_back (std::move (latencySinNode));
+
+            auto sumNode = std::make_unique<SummingAudioNode> (std::move (nodes));
+            
+            auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, 5.0);
+            auto& buffer = testContext->buffer;
+
+            AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(),
+                                              buffer.getNumChannels(),
+                                              numLatencySamples, buffer.getNumSamples() - numLatencySamples);
+            
+            expectWithinAbsoluteError (trimmedBuffer.getMagnitude (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
+            expectWithinAbsoluteError (trimmedBuffer.getRMSLevel (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
         }
     }
 };
