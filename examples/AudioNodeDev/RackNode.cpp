@@ -11,13 +11,6 @@
 #include "RackNode.h"
 
 /**
-    Tests:
-    1. Build a node that generates a sin wave
-    2. Add another node that generates a sin wave an octave higher
-    3. Make two sin waves, add latency of the period to one of these, the output should be silent
-*/
-
-/**
     - Each node should have pointers to its inputs
     - When a node is processed, it should check its inputs to see if they have produced outputs
     - If they have, that node can be processed. If they haven't the processor can try another node
@@ -75,6 +68,15 @@ struct PlaybackInitialisationInfo
     const std::vector<AudioNode*>& allNodes;
 };
 
+/** Holds some really basic properties of a node */
+struct AudioNodeProperties
+{
+    bool hasAudio;
+    bool hasMidi;
+    int numberOfChannels;
+    int latencyNumSamples = 0;
+};
+
 //==============================================================================
 //==============================================================================
 class AudioNode
@@ -104,7 +106,7 @@ public:
     
     //==============================================================================
     /** Should return the properties of the node. */
-    virtual tracktion_engine::AudioNodeProperties getAudioNodeProperties() = 0;
+    virtual AudioNodeProperties getAudioNodeProperties() = 0;
 
     /** Should return all the inputs feeding in to this node. */
     virtual std::vector<AudioNode*> getAllInputNodes() { return {}; }
@@ -243,9 +245,12 @@ public:
     {
     }
     
-    tracktion_engine::AudioNodeProperties getAudioNodeProperties() override
+    AudioNodeProperties getAudioNodeProperties() override
     {
-        return input->getAudioNodeProperties();
+        auto props = input->getAudioNodeProperties();
+        props.latencyNumSamples = std::max (props.latencyNumSamples, latencyNumSamples);
+        
+        return props;
     }
     
     std::vector<AudioNode*> getAllInputNodes() override
@@ -294,61 +299,34 @@ private:
 
 //==============================================================================
 //==============================================================================
-class SinAudioNode : public AudioNode
-{
-public:
-    SinAudioNode (double frequency)
-    {
-        osc.setFrequency (frequency);
-    }
-    
-    tracktion_engine::AudioNodeProperties getAudioNodeProperties() override
-    {
-        tracktion_engine::AudioNodeProperties props;
-        props.hasAudio = true;
-        props.hasMidi = false;
-        props.numberOfChannels = 1;
-        
-        return props;
-    }
-    
-    bool isReadyToProcess() override
-    {
-        return true;
-    }
-    
-    void prepareToPlay (const PlaybackInitialisationInfo& info) override
-    {
-        osc.prepare ({ double (info.sampleRate), uint32 (info.blockSize), 1 });
-    }
-    
-    void process (AudioBuffer<float>& buffer, MidiBuffer&) override
-    {
-        float* samples = buffer.getWritePointer (0);
-        int numSamples = buffer.getNumSamples();
-
-        for (int i = 0; i < numSamples; ++i)
-            samples[i] = osc.processSample (0.0);
-    }
-    
-private:
-    juce::dsp::Oscillator<float> osc { [] (float in) { return std::sin (in); } };
-};
-
-
-//==============================================================================
-//==============================================================================
+/**
+    An AudioNode which sums together the multiple inputs adding additional latency
+    to provide a coherent output.
+*/
 class SummingAudioNode : public AudioNode
 {
 public:
     SummingAudioNode (std::vector<std::unique_ptr<AudioNode>> inputs)
         : nodes (std::move (inputs))
     {
+        const int maxLatency = getAudioNodeProperties().latencyNumSamples;
+        
+        for (auto& node : nodes)
+        {
+            const int nodeLatency = node->getAudioNodeProperties().latencyNumSamples;
+            const int latencyToAdd = maxLatency - nodeLatency;
+            
+            if (latencyToAdd == 0)
+                continue;
+            
+            std::unique_ptr<AudioNode> latencyNode = std::make_unique<LatencyAudioNode> (std::move (node), latencyToAdd);
+            node.swap (latencyNode);
+        }
     }
     
-    tracktion_engine::AudioNodeProperties getAudioNodeProperties() override
+    AudioNodeProperties getAudioNodeProperties() override
     {
-        tracktion_engine::AudioNodeProperties props;
+        AudioNodeProperties props;
         props.hasAudio = false;
         props.hasMidi = false;
         props.numberOfChannels = 0;
@@ -359,6 +337,7 @@ public:
             props.hasAudio = props.hasAudio | nodeProps.hasAudio;
             props.hasMidi = props.hasMidi | nodeProps.hasMidi;
             props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);
+            props.latencyNumSamples = std::max (props.latencyNumSamples, nodeProps.latencyNumSamples);
         }
 
         return props;
@@ -426,6 +405,138 @@ std::unique_ptr<SummingAudioNode> makeSummingAudioNode (std::initializer_list<Au
 
 //==============================================================================
 //==============================================================================
+class SinAudioNode : public AudioNode
+{
+public:
+    SinAudioNode (double frequency)
+    {
+        osc.setFrequency (frequency);
+    }
+    
+    AudioNodeProperties getAudioNodeProperties() override
+    {
+        AudioNodeProperties props;
+        props.hasAudio = true;
+        props.hasMidi = false;
+        props.numberOfChannels = 1;
+        
+        return props;
+    }
+    
+    bool isReadyToProcess() override
+    {
+        return true;
+    }
+    
+    void prepareToPlay (const PlaybackInitialisationInfo& info) override
+    {
+        osc.prepare ({ double (info.sampleRate), uint32 (info.blockSize), 1 });
+    }
+    
+    void process (AudioBuffer<float>& buffer, MidiBuffer&) override
+    {
+        float* samples = buffer.getWritePointer (0);
+        int numSamples = buffer.getNumSamples();
+
+        for (int i = 0; i < numSamples; ++i)
+            samples[i] = osc.processSample (0.0);
+    }
+    
+private:
+    juce::dsp::Oscillator<float> osc { [] (float in) { return std::sin (in); } };
+};
+
+
+//==============================================================================
+//==============================================================================
+class BasicSummingAudioNode : public AudioNode
+{
+public:
+    BasicSummingAudioNode (std::vector<std::unique_ptr<AudioNode>> inputs)
+        : nodes (std::move (inputs))
+    {
+    }
+    
+    AudioNodeProperties getAudioNodeProperties() override
+    {
+        AudioNodeProperties props;
+        props.hasAudio = false;
+        props.hasMidi = false;
+        props.numberOfChannels = 0;
+
+        for (auto& node : nodes)
+        {
+            auto nodeProps = node->getAudioNodeProperties();
+            props.hasAudio = props.hasAudio | nodeProps.hasAudio;
+            props.hasMidi = props.hasMidi | nodeProps.hasMidi;
+            props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);
+        }
+
+        return props;
+    }
+    
+    std::vector<AudioNode*> getAllInputNodes() override
+    {
+        std::vector<AudioNode*> inputNodes;
+        
+        for (auto& node : nodes)
+        {
+            inputNodes.push_back (node.get());
+            
+            auto nodeInputs = node->getAllInputNodes();
+            inputNodes.insert (inputNodes.end(), nodeInputs.begin(), nodeInputs.end());
+        }
+
+        return inputNodes;
+    }
+
+    bool isReadyToProcess() override
+    {
+        for (auto& node : nodes)
+            if (! node->hasProcessed())
+                return false;
+        
+        return true;
+    }
+    
+    void process (AudioBuffer<float>& dest, MidiBuffer& midi) override
+    {
+        const int numSamples = dest.getNumSamples();
+
+        for (auto& node : nodes)
+        {
+            // get each of the inputs and add them to dest
+            auto& inputBuffer = node->getProcessedAudioOutput();
+            jassert (dest.getNumSamples() == inputBuffer.getNumSamples());
+            
+            const int numChannels = std::min (dest.getNumChannels(), inputBuffer.getNumChannels());
+
+            for (int i = 0; i < numChannels; ++i)
+                dest.addFrom (i, 0, inputBuffer, i, 0, numSamples);
+        }
+        
+        //TODO:  MIDI
+    }
+
+private:
+    std::vector<std::unique_ptr<AudioNode>> nodes;
+};
+
+
+/** Creates a SummingAudioNode from a number of AudioNodes. */
+std::unique_ptr<BasicSummingAudioNode> makeBaicSummingAudioNode (std::initializer_list<AudioNode*> nodes)
+{
+    std::vector<std::unique_ptr<AudioNode>> nodeVector;
+    
+    for (auto node : nodes)
+        nodeVector.push_back (std::unique_ptr<AudioNode> (node));
+        
+    return std::make_unique<BasicSummingAudioNode> (std::move (nodeVector));
+}
+
+
+//==============================================================================
+//==============================================================================
 class FunctionAudioNode : public AudioNode
 {
 public:
@@ -437,7 +548,7 @@ public:
         jassert (function);
     }
     
-    tracktion_engine::AudioNodeProperties getAudioNodeProperties() override
+    AudioNodeProperties getAudioNodeProperties() override
     {
         return node->getAudioNodeProperties();
     }
@@ -497,7 +608,7 @@ public:
         return busID;
     }
     
-    tracktion_engine::AudioNodeProperties getAudioNodeProperties() override
+    AudioNodeProperties getAudioNodeProperties() override
     {
         return input->getAudioNodeProperties();
     }
@@ -541,7 +652,7 @@ public:
     {
     }
     
-    tracktion_engine::AudioNodeProperties getAudioNodeProperties() override
+    AudioNodeProperties getAudioNodeProperties() override
     {
         return input->getAudioNodeProperties();
     }
@@ -595,7 +706,11 @@ private:
 };
 
 
-
+/** Returns a node wrapped in another node that applies a static gain to it. */
+std::unique_ptr<AudioNode> makeGainNode (std::unique_ptr<AudioNode> node, float gain)
+{
+    return std::make_unique<FunctionAudioNode> (std::move (node), [gain] (float s) { return s * gain; });
+}
 
 //==============================================================================
 //==============================================================================
@@ -699,7 +814,7 @@ private:
             auto invertedSinNode = std::make_unique<FunctionAudioNode> (std::move (sinNode), [] (float s) { return -s; });
             nodes.push_back (std::move (invertedSinNode));
 
-            auto sumNode = std::make_unique<SummingAudioNode> (std::move (nodes));
+            auto sumNode = std::make_unique<BasicSummingAudioNode> (std::move (nodes));
             
             auto testContext = createTestContext (std::move (sumNode), 44100.0, 512, 1, 5.0);
             auto& buffer = testContext->buffer;
@@ -717,7 +832,7 @@ private:
             nodes.push_back (std::make_unique<SinAudioNode> (220.0));
             nodes.push_back (std::make_unique<SinAudioNode> (440.0));
 
-            auto sumNode = std::make_unique<SummingAudioNode> (std::move (nodes));
+            auto sumNode = std::make_unique<BasicSummingAudioNode> (std::move (nodes));
             auto node = std::make_unique<FunctionAudioNode> (std::move (sumNode), [] (float s) { return s * 0.5f; });
             
             auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0);
@@ -743,7 +858,7 @@ private:
             auto track2Node = std::make_unique<ReturnAudioNode> (std::move (silentNode), 1);
 
             // Track 1 & 2 then get summed together
-            auto node = makeSummingAudioNode ({ track1Node.release(), track2Node.release() });
+            auto node = makeBaicSummingAudioNode ({ track1Node.release(), track2Node.release() });
 
             auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0);
             auto& buffer = testContext->buffer;
@@ -767,7 +882,7 @@ private:
             auto track2Node = std::make_unique<ReturnAudioNode> (std::move (silentNode), 2);
 
             // Track 1 & 2 then get summed together
-            auto node = makeSummingAudioNode ({ track1Node.release(), track2Node.release() });
+            auto node = makeBaicSummingAudioNode ({ track1Node.release(), track2Node.release() });
 
             auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0);
             auto& buffer = testContext->buffer;
@@ -789,7 +904,7 @@ private:
             auto track2Node = std::make_unique<ReturnAudioNode> (std::move (attenuatedSinUpperNode), 1);
 
             // Track 1 & 2 then get summed together
-            auto node = makeSummingAudioNode ({ track1Node.release(), track2Node.release() });
+            auto node = makeBaicSummingAudioNode ({ track1Node.release(), track2Node.release() });
             
             auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0);
             auto& buffer = testContext->buffer;
@@ -803,6 +918,10 @@ private:
     {
         beginTest ("Basic latency test cancelling sin");
         {
+            /*  Has two sin nodes at the same frequency and delays one of them by half a period
+                so they should cancel out completely.
+                This uses the test sample rate to determine the sin frequency to avoid rounding errors.
+            */
             const double sampleRate = 44100.0;
             const double sinFrequency = sampleRate / 100.0;
             const double numSamplesPerCycle = sampleRate / sinFrequency;
@@ -815,7 +934,7 @@ private:
             auto latencySinNode = std::make_unique<LatencyAudioNode> (std::move (sinNode), numLatencySamples);
             nodes.push_back (std::move (latencySinNode));
 
-            auto sumNode = std::make_unique<SummingAudioNode> (std::move (nodes));
+            auto sumNode = std::make_unique<BasicSummingAudioNode> (std::move (nodes));
 
             auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, 5.0);
             auto& buffer = testContext->buffer;
@@ -826,6 +945,47 @@ private:
             
             expectWithinAbsoluteError (trimmedBuffer.getMagnitude (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
             expectWithinAbsoluteError (trimmedBuffer.getRMSLevel (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
+        }
+        
+        beginTest ("Basic latency test doubling sin");
+        {
+            /*  This is the same test as before, two sin waves with one delayed but now the second one is compensated for.
+                This has two implications:
+                 1. There will be a half period of silence at the start of the output
+                 2. Instead of cancelling, the sins will now constructively interfere, doubling the magnitude
+            */
+            const double sampleRate = 44100.0;
+            const double sinFrequency = sampleRate / 100.0;
+            const double numSamplesPerCycle = sampleRate / sinFrequency;
+            const int numLatencySamples = roundToInt (numSamplesPerCycle / 2.0);
+
+            std::vector<std::unique_ptr<AudioNode>> nodes;
+            nodes.push_back (makeGainNode (std::make_unique<SinAudioNode> (sinFrequency), 0.5f));
+
+            auto sinNode = makeGainNode (std::make_unique<SinAudioNode> (sinFrequency), 0.5f);
+            auto latencySinNode = std::make_unique<LatencyAudioNode> (std::move (sinNode), numLatencySamples);
+            nodes.push_back (std::move (latencySinNode));
+
+            auto sumNode = std::make_unique<SummingAudioNode> (std::move (nodes));
+
+            auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, 5.0);
+            auto& buffer = testContext->buffer;
+
+            // Start of buffer which should be silent
+            {
+                AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
+                                                  0, numLatencySamples);
+                expectWithinAbsoluteError (trimmedBuffer.getMagnitude (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
+                expectWithinAbsoluteError (trimmedBuffer.getRMSLevel (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
+            }
+
+            // Part of buffer after latency which should be all sin +-1.0
+            {
+                AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
+                                                  numLatencySamples, buffer.getNumSamples() - numLatencySamples);
+                expectWithinAbsoluteError (trimmedBuffer.getMagnitude (0, 0, trimmedBuffer.getNumSamples()), 1.0f, 0.001f);
+                expectWithinAbsoluteError (trimmedBuffer.getRMSLevel (0, 0, trimmedBuffer.getNumSamples()), 0.707f, 0.001f);
+            }
         }
     }
 };
