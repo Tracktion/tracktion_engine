@@ -412,6 +412,18 @@ private:
 };
 
 
+/** Creates a SummingAudioNode from a number of AudioNodes. */
+std::unique_ptr<SummingAudioNode> makeSummingAudioNode (std::initializer_list<AudioNode*> nodes)
+{
+    std::vector<std::unique_ptr<AudioNode>> nodeVector;
+    
+    for (auto node : nodes)
+        nodeVector.push_back (std::unique_ptr<AudioNode> (node));
+        
+    return std::make_unique<SummingAudioNode> (std::move (nodeVector));
+}
+
+
 //==============================================================================
 //==============================================================================
 class FunctionAudioNode : public AudioNode
@@ -731,12 +743,8 @@ private:
             auto track2Node = std::make_unique<ReturnAudioNode> (std::move (silentNode), 1);
 
             // Track 1 & 2 then get summed together
-            std::vector<std::unique_ptr<AudioNode>> nodes;
-            nodes.push_back (std::move (track1Node));
-            nodes.push_back (std::move (track2Node));
+            auto node = makeSummingAudioNode ({ track1Node.release(), track2Node.release() });
 
-            auto node = std::make_unique<SummingAudioNode> (std::move (nodes));
-            
             auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0);
             auto& buffer = testContext->buffer;
 
@@ -759,12 +767,8 @@ private:
             auto track2Node = std::make_unique<ReturnAudioNode> (std::move (silentNode), 2);
 
             // Track 1 & 2 then get summed together
-            std::vector<std::unique_ptr<AudioNode>> nodes;
-            nodes.push_back (std::move (track1Node));
-            nodes.push_back (std::move (track2Node));
+            auto node = makeSummingAudioNode ({ track1Node.release(), track2Node.release() });
 
-            auto node = std::make_unique<SummingAudioNode> (std::move (nodes));
-            
             auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0);
             auto& buffer = testContext->buffer;
 
@@ -785,12 +789,8 @@ private:
             auto track2Node = std::make_unique<ReturnAudioNode> (std::move (attenuatedSinUpperNode), 1);
 
             // Track 1 & 2 then get summed together
-            std::vector<std::unique_ptr<AudioNode>> nodes;
-            nodes.push_back (std::move (track1Node));
-            nodes.push_back (std::move (track2Node));
-
-            auto node = std::make_unique<SummingAudioNode> (std::move (nodes));
-
+            auto node = makeSummingAudioNode ({ track1Node.release(), track2Node.release() });
+            
             auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0);
             auto& buffer = testContext->buffer;
 
@@ -816,7 +816,7 @@ private:
             nodes.push_back (std::move (latencySinNode));
 
             auto sumNode = std::make_unique<SummingAudioNode> (std::move (nodes));
-            
+
             auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, 5.0);
             auto& buffer = testContext->buffer;
 
