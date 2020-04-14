@@ -624,7 +624,7 @@ void TransportControl::triggerClearDevicesOnStop()
 {
     transportState->clearDevicesOnStop = true;
 
-    if (isPlaying())
+    if (isPlaying() || edit.isRendering())
         return;
 
     stop (false, true);
