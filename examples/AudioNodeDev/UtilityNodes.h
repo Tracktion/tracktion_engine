@@ -55,21 +55,29 @@ public:
     {
         auto& outputBlock = pc.buffers.audio;
         auto inputBuffer = input->getProcessedOutput().audio;
-        jassert (fifo.getNumChannels() == inputBuffer.getNumChannels());
-        fifo.write (inputBuffer);
-        
-        jassert (fifo.getNumReady() >= outputBlock.getNumSamples());
-        jassert (inputBuffer.getNumSamples() == outputBlock.getNumSamples());
+        auto inputMidi = input->getProcessedOutput().midi;
+        const int numSamples = (int) inputBuffer.getNumSamples();
 
+        jassert (numSamples == outputBlock.getNumSamples());
+        jassert (fifo.getNumChannels() == inputBuffer.getNumChannels());
+        
+        // Write to delay buffers
+        fifo.write (inputBuffer);
+        midi.addEvents (inputMidi, 0, -1, latencyNumSamples);
+
+        // Then read from them
+        jassert (fifo.getNumReady() >= outputBlock.getNumSamples());
         fifo.readAdding (outputBlock);
         
-        //TODO: MIDI
+        pc.buffers.midi.addEvents (midi, latencyNumSamples, numSamples, -latencyNumSamples);
+        midi.clear (latencyNumSamples, numSamples);
     }
     
 private:
     std::unique_ptr<AudioNode> input;
     const int latencyNumSamples;
     tracktion_engine::AudioFifo fifo { 1, 32 };
+    juce::MidiBuffer midi;
 };
 
 
@@ -145,11 +153,20 @@ public:
     
     void process (const ProcessContext& pc) override
     {
+        const auto numChannels = pc.buffers.audio.getNumChannels();
+
         // Get each of the inputs and add them to dest
         for (auto& node : nodes)
         {
-            pc.buffers.audio.add (node->getProcessedOutput().audio);
-            //TODO:  MIDI
+            auto inputFromNode = node->getProcessedOutput();
+            
+            const auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels);
+
+            if (numChannelsToAdd > 0)
+                pc.buffers.audio.getSubsetChannelBlock (0, numChannelsToAdd)
+                    .add (node->getProcessedOutput().audio.getSubsetChannelBlock (0, numChannelsToAdd));
+            
+            pc.buffers.midi.addEvents (inputFromNode.midi, 0, -1, 0);
         }
     }
 

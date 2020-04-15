@@ -173,11 +173,20 @@ public:
     
     void process (const ProcessContext& pc) override
     {
+        const auto numChannels = pc.buffers.audio.getNumChannels();
+
         // Get each of the inputs and add them to dest
         for (auto& node : nodes)
         {
-            pc.buffers.audio.add (node->getProcessedOutput().audio);
-            //TODO:  MIDI
+            auto inputFromNode = node->getProcessedOutput();
+            
+            const auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels);
+
+            if (numChannelsToAdd > 0)
+                pc.buffers.audio.getSubsetChannelBlock (0, numChannelsToAdd)
+                    .add (node->getProcessedOutput().audio.getSubsetChannelBlock (0, numChannelsToAdd));
+            
+            pc.buffers.midi.addEvents (inputFromNode.midi, 0, -1, 0);
         }
     }
 
@@ -796,12 +805,12 @@ private:
     
     void runMidiTests (bool randomiseBlockSizes)
     {
+        const double sampleRate = 44100.0;
+        const double duration = 5.0;
+        const auto sequence = createRandomMidiMessageSequence (duration, getRandom());
+        
         beginTest ("Basic MIDI");
         {
-            const double sampleRate = 44100.0;
-            const double duration = 5.0;
-            
-            auto sequence = createRandomMidiMessageSequence (duration, getRandom());
             auto node = std::make_unique<MidiAudioNode> (sequence);
             
             auto testContext = createTestContext (std::move (node), sampleRate, 512, 1, duration, randomiseBlockSizes);
@@ -809,10 +818,46 @@ private:
             expectGreaterThan (sequence.getNumEvents(), 0);
             expectMidiBuffer (testContext->midi, sampleRate, sequence);
         }
+        
+        beginTest ("Delayed MIDI");
+        {
+            expectGreaterThan (sequence.getNumEvents(), 0);
+            
+            const int latencyNumSamples = roundToInt (sampleRate / 100.0);
+            const double delayedTime = latencyNumSamples / sampleRate;
+            auto midiNode = std::make_unique<MidiAudioNode> (sequence);
+            auto delayedNode = std::make_unique<LatencyAudioNode> (std::move (midiNode), latencyNumSamples);
 
-        // Latency MIDI
+            auto testContext = createTestContext (std::move (delayedNode), sampleRate, 512, 1, duration, randomiseBlockSizes);
+            
+            auto extectedSequence = sequence;
+            extectedSequence.addTimeToMessages (delayedTime);
+            expectMidiBuffer (testContext->midi, sampleRate, extectedSequence);
+        }
+
+        beginTest ("Compensated MIDI");
+        {
+            // This test has a sin node being delayed by a block which then gets mixed with a non-deleayed MIDI stream
+            // The MIDI stream should be delayed by the same amount as the sin stream
+            expectGreaterThan (sequence.getNumEvents(), 0);
+            
+            const int latencyNumSamples = roundToInt (sampleRate / 100.0);
+            const double delayedTime = latencyNumSamples / sampleRate;
+
+            auto sinNode = std::make_unique<SinAudioNode> (220.0);
+            auto delayedNode = std::make_unique<LatencyAudioNode> (std::move (sinNode), latencyNumSamples);
+            
+            auto midiNode = std::make_unique<MidiAudioNode> (sequence);
+            auto summedNode = makeSummingAudioNode ({ delayedNode.release(), midiNode.release() });
+
+            auto testContext = createTestContext (std::move (summedNode), sampleRate, 512, 1, duration, randomiseBlockSizes);
+            
+            auto extectedSequence = sequence;
+            extectedSequence.addTimeToMessages (delayedTime);
+            expectMidiBuffer (testContext->midi, sampleRate, extectedSequence);
+        }
+
         // Send/return MIDI
-        // Compensated MIDI
     }
 };
 
