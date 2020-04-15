@@ -16,6 +16,29 @@
 //==============================================================================
 namespace test_utilities
 {
+    /** Creates a random MidiMessageSequence sequence. */
+    MidiMessageSequence createRandomMidiMessageSequence (double durationSeconds, Random r)
+    {
+        juce::MidiMessageSequence sequence;
+        int noteNumber = -1;
+        
+        for (double time = 0.0; time < durationSeconds; time += r.nextDouble() * 0.5 + 0.1)
+        {
+            if (noteNumber != -1)
+            {
+                sequence.addEvent (MidiMessage::noteOff (1, noteNumber), time);
+                noteNumber = -1;
+            }
+            else
+            {
+                noteNumber = r.nextInt ({ 1, 127 });
+                sequence.addEvent (MidiMessage::noteOn (1, noteNumber, 1.0f), time);
+            }
+        }
+        
+        return sequence;
+    }
+
     /** Creates a MidiMessageSequence from a MidiBuffer. */
     static MidiMessageSequence createMidiMessageSequence (const juce::MidiBuffer& buffer, double sampleRate)
     {
@@ -41,6 +64,16 @@ namespace test_utilities
     {
         for (int i = 0; i < seq.getNumEvents(); ++i)
             ut.logMessage (seq.getEventPointer (i)->message.getDescription());
+    }
+
+    /** Writes an audio buffer to a file. */
+    void writeToFile (File file, const AudioBuffer<float>& buffer, double sampleRate)
+    {
+        if (auto writer = std::unique_ptr<AudioFormatWriter> (WavAudioFormat().createWriterFor (file.createOutputStream().release(),
+                                                                                                sampleRate, buffer.getNumChannels(), 16, {}, 0)))
+        {
+            writer->writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());
+        }
     }
 
     //==============================================================================
@@ -112,13 +145,18 @@ public:
                                 .replace ("BS", String (blockSize))
                                 .replace ("RND", randomiseBlockSizes ? "Y" : "N"));
 
+                    // Mono tests
                     runSinTests (setup);
                     runSinCancellingTests (setup);
                     runSinOctaveTests (setup);
                     runSendReturnTests (setup);
                     runLatencyTests (setup);
-                    
+
+                    // MIDI tests
                     runMidiTests (setup);
+                    
+                    // Multi channel tests
+                    runStereoTests (setup);
                 }
             }
         }
@@ -132,31 +170,38 @@ private:
         AudioBuffer<float> buffer;
         MidiBuffer midi;
     };
-    
+
     std::unique_ptr<TestContext> createTestContext (std::unique_ptr<AudioNode> node, const double sampleRate, const int blockSize,
                                                     const int numChannels, const double durationInSeconds,
                                                     bool randomiseBlockSizes, Random r)
+    {
+        TestSetup ts { sampleRate, blockSize, randomiseBlockSizes };
+        return createTestContext (std::move (node), ts, numChannels, durationInSeconds, r);
+    }
+    
+    std::unique_ptr<TestContext> createTestContext (std::unique_ptr<AudioNode> node, const TestSetup ts,
+                                                    const int numChannels, const double durationInSeconds, Random r)
     {
         auto context = std::make_unique<TestContext>();
         context->tempFile = std::make_unique<TemporaryFile> (".wav");
         
         // Process the node to a file
         if (auto writer = std::unique_ptr<AudioFormatWriter> (WavAudioFormat().createWriterFor (context->tempFile->getFile().createOutputStream().release(),
-                                                                                                sampleRate, numChannels, 16, {}, 0)))
+                                                                                                ts.sampleRate, numChannels, 16, {}, 0)))
         {
             AudioNodeProcessor processor (std::move (node));
-            processor.prepareToPlay (sampleRate, blockSize);
+            processor.prepareToPlay (ts.sampleRate, ts.blockSize);
             
-            AudioBuffer<float> buffer (1, blockSize);
+            AudioBuffer<float> buffer (numChannels, ts.blockSize);
             MidiBuffer midi;
             
-            int numSamplesToDo = roundToInt (durationInSeconds * sampleRate);
+            int numSamplesToDo = roundToInt (durationInSeconds * ts.sampleRate);
             int numSamplesDone = 0;
             
             for (;;)
             {
-                const int numThisTime = randomiseBlockSizes ? std::min (r.nextInt ({ 1, blockSize }), numSamplesToDo)
-                                                            : std::min (blockSize, numSamplesToDo);
+                const int numThisTime = ts.randomiseBlockSizes ? std::min (r.nextInt ({ 1, ts.blockSize }), numSamplesToDo)
+                                                               : std::min (ts.blockSize, numSamplesToDo);
                 buffer.clear();
                 midi.clear();
                 
@@ -199,7 +244,7 @@ private:
         {
             auto sinNode = std::make_unique<SinAudioNode> (220.0);
             
-            auto testContext = createTestContext (std::move (sinNode), 44100.0, 512, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
+            auto testContext = createTestContext (std::move (sinNode), testSetup.sampleRate, testSetup.blockSize, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
             auto& buffer = testContext->buffer;
             
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 1.0f, 0.001f);
@@ -220,7 +265,7 @@ private:
 
             auto sumNode = std::make_unique<BasicSummingAudioNode> (std::move (nodes));
             
-            auto testContext = createTestContext (std::move (sumNode), 44100.0, 512, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
+            auto testContext = createTestContext (std::move (sumNode), testSetup.sampleRate, testSetup.blockSize, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
             auto& buffer = testContext->buffer;
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.0f, 0.001f);
@@ -239,7 +284,7 @@ private:
             auto sumNode = std::make_unique<BasicSummingAudioNode> (std::move (nodes));
             auto node = std::make_unique<FunctionAudioNode> (std::move (sumNode), [] (float s) { return s * 0.5f; });
             
-            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
+            auto testContext = createTestContext (std::move (node), testSetup.sampleRate, testSetup.blockSize, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
             auto& buffer = testContext->buffer;
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.885f, 0.001f);
@@ -264,7 +309,7 @@ private:
             // Track 1 & 2 then get summed together
             auto node = makeBaicSummingAudioNode ({ track1Node.release(), track2Node.release() });
 
-            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
+            auto testContext = createTestContext (std::move (node), testSetup.sampleRate, testSetup.blockSize, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
             auto& buffer = testContext->buffer;
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 1.0f, 0.001f);
@@ -288,7 +333,7 @@ private:
             // Track 1 & 2 then get summed together
             auto node = makeBaicSummingAudioNode ({ track1Node.release(), track2Node.release() });
 
-            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
+            auto testContext = createTestContext (std::move (node), testSetup.sampleRate, testSetup.blockSize, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
             auto& buffer = testContext->buffer;
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.0f, 0.001f);
@@ -310,7 +355,7 @@ private:
             // Track 1 & 2 then get summed together
             auto node = makeBaicSummingAudioNode ({ track1Node.release(), track2Node.release() });
             
-            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
+            auto testContext = createTestContext (std::move (node), testSetup.sampleRate, testSetup.blockSize, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
             auto& buffer = testContext->buffer;
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.885f, 0.001f);
@@ -326,7 +371,7 @@ private:
                 so they should cancel out completely.
                 This uses the test sample rate to determine the sin frequency to avoid rounding errors.
             */
-            const double sampleRate = 44100.0;
+            const double sampleRate = testSetup.sampleRate;
             const double sinFrequency = sampleRate / 100.0;
             const double numSamplesPerCycle = sampleRate / sinFrequency;
             const int numLatencySamples = roundToInt (numSamplesPerCycle / 2.0);
@@ -358,7 +403,7 @@ private:
                  1. There will be a half period of silence at the start of the output
                  2. Instead of cancelling, the sins will now constructively interfere, doubling the magnitude
             */
-            const double sampleRate = 44100.0;
+            const double sampleRate = testSetup.sampleRate;
             const double sinFrequency = sampleRate / 100.0;
             const double numSamplesPerCycle = sampleRate / sinFrequency;
             const int numLatencySamples = roundToInt (numSamplesPerCycle / 2.0);
@@ -397,7 +442,7 @@ private:
             /*  This is the same test as before, two sin waves with one delayed and latency compensated
                 but this time the processing happens in different sized blocks
             */
-            const double sampleRate = 44100.0;
+            const double sampleRate = testSetup.sampleRate;
             const double sinFrequency = sampleRate / 100.0;
             const double numSamplesPerCycle = sampleRate / sinFrequency;
             const int numLatencySamples = roundToInt (numSamplesPerCycle / 2.0);
@@ -431,34 +476,12 @@ private:
             }
         }
     }
-    
-    MidiMessageSequence createRandomMidiMessageSequence (double durationSeconds, Random r)
-    {
-        juce::MidiMessageSequence sequence;
-        int noteNumber = -1;
         
-        for (double time = 0.0; time < durationSeconds; time += r.nextDouble() * 0.5 + 0.1)
-        {
-            if (noteNumber != -1)
-            {
-                sequence.addEvent (MidiMessage::noteOff (1, noteNumber), time);
-                noteNumber = -1;
-            }
-            else
-            {
-                noteNumber = r.nextInt ({ 1, 127 });
-                sequence.addEvent (MidiMessage::noteOn (1, noteNumber, 1.0f), time);
-            }
-        }
-        
-        return sequence;
-    }
-    
     void runMidiTests (TestSetup testSetup)
     {
         const double sampleRate = 44100.0;
         const double duration = 5.0;
-        const auto sequence = createRandomMidiMessageSequence (duration, getRandom());
+        const auto sequence = test_utilities::createRandomMidiMessageSequence (duration, getRandom());
         
         beginTest ("Basic MIDI");
         {
@@ -544,6 +567,107 @@ private:
 
             expectGreaterThan (sequence.getNumEvents(), 0);
             test_utilities::expectMidiBuffer (*this, testContext->midi, sampleRate, sequence);
+        }
+    }
+    
+    void runStereoTests (TestSetup testSetup)
+    {
+        beginTest ("Stereo sin");
+        {
+            auto node = makeAudioNode<SinAudioNode> (220.0, 2);
+
+            auto testContext = createTestContext (std::move (node), testSetup, 2, 5.0, getRandom());
+            auto& buffer = testContext->buffer;
+
+            expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 1.0f, 0.001f);
+            expectWithinAbsoluteError (buffer.getRMSLevel (0, 0, buffer.getNumSamples()), 0.707f, 0.001f);
+        }
+
+        beginTest ("Stereo sin");
+        {
+            // Two mono sin nodes summed to L/R stereo
+            auto leftSin = makeAudioNode<SinAudioNode> (220.0, 1);
+            auto rightSin = makeAudioNode<SinAudioNode> (220.0, 1);
+
+            std::vector<std::pair<int, int>> channelMap;
+            channelMap.push_back ({ 0, 1 });
+            auto rightRemapped = makeAudioNode<ChannelMappingAudioNode> (std::move (rightSin), channelMap);
+
+            auto node = makeSummingAudioNode ({ leftSin.release(), rightRemapped.release() });
+
+            expectEquals (node->getAudioNodeProperties().numberOfChannels, 2);
+
+            auto testContext = createTestContext (std::move (node), testSetup, 2, 5.0, getRandom());
+            auto& buffer = testContext->buffer;
+
+            for (int channel : { 0, 1 })
+            {
+                expectWithinAbsoluteError (buffer.getMagnitude (channel, 0, buffer.getNumSamples()), 1.0f, 0.001f);
+                expectWithinAbsoluteError (buffer.getRMSLevel (channel, 0, buffer.getNumSamples()), 0.707f, 0.001f);
+            }
+        }
+
+        beginTest ("Stereo sin summed to mono");
+        {
+            // A stero sin node at 0.5 is summed to mono to produce a 1.0 mono sin
+            auto node = makeAudioNode<SinAudioNode> (220.0, 2);
+            node = makeGainAudioNode (std::move (node), 0.5f);
+
+            // Merge channe 1 with channel 2
+            std::vector<std::pair<int, int>> channelMap;
+            channelMap.push_back ({ 0, 0 });
+            channelMap.push_back ({ 1, 0 });
+            node = makeAudioNode<ChannelMappingAudioNode> (std::move (node), channelMap);
+
+            expectEquals (node->getAudioNodeProperties().numberOfChannels, 1);
+
+            auto testContext = createTestContext (std::move (node), testSetup, 1, 5.0, getRandom());
+            auto& buffer = testContext->buffer;
+
+            expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 1.0f, 0.001f);
+            expectWithinAbsoluteError (buffer.getRMSLevel (0, 0, buffer.getNumSamples()), 0.707f, 0.001f);
+        }
+        
+        beginTest ("Twin mono sin summed to mono cancelling");
+        {
+            // L/R sin with inverted phase that cancel
+            auto leftNode = makeAudioNode<SinAudioNode> (220.0, 1);
+
+            auto rightNode = makeAudioNode<SinAudioNode> (220.0, 1);
+            rightNode = makeAudioNode<FunctionAudioNode> (std::move (rightNode), [] (float s) { return s * -1.0f; });
+            rightNode = makeAudioNode<ChannelMappingAudioNode> (std::move (rightNode), makeChannelMap ({ { 0, 1 } }));
+
+            auto sumNode = makeSummingAudioNode ({ leftNode.release(), rightNode.release() });
+
+            // Merge channe 1 with channel 2
+            auto node = makeAudioNode<ChannelMappingAudioNode> (std::move (sumNode), makeChannelMap ({ { 0, 0 }, { 1, 0 } }));
+
+            expectEquals (node->getAudioNodeProperties().numberOfChannels, 1);
+
+            auto testContext = createTestContext (std::move (node), testSetup, 1, 5.0, getRandom());
+            auto& buffer = testContext->buffer;
+
+            expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.0f, 0.001f);
+            expectWithinAbsoluteError (buffer.getRMSLevel (0, 0, buffer.getNumSamples()), 0.0f, 0.001f);
+        }
+        
+        beginTest ("Mono sin duplicated to 6 channel");
+        {
+            // Create a single mono sin and then copy that to 6 channels
+            auto node = makeAudioNode<SinAudioNode> (220.0, 1);
+            node = makeAudioNode<ChannelMappingAudioNode> (std::move (node),
+                                                           makeChannelMap ({ { 0, 0 }, { 0, 1 }, { 0, 2 }, { 0, 3 }, { 0, 4 }, { 0, 5 } }));
+
+            expectEquals (node->getAudioNodeProperties().numberOfChannels, 6);
+
+            auto testContext = createTestContext (std::move (node), testSetup, 6, 5.0, getRandom());
+            auto& buffer = testContext->buffer;
+
+            for (int channel : { 0, 1, 2, 3, 4, 5 })
+            {
+                expectWithinAbsoluteError (buffer.getMagnitude (channel, 0, buffer.getNumSamples()), 1.0f, 0.001f);
+                expectWithinAbsoluteError (buffer.getRMSLevel (channel, 0, buffer.getNumSamples()), 0.707f, 0.001f);
+            }
         }
     }
 };

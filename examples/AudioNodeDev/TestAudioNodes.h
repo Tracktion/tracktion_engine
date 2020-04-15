@@ -78,7 +78,8 @@ private:
 class SinAudioNode : public AudioNode
 {
 public:
-    SinAudioNode (double frequency)
+    SinAudioNode (double frequency, int numChannelsToUse = 1)
+        : numChannels (numChannelsToUse)
     {
         osc.setFrequency (frequency);
     }
@@ -88,7 +89,7 @@ public:
         AudioNodeProperties props;
         props.hasAudio = true;
         props.hasMidi = false;
-        props.numberOfChannels = 1;
+        props.numberOfChannels = numChannels;
         
         return props;
     }
@@ -100,21 +101,19 @@ public:
     
     void prepareToPlay (const PlaybackInitialisationInfo& info) override
     {
-        osc.prepare ({ double (info.sampleRate), uint32 (info.blockSize), 1 });
+        osc.prepare ({ double (info.sampleRate), uint32 (info.blockSize), (uint32) numChannels });
     }
     
     void process (const ProcessContext& pc) override
     {
+        auto block = pc.buffers.audio;
+        osc.process (juce::dsp::ProcessContextReplacing<float> { block });
         jassert (pc.buffers.audio.getNumChannels() == getAudioNodeProperties().numberOfChannels);
-        float* samples = pc.buffers.audio.getChannelPointer (0);
-        int numSamples = (int) pc.buffers.audio.getNumSamples();
-
-        for (int i = 0; i < numSamples; ++i)
-            samples[i] = osc.processSample (0.0);
     }
     
 private:
     juce::dsp::Oscillator<float> osc { [] (float in) { return std::sin (in); } };
+    const int numChannels;
 };
 
 
@@ -263,6 +262,12 @@ private:
     std::function<float (float)> function;
 };
 
+/** Returns an audio node that applied a fixed gain to an input node. */
+std::unique_ptr<AudioNode> makeGainAudioNode (std::unique_ptr<AudioNode> input, float gain)
+{
+    return makeAudioNode<FunctionAudioNode> (std::move (input), [gain] (float s) { return s * gain; });
+}
+
 
 //==============================================================================
 //==============================================================================
@@ -390,4 +395,84 @@ private:
 std::unique_ptr<AudioNode> makeGainNode (std::unique_ptr<AudioNode> node, float gain)
 {
     return std::make_unique<FunctionAudioNode> (std::move (node), [gain] (float s) { return s * gain; });
+}
+
+
+//==============================================================================
+//==============================================================================
+/** Maps channels from one to another. */
+class ChannelMappingAudioNode : public AudioNode
+{
+public:
+    ChannelMappingAudioNode (std::unique_ptr<AudioNode> inputNode,
+                             std::vector<std::pair<int /* source channel */, int /* dest channel */>> channelMapToUse)
+        : input (std::move (inputNode)),
+          channelMap (std::move (channelMapToUse))
+    {
+    }
+        
+    AudioNodeProperties getAudioNodeProperties() override
+    {
+        AudioNodeProperties props;
+        props.hasAudio = true;
+        props.hasMidi = false;
+        props.numberOfChannels = 0;
+
+        // Num channels is the max of destinations
+        for (auto channel : channelMap)
+            props.numberOfChannels = std::max (props.numberOfChannels, channel.second + 1);
+        
+        return props;
+    }
+    
+    std::vector<AudioNode*> getAllInputNodes() override
+    {
+        std::vector<AudioNode*> inputNodes;
+        inputNodes.push_back (input.get());
+        
+        auto nodeInputs = input->getAllInputNodes();
+        inputNodes.insert (inputNodes.end(), nodeInputs.begin(), nodeInputs.end());
+
+        return inputNodes;
+    }
+    
+    bool isReadyToProcess() override
+    {
+        return input->hasProcessed();
+    }
+    
+    void process (const ProcessContext& pc) override
+    {
+        auto inputBuffers = input->getProcessedOutput();
+        
+        // Pass on MIDI
+        pc.buffers.midi.addEvents (inputBuffers.midi, 0, -1, 0);
+        
+        // Remap audio
+        auto sourceAudio = inputBuffers.audio;
+        auto destAudio = pc.buffers.audio;
+
+        for (auto channel : channelMap)
+        {
+            auto sourceChanelBlock = sourceAudio.getSubsetChannelBlock (channel.first, 1);
+            auto destChanelBlock = destAudio.getSubsetChannelBlock (channel.second, 1);
+            destChanelBlock.add (sourceChanelBlock);
+        }
+    }
+
+private:
+    std::unique_ptr<AudioNode> input;
+    std::vector<std::pair<int, int>> channelMap;
+};
+
+
+/** Creates a channel map from source/dest pairs in an initializer_list. */
+std::vector<std::pair<int, int>> makeChannelMap (std::initializer_list<std::pair<int, int>> sourceDestChannelIndicies)
+{
+    std::vector<std::pair<int, int>> map;
+    
+    for (auto channelPair : sourceDestChannelIndicies)
+        map.push_back (channelPair);
+    
+    return map;
 }
