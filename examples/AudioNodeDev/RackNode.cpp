@@ -11,6 +11,13 @@
 #include "RackNode.h"
 
 /**
+    Aims:
+    - Separate graph structure from processing and any model
+    - Ensure nodes can be processed multi-threaded which scales independantly of graph complexity
+    - Processing can happen in any sized block
+    - Processing in float or double
+ 
+    Notes:
     - Each node should have pointers to its inputs
     - When a node is processed, it should check its inputs to see if they have produced outputs
     - If they have, that node can be processed. If they haven't the processor can try another node
@@ -35,6 +42,14 @@ namespace utilities
             dest.copyFrom (i, 0, source, i, 0, numSamples);
     }
 
+    void copyAudioBuffer (AudioBuffer<float>& dest, const juce::dsp::AudioBlock<float>& source)
+    {
+        jassert (source.getNumSamples() == dest.getNumSamples());
+        const int numChannels = std::min (dest.getNumChannels(), (int) source.getNumChannels());
+        
+        juce::dsp::AudioBlock<float> (dest).copyFrom (source.getSubsetChannelBlock (0, numChannels));
+    }
+
     void addAudioBuffer (AudioBuffer<float>& dest, const AudioBuffer<float>& source)
     {
         jassert (source.getNumSamples() == dest.getNumSamples());
@@ -43,6 +58,14 @@ namespace utilities
 
         for (int i = 0; i < numChannels; ++i)
             dest.addFrom (i, 0, source, i, 0, numSamples);
+    }
+
+    void addAudioBuffer (AudioBuffer<float>& dest, const juce::dsp::AudioBlock<float>& source)
+    {
+        jassert (source.getNumSamples() == dest.getNumSamples());
+        const int numChannels = std::min (dest.getNumChannels(), (int) source.getNumChannels());
+        
+        juce::dsp::AudioBlock<float> (dest).add (source.getSubsetChannelBlock (0, numChannels));
     }
 
     void writeToFile (File file, const AudioBuffer<float>& buffer, double sampleRate)
@@ -93,17 +116,23 @@ public:
     void prepareForNextBlock();
     
     /** Call to process the node, which will in turn call the process method with the buffers to fill. */
-    void process();
+    void process (int numSamples);
     
     /** Returns true if this node has processed and its outputs can be retrieved. */
     bool hasProcessed() const;
     
-    /** Returns the processed audio output. Must only be called after hasProcessed returns true. */
-    AudioBuffer<float>& getProcessedAudioOutput();
+    /** Contains the buffers for a processing operation. */
+    struct ProcessContext
+    {
+        juce::dsp::AudioBlock<float> audio;
+        MidiBuffer& midi;
+    };
 
-    /** Returns the processed MIDI output. Must only be called after hasProcessed returns true. */
-    MidiBuffer& getProcessedMidiOutput();
-    
+    /** Returns the processed audio and MIDI output.
+        Must only be called after hasProcessed returns true.
+    */
+    ProcessContext getProcessedOutput();
+
     //==============================================================================
     /** Should return the properties of the node. */
     virtual AudioNodeProperties getAudioNodeProperties() = 0;
@@ -130,6 +159,7 @@ private:
     std::atomic<bool> hasBeenProcessed { false };
     AudioBuffer<float> audioBuffer;
     MidiBuffer midiBuffer;
+    int numSamplesProcessed = 0;
 };
 
 void AudioNode::initialise (const PlaybackInitialisationInfo& info)
@@ -143,7 +173,7 @@ void AudioNode::prepareForNextBlock()
     hasBeenProcessed = false;
 }
 
-void AudioNode::process()
+void AudioNode::process (int numSamples)
 {
     audioBuffer.clear();
     midiBuffer.clear();
@@ -151,7 +181,10 @@ void AudioNode::process()
     const int numSamplesBeforeProcessing = audioBuffer.getNumSamples();
     ignoreUnused (numChannelsBeforeProcessing, numSamplesBeforeProcessing);
 
-    process (audioBuffer, midiBuffer);
+    AudioBuffer<float> subSectionBuffer (audioBuffer.getArrayOfWritePointers(),
+                                         audioBuffer.getNumChannels(), 0, numSamples);
+    process (subSectionBuffer, midiBuffer);
+    numSamplesProcessed = numSamples;
     hasBeenProcessed = true;
     
     jassert (numChannelsBeforeProcessing == audioBuffer.getNumChannels());
@@ -163,24 +196,23 @@ bool AudioNode::hasProcessed() const
     return hasBeenProcessed;
 }
 
-AudioBuffer<float>& AudioNode::getProcessedAudioOutput()
+AudioNode::ProcessContext AudioNode::getProcessedOutput()
 {
     jassert (hasProcessed());
-    return audioBuffer;
-}
-
-MidiBuffer& AudioNode::getProcessedMidiOutput()
-{
-    jassert (hasProcessed());
-    return midiBuffer;
+    return { juce::dsp::AudioBlock<float> (audioBuffer).getSubBlock (0, numSamplesProcessed), midiBuffer };
 }
 
 
 //==============================================================================
 //==============================================================================
+/**
+    Simple processor for an AudioNode.
+    This simply iterate all the nodes attempting to process them in a single thread.
+*/
 class AudioNodeProcessor
 {
 public:
+    /** Creates an AudioNodeProcessor to process an AudioNode. */
     AudioNodeProcessor (std::unique_ptr<AudioNode> nodeToProcess)
         : node (std::move (nodeToProcess))
     {
@@ -190,6 +222,7 @@ public:
                           [] (auto n1, auto n2) { return n1 == n2; });
     }
 
+    /** Preapres the processor to be played. */
     void prepareToPlay (double sampleRate, int blockSize)
     {
         const PlaybackInitialisationInfo info { sampleRate, blockSize, allNodes };
@@ -201,6 +234,7 @@ public:
         }
     }
 
+    /** Processes an block of audio and MIDI data. */
     void process (AudioBuffer<float>& audio, MidiBuffer& midi)
     {
         for (auto node : allNodes)
@@ -214,14 +248,14 @@ public:
             {
                 if (! node->hasProcessed() && node->isReadyToProcess())
                 {
-                    node->process();
+                    node->process (audio.getNumSamples());
                     processedAnyNodes = true;
                 }
             }
             
             if (! processedAnyNodes)
             {
-                utilities::copyAudioBuffer (audio, node->getProcessedAudioOutput());
+                utilities::copyAudioBuffer (audio, node->getProcessedOutput().audio);
                 //TODO: MIDI
                 
                 break;
@@ -278,7 +312,7 @@ public:
     
     void process (AudioBuffer<float>& outputBuffer, MidiBuffer&) override
     {
-        auto& inputBuffer = input->getProcessedAudioOutput();
+        auto inputBuffer = input->getProcessedOutput().audio;
         jassert (fifo.getNumChannels() == inputBuffer.getNumChannels());
         fifo.write (inputBuffer);
         
@@ -369,21 +403,12 @@ public:
     
     void process (AudioBuffer<float>& dest, MidiBuffer& midi) override
     {
-        const int numSamples = dest.getNumSamples();
-
+        // Get each of the inputs and add them to dest
         for (auto& node : nodes)
         {
-            // get each of the inputs and add them to dest
-            auto& inputBuffer = node->getProcessedAudioOutput();
-            jassert (dest.getNumSamples() == inputBuffer.getNumSamples());
-            
-            const int numChannels = std::min (dest.getNumChannels(), inputBuffer.getNumChannels());
-
-            for (int i = 0; i < numChannels; ++i)
-                dest.addFrom (i, 0, inputBuffer, i, 0, numSamples);
+            utilities::addAudioBuffer (dest, node->getProcessedOutput().audio);
+            //TODO:  MIDI
         }
-        
-        //TODO:  MIDI
     }
 
 private:
@@ -501,21 +526,12 @@ public:
     
     void process (AudioBuffer<float>& dest, MidiBuffer& midi) override
     {
-        const int numSamples = dest.getNumSamples();
-
+        // Get each of the inputs and add them to dest
         for (auto& node : nodes)
         {
-            // get each of the inputs and add them to dest
-            auto& inputBuffer = node->getProcessedAudioOutput();
-            jassert (dest.getNumSamples() == inputBuffer.getNumSamples());
-            
-            const int numChannels = std::min (dest.getNumChannels(), inputBuffer.getNumChannels());
-
-            for (int i = 0; i < numChannels; ++i)
-                dest.addFrom (i, 0, inputBuffer, i, 0, numSamples);
+            utilities::addAudioBuffer (dest, node->getProcessedOutput().audio);
+            //TODO:  MIDI
         }
-        
-        //TODO:  MIDI
     }
 
 private:
@@ -571,15 +587,15 @@ public:
     
     void process (AudioBuffer<float>& outputBuffer, MidiBuffer&) override
     {
-        auto& inputBuffer = node->getProcessedAudioOutput();
+        auto inputBuffer = node->getProcessedOutput().audio;
         jassert (inputBuffer.getNumSamples() == outputBuffer.getNumSamples());
 
         const int numSamples = outputBuffer.getNumSamples();
-        const int numChannels = std::min (inputBuffer.getNumChannels(), outputBuffer.getNumChannels());
+        const int numChannels = std::min ((int) inputBuffer.getNumChannels(), outputBuffer.getNumChannels());
 
         for (int c = 0; c < numChannels; ++c)
         {
-            const float* inputSamples = inputBuffer.getReadPointer (c);
+            const float* inputSamples = inputBuffer.getChannelPointer ((size_t) c);
             float* outputSamples = outputBuffer.getWritePointer (c);
             
             for (int i = 0; i < numSamples; ++i)
@@ -632,8 +648,8 @@ public:
     void process (AudioBuffer<float>& outputBuffer, MidiBuffer& outputMidi) override
     {
         // Just pass out input on to our output
-        utilities::copyAudioBuffer (outputBuffer, input->getProcessedAudioOutput());
-        outputMidi.addEvents (input->getProcessedMidiOutput(), 0, outputBuffer.getNumSamples(), 0);
+        utilities::copyAudioBuffer (outputBuffer, input->getProcessedOutput().audio);
+        outputMidi.addEvents (input->getProcessedOutput().midi, 0, outputBuffer.getNumSamples(), 0);
     }
     
 private:
@@ -688,14 +704,14 @@ public:
     void process (AudioBuffer<float>& outputBuffer, MidiBuffer& outputMidi) override
     {
         // Copy the input on to our output
-        utilities::copyAudioBuffer (outputBuffer, input->getProcessedAudioOutput());
-        outputMidi.addEvents (input->getProcessedMidiOutput(), 0, outputBuffer.getNumSamples(), 0);
+        utilities::copyAudioBuffer (outputBuffer, input->getProcessedOutput().audio);
+        outputMidi.addEvents (input->getProcessedOutput().midi, 0, outputBuffer.getNumSamples(), 0);
         
         // And a copy of all the send nodes
         for (auto send : sendNodes)
         {
-            utilities::addAudioBuffer (outputBuffer, send->getProcessedAudioOutput());
-            outputMidi.addEvents (send->getProcessedMidiOutput(), 0, outputBuffer.getNumSamples(), 0);
+            utilities::addAudioBuffer (outputBuffer, send->getProcessedOutput().audio);
+            outputMidi.addEvents (send->getProcessedOutput().midi, 0, outputBuffer.getNumSamples(), 0);
         }
     }
     
@@ -724,11 +740,14 @@ public:
     
     void runTest() override
     {
-        runSinTest();
-        runSinCancellingTest();
-        runSinOctaveTest();
-        runSendReturnTest();
-        runLatencyTests();
+        for (bool randomiseBlockSizes : { false, true })
+        {
+            runSinTest (randomiseBlockSizes);
+            runSinCancellingTest (randomiseBlockSizes);
+            runSinOctaveTest (randomiseBlockSizes);
+            runSendReturnTest (randomiseBlockSizes);
+            runLatencyTests (randomiseBlockSizes);
+        }
     }
 
 private:
@@ -738,8 +757,8 @@ private:
         AudioBuffer<float> buffer;
     };
     
-    std::unique_ptr<TestContext> createTestContext (std::unique_ptr<AudioNode> node, double sampleRate, int blockSize,
-                                                    int numChannels, double durationInSeconds)
+    std::unique_ptr<TestContext> createTestContext (std::unique_ptr<AudioNode> node, const double sampleRate, const int blockSize,
+                                                    const int numChannels, const double durationInSeconds, bool randomiseBlockSizes = false)
     {
         auto context = std::make_unique<TestContext>();
         context->tempFile = std::make_unique<TemporaryFile> (".wav");
@@ -755,17 +774,21 @@ private:
             MidiBuffer midi;
             
             int numSamplesToDo = roundToInt (durationInSeconds * sampleRate);
+            Random r;
             
             for (;;)
             {
-                const int numThisTime = std::min (blockSize, numSamplesToDo);
-                
+                const int numThisTime = randomiseBlockSizes ? std::min (r.nextInt ({ 1, blockSize }), numSamplesToDo)
+                                                            : std::min (blockSize, numSamplesToDo);
                 buffer.clear();
                 midi.clear();
                 
-                processor.process (buffer, midi);
+                AudioBuffer<float> subSectionBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
+                                                     0, numThisTime);
+
+                processor.process (subSectionBuffer, midi);
                 
-                writer->writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());
+                writer->writeFromAudioSampleBuffer (subSectionBuffer, 0, subSectionBuffer.getNumSamples());
                 
                 numSamplesToDo -= numThisTime;
                 
@@ -789,13 +812,13 @@ private:
         return {};
     }
     
-    void runSinTest()
+    void runSinTest (bool randomiseBlockSizes)
     {
         beginTest ("Sin");
         {
             auto sinNode = std::make_unique<SinAudioNode> (220.0);
             
-            auto testContext = createTestContext (std::move (sinNode), 44100.0, 512, 1, 5.0);
+            auto testContext = createTestContext (std::move (sinNode), 44100.0, 512, 1, 5.0, randomiseBlockSizes);
             auto& buffer = testContext->buffer;
             
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 1.0f, 0.001f);
@@ -803,7 +826,7 @@ private:
         }
     }
 
-    void runSinCancellingTest()
+    void runSinCancellingTest (bool randomiseBlockSizes)
     {
         beginTest ("Sin cancelling");
         {
@@ -816,7 +839,7 @@ private:
 
             auto sumNode = std::make_unique<BasicSummingAudioNode> (std::move (nodes));
             
-            auto testContext = createTestContext (std::move (sumNode), 44100.0, 512, 1, 5.0);
+            auto testContext = createTestContext (std::move (sumNode), 44100.0, 512, 1, 5.0, randomiseBlockSizes);
             auto& buffer = testContext->buffer;
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.0f, 0.001f);
@@ -824,7 +847,7 @@ private:
         }
     }
 
-    void runSinOctaveTest()
+    void runSinOctaveTest (bool randomiseBlockSizes)
     {
         beginTest ("Sin octave");
         {
@@ -835,7 +858,7 @@ private:
             auto sumNode = std::make_unique<BasicSummingAudioNode> (std::move (nodes));
             auto node = std::make_unique<FunctionAudioNode> (std::move (sumNode), [] (float s) { return s * 0.5f; });
             
-            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0);
+            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0, randomiseBlockSizes);
             auto& buffer = testContext->buffer;
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.885f, 0.001f);
@@ -843,7 +866,7 @@ private:
         }
     }
     
-    void runSendReturnTest()
+    void runSendReturnTest (bool randomiseBlockSizes)
     {
         beginTest ("Sin send/return");
         {
@@ -860,7 +883,7 @@ private:
             // Track 1 & 2 then get summed together
             auto node = makeBaicSummingAudioNode ({ track1Node.release(), track2Node.release() });
 
-            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0);
+            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0, randomiseBlockSizes);
             auto& buffer = testContext->buffer;
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 1.0f, 0.001f);
@@ -884,7 +907,7 @@ private:
             // Track 1 & 2 then get summed together
             auto node = makeBaicSummingAudioNode ({ track1Node.release(), track2Node.release() });
 
-            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0);
+            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0, randomiseBlockSizes);
             auto& buffer = testContext->buffer;
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.0f, 0.001f);
@@ -906,7 +929,7 @@ private:
             // Track 1 & 2 then get summed together
             auto node = makeBaicSummingAudioNode ({ track1Node.release(), track2Node.release() });
             
-            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0);
+            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0, randomiseBlockSizes);
             auto& buffer = testContext->buffer;
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.885f, 0.001f);
@@ -914,7 +937,7 @@ private:
         }
     }
     
-    void runLatencyTests()
+    void runLatencyTests (bool randomiseBlockSizes)
     {
         beginTest ("Basic latency test cancelling sin");
         {
@@ -936,7 +959,7 @@ private:
 
             auto sumNode = std::make_unique<BasicSummingAudioNode> (std::move (nodes));
 
-            auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, 5.0);
+            auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, 5.0, randomiseBlockSizes);
             auto& buffer = testContext->buffer;
 
             AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(),
@@ -968,7 +991,46 @@ private:
 
             auto sumNode = std::make_unique<SummingAudioNode> (std::move (nodes));
 
-            auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, 5.0);
+            auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, 5.0, randomiseBlockSizes);
+            auto& buffer = testContext->buffer;
+
+            // Start of buffer which should be silent
+            {
+                AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
+                                                  0, numLatencySamples);
+                expectWithinAbsoluteError (trimmedBuffer.getMagnitude (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
+                expectWithinAbsoluteError (trimmedBuffer.getRMSLevel (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
+            }
+
+            // Part of buffer after latency which should be all sin +-1.0
+            {
+                AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
+                                                  numLatencySamples, buffer.getNumSamples() - numLatencySamples);
+                expectWithinAbsoluteError (trimmedBuffer.getMagnitude (0, 0, trimmedBuffer.getNumSamples()), 1.0f, 0.001f);
+                expectWithinAbsoluteError (trimmedBuffer.getRMSLevel (0, 0, trimmedBuffer.getNumSamples()), 0.707f, 0.001f);
+            }
+        }
+
+        beginTest ("Basic latency test doubling sin multiple sized blocks");
+        {
+            /*  This is the same test as before, two sin waves with one delayed and latency compensated
+                but this time the processing happens in different sized blocks
+            */
+            const double sampleRate = 44100.0;
+            const double sinFrequency = sampleRate / 100.0;
+            const double numSamplesPerCycle = sampleRate / sinFrequency;
+            const int numLatencySamples = roundToInt (numSamplesPerCycle / 2.0);
+
+            std::vector<std::unique_ptr<AudioNode>> nodes;
+            nodes.push_back (makeGainNode (std::make_unique<SinAudioNode> (sinFrequency), 0.5f));
+
+            auto sinNode = makeGainNode (std::make_unique<SinAudioNode> (sinFrequency), 0.5f);
+            auto latencySinNode = std::make_unique<LatencyAudioNode> (std::move (sinNode), numLatencySamples);
+            nodes.push_back (std::move (latencySinNode));
+
+            auto sumNode = std::make_unique<SummingAudioNode> (std::move (nodes));
+
+            auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, 5.0, randomiseBlockSizes);
             auto& buffer = testContext->buffer;
 
             // Start of buffer which should be silent

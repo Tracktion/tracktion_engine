@@ -98,6 +98,26 @@ public:
         return true;
     }
 
+    bool write (juce::dsp::AudioBlock<float> block)
+    {
+        jassert (buffer.getNumChannels() <= block.getNumChannels());
+        int numSamples = (int) block.getNumSamples();
+        int start1, size1, start2, size2;
+        fifo.prepareToWrite (numSamples, start1, size1, start2, size2);
+
+        if (size1 + size2 < numSamples)
+            return false;
+
+        for (int i = buffer.getNumChannels(); --i >= 0;)
+        {
+            buffer.copyFrom (i, start1, block.getChannelPointer (i), size1);
+            buffer.copyFrom (i, start2, block.getChannelPointer (i) + size1, size2);
+        }
+
+        fifo.finishedWrite (size1 + size2);
+        return true;
+    }
+
     bool writeSilence (int numSamples)
     {
         if (numSamples <= 0)
