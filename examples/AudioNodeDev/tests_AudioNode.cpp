@@ -370,8 +370,12 @@ public:
         // And a copy of all the send nodes
         for (auto send : sendNodes)
         {
-            jassert (pc.buffers.audio.getNumChannels() == send->getProcessedOutput().audio.getNumChannels());
-            pc.buffers.audio.add (send->getProcessedOutput().audio);
+            const auto numChannelsToUse = std::min (pc.buffers.audio.getNumChannels(), send->getProcessedOutput().audio.getNumChannels());
+            
+            if (numChannelsToUse > 0)
+                pc.buffers.audio.getSubsetChannelBlock (0, numChannelsToUse)
+                    .add (send->getProcessedOutput().audio.getSubsetChannelBlock (0, numChannelsToUse));
+            
             pc.buffers.midi.addEvents (send->getProcessedOutput().midi, 0, (int) pc.buffers.audio.getNumSamples(), 0);
         }
     }
@@ -857,7 +861,43 @@ private:
             expectMidiBuffer (testContext->midi, sampleRate, extectedSequence);
         }
 
-        // Send/return MIDI
+        beginTest ("Send/return MIDI");
+        {
+            // Test that sends MIDI from one branch of a node to another and mutes the original
+            const int busNum = 1;
+            
+            auto track1 = makeAudioNode<MidiAudioNode> (sequence);
+            track1 = makeAudioNode<SendAudioNode> (std::move (track1), busNum);
+            track1 = makeAudioNode<FunctionAudioNode> (std::move (track1), [] (float) { return 0.0f; });
+
+            auto track2 = makeAudioNode<ReturnAudioNode> (makeAudioNode<SinAudioNode> (220.0), busNum);
+            
+            auto sumNode = makeSummingAudioNode ({ track1.release(), track2.release() });
+
+            auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, duration, randomiseBlockSizes);
+
+            expectGreaterThan (sequence.getNumEvents(), 0);
+            expectMidiBuffer (testContext->midi, sampleRate, sequence);
+        }
+        
+        beginTest ("Send/return MIDI passthrough");
+        {
+            // Test that sends MIDI from one branch of a node to another and mutes the return path
+            const int busNum = 1;
+            
+            auto track1 = makeAudioNode<MidiAudioNode> (sequence);
+            track1 = makeAudioNode<SendAudioNode> (std::move (track1), busNum);
+
+            auto track2 = makeAudioNode<ReturnAudioNode> (makeAudioNode<SinAudioNode> (220.0), busNum);
+            track2 = makeAudioNode<FunctionAudioNode> (std::move (track2), [] (float) { return 0.0f; });
+
+            auto sumNode = makeSummingAudioNode ({ track1.release(), track2.release() });
+
+            auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, duration, randomiseBlockSizes);
+
+            expectGreaterThan (sequence.getNumEvents(), 0);
+            expectMidiBuffer (testContext->midi, sampleRate, sequence);
+        }
     }
 };
 
