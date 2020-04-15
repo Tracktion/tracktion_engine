@@ -16,6 +16,7 @@
     - Ensure nodes can be processed multi-threaded which scales independantly of graph complexity
     - Processing can happen in any sized block
     - Processing in float or double
+    - Process calls will only ever get the number of channels to fill that they report
  
     Notes:
     - Each node should have pointers to its inputs
@@ -122,7 +123,7 @@ public:
     bool hasProcessed() const;
     
     /** Contains the buffers for a processing operation. */
-    struct ProcessContext
+    struct AudioAndMidiBuffer
     {
         juce::dsp::AudioBlock<float> audio;
         MidiBuffer& midi;
@@ -131,7 +132,7 @@ public:
     /** Returns the processed audio and MIDI output.
         Must only be called after hasProcessed returns true.
     */
-    ProcessContext getProcessedOutput();
+    AudioAndMidiBuffer getProcessedOutput();
 
     //==============================================================================
     /** Should return the properties of the node. */
@@ -150,10 +151,16 @@ public:
     */
     virtual bool isReadyToProcess() = 0;
     
+    /** Struct to describe a single iteration of a process call. */
+    struct ProcessContext
+    {
+        AudioAndMidiBuffer buffers;
+    };
+    
     /** Called when the node is to be processed.
         This should add in to the buffers available making sure not to change their size at all.
     */
-    virtual void process (AudioBuffer<float>& destAudio, MidiBuffer& destMidi) = 0;
+    virtual void process (const ProcessContext&) = 0;
 
 private:
     std::atomic<bool> hasBeenProcessed { false };
@@ -181,9 +188,8 @@ void AudioNode::process (int numSamples)
     const int numSamplesBeforeProcessing = audioBuffer.getNumSamples();
     ignoreUnused (numChannelsBeforeProcessing, numSamplesBeforeProcessing);
 
-    AudioBuffer<float> subSectionBuffer (audioBuffer.getArrayOfWritePointers(),
-                                         audioBuffer.getNumChannels(), 0, numSamples);
-    process (subSectionBuffer, midiBuffer);
+    ProcessContext pc { { juce::dsp::AudioBlock<float> (audioBuffer).getSubBlock (0, numSamples) , midiBuffer } };
+    process (pc);
     numSamplesProcessed = numSamples;
     hasBeenProcessed = true;
     
@@ -196,7 +202,7 @@ bool AudioNode::hasProcessed() const
     return hasBeenProcessed;
 }
 
-AudioNode::ProcessContext AudioNode::getProcessedOutput()
+AudioNode::AudioAndMidiBuffer AudioNode::getProcessedOutput()
 {
     jassert (hasProcessed());
     return { juce::dsp::AudioBlock<float> (audioBuffer).getSubBlock (0, numSamplesProcessed), midiBuffer };
@@ -235,7 +241,7 @@ public:
     }
 
     /** Processes an block of audio and MIDI data. */
-    void process (AudioBuffer<float>& audio, MidiBuffer& midi)
+    void process (const AudioNode::ProcessContext& pc)
     {
         for (auto node : allNodes)
             node->prepareForNextBlock();
@@ -248,14 +254,14 @@ public:
             {
                 if (! node->hasProcessed() && node->isReadyToProcess())
                 {
-                    node->process (audio.getNumSamples());
+                    node->process ((int) pc.buffers.audio.getNumSamples());
                     processedAnyNodes = true;
                 }
             }
             
             if (! processedAnyNodes)
             {
-                utilities::copyAudioBuffer (audio, node->getProcessedOutput().audio);
+                pc.buffers.audio.copyFrom (node->getProcessedOutput().audio);
                 //TODO: MIDI
                 
                 break;
@@ -310,16 +316,17 @@ public:
         jassert (fifo.getNumReady() == latencyNumSamples);
     }
     
-    void process (AudioBuffer<float>& outputBuffer, MidiBuffer&) override
+    void process (const ProcessContext& pc) override
     {
+        auto& outputBlock = pc.buffers.audio;
         auto inputBuffer = input->getProcessedOutput().audio;
         jassert (fifo.getNumChannels() == inputBuffer.getNumChannels());
         fifo.write (inputBuffer);
         
-        jassert (fifo.getNumReady() >= outputBuffer.getNumSamples());
-        jassert (inputBuffer.getNumSamples() == outputBuffer.getNumSamples());
+        jassert (fifo.getNumReady() >= outputBlock.getNumSamples());
+        jassert (inputBuffer.getNumSamples() == outputBlock.getNumSamples());
 
-        fifo.readAdding (outputBuffer, 0);
+        fifo.readAdding (outputBlock);
         
         //TODO: MIDI
     }
@@ -401,12 +408,12 @@ public:
         return true;
     }
     
-    void process (AudioBuffer<float>& dest, MidiBuffer& midi) override
+    void process (const ProcessContext& pc) override
     {
         // Get each of the inputs and add them to dest
         for (auto& node : nodes)
         {
-            utilities::addAudioBuffer (dest, node->getProcessedOutput().audio);
+            pc.buffers.audio.add (node->getProcessedOutput().audio);
             //TODO:  MIDI
         }
     }
@@ -458,10 +465,11 @@ public:
         osc.prepare ({ double (info.sampleRate), uint32 (info.blockSize), 1 });
     }
     
-    void process (AudioBuffer<float>& buffer, MidiBuffer&) override
+    void process (const ProcessContext& pc) override
     {
-        float* samples = buffer.getWritePointer (0);
-        int numSamples = buffer.getNumSamples();
+        jassert (pc.buffers.audio.getNumChannels() == getAudioNodeProperties().numberOfChannels);
+        float* samples = pc.buffers.audio.getChannelPointer (0);
+        int numSamples = (int) pc.buffers.audio.getNumSamples();
 
         for (int i = 0; i < numSamples; ++i)
             samples[i] = osc.processSample (0.0);
@@ -524,12 +532,12 @@ public:
         return true;
     }
     
-    void process (AudioBuffer<float>& dest, MidiBuffer& midi) override
+    void process (const ProcessContext& pc) override
     {
         // Get each of the inputs and add them to dest
         for (auto& node : nodes)
         {
-            utilities::addAudioBuffer (dest, node->getProcessedOutput().audio);
+            pc.buffers.audio.add (node->getProcessedOutput().audio);
             //TODO:  MIDI
         }
     }
@@ -585,18 +593,18 @@ public:
         return node->hasProcessed();
     }
     
-    void process (AudioBuffer<float>& outputBuffer, MidiBuffer&) override
+    void process (const ProcessContext& pc) override
     {
         auto inputBuffer = node->getProcessedOutput().audio;
-        jassert (inputBuffer.getNumSamples() == outputBuffer.getNumSamples());
+        jassert (inputBuffer.getNumSamples() == pc.buffers.audio.getNumSamples());
 
-        const int numSamples = outputBuffer.getNumSamples();
-        const int numChannels = std::min ((int) inputBuffer.getNumChannels(), outputBuffer.getNumChannels());
+        const int numSamples = (int) pc.buffers.audio.getNumSamples();
+        const int numChannels = std::min ((int) inputBuffer.getNumChannels(), (int) pc.buffers.audio.getNumChannels());
 
         for (int c = 0; c < numChannels; ++c)
         {
             const float* inputSamples = inputBuffer.getChannelPointer ((size_t) c);
-            float* outputSamples = outputBuffer.getWritePointer (c);
+            float* outputSamples = pc.buffers.audio.getChannelPointer ((size_t) c);
             
             for (int i = 0; i < numSamples; ++i)
                 outputSamples[i] = function (inputSamples[i]);
@@ -645,11 +653,13 @@ public:
         return input->hasProcessed();
     }
     
-    void process (AudioBuffer<float>& outputBuffer, MidiBuffer& outputMidi) override
+    void process (const ProcessContext& pc) override
     {
+        jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
+
         // Just pass out input on to our output
-        utilities::copyAudioBuffer (outputBuffer, input->getProcessedOutput().audio);
-        outputMidi.addEvents (input->getProcessedOutput().midi, 0, outputBuffer.getNumSamples(), 0);
+        pc.buffers.audio.copyFrom (input->getProcessedOutput().audio);
+        pc.buffers.midi.addEvents (input->getProcessedOutput().midi, 0, (int) pc.buffers.audio.getNumSamples(), 0);
     }
     
 private:
@@ -701,17 +711,20 @@ public:
                     sendNodes.push_back (send);
     }
     
-    void process (AudioBuffer<float>& outputBuffer, MidiBuffer& outputMidi) override
+    void process (const ProcessContext& pc) override
     {
+        jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
+        
         // Copy the input on to our output
-        utilities::copyAudioBuffer (outputBuffer, input->getProcessedOutput().audio);
-        outputMidi.addEvents (input->getProcessedOutput().midi, 0, outputBuffer.getNumSamples(), 0);
+        pc.buffers.audio.copyFrom (input->getProcessedOutput().audio);
+        pc.buffers.midi.addEvents (input->getProcessedOutput().midi, 0, (int) pc.buffers.audio.getNumSamples(), 0);
         
         // And a copy of all the send nodes
         for (auto send : sendNodes)
         {
-            utilities::addAudioBuffer (outputBuffer, send->getProcessedOutput().audio);
-            outputMidi.addEvents (send->getProcessedOutput().midi, 0, outputBuffer.getNumSamples(), 0);
+            jassert (pc.buffers.audio.getNumChannels() == send->getProcessedOutput().audio.getNumChannels());
+            pc.buffers.audio.add (send->getProcessedOutput().audio);
+            pc.buffers.midi.addEvents (send->getProcessedOutput().midi, 0, (int) pc.buffers.audio.getNumSamples(), 0);
         }
     }
     
@@ -786,7 +799,7 @@ private:
                 AudioBuffer<float> subSectionBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
                                                      0, numThisTime);
 
-                processor.process (subSectionBuffer, midi);
+                processor.process ({ { { subSectionBuffer }, midi } });
                 
                 writer->writeFromAudioSampleBuffer (subSectionBuffer, 0, subSectionBuffer.getNumSamples());
                 

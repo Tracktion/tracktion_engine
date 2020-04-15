@@ -193,6 +193,26 @@ public:
         return true;
     }
 
+    bool readAdding (const juce::dsp::AudioBlock<float>& dest)
+    {
+        jassert ((int) dest.getNumChannels() == buffer.getNumChannels());
+        const int numSamples = (int) dest.getNumSamples();
+        int start1, size1, start2, size2;
+        fifo.prepareToRead (numSamples, start1, size1, start2, size2);
+
+        if ((size1 + size2) < numSamples)
+            return false;
+
+        juce::dsp::AudioBlock<float> sourceBlock (buffer);
+        dest.add (sourceBlock.getSubBlock (start1, size1));
+
+        if (size2 > 0)
+            dest.getSubBlock (size1, size2).add (sourceBlock.getSubBlock (start2, size2));
+
+        fifo.finishedRead (size1 + size2);
+        return true;
+    }
+
 private:
     juce::AbstractFifo fifo;
     juce::AudioBuffer<float> buffer;
