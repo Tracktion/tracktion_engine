@@ -91,17 +91,36 @@ public:
     {
     }
     
+    struct TestSetup
+    {
+        double sampleRate = 44100.0;
+        int blockSize = 512;
+        bool randomiseBlockSizes = false;
+    };
+    
     void runTest() override
     {
-        for (bool randomiseBlockSizes : { false, true })
+        for (double sampleRate : { 44100.0, 48000.0, 96000.0 })
         {
-            runSinTest (randomiseBlockSizes);
-            runSinCancellingTest (randomiseBlockSizes);
-            runSinOctaveTest (randomiseBlockSizes);
-            runSendReturnTest (randomiseBlockSizes);
-            runLatencyTests (randomiseBlockSizes);
-            
-            runMidiTests (randomiseBlockSizes);
+            for (int blockSize : { 64, 256, 512, 1024 })
+            {
+                for (bool randomiseBlockSizes : { false, true })
+                {
+                    TestSetup setup { sampleRate, blockSize, randomiseBlockSizes };
+                    logMessage (String ("Test setup: sample rate SR, block size BS, random blocks RND")
+                                .replace ("SR", String (sampleRate))
+                                .replace ("BS", String (blockSize))
+                                .replace ("RND", randomiseBlockSizes ? "Y" : "N"));
+
+                    runSinTests (setup);
+                    runSinCancellingTests (setup);
+                    runSinOctaveTests (setup);
+                    runSendReturnTests (setup);
+                    runLatencyTests (setup);
+                    
+                    runMidiTests (setup);
+                }
+            }
         }
     }
 
@@ -174,13 +193,13 @@ private:
     
     //==============================================================================
     //==============================================================================
-    void runSinTest (bool randomiseBlockSizes)
+    void runSinTests (TestSetup testSetup)
     {
         beginTest ("Sin");
         {
             auto sinNode = std::make_unique<SinAudioNode> (220.0);
             
-            auto testContext = createTestContext (std::move (sinNode), 44100.0, 512, 1, 5.0, randomiseBlockSizes, getRandom());
+            auto testContext = createTestContext (std::move (sinNode), 44100.0, 512, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
             auto& buffer = testContext->buffer;
             
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 1.0f, 0.001f);
@@ -188,7 +207,7 @@ private:
         }
     }
 
-    void runSinCancellingTest (bool randomiseBlockSizes)
+    void runSinCancellingTests (TestSetup testSetup)
     {
         beginTest ("Sin cancelling");
         {
@@ -201,7 +220,7 @@ private:
 
             auto sumNode = std::make_unique<BasicSummingAudioNode> (std::move (nodes));
             
-            auto testContext = createTestContext (std::move (sumNode), 44100.0, 512, 1, 5.0, randomiseBlockSizes, getRandom());
+            auto testContext = createTestContext (std::move (sumNode), 44100.0, 512, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
             auto& buffer = testContext->buffer;
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.0f, 0.001f);
@@ -209,7 +228,7 @@ private:
         }
     }
 
-    void runSinOctaveTest (bool randomiseBlockSizes)
+    void runSinOctaveTests (TestSetup testSetup)
     {
         beginTest ("Sin octave");
         {
@@ -220,7 +239,7 @@ private:
             auto sumNode = std::make_unique<BasicSummingAudioNode> (std::move (nodes));
             auto node = std::make_unique<FunctionAudioNode> (std::move (sumNode), [] (float s) { return s * 0.5f; });
             
-            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0, randomiseBlockSizes, getRandom());
+            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
             auto& buffer = testContext->buffer;
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.885f, 0.001f);
@@ -228,7 +247,7 @@ private:
         }
     }
     
-    void runSendReturnTest (bool randomiseBlockSizes)
+    void runSendReturnTests (TestSetup testSetup)
     {
         beginTest ("Sin send/return");
         {
@@ -245,7 +264,7 @@ private:
             // Track 1 & 2 then get summed together
             auto node = makeBaicSummingAudioNode ({ track1Node.release(), track2Node.release() });
 
-            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0, randomiseBlockSizes, getRandom());
+            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
             auto& buffer = testContext->buffer;
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 1.0f, 0.001f);
@@ -269,7 +288,7 @@ private:
             // Track 1 & 2 then get summed together
             auto node = makeBaicSummingAudioNode ({ track1Node.release(), track2Node.release() });
 
-            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0, randomiseBlockSizes, getRandom());
+            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
             auto& buffer = testContext->buffer;
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.0f, 0.001f);
@@ -291,7 +310,7 @@ private:
             // Track 1 & 2 then get summed together
             auto node = makeBaicSummingAudioNode ({ track1Node.release(), track2Node.release() });
             
-            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0, randomiseBlockSizes, getRandom());
+            auto testContext = createTestContext (std::move (node), 44100.0, 512, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
             auto& buffer = testContext->buffer;
 
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.885f, 0.001f);
@@ -299,7 +318,7 @@ private:
         }
     }
     
-    void runLatencyTests (bool randomiseBlockSizes)
+    void runLatencyTests (TestSetup testSetup)
     {
         beginTest ("Basic latency test cancelling sin");
         {
@@ -321,7 +340,7 @@ private:
 
             auto sumNode = std::make_unique<BasicSummingAudioNode> (std::move (nodes));
 
-            auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, 5.0, randomiseBlockSizes, getRandom());
+            auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
             auto& buffer = testContext->buffer;
 
             AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(),
@@ -353,7 +372,7 @@ private:
 
             auto sumNode = std::make_unique<SummingAudioNode> (std::move (nodes));
 
-            auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, 5.0, randomiseBlockSizes, getRandom());
+            auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
             auto& buffer = testContext->buffer;
 
             // Start of buffer which should be silent
@@ -392,7 +411,7 @@ private:
 
             auto sumNode = std::make_unique<SummingAudioNode> (std::move (nodes));
 
-            auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, 5.0, randomiseBlockSizes, getRandom());
+            auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, 5.0, testSetup.randomiseBlockSizes, getRandom());
             auto& buffer = testContext->buffer;
 
             // Start of buffer which should be silent
@@ -435,7 +454,7 @@ private:
         return sequence;
     }
     
-    void runMidiTests (bool randomiseBlockSizes)
+    void runMidiTests (TestSetup testSetup)
     {
         const double sampleRate = 44100.0;
         const double duration = 5.0;
@@ -445,7 +464,7 @@ private:
         {
             auto node = std::make_unique<MidiAudioNode> (sequence);
             
-            auto testContext = createTestContext (std::move (node), sampleRate, 512, 1, duration, randomiseBlockSizes, getRandom());
+            auto testContext = createTestContext (std::move (node), sampleRate, 512, 1, duration, testSetup.randomiseBlockSizes, getRandom());
 
             expectGreaterThan (sequence.getNumEvents(), 0);
             test_utilities::expectMidiBuffer (*this, testContext->midi, sampleRate, sequence);
@@ -460,7 +479,7 @@ private:
             auto midiNode = std::make_unique<MidiAudioNode> (sequence);
             auto delayedNode = std::make_unique<LatencyAudioNode> (std::move (midiNode), latencyNumSamples);
 
-            auto testContext = createTestContext (std::move (delayedNode), sampleRate, 512, 1, duration, randomiseBlockSizes, getRandom());
+            auto testContext = createTestContext (std::move (delayedNode), sampleRate, 512, 1, duration, testSetup.randomiseBlockSizes, getRandom());
             
             auto extectedSequence = sequence;
             extectedSequence.addTimeToMessages (delayedTime);
@@ -482,7 +501,7 @@ private:
             auto midiNode = std::make_unique<MidiAudioNode> (sequence);
             auto summedNode = makeSummingAudioNode ({ delayedNode.release(), midiNode.release() });
 
-            auto testContext = createTestContext (std::move (summedNode), sampleRate, 512, 1, duration, randomiseBlockSizes, getRandom());
+            auto testContext = createTestContext (std::move (summedNode), sampleRate, 512, 1, duration, testSetup.randomiseBlockSizes, getRandom());
             
             auto extectedSequence = sequence;
             extectedSequence.addTimeToMessages (delayedTime);
@@ -502,7 +521,7 @@ private:
             
             auto sumNode = makeSummingAudioNode ({ track1.release(), track2.release() });
 
-            auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, duration, randomiseBlockSizes, getRandom());
+            auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, duration, testSetup.randomiseBlockSizes, getRandom());
 
             expectGreaterThan (sequence.getNumEvents(), 0);
             test_utilities::expectMidiBuffer (*this, testContext->midi, sampleRate, sequence);
@@ -521,7 +540,7 @@ private:
 
             auto sumNode = makeSummingAudioNode ({ track1.release(), track2.release() });
 
-            auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, duration, randomiseBlockSizes, getRandom());
+            auto testContext = createTestContext (std::move (sumNode), sampleRate, 512, 1, duration, testSetup.randomiseBlockSizes, getRandom());
 
             expectGreaterThan (sequence.getNumEvents(), 0);
             test_utilities::expectMidiBuffer (*this, testContext->midi, sampleRate, sequence);
