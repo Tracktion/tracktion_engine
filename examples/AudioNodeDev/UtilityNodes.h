@@ -10,6 +10,17 @@
 
 #pragma once
 
+
+//==============================================================================
+//==============================================================================
+/** Creates a node of the given type and returns it as the base AudioNode class. */
+template<typename AudioNodeType, typename... Args>
+std::unique_ptr<AudioNode> makeAudioNode (Args&&... args)
+{
+    return std::unique_ptr<AudioNode> (std::move (std::make_unique<AudioNodeType> (std::forward<Args> (args)...)));
+}
+
+
 //==============================================================================
 //==============================================================================
 class LatencyAudioNode  : public AudioNode
