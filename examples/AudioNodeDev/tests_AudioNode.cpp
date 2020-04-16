@@ -591,7 +591,7 @@ private:
 
             std::vector<std::pair<int, int>> channelMap;
             channelMap.push_back ({ 0, 1 });
-            auto rightRemapped = makeAudioNode<ChannelMappingAudioNode> (std::move (rightSin), channelMap);
+            auto rightRemapped = makeAudioNode<ChannelMappingAudioNode> (std::move (rightSin), channelMap, true);
 
             auto node = makeSummingAudioNode ({ leftSin.release(), rightRemapped.release() });
 
@@ -617,7 +617,7 @@ private:
             std::vector<std::pair<int, int>> channelMap;
             channelMap.push_back ({ 0, 0 });
             channelMap.push_back ({ 1, 0 });
-            node = makeAudioNode<ChannelMappingAudioNode> (std::move (node), channelMap);
+            node = makeAudioNode<ChannelMappingAudioNode> (std::move (node), channelMap, true);
 
             expectEquals (node->getAudioNodeProperties().numberOfChannels, 1);
 
@@ -635,12 +635,12 @@ private:
 
             auto rightNode = makeAudioNode<SinAudioNode> (220.0, 1);
             rightNode = makeAudioNode<FunctionAudioNode> (std::move (rightNode), [] (float s) { return s * -1.0f; });
-            rightNode = makeAudioNode<ChannelMappingAudioNode> (std::move (rightNode), makeChannelMap ({ { 0, 1 } }));
+            rightNode = makeAudioNode<ChannelMappingAudioNode> (std::move (rightNode), makeChannelMap ({ { 0, 1 } }), true);
 
             auto sumNode = makeSummingAudioNode ({ leftNode.release(), rightNode.release() });
 
             // Merge channe 1 with channel 2
-            auto node = makeAudioNode<ChannelMappingAudioNode> (std::move (sumNode), makeChannelMap ({ { 0, 0 }, { 1, 0 } }));
+            auto node = makeAudioNode<ChannelMappingAudioNode> (std::move (sumNode), makeChannelMap ({ { 0, 0 }, { 1, 0 } }), true);
 
             expectEquals (node->getAudioNodeProperties().numberOfChannels, 1);
 
@@ -656,7 +656,8 @@ private:
             // Create a single mono sin and then copy that to 6 channels
             auto node = makeAudioNode<SinAudioNode> (220.0, 1);
             node = makeAudioNode<ChannelMappingAudioNode> (std::move (node),
-                                                           makeChannelMap ({ { 0, 0 }, { 0, 1 }, { 0, 2 }, { 0, 3 }, { 0, 4 }, { 0, 5 } }));
+                                                           makeChannelMap ({ { 0, 0 }, { 0, 1 }, { 0, 2 }, { 0, 3 }, { 0, 4 }, { 0, 5 } }),
+                                                           true);
 
             expectEquals (node->getAudioNodeProperties().numberOfChannels, 6);
 

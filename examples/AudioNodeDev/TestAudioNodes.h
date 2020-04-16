@@ -405,9 +405,11 @@ class ChannelMappingAudioNode : public AudioNode
 {
 public:
     ChannelMappingAudioNode (std::unique_ptr<AudioNode> inputNode,
-                             std::vector<std::pair<int /* source channel */, int /* dest channel */>> channelMapToUse)
+                             std::vector<std::pair<int /* source channel */, int /* dest channel */>> channelMapToUse,
+                             bool passMidiThrough)
         : input (std::move (inputNode)),
-          channelMap (std::move (channelMapToUse))
+          channelMap (std::move (channelMapToUse)),
+          passMIDI (passMidiThrough)
     {
     }
         
@@ -417,6 +419,7 @@ public:
         props.hasAudio = true;
         props.hasMidi = false;
         props.numberOfChannels = 0;
+        props.latencyNumSamples = input->getAudioNodeProperties().latencyNumSamples;
 
         // Num channels is the max of destinations
         for (auto channel : channelMap)
@@ -446,7 +449,8 @@ public:
         auto inputBuffers = input->getProcessedOutput();
         
         // Pass on MIDI
-        pc.buffers.midi.addEvents (inputBuffers.midi, 0, -1, 0);
+        if (passMIDI)
+            pc.buffers.midi.addEvents (inputBuffers.midi, 0, -1, 0);
         
         // Remap audio
         auto sourceAudio = inputBuffers.audio;
@@ -462,7 +466,8 @@ public:
 
 private:
     std::unique_ptr<AudioNode> input;
-    std::vector<std::pair<int, int>> channelMap;
+    const std::vector<std::pair<int, int>> channelMap;
+    const bool passMIDI;
 };
 
 
