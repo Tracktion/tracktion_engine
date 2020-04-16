@@ -82,6 +82,8 @@ public:
         
         pc.buffers.midi.addEvents (midi, latencyNumSamples, numSamples, -latencyNumSamples);
         midi.clear (latencyNumSamples, numSamples);
+        // TODO: This will deallocate so we'll need a non-shrinking version.
+        // Maybe just a fifo with timestamped messages? If so, we'll need to make sure things don't get stuck in the fifo.
     }
     
 private:

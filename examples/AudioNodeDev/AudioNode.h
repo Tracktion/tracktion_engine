@@ -14,16 +14,33 @@
     Aims:
     - Separate graph structure from processing and any model
     - Ensure nodes can be processed multi-threaded which scales independantly of graph complexity
-    - Processing can happen in any sized block
-    - Processing in float or double
+    - Processing can happen in any sized block (up to the maximum prepared for)
     - Process calls will only ever get the number of channels to fill that they report
- 
+    - Process calls will always provide empty buffers so nodes can simply "add" in to them. (Measure performance here)
+    - Processing in float or double
+
     Notes:
     - Each node should have pointers to its inputs
     - When a node is processed, it should check its inputs to see if they have produced outputs
     - If they have, that node can be processed. If they haven't the processor can try another node
     - If one node reports latency, every other node being summed with it will need to be delayed up to the same ammount
     - The reported latency of a node is the max of all its input latencies
+ 
+    Initialisation:
+    - There really needs to be two stages for this:
+        - Stage 1 is a simple visit of all the base nodes (i.e. no send/return connections).
+          This will get a list of all the nodes in the graph
+        - Stage 2 will be the initialise call with a flat list of all the nodes.
+          Send/return nodes can use this to add inputs from the graph (e.g. based on busNum)
+          (However, at this stage, return nodes might choose to add latency nodes to balance themselves???)
+          (Maybe this should have to happen when the graph is built? That would mean latency needs to be fixed.)
+    - Now we have a fully connected graph we can do a proper DFS:
+        - This can be used to balance processing buffers between the graph by finding unconnected nodes
+        - Finding a processing order by building "stacks" of nodes starting with leafs
+    - This might look like the following steps:
+        - visitAcyclic (Visitor) [only visit nodes that it was constructed with, used to create the flat list]
+        - initialise (const PlaybackInitialisationInfo&) [used to add extra connections and balance latency etc.]
+        - visitDFS (Visitor) [used to get list of nodes to process and can be called multiple times to optomise graph etc.]
  
     Each node needs:
     - A flag to say if it has produced outputs yet
