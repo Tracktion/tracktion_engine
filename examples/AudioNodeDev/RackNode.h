@@ -11,6 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "TestAudioNodes.h"
 
 // To process a Rack we need to:
 //  1. Find all the plugins in the Rack
@@ -31,3 +32,451 @@
 //                                                  PluginAudioNode -> ChannelMappingAudioNode -^
 //     ChannelMappingAudioNode -> SummingAudioNode -^
 //  6. Quickly, all plugins should have been iterated and the summind audionodes will have balanced the latency
+
+//==============================================================================
+//==============================================================================
+struct InputProvider
+{
+    InputProvider() = default;
+    
+    void setInputs (AudioNode::AudioAndMidiBuffer newBuffers)
+    {
+        audio = newBuffers.audio;
+        midi = newBuffers.midi;
+    }
+    
+    AudioNode::AudioAndMidiBuffer getInputs()
+    {
+        return { audio, midi };
+    }
+    
+    juce::dsp::AudioBlock<float> audio;
+    MidiBuffer midi;
+};
+
+
+//==============================================================================
+//==============================================================================
+class InputAudioNode    : public AudioNode
+{
+public:
+    InputAudioNode (std::shared_ptr<InputProvider> inputProviderToUse,
+                    int numAudioChannels, bool hasMidiInput)
+        : inputProvider (std::move (inputProviderToUse)),
+          numChannels (numAudioChannels),
+          hasMidi (hasMidiInput)
+    {
+    }
+    
+    AudioNodeProperties getAudioNodeProperties() override
+    {
+        AudioNodeProperties props;
+        props.hasAudio = numChannels > 0;
+        props.hasMidi = hasMidi;
+        props.numberOfChannels = numChannels;
+        
+        return props;
+    }
+    
+    bool isReadyToProcess() override
+    {
+        return true;
+    }
+    
+    void prepareToPlay (const PlaybackInitialisationInfo&) override
+    {
+    }
+    
+    void process (const ProcessContext& pc) override
+    {
+        auto inputBuffers = inputProvider->getInputs();
+
+        if (numChannels > 0)
+        {
+            auto& inputAudioBlock = inputBuffers.audio;
+            
+            auto& outputBuffers = pc.buffers;
+            auto& audioOutputBlock = outputBuffers.audio;
+            jassert (inputAudioBlock.getNumChannels() == audioOutputBlock.getNumChannels());
+            jassert (inputAudioBlock.getNumSamples() == audioOutputBlock.getNumSamples());
+
+            audioOutputBlock.add (inputAudioBlock);
+        }
+        
+        if (hasMidi)
+            pc.buffers.midi = inputBuffers.midi;
+    }
+    
+private:
+    std::shared_ptr<InputProvider> inputProvider;
+    const int numChannels;
+    const bool hasMidi;
+};
+
+
+//==============================================================================
+//==============================================================================
+class PluginAudioNode   : public AudioNode
+{
+public:
+    PluginAudioNode (std::unique_ptr<AudioNode> inputNode,
+                     tracktion_engine::Plugin::Ptr pluginToProcess)
+        : input (std::move (inputNode)),
+          plugin (std::move (pluginToProcess))
+    {
+        jassert (input != nullptr);
+        jassert (plugin != nullptr);
+    }
+    
+    ~PluginAudioNode()
+    {
+        if (isInitialised)
+            plugin->baseClassDeinitialise();
+    }
+    
+    AudioNodeProperties getAudioNodeProperties() override
+    {
+        auto props = input->getAudioNodeProperties();
+        const auto latencyNumSamples = roundToInt (plugin->getLatencySeconds() * plugin->getSampleRate());
+        //TODO: This is happening in the wrong order as the prepare call may change the num latency samples
+
+        props.numberOfChannels = jmax (props.numberOfChannels, plugin->getNumOutputChannelsGivenInputs (props.numberOfChannels));
+        props.hasAudio = plugin->producesAudioWhenNoAudioInput();
+        props.hasMidi  = plugin->takesMidiInput();
+        props.latencyNumSamples = std::max (props.latencyNumSamples, latencyNumSamples);
+
+        return props;
+    }
+    
+    std::vector<AudioNode*> getAllInputNodes() override
+    {
+        std::vector<AudioNode*> inputNodes;
+        inputNodes.push_back (input.get());
+        
+        auto nodeInputs = input->getAllInputNodes();
+        inputNodes.insert (inputNodes.end(), nodeInputs.begin(), nodeInputs.end());
+
+        return inputNodes;
+    }
+
+    bool isReadyToProcess() override
+    {
+        return input->hasProcessed();
+    }
+    
+    void prepareToPlay (const PlaybackInitialisationInfo& info) override
+    {
+        tracktion_engine::PlayHead playHead;
+        tracktion_engine::PlaybackInitialisationInfo teInfo =
+        {
+            0.0, info.sampleRate, info.blockSize, {}, playHead
+        };
+        
+        plugin->baseClassInitialise (teInfo);
+        isInitialised = true;
+        sampleRate = info.sampleRate;
+    }
+    
+    void process (const ProcessContext& pc) override
+    {
+        auto inputBuffers = input->getProcessedOutput();
+
+        auto& inputAudioBlock = inputBuffers.audio;
+        
+        auto& outputBuffers = pc.buffers;
+        auto& audioOutputBlock = outputBuffers.audio;
+        jassert (inputAudioBlock.getNumChannels() == audioOutputBlock.getNumChannels());
+        jassert (inputAudioBlock.getNumSamples() == audioOutputBlock.getNumSamples());
+        
+        // Setup audio buffers
+        float* channels[32] = {};
+
+        for (size_t i = 0; i < inputAudioBlock.getNumChannels(); ++i)
+            channels[i] = inputAudioBlock.getChannelPointer (i);
+
+        AudioBuffer<float> inputAudioBuffer (channels,
+                                             (int) inputAudioBlock.getNumChannels(),
+                                             (int) inputAudioBlock.getNumSamples());
+
+        // Then MIDI buffers
+        midiMessageArray.clear();
+
+        for (MidiBuffer::Iterator iter (inputBuffers.midi);;)
+        {
+            MidiMessage result;
+            int samplePosition = 0;
+
+            if (! iter.getNextEvent (result, samplePosition))
+                break;
+
+            const double time = samplePosition / sampleRate;
+            midiMessageArray.addMidiMessage (std::move (result), time, tracktion_engine::MidiMessageArray::notMPE);
+        }
+
+        // Then prepare the AudioRenderContext
+        tracktion_engine::PlayHead playHead;
+        tracktion_engine::AudioRenderContext rc (playHead, {},
+                                                 &inputAudioBuffer,
+                                                 juce::AudioChannelSet::canonicalChannelSet (inputAudioBuffer.getNumChannels()),
+                                                 0, inputAudioBuffer.getNumSamples(),
+                                                 &midiMessageArray, 0.0,
+                                                 tracktion_engine::AudioRenderContext::contiguous, false);
+
+        // Process the plugin
+        plugin->applyToBufferWithAutomation (rc);
+        
+        // Then copy the buffers to the outputs
+        audioOutputBlock.add (inputAudioBlock);
+        
+        for (auto& m : midiMessageArray)
+        {
+            const int sampleNum =  sampleRate * m.getTimeStamp();
+            outputBuffers.midi.addEvent (m, sampleNum);
+        }
+    }
+    
+private:
+    std::unique_ptr<AudioNode> input;
+    tracktion_engine::Plugin::Ptr plugin;
+    bool isInitialised = false;
+    double sampleRate = 44100.0;
+    tracktion_engine::MidiMessageArray midiMessageArray;
+};
+
+
+//==============================================================================
+//==============================================================================
+/**
+    Simple processor for an AudioNode which uses an InputProvider to pass input in to the graph.
+    This simply iterate all the nodes attempting to process them in a single thread.
+*/
+class RackAudioNodeProcessor
+{
+public:
+    /** Creates an RackAudioNodeProcessor to process an AudioNode with input. */
+    RackAudioNodeProcessor (std::unique_ptr<AudioNode> nodeToProcess,
+                            std::shared_ptr<InputProvider> inputProviderToUse)
+        : node (std::move (nodeToProcess)),
+          inputProvider (inputProviderToUse)
+    {
+        auto nodes = node->getAllInputNodes();
+        nodes.push_back (node.get());
+        std::unique_copy (nodes.begin(), nodes.end(), std::back_inserter (allNodes),
+                          [] (auto n1, auto n2) { return n1 == n2; });
+    }
+
+    /** Preapres the processor to be played. */
+    void prepareToPlay (double sampleRate, int blockSize)
+    {
+        const PlaybackInitialisationInfo info { sampleRate, blockSize, allNodes };
+        
+        for (auto& node : allNodes)
+        {
+            node->initialise (info);
+            node->prepareToPlay (info);
+        }
+    }
+
+    /** Processes a block of audio and MIDI data. */
+    void process (const AudioNode::ProcessContext& pc)
+    {
+        inputProvider->setInputs (pc.buffers);
+        
+        for (auto node : allNodes)
+            node->prepareForNextBlock();
+        
+        for (;;)
+        {
+            int processedAnyNodes = false;
+            
+            for (auto node : allNodes)
+            {
+                if (! node->hasProcessed() && node->isReadyToProcess())
+                {
+                    node->process ((int) pc.buffers.audio.getNumSamples());
+                    processedAnyNodes = true;
+                }
+            }
+            
+            if (! processedAnyNodes)
+            {
+                auto output = node->getProcessedOutput();
+                pc.buffers.audio.copyFrom (output.audio);
+                pc.buffers.midi.addEvents (output.midi, 0, -1, 0);
+                
+                break;
+            }
+        }
+    }
+    
+private:
+    std::unique_ptr<AudioNode> node;
+    std::vector<AudioNode*> allNodes;
+    std::shared_ptr<InputProvider> inputProvider;
+};
+
+
+//==============================================================================
+//==============================================================================
+namespace RackNodeBuilder
+{
+    namespace te = tracktion_engine;
+
+    struct Connection
+    {
+        te::EditItemID sourceID, destID;
+    };
+
+    /** Returns a vector of connections between inputs and outputs. */
+    std::vector<Connection> getSimplifiedConnections (te::RackType& rack)
+    {
+        std::vector<Connection> connections;
+
+        for (auto c : rack.getConnections())
+            connections.push_back (Connection { c->sourceID.get(), c->destID.get() });
+
+        std::sort (connections.begin(), connections.end(),
+                   [] (auto c1, auto c2)
+                   {
+                       return (c1.sourceID.toString() + c1.destID.toString()).hash()
+                            < (c2.sourceID.toString() + c2.destID.toString()).hash();
+                   });
+        auto last = std::unique (connections.begin(), connections.end(),
+                                 [] (auto c1, auto c2) { return c1.sourceID == c2.sourceID && c1.destID == c2.destID; });
+        connections.erase (last, connections.end());
+        //TODO: This should be smarter and remove cycles
+
+        return connections;
+    }
+
+    Array<const te::RackConnection*> getConnectionsBetween (te::RackType& rack,
+                                                            te::EditItemID sourceID, te::EditItemID destID)
+    {
+        Array<const te::RackConnection*> connections;
+
+        for (auto c : rack.getConnections())
+            if (c->sourceID == sourceID && c->destID == destID)
+                connections.add (c);
+        
+        return connections;
+    }
+
+    std::unique_ptr<AudioNode> createChannelMappingNodeForConnections (std::unique_ptr<AudioNode> input,
+                                                                       const Array<const te::RackConnection*>& connections)
+    {
+        jassert (! connections.isEmpty());
+        std::vector<std::pair<int, int>> chanelMap;
+        bool passMidi = false;
+        
+        auto firstSourceID = connections.getFirst()->sourceID.get();
+        auto firstDestID = connections.getFirst()->destID.get();
+        ignoreUnused (firstSourceID, firstDestID);
+
+        for (auto c : connections)
+        {
+            jassert (c->sourceID == firstSourceID);
+            jassert (c->destID == firstDestID);
+
+            if (c->sourcePin.get() == 0 && c->destPin.get() == 0)
+                passMidi = true;
+            else
+                chanelMap.emplace_back (c->sourcePin - 1, c->destPin - 1);
+        }
+        
+        if (! chanelMap.empty() || passMidi)
+            return makeAudioNode<ChannelMappingAudioNode> (std::move (input), std::move (chanelMap), passMidi);
+        
+        return {};
+    }
+
+    //==============================================================================
+    std::unique_ptr<AudioNode> createNodeForDirectConnectionsBetween (te::RackType& rack,
+                                                                      te::EditItemID sourceID, te::EditItemID destID,
+                                                                      std::shared_ptr<InputProvider> inputProvider)
+    {
+        auto connections = getConnectionsBetween (rack, sourceID, destID);
+        
+        if (connections.isEmpty())
+            return {};
+        
+        int numChannels = 0;
+        bool hasMidi = false;
+        
+        for (auto c : connections)
+        {
+            const int sourcePin = c->sourcePin.get();
+            const int destPin = c->destPin.get();
+            
+            if (sourcePin == 0 && destPin == 0)
+                hasMidi = true;
+            else
+                numChannels = jmax (numChannels, sourcePin, destPin);
+        }
+        
+        return createChannelMappingNodeForConnections (makeAudioNode<InputAudioNode> (inputProvider, numChannels, hasMidi),
+                                                       connections);
+    }
+
+    std::unique_ptr<AudioNode> createNodeForRackInputOutputDirectConnections (te::RackType& rack, std::shared_ptr<InputProvider> inputProvider)
+    {
+        return createNodeForDirectConnectionsBetween (rack, {}, {}, inputProvider);
+    }
+
+    //==============================================================================
+    std::unique_ptr<AudioNode> createNodeForPlugin (te::RackType& rack, te::Plugin::Ptr plugin,
+                                                    std::shared_ptr<InputProvider> inputProvider)
+    {
+        std::vector<std::unique_ptr<AudioNode>> nodes;
+
+        const auto pluginID = plugin->itemID;
+        
+        // Start with any Rack inputs connected directly to this plugin
+        if (auto inputNode = createNodeForDirectConnectionsBetween (rack, {}, pluginID, inputProvider))
+            nodes.push_back (std::move (inputNode));
+        
+        // Then find any connections between plugins and this plugin
+        for (auto c : getSimplifiedConnections (rack))
+        {
+            if (c.destID != pluginID)
+                continue;
+
+            if (auto plugin = rack.getPluginForID (c.sourceID))
+            {
+                auto pluginNode = createNodeForPlugin (rack, *plugin, inputProvider);
+                auto mappedNode = createChannelMappingNodeForConnections (std::move (pluginNode),
+                                                                          getConnectionsBetween (rack, c.sourceID, pluginID));
+                nodes.push_back (std::move (mappedNode));
+            }
+        }
+
+        return makeAudioNode<PluginAudioNode> (makeAudioNode<SummingAudioNode> (std::move (nodes)), *plugin);
+    }
+
+    std::unique_ptr<AudioNode> createRackAudioNode (te::RackType& rack, std::shared_ptr<InputProvider> inputProvider)
+    {
+        std::vector<std::unique_ptr<AudioNode>> nodes;
+        
+        // Start with any inputs connected directly to the outputs
+        if (auto inputNode = createNodeForRackInputOutputDirectConnections (rack, inputProvider))
+            nodes.push_back (std::move (inputNode));
+        
+        // Then find any connections between plugins and rack output
+        for (auto c : getSimplifiedConnections (rack))
+        {
+            // Connected to a plugin's input
+            if (c.destID.isValid())
+                continue;
+
+            // Otherwise connected to the Rack output
+            if (auto plugin = rack.getPluginForID (c.sourceID))
+            {
+                auto pluginNode = createNodeForPlugin (rack, *plugin, inputProvider);
+                auto mappedNode = createChannelMappingNodeForConnections (std::move (pluginNode),
+                                                                          getConnectionsBetween (rack, c.sourceID, {}));
+                nodes.push_back (std::move (mappedNode));
+            }
+        }
+
+        return makeAudioNode<SummingAudioNode> (std::move (nodes));
+    }
+}

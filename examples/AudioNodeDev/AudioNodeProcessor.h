@@ -43,7 +43,7 @@ public:
         }
     }
 
-    /** Processes an block of audio and MIDI data. */
+    /** Processes a block of audio and MIDI data. */
     void process (const AudioNode::ProcessContext& pc)
     {
         for (auto node : allNodes)
