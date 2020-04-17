@@ -302,7 +302,7 @@ public:
         for (auto m : toSend)
         {
             auto t = m.getTimeStamp() * audioIf.parameters.sampleRate;
-            midi.addEvent (m, t);
+            midi.addEvent (m, int (t));
         }
         toSend.clear ();
     }

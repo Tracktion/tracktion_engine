@@ -127,7 +127,7 @@ public:
     // For MidiOutputDevices that aren't connected to a physical piece of hardware,
     // they should handle sending midi messages to their logical device now
     // and clear the input buffer
-    virtual bool sendMessages (PlayHead& playhead, MidiMessageArray&, EditTimeRange) { return false; }
+    virtual bool sendMessages (PlayHead&, MidiMessageArray&, EditTimeRange) { return false; }
 
 private:
     std::unique_ptr<MidiTimecodeGenerator> timecodeGenerator;
