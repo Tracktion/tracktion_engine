@@ -441,8 +441,14 @@ String MidiOutputDevice::openDevice()
             if (deviceIndex >= 0)
             {
                 outputDevice = MidiOutput::openDevice (deviceIndex);
+
+                if (outputDevice == nullptr)
+                {
+                    TRACKTION_LOG_ERROR ("Failed to open MIDI output " + getName());
+                    return TRANS("Couldn't open device");
+                }
             }
-            else
+            else if (softDevice)
             {
                #if JUCE_MAC
                 outputDevice = MidiOutput::createNewDevice (getName());
@@ -451,12 +457,10 @@ String MidiOutputDevice::openDevice()
                 jassertfalse;
                #endif
             }
-        }
-
-        if (outputDevice == nullptr)
-        {
-            TRACKTION_LOG_ERROR ("Failed to open MIDI output " + getName());
-            return TRANS("Couldn't open device");
+            else
+            {
+                outputDevice.reset();
+            }
         }
     }
 

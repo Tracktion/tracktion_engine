@@ -72,7 +72,7 @@ public:
 
     MidiProgramManager& getMidiProgramManager() const   { return engine.getMidiProgramManager(); }
 
-private:
+protected:
     //==============================================================================
     friend class MidiOutputDeviceInstance;
 
@@ -96,6 +96,7 @@ private:
     bool sendingMMC = false;
     bool sendControllerMidiClock = false;
     bool defaultMidiDevice = false;
+    bool softDevice = false;
 
     juce::BigInteger midiNotesOn, channelsUsed;
     int sustain = 0;
@@ -106,6 +107,18 @@ private:
 
     juce::String openDevice() override;
     void closeDevice() override;
+};
+
+//==============================================================================
+/** Create a software midi port on macOS. Not supported on other platforms */
+class SoftwareMidiOutputDevice  : public MidiOutputDevice
+{
+public:
+    SoftwareMidiOutputDevice (Engine& e, const juce::String& name)
+        : MidiOutputDevice (e, name, -1)
+    {
+        softDevice = true;
+    }
 };
 
 //==============================================================================
