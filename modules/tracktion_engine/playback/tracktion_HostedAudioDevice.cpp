@@ -292,9 +292,50 @@ public:
         audioIf.midiOutputs.removeFirstMatchingValue (this);
     }
 
+    MidiOutputDeviceInstance* createInstance (EditPlaybackContext& epc) override
+    {
+        return new HostedMidiOutputDeviceInstance (*this, epc);
+    }
+
+    void processBlock (MidiBuffer& midi)
+    {
+        for (auto m : toSend)
+        {
+            auto t = m.getTimeStamp() * audioIf.parameters.sampleRate;
+            midi.addEvent (m, t);
+        }
+        toSend.clear ();
+    }
+
+    void sendMessageNow (const MidiMessage& message) override
+    {
+        toSend.addMidiMessage (message, 0, MidiMessageArray::notMPE);
+        toSend.sortByTimestamp();
+    }
 
 private:
+    class HostedMidiOutputDeviceInstance : public MidiOutputDeviceInstance
+    {
+    public:
+        HostedMidiOutputDeviceInstance (HostedMidiOutputDevice& o, EditPlaybackContext& epc)
+            : MidiOutputDeviceInstance (o, epc), owner (o)
+        {
+        }
+
+        bool sendMessages (PlayHead& playhead, MidiMessageArray& mma, EditTimeRange streamTime) override
+        {
+            auto editTime = playhead.streamTimeToEditWindow (streamTime);
+            mma.addToTimestamps (-editTime.editRange1.getStart() - owner.getDeviceDelay());
+            owner.toSend.mergeFromAndClear (mma);
+            return true;
+        }
+
+        HostedMidiOutputDevice& owner;
+    };
+
     HostedAudioDeviceInterface& audioIf;
+
+    MidiMessageArray toSend;
 };
 //==============================================================================
 HostedAudioDeviceInterface::HostedAudioDeviceInterface (Engine& e)
@@ -346,14 +387,18 @@ void HostedAudioDeviceInterface::initialise (const Parameters& p)
 
 void HostedAudioDeviceInterface::prepareToPlay (double sampleRate, int blockSize)
 {
-    if (parameters.sampleRate != sampleRate || parameters.blockSize != blockSize)
+    int newMaxChannels = jmax (parameters.inputChannels, parameters.outputChannels);
+
+    if (parameters.sampleRate != sampleRate ||
+        parameters.blockSize != blockSize   ||
+        maxChannels != newMaxChannels)
     {
+        maxChannels = newMaxChannels;
         parameters.sampleRate = sampleRate;
         parameters.blockSize  = blockSize;
 
         if (! parameters.fixedBlockSize)
         {
-            int maxChannels = jmax (parameters.inputChannels, parameters.outputChannels);
             inputFifo.setSize (maxChannels, blockSize * 4);
             outputFifo.setSize (maxChannels, blockSize * 4);
 
@@ -375,12 +420,19 @@ void HostedAudioDeviceInterface::processBlock (AudioBuffer<float>& buffer, MidiB
             if (auto hostedInput = dynamic_cast<HostedMidiInputDevice*> (input))
                 hostedInput->processBlock (midi);
 
+        midi.clear();
+
         if (deviceType != nullptr)
             deviceType->processBlock (buffer);
+
+        for (auto output : midiOutputs)
+            if (auto hostedOutput = dynamic_cast<HostedMidiOutputDevice*> (output))
+                hostedOutput->processBlock (midi);
     }
     else
     {
         inputFifo.writeAudioAndMidi (buffer, midi);
+        midi.clear();
 
         while (inputFifo.getNumSamplesAvailable() >= parameters.blockSize)
         {
@@ -395,6 +447,12 @@ void HostedAudioDeviceInterface::processBlock (AudioBuffer<float>& buffer, MidiB
 
             if (deviceType != nullptr)
                 deviceType->processBlock (scratch.buffer);
+
+            scratchMidi.clear();
+
+            for (auto output : midiOutputs)
+                if (auto hostedOutput = dynamic_cast<HostedMidiOutputDevice*> (output))
+                    hostedOutput->processBlock (scratchMidi);
 
             outputFifo.writeAudioAndMidi (scratch.buffer, scratchMidi);
         }

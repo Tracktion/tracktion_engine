@@ -21,7 +21,7 @@ public:
     void setEnabled (bool) override;
     bool isMidi() const override                        { return true; }
 
-    MidiOutputDeviceInstance* createInstance (EditPlaybackContext&);
+    virtual MidiOutputDeviceInstance* createInstance (EditPlaybackContext&);
 
     //==============================================================================
     juce::String prepareToPlay (Edit*, double start);
@@ -76,6 +76,8 @@ private:
     //==============================================================================
     friend class MidiOutputDeviceInstance;
 
+    virtual void sendMessageNow (const juce::MidiMessage& message);
+
     void loadProps();
     void saveProps();
 
@@ -121,6 +123,11 @@ public:
     MidiOutputDevice& getMidiOutput() const noexcept     { return static_cast<MidiOutputDevice&> (owner); }
 
     MidiMessageArray& refillBuffer (PlayHead&, EditTimeRange streamTime, int blockSize);
+
+    // For MidiOutputDevices that aren't connected to a physical piece of hardware,
+    // they should handle sending midi messages to their logical device now
+    // and clear the input buffer
+    virtual bool sendMessages (PlayHead& playhead, MidiMessageArray&, EditTimeRange) { return false; }
 
 private:
     std::unique_ptr<MidiTimecodeGenerator> timecodeGenerator;

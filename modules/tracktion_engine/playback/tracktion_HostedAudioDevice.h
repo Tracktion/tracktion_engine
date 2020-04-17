@@ -87,6 +87,7 @@ private:
     juce::Array<MidiOutputDevice*> midiOutputs;
     juce::Array<MidiInputDevice*> midiInputs;
 
+    int maxChannels = 0;
     AudioMidiFifo inputFifo, outputFifo;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HostedAudioDeviceInterface)
