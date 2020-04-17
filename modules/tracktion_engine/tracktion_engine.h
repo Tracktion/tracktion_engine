@@ -542,6 +542,7 @@ namespace tracktion_engine
 #include "plugins/effects/tracktion_PitchShift.h"
 #include "plugins/effects/tracktion_Reverb.h"
 #include "plugins/effects/tracktion_SamplerPlugin.h"
+#include "plugins/effects/tracktion_ToneGenerator.h"
 
 #include "plugins/ARA/tracktion_MelodyneFileReader.h"
 

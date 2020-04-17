@@ -26,6 +26,8 @@
 
 using namespace juce;
 
+#include "model/automation/modifiers/tracktion_ModifierInternal.h"
+
 #include "plugins/tracktion_Plugin.cpp"
 #include "plugins/tracktion_PluginList.cpp"
 #include "plugins/tracktion_PluginManager.cpp"
@@ -62,6 +64,7 @@ using namespace juce;
 #include "plugins/effects/tracktion_PitchShift.cpp"
 #include "plugins/effects/tracktion_Reverb.cpp"
 #include "plugins/effects/tracktion_SamplerPlugin.cpp"
+#include "plugins/effects/tracktion_ToneGenerator.cpp"
 
 #include "plugins/ARA/tracktion_MelodyneFileReader.cpp"
 

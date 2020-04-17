@@ -625,7 +625,9 @@ namespace IDs
     DECLARE_ID (ARRANGERTRACK)
     DECLARE_ID (ARRANGERCLIP)
     DECLARE_ID (apply)
-    
+    DECLARE_ID (oscType)
+    DECLARE_ID (bandLimit)
+
     #undef DECLARE_ID
 }
 
