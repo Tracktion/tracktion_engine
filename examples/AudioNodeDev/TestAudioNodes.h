@@ -83,7 +83,7 @@ public:
     SinAudioNode (double frequency, int numChannelsToUse = 1)
         : numChannels (numChannelsToUse)
     {
-        osc.setFrequency (frequency);
+        osc.setFrequency (frequency, true);
     }
     
     AudioNodeProperties getAudioNodeProperties() override
