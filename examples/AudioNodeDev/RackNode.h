@@ -136,9 +136,9 @@ public:
     
     AudioNodeProperties getAudioNodeProperties() override
     {
+        jassert (isInitialised);
         auto props = input->getAudioNodeProperties();
-        const auto latencyNumSamples = roundToInt (plugin->getLatencySeconds() * plugin->getSampleRate());
-        //TODO: This is happening in the wrong order as the prepare call may change the num latency samples
+        const auto latencyNumSamples = roundToInt (plugin->getLatencySeconds() * sampleRate);
 
         props.numberOfChannels = jmax (props.numberOfChannels, plugin->getNumOutputChannelsGivenInputs (props.numberOfChannels));
         props.hasAudio = plugin->producesAudioWhenNoAudioInput();
@@ -148,17 +148,11 @@ public:
         return props;
     }
     
-    std::vector<AudioNode*> getAllInputNodes() override
+    std::vector<AudioNode*> getDirectInputNodes() override
     {
-        std::vector<AudioNode*> inputNodes;
-        inputNodes.push_back (input.get());
-        
-        auto nodeInputs = input->getAllInputNodes();
-        inputNodes.insert (inputNodes.end(), nodeInputs.begin(), nodeInputs.end());
-
-        return inputNodes;
+        return { input.get() };
     }
-
+    
     bool isReadyToProcess() override
     {
         return input->hasProcessed();
@@ -259,22 +253,22 @@ public:
         : node (std::move (nodeToProcess)),
           inputProvider (inputProviderToUse)
     {
-        auto nodes = node->getAllInputNodes();
-        nodes.push_back (node.get());
-        std::unique_copy (nodes.begin(), nodes.end(), std::back_inserter (allNodes),
-                          [] (auto n1, auto n2) { return n1 == n2; });
     }
 
     /** Preapres the processor to be played. */
     void prepareToPlay (double sampleRate, int blockSize)
     {
-        const PlaybackInitialisationInfo info { sampleRate, blockSize, allNodes };
+        // First, initiliase all the nodes, this will call prepareToPlay on them and also
+        // give them a chance to do things like balance latency
+        const PlaybackInitialisationInfo info { sampleRate, blockSize, *node };
+        std::function<void (AudioNode&)> visitor = [&] (AudioNode& n) { n.initialise (info); };
+        visitInputs (*node, visitor);
         
-        for (auto& node : allNodes)
-        {
-            node->initialise (info);
-            node->prepareToPlay (info);
-        }
+        // Then find all the nodes as it might have changed after initialisation
+        allNodes.clear();
+        
+        std::function<void (AudioNode&)> visitor2 = [&] (AudioNode& n) { allNodes.push_back (&n); };
+        visitInputs (*node, visitor2);
     }
 
     /** Processes a block of audio and MIDI data. */

@@ -121,6 +121,47 @@ private:
 
 //==============================================================================
 //==============================================================================
+/**
+    Just a simple audio node that doesn't take any input so can be used as a stub.
+*/
+class SilentAudioNode   : public AudioNode
+{
+public:
+    SilentAudioNode (int numChannelsToUse = 1)
+        : numChannels (numChannelsToUse)
+    {
+    }
+    
+    AudioNodeProperties getAudioNodeProperties() override
+    {
+        AudioNodeProperties props;
+        props.hasAudio = true;
+        props.hasMidi = false;
+        props.numberOfChannels = numChannels;
+        
+        return props;
+    }
+    
+    bool isReadyToProcess() override
+    {
+        return true;
+    }
+    
+    void prepareToPlay (const PlaybackInitialisationInfo&) override
+    {
+    }
+    
+    void process (const ProcessContext&) override
+    {
+    }
+    
+private:
+    const int numChannels;
+};
+
+
+//==============================================================================
+//==============================================================================
 class BasicSummingAudioNode : public AudioNode
 {
 public:
@@ -147,17 +188,12 @@ public:
         return props;
     }
     
-    std::vector<AudioNode*> getAllInputNodes() override
+    std::vector<AudioNode*> getDirectInputNodes() override
     {
         std::vector<AudioNode*> inputNodes;
         
         for (auto& node : nodes)
-        {
             inputNodes.push_back (node.get());
-            
-            auto nodeInputs = node->getAllInputNodes();
-            inputNodes.insert (inputNodes.end(), nodeInputs.begin(), nodeInputs.end());
-        }
 
         return inputNodes;
     }
@@ -225,15 +261,9 @@ public:
         return node->getAudioNodeProperties();
     }
     
-    std::vector<AudioNode*> getAllInputNodes() override
+    std::vector<AudioNode*> getDirectInputNodes() override
     {
-        std::vector<AudioNode*> inputNodes;
-        inputNodes.push_back (node.get());
-        
-        auto nodeInputs = node->getAllInputNodes();
-        inputNodes.insert (inputNodes.end(), nodeInputs.begin(), nodeInputs.end());
-
-        return inputNodes;
+        return { node.get() };
     }
 
     bool isReadyToProcess() override
@@ -291,15 +321,9 @@ public:
         return input->getAudioNodeProperties();
     }
     
-    std::vector<AudioNode*> getAllInputNodes() override
+    std::vector<AudioNode*> getDirectInputNodes() override
     {
-        std::vector<AudioNode*> inputNodes;
-        inputNodes.push_back (input.get());
-        
-        auto nodeInputs = input->getAllInputNodes();
-        inputNodes.insert (inputNodes.end(), nodeInputs.begin(), nodeInputs.end());
-
-        return inputNodes;
+        return { input.get() };
     }
 
     bool isReadyToProcess() override
@@ -337,59 +361,58 @@ public:
         return input->getAudioNodeProperties();
     }
     
-    std::vector<AudioNode*> getAllInputNodes() override
+    std::vector<AudioNode*> getDirectInputNodes() override
     {
-        std::vector<AudioNode*> inputNodes;
-        inputNodes.push_back (input.get());
-        
-        auto nodeInputs = input->getAllInputNodes();
-        inputNodes.insert (inputNodes.end(), nodeInputs.begin(), nodeInputs.end());
-
-        return inputNodes;
+        return { input.get() };
     }
 
     bool isReadyToProcess() override
     {
-        for (auto send : sendNodes)
-            if (! send->hasProcessed())
-                return false;
-        
         return input->hasProcessed();
     }
     
     void prepareToPlay (const PlaybackInitialisationInfo& info) override
     {
-        for (auto node : info.allNodes)
-            if (auto send = dynamic_cast<SendAudioNode*> (node))
-                if (send->getBusID() == busID)
-                    sendNodes.push_back (send);
+        // There isn't currently support for initialising twice as the latency nodes will get created again.
+        // We might need a different step for this
+        jassert (! hasInitialised);
+        
+        std::vector<AudioNode*> sends;
+        std::function<void (AudioNode&)> visitor = [&] (AudioNode& n)
+            {
+                if (auto send = dynamic_cast<SendAudioNode*> (&n))
+                    if (send->getBusID() == busID)
+                        sends.push_back (send);
+            };
+        visitInputs (info.rootNode, visitor);
+        
+        // Create a summing node if required
+        if (sends.size() > 0)
+        {
+            std::vector<std::unique_ptr<AudioNode>> ownedNodes;
+            ownedNodes.push_back (std::move (input));
+            
+            auto node = makeAudioNode<SummingAudioNode> (std::move (ownedNodes), std::move (sends));
+            node->initialise (info);
+            input.swap (node);
+        }
+        hasInitialised = true;
     }
     
     void process (const ProcessContext& pc) override
     {
         jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
         
-        // Copy the input on to our output
+        // Copy the input on to our output, the SumminAudioNode will copy all the sends and get all the input
         pc.buffers.audio.copyFrom (input->getProcessedOutput().audio);
         pc.buffers.midi.addEvents (input->getProcessedOutput().midi, 0, (int) pc.buffers.audio.getNumSamples(), 0);
-        
-        // And a copy of all the send nodes
-        for (auto send : sendNodes)
-        {
-            const auto numChannelsToUse = std::min (pc.buffers.audio.getNumChannels(), send->getProcessedOutput().audio.getNumChannels());
-            
-            if (numChannelsToUse > 0)
-                pc.buffers.audio.getSubsetChannelBlock (0, numChannelsToUse)
-                    .add (send->getProcessedOutput().audio.getSubsetChannelBlock (0, numChannelsToUse));
-            
-            pc.buffers.midi.addEvents (send->getProcessedOutput().midi, 0, (int) pc.buffers.audio.getNumSamples(), 0);
-        }
     }
     
 private:
     std::unique_ptr<AudioNode> input;
     std::vector<AudioNode*> sendNodes;
     const int busID;
+    bool hasInitialised = false;
 };
 
 
@@ -430,17 +453,11 @@ public:
         return props;
     }
     
-    std::vector<AudioNode*> getAllInputNodes() override
+    std::vector<AudioNode*> getDirectInputNodes() override
     {
-        std::vector<AudioNode*> inputNodes;
-        inputNodes.push_back (input.get());
-        
-        auto nodeInputs = input->getAllInputNodes();
-        inputNodes.insert (inputNodes.end(), nodeInputs.begin(), nodeInputs.end());
-
-        return inputNodes;
+        return { input.get() };
     }
-    
+
     bool isReadyToProcess() override
     {
         return input->hasProcessed();

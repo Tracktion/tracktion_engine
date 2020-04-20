@@ -27,29 +27,29 @@ class LatencyAudioNode  : public AudioNode
 {
 public:
     LatencyAudioNode (std::unique_ptr<AudioNode> inputNode, int numSamplesToDelay)
-        : input (std::move (inputNode)), latencyNumSamples (numSamplesToDelay)
+        : LatencyAudioNode (inputNode.get(), numSamplesToDelay)
+    {
+        ownedInput = std::move (inputNode);
+    }
+
+    LatencyAudioNode (AudioNode* inputNode, int numSamplesToDelay)
+        : input (inputNode), latencyNumSamples (numSamplesToDelay)
     {
     }
-    
+
     AudioNodeProperties getAudioNodeProperties() override
     {
         auto props = input->getAudioNodeProperties();
-        props.latencyNumSamples = std::max (props.latencyNumSamples, latencyNumSamples);
+        props.latencyNumSamples += latencyNumSamples;
         
         return props;
     }
     
-    std::vector<AudioNode*> getAllInputNodes() override
+    std::vector<AudioNode*> getDirectInputNodes() override
     {
-        std::vector<AudioNode*> inputNodes;
-        inputNodes.push_back (input.get());
-        
-        auto nodeInputs = input->getAllInputNodes();
-        inputNodes.insert (inputNodes.end(), nodeInputs.begin(), nodeInputs.end());
-
-        return inputNodes;
+        return { input };
     }
-    
+
     bool isReadyToProcess() override
     {
         return input->hasProcessed();
@@ -87,7 +87,8 @@ public:
     }
     
 private:
-    std::unique_ptr<AudioNode> input;
+    std::unique_ptr<AudioNode> ownedInput;
+    AudioNode* input;
     const int latencyNumSamples;
     tracktion_engine::AudioFifo fifo { 1, 32 };
     juce::MidiBuffer midi;
@@ -104,23 +105,24 @@ class SummingAudioNode : public AudioNode
 {
 public:
     SummingAudioNode (std::vector<std::unique_ptr<AudioNode>> inputs)
+        : ownedNodes (std::move (inputs))
+    {
+        for (auto& ownedNode : ownedNodes)
+            nodes.push_back (ownedNode.get());
+    }
+
+    SummingAudioNode (std::vector<AudioNode*> inputs)
         : nodes (std::move (inputs))
     {
-        const int maxLatency = getAudioNodeProperties().latencyNumSamples;
-        
-        for (auto& node : nodes)
-        {
-            const int nodeLatency = node->getAudioNodeProperties().latencyNumSamples;
-            const int latencyToAdd = maxLatency - nodeLatency;
-            
-            if (latencyToAdd == 0)
-                continue;
-            
-            std::unique_ptr<AudioNode> latencyNode = std::make_unique<LatencyAudioNode> (std::move (node), latencyToAdd);
-            node.swap (latencyNode);
-        }
     }
     
+    SummingAudioNode (std::vector<std::unique_ptr<AudioNode>> ownedInputs,
+                      std::vector<AudioNode*> referencedInputs)
+        : SummingAudioNode (std::move (ownedInputs))
+    {
+        nodes.insert (nodes.begin(), referencedInputs.begin(), referencedInputs.end());
+    }
+
     AudioNodeProperties getAudioNodeProperties() override
     {
         AudioNodeProperties props;
@@ -140,19 +142,19 @@ public:
         return props;
     }
     
-    std::vector<AudioNode*> getAllInputNodes() override
+    std::vector<AudioNode*> getDirectInputNodes() override
     {
         std::vector<AudioNode*> inputNodes;
         
         for (auto& node : nodes)
-        {
-            inputNodes.push_back (node.get());
-            
-            auto nodeInputs = node->getAllInputNodes();
-            inputNodes.insert (inputNodes.end(), nodeInputs.begin(), nodeInputs.end());
-        }
+            inputNodes.push_back (node);
 
         return inputNodes;
+    }
+
+    void prepareToPlay (const PlaybackInitialisationInfo& info) override
+    {
+        createLatencyNodes (info);
     }
 
     bool isReadyToProcess() override
@@ -184,7 +186,60 @@ public:
     }
 
 private:
-    std::vector<std::unique_ptr<AudioNode>> nodes;
+    std::vector<std::unique_ptr<AudioNode>> ownedNodes;
+    std::vector<AudioNode*> nodes;
+    
+    void createLatencyNodes (const PlaybackInitialisationInfo& info)
+    {
+        const int maxLatency = getAudioNodeProperties().latencyNumSamples;
+        std::vector<std::unique_ptr<AudioNode>> ownedNodesToAdd;
+
+        for (auto& node : nodes)
+        {
+            const int nodeLatency = node->getAudioNodeProperties().latencyNumSamples;
+            const int latencyToAdd = maxLatency - nodeLatency;
+            
+            if (latencyToAdd == 0)
+                continue;
+            
+            auto getOwnedNode = [this] (auto nodeToFind)
+            {
+                for (auto& ownedNode : ownedNodes)
+                {
+                    if (ownedNode.get() == nodeToFind)
+                    {
+                        auto nodeToReturn = std::move (ownedNode);
+                        ownedNode.reset();
+                        return nodeToReturn;
+                    }
+                }
+                
+                return std::unique_ptr<AudioNode>();
+            };
+            
+            auto ownedNode = getOwnedNode (node);
+            auto latencyNode = ownedNode != nullptr ? makeAudioNode<LatencyAudioNode> (std::move (ownedNode), latencyToAdd)
+                                                    : makeAudioNode<LatencyAudioNode> (node, latencyToAdd);
+            latencyNode->initialise (info);
+            ownedNodesToAdd.push_back (std::move (latencyNode));
+            node = nullptr;
+        }
+        
+        // Take ownership of any new nodes and also ensure they're reference in the raw array
+        for (auto& newNode : ownedNodesToAdd)
+        {
+            nodes.push_back (newNode.get());
+            ownedNodes.push_back (std::move (newNode));
+        }
+
+        nodes.erase (std::remove_if (nodes.begin(), nodes.end(),
+                                     [] (auto& n) { return n == nullptr; }),
+                     nodes.end());
+
+        ownedNodes.erase (std::remove_if (ownedNodes.begin(), ownedNodes.end(),
+                                          [] (auto& n) { return n == nullptr; }),
+                          ownedNodes.end());
+    }
 };
 
 

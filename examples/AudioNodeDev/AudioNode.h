@@ -80,7 +80,7 @@ struct PlaybackInitialisationInfo
 {
     double sampleRate;
     int blockSize;
-    const std::vector<AudioNode*>& allNodes;
+    AudioNode& rootNode;
 };
 
 /** Holds some really basic properties of a node */
@@ -126,16 +126,18 @@ public:
     AudioAndMidiBuffer getProcessedOutput();
 
     //==============================================================================
-    /** Should return the properties of the node. */
-    virtual AudioNodeProperties getAudioNodeProperties() = 0;
-
-    /** Should return all the inputs feeding in to this node. */
-    virtual std::vector<AudioNode*> getAllInputNodes() { return {}; }
+    /** Should return all the inputs directly feeding in to this node. */
+    virtual std::vector<AudioNode*> getDirectInputNodes() { return {}; }
 
     /** Called once before playback begins for each node.
         Use this to allocate buffers etc.
     */
     virtual void prepareToPlay (const PlaybackInitialisationInfo&) {}
+
+    /** Should return the properties of the node.
+        This should not be called until after initialise.
+    */
+    virtual AudioNodeProperties getAudioNodeProperties() = 0;
 
     /** Should return true when this node is ready to be processed.
         This is usually when its input's output buffers are ready.
@@ -162,8 +164,24 @@ private:
 
 
 //==============================================================================
+//==============================================================================
+/** Should call the visitInputs for any direct inputs to the node and then call
+    the visit function on this node.
+*/
+void visitInputs (AudioNode& node, std::function<void (AudioNode&)>& visit)
+{
+    for (auto n : node.getDirectInputNodes())
+        visitInputs (*n, visit);
+    
+    visit (node);
+}
+
+
+//==============================================================================
 void AudioNode::initialise (const PlaybackInitialisationInfo& info)
 {
+    prepareToPlay (info);
+    
     auto props = getAudioNodeProperties();
     audioBuffer.setSize (props.numberOfChannels, info.blockSize);
 }

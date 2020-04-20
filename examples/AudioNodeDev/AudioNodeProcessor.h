@@ -25,22 +25,22 @@ public:
     AudioNodeProcessor (std::unique_ptr<AudioNode> nodeToProcess)
         : node (std::move (nodeToProcess))
     {
-        auto nodes = node->getAllInputNodes();
-        nodes.push_back (node.get());
-        std::unique_copy (nodes.begin(), nodes.end(), std::back_inserter (allNodes),
-                          [] (auto n1, auto n2) { return n1 == n2; });
     }
 
     /** Preapres the processor to be played. */
     void prepareToPlay (double sampleRate, int blockSize)
     {
-        const PlaybackInitialisationInfo info { sampleRate, blockSize, allNodes };
+        // First, initiliase all the nodes, this will call prepareToPlay on them and also
+        // give them a chance to do things like balance latency
+        const PlaybackInitialisationInfo info { sampleRate, blockSize, *node };
+        std::function<void (AudioNode&)> visitor = [&] (AudioNode& n) { n.initialise (info); };
+        visitInputs (*node, visitor);
         
-        for (auto& node : allNodes)
-        {
-            node->initialise (info);
-            node->prepareToPlay (info);
-        }
+        // Then find all the nodes as it might have changed after initialisation
+        allNodes.clear();
+        
+        std::function<void (AudioNode&)> visitor2 = [&] (AudioNode& n) { allNodes.push_back (&n); };
+        visitInputs (*node, visitor2);
     }
 
     /** Processes a block of audio and MIDI data. */

@@ -158,9 +158,6 @@ public:
     virtual double getTailLength() const                { return 0.0; }
     virtual bool mustBePlayedLiveWhenOnAClip() const    { return false; }
     virtual bool canSidechain();
-    
-    /** Returns the sample rate the plugin has currently been initialised with. */
-    double getSampleRate() const                        { return sampleRate; }
 
     juce::StringArray getInputChannelNames();
     juce::StringArray getSidechainSourceNames (bool allowNone);
