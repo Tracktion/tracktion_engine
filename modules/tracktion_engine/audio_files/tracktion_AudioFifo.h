@@ -100,7 +100,7 @@ public:
 
     bool write (juce::dsp::AudioBlock<float> block)
     {
-        jassert (buffer.getNumChannels() <= block.getNumChannels());
+        jassert (buffer.getNumChannels() <= (int) block.getNumChannels());
         int numSamples = (int) block.getNumSamples();
         int start1, size1, start2, size2;
         fifo.prepareToWrite (numSamples, start1, size1, start2, size2);
@@ -110,8 +110,8 @@ public:
 
         for (int i = buffer.getNumChannels(); --i >= 0;)
         {
-            buffer.copyFrom (i, start1, block.getChannelPointer (i), size1);
-            buffer.copyFrom (i, start2, block.getChannelPointer (i) + size1, size2);
+            buffer.copyFrom (i, start1, block.getChannelPointer ((size_t) i), size1);
+            buffer.copyFrom (i, start2, block.getChannelPointer ((size_t) i) + size1, size2);
         }
 
         fifo.finishedWrite (size1 + size2);
@@ -204,10 +204,10 @@ public:
             return false;
 
         juce::dsp::AudioBlock<float> sourceBlock (buffer);
-        dest.add (sourceBlock.getSubBlock (start1, size1));
+        dest.add (sourceBlock.getSubBlock ((size_t) start1, (size_t) size1));
 
         if (size2 > 0)
-            dest.getSubBlock (size1, size2).add (sourceBlock.getSubBlock (start2, size2));
+            dest.getSubBlock ((size_t) size1, (size_t) size2).add (sourceBlock.getSubBlock ((size_t) start2, (size_t) size2));
 
         fifo.finishedRead (size1 + size2);
         return true;
