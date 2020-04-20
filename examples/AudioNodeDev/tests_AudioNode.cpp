@@ -420,15 +420,15 @@ private:
             const int numLatencySamples = roundToInt (numSamplesPerCycle / 2.0);
 
             std::vector<std::unique_ptr<AudioNode>> nodes;
-            nodes.push_back (makeGainNode (std::make_unique<SinAudioNode> (sinFrequency), 0.5f));
+            nodes.push_back (makeGainNode (makeAudioNode<SinAudioNode> (sinFrequency), 0.5f));
 
-            auto sinNode = makeGainNode (std::make_unique<SinAudioNode> (sinFrequency), 0.5f);
-            auto latencySinNode = std::make_unique<LatencyAudioNode> (std::move (sinNode), numLatencySamples);
+            auto sinNode = makeGainNode (makeAudioNode<SinAudioNode> (sinFrequency), 0.5f);
+            auto latencySinNode = makeAudioNode<LatencyAudioNode> (std::move (sinNode), numLatencySamples);
             nodes.push_back (std::move (latencySinNode));
 
-            auto sumNode = std::make_unique<SummingAudioNode> (std::move (nodes));
+            auto sumNode = makeAudioNode<SummingAudioNode> (std::move (nodes));
 
-            auto testContext = createBasicTestContext (std::move (sumNode), sampleRate, 512, 1, 5.0, testSetup.randomiseBlockSizes);
+            auto testContext = createBasicTestContext (std::move (sumNode), sampleRate, testSetup.blockSize, 1, 5.0, testSetup.randomiseBlockSizes);
             auto& buffer = testContext->buffer;
 
             // Start of buffer which should be silent
@@ -448,26 +448,121 @@ private:
             }
         }
 
-        beginTest ("Basic latency test doubling sin multiple sized blocks");
+        beginTest ("Send/return with latency");
         {
-            /*  This is the same test as before, two sin waves with one delayed and latency compensated
-                but this time the processing happens in different sized blocks
+            /*  This has a sin input to a latency node leading to a send.
+                The return branch also has a sin input. The latency should be compensated on the return node correctly.
             */
-            const double sampleRate = testSetup.sampleRate;
-            const double sinFrequency = sampleRate / 100.0;
-            const double numSamplesPerCycle = sampleRate / sinFrequency;
+            const double sinFrequency = testSetup.sampleRate / 100.0;
+            const double numSamplesPerCycle = testSetup.sampleRate / sinFrequency;
             const int numLatencySamples = roundToInt (numSamplesPerCycle / 2.0);
 
-            std::vector<std::unique_ptr<AudioNode>> nodes;
-            nodes.push_back (makeGainNode (std::make_unique<SinAudioNode> (sinFrequency), 0.5f));
+            auto track1 = makeAudioNode<SinAudioNode> (sinFrequency);
+            track1 = makeAudioNode<LatencyAudioNode> (std::move (track1), numLatencySamples);
+            track1 = makeGainNode (std::move (track1), 0.5f);
+            track1 = makeAudioNode<SendAudioNode> (std::move (track1), 1);
+            track1 = makeGainNode (std::move (track1), 0.0f);
 
-            auto sinNode = makeGainNode (std::make_unique<SinAudioNode> (sinFrequency), 0.5f);
-            auto latencySinNode = std::make_unique<LatencyAudioNode> (std::move (sinNode), numLatencySamples);
-            nodes.push_back (std::move (latencySinNode));
+            auto track2 = makeAudioNode<SinAudioNode> (sinFrequency);
+            track2 = makeGainNode (std::move (track2), 0.5f);
+            track2 = makeAudioNode<ReturnAudioNode> (std::move (track2), 1);
+            
+            auto node = makeSummingAudioNode ({ track1.release(), track2.release() });
 
-            auto sumNode = std::make_unique<SummingAudioNode> (std::move (nodes));
+            auto testContext = createBasicTestContext (std::move (node), testSetup.sampleRate, testSetup.blockSize, 1, 5.0, testSetup.randomiseBlockSizes);
+            auto& buffer = testContext->buffer;
 
-            auto testContext = createBasicTestContext (std::move (sumNode), sampleRate, 512, 1, 5.0, testSetup.randomiseBlockSizes);
+            // Start of buffer which should be silent
+            {
+                AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
+                                                  0, numLatencySamples);
+                expectWithinAbsoluteError (trimmedBuffer.getMagnitude (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
+                expectWithinAbsoluteError (trimmedBuffer.getRMSLevel (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
+            }
+
+            // Part of buffer after latency which should be all sin +-1.0
+            {
+                AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
+                                                  numLatencySamples, buffer.getNumSamples() - numLatencySamples);
+                expectWithinAbsoluteError (trimmedBuffer.getMagnitude (0, 0, trimmedBuffer.getNumSamples()), 1.0f, 0.001f);
+                expectWithinAbsoluteError (trimmedBuffer.getRMSLevel (0, 0, trimmedBuffer.getNumSamples()), 0.707f, 0.001f);
+            }
+        }
+
+        beginTest ("Multiple send/return with latency");
+        {
+            /*  This two tracks with sin input to a latency node leading to a send. The latency is different on each branch.
+                The latency should be compensated on the return node correctly.
+            */
+            const double sinFrequency = testSetup.sampleRate / 100.0;
+            const double numSamplesPerCycle = testSetup.sampleRate / sinFrequency;
+            const int numLatencySamples = roundToInt (numSamplesPerCycle / 2.0);
+
+            auto track1 = makeAudioNode<SinAudioNode> (sinFrequency);
+            track1 = makeAudioNode<LatencyAudioNode> (std::move (track1), numLatencySamples);
+            track1 = makeGainNode (std::move (track1), 0.5f);
+            track1 = makeAudioNode<SendAudioNode> (std::move (track1), 1);
+            track1 = makeGainNode (std::move (track1), 0.0f);
+
+            auto track2 = makeAudioNode<SinAudioNode> (sinFrequency);
+            track2 = makeAudioNode<LatencyAudioNode> (std::move (track2), numLatencySamples * 2);
+            track2 = makeGainNode (std::move (track2), 0.5f);
+            track2 = makeAudioNode<SendAudioNode> (std::move (track2), 1);
+            track2 = makeGainNode (std::move (track2), 0.0f);
+
+            auto track3 = makeAudioNode<SinAudioNode> (sinFrequency);
+            track3 = makeGainNode (std::move (track3), 0.0f);
+            track3 = makeAudioNode<ReturnAudioNode> (std::move (track3), 1);
+            
+            auto node = makeSummingAudioNode ({ track1.release(), track2.release(), track3.release() });
+
+            auto testContext = createBasicTestContext (std::move (node), testSetup.sampleRate, testSetup.blockSize, 1, 5.0, testSetup.randomiseBlockSizes);
+            auto& buffer = testContext->buffer;
+
+            // Start of buffer which should be silent
+            {
+                AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
+                                                  0, numLatencySamples);
+                expectWithinAbsoluteError (trimmedBuffer.getMagnitude (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
+                expectWithinAbsoluteError (trimmedBuffer.getRMSLevel (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
+            }
+
+            // Part of buffer after latency which should be all sin +-1.0
+            {
+                AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
+                                                  numLatencySamples, buffer.getNumSamples() - numLatencySamples);
+                expectWithinAbsoluteError (trimmedBuffer.getMagnitude (0, 0, trimmedBuffer.getNumSamples()), 1.0f, 0.001f);
+                expectWithinAbsoluteError (trimmedBuffer.getRMSLevel (0, 0, trimmedBuffer.getNumSamples()), 0.707f, 0.001f);
+            }
+        }
+        
+        beginTest ("Send, send/return with two stage latency");
+        {
+            /*  This has a sin input to a latency node leading to a another latency block and another send on a different bus.
+                There are then two other tracks that receive each of the send nodes.
+                The latency should be compensated for and the output a mag 1 sin.
+            */
+            const double sinFrequency = testSetup.sampleRate / 100.0;
+            const double numSamplesPerCycle = testSetup.sampleRate / sinFrequency;
+            const int numLatencySamples = roundToInt (numSamplesPerCycle / 2.0);
+
+            auto track1 = makeAudioNode<SinAudioNode> (sinFrequency);
+            track1 = makeAudioNode<LatencyAudioNode> (std::move (track1), numLatencySamples);
+            track1 = makeGainNode (std::move (track1), 0.5f);
+            track1 = makeAudioNode<SendAudioNode> (std::move (track1), 1);
+            track1 = makeAudioNode<LatencyAudioNode> (std::move (track1), numLatencySamples);
+            track1 = makeAudioNode<SendAudioNode> (std::move (track1), 2);
+            track1 = makeGainNode (std::move (track1), 0.0f);
+
+            auto track2 = makeAudioNode<SilentAudioNode> (1);
+            track2 = makeAudioNode<ReturnAudioNode> (std::move (track2), 1);
+
+            auto track3 = makeAudioNode<SilentAudioNode> (1);
+            track3 = makeAudioNode<ReturnAudioNode> (std::move (track3), 2);
+
+            auto node = makeSummingAudioNode ({ track1.release(), track2.release(), track3.release() });
+
+            auto testContext = createBasicTestContext (std::move (node), testSetup.sampleRate, testSetup.blockSize, 1, 5.0, testSetup.randomiseBlockSizes);
             auto& buffer = testContext->buffer;
 
             // Start of buffer which should be silent
