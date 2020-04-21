@@ -27,7 +27,7 @@ struct Edit::UndoTransactionTimer   : private juce::Timer,
         callBlocking ([&] { edit.getUndoManager().addChangeListener (this); });
     }
 
-    ~UndoTransactionTimer()
+    ~UndoTransactionTimer() override
     {
         edit.getUndoManager().removeChangeListener (this);
     }

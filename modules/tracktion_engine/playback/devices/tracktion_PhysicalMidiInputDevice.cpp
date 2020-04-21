@@ -497,7 +497,7 @@ public:
     {
     }
 
-    ~MidiEventSnifferNode()
+    ~MidiEventSnifferNode() override
     {
         releaseAudioNodeResources();
     }

@@ -77,7 +77,7 @@ public:
     Edit (Engine&, juce::ValueTree, EditRole, LoadContext*, int numUndoLevelsToStore);
 
     /** Destructor. */
-    ~Edit();
+    ~Edit() override;
 
     Engine& engine;
 
@@ -607,7 +607,7 @@ private:
 /** Deferred Edit object deleter. @see Engine::getEditDeleter() */
 struct EditDeleter  : private juce::AsyncUpdater
 {
-    ~EditDeleter();
+    ~EditDeleter() override;
 
     void deleteEdit (std::unique_ptr<Edit>);
 

@@ -16,7 +16,7 @@ class LevelMeterPlugin  : public Plugin,
 {
 public:
     LevelMeterPlugin (PluginCreationInfo);
-    ~LevelMeterPlugin();
+    ~LevelMeterPlugin() override;
 
     static juce::ValueTree create();
 

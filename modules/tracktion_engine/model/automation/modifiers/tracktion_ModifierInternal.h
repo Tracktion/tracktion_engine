@@ -52,7 +52,7 @@ namespace PredefinedWavetable
     {
         return getStepsUpSample (1.0f - phase, totalNumStages);
     }
-};
+}
 
 /** A ramp which goes between 0 and 1 over a set duration. */
 struct Ramp
@@ -109,7 +109,7 @@ struct DiscreteLabelledParameter  : public AutomatableParameter
         jassert (labels.isEmpty() || labels.size() == numStates);
     }
 
-    ~DiscreteLabelledParameter()
+    ~DiscreteLabelledParameter() override
     {
         notifyListenersOfDeletion();
     }
@@ -166,7 +166,7 @@ struct SuffixedParameter    : public AutomatableParameter
     {
     }
 
-    ~SuffixedParameter()
+    ~SuffixedParameter() override
     {
         notifyListenersOfDeletion();
     }
@@ -195,7 +195,7 @@ static inline AutomatableParameter* createDiscreteParameter (AutomatableEditItem
     p->attachToCurrentValue (val);
 
     return p;
-};
+}
 
 static inline AutomatableParameter* createSuffixedParameter (AutomatableEditItem& item, const String& paramID, const String& name,
                                                              NormalisableRange<float> valueRange, float centreVal, CachedValue<float>& val, const String& suffix)
@@ -205,6 +205,6 @@ static inline AutomatableParameter* createSuffixedParameter (AutomatableEditItem
     p->attachToCurrentValue (val);
 
     return p;
-};
+}
 
 }

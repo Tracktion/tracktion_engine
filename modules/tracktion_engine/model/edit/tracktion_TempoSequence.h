@@ -24,7 +24,7 @@ class TempoSequence  : public Selectable,
 public:
     //==============================================================================
     TempoSequence (Edit&);
-    ~TempoSequence();
+    ~TempoSequence() override;
 
     Edit& getEdit() const                           { return edit; }
 

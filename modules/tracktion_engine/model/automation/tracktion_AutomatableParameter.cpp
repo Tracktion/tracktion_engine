@@ -336,7 +336,7 @@ struct AutomatableParameter::AutomationSourceList  : private ValueTreeObjectList
             parameter.curveSource->triggerAsyncCurveUpdate();
     }
 
-    ~AutomationSourceList()
+    ~AutomationSourceList() override
     {
         freeObjects();
     }

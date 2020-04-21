@@ -31,7 +31,7 @@ struct ApplicationSettings : public PropertiesFile,
     ApplicationSettings() : PropertiesFile (getApplicationSettingsFile(), getSettingsOptions()) {}
     ~ApplicationSettings() { clearSingletonInstance(); }
 
-    JUCE_DECLARE_SINGLETON (ApplicationSettings, false);
+    JUCE_DECLARE_SINGLETON (ApplicationSettings, false)
 };
 
 PropertiesFile* getApplicationSettings()
@@ -39,7 +39,7 @@ PropertiesFile* getApplicationSettings()
     return ApplicationSettings::getInstance();
 }
 
-JUCE_IMPLEMENT_SINGLETON (ApplicationSettings);
+JUCE_IMPLEMENT_SINGLETON (ApplicationSettings)
 
 //==============================================================================
 String PropertyStorage::settingToString (SettingID setting)

@@ -16,7 +16,7 @@ class ChordTrack  : public ClipTrack
 {
 public:
     ChordTrack (Edit&, const juce::ValueTree&);
-    ~ChordTrack();
+    ~ChordTrack() override;
 
     bool isChordTrack() const override                  { return true; }
     juce::String getSelectableDescription() override    { return TRANS("Chord Track"); }

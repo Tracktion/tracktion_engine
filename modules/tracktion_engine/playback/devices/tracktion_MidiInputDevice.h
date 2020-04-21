@@ -19,7 +19,7 @@ class MidiInputDevice : public InputDevice,
 {
 public:
     MidiInputDevice (Engine&, const juce::String& type, const juce::String& name);
-    ~MidiInputDevice();
+    ~MidiInputDevice() override;
 
     void setEnabled (bool) override;
     bool isMidi() const override                    { return true; }

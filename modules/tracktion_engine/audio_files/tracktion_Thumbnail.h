@@ -18,7 +18,7 @@ public:
                         juce::AudioFormatManager& formatManager,
                         juce::AudioThumbnailCache& cacheToUse);
 
-    ~TracktionThumbnail();
+    ~TracktionThumbnail() override;
 
     void clear() override;
     void clearChannelData();

@@ -20,7 +20,7 @@ struct AsyncCaller  : public juce::AsyncUpdater
     AsyncCaller() = default;
 
     /** Destructor. */
-    ~AsyncCaller()
+    ~AsyncCaller() override
     {
         cancelPendingUpdate();
     }
@@ -48,10 +48,10 @@ struct AsyncCaller  : public juce::AsyncUpdater
 struct AsyncFunctionCaller  : private juce::AsyncUpdater
 {
     /** Creates an empty AsyncFunctionCaller. */
-    AsyncFunctionCaller() {}
+    AsyncFunctionCaller() = default;
 
     /** Destructor. */
-    ~AsyncFunctionCaller()
+    ~AsyncFunctionCaller() override
     {
         cancelPendingUpdate();
     }
@@ -125,8 +125,8 @@ private:
 class MessageThreadCallback   : private juce::AsyncUpdater
 {
 public:
-    MessageThreadCallback()                 {}
-    ~MessageThreadCallback()                { cancelPendingUpdate(); }
+    MessageThreadCallback() = default;
+    ~MessageThreadCallback() override       { cancelPendingUpdate(); }
 
     /** Returns true if the callback has completed. */
     bool hasFinished() const noexcept       { return finished.get() != 0; }

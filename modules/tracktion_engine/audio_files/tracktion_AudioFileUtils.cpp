@@ -331,7 +331,7 @@ bool AudioFileUtils::reverse (Engine& engine,
 
             for (int j = numChans; --j >= 0;)
             {
-                if (buffers[j] != 0)
+                if (buffers[j] != nullptr)
                 {
                     const int temp = buffers[j][i];
                     buffers[j][i] = buffers[j][other];

@@ -15,7 +15,7 @@ class PatchBayPlugin   : public Plugin
 {
 public:
     PatchBayPlugin (PluginCreationInfo);
-    ~PatchBayPlugin();
+    ~PatchBayPlugin() override;
 
     //==============================================================================
     struct Wire

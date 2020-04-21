@@ -18,7 +18,7 @@ class EnvelopeFollowerModifier  : public Modifier,
 public:
     //==============================================================================
     EnvelopeFollowerModifier (Edit&, const juce::ValueTree&);
-    ~EnvelopeFollowerModifier();
+    ~EnvelopeFollowerModifier() override;
 
     using Ptr    = juce::ReferenceCountedObjectPtr<EnvelopeFollowerModifier>;
     using Array = juce::ReferenceCountedArray<EnvelopeFollowerModifier>;

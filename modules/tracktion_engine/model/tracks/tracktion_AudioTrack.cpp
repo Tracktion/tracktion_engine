@@ -18,7 +18,7 @@ struct LiveMidiInjectingAudioNode  : public SingleInputAudioNode
     {
     }
 
-    ~LiveMidiInjectingAudioNode()
+    ~LiveMidiInjectingAudioNode() override
     {
         removeFromList();
     }
@@ -117,7 +117,7 @@ private:
     {
         const ScopedLock sl (liveMidiLock);
         return ! liveMidiMessages.isEmpty();
-    };
+    }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LiveMidiInjectingAudioNode)
 };
@@ -185,7 +185,7 @@ private:
 struct AudioTrack::TrackMuter : private AsyncUpdater
 {
     TrackMuter (AudioTrack& at) : owner (at)        { triggerAsyncUpdate(); }
-    ~TrackMuter()                                   { cancelPendingUpdate(); }
+    ~TrackMuter() override                          { cancelPendingUpdate(); }
 
     void handleAsyncUpdate() override
     {
@@ -209,7 +209,7 @@ struct AudioTrack::FreezeUpdater : private ValueTreeAllEventListener,
         state.addListener (this);
     }
 
-    ~FreezeUpdater()
+    ~FreezeUpdater() override
     {
         state.removeListener (this);
         cancelPendingUpdate();

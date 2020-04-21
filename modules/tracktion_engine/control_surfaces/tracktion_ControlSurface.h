@@ -39,7 +39,7 @@ class ControlSurface   : public Selectable
 {
 public:
     ControlSurface (ExternalControllerManager&);
-    virtual ~ControlSurface();
+    ~ControlSurface() override;
 
     //==============================================================================
     /*

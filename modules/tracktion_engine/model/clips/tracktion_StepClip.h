@@ -19,7 +19,7 @@ class StepClip   : public Clip,
 {
 public:
     StepClip (const juce::ValueTree&, EditItemID, ClipTrack&);
-    ~StepClip();
+    ~StepClip() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<StepClip>;
 
@@ -29,7 +29,7 @@ public:
     struct Channel  : public Selectable
     {
         Channel (StepClip&, const juce::ValueTree&);
-        ~Channel() noexcept;
+        ~Channel() noexcept override;
 
         bool operator== (const Channel&) const noexcept;
 
@@ -135,7 +135,7 @@ public:
         PatternInstance (StepClip& c, int index)
             : clip (c), patternIndex (index) {}
 
-        ~PatternInstance()
+        ~PatternInstance() override
         {
             notifyListenersOfDeletion();
         }

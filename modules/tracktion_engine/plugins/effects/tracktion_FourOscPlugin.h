@@ -164,7 +164,7 @@ class FourOscPlugin  : public Plugin,
 {
 public:
     FourOscPlugin (PluginCreationInfo);
-    ~FourOscPlugin();
+    ~FourOscPlugin() override;
 
     bool isMono() const                                 { return voiceModeValue.get() == 0; }
     bool isLegato() const                               { return voiceModeValue.get() == 1; }

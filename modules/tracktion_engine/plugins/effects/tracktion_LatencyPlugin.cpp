@@ -149,9 +149,8 @@ LatencyPlugin::~LatencyPlugin()
     notifyListenersOfDeletion();
 }
 
-void LatencyPlugin::initialise (const PlaybackInitialisationInfo& info)
+void LatencyPlugin::initialise (const PlaybackInitialisationInfo&)
 {
-    sampleRate = info.sampleRate;
     jassert (sampleRate > 0.0);
 
     const int maxDelaySamples = (int) std::ceil (5.0 * sampleRate);

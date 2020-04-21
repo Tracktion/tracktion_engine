@@ -32,7 +32,7 @@ static float triangle (float phase, float freq, double sampleRate)
         k += 2;
     }
     return float (8.0f / (float_Pi * float_Pi) * sum);
-};
+}
 
 static float sawUp (float phase, float freq, double sampleRate)
 {
@@ -44,7 +44,7 @@ static float sawUp (float phase, float freq, double sampleRate)
         k++;
     }
     return float (-2.0f / float_Pi * sum);
-};
+}
 
 static float sawDown (float phase, float freq, double sampleRate)
 {
@@ -56,7 +56,7 @@ static float sawDown (float phase, float freq, double sampleRate)
         k++;
     }
     return float (2.0f / float_Pi * sum);
-};
+}
 
 //==============================================================================
 void Oscillator::start()

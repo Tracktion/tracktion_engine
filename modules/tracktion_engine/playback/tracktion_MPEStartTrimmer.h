@@ -122,7 +122,7 @@ private:
     }
 
     static constexpr int notFound = -1;
-    static bool wasFound (int v) { return v != notFound; };
+    static bool wasFound (int v) { return v != notFound; }
 };
 
 } // namespace tracktion_engine

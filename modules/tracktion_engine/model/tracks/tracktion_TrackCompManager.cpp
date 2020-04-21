@@ -529,7 +529,7 @@ struct TrackCompManager::TrackCompList   : public ValueTreeObjectList<TrackComp>
         rebuildObjects();
     }
 
-    ~TrackCompList()
+    ~TrackCompList() override
     {
         freeObjects();
     }

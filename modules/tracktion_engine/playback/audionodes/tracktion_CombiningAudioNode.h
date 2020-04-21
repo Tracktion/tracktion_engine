@@ -23,7 +23,7 @@ class CombiningAudioNode   : public AudioNode
 {
 public:
     CombiningAudioNode();
-    ~CombiningAudioNode();
+    ~CombiningAudioNode() override;
 
     //==============================================================================
     /** Adds an input node to be played.

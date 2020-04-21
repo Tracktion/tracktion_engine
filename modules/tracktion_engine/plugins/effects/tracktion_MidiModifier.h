@@ -15,7 +15,7 @@ class MidiModifierPlugin   : public Plugin
 {
 public:
     MidiModifierPlugin (PluginCreationInfo);
-    ~MidiModifierPlugin();
+    ~MidiModifierPlugin() override;
 
     //==============================================================================
     juce::CachedValue<float> semitonesValue;

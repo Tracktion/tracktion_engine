@@ -1160,7 +1160,7 @@ struct PluginUnloadInhibitor    : private Timer
             callback();
     }
 
-    ~PluginUnloadInhibitor()
+    ~PluginUnloadInhibitor() override
     {
         if (count > 0)
             unload();

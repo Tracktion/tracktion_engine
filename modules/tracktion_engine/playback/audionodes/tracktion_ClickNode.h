@@ -16,7 +16,7 @@ class ClickNode  : public AudioNode
 {
 public:
     ClickNode (bool isMidi, Edit&, double endTime);
-    ~ClickNode();
+    ~ClickNode() override;
 
     void getAudioNodeProperties (AudioNodeProperties&) override;
     void visitNodes (const VisitorFn&) override;

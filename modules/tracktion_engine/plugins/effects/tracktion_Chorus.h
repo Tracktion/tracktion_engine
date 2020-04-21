@@ -15,7 +15,7 @@ class ChorusPlugin  : public Plugin
 {
 public:
     ChorusPlugin (PluginCreationInfo);
-    ~ChorusPlugin();
+    ~ChorusPlugin() override;
 
     //==============================================================================
     static const char* getPluginName()                  { return NEEDS_TRANS("Chorus"); }

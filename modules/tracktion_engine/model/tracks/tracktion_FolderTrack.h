@@ -16,7 +16,7 @@ class FolderTrack  : public Track
 {
 public:
     FolderTrack (Edit&, const juce::ValueTree&);
-    ~FolderTrack();
+    ~FolderTrack() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<FolderTrack>;
 

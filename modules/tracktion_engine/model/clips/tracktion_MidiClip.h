@@ -20,7 +20,7 @@ public:
     //==============================================================================
     MidiClip() = delete;
     MidiClip (const juce::ValueTree&, EditItemID, ClipTrack&);
-    ~MidiClip();
+    ~MidiClip() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<MidiClip>;
 

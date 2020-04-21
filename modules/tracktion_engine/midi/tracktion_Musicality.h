@@ -160,7 +160,7 @@ public:
 
     //==============================================================================
     PatternGenerator (Clip&, juce::ValueTree);
-    ~PatternGenerator();
+    ~PatternGenerator() override;
 
     //==============================================================================
     double getMinimumChordLength() const;
@@ -279,7 +279,7 @@ private:
     struct ProgressionList;
     std::unique_ptr<ProgressionList> progressionList;
 
-    void valueTreeChanged() override {};
+    void valueTreeChanged() override {}
     void valueTreePropertyChanged (juce::ValueTree& p, const juce::Identifier& c) override;
 
     ChordClip* getChordClipAt (double beat) const;
@@ -307,9 +307,9 @@ private:
                                public juce::AsyncUpdater
     {
         AutoUpdateManager (PatternGenerator& owner);
-        ~AutoUpdateManager();
+        ~AutoUpdateManager() override;
 
-        void valueTreeChanged() override {};
+        void valueTreeChanged() override {}
         void valueTreePropertyChanged (juce::ValueTree& p, const juce::Identifier& c) override;
 
         void handleAsyncUpdate() override;

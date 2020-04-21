@@ -26,7 +26,7 @@ struct TrackList    : public ValueTreeObjectList<Track>,
                       private juce::AsyncUpdater
 {
     TrackList (Edit& e, const juce::ValueTree& parent);
-    ~TrackList();
+    ~TrackList() override;
 
     Track* getTrackFor (const juce::ValueTree&) const;
 

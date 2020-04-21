@@ -15,7 +15,7 @@ class MidiNoteDispatcher   : private juce::HighResolutionTimer
 {
 public:
     MidiNoteDispatcher();
-    ~MidiNoteDispatcher();
+    ~MidiNoteDispatcher() override;
 
     //==============================================================================
     void setMidiDeviceList (const juce::OwnedArray<MidiOutputDeviceInstance>&);

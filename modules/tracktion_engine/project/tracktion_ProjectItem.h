@@ -67,7 +67,7 @@ public:
                  double length,
                  ProjectItemID);
 
-    ~ProjectItem();
+    ~ProjectItem() override;
 
     //==============================================================================
     juce::String getSelectableDescription() override;

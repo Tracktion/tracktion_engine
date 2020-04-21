@@ -23,7 +23,7 @@ class Clip   : public TrackItem,
 public:
     //==============================================================================
     Clip (const juce::ValueTree&, ClipTrack&, EditItemID, Type);
-    ~Clip();
+    ~Clip() override;
 
     virtual void initialise();
 

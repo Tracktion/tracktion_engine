@@ -19,7 +19,7 @@ class MarkerManager   : public juce::ChangeBroadcaster,
 {
 public:
     MarkerManager (Edit&, const juce::ValueTree&);
-    ~MarkerManager();
+    ~MarkerManager() override;
 
     int getNextUniqueID (int start = 1);
     void checkForDuplicates (MarkerClip&, bool changeOthers);

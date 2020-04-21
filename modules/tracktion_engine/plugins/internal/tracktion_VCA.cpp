@@ -20,7 +20,7 @@ public:
     {
     }
 
-    ~VcaAutomatableParameter()
+    ~VcaAutomatableParameter() override
     {
         notifyListenersOfDeletion();
     }

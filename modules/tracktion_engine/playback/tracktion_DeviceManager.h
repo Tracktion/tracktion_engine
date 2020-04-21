@@ -24,7 +24,7 @@ class DeviceManager     : public juce::ChangeBroadcaster,
 
 public:
     //==============================================================================
-    ~DeviceManager();
+    ~DeviceManager() override;
 
     void initialise (int defaultNumInputChannelsToOpen = 512,
                      int defaultNumOutputChannelsToOpen = 512);

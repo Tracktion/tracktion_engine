@@ -39,7 +39,7 @@ public:
                bool includeLibraryFiles,
                bool includeClips);
 
-    ~ExportJob();
+    ~ExportJob() override;
 
     //==============================================================================
     JobStatus runJob() override;

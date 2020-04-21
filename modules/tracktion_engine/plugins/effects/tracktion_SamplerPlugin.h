@@ -16,7 +16,7 @@ class SamplerPlugin  : public Plugin,
 {
 public:
     SamplerPlugin (PluginCreationInfo);
-    ~SamplerPlugin();
+    ~SamplerPlugin() override;
 
     //==============================================================================
     int getNumSounds() const;

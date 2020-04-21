@@ -21,7 +21,7 @@ class ExternalController  : private juce::AsyncUpdater,
 public:
     //==============================================================================
     ExternalController (Engine&, ControlSurface*);
-    ~ExternalController();
+    ~ExternalController() override;
 
     //==============================================================================
     juce::String getName() const;

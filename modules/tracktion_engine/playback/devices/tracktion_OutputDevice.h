@@ -18,7 +18,7 @@ class OutputDevice   : public Selectable
 {
 public:
     OutputDevice (Engine&, const juce::String& type, const juce::String& name);
-    ~OutputDevice();
+    ~OutputDevice() override;
 
     //==============================================================================
     virtual juce::String getName() const;

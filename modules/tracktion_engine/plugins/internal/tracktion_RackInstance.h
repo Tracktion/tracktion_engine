@@ -15,7 +15,7 @@ class RackInstance  : public Plugin
 {
 public:
     RackInstance (PluginCreationInfo);
-    ~RackInstance();
+    ~RackInstance() override;
 
     static juce::ValueTree create (RackType&);
 

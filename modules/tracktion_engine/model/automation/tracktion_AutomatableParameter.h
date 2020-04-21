@@ -21,7 +21,7 @@ public:
                           AutomatableEditItem&,
                           juce::NormalisableRange<float> valueRange);
 
-    ~AutomatableParameter();
+    ~AutomatableParameter() override;
 
     using Ptr   = juce::ReferenceCountedObjectPtr<AutomatableParameter>;
     using Array = juce::ReferenceCountedArray<AutomatableParameter>;
@@ -344,7 +344,7 @@ class AutomationDragDropTarget   : public juce::DragAndDropTarget
 {
 public:
     AutomationDragDropTarget();
-    ~AutomationDragDropTarget();
+    ~AutomationDragDropTarget() override;
 
     //==============================================================================
     virtual bool hasAnAutomatableParameter() = 0;

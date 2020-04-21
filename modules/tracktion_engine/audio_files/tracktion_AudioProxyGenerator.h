@@ -26,7 +26,7 @@ public:
     struct GeneratorJob  : public ThreadPoolJobWithProgress
     {
         GeneratorJob (const AudioFile& proxy);
-        ~GeneratorJob();
+        ~GeneratorJob() override;
 
         virtual bool render() = 0;
 

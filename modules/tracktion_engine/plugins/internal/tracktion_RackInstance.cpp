@@ -18,7 +18,7 @@ struct RackInputAutomatableParameter   : public AutomatableParameter
     {
     }
 
-    ~RackInputAutomatableParameter()
+    ~RackInputAutomatableParameter() override
     {
         notifyListenersOfDeletion();
     }
@@ -39,7 +39,7 @@ struct RackOutputAutomatableParameter   : public AutomatableParameter
     {
     }
 
-    ~RackOutputAutomatableParameter()
+    ~RackOutputAutomatableParameter() override
     {
         notifyListenersOfDeletion();
     }
@@ -60,7 +60,7 @@ struct RackWetDryAutomatableParam  : public AutomatableParameter
     {
     }
 
-    ~RackWetDryAutomatableParam()
+    ~RackWetDryAutomatableParam() override
     {
         notifyListenersOfDeletion();
     }

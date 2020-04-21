@@ -74,7 +74,7 @@ public:
 
     bool isUsingFile (const AudioFile&) const;
 
-    virtual void flushStateToValueTree() {};
+    virtual void flushStateToValueTree() {}
 
     juce::UndoManager& getUndoManager();
     AudioClipBase& getClip();
@@ -110,7 +110,7 @@ public:
 
     //==============================================================================
     ClipEffects (const juce::ValueTree&, AudioClipBase&);
-    ~ClipEffects();
+    ~ClipEffects() override;
 
     void flushStateToValueTree()
     {
@@ -233,8 +233,8 @@ public:
         virtual void renderComplete() {}
     };
 
-    void addListener (Listener* l)          { listeners.add (l); };
-    void removeListener (Listener* l)       { listeners.remove (l); };
+    void addListener (Listener* l)          { listeners.add (l); }
+    void removeListener (Listener* l)       { listeners.remove (l); }
 
     struct RenderInhibitor
     {
@@ -386,7 +386,7 @@ struct StepVolumeEffect  : public ClipEffect,
                            public Selectable
 {
     StepVolumeEffect (const juce::ValueTree&, ClipEffects&);
-    ~StepVolumeEffect();
+    ~StepVolumeEffect() override;
 
     int getMaxNumNotes();
 
@@ -515,7 +515,7 @@ struct NormaliseEffect  : public ClipEffect,
                           public Selectable
 {
     NormaliseEffect (const juce::ValueTree&, ClipEffects&);
-    ~NormaliseEffect();
+    ~NormaliseEffect() override;
 
     juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile& sourceFile, double sourceLength) override;
 
@@ -545,7 +545,7 @@ struct MakeMonoEffect : public ClipEffect,
     };
 
     MakeMonoEffect (const juce::ValueTree&, ClipEffects&);
-    ~MakeMonoEffect();
+    ~MakeMonoEffect() override;
 
     juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile&, double sourceLength) override;
 

@@ -51,7 +51,6 @@ const char* ToneGeneratorPlugin::xmlTypeName = "toneGenerator";
 void ToneGeneratorPlugin::initialise (const PlaybackInitialisationInfo& info)
 {
     scratch.setSize (1, info.blockSizeSamples);
-    sampleRate = info.sampleRate;
     auto samplesPerBlock = uint32 (info.blockSizeSamples);
 
     sine.prepare        ({ sampleRate, uint32 (samplesPerBlock), 1 });
@@ -123,7 +122,7 @@ namespace ToneGenHelpers
     inline bool oddEven (int x)
     {
         return (x % 2 == 0) ? 1 : -1;
-    };
+    }
 }
 
 void ToneGeneratorPlugin::initialiseOscilators()

@@ -20,7 +20,7 @@ class SelectionManager  : public juce::ChangeBroadcaster,
 public:
     //==============================================================================
     SelectionManager (Engine&);
-    ~SelectionManager();
+    ~SelectionManager() override;
 
     //==============================================================================
     int getNumObjectsSelected() const;

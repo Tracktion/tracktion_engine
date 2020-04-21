@@ -38,7 +38,7 @@ public:
     AudioClipBase (const juce::ValueTree&, EditItemID, Type, ClipTrack&);
 
     /** Destructor. */
-    ~AudioClipBase();
+    ~AudioClipBase() override;
 
     //==============================================================================
     void initialise() override;

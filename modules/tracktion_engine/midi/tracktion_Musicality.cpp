@@ -531,7 +531,7 @@ struct PatternGenerator::ProgressionList  : public ValueTreeObjectList<PatternGe
         rebuildObjects();
     }
 
-    ~ProgressionList()
+    ~ProgressionList() override
     {
         freeObjects();
     }

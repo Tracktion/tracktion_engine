@@ -49,7 +49,7 @@ public:
     struct ProjectItems  : public ContentType
     {
         ProjectItems();
-        ~ProjectItems();
+        ~ProjectItems() override;
 
         bool pasteIntoEdit (const EditPastingOptions&) const override;
         bool pasteIntoProject (Project&) const;
@@ -66,7 +66,7 @@ public:
     struct Clips  : public ContentType
     {
         Clips();
-        ~Clips();
+        ~Clips() override;
 
         bool pasteIntoEdit (Edit&, EditInsertPoint&, SelectionManager*) const override;
         bool pasteIntoEdit (const EditPastingOptions&) const override;
@@ -101,7 +101,7 @@ public:
     struct Tracks  : public ContentType
     {
         Tracks();
-        ~Tracks();
+        ~Tracks() override;
 
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
@@ -111,7 +111,7 @@ public:
     struct TempoChanges  : public ContentType
     {
         TempoChanges (const TempoSequence&, EditTimeRange range);
-        ~TempoChanges();
+        ~TempoChanges() override;
 
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
@@ -129,7 +129,7 @@ public:
     struct AutomationPoints  : public ContentType
     {
         AutomationPoints (const AutomationCurve&, EditTimeRange range);
-        ~AutomationPoints();
+        ~AutomationPoints() override;
 
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
@@ -142,7 +142,7 @@ public:
     struct MIDINotes  : public ContentType
     {
         MIDINotes();
-        ~MIDINotes();
+        ~MIDINotes() override;
 
         juce::Array<MidiNote*> pasteIntoClip (MidiClip&, const juce::Array<MidiNote*>& selectedNotes,
                                               double cursorPosition, const std::function<double(double)>& snapBeat) const;
@@ -154,7 +154,7 @@ public:
     struct Pitches  : public ContentType
     {
         Pitches();
-        ~Pitches();
+        ~Pitches() override;
 
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
@@ -164,7 +164,7 @@ public:
     struct TimeSigs  : public ContentType
     {
         TimeSigs();
-        ~TimeSigs();
+        ~TimeSigs() override;
 
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
@@ -174,7 +174,7 @@ public:
     struct Plugins  : public ContentType
     {
         Plugins (const Plugin::Array&);
-        ~Plugins();
+        ~Plugins() override;
 
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
@@ -184,7 +184,7 @@ public:
     struct Takes  : public ContentType
     {
         Takes (const WaveCompManager&);
-        ~Takes();
+        ~Takes() override;
 
         bool pasteIntoClip (WaveAudioClip&) const;
 
@@ -194,7 +194,7 @@ public:
     struct Modifiers  : public ContentType
     {
         Modifiers();
-        ~Modifiers();
+        ~Modifiers() override;
 
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 

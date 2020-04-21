@@ -22,7 +22,7 @@ public:
         startTimer (1000);
     }
 
-    ~DiskSpaceCheckTask()
+    ~DiskSpaceCheckTask() override
     {
         stopTimer();
         engine.getBackgroundJobs().getPool().removeJob (this, true, 10000);
@@ -209,7 +209,7 @@ public:
         getWaveInput().addInstance (this);
     }
 
-    ~WaveInputDeviceInstance()
+    ~WaveInputDeviceInstance() override
     {
         stop();
 
@@ -1132,7 +1132,7 @@ protected:
             sampleRate = owner.edit.engine.getDeviceManager().getSampleRate();
         }
 
-        ~InputAudioNode()
+        ~InputAudioNode() override
         {
             releaseAudioNodeResources();
         }
@@ -1612,7 +1612,7 @@ public:
     {
     }
 
-    ~WaveInputDeviceAudioNode()
+    ~WaveInputDeviceAudioNode() override
     {
         releaseAudioNodeResources();
     }

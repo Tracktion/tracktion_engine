@@ -15,7 +15,7 @@ class LowPassPlugin  : public Plugin
 {
 public:
     LowPassPlugin (PluginCreationInfo);
-    ~LowPassPlugin();
+    ~LowPassPlugin() override;
 
     //==============================================================================
     static const char* getPluginName()                  { return NEEDS_TRANS("Low/High-Pass Filter"); }

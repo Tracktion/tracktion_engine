@@ -18,7 +18,7 @@ class ParameterControlMappings  : public juce::ChangeBroadcaster,
 public:
     //==============================================================================
     ParameterControlMappings (Edit&);
-    ~ParameterControlMappings();
+    ~ParameterControlMappings() override;
 
     void loadFrom (const juce::ValueTree&);
     void saveTo (juce::ValueTree&);

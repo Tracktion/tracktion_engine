@@ -18,7 +18,7 @@ class MIDITrackerModifier   : public Modifier,
 public:
     //==============================================================================
     MIDITrackerModifier (Edit&, const juce::ValueTree&);
-    ~MIDITrackerModifier();
+    ~MIDITrackerModifier() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<MIDITrackerModifier>;
     using Array = juce::ReferenceCountedArray<MIDITrackerModifier>;

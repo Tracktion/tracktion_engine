@@ -19,7 +19,7 @@ public:
         : AudioIODevice ("Hosted Device", "Hosted Device"), audioIf (aif), onDestroy (onDestroy_)
     {}
 
-    ~HostedAudioDevice()
+    ~HostedAudioDevice() override
     {
         if (onDestroy)
             onDestroy (this);
@@ -106,7 +106,7 @@ public:
         : AudioIODeviceType ("Hosted Device"), audioIf (aif)
     {}
 
-    ~HostedAudioDeviceType()
+    ~HostedAudioDeviceType() override
     {
         if (audioIf.deviceType == this)
             audioIf.deviceType = nullptr;
@@ -156,7 +156,7 @@ public:
     {
     }
 
-    ~HostedMidiInputDevice()
+    ~HostedMidiInputDevice() override
     {
         audioIf.midiInputs.removeFirstMatchingValue (this);
     }

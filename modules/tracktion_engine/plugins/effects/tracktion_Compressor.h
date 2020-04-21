@@ -15,7 +15,7 @@ class CompressorPlugin : public Plugin
 {
 public:
     CompressorPlugin (PluginCreationInfo);
-    ~CompressorPlugin();
+    ~CompressorPlugin() override;
 
     //==============================================================================
     float getThreshold() const;

@@ -45,7 +45,7 @@ public:
     RenderOptions (Engine&);
     RenderOptions (const RenderOptions&, juce::UndoManager*);
     RenderOptions (Engine&, const juce::ValueTree&, juce::UndoManager*);
-    ~RenderOptions();
+    ~RenderOptions() override;
 
     RenderOptions() = delete;
     RenderOptions (const RenderOptions&) = delete;

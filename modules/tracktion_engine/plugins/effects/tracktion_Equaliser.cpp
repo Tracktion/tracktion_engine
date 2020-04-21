@@ -23,7 +23,7 @@ public:
     {
     }
 
-    ~EQAutomatableParameter()
+    ~EQAutomatableParameter() override
     {
         notifyListenersOfDeletion();
     }

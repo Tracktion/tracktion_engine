@@ -18,7 +18,7 @@ class ArrangerClip  : public Clip
 {
 public:
     ArrangerClip (const juce::ValueTree&, EditItemID, ClipTrack& targetTrack);
-    ~ArrangerClip();
+    ~ArrangerClip() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<ArrangerClip>;
 

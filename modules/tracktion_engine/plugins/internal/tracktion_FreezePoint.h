@@ -75,7 +75,7 @@ public:
     static std::unique_ptr<ScopedTrackFreezer> createTrackFreezer (const Plugin::Ptr&);
 
     FreezePointPlugin (PluginCreationInfo);
-    ~FreezePointPlugin();
+    ~FreezePointPlugin() override;
 
     static const char* getPluginName()      { return NEEDS_TRANS("Freeze Point"); }
     static juce::ValueTree create();

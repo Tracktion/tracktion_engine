@@ -45,10 +45,10 @@ struct Modifier : public AutomatableEditItem,
 
     //==============================================================================
     /** Can return an array of names represeting MIDI inputs. */
-    virtual juce::StringArray getMidiInputNames()               { return {}; };
+    virtual juce::StringArray getMidiInputNames()               { return {}; }
 
     /** Can return an array of names represeting audio inputs. */
-    virtual juce::StringArray getAudioInputNames()              { return {}; };
+    virtual juce::StringArray getAudioInputNames()              { return {}; }
 
     virtual AudioNode* createPreFXAudioNode (AudioNode* input)  { return input; }
     virtual AudioNode* createPostFXAudioNode (AudioNode* input) { return input; }
@@ -82,7 +82,7 @@ class ModifierList  : public juce::ChangeBroadcaster,
 {
 public:
     ModifierList (Edit&, const juce::ValueTree&);
-    ~ModifierList();
+    ~ModifierList() override;
 
     static bool isModifier (const juce::Identifier&);
 

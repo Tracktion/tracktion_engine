@@ -193,7 +193,7 @@ private:
             ValueTreeObjectList<EventType>::rebuildObjects();
         }
 
-        ~EventList()
+        ~EventList() override
         {
             ValueTreeObjectList<EventType>::freeObjects();
         }

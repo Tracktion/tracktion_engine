@@ -29,7 +29,7 @@ class Project  : public juce::ReferenceCountedObject,
 {
 public:
     //==============================================================================
-    ~Project();
+    ~Project() override;
 
     //==============================================================================
     /** only saves if a change has been made since last time  */

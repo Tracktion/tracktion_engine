@@ -189,7 +189,7 @@ struct MultiCPU
             return false;
         }
 
-        JUCE_DECLARE_SINGLETON_SINGLETHREADED_MINIMAL (MixerThreadPool);
+        JUCE_DECLARE_SINGLETON_SINGLETHREADED_MINIMAL (MixerThreadPool)
 
         //==============================================================================
         struct MixerThread : public Thread
@@ -200,7 +200,7 @@ struct MultiCPU
                 startThread (Thread::realtimeAudioPriority);
             }
 
-            ~MixerThread()
+            ~MixerThread() override
             {
                 stopThread (5000);
             }
@@ -231,7 +231,7 @@ struct MultiCPU
     };
 };
 
-JUCE_IMPLEMENT_SINGLETON (MultiCPU::MixerThreadPool);
+JUCE_IMPLEMENT_SINGLETON (MultiCPU::MixerThreadPool)
 
 
 

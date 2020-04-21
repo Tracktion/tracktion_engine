@@ -34,7 +34,7 @@ public:
         //==============================================================================
         using Ptr = juce::ReferenceCountedObjectPtr<Job>;
 
-        virtual ~Job();
+        ~Job() override;
 
         /** Performs the render. */
         JobStatus runJob() override;
@@ -139,7 +139,7 @@ public:
 
     //==============================================================================
     RenderManager (Engine&);
-    ~RenderManager();
+    ~RenderManager() override;
 
     /** Cleans up any remaining jobs - should be called before the manager is deleted. */
     void cleanUp();

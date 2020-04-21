@@ -61,7 +61,7 @@ public:
                    double speedRatio,
                    const juce::AudioChannelSet& channelsToUse);
 
-    ~WaveAudioNode();
+    ~WaveAudioNode() override;
 
     //==============================================================================
     void getAudioNodeProperties (AudioNodeProperties&) override;

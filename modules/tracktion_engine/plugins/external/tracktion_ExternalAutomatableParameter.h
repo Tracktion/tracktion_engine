@@ -41,7 +41,7 @@ public:
         registerAsListener();
     }
 
-    ~ExternalAutomatableParameter()
+    ~ExternalAutomatableParameter() override
     {
         CRASH_TRACER
         cancelPendingUpdate();

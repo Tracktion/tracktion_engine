@@ -17,7 +17,7 @@ class EditInputDevices  : private juce::ChangeListener,
 {
 public:
     EditInputDevices (Edit&, const juce::ValueTree& state);
-    ~EditInputDevices();
+    ~EditInputDevices() override;
 
     int getMaxNumInputs() const;
 

@@ -22,7 +22,7 @@ public:
     };
 
     InsertPlugin (PluginCreationInfo);
-    ~InsertPlugin();
+    ~InsertPlugin() override;
 
     AudioNode* createSendAudioNode (OutputDevice&);
 

@@ -36,7 +36,7 @@ public:
 
     //==============================================================================
     /** Destructor. */
-    ~EditRenderJob();
+    ~EditRenderJob() override;
 
     /** Returns the parameters in use for this job. */
     const Renderer::Parameters& getParams() const noexcept  { return params; }

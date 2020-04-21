@@ -29,7 +29,7 @@ public:
     TempoSetting (TempoSequence&, const juce::ValueTree&);
 
     /** Destructor. */
-    ~TempoSetting();
+    ~TempoSetting() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<TempoSetting>;
 

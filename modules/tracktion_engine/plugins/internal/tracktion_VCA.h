@@ -19,7 +19,7 @@ class VCAPlugin   : public Plugin
 {
 public:
     VCAPlugin (PluginCreationInfo);
-    ~VCAPlugin();
+    ~VCAPlugin() override;
 
     static juce::ValueTree create();
 

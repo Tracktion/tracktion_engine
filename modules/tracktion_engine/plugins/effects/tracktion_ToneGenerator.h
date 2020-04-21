@@ -15,7 +15,7 @@ class ToneGeneratorPlugin   : public Plugin
 {
 public:
     ToneGeneratorPlugin (PluginCreationInfo);
-    ~ToneGeneratorPlugin();
+    ~ToneGeneratorPlugin() override;
 
     //==============================================================================
     static const char* getPluginName()                  { return NEEDS_TRANS("Tone Generator"); }
@@ -55,7 +55,6 @@ private:
     //==============================================================================
     juce::AudioSampleBuffer scratch;
     std::atomic<bool> bandLimitOsc { false };
-    double sampleRate = 44100.0;
 
     juce::dsp::Oscillator<float> sine;
     juce::dsp::Oscillator<float> triangle;

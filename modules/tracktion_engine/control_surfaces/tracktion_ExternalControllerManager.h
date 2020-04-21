@@ -20,7 +20,7 @@ class ExternalControllerManager  : public juce::ChangeBroadcaster,
 {
 public:
     //==============================================================================
-    ~ExternalControllerManager();
+    ~ExternalControllerManager() override;
 
     void initialise();
     void shutdown();

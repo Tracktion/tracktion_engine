@@ -33,7 +33,7 @@ class CurveEditorPoint  : public Selectable
 public:
     CurveEditorPoint() noexcept {}
     CurveEditorPoint (int i, CurveEditor* ed)  : index (i), editor (ed) {}
-    ~CurveEditorPoint();
+    ~CurveEditorPoint() override;
 
     void selectionStatusChanged (bool isNowSelected) override;
 
@@ -57,7 +57,7 @@ class CurveEditor  : public juce::Component,
 {
 public:
     CurveEditor (Edit&, SelectionManager&);
-    ~CurveEditor();
+    ~CurveEditor() override;
 
     void paint (juce::Graphics&) override;
     bool hitTest (int x, int y) override;
@@ -129,8 +129,8 @@ protected:
     virtual void showBubbleForPointUnderMouse() = 0;
     virtual void hideBubble() = 0;
 
-    virtual void nonRealTimeDragStart() {};
-    virtual void nonRealTimeDragEnd()   {};
+    virtual void nonRealTimeDragStart() {}
+    virtual void nonRealTimeDragEnd()   {}
 
     bool isPointSelected (int idx);
     bool areAnyPointsSelected();

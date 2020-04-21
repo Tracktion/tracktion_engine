@@ -16,7 +16,7 @@ class TextPlugin   : public Plugin
 {
 public:
     TextPlugin (PluginCreationInfo);
-    ~TextPlugin();
+    ~TextPlugin() override;
 
     static const char* getPluginName()                  { return NEEDS_TRANS("Text"); }
     static juce::ValueTree create();
