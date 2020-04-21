@@ -41,10 +41,7 @@ void AudioNodeTests::runRackTests (TestSetup testSetup)
             auto rackProcessor = std::make_unique<RackAudioNodeProcessor> (std::move (rackNode), inputProvider);
                                     
             auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
-            auto& buffer = testContext->buffer;
-            
-            expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 1.0f, 0.001f);
-            expectWithinAbsoluteError (buffer.getRMSLevel (0, 0, buffer.getNumSamples()), 0.707f, 0.001f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
         }
                 
         engine.getAudioFileManager().releaseAllFiles();

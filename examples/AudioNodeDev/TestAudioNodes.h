@@ -377,6 +377,9 @@ public:
         // We might need a different step for this
         jassert (! hasInitialised);
         
+        if (hasInitialised)
+            return;
+        
         std::vector<AudioNode*> sends;
         std::function<void (AudioNode&)> visitor = [&] (AudioNode& n)
             {
@@ -396,6 +399,7 @@ public:
             node->initialise (info);
             input.swap (node);
         }
+        
         hasInitialised = true;
     }
     
@@ -430,7 +434,7 @@ class ChannelMappingAudioNode : public AudioNode
 {
 public:
     ChannelMappingAudioNode (std::unique_ptr<AudioNode> inputNode,
-                             std::vector<std::pair<int /* source channel */, int /* dest channel */>> channelMapToUse,
+                             std::vector<std::pair<int /*source channel*/, int /*dest channel*/>> channelMapToUse,
                              bool passMidiThrough)
         : input (std::move (inputNode)),
           channelMap (std::move (channelMapToUse)),

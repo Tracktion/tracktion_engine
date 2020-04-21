@@ -111,6 +111,31 @@ namespace test_utilities
     {
         expectMidiMessageSequence (ut, createMidiMessageSequence (buffer, sampleRate), seq);
     }
+
+    /** Expects a specific magnitude and RMS from an AudioBuffer's channel. */
+    static void expectAudioBuffer (juce::UnitTest& ut, const AudioBuffer<float>& buffer, int channel, float mag, float rms)
+    {
+        ut.expectWithinAbsoluteError (buffer.getMagnitude (channel, 0, buffer.getNumSamples()), mag, 0.001f);
+        ut.expectWithinAbsoluteError (buffer.getRMSLevel (channel, 0, buffer.getNumSamples()), rms, 0.001f);
+    }
+
+    /** Splits a buffer in to two and expects a specific magnitude and RMS from each half AudioBuffer. */
+    static void expectAudioBuffer (juce::UnitTest& ut, AudioBuffer<float>& buffer, int channel, int numSampleToSplitAt,
+                                   float mag1, float rms1, float mag2, float rms2)
+    {
+        {
+            AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
+                                              0, numSampleToSplitAt);
+            expectAudioBuffer (ut, trimmedBuffer, channel, mag1, rms1);
+        }
+        
+        {
+            AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(),
+                                              buffer.getNumChannels(),
+                                              numSampleToSplitAt, buffer.getNumSamples() - numSampleToSplitAt);
+            expectAudioBuffer (ut, trimmedBuffer, channel, mag2, rms2);
+        }
+    }
 }
 
 
@@ -248,10 +273,7 @@ private:
             auto sinNode = std::make_unique<SinAudioNode> (220.0);
             
             auto testContext = createBasicTestContext (std::move (sinNode), testSetup, 1, 5.0);
-            auto& buffer = testContext->buffer;
-            
-            expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 1.0f, 0.001f);
-            expectWithinAbsoluteError (buffer.getRMSLevel (0, 0, buffer.getNumSamples()), 0.707f, 0.001f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
         }
     }
 
@@ -269,10 +291,7 @@ private:
             auto sumNode = std::make_unique<BasicSummingAudioNode> (std::move (nodes));
             
             auto testContext = createBasicTestContext (std::move (sumNode), testSetup, 1, 5.0);
-            auto& buffer = testContext->buffer;
-
-            expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.0f, 0.001f);
-            expectWithinAbsoluteError (buffer.getRMSLevel (0, 0, buffer.getNumSamples()), 0.0f, 0.001f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 0.0f, 0.0f);
         }
     }
 
@@ -288,10 +307,7 @@ private:
             auto node = std::make_unique<FunctionAudioNode> (std::move (sumNode), [] (float s) { return s * 0.5f; });
             
             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, 5.0);
-            auto& buffer = testContext->buffer;
-
-            expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.885f, 0.001f);
-            expectWithinAbsoluteError (buffer.getRMSLevel (0, 0, buffer.getNumSamples()), 0.5f, 0.001f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 0.885f, 0.5f);
         }
     }
     
@@ -313,10 +329,7 @@ private:
             auto node = makeBaicSummingAudioNode ({ track1Node.release(), track2Node.release() });
 
             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, 5.0);
-            auto& buffer = testContext->buffer;
-
-            expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 1.0f, 0.001f);
-            expectWithinAbsoluteError (buffer.getRMSLevel (0, 0, buffer.getNumSamples()), 0.707f, 0.001f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
         }
 
         beginTest ("Sin send/return different bus#");
@@ -337,10 +350,7 @@ private:
             auto node = makeBaicSummingAudioNode ({ track1Node.release(), track2Node.release() });
 
             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, 5.0);
-            auto& buffer = testContext->buffer;
-
-            expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.0f, 0.001f);
-            expectWithinAbsoluteError (buffer.getRMSLevel (0, 0, buffer.getNumSamples()), 0.0f, 0.001f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 0.0f, 0.0f);
         }
         
         beginTest ("Sin send/return non-blocking");
@@ -359,10 +369,7 @@ private:
             auto node = makeBaicSummingAudioNode ({ track1Node.release(), track2Node.release() });
             
             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, 5.0);
-            auto& buffer = testContext->buffer;
-
-            expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.885f, 0.001f);
-            expectWithinAbsoluteError (buffer.getRMSLevel (0, 0, buffer.getNumSamples()), 0.5f, 0.001f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 0.885f, 0.5f);
         }
     }
     
@@ -389,14 +396,9 @@ private:
             auto sumNode = std::make_unique<BasicSummingAudioNode> (std::move (nodes));
 
             auto testContext = createBasicTestContext (std::move (sumNode), testSetup, 1, 5.0);
-            auto& buffer = testContext->buffer;
 
-            AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(),
-                                              buffer.getNumChannels(),
-                                              numLatencySamples, buffer.getNumSamples() - numLatencySamples);
-            
-            expectWithinAbsoluteError (trimmedBuffer.getMagnitude (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
-            expectWithinAbsoluteError (trimmedBuffer.getRMSLevel (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
+            // Start of buffer is +-1, after latency comp kicks in, the second half will be silent
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, numLatencySamples, 1.0f, 0.707f, 0.0f, 0.0f);
         }
         
         beginTest ("Basic latency test doubling sin");
@@ -421,23 +423,9 @@ private:
             auto sumNode = makeAudioNode<SummingAudioNode> (std::move (nodes));
 
             auto testContext = createBasicTestContext (std::move (sumNode), testSetup, 1, 5.0);
-            auto& buffer = testContext->buffer;
-
             // Start of buffer which should be silent
-            {
-                AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
-                                                  0, numLatencySamples);
-                expectWithinAbsoluteError (trimmedBuffer.getMagnitude (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
-                expectWithinAbsoluteError (trimmedBuffer.getRMSLevel (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
-            }
-
             // Part of buffer after latency which should be all sin +-1.0
-            {
-                AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
-                                                  numLatencySamples, buffer.getNumSamples() - numLatencySamples);
-                expectWithinAbsoluteError (trimmedBuffer.getMagnitude (0, 0, trimmedBuffer.getNumSamples()), 1.0f, 0.001f);
-                expectWithinAbsoluteError (trimmedBuffer.getRMSLevel (0, 0, trimmedBuffer.getNumSamples()), 0.707f, 0.001f);
-            }
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, numLatencySamples, 0.0f, 0.0f, 1.0f, 0.707f);
         }
 
         beginTest ("Send/return with latency");
@@ -462,23 +450,10 @@ private:
             auto node = makeSummingAudioNode ({ track1.release(), track2.release() });
 
             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, 5.0);
-            auto& buffer = testContext->buffer;
 
             // Start of buffer which should be silent
-            {
-                AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
-                                                  0, numLatencySamples);
-                expectWithinAbsoluteError (trimmedBuffer.getMagnitude (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
-                expectWithinAbsoluteError (trimmedBuffer.getRMSLevel (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
-            }
-
             // Part of buffer after latency which should be all sin +-1.0
-            {
-                AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
-                                                  numLatencySamples, buffer.getNumSamples() - numLatencySamples);
-                expectWithinAbsoluteError (trimmedBuffer.getMagnitude (0, 0, trimmedBuffer.getNumSamples()), 1.0f, 0.001f);
-                expectWithinAbsoluteError (trimmedBuffer.getRMSLevel (0, 0, trimmedBuffer.getNumSamples()), 0.707f, 0.001f);
-            }
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, numLatencySamples, 0.0f, 0.0f, 1.0f, 0.707f);
         }
 
         beginTest ("Multiple send/return with latency");
@@ -509,23 +484,10 @@ private:
             auto node = makeSummingAudioNode ({ track1.release(), track2.release(), track3.release() });
 
             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, 5.0);
-            auto& buffer = testContext->buffer;
 
             // Start of buffer which should be silent
-            {
-                AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
-                                                  0, numLatencySamples);
-                expectWithinAbsoluteError (trimmedBuffer.getMagnitude (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
-                expectWithinAbsoluteError (trimmedBuffer.getRMSLevel (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
-            }
-
             // Part of buffer after latency which should be all sin +-1.0
-            {
-                AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
-                                                  numLatencySamples, buffer.getNumSamples() - numLatencySamples);
-                expectWithinAbsoluteError (trimmedBuffer.getMagnitude (0, 0, trimmedBuffer.getNumSamples()), 1.0f, 0.001f);
-                expectWithinAbsoluteError (trimmedBuffer.getRMSLevel (0, 0, trimmedBuffer.getNumSamples()), 0.707f, 0.001f);
-            }
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, numLatencySamples, 0.0f, 0.0f, 1.0f, 0.707f);
         }
         
         beginTest ("Send, send/return with two stage latency");
@@ -555,23 +517,10 @@ private:
             auto node = makeSummingAudioNode ({ track1.release(), track2.release(), track3.release() });
 
             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, 5.0);
-            auto& buffer = testContext->buffer;
 
             // Start of buffer which should be silent
-            {
-                AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
-                                                  0, numLatencySamples);
-                expectWithinAbsoluteError (trimmedBuffer.getMagnitude (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
-                expectWithinAbsoluteError (trimmedBuffer.getRMSLevel (0, 0, trimmedBuffer.getNumSamples()), 0.0f, 0.001f);
-            }
-
             // Part of buffer after latency which should be all sin +-1.0
-            {
-                AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
-                                                  numLatencySamples, buffer.getNumSamples() - numLatencySamples);
-                expectWithinAbsoluteError (trimmedBuffer.getMagnitude (0, 0, trimmedBuffer.getNumSamples()), 1.0f, 0.001f);
-                expectWithinAbsoluteError (trimmedBuffer.getRMSLevel (0, 0, trimmedBuffer.getNumSamples()), 0.707f, 0.001f);
-            }
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, numLatencySamples, 0.0f, 0.0f, 1.0f, 0.707f);
         }
     }
         
