@@ -23,56 +23,67 @@ echo ROOT: "$ROOT"
 #==========================================================
 # Build examples and run tests
 #==========================================================
-if [ "$PLATFORM" == "mac" ]; then
-    "$ROOT/tests/mac/build_examples"
+function runTestApp()
+{
+    APP_NAME="$1"
 
-    TESTRUNNER_ROOT=$ROOT/examples/projects/TestRunner/Builds/MacOSX
-    TESTRUNNER_EXE=$TESTRUNNER_ROOT/build/Release/TestRunner
-    cd "$TESTRUNNER_ROOT"
+    if [ "$PLATFORM" == "mac" ]; then
+        "$ROOT/tests/mac/build_examples"
 
-    # xcodebuild -configuration Release LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
-    "$TESTRUNNER_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-TestRunner.xml"
-    
-    xcodebuild -configuration Release -enableAddressSanitizer YES LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
-    "$TESTRUNNER_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-TestRunner_asan.xml"
+        APP_ROOT=$ROOT/examples/projects/$APP_NAME/Builds/MacOSX
+        APP_EXE=$APP_ROOT/build/Release/$APP_NAME
+        cd "$APP_ROOT"
 
-    xcodebuild -configuration Release -enableThreadSanitizer YES LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
-    "$TESTRUNNER_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-TestRunner_tsan.xml"
+        xcodebuild -configuration Release LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
+        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME.xml"
+        
+        xcodebuild -configuration Release -enableAddressSanitizer YES LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
+        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME_asan.xml"
 
-    xcodebuild analyze -quiet -configuration Release LLVM_LTO=NO
-fi
+        xcodebuild -configuration Release -enableThreadSanitizer YES LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
+        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME_tsan.xml"
 
-# ==========================================================
-if [ "$PLATFORM" == "windows" ]; then
-    if [ -z "$MSBUILD_EXE" ]; then
-        export MSBUILD_EXE="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MSBuild.exe"
+        xcodebuild analyze -quiet -configuration Release LLVM_LTO=NO
     fi
 
-    "$ROOT/tests/windows/build_examples.bat"
+    # ==========================================================
+    if [ "$PLATFORM" == "windows" ]; then
+        if [ -z "$MSBUILD_EXE" ]; then
+            export MSBUILD_EXE="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MSBuild.exe"
+        fi
 
-    TESTRUNNER_ROOT=$ROOT/examples/projects/TestRunner/Builds/VisualStudio2017
-    TESTRUNNER_EXE=$TESTRUNNER_ROOT/x64/Release/ConsoleApp/TestRunner.exe
-    cd "$TESTRUNNER_ROOT"
+        "$ROOT/tests/windows/build_examples.bat"
 
-    # "$MSBUILD_EXE" TestRunner.sln -p:VisualStudioVersion=15.0 -m -p:Configuration=Release -p:Platform=x64 -p:PreferredToolArchitecture=x64
+        APP_ROOT=$ROOT/examples/projects/$APP_NAME/Builds/VisualStudio2017
+        APP_EXE=$APP_ROOT/x64/Release/ConsoleApp/$APP_NAME.exe
+        cd "$APP_ROOT"
 
-    "$TESTRUNNER_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-TestRunner.xml"
-fi
+        "$MSBUILD_EXE" TestRunner.sln -p:VisualStudioVersion=15.0 -m -p:Configuration=Release -p:Platform=x64 -p:PreferredToolArchitecture=x64
 
-# ==========================================================
-if [ "$PLATFORM" == "linux" ]; then
-    "$ROOT/tests/linux/build_examples"
-
-    TESTRUNNER_ROOT=$ROOT/examples/projects/TestRunner/Builds/LinuxMakefile
-    TESTRUNNER_EXE=$TESTRUNNER_ROOT/build/TestRunner
-    cd "$TESTRUNNER_ROOT"
-
-    # make clean
-    # make CONFIG=Release -j$(nproc)
-
-    "$TESTRUNNER_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-TestRunner.xml"
-    
-    if [ -z "$DISABLE_VALGRIND" ]; then
-        valgrind "$TESTRUNNER_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-TestRunner_valgrind.xml"
+        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME.xml"
     fi
-fi
+
+    # ==========================================================
+    if [ "$PLATFORM" == "linux" ]; then
+        "$ROOT/tests/linux/build_examples"
+
+        APP_ROOT=$ROOT/examples/projects/$APP_NAME/Builds/LinuxMakefile
+        APP_EXE=$APP_ROOT/build/$APP_NAME
+        cd "$APP_ROOT"
+
+        make clean
+        make CONFIG=Release -j$(nproc)
+
+        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME.xml"
+        
+        if [ -z "$DISABLE_VALGRIND" ]; then
+            valgrind "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME_valgrind.xml"
+        fi
+    fi
+}
+
+#==========================================================
+# Run the apps
+#==========================================================
+runTestApp "TestRunner"
+runTestApp "AudioNodeDev"
