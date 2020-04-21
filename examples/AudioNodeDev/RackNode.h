@@ -38,10 +38,11 @@
 struct InputProvider
 {
     InputProvider() = default;
-    
+    InputProvider (int numChannelsToUse) : numChannels (numChannelsToUse) {}
+
     void setInputs (AudioNode::AudioAndMidiBuffer newBuffers)
     {
-        audio = newBuffers.audio;
+        audio = numChannels > 0 ? newBuffers.audio.getSubsetChannelBlock (0, numChannels) : newBuffers.audio;
         midi = newBuffers.midi;
     }
     
@@ -50,6 +51,7 @@ struct InputProvider
         return { audio, midi };
     }
     
+    int numChannels = 0;
     juce::dsp::AudioBlock<float> audio;
     MidiBuffer midi;
 };
@@ -93,13 +95,18 @@ public:
 
         if (numChannels > 0)
         {
-            auto& inputAudioBlock = inputBuffers.audio;
-            
             auto& outputBuffers = pc.buffers;
             auto& audioOutputBlock = outputBuffers.audio;
+            
+            // For testing purposes, the last block might be smaller than the InputProvider
+            // so we'll just take the number of samples required
+            jassert (inputBuffers.audio.getNumSamples() >= audioOutputBlock.getNumSamples());
+            jassert (inputBuffers.audio.getNumChannels() >= numChannels);
+            
+            auto inputAudioBlock = inputBuffers.audio.getSubsetChannelBlock (0, numChannels)
+                                    .getSubBlock (0, audioOutputBlock.getNumSamples());
             jassert (inputAudioBlock.getNumChannels() == audioOutputBlock.getNumChannels());
-            jassert (inputAudioBlock.getNumSamples() == audioOutputBlock.getNumSamples());
-
+            
             audioOutputBlock.add (inputAudioBlock);
         }
         
