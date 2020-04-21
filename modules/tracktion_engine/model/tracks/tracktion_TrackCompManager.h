@@ -76,7 +76,7 @@ public:
         };
 
         TrackComp (Edit&, const juce::ValueTree&);
-        ~TrackComp();
+        ~TrackComp() override;
 
         using Ptr = juce::ReferenceCountedObjectPtr<TrackComp>;
         static TrackComp* createAndIncRefCount (Edit&, const juce::ValueTree&);

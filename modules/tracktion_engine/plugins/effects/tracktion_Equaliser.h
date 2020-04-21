@@ -15,7 +15,7 @@ class EqualiserPlugin  : public Plugin
 {
 public:
     EqualiserPlugin (PluginCreationInfo);
-    ~EqualiserPlugin();
+    ~EqualiserPlugin() override;
 
     //==============================================================================
     /** Finds the gain at a frequency - used to plot the EQ graph. */

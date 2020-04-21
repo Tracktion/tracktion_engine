@@ -62,7 +62,7 @@ public:
     */
     struct Listener
     {
-        virtual ~Listener() {};
+        virtual ~Listener() {}
         virtual void linkRequestedTempoChange (double newBpm) = 0;
         virtual void linkRequestedPositionChange (double adjustmentInBeats) = 0;
         virtual void linkConnectionChanged() = 0;

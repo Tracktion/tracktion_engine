@@ -18,7 +18,7 @@ class CollectionClip   : public TrackItem
 {
 public:
     CollectionClip (Track&);
-    ~CollectionClip();
+    ~CollectionClip() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<CollectionClip>;
 

@@ -67,7 +67,7 @@ void LevelMeterPlugin::applyToBuffer (const AudioRenderContext& fc)
     if (fc.bufferForMidiMessages != nullptr)
     {
         measurer.setShowMidi (showMidiActivity);
-        measurer.processMidi (*fc.bufferForMidiMessages, 0);
+        measurer.processMidi (*fc.bufferForMidiMessages, nullptr);
     }
 }
 

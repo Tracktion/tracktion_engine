@@ -15,7 +15,7 @@ class AuxSendPlugin   : public Plugin
 {
 public:
     AuxSendPlugin (PluginCreationInfo);
-    ~AuxSendPlugin();
+    ~AuxSendPlugin() override;
 
     //==============================================================================
     void setGainDb (float newDb);

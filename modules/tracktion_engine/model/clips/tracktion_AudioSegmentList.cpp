@@ -40,7 +40,7 @@ float AudioSegmentList::Segment::getTranspose() const                          {
 bool AudioSegmentList::Segment::hasFadeIn() const                              { return fadeIn; }
 bool AudioSegmentList::Segment::hasFadeOut() const                             { return fadeOut; }
 
-bool AudioSegmentList::Segment::isFollowedBySilence() const                    { return followedBySilence; };
+bool AudioSegmentList::Segment::isFollowedBySilence() const                    { return followedBySilence; }
 
 juce::int64 AudioSegmentList::Segment::getHashCode() const
 {

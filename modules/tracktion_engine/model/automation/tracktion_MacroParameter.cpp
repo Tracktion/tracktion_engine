@@ -86,7 +86,7 @@ struct MacroParameterList::List : public ValueTreeObjectList<MacroParameter>
         rebuildObjects();
     }
 
-    ~List()
+    ~List() override
     {
         freeObjects();
     }

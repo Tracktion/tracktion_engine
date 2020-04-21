@@ -33,7 +33,7 @@ public:
 
     //==============================================================================
     InputDevice (Engine&, const juce::String& type, const juce::String& name);
-    ~InputDevice();
+    ~InputDevice() override;
 
     //==============================================================================
     const juce::String& getName() const         { return name; }
@@ -91,7 +91,7 @@ class InputDeviceInstance   : protected juce::ValueTree::Listener
 {
 public:
     InputDeviceInstance (InputDevice&, EditPlaybackContext&);
-    virtual ~InputDeviceInstance();
+    ~InputDeviceInstance() override;
 
     InputDevice& getInputDevice() noexcept      { return owner; }
 
@@ -171,7 +171,7 @@ public:
         juce::String getSelectableDescription() override
         {
             return input.getInputDevice().getSelectableDescription();
-        };
+        }
         
         InputDeviceInstance& input;
         juce::ValueTree state;
@@ -208,7 +208,7 @@ public:
             rebuildObjects();
         }
 
-        ~InputDeviceDestinationList()
+        ~InputDeviceDestinationList() override
         {
             freeObjects();
         }

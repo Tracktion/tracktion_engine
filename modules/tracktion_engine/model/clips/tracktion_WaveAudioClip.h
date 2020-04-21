@@ -18,7 +18,7 @@ class WaveAudioClip  : public AudioClipBase
 {
 public:
     WaveAudioClip (const juce::ValueTree&, EditItemID, ClipTrack&);
-    ~WaveAudioClip();
+    ~WaveAudioClip() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<WaveAudioClip>;
 

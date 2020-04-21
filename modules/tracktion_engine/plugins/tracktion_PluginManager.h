@@ -15,7 +15,7 @@ class PluginManager  : private juce::ChangeListener
 {
 public:
     PluginManager (Engine&);
-    ~PluginManager();
+    ~PluginManager() override;
 
     void initialise();
 
@@ -106,7 +106,7 @@ class PluginCache  : private juce::Timer
 {
 public:
     PluginCache (Edit&);
-    ~PluginCache();
+    ~PluginCache() override;
 
     //==============================================================================
     Plugin::Ptr getPluginFor (EditItemID pluginID) const;

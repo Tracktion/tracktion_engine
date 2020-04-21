@@ -20,7 +20,7 @@ class SelectedMidiEvents   : public Selectable,
 public:
     SelectedMidiEvents (MidiClip&);
     SelectedMidiEvents (juce::Array<MidiClip*>);
-    ~SelectedMidiEvents();
+    ~SelectedMidiEvents() override;
 
     Edit& getEdit();
 

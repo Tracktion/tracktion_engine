@@ -48,7 +48,7 @@ struct TempoSequence::TempoSettingList  : public TempoAndTimeSigListBase<TempoSe
         rebuildObjects();
     }
 
-    ~TempoSettingList()
+    ~TempoSettingList() override
     {
         freeObjects();
     }
@@ -81,7 +81,7 @@ struct TempoSequence::TimeSigList  : public TempoAndTimeSigListBase<TimeSigSetti
         rebuildObjects();
     }
 
-    ~TimeSigList()
+    ~TimeSigList() override
     {
         freeObjects();
     }
@@ -360,8 +360,8 @@ void TempoSequence::moveTempoStart (int index, double deltaBeats, bool snapToBea
             auto prev = getTempo (index - 1);
             auto next = getTempo (index + 1);
 
-            const double prevBeat = (prev != 0) ? prev->startBeatNumber : 0;
-            const double nextBeat = (next != 0) ? next->startBeatNumber : 0x7ffffff;
+            const double prevBeat = (prev != nullptr) ? prev->startBeatNumber : 0;
+            const double nextBeat = (next != nullptr) ? next->startBeatNumber : 0x7ffffff;
 
             const double newStart = jlimit (prevBeat, nextBeat, t->startBeatNumber + deltaBeats);
             t->set (snapToBeat ? roundToInt (newStart) : newStart, t->bpm, t->curve, false);
@@ -378,8 +378,8 @@ void TempoSequence::moveTimeSigStart (int index, double deltaBeats, bool snapToB
             auto prev = getTimeSig (index - 1);
             auto next = getTimeSig (index + 1);
 
-            const double prevBeat = (prev != 0) ? prev->startBeatNumber : 0.0;
-            const double nextBeat = (next != 0) ? next->startBeatNumber : 0x7ffffff;
+            const double prevBeat = (prev != nullptr) ? prev->startBeatNumber : 0.0;
+            const double nextBeat = (next != nullptr) ? next->startBeatNumber : 0x7ffffff;
 
             if (nextBeat < prevBeat + 2)
                 return;

@@ -17,7 +17,7 @@ class LFOModifier   : public Modifier,
 {
 public:
     LFOModifier (Edit&, const juce::ValueTree&);
-    ~LFOModifier();
+    ~LFOModifier() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<LFOModifier>;
     using Array = juce::ReferenceCountedArray<LFOModifier>;

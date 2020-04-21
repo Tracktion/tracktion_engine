@@ -15,7 +15,7 @@ class ReverbPlugin : public Plugin
 {
 public:
     ReverbPlugin (PluginCreationInfo);
-    ~ReverbPlugin();
+    ~ReverbPlugin() override;
 
     //==============================================================================
     static const char* getPluginName()                  { return NEEDS_TRANS("Reverb"); }

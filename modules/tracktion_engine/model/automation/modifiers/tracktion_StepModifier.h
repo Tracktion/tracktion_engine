@@ -18,7 +18,7 @@ class StepModifier  : public Modifier,
 public:
     //==============================================================================
     StepModifier (Edit&, const juce::ValueTree&);
-    ~StepModifier();
+    ~StepModifier() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<StepModifier>;
     using Array = juce::ReferenceCountedArray<StepModifier>;

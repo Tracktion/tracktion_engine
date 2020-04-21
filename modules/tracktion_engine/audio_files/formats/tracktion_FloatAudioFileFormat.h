@@ -18,7 +18,7 @@ class FloatAudioFormat   : public juce::AudioFormat
 {
 public:
     FloatAudioFormat();
-    ~FloatAudioFormat();
+    ~FloatAudioFormat() override;
 
     //==============================================================================
     juce::Array<int> getPossibleSampleRates() override;

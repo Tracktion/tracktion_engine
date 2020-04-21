@@ -19,7 +19,7 @@ class VolumeAndPanPlugin  : public Plugin
 public:
     VolumeAndPanPlugin (Edit&, const juce::ValueTree&, bool isMasterVolumeNode);
     VolumeAndPanPlugin (PluginCreationInfo, bool isMasterVolumeNode = false);
-    ~VolumeAndPanPlugin();
+    ~VolumeAndPanPlugin() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<VolumeAndPanPlugin>;
 

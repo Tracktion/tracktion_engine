@@ -31,7 +31,7 @@ public:
     SmartThumbnail (Engine& e, const AudioFile&, juce::Component& componentToRepaint, Edit*);
 
     /** Destructor. */
-    ~SmartThumbnail();
+    ~SmartThumbnail() override;
 
     /** Enable/disable all smart thumbnail generation. */
     static void setEnabled (bool e)             { enabled = e; }

@@ -17,7 +17,7 @@ class HissingAudioNode  : public SingleInputAudioNode
 public:
     //==============================================================================
     HissingAudioNode (AudioNode*);
-    ~HissingAudioNode();
+    ~HissingAudioNode() override;
 
     void prepareAudioNodeToPlay (const PlaybackInitialisationInfo&) override;
 

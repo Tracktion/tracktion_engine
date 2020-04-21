@@ -15,7 +15,7 @@ class ExternalPlugin  : public Plugin
 {
 public:
     ExternalPlugin (PluginCreationInfo);
-    ~ExternalPlugin();
+    ~ExternalPlugin() override;
 
     juce::String getIdentifierString() override { return desc.createIdentifierString(); }
 
@@ -175,7 +175,7 @@ private:
 struct PluginWetDryAutomatableParam  : public AutomatableParameter
 {
     PluginWetDryAutomatableParam (const juce::String& xmlTag, const juce::String& name, Plugin&);
-    ~PluginWetDryAutomatableParam();
+    ~PluginWetDryAutomatableParam() override;
 
     juce::String valueToString (float value) override;
     float stringToValue (const juce::String& s) override;

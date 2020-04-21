@@ -20,7 +20,7 @@ public:
     //==============================================================================
     QuantisationType();
     QuantisationType (const juce::ValueTree&, juce::UndoManager*);
-    ~QuantisationType();
+    ~QuantisationType() override;
 
     QuantisationType (const QuantisationType&);
     QuantisationType& operator= (const QuantisationType&);

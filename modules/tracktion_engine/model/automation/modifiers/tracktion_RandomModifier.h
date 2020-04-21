@@ -18,7 +18,7 @@ class RandomModifier    : public Modifier,
 public:
     //==============================================================================
     RandomModifier (Edit&, const juce::ValueTree&);
-    ~RandomModifier();
+    ~RandomModifier() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<RandomModifier>;
     using Array = juce::ReferenceCountedArray<RandomModifier>;

@@ -22,7 +22,7 @@ public:
     CompManager (Clip&, const juce::ValueTree&);
 
     /** Destructor. */
-    ~CompManager();
+    ~CompManager() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<CompManager>;
 
@@ -248,7 +248,7 @@ public:
     using Ptr = juce::ReferenceCountedObjectPtr<WaveCompManager>;
 
     WaveCompManager (WaveAudioClip&);
-    ~WaveCompManager();
+    ~WaveCompManager() override;
 
     /** Updates an array of thumbnails so they represent the takes and are in the correct order etc. */
     void updateThumbnails (juce::Component&, juce::OwnedArray<SmartThumbnail>& thumbnails) const;
@@ -319,7 +319,7 @@ public:
     using Ptr = juce::ReferenceCountedObjectPtr<MidiCompManager>;
 
     MidiCompManager (MidiClip&);
-    ~MidiCompManager();
+    ~MidiCompManager() override;
 
     void initialise() override;
     MidiList* getSequenceLooped (int index);

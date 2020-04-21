@@ -19,7 +19,7 @@ class ChordClip   : public Clip,
 {
 public:
     ChordClip (const juce::ValueTree&, EditItemID, ClipTrack& targetTrack);
-    ~ChordClip();
+    ~ChordClip() override;
 
     juce::String getSelectableDescription() override;
     void setTrack (ClipTrack*) override;

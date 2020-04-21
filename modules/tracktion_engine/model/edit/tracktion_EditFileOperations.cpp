@@ -16,7 +16,7 @@ struct ThreadedEditFileWriter   : private Thread
     ThreadedEditFileWriter()
         : Thread ("TemporyFileWriter") {}
 
-    ~ThreadedEditFileWriter()
+    ~ThreadedEditFileWriter() override
     {
         flushAllFiles();
         stopThread (10000);

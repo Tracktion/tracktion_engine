@@ -19,7 +19,7 @@ class PitchSetting   : public TrackItem,
 {
 public:
     PitchSetting (Edit&, const juce::ValueTree&);
-    ~PitchSetting();
+    ~PitchSetting() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<PitchSetting>;
     using Array = juce::ReferenceCountedArray<PitchSetting>;
@@ -48,7 +48,7 @@ public:
     juce::CachedValue<Scale::ScaleType> scale;
 
 private:
-    void valueTreeChanged() override { changed(); };
+    void valueTreeChanged() override { changed(); }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PitchSetting)
 };

@@ -55,7 +55,7 @@ class DelayPlugin  : public Plugin
 {
 public:
     DelayPlugin (PluginCreationInfo);
-    ~DelayPlugin();
+    ~DelayPlugin() override;
 
     //==============================================================================
     static const char* getPluginName()                  { return NEEDS_TRANS("Delay"); }

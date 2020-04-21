@@ -116,7 +116,7 @@ struct TransportControl::TransportState : private ValueTree::Listener
     }
 
     /** Destructor. */
-    ~TransportState()
+    ~TransportState() override
     {
         jassert (reallocationInhibitors == 0);
     }
@@ -288,7 +288,7 @@ struct TransportControl::SectionPlayer  : private Timer
         startTimerHz (25);
     }
 
-    ~SectionPlayer()
+    ~SectionPlayer() override
     {
         if (wasLooping)
             transport.looping = true;

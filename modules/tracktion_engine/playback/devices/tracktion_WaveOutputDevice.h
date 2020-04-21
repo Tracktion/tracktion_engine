@@ -20,7 +20,7 @@ class WaveOutputDevice  : public OutputDevice
 {
 public:
     WaveOutputDevice (Engine&, const juce::String& name, const std::vector<ChannelIndex>& channels);
-    ~WaveOutputDevice();
+    ~WaveOutputDevice() override;
 
     void resetToDefault();
     void setEnabled (bool) override;

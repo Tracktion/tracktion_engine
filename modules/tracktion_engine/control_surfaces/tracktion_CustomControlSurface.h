@@ -138,7 +138,7 @@ public:
     //==============================================================================
     CustomControlSurface (ExternalControllerManager&, const juce::String& name, ExternalControllerManager::Protocol);
     CustomControlSurface (ExternalControllerManager&, const juce::XmlElement&);
-    ~CustomControlSurface();
+    ~CustomControlSurface() override;
 
     //==============================================================================
     static juce::String getNameForActionID (ExternalControllerManager&, ActionID);

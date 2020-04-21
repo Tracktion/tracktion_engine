@@ -47,11 +47,12 @@ class BackgroundJobManager  : private juce::AsyncUpdater,
                               private juce::Timer
 {
 public:
-    BackgroundJobManager()  : pool (8)
+    BackgroundJobManager()
+        : pool (8)
     {
     }
 
-    ~BackgroundJobManager()
+    ~BackgroundJobManager() override
     {
         pool.removeAllJobs (true, 30000);
     }

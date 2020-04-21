@@ -38,7 +38,7 @@ public:
 
     //==============================================================================
     MacroParameter (AutomatableEditItem&, Edit&, const juce::ValueTree&);
-    ~MacroParameter();
+    ~MacroParameter() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<MacroParameter>;
 
@@ -65,7 +65,7 @@ class MacroParameterList    : public AutomatableEditItem,
 {
 public:
     MacroParameterList (Edit&, const juce::ValueTree&);
-    ~MacroParameterList();
+    ~MacroParameterList() override;
 
     MacroParameter* createMacroParameter();
     void removeMacroParameter (MacroParameter&);

@@ -17,8 +17,6 @@ struct AbletonLink::ImplBase  : public Timer
     {
     }
 
-    virtual ~ImplBase() {}
-
     void activateTimer (bool isActive)
     {
         if (isActive)

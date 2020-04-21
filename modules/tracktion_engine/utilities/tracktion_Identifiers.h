@@ -320,8 +320,8 @@ namespace IDs
     DECLARE_ID (trackCompsVisible)
     DECLARE_ID (trackCompsEditable)
     DECLARE_ID (minimalTransportBar)
-    DECLARE_ID (lockedClips);
-    DECLARE_ID (hiddenClips);
+    DECLARE_ID (lockedClips)
+    DECLARE_ID (hiddenClips)
     DECLARE_ID (TRACKCOMPS)
     DECLARE_ID (TRACKCOMP)
     DECLARE_ID (track)

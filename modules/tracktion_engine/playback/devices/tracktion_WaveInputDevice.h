@@ -22,7 +22,7 @@ public:
     //==============================================================================
     WaveInputDevice (Engine&, const juce::String& name, const juce::String& type,
                      const std::vector<ChannelIndex>&, DeviceType);
-    ~WaveInputDevice();
+    ~WaveInputDevice() override;
 
     static juce::StringArray getMergeModes();
     juce::StringArray getRecordFormatNames();
@@ -118,7 +118,7 @@ class WaveInputRecordingThread  : public juce::Thread,
 public:
     //==============================================================================
     WaveInputRecordingThread (Engine&);
-    ~WaveInputRecordingThread();
+    ~WaveInputRecordingThread() override;
 
     //==============================================================================
     struct ScopedInitialiser

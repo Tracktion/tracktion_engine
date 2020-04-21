@@ -19,7 +19,7 @@ class TrackOutput   : private juce::ValueTree::Listener
 public:
     //==============================================================================
     TrackOutput (AudioTrack&);
-    ~TrackOutput();
+    ~TrackOutput() override;
 
     //==============================================================================
     void initialise();

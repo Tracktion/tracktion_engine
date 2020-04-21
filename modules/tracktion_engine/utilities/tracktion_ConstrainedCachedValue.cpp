@@ -24,10 +24,10 @@ public:
     {
         beginTest ("Odd/even tests");
         {
-            juce::ValueTree v ("TREE");
+            juce::ValueTree state ("TREE");
             ConstrainedCachedValue<int> value;
             value.setConstrainer ([] (int v) { return v % 2 == 0 ? v : v + 1; });
-            value.referTo (v, "value", nullptr);
+            value.referTo (state, "value", nullptr);
 
             expectEquals (value.get(), 0);
             value = 1;
@@ -40,11 +40,11 @@ public:
 
         beginTest ("ceil/floor tests");
         {
-            juce::ValueTree v ("TREE");
+            juce::ValueTree state ("TREE");
             ConstrainedCachedValue<float> value;
             bool useCeil = true;
             value.setConstrainer ([&useCeil] (float v) { return useCeil ? std::ceil (v) : std::floor (v); });
-            value.referTo (v, "value", nullptr);
+            value.referTo (state, "value", nullptr);
 
             expectWithinAbsoluteError (value.getDefault(), 0.0f, 0.00000000000001f);
             expectWithinAbsoluteError (value.get(), 0.0f, 0.00000000000001f);
@@ -61,7 +61,7 @@ public:
             value = -3.0f;
             expectWithinAbsoluteError (value.get(), -3.0f, 0.00000000000001f);
 
-            value.referTo (v, "value", nullptr, 1.2f);
+            value.referTo (state, "value", nullptr, 1.2f);
             expectWithinAbsoluteError (value.getDefault(), 1.0f, 0.00000000000001f);
             expectWithinAbsoluteError (value.get(), -3.0f, 0.00000000000001f);
         }

@@ -15,7 +15,7 @@ class AuxReturnPlugin   : public Plugin
 {
 public:
     AuxReturnPlugin (PluginCreationInfo);
-    ~AuxReturnPlugin();
+    ~AuxReturnPlugin() override;
 
     static const char* getPluginName()                                      { return NEEDS_TRANS("Aux Return"); }
     static const char* xmlTypeName;

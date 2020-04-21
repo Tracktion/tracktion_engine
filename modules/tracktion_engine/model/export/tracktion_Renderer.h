@@ -84,7 +84,7 @@ public:
                     std::atomic<float>& progressToUpdate,
                     juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver*);
 
-        ~RenderTask();
+        ~RenderTask() override;
 
         JobStatus runJob() override;
         float getCurrentTaskProgress() override   { return progress; }

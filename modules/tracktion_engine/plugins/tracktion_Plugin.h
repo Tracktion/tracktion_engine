@@ -39,7 +39,7 @@ class Plugin  : public Selectable,
 {
 public:
     Plugin (PluginCreationInfo);
-    ~Plugin();
+    ~Plugin() override;
 
     void selectableAboutToBeDeleted() override;
 

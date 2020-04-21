@@ -19,7 +19,7 @@ class TimeSigSetting  : public TrackItem,
 {
 public:
     TimeSigSetting (TempoSequence&, const juce::ValueTree&);
-    ~TimeSigSetting();
+    ~TimeSigSetting() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<TimeSigSetting>;
     using Array = juce::ReferenceCountedArray<TimeSigSetting>;
@@ -54,7 +54,7 @@ public:
     double endTime = 0;
 
 private:
-    void valueTreeChanged() override { changed(); };
+    void valueTreeChanged() override { changed(); }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TimeSigSetting)
 };

@@ -136,7 +136,7 @@ struct DeviceManager::ContextDeviceClearer : private juce::AsyncUpdater
         : deviceManager (owner)
     {}
 
-    ~ContextDeviceClearer()
+    ~ContextDeviceClearer() override
     {
         handleUpdateNowIfNeeded();
     }
@@ -733,7 +733,7 @@ void DeviceManager::checkDefaultDevicesAreValid()
 
         for (int i = 0; i < getNumWaveOutDevices(); ++i)
         {
-            if (getWaveOutDevice(i) != 0 && getWaveOutDevice(i)->isEnabled())
+            if (getWaveOutDevice(i) != nullptr && getWaveOutDevice(i)->isEnabled())
             {
                 defaultWaveOutIndex = i;
                 break;
@@ -751,7 +751,7 @@ void DeviceManager::checkDefaultDevicesAreValid()
 
         for (int i = 0; i < getNumMidiOutDevices(); ++i)
         {
-            if (getMidiOutDevice(i) != 0 && getMidiOutDevice(i)->isEnabled())
+            if (getMidiOutDevice(i) != nullptr && getMidiOutDevice(i)->isEnabled())
             {
                 defaultMidiOutIndex = i;
                 break;
@@ -769,7 +769,7 @@ void DeviceManager::checkDefaultDevicesAreValid()
 
         for (int i = 0; i < getNumWaveInDevices(); ++i)
         {
-            if (getWaveInDevice(i) != 0 && getWaveInDevice(i)->isEnabled())
+            if (getWaveInDevice(i) != nullptr && getWaveInDevice(i)->isEnabled())
             {
                 defaultWaveInIndex = i;
                 break;
@@ -787,7 +787,7 @@ void DeviceManager::checkDefaultDevicesAreValid()
 
         for (int i = 0; i < getNumMidiInDevices(); ++i)
         {
-            if (getMidiInDevice(i) != 0 && getMidiInDevice(i)->isEnabled())
+            if (getMidiInDevice(i) != nullptr && getMidiInDevice(i)->isEnabled())
             {
                 defaultMidiInIndex = i;
                 break;
@@ -936,7 +936,7 @@ void DeviceManager::setWaveInChannelsEnabled (const std::vector<ChannelIndex>& c
 
 void DeviceManager::setDefaultMidiOutDevice (int index)
 {
-    if (midiOutputs[index] != 0 && midiOutputs[index]->isEnabled())
+    if (midiOutputs[index] != nullptr && midiOutputs[index]->isEnabled())
     {
         defaultMidiOutIndex = index;
         engine.getPropertyStorage().setProperty (SettingID::defaultMidiOutDevice, defaultMidiOutIndex);
@@ -948,7 +948,7 @@ void DeviceManager::setDefaultMidiOutDevice (int index)
 
 void DeviceManager::setDefaultMidiInDevice (int index)
 {
-    if (midiInputs[index] != 0 && midiInputs[index]->isEnabled())
+    if (midiInputs[index] != nullptr && midiInputs[index]->isEnabled())
     {
         defaultMidiInIndex = index;
         engine.getPropertyStorage().setProperty (SettingID::defaultMidiInDevice, defaultMidiInIndex);

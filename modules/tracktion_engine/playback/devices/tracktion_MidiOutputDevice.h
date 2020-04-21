@@ -16,7 +16,7 @@ class MidiOutputDevice   : public OutputDevice
 {
 public:
     MidiOutputDevice (Engine&, const juce::String& name, int deviceIndex);
-    ~MidiOutputDevice();
+    ~MidiOutputDevice() override;
 
     void setEnabled (bool) override;
     bool isMidi() const override                        { return true; }
@@ -61,7 +61,7 @@ public:
     juce::StringArray getProgramSets() const;
     int getCurrentSetIndex() const;
     void setCurrentProgramSet (const juce::String&);
-    juce::String getCurrentProgramSet() const           { return programNameSet; };
+    juce::String getCurrentProgramSet() const           { return programNameSet; }
     juce::String getProgramName (int programNumber, int bank);
     bool canEditProgramSet (int index) const;
     bool canDeleteProgramSet (int index) const;

@@ -16,7 +16,7 @@ class PitchShiftPlugin : public Plugin
 public:
     PitchShiftPlugin (Edit&, const juce::ValueTree&);
     PitchShiftPlugin (PluginCreationInfo);
-    ~PitchShiftPlugin();
+    ~PitchShiftPlugin() override;
 
     static const char* getPluginName()          { return NEEDS_TRANS("Pitch Shifter"); }
     static juce::ValueTree create();

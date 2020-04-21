@@ -20,7 +20,7 @@ struct PitchSequence::PitchList  : public ValueTreeObjectList<PitchSetting>,
         rebuildObjects();
     }
 
-    ~PitchList()
+    ~PitchList() override
     {
         freeObjects();
     }

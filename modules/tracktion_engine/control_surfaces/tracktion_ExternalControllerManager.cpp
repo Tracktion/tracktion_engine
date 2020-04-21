@@ -20,7 +20,7 @@ struct ExternalControllerManager::EditTreeWatcher   : private ValueTree::Listene
         startTimer (40);
     }
 
-    ~EditTreeWatcher()
+    ~EditTreeWatcher() override
     {
         edit.state.removeListener (this);
     }

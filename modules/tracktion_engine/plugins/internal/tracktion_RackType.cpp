@@ -350,7 +350,7 @@ struct RackType::RackPluginList  : public ValueTreeObjectList<RackType::PluginIn
         callBlocking ([this] { this->rebuildObjects(); });
     }
 
-    ~RackPluginList()
+    ~RackPluginList() override
     {
         freeObjects();
     }
@@ -399,7 +399,7 @@ struct RackType::ConnectionList  : public ValueTreeObjectList<RackConnection>
         rebuildObjects();
     }
 
-    ~ConnectionList()
+    ~ConnectionList() override
     {
         freeObjects();
     }
@@ -449,7 +449,7 @@ struct RackType::WindowStateList  : public ValueTreeObjectList<WindowState>
         callBlocking ([this] { this->rebuildObjects(); });
     }
 
-    ~WindowStateList()
+    ~WindowStateList() override
     {
         freeObjects();
     }
@@ -2001,7 +2001,7 @@ struct RackTypeList::ValueTreeList  : public ValueTreeObjectList<RackType>
         // list while they're being created
     }
 
-    ~ValueTreeList()
+    ~ValueTreeList() override
     {
         freeObjects();
     }

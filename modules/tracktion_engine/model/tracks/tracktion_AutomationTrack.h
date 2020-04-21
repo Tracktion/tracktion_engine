@@ -16,7 +16,7 @@ class AutomationTrack  : public Track
 {
 public:
     AutomationTrack (Edit&, const juce::ValueTree&);
-    ~AutomationTrack();
+    ~AutomationTrack() override;
 
     //==============================================================================
     bool isAutomationTrack() const override            { return true; }

@@ -22,7 +22,7 @@ public:
     Track (Edit&, const juce::ValueTree&,
            double defaultTrackHeight, double minTrackHeight, double maxTrackHeight);
 
-    ~Track();
+    ~Track() override;
 
     using Ptr   = juce::ReferenceCountedObjectPtr<Track>;
     using Array = juce::ReferenceCountedArray<Track>;

@@ -13,32 +13,32 @@ namespace tracktion_engine
 
 namespace PredefinedWavetable
 {
-    static float getSinSample (float phase)
+    static inline float getSinSample (float phase)
     {
         return (std::sin (phase * juce::float_Pi * 2.0f) + 1.0f) / 2.0f;
     }
 
-    static float getTriangleSample (float phase)
+    static inline float getTriangleSample (float phase)
     {
         return (phase < 0.5f) ? (2.0f * phase) : (-2.0f * phase + 2.0f);
     }
 
-    static float getSawUpSample (float phase)
+    static inline float getSawUpSample (float phase)
     {
         return phase;
     }
 
-    static float getSawDownSample (float phase)
+    static inline float getSawDownSample (float phase)
     {
         return 1.0f - phase;
     }
 
-    static float getSquareSample (float phase)
+    static inline float getSquareSample (float phase)
     {
         return phase < 0.5f ? 1.0f : 0.0f;
     }
 
-    static float getStepsUpSample (float phase, int totalNumSteps)
+    static inline float getStepsUpSample (float phase, int totalNumSteps)
     {
         jassert (totalNumSteps > 1);
         const float stageAmmount = 1.0f / (totalNumSteps - 1);
@@ -48,11 +48,11 @@ namespace PredefinedWavetable
         return stageAmmount * stage;
     }
 
-    static float getStepsDownSample (float phase, int totalNumStages)
+    static inline float getStepsDownSample (float phase, int totalNumStages)
     {
         return getStepsUpSample (1.0f - phase, totalNumStages);
     }
-};
+}
 
 /** A ramp which goes between 0 and 1 over a set duration. */
 struct Ramp
@@ -109,7 +109,7 @@ struct DiscreteLabelledParameter  : public AutomatableParameter
         jassert (labels.isEmpty() || labels.size() == numStates);
     }
 
-    ~DiscreteLabelledParameter()
+    ~DiscreteLabelledParameter() override
     {
         notifyListenersOfDeletion();
     }
@@ -166,7 +166,7 @@ struct SuffixedParameter    : public AutomatableParameter
     {
     }
 
-    ~SuffixedParameter()
+    ~SuffixedParameter() override
     {
         notifyListenersOfDeletion();
     }
@@ -185,5 +185,26 @@ struct SuffixedParameter    : public AutomatableParameter
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SuffixedParameter)
 };
+
+//==============================================================================
+//==============================================================================
+static inline AutomatableParameter* createDiscreteParameter (AutomatableEditItem& item, const String& paramID, const String& name,
+                                                             Range<float> valueRange, CachedValue<float>& val, const StringArray& labels)
+{
+    auto p = new DiscreteLabelledParameter (paramID, name, item, valueRange, labels.size(), labels);
+    p->attachToCurrentValue (val);
+
+    return p;
+}
+
+static inline AutomatableParameter* createSuffixedParameter (AutomatableEditItem& item, const String& paramID, const String& name,
+                                                             NormalisableRange<float> valueRange, float centreVal, CachedValue<float>& val, const String& suffix)
+{
+    valueRange.setSkewForCentre (centreVal);
+    auto p = new SuffixedParameter (paramID, name, item, valueRange, suffix);
+    p->attachToCurrentValue (val);
+
+    return p;
+}
 
 }

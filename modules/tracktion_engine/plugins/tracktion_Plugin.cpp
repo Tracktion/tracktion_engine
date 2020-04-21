@@ -26,7 +26,7 @@ struct Plugin::WireList : public ValueTreeObjectList<Plugin::Wire, CriticalSecti
         rebuildObjects();
     }
 
-    ~WireList()
+    ~WireList() override
     {
         freeObjects();
     }
@@ -56,7 +56,7 @@ public:
         jassert (plugin != nullptr);
     }
 
-    ~PluginAudioNode()
+    ~PluginAudioNode() override
     {
         input = nullptr;
         releaseAudioNodeResources();

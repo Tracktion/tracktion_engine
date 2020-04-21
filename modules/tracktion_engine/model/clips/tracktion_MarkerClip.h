@@ -18,7 +18,7 @@ class MarkerClip   : public Clip
 {
 public:
     MarkerClip (const juce::ValueTree&, EditItemID, ClipTrack& targetTrack);
-    ~MarkerClip();
+    ~MarkerClip() override;
 
     int getMarkerID()                                               { return markerID; }
     void setMarkerID (int newID);

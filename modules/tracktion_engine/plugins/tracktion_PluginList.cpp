@@ -20,7 +20,7 @@ struct PluginList::ObjectList  : public ValueTreeObjectList<Plugin>
         // list while they're being created
     }
 
-    ~ObjectList()
+    ~ObjectList() override
     {
         freeObjects();
     }

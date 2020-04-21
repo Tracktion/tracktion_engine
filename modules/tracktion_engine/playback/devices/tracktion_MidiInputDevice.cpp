@@ -579,7 +579,7 @@ public:
         getMidiInput().addInstance (this);
     }
 
-    ~MidiInputDeviceInstanceBase()
+    ~MidiInputDeviceInstanceBase() override
     {
         getMidiInput().removeInstance (this);
     }
@@ -1060,7 +1060,7 @@ private:
                 incomingMessages.add (new MidiMessage (0x80, 0, 0));
         }
 
-        ~InputAudioNode()
+        ~InputAudioNode() override
         {
             releaseAudioNodeResources();
         }

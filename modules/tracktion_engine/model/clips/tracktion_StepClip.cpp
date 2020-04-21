@@ -19,7 +19,7 @@ struct StepClip::ChannelList  : public ValueTreeObjectList<StepClip::Channel>
         rebuildObjects();
     }
 
-    ~ChannelList()
+    ~ChannelList() override
     {
         freeObjects();
     }

@@ -15,7 +15,7 @@ class MidiPatchBayPlugin  : public Plugin
 {
 public:
     MidiPatchBayPlugin (PluginCreationInfo);
-    ~MidiPatchBayPlugin();
+    ~MidiPatchBayPlugin() override;
 
     static const char* getPluginName()      { return NEEDS_TRANS("MIDI Patch Bay"); }
     static juce::ValueTree create();

@@ -24,7 +24,7 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
         clipTrack.trackItemsDirty = true;
     }
 
-    ~ClipList()
+    ~ClipList() override
     {
         for (auto c : objects)
             c->setTrack (nullptr);
@@ -170,7 +170,7 @@ struct ClipTrack::CollectionClipList  : public ValueTree::Listener
         state.addListener (this);
     }
 
-    ~CollectionClipList()
+    ~CollectionClipList() override
     {
         state.removeListener (this);
     }

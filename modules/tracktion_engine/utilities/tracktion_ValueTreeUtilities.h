@@ -62,7 +62,7 @@ public:
         parent.addListener (this);
     }
 
-    virtual ~ValueTreeObjectList()
+    ~ValueTreeObjectList() override
     {
         jassert (objects.isEmpty()); // must call freeObjects() in the subclass destructor!
     }

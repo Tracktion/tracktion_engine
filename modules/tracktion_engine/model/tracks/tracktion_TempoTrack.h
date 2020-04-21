@@ -16,7 +16,7 @@ class TempoTrack  : public Track
 {
 public:
     TempoTrack (Edit&, const juce::ValueTree&);
-    ~TempoTrack();
+    ~TempoTrack() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<TempoTrack>;
 

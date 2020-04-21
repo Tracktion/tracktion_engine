@@ -15,7 +15,7 @@ class PhaserPlugin  : public Plugin
 {
 public:
     PhaserPlugin (PluginCreationInfo);
-    ~PhaserPlugin();
+    ~PhaserPlugin() override;
 
     //==============================================================================
     static const char* getPluginName()                      { return NEEDS_TRANS("Phaser"); }

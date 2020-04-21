@@ -18,7 +18,7 @@ struct VolAutomatableParameter : public AutomatableParameter
     {
     }
 
-    ~VolAutomatableParameter()
+    ~VolAutomatableParameter() override
     {
         notifyListenersOfDeletion();
     }
@@ -42,7 +42,7 @@ struct PanAutomatableParameter : public AutomatableParameter
     {
     }
 
-    ~PanAutomatableParameter()
+    ~PanAutomatableParameter() override
     {
         notifyListenersOfDeletion();
     }
@@ -67,7 +67,7 @@ struct MasterVolParameter  : public VolAutomatableParameter
     {
     }
 
-    ~MasterVolParameter()
+    ~MasterVolParameter() override
     {
         notifyListenersOfDeletion();
     }
@@ -84,7 +84,7 @@ struct MasterPanParameter  : public PanAutomatableParameter
     {
     }
 
-    ~MasterPanParameter()
+    ~MasterPanParameter() override
     {
         notifyListenersOfDeletion();
     }

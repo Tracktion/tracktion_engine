@@ -17,7 +17,7 @@ class BreakpointOscillatorModifier  : public Modifier,
 public:
     //==============================================================================
     BreakpointOscillatorModifier (Edit&, const juce::ValueTree&);
-    ~BreakpointOscillatorModifier();
+    ~BreakpointOscillatorModifier() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<BreakpointOscillatorModifier>;
     using Array = juce::ReferenceCountedArray<BreakpointOscillatorModifier>;

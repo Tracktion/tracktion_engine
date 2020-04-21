@@ -269,7 +269,7 @@ namespace NoteHelpers
     {
         return juce::MidiMessage::noteOff (midiChannel, noteNumber, noteOffVelocity);
     }
-};
+}
 
 void addMidiNoteOnExpressionToSequence (juce::MidiMessageSequence& seq, const juce::ValueTree& state, int midiChannel, double noteOnTime) noexcept
 {

@@ -16,7 +16,7 @@ class MarkerTrack  : public ClipTrack
 {
 public:
     MarkerTrack (Edit&, const juce::ValueTree&);
-    ~MarkerTrack();
+    ~MarkerTrack() override;
 
     bool isMarkerTrack() const override;
     juce::String getSelectableDescription() override;

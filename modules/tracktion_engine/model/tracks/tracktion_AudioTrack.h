@@ -16,7 +16,7 @@ class AudioTrack  : public ClipTrack
 {
 public:
     AudioTrack (Edit&, const juce::ValueTree&);
-    ~AudioTrack();
+    ~AudioTrack() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<AudioTrack>;
 

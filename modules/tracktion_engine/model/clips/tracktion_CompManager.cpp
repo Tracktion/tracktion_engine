@@ -15,7 +15,7 @@ struct CompManager::RenderTrigger   : public ValueTreeAllEventListener,
                                       private juce::Timer
 {
     RenderTrigger (CompManager& o) : owner (o)      { owner.takesTree.addListener (this); }
-    ~RenderTrigger()                                { owner.takesTree.removeListener (this); }
+    ~RenderTrigger() override                       { owner.takesTree.removeListener (this); }
 
     void trigger()                                  { startTimer (10); }
     void valueTreeChanged() override                { trigger(); }

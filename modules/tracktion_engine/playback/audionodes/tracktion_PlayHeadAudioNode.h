@@ -21,7 +21,7 @@ class PlayHeadAudioNode  : public SingleInputAudioNode
 {
 public:
     PlayHeadAudioNode (AudioNode*);
-    ~PlayHeadAudioNode();
+    ~PlayHeadAudioNode() override;
 
     //==============================================================================
     void getAudioNodeProperties (AudioNodeProperties&) override;

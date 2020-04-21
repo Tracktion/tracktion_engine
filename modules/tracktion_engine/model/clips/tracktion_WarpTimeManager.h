@@ -50,7 +50,7 @@ public:
 
     WarpTimeManager (AudioClipBase& source);
     WarpTimeManager (Edit&, const AudioFile& sourceFile, juce::ValueTree parentTree);
-    ~WarpTimeManager();
+    ~WarpTimeManager() override;
 
     void setSourceFile (const AudioFile&);
     AudioFile getSourceFile() const;
@@ -102,7 +102,7 @@ private:
             rebuildObjects();
         }
 
-        ~WarpMarkerList()
+        ~WarpMarkerList() override
         {
             freeObjects();
         }

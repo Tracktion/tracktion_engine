@@ -22,7 +22,7 @@ public:
                         AudioFadeCurve::Type fadeOutType,
                         bool clearSamplesOutsideFade = true);
 
-    ~FadeInOutAudioNode();
+    ~FadeInOutAudioNode() override;
 
     static AudioNode* createForEdit (Edit&, AudioNode* input);
 

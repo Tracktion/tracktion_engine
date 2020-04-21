@@ -15,7 +15,7 @@ class VirtualMidiInputDevice  : public MidiInputDevice
 {
 public:
     VirtualMidiInputDevice (Engine&, const juce::String& name, DeviceType);
-    ~VirtualMidiInputDevice();
+    ~VirtualMidiInputDevice() override;
 
     InputDeviceInstance* createInstance (EditPlaybackContext&) override;
     void handleIncomingMidiMessage (const juce::MidiMessage&) override;

@@ -26,7 +26,7 @@ public:
     BufferingAudioNode (AudioNode* input, int minBufferSize);
 
     /** Destructor. */
-    ~BufferingAudioNode();
+    ~BufferingAudioNode() override;
 
     void getAudioNodeProperties (AudioNodeProperties& info) override;
     void prepareAudioNodeToPlay (const PlaybackInitialisationInfo& info) override;

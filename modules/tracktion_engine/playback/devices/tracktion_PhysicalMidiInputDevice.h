@@ -15,7 +15,7 @@ class PhysicalMidiInputDevice  : public MidiInputDevice
 {
 public:
     PhysicalMidiInputDevice (Engine&, const juce::String& name, int deviceIndex);
-    ~PhysicalMidiInputDevice();
+    ~PhysicalMidiInputDevice() override;
 
     InputDeviceInstance* createInstance (EditPlaybackContext&) override;
 

@@ -87,9 +87,9 @@ void AuxSendPlugin::initialiseWithoutStopping (const PlaybackInitialisationInfo&
     juce::Array<AuxReturnPlugin*> result;
 
     for (auto node : *info.rootNodes)
-        node->visitNodes ([&] (AudioNode& node)
+        node->visitNodes ([&] (AudioNode& visitedNode)
                           {
-                              if (auto ar = dynamic_cast<AuxReturnPlugin*> (node.getPlugin().get()))
+                              if (auto ar = dynamic_cast<AuxReturnPlugin*> (visitedNode.getPlugin().get()))
                                   result.add (ar);
                           });
 

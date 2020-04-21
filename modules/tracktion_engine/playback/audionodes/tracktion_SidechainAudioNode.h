@@ -118,10 +118,10 @@ public:
 
         juce::Array<SidechainSendAudioNode*> result;
 
-        for (auto* node : *info.rootNodes)
-            node->visitNodes ([&] (AudioNode& node)
+        for (auto node : *info.rootNodes)
+            node->visitNodes ([&] (AudioNode& visitingNode)
                               {
-                                  if (auto srcNode = dynamic_cast<SidechainSendAudioNode*> (&node))
+                                  if (auto srcNode = dynamic_cast<SidechainSendAudioNode*> (&visitingNode))
                                       if (sidechainSourceID == srcNode->srcTrackID)
                                           result.add (srcNode);
                               });

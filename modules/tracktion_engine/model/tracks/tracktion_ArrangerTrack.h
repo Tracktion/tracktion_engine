@@ -17,7 +17,7 @@ class ArrangerTrack  : public ClipTrack
 {
 public:
     ArrangerTrack (Edit&, const juce::ValueTree&);
-    ~ArrangerTrack();
+    ~ArrangerTrack() override;
 
     bool isArrangerTrack() const override;
     juce::String getSelectableDescription() override;

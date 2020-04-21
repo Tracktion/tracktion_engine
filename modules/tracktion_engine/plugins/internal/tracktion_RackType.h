@@ -30,7 +30,7 @@ class RackType  : public Selectable,
 {
 public:
     RackType (const juce::ValueTree&, Edit&);
-    ~RackType();
+    ~RackType() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<RackType>;
 

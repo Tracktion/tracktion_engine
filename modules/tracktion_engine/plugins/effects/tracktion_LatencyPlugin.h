@@ -19,7 +19,7 @@ class LatencyPlugin  : public Plugin
 {
 public:
     LatencyPlugin (PluginCreationInfo);
-    ~LatencyPlugin();
+    ~LatencyPlugin() override;
 
     //==============================================================================
     static const char* getPluginName()                      { return NEEDS_TRANS("Latency Tester"); }
@@ -44,7 +44,6 @@ public:
 
 private:
     class DelayRegister;
-    double sampleRate = 44100.0;
     std::unique_ptr<DelayRegister> delayCompensator[2];
     LambdaTimer playbackRestartTimer;
 

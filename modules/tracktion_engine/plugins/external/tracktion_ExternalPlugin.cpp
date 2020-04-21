@@ -21,7 +21,7 @@ struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorLis
             jassertfalse;
     }
 
-    ~ProcessorChangedManager()
+    ~ProcessorChangedManager() override
     {
         if (auto pi = plugin.getAudioPluginInstance())
             pi->removeListener (this);
@@ -78,7 +78,7 @@ struct AsyncPluginDeleter  : private Timer,
 {
     AsyncPluginDeleter() = default;
 
-    ~AsyncPluginDeleter()
+    ~AsyncPluginDeleter() override
     {
         stopTimer();
 

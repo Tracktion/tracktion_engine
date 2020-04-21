@@ -27,7 +27,7 @@ struct PatchBayPlugin::WireList  : public ValueTreeObjectList<PatchBayPlugin::Wi
         rebuildObjects();
     }
 
-    ~WireList()
+    ~WireList() override
     {
         freeObjects();
     }

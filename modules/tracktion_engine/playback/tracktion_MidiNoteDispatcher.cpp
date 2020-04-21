@@ -28,7 +28,8 @@ void MidiNoteDispatcher::nextBlockStarted (PlayHead& playhead, EditTimeRange str
     {
         auto delay = state->device->getMidiOutput().getDeviceDelay();
         auto& buffer = state->device->refillBuffer (playhead, streamTime - delay, blockSize);
-        state->device->context.masterLevels.processMidi (buffer, 0);
+        state->device->context.masterLevels.processMidi (buffer, nullptr);
+        
         if (! state->device->sendMessages (playhead, buffer, streamTime - delay))
             state->buffer.mergeFromAndClear (buffer);
     }
