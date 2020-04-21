@@ -56,7 +56,7 @@ public:
                 if (! timeRange.contains (time))
                     break;
                 
-                const int sampleNumber = sampleRate * (time - timeRange.getStart());
+                const int sampleNumber = roundToInt (sampleRate * (time - timeRange.getStart()));
                 jassert (sampleNumber < numSamples);
                 pc.buffers.midi.addEvent (eventHolder->message, sampleNumber);
             }
@@ -80,7 +80,7 @@ private:
 class SinAudioNode : public AudioNode
 {
 public:
-    SinAudioNode (double frequency, int numChannelsToUse = 1)
+    SinAudioNode (float frequency, int numChannelsToUse = 1)
         : numChannels (numChannelsToUse)
     {
         osc.setFrequency (frequency, true);
@@ -110,7 +110,7 @@ public:
     {
         auto block = pc.buffers.audio;
         osc.process (juce::dsp::ProcessContextReplacing<float> { block });
-        jassert (pc.buffers.audio.getNumChannels() == getAudioNodeProperties().numberOfChannels);
+        jassert (pc.buffers.audio.getNumChannels() == (size_t) getAudioNodeProperties().numberOfChannels);
     }
     
 private:
@@ -481,8 +481,8 @@ public:
 
         for (auto channel : channelMap)
         {
-            auto sourceChanelBlock = sourceAudio.getSubsetChannelBlock (channel.first, 1);
-            auto destChanelBlock = destAudio.getSubsetChannelBlock (channel.second, 1);
+            auto sourceChanelBlock = sourceAudio.getSubsetChannelBlock ((size_t) channel.first, 1);
+            auto destChanelBlock = destAudio.getSubsetChannelBlock ((size_t) channel.second, 1);
             destChanelBlock.add (sourceChanelBlock);
         }
     }

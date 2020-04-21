@@ -38,7 +38,8 @@
         - Stage 2 will be the initialise call with a flat list of all the nodes.
           Send/return nodes can use this to add inputs from the graph (e.g. based on busNum)
           (However, at this stage, return nodes might choose to add latency nodes to balance themselves???)
-          (Maybe this should have to happen when the graph is built? That would mean latency needs to be fixed.)
+          (Maybe this should have to happen when the graph is built? That would mean latency needs to be fixed,
+          and therefore plugins would need to be initialised before graph construction.)
     - Now we have a fully connected graph we can do a proper DFS:
         - This can be used to balance processing buffers between the graph by finding unconnected nodes
         - Finding a processing order by building "stacks" of nodes starting with leafs
@@ -131,6 +132,9 @@ public:
 
     /** Called once before playback begins for each node.
         Use this to allocate buffers etc.
+        This step can be used to modify the topology of the graph (i.e. add/remove nodes).
+        However, if you do this, you must make sure to call initialise on them so they are
+        fully prepared for processing.
     */
     virtual void prepareToPlay (const PlaybackInitialisationInfo&) {}
 
@@ -199,7 +203,7 @@ void AudioNode::process (int numSamples)
     const int numSamplesBeforeProcessing = audioBuffer.getNumSamples();
     ignoreUnused (numChannelsBeforeProcessing, numSamplesBeforeProcessing);
 
-    ProcessContext pc { { juce::dsp::AudioBlock<float> (audioBuffer).getSubBlock (0, numSamples) , midiBuffer } };
+    ProcessContext pc { { juce::dsp::AudioBlock<float> (audioBuffer).getSubBlock (0, (size_t) numSamples) , midiBuffer } };
     process (pc);
     numSamplesProcessed = numSamples;
     hasBeenProcessed = true;
@@ -216,5 +220,5 @@ bool AudioNode::hasProcessed() const
 AudioNode::AudioAndMidiBuffer AudioNode::getProcessedOutput()
 {
     jassert (hasProcessed());
-    return { juce::dsp::AudioBlock<float> (audioBuffer).getSubBlock (0, numSamplesProcessed), midiBuffer };
+    return { juce::dsp::AudioBlock<float> (audioBuffer).getSubBlock (0, (size_t) numSamplesProcessed), midiBuffer };
 }

@@ -42,7 +42,7 @@ struct InputProvider
 
     void setInputs (AudioNode::AudioAndMidiBuffer newBuffers)
     {
-        audio = numChannels > 0 ? newBuffers.audio.getSubsetChannelBlock (0, numChannels) : newBuffers.audio;
+        audio = numChannels > 0 ? newBuffers.audio.getSubsetChannelBlock (0, (size_t) numChannels) : newBuffers.audio;
         midi = newBuffers.midi;
     }
     
@@ -101,9 +101,9 @@ public:
             // For testing purposes, the last block might be smaller than the InputProvider
             // so we'll just take the number of samples required
             jassert (inputBuffers.audio.getNumSamples() >= audioOutputBlock.getNumSamples());
-            jassert (inputBuffers.audio.getNumChannels() >= numChannels);
+            jassert (inputBuffers.audio.getNumChannels() >= (size_t) numChannels);
             
-            auto inputAudioBlock = inputBuffers.audio.getSubsetChannelBlock (0, numChannels)
+            auto inputAudioBlock = inputBuffers.audio.getSubsetChannelBlock (0, (size_t) numChannels)
                                     .getSubBlock (0, audioOutputBlock.getNumSamples());
             jassert (inputAudioBlock.getNumChannels() == audioOutputBlock.getNumChannels());
             
@@ -135,7 +135,7 @@ public:
         jassert (plugin != nullptr);
     }
     
-    ~PluginAudioNode()
+    ~PluginAudioNode() override
     {
         if (isInitialised)
             plugin->baseClassDeinitialise();
@@ -231,7 +231,7 @@ public:
         
         for (auto& m : midiMessageArray)
         {
-            const int sampleNum =  sampleRate * m.getTimeStamp();
+            const int sampleNum = roundToInt (sampleRate * m.getTimeStamp());
             outputBuffers.midi.addEvent (m, sampleNum);
         }
     }

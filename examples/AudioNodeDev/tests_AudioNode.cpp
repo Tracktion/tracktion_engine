@@ -82,7 +82,7 @@ namespace test_utilities
     void writeToFile (File file, const AudioBuffer<float>& buffer, double sampleRate)
     {
         if (auto writer = std::unique_ptr<AudioFormatWriter> (WavAudioFormat().createWriterFor (file.createOutputStream().release(),
-                                                                                                sampleRate, buffer.getNumChannels(), 16, {}, 0)))
+                                                                                                sampleRate, (uint32_t) buffer.getNumChannels(), 16, {}, 0)))
         {
             writer->writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());
         }
@@ -95,7 +95,7 @@ namespace test_utilities
         float* chans[32] = {};
 
         for (int i = 0; i < numChannels; ++i)
-            chans[i] = block.getChannelPointer (i);
+            chans[i] = block.getChannelPointer ((size_t) i);
 
         const juce::AudioBuffer<float> buffer (chans, numChannels, (int) block.getNumSamples());
         writeToFile (file, buffer, sampleRate);
@@ -242,7 +242,7 @@ private:
         
         // Process the node to a file
         if (auto writer = std::unique_ptr<AudioFormatWriter> (WavAudioFormat().createWriterFor (context->tempFile->getFile().createOutputStream().release(),
-                                                                                                ts.sampleRate, numChannels, 16, {}, 0)))
+                                                                                                ts.sampleRate, (uint32_t) numChannels, 16, {}, 0)))
         {
             processor->prepareToPlay (ts.sampleRate, ts.blockSize);
             

@@ -69,15 +69,15 @@ public:
         auto inputMidi = input->getProcessedOutput().midi;
         const int numSamples = (int) inputBuffer.getNumSamples();
 
-        jassert (numSamples == outputBlock.getNumSamples());
-        jassert (fifo.getNumChannels() == inputBuffer.getNumChannels());
+        jassert (numSamples == (int) outputBlock.getNumSamples());
+        jassert (fifo.getNumChannels() == (int) inputBuffer.getNumChannels());
         
         // Write to delay buffers
         fifo.write (inputBuffer);
         midi.addEvents (inputMidi, 0, -1, latencyNumSamples);
 
         // Then read from them
-        jassert (fifo.getNumReady() >= outputBlock.getNumSamples());
+        jassert (fifo.getNumReady() >= (int) outputBlock.getNumSamples());
         fifo.readAdding (outputBlock);
         
         pc.buffers.midi.addEvents (midi, latencyNumSamples, numSamples, -latencyNumSamples);
