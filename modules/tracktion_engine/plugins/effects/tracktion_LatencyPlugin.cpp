@@ -184,7 +184,7 @@ void LatencyPlugin::applyToBuffer (const AudioRenderContext& rc)
         for (int i = 0; i < numChannels; ++i)
         {
             delayCompensator[i]->setSize (delayCompensationSamples);
-            delayCompensator[i]->processSamplesSmoothed (samples[i] + rc.bufferStartSample, rc.bufferNumSamples);
+            delayCompensator[i]->processSamples (samples[i] + rc.bufferStartSample, rc.bufferNumSamples);
         }
     }
 }
