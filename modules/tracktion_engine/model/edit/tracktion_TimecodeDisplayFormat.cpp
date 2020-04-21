@@ -648,31 +648,3 @@ bool TimecodeDisplayIterator::isOneBarOrGreater() const noexcept
 }
 
 }
-
-
-#if TRACKTION_UNIT_TESTS
-
-//==============================================================================
-//==============================================================================
-class TimecodeTests  : public UnitTest
-{
-public:
-    TimecodeTests()
-        : UnitTest ("Timecode", "Tracktion")
-    {
-    }
-
-    void runTest() override
-    {
-        using namespace tracktion_engine;
-        auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
-        TimecodeDisplayFormat timecodeFormat (TimecodeType::millisecs);
-        TimecodeSnapType snapType = timecodeFormat.getSnapType (1);
-        auto string = snapType.getTimecodeString (11.616, edit->tempoSequence, false);
-        DBG(" timecode string: " << snapType.getTimecodeString (11.61, edit->tempoSequence, false));
-    }
-};
-
-static TimecodeTests timecodeTests;
-
-#endif //TRACKTION_UNIT_TESTS
