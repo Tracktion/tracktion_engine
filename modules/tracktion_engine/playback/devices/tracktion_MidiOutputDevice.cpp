@@ -441,8 +441,14 @@ String MidiOutputDevice::openDevice()
             if (deviceIndex >= 0)
             {
                 outputDevice = MidiOutput::openDevice (deviceIndex);
+
+                if (outputDevice == nullptr)
+                {
+                    TRACKTION_LOG_ERROR ("Failed to open MIDI output " + getName());
+                    return TRANS("Couldn't open device");
+                }
             }
-            else
+            else if (softDevice)
             {
                #if JUCE_MAC
                 outputDevice = MidiOutput::createNewDevice (getName());
@@ -451,12 +457,10 @@ String MidiOutputDevice::openDevice()
                 jassertfalse;
                #endif
             }
-        }
-
-        if (outputDevice == nullptr)
-        {
-            TRACKTION_LOG_ERROR ("Failed to open MIDI output " + getName());
-            return TRANS("Couldn't open device");
+            else
+            {
+                outputDevice.reset();
+            }
         }
     }
 
@@ -486,18 +490,18 @@ void MidiOutputDevice::sendNoteOffMessages()
             {
                 for (int note = midiNotesOn.getHighestBit() + 1; --note >= 0;)
                     if (midiNotesOn [note])
-                        outputDevice->sendMessageNow (MidiMessage::noteOff (channel, note));
+                        sendMessageNow (MidiMessage::noteOff (channel, note));
 
                 if (sustain > 0)
                 {
-                    outputDevice->sendMessageNow (MidiMessage::controllerEvent (channel, 64, 0));
-                    outputDevice->sendMessageNow (MidiMessage::controllerEvent (channel, 64, sustain));
+                    sendMessageNow (MidiMessage::controllerEvent (channel, 64, 0));
+                    sendMessageNow (MidiMessage::controllerEvent (channel, 64, sustain));
                 }
 
-                outputDevice->sendMessageNow (MidiMessage::allNotesOff (channel));
+                sendMessageNow (MidiMessage::allNotesOff (channel));
 
                 if (shouldSendAllControllersOffMessages)
-                    outputDevice->sendMessageNow (MidiMessage::allControllersOff (channel));
+                    sendMessageNow (MidiMessage::allControllersOff (channel));
             }
         }
 
@@ -506,12 +510,17 @@ void MidiOutputDevice::sendNoteOffMessages()
     }
 }
 
+void MidiOutputDevice::sendMessageNow (const MidiMessage& message)
+{
+    if (outputDevice != nullptr)
+        outputDevice->sendMessageNow (message);
+}
+
 void MidiOutputDevice::fireMessage (const MidiMessage& message)
 {
     if (! message.isMetaEvent())
     {
-        if (outputDevice != nullptr)
-            outputDevice->sendMessageNow (message);
+        sendMessageNow (message);
 
         if (message.isNoteOnOrOff())
         {

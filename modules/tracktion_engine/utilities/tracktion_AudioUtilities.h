@@ -119,7 +119,6 @@ public:
         jassert (getNumSamplesFree() >= audioSrc.getNumSamples());
         jassert (audioSrc.getNumChannels() == audioBuffer.getNumChannels());
 
-        midiBuffer.clear();
         midiBuffer.addEvents (midiSrc, 0, audioSrc.getNumSamples(), fifo.getNumReady());
 
         int start1, size1, start2, size2;

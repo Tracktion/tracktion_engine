@@ -16,7 +16,7 @@
   exporters:        vs2017, xcode_mac, linux_make
 
   moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1
-  defines:          JucePlugin_IsSynth=1, JucePlugin_WantsMidiInput=1,
+  defines:          JucePlugin_IsSynth=1, JucePlugin_WantsMidiInput=1, JucePlugin_ProducesMidiOutput=1
                     JucePlugin_Vst3Category="Instrument", JucePlugin_AUMainType='aumu', JucePlugin_VSTCategory=kPlugCategSynth
 
   type:             AudioProcessor
@@ -123,16 +123,48 @@ private:
         
         edit.playInStopEnabled = true;
         edit.getTransport().ensureContextAllocated (true);
-        
+
+        // Add the midi input to track 1
         if (auto t = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
             if (auto dev = dm.getMidiInDevice (0))
                 for (auto instance : edit.getAllInputDevices())
                     if (&instance->getInputDevice() == dev)
                         instance->setTargetTrack (*t, 0, true);
-        
+
+        // Also add the same midi input to track 2
+        if (auto t = EngineHelpers::getOrInsertAudioTrackAt (edit, 1))
+            if (auto dev = dm.getMidiInDevice (0))
+                for (auto instance : edit.getAllInputDevices())
+                    if (&instance->getInputDevice() == dev)
+                        instance->setTargetTrack (*t, 0, false);
+
+
         edit.restartPlayback();
     }
-    
+
+    static void setupOutputs (te::Edit& edit)
+    {
+        auto& dm = edit.engine.getDeviceManager();
+
+        for (int i = 0; i < dm.getNumMidiOutDevices(); i++)
+        {
+            auto dev = dm.getMidiOutDevice (i);
+            dev->setEnabled (true);
+        }
+
+        edit.playInStopEnabled = true;
+        edit.getTransport().ensureContextAllocated (true);
+
+        // Set track 2 to send to midi output
+        if (auto t = EngineHelpers::getOrInsertAudioTrackAt (edit, 1))
+        {
+            auto& output = t->getOutput();
+            output.setOutputToDefaultDevice (true);
+        }
+
+        edit.restartPlayback();
+    }
+
     static void create4OSCPlugin (te::Edit& edit)
     {
         if (auto synth = dynamic_cast<te::FourOscPlugin*> (edit.getPluginCache().createNewPlugin (te::FourOscPlugin::xmlTypeName, {}).get()))
@@ -164,6 +196,7 @@ private:
             audioInterface.initialise ({});
 
             setupInputs (edit);
+            setupOutputs (edit);
             create4OSCPlugin (edit);
         }
 
@@ -239,7 +272,9 @@ private:
                  << PlayHeadHelpers::getTimecodeDisplay (pluginPositionInfo) << newLine
                  << newLine
                  << "Tracktion Engine Info:" << newLine
-                 << PlayHeadHelpers::getTimecodeDisplay (editPositionInfo) << newLine;
+                 << PlayHeadHelpers::getTimecodeDisplay (editPositionInfo) << newLine
+                 << "Build:" << newLine
+                 << Time::getCompilationDate().toString (true, true);
             g.setColour (Colours::white);
             g.setFont (15.0f);
             g.drawFittedText (text, r.reduced (10), Justification::topLeft, 5);

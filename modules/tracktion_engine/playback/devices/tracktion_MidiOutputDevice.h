@@ -21,7 +21,7 @@ public:
     void setEnabled (bool) override;
     bool isMidi() const override                        { return true; }
 
-    MidiOutputDeviceInstance* createInstance (EditPlaybackContext&);
+    virtual MidiOutputDeviceInstance* createInstance (EditPlaybackContext&);
 
     //==============================================================================
     juce::String prepareToPlay (Edit*, double start);
@@ -72,9 +72,11 @@ public:
 
     MidiProgramManager& getMidiProgramManager() const   { return engine.getMidiProgramManager(); }
 
-private:
+protected:
     //==============================================================================
     friend class MidiOutputDeviceInstance;
+
+    virtual void sendMessageNow (const juce::MidiMessage& message);
 
     void loadProps();
     void saveProps();
@@ -94,6 +96,7 @@ private:
     bool sendingMMC = false;
     bool sendControllerMidiClock = false;
     bool defaultMidiDevice = false;
+    bool softDevice = false;
 
     juce::BigInteger midiNotesOn, channelsUsed;
     int sustain = 0;
@@ -104,6 +107,18 @@ private:
 
     juce::String openDevice() override;
     void closeDevice() override;
+};
+
+//==============================================================================
+/** Create a software midi port on macOS. Not supported on other platforms */
+class SoftwareMidiOutputDevice  : public MidiOutputDevice
+{
+public:
+    SoftwareMidiOutputDevice (Engine& e, const juce::String& name)
+        : MidiOutputDevice (e, name, -1)
+    {
+        softDevice = true;
+    }
 };
 
 //==============================================================================
@@ -121,6 +136,11 @@ public:
     MidiOutputDevice& getMidiOutput() const noexcept     { return static_cast<MidiOutputDevice&> (owner); }
 
     MidiMessageArray& refillBuffer (PlayHead&, EditTimeRange streamTime, int blockSize);
+
+    // For MidiOutputDevices that aren't connected to a physical piece of hardware,
+    // they should handle sending midi messages to their logical device now
+    // and clear the input buffer
+    virtual bool sendMessages (PlayHead&, MidiMessageArray&, EditTimeRange) { return false; }
 
 private:
     std::unique_ptr<MidiTimecodeGenerator> timecodeGenerator;

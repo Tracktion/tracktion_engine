@@ -319,7 +319,7 @@ void DeviceManager::initialiseMidi()
 
    #if JUCE_MAC && JUCE_DEBUG
     if (openHardwareMidi)
-        midiOutputs.add (new MidiOutputDevice (engine, "Tracktion MIDI Device", -1));
+        midiOutputs.add (new SoftwareMidiOutputDevice (engine, "Tracktion MIDI Device"));
    #endif
 
     StringArray virtualDevices;

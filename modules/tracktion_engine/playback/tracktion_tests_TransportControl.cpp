@@ -29,7 +29,7 @@ public:
         params.fixedBlockSize = true;
         runSynchronisationTest (params);
 
-        params.sampleRate = 96000.0;
+        params.sampleRate = 48000.0;
         params.blockSize = 512;
         runSynchronisationTest (params);
 
@@ -92,6 +92,10 @@ public:
             expectEquals (clips.size(), getAudioTracks (*edit).size());
             auto audioFiles = getSourceFilesFromClips (clips);
             auto sampleIndicies = getSampleIndiciesOfImpulse (engine, audioFiles);
+
+            expect (tempDir.tempDir.isDirectory(), "Output dir not created");
+            expectEquals (tempDir.tempDir.getFullPathName(), File::getCurrentWorkingDirectory().getFullPathName(), "Current directory has changed");
+            expectEquals (audioFiles.size(), deviceManager.getNumWaveInDevices(), "Audio files not created");
 
             for (const auto& f : audioFiles)
                 expectGreaterOrEqual (getFileLength (engine, f), 2.0, "File length less then 2 seconds");
@@ -239,7 +243,6 @@ public:
             originalCwd.setAsCurrentWorkingDirectory();
         }
 
-    private:
         const File originalCwd = File::getCurrentWorkingDirectory();
         const File tempDir = File::createTempFile ({});
     };
