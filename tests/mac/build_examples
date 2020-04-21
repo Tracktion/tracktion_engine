@@ -39,6 +39,7 @@ function buildExample()
 	fi
 }
 
+buildExample "AudioNodeDev"
 buildExample "TestRunner"
 buildExample "PlaybackDemo"
 buildExample "PitchAndTimeDemo"
