@@ -29,7 +29,7 @@ public:
         params.fixedBlockSize = true;
         runSynchronisationTest (params);
 
-        params.sampleRate = 96000.0;
+        params.sampleRate = 48000.0;
         params.blockSize = 512;
         runSynchronisationTest (params);
 
