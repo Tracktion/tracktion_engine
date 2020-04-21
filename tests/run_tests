@@ -73,6 +73,7 @@ if [ "$PLATFORM" == "linux" ]; then
     "$TESTRUNNER_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-TestRunner.xml"
     
     if [ -z "$DISABLE_VALGRIND" ]; then
+        sleep 5
         valgrind "$TESTRUNNER_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-TestRunner_valgrind.xml"
     fi
 fi
