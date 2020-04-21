@@ -48,6 +48,45 @@ void AudioNodeTests::runRackTests (TestSetup testSetup)
         edit->getTempDirectory (false).deleteRecursively();
     }
 
+    beginTest ("Four channel sin Rack");
+    {
+        // This Rack has four input and output channels
+        // The single sin node goes to all the outputs
+        auto edit = Edit::createSingleTrackEdit (engine);
+        auto track = getFirstAudioTrack (*edit);
+        Plugin::Ptr pluginPtr = edit->getPluginCache().createNewPlugin (ToneGeneratorPlugin::xmlTypeName, {});
+        track->pluginList.insertPlugin (pluginPtr, 0, nullptr);
+        auto tonePlugin = dynamic_cast<ToneGeneratorPlugin*> (pluginPtr.get());
+        expect (tonePlugin != nullptr);
+        
+        Plugin::Array plugins;
+        plugins.add (pluginPtr);
+        auto rack = RackType::createTypeToWrapPlugins (plugins, *edit);
+        rack->addOutput (3, "Bus L");
+        rack->addOutput (4, "Bus R");
+
+        rack->addConnection (tonePlugin->itemID, 1, {}, 3);
+        rack->addConnection (tonePlugin->itemID, 2, {}, 4);
+
+        expectEquals (rack->getConnections().size(), 8);
+        
+        // Process Rack
+        {
+            auto inputProvider = std::make_shared<InputProvider> (2);
+            auto rackNode = RackNodeBuilder::createRackAudioNode (*rack, inputProvider);
+
+            auto rackProcessor = std::make_unique<RackAudioNodeProcessor> (std::move (rackNode), inputProvider);
+                                    
+            auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
+            
+            for (int c : { 0, 1, 2, 3 })
+                test_utilities::expectAudioBuffer (*this, testContext->buffer, c, 1.0f, 0.707f);
+        }
+                
+        engine.getAudioFileManager().releaseAllFiles();
+        edit->getTempDirectory (false).deleteRecursively();
+    }
+    
     beginTest ("Two sins in parallel Rack");
     {
         auto edit = Edit::createSingleTrackEdit (engine);
@@ -146,5 +185,89 @@ void AudioNodeTests::runRackTests (TestSetup testSetup)
                 
         engine.getAudioFileManager().releaseAllFiles();
         edit->getTempDirectory (false).deleteRecursively();
+    }
+}
+
+void AudioNodeTests::runRackAudioInputTests (TestSetup testSetup)
+{
+    using namespace tracktion_engine;
+    auto& engine = *Engine::getEngines()[0];
+    
+    // These tests won't work with random block sizes as the test inputs are just static
+    if (! testSetup.randomiseBlockSizes)
+    {
+        beginTest ("Basic sin audio input Rack");
+        {
+            // Just a stereo sing input connected directly to the output across 4 channels
+            auto edit = Edit::createSingleTrackEdit (engine);
+
+            Plugin::Array plugins;
+            auto rack = edit->getRackList().addNewRack();
+            expect (rack != nullptr);
+            
+            rack->addInput (3, "Bus In L");
+            rack->addInput (4, "Bus In R");
+            rack->addOutput (3, "Bus Out L");
+            rack->addOutput (4, "Bus Out R");
+
+            for (int p : { 0, 1, 2, 3, 4 })
+                rack->addConnection ({}, p, {}, p);
+            
+            expectEquals (rack->getConnections().size(), 5);
+
+            // Sin input provider
+            const auto inputProvider = std::make_shared<InputProvider>();
+            AudioBuffer<float> inputBuffer (4, testSetup.blockSize);
+
+            // Fill inputs with sin data
+            {
+                test_utilities::fillBufferWithSinData (inputBuffer);
+                MidiBuffer midi;
+                inputProvider->setInputs ({ juce::dsp::AudioBlock<float> (inputBuffer), midi });
+            }
+
+            // Process Rack
+            {
+                auto rackNode = RackNodeBuilder::createRackAudioNode (*rack, inputProvider);
+                auto rackProcessor = std::make_unique<AudioNodeProcessor> (std::move (rackNode));
+                auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
+
+                for (int c : { 0, 1, 2, 3 })
+                    test_utilities::expectAudioBuffer (*this, testContext->buffer, c, 1.0f, 0.707f);
+            }
+            
+            // Remove connections between 3 & 4, add a latency plugin there, the results should be the same
+            {
+                rack->removeConnection ({}, 3, {}, 3);
+                rack->removeConnection ({}, 4, {}, 4);
+
+                Plugin::Ptr latencyPlugin = edit->getPluginCache().createNewPlugin (LatencyPlugin::xmlTypeName, {});
+                const double latencyTimeInSeconds = 0.5f;
+                dynamic_cast<LatencyPlugin*> (latencyPlugin.get())->latencyTimeSeconds = latencyTimeInSeconds;
+
+                rack->addPlugin (latencyPlugin, {}, false);
+
+                rack->addConnection ({}, 3, latencyPlugin->itemID, 1);
+                rack->addConnection ({}, 4, latencyPlugin->itemID, 2);
+                rack->addConnection (latencyPlugin->itemID, 1, {}, 3);
+                rack->addConnection (latencyPlugin->itemID, 2, {}, 4);
+
+                expectEquals (rack->getConnections().size(), 7);
+
+                // Process Rack
+                {
+                    auto rackNode = RackNodeBuilder::createRackAudioNode (*rack, inputProvider);
+                    auto rackProcessor = std::make_unique<AudioNodeProcessor> (std::move (rackNode));
+                    auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
+                    const int latencyNumSamples = roundToInt (latencyTimeInSeconds * testSetup.sampleRate);
+
+                    for (int c : { 0, 1, 2, 3 })
+                        test_utilities::expectAudioBuffer (*this, testContext->buffer, c, latencyNumSamples, 0.0f, 0.0f, 1.0f, 0.707f);
+                }
+            }
+                    
+            engine.getAudioFileManager().releaseAllFiles();
+            edit->getTempDirectory (false).deleteRecursively();
+        }
     }
 }

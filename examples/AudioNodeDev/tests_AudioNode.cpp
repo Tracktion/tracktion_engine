@@ -58,7 +58,19 @@ namespace test_utilities
         
         return sequence;
     }
-    
+
+    static void fillBufferWithSinData (AudioBuffer<float>& buffer)
+    {
+        const float incremement = MathConstants<float>::twoPi / buffer.getNumSamples();
+        float* sample = buffer.getWritePointer (0);
+        
+        for (int i = 0; i < buffer.getNumSamples(); ++i)
+            *sample++ = std::sin (incremement * i);
+        
+        for (int i = 1; i < buffer.getNumChannels(); ++i)
+            buffer.copyFrom (i, 0, buffer, 0, 0, buffer.getNumSamples());
+    }
+
     /** Logs a MidiMessageSequence. */
     void logMidiMessageSequence (juce::UnitTest& ut, const juce::MidiMessageSequence& seq)
     {
@@ -74,6 +86,19 @@ namespace test_utilities
         {
             writer->writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());
         }
+    }
+
+    /** Writes an audio block to a file. */
+    void writeToFile (File file, const juce::dsp::AudioBlock<float>& block, double sampleRate)
+    {
+        const int numChannels = (int) block.getNumChannels();
+        float* chans[32] = {};
+
+        for (int i = 0; i < numChannels; ++i)
+            chans[i] = block.getChannelPointer (i);
+
+        const juce::AudioBuffer<float> buffer (chans, numChannels, (int) block.getNumSamples());
+        writeToFile (file, buffer, sampleRate);
     }
 
     //==============================================================================
@@ -186,6 +211,7 @@ public:
 
                     // Rack tests
                     runRackTests (setup);
+                    runRackAudioInputTests (setup);
                 }
             }
         }
@@ -721,6 +747,7 @@ private:
     
     // Defined in RackNode.cpp
     void runRackTests (TestSetup);
+    void runRackAudioInputTests (TestSetup);
 };
 
 static AudioNodeTests audioNodeTests;
