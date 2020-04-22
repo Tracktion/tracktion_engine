@@ -259,9 +259,8 @@ private:
     {
     public:
         HostedMidiInputDeviceInstance (HostedMidiInputDevice& owner_, EditPlaybackContext& epc)
-            : MidiInputDeviceInstanceBase (owner_, epc), owner (owner_), context (epc)
+            : MidiInputDeviceInstanceBase (owner_, epc)
         {
-            ignoreUnused (owner, context);
         }
 
         bool startRecording() override              { return false; }
@@ -269,8 +268,6 @@ private:
         void processBlock (MidiBuffer& m)           { midi = m; }
 
     private:
-        HostedMidiInputDevice& owner;
-        EditPlaybackContext& context;
         MidiBuffer midi;
     };
     
@@ -287,7 +284,7 @@ public:
     {
     }
 
-    ~HostedMidiOutputDevice()
+    ~HostedMidiOutputDevice() override
     {
         audioIf.midiOutputs.removeFirstMatchingValue (this);
     }
@@ -318,19 +315,19 @@ private:
     {
     public:
         HostedMidiOutputDeviceInstance (HostedMidiOutputDevice& o, EditPlaybackContext& epc)
-            : MidiOutputDeviceInstance (o, epc), owner (o)
+            : MidiOutputDeviceInstance (o, epc), outputDevice (o)
         {
         }
 
         bool sendMessages (PlayHead& playhead, MidiMessageArray& mma, EditTimeRange streamTime) override
         {
             auto editTime = playhead.streamTimeToEditWindow (streamTime);
-            mma.addToTimestamps (-editTime.editRange1.getStart() - owner.getDeviceDelay());
-            owner.toSend.mergeFromAndClear (mma);
+            mma.addToTimestamps (-editTime.editRange1.getStart() - outputDevice.getDeviceDelay());
+            outputDevice.toSend.mergeFromAndClear (mma);
             return true;
         }
 
-        HostedMidiOutputDevice& owner;
+        HostedMidiOutputDevice& outputDevice;
     };
 
     HostedAudioDeviceInterface& audioIf;

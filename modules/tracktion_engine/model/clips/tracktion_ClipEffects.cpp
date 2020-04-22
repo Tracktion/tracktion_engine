@@ -553,8 +553,8 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
 //==============================================================================
 struct BlockBasedRenderJob : public ClipEffect::ClipEffectRenderJob
 {
-    BlockBasedRenderJob (Engine& e, const AudioFile& dest, const AudioFile& src, double sourceLengthSeconds)
-        : ClipEffect::ClipEffectRenderJob (e, dest, src), sourceLength (sourceLengthSeconds)
+    BlockBasedRenderJob (Engine& e, const AudioFile& dest, const AudioFile& src, double sourceLength)
+        : ClipEffect::ClipEffectRenderJob (e, dest, src), sourceLengthSeconds (sourceLength)
     {
     }
 
@@ -573,7 +573,7 @@ struct BlockBasedRenderJob : public ClipEffect::ClipEffectRenderJob
         if (reader == nullptr || reader->lengthInSamples == 0)
             return false;
 
-        sourceLengthSamples = (juce::int64) (sourceLength * reader->sampleRate);
+        sourceLengthSamples = (juce::int64) (sourceLengthSeconds * reader->sampleRate);
 
         writer.reset (new AudioFileWriter (destination, engine.getAudioFileFormatManager().getWavFormat(),
                                            sourceInfo.numChannels, sourceInfo.sampleRate,
@@ -596,7 +596,7 @@ protected:
     std::unique_ptr<AudioFormatReader> reader;
     std::unique_ptr<AudioFileWriter> writer;
 
-    double sourceLength = 0;
+    double sourceLengthSeconds = 0;
     juce::int64 position = 0;
     juce::int64 sourceLengthSamples = 0;
 
@@ -608,9 +608,9 @@ class WarpTimeEffectRenderJob :   public BlockBasedRenderJob
 {
 public:
     WarpTimeEffectRenderJob (Engine& e, const AudioFile& dest, const AudioFile& src,
-                             double sourceLengthSeconds,
+                             double sourceLength,
                              WarpTimeManager& wtm, AudioClipBase& c)
-        : BlockBasedRenderJob (e, dest, src, sourceLengthSeconds),
+        : BlockBasedRenderJob (e, dest, src, sourceLength),
           clip (c), warpTimeManager (wtm)
     {
         CRASH_TRACER
@@ -1466,7 +1466,7 @@ struct MakeMonoEffect::MakeMonoRenderJob : public BlockBasedRenderJob
         if (reader == nullptr || reader->lengthInSamples == 0)
             return false;
 
-        sourceLengthSamples = (juce::int64) (sourceLength * reader->sampleRate);
+        sourceLengthSamples = (juce::int64) (sourceLengthSeconds * reader->sampleRate);
 
         writer.reset (new AudioFileWriter (destination, engine.getAudioFileFormatManager().getWavFormat(),
                                            1, sourceInfo.sampleRate,

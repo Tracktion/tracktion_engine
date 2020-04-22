@@ -341,10 +341,10 @@ void CustomControlSurface::recreateOSCSockets()
     }
 }
 
-void CustomControlSurface::saveAllSettings (Engine& engine)
+void CustomControlSurface::saveAllSettings (Engine& e)
 {
     SharedResourcePointer<CustomControlSurfaceManager> manager;
-    manager->saveAllSettings (engine);
+    manager->saveAllSettings (e);
 }
 
 void CustomControlSurface::updateMiscFeatures()

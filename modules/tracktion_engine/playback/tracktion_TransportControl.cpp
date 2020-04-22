@@ -71,8 +71,8 @@ namespace TransportHelpers
 */
 struct TransportControl::TransportState : private ValueTree::Listener
 {
-    TransportState (TransportControl& tc, juce::ValueTree transportState)
-        : state (transportState), transport (tc)
+    TransportState (TransportControl& tc, juce::ValueTree transportStateToUse)
+        : state (transportStateToUse), transport (tc)
     {
         UndoManager* um = nullptr;
 
