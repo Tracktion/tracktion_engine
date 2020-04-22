@@ -262,7 +262,8 @@ private:
                 AudioBuffer<float> subSectionBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
                                                      0, numThisTime);
 
-                processor->process ({ { { subSectionBuffer }, midi } });
+                processor->process ({ { (int64_t) numSamplesDone, (int64_t) numThisTime },
+                                      { { subSectionBuffer }, midi } });
                 
                 writer->writeFromAudioSampleBuffer (subSectionBuffer, 0, subSectionBuffer.getNumSamples());
                 context->midi.addEvents (midi, 0, numThisTime, numSamplesDone);

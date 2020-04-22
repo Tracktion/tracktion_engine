@@ -56,7 +56,7 @@ public:
                 if (! timeRange.contains (time))
                     break;
                 
-                const int sampleNumber = roundToInt (sampleRate * (time - timeRange.getStart()));
+                const int sampleNumber = (int) std::floor (sampleRate * (time - timeRange.getStart()));
                 jassert (sampleNumber < numSamples);
                 pc.buffers.midi.addEvent (eventHolder->message, sampleNumber);
             }

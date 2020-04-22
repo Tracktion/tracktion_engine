@@ -108,8 +108,16 @@ public:
     /** Call before processing the next block, used to reset the process status. */
     void prepareForNextBlock();
     
-    /** Call to process the node, which will in turn call the process method with the buffers to fill. */
-    void process (int numSamples);
+    /** Call to process the node, which will in turn call the process method with the
+        buffers to fill.
+        @param streamSampleRange The monotonic stream time in samples.
+                                 This will be passed to the ProcessContext during the
+                                 process callback so nodes can use this to determine file
+                                 reading positions etc.
+                                 Some nodes may ignore this completely but it should at the
+                                 least specify the number to samples to process in this block.
+    */
+    void process (juce::Range<int64_t> streamSampleRange);
     
     /** Returns true if this node has processed and its outputs can be retrieved. */
     bool hasProcessed() const;
@@ -151,6 +159,7 @@ public:
     /** Struct to describe a single iteration of a process call. */
     struct ProcessContext
     {
+        juce::Range<int64_t> streamSampleRange;
         AudioAndMidiBuffer buffers;
     };
     
@@ -195,7 +204,7 @@ void AudioNode::prepareForNextBlock()
     hasBeenProcessed = false;
 }
 
-void AudioNode::process (int numSamples)
+void AudioNode::process (juce::Range<int64_t> streamSampleRange)
 {
     audioBuffer.clear();
     midiBuffer.clear();
@@ -203,7 +212,11 @@ void AudioNode::process (int numSamples)
     const int numSamplesBeforeProcessing = audioBuffer.getNumSamples();
     ignoreUnused (numChannelsBeforeProcessing, numSamplesBeforeProcessing);
 
-    ProcessContext pc { { juce::dsp::AudioBlock<float> (audioBuffer).getSubBlock (0, (size_t) numSamples) , midiBuffer } };
+    const int numSamples = (int) streamSampleRange.getLength();
+    ProcessContext pc {
+                        streamSampleRange,
+                        { juce::dsp::AudioBlock<float> (audioBuffer).getSubBlock (0, (size_t) numSamples) , midiBuffer }
+                      };
     process (pc);
     numSamplesProcessed = numSamples;
     hasBeenProcessed = true;
