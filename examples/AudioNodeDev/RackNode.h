@@ -51,9 +51,25 @@ struct InputProvider
         return { audio, midi };
     }
     
+    void setContext (tracktion_engine::AudioRenderContext* rc)
+    {
+        context = rc;
+    }
+    
+    /** Returns the context currently in use.
+        This is only valid for the duration of the process call.
+    */
+    tracktion_engine::AudioRenderContext& getContext()
+    {
+        jassert (context != nullptr);
+        return *context;
+    }
+    
     int numChannels = 0;
     juce::dsp::AudioBlock<float> audio;
     MidiBuffer midi;
+
+    tracktion_engine::AudioRenderContext* context = nullptr;
 };
 
 
@@ -127,9 +143,11 @@ class PluginAudioNode   : public AudioNode
 {
 public:
     PluginAudioNode (std::unique_ptr<AudioNode> inputNode,
-                     tracktion_engine::Plugin::Ptr pluginToProcess)
+                     tracktion_engine::Plugin::Ptr pluginToProcess,
+                     std::shared_ptr<InputProvider> contextProvider)
         : input (std::move (inputNode)),
-          plugin (std::move (pluginToProcess))
+          plugin (std::move (pluginToProcess)),
+          audioRenderContextProvider (std::move (contextProvider))
     {
         jassert (input != nullptr);
         jassert (plugin != nullptr);
@@ -215,13 +233,13 @@ public:
         }
 
         // Then prepare the AudioRenderContext
-        tracktion_engine::PlayHead playHead;
-        tracktion_engine::AudioRenderContext rc (playHead, {},
-                                                 &inputAudioBuffer,
-                                                 juce::AudioChannelSet::canonicalChannelSet (inputAudioBuffer.getNumChannels()),
-                                                 0, inputAudioBuffer.getNumSamples(),
-                                                 &midiMessageArray, 0.0,
-                                                 tracktion_engine::AudioRenderContext::contiguous, false);
+        auto sourceContext = audioRenderContextProvider->getContext();
+        tracktion_engine::AudioRenderContext rc (sourceContext);
+        rc.destBuffer = &inputAudioBuffer;
+        rc.bufferStartSample = 0;
+        rc.bufferNumSamples = inputAudioBuffer.getNumSamples();
+        rc.bufferForMidiMessages = &midiMessageArray;
+        rc.midiBufferOffset = 0.0;
 
         // Process the plugin
         plugin->applyToBufferWithAutomation (rc);
@@ -239,6 +257,8 @@ public:
 private:
     std::unique_ptr<AudioNode> input;
     tracktion_engine::Plugin::Ptr plugin;
+    std::shared_ptr<InputProvider> audioRenderContextProvider;
+    
     bool isInitialised = false;
     double sampleRate = 44100.0;
     tracktion_engine::MidiMessageArray midiMessageArray;
@@ -256,15 +276,19 @@ class RackAudioNodeProcessor
 public:
     /** Creates an RackAudioNodeProcessor to process an AudioNode with input. */
     RackAudioNodeProcessor (std::unique_ptr<AudioNode> nodeToProcess,
-                            std::shared_ptr<InputProvider> inputProviderToUse)
+                            std::shared_ptr<InputProvider> inputProviderToUse,
+                            bool overrideInputProvider = true)
         : node (std::move (nodeToProcess)),
-          inputProvider (inputProviderToUse)
+          inputProvider (std::move (inputProviderToUse)),
+          overrideInputs (overrideInputProvider)
     {
     }
 
     /** Preapres the processor to be played. */
-    void prepareToPlay (double sampleRate, int blockSize)
+    void prepareToPlay (double sampleRateToUse, int blockSize)
     {
+        sampleRate = sampleRateToUse;
+        
         // First, initiliase all the nodes, this will call prepareToPlay on them and also
         // give them a chance to do things like balance latency
         const PlaybackInitialisationInfo info { sampleRate, blockSize, *node };
@@ -281,7 +305,42 @@ public:
     /** Processes a block of audio and MIDI data. */
     void process (const AudioNode::ProcessContext& pc)
     {
-        inputProvider->setInputs (pc.buffers);
+        if (overrideInputs)
+            inputProvider->setInputs (pc.buffers);
+
+        //ddd TODO: Remove this
+        float* channels[32] = {};
+
+        for (size_t i = 0; i < pc.buffers.audio.getNumChannels(); ++i)
+            channels[i] = pc.buffers.audio.getChannelPointer (i);
+
+        AudioBuffer<float> inputAudioBuffer (channels,
+                                             (int) pc.buffers.audio.getNumChannels(),
+                                             (int) pc.buffers.audio.getNumSamples());
+
+        midiMessageArray.clear();
+
+        for (MidiBuffer::Iterator iter (pc.buffers.midi);;)
+        {
+            MidiMessage result;
+            int samplePosition = 0;
+
+            if (! iter.getNextEvent (result, samplePosition))
+                break;
+
+            const double time = samplePosition / sampleRate;
+            midiMessageArray.addMidiMessage (std::move (result), time, tracktion_engine::MidiMessageArray::notMPE);
+        }
+
+        tracktion_engine::PlayHead playHead;
+        tracktion_engine::AudioRenderContext rc (playHead, {},
+                                                 &inputAudioBuffer,
+                                                 juce::AudioChannelSet::canonicalChannelSet (inputAudioBuffer.getNumChannels()),
+                                                 0, inputAudioBuffer.getNumSamples(),
+                                                 &midiMessageArray, 0.0,
+                                                 tracktion_engine::AudioRenderContext::contiguous, false);
+
+        inputProvider->setContext (&rc);
         
         for (auto node : allNodes)
             node->prepareForNextBlock();
@@ -314,6 +373,10 @@ private:
     std::unique_ptr<AudioNode> node;
     std::vector<AudioNode*> allNodes;
     std::shared_ptr<InputProvider> inputProvider;
+    bool overrideInputs = true;
+
+    double sampleRate = 44100.0;
+    tracktion_engine::MidiMessageArray midiMessageArray;
 };
 
 
@@ -418,7 +481,8 @@ namespace RackNodeBuilder
                                                        connections);
     }
 
-    std::unique_ptr<AudioNode> createNodeForRackInputOutputDirectConnections (te::RackType& rack, std::shared_ptr<InputProvider> inputProvider)
+    std::unique_ptr<AudioNode> createNodeForRackInputOutputDirectConnections (te::RackType& rack,
+                                                                              std::shared_ptr<InputProvider> inputProvider)
     {
         return createNodeForDirectConnectionsBetween (rack, {}, {}, inputProvider);
     }
@@ -450,10 +514,11 @@ namespace RackNodeBuilder
             }
         }
 
-        return makeAudioNode<PluginAudioNode> (makeAudioNode<SummingAudioNode> (std::move (nodes)), *plugin);
+        return makeAudioNode<PluginAudioNode> (makeAudioNode<SummingAudioNode> (std::move (nodes)), *plugin, inputProvider);
     }
 
-    std::unique_ptr<AudioNode> createRackAudioNode (te::RackType& rack, std::shared_ptr<InputProvider> inputProvider)
+    std::unique_ptr<AudioNode> createRackAudioNode (te::RackType& rack,
+                                                    std::shared_ptr<InputProvider> inputProvider)
     {
         std::vector<std::unique_ptr<AudioNode>> nodes;
         

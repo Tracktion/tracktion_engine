@@ -213,6 +213,7 @@ void AudioNode::process (juce::Range<int64_t> streamSampleRange)
     ignoreUnused (numChannelsBeforeProcessing, numSamplesBeforeProcessing);
 
     const int numSamples = (int) streamSampleRange.getLength();
+    jassert (numSamples > 0); // This must be a valid number of samples to process
     ProcessContext pc {
                         streamSampleRange,
                         { juce::dsp::AudioBlock<float> (audioBuffer).getSubBlock (0, (size_t) numSamples) , midiBuffer }

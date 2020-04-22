@@ -229,7 +229,7 @@ void AudioNodeTests::runRackAudioInputTests (TestSetup testSetup)
             // Process Rack
             {
                 auto rackNode = RackNodeBuilder::createRackAudioNode (*rack, inputProvider);
-                auto rackProcessor = std::make_unique<AudioNodeProcessor> (std::move (rackNode));
+                auto rackProcessor = std::make_unique<RackAudioNodeProcessor> (std::move (rackNode), inputProvider, false);
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
 
                 for (int c : { 0, 1, 2, 3 })
@@ -257,7 +257,7 @@ void AudioNodeTests::runRackAudioInputTests (TestSetup testSetup)
                 // Process Rack
                 {
                     auto rackNode = RackNodeBuilder::createRackAudioNode (*rack, inputProvider);
-                    auto rackProcessor = std::make_unique<AudioNodeProcessor> (std::move (rackNode));
+                    auto rackProcessor = std::make_unique<RackAudioNodeProcessor> (std::move (rackNode), inputProvider, false);
                     auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
                     const int latencyNumSamples = roundToInt (latencyTimeInSeconds * testSetup.sampleRate);
 
