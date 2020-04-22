@@ -27,7 +27,9 @@ using namespace juce;
  #pragma clang diagnostic ignored "-Wmacro-redefined"
  #pragma clang diagnostic ignored "-Wconversion"
  #pragma clang diagnostic ignored "-Wunused"
- #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
+ #if __has_warning("-Wzero-as-null-pointer-constant")
+  #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
+ #endif
  #pragma clang diagnostic ignored "-Wextra-semi"
 #endif
 
