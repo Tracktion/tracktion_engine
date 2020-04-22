@@ -268,7 +268,6 @@ struct MacroSource : public AutomationModifierSource
 {
     MacroSource (MacroParameter::Assignment::Ptr macroAssignment, MacroParameter& macroParameter)
         : AutomationModifierSource (macroAssignment),
-          assignment (macroAssignment),
           macro (&macroParameter)
     {
         jassert (state.hasType (IDs::MACRO) && state.hasProperty (IDs::source));
@@ -311,7 +310,6 @@ struct MacroSource : public AutomationModifierSource
         return currentValue.load (std::memory_order_acquire);
     }
 
-    const MacroParameter::Assignment::Ptr assignment;
     const MacroParameter::Ptr macro;
 
 private:

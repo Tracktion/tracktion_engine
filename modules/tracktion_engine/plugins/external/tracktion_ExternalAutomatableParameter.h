@@ -16,11 +16,11 @@ class ExternalAutomatableParameter   : public AutomatableParameter,
                                        private juce::AsyncUpdater
 {
 public:
-    ExternalAutomatableParameter (const juce::String& paramID,
+    ExternalAutomatableParameter (const juce::String& parameterID,
                                   const juce::String& name,
                                   ExternalPlugin& owner, int parameterIndex_,
                                   juce::Range<float> valueRangeToUse)
-        : AutomatableParameter (paramID, name, owner, valueRangeToUse),
+        : AutomatableParameter (parameterID, name, owner, valueRangeToUse),
           parameterIndex (parameterIndex_)
     {
         if (auto vstXML = owner.getVSTXML())

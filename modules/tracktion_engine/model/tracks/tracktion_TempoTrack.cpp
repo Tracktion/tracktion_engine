@@ -11,8 +11,8 @@
 namespace tracktion_engine
 {
 
-TempoTrack::TempoTrack (Edit& edit, const ValueTree& v)
-    : Track (edit, v, 40, 13, 200)
+TempoTrack::TempoTrack (Edit& e, const ValueTree& v)
+    : Track (e, v, 40, 13, 200)
 {
 }
 

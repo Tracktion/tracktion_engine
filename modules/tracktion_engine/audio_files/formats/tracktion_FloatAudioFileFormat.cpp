@@ -87,10 +87,10 @@ public:
 class FloatAudioFormatWriter  : public juce::AudioFormatWriter
 {
 public:
-    FloatAudioFormatWriter (juce::OutputStream* out, double sampleRate, unsigned int numChannels_)
+    FloatAudioFormatWriter (juce::OutputStream* out, double sampleRate_, unsigned int numChannels_)
         : AudioFormatWriter (out,
                              TRANS("Tracktion audio file"),
-                             sampleRate,
+                             sampleRate_,
                              numChannels_,
                              32),
           lengthInSamples (0)

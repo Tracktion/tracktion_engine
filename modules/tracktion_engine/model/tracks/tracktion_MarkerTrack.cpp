@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-MarkerTrack::MarkerTrack (Edit& edit, const ValueTree& v)  : ClipTrack (edit, v, 40, 13, 60)
+MarkerTrack::MarkerTrack (Edit& e, const ValueTree& v)  : ClipTrack (e, v, 40, 13, 60)
 {
 }
 
