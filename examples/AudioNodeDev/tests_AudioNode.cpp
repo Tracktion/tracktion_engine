@@ -280,9 +280,9 @@ private:
             // Then read it back in to the buffer
             if (auto reader = std::unique_ptr<AudioFormatReader> (WavAudioFormat().createReaderFor (context->tempFile->getFile().createInputStream().release(), true)))
             {
-                AudioBuffer<float> buffer (numChannels, (int) reader->lengthInSamples);
-                reader->read (&buffer, 0, buffer.getNumSamples(), 0, true, false);
-                context->buffer = std::move (buffer);
+                AudioBuffer<float> tempBuffer (numChannels, (int) reader->lengthInSamples);
+                reader->read (&tempBuffer, 0, tempBuffer.getNumSamples(), 0, true, false);
+                context->buffer = std::move (tempBuffer);
                 
                 return context;
             }

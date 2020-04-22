@@ -23,7 +23,7 @@ class AudioNodeProcessor
 public:
     /** Creates an AudioNodeProcessor to process an AudioNode. */
     AudioNodeProcessor (std::unique_ptr<AudioNode> nodeToProcess)
-        : node (std::move (nodeToProcess))
+        : input (std::move (nodeToProcess))
     {
     }
 
@@ -32,15 +32,15 @@ public:
     {
         // First, initiliase all the nodes, this will call prepareToPlay on them and also
         // give them a chance to do things like balance latency
-        const PlaybackInitialisationInfo info { sampleRate, blockSize, *node };
+        const PlaybackInitialisationInfo info { sampleRate, blockSize, *input };
         std::function<void (AudioNode&)> visitor = [&] (AudioNode& n) { n.initialise (info); };
-        visitInputs (*node, visitor);
+        visitInputs (*input, visitor);
         
         // Then find all the nodes as it might have changed after initialisation
         allNodes.clear();
         
         std::function<void (AudioNode&)> visitor2 = [&] (AudioNode& n) { allNodes.push_back (&n); };
-        visitInputs (*node, visitor2);
+        visitInputs (*input, visitor2);
     }
 
     /** Processes a block of audio and MIDI data. */
@@ -64,7 +64,7 @@ public:
             
             if (! processedAnyNodes)
             {
-                auto output = node->getProcessedOutput();
+                auto output = input->getProcessedOutput();
                 pc.buffers.audio.copyFrom (output.audio);
                 pc.buffers.midi.addEvents (output.midi, 0, -1, 0);
                 
@@ -74,6 +74,6 @@ public:
     }
     
 private:
-    std::unique_ptr<AudioNode> node;
+    std::unique_ptr<AudioNode> input;
     std::vector<AudioNode*> allNodes;
 };

@@ -278,7 +278,7 @@ public:
     RackAudioNodeProcessor (std::unique_ptr<AudioNode> nodeToProcess,
                             std::shared_ptr<InputProvider> inputProviderToUse,
                             bool overrideInputProvider = true)
-        : node (std::move (nodeToProcess)),
+        : input (std::move (nodeToProcess)),
           inputProvider (std::move (inputProviderToUse)),
           overrideInputs (overrideInputProvider)
     {
@@ -291,15 +291,15 @@ public:
         
         // First, initiliase all the nodes, this will call prepareToPlay on them and also
         // give them a chance to do things like balance latency
-        const PlaybackInitialisationInfo info { sampleRate, blockSize, *node };
+        const PlaybackInitialisationInfo info { sampleRate, blockSize, *input };
         std::function<void (AudioNode&)> visitor = [&] (AudioNode& n) { n.initialise (info); };
-        visitInputs (*node, visitor);
+        visitInputs (*input, visitor);
         
         // Then find all the nodes as it might have changed after initialisation
         allNodes.clear();
         
         std::function<void (AudioNode&)> visitor2 = [&] (AudioNode& n) { allNodes.push_back (&n); };
-        visitInputs (*node, visitor2);
+        visitInputs (*input, visitor2);
     }
 
     /** Processes a block of audio and MIDI data. */
@@ -360,7 +360,7 @@ public:
             
             if (! processedAnyNodes)
             {
-                auto output = node->getProcessedOutput();
+                auto output = input->getProcessedOutput();
                 pc.buffers.audio.copyFrom (output.audio);
                 pc.buffers.midi.addEvents (output.midi, 0, -1, 0);
                 
@@ -370,7 +370,7 @@ public:
     }
     
 private:
-    std::unique_ptr<AudioNode> node;
+    std::unique_ptr<AudioNode> input;
     std::vector<AudioNode*> allNodes;
     std::shared_ptr<InputProvider> inputProvider;
     bool overrideInputs = true;
@@ -505,9 +505,9 @@ namespace RackNodeBuilder
             if (c.destID != pluginID)
                 continue;
 
-            if (auto plugin = rack.getPluginForID (c.sourceID))
+            if (auto p = rack.getPluginForID (c.sourceID))
             {
-                auto pluginNode = createNodeForPlugin (rack, *plugin, inputProvider);
+                auto pluginNode = createNodeForPlugin (rack, *p, inputProvider);
                 auto mappedNode = createChannelMappingNodeForConnections (std::move (pluginNode),
                                                                           getConnectionsBetween (rack, c.sourceID, pluginID));
                 nodes.push_back (std::move (mappedNode));
