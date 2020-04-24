@@ -67,18 +67,24 @@ public:
         auto& outputBlock = pc.buffers.audio;
         auto inputBuffer = input->getProcessedOutput().audio;
         auto inputMidi = input->getProcessedOutput().midi;
-        const int numSamples = (int) inputBuffer.getNumSamples();
+        const int numSamples = (int) pc.streamSampleRange.getLength();
 
-        jassert (numSamples == (int) outputBlock.getNumSamples());
-        jassert (fifo.getNumChannels() == (int) inputBuffer.getNumChannels());
-        
-        // Write to delay buffers
-        fifo.write (inputBuffer);
+        if (fifo.getNumChannels() > 0)
+        {
+            jassert (numSamples == (int) outputBlock.getNumSamples());
+            jassert (fifo.getNumChannels() == (int) inputBuffer.getNumChannels());
+            
+            // Write to audio delay buffer
+            fifo.write (inputBuffer);
+
+            // Then read from them
+            jassert (fifo.getNumReady() >= (int) outputBlock.getNumSamples());
+            fifo.readAdding (outputBlock);
+        }
+
+        // Then write to MIDI delay buffer
         midi.addEvents (inputMidi, 0, -1, latencyNumSamples);
 
-        // Then read from them
-        jassert (fifo.getNumReady() >= (int) outputBlock.getNumSamples());
-        fifo.readAdding (outputBlock);
         
         pc.buffers.midi.addEvents (midi, latencyNumSamples, numSamples, -latencyNumSamples);
         midi.clear (latencyNumSamples, numSamples);

@@ -44,7 +44,7 @@ public:
     
     void process (const ProcessContext& pc) override
     {
-        const int numSamples = (int) pc.buffers.audio.getNumSamples();
+        const int numSamples = (int) pc.streamSampleRange.getLength();
         const double blockDuration = numSamples / sampleRate;
         const auto timeRange = tracktion_engine::EditTimeRange::withStartAndLength (lastTime, blockDuration);
         
@@ -275,10 +275,10 @@ public:
     void process (const ProcessContext& pc) override
     {
         auto inputBuffer = node->getProcessedOutput().audio;
-        jassert (inputBuffer.getNumSamples() == pc.buffers.audio.getNumSamples());
 
-        const int numSamples = (int) pc.buffers.audio.getNumSamples();
+        const int numSamples = (int) pc.streamSampleRange.getLength();
         const int numChannels = std::min ((int) inputBuffer.getNumChannels(), (int) pc.buffers.audio.getNumChannels());
+        jassert ((int) inputBuffer.getNumSamples() == numSamples);
 
         for (int c = 0; c < numChannels; ++c)
         {
@@ -336,10 +336,11 @@ public:
     void process (const ProcessContext& pc) override
     {
         jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
+        const int numSamples = (int) pc.streamSampleRange.getLength();
 
         // Just pass out input on to our output
         pc.buffers.audio.copyFrom (input->getProcessedOutput().audio);
-        pc.buffers.midi.addEvents (input->getProcessedOutput().midi, 0, (int) pc.buffers.audio.getNumSamples(), 0);
+        pc.buffers.midi.addEvents (input->getProcessedOutput().midi, 0, numSamples, 0);
     }
     
 private:
@@ -408,10 +409,11 @@ public:
     void process (const ProcessContext& pc) override
     {
         jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
-        
-        // Copy the input on to our output, the SumminAudioNode will copy all the sends and get all the input
+        const int numSamples = (int) pc.streamSampleRange.getLength();
+
+        // Copy the input on to our output, the SummingAudioNode will copy all the sends and get all the input
         pc.buffers.audio.copyFrom (input->getProcessedOutput().audio);
-        pc.buffers.midi.addEvents (input->getProcessedOutput().midi, 0, (int) pc.buffers.audio.getNumSamples(), 0);
+        pc.buffers.midi.addEvents (input->getProcessedOutput().midi, 0, numSamples, 0);
     }
     
 private:
