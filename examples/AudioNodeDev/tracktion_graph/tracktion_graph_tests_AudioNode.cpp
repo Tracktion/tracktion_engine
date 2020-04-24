@@ -178,9 +178,9 @@ private:
             const int numLatencySamples = roundToInt (numSamplesPerCycle / 2.0);
 
             std::vector<std::unique_ptr<AudioNode>> nodes;
-            nodes.push_back (std::make_unique<SinAudioNode> (sinFrequency));
+            nodes.push_back (std::make_unique<SinAudioNode> ((float) sinFrequency));
 
-            auto sinNode = std::make_unique<SinAudioNode> (sinFrequency);
+            auto sinNode = std::make_unique<SinAudioNode> ((float) sinFrequency);
             auto latencySinNode = std::make_unique<LatencyAudioNode> (std::move (sinNode), numLatencySamples);
             nodes.push_back (std::move (latencySinNode));
 
@@ -205,9 +205,9 @@ private:
             const int numLatencySamples = roundToInt (numSamplesPerCycle / 2.0);
 
             std::vector<std::unique_ptr<AudioNode>> nodes;
-            nodes.push_back (makeGainNode (makeAudioNode<SinAudioNode> (sinFrequency), 0.5f));
+            nodes.push_back (makeGainNode (makeAudioNode<SinAudioNode> ((float) sinFrequency), 0.5f));
 
-            auto sinNode = makeGainNode (makeAudioNode<SinAudioNode> (sinFrequency), 0.5f);
+            auto sinNode = makeGainNode (makeAudioNode<SinAudioNode> ((float) sinFrequency), 0.5f);
             auto latencySinNode = makeAudioNode<LatencyAudioNode> (std::move (sinNode), numLatencySamples);
             nodes.push_back (std::move (latencySinNode));
 
@@ -228,13 +228,13 @@ private:
             const double numSamplesPerCycle = testSetup.sampleRate / sinFrequency;
             const int numLatencySamples = roundToInt (numSamplesPerCycle / 2.0);
 
-            auto track1 = makeAudioNode<SinAudioNode> (sinFrequency);
+            auto track1 = makeAudioNode<SinAudioNode> ((float) sinFrequency);
             track1 = makeAudioNode<LatencyAudioNode> (std::move (track1), numLatencySamples);
             track1 = makeGainNode (std::move (track1), 0.5f);
             track1 = makeAudioNode<SendAudioNode> (std::move (track1), 1);
             track1 = makeGainNode (std::move (track1), 0.0f);
 
-            auto track2 = makeAudioNode<SinAudioNode> (sinFrequency);
+            auto track2 = makeAudioNode<SinAudioNode> ((float) sinFrequency);
             track2 = makeGainNode (std::move (track2), 0.5f);
             track2 = makeAudioNode<ReturnAudioNode> (std::move (track2), 1);
             
@@ -256,19 +256,19 @@ private:
             const double numSamplesPerCycle = testSetup.sampleRate / sinFrequency;
             const int numLatencySamples = roundToInt (numSamplesPerCycle / 2.0);
 
-            auto track1 = makeAudioNode<SinAudioNode> (sinFrequency);
+            auto track1 = makeAudioNode<SinAudioNode> ((float) sinFrequency);
             track1 = makeAudioNode<LatencyAudioNode> (std::move (track1), numLatencySamples);
             track1 = makeGainNode (std::move (track1), 0.5f);
             track1 = makeAudioNode<SendAudioNode> (std::move (track1), 1);
             track1 = makeGainNode (std::move (track1), 0.0f);
 
-            auto track2 = makeAudioNode<SinAudioNode> (sinFrequency);
+            auto track2 = makeAudioNode<SinAudioNode> ((float) sinFrequency);
             track2 = makeAudioNode<LatencyAudioNode> (std::move (track2), numLatencySamples * 2);
             track2 = makeGainNode (std::move (track2), 0.5f);
             track2 = makeAudioNode<SendAudioNode> (std::move (track2), 1);
             track2 = makeGainNode (std::move (track2), 0.0f);
 
-            auto track3 = makeAudioNode<SinAudioNode> (sinFrequency);
+            auto track3 = makeAudioNode<SinAudioNode> ((float) sinFrequency);
             track3 = makeGainNode (std::move (track3), 0.0f);
             track3 = makeAudioNode<ReturnAudioNode> (std::move (track3), 1);
             
@@ -291,7 +291,7 @@ private:
             const double numSamplesPerCycle = testSetup.sampleRate / sinFrequency;
             const int numLatencySamples = roundToInt (numSamplesPerCycle / 2.0);
 
-            auto track1 = makeAudioNode<SinAudioNode> (sinFrequency);
+            auto track1 = makeAudioNode<SinAudioNode> ((float) sinFrequency);
             track1 = makeAudioNode<LatencyAudioNode> (std::move (track1), numLatencySamples);
             track1 = makeGainNode (std::move (track1), 0.5f);
             track1 = makeAudioNode<SendAudioNode> (std::move (track1), 1);
