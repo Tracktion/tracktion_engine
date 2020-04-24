@@ -208,7 +208,7 @@ namespace test_utilities
                 AudioBuffer<float> subSectionBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
                                                      0, numThisTime);
 
-                processor->process ({ { (int64_t) numSamplesDone, (int64_t) numThisTime },
+                processor->process ({ juce::Range<int64_t>::withStartAndLength ((int64_t) numSamplesDone, (int64_t) numThisTime),
                                       { { subSectionBuffer }, midi } });
                 
                 writer->writeFromAudioSampleBuffer (subSectionBuffer, 0, subSectionBuffer.getNumSamples());
