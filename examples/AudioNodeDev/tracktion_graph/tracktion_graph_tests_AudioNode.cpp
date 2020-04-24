@@ -61,7 +61,7 @@ private:
     {
         beginTest ("Sin");
         {
-            auto sinNode = std::make_unique<SinAudioNode> (220.0);
+            auto sinNode = std::make_unique<SinAudioNode> (220.0f);
             
             auto testContext = createBasicTestContext (std::move (sinNode), testSetup, 1, 5.0);
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
@@ -73,9 +73,9 @@ private:
         beginTest ("Sin cancelling");
         {
             std::vector<std::unique_ptr<AudioNode>> nodes;
-            nodes.push_back (std::make_unique<SinAudioNode> (220.0));
+            nodes.push_back (std::make_unique<SinAudioNode> (220.0f));
 
-            auto sinNode = std::make_unique<SinAudioNode> (220.0);
+            auto sinNode = std::make_unique<SinAudioNode> (220.0f);
             auto invertedSinNode = std::make_unique<FunctionAudioNode> (std::move (sinNode), [] (float s) { return -s; });
             nodes.push_back (std::move (invertedSinNode));
 
@@ -91,8 +91,8 @@ private:
         beginTest ("Sin octave");
         {
             std::vector<std::unique_ptr<AudioNode>> nodes;
-            nodes.push_back (std::make_unique<SinAudioNode> (220.0));
-            nodes.push_back (std::make_unique<SinAudioNode> (440.0));
+            nodes.push_back (std::make_unique<SinAudioNode> (220.0f));
+            nodes.push_back (std::make_unique<SinAudioNode> (440.0f));
 
             auto sumNode = std::make_unique<BasicSummingAudioNode> (std::move (nodes));
             auto node = std::make_unique<FunctionAudioNode> (std::move (sumNode), [] (float s) { return s * 0.5f; });
@@ -107,12 +107,12 @@ private:
         beginTest ("Sin send/return");
         {
             // Track 1 sends a sin tone to a send and then gets muted
-            auto sinLowerNode = std::make_unique<SinAudioNode> (220.0);
+            auto sinLowerNode = std::make_unique<SinAudioNode> (220.0f);
             auto sendNode = std::make_unique<SendAudioNode> (std::move (sinLowerNode), 1);
             auto track1Node = std::make_unique<FunctionAudioNode> (std::move (sendNode), [] (float) { return 0.0f; });
 
             // Track 2 has a silent source and receives input from the send
-            auto sinUpperNode = std::make_unique<SinAudioNode> (440.0);
+            auto sinUpperNode = std::make_unique<SinAudioNode> (440.0f);
             auto silentNode = std::make_unique<FunctionAudioNode> (std::move (sinUpperNode), [] (float) { return 0.0f; });
             auto track2Node = std::make_unique<ReturnAudioNode> (std::move (silentNode), 1);
 
@@ -128,12 +128,12 @@ private:
             // This test is the same as before but uses a different bus number for the return so the output should be silent
 
             // Track 1 sends a sin tone to a send and then gets muted
-            auto sinLowerNode = std::make_unique<SinAudioNode> (220.0);
+            auto sinLowerNode = std::make_unique<SinAudioNode> (220.0f);
             auto sendNode = std::make_unique<SendAudioNode> (std::move (sinLowerNode), 1);
             auto track1Node = std::make_unique<FunctionAudioNode> (std::move (sendNode), [] (float) { return 0.0f; });
 
             // Track 2 has a silent source and receives input from the send
-            auto sinUpperNode = std::make_unique<SinAudioNode> (440.0);
+            auto sinUpperNode = std::make_unique<SinAudioNode> (440.0f);
             auto silentNode = std::make_unique<FunctionAudioNode> (std::move (sinUpperNode), [] (float) { return 0.0f; });
             auto track2Node = std::make_unique<ReturnAudioNode> (std::move (silentNode), 2);
 
@@ -147,12 +147,12 @@ private:
         beginTest ("Sin send/return non-blocking");
         {
             // Track 1 sends a sin tone to a send with a gain of 0.25
-            auto sinLowerNode = std::make_unique<SinAudioNode> (220.0);
+            auto sinLowerNode = std::make_unique<SinAudioNode> (220.0f);
             auto attenuatedSinLowerNode = std::make_unique<FunctionAudioNode> (std::move (sinLowerNode), [] (float s) { return s * 0.25f; });
             auto track1Node = std::make_unique<SendAudioNode> (std::move (attenuatedSinLowerNode), 1);
 
             // Track 2 has a sin source  of gain 0.5 and receives input from the send
-            auto sinUpperNode = std::make_unique<SinAudioNode> (440.0);
+            auto sinUpperNode = std::make_unique<SinAudioNode> (440.0f);
             auto attenuatedSinUpperNode = std::make_unique<FunctionAudioNode> (std::move (sinUpperNode), [] (float s) { return s * 0.5f; });
             auto track2Node = std::make_unique<ReturnAudioNode> (std::move (attenuatedSinUpperNode), 1);
 
@@ -356,7 +356,7 @@ private:
             const int latencyNumSamples = roundToInt (sampleRate / 100.0);
             const double delayedTime = latencyNumSamples / sampleRate;
 
-            auto sinNode = std::make_unique<SinAudioNode> (220.0);
+            auto sinNode = std::make_unique<SinAudioNode> (220.0f);
             auto delayedNode = std::make_unique<LatencyAudioNode> (std::move (sinNode), latencyNumSamples);
             
             auto midiNode = std::make_unique<MidiAudioNode> (sequence);
@@ -378,7 +378,7 @@ private:
             track1 = makeAudioNode<SendAudioNode> (std::move (track1), busNum);
             track1 = makeAudioNode<FunctionAudioNode> (std::move (track1), [] (float) { return 0.0f; });
 
-            auto track2 = makeAudioNode<ReturnAudioNode> (makeAudioNode<SinAudioNode> (220.0), busNum);
+            auto track2 = makeAudioNode<ReturnAudioNode> (makeAudioNode<SinAudioNode> (220.0f), busNum);
             
             auto sumNode = makeSummingAudioNode ({ track1.release(), track2.release() });
 
@@ -396,7 +396,7 @@ private:
             auto track1 = makeAudioNode<MidiAudioNode> (sequence);
             track1 = makeAudioNode<SendAudioNode> (std::move (track1), busNum);
 
-            auto track2 = makeAudioNode<ReturnAudioNode> (makeAudioNode<SinAudioNode> (220.0), busNum);
+            auto track2 = makeAudioNode<ReturnAudioNode> (makeAudioNode<SinAudioNode> (220.0f), busNum);
             track2 = makeAudioNode<FunctionAudioNode> (std::move (track2), [] (float) { return 0.0f; });
 
             auto sumNode = makeSummingAudioNode ({ track1.release(), track2.release() });
@@ -412,7 +412,7 @@ private:
     {
         beginTest ("Stereo sin");
         {
-            auto node = makeAudioNode<SinAudioNode> (220.0, 2);
+            auto node = makeAudioNode<SinAudioNode> (220.0f, 2);
 
             auto testContext = createBasicTestContext (std::move (node), testSetup, 2, 5.0);
             auto& buffer = testContext->buffer;
@@ -424,8 +424,8 @@ private:
         beginTest ("Stereo sin");
         {
             // Two mono sin nodes summed to L/R stereo
-            auto leftSin = makeAudioNode<SinAudioNode> (220.0, 1);
-            auto rightSin = makeAudioNode<SinAudioNode> (220.0, 1);
+            auto leftSin = makeAudioNode<SinAudioNode> (220.0f, 1);
+            auto rightSin = makeAudioNode<SinAudioNode> (220.0f, 1);
 
             std::vector<std::pair<int, int>> channelMap;
             channelMap.push_back ({ 0, 1 });
@@ -448,7 +448,7 @@ private:
         beginTest ("Stereo sin summed to mono");
         {
             // A stero sin node at 0.5 is summed to mono to produce a 1.0 mono sin
-            auto node = makeAudioNode<SinAudioNode> (220.0, 2);
+            auto node = makeAudioNode<SinAudioNode> (220.0f, 2);
             node = makeGainNode (std::move (node), 0.5f);
 
             // Merge channe 1 with channel 2
@@ -469,9 +469,9 @@ private:
         beginTest ("Twin mono sin summed to mono cancelling");
         {
             // L/R sin with inverted phase that cancel
-            auto leftNode = makeAudioNode<SinAudioNode> (220.0, 1);
+            auto leftNode = makeAudioNode<SinAudioNode> (220.0f, 1);
 
-            auto rightNode = makeAudioNode<SinAudioNode> (220.0, 1);
+            auto rightNode = makeAudioNode<SinAudioNode> (220.0f, 1);
             rightNode = makeAudioNode<FunctionAudioNode> (std::move (rightNode), [] (float s) { return s * -1.0f; });
             rightNode = makeAudioNode<ChannelMappingAudioNode> (std::move (rightNode), makeChannelMap ({ { 0, 1 } }), true);
 
@@ -492,7 +492,7 @@ private:
         beginTest ("Mono sin duplicated to 6 channel");
         {
             // Create a single mono sin and then copy that to 6 channels
-            auto node = makeAudioNode<SinAudioNode> (220.0, 1);
+            auto node = makeAudioNode<SinAudioNode> (220.0f, 1);
             node = makeAudioNode<ChannelMappingAudioNode> (std::move (node),
                                                            makeChannelMap ({ { 0, 0 }, { 0, 1 }, { 0, 2 }, { 0, 3 }, { 0, 4 }, { 0, 5 } }),
                                                            true);
