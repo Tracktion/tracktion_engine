@@ -285,10 +285,8 @@ public:
     }
 
     /** Preapres the processor to be played. */
-    void prepareToPlay (double sampleRateToUse, int blockSize)
+    void prepareToPlay (double sampleRate, int blockSize)
     {
-        sampleRate = sampleRateToUse;
-        
         // First, initiliase all the nodes, this will call prepareToPlay on them and also
         // give them a chance to do things like balance latency
         const PlaybackInitialisationInfo info { sampleRate, blockSize, *input };
@@ -308,36 +306,12 @@ public:
         if (overrideInputs)
             inputProvider->setInputs (pc.buffers);
 
-        //ddd TODO: Remove this
-        float* channels[32] = {};
-
-        for (size_t i = 0; i < pc.buffers.audio.getNumChannels(); ++i)
-            channels[i] = pc.buffers.audio.getChannelPointer (i);
-
-        AudioBuffer<float> inputAudioBuffer (channels,
-                                             (int) pc.buffers.audio.getNumChannels(),
-                                             (int) pc.buffers.audio.getNumSamples());
-
-        midiMessageArray.clear();
-
-        for (MidiBuffer::Iterator iter (pc.buffers.midi);;)
-        {
-            MidiMessage result;
-            int samplePosition = 0;
-
-            if (! iter.getNextEvent (result, samplePosition))
-                break;
-
-            const double time = samplePosition / sampleRate;
-            midiMessageArray.addMidiMessage (std::move (result), time, tracktion_engine::MidiMessageArray::notMPE);
-        }
-
+        // The internal nodes won't be interested in the top level audio/midi inputs
+        // They should only be referencing this for time and continuity
         tracktion_engine::PlayHead playHead;
         tracktion_engine::AudioRenderContext rc (playHead, {},
-                                                 &inputAudioBuffer,
-                                                 juce::AudioChannelSet::canonicalChannelSet (inputAudioBuffer.getNumChannels()),
-                                                 0, inputAudioBuffer.getNumSamples(),
-                                                 &midiMessageArray, 0.0,
+                                                 nullptr, juce::AudioChannelSet(), 0, 0,
+                                                 nullptr, 0.0,
                                                  tracktion_engine::AudioRenderContext::contiguous, false);
 
         inputProvider->setContext (&rc);
@@ -353,7 +327,7 @@ public:
             {
                 if (! node->hasProcessed() && node->isReadyToProcess())
                 {
-                    node->process (juce::Range<int64_t>::withStartAndLength (0, (int64_t) pc.buffers.audio.getNumSamples()));
+                    node->process (pc.streamSampleRange);
                     processedAnyNodes = true;
                 }
             }
@@ -374,9 +348,6 @@ private:
     std::vector<AudioNode*> allNodes;
     std::shared_ptr<InputProvider> inputProvider;
     bool overrideInputs = true;
-
-    double sampleRate = 44100.0;
-    tracktion_engine::MidiMessageArray midiMessageArray;
 };
 
 
@@ -392,7 +363,7 @@ namespace RackNodeBuilder
     };
 
     /** Returns a vector of connections between inputs and outputs. */
-    std::vector<Connection> getSimplifiedConnections (te::RackType& rack)
+    static inline std::vector<Connection> getSimplifiedConnections (te::RackType& rack)
     {
         std::vector<Connection> connections;
 
@@ -413,8 +384,8 @@ namespace RackNodeBuilder
         return connections;
     }
 
-    Array<const te::RackConnection*> getConnectionsBetween (te::RackType& rack,
-                                                            te::EditItemID sourceID, te::EditItemID destID)
+    static inline Array<const te::RackConnection*> getConnectionsBetween (te::RackType& rack,
+                                                                          te::EditItemID sourceID, te::EditItemID destID)
     {
         Array<const te::RackConnection*> connections;
 
@@ -425,8 +396,8 @@ namespace RackNodeBuilder
         return connections;
     }
 
-    std::unique_ptr<AudioNode> createChannelMappingNodeForConnections (std::unique_ptr<AudioNode> input,
-                                                                       const Array<const te::RackConnection*>& connections)
+    static inline std::unique_ptr<AudioNode> createChannelMappingNodeForConnections (std::unique_ptr<AudioNode> input,
+                                                                                     const Array<const te::RackConnection*>& connections)
     {
         jassert (! connections.isEmpty());
         std::vector<std::pair<int, int>> chanelMap;
@@ -454,9 +425,9 @@ namespace RackNodeBuilder
     }
 
     //==============================================================================
-    std::unique_ptr<AudioNode> createNodeForDirectConnectionsBetween (te::RackType& rack,
-                                                                      te::EditItemID sourceID, te::EditItemID destID,
-                                                                      std::shared_ptr<InputProvider> inputProvider)
+    static inline std::unique_ptr<AudioNode> createNodeForDirectConnectionsBetween (te::RackType& rack,
+                                                                                    te::EditItemID sourceID, te::EditItemID destID,
+                                                                                    std::shared_ptr<InputProvider> inputProvider)
     {
         auto connections = getConnectionsBetween (rack, sourceID, destID);
         
@@ -481,15 +452,15 @@ namespace RackNodeBuilder
                                                        connections);
     }
 
-    std::unique_ptr<AudioNode> createNodeForRackInputOutputDirectConnections (te::RackType& rack,
-                                                                              std::shared_ptr<InputProvider> inputProvider)
+    static inline std::unique_ptr<AudioNode> createNodeForRackInputOutputDirectConnections (te::RackType& rack,
+                                                                                            std::shared_ptr<InputProvider> inputProvider)
     {
         return createNodeForDirectConnectionsBetween (rack, {}, {}, inputProvider);
     }
 
     //==============================================================================
-    std::unique_ptr<AudioNode> createNodeForPlugin (te::RackType& rack, te::Plugin::Ptr plugin,
-                                                    std::shared_ptr<InputProvider> inputProvider)
+    static inline std::unique_ptr<AudioNode> createNodeForPlugin (te::RackType& rack, te::Plugin::Ptr plugin,
+                                                                  std::shared_ptr<InputProvider> inputProvider)
     {
         std::vector<std::unique_ptr<AudioNode>> nodes;
 
@@ -517,8 +488,8 @@ namespace RackNodeBuilder
         return makeAudioNode<PluginAudioNode> (makeAudioNode<SummingAudioNode> (std::move (nodes)), *plugin, inputProvider);
     }
 
-    std::unique_ptr<AudioNode> createRackAudioNode (te::RackType& rack,
-                                                    std::shared_ptr<InputProvider> inputProvider)
+    static inline std::unique_ptr<AudioNode> createRackAudioNode (te::RackType& rack,
+                                                                  std::shared_ptr<InputProvider> inputProvider)
     {
         std::vector<std::unique_ptr<AudioNode>> nodes;
         
