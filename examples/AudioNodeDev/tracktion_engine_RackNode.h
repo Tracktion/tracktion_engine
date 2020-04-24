@@ -277,7 +277,7 @@ public:
     /** Creates an RackAudioNodeProcessor to process an AudioNode with input. */
     RackAudioNodeProcessor (std::unique_ptr<AudioNode> nodeToProcess,
                             std::shared_ptr<InputProvider> inputProviderToUse,
-                            bool overrideInputProvider = true)
+                            bool overrideInputProvider)
         : input (std::move (nodeToProcess)),
           inputProvider (std::move (inputProviderToUse)),
           overrideInputs (overrideInputProvider)
