@@ -79,7 +79,8 @@ public:
     juce::String getGlobalPropertyName() const;
 
 protected:
-    bool enabled = false, endToEndEnabled = false;
+    std::atomic<bool> enabled { false };
+    bool endToEndEnabled = false;
     bool retrospectiveRecordLock = false;
 
 private:
