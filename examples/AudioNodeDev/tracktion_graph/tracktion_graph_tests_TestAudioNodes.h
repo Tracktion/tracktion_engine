@@ -1,16 +1,17 @@
 /*
-  ==============================================================================
+    ,--.                     ,--.     ,--.  ,--.
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
+    |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
+    `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    TestAudioNodes.h
-    Created: 15 Apr 2020 5:46:29pm
-    Author:  David Rowland
-
-  ==============================================================================
+    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
 #pragma once
 
-#include "AudioNode.h"
+#include "tracktion_graph_AudioNode.h"
+#include "tracktion_graph_UtilityNodes.h"
 
 //==============================================================================
 //==============================================================================

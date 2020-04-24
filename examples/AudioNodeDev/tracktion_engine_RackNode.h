@@ -1,17 +1,17 @@
 /*
-  ==============================================================================
+    ,--.                     ,--.     ,--.  ,--.
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
+    |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
+    `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    RackNode.h
-    Created: 8 Apr 2020 3:41:40pm
-    Author:  David Rowland
-
-  ==============================================================================
+    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
 #pragma once
 
 #include <JuceHeader.h>
-#include "TestAudioNodes.h"
+#include "tracktion_graph/tracktion_graph_tests_TestAudioNodes.h"
 
 // To process a Rack we need to:
 //  1. Find all the plugins in the Rack

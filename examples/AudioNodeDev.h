@@ -27,7 +27,8 @@
 
 #pragma once
 
-#include "AudioNodeDev/tests_AudioNode.cpp"
+#include "AudioNodeDev/tracktion_graph/tracktion_graph_tests_AudioNode.cpp"
+#include "AudioNodeDev/tracktion_engine_tests_RackNode.cpp"
 
 using namespace tracktion_engine;
 
