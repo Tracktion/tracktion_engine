@@ -449,7 +449,7 @@ private:
         {
             // A stero sin node at 0.5 is summed to mono to produce a 1.0 mono sin
             auto node = makeAudioNode<SinAudioNode> (220.0, 2);
-            node = makeGainAudioNode (std::move (node), 0.5f);
+            node = makeGainNode (std::move (node), 0.5f);
 
             // Merge channe 1 with channel 2
             std::vector<std::pair<int, int>> channelMap;

@@ -233,7 +233,7 @@ private:
 
 
 /** Creates a SummingAudioNode from a number of AudioNodes. */
-std::unique_ptr<BasicSummingAudioNode> makeBaicSummingAudioNode (std::initializer_list<AudioNode*> nodes)
+static inline std::unique_ptr<BasicSummingAudioNode> makeBaicSummingAudioNode (std::initializer_list<AudioNode*> nodes)
 {
     std::vector<std::unique_ptr<AudioNode>> nodeVector;
     
@@ -295,8 +295,9 @@ private:
     std::function<float (float)> function;
 };
 
-/** Returns an audio node that applied a fixed gain to an input node. */
-std::unique_ptr<AudioNode> makeGainAudioNode (std::unique_ptr<AudioNode> input, float gain)
+//==============================================================================
+/** Returns an audio node that applies a fixed gain to an input node. */
+static inline std::unique_ptr<AudioNode> makeGainNode (std::unique_ptr<AudioNode> input, float gain)
 {
     return makeAudioNode<FunctionAudioNode> (std::move (input), [gain] (float s) { return s * gain; });
 }
@@ -421,13 +422,6 @@ private:
 };
 
 
-/** Returns a node wrapped in another node that applies a static gain to it. */
-std::unique_ptr<AudioNode> makeGainNode (std::unique_ptr<AudioNode> node, float gain)
-{
-    return std::make_unique<FunctionAudioNode> (std::move (node), [gain] (float s) { return s * gain; });
-}
-
-
 //==============================================================================
 //==============================================================================
 /** Maps channels from one to another. */
@@ -496,7 +490,7 @@ private:
 
 
 /** Creates a channel map from source/dest pairs in an initializer_list. */
-std::vector<std::pair<int, int>> makeChannelMap (std::initializer_list<std::pair<int, int>> sourceDestChannelIndicies)
+static inline std::vector<std::pair<int, int>> makeChannelMap (std::initializer_list<std::pair<int, int>> sourceDestChannelIndicies)
 {
     std::vector<std::pair<int, int>> map;
     

@@ -181,7 +181,7 @@ private:
 /** Should call the visitInputs for any direct inputs to the node and then call
     the visit function on this node.
 */
-void visitInputs (AudioNode& node, std::function<void (AudioNode&)>& visit)
+static inline void visitInputs (AudioNode& node, std::function<void (AudioNode&)>& visit)
 {
     for (auto n : node.getDirectInputNodes())
         visitInputs (*n, visit);
@@ -191,7 +191,7 @@ void visitInputs (AudioNode& node, std::function<void (AudioNode&)>& visit)
 
 
 //==============================================================================
-void AudioNode::initialise (const PlaybackInitialisationInfo& info)
+inline void AudioNode::initialise (const PlaybackInitialisationInfo& info)
 {
     prepareToPlay (info);
     
@@ -199,12 +199,12 @@ void AudioNode::initialise (const PlaybackInitialisationInfo& info)
     audioBuffer.setSize (props.numberOfChannels, info.blockSize);
 }
 
-void AudioNode::prepareForNextBlock()
+inline void AudioNode::prepareForNextBlock()
 {
     hasBeenProcessed = false;
 }
 
-void AudioNode::process (juce::Range<int64_t> streamSampleRange)
+inline void AudioNode::process (juce::Range<int64_t> streamSampleRange)
 {
     audioBuffer.clear();
     midiBuffer.clear();
@@ -226,12 +226,12 @@ void AudioNode::process (juce::Range<int64_t> streamSampleRange)
     jassert (numSamplesBeforeProcessing == audioBuffer.getNumSamples());
 }
 
-bool AudioNode::hasProcessed() const
+inline bool AudioNode::hasProcessed() const
 {
     return hasBeenProcessed;
 }
 
-AudioNode::AudioAndMidiBuffer AudioNode::getProcessedOutput()
+inline AudioNode::AudioAndMidiBuffer AudioNode::getProcessedOutput()
 {
     jassert (hasProcessed());
     return { juce::dsp::AudioBlock<float> (audioBuffer).getSubBlock (0, (size_t) numSamplesProcessed), midiBuffer };

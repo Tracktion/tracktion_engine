@@ -244,7 +244,7 @@ private:
 
 
 /** Creates a SummingAudioNode from a number of AudioNodes. */
-std::unique_ptr<SummingAudioNode> makeSummingAudioNode (std::initializer_list<AudioNode*> nodes)
+static inline std::unique_ptr<SummingAudioNode> makeSummingAudioNode (std::initializer_list<AudioNode*> nodes)
 {
     std::vector<std::unique_ptr<AudioNode>> nodeVector;
     
