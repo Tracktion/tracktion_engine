@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#pragma once
+
 #include "tracktion_graph_AudioNodeProcessor.h"
 
 
@@ -15,7 +17,7 @@
 namespace test_utilities
 {
     /** Creates a random MidiMessageSequence sequence. */
-    MidiMessageSequence createRandomMidiMessageSequence (double durationSeconds, Random r)
+    static inline MidiMessageSequence createRandomMidiMessageSequence (double durationSeconds, Random r)
     {
         juce::MidiMessageSequence sequence;
         int noteNumber = -1;
@@ -38,7 +40,7 @@ namespace test_utilities
     }
 
     /** Creates a MidiMessageSequence from a MidiBuffer. */
-    static MidiMessageSequence createMidiMessageSequence (const juce::MidiBuffer& buffer, double sampleRate)
+    static inline MidiMessageSequence createMidiMessageSequence (const juce::MidiBuffer& buffer, double sampleRate)
     {
         MidiMessageSequence sequence;
         
@@ -57,7 +59,7 @@ namespace test_utilities
         return sequence;
     }
 
-    static void fillBufferWithSinData (AudioBuffer<float>& buffer)
+    static inline void fillBufferWithSinData (AudioBuffer<float>& buffer)
     {
         const float incremement = MathConstants<float>::twoPi / buffer.getNumSamples();
         float* sample = buffer.getWritePointer (0);
@@ -70,14 +72,29 @@ namespace test_utilities
     }
 
     /** Logs a MidiMessageSequence. */
-    void logMidiMessageSequence (juce::UnitTest& ut, const juce::MidiMessageSequence& seq)
+    static inline void logMidiMessageSequence (juce::UnitTest& ut, const juce::MidiMessageSequence& seq)
     {
         for (int i = 0; i < seq.getNumEvents(); ++i)
             ut.logMessage (seq.getEventPointer (i)->message.getDescription());
     }
 
+    /** Logs a MidiBuffer. */
+    static inline void dgbMidiBuffer (const juce::MidiBuffer& buffer)
+    {
+        for (MidiBuffer::Iterator iter (buffer);;)
+        {
+            MidiMessage result;
+            int samplePosition = 0;
+
+            if (! iter.getNextEvent (result, samplePosition))
+                break;
+
+            DBG(result.getDescription());
+        }
+    }
+
     /** Writes an audio buffer to a file. */
-    void writeToFile (File file, const AudioBuffer<float>& buffer, double sampleRate)
+    static inline void writeToFile (File file, const AudioBuffer<float>& buffer, double sampleRate)
     {
         if (auto writer = std::unique_ptr<AudioFormatWriter> (WavAudioFormat().createWriterFor (file.createOutputStream().release(),
                                                                                                 sampleRate, (uint32_t) buffer.getNumChannels(), 16, {}, 0)))
@@ -87,7 +104,7 @@ namespace test_utilities
     }
 
     /** Writes an audio block to a file. */
-    void writeToFile (File file, const juce::dsp::AudioBlock<float>& block, double sampleRate)
+    static inline void writeToFile (File file, const juce::dsp::AudioBlock<float>& block, double sampleRate)
     {
         const int numChannels = (int) block.getNumChannels();
         float* chans[32] = {};
@@ -101,7 +118,7 @@ namespace test_utilities
 
     //==============================================================================
     /** Compares two MidiMessageSequences and expects them to be equal. */
-    static void expectMidiMessageSequence (juce::UnitTest& ut, const juce::MidiMessageSequence& seq1, const juce::MidiMessageSequence& seq2)
+    static inline void expectMidiMessageSequence (juce::UnitTest& ut, const juce::MidiMessageSequence& seq1, const juce::MidiMessageSequence& seq2)
     {
         ut.expectEquals (seq1.getNumEvents(), seq2.getNumEvents(), "Num MIDI events not equal");
         
@@ -130,21 +147,21 @@ namespace test_utilities
     }
 
     /** Compares a MidiBuffer and a MidiMessageSequence and expects them to be equal. */
-    static void expectMidiBuffer (juce::UnitTest& ut, const juce::MidiBuffer& buffer, double sampleRate, const juce::MidiMessageSequence& seq)
+    static inline void expectMidiBuffer (juce::UnitTest& ut, const juce::MidiBuffer& buffer, double sampleRate, const juce::MidiMessageSequence& seq)
     {
         expectMidiMessageSequence (ut, createMidiMessageSequence (buffer, sampleRate), seq);
     }
 
     /** Expects a specific magnitude and RMS from an AudioBuffer's channel. */
-    static void expectAudioBuffer (juce::UnitTest& ut, const AudioBuffer<float>& buffer, int channel, float mag, float rms)
+    static inline void expectAudioBuffer (juce::UnitTest& ut, const AudioBuffer<float>& buffer, int channel, float mag, float rms)
     {
         ut.expectWithinAbsoluteError (buffer.getMagnitude (channel, 0, buffer.getNumSamples()), mag, 0.001f);
         ut.expectWithinAbsoluteError (buffer.getRMSLevel (channel, 0, buffer.getNumSamples()), rms, 0.001f);
     }
 
     /** Splits a buffer in to two and expects a specific magnitude and RMS from each half AudioBuffer. */
-    static void expectAudioBuffer (juce::UnitTest& ut, AudioBuffer<float>& buffer, int channel, int numSampleToSplitAt,
-                                   float mag1, float rms1, float mag2, float rms2)
+    static inline void expectAudioBuffer (juce::UnitTest& ut, AudioBuffer<float>& buffer, int channel, int numSampleToSplitAt,
+                                          float mag1, float rms1, float mag2, float rms2)
     {
         {
             AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
@@ -180,8 +197,8 @@ namespace test_utilities
     };
 
     template<typename AudioNodeProcessorType>
-    std::unique_ptr<TestContext> createTestContext (std::unique_ptr<AudioNodeProcessorType> processor, TestSetup ts,
-                                                    const int numChannels, const double durationInSeconds)
+    static inline std::unique_ptr<TestContext> createTestContext (std::unique_ptr<AudioNodeProcessorType> processor, TestSetup ts,
+                                                                  const int numChannels, const double durationInSeconds)
     {
         auto context = std::make_unique<TestContext>();
         context->tempFile = std::make_unique<TemporaryFile> (".wav");
@@ -237,8 +254,8 @@ namespace test_utilities
         return {};
     }
 
-    std::unique_ptr<TestContext> createBasicTestContext (std::unique_ptr<AudioNode> node, const TestSetup ts,
-                                                         const int numChannels, const double durationInSeconds)
+    static inline std::unique_ptr<TestContext> createBasicTestContext (std::unique_ptr<AudioNode> node, const TestSetup ts,
+                                                                       const int numChannels, const double durationInSeconds)
     {
         auto processor = std::make_unique<AudioNodeProcessor> (std::move (node));
         return createTestContext (std::move (processor), ts, numChannels, durationInSeconds);
