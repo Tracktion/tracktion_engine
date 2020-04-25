@@ -8,6 +8,12 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#define ENABLE_EXPERIMENTAL_RACK_PROCESSING 1
+
+#if ENABLE_EXPERIMENTAL_RACK_PROCESSING
+ #include "../../../../examples/AudioNodeDev/tracktion_engine_RackNode.h"
+#endif
+
 namespace tracktion_engine
 {
 
@@ -484,7 +490,71 @@ struct RackType::WindowStateList  : public ValueTreeObjectList<WindowState>
 //==============================================================================
 struct RackType::RenderContext
 {
-    RenderContext (RackType& type)
+    RenderContext (RackType& type, bool useExperimentalProcessing)
+    {
+        if (useExperimentalProcessing)
+            createExperiemntalProcessor (type);
+        else
+            createRenderContexts (type);
+    }
+    
+    void prepareForNextBlock()
+    {
+        for (auto f : renderContexts)
+            f->resetRenderingFlag();
+    }
+    
+    void process (PlayHead& playhead, EditTimeRange playheadOutputTime,
+                  juce::AudioBuffer<float>& outputBuffer,
+                  juce::AudioBuffer<float>& inputBuffer,
+                  MidiMessageArray& midiOut,
+                  MidiMessageArray& midiIn,
+                  bool isRendering)
+    {
+        if (processor)
+        {
+            processExperiemntal (playhead, playheadOutputTime,
+                                 outputBuffer, inputBuffer,
+                                 midiOut, midiIn,
+                                 isRendering);
+        }
+        else
+        {
+            for (int i = renderContexts.size(); --i >= 0;)
+            {
+                auto fw = renderContexts.getUnchecked (i);
+
+                if (fw->isConnectedToOutput)
+                    fw->addToRackOutput (playhead,
+                                         playheadOutputTime,
+                                         outputBuffer,
+                                         inputBuffer,
+                                         midiOut,
+                                         midiIn,
+                                         isRendering);
+            }
+        }
+    }
+
+private:
+   OwnedArray<PluginRenderingInfo> renderContexts;
+    
+   #if ENABLE_EXPERIMENTAL_RACK_PROCESSING
+    std::shared_ptr<InputProvider> inputProvider;
+    std::unique_ptr<RackAudioNodeProcessor> processor;
+    juce::MidiBuffer midiBuffer;
+   #endif
+
+    void createExperiemntalProcessor (RackType& type)
+    {
+        inputProvider = std::make_shared<InputProvider>();
+        auto rackNode = RackNodeBuilder::createRackAudioNode (type, inputProvider);
+
+        processor = std::make_unique<RackAudioNodeProcessor> (std::move (rackNode), inputProvider, false);
+        processor->prepareToPlay (type.sampleRate, type.blockSize);
+    }
+    
+    void createRenderContexts (RackType& type)
     {
         if (type.numActiveInstances.load() == 0)
             return;
@@ -518,7 +588,56 @@ struct RackType::RenderContext
             fw->initialise (type.blockSize, type, renderContexts);
     }
 
-    OwnedArray<PluginRenderingInfo> renderContexts;
+    void processExperiemntal (PlayHead& playhead, EditTimeRange playheadOutputTime,
+                              juce::AudioBuffer<float>& outputBuffer,
+                              juce::AudioBuffer<float>& inputBuffer,
+                              MidiMessageArray& midiOut,
+                              MidiMessageArray& midiIn,
+                              bool isRendering)
+    {
+        jassert (outputBuffer.getNumSamples() == inputBuffer.getNumSamples());
+
+        // Set up the inputs
+        midiBuffer.clear();
+        const double timePerSample = playheadOutputTime.getLength() / inputBuffer.getNumSamples();
+
+        for (const auto& m : midiIn)
+        {
+            const int sampleNumber = (int) std::floor (m.getTimeStamp() / timePerSample);
+            midiBuffer.addEvent (m, sampleNumber);
+        }
+        
+        juce::dsp::AudioBlock<float> intputBlock (inputBuffer);
+        inputProvider->setInputs ({ intputBlock, midiBuffer });
+        midiBuffer.clear();
+
+        
+        // The context
+        AudioRenderContext rc (playhead, playheadOutputTime,
+                               nullptr, AudioChannelSet(), 0, 0,
+                               nullptr, 0.0, AudioRenderContext::contiguous, isRendering);
+        inputProvider->setContext (&rc);
+        
+        
+        // Then process
+        //TODO: This probably should be the master stream time
+        auto streamSampleRange = juce::Range<int64_t>::withStartAndLength (0, inputBuffer.getNumSamples());
+        juce::dsp::AudioBlock<float> outputBlock (outputBuffer);
+        processor->process ({ streamSampleRange, { outputBlock, midiBuffer } });
+        
+        // And finally get the output
+        if (! midiBuffer.isEmpty())
+        {
+            MidiBuffer::Iterator iter (midiBuffer);
+
+            const uint8* midiData;
+            int numBytes, midiEventPos;
+
+            while (iter.getNextEvent (midiData, numBytes, midiEventPos))
+                midiOut.addMidiMessage (MidiMessage (midiData, numBytes, midiEventPos * timePerSample),
+                                        MidiMessageArray::notMPE);
+        }
+    }
 };
 
 //==============================================================================
@@ -565,7 +684,16 @@ RackType::RackType (const juce::ValueTree& v, Edit& owner)
 
     state.addListener (this);
 
-    renderContextBuilder.setFunction ([this] { std::atomic_exchange (&renderContext, std::make_shared<RenderContext> (*this)); });
+    renderContextBuilder.setFunction ([this]
+                                      {
+                                          #if ENABLE_EXPERIMENTAL_RACK_PROCESSING
+                                           const bool useExperimentalProcessing = true;
+                                          #else
+                                           const bool useExperimentalProcessing = false;
+                                          #endif
+
+                                          std::atomic_exchange (&renderContext, std::make_shared<RenderContext> (*this, useExperimentalProcessing));
+                                      });
 }
 
 RackType::~RackType()
@@ -1702,8 +1830,7 @@ void RackType::process (const AudioRenderContext& fc,
         isFirstCallbackOfBlock = false;
 
         // reset the flags on all the plugin wrappers..
-        for (auto f : rrc->renderContexts)
-            f->resetRenderingFlag();
+        rrc->prepareForNextBlock();
 
         if (numActiveInstances.load() <= 1)
         {
@@ -1732,20 +1859,13 @@ void RackType::process (const AudioRenderContext& fc,
             if (fc.bufferForMidiMessages != nullptr)
                 tempMidiBufferIn.mergeFromAndClear (*fc.bufferForMidiMessages);
 
-            // render all the nodes that connect to the output
-            for (int i = rrc->renderContexts.size(); --i >= 0;)
-            {
-                auto fw = rrc->renderContexts.getUnchecked (i);
-
-                if (fw->isConnectedToOutput)
-                    fw->addToRackOutput (fc.playhead,
-                                         fc.streamTime,
-                                         tempBufferOut,
-                                         tempBufferIn,
-                                         tempMidiBufferOut,
-                                         tempMidiBufferIn,
-                                         fc.isRendering);
-            }
+            rrc->process (fc.playhead,
+                          fc.streamTime,
+                          tempBufferOut,
+                          tempBufferIn,
+                          tempMidiBufferOut,
+                          tempMidiBufferIn,
+                          fc.isRendering);
 
             if (fc.destBuffer != nullptr)
             {
@@ -1778,19 +1898,13 @@ void RackType::process (const AudioRenderContext& fc,
             tempBufferOut.clear();
             tempMidiBufferOut.clear();
 
-            for (int i = rrc->renderContexts.size(); --i >= 0;)
-            {
-                auto fw = rrc->renderContexts.getUnchecked (i);
-
-                if (fw->isConnectedToOutput)
-                    fw->addToRackOutput (fc.playhead,
-                                         fc.streamTime,
-                                         tempBufferOut,
-                                         tempBufferIn,
-                                         tempMidiBufferOut,
-                                         tempMidiBufferIn,
-                                         fc.isRendering);
-            }
+            rrc->process (fc.playhead,
+                          fc.streamTime,
+                          tempBufferOut,
+                          tempBufferIn,
+                          tempMidiBufferOut,
+                          tempMidiBufferIn,
+                          fc.isRendering);
 
             // then add the new input to our cleared input buffer
             // and copy out the appropriate output channels
