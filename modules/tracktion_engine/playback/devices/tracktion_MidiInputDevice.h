@@ -110,7 +110,8 @@ public:
 protected:
     class MidiEventSnifferNode;
 
-    double adjustSecs = 0, manualAdjustMs = 0;
+    std::atomic<double> adjustSecs { 0 };
+    double manualAdjustMs = 0;
     bool overrideNoteVels = false, eventReceivedFromDevice = false;
     juce::BigInteger disallowedChannels;
     MidiChannel channelToUse;
