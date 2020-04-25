@@ -199,23 +199,30 @@ public:
     void process (const ProcessContext& pc) override
     {
         auto inputBuffers = input->getProcessedOutput();
-
         auto& inputAudioBlock = inputBuffers.audio;
         
         auto& outputBuffers = pc.buffers;
-        auto& audioOutputBlock = outputBuffers.audio;
-        jassert (inputAudioBlock.getNumChannels() == audioOutputBlock.getNumChannels());
-        jassert (inputAudioBlock.getNumSamples() == audioOutputBlock.getNumSamples());
-        
+        auto& outputAudioBlock = outputBuffers.audio;
+        jassert (inputAudioBlock.getNumSamples() == outputAudioBlock.getNumSamples());
+
+        // Copy the inputs to the outputs, then process using the
+        // output buffers as that will be the correct size
+        {
+            const size_t numInputChannelsToCopy = std::min (inputAudioBlock.getNumChannels(), outputAudioBlock.getNumChannels());
+            
+            if (numInputChannelsToCopy > 0)
+                outputAudioBlock.copyFrom (inputAudioBlock.getSubsetChannelBlock (0, numInputChannelsToCopy));
+        }
+
         // Setup audio buffers
         float* channels[32] = {};
 
-        for (size_t i = 0; i < inputAudioBlock.getNumChannels(); ++i)
-            channels[i] = inputAudioBlock.getChannelPointer (i);
+        for (size_t i = 0; i < outputAudioBlock.getNumChannels(); ++i)
+            channels[i] = outputAudioBlock.getChannelPointer (i);
 
-        AudioBuffer<float> inputAudioBuffer (channels,
-                                             (int) inputAudioBlock.getNumChannels(),
-                                             (int) inputAudioBlock.getNumSamples());
+        AudioBuffer<float> outputAudioBuffer (channels,
+                                              (int) outputAudioBlock.getNumChannels(),
+                                              (int) outputAudioBlock.getNumSamples());
 
         // Then MIDI buffers
         midiMessageArray.clear();
@@ -235,9 +242,9 @@ public:
         // Then prepare the AudioRenderContext
         auto sourceContext = audioRenderContextProvider->getContext();
         tracktion_engine::AudioRenderContext rc (sourceContext);
-        rc.destBuffer = &inputAudioBuffer;
+        rc.destBuffer = &outputAudioBuffer;
         rc.bufferStartSample = 0;
-        rc.bufferNumSamples = inputAudioBuffer.getNumSamples();
+        rc.bufferNumSamples = outputAudioBuffer.getNumSamples();
         rc.bufferForMidiMessages = &midiMessageArray;
         rc.midiBufferOffset = 0.0;
 
@@ -245,8 +252,6 @@ public:
         plugin->applyToBufferWithAutomation (rc);
         
         // Then copy the buffers to the outputs
-        audioOutputBlock.add (inputAudioBlock);
-        
         for (auto& m : midiMessageArray)
         {
             const int sampleNum = roundToInt (sampleRate * m.getTimeStamp());
