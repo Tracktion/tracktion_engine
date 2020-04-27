@@ -128,7 +128,7 @@ public:
     struct AudioAndMidiBuffer
     {
         juce::dsp::AudioBlock<float> audio;
-        juce::MidiBuffer& midi;
+        tracktion_engine::MidiMessageArray& midi;
     };
 
     /** Returns the processed audio and MIDI output.
@@ -173,7 +173,7 @@ public:
 private:
     std::atomic<bool> hasBeenProcessed { false };
     juce::AudioBuffer<float> audioBuffer;
-    juce::MidiBuffer midiBuffer;
+    tracktion_engine::MidiMessageArray midiBuffer;
     int numSamplesProcessed = 0;
 };
 

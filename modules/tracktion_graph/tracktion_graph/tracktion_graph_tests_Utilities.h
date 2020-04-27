@@ -210,7 +210,7 @@ namespace test_utilities
             processor->prepareToPlay (ts.sampleRate, ts.blockSize);
             
             juce::AudioBuffer<float> buffer (numChannels, ts.blockSize);
-            juce::MidiBuffer midi;
+            tracktion_engine::MidiMessageArray midi;
             
             int numSamplesToDo = juce::roundToInt (durationInSeconds * ts.sampleRate);
             int numSamplesDone = 0;
@@ -229,7 +229,13 @@ namespace test_utilities
                                       { { subSectionBuffer }, midi } });
                 
                 writer->writeFromAudioSampleBuffer (subSectionBuffer, 0, subSectionBuffer.getNumSamples());
-                context->midi.addEvents (midi, 0, numThisTime, numSamplesDone);
+                
+                // Copy MIDI to buffer
+                for (const auto& m : midi)
+                {
+                    const int sampleNumber = (int) std::floor (m.getTimeStamp() * ts.sampleRate);
+                    context->midi.addEvent (m, numSamplesDone + sampleNumber);
+                }
                 
                 numSamplesToDo -= numThisTime;
                 numSamplesDone += numThisTime;

@@ -542,7 +542,6 @@ private:
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     std::shared_ptr<InputProvider> inputProvider;
     std::unique_ptr<RackAudioNodeProcessor> processor;
-    juce::MidiBuffer midiBuffer;
    #endif
 
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
@@ -601,18 +600,8 @@ private:
         jassert (outputBuffer.getNumSamples() == inputBuffer.getNumSamples());
 
         // Set up the inputs
-        midiBuffer.clear();
-        const double timePerSample = playheadOutputTime.getLength() / inputBuffer.getNumSamples();
-
-        for (const auto& m : midiIn)
-        {
-            const int sampleNumber = (int) std::floor (m.getTimeStamp() / timePerSample);
-            midiBuffer.addEvent (m, sampleNumber);
-        }
-        
         juce::dsp::AudioBlock<float> intputBlock (inputBuffer);
-        inputProvider->setInputs ({ intputBlock, midiBuffer });
-        midiBuffer.clear();
+        inputProvider->setInputs ({ intputBlock, midiIn });
 
         
         // The context
@@ -626,20 +615,7 @@ private:
         //TODO: This probably should be the master stream time
         auto streamSampleRange = juce::Range<int64_t>::withStartAndLength (0, inputBuffer.getNumSamples());
         juce::dsp::AudioBlock<float> outputBlock (outputBuffer);
-        processor->process ({ streamSampleRange, { outputBlock, midiBuffer } });
-        
-        // And finally get the output
-        if (! midiBuffer.isEmpty())
-        {
-            MidiBuffer::Iterator iter (midiBuffer);
-
-            const uint8* midiData;
-            int numBytes, midiEventPos;
-
-            while (iter.getNextEvent (midiData, numBytes, midiEventPos))
-                midiOut.addMidiMessage (MidiMessage (midiData, numBytes, midiEventPos * timePerSample),
-                                        MidiMessageArray::notMPE);
-        }
+        processor->process ({ streamSampleRange, { outputBlock, midiOut } });
     }
    #endif
 };

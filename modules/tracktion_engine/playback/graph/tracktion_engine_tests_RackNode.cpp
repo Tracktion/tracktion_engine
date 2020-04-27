@@ -261,7 +261,7 @@ private:
                 // Fill inputs with sin data
                 {
                     test_utilities::fillBufferWithSinData (inputBuffer);
-                    MidiBuffer midi;
+                    tracktion_engine::MidiMessageArray midi;
                     inputProvider->setInputs ({ juce::dsp::AudioBlock<float> (inputBuffer), midi });
                 }
 

@@ -67,7 +67,7 @@ public:
             {
                 auto output = input->getProcessedOutput();
                 pc.buffers.audio.copyFrom (output.audio);
-                pc.buffers.midi.addEvents (output.midi, 0, -1, 0);
+                pc.buffers.midi.copyFrom (output.midi);
                 
                 break;
             }

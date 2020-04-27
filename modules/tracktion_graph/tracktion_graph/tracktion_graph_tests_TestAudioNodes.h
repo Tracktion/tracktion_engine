@@ -57,9 +57,8 @@ public:
                 if (! timeRange.contains (time))
                     break;
                 
-                const int sampleNumber = (int) std::floor (sampleRate * (time - timeRange.getStart()));
-                jassert (sampleNumber < numSamples);
-                pc.buffers.midi.addEvent (eventHolder->message, sampleNumber);
+                pc.buffers.midi.addMidiMessage (eventHolder->message, time - timeRange.getStart(),
+                                                tracktion_engine::MidiMessageArray::notMPE);
             }
             else
             {
@@ -223,7 +222,7 @@ public:
                 pc.buffers.audio.getSubsetChannelBlock (0, numChannelsToAdd)
                     .add (node->getProcessedOutput().audio.getSubsetChannelBlock (0, numChannelsToAdd));
             
-            pc.buffers.midi.addEvents (inputFromNode.midi, 0, -1, 0);
+            pc.buffers.midi.mergeFrom (inputFromNode.midi);
         }
     }
 
@@ -336,11 +335,10 @@ public:
     void process (const ProcessContext& pc) override
     {
         jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
-        const int numSamples = (int) pc.streamSampleRange.getLength();
 
         // Just pass out input on to our output
         pc.buffers.audio.copyFrom (input->getProcessedOutput().audio);
-        pc.buffers.midi.addEvents (input->getProcessedOutput().midi, 0, numSamples, 0);
+        pc.buffers.midi.mergeFrom (input->getProcessedOutput().midi);
     }
     
 private:
@@ -409,11 +407,10 @@ public:
     void process (const ProcessContext& pc) override
     {
         jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
-        const int numSamples = (int) pc.streamSampleRange.getLength();
 
         // Copy the input on to our output, the SummingAudioNode will copy all the sends and get all the input
         pc.buffers.audio.copyFrom (input->getProcessedOutput().audio);
-        pc.buffers.midi.addEvents (input->getProcessedOutput().midi, 0, numSamples, 0);
+        pc.buffers.midi.mergeFrom (input->getProcessedOutput().midi);
     }
     
 private:
@@ -470,7 +467,7 @@ public:
         
         // Pass on MIDI
         if (passMIDI)
-            pc.buffers.midi.addEvents (inputBuffers.midi, 0, -1, 0);
+            pc.buffers.midi.mergeFrom (inputBuffers.midi);
         
         // Remap audio
         auto sourceAudio = inputBuffers.audio;

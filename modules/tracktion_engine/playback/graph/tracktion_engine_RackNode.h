@@ -43,7 +43,7 @@ struct InputProvider
     void setInputs (tracktion_graph::AudioNode::AudioAndMidiBuffer newBuffers)
     {
         audio = numChannels > 0 ? newBuffers.audio.getSubsetChannelBlock (0, (size_t) numChannels) : newBuffers.audio;
-        midi = newBuffers.midi;
+        midi.copyFrom (newBuffers.midi);
     }
     
     tracktion_graph::AudioNode::AudioAndMidiBuffer getInputs()
@@ -67,7 +67,7 @@ struct InputProvider
     
     int numChannels = 0;
     juce::dsp::AudioBlock<float> audio;
-    MidiBuffer midi;
+    tracktion_engine::MidiMessageArray midi;
 
     tracktion_engine::AudioRenderContext* context = nullptr;
 };
@@ -165,7 +165,7 @@ public:
         auto props = input->getAudioNodeProperties();
         const auto latencyNumSamples = roundToInt (plugin->getLatencySeconds() * sampleRate);
 
-        props.numberOfChannels = jmax (props.numberOfChannels, plugin->getNumOutputChannelsGivenInputs (props.numberOfChannels));
+        props.numberOfChannels = jmax (1, props.numberOfChannels, plugin->getNumOutputChannelsGivenInputs (props.numberOfChannels));
         props.hasAudio = plugin->producesAudioWhenNoAudioInput();
         props.hasMidi  = plugin->takesMidiInput();
         props.latencyNumSamples = std::max (props.latencyNumSamples, latencyNumSamples);
@@ -225,19 +225,7 @@ public:
                                               (int) outputAudioBlock.getNumSamples());
 
         // Then MIDI buffers
-        midiMessageArray.clear();
-
-        for (MidiBuffer::Iterator iter (inputBuffers.midi);;)
-        {
-            MidiMessage result;
-            int samplePosition = 0;
-
-            if (! iter.getNextEvent (result, samplePosition))
-                break;
-
-            const double time = samplePosition / sampleRate;
-            midiMessageArray.addMidiMessage (std::move (result), time, tracktion_engine::MidiMessageArray::notMPE);
-        }
+        midiMessageArray.copyFrom (inputBuffers.midi);
 
         // Then prepare the AudioRenderContext
         auto sourceContext = audioRenderContextProvider->getContext();
@@ -252,11 +240,7 @@ public:
         plugin->applyToBufferWithAutomation (rc);
         
         // Then copy the buffers to the outputs
-        for (auto& m : midiMessageArray)
-        {
-            const int sampleNum = roundToInt (sampleRate * m.getTimeStamp());
-            outputBuffers.midi.addEvent (m, sampleNum);
-        }
+        outputBuffers.midi.mergeFrom (midiMessageArray);
     }
     
 private:
@@ -341,7 +325,7 @@ public:
             {
                 auto output = input->getProcessedOutput();
                 pc.buffers.audio.copyFrom (output.audio);
-                pc.buffers.midi.addEvents (output.midi, 0, -1, 0);
+                pc.buffers.midi.copyFrom (output.midi);
                 
                 break;
             }

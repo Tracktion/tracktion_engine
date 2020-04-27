@@ -59,6 +59,9 @@ public:
     
     void prepareToPlay (const PlaybackInitialisationInfo& info) override
     {
+        sampleRate = info.sampleRate;
+        latencyTimeSeconds = latencyNumSamples / info.sampleRate;
+        
         fifo.setSize (getAudioNodeProperties().numberOfChannels, latencyNumSamples + info.blockSize + 1);
         fifo.writeSilence (latencyNumSamples);
         jassert (fifo.getNumReady() == latencyNumSamples);
@@ -68,7 +71,7 @@ public:
     {
         auto& outputBlock = pc.buffers.audio;
         auto inputBuffer = input->getProcessedOutput().audio;
-        auto inputMidi = input->getProcessedOutput().midi;
+        auto& inputMidi = input->getProcessedOutput().midi;
         const int numSamples = (int) pc.streamSampleRange.getLength();
 
         if (fifo.getNumChannels() > 0)
@@ -85,21 +88,43 @@ public:
         }
 
         // Then write to MIDI delay buffer
-        midi.addEvents (inputMidi, 0, -1, latencyNumSamples);
+        midi.mergeFromWithOffset (inputMidi, latencyTimeSeconds);
 
+
+        // And read out any delayed items
+        const double blockTimeSeconds = numSamples / sampleRate;
+     
+        for (int i = midi.size(); --i >= 0;)
+        {
+            auto& m = midi[i];
+            
+            if (m.getTimeStamp() <= blockTimeSeconds)
+            {
+                pc.buffers.midi.add (m);
+                midi.remove (i);
+                // TODO: This will deallocate, we need a MIDI message array that doesn't adjust its storage
+            }
+        }
         
-        pc.buffers.midi.addEvents (midi, latencyNumSamples, numSamples, -latencyNumSamples);
-        midi.clear (latencyNumSamples, numSamples);
-        // TODO: This will deallocate so we'll need a non-shrinking version.
-        // Maybe just a fifo with timestamped messages? If so, we'll need to make sure things don't get stuck in the fifo.
+        // Shuffle down remaining items by block time
+        midi.addToTimestamps (-blockTimeSeconds);
+        
+        // Ensure there are no negative time messages
+        for (auto& m : midi)
+        {
+            juce::ignoreUnused (m);
+            jassert (m.getTimeStamp() >= 0.0);
+        }
     }
     
 private:
     std::unique_ptr<AudioNode> ownedInput;
     AudioNode* input;
     const int latencyNumSamples;
+    double sampleRate = 44100.0;
+    double latencyTimeSeconds = 0.0;
     AudioFifo fifo { 1, 32 };
-    juce::MidiBuffer midi;
+    tracktion_engine::MidiMessageArray midi;
 };
 
 
@@ -189,7 +214,7 @@ public:
                 pc.buffers.audio.getSubsetChannelBlock (0, numChannelsToAdd)
                     .add (node->getProcessedOutput().audio.getSubsetChannelBlock (0, numChannelsToAdd));
             
-            pc.buffers.midi.addEvents (inputFromNode.midi, 0, -1, 0);
+            pc.buffers.midi.mergeFrom (inputFromNode.midi);
         }
     }
 
