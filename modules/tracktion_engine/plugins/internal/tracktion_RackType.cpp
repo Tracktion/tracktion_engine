@@ -486,6 +486,8 @@ struct RackType::RenderContext
 {
     RenderContext (RackType& type, bool useExperimentalProcessing)
     {
+        juce::ignoreUnused (useExperimentalProcessing);
+        
        #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         if (useExperimentalProcessing)
             createExperiemntalProcessor (type);
@@ -689,7 +691,7 @@ RackType::RackType (const juce::ValueTree& v, Edit& owner)
     renderContextBuilder.setFunction ([this]
                                       {
                                           #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-                                           const bool useExperimentalProcessing = true;
+                                           const bool useExperimentalProcessing = isExperimentalGraphProcessingEnabled();
                                           #else
                                            const bool useExperimentalProcessing = false;
                                           #endif
@@ -1521,6 +1523,8 @@ void RackType::registerInstance (RackInstance* instance, const PlaybackInitialis
 
     blockSize = info.blockSizeSamples;
     sampleRate = info.sampleRate;
+    jassert (blockSize > 0);
+    jassert (sampleRate > 0.0);
 
     tempBufferOut.setSize (jmax (1, getOutputNames().size()), blockSize);
     tempBufferOut.clear();
@@ -2106,6 +2110,28 @@ ModifierList& RackType::getModifierList() const noexcept
 {
     return *modifierList;
 }
+
+//==============================================================================
+#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+ namespace
+ {
+     bool& getExperimentalGraphProcessingFlag()
+     {
+         static bool enabled = false;
+         return enabled;
+     }
+ }
+
+ void RackType::enableExperimentalGraphProcessing (bool enable)
+ {
+     getExperimentalGraphProcessingFlag() = enable;
+ }
+ 
+ bool RackType::isExperimentalGraphProcessingEnabled()
+ {
+     return getExperimentalGraphProcessingFlag();
+ }
+#endif
 
 //==============================================================================
 struct RackTypeList::ValueTreeList  : public ValueTreeObjectList<RackType>

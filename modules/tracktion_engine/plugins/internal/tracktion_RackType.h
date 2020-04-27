@@ -154,6 +154,14 @@ public:
 
     juce::CachedValue<juce::String> rackName;
 
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+    /** Enables the new tracktion_graph module for internal Rack processing.
+        N.B. This is for development only and this method will be removed in the future.
+    */
+    static void enableExperimentalGraphProcessing (bool);
+    static bool isExperimentalGraphProcessingEnabled();
+   #endif
+
 private:
     struct PluginInfo
     {
