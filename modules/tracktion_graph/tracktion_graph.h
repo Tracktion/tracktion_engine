@@ -42,7 +42,8 @@
 
 
 //==============================================================================
-#include "utilities/tracktion_graph_AudioFifo.h"
+#include "utilities/tracktion_AudioFifo.h"
+#include "utilities/tracktion_MidiMessageArray.h"
 
 #include "tracktion_graph/tracktion_graph_AudioNode.h"
 #include "tracktion_graph/tracktion_graph_AudioNodeProcessor.h"

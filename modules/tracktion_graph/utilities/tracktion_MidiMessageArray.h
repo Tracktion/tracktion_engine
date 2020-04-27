@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#pragma once
+
 namespace tracktion_engine
 {
 
@@ -106,16 +108,39 @@ struct MidiMessageArray
         messages.getReference (messages.size() - 1).setTimeStamp (time);
     }
 
+    void copyFrom (const MidiMessageArray& source)
+    {
+        clear();
+        mergeFrom (source);
+    }
+
     void mergeFrom (const MidiMessageArray& source)
     {
+        isAllNotesOff = isAllNotesOff || source.isAllNotesOff;
+
         if (source.isEmpty())
             return;
 
-        isAllNotesOff = isAllNotesOff || source.isAllNotesOff;
         messages.ensureStorageAllocated (messages.size() + source.size());
 
         for (auto& m : source)
             messages.add (m);
+    }
+    
+    void mergeFromWithOffset (const MidiMessageArray& source, double delta)
+    {
+        isAllNotesOff = isAllNotesOff || source.isAllNotesOff;
+
+        if (source.isEmpty())
+            return;
+
+        messages.ensureStorageAllocated (messages.size() + source.size());
+
+        for (auto& m : source)
+        {
+            messages.add (m);
+            messages.getReference (messages.size() - 1).addToTimeStamp (delta);
+        }
     }
 
     void mergeFromAndClear (MidiMessageArray& source)
@@ -188,7 +213,7 @@ struct MidiMessageArray
     void removeNoteOnsAndOffs()
     {
         for (int i = messages.size(); --i >= 0;)
-            if (messages.getReference(i).isNoteOnOrOff())
+            if (messages.getReference (i).isNoteOnOrOff())
                 messages.remove (i);
     }
 

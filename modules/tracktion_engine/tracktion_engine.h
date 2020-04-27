@@ -355,7 +355,7 @@ namespace tracktion_engine
 
 #include "midi/tracktion_Musicality.h"
 #include "midi/tracktion_MidiNote.h"
-#include "midi/tracktion_MidiMessageArray.h"
+#include "../tracktion_graph/utilities/tracktion_MidiMessageArray.h"
 #include "midi/tracktion_ActiveNoteList.h"
 
 #include "plugins/tracktion_PluginWindowState.h"
