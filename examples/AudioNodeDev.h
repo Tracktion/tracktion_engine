@@ -174,7 +174,7 @@ namespace TestRunner
         testRunner.setAssertOnFailure (false);
 
         Array<UnitTest*> tests;
-        tests.addArray (UnitTest::getTestsInCategory ("AudioNode"));
+        tests.addArray (UnitTest::getTestsInCategory ("tracktion_graph"));
         
         const auto startTime = Time::getCurrentTime();
         testRunner.runTests (tests);

@@ -21,7 +21,7 @@ class RackAudioNodeTests : public juce::UnitTest
 {
 public:
     RackAudioNodeTests()
-        : juce::UnitTest ("RackAudioNode", "AudioNode")
+        : juce::UnitTest ("RackNode", "tracktion_graph")
     {
     }
     
@@ -77,7 +77,7 @@ private:
                 auto inputProvider = std::make_shared<InputProvider>();
                 auto rackNode = RackNodeBuilder::createRackNode (*rack, inputProvider);
 
-                auto rackProcessor = std::make_unique<RackAudioNodeProcessor> (std::move (rackNode), inputProvider, true);
+                auto rackProcessor = std::make_unique<RackNodePlayer> (std::move (rackNode), inputProvider, true);
                                         
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
                 test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
@@ -114,7 +114,7 @@ private:
                 auto inputProvider = std::make_shared<InputProvider> (2);
                 auto rackNode = RackNodeBuilder::createRackNode (*rack, inputProvider);
 
-                auto rackProcessor = std::make_unique<RackAudioNodeProcessor> (std::move (rackNode), inputProvider, true);
+                auto rackProcessor = std::make_unique<RackNodePlayer> (std::move (rackNode), inputProvider, true);
                                         
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
                 
@@ -160,7 +160,7 @@ private:
                 auto inputProvider = std::make_shared<InputProvider>();
                 auto rackNode = RackNodeBuilder::createRackNode (*rack, inputProvider);
 
-                auto rackProcessor = std::make_unique<RackAudioNodeProcessor> (std::move (rackNode), inputProvider, true);
+                auto rackProcessor = std::make_unique<RackNodePlayer> (std::move (rackNode), inputProvider, true);
                                         
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
                 test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
@@ -214,7 +214,7 @@ private:
                 auto inputProvider = std::make_shared<InputProvider>();
                 auto rackNode = RackNodeBuilder::createRackNode (*rack, inputProvider);
 
-                auto rackProcessor = std::make_unique<RackAudioNodeProcessor> (std::move (rackNode), inputProvider, true);
+                auto rackProcessor = std::make_unique<RackNodePlayer> (std::move (rackNode), inputProvider, true);
                                         
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
                 const int latencyNumSamples = roundToInt (latencyTimeInSeconds * testSetup.sampleRate);
@@ -268,7 +268,7 @@ private:
                 // Process Rack
                 {
                     auto rackNode = RackNodeBuilder::createRackNode (*rack, inputProvider);
-                    auto rackProcessor = std::make_unique<RackAudioNodeProcessor> (std::move (rackNode), inputProvider, false);
+                    auto rackProcessor = std::make_unique<RackNodePlayer> (std::move (rackNode), inputProvider, false);
                     auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
 
                     for (int c : { 0, 1, 2, 3 })
@@ -296,7 +296,7 @@ private:
                     // Process Rack
                     {
                         auto rackNode = RackNodeBuilder::createRackNode (*rack, inputProvider);
-                        auto rackProcessor = std::make_unique<RackAudioNodeProcessor> (std::move (rackNode), inputProvider, false);
+                        auto rackProcessor = std::make_unique<RackNodePlayer> (std::move (rackNode), inputProvider, false);
                         auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
                         const int latencyNumSamples = roundToInt (latencyTimeInSeconds * testSetup.sampleRate);
 

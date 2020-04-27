@@ -240,13 +240,13 @@ private:
     Simple processor for a Node which uses an InputProvider to pass input in to the graph.
     This simply iterate all the nodes attempting to process them in a single thread.
 */
-class RackAudioNodeProcessor
+class RackNodePlayer
 {
 public:
-    /** Creates an RackAudioNodeProcessor to process an Node with input. */
-    RackAudioNodeProcessor (std::unique_ptr<tracktion_graph::Node> nodeToProcess,
-                            std::shared_ptr<InputProvider> inputProviderToUse,
-                            bool overrideInputProvider)
+    /** Creates an RackNodePlayer to process an Node with input. */
+    RackNodePlayer (std::unique_ptr<tracktion_graph::Node> nodeToProcess,
+                    std::shared_ptr<InputProvider> inputProviderToUse,
+                    bool overrideInputProvider)
         : input (std::move (nodeToProcess)),
           inputProvider (std::move (inputProviderToUse)),
           overrideInputs (overrideInputProvider)

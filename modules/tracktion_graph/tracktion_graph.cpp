@@ -20,4 +20,4 @@
 #include "tracktion_graph.h"
 
 //==============================================================================
-#include "tracktion_graph/tracktion_graph_tests_AudioNode.cpp"
+#include "tracktion_graph/tracktion_graph_tests_Node.cpp"

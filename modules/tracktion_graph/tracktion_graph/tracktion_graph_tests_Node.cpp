@@ -20,7 +20,7 @@ class NodeTests : public juce::UnitTest
 {
 public:
     NodeTests()
-        : juce::UnitTest ("AudioNode", "AudioNode")
+        : juce::UnitTest ("Node", "tracktion_graph")
     {
     }
     

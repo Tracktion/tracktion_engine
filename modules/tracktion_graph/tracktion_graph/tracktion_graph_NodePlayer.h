@@ -16,14 +16,14 @@ namespace tracktion_graph
 //==============================================================================
 //==============================================================================
 /**
-    Simple processor for an Node.
+    Simple player for an Node.
     This simply iterate all the nodes attempting to process them in a single thread.
 */
-class AudioNodeProcessor
+class NodePlayer
 {
 public:
-    /** Creates an AudioNodeProcessor to process an Node. */
-    AudioNodeProcessor (std::unique_ptr<Node> nodeToProcess)
+    /** Creates an NodePlayer to process an Node. */
+    NodePlayer (std::unique_ptr<Node> nodeToProcess)
         : input (std::move (nodeToProcess))
     {
     }

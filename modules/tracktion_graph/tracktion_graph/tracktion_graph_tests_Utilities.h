@@ -263,8 +263,8 @@ namespace test_utilities
     static inline std::unique_ptr<TestContext> createBasicTestContext (std::unique_ptr<Node> node, const TestSetup ts,
                                                                        const int numChannels, const double durationInSeconds)
     {
-        auto processor = std::make_unique<AudioNodeProcessor> (std::move (node));
-        return createTestContext (std::move (processor), ts, numChannels, durationInSeconds);
+        auto player = std::make_unique<NodePlayer> (std::move (node));
+        return createTestContext (std::move (player), ts, numChannels, durationInSeconds);
     }
 }
 

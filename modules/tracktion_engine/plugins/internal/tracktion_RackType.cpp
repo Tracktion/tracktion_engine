@@ -541,7 +541,7 @@ private:
     
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     std::shared_ptr<InputProvider> inputProvider;
-    std::unique_ptr<RackAudioNodeProcessor> processor;
+    std::unique_ptr<RackNodePlayer> processor;
    #endif
 
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
@@ -550,7 +550,7 @@ private:
         inputProvider = std::make_shared<InputProvider>();
         auto rackNode = RackNodeBuilder::createRackNode (type, inputProvider);
 
-        processor = std::make_unique<RackAudioNodeProcessor> (std::move (rackNode), inputProvider, false);
+        processor = std::make_unique<RackNodePlayer> (std::move (rackNode), inputProvider, false);
         processor->prepareToPlay (type.sampleRate, type.blockSize);
     }
    #endif
