@@ -8,8 +8,9 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#include "tracktion_graph_tests_Utilities.h"
-#include "tracktion_graph_tests_TestAudioNodes.h"
+
+namespace tracktion_graph
+{
 
 using namespace test_utilities;
 
@@ -32,9 +33,9 @@ public:
                 for (bool randomiseBlockSizes : { false, true })
                 {
                     TestSetup setup { sampleRate, blockSize, randomiseBlockSizes, getRandom() };
-                    logMessage (String ("Test setup: sample rate SR, block size BS, random blocks RND")
-                                .replace ("SR", String (sampleRate))
-                                .replace ("BS", String (blockSize))
+                    logMessage (juce::String ("Test setup: sample rate SR, block size BS, random blocks RND")
+                                .replace ("SR", juce::String (sampleRate))
+                                .replace ("BS", juce::String (blockSize))
                                 .replace ("RND", randomiseBlockSizes ? "Y" : "N"));
 
                     // Mono tests
@@ -175,13 +176,13 @@ private:
             const double sampleRate = testSetup.sampleRate;
             const double sinFrequency = sampleRate / 100.0;
             const double numSamplesPerCycle = sampleRate / sinFrequency;
-            const int numLatencySamples = roundToInt (numSamplesPerCycle / 2.0);
+            const int numLatencySamples = juce::roundToInt (numSamplesPerCycle / 2.0);
 
             std::vector<std::unique_ptr<AudioNode>> nodes;
             nodes.push_back (std::make_unique<SinAudioNode> ((float) sinFrequency));
 
             auto sinNode = std::make_unique<SinAudioNode> ((float) sinFrequency);
-            auto latencySinNode = std::make_unique<LatencyAudioNode> (std::move (sinNode), numLatencySamples);
+            auto latencySinNode = makeAudioNode<LatencyAudioNode> (std::move (sinNode), numLatencySamples);
             nodes.push_back (std::move (latencySinNode));
 
             auto sumNode = std::make_unique<BasicSummingAudioNode> (std::move (nodes));
@@ -202,7 +203,7 @@ private:
             const double sampleRate = testSetup.sampleRate;
             const double sinFrequency = sampleRate / 100.0;
             const double numSamplesPerCycle = sampleRate / sinFrequency;
-            const int numLatencySamples = roundToInt (numSamplesPerCycle / 2.0);
+            const int numLatencySamples = juce::roundToInt (numSamplesPerCycle / 2.0);
 
             std::vector<std::unique_ptr<AudioNode>> nodes;
             nodes.push_back (makeGainNode (makeAudioNode<SinAudioNode> ((float) sinFrequency), 0.5f));
@@ -226,7 +227,7 @@ private:
             */
             const double sinFrequency = testSetup.sampleRate / 100.0;
             const double numSamplesPerCycle = testSetup.sampleRate / sinFrequency;
-            const int numLatencySamples = roundToInt (numSamplesPerCycle / 2.0);
+            const int numLatencySamples = juce::roundToInt (numSamplesPerCycle / 2.0);
 
             auto track1 = makeAudioNode<SinAudioNode> ((float) sinFrequency);
             track1 = makeAudioNode<LatencyAudioNode> (std::move (track1), numLatencySamples);
@@ -254,7 +255,7 @@ private:
             */
             const double sinFrequency = testSetup.sampleRate / 100.0;
             const double numSamplesPerCycle = testSetup.sampleRate / sinFrequency;
-            const int numLatencySamples = roundToInt (numSamplesPerCycle / 2.0);
+            const int numLatencySamples = juce::roundToInt (numSamplesPerCycle / 2.0);
 
             auto track1 = makeAudioNode<SinAudioNode> ((float) sinFrequency);
             track1 = makeAudioNode<LatencyAudioNode> (std::move (track1), numLatencySamples);
@@ -289,7 +290,7 @@ private:
             */
             const double sinFrequency = testSetup.sampleRate / 100.0;
             const double numSamplesPerCycle = testSetup.sampleRate / sinFrequency;
-            const int numLatencySamples = roundToInt (numSamplesPerCycle / 2.0);
+            const int numLatencySamples = juce::roundToInt (numSamplesPerCycle / 2.0);
 
             auto track1 = makeAudioNode<SinAudioNode> ((float) sinFrequency);
             track1 = makeAudioNode<LatencyAudioNode> (std::move (track1), numLatencySamples);
@@ -335,10 +336,10 @@ private:
         {
             expectGreaterThan (sequence.getNumEvents(), 0);
             
-            const int latencyNumSamples = roundToInt (sampleRate / 100.0);
+            const int latencyNumSamples = juce::roundToInt (sampleRate / 100.0);
             const double delayedTime = latencyNumSamples / sampleRate;
             auto midiNode = std::make_unique<MidiAudioNode> (sequence);
-            auto delayedNode = std::make_unique<LatencyAudioNode> (std::move (midiNode), latencyNumSamples);
+            auto delayedNode = makeAudioNode<LatencyAudioNode> (std::move (midiNode), latencyNumSamples);
 
             auto testContext = createBasicTestContext (std::move (delayedNode), testSetup, 1, duration);
             
@@ -353,13 +354,13 @@ private:
             // The MIDI stream should be delayed by the same amount as the sin stream
             expectGreaterThan (sequence.getNumEvents(), 0);
             
-            const int latencyNumSamples = roundToInt (sampleRate / 100.0);
+            const int latencyNumSamples = juce::roundToInt (sampleRate / 100.0);
             const double delayedTime = latencyNumSamples / sampleRate;
 
-            auto sinNode = std::make_unique<SinAudioNode> (220.0f);
-            auto delayedNode = std::make_unique<LatencyAudioNode> (std::move (sinNode), latencyNumSamples);
+            auto sinNode = makeAudioNode<SinAudioNode> (220.0f);
+            auto delayedNode = makeAudioNode<LatencyAudioNode> (std::move (sinNode), latencyNumSamples);
             
-            auto midiNode = std::make_unique<MidiAudioNode> (sequence);
+            auto midiNode = makeAudioNode<MidiAudioNode> (sequence);
             auto summedNode = makeSummingAudioNode ({ delayedNode.release(), midiNode.release() });
 
             auto testContext = createBasicTestContext (std::move (summedNode), testSetup, 1, duration);
@@ -512,3 +513,5 @@ private:
 };
 
 static AudioNodeTests audioNodeTests;
+
+}

@@ -10,7 +10,8 @@
 
 #pragma once
 
-#include "tracktion_graph_AudioNode.h"
+namespace tracktion_graph
+{
 
 //==============================================================================
 //==============================================================================
@@ -77,3 +78,5 @@ private:
     std::unique_ptr<AudioNode> input;
     std::vector<AudioNode*> allNodes;
 };
+
+}

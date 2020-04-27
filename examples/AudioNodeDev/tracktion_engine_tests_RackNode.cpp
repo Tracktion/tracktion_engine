@@ -10,6 +10,8 @@
 
 #include "tracktion_engine_RackNode.h"
 
+using namespace tracktion_graph;
+
 //==============================================================================
 //==============================================================================
 class RackAudioNodeTests : public juce::UnitTest
@@ -28,7 +30,7 @@ public:
             {
                 for (bool randomiseBlockSizes : { false, true })
                 {
-                    TestSetup setup { sampleRate, blockSize, randomiseBlockSizes, getRandom() };
+                    test_utilities::TestSetup setup { sampleRate, blockSize, randomiseBlockSizes, getRandom() };
                     logMessage (String ("Test setup: sample rate SR, block size BS, random blocks RND")
                                 .replace ("SR", String (sampleRate))
                                 .replace ("BS", String (blockSize))
@@ -44,7 +46,7 @@ public:
 
 private:
     //==============================================================================
-    void runRackTests (TestSetup testSetup)
+    void runRackTests (test_utilities::TestSetup testSetup)
     {
         using namespace tracktion_engine;
         auto& engine = *Engine::getEngines()[0];
@@ -222,7 +224,7 @@ private:
         }
     }
 
-    void runRackAudioInputTests (TestSetup testSetup)
+    void runRackAudioInputTests (test_utilities::TestSetup testSetup)
     {
         using namespace tracktion_engine;
         auto& engine = *Engine::getEngines()[0];

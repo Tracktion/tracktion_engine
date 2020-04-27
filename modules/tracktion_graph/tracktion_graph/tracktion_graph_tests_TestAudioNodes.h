@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include "tracktion_graph_AudioNode.h"
-#include "tracktion_graph_UtilityNodes.h"
+namespace tracktion_graph
+{
 
 //==============================================================================
 //==============================================================================
@@ -46,7 +46,7 @@ public:
     {
         const int numSamples = (int) pc.streamSampleRange.getLength();
         const double blockDuration = numSamples / sampleRate;
-        const auto timeRange = tracktion_engine::EditTimeRange::withStartAndLength (lastTime, blockDuration);
+        const auto timeRange = juce::Range<double>::withStartAndLength (lastTime, blockDuration);
         
         for (int index = sequence.getNextIndexAtTime (timeRange.getStart()); index >= 0; ++index)
         {
@@ -104,7 +104,7 @@ public:
     
     void prepareToPlay (const PlaybackInitialisationInfo& info) override
     {
-        osc.prepare ({ double (info.sampleRate), uint32 (info.blockSize), (uint32) numChannels });
+        osc.prepare ({ double (info.sampleRate), uint32_t (info.blockSize), (uint32_t) numChannels });
     }
     
     void process (const ProcessContext& pc) override
@@ -500,4 +500,6 @@ static inline std::vector<std::pair<int, int>> makeChannelMap (std::initializer_
         map.push_back (channelPair);
     
     return map;
+}
+
 }

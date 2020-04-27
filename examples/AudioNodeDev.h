@@ -12,7 +12,7 @@
 
   dependencies:     juce_audio_basics, juce_audio_devices, juce_audio_formats, juce_audio_processors, juce_audio_utils,
                     juce_core, juce_data_structures, juce_dsp, juce_events, juce_graphics,
-                    juce_gui_basics, juce_gui_extra, juce_osc, tracktion_engine
+                    juce_gui_basics, juce_gui_extra, juce_osc, tracktion_engine, tracktion_graph
   exporters:        linux_make, vs2017, xcode_iphone, xcode_mac
 
   moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1, JUCE_PLUGINHOST_AU=1, JUCE_PLUGINHOST_VST3=1
@@ -27,7 +27,6 @@
 
 #pragma once
 
-#include "AudioNodeDev/tracktion_graph/tracktion_graph_tests_AudioNode.cpp"
 #include "AudioNodeDev/tracktion_engine_tests_RackNode.cpp"
 
 using namespace tracktion_engine;

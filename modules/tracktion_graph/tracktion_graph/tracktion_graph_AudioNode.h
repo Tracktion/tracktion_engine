@@ -69,7 +69,9 @@
               be released back to the pool
 */
 
-#include <JuceHeader.h>
+
+namespace tracktion_graph
+{
 
 class AudioNode;
 
@@ -126,7 +128,7 @@ public:
     struct AudioAndMidiBuffer
     {
         juce::dsp::AudioBlock<float> audio;
-        MidiBuffer& midi;
+        juce::MidiBuffer& midi;
     };
 
     /** Returns the processed audio and MIDI output.
@@ -170,8 +172,8 @@ public:
 
 private:
     std::atomic<bool> hasBeenProcessed { false };
-    AudioBuffer<float> audioBuffer;
-    MidiBuffer midiBuffer;
+    juce::AudioBuffer<float> audioBuffer;
+    juce::MidiBuffer midiBuffer;
     int numSamplesProcessed = 0;
 };
 
@@ -210,7 +212,7 @@ inline void AudioNode::process (juce::Range<int64_t> streamSampleRange)
     midiBuffer.clear();
     const int numChannelsBeforeProcessing = audioBuffer.getNumChannels();
     const int numSamplesBeforeProcessing = audioBuffer.getNumSamples();
-    ignoreUnused (numChannelsBeforeProcessing, numSamplesBeforeProcessing);
+    juce::ignoreUnused (numChannelsBeforeProcessing, numSamplesBeforeProcessing);
 
     const int numSamples = (int) streamSampleRange.getLength();
     jassert (numSamples > 0); // This must be a valid number of samples to process
@@ -238,4 +240,6 @@ inline AudioNode::AudioAndMidiBuffer AudioNode::getProcessedOutput()
 {
     jassert (hasProcessed());
     return { juce::dsp::AudioBlock<float> (audioBuffer).getSubBlock (0, (size_t) numSamplesProcessed), midiBuffer };
+}
+
 }

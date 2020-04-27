@@ -10,14 +10,16 @@
 
 #pragma once
 
+namespace tracktion_graph
+{
 
 //==============================================================================
 //==============================================================================
 /** Creates a node of the given type and returns it as the base AudioNode class. */
 template<typename AudioNodeType, typename... Args>
-std::unique_ptr<::AudioNode> makeAudioNode (Args&&... args)
+std::unique_ptr<AudioNode> makeAudioNode (Args&&... args)
 {
-    return std::unique_ptr<::AudioNode> (std::move (std::make_unique<AudioNodeType> (std::forward<Args> (args)...)));
+    return std::unique_ptr<tracktion_graph::AudioNode> (std::move (std::make_unique<AudioNodeType> (std::forward<Args> (args)...)));
 }
 
 
@@ -96,7 +98,7 @@ private:
     std::unique_ptr<AudioNode> ownedInput;
     AudioNode* input;
     const int latencyNumSamples;
-    tracktion_engine::AudioFifo fifo { 1, 32 };
+    AudioFifo fifo { 1, 32 };
     juce::MidiBuffer midi;
 };
 
@@ -258,4 +260,6 @@ static inline std::unique_ptr<SummingAudioNode> makeSummingAudioNode (std::initi
         nodeVector.push_back (std::unique_ptr<AudioNode> (node));
         
     return std::make_unique<SummingAudioNode> (std::move (nodeVector));
+}
+
 }

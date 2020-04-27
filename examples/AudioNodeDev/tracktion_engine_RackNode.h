@@ -11,7 +11,6 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "tracktion_graph/tracktion_graph_tests_TestAudioNodes.h"
 
 // To process a Rack we need to:
 //  1. Find all the plugins in the Rack
@@ -40,13 +39,13 @@ struct InputProvider
     InputProvider() = default;
     InputProvider (int numChannelsToUse) : numChannels (numChannelsToUse) {}
 
-    void setInputs (AudioNode::AudioAndMidiBuffer newBuffers)
+    void setInputs (tracktion_graph::AudioNode::AudioAndMidiBuffer newBuffers)
     {
         audio = numChannels > 0 ? newBuffers.audio.getSubsetChannelBlock (0, (size_t) numChannels) : newBuffers.audio;
         midi = newBuffers.midi;
     }
     
-    AudioNode::AudioAndMidiBuffer getInputs()
+    tracktion_graph::AudioNode::AudioAndMidiBuffer getInputs()
     {
         return { audio, midi };
     }
@@ -75,7 +74,7 @@ struct InputProvider
 
 //==============================================================================
 //==============================================================================
-class InputAudioNode    : public AudioNode
+class InputAudioNode    : public tracktion_graph::AudioNode
 {
 public:
     InputAudioNode (std::shared_ptr<InputProvider> inputProviderToUse,
@@ -86,9 +85,9 @@ public:
     {
     }
     
-    AudioNodeProperties getAudioNodeProperties() override
+    tracktion_graph::AudioNodeProperties getAudioNodeProperties() override
     {
-        AudioNodeProperties props;
+        tracktion_graph::AudioNodeProperties props;
         props.hasAudio = numChannels > 0;
         props.hasMidi = hasMidi;
         props.numberOfChannels = numChannels;
@@ -101,7 +100,7 @@ public:
         return true;
     }
     
-    void prepareToPlay (const PlaybackInitialisationInfo&) override
+    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override
     {
     }
     
@@ -139,7 +138,7 @@ private:
 
 //==============================================================================
 //==============================================================================
-class PluginAudioNode   : public AudioNode
+class PluginAudioNode   : public tracktion_graph::AudioNode
 {
 public:
     PluginAudioNode (std::unique_ptr<AudioNode> inputNode,
@@ -159,7 +158,7 @@ public:
             plugin->baseClassDeinitialise();
     }
     
-    AudioNodeProperties getAudioNodeProperties() override
+    tracktion_graph::AudioNodeProperties getAudioNodeProperties() override
     {
         jassert (isInitialised);
         auto props = input->getAudioNodeProperties();
@@ -183,7 +182,7 @@ public:
         return input->hasProcessed();
     }
     
-    void prepareToPlay (const PlaybackInitialisationInfo& info) override
+    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info) override
     {
         tracktion_engine::PlayHead playHead;
         tracktion_engine::PlaybackInitialisationInfo teInfo =
@@ -280,7 +279,7 @@ class RackAudioNodeProcessor
 {
 public:
     /** Creates an RackAudioNodeProcessor to process an AudioNode with input. */
-    RackAudioNodeProcessor (std::unique_ptr<AudioNode> nodeToProcess,
+    RackAudioNodeProcessor (std::unique_ptr<tracktion_graph::AudioNode> nodeToProcess,
                             std::shared_ptr<InputProvider> inputProviderToUse,
                             bool overrideInputProvider)
         : input (std::move (nodeToProcess)),
@@ -294,19 +293,19 @@ public:
     {
         // First, initiliase all the nodes, this will call prepareToPlay on them and also
         // give them a chance to do things like balance latency
-        const PlaybackInitialisationInfo info { sampleRate, blockSize, *input };
-        std::function<void (AudioNode&)> visitor = [&] (AudioNode& n) { n.initialise (info); };
+        const tracktion_graph::PlaybackInitialisationInfo info { sampleRate, blockSize, *input };
+        std::function<void (tracktion_graph::AudioNode&)> visitor = [&] (tracktion_graph::AudioNode& n) { n.initialise (info); };
         visitInputs (*input, visitor);
         
         // Then find all the nodes as it might have changed after initialisation
         allNodes.clear();
         
-        std::function<void (AudioNode&)> visitor2 = [&] (AudioNode& n) { allNodes.push_back (&n); };
+        std::function<void (tracktion_graph::AudioNode&)> visitor2 = [&] (tracktion_graph::AudioNode& n) { allNodes.push_back (&n); };
         visitInputs (*input, visitor2);
     }
 
     /** Processes a block of audio and MIDI data. */
-    void process (const AudioNode::ProcessContext& pc)
+    void process (const tracktion_graph::AudioNode::ProcessContext& pc)
     {
         if (overrideInputs)
             inputProvider->setInputs (pc.buffers);
@@ -349,8 +348,8 @@ public:
     }
     
 private:
-    std::unique_ptr<AudioNode> input;
-    std::vector<AudioNode*> allNodes;
+    std::unique_ptr<tracktion_graph::AudioNode> input;
+    std::vector<tracktion_graph::AudioNode*> allNodes;
     std::shared_ptr<InputProvider> inputProvider;
     bool overrideInputs = true;
 };
@@ -401,8 +400,8 @@ namespace RackNodeBuilder
         return connections;
     }
 
-    static inline std::unique_ptr<AudioNode> createChannelMappingNodeForConnections (std::unique_ptr<AudioNode> input,
-                                                                                     const Array<const te::RackConnection*>& connections)
+    static inline std::unique_ptr<tracktion_graph::AudioNode> createChannelMappingNodeForConnections (std::unique_ptr<tracktion_graph::AudioNode> input,
+                                                                                                      const Array<const te::RackConnection*>& connections)
     {
         jassert (! connections.isEmpty());
         std::vector<std::pair<int, int>> chanelMap;
@@ -424,15 +423,15 @@ namespace RackNodeBuilder
         }
         
         if (! chanelMap.empty() || passMidi)
-            return makeAudioNode<ChannelMappingAudioNode> (std::move (input), std::move (chanelMap), passMidi);
+            return makeAudioNode<tracktion_graph::ChannelMappingAudioNode> (std::move (input), std::move (chanelMap), passMidi);
         
         return {};
     }
 
     //==============================================================================
-    static inline std::unique_ptr<AudioNode> createNodeForDirectConnectionsBetween (te::RackType& rack,
-                                                                                    te::EditItemID sourceID, te::EditItemID destID,
-                                                                                    std::shared_ptr<InputProvider> inputProvider)
+    static inline std::unique_ptr<tracktion_graph::AudioNode> createNodeForDirectConnectionsBetween (te::RackType& rack,
+                                                                                                     te::EditItemID sourceID, te::EditItemID destID,
+                                                                                                     std::shared_ptr<InputProvider> inputProvider)
     {
         auto connections = getConnectionsBetween (rack, sourceID, destID);
         
@@ -453,21 +452,21 @@ namespace RackNodeBuilder
                 numChannels = jmax (numChannels, sourcePin, destPin);
         }
         
-        return createChannelMappingNodeForConnections (makeAudioNode<InputAudioNode> (inputProvider, numChannels, hasMidi),
+        return createChannelMappingNodeForConnections (tracktion_graph::makeAudioNode<InputAudioNode> (inputProvider, numChannels, hasMidi),
                                                        connections);
     }
 
-    static inline std::unique_ptr<AudioNode> createNodeForRackInputOutputDirectConnections (te::RackType& rack,
-                                                                                            std::shared_ptr<InputProvider> inputProvider)
+    static inline std::unique_ptr<tracktion_graph::AudioNode> createNodeForRackInputOutputDirectConnections (te::RackType& rack,
+                                                                                                             std::shared_ptr<InputProvider> inputProvider)
     {
         return createNodeForDirectConnectionsBetween (rack, {}, {}, inputProvider);
     }
 
     //==============================================================================
-    static inline std::unique_ptr<AudioNode> createNodeForPlugin (te::RackType& rack, te::Plugin::Ptr plugin,
-                                                                  std::shared_ptr<InputProvider> inputProvider)
+    static inline std::unique_ptr<tracktion_graph::AudioNode> createNodeForPlugin (te::RackType& rack, te::Plugin::Ptr plugin,
+                                                                                   std::shared_ptr<InputProvider> inputProvider)
     {
-        std::vector<std::unique_ptr<AudioNode>> nodes;
+        std::vector<std::unique_ptr<tracktion_graph::AudioNode>> nodes;
 
         const auto pluginID = plugin->itemID;
         
@@ -490,13 +489,13 @@ namespace RackNodeBuilder
             }
         }
 
-        return makeAudioNode<PluginAudioNode> (makeAudioNode<SummingAudioNode> (std::move (nodes)), *plugin, inputProvider);
+        return tracktion_graph::makeAudioNode<PluginAudioNode> (tracktion_graph::makeAudioNode<tracktion_graph::SummingAudioNode> (std::move (nodes)), *plugin, inputProvider);
     }
 
-    static inline std::unique_ptr<AudioNode> createRackAudioNode (te::RackType& rack,
-                                                                  std::shared_ptr<InputProvider> inputProvider)
+    static inline std::unique_ptr<tracktion_graph::AudioNode> createRackAudioNode (te::RackType& rack,
+                                                                                   std::shared_ptr<InputProvider> inputProvider)
     {
-        std::vector<std::unique_ptr<AudioNode>> nodes;
+        std::vector<std::unique_ptr<tracktion_graph::AudioNode>> nodes;
         
         // Start with any inputs connected directly to the outputs
         if (auto inputNode = createNodeForRackInputOutputDirectConnections (rack, inputProvider))
@@ -519,6 +518,6 @@ namespace RackNodeBuilder
             }
         }
 
-        return makeAudioNode<SummingAudioNode> (std::move (nodes));
+        return tracktion_graph::makeAudioNode<tracktion_graph::SummingAudioNode> (std::move (nodes));
     }
 }
