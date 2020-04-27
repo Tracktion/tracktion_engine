@@ -10,7 +10,8 @@
 
 #pragma once
 
-#include <JuceHeader.h>
+namespace tracktion_engine
+{
 
 // To process a Rack we need to:
 //  1. Find all the plugins in the Rack
@@ -24,11 +25,11 @@
 //      - Which looks like: InputAudioNode -> SendAudioNode -> ChannelMappingAudioNode -> SummingAudioNode
 //  4. Iterate each plugin, if it connects to the output add a channel mapper and then add this to the output summer
 //      - InputAudioNode -> SendAudioNode -> ChannelMappingAudioNode -> SummingAudioNode
-//                        PluginAudioNode -> ChannelMappingAudioNode -^
-//                        PluginAudioNode -> ChannelMappingAudioNode -^
+//                        PluginNode -> ChannelMappingAudioNode -^
+//                        PluginNode -> ChannelMappingAudioNode -^
 //  5. Whilst iterating each plugin, also iterate each of its input plugins and add ChannelMappingAudioNode and SumminAudioNodes
 //      -                           InputAudioNode -> SendAudioNode -> ChannelMappingAudioNode -> SummingAudioNode
-//                                                  PluginAudioNode -> ChannelMappingAudioNode -^
+//                                                       PluginNode -> ChannelMappingAudioNode -^
 //     ChannelMappingAudioNode -> SummingAudioNode -^
 //  6. Quickly, all plugins should have been iterated and the summind audionodes will have balanced the latency
 
@@ -138,12 +139,12 @@ private:
 
 //==============================================================================
 //==============================================================================
-class PluginAudioNode   : public tracktion_graph::AudioNode
+class PluginNode   : public tracktion_graph::AudioNode
 {
 public:
-    PluginAudioNode (std::unique_ptr<AudioNode> inputNode,
-                     tracktion_engine::Plugin::Ptr pluginToProcess,
-                     std::shared_ptr<InputProvider> contextProvider)
+    PluginNode (std::unique_ptr<AudioNode> inputNode,
+                tracktion_engine::Plugin::Ptr pluginToProcess,
+                std::shared_ptr<InputProvider> contextProvider)
         : input (std::move (inputNode)),
           plugin (std::move (pluginToProcess)),
           audioRenderContextProvider (std::move (contextProvider))
@@ -152,7 +153,7 @@ public:
         jassert (plugin != nullptr);
     }
     
-    ~PluginAudioNode() override
+    ~PluginNode() override
     {
         if (isInitialised)
             plugin->baseClassDeinitialise();
@@ -423,7 +424,7 @@ namespace RackNodeBuilder
         }
         
         if (! chanelMap.empty() || passMidi)
-            return makeAudioNode<tracktion_graph::ChannelMappingAudioNode> (std::move (input), std::move (chanelMap), passMidi);
+            return tracktion_graph::makeAudioNode<tracktion_graph::ChannelMappingAudioNode> (std::move (input), std::move (chanelMap), passMidi);
         
         return {};
     }
@@ -489,7 +490,7 @@ namespace RackNodeBuilder
             }
         }
 
-        return tracktion_graph::makeAudioNode<PluginAudioNode> (tracktion_graph::makeAudioNode<tracktion_graph::SummingAudioNode> (std::move (nodes)), *plugin, inputProvider);
+        return tracktion_graph::makeAudioNode<PluginNode> (tracktion_graph::makeAudioNode<tracktion_graph::SummingAudioNode> (std::move (nodes)), *plugin, inputProvider);
     }
 
     static inline std::unique_ptr<tracktion_graph::AudioNode> createRackAudioNode (te::RackType& rack,
@@ -520,4 +521,6 @@ namespace RackNodeBuilder
 
         return tracktion_graph::makeAudioNode<tracktion_graph::SummingAudioNode> (std::move (nodes));
     }
+}
+
 }

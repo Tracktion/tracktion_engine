@@ -8,7 +8,10 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#include "tracktion_engine_RackNode.h"
+namespace tracktion_engine
+{
+
+#if TRACKTION_UNIT_TESTS
 
 using namespace tracktion_graph;
 
@@ -310,3 +313,7 @@ private:
 };
 
 static RackAudioNodeTests rackAudioNodeTests;
+
+ #endif //TRACKTION_UNIT_TESTS
+
+}

@@ -8,12 +8,6 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#define ENABLE_EXPERIMENTAL_RACK_PROCESSING 1
-
-#if ENABLE_EXPERIMENTAL_RACK_PROCESSING
- #include "../../../../examples/AudioNodeDev/tracktion_engine_RackNode.h"
-#endif
-
 namespace tracktion_engine
 {
 
@@ -492,9 +486,11 @@ struct RackType::RenderContext
 {
     RenderContext (RackType& type, bool useExperimentalProcessing)
     {
+       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         if (useExperimentalProcessing)
             createExperiemntalProcessor (type);
         else
+       #endif
             createRenderContexts (type);
     }
     
@@ -511,6 +507,7 @@ struct RackType::RenderContext
                   MidiMessageArray& midiIn,
                   bool isRendering)
     {
+       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         if (processor)
         {
             processExperiemntal (playhead, playheadOutputTime,
@@ -519,6 +516,7 @@ struct RackType::RenderContext
                                  isRendering);
         }
         else
+       #endif
         {
             for (int i = renderContexts.size(); --i >= 0;)
             {
@@ -539,12 +537,13 @@ struct RackType::RenderContext
 private:
    OwnedArray<PluginRenderingInfo> renderContexts;
     
-   #if ENABLE_EXPERIMENTAL_RACK_PROCESSING
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     std::shared_ptr<InputProvider> inputProvider;
     std::unique_ptr<RackAudioNodeProcessor> processor;
     juce::MidiBuffer midiBuffer;
    #endif
 
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     void createExperiemntalProcessor (RackType& type)
     {
         inputProvider = std::make_shared<InputProvider>();
@@ -553,7 +552,8 @@ private:
         processor = std::make_unique<RackAudioNodeProcessor> (std::move (rackNode), inputProvider, false);
         processor->prepareToPlay (type.sampleRate, type.blockSize);
     }
-    
+   #endif
+
     void createRenderContexts (RackType& type)
     {
         if (type.numActiveInstances.load() == 0)
@@ -588,6 +588,7 @@ private:
             fw->initialise (type.blockSize, type, renderContexts);
     }
 
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     void processExperiemntal (PlayHead& playhead, EditTimeRange playheadOutputTime,
                               juce::AudioBuffer<float>& outputBuffer,
                               juce::AudioBuffer<float>& inputBuffer,
@@ -638,6 +639,7 @@ private:
                                         MidiMessageArray::notMPE);
         }
     }
+   #endif
 };
 
 //==============================================================================
@@ -686,7 +688,7 @@ RackType::RackType (const juce::ValueTree& v, Edit& owner)
 
     renderContextBuilder.setFunction ([this]
                                       {
-                                          #if ENABLE_EXPERIMENTAL_RACK_PROCESSING
+                                          #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
                                            const bool useExperimentalProcessing = true;
                                           #else
                                            const bool useExperimentalProcessing = false;

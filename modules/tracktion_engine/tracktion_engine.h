@@ -25,7 +25,7 @@
   website:          http://www.tracktion.com
   license:          Proprietary
 
-  dependencies:     juce_audio_devices juce_audio_utils juce_gui_extra juce_dsp juce_osc
+  dependencies:     juce_audio_devices juce_audio_utils juce_gui_extra juce_dsp juce_osc tracktion_graph
 
  END_JUCE_MODULE_DECLARATION
 
@@ -156,6 +156,12 @@
  #define TRACKTION_AIR_WINDOWS 0
 #endif
 
+/** Config: ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+    Enables the new tracktion_graph features
+*/
+#ifndef ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+ #define ENABLE_EXPERIMENTAL_TRACKTION_GRAPH 0
+#endif
 
 //==============================================================================
 #ifndef TRACKTION_LOG_ENABLED

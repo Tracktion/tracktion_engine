@@ -22,9 +22,18 @@
 #include <atomic>
 #include <numeric>
 
+#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+ #include <tracktion_graph/tracktion_graph.h>
+#endif
+
 #include "tracktion_engine.h"
 
 using namespace juce;
+
+#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+ #include "playback/graph/tracktion_engine_RackNode.h"
+ #include "playback/graph/tracktion_engine_tests_RackNode.cpp"
+#endif
 
 #include "model/automation/modifiers/tracktion_ModifierInternal.h"
 
