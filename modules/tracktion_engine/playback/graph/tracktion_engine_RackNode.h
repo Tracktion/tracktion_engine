@@ -13,26 +13,6 @@
 namespace tracktion_engine
 {
 
-// To process a Rack we need to:
-//  1. Find all the plugins in the Rack
-//  2. Start by creating an output node (with the num channels as the num outputs) and then find all plugins attached to it
-//        - This is a SummingAudioNode
-//  3. Inputs are handled by a SendAudioNode feeding in to the output SummingAudioNode
-//      - If there are no direct connections between the input and output, the ChannelMappingAudioNode will be empty
-//      - Otherwise it will need to map input to output channels
-//      - There needs to be a speacial InputAudioNode which is processed first and receives the graph audio/MIDI input
-//      - This then passes to the SendAudioNode
-//      - Which looks like: InputAudioNode -> SendAudioNode -> ChannelMappingAudioNode -> SummingAudioNode
-//  4. Iterate each plugin, if it connects to the output add a channel mapper and then add this to the output summer
-//      - InputAudioNode -> SendAudioNode -> ChannelMappingAudioNode -> SummingAudioNode
-//                        PluginNode -> ChannelMappingAudioNode -^
-//                        PluginNode -> ChannelMappingAudioNode -^
-//  5. Whilst iterating each plugin, also iterate each of its input plugins and add ChannelMappingAudioNode and SumminAudioNodes
-//      -                           InputAudioNode -> SendAudioNode -> ChannelMappingAudioNode -> SummingAudioNode
-//                                                       PluginNode -> ChannelMappingAudioNode -^
-//     ChannelMappingAudioNode -> SummingAudioNode -^
-//  6. Quickly, all plugins should have been iterated and the summind audionodes will have balanced the latency
-
 //==============================================================================
 //==============================================================================
 struct InputProvider
@@ -40,13 +20,13 @@ struct InputProvider
     InputProvider() = default;
     InputProvider (int numChannelsToUse) : numChannels (numChannelsToUse) {}
 
-    void setInputs (tracktion_graph::AudioNode::AudioAndMidiBuffer newBuffers)
+    void setInputs (tracktion_graph::Node::AudioAndMidiBuffer newBuffers)
     {
         audio = numChannels > 0 ? newBuffers.audio.getSubsetChannelBlock (0, (size_t) numChannels) : newBuffers.audio;
         midi.copyFrom (newBuffers.midi);
     }
     
-    tracktion_graph::AudioNode::AudioAndMidiBuffer getInputs()
+    tracktion_graph::Node::AudioAndMidiBuffer getInputs()
     {
         return { audio, midi };
     }
@@ -75,20 +55,20 @@ struct InputProvider
 
 //==============================================================================
 //==============================================================================
-class InputAudioNode    : public tracktion_graph::AudioNode
+class InputNode : public tracktion_graph::Node
 {
 public:
-    InputAudioNode (std::shared_ptr<InputProvider> inputProviderToUse,
-                    int numAudioChannels, bool hasMidiInput)
+    InputNode (std::shared_ptr<InputProvider> inputProviderToUse,
+               int numAudioChannels, bool hasMidiInput)
         : inputProvider (std::move (inputProviderToUse)),
           numChannels (numAudioChannels),
           hasMidi (hasMidiInput)
     {
     }
     
-    tracktion_graph::AudioNodeProperties getAudioNodeProperties() override
+    tracktion_graph::NodeProperties getNodeProperties() override
     {
-        tracktion_graph::AudioNodeProperties props;
+        tracktion_graph::NodeProperties props;
         props.hasAudio = numChannels > 0;
         props.hasMidi = hasMidi;
         props.numberOfChannels = numChannels;
@@ -139,10 +119,10 @@ private:
 
 //==============================================================================
 //==============================================================================
-class PluginNode   : public tracktion_graph::AudioNode
+class PluginNode   : public tracktion_graph::Node
 {
 public:
-    PluginNode (std::unique_ptr<AudioNode> inputNode,
+    PluginNode (std::unique_ptr<Node> inputNode,
                 tracktion_engine::Plugin::Ptr pluginToProcess,
                 std::shared_ptr<InputProvider> contextProvider)
         : input (std::move (inputNode)),
@@ -159,10 +139,10 @@ public:
             plugin->baseClassDeinitialise();
     }
     
-    tracktion_graph::AudioNodeProperties getAudioNodeProperties() override
+    tracktion_graph::NodeProperties getNodeProperties() override
     {
         jassert (isInitialised);
-        auto props = input->getAudioNodeProperties();
+        auto props = input->getNodeProperties();
         const auto latencyNumSamples = roundToInt (plugin->getLatencySeconds() * sampleRate);
 
         props.numberOfChannels = jmax (1, props.numberOfChannels, plugin->getNumOutputChannelsGivenInputs (props.numberOfChannels));
@@ -173,7 +153,7 @@ public:
         return props;
     }
     
-    std::vector<AudioNode*> getDirectInputNodes() override
+    std::vector<Node*> getDirectInputNodes() override
     {
         return { input.get() };
     }
@@ -244,7 +224,7 @@ public:
     }
     
 private:
-    std::unique_ptr<AudioNode> input;
+    std::unique_ptr<Node> input;
     tracktion_engine::Plugin::Ptr plugin;
     std::shared_ptr<InputProvider> audioRenderContextProvider;
     
@@ -257,14 +237,14 @@ private:
 //==============================================================================
 //==============================================================================
 /**
-    Simple processor for an AudioNode which uses an InputProvider to pass input in to the graph.
+    Simple processor for a Node which uses an InputProvider to pass input in to the graph.
     This simply iterate all the nodes attempting to process them in a single thread.
 */
 class RackAudioNodeProcessor
 {
 public:
-    /** Creates an RackAudioNodeProcessor to process an AudioNode with input. */
-    RackAudioNodeProcessor (std::unique_ptr<tracktion_graph::AudioNode> nodeToProcess,
+    /** Creates an RackAudioNodeProcessor to process an Node with input. */
+    RackAudioNodeProcessor (std::unique_ptr<tracktion_graph::Node> nodeToProcess,
                             std::shared_ptr<InputProvider> inputProviderToUse,
                             bool overrideInputProvider)
         : input (std::move (nodeToProcess)),
@@ -279,18 +259,18 @@ public:
         // First, initiliase all the nodes, this will call prepareToPlay on them and also
         // give them a chance to do things like balance latency
         const tracktion_graph::PlaybackInitialisationInfo info { sampleRate, blockSize, *input };
-        std::function<void (tracktion_graph::AudioNode&)> visitor = [&] (tracktion_graph::AudioNode& n) { n.initialise (info); };
+        std::function<void (tracktion_graph::Node&)> visitor = [&] (tracktion_graph::Node& n) { n.initialise (info); };
         visitInputs (*input, visitor);
         
         // Then find all the nodes as it might have changed after initialisation
         allNodes.clear();
         
-        std::function<void (tracktion_graph::AudioNode&)> visitor2 = [&] (tracktion_graph::AudioNode& n) { allNodes.push_back (&n); };
+        std::function<void (tracktion_graph::Node&)> visitor2 = [&] (tracktion_graph::Node& n) { allNodes.push_back (&n); };
         visitInputs (*input, visitor2);
     }
 
     /** Processes a block of audio and MIDI data. */
-    void process (const tracktion_graph::AudioNode::ProcessContext& pc)
+    void process (const tracktion_graph::Node::ProcessContext& pc)
     {
         if (overrideInputs)
             inputProvider->setInputs (pc.buffers);
@@ -333,8 +313,8 @@ public:
     }
     
 private:
-    std::unique_ptr<tracktion_graph::AudioNode> input;
-    std::vector<tracktion_graph::AudioNode*> allNodes;
+    std::unique_ptr<tracktion_graph::Node> input;
+    std::vector<tracktion_graph::Node*> allNodes;
     std::shared_ptr<InputProvider> inputProvider;
     bool overrideInputs = true;
 };
@@ -385,8 +365,8 @@ namespace RackNodeBuilder
         return connections;
     }
 
-    static inline std::unique_ptr<tracktion_graph::AudioNode> createChannelMappingNodeForConnections (std::unique_ptr<tracktion_graph::AudioNode> input,
-                                                                                                      const Array<const te::RackConnection*>& connections)
+    static inline std::unique_ptr<tracktion_graph::Node> createChannelMappingNodeForConnections (std::unique_ptr<tracktion_graph::Node> input,
+                                                                                                 const Array<const te::RackConnection*>& connections)
     {
         jassert (! connections.isEmpty());
         std::vector<std::pair<int, int>> chanelMap;
@@ -408,15 +388,15 @@ namespace RackNodeBuilder
         }
         
         if (! chanelMap.empty() || passMidi)
-            return tracktion_graph::makeAudioNode<tracktion_graph::ChannelMappingAudioNode> (std::move (input), std::move (chanelMap), passMidi);
+            return tracktion_graph::makeNode<tracktion_graph::ChannelMappingNode> (std::move (input), std::move (chanelMap), passMidi);
         
         return {};
     }
 
     //==============================================================================
-    static inline std::unique_ptr<tracktion_graph::AudioNode> createNodeForDirectConnectionsBetween (te::RackType& rack,
-                                                                                                     te::EditItemID sourceID, te::EditItemID destID,
-                                                                                                     std::shared_ptr<InputProvider> inputProvider)
+    static inline std::unique_ptr<tracktion_graph::Node> createNodeForDirectConnectionsBetween (te::RackType& rack,
+                                                                                                te::EditItemID sourceID, te::EditItemID destID,
+                                                                                                std::shared_ptr<InputProvider> inputProvider)
     {
         auto connections = getConnectionsBetween (rack, sourceID, destID);
         
@@ -437,21 +417,21 @@ namespace RackNodeBuilder
                 numChannels = jmax (numChannels, sourcePin, destPin);
         }
         
-        return createChannelMappingNodeForConnections (tracktion_graph::makeAudioNode<InputAudioNode> (inputProvider, numChannels, hasMidi),
+        return createChannelMappingNodeForConnections (tracktion_graph::makeNode<InputNode> (inputProvider, numChannels, hasMidi),
                                                        connections);
     }
 
-    static inline std::unique_ptr<tracktion_graph::AudioNode> createNodeForRackInputOutputDirectConnections (te::RackType& rack,
-                                                                                                             std::shared_ptr<InputProvider> inputProvider)
+    static inline std::unique_ptr<tracktion_graph::Node> createNodeForRackInputOutputDirectConnections (te::RackType& rack,
+                                                                                                        std::shared_ptr<InputProvider> inputProvider)
     {
         return createNodeForDirectConnectionsBetween (rack, {}, {}, inputProvider);
     }
 
     //==============================================================================
-    static inline std::unique_ptr<tracktion_graph::AudioNode> createNodeForPlugin (te::RackType& rack, te::Plugin::Ptr plugin,
-                                                                                   std::shared_ptr<InputProvider> inputProvider)
+    static inline std::unique_ptr<tracktion_graph::Node> createNodeForPlugin (te::RackType& rack, te::Plugin::Ptr plugin,
+                                                                              std::shared_ptr<InputProvider> inputProvider)
     {
-        std::vector<std::unique_ptr<tracktion_graph::AudioNode>> nodes;
+        std::vector<std::unique_ptr<tracktion_graph::Node>> nodes;
 
         const auto pluginID = plugin->itemID;
         
@@ -474,13 +454,13 @@ namespace RackNodeBuilder
             }
         }
 
-        return tracktion_graph::makeAudioNode<PluginNode> (tracktion_graph::makeAudioNode<tracktion_graph::SummingAudioNode> (std::move (nodes)), *plugin, inputProvider);
+        return tracktion_graph::makeNode<PluginNode> (tracktion_graph::makeNode<tracktion_graph::SummingNode> (std::move (nodes)), *plugin, inputProvider);
     }
 
-    static inline std::unique_ptr<tracktion_graph::AudioNode> createRackAudioNode (te::RackType& rack,
-                                                                                   std::shared_ptr<InputProvider> inputProvider)
+    static inline std::unique_ptr<tracktion_graph::Node> createRackNode (te::RackType& rack,
+                                                                         std::shared_ptr<InputProvider> inputProvider)
     {
-        std::vector<std::unique_ptr<tracktion_graph::AudioNode>> nodes;
+        std::vector<std::unique_ptr<tracktion_graph::Node>> nodes;
         
         // Start with any inputs connected directly to the outputs
         if (auto inputNode = createNodeForRackInputOutputDirectConnections (rack, inputProvider))
@@ -503,7 +483,7 @@ namespace RackNodeBuilder
             }
         }
 
-        return tracktion_graph::makeAudioNode<tracktion_graph::SummingAudioNode> (std::move (nodes));
+        return tracktion_graph::makeNode<tracktion_graph::SummingNode> (std::move (nodes));
     }
 }
 

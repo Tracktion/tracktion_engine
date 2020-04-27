@@ -196,8 +196,8 @@ namespace test_utilities
         juce::MidiBuffer midi;
     };
 
-    template<typename AudioNodeProcessorType>
-    static inline std::unique_ptr<TestContext> createTestContext (std::unique_ptr<AudioNodeProcessorType> processor, TestSetup ts,
+    template<typename NodeProcessorType>
+    static inline std::unique_ptr<TestContext> createTestContext (std::unique_ptr<NodeProcessorType> processor, TestSetup ts,
                                                                   const int numChannels, const double durationInSeconds)
     {
         auto context = std::make_unique<TestContext>();
@@ -260,7 +260,7 @@ namespace test_utilities
         return {};
     }
 
-    static inline std::unique_ptr<TestContext> createBasicTestContext (std::unique_ptr<AudioNode> node, const TestSetup ts,
+    static inline std::unique_ptr<TestContext> createBasicTestContext (std::unique_ptr<Node> node, const TestSetup ts,
                                                                        const int numChannels, const double durationInSeconds)
     {
         auto processor = std::make_unique<AudioNodeProcessor> (std::move (node));

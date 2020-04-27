@@ -19,15 +19,15 @@ namespace tracktion_graph
     Plays back a MIDI sequence.
     This simply plays it back from start to finish with no notation of a playhead.
 */
-class MidiAudioNode : public AudioNode
+class MidiNode : public Node
 {
 public:
-    MidiAudioNode (juce::MidiMessageSequence sequenceToPlay)
+    MidiNode (juce::MidiMessageSequence sequenceToPlay)
         : sequence (std::move (sequenceToPlay))
     {
     }
     
-    AudioNodeProperties getAudioNodeProperties() override
+    NodeProperties getNodeProperties() override
     {
         return { false, true, 0 };
     }
@@ -77,18 +77,18 @@ private:
 
 //==============================================================================
 //==============================================================================
-class SinAudioNode : public AudioNode
+class SinNode : public Node
 {
 public:
-    SinAudioNode (float frequency, int numChannelsToUse = 1)
+    SinNode (float frequency, int numChannelsToUse = 1)
         : numChannels (numChannelsToUse)
     {
         osc.setFrequency (frequency, true);
     }
     
-    AudioNodeProperties getAudioNodeProperties() override
+    NodeProperties getNodeProperties() override
     {
-        AudioNodeProperties props;
+        NodeProperties props;
         props.hasAudio = true;
         props.hasMidi = false;
         props.numberOfChannels = numChannels;
@@ -110,7 +110,7 @@ public:
     {
         auto block = pc.buffers.audio;
         osc.process (juce::dsp::ProcessContextReplacing<float> { block });
-        jassert (pc.buffers.audio.getNumChannels() == (size_t) getAudioNodeProperties().numberOfChannels);
+        jassert (pc.buffers.audio.getNumChannels() == (size_t) getNodeProperties().numberOfChannels);
     }
     
 private:
@@ -124,17 +124,17 @@ private:
 /**
     Just a simple audio node that doesn't take any input so can be used as a stub.
 */
-class SilentAudioNode   : public AudioNode
+class SilentNode   : public Node
 {
 public:
-    SilentAudioNode (int numChannelsToUse = 1)
+    SilentNode (int numChannelsToUse = 1)
         : numChannels (numChannelsToUse)
     {
     }
     
-    AudioNodeProperties getAudioNodeProperties() override
+    NodeProperties getNodeProperties() override
     {
-        AudioNodeProperties props;
+        NodeProperties props;
         props.hasAudio = true;
         props.hasMidi = false;
         props.numberOfChannels = numChannels;
@@ -162,24 +162,24 @@ private:
 
 //==============================================================================
 //==============================================================================
-class BasicSummingAudioNode : public AudioNode
+class BasicSummingNode : public Node
 {
 public:
-    BasicSummingAudioNode (std::vector<std::unique_ptr<AudioNode>> inputs)
+    BasicSummingNode (std::vector<std::unique_ptr<Node>> inputs)
         : nodes (std::move (inputs))
     {
     }
     
-    AudioNodeProperties getAudioNodeProperties() override
+    NodeProperties getNodeProperties() override
     {
-        AudioNodeProperties props;
+        NodeProperties props;
         props.hasAudio = false;
         props.hasMidi = false;
         props.numberOfChannels = 0;
 
         for (auto& node : nodes)
         {
-            auto nodeProps = node->getAudioNodeProperties();
+            auto nodeProps = node->getNodeProperties();
             props.hasAudio = props.hasAudio | nodeProps.hasAudio;
             props.hasMidi = props.hasMidi | nodeProps.hasMidi;
             props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);
@@ -188,9 +188,9 @@ public:
         return props;
     }
     
-    std::vector<AudioNode*> getDirectInputNodes() override
+    std::vector<Node*> getDirectInputNodes() override
     {
-        std::vector<AudioNode*> inputNodes;
+        std::vector<Node*> inputNodes;
         
         for (auto& node : nodes)
             inputNodes.push_back (node.get());
@@ -227,41 +227,41 @@ public:
     }
 
 private:
-    std::vector<std::unique_ptr<AudioNode>> nodes;
+    std::vector<std::unique_ptr<Node>> nodes;
 };
 
 
-/** Creates a SummingAudioNode from a number of AudioNodes. */
-static inline std::unique_ptr<BasicSummingAudioNode> makeBaicSummingAudioNode (std::initializer_list<AudioNode*> nodes)
+/** Creates a SummingNode from a number of Nodes. */
+static inline std::unique_ptr<BasicSummingNode> makeBaicSummingNode (std::initializer_list<Node*> nodes)
 {
-    std::vector<std::unique_ptr<AudioNode>> nodeVector;
+    std::vector<std::unique_ptr<Node>> nodeVector;
     
     for (auto node : nodes)
-        nodeVector.push_back (std::unique_ptr<AudioNode> (node));
+        nodeVector.push_back (std::unique_ptr<Node> (node));
         
-    return std::make_unique<BasicSummingAudioNode> (std::move (nodeVector));
+    return std::make_unique<BasicSummingNode> (std::move (nodeVector));
 }
 
 
 //==============================================================================
 //==============================================================================
-class FunctionAudioNode : public AudioNode
+class FunctionNode : public Node
 {
 public:
-    FunctionAudioNode (std::unique_ptr<AudioNode> input,
-                       std::function<float (float)> fn)
+    FunctionNode (std::unique_ptr<Node> input,
+                  std::function<float (float)> fn)
         : node (std::move (input)),
           function (std::move (fn))
     {
         jassert (function);
     }
     
-    AudioNodeProperties getAudioNodeProperties() override
+    NodeProperties getNodeProperties() override
     {
-        return node->getAudioNodeProperties();
+        return node->getNodeProperties();
     }
     
-    std::vector<AudioNode*> getDirectInputNodes() override
+    std::vector<Node*> getDirectInputNodes() override
     {
         return { node.get() };
     }
@@ -290,24 +290,24 @@ public:
     }
     
 private:
-    std::unique_ptr<AudioNode> node;
+    std::unique_ptr<Node> node;
     std::function<float (float)> function;
 };
 
 //==============================================================================
 /** Returns an audio node that applies a fixed gain to an input node. */
-static inline std::unique_ptr<AudioNode> makeGainNode (std::unique_ptr<AudioNode> input, float gain)
+static inline std::unique_ptr<Node> makeGainNode (std::unique_ptr<Node> input, float gain)
 {
-    return makeAudioNode<FunctionAudioNode> (std::move (input), [gain] (float s) { return s * gain; });
+    return makeNode<FunctionNode> (std::move (input), [gain] (float s) { return s * gain; });
 }
 
 
 //==============================================================================
 //==============================================================================
-class SendAudioNode : public AudioNode
+class SendNode : public Node
 {
 public:
-    SendAudioNode (std::unique_ptr<AudioNode> inputNode, int busIDToUse)
+    SendNode (std::unique_ptr<Node> inputNode, int busIDToUse)
         : input (std::move (inputNode)), busID (busIDToUse)
     {
     }
@@ -317,12 +317,12 @@ public:
         return busID;
     }
     
-    AudioNodeProperties getAudioNodeProperties() override
+    NodeProperties getNodeProperties() override
     {
-        return input->getAudioNodeProperties();
+        return input->getNodeProperties();
     }
     
-    std::vector<AudioNode*> getDirectInputNodes() override
+    std::vector<Node*> getDirectInputNodes() override
     {
         return { input.get() };
     }
@@ -342,27 +342,27 @@ public:
     }
     
 private:
-    std::unique_ptr<AudioNode> input;
+    std::unique_ptr<Node> input;
     const int busID;
 };
 
 
 //==============================================================================
 //==============================================================================
-class ReturnAudioNode : public AudioNode
+class ReturnNode : public Node
 {
 public:
-    ReturnAudioNode (std::unique_ptr<AudioNode> inputNode, int busIDToUse)
+    ReturnNode (std::unique_ptr<Node> inputNode, int busIDToUse)
         : input (std::move (inputNode)), busID (busIDToUse)
     {
     }
     
-    AudioNodeProperties getAudioNodeProperties() override
+    NodeProperties getNodeProperties() override
     {
-        return input->getAudioNodeProperties();
+        return input->getNodeProperties();
     }
     
-    std::vector<AudioNode*> getDirectInputNodes() override
+    std::vector<Node*> getDirectInputNodes() override
     {
         return { input.get() };
     }
@@ -381,10 +381,10 @@ public:
         if (hasInitialised)
             return;
         
-        std::vector<AudioNode*> sends;
-        std::function<void (AudioNode&)> visitor = [&] (AudioNode& n)
+        std::vector<Node*> sends;
+        std::function<void (Node&)> visitor = [&] (Node& n)
             {
-                if (auto send = dynamic_cast<SendAudioNode*> (&n))
+                if (auto send = dynamic_cast<SendNode*> (&n))
                     if (send->getBusID() == busID)
                         sends.push_back (send);
             };
@@ -393,10 +393,10 @@ public:
         // Create a summing node if required
         if (sends.size() > 0)
         {
-            std::vector<std::unique_ptr<AudioNode>> ownedNodes;
+            std::vector<std::unique_ptr<Node>> ownedNodes;
             ownedNodes.push_back (std::move (input));
             
-            auto node = makeAudioNode<SummingAudioNode> (std::move (ownedNodes), std::move (sends));
+            auto node = makeNode<SummingNode> (std::move (ownedNodes), std::move (sends));
             node->initialise (info);
             input.swap (node);
         }
@@ -408,14 +408,14 @@ public:
     {
         jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
 
-        // Copy the input on to our output, the SummingAudioNode will copy all the sends and get all the input
+        // Copy the input on to our output, the SummingNode will copy all the sends and get all the input
         pc.buffers.audio.copyFrom (input->getProcessedOutput().audio);
         pc.buffers.midi.mergeFrom (input->getProcessedOutput().midi);
     }
     
 private:
-    std::unique_ptr<AudioNode> input;
-    std::vector<AudioNode*> sendNodes;
+    std::unique_ptr<Node> input;
+    std::vector<Node*> sendNodes;
     const int busID;
     bool hasInitialised = false;
 };
@@ -424,25 +424,25 @@ private:
 //==============================================================================
 //==============================================================================
 /** Maps channels from one to another. */
-class ChannelMappingAudioNode : public AudioNode
+class ChannelMappingNode : public Node
 {
 public:
-    ChannelMappingAudioNode (std::unique_ptr<AudioNode> inputNode,
-                             std::vector<std::pair<int /*source channel*/, int /*dest channel*/>> channelMapToUse,
-                             bool passMidiThrough)
+    ChannelMappingNode (std::unique_ptr<Node> inputNode,
+                        std::vector<std::pair<int /*source channel*/, int /*dest channel*/>> channelMapToUse,
+                        bool passMidiThrough)
         : input (std::move (inputNode)),
           channelMap (std::move (channelMapToUse)),
           passMIDI (passMidiThrough)
     {
     }
         
-    AudioNodeProperties getAudioNodeProperties() override
+    NodeProperties getNodeProperties() override
     {
-        AudioNodeProperties props;
+        NodeProperties props;
         props.hasAudio = true;
         props.hasMidi = false;
         props.numberOfChannels = 0;
-        props.latencyNumSamples = input->getAudioNodeProperties().latencyNumSamples;
+        props.latencyNumSamples = input->getNodeProperties().latencyNumSamples;
 
         // Num channels is the max of destinations
         for (auto channel : channelMap)
@@ -451,7 +451,7 @@ public:
         return props;
     }
     
-    std::vector<AudioNode*> getDirectInputNodes() override
+    std::vector<Node*> getDirectInputNodes() override
     {
         return { input.get() };
     }
@@ -482,7 +482,7 @@ public:
     }
 
 private:
-    std::unique_ptr<AudioNode> input;
+    std::unique_ptr<Node> input;
     const std::vector<std::pair<int, int>> channelMap;
     const bool passMIDI;
 };

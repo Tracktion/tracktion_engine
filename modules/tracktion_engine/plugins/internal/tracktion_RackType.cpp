@@ -548,7 +548,7 @@ private:
     void createExperiemntalProcessor (RackType& type)
     {
         inputProvider = std::make_shared<InputProvider>();
-        auto rackNode = RackNodeBuilder::createRackAudioNode (type, inputProvider);
+        auto rackNode = RackNodeBuilder::createRackNode (type, inputProvider);
 
         processor = std::make_unique<RackAudioNodeProcessor> (std::move (rackNode), inputProvider, false);
         processor->prepareToPlay (type.sampleRate, type.blockSize);

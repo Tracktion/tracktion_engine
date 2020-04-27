@@ -75,7 +75,7 @@ private:
             // Process Rack
             {
                 auto inputProvider = std::make_shared<InputProvider>();
-                auto rackNode = RackNodeBuilder::createRackAudioNode (*rack, inputProvider);
+                auto rackNode = RackNodeBuilder::createRackNode (*rack, inputProvider);
 
                 auto rackProcessor = std::make_unique<RackAudioNodeProcessor> (std::move (rackNode), inputProvider, true);
                                         
@@ -112,7 +112,7 @@ private:
             // Process Rack
             {
                 auto inputProvider = std::make_shared<InputProvider> (2);
-                auto rackNode = RackNodeBuilder::createRackAudioNode (*rack, inputProvider);
+                auto rackNode = RackNodeBuilder::createRackNode (*rack, inputProvider);
 
                 auto rackProcessor = std::make_unique<RackAudioNodeProcessor> (std::move (rackNode), inputProvider, true);
                                         
@@ -158,7 +158,7 @@ private:
             // Process Rack
             {
                 auto inputProvider = std::make_shared<InputProvider>();
-                auto rackNode = RackNodeBuilder::createRackAudioNode (*rack, inputProvider);
+                auto rackNode = RackNodeBuilder::createRackNode (*rack, inputProvider);
 
                 auto rackProcessor = std::make_unique<RackAudioNodeProcessor> (std::move (rackNode), inputProvider, true);
                                         
@@ -212,7 +212,7 @@ private:
             // Process Rack
             {
                 auto inputProvider = std::make_shared<InputProvider>();
-                auto rackNode = RackNodeBuilder::createRackAudioNode (*rack, inputProvider);
+                auto rackNode = RackNodeBuilder::createRackNode (*rack, inputProvider);
 
                 auto rackProcessor = std::make_unique<RackAudioNodeProcessor> (std::move (rackNode), inputProvider, true);
                                         
@@ -267,7 +267,7 @@ private:
 
                 // Process Rack
                 {
-                    auto rackNode = RackNodeBuilder::createRackAudioNode (*rack, inputProvider);
+                    auto rackNode = RackNodeBuilder::createRackNode (*rack, inputProvider);
                     auto rackProcessor = std::make_unique<RackAudioNodeProcessor> (std::move (rackNode), inputProvider, false);
                     auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
 
@@ -295,7 +295,7 @@ private:
 
                     // Process Rack
                     {
-                        auto rackNode = RackNodeBuilder::createRackAudioNode (*rack, inputProvider);
+                        auto rackNode = RackNodeBuilder::createRackNode (*rack, inputProvider);
                         auto rackProcessor = std::make_unique<RackAudioNodeProcessor> (std::move (rackNode), inputProvider, false);
                         auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
                         const int latencyNumSamples = roundToInt (latencyTimeInSeconds * testSetup.sampleRate);

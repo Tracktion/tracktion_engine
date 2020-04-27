@@ -15,39 +15,39 @@ namespace tracktion_graph
 
 //==============================================================================
 //==============================================================================
-/** Creates a node of the given type and returns it as the base AudioNode class. */
-template<typename AudioNodeType, typename... Args>
-std::unique_ptr<AudioNode> makeAudioNode (Args&&... args)
+/** Creates a node of the given type and returns it as the base Node class. */
+template<typename NodeType, typename... Args>
+std::unique_ptr<Node> makeNode (Args&&... args)
 {
-    return std::unique_ptr<tracktion_graph::AudioNode> (std::move (std::make_unique<AudioNodeType> (std::forward<Args> (args)...)));
+    return std::unique_ptr<tracktion_graph::Node> (std::move (std::make_unique<NodeType> (std::forward<Args> (args)...)));
 }
 
 
 //==============================================================================
 //==============================================================================
-class LatencyAudioNode  : public AudioNode
+class LatencyNode  : public Node
 {
 public:
-    LatencyAudioNode (std::unique_ptr<AudioNode> inputNode, int numSamplesToDelay)
-        : LatencyAudioNode (inputNode.get(), numSamplesToDelay)
+    LatencyNode (std::unique_ptr<Node> inputNode, int numSamplesToDelay)
+        : LatencyNode (inputNode.get(), numSamplesToDelay)
     {
         ownedInput = std::move (inputNode);
     }
 
-    LatencyAudioNode (AudioNode* inputNode, int numSamplesToDelay)
+    LatencyNode (Node* inputNode, int numSamplesToDelay)
         : input (inputNode), latencyNumSamples (numSamplesToDelay)
     {
     }
 
-    AudioNodeProperties getAudioNodeProperties() override
+    NodeProperties getNodeProperties() override
     {
-        auto props = input->getAudioNodeProperties();
+        auto props = input->getNodeProperties();
         props.latencyNumSamples += latencyNumSamples;
         
         return props;
     }
     
-    std::vector<AudioNode*> getDirectInputNodes() override
+    std::vector<Node*> getDirectInputNodes() override
     {
         return { input };
     }
@@ -62,7 +62,7 @@ public:
         sampleRate = info.sampleRate;
         latencyTimeSeconds = latencyNumSamples / info.sampleRate;
         
-        fifo.setSize (getAudioNodeProperties().numberOfChannels, latencyNumSamples + info.blockSize + 1);
+        fifo.setSize (getNodeProperties().numberOfChannels, latencyNumSamples + info.blockSize + 1);
         fifo.writeSilence (latencyNumSamples);
         jassert (fifo.getNumReady() == latencyNumSamples);
     }
@@ -118,8 +118,8 @@ public:
     }
     
 private:
-    std::unique_ptr<AudioNode> ownedInput;
-    AudioNode* input;
+    std::unique_ptr<Node> ownedInput;
+    Node* input;
     const int latencyNumSamples;
     double sampleRate = 44100.0;
     double latencyTimeSeconds = 0.0;
@@ -131,41 +131,41 @@ private:
 //==============================================================================
 //==============================================================================
 /**
-    An AudioNode which sums together the multiple inputs adding additional latency
+    An Node which sums together the multiple inputs adding additional latency
     to provide a coherent output.
 */
-class SummingAudioNode : public AudioNode
+class SummingNode : public Node
 {
 public:
-    SummingAudioNode (std::vector<std::unique_ptr<AudioNode>> inputs)
+    SummingNode (std::vector<std::unique_ptr<Node>> inputs)
         : ownedNodes (std::move (inputs))
     {
         for (auto& ownedNode : ownedNodes)
             nodes.push_back (ownedNode.get());
     }
 
-    SummingAudioNode (std::vector<AudioNode*> inputs)
+    SummingNode (std::vector<Node*> inputs)
         : nodes (std::move (inputs))
     {
     }
     
-    SummingAudioNode (std::vector<std::unique_ptr<AudioNode>> ownedInputs,
-                      std::vector<AudioNode*> referencedInputs)
-        : SummingAudioNode (std::move (ownedInputs))
+    SummingNode (std::vector<std::unique_ptr<Node>> ownedInputs,
+                      std::vector<Node*> referencedInputs)
+        : SummingNode (std::move (ownedInputs))
     {
         nodes.insert (nodes.begin(), referencedInputs.begin(), referencedInputs.end());
     }
 
-    AudioNodeProperties getAudioNodeProperties() override
+    NodeProperties getNodeProperties() override
     {
-        AudioNodeProperties props;
+        NodeProperties props;
         props.hasAudio = false;
         props.hasMidi = false;
         props.numberOfChannels = 0;
 
         for (auto& node : nodes)
         {
-            auto nodeProps = node->getAudioNodeProperties();
+            auto nodeProps = node->getNodeProperties();
             props.hasAudio = props.hasAudio | nodeProps.hasAudio;
             props.hasMidi = props.hasMidi | nodeProps.hasMidi;
             props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);
@@ -175,9 +175,9 @@ public:
         return props;
     }
     
-    std::vector<AudioNode*> getDirectInputNodes() override
+    std::vector<Node*> getDirectInputNodes() override
     {
-        std::vector<AudioNode*> inputNodes;
+        std::vector<Node*> inputNodes;
         
         for (auto& node : nodes)
             inputNodes.push_back (node);
@@ -219,17 +219,17 @@ public:
     }
 
 private:
-    std::vector<std::unique_ptr<AudioNode>> ownedNodes;
-    std::vector<AudioNode*> nodes;
+    std::vector<std::unique_ptr<Node>> ownedNodes;
+    std::vector<Node*> nodes;
     
     void createLatencyNodes (const PlaybackInitialisationInfo& info)
     {
-        const int maxLatency = getAudioNodeProperties().latencyNumSamples;
-        std::vector<std::unique_ptr<AudioNode>> ownedNodesToAdd;
+        const int maxLatency = getNodeProperties().latencyNumSamples;
+        std::vector<std::unique_ptr<Node>> ownedNodesToAdd;
 
         for (auto& node : nodes)
         {
-            const int nodeLatency = node->getAudioNodeProperties().latencyNumSamples;
+            const int nodeLatency = node->getNodeProperties().latencyNumSamples;
             const int latencyToAdd = maxLatency - nodeLatency;
             
             if (latencyToAdd == 0)
@@ -247,12 +247,12 @@ private:
                     }
                 }
                 
-                return std::unique_ptr<AudioNode>();
+                return std::unique_ptr<Node>();
             };
             
             auto ownedNode = getOwnedNode (node);
-            auto latencyNode = ownedNode != nullptr ? makeAudioNode<LatencyAudioNode> (std::move (ownedNode), latencyToAdd)
-                                                    : makeAudioNode<LatencyAudioNode> (node, latencyToAdd);
+            auto latencyNode = ownedNode != nullptr ? makeNode<LatencyNode> (std::move (ownedNode), latencyToAdd)
+                                                    : makeNode<LatencyNode> (node, latencyToAdd);
             latencyNode->initialise (info);
             ownedNodesToAdd.push_back (std::move (latencyNode));
             node = nullptr;
@@ -276,15 +276,15 @@ private:
 };
 
 
-/** Creates a SummingAudioNode from a number of AudioNodes. */
-static inline std::unique_ptr<SummingAudioNode> makeSummingAudioNode (std::initializer_list<AudioNode*> nodes)
+/** Creates a SummingNode from a number of Nodes. */
+static inline std::unique_ptr<SummingNode> makeSummingNode (std::initializer_list<Node*> nodes)
 {
-    std::vector<std::unique_ptr<AudioNode>> nodeVector;
+    std::vector<std::unique_ptr<Node>> nodeVector;
     
     for (auto node : nodes)
-        nodeVector.push_back (std::unique_ptr<AudioNode> (node));
+        nodeVector.push_back (std::unique_ptr<Node> (node));
         
-    return std::make_unique<SummingAudioNode> (std::move (nodeVector));
+    return std::make_unique<SummingNode> (std::move (nodeVector));
 }
 
 }

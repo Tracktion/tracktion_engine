@@ -73,21 +73,21 @@
 namespace tracktion_graph
 {
 
-class AudioNode;
+class Node;
 
 //==============================================================================
-/** Passed into AudioNodes when they are being initialised, to give them useful
+/** Passed into Nodes when they are being initialised, to give them useful
     contextual information that they may need
 */
 struct PlaybackInitialisationInfo
 {
     double sampleRate;
     int blockSize;
-    AudioNode& rootNode;
+    Node& rootNode;
 };
 
 /** Holds some really basic properties of a node */
-struct AudioNodeProperties
+struct NodeProperties
 {
     bool hasAudio;
     bool hasMidi;
@@ -97,11 +97,11 @@ struct AudioNodeProperties
 
 //==============================================================================
 //==============================================================================
-class AudioNode
+class Node
 {
 public:
-    AudioNode() = default;
-    virtual ~AudioNode() = default;
+    Node() = default;
+    virtual ~Node() = default;
     
     //==============================================================================
     /** Call once after the graph has been constructed to initialise buffers etc. */
@@ -138,7 +138,7 @@ public:
 
     //==============================================================================
     /** Should return all the inputs directly feeding in to this node. */
-    virtual std::vector<AudioNode*> getDirectInputNodes() { return {}; }
+    virtual std::vector<Node*> getDirectInputNodes() { return {}; }
 
     /** Called once before playback begins for each node.
         Use this to allocate buffers etc.
@@ -151,7 +151,7 @@ public:
     /** Should return the properties of the node.
         This should not be called until after initialise.
     */
-    virtual AudioNodeProperties getAudioNodeProperties() = 0;
+    virtual NodeProperties getNodeProperties() = 0;
 
     /** Should return true when this node is ready to be processed.
         This is usually when its input's output buffers are ready.
@@ -183,7 +183,7 @@ private:
 /** Should call the visitInputs for any direct inputs to the node and then call
     the visit function on this node.
 */
-static inline void visitInputs (AudioNode& node, std::function<void (AudioNode&)>& visit)
+static inline void visitInputs (Node& node, std::function<void (Node&)>& visit)
 {
     for (auto n : node.getDirectInputNodes())
         visitInputs (*n, visit);
@@ -193,20 +193,20 @@ static inline void visitInputs (AudioNode& node, std::function<void (AudioNode&)
 
 
 //==============================================================================
-inline void AudioNode::initialise (const PlaybackInitialisationInfo& info)
+inline void Node::initialise (const PlaybackInitialisationInfo& info)
 {
     prepareToPlay (info);
     
-    auto props = getAudioNodeProperties();
+    auto props = getNodeProperties();
     audioBuffer.setSize (props.numberOfChannels, info.blockSize);
 }
 
-inline void AudioNode::prepareForNextBlock()
+inline void Node::prepareForNextBlock()
 {
     hasBeenProcessed = false;
 }
 
-inline void AudioNode::process (juce::Range<int64_t> streamSampleRange)
+inline void Node::process (juce::Range<int64_t> streamSampleRange)
 {
     audioBuffer.clear();
     midiBuffer.clear();
@@ -231,12 +231,12 @@ inline void AudioNode::process (juce::Range<int64_t> streamSampleRange)
     jassert (numSamplesBeforeProcessing == audioBuffer.getNumSamples());
 }
 
-inline bool AudioNode::hasProcessed() const
+inline bool Node::hasProcessed() const
 {
     return hasBeenProcessed;
 }
 
-inline AudioNode::AudioAndMidiBuffer AudioNode::getProcessedOutput()
+inline Node::AudioAndMidiBuffer Node::getProcessedOutput()
 {
     jassert (hasProcessed());
     return { juce::dsp::AudioBlock<float> (audioBuffer).getSubBlock (0, (size_t) numSamplesProcessed), midiBuffer };

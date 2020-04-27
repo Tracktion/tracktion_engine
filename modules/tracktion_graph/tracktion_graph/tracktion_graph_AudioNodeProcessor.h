@@ -16,14 +16,14 @@ namespace tracktion_graph
 //==============================================================================
 //==============================================================================
 /**
-    Simple processor for an AudioNode.
+    Simple processor for an Node.
     This simply iterate all the nodes attempting to process them in a single thread.
 */
 class AudioNodeProcessor
 {
 public:
-    /** Creates an AudioNodeProcessor to process an AudioNode. */
-    AudioNodeProcessor (std::unique_ptr<AudioNode> nodeToProcess)
+    /** Creates an AudioNodeProcessor to process an Node. */
+    AudioNodeProcessor (std::unique_ptr<Node> nodeToProcess)
         : input (std::move (nodeToProcess))
     {
     }
@@ -34,18 +34,18 @@ public:
         // First, initiliase all the nodes, this will call prepareToPlay on them and also
         // give them a chance to do things like balance latency
         const PlaybackInitialisationInfo info { sampleRate, blockSize, *input };
-        std::function<void (AudioNode&)> visitor = [&] (AudioNode& n) { n.initialise (info); };
+        std::function<void (Node&)> visitor = [&] (Node& n) { n.initialise (info); };
         visitInputs (*input, visitor);
         
         // Then find all the nodes as it might have changed after initialisation
         allNodes.clear();
         
-        std::function<void (AudioNode&)> visitor2 = [&] (AudioNode& n) { allNodes.push_back (&n); };
+        std::function<void (Node&)> visitor2 = [&] (Node& n) { allNodes.push_back (&n); };
         visitInputs (*input, visitor2);
     }
 
     /** Processes a block of audio and MIDI data. */
-    void process (const AudioNode::ProcessContext& pc)
+    void process (const Node::ProcessContext& pc)
     {
         for (auto node : allNodes)
             node->prepareForNextBlock();
@@ -75,8 +75,8 @@ public:
     }
     
 private:
-    std::unique_ptr<AudioNode> input;
-    std::vector<AudioNode*> allNodes;
+    std::unique_ptr<Node> input;
+    std::vector<Node*> allNodes;
 };
 
 }
