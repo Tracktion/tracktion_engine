@@ -691,6 +691,9 @@ namespace RackNodeBuilder
             // Otherwise connected to the Rack output
             auto plugin = rack.getPluginForID (c.sourceID);
             auto modifier = findModifierForID (rack, c.sourceID);
+            
+            if (plugin == nullptr && modifier == nullptr)
+                continue;
 
             if (auto node = createNodeForPluginOrModifier (rack, inputProvider, plugin, modifier))
             {
