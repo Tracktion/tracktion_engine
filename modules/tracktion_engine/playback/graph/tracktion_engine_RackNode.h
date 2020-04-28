@@ -640,31 +640,23 @@ namespace RackNodeBuilder
             if (c.destID != pluginOrModifierID)
                 continue;
 
-            if (auto p = rack.getPluginForID (c.sourceID))
+            auto p = rack.getPluginForID (c.sourceID);
+            auto m = findModifierForID (rack, c.sourceID);
+            
+            if (p == nullptr && m == nullptr)
+                continue;
+
+            if (auto node = createNodeForPluginOrModifier (rack, inputProvider, p, m))
             {
-                if (auto node = createNodeForPluginOrModifier (rack, inputProvider, *p, nullptr))
-                {
-                    auto connections = getConnectionsBetween (rack, c.sourceID, pluginOrModifierID);
-                    jassert (! connections.isEmpty());
-                    node = createChannelRemappingNodeForConnections (std::move (node), connections, modifier);
-                    nodes.push_back (std::move (node));
-                }
-            }
-            else if (auto m = findModifierForID (rack, c.sourceID))
-            {
-                if (auto node = createNodeForPluginOrModifier (rack, inputProvider, nullptr, *m))
-                {
-                    auto connections = getConnectionsBetween (rack, c.sourceID, pluginOrModifierID);
-                    jassert (! connections.isEmpty());
-                    node = createChannelRemappingNodeForConnections (std::move (node), connections, modifier);
-                    nodes.push_back (std::move (node));
-                }
+                auto connections = getConnectionsBetween (rack, c.sourceID, pluginOrModifierID);
+                jassert (! connections.isEmpty());
+                node = createChannelRemappingNodeForConnections (std::move (node), connections, modifier);
+                nodes.push_back (std::move (node));
             }
         }
         
         if (nodes.empty())
             return {};
-        
         
         auto node = [&]() -> std::unique_ptr<tracktion_graph::Node>
         {
@@ -697,29 +689,19 @@ namespace RackNodeBuilder
                 continue;
 
             // Otherwise connected to the Rack output
-            if (auto plugin = rack.getPluginForID (c.sourceID))
+            auto plugin = rack.getPluginForID (c.sourceID);
+            auto modifier = findModifierForID (rack, c.sourceID);
+
+            if (auto node = createNodeForPluginOrModifier (rack, inputProvider, plugin, modifier))
             {
-                if (auto node = createNodeForPluginOrModifier (rack, inputProvider, *plugin, nullptr))
-                {
-                    auto connections = getConnectionsBetween (rack, c.sourceID, {});
-                    jassert (! connections.isEmpty());
-                    node = createChannelRemappingNodeForConnections (std::move (node), connections, nullptr);
-                    nodes.push_back (std::move (node));
-                }
-            }
-            else if (auto modifier = findModifierForID (rack, c.sourceID))
-            {
-                if (auto node = createNodeForPluginOrModifier (rack, inputProvider, nullptr, *modifier))
-                {
-                    auto connections = getConnectionsBetween (rack, c.sourceID, {});
-                    
-                    if (connections.isEmpty())
-                        node = tracktion_graph::makeNode<tracktion_graph::SinkNode> (std::move (node));
-                    else
-                        node = createChannelRemappingNodeForConnections (std::move (node), connections, modifier);
-                    
-                    nodes.push_back (std::move (node));
-                }
+                auto connections = getConnectionsBetween (rack, c.sourceID, {});
+                
+                if (connections.isEmpty())
+                    node = tracktion_graph::makeNode<tracktion_graph::SinkNode> (std::move (node));
+                else
+                    node = createChannelRemappingNodeForConnections (std::move (node), connections, modifier);
+                
+                nodes.push_back (std::move (node));
             }
         }
 
