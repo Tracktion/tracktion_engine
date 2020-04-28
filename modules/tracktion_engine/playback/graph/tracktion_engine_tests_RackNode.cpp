@@ -42,6 +42,7 @@ public:
                     // Rack tests
                     runRackTests (setup);
                     runRackAudioInputTests (setup);
+                    runRackModifiertests (setup);
                 }
             }
         }
@@ -55,6 +56,41 @@ private:
         auto& engine = *Engine::getEngines()[0];
         engine.getPluginManager().createBuiltInType<ToneGeneratorPlugin>();
         engine.getPluginManager().createBuiltInType<LatencyPlugin>();
+
+        beginTest ("Unconnected Rack");
+        {
+            // Rack with a sin oscilator but not connected should be silent
+            auto edit = Edit::createSingleTrackEdit (engine);
+            auto track = getFirstAudioTrack (*edit);
+            
+            auto rack = edit->getRackList().addNewRack();
+            expect (rack != nullptr);
+            expectEquals (rack->getConnections().size(), 0);
+            expectEquals (rack->getInputNames().size(), 3);
+            expectEquals (rack->getOutputNames().size(), 3);
+
+            Plugin::Ptr pluginPtr = edit->getPluginCache().createNewPlugin (ToneGeneratorPlugin::xmlTypeName, {});
+            track->pluginList.insertPlugin (pluginPtr, 0, nullptr);
+            auto tonePlugin = dynamic_cast<ToneGeneratorPlugin*> (pluginPtr.get());
+            expect (tonePlugin != nullptr);
+
+            rack->addPlugin (tonePlugin, {}, false);
+            expect (rack->getPlugins().getFirst() == pluginPtr.get());
+
+            // Process Rack
+            {
+                auto inputProvider = std::make_shared<InputProvider>();
+                auto rackNode = RackNodeBuilder::createRackNode (*rack, inputProvider);
+
+                auto rackProcessor = std::make_unique<RackNodePlayer> (std::move (rackNode), inputProvider, true);
+                                        
+                auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
+                test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 0.0f, 0.0f);
+            }
+                    
+            engine.getAudioFileManager().releaseAllFiles();
+            edit->getTempDirectory (false).deleteRecursively();
+        }
 
         beginTest ("Basic sin Rack");
         {
@@ -308,6 +344,61 @@ private:
                 engine.getAudioFileManager().releaseAllFiles();
                 edit->getTempDirectory (false).deleteRecursively();
             }
+        }
+    }
+    
+    void runRackModifiertests (test_utilities::TestSetup ts)
+    {
+        using namespace tracktion_engine;
+        auto& engine = *Engine::getEngines()[0];
+        
+        beginTest ("LFO Modifier Rack");
+        {
+            auto edit = Edit::createSingleTrackEdit (engine);
+            auto track = getFirstAudioTrack (*edit);
+            Plugin::Ptr pluginPtr = edit->getPluginCache().createNewPlugin (ToneGeneratorPlugin::xmlTypeName, {});
+            track->pluginList.insertPlugin (pluginPtr, 0, nullptr);
+            auto tonePlugin = dynamic_cast<ToneGeneratorPlugin*> (pluginPtr.get());
+            expect (tonePlugin != nullptr);
+            
+            Plugin::Array plugins;
+            plugins.add (pluginPtr);
+            auto rack = RackType::createTypeToWrapPlugins (plugins, *edit);
+            expect (rack != nullptr);
+            expect (rack->getPlugins().getFirst() == pluginPtr.get());
+            expectEquals (rack->getConnections().size(), 6);
+            
+            auto modifier = rack->getModifierList().insertModifier (ValueTree (IDs::LFO), 0, nullptr);
+            auto lfoModifier = dynamic_cast<LFOModifier*> (modifier.get());
+            lfoModifier->depthParam->setParameter (0.0f, dontSendNotification);
+            lfoModifier->offsetParam->setParameter (0.5f, dontSendNotification);
+            expectWithinAbsoluteError (lfoModifier->depthParam->getCurrentValue(), 0.0f, 0.001f);
+            expectWithinAbsoluteError (lfoModifier->offsetParam->getCurrentValue(), 0.5f, 0.001f);
+            
+            tonePlugin->levelParam->addModifier (*modifier, -1.0f);
+            
+            PlayHead playhead;
+            edit->updateModifierTimers (playhead, EditTimeRange(), 0);
+            tonePlugin->levelParam->updateToFollowCurve (0.0); // Force an update of the param value for testing
+            expectWithinAbsoluteError (lfoModifier->getCurrentValue(), 0.5f, 0.001f);
+            expectWithinAbsoluteError (tonePlugin->levelParam->getCurrentValue(), 0.5f, 0.001f);
+
+            // Process Rack
+            {
+                auto inputProvider = std::make_shared<InputProvider>();
+                auto rackNode = RackNodeBuilder::createRackNode (*rack, inputProvider);
+
+                auto rackProcessor = std::make_unique<RackNodePlayer> (std::move (rackNode), inputProvider, true);
+                                        
+                auto testContext = createTestContext (std::move (rackProcessor), ts, 2, 5.0);
+                test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 0.5f, 0.353f);
+            }
+
+            // Check this hasn't changed
+            expectWithinAbsoluteError (tonePlugin->levelParam->getCurrentValue(), 0.5f, 0.001f);
+
+            engine.getAudioFileManager().releaseAllFiles();
+            edit->getTempDirectory (false).deleteRecursively();
         }
     }
 };
