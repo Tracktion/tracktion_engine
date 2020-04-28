@@ -184,6 +184,9 @@ typename ModifierType::Ptr findModifierTypeForID (const Edit&, EditItemID);
 /** Returns the Modifier with a given ID. */
 Modifier::Ptr findModifierForID (const Edit&, EditItemID);
 
+/** Returns the Modifier with a given ID if the RackType contains it. */
+Modifier::Ptr findModifierForID (const RackType&, EditItemID);
+
 /** Returns the Track containing a Modifier. */
 Track* getTrackContainingModifier (const Edit&, const Modifier::Ptr&);
 

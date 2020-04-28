@@ -434,13 +434,14 @@ public:
           channelMap (std::move (channelMapToUse)),
           passMIDI (passMidiThrough)
     {
+        jassert (input);
     }
         
     NodeProperties getNodeProperties() override
     {
         NodeProperties props;
-        props.hasAudio = true;
-        props.hasMidi = false;
+        props.hasAudio = ! channelMap.empty();
+        props.hasMidi = passMIDI;
         props.numberOfChannels = 0;
         props.latencyNumSamples = input->getNodeProperties().latencyNumSamples;
 
@@ -475,6 +476,9 @@ public:
 
         for (auto channel : channelMap)
         {
+            if ((int) sourceAudio.getNumChannels() <= channel.first)
+                continue;
+                
             auto sourceChanelBlock = sourceAudio.getSubsetChannelBlock ((size_t) channel.first, 1);
             auto destChanelBlock = destAudio.getSubsetChannelBlock ((size_t) channel.second, 1);
             destChanelBlock.add (sourceChanelBlock);
@@ -498,5 +502,40 @@ static inline std::vector<std::pair<int, int>> makeChannelMap (std::initializer_
     
     return map;
 }
+
+//==============================================================================
+//==============================================================================
+/** Blocks audio and MIDI input from reaching the outputs. */
+class SinkNode  : public Node
+{
+public:
+    SinkNode (std::unique_ptr<Node> inputNode)
+        : input (std::move (inputNode))
+    {
+        jassert (input);
+    }
+        
+    NodeProperties getNodeProperties() override
+    {
+        return input->getNodeProperties();
+    }
+    
+    std::vector<Node*> getDirectInputNodes() override
+    {
+        return { input.get() };
+    }
+
+    bool isReadyToProcess() override
+    {
+        return input->hasProcessed();
+    }
+    
+    void process (const ProcessContext&) override
+    {
+    }
+
+private:
+    std::unique_ptr<Node> input;
+};
 
 }

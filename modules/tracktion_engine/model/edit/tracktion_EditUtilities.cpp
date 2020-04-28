@@ -834,6 +834,15 @@ Modifier::Ptr findModifierForID (const Edit& edit, EditItemID id)
     return {};
 }
 
+Modifier::Ptr findModifierForID (const RackType& rack, EditItemID id)
+{
+    for (auto modifier : rack.getModifierList().getModifiers())
+        if (modifier->itemID == id)
+            return modifier;
+
+    return {};
+}
+
 Track* getTrackContainingModifier (const Edit& edit, const Modifier::Ptr& m)
 {
     if (m == nullptr)

@@ -46,5 +46,3 @@
 #include "tracktion_graph/tracktion_graph_Node.h"
 #include "tracktion_graph/tracktion_graph_NodePlayer.h"
 #include "tracktion_graph/tracktion_graph_UtilityNodes.h"
-#include "tracktion_graph/tracktion_graph_tests_Utilities.h"
-#include "tracktion_graph/tracktion_graph_tests_TestNodes.h"
