@@ -542,12 +542,12 @@ struct RackType::RenderContext
     }
 
 private:
-   OwnedArray<PluginRenderingInfo> renderContexts;
-    
+    OwnedArray<PluginRenderingInfo> renderContexts;
+    double latencySeconds = 0.0;
+
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     std::shared_ptr<InputProvider> inputProvider;
     std::unique_ptr<RackNodePlayer> processor;
-    double latencySeconds = 0.0;
    #endif
 
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
