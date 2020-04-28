@@ -424,12 +424,12 @@ private:
 //==============================================================================
 //==============================================================================
 /** Maps channels from one to another. */
-class ChannelMappingNode : public Node
+class ChannelRemappingNode  : public Node
 {
 public:
-    ChannelMappingNode (std::unique_ptr<Node> inputNode,
-                        std::vector<std::pair<int /*source channel*/, int /*dest channel*/>> channelMapToUse,
-                        bool passMidiThrough)
+    ChannelRemappingNode (std::unique_ptr<Node> inputNode,
+                          std::vector<std::pair<int /*source channel*/, int /*dest channel*/>> channelMapToUse,
+                          bool passMidiThrough)
         : input (std::move (inputNode)),
           channelMap (std::move (channelMapToUse)),
           passMIDI (passMidiThrough)

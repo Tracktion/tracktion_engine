@@ -430,7 +430,7 @@ private:
 
             std::vector<std::pair<int, int>> channelMap;
             channelMap.push_back ({ 0, 1 });
-            auto rightRemapped = makeNode<ChannelMappingNode> (std::move (rightSin), channelMap, true);
+            auto rightRemapped = makeNode<ChannelRemappingNode> (std::move (rightSin), channelMap, true);
 
             auto node = makeSummingNode ({ leftSin.release(), rightRemapped.release() });
 
@@ -456,7 +456,7 @@ private:
             std::vector<std::pair<int, int>> channelMap;
             channelMap.push_back ({ 0, 0 });
             channelMap.push_back ({ 1, 0 });
-            node = makeNode<ChannelMappingNode> (std::move (node), channelMap, true);
+            node = makeNode<ChannelRemappingNode> (std::move (node), channelMap, true);
 
             expectEquals (node->getNodeProperties().numberOfChannels, 1);
 
@@ -474,12 +474,12 @@ private:
 
             auto rightNode = makeNode<SinNode> (220.0f, 1);
             rightNode = makeNode<FunctionNode> (std::move (rightNode), [] (float s) { return s * -1.0f; });
-            rightNode = makeNode<ChannelMappingNode> (std::move (rightNode), makeChannelMap ({ { 0, 1 } }), true);
+            rightNode = makeNode<ChannelRemappingNode> (std::move (rightNode), makeChannelMap ({ { 0, 1 } }), true);
 
             auto sumNode = makeSummingNode ({ leftNode.release(), rightNode.release() });
 
             // Merge channe 1 with channel 2
-            auto node = makeNode<ChannelMappingNode> (std::move (sumNode), makeChannelMap ({ { 0, 0 }, { 1, 0 } }), true);
+            auto node = makeNode<ChannelRemappingNode> (std::move (sumNode), makeChannelMap ({ { 0, 0 }, { 1, 0 } }), true);
 
             expectEquals (node->getNodeProperties().numberOfChannels, 1);
 
@@ -494,9 +494,9 @@ private:
         {
             // Create a single mono sin and then copy that to 6 channels
             auto node = makeNode<SinNode> (220.0f, 1);
-            node = makeNode<ChannelMappingNode> (std::move (node),
-                                                           makeChannelMap ({ { 0, 0 }, { 0, 1 }, { 0, 2 }, { 0, 3 }, { 0, 4 }, { 0, 5 } }),
-                                                           true);
+            node = makeNode<ChannelRemappingNode> (std::move (node),
+                                                   makeChannelMap ({ { 0, 0 }, { 0, 1 }, { 0, 2 }, { 0, 3 }, { 0, 4 }, { 0, 5 } }),
+                                                   true);
 
             expectEquals (node->getNodeProperties().numberOfChannels, 6);
 
