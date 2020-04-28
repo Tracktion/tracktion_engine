@@ -85,5 +85,5 @@ function runTestApp()
 #==========================================================
 # Run the apps
 #==========================================================
-runTestApp "TestRunner"
 runTestApp "AudioNodeDev"
+#runTestApp "TestRunner"
