@@ -135,7 +135,7 @@ public:
     
     ~PluginNode() override
     {
-        if (isInitialised)
+        if (isInitialised && ! plugin->baseClassNeedsInitialising())
             plugin->baseClassDeinitialise();
     }
     
