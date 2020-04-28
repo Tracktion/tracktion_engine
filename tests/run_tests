@@ -58,7 +58,7 @@ function runTestApp()
         APP_EXE=$APP_ROOT/x64/Release/ConsoleApp/$APP_NAME.exe
         cd "$APP_ROOT"
 
-        "$MSBUILD_EXE" TestRunner.sln -p:VisualStudioVersion=15.0 -m -p:Configuration=Release -p:Platform=x64 -p:PreferredToolArchitecture=x64
+        "$MSBUILD_EXE" "$APP_NAME.sln" -p:VisualStudioVersion=15.0 -m -p:Configuration=Release -p:Platform=x64 -p:PreferredToolArchitecture=x64
 
         "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME.xml"
     fi
