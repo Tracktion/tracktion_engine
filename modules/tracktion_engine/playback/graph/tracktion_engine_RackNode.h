@@ -268,6 +268,12 @@ public:
         std::function<void (tracktion_graph::Node&)> visitor2 = [&] (tracktion_graph::Node& n) { allNodes.push_back (&n); };
         visitInputs (*input, visitor2);
     }
+    
+    int getLatencySamples() const
+    {
+        jassert (! allNodes.empty()); // Must be initialised first
+        return input->getNodeProperties().latencyNumSamples;
+    }
 
     /** Processes a block of audio and MIDI data. */
     void process (const tracktion_graph::Node::ProcessContext& pc)

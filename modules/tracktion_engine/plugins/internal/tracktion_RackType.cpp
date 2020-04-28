@@ -496,6 +496,11 @@ struct RackType::RenderContext
             createRenderContexts (type);
     }
     
+    double getLatencySeconds() const
+    {
+        return latencySeconds;
+    }
+    
     void prepareForNextBlock()
     {
         for (auto f : renderContexts)
@@ -542,6 +547,7 @@ private:
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     std::shared_ptr<InputProvider> inputProvider;
     std::unique_ptr<RackNodePlayer> processor;
+    double latencySeconds = 0.0;
    #endif
 
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
@@ -552,6 +558,7 @@ private:
 
         processor = std::make_unique<RackNodePlayer> (std::move (rackNode), inputProvider, false);
         processor->prepareToPlay (type.sampleRate, type.blockSize);
+        latencySeconds = processor->getLatencySamples() / type.sampleRate;
     }
    #endif
 
@@ -1683,13 +1690,23 @@ struct RackType::LatencyCalculation
 {
     LatencyCalculation (RackType& rt, double rate, int buffSize)
         : sampleRate (rate), bufferSize (buffSize),
-          latencySeconds (RackLatency::getMaxLatency (rt))
+          latencySeconds (getLatency (rt))
     {
     }
 
     const double sampleRate;
     const int bufferSize;
     const double latencySeconds = 0.0;
+    
+private:
+    static double getLatency (RackType& rt)
+    {
+        rt.renderContextBuilder.handleUpdateNowIfNeeded();
+        const double contextLatencySeconds = rt.renderContext ? rt.renderContext->getLatencySeconds() : 0.0;
+        const double maxLatencySeconds = RackLatency::getMaxLatency (rt);
+
+        return jmax (contextLatencySeconds, maxLatencySeconds);
+    }
 };
 
 double RackType::getLatencySeconds (double rate, int bufferSize)
