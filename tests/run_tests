@@ -26,6 +26,8 @@ rm -rf "$ROOT/bin"
 #==========================================================
 # Build examples and run tests
 #==========================================================
+echo "INFO: Building all examples"
+
 if [ -z "$MSBUILD_EXE" ]; then
     export MSBUILD_EXE="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MSBuild.exe"
 fi
@@ -41,10 +43,9 @@ if [ "$PLATFORM" == "linux" ];      then "$ROOT/tests/linux/build_examples"; fi
 function runTestApp()
 {
     APP_NAME="$1"
+    echo "INFO: Running tests for: $APP_NAME"
 
     if [ "$PLATFORM" == "mac" ]; then
-        "$ROOT/tests/mac/build_examples"
-
         APP_ROOT=$ROOT/examples/projects/$APP_NAME/Builds/MacOSX
         APP_EXE=$APP_ROOT/build/Release/$APP_NAME
         cd "$APP_ROOT"
@@ -67,8 +68,6 @@ function runTestApp()
             export MSBUILD_EXE="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MSBuild.exe"
         fi
 
-        "$ROOT/tests/windows/build_examples.bat"
-
         APP_ROOT=$ROOT/examples/projects/$APP_NAME/Builds/VisualStudio2017
         APP_EXE=$APP_ROOT/x64/Release/ConsoleApp/$APP_NAME.exe
         cd "$APP_ROOT"
@@ -80,8 +79,6 @@ function runTestApp()
 
     # ==========================================================
     if [ "$PLATFORM" == "linux" ]; then
-        "$ROOT/tests/linux/build_examples"
-
         APP_ROOT=$ROOT/examples/projects/$APP_NAME/Builds/LinuxMakefile
         APP_EXE=$APP_ROOT/build/$APP_NAME
         cd "$APP_ROOT"
