@@ -8,47 +8,47 @@ trigger:
     - bugfix/*
 
 jobs:
-- job: linux
-  pool:
-    name: Default
-    demands:
-    - agent.os -equals Linux
-  timeoutInMinutes: 180
-  steps:
-  - checkout: self
-    submodules: true
-    clean: false
-  - script: |
-      tests/run_tests
-    displayName: 'Linux Build'
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'JUnit'
-      testResultsFiles: '**/TEST-*.xml' 
-      searchFolder: '$(System.DefaultWorkingDirectory)/bin/test_results'
-      buildPlatform: linux
-    condition: succeededOrFailed()
+# - job: linux
+#   pool:
+#     name: Default
+#     demands:
+#     - agent.os -equals Linux
+#   timeoutInMinutes: 180
+#   steps:
+#   - checkout: self
+#     submodules: true
+#     clean: false
+#   - script: |
+#       tests/run_tests
+#     displayName: 'Linux Build'
+#   - task: PublishTestResults@2
+#     inputs:
+#       testResultsFormat: 'JUnit'
+#       testResultsFiles: '**/TEST-*.xml' 
+#       searchFolder: '$(System.DefaultWorkingDirectory)/bin/test_results'
+#       buildPlatform: linux
+#     condition: succeededOrFailed()
 
-- job: macOS
-  pool: 
-    name: Default
-    demands:
-    - agent.os -equals Darwin
-  timeoutInMinutes: 180
-  steps:
-  - checkout: self
-    submodules: true
-    clean: false
-  - script: |
-      tests/run_tests
-    displayName: 'macOS Build'
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFormat: 'JUnit'
-      testResultsFiles: '**/TEST-*.xml' 
-      searchFolder: '$(System.DefaultWorkingDirectory)/bin/test_results'
-      buildPlatform: mac
-    condition: succeededOrFailed()
+# - job: macOS
+#   pool: 
+#     name: Default
+#     demands:
+#     - agent.os -equals Darwin
+#   timeoutInMinutes: 180
+#   steps:
+#   - checkout: self
+#     submodules: true
+#     clean: false
+#   - script: |
+#       tests/run_tests
+#     displayName: 'macOS Build'
+#   - task: PublishTestResults@2
+#     inputs:
+#       testResultsFormat: 'JUnit'
+#       testResultsFiles: '**/TEST-*.xml' 
+#       searchFolder: '$(System.DefaultWorkingDirectory)/bin/test_results'
+#       buildPlatform: mac
+#     condition: succeededOrFailed()
 
 - job: windows
   pool:
@@ -72,20 +72,20 @@ jobs:
       buildPlatform: windows
     condition: succeededOrFailed()
 
-- job: publish
-  dependsOn:
-  - linux
-  - macOS
-  - windows
-  pool: 
-    name: Default
-    demands:
-    - agent.os -equals Darwin
-  timeoutInMinutes: 15
-  steps:
-  - bash: |
-      git branch -d $(Build.SourceBranchName) || true
-      git checkout -b $(Build.SourceBranchName)
-      git push git@github.com:Tracktion/tracktion_engine.git $(Build.SourceBranchName)
-    displayName: Publishing to public repo
-    condition: and(succeeded(), in(variables['Build.SourceBranchName'], 'master', 'develop'))
+# - job: publish
+#   dependsOn:
+#   - linux
+#   - macOS
+#   - windows
+#   pool: 
+#     name: Default
+#     demands:
+#     - agent.os -equals Darwin
+#   timeoutInMinutes: 15
+#   steps:
+#   - bash: |
+#       git branch -d $(Build.SourceBranchName) || true
+#       git checkout -b $(Build.SourceBranchName)
+#       git push git@github.com:Tracktion/tracktion_engine.git $(Build.SourceBranchName)
+#     displayName: Publishing to public repo
+#     condition: and(succeeded(), in(variables['Build.SourceBranchName'], 'master', 'develop'))
