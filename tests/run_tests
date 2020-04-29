@@ -19,6 +19,9 @@ fi
 ROOT=$(cd "$(dirname "$0")/.."; pwd)
 echo ROOT: "$ROOT"
 
+# Remove all build products
+rm -rf "$ROOT/bin"
+
 
 #==========================================================
 # Build examples and run tests
@@ -86,4 +89,4 @@ function runTestApp()
 # Run the apps
 #==========================================================
 runTestApp "AudioNodeDev"
-#runTestApp "TestRunner"
+runTestApp "TestRunner"
