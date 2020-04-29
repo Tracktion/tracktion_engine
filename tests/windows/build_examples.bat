@@ -60,13 +60,10 @@ exit /b 0
     set EXAMPLE_DEST_DIR=%EXAMPLES_DIR%/projects
     set EXAMPLE_ROOT_DIR=%EXAMPLE_DEST_DIR%/%EXAMPLE_NAME%
 
-    if exist "%EXAMPLE_ROOT_DIR%" (
-        attrib -h -r -s "%EXAMPLE_ROOT_DIR%" /s /d
-        rmdir /s /q "%EXAMPLE_ROOT_DIR%"
-    )
-
     call "%PROJUCER_EXE%" --create-project-from-pip "%EXAMPLE_PIP_FILE%" "%EXAMPLE_DEST_DIR%" "%JUCE_DIR%/modules" "%TRACKTION_ENGINE_DIR%"
+    if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
     call "%PROJUCER_EXE%" --resave "%EXAMPLE_ROOT_DIR%/%EXAMPLE_NAME%.jucer"
+    if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
     if defined DISABLE_BUILD goto builtSection
         cd "%EXAMPLE_ROOT_DIR%/Builds/VisualStudio2017"
