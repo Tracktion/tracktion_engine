@@ -29,26 +29,26 @@ if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 call :BuildExample "PlaybackDemo"
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
-rem call :BuildExample "PitchAndTimeDemo"
-rem if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+call :BuildExample "PitchAndTimeDemo"
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
-rem call :BuildExample "StepSequencerDemo"
-rem if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+call :BuildExample "StepSequencerDemo"
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
-rem call :BuildExample "PatternGeneratorDemo"
-rem if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+call :BuildExample "PatternGeneratorDemo"
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
-rem call :BuildExample "RecordingDemo"
-rem if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+call :BuildExample "RecordingDemo"
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
-rem call :BuildExample "PluginDemo"
-rem if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+call :BuildExample "PluginDemo"
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
-rem call :BuildExample "EngineInPluginDemo"
-rem if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+call :BuildExample "EngineInPluginDemo"
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
-rem call :BuildExample "MidiRecordingDemo"
-rem if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+call :BuildExample "MidiRecordingDemo"
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
 exit /b 0
 
