@@ -26,6 +26,18 @@ rm -rf "$ROOT/bin"
 #==========================================================
 # Build examples and run tests
 #==========================================================
+if [ -z "$MSBUILD_EXE" ]; then
+    export MSBUILD_EXE="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MSBuild.exe"
+fi
+
+if [ "$PLATFORM" == "mac" ];        then "$ROOT/tests/mac/build_examples"; fi
+if [ "$PLATFORM" == "windows" ];    then "$ROOT/tests/windows/build_examples.bat"; fi
+if [ "$PLATFORM" == "linux" ];      then "$ROOT/tests/linux/build_examples"; fi
+
+
+#==========================================================
+# Run tests for specific apps
+#==========================================================
 function runTestApp()
 {
     APP_NAME="$1"
