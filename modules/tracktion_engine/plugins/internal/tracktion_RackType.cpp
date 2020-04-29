@@ -569,7 +569,8 @@ private:
 
         // need to create all the wrappers first, then initialise them..
         for (auto f : type.pluginList->objects)
-            renderContexts.add (new PluginRenderingInfo (f->plugin));
+            if (f->plugin != nullptr)
+                renderContexts.add (new PluginRenderingInfo (f->plugin));
 
         for (auto m : type.getModifierList().getModifiers())
             if (m->getMidiInputNames().size() > 0 || m->getAudioInputNames().size() > 0)
@@ -929,7 +930,8 @@ juce::Array<Plugin*> RackType::getPlugins() const
     Array<Plugin*> list;
 
     for (auto i : pluginList->objects)
-        list.add (i->plugin.get());
+        if (i->plugin != nullptr)
+            list.add (i->plugin.get());
 
     return list;
 }
@@ -2032,7 +2034,7 @@ Plugin* RackType::getPluginForID (EditItemID pluginID)
         return {};
 
     for (auto p : pluginList->objects)
-        if (p->plugin->itemID == pluginID)
+        if (p->plugin != nullptr && p->plugin->itemID == pluginID)
             return p->plugin.get();
 
     return {};
