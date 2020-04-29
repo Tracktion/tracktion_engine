@@ -97,6 +97,14 @@ struct NodeProperties
 
 //==============================================================================
 //==============================================================================
+/**
+    Main graph Node processor class.
+    Nodes are combined together to form a graph with a root Node which can then
+    be initialsed and processed.
+    
+    Subclasses should implement the various virtual methods but never call these
+    directly. They will be called automatically by the non-virtual methods.
+*/
 class Node
 {
 public:
