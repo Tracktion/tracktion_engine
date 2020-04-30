@@ -150,7 +150,7 @@ public:
     }
     
     SummingNode (std::vector<std::unique_ptr<Node>> ownedInputs,
-                      std::vector<Node*> referencedInputs)
+                 std::vector<Node*> referencedInputs)
         : SummingNode (std::move (ownedInputs))
     {
         nodes.insert (nodes.begin(), referencedInputs.begin(), referencedInputs.end());

@@ -58,7 +58,7 @@ public:
             {
                 if (! node->hasProcessed() && node->isReadyToProcess())
                 {
-                    node->process (juce::Range<int64_t>::withStartAndLength (0, (int64_t) pc.buffers.audio.getNumSamples()));
+                    node->process (pc.streamSampleRange);
                     processedAnyNodes = true;
                 }
             }

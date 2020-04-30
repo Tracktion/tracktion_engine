@@ -148,14 +148,6 @@ public:
     /** Should return all the inputs directly feeding in to this node. */
     virtual std::vector<Node*> getDirectInputNodes() { return {}; }
 
-    /** Called once before playback begins for each node.
-        Use this to allocate buffers etc.
-        This step can be used to modify the topology of the graph (i.e. add/remove nodes).
-        However, if you do this, you must make sure to call initialise on them so they are
-        fully prepared for processing.
-    */
-    virtual void prepareToPlay (const PlaybackInitialisationInfo&) {}
-
     /** Should return the properties of the node.
         This should not be called until after initialise.
     */
@@ -173,6 +165,15 @@ public:
         AudioAndMidiBuffer buffers;
     };
     
+protected:
+    /** Called once before playback begins for each node.
+        Use this to allocate buffers etc.
+        This step can be used to modify the topology of the graph (i.e. add/remove nodes).
+        However, if you do this, you must make sure to call initialise on them so they are
+        fully prepared for processing.
+    */
+    virtual void prepareToPlay (const PlaybackInitialisationInfo&) {}
+
     /** Called when the node is to be processed.
         This should add in to the buffers available making sure not to change their size at all.
     */
