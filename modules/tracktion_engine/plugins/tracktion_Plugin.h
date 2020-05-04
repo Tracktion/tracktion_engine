@@ -343,6 +343,7 @@ private:
     int initialiseCount = 0;
     double timeToCpuScale = 0;
     std::atomic<double> cpuUsageMs { 0 };
+    std::atomic<bool> isClipEffect { false };
 
     juce::ValueTree getConnectionsTree();
     struct WireList;

@@ -365,6 +365,7 @@ Plugin::Plugin (PluginCreationInfo info)
       engine (info.edit.engine),
       state (info.state)
 {
+    isClipEffect = state.getParent().hasType (IDs::EFFECT);
     windowState = std::make_unique<WindowState> (*this);
 
     jassert (state.isValid());
@@ -665,7 +666,7 @@ RackType::Ptr Plugin::getOwnerRackType() const
 
 bool Plugin::isClipEffectPlugin() const
 {
-    return state.getParent().hasType (IDs::EFFECT);
+    return isClipEffect;
 }
 
 void Plugin::valueTreePropertyChanged (ValueTree&, const juce::Identifier& i)
@@ -699,6 +700,8 @@ void Plugin::valueTreeChildRemoved (ValueTree&, juce::ValueTree& c, int)
 
 void Plugin::valueTreeParentChanged (juce::ValueTree& v)
 {
+    isClipEffect = state.getParent().hasType (IDs::EFFECT);
+    
     if (v.hasType (IDs::PLUGIN))
         hideWindowForShutdown();
 }
@@ -952,7 +955,8 @@ void Plugin::applyToBufferWithAutomation (const AudioRenderContext& fc)
 
     updateLastPlaybackTime();
 
-    if (isAutomationNeeded() && arm.isReadingAutomation())
+    if (isAutomationNeeded()
+        && (arm.isReadingAutomation() || isClipEffect.load()))
     {
         if (fc.playhead.isUserDragging() || ! fc.playhead.isPlaying())
         {

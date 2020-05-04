@@ -212,7 +212,9 @@ public:
     void setPosition (double time) override
     {
         if (! parameter.getEdit().getAutomationRecordManager().isReadingAutomation())
-            return;
+            if (auto plugin = parameter.getPlugin())
+                if (! plugin->isClipEffectPlugin())
+                    return;
 
         const juce::ScopedLock sl (parameterStreamLock);
 
