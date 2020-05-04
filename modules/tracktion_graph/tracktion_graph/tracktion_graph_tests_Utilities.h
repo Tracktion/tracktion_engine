@@ -177,6 +177,15 @@ namespace test_utilities
         }
     }
 
+    /** Extracts a section of a buffer and expects a specific magnitude and RMS it. */
+    static inline void expectAudioBuffer (juce::UnitTest& ut, juce::AudioBuffer<float>& buffer, int channel, juce::Range<int> sampleRange,
+                                          float mag, float rms)
+    {
+        juce::AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(),
+                                                buffer.getNumChannels(),
+                                                sampleRange.getStart(), sampleRange.getLength());
+        expectAudioBuffer (ut, trimmedBuffer, channel, mag, rms);
+    }
 
     //==============================================================================
     //==============================================================================
@@ -197,28 +206,43 @@ namespace test_utilities
     };
 
     template<typename NodeProcessorType>
-    static inline std::unique_ptr<TestContext> createTestContext (std::unique_ptr<NodeProcessorType> processor, TestSetup ts,
-                                                                  const int numChannels, const double durationInSeconds)
+    struct TestProcess
     {
-        auto context = std::make_unique<TestContext>();
-        context->tempFile = std::make_unique<juce::TemporaryFile> (".wav");
-        
-        // Process the node to a file
-        if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (juce::WavAudioFormat().createWriterFor (context->tempFile->getFile().createOutputStream().release(),
-                                                                                                            ts.sampleRate, (uint32_t) numChannels, 16, {}, 0)))
+        TestProcess (std::unique_ptr<NodeProcessorType> playerToUse, TestSetup ts,
+                     const int numChannelsToUse, const double durationInSeconds)
+            : testSetup (ts), numChannels (numChannelsToUse)
         {
-            processor->prepareToPlay (ts.sampleRate, ts.blockSize);
-            
-            juce::AudioBuffer<float> buffer (numChannels, ts.blockSize);
-            tracktion_engine::MidiMessageArray midi;
-            
-            int numSamplesToDo = juce::roundToInt (durationInSeconds * ts.sampleRate);
-            int numSamplesDone = 0;
+            context = std::make_shared<TestContext>();
+            context->tempFile = std::make_unique<juce::TemporaryFile> (".wav");
+
+            buffer.setSize  (numChannels, ts.blockSize);
+            numSamplesToDo = juce::roundToInt (durationInSeconds * ts.sampleRate);
+
+            writer = std::unique_ptr<juce::AudioFormatWriter> (juce::WavAudioFormat().createWriterFor (context->tempFile->getFile().createOutputStream().release(),
+                                                                                                       ts.sampleRate, (uint32_t) numChannels, 16, {}, 0));
+            setPlayer (std::move (playerToUse));
+        }
+        
+        void setPlayer (std::unique_ptr<NodeProcessorType> newPlayerToUse)
+        {
+            jassert (newPlayerToUse != nullptr);
+            processor = std::move (newPlayerToUse);
+            processor->prepareToPlay (testSetup.sampleRate, testSetup.blockSize);
+        }
+                
+        /** Processes a number of samples.
+            Returns true if there is still more processing to be done.
+        */
+        bool process (int maxNumSamples)
+        {
+            if (! writer)
+                return false;
             
             for (;;)
             {
-                const int numThisTime = ts.randomiseBlockSizes ? std::min (ts.random.nextInt ({ 1, ts.blockSize }), numSamplesToDo)
-                                                               : std::min (ts.blockSize, numSamplesToDo);
+                const int maxNumThisTime = testSetup.randomiseBlockSizes ? std::min (testSetup.random.nextInt ({ 1, testSetup.blockSize }), numSamplesToDo)
+                                                                         : std::min (testSetup.blockSize, numSamplesToDo);
+                const int numThisTime = std::min (maxNumSamples, maxNumThisTime);
                 buffer.clear();
                 midi.clear();
                 
@@ -233,18 +257,30 @@ namespace test_utilities
                 // Copy MIDI to buffer
                 for (const auto& m : midi)
                 {
-                    const int sampleNumber = (int) std::floor (m.getTimeStamp() * ts.sampleRate);
+                    const int sampleNumber = (int) std::floor (m.getTimeStamp() * testSetup.sampleRate);
                     context->midi.addEvent (m, numSamplesDone + sampleNumber);
                 }
                 
                 numSamplesToDo -= numThisTime;
                 numSamplesDone += numThisTime;
+                maxNumSamples -=  numThisTime;
                 
-                if (numSamplesToDo <= 0)
+                if (maxNumSamples <= 0)
                     break;
             }
             
-            writer.reset();
+            return numSamplesToDo > 0;
+        }
+        
+        std::shared_ptr<TestContext> processAll()
+        {
+            process (numSamplesToDo);
+            return getTestResult();
+        }
+        
+        std::shared_ptr<TestContext> getTestResult()
+        {
+            writer->flush();
 
             // Then read it back in to the buffer
             if (auto reader = std::unique_ptr<juce::AudioFormatReader> (juce::WavAudioFormat().createReaderFor (context->tempFile->getFile().createInputStream().release(), true)))
@@ -255,12 +291,32 @@ namespace test_utilities
                 
                 return context;
             }
+            
+            return {};
         }
+        
+    private:
+        std::unique_ptr<NodeProcessorType> processor;
+        TestSetup testSetup;
+        const int numChannels;
 
-        return {};
+        std::unique_ptr<juce::AudioFormatWriter> writer;
+        std::shared_ptr<TestContext> context;
+        
+        juce::AudioBuffer<float> buffer;
+        tracktion_engine::MidiMessageArray midi;
+        int numSamplesToDo = 0;
+        int numSamplesDone = 0;
+    };
+
+    template<typename NodeProcessorType>
+    static inline std::shared_ptr<TestContext> createTestContext (std::unique_ptr<NodeProcessorType> processor, TestSetup ts,
+                                                                  const int numChannels, const double durationInSeconds)
+    {
+        return TestProcess<NodeProcessorType> (std::move (processor), ts, numChannels, durationInSeconds).processAll();
     }
 
-    static inline std::unique_ptr<TestContext> createBasicTestContext (std::unique_ptr<Node> node, const TestSetup ts,
+    static inline std::shared_ptr<TestContext> createBasicTestContext (std::unique_ptr<Node> node, const TestSetup ts,
                                                                        const int numChannels, const double durationInSeconds)
     {
         auto player = std::make_unique<NodePlayer> (std::move (node));

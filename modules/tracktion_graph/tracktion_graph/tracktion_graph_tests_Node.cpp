@@ -50,6 +50,9 @@ public:
 
                     // Multi channel tests
                     runStereoTests (setup);
+                    
+                    // Tests rebuilding the graph mid render
+                    runRebuildTests (setup);
                 }
             }
         }
@@ -508,6 +511,66 @@ private:
                 expectWithinAbsoluteError (buffer.getMagnitude (channel, 0, buffer.getNumSamples()), 1.0f, 0.001f);
                 expectWithinAbsoluteError (buffer.getRMSLevel (channel, 0, buffer.getNumSamples()), 0.707f, 0.001f);
             }
+        }
+    }
+    
+    void runRebuildTests (TestSetup testSetup)
+    {
+        beginTest ("Sin rebuild");
+        {
+            const double totalDuration = 5.0;
+            TestProcess<NodePlayer> playerContext (std::make_unique<NodePlayer> (std::make_unique<SinNode> (220.0f)),
+                                                   testSetup, 1, totalDuration);
+            const int firstHalfNumSamples = (int) std::floor ((totalDuration / 2.0) * testSetup.sampleRate);
+            
+            playerContext.process (firstHalfNumSamples);
+            auto testContext = playerContext.getTestResult();
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
+            expectEquals (testContext->buffer.getNumSamples(), firstHalfNumSamples);
+
+            // Make a new sin node and switch that in to the test context
+            playerContext.setPlayer (std::make_unique<NodePlayer> (std::make_unique<SinNode> (220.0f)));
+            const int secondHalfNumSamples = (totalDuration * testSetup.sampleRate) - firstHalfNumSamples;
+            playerContext.process (secondHalfNumSamples);
+            testContext = playerContext.getTestResult();
+            
+            expectEquals (testContext->buffer.getNumSamples(), firstHalfNumSamples + secondHalfNumSamples);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
+        }
+
+        beginTest ("Sin with latency rebuild");
+        {
+            const int latencyNumSamples = (int) std::floor (testSetup.sampleRate / 2.0);
+            auto makeSinNode = [latencyNumSamples]
+            {
+                return makeNode<LatencyNode> (makeNode<SinNode> (220.0f), latencyNumSamples);
+            };
+            
+            const double totalDuration = 5.0;
+            TestProcess<NodePlayer> playerContext (std::make_unique<NodePlayer> (makeSinNode()),
+                                                   testSetup, 1, totalDuration);
+            const int firstHalfNumSamples = (int) std::floor ((totalDuration / 2.0) * testSetup.sampleRate);
+            
+            playerContext.process (firstHalfNumSamples);
+            auto testContext = playerContext.getTestResult();
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, latencyNumSamples,
+                                               0.0f, 0.0f, 1.0f, 0.707f);
+            expectEquals (testContext->buffer.getNumSamples(), firstHalfNumSamples);
+
+            // Make a new sin node and switch that in to the test context
+            playerContext.setPlayer (std::make_unique<NodePlayer> (makeSinNode()));
+            const int secondHalfNumSamples = (totalDuration * testSetup.sampleRate) - firstHalfNumSamples;
+            playerContext.process (secondHalfNumSamples);
+            testContext = playerContext.getTestResult();
+            
+            expectEquals (testContext->buffer.getNumSamples(), firstHalfNumSamples + secondHalfNumSamples);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0,
+                                               juce::Range<int>::withStartAndLength (firstHalfNumSamples, latencyNumSamples),
+                                               0.0f, 0.0f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0,
+                                               juce::Range<int>::withStartAndLength (firstHalfNumSamples + latencyNumSamples,
+                                                                                     secondHalfNumSamples - latencyNumSamples),
+                                               1.0f, 0.707f);
         }
     }
 };
