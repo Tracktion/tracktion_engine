@@ -273,7 +273,7 @@ private:
         {
             beginTest ("Basic sin audio input Rack");
             {
-                // Just a stereo sing input connected directly to the output across 4 channels
+                // Just a stereo sin input connected directly to the output across 4 channels
                 auto edit = Edit::createSingleTrackEdit (engine);
 
                 Plugin::Array plugins;
@@ -318,6 +318,7 @@ private:
 
                     Plugin::Ptr latencyPlugin = edit->getPluginCache().createNewPlugin (LatencyPlugin::xmlTypeName, {});
                     const double latencyTimeInSeconds = 0.5f;
+                    const int latencyNumSamples = roundToInt (latencyTimeInSeconds * testSetup.sampleRate);
                     dynamic_cast<LatencyPlugin*> (latencyPlugin.get())->latencyTimeSeconds = latencyTimeInSeconds;
 
                     rack->addPlugin (latencyPlugin, {}, false);
@@ -334,11 +335,69 @@ private:
                         auto rackNode = RackNodeBuilder::createRackNode (*rack, inputProvider);
                         auto rackProcessor = std::make_unique<RackNodePlayer> (std::move (rackNode), inputProvider, false);
                         auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
-                        const int latencyNumSamples = roundToInt (latencyTimeInSeconds * testSetup.sampleRate);
 
                         for (int c : { 0, 1, 2, 3 })
                             test_utilities::expectAudioBuffer (*this, testContext->buffer, c, latencyNumSamples, 0.0f, 0.0f, 1.0f, 0.707f);
                     }
+
+                    // Set the num audio inputs to be 1 channel and the Rack shouldn't crash
+                    {
+                        inputProvider->numChannels = 1;
+                        tracktion_engine::MidiMessageArray midi;
+                        inputProvider->setInputs ({ juce::dsp::AudioBlock<float> (inputBuffer), midi });
+
+                        auto rackNode = RackNodeBuilder::createRackNode (*rack, inputProvider);
+                        auto rackProcessor = std::make_unique<RackNodePlayer> (std::move (rackNode), inputProvider, false);
+                        auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
+
+                        // Channel 0 should be a sin from 0.5s, silent before
+                        test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, latencyNumSamples,
+                                                           0.0f, 0.0f, 1.0f, 0.707f);
+
+                        // The others should be silent
+                        for (int c : { 1, 2, 3 })
+                            test_utilities::expectAudioBuffer (*this, testContext->buffer, c, 0.0f, 0.0f);
+                    }
+                }
+                        
+                engine.getAudioFileManager().releaseAllFiles();
+                edit->getTempDirectory (false).deleteRecursively();
+            }
+            
+            beginTest ("Mismatched num input and Rack channels");
+            {
+                // Just a stereo sin input connected directly to the output across 2 channels
+                auto edit = Edit::createSingleTrackEdit (engine);
+
+                Plugin::Array plugins;
+                auto rack = edit->getRackList().addNewRack();
+                expect (rack != nullptr);
+                                    
+                for (int p : { 0, 1, 2 })
+                    rack->addConnection ({}, p, {}, p);
+
+                expectEquals (rack->getConnections().size(), 3);
+
+                // Sin input provider
+                const auto inputProvider = std::make_shared<InputProvider>();
+                AudioBuffer<float> inputBuffer (1, testSetup.blockSize);
+
+                // Fill inputs with sin data
+                {
+                    test_utilities::fillBufferWithSinData (inputBuffer);
+                    tracktion_engine::MidiMessageArray midi;
+                    inputProvider->setInputs ({ juce::dsp::AudioBlock<float> (inputBuffer), midi });
+                }
+
+                // Process Rack
+                {
+                    auto rackNode = RackNodeBuilder::createRackNode (*rack, inputProvider);
+                    auto rackProcessor = std::make_unique<RackNodePlayer> (std::move (rackNode), inputProvider, false);
+                    auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
+
+                    // Channel 0 should be a sin, channel 1 silent
+                    test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
+                    test_utilities::expectAudioBuffer (*this, testContext->buffer, 1, 0.0f, 0.0f);
                 }
                         
                 engine.getAudioFileManager().releaseAllFiles();

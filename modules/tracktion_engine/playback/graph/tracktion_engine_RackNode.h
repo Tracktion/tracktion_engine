@@ -92,18 +92,17 @@ public:
         if (numChannels > 0)
         {
             auto& outputBuffers = pc.buffers;
-            auto& audioOutputBlock = outputBuffers.audio;
+            
+            // The InputProvider may have less channels than this Node requires so only take the number available
+            const size_t numInputChannelsToCopy = std::min (inputBuffers.audio.getNumChannels(), outputBuffers.audio.getNumChannels());
             
             // For testing purposes, the last block might be smaller than the InputProvider
             // so we'll just take the number of samples required
-            jassert (inputBuffers.audio.getNumSamples() >= audioOutputBlock.getNumSamples());
-            jassert (inputBuffers.audio.getNumChannels() >= (size_t) numChannels);
-            
-            auto inputAudioBlock = inputBuffers.audio.getSubsetChannelBlock (0, (size_t) numChannels)
-                                    .getSubBlock (0, audioOutputBlock.getNumSamples());
-            jassert (inputAudioBlock.getNumChannels() == audioOutputBlock.getNumChannels());
-            
-            audioOutputBlock.add (inputAudioBlock);
+            jassert (inputBuffers.audio.getNumSamples() >= outputBuffers.audio.getNumSamples());
+            auto inputAudioBlock = inputBuffers.audio.getSubsetChannelBlock (0, numInputChannelsToCopy)
+                                    .getSubBlock (0, outputBuffers.audio.getNumSamples());
+            auto outputAudioBlock = outputBuffers.audio.getSubsetChannelBlock (0, numInputChannelsToCopy);
+            outputAudioBlock.add (inputAudioBlock);
         }
         
         if (hasMidi)

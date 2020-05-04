@@ -250,7 +250,7 @@ namespace test_utilities
             if (auto reader = std::unique_ptr<juce::AudioFormatReader> (juce::WavAudioFormat().createReaderFor (context->tempFile->getFile().createInputStream().release(), true)))
             {
                 juce::AudioBuffer<float> tempBuffer (numChannels, (int) reader->lengthInSamples);
-                reader->read (&tempBuffer, 0, tempBuffer.getNumSamples(), 0, true, false);
+                reader->read (&tempBuffer, 0, tempBuffer.getNumSamples(), 0, true, true);
                 context->buffer = std::move (tempBuffer);
                 
                 return context;
