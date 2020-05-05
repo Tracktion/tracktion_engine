@@ -823,7 +823,7 @@ static AudioNode* createRenderingNodeFromEdit (Edit& edit,
                         auto srcTracks = first->findSidechainSourceTracks();
                         tracksToBeRendered.add (first);
 
-                        for (auto* t : srcTracks)
+                        for (auto t : srcTracks)
                             sidechainSourceTracks.addIfNotAlreadyThere (t);
 
                         todo.addArray (first->getInputTracks());
