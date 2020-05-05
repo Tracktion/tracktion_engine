@@ -519,9 +519,10 @@ private:
         beginTest ("Sin rebuild");
         {
             const double totalDuration = 5.0;
+            const int totalNumSamples = (int) std::floor (totalDuration * testSetup.sampleRate);
             TestProcess<NodePlayer> playerContext (std::make_unique<NodePlayer> (std::make_unique<SinNode> (220.0f)),
                                                    testSetup, 1, totalDuration);
-            const int firstHalfNumSamples = (int) std::floor ((totalDuration / 2.0) * testSetup.sampleRate);
+            const int firstHalfNumSamples = totalNumSamples / 2;
             
             playerContext.process (firstHalfNumSamples);
             auto testContext = playerContext.getTestResult();
@@ -530,7 +531,7 @@ private:
 
             // Make a new sin node and switch that in to the test context
             playerContext.setPlayer (std::make_unique<NodePlayer> (std::make_unique<SinNode> (220.0f)));
-            const int secondHalfNumSamples = (totalDuration * testSetup.sampleRate) - firstHalfNumSamples;
+            const int secondHalfNumSamples = totalNumSamples - firstHalfNumSamples;
             playerContext.process (secondHalfNumSamples);
             testContext = playerContext.getTestResult();
             
@@ -547,9 +548,10 @@ private:
             };
             
             const double totalDuration = 5.0;
+            const int totalNumSamples = (int) std::floor (totalDuration * testSetup.sampleRate);
             TestProcess<NodePlayer> playerContext (std::make_unique<NodePlayer> (makeSinNode()),
                                                    testSetup, 1, totalDuration);
-            const int firstHalfNumSamples = (int) std::floor ((totalDuration / 2.0) * testSetup.sampleRate);
+            const int firstHalfNumSamples = totalNumSamples / 2;
             
             playerContext.process (firstHalfNumSamples);
             auto testContext = playerContext.getTestResult();
@@ -559,7 +561,7 @@ private:
 
             // Make a new sin node and switch that in to the test context
             playerContext.setPlayer (std::make_unique<NodePlayer> (makeSinNode()));
-            const int secondHalfNumSamples = (totalDuration * testSetup.sampleRate) - firstHalfNumSamples;
+            const int secondHalfNumSamples = totalNumSamples - firstHalfNumSamples;
             playerContext.process (secondHalfNumSamples);
             testContext = playerContext.getTestResult();
             
