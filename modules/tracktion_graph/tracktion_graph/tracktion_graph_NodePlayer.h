@@ -28,12 +28,22 @@ public:
     {
     }
 
-    /** Preapres the processor to be played. */
-    void prepareToPlay (double sampleRate, int blockSize)
+    void setNode (std::unique_ptr<Node> newNode)
     {
+        auto oldNode = std::move (input);
+        input = std::move (newNode);
+        prepareToPlay (sampleRate, blockSize, oldNode.get());
+    }
+    
+    /** Prepares the processor to be played. */
+    void prepareToPlay (double sampleRateToUse, int blockSizeToUse, Node* oldNode = nullptr)
+    {
+        sampleRate = sampleRateToUse;
+        blockSize = blockSizeToUse;
+        
         // First, initiliase all the nodes, this will call prepareToPlay on them and also
         // give them a chance to do things like balance latency
-        const PlaybackInitialisationInfo info { sampleRate, blockSize, *input };
+        const PlaybackInitialisationInfo info { sampleRate, blockSize, *input, oldNode };
         std::function<void (Node&)> visitor = [&] (Node& n) { n.initialise (info); };
         visitInputs (*input, visitor);
         
@@ -77,6 +87,8 @@ public:
 private:
     std::unique_ptr<Node> input;
     std::vector<Node*> allNodes;
+    double sampleRate = 44100.0;
+    int blockSize = 512;
 };
 
 }

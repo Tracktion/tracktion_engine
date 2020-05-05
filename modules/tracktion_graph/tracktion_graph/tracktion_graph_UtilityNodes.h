@@ -35,14 +35,18 @@ public:
     }
 
     LatencyNode (Node* inputNode, int numSamplesToDelay)
-        : input (inputNode), latencyNumSamples (numSamplesToDelay)
+        : input (inputNode)
     {
+        latencyStorage->latencyNumSamples = numSamplesToDelay;
     }
 
     NodeProperties getNodeProperties() override
     {
         auto props = input->getNodeProperties();
-        props.latencyNumSamples += latencyNumSamples;
+        props.latencyNumSamples += latencyStorage->latencyNumSamples;
+        
+        constexpr size_t latencyNodeMagicHash = 0x95ab5e9dcc;
+        hash_combine (props.nodeID, latencyNodeMagicHash);        
         
         return props;
     }
@@ -59,12 +63,14 @@ public:
     
     void prepareToPlay (const PlaybackInitialisationInfo& info) override
     {
-        sampleRate = info.sampleRate;
-        latencyTimeSeconds = latencyNumSamples / info.sampleRate;
+        latencyStorage->sampleRate = info.sampleRate;
+        latencyStorage->latencyTimeSeconds = latencyStorage->latencyNumSamples / info.sampleRate;
         
-        fifo.setSize (getNodeProperties().numberOfChannels, latencyNumSamples + info.blockSize + 1);
-        fifo.writeSilence (latencyNumSamples);
-        jassert (fifo.getNumReady() == latencyNumSamples);
+        latencyStorage->fifo.setSize (getNodeProperties().numberOfChannels, latencyStorage->latencyNumSamples + info.blockSize + 1);
+        latencyStorage->fifo.writeSilence (latencyStorage->latencyNumSamples);
+        jassert (latencyStorage->fifo.getNumReady() == latencyStorage->latencyNumSamples);
+        
+        replaceLatencyStorageIfPossible (info.rootNodeToReplace);
     }
     
     void process (const ProcessContext& pc) override
@@ -74,43 +80,43 @@ public:
         auto& inputMidi = input->getProcessedOutput().midi;
         const int numSamples = (int) pc.streamSampleRange.getLength();
 
-        if (fifo.getNumChannels() > 0)
+        if (latencyStorage->fifo.getNumChannels() > 0)
         {
             jassert (numSamples == (int) outputBlock.getNumSamples());
-            jassert (fifo.getNumChannels() == (int) inputBuffer.getNumChannels());
+            jassert (latencyStorage->fifo.getNumChannels() == (int) inputBuffer.getNumChannels());
             
             // Write to audio delay buffer
-            fifo.write (inputBuffer);
+            latencyStorage->fifo.write (inputBuffer);
 
             // Then read from them
-            jassert (fifo.getNumReady() >= (int) outputBlock.getNumSamples());
-            fifo.readAdding (outputBlock);
+            jassert (latencyStorage->fifo.getNumReady() >= (int) outputBlock.getNumSamples());
+            latencyStorage->fifo.readAdding (outputBlock);
         }
 
         // Then write to MIDI delay buffer
-        midi.mergeFromWithOffset (inputMidi, latencyTimeSeconds);
+        latencyStorage->midi.mergeFromWithOffset (inputMidi, latencyStorage->latencyTimeSeconds);
 
 
         // And read out any delayed items
-        const double blockTimeSeconds = numSamples / sampleRate;
+        const double blockTimeSeconds = numSamples / latencyStorage->sampleRate;
      
-        for (int i = midi.size(); --i >= 0;)
+        for (int i = latencyStorage->midi.size(); --i >= 0;)
         {
-            auto& m = midi[i];
+            auto& m = latencyStorage->midi[i];
             
             if (m.getTimeStamp() <= blockTimeSeconds)
             {
                 pc.buffers.midi.add (m);
-                midi.remove (i);
+                latencyStorage->midi.remove (i);
                 // TODO: This will deallocate, we need a MIDI message array that doesn't adjust its storage
             }
         }
         
         // Shuffle down remaining items by block time
-        midi.addToTimestamps (-blockTimeSeconds);
+        latencyStorage->midi.addToTimestamps (-blockTimeSeconds);
         
         // Ensure there are no negative time messages
-        for (auto& m : midi)
+        for (auto& m : latencyStorage->midi)
         {
             juce::ignoreUnused (m);
             jassert (m.getTimeStamp() >= 0.0);
@@ -120,11 +126,38 @@ public:
 private:
     std::unique_ptr<Node> ownedInput;
     Node* input;
-    const int latencyNumSamples;
-    double sampleRate = 44100.0;
-    double latencyTimeSeconds = 0.0;
-    AudioFifo fifo { 1, 32 };
-    tracktion_engine::MidiMessageArray midi;
+    
+    struct LatencyStorage
+    {
+        int latencyNumSamples = 0;
+        double sampleRate = 44100.0;
+        double latencyTimeSeconds = 0.0;
+        AudioFifo fifo { 1, 32 };
+        tracktion_engine::MidiMessageArray midi;
+    };
+    
+    std::shared_ptr<LatencyStorage> latencyStorage { std::make_shared<LatencyStorage>() };
+    
+    void replaceLatencyStorageIfPossible (Node* rootNodeToReplace)
+    {
+        if (rootNodeToReplace == nullptr)
+            return;
+
+        auto visitor = [this, nodeIDToLookFor = getNodeProperties().nodeID] (Node& node)
+        {
+            if (auto other = dynamic_cast<LatencyNode*> (&node))
+            {
+                if (other->getNodeProperties().nodeID == nodeIDToLookFor
+                    && other->latencyStorage->latencyNumSamples == latencyStorage->latencyNumSamples
+                    && other->latencyStorage->sampleRate == latencyStorage->sampleRate
+                    && other->latencyStorage->fifo.getNumChannels() == latencyStorage->fifo.getNumChannels())
+                {
+                    latencyStorage = other->latencyStorage;
+                }
+            }
+        };
+        visitInputs (*rootNodeToReplace, visitor);
+    }
 };
 
 
@@ -163,6 +196,9 @@ public:
         props.hasMidi = false;
         props.numberOfChannels = 0;
 
+        constexpr size_t summingNodeHash = 0xb2e9a68a78;
+        props.nodeID = summingNodeHash;
+
         for (auto& node : nodes)
         {
             auto nodeProps = node->getNodeProperties();
@@ -170,6 +206,7 @@ public:
             props.hasMidi = props.hasMidi | nodeProps.hasMidi;
             props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);
             props.latencyNumSamples = std::max (props.latencyNumSamples, nodeProps.latencyNumSamples);
+            hash_combine (props.nodeID, nodeProps.nodeID);
         }
 
         return props;

@@ -80,8 +80,8 @@ private:
 class SinNode : public Node
 {
 public:
-    SinNode (float frequency, int numChannelsToUse = 1)
-        : numChannels (numChannelsToUse)
+    SinNode (float frequency, int numChannelsToUse = 1, size_t nodeIDToUse = 0)
+        : numChannels (numChannelsToUse), nodeID (nodeIDToUse)
     {
         osc.setFrequency (frequency, true);
     }
@@ -92,6 +92,7 @@ public:
         props.hasAudio = true;
         props.hasMidi = false;
         props.numberOfChannels = numChannels;
+        props.nodeID = nodeID;
         
         return props;
     }
@@ -116,6 +117,7 @@ public:
 private:
     juce::dsp::Oscillator<float> osc { [] (float in) { return std::sin (in); } };
     const int numChannels;
+    size_t nodeID = 0;
 };
 
 

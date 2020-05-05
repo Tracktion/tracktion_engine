@@ -530,7 +530,7 @@ private:
             expectEquals (testContext->buffer.getNumSamples(), firstHalfNumSamples);
 
             // Make a new sin node and switch that in to the test context
-            playerContext.setPlayer (std::make_unique<NodePlayer> (std::make_unique<SinNode> (220.0f)));
+            playerContext.setNode (std::make_unique<SinNode> (220.0f));
             const int secondHalfNumSamples = totalNumSamples - firstHalfNumSamples;
             playerContext.process (secondHalfNumSamples);
             testContext = playerContext.getTestResult();
@@ -539,17 +539,25 @@ private:
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
         }
 
-        beginTest ("Sin with latency rebuild");
+        beginTest ("Sin with latency rebuild, non-replacing");
         {
+            // This creates a sin node with 0.5s latency, processes 2.5s then re-creates the node and processes another 0.5s
+            // This test uses setPlayer which doesn't pass on the old node to the new prepareToPlay method
+            // so after replacing you'd expect 0.5s silence
             const int latencyNumSamples = (int) std::floor (testSetup.sampleRate / 2.0);
             auto makeSinNode = [latencyNumSamples]
             {
-                return makeNode<LatencyNode> (makeNode<SinNode> (220.0f), latencyNumSamples);
+                size_t nodeID = 1234;
+                return makeNode<LatencyNode> (makeNode<SinNode> (220.0f, 1, nodeID), latencyNumSamples);
             };
+            
+            const size_t expectedNodeID = 645479746027;
             
             const double totalDuration = 5.0;
             const int totalNumSamples = (int) std::floor (totalDuration * testSetup.sampleRate);
-            TestProcess<NodePlayer> playerContext (std::make_unique<NodePlayer> (makeSinNode()),
+            auto node = makeSinNode();
+            expectEquals (node->getNodeProperties().nodeID, expectedNodeID);
+            TestProcess<NodePlayer> playerContext (std::make_unique<NodePlayer> (std::move (node)),
                                                    testSetup, 1, totalDuration);
             const int firstHalfNumSamples = totalNumSamples / 2;
             
@@ -560,7 +568,9 @@ private:
             expectEquals (testContext->buffer.getNumSamples(), firstHalfNumSamples);
 
             // Make a new sin node and switch that in to the test context
-            playerContext.setPlayer (std::make_unique<NodePlayer> (makeSinNode()));
+            node = makeSinNode();
+            expectEquals (node->getNodeProperties().nodeID, expectedNodeID);
+            playerContext.setPlayer (std::make_unique<NodePlayer> (std::move (node)));
             const int secondHalfNumSamples = totalNumSamples - firstHalfNumSamples;
             playerContext.process (secondHalfNumSamples);
             testContext = playerContext.getTestResult();
@@ -573,6 +583,47 @@ private:
                                                juce::Range<int>::withStartAndLength (firstHalfNumSamples + latencyNumSamples,
                                                                                      secondHalfNumSamples - latencyNumSamples),
                                                1.0f, 0.707f);
+        }
+        
+        beginTest ("Sin with latency rebuild, replacing");
+        {
+            // This is the same as the previous text except that it uses setNode which passes the old
+            // node in the prepareToPlay call so the latency buffer can be obtained from the old graph
+            // and the 0.5s silence after swapping is avoided
+            const int latencyNumSamples = (int) std::floor (testSetup.sampleRate / 2.0);
+            auto makeSinNode = [latencyNumSamples]
+            {
+                size_t nodeID = 1234;
+                return makeNode<LatencyNode> (makeNode<SinNode> (220.0f, 1, nodeID), latencyNumSamples);
+            };
+            
+            const size_t expectedNodeID = 645479746027;
+            
+            const double totalDuration = 5.0;
+            const int totalNumSamples = (int) std::floor (totalDuration * testSetup.sampleRate);
+            auto node = makeSinNode();
+            expectEquals (node->getNodeProperties().nodeID, expectedNodeID);
+            TestProcess<NodePlayer> playerContext (std::make_unique<NodePlayer> (std::move (node)),
+                                                   testSetup, 1, totalDuration);
+            const int firstHalfNumSamples = totalNumSamples / 2;
+            
+            playerContext.process (firstHalfNumSamples);
+            auto testContext = playerContext.getTestResult();
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, latencyNumSamples,
+                                               0.0f, 0.0f, 1.0f, 0.707f);
+            expectEquals (testContext->buffer.getNumSamples(), firstHalfNumSamples);
+
+            // Make a new sin node and switch that in to the test context
+            node = makeSinNode();
+            expectEquals (node->getNodeProperties().nodeID, expectedNodeID);
+            playerContext.setNode (std::move (node));
+            const int secondHalfNumSamples = totalNumSamples - firstHalfNumSamples;
+            playerContext.process (secondHalfNumSamples);
+            testContext = playerContext.getTestResult();
+            
+            expectEquals (testContext->buffer.getNumSamples(), firstHalfNumSamples + secondHalfNumSamples);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, latencyNumSamples,
+                                               0.0f, 0.0f, 1.0f, 0.707f);
         }
     }
 };

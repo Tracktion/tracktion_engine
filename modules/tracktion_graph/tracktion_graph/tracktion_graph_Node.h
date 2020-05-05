@@ -84,6 +84,7 @@ struct PlaybackInitialisationInfo
     double sampleRate;
     int blockSize;
     Node& rootNode;
+    Node* rootNodeToReplace = nullptr;
 };
 
 /** Holds some really basic properties of a node */
@@ -93,6 +94,7 @@ struct NodeProperties
     bool hasMidi;
     int numberOfChannels;
     int latencyNumSamples = 0;
+    size_t nodeID = 0;
 };
 
 //==============================================================================
@@ -190,16 +192,17 @@ private:
 //==============================================================================
 //==============================================================================
 /** Should call the visitInputs for any direct inputs to the node and then call
-    the visit function on this node.
+    the visitor function on this node.
+    @param Visitor has the signature @code void (Node&) @endcode
 */
-static inline void visitInputs (Node& node, std::function<void (Node&)>& visit)
+template<typename Visitor>
+void visitInputs (Node& node, Visitor&& visitor)
 {
     for (auto n : node.getDirectInputNodes())
-        visitInputs (*n, visit);
+        visitInputs (*n, visitor);
     
-    visit (node);
+    visitor (node);
 }
-
 
 //==============================================================================
 inline void Node::initialise (const PlaybackInitialisationInfo& info)

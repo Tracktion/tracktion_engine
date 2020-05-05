@@ -222,6 +222,12 @@ namespace test_utilities
                                                                                                        ts.sampleRate, (uint32_t) numChannels, 16, {}, 0));
             setPlayer (std::move (playerToUse));
         }
+
+        void setNode (std::unique_ptr<Node> newNode)
+        {
+            jassert (newNode != nullptr);
+            processor->setNode (std::move (newNode));
+        }
         
         void setPlayer (std::unique_ptr<NodeProcessorType> newPlayerToUse)
         {
