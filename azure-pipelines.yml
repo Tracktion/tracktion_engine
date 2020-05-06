@@ -72,20 +72,20 @@ jobs:
       buildPlatform: windows
     condition: succeededOrFailed()
 
-# - job: publish
-#   dependsOn:
-#   - linux
-#   - macOS
-#   - windows
-#   pool: 
-#     name: Default
-#     demands:
-#     - agent.os -equals Darwin
-#   timeoutInMinutes: 15
-#   steps:
-#   - bash: |
-#       git branch -d $(Build.SourceBranchName) || true
-#       git checkout -b $(Build.SourceBranchName)
-#       git push git@github.com:Tracktion/tracktion_engine.git $(Build.SourceBranchName)
-#     displayName: Publishing to public repo
-#     condition: and(succeeded(), in(variables['Build.SourceBranchName'], 'master', 'develop'))
+- job: publish
+  dependsOn:
+  - linux
+  - macOS
+  - windows
+  pool: 
+    name: Default
+    demands:
+    - agent.os -equals Darwin
+  timeoutInMinutes: 15
+  steps:
+  - bash: |
+      git branch -d $(Build.SourceBranchName) || true
+      git checkout -b $(Build.SourceBranchName)
+      git push git@github.com:Tracktion/tracktion_engine.git $(Build.SourceBranchName)
+    displayName: Publishing to public repo
+    condition: and(succeeded(), in(variables['Build.SourceBranchName'], 'master', 'develop'))

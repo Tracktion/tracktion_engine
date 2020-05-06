@@ -19,7 +19,7 @@
 
   ID:               tracktion_graph
   vendor:           Tracktion Corporation
-  version:          1.0.0
+  version:          0.0.1
   name:             The Tracktion graph audio engine
   description:      Classes for creating and processing audio graphs
   website:          http://www.tracktion.com
@@ -31,10 +31,22 @@
 
 *******************************************************************************/
 
+
+/*******************************************************************************
+ PLEASE READ!
+ 
+ tracktion_graph is an experimental module. It is currently in an early stage of
+ development so the API or functionaility it contains is in no way stable. It
+ will change so if you do want to use this in your own code please be aware of
+ this and prepare yourself for a lot of updating.
+
+*******************************************************************************/
+
+
 #pragma once
 #define TRACKTION_GRAPH_H_INCLUDED
 
-
+//==============================================================================
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <juce_dsp/juce_dsp.h>
 
