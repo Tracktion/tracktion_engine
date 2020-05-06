@@ -323,7 +323,9 @@ private:
     {
         const double sampleRate = 44100.0;
         const double duration = 5.0;
-        const auto sequence = test_utilities::createRandomMidiMessageSequence (duration, testSetup.random);
+        
+        // Avoid creating events at the end of the duration as they'll get lost after latency is applied
+        const auto sequence = test_utilities::createRandomMidiMessageSequence (duration - 0.5, testSetup.random);
         
         beginTest ("Basic MIDI");
         {
