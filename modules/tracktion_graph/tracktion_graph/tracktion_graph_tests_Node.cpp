@@ -553,12 +553,10 @@ private:
                 return makeNode<LatencyNode> (makeNode<SinNode> (220.0f, 1, nodeID), latencyNumSamples);
             };
             
-            const size_t expectedNodeID = 645479746027;
-            
             const double totalDuration = 5.0;
             const int totalNumSamples = (int) std::floor (totalDuration * testSetup.sampleRate);
             auto node = makeSinNode();
-            expectEquals (node->getNodeProperties().nodeID, expectedNodeID);
+            const size_t expectedNodeID = node->getNodeProperties().nodeID;
             TestProcess<NodePlayer> playerContext (std::make_unique<NodePlayer> (std::move (node)),
                                                    testSetup, 1, totalDuration);
             const int firstHalfNumSamples = totalNumSamples / 2;
@@ -599,12 +597,10 @@ private:
                 return makeNode<LatencyNode> (makeNode<SinNode> (220.0f, 1, nodeID), latencyNumSamples);
             };
             
-            const size_t expectedNodeID = 645479746027;
-            
             const double totalDuration = 5.0;
             const int totalNumSamples = (int) std::floor (totalDuration * testSetup.sampleRate);
             auto node = makeSinNode();
-            expectEquals (node->getNodeProperties().nodeID, expectedNodeID);
+            const size_t expectedNodeID = node->getNodeProperties().nodeID;
             TestProcess<NodePlayer> playerContext (std::make_unique<NodePlayer> (std::move (node)),
                                                    testSetup, 1, totalDuration);
             const int firstHalfNumSamples = totalNumSamples / 2;
