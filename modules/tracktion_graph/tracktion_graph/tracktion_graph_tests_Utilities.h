@@ -306,8 +306,8 @@ namespace test_utilities
         TestSetup testSetup;
         const int numChannels;
 
-        std::unique_ptr<juce::AudioFormatWriter> writer;
-        std::shared_ptr<TestContext> context;
+		std::shared_ptr<TestContext> context;
+		std::unique_ptr<juce::AudioFormatWriter> writer;
         
         juce::AudioBuffer<float> buffer;
         tracktion_engine::MidiMessageArray midi;
