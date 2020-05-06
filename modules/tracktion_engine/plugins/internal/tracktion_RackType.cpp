@@ -553,6 +553,9 @@ private:
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     void createExperiemntalProcessor (RackType& type)
     {
+        if (type.sampleRate == 0.0 || type.blockSize == 0)
+            return;
+        
         inputProvider = std::make_shared<InputProvider>();
         auto rackNode = RackNodeBuilder::createRackNode (type, inputProvider);
 

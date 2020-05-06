@@ -372,6 +372,9 @@ public:
     /** Preapres the processor to be played. */
     void prepareToPlay (double sampleRate, int blockSize)
     {
+        jassert (sampleRate != 0.0);
+        jassert (blockSize != 0);
+        
         // First, initiliase all the nodes, this will call prepareToPlay on them and also
         // give them a chance to do things like balance latency
         const tracktion_graph::PlaybackInitialisationInfo info { sampleRate, blockSize, *input };
