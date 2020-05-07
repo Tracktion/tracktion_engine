@@ -26,35 +26,28 @@ public:
     
     void runTest() override
     {
-        for (double sampleRate : { 44100.0, 48000.0, 96000.0 })
+        for (auto setup : getTestSetups (*this))
         {
-            for (int blockSize : { 64, 256, 512, 1024 })
-            {
-                for (bool randomiseBlockSizes : { false, true })
-                {
-                    TestSetup setup { sampleRate, blockSize, randomiseBlockSizes, getRandom() };
-                    logMessage (juce::String ("Test setup: sample rate SR, block size BS, random blocks RND")
-                                .replace ("SR", juce::String (sampleRate))
-                                .replace ("BS", juce::String (blockSize))
-                                .replace ("RND", randomiseBlockSizes ? "Y" : "N"));
+            logMessage (juce::String ("Test setup: sample rate SR, block size BS, random blocks RND")
+                        .replace ("SR", juce::String (setup.sampleRate))
+                        .replace ("BS", juce::String (setup.blockSize))
+                        .replace ("RND", setup.randomiseBlockSizes ? "Y" : "N"));
 
-                    // Mono tests
-                    runSinTests (setup);
-                    runSinCancellingTests (setup);
-                    runSinOctaveTests (setup);
-                    runSendReturnTests (setup);
-                    runLatencyTests (setup);
+            // Mono tests
+            runSinTests (setup);
+            runSinCancellingTests (setup);
+            runSinOctaveTests (setup);
+            runSendReturnTests (setup);
+            runLatencyTests (setup);
 
-                    // MIDI tests
-                    runMidiTests (setup);
+            // MIDI tests
+            runMidiTests (setup);
 
-                    // Multi channel tests
-                    runStereoTests (setup);
-                    
-                    // Tests rebuilding the graph mid render
-                    runRebuildTests (setup);
-                }
-            }
+            // Multi channel tests
+            runStereoTests (setup);
+            
+            // Tests rebuilding the graph mid render
+            runRebuildTests (setup);
         }
     }
 
@@ -613,6 +606,7 @@ private:
 
             // Make a new sin node and switch that in to the test context
             node = makeSinNode();
+            test_utilities::expectUniqueNodeIDs (*this, *node);
             expectEquals (node->getNodeProperties().nodeID, expectedNodeID);
             playerContext.setNode (std::move (node));
             const int secondHalfNumSamples = totalNumSamples - firstHalfNumSamples;

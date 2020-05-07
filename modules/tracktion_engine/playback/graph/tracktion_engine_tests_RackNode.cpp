@@ -27,24 +27,17 @@ public:
     
     void runTest() override
     {
-        for (double sampleRate : { 44100.0, 48000.0, 96000.0 })
+        for (auto setup : test_utilities::getTestSetups (*this))
         {
-            for (int blockSize : { 64, 256, 512, 1024 })
-            {
-                for (bool randomiseBlockSizes : { false, true })
-                {
-                    test_utilities::TestSetup setup { sampleRate, blockSize, randomiseBlockSizes, getRandom() };
-                    logMessage (String ("Test setup: sample rate SR, block size BS, random blocks RND")
-                                .replace ("SR", String (sampleRate))
-                                .replace ("BS", String (blockSize))
-                                .replace ("RND", randomiseBlockSizes ? "Y" : "N"));
+            logMessage (String ("Test setup: sample rate SR, block size BS, random blocks RND")
+                        .replace ("SR", String (setup.sampleRate))
+                        .replace ("BS", String (setup.blockSize))
+                        .replace ("RND", setup.randomiseBlockSizes ? "Y" : "N"));
 
-                    // Rack tests
-                    runRackTests (setup);
-                    runRackAudioInputTests (setup);
-                    runRackModifiertests (setup);
-                }
-            }
+            // Rack tests
+            runRackTests (setup);
+            runRackAudioInputTests (setup);
+            runRackModifiertests (setup);
         }
     }
 
