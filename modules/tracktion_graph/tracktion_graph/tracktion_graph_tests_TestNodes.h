@@ -366,7 +366,9 @@ public:
     
     std::vector<Node*> getDirectInputNodes() override
     {
-        return { input.get() };
+        std::vector<Node*> inputs { input.get() };
+        inputs.insert (inputs.end(), sendNodes.begin(), sendNodes.end());
+        return inputs;
     }
 
     bool isReadyToProcess() override
