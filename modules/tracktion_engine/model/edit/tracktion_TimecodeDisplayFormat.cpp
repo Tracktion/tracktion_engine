@@ -558,20 +558,18 @@ double TimecodeDisplayFormat::getNewTimeWithPartValue (double time, const TempoS
 String TimecodeDisplayFormat::toFullTimecode (double seconds, int subSecondDivisions, bool showHours)
 {
     auto absSecs = std::abs (seconds);
-    const char* sign = (seconds < 0) ? "-" : "";
+    String sign = (seconds < 0) ? "-" : "";
     String result;
 
     if (showHours || (absSecs >= 60.0 * 60.0))
-        result = String::formatted ("%s%02d:%02d:%02d",
-                                    sign,
-                                    (int) (absSecs / (60.0 * 60.0)),
-                                    ((int) (absSecs / 60.0)) % 60,
-                                    ((int) absSecs) % 60);
+        result = sign + String::formatted ("%02d:%02d:%02d",
+                                           (int) (absSecs / (60.0 * 60.0)),
+                                           ((int) (absSecs / 60.0)) % 60,
+                                           ((int) absSecs) % 60);
     else
-        result = String::formatted ("%s%d:%02d",
-                                    sign,
-                                    ((int) (absSecs / 60.0)) % 60,
-                                    ((int) absSecs) % 60);
+        result = sign + String::formatted ("%d:%02d",
+                                           ((int) (absSecs / 60.0)) % 60,
+                                           ((int) absSecs) % 60);
 
     if (subSecondDivisions > 0)
         result += String::formatted (":%0*d",
