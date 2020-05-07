@@ -76,7 +76,7 @@ private:
 
         beginTest ("Basic visting");
         {
-            expectEquals (allNodes.size(), 7ul);
+            expectEquals<size_t> (allNodes.size(), 7);
         
             std::vector<Node*> nodes;
             visitInputs (*A, [&] (auto& node)
