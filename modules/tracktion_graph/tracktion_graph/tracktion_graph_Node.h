@@ -191,8 +191,12 @@ private:
 
 //==============================================================================
 //==============================================================================
-/** Should call the visitInputs for any direct inputs to the node and then call
+/** Calls the visitor for any direct inputs to the node and then calls
     the visitor function on this node.
+    
+    This method is not stateful so may end up calling nodes more than once and
+    could be infinite if there are cycles in the graph.
+ 
     @param Visitor has the signature @code void (Node&) @endcode
 */
 template<typename Visitor>
@@ -204,6 +208,31 @@ void visitInputs (Node& node, Visitor&& visitor)
     visitor (node);
 }
 
+//==============================================================================
+/** Should call the visitor for any direct inputs to the node exactly once.
+    If preordering is true, nodes will be visited before their inputs, if
+    false, inputs will be visited first.
+ 
+    @param Visitor has the signature @code void (Node&) @endcode
+*/
+template<typename Visitor>
+void visitNodes (Node&, Visitor&&, bool preordering);
+
+//==============================================================================
+/** Specifies the ordering algorithm. */
+enum class VertexOrdering
+{
+    preordering,            // The order in which nodes are first visited
+    postordering,           // The order in which nodes are last visited
+    reversePreordering,     // The reverse of the preordering
+    reversePostordering     // The reverse of the postordering
+};
+
+/** Returns all the nodes in a Node graph in the order given by vertexOrdering. */
+static inline std::vector<Node*> getNodes (Node&, VertexOrdering);
+
+
+//==============================================================================
 //==============================================================================
 inline void Node::initialise (const PlaybackInitialisationInfo& info)
 {
@@ -253,5 +282,59 @@ inline Node::AudioAndMidiBuffer Node::getProcessedOutput()
     jassert (hasProcessed());
     return { juce::dsp::AudioBlock<float> (audioBuffer).getSubBlock (0, (size_t) numSamplesProcessed), midiBuffer };
 }
+
+
+//==============================================================================
+//==============================================================================
+namespace detail
+{
+    struct VisitNodesWithRecord
+    {
+        template<typename Visitor>
+        static void visit (std::vector<Node*>& visitedNodes, Node& visitingNode, Visitor&& visitor, bool preordering)
+        {
+            if (std::find (visitedNodes.begin(), visitedNodes.end(), &visitingNode) != visitedNodes.end())
+                return;
+            
+            if (preordering)
+            {
+                visitedNodes.push_back (&visitingNode);
+                visitor (visitingNode);
+            }
+
+            for (auto n : visitingNode.getDirectInputNodes())
+                visit  (visitedNodes, *n, visitor, preordering);
+
+            if (! preordering)
+            {
+                visitedNodes.push_back (&visitingNode);
+                visitor (visitingNode);
+            }
+        }
+    };
+}
+
+template<typename Visitor>
+inline void visitNodes (Node& node, Visitor&& visitor, bool preordering)
+{
+    std::vector<Node*> visitedNodes;
+    detail::VisitNodesWithRecord::visit (visitedNodes, node, visitor, preordering);
+}
+
+inline std::vector<Node*> getNodes (Node& node, VertexOrdering vertexOrdering)
+{
+    bool preordering = vertexOrdering == VertexOrdering::preordering
+                    || vertexOrdering == VertexOrdering::reversePreordering;
+    
+    std::vector<Node*> visitedNodes;
+    detail::VisitNodesWithRecord::visit (visitedNodes, node, [](auto&){}, preordering);
+
+    if (vertexOrdering == VertexOrdering::reversePreordering
+        || vertexOrdering == VertexOrdering::reversePostordering)
+        std::reverse (visitedNodes.begin(), visitedNodes.end());
+    
+    return visitedNodes;
+}
+
 
 }

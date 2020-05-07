@@ -24,3 +24,4 @@
 #include "tracktion_graph/tracktion_graph_tests_TestNodes.h"
 
 #include "tracktion_graph/tracktion_graph_tests_Node.cpp"
+#include "tracktion_graph/tracktion_graph_tests_NodeVisiting.cpp"
