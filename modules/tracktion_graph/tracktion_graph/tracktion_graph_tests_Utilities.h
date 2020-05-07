@@ -187,6 +187,16 @@ namespace test_utilities
         expectAudioBuffer (ut, trimmedBuffer, channel, mag, rms);
     }
 
+    /** Checks that there are no duplicate nodeIDs in a Node. */
+    static inline void expectUniqueNodeIDs (juce::UnitTest& ut, Node& node)
+    {
+        std::vector<size_t> nodeIDs;
+        visitInputs (node, [&] (Node& n) { nodeIDs.push_back (n.getNodeProperties().nodeID); });
+        std::sort (nodeIDs.begin(), nodeIDs.end());
+        auto uniqueEnd = std::unique (nodeIDs.begin(), nodeIDs.end());
+        ut.expect (uniqueEnd == nodeIDs.end(), "nodeIDs are not unique");
+    }
+
     //==============================================================================
     //==============================================================================
     struct TestSetup
@@ -197,6 +207,24 @@ namespace test_utilities
         juce::Random random;
     };
     
+    /** Returns a set of TestSetups to be used for testing. */
+    static inline std::vector<TestSetup> getTestSetups (juce::UnitTest& ut)
+    {
+        std::vector<TestSetup> setups;
+        
+       #if JUCE_DEBUG
+        for (double sampleRate : { 44100.0, 96000.0 })
+            for (int blockSize : { 64, 512 })
+       #else
+        for (double sampleRate : { 44100.0, 48000.0, 96000.0 })
+            for (int blockSize : { 64, 256, 512, 1024 })
+       #endif
+                for (bool randomiseBlockSizes : { false, true })
+                    setups.push_back ({ sampleRate, blockSize, randomiseBlockSizes, ut.getRandom() });
+
+        return setups;
+    }
+
     //==============================================================================
     struct TestContext
     {
