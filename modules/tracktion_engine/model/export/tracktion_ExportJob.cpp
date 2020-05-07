@@ -288,7 +288,7 @@ void ExportJob::createArchiveFromTempFiles()
             auto compression = TracktionArchiveFile::CompressionType::zip;
             const File f (filesForDeletion[i]);
 
-            if (AudioFile (edit->engine, f).isValid())
+            if (AudioFile (srcProject->engine, f).isValid())
                 compression = compressionType;
 
             if (! archive->addFile (f, destDir, compression))
