@@ -447,11 +447,21 @@ public:
         props.hasAudio = ! channelMap.empty();
         props.hasMidi = passMIDI;
         props.numberOfChannels = 0;
-        props.latencyNumSamples = input->getNodeProperties().latencyNumSamples;
-
+        
+        const auto inputProps = input->getNodeProperties();
+        props.latencyNumSamples = inputProps.latencyNumSamples;
+        
+        props.nodeID = inputProps.nodeID;
+        hash_combine (props.nodeID, passMIDI);
+        
         // Num channels is the max of destinations
         for (auto channel : channelMap)
+        {
+            hash_combine (props.nodeID, channel.first);
+            hash_combine (props.nodeID, channel.second);
+
             props.numberOfChannels = std::max (props.numberOfChannels, channel.second + 1);
+        }
         
         return props;
     }

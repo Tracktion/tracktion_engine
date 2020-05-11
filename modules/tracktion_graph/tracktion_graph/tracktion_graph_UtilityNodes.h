@@ -170,6 +170,8 @@ private:
 class SummingNode : public Node
 {
 public:
+    SummingNode() = default;
+    
     SummingNode (std::vector<std::unique_ptr<Node>> inputs)
         : ownedNodes (std::move (inputs))
     {
@@ -189,6 +191,13 @@ public:
         nodes.insert (nodes.begin(), referencedInputs.begin(), referencedInputs.end());
     }
 
+    /** Adds an input to be summed in this Node. */
+    void addInput (std::unique_ptr<Node> newInput)
+    {
+        nodes.push_back (newInput.get());
+        ownedNodes.push_back (std::move (newInput));
+    }
+    
     NodeProperties getNodeProperties() override
     {
         NodeProperties props;

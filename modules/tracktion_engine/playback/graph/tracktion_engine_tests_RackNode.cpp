@@ -86,7 +86,7 @@ private:
             edit->getTempDirectory (false).deleteRecursively();
         }
 
-        beginTest ("Basic sin Rack");
+        beginTest ("Basic sin Rack connected to inputs");
         {
             auto edit = Edit::createSingleTrackEdit (engine);
             auto track = getFirstAudioTrack (*edit);
@@ -111,6 +111,34 @@ private:
                 auto rackProcessor = std::make_unique<RackNodePlayer> (std::move (rackNode), inputProvider, true);
                                         
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
+                test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
+            }
+                    
+            engine.getAudioFileManager().releaseAllFiles();
+            edit->getTempDirectory (false).deleteRecursively();
+        }
+        
+        beginTest ("Basic sin only connected to outputs");
+        {
+            auto edit = Edit::createSingleTrackEdit (engine);
+            auto rack = edit->getRackList().addNewRack();
+            expectEquals (rack->getOutputNames().size(), 3);
+
+            auto tonePlugin = edit->getPluginCache().createNewPlugin (ToneGeneratorPlugin::xmlTypeName, {});
+            rack->addPlugin (tonePlugin, {}, false);
+            
+            rack->addConnection (tonePlugin->itemID, 1, {}, 1);
+            expectEquals (rack->getConnections().size(), 1);
+            
+            // Process Rack
+            {
+                auto inputProvider = std::make_shared<InputProvider>();
+                auto rackNode = RackNodeBuilder::createRackNode (*rack, inputProvider);
+                test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
+
+                auto rackProcessor = std::make_unique<RackNodePlayer> (std::move (rackNode), inputProvider, true);
+                                        
+                auto testContext = createTestContext (std::move (rackProcessor), testSetup, 1, 5.0);
                 test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
             }
                     
@@ -254,6 +282,43 @@ private:
                 const int latencyNumSamples = roundToInt (latencyTimeInSeconds * testSetup.sampleRate);
                 test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, latencyNumSamples, 0.0f, 0.0f, 1.0f, 0.707f);
                 test_utilities::expectAudioBuffer (*this, testContext->buffer, 1, latencyNumSamples, 0.0f, 0.0f, 1.0f, 0.707f);
+            }
+                    
+            engine.getAudioFileManager().releaseAllFiles();
+            edit->getTempDirectory (false).deleteRecursively();
+        }
+        
+        beginTest ("Two paths to single synth");
+        {
+            auto edit = Edit::createSingleTrackEdit (engine);
+            auto rack = edit->getRackList().addNewRack();
+            expectEquals (rack->getOutputNames().size(), 3);
+
+            auto tonePlugin = edit->getPluginCache().createNewPlugin (ToneGeneratorPlugin::xmlTypeName, {});
+            rack->addPlugin (tonePlugin, {}, false);
+            auto vol1Plugin = edit->getPluginCache().createNewPlugin (VolumeAndPanPlugin::xmlTypeName, {});
+            rack->addPlugin (vol1Plugin, {}, false);
+            auto vol2Plugin = edit->getPluginCache().createNewPlugin (VolumeAndPanPlugin::xmlTypeName, {});
+            rack->addPlugin (vol2Plugin, {}, false);
+            
+            rack->addConnection (tonePlugin->itemID, 1, vol1Plugin->itemID, 1);
+            rack->addConnection (tonePlugin->itemID, 1, vol2Plugin->itemID, 1);
+            rack->addConnection (vol1Plugin->itemID, 1, {}, 1);
+            rack->addConnection (vol2Plugin->itemID, 1, {}, 1);
+            expectEquals (rack->getConnections().size(), 4);
+
+            dynamic_cast<ToneGeneratorPlugin*> (tonePlugin.get())->level = 0.5f;
+            
+            // Process Rack
+            {
+                auto inputProvider = std::make_shared<InputProvider>();
+                auto rackNode = RackNodeBuilder::createRackNode (*rack, inputProvider);
+                test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
+
+                auto rackProcessor = std::make_unique<RackNodePlayer> (std::move (rackNode), inputProvider, true);
+                                        
+                auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
+                test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
             }
                     
             engine.getAudioFileManager().releaseAllFiles();

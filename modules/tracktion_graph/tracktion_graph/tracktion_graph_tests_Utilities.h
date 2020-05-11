@@ -206,7 +206,11 @@ namespace test_utilities
     /** Checks that there are no duplicate nodeIDs in a Node. */
     static inline void expectUniqueNodeIDs (juce::UnitTest& ut, Node& node, bool ignoreZeroIDs)
     {
-        ut.expect (areNodeIDsUnique (node, ignoreZeroIDs), "nodeIDs are not unique");
+        auto areUnique = areNodeIDsUnique (node, ignoreZeroIDs);
+        ut.expect (areUnique, "nodeIDs are not unique");
+        
+        if (! areUnique)
+            visitNodes (node, [&] (Node& n) { ut.logMessage (juce::String (typeid (n).name()) + " - " + juce::String (n.getNodeProperties().nodeID)); }, false);
     }
 
     //==============================================================================
