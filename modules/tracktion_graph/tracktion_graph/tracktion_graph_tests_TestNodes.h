@@ -386,13 +386,13 @@ public:
             return;
         
         std::vector<Node*> sends;
-        std::function<void (Node&)> visitor = [&] (Node& n)
-            {
-                if (auto send = dynamic_cast<SendNode*> (&n))
-                    if (send->getBusID() == busID)
-                        sends.push_back (send);
-            };
-        visitInputs (info.rootNode, visitor);
+        visitInputs (info.rootNode,
+                     [&] (Node& n)
+                     {
+                        if (auto send = dynamic_cast<SendNode*> (&n))
+                            if (send->getBusID() == busID)
+                                sends.push_back (send);
+                     });
         
         // Create a summing node if required
         if (sends.size() > 0)

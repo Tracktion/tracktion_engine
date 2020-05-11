@@ -606,7 +606,7 @@ private:
 
             // Make a new sin node and switch that in to the test context
             node = makeSinNode();
-            test_utilities::expectUniqueNodeIDs (*this, *node);
+            test_utilities::expectUniqueNodeIDs (*this, *node, false);
             expectEquals (node->getNodeProperties().nodeID, expectedNodeID);
             playerContext.setNode (std::move (node));
             const int secondHalfNumSamples = totalNumSamples - firstHalfNumSamples;

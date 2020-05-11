@@ -116,6 +116,22 @@ namespace test_utilities
         writeToFile (file, buffer, sampleRate);
     }
 
+    /** Returns true if all the nodes in the graph have a unique nodeID. */
+    static inline bool areNodeIDsUnique (Node& node, bool ignoreZeroIDs)
+    {
+        std::vector<size_t> nodeIDs;
+        visitNodes (node, [&] (Node& n) { nodeIDs.push_back (n.getNodeProperties().nodeID); }, false);
+        std::sort (nodeIDs.begin(), nodeIDs.end());
+        
+        if (ignoreZeroIDs)
+            nodeIDs.erase (std::remove_if (nodeIDs.begin(), nodeIDs.end(),
+                                           [] (auto nID) { return nID == 0; }),
+                           nodeIDs.end());
+        
+        auto uniqueEnd = std::unique (nodeIDs.begin(), nodeIDs.end());
+        return uniqueEnd == nodeIDs.end();
+    }
+
     //==============================================================================
     /** Compares two MidiMessageSequences and expects them to be equal. */
     static inline void expectMidiMessageSequence (juce::UnitTest& ut, const juce::MidiMessageSequence& seq1, const juce::MidiMessageSequence& seq2)
@@ -188,13 +204,9 @@ namespace test_utilities
     }
 
     /** Checks that there are no duplicate nodeIDs in a Node. */
-    static inline void expectUniqueNodeIDs (juce::UnitTest& ut, Node& node)
+    static inline void expectUniqueNodeIDs (juce::UnitTest& ut, Node& node, bool ignoreZeroIDs)
     {
-        std::vector<size_t> nodeIDs;
-        visitInputs (node, [&] (Node& n) { nodeIDs.push_back (n.getNodeProperties().nodeID); });
-        std::sort (nodeIDs.begin(), nodeIDs.end());
-        auto uniqueEnd = std::unique (nodeIDs.begin(), nodeIDs.end());
-        ut.expect (uniqueEnd == nodeIDs.end(), "nodeIDs are not unique");
+        ut.expect (areNodeIDsUnique (node, ignoreZeroIDs), "nodeIDs are not unique");
     }
 
     //==============================================================================

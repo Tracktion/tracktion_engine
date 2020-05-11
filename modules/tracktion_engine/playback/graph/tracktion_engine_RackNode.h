@@ -138,9 +138,13 @@ public:
             plugin->baseClassDeinitialise();
     }
     
+    Plugin& getPlugin()
+    {
+        return *plugin;
+    }
+    
     tracktion_graph::NodeProperties getNodeProperties() override
     {
-        jassert (isInitialised);
         auto props = input->getNodeProperties();
         const auto latencyNumSamples = roundToInt (plugin->getLatencySeconds() * sampleRate);
 
@@ -148,6 +152,7 @@ public:
         props.hasAudio = plugin->producesAudioWhenNoAudioInput();
         props.hasMidi  = plugin->takesMidiInput();
         props.latencyNumSamples = std::max (props.latencyNumSamples, latencyNumSamples);
+        props.nodeID = (size_t) plugin->itemID.getRawID();
 
         return props;
     }
@@ -172,6 +177,7 @@ public:
         
         plugin->baseClassInitialise (teInfo);
         isInitialised = true;
+
         sampleRate = info.sampleRate;
     }
     
@@ -402,7 +408,6 @@ public:
 
         // The internal nodes won't be interested in the top level audio/midi inputs
         // They should only be referencing this for time and continuity
-        tracktion_engine::PlayHead playHead;
         tracktion_engine::AudioRenderContext rc (playHead, {},
                                                  nullptr, juce::AudioChannelSet(), 0, 0,
                                                  nullptr, 0.0,
@@ -442,6 +447,7 @@ private:
     std::vector<tracktion_graph::Node*> allNodes;
     std::shared_ptr<InputProvider> inputProvider;
     bool overrideInputs = true;
+    tracktion_engine::PlayHead playHead;
 };
 
 

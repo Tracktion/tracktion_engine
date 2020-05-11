@@ -331,7 +331,7 @@ inline std::vector<Node*> getNodes (Node& node, VertexOrdering vertexOrdering)
 
     if (vertexOrdering == VertexOrdering::reversePreordering
         || vertexOrdering == VertexOrdering::reversePostordering)
-        std::reverse (visitedNodes.begin(), visitedNodes.end());
+       std::reverse (visitedNodes.begin(), visitedNodes.end());
     
     return visitedNodes;
 }
