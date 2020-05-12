@@ -531,7 +531,11 @@ public:
         
     NodeProperties getNodeProperties() override
     {
-        return input->getNodeProperties();
+        constexpr size_t sinkNodeMagicHash = 0x95ab5e9dcd;
+        auto props = input->getNodeProperties();
+        hash_combine (props.nodeID, sinkNodeMagicHash);
+        
+        return props;
     }
     
     std::vector<Node*> getDirectInputNodes() override

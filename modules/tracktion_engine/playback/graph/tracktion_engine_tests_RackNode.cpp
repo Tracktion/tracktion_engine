@@ -527,6 +527,81 @@ private:
             engine.getAudioFileManager().releaseAllFiles();
             edit->getTempDirectory (false).deleteRecursively();
         }
+
+        beginTest ("Envelope Modifier Rack");
+        {
+            // This has a stereo input to an Envelope follower configured to output an envelope of 1 with a sin input
+            // This then controls the level of a volume plugin to -6dB
+            
+            auto edit = Edit::createSingleTrackEdit (engine);
+            auto track = getFirstAudioTrack (*edit);
+            
+            Plugin::Ptr pluginPtr = edit->getPluginCache().createNewPlugin (VolumeAndPanPlugin::xmlTypeName, {});
+            track->pluginList.insertPlugin (pluginPtr, 0, nullptr);
+            auto volPlugin = dynamic_cast<VolumeAndPanPlugin*> (pluginPtr.get());
+            expect (volPlugin != nullptr);
+            
+            Plugin::Array plugins;
+            plugins.add (pluginPtr);
+            auto rack = RackType::createTypeToWrapPlugins (plugins, *edit);
+            expect (rack != nullptr);
+            expect (rack->getPlugins().getFirst() == pluginPtr.get());
+            expectEquals (rack->getConnections().size(), 6);
+
+            auto modifier = rack->getModifierList().insertModifier (ValueTree (IDs::ENVELOPEFOLLOWER), 0, nullptr);
+            auto envelopeModifier = dynamic_cast<EnvelopeFollowerModifier*> (modifier.get());
+            envelopeModifier->attackParam->setParameter (envelopeModifier->attackParam->valueRange.start, dontSendNotification);
+            envelopeModifier->releaseParam->setParameter (envelopeModifier->releaseParam->valueRange.end, dontSendNotification);
+            expectWithinAbsoluteError (envelopeModifier->attackParam->getCurrentValue(), 1.0f, 0.001f);
+            expectWithinAbsoluteError (envelopeModifier->releaseParam->getCurrentValue(), 5000.0f, 0.001f);
+            
+            rack->addConnection ({}, 1, envelopeModifier->itemID, 0);
+            rack->addConnection ({}, 2, envelopeModifier->itemID, 1);
+            expectEquals (rack->getConnections().size(), 8);
+
+            // This value should modify the volume to -6dB
+            volPlugin->volParam->addModifier (*modifier, -0.193f);
+            
+            PlayHead playhead;
+            edit->updateModifierTimers (playhead, EditTimeRange(), 0);
+            volPlugin->updateActiveParameters();
+            volPlugin->volParam->updateToFollowCurve (0.0); // Force an update of the param value for testing
+
+            // Process Rack
+            {
+                // Sin input provider
+                const auto inputProvider = std::make_shared<InputProvider>();
+                AudioBuffer<float> inputBuffer (2, ts.blockSize);
+
+                // Fill inputs with sin data
+                {
+                    test_utilities::fillBufferWithSinData (inputBuffer);
+                    tracktion_engine::MidiMessageArray midi;
+                    inputProvider->setInputs ({ juce::dsp::AudioBlock<float> (inputBuffer), midi });
+                }
+
+                auto rackNode = RackNodeBuilder::createRackNode (*rack, inputProvider);
+                test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
+
+                auto rackProcessor = std::make_unique<RackNodePlayer> (std::move (rackNode), inputProvider, false);
+                                        
+                auto testContext = createTestContext (std::move (rackProcessor), ts, 2, 5.0);
+
+                // Disable this test for now until full automation is working
+               #if 0
+                ignoreUnused (testContext);
+                // Trim the first 0.1s as the envelope ramps up
+                const juce::Range<int> sampleRange (roundToInt (0.5 * ts.sampleRate), roundToInt (5.0 * ts.sampleRate));
+                test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, sampleRange, 0.5f, 0.353f);
+               #endif
+            }
+
+            // Check this ends on -6db
+            expectWithinAbsoluteError (volPlugin->getVolumeDb(), -6.02f, 0.01f);
+
+            engine.getAudioFileManager().releaseAllFiles();
+            edit->getTempDirectory (false).deleteRecursively();
+        }
     }
 };
 
