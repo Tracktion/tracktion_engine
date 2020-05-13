@@ -597,7 +597,7 @@ private:
             }
 
             // Check this ends on -6db
-            expectWithinAbsoluteError (volPlugin->getVolumeDb(), -6.02f, 0.01f);
+            expectWithinAbsoluteError (volPlugin->getVolumeDb(), -6.0f, 0.1f);
 
             engine.getAudioFileManager().releaseAllFiles();
             edit->getTempDirectory (false).deleteRecursively();
