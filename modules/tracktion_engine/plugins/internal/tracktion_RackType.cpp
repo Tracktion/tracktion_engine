@@ -553,8 +553,13 @@ private:
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     void createExperiemntalProcessor (RackType& type)
     {
-        if (type.sampleRate == 0.0 || type.blockSize == 0)
-            return;
+        if (type.sampleRate == 0.0 || type.blockSize == 0
+            || type.numActiveInstances.load() == 0)
+        {
+            processor.reset();
+            inputProvider.reset();
+           return;
+        }
         
         inputProvider = std::make_shared<InputProvider>();
         auto rackNode = RackNodeBuilder::createRackNode (type, inputProvider);
@@ -1533,11 +1538,14 @@ void RackType::initialisePluginsIfNeeded (const PlaybackInitialisationInfo& info
 {
     latencyCalculation.reset();
 
-    for (auto f : getPlugins())
-        f->baseClassInitialise (info);
+    if (! RackType::isExperimentalGraphProcessingEnabled())
+    {
+        for (auto f : getPlugins())
+            f->baseClassInitialise (info);
 
-    for (auto& m : getModifierList().getModifiers())
-        m->baseClassInitialise (info);
+        for (auto& m : getModifierList().getModifiers())
+            m->baseClassInitialise (info);
+    }
 }
 
 void RackType::deregisterInstance (RackInstance* instance)
@@ -1560,11 +1568,16 @@ void RackType::deregisterInstance (RackInstance* instance)
 
     if (activeRackInstances.isEmpty())
     {
-        for (auto f : getPlugins())
-            f->baseClassDeinitialise();
+        renderContextBuilder.handleUpdateNowIfNeeded();
+        
+        if (! RackType::isExperimentalGraphProcessingEnabled())
+        {
+            for (auto f : getPlugins())
+                f->baseClassDeinitialise();
 
-        for (auto m : getModifierList().getModifiers())
-            m->baseClassDeinitialise();
+            for (auto m : getModifierList().getModifiers())
+                m->baseClassDeinitialise();
+        }
     }
 
     countInstancesInEdit();

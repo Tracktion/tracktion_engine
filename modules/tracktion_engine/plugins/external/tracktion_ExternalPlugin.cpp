@@ -1515,7 +1515,7 @@ bool ExternalPlugin::setBusLayout (AudioChannelSet set, bool isInput, int busInd
 {
     if (pluginInstance != nullptr)
     {
-        if (auto* bus = pluginInstance->getBus (isInput, busIndex))
+        if (auto bus = pluginInstance->getBus (isInput, busIndex))
         {
             std::unique_ptr<Edit::ScopedRenderStatus> srs;
 
