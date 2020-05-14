@@ -478,8 +478,10 @@ public:
         return input->getNodeProperties().latencyNumSamples;
     }
 
-    /** Processes a block of audio and MIDI data. */
-    void process (const tracktion_graph::Node::ProcessContext& pc)
+    /** Processes a block of audio and MIDI data.
+        Returns the number of times a node was checked but unable to be processed.
+    */
+    int process (const tracktion_graph::Node::ProcessContext& pc)
     {
         if (overrideInputs)
             inputProvider->setInputs (pc.buffers);
@@ -492,37 +494,13 @@ public:
                                                  tracktion_engine::AudioRenderContext::contiguous, false);
 
         inputProvider->setContext (&rc);
-        
-        for (auto node : allNodes)
-            node->prepareForNextBlock();
-        
-        for (;;)
-        {
-            int processedAnyNodes = false;
-            
-            for (auto node : allNodes)
-            {
-                if (! node->hasProcessed() && node->isReadyToProcess())
-                {
-                    node->process (pc.streamSampleRange);
-                    processedAnyNodes = true;
-                }
-            }
-            
-            if (! processedAnyNodes)
-            {
-                auto output = input->getProcessedOutput();
-                pc.buffers.audio.copyFrom (output.audio);
-                pc.buffers.midi.copyFrom (output.midi);
-                
-                break;
-            }
-        }
+     
+        return processPostorderedNodes (*input, allNodes, pc);
     }
     
 private:
     std::unique_ptr<tracktion_graph::Node> input;
-    std::vector<tracktion_graph::Node*> allNodes;
+    std::vector<tracktion_graph::Node*> allNodes, nodesToProcess;
     std::shared_ptr<InputProvider> inputProvider;
     bool overrideInputs = true;
     tracktion_engine::PlayHead playHead;

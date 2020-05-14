@@ -13,6 +13,46 @@
 namespace tracktion_graph
 {
 
+/** Processes a group of Nodes assuming a postordering VertexOrdering.
+    If these conditions are met the Nodes should be processed in a single loop iteration.
+*/
+static inline int processPostorderedNodes (Node& rootNode, const std::vector<Node*>& allNodes, const Node::ProcessContext& pc)
+{
+    for (auto node : allNodes)
+        node->prepareForNextBlock();
+    
+    int numMisses = 0;
+    size_t numNodesProcessed = 0;
+
+    for (;;)
+    {
+        for (auto node : allNodes)
+        {
+            if (! node->hasProcessed() && node->isReadyToProcess())
+            {
+                node->process (pc.streamSampleRange);
+                ++numNodesProcessed;
+            }
+            else
+            {
+                ++numMisses;
+            }
+        }
+
+        if (numNodesProcessed == allNodes.size())
+        {
+            auto output = rootNode.getProcessedOutput();
+            pc.buffers.audio.copyFrom (output.audio);
+            pc.buffers.midi.copyFrom (output.midi);
+
+            break;
+        }
+    }
+    
+    return numMisses;
+}
+
+
 //==============================================================================
 //==============================================================================
 /**
@@ -48,40 +88,16 @@ public:
         visitInputs (*input, visitor);
         
         // Then find all the nodes as it might have changed after initialisation
-        allNodes.clear();
-        
-        std::function<void (Node&)> visitor2 = [&] (Node& n) { allNodes.push_back (&n); };
-        visitInputs (*input, visitor2);
+        // Then find all the nodes as it might have changed after initialisation
+        allNodes = tracktion_graph::getNodes (*input, tracktion_graph::VertexOrdering::postordering);
     }
 
-    /** Processes a block of audio and MIDI data. */
-    void process (const Node::ProcessContext& pc)
+    /** Processes a block of audio and MIDI data.
+        Returns the number of times a node was checked but unable to be processed.
+    */
+    int process (const Node::ProcessContext& pc)
     {
-        for (auto node : allNodes)
-            node->prepareForNextBlock();
-        
-        for (;;)
-        {
-            int processedAnyNodes = false;
-            
-            for (auto node : allNodes)
-            {
-                if (! node->hasProcessed() && node->isReadyToProcess())
-                {
-                    node->process (pc.streamSampleRange);
-                    processedAnyNodes = true;
-                }
-            }
-            
-            if (! processedAnyNodes)
-            {
-                auto output = input->getProcessedOutput();
-                pc.buffers.audio.copyFrom (output.audio);
-                pc.buffers.midi.copyFrom (output.midi);
-                
-                break;
-            }
-        }
+        return processPostorderedNodes (*input, allNodes, pc);
     }
     
 private:

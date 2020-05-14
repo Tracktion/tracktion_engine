@@ -247,6 +247,7 @@ namespace test_utilities
         std::unique_ptr<juce::TemporaryFile> tempFile;
         juce::AudioBuffer<float> buffer;
         juce::MidiBuffer midi;
+        int numProcessMisses = 0;
     };
 
     template<typename NodeProcessorType>
@@ -299,8 +300,8 @@ namespace test_utilities
                 juce::AudioBuffer<float> subSectionBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
                                                            0, numThisTime);
 
-                processor->process ({ juce::Range<int64_t>::withStartAndLength ((int64_t) numSamplesDone, (int64_t) numThisTime),
-                                      { { subSectionBuffer }, midi } });
+                numProcessMisses += processor->process ({ juce::Range<int64_t>::withStartAndLength ((int64_t) numSamplesDone, (int64_t) numThisTime),
+                                                        { { subSectionBuffer }, midi } });
                 
                 writer->writeFromAudioSampleBuffer (subSectionBuffer, 0, subSectionBuffer.getNumSamples());
                 
@@ -338,6 +339,7 @@ namespace test_utilities
                 juce::AudioBuffer<float> tempBuffer (numChannels, (int) reader->lengthInSamples);
                 reader->read (&tempBuffer, 0, tempBuffer.getNumSamples(), 0, true, true);
                 context->buffer = std::move (tempBuffer);
+                context->numProcessMisses = numProcessMisses;
                 
                 return context;
             }
@@ -357,6 +359,7 @@ namespace test_utilities
         tracktion_engine::MidiMessageArray midi;
         int numSamplesToDo = 0;
         int numSamplesDone = 0;
+        int numProcessMisses = 0;
     };
 
     template<typename NodeProcessorType>

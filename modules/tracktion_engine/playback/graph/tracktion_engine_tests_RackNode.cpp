@@ -27,6 +27,11 @@ public:
     
     void runTest() override
     {
+        using namespace tracktion_engine;
+        auto& engine = *tracktion_engine::Engine::getEngines()[0];
+        engine.getPluginManager().createBuiltInType<ToneGeneratorPlugin>();
+        engine.getPluginManager().createBuiltInType<LatencyPlugin>();
+        
         for (auto setup : test_utilities::getTestSetups (*this))
         {
             logMessage (String ("Test setup: sample rate SR, block size BS, random blocks RND")
@@ -45,11 +50,8 @@ private:
     //==============================================================================
     void runRackTests (test_utilities::TestSetup testSetup)
     {
-        using namespace tracktion_engine;
-        auto& engine = *Engine::getEngines()[0];
-        engine.getPluginManager().createBuiltInType<ToneGeneratorPlugin>();
-        engine.getPluginManager().createBuiltInType<LatencyPlugin>();
-
+        auto& engine = *tracktion_engine::Engine::getEngines()[0];
+        
         beginTest ("Unconnected Rack");
         {
             // Rack with a sin oscilator but not connected should be silent
@@ -438,7 +440,7 @@ private:
                 Plugin::Array plugins;
                 auto rack = edit->getRackList().addNewRack();
                 expect (rack != nullptr);
-                                    
+
                 for (int p : { 0, 1, 2 })
                     rack->addConnection ({}, p, {}, p);
 
@@ -466,7 +468,7 @@ private:
                     test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
                     test_utilities::expectAudioBuffer (*this, testContext->buffer, 1, 0.0f, 0.0f);
                 }
-                        
+
                 engine.getAudioFileManager().releaseAllFiles();
                 edit->getTempDirectory (false).deleteRecursively();
             }
