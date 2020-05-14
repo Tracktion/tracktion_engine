@@ -547,7 +547,7 @@ private:
 
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     std::shared_ptr<InputProvider> inputProvider;
-    std::unique_ptr<RackNodePlayer> processor;
+    std::unique_ptr<RackNodePlayer<NodePlayer>> processor;
    #endif
 
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
@@ -565,7 +565,7 @@ private:
         auto rackNode = RackNodeBuilder::createRackNode (type, inputProvider);
         jassert (tracktion_graph::test_utilities::areNodeIDsUnique (*rackNode, true));
 
-        processor = std::make_unique<RackNodePlayer> (std::move (rackNode), inputProvider, false);
+        processor = std::make_unique<RackNodePlayer<NodePlayer>> (std::move (rackNode), inputProvider, false);
         processor->prepareToPlay (type.sampleRate, type.blockSize);
         latencySeconds = processor->getLatencySamples() / type.sampleRate;
     }

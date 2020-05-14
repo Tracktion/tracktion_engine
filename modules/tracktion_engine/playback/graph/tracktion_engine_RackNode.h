@@ -444,6 +444,7 @@ private:
     Simple processor for a Node which uses an InputProvider to pass input in to the graph.
     This simply iterate all the nodes attempting to process them in a single thread.
 */
+template<typename NodePlayerType>
 class RackNodePlayer
 {
 public:
@@ -451,7 +452,7 @@ public:
     RackNodePlayer (std::unique_ptr<tracktion_graph::Node> nodeToProcess,
                     std::shared_ptr<InputProvider> inputProviderToUse,
                     bool overrideInputProvider)
-        : input (std::move (nodeToProcess)),
+        : nodePlayer (std::move (nodeToProcess)),
           inputProvider (std::move (inputProviderToUse)),
           overrideInputs (overrideInputProvider)
     {
@@ -462,20 +463,12 @@ public:
     {
         jassert (sampleRate != 0.0);
         jassert (blockSize != 0);
-        
-        // First, initiliase all the nodes, this will call prepareToPlay on them and also
-        // give them a chance to do things like balance latency
-        const tracktion_graph::PlaybackInitialisationInfo info { sampleRate, blockSize, *input };
-        visitNodes (*input, [&] (tracktion_graph::Node& n) { n.initialise (info); }, false);
-        
-        // Then find all the nodes as it might have changed after initialisation
-        allNodes = tracktion_graph::getNodes (*input, tracktion_graph::VertexOrdering::postordering);
+        nodePlayer.prepareToPlay (sampleRate, blockSize);
     }
     
-    int getLatencySamples() const
+    int getLatencySamples()
     {
-        jassert (! allNodes.empty()); // Must be initialised first
-        return input->getNodeProperties().latencyNumSamples;
+        return nodePlayer.getNode().getNodeProperties().latencyNumSamples;
     }
 
     /** Processes a block of audio and MIDI data.
@@ -495,12 +488,12 @@ public:
 
         inputProvider->setContext (&rc);
      
-        return processPostorderedNodes (*input, allNodes, pc);
+        return nodePlayer.process (pc);
     }
     
 private:
-    std::unique_ptr<tracktion_graph::Node> input;
-    std::vector<tracktion_graph::Node*> allNodes, nodesToProcess;
+    NodePlayerType nodePlayer;
+    
     std::shared_ptr<InputProvider> inputProvider;
     bool overrideInputs = true;
     tracktion_engine::PlayHead playHead;

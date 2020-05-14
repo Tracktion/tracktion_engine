@@ -58,4 +58,5 @@
 #include "tracktion_graph/tracktion_graph_Utility.h"
 #include "tracktion_graph/tracktion_graph_Node.h"
 #include "tracktion_graph/tracktion_graph_NodePlayer.h"
+#include "tracktion_graph/tracktion_graph_MultiThreadedNodePlayer.h"
 #include "tracktion_graph/tracktion_graph_UtilityNodes.h"

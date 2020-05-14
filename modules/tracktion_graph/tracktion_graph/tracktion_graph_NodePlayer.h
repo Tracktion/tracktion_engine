@@ -10,48 +10,12 @@
 
 #pragma once
 
+#include <thread>
+#include <emmintrin.h>
+
+
 namespace tracktion_graph
 {
-
-/** Processes a group of Nodes assuming a postordering VertexOrdering.
-    If these conditions are met the Nodes should be processed in a single loop iteration.
-*/
-static inline int processPostorderedNodes (Node& rootNode, const std::vector<Node*>& allNodes, const Node::ProcessContext& pc)
-{
-    for (auto node : allNodes)
-        node->prepareForNextBlock();
-    
-    int numMisses = 0;
-    size_t numNodesProcessed = 0;
-
-    for (;;)
-    {
-        for (auto node : allNodes)
-        {
-            if (! node->hasProcessed() && node->isReadyToProcess())
-            {
-                node->process (pc.streamSampleRange);
-                ++numNodesProcessed;
-            }
-            else
-            {
-                ++numMisses;
-            }
-        }
-
-        if (numNodesProcessed == allNodes.size())
-        {
-            auto output = rootNode.getProcessedOutput();
-            pc.buffers.audio.copyFrom (output.audio);
-            pc.buffers.midi.copyFrom (output.midi);
-
-            break;
-        }
-    }
-    
-    return numMisses;
-}
-
 
 //==============================================================================
 //==============================================================================
@@ -66,6 +30,11 @@ public:
     NodePlayer (std::unique_ptr<Node> nodeToProcess)
         : input (std::move (nodeToProcess))
     {
+    }
+    
+    Node& getNode()
+    {
+        return *input;
     }
 
     void setNode (std::unique_ptr<Node> newNode)
@@ -88,7 +57,6 @@ public:
         visitInputs (*input, visitor);
         
         // Then find all the nodes as it might have changed after initialisation
-        // Then find all the nodes as it might have changed after initialisation
         allNodes = tracktion_graph::getNodes (*input, tracktion_graph::VertexOrdering::postordering);
     }
 
@@ -105,6 +73,45 @@ private:
     std::vector<Node*> allNodes;
     double sampleRate = 44100.0;
     int blockSize = 512;
+
+    /** Processes a group of Nodes assuming a postordering VertexOrdering.
+        If these conditions are met the Nodes should be processed in a single loop iteration.
+    */
+    static int processPostorderedNodes (Node& rootNode, const std::vector<Node*>& allNodes, const Node::ProcessContext& pc)
+    {
+        for (auto node : allNodes)
+            node->prepareForNextBlock();
+        
+        int numMisses = 0;
+        size_t numNodesProcessed = 0;
+
+        for (;;)
+        {
+            for (auto node : allNodes)
+            {
+                if (! node->hasProcessed() && node->isReadyToProcess())
+                {
+                    node->process (pc.streamSampleRange);
+                    ++numNodesProcessed;
+                }
+                else
+                {
+                    ++numMisses;
+                }
+            }
+
+            if (numNodesProcessed == allNodes.size())
+            {
+                auto output = rootNode.getProcessedOutput();
+                pc.buffers.audio.copyFrom (output.audio);
+                pc.buffers.midi.copyFrom (output.midi);
+
+                break;
+            }
+        }
+        
+        return numMisses;
+    }
 };
 
 }
