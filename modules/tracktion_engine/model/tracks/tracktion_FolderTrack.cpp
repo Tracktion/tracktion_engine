@@ -100,7 +100,7 @@ bool FolderTrack::isSubmixFolder() const
 
 bool FolderTrack::outputsToDevice (const OutputDevice& dev) const
 {
-    for (AudioTrack* t : getAllAudioSubTracks (true))
+    for (auto t : getAllAudioSubTracks (true))
         if (t->createsOutput() && &dev == t->getOutput().getOutputDevice (false))
             return true;
 
@@ -119,7 +119,7 @@ AudioNode* FolderTrack::createAudioNode (const CreateAudioNodeParams& params)
 
     juce::Array<FolderTrack*> subFolders;
 
-    for (auto* t : getAllSubTracks (false))
+    for (auto t : getAllSubTracks (false))
         if (auto ft = dynamic_cast<FolderTrack*> (t))
             subFolders.add (ft);
 
@@ -132,7 +132,7 @@ AudioNode* FolderTrack::createAudioNode (const CreateAudioNodeParams& params)
     const bool shouldUseMultiCPU = (subTracks.size() + subFolders.size()) > 1
                                     && edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio() > 1;
 
-    auto* mixer = new MixerAudioNode (use64Bit, shouldUseMultiCPU);
+    auto mixer = new MixerAudioNode (use64Bit, shouldUseMultiCPU);
 
     // Create nodes for any submix tracks
     for (auto t : subFolders)
@@ -146,7 +146,7 @@ AudioNode* FolderTrack::createAudioNode (const CreateAudioNodeParams& params)
         }
         else
         {
-            for (auto* at : t->getAllAudioSubTracks (false))
+            for (auto at : t->getAllAudioSubTracks (false))
                 if (params.allowedTracks == nullptr || (*params.allowedTracks)[allTracks.indexOf (at)])
                     mixer->addInput (at->createAudioNode (params));
         }

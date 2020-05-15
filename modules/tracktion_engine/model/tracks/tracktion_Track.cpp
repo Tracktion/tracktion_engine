@@ -479,6 +479,8 @@ void Track::updateTrackList()
     {
         trackList.reset();
     }
+    
+    changed();
 }
 
 void Track::updateCachedParent()
@@ -505,6 +507,8 @@ void Track::updateCachedParent()
 
         if (newFolder != nullptr)
             newFolder->setDirtyClips();
+        
+        changed();
     }
 
     cachedParentFolderTrack = newFolder;
