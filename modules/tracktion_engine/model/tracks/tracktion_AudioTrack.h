@@ -89,7 +89,7 @@ public:
     bool hasAnyLiveInputs();
     bool hasAnyTracksFeedingIn();
 
-    juce::Array<AudioTrack*> getInputTracks() const;
+    juce::Array<Track*> getInputTracks() const override;
     juce::Array<Track*> findSidechainSourceTracks() const;
 
     void injectLiveMidiMessage (const MidiMessageArray::MidiMessageWithSource&);

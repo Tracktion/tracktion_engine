@@ -826,7 +826,10 @@ static AudioNode* createRenderingNodeFromEdit (Edit& edit,
                         for (auto t : srcTracks)
                             sidechainSourceTracks.addIfNotAlreadyThere (t);
 
-                        todo.addArray (first->getInputTracks());
+                        for (auto t : first->getInputTracks())
+                            if (auto audioInputTrack = dynamic_cast<AudioTrack*> (t))
+                                todo.add (audioInputTrack);
+                        
                         todo.remove (0);
                     }
                 }

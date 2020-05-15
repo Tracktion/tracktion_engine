@@ -78,6 +78,9 @@ public:
 
     virtual bool processAudioNodesWhileMuted() const            { return false; }
 
+    /** Should return any tracks which feed into this track. */
+    virtual juce::Array<Track*> getInputTracks() const          { return {}; }
+
     //==============================================================================
     juce::Array<Track*> getAllSubTracks (bool recursive) const;
     juce::Array<AudioTrack*> getAllAudioSubTracks (bool recursive) const;

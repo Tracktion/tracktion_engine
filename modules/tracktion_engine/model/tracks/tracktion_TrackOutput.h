@@ -18,7 +18,7 @@ class TrackOutput   : private juce::ValueTree::Listener
 {
 public:
     //==============================================================================
-    TrackOutput (AudioTrack&);
+    TrackOutput (Track&);
     ~TrackOutput() override;
 
     //==============================================================================
@@ -47,7 +47,7 @@ public:
     bool outputsToDestTrack (AudioTrack&) const;
 
     /** true if any downstream tracks match this one */
-    bool feedsInto (const AudioTrack* possibleDestTrack) const;
+    bool feedsInto (const Track* possibleDestTrack) const;
 
     /** finds the output device.
 
@@ -82,7 +82,7 @@ public:
     juce::ValueTree state;
 
 private:
-    AudioTrack& owner;
+    Track& owner;
     juce::CachedValue<juce::String> outputDevice;
     EditItemID destTrackID;
 

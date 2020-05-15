@@ -283,12 +283,15 @@ bool checkRenderParametersAndConfirmWithUser (const Array<Track*>& tracks, EditT
 
             for (auto feederTrack : at->getInputTracks())
             {
-                if (auto numClipsInTrack = feederTrack->getClips().size())
+                if (auto audioFeederTrack = dynamic_cast<AudioTrack*> (feederTrack))
                 {
-                    auto trackRange = feederTrack->getTotalRange();
-                    start = jmin (start, trackRange.getStart());
-                    end   = jmax (end, trackRange.getEnd());
-                    numClips += numClipsInTrack;
+                    if (auto numClipsInTrack = audioFeederTrack->getClips().size())
+                    {
+                        auto trackRange = audioFeederTrack->getTotalRange();
+                        start = jmin (start, trackRange.getStart());
+                        end   = jmax (end, trackRange.getEnd());
+                        numClips += numClipsInTrack;
+                    }
                 }
             }
 

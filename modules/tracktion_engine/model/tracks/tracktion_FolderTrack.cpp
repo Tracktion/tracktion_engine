@@ -98,13 +98,33 @@ bool FolderTrack::isSubmixFolder() const
     return false;
 }
 
-bool FolderTrack::outputsToDevice (const OutputDevice& dev) const
+TrackOutput* FolderTrack::getOutput() const noexcept
 {
+    if (! isSubmixFolder())
+        return nullptr;
+    
     for (auto t : getAllAudioSubTracks (true))
-        if (t->createsOutput() && &dev == t->getOutput().getOutputDevice (false))
-            return true;
+        if (auto at = dynamic_cast<AudioTrack*> (t))
+            return &at->getOutput();
 
-    return false;
+    return nullptr;
+}
+
+juce::Array<Track*> FolderTrack::getInputTracks() const
+{
+    juce::Array<Track*> tracks;
+    
+    for (auto track : getAllSubTracks (false))
+    {
+        if (dynamic_cast<AudioTrack*> (track) != nullptr)
+            tracks.add (track);
+
+        if (auto ft = dynamic_cast<FolderTrack*> (track))
+            if (ft->isSubmixFolder())
+                tracks.add (track);
+    }
+    
+    return tracks;
 }
 
 AudioNode* FolderTrack::createAudioNode (const CreateAudioNodeParams& params)
@@ -191,8 +211,13 @@ bool FolderTrack::isSolo (bool includeIndirectSolo) const
     {
         // If any of the parent tracks are soloed, this needs to be indirectly soloed
         for (auto p = getParentFolderTrack(); p != nullptr; p = p->getParentFolderTrack())
-            if (p->isSolo (false))
+            if (p->isSolo (true))
                 return true;
+
+        if (! isPartOfSubmix())
+            if (auto output = getOutput())
+                if (auto dest = output->getDestinationTrack())
+                    return dest->isSolo (true);
 
         // If any sub-tracks are soloed, this needs to be indirectly soloed
         bool anySubTracksSolo = false;
@@ -224,8 +249,13 @@ bool FolderTrack::isSoloIsolate (bool includeIndirectSolo) const
     {
         // If any of the parent tracks are solo isolate, this needs to be indirectly solo isolate
         for (auto p = getParentFolderTrack(); p != nullptr; p = p->getParentFolderTrack())
-            if (p->isSoloIsolate (false))
+            if (p->isSoloIsolate (true))
                 return true;
+
+        if (! isPartOfSubmix())
+            if (auto output = getOutput())
+                if (auto dest = output->getDestinationTrack())
+                    return dest->isSoloIsolate (true);
 
         // If any sub-tracks are solo isoloate, this needs to be indirectly solo isolate
         bool anySubTracksSolo = false;

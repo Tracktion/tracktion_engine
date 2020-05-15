@@ -553,11 +553,12 @@ bool AudioTrack::isSolo (bool includeIndirectSolo) const
     {
         // If any of the parent tracks are soloed, this needs to be indirectly soloed
         for (auto p = getParentFolderTrack(); p != nullptr; p = p->getParentFolderTrack())
-            if (p->isSolo (false))
+            if (p->isSolo (true))
                 return true;
 
-        if (auto dest = output->getDestinationTrack())
-            return dest->isSolo (true);
+        if (! isPartOfSubmix())
+            if (auto dest = output->getDestinationTrack())
+                return dest->isSolo (true);
     }
 
     return false;
@@ -572,17 +573,18 @@ bool AudioTrack::isSoloIsolate (bool includeIndirectSolo) const
     {
         // If any of the parent tracks are solo isolate, this needs to be indirectly solo isolate
         for (auto p = getParentFolderTrack(); p != nullptr; p = p->getParentFolderTrack())
-            if (p->isSoloIsolate (false))
+            if (p->isSoloIsolate (true))
                 return true;
 
-        if (auto dest = output->getDestinationTrack())
-            return dest->isSoloIsolate (true);
+        if (! isPartOfSubmix())
+            if (auto dest = output->getDestinationTrack())
+                return dest->isSoloIsolate (true);
     }
 
     return false;
 }
 
-static bool isInputTrackSolo (const AudioTrack& track)
+static bool isInputTrackSolo (const Track& track)
 {
     for (auto t : track.getInputTracks())
         if (t->isSolo (true))
@@ -876,11 +878,19 @@ bool AudioTrack::canUseBufferedAudioNode()
 }
 
 static void addTrackInputs (const CreateAudioNodeParams& params,
-                            MixerAudioNode& mixer, const juce::Array<AudioTrack*>& inputTracks)
+                            MixerAudioNode& mixer, const juce::Array<Track*>& inputTracks)
 {
     for (auto t : inputTracks)
-        if (t->isProcessing (true))
-            mixer.addInput (t->createAudioNode (params));
+    {
+        if (! t->isProcessing (true))
+            continue;
+            
+        if (auto at = dynamic_cast<AudioTrack*> (t))
+            mixer.addInput (at->createAudioNode (params));
+        else if (auto ft = dynamic_cast<FolderTrack*> (t))
+            if (ft->isSubmixFolder())
+                mixer.addInput (ft->createAudioNode (params));
+    }
 }
 
 static juce::Array<AudioNode*> createLiveInputs (AudioTrack& track, const CreateAudioNodeParams& params)
@@ -925,10 +935,14 @@ AudioNode* AudioTrack::createAudioNode (const CreateAudioNodeParams& params)
     std::unique_ptr<CombiningAudioNode> clipCombiner (createClipCombiner (params, clips));
     auto liveNodes = createLiveInputs (*this, params);
 
-    juce::Array<AudioTrack*> inputTracks;
+    juce::Array<Track*> inputTracks;
 
     for (auto t : getAudioTracks (edit))
-        if (t != this && t->createsOutput() && t->getOutput().outputsToDestTrack (*this))
+        if (t != this && t->createsOutput() && ! t->isPartOfSubmix() && t->getOutput().outputsToDestTrack (*this))
+            inputTracks.add (t);
+
+    for (auto t : getTracksOfType<FolderTrack> (edit, true))
+        if (! t->isPartOfSubmix() && t->getOutput() != nullptr && t->getOutput()->outputsToDestTrack (*this))
             inputTracks.add (t);
 
     AudioNode* node = nullptr;
@@ -1202,12 +1216,16 @@ bool AudioTrack::mergeInMidiSequence (const MidiMessageSequence& original, doubl
     return false;
 }
 
-juce::Array<AudioTrack*> AudioTrack::getInputTracks() const
+juce::Array<Track*> AudioTrack::getInputTracks() const
 {
-    juce::Array<AudioTrack*> inputTracks;
+    juce::Array<Track*> inputTracks;
 
     for (auto track : getAudioTracks (edit))
-        if (track != this && track->getOutput().feedsInto (this))
+        if (! track->isPartOfSubmix() && track != this && track->getOutput().feedsInto (this))
+            inputTracks.add (track);
+
+    for (auto track : getTracksOfType<FolderTrack> (edit, true))
+        if (! track->isPartOfSubmix() && track->getOutput() != nullptr && track->getOutput()->feedsInto (this))
             inputTracks.add (track);
 
     return inputTracks;

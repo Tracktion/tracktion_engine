@@ -296,7 +296,8 @@ static AudioNode* createPlaybackAudioNode (Edit& edit, OutputDeviceInstance& dev
     // Create nodes for any submix tracks
     for (auto t : getTracksOfType<FolderTrack> (edit, true))
     {
-        if (t->isSubmixFolder() && (! t->isPartOfSubmix()) && t->outputsToDevice (device))
+        if (t->isSubmixFolder() && (! t->isPartOfSubmix())
+            && t->getOutput() != nullptr && &device == t->getOutput()->getOutputDevice (false))
         {
             if (auto n = t->createAudioNode (cnp))
             {

@@ -34,7 +34,11 @@ public:
 
     //==============================================================================
     bool isSubmixFolder() const;
-    bool outputsToDevice (const OutputDevice&) const;
+    
+    /** Returns the output if this track is a submix folder. */
+    TrackOutput* getOutput() const noexcept;
+    
+    juce::Array<Track*> getInputTracks() const override;
 
     AudioNode* createAudioNode (const CreateAudioNodeParams&);
 

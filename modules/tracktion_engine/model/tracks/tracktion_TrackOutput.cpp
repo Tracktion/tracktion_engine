@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-TrackOutput::TrackOutput (AudioTrack& t)
+TrackOutput::TrackOutput (Track& t)
     : owner (t)
 {
     auto um = &t.edit.getUndoManager();
@@ -178,7 +178,7 @@ juce::String TrackOutput::getDescriptiveOutputName() const
                  .replace ("123", String (t->getAudioTrackNumber()));
     }
 
-    if (auto* dev = owner.edit.engine.getDeviceManager().findOutputDeviceWithName (outputDevice))
+    if (auto dev = owner.edit.engine.getDeviceManager().findOutputDeviceWithName (outputDevice))
         return dev->getAlias();
 
     return outputDevice;
@@ -315,7 +315,7 @@ void TrackOutput::getPossibleOutputNames (const Array<AudioTrack*>& tracks,
     }
 }
 
-bool TrackOutput::feedsInto (const AudioTrack* dest) const
+bool TrackOutput::feedsInto (const Track* dest) const
 {
     if (auto t = getDestinationTrack())
         return t == dest || t->getOutput().feedsInto (dest);
