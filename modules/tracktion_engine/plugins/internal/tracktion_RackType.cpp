@@ -683,13 +683,8 @@ RackType::RackType (const juce::ValueTree& v, Edit& owner)
 
     renderContextBuilder.setFunction ([this]
                                       {
-                                          #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-                                           const bool useExperimentalProcessing = isExperimentalGraphProcessingEnabled();
-                                          #else
-                                           const bool useExperimentalProcessing = false;
-                                          #endif
-
-                                          std::atomic_exchange (&renderContext, std::make_shared<RenderContext> (*this, useExperimentalProcessing));
+                                          std::atomic_exchange (&renderContext,
+                                                                std::make_shared<RenderContext> (*this, isExperimentalGraphProcessingEnabled()));
                                       });
 }
 
@@ -2124,7 +2119,6 @@ ModifierList& RackType::getModifierList() const noexcept
 }
 
 //==============================================================================
-#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
  namespace
  {
      bool& getExperimentalGraphProcessingFlag()
@@ -2141,9 +2135,12 @@ ModifierList& RackType::getModifierList() const noexcept
  
  bool RackType::isExperimentalGraphProcessingEnabled()
  {
+    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
      return getExperimentalGraphProcessingFlag();
+    #else
+     return false;
+    #endif
  }
-#endif
 
 //==============================================================================
 struct RackTypeList::ValueTreeList  : public ValueTreeObjectList<RackType>
