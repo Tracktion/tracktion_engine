@@ -534,6 +534,7 @@ void TransportControl::restartAllTransports (Engine& engine, bool clearDevices)
         {
             spr = std::make_unique<ScopedPlaybackRestarter> (*tc);
             tc->stop (false, true);
+            tc->freePlaybackContext();
         }
         else
         {
