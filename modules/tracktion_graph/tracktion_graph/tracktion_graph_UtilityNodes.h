@@ -156,7 +156,7 @@ private:
                 }
             }
         };
-        visitInputs (*rootNodeToReplace, visitor);
+        visitNodes (*rootNodeToReplace, visitor, true);
     }
 };
 

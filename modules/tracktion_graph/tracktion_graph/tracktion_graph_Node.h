@@ -191,24 +191,6 @@ private:
 
 //==============================================================================
 //==============================================================================
-/** Calls the visitor for any direct inputs to the node and then calls
-    the visitor function on this node.
-    
-    This method is not stateful so may end up calling nodes more than once and
-    could be infinite if there are cycles in the graph.
- 
-    @param Visitor has the signature @code void (Node&) @endcode
-*/
-template<typename Visitor>
-void visitInputs (Node& node, Visitor&& visitor)
-{
-    for (auto n : node.getDirectInputNodes())
-        visitInputs (*n, visitor);
-    
-    visitor (node);
-}
-
-//==============================================================================
 /** Should call the visitor for any direct inputs to the node exactly once.
     If preordering is true, nodes will be visited before their inputs, if
     false, inputs will be visited first.

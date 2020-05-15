@@ -53,8 +53,7 @@ public:
         // First, initiliase all the nodes, this will call prepareToPlay on them and also
         // give them a chance to do things like balance latency
         const PlaybackInitialisationInfo info { sampleRate, blockSize, *input, oldNode };
-        std::function<void (Node&)> visitor = [&] (Node& n) { n.initialise (info); };
-        visitInputs (*input, visitor);
+        visitNodes (*input, [&] (Node& n) { n.initialise (info); }, false);
         
         // Then find all the nodes as it might have changed after initialisation
         allNodes = tracktion_graph::getNodes (*input, tracktion_graph::VertexOrdering::postordering);

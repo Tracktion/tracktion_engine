@@ -48,6 +48,7 @@ public:
             
             // Tests rebuilding the graph mid render
             runRebuildTests (setup);
+            runCycleTests (setup);
         }
     }
 
@@ -616,6 +617,31 @@ private:
             expectEquals (testContext->buffer.getNumSamples(), firstHalfNumSamples + secondHalfNumSamples);
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, latencyNumSamples,
                                                0.0f, 0.0f, 1.0f, 0.707f);
+        }
+    }
+    
+    void runCycleTests (TestSetup testSetup)
+    {
+        beginTest ("Cycles");
+        {
+            // This graph has a cycle in it, it should still render with an output of 1,
+            // the second sin will not get sent to the return
+            auto node1 = makeNode<SinNode> (220.0f, 1);
+            node1 = makeGainNode (std::move (node1), 0.333f);
+            node1 = makeNode<ReturnNode> (std::move (node1), 2);
+            node1 = makeNode<SendNode> (std::move (node1), 1);
+
+            auto node2 = makeNode<SinNode> (220.0f, 1);
+            node2 = makeGainNode (std::move (node2), 0.333f);
+            node2 = makeNode<ReturnNode> (std::move (node2), 1);
+            node2 = makeNode<SendNode> (std::move (node2), 2);
+
+            auto node = makeSummingNode ({ node1.release(), node2.release() });
+
+            expectEquals (node->getNodeProperties().numberOfChannels, 1);
+
+            auto testContext = createBasicTestContext (std::move (node), testSetup, 1, 5.0);
+            expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
         }
     }
 };

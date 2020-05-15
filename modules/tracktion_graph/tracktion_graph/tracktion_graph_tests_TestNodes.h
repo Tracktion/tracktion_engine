@@ -361,7 +361,22 @@ public:
     
     NodeProperties getNodeProperties() override
     {
-        return input->getNodeProperties();
+        NodeProperties props;
+        props.hasAudio = false;
+        props.hasMidi = false;
+        props.numberOfChannels = 0;
+
+        for (auto& node : getDirectInputNodes())
+        {
+            auto nodeProps = node->getNodeProperties();
+            props.hasAudio = props.hasAudio | nodeProps.hasAudio;
+            props.hasMidi = props.hasMidi | nodeProps.hasMidi;
+            props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);
+            props.latencyNumSamples = std::max (props.latencyNumSamples, nodeProps.latencyNumSamples);
+            hash_combine (props.nodeID, nodeProps.nodeID);
+        }
+
+        return props;
     }
     
     std::vector<Node*> getDirectInputNodes() override
@@ -386,14 +401,31 @@ public:
             return;
         
         std::vector<Node*> sends;
-        visitInputs (info.rootNode,
-                     [&] (Node& n)
-                     {
-                        if (auto send = dynamic_cast<SendNode*> (&n))
-                            if (send->getBusID() == busID)
-                                sends.push_back (send);
-                     });
+        visitNodes (info.rootNode,
+                    [&] (Node& n)
+                    {
+                       if (auto send = dynamic_cast<SendNode*> (&n))
+                           if (send->getBusID() == busID)
+                               sends.push_back (send);
+                    }, true);
         
+        // Remove any send nodes that feed back in to this
+        std::vector<Node*> sendsToRemove;
+        
+        for (auto send : sends)
+        {
+            visitNodes (*send,
+                        [&] (Node& n)
+                        {
+                            if (&n == this)
+                                sendsToRemove.push_back (send);
+                        }, true);
+        }
+        
+        sends.erase (std::remove_if (sends.begin(), sends.end(),
+                                     [&] (auto n) { return std::find (sendsToRemove.begin(), sendsToRemove.end(), n) != sendsToRemove.end(); }),
+                     sends.end());
+
         // Create a summing node if required
         if (sends.size() > 0)
         {
@@ -401,8 +433,8 @@ public:
             ownedNodes.push_back (std::move (input));
             
             auto node = makeNode<SummingNode> (std::move (ownedNodes), std::move (sends));
-            node->initialise (info);
             input.swap (node);
+            input->initialise (info);
         }
         
         hasInitialised = true;

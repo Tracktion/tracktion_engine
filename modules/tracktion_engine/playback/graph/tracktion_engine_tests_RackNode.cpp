@@ -625,6 +625,6 @@ private:
 
 static RackAudioNodeTests rackAudioNodeTests;
 
- #endif //TRACKTION_UNIT_TESTS
+#endif //TRACKTION_UNIT_TESTS
 
 }
