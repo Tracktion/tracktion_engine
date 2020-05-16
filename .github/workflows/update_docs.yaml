@@ -1,0 +1,28 @@
+name: Update Docs
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2 
+        with:
+          persist-credentials: false
+
+      - name: Build Docs
+        run: |
+          sudo apt-get install doxygen
+          sudo apt-get install graphviz
+          sudo apt-get install rsync
+          cd doxygen
+          make
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          BRANCH: gh-pages 
+          FOLDER: doxygen/doc
