@@ -1,0 +1,18 @@
+<map id="tracktion_graph::Node" name="tracktion_graph::Node">
+<area shape="rect" id="node2" href="$classtracktion__engine_1_1ForwardingNode.html" title="Takes a non&#45;owning input node and simply forwards its outputs on. " alt="" coords="213,5,433,32"/>
+<area shape="rect" id="node3" href="$classtracktion__engine_1_1HoldingNode.html" title="Takes ownership of a number of nodes but doesn&#39;t do any processing. " alt="" coords="223,56,423,83"/>
+<area shape="rect" id="node4" href="$classtracktion__engine_1_1InputNode.html" title="tracktion_engine::InputNode" alt="" coords="231,107,416,133"/>
+<area shape="rect" id="node5" href="$classtracktion__engine_1_1ModifierNode.html" title="tracktion_engine::ModifierNode" alt="" coords="222,157,425,184"/>
+<area shape="rect" id="node6" href="$classtracktion__engine_1_1PluginNode.html" title="tracktion_engine::PluginNode" alt="" coords="227,208,419,235"/>
+<area shape="rect" id="node7" href="$classtracktion__graph_1_1BasicSummingNode.html" title="tracktion_graph::BasicSummingNode" alt="" coords="204,259,443,285"/>
+<area shape="rect" id="node8" href="$classtracktion__graph_1_1ChannelRemappingNode.html" title="Maps channels from one to another. " alt="" coords="240,310,407,351"/>
+<area shape="rect" id="node9" href="$classtracktion__graph_1_1FunctionNode.html" title="tracktion_graph::FunctionNode" alt="" coords="223,376,423,403"/>
+<area shape="rect" id="node10" href="$classtracktion__graph_1_1LatencyNode.html" title="tracktion_graph::LatencyNode" alt="" coords="225,427,421,453"/>
+<area shape="rect" id="node11" href="$classtracktion__graph_1_1MidiNode.html" title="Plays back a MIDI sequence. " alt="" coords="236,477,411,504"/>
+<area shape="rect" id="node12" href="$classtracktion__graph_1_1ReturnNode.html" title="tracktion_graph::ReturnNode" alt="" coords="229,528,418,555"/>
+<area shape="rect" id="node13" href="$classtracktion__graph_1_1SendNode.html" title="tracktion_graph::SendNode" alt="" coords="233,579,413,605"/>
+<area shape="rect" id="node14" href="$classtracktion__graph_1_1SilentNode.html" title="Just a simple audio node that doesn&#39;t take any input so can be used as a stub. " alt="" coords="232,629,415,656"/>
+<area shape="rect" id="node15" href="$classtracktion__graph_1_1SinkNode.html" title="Blocks audio and MIDI input from reaching the outputs. " alt="" coords="235,680,411,707"/>
+<area shape="rect" id="node16" href="$classtracktion__graph_1_1SinNode.html" title="tracktion_graph::SinNode" alt="" coords="239,731,408,757"/>
+<area shape="rect" id="node17" href="$classtracktion__graph_1_1SummingNode.html" title="An Node which sums together the multiple inputs adding additional latency to provide a coherent outpu..." alt="" coords="221,781,426,808"/>
+</map>

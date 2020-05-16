@@ -1,0 +1,7 @@
+<map id="tracktion_engine::AudioTrack" name="tracktion_engine::AudioTrack">
+<area shape="rect" id="node2" href="$classtracktion__engine_1_1ClipTrack.html" title="tracktion_engine::ClipTrack" alt="" coords="481,56,663,83"/>
+<area shape="rect" id="node3" href="$classtracktion__engine_1_1Track.html" title="tracktion_engine::Track" alt="" coords="275,56,433,83"/>
+<area shape="rect" id="node4" href="$classtracktion__engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g. " alt="" coords="29,5,203,32"/>
+<area shape="rect" id="node5" href="$classtracktion__engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel..." alt="" coords="23,56,209,83"/>
+<area shape="rect" id="node6" href="$classtracktion__engine_1_1MacroParameterElement.html" title="Base class for elements which can contain macro parameters. " alt="" coords="5,107,227,149"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="tracktion_engine::RandomModifier" name="tracktion_engine::RandomModifier">
+<area shape="rect" id="node2" href="$structtracktion__engine_1_1Modifier.html" title="tracktion_engine::Modifier" alt="" coords="481,71,652,98"/>
+<area shape="rect" id="node3" href="$classtracktion__engine_1_1AutomatableEditItem.html" title="Base class for elements that have some kind of automatable parameters. " alt="" coords="228,5,427,47"/>
+<area shape="rect" id="node4" href="$classtracktion__engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g. " alt="" coords="5,13,180,39"/>
+<area shape="rect" id="node5" href="$classtracktion__engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel..." alt="" coords="234,71,421,98"/>
+<area shape="rect" id="node6" href="$structtracktion__engine_1_1AutomatableParameter_1_1ModifierSource.html" title="Base class for things that can be used to modify parameters. " alt="" coords="228,123,427,164"/>
+<area shape="rect" id="node7" href="$structtracktion__engine_1_1ValueTreeAllEventListener.html" title="tracktion_engine::ValueTree\lAllEventListener" alt="" coords="475,123,659,164"/>
+</map>

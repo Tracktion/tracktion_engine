@@ -1,0 +1,4 @@
+<map id="tracktion_engine::TrackCompManager::TrackComp" name="tracktion_engine::TrackCompManager::TrackComp">
+<area shape="rect" id="node2" href="$classtracktion__engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel..." alt="" coords="5,13,192,39"/>
+<area shape="rect" id="node3" href="$classtracktion__engine_1_1ValueTreeObjectList.html" title="tracktion_engine::ValueTree\lObjectList\&lt; CompSection \&gt;" alt="" coords="216,5,400,47"/>
+</map>

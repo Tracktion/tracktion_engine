@@ -1,0 +1,3 @@
+<map id="tracktion_engine::SharedLevelMeasurer" name="tracktion_engine::SharedLevelMeasurer">
+<area shape="rect" id="node2" href="$classtracktion__engine_1_1LevelMeasurer.html" title="Monitors the levels of buffers that are passed in, and keeps peak values, overloads, etc., for display in a level meter component. " alt="" coords="5,5,216,32"/>
+</map>

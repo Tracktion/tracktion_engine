@@ -1,0 +1,13 @@
+<map id="tracktion_engine::Track" name="tracktion_engine::Track">
+<area shape="rect" id="node5" href="$classtracktion__engine_1_1AutomationTrack.html" title="tracktion_engine::Automation\lTrack" alt="" coords="485,31,676,72"/>
+<area shape="rect" id="node6" href="$classtracktion__engine_1_1ClipTrack.html" title="tracktion_engine::ClipTrack" alt="" coords="490,97,671,123"/>
+<area shape="rect" id="node11" href="$classtracktion__engine_1_1FolderTrack.html" title="tracktion_engine::Folder\lTrack" alt="" coords="500,148,661,189"/>
+<area shape="rect" id="node12" href="$classtracktion__engine_1_1TempoTrack.html" title="tracktion_engine::TempoTrack" alt="" coords="481,214,680,241"/>
+<area shape="rect" id="node2" href="$classtracktion__engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g. " alt="" coords="29,75,203,102"/>
+<area shape="rect" id="node3" href="$classtracktion__engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel..." alt="" coords="23,126,209,153"/>
+<area shape="rect" id="node4" href="$classtracktion__engine_1_1MacroParameterElement.html" title="Base class for elements which can contain macro parameters. " alt="" coords="5,177,227,219"/>
+<area shape="rect" id="node7" href="$classtracktion__engine_1_1ArrangerTrack.html" title="A track similar to the MarkerTrack but can be used to move sections of an Edit around. " alt="" coords="737,5,912,47"/>
+<area shape="rect" id="node8" href="$classtracktion__engine_1_1AudioTrack.html" title="tracktion_engine::AudioTrack" alt="" coords="729,71,920,98"/>
+<area shape="rect" id="node9" href="$classtracktion__engine_1_1ChordTrack.html" title="tracktion_engine::ChordTrack" alt="" coords="728,122,921,149"/>
+<area shape="rect" id="node10" href="$classtracktion__engine_1_1MarkerTrack.html" title="tracktion_engine::Marker\lTrack" alt="" coords="742,173,907,215"/>
+</map>

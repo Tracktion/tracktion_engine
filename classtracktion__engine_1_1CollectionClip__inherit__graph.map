@@ -1,0 +1,5 @@
+<map id="tracktion_engine::CollectionClip" name="tracktion_engine::CollectionClip">
+<area shape="rect" id="node2" href="$classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a track, e.g. " alt="" coords="103,80,287,107"/>
+<area shape="rect" id="node3" href="$classtracktion__engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g. " alt="" coords="5,5,180,32"/>
+<area shape="rect" id="node4" href="$classtracktion__engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel..." alt="" coords="205,5,391,32"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="tracktion_engine::SelectableListener" name="tracktion_engine::SelectableListener">
+<area shape="rect" id="node2" href="$classtracktion__engine_1_1CurveEditor.html" title="tracktion_engine::CurveEditor" alt="" coords="240,5,435,32"/>
+<area shape="rect" id="node3" href="$classtracktion__engine_1_1ExternalController.html" title="Acts as a holder for a ControlSurface object. " alt="" coords="251,57,424,98"/>
+<area shape="rect" id="node4" href="$classtracktion__engine_1_1SelectionManager.html" title="Manages a list of items that are currently selected. " alt="" coords="248,122,427,163"/>
+</map>

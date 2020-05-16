@@ -1,0 +1,11 @@
+<map id="tracktion_engine::ControlSurface" name="tracktion_engine::ControlSurface">
+<area shape="rect" id="node3" href="$classtracktion__engine_1_1AlphaTrackControlSurface.html" title="tracktion_engine::AlphaTrack\lControlSurface" alt="" coords="459,5,649,47"/>
+<area shape="rect" id="node4" href="$classtracktion__engine_1_1CustomControlSurface.html" title="tracktion_engine::Custom\lControlSurface" alt="" coords="469,71,639,112"/>
+<area shape="rect" id="node5" href="$classtracktion__engine_1_1MackieC4.html" title="tracktion_engine::MackieC4" alt="" coords="462,137,646,163"/>
+<area shape="rect" id="node6" href="$classtracktion__engine_1_1MackieMCU.html" title="tracktion_engine::MackieMCU" alt="" coords="455,187,653,214"/>
+<area shape="rect" id="node7" href="$classtracktion__engine_1_1MackieXT.html" title="tracktion_engine::MackieXT" alt="" coords="462,238,646,265"/>
+<area shape="rect" id="node8" href="$classtracktion__engine_1_1NovationRemoteSl.html" title="tracktion_engine::Novation\lRemoteSl" alt="" coords="465,289,643,331"/>
+<area shape="rect" id="node9" href="$classtracktion__engine_1_1RemoteSLCompact.html" title="tracktion_engine::Remote\lSLCompact" alt="" coords="469,355,639,396"/>
+<area shape="rect" id="node10" href="$classtracktion__engine_1_1TranzportControlSurface.html" title="tracktion_engine::Tranzport\lControlSurface" alt="" coords="464,420,644,461"/>
+<area shape="rect" id="node2" href="$classtracktion__engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel..." alt="" coords="5,213,192,239"/>
+</map>

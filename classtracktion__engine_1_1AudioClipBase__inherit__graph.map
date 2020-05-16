@@ -1,0 +1,10 @@
+<map id="tracktion_engine::AudioClipBase" name="tracktion_engine::AudioClipBase">
+<area shape="rect" id="node8" href="$classtracktion__engine_1_1EditClip.html" title="This is the main source of an Edit clip and is responsible for managing its properties and creating a..." alt="" coords="197,319,367,345"/>
+<area shape="rect" id="node9" href="$classtracktion__engine_1_1WaveAudioClip.html" title="tracktion_engine::WaveAudioClip" alt="" coords="392,319,607,345"/>
+<area shape="rect" id="node2" href="$classtracktion__engine_1_1Clip.html" title="A clip in an edit. " alt="" coords="225,162,373,189"/>
+<area shape="rect" id="node3" href="$classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a track, e.g. " alt="" coords="103,80,287,107"/>
+<area shape="rect" id="node4" href="$classtracktion__engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g. " alt="" coords="5,5,180,32"/>
+<area shape="rect" id="node5" href="$classtracktion__engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel..." alt="" coords="205,5,391,32"/>
+<area shape="rect" id="node6" href="$classtracktion__engine_1_1Exportable.html" title="An interface for objects within an edit that can be exported. " alt="" coords="311,80,498,107"/>
+<area shape="rect" id="node7" href="$structtracktion__engine_1_1RenderManager_1_1Job_1_1Listener.html" title="tracktion_engine::Render\lManager::Job::Listener" alt="" coords="397,155,564,196"/>
+</map>
