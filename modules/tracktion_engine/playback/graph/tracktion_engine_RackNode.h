@@ -478,12 +478,20 @@ public:
     */
     int process (const tracktion_graph::Node::ProcessContext& pc)
     {
+        return process (pc, playHead, {});
+    }
+    
+    /** Processes a block of audio and MIDI data with a given PlayHead and EditTimeRange.
+        This should be used when processing ExternalPlugins or they will crash when getting the playhead info.
+    */
+    int process (const tracktion_graph::Node::ProcessContext& pc, PlayHead& ph, EditTimeRange stream)
+    {
         if (overrideInputs)
             inputProvider->setInputs (pc.buffers);
 
         // The internal nodes won't be interested in the top level audio/midi inputs
         // They should only be referencing this for time and continuity
-        tracktion_engine::AudioRenderContext rc (playHead, {},
+        tracktion_engine::AudioRenderContext rc (ph, stream,
                                                  nullptr, juce::AudioChannelSet(), 0, 0,
                                                  nullptr, 0.0,
                                                  tracktion_engine::AudioRenderContext::contiguous, false);

@@ -632,7 +632,7 @@ private:
         //TODO: This probably should be the master stream time
         auto streamSampleRange = juce::Range<int64_t>::withStartAndLength (0, inputBuffer.getNumSamples());
         juce::dsp::AudioBlock<float> outputBlock (outputBuffer);
-        processor->process ({ streamSampleRange, { outputBlock, midiOut } });
+        processor->process ({ streamSampleRange, { outputBlock, midiOut } }, playhead, playheadOutputTime);
     }
    #endif
 };
