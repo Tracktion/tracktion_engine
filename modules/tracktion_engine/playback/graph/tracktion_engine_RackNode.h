@@ -224,7 +224,9 @@ public:
         rc.midiBufferOffset = 0.0;
 
         // Process the plugin
-        plugin->applyToBufferWithAutomation (rc);
+        //TODO: If a plugin is disabled we should probably apply our own latency to the plugin
+        if (plugin->isEnabled())
+            plugin->applyToBufferWithAutomation (rc);
         
         // Then copy the buffers to the outputs
         outputBuffers.midi.mergeFrom (midiMessageArray);
