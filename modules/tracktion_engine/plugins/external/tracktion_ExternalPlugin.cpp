@@ -192,7 +192,8 @@ struct ExtraVSTCallbacks  : public juce::VSTPluginFormat::ExtraFunctions
 class ExternalPlugin::PluginPlayHead  : public juce::AudioPlayHead
 {
 public:
-    PluginPlayHead (ExternalPlugin& p, PlayHead& ph)  : plugin (p), playhead (ph)
+    PluginPlayHead (ExternalPlugin& p)
+        : plugin (p)
     {
         currentPos = std::make_unique<TempoSequencePosition> (plugin.edit.tempoSequence);
         loopStart  = std::make_unique<TempoSequencePosition> (plugin.edit.tempoSequence);
@@ -207,11 +208,13 @@ public:
     {
         if (rc != nullptr)
         {
+            playhead    = &rc->playhead;
             time        = rc->getEditTime().editRange1.getStart();
             isPlaying   = rc->playhead.isPlaying();
         }
         else
         {
+            playhead    = nullptr;
             time        = 0.0;
             isPlaying   = false;
         }
@@ -222,23 +225,24 @@ public:
         zerostruct (result);
         result.frameRate = getFrameRate();
 
-        if (currentPos == nullptr)
+        if (currentPos == nullptr || playhead == nullptr)
             return false;
 
+        auto& ph = *playhead;
         auto& transport = plugin.edit.getTransport();
         double localTime = time;
 
         result.isPlaying        = isPlaying;
         result.isRecording      = transport.isRecording();
         result.editOriginTime   = transport.getTimeWhenStarted();
-        result.isLooping        = playhead.isLooping();
+        result.isLooping        = ph.isLooping();
 
         if (result.isLooping)
         {
-            loopStart->setTime (playhead.getLoopTimes().start);
+            loopStart->setTime (ph.getLoopTimes().start);
             result.ppqLoopStart = loopStart->getPPQTime();
 
-            loopEnd->setTime (playhead.getLoopTimes().end);
+            loopEnd->setTime (ph.getLoopTimes().end);
             result.ppqLoopEnd = loopEnd->getPPQTime();
         }
 
@@ -259,8 +263,8 @@ public:
 
 private:
     ExternalPlugin& plugin;
-    PlayHead& playhead;
     std::unique_ptr<TempoSequencePosition> currentPos, loopStart, loopEnd;
+    std::atomic<PlayHead*> playhead { nullptr };
     std::atomic<double> time { 0 };
     std::atomic<bool> isPlaying { false };
 
@@ -1034,7 +1038,7 @@ void ExternalPlugin::initialise (const PlaybackInitialisationInfo& info)
         }
 
         pluginInstance->setPlayHead (nullptr);
-        playhead = std::make_unique<PluginPlayHead> (*this, info.playhead);
+        playhead = std::make_unique<PluginPlayHead> (*this);
         pluginInstance->setPlayHead (playhead.get());
     }
     else
