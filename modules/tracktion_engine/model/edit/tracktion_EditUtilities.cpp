@@ -680,6 +680,25 @@ Plugin::Array getAllPlugins (const Edit& edit, bool includeMasterVolume)
     edit.visitAllTracksRecursive ([&] (Track& t)
                                   {
                                       list.addArray (t.getAllPlugins());
+        
+                                      if (auto at = dynamic_cast<AudioTrack*> (&t))
+                                      {
+                                          for (auto clip : at->getClips())
+                                          {
+                                              if (auto abc = dynamic_cast<AudioClipBase*> (clip))
+                                              {
+                                                  if (auto pluginList = abc->getPluginList())
+                                                      list.addArray (t.getAllPlugins());
+
+                                                  if (auto clipEffects = abc->getClipEffects())
+                                                      for (auto effect : *clipEffects)
+                                                          if (auto pluginEffect = dynamic_cast<PluginEffect*> (effect))
+                                                              if (pluginEffect->plugin != nullptr)
+                                                                  list.add (pluginEffect->plugin);
+                                              }
+                                          }
+                                      }
+        
                                       return true;
                                   });
 
