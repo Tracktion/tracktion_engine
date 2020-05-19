@@ -173,6 +173,7 @@ public:
     
     void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info) override
     {
+        ignoreUnused (info);
         jassert (sampleRate == info.sampleRate);
     }
     
