@@ -125,6 +125,7 @@ class PluginNode   : public tracktion_graph::Node
 public:
     PluginNode (std::unique_ptr<Node> inputNode,
                 tracktion_engine::Plugin::Ptr pluginToProcess,
+                double sampleRateToUse, int blockSizeToUse,
                 std::shared_ptr<InputProvider> contextProvider)
         : input (std::move (inputNode)),
           plugin (std::move (pluginToProcess)),
@@ -132,6 +133,7 @@ public:
     {
         jassert (input != nullptr);
         jassert (plugin != nullptr);
+        initialisePlugin (sampleRateToUse, blockSizeToUse);
     }
     
     ~PluginNode() override
@@ -171,16 +173,7 @@ public:
     
     void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info) override
     {
-        tracktion_engine::PlayHead playHead;
-        tracktion_engine::PlaybackInitialisationInfo teInfo =
-        {
-            0.0, info.sampleRate, info.blockSize, {}, playHead
-        };
-        
-        plugin->baseClassInitialise (teInfo);
-        isInitialised = true;
-
-        sampleRate = info.sampleRate;
+        jassert (sampleRate == info.sampleRate);
     }
     
     void process (const ProcessContext& pc) override
@@ -240,6 +233,20 @@ private:
     bool isInitialised = false;
     double sampleRate = 44100.0;
     tracktion_engine::MidiMessageArray midiMessageArray;
+
+    void initialisePlugin (double sampleRateToUse, int blockSizeToUse)
+    {
+        tracktion_engine::PlayHead playHead;
+        tracktion_engine::PlaybackInitialisationInfo teInfo =
+        {
+            0.0, sampleRateToUse, blockSizeToUse, {}, playHead
+        };
+        
+        plugin->baseClassInitialise (teInfo);
+        isInitialised = true;
+
+        sampleRate = sampleRateToUse;
+    }
 };
 
 
@@ -709,6 +716,7 @@ namespace RackNodeBuilder
     }
 
     static inline std::unique_ptr<tracktion_graph::Node> createRackNode (te::RackType& rack,
+                                                                         double sampleRate, int blockSize,
                                                                          std::shared_ptr<InputProvider> inputProvider)
     {
         // Gather all the PluginNodes and ModifierNodes in a vector
@@ -716,7 +724,7 @@ namespace RackNodeBuilder
         
         for (auto plugin : rack.getPlugins())
             itemNodes.push_back (tracktion_graph::makeNode<PluginNode> (tracktion_graph::makeNode<tracktion_graph::SummingNode>(),
-                                                                        plugin, inputProvider));
+                                                                        plugin, sampleRate, blockSize, inputProvider));
         
         for (auto m : rack.getModifierList().getModifiers())
             itemNodes.push_back (tracktion_graph::makeNode<ModifierNode> (tracktion_graph::makeNode<tracktion_graph::SummingNode>(),

@@ -78,6 +78,9 @@ private:
         auto a = makeSummingNode ({ b.release(), c.release(), e.release() });
         auto A = a.get();
         
+        // Prepare the topology
+        transformNodes (*A);
+        
         std::vector<Node*> allNodes { A, B, C, D, E, F, G };
 
         for (auto n : allNodes)

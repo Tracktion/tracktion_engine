@@ -189,7 +189,7 @@ private:
             // Start of buffer is +-1, after latency comp kicks in, the second half will be silent
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, numLatencySamples, 1.0f, 0.707f, 0.0f, 0.0f);
         }
-        
+
         beginTest ("Basic latency test doubling sin");
         {
             /*  This is the same test as before, two sin waves with one delayed but now the second one is compensated for.
@@ -269,7 +269,7 @@ private:
             auto track3 = makeNode<SinNode> ((float) sinFrequency);
             track3 = makeGainNode (std::move (track3), 0.0f);
             track3 = makeNode<ReturnNode> (std::move (track3), 1);
-            
+
             auto node = makeSummingNode ({ track1.release(), track2.release(), track3.release() });
 
             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, 5.0);
@@ -278,7 +278,7 @@ private:
             // Part of buffer after latency which should be all sin +-1.0
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, numLatencySamples, 0.0f, 0.0f, 1.0f, 0.707f);
         }
-        
+
         beginTest ("Send, send/return with two stage latency");
         {
             /*  This has a sin input to a latency node leading to a another latency block and another send on a different bus.

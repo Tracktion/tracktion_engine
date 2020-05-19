@@ -381,9 +381,18 @@ public:
     
     std::vector<Node*> getDirectInputNodes() override
     {
-        std::vector<Node*> inputs { input.get() };
-        inputs.insert (inputs.end(), sendNodes.begin(), sendNodes.end());
-        return inputs;
+        return { input.get() };
+    }
+    
+    bool transform (Node& rootNode) override
+    {
+        if (! hasInitialised)
+        {
+            findSendNodes (rootNode);
+            return true;
+        }
+        
+        return false;
     }
 
     bool isReadyToProcess() override
@@ -391,17 +400,31 @@ public:
         return input->hasProcessed();
     }
     
-    void prepareToPlay (const PlaybackInitialisationInfo& info) override
+    void process (const ProcessContext& pc) override
     {
-        // There isn't currently support for initialising twice as the latency nodes will get created again.
-        // We might need a different step for this
+        jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
+
+        // Copy the input on to our output, the SummingNode will copy all the sends and get all the input
+        pc.buffers.audio.copyFrom (input->getProcessedOutput().audio);
+        pc.buffers.midi.mergeFrom (input->getProcessedOutput().midi);
+    }
+    
+private:
+    std::unique_ptr<Node> input;
+    std::vector<Node*> sendNodes;
+    const int busID;
+    bool hasInitialised = false;
+    
+    void findSendNodes (Node& rootNode)
+    {
+        // This can only be initialised once as otherwise the latency nodes will get created again
         jassert (! hasInitialised);
         
         if (hasInitialised)
             return;
         
         std::vector<Node*> sends;
-        visitNodes (info.rootNode,
+        visitNodes (rootNode,
                     [&] (Node& n)
                     {
                        if (auto send = dynamic_cast<SendNode*> (&n))
@@ -434,26 +457,10 @@ public:
             
             auto node = makeNode<SummingNode> (std::move (ownedNodes), std::move (sends));
             input.swap (node);
-            input->initialise (info);
         }
         
         hasInitialised = true;
     }
-    
-    void process (const ProcessContext& pc) override
-    {
-        jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
-
-        // Copy the input on to our output, the SummingNode will copy all the sends and get all the input
-        pc.buffers.audio.copyFrom (input->getProcessedOutput().audio);
-        pc.buffers.midi.mergeFrom (input->getProcessedOutput().midi);
-    }
-    
-private:
-    std::unique_ptr<Node> input;
-    std::vector<Node*> sendNodes;
-    const int busID;
-    bool hasInitialised = false;
 };
 
 

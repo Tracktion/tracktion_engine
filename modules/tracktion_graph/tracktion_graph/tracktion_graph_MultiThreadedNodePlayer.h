@@ -51,6 +51,9 @@ public:
         sampleRate = sampleRateToUse;
         blockSize = blockSizeToUse;
         
+        // First give the Nodes a chance to transform
+        transformNodes (*rootNode);
+        
         // First, initiliase all the nodes, this will call prepareToPlay on them and also
         // give them a chance to do things like balance latency
         const PlaybackInitialisationInfo info { sampleRate, blockSize, *rootNode, oldNode };

@@ -147,6 +147,13 @@ public:
     AudioAndMidiBuffer getProcessedOutput();
 
     //==============================================================================
+    /** Called after construction to give the node a chance to modify its topology.
+        This should return true if any changes were made to the topology as this
+        indicates that the method may need to be called again after other nodes have
+        had their toplogy changed.
+    */
+    virtual bool transform (Node& /*rootNode*/) { return false; }
+    
     /** Should return all the inputs directly feeding in to this node. */
     virtual std::vector<Node*> getDirectInputNodes() { return {}; }
 
@@ -188,7 +195,6 @@ private:
     int numSamplesProcessed = 0;
 };
 
-
 //==============================================================================
 //==============================================================================
 /** Should call the visitor for any direct inputs to the node exactly once.
@@ -212,6 +218,32 @@ enum class VertexOrdering
 
 /** Returns all the nodes in a Node graph in the order given by vertexOrdering. */
 static inline std::vector<Node*> getNodes (Node&, VertexOrdering);
+
+
+//==============================================================================
+//==============================================================================
+/** Gives the graph a chance to modify its topology e.g. to connect send/return
+    nodes and balance latency etc.
+    Call this once after construction and it will call the Node::transform() method
+    repeatedly for Node until they all return false indicating no topological
+    changes have been made.
+*/
+static inline void transformNodes (Node& rootNode)
+{
+    for (;;)
+    {
+        bool needToTransformAgain = false;
+
+        auto allNodes = getNodes (rootNode, VertexOrdering::postordering);
+
+        for (auto node : allNodes)
+            if (node->transform (rootNode))
+                needToTransformAgain = true;
+
+        if (! needToTransformAgain)
+            break;
+    }
+}
 
 
 //==============================================================================

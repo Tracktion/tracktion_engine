@@ -230,10 +230,14 @@ public:
 
         return inputNodes;
     }
-
-    void prepareToPlay (const PlaybackInitialisationInfo& info) override
+    
+    bool transform (Node&) override
     {
-        createLatencyNodes (info);
+        return createLatencyNodes();
+    }
+
+    void prepareToPlay (const PlaybackInitialisationInfo&) override
+    {
     }
 
     bool isReadyToProcess() override
@@ -268,8 +272,9 @@ private:
     std::vector<std::unique_ptr<Node>> ownedNodes;
     std::vector<Node*> nodes;
     
-    void createLatencyNodes (const PlaybackInitialisationInfo& info)
+    bool createLatencyNodes()
     {
+        bool topologyChanged = false;
         const int maxLatency = getNodeProperties().latencyNumSamples;
         std::vector<std::unique_ptr<Node>> ownedNodesToAdd;
 
@@ -299,9 +304,9 @@ private:
             auto ownedNode = getOwnedNode (node);
             auto latencyNode = ownedNode != nullptr ? makeNode<LatencyNode> (std::move (ownedNode), latencyToAdd)
                                                     : makeNode<LatencyNode> (node, latencyToAdd);
-            latencyNode->initialise (info);
             ownedNodesToAdd.push_back (std::move (latencyNode));
             node = nullptr;
+            topologyChanged = true;
         }
         
         // Take ownership of any new nodes and also ensure they're reference in the raw array
@@ -318,6 +323,8 @@ private:
         ownedNodes.erase (std::remove_if (ownedNodes.begin(), ownedNodes.end(),
                                           [] (auto& n) { return n == nullptr; }),
                           ownedNodes.end());
+        
+        return topologyChanged;
     }
 };
 
