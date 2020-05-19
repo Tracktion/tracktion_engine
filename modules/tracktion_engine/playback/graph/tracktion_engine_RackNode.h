@@ -195,13 +195,15 @@ public:
         }
 
         // Setup audio buffers
-        float* channels[32] = {};
+        constexpr size_t maxNumChannels = 64;
+        float* channels[maxNumChannels] = {};
+        const size_t numChannelsToUse = std::min (outputAudioBlock.getNumChannels(), maxNumChannels);
 
-        for (size_t i = 0; i < outputAudioBlock.getNumChannels(); ++i)
+        for (size_t i = 0; i < numChannelsToUse; ++i)
             channels[i] = outputAudioBlock.getChannelPointer (i);
 
         AudioBuffer<float> outputAudioBuffer (channels,
-                                              (int) outputAudioBlock.getNumChannels(),
+                                              (int) numChannelsToUse,
                                               (int) outputAudioBlock.getNumSamples());
 
         // Then MIDI buffers
