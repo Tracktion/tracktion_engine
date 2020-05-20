@@ -553,7 +553,7 @@ bool AudioTrack::isSolo (bool includeIndirectSolo) const
     {
         // If any of the parent tracks are soloed, this needs to be indirectly soloed
         for (auto p = getParentFolderTrack(); p != nullptr; p = p->getParentFolderTrack())
-            if (p->isSolo (true))
+            if (p->isSolo (false))
                 return true;
 
         if (! isPartOfSubmix())
@@ -573,7 +573,7 @@ bool AudioTrack::isSoloIsolate (bool includeIndirectSolo) const
     {
         // If any of the parent tracks are solo isolate, this needs to be indirectly solo isolate
         for (auto p = getParentFolderTrack(); p != nullptr; p = p->getParentFolderTrack())
-            if (p->isSoloIsolate (true))
+            if (p->isSoloIsolate (false))
                 return true;
 
         if (! isPartOfSubmix())
