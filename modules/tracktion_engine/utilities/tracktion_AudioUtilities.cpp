@@ -250,7 +250,7 @@ void getGainsFromVolumeFaderPositionAndPan (float volSliderPos, float pan, const
         leftGain    = std::sin ((1.0f - pan) * halfPi);
         rightGain   = std::sin (pan * halfPi);
 
-        float ratio;
+        float ratio = 1.0f;
 
         switch (panLaw)
         {
@@ -259,9 +259,13 @@ void getGainsFromVolumeFaderPositionAndPan (float volSliderPos, float pan, const
             case PanLaw4point5dBCenter: ratio = 1.5f;         break;
             case PanLaw6dBCenter:       ratio = 2.0f;         break;
 
+            case PanLawDefault:
+            case PanLawLinear:
+                jassertfalse; // should have alread been handled?
+                break;
+                
             default:
                 jassertfalse; // New pan law?
-                ratio = 1.0f;
                 break;
         }
 
