@@ -77,17 +77,17 @@ XmlElement* GrooveTemplate::createXml() const
     node->setAttribute ("notesPerBeat", notesPerBeat);
     node->setAttribute ("parameterized", parameterized);
 
-	int lastNonZeroNote = numNotes;
-	while (--lastNonZeroNote >= 0)
-		if (latenesses[lastNonZeroNote] != 0.0f)
-			break;
+    int lastNonZeroNote = numNotes;
+    while (--lastNonZeroNote >= 0)
+        if (latenesses[lastNonZeroNote] != 0.0f)
+            break;
 
-	for (int i = 0; i <= lastNonZeroNote; ++i)
-	{
-		auto n = new juce::XmlElement ("SHIFT");
-		n->setAttribute ("delta", 0.001 * roundToInt (1000.0 * latenesses[i]));
-		node->addChildElement (n);
-	}
+    for (int i = 0; i <= lastNonZeroNote; ++i)
+    {
+        auto n = new juce::XmlElement ("SHIFT");
+        n->setAttribute ("delta", 0.001 * roundToInt (1000.0 * latenesses[i]));
+        node->addChildElement (n);
+    }
 
     return node;
 }
@@ -105,7 +105,7 @@ void GrooveTemplate::setNotesPerBeat (int notes)
 float GrooveTemplate::getLatenessProportion (int noteNumber, float strength) const
 {
     if (parameterized)
-		return latenesses[noteNumber] * strength;
+        return latenesses[noteNumber] * strength;
 
     return latenesses[noteNumber];
 }
@@ -128,7 +128,7 @@ void GrooveTemplate::clearLatenesses()
 
 double GrooveTemplate::beatsTimeToGroovyTime (double beatsTime, float strength) const
 {
-	auto activeStrength = parameterized ? strength : 1.0f;
+    auto activeStrength = parameterized ? strength : 1.0f;
 
     const double beatNum    = std::floor (beatsTime * notesPerBeat);
     const double offset     = notesPerBeat * (beatsTime - (beatNum / notesPerBeat));
@@ -150,11 +150,11 @@ double GrooveTemplate::editTimeToGroovyTime (double editTime, float strength, Ed
 
 bool GrooveTemplate::isEmpty() const
 {
-	for (int i = latenesses.size(); --i >= 0;)
-		if (latenesses.getUnchecked (i) != 0.0f)
-			return false;
+    for (int i = latenesses.size(); --i >= 0;)
+        if (latenesses.getUnchecked (i) != 0.0f)
+            return false;
 
-	return true;
+    return true;
 }
 
 //==============================================================================
@@ -191,20 +191,20 @@ GrooveTemplateManager::GrooveTemplateManager (Engine& e)
 //==============================================================================
 void GrooveTemplateManager::useParameterizedGrooves (bool use)
 {
-	activeGrooves.clear();
+    activeGrooves.clear();
 
-	useParameterized = use;
-	if (useParameterized)
-	{
-		for (auto g : knownGrooves)
-			activeGrooves.add (g);
-	}
-	else
-	{
-		for (auto g : knownGrooves)
-			if (! g->isParameterized())
-				activeGrooves.add (g);
-	}
+    useParameterized = use;
+    if (useParameterized)
+    {
+        for (auto g : knownGrooves)
+            activeGrooves.add (g);
+    }
+    else
+    {
+        for (auto g : knownGrooves)
+            if (! g->isParameterized())
+                activeGrooves.add (g);
+    }
 }
 
 void GrooveTemplateManager::reload()
@@ -221,7 +221,7 @@ void GrooveTemplateManager::reload (const juce::XmlElement* grooves)
         forEachXmlChildElementWithTagName (*grooves, n, GrooveTemplate::grooveXmlTag)
             knownGrooves.add (new GrooveTemplate (n));
 
-	useParameterizedGrooves (useParameterized);
+    useParameterizedGrooves (useParameterized);
 }
 
 void GrooveTemplateManager::save()
@@ -275,7 +275,7 @@ StringArray GrooveTemplateManager::getTemplateNames() const
 
 void GrooveTemplateManager::updateTemplate (int index, const GrooveTemplate& gt)
 {
-	index = knownGrooves.indexOf (activeGrooves[index]);
+    index = knownGrooves.indexOf (activeGrooves[index]);
 
     // check the name doesn't clash..
     String n (gt.getName().trim());
@@ -302,7 +302,7 @@ void GrooveTemplateManager::updateTemplate (int index, const GrooveTemplate& gt)
     if (knownGrooves[index] != nullptr)
         knownGrooves.remove (index);
 
-	useParameterizedGrooves (useParameterized);
+    useParameterizedGrooves (useParameterized);
 
     int suff = 2;
     while (getTemplateByName (n) != nullptr)
@@ -310,10 +310,10 @@ void GrooveTemplateManager::updateTemplate (int index, const GrooveTemplate& gt)
 
     auto newGroove = knownGrooves.insert (index, new GrooveTemplate (gt));
     newGroove->setName (n);
-	newGroove->setParameterized (useParameterized);
+    newGroove->setParameterized (useParameterized);
 
     save();
-	useParameterizedGrooves (useParameterized);
+    useParameterizedGrooves (useParameterized);
     TransportControl::restartAllTransports (engine, false);
 }
 
@@ -321,7 +321,7 @@ void GrooveTemplateManager::deleteTemplate (int index)
 {
     knownGrooves.removeObject (activeGrooves[index]);
 
-	useParameterizedGrooves (useParameterized);
+    useParameterizedGrooves (useParameterized);
 
     save();
     TransportControl::restartAllTransports (engine, false);
