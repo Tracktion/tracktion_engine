@@ -453,6 +453,7 @@ private:
                 return rampUp ? (proportion / 2.0) - (std::sin (juce::double_Pi * proportion) / (2.0 * juce::double_Pi)) + 0.5
                               : std::sin (juce::double_Pi * proportion) / (2.0 * juce::double_Pi) + (proportion / 2.0);
 
+            case AudioFadeCurve::linear:
             default:
                 return rampUp ? (juce::square (proportion) * 0.5) + 0.5
                               : ((-juce::square (proportion - 1.0)) * 0.5) + 0.5;
