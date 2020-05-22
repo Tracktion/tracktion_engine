@@ -46,6 +46,8 @@
 namespace tracktion_graph
 {
 
+//==============================================================================
+//==============================================================================
 template<typename T>
 void hash_combine (size_t& seed, const T& v)
 {
@@ -68,6 +70,36 @@ void hash_range (std::size_t& seed, It first, It last)
 {
     for (; first != last; ++first)
         hash_combine (seed, *first);
+}
+
+//==============================================================================
+//==============================================================================
+/** Converts an integer sample number to a time in seconds. */
+template<typename IntType>
+constexpr double sampleToTime (IntType samplePosition, double sampleRate)
+{
+    return samplePosition / sampleRate;
+}
+
+/** Converts a time in seconds to a sample number. */
+constexpr int64_t timeToSample (double timeInSeconds, double sampleRate)
+{
+    return static_cast<int64_t> ((timeInSeconds * sampleRate) + 0.5);
+}
+
+/** Converts an integer sample range to a time range in seconds. */
+template<typename IntType>
+constexpr juce::Range<double> sampleToTime (juce::Range<IntType> sampleRange, double sampleRate)
+{
+    return { sampleToTime (sampleRange.getStart(), sampleRate),
+             sampleToTime (sampleRange.getEnd(), sampleRate) };
+}
+
+/** Converts a time range in seconds to a range of sample numbers. */
+constexpr juce::Range<int64_t> timeToSample (juce::Range<double> timeInSeconds, double sampleRate)
+{
+    return { timeToSample (timeInSeconds.getStart(), sampleRate),
+             timeToSample (timeInSeconds.getEnd(), sampleRate) };
 }
 
 }

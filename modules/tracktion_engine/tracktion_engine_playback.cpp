@@ -40,6 +40,13 @@ extern "C"
 
 #define JUCE_CORE_INCLUDE_JNI_HELPERS 1 // Required for Ableton Link on Android
 
+#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+ #include <tracktion_graph/tracktion_graph.h>
+
+ #include <tracktion_graph/tracktion_graph/tracktion_graph_tests_Utilities.h>
+ #include <tracktion_graph/tracktion_graph/tracktion_graph_tests_TestNodes.h>
+#endif
+
 #include "tracktion_engine.h"
 
 #if JUCE_LINUX || JUCE_WINDOWS
@@ -47,6 +54,12 @@ extern "C"
 #endif
 
 #include <thread>
+
+#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+ #include "playback/graph/tracktion_WaveNode.h"
+ #include "playback/graph/tracktion_WaveNode.cpp"
+ #include "playback/graph/tracktion_tests_WaveNode.cpp"
+#endif
 
 using namespace juce;
 

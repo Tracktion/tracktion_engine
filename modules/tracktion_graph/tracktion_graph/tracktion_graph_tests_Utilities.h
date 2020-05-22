@@ -133,6 +133,41 @@ namespace test_utilities
     }
 
     //==============================================================================
+    template<typename AudioFormatType>
+    std::unique_ptr<juce::TemporaryFile> getSinFile (double sampleRate, double durationInSeconds)
+    {
+        juce::AudioBuffer<float> buffer (1, static_cast<int> (sampleRate * durationInSeconds));
+        juce::dsp::Oscillator<float> osc ([] (float in) { return std::sin (in); });
+        osc.setFrequency (220.0, true);
+        osc.prepare ({ double (sampleRate), uint32_t (buffer.getNumSamples()), 1 });
+
+        float* samples = buffer.getWritePointer (0);
+        int numSamples = buffer.getNumSamples();
+
+        for (int i = 0; i < numSamples; ++i)
+            samples[i] = osc.processSample (0.0);
+
+        // Then write it to a temp file
+        AudioFormatType format;
+        auto f = std::make_unique<juce::TemporaryFile> (format.getFileExtensions()[0]);
+        
+        if (auto fileStream = f->getFile().createOutputStream())
+        {
+            const int numQualityOptions = format.getQualityOptions().size();
+            const int qualityOptionIndex = numQualityOptions == 0 ? 0 : (numQualityOptions / 2);
+            const int bitDepth = format.getPossibleBitDepths().contains (16) ? 16 : 32;
+            
+            if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (AudioFormatType().createWriterFor (fileStream.get(), sampleRate, 1, bitDepth, {}, qualityOptionIndex)))
+            {
+                fileStream.release();
+                writer->writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());
+            }
+        }
+
+        return f;
+    }
+
+    //==============================================================================
     /** Compares two MidiMessageSequences and expects them to be equal. */
     static inline void expectMidiMessageSequence (juce::UnitTest& ut, const juce::MidiMessageSequence& seq1, const juce::MidiMessageSequence& seq2)
     {
@@ -194,12 +229,13 @@ namespace test_utilities
     }
 
     /** Extracts a section of a buffer and expects a specific magnitude and RMS it. */
-    static inline void expectAudioBuffer (juce::UnitTest& ut, juce::AudioBuffer<float>& buffer, int channel, juce::Range<int> sampleRange,
+    template<typename IntType>
+    static inline void expectAudioBuffer (juce::UnitTest& ut, juce::AudioBuffer<float>& buffer, int channel, juce::Range<IntType> sampleRange,
                                           float mag, float rms)
     {
         juce::AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(),
                                                 buffer.getNumChannels(),
-                                                sampleRange.getStart(), sampleRange.getLength());
+                                                (int) sampleRange.getStart(), (int) sampleRange.getLength());
         expectAudioBuffer (ut, trimmedBuffer, channel, mag, rms);
     }
 
