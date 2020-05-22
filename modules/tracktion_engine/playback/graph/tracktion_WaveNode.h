@@ -31,7 +31,7 @@ public:
               LiveClipLevel level,
               double speedRatio,
               const juce::AudioChannelSet& channelsToUse,
-              tracktion_graph::PlayHead&,
+              tracktion_graph::PlayHeadState&,
               bool isOfflineRender);
 
     //==============================================================================
@@ -45,7 +45,7 @@ public:
 
 private:
     //==============================================================================
-    tracktion_graph::PlayHead& playHead;
+    tracktion_graph::PlayHeadState& playHeadState;
     EditTimeRange editPosition, loopSection;
     double offset = 0;
     double originalSpeedRatio = 0, outputSampleRate = 44100.0;

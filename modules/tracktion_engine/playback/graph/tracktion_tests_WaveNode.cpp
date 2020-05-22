@@ -44,6 +44,7 @@ private:
         AudioFile sinAudioFile (engine, sinFile->getFile());
         
         tracktion_graph::PlayHead playHead;
+        tracktion_graph::PlayHeadState playHeadState (playHead);
         playHead.playSyncedToRange ({ 0, std::numeric_limits<int64_t>::max() });
         
         beginTest ("WaveNode at time 0s");
@@ -55,7 +56,7 @@ private:
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
-                                            playHead,
+                                            playHeadState,
                                             true);
             
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
@@ -74,7 +75,7 @@ private:
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
-                                            playHead,
+                                            playHeadState,
                                             true);
             
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
@@ -94,7 +95,7 @@ private:
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
-                                            playHead,
+                                            playHeadState,
                                             true);
             
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards

@@ -11,80 +11,6 @@
 namespace tracktion_engine
 {
 
-enum class ContinuityFlags
-{
-    contiguous           = 1,
-    playheadJumped       = 2,
-    lastBlockBeforeLoop  = 4,
-    firstBlockOfLoop     = 8
-};
-
-namespace Continuity
-{
-    static inline bool isContiguousWithPreviousBlock (int continuityFlags) noexcept    { return (continuityFlags & (int) ContinuityFlags::contiguous) != 0; }
-    static inline bool isFirstBlockOfLoop (int continuityFlags) noexcept               { return (continuityFlags & (int) ContinuityFlags::firstBlockOfLoop) != 0; }
-    static inline bool isLastBlockOfLoop (int continuityFlags) noexcept                { return (continuityFlags & (int) ContinuityFlags::lastBlockBeforeLoop) != 0; }
-    static inline bool didPlayheadJump (int continuityFlags) noexcept                  { return (continuityFlags & (int) ContinuityFlags::playheadJumped) != 0; }
-}
-
-
-//==============================================================================
-//==============================================================================
-template <typename CallbackType>
-static void invokeSplitProcessor (const tracktion_graph::Node::ProcessContext& pc, tracktion_graph::PlayHead& playHead, CallbackType& target)
-{
-    const auto splitTimelineRange = tracktion_graph::referenceSampleRangeToSplitTimelineRange (playHead, pc.streamSampleRange);
-    int continuity = (int) ContinuityFlags::contiguous;
-    
-    if (splitTimelineRange.isSplit)
-    {
-        const auto firstNumSamples = splitTimelineRange.timelineRange1.getLength();
-        const auto firstRange = pc.streamSampleRange.withLength (firstNumSamples);
-        
-        {
-            auto inputAudio = pc.buffers.audio.getSubBlock (0, (size_t) firstNumSamples);
-            auto& inputMidi = pc.buffers.midi;
-            
-            tracktion_graph::Node::ProcessContext pc1 { firstRange, { inputAudio , inputMidi } };
-            continuity |= (int) ContinuityFlags::lastBlockBeforeLoop;
-            target.processSection (pc1, splitTimelineRange.timelineRange1, continuity);
-        }
-        
-        {
-            const auto secondNumSamples = splitTimelineRange.timelineRange2.getLength();
-            const auto secondRange = juce::Range<int64_t>::withStartAndLength (firstRange.getEnd(), secondNumSamples);
-            
-            auto inputAudio = pc.buffers.audio.getSubBlock ((size_t) firstNumSamples, (size_t) secondNumSamples);
-            auto& inputMidi = pc.buffers.midi;
-            
-            //TODO: Use a scratch MidiMessageArray and then merge it back with the offset time
-            tracktion_graph::Node::ProcessContext pc2 { secondRange, { inputAudio , inputMidi } };
-            continuity = (int) ContinuityFlags::firstBlockOfLoop;
-            target.processSection (pc2, splitTimelineRange.timelineRange2, continuity);
-        }
-    }
-    else if (playHead.isLooping() && ! playHead.isRollingIntoLoop())
-    {
-        // In the case where looping happens to line up exactly with the audio
-        // blocks being rendered, set the proper continuity flags
-        auto loop = playHead.getLoopRange();
-
-        auto s = splitTimelineRange.timelineRange1.getStart();
-        auto e = splitTimelineRange.timelineRange1.getEnd();
-
-        if (e == loop.getEnd())
-            continuity |= (int) AudioRenderContext::lastBlockBeforeLoop;
-        if (s == loop.getStart())
-            continuity = (int) AudioRenderContext::firstBlockOfLoop;
-
-        target.processSection (pc, splitTimelineRange.timelineRange1, continuity);
-    }
-    else
-    {
-        target.processSection (pc, splitTimelineRange.timelineRange1, continuity);
-    }
-}
-
 
 //==============================================================================
 //==============================================================================
@@ -105,9 +31,9 @@ WaveNode::WaveNode (const AudioFile& af,
                     LiveClipLevel level,
                     double speed,
                     const juce::AudioChannelSet& channelSetToUse,
-                    tracktion_graph::PlayHead& ph,
+                    tracktion_graph::PlayHeadState& ph,
                     bool isRendering)
-   : playHead (ph),
+   : playHeadState (ph),
      editPosition (editTime),
      loopSection (loop.getStart() * speed, loop.getEnd() * speed),
      offset (off),
@@ -171,7 +97,7 @@ void WaveNode::process (const ProcessContext& pc)
     SCOPED_REALTIME_CHECK
 
     //TODO: Might get a performance boost by pre-setting the file position in prepareForNextBlock
-    invokeSplitProcessor (pc, playHead, *this);
+    invokeSplitProcessor (pc, playHeadState, *this);
 }
 
 //==============================================================================
@@ -243,8 +169,8 @@ void WaveNode::processSection (const ProcessContext& pc, juce::Range<int64_t> ti
                                  channelsToUse,
                                  isOfflineRender ? 5000 : 3))
         {
-            if (! Continuity::isContiguousWithPreviousBlock (continuityFlags) && ! Continuity::isFirstBlockOfLoop (continuityFlags))
-                lastSampleFadeLength = std::min (numSamples, playHead.isUserDragging() ? 40 : 10);
+            if (! tracktion_graph::Continuity::isContiguousWithPreviousBlock (continuityFlags) && ! tracktion_graph::Continuity::isFirstBlockOfLoop (continuityFlags))
+                lastSampleFadeLength = std::min (numSamples, playHeadState.playHead.isUserDragging() ? 40 : 10);
         }
         else
         {
@@ -261,7 +187,7 @@ void WaveNode::processSection (const ProcessContext& pc, juce::Range<int64_t> ti
     else
         gains[0] = gains[1] = clipLevel.getGainIncludingMute();
 
-    if (playHead.isUserDragging())
+    if (playHeadState.playHead.isUserDragging())
     {
         gains[0] *= 0.4f;
         gains[1] *= 0.4f;
