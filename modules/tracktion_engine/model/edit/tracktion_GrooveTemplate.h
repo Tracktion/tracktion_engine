@@ -27,7 +27,7 @@ public:
     //==============================================================================
     bool isEmpty() const;
     bool isParameterized() const;
-	void setParameterized (bool p)							{ parameterized = p; }
+    void setParameterized (bool p)                          { parameterized = p; }
 
     //==============================================================================
     /** Apply this groove to a time, in beats */
@@ -58,7 +58,7 @@ public:
 
 private:
     //==============================================================================
-	juce::Array<float> latenesses;
+    juce::Array<float> latenesses;
     int numNotes, notesPerBeat;
     juce::String name;
     bool parameterized = false;
@@ -77,7 +77,7 @@ public:
     //==============================================================================
     GrooveTemplateManager (Engine&);
 
-	void useParameterizedGrooves (bool b);
+    void useParameterizedGrooves (bool b);
 
     //==============================================================================
     int getNumTemplates() const;
@@ -98,13 +98,13 @@ private:
     //==============================================================================
     Engine& engine;
     juce::OwnedArray<GrooveTemplate> knownGrooves;
-	juce::Array<GrooveTemplate*> activeGrooves;
+    juce::Array<GrooveTemplate*> activeGrooves;
 
     //==============================================================================
     void save();
     void reload (const juce::XmlElement*);
 
-	bool useParameterized = false;
+    bool useParameterized = false;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GrooveTemplateManager)
 };
