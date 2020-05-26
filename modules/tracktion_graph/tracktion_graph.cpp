@@ -23,7 +23,7 @@
 #include "tracktion_graph/tracktion_graph_tests_Utilities.h"
 #include "tracktion_graph/tracktion_graph_tests_TestNodes.h"
 
-#include "tracktion_graph/tracktion_graph_Continuity.cpp"
+#include "tracktion_graph/tracktion_graph_PlayHeadState.cpp"
 #include "tracktion_graph/tracktion_graph_PlayHead.cpp"
 #include "tracktion_graph/tracktion_graph_tests_Node.cpp"
 #include "tracktion_graph/tracktion_graph_tests_NodeVisiting.cpp"

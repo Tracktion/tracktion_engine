@@ -97,7 +97,10 @@ void WaveNode::process (const ProcessContext& pc)
     SCOPED_REALTIME_CHECK
 
     //TODO: Might get a performance boost by pre-setting the file position in prepareForNextBlock
-    invokeSplitProcessor (pc, playHeadState, *this);
+    const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.streamSampleRange);
+    jassert (! splitTimelineRange.isSplit); // This should be handled by the NodePlayer
+    
+    processSection (pc, splitTimelineRange.timelineRange1);
 }
 
 //==============================================================================
@@ -132,7 +135,7 @@ bool WaveNode::updateFileSampleRate()
     return true;
 }
 
-void WaveNode::processSection (const ProcessContext& pc, juce::Range<int64_t> timelineRange, int continuityFlags)
+void WaveNode::processSection (const ProcessContext& pc, juce::Range<int64_t> timelineRange)
 {
     const auto sectionEditTime = tracktion_graph::sampleToTime (timelineRange, outputSampleRate);
     
@@ -169,7 +172,7 @@ void WaveNode::processSection (const ProcessContext& pc, juce::Range<int64_t> ti
                                  channelsToUse,
                                  isOfflineRender ? 5000 : 3))
         {
-            if (! tracktion_graph::Continuity::isContiguousWithPreviousBlock (continuityFlags) && ! tracktion_graph::Continuity::isFirstBlockOfLoop (continuityFlags))
+            if (! playHeadState.isContiguousWithPreviousBlock() && ! playHeadState.isFirstBlockOfLoop())
                 lastSampleFadeLength = std::min (numSamples, playHeadState.playHead.isUserDragging() ? 40 : 10);
         }
         else

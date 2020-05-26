@@ -411,6 +411,13 @@ namespace test_utilities
         auto player = std::make_unique<NodePlayer> (std::move (node));
         return createTestContext (std::move (player), ts, numChannels, durationInSeconds);
     }
+
+    static inline std::shared_ptr<TestContext> createBasicTestContext (std::unique_ptr<Node> node, PlayHeadState& playHeadStateToUse,
+                                                                       const TestSetup ts, const int numChannels, const double durationInSeconds)
+    {
+        auto player = std::make_unique<NodePlayer> (std::move (node), &playHeadStateToUse);
+        return createTestContext (std::move (player), ts, numChannels, durationInSeconds);
+    }
 }
 
 }

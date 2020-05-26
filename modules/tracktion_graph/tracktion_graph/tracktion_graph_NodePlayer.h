@@ -27,8 +27,8 @@ class NodePlayer
 {
 public:
     /** Creates an NodePlayer to process an Node. */
-    NodePlayer (std::unique_ptr<Node> nodeToProcess)
-        : input (std::move (nodeToProcess))
+    NodePlayer (std::unique_ptr<Node> nodeToProcess, PlayHeadState* playHeadStateToUse = nullptr)
+        : input (std::move (nodeToProcess)), playHeadState (playHeadStateToUse)
     {
     }
     
@@ -67,14 +67,62 @@ public:
     */
     int process (const Node::ProcessContext& pc)
     {
+        if (playHeadState != nullptr)
+            return processWithPlayHeadState (*playHeadState, *input, allNodes, pc);
+        
         return processPostorderedNodes (*input, allNodes, pc);
     }
     
 private:
     std::unique_ptr<Node> input;
+    PlayHeadState* playHeadState = nullptr;
+    
     std::vector<Node*> allNodes;
     double sampleRate = 44100.0;
     int blockSize = 512;
+    
+    static int processWithPlayHeadState (PlayHeadState& playHeadState, Node& rootNode, const std::vector<Node*>& allNodes, const Node::ProcessContext& pc)
+    {
+        int numMisses = 0;
+        
+        // Check to see if the timeline needs to be processed in two halves due to looping
+        const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.streamSampleRange);
+        
+        if (splitTimelineRange.isSplit)
+        {
+            const auto firstNumSamples = splitTimelineRange.timelineRange1.getLength();
+            const auto firstRange = pc.streamSampleRange.withLength (firstNumSamples);
+            
+            {
+                auto inputAudio = pc.buffers.audio.getSubBlock (0, (size_t) firstNumSamples);
+                auto& inputMidi = pc.buffers.midi;
+                
+                playHeadState.update (firstRange);
+                tracktion_graph::Node::ProcessContext pc1 { firstRange, { inputAudio , inputMidi } };
+                numMisses += processPostorderedNodes (rootNode, allNodes, pc1);
+            }
+            
+            {
+                const auto secondNumSamples = splitTimelineRange.timelineRange2.getLength();
+                const auto secondRange = juce::Range<int64_t>::withStartAndLength (firstRange.getEnd(), secondNumSamples);
+                
+                auto inputAudio = pc.buffers.audio.getSubBlock ((size_t) firstNumSamples, (size_t) secondNumSamples);
+                auto& inputMidi = pc.buffers.midi;
+                
+                //TODO: Use a scratch MidiMessageArray and then merge it back with the offset time
+                tracktion_graph::Node::ProcessContext pc2 { secondRange, { inputAudio , inputMidi } };
+                playHeadState.update (secondRange);
+                numMisses += processPostorderedNodes (rootNode, allNodes, pc2);
+            }
+        }
+        else
+        {
+            playHeadState.update (pc.streamSampleRange);
+            numMisses += processPostorderedNodes (rootNode, allNodes, pc);
+        }
+        
+        return numMisses;
+    }
 
     /** Processes a group of Nodes assuming a postordering VertexOrdering.
         If these conditions are met the Nodes should be processed in a single loop iteration.
