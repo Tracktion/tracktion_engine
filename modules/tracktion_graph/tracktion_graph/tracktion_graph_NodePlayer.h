@@ -50,6 +50,9 @@ public:
         sampleRate = sampleRateToUse;
         blockSize = blockSizeToUse;
         
+        if (playHeadState != nullptr)
+            playHeadState->playHead.setScrubbingBlockLength (timeToSample (0.08, sampleRate));
+        
         // First give the Nodes a chance to transform
         transformNodes (*input);
         
