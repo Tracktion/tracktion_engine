@@ -28,7 +28,7 @@ public:
               EditTimeRange editTime,
               double offset,
               EditTimeRange loopSection,
-              LiveClipLevel level,
+              LiveClipLevel,
               double speedRatio,
               const juce::AudioChannelSet& channelsToUse,
               tracktion_graph::PlayHeadState&,

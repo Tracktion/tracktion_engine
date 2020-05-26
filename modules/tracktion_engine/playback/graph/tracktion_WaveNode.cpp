@@ -71,7 +71,9 @@ void WaveNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&
 
 bool WaveNode::isReadyToProcess()
 {
-    //TODO: This should only really be called whilst offline rendering as otherwise it will block whilst the proxies are being created
+    // Only check this whilst rendering or it will block whilst the proxies are being created
+    if (! isOfflineRender)
+        return true;
     
     // If the hash is 0 it means an empty file path which means a missing file so
     // this will never return a valid reader and we should just bail
