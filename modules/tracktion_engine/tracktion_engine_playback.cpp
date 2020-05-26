@@ -55,7 +55,13 @@ extern "C"
 
 #include <thread>
 
+#include "playback/tracktion_MPEStartTrimmer.h"
+
 #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+ #include "playback/graph/tracktion_MidiNode.h"
+ #include "playback/graph/tracktion_MidiNode.cpp"
+ #include "playback/graph/tracktion_tests_MidiNode.cpp"
+
  #include "playback/graph/tracktion_WaveNode.h"
  #include "playback/graph/tracktion_WaveNode.cpp"
  #include "playback/graph/tracktion_tests_WaveNode.cpp"
@@ -71,8 +77,6 @@ using namespace juce;
 #include "playback/tracktion_tests_TransportControl.cpp"
 #include "playback/tracktion_TransportControl.cpp"
 #include "playback/tracktion_AbletonLink.cpp"
-
-#include "playback/tracktion_MPEStartTrimmer.h"
 
 #include "playback/audionodes/tracktion_AudioNode.cpp"
 #include "playback/audionodes/tracktion_BufferingAudioNode.cpp"

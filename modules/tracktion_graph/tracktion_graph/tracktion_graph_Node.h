@@ -90,9 +90,9 @@ struct PlaybackInitialisationInfo
 /** Holds some really basic properties of a node */
 struct NodeProperties
 {
-    bool hasAudio;
-    bool hasMidi;
-    int numberOfChannels;
+    bool hasAudio = false;
+    bool hasMidi = false;
+    int numberOfChannels = 0;
     int latencyNumSamples = 0;
     size_t nodeID = 0;
 };
