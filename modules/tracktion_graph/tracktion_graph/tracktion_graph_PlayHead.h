@@ -152,6 +152,7 @@ private:
     //==============================================================================
     struct SyncPositions
     {
+        SyncPositions() noexcept = default;
         int64_t referenceSyncPosition = 0;
         int64_t playoutSyncPosition = 0;
     };
