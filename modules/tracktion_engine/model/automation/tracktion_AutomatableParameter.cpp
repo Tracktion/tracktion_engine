@@ -772,7 +772,11 @@ void AutomatableParameter::updateFromAutomationSources (double time)
                            m.setPosition (time);
 
                            if (m.isEnabled())
-                               newModifierValue += m.getCurrentValue();
+                           {
+                               float currentValue = m.getCurrentValue();
+                               jassert (! std::isnan (currentValue));
+                               newModifierValue += currentValue;
+                           }
                        });
 
     const float newBaseValue = [this, time]
