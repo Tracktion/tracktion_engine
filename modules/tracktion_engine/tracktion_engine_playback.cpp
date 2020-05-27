@@ -65,6 +65,9 @@ extern "C"
  #include "playback/graph/tracktion_WaveNode.h"
  #include "playback/graph/tracktion_WaveNode.cpp"
  #include "playback/graph/tracktion_tests_WaveNode.cpp"
+
+ #include "playback/graph/tracktion_EditNodeBuilder.h"
+ #include "playback/graph/tracktion_EditNodeBuilder.cpp"
 #endif
 
 using namespace juce;
