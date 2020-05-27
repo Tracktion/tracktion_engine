@@ -151,6 +151,9 @@ public:
     void setRightChannelActive (bool);
     bool isRightChannelActive() const;
 
+    /** Returns the layout of the active channels. */
+    juce::AudioChannelSet getActiveChannels() const     { return activeChannels; }
+
     //==============================================================================
     bool setFadeIn (double length);
     double getFadeIn() const;
