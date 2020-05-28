@@ -73,7 +73,6 @@ struct AbletonLink::ImplBase  : public Timer
 
     void setTempoFromLink (double bpm)
     {
-        ensureJavaEnvironmentAttachedToThread();
         Edit::WeakRef bailOut (&transport.edit);
         bpm = getTempoInRange (bpm);
 
@@ -89,7 +88,6 @@ struct AbletonLink::ImplBase  : public Timer
 
     void callConnectionChanged()
     {
-        ensureJavaEnvironmentAttachedToThread();
         Edit::WeakRef bailOut (&transport.edit);
 
         MessageManager::callAsync ([this, bailOut]
@@ -97,14 +95,6 @@ struct AbletonLink::ImplBase  : public Timer
             if (bailOut != nullptr)
                 listeners.call (&AbletonLink::Listener::linkConnectionChanged);
         });
-    }
-
-    void ensureJavaEnvironmentAttachedToThread()
-    {
-        // Ensure thread owned by Link has a java environment attached
-       #if JUCE_ANDROID
-        attachAndroidJNI();
-       #endif
     }
 
     double getBeatsUntilNextCycle (double quantum)
