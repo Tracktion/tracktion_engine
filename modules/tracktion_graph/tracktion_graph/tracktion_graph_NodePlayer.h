@@ -10,9 +10,6 @@
 
 #pragma once
 
-#include <thread>
-#include <emmintrin.h>
-
 
 namespace tracktion_graph
 {
@@ -39,13 +36,25 @@ public:
 
     void setNode (std::unique_ptr<Node> newNode)
     {
-        auto oldNode = std::move (input);
-        input = std::move (newNode);
-        prepareToPlay (sampleRate, blockSize, oldNode.get());
+        auto newNodes = prepareToPlay (*newNode, input.get(), sampleRate, blockSize);
+        std::unique_ptr<Node> oldNode;
+        
+        {
+            const juce::SpinLock::ScopedLockType sl (inputAndNodesLock);
+            oldNode = std::move (input);
+            input = std::move (newNode);
+            allNodes = std::move (newNodes);
+        }
     }
-    
-    /** Prepares the processor to be played. */
+
+    /** Prepares the current Node to be played. */
     void prepareToPlay (double sampleRateToUse, int blockSizeToUse, Node* oldNode = nullptr)
+    {
+        allNodes = prepareToPlay (*input, oldNode, sampleRateToUse, blockSizeToUse);
+    }
+
+    /** Prepares a specific Node to be played and returns all the Nodes. */
+    std::vector<Node*> prepareToPlay (Node& node, Node* oldNode, double sampleRateToUse, int blockSizeToUse)
     {
         sampleRate = sampleRateToUse;
         blockSize = blockSizeToUse;
@@ -54,15 +63,15 @@ public:
             playHeadState->playHead.setScrubbingBlockLength (timeToSample (0.08, sampleRate));
         
         // First give the Nodes a chance to transform
-        transformNodes (*input);
+        transformNodes (node);
         
         // Next, initialise all the nodes, this will call prepareToPlay on them and also
         // give them a chance to do things like balance latency
-        const PlaybackInitialisationInfo info { sampleRate, blockSize, *input, oldNode };
-        visitNodes (*input, [&] (Node& n) { n.initialise (info); }, false);
+        const PlaybackInitialisationInfo info { sampleRate, blockSize, node, oldNode };
+        visitNodes (node, [&] (Node& n) { n.initialise (info); }, false);
         
         // Then find all the nodes as it might have changed after initialisation
-        allNodes = tracktion_graph::getNodes (*input, tracktion_graph::VertexOrdering::postordering);
+        return tracktion_graph::getNodes (node, tracktion_graph::VertexOrdering::postordering);
     }
 
     /** Processes a block of audio and MIDI data.
@@ -70,10 +79,27 @@ public:
     */
     int process (const Node::ProcessContext& pc)
     {
-        if (playHeadState != nullptr)
-            return processWithPlayHeadState (*playHeadState, *input, allNodes, pc);
+        if (inputAndNodesLock.tryEnter())
+        {
+            if (! input)
+            {
+                inputAndNodesLock.exit();
+                return 0;
+            }
+            
+            int numMisses = 0;
+            
+            if (playHeadState != nullptr)
+                numMisses = processWithPlayHeadState (*playHeadState, *input, allNodes, pc);
+            else
+                numMisses = processPostorderedNodes (*input, allNodes, pc);
+            
+            inputAndNodesLock.exit();
+            
+            return numMisses;
+        }
         
-        return processPostorderedNodes (*input, allNodes, pc);
+        return 0;
     }
     
 private:
@@ -83,6 +109,8 @@ private:
     std::vector<Node*> allNodes;
     double sampleRate = 44100.0;
     int blockSize = 512;
+    
+    juce::SpinLock inputAndNodesLock;
     
     static int processWithPlayHeadState (PlayHeadState& playHeadState, Node& rootNode, const std::vector<Node*>& allNodes, const Node::ProcessContext& pc)
     {
