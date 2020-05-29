@@ -773,9 +773,9 @@ void AutomatableParameter::updateFromAutomationSources (double time)
 
                            if (m.isEnabled())
                            {
-                               float currentValue = m.getCurrentValue();
-                               jassert (! std::isnan (currentValue));
-                               newModifierValue += currentValue;
+                               float currentModValue = m.getCurrentValue();
+                               jassert (! std::isnan (currentModValue));
+                               newModifierValue += currentModValue;
                            }
                        });
 
