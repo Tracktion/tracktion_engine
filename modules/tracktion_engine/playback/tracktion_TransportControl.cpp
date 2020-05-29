@@ -461,6 +461,169 @@ private:
 };
 
 //==============================================================================
+struct TransportControl::PlayHeadWrapper
+{
+    PlayHeadWrapper (TransportControl& t)
+        : transport (t)
+    {}
+    
+    tracktion_engine::PlayHead* getPlayHead() const
+    {
+        return transport.playbackContext ? &transport.playbackContext->playhead
+                                         : nullptr;
+    }
+
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+    tracktion_graph::PlayHead* getNodePlayHead() const
+    {
+        return transport.playbackContext ? transport.playbackContext->getNodePlayHead()
+                                         : nullptr;
+    }
+    
+    double getSampleRate() const
+    {
+        return transport.playbackContext ? transport.playbackContext->getSampleRate()
+                                         : 44100.0;
+    }
+   #endif
+
+    void play (EditTimeRange timeRange, bool looped)
+    {
+       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+        if (auto ph = getNodePlayHead())
+            ph->play (timeToSample (timeRange, getSampleRate()), looped);
+       #endif
+
+        if (auto ph = getPlayHead())
+            ph->play (timeRange, looped);
+    }
+    
+    void setRollInToLoop (double prerollStartTime)
+    {
+       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+        if (auto ph = getNodePlayHead())
+            ph->setRollInToLoop (timeToSample (prerollStartTime, getSampleRate()));
+       #endif
+
+        if (auto ph = getPlayHead())
+            ph->setRollInToLoop (prerollStartTime);
+    }
+    
+    void stop()
+    {
+       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+        if (auto ph = getNodePlayHead())
+            ph->stop();
+       #endif
+        
+        if (auto ph = getPlayHead())
+            ph->stop();
+    }
+    
+    bool isPlaying() const
+    {
+       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+        if (auto ph = getNodePlayHead())
+            return ph->isPlaying();
+       #endif
+
+        if (auto ph = getPlayHead())
+            return ph->isPlaying();
+        
+        return false;
+    }
+    
+    double getPosition() const
+    {
+       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+        if (auto ph = getNodePlayHead())
+            return sampleToTime (ph->getPosition(), getSampleRate());
+       #endif
+
+        if (auto ph = getPlayHead())
+            return ph->getPosition();
+        
+        return 0.0;
+    }
+    
+    double getUnloopedPosition() const
+    {
+       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+        if (auto ph = getNodePlayHead())
+            return sampleToTime (ph->getUnloopedPosition(), getSampleRate());
+       #endif
+
+        if (auto ph = getPlayHead())
+            return ph->getUnloopedPosition();
+        
+        return 0.0;
+    }
+    
+    void setPosition (double newPos)
+    {
+       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+        if (auto ph = getNodePlayHead())
+            ph->setPosition (timeToSample (newPos, getSampleRate()));
+       #endif
+
+        if (auto ph = getPlayHead())
+            ph->setPosition (newPos);
+    }
+    
+    bool isLooping() const
+    {
+       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+        if (auto ph = getNodePlayHead())
+            return ph->isLooping();
+       #endif
+
+        if (auto ph = getPlayHead())
+            return ph->isLooping();
+        
+        return false;
+    }
+    
+    EditTimeRange getLoopTimes() const
+    {
+       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+        if (auto ph = getNodePlayHead())
+            return sampleToTime (ph->getLoopRange(), getSampleRate());
+       #endif
+
+        if (auto ph = getPlayHead())
+            return ph->getLoopTimes();
+        
+        return {};
+    }
+    
+    void setLoopTimes (bool loop, EditTimeRange newRange)
+    {
+       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+        if (auto ph = getNodePlayHead())
+            ph->setLoopRange (loop, timeToSample (newRange, getSampleRate()));
+       #endif
+        
+        if (auto ph = getPlayHead())
+            ph->setLoopTimes (loop, newRange);
+    }
+    
+    void setUserIsDragging (bool isDragging)
+    {
+        #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+         if (auto ph = getNodePlayHead())
+             ph->setUserIsDragging (isDragging);
+        #endif
+         
+        if (auto ph = getPlayHead())
+            ph->setUserIsDragging (isDragging);
+    }
+                              
+private:
+    TransportControl& transport;
+};
+
+
+//==============================================================================
 static Array<TransportControl*, CriticalSection> activeTransportControls;
 
 //==============================================================================
@@ -476,6 +639,7 @@ TransportControl::TransportControl (Edit& ed, const juce::ValueTree& v)
     looping.referTo (state, IDs::looping, um);
     scrubInterval.referTo (state, IDs::scrubInterval, um, 0.1);
 
+    playHeadWrapper = std::make_unique<PlayHeadWrapper> (*this);
     transportState = std::make_unique<TransportState> (*this, state);
 
     rwRepeater = std::make_unique<ButtonRepeater> (*this, true);
@@ -820,14 +984,14 @@ void TransportControl::timerCallback()
     if (isDelayedChangePending)
         editHasChanged();
 
-    if (isPlaying() && playbackContext->playhead.getPosition() >= Edit::maximumLength)
+    if (isPlaying() && playHeadWrapper->getPosition() >= Edit::maximumLength)
     {
         stop (false, false);
         position = double (Edit::maximumLength);
         return;
     }
 
-    if (! playbackContext->playhead.isPlaying())
+    if (! playHeadWrapper->isPlaying())
     {
         if (isRecording())
         {
@@ -842,13 +1006,13 @@ void TransportControl::timerCallback()
         }
 
         if ((! transportState->userDragging) && Time::getMillisecondCounter() - transportState->lastUserDragTime > 200)
-            playbackContext->playhead.setPosition (position);
+            playHeadWrapper->setPosition (position);
     }
     else
     {
         if ((! transportState->userDragging) && Time::getMillisecondCounter() - transportState->lastUserDragTime > 200)
         {
-            const double currentTime = playbackContext->playhead.getPosition();
+            const double currentTime = playHeadWrapper->getPosition();
             transportState->setVideoPosition (currentTime, false);
             transportState->updatePositionFromPlayhead (currentTime);
         }
@@ -861,11 +1025,11 @@ void TransportControl::timerCallback()
             {
                 auto lr = getLoopRange();
                 lr.end = std::max (lr.end, lr.start + 0.001);
-                playbackContext->playhead.setLoopTimes (true, lr);
+                playHeadWrapper->setLoopTimes (true, lr);
             }
             else
             {
-                playbackContext->playhead.setLoopTimes (false, {});
+                playHeadWrapper->setLoopTimes (false, {});
             }
         }
     }
@@ -915,7 +1079,7 @@ void TransportControl::setUserDragging (bool b)
     CRASH_TRACER
 
     if (playbackContext != nullptr)
-        playbackContext->playhead.setUserIsDragging (b);
+        playHeadWrapper->setUserIsDragging (b);
 
     if (b != transportState->userDragging)
     {
@@ -924,7 +1088,7 @@ void TransportControl::setUserDragging (bool b)
             edit.getAutomationRecordManager().punchOut (false);
 
             if (playbackContext != nullptr)
-                playbackContext->playhead.setPosition (position);
+                playHeadWrapper->setPosition (position);
         }
 
         transportState->userDragging = b;
@@ -1140,18 +1304,18 @@ void TransportControl::performPlay()
 
         if (playbackContext)
         {
-            playbackContext->playhead.play ({ transportState->startTime, transportState->endTime }, looping);
+            playHeadWrapper->play ({ transportState->startTime, transportState->endTime }, looping);
 
             if (looping)
             {
-                playbackContext->playhead.setPosition (position);
+                playHeadWrapper->setPosition (position);
             }
             else if (transportState->startTime < 0.2)
             {
                 // if we're playing from near time = 0, roll back a fraction so we
                 // don't miss the first block - this won't be noticable further along
                 // in the edit.
-                playbackContext->playhead.setPosition (transportState->startTime - 0.2);
+                playHeadWrapper->setPosition (transportState->startTime - 0.2);
             }
         }
         else
@@ -1243,7 +1407,7 @@ bool TransportControl::performRecord()
             if (playbackContext)
             {
                 if (edit.getNumCountInBeats() > 0)
-                    playbackContext->playhead.setLoopTimes (true, { transportState->startTime, Edit::maximumLength });
+                    playHeadWrapper->setLoopTimes (true, { transportState->startTime, Edit::maximumLength });
 
                 // if we're playing from near time = 0, roll back a fraction so we
                 // don't miss the first block - this won't be noticable further along
@@ -1252,13 +1416,13 @@ bool TransportControl::performRecord()
                     prerollStart -= 0.2;
 
                 if (looping)
-                    playbackContext->playhead.setRollInToLoop (prerollStart);
+                    playHeadWrapper->setRollInToLoop (prerollStart);
 
                 // Set the playhead loop times before preparing the context as this will be used by
                 // the RecordingContext to initialise itself
-                playbackContext->playhead.setLoopTimes (false, { prerollStart, transportState->endTime });
-                playbackContext->playhead.play ({ prerollStart, transportState->endTime }, false);
-                playbackContext->playhead.setPosition (prerollStart);
+                playHeadWrapper->setLoopTimes (false, { prerollStart, transportState->endTime });
+                playHeadWrapper->play ({ prerollStart, transportState->endTime }, false);
+                playHeadWrapper->setPosition (prerollStart);
                 position = prerollStart;
 
                 // Prepare the recordings after the playhead has been setup to avoid synchronisation problems
@@ -1315,11 +1479,11 @@ void TransportControl::performStop()
         CRASH_TRACER
 
         // grab this before stopping the playhead
-        auto recEndTime = playbackContext->playhead.getUnloopedPosition();
-        auto recEndPos  = playbackContext->playhead.getPosition();
+        auto recEndTime = playHeadWrapper->getUnloopedPosition();
+        auto recEndPos  = playHeadWrapper->getPosition();
 
         clearPlayingFlags();
-        playbackContext->playhead.stop();
+        playHeadWrapper->stop();
         playbackContext->recordingFinished ({ transportState->startTime, recEndTime },
                                             transportState->discardRecordings);
 
@@ -1333,7 +1497,7 @@ void TransportControl::performStop()
             engine.getUIBehaviour().showWarningMessage (TRANS("Can only abort a recording when something's actually recording."));
 
         clearPlayingFlags();
-        playbackContext->playhead.stop();
+        playHeadWrapper->stop();
     }
 
     if (transportState->clearDevices || ! edit.playInStopEnabled || transportState->clearDevicesOnStop)
@@ -1374,7 +1538,7 @@ void TransportControl::performPositionChange()
     }
 
     if (playbackContext != nullptr && isPlaying())
-        playbackContext->playhead.setPosition (newPos);
+        playHeadWrapper->setPosition (newPos);
 
     if (! isPlaying())
         transportState->cursorPosAtPlayStart = newPos;

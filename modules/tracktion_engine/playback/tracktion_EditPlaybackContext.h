@@ -75,6 +75,18 @@ public:
         Engine& engine;
     };
 
+    //==============================================================================
+    /** Enables the new tracktion_graph module for internal processing.
+        N.B. This is for development only and this method will be removed in the future.
+    */
+    static void enableExperimentalGraphProcessing (bool);
+    static bool isExperimentalGraphProcessingEnabled();
+
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+    tracktion_graph::PlayHead* getNodePlayHead() const;
+    double getSampleRate() const;
+   #endif
+
 private:
     bool isAllocated = false;
 
@@ -110,6 +122,14 @@ private:
     double syncInterval = 0;
     bool hasSynced = false;
     double lastStreamPos = 0;
+    
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+    struct NodePlaybackContext;
+    std::unique_ptr<NodePlaybackContext> nodePlaybackContext;
+    
+    void createNode();
+    void fillNextNodeBlock (juce::Range<int64_t> referenceSampleRange, float** allChannels, int numChannels);
+   #endif
 
     JUCE_DECLARE_WEAK_REFERENCEABLE (EditPlaybackContext)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EditPlaybackContext)

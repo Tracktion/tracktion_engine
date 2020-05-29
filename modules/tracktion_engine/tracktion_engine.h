@@ -181,6 +181,14 @@
     jassert (juce::MessageManager::getInstance()->currentThreadHasLockedMessageManager());
 
 //==============================================================================
+#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+ namespace tracktion_graph
+ {
+     class PlayHead;
+ }
+#endif //ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+
+//==============================================================================
 namespace tracktion_engine
 {
     class Engine;

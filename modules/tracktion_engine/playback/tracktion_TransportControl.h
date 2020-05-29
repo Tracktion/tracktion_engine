@@ -202,6 +202,9 @@ private:
 
     struct SectionPlayer;
     std::unique_ptr<SectionPlayer> sectionPlayer;
+    
+    struct PlayHeadWrapper;
+    std::unique_ptr<PlayHeadWrapper> playHeadWrapper;
 
     bool lastPlayStatus = false, lastRecordStatus = false;
     void startedOrStopped();

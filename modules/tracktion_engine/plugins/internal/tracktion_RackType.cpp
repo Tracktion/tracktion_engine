@@ -2119,28 +2119,28 @@ ModifierList& RackType::getModifierList() const noexcept
 }
 
 //==============================================================================
- namespace
- {
-     bool& getExperimentalGraphProcessingFlag()
-     {
-         static bool enabled = false;
-         return enabled;
-     }
- }
+namespace
+{
+    bool& getExperimentalGraphProcessingFlag()
+    {
+        static bool enabled = false;
+        return enabled;
+    }
+}
 
- void RackType::enableExperimentalGraphProcessing (bool enable)
- {
-     getExperimentalGraphProcessingFlag() = enable;
- }
- 
- bool RackType::isExperimentalGraphProcessingEnabled()
- {
-    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-     return getExperimentalGraphProcessingFlag();
-    #else
-     return false;
-    #endif
- }
+void RackType::enableExperimentalGraphProcessing (bool enable)
+{
+    getExperimentalGraphProcessingFlag() = enable;
+}
+
+bool RackType::isExperimentalGraphProcessingEnabled()
+{
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+    return getExperimentalGraphProcessingFlag();
+   #else
+    return false;
+   #endif
+}
 
 //==============================================================================
 struct RackTypeList::ValueTreeList  : public ValueTreeObjectList<RackType>

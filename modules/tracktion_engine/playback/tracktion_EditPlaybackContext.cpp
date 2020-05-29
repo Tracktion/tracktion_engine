@@ -11,6 +11,36 @@
 namespace tracktion_engine
 {
 
+#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+ struct EditPlaybackContext::NodePlaybackContext
+ {
+     NodePlaybackContext (double sampleRateToUse)
+        : sampleRate (sampleRateToUse)
+     {
+     }
+     
+     void process (juce::Range<int64_t> referenceSampleRange, float** allChannels, int numChannels)
+     {
+         const auto numSamples = referenceSampleRange.getLength();
+         playHead.setReferenceSampleRange (referenceSampleRange);
+     
+         juce::dsp::AudioBlock<float> audioBlock (allChannels, (size_t) numChannels, (size_t) numSamples);
+         scratchMidiBuffer.clear();
+         tracktion_graph::Node::ProcessContext pc { referenceSampleRange, { audioBlock, scratchMidiBuffer } };
+         player.process (pc);
+     }
+     
+     const double sampleRate;
+     tracktion_graph::PlayHead playHead;
+     tracktion_graph::PlayHeadState playHeadState { playHead };
+     tracktion_graph::NodePlayer player { nullptr, &playHeadState };
+     
+ private:
+     MidiMessageArray scratchMidiBuffer;
+ };
+#endif
+
+//==============================================================================
 std::function<AudioNode*(AudioNode*)> EditPlaybackContext::insertOptionalLastStageNode = [] (AudioNode* input)    { return input; };
 
 //==============================================================================
@@ -45,6 +75,10 @@ EditPlaybackContext::EditPlaybackContext (TransportControl& tc)
     if (edit.shouldPlay())
     {
         edit.engine.getDeviceManager().addContext (this);
+
+       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+        nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.engine.getDeviceManager().getSampleRate());
+       #endif
     }
 }
 
@@ -379,6 +413,36 @@ static AudioNode* createPlaybackAudioNode (Edit& edit, OutputDeviceInstance& dev
     return finalNode;
 }
 
+#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+void EditPlaybackContext::createNode()
+{
+    CRASH_TRACER
+    isAllocated = true;
+    
+    CreateNodeParams cnp;
+    auto newNode = createNodeForEdit (edit, nodePlaybackContext->playHeadState, cnp);
+
+    const auto& tempoSections = edit.tempoSequence.getTempoSections();
+    const bool hasTempoChanged = tempoSections.getChangeCount() != lastTempoSections.getChangeCount();
+
+    nodePlaybackContext->player.setNode (std::move (newNode));
+
+    if (hasTempoChanged && lastTempoSections.size() > 0)
+    {
+        const auto sampleRate = edit.engine.getDeviceManager().getSampleRate();
+        const auto lastTime = sampleToTime (nodePlaybackContext->playHead.getPosition(), sampleRate);
+        const auto lastBeats = lastTempoSections.timeToBeats (lastTime);
+        const auto lastPositionRemapped = tempoSections.beatsToTime (lastBeats);
+
+        const auto lastSampleRemapped = timeToSample (lastPositionRemapped, sampleRate);
+        nodePlaybackContext->playHead.overridePosition (lastSampleRemapped);
+    }
+
+    if (hasTempoChanged)
+        lastTempoSections = tempoSections;
+}
+#endif
+
 void EditPlaybackContext::createAudioNodes (double startTime, bool addAntiDenormalisationNoise)
 {
     CRASH_TRACER
@@ -431,7 +495,13 @@ void EditPlaybackContext::createAudioNodes (double startTime, bool addAntiDenorm
 
 void EditPlaybackContext::createPlayAudioNodes (double startTime)
 {
-    createAudioNodes (startTime, shouldAddAntiDenormalisationNoise (edit.engine));
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+    if (isExperimentalGraphProcessingEnabled())
+        createNode();
+    else
+   #endif
+        createAudioNodes (startTime, shouldAddAntiDenormalisationNoise (edit.engine));
+    
     startPlaying (startTime);
 }
 
@@ -697,6 +767,20 @@ void EditPlaybackContext::fillNextAudioBlock (EditTimeRange streamTime, float** 
         wo->fillNextAudioBlock (playhead, streamTime, allChannels, numSamples);
 }
 
+#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+void EditPlaybackContext::fillNextNodeBlock (juce::Range<int64_t> referenceSampleRange, float** allChannels, int numChannels)
+{
+    CRASH_TRACER
+
+    if (edit.isRendering())
+        return;
+
+    SCOPED_REALTIME_CHECK
+    if (nodePlaybackContext)
+        nodePlaybackContext->process (referenceSampleRange, allChannels, numChannels);
+}
+#endif
+
 InputDeviceInstance* EditPlaybackContext::getInputFor (InputDevice* d) const
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
@@ -741,6 +825,44 @@ void EditPlaybackContext::setAddAntiDenormalisationNoise (Engine& e, bool b)
     e.getPropertyStorage().setProperty (SettingID::addAntiDenormalNoise, b);
     hasCheckedDenormNoise = false;
 }
+
+//==============================================================================
+namespace EditPlaybackContextInternal
+{
+    bool& getExperimentalGraphProcessingFlag()
+    {
+        static bool enabled = false;
+        return enabled;
+    }
+}
+
+void EditPlaybackContext::enableExperimentalGraphProcessing (bool enable)
+{
+    EditPlaybackContextInternal::getExperimentalGraphProcessingFlag() = enable;
+}
+
+bool EditPlaybackContext::isExperimentalGraphProcessingEnabled()
+{
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+    return EditPlaybackContextInternal::getExperimentalGraphProcessingFlag();
+   #else
+    return false;
+   #endif
+}
+
+#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+tracktion_graph::PlayHead* EditPlaybackContext::getNodePlayHead() const
+{
+    return nodePlaybackContext ? &nodePlaybackContext->playHead
+                               : nullptr;
+}
+
+double EditPlaybackContext::getSampleRate() const
+{
+    return nodePlaybackContext ? nodePlaybackContext->sampleRate
+                               : 44100.0;
+}
+#endif
 
 //==============================================================================
 #if JUCE_WINDOWS
