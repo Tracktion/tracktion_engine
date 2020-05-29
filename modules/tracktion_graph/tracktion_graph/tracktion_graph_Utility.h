@@ -102,4 +102,12 @@ constexpr juce::Range<int64_t> timeToSample (juce::Range<double> timeInSeconds, 
              timeToSample (timeInSeconds.getEnd(), sampleRate) };
 }
 
+/** Converts a time range in seconds to a range of sample numbers. */
+template<typename RangeType>
+constexpr juce::Range<int64_t> timeToSample (RangeType timeInSeconds, double sampleRate)
+{
+    return { timeToSample (timeInSeconds.getStart(), sampleRate),
+             timeToSample (timeInSeconds.getEnd(), sampleRate) };
+}
+
 }

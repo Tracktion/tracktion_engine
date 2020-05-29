@@ -42,8 +42,8 @@ public:
             expect (playHeadState.isFirstBlockOfLoop());
             expect (! playHeadState.isLastBlockOfLoop());
 
-            playHead.incrementReferenceSampleCount (blockSize);
             referenceRange += blockSize;
+            playHead.setReferenceSampleRange (referenceRange);
             playHeadState.update (referenceRange);
 
             expect (playHeadState.isContiguousWithPreviousBlock());
@@ -51,8 +51,8 @@ public:
             expect (! playHeadState.isFirstBlockOfLoop());
             expect (! playHeadState.isLastBlockOfLoop());
 
-            playHead.incrementReferenceSampleCount (blockSize);
             referenceRange += blockSize;
+            playHead.setReferenceSampleRange (referenceRange);
             playHeadState.update (referenceRange);
 
             expect (playHeadState.isContiguousWithPreviousBlock());
@@ -75,8 +75,8 @@ public:
             expect (! playHeadState.isFirstBlockOfLoop());
             expect (! playHeadState.isLastBlockOfLoop());
 
-            playHead.incrementReferenceSampleCount (blockSize);
             referenceRange += blockSize;
+            playHead.setReferenceSampleRange (referenceRange);
             playHeadState.update (referenceRange);
 
             expect (playHeadState.isContiguousWithPreviousBlock());
@@ -84,8 +84,8 @@ public:
             expect (! playHeadState.isFirstBlockOfLoop());
             expect (! playHeadState.isLastBlockOfLoop());
 
-            playHead.incrementReferenceSampleCount (blockSize);
             referenceRange += blockSize;
+            playHead.setReferenceSampleRange (referenceRange);
             playHeadState.update (referenceRange);
 
             expect (playHeadState.isContiguousWithPreviousBlock());

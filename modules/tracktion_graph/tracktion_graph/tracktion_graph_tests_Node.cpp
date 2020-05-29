@@ -646,6 +646,6 @@ private:
     }
 };
 
-static NodeTests NodeTests;
+static NodeTests nodeTests;
 
 }

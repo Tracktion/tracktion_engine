@@ -73,19 +73,24 @@ private:
             {
                 PlayHead playHead;
                 playHead.play ({ 0, 10'000 }, false);
+                juce::Range<int64_t> referenceRange;
+
                 expectEquals<int64_t> (playHead.getPosition(), 0);
                 expectEquals<int64_t> (playHead.referenceSamplePositionToTimelinePosition (0), 0);
 
-                playHead.incrementReferenceSampleCount (500);
+                referenceRange += 500;
+                playHead.setReferenceSampleRange (referenceRange);
                 expectEquals<int64_t> (playHead.getPosition(), 500);
                 expectEquals<int64_t> (playHead.referenceSamplePositionToTimelinePosition (0), 0);
 
-                playHead.incrementReferenceSampleCount (1000);
+                referenceRange += 1000;
+                playHead.setReferenceSampleRange (referenceRange);
                 expectEquals<int64_t> (playHead.getPosition(), 1500);
                 expectEquals<int64_t> (playHead.referenceSamplePositionToTimelinePosition (0), 0);
 
                 playHead.stop();
-                playHead.incrementReferenceSampleCount (500);
+                referenceRange += 500;
+                playHead.setReferenceSampleRange (referenceRange);
                 expectEquals<int64_t> (playHead.getPosition(), 1500); // timeline position hasn't moved
                 expectEquals<int64_t> (playHead.referenceSamplePositionToTimelinePosition (0), 1500); // ref position is at the previous timeline pos
 
@@ -94,7 +99,8 @@ private:
                 // ref position is now synced to the last timeline pos (2000)
                 expectEquals<int64_t> (playHead.referenceSamplePositionToTimelinePosition (0), -500);
                 expectEquals<int64_t> (playHead.getPosition(), 1500);
-                playHead.incrementReferenceSampleCount (500);
+                referenceRange += 500;
+                playHead.setReferenceSampleRange (referenceRange);
                 expectEquals<int64_t> (playHead.getPosition(), 2000);
                 expectEquals<int64_t> (playHead.referenceSamplePositionToTimelinePosition (0), -500);
             }
@@ -106,8 +112,8 @@ private:
                 
                 auto incrementReferencePos = [&] (int64_t numSamples)
                 {
-                    playHead.incrementReferenceSampleCount (numSamples);
                     referencePos += numSamples;
+                    playHead.setReferenceSampleRange ({ referencePos, referencePos });
                 };
                 
                 expectEquals<int64_t> (playHead.getPosition(), 0);
@@ -147,8 +153,8 @@ private:
                 
                 auto incrementReferencePos = [&] (int64_t numSamples)
                 {
-                    playHead.incrementReferenceSampleCount (numSamples);
                     referencePos += numSamples;
+                    playHead.setReferenceSampleRange ({ referencePos, referencePos });
                 };
                 
                 expectEquals<int64_t> (playHead.getPosition(), 1'000);
@@ -190,7 +196,7 @@ private:
                 expect (playHead.isRollingIntoLoop());
 
                 expectEquals<int64_t> (playHead.getPosition(), 500);
-                playHead.incrementReferenceSampleCount (500);
+                playHead.setReferenceSampleRange ({ 500, 500 });
                 expectEquals<int64_t> (playHead.getPosition(), 1'000);
                 expect (! playHead.isRollingIntoLoop());
             }

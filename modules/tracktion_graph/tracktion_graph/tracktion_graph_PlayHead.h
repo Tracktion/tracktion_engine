@@ -140,9 +140,9 @@ public:
     static int64_t linearPositionToLoopPosition (int64_t position, juce::Range<int64_t> loopRange);
 
     //==============================================================================
-    /** Incrementes the reference sample count, progressing the timeline if the play head is playing. */
-    void incrementReferenceSampleCount (int64_t numSamples);
-    
+    /** Sets the reference sample count, adjusting the timeline if the play head is playing. */
+    void setReferenceSampleRange (juce::Range<int64_t> sampleRange);
+
     /** Returns the playout sync position.
         For syncing a reference position to a timeline position.
     */
@@ -338,9 +338,9 @@ inline int64_t PlayHead::linearPositionToLoopPosition (int64_t position, juce::R
 }
 
 //==============================================================================
-inline void PlayHead::incrementReferenceSampleCount (int64_t numSamples)
+inline void PlayHead::setReferenceSampleRange (juce::Range<int64_t> sampleRange)
 {
-    referenceSampleRange = referenceSampleRange.load() + numSamples;
+    referenceSampleRange = sampleRange;
 
     if (rollInToLoop && getPosition() >= timelinePlayRange.load().getStart())
         rollInToLoop = false;
@@ -383,8 +383,8 @@ inline SplitTimelineRange referenceSampleRangeToSplitTimelineRange (const PlayHe
     if (playHead.isLooping() && ! playHead.isRollingIntoLoop())
     {
         const auto pr = playHead.getLoopRange();
-        s = playHead.linearPositionToLoopPosition (s, pr);
-        e = playHead.linearPositionToLoopPosition (e, pr);
+        s = PlayHead::linearPositionToLoopPosition (s, pr);
+        e = PlayHead::linearPositionToLoopPosition (e, pr);
 
         if (s >= e)
         {
