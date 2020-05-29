@@ -103,7 +103,7 @@ void AuxSendPlugin::deinitialise()
     delayBuffer.setSize (2, 32, false);
 }
 
-void AuxSendPlugin::applyToBuffer (const AudioRenderContext& fc)
+void AuxSendPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     if (fc.destBuffer == nullptr)
         return;

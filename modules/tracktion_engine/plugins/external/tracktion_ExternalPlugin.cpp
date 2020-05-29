@@ -204,17 +204,15 @@ public:
                  reference to the context hanging around; it may well have dissapeared by the time these plugins
                  get around to calling it. The best we can do is keep the last info we got.
     */
-    void setCurrentContext (const AudioRenderContext* rc)
+    void setCurrentContext (const PluginRenderContext* rc)
     {
         if (rc != nullptr)
         {
-            playhead    = &rc->playhead;
-            time        = rc->getEditTime().editRange1.getStart();
-            isPlaying   = rc->playhead.isPlaying();
+            time        = rc->editTime;
+            isPlaying   = rc->isPlaying;
         }
         else
         {
-            playhead    = nullptr;
             time        = 0.0;
             isPlaying   = false;
         }
@@ -225,24 +223,24 @@ public:
         zerostruct (result);
         result.frameRate = getFrameRate();
 
-        if (currentPos == nullptr || playhead == nullptr)
+        if (currentPos == nullptr)
             return false;
 
-        auto& ph = *playhead;
         auto& transport = plugin.edit.getTransport();
         double localTime = time;
 
         result.isPlaying        = isPlaying;
         result.isRecording      = transport.isRecording();
         result.editOriginTime   = transport.getTimeWhenStarted();
-        result.isLooping        = ph.isLooping();
+        result.isLooping        = transport.looping;
 
         if (result.isLooping)
         {
-            loopStart->setTime (ph.getLoopTimes().start);
+            const auto loopTimes = transport.getLoopRange();
+            loopStart->setTime (loopTimes.start);
             result.ppqLoopStart = loopStart->getPPQTime();
 
-            loopEnd->setTime (ph.getLoopTimes().end);
+            loopEnd->setTime (loopTimes.end);
             result.ppqLoopEnd = loopEnd->getPPQTime();
         }
 
@@ -264,7 +262,6 @@ public:
 private:
     ExternalPlugin& plugin;
     std::unique_ptr<TempoSequencePosition> currentPos, loopStart, loopEnd;
-    std::atomic<PlayHead*> playhead { nullptr };
     std::atomic<double> time { 0 };
     std::atomic<bool> isPlaying { false };
 
@@ -1179,7 +1176,7 @@ void ExternalPlugin::prepareIncomingMidiMessages (MidiMessageArray& incoming, in
     incoming.clear();
 }
 
-void ExternalPlugin::applyToBuffer (const AudioRenderContext& fc)
+void ExternalPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     if (pluginInstance != nullptr && isEnabled())
     {
@@ -1193,7 +1190,7 @@ void ExternalPlugin::applyToBuffer (const AudioRenderContext& fc)
         midiBuffer.clear();
 
         if (fc.bufferForMidiMessages != nullptr)
-            prepareIncomingMidiMessages (*fc.bufferForMidiMessages, fc.bufferNumSamples, fc.playhead.isPlaying());
+            prepareIncomingMidiMessages (*fc.bufferForMidiMessages, fc.bufferNumSamples, fc.isPlaying);
 
         if (fc.destBuffer != nullptr)
         {
@@ -1235,7 +1232,7 @@ void ExternalPlugin::applyToBuffer (const AudioRenderContext& fc)
                     buffer.applyGain (0, 0, fc.bufferNumSamples, 0.5f);
                 }
 
-                AudioRenderContext fc2 (fc);
+                PluginRenderContext fc2 (fc);
                 fc2.destBuffer = &asb.buffer;
                 fc2.bufferStartSample = 0;
 
@@ -1279,7 +1276,7 @@ void ExternalPlugin::applyToBuffer (const AudioRenderContext& fc)
     }
 }
 
-void ExternalPlugin::processPluginBlock (const AudioRenderContext& fc)
+void ExternalPlugin::processPluginBlock (const PluginRenderContext& fc)
 {
     juce::AudioBuffer<float> asb (fc.destBuffer->getArrayOfWritePointers(), fc.destBuffer->getNumChannels(),
                                   fc.bufferStartSample, fc.bufferNumSamples);

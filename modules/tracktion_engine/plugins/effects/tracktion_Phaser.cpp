@@ -41,7 +41,7 @@ void PhaserPlugin::deinitialise()
 {
 }
 
-void PhaserPlugin::applyToBuffer (const AudioRenderContext& fc)
+void PhaserPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     if (fc.destBuffer == nullptr)
         return;

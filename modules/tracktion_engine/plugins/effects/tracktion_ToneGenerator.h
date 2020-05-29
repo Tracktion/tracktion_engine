@@ -30,7 +30,7 @@ public:
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmax (1, numInputChannels); }
     void initialise (const PlaybackInitialisationInfo&) override;
     void deinitialise() override;
-    void applyToBuffer (const AudioRenderContext&) override;
+    void applyToBuffer (const PluginRenderContext&) override;
     juce::String getSelectableDescription() override    { return getName(); }
     bool needsConstantBufferSize() override             { return false; }
 

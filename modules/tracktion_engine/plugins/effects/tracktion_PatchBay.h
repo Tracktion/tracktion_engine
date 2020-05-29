@@ -51,7 +51,7 @@ public:
     void deinitialise() override;
 
     void getChannelNames (juce::StringArray*, juce::StringArray*) override;
-    void applyToBuffer (const AudioRenderContext&) override;
+    void applyToBuffer (const PluginRenderContext&) override;
 
 private:
     struct WireList;

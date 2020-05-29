@@ -187,7 +187,7 @@ public:
 
     void reset() override;
 
-    void applyToBuffer (const AudioRenderContext&) override;
+    void applyToBuffer (const PluginRenderContext&) override;
 
     //==============================================================================
     bool takesMidiInput() override                      { return true; }

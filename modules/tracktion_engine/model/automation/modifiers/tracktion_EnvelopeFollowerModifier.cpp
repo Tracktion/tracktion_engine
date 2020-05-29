@@ -349,20 +349,17 @@ void EnvelopeFollowerModifier::deinitialise()
     reset();
 }
 
-void EnvelopeFollowerModifier::applyToBuffer (const AudioRenderContext& rc)
+void EnvelopeFollowerModifier::applyToBuffer (const PluginRenderContext& pc)
 {
-    if (rc.destBuffer == nullptr)
+    if (pc.destBuffer == nullptr)
         return;
 
-    updateParameterStreams (rc.getEditTime().editRange1.getStart());
+    updateParameterStreams (pc.editTime);
 
-    if (rc.didPlayheadJump())
-        reset();
-
-    AudioBuffer<float> ab (rc.destBuffer->getArrayOfWritePointers(),
-                           rc.destBuffer->getNumChannels(),
-                           rc.bufferStartSample,
-                           rc.bufferNumSamples);
+    AudioBuffer<float> ab (pc.destBuffer->getArrayOfWritePointers(),
+                           pc.destBuffer->getNumChannels(),
+                           pc.bufferStartSample,
+                           pc.bufferNumSamples);
     processBlock (ab);
 }
 

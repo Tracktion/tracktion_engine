@@ -1436,7 +1436,7 @@ void FourOscPlugin::reset()
     turnOffAllVoices (false);
 }
 
-void FourOscPlugin::applyToBuffer (const AudioRenderContext& fc)
+void FourOscPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     juce::ScopedLock sl (voicesLock);
 
@@ -1445,7 +1445,7 @@ void FourOscPlugin::applyToBuffer (const AudioRenderContext& fc)
         SCOPED_REALTIME_CHECK
 
         // find the tempo
-        double now = fc.getEditTime().editRange1.getStart();
+        double now = fc.editTime;
         currentPos.setTime (now);
         currentTempo = float (currentPos.getCurrentTempo().bpm);
 

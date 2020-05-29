@@ -36,7 +36,7 @@ public:
 
     void initialise (const PlaybackInitialisationInfo&) override;
     void deinitialise() override;
-    void applyToBuffer (const AudioRenderContext&) override;
+    void applyToBuffer (const PluginRenderContext&) override;
 
     juce::String getSelectableDescription() override                    { return TRANS("Compressor/Limiter Plugin"); }
 

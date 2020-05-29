@@ -201,6 +201,7 @@ namespace tracktion_engine
     class Plugin;
     class AudioNode;
     struct AudioRenderContext;
+    struct PluginRenderContext;
     class AudioFile;
     class PlayHead;
     class Project;

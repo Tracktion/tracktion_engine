@@ -30,6 +30,67 @@ struct PluginCreationInfo
 
 
 //==============================================================================
+//==============================================================================
+/**
+    The context passed to plugin render methods to provide it with buffers to fill.
+*/
+struct PluginRenderContext
+{
+    PluginRenderContext (juce::AudioBuffer<float>* buffer,
+                         const juce::AudioChannelSet& bufferChannels,
+                         int bufferStart, int bufferSize,
+                         MidiMessageArray* midiBuffer, double midiOffset,
+                         double editTime, bool playing, bool scrubbing, bool rendering) noexcept;
+
+    /** Creates a PluginRenderContext from an AudioRenderContext. */
+    PluginRenderContext (const AudioRenderContext&);
+    
+    /** Creates a copy of another PluginRenderContext. */
+    PluginRenderContext (const PluginRenderContext&) = default;
+    PluginRenderContext (PluginRenderContext&&) = default;
+
+    /** Deleted assignment operators. */
+    PluginRenderContext& operator= (const PluginRenderContext&) = delete;
+    PluginRenderContext& operator= (PluginRenderContext&&) = delete;
+
+    /** The target audio buffer which needs to be filled.
+        This may be nullptr if no audio is being processed.
+    */
+    juce::AudioBuffer<float>* destBuffer = nullptr;
+
+    /** A description of the type of channels in each of the channels in destBuffer. */
+    juce::AudioChannelSet destBufferChannels;
+
+    /** The index of the start point in the audio buffer from which data must be written. */
+    int bufferStartSample = 0;
+
+    /** The number of samples to write into the audio buffer. */
+    int bufferNumSamples = 0;
+
+    /** A buffer of MIDI events to process.
+        This may be nullptr if no MIDI is being sent
+    */
+    MidiMessageArray* bufferForMidiMessages = nullptr;
+
+    /** A time offset to add to the timestamp of any events in the MIDI buffer. */
+    double midiBufferOffset = 0.0;
+
+    /** The time in seconds that the start of this context represents. */
+    double editTime = 0.0;
+
+    /** True if the the playhead is currently playing. */
+    bool isPlaying = false;
+
+    /** True if the the audio is currently being scrubbed. */
+    bool isScrubbing = false;
+
+    /** True if the rendering is happening as part of an offline render rather than live playback. */
+    bool isRendering = false;
+};
+
+
+//==============================================================================
+//==============================================================================
 class Plugin  : public Selectable,
                 public juce::ReferenceCountedObject,
                 public Exportable,
@@ -124,13 +185,13 @@ public:
 
         Other parameters and principles are similar to AudioNode::readBlock()
     */
-    virtual void applyToBuffer (const AudioRenderContext&) = 0;
+    virtual void applyToBuffer (const PluginRenderContext&) = 0;
 
     /** Called between successive rendering blocks. */
-    virtual void prepareForNextBlock (const AudioRenderContext&) {}
+    virtual void prepareForNextBlock (const PluginRenderContext&) {}
 
     // wrapper on applyTobuffer, called by the node
-    void applyToBufferWithAutomation (const AudioRenderContext&);
+    void applyToBufferWithAutomation (const PluginRenderContext&);
 
     /** Creates a new audio node that will render this plugin. */
     AudioNode* createAudioNode (AudioNode* input, bool applyAntiDenormalisationNoise);

@@ -129,13 +129,22 @@ std::unique_ptr<tracktion_graph::SummingNode> createClipsNode (const juce::Array
     return summingNode;
 }
 
-std::unique_ptr<tracktion_graph::Node> createNodeForPlugin (Plugin& plugin, std::unique_ptr<Node> node, const CreateNodeParams&)
+std::unique_ptr<tracktion_graph::Node> createNodeForPlugin (Plugin& plugin, std::unique_ptr<Node> node,
+                                                            tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
     jassert (node != nullptr);
 
     if (plugin.isDisabled())
         return node;
 
+    auto& deviceManager = plugin.edit.engine.getDeviceManager();;
+    double sampleRate = deviceManager.getSampleRate();
+    int blockSize = deviceManager.getBlockSize();
+    node = tracktion_graph::makeNode<PluginNode> (std::move (node),
+                                                  plugin,
+                                                  sampleRate, blockSize,
+                                                  playHeadState.playHead, params.forRendering);
+    
     //TODO:
     // Side-chain send
     // Fine-grain automation
@@ -143,22 +152,24 @@ std::unique_ptr<tracktion_graph::Node> createNodeForPlugin (Plugin& plugin, std:
     return node;
 }
 
-std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList& list, std::unique_ptr<Node> node, const CreateNodeParams& params)
+std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList& list, std::unique_ptr<Node> node,
+                                                                tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
     for (auto p : list)
         if (! p->mustBePlayedLiveWhenOnAClip())
-            node = createNodeForPlugin (*p, std::move (node), params);
+            node = createNodeForPlugin (*p, std::move (node), playHeadState, params);
 
     return node;
 }
 
-std::unique_ptr<tracktion_graph::Node> createPluginNodeForTrack (AudioTrack& at, std::unique_ptr<Node> node, const CreateNodeParams& params)
+std::unique_ptr<tracktion_graph::Node> createPluginNodeForTrack (AudioTrack& at, std::unique_ptr<Node> node,
+                                                                 tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
     //TODO:
     // Pre-fx modifier node
     // Post-fx modifier node
 
-    node = createPluginNodeForList (at.pluginList, std::move (node), params);
+    node = createPluginNodeForList (at.pluginList, std::move (node), playHeadState, params);
 
     return node;
 }
@@ -175,6 +186,11 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioTrack (AudioTrack& at, 
 
     auto clipsNode = createClipsNode (clips, playHeadState, params);
     
+    if (clipsNode == nullptr)
+        return {};
+    
+    return createPluginNodeForTrack (at, std::move (clipsNode), playHeadState, params);
+    
     //TODO:
     // Input tracks
     // ARA clips
@@ -182,8 +198,6 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioTrack (AudioTrack& at, 
     // Live midi out
     // Live midi in
     // Track devices (track outputs to inputs)
-    
-    return clipsNode;
 }
 
 //==============================================================================

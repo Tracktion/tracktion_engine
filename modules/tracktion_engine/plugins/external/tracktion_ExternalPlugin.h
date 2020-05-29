@@ -45,7 +45,7 @@ public:
     void reset() override;
     void setEnabled (bool enabled) override;
 
-    void applyToBuffer (const AudioRenderContext&) override;
+    void applyToBuffer (const PluginRenderContext&) override;
 
     bool producesAudioWhenNoAudioInput() override   { return isAutomationNeeded() || isSynth() || ! noTail(); }
     int getNumOutputChannelsGivenInputs (int numInputs) override;
@@ -156,7 +156,7 @@ private:
     void buildParameterList();
     void refreshParameterValues();
     void updateDebugName();
-    void processPluginBlock (const AudioRenderContext&);
+    void processPluginBlock (const PluginRenderContext&);
 
     std::unique_ptr<juce::PluginDescription> findMatchingPlugin() const;
     std::unique_ptr<juce::PluginDescription> findDescForUID (int uid) const;

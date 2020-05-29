@@ -256,7 +256,7 @@ void InsertPlugin::deinitialise()
     returnMidiBuffer.clear();
 }
 
-void InsertPlugin::applyToBuffer (const AudioRenderContext& fc)
+void InsertPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     CRASH_TRACER
     // Fill send buffer with data

@@ -27,7 +27,7 @@ public:
     void initialise (const PlaybackInitialisationInfo&) override;
     void deinitialise() override;
     int getNumOutputChannelsGivenInputs (int numInputChannels) override  { return juce::jmin (numInputChannels, 2); }
-    void applyToBuffer (const AudioRenderContext&) override;
+    void applyToBuffer (const PluginRenderContext&) override;
     juce::String getSelectableDescription() override;
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 

@@ -165,7 +165,7 @@ void LatencyPlugin::deinitialise()
         delayCompensator[i]->clear();
 }
 
-void LatencyPlugin::applyToBuffer (const AudioRenderContext& rc)
+void LatencyPlugin::applyToBuffer (const PluginRenderContext& rc)
 {
     if (! applyLatency.get())
         return;

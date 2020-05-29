@@ -95,7 +95,7 @@ void CompressorPlugin::deinitialise()
 
 static const float preFilterAmount = 0.9f; // more = smoother level detection
 
-void CompressorPlugin::applyToBuffer (const AudioRenderContext& fc)
+void CompressorPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     if (fc.destBuffer == nullptr)
         return;

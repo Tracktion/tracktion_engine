@@ -11,6 +11,33 @@
 namespace tracktion_engine
 {
 
+PluginRenderContext::PluginRenderContext (juce::AudioBuffer<float>* buffer,
+                                          const juce::AudioChannelSet& bufferChannels,
+                                          int bufferStart, int bufferSize,
+                                          MidiMessageArray* midiBuffer, double midiOffset,
+                                          double editStartTime, bool playing, bool scrubbing, bool rendering) noexcept
+    : destBuffer (buffer), destBufferChannels (bufferChannels),
+      bufferStartSample (bufferStart), bufferNumSamples (bufferSize),
+      bufferForMidiMessages (midiBuffer), midiBufferOffset (midiOffset),
+      editTime (editStartTime),
+      isPlaying (playing), isScrubbing (scrubbing), isRendering (rendering)
+{}
+
+PluginRenderContext::PluginRenderContext (const AudioRenderContext& rc)
+    : destBuffer (rc.destBuffer),
+      destBufferChannels (rc.destBufferChannels),
+      bufferStartSample (rc.bufferStartSample),
+      bufferNumSamples (rc.bufferNumSamples),
+      bufferForMidiMessages (rc.bufferForMidiMessages),
+      midiBufferOffset (rc.midiBufferOffset),
+      editTime (rc.getEditTime().editRange1.getStart()),
+      isPlaying (rc.playhead.isPlaying()),
+      isScrubbing (rc.playhead.isUserDragging()),
+      isRendering (rc.isRendering)
+{
+}
+
+//==============================================================================
 Plugin::Wire::Wire (const juce::ValueTree& v, UndoManager* um)  : state (v)
 {
     sourceChannelIndex.referTo (state, IDs::srcChan, um);
@@ -944,7 +971,7 @@ void Plugin::setQuickControlParameter (AutomatableParameter* param)
         quickParamName = param->paramID;
 }
 
-void Plugin::applyToBufferWithAutomation (const AudioRenderContext& fc)
+void Plugin::applyToBufferWithAutomation (const PluginRenderContext& pc)
 {
     SCOPED_REALTIME_CHECK
 
@@ -958,26 +985,26 @@ void Plugin::applyToBufferWithAutomation (const AudioRenderContext& fc)
     if (isAutomationNeeded()
         && (arm.isReadingAutomation() || isClipEffect.load()))
     {
-        if (fc.playhead.isUserDragging() || ! fc.playhead.isPlaying())
+        if (pc.isScrubbing || ! pc.isPlaying)
         {
             SCOPED_REALTIME_CHECK
             auto& tc = edit.getTransport();
-            updateParameterStreams (tc.isPlayContextActive() && ! fc.isRendering
+            updateParameterStreams (tc.isPlayContextActive() && ! pc.isRendering
                                         ? tc.getCurrentPosition()
-                                        : fc.getEditTime().editRange1.getStart());
-            applyToBuffer (fc);
+                                        : pc.editTime);
+            applyToBuffer (pc);
         }
         else
         {
             SCOPED_REALTIME_CHECK
-            updateParameterStreams (fc.getEditTime().editRange1.getStart());
-            applyToBuffer (fc);
+            updateParameterStreams (pc.editTime);
+            applyToBuffer (pc);
         }
     }
     else
     {
         SCOPED_REALTIME_CHECK
-        applyToBuffer (fc);
+        applyToBuffer (pc);
     }
 }
 

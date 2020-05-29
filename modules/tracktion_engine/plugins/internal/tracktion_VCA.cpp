@@ -63,7 +63,7 @@ const char* VCAPlugin::xmlTypeName = "vca";
 
 void VCAPlugin::initialise (const PlaybackInitialisationInfo&) {}
 void VCAPlugin::deinitialise() {}
-void VCAPlugin::applyToBuffer (const AudioRenderContext&) {}
+void VCAPlugin::applyToBuffer (const PluginRenderContext&) {}
 
 float VCAPlugin::getSliderPos() const
 {

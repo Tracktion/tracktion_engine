@@ -289,7 +289,7 @@ public:
         pluginsServedThisFrame = 0;
     }
 
-    void getAudioOutput (const AudioRenderContext& fc,
+    void getAudioOutput (const PluginRenderContext& fc,
                          int leftChannelIndex, int rightChannelIndex,
                          int bus, int channel)
     {
@@ -435,11 +435,11 @@ public:
         e.fEventTarget.fChannel = (unsigned short) channel;
     }
 
-    bool isPlaying (const AudioRenderContext& fc, ReWireDriveAudioInputParams& in)
+    bool isPlaying (const PluginRenderContext& fc, ReWireDriveAudioInputParams& in)
     {
-        auto playheadOutputTime = fc.getEditTime().editRange1.getStart();
+        auto playheadOutputTime = fc.editTime;
 
-        if ((fc.playhead.isPlaying() && playheadOutputTime >= 0) || fc.isRendering)
+        if ((fc.isPlaying && playheadOutputTime >= 0) || fc.isRendering)
         {
             if (lastTime > playheadOutputTime || lastTime < playheadOutputTime - timePerBlock)
                 in.fPlayMode = kReWirePlayModeChaseAndPlay;
@@ -1104,17 +1104,17 @@ void ReWirePlugin::deinitialise()
         device->deinitialise();
 }
 
-void ReWirePlugin::prepareForNextBlock (const AudioRenderContext& rc)
+void ReWirePlugin::prepareForNextBlock (const PluginRenderContext& pc)
 {
     if (currentTempoPosition != nullptr && device != nullptr)
     {
-        currentTempoPosition->setTime (rc.playhead.streamTimeToSourceTime (rc.streamTime.getStart()));
+        currentTempoPosition->setTime (pc.editTime);
 
         device->updateTempoInfo (TempoSequencePosition (*currentTempoPosition));
     }
 }
 
-void ReWirePlugin::applyToBuffer (const AudioRenderContext& fc)
+void ReWirePlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     if (fc.destBuffer != nullptr && device != nullptr)
     {

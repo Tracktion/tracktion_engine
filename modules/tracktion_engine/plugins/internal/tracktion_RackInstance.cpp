@@ -340,14 +340,14 @@ double RackInstance::getLatencySeconds()
     return 0.0;
 }
 
-void RackInstance::prepareForNextBlock (const AudioRenderContext& rc)
+void RackInstance::prepareForNextBlock (const PluginRenderContext& pc)
 {
     // N.B. This will be called by the EditPlaybackContext during normal playback
-    if (type != nullptr && rc.isRendering)
+    if (type != nullptr && pc.isRendering)
         type->newBlockStarted();
 }
 
-void RackInstance::applyToBuffer (const AudioRenderContext& fc)
+void RackInstance::applyToBuffer (const PluginRenderContext& fc)
 {
     const float wet = wetGain->getCurrentValue();
 

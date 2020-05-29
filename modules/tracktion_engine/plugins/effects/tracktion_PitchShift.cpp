@@ -53,7 +53,7 @@ struct PitchShiftPlugin::Pimpl
         latencySeconds = latencySamples / sr;
     }
 
-    void applyToBuffer (const AudioRenderContext& fc, float semis)
+    void applyToBuffer (const PluginRenderContext& fc, float semis)
     {
         SCOPED_REALTIME_CHECK
 
@@ -161,7 +161,7 @@ void PitchShiftPlugin::deinitialise()
 {
 }
 
-void PitchShiftPlugin::applyToBuffer (const AudioRenderContext& fc)
+void PitchShiftPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     pimpl->applyToBuffer (fc, semitones->getCurrentValue());
 

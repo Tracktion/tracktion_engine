@@ -31,15 +31,15 @@ struct InputProvider
         return { audio, midi };
     }
     
-    void setContext (tracktion_engine::AudioRenderContext* rc)
+    void setContext (tracktion_engine::PluginRenderContext* pc)
     {
-        context = rc;
+        context = pc;
     }
     
     /** Returns the context currently in use.
         This is only valid for the duration of the process call.
     */
-    tracktion_engine::AudioRenderContext& getContext()
+    tracktion_engine::PluginRenderContext& getContext()
     {
         jassert (context != nullptr);
         return *context;
@@ -49,7 +49,7 @@ struct InputProvider
     juce::dsp::AudioBlock<float> audio;
     tracktion_engine::MidiMessageArray midi;
 
-    tracktion_engine::AudioRenderContext* context = nullptr;
+    tracktion_engine::PluginRenderContext* context = nullptr;
 };
 
 
@@ -135,7 +135,21 @@ public:
         jassert (plugin != nullptr);
         initialisePlugin (sampleRateToUse, blockSizeToUse);
     }
-    
+
+    PluginNode (std::unique_ptr<Node> inputNode,
+                tracktion_engine::Plugin::Ptr pluginToProcess,
+                double sampleRateToUse, int blockSizeToUse,
+                tracktion_graph::PlayHead& playHeadToUse, bool rendering)
+        : input (std::move (inputNode)),
+          plugin (std::move (pluginToProcess)),
+          playHead (&playHeadToUse),
+          isRendering (rendering)
+    {
+        jassert (input != nullptr);
+        jassert (plugin != nullptr);
+        initialisePlugin (sampleRateToUse, blockSizeToUse);
+    }
+
     ~PluginNode() override
     {
         if (isInitialised && ! plugin->baseClassNeedsInitialising())
@@ -150,9 +164,9 @@ public:
     tracktion_graph::NodeProperties getNodeProperties() override
     {
         auto props = input->getNodeProperties();
-        const auto latencyNumSamples = roundToInt (plugin->getLatencySeconds() * sampleRate);
+        const auto latencyNumSamples = juce::roundToInt (plugin->getLatencySeconds() * sampleRate);
 
-        props.numberOfChannels = jmax (1, props.numberOfChannels, plugin->getNumOutputChannelsGivenInputs (props.numberOfChannels));
+        props.numberOfChannels = juce::jmax (1, props.numberOfChannels, plugin->getNumOutputChannelsGivenInputs (props.numberOfChannels));
         props.hasAudio = plugin->producesAudioWhenNoAudioInput();
         props.hasMidi  = plugin->takesMidiInput();
         props.latencyNumSamples = std::max (props.latencyNumSamples, latencyNumSamples);
@@ -173,7 +187,7 @@ public:
     
     void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info) override
     {
-        ignoreUnused (info);
+        juce::ignoreUnused (info);
         jassert (sampleRate == info.sampleRate);
     }
     
@@ -203,26 +217,17 @@ public:
         for (size_t i = 0; i < numChannelsToUse; ++i)
             channels[i] = outputAudioBlock.getChannelPointer (i);
 
-        AudioBuffer<float> outputAudioBuffer (channels,
-                                              (int) numChannelsToUse,
-                                              (int) outputAudioBlock.getNumSamples());
+        juce::AudioBuffer<float> outputAudioBuffer (channels,
+                                                    (int) numChannelsToUse,
+                                                    (int) outputAudioBlock.getNumSamples());
 
         // Then MIDI buffers
         midiMessageArray.copyFrom (inputBuffers.midi);
 
-        // Then prepare the AudioRenderContext
-        auto sourceContext = audioRenderContextProvider->getContext();
-        tracktion_engine::AudioRenderContext rc (sourceContext);
-        rc.destBuffer = &outputAudioBuffer;
-        rc.bufferStartSample = 0;
-        rc.bufferNumSamples = outputAudioBuffer.getNumSamples();
-        rc.bufferForMidiMessages = &midiMessageArray;
-        rc.midiBufferOffset = 0.0;
-
         // Process the plugin
         //TODO: If a plugin is disabled we should probably apply our own latency to the plugin
         if (plugin->isEnabled())
-            plugin->applyToBufferWithAutomation (rc);
+            plugin->applyToBufferWithAutomation (getPluginRenderContext (pc.streamSampleRange.getStart(), outputAudioBuffer));
         
         // Then copy the buffers to the outputs
         outputBuffers.midi.mergeFrom (midiMessageArray);
@@ -233,22 +238,49 @@ private:
     tracktion_engine::Plugin::Ptr plugin;
     std::shared_ptr<InputProvider> audioRenderContextProvider;
     
+    tracktion_graph::PlayHead* playHead = nullptr;
+    bool isRendering = false;
+    
     bool isInitialised = false;
     double sampleRate = 44100.0;
     tracktion_engine::MidiMessageArray midiMessageArray;
 
     void initialisePlugin (double sampleRateToUse, int blockSizeToUse)
     {
-        tracktion_engine::PlayHead playHead;
+        tracktion_engine::PlayHead enginePlayHead;
         tracktion_engine::PlaybackInitialisationInfo teInfo =
         {
-            0.0, sampleRateToUse, blockSizeToUse, {}, playHead
+            0.0, sampleRateToUse, blockSizeToUse, {}, enginePlayHead
         };
         
         plugin->baseClassInitialise (teInfo);
         isInitialised = true;
 
         sampleRate = sampleRateToUse;
+    }
+    
+    PluginRenderContext getPluginRenderContext (int64_t referenceSamplePosition, juce::AudioBuffer<float>& destBuffer)
+    {
+        if (audioRenderContextProvider != nullptr)
+        {
+            tracktion_engine::PluginRenderContext rc (audioRenderContextProvider->getContext());
+            rc.destBuffer = &destBuffer;
+            rc.bufferStartSample = 0;
+            rc.bufferNumSamples = destBuffer.getNumSamples();
+            rc.bufferForMidiMessages = &midiMessageArray;
+            rc.midiBufferOffset = 0.0;
+            
+            return rc;
+        }
+
+        jassert (playHead != nullptr);
+        
+        return { &destBuffer,
+                 juce::AudioChannelSet::canonicalChannelSet (destBuffer.getNumChannels()),
+                 0, destBuffer.getNumSamples(),
+                 &midiMessageArray, 0.0,
+                 tracktion_graph::sampleToTime (playHead->referenceSamplePositionToTimelinePosition (referenceSamplePosition), sampleRate),
+                 playHead->isPlaying(), playHead->isUserDragging(), isRendering };
     }
 };
 
@@ -284,7 +316,7 @@ public:
     {
         auto props = input->getNodeProperties();
 
-        props.numberOfChannels = jmax (props.numberOfChannels, modifier->getAudioInputNames().size());
+        props.numberOfChannels = juce::jmax (props.numberOfChannels, modifier->getAudioInputNames().size());
         props.hasAudio = modifier->getAudioInputNames().size() > 0;
         props.hasMidi  = modifier->getMidiInputNames().size() > 0;
         props.nodeID = (size_t) modifier->itemID.getRawID();
@@ -341,24 +373,24 @@ public:
         for (size_t i = 0; i < outputAudioBlock.getNumChannels(); ++i)
             channels[i] = outputAudioBlock.getChannelPointer (i);
 
-        AudioBuffer<float> outputAudioBuffer (channels,
-                                              (int) outputAudioBlock.getNumChannels(),
-                                              (int) outputAudioBlock.getNumSamples());
+        juce::AudioBuffer<float> outputAudioBuffer (channels,
+                                                    (int) outputAudioBlock.getNumChannels(),
+                                                    (int) outputAudioBlock.getNumSamples());
 
         // Then MIDI buffers
         midiMessageArray.copyFrom (inputBuffers.midi);
 
         // Then prepare the AudioRenderContext
         auto sourceContext = audioRenderContextProvider->getContext();
-        tracktion_engine::AudioRenderContext rc (sourceContext);
-        rc.destBuffer = &outputAudioBuffer;
-        rc.bufferStartSample = 0;
-        rc.bufferNumSamples = outputAudioBuffer.getNumSamples();
-        rc.bufferForMidiMessages = &midiMessageArray;
-        rc.midiBufferOffset = 0.0;
+        tracktion_engine::PluginRenderContext prc (sourceContext);
+        prc.destBuffer = &outputAudioBuffer;
+        prc.bufferStartSample = 0;
+        prc.bufferNumSamples = outputAudioBuffer.getNumSamples();
+        prc.bufferForMidiMessages = &midiMessageArray;
+        prc.midiBufferOffset = 0.0;
 
         // Process the plugin
-        modifier->applyToBuffer (rc);
+        modifier->applyToBuffer (prc);
         
         // Then copy the buffers to the outputs
         outputBuffers.midi.mergeFrom (midiMessageArray);
@@ -488,23 +520,23 @@ public:
     */
     int process (const tracktion_graph::Node::ProcessContext& pc)
     {
-        return process (pc, playHead, {});
+        return process (pc, {}, true, false, false);
     }
     
     /** Processes a block of audio and MIDI data with a given PlayHead and EditTimeRange.
         This should be used when processing ExternalPlugins or they will crash when getting the playhead info.
     */
-    int process (const tracktion_graph::Node::ProcessContext& pc, PlayHead& ph, EditTimeRange stream)
+    int process (const tracktion_graph::Node::ProcessContext& pc,
+                 double editTime, bool isPlaying, bool isScrubbing, bool isRendering)
     {
         if (overrideInputs)
             inputProvider->setInputs (pc.buffers);
 
         // The internal nodes won't be interested in the top level audio/midi inputs
         // They should only be referencing this for time and continuity
-        tracktion_engine::AudioRenderContext rc (ph, stream,
-                                                 nullptr, juce::AudioChannelSet(), 0, 0,
-                                                 nullptr, 0.0,
-                                                 tracktion_engine::AudioRenderContext::contiguous, false);
+        tracktion_engine::PluginRenderContext rc (nullptr, juce::AudioChannelSet(), 0, 0,
+                                                  nullptr, 0.0,
+                                                  editTime, isPlaying, isScrubbing, isRendering);
 
         inputProvider->setContext (&rc);
      

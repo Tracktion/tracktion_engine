@@ -46,7 +46,7 @@ bool MidiModifierPlugin::takesAudioInput()                                      
 bool MidiModifierPlugin::canBeAddedToClip()                                        { return false; }
 bool MidiModifierPlugin::needsConstantBufferSize()                                 { return false; }
 
-void MidiModifierPlugin::applyToBuffer (const AudioRenderContext& fc)
+void MidiModifierPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     if (fc.bufferForMidiMessages != nullptr)
         fc.bufferForMidiMessages->addToNoteNumbers (roundToInt (semitones->getCurrentValue()));

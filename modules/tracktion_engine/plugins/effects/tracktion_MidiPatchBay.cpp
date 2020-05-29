@@ -37,7 +37,7 @@ const char* MidiPatchBayPlugin::xmlTypeName = "midipatchbay";
 void MidiPatchBayPlugin::initialise (const PlaybackInitialisationInfo&) {}
 void MidiPatchBayPlugin::deinitialise() {}
 
-void MidiPatchBayPlugin::applyToBuffer (const AudioRenderContext& fc)
+void MidiPatchBayPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     if (fc.bufferForMidiMessages != nullptr)
     {

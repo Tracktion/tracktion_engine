@@ -104,7 +104,7 @@ static bool isSilent (const float* data, int num) noexcept
     return ! (isNotSilent (range.getStart()) || isNotSilent (range.getEnd()));
 }
 
-void ReverbPlugin::applyToBuffer (const AudioRenderContext& fc)
+void ReverbPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     if (fc.destBuffer != nullptr)
     {

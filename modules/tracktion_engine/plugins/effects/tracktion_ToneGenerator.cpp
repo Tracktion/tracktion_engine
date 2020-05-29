@@ -65,7 +65,7 @@ void ToneGeneratorPlugin::deinitialise()
 {
 }
 
-void ToneGeneratorPlugin::applyToBuffer (const AudioRenderContext& fc)
+void ToneGeneratorPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     if (fc.destBuffer == nullptr)
         return;

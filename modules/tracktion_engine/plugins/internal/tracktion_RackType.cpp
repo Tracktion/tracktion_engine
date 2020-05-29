@@ -228,15 +228,14 @@ struct RackType::PluginRenderingInfo
         }
     }
 
-    void addPluginChannelOutput (PlayHead& playhead,
-                                 EditTimeRange playheadOutputTime,
+    void addPluginChannelOutput (double editTime,
                                  juce::AudioBuffer<float>* destBuffer,
                                  int destBufferChannel,
                                  int pluginOutputChannelWanted,
                                  MidiMessageArray* destMidi,
                                  juce::AudioBuffer<float>* rackInputBuffer,
                                  MidiMessageArray* rackInputMidi,
-                                 bool isRendering)
+                                 bool isPlaying, bool isScrubbing, bool isRendering)
     {
         jassert (initialised);
 
@@ -257,10 +256,10 @@ struct RackType::PluginRenderingInfo
 
                 if (inf->renderingInfo != nullptr)
                 {
-                    inf->renderingInfo->addPluginChannelOutput (playhead, playheadOutputTime,
+                    inf->renderingInfo->addPluginChannelOutput (editTime,
                                                                 &pluginOutput, inf->destInputChan, inf->sourceOutputChan,
                                                                 &pluginMidiOutput, rackInputBuffer, rackInputMidi,
-                                                                isRendering);
+                                                                isPlaying, isScrubbing, isRendering);
                 }
                 else
                 {
@@ -288,16 +287,18 @@ struct RackType::PluginRenderingInfo
 
             // and render it..
             if (plugin != nullptr && plugin->isEnabled() && ! plugin->baseClassNeedsInitialising())
-                plugin->applyToBufferWithAutomation (AudioRenderContext (playhead, playheadOutputTime,
-                                                                         &pluginOutput, pluginOutputChannels, 0,
-                                                                         pluginOutput.getNumSamples(),
-                                                                         &pluginMidiOutput, 0, true, isRendering));
+                plugin->applyToBufferWithAutomation (PluginRenderContext (&pluginOutput, pluginOutputChannels, 0,
+                                                                          pluginOutput.getNumSamples(),
+                                                                          &pluginMidiOutput, 0.0,
+                                                                          editTime,
+                                                                          isPlaying, isScrubbing, isRendering));
 
             if (modifier != nullptr && ! modifier->baseClassNeedsInitialising())
-                modifier->applyToBuffer (AudioRenderContext (playhead, playheadOutputTime,
-                                                             &pluginOutput, pluginOutputChannels,
-                                                             0, pluginOutput.getNumSamples(),
-                                                             &pluginMidiOutput, 0, true, isRendering));
+                modifier->applyToBuffer (PluginRenderContext (&pluginOutput, pluginOutputChannels,
+                                                              0, pluginOutput.getNumSamples(),
+                                                              &pluginMidiOutput, 0.0,
+                                                              editTime,
+                                                              isPlaying, isScrubbing, isRendering));
         }
 
         if (destBuffer != nullptr)
@@ -316,26 +317,25 @@ struct RackType::PluginRenderingInfo
                 destMidi->add (m);
     }
 
-    void addToRackOutput (PlayHead& playhead, EditTimeRange playheadOutputTime,
+    void addToRackOutput (double editTime,
                           juce::AudioBuffer<float>& outputBuffer,
                           juce::AudioBuffer<float>& inputBuffer,
                           MidiMessageArray& midiOut,
                           MidiMessageArray& midiIn,
-                          bool isRendering)
+                          bool isPlaying, bool isScrubbing, bool isRendering)
     {
         for (int i = outputConnections.size(); --i >= 0;)
         {
             auto oci = outputConnections.getUnchecked (i);
 
-            addPluginChannelOutput (playhead,
-                                    playheadOutputTime,
+            addPluginChannelOutput (editTime,
                                     &outputBuffer,
                                     oci->destOutputChan,
                                     oci->sourceOutputChan,
                                     &midiOut,
                                     &inputBuffer,
                                     &midiIn,
-                                    isRendering);
+                                    isPlaying, isScrubbing, isRendering);
         }
     }
 };
@@ -507,19 +507,21 @@ struct RackType::RenderContext
             f->resetRenderingFlag();
     }
     
-    void process (PlayHead& playhead, EditTimeRange playheadOutputTime,
+    void process (double editTime,
                   juce::AudioBuffer<float>& outputBuffer,
                   juce::AudioBuffer<float>& inputBuffer,
                   MidiMessageArray& midiOut,
                   MidiMessageArray& midiIn,
-                  bool isRendering)
+                  bool isPlaying, bool isScrubbing, bool isRendering)
     {
        #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         if (processor)
         {
-            processExperiemntal (playhead, playheadOutputTime,
+            processExperiemntal (editTime,
                                  outputBuffer, inputBuffer,
                                  midiOut, midiIn,
+                                 isPlaying,
+                                 isScrubbing,
                                  isRendering);
         }
         else
@@ -530,12 +532,13 @@ struct RackType::RenderContext
                 auto fw = renderContexts.getUnchecked (i);
 
                 if (fw->isConnectedToOutput)
-                    fw->addToRackOutput (playhead,
-                                         playheadOutputTime,
+                    fw->addToRackOutput (editTime,
                                          outputBuffer,
                                          inputBuffer,
                                          midiOut,
                                          midiIn,
+                                         isPlaying,
+                                         isScrubbing,
                                          isRendering);
             }
         }
@@ -607,12 +610,12 @@ private:
     }
 
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-    void processExperiemntal (PlayHead& playhead, EditTimeRange playheadOutputTime,
+    void processExperiemntal (double editTime,
                               juce::AudioBuffer<float>& outputBuffer,
                               juce::AudioBuffer<float>& inputBuffer,
                               MidiMessageArray& midiOut,
                               MidiMessageArray& midiIn,
-                              bool isRendering)
+                              bool isPlaying, bool isScrubbing, bool isRendering)
     {
         jassert (outputBuffer.getNumSamples() == inputBuffer.getNumSamples());
 
@@ -622,17 +625,18 @@ private:
 
         
         // The context
-        AudioRenderContext rc (playhead, playheadOutputTime,
-                               nullptr, AudioChannelSet(), 0, 0,
-                               nullptr, 0.0, AudioRenderContext::contiguous, isRendering);
-        inputProvider->setContext (&rc);
+        PluginRenderContext pc (nullptr, AudioChannelSet(), 0, 0,
+                                nullptr, 0.0,
+                                editTime, isPlaying, isScrubbing, isRendering);
+        inputProvider->setContext (&pc);
         
         
         // Then process
         //TODO: This probably should be the master stream time
         auto streamSampleRange = juce::Range<int64_t>::withStartAndLength (0, inputBuffer.getNumSamples());
         juce::dsp::AudioBlock<float> outputBlock (outputBuffer);
-        processor->process ({ streamSampleRange, { outputBlock, midiOut } }, playhead, playheadOutputTime);
+        processor->process ({ streamSampleRange, { outputBlock, midiOut } },
+                            editTime, isPlaying, isScrubbing, isRendering);
     }
    #endif
 };
@@ -1819,7 +1823,7 @@ void RackType::newBlockStarted()
     isFirstCallbackOfBlock = true;
 }
 
-void RackType::process (const AudioRenderContext& fc,
+void RackType::process (const PluginRenderContext& fc,
                         int leftInputGoesTo,   float leftInputGain1,  float leftInputGain2,
                         int rightInputGoesTo,  float rightInputGain1, float rightInputGain2,
                         int leftOutComesFrom,  float leftOutGain1,    float leftOutGain2,
@@ -1872,13 +1876,12 @@ void RackType::process (const AudioRenderContext& fc,
             if (fc.bufferForMidiMessages != nullptr)
                 tempMidiBufferIn.mergeFromAndClear (*fc.bufferForMidiMessages);
 
-            rrc->process (fc.playhead,
-                          fc.streamTime,
+            rrc->process (fc.editTime,
                           tempBufferOut,
                           tempBufferIn,
                           tempMidiBufferOut,
                           tempMidiBufferIn,
-                          fc.isRendering);
+                          fc.isPlaying, fc.isScrubbing, fc.isRendering);
 
             if (fc.destBuffer != nullptr)
             {
@@ -1911,13 +1914,12 @@ void RackType::process (const AudioRenderContext& fc,
             tempBufferOut.clear();
             tempMidiBufferOut.clear();
 
-            rrc->process (fc.playhead,
-                          fc.streamTime,
+            rrc->process (fc.editTime,
                           tempBufferOut,
                           tempBufferIn,
                           tempMidiBufferOut,
                           tempMidiBufferIn,
-                          fc.isRendering);
+                          fc.isPlaying, fc.isScrubbing, fc.isRendering);
 
             // then add the new input to our cleared input buffer
             // and copy out the appropriate output channels

@@ -31,7 +31,7 @@ public:
 
     void initialise (const PlaybackInitialisationInfo&) override;
     void deinitialise() override;
-    void applyToBuffer (const AudioRenderContext&) override;
+    void applyToBuffer (const PluginRenderContext&) override;
 
     double getLatencySeconds() override                     { return latencyTimeSeconds.get(); }
     bool needsConstantBufferSize() override                 { return false; }

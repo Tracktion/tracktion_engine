@@ -28,8 +28,8 @@ public:
 
     void initialise (const PlaybackInitialisationInfo&) override;
     void deinitialise() override;
-    void prepareForNextBlock (const AudioRenderContext&) override;
-    void applyToBuffer (const AudioRenderContext&) override;
+    void prepareForNextBlock (const PluginRenderContext&) override;
+    void applyToBuffer (const PluginRenderContext&) override;
 
     bool takesAudioInput() override                  { return true; }
     bool takesMidiInput() override                   { return true; }

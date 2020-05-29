@@ -38,7 +38,7 @@ public:
     juce::StringArray getMidiInputNames() override;
     AudioNode* createPreFXAudioNode (AudioNode*) override;
 
-    void applyToBuffer (const AudioRenderContext&) override;
+    void applyToBuffer (const PluginRenderContext&) override;
 
     //==============================================================================
     struct Assignment   : public AutomatableParameter::ModifierAssignment

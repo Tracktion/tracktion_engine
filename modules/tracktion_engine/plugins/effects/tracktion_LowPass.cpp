@@ -67,7 +67,7 @@ void LowPassPlugin::deinitialise()
 {
 }
 
-void LowPassPlugin::applyToBuffer (const AudioRenderContext& fc)
+void LowPassPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     if (fc.destBuffer != nullptr)
     {

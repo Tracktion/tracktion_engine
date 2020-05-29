@@ -55,7 +55,7 @@ struct Modifier : public AutomatableEditItem,
 
     virtual void initialise (const PlaybackInitialisationInfo&) {}
     virtual void deinitialise() {}
-    virtual void applyToBuffer (const AudioRenderContext&) {}
+    virtual void applyToBuffer (const PluginRenderContext&) {}
 
     //==============================================================================
     bool baseClassNeedsInitialising() const noexcept        { return initialiseCount == 0; }

@@ -97,7 +97,7 @@ public:
 
     void initialise (const PlaybackInitialisationInfo&) override;
     void deinitialise() override;
-    void applyToBuffer (const AudioRenderContext&) override;
+    void applyToBuffer (const PluginRenderContext&) override;
     int getNumOutputChannelsGivenInputs (int numInputChannels) override     { return numInputChannels; }
 
     bool isTrackFrozen() const;
