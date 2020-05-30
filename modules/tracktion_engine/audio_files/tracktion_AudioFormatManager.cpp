@@ -41,7 +41,7 @@ AudioFileFormatManager::AudioFileFormatManager()
     readFormats.add (rexFormat.get());
    #endif
 
-   #if JUCE_MAC
+   #if JUCE_MAC || JUCE_IOS
     nativeAudioFormat = std::make_unique<juce::CoreAudioFormat>();
     readFormats.add (nativeAudioFormat.get());
    #elif JUCE_WINDOWS
@@ -69,7 +69,7 @@ AudioFileFormatManager::AudioFileFormatManager()
     readFormatManager.registerFormat (new RexAudioFormat(), false);
    #endif
 
-   #if JUCE_MAC
+   #if JUCE_MAC || JUCE_IOS
     readFormatManager.registerFormat (new juce::CoreAudioFormat(), false);
    #elif JUCE_WINDOWS
     readFormatManager.registerFormat (new juce::WindowsMediaAudioFormat(), false);
