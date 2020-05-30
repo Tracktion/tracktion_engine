@@ -710,7 +710,7 @@ juce::Array<AudioTrack*> AudioTrack::getGhostTracks() const
     return tracks;
 }
 
-void AudioTrack::playGuideNote (int note, MidiChannel midiChannel, int velocity, bool stopOtherFirst, bool forceNote)
+void AudioTrack::playGuideNote (int note, MidiChannel midiChannel, int velocity, bool stopOtherFirst, bool forceNote, bool autorelease)
 {
     jassert (midiChannel.isValid()); //SysEx?
     jassert (velocity >= 0 && velocity <= 127);
@@ -728,6 +728,9 @@ void AudioTrack::playGuideNote (int note, MidiChannel midiChannel, int velocity,
             injectLiveMidiMessage (MidiMessage::noteOn (midiChannel.getChannelNumber(), pitch, (uint8) velocity),
                                    MidiMessageArray::notMPE);
         }
+
+        if (autorelease)
+            startTimer (100);
     }
 }
 
@@ -757,6 +760,8 @@ void AudioTrack::playGuideNotes (const juce::Array<int>& notes, MidiChannel midi
 
 void AudioTrack::turnOffGuideNotes()
 {
+    stopTimer();
+    
     for (int ch = 1; ch <= 16; ch++)
         turnOffGuideNotes (MidiChannel (ch));
 }
