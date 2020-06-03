@@ -36,7 +36,12 @@ public:
 
     void setNode (std::unique_ptr<Node> newNode)
     {
-        auto newNodes = prepareToPlay (*newNode, input.get(), sampleRate, blockSize);
+        setNode (std::move (newNode), sampleRate, blockSize);
+    }
+
+    void setNode (std::unique_ptr<Node> newNode, double sampleRateToUse, int blockSizeToUse)
+    {
+        auto newNodes = prepareToPlay (newNode.get(), input.get(), sampleRateToUse, blockSizeToUse);
         std::unique_ptr<Node> oldNode;
         
         {
@@ -50,11 +55,11 @@ public:
     /** Prepares the current Node to be played. */
     void prepareToPlay (double sampleRateToUse, int blockSizeToUse, Node* oldNode = nullptr)
     {
-        allNodes = prepareToPlay (*input, oldNode, sampleRateToUse, blockSizeToUse);
+        allNodes = prepareToPlay (input.get(), oldNode, sampleRateToUse, blockSizeToUse);
     }
 
     /** Prepares a specific Node to be played and returns all the Nodes. */
-    std::vector<Node*> prepareToPlay (Node& node, Node* oldNode, double sampleRateToUse, int blockSizeToUse)
+    std::vector<Node*> prepareToPlay (Node* node, Node* oldNode, double sampleRateToUse, int blockSizeToUse)
     {
         sampleRate = sampleRateToUse;
         blockSize = blockSizeToUse;
@@ -62,16 +67,19 @@ public:
         if (playHeadState != nullptr)
             playHeadState->playHead.setScrubbingBlockLength (timeToSample (0.08, sampleRate));
         
+        if (node == nullptr)
+            return {};
+        
         // First give the Nodes a chance to transform
-        transformNodes (node);
+        transformNodes (*node);
         
         // Next, initialise all the nodes, this will call prepareToPlay on them and also
         // give them a chance to do things like balance latency
-        const PlaybackInitialisationInfo info { sampleRate, blockSize, node, oldNode };
-        visitNodes (node, [&] (Node& n) { n.initialise (info); }, false);
+        const PlaybackInitialisationInfo info { sampleRate, blockSize, *node, oldNode };
+        visitNodes (*node, [&] (Node& n) { n.initialise (info); }, false);
         
         // Then find all the nodes as it might have changed after initialisation
-        return tracktion_graph::getNodes (node, tracktion_graph::VertexOrdering::postordering);
+        return tracktion_graph::getNodes (*node, tracktion_graph::VertexOrdering::postordering);
     }
 
     /** Processes a block of audio and MIDI data.

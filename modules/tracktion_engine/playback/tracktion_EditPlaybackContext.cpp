@@ -104,6 +104,11 @@ void EditPlaybackContext::releaseDeviceList()
     midiOutputs.clear();
     waveInputs.clear();
     midiInputs.clear();
+    
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+    nodePlaybackContext->playHead.stop();
+    nodePlaybackContext->player.setNode (nullptr);
+   #endif
 }
 
 void EditPlaybackContext::rebuildDeviceList()
@@ -425,7 +430,8 @@ void EditPlaybackContext::createNode()
     const auto& tempoSections = edit.tempoSequence.getTempoSections();
     const bool hasTempoChanged = tempoSections.getChangeCount() != lastTempoSections.getChangeCount();
 
-    nodePlaybackContext->player.setNode (std::move (newNode));
+    auto& dm = edit.engine.getDeviceManager();
+    nodePlaybackContext->player.setNode (std::move (newNode), dm.getSampleRate(), dm.getBlockSize());
 
     if (hasTempoChanged && lastTempoSections.size() > 0)
     {
