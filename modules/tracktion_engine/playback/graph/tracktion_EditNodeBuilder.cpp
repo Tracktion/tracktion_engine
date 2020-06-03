@@ -143,7 +143,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForPlugin (Plugin& plugin, std:
     node = tracktion_graph::makeNode<PluginNode> (std::move (node),
                                                   plugin,
                                                   sampleRate, blockSize,
-                                                  playHeadState.playHead, params.forRendering);
+                                                  playHeadState, params.forRendering);
     
     //TODO:
     // Side-chain send

@@ -81,6 +81,9 @@ void MidiNode::process (const ProcessContext& pc)
 
 void MidiNode::processSection (const ProcessContext& pc, juce::Range<int64_t> timelineRange)
 {
+    if (timelineRange.isEmpty())
+        return;
+    
     const auto sectionEditTime = tracktion_graph::sampleToTime (timelineRange, sampleRate);
     auto localTime = sectionEditTime - editSection.getStart();
     const bool mute = clipLevel.isMute();

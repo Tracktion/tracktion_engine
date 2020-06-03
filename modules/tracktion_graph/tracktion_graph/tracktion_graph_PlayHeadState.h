@@ -71,7 +71,7 @@ inline void PlayHeadState::update (juce::Range<int64_t> referenceSampleRange)
         jumped = jumped || isPlayHeadRunning;
     }
 
-    playheadJumped = isPlayingNow && jumped;
+    playheadJumped = jumped;
     
     // Next check if this is the start or end of a loop range
     if (playHead.isLooping())

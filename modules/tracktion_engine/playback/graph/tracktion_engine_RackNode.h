@@ -139,10 +139,10 @@ public:
     PluginNode (std::unique_ptr<Node> inputNode,
                 tracktion_engine::Plugin::Ptr pluginToProcess,
                 double sampleRateToUse, int blockSizeToUse,
-                tracktion_graph::PlayHead& playHeadToUse, bool rendering)
+                tracktion_graph::PlayHeadState& playHeadStateToUse, bool rendering)
         : input (std::move (inputNode)),
           plugin (std::move (pluginToProcess)),
-          playHead (&playHeadToUse),
+          playHeadState (&playHeadStateToUse),
           isRendering (rendering)
     {
         jassert (input != nullptr);
@@ -223,6 +223,9 @@ public:
 
         // Then MIDI buffers
         midiMessageArray.copyFrom (inputBuffers.midi);
+        
+        if (playHeadState != nullptr && playHeadState->didPlayheadJump())
+            midiMessageArray.isAllNotesOff = true;
 
         // Process the plugin
         //TODO: If a plugin is disabled we should probably apply our own latency to the plugin
@@ -238,7 +241,7 @@ private:
     tracktion_engine::Plugin::Ptr plugin;
     std::shared_ptr<InputProvider> audioRenderContextProvider;
     
-    tracktion_graph::PlayHead* playHead = nullptr;
+    tracktion_graph::PlayHeadState* playHeadState = nullptr;
     bool isRendering = false;
     
     bool isInitialised = false;
@@ -273,14 +276,15 @@ private:
             return rc;
         }
 
-        jassert (playHead != nullptr);
+        jassert (playHeadState != nullptr);
+        auto& playHead = playHeadState->playHead;
         
         return { &destBuffer,
                  juce::AudioChannelSet::canonicalChannelSet (destBuffer.getNumChannels()),
                  0, destBuffer.getNumSamples(),
                  &midiMessageArray, 0.0,
-                 tracktion_graph::sampleToTime (playHead->referenceSamplePositionToTimelinePosition (referenceSamplePosition), sampleRate),
-                 playHead->isPlaying(), playHead->isUserDragging(), isRendering };
+                 tracktion_graph::sampleToTime (playHead.referenceSamplePositionToTimelinePosition (referenceSamplePosition), sampleRate),
+                 playHead.isPlaying(), playHead.isUserDragging(), isRendering };
     }
 };
 
