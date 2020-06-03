@@ -103,17 +103,22 @@ namespace test_utilities
         }
     }
 
-    /** Writes an audio block to a file. */
-    static inline void writeToFile (juce::File file, const juce::dsp::AudioBlock<float>& block, double sampleRate)
+    /** Creates an AudioBuffer from an AudioBlock. */
+    static inline juce::AudioBuffer<float> createAudioBuffer (const juce::dsp::AudioBlock<float>& block)
     {
         const int numChannels = (int) block.getNumChannels();
-        float* chans[32] = {};
+        float* chans[128] = {};
 
         for (int i = 0; i < numChannels; ++i)
             chans[i] = block.getChannelPointer ((size_t) i);
 
-        const juce::AudioBuffer<float> buffer (chans, numChannels, (int) block.getNumSamples());
-        writeToFile (file, buffer, sampleRate);
+        return juce::AudioBuffer<float> (chans, numChannels, (int) block.getNumSamples());
+    }
+
+    /** Writes an audio block to a file. */
+    static inline void writeToFile (juce::File file, const juce::dsp::AudioBlock<float>& block, double sampleRate)
+    {
+        writeToFile (file, createAudioBuffer (block), sampleRate);
     }
 
     /** Returns true if all the nodes in the graph have a unique nodeID. */

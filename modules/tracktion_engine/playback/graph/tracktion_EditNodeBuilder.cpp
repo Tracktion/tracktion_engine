@@ -189,7 +189,15 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioTrack (AudioTrack& at, 
     if (clipsNode == nullptr)
         return {};
     
-    return createPluginNodeForTrack (at, std::move (clipsNode), playHeadState, params);
+    auto node = createPluginNodeForTrack (at, std::move (clipsNode), playHeadState, params);
+    
+    auto inputTracks = at.getInputTracks();
+    const bool muteForInputsWhenRecording = inputTracks.isEmpty();
+    const bool processMidiWhenMuted = at.state.getProperty (IDs::processMidiWhenMuted, false);
+    node = makeNode<TrackMutingNode> (at, std::move (node),
+                                      muteForInputsWhenRecording, processMidiWhenMuted);
+    
+    return node;
     
     //TODO:
     // Input tracks
