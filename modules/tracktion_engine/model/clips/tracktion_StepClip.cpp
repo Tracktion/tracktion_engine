@@ -308,6 +308,11 @@ void StepClip::generateMidiSequenceForChannels (MidiMessageSequence& result,
 
                 if (cache->getNote (i))
                 {
+                    auto prob = cache->getProbability (i);
+
+                    if (Random::getSystemRandom ().nextFloat() >= prob)
+                        continue;
+
                     auto gate = cache->getGate (i);
                     auto beatEnd = startBeat + (noteLength * gate * ratio);
                     jassert (gate > 0.0);
