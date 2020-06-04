@@ -12,12 +12,13 @@ namespace tracktion_engine
 {
 
 MidiNode::MidiNode (juce::MidiMessageSequence sequence,
-          juce::Range<int> midiChannelNumbers,
-          bool useMPE,
-          EditTimeRange editTimeRange,
-          LiveClipLevel liveClipLevel,
-          tracktion_graph::PlayHeadState& playHeadStateToUse,
-                    EditItemID editItemIDToUse)
+                    juce::Range<int> midiChannelNumbers,
+                    bool useMPE,
+                    EditTimeRange editTimeRange,
+                    LiveClipLevel liveClipLevel,
+                    tracktion_graph::PlayHeadState& playHeadStateToUse,
+                    EditItemID editItemIDToUse,
+                    std::function<bool()> shouldBeMuted)
     : ms (std::move (sequence)),
       channelNumbers (midiChannelNumbers),
       useMPEChannelMode (useMPE),
@@ -25,6 +26,7 @@ MidiNode::MidiNode (juce::MidiMessageSequence sequence,
       clipLevel (liveClipLevel),
       playHeadState (playHeadStateToUse),
       editItemID (editItemIDToUse),
+      shouldBeMutedDelegate (std::move (shouldBeMuted)),
       wasMute (liveClipLevel.isMute())
 {
     jassert (channelNumbers.getStart() > 0 && channelNumbers.getEnd() <= 16);
@@ -82,6 +84,9 @@ void MidiNode::process (const ProcessContext& pc)
 void MidiNode::processSection (const ProcessContext& pc, juce::Range<int64_t> timelineRange)
 {
     if (timelineRange.isEmpty())
+        return;
+    
+    if (shouldBeMutedDelegate && shouldBeMutedDelegate())
         return;
     
     const auto sectionEditTime = tracktion_graph::sampleToTime (timelineRange, sampleRate);

@@ -11,11 +11,11 @@
 namespace tracktion_engine
 {
 
-TrackMutingNode::TrackMutingNode (Track& t, std::unique_ptr<tracktion_graph::Node> inputNode,
-                                  bool muteForInputsWhenRecording, bool processMidiWhenMuted_)
-    : input (std::move (inputNode)), edit (t.edit), track (&t),
+TrackMuteState::TrackMuteState (Track& t, bool muteForInputsWhenRecording, bool processMidiWhenMuted_)
+    : edit (t.edit), track (&t),
       processMidiWhileMuted (processMidiWhenMuted_)
 {
+    processMidiWhileMuted = true;
     callInputWhileMuted = t.processAudioNodesWhileMuted();
     
     if (muteForInputsWhenRecording)
@@ -24,13 +24,58 @@ TrackMutingNode::TrackMutingNode (Track& t, std::unique_ptr<tracktion_graph::Nod
                 if (in->isRecordingActive (t) && in->getTargetTracks().contains (at))
                     inputDevicesToMuteFor.add (in);
 
-    wasBeingPlayed = t.shouldBePlayed();
+    wasBeingPlayedFlag = t.shouldBePlayed();
 }
 
-TrackMutingNode::TrackMutingNode (Edit& e, std::unique_ptr<tracktion_graph::Node> inputNode)
-    : input (std::move (inputNode)), edit (e)
+TrackMuteState::TrackMuteState (Edit& e)
+    : edit (e)
 {
-    wasBeingPlayed = ! edit.areAnyTracksSolo();
+    wasBeingPlayedFlag = ! edit.areAnyTracksSolo();
+}
+
+void TrackMuteState::update()
+{
+    const bool isPlayingNow = isBeingPlayed();
+    wasJustMutedFlag = wasBeingPlayedFlag && ! isPlayingNow;
+    wasJustUnMutedFlag = ! wasBeingPlayedFlag && isPlayingNow;
+    wasBeingPlayedFlag = isPlayingNow;
+}
+
+bool TrackMuteState::shouldTrackBeAudible() const
+{
+    return wasBeingPlayedFlag || wasJustMuted();
+}
+
+bool TrackMuteState::shouldTrackContentsBeProcessed() const
+{
+    return callInputWhileMuted && wasBeingPlayedFlag;
+}
+
+bool TrackMuteState::shouldTrackMidiBeProcessed() const
+{
+    return processMidiWhileMuted;
+}
+
+bool TrackMuteState::isBeingPlayed() const
+{
+    bool playing = track != nullptr ? track->shouldBePlayed() : ! edit.areAnyTracksSolo();
+
+    if (! playing)
+        return false;
+
+    for (int i = inputDevicesToMuteFor.size(); --i >= 0;)
+        if (inputDevicesToMuteFor.getUnchecked (i)->shouldTrackContentsBeMuted())
+            return false;
+
+    return true;
+}
+
+
+//==============================================================================
+//==============================================================================
+TrackMutingNode::TrackMutingNode (const TrackMuteState& muteState, std::unique_ptr<tracktion_graph::Node> inputNode)
+    : trackMuteState (muteState), input (std::move (inputNode))
+{
 }
 
 //==============================================================================
@@ -55,94 +100,22 @@ bool TrackMutingNode::isReadyToProcess()
 void TrackMutingNode::process (const ProcessContext& pc)
 {
     auto sourceBuffers = input->getProcessedOutput();
-    auto& sourceAudioBlock = sourceBuffers.audio;
     auto destAudioBlock = pc.buffers.audio;
-    jassert (sourceAudioBlock.getNumChannels() == destAudioBlock.getNumChannels());
+    jassert (sourceBuffers.audio.getNumChannels() == destAudioBlock.getNumChannels());
 
-    auto& sourceMidi = sourceBuffers.midi;
-    auto& destMidi = pc.buffers.midi;
-
-    const bool isPlayingNow = isBeingPlayed();
-
-    if (wasJustMuted (isPlayingNow))
+    if (trackMuteState.shouldTrackBeAudible())
     {
-        //TODO: Sending all-notes-off here won't work as the input will have already been processed
-        // send midi off events if we don't want to process midi while muted
-        if (! callInputWhileMuted && ! processMidiWhileMuted)
-            sendAllNotesOffIfDesired (destMidi);
+        pc.buffers.midi.copyFrom (sourceBuffers.midi);
+        destAudioBlock.copyFrom (sourceBuffers.audio);
+    }
 
-        destAudioBlock.copyFrom (sourceAudioBlock);
+    if (trackMuteState.wasJustMuted())
         rampBlock (destAudioBlock, 1.0f, 0.0f);
-
-        if (! callInputWhileMuted && ! processMidiWhileMuted)
-        {
-            destMidi.clear();
-            sendAllNotesOffIfDesired (destMidi);
-        }
-    }
-    else if (wasJustUnMuted (isPlayingNow))
-    {
-        destMidi.copyFrom (sourceMidi);
-        destAudioBlock.copyFrom (sourceAudioBlock);
-        rampBlock (destAudioBlock, 1.0f, 0.0f);
-    }
-    else if (wasBeingPlayed)
-    {
-        destMidi.copyFrom (sourceMidi);
-        destAudioBlock.copyFrom (sourceAudioBlock);
-    }
-    else if (callInputWhileMuted || processMidiWhileMuted)
-    {
-        if (processMidiWhileMuted)
-        {
-            destMidi.copyFrom (sourceMidi);
-            destAudioBlock.clear();
-        }
-        else
-        {
-            destMidi.clear();
-            destAudioBlock.clear();
-        }
-    }
-    else
-    {
-        destMidi.clear();
-        destAudioBlock.clear();
-    }
-
-    updateLastMutedState (isPlayingNow);
+    else if (trackMuteState.wasJustUnMuted())
+        rampBlock (destAudioBlock, 0.0f, 1.0f);
 }
 
 //==============================================================================
-bool TrackMutingNode::isBeingPlayed() const
-{
-    bool playing = track != nullptr ? track->shouldBePlayed() : ! edit.areAnyTracksSolo();
-
-    if (! playing)
-        return false;
-
-    for (int i = inputDevicesToMuteFor.size(); --i >= 0;)
-        if (inputDevicesToMuteFor.getUnchecked (i)->shouldTrackContentsBeMuted())
-            return false;
-
-    return true;
-}
-
-bool TrackMutingNode::wasJustMuted (bool isPlayingNow) const
-{
-    return wasBeingPlayed && ! isPlayingNow;
-}
-
-bool TrackMutingNode::wasJustUnMuted (bool isPlayingNow) const
-{
-    return ! wasBeingPlayed && isPlayingNow;
-}
-
-void TrackMutingNode::updateLastMutedState (bool isPlayingNow)
-{
-    wasBeingPlayed = isPlayingNow;
-}
-
 void TrackMutingNode::rampBlock (juce::dsp::AudioBlock<float>& audioBlock, float start, float end)
 {
     if (audioBlock.getNumChannels() == 0)
@@ -150,12 +123,6 @@ void TrackMutingNode::rampBlock (juce::dsp::AudioBlock<float>& audioBlock, float
     
     auto buffer = tracktion_graph::test_utilities::createAudioBuffer (audioBlock);
     buffer.applyGainRamp (0, buffer.getNumSamples(), start, end);
-}
-
-void TrackMutingNode::sendAllNotesOffIfDesired (MidiMessageArray& midi)
-{
-    if (! processMidiWhileMuted)
-        midi.isAllNotesOff = true;
 }
 
 } // namespace tracktion_engine

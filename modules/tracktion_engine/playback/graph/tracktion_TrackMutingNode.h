@@ -12,16 +12,64 @@ namespace tracktion_engine
 {
 
 /**
+    Holds the state of a Track and if its contents/plugins should be played or not.
+*/
+class TrackMuteState
+{
+public:
+    /** Creates a TrackMuteState for a Track. */
+    TrackMuteState (Track&, bool muteForInputsWhenRecording, bool processMidiWhenMuted);
+
+    /** Creates a TrackMuteState for an Edit.
+        This is used for freeze tracks and will be muted if any other track is soloed.
+    */
+    TrackMuteState (Edit&);
+
+    /** Call once per block to update the mute status. */
+    void update();
+    
+    //==============================================================================
+    /** Returns true if the track's mix bus should be audible. */
+    bool shouldTrackBeAudible() const;
+
+    /** Returns true if the track's contents should be processed e.g. clips and plugins. */
+    bool shouldTrackContentsBeProcessed() const;
+
+    /** Returns true if the track's MIDI should be processed to avoid breaks in long notes. */
+    bool shouldTrackMidiBeProcessed() const;
+
+    //==============================================================================
+    /** Returns true if the last block was audible but this one isn't. */
+    bool wasJustMuted() const       { return wasJustMutedFlag; }
+
+    /** Returns true if the last block wasn't audible but this one is. */
+    bool wasJustUnMuted() const     { return wasJustUnMutedFlag; }
+
+private:
+    //==============================================================================
+    Edit& edit;
+    juce::ReferenceCountedObjectPtr<Track> track;
+    bool wasBeingPlayedFlag = false, wasJustMutedFlag = false, wasJustUnMutedFlag = false;
+    
+    bool callInputWhileMuted = false;
+    bool processMidiWhileMuted = false;
+    juce::Array<InputDeviceInstance*> inputDevicesToMuteFor;
+
+    //==============================================================================
+    bool isBeingPlayed() const;
+};
+
+
+//==============================================================================
+//==============================================================================
+/**
     A Node that handles muting/soloing of its input node, according to
     the audibility of a track.
 */
 class TrackMutingNode final : public tracktion_graph::Node
 {
 public:
-    TrackMutingNode (Track&, std::unique_ptr<tracktion_graph::Node> input,
-                     bool muteForInputsWhenRecording, bool processMidiWhenMuted);
-
-    TrackMutingNode (Edit&, std::unique_ptr<tracktion_graph::Node> input);
+    TrackMutingNode (const TrackMuteState&, std::unique_ptr<tracktion_graph::Node> input);
 
     //==============================================================================
     tracktion_graph::NodeProperties getNodeProperties() override;
@@ -32,20 +80,10 @@ public:
 
 private:
     //==============================================================================
+    const TrackMuteState& trackMuteState;
     std::unique_ptr<tracktion_graph::Node> input;
-    Edit& edit;
-    juce::ReferenceCountedObjectPtr<Track> track;
-    bool wasBeingPlayed = false;
-    bool callInputWhileMuted = false;
-    bool processMidiWhileMuted = false;
-    juce::Array<InputDeviceInstance*> inputDevicesToMuteFor;
 
     //==============================================================================
-    bool isBeingPlayed() const;
-    bool wasJustMuted (bool isPlayingNow) const;
-    bool wasJustUnMuted (bool isPlayingNow) const;
-    void updateLastMutedState (bool isPlayingNow);
-
     void rampBlock (juce::dsp::AudioBlock<float>&, float start, float end);
     void sendAllNotesOffIfDesired (MidiMessageArray&);
 };

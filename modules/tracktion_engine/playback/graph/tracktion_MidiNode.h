@@ -23,7 +23,8 @@ public:
               EditTimeRange editSection,
               LiveClipLevel,
               tracktion_graph::PlayHeadState&,
-              EditItemID);
+              EditItemID,
+              std::function<bool()> shouldBeMutedDelegate = nullptr);
     
     tracktion_graph::NodeProperties getNodeProperties() override;
     void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
@@ -39,6 +40,7 @@ private:
     LiveClipLevel clipLevel;
     tracktion_graph::PlayHeadState& playHeadState;
     EditItemID editItemID;
+    std::function<bool()> shouldBeMutedDelegate = nullptr;
     
     double sampleRate = 44100.0;
     int currentIndex = 0;

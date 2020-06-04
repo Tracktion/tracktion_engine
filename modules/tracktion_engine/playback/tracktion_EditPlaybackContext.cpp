@@ -19,24 +19,61 @@ namespace tracktion_engine
      {
      }
      
+     void setNodeContext (EditNodeContext editNodeContext)
+     {
+         {
+             const SpinLock::ScopedLockType sl (trackMuteStatesLock);
+             std::swap (trackMuteStates, editNodeContext.trackMuteStates);
+         }
+         
+         player.setNode (std::move (editNodeContext.node));
+     }
+     
+     void setNodeContext (EditNodeContext editNodeContext, double newSampleRate, int blockSize)
+     {
+         sampleRate = newSampleRate;
+         
+         {
+             const SpinLock::ScopedLockType sl (trackMuteStatesLock);
+             std::swap (trackMuteStates, editNodeContext.trackMuteStates);
+         }
+         
+         player.setNode (std::move (editNodeContext.node), sampleRate, blockSize);
+     }
+     
      void process (juce::Range<int64_t> referenceSampleRange, float** allChannels, int numChannels)
      {
          const auto numSamples = referenceSampleRange.getLength();
          playHead.setReferenceSampleRange (referenceSampleRange);
-     
+         updateMuteStates();
+         
          juce::dsp::AudioBlock<float> audioBlock (allChannels, (size_t) numChannels, (size_t) numSamples);
          scratchMidiBuffer.clear();
          tracktion_graph::Node::ProcessContext pc { referenceSampleRange, { audioBlock, scratchMidiBuffer } };
          player.process (pc);
      }
      
-     const double sampleRate;
+     double sampleRate;
      tracktion_graph::PlayHead playHead;
      tracktion_graph::PlayHeadState playHeadState { playHead };
      tracktion_graph::NodePlayer player { nullptr, &playHeadState };
      
  private:
      MidiMessageArray scratchMidiBuffer;
+     
+     SpinLock trackMuteStatesLock;
+     std::vector<std::unique_ptr<TrackMuteState>> trackMuteStates;
+     
+     void updateMuteStates()
+     {
+         if (! trackMuteStatesLock.tryEnter())
+             return;
+
+         for (auto& trackMuteState : trackMuteStates)
+             trackMuteState->update();
+
+         trackMuteStatesLock.exit();
+     }
  };
 #endif
 
@@ -107,7 +144,7 @@ void EditPlaybackContext::releaseDeviceList()
     
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     nodePlaybackContext->playHead.stop();
-    nodePlaybackContext->player.setNode (nullptr);
+    nodePlaybackContext->setNodeContext ({});
    #endif
 }
 
@@ -425,13 +462,13 @@ void EditPlaybackContext::createNode()
     isAllocated = true;
     
     CreateNodeParams cnp;
-    auto newNode = createNodeForEdit (edit, nodePlaybackContext->playHeadState, cnp);
+    auto editNodeContext = createNodeForEdit (edit, nodePlaybackContext->playHeadState, cnp);
 
     const auto& tempoSections = edit.tempoSequence.getTempoSections();
     const bool hasTempoChanged = tempoSections.getChangeCount() != lastTempoSections.getChangeCount();
 
     auto& dm = edit.engine.getDeviceManager();
-    nodePlaybackContext->player.setNode (std::move (newNode), dm.getSampleRate(), dm.getBlockSize());
+    nodePlaybackContext->setNodeContext (std::move (editNodeContext), dm.getSampleRate(), dm.getBlockSize());
 
     if (hasTempoChanged && lastTempoSections.size() > 0)
     {

@@ -139,9 +139,11 @@ public:
     PluginNode (std::unique_ptr<Node> inputNode,
                 tracktion_engine::Plugin::Ptr pluginToProcess,
                 double sampleRateToUse, int blockSizeToUse,
+                const TrackMuteState& trackMuteStateToUse,
                 tracktion_graph::PlayHeadState& playHeadStateToUse, bool rendering)
         : input (std::move (inputNode)),
           plugin (std::move (pluginToProcess)),
+          trackMuteState (&trackMuteStateToUse),
           playHeadState (&playHeadStateToUse),
           isRendering (rendering)
     {
@@ -223,13 +225,25 @@ public:
 
         // Then MIDI buffers
         midiMessageArray.copyFrom (inputBuffers.midi);
+        bool shouldProcessPlugin = plugin->isEnabled();
         
         if (playHeadState != nullptr && playHeadState->didPlayheadJump())
             midiMessageArray.isAllNotesOff = true;
+        
+        if (trackMuteState != nullptr)
+        {
+            if (! trackMuteState->shouldTrackContentsBeProcessed())
+            {
+                shouldProcessPlugin = trackMuteState->shouldTrackBeAudible();
+            
+                if (trackMuteState->wasJustMuted())
+                    midiMessageArray.isAllNotesOff = true;
+            }
+        }
 
         // Process the plugin
         //TODO: If a plugin is disabled we should probably apply our own latency to the plugin
-        if (plugin->isEnabled())
+        if (shouldProcessPlugin)
             plugin->applyToBufferWithAutomation (getPluginRenderContext (pc.streamSampleRange.getStart(), outputAudioBuffer));
         
         // Then copy the buffers to the outputs
@@ -241,6 +255,7 @@ private:
     tracktion_engine::Plugin::Ptr plugin;
     std::shared_ptr<InputProvider> audioRenderContextProvider;
     
+    const TrackMuteState* trackMuteState = nullptr;
     tracktion_graph::PlayHeadState* playHeadState = nullptr;
     bool isRendering = false;
     

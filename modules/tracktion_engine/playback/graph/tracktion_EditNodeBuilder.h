@@ -11,6 +11,8 @@
 namespace tracktion_engine
 {
 
+class TrackMuteState;
+
 //==============================================================================
 /**
     Contains options for Edit Node content creation.
@@ -25,8 +27,14 @@ struct CreateNodeParams
 };
 
 //==============================================================================
+struct EditNodeContext
+{
+    std::unique_ptr<tracktion_graph::Node> node;
+    std::vector<std::unique_ptr<TrackMuteState>> trackMuteStates;
+};
+
 /** Creates a Node to play back an Edit. */
-std::unique_ptr<tracktion_graph::Node> createNodeForEdit (Edit&, tracktion_graph::PlayHeadState&, const CreateNodeParams&);
+EditNodeContext createNodeForEdit (Edit&, tracktion_graph::PlayHeadState&, const CreateNodeParams&);
 
 
 } // namespace tracktion_engine
