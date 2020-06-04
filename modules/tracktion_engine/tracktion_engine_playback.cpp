@@ -58,6 +58,9 @@ extern "C"
 #include "playback/tracktion_MPEStartTrimmer.h"
 
 #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+ #include "playback/graph/tracktion_FadeInOutNode.h"
+ #include "playback/graph/tracktion_FadeInOutNode.cpp"
+
  #include "playback/graph/tracktion_MidiNode.h"
  #include "playback/graph/tracktion_MidiNode.cpp"
  #include "playback/graph/tracktion_tests_MidiNode.cpp"

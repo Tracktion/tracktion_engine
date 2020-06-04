@@ -14,7 +14,6 @@ namespace tracktion_engine
 //==============================================================================
 std::unique_ptr<tracktion_graph::Node> createNodeForAudioClip (AudioClipBase& clip, tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
-    //TODO: Fade in/out, speed in/out
     const AudioFile playFile (clip.getPlaybackFile());
 
     if (playFile.isNull())
@@ -42,15 +41,38 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioClip (AudioClipBase& cl
     // Timestretched previewing node
     // Sub-sample speed ramp audio node
 
-    return tracktion_graph::makeNode<WaveNode> (playFile,
-                                                clip.getEditTimeRange(),
-                                                nodeOffset,
-                                                loopRange,
-                                                clip.getLiveClipLevel(),
-                                                speed,
-                                                clip.getActiveChannels(),
-                                                playHeadState,
-                                                params.forRendering);
+    auto node = tracktion_graph::makeNode<WaveNode> (playFile,
+                                                     clip.getEditTimeRange(),
+                                                     nodeOffset,
+                                                     loopRange,
+                                                     clip.getLiveClipLevel(),
+                                                     speed,
+                                                     clip.getActiveChannels(),
+                                                     playHeadState,
+                                                     params.forRendering);
+    
+    // Create FadeInOutNode
+    {
+        auto fIn = clip.getFadeIn();
+        auto fOut = clip.getFadeOut();
+
+        if (fIn > 0.0 || fOut > 0.0)
+        {
+            const bool speedIn = clip.getFadeInBehaviour() == AudioClipBase::speedRamp && fIn > 0.0;
+            const bool speedOut = clip.getFadeOutBehaviour() == AudioClipBase::speedRamp && fOut > 0.0;
+
+            auto pos = clip.getPosition();
+            node = makeNode<FadeInOutNode> (std::move (node), playHeadState,
+                                            speedIn ? EditTimeRange (pos.getStart(), pos.getStart() + juce::jmin (0.003, fIn))
+                                                    : EditTimeRange (pos.getStart(), pos.getStart() + fIn),
+                                            speedOut ? EditTimeRange (pos.getEnd() - juce::jmin (0.003, fOut), pos.getEnd())
+                                                     : EditTimeRange (pos.getEnd() - fOut, pos.getEnd()),
+                                            clip.getFadeInType(), clip.getFadeOutType(),
+                                            true);
+        }
+    }
+    
+    return node;
 }
 
 std::unique_ptr<tracktion_graph::Node> createNodeForMidiClip (MidiClip& clip, const TrackMuteState& trackMuteState, tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams&)
@@ -258,6 +280,22 @@ std::unique_ptr<tracktion_graph::Node> createNodeForDevice (OutputDevice& device
     return {};
 }
 
+std::unique_ptr<tracktion_graph::Node> createMasterFadeInOutNode (Edit& edit, tracktion_graph::PlayHeadState& playHeadState, std::unique_ptr<Node> node)
+{
+    if (edit.masterFadeIn > 0 || edit.masterFadeOut > 0)
+    {
+        auto length = edit.getLength();
+        return makeNode<FadeInOutNode> (std::move (node), playHeadState,
+                                        EditTimeRange { 0.0, edit.masterFadeIn },
+                                        EditTimeRange { length - edit.masterFadeOut, length },
+                                        edit.masterFadeInType.get(),
+                                        edit.masterFadeOutType.get(),
+                                        true);
+    }
+
+    return node;
+}
+
 //==============================================================================
 EditNodeContext createNodeForEdit (Edit& edit, tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
@@ -319,14 +357,15 @@ EditNodeContext createNodeForEdit (Edit& edit, tracktion_graph::PlayHeadState& p
         jassert (device != nullptr);
         auto tracksVector = std::move (deviceAndTrackNode.second);
         
-        auto tracksNode = tracktion_graph::makeNode<tracktion_graph::SummingNode> (std::move (tracksVector));
+        auto node = tracktion_graph::makeNode<tracktion_graph::SummingNode> (std::move (tracksVector));
+        node = createMasterFadeInOutNode (edit, playHeadState, std::move (node));
         
         if (edit.isClickTrackDevice (*device))
         {
             //TODO: Add click node (with mute) to device input
         }
 
-        outputNode->addInput (createNodeForDevice (*device, std::move (tracksNode)));
+        outputNode->addInput (createNodeForDevice (*device, std::move (node)));
     }
     
     std::unique_ptr<Node> finalNode (std::move (outputNode));
