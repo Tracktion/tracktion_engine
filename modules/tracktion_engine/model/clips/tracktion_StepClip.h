@@ -57,6 +57,8 @@ public:
     void removeChannel (int index);
     void insertNewChannel (int index);
 
+    bool usesProbability();
+
     //==============================================================================
     /**
     */

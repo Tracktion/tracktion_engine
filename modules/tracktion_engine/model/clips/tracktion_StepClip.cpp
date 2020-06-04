@@ -404,11 +404,30 @@ void StepClip::generateMidiSequence (MidiMessageSequence& result,
 AudioNode* StepClip::createAudioNode (const CreateAudioNodeParams& params)
 {
     CRASH_TRACER
-    MidiMessageSequence sequence;
-    generateMidiSequence (sequence);
 
-    return new MidiAudioNode (std::move (sequence), { 1, 16 }, getEditTimeRange(), volumeDb, mute, *this,
-                              getClipIfPresentInNode (params.audioNodeToBeReplaced, *this));
+    if (usesProbability())
+    {
+        std::vector<MidiMessageSequence> sequences;
+
+        for (int i = 0; i < 64; i++)
+        {
+            MidiMessageSequence sequence;
+            generateMidiSequence (sequence);
+
+            sequences.push_back (sequence);
+        }
+
+        return new MidiAudioNode (std::move (sequences), { 1, 16 }, getEditTimeRange(), volumeDb, mute, *this,
+                                  getClipIfPresentInNode (params.audioNodeToBeReplaced, *this));
+    }
+    else
+    {
+        MidiMessageSequence sequence;
+        generateMidiSequence (sequence);
+
+        return new MidiAudioNode (std::move (sequence), { 1, 16 }, getEditTimeRange(), volumeDb, mute, *this,
+                                  getClipIfPresentInNode (params.audioNodeToBeReplaced, *this));
+    }
 }
 
 //==============================================================================
@@ -433,6 +452,19 @@ struct SelectedChannelIndex
 const juce::Array<StepClip::Channel*>& StepClip::getChannels() const noexcept
 {
     return channelList->objects;
+}
+
+bool StepClip::usesProbability()
+{
+    for (auto seq : getPatternSequence())
+    {
+        auto p = seq->getPattern();
+        for (int ch = 0; ch < getChannels().size(); ch++)
+            for (auto v : p.getProbabilities (ch))
+                if (v < 1.0f)
+                    return true;
+    }
+    return false;
 }
 
 void StepClip::insertNewChannel (int index)

@@ -229,7 +229,7 @@ double StepClip::Pattern::getGate (int channel, int index) const
 float StepClip::Pattern::getProbability (int channel, int index) const
 {
     if (! getNote (channel, index))
-        return 0.0;
+        return 1.0;
 
     auto p = getProbabilities (channel);
 

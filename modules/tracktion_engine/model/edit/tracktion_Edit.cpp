@@ -190,7 +190,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
             else if (v.hasType (IDs::CHANNEL))
             {
                 if (i == IDs::pattern || i == IDs::channel
-                     || i == IDs::velocities || i == IDs::gates
+                    || i == IDs::velocities || i == IDs::gates || i == IDs::probabilities 
                      || i == IDs::note || i == IDs::velocity || i == IDs::groove
                      || i == IDs::grooveStrength)
                     restart();

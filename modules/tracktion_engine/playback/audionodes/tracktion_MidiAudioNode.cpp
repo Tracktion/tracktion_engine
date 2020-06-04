@@ -17,7 +17,30 @@ MidiAudioNode::MidiAudioNode (MidiMessageSequence sequence,
                               CachedValue<float>& volumeDb_,
                               CachedValue<bool>& mute_,
                               Clip& sourceClip, const MidiAudioNode* nodeToReplace)
-    : ms (std::move (sequence)),
+    : editSection (editPos),
+      channelNumbers (chans),
+      volumeDb (volumeDb_),
+      mute (mute_),
+      clip (&sourceClip),
+      wasMute (mute_),
+      shouldCreateMessagesForTime (nodeToReplace == nullptr)
+{
+    jassert (channelNumbers.getStart() > 0 && channelNumbers.getEnd() <= 16);
+
+    if (nodeToReplace != nullptr)
+        midiSourceID = nodeToReplace->midiSourceID;
+
+    ms.push_back (std::move (sequence));
+    ms[0].updateMatchedPairs();
+}
+
+MidiAudioNode::MidiAudioNode (std::vector<juce::MidiMessageSequence> sequences,
+                              Range<int> chans,
+                              EditTimeRange editPos,
+                              CachedValue<float>& volumeDb_,
+                              CachedValue<bool>& mute_,
+                              Clip& sourceClip, const MidiAudioNode* nodeToReplace)
+    : ms (std::move (sequences)),
       editSection (editPos),
       channelNumbers (chans),
       volumeDb (volumeDb_),
@@ -31,7 +54,8 @@ MidiAudioNode::MidiAudioNode (MidiMessageSequence sequence,
     if (nodeToReplace != nullptr)
         midiSourceID = nodeToReplace->midiSourceID;
 
-    ms.updateMatchedPairs();
+    for (auto& m : ms)
+        m.updateMatchedPairs();
 }
 
 void MidiAudioNode::renderSection (const AudioRenderContext& rc, EditTimeRange editTime)
@@ -45,7 +69,7 @@ void MidiAudioNode::renderSection (const AudioRenderContext& rc, EditTimeRange e
             if (mute != wasMute)
             {
                 wasMute = mute;
-                createNoteOffs (*rc.bufferForMidiMessages, ms, localTime.getStart(), rc.midiBufferOffset, rc.playhead.isPlaying());
+                createNoteOffs (*rc.bufferForMidiMessages, ms[currentSequence], localTime.getStart(), rc.midiBufferOffset, rc.playhead.isPlaying());
             }
 
             return;
@@ -57,20 +81,20 @@ void MidiAudioNode::renderSection (const AudioRenderContext& rc, EditTimeRange e
             shouldCreateMessagesForTime = false;
         }
 
-        auto numEvents = ms.getNumEvents();
+        auto numEvents = ms[currentSequence].getNumEvents();
 
         if (numEvents != 0)
         {
             currentIndex = jlimit (0, numEvents - 1, currentIndex);
 
-            if (ms.getEventTime (currentIndex) >= localTime.getStart())
+            if (ms[currentSequence].getEventTime (currentIndex) >= localTime.getStart())
             {
-                while (currentIndex > 0 && ms.getEventTime (currentIndex - 1) >= localTime.getStart())
+                while (currentIndex > 0 && ms[currentSequence].getEventTime (currentIndex - 1) >= localTime.getStart())
                     --currentIndex;
             }
             else
             {
-                while (currentIndex < numEvents && ms.getEventTime (currentIndex) < localTime.getStart())
+                while (currentIndex < numEvents && ms[currentSequence].getEventTime (currentIndex) < localTime.getStart())
                     ++currentIndex;
             }
         }
@@ -79,7 +103,7 @@ void MidiAudioNode::renderSection (const AudioRenderContext& rc, EditTimeRange e
 
         for (;;)
         {
-            if (auto meh = ms.getEventPointer (currentIndex++))
+            if (auto meh = ms[currentSequence].getEventPointer (currentIndex++))
             {
                 auto eventTime = meh->message.getTimeStamp();
 
@@ -102,7 +126,13 @@ void MidiAudioNode::renderSection (const AudioRenderContext& rc, EditTimeRange e
         }
 
         if (rc.isLastBlockOfLoop())
-            createNoteOffs (*rc.bufferForMidiMessages, ms, localTime.getEnd(), rc.midiBufferOffset + localTime.getLength(), rc.playhead.isPlaying());
+        {
+            createNoteOffs (*rc.bufferForMidiMessages, ms[currentSequence], localTime.getEnd(), rc.midiBufferOffset + localTime.getLength(), rc.playhead.isPlaying());
+
+            currentSequence++;
+            if (currentSequence >= ms.size())
+                currentSequence = 0;
+        }
     }
 }
 
@@ -112,12 +142,12 @@ void MidiAudioNode::createMessagesForTime (double time, MidiMessageArray& buffer
 
     if (midiClip != nullptr && midiClip->getMPEMode())
     {
-        const int indexOfTime = ms.getNextIndexAtTime (time);
+        const int indexOfTime = ms[currentSequence].getNextIndexAtTime (time);
 
         Array<MidiMessage> mpeMessagesToAddAtStart;
 
         for (int i = channelNumbers.getStart(); i <= channelNumbers.getEnd(); ++i)
-            MPEStartTrimmer::reconstructExpression (mpeMessagesToAddAtStart, ms, indexOfTime, i);
+            MPEStartTrimmer::reconstructExpression (mpeMessagesToAddAtStart, ms[currentSequence], indexOfTime, i);
 
         for (auto& m : mpeMessagesToAddAtStart)
             buffer.addMidiMessage (m, midiTimeOffset + 0.0001, midiSourceID);
@@ -128,7 +158,7 @@ void MidiAudioNode::createMessagesForTime (double time, MidiMessageArray& buffer
             juce::Array<juce::MidiMessage> controllerMessages;
 
             for (int i = channelNumbers.getStart(); i <= channelNumbers.getEnd(); ++i)
-                ms.createControllerUpdatesForTime (i, time, controllerMessages);
+                ms[currentSequence].createControllerUpdatesForTime (i, time, controllerMessages);
 
             if (! controllerMessages.isEmpty())
                 for (auto& m : controllerMessages)
@@ -139,9 +169,9 @@ void MidiAudioNode::createMessagesForTime (double time, MidiMessageArray& buffer
         {
             auto volScale = dbToGain (volumeDb);
 
-            for (int i = 0; i < ms.getNumEvents(); ++i)
+            for (int i = 0; i < ms[currentSequence].getNumEvents(); ++i)
             {
-                if (auto meh = ms.getEventPointer (i))
+                if (auto meh = ms[currentSequence].getEventPointer (i))
                 {
                     if (meh->noteOffObject != nullptr
                         && meh->message.isNoteOn())
