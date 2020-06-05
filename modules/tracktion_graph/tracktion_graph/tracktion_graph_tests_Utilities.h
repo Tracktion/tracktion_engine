@@ -61,11 +61,11 @@ namespace test_utilities
 
     static inline void fillBufferWithSinData (juce::AudioBuffer<float>& buffer)
     {
-        const float incremement = juce::MathConstants<float>::twoPi / buffer.getNumSamples();
+        const float increment = juce::MathConstants<float>::twoPi / buffer.getNumSamples();
         float* sample = buffer.getWritePointer (0);
         
         for (int i = 0; i < buffer.getNumSamples(); ++i)
-            *sample++ = std::sin (incremement * i);
+            *sample++ = std::sin (increment * i);
         
         for (int i = 1; i < buffer.getNumChannels(); ++i)
             buffer.copyFrom (i, 0, buffer, 0, 0, buffer.getNumSamples());

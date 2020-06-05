@@ -119,7 +119,7 @@ void ToneGeneratorPlugin::restorePluginStateFromValueTree (const juce::ValueTree
 //==============================================================================
 namespace ToneGenHelpers
 {
-    inline bool oddEven (int x)
+    inline int oddEven (int x)
     {
         return (x % 2 == 0) ? 1 : -1;
     }

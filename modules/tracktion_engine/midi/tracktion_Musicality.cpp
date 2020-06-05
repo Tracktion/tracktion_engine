@@ -1453,7 +1453,7 @@ void PatternGenerator::generateArpPattern()
     // clear offset before generating clip
     mc->setOffset (0);
 
-    // Loop over the length of the clip in incremements of note length
+    // Loop over the length of the clip in increments of note length
     double stepLengthLeft = progressionItems.getFirst()->lengthInBeats;
     const double clipLength = mc->isLooping() ? mc->getLoopLengthBeats() : mc->getLengthInBeats() + mc->getOffsetInBeats();
     double curBeat = -progressionOffset;
@@ -1481,7 +1481,7 @@ void PatternGenerator::generateArpPattern()
                 for (auto v : chord.getSteps (progressionItem->inversion)) intervals.add (v + 12);
                 for (auto v : chord.getSteps (progressionItem->inversion)) intervals.add (v + 24);
 
-                // find which note in the chord we are currently using and incremement by that amount
+                // find which note in the chord we are currently using and increment by that amount
                 const int stepIndex = styleValues[stepCur];
                 const int note = chordRoot + intervals[stepIndex] + octaveOffset;
 
@@ -1497,7 +1497,7 @@ void PatternGenerator::generateArpPattern()
                 }
             }
 
-            // incremement current note in chord, then incremeent position in progression
+            // increment current note in chord, then incremeent position in progression
             stepLengthLeft -= stepLength;
             stepCur++;
             if (stepCur >= styleValues.size())
@@ -1592,7 +1592,7 @@ void PatternGenerator::generateChordPattern()
     // clear offset before generating clip
     mc->setOffset (0);
 
-    // Loop over the length of the clip in incremements of pattern length
+    // Loop over the length of the clip in increments of pattern length
     double curBeat = -progressionOffset;
     const double clipLength = mc->isLooping() ? mc->getLoopLengthBeats() : mc->getLengthInBeats() + mc->getOffsetInBeats();
     int panic = 1000;
@@ -1700,7 +1700,7 @@ void PatternGenerator::generateMelodyPattern()
     // clear offset before generating clip
     mc->setOffset (0);
 
-    // Loop over the length of the clip in incremements of bar length
+    // Loop over the length of the clip in increments of bar length
     auto curBeat = -progressionOffset;
     auto clipLength = mc->isLooping() ? mc->getLoopLengthBeats()
                                       : mc->getLengthInBeats() + mc->getOffsetInBeats();
@@ -1881,7 +1881,7 @@ void PatternGenerator::generateBassPattern()
     // clear offset before generating clip
     mc->setOffset (0);
 
-    // Loop over the length of the clip in incremements of pattern length
+    // Loop over the length of the clip in increments of pattern length
     double curBeat = -progressionOffset;
     const double clipLength = mc->isLooping() ? mc->getLoopLengthBeats() : mc->getLengthInBeats() + mc->getOffsetInBeats();
     int panic = 1000;

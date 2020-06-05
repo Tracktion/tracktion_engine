@@ -12,7 +12,8 @@ namespace tracktion_engine
 {
 
 /** */
-class AudioTrack  : public ClipTrack
+class AudioTrack  : public ClipTrack,
+                    private juce::Timer
 {
 public:
     AudioTrack (Edit&, const juce::ValueTree&);
@@ -133,7 +134,7 @@ public:
                               MidiClip*, MidiList::NoteAutomationType);
 
     void playGuideNote (int note, MidiChannel midiChannel, int velocity,
-                        bool stopOtherFirst = true, bool forceNote = false);
+                        bool stopOtherFirst = true, bool forceNote = false, bool autorelease = false);
 
     void playGuideNotes (const juce::Array<int>& notes, MidiChannel midiChannel,
                          const juce::Array<int>& velocities,
@@ -173,6 +174,8 @@ public:
 protected:
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
     bool isTrackAudible (bool areAnyTracksSolo) const override;
+
+    void timerCallback() override   { turnOffGuideNotes(); }
 
 private:
     //==============================================================================

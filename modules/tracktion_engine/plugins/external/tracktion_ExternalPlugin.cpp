@@ -1196,7 +1196,6 @@ void ExternalPlugin::applyToBuffer (const PluginRenderContext& fc)
         {
             auto destNumChans = fc.destBuffer->getNumChannels();
             jassert (destNumChans > 0);
-            jassert (fc.bufferStartSample == 0);
 
             auto numInputChannels = pluginInstance->getTotalNumInputChannels();
             auto numOutputChannels = pluginInstance->getTotalNumOutputChannels();

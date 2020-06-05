@@ -24,6 +24,13 @@ public:
                    juce::CachedValue<bool>& mute,
                    Clip&, const MidiAudioNode* nodeToReplace);
 
+    MidiAudioNode (std::vector<juce::MidiMessageSequence> sequences,
+                   juce::Range<int> midiChannelNumbers,
+                   EditTimeRange editSection,
+                   juce::CachedValue<float>& volumeDb,
+                   juce::CachedValue<bool>& mute,
+                   Clip&, const MidiAudioNode* nodeToReplace);
+
     void renderSection (const AudioRenderContext&, EditTimeRange editTime);
 
     void getAudioNodeProperties (AudioNodeProperties&) override;
@@ -38,7 +45,8 @@ public:
     Clip& getClip() const noexcept                  { return *clip; }
 
 private:
-    juce::MidiMessageSequence ms;
+    std::vector<juce::MidiMessageSequence> ms;
+    size_t currentSequence = 0;
     int currentIndex = 0;
     EditTimeRange editSection;
     juce::Range<int> channelNumbers;

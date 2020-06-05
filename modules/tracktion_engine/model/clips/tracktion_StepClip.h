@@ -57,6 +57,8 @@ public:
     void removeChannel (int index);
     void insertNewChannel (int index);
 
+    bool usesProbability();
+
     //==============================================================================
     /**
     */
@@ -101,6 +103,12 @@ public:
         double getGate (int channel, int index) const;
         void setGate (int channel, int index, double value);
 
+        juce::Array<float> getProbabilities (int channel) const;
+        void setProbabilities (int channel, const juce::Array<float>&);
+
+        float getProbability (int channel, int index) const;
+        void setProbability (int channel, int index, float value);
+
         /** Creates a snapshot of a pattern's notes, velocities and gates to avoid costly
             property parsing. Obviously if you change a property this will become invalid.
          */
@@ -111,10 +119,12 @@ public:
             bool getNote (int index) const noexcept;
             int getVelocity (int index) const noexcept;
             double getGate (int index) const noexcept;
+            float getProbability (int index) const noexcept;
 
             juce::BigInteger notes;
             juce::Array<int> velocities;
             juce::Array<double> gates;
+			juce::Array<float> probabilities;
             JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CachedPattern)
         };
 

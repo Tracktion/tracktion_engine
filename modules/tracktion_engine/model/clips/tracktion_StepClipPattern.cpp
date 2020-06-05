@@ -125,6 +125,35 @@ void StepClip::Pattern::setGates (int channel, const juce::Array<double>& ga)
     state.getChild (channel).setProperty (IDs::gates, sa.joinIntoString (" "), clip.getUndoManager());
 }
 
+juce::Array<float> StepClip::Pattern::getProbabilities (int channel) const
+{
+    juce::Array<float> v;
+    auto pa = StringArray::fromTokens (state.getChild (channel)[IDs::probabilities].toString(), false);
+    v.ensureStorageAllocated (pa.size());
+
+    for (auto& p : pa)
+            v.add (p.getFloatValue());
+
+    return v;
+}
+
+void StepClip::Pattern::setProbabilities (int channel, const juce::Array<float>& pa)
+{
+    if (channel >= state.getNumChildren())
+    {
+        jassertfalse;
+        return;
+    }
+
+    StringArray sa;
+    sa.ensureStorageAllocated (pa.size());
+
+    for (double p : pa)
+        sa.add (String (p));
+
+    state.getChild (channel).setProperty (IDs::probabilities, sa.joinIntoString (" "), clip.getUndoManager());
+}
+
 bool StepClip::Pattern::getNote (int channel, int index) const noexcept
 {
     return getChannel (channel) [index];
@@ -197,6 +226,19 @@ double StepClip::Pattern::getGate (int channel, int index) const
     return 1.0;
 }
 
+float StepClip::Pattern::getProbability (int channel, int index) const
+{
+    if (! getNote (channel, index))
+        return 1.0;
+
+    auto p = getProbabilities (channel);
+
+    if (isPositiveAndBelow (index, p.size()))
+        return p[index];
+
+    return 1.0;
+}
+
 void StepClip::Pattern::setGate (int channel, int index, double value)
 {
     if (! isPositiveAndBelow (channel, (int) maxNumChannels))
@@ -212,6 +254,23 @@ void StepClip::Pattern::setGate (int channel, int index, double value)
 
     gates.set (index, value);
     setGates (channel, gates);
+}
+
+void StepClip::Pattern::setProbability (int channel, int index, float value)
+{
+    if (! isPositiveAndBelow (channel, (int) maxNumChannels))
+        return;
+
+    setNote (channel, index, value != 0.0);
+
+    auto p = getProbabilities (channel);
+    const int size = p.size();
+
+    if (! isPositiveAndNotGreaterThan (index, size))
+        p.insertMultiple (size, 1.0f, index - size);
+
+    p.set (index, value);
+    setProbabilities (channel, p);
 }
 
 void StepClip::Pattern::clear()
@@ -284,7 +343,9 @@ void StepClip::Pattern::toggleAtInterval (int channel, int interval)
 
 StepClip::Pattern::CachedPattern::CachedPattern (const Pattern& p, int c)
     : notes (p.getChannel (c)),
-      velocities (p.getVelocities (c)), gates (p.getGates (c))
+      velocities (p.getVelocities (c)),
+      gates (p.getGates (c)),
+      probabilities (p.getProbabilities (c))
 {
 }
 
@@ -311,6 +372,17 @@ double StepClip::Pattern::CachedPattern::getGate (int index) const noexcept
 
     if (isPositiveAndBelow (index, gates.size()))
         return gates[index];
+
+    return 1.0;
+}
+
+float StepClip::Pattern::CachedPattern::getProbability (int index) const noexcept
+{
+    if (! getNote (index))
+        return 0.0;
+
+    if (isPositiveAndBelow (index, probabilities.size()))
+        return probabilities[index];
 
     return 1.0;
 }
