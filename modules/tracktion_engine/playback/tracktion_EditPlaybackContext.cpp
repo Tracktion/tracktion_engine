@@ -462,7 +462,7 @@ void EditPlaybackContext::createNode()
     isAllocated = true;
     
     CreateNodeParams cnp;
-    auto editNodeContext = createNodeForEdit (edit, nodePlaybackContext->playHeadState, cnp);
+    auto editNodeContext = createNodeForEdit (*this, nodePlaybackContext->playHeadState, cnp);
 
     const auto& tempoSections = edit.tempoSequence.getTempoSections();
     const bool hasTempoChanged = tempoSections.getChangeCount() != lastTempoSections.getChangeCount();
@@ -629,7 +629,7 @@ void EditPlaybackContext::prepareOutputDevices (double start)
     for (auto mo : midiOutputs)
         mo->prepareToPlay (start, true);
 
-    midiDispatcher.prepareToPlay (playhead, start);
+    midiDispatcher.prepareToPlay (start);
 }
 
 void EditPlaybackContext::prepareForPlaying (double startTime)
@@ -747,9 +747,10 @@ void EditPlaybackContext::fillNextAudioBlock (EditTimeRange streamTime, float** 
         if (in->owner.getDeviceType() == InputDevice::trackMidiDevice)
             in->owner.masterTimeUpdate (streamTime.getStart());
 
-    midiDispatcher.masterTimeUpdate (playhead, streamTime.getStart());
-
     playhead.deviceManagerPositionUpdate (streamTime.getStart(), streamTime.getEnd());
+
+    // Update the dispatcher after the playhead reference time
+    midiDispatcher.masterTimeUpdate (playhead.streamTimeToSourceTime (streamTime.getStart()));
 
     // sync this playback context with a master context
     if (contextToSyncTo != nullptr && playhead.isPlaying())
@@ -801,7 +802,7 @@ void EditPlaybackContext::fillNextAudioBlock (EditTimeRange streamTime, float** 
     }
 
     edit.updateModifierTimers (playhead, streamTime, numSamples);
-    midiDispatcher.nextBlockStarted (playhead, streamTime, numSamples);
+    midiDispatcher.renderDevices (playhead, streamTime, numSamples);
 
     for (auto r : edit.getRackList().getTypes())
         r->newBlockStarted();
@@ -820,7 +821,14 @@ void EditPlaybackContext::fillNextNodeBlock (juce::Range<int64_t> referenceSampl
 
     SCOPED_REALTIME_CHECK
     if (nodePlaybackContext)
+    {
         nodePlaybackContext->process (referenceSampleRange, allChannels, numChannels);
+        
+        // Dispatch any MIDI messages that have been injected in to the MidiOutputDeviceInstances by the Node
+        const auto timelinePosition = nodePlaybackContext->playHead.referenceSamplePositionToTimelinePosition (referenceSampleRange.getStart());
+        const double editTime = tracktion_graph::sampleToTime (timelinePosition, nodePlaybackContext->sampleRate);
+        midiDispatcher.dispatchPendingMessagesForDevices (editTime);
+    }
 }
 #endif
 
@@ -833,6 +841,21 @@ InputDeviceInstance* EditPlaybackContext::getInputFor (InputDevice* d) const
             return i;
 
     for (auto i : midiInputs)
+        if (&i->owner == d)
+            return i;
+
+    return {};
+}
+
+OutputDeviceInstance* EditPlaybackContext::getOutputFor (OutputDevice* d) const
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+
+    for (auto i : waveOutputs)
+        if (&i->owner == d)
+            return i;
+
+    for (auto i : midiOutputs)
         if (&i->owner == d)
             return i;
 

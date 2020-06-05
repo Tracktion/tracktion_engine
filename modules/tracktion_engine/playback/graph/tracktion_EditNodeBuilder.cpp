@@ -258,7 +258,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForSubmixTrack (FolderTrack& ft
 }
 
 //==============================================================================
-std::unique_ptr<tracktion_graph::Node> createNodeForDevice (OutputDevice& device, std::unique_ptr<Node> node)
+std::unique_ptr<tracktion_graph::Node> createNodeForDevice (EditPlaybackContext& epc, OutputDevice& device, PlayHeadState& playHeadState, std::unique_ptr<Node> node)
 {
     if (auto waveDevice = dynamic_cast<WaveOutputDevice*> (&device))
     {
@@ -275,8 +275,11 @@ std::unique_ptr<tracktion_graph::Node> createNodeForDevice (OutputDevice& device
 
         return tracktion_graph::makeNode<ChannelRemappingNode> (std::move (node), channelMap, false);
     }
+    else if (auto midiInstance = dynamic_cast<MidiOutputDeviceInstance*> (epc.getOutputFor (&device)))
+    {
+        return tracktion_graph::makeNode<MidiOutputDeviceInstanceInjectingNode> (*midiInstance, std::move (node), playHeadState.playHead);
+    }
     
-    //TODO: MIDI devices...
     return {};
 }
 
@@ -297,8 +300,9 @@ std::unique_ptr<tracktion_graph::Node> createMasterFadeInOutNode (Edit& edit, tr
 }
 
 //==============================================================================
-EditNodeContext createNodeForEdit (Edit& edit, tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
+EditNodeContext createNodeForEdit (EditPlaybackContext& epc, tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
+    Edit& edit = epc.edit;
     std::vector<std::unique_ptr<TrackMuteState>> trackMuteStates;
     using TrackNodeVector = std::vector<std::unique_ptr<tracktion_graph::Node>>;
     std::map<OutputDevice*, TrackNodeVector> deviceNodes;
@@ -365,7 +369,7 @@ EditNodeContext createNodeForEdit (Edit& edit, tracktion_graph::PlayHeadState& p
             //TODO: Add click node (with mute) to device input
         }
 
-        outputNode->addInput (createNodeForDevice (*device, std::move (node)));
+        outputNode->addInput (createNodeForDevice (epc, *device, playHeadState, std::move (node)));
     }
     
     std::unique_ptr<Node> finalNode (std::move (outputNode));

@@ -34,7 +34,7 @@ struct EditNodeContext
 };
 
 /** Creates a Node to play back an Edit. */
-EditNodeContext createNodeForEdit (Edit&, tracktion_graph::PlayHeadState&, const CreateNodeParams&);
+EditNodeContext createNodeForEdit (EditPlaybackContext&, tracktion_graph::PlayHeadState&, const CreateNodeParams&);
 
 
 } // namespace tracktion_engine

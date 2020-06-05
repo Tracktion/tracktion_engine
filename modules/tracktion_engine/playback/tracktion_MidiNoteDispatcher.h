@@ -20,9 +20,11 @@ public:
     //==============================================================================
     void setMidiDeviceList (const juce::OwnedArray<MidiOutputDeviceInstance>&);
 
-    void nextBlockStarted (PlayHead& playhead, EditTimeRange streamTime, int blockSize);
-    void masterTimeUpdate (PlayHead& playhead, double streamTime);
-    void prepareToPlay (PlayHead& playhead, double start);
+    void renderDevices (PlayHead&, EditTimeRange streamTime, int blockSize);
+    void dispatchPendingMessagesForDevices (double editTime);
+    
+    void masterTimeUpdate (double editTime);
+    void prepareToPlay (double editTime);
 
     void hiResTimerCallback() override;
 
@@ -30,9 +32,9 @@ private:
     //==============================================================================
     struct DeviceState
     {
-        DeviceState (MidiOutputDeviceInstance* d) : device (d) {}
+        DeviceState (MidiOutputDeviceInstance& d) : device (d) {}
 
-        MidiOutputDeviceInstance* device;
+        MidiOutputDeviceInstance& device;
         MidiMessageArray buffer;
     };
 
@@ -42,6 +44,7 @@ private:
     double masterTime = 0, hiResClockOfMasterTime = 0;
 
     double getCurrentTime() const;
+    void dispatchPendingMessages (DeviceState&, double editTime);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiNoteDispatcher)
 };

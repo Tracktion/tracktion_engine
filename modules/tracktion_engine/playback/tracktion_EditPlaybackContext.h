@@ -41,6 +41,7 @@ public:
 
     juce::Array<InputDeviceInstance*> getAllInputs();
     InputDeviceInstance* getInputFor (InputDevice*) const;
+    OutputDeviceInstance* getOutputFor (OutputDevice*) const;
 
     Edit& edit;
     TransportControl& transport;

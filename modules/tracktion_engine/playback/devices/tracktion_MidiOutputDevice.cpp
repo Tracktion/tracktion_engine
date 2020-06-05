@@ -678,6 +678,25 @@ void MidiOutputDeviceInstance::stop()
 
 MidiMessageArray& MidiOutputDeviceInstance::refillBuffer (PlayHead& playhead, EditTimeRange streamTime, int blockSize)
 {
+    // Render the current block
+    renderBlock (playhead, streamTime, blockSize);
+    
+    // Then add the relevent MIDI timecode and clock messages
+    auto editTime = playhead.streamTimeToEditWindow (streamTime);
+    addMidiClockMessagesToCurrentBlock (playhead.isPlaying(), playhead.isUserDragging(), editTime.editRange1);
+    
+    if (editTime.isSplit)
+        addMidiClockMessagesToCurrentBlock (playhead.isPlaying(), playhead.isUserDragging(), editTime.editRange2);
+
+    // Add device delay to the current block of messages
+    midiMessages.addToTimestamps (editTime.editRange1.getStart() + getMidiOutput().getDeviceDelay());
+    midiMessages.sortByTimestamp();
+
+    return getPendingMessages();
+}
+
+void MidiOutputDeviceInstance::renderBlock (PlayHead& playhead, EditTimeRange streamTime, int blockSize)
+{
     const int numChannels = 2;
     AudioScratchBuffer dummyBuffer (numChannels, blockSize + 128);
     auto dummyChannelSet = AudioChannelSet::canonicalChannelSet (numChannels);
@@ -703,46 +722,32 @@ MidiMessageArray& MidiOutputDeviceInstance::refillBuffer (PlayHead& playhead, Ed
         }
     }
     JUCE_CATCH_EXCEPTION
+}
 
-    auto editTime = playhead.streamTimeToEditWindow (streamTime);
+void MidiOutputDeviceInstance::mergeInMidiMessages (const MidiMessageArray& source, double editTime)
+{
+    midiMessages.mergeFromWithOffset (source, editTime + getMidiOutput().getDeviceDelay());
+    midiMessages.sortByTimestamp();
+}
+
+void MidiOutputDeviceInstance::addMidiClockMessagesToCurrentBlock (bool isPlaying, bool isDragging, EditTimeRange editTimeRange)
+{
     auto& midiOut = getMidiOutput();
 
     if (shouldSendMidiTimecode)
     {
         if (midiOut.sendTimecode)
-        {
-            timecodeGenerator->addMessages (playhead.isPlaying(), playhead.isUserDragging(),
+            timecodeGenerator->addMessages (isPlaying, isDragging,
                                             &edit.getTransport(), midiMessages,
-                                            editTime.editRange1.getStart(),
-                                            editTime.editRange1.getEnd());
-
-            if (editTime.isSplit)
-                timecodeGenerator->addMessages (playhead.isPlaying(), playhead.isUserDragging(),
-                                                &edit.getTransport(), midiMessages,
-                                                editTime.editRange2.getStart(),
-                                                editTime.editRange2.getEnd());
-
-        }
+                                            editTimeRange.getStart(),
+                                            editTimeRange.getEnd());
 
         if (midiOut.sendMidiClock || midiOut.sendControllerMidiClock)
-        {
-            midiClockGenerator->addMessages (playhead.isPlaying(),
+            midiClockGenerator->addMessages (isPlaying,
                                              &edit.getTransport(), midiMessages,
-                                             editTime.editRange1.getStart(),
-                                             editTime.editRange1.getLength());
-
-            if (editTime.isSplit)
-                midiClockGenerator->addMessages (playhead.isPlaying(),
-                                                 &edit.getTransport(), midiMessages,
-                                                 editTime.editRange2.getStart(),
-                                                 editTime.editRange2.getLength());
-        }
+                                             editTimeRange.getStart(),
+                                             editTimeRange.getLength());
     }
-
-    midiMessages.addToTimestamps (editTime.editRange1.getStart() + midiOut.getDeviceDelay());
-    midiMessages.sortByTimestamp();
-
-    return midiMessages;
 }
 
 }

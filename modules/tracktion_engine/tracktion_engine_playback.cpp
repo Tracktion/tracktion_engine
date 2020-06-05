@@ -65,6 +65,9 @@ extern "C"
  #include "playback/graph/tracktion_MidiNode.cpp"
  #include "playback/graph/tracktion_tests_MidiNode.cpp"
 
+ #include "playback/graph/tracktion_MidiOutputDeviceInstanceInjectingNode.h"
+ #include "playback/graph/tracktion_MidiOutputDeviceInstanceInjectingNode.cpp"
+
  #include "playback/graph/tracktion_WaveNode.h"
  #include "playback/graph/tracktion_WaveNode.cpp"
  #include "playback/graph/tracktion_tests_WaveNode.cpp"
