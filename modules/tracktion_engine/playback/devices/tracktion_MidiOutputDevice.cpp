@@ -44,15 +44,13 @@ public:
         }
     }
 
-    void addMessages (PlayHead& playhead, TransportControl* tc,
+    void addMessages (bool isPlaying, bool isScrubbing,
+                      TransportControl* tc,
                       MidiMessageArray& buffer,
                       double blockStart, double blockEnd)
     {
         CRASH_TRACER
-        const bool playingNow = playhead.isPlaying();
-        const bool scrubbingNow = playhead.isUserDragging();
-
-        if (scrubbingNow || ! playingNow)
+        if (isScrubbing || ! isPlaying)
         {
             auto len = blockEnd - blockStart;
 
@@ -60,11 +58,11 @@ public:
             blockEnd = blockStart + len;
         }
 
-        if (playing != playingNow
-             || scrubbing != scrubbingNow)
+        if (playing != isPlaying
+            || scrubbing != isScrubbing)
         {
-            playing = playingNow;
-            scrubbing = scrubbingNow;
+            playing = isPlaying;
+            scrubbing = isScrubbing;
 
             updateParts (blockStart);
             buffer.addMidiMessage (MidiMessage::fullFrame (hours, minutes, seconds, frames, midiTCType),
@@ -186,11 +184,11 @@ public:
             position.reset (new TempoSequencePosition (edit->tempoSequence));
     }
 
-    void addMessages (PlayHead& playhead, TransportControl* tc, MidiMessageArray& buffer,
+    void addMessages (bool playHeadIsPlaying, TransportControl* tc, MidiMessageArray& buffer,
                       double blockStartTime, double blockLength)
     {
         CRASH_TRACER
-        const bool isPlaying = playhead.isPlaying() && position != nullptr;
+        const bool isPlaying = playHeadIsPlaying && position != nullptr;
 
         if (isPlaying != wasPlaying)
         {
@@ -713,12 +711,14 @@ MidiMessageArray& MidiOutputDeviceInstance::refillBuffer (PlayHead& playhead, Ed
     {
         if (midiOut.sendTimecode)
         {
-            timecodeGenerator->addMessages (playhead, &edit.getTransport(), midiMessages,
+            timecodeGenerator->addMessages (playhead.isPlaying(), playhead.isUserDragging(),
+                                            &edit.getTransport(), midiMessages,
                                             editTime.editRange1.getStart(),
                                             editTime.editRange1.getEnd());
 
             if (editTime.isSplit)
-                timecodeGenerator->addMessages (playhead, &edit.getTransport(), midiMessages,
+                timecodeGenerator->addMessages (playhead.isPlaying(), playhead.isUserDragging(),
+                                                &edit.getTransport(), midiMessages,
                                                 editTime.editRange2.getStart(),
                                                 editTime.editRange2.getEnd());
 
@@ -726,12 +726,14 @@ MidiMessageArray& MidiOutputDeviceInstance::refillBuffer (PlayHead& playhead, Ed
 
         if (midiOut.sendMidiClock || midiOut.sendControllerMidiClock)
         {
-            midiClockGenerator->addMessages (playhead, &edit.getTransport(), midiMessages,
+            midiClockGenerator->addMessages (playhead.isPlaying(),
+                                             &edit.getTransport(), midiMessages,
                                              editTime.editRange1.getStart(),
                                              editTime.editRange1.getLength());
 
             if (editTime.isSplit)
-                midiClockGenerator->addMessages (playhead, &edit.getTransport(), midiMessages,
+                midiClockGenerator->addMessages (playhead.isPlaying(),
+                                                 &edit.getTransport(), midiMessages,
                                                  editTime.editRange2.getStart(),
                                                  editTime.editRange2.getLength());
         }
