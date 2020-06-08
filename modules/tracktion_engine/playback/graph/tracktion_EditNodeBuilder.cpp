@@ -12,10 +12,16 @@ namespace tracktion_engine
 {
 
 //==============================================================================
+//==============================================================================
 std::unique_ptr<tracktion_graph::Node> createNodeForTrack (Track&, tracktion_graph::PlayHeadState&,
                                                            std::vector<std::unique_ptr<TrackMuteState>>&,
                                                            const CreateNodeParams&);
 
+std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList&, const TrackMuteState*, std::unique_ptr<Node>,
+                                                                tracktion_graph::PlayHeadState&, const CreateNodeParams&);
+
+
+//==============================================================================
 //==============================================================================
 std::unique_ptr<tracktion_graph::Node> createNodeForAudioClip (AudioClipBase& clip, tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
@@ -56,6 +62,18 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioClip (AudioClipBase& cl
                                                      playHeadState,
                                                      params.forRendering);
     
+    // Plugins
+    if (params.includePlugins)
+    {
+        if (auto pluginList = clip.getPluginList())
+        {
+            for (auto p : *pluginList)
+                p->initialiseFully();
+
+            node = createPluginNodeForList (*pluginList, nullptr, std::move (node), playHeadState, params);
+        }
+    }
+
     // Create FadeInOutNode
     {
         auto fIn = clip.getFadeIn();
