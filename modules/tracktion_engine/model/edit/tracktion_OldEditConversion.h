@@ -498,6 +498,10 @@ private:
                 continue;
 
             auto tagsString = e->getStringAttribute (IDs::tags);
+            
+            if (tagsString.contains (","))
+                tagsString = juce::StringArray::fromTokens (tagsString, ",", "\"").joinIntoString ("|");
+            
             auto tags = juce::StringArray::fromTokens (tagsString, "|", "\"");
 
             for (auto& tag : tags)
