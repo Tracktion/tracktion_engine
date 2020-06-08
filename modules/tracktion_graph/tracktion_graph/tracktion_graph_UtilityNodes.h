@@ -194,6 +194,7 @@ public:
     /** Adds an input to be summed in this Node. */
     void addInput (std::unique_ptr<Node> newInput)
     {
+        assert (newInput != nullptr);
         nodes.push_back (newInput.get());
         ownedNodes.push_back (std::move (newInput));
     }

@@ -12,6 +12,22 @@ namespace tracktion_engine
 {
 
 //==============================================================================
+std::unique_ptr<tracktion_graph::Node> createNodeForTrack (Track&, tracktion_graph::PlayHeadState&,
+                                                           std::vector<std::unique_ptr<TrackMuteState>>&,
+                                                           const CreateNodeParams&);
+
+TrackOutput* getTrackOutput (Track& track)
+{
+    if (auto t = dynamic_cast<AudioTrack*> (&track))
+        return &t->getOutput();
+
+    if (auto t = dynamic_cast<FolderTrack*> (&track))
+        return t->getOutput();
+    
+    return {};
+}
+
+//==============================================================================
 std::unique_ptr<tracktion_graph::Node> createNodeForAudioClip (AudioClipBase& clip, tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
     const AudioFile playFile (clip.getPlaybackFile());
@@ -212,6 +228,21 @@ std::unique_ptr<tracktion_graph::Node> createPluginNodeForTrack (AudioTrack& at,
     return node;
 }
 
+juce::Array<Track*> getDirectInputTracks (AudioTrack& at)
+{
+    juce::Array<Track*> inputTracks;
+
+    for (auto track : getAudioTracks (at.edit))
+        if (! track->isPartOfSubmix() && track != &at && track->getOutput().outputsToDestTrack (at))
+            inputTracks.add (track);
+
+    for (auto track : getTracksOfType<FolderTrack> (at.edit, true))
+        if (! track->isPartOfSubmix() && track->getOutput() != nullptr && track->getOutput()->outputsToDestTrack (at))
+            inputTracks.add (track);
+
+    return inputTracks;
+}
+
 std::unique_ptr<tracktion_graph::Node> createNodeForAudioTrack (AudioTrack& at, tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params,
                                                                 std::vector<std::unique_ptr<TrackMuteState>>& trackMuteStates)
 {
@@ -221,7 +252,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioTrack (AudioTrack& at, 
     if (! params.forRendering && at.isFrozen (AudioTrack::individualFreeze))
         return createNodeForFrozenAudioTrack (at, playHeadState, params);
 
-    auto inputTracks = at.getInputTracks();
+    auto inputTracks = getDirectInputTracks (at);
     const bool muteForInputsWhenRecording = inputTracks.isEmpty();
     const bool processMidiWhenMuted = at.state.getProperty (IDs::processMidiWhenMuted, false);
     auto trackMuteState = std::make_unique<TrackMuteState> (at, muteForInputsWhenRecording, processMidiWhenMuted);
@@ -229,10 +260,26 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioTrack (AudioTrack& at, 
     const auto& clips = at.getClips();
     auto clipsNode = createClipsNode (clips, *trackMuteState, playHeadState, params);
     
-    if (clipsNode == nullptr)
+    if (clipsNode == nullptr && inputTracks.isEmpty())
         return {};
     
-    auto node = createPluginNodeForTrack (at, *trackMuteState, std::move (clipsNode), playHeadState, params);
+    std::unique_ptr<Node> node = std::move (clipsNode);
+    
+    if (! inputTracks.isEmpty())
+    {
+        auto sumNode = std::make_unique<SummingNode>();
+        
+        if (node)
+            sumNode->addInput (std::move (node));
+
+        for (auto inputTrack : inputTracks)
+            if (auto n = createNodeForTrack (*inputTrack, playHeadState, trackMuteStates, params))
+                sumNode->addInput (std::move (n));
+        
+        node = std::move (sumNode);
+    }
+    
+    node = createPluginNodeForTrack (at, *trackMuteState, std::move (node), playHeadState, params);
     
     node = makeNode<TrackMutingNode> (*trackMuteState, std::move (node));
     trackMuteStates.push_back (std::move (trackMuteState));
@@ -317,6 +364,46 @@ std::unique_ptr<tracktion_graph::Node> createNodeForSubmixTrack (FolderTrack& su
 }
 
 //==============================================================================
+std::unique_ptr<tracktion_graph::Node> createNodeForTrack (Track& track, tracktion_graph::PlayHeadState& playHeadState,
+                                                           std::vector<std::unique_ptr<TrackMuteState>>& trackMuteStates,
+                                                           const CreateNodeParams& params)
+{
+    if (auto t = dynamic_cast<AudioTrack*> (&track))
+    {
+        if (! t->isProcessing (true))
+            return {};
+
+        if (! t->createsOutput())
+            return {};
+
+        if (t->isPartOfSubmix())
+            return {};
+
+        if (t->isFrozen (Track::groupFreeze))
+            return {};
+
+        return createNodeForAudioTrack (*t, playHeadState, params, trackMuteStates);
+    }
+
+    if (auto t = dynamic_cast<FolderTrack*> (&track))
+    {
+        if (! t->isSubmixFolder())
+            return {};
+
+        if (t->isPartOfSubmix())
+            return {};
+
+        if (t->getOutput() == nullptr)
+            return {};
+
+        return createNodeForSubmixTrack (*t, playHeadState, trackMuteStates, params);
+    }
+
+    return {};
+}
+
+
+//==============================================================================
 std::unique_ptr<tracktion_graph::Node> createNodeForDevice (EditPlaybackContext& epc, OutputDevice& device, PlayHeadState& playHeadState, std::unique_ptr<Node> node)
 {
     if (auto waveDevice = dynamic_cast<WaveOutputDevice*> (&device))
@@ -378,50 +465,20 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, tracktion_graph::Pl
     std::vector<std::unique_ptr<TrackMuteState>> trackMuteStates;
     using TrackNodeVector = std::vector<std::unique_ptr<tracktion_graph::Node>>;
     std::map<OutputDevice*, TrackNodeVector> deviceNodes;
-    
-    // Create Nodes for AudioTracks
-    for (auto t : getAudioTracks (edit))
-    {
-        if (! t->isProcessing (true))
-            continue;
-        
-        if (! t->createsOutput())
-            continue;
-        
-        if (t->isPartOfSubmix())
-            continue;
 
-        if (t->isFrozen (Track::groupFreeze))
-            continue;
-                
-        if (auto device = t->getOutput().getOutputDevice (false))
-            if (auto node = createNodeForAudioTrack (*t, playHeadState, params, trackMuteStates))
-                deviceNodes[device].push_back (std::move (node));
-    }
-    
-    // Then Nodes for any submix tracks
-    for (auto t : getTracksOfType<FolderTrack> (edit, true))
-    {
-        if (! t->isSubmixFolder())
-            continue;
-
-        if (t->isPartOfSubmix())
-            continue;
-        
-        if (t->getOutput() == nullptr)
-            continue;
-        
-        if (auto output = t->getOutput())
-            if (auto device = output->getOutputDevice (false))
-                if (auto node = createNodeForSubmixTrack (*t, playHeadState, trackMuteStates, params))
-                    deviceNodes[device].push_back (std::move (node));
-    }
+    for (auto t : getAllTracks (edit))
+        if (params.allowedTracks == nullptr || params.allowedTracks->contains (t))
+            if (auto output = getTrackOutput (*t))
+                if (auto device = output->getOutputDevice (false))
+                    if (auto node = createNodeForTrack (*t, playHeadState, trackMuteStates, params))
+                        deviceNodes[device].push_back (std::move (node));
 
     //TODO:
     // Group frozen tracks
     // Insert plugins
     // Optional last stage
     // Preview level measurer
+    // ClickTrack (with mute)
     
     auto outputNode = std::make_unique<tracktion_graph::SummingNode>();
         
