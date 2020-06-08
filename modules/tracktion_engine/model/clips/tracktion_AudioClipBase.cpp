@@ -2504,8 +2504,28 @@ int64 AudioClipBase::getProxyHash()
 
 void AudioClipBase::beginRenderingNewProxyIfNeeded()
 {
-    if (canUseProxy() && isTimerRunning())
+    if (! canUseProxy())
+        return;
+    
+    if (isTimerRunning())
+    {
         startTimer (1);
+        return;
+    }
+    
+    const AudioFile playFile (getPlaybackFile());
+
+    if (playFile.isNull())
+        return;
+
+    auto original = getAudioFile();
+
+    if (shouldAttemptRender() && ! original.isValid())
+        createNewProxyAsync();
+
+    if (usesTimeStretchedProxy() || original.getInfo().needsCachedProxy)
+        if (playFile.getSampleRate() <= 0.0)
+            createNewProxyAsync();
 }
 
 //==============================================================================

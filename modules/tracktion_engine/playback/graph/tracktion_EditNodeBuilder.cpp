@@ -16,17 +16,6 @@ std::unique_ptr<tracktion_graph::Node> createNodeForTrack (Track&, tracktion_gra
                                                            std::vector<std::unique_ptr<TrackMuteState>>&,
                                                            const CreateNodeParams&);
 
-TrackOutput* getTrackOutput (Track& track)
-{
-    if (auto t = dynamic_cast<AudioTrack*> (&track))
-        return &t->getOutput();
-
-    if (auto t = dynamic_cast<FolderTrack*> (&track))
-        return t->getOutput();
-    
-    return {};
-}
-
 //==============================================================================
 std::unique_ptr<tracktion_graph::Node> createNodeForAudioClip (AudioClipBase& clip, tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
@@ -43,8 +32,8 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioClip (AudioClipBase& cl
     EditTimeRange loopRange;
     const bool usesTimestretchedProxy = clip.usesTimeStretchedProxy();
 
-    //TODO:
-    // Trigger proxy render if it needs it (if original file is invalid or playFile sample rate is == 0.0)
+    // Trigger proxy render if it needs it
+    clip.beginRenderingNewProxyIfNeeded();
 
     if (! usesTimestretchedProxy)
     {
