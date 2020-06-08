@@ -199,8 +199,7 @@ std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList& list
                                                                 tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
     for (auto p : list)
-        if (! p->mustBePlayedLiveWhenOnAClip())
-            node = createNodeForPlugin (*p, trackMuteState, std::move (node), playHeadState, params);
+        node = createNodeForPlugin (*p, trackMuteState, std::move (node), playHeadState, params);
 
     return node;
 }

@@ -983,10 +983,6 @@ AudioNode* AudioTrack::createAudioNode (const CreateAudioNodeParams& params)
             }
         }
 
-        for (int i = clips.size(); --i >= 0;)
-            if (auto pl = clips.getUnchecked (i)->getPluginList())
-                clipsNode = pl->attachNodesForPluginsNeedingLivePlay (clipsNode);
-
         if (compGroup != -1)
             if (auto tc = edit.getTrackCompManager().getTrackComp (this))
                 clipsNode = tc->createAudioNode (*this, clipsNode);

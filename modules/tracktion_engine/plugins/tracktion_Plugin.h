@@ -217,7 +217,6 @@ public:
     virtual bool isSynth()                              { return false; }
     virtual double getLatencySeconds()                  { return 0.0; }
     virtual double getTailLength() const                { return 0.0; }
-    virtual bool mustBePlayedLiveWhenOnAClip() const    { return false; }
     virtual bool canSidechain();
 
     juce::StringArray getInputChannelNames();
