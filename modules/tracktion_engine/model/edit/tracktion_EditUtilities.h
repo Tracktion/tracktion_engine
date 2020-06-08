@@ -76,6 +76,8 @@ ClipTrack* findFirstClipTrackFromSelection (const SelectableList&);
 /** Returns true if the Edit contains this Track. */
 bool containsTrack (const Edit&, const Track&);
 
+/** Returns the TrackOutput if the given track has one. */
+TrackOutput* getTrackOutput (Track&);
 
 //==============================================================================
 // Clips

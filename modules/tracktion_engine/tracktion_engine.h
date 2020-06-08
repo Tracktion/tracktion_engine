@@ -304,6 +304,7 @@ namespace tracktion_engine
     struct RetrospectiveRecordBuffer;
     class Clipboard;
     class PropertyStorage;
+    class TrackOutput;
 }
 
 //==============================================================================

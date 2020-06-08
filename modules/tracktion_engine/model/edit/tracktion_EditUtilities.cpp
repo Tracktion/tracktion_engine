@@ -127,6 +127,17 @@ bool containsTrack (const Edit& edit, const Track& track)
     return findTrackForPredicate (edit, [&track] (Track& t) { return &track == &t; }) != nullptr;
 }
 
+TrackOutput* getTrackOutput (Track& track)
+{
+    if (auto t = dynamic_cast<AudioTrack*> (&track))
+        return &t->getOutput();
+
+    if (auto t = dynamic_cast<FolderTrack*> (&track))
+        return t->getOutput();
+    
+    return {};
+}
+
 juce::Array<Track*> findAllTracksContainingSelectedItems (const SelectableList& items)
 {
     auto tracks = items.getItemsOfType<Track>();
