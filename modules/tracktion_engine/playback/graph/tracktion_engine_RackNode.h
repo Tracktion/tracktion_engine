@@ -139,11 +139,11 @@ public:
     PluginNode (std::unique_ptr<Node> inputNode,
                 tracktion_engine::Plugin::Ptr pluginToProcess,
                 double sampleRateToUse, int blockSizeToUse,
-                const TrackMuteState& trackMuteStateToUse,
+                const TrackMuteState* trackMuteStateToUse,
                 tracktion_graph::PlayHeadState& playHeadStateToUse, bool rendering)
         : input (std::move (inputNode)),
           plugin (std::move (pluginToProcess)),
-          trackMuteState (&trackMuteStateToUse),
+          trackMuteState (trackMuteStateToUse),
           playHeadState (&playHeadStateToUse),
           isRendering (rendering)
     {

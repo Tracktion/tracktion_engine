@@ -167,7 +167,7 @@ std::unique_ptr<tracktion_graph::SummingNode> createClipsNode (const juce::Array
     return summingNode;
 }
 
-std::unique_ptr<tracktion_graph::Node> createNodeForPlugin (Plugin& plugin, const TrackMuteState& trackMuteState, std::unique_ptr<Node> node,
+std::unique_ptr<tracktion_graph::Node> createNodeForPlugin (Plugin& plugin, const TrackMuteState* trackMuteState, std::unique_ptr<Node> node,
                                                             tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
     jassert (node != nullptr);
@@ -190,7 +190,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForPlugin (Plugin& plugin, cons
     return node;
 }
 
-std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList& list, const TrackMuteState& trackMuteState, std::unique_ptr<Node> node,
+std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList& list, const TrackMuteState* trackMuteState, std::unique_ptr<Node> node,
                                                                 tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
     for (auto p : list)
@@ -207,7 +207,7 @@ std::unique_ptr<tracktion_graph::Node> createPluginNodeForTrack (AudioTrack& at,
     // Pre-fx modifier node
     // Post-fx modifier node
 
-    node = createPluginNodeForList (at.pluginList, trackMuteState, std::move (node), playHeadState, params);
+    node = createPluginNodeForList (at.pluginList, &trackMuteState, std::move (node), playHeadState, params);
 
     return node;
 }
@@ -283,6 +283,19 @@ std::unique_ptr<tracktion_graph::Node> createNodeForDevice (EditPlaybackContext&
     return {};
 }
 
+std::unique_ptr<tracktion_graph::Node> createMasterPluginsNode (Edit& edit, OutputDevice& device, tracktion_graph::PlayHeadState& playHeadState, std::unique_ptr<Node> node, const CreateNodeParams& params)
+{
+    if (edit.engine.getDeviceManager().getDefaultWaveOutDevice() != &device)
+        return node;
+    
+    node = createPluginNodeForList (edit.getMasterPluginList(), nullptr, std::move (node), playHeadState, params);
+
+    if (auto masterVolPlugin = edit.getMasterVolumePlugin())
+        node = createNodeForPlugin (*masterVolPlugin, nullptr, std::move (node), playHeadState, params);
+    
+    return node;
+}
+
 std::unique_ptr<tracktion_graph::Node> createMasterFadeInOutNode (Edit& edit, tracktion_graph::PlayHeadState& playHeadState, std::unique_ptr<Node> node)
 {
     if (edit.masterFadeIn > 0 || edit.masterFadeOut > 0)
@@ -348,9 +361,7 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, tracktion_graph::Pl
     //TODO:
     // Group frozen tracks
     // Insert plugins
-    // Master plugins
     // Optional last stage
-    // Master fade in/out
     // Preview level measurer
     
     auto outputNode = std::make_unique<tracktion_graph::SummingNode>();
@@ -362,6 +373,7 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, tracktion_graph::Pl
         auto tracksVector = std::move (deviceAndTrackNode.second);
         
         auto node = tracktion_graph::makeNode<tracktion_graph::SummingNode> (std::move (tracksVector));
+        node = createMasterPluginsNode (edit, *device, playHeadState, std::move (node), params);
         node = createMasterFadeInOutNode (edit, playHeadState, std::move (node));
         
         if (edit.isClickTrackDevice (*device))
