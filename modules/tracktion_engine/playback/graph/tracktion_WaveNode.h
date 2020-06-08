@@ -24,7 +24,7 @@ public:
         2.0f will double the values returned.
 
     */
-    WaveNode (const AudioFile& file,
+    WaveNode (const AudioFile&,
               EditTimeRange editTime,
               double offset,
               EditTimeRange loopSection,
