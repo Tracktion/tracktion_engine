@@ -234,7 +234,7 @@ public:
         {
             if (! trackMuteState->shouldTrackContentsBeProcessed())
             {
-                shouldProcessPlugin = trackMuteState->shouldTrackBeAudible();
+                shouldProcessPlugin = shouldProcessPlugin && trackMuteState->shouldTrackBeAudible();
             
                 if (trackMuteState->wasJustMuted())
                     midiMessageArray.isAllNotesOff = true;
