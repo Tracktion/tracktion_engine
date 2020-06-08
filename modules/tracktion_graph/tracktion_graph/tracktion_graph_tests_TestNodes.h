@@ -303,14 +303,77 @@ static inline std::unique_ptr<Node> makeGainNode (std::unique_ptr<Node> input, f
     return makeNode<FunctionNode> (std::move (input), [gain] (float s) { return s * gain; });
 }
 
+//==============================================================================
+//==============================================================================
+class GainNode  : public Node
+{
+public:
+    GainNode (Node* inputNode, std::function<float()> gainFunc)
+        : input (inputNode), gainFunction (std::move (gainFunc))
+    {
+        assert (input != nullptr);
+        assert (gainFunction);
+        lastGain = gainFunction();
+    }
+    
+    NodeProperties getNodeProperties() override
+    {
+        return input->getNodeProperties();
+    }
+    
+    std::vector<Node*> getDirectInputNodes() override
+    {
+        return { input };
+    }
+
+    bool isReadyToProcess() override
+    {
+        return input->hasProcessed();
+    }
+    
+    void process (const ProcessContext& pc) override
+    {
+        jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
+
+        // Just pass out input on to our output
+        pc.buffers.audio.copyFrom (input->getProcessedOutput().audio);
+        pc.buffers.midi.mergeFrom (input->getProcessedOutput().midi);
+        
+        float gain = gainFunction();
+        
+        if (gain == lastGain)
+        {
+            if (gain == 0.0f)
+                pc.buffers.audio.clear();
+            else if (gain != 1.0f)
+                pc.buffers.audio *= gain;
+        }
+        else
+        {
+            juce::SmoothedValue<float> smoother (lastGain);
+            smoother.setTargetValue (gain);
+            smoother.reset ((int) pc.buffers.audio.getNumSamples());
+            pc.buffers.audio.multiplyBy (smoother);
+        }
+        
+        lastGain = gain;
+    }
+    
+private:
+    Node* input = nullptr;
+    std::function<float()> gainFunction;
+    float lastGain = 0.0f;
+};
 
 //==============================================================================
 //==============================================================================
 class SendNode : public Node
 {
 public:
-    SendNode (std::unique_ptr<Node> inputNode, int busIDToUse)
-        : input (std::move (inputNode)), busID (busIDToUse)
+    SendNode (std::unique_ptr<Node> inputNode, int busIDToUse,
+              std::function<float()> getGainFunc = nullptr)
+        : input (std::move (inputNode)), busID (busIDToUse),
+          gainFunction (std::move (getGainFunc))
     {
     }
     
@@ -319,6 +382,11 @@ public:
         return busID;
     }
     
+    std::function<float()> getGainFunction()
+    {
+        return gainFunction;
+    }
+                                                
     NodeProperties getNodeProperties() override
     {
         return input->getNodeProperties();
@@ -346,6 +414,7 @@ public:
 private:
     std::unique_ptr<Node> input;
     const int busID;
+    std::function<float()> gainFunction;
 };
 
 
@@ -411,7 +480,6 @@ public:
     
 private:
     std::unique_ptr<Node> input;
-    std::vector<Node*> sendNodes;
     const int busID;
     bool hasInitialised = false;
     
@@ -423,7 +491,7 @@ private:
         if (hasInitialised)
             return;
         
-        std::vector<Node*> sends;
+        std::vector<SendNode*> sends;
         visitNodes (rootNode,
                     [&] (Node& n)
                     {
@@ -455,7 +523,19 @@ private:
             std::vector<std::unique_ptr<Node>> ownedNodes;
             ownedNodes.push_back (std::move (input));
             
-            auto node = makeNode<SummingNode> (std::move (ownedNodes), std::move (sends));
+            // For each of the sends create a live gain node
+            for (int i = (int) sends.size(); --i >= 0;)
+            {
+                auto gainFunction = sends[(size_t) i]->getGainFunction();
+                
+                if (! gainFunction)
+                    continue;
+                
+                sends.erase (std::find (sends.begin(), sends.end(), sends[(size_t) i]));
+                ownedNodes.push_back (makeNode<GainNode> (std::move (sends[(size_t) i]), std::move (gainFunction)));
+            }
+            
+            auto node = makeNode<SummingNode> (std::move (ownedNodes));
             input.swap (node);
         }
         
