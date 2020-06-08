@@ -73,9 +73,12 @@ extern "C"
  #include "playback/graph/tracktion_tests_WaveNode.cpp"
 
  #include "playback/graph/tracktion_TrackMutingNode.h"
+ #include "playback/graph/tracktion_PluginNode.h"
+ #include "playback/graph/tracktion_RackNode.h"
+ #include "playback/graph/tracktion_PluginNode.cpp"
+
  #include "playback/graph/tracktion_TrackMutingNode.cpp"
 
- #include "playback/graph/tracktion_engine_RackNode.h"
  #include "playback/graph/tracktion_EditNodeBuilder.h"
  #include "playback/graph/tracktion_EditNodeBuilder.cpp"
 #endif
