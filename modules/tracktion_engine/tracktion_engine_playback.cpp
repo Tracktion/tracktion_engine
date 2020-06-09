@@ -79,6 +79,9 @@ extern "C"
 
  #include "playback/graph/tracktion_TrackMutingNode.cpp"
 
+ #include "playback/graph/tracktion_MidiInputDeviceNode.h"
+ #include "playback/graph/tracktion_MidiInputDeviceNode.cpp"
+
  #include "playback/graph/tracktion_EditNodeBuilder.h"
  #include "playback/graph/tracktion_EditNodeBuilder.cpp"
 #endif

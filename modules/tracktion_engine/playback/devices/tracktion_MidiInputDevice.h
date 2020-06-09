@@ -87,6 +87,7 @@ public:
     juce::Array<AudioTrack*> getDestinationTracks();
 
     MidiChannel getMidiChannelFor (int rawChannelNumber) const;
+    MidiMessageArray::MPESourceID getMPESourceID() const            { return midiSourceID; }
 
     //==============================================================================
     /** Gets notified (lazily, not in real-time) when any MidiInputDevice's key's state changes. */
@@ -118,6 +119,7 @@ protected:
     int programToUse = 0;
     bool firstSetEnabledCall = true;
     int bankToUse = 0;
+    MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
 
     bool keysDown[128];
     juce::uint8 keyDownVelocities[128];

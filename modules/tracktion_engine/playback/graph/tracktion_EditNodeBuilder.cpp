@@ -226,6 +226,31 @@ std::unique_ptr<tracktion_graph::SummingNode> createClipsNode (const juce::Array
     return summingNode;
 }
 
+std::unique_ptr<tracktion_graph::Node> createLiveInputNodeForDevice (InputDeviceInstance& inputDeviceInstance, tracktion_graph::PlayHeadState& playHeadState)
+{
+    if (auto midiDevice = dynamic_cast<MidiInputDevice*> (&inputDeviceInstance.getInputDevice()))
+        return makeNode<MidiInputDeviceNode> (inputDeviceInstance, *midiDevice, midiDevice->getMPESourceID(), playHeadState);
+
+    return {};
+}
+
+std::unique_ptr<tracktion_graph::Node> createLiveInputsNode (AudioTrack& track, tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
+{
+    std::vector<std::unique_ptr<tracktion_graph::Node>> nodes;
+
+    if (! params.forRendering)
+        if (auto context = track.edit.getCurrentPlaybackContext())
+            for (auto in : context->getAllInputs())
+                if (in->isLivePlayEnabled (track) && in->isOnTargetTrack (track))
+                    if (auto node = createLiveInputNodeForDevice (*in, playHeadState))
+                        nodes.push_back (std::move (node));
+
+    if (nodes.size() == 1)
+        return std::move (nodes.front());
+
+    return std::make_unique<SummingNode> (std::move (nodes));
+}
+
 std::unique_ptr<tracktion_graph::Node> createSidechainInputNodeForPlugin (Plugin& plugin, std::unique_ptr<Node> node)
 {
     const auto sidechainSourceID = plugin.getSidechainSourceID();
@@ -353,11 +378,27 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioTrack (AudioTrack& at, 
 
     const auto& clips = at.getClips();
     auto clipsNode = createClipsNode (clips, *trackMuteState, playHeadState, params);
+    auto liveInputNode = createLiveInputsNode (at, playHeadState, params);
     
-    if (clipsNode == nullptr && inputTracks.isEmpty())
+    if (clipsNode == nullptr && inputTracks.isEmpty() && liveInputNode == nullptr)
         return {};
     
     std::unique_ptr<Node> node = std::move (clipsNode);
+
+    if (liveInputNode)
+    {
+        if (node)
+        {
+            auto sumNode = std::make_unique<SummingNode>();
+            sumNode->addInput (std::move (node));
+            sumNode->addInput (std::move (liveInputNode));
+            node = std::move (sumNode);
+        }
+        else
+        {
+            node = std::move (liveInputNode);
+        }
+    }
     
     if (! inputTracks.isEmpty())
     {

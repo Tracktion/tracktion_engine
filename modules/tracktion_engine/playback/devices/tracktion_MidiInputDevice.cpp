@@ -626,7 +626,6 @@ public:
 
     bool isRecording() override
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
         return recording;
     }
 
@@ -1046,7 +1045,7 @@ public:
 
     MidiInputDevice& getMidiInput() const   { return static_cast<MidiInputDevice&> (owner); }
 
-    bool volatile recording = false, livePlayOver = false;
+    std::atomic<bool> recording { false }, livePlayOver { false };
     double startTime = 0;
     juce::MidiMessageSequence recorded;
 
