@@ -21,23 +21,12 @@ namespace tracktion_engine
      
      void setNodeContext (EditNodeContext editNodeContext)
      {
-         {
-             const SpinLock::ScopedLockType sl (trackMuteStatesLock);
-             std::swap (trackMuteStates, editNodeContext.trackMuteStates);
-         }
-         
          player.setNode (std::move (editNodeContext.node));
      }
      
      void setNodeContext (EditNodeContext editNodeContext, double newSampleRate, int blockSize)
      {
          sampleRate = newSampleRate;
-         
-         {
-             const SpinLock::ScopedLockType sl (trackMuteStatesLock);
-             std::swap (trackMuteStates, editNodeContext.trackMuteStates);
-         }
-         
          player.setNode (std::move (editNodeContext.node), sampleRate, blockSize);
      }
      
@@ -45,8 +34,7 @@ namespace tracktion_engine
      {
          const auto numSamples = referenceSampleRange.getLength();
          playHead.setReferenceSampleRange (referenceSampleRange);
-         updateMuteStates();
-         
+
          juce::dsp::AudioBlock<float> audioBlock (allChannels, (size_t) numChannels, (size_t) numSamples);
          scratchMidiBuffer.clear();
          tracktion_graph::Node::ProcessContext pc { referenceSampleRange, { audioBlock, scratchMidiBuffer } };
@@ -60,20 +48,6 @@ namespace tracktion_engine
      
  private:
      MidiMessageArray scratchMidiBuffer;
-     
-     SpinLock trackMuteStatesLock;
-     std::vector<std::unique_ptr<TrackMuteState>> trackMuteStates;
-     
-     void updateMuteStates()
-     {
-         if (! trackMuteStatesLock.tryEnter())
-             return;
-
-         for (auto& trackMuteState : trackMuteStates)
-             trackMuteState->update();
-
-         trackMuteStatesLock.exit();
-     }
  };
 #endif
 

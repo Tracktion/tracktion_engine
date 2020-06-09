@@ -73,9 +73,10 @@ bool TrackMuteState::isBeingPlayed() const
 
 //==============================================================================
 //==============================================================================
-TrackMutingNode::TrackMutingNode (const TrackMuteState& muteState, std::unique_ptr<tracktion_graph::Node> inputNode)
-    : trackMuteState (muteState), input (std::move (inputNode))
+TrackMutingNode::TrackMutingNode (std::unique_ptr<TrackMuteState> muteState, std::unique_ptr<tracktion_graph::Node> inputNode)
+    : trackMuteState (std::move (muteState)), input (std::move (inputNode))
 {
+    assert (trackMuteState);
 }
 
 //==============================================================================
@@ -97,21 +98,26 @@ bool TrackMutingNode::isReadyToProcess()
     return input->hasProcessed();
 }
 
+void TrackMutingNode::prefetchBlock (juce::Range<int64_t>)
+{
+    trackMuteState->update();
+}
+
 void TrackMutingNode::process (const ProcessContext& pc)
 {
     auto sourceBuffers = input->getProcessedOutput();
     auto destAudioBlock = pc.buffers.audio;
     jassert (sourceBuffers.audio.getNumChannels() == destAudioBlock.getNumChannels());
 
-    if (trackMuteState.shouldTrackBeAudible())
+    if (trackMuteState->shouldTrackBeAudible())
     {
         pc.buffers.midi.copyFrom (sourceBuffers.midi);
         destAudioBlock.copyFrom (sourceBuffers.audio);
     }
 
-    if (trackMuteState.wasJustMuted())
+    if (trackMuteState->wasJustMuted())
         rampBlock (destAudioBlock, 1.0f, 0.0f);
-    else if (trackMuteState.wasJustUnMuted())
+    else if (trackMuteState->wasJustUnMuted())
         rampBlock (destAudioBlock, 0.0f, 1.0f);
 }
 

@@ -69,18 +69,19 @@ private:
 class TrackMutingNode final : public tracktion_graph::Node
 {
 public:
-    TrackMutingNode (const TrackMuteState&, std::unique_ptr<tracktion_graph::Node> input);
+    TrackMutingNode (std::unique_ptr<TrackMuteState>, std::unique_ptr<tracktion_graph::Node> input);
 
     //==============================================================================
     tracktion_graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override;
     void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override {}
     bool isReadyToProcess() override;
+    void prefetchBlock (juce::Range<int64_t>) override;
     void process (const ProcessContext&) override;
 
 private:
     //==============================================================================
-    const TrackMuteState& trackMuteState;
+    std::unique_ptr<TrackMuteState> trackMuteState;
     std::unique_ptr<tracktion_graph::Node> input;
 
     //==============================================================================

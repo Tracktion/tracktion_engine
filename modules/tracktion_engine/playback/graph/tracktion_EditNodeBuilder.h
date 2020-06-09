@@ -30,7 +30,6 @@ struct CreateNodeParams
 struct EditNodeContext
 {
     std::unique_ptr<tracktion_graph::Node> node;
-    std::vector<std::unique_ptr<TrackMuteState>> trackMuteStates;
 };
 
 /** Creates a Node to play back an Edit. */
