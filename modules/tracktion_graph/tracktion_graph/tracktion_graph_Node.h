@@ -118,18 +118,18 @@ public:
     void initialise (const PlaybackInitialisationInfo&);
     
     /** Call before processing the next block, used to reset the process status. */
-    void prepareForNextBlock();
+    void prepareForNextBlock (juce::Range<int64_t> referenceSampleRange);
     
     /** Call to process the node, which will in turn call the process method with the
         buffers to fill.
-        @param streamSampleRange The monotonic stream time in samples.
-                                 This will be passed to the ProcessContext during the
-                                 process callback so nodes can use this to determine file
-                                 reading positions etc.
-                                 Some nodes may ignore this completely but it should at the
-                                 least specify the number to samples to process in this block.
+        @param referenceSampleRange The monotonic stream time in samples.
+                                    This will be passed to the ProcessContext during the
+                                    process callback so nodes can use this to determine file
+                                    reading positions etc.
+                                    Some nodes may ignore this completely but it should at the
+                                    least specify the number to samples to process in this block.
     */
-    void process (juce::Range<int64_t> streamSampleRange);
+    void process (juce::Range<int64_t> referenceSampleRange);
     
     /** Returns true if this node has processed and its outputs can be retrieved. */
     bool hasProcessed() const;
@@ -170,7 +170,7 @@ public:
     /** Struct to describe a single iteration of a process call. */
     struct ProcessContext
     {
-        juce::Range<int64_t> streamSampleRange;
+        juce::Range<int64_t> referenceSampleRange;
         AudioAndMidiBuffer buffers;
     };
     
@@ -182,6 +182,11 @@ protected:
         fully prepared for processing.
     */
     virtual void prepareToPlay (const PlaybackInitialisationInfo&) {}
+
+    /** Called before once on all Nodes before they are processed.
+        This can be used to prefetch audio data or update mute statuses etc..
+    */
+    virtual void prefetchBlock (juce::Range<int64_t> /*referenceSampleRange*/) {}
 
     /** Called when the node is to be processed.
         This should add in to the buffers available making sure not to change their size at all.
@@ -256,12 +261,13 @@ inline void Node::initialise (const PlaybackInitialisationInfo& info)
     audioBuffer.setSize (props.numberOfChannels, info.blockSize);
 }
 
-inline void Node::prepareForNextBlock()
+inline void Node::prepareForNextBlock (juce::Range<int64_t> referenceSampleRange)
 {
     hasBeenProcessed = false;
+    prefetchBlock (referenceSampleRange);
 }
 
-inline void Node::process (juce::Range<int64_t> streamSampleRange)
+inline void Node::process (juce::Range<int64_t> referenceSampleRange)
 {
     audioBuffer.clear();
     midiBuffer.clear();
@@ -269,13 +275,13 @@ inline void Node::process (juce::Range<int64_t> streamSampleRange)
     const int numSamplesBeforeProcessing = audioBuffer.getNumSamples();
     juce::ignoreUnused (numChannelsBeforeProcessing, numSamplesBeforeProcessing);
 
-    const int numSamples = (int) streamSampleRange.getLength();
+    const int numSamples = (int) referenceSampleRange.getLength();
     jassert (numSamples > 0); // This must be a valid number of samples to process
     
     auto inputBlock = numChannelsBeforeProcessing > 0 ? juce::dsp::AudioBlock<float> (audioBuffer).getSubBlock (0, (size_t) numSamples)
                                                       : juce::dsp::AudioBlock<float>();
     ProcessContext pc {
-                        streamSampleRange,
+                        referenceSampleRange,
                         { inputBlock , midiBuffer }
                       };
     process (pc);

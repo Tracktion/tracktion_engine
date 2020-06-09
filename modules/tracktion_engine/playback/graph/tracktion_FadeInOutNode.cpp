@@ -56,7 +56,7 @@ bool FadeInOutNode::isReadyToProcess()
 
 void FadeInOutNode::process (const ProcessContext& pc)
 {
-    const auto timelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.streamSampleRange).timelineRange1;
+    const auto timelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.referenceSampleRange).timelineRange1;
     
     auto sourceBuffers = input->getProcessedOutput();
     auto destAudioBlock = pc.buffers.audio;

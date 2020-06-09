@@ -68,11 +68,11 @@ public:
     int process (const Node::ProcessContext& pc)
     {
         // Reset the stream range
-        streamSampleRange = pc.streamSampleRange;
+        referenceSampleRange = pc.referenceSampleRange;
         
         // Prepare all the nodes to be played back
         for (auto node : allNodes)
-            node->prepareForNextBlock();
+            node->prepareForNextBlock (referenceSampleRange);
 
         // Then set the vector to be processed
         // Threads are always running so will process as soon numNodesLeftToProcess is non-zero
@@ -102,7 +102,7 @@ private:
     std::vector<std::thread> threads;
     std::vector<Node*> allNodes;
     
-    juce::Range<int64_t> streamSampleRange;
+    juce::Range<int64_t> referenceSampleRange;
     std::atomic<bool> threadsShouldExit { false };
     std::atomic<size_t> numNodesLeftToProcess { 0 };
 
@@ -179,7 +179,7 @@ private:
             while (! node->isReadyToProcess())
                 pause();
             
-            node->process (streamSampleRange);
+            node->process (referenceSampleRange);
             
             return true;
         }

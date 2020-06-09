@@ -44,7 +44,7 @@ public:
     
     void process (const ProcessContext& pc) override
     {
-        const int numSamples = (int) pc.streamSampleRange.getLength();
+        const int numSamples = (int) pc.referenceSampleRange.getLength();
         const double blockDuration = numSamples / sampleRate;
         const auto timeRange = juce::Range<double>::withStartAndLength (lastTime, blockDuration);
         
@@ -277,7 +277,7 @@ public:
     {
         auto inputBuffer = node->getProcessedOutput().audio;
 
-        const int numSamples = (int) pc.streamSampleRange.getLength();
+        const int numSamples = (int) pc.referenceSampleRange.getLength();
         const int numChannels = std::min ((int) inputBuffer.getNumChannels(), (int) pc.buffers.audio.getNumChannels());
         jassert ((int) inputBuffer.getNumSamples() == numSamples);
 

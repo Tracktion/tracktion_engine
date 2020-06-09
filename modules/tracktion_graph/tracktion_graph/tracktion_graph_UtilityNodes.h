@@ -78,7 +78,7 @@ public:
         auto& outputBlock = pc.buffers.audio;
         auto inputBuffer = input->getProcessedOutput().audio;
         auto& inputMidi = input->getProcessedOutput().midi;
-        const int numSamples = (int) pc.streamSampleRange.getLength();
+        const int numSamples = (int) pc.referenceSampleRange.getLength();
 
         if (latencyStorage->fifo.getNumChannels() > 0)
         {

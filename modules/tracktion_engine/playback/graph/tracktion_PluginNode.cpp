@@ -120,7 +120,7 @@ void PluginNode::process (const ProcessContext& pc)
     // Process the plugin
     //TODO: If a plugin is disabled we should probably apply our own latency to the plugin
     if (shouldProcessPlugin)
-        plugin->applyToBufferWithAutomation (getPluginRenderContext (pc.streamSampleRange.getStart(), outputAudioBuffer));
+        plugin->applyToBufferWithAutomation (getPluginRenderContext (pc.referenceSampleRange.getStart(), outputAudioBuffer));
     
     // Then copy the buffers to the outputs
     outputBuffers.midi.mergeFrom (midiMessageArray);

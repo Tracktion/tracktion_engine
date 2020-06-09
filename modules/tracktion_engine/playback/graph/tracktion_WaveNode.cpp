@@ -99,7 +99,7 @@ void WaveNode::process (const ProcessContext& pc)
     SCOPED_REALTIME_CHECK
 
     //TODO: Might get a performance boost by pre-setting the file position in prepareForNextBlock
-    const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.streamSampleRange);
+    const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.referenceSampleRange);
     jassert (! splitTimelineRange.isSplit); // This should be handled by the NodePlayer
     
     processSection (pc, splitTimelineRange.timelineRange1);

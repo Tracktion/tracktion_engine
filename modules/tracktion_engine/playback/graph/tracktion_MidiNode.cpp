@@ -75,7 +75,7 @@ void MidiNode::process (const ProcessContext& pc)
 {
     SCOPED_REALTIME_CHECK
 
-    const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.streamSampleRange);
+    const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.referenceSampleRange);
     jassert (! splitTimelineRange.isSplit); // This should be handled by the NodePlayer
     
     processSection (pc, splitTimelineRange.timelineRange1);

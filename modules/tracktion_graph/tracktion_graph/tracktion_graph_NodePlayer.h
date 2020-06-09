@@ -125,12 +125,12 @@ private:
         int numMisses = 0;
         
         // Check to see if the timeline needs to be processed in two halves due to looping
-        const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.streamSampleRange);
+        const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.referenceSampleRange);
         
         if (splitTimelineRange.isSplit)
         {
             const auto firstNumSamples = splitTimelineRange.timelineRange1.getLength();
-            const auto firstRange = pc.streamSampleRange.withLength (firstNumSamples);
+            const auto firstRange = pc.referenceSampleRange.withLength (firstNumSamples);
             
             {
                 auto inputAudio = pc.buffers.audio.getSubBlock (0, (size_t) firstNumSamples);
@@ -156,7 +156,7 @@ private:
         }
         else
         {
-            playHeadState.update (pc.streamSampleRange);
+            playHeadState.update (pc.referenceSampleRange);
             numMisses += processPostorderedNodes (rootNode, allNodes, pc);
         }
         
@@ -169,7 +169,7 @@ private:
     static int processPostorderedNodes (Node& rootNode, const std::vector<Node*>& allNodes, const Node::ProcessContext& pc)
     {
         for (auto node : allNodes)
-            node->prepareForNextBlock();
+            node->prepareForNextBlock (pc.referenceSampleRange);
         
         int numMisses = 0;
         size_t numNodesProcessed = 0;
@@ -180,7 +180,7 @@ private:
             {
                 if (! node->hasProcessed() && node->isReadyToProcess())
                 {
-                    node->process (pc.streamSampleRange);
+                    node->process (pc.referenceSampleRange);
                     ++numNodesProcessed;
                 }
                 else
