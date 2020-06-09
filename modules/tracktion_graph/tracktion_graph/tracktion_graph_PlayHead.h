@@ -386,12 +386,7 @@ inline SplitTimelineRange referenceSampleRangeToSplitTimelineRange (const PlayHe
         s = PlayHead::linearPositionToLoopPosition (s, pr);
         e = PlayHead::linearPositionToLoopPosition (e, pr);
 
-        auto isExactLoop = [&]
-        {
-            return s == e && referenceSampleRange.getLength() > 0;
-        };
-
-        if (s > e || isExactLoop())
+        if (s > e)
         {
             if (s >= pr.getEnd())   return { { pr.getStart(), e } };
             if (e <= pr.getStart()) return { { s, pr.getEnd() } };
