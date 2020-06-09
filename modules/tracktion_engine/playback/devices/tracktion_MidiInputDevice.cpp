@@ -1051,7 +1051,8 @@ public:
     juce::MidiMessageSequence recorded;
 
 private:
-    struct InputAudioNode  : public AudioNode
+    struct InputAudioNode  : public Consumer,
+                             public AudioNode
     {
         InputAudioNode (MidiInputDeviceInstanceBase& m, MidiMessageArray::MPESourceID msi)
             : owner (m), midiSourceID (msi)
@@ -1105,7 +1106,7 @@ private:
                 numLiveMessagesToPlay = 0;
             }
 
-            owner.add (this);
+            owner.addConsumer (this);
         }
 
         bool isReadyToRender() override
@@ -1115,7 +1116,7 @@ private:
 
         void releaseAudioNodeResources() override
         {
-            owner.remove (this);
+            owner.removeConsumer (this);
 
             const ScopedLock sl (bufferLock);
             numMessages = 0;
@@ -1210,7 +1211,7 @@ private:
             }
         }
 
-        void handleIncomingMidiMessage (const MidiMessage& message)
+        void handleIncomingMidiMessage (const MidiMessage& message) override
         {
             auto& mi = getMidiInput();
             auto channelToUse = mi.getChannelToUse().getChannelNumber();
@@ -1278,13 +1279,13 @@ private:
     };
 
     CriticalSection nodeLock;
-    Array<InputAudioNode*> nodes;
+    Array<Consumer*> nodes;
     double lastEditTime = -1.0;
     double pausedTime = 0;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
 
-    void add (InputAudioNode* node)     { ScopedLock sl (nodeLock); nodes.addIfNotAlreadyThere (node); }
-    void remove (InputAudioNode* node)  { ScopedLock sl (nodeLock); nodes.removeAllInstancesOf (node); }
+    void addConsumer (Consumer* node) override      { ScopedLock sl (nodeLock); nodes.addIfNotAlreadyThere (node); }
+    void removeConsumer (Consumer* node) override   { ScopedLock sl (nodeLock); nodes.removeAllInstancesOf (node); }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiInputDeviceInstanceBase)
 };

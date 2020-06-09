@@ -246,6 +246,28 @@ public:
 
     InputDeviceDestinationList destTracks {*this, state};
 
+    //==============================================================================
+    /** Base class for classes that want to listen to an InputDevice and get a callback for each block of input.
+        Subclasses of this can be used to output live audio/MIDI or for visualisations etc.
+     */
+    struct Consumer
+    {
+        /** Destructor. */
+        virtual ~Consumer() = default;
+
+        /** Override this to receive audio input from the device if it has any. */
+        virtual void acceptInputBuffer (const juce::dsp::AudioBlock<float>&) {}
+
+        /** Override this to receive MIDI input from the device if it has any. */
+        virtual void handleIncomingMidiMessage (const juce::MidiMessage&) {}
+    };
+
+    /** Base classes should override this to add any Consumers internally. */
+    virtual void addConsumer (Consumer*) = 0;
+
+    /** Base classes should override this to remove the Consumer internally. */
+    virtual void removeConsumer (Consumer*) = 0;
+
 protected:
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
     void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override;

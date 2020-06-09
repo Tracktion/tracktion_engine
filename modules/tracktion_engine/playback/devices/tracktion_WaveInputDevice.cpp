@@ -1029,7 +1029,8 @@ public:
             const ScopedLock sl (consumerLock);
 
             for (auto n : consumers)
-                n->acceptInputBuffer (inputBuffer, numSamples);
+                n->acceptInputBuffer (juce::dsp::AudioBlock<float> (inputBuffer.getArrayOfWritePointers(),
+                                                                    size_t (inputBuffer.getNumChannels()), (size_t) numSamples));
         }
 
         const ScopedLock sl (contextLock);
@@ -1122,7 +1123,8 @@ protected:
     WaveInputDevice& getWaveInput() const noexcept    { return static_cast<WaveInputDevice&> (owner); }
 
     //==============================================================================
-    class InputAudioNode  : public AudioNode
+    class InputAudioNode  : public Consumer,
+                            public AudioNode
     {
     public:
         InputAudioNode (WaveInputDeviceInstance& d)
@@ -1226,16 +1228,18 @@ protected:
             }
         }
 
-        void acceptInputBuffer (juce::AudioBuffer<float>& newBuffer, int newSamps)
+        void acceptInputBuffer (const juce::dsp::AudioBlock<float>& newBlock) override
         {
             const ScopedLock sl (bufferLock);
+
+            const int newSamps = (int) newBlock.getNumSamples();
 
             if (validSamples > buffer.getNumSamples() - newSamps)
                 validSamples = 0;
 
             for (int i = buffer.getNumChannels(); --i >= 0;)
                 buffer.copyFrom (i, validSamples,
-                                 newBuffer, jmin (newBuffer.getNumChannels() - 1, i), 0,
+                                 newBlock.getChannelPointer ((size_t) jmin ((int) newBlock.getNumChannels() - 1, i)),
                                  newSamps);
 
             validSamples += newSamps;
@@ -1252,16 +1256,16 @@ protected:
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InputAudioNode)
     };
 
-    Array<InputAudioNode*> consumers;
+    Array<Consumer*> consumers;
     CriticalSection consumerLock;
 
-    void addConsumer (InputAudioNode* consumer)
+    void addConsumer (Consumer* consumer) override
     {
         const ScopedLock sl (consumerLock);
         consumers.addIfNotAlreadyThere (consumer);
     }
 
-    void removeConsumer (InputAudioNode* consumer)
+    void removeConsumer (Consumer* consumer) override
     {
         const ScopedLock sl (consumerLock);
         consumers.removeAllInstancesOf (consumer);
