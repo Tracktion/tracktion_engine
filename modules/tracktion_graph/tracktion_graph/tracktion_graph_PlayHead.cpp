@@ -49,6 +49,15 @@ private:
             }
 
             {
+                const auto tr = referenceSampleRangeToSplitTimelineRange (playHead, { 750, 1250 });
+                expect (tr.isSplit);
+                expectEquals<int64_t> (tr.timelineRange1.getStart(), 750);
+                expectEquals<int64_t> (tr.timelineRange1.getEnd(), 1000);
+                expectEquals<int64_t> (tr.timelineRange2.getStart(), 0);
+                expectEquals<int64_t> (tr.timelineRange2.getEnd(), 250);
+            }
+
+            {
                 const auto tr = referenceSampleRangeToSplitTimelineRange (playHead, { 500, 1500 });
                 expect (tr.isSplit);
                 expectEquals<int64_t> (tr.timelineRange1.getStart(), 500);
