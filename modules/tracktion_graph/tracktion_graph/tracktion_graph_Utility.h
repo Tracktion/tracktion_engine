@@ -72,6 +72,14 @@ void hash_range (std::size_t& seed, It first, It last)
         hash_combine (seed, *first);
 }
 
+/** Hashes a type with a given seed and returns the new hash value. */
+template<typename T>
+size_t hash (size_t seed, const T& v)
+{
+    hash_combine (seed, v);
+    return seed;
+}
+
 //==============================================================================
 //==============================================================================
 /** Converts an integer sample number to a time in seconds. */

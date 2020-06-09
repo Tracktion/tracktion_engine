@@ -13,6 +13,43 @@ namespace tracktion_engine
 
 //==============================================================================
 //==============================================================================
+namespace
+{
+    int getSidechainBusID (EditItemID sidechainSourceID)
+    {
+        constexpr size_t sidechainMagicNum = 0xb2275e7216a2;
+        return static_cast<int> (hash (sidechainMagicNum, sidechainSourceID.getRawID()));
+    }
+
+    bool isSidechainSource (Track& t)
+    {
+        const auto itemID = t.itemID;
+
+        for (auto p : tracktion_engine::getAllPlugins (t.edit, false))
+            if (p->getSidechainSourceID() == itemID)
+                return true;
+
+        return false;
+    }
+
+    constexpr int getTrackNumChannels()
+    {
+        return 2;
+    }
+
+    bool isUnityChannelMap (const std::vector<std::pair<int, int>>& channelMap)
+    {
+        for (auto mapping : channelMap)
+            if (mapping.first != mapping.second)
+                return false;
+
+        return true;
+    }
+}
+
+
+//==============================================================================
+//==============================================================================
 std::unique_ptr<tracktion_graph::Node> createNodeForTrack (Track&, tracktion_graph::PlayHeadState&,
                                                            const CreateNodeParams&);
 
@@ -189,6 +226,52 @@ std::unique_ptr<tracktion_graph::SummingNode> createClipsNode (const juce::Array
     return summingNode;
 }
 
+std::unique_ptr<tracktion_graph::Node> createSidechainInputNodeForPlugin (Plugin& plugin, std::unique_ptr<Node> node)
+{
+    const auto sidechainSourceID = plugin.getSidechainSourceID();
+    const bool usesSidechain = ! plugin.isMissing() && sidechainSourceID.isValid();
+
+    if (! usesSidechain)
+        return node;
+
+    // This is complicated because the first two source channels will always be the track the plugin is on
+    // Any additional channels will be from the sidechain source track
+    // So we really have two channel maps, one from the plugin's track to the plugin and one from the sidechain track to the plugin
+    std::vector<std::pair<int /*source channel*/, int /*dest channel*/>> directChannelMap, sidechainChannelMap;
+
+    for (int i = 0; i < plugin.getNumWires(); ++i)
+    {
+        if (auto w = plugin.getWire (i))
+        {
+            const int sourceIndex = w->sourceChannelIndex;
+            const int destIndex = w->destChannelIndex;
+
+            if (sourceIndex < getTrackNumChannels())
+                directChannelMap.emplace_back (sourceIndex, destIndex);
+            else
+                sidechainChannelMap.emplace_back (sourceIndex - getTrackNumChannels(), destIndex);
+        }
+    }
+
+    if (directChannelMap.empty() && sidechainChannelMap.empty())
+        return node;
+
+    auto directInput = std::move (node);
+
+    if (! isUnityChannelMap (directChannelMap))
+        directInput = makeNode<ChannelRemappingNode> (std::move (directInput), directChannelMap, true);
+
+    auto sidechainInput = makeNode<ReturnNode> (getSidechainBusID (sidechainSourceID));
+    sidechainInput = makeNode<ChannelRemappingNode> (std::move (sidechainInput), std::move (sidechainChannelMap), false);
+
+    if (directChannelMap.empty())
+        return sidechainInput;
+
+    auto sumNode = makeSummingNode ({ directInput.release(), sidechainInput.release() });
+
+    return std::move (sumNode);
+}
+
 std::unique_ptr<tracktion_graph::Node> createNodeForPlugin (Plugin& plugin, const TrackMuteState* trackMuteState, std::unique_ptr<Node> node,
                                                             tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
@@ -200,13 +283,13 @@ std::unique_ptr<tracktion_graph::Node> createNodeForPlugin (Plugin& plugin, cons
     auto& deviceManager = plugin.edit.engine.getDeviceManager();;
     double sampleRate = deviceManager.getSampleRate();
     int blockSize = deviceManager.getBlockSize();
+    node = createSidechainInputNodeForPlugin (plugin, std::move (node));
     node = tracktion_graph::makeNode<PluginNode> (std::move (node),
                                                   plugin,
                                                   sampleRate, blockSize,
                                                   trackMuteState, playHeadState, params.forRendering);
     
     //TODO:
-    // Side-chain send
     // Fine-grain automation
 
     return node;
@@ -291,6 +374,10 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioTrack (AudioTrack& at, 
     }
     
     node = createPluginNodeForTrack (at, *trackMuteState, std::move (node), playHeadState, params);
+
+    if (isSidechainSource (at))
+        node = makeNode<SendNode> (std::move (node), getSidechainBusID (at.itemID));
+
     node = makeNode<TrackMutingNode> (std::move (trackMuteState), std::move (node));
 
     return node;

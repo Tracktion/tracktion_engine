@@ -423,11 +423,16 @@ private:
 class ReturnNode : public Node
 {
 public:
+    ReturnNode (int busIDToUse)
+        : busID (busIDToUse)
+    {
+    }
+
     ReturnNode (std::unique_ptr<Node> inputNode, int busIDToUse)
         : input (std::move (inputNode)), busID (busIDToUse)
     {
     }
-    
+
     NodeProperties getNodeProperties() override
     {
         NodeProperties props;
@@ -450,6 +455,9 @@ public:
     
     std::vector<Node*> getDirectInputNodes() override
     {
+        if (! input)
+            return {};
+
         return { input.get() };
     }
     
@@ -466,11 +474,14 @@ public:
 
     bool isReadyToProcess() override
     {
-        return input->hasProcessed();
+        return ! input || input->hasProcessed();
     }
     
     void process (const ProcessContext& pc) override
     {
+        if (! input)
+            return;
+
         jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
 
         // Copy the input on to our output, the SummingNode will copy all the sends and get all the input
@@ -521,7 +532,9 @@ private:
         if (sends.size() > 0)
         {
             std::vector<std::unique_ptr<Node>> ownedNodes;
-            ownedNodes.push_back (std::move (input));
+
+            if (input)
+                ownedNodes.push_back (std::move (input));
             
             // For each of the sends create a live gain node
             for (int i = (int) sends.size(); --i >= 0;)
@@ -534,8 +547,8 @@ private:
                 sends.erase (std::find (sends.begin(), sends.end(), sends[(size_t) i]));
                 ownedNodes.push_back (makeNode<GainNode> (std::move (sends[(size_t) i]), std::move (gainFunction)));
             }
-            
-            auto node = makeNode<SummingNode> (std::move (ownedNodes));
+
+            auto node = makeNode<SummingNode> (std::move (ownedNodes), std::vector<Node*> (sends.begin(), sends.end()));
             input.swap (node);
         }
         
