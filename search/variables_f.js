@@ -64,6 +64,7 @@ var searchData=
   ['preserveformants',['preserveFormants',['../structtracktion__engine_1_1TimeStretcher_1_1ElastiqueProOptions.html#ac174f9ada60950dcfe55e9dcc9907b60',1,'tracktion_engine::TimeStretcher::ElastiqueProOptions']]],
   ['presetfilesuffix',['presetFileSuffix',['../namespacetracktion__engine.html#ac7d20c8b49acbd3addbc606482fb9141',1,'tracktion_engine']]],
   ['prevnumerator',['prevNumerator',['../structtracktion__engine_1_1TempoSequence_1_1SectionDetails.html#a98c1d6bf2ad48ecdf1dfdb96eab5d61f',1,'tracktion_engine::TempoSequence::SectionDetails']]],
+  ['probabilities',['probabilities',['../structtracktion__engine_1_1StepClip_1_1Pattern_1_1CachedPattern.html#a5285b15247a40610aafa01edbd52e40a',1,'tracktion_engine::StepClip::Pattern::CachedPattern']]],
   ['processing',['processing',['../classtracktion__engine_1_1Plugin.html#a377f442af6e4e8fe45f47936c19dbe5a',1,'tracktion_engine::Plugin']]],
   ['processmutedtracks',['processMutedTracks',['../classtracktion__engine_1_1Edit.html#a14fb0aa53840fceca6fcea56d32ea78a',1,'tracktion_engine::Edit']]],
   ['programnames',['programNames',['../structtracktion__engine_1_1MidiProgramManager_1_1MidiBank.html#a3868bbb9e822b33db7ad6fdb8f802b27',1,'tracktion_engine::MidiProgramManager::MidiBank']]],

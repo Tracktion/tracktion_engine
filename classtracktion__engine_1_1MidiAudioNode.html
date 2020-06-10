@@ -83,6 +83,8 @@ Inheritance diagram for tracktion_engine::MidiAudioNode:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ae71fbf566751f58e6810db5682f4f6c3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiAudioNode.html#ae71fbf566751f58e6810db5682f4f6c3">MidiAudioNode</a> (juce::MidiMessageSequence sequence, juce::Range&lt; int &gt; midiChannelNumbers, <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> editSection, juce::CachedValue&lt; float &gt; &amp;volumeDb, juce::CachedValue&lt; bool &gt; &amp;mute, <a class="el" href="classtracktion__engine_1_1Clip.html">Clip</a> &amp;, const <a class="el" href="classtracktion__engine_1_1MidiAudioNode.html">MidiAudioNode</a> *nodeToReplace)</td></tr>
 <tr class="separator:ae71fbf566751f58e6810db5682f4f6c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c986feb8cae41941ab329bd4e10c5f3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiAudioNode.html#a7c986feb8cae41941ab329bd4e10c5f3">MidiAudioNode</a> (std::vector&lt; juce::MidiMessageSequence &gt; sequences, juce::Range&lt; int &gt; midiChannelNumbers, <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> editSection, juce::CachedValue&lt; float &gt; &amp;volumeDb, juce::CachedValue&lt; bool &gt; &amp;mute, <a class="el" href="classtracktion__engine_1_1Clip.html">Clip</a> &amp;, const <a class="el" href="classtracktion__engine_1_1MidiAudioNode.html">MidiAudioNode</a> *nodeToReplace)</td></tr>
+<tr class="separator:a7c986feb8cae41941ab329bd4e10c5f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a1261e645f9ab7af9fbe3d6ba397bf6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiAudioNode.html#a4a1261e645f9ab7af9fbe3d6ba397bf6">renderSection</a> (const <a class="el" href="structtracktion__engine_1_1AudioRenderContext.html">AudioRenderContext</a> &amp;, <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> editTime)</td></tr>
 <tr class="separator:a4a1261e645f9ab7af9fbe3d6ba397bf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77e9792e92eeaabb26238280384083b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiAudioNode.html#a77e9792e92eeaabb26238280384083b2">getAudioNodeProperties</a> (<a class="el" href="structtracktion__engine_1_1AudioNodeProperties.html">AudioNodeProperties</a> &amp;) override</td></tr>
@@ -134,7 +136,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="textblock"><p>An <a class="el" href="classtracktion__engine_1_1AudioNode.html" title="Base class for nodes in an audio playback graph. ">AudioNode</a> that plays MIDI data from a MidiMessageSequence, at a specific MIDI channel. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ae71fbf566751f58e6810db5682f4f6c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae71fbf566751f58e6810db5682f4f6c3">&#9670;&nbsp;</a></span>MidiAudioNode()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae71fbf566751f58e6810db5682f4f6c3">&#9670;&nbsp;</a></span>MidiAudioNode() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -144,6 +146,64 @@ Additional Inherited Members</h2></td></tr>
           <td>(</td>
           <td class="paramtype">juce::MidiMessageSequence&#160;</td>
           <td class="paramname"><em>sequence</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::Range&lt; int &gt;&#160;</td>
+          <td class="paramname"><em>midiChannelNumbers</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a>&#160;</td>
+          <td class="paramname"><em>editSection</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::CachedValue&lt; float &gt; &amp;&#160;</td>
+          <td class="paramname"><em>volumeDb</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::CachedValue&lt; bool &gt; &amp;&#160;</td>
+          <td class="paramname"><em>mute</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1Clip.html">Clip</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classtracktion__engine_1_1MidiAudioNode.html">MidiAudioNode</a> *&#160;</td>
+          <td class="paramname"><em>nodeToReplace</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7c986feb8cae41941ab329bd4e10c5f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c986feb8cae41941ab329bd4e10c5f3">&#9670;&nbsp;</a></span>MidiAudioNode() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">tracktion_engine::MidiAudioNode::MidiAudioNode </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; juce::MidiMessageSequence &gt;&#160;</td>
+          <td class="paramname"><em>sequences</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -493,7 +553,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat May 16 2020 21:15:58 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 10 2020 15:50:38 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

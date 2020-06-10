@@ -78,8 +78,8 @@ Inheritance diagram for tracktion_engine::PluginNode:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a64535c6887d9280a602567bb67f1f7b8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1PluginNode.html#a64535c6887d9280a602567bb67f1f7b8">PluginNode</a> (std::unique_ptr&lt; <a class="el" href="classtracktion__graph_1_1Node.html#a497aa5a09fde53cae0e70accd5a7ebc8">Node</a> &gt; inputNode, <a class="el" href="classtracktion__engine_1_1Plugin.html#a97f7d1afcf0045b5f21a027d58b0c072">tracktion_engine::Plugin::Ptr</a> pluginToProcess, std::shared_ptr&lt; <a class="el" href="structtracktion__engine_1_1InputProvider.html">InputProvider</a> &gt; contextProvider)</td></tr>
-<tr class="separator:a64535c6887d9280a602567bb67f1f7b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66c6d17781c54417610629cc1a5a48e9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1PluginNode.html#a66c6d17781c54417610629cc1a5a48e9">PluginNode</a> (std::unique_ptr&lt; <a class="el" href="classtracktion__graph_1_1Node.html#a497aa5a09fde53cae0e70accd5a7ebc8">Node</a> &gt; inputNode, <a class="el" href="classtracktion__engine_1_1Plugin.html#a97f7d1afcf0045b5f21a027d58b0c072">tracktion_engine::Plugin::Ptr</a> pluginToProcess, double sampleRateToUse, int blockSizeToUse, std::shared_ptr&lt; <a class="el" href="structtracktion__engine_1_1InputProvider.html">InputProvider</a> &gt; contextProvider)</td></tr>
+<tr class="separator:a66c6d17781c54417610629cc1a5a48e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6fee8745f0512058615cc0317e0db9a1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1PluginNode.html#a6fee8745f0512058615cc0317e0db9a1">~PluginNode</a> () override</td></tr>
 <tr class="separator:a6fee8745f0512058615cc0317e0db9a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf65e61d295a838e8f06d0ee994d8e02"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1Plugin.html">Plugin</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1PluginNode.html#aaf65e61d295a838e8f06d0ee994d8e02">getPlugin</a> ()</td></tr>
@@ -119,13 +119,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afcdb0cbfce2a92197c76d75197da6759 inherit pub_methods_classtracktion__graph_1_1Node"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion__graph_1_1Node_1_1AudioAndMidiBuffer.html">AudioAndMidiBuffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1Node.html#afcdb0cbfce2a92197c76d75197da6759">getProcessedOutput</a> ()</td></tr>
 <tr class="memdesc:afcdb0cbfce2a92197c76d75197da6759 inherit pub_methods_classtracktion__graph_1_1Node"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the processed audio and MIDI output.  <a href="classtracktion__graph_1_1Node.html#afcdb0cbfce2a92197c76d75197da6759">More...</a><br /></td></tr>
 <tr class="separator:afcdb0cbfce2a92197c76d75197da6759 inherit pub_methods_classtracktion__graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb4615ba244e6e702dca2b179fd4a3bc inherit pub_methods_classtracktion__graph_1_1Node"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1Node.html#adb4615ba244e6e702dca2b179fd4a3bc">transform</a> (<a class="el" href="classtracktion__graph_1_1Node.html">Node</a> &amp;)</td></tr>
+<tr class="memdesc:adb4615ba244e6e702dca2b179fd4a3bc inherit pub_methods_classtracktion__graph_1_1Node"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after construction to give the node a chance to modify its topology.  <a href="classtracktion__graph_1_1Node.html#adb4615ba244e6e702dca2b179fd4a3bc">More...</a><br /></td></tr>
+<tr class="separator:adb4615ba244e6e702dca2b179fd4a3bc inherit pub_methods_classtracktion__graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a64535c6887d9280a602567bb67f1f7b8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a64535c6887d9280a602567bb67f1f7b8">&#9670;&nbsp;</a></span>PluginNode()</h2>
+<a id="a66c6d17781c54417610629cc1a5a48e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66c6d17781c54417610629cc1a5a48e9">&#9670;&nbsp;</a></span>PluginNode()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -141,6 +144,18 @@ Additional Inherited Members</h2></td></tr>
           <td></td>
           <td class="paramtype"><a class="el" href="classtracktion__engine_1_1Plugin.html#a97f7d1afcf0045b5f21a027d58b0c072">tracktion_engine::Plugin::Ptr</a>&#160;</td>
           <td class="paramname"><em>pluginToProcess</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>sampleRateToUse</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>blockSizeToUse</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -321,7 +336,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classtracktion__graph_1_1Node.html#a486e18fa9f17f0c5af631a9a3e10ab47">tracktion_graph::Node</a>.</p>
 
-<p class="reference">References <a class="el" href="structtracktion__graph_1_1PlaybackInitialisationInfo.html#a8797e66809d521e2fff4b67f19996cdc">tracktion_graph::PlaybackInitialisationInfo::blockSize</a>, and <a class="el" href="structtracktion__graph_1_1PlaybackInitialisationInfo.html#acd346b611cf42f45b7188cc2c04de442">tracktion_graph::PlaybackInitialisationInfo::sampleRate</a>.</p>
+<p class="reference">References <a class="el" href="structtracktion__graph_1_1PlaybackInitialisationInfo.html#acd346b611cf42f45b7188cc2c04de442">tracktion_graph::PlaybackInitialisationInfo::sampleRate</a>.</p>
 
 </div>
 </div>
@@ -364,7 +379,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat May 16 2020 21:15:58 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 10 2020 15:50:38 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

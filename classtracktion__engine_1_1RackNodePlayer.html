@@ -86,6 +86,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a77ad130aed89432e6c6a5f7f7384506e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1RackNodePlayer.html#a77ad130aed89432e6c6a5f7f7384506e">process</a> (const <a class="el" href="structtracktion__graph_1_1Node_1_1ProcessContext.html">tracktion_graph::Node::ProcessContext</a> &amp;pc)</td></tr>
 <tr class="memdesc:a77ad130aed89432e6c6a5f7f7384506e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes a block of audio and MIDI data.  <a href="#a77ad130aed89432e6c6a5f7f7384506e">More...</a><br /></td></tr>
 <tr class="separator:a77ad130aed89432e6c6a5f7f7384506e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c447e60caa5df9b35a7ec9185acde0d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1RackNodePlayer.html#a1c447e60caa5df9b35a7ec9185acde0d">process</a> (const <a class="el" href="structtracktion__graph_1_1Node_1_1ProcessContext.html">tracktion_graph::Node::ProcessContext</a> &amp;pc, <a class="el" href="classtracktion__engine_1_1PlayHead.html">PlayHead</a> &amp;ph, <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> stream)</td></tr>
+<tr class="memdesc:a1c447e60caa5df9b35a7ec9185acde0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes a block of audio and MIDI data with a given <a class="el" href="classtracktion__engine_1_1PlayHead.html">PlayHead</a> and <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a>.  <a href="#a1c447e60caa5df9b35a7ec9185acde0d">More...</a><br /></td></tr>
+<tr class="separator:a1c447e60caa5df9b35a7ec9185acde0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename NodePlayerType&gt;<br />
@@ -185,7 +188,7 @@ template&lt;typename NodePlayerType &gt; </div>
 </div>
 </div>
 <a id="a77ad130aed89432e6c6a5f7f7384506e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a77ad130aed89432e6c6a5f7f7384506e">&#9670;&nbsp;</a></span>process()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a77ad130aed89432e6c6a5f7f7384506e">&#9670;&nbsp;</a></span>process() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -205,6 +208,45 @@ template&lt;typename NodePlayerType &gt; </div>
 <p>Processes a block of audio and MIDI data. </p>
 <p>Returns the number of times a node was checked but unable to be processed. </p>
 
+</div>
+</div>
+<a id="a1c447e60caa5df9b35a7ec9185acde0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c447e60caa5df9b35a7ec9185acde0d">&#9670;&nbsp;</a></span>process() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename NodePlayerType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classtracktion__engine_1_1RackNodePlayer.html">tracktion_engine::RackNodePlayer</a>&lt; NodePlayerType &gt;::process </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtracktion__graph_1_1Node_1_1ProcessContext.html">tracktion_graph::Node::ProcessContext</a> &amp;&#160;</td>
+          <td class="paramname"><em>pc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1PlayHead.html">PlayHead</a> &amp;&#160;</td>
+          <td class="paramname"><em>ph</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a>&#160;</td>
+          <td class="paramname"><em>stream</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Processes a block of audio and MIDI data with a given <a class="el" href="classtracktion__engine_1_1PlayHead.html">PlayHead</a> and <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a>. </p>
+<p>This should be used when processing ExternalPlugins or they will crash when getting the playhead info. </p>
+
 <p class="reference">References <a class="el" href="structtracktion__graph_1_1Node_1_1ProcessContext.html#a66de1f0f7d31c6c64e30a654764702be">tracktion_graph::Node::ProcessContext::buffers</a>, and <a class="el" href="structtracktion__engine_1_1AudioRenderContext.html#a9afec5cd6a8831e483bad2f49cc64db0ac9bcee53c142bd4cbf490c4b9740449c">tracktion_engine::AudioRenderContext::contiguous</a>.</p>
 
 </div>
@@ -215,7 +257,7 @@ template&lt;typename NodePlayerType &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat May 16 2020 21:15:58 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 10 2020 15:50:38 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

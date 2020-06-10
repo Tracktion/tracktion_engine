@@ -84,6 +84,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0ff7e691cda2c9b384ecdc089e0fddf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad40b8497c69ac89ab7ceeb156cf964c2"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1StepClip_1_1Pattern_1_1CachedPattern.html#ad40b8497c69ac89ab7ceeb156cf964c2">getGate</a> (int index) const noexcept</td></tr>
 <tr class="separator:ad40b8497c69ac89ab7ceeb156cf964c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35e0509c08e4fe279c250bf4f2ff96aa"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1StepClip_1_1Pattern_1_1CachedPattern.html#a35e0509c08e4fe279c250bf4f2ff96aa">getProbability</a> (int index) const noexcept</td></tr>
+<tr class="separator:a35e0509c08e4fe279c250bf4f2ff96aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -93,6 +95,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a704247515bd05d10ce2eb395131e8844"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a351dfed8d27271a60e79c232f05ddb"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1StepClip_1_1Pattern_1_1CachedPattern.html#a0a351dfed8d27271a60e79c232f05ddb">gates</a></td></tr>
 <tr class="separator:a0a351dfed8d27271a60e79c232f05ddb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5285b15247a40610aafa01edbd52e40a"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1StepClip_1_1Pattern_1_1CachedPattern.html#a5285b15247a40610aafa01edbd52e40a">probabilities</a></td></tr>
+<tr class="separator:a5285b15247a40610aafa01edbd52e40a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Creates a snapshot of a pattern's notes, velocities and gates to avoid costly property parsing. </p>
@@ -205,6 +209,32 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a35e0509c08e4fe279c250bf4f2ff96aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35e0509c08e4fe279c250bf4f2ff96aa">&#9670;&nbsp;</a></span>getProbability()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float tracktion_engine::StepClip::Pattern::CachedPattern::getProbability </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="a06ec05b65fb2f6afe98212936c868849"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a06ec05b65fb2f6afe98212936c868849">&#9670;&nbsp;</a></span>notes</h2>
@@ -248,13 +278,27 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a5285b15247a40610aafa01edbd52e40a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5285b15247a40610aafa01edbd52e40a">&#9670;&nbsp;</a></span>probabilities</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::Array&lt;float&gt; tracktion_engine::StepClip::Pattern::CachedPattern::probabilities</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="tracktion__StepClip_8h.html">tracktion_StepClip.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat May 16 2020 21:15:59 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 10 2020 15:50:38 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

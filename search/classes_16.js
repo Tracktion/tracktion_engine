@@ -16,5 +16,5 @@ var searchData=
   ['waveoutputdevice',['WaveOutputDevice',['../classtracktion__engine_1_1WaveOutputDevice.html',1,'tracktion_engine']]],
   ['waveoutputdeviceinstance',['WaveOutputDeviceInstance',['../classtracktion__engine_1_1WaveOutputDeviceInstance.html',1,'tracktion_engine']]],
   ['windowstate',['WindowState',['../structtracktion__engine_1_1RackType_1_1WindowState.html',1,'tracktion_engine::RackType::WindowState'],['../structtracktion__engine_1_1Plugin_1_1WindowState.html',1,'tracktion_engine::Plugin::WindowState']]],
-  ['wire',['Wire',['../structtracktion__engine_1_1PatchBayPlugin_1_1Wire.html',1,'tracktion_engine::PatchBayPlugin::Wire'],['../structtracktion__engine_1_1Plugin_1_1Wire.html',1,'tracktion_engine::Plugin::Wire']]]
+  ['wire',['Wire',['../structtracktion__engine_1_1Plugin_1_1Wire.html',1,'tracktion_engine::Plugin::Wire'],['../structtracktion__engine_1_1PatchBayPlugin_1_1Wire.html',1,'tracktion_engine::PatchBayPlugin::Wire']]]
 ];

@@ -10955,8 +10955,8 @@
       <type>void</type>
       <name>playGuideNote</name>
       <anchorfile>classtracktion__engine_1_1AudioTrack.html</anchorfile>
-      <anchor>a536dcbbe80b484a44fefeb9b1fadaf07</anchor>
-      <arglist>(int note, MidiChannel midiChannel, int velocity, bool stopOtherFirst=true, bool forceNote=false)</arglist>
+      <anchor>a6d3cd3a7f20567eaa3e0062efc6a8e66</anchor>
+      <arglist>(int note, MidiChannel midiChannel, int velocity, bool stopOtherFirst=true, bool forceNote=false, bool autorelease=false)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -11006,6 +11006,13 @@
       <anchorfile>classtracktion__engine_1_1AudioTrack.html</anchorfile>
       <anchor>a4f68473915d0a0d780d9e8d6098dd9cf</anchor>
       <arglist>(bool areAnyTracksSolo) const override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>timerCallback</name>
+      <anchorfile>classtracktion__engine_1_1AudioTrack.html</anchorfile>
+      <anchor>ab941adfbee300e100c0a6d62ddbc4485</anchor>
+      <arglist>() override</arglist>
     </member>
     <member kind="friend" protection="private">
       <type>friend struct</type>
@@ -14198,6 +14205,13 @@
       <anchor>ad40b8497c69ac89ab7ceeb156cf964c2</anchor>
       <arglist>(int index) const noexcept</arglist>
     </member>
+    <member kind="function">
+      <type>float</type>
+      <name>getProbability</name>
+      <anchorfile>structtracktion__engine_1_1StepClip_1_1Pattern_1_1CachedPattern.html</anchorfile>
+      <anchor>a35e0509c08e4fe279c250bf4f2ff96aa</anchor>
+      <arglist>(int index) const noexcept</arglist>
+    </member>
     <member kind="variable">
       <type>juce::BigInteger</type>
       <name>notes</name>
@@ -14217,6 +14231,13 @@
       <name>gates</name>
       <anchorfile>structtracktion__engine_1_1StepClip_1_1Pattern_1_1CachedPattern.html</anchorfile>
       <anchor>a0a351dfed8d27271a60e79c232f05ddb</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::Array&lt; float &gt;</type>
+      <name>probabilities</name>
+      <anchorfile>structtracktion__engine_1_1StepClip_1_1Pattern_1_1CachedPattern.html</anchorfile>
+      <anchor>a5285b15247a40610aafa01edbd52e40a</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -38706,6 +38727,13 @@
       <arglist>(juce::MidiMessageSequence sequence, juce::Range&lt; int &gt; midiChannelNumbers, EditTimeRange editSection, juce::CachedValue&lt; float &gt; &amp;volumeDb, juce::CachedValue&lt; bool &gt; &amp;mute, Clip &amp;, const MidiAudioNode *nodeToReplace)</arglist>
     </member>
     <member kind="function">
+      <type></type>
+      <name>MidiAudioNode</name>
+      <anchorfile>classtracktion__engine_1_1MidiAudioNode.html</anchorfile>
+      <anchor>a7c986feb8cae41941ab329bd4e10c5f3</anchor>
+      <arglist>(std::vector&lt; juce::MidiMessageSequence &gt; sequences, juce::Range&lt; int &gt; midiChannelNumbers, EditTimeRange editSection, juce::CachedValue&lt; float &gt; &amp;volumeDb, juce::CachedValue&lt; bool &gt; &amp;mute, Clip &amp;, const MidiAudioNode *nodeToReplace)</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>renderSection</name>
       <anchorfile>classtracktion__engine_1_1MidiAudioNode.html</anchorfile>
@@ -44127,6 +44155,13 @@
       <arglist>()</arglist>
     </member>
     <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>transform</name>
+      <anchorfile>classtracktion__graph_1_1Node.html</anchorfile>
+      <anchor>adb4615ba244e6e702dca2b179fd4a3bc</anchor>
+      <arglist>(Node &amp;)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
       <type>virtual std::vector&lt; Node * &gt;</type>
       <name>getDirectInputNodes</name>
       <anchorfile>classtracktion__graph_1_1Node.html</anchorfile>
@@ -46379,6 +46414,34 @@
       <anchorfile>structtracktion__engine_1_1StepClip_1_1Pattern.html</anchorfile>
       <anchor>abcccd2ddbc9b4abfa76dea5941558470</anchor>
       <arglist>(int channel, int index, double value)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; float &gt;</type>
+      <name>getProbabilities</name>
+      <anchorfile>structtracktion__engine_1_1StepClip_1_1Pattern.html</anchorfile>
+      <anchor>a5ba0b1cde5fb4a437fe6c4cccf92fdc4</anchor>
+      <arglist>(int channel) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setProbabilities</name>
+      <anchorfile>structtracktion__engine_1_1StepClip_1_1Pattern.html</anchorfile>
+      <anchor>af932a6105e44fcab088f8bc8979b2a88</anchor>
+      <arglist>(int channel, const juce::Array&lt; float &gt; &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>float</type>
+      <name>getProbability</name>
+      <anchorfile>structtracktion__engine_1_1StepClip_1_1Pattern.html</anchorfile>
+      <anchor>a0308baf852fe7d88562a6e9bf8cc2d23</anchor>
+      <arglist>(int channel, int index) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setProbability</name>
+      <anchorfile>structtracktion__engine_1_1StepClip_1_1Pattern.html</anchorfile>
+      <anchor>a48479387bce2f94590a34b70e1a6cdc4</anchor>
+      <arglist>(int channel, int index, float value)</arglist>
     </member>
     <member kind="variable">
       <type>StepClip &amp;</type>
@@ -49689,8 +49752,8 @@
       <type></type>
       <name>PluginNode</name>
       <anchorfile>classtracktion__engine_1_1PluginNode.html</anchorfile>
-      <anchor>a64535c6887d9280a602567bb67f1f7b8</anchor>
-      <arglist>(std::unique_ptr&lt; Node &gt; inputNode, tracktion_engine::Plugin::Ptr pluginToProcess, std::shared_ptr&lt; InputProvider &gt; contextProvider)</arglist>
+      <anchor>a66c6d17781c54417610629cc1a5a48e9</anchor>
+      <arglist>(std::unique_ptr&lt; Node &gt; inputNode, tracktion_engine::Plugin::Ptr pluginToProcess, double sampleRateToUse, int blockSizeToUse, std::shared_ptr&lt; InputProvider &gt; contextProvider)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -52403,6 +52466,13 @@
       <anchor>a77ad130aed89432e6c6a5f7f7384506e</anchor>
       <arglist>(const tracktion_graph::Node::ProcessContext &amp;pc)</arglist>
     </member>
+    <member kind="function">
+      <type>int</type>
+      <name>process</name>
+      <anchorfile>classtracktion__engine_1_1RackNodePlayer.html</anchorfile>
+      <anchor>a1c447e60caa5df9b35a7ec9185acde0d</anchor>
+      <arglist>(const tracktion_graph::Node::ProcessContext &amp;pc, PlayHead &amp;ph, EditTimeRange stream)</arglist>
+    </member>
   </compound>
   <compound kind="struct">
     <name>tracktion_engine::RackNodeBuilder::RackPinConnections</name>
@@ -55039,17 +55109,17 @@
     </member>
     <member kind="function">
       <type>bool</type>
+      <name>transform</name>
+      <anchorfile>classtracktion__graph_1_1ReturnNode.html</anchorfile>
+      <anchor>a68c58299ec25c1955650d43ab23644dd</anchor>
+      <arglist>(Node &amp;rootNode) override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
       <name>isReadyToProcess</name>
       <anchorfile>classtracktion__graph_1_1ReturnNode.html</anchorfile>
       <anchor>aac877e5279a83f343d67d279308f6bab</anchor>
       <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>prepareToPlay</name>
-      <anchorfile>classtracktion__graph_1_1ReturnNode.html</anchorfile>
-      <anchor>a6fac0308e983611e38b00420769e357b</anchor>
-      <arglist>(const PlaybackInitialisationInfo &amp;info) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -59314,6 +59384,13 @@
       <arglist>(int index)</arglist>
     </member>
     <member kind="function">
+      <type>bool</type>
+      <name>usesProbability</name>
+      <anchorfile>classtracktion__engine_1_1StepClip.html</anchorfile>
+      <anchor>a23562c861a9ea647dfcb97006f584660</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
       <type>PatternArray</type>
       <name>getPatternSequence</name>
       <anchorfile>classtracktion__engine_1_1StepClip.html</anchorfile>
@@ -60080,11 +60157,18 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
+      <type>bool</type>
+      <name>transform</name>
+      <anchorfile>classtracktion__graph_1_1SummingNode.html</anchorfile>
+      <anchor>a3cb908d4ce7d474600ee8a7641119b04</anchor>
+      <arglist>(Node &amp;) override</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>prepareToPlay</name>
       <anchorfile>classtracktion__graph_1_1SummingNode.html</anchorfile>
-      <anchor>a980b4e1197d75832518f6815d381b2c6</anchor>
-      <arglist>(const PlaybackInitialisationInfo &amp;info) override</arglist>
+      <anchor>a6bb21499121240b31694ede83a9d406e</anchor>
+      <arglist>(const PlaybackInitialisationInfo &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -71605,6 +71689,38 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion_engine::Plugin::Wire</name>
+    <filename>structtracktion__engine_1_1Plugin_1_1Wire.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>Wire</name>
+      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
+      <anchor>a5b4229b171a927ec1d746c1c30c3637f</anchor>
+      <arglist>(const juce::ValueTree &amp;, juce::UndoManager *)</arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::ValueTree</type>
+      <name>state</name>
+      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
+      <anchor>a14734b9a38f37621bd3c15c60c8593f8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; int &gt;</type>
+      <name>sourceChannelIndex</name>
+      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
+      <anchor>a56be586eeab530d1a9baa7750460c837</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; int &gt;</type>
+      <name>destChannelIndex</name>
+      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
+      <anchor>a940044f0fb34b8e4cfac5ec49a51f83a</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion_engine::PatchBayPlugin::Wire</name>
     <filename>structtracktion__engine_1_1PatchBayPlugin_1_1Wire.html</filename>
     <member kind="function">
@@ -71640,38 +71756,6 @@
       <name>gainDb</name>
       <anchorfile>structtracktion__engine_1_1PatchBayPlugin_1_1Wire.html</anchorfile>
       <anchor>aa09e1fd32f830dbdc87dfdb28217bef3</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion_engine::Plugin::Wire</name>
-    <filename>structtracktion__engine_1_1Plugin_1_1Wire.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>Wire</name>
-      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
-      <anchor>a5b4229b171a927ec1d746c1c30c3637f</anchor>
-      <arglist>(const juce::ValueTree &amp;, juce::UndoManager *)</arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::ValueTree</type>
-      <name>state</name>
-      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
-      <anchor>a14734b9a38f37621bd3c15c60c8593f8</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::CachedValue&lt; int &gt;</type>
-      <name>sourceChannelIndex</name>
-      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
-      <anchor>a56be586eeab530d1a9baa7750460c837</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::CachedValue&lt; int &gt;</type>
-      <name>destChannelIndex</name>
-      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
-      <anchor>a940044f0fb34b8e4cfac5ec49a51f83a</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -76052,6 +76136,14 @@
     <subgroup>tracktion_engine-utilities</subgroup>
   </compound>
   <compound kind="group">
+    <name>tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph.html</filename>
+    <subgroup>tracktion_graph-docs</subgroup>
+    <subgroup>tracktion_graph-tracktion_graph</subgroup>
+    <subgroup>tracktion_graph-utilities</subgroup>
+  </compound>
+  <compound kind="group">
     <name>tracktion_graph-tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph-tracktion__graph.html</filename>
@@ -76080,24 +76172,6 @@
     <class kind="struct">tracktion_graph::test_utilities::TestProcess</class>
     <class kind="class">tracktion_graph::LatencyNode</class>
     <class kind="class">tracktion_graph::SummingNode</class>
-  </compound>
-  <compound kind="group">
-    <name>tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph.html</filename>
-    <subgroup>tracktion_graph-docs</subgroup>
-    <subgroup>tracktion_graph-tracktion_graph</subgroup>
-    <subgroup>tracktion_graph-utilities</subgroup>
-  </compound>
-  <compound kind="group">
-    <name>tracktion_graph-utilities</name>
-    <title>utilities</title>
-    <filename>group__tracktion__graph-utilities.html</filename>
-    <namespace>tracktion_graph</namespace>
-    <namespace>tracktion_engine</namespace>
-    <class kind="class">tracktion_graph::AudioFifo</class>
-    <class kind="struct">tracktion_engine::MidiMessageArray::MidiMessageWithSource</class>
-    <class kind="struct">tracktion_engine::MidiMessageArray</class>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-utilities</name>
@@ -76163,5 +76237,15 @@
     <class kind="struct">tracktion_engine::ValueTreeAllEventListener</class>
     <class kind="struct">tracktion_engine::ValueTreeComparator</class>
     <class kind="class">tracktion_engine::ReferenceCountedValueTree</class>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_graph-utilities</name>
+    <title>utilities</title>
+    <filename>group__tracktion__graph-utilities.html</filename>
+    <namespace>tracktion_graph</namespace>
+    <namespace>tracktion_engine</namespace>
+    <class kind="class">tracktion_graph::AudioFifo</class>
+    <class kind="struct">tracktion_engine::MidiMessageArray::MidiMessageWithSource</class>
+    <class kind="struct">tracktion_engine::MidiMessageArray</class>
   </compound>
 </tagfile>

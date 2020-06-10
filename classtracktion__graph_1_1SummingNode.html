@@ -98,9 +98,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a120b1f1f1ef50e3bbb7b62afc4b49b80"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtracktion__graph_1_1Node.html">Node</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1SummingNode.html#a120b1f1f1ef50e3bbb7b62afc4b49b80">getDirectInputNodes</a> () override</td></tr>
 <tr class="memdesc:a120b1f1f1ef50e3bbb7b62afc4b49b80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return all the inputs directly feeding in to this node.  <a href="#a120b1f1f1ef50e3bbb7b62afc4b49b80">More...</a><br /></td></tr>
 <tr class="separator:a120b1f1f1ef50e3bbb7b62afc4b49b80"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a980b4e1197d75832518f6815d381b2c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1SummingNode.html#a980b4e1197d75832518f6815d381b2c6">prepareToPlay</a> (const <a class="el" href="structtracktion__graph_1_1PlaybackInitialisationInfo.html">PlaybackInitialisationInfo</a> &amp;info) override</td></tr>
-<tr class="memdesc:a980b4e1197d75832518f6815d381b2c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called once before playback begins for each node.  <a href="#a980b4e1197d75832518f6815d381b2c6">More...</a><br /></td></tr>
-<tr class="separator:a980b4e1197d75832518f6815d381b2c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3cb908d4ce7d474600ee8a7641119b04"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1SummingNode.html#a3cb908d4ce7d474600ee8a7641119b04">transform</a> (<a class="el" href="classtracktion__graph_1_1Node.html">Node</a> &amp;) override</td></tr>
+<tr class="memdesc:a3cb908d4ce7d474600ee8a7641119b04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after construction to give the node a chance to modify its topology.  <a href="#a3cb908d4ce7d474600ee8a7641119b04">More...</a><br /></td></tr>
+<tr class="separator:a3cb908d4ce7d474600ee8a7641119b04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bb21499121240b31694ede83a9d406e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1SummingNode.html#a6bb21499121240b31694ede83a9d406e">prepareToPlay</a> (const <a class="el" href="structtracktion__graph_1_1PlaybackInitialisationInfo.html">PlaybackInitialisationInfo</a> &amp;) override</td></tr>
+<tr class="memdesc:a6bb21499121240b31694ede83a9d406e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called once before playback begins for each node.  <a href="#a6bb21499121240b31694ede83a9d406e">More...</a><br /></td></tr>
+<tr class="separator:a6bb21499121240b31694ede83a9d406e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92f08685f927e65b67c0589cf0e6faba"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1SummingNode.html#a92f08685f927e65b67c0589cf0e6faba">isReadyToProcess</a> () override</td></tr>
 <tr class="memdesc:a92f08685f927e65b67c0589cf0e6faba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return true when this node is ready to be processed.  <a href="#a92f08685f927e65b67c0589cf0e6faba">More...</a><br /></td></tr>
 <tr class="separator:a92f08685f927e65b67c0589cf0e6faba"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -305,8 +308,39 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a980b4e1197d75832518f6815d381b2c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a980b4e1197d75832518f6815d381b2c6">&#9670;&nbsp;</a></span>prepareToPlay()</h2>
+<a id="a3cb908d4ce7d474600ee8a7641119b04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3cb908d4ce7d474600ee8a7641119b04">&#9670;&nbsp;</a></span>transform()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion_graph::SummingNode::transform </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion__graph_1_1Node.html">Node</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called after construction to give the node a chance to modify its topology. </p>
+<p>This should return true if any changes were made to the topology as this indicates that the method may need to be called again after other nodes have had their toplogy changed. </p>
+
+<p>Reimplemented from <a class="el" href="classtracktion__graph_1_1Node.html#adb4615ba244e6e702dca2b179fd4a3bc">tracktion_graph::Node</a>.</p>
+
+</div>
+</div>
+<a id="a6bb21499121240b31694ede83a9d406e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bb21499121240b31694ede83a9d406e">&#9670;&nbsp;</a></span>prepareToPlay()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -405,7 +439,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat May 16 2020 21:15:59 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 10 2020 15:50:38 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

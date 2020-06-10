@@ -86,12 +86,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a28020aadfee864679997ec650d546e85"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtracktion__graph_1_1Node.html">Node</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1ReturnNode.html#a28020aadfee864679997ec650d546e85">getDirectInputNodes</a> () override</td></tr>
 <tr class="memdesc:a28020aadfee864679997ec650d546e85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return all the inputs directly feeding in to this node.  <a href="#a28020aadfee864679997ec650d546e85">More...</a><br /></td></tr>
 <tr class="separator:a28020aadfee864679997ec650d546e85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68c58299ec25c1955650d43ab23644dd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1ReturnNode.html#a68c58299ec25c1955650d43ab23644dd">transform</a> (<a class="el" href="classtracktion__graph_1_1Node.html">Node</a> &amp;rootNode) override</td></tr>
+<tr class="memdesc:a68c58299ec25c1955650d43ab23644dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after construction to give the node a chance to modify its topology.  <a href="#a68c58299ec25c1955650d43ab23644dd">More...</a><br /></td></tr>
+<tr class="separator:a68c58299ec25c1955650d43ab23644dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac877e5279a83f343d67d279308f6bab"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1ReturnNode.html#aac877e5279a83f343d67d279308f6bab">isReadyToProcess</a> () override</td></tr>
 <tr class="memdesc:aac877e5279a83f343d67d279308f6bab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return true when this node is ready to be processed.  <a href="#aac877e5279a83f343d67d279308f6bab">More...</a><br /></td></tr>
 <tr class="separator:aac877e5279a83f343d67d279308f6bab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6fac0308e983611e38b00420769e357b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1ReturnNode.html#a6fac0308e983611e38b00420769e357b">prepareToPlay</a> (const <a class="el" href="structtracktion__graph_1_1PlaybackInitialisationInfo.html">PlaybackInitialisationInfo</a> &amp;info) override</td></tr>
-<tr class="memdesc:a6fac0308e983611e38b00420769e357b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called once before playback begins for each node.  <a href="#a6fac0308e983611e38b00420769e357b">More...</a><br /></td></tr>
-<tr class="separator:a6fac0308e983611e38b00420769e357b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acfa2ddc0d5cf49a2423382dd0d0bd8be"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1ReturnNode.html#acfa2ddc0d5cf49a2423382dd0d0bd8be">process</a> (const <a class="el" href="structtracktion__graph_1_1Node_1_1ProcessContext.html">ProcessContext</a> &amp;pc) override</td></tr>
 <tr class="memdesc:acfa2ddc0d5cf49a2423382dd0d0bd8be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the node is to be processed.  <a href="#acfa2ddc0d5cf49a2423382dd0d0bd8be">More...</a><br /></td></tr>
 <tr class="separator:acfa2ddc0d5cf49a2423382dd0d0bd8be"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,6 +118,10 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pro_methods_classtracktion__graph_1_1Node"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classtracktion__graph_1_1Node')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classtracktion__graph_1_1Node.html">tracktion_graph::Node</a></td></tr>
+<tr class="memitem:a486e18fa9f17f0c5af631a9a3e10ab47 inherit pro_methods_classtracktion__graph_1_1Node"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1Node.html#a486e18fa9f17f0c5af631a9a3e10ab47">prepareToPlay</a> (const <a class="el" href="structtracktion__graph_1_1PlaybackInitialisationInfo.html">PlaybackInitialisationInfo</a> &amp;)</td></tr>
+<tr class="memdesc:a486e18fa9f17f0c5af631a9a3e10ab47 inherit pro_methods_classtracktion__graph_1_1Node"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called once before playback begins for each node.  <a href="classtracktion__graph_1_1Node.html#a486e18fa9f17f0c5af631a9a3e10ab47">More...</a><br /></td></tr>
+<tr class="separator:a486e18fa9f17f0c5af631a9a3e10ab47 inherit pro_methods_classtracktion__graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a98f0ad61e197981c6edb6c591957b9fd"></a>
@@ -210,6 +214,37 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a68c58299ec25c1955650d43ab23644dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68c58299ec25c1955650d43ab23644dd">&#9670;&nbsp;</a></span>transform()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion_graph::ReturnNode::transform </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion__graph_1_1Node.html">Node</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called after construction to give the node a chance to modify its topology. </p>
+<p>This should return true if any changes were made to the topology as this indicates that the method may need to be called again after other nodes have had their toplogy changed. </p>
+
+<p>Reimplemented from <a class="el" href="classtracktion__graph_1_1Node.html#adb4615ba244e6e702dca2b179fd4a3bc">tracktion_graph::Node</a>.</p>
+
+</div>
+</div>
 <a id="aac877e5279a83f343d67d279308f6bab"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aac877e5279a83f343d67d279308f6bab">&#9670;&nbsp;</a></span>isReadyToProcess()</h2>
 
@@ -237,39 +272,6 @@ Additional Inherited Members</h2></td></tr>
 <p>This is usually when its input's output buffers are ready. </p>
 
 <p>Implements <a class="el" href="classtracktion__graph_1_1Node.html#a7137ee39624c0a7ff5d79f1d37ebaa93">tracktion_graph::Node</a>.</p>
-
-</div>
-</div>
-<a id="a6fac0308e983611e38b00420769e357b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6fac0308e983611e38b00420769e357b">&#9670;&nbsp;</a></span>prepareToPlay()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion_graph::ReturnNode::prepareToPlay </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtracktion__graph_1_1PlaybackInitialisationInfo.html">PlaybackInitialisationInfo</a> &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Called once before playback begins for each node. </p>
-<p>Use this to allocate buffers etc. This step can be used to modify the topology of the graph (i.e. add/remove nodes). However, if you do this, you must make sure to call initialise on them so they are fully prepared for processing. </p>
-
-<p>Reimplemented from <a class="el" href="classtracktion__graph_1_1Node.html#a486e18fa9f17f0c5af631a9a3e10ab47">tracktion_graph::Node</a>.</p>
-
-<p class="reference">References <a class="el" href="structtracktion__graph_1_1PlaybackInitialisationInfo.html#a4a343e6606f59686571edad950033860">tracktion_graph::PlaybackInitialisationInfo::rootNode</a>, and <a class="el" href="namespacetracktion__graph.html#a628d15d4a6b61b204cf1103799d923c5">tracktion_graph::visitNodes()</a>.</p>
 
 </div>
 </div>
@@ -302,7 +304,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classtracktion__graph_1_1Node.html#a88795f25fa113cff69e6a9eb24512aba">tracktion_graph::Node</a>.</p>
 
-<p class="reference">References <a class="el" href="structtracktion__graph_1_1Node_1_1AudioAndMidiBuffer.html#ab67c8d346bbfbf05722f17361f839b2a">tracktion_graph::Node::AudioAndMidiBuffer::audio</a>, <a class="el" href="structtracktion__graph_1_1Node_1_1ProcessContext.html#a66de1f0f7d31c6c64e30a654764702be">tracktion_graph::Node::ProcessContext::buffers</a>, <a class="el" href="structtracktion__engine_1_1MidiMessageArray.html#aa65f67dacc66363b35af13bbcaf884ef">tracktion_engine::MidiMessageArray::mergeFrom()</a>, and <a class="el" href="structtracktion__graph_1_1Node_1_1AudioAndMidiBuffer.html#ad7f98a07c2cf70cee30a91a32a791742">tracktion_graph::Node::AudioAndMidiBuffer::midi</a>.</p>
+<p class="reference">References <a class="el" href="structtracktion__graph_1_1Node_1_1AudioAndMidiBuffer.html#ab67c8d346bbfbf05722f17361f839b2a">tracktion_graph::Node::AudioAndMidiBuffer::audio</a>, <a class="el" href="structtracktion__graph_1_1Node_1_1ProcessContext.html#a66de1f0f7d31c6c64e30a654764702be">tracktion_graph::Node::ProcessContext::buffers</a>, <a class="el" href="structtracktion__engine_1_1MidiMessageArray.html#aa65f67dacc66363b35af13bbcaf884ef">tracktion_engine::MidiMessageArray::mergeFrom()</a>, <a class="el" href="structtracktion__graph_1_1Node_1_1AudioAndMidiBuffer.html#ad7f98a07c2cf70cee30a91a32a791742">tracktion_graph::Node::AudioAndMidiBuffer::midi</a>, and <a class="el" href="namespacetracktion__graph.html#a628d15d4a6b61b204cf1103799d923c5">tracktion_graph::visitNodes()</a>.</p>
 
 </div>
 </div>
@@ -312,7 +314,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat May 16 2020 21:15:59 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 10 2020 15:50:38 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

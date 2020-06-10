@@ -246,8 +246,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a62fc7e09bb828ecdc5ad859f56068a6d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioTrack.html#a62fc7e09bb828ecdc5ad859f56068a6d">mergeInMidiSequence</a> (const juce::MidiMessageSequence &amp;, double startTime, <a class="el" href="classtracktion__engine_1_1MidiClip.html">MidiClip</a> *, <a class="el" href="classtracktion__engine_1_1MidiList.html#a7d84a1321e0bb5af59aa2d429cb2cf20">MidiList::NoteAutomationType</a>)</td></tr>
 <tr class="memdesc:a62fc7e09bb828ecdc5ad859f56068a6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">try to add this MIDI sequence to any MIDI clips that are already in the track.  <a href="#a62fc7e09bb828ecdc5ad859f56068a6d">More...</a><br /></td></tr>
 <tr class="separator:a62fc7e09bb828ecdc5ad859f56068a6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a536dcbbe80b484a44fefeb9b1fadaf07"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioTrack.html#a536dcbbe80b484a44fefeb9b1fadaf07">playGuideNote</a> (int note, <a class="el" href="structtracktion__engine_1_1MidiChannel.html">MidiChannel</a> midiChannel, int velocity, bool stopOtherFirst=true, bool forceNote=false)</td></tr>
-<tr class="separator:a536dcbbe80b484a44fefeb9b1fadaf07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d3cd3a7f20567eaa3e0062efc6a8e66"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioTrack.html#a6d3cd3a7f20567eaa3e0062efc6a8e66">playGuideNote</a> (int note, <a class="el" href="structtracktion__engine_1_1MidiChannel.html">MidiChannel</a> midiChannel, int velocity, bool stopOtherFirst=true, bool forceNote=false, bool autorelease=false)</td></tr>
+<tr class="separator:a6d3cd3a7f20567eaa3e0062efc6a8e66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7d2484691fbb3538726e710eebe3eb0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioTrack.html#aa7d2484691fbb3538726e710eebe3eb0">playGuideNotes</a> (const juce::Array&lt; int &gt; &amp;notes, <a class="el" href="structtracktion__engine_1_1MidiChannel.html">MidiChannel</a> midiChannel, const juce::Array&lt; int &gt; &amp;velocities, bool stopOthersFirst=true)</td></tr>
 <tr class="separator:aa7d2484691fbb3538726e710eebe3eb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a588a7daf99a74190e36ba3acf3ae6fd0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioTrack.html#a588a7daf99a74190e36ba3acf3ae6fd0">turnOffGuideNotes</a> ()</td></tr>
@@ -528,6 +528,8 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a72135c2d34896f35476680fdf097f68f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f68473915d0a0d780d9e8d6098dd9cf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioTrack.html#a4f68473915d0a0d780d9e8d6098dd9cf">isTrackAudible</a> (bool areAnyTracksSolo) const override</td></tr>
 <tr class="separator:a4f68473915d0a0d780d9e8d6098dd9cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab941adfbee300e100c0a6d62ddbc4485"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioTrack.html#ab941adfbee300e100c0a6d62ddbc4485">timerCallback</a> () override</td></tr>
+<tr class="separator:ab941adfbee300e100c0a6d62ddbc4485"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classtracktion__engine_1_1ClipTrack"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classtracktion__engine_1_1ClipTrack')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classtracktion__engine_1_1ClipTrack.html">tracktion_engine::ClipTrack</a></td></tr>
 <tr class="memitem:ac3f46ea49a046b626c917253edc69327 inherit pro_methods_classtracktion__engine_1_1ClipTrack"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ClipTrack.html#ac3f46ea49a046b626c917253edc69327">findAllTimesOfInterest</a> ()</td></tr>
 <tr class="separator:ac3f46ea49a046b626c917253edc69327 inherit pro_methods_classtracktion__engine_1_1ClipTrack"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2021,7 +2023,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classtracktion__engine_1_1AudioTrack.html#a62fc7e09bb828ecdc5ad859f56068a6d">mergeInMidiSequence()</a>, <a class="el" href="classtracktion__engine_1_1AudioTrack.html#a536dcbbe80b484a44fefeb9b1fadaf07">playGuideNote()</a>, <a class="el" href="classtracktion__engine_1_1AudioTrack.html#aa7d2484691fbb3538726e710eebe3eb0">playGuideNotes()</a>, and <a class="el" href="classtracktion__engine_1_1AudioTrack.html#a588a7daf99a74190e36ba3acf3ae6fd0">turnOffGuideNotes()</a>.</p>
+<p class="reference">References <a class="el" href="classtracktion__engine_1_1AudioTrack.html#a62fc7e09bb828ecdc5ad859f56068a6d">mergeInMidiSequence()</a>, <a class="el" href="classtracktion__engine_1_1AudioTrack.html#a6d3cd3a7f20567eaa3e0062efc6a8e66">playGuideNote()</a>, <a class="el" href="classtracktion__engine_1_1AudioTrack.html#aa7d2484691fbb3538726e710eebe3eb0">playGuideNotes()</a>, and <a class="el" href="classtracktion__engine_1_1AudioTrack.html#a588a7daf99a74190e36ba3acf3ae6fd0">turnOffGuideNotes()</a>.</p>
 
 </div>
 </div>
@@ -2070,8 +2072,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a536dcbbe80b484a44fefeb9b1fadaf07"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a536dcbbe80b484a44fefeb9b1fadaf07">&#9670;&nbsp;</a></span>playGuideNote()</h2>
+<a id="a6d3cd3a7f20567eaa3e0062efc6a8e66"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d3cd3a7f20567eaa3e0062efc6a8e66">&#9670;&nbsp;</a></span>playGuideNote()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2104,7 +2106,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>forceNote</em> = <code>false</code>&#160;</td>
+          <td class="paramname"><em>forceNote</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>autorelease</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2175,7 +2183,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1AudioTrack.html#a6a20100ebef4826f66a62e6448977f4c">loadMidiNoteNames()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1AudioTrack.html#a6a20100ebef4826f66a62e6448977f4c">loadMidiNoteNames()</a>, and <a class="el" href="classtracktion__engine_1_1AudioTrack.html#ab941adfbee300e100c0a6d62ddbc4485">timerCallback()</a>.</p>
 
 </div>
 </div>
@@ -2301,13 +2309,40 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="ab941adfbee300e100c0a6d62ddbc4485"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab941adfbee300e100c0a6d62ddbc4485">&#9670;&nbsp;</a></span>timerCallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion_engine::AudioTrack::timerCallback </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classtracktion__engine_1_1AudioTrack.html#a15870834926e87a5d0fca6115fd44cbd">TrackMuter</a>, and <a class="el" href="classtracktion__engine_1_1AudioTrack.html#a588a7daf99a74190e36ba3acf3ae6fd0">turnOffGuideNotes()</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="tracktion__AudioTrack_8h.html">tracktion_AudioTrack.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat May 16 2020 21:15:58 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 10 2020 15:50:37 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>
