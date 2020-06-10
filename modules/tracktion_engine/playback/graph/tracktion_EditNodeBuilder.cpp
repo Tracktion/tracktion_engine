@@ -21,6 +21,18 @@ namespace
         return static_cast<int> (hash (sidechainMagicNum, sidechainSourceID.getRawID()));
     }
 
+    int getWaveInputDeviceBusID (EditItemID trackItemID)
+    {
+        constexpr size_t waveMagicNum = 0xc1abde;
+        return static_cast<int> (hash (waveMagicNum, trackItemID.getRawID()));
+    }
+
+    int getMidiInputDeviceBusID (EditItemID trackItemID)
+    {
+        constexpr size_t midiMagicNum = 0x9a2762;
+        return static_cast<int> (hash (midiMagicNum, trackItemID.getRawID()));
+    }
+
     bool isSidechainSource (Track& t)
     {
         const auto itemID = t.itemID;
@@ -44,6 +56,24 @@ namespace
                 return false;
 
         return true;
+    }
+
+    AudioTrack* getTrackContainingTrackDevice (Edit& edit, WaveInputDevice& device)
+    {
+        for (auto t : getAudioTracks (edit))
+            if (&t->getWaveInputDevice() == &device)
+                return t;
+
+        return nullptr;
+    }
+
+    AudioTrack* getTrackContainingTrackDevice (Edit& edit, MidiInputDevice& device)
+    {
+        for (auto t : getAudioTracks (edit))
+            if (&t->getMidiInputDevice() == &device)
+                return t;
+
+        return nullptr;
     }
 }
 
@@ -229,9 +259,21 @@ std::unique_ptr<tracktion_graph::SummingNode> createClipsNode (const juce::Array
 std::unique_ptr<tracktion_graph::Node> createLiveInputNodeForDevice (InputDeviceInstance& inputDeviceInstance, tracktion_graph::PlayHeadState& playHeadState)
 {
     if (auto midiDevice = dynamic_cast<MidiInputDevice*> (&inputDeviceInstance.getInputDevice()))
+    {
+        if (midiDevice->isTrackDevice())
+            if (auto sourceTrack = getTrackContainingTrackDevice (inputDeviceInstance.edit, *midiDevice))
+                return makeNode<TrackMidiInputDeviceNode> (*midiDevice, makeNode<ReturnNode> (getMidiInputDeviceBusID (sourceTrack->itemID)));
+
         return makeNode<MidiInputDeviceNode> (inputDeviceInstance, *midiDevice, midiDevice->getMPESourceID(), playHeadState);
+    }
     else if (auto waveDevice = dynamic_cast<WaveInputDevice*> (&inputDeviceInstance.getInputDevice()))
-        return makeNode<WaveInputDeviceNode> (inputDeviceInstance, *waveDevice);
+    {
+        if (waveDevice->isTrackDevice())
+            if (auto sourceTrack = getTrackContainingTrackDevice (inputDeviceInstance.edit, *waveDevice))
+                return makeNode<TrackWaveInputDeviceNode> (*waveDevice, makeNode<ReturnNode> (getWaveInputDeviceBusID (sourceTrack->itemID)));
+
+        return makeNode<WaveInputDeviceNode>(inputDeviceInstance, *waveDevice);
+    }
 
     return {};
 }
@@ -243,7 +285,7 @@ std::unique_ptr<tracktion_graph::Node> createLiveInputsNode (AudioTrack& track, 
     if (! params.forRendering)
         if (auto context = track.edit.getCurrentPlaybackContext())
             for (auto in : context->getAllInputs())
-                if (in->isLivePlayEnabled (track) && in->isOnTargetTrack (track))
+                if ((in->isLivePlayEnabled (track) || in->getInputDevice().isTrackDevice()) && in->isOnTargetTrack (track))
                     if (auto node = createLiveInputNodeForDevice (*in, playHeadState))
                         nodes.push_back (std::move (node));
 
@@ -423,15 +465,20 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioTrack (AudioTrack& at, 
 
     node = makeNode<TrackMutingNode> (std::move (trackMuteState), std::move (node));
 
+    if (! params.forRendering)
+    {
+        if (at.getWaveInputDevice().isEnabled())
+            node = makeNode<SendNode> (std::move (node), getWaveInputDeviceBusID (at.itemID));
+
+        if (at.getMidiInputDevice().isEnabled())
+            node = makeNode<SendNode> (std::move (node), getMidiInputDeviceBusID (at.itemID));
+    }
+
     return node;
     
     //TODO:
-    // Input tracks
     // ARA clips
     // Track comps
-    // Live midi out
-    // Live midi in
-    // Track devices (track outputs to inputs)
 }
 
 //==============================================================================
