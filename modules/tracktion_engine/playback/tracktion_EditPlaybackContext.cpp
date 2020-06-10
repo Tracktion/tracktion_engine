@@ -115,11 +115,6 @@ void EditPlaybackContext::releaseDeviceList()
     midiOutputs.clear();
     waveInputs.clear();
     midiInputs.clear();
-    
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-    nodePlaybackContext->playHead.stop();
-    nodePlaybackContext->setNodeContext ({});
-   #endif
 }
 
 void EditPlaybackContext::rebuildDeviceList()
@@ -224,6 +219,11 @@ void EditPlaybackContext::clearNodes()
 
     removedNodes.clear();
     isAllocated = false;
+
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+    nodePlaybackContext->playHead.stop();
+    nodePlaybackContext->setNodeContext ({});
+   #endif
 }
 
 static AudioNode* prepareNode (AudioNode* node, bool forMidi)

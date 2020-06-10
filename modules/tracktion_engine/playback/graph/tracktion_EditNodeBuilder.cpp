@@ -230,6 +230,8 @@ std::unique_ptr<tracktion_graph::Node> createLiveInputNodeForDevice (InputDevice
 {
     if (auto midiDevice = dynamic_cast<MidiInputDevice*> (&inputDeviceInstance.getInputDevice()))
         return makeNode<MidiInputDeviceNode> (inputDeviceInstance, *midiDevice, midiDevice->getMPESourceID(), playHeadState);
+    else if (auto waveDevice = dynamic_cast<WaveInputDevice*> (&inputDeviceInstance.getInputDevice()))
+        return makeNode<WaveInputDeviceNode> (inputDeviceInstance, *waveDevice);
 
     return {};
 }
