@@ -86,6 +86,8 @@ std::unique_ptr<tracktion_graph::Node> createNodeForTrack (Track&, tracktion_gra
 std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList&, const TrackMuteState*, std::unique_ptr<Node>,
                                                                 tracktion_graph::PlayHeadState&, const CreateNodeParams&);
 
+std::unique_ptr<tracktion_graph::Node> createPluginNodeForTrack (AudioTrack&, const TrackMuteState&, std::unique_ptr<Node>,
+                                                                 tracktion_graph::PlayHeadState&, const CreateNodeParams&);
 
 //==============================================================================
 //==============================================================================
@@ -234,11 +236,29 @@ std::unique_ptr<tracktion_graph::Node> createNodeForClip (Clip& clip, const Trac
 }
 
 //==============================================================================
-std::unique_ptr<tracktion_graph::Node> createNodeForFrozenAudioTrack (AudioTrack&, tracktion_graph::PlayHeadState&, const CreateNodeParams& params)
+std::unique_ptr<tracktion_graph::Node> createNodeForFrozenAudioTrack (AudioTrack& track, tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
-    jassert (params.forRendering);
-    
-    return {};
+    jassert (! params.forRendering);
+
+    const bool processMidiWhenMuted = track.state.getProperty (IDs::processMidiWhenMuted, false);
+    auto trackMuteState = std::make_unique<TrackMuteState> (track, false, processMidiWhenMuted);
+    auto node = tracktion_graph::makeNode<WaveNode> (AudioFile (track.edit.engine, TemporaryFileManager::getFreezeFileForTrack (track)),
+                                                     EditTimeRange (0.0, track.getLengthIncludingInputTracks()),
+                                                     0.0, EditTimeRange(), LiveClipLevel(),
+                                                     1.0, juce::AudioChannelSet::stereo(),
+                                                     playHeadState,
+                                                     params.forRendering);
+
+    // Plugins
+    if (params.includePlugins)
+        node = createPluginNodeForTrack (track, *trackMuteState, std::move (node), playHeadState, params);
+
+    if (isSidechainSource (track))
+        node = makeNode<SendNode> (std::move (node), getSidechainBusID (track.itemID));
+
+    node = makeNode<TrackMutingNode> (std::move (trackMuteState), std::move (node));
+
+    return node;
 }
 
 std::unique_ptr<tracktion_graph::SummingNode> createClipsNode (const juce::Array<Clip*>& clips, const TrackMuteState& trackMuteState,
@@ -584,6 +604,33 @@ std::unique_ptr<tracktion_graph::Node> createNodeForTrack (Track& track, trackti
     return {};
 }
 
+//==============================================================================
+std::unique_ptr<tracktion_graph::Node> createGroupFreezeNodeForDevice (Edit& edit, OutputDevice& device, PlayHeadState& playHeadState)
+{
+    CRASH_TRACER
+
+    for (auto& freezeFile : TemporaryFileManager::getFrozenTrackFiles (edit))
+    {
+        const auto outId = TemporaryFileManager::getDeviceIDFromFreezeFile (edit, freezeFile);
+
+        if (device.getDeviceID() == outId)
+        {
+            AudioFile af (edit.engine, freezeFile);
+            const double length = af.getLength();
+
+            if (length <= 0.0)
+                return {};
+
+            auto node = tracktion_graph::makeNode<WaveNode> (af, EditTimeRange (0.0, length),
+                                                             0.0, EditTimeRange(), LiveClipLevel(),
+                                                             1.0, juce::AudioChannelSet::stereo(),
+                                                             playHeadState, false);
+            return makeNode<TrackMutingNode> (std::make_unique<TrackMuteState> (edit), std::move (node));
+        }
+    }
+
+    return {};
+}
 
 //==============================================================================
 std::unique_ptr<tracktion_graph::Node> createNodeForDevice (EditPlaybackContext& epc, OutputDevice& device, PlayHeadState& playHeadState, std::unique_ptr<Node> node)
@@ -646,13 +693,36 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, tracktion_graph::Pl
     Edit& edit = epc.edit;
     using TrackNodeVector = std::vector<std::unique_ptr<tracktion_graph::Node>>;
     std::map<OutputDevice*, TrackNodeVector> deviceNodes;
+    std::vector<OutputDevice*> devicesWithFrozenNodes;
 
     for (auto t : getAllTracks (edit))
-        if (params.allowedTracks == nullptr || params.allowedTracks->contains (t))
-            if (auto output = getTrackOutput (*t))
-                if (auto device = output->getOutputDevice (false))
-                    if (auto node = createNodeForTrack (*t, playHeadState, params))
+    {
+        if (params.allowedTracks != nullptr && params.allowedTracks->contains (t))
+            continue;
+
+        if (auto output = getTrackOutput (*t))
+        {
+            if (auto device = output->getOutputDevice (false))
+            {
+                if (t->isFrozen (Track::groupFreeze))
+                {
+                    if (std::find (devicesWithFrozenNodes.begin(), devicesWithFrozenNodes.end(), device)
+                        != devicesWithFrozenNodes.end())
+                       continue;
+
+                    if (auto node = createGroupFreezeNodeForDevice (edit, *device, playHeadState))
+                    {
                         deviceNodes[device].push_back (std::move (node));
+                        devicesWithFrozenNodes.push_back (device);
+                    }
+                }
+                else if (auto node = createNodeForTrack (*t, playHeadState, params))
+                {
+                    deviceNodes[device].push_back (std::move (node));
+                }
+            }
+        }
+    }
 
     //TODO:
     // Group frozen tracks
