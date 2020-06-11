@@ -78,6 +78,9 @@ public:
     static juce::File getFreezeFileForDevice (Edit&, OutputDevice&);
 
     /** */
+    static juce::String getDeviceIDFromFreezeFile (Edit&, const juce::File& deviceFreezeFile);
+
+    /** */
     static juce::File getFreezeFileForTrack (const AudioTrack&);
 
     /** */

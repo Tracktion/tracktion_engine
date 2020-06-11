@@ -2172,10 +2172,7 @@ void Edit::readFrozenTracksFiles()
 
     for (auto& freezeFile : freezeFiles)
     {
-        auto fn = freezeFile.getFileName();
-        auto outId = fn.fromFirstOccurrenceOf ("_", false, false)
-                       .fromFirstOccurrenceOf ("_", false, false)
-                       .upToFirstOccurrenceOf (".", false, false);
+        const auto outId = TemporaryFileManager::getDeviceIDFromFreezeFile (*this, freezeFile);
 
         if (engine.getDeviceManager().findOutputDeviceForID (outId) == nullptr)
         {
