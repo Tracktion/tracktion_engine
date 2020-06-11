@@ -85,6 +85,9 @@ extern "C"
  #include "playback/graph/tracktion_TrackWaveInputDeviceNode.h"
  #include "playback/graph/tracktion_TrackWaveInputDeviceNode.cpp"
 
+ #include "playback/graph/tracktion_SharedLevelMeasuringNode.h"
+ #include "playback/graph/tracktion_SharedLevelMeasuringNode.cpp"
+
  #include "playback/graph/tracktion_MidiInputDeviceNode.h"
  #include "playback/graph/tracktion_MidiInputDeviceNode.cpp"
 

@@ -725,10 +725,8 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, tracktion_graph::Pl
     }
 
     //TODO:
-    // Group frozen tracks
     // Insert plugins
     // Optional last stage
-    // Preview level measurer
     // ClickTrack (with mute)
     
     auto outputNode = std::make_unique<tracktion_graph::SummingNode>();
@@ -742,7 +740,10 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, tracktion_graph::Pl
         auto node = tracktion_graph::makeNode<tracktion_graph::SummingNode> (std::move (tracksVector));
         node = createMasterPluginsNode (edit, *device, playHeadState, std::move (node), params);
         node = createMasterFadeInOutNode (edit, playHeadState, std::move (node));
-        
+
+        if (edit.getIsPreviewEdit() && node != nullptr)
+            node = makeNode<SharedLevelMeasuringNode> (edit.getPreviewLevelMeasurer(), std::move (node));
+
         if (edit.isClickTrackDevice (*device))
         {
             //TODO: Add click node (with mute) to device input
