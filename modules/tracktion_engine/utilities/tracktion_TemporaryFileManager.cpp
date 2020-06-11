@@ -237,6 +237,16 @@ juce::File TemporaryFileManager::getFreezeFileForDevice (Edit& edit, OutputDevic
              .getChildFile (getDeviceFreezePrefix (edit) + String (device.getDeviceID()) + ".freeze");
 }
 
+juce::String TemporaryFileManager::getDeviceIDFromFreezeFile (Edit& edit, const File& deviceFreezeFile)
+{
+    const auto fileName = deviceFreezeFile.getFileName();
+    jassert (fileName.startsWith (getDeviceFreezePrefix (edit)));
+    jassert (fileName.endsWith (".freeze"));
+
+    return fileName.fromLastOccurrenceOf (getDeviceFreezePrefix (edit), false, false)
+                   .upToFirstOccurrenceOf (".", false, false);
+}
+
 juce::File TemporaryFileManager::getFreezeFileForTrack (const AudioTrack& track)
 {
     return track.edit.getTempDirectory (true)
