@@ -345,7 +345,7 @@ public:
     
     int getLatencySamples()
     {
-        return nodePlayer.getNode().getNodeProperties().latencyNumSamples;
+        return nodePlayer.getNode()->getNodeProperties().latencyNumSamples;
     }
 
     /** Processes a block of audio and MIDI data.

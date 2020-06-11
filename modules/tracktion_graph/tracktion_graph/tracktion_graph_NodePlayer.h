@@ -29,9 +29,9 @@ public:
     {
     }
     
-    Node& getNode()
+    Node* getNode()
     {
-        return *input;
+        return input.get();
     }
 
     void setNode (std::unique_ptr<Node> newNode)
@@ -192,8 +192,8 @@ private:
             if (numNodesProcessed == allNodes.size())
             {
                 auto output = rootNode.getProcessedOutput();
-                pc.buffers.audio.copyFrom (output.audio);
-                pc.buffers.midi.copyFrom (output.midi);
+                pc.buffers.audio.add (output.audio);
+                pc.buffers.midi.mergeFrom (output.midi);
 
                 break;
             }
