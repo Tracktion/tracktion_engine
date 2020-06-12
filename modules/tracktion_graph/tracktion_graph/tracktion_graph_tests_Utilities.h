@@ -305,8 +305,9 @@ namespace test_utilities
             buffer.setSize  (numChannels, ts.blockSize);
             numSamplesToDo = juce::roundToInt (durationInSeconds * ts.sampleRate);
 
-            writer = std::unique_ptr<juce::AudioFormatWriter> (juce::WavAudioFormat().createWriterFor (context->tempFile->getFile().createOutputStream().release(),
-                                                                                                       ts.sampleRate, (uint32_t) numChannels, 16, {}, 0));
+            if (numChannels > 0)
+                writer = std::unique_ptr<juce::AudioFormatWriter> (juce::WavAudioFormat().createWriterFor (context->tempFile->getFile().createOutputStream().release(),
+                                                                                                           ts.sampleRate, (uint32_t) numChannels, 16, {}, 0));
             setPlayer (std::move (playerToUse));
         }
 
@@ -328,9 +329,6 @@ namespace test_utilities
         */
         bool process (int maxNumSamples)
         {
-            if (! writer)
-                return false;
-            
             for (;;)
             {
                 const int maxNumThisTime = testSetup.randomiseBlockSizes ? std::min (testSetup.random.nextInt ({ 1, testSetup.blockSize }), numSamplesToDo)
@@ -345,7 +343,8 @@ namespace test_utilities
                 numProcessMisses += processor->process ({ juce::Range<int64_t>::withStartAndLength ((int64_t) numSamplesDone, (int64_t) numThisTime),
                                                         { { subSectionBuffer }, midi } });
                 
-                writer->writeFromAudioSampleBuffer (subSectionBuffer, 0, subSectionBuffer.getNumSamples());
+                if (writer)
+                    writer->writeFromAudioSampleBuffer (subSectionBuffer, 0, subSectionBuffer.getNumSamples());
                 
                 // Copy MIDI to buffer
                 for (const auto& m : midi)
@@ -373,20 +372,20 @@ namespace test_utilities
         
         std::shared_ptr<TestContext> getTestResult()
         {
-            writer->flush();
-
-            // Then read it back in to the buffer
-            if (auto reader = std::unique_ptr<juce::AudioFormatReader> (juce::WavAudioFormat().createReaderFor (context->tempFile->getFile().createInputStream().release(), true)))
+            if (writer)
             {
-                juce::AudioBuffer<float> tempBuffer (numChannels, (int) reader->lengthInSamples);
-                reader->read (&tempBuffer, 0, tempBuffer.getNumSamples(), 0, true, true);
-                context->buffer = std::move (tempBuffer);
-                context->numProcessMisses = numProcessMisses;
-                
-                return context;
+                writer->flush();
+
+                // Then read it back in to the buffer
+                if (auto reader = std::unique_ptr<juce::AudioFormatReader> (juce::WavAudioFormat().createReaderFor (context->tempFile->getFile().createInputStream().release(), true)))
+                {
+                    juce::AudioBuffer<float> tempBuffer (numChannels, (int) reader->lengthInSamples);
+                    reader->read (&tempBuffer, 0, tempBuffer.getNumSamples(), 0, true, true);
+                    context->buffer = std::move (tempBuffer);
+                }
             }
             
-            return {};
+            return context;
         }
         
     private:

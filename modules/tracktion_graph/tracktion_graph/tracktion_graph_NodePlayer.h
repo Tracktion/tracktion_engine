@@ -192,7 +192,11 @@ private:
             if (numNodesProcessed == allNodes.size())
             {
                 auto output = rootNode.getProcessedOutput();
-                pc.buffers.audio.add (output.audio);
+                const size_t numAudioChannels = std::min (output.audio.getNumChannels(), pc.buffers.audio.getNumChannels());
+                
+                if (numAudioChannels > 0)
+                    pc.buffers.audio.getSubsetChannelBlock (0, numAudioChannels).add (output.audio.getSubsetChannelBlock (0, numAudioChannels));
+                
                 pc.buffers.midi.mergeFrom (output.midi);
 
                 break;
