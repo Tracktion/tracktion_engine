@@ -35,8 +35,9 @@ public:
 
     juce::StringArray getAudioInputNames() override;
     AudioNode* createPostFXAudioNode (AudioNode*) override;
+    ProcessingPosition getProcessingPosition() override { return ProcessingPosition::postFX; }
 
-    void initialise (const PlaybackInitialisationInfo&) override;
+    void initialise (double sampleRate, int blockSizeSamples) override;
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;
 

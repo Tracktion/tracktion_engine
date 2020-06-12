@@ -70,7 +70,7 @@ private:
                                                                       playHeadState,
                                                                       EditItemID());
             
-            auto testContext = createBasicTestContext (std::move (node), playHeadState, ts, 1, duration);
+            auto testContext = createBasicTestContext (std::move (node), playHeadState, ts, 0, duration);
 
             expectGreaterThan (sequence.getNumEvents(), 0);
             test_utilities::expectMidiBuffer (*this, testContext->midi, sampleRate, sequence);
@@ -86,7 +86,7 @@ private:
                                                                       playHeadState,
                                                                       EditItemID());
             
-            auto testContext = createBasicTestContext (std::move (node), playHeadState, ts, 1, duration + 1.0);
+            auto testContext = createBasicTestContext (std::move (node), playHeadState, ts, 0, duration + 1.0);
 
             auto expectedSequence = masterSequence;
             expectedSequence.addTimeToMessages (1.0);

@@ -126,7 +126,7 @@ void ClickGenerator::processBlock (const juce::dsp::AudioBlock<float>* destBuffe
 {
     if (isMutedAtTime (editTime.getStart()))
         return;
-    
+
     auto gain = edit.getClickTrackVolume();
     const bool emphasis = edit.clickTrackEmphasiseBars;
 

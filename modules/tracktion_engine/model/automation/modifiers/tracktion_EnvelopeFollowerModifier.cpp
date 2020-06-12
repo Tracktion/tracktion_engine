@@ -230,7 +230,7 @@ struct EnvelopeFollowerModifier::EnvelopeFollowerModifierAudioNode  : public Sin
     void prepareAudioNodeToPlay (const PlaybackInitialisationInfo& info) override
     {
         SingleInputAudioNode::prepareAudioNodeToPlay (info);
-        envelopeFollowerModifier->baseClassInitialise (info);
+        envelopeFollowerModifier->baseClassInitialise (info.sampleRate, info.blockSizeSamples);
     }
 
     void renderOver (const AudioRenderContext& rc) override
@@ -339,9 +339,9 @@ AudioNode* EnvelopeFollowerModifier::createPostFXAudioNode (AudioNode* an)
     return new EnvelopeFollowerModifierAudioNode (an, *this);
 }
 
-void EnvelopeFollowerModifier::initialise (const PlaybackInitialisationInfo& info)
+void EnvelopeFollowerModifier::initialise (double sampleRate, int)
 {
-    prepareToPlay (info.sampleRate);
+    prepareToPlay (sampleRate);
 }
 
 void EnvelopeFollowerModifier::deinitialise()

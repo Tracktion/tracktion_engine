@@ -1543,7 +1543,7 @@ void RackType::initialisePluginsIfNeeded (const PlaybackInitialisationInfo& info
             f->baseClassInitialise (info);
 
         for (auto& m : getModifierList().getModifiers())
-            m->baseClassInitialise (info);
+            m->baseClassInitialise (info.sampleRate, info.blockSizeSamples);
     }
 }
 

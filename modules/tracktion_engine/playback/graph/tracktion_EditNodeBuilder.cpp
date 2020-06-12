@@ -408,14 +408,33 @@ std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList& list
     return node;
 }
 
+std::unique_ptr<tracktion_graph::Node> createModifierNodeForList (ModifierList& list, Modifier::ProcessingPosition position, const TrackMuteState& trackMuteState,
+                                                                  std::unique_ptr<Node> node,
+                                                                  tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
+{
+    for (auto& modifier : list.getModifiers())
+    {
+        if (modifier->getProcessingPosition() != position)
+            continue;
+
+        auto& deviceManager = modifier->edit.engine.getDeviceManager();;
+        const double sampleRate = deviceManager.getSampleRate();
+        const int blockSize = deviceManager.getBlockSize();
+        node = makeNode<ModifierNode> (std::move (node), modifier, sampleRate, blockSize,
+                                       &trackMuteState, playHeadState, params.forRendering);
+    }
+    
+    return node;
+}
+
 std::unique_ptr<tracktion_graph::Node> createPluginNodeForTrack (AudioTrack& at, const TrackMuteState& trackMuteState, std::unique_ptr<Node> node,
                                                                  tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
-    //TODO:
-    // Pre-fx modifier node
-    // Post-fx modifier node
-
+    node = createModifierNodeForList (at.getModifierList(), Modifier::ProcessingPosition::preFX,
+                                      trackMuteState, std::move (node), playHeadState, params);
     node = createPluginNodeForList (at.pluginList, &trackMuteState, std::move (node), playHeadState, params);
+    node = createModifierNodeForList (at.getModifierList(), Modifier::ProcessingPosition::postFX,
+                                      trackMuteState, std::move (node), playHeadState, params);
 
     return node;
 }

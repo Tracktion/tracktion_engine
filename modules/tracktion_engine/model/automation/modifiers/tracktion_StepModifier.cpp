@@ -78,7 +78,7 @@ struct StepModifier::StepModifierTimer : public ModifierTimer
         }
     }
 
-    void resync (EditTimeRange streamTime)
+    void resync (double duration)
     {
         const auto type = roundToInt (stepModifier.syncTypeParam->getCurrentValue());
 
@@ -88,7 +88,7 @@ struct StepModifier::StepModifierTimer : public ModifierTimer
             stepModifier.currentStep.store (0, std::memory_order_release);
 
             // Move the ramp on for the next block
-            ramp.process ((float) streamTime.getLength());
+            ramp.process ((float) duration);
         }
     }
 
@@ -102,25 +102,14 @@ struct StepModifier::StepModifierAudioNode    : public SingleInputAudioNode
 {
     StepModifierAudioNode (AudioNode* source, StepModifier& sm)
         : SingleInputAudioNode (source),
-          stepModifier (&sm)
+          modifier (&sm)
     {
     }
 
     void renderOver (const AudioRenderContext& rc) override
     {
         SingleInputAudioNode::renderOver (rc);
-
-        if (rc.bufferForMidiMessages != nullptr)
-        {
-            for (auto& m : *rc.bufferForMidiMessages)
-            {
-                if (m.isNoteOn())
-                {
-                    stepModifier->stepModifierTimer->resync (rc.streamTime);
-                    break;
-                }
-            }
-        }
+        modifier->applyToBuffer (rc);
     }
 
     void renderAdding (const AudioRenderContext& rc) override
@@ -128,7 +117,7 @@ struct StepModifier::StepModifierAudioNode    : public SingleInputAudioNode
         callRenderOver (rc);
     }
 
-    StepModifier::Ptr stepModifier;
+    StepModifier::Ptr modifier;
 };
 
 //==============================================================================
@@ -237,6 +226,16 @@ AutomatableParameter::ModifierAssignment* StepModifier::createAssignment (const 
 AudioNode* StepModifier::createPreFXAudioNode (AudioNode* an)
 {
     return new StepModifierAudioNode (an, *this);
+}
+
+void StepModifier::applyToBuffer (const PluginRenderContext& prc)
+{
+    if (prc.bufferForMidiMessages == nullptr)
+        return;
+    
+    for (auto& m : *prc.bufferForMidiMessages)
+        if (m.isNoteOn())
+            stepModifierTimer->resync (prc.bufferNumSamples / getSampleRate());
 }
 
 //==============================================================================

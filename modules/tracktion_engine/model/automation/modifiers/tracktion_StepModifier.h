@@ -38,6 +38,8 @@ public:
     AutomatableParameter::ModifierAssignment* createAssignment (const juce::ValueTree&) override;
 
     AudioNode* createPreFXAudioNode (AudioNode*) override;
+    ProcessingPosition getProcessingPosition() override { return ProcessingPosition::preFX; }
+    void applyToBuffer (const PluginRenderContext&) override;
 
     //==============================================================================
     struct Assignment : public AutomatableParameter::ModifierAssignment
