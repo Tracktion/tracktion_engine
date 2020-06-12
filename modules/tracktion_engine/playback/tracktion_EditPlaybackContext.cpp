@@ -407,7 +407,7 @@ static AudioNode* createPlaybackAudioNode (Edit& edit, OutputDeviceInstance& dev
     {
         CRASH_TRACER
 
-        auto clickNode = new ClickMutingNode (new ClickNode (device.isMidi(), edit, Edit::maximumLength), edit);
+        auto clickNode = new ClickMutingNode (new ClickAudioNode (device.isMidi(), edit, Edit::maximumLength), edit);
 
         auto finalMixer = dynamic_cast<MixerAudioNode*> (finalNode);
 

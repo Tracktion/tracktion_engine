@@ -75,6 +75,14 @@ namespace
 
         return nullptr;
     }
+
+    int getNumChannelsFromDevice (OutputDevice& device)
+    {
+        if (auto waveDevice = dynamic_cast<WaveOutputDevice*> (&device))
+            return waveDevice->getChannelSet().size();
+
+        return 0;
+    }
 }
 
 
@@ -727,8 +735,7 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, tracktion_graph::Pl
     //TODO:
     // Insert plugins
     // Optional last stage
-    // ClickTrack (with mute)
-    
+
     auto outputNode = std::make_unique<tracktion_graph::SummingNode>();
         
     for (auto& deviceAndTrackNode : deviceNodes)
@@ -745,9 +752,8 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, tracktion_graph::Pl
             node = makeNode<SharedLevelMeasuringNode> (edit.getPreviewLevelMeasurer(), std::move (node));
 
         if (edit.isClickTrackDevice (*device))
-        {
-            //TODO: Add click node (with mute) to device input
-        }
+            outputNode->addInput (makeNode<ClickNode> (edit, getNumChannelsFromDevice (*device),
+                                                       device->isMidi(), playHeadState.playHead));
 
         outputNode->addInput (createNodeForDevice (epc, *device, playHeadState, std::move (node)));
     }
