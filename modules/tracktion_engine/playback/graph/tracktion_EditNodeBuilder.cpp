@@ -759,7 +759,8 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, tracktion_graph::Pl
     }
     
     std::unique_ptr<Node> finalNode (std::move (outputNode));
-        
+    finalNode = makeNode<LevelMeasuringNode> (std::move (finalNode), epc.masterLevels);
+    
     return { std::move (finalNode) };
 }
 

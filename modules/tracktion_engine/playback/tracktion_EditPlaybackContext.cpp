@@ -44,11 +44,11 @@ namespace tracktion_engine
      double sampleRate;
      tracktion_graph::PlayHead playHead;
      tracktion_graph::PlayHeadState playHeadState { playHead };
-     tracktion_graph::NodePlayer player { nullptr, &playHeadState };
      
  private:
      MidiMessageArray scratchMidiBuffer;
- };
+     tracktion_graph::NodePlayer player { nullptr, &playHeadState };
+};
 #endif
 
 //==============================================================================
@@ -802,14 +802,6 @@ void EditPlaybackContext::fillNextNodeBlock (juce::Range<int64_t> referenceSampl
         const auto timelinePosition = nodePlaybackContext->playHead.referenceSamplePositionToTimelinePosition (referenceSampleRange.getStart());
         const double editTime = tracktion_graph::sampleToTime (timelinePosition, nodePlaybackContext->sampleRate);
         midiDispatcher.dispatchPendingMessagesForDevices (editTime);
-
-        // Update master levels
-        if (auto node = nodePlaybackContext->player.getNode())
-        {
-            auto block = node->getProcessedOutput().audio;
-            auto buffer = tracktion_graph::test_utilities::createAudioBuffer (block);
-            masterLevels.processBuffer (buffer, 0, buffer.getNumSamples ());
-        }
     }
 }
 #endif
