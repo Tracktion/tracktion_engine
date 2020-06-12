@@ -62,8 +62,7 @@ void WaveInputDeviceNode::process (const ProcessContext& pc)
 
     auto& destAudio = pc.buffers.audio;
     const int numSamples = (int) destAudio.getNumSamples();
-    const int numChannels = (int) destAudio.getNumChannels();
-    jassert (numChannels == audioFifo.getNumChannels());
+    jassert ((int) destAudio.getNumChannels() == audioFifo.getNumChannels());
 
     const auto numToRead = (size_t) std::min (audioFifo.getNumReady(), numSamples);
 

@@ -387,10 +387,9 @@ EnvelopeFollowerModifier::Ptr EnvelopeFollowerModifier::Assignment::getEnvelopeF
 }
 
 //==============================================================================
-void EnvelopeFollowerModifier::prepareToPlay (double sampleRate)
+void EnvelopeFollowerModifier::prepareToPlay (double newSampleRate)
 {
-    envelopeFollower->setSampleRate ((float) sampleRate);
-    currentSampleRate = sampleRate;
+    envelopeFollower->setSampleRate ((float) newSampleRate);
 }
 
 void EnvelopeFollowerModifier::processBlock (const juce::AudioBuffer<float>& ab)
@@ -423,10 +422,10 @@ void EnvelopeFollowerModifier::processBlock (const juce::AudioBuffer<float>& ab)
 
     // Filter if required
     if (setIfDifferent (currentLowPassFrequency, lowPassFrequencyParam->getCurrentValue()))
-        lowPassFilter.setCoefficients (IIRCoefficients::makeLowPass (currentSampleRate, currentLowPassFrequency));
+        lowPassFilter.setCoefficients (IIRCoefficients::makeLowPass (getSampleRate(), currentLowPassFrequency));
 
     if (setIfDifferent (currentHighPassFrequency, highPassFrequencyParam->getCurrentValue()))
-        highPassFilter.setCoefficients (IIRCoefficients::makeHighPass (currentSampleRate, currentHighPassFrequency));
+        highPassFilter.setCoefficients (IIRCoefficients::makeHighPass (getSampleRate(), currentHighPassFrequency));
 
     if (lowPass)
         lowPassFilter.processSamples (scratchData, numSamples);
