@@ -69,7 +69,6 @@ private:
     std::atomic<float> envelopeValue;
     std::unique_ptr<EnvelopeFollower> envelopeFollower;
     juce::IIRFilter lowPassFilter, highPassFilter;
-    double currentSampleRate = 44100.0;
     float currentLowPassFrequency = 0.0f, currentHighPassFrequency = 0.0f;
     LambdaTimer changedTimer;
 
