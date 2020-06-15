@@ -339,9 +339,9 @@ AudioNode* EnvelopeFollowerModifier::createPostFXAudioNode (AudioNode* an)
     return new EnvelopeFollowerModifierAudioNode (an, *this);
 }
 
-void EnvelopeFollowerModifier::initialise (double sampleRate, int)
+void EnvelopeFollowerModifier::initialise (double newSampleRate, int)
 {
-    prepareToPlay (sampleRate);
+    prepareToPlay (newSampleRate);
 }
 
 void EnvelopeFollowerModifier::deinitialise()
