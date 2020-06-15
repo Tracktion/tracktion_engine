@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#pragma once
+
 namespace tracktion_engine
 {
 
@@ -24,6 +26,12 @@ struct CreateNodeParams
     bool forRendering = false;
     bool includePlugins = true;
     bool addAntiDenormalisationNoise = false;
+};
+
+//==============================================================================
+struct EditNodeBuilder
+{
+    static std::function<std::unique_ptr<tracktion_graph::Node> (std::unique_ptr<tracktion_graph::Node>)> insertOptionalLastStageNode;
 };
 
 //==============================================================================

@@ -753,7 +753,6 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, tracktion_graph::Pl
 
     //TODO:
     // Insert plugins
-    // Optional last stage
 
     auto outputNode = std::make_unique<tracktion_graph::SummingNode>();
         
@@ -766,6 +765,7 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, tracktion_graph::Pl
         auto node = tracktion_graph::makeNode<tracktion_graph::SummingNode> (std::move (tracksVector));
         node = createMasterPluginsNode (edit, *device, playHeadState, std::move (node), params);
         node = createMasterFadeInOutNode (edit, playHeadState, std::move (node));
+        node = EditNodeBuilder::insertOptionalLastStageNode (std::move (node));
 
         if (edit.getIsPreviewEdit() && node != nullptr)
             node = makeNode<SharedLevelMeasuringNode> (edit.getPreviewLevelMeasurer(), std::move (node));
@@ -783,5 +783,7 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, tracktion_graph::Pl
     return { std::move (finalNode) };
 }
 
+std::function<std::unique_ptr<tracktion_graph::Node> (std::unique_ptr<tracktion_graph::Node>)> EditNodeBuilder::insertOptionalLastStageNode
+    = [] (std::unique_ptr<tracktion_graph::Node> input) { return input; };
 
 }
