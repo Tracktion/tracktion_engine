@@ -13,7 +13,7 @@ namespace tracktion_engine
 
 //==============================================================================
 /** An Node that plays back a wave file. */
-class WaveNode  : public tracktion_graph::Node
+class WaveNode final    : public tracktion_graph::Node
 {
 public:
     /** offset is a time added to the start of the file, e.g. an offset of 10.0

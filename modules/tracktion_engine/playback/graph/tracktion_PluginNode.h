@@ -19,7 +19,7 @@ class TrackMuteState;
 /**
     Node for processing a plugin.
 */
-class PluginNode   : public tracktion_graph::Node
+class PluginNode final  : public tracktion_graph::Node
 {
 public:
     //==============================================================================

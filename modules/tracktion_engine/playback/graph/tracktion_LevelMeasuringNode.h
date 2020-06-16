@@ -14,7 +14,7 @@ namespace tracktion_engine
 /**
     A Node that passes its incomming audio and MIDI through a LevelMeasurer.
 */
-class LevelMeasuringNode : public tracktion_graph::Node
+class LevelMeasuringNode final  : public tracktion_graph::Node
 {
 public:
     LevelMeasuringNode (std::unique_ptr<tracktion_graph::Node> inputNode, LevelMeasurer&);

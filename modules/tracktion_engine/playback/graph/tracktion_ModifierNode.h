@@ -18,7 +18,7 @@ class TrackMuteState;
 /**
     Node for processing a Modifier.
 */
-class ModifierNode   : public tracktion_graph::Node
+class ModifierNode final    : public tracktion_graph::Node
 {
 public:
     //==============================================================================

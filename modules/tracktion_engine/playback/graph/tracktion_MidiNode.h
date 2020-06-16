@@ -14,7 +14,7 @@ namespace tracktion_engine
 /** A Node that plays MIDI data from a MidiMessageSequence,
     at a specific MIDI channel.
 */
-class MidiNode  : public tracktion_graph::Node
+class MidiNode final    : public tracktion_graph::Node
 {
 public:
     MidiNode (juce::MidiMessageSequence,

@@ -25,7 +25,7 @@ std::unique_ptr<Node> makeNode (Args&&... args)
 
 //==============================================================================
 //==============================================================================
-class LatencyNode  : public Node
+class LatencyNode final : public Node
 {
 public:
     LatencyNode (std::unique_ptr<Node> inputNode, int numSamplesToDelay)
@@ -167,7 +167,7 @@ private:
     An Node which sums together the multiple inputs adding additional latency
     to provide a coherent output.
 */
-class SummingNode : public Node
+class SummingNode final : public Node
 {
 public:
     SummingNode() = default;

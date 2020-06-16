@@ -19,7 +19,7 @@ namespace tracktion_graph
     Plays back a MIDI sequence.
     This simply plays it back from start to finish with no notation of a playhead.
 */
-class MidiNode : public Node
+class MidiNode final    : public Node
 {
 public:
     MidiNode (juce::MidiMessageSequence sequenceToPlay)
@@ -77,7 +77,7 @@ private:
 
 //==============================================================================
 //==============================================================================
-class SinNode : public Node
+class SinNode final : public Node
 {
 public:
     SinNode (float frequency, int numChannelsToUse = 1, size_t nodeIDToUse = 0)
@@ -126,7 +126,7 @@ private:
 /**
     Just a simple audio node that doesn't take any input so can be used as a stub.
 */
-class SilentNode   : public Node
+class SilentNode final  : public Node
 {
 public:
     SilentNode (int numChannelsToUse = 1)
@@ -164,7 +164,7 @@ private:
 
 //==============================================================================
 //==============================================================================
-class BasicSummingNode : public Node
+class BasicSummingNode final    : public Node
 {
 public:
     BasicSummingNode (std::vector<std::unique_ptr<Node>> inputs)
@@ -182,8 +182,8 @@ public:
         for (auto& node : nodes)
         {
             auto nodeProps = node->getNodeProperties();
-            props.hasAudio = props.hasAudio | nodeProps.hasAudio;
-            props.hasMidi = props.hasMidi | nodeProps.hasMidi;
+            props.hasAudio = props.hasAudio || nodeProps.hasAudio;
+            props.hasMidi = props.hasMidi || nodeProps.hasMidi;
             props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);
         }
 
@@ -247,7 +247,7 @@ static inline std::unique_ptr<BasicSummingNode> makeBaicSummingNode (std::initia
 
 //==============================================================================
 //==============================================================================
-class FunctionNode : public Node
+class FunctionNode final    : public Node
 {
 public:
     FunctionNode (std::unique_ptr<Node> input,
@@ -305,7 +305,7 @@ static inline std::unique_ptr<Node> makeGainNode (std::unique_ptr<Node> input, f
 
 //==============================================================================
 //==============================================================================
-class GainNode  : public Node
+class GainNode final : public Node
 {
 public:
     GainNode (Node* inputNode, std::function<float()> gainFunc)
@@ -367,7 +367,7 @@ private:
 
 //==============================================================================
 //==============================================================================
-class SendNode : public Node
+class SendNode final    : public Node
 {
 public:
     SendNode (std::unique_ptr<Node> inputNode, int busIDToUse,
@@ -420,7 +420,7 @@ private:
 
 //==============================================================================
 //==============================================================================
-class ReturnNode : public Node
+class ReturnNode final  : public Node
 {
 public:
     ReturnNode (int busIDToUse)
@@ -560,7 +560,7 @@ private:
 //==============================================================================
 //==============================================================================
 /** Maps channels from one to another. */
-class ChannelRemappingNode  : public Node
+class ChannelRemappingNode final    : public Node
 {
 public:
     ChannelRemappingNode (std::unique_ptr<Node> inputNode,
@@ -652,7 +652,7 @@ static inline std::vector<std::pair<int, int>> makeChannelMap (std::initializer_
 //==============================================================================
 //==============================================================================
 /** Blocks audio and MIDI input from reaching the outputs. */
-class SinkNode  : public Node
+class SinkNode final    : public Node
 {
 public:
     SinkNode (std::unique_ptr<Node> inputNode)

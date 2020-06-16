@@ -55,7 +55,7 @@ struct InputProvider
 
 //==============================================================================
 //==============================================================================
-class InputNode : public tracktion_graph::Node
+class InputNode final   : public tracktion_graph::Node
 {
 public:
     InputNode (std::shared_ptr<InputProvider> inputProviderToUse,
@@ -120,7 +120,7 @@ private:
 
 //==============================================================================
 //==============================================================================
-class RackModifierNode  : public tracktion_graph::Node
+class RackModifierNode final    : public tracktion_graph::Node
 {
 public:
     RackModifierNode (std::unique_ptr<Node> inputNode,
@@ -236,7 +236,7 @@ private:
 //==============================================================================
 //==============================================================================
 /** Takes a non-owning input node and simply forwards its outputs on. */
-class ForwardingNode  : public tracktion_graph::Node
+class ForwardingNode final  : public tracktion_graph::Node
 {
 public:
     ForwardingNode (tracktion_graph::Node* inputNode)
@@ -278,7 +278,7 @@ private:
 //==============================================================================
 //==============================================================================
 /** Takes ownership of a number of nodes but doesn't do any processing. */
-class HoldingNode  : public tracktion_graph::Node
+class HoldingNode final : public tracktion_graph::Node
 {
 public:
     HoldingNode (std::vector<std::unique_ptr<tracktion_graph::Node>> nodesToStore)
