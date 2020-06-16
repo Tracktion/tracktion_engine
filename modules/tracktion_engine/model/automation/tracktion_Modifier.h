@@ -17,7 +17,7 @@ namespace tracktion_engine
 struct ModifierTimer
 {
     virtual ~ModifierTimer() = default;
-    virtual void updateStreamTime (PlayHead&, EditTimeRange streamTime, int numSamples) = 0;
+    virtual void updateStreamTime (double editTime, int numSamples) = 0;
 };
 
 //==============================================================================

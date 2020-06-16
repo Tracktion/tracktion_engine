@@ -1968,12 +1968,12 @@ void Edit::removeModifierTimer (ModifierTimer& mt)
     modifierTimers.removeFirstMatchingValue (&mt);
 }
 
-void Edit::updateModifierTimers (PlayHead& ph, EditTimeRange streamTime, int numSamples) const
+void Edit::updateModifierTimers (double editTime, int numSamples) const
 {
     const juce::ScopedLock sl (modifierTimers.getLock());
 
     for (auto mt : modifierTimers)
-        mt->updateStreamTime (ph, streamTime, numSamples);
+        mt->updateStreamTime (editTime, numSamples);
 }
 
 //==============================================================================

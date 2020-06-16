@@ -522,7 +522,7 @@ private:
             tonePlugin->levelParam->addModifier (*modifier, -1.0f);
             
             PlayHead playhead;
-            edit->updateModifierTimers (playhead, EditTimeRange(), 0);
+            edit->updateModifierTimers (0.0, 0);
             tonePlugin->levelParam->updateToFollowCurve (0.0); // Force an update of the param value for testing
             expectWithinAbsoluteError (lfoModifier->getCurrentValue(), 0.5f, 0.001f);
             expectWithinAbsoluteError (tonePlugin->levelParam->getCurrentValue(), 0.5f, 0.001f);
@@ -581,7 +581,7 @@ private:
             volPlugin->volParam->addModifier (*modifier, -0.193f);
             
             PlayHead playhead;
-            edit->updateModifierTimers (playhead, EditTimeRange(), 0);
+            edit->updateModifierTimers (0.0, 0);
             volPlugin->updateActiveParameters();
             volPlugin->volParam->updateToFollowCurve (0.0); // Force an update of the param value for testing
 

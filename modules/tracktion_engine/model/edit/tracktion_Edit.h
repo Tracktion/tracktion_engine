@@ -269,7 +269,7 @@ public:
 
     void addModifierTimer (ModifierTimer&);
     void removeModifierTimer (ModifierTimer&);
-    void updateModifierTimers (PlayHead&, EditTimeRange streamTime, int numSamples) const;
+    void updateModifierTimers (double editTime, int numSamples) const;
 
     struct GlobalMacros : public MacroParameterElement
     {

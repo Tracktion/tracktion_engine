@@ -395,7 +395,7 @@ struct Renderer::RenderTask::RendererContext
 
         rc->streamTime = { streamTime, blockEnd };
 
-        r.edit->updateModifierTimers (localPlayhead, rc->streamTime, r.blockSizeForAudio);
+        r.edit->updateModifierTimers (localPlayhead.streamTimeToSourceTime (rc->streamTime.getStart()), r.blockSizeForAudio);
         node->prepareForNextBlock (*rc);
 
         // wait for any nodes to render their sources or proxies

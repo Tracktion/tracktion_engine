@@ -101,10 +101,10 @@ struct BreakpointOscillatorModifier::BreakpointOscillatorModifierTimer    : publ
     {
     }
 
-    void updateStreamTime (PlayHead& ph, EditTimeRange streamTime, int /*numSamples*/) override
+    void updateStreamTime (double editTime, int numSamples) override
     {
         using namespace ModifierCommon;
-        auto editTime = (float) ph.streamTimeToSourceTime (streamTime.getStart());
+        const double blockLength = numSamples / modifier.getSampleRate();
         modifier.updateParameterStreams (editTime);
 
         const auto syncTypeThisBlock = getTypedParamValue<SyncType> (*modifier.syncTypeParam);
@@ -117,12 +117,12 @@ struct BreakpointOscillatorModifier::BreakpointOscillatorModifierTimer    : publ
             ramp.setDuration (durationPerPattern);
 
             if (syncTypeThisBlock == transport)
-                ramp.setPosition (std::fmod (editTime, durationPerPattern));
+                ramp.setPosition (std::fmod ((float) editTime, durationPerPattern));
 
             modifier.setPhase (ramp.getProportion());
 
             // Move the ramp on for the next block
-            ramp.process ((float) streamTime.getLength());
+            ramp.process ((float) blockLength);
         }
         else
         {
@@ -152,7 +152,7 @@ struct BreakpointOscillatorModifier::BreakpointOscillatorModifierTimer    : publ
                 modifier.setPhase (ramp.getProportion());
 
                 // Move the ramp on for the next block
-                ramp.process ((float) streamTime.getLength());
+                ramp.process ((float) blockLength);
             }
         }
     }

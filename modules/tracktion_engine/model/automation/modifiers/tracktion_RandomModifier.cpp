@@ -18,9 +18,9 @@ struct RandomModifier::RandomModifierTimer    : public ModifierTimer
     {
     }
 
-    void updateStreamTime (PlayHead& ph, EditTimeRange streamTime, int /*numSamples*/) override
+    void updateStreamTime (double editTime, int numSamples) override
     {
-        auto editTime = (float) ph.streamTimeToSourceTime (streamTime.getStart());
+        const double blockLength = numSamples / modifier.getSampleRate();
         modifier.updateParameterStreams (editTime);
 
         const auto syncTypeThisBlock = roundToInt (modifier.syncTypeParam->getCurrentValue());
@@ -34,12 +34,12 @@ struct RandomModifier::RandomModifierTimer    : public ModifierTimer
             ramp.setDuration (durationPerPattern);
 
             if (syncTypeThisBlock == ModifierCommon::transport)
-                ramp.setPosition (std::fmod (editTime, durationPerPattern));
+                ramp.setPosition (std::fmod ((float) editTime, durationPerPattern));
 
             modifier.setPhase (ramp.getProportion());
 
             // Move the ramp on for the next block
-            ramp.process ((float) streamTime.getLength());
+            ramp.process ((float) blockLength);
         }
         else
         {
@@ -69,7 +69,7 @@ struct RandomModifier::RandomModifierTimer    : public ModifierTimer
                 modifier.setPhase (ramp.getProportion());
 
                 // Move the ramp on for the next block
-                ramp.process ((float) streamTime.getLength());
+                ramp.process ((float) blockLength);
             }
         }
     }

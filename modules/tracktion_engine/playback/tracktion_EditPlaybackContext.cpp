@@ -775,7 +775,7 @@ void EditPlaybackContext::fillNextAudioBlock (EditTimeRange streamTime, float** 
         lastStreamPos = streamPos;
     }
 
-    edit.updateModifierTimers (playhead, streamTime, numSamples);
+    edit.updateModifierTimers (playhead.streamTimeToSourceTime (streamTime.getStart()), numSamples);
     midiDispatcher.renderDevices (playhead, streamTime, numSamples);
 
     for (auto r : edit.getRackList().getTypes())
