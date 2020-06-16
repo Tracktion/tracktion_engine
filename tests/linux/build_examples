@@ -36,7 +36,7 @@ buildExample()
     if [ -z "$DISABLE_BUILD" ]; then
         cd "$EXAMPLE_ROOT_DIR/Builds/LinuxMakefile"
         make clean
-        make CONFIG=Release -j$(nproc)
+        make CONFIG=Release -j$(nproc) TARGET_ARCH=-m64
     fi
 }
 
