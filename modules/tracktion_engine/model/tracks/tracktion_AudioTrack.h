@@ -170,6 +170,9 @@ public:
 
     /** Removes a Listener. */
     void removeListener (Listener*);
+    
+    /** Returns the listener list so Nodes can manually call them. */
+    juce::ListenerList<Listener>& getListeners()            { return listeners; }
 
 protected:
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
