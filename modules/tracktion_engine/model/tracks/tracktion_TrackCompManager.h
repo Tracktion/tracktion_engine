@@ -88,6 +88,7 @@ public:
         void setTimeFormat (TimeFormat t);
 
         static juce::Array<EditTimeRange> getMuteTimes (const juce::Array<EditTimeRange>& nonMuteTimes);
+        juce::Array<EditTimeRange> getNonMuteTimes (Track&, double crossfadeTime) const;
         EditTimeRange getTimeRange() const;
         AudioNode* createAudioNode (Track&, AudioNode* input);
 

@@ -448,6 +448,41 @@ juce::Array<Track*> getDirectInputTracks (AudioTrack& at)
     return inputTracks;
 }
 
+std::unique_ptr<tracktion_graph::Node> createTrackCompNode (AudioTrack& at, tracktion_graph::PlayHeadState& playHeadState, std::unique_ptr<tracktion_graph::Node> node)
+{
+    if (at.getCompGroup() == -1)
+        return node;
+    
+    if (auto tc = at.edit.getTrackCompManager().getTrackComp (&at))
+    {
+        const auto crossfadeTimeMs = at.edit.engine.getPropertyStorage().getProperty (SettingID::compCrossfadeMs, 20.0);
+        const auto crossfadeTime = static_cast<double> (crossfadeTimeMs) / 1000.0;
+        
+        const auto nonMuteTimes = tc->getNonMuteTimes (at, crossfadeTime);
+        const auto muteTimes = TrackCompManager::TrackComp::getMuteTimes (nonMuteTimes);
+        
+        if (muteTimes.isEmpty())
+            return node;
+
+        node = makeNode<TimedMutingNode> (std::move (node), muteTimes, playHeadState);
+
+        for (auto r : nonMuteTimes)
+        {
+            auto fadeIn = r.withLength (crossfadeTime) - 0.0001;
+            auto fadeOut = fadeIn.movedToEndAt (r.getEnd() + 0.0001);
+
+            if (! (fadeIn.isEmpty() && fadeOut.isEmpty()))
+                node = makeNode<FadeInOutNode> (std::move (node),
+                                                playHeadState,
+                                                fadeIn, fadeOut,
+                                                AudioFadeCurve::convex,
+                                                AudioFadeCurve::convex, false);
+        }
+    }
+    
+    return node;
+}
+
 std::unique_ptr<tracktion_graph::Node> createNodeForAudioTrack (AudioTrack& at, tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
     CRASH_TRACER
@@ -462,14 +497,16 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioTrack (AudioTrack& at, 
     auto trackMuteState = std::make_unique<TrackMuteState> (at, muteForInputsWhenRecording, processMidiWhenMuted);
 
     const auto& clips = at.getClips();
-    auto clipsNode = createClipsNode (clips, *trackMuteState, playHeadState, params);
+    std::unique_ptr<Node> node = createClipsNode (clips, *trackMuteState, playHeadState, params);
+    
+    if (node)
+        node = createTrackCompNode (at, playHeadState, std::move (node));
+    
     auto liveInputNode = createLiveInputsNode (at, playHeadState, params);
     
-    if (clipsNode == nullptr && inputTracks.isEmpty() && liveInputNode == nullptr)
+    if (node == nullptr && inputTracks.isEmpty() && liveInputNode == nullptr)
         return {};
     
-    std::unique_ptr<Node> node = std::move (clipsNode);
-
     if (liveInputNode)
     {
         if (node)
