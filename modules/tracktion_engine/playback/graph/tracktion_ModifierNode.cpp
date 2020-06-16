@@ -42,8 +42,8 @@ tracktion_graph::NodeProperties ModifierNode::getNodeProperties()
     auto props = input->getNodeProperties();
 
     props.numberOfChannels = juce::jmax (props.numberOfChannels, modifier->getAudioInputNames().size());
-    props.hasAudio = modifier->getAudioInputNames().size() > 0;
-    props.hasMidi  = modifier->getMidiInputNames().size() > 0;
+    props.hasAudio = props.hasAudio || modifier->getAudioInputNames().size() > 0;
+    props.hasMidi  = props.hasMidi || modifier->getMidiInputNames().size() > 0;
     props.nodeID = (size_t) modifier->itemID.getRawID();
 
     return props;

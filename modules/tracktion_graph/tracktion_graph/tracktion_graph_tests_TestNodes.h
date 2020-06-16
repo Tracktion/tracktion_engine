@@ -443,8 +443,8 @@ public:
         for (auto& node : getDirectInputNodes())
         {
             auto nodeProps = node->getNodeProperties();
-            props.hasAudio = props.hasAudio | nodeProps.hasAudio;
-            props.hasMidi = props.hasMidi | nodeProps.hasMidi;
+            props.hasAudio = props.hasAudio || nodeProps.hasAudio;
+            props.hasMidi = props.hasMidi || nodeProps.hasMidi;
             props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);
             props.latencyNumSamples = std::max (props.latencyNumSamples, nodeProps.latencyNumSamples);
             hash_combine (props.nodeID, nodeProps.nodeID);
