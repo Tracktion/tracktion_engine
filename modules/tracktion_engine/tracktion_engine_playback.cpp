@@ -104,6 +104,9 @@ extern "C"
 
  #include "playback/graph/tracktion_EditNodeBuilder.h"
  #include "playback/graph/tracktion_EditNodeBuilder.cpp"
+
+ #include "playback/graph/tracktion_NodeRenderContext.h"
+ #include "playback/graph/tracktion_NodeRenderContext.cpp"
 #endif
 
 using namespace juce;

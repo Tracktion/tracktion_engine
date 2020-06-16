@@ -377,13 +377,10 @@ std::unique_ptr<tracktion_graph::Node> createNodeForPlugin (Plugin& plugin, cons
     if (plugin.isDisabled())
         return node;
 
-    auto& deviceManager = plugin.edit.engine.getDeviceManager();;
-    double sampleRate = deviceManager.getSampleRate();
-    int blockSize = deviceManager.getBlockSize();
     node = createSidechainInputNodeForPlugin (plugin, std::move (node));
     node = tracktion_graph::makeNode<PluginNode> (std::move (node),
                                                   plugin,
-                                                  sampleRate, blockSize,
+                                                  params.sampleRate, params.blockSize,
                                                   trackMuteState, playHeadState, params.forRendering);
     
     //TODO:
@@ -417,10 +414,7 @@ std::unique_ptr<tracktion_graph::Node> createModifierNodeForList (ModifierList& 
         if (modifier->getProcessingPosition() != position)
             continue;
 
-        auto& deviceManager = modifier->edit.engine.getDeviceManager();;
-        const double sampleRate = deviceManager.getSampleRate();
-        const int blockSize = deviceManager.getBlockSize();
-        node = makeNode<ModifierNode> (std::move (node), modifier, sampleRate, blockSize,
+        node = makeNode<ModifierNode> (std::move (node), modifier, params.sampleRate, params.blockSize,
                                        &trackMuteState, playHeadState, params.forRendering);
     }
     
@@ -685,11 +679,8 @@ std::unique_ptr<tracktion_graph::Node> createNodeForDevice (EditPlaybackContext&
     return {};
 }
 
-std::unique_ptr<tracktion_graph::Node> createMasterPluginsNode (Edit& edit, OutputDevice& device, tracktion_graph::PlayHeadState& playHeadState, std::unique_ptr<Node> node, const CreateNodeParams& params)
+std::unique_ptr<tracktion_graph::Node> createMasterPluginsNode (Edit& edit, tracktion_graph::PlayHeadState& playHeadState, std::unique_ptr<Node> node, const CreateNodeParams& params)
 {
-    if (edit.engine.getDeviceManager().getDefaultWaveOutDevice() != &device)
-        return node;
-    
     node = createPluginNodeForList (edit.getMasterPluginList(), nullptr, std::move (node), playHeadState, params);
 
     if (auto masterVolPlugin = edit.getMasterVolumePlugin())
@@ -724,7 +715,7 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, tracktion_graph::Pl
 
     for (auto t : getAllTracks (edit))
     {
-        if (params.allowedTracks != nullptr && params.allowedTracks->contains (t))
+        if (params.allowedTracks != nullptr && ! params.allowedTracks->contains (t))
             continue;
 
         if (auto output = getTrackOutput (*t))
@@ -763,12 +754,16 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, tracktion_graph::Pl
         auto tracksVector = std::move (deviceAndTrackNode.second);
         
         auto node = tracktion_graph::makeNode<tracktion_graph::SummingNode> (std::move (tracksVector));
-        node = createMasterPluginsNode (edit, *device, playHeadState, std::move (node), params);
+        
+        if (edit.engine.getDeviceManager().getDefaultWaveOutDevice() == device)
+            node = createMasterPluginsNode (edit, playHeadState, std::move (node), params);
+        
         node = createMasterFadeInOutNode (edit, playHeadState, std::move (node));
         node = EditNodeBuilder::insertOptionalLastStageNode (std::move (node));
 
         if (edit.getIsPreviewEdit() && node != nullptr)
-            node = makeNode<SharedLevelMeasuringNode> (edit.getPreviewLevelMeasurer(), std::move (node));
+            if (auto previewMeasurer = edit.getPreviewLevelMeasurer())
+                node = makeNode<SharedLevelMeasuringNode> (std::move (previewMeasurer), std::move (node));
 
         if (edit.isClickTrackDevice (*device))
             outputNode->addInput (makeNode<ClickNode> (edit, getNumChannelsFromDevice (*device),
@@ -781,6 +776,26 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, tracktion_graph::Pl
     finalNode = makeNode<LevelMeasuringNode> (std::move (finalNode), epc.masterLevels);
     
     return { std::move (finalNode) };
+}
+
+EditNodeContext createNodeForEdit (Edit& edit, tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
+{
+    std::vector<std::unique_ptr<tracktion_graph::Node>> trackNodes;
+
+    for (auto t : getAllTracks (edit))
+    {
+        if (params.allowedTracks != nullptr && ! params.allowedTracks->contains (t))
+            continue;
+
+        if (auto node = createNodeForTrack (*t, playHeadState, params))
+            trackNodes.push_back (std::move (node));
+    }
+
+    auto node = tracktion_graph::makeNode<tracktion_graph::SummingNode> (std::move (trackNodes));
+    node = createMasterPluginsNode (edit, playHeadState, std::move (node), params);
+    node = createMasterFadeInOutNode (edit, playHeadState, std::move (node));
+    
+    return { std::move (node) };
 }
 
 std::function<std::unique_ptr<tracktion_graph::Node> (std::unique_ptr<tracktion_graph::Node>)> EditNodeBuilder::insertOptionalLastStageNode

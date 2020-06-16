@@ -435,18 +435,20 @@ void EditPlaybackContext::createNode()
     CRASH_TRACER
     isAllocated = true;
     
+    auto& dm = edit.engine.getDeviceManager();
     CreateNodeParams cnp;
+    cnp.sampleRate = dm.getSampleRate();
+    cnp.blockSize = dm.getBlockSize();
     auto editNodeContext = createNodeForEdit (*this, nodePlaybackContext->playHeadState, cnp);
 
     const auto& tempoSections = edit.tempoSequence.getTempoSections();
     const bool hasTempoChanged = tempoSections.getChangeCount() != lastTempoSections.getChangeCount();
 
-    auto& dm = edit.engine.getDeviceManager();
-    nodePlaybackContext->setNodeContext (std::move (editNodeContext), dm.getSampleRate(), dm.getBlockSize());
+    nodePlaybackContext->setNodeContext (std::move (editNodeContext), cnp.sampleRate, cnp.blockSize);
 
     if (hasTempoChanged && lastTempoSections.size() > 0)
     {
-        const auto sampleRate = edit.engine.getDeviceManager().getSampleRate();
+        const auto sampleRate = cnp.sampleRate;
         const auto lastTime = sampleToTime (nodePlaybackContext->playHead.getPosition(), sampleRate);
         const auto lastBeats = lastTempoSections.timeToBeats (lastTime);
         const auto lastPositionRemapped = tempoSections.beatsToTime (lastBeats);

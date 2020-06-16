@@ -282,24 +282,66 @@ bool EditRenderJob::RenderPass::initialise()
         && r.destFile.hasWriteAccess()
         && ! r.destFile.isDirectory())
     {
-        AudioNode* node = nullptr;
-
-        CreateAudioNodeParams cnp;
-        cnp.allowedClips = r.allowedClips.isEmpty() ? nullptr : &r.allowedClips;
-        cnp.allowedTracks = &r.tracksToDo;
-        cnp.forRendering = true;
-        cnp.includePlugins = r.usePlugins;
-        cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
-
-        callBlocking ([this, &node, &cnp]
+       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+        if (EditPlaybackContext::isExperimentalGraphProcessingEnabled())
         {
-            node = createRenderingNodeFromEdit (*r.edit, cnp, r.useMasterPlugins);
-        });
+            Array<Track*> tracksToDo;
 
-        if (node != nullptr)
+            CreateNodeParams cnp;
+            cnp.sampleRate = r.sampleRateForAudio;
+            cnp.blockSize = r.blockSizeForAudio;
+            cnp.allowedClips = r.allowedClips.isEmpty() ? nullptr : &r.allowedClips;
+            cnp.allowedTracks = r.tracksToDo.isZero() ? nullptr : &tracksToDo;
+            cnp.forRendering = true;
+            cnp.includePlugins = r.usePlugins;
+            cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
+            
+            // Find Track pointers for bitset
+            auto allTracks = getAllTracks (*r.edit);
+
+            for (auto bit = r.tracksToDo.findNextSetBit (0); bit != -1; bit = r.tracksToDo.findNextSetBit (bit + 1))
+                tracksToDo.add (allTracks[bit]);
+            
+            // Initialise playhead and continuity
+            auto playHead = std::make_unique<tracktion_graph::PlayHead>();
+            auto playHeadState = std::make_unique<tracktion_graph::PlayHeadState> (*playHead);
+            std::unique_ptr<tracktion_graph::Node> node;
+
+            callBlocking ([this, &node, &playHeadState, &cnp]
+            {
+                node = std::move (createNodeForEdit (*r.edit, *playHeadState, cnp).node);
+            });
+
+            if (node)
+            {
+                task.reset (new Renderer::RenderTask (desc, r,
+                                                      std::move (node), std::move (playHead), std::move (playHeadState),
+                                                      owner.progress, &owner.thumbnailToUpdate));
+                return task->errorMessage.isEmpty();
+            }
+        }
+        else
+       #endif
         {
-            task.reset (new Renderer::RenderTask (desc, r, node, owner.progress, &owner.thumbnailToUpdate));
-            return task->errorMessage.isEmpty();
+            AudioNode* node = nullptr;
+
+            CreateAudioNodeParams cnp;
+            cnp.allowedClips = r.allowedClips.isEmpty() ? nullptr : &r.allowedClips;
+            cnp.allowedTracks = &r.tracksToDo;
+            cnp.forRendering = true;
+            cnp.includePlugins = r.usePlugins;
+            cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
+
+            callBlocking ([this, &node, &cnp]
+            {
+                node = createRenderingNodeFromEdit (*r.edit, cnp, r.useMasterPlugins);
+            });
+
+            if (node != nullptr)
+            {
+                task.reset (new Renderer::RenderTask (desc, r, node, owner.progress, &owner.thumbnailToUpdate));
+                return task->errorMessage.isEmpty();
+            }
         }
     }
 

@@ -21,6 +21,8 @@ class TrackMuteState;
 */
 struct CreateNodeParams
 {
+    double sampleRate = 44100.0;
+    int blockSize = 256;
     const juce::Array<Clip*>* allowedClips = nullptr;
     const juce::Array<Track*>* allowedTracks = nullptr;
     bool forRendering = false;
@@ -42,6 +44,9 @@ struct EditNodeContext
 
 /** Creates a Node to play back an Edit. */
 EditNodeContext createNodeForEdit (EditPlaybackContext&, tracktion_graph::PlayHeadState&, const CreateNodeParams&);
+
+/** Creates a Node to play back an Edit. */
+EditNodeContext createNodeForEdit (Edit&, tracktion_graph::PlayHeadState&, const CreateNodeParams&);
 
 
 } // namespace tracktion_engine

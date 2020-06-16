@@ -116,6 +116,22 @@ Renderer::RenderTask::RenderTask (const String& taskDescription, const Renderer:
 {
 }
 
+#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
+                                  const Renderer::Parameters& rp,
+                                  std::unique_ptr<tracktion_graph::Node> n,
+                                  std::unique_ptr<tracktion_graph::PlayHead> playHead_,
+                                  std::unique_ptr<tracktion_graph::PlayHeadState> playHeadState_,
+                                  std::atomic<float>& progressToUpdate,
+                                  juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* source)
+   : ThreadPoolJobWithProgress (taskDescription),
+     params (rp), isUsingGraphNode (true),
+     graphNode (std::move (n)), playHead (std::move (playHead_)), playHeadState (std::move (playHeadState_)),
+     progress (progressToUpdate), sourceToUpdate (source)
+{
+}
+#endif
+
 Renderer::RenderTask::~RenderTask()
 {
 }
@@ -253,7 +269,7 @@ struct Renderer::RenderTask::RendererContext
             node->prepareAudioNodeToPlay (info);
         }
 
-        flushAllPlugins (localPlayhead, plugins, r.sampleRateForAudio, r.blockSizeForAudio);
+        flushAllPlugins (plugins, r.sampleRateForAudio, r.blockSizeForAudio);
 
         samplesTrimmed = 0;
         hasStartedSavingToFile = ! r.trimSilenceAtEnds;
@@ -559,6 +575,34 @@ bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parame
 bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
 {
     CRASH_TRACER
+    
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+    if (isUsingGraphNode)
+    {
+        if (! nodeRenderContext)
+        {
+            callBlocking ([&, this] { nodeRenderContext = std::make_unique<NodeRenderContext> (*this, r,
+                                                                                               std::move (graphNode),
+                                                                                               std::move (playHead),
+                                                                                               std::move (playHeadState),
+                                                                                               sourceToUpdate); });
+
+            if (! nodeRenderContext->getStatus().wasOk())
+            {
+                errorMessage = nodeRenderContext->getStatus().getErrorMessage();
+                return true;
+            }
+        }
+        
+        if (! nodeRenderContext->renderNextBlock (progress))
+            return false;
+        
+        nodeRenderContext.reset();
+        progress = 1.0f;
+        
+        return true;
+    }
+   #endif
 
     if (context == nullptr)
     {
@@ -581,7 +625,7 @@ bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
     return true;
 }
 
-void Renderer::RenderTask::flushAllPlugins (PlayHead& playhead, const Plugin::Array& plugins,
+void Renderer::RenderTask::flushAllPlugins (const Plugin::Array& plugins,
                                             double sampleRate, int samplesPerBlock)
 {
     CRASH_TRACER
@@ -607,10 +651,9 @@ void Renderer::RenderTask::flushAllPlugins (PlayHead& playhead, const Plugin::Ar
                     buffer.clear();
                     const AudioChannelSet channels = AudioChannelSet::canonicalChannelSet (buffer.getNumChannels());
 
-                    ep->applyToBuffer (AudioRenderContext (playhead,
-                                                           { -1.0, samplesPerBlock / sampleRate - 1.0 },
-                                                           &buffer, channels, 0, samplesPerBlock,
-                                                           nullptr, 0, true, true));
+                    ep->applyToBuffer (PluginRenderContext (&buffer, channels, 0, samplesPerBlock,
+                                                            nullptr, 0.0,
+                                                            0.0, false, false, true));
 
                     if (isAudioDataAlmostSilent (buffer.getReadPointer (0), samplesPerBlock))
                         break;
