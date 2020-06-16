@@ -83,6 +83,18 @@ namespace
 
         return 0;
     }
+
+    template<typename PluginType>
+    juce::Array<PluginType*> getAllPluginsOfType (const Edit& edit, bool includeMasterVolume)
+    {
+        juce::Array<PluginType*> plugins;
+        
+        for (auto p : getAllPlugins (edit, includeMasterVolume))
+            if (auto pt = dynamic_cast<PluginType*> (p))
+                plugins.add (pt);
+        
+        return plugins;
+    }
 }
 
 
@@ -96,6 +108,9 @@ std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList&, con
 
 std::unique_ptr<tracktion_graph::Node> createPluginNodeForTrack (AudioTrack&, const TrackMuteState&, std::unique_ptr<Node>,
                                                                  tracktion_graph::PlayHeadState&, const CreateNodeParams&);
+
+std::unique_ptr<tracktion_graph::Node> createLiveInputNodeForDevice (InputDeviceInstance&, tracktion_graph::PlayHeadState&);
+
 
 //==============================================================================
 //==============================================================================
@@ -666,6 +681,31 @@ std::unique_ptr<tracktion_graph::Node> createNodeForTrack (Track& track, trackti
 }
 
 //==============================================================================
+std::unique_ptr<Node> createInsertSendNode (InsertPlugin& insert, OutputDevice& device,
+                                            tracktion_graph::PlayHeadState& playHeadState)
+{
+    if (insert.outputDevice != device.getName())
+        return {};
+    
+    auto sendNode = makeNode<InsertSendNode> (insert);
+    
+    auto getInsertReturnNode = [&] () -> std::unique_ptr<Node>
+    {
+        if (insert.getReturnDeviceType() != InsertPlugin::noDevice)
+            for (auto i : insert.edit.getAllInputDevices())
+                if (i->owner.getName() == insert.inputDevice)
+                    return makeNode<InsertReturnNode> (insert, createLiveInputNodeForDevice (*i, playHeadState));
+
+        return {};
+    };
+
+    if (auto returnNode = getInsertReturnNode())
+        return { makeSummingNode ({ returnNode.release(), sendNode.release() }) };
+
+    return sendNode;
+}
+
+//==============================================================================
 std::unique_ptr<tracktion_graph::Node> createGroupFreezeNodeForDevice (Edit& edit, OutputDevice& device, PlayHeadState& playHeadState)
 {
     CRASH_TRACER
@@ -749,6 +789,8 @@ std::unique_ptr<tracktion_graph::Node> createMasterFadeInOutNode (Edit& edit, tr
 EditNodeContext createNodeForEdit (EditPlaybackContext& epc, tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
     Edit& edit = epc.edit;
+    auto insertPlugins = getAllPluginsOfType<InsertPlugin> (edit, false);
+    
     using TrackNodeVector = std::vector<std::unique_ptr<tracktion_graph::Node>>;
     std::map<OutputDevice*, TrackNodeVector> deviceNodes;
     std::vector<OutputDevice*> devicesWithFrozenNodes;
@@ -782,9 +824,6 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, tracktion_graph::Pl
         }
     }
 
-    //TODO:
-    // Insert plugins
-
     auto outputNode = std::make_unique<tracktion_graph::SummingNode>();
         
     for (auto& deviceAndTrackNode : deviceNodes)
@@ -793,18 +832,41 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, tracktion_graph::Pl
         jassert (device != nullptr);
         auto tracksVector = std::move (deviceAndTrackNode.second);
         
-        auto node = tracktion_graph::makeNode<tracktion_graph::SummingNode> (std::move (tracksVector));
-        
-        if (edit.engine.getDeviceManager().getDefaultWaveOutDevice() == device)
-            node = createMasterPluginsNode (edit, playHeadState, std::move (node), params);
-        
-        node = createMasterFadeInOutNode (edit, playHeadState, std::move (node));
-        node = EditNodeBuilder::insertOptionalLastStageNode (std::move (node));
+        auto sumNode = std::make_unique<SummingNode> (std::move (tracksVector));
 
-        if (edit.getIsPreviewEdit() && node != nullptr)
-            if (auto previewMeasurer = edit.getPreviewLevelMeasurer())
-                node = makeNode<SharedLevelMeasuringNode> (std::move (previewMeasurer), std::move (node));
+        // Create nodes for any insert plugins
+        bool deviceIsBeingUsedAsInsert = false;
 
+        for (auto ins : insertPlugins)
+        {
+            if (ins->isFrozen())
+                continue;
+            
+            if (ins->outputDevice != device->getName())
+                continue;
+
+            if (auto sendNode = createInsertSendNode (*ins, *device, playHeadState))
+            {
+                sumNode->addInput (std::move (sendNode));
+                deviceIsBeingUsedAsInsert = true;
+            }
+        }
+        
+        std::unique_ptr<Node> node = std::move (sumNode);
+
+        if (! deviceIsBeingUsedAsInsert)
+        {
+            if (edit.engine.getDeviceManager().getDefaultWaveOutDevice() == device)
+                node = createMasterPluginsNode (edit, playHeadState, std::move (node), params);
+            
+            node = createMasterFadeInOutNode (edit, playHeadState, std::move (node));
+            node = EditNodeBuilder::insertOptionalLastStageNode (std::move (node));
+
+            if (edit.getIsPreviewEdit() && node != nullptr)
+                if (auto previewMeasurer = edit.getPreviewLevelMeasurer())
+                    node = makeNode<SharedLevelMeasuringNode> (std::move (previewMeasurer), std::move (node));
+        }
+        
         if (edit.isClickTrackDevice (*device))
             outputNode->addInput (makeNode<ClickNode> (edit, getNumChannelsFromDevice (*device),
                                                        device->isMidi(), playHeadState.playHead));

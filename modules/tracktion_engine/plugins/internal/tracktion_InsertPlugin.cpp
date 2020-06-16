@@ -101,7 +101,18 @@ public:
     void releaseAudioNodeResources() override                       {}
     void prepareForNextBlock (const AudioRenderContext&) override   {}
     void renderOver (const AudioRenderContext& rc) override         { callRenderAdding (rc); }
-    void renderAdding (const AudioRenderContext& rc) override       { owner.fillSendBuffer (rc); }
+    void renderAdding (const AudioRenderContext& rc) override
+    {
+        if (rc.destBuffer != nullptr)
+        {
+            auto audio = juce::dsp::AudioBlock<float> (*rc.destBuffer).getSubBlock ((size_t) rc.bufferStartSample, (size_t) rc.bufferNumSamples);
+            owner.fillSendBuffer (&audio, rc.bufferForMidiMessages);
+        }
+        else
+        {
+            owner.fillSendBuffer (nullptr, rc.bufferForMidiMessages);
+        }
+    }
 
 private:
     InsertPlugin& owner;
@@ -152,7 +163,8 @@ public:
         midiScratch.clear();
 
         SingleInputAudioNode::renderAdding (rc2);
-        owner.fillReturnBuffer (rc2);
+        juce::dsp::AudioBlock<float> audio (scratch.buffer);
+        owner.fillReturnBuffer (&audio, &midiScratch);
     }
 
     void releaseAudioNodeResources() override
@@ -360,48 +372,51 @@ void InsertPlugin::getPossibleDeviceNames (Engine& e,
 bool InsertPlugin::hasAudio() const       { return sendDeviceType == audioDevice  || returnDeviceType == audioDevice; }
 bool InsertPlugin::hasMidi() const        { return sendDeviceType == midiDevice   || returnDeviceType == midiDevice; }
 
-void InsertPlugin::fillSendBuffer (const AudioRenderContext& rc)
+void InsertPlugin::fillSendBuffer (const juce::dsp::AudioBlock<float>* srcAudio, MidiMessageArray* srcMidi)
 {
     CRASH_TRACER
     if (sendDeviceType == audioDevice)
     {
-        if (rc.destBuffer == nullptr)
+        if (srcAudio == nullptr)
             return;
 
-        auto& dest = *rc.destBuffer;
-        const int numChans      = jmin (sendBuffer.getNumChannels(), dest.getNumChannels());
-        const int numSamples    = jmin (sendBuffer.getNumSamples(), dest.getNumSamples());
+        const int numChans      = jmin (sendBuffer.getNumChannels(), (int) srcAudio->getNumChannels());
+        const int numSamples    = jmin (sendBuffer.getNumSamples(), (int) srcAudio->getNumSamples());
 
         for (int i = numChans; --i >= 0;)
-            dest.copyFrom (i, rc.bufferStartSample,
-                           sendBuffer, i, 0, numSamples);
+        {
+            auto destAudio = juce::dsp::AudioBlock<float> (sendBuffer).getSingleChannelBlock ((size_t) i).getSubBlock (0, (size_t) numSamples);
+            srcAudio->getSingleChannelBlock ((size_t) i).getSubBlock (0, (size_t) numSamples).copyFrom (destAudio);
+        }
     }
     else if (sendDeviceType == midiDevice)
     {
-        if (rc.bufferForMidiMessages != nullptr)
-            rc.bufferForMidiMessages->mergeFromAndClear (sendMidiBuffer);
+        if (srcMidi != nullptr)
+            srcMidi->mergeFromAndClear (sendMidiBuffer);
     }
 }
 
-void InsertPlugin::fillReturnBuffer (const AudioRenderContext& rc)
+void InsertPlugin::fillReturnBuffer (const juce::dsp::AudioBlock<float>* srcAudio, MidiMessageArray* srcMidi)
 {
     CRASH_TRACER
     if (returnDeviceType == audioDevice)
     {
-        if (rc.destBuffer == nullptr)
+        if (srcAudio == nullptr)
             return;
 
-        auto& src = *rc.destBuffer;
-        const int numChans      = jmin (returnBuffer.getNumChannels(), src.getNumChannels());
-        const int numSamples    = jmin (returnBuffer.getNumSamples(), src.getNumSamples());
+        const int numChans      = jmin (returnBuffer.getNumChannels(), (int) srcAudio->getNumChannels());
+        const int numSamples    = jmin (returnBuffer.getNumSamples(), (int) srcAudio->getNumSamples());
 
         for (int i = numChans; --i >= 0;)
-            returnBuffer.copyFrom (i, 0, src, i, rc.bufferStartSample, numSamples);
+        {
+            auto returnChannelBlock = juce::dsp::AudioBlock<float> (returnBuffer).getSingleChannelBlock ((size_t) i).getSubBlock (0, (size_t) numSamples);
+            returnChannelBlock.copyFrom (srcAudio->getSingleChannelBlock ((size_t) i).getSubBlock (0, (size_t) numSamples));
+        }
     }
     else if (returnDeviceType == midiDevice)
     {
-        if (rc.bufferForMidiMessages != nullptr)
-            returnMidiBuffer.mergeFromAndClear (*rc.bufferForMidiMessages);
+        if (srcMidi != nullptr)
+            returnMidiBuffer.mergeFromAndClear (*srcMidi);
     }
 }
 

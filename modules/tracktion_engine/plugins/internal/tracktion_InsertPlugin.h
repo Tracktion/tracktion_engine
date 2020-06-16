@@ -57,12 +57,22 @@ public:
     void updateDeviceTypes();
     void showLatencyTester();
 
+    /** Returns true if either the send or return types are audio. */
+    bool hasAudio() const;
+
+    /** Returns true if either the send or return types are MIDI. */
+    bool hasMidi() const;
+
     static void getPossibleDeviceNames (Engine&,
                                         juce::StringArray& devices,
                                         juce::StringArray& aliases,
                                         juce::BigInteger& hasAudio,
                                         juce::BigInteger& hasMidi,
                                         bool forInput);
+
+    /** @internal. */
+    void fillSendBuffer (const juce::dsp::AudioBlock<float>*, MidiMessageArray*);
+    void fillReturnBuffer (const juce::dsp::AudioBlock<float>*, MidiMessageArray*);
 
 private:
     //==============================================================================
@@ -71,12 +81,6 @@ private:
 
     double latencySeconds = 0.0;
     DeviceType sendDeviceType = noDevice, returnDeviceType = noDevice;
-
-    bool hasAudio() const;
-    bool hasMidi() const;
-
-    void fillSendBuffer (const AudioRenderContext&);
-    void fillReturnBuffer (const AudioRenderContext&);
 
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
 

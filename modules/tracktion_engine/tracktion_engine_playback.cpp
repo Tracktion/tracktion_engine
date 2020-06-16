@@ -64,6 +64,11 @@ extern "C"
  #include "playback/graph/tracktion_FadeInOutNode.h"
  #include "playback/graph/tracktion_FadeInOutNode.cpp"
 
+ #include "playback/graph/tracktion_InsertSendNode.h"
+ #include "playback/graph/tracktion_InsertSendNode.cpp"
+ #include "playback/graph/tracktion_InsertReturnNode.h"
+ #include "playback/graph/tracktion_InsertReturnNode.cpp"
+
  #include "playback/graph/tracktion_LevelMeasuringNode.h"
  #include "playback/graph/tracktion_LevelMeasuringNode.cpp"
 
