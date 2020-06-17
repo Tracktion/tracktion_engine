@@ -107,7 +107,8 @@ namespace JUnit
         ValueTree testcase ("testcase");
         testcase.setProperty ("classname", result.unitTestName, nullptr);
         testcase.setProperty ("name", result.subcategoryName, nullptr);
-        
+        testcase.setProperty ("time", (result.endTime - result.startTime).inSeconds(), nullptr);
+
         for (auto message : result.messages)
             testcase.appendChild (ValueTree { "failure", {{ "message", message }}}, nullptr);
         
