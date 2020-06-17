@@ -190,7 +190,7 @@ namespace TestRunner
         if (junitResultsFile != File())
         {
             junitResultsFile.create();
-            auto res = JUnit::createJUnitXMLFile (junitResultsFile, "Tracktion", testRunner, endTime - startTime);
+            auto res = JUnit::createJUnitXMLFile (junitResultsFile, junitResultsFile.getFileName(), testRunner, endTime - startTime);
             
             if (res)
                 Logger::writeToLog ("Wrote junit results to :" + junitResultsFile.getFullPathName());
