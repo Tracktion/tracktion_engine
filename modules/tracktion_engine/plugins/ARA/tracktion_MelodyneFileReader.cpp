@@ -854,10 +854,10 @@ struct ARADocumentHolder::Pimpl
         {
             araDocument->beginRestoringState (edit.araDocument->lastState);
 
-            visitAllTrackItems (edit, [this] (TrackItem& i)
+            visitAllTrackItems (edit, [] (TrackItem& i)
             {
                 if (auto c = dynamic_cast<AudioClipBase*> (&i))
-                    c->loadMelodyneState (edit);
+                    c->loadMelodyneState();
 
                 return true;
             });

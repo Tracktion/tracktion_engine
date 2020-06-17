@@ -1271,9 +1271,9 @@ bool AudioClipBase::isUsingMelodyne() const
     return TimeStretcher::isMelodyne (timeStretchMode);
 }
 
-void AudioClipBase::loadMelodyneState (Edit& ed)
+void AudioClipBase::loadMelodyneState()
 {
-    setupARA (ed, true);
+    setupARA (true);
 }
 
 void AudioClipBase::showMelodyneWindow()
@@ -1774,7 +1774,7 @@ void AudioClipBase::sendMirrorUpdateToAllPlugins (Plugin& p) const
 }
 
 //==============================================================================
-bool AudioClipBase::setupARA (Edit& ed, bool dontPopupErrorMessages)
+bool AudioClipBase::setupARA (bool dontPopupErrorMessages)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     static bool araReentrancyCheck = false;
@@ -1790,7 +1790,7 @@ bool AudioClipBase::setupARA (Edit& ed, bool dontPopupErrorMessages)
         if (melodyneProxy == nullptr)
         {
             TRACKTION_LOG ("Created ARA reader!");
-            melodyneProxy = new MelodyneFileReader (ed, *this);
+            melodyneProxy = new MelodyneFileReader (edit, *this);
         }
 
         if (melodyneProxy != nullptr && melodyneProxy->isValid())
@@ -1801,11 +1801,11 @@ bool AudioClipBase::setupARA (Edit& ed, bool dontPopupErrorMessages)
             TRACKTION_LOG_ERROR ("Failed setting up ARA for audio clip!");
 
             if (TimeStretcher::isMelodyne (timeStretchMode)
-                  && ed.engine.getPluginManager().getARACompatiblePlugDescriptions().size() <= 0)
+                  && edit.engine.getPluginManager().getARACompatiblePlugDescriptions().size() <= 0)
             {
                 TRACKTION_LOG_ERROR ("No ARA-compatible plugins were found!");
 
-                ed.engine.getUIBehaviour().showWarningMessage (TRANS ("This audio clip is setup with Melodyne's time-stretching, but there aren't any ARA-compatible plugins available!")
+                edit.engine.getUIBehaviour().showWarningMessage (TRANS ("This audio clip is setup with Melodyne's time-stretching, but there aren't any ARA-compatible plugins available!")
                                                                  + "\n\n"
                                                                  + TRANS ("If you know you have ARA-compatible plugins installed, they must be scanned and part of the list of known plugins!"));
             }
@@ -1813,7 +1813,7 @@ bool AudioClipBase::setupARA (Edit& ed, bool dontPopupErrorMessages)
     }
    #endif
 
-    juce::ignoreUnused (dontPopupErrorMessages, ed);
+    juce::ignoreUnused (dontPopupErrorMessages);
     return false;
 }
 
@@ -1891,7 +1891,7 @@ AudioNode* AudioClipBase::createNode (EditTimeRange editTime, LiveClipLevel lcl,
     if (playFile.isNull())
         return {};
 
-    if (setupARA (edit, false))
+    if (setupARA (false))
     {
         jassert (melodyneProxy != nullptr);
 

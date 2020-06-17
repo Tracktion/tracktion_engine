@@ -114,15 +114,51 @@ std::unique_ptr<tracktion_graph::Node> createLiveInputNodeForDevice (InputDevice
 
 //==============================================================================
 //==============================================================================
-std::unique_ptr<tracktion_graph::Node> createNodeForAudioClip (AudioClipBase& clip, tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
+std::unique_ptr<tracktion_graph::Node> createFadeNodeForClip (AudioClipBase& clip, PlayHeadState& playHeadState, std::unique_ptr<Node> node)
+{
+    auto fIn = clip.getFadeIn();
+    auto fOut = clip.getFadeOut();
+
+    if (fIn > 0.0 || fOut > 0.0)
+    {
+        const bool speedIn = clip.getFadeInBehaviour() == AudioClipBase::speedRamp && fIn > 0.0;
+        const bool speedOut = clip.getFadeOutBehaviour() == AudioClipBase::speedRamp && fOut > 0.0;
+
+        auto pos = clip.getPosition();
+        node = makeNode<FadeInOutNode> (std::move (node), playHeadState,
+                                        speedIn ? EditTimeRange (pos.getStart(), pos.getStart() + juce::jmin (0.003, fIn))
+                                                : EditTimeRange (pos.getStart(), pos.getStart() + fIn),
+                                        speedOut ? EditTimeRange (pos.getEnd() - juce::jmin (0.003, fOut), pos.getEnd())
+                                                 : EditTimeRange (pos.getEnd() - fOut, pos.getEnd()),
+                                        clip.getFadeInType(), clip.getFadeOutType(),
+                                        true);
+    }
+    
+    return node;
+}
+
+//==============================================================================
+std::unique_ptr<tracktion_graph::Node> createNodeForAudioClip (AudioClipBase& clip, bool includeMelodyne, tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
     const AudioFile playFile (clip.getPlaybackFile());
 
     if (playFile.isNull())
         return {};
 
-    //TODO: Melodyne setup
+    // Check if ARA should be used
+    if (clip.setupARA (false))
+    {
+        jassert (clip.melodyneProxy != nullptr);
 
+        if (includeMelodyne)
+            return makeNode<MelodyneNode> (clip, playHeadState.playHead, params.forRendering);
+
+        return {}; // the ARA node creation will be handled by the track to allow live-play...
+    }
+
+    clip.melodyneProxy = nullptr;
+
+    // Otherwise use audio file
     auto original = clip.getAudioFile();
 
     double nodeOffset = 0.0, speed = 1.0;
@@ -166,25 +202,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioClip (AudioClipBase& cl
     }
 
     // Create FadeInOutNode
-    {
-        auto fIn = clip.getFadeIn();
-        auto fOut = clip.getFadeOut();
-
-        if (fIn > 0.0 || fOut > 0.0)
-        {
-            const bool speedIn = clip.getFadeInBehaviour() == AudioClipBase::speedRamp && fIn > 0.0;
-            const bool speedOut = clip.getFadeOutBehaviour() == AudioClipBase::speedRamp && fOut > 0.0;
-
-            auto pos = clip.getPosition();
-            node = makeNode<FadeInOutNode> (std::move (node), playHeadState,
-                                            speedIn ? EditTimeRange (pos.getStart(), pos.getStart() + juce::jmin (0.003, fIn))
-                                                    : EditTimeRange (pos.getStart(), pos.getStart() + fIn),
-                                            speedOut ? EditTimeRange (pos.getEnd() - juce::jmin (0.003, fOut), pos.getEnd())
-                                                     : EditTimeRange (pos.getEnd() - fOut, pos.getEnd()),
-                                            clip.getFadeInType(), clip.getFadeOutType(),
-                                            true);
-        }
-    }
+    node = createFadeNodeForClip (clip, playHeadState, std::move (node));
     
     return node;
 }
@@ -247,7 +265,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForClip (Clip& clip, const Trac
                                                           tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
     if (auto audioClip = dynamic_cast<AudioClipBase*> (&clip))
-        return createNodeForAudioClip (*audioClip, playHeadState, params);
+        return createNodeForAudioClip (*audioClip, false, playHeadState, params);
 
     if (auto midiClip = dynamic_cast<MidiClip*> (&clip))
         return createNodeForMidiClip (*midiClip, trackMuteState, playHeadState, params);
@@ -284,6 +302,32 @@ std::unique_ptr<tracktion_graph::Node> createNodeForFrozenAudioTrack (AudioTrack
     return node;
 }
 
+std::unique_ptr<tracktion_graph::Node> createARAClipsNode (const juce::Array<Clip*>& clips, const TrackMuteState&,
+                                                           tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
+{
+    juce::Array<AudioClipBase*> araClips;
+
+    for (auto clip : clips)
+        if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
+            if (auto acb = dynamic_cast<AudioClipBase*> (clip))
+                if (acb->isUsingMelodyne() && acb->melodyneProxy != nullptr)
+                    araClips.add (acb);
+
+    if (araClips.size() == 0)
+        return {};
+    
+    std::vector<std::unique_ptr<Node>> nodes;
+    
+    for (auto araClip : araClips)
+        if (auto araNode = createNodeForAudioClip (*araClip, true, playHeadState, params))
+            nodes.push_back (createFadeNodeForClip (*araClip, playHeadState, std::move (araNode)));
+    
+    if (nodes.size() == 1)
+        return std::move (nodes.front());
+    
+    return std::make_unique<SummingNode> (std::move (nodes));
+}
+
 std::unique_ptr<tracktion_graph::SummingNode> createClipsNode (const juce::Array<Clip*>& clips, const TrackMuteState& trackMuteState,
                                                                tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
@@ -291,8 +335,12 @@ std::unique_ptr<tracktion_graph::SummingNode> createClipsNode (const juce::Array
 
     for (auto clip : clips)
         if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
-            summingNode->addInput (createNodeForClip (*clip, trackMuteState, playHeadState, params));
+            if (auto node = createNodeForClip (*clip, trackMuteState, playHeadState, params))
+                summingNode->addInput (std::move (node));
 
+    if (auto araNode = createARAClipsNode (clips, trackMuteState, playHeadState, params))
+        summingNode->addInput (std::move (araNode));
+    
     if (summingNode->getDirectInputNodes().empty())
         return {};
     

@@ -75,6 +75,9 @@ extern "C"
  #include "playback/graph/tracktion_LiveMidiOutputNode.h"
  #include "playback/graph/tracktion_LiveMidiOutputNode.cpp"
 
+ #include "playback/graph/tracktion_MelodyneNode.h"
+ #include "playback/graph/tracktion_MelodyneNode.cpp"
+
  #include "playback/graph/tracktion_MidiNode.h"
  #include "playback/graph/tracktion_MidiNode.cpp"
  #include "playback/graph/tracktion_tests_MidiNode.cpp"
