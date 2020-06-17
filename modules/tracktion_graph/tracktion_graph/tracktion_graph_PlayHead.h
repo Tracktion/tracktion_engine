@@ -181,8 +181,11 @@ private:
 //==============================================================================
 inline PlayHead::PlayHead() noexcept
 {
+    // There isn't currently a lock-free implementation of this on Linux
+   #if ! JUCE_LINUX
     assert (referenceSampleRange.is_lock_free());
     assert (syncPositions.is_lock_free());
+   #endif
 }
 
 //==============================================================================
