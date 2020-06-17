@@ -84,7 +84,7 @@ function runTestApp()
         cd "$APP_ROOT"
 
         make clean
-        make CONFIG=Release -j$(nproc)
+        make CONFIG=Release -j$(nproc) TARGET_ARCH="-latomic -m64"
 
         "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME.xml"
         
