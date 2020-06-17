@@ -101,6 +101,9 @@ extern "C"
  #include "playback/graph/tracktion_TimedMutingNode.h"
  #include "playback/graph/tracktion_TimedMutingNode.cpp"
 
+ #include "playback/graph/tracktion_TimeStretchingWaveNode.h"
+ #include "playback/graph/tracktion_TimeStretchingWaveNode.cpp"
+
  #include "playback/graph/tracktion_TrackMidiInputDeviceNode.h"
  #include "playback/graph/tracktion_TrackMidiInputDeviceNode.cpp"
 

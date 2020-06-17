@@ -174,9 +174,16 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioClip (AudioClipBase& cl
         loopRange = clip.getLoopRange();
         speed = clip.getSpeedRatio();
     }
-    
+
+    if (clip.usesTimestretchedPreview())
+    {
+        auto& li = clip.getLoopInfo();
+
+        if (li.getNumBeats() > 0.0 || li.getRootNote() != -1)
+            return makeNode<TimeStretchingWaveNode> (clip, playHeadState);
+    }
+
     //TODO:
-    // Timestretched previewing node
     // Sub-sample speed ramp audio node
 
     auto node = tracktion_graph::makeNode<WaveNode> (playFile,
