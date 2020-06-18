@@ -62,7 +62,7 @@ void TimedMutingNode::process (const ProcessContext& pc)
     if (! playHeadState.playHead.isPlaying())
         return;
     
-    processSection (destAudioBlock, sampleToTime (timelineRange, sampleRate));
+    processSection (destAudioBlock, tracktion_graph::sampleToTime (timelineRange, sampleRate));
 }
 
 void TimedMutingNode::processSection (const juce::dsp::AudioBlock<float>& block, EditTimeRange editTime)
@@ -81,18 +81,18 @@ void TimedMutingNode::processSection (const juce::dsp::AudioBlock<float>& block,
                 }
                 else if (editTime.contains (mute))
                 {
-                    auto startSample = timeToSample (mute.getStart() - editTime.getStart(), sampleRate);
-                    auto numSamples = timeToSample (mute.getEnd() - mute.getStart(), sampleRate);
+                    auto startSample = tracktion_graph::timeToSample (mute.getStart() - editTime.getStart(), sampleRate);
+                    auto numSamples = tracktion_graph::timeToSample (mute.getEnd() - mute.getStart(), sampleRate);
                     muteSection (block, startSample, numSamples);
                 }
                 else if (mute.getEnd() <= editTime.getEnd())
                 {
-                    auto numSamples = timeToSample (editTime.getEnd() - mute.getEnd(), sampleRate);
+                    auto numSamples = tracktion_graph::timeToSample (editTime.getEnd() - mute.getEnd(), sampleRate);
                     muteSection (block, 0, numSamples);
                 }
                 else if (mute.getStart() >= editTime.getStart())
                 {
-                    auto startSample = timeToSample (mute.getStart() - editTime.getStart(), sampleRate);
+                    auto startSample = tracktion_graph::timeToSample (mute.getStart() - editTime.getStart(), sampleRate);
                     muteSection (block, startSample, int64_t (block.getNumSamples()) - startSample);
                 }
             }

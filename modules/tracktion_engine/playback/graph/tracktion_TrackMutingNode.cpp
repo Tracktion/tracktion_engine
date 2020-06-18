@@ -88,7 +88,7 @@ tracktion_graph::NodeProperties TrackMutingNode::getNodeProperties()
     return props;
 }
 
-std::vector<Node*> TrackMutingNode::getDirectInputNodes()
+std::vector<tracktion_graph::Node*> TrackMutingNode::getDirectInputNodes()
 {
     return { input.get() };
 }

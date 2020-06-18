@@ -13,8 +13,6 @@ namespace tracktion_engine
 
 #if TRACKTION_UNIT_TESTS
 
-using namespace tracktion_graph;
-
 //==============================================================================
 //==============================================================================
 class WaveNodeTests : public juce::UnitTest

@@ -18,7 +18,7 @@ TrackMidiInputDeviceNode::TrackMidiInputDeviceNode (MidiInputDevice& owner, std:
     jassert (midiInputDevice.isTrackDevice());
 }
 
-std::vector<Node*> TrackMidiInputDeviceNode::getDirectInputNodes()
+std::vector<tracktion_graph::Node*> TrackMidiInputDeviceNode::getDirectInputNodes()
 {
     return { input.get() };
 }
@@ -30,7 +30,7 @@ tracktion_graph::NodeProperties TrackMidiInputDeviceNode::getNodeProperties()
 
 void TrackMidiInputDeviceNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
 {
-    offsetSeconds = sampleToTime (info.blockSize, info.sampleRate);
+    offsetSeconds = tracktion_graph::sampleToTime (info.blockSize, info.sampleRate);
 }
 
 bool TrackMidiInputDeviceNode::isReadyToProcess()

@@ -80,14 +80,12 @@ extern "C"
 
  #include "playback/graph/tracktion_MidiNode.h"
  #include "playback/graph/tracktion_MidiNode.cpp"
- #include "playback/graph/tracktion_tests_MidiNode.cpp"
 
  #include "playback/graph/tracktion_MidiOutputDeviceInstanceInjectingNode.h"
  #include "playback/graph/tracktion_MidiOutputDeviceInstanceInjectingNode.cpp"
 
  #include "playback/graph/tracktion_WaveNode.h"
  #include "playback/graph/tracktion_WaveNode.cpp"
- #include "playback/graph/tracktion_tests_WaveNode.cpp"
 
  #include "playback/graph/tracktion_TrackMutingNode.h"
  #include "playback/graph/tracktion_PluginNode.h"
@@ -124,6 +122,9 @@ extern "C"
 
  #include "playback/graph/tracktion_NodeRenderContext.h"
  #include "playback/graph/tracktion_NodeRenderContext.cpp"
+ 
+ #include "playback/graph/tracktion_tests_WaveNode.cpp"
+ #include "playback/graph/tracktion_tests_MidiNode.cpp"
 #endif
 
 using namespace juce;

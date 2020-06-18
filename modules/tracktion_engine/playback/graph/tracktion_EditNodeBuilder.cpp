@@ -15,22 +15,24 @@ namespace tracktion_engine
 //==============================================================================
 namespace
 {
+    using namespace tracktion_graph;
+
     int getSidechainBusID (EditItemID sidechainSourceID)
     {
         constexpr size_t sidechainMagicNum = 0xb2275e7216a2;
-        return static_cast<int> (hash (sidechainMagicNum, sidechainSourceID.getRawID()));
+        return static_cast<int> (tracktion_graph::hash (sidechainMagicNum, sidechainSourceID.getRawID()));
     }
 
     int getWaveInputDeviceBusID (EditItemID trackItemID)
     {
         constexpr size_t waveMagicNum = 0xc1abde;
-        return static_cast<int> (hash (waveMagicNum, trackItemID.getRawID()));
+        return static_cast<int> (tracktion_graph::hash (waveMagicNum, trackItemID.getRawID()));
     }
 
     int getMidiInputDeviceBusID (EditItemID trackItemID)
     {
         constexpr size_t midiMagicNum = 0x9a2762;
-        return static_cast<int> (hash (midiMagicNum, trackItemID.getRawID()));
+        return static_cast<int> (tracktion_graph::hash (midiMagicNum, trackItemID.getRawID()));
     }
 
     bool isSidechainSource (Track& t)
@@ -95,7 +97,6 @@ namespace
         
         return plugins;
     }
-}
 
 
 //==============================================================================
@@ -838,6 +839,8 @@ std::unique_ptr<tracktion_graph::Node> createMasterFadeInOutNode (Edit& edit, tr
     }
 
     return node;
+}
+
 }
 
 //==============================================================================

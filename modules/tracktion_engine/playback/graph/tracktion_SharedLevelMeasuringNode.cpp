@@ -18,7 +18,7 @@ SharedLevelMeasuringNode::SharedLevelMeasuringNode (SharedLevelMeasurer::Ptr sou
     jassert (levelMeasurer != nullptr);
 }
 
-std::vector<Node*> SharedLevelMeasuringNode::getDirectInputNodes()
+std::vector<tracktion_graph::Node*> SharedLevelMeasuringNode::getDirectInputNodes()
 {
     return { input.get() };
 }
@@ -41,7 +41,7 @@ bool SharedLevelMeasuringNode::isReadyToProcess()
 
 void SharedLevelMeasuringNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
 {
-    levelMeasurer->startNextBlock (sampleToTime (referenceSampleRange.getStart(), sampleRate));
+    levelMeasurer->startNextBlock (tracktion_graph::sampleToTime (referenceSampleRange.getStart(), sampleRate));
 }
 
 void SharedLevelMeasuringNode::process (const ProcessContext& pc)

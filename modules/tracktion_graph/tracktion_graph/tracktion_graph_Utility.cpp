@@ -61,6 +61,6 @@ public:
 
 static SampleConversionTests sampleConversionTests;
 
-#endif //TRACKTION_UNIT_TESTS
-
 }
+
+#endif //TRACKTION_UNIT_TESTS

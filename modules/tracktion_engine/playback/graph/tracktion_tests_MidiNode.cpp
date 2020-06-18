@@ -13,8 +13,6 @@ namespace tracktion_engine
 
 #if TRACKTION_UNIT_TESTS
 
-using namespace tracktion_graph;
-
 //==============================================================================
 //==============================================================================
 class MidiNodeTests : public juce::UnitTest
@@ -27,7 +25,7 @@ public:
     
     void runTest() override
     {
-        for (auto setup : test_utilities::getTestSetups (*this))
+        for (auto setup : tracktion_graph::test_utilities::getTestSetups (*this))
         {
             logMessage (juce::String ("Test setup: sample rate SR, block size BS, random blocks RND")
                         .replace ("SR", juce::String (setup.sampleRate))
@@ -42,8 +40,10 @@ public:
 private:
     //==============================================================================
     //==============================================================================
-    void runMidiTests (test_utilities::TestSetup ts, bool playSyncedToRange)
+    void runMidiTests (tracktion_graph::test_utilities::TestSetup ts, bool playSyncedToRange)
     {
+        using namespace tracktion_graph;
+        
         const double sampleRate = 44100.0;
         const double duration = 5.0;
         

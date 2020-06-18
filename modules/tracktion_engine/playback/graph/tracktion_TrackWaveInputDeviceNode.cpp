@@ -18,7 +18,7 @@ TrackWaveInputDeviceNode::TrackWaveInputDeviceNode (WaveInputDevice& owner, std:
     jassert (waveInputDevice.isTrackDevice());
 }
 
-std::vector<Node*> TrackWaveInputDeviceNode::getDirectInputNodes()
+std::vector<tracktion_graph::Node*> TrackWaveInputDeviceNode::getDirectInputNodes()
 {
     return { input.get() };
 }
@@ -60,7 +60,7 @@ void TrackWaveInputDeviceNode::process (const ProcessContext& pc)
         const float* chans[3] = { sourceBuffers.audio.getChannelPointer (0),
                                   numChans > 1 ? sourceBuffers.audio.getChannelPointer (1) : nullptr,
                                   nullptr };
-        const double streamTime = sampleToTime (pc.referenceSampleRange.getStart() - offsetSamples, sampleRate);
+        const double streamTime = tracktion_graph::sampleToTime (pc.referenceSampleRange.getStart() - offsetSamples, sampleRate);
         waveInputDevice.consumeNextAudioBlock (chans, numChans, (int) sourceBuffers.audio.getNumSamples(), streamTime);
     }
 }

@@ -98,10 +98,10 @@ void MidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& me
 
     if (playHead.isPlaying() && isLivePlayOverActive())
     {
-        const auto loopTimes = sampleToTime (playHead.getLoopRange(), sampleRate);
-        const auto messageReferenceSamplePosition = timeToSample (message.getTimeStamp(), sampleRate);
+        const auto loopTimes = tracktion_graph::sampleToTime (playHead.getLoopRange(), sampleRate);
+        const auto messageReferenceSamplePosition = tracktion_graph::timeToSample (message.getTimeStamp(), sampleRate);
         const auto timelinePosition = playHead.referenceSamplePositionToTimelinePosition (messageReferenceSamplePosition);
-        auto sourceTime = sampleToTime (timelinePosition, sampleRate);
+        auto sourceTime = tracktion_graph::sampleToTime (timelinePosition, sampleRate);
 
         if (message.isNoteOff())
             sourceTime = midiInputDevice.quantisation.roundUp (sourceTime, instance.edit);
@@ -124,7 +124,7 @@ void MidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& me
 
 void MidiInputDeviceNode::processSection (const ProcessContext& pc, juce::Range<int64_t> timelineRange)
 {
-    const auto editTime = sampleToTime (timelineRange, sampleRate);
+    const auto editTime = tracktion_graph::sampleToTime (timelineRange, sampleRate);
     const auto timeNow = juce::Time::getApproximateMillisecondCounter();
     auto& destMidi = pc.buffers.midi;
 

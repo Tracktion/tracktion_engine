@@ -56,7 +56,7 @@ void MidiOutputDeviceInstanceInjectingNode::process (const ProcessContext& pc)
 
     // Merge in the MIDI from the current block to the device to be dispatched
     const auto timelineSamplePosition = playHead.referenceSamplePositionToTimelinePosition (pc.referenceSampleRange.getStart());
-    const double editTime = sampleToTime (timelineSamplePosition, sampleRate);
+    const double editTime = tracktion_graph::sampleToTime (timelineSamplePosition, sampleRate);
     deviceInstance.mergeInMidiMessages (sourceBuffers.midi, editTime);
 }
 
