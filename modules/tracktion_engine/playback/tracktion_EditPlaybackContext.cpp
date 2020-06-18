@@ -85,11 +85,12 @@ EditPlaybackContext::EditPlaybackContext (TransportControl& tc)
 
     if (edit.shouldPlay())
     {
-        edit.engine.getDeviceManager().addContext (this);
+        #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+         nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.engine.getDeviceManager().getSampleRate());
+        #endif
 
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-        nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.engine.getDeviceManager().getSampleRate());
-       #endif
+        // This ensures the referenceSampleRange of the new context has been synced
+        edit.engine.getDeviceManager().addContext (this);
     }
 }
 
