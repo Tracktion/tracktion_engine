@@ -41,6 +41,9 @@ jobs:
     submodules: true
     clean: false
   - script: |
+      echo "Set Xcode version to latest"
+      sudo xcode-select -s /Applications/Xcode.app
+      echo "`xcode-select -print-path`"
       tests/run_tests
     displayName: 'macOS Build'
   - task: PublishTestResults@2
