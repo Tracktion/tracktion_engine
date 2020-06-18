@@ -140,18 +140,22 @@ namespace test_utilities
 
     //==============================================================================
     template<typename AudioFormatType>
-    std::unique_ptr<juce::TemporaryFile> getSinFile (double sampleRate, double durationInSeconds)
+    std::unique_ptr<juce::TemporaryFile> getSinFile (double sampleRate, double durationInSeconds, int numChannels = 1, float frequency = 220.0f)
     {
-        juce::AudioBuffer<float> buffer (1, static_cast<int> (sampleRate * durationInSeconds));
+        juce::AudioBuffer<float> buffer (numChannels, static_cast<int> (sampleRate * durationInSeconds));
         juce::dsp::Oscillator<float> osc ([] (float in) { return std::sin (in); });
-        osc.setFrequency (220.0, true);
-        osc.prepare ({ double (sampleRate), uint32_t (buffer.getNumSamples()), 1 });
+        osc.setFrequency (frequency, true);
+        osc.prepare ({ double (sampleRate), uint32_t (buffer.getNumSamples()), uint32_t (buffer.getNumChannels()) });
 
-        float* samples = buffer.getWritePointer (0);
         int numSamples = buffer.getNumSamples();
 
-        for (int i = 0; i < numSamples; ++i)
-            samples[i] = osc.processSample (0.0);
+        for (int c = 0; c < numChannels; ++c)
+        {
+            float* samples = buffer.getWritePointer (c);
+            
+            for (int i = 0; i < numSamples; ++i)
+                samples[i] = osc.processSample (0.0);
+        }
 
         // Then write it to a temp file
         AudioFormatType format;
@@ -163,7 +167,7 @@ namespace test_utilities
             const int qualityOptionIndex = numQualityOptions == 0 ? 0 : (numQualityOptions / 2);
             const int bitDepth = format.getPossibleBitDepths().contains (16) ? 16 : 32;
             
-            if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (AudioFormatType().createWriterFor (fileStream.get(), sampleRate, 1, bitDepth, {}, qualityOptionIndex)))
+            if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (AudioFormatType().createWriterFor (fileStream.get(), sampleRate, numChannels, bitDepth, {}, qualityOptionIndex)))
             {
                 fileStream.release();
                 writer->writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());
@@ -264,6 +268,13 @@ namespace test_utilities
         bool randomiseBlockSizes = false;
         juce::Random random;
     };
+
+    /** Returns a the descriptions of s TestSetup. */
+    static inline juce::String getDescription (const TestSetup& ts)
+    {
+        return juce::String (ts.sampleRate, 0) + ", " + juce::String (ts.blockSize)
+            + juce::String (ts.randomiseBlockSizes ? ", random" : "");
+    }
     
     /** Returns a set of TestSetups to be used for testing. */
     static inline std::vector<TestSetup> getTestSetups (juce::UnitTest& ut)
@@ -323,6 +334,11 @@ namespace test_utilities
             processor = std::move (newPlayerToUse);
             processor->prepareToPlay (testSetup.sampleRate, testSetup.blockSize);
         }
+        
+        void setPlayHead (tracktion_graph::PlayHead* newPlayHead)
+        {
+            playHead = newPlayHead;
+        }
                 
         /** Processes a number of samples.
             Returns true if there is still more processing to be done.
@@ -339,8 +355,12 @@ namespace test_utilities
                 
                 juce::AudioBuffer<float> subSectionBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
                                                            0, numThisTime);
+                const auto referenceSampleRange = juce::Range<int64_t>::withStartAndLength ((int64_t) numSamplesDone, (int64_t) numThisTime);
 
-                numProcessMisses += processor->process ({ juce::Range<int64_t>::withStartAndLength ((int64_t) numSamplesDone, (int64_t) numThisTime),
+                if (playHead)
+                    playHead->setReferenceSampleRange (referenceSampleRange);
+                
+                numProcessMisses += processor->process ({ referenceSampleRange,
                                                         { { subSectionBuffer }, midi } });
                 
                 if (writer)
@@ -392,6 +412,7 @@ namespace test_utilities
         std::unique_ptr<NodeProcessorType> processor;
         TestSetup testSetup;
         const int numChannels;
+        tracktion_graph::PlayHead* playHead = nullptr;
 
 		std::shared_ptr<TestContext> context;
 		std::unique_ptr<juce::AudioFormatWriter> writer;

@@ -122,6 +122,8 @@ extern "C"
 
  #include "playback/graph/tracktion_NodeRenderContext.h"
  #include "playback/graph/tracktion_NodeRenderContext.cpp"
+
+ #include "playback/graph/tracktion_NodeRendering.test.cpp"
  
  #include "playback/graph/tracktion_tests_WaveNode.cpp"
  #include "playback/graph/tracktion_tests_MidiNode.cpp"
