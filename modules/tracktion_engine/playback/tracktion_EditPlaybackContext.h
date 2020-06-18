@@ -127,7 +127,11 @@ private:
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     struct NodePlaybackContext;
     std::unique_ptr<NodePlaybackContext> nodePlaybackContext;
-    
+
+    juce::WeakReference<EditPlaybackContext> nodeContextToSyncTo;
+    bool nodeHasSynced = false;
+    int64_t lastTimelinePos = 0;
+
     void createNode();
     void fillNextNodeBlock (juce::Range<int64_t> referenceSampleRange, float** allChannels, int numChannels);
    #endif
