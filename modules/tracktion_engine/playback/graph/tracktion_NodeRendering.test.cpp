@@ -28,8 +28,8 @@ public:
     void runTest() override
     {
         tracktion_graph::test_utilities::TestSetup ts;
-        ts.sampleRate = 44100.0;
-        ts.blockSize = 512;
+        ts.sampleRate = 96000.0;
+        ts.blockSize = 128;
         
         runWaveRendering (ts, 30.0, 2, 20, 12, true);
         runWaveRendering (ts, 30.0, 2, 20, 12, false);
