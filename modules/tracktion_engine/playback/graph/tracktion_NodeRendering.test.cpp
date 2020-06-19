@@ -21,7 +21,7 @@ class PerformanceTests : public juce::UnitTest
 {
 public:
     PerformanceTests()
-        : juce::UnitTest ("Performance Tests", "tracktion_graph")
+        : juce::UnitTest ("Performance Tests", "tracktion_graph_performance")
     {
     }
     

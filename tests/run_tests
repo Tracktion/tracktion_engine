@@ -53,13 +53,15 @@ function runTestApp()
         xcodebuild -configuration Release LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
         "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME.xml"
         
-        xcodebuild -configuration Release -enableAddressSanitizer YES LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
-        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME_asan.xml"
+        if [ "$2" != "DISABLE_TOOLS" ]; then
+            xcodebuild -configuration Release -enableAddressSanitizer YES LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
+            "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME_asan.xml"
 
-        xcodebuild -configuration Release -enableThreadSanitizer YES LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
-        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME_tsan.xml"
+            xcodebuild -configuration Release -enableThreadSanitizer YES LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
+            "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME_tsan.xml"
 
-        xcodebuild analyze -quiet -configuration Release LLVM_LTO=NO
+            xcodebuild analyze -quiet -configuration Release LLVM_LTO=NO
+        fi
     fi
 
     # ==========================================================
@@ -88,8 +90,10 @@ function runTestApp()
 
         "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME.xml"
         
-        if [ -z "$DISABLE_VALGRIND" ]; then
-            valgrind "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME_valgrind.xml"
+        if [ "$2" != "DISABLE_TOOLS" ]; then
+            if [ -z "$DISABLE_VALGRIND" ]; then
+                valgrind "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME_valgrind.xml"
+            fi
         fi
     fi
 }
@@ -97,5 +101,6 @@ function runTestApp()
 #==========================================================
 # Run the apps
 #==========================================================
-runTestApp "AudioNodeDev"
+runTestApp "tracktion_graph_PerformanceTests" "DISABLE_TOOLS"
+runTestApp "tracktion_graph_TestRunner"
 runTestApp "TestRunner"

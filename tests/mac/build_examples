@@ -39,7 +39,8 @@ function buildExample()
 	fi
 }
 
-buildExample "AudioNodeDev"
+buildExample "tracktion_graph_PerformanceTests"
+buildExample "tracktion_graph_TestRunner"
 buildExample "TestRunner"
 buildExample "PlaybackDemo"
 buildExample "PitchAndTimeDemo"

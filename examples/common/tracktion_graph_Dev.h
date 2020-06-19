@@ -1,29 +1,12 @@
-/*******************************************************************************
- The block below describes the properties of this PIP. A PIP is a short snippet
- of code that can be read by the Projucer and used to generate a JUCE project.
+/*
+    ,--.                     ,--.     ,--.  ,--.
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
+    |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
+    `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
- BEGIN_JUCE_PIP_METADATA
-
-  name:             AudioNodeDev
-  version:          0.0.1
-  vendor:           Tracktion
-  website:          www.tracktion.com
-  description:      Used for development of the new audio graph.
-
-  dependencies:     juce_audio_basics, juce_audio_devices, juce_audio_formats, juce_audio_processors, juce_audio_utils,
-                    juce_core, juce_data_structures, juce_dsp, juce_events, juce_graphics,
-                    juce_gui_basics, juce_gui_extra, juce_osc, tracktion_engine, tracktion_graph
-  exporters:        linux_make, vs2017, xcode_iphone, xcode_mac
-
-  moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1, JUCE_PLUGINHOST_AU=1, JUCE_PLUGINHOST_VST3=1
-  defines:          ENABLE_EXPERIMENTAL_TRACKTION_GRAPH=1, TRACKTION_UNIT_TESTS=1, TRACKTION_GRAPH_PERFORMANCE_TESTS=1
-
-  type:             Console
-  mainClass:        AudioNodeDev
-
- END_JUCE_PIP_METADATA
-
-*******************************************************************************/
+    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+*/
 
 #pragma once
 
@@ -164,7 +147,7 @@ namespace JUnit
 //==============================================================================
 namespace TestRunner
 {
-    int runTests (const File& junitResultsFile)
+    int runTests (const File& junitResultsFile, StringRef category)
     {
         CoutLogger logger;
         Logger::setCurrentLogger (&logger);
@@ -174,8 +157,7 @@ namespace TestRunner
         UnitTestRunner testRunner;
         testRunner.setAssertOnFailure (false);
 
-        Array<UnitTest*> tests;
-        tests.addArray (UnitTest::getTestsInCategory ("tracktion_graph"));
+        auto tests = UnitTest::getTestsInCategory (category);
         
         const auto startTime = Time::getCurrentTime();
         testRunner.runTests (tests);
@@ -202,20 +184,4 @@ namespace TestRunner
 
         return numFailues > 0 ? 1 : 0;
     }
-}
-
-
-//==============================================================================
-//==============================================================================
-int main (int argv, char** argc)
-{
-    File junitFile;
-    
-    for (int i = 1; i < argv; ++i)
-        if (String (argc[i]) == "--junit-xml-file")
-            if ((i + 1) < argv)
-                junitFile = String (argc[i + 1]);
-    
-    ScopedJuceInitialiser_GUI init;
-    return TestRunner::runTests (junitFile);
 }

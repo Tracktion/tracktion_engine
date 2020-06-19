@@ -20,7 +20,10 @@ call "%TESTS_DIR%/build_projucer.bat" || exit 1
 ::============================================================
 ::   Build examples
 ::============================================================
-call :BuildExample "AudioNodeDev"
+call :BuildExample "tracktion_graph_PerformanceTests"
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+call :BuildExample "tracktion_graph_TestRunner"
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
 call :BuildExample "TestRunner"
