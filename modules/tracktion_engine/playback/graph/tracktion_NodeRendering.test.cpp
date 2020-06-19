@@ -78,7 +78,11 @@ private:
         playHeadState.playHead.playSyncedToRange ({});
         expect (true);
 
-        // Log memory usage
+        beginTest ("Wave - memory use: " + description);
+        const auto nodes = tracktion_graph::getNodes (testContext.getNode(), tracktion_graph::VertexOrdering::postordering);
+        std::cout << "Num nodes: " << nodes.size() << "\n";
+        std::cout << juce::File::descriptionOfSizeInBytes ((int64_t) test_utilities::getMemoryUsage (nodes, ts.blockSize)) << "\n";
+        expect (true);
 
         beginTest ("Wave - rendering: " + description);
         auto result = testContext.processAll();

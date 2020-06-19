@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <numeric>
+
 namespace tracktion_graph
 {
 
@@ -136,6 +138,23 @@ namespace test_utilities
         
         auto uniqueEnd = std::unique (nodeIDs.begin(), nodeIDs.end());
         return uniqueEnd == nodeIDs.end();
+    }
+
+    //==============================================================================
+    /** Returns the ammount of internal memory allocated for buffers. */
+    static inline size_t getMemoryUsage (const std::vector<Node*>& nodes, int prepareBlockSize)
+    {
+        return std::accumulate (nodes.begin(), nodes.end(), (size_t) 0,
+                                [prepareBlockSize] (size_t total, Node* n)
+                                {
+                                    return total + (size_t (n->getNodeProperties().numberOfChannels * prepareBlockSize) * sizeof (float));
+                                });
+    }
+
+    /** Returns the ammount of internal memory allocated for buffers. */
+    static inline size_t getMemoryUsage (Node& node, int prepareBlockSize)
+    {
+        return getMemoryUsage (tracktion_graph::getNodes (node, tracktion_graph::VertexOrdering::postordering), prepareBlockSize);
     }
 
     //==============================================================================
@@ -320,6 +339,11 @@ namespace test_utilities
                 writer = std::unique_ptr<juce::AudioFormatWriter> (juce::WavAudioFormat().createWriterFor (context->tempFile->getFile().createOutputStream().release(),
                                                                                                            ts.sampleRate, (uint32_t) numChannels, 16, {}, 0));
             setPlayer (std::move (playerToUse));
+        }
+        
+        Node& getNode() const
+        {
+            return *processor->getNode();
         }
 
         void setNode (std::unique_ptr<Node> newNode)
