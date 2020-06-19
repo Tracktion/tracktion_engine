@@ -517,7 +517,7 @@ private:
             const double totalDuration = 5.0;
             const int totalNumSamples = (int) std::floor (totalDuration * testSetup.sampleRate);
             TestProcess<NodePlayer> playerContext (std::make_unique<NodePlayer> (std::make_unique<SinNode> (220.0f)),
-                                                   testSetup, 1, totalDuration);
+                                                   testSetup, 1, totalDuration, true);
             const int firstHalfNumSamples = totalNumSamples / 2;
             
             playerContext.process (firstHalfNumSamples);
@@ -552,7 +552,7 @@ private:
             auto node = makeSinNode();
             const size_t expectedNodeID = node->getNodeProperties().nodeID;
             TestProcess<NodePlayer> playerContext (std::make_unique<NodePlayer> (std::move (node)),
-                                                   testSetup, 1, totalDuration);
+                                                   testSetup, 1, totalDuration, true);
             const int firstHalfNumSamples = totalNumSamples / 2;
             
             playerContext.process (firstHalfNumSamples);
@@ -596,7 +596,7 @@ private:
             auto node = makeSinNode();
             const size_t expectedNodeID = node->getNodeProperties().nodeID;
             TestProcess<NodePlayer> playerContext (std::make_unique<NodePlayer> (std::move (node)),
-                                                   testSetup, 1, totalDuration);
+                                                   testSetup, 1, totalDuration, true);
             const int firstHalfNumSamples = totalNumSamples / 2;
             
             playerContext.process (firstHalfNumSamples);

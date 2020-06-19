@@ -167,7 +167,7 @@ namespace test_utilities
             const int qualityOptionIndex = numQualityOptions == 0 ? 0 : (numQualityOptions / 2);
             const int bitDepth = format.getPossibleBitDepths().contains (16) ? 16 : 32;
             
-            if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (AudioFormatType().createWriterFor (fileStream.get(), sampleRate, numChannels, bitDepth, {}, qualityOptionIndex)))
+            if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (AudioFormatType().createWriterFor (fileStream.get(), sampleRate, (uint32_t) numChannels, bitDepth, {}, qualityOptionIndex)))
             {
                 fileStream.release();
                 writer->writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());
@@ -307,7 +307,7 @@ namespace test_utilities
     struct TestProcess
     {
         TestProcess (std::unique_ptr<NodeProcessorType> playerToUse, TestSetup ts,
-                     const int numChannelsToUse, const double durationInSeconds)
+                     const int numChannelsToUse, const double durationInSeconds, bool writeToFile)
             : testSetup (ts), numChannels (numChannelsToUse)
         {
             context = std::make_shared<TestContext>();
@@ -316,7 +316,7 @@ namespace test_utilities
             buffer.setSize  (numChannels, ts.blockSize);
             numSamplesToDo = juce::roundToInt (durationInSeconds * ts.sampleRate);
 
-            if (numChannels > 0)
+            if (writeToFile && numChannels > 0)
                 writer = std::unique_ptr<juce::AudioFormatWriter> (juce::WavAudioFormat().createWriterFor (context->tempFile->getFile().createOutputStream().release(),
                                                                                                            ts.sampleRate, (uint32_t) numChannels, 16, {}, 0));
             setPlayer (std::move (playerToUse));
@@ -428,7 +428,7 @@ namespace test_utilities
     static inline std::shared_ptr<TestContext> createTestContext (std::unique_ptr<NodeProcessorType> processor, TestSetup ts,
                                                                   const int numChannels, const double durationInSeconds)
     {
-        return TestProcess<NodeProcessorType> (std::move (processor), ts, numChannels, durationInSeconds).processAll();
+        return TestProcess<NodeProcessorType> (std::move (processor), ts, numChannels, durationInSeconds, true).processAll();
     }
 
     static inline std::shared_ptr<TestContext> createBasicTestContext (std::unique_ptr<Node> node, const TestSetup ts,

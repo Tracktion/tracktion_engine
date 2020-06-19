@@ -27,17 +27,19 @@ public:
     
     void runTest() override
     {
-        for (auto ts : tracktion_graph::test_utilities::getTestSetups (*this))
-        {
-            runWaveRendering (ts, 2, 20, 12, true);
-            runWaveRendering (ts, 2, 20, 12, false);
-        }
+        tracktion_graph::test_utilities::TestSetup ts;
+        ts.sampleRate = 44100.0;
+        ts.blockSize = 512;
+        
+        runWaveRendering (ts, 30.0, 2, 20, 12, true);
+        runWaveRendering (ts, 30.0, 2, 20, 12, false);
     }
 
 private:
     //==============================================================================
     //==============================================================================
     void runWaveRendering (test_utilities::TestSetup ts,
+                           double durationInSeconds,
                            int numChannels,
                            int numTracks,
                            int numFilesPerTrack,
@@ -57,10 +59,11 @@ private:
         
         //===
         beginTest ("Wave Edit - creation: " + description);
-        auto context = createTestContext (engine, numTracks, numFilesPerTrack, 5.0, ts.sampleRate, ts.random, useSingleFile);
+        const double durationOfFile = durationInSeconds / numFilesPerTrack;
+        auto context = createTestContext (engine, numTracks, numFilesPerTrack, durationOfFile, ts.sampleRate, ts.random, useSingleFile);
         expect (context.edit != nullptr);
         expect (useSingleFile || (context.files.size() == size_t (numTracks * numFilesPerTrack)));
-        expectWithinAbsoluteError (context.edit->getLength(), 60.0, 0.01);
+        expectWithinAbsoluteError (context.edit->getLength(), durationInSeconds, 0.01);
 
         //===
         beginTest ("Wave - building: " + description);
@@ -70,7 +73,7 @@ private:
         //===
         beginTest ("Wave - preparing: " + description);
         TestProcess<NodePlayer> testContext (std::make_unique<NodePlayer> (std::move (node), &playHeadState),
-                                             ts, numChannels, context.edit->getLength());
+                                             ts, numChannels, context.edit->getLength(), false);
         testContext.setPlayHead (&playHeadState.playHead);
         playHeadState.playHead.playSyncedToRange ({});
         expect (true);
