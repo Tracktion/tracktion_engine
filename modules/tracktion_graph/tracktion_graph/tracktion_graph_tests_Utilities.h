@@ -198,29 +198,34 @@ namespace test_utilities
 
     //==============================================================================
     /** Compares two MidiMessageSequences and expects them to be equal. */
-    static inline void expectMidiMessageSequence (juce::UnitTest& ut, const juce::MidiMessageSequence& seq1, const juce::MidiMessageSequence& seq2)
+    static inline void expectMidiMessageSequence (juce::UnitTest& ut, const juce::MidiMessageSequence& actual, const juce::MidiMessageSequence& expected)
     {
-        ut.expectEquals (seq1.getNumEvents(), seq2.getNumEvents(), "Num MIDI events not equal");
-        
-        if (seq1.getNumEvents() != seq2.getNumEvents())
-            return;
+        ut.expectEquals (actual.getNumEvents(), expected.getNumEvents(), "Num MIDI events not equal");
         
         bool sequencesTheSame = true;
         
-        for (int i = 0; i < seq1.getNumEvents(); ++i)
+        for (int i = 0; i < actual.getNumEvents(); ++i)
         {
-            auto event1 = seq1.getEventPointer (i);
-            auto event2 = seq2.getEventPointer (i);
+            auto event1 = actual.getEventPointer (i);
+            auto event2 = expected.getEventPointer (i);
             
             auto desc1 = event1->message.getDescription();
             auto desc2 = event2->message.getDescription();
 
             if (desc1 != desc2)
             {
-                ut.logMessage (juce::String ("Event at index 123 is:\n\tseq1: XXX\n\tseq2 is: YYY")
+                ut.logMessage (juce::String ("Event at index 123 is:\n\tactual: XXX\n\texpected is: YYY")
                                 .replace ("123", juce::String (i)).replace ("XXX", desc1).replace ("YYY", desc2));
                 sequencesTheSame = false;
             }
+        }
+        
+        for (int i = actual.getNumEvents(); i < expected.getNumEvents(); ++i)
+        {
+            auto event2 = expected.getEventPointer (i);
+            auto desc2 = event2->message.getDescription();
+            ut.logMessage (juce::String ("Missing event at index 123 is:\n\texpected is: YYY, TTT")
+                            .replace ("123", juce::String (i)).replace ("YYY", desc2).replace ("TTT", juce::String (event2->message.getTimeStamp())));
         }
         
         ut.expect (sequencesTheSame, "MIDI sequence contents not equal");

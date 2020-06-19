@@ -78,18 +78,22 @@ private:
         
         beginTest ("Offset MIDI");
         {
+            const EditTimeRange editTimeRange (1.0, duration);
             auto node = std::make_unique<tracktion_engine::MidiNode> (masterSequence,
                                                                       juce::Range<int>::withStartAndLength (1, 1),
                                                                       false,
-                                                                      EditTimeRange (1.0, duration),
+                                                                      editTimeRange,
                                                                       LiveClipLevel(),
                                                                       playHeadState,
                                                                       EditItemID());
             
             auto testContext = createBasicTestContext (std::move (node), playHeadState, ts, 0, duration + 1.0);
 
-            auto expectedSequence = masterSequence;
-            expectedSequence.addTimeToMessages (1.0);
+            juce::MidiMessageSequence expectedSequence;
+            expectedSequence.addSequence (masterSequence,
+                                          1.0,
+                                          editTimeRange.getStart(),
+                                          editTimeRange.getEnd());
 
             expectGreaterThan (expectedSequence.getNumEvents(), 0);
             test_utilities::expectMidiBuffer (*this, testContext->midi, sampleRate, expectedSequence);
