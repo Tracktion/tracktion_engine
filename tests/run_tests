@@ -51,14 +51,14 @@ function runTestApp()
         cd "$APP_ROOT"
 
         xcodebuild -configuration Release LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
-        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME.xml"
+        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
         
         if [ "$2" != "DISABLE_TOOLS" ]; then
             xcodebuild -configuration Release -enableAddressSanitizer YES LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
-            "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME_asan.xml"
+            "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_asan.xml"
 
             xcodebuild -configuration Release -enableThreadSanitizer YES LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
-            "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME_tsan.xml"
+            "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_tsan.xml"
 
             xcodebuild analyze -quiet -configuration Release LLVM_LTO=NO
         fi
@@ -76,7 +76,7 @@ function runTestApp()
 
         "$MSBUILD_EXE" "$APP_NAME.sln" -p:VisualStudioVersion=15.0 -m -p:Configuration=Release -p:Platform=x64 -p:PreferredToolArchitecture=x64
 
-        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME.xml"
+        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
     fi
 
     # ==========================================================
@@ -88,11 +88,11 @@ function runTestApp()
         make clean
         make CONFIG=Release -j$(nproc) TARGET_ARCH="-latomic -m64"
 
-        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME.xml"
+        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
         
         if [ "$2" != "DISABLE_TOOLS" ]; then
             if [ -z "$DISABLE_VALGRIND" ]; then
-                valgrind "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME_valgrind.xml"
+                valgrind "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_valgrind.xml"
             fi
         fi
     fi

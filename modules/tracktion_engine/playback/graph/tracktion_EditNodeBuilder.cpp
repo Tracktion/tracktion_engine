@@ -627,10 +627,6 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioTrack (AudioTrack& at, 
     }
 
     return node;
-    
-    //TODO:
-    // ARA clips
-    // Track comps
 }
 
 //==============================================================================
