@@ -263,7 +263,7 @@ inline void Node::initialise (const PlaybackInitialisationInfo& info)
 
 inline void Node::prepareForNextBlock (juce::Range<int64_t> referenceSampleRange)
 {
-    hasBeenProcessed = false;
+    hasBeenProcessed.store (false, std::memory_order_release);
     prefetchBlock (referenceSampleRange);
 }
 
@@ -286,7 +286,7 @@ inline void Node::process (juce::Range<int64_t> referenceSampleRange)
                       };
     process (pc);
     numSamplesProcessed = numSamples;
-    hasBeenProcessed = true;
+    hasBeenProcessed.store (true, std::memory_order_release);
     
     jassert (numChannelsBeforeProcessing == audioBuffer.getNumChannels());
     jassert (numSamplesBeforeProcessing == audioBuffer.getNumSamples());
@@ -294,7 +294,7 @@ inline void Node::process (juce::Range<int64_t> referenceSampleRange)
 
 inline bool Node::hasProcessed() const
 {
-    return hasBeenProcessed;
+    return hasBeenProcessed.load (std::memory_order_acquire);
 }
 
 inline Node::AudioAndMidiBuffer Node::getProcessedOutput()
