@@ -45,6 +45,8 @@ tracktion_graph::NodeProperties MidiNode::getNodeProperties()
 
 void MidiNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
 {
+    sampleRate = info.sampleRate;
+    
     if (info.rootNodeToReplace != nullptr)
     {
         bool foundNodeToReplace = false;
