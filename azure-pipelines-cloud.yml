@@ -1,12 +1,5 @@
 trigger:
   batch: true
-  branches:
-    include:
-    - master
-    - develop
-    - feature/*
-    - bugfix/*
-
 
 strategy:
   matrix:
