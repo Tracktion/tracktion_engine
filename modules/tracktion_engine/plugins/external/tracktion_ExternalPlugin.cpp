@@ -1022,11 +1022,18 @@ void ExternalPlugin::initialise (const PlaybackInitialisationInfo& info)
 
     if (pluginInstance != nullptr)
     {
-        if (isInstancePrepared)
-            pluginInstance->releaseResources();
+        if (! isInstancePrepared)
+		{
+			pluginInstance->prepareToPlay (info.sampleRate, info.blockSizeSamples);
+			isInstancePrepared = true;
+		}
+		else if (info.sampleRate != lastSampleRate || info.blockSizeSamples != lastBlockSizeSamples)
+		{
+			pluginInstance->prepareToPlay (info.sampleRate, info.blockSizeSamples);
+		}
 
-        pluginInstance->prepareToPlay (info.sampleRate, info.blockSizeSamples);
-        isInstancePrepared = true;
+		lastSampleRate = info.sampleRate;
+		lastBlockSizeSamples = info.blockSizeSamples;
 
         latencySamples = pluginInstance->getLatencySamples();
         latencySeconds = latencySamples / info.sampleRate;
@@ -1061,9 +1068,6 @@ void ExternalPlugin::deinitialise()
 
         if (playhead != nullptr)
             playhead->setCurrentContext (nullptr);
-
-        pluginInstance->releaseResources();
-        isInstancePrepared = false;
     }
 }
 
