@@ -39,8 +39,6 @@ private:
                                                                                     test_utilities::TestSetup ts, int numChannels, double durationInSeconds)
     {
         test_utilities::TestProcess<TracktionNodePlayer> testProcess (std::make_unique<TracktionNodePlayer> (std::move (node), processState), ts, numChannels, durationInSeconds, true);
-        testProcess.setPlayHead (&processState.playHeadState.playHead);
-        
         return testProcess.processAll();
     }
     

@@ -44,7 +44,7 @@ public:
         setNode (std::move (newNode), sampleRate, blockSize);
     }
 
-    /** Returns the Node to process with the current sample rate and block size. */
+    /** Sets the Node to process with a new current sample rate and block size. */
     void setNode (std::unique_ptr<Node> newNode, double sampleRateToUse, int blockSizeToUse)
     {
         auto newNodes = prepareToPlay (newNode.get(), input.get(), sampleRateToUse, blockSizeToUse);

@@ -200,9 +200,9 @@ inline void PlayHead::setPosition (int64_t newPosition)
 inline void PlayHead::play (juce::Range<int64_t> rangeToPlay, bool looped)
 {
     timelinePlayRange = rangeToPlay;
+    looping = looped && (rangeToPlay.getLength() > 50);
     setPosition (rangeToPlay.getStart());
     speed = 1;
-    looping = looped && (rangeToPlay.getLength() > 50);
 }
 
 inline void PlayHead::play()
@@ -242,7 +242,7 @@ inline void PlayHead::overridePosition (int64_t newPosition)
         newPosition = timelinePlayRange.load().clipValue (newPosition);
 
     SyncPositions newSyncPositions;
-    newSyncPositions.referenceSyncPosition = referenceSampleRange.load().getEnd();
+    newSyncPositions.referenceSyncPosition = referenceSampleRange.load().getStart();
     newSyncPositions.playoutSyncPosition = newPosition;
     setSyncPositions (newSyncPositions);
 }

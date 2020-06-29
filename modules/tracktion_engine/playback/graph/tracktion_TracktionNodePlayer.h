@@ -77,7 +77,6 @@ public:
                 auto destAudio = pc.buffers.audio.getSubBlock (0, (size_t) firstNumSamples);
                 auto& destMidi = pc.buffers.midi;
                 
-                playHeadState.update (firstRange);
                 processState.update (nodePlayer.getSampleRate(), firstRange);
                 tracktion_graph::Node::ProcessContext pc1 { firstRange, { destAudio , destMidi } };
                 numMisses += nodePlayer.process (pc1);
@@ -92,7 +91,6 @@ public:
                 scratchMidi.clear();
                 
                 tracktion_graph::Node::ProcessContext pc2 { secondRange, { destAudio , scratchMidi } };
-                playHeadState.update (secondRange);
                 processState.update (nodePlayer.getSampleRate(), secondRange);
                 numMisses += nodePlayer.process (pc2);
 
@@ -102,7 +100,6 @@ public:
         }
         else
         {
-            playHeadState.update (pc.referenceSampleRange);
             processState.update (nodePlayer.getSampleRate(), pc.referenceSampleRange);
             numMisses += nodePlayer.process (pc);
         }
