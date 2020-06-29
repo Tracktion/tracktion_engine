@@ -72,29 +72,32 @@ public:
         {
             const auto firstNumSamples = splitTimelineRange.timelineRange1.getLength();
             const auto firstRange = pc.referenceSampleRange.withLength (firstNumSamples);
-            
+
             {
-                auto inputAudio = pc.buffers.audio.getSubBlock (0, (size_t) firstNumSamples);
-                auto& inputMidi = pc.buffers.midi;
+                auto destAudio = pc.buffers.audio.getSubBlock (0, (size_t) firstNumSamples);
+                auto& destMidi = pc.buffers.midi;
                 
                 playHeadState.update (firstRange);
                 processState.update (nodePlayer.getSampleRate(), firstRange);
-                tracktion_graph::Node::ProcessContext pc1 { firstRange, { inputAudio , inputMidi } };
+                tracktion_graph::Node::ProcessContext pc1 { firstRange, { destAudio , destMidi } };
                 numMisses += nodePlayer.process (pc1);
             }
             
             {
+                const double firstDuration = processState.editTimeRange.getLength();
                 const auto secondNumSamples = splitTimelineRange.timelineRange2.getLength();
                 const auto secondRange = juce::Range<int64_t>::withStartAndLength (firstRange.getEnd(), secondNumSamples);
                 
-                auto inputAudio = pc.buffers.audio.getSubBlock ((size_t) firstNumSamples, (size_t) secondNumSamples);
-                auto& inputMidi = pc.buffers.midi;
+                auto destAudio = pc.buffers.audio.getSubBlock ((size_t) firstNumSamples, (size_t) secondNumSamples);
+                scratchMidi.clear();
                 
-                //TODO: Use a scratch MidiMessageArray and then merge it back with the offset time
-                tracktion_graph::Node::ProcessContext pc2 { secondRange, { inputAudio , inputMidi } };
+                tracktion_graph::Node::ProcessContext pc2 { secondRange, { destAudio , scratchMidi } };
                 playHeadState.update (secondRange);
                 processState.update (nodePlayer.getSampleRate(), secondRange);
                 numMisses += nodePlayer.process (pc2);
+
+                // Merge back MIDI from end of block
+                pc.buffers.midi.mergeFromWithOffset (scratchMidi, firstDuration);
             }
         }
         else
@@ -111,6 +114,7 @@ private:
     tracktion_graph::PlayHeadState& playHeadState;
     ProcessState& processState;
     tracktion_graph::NodePlayer nodePlayer;
+    MidiMessageArray scratchMidi;
 };
 
 }
