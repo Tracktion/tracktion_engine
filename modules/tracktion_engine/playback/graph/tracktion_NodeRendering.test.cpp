@@ -56,7 +56,8 @@ private:
         
         tracktion_graph::PlayHead playHead;
         tracktion_graph::PlayHeadState playHeadState { playHead };
-        
+        ProcessState processState { playHeadState };
+
         //===
         beginTest ("Wave Edit - creation: " + description);
         const double durationOfFile = durationInSeconds / numFilesPerTrack;
@@ -67,7 +68,7 @@ private:
 
         //===
         beginTest ("Wave - building: " + description);
-        auto node = createNode (*context.edit, playHeadState, ts.sampleRate, ts.blockSize);
+        auto node = createNode (*context.edit, processState, ts.sampleRate, ts.blockSize);
         expect (node != nullptr);
 
         //===
@@ -137,14 +138,14 @@ private:
         return { std::move (edit), std::move (files) };
     }
     
-    static std::unique_ptr<tracktion_graph::Node> createNode (Edit& edit, tracktion_graph::PlayHeadState& playHeadState,
+    static std::unique_ptr<tracktion_graph::Node> createNode (Edit& edit, ProcessState& processState,
                                                               double sampleRate, int blockSize)
     {
-        CreateNodeParams params;
+        CreateNodeParams params { processState };
         params.sampleRate = sampleRate;
         params.blockSize = blockSize;
         params.forRendering = true; // Required for audio files to be read
-        return createNodeForEdit (edit, playHeadState, params).node;
+        return createNodeForEdit (edit, params).node;
     }
 };
 
