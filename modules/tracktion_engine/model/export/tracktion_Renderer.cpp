@@ -122,11 +122,12 @@ Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
                                   std::unique_ptr<tracktion_graph::Node> n,
                                   std::unique_ptr<tracktion_graph::PlayHead> playHead_,
                                   std::unique_ptr<tracktion_graph::PlayHeadState> playHeadState_,
+                                  std::unique_ptr<ProcessState> processState_,
                                   std::atomic<float>& progressToUpdate,
                                   juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* source)
    : ThreadPoolJobWithProgress (taskDescription),
      params (rp), isUsingGraphNode (true),
-     graphNode (std::move (n)), playHead (std::move (playHead_)), playHeadState (std::move (playHeadState_)),
+     graphNode (std::move (n)), playHead (std::move (playHead_)), playHeadState (std::move (playHeadState_)), processState (std::move (processState_)),
      progress (progressToUpdate), sourceToUpdate (source)
 {
 }
@@ -585,6 +586,7 @@ bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
                                                                                                std::move (graphNode),
                                                                                                std::move (playHead),
                                                                                                std::move (playHeadState),
+                                                                                               std::move (processState),
                                                                                                sourceToUpdate); });
 
             if (! nodeRenderContext->getStatus().wasOk())

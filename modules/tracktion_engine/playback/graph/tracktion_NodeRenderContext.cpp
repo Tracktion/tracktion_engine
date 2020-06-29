@@ -40,11 +40,13 @@ NodeRenderContext::NodeRenderContext (Renderer::RenderTask& owner_, Renderer::Pa
                                       std::unique_ptr<Node> n,
                                       std::unique_ptr<tracktion_graph::PlayHead> playHead_,
                                       std::unique_ptr<tracktion_graph::PlayHeadState> playHeadState_,
+                                      std::unique_ptr<ProcessState> processState_,
                                       juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* sourceToUpdate_)
     : owner (owner_),
       r (p), originalParams (p),
       playHead (std::move (playHead_)),
       playHeadState (std::move (playHeadState_)),
+      processState (std::move (processState_)),
       status (juce::Result::ok()),
       ditherers (256, r.bitDepth),
       sourceToUpdate (sourceToUpdate_)
@@ -55,7 +57,7 @@ NodeRenderContext::NodeRenderContext (Renderer::RenderTask& owner_, Renderer::Pa
     jassert (r.edit != nullptr);
     jassert (r.time.getLength() > 0.0);
 
-    nodePlayer = std::make_unique<NodePlayer> (std::move (n), playHeadState.get());
+    nodePlayer = std::make_unique<TracktionNodePlayer> (std::move (n), *processState);
 
     if (r.edit->getTransport().isPlayContextActive())
     {

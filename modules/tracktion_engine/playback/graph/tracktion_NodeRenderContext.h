@@ -25,6 +25,7 @@ public:
                        std::unique_ptr<tracktion_graph::Node>,
                        std::unique_ptr<tracktion_graph::PlayHead>,
                        std::unique_ptr<tracktion_graph::PlayHeadState>,
+                       std::unique_ptr<ProcessState>,
                        juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* sourceToUpdate);
     
     /** Destructor. */
@@ -70,7 +71,8 @@ private:
     
     std::unique_ptr<tracktion_graph::PlayHead> playHead;
     std::unique_ptr<tracktion_graph::PlayHeadState> playHeadState;
-    std::unique_ptr<tracktion_graph::NodePlayer> nodePlayer;
+    std::unique_ptr<ProcessState> processState;
+    std::unique_ptr<TracktionNodePlayer> nodePlayer;
     
     int numOutputChans = 0;
     std::unique_ptr<AudioFileWriter> writer;

@@ -58,6 +58,10 @@ extern "C"
 #include "playback/tracktion_MPEStartTrimmer.h"
 
 #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+ #include "playback/graph/tracktion_TracktionEngineNode.h"
+ #include "playback/graph/tracktion_TracktionEngineNode.cpp"
+ #include "playback/graph/tracktion_TracktionNodePlayer.h"
+
  #include "playback/graph/tracktion_ClickNode.h"
  #include "playback/graph/tracktion_ClickNode.cpp"
 

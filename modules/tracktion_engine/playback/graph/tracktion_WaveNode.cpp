@@ -31,9 +31,9 @@ WaveNode::WaveNode (const AudioFile& af,
                     LiveClipLevel level,
                     double speed,
                     const juce::AudioChannelSet& channelSetToUse,
-                    tracktion_graph::PlayHeadState& ph,
+                    ProcessState& ps,
                     bool isRendering)
-   : playHeadState (ph),
+   : TracktionEngineNode (ps),
      editPosition (editTime),
      loopSection (loop.getStart() * speed, loop.getEnd() * speed),
      offset (off),
@@ -99,10 +99,7 @@ void WaveNode::process (const ProcessContext& pc)
     SCOPED_REALTIME_CHECK
 
     //TODO: Might get a performance boost by pre-setting the file position in prepareForNextBlock
-    const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.referenceSampleRange);
-    jassert (! splitTimelineRange.isSplit); // This should be handled by the NodePlayer
-    
-    processSection (pc, splitTimelineRange.timelineRange1);
+    processSection (pc, getTimelineSampleRange());
 }
 
 //==============================================================================
@@ -174,8 +171,8 @@ void WaveNode::processSection (const ProcessContext& pc, juce::Range<int64_t> ti
                                  channelsToUse,
                                  isOfflineRender ? 5000 : 3))
         {
-            if (! playHeadState.isContiguousWithPreviousBlock() && ! playHeadState.isFirstBlockOfLoop())
-                lastSampleFadeLength = std::min (numSamples, playHeadState.playHead.isUserDragging() ? 40 : 10);
+            if (! getPlayHeadState().isContiguousWithPreviousBlock() && ! getPlayHeadState().isFirstBlockOfLoop())
+                lastSampleFadeLength = std::min (numSamples, getPlayHead().isUserDragging() ? 40 : 10);
         }
         else
         {
@@ -192,7 +189,7 @@ void WaveNode::processSection (const ProcessContext& pc, juce::Range<int64_t> ti
     else
         gains[0] = gains[1] = clipLevel.getGainIncludingMute();
 
-    if (playHeadState.playHead.isUserDragging())
+    if (getPlayHead().isUserDragging())
     {
         gains[0] *= 0.4f;
         gains[1] *= 0.4f;

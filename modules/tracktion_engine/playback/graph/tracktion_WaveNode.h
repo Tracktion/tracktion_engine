@@ -13,7 +13,8 @@ namespace tracktion_engine
 
 //==============================================================================
 /** An Node that plays back a wave file. */
-class WaveNode final    : public tracktion_graph::Node
+class WaveNode final    : public tracktion_graph::Node,
+                          public TracktionEngineNode
 {
 public:
     /** offset is a time added to the start of the file, e.g. an offset of 10.0
@@ -31,7 +32,7 @@ public:
               LiveClipLevel,
               double speedRatio,
               const juce::AudioChannelSet& channelsToUse,
-              tracktion_graph::PlayHeadState&,
+              ProcessState&,
               bool isOfflineRender);
 
     //==============================================================================
@@ -42,7 +43,6 @@ public:
 
 private:
     //==============================================================================
-    tracktion_graph::PlayHeadState& playHeadState;
     EditTimeRange editPosition, loopSection;
     double offset = 0;
     double originalSpeedRatio = 0, outputSampleRate = 44100.0;

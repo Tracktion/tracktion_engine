@@ -33,8 +33,6 @@ namespace tracktion_engine
      void process (juce::Range<int64_t> referenceSampleRange, float** allChannels, int numChannels)
      {
          const auto numSamples = referenceSampleRange.getLength();
-         playHead.setReferenceSampleRange (referenceSampleRange);
-
          juce::dsp::AudioBlock<float> audioBlock (allChannels, (size_t) numChannels, (size_t) numSamples);
          scratchMidiBuffer.clear();
          tracktion_graph::Node::ProcessContext pc { referenceSampleRange, { audioBlock, scratchMidiBuffer } };
@@ -44,10 +42,11 @@ namespace tracktion_engine
      double sampleRate;
      tracktion_graph::PlayHead playHead;
      tracktion_graph::PlayHeadState playHeadState { playHead };
+     ProcessState processState { playHeadState };
      
  private:
      MidiMessageArray scratchMidiBuffer;
-     tracktion_graph::NodePlayer player { nullptr, &playHeadState };
+     TracktionNodePlayer player { processState };
 };
 #endif
 
@@ -437,10 +436,10 @@ void EditPlaybackContext::createNode()
     isAllocated = true;
     
     auto& dm = edit.engine.getDeviceManager();
-    CreateNodeParams cnp;
+    CreateNodeParams cnp { nodePlaybackContext->processState };
     cnp.sampleRate = dm.getSampleRate();
     cnp.blockSize = dm.getBlockSize();
-    auto editNodeContext = createNodeForEdit (*this, nodePlaybackContext->playHeadState, cnp);
+    auto editNodeContext = createNodeForEdit (*this, cnp);
 
     const auto& tempoSections = edit.tempoSequence.getTempoSections();
     const bool hasTempoChanged = tempoSections.getChangeCount() != lastTempoSections.getChangeCount();

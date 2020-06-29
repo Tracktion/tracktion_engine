@@ -23,22 +23,28 @@ namespace tracktion_graph
 class NodePlayer
 {
 public:
-    /** Creates an NodePlayer to process an Node. */
+    /** Creates an empty NodePlayer. */
+    NodePlayer () = default;
+
+    /** Creates an NodePlayer to process a Node. */
     NodePlayer (std::unique_ptr<Node> nodeToProcess, PlayHeadState* playHeadStateToUse = nullptr)
         : input (std::move (nodeToProcess)), playHeadState (playHeadStateToUse)
     {
     }
     
+    /** Returns the current Node. */
     Node* getNode()
     {
         return input.get();
     }
 
+    /** Returns the Node to process. */
     void setNode (std::unique_ptr<Node> newNode)
     {
         setNode (std::move (newNode), sampleRate, blockSize);
     }
 
+    /** Returns the Node to process with the current sample rate and block size. */
     void setNode (std::unique_ptr<Node> newNode, double sampleRateToUse, int blockSizeToUse)
     {
         auto newNodes = prepareToPlay (newNode.get(), input.get(), sampleRateToUse, blockSizeToUse);
@@ -108,6 +114,11 @@ public:
         }
         
         return 0;
+    }
+    
+    double getSampleRate() const
+    {
+        return sampleRate;
     }
     
 private:

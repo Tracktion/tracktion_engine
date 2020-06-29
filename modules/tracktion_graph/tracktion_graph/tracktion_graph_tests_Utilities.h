@@ -327,10 +327,10 @@ namespace test_utilities
         int numProcessMisses = 0;
     };
 
-    template<typename NodeProcessorType>
+    template<typename NodePlayerType>
     struct TestProcess
     {
-        TestProcess (std::unique_ptr<NodeProcessorType> playerToUse, TestSetup ts,
+        TestProcess (std::unique_ptr<NodePlayerType> playerToUse, TestSetup ts,
                      const int numChannelsToUse, const double durationInSeconds, bool writeToFile)
             : testSetup (ts), numChannels (numChannelsToUse)
         {
@@ -348,20 +348,20 @@ namespace test_utilities
         
         Node& getNode() const
         {
-            return *processor->getNode();
+            return *player->getNode();
         }
 
         void setNode (std::unique_ptr<Node> newNode)
         {
             jassert (newNode != nullptr);
-            processor->setNode (std::move (newNode));
+            player->setNode (std::move (newNode));
         }
         
-        void setPlayer (std::unique_ptr<NodeProcessorType> newPlayerToUse)
+        void setPlayer (std::unique_ptr<NodePlayerType> newPlayerToUse)
         {
             jassert (newPlayerToUse != nullptr);
-            processor = std::move (newPlayerToUse);
-            processor->prepareToPlay (testSetup.sampleRate, testSetup.blockSize);
+            player = std::move (newPlayerToUse);
+            player->prepareToPlay (testSetup.sampleRate, testSetup.blockSize);
         }
         
         void setPlayHead (tracktion_graph::PlayHead* newPlayHead)
@@ -389,8 +389,8 @@ namespace test_utilities
                 if (playHead)
                     playHead->setReferenceSampleRange (referenceSampleRange);
                 
-                numProcessMisses += processor->process ({ referenceSampleRange,
-                                                        { { subSectionBuffer }, midi } });
+                numProcessMisses += player->process ({ referenceSampleRange,
+                                                       { { subSectionBuffer }, midi } });
                 
                 if (writer)
                     writer->writeFromAudioSampleBuffer (subSectionBuffer, 0, subSectionBuffer.getNumSamples());
@@ -438,7 +438,7 @@ namespace test_utilities
         }
         
     private:
-        std::unique_ptr<NodeProcessorType> processor;
+        std::unique_ptr<NodePlayerType> player;
         TestSetup testSetup;
         const int numChannels;
         tracktion_graph::PlayHead* playHead = nullptr;
@@ -453,11 +453,11 @@ namespace test_utilities
         int numProcessMisses = 0;
     };
 
-    template<typename NodeProcessorType>
-    static inline std::shared_ptr<TestContext> createTestContext (std::unique_ptr<NodeProcessorType> processor, TestSetup ts,
+    template<typename NodePlayerType>
+    static inline std::shared_ptr<TestContext> createTestContext (std::unique_ptr<NodePlayerType> player, TestSetup ts,
                                                                   const int numChannels, const double durationInSeconds)
     {
-        return TestProcess<NodeProcessorType> (std::move (processor), ts, numChannels, durationInSeconds, true).processAll();
+        return TestProcess<NodePlayerType> (std::move (player), ts, numChannels, durationInSeconds, true).processAll();
     }
 
     static inline std::shared_ptr<TestContext> createBasicTestContext (std::unique_ptr<Node> node, const TestSetup ts,

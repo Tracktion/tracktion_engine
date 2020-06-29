@@ -287,15 +287,6 @@ bool EditRenderJob::RenderPass::initialise()
         {
             Array<Track*> tracksToDo;
 
-            CreateNodeParams cnp;
-            cnp.sampleRate = r.sampleRateForAudio;
-            cnp.blockSize = r.blockSizeForAudio;
-            cnp.allowedClips = r.allowedClips.isEmpty() ? nullptr : &r.allowedClips;
-            cnp.allowedTracks = r.tracksToDo.isZero() ? nullptr : &tracksToDo;
-            cnp.forRendering = true;
-            cnp.includePlugins = r.usePlugins;
-            cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
-            
             // Find Track pointers for bitset
             auto allTracks = getAllTracks (*r.edit);
 
@@ -305,17 +296,28 @@ bool EditRenderJob::RenderPass::initialise()
             // Initialise playhead and continuity
             auto playHead = std::make_unique<tracktion_graph::PlayHead>();
             auto playHeadState = std::make_unique<tracktion_graph::PlayHeadState> (*playHead);
+            auto processState = std::make_unique<ProcessState> (*playHeadState);
+
+            CreateNodeParams cnp { *processState };
+            cnp.sampleRate = r.sampleRateForAudio;
+            cnp.blockSize = r.blockSizeForAudio;
+            cnp.allowedClips = r.allowedClips.isEmpty() ? nullptr : &r.allowedClips;
+            cnp.allowedTracks = r.tracksToDo.isZero() ? nullptr : &tracksToDo;
+            cnp.forRendering = true;
+            cnp.includePlugins = r.usePlugins;
+            cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
+
             std::unique_ptr<tracktion_graph::Node> node;
 
-            callBlocking ([this, &node, &playHeadState, &cnp]
+            callBlocking ([this, &node, &cnp]
             {
-                node = std::move (createNodeForEdit (*r.edit, *playHeadState, cnp).node);
+                node = std::move (createNodeForEdit (*r.edit, cnp).node);
             });
 
             if (node)
             {
                 task.reset (new Renderer::RenderTask (desc, r,
-                                                      std::move (node), std::move (playHead), std::move (playHeadState),
+                                                      std::move (node), std::move (playHead), std::move (playHeadState), std::move (processState),
                                                       owner.progress, &owner.thumbnailToUpdate));
                 return task->errorMessage.isEmpty();
             }

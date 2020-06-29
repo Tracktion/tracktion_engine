@@ -17,6 +17,8 @@
 #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
  #include <tracktion_graph/tracktion_graph.h>
 
+ #include "playback/graph/tracktion_TracktionEngineNode.h"
+ #include "playback/graph/tracktion_TracktionNodePlayer.h"
  #include "playback/graph/tracktion_NodeRenderContext.h"
  #include "playback/graph/tracktion_EditNodeBuilder.h"
 #endif

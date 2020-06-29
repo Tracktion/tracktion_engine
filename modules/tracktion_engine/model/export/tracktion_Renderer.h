@@ -22,6 +22,7 @@ namespace tracktion_engine
 
 #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
 class NodeRenderContext;
+struct ProcessState;
 #endif
 
 //==============================================================================
@@ -103,6 +104,7 @@ public:
                     std::unique_ptr<tracktion_graph::Node>,
                     std::unique_ptr<tracktion_graph::PlayHead>,
                     std::unique_ptr<tracktion_graph::PlayHeadState>,
+                    std::unique_ptr<ProcessState>,
                     std::atomic<float>& progressToUpdate,
                     juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver*);
        #endif
@@ -132,6 +134,7 @@ public:
         std::unique_ptr<tracktion_graph::Node> graphNode;
         std::unique_ptr<tracktion_graph::PlayHead> playHead;
         std::unique_ptr<tracktion_graph::PlayHeadState> playHeadState;
+        std::unique_ptr<ProcessState> processState;
         std::unique_ptr<NodeRenderContext> nodeRenderContext;
        #endif
 

@@ -34,6 +34,15 @@ public:
     }
 
 private:
+    static std::shared_ptr<test_utilities::TestContext> createTracktionTestContext (ProcessState& processState, std::unique_ptr<Node> node,
+                                                                                    test_utilities::TestSetup ts, int numChannels, double durationInSeconds)
+    {
+        test_utilities::TestProcess<TracktionNodePlayer> testProcess (std::make_unique<TracktionNodePlayer> (std::move (node), processState), ts, numChannels, durationInSeconds, true);
+        testProcess.setPlayHead (&processState.playHeadState.playHead);
+        
+        return testProcess.processAll();
+    }
+    
     //==============================================================================
     //==============================================================================
     void runBasicTests (test_utilities::TestSetup ts, bool playSyncedToRange)
@@ -48,7 +57,8 @@ private:
         tracktion_graph::PlayHead playHead;
         playHead.setScrubbingBlockLength (timeToSample (0.08, ts.sampleRate));
         tracktion_graph::PlayHeadState playHeadState (playHead);
-        
+        ProcessState processState (playHeadState);
+
         if (playSyncedToRange)
             playHead.play ({ 0, std::numeric_limits<int64_t>::max() }, false);
         else
@@ -63,11 +73,11 @@ private:
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
-                                            playHeadState,
+                                            processState,
                                             true);
             
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
-            auto testContext = createBasicTestContext (std::move (node), playHeadState, ts, 1, 6.0);
+            auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
             
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 0.0, fileLengthSeconds }, ts.sampleRate), 1.0f, 0.707f);
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ fileLengthSeconds, fileLengthSeconds + 1.0 }, ts.sampleRate), 0.0f, 0.0f);
@@ -83,13 +93,13 @@ private:
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
-                                            playHeadState,
+                                            processState,
                                             true);
             
             playHead.setUserIsDragging (true);
             
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
-            auto testContext = createBasicTestContext (std::move (node), playHeadState, ts, 1, 6.0);
+            auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
 
             playHead.setUserIsDragging (false);
 
@@ -105,11 +115,11 @@ private:
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
-                                            playHeadState,
+                                            processState,
                                             true);
             
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
-            auto testContext = createBasicTestContext (std::move (node), playHeadState, ts, 1, 6.0);
+            auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
 
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 0.0, 1.0 }, ts.sampleRate), 0.0f, 0.0f);
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 1.0, 4.0 }, ts.sampleRate), 1.0f, 0.707f);
@@ -125,11 +135,11 @@ private:
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
-                                            playHeadState,
+                                            processState,
                                             true);
             
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
-            auto testContext = createBasicTestContext (std::move (node), playHeadState, ts, 1, 6.0);
+            auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
 
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 0.0, 1.0 }, ts.sampleRate), 0.0f, 0.0f);
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 1.0, 4.0 }, ts.sampleRate), 1.0f, 0.707f);
@@ -148,6 +158,7 @@ private:
         
         tracktion_graph::PlayHead playHead;
         tracktion_graph::PlayHeadState playHeadState (playHead);
+        ProcessState processState (playHeadState);
 
         beginTest ("Loop 0s-1s");
         {
@@ -159,14 +170,14 @@ private:
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
-                                            playHeadState,
+                                            processState,
                                             true);
 
             // Loop playback between 0s & 1s on the timeline
             playHead.play ({ 0, timeToSample (1.0, ts.sampleRate) }, true);
 
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
-            auto testContext = createBasicTestContext (std::move (node), playHeadState, ts, 1, 5.0);
+            auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 5.0);
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 0.0, 5.0 }, ts.sampleRate), 1.0f, 0.707f);
         }
 
@@ -180,14 +191,15 @@ private:
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
-                                            playHeadState,
+                                            processState,
                                             true);
 
             // Loop playback between 0s & 1s on the timeline
+            playHead.setReferenceSampleRange ({ 0, ts.blockSize });
             playHead.play ({ timeToSample (1.0, ts.sampleRate), timeToSample (2.0, ts.sampleRate) }, true);
 
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
-            auto testContext = createBasicTestContext (std::move (node), playHeadState, ts, 1, 5.0);
+            auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 5.0);
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 0.0, 5.0 }, ts.sampleRate), 1.0f, 0.707f);
         }
     }
