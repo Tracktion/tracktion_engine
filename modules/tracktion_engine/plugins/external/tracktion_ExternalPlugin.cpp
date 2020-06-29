@@ -519,7 +519,6 @@ void ExternalPlugin::forceFullReinitialise()
 
     if (isInstancePrepared && pluginInstance->getSampleRate() > 0 && pluginInstance->getBlockSize() > 0)
     {
-        pluginInstance->releaseResources();
         pluginInstance->prepareToPlay (pluginInstance->getSampleRate(), pluginInstance->getBlockSize());
     }
 
@@ -1022,6 +1021,10 @@ void ExternalPlugin::initialise (const PlaybackInitialisationInfo& info)
 
     if (pluginInstance != nullptr)
     {
+        // This used to releaseResources() before calling prepareToPlay().
+        // However, with VST3, releaseResources() shuts down the MIDI
+        // input buses and then there is no way to get them back, which
+        // breaks all synths.
         if (! isInstancePrepared)
 		{
 			pluginInstance->prepareToPlay (info.sampleRate, info.blockSizeSamples);
