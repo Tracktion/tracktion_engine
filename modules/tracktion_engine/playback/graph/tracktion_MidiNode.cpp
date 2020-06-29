@@ -16,15 +16,15 @@ MidiNode::MidiNode (juce::MidiMessageSequence sequence,
                     bool useMPE,
                     EditTimeRange editTimeRange,
                     LiveClipLevel liveClipLevel,
-                    tracktion_graph::PlayHeadState& playHeadStateToUse,
+                    ProcessState& processState,
                     EditItemID editItemIDToUse,
                     std::function<bool()> shouldBeMuted)
-    : ms (std::move (sequence)),
+    : TracktionEngineNode (processState),
+      ms (std::move (sequence)),
       channelNumbers (midiChannelNumbers),
       useMPEChannelMode (useMPE),
       editSection (editTimeRange),
       clipLevel (liveClipLevel),
-      playHeadState (playHeadStateToUse),
       editItemID (editItemIDToUse),
       shouldBeMutedDelegate (std::move (shouldBeMuted)),
       wasMute (liveClipLevel.isMute())
@@ -76,11 +76,7 @@ bool MidiNode::isReadyToProcess()
 void MidiNode::process (const ProcessContext& pc)
 {
     SCOPED_REALTIME_CHECK
-
-    const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.referenceSampleRange);
-    jassert (! splitTimelineRange.isSplit); // This should be handled by the NodePlayer
-    
-    processSection (pc, splitTimelineRange.timelineRange1);
+    processSection (pc, getTimelineSampleRange());
 }
 
 void MidiNode::processSection (const ProcessContext& pc, juce::Range<int64_t> timelineRange)
@@ -91,7 +87,7 @@ void MidiNode::processSection (const ProcessContext& pc, juce::Range<int64_t> ti
     if (shouldBeMutedDelegate && shouldBeMutedDelegate())
         return;
     
-    const auto sectionEditTime = tracktion_graph::sampleToTime (timelineRange, sampleRate);
+    const auto sectionEditTime = getEditTimeRange();
     const auto localTime = sectionEditTime - editSection.getStart();
 
     if (sectionEditTime.getEnd() <= editSection.getStart()
@@ -105,13 +101,13 @@ void MidiNode::processSection (const ProcessContext& pc, juce::Range<int64_t> ti
         if (mute != wasMute)
         {
             wasMute = mute;
-            createNoteOffs (pc.buffers.midi, ms, localTime.getStart(), 0.0, playHeadState.playHead.isPlaying());
+            createNoteOffs (pc.buffers.midi, ms, localTime.getStart(), 0.0, getPlayHead().isPlaying());
         }
 
         return;
     }
 
-    if (! playHeadState.isContiguousWithPreviousBlock() || localTime.getStart() <= 0.00001 || shouldCreateMessagesForTime)
+    if (! getPlayHeadState().isContiguousWithPreviousBlock() || localTime.getStart() <= 0.00001 || shouldCreateMessagesForTime)
     {
         createMessagesForTime (localTime.getStart(), pc.buffers.midi);
         shouldCreateMessagesForTime = false;
@@ -161,8 +157,8 @@ void MidiNode::processSection (const ProcessContext& pc, juce::Range<int64_t> ti
         }
     }
 
-    if (playHeadState.isLastBlockOfLoop())
-        createNoteOffs (pc.buffers.midi, ms, localTime.getEnd(), localTime.getLength(), playHeadState.playHead.isPlaying());
+    if (getPlayHeadState().isLastBlockOfLoop())
+        createNoteOffs (pc.buffers.midi, ms, localTime.getEnd(), localTime.getLength(), getPlayHead().isPlaying());
 }
 
 void MidiNode::createMessagesForTime (double time, MidiMessageArray& buffer)

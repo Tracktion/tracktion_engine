@@ -39,6 +39,16 @@ public:
 
 private:
     //==============================================================================
+    static std::shared_ptr<test_utilities::TestContext> createTracktionTestContext (ProcessState& processState, std::unique_ptr<Node> node,
+                                                                                    test_utilities::TestSetup ts, int numChannels, double durationInSeconds)
+    {
+        test_utilities::TestProcess<TracktionNodePlayer> testProcess (std::make_unique<TracktionNodePlayer> (std::move (node), processState), ts, numChannels, durationInSeconds, true);
+        testProcess.setPlayHead (&processState.playHeadState.playHead);
+        
+        return testProcess.processAll();
+    }
+
+    //==============================================================================
     //==============================================================================
     void runMidiTests (tracktion_graph::test_utilities::TestSetup ts, bool playSyncedToRange)
     {
@@ -53,7 +63,8 @@ private:
         tracktion_graph::PlayHead playHead;
         playHead.setScrubbingBlockLength (timeToSample (0.08, ts.sampleRate));
         tracktion_graph::PlayHeadState playHeadState (playHead);
-        
+        ProcessState processState (playHeadState);
+
         if (playSyncedToRange)
             playHead.play ({ 0, std::numeric_limits<int64_t>::max() }, false);
         else
@@ -67,10 +78,10 @@ private:
                                                                       false,
                                                                       EditTimeRange (0.0, duration),
                                                                       LiveClipLevel(),
-                                                                      playHeadState,
+                                                                      processState,
                                                                       EditItemID());
             
-            auto testContext = createBasicTestContext (std::move (node), playHeadState, ts, 0, duration);
+            auto testContext = createTracktionTestContext (processState, std::move (node), ts, 0, duration);
 
             expectGreaterThan (sequence.getNumEvents(), 0);
             test_utilities::expectMidiBuffer (*this, testContext->midi, sampleRate, sequence);
@@ -84,10 +95,10 @@ private:
                                                                       false,
                                                                       editTimeRange,
                                                                       LiveClipLevel(),
-                                                                      playHeadState,
+                                                                      processState,
                                                                       EditItemID());
             
-            auto testContext = createBasicTestContext (std::move (node), playHeadState, ts, 0, duration + 1.0);
+            auto testContext = createTracktionTestContext (processState, std::move (node), ts, 0, duration + 1.0);
 
             juce::MidiMessageSequence expectedSequence;
             expectedSequence.addSequence (masterSequence,

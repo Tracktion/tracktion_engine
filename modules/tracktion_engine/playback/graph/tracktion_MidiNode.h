@@ -14,7 +14,8 @@ namespace tracktion_engine
 /** A Node that plays MIDI data from a MidiMessageSequence,
     at a specific MIDI channel.
 */
-class MidiNode final    : public tracktion_graph::Node
+class MidiNode final    : public tracktion_graph::Node,
+                          public TracktionEngineNode
 {
 public:
     MidiNode (juce::MidiMessageSequence,
@@ -22,7 +23,7 @@ public:
               bool useMPE,
               EditTimeRange editSection,
               LiveClipLevel,
-              tracktion_graph::PlayHeadState&,
+              ProcessState&,
               EditItemID,
               std::function<bool()> shouldBeMutedDelegate = nullptr);
     
@@ -38,7 +39,6 @@ private:
     bool useMPEChannelMode;
     EditTimeRange editSection;
     LiveClipLevel clipLevel;
-    tracktion_graph::PlayHeadState& playHeadState;
     EditItemID editItemID;
     std::function<bool()> shouldBeMutedDelegate = nullptr;
     
