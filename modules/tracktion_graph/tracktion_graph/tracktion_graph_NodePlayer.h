@@ -130,9 +130,9 @@ public:
         return sampleRate;
     }
     
-    int processPostorderedNodes (Node& rootNode, const std::vector<Node*>& allNodes, const Node::ProcessContext& pc)
+    int processPostorderedNodes (Node& rootNodeToProcess, const std::vector<Node*>& nodes, const Node::ProcessContext& pc)
     {
-        return processPostorderedNodesSingleThreaded (rootNode, allNodes, pc);
+        return processPostorderedNodesSingleThreaded (rootNodeToProcess, nodes, pc);
     }
 
 protected:
@@ -145,12 +145,13 @@ protected:
     
     juce::SpinLock inputAndNodesLock;
     
-    int processWithPlayHeadState (PlayHeadState& playHeadState, Node& rootNode, const std::vector<Node*>& allNodes, const Node::ProcessContext& pc)
+    int processWithPlayHeadState (PlayHeadState& phs, Node& rootNodeToProcess, const std::vector<Node*>& nodes,
+                                  const Node::ProcessContext& pc)
     {
         int numMisses = 0;
         
         // Check to see if the timeline needs to be processed in two halves due to looping
-        const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.referenceSampleRange);
+        const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (phs.playHead, pc.referenceSampleRange);
         
         if (splitTimelineRange.isSplit)
         {
@@ -161,9 +162,9 @@ protected:
                 auto inputAudio = pc.buffers.audio.getSubBlock (0, (size_t) firstNumSamples);
                 auto& inputMidi = pc.buffers.midi;
                 
-                playHeadState.update (firstRange);
+                phs.update (firstRange);
                 tracktion_graph::Node::ProcessContext pc1 { firstRange, { inputAudio , inputMidi } };
-                numMisses += processPostorderedNodes (rootNode, allNodes, pc1);
+                numMisses += processPostorderedNodes (rootNodeToProcess, nodes, pc1);
             }
             
             {
@@ -175,14 +176,14 @@ protected:
                 
                 //TODO: Use a scratch MidiMessageArray and then merge it back with the offset time
                 tracktion_graph::Node::ProcessContext pc2 { secondRange, { inputAudio , inputMidi } };
-                playHeadState.update (secondRange);
-                numMisses += processPostorderedNodes (rootNode, allNodes, pc2);
+                phs.update (secondRange);
+                numMisses += processPostorderedNodes (rootNodeToProcess, nodes, pc2);
             }
         }
         else
         {
-            playHeadState.update (pc.referenceSampleRange);
-            numMisses += processPostorderedNodes (rootNode, allNodes, pc);
+            phs.update (pc.referenceSampleRange);
+            numMisses += processPostorderedNodes (rootNodeToProcess, nodes, pc);
         }
         
         return numMisses;
