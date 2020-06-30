@@ -64,5 +64,5 @@
 #include "tracktion_graph/tracktion_graph_PlayHeadState.h"
 
 #include "tracktion_graph/tracktion_graph_NodePlayer.h"
-#include "tracktion_graph/tracktion_graph_MultiThreadedNodePlayer.h"
+#include "tracktion_graph/tracktion_graph_LockFreeMultiThreadedNodePlayer.h"
 #include "tracktion_graph/tracktion_graph_UtilityNodes.h"

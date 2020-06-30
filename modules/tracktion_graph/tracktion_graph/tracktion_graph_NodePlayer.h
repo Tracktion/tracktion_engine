@@ -14,6 +14,27 @@
 namespace tracktion_graph
 {
 
+namespace node_player_utils
+{
+    /** Prepares a specific Node to be played and returns all the Nodes. */
+    static std::vector<Node*> prepareToPlay (Node* node, Node* oldNode, double sampleRate, int blockSize)
+    {
+        if (node == nullptr)
+            return {};
+        
+        // First give the Nodes a chance to transform
+        transformNodes (*node);
+        
+        // Next, initialise all the nodes, this will call prepareToPlay on them and also
+        // give them a chance to do things like balance latency
+        const PlaybackInitialisationInfo info { sampleRate, blockSize, *node, oldNode };
+        visitNodes (*node, [&] (Node& n) { n.initialise (info); }, false);
+        
+        // Then find all the nodes as it might have changed after initialisation
+        return tracktion_graph::getNodes (*node, tracktion_graph::VertexOrdering::postordering);
+    }
+}
+
 //==============================================================================
 //==============================================================================
 /**
@@ -24,8 +45,8 @@ class NodePlayer
 {
 public:
     /** Creates an empty NodePlayer. */
-    NodePlayer () = default;
-
+    NodePlayer() = default;
+    
     /** Creates an NodePlayer to process a Node. */
     NodePlayer (std::unique_ptr<Node> nodeToProcess, PlayHeadState* playHeadStateToUse = nullptr)
         : input (std::move (nodeToProcess)), playHeadState (playHeadStateToUse)
@@ -38,13 +59,13 @@ public:
         return input.get();
     }
 
-    /** Returns the Node to process. */
+    /** Sets the Node to process. */
     void setNode (std::unique_ptr<Node> newNode)
     {
         setNode (std::move (newNode), sampleRate, blockSize);
     }
 
-    /** Sets the Node to process with a new current sample rate and block size. */
+    /** Sets the Node to process with a new sample rate and block size. */
     void setNode (std::unique_ptr<Node> newNode, double sampleRateToUse, int blockSizeToUse)
     {
         auto newNodes = prepareToPlay (newNode.get(), input.get(), sampleRateToUse, blockSizeToUse);
@@ -73,19 +94,7 @@ public:
         if (playHeadState != nullptr)
             playHeadState->playHead.setScrubbingBlockLength (timeToSample (0.08, sampleRate));
         
-        if (node == nullptr)
-            return {};
-        
-        // First give the Nodes a chance to transform
-        transformNodes (*node);
-        
-        // Next, initialise all the nodes, this will call prepareToPlay on them and also
-        // give them a chance to do things like balance latency
-        const PlaybackInitialisationInfo info { sampleRate, blockSize, *node, oldNode };
-        visitNodes (*node, [&] (Node& n) { n.initialise (info); }, false);
-        
-        // Then find all the nodes as it might have changed after initialisation
-        return tracktion_graph::getNodes (*node, tracktion_graph::VertexOrdering::postordering);
+        return node_player_utils::prepareToPlay (node, oldNode, sampleRateToUse, blockSizeToUse);
     }
 
     /** Processes a block of audio and MIDI data.
@@ -121,7 +130,12 @@ public:
         return sampleRate;
     }
     
-private:
+    int processPostorderedNodes (Node& rootNode, const std::vector<Node*>& allNodes, const Node::ProcessContext& pc)
+    {
+        return processPostorderedNodesSingleThreaded (rootNode, allNodes, pc);
+    }
+
+protected:
     std::unique_ptr<Node> input;
     PlayHeadState* playHeadState = nullptr;
     
@@ -131,7 +145,7 @@ private:
     
     juce::SpinLock inputAndNodesLock;
     
-    static int processWithPlayHeadState (PlayHeadState& playHeadState, Node& rootNode, const std::vector<Node*>& allNodes, const Node::ProcessContext& pc)
+    int processWithPlayHeadState (PlayHeadState& playHeadState, Node& rootNode, const std::vector<Node*>& allNodes, const Node::ProcessContext& pc)
     {
         int numMisses = 0;
         
@@ -177,7 +191,7 @@ private:
     /** Processes a group of Nodes assuming a postordering VertexOrdering.
         If these conditions are met the Nodes should be processed in a single loop iteration.
     */
-    static int processPostorderedNodes (Node& rootNode, const std::vector<Node*>& allNodes, const Node::ProcessContext& pc)
+    static int processPostorderedNodesSingleThreaded (Node& rootNode, const std::vector<Node*>& allNodes, const Node::ProcessContext& pc)
     {
         for (auto node : allNodes)
             node->prepareForNextBlock (pc.referenceSampleRange);

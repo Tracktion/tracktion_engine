@@ -33,7 +33,7 @@ public:
         engine.getPluginManager().createBuiltInType<LatencyPlugin>();
         
         runAllTests<tracktion_graph::NodePlayer>();
-        runAllTests<tracktion_graph::MultiThreadedNodePlayer>();
+        runAllTests<tracktion_graph::LockFreeMultiThreadedNodePlayer>();
     }
     
     template<typename NodePlayerType>
