@@ -177,9 +177,9 @@ void TemporaryFileManager::cleanUp()
         }
     }
 
-    for (juce::DirectoryIterator i (getTempDirectory(), false, "edit_*", juce::File::findDirectories); i.next();)
-        if (i.getFile().getNumberOfChildFiles (juce::File::findFilesAndDirectories) == 0)
-            i.getFile().deleteRecursively();
+    for (auto entry : juce::RangedDirectoryIterator (getTempDirectory(), false, "edit_*", juce::File::findDirectories))
+        if (entry.getFile().getNumberOfChildFiles (juce::File::findFilesAndDirectories) == 0)
+            entry.getFile().deleteRecursively();
 }
 
 juce::File TemporaryFileManager::getTempFile (const juce::String& filename) const
@@ -275,15 +275,15 @@ void TemporaryFileManager::purgeOrphanEditTempFolders (ProjectManager& pm)
     juce::Array<juce::File> filesToDelete;
     juce::StringArray reasonsForDeletion;
 
-    for (juce::DirectoryIterator i (getTempDirectory(), false, "edit_*", juce::File::findDirectories); i.next();)
+    for (auto entry : juce::RangedDirectoryIterator (getTempDirectory(), false, "edit_*", juce::File::findDirectories))
     {
-        auto itemID = getProjectItemIDFromFilename (i.getFile().getFileName());
+        auto itemID = getProjectItemIDFromFilename (entry.getFile().getFileName());
 
         if (itemID.isValid())
         {
             if (pm.getProjectItem (itemID) == nullptr)
             {
-                filesToDelete.add (i.getFile());
+                filesToDelete.add (entry.getFile());
 
                 auto pp = pm.getProject (itemID.getProjectID());
 
@@ -323,9 +323,9 @@ void TemporaryFileManager::purgeOrphanFreezeAndProxyFiles (Edit& edit)
     CRASH_TRACER
     juce::Array<juce::File> filesToDelete;
 
-    for (juce::DirectoryIterator i (edit.getTempDirectory (false), false, "*"); i.next();)
+    for (auto entry : juce::RangedDirectoryIterator (edit.getTempDirectory (false), false, "*"))
     {
-        auto name = i.getFile().getFileName();
+        auto name = entry.getFile().getFileName();
         auto itemID = getEditItemIDFromFilename (name);
 
         if (itemID.isValid())
@@ -337,12 +337,12 @@ void TemporaryFileManager::purgeOrphanFreezeAndProxyFiles (Edit& edit)
 
                 if (auto acb = dynamic_cast<AudioClipBase*> (clip))
                 {
-                    if (! acb->isUsingFile (AudioFile (edit.engine, i.getFile())))
-                        filesToDelete.add (i.getFile());
+                    if (! acb->isUsingFile (AudioFile (edit.engine, entry.getFile())))
+                        filesToDelete.add (entry.getFile());
                 }
                 else if (clip == nullptr)
                 {
-                    filesToDelete.add (i.getFile());
+                    filesToDelete.add (entry.getFile());
                 }
             }
             else if (name.startsWith (getFileProxyPrefix()))
@@ -353,13 +353,13 @@ void TemporaryFileManager::purgeOrphanFreezeAndProxyFiles (Edit& edit)
             {
                 if (auto at = dynamic_cast<AudioTrack*> (findTrackForID (edit, itemID)))
                     if (! at->isFrozen (Track::individualFreeze))
-                        filesToDelete.add (i.getFile());
+                        filesToDelete.add (entry.getFile());
             }
         }
         else if (name.startsWith (RenderManager::getFileRenderPrefix()))
         {
-            if (! edit.areAnyClipsUsingFile (AudioFile (edit.engine, i.getFile())))
-                filesToDelete.add (i.getFile());
+            if (! edit.areAnyClipsUsingFile (AudioFile (edit.engine, entry.getFile())))
+                filesToDelete.add (entry.getFile());
         }
     }
 

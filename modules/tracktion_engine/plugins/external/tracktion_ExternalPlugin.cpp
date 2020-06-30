@@ -1141,11 +1141,13 @@ void ExternalPlugin::prepareIncomingMidiMessages (MidiMessageArray& incoming, in
             layout.setLowerZone (15);
 
             auto layoutBuffer = MPEMessages::setZoneLayout (layout);
-            MidiBuffer::Iterator iter (layoutBuffer);
-            MidiMessage result;
+            for (auto itr : layoutBuffer)
+            {
+                auto result = itr.getMessage();
+                int samplePosition = itr.samplePosition;
 
-            for (int samplePosition = 0; iter.getNextEvent (result, samplePosition);)
                 midiBuffer.addEvent (result, samplePosition);
+            }
         }
     }
 
@@ -1272,14 +1274,17 @@ void ExternalPlugin::applyToBuffer (const AudioRenderContext& fc)
 
             if (! midiBuffer.isEmpty())
             {
-                MidiBuffer::Iterator iter (midiBuffer);
+                for (auto itr : midiBuffer)
+                {
+                    const auto& msg = itr.getMessage();
+                    int midiEventPos = itr.samplePosition;
 
-                const uint8* midiData;
-                int numBytes, midiEventPos;
+                    auto midiData = msg.getRawData();
+                    auto numBytes = msg.getRawDataSize();
 
-                while (iter.getNextEvent (midiData, numBytes, midiEventPos))
                     fc.bufferForMidiMessages->addMidiMessage (MidiMessage (midiData, numBytes, fc.midiBufferOffset + midiEventPos / sampleRate),
                                                               midiSourceID);
+                }
             }
         }
     }
