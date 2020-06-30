@@ -65,6 +65,9 @@ extern "C"
  #include "playback/graph/tracktion_ClickNode.h"
  #include "playback/graph/tracktion_ClickNode.cpp"
 
+ #include "playback/graph/tracktion_CombiningNode.h"
+ #include "playback/graph/tracktion_CombiningNode.cpp"
+
  #include "playback/graph/tracktion_FadeInOutNode.h"
  #include "playback/graph/tracktion_FadeInOutNode.cpp"
 

@@ -283,6 +283,25 @@ std::unique_ptr<tracktion_graph::Node> createNodeForClip (Clip& clip, const Trac
     return {};
 }
 
+std::unique_ptr<tracktion_graph::Node> createNodeForClips (const juce::Array<Clip*>& clips, const TrackMuteState& trackMuteState, const CreateNodeParams& params)
+{
+    if (clips.size() == 1)
+    {
+        auto clip = clips.getFirst();
+
+        if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
+            return createNodeForClip (*clip, trackMuteState, params);
+    }
+        
+    auto combiner =  std::make_unique<CombiningNode> (params.processState);
+    
+    for (auto clip : clips)
+        if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
+            combiner->addInput (createNodeForClip (*clip, trackMuteState, params), clip->getPosition().time);
+        
+    return combiner;
+}
+
 //==============================================================================
 std::unique_ptr<tracktion_graph::Node> createNodeForFrozenAudioTrack (AudioTrack& track, tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
@@ -340,11 +359,9 @@ std::unique_ptr<tracktion_graph::SummingNode> createClipsNode (const juce::Array
 {
     auto summingNode = std::make_unique<tracktion_graph::SummingNode>();
 
-    for (auto clip : clips)
-        if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
-            if (auto node = createNodeForClip (*clip, trackMuteState, params))
-                summingNode->addInput (std::move (node));
-
+    if (auto clipsNode = createNodeForClips (clips, trackMuteState, params))
+        summingNode->addInput (std::move (clipsNode));
+    
     if (auto araNode = createARAClipsNode (clips, trackMuteState, params.processState.playHeadState, params))
         summingNode->addInput (std::move (araNode));
     
