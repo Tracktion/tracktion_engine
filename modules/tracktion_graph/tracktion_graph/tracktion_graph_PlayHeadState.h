@@ -34,7 +34,7 @@ public:
     void update (juce::Range<int64_t> referenceSampleRange);
 
     /** Returns true if the play head did not jump and this block is contiguous with the previous block. */
-    inline bool isContiguousWithPreviousBlock() noexcept    { return ! didPlayheadJump(); }
+    inline bool isContiguousWithPreviousBlock() noexcept    { return ! (didPlayheadJump() || isFirstBlockOfLoop()); }
 
     /** Returns true if the play head jumped. */
     inline bool didPlayheadJump() noexcept                  { return playheadJumped; }
