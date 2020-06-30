@@ -1104,11 +1104,11 @@ void ReWirePlugin::deinitialise()
         device->deinitialise();
 }
 
-void ReWirePlugin::prepareForNextBlock (const PluginRenderContext& pc)
+void ReWirePlugin::prepareForNextBlock (double editTime)
 {
     if (currentTempoPosition != nullptr && device != nullptr)
     {
-        currentTempoPosition->setTime (pc.editTime);
+        currentTempoPosition->setTime (editTime);
 
         device->updateTempoInfo (TempoSequencePosition (*currentTempoPosition));
     }

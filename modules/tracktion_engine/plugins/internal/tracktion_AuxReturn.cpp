@@ -61,7 +61,7 @@ void AuxReturnPlugin::deinitialise()
     currentBuffer = nullptr;
 }
 
-void AuxReturnPlugin::prepareForNextBlock (const PluginRenderContext&)
+void AuxReturnPlugin::prepareForNextBlock (double)
 {
     const ScopedLock sl (addingAudioLock);
 

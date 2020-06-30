@@ -340,10 +340,9 @@ double RackInstance::getLatencySeconds()
     return 0.0;
 }
 
-void RackInstance::prepareForNextBlock (const PluginRenderContext& pc)
+void RackInstance::prepareForNextBlock (double)
 {
-    // N.B. This will be called by the EditPlaybackContext during normal playback
-    if (type != nullptr && pc.isRendering)
+    if (type != nullptr)
         type->newBlockStarted();
 }
 

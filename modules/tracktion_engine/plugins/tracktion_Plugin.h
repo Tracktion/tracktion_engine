@@ -188,7 +188,7 @@ public:
     virtual void applyToBuffer (const PluginRenderContext&) = 0;
 
     /** Called between successive rendering blocks. */
-    virtual void prepareForNextBlock (const PluginRenderContext&) {}
+    virtual void prepareForNextBlock (double /*editTime*/) {}
 
     // wrapper on applyTobuffer, called by the node
     void applyToBufferWithAutomation (const PluginRenderContext&);

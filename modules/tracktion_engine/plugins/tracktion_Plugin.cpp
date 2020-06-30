@@ -230,7 +230,7 @@ public:
 
     void prepareForNextBlock (const AudioRenderContext& rc) override
     {
-        plugin->prepareForNextBlock (rc);
+        plugin->prepareForNextBlock (rc.getEditTime().editRange1.getStart());
         input->prepareForNextBlock (rc);
     }
 

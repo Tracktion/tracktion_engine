@@ -69,6 +69,11 @@ void PluginNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInf
     jassert (sampleRate == info.sampleRate);
 }
 
+void PluginNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
+{
+    plugin->prepareForNextBlock (tracktion_graph::sampleToTime (referenceSampleRange.getStart(), sampleRate));
+}
+
 void PluginNode::process (const ProcessContext& pc)
 {
     auto inputBuffers = input->getProcessedOutput();

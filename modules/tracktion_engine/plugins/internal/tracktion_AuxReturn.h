@@ -28,7 +28,7 @@ public:
 
     void initialise (const PlaybackInitialisationInfo&) override;
     void deinitialise() override;
-    void prepareForNextBlock (const PluginRenderContext&) override;
+    void prepareForNextBlock (double editTime) override;
     void applyToBuffer (const PluginRenderContext&) override;
 
     bool takesAudioInput() override                  { return true; }
