@@ -78,11 +78,14 @@ namespace test_utilities
     /** Logs a MidiBuffer. */
     static inline void dgbMidiBuffer (const juce::MidiBuffer& buffer)
     {
+        ignoreUnused (buffer);
+       #if JUCE_DEBUG
         for (auto itr : buffer)
         {
             const auto& result = itr.getMessage();
             DBG(result.getDescription());
         }
+       #endif
     }
 
     /** Writes an audio buffer to a file. */
