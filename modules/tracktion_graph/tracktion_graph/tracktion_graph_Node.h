@@ -371,8 +371,27 @@ inline void visitNodes (Node& node, Visitor&& visitor, bool preordering)
     detail::VisitNodesWithRecord::visit (visitedNodes, node, visitor, preordering);
 }
 
+template<typename Visitor>
+inline void visitNodesBFS (Node& node, Visitor&& visitor)
+{
+    std::vector<Node*> visitedNodes;
+    detail::VisitNodesWithRecordBFS::visit (visitedNodes, node, visitor);
+}
+
 inline std::vector<Node*> getNodes (Node& node, VertexOrdering vertexOrdering)
 {
+    if (vertexOrdering == VertexOrdering::bfsPreordering
+        || vertexOrdering == VertexOrdering::bfsReversePreordering)
+    {
+        std::vector<Node*> visitedNodes;
+        detail::VisitNodesWithRecordBFS::visit (visitedNodes, node, [](auto&){});
+
+        if (vertexOrdering == VertexOrdering::bfsReversePreordering)
+            std::reverse (visitedNodes.begin(), visitedNodes.end());
+
+        return visitedNodes;
+    }
+    
     bool preordering = vertexOrdering == VertexOrdering::preordering
                     || vertexOrdering == VertexOrdering::reversePreordering;
     
