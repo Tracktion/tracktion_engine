@@ -12,6 +12,7 @@
 
 #include <thread>
 #include <emmintrin.h>
+#include "../3rd_party/concurrentqueue.h"
 
 namespace tracktion_graph
 {
@@ -70,7 +71,7 @@ public:
     /** Returns the current Node. */
     Node* getNode()
     {
-        return preparedNode.rootNode.get();
+        return rootNode;
     }
 
     int process (const Node::ProcessContext& pc)
@@ -89,7 +90,8 @@ public:
 
         // Then set the vector to be processed
         // Threads are always running so will process as soon numNodesLeftToProcess is non-zero
-        numNodesLeftToProcess = preparedNode.allNodes.size();
+        resetProcessQueue (preparedNode);
+//        numNodesLeftToProcess = preparedNode.allNodes.size();
         
         // Try to process Nodes until they're all processed
         for (;;)
@@ -119,17 +121,31 @@ private:
     std::vector<std::thread> threads;
     juce::Range<int64_t> referenceSampleRange;
     std::atomic<bool> threadsShouldExit { false };
-    std::atomic<size_t> numNodesLeftToProcess { 0 };
+//    std::atomic<size_t> numNodesLeftToProcess { 0 };
+
+    struct PlaybackNode
+    {
+        PlaybackNode (Node& n)
+            : node (n) {}
+        
+        Node& node;
+        std::vector<Node*> outputs;
+        std::atomic<size_t> outputsProcessed { 0 };
+    };
     
     struct PreparedNode
     {
         std::unique_ptr<Node> rootNode;
         std::vector<Node*> allNodes;
+        std::vector<std::unique_ptr<PlaybackNode>> playbackNodes;
+        moodycamel::ConcurrentQueue<Node*> nodesReadyToBeProcessed;
     };
     
+    Node* rootNode = nullptr;
     PreparedNode preparedNode, pendingPreparedNodeStorage;
     std::atomic<PreparedNode*> pendingPreparedNode { nullptr };
     std::atomic<bool> isUpdatingPreparedNode { false };
+    
 
     //==============================================================================
     double sampleRate = 44100.0;
@@ -141,7 +157,7 @@ private:
         isUpdatingPreparedNode = true;
         
         if (auto newPreparedNode = pendingPreparedNode.exchange (nullptr))
-            preparedNode = std::move (*newPreparedNode);
+            std::swap (preparedNode, *newPreparedNode);
         
         isUpdatingPreparedNode = false;
     }
@@ -186,10 +202,69 @@ private:
         while (isUpdatingPreparedNode)
             pause();
         
+//ddd        std::stable_sort (newNodes.begin(), newNodes.end(),
+//                          [] (auto n1, auto) { return n1->isReadyToProcess(); });
+        
         pendingPreparedNode = nullptr;
+        rootNode = newRoot.get();
         pendingPreparedNodeStorage.rootNode = std::move (newRoot);
         pendingPreparedNodeStorage.allNodes = std::move (newNodes);
+        buildNodesOutputLists (pendingPreparedNodeStorage);
+        
         pendingPreparedNode = &pendingPreparedNodeStorage;
+    }
+    
+    static void buildNodesOutputLists (PreparedNode& preparedNode)
+    {
+        preparedNode.playbackNodes.clear();
+        preparedNode.playbackNodes.reserve (preparedNode.allNodes.size());
+        
+        for (auto n : preparedNode.allNodes)
+        {
+            preparedNode.playbackNodes.push_back (std::make_unique<PlaybackNode> (*n));
+            n->internal = preparedNode.playbackNodes.back().get();
+        }
+        
+        // Iterate all nodes, for each input, add to the current Nodes output list
+        for (auto& playbackNode : preparedNode.playbackNodes)
+            for (auto inputNode : playbackNode->node.getDirectInputNodes())
+                static_cast<PlaybackNode*> (inputNode->internal)->outputs.push_back (&playbackNode->node);
+    }
+    
+    static void resetProcessQueue (PreparedNode& preparedNode)
+    {
+        // Clear the nodesReadyToBeProcessed list
+        for (;;)
+        {
+            Node* temp;
+            
+            if (! preparedNode.nodesReadyToBeProcessed.try_dequeue (temp))
+                break;
+        }
+
+        // Reset all the counters
+        // And then move any Nodes that are ready to the correct queue
+        for (auto& playbackNode : preparedNode.playbackNodes)
+        {
+            playbackNode->outputsProcessed = playbackNode->outputs.size();
+            
+            if (playbackNode->outputsProcessed == 0)
+                preparedNode.nodesReadyToBeProcessed.enqueue (&playbackNode->node);
+        }
+    }
+
+    static void updateProcessQueueForNode (PreparedNode& preparedNode, PlaybackNode& playbackNode)
+    {
+        for (auto output : playbackNode.outputs)
+        {
+            auto outputPlaybackNode = static_cast<PlaybackNode*> (output->internal);
+            
+            if (--outputPlaybackNode->outputsProcessed == 0)
+            {
+                jassert (outputPlaybackNode->node.isReadyToProcess());
+                preparedNode.nodesReadyToBeProcessed.enqueue (&outputPlaybackNode->node);
+            }
+        }
     }
 
     //==============================================================================
@@ -204,33 +279,46 @@ private:
                 pause();
         }
     }
-
+    
     bool processNextFreeNode()
     {
-        size_t expectedNumNodesLeft = numNodesLeftToProcess;
+        Node* nodeToProcess = nullptr;
         
-        if (expectedNumNodesLeft == 0)
+        if (! preparedNode.nodesReadyToBeProcessed.try_dequeue (nodeToProcess))
             return false;
-
-        const size_t nodeToReserve = expectedNumNodesLeft - 1;
-
-        if (numNodesLeftToProcess.compare_exchange_strong (expectedNumNodesLeft, nodeToReserve))
-        {
-            const size_t nodeIndex = preparedNode.allNodes.size() - nodeToReserve - 1;
-            auto node = preparedNode.allNodes[nodeIndex];
-
-            // Wait until this node is actually ready to be processed
-            // It might be waiting for other Nodes
-            while (! node->isReadyToProcess())
-                pause();
-            
-            node->process (referenceSampleRange);
-            
-            return true;
-        }
         
-        return false;
+        nodeToProcess->process (referenceSampleRange);
+        updateProcessQueueForNode (preparedNode, *(static_cast<PlaybackNode*> (nodeToProcess->internal)));
+        
+        return true;
     }
+
+//    bool processNextFreeNode()
+//    {
+//        size_t expectedNumNodesLeft = numNodesLeftToProcess;
+//
+//        if (expectedNumNodesLeft == 0)
+//            return false;
+//
+//        const size_t nodeToReserve = expectedNumNodesLeft - 1;
+//
+//        if (numNodesLeftToProcess.compare_exchange_strong (expectedNumNodesLeft, nodeToReserve))
+//        {
+//            const size_t nodeIndex = preparedNode.allNodes.size() - nodeToReserve - 1;
+//            auto node = preparedNode.allNodes[nodeIndex];
+//
+//            // Wait until this node is actually ready to be processed
+//            // It might be waiting for other Nodes
+//            while (! node->isReadyToProcess())
+//                pause();
+//
+//            node->process (referenceSampleRange);
+//
+//            return true;
+//        }
+//
+//        return false;
+//    }
 };
 
 }

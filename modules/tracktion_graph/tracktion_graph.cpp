@@ -37,4 +37,6 @@
 #include "tracktion_graph/tracktion_graph_tests_NodeVisiting.cpp"
 #include "tracktion_graph/tracktion_graph_Utility.cpp"
 
+#include "tracktion_graph/tracktion_graph_MultiThreadedNodePlayer.cpp"
+
 #include "utilities/tracktion_Threads.cpp"

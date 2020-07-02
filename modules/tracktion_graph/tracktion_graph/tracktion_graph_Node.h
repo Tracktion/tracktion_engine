@@ -174,6 +174,10 @@ public:
         AudioAndMidiBuffer buffers;
     };
     
+    //==============================================================================
+    /** @internal */
+    void* internal = nullptr;
+
 protected:
     /** Called once before playback begins for each node.
         Use this to allocate buffers etc.
