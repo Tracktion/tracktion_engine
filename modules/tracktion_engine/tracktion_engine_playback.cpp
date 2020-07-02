@@ -41,6 +41,12 @@ extern "C"
 #define JUCE_CORE_INCLUDE_JNI_HELPERS 1 // Required for Ableton Link on Android
 
 #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+ #if TRACKTION_UNIT_TESTS
+  #define GRAPH_UNIT_TESTS_WAVENODE          1
+  #define GRAPH_UNIT_TESTS_MIDINODE          1
+  #define GRAPH_UNIT_TESTS_RACKNODE          1
+ #endif 
+
  #include <tracktion_graph/tracktion_graph.h>
 
  #include <tracktion_graph/tracktion_graph/tracktion_graph_tests_Utilities.h>

@@ -14,6 +14,8 @@
 namespace tracktion_graph
 {
 
+#if GRAPH_UNIT_TESTS_PLAYHEAD
+
 //==============================================================================
 //==============================================================================
 class PlayHeadTests : public juce::UnitTest
@@ -205,5 +207,7 @@ private:
 };
 
 static PlayHeadTests playHeadTests;
+
+#endif
 
 }

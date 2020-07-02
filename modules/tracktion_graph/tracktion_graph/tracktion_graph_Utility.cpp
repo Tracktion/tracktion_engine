@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#if TRACKTION_UNIT_TESTS
+#if GRAPH_UNIT_TESTS_SAMPLECONVERSION
 
 namespace tracktion_graph
 {
@@ -63,4 +63,4 @@ static SampleConversionTests sampleConversionTests;
 
 }
 
-#endif //TRACKTION_UNIT_TESTS
+#endif //GRAPH_UNIT_TESTS_SAMPLECONVERSION

@@ -12,6 +12,8 @@
 namespace tracktion_graph
 {
 
+#if GRAPH_UNIT_TESTS_NODEVISITING
+
 using namespace test_utilities;
 
 //==============================================================================
@@ -139,6 +141,10 @@ private:
                              { D, E, F, B, G, C, A });
             expectNodeOrder (allNodes, trimEndNodes (getNodes (*A, VertexOrdering::reversePostordering)),
                              { A, C, G, B, F, E, D });
+            expectNodeOrder (allNodes, trimEndNodes (getNodes (*A, VertexOrdering::bfsPreordering)),
+                             { A, B, C, E, D, F, G });
+            expectNodeOrder (allNodes, trimEndNodes (getNodes (*A, VertexOrdering::bfsReversePreordering)),
+                             { G, F, D, E, C, B, A });
         }
     }
     
@@ -170,5 +176,7 @@ private:
 };
 
 static NodeVistingTests nodeVistingTests;
+
+#endif
 
 }

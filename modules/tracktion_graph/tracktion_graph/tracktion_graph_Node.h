@@ -218,7 +218,9 @@ enum class VertexOrdering
     preordering,            // The order in which nodes are first visited
     postordering,           // The order in which nodes are last visited
     reversePreordering,     // The reverse of the preordering
-    reversePostordering     // The reverse of the postordering
+    reversePostordering,    // The reverse of the postordering
+    bfsPreordering,         // A breadth-first search
+    bfsReversePreordering   // A reversed breadth-first search
 };
 
 /** Returns all the nodes in a Node graph in the order given by vertexOrdering. */
@@ -330,6 +332,34 @@ namespace detail
                 visitedNodes.push_back (&visitingNode);
                 visitor (visitingNode);
             }
+        }
+    };
+
+    struct VisitNodesWithRecordBFS
+    {
+        template<typename Visitor>
+        static void visit (std::vector<Node*>& visitedNodes, Node& visitingNode, Visitor&& visitor)
+        {
+            if (std::find (visitedNodes.begin(), visitedNodes.end(), &visitingNode) == visitedNodes.end())
+            {
+                visitedNodes.push_back (&visitingNode);
+                visitor (visitingNode);
+            }
+            
+            auto inputs = visitingNode.getDirectInputNodes();
+            
+            // Visit each node then go back to the first and recurse
+            for (auto n : inputs)
+            {
+                if (std::find (visitedNodes.begin(), visitedNodes.end(), n) == visitedNodes.end())
+                {
+                    visitedNodes.push_back (n);
+                    visitor (visitingNode);
+                }
+            }
+            
+            for (auto n : inputs)
+                visit  (visitedNodes, *n, visitor);
         }
     };
 }

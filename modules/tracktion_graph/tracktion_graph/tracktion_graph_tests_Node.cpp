@@ -12,6 +12,8 @@
 namespace tracktion_graph
 {
 
+#if GRAPH_UNIT_TESTS_NODE
+
 using namespace test_utilities;
 
 //==============================================================================
@@ -647,5 +649,7 @@ private:
 };
 
 static NodeTests nodeTests;
+
+#endif
 
 }

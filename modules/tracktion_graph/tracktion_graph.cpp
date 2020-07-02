@@ -17,6 +17,14 @@
  #error "Incorrect use of JUCE cpp file"
 #endif
 
+//==============================================================================
+#define GRAPH_UNIT_TESTS_PLAYHEAD          1
+#define GRAPH_UNIT_TESTS_PLAYHEADSTATE     1
+#define GRAPH_UNIT_TESTS_NODE              1
+#define GRAPH_UNIT_TESTS_NODEVISITING      1
+#define GRAPH_UNIT_TESTS_SAMPLECONVERSION  1
+
+//==============================================================================
 #include "tracktion_graph.h"
 
 //==============================================================================
