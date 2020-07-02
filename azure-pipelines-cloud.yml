@@ -37,7 +37,7 @@ steps:
 - bash: |
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
       export DISABLE_VALGRIND=1
-      xvfb-run -a tests/run_tests
+      tests/run_tests
     else
       if [[ "$(imageName)" == "windows-2019" ]]; then
         export MSBUILD_EXE="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
