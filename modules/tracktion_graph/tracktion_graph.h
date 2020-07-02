@@ -56,6 +56,7 @@
 //==============================================================================
 #include "utilities/tracktion_AudioFifo.h"
 #include "utilities/tracktion_MidiMessageArray.h"
+#include "utilities/tracktion_Threads.h"
 
 #include "tracktion_graph/tracktion_graph_PlayHead.h"
 #include "tracktion_graph/tracktion_graph_Utility.h"
