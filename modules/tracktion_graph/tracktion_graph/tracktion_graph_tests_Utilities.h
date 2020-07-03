@@ -204,7 +204,7 @@ namespace test_utilities
         
         bool sequencesTheSame = true;
         
-        for (int i = 0; i < actual.getNumEvents(); ++i)
+        for (int i = 0; i < std::min (actual.getNumEvents(), expected.getNumEvents()); ++i)
         {
             auto event1 = actual.getEventPointer (i);
             auto event2 = expected.getEventPointer (i);
@@ -227,7 +227,15 @@ namespace test_utilities
             ut.logMessage (juce::String ("Missing event at index 123 is:\n\texpected is: YYY, TTT")
                             .replace ("123", juce::String (i)).replace ("YYY", desc2).replace ("TTT", juce::String (event2->message.getTimeStamp())));
         }
-        
+
+        for (int i = expected.getNumEvents(); i < actual.getNumEvents(); ++i)
+        {
+            auto event2 = actual.getEventPointer (i);
+            auto desc2 = event2->message.getDescription();
+            ut.logMessage (juce::String ("Extra event at index 123 is:\n\tactual is: YYY, TTT")
+                            .replace ("123", juce::String (i)).replace ("YYY", desc2).replace ("TTT", juce::String (event2->message.getTimeStamp())));
+        }
+
         ut.expect (sequencesTheSame, "MIDI sequence contents not equal");
     }
 
