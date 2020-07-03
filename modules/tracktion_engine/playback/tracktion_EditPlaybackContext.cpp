@@ -14,8 +14,8 @@ namespace tracktion_engine
 #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
  struct EditPlaybackContext::NodePlaybackContext
  {
-     NodePlaybackContext (double sampleRateToUse, size_t numThreads)
-        : sampleRate (sampleRateToUse)
+     NodePlaybackContext (double sampleRateToUse, size_t numThreads, size_t maxNumThreadsToUse)
+        : sampleRate (sampleRateToUse), maxNumThreads (maxNumThreadsToUse)
      {
          setNumThreads (numThreads);
      }
@@ -23,7 +23,7 @@ namespace tracktion_engine
      void setNumThreads (size_t numThreads)
      {
          CRASH_TRACER
-         player.setNumThreads (numThreads);
+         player.setNumThreads (std::min (numThreads, maxNumThreads));
      }
      
      void setNodeContext (EditNodeContext editNodeContext)
@@ -54,6 +54,7 @@ namespace tracktion_engine
  private:
      MidiMessageArray scratchMidiBuffer;
      TracktionNodePlayer player { processState };
+     const size_t maxNumThreads;
 };
 #endif
 
@@ -93,7 +94,8 @@ EditPlaybackContext::EditPlaybackContext (TransportControl& tc)
     {
         #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
          nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.engine.getDeviceManager().getSampleRate(),
-                                                                      edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio());
+                                                                      edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio(),
+                                                                      size_t (edit.getIsPreviewEdit() ? 0 : juce::SystemStats::getNumCpus()));
         #endif
 
         // This ensures the referenceSampleRange of the new context has been synced
@@ -978,7 +980,7 @@ double EditPlaybackContext::getSampleRate() const
 void EditPlaybackContext::updateNumCPUs()
 {
     if (nodePlaybackContext)
-        nodePlaybackContext->setNumThreads (edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio() - 1);
+        nodePlaybackContext->setNumThreads ((size_t) edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio() - 1);
 }
 #endif
 
