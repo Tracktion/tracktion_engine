@@ -23,6 +23,10 @@
 #include <numeric>
 
 #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+ #if TRACKTION_UNIT_TESTS
+  #include <tracktion_graph/tracktion_graph_TestConfig.h>
+ #endif
+
  #include <tracktion_graph/tracktion_graph.h>
  
  #include <tracktion_graph/tracktion_graph/tracktion_graph_tests_Utilities.h>

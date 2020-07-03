@@ -18,11 +18,7 @@
 #endif
 
 //==============================================================================
-#define GRAPH_UNIT_TESTS_PLAYHEAD          1
-#define GRAPH_UNIT_TESTS_PLAYHEADSTATE     1
-#define GRAPH_UNIT_TESTS_NODE              1
-#define GRAPH_UNIT_TESTS_NODEVISITING      1
-#define GRAPH_UNIT_TESTS_SAMPLECONVERSION  1
+#include "tracktion_graph_TestConfig.h"
 
 //==============================================================================
 #include "tracktion_graph.h"
@@ -37,6 +33,7 @@
 #include "tracktion_graph/tracktion_graph_tests_NodeVisiting.cpp"
 #include "tracktion_graph/tracktion_graph_Utility.cpp"
 
+#include "tracktion_graph/tracktion_graph_LockFreeMultiThreadedNodePlayer.cpp"
 #include "tracktion_graph/tracktion_graph_MultiThreadedNodePlayer.cpp"
 
 #include "utilities/tracktion_Threads.cpp"

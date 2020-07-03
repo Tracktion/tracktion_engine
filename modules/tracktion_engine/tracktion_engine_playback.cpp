@@ -42,10 +42,8 @@ extern "C"
 
 #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
  #if TRACKTION_UNIT_TESTS
-  #define GRAPH_UNIT_TESTS_WAVENODE          1
-  #define GRAPH_UNIT_TESTS_MIDINODE          1
-  #define GRAPH_UNIT_TESTS_RACKNODE          1
- #endif 
+  #include <tracktion_graph/tracktion_graph_TestConfig.h>
+ #endif
 
  #include <tracktion_graph/tracktion_graph.h>
 
