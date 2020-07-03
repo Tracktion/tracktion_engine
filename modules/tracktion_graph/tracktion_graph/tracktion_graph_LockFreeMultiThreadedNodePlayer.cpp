@@ -180,8 +180,10 @@ void LockFreeMultiThreadedNodePlayer::buildNodesOutputLists (PreparedNode& prepa
     
     for (auto n : preparedNode.allNodes)
     {
+       #if JUCE_DEBUG
         for (auto& pn : preparedNode.playbackNodes)
             jassert (&pn->node != n);
+       #endif
         
         jassert (std::count (preparedNode.allNodes.begin(), preparedNode.allNodes.end(), n) == 1);
 
@@ -230,8 +232,10 @@ void LockFreeMultiThreadedNodePlayer::resetProcessQueue()
             jassert (playbackNode->node.isReadyToProcess());
     }
 
+   #if JUCE_DEBUG
     for (auto& playbackNode : preparedNode.playbackNodes)
         jassert (! playbackNode->hasBeenQueued);
+   #endif
 
     size_t numNodesJustQueued = 0;
 

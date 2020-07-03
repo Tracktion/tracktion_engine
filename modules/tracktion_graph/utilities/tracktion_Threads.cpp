@@ -31,14 +31,15 @@ namespace tracktion_graph
         return SetThreadPriority (handle, pri) != FALSE;
     }
 #else
-    bool setThreadPriority (void* handle, int priority)
+    template<typename HandleType>
+    bool setThreadPriority (HandleType handle, int priority)
     {
         struct sched_param param;
         int policy;
         priority = std::max (0, std::min (10, priority));
 
         if (handle == nullptr)
-            handle = (void*) pthread_self();
+            handle = (HandleType) pthread_self();
 
         if (pthread_getschedparam ((pthread_t) handle, &policy, &param) != 0)
             return false;
