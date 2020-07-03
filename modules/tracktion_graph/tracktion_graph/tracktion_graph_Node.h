@@ -201,7 +201,11 @@ private:
     std::atomic<bool> hasBeenProcessed { false };
     juce::AudioBuffer<float> audioBuffer;
     tracktion_engine::MidiMessageArray midiBuffer;
-    int numSamplesProcessed = 0;
+    std::atomic<int> numSamplesProcessed { 0 };
+
+   #if JUCE_DEBUG
+    std::atomic<bool> isBeingProcessed { false };
+   #endif
 };
 
 //==============================================================================
@@ -275,6 +279,11 @@ inline void Node::prepareForNextBlock (juce::Range<int64_t> referenceSampleRange
 
 inline void Node::process (juce::Range<int64_t> referenceSampleRange)
 {
+   #if JUCE_DEBUG
+    assert (! isBeingProcessed);
+    isBeingProcessed = true;
+   #endif
+
     audioBuffer.clear();
     midiBuffer.clear();
     const int numChannelsBeforeProcessing = audioBuffer.getNumChannels();
@@ -291,11 +300,15 @@ inline void Node::process (juce::Range<int64_t> referenceSampleRange)
                         { inputBlock , midiBuffer }
                       };
     process (pc);
-    numSamplesProcessed = numSamples;
+    numSamplesProcessed.store (numSamples, std::memory_order_release);
     hasBeenProcessed.store (true, std::memory_order_release);
     
     jassert (numChannelsBeforeProcessing == audioBuffer.getNumChannels());
     jassert (numSamplesBeforeProcessing == audioBuffer.getNumSamples());
+
+   #if JUCE_DEBUG
+    isBeingProcessed = false;
+   #endif
 }
 
 inline bool Node::hasProcessed() const
@@ -306,7 +319,7 @@ inline bool Node::hasProcessed() const
 inline Node::AudioAndMidiBuffer Node::getProcessedOutput()
 {
     jassert (hasProcessed());
-    return { juce::dsp::AudioBlock<float> (audioBuffer).getSubBlock (0, (size_t) numSamplesProcessed), midiBuffer };
+    return { juce::dsp::AudioBlock<float> (audioBuffer).getSubBlock (0, (size_t) numSamplesProcessed.load (std::memory_order_acquire)), midiBuffer };
 }
 
 

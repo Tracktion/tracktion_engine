@@ -76,6 +76,7 @@ private:
         const size_t numInputs;
         std::vector<Node*> outputs;
         std::atomic<size_t> numInputsToBeProcessed { 0 };
+        std::atomic<bool> hasBeenQueued { true };
     };
     
     struct PreparedNode

@@ -78,9 +78,16 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
         }
     }
 
-    auto output = preparedNode.rootNode->getProcessedOutput();
-    pc.buffers.audio.copyFrom (output.audio);
-    pc.buffers.midi.copyFrom (output.midi);
+    // Add output from graph to buffers
+    {
+        auto output = preparedNode.rootNode->getProcessedOutput();
+        const size_t numAudioChannels = std::min (output.audio.getNumChannels(), pc.buffers.audio.getNumChannels());
+        
+        if (numAudioChannels > 0)
+            pc.buffers.audio.getSubsetChannelBlock (0, numAudioChannels).add (output.audio.getSubsetChannelBlock (0, numAudioChannels));
+        
+        pc.buffers.midi.mergeFrom (output.midi);
+    }
 
     return -1;
 }
@@ -173,6 +180,9 @@ void LockFreeMultiThreadedNodePlayer::buildNodesOutputLists (PreparedNode& prepa
     
     for (auto n : preparedNode.allNodes)
     {
+        for (auto& pn : preparedNode.playbackNodes)
+            jassert (&pn->node != n);
+        
         jassert (std::count (preparedNode.allNodes.begin(), preparedNode.allNodes.end(), n) == 1);
 
         preparedNode.playbackNodes.push_back (std::make_unique<PlaybackNode> (*n));
@@ -208,6 +218,8 @@ void LockFreeMultiThreadedNodePlayer::resetProcessQueue()
     // And then move any Nodes that are ready to the correct queue
     for (auto& playbackNode : preparedNode.playbackNodes)
     {
+        jassert (playbackNode->hasBeenQueued);
+        playbackNode->hasBeenQueued = false;
         playbackNode->numInputsToBeProcessed.store (playbackNode->numInputs, std::memory_order_release);
         
         // Check only ready nodes will be queued
@@ -218,15 +230,26 @@ void LockFreeMultiThreadedNodePlayer::resetProcessQueue()
             jassert (playbackNode->node.isReadyToProcess());
     }
 
+    for (auto& playbackNode : preparedNode.playbackNodes)
+        jassert (! playbackNode->hasBeenQueued);
+
+    size_t numNodesJustQueued = 0;
+
     // Make sure the counters are reset for all nodes before queueing any
     for (auto& playbackNode : preparedNode.playbackNodes)
     {
         if (playbackNode->numInputsToBeProcessed.load (std::memory_order_acquire) == 0)
         {
+            jassert (! playbackNode->hasBeenQueued);
+            playbackNode->hasBeenQueued = true;
             preparedNode.nodesReadyToBeProcessed.enqueue (&playbackNode->node);
-            numNodesQueued.fetch_add (1, std::memory_order_release);
+            ++numNodesJustQueued;
         }
     }
+
+    // Make sure this is only incremented after all the nodes have been queued
+    // or the threads will start queueing Nodes at the same time
+    numNodesQueued += numNodesJustQueued;
 }
 
 void LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
@@ -241,6 +264,8 @@ void LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
         if (outputPlaybackNode->numInputsToBeProcessed.fetch_sub (1, std::memory_order_release) == 1)
         {
             jassert (outputPlaybackNode->node.isReadyToProcess());
+            jassert (! outputPlaybackNode->hasBeenQueued);
+            outputPlaybackNode->hasBeenQueued = true;
             preparedNode.nodesReadyToBeProcessed.enqueue (&outputPlaybackNode->node);
             numNodesQueued.fetch_add (1, std::memory_order_release);
         }
@@ -271,7 +296,7 @@ bool LockFreeMultiThreadedNodePlayer::processNextFreeNode()
         return false;
     
     numNodesQueued.fetch_sub (1, std::memory_order_release);
-    
+
     nodeToProcess->process (referenceSampleRange);
     updateProcessQueueForNode (*nodeToProcess);
     
