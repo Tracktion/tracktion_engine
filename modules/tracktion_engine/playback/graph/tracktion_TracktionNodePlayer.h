@@ -36,6 +36,15 @@ public:
     {
         nodePlayer.setNode (std::move (node));
     }
+    
+    /** Sets the number of threads to use for rendering.
+        This can be 0 in which case only the process calling thread will be used for processing.
+        N.B. this will pause processing whilst updating the threads so there will be a gap in the audio.
+    */
+    void setNumThreads (size_t numThreads)
+    {
+        nodePlayer.setNumThreads (numThreads);
+    }
 
     tracktion_graph::Node* getNode()
     {
@@ -110,8 +119,8 @@ public:
 private:
     tracktion_graph::PlayHeadState& playHeadState;
     ProcessState& processState;
-    tracktion_graph::NodePlayer nodePlayer;
     MidiMessageArray scratchMidi;
+    tracktion_graph::LockFreeMultiThreadedNodePlayer nodePlayer;
 };
 
 }

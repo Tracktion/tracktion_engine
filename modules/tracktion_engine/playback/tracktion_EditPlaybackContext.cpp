@@ -14,9 +14,16 @@ namespace tracktion_engine
 #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
  struct EditPlaybackContext::NodePlaybackContext
  {
-     NodePlaybackContext (double sampleRateToUse)
+     NodePlaybackContext (double sampleRateToUse, size_t numThreads)
         : sampleRate (sampleRateToUse)
      {
+         setNumThreads (numThreads);
+     }
+     
+     void setNumThreads (size_t numThreads)
+     {
+         CRASH_TRACER
+         player.setNumThreads (numThreads);
      }
      
      void setNodeContext (EditNodeContext editNodeContext)
@@ -85,7 +92,8 @@ EditPlaybackContext::EditPlaybackContext (TransportControl& tc)
     if (edit.shouldPlay())
     {
         #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-         nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.engine.getDeviceManager().getSampleRate());
+         nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.engine.getDeviceManager().getSampleRate(),
+                                                                      edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio());
         #endif
 
         // This ensures the referenceSampleRange of the new context has been synced
@@ -965,6 +973,12 @@ double EditPlaybackContext::getSampleRate() const
 {
     return nodePlaybackContext ? nodePlaybackContext->sampleRate
                                : 44100.0;
+}
+
+void EditPlaybackContext::updateNumCPUs()
+{
+    if (nodePlaybackContext)
+        nodePlaybackContext->setNumThreads (edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio() - 1);
 }
 #endif
 

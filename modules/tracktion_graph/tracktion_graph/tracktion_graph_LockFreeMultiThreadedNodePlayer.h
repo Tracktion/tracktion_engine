@@ -26,10 +26,14 @@ public:
     /** Creates an empty LockFreeMultiThreadedNodePlayer. */
     LockFreeMultiThreadedNodePlayer() = default;
     
-    LockFreeMultiThreadedNodePlayer (std::unique_ptr<Node>);
-    
     /** Destructor. */
     ~LockFreeMultiThreadedNodePlayer();
+    
+    /** Sets the number of threads to use for rendering.
+        This can be 0 in which case only the process calling thread will be used for processing.
+        N.B. this will pause processing whilst updating the threads so there will be a gap in the audio.
+    */
+    void setNumThreads (size_t);
     
     /** Sets the Node to process. */
     void setNode (std::unique_ptr<Node>);
@@ -57,6 +61,7 @@ public:
     
 private:
     //==============================================================================
+    std::atomic<size_t> numThreadsToUse { std::max ((size_t) 0, (size_t) std::thread::hardware_concurrency() - 1) };
     std::vector<std::thread> threads;
     juce::Range<int64_t> referenceSampleRange;
     std::atomic<bool> threadsShouldExit { false };
@@ -99,7 +104,6 @@ private:
     void updatePreparedNode();
 
     //==============================================================================
-    static size_t getNumThreadsToUse();
     void clearThreads();
     void createThreads();
     void pause();

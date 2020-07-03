@@ -86,6 +86,7 @@ public:
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     tracktion_graph::PlayHead* getNodePlayHead() const;
     double getSampleRate() const;
+    void updateNumCPUs();
    #endif
 
 private:

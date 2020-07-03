@@ -323,10 +323,10 @@ public:
     RackNodePlayer (std::unique_ptr<tracktion_graph::Node> nodeToProcess,
                     std::shared_ptr<InputProvider> inputProviderToUse,
                     bool overrideInputProvider)
-        : nodePlayer (std::move (nodeToProcess)),
-          inputProvider (std::move (inputProviderToUse)),
+        : inputProvider (std::move (inputProviderToUse)),
           overrideInputs (overrideInputProvider)
     {
+        nodePlayer.setNode (std::move (nodeToProcess));
     }
 
     /** Preapres the processor to be played. */

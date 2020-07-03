@@ -12,14 +12,17 @@
 
 namespace tracktion_graph
 {
-LockFreeMultiThreadedNodePlayer::LockFreeMultiThreadedNodePlayer (std::unique_ptr<Node> node)
-{
-    preparedNode.rootNode = (std::move (node));
-}
 
 LockFreeMultiThreadedNodePlayer::~LockFreeMultiThreadedNodePlayer()
 {
     clearThreads();
+}
+
+void LockFreeMultiThreadedNodePlayer::setNumThreads (size_t newNumThreads)
+{
+    clearThreads();
+    numThreadsToUse = newNumThreads;
+    createThreads();
 }
 
 void LockFreeMultiThreadedNodePlayer::setNode (std::unique_ptr<Node> newNode)
@@ -52,19 +55,27 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
     // Prepare all the nodes to be played back
     for (auto node : preparedNode.allNodes)
         node->prepareForNextBlock (referenceSampleRange);
-
-    // Reset the queue to be processed
-    jassert (preparedNode.playbackNodes.size() == preparedNode.allNodes.size());
-    resetProcessQueue();
     
-    // Try to process Nodes until the root is ready
-    for (;;)
+    if (numThreadsToUse.load (std::memory_order_acquire) == 0)
     {
-        if (preparedNode.rootNode->hasProcessed())
-            break;
+        for (auto node : preparedNode.allNodes)
+            node->process (referenceSampleRange);
+    }
+    else
+    {
+        // Reset the queue to be processed
+        jassert (preparedNode.playbackNodes.size() == preparedNode.allNodes.size());
+        resetProcessQueue();
         
-        if (! processNextFreeNode())
-            pause();
+        // Try to process Nodes until the root is ready
+        for (;;)
+        {
+            if (preparedNode.rootNode->hasProcessed())
+                break;
+            
+            if (! processNextFreeNode())
+                pause();
+        }
     }
 
     auto output = preparedNode.rootNode->getProcessedOutput();
@@ -99,11 +110,6 @@ void LockFreeMultiThreadedNodePlayer::updatePreparedNode()
 }
 
 //==============================================================================
-size_t LockFreeMultiThreadedNodePlayer::getNumThreadsToUse()
-{
-    return std::max ((size_t) 1, (size_t) std::thread::hardware_concurrency() - 1);
-}
-
 void LockFreeMultiThreadedNodePlayer::clearThreads()
 {
     threadsShouldExit = true;
@@ -116,8 +122,14 @@ void LockFreeMultiThreadedNodePlayer::clearThreads()
 
 void LockFreeMultiThreadedNodePlayer::createThreads()
 {
-    for (size_t i = 0; i < getNumThreadsToUse(); ++i)
+    threadsShouldExit = false;
+    
+    // If there is 0 threads, simply process on the audio thread
+    for (size_t i = 0; i < numThreadsToUse.load(); ++i)
+    {
         threads.emplace_back ([this] { processNextFreeNodeOrWait(); });
+        setThreadPriority (threads.back(), 10);
+    }
 }
 
 inline void pause8()
@@ -224,7 +236,6 @@ void LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
     for (auto output : playbackNode->outputs)
     {
         auto outputPlaybackNode = static_cast<PlaybackNode*> (output->internal);
-        jassert (outputPlaybackNode->numInputsToBeProcessed < 100);
         
         // fetch_sub returns the previous value so it will now be 0
         if (outputPlaybackNode->numInputsToBeProcessed.fetch_sub (1, std::memory_order_release) == 1)

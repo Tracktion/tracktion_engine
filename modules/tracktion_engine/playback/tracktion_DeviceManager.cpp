@@ -1212,6 +1212,13 @@ void DeviceManager::updateNumCPUs()
 {
     const ScopedLock sl (deviceManager.getAudioCallbackLock());
     MixerAudioNode::updateNumCPUs (engine);
+    
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+    const ScopedLock cl (contextLock);
+
+    for (auto c : activeContexts)
+        c->updateNumCPUs();
+   #endif
 }
 
 void DeviceManager::addContext (EditPlaybackContext* c)
