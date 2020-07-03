@@ -36,8 +36,8 @@ TrackMuteState::TrackMuteState (Edit& e)
 void TrackMuteState::update()
 {
     const bool isPlayingNow = isBeingPlayed();
-    wasJustMutedFlag = wasBeingPlayedFlag && ! isPlayingNow;
-    wasJustUnMutedFlag = ! wasBeingPlayedFlag && isPlayingNow;
+    wasJustMutedFlag.store (wasBeingPlayedFlag && ! isPlayingNow, std::memory_order_release);
+    wasJustUnMutedFlag.store (! wasBeingPlayedFlag && isPlayingNow, std::memory_order_release);
     wasBeingPlayedFlag = isPlayingNow;
 }
 

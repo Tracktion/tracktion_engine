@@ -40,16 +40,17 @@ public:
 
     //==============================================================================
     /** Returns true if the last block was audible but this one isn't. */
-    bool wasJustMuted() const       { return wasJustMutedFlag; }
+    bool wasJustMuted() const       { return wasJustMutedFlag.load (std::memory_order_acquire); }
 
     /** Returns true if the last block wasn't audible but this one is. */
-    bool wasJustUnMuted() const     { return wasJustUnMutedFlag; }
+    bool wasJustUnMuted() const     { return wasJustUnMutedFlag.load (std::memory_order_acquire); }
 
 private:
     //==============================================================================
     Edit& edit;
     juce::ReferenceCountedObjectPtr<Track> track;
-    bool wasBeingPlayedFlag = false, wasJustMutedFlag = false, wasJustUnMutedFlag = false;
+    bool wasBeingPlayedFlag = false;
+    std::atomic<bool> wasJustMutedFlag { false }, wasJustUnMutedFlag { false };
     
     bool callInputWhileMuted = false;
     bool processMidiWhileMuted = false;

@@ -233,7 +233,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForMidiClip (MidiClip& clip, co
                                                 clip.getLiveClipLevel(),
                                                 params.processState,
                                                 clip.itemID,
-                                                [trackMuteState]
+                                                [&trackMuteState]
                                                 {
                                                     if (! trackMuteState.shouldTrackBeAudible())
                                                         return ! trackMuteState.shouldTrackMidiBeProcessed();
@@ -260,7 +260,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForStepClip (StepClip& clip, co
                                                 LiveClipLevel (level),
                                                 params.processState,
                                                 clip.itemID,
-                                                [trackMuteState]
+                                                [&trackMuteState]
                                                 {
                                                     if (! trackMuteState.shouldTrackBeAudible())
                                                         return ! trackMuteState.shouldTrackMidiBeProcessed();
