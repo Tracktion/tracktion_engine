@@ -204,6 +204,7 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
     {
         streamTime = r.time.getStart();
         playHead->playSyncedToRange (timeToSample (EditTimeRange (streamTime, Edit::maximumLength), r.sampleRateForAudio));
+        playHeadState->update (tracktion_graph::timeToSample (EditTimeRange (streamTime, blockEnd), r.sampleRateForAudio));
     }
 
     if (r.realTimeRender)
