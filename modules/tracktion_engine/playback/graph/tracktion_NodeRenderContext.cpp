@@ -162,7 +162,7 @@ NodeRenderContext::~NodeRenderContext()
     if (writer != nullptr)
         writer->closeForWriting();
 
-    callBlocking ([this] { nodePlayer->setNode (nullptr); });
+    callBlocking ([this] { nodePlayer.reset(); });
 
     if (needsToNormaliseAndTrim)
         owner.performNormalisingAndTrimming (originalParams, r);
