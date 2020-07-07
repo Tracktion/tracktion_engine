@@ -16,6 +16,7 @@ namespace tracktion_graph
 #ifdef _WIN32
     bool setThreadPriority (void* handle, int priority)
     {
+        assert (handle != nullptr);
         int pri = THREAD_PRIORITY_TIME_CRITICAL;
 
         if (priority < 1)       pri = THREAD_PRIORITY_IDLE;
@@ -25,21 +26,17 @@ namespace tracktion_graph
         else if (priority < 9)  pri = THREAD_PRIORITY_ABOVE_NORMAL;
         else if (priority < 10) pri = THREAD_PRIORITY_HIGHEST;
 
-        if (handle == 0)
-            handle = GetCurrentThread();
-
         return SetThreadPriority (handle, pri) != FALSE;
     }
 #else
     template<typename HandleType>
     bool setThreadPriority (HandleType handle, int priority)
     {
+        assert (handle != nullptr);
+        
         struct sched_param param;
         int policy;
         priority = std::max (0, std::min (10, priority));
-
-        if (handle == nullptr)
-            handle = (HandleType) pthread_self();
 
         if (pthread_getschedparam ((pthread_t) handle, &policy, &param) != 0)
             return false;
