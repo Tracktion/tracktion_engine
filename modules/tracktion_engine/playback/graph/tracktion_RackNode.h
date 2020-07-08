@@ -329,6 +329,17 @@ public:
         nodePlayer.setNode (std::move (nodeToProcess));
     }
 
+    /** Creates an RackNodePlayer to process an Node with input, sample rate and block size. */
+    RackNodePlayer (std::unique_ptr<tracktion_graph::Node> nodeToProcess,
+                    std::shared_ptr<InputProvider> inputProviderToUse,
+                    bool overrideInputProvider,
+                    double sampleRateToUse, int blockSizeToUse)
+        : inputProvider (std::move (inputProviderToUse)),
+          overrideInputs (overrideInputProvider)
+    {
+        nodePlayer.setNode (std::move (nodeToProcess), sampleRateToUse, blockSizeToUse);
+    }
+    
     /** Preapres the processor to be played. */
     void prepareToPlay (double sampleRate, int blockSize)
     {
