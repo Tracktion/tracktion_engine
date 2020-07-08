@@ -235,6 +235,7 @@ void LockFreeMultiThreadedNodePlayer::resetProcessQueue()
    #if JUCE_DEBUG
     for (auto& playbackNode : preparedNode.playbackNodes)
     {
+        playbackNode->hasBeenDequeued = false;
         jassert (! playbackNode->hasBeenQueued);
         jassert (playbackNode->numInputsToBeProcessed == playbackNode->numInputs);
         jassert (playbackNode->numInputsToBeProcessed.load (std::memory_order_acquire) == playbackNode->numInputs);
@@ -285,7 +286,7 @@ void LockFreeMultiThreadedNodePlayer::processNextFreeNodeOrWait()
 {
     for (;;)
     {
-        if (threadsShouldExit)
+        if (threadsShouldExit.load (std::memory_order_acquire))
             return;
         
         if (! processNextFreeNode())
@@ -302,7 +303,12 @@ bool LockFreeMultiThreadedNodePlayer::processNextFreeNode()
         
     if (! preparedNode.nodesReadyToBeProcessed.try_dequeue (nodeToProcess))
         return false;
-    
+
+   #if JUCE_DEBUG
+    jassert (nodeToProcess != nullptr);
+    jassert (! static_cast<PlaybackNode*> (nodeToProcess->internal)->hasBeenDequeued);
+    static_cast<PlaybackNode*> (nodeToProcess->internal)->hasBeenDequeued = true;
+   #endif
     numNodesQueued.fetch_sub (1, std::memory_order_release);
 
     nodeToProcess->process (referenceSampleRange);

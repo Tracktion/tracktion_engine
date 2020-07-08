@@ -87,6 +87,9 @@ private:
         std::vector<Node*> outputs;
         std::atomic<size_t> numInputsToBeProcessed { 0 };
         std::atomic<bool> hasBeenQueued { true };
+       #if JUCE_DEBUG
+        std::atomic<bool> hasBeenDequeued { false };
+       #endif
     };
     
     struct PreparedNode
