@@ -234,7 +234,11 @@ void LockFreeMultiThreadedNodePlayer::resetProcessQueue()
 
    #if JUCE_DEBUG
     for (auto& playbackNode : preparedNode.playbackNodes)
+    {
         jassert (! playbackNode->hasBeenQueued);
+        jassert (playbackNode->numInputsToBeProcessed == playbackNode->numInputs);
+        jassert (playbackNode->numInputsToBeProcessed.load (std::memory_order_acquire) == playbackNode->numInputs);
+    }
    #endif
 
     size_t numNodesJustQueued = 0;

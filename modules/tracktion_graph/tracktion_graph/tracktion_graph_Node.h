@@ -292,7 +292,8 @@ inline void Node::process (juce::Range<int64_t> referenceSampleRange)
 
     const int numSamples = (int) referenceSampleRange.getLength();
     jassert (numSamples > 0); // This must be a valid number of samples to process
-    
+    jassert (numChannelsBeforeProcessing == 0 || numSamples <= audioBuffer.getNumSamples());
+
     auto inputBlock = numChannelsBeforeProcessing > 0 ? juce::dsp::AudioBlock<float> (audioBuffer).getSubBlock (0, (size_t) numSamples)
                                                       : juce::dsp::AudioBlock<float>();
     ProcessContext pc {

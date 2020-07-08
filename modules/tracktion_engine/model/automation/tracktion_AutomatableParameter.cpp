@@ -1083,7 +1083,11 @@ void AutomatableParameter::updateToFollowCurve (double time)
         .visitSources ([&newModifierValue, time] (AutomationModifierSource& m) mutable
                        {
                            if (m.isEnabledAt (time))
-                               newModifierValue += m.getValueAt (time);
+                           {
+                               const float sourceModValue = m.getValueAt (time);
+                               jassert (! std::isnan (sourceModValue));
+                               newModifierValue += sourceModValue;
+                           }
                        });
 
     const float newBaseValue = [this, time]
