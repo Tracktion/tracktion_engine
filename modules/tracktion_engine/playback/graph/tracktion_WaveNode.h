@@ -31,7 +31,8 @@ public:
               EditTimeRange loopSection,
               LiveClipLevel,
               double speedRatio,
-              const juce::AudioChannelSet& channelsToUse,
+              const juce::AudioChannelSet& sourceChannelsToUse,
+              const juce::AudioChannelSet& destChannelsToFill,
               ProcessState&,
               bool isOfflineRender);
 
@@ -52,7 +53,7 @@ private:
     LiveClipLevel clipLevel;
     juce::Range<int64_t> editPositionInSamples;
     double audioFileSampleRate = 0;
-    const juce::AudioChannelSet channelsToUse;
+    const juce::AudioChannelSet channelsToUse, destChannels;
     AudioFileCache::Reader::Ptr reader;
 
     struct PerChannelState;

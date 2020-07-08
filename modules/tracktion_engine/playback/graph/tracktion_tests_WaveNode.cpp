@@ -73,6 +73,7 @@ private:
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
+                                            juce::AudioChannelSet::canonicalChannelSet (1),
                                             processState,
                                             true);
             
@@ -93,6 +94,7 @@ private:
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
+                                            juce::AudioChannelSet::canonicalChannelSet (1),
                                             processState,
                                             true);
             
@@ -115,6 +117,7 @@ private:
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
+                                            juce::AudioChannelSet::canonicalChannelSet (1),
                                             processState,
                                             true);
             
@@ -135,6 +138,7 @@ private:
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
+                                            juce::AudioChannelSet::canonicalChannelSet (1),
                                             processState,
                                             true);
             
@@ -170,6 +174,7 @@ private:
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
+                                            juce::AudioChannelSet::canonicalChannelSet (1),
                                             processState,
                                             true);
 
@@ -191,6 +196,7 @@ private:
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
+                                            juce::AudioChannelSet::canonicalChannelSet (1),
                                             processState,
                                             true);
 

@@ -31,6 +31,7 @@ WaveNode::WaveNode (const AudioFile& af,
                     LiveClipLevel level,
                     double speed,
                     const juce::AudioChannelSet& channelSetToUse,
+                    const juce::AudioChannelSet& destChannelsToFill,
                     ProcessState& ps,
                     bool isRendering)
    : TracktionEngineNode (ps),
@@ -41,7 +42,8 @@ WaveNode::WaveNode (const AudioFile& af,
      isOfflineRender (isRendering),
      audioFile (af),
      clipLevel (level),
-     channelsToUse (channelSetToUse)
+     channelsToUse (channelSetToUse),
+     destChannels (destChannelsToFill)
 {
 }
 
@@ -50,7 +52,7 @@ tracktion_graph::NodeProperties WaveNode::getNodeProperties()
     tracktion_graph::NodeProperties props;
     props.hasAudio = true;
     props.hasMidi = false;
-    props.numberOfChannels = juce::jlimit (1, std::max (channelsToUse.size(), 1), audioFile.getNumChannels());
+    props.numberOfChannels = destChannels.size();
     
     return props;
 }
@@ -97,6 +99,7 @@ bool WaveNode::isReadyToProcess()
 void WaveNode::process (const ProcessContext& pc)
 {
     SCOPED_REALTIME_CHECK
+    assert (outputSampleRate == getSampleRate());
 
     //TODO: Might get a performance boost by pre-setting the file position in prepareForNextBlock
     processSection (pc, getTimelineSampleRange());
