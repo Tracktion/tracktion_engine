@@ -31,8 +31,11 @@ public:
         ts.sampleRate = 96000.0;
         ts.blockSize = 128;
         
-        runWaveRendering (ts, 30.0, 2, 20, 12, true);
-        runWaveRendering (ts, 30.0, 2, 20, 12, false);
+        runWaveRendering (ts, 30.0, 2, 20, 12, true, false);
+        runWaveRendering (ts, 30.0, 2, 20, 12, false, false);
+        
+        runWaveRendering (ts, 30.0, 2, 20, 12, true, true);
+        runWaveRendering (ts, 30.0, 2, 20, 12, false, true);
     }
 
 private:
@@ -43,7 +46,8 @@ private:
                            int numChannels,
                            int numTracks,
                            int numFilesPerTrack,
-                           bool useSingleFile)
+                           bool useSingleFile,
+                           bool isMultiThreaded)
     {
         // Create Edit with 20 tracks
         // Create 12 5s files per track
@@ -52,7 +56,8 @@ private:
         using namespace test_utilities;
         auto& engine = *tracktion_engine::Engine::getEngines()[0];
         const auto description = test_utilities::getDescription (ts)
-                                    + juce::String (useSingleFile ? ", single file" : ", multiple files");
+                                    + juce::String (useSingleFile ? ", single file" : ", multiple files")
+                                    + juce::String (isMultiThreaded ? ", MT" : ", ST");
         
         tracktion_graph::PlayHead playHead;
         tracktion_graph::PlayHeadState playHeadState { playHead };
@@ -73,8 +78,12 @@ private:
 
         //===
         beginTest ("Wave - preparing: " + description);
-        TestProcess<NodePlayer> testContext (std::make_unique<NodePlayer> (std::move (node), &playHeadState),
-                                             ts, numChannels, context.edit->getLength(), false);
+        TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize),
+                                                      ts, numChannels, context.edit->getLength(), false);
+        
+        if (! isMultiThreaded)
+            testContext.getNodePlayer().setNumThreads (0);
+        
         testContext.setPlayHead (&playHeadState.playHead);
         playHeadState.playHead.playSyncedToRange ({});
         expect (true);

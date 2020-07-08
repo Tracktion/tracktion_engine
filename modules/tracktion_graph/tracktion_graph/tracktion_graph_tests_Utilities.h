@@ -359,6 +359,11 @@ namespace test_utilities
             return *player->getNode();
         }
 
+        NodePlayerType& getNodePlayer() const
+        {
+            return *player;
+        }
+
         void setNode (std::unique_ptr<Node> newNode)
         {
             jassert (newNode != nullptr);
