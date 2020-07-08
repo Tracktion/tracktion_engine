@@ -12,7 +12,17 @@
 
 #include <thread>
 #include <emmintrin.h>
+
+#ifdef _MSC_VER
+ #pragma warning (push)
+ #pragma warning (disable: 4127)
+#endif
+
 #include "../3rd_party/concurrentqueue.h"
+
+#ifdef _MSC_VER
+ #pragma warning (pop)
+#endif
 
 namespace tracktion_graph
 {
