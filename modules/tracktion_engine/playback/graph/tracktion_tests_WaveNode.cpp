@@ -38,7 +38,8 @@ private:
     static std::shared_ptr<test_utilities::TestContext> createTracktionTestContext (ProcessState& processState, std::unique_ptr<Node> node,
                                                                                     test_utilities::TestSetup ts, int numChannels, double durationInSeconds)
     {
-        test_utilities::TestProcess<TracktionNodePlayer> testProcess (std::make_unique<TracktionNodePlayer> (std::move (node), processState), ts, numChannels, durationInSeconds, true);
+        test_utilities::TestProcess<TracktionNodePlayer> testProcess (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize),
+                                                                      ts, numChannels, durationInSeconds, true);
         return testProcess.processAll();
     }
     

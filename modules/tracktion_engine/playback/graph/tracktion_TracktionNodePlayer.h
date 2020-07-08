@@ -31,10 +31,11 @@ public:
 
     /** Creates an NodePlayer to process a Node. */
     TracktionNodePlayer (std::unique_ptr<tracktion_graph::Node> node,
-                         ProcessState& processStateToUse)
+                         ProcessState& processStateToUse,
+                         double sampleRate, int blockSize)
         : TracktionNodePlayer (processStateToUse)
     {
-        nodePlayer.setNode (std::move (node));
+        nodePlayer.setNode (std::move (node), sampleRate, blockSize);
     }
     
     /** Sets the number of threads to use for rendering.

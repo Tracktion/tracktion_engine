@@ -57,7 +57,7 @@ NodeRenderContext::NodeRenderContext (Renderer::RenderTask& owner_, Renderer::Pa
     jassert (r.edit != nullptr);
     jassert (r.time.getLength() > 0.0);
 
-    nodePlayer = std::make_unique<TracktionNodePlayer> (std::move (n), *processState);
+    nodePlayer = std::make_unique<TracktionNodePlayer> (std::move (n), *processState, r.sampleRateForAudio, r.blockSizeForAudio);
 
     if (r.edit->getTransport().isPlayContextActive())
     {
