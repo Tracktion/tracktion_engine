@@ -1,6 +1,7 @@
 trigger:
   batch: true
 
+timeoutInMinutes: 90
 strategy:
   matrix:
     linux_16:
@@ -17,7 +18,6 @@ strategy:
       imageName: 'windows-2019'
 pool:
   vmImage: $(imageName)
-timeoutInMinutes: 90
 steps:
 - checkout: self
   submodules: true
