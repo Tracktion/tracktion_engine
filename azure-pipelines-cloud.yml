@@ -1,7 +1,6 @@
 trigger:
   batch: true
 
-timeoutInMinutes: 90
 strategy:
   matrix:
     linux_16:
@@ -42,6 +41,7 @@ steps:
       tests/run_tests
     fi
   displayName: 'Build'
+  timeoutInMinutes: 90
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'JUnit'
