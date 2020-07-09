@@ -95,7 +95,7 @@ EditPlaybackContext::EditPlaybackContext (TransportControl& tc)
         #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
          nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.engine.getDeviceManager().getSampleRate(),
                                                                       edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio(),
-                                                                      size_t (edit.getIsPreviewEdit() ? 0 : juce::SystemStats::getNumCpus()));
+                                                                      size_t (edit.getIsPreviewEdit() ? 0 : juce::SystemStats::getNumCpus() - 1));
         #endif
 
         // This ensures the referenceSampleRange of the new context has been synced
@@ -233,6 +233,7 @@ void EditPlaybackContext::clearNodes()
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     nodePlaybackContext->playHead.stop();
     nodePlaybackContext->setNodeContext ({});
+    nodePlaybackContext->setNumThreads (0);
    #endif
 }
 
@@ -455,6 +456,7 @@ void EditPlaybackContext::createNode()
     const bool hasTempoChanged = tempoSections.getChangeCount() != lastTempoSections.getChangeCount();
 
     nodePlaybackContext->setNodeContext (std::move (editNodeContext), cnp.sampleRate, cnp.blockSize);
+    updateNumCPUs();
 
     if (hasTempoChanged && lastTempoSections.size() > 0)
     {
