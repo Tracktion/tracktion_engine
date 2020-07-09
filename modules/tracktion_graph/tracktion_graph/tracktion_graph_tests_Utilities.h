@@ -46,14 +46,11 @@ namespace test_utilities
     {
         juce::MidiMessageSequence sequence;
         
-        for (juce::MidiBuffer::Iterator iter (buffer);;)
+        for (auto itr : buffer)
         {
-            juce::MidiMessage result;
-            int samplePosition = 0;
-            
-            if (! iter.getNextEvent (result, samplePosition))
-                break;
-            
+            const auto& result = itr.getMessage();
+            int samplePosition = itr.samplePosition;
+
             const double time = samplePosition / sampleRate;
             sequence.addEvent (result, time);
         }
@@ -83,16 +80,14 @@ namespace test_utilities
     /** Logs a MidiBuffer. */
     static inline void dgbMidiBuffer (const juce::MidiBuffer& buffer)
     {
-        for (juce::MidiBuffer::Iterator iter (buffer);;)
+        ignoreUnused (buffer);
+       #if JUCE_DEBUG
+        for (auto itr : buffer)
         {
-            juce::MidiMessage result;
-            int samplePosition = 0;
-
-            if (! iter.getNextEvent (result, samplePosition))
-                break;
-
+            const auto& result = itr.getMessage();
             DBG(result.getDescription());
         }
+       #endif
     }
 
     /** Writes an audio buffer to a file. */

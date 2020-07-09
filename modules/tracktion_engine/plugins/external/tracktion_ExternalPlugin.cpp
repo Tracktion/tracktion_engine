@@ -516,7 +516,6 @@ void ExternalPlugin::forceFullReinitialise()
 
     if (isInstancePrepared && pluginInstance->getSampleRate() > 0 && pluginInstance->getBlockSize() > 0)
     {
-        pluginInstance->releaseResources();
         pluginInstance->prepareToPlay (pluginInstance->getSampleRate(), pluginInstance->getBlockSize());
     }
 
@@ -1019,11 +1018,22 @@ void ExternalPlugin::initialise (const PlaybackInitialisationInfo& info)
 
     if (pluginInstance != nullptr)
     {
-        if (isInstancePrepared)
-            pluginInstance->releaseResources();
+        // This used to releaseResources() before calling prepareToPlay().
+        // However, with VST3, releaseResources() shuts down the MIDI
+        // input buses and then there is no way to get them back, which
+        // breaks all synths.
+        if (! isInstancePrepared)
+		{
+			pluginInstance->prepareToPlay (info.sampleRate, info.blockSizeSamples);
+			isInstancePrepared = true;
+		}
+		else if (info.sampleRate != lastSampleRate || info.blockSizeSamples != lastBlockSizeSamples)
+		{
+			pluginInstance->prepareToPlay (info.sampleRate, info.blockSizeSamples);
+		}
 
-        pluginInstance->prepareToPlay (info.sampleRate, info.blockSizeSamples);
-        isInstancePrepared = true;
+		lastSampleRate = info.sampleRate;
+		lastBlockSizeSamples = info.blockSizeSamples;
 
         latencySamples = pluginInstance->getLatencySamples();
         latencySeconds = latencySamples / info.sampleRate;
@@ -1058,9 +1068,6 @@ void ExternalPlugin::deinitialise()
 
         if (playhead != nullptr)
             playhead->setCurrentContext (nullptr);
-
-        pluginInstance->releaseResources();
-        isInstancePrepared = false;
     }
 }
 
@@ -1131,11 +1138,13 @@ void ExternalPlugin::prepareIncomingMidiMessages (MidiMessageArray& incoming, in
             layout.setLowerZone (15);
 
             auto layoutBuffer = MPEMessages::setZoneLayout (layout);
-            MidiBuffer::Iterator iter (layoutBuffer);
-            MidiMessage result;
+            for (auto itr : layoutBuffer)
+            {
+                auto result = itr.getMessage();
+                int samplePosition = itr.samplePosition;
 
-            for (int samplePosition = 0; iter.getNextEvent (result, samplePosition);)
                 midiBuffer.addEvent (result, samplePosition);
+            }
         }
     }
 
@@ -1262,14 +1271,17 @@ void ExternalPlugin::applyToBuffer (const PluginRenderContext& fc)
 
             if (! midiBuffer.isEmpty())
             {
-                MidiBuffer::Iterator iter (midiBuffer);
+                for (auto itr : midiBuffer)
+                {
+                    const auto& msg = itr.getMessage();
+                    int midiEventPos = itr.samplePosition;
 
-                const uint8* midiData;
-                int numBytes, midiEventPos;
+                    auto midiData = msg.getRawData();
+                    auto numBytes = msg.getRawDataSize();
 
-                while (iter.getNextEvent (midiData, numBytes, midiEventPos))
                     fc.bufferForMidiMessages->addMidiMessage (MidiMessage (midiData, numBytes, fc.midiBufferOffset + midiEventPos / sampleRate),
                                                               midiSourceID);
+                }
             }
         }
     }

@@ -236,12 +236,11 @@ private:
         {
             if (rc.bufferForMidiMessages != nullptr)
             {
-                MidiBuffer::Iterator itr (midi);
-
-                MidiMessage msg;
-                int pos = 0;
-                while (itr.getNextEvent (msg, pos))
+                for (auto itr : midi)
                 {
+                    auto msg = itr.getMessage();
+                    int pos = itr.samplePosition;
+
                     msg.setTimeStamp (pos / sampleRate + rc.midiBufferOffset);
                     rc.bufferForMidiMessages->addMidiMessage (msg, mpeSource);
                 }
