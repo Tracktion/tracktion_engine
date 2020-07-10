@@ -23,6 +23,18 @@ namespace
         return static_cast<int> (tracktion_graph::hash (sidechainMagicNum, sidechainSourceID.getRawID()));
     }
 
+    int getRackInputBusID (EditItemID rackID)
+    {
+        constexpr size_t rackInputMagicNum = 0x7261636b496e;
+        return static_cast<int> (tracktion_graph::hash (rackInputMagicNum, rackID.getRawID()));
+    }
+
+    int getRackOutputBusID (EditItemID rackID)
+    {
+        constexpr size_t rackOutputMagicNum = 0x7261636b4f7574;
+        return static_cast<int> (tracktion_graph::hash (rackOutputMagicNum, rackID.getRawID()));
+    }
+
     int getWaveInputDeviceBusID (EditItemID trackItemID)
     {
         constexpr size_t waveMagicNum = 0xc1abde;
@@ -477,6 +489,31 @@ std::unique_ptr<tracktion_graph::Node> createNodeForPlugin (Plugin& plugin, cons
     return node;
 }
 
+std::unique_ptr<tracktion_graph::Node> createNodeForRackInstance (RackInstance& rackInstance, std::unique_ptr<Node> node)
+{
+    jassert (node != nullptr);
+
+    if (rackInstance.isDisabled())
+        return node;
+
+    const auto rackInputID = getRackInputBusID (rackInstance.rackTypeID);
+    const auto rackOutputID = getRackOutputBusID (rackInstance.rackTypeID);
+    
+    // The input to the instance is referenced by the dry signal path
+    auto* inputNode = node.get();
+    
+    // TODO: left/right input gain and channel layout
+    node = makeNode<SendNode> (std::move (node), rackInputID);
+    node = makeNode<ReturnNode> (makeNode<SinkNode> (std::move (node)), rackOutputID);
+
+    // TODO: left/right output gain and channel layout
+    auto wetNode = makeNode<GainNode> (std::move (node), [wetGain = rackInstance.wetGain] { return wetGain->getCurrentValue(); });
+    auto dryNode = makeNode<GainNode> (inputNode, [dryGain = rackInstance.dryGain] { return dryGain->getCurrentValue(); });
+    auto sumNode = makeSummingNode ({ wetNode.release(), dryNode.release() });
+
+    return std::move (sumNode);
+}
+
 std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList& list, const TrackMuteState* trackMuteState, std::unique_ptr<Node> node,
                                                                 tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
@@ -486,6 +523,8 @@ std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList& list
             node = makeNode<SendNode> (std::move (node), sendPlugin->busNumber, [sendPlugin] { return volumeFaderPositionToGain (sendPlugin->gain->getCurrentValue()); });
         else if (auto returnPlugin = dynamic_cast<AuxReturnPlugin*> (p))
             node = makeNode<ReturnNode> (std::move (node), returnPlugin->busNumber);
+        else if (auto rackInstance = dynamic_cast<RackInstance*> (p))
+            node = createNodeForRackInstance (*rackInstance, std::move (node));
         else
             node = createNodeForPlugin (*p, trackMuteState, std::move (node), playHeadState, params);
     }
@@ -751,6 +790,47 @@ std::unique_ptr<tracktion_graph::Node> createNodeForTrack (Track& track, const C
 }
 
 //==============================================================================
+std::unique_ptr<Node> createNodeForRackType (RackType& rackType, const CreateNodeParams& params)
+{
+    const auto rackInputID = getRackInputBusID (rackType.rackID);
+    const auto rackOutputID = getRackOutputBusID (rackType.rackID);
+    
+    auto rackInputNode = makeNode<ReturnNode> (rackInputID);
+    auto rackNode = RackNodeBuilder::createRackNode (rackType, params.sampleRate, params.blockSize, std::move (rackInputNode),
+                                                     params.processState.playHeadState, params.forRendering);
+    auto rackOutputNode = makeNode<SendNode> (std::move (rackNode), rackOutputID);
+
+    return makeNode<SinkNode> (std::move (rackOutputNode));
+}
+
+std::vector<std::unique_ptr<Node>> createNodesForRacks (RackTypeList& rackTypeList, const CreateNodeParams& params)
+{
+    std::vector<std::unique_ptr<Node>> nodes;
+    
+    //TODO: Only add Racks with instances
+    for (auto rackType : rackTypeList.getTypes())
+        if (auto rackNode = createNodeForRackType (*rackType, params))
+            nodes.push_back (std::move (rackNode));
+    
+    return nodes;
+}
+
+std::unique_ptr<Node> createRackNode (std::unique_ptr<Node> input, RackTypeList& rackTypeList, const CreateNodeParams& params)
+{
+    // Finally add the RackType Nodes
+    auto rackNodes = createNodesForRacks (rackTypeList, params);
+    
+    if (rackNodes.empty())
+        return input;
+    
+    auto sumNode = std::make_unique<SummingNode> (std::move (rackNodes));
+    sumNode->addInput (std::move (input));
+    input = std::move (sumNode);
+    
+    return input;
+}
+
+//==============================================================================
 std::unique_ptr<Node> createInsertSendNode (InsertPlugin& insert, OutputDevice& device,
                                             tracktion_graph::PlayHeadState& playHeadState)
 {
@@ -949,6 +1029,7 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, const CreateNodePar
     
     std::unique_ptr<Node> finalNode (std::move (outputNode));
     finalNode = makeNode<LevelMeasuringNode> (std::move (finalNode), epc.masterLevels);
+    finalNode = createRackNode (std::move (finalNode), edit.getRackList(), params);
     
     return { std::move (finalNode) };
 }
@@ -970,7 +1051,8 @@ EditNodeContext createNodeForEdit (Edit& edit, const CreateNodeParams& params)
     auto node = tracktion_graph::makeNode<tracktion_graph::SummingNode> (std::move (trackNodes));
     node = createMasterPluginsNode (edit, playHeadState, std::move (node), params);
     node = createMasterFadeInOutNode (edit, playHeadState, std::move (node));
-    
+    node = createRackNode (std::move (node), edit.getRackList(), params);
+
     return { std::move (node) };
 }
 

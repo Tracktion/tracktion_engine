@@ -15,6 +15,54 @@ namespace tracktion_engine
 
 //==============================================================================
 //==============================================================================
+/**
+    Fills an InputProvider with output from a Node.
+*/
+class InputProviderFillerNode final : public tracktion_graph::Node
+{
+public:
+    InputProviderFillerNode (std::unique_ptr<Node> inputNode,
+                             std::shared_ptr<InputProvider> inputProviderToUse)
+        : input (std::move (inputNode)),
+          inputProvider (std::move (inputProviderToUse))
+    {
+        assert (input);
+        assert (inputProvider);
+    }
+    
+    std::vector<Node*> getDirectInputNodes() override
+    {
+        return { input.get() };
+    }
+    
+    tracktion_graph::NodeProperties getNodeProperties() override
+    {
+        return input->getNodeProperties();
+    }
+    
+    bool isReadyToProcess() override
+    {
+        return input->hasProcessed();
+    }
+    
+    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override
+    {
+    }
+    
+    void process (const ProcessContext&) override
+    {
+        auto inputs = input->getProcessedOutput();
+        inputProvider->setInputs (inputs);
+    }
+    
+private:
+    std::unique_ptr<Node> input;
+    std::shared_ptr<InputProvider> inputProvider;
+};
+
+
+//==============================================================================
+//==============================================================================
 class InputNode final   : public tracktion_graph::Node
 {
 public:
@@ -24,6 +72,11 @@ public:
           numChannels (numAudioChannels),
           hasMidi (hasMidiInput)
     {
+    }
+    
+    void setInputDependancy (Node* dependancy)
+    {
+        nodeDependancy = dependancy;
     }
     
     tracktion_graph::NodeProperties getNodeProperties() override
@@ -37,9 +90,18 @@ public:
         return props;
     }
     
+    std::vector<Node*> getDirectInputNodes() override
+    {
+        if (nodeDependancy)
+            return { nodeDependancy };
+        
+        return {};
+    }
+    
     bool isReadyToProcess() override
     {
-        return true;
+        return nodeDependancy ? nodeDependancy->hasProcessed()
+                              : true;
     }
     
     void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override
@@ -57,13 +119,16 @@ public:
             // The InputProvider may have less channels than this Node requires so only take the number available
             const size_t numInputChannelsToCopy = std::min (inputBuffers.audio.getNumChannels(), outputBuffers.audio.getNumChannels());
             
-            // For testing purposes, the last block might be smaller than the InputProvider
-            // so we'll just take the number of samples required
-            jassert (inputBuffers.audio.getNumSamples() >= outputBuffers.audio.getNumSamples());
-            auto inputAudioBlock = inputBuffers.audio.getSubsetChannelBlock (0, numInputChannelsToCopy)
-                                    .getSubBlock (0, outputBuffers.audio.getNumSamples());
-            auto outputAudioBlock = outputBuffers.audio.getSubsetChannelBlock (0, numInputChannelsToCopy);
-            outputAudioBlock.add (inputAudioBlock);
+            if (numInputChannelsToCopy > 0)
+            {
+                // For testing purposes, the last block might be smaller than the InputProvider
+                // so we'll just take the number of samples required
+                jassert (inputBuffers.audio.getNumSamples() >= outputBuffers.audio.getNumSamples());
+                auto inputAudioBlock = inputBuffers.audio.getSubsetChannelBlock (0, numInputChannelsToCopy)
+                                        .getSubBlock (0, outputBuffers.audio.getNumSamples());
+                auto outputAudioBlock = outputBuffers.audio.getSubsetChannelBlock (0, numInputChannelsToCopy);
+                outputAudioBlock.add (inputAudioBlock);
+            }
         }
         
         if (hasMidi)
@@ -74,6 +139,7 @@ private:
     std::shared_ptr<InputProvider> inputProvider;
     const int numChannels;
     const bool hasMidi;
+    Node* nodeDependancy = nullptr;
     const size_t nodeID { (size_t) juce::Random::getSystemRandom().nextInt() };
 };
 
@@ -468,20 +534,33 @@ namespace RackNodeBuilder
         return getConnectionsToOrFrom (rack, sourceID, true);
     }
 
+    //==============================================================================
     std::unique_ptr<tracktion_graph::Node> createRackNode (te::RackType& rack,
                                                            double sampleRate, int blockSize,
-                                                           std::shared_ptr<InputProvider> inputProvider)
+                                                           std::shared_ptr<InputProvider> inputProvider,
+                                                           tracktion_graph::PlayHeadState* playHeadState,
+                                                           bool isRendering)
     {
         // Gather all the PluginNodes and ModifierNodes in a vector
         std::vector<std::unique_ptr<tracktion_graph::Node>> itemNodes;
         
-        for (auto plugin : rack.getPlugins())
-            itemNodes.push_back (tracktion_graph::makeNode<PluginNode> (tracktion_graph::makeNode<tracktion_graph::SummingNode>(),
-                                                                        plugin, sampleRate, blockSize, inputProvider));
+        if (playHeadState)
+        {
+            for (auto plugin : rack.getPlugins())
+                itemNodes.push_back (tracktion_graph::makeNode<PluginNode> (tracktion_graph::makeNode<tracktion_graph::SummingNode>(),
+                                                                            plugin, sampleRate, blockSize, nullptr,
+                                                                            *playHeadState, isRendering));
+        }
+        else
+        {
+            for (auto plugin : rack.getPlugins())
+                itemNodes.push_back (tracktion_graph::makeNode<PluginNode> (tracktion_graph::makeNode<tracktion_graph::SummingNode>(),
+                                                                            plugin, sampleRate, blockSize, inputProvider));
+        }
         
         for (auto m : rack.getModifierList().getModifiers())
             itemNodes.push_back (tracktion_graph::makeNode<RackModifierNode> (tracktion_graph::makeNode<tracktion_graph::SummingNode>(),
-                                                                          m, inputProvider));
+                                                                              m, inputProvider));
         
         // Iterate all the plugin/modifiers and find all the inputs to them grouped by input
         for (auto& node : itemNodes)
@@ -529,6 +608,29 @@ namespace RackNodeBuilder
         outputNode->addInput (tracktion_graph::makeNode<HoldingNode> (std::move (itemNodes)));
         
         return outputNode;
+    }
+
+    //==============================================================================
+    std::unique_ptr<tracktion_graph::Node> createRackNode (tracktion_engine::RackType& rackType,
+                                                           double sampleRate, int blockSize,
+                                                           std::unique_ptr<tracktion_graph::Node> node,
+                                                           tracktion_graph::PlayHeadState& playHeadState, bool isRendering)
+    {
+        auto inputProvider = std::make_shared<InputProvider>();
+        
+        auto inputFiller = tracktion_graph::makeNode<InputProviderFillerNode> (std::move (node), inputProvider);
+        auto rackNode = createRackNode (rackType, sampleRate, blockSize, inputProvider, &playHeadState, isRendering);
+        
+        // This could be provided as an argument to the createRackNode method to avoid the lookup here
+        visitNodes (*rackNode,
+                    [sourceInputNode = inputFiller.get()] (auto& n)
+                    {
+                        if (auto inputNode = dynamic_cast<InputNode*> (&n))
+                            inputNode->setInputDependancy (sourceInputNode);
+                    },
+                    false);
+        
+        return tracktion_graph::makeSummingNode ({ inputFiller.release(), rackNode.release() });
     }
 }
 

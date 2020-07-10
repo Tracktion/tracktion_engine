@@ -138,12 +138,22 @@ private:
 //==============================================================================
 namespace RackNodeBuilder
 {
+    //==============================================================================
     /** Creates a Node for processing a Rack.
         The InputProvider must be used for providing audio and MIDI input to the Rack.
     */
     std::unique_ptr<tracktion_graph::Node> createRackNode (tracktion_engine::RackType&,
                                                            double sampleRate, int blockSize,
-                                                           std::shared_ptr<InputProvider>);
+                                                           std::shared_ptr<InputProvider>,
+                                                           tracktion_graph::PlayHeadState* playHeadState = nullptr,
+                                                           bool isRendering = true);
+
+    //==============================================================================
+    /** Creates a Node for processing a Rack where the input comes from a Node. */
+    std::unique_ptr<tracktion_graph::Node> createRackNode (tracktion_engine::RackType&,
+                                                           double sampleRate, int blockSize,
+                                                           std::unique_ptr<tracktion_graph::Node>,
+                                                           tracktion_graph::PlayHeadState&, bool isRendering);
 }
 
 }

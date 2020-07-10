@@ -308,6 +308,7 @@ static inline std::unique_ptr<Node> makeGainNode (std::unique_ptr<Node> input, f
 class GainNode final : public Node
 {
 public:
+    /** Creates a GainNode that doesn't own its input. */
     GainNode (Node* inputNode, std::function<float()> gainFunc)
         : input (inputNode), gainFunction (std::move (gainFunc))
     {
@@ -315,7 +316,18 @@ public:
         assert (gainFunction);
         lastGain = gainFunction();
     }
-    
+
+    /** Creates a GainNode that owns its input. */
+    GainNode (std::unique_ptr<Node> inputNode, std::function<float()> gainFunc)
+        : ownedInput (std::move (inputNode)), input (ownedInput.get()),
+          gainFunction (std::move (gainFunc))
+    {
+        assert (ownedInput != nullptr);
+        assert (input != nullptr);
+        assert (gainFunction);
+        lastGain = gainFunction();
+    }
+
     NodeProperties getNodeProperties() override
     {
         return input->getNodeProperties();
@@ -360,6 +372,7 @@ public:
     }
     
 private:
+    std::unique_ptr<Node> ownedInput;
     Node* input = nullptr;
     std::function<float()> gainFunction;
     float lastGain = 0.0f;
