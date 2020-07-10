@@ -43,9 +43,9 @@ public:
                 
         for (auto setup : test_utilities::getTestSetups (*this))
         {
-            logMessage (String ("Test setup: sample rate SR, block size BS, random blocks RND")
-                        .replace ("SR", String (setup.sampleRate))
-                        .replace ("BS", String (setup.blockSize))
+            logMessage (juce::String ("Test setup: sample rate SR, block size BS, random blocks RND")
+                        .replace ("SR", juce::String (setup.sampleRate))
+                        .replace ("BS", juce::String (setup.blockSize))
                         .replace ("RND", setup.randomiseBlockSizes ? "Y" : "N"));
 
             // Rack tests
@@ -55,8 +55,8 @@ public:
         }
 
         auto elapsed = std::chrono::high_resolution_clock::now() - start;
-        logMessage (String ("Tests for ") + typeid (NodePlayerType).name() + " - "
-                    + String (std::chrono::duration_cast<std::chrono::milliseconds> (elapsed).count()) + "ms");
+        logMessage (juce::String ("Tests for ") + typeid (NodePlayerType).name() + " - "
+                    + juce::String (std::chrono::duration_cast<std::chrono::milliseconds> (elapsed).count()) + "ms");
     }
 
 private:
@@ -209,7 +209,7 @@ private:
             Plugin::Ptr pluginPtr = edit->getPluginCache().createNewPlugin (ToneGeneratorPlugin::xmlTypeName, {});
             track->pluginList.insertPlugin (pluginPtr, 0, nullptr);
             auto tonePlugin = dynamic_cast<ToneGeneratorPlugin*> (pluginPtr.get());
-            tonePlugin->levelParam->setParameter (0.5f, dontSendNotification);
+            tonePlugin->levelParam->setParameter (0.5f, juce::dontSendNotification);
             expect (tonePlugin != nullptr);
             
             Plugin::Array plugins;
@@ -219,7 +219,7 @@ private:
             
             // Add another ToneGenerator and connect it in parallel
             Plugin::Ptr secondToneGen = edit->getPluginCache().createNewPlugin (ToneGeneratorPlugin::xmlTypeName, {});
-            dynamic_cast<ToneGeneratorPlugin*> (secondToneGen.get())->levelParam->setParameter (0.5f, dontSendNotification);
+            dynamic_cast<ToneGeneratorPlugin*> (secondToneGen.get())->levelParam->setParameter (0.5f, juce::dontSendNotification);
             rack->addPlugin (secondToneGen, {}, false);
             rack->addConnection ({}, 0, secondToneGen->itemID, 0);
             rack->addConnection ({}, 1, secondToneGen->itemID, 1);
@@ -254,7 +254,7 @@ private:
             Plugin::Ptr pluginPtr = edit->getPluginCache().createNewPlugin (ToneGeneratorPlugin::xmlTypeName, {});
             track->pluginList.insertPlugin (pluginPtr, 0, nullptr);
             auto tonePlugin = dynamic_cast<ToneGeneratorPlugin*> (pluginPtr.get());
-            tonePlugin->levelParam->setParameter (0.5f, dontSendNotification);
+            tonePlugin->levelParam->setParameter (0.5f, juce::dontSendNotification);
             expect (tonePlugin != nullptr);
             
             Plugin::Array plugins;
@@ -264,7 +264,7 @@ private:
             
             // Add another ToneGenerator feeding in to a LatencyPlugin and connect it in parallel
             Plugin::Ptr secondToneGen = edit->getPluginCache().createNewPlugin (ToneGeneratorPlugin::xmlTypeName, {});
-            dynamic_cast<ToneGeneratorPlugin*> (secondToneGen.get())->levelParam->setParameter (0.5f, dontSendNotification);
+            dynamic_cast<ToneGeneratorPlugin*> (secondToneGen.get())->levelParam->setParameter (0.5f, juce::dontSendNotification);
 
             Plugin::Ptr latencyPlugin = edit->getPluginCache().createNewPlugin (LatencyPlugin::xmlTypeName, {});
             const double latencyTimeInSeconds = 0.5f;
@@ -295,7 +295,7 @@ private:
                 auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, true, testSetup.sampleRate, testSetup.blockSize);
                                         
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
-                const int latencyNumSamples = roundToInt (latencyTimeInSeconds * testSetup.sampleRate);
+                const int latencyNumSamples = juce::roundToInt (latencyTimeInSeconds * testSetup.sampleRate);
                 test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, latencyNumSamples, 0.0f, 0.0f, 1.0f, 0.707f);
                 test_utilities::expectAudioBuffer (*this, testContext->buffer, 1, latencyNumSamples, 0.0f, 0.0f, 1.0f, 0.707f);
             }
@@ -372,7 +372,7 @@ private:
 
                 // Sin input provider
                 const auto inputProvider = std::make_shared<InputProvider>();
-                AudioBuffer<float> inputBuffer (4, testSetup.blockSize);
+                juce::AudioBuffer<float> inputBuffer (4, testSetup.blockSize);
 
                 // Fill inputs with sin data
                 {
@@ -399,7 +399,7 @@ private:
 
                     Plugin::Ptr latencyPlugin = edit->getPluginCache().createNewPlugin (LatencyPlugin::xmlTypeName, {});
                     const double latencyTimeInSeconds = 0.5f;
-                    const int latencyNumSamples = roundToInt (latencyTimeInSeconds * testSetup.sampleRate);
+                    const int latencyNumSamples = juce::roundToInt (latencyTimeInSeconds * testSetup.sampleRate);
                     dynamic_cast<LatencyPlugin*> (latencyPlugin.get())->latencyTimeSeconds = latencyTimeInSeconds;
 
                     rack->addPlugin (latencyPlugin, {}, false);
@@ -463,7 +463,7 @@ private:
 
                 // Sin input provider
                 const auto inputProvider = std::make_shared<InputProvider>();
-                AudioBuffer<float> inputBuffer (1, testSetup.blockSize);
+                juce::AudioBuffer<float> inputBuffer (1, testSetup.blockSize);
 
                 // Fill inputs with sin data
                 {
@@ -512,10 +512,10 @@ private:
             expect (rack->getPlugins().getFirst() == pluginPtr.get());
             expectEquals (rack->getConnections().size(), 6);
             
-            auto modifier = rack->getModifierList().insertModifier (ValueTree (IDs::LFO), 0, nullptr);
+            auto modifier = rack->getModifierList().insertModifier (juce::ValueTree (IDs::LFO), 0, nullptr);
             auto lfoModifier = dynamic_cast<LFOModifier*> (modifier.get());
-            lfoModifier->depthParam->setParameter (0.0f, dontSendNotification);
-            lfoModifier->offsetParam->setParameter (0.5f, dontSendNotification);
+            lfoModifier->depthParam->setParameter (0.0f, juce::dontSendNotification);
+            lfoModifier->offsetParam->setParameter (0.5f, juce::dontSendNotification);
             expectWithinAbsoluteError (lfoModifier->depthParam->getCurrentValue(), 0.0f, 0.001f);
             expectWithinAbsoluteError (lfoModifier->offsetParam->getCurrentValue(), 0.5f, 0.001f);
             
@@ -566,10 +566,10 @@ private:
             expect (rack->getPlugins().getFirst() == pluginPtr.get());
             expectEquals (rack->getConnections().size(), 6);
 
-            auto modifier = rack->getModifierList().insertModifier (ValueTree (IDs::ENVELOPEFOLLOWER), 0, nullptr);
+            auto modifier = rack->getModifierList().insertModifier (juce::ValueTree (IDs::ENVELOPEFOLLOWER), 0, nullptr);
             auto envelopeModifier = dynamic_cast<EnvelopeFollowerModifier*> (modifier.get());
-            envelopeModifier->attackParam->setParameter (envelopeModifier->attackParam->valueRange.start, dontSendNotification);
-            envelopeModifier->releaseParam->setParameter (envelopeModifier->releaseParam->valueRange.end, dontSendNotification);
+            envelopeModifier->attackParam->setParameter (envelopeModifier->attackParam->valueRange.start, juce::dontSendNotification);
+            envelopeModifier->releaseParam->setParameter (envelopeModifier->releaseParam->valueRange.end, juce::dontSendNotification);
             expectWithinAbsoluteError (envelopeModifier->attackParam->getCurrentValue(), 1.0f, 0.001f);
             expectWithinAbsoluteError (envelopeModifier->releaseParam->getCurrentValue(), 5000.0f, 0.001f);
             
@@ -589,7 +589,7 @@ private:
             {
                 // Sin input provider
                 const auto inputProvider = std::make_shared<InputProvider>();
-                AudioBuffer<float> inputBuffer (2, ts.blockSize);
+                juce::AudioBuffer<float> inputBuffer (2, ts.blockSize);
 
                 // Fill inputs with sin data
                 {

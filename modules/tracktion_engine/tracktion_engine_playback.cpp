@@ -102,6 +102,7 @@ extern "C"
  #include "playback/graph/tracktion_PluginNode.h"
  #include "playback/graph/tracktion_ModifierNode.h"
  #include "playback/graph/tracktion_RackNode.h"
+ #include "playback/graph/tracktion_RackNode.cpp"
  #include "playback/graph/tracktion_PluginNode.cpp"
  #include "playback/graph/tracktion_ModifierNode.cpp"
 
@@ -138,6 +139,7 @@ extern "C"
  
  #include "playback/graph/tracktion_tests_WaveNode.cpp"
  #include "playback/graph/tracktion_tests_MidiNode.cpp"
+ #include "playback/graph/tracktion_tests_RackNode.cpp"
 #endif
 
 using namespace juce;
