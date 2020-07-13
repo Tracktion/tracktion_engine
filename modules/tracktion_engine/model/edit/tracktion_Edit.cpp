@@ -238,8 +238,9 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
             {
                 if (v[IDs::type] == RackInstance::xmlTypeName)
                 {
-                    if (i == IDs::leftTo || i == IDs::rightTo || i == IDs::leftFrom || i == IDs::rightFrom)
-                        restart();
+                    if (i == IDs::enabled
+                        || i == IDs::leftTo || i == IDs::rightTo || i == IDs::leftFrom || i == IDs::rightFrom)
+                       restart();
                 }
                 else if (i == IDs::outputDevice || i == IDs::manualAdjustMs || i == IDs::sidechainSourceID || i == IDs::ignoreVca || i == IDs::busNum)
                 {

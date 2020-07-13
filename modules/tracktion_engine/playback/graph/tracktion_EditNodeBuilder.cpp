@@ -493,7 +493,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForRackInstance (RackInstance& 
 {
     jassert (node != nullptr);
 
-    if (rackInstance.isDisabled())
+    if (! rackInstance.isEnabled())
         return node;
 
     const auto rackInputID = getRackInputBusID (rackInstance.rackTypeID);
