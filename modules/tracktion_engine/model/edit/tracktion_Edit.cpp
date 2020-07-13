@@ -236,8 +236,15 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
             }
             else if (v.hasType (IDs::PLUGIN))
             {
-                if (i == IDs::outputDevice || i == IDs::manualAdjustMs || i == IDs::sidechainSourceID || i == IDs::ignoreVca || i == IDs::busNum)
+                if (v[IDs::type] == RackInstance::xmlTypeName)
+                {
+                    if (i == IDs::leftTo || i == IDs::rightTo || i == IDs::leftFrom || i == IDs::rightFrom)
+                        restart();
+                }
+                else if (i == IDs::outputDevice || i == IDs::manualAdjustMs || i == IDs::sidechainSourceID || i == IDs::ignoreVca || i == IDs::busNum)
+                {
                     restart();
+                }
             }
             else if (v.hasType (IDs::MASTERVOLUME))
             {
