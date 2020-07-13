@@ -387,7 +387,10 @@ void RackInstance::setInputLevel (Channel c, float v)
     param->setParameter (v, sendNotification);
 
     if (linkInputs)
-        param->setParameter (v, sendNotification);
+    {
+        const auto& linkedParam = c == left ? rightInDb : leftInDb;
+        linkedParam->setParameter (v, sendNotification);
+    }
 }
 
 void RackInstance::setOutputLevel (Channel c, float v)
@@ -397,7 +400,10 @@ void RackInstance::setOutputLevel (Channel c, float v)
     param->setParameter (v, sendNotification);
 
     if (linkOutputs)
-        param->setParameter (v, sendNotification);
+    {
+        const auto& linkedParam = c == left ? rightOutDb : leftOutDb;
+        linkedParam->setParameter (v, sendNotification);
+    }
 }
 
 juce::String RackInstance::getInputName (Channel c)
