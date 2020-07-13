@@ -87,6 +87,9 @@ public:
         props.numberOfChannels = numChannels;
         props.nodeID = nodeID;
         
+        if (nodeDependancy)
+            props.latencyNumSamples = nodeDependancy->getNodeProperties().latencyNumSamples;
+        
         return props;
     }
     
