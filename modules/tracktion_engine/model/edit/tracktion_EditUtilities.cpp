@@ -516,6 +516,20 @@ SelectableList getClipSelectionWithCollectionClipContents (const SelectableList&
     return result;
 }
 
+juce::Array<ClipEffect*> getAllClipEffects (Edit& edit)
+{
+    juce::Array<ClipEffect*> res;
+
+    for (auto audioTrack : getAudioTracks (edit))
+        for (auto clip : audioTrack->getClips())
+            if (auto waveClip = dynamic_cast<AudioClipBase*> (clip))
+                if (auto effects = waveClip->getClipEffects())
+                    for (auto effect : *effects)
+                        res.add (effect);
+
+    return res;
+}
+
 //==============================================================================
 Clip* findClipForID (const Edit& edit, EditItemID clipID)
 {

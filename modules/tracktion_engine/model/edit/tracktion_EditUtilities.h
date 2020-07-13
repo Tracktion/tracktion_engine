@@ -127,6 +127,9 @@ void moveSelectedClips (const SelectableList&, Edit&, MoveClipAction mode, bool 
 /** Returns a list of clips. If any of these are collection clips, this will return their contained clips. */
 SelectableList getClipSelectionWithCollectionClipContents (const SelectableList&);
 
+/** Returns all clip effects */
+juce::Array<ClipEffect*> getAllClipEffects (Edit& edit);
+
 //==============================================================================
 // MIDI
 //==============================================================================

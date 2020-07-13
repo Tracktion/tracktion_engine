@@ -720,7 +720,7 @@ void Edit::initialise()
                       for (auto ap : getAllAutomatableParams (true))
                           ap->updateStream();
 
-                      for (auto effect : getAllClipEffects())
+                      for (auto effect : getAllClipEffects (*this))
                           effect->initialise();
                   });
 
@@ -2435,20 +2435,6 @@ juce::Array<AutomatableParameter*> Edit::getAllAutomatableParams (bool includeTr
     }
 
     return list;
-}
-
-juce::Array<ClipEffect*> Edit::getAllClipEffects() const
-{
-    juce::Array<ClipEffect*> res;
-
-    for (auto audioTrack : getAudioTracks (*this))
-        for (auto clip : audioTrack->getClips())
-            if (auto waveClip = dynamic_cast<AudioClipBase*> (clip))
-                if (auto effects = waveClip->getClipEffects())
-                    for (auto effect : *effects)
-                        res.add (effect);
-
-    return res;
 }
 
 //==============================================================================
