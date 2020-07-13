@@ -11,6 +11,7 @@
 namespace tracktion_engine
 {
 
+ class ClipEffect;
 //==============================================================================
 /**
     The Tracktion Edit class!
@@ -305,6 +306,7 @@ public:
 
     //==============================================================================
     juce::Array<AutomatableParameter*> getAllAutomatableParams (bool includeTrackParams) const;
+    juce::Array<ClipEffect*> getAllClipEffects() const;
 
     //==============================================================================
     juce::File getVideoFile() const;

@@ -1059,6 +1059,13 @@ PitchShiftEffect::PitchShiftEffect (const ValueTree& v, ClipEffects& o)
     plugin = new PitchShiftPlugin (edit, pitchState);
 }
 
+void PitchShiftEffect::initialise()
+{
+    if (plugin != nullptr)
+        for (auto ap : plugin->getAutomatableParameters())
+            ap->updateStream();
+}
+
 ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> PitchShiftEffect::createRenderJob (const AudioFile& sourceFile, double sourceLength)
 {
     CRASH_TRACER

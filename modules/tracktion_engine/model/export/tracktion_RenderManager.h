@@ -162,7 +162,10 @@ public:
 
     //==============================================================================
     /** Returns the prefix used for render files. */
-    static juce::StringRef getFileRenderPrefix()      { return "render_"; }
+    static juce::StringRef getFileRenderPrefix()      
+    { 
+        return "render_"; 
+    }
 
     /** Returns true if a render is currently being performed for this AudioFile. */
     bool isProxyBeingGenerated (const AudioFile& proxyFile) noexcept;

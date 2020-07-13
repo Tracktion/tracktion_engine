@@ -41,6 +41,8 @@ public:
     static void createEffectAndAddToValueTree (Edit&, juce::ValueTree parent,
                                                ClipEffect::EffectType, int index);
 
+    virtual void initialise() {}
+
     static juce::String getTypeDisplayName (EffectType);
     static void addEffectsToMenu (juce::PopupMenu&);
 
@@ -344,6 +346,13 @@ struct VolumeEffect : public ClipEffect,
     VolumeEffect (const juce::ValueTree&, ClipEffects&);
     juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile& sourceFile, double sourceLength) override;
 
+    void initialise() override 
+    {
+        if (plugin != nullptr)
+            for (auto ap : plugin->getAutomatableParameters())
+                ap->updateStream();
+    }
+
     bool hasProperties() override;
     void propertiesButtonPressed (SelectionManager&) override;
     juce::int64 getIndividualHash() const override;
@@ -441,6 +450,8 @@ struct PitchShiftEffect  : public ClipEffect,
 {
     PitchShiftEffect (const juce::ValueTree&, ClipEffects&);
 
+    void initialise() override;
+
     juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile& sourceFile, double sourceLength) override;
 
     bool hasProperties() override;
@@ -487,6 +498,13 @@ struct PluginEffect  : public ClipEffect,
     PluginEffect (const juce::ValueTree&, ClipEffects&);
 
     juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile&, double sourceLength) override;
+
+    void initialise() override 
+    {
+        if (plugin != nullptr)
+            for (auto ap : plugin->getAutomatableParameters())
+                ap->updateStream();
+    }
 
     void flushStateToValueTree() override;
     bool hasProperties() override;
