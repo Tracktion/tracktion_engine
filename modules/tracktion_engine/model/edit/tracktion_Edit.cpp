@@ -727,6 +727,9 @@ void Edit::initialise()
 
                       for (auto ap : getAllAutomatableParams (true))
                           ap->updateStream();
+
+                      for (auto effect : getAllClipEffects (*this))
+                          effect->initialise();
                   });
 
     cancelAnyPendingUpdates();

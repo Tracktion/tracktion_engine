@@ -11,6 +11,7 @@
 namespace tracktion_engine
 {
 
+ class ClipEffect;
 //==============================================================================
 /**
     The Tracktion Edit class!
