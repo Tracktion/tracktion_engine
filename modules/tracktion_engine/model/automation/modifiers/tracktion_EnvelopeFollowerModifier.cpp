@@ -437,6 +437,7 @@ void EnvelopeFollowerModifier::processBlock (const juce::AudioBuffer<float>& ab)
     for (int i = 0; i < numSamples; ++i)
         envelope = envelopeFollower->processSingleSample (scratchData[i]);
 
+    jassert (! std::isnan (envelope));
     envelopeValue.store (envelope, std::memory_order_release);
 }
 
