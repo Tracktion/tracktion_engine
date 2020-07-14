@@ -11,7 +11,9 @@
 #pragma once
 
 #include <thread>
-#include <emmintrin.h>
+#ifndef __aarch64__
+ #include <emmintrin.h>
+#endif
 
 #ifdef _MSC_VER
  #pragma warning (push)

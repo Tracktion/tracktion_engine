@@ -144,6 +144,7 @@ void LockFreeMultiThreadedNodePlayer::createThreads()
 
 inline void pause8()
 {
+   #if JUCE_INTEL
     _mm_pause();
     _mm_pause();
     _mm_pause();
@@ -152,6 +153,9 @@ inline void pause8()
     _mm_pause();
     _mm_pause();
     _mm_pause();
+   #else
+    #warning Implement for ARM
+   #endif
 }
 
 inline void LockFreeMultiThreadedNodePlayer::pause()
