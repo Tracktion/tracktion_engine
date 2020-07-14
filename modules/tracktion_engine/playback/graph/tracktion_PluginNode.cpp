@@ -119,7 +119,7 @@ void PluginNode::process (const ProcessContext& pc)
         plugin->applyToBufferWithAutomation (getPluginRenderContext (pc.referenceSampleRange.getStart(), outputAudioBuffer));
     
     // Then copy the buffers to the outputs
-    outputBuffers.midi.mergeFrom (midiMessageArray);
+    outputBuffers.midi.copyFrom (midiMessageArray);
 }
 
 //==============================================================================
