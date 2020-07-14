@@ -208,6 +208,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioClip (AudioClipBase& cl
                                                      clip.getActiveChannels(),
                                                      juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
                                                      params.processState,
+                                                     clip.itemID,
                                                      params.forRendering);
     
     // Plugins
@@ -298,6 +299,9 @@ std::unique_ptr<tracktion_graph::Node> createNodeForClip (Clip& clip, const Trac
 
 std::unique_ptr<tracktion_graph::Node> createNodeForClips (const juce::Array<Clip*>& clips, const TrackMuteState& trackMuteState, const CreateNodeParams& params)
 {
+    if (clips.size() == 0)
+        return {};
+
     if (clips.size() == 1)
     {
         auto clip = clips.getFirst();
@@ -327,6 +331,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForFrozenAudioTrack (AudioTrack
                                                      0.0, EditTimeRange(), LiveClipLevel(),
                                                      1.0, juce::AudioChannelSet::stereo(), juce::AudioChannelSet::stereo(),
                                                      params.processState,
+                                                     track.itemID,
                                                      params.forRendering);
 
     // Plugins
@@ -884,7 +889,7 @@ std::unique_ptr<tracktion_graph::Node> createGroupFreezeNodeForDevice (Edit& edi
             auto node = tracktion_graph::makeNode<WaveNode> (af, EditTimeRange (0.0, length),
                                                              0.0, EditTimeRange(), LiveClipLevel(),
                                                              1.0, juce::AudioChannelSet::stereo(), juce::AudioChannelSet::stereo(),
-                                                             processState, false);
+                                                             processState, EditItemID::fromRawID ((uint64_t) device.getName().hash()), false);
             return makeNode<TrackMutingNode> (std::make_unique<TrackMuteState> (edit), std::move (node));
         }
     }

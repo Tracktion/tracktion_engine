@@ -310,14 +310,16 @@ private:
 class HoldingNode final : public tracktion_graph::Node
 {
 public:
-    HoldingNode (std::vector<std::unique_ptr<tracktion_graph::Node>> nodesToStore)
-        : nodes (std::move (nodesToStore))
+    HoldingNode (std::vector<std::unique_ptr<tracktion_graph::Node>> nodesToStore,
+                 EditItemID rackID)
+        : nodes (std::move (nodesToStore)),
+          nodeID ((size_t) rackID.getRawID())
     {
     }
         
     tracktion_graph::NodeProperties getNodeProperties() override
     {
-        return { true, true, 0 };
+        return { true, true, 0, 0, nodeID };
     }
     
     std::vector<tracktion_graph::Node*> getDirectInputNodes() override
@@ -336,6 +338,7 @@ public:
 
 private:
     std::vector<std::unique_ptr<tracktion_graph::Node>> nodes;
+    const size_t nodeID;
 };
 
 
@@ -608,7 +611,7 @@ namespace RackNodeBuilder
         }
 
         // Finally store all the Plugin/ModifierNodes somewhere so they don't get processed again
-        outputNode->addInput (tracktion_graph::makeNode<HoldingNode> (std::move (itemNodes)));
+        outputNode->addInput (tracktion_graph::makeNode<HoldingNode> (std::move (itemNodes), rack.rackID));
         
         return outputNode;
     }

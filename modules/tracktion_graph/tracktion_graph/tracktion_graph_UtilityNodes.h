@@ -46,7 +46,9 @@ public:
         props.latencyNumSamples += latencyStorage->latencyNumSamples;
         
         constexpr size_t latencyNodeMagicHash = 0x95ab5e9dcc;
-        hash_combine (props.nodeID, latencyNodeMagicHash);        
+        
+        if (props.nodeID != 0)
+            hash_combine (props.nodeID, latencyNodeMagicHash);
         
         return props;
     }
@@ -142,8 +144,13 @@ private:
     {
         if (rootNodeToReplace == nullptr)
             return;
+        
+        auto nodeIDToLookFor = getNodeProperties().nodeID;
+        
+        if (nodeIDToLookFor == 0)
+            return;
 
-        auto visitor = [this, nodeIDToLookFor = getNodeProperties().nodeID] (Node& node)
+        auto visitor = [this, nodeIDToLookFor] (Node& node)
         {
             if (auto other = dynamic_cast<LatencyNode*> (&node))
             {
@@ -205,9 +212,6 @@ public:
         props.hasAudio = false;
         props.hasMidi = false;
         props.numberOfChannels = 0;
-
-        constexpr size_t summingNodeHash = 0xb2e9a68a78;
-        props.nodeID = summingNodeHash;
 
         for (auto& node : nodes)
         {

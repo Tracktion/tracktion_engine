@@ -33,12 +33,14 @@ WaveNode::WaveNode (const AudioFile& af,
                     const juce::AudioChannelSet& channelSetToUse,
                     const juce::AudioChannelSet& destChannelsToFill,
                     ProcessState& ps,
+                    EditItemID itemIDToUse,
                     bool isRendering)
    : TracktionEngineNode (ps),
      editPosition (editTime),
      loopSection (loop.getStart() * speed, loop.getEnd() * speed),
      offset (off),
      originalSpeedRatio (speed),
+     editItemID (itemIDToUse),
      isOfflineRender (isRendering),
      audioFile (af),
      clipLevel (level),
@@ -53,7 +55,8 @@ tracktion_graph::NodeProperties WaveNode::getNodeProperties()
     props.hasAudio = true;
     props.hasMidi = false;
     props.numberOfChannels = destChannels.size();
-    
+    props.nodeID = (size_t) editItemID.getRawID();
+
     return props;
 }
 

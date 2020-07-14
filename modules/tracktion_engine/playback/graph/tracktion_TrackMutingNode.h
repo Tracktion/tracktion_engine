@@ -45,6 +45,10 @@ public:
     /** Returns true if the last block wasn't audible but this one is. */
     bool wasJustUnMuted() const     { return wasJustUnMutedFlag.load (std::memory_order_acquire); }
 
+    //==============================================================================
+    /** Returns the ID for the relevant item, either the Track or Edit. */
+    size_t getItemID() const;
+
 private:
     //==============================================================================
     Edit& edit;

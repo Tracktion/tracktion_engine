@@ -75,6 +75,7 @@ private:
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
                                             juce::AudioChannelSet::canonicalChannelSet (1),
                                             processState,
+                                            EditItemID(),
                                             true);
             
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
@@ -96,6 +97,7 @@ private:
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
                                             juce::AudioChannelSet::canonicalChannelSet (1),
                                             processState,
+                                            EditItemID(),
                                             true);
             
             playHead.setUserIsDragging (true);
@@ -119,6 +121,7 @@ private:
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
                                             juce::AudioChannelSet::canonicalChannelSet (1),
                                             processState,
+                                            EditItemID(),
                                             true);
             
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
@@ -140,6 +143,7 @@ private:
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
                                             juce::AudioChannelSet::canonicalChannelSet (1),
                                             processState,
+                                            EditItemID(),
                                             true);
             
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
@@ -176,6 +180,7 @@ private:
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
                                             juce::AudioChannelSet::canonicalChannelSet (1),
                                             processState,
+                                            EditItemID(),
                                             true);
 
             // Loop playback between 0s & 1s on the timeline
@@ -198,6 +203,7 @@ private:
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
                                             juce::AudioChannelSet::canonicalChannelSet (1),
                                             processState,
+                                            EditItemID(),
                                             true);
 
             // Loop playback between 0s & 1s on the timeline

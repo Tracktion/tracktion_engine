@@ -70,6 +70,13 @@ bool TrackMuteState::isBeingPlayed() const
     return true;
 }
 
+//==============================================================================
+size_t TrackMuteState::getItemID() const
+{
+    return track != nullptr ? (size_t) track->itemID.getRawID()
+                            : (size_t) edit.getProjectItemID().getRawID();
+}
+
 
 //==============================================================================
 //==============================================================================
@@ -83,7 +90,7 @@ TrackMutingNode::TrackMutingNode (std::unique_ptr<TrackMuteState> muteState, std
 tracktion_graph::NodeProperties TrackMutingNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
-    props.nodeID = 0;
+    tracktion_graph::hash_combine (props.nodeID, trackMuteState->getItemID());
 
     return props;
 }

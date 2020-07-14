@@ -34,6 +34,7 @@ public:
               const juce::AudioChannelSet& sourceChannelsToUse,
               const juce::AudioChannelSet& destChannelsToFill,
               ProcessState&,
+              EditItemID,
               bool isOfflineRender);
 
     //==============================================================================
@@ -47,6 +48,7 @@ private:
     EditTimeRange editPosition, loopSection;
     double offset = 0;
     double originalSpeedRatio = 0, outputSampleRate = 44100.0;
+    const EditItemID editItemID;
     bool isOfflineRender = false;
 
     AudioFile audioFile;
