@@ -22,7 +22,7 @@ class ModifierNode final    : public tracktion_graph::Node
 {
 public:
     //==============================================================================
-    /** Creates a ModifierNode to process a Modifier on a Track.
+    /** Creates a ModifierNode to process a Modifier.
         @param const TrackMuteState*    The optional TrackMuteState to use
         @param PlayHeadState            The PlayHeadState to monitor for jumps
         @param rendering                Should be true if this is an offline render
@@ -34,9 +34,21 @@ public:
                   const TrackMuteState*,
                   tracktion_graph::PlayHeadState&, bool rendering);
 
+    /** Creates a ModifierNode to process a plugin on in a Rack with an InputProvider.
+        @param InputProvider            The InputProvider to provide inputs and a PluginRenderContext
+     
+    */
+    ModifierNode (std::unique_ptr<Node> input,
+                  tracktion_engine::Modifier::Ptr,
+                  double sampleRateToUse, int blockSizeToUse,
+                  std::shared_ptr<InputProvider>);
+
     /** Destructor. */
     ~ModifierNode() override;
     
+    //==============================================================================
+    Modifier& getModifier()                             { return *modifier; }
+
     //==============================================================================
     tracktion_graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override   { return { input.get() }; }
@@ -51,7 +63,7 @@ private:
     std::shared_ptr<InputProvider> audioRenderContextProvider;
     
     const TrackMuteState* trackMuteState = nullptr;
-    tracktion_graph::PlayHeadState& playHeadState;
+    tracktion_graph::PlayHeadState* playHeadState = nullptr;
     bool isRendering = false;
     
     bool isInitialised = false;

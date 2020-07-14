@@ -22,8 +22,21 @@ ModifierNode::ModifierNode (std::unique_ptr<Node> inputNode,
     : input (std::move (inputNode)),
       modifier (std::move (modifierToProcess)),
       trackMuteState (trackMuteStateToUse),
-      playHeadState (playHeadStateToUse),
+      playHeadState (&playHeadStateToUse),
       isRendering (rendering)
+{
+    jassert (input != nullptr);
+    jassert (modifier != nullptr);
+    initialiseModifier (sampleRateToUse, blockSizeToUse);
+}
+
+ModifierNode::ModifierNode (std::unique_ptr<Node> inputNode,
+                            tracktion_engine::Modifier::Ptr modifierToProcess,
+                            double sampleRateToUse, int blockSizeToUse,
+                            std::shared_ptr<InputProvider> contextProvider)
+    : input (std::move (inputNode)),
+      modifier (std::move (modifierToProcess)),
+      audioRenderContextProvider (std::move (contextProvider))
 {
     jassert (input != nullptr);
     jassert (modifier != nullptr);
@@ -62,7 +75,6 @@ void ModifierNode::process (const ProcessContext& pc)
     
     auto& outputBuffers = pc.buffers;
     auto& outputAudioBlock = outputBuffers.audio;
-    jassert (inputAudioBlock.getNumSamples() == outputAudioBlock.getNumSamples());
 
     // Copy the inputs to the outputs, then process using the
     // output buffers as that will be the correct size
@@ -83,7 +95,7 @@ void ModifierNode::process (const ProcessContext& pc)
     midiMessageArray.copyFrom (inputBuffers.midi);
     bool shouldProcess = getBoolParamValue (*modifier->enabledParam);
     
-    if (playHeadState.didPlayheadJump())
+    if (playHeadState != nullptr && playHeadState->didPlayheadJump())
         midiMessageArray.isAllNotesOff = true;
     
     if (trackMuteState != nullptr)
@@ -115,7 +127,20 @@ void ModifierNode::initialiseModifier (double sampleRateToUse, int blockSizeToUs
 
 PluginRenderContext ModifierNode::getPluginRenderContext (int64_t referenceSamplePosition, juce::AudioBuffer<float>& destBuffer)
 {
-    auto& playHead = playHeadState.playHead;
+    if (audioRenderContextProvider != nullptr)
+    {
+        tracktion_engine::PluginRenderContext rc (audioRenderContextProvider->getContext());
+        rc.destBuffer = &destBuffer;
+        rc.bufferStartSample = 0;
+        rc.bufferNumSamples = destBuffer.getNumSamples();
+        rc.bufferForMidiMessages = &midiMessageArray;
+        rc.midiBufferOffset = 0.0;
+        
+        return rc;
+    }
+
+    jassert (playHeadState != nullptr);
+    auto& playHead = playHeadState->playHead;
     
     return { &destBuffer,
              juce::AudioChannelSet::canonicalChannelSet (destBuffer.getNumChannels()),

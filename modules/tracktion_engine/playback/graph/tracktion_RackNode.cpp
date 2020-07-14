@@ -149,121 +149,6 @@ private:
 
 //==============================================================================
 //==============================================================================
-class RackModifierNode final    : public tracktion_graph::Node
-{
-public:
-    RackModifierNode (std::unique_ptr<Node> inputNode,
-                      Modifier::Ptr modifierToProcess,
-                      std::shared_ptr<InputProvider> contextProvider)
-        : input (std::move (inputNode)),
-          modifier (std::move (modifierToProcess)),
-          audioRenderContextProvider (std::move (contextProvider))
-    {
-        jassert (input != nullptr);
-        jassert (modifier != nullptr);
-    }
-    
-    ~RackModifierNode() override
-    {
-        if (isInitialised)
-            modifier->baseClassDeinitialise();
-    }
-    
-    Modifier& getModifier()
-    {
-        return *modifier;
-    }
-    
-    tracktion_graph::NodeProperties getNodeProperties() override
-    {
-        auto props = input->getNodeProperties();
-
-        props.numberOfChannels = juce::jmax (props.numberOfChannels, modifier->getAudioInputNames().size());
-        props.hasAudio = modifier->getAudioInputNames().size() > 0;
-        props.hasMidi  = modifier->getMidiInputNames().size() > 0;
-        props.nodeID = (size_t) modifier->itemID.getRawID();
-
-        return props;
-    }
-    
-    std::vector<Node*> getDirectInputNodes() override
-    {
-        return { input.get() };
-    }
-    
-    bool isReadyToProcess() override
-    {
-        return input->hasProcessed();
-    }
-    
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info) override
-    {
-        modifier->baseClassInitialise (info.sampleRate, info.blockSize);
-        isInitialised = true;
-        sampleRate = info.sampleRate;
-    }
-    
-    void process (const ProcessContext& pc) override
-    {
-        auto inputBuffers = input->getProcessedOutput();
-        auto& inputAudioBlock = inputBuffers.audio;
-        
-        auto& outputBuffers = pc.buffers;
-        auto& outputAudioBlock = outputBuffers.audio;
-
-        // Copy the inputs to the outputs, then process using the
-        // output buffers as that will be the correct size
-        {
-            const size_t numInputChannelsToCopy = std::min (inputAudioBlock.getNumChannels(), outputAudioBlock.getNumChannels());
-            
-            if (numInputChannelsToCopy > 0)
-            {
-                jassert (inputAudioBlock.getNumSamples() == outputAudioBlock.getNumSamples());
-                outputAudioBlock.copyFrom (inputAudioBlock.getSubsetChannelBlock (0, numInputChannelsToCopy));
-            }
-        }
-
-        // Setup audio buffers
-        float* channels[32] = {};
-
-        for (size_t i = 0; i < outputAudioBlock.getNumChannels(); ++i)
-            channels[i] = outputAudioBlock.getChannelPointer (i);
-
-        juce::AudioBuffer<float> outputAudioBuffer (channels,
-                                                    (int) outputAudioBlock.getNumChannels(),
-                                                    (int) outputAudioBlock.getNumSamples());
-
-        // Then MIDI buffers
-        midiMessageArray.copyFrom (inputBuffers.midi);
-
-        // Then prepare the AudioRenderContext
-        auto sourceContext = audioRenderContextProvider->getContext();
-        PluginRenderContext prc (sourceContext);
-        prc.destBuffer = &outputAudioBuffer;
-        prc.bufferStartSample = 0;
-        prc.bufferNumSamples = outputAudioBuffer.getNumSamples();
-        prc.bufferForMidiMessages = &midiMessageArray;
-        prc.midiBufferOffset = 0.0;
-
-        // Process the plugin
-        modifier->applyToBuffer (prc);
-        
-        // Then copy the buffers to the outputs
-        outputBuffers.midi.mergeFrom (midiMessageArray);
-    }
-    
-private:
-    std::unique_ptr<Node> input;
-    Modifier::Ptr modifier;
-    std::shared_ptr<InputProvider> audioRenderContextProvider;
-    
-    bool isInitialised = false;
-    double sampleRate = 44100.0;
-    MidiMessageArray midiMessageArray;
-};
-
-//==============================================================================
-//==============================================================================
 /** Takes a non-owning input node and simply forwards its outputs on. */
 class ForwardingNode final  : public tracktion_graph::Node
 {
@@ -353,7 +238,7 @@ namespace RackNodeBuilder
         tracktion_graph::Node* node = dynamic_cast<PluginNode*> (&pluginOrModifierNode);
         
         if (node == nullptr)
-            node = dynamic_cast<RackModifierNode*> (&pluginOrModifierNode);
+            node = dynamic_cast<ModifierNode*> (&pluginOrModifierNode);
         
         jassert (node != nullptr);
         auto summingNode = node->getDirectInputNodes().front();
@@ -399,7 +284,7 @@ namespace RackNodeBuilder
     static inline int getNumMidiInputPins (const std::vector<std::unique_ptr<tracktion_graph::Node>>& itemNodes, te::EditItemID itemID)
     {
         for (auto& node : itemNodes)
-            if (auto modifierNode = dynamic_cast<RackModifierNode*> (node.get()))
+            if (auto modifierNode = dynamic_cast<ModifierNode*> (node.get()))
                 if (modifierNode->getModifier().itemID == itemID)
                     return modifierNode->getModifier().getMidiInputNames().size();
         
@@ -468,7 +353,7 @@ namespace RackNodeBuilder
                         break;
                     }
                 }
-                else if (auto modifierNode = dynamic_cast<RackModifierNode*> (node.get()))
+                else if (auto modifierNode = dynamic_cast<ModifierNode*> (node.get()))
                 {
                     if (modifierNode->getModifier().itemID == sourceID)
                     {
@@ -556,17 +441,21 @@ namespace RackNodeBuilder
                 itemNodes.push_back (tracktion_graph::makeNode<PluginNode> (tracktion_graph::makeNode<tracktion_graph::SummingNode>(),
                                                                             plugin, sampleRate, blockSize, nullptr,
                                                                             *playHeadState, isRendering));
+            for (auto m : rack.getModifierList().getModifiers())
+                itemNodes.push_back (tracktion_graph::makeNode<ModifierNode> (tracktion_graph::makeNode<tracktion_graph::SummingNode>(),
+                                                                              m, sampleRate, blockSize, nullptr,
+                                                                              *playHeadState, isRendering));
         }
         else
         {
             for (auto plugin : rack.getPlugins())
                 itemNodes.push_back (tracktion_graph::makeNode<PluginNode> (tracktion_graph::makeNode<tracktion_graph::SummingNode>(),
                                                                             plugin, sampleRate, blockSize, inputProvider));
+
+            for (auto m : rack.getModifierList().getModifiers())
+                itemNodes.push_back (tracktion_graph::makeNode<ModifierNode> (tracktion_graph::makeNode<tracktion_graph::SummingNode>(),
+                                                                              m, sampleRate, blockSize, inputProvider));
         }
-        
-        for (auto m : rack.getModifierList().getModifiers())
-            itemNodes.push_back (tracktion_graph::makeNode<RackModifierNode> (tracktion_graph::makeNode<tracktion_graph::SummingNode>(),
-                                                                              m, inputProvider));
         
         // Iterate all the plugin/modifiers and find all the inputs to them grouped by input
         for (auto& node : itemNodes)
@@ -575,7 +464,7 @@ namespace RackNodeBuilder
 
             if (auto pluginNode = dynamic_cast<PluginNode*> (node.get()))
                 itemID = pluginNode->getPlugin().itemID;
-            else if (auto modifierNode = dynamic_cast<RackModifierNode*> (node.get()))
+            else if (auto modifierNode = dynamic_cast<ModifierNode*> (node.get()))
                 itemID = modifierNode->getModifier().itemID;
 
             if (! itemID.isValid())
@@ -605,7 +494,7 @@ namespace RackNodeBuilder
         // they'll still need to be processed but not pass any output on
         for (auto& node : itemNodes)
         {
-            if (auto modifierNode = dynamic_cast<RackModifierNode*> (node.get()))
+            if (auto modifierNode = dynamic_cast<ModifierNode*> (node.get()))
                 if (getConnectionsFrom (rack, modifierNode->getModifier().itemID).empty())
                     outputNode->addInput (tracktion_graph::makeNode<tracktion_graph::SinkNode> (tracktion_graph::makeNode<ForwardingNode> (modifierNode)));
         }

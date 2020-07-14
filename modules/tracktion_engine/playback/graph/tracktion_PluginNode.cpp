@@ -93,16 +93,7 @@ void PluginNode::process (const ProcessContext& pc)
     }
 
     // Setup audio buffers
-    constexpr size_t maxNumChannels = 64;
-    float* channels[maxNumChannels] = {};
-    const size_t numChannelsToUse = std::min (outputAudioBlock.getNumChannels(), maxNumChannels);
-
-    for (size_t i = 0; i < numChannelsToUse; ++i)
-        channels[i] = outputAudioBlock.getChannelPointer (i);
-
-    juce::AudioBuffer<float> outputAudioBuffer (channels,
-                                                (int) numChannelsToUse,
-                                                (int) outputAudioBlock.getNumSamples());
+    auto outputAudioBuffer = tracktion_graph::test_utilities::createAudioBuffer (outputAudioBlock);
 
     // Then MIDI buffers
     midiMessageArray.copyFrom (inputBuffers.midi);
