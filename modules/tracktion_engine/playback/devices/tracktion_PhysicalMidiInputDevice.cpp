@@ -87,6 +87,12 @@ struct MidiTimecodeReader  : private MessageListener,
                     }
 
                     transport.engine.getDeviceManager().setSpeedCompensation (speedComp);
+                    
+                   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+                    if (auto epc = transport.getCurrentPlaybackContext())
+                        epc->setSpeedCompensation (speedComp);
+                   #endif
+                        
                     break;
                 }
 

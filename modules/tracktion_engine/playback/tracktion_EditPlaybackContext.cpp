@@ -34,16 +34,60 @@ namespace tracktion_engine
      void setNodeContext (EditNodeContext editNodeContext, double newSampleRate, int blockSize)
      {
          sampleRate = newSampleRate;
+         blockSize = juce::roundToInt (blockSize * (1.0 + (10.0 * 0.01))); // max speed comp
          player.setNode (std::move (editNodeContext.node), sampleRate, blockSize);
      }
      
-     void process (juce::Range<int64_t> referenceSampleRange, float** allChannels, int numChannels)
+     void setSpeedCompensation (double plusOrMinus)
+     {
+         speedCompensation = jlimit (-10.0, 10.0, plusOrMinus);
+     }
+     
+     void updateReferenceSampleRange (int numSamples)
+     {
+         if (speedCompensation != 0.0)
+             numSamples = juce::roundToInt (numSamples * (1.0 + (speedCompensation * 0.01)));
+
+         referenceSampleRange = juce::Range<int64_t>::withStartAndLength (referenceSampleRange.getEnd(), (int64_t) numSamples);
+         playHead.setReferenceSampleRange (referenceSampleRange);
+     }
+     
+     void process (float** allChannels, int numChannels, int destNumSamples)
      {
          const auto numSamples = referenceSampleRange.getLength();
-         juce::dsp::AudioBlock<float> audioBlock (allChannels, (size_t) numChannels, (size_t) numSamples);
          scratchMidiBuffer.clear();
-         tracktion_graph::Node::ProcessContext pc { referenceSampleRange, { audioBlock, scratchMidiBuffer } };
-         player.process (pc);
+
+         if (isUsingInterpolator || destNumSamples != numSamples)
+         {
+             // Initialise interpolators
+             isUsingInterpolator = true;
+             ensureNumInterpolators (numChannels);
+             
+             // Process required num samples
+             scratchAudioBuffer.setSize (numChannels, (int) numSamples, false, false, true);
+             scratchAudioBuffer.clear();
+             
+             juce::dsp::AudioBlock<float> audioBlock (scratchAudioBuffer);
+             tracktion_graph::Node::ProcessContext pc { referenceSampleRange, { audioBlock, scratchMidiBuffer } };
+             player.process (pc);
+             
+             // Then resample them to the dest num samples
+             const double ratio = numSamples / (double) destNumSamples;
+             
+             for (int channel = 0; channel < numChannels; ++channel)
+             {
+                 const auto src = scratchAudioBuffer.getReadPointer (channel);
+                 const auto dest = allChannels[channel];
+
+                 interpolators[(size_t) channel]->processAdding (ratio, src, dest, destNumSamples, 1.0f);
+             }
+         }
+         else
+         {
+             juce::dsp::AudioBlock<float> audioBlock (allChannels, (size_t) numChannels, (size_t) numSamples);
+             tracktion_graph::Node::ProcessContext pc { referenceSampleRange, { audioBlock, scratchMidiBuffer } };
+             player.process (pc);
+         }
      }
      
      double sampleRate;
@@ -52,9 +96,21 @@ namespace tracktion_engine
      ProcessState processState { playHeadState };
      
  private:
+     AudioBuffer<float> scratchAudioBuffer;
      MidiMessageArray scratchMidiBuffer;
      TracktionNodePlayer player { processState };
      const size_t maxNumThreads;
+     
+     juce::Range<int64_t> referenceSampleRange;
+     double speedCompensation = 0.0;
+     std::vector<std::unique_ptr<juce::LagrangeInterpolator>> interpolators;
+     bool isUsingInterpolator = false;
+     
+     void ensureNumInterpolators (int numRequired)
+     {
+         for (size_t i = interpolators.size(); i < (size_t) numRequired; ++i)
+             interpolators.push_back (std::make_unique<juce::LagrangeInterpolator>());
+     }
 };
 #endif
 
@@ -800,7 +856,7 @@ void EditPlaybackContext::fillNextAudioBlock (EditTimeRange streamTime, float** 
 }
 
 #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-void EditPlaybackContext::fillNextNodeBlock (juce::Range<int64_t> referenceSampleRange, float** allChannels, int numChannels)
+void EditPlaybackContext::fillNextNodeBlock (float** allChannels, int numChannels, int numSamples)
 {
     CRASH_TRACER
 
@@ -810,7 +866,7 @@ void EditPlaybackContext::fillNextNodeBlock (juce::Range<int64_t> referenceSampl
     SCOPED_REALTIME_CHECK
     if (nodePlaybackContext)
     {
-        nodePlaybackContext->playHead.setReferenceSampleRange (referenceSampleRange);
+        nodePlaybackContext->updateReferenceSampleRange (numSamples);
 
         // Sync this playback context with a master context
         if (nodeContextToSyncTo != nullptr && nodePlaybackContext->playHead.isPlaying())
@@ -864,11 +920,10 @@ void EditPlaybackContext::fillNextNodeBlock (juce::Range<int64_t> referenceSampl
             lastTimelinePos = timelinePosition;
         }
 
-        nodePlaybackContext->process (referenceSampleRange, allChannels, numChannels);
+        nodePlaybackContext->process (allChannels, numChannels, numSamples);
         
         // Dispatch any MIDI messages that have been injected in to the MidiOutputDeviceInstances by the Node
-        const auto timelinePosition = nodePlaybackContext->playHead.referenceSamplePositionToTimelinePosition (referenceSampleRange.getStart());
-        const double editTime = tracktion_graph::sampleToTime (timelinePosition, nodePlaybackContext->sampleRate);
+        const double editTime = tracktion_graph::sampleToTime (nodePlaybackContext->playHead.getPosition(), nodePlaybackContext->sampleRate);
         midiDispatcher.dispatchPendingMessagesForDevices (editTime);
     }
 }
@@ -983,6 +1038,12 @@ void EditPlaybackContext::updateNumCPUs()
 {
     if (nodePlaybackContext)
         nodePlaybackContext->setNumThreads ((size_t) edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio() - 1);
+}
+
+void EditPlaybackContext::setSpeedCompensation (double plusOrMinus)
+{
+    if (nodePlaybackContext)
+        nodePlaybackContext->setSpeedCompensation (plusOrMinus);
 }
 #endif
 

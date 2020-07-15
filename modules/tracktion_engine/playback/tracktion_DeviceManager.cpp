@@ -1105,7 +1105,7 @@ void DeviceManager::audioDeviceIOCallback (const float** inputChannelData, int n
                     c->fillNextAudioBlock (blockStreamTime, outputChannelData, numSamples);
                     
                    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-                    c->fillNextNodeBlock ({ referenceSampleCount, referenceSampleCount + numSamples }, outputChannelData, totalNumOutputChannels);
+                    c->fillNextNodeBlock (outputChannelData, totalNumOutputChannels, numSamples);
                    #endif
                 }
             }
@@ -1120,7 +1120,6 @@ void DeviceManager::audioDeviceIOCallback (const float** inputChannelData, int n
            #endif
 
             streamTime = blockStreamTime.getEnd();
-            referenceSampleCount += (int64_t) numSamples;
             currentCpuUsage = deviceManager.getCpuUsage();
         }
 
@@ -1165,7 +1164,6 @@ void DeviceManager::audioDeviceAboutToStart (AudioIODevice* device)
     contextDeviceClearer->dispatchPendingUpdates();
 
     streamTime = 0;
-    referenceSampleCount = 0;
     currentCpuUsage = 0.0f;
     currentSampleRate = device->getCurrentSampleRate();
     currentLatencyMs  = device->getCurrentBufferSizeSamples() * 1000.0f / currentSampleRate;

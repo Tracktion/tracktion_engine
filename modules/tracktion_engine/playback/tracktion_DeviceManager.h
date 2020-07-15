@@ -191,7 +191,6 @@ private:
     bool sendMidiTimecode = false;
 
     std::atomic<double> currentCpuUsage { 0 }, streamTime { 0 };
-    int64_t referenceSampleCount = 0;
     double cpuLimitBeforeMuting = 0.95;
     double currentLatencyMs = 0, outputLatencyTime = 0, currentSampleRate = 0;
     double speedCompensation = 0;

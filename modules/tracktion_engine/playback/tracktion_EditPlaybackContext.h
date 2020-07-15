@@ -87,6 +87,7 @@ public:
     tracktion_graph::PlayHead* getNodePlayHead() const;
     double getSampleRate() const;
     void updateNumCPUs();
+    void setSpeedCompensation (double plusOrMinus);
    #endif
 
 private:
@@ -134,7 +135,7 @@ private:
     int64_t lastTimelinePos = 0;
 
     void createNode();
-    void fillNextNodeBlock (juce::Range<int64_t> referenceSampleRange, float** allChannels, int numChannels);
+    void fillNextNodeBlock (float** allChannels, int numChannels, int numSamples);
    #endif
 
     JUCE_DECLARE_WEAK_REFERENCEABLE (EditPlaybackContext)
