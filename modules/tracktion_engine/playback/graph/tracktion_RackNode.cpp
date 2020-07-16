@@ -364,7 +364,10 @@ namespace RackNodeBuilder
             }
         }
         
-        jassert (inputNode != nullptr);
+        // If the source plugin can't be found we can't map it
+        if (inputNode == nullptr)
+            return {};
+
         return tracktion_graph::makeNode<tracktion_graph::ChannelRemappingNode> (std::move (inputNode),
                                                                                  channelMap.channels, channelMap.passMidi);
     }
@@ -471,11 +474,16 @@ namespace RackNodeBuilder
                 continue;
 
             for (auto connectionsBetweenSingleSourceAndDest : getConnectionsTo (rack, itemID))
-                getSummingNode (*node).addInput (createChannelRemappingNode (connectionsBetweenSingleSourceAndDest.front().sourceID,
-                                                                             createChannelMap (createPinConnections (connectionsBetweenSingleSourceAndDest),
-                                                                                               getNumMidiInputPins (itemNodes, itemID)),
-                                                                             inputProvider,
-                                                                             itemNodes));
+            {
+                if (auto remappingNode = createChannelRemappingNode (connectionsBetweenSingleSourceAndDest.front().sourceID,
+                                                                     createChannelMap (createPinConnections (connectionsBetweenSingleSourceAndDest),
+                                                                                       getNumMidiInputPins (itemNodes, itemID)),
+                                                                     inputProvider,
+                                                                     itemNodes))
+                {
+                    getSummingNode (*node).addInput (std::move (remappingNode));
+                }
+            }
         }
         
         auto outputNode = std::make_unique<tracktion_graph::SummingNode>();
@@ -483,21 +491,21 @@ namespace RackNodeBuilder
         // Next find all the plugins connected to the outputs (this will include direct input/output connections)
         for (auto connectionsBetweenSingleSourceAndRackOutputs : getConnectionsTo (rack, {}))
         {
-            outputNode->addInput (createChannelRemappingNode (connectionsBetweenSingleSourceAndRackOutputs.front().sourceID,
-                                                              createChannelMap (createPinConnections (connectionsBetweenSingleSourceAndRackOutputs), 1),
-                                                              inputProvider,
-                                                              itemNodes));
-
+            if (auto node = createChannelRemappingNode (connectionsBetweenSingleSourceAndRackOutputs.front().sourceID,
+                                                        createChannelMap (createPinConnections (connectionsBetweenSingleSourceAndRackOutputs), 1),
+                                                        inputProvider,
+                                                        itemNodes))
+            {
+                outputNode->addInput (std::move (node));
+            }
         }
         
         // Next get any modifiers that aren't connected to the output or another plugin as
         // they'll still need to be processed but not pass any output on
         for (auto& node : itemNodes)
-        {
             if (auto modifierNode = dynamic_cast<ModifierNode*> (node.get()))
                 if (getConnectionsFrom (rack, modifierNode->getModifier().itemID).empty())
                     outputNode->addInput (tracktion_graph::makeNode<tracktion_graph::SinkNode> (tracktion_graph::makeNode<ForwardingNode> (modifierNode)));
-        }
 
         // Finally store all the Plugin/ModifierNodes somewhere so they don't get processed again
         outputNode->addInput (tracktion_graph::makeNode<HoldingNode> (std::move (itemNodes), rack.rackID));
