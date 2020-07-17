@@ -70,6 +70,7 @@ private:
     bool isInitialised = false;
     double sampleRate = 44100.0;
     tracktion_engine::MidiMessageArray midiMessageArray;
+    int subBlockSizeToUse = -1;
 
     //==============================================================================
     void initialisePlugin (double sampleRateToUse, int blockSizeToUse);

@@ -13,6 +13,20 @@
 namespace tracktion_engine
 {
 
+namespace
+{
+    static bool shouldUseFineGrainAutomation (Plugin& p)
+    {
+        if (! p.isAutomationNeeded())
+            return false;
+
+        if (p.engine.getPluginManager().canUseFineGrainAutomation)
+            return p.engine.getPluginManager().canUseFineGrainAutomation (p);
+
+        return true;
+    }
+}
+
 PluginNode::PluginNode (std::unique_ptr<Node> inputNode,
                         tracktion_engine::Plugin::Ptr pluginToProcess,
                         double sampleRateToUse, int blockSizeToUse,
@@ -67,6 +81,9 @@ void PluginNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInf
 {
     juce::ignoreUnused (info);
     jassert (sampleRate == info.sampleRate);
+    
+    if (shouldUseFineGrainAutomation (*plugin))
+        subBlockSizeToUse = std::max (128, 128 * juce::roundToInt (info.sampleRate / 44100.0));
 }
 
 void PluginNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
@@ -91,16 +108,20 @@ void PluginNode::process (const ProcessContext& pc)
         if (numInputChannelsToCopy > 0)
             outputAudioBlock.copyFrom (inputAudioBlock.getSubsetChannelBlock (0, numInputChannelsToCopy));
     }
-
-    // Setup audio buffers
-    auto outputAudioBuffer = tracktion_graph::test_utilities::createAudioBuffer (outputAudioBlock);
-
-    // Then MIDI buffers
-    midiMessageArray.copyFrom (inputBuffers.midi);
+    
+    // Init block
+    const size_t subBlockSize = subBlockSizeToUse == -1 ? inputAudioBlock.getNumSamples()
+                                                        : (size_t) subBlockSizeToUse;
+    
+    size_t numSamplesDone = 0;
+    size_t numSamplesLeft = inputAudioBlock.getNumSamples();
+    
+    midiMessageArray.clear();
     bool shouldProcessPlugin = plugin->isEnabled();
+    bool isAllNotesOff = inputBuffers.midi.isAllNotesOff;
     
     if (playHeadState != nullptr && playHeadState->didPlayheadJump())
-        midiMessageArray.isAllNotesOff = true;
+        isAllNotesOff = true;
     
     if (trackMuteState != nullptr)
     {
@@ -109,17 +130,53 @@ void PluginNode::process (const ProcessContext& pc)
             shouldProcessPlugin = shouldProcessPlugin && trackMuteState->shouldTrackBeAudible();
         
             if (trackMuteState->wasJustMuted())
-                midiMessageArray.isAllNotesOff = true;
+                isAllNotesOff = true;
         }
     }
-
-    // Process the plugin
-    //TODO: If a plugin is disabled we should probably apply our own latency to the plugin
-    if (shouldProcessPlugin)
-        plugin->applyToBufferWithAutomation (getPluginRenderContext (pc.referenceSampleRange.getStart(), outputAudioBuffer));
     
-    // Then copy the buffers to the outputs
-    outputBuffers.midi.copyFrom (midiMessageArray);
+    auto inputMidiIter = inputBuffers.midi.begin();
+
+    // Process in blocks
+    for (;;)
+    {
+        size_t numSamplesThisBlock = std::min (subBlockSize, numSamplesLeft);
+
+        auto outputAudioBuffer = tracktion_graph::test_utilities::createAudioBuffer (outputAudioBlock.getSubBlock (numSamplesDone, numSamplesThisBlock));
+        
+        const auto subBlockTimeRange = tracktion_graph::sampleToTime (juce::Range<size_t>::withStartAndLength (numSamplesDone, numSamplesThisBlock), sampleRate);
+        midiMessageArray.copyFrom (inputBuffers.midi);
+        
+        midiMessageArray.clear();
+        midiMessageArray.isAllNotesOff = isAllNotesOff;
+        
+        for (; inputMidiIter != inputBuffers.midi.end(); ++inputMidiIter)
+        {
+            const auto timestamp = inputMidiIter->getTimeStamp();
+            
+            if (timestamp >= subBlockTimeRange.getEnd())
+                break;
+            
+            midiMessageArray.addMidiMessage (*inputMidiIter,
+                                             timestamp - subBlockTimeRange.getStart(),
+                                             inputMidiIter->mpeSourceID);
+        }
+        
+        // Process the plugin
+        //TODO: If a plugin is disabled we should probably apply our own latency to the plugin
+        if (shouldProcessPlugin)
+            plugin->applyToBufferWithAutomation (getPluginRenderContext (pc.referenceSampleRange.getStart() + (int64_t) numSamplesDone, outputAudioBuffer));
+
+        // Then copy the buffers to the outputs
+        outputBuffers.midi.mergeFrom (midiMessageArray);
+
+        numSamplesDone += numSamplesThisBlock;
+        numSamplesLeft -= numSamplesThisBlock;
+        
+        if (numSamplesLeft == 0)
+            break;
+
+        isAllNotesOff = false;
+    }
 }
 
 //==============================================================================
