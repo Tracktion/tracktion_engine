@@ -756,6 +756,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForSubmixTrack (FolderTrack& su
         return {};
     
     auto sumNode = std::make_unique<tracktion_graph::SummingNode>();
+    sumNode->setDoubleProcessingPrecision (submixTrack.edit.engine.getPropertyStorage().getProperty (SettingID::use64Bit, false));
 
     // Create nodes for any submix tracks
     for (auto ft : subFolderTracks)
@@ -1033,6 +1034,7 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, const CreateNodePar
         auto tracksVector = std::move (deviceAndTrackNode.second);
         
         auto sumNode = std::make_unique<SummingNode> (std::move (tracksVector));
+        sumNode->setDoubleProcessingPrecision (edit.engine.getPropertyStorage().getProperty (SettingID::use64Bit, false));
 
         // Create nodes for any insert plugins
         bool deviceIsBeingUsedAsInsert = false;
@@ -1095,7 +1097,10 @@ EditNodeContext createNodeForEdit (Edit& edit, const CreateNodeParams& params)
             trackNodes.push_back (std::move (node));
     }
 
-    auto node = tracktion_graph::makeNode<tracktion_graph::SummingNode> (std::move (trackNodes));
+    auto sumNode = std::make_unique<SummingNode> (std::move (trackNodes));
+    sumNode->setDoubleProcessingPrecision (edit.engine.getPropertyStorage().getProperty (SettingID::use64Bit, false));
+
+    auto node = std::unique_ptr<Node> (std::move (sumNode));
     node = createMasterPluginsNode (edit, playHeadState, std::move (node), params);
     node = createMasterFadeInOutNode (edit, playHeadState, std::move (node));
     node = createRackNode (std::move (node), edit.getRackList(), params);

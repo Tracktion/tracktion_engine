@@ -198,6 +198,7 @@ public:
         nodes.insert (nodes.begin(), referencedInputs.begin(), referencedInputs.end());
     }
 
+    //==============================================================================
     /** Adds an input to be summed in this Node. */
     void addInput (std::unique_ptr<Node> newInput)
     {
@@ -205,7 +206,17 @@ public:
         nodes.push_back (newInput.get());
         ownedNodes.push_back (std::move (newInput));
     }
+
+    /** Enables Nodes to be intermediately summed using double precision.
+        This must be set before the node is initialised.
+        N.B. The output will still be single-precision floats.
+    */
+    void setDoubleProcessingPrecision (bool shouldSumInDoublePrecision)
+    {
+        useDoublePrecision = shouldSumInDoublePrecision;
+    }
     
+    //==============================================================================
     NodeProperties getNodeProperties() override
     {
         NodeProperties props;
@@ -241,8 +252,12 @@ public:
         return createLatencyNodes();
     }
 
-    void prepareToPlay (const PlaybackInitialisationInfo&) override
+    void prepareToPlay (const PlaybackInitialisationInfo& info) override
     {
+        useDoublePrecision = useDoublePrecision && nodes.size() > 1;
+        
+        if (useDoublePrecision)
+            tempDoubleBuffer.setSize (getNodeProperties().numberOfChannels, info.blockSize);
     }
 
     bool isReadyToProcess() override
@@ -255,6 +270,42 @@ public:
     }
     
     void process (const ProcessContext& pc) override
+    {
+        if (useDoublePrecision)
+            processDoublePrecision (pc);
+        else
+            processSinglePrecision (pc);
+    }
+
+private:
+    //==============================================================================
+    std::vector<std::unique_ptr<Node>> ownedNodes;
+    std::vector<Node*> nodes;
+    
+    bool useDoublePrecision = false;
+    juce::AudioBuffer<double> tempDoubleBuffer;
+    
+    //==============================================================================
+    template<typename DestType, typename SourceType>
+    static void addBlock (juce::dsp::AudioBlock<DestType>& dest, const juce::dsp::AudioBlock<SourceType>& src,
+                          size_t numChannels)
+    {
+        assert (dest.getNumChannels() <= numChannels);
+        assert (src.getNumChannels() <= numChannels);
+        assert (dest.getNumSamples() == src.getNumSamples());
+        const auto numSamples = dest.getNumSamples();
+
+        for (size_t c = 0; c < numChannels; ++c)
+        {
+            DestType* destChan = dest.getChannelPointer (c);
+            const SourceType* srcChan = src.getChannelPointer (c);
+
+            for (size_t i = 0; i < numSamples; ++i)
+                *destChan++ += static_cast<DestType> (*srcChan++);
+        }
+    }
+    
+    void processSinglePrecision (const ProcessContext& pc)
     {
         const auto numChannels = pc.buffers.audio.getNumChannels();
 
@@ -272,11 +323,36 @@ public:
             pc.buffers.midi.mergeFrom (inputFromNode.midi);
         }
     }
-
-private:
-    std::vector<std::unique_ptr<Node>> ownedNodes;
-    std::vector<Node*> nodes;
     
+    void processDoublePrecision (const ProcessContext& pc)
+    {
+        const auto numChannels = pc.buffers.audio.getNumChannels();
+        tempDoubleBuffer.clear();
+        assert (tempDoubleBuffer.getNumChannels() == (int) numChannels);
+        auto doubleBlock (juce::dsp::AudioBlock<double> (tempDoubleBuffer).getSubBlock (0, pc.buffers.audio.getNumSamples()));
+
+        // Get each of the inputs and add them to dest
+        for (auto& node : nodes)
+        {
+            auto inputFromNode = node->getProcessedOutput();
+            
+            const auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels);
+
+            if (numChannelsToAdd > 0)
+            {
+                auto destBlock = doubleBlock.getSubsetChannelBlock (0, numChannelsToAdd);
+                auto srcBlock = node->getProcessedOutput().audio.getSubsetChannelBlock (0, numChannelsToAdd);
+                addBlock (destBlock, srcBlock, numChannelsToAdd);
+            }
+            
+            pc.buffers.midi.mergeFrom (inputFromNode.midi);
+        }
+        
+        auto floatBlock = pc.buffers.audio.getSubsetChannelBlock (0, numChannels);
+        addBlock (floatBlock, doubleBlock, numChannels);
+    }
+
+    //==============================================================================
     bool createLatencyNodes()
     {
         bool topologyChanged = false;
