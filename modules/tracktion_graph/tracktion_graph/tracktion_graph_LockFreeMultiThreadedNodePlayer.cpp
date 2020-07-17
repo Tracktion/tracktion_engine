@@ -293,7 +293,7 @@ void LockFreeMultiThreadedNodePlayer::processNextFreeNodeOrWait()
 {
     // The pause and sleep counts avoid starving the CPU if there aren't enough queued nodes
     // This only happens on the worker threads so the main audio thread never interacts with the thread scheduler
-    thread_local int pauseCount = 0, sleepCount = 0;
+    thread_local int pauseCount = 0;
     
     for (;;)
     {
@@ -302,27 +302,22 @@ void LockFreeMultiThreadedNodePlayer::processNextFreeNodeOrWait()
         
         if (! processNextFreeNode())
         {
-            if (++pauseCount == 100)
-            {
-                std::this_thread::yield();
-                pauseCount = 0;
-                ++sleepCount;
-            }
-            else
-            {
-                pause();
-            }
+            ++pauseCount;
             
-            if (sleepCount == 100)
-            {
+            if (pauseCount < 50)
+                pause();
+            else if (pauseCount < 100)
+                std::this_thread::yield();
+            else if (pauseCount < 150)
                 std::this_thread::sleep_for (std::chrono::milliseconds (1));
-                sleepCount = 0;
-            }
+            else if (pauseCount < 200)
+                std::this_thread::sleep_for (std::chrono::milliseconds (5));
+            else
+                pauseCount = 0;
         }
         else
         {
             pauseCount = 0;
-            sleepCount = 0;
         }
     }
 }
