@@ -125,6 +125,9 @@ extern "C"
  #include "playback/graph/tracktion_SharedLevelMeasuringNode.h"
  #include "playback/graph/tracktion_SharedLevelMeasuringNode.cpp"
 
+ #include "playback/graph/tracktion_SpeedRampWaveNode.h"
+ #include "playback/graph/tracktion_SpeedRampWaveNode.cpp"
+
  #include "playback/graph/tracktion_MidiInputDeviceNode.h"
  #include "playback/graph/tracktion_MidiInputDeviceNode.cpp"
 
