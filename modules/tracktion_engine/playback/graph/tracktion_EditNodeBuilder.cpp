@@ -307,16 +307,11 @@ std::unique_ptr<tracktion_graph::Node> createNodeForStepClip (StepClip& clip, co
     juce::MidiMessageSequence sequence;
     clip.generateMidiSequence (sequence);
 
-    //TODO: Cache these in the StepClip
-    auto level = std::make_shared<ClipLevel>();
-    level->dbGain.referTo (clip.volumeDb.getValueTree(), clip.volumeDb.getPropertyID(), clip.volumeDb.getUndoManager(), clip.volumeDb.getDefault());
-    level->mute.referTo (clip.mute.getValueTree(), clip.mute.getPropertyID(), clip.mute.getUndoManager(), clip.mute.getDefault());
-
     return tracktion_graph::makeNode<MidiNode> (std::move (sequence),
                                                 juce::Range<int> (1, 16),
                                                 false,
                                                 clip.getEditTimeRange(),
-                                                LiveClipLevel (level),
+                                                clip.getLiveClipLevel(),
                                                 params.processState,
                                                 clip.itemID,
                                                 [&trackMuteState]

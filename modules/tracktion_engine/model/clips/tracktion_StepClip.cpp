@@ -55,8 +55,8 @@ StepClip::StepClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTr
     auto um = getUndoManager();
     channelList.reset (new ChannelList (*this, state.getOrCreateChildWithName (IDs::CHANNELS, um)));
     repeatSequence.referTo (state, IDs::repeatSequence, um);
-    volumeDb.referTo (state, IDs::volDb, um, 0.0f);
-    mute.referTo (state, IDs::mute, um, false);
+    level->dbGain.referTo (state, IDs::volDb, um, 0.0f);
+    level->mute.referTo (state, IDs::mute, um, false);
 
     if (getChannels().isEmpty())
     {
@@ -106,8 +106,8 @@ void StepClip::cloneFrom (Clip* c)
         Clip::cloneFrom (other);
 
         repeatSequence  .setValue (other->repeatSequence, nullptr);
-        volumeDb        .setValue (other->volumeDb, nullptr);
-        mute            .setValue (other->mute, nullptr);
+        level->dbGain   .setValue (other->level->dbGain, nullptr);
+        level->mute     .setValue (other->level->mute, nullptr);
 
         auto chans = state.getChildWithName (IDs::CHANNELS);
         auto patterns = state.getChildWithName (IDs::PATTERNS);
@@ -417,7 +417,7 @@ AudioNode* StepClip::createAudioNode (const CreateAudioNodeParams& params)
             sequences.push_back (sequence);
         }
 
-        return new MidiAudioNode (std::move (sequences), { 1, 16 }, getEditTimeRange(), volumeDb, mute, *this,
+        return new MidiAudioNode (std::move (sequences), { 1, 16 }, getEditTimeRange(), level->dbGain, level->mute, *this,
                                   getClipIfPresentInNode (params.audioNodeToBeReplaced, *this));
     }
     else
@@ -425,7 +425,7 @@ AudioNode* StepClip::createAudioNode (const CreateAudioNodeParams& params)
         MidiMessageSequence sequence;
         generateMidiSequence (sequence);
 
-        return new MidiAudioNode (std::move (sequence), { 1, 16 }, getEditTimeRange(), volumeDb, mute, *this,
+        return new MidiAudioNode (std::move (sequence), { 1, 16 }, getEditTimeRange(), level->dbGain, level->mute, *this,
                                   getClipIfPresentInNode (params.audioNodeToBeReplaced, *this));
     }
 }
@@ -434,6 +434,11 @@ AudioNode* StepClip::createAudioNode (const CreateAudioNodeParams& params)
 Colour StepClip::getDefaultColour() const
 {
     return Colours::red.withHue (3.0f / 9.0f);
+}
+
+LiveClipLevel StepClip::getLiveClipLevel()
+{
+    return { level };
 }
 
 //==============================================================================
