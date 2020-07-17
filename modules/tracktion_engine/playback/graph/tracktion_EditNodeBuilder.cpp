@@ -110,6 +110,18 @@ namespace
         return plugins;
     }
 
+    juce::Array<RackInstance*> getInstancesForRack (RackType& type)
+    {
+        juce::Array<RackInstance*> instances;
+
+        for (auto p : getAllPlugins (type.edit, false))
+            if (auto ri = dynamic_cast<RackInstance*> (p))
+                if (ri->type.get() == &type)
+                    instances.add (ri);
+        
+        return instances;
+    }
+
 
 //==============================================================================
 //==============================================================================
@@ -855,10 +867,10 @@ std::vector<std::unique_ptr<Node>> createNodesForRacks (RackTypeList& rackTypeLi
 {
     std::vector<std::unique_ptr<Node>> nodes;
     
-    //TODO: Only add Racks with instances
     for (auto rackType : rackTypeList.getTypes())
-        if (auto rackNode = createNodeForRackType (*rackType, params))
-            nodes.push_back (std::move (rackNode));
+        if (getInstancesForRack (*rackType).size() > 0)
+            if (auto rackNode = createNodeForRackType (*rackType, params))
+                nodes.push_back (std::move (rackNode));
     
     return nodes;
 }
