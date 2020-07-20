@@ -1432,6 +1432,14 @@ bool TransportControl::performRecord()
                     edit.setClickTrackRange ({ prerollStart, transportState->startTime });
                 else
                     edit.setClickTrackRange ({});
+                
+                // Finally update the loop range
+                if (looping)
+                {
+                    auto lr = getLoopRange();
+                    lr.end = std::max (lr.end, lr.start + 0.001);
+                    playHeadWrapper->setLoopTimes (true, lr);
+                }
 
                 transportState->playing = true; // N.B. set these after the devices have been rebuilt and the playingFlag has been set
                 screenSaverDefeater = std::make_unique<ScreenSaverDefeater>();
