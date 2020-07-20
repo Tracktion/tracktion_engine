@@ -12,9 +12,11 @@
 namespace tracktion_engine
 {
 
-WaveInputDeviceNode::WaveInputDeviceNode (InputDeviceInstance& idi, WaveInputDevice& owner)
+WaveInputDeviceNode::WaveInputDeviceNode (InputDeviceInstance& idi, WaveInputDevice& owner,
+                                          const juce::AudioChannelSet& destChannelsToFill)
     : instance (idi),
-      waveInputDevice (owner)
+      waveInputDevice (owner),
+      destChannels (destChannelsToFill)
 {
 }
 
@@ -27,15 +29,15 @@ tracktion_graph::NodeProperties WaveInputDeviceNode::getNodeProperties()
 {
     tracktion_graph::NodeProperties props;
     props.hasAudio = true;
-    props.numberOfChannels = (waveInputDevice.isStereoPair()) ? 2 : 1;
+    props.numberOfChannels = destChannels.size();
 
     return props;
 }
 
 void WaveInputDeviceNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
 {
-    const int numChannels = getNodeProperties().numberOfChannels;
-    audioFifo.setSize (numChannels, info.blockSize * 8);
+    const int numIncommingChannels = (waveInputDevice.isStereoPair()) ? 2 : 1;
+    audioFifo.setSize (numIncommingChannels, info.blockSize * 8);
     lastCallbackTime = juce::Time::getMillisecondCounter();
 
     instance.addConsumer (this);
@@ -62,12 +64,21 @@ void WaveInputDeviceNode::process (const ProcessContext& pc)
 
     auto& destAudio = pc.buffers.audio;
     const int numSamples = (int) destAudio.getNumSamples();
-    jassert ((int) destAudio.getNumChannels() == audioFifo.getNumChannels());
+    const size_t numChannelsToRead = std::min (destAudio.getNumChannels(), (size_t) audioFifo.getNumChannels());
+    jassert ((int) destAudio.getNumChannels() >= audioFifo.getNumChannels());
 
     const auto numToRead = (size_t) std::min (audioFifo.getNumReady(), numSamples);
 
     if (numToRead > 0)
-        audioFifo.readAdding (destAudio.getSubBlock (0, numToRead));
+    {
+        const auto destSubBlock = destAudio.getSubsetChannelBlock (0, numChannelsToRead)
+                                           .getSubBlock (0, numToRead);
+        audioFifo.readAdding (destSubBlock);
+    
+        // Copy any additional channels from the last one
+        for (size_t c = numChannelsToRead; c < destAudio.getNumChannels(); ++c)
+            destAudio.getSubsetChannelBlock (c, 1).getSubBlock (0, numToRead).copyFrom (destSubBlock);
+    }
 }
 
 void WaveInputDeviceNode::acceptInputBuffer (const juce::dsp::AudioBlock<float>& newBlock)

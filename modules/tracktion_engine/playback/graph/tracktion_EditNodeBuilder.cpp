@@ -445,7 +445,9 @@ std::unique_ptr<tracktion_graph::Node> createLiveInputNodeForDevice (InputDevice
             if (auto sourceTrack = getTrackContainingTrackDevice (inputDeviceInstance.edit, *waveDevice))
                 return makeNode<TrackWaveInputDeviceNode> (*waveDevice, makeNode<ReturnNode> (getWaveInputDeviceBusID (sourceTrack->itemID)));
 
-        return makeNode<WaveInputDeviceNode>(inputDeviceInstance, *waveDevice);
+        // For legacy reasons, we always need a stereo output from our live inputs
+        return makeNode<WaveInputDeviceNode> (inputDeviceInstance, *waveDevice,
+                                              juce::AudioChannelSet::canonicalChannelSet (2));
     }
 
     return {};
