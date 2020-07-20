@@ -287,8 +287,12 @@ void EditPlaybackContext::clearNodes()
     isAllocated = false;
 
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+    // Because the nodePlaybackContext is lock-free, it doesn't immediately delete its current node
+    // To avoid it referencing input devices that have been deleted, fully delete the context
     nodePlaybackContext->playHead.stop();
-    nodePlaybackContext->setNodeContext ({});
+    nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.engine.getDeviceManager().getSampleRate(),
+                                                                 edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio(),
+                                                                 size_t (edit.getIsPreviewEdit() ? 0 : juce::SystemStats::getNumCpus() - 1));
     nodePlaybackContext->setNumThreads (0);
    #endif
 }
