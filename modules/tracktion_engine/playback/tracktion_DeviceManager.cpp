@@ -103,7 +103,9 @@ struct DeviceManager::WaveDeviceList
 
         for (int i = 0; i < channelNames.size(); ++i)
         {
-            if (isInput ? dm.isDeviceInChannelStereo (i) : dm.isDeviceOutChannelStereo (i))
+            const bool canBeStereo = i < channelNames.size() - 1;
+            
+            if (canBeStereo && (isInput ? dm.isDeviceInChannelStereo (i) : dm.isDeviceOutChannelStereo (i)))
             {
                 descriptions.push_back (WaveDeviceDescription (mergeTwoNames (channelNames[i], channelNames[i + 1]),
                                                                i, i + 1, isDeviceEnabled (i) || isDeviceEnabled (i + 1)));
