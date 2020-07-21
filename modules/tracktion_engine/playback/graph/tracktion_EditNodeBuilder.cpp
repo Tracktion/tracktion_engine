@@ -573,13 +573,23 @@ std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList& list
     for (auto p : list)
     {
         if (auto sendPlugin = dynamic_cast<AuxSendPlugin*> (p))
-            node = makeNode<SendNode> (std::move (node), sendPlugin->busNumber, [sendPlugin] { return volumeFaderPositionToGain (sendPlugin->gain->getCurrentValue()); });
+        {
+            if (sendPlugin->isEnabled())
+                node = makeNode<SendNode> (std::move (node), sendPlugin->busNumber, [sendPlugin] { return volumeFaderPositionToGain (sendPlugin->gain->getCurrentValue()); });
+        }
         else if (auto returnPlugin = dynamic_cast<AuxReturnPlugin*> (p))
-            node = makeNode<ReturnNode> (std::move (node), returnPlugin->busNumber);
+        {
+            if (returnPlugin->isEnabled())
+                node = makeNode<ReturnNode> (std::move (node), returnPlugin->busNumber);
+        }
         else if (auto rackInstance = dynamic_cast<RackInstance*> (p))
+        {
             node = createNodeForRackInstance (*rackInstance, std::move (node));
+        }
         else
+        {
             node = createNodeForPlugin (*p, trackMuteState, std::move (node), playHeadState, params);
+        }
     }
 
     return node;

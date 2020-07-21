@@ -236,7 +236,14 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
             }
             else if (v.hasType (IDs::PLUGIN))
             {
-                if (v[IDs::type] == RackInstance::xmlTypeName)
+                const auto type = v[IDs::type].toString();
+                
+                if (type == AuxSendPlugin::xmlTypeName || type == AuxReturnPlugin::xmlTypeName)
+                {
+                    if (i == IDs::enabled)
+                        restart();
+                }
+                else if (type == RackInstance::xmlTypeName)
                 {
                     if (i == IDs::enabled
                         || i == IDs::leftTo || i == IDs::rightTo || i == IDs::leftFrom || i == IDs::rightFrom)
