@@ -60,7 +60,7 @@ namespace PlayHeadHelpers
         if (numerator == 0 || denominator == 0)
             return "1|1|000";
 
-        auto quarterNotesPerBar = (numerator * 4 / denominator);
+        auto quarterNotesPerBar = ((double) numerator * 4.0 / (double) denominator);
         auto beats  = (fmod (quarterNotes, quarterNotesPerBar) / quarterNotesPerBar) * numerator;
 
         auto bar    = ((int) quarterNotes) / quarterNotesPerBar + 1;
