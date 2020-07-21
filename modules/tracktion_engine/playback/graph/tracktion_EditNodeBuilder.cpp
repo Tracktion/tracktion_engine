@@ -572,6 +572,9 @@ std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList& list
 {
     for (auto p : list)
     {
+        if (p->isFrozen())
+            continue;
+        
         if (auto sendPlugin = dynamic_cast<AuxSendPlugin*> (p))
         {
             if (sendPlugin->isEnabled())
