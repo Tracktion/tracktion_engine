@@ -20,7 +20,7 @@ RackInstanceNode::RackInstanceNode (std::unique_ptr<Node> inputNode,
     
     for (auto& chan : channelMap)
     {
-        assert (std::get<2> (chan) != nullptr);
+		assert (std::get<2> (chan) != nullptr);
         maxNumChannels = std::max (maxNumChannels,
                                    std::max (std::get<0> (chan), std::get<1> (chan)) + 1);
     }
@@ -67,14 +67,20 @@ void RackInstanceNode::process (const ProcessContext& pc)
     
     for (auto& chan : channelMap)
     {
-        auto srcChan = (size_t) std::get<0> (chan);
-        auto destChan = (size_t) std::get<1> (chan);
+        auto srcChan = std::get<0> (chan);
+        auto destChan = std::get<1> (chan);
         
-        if (srcChan >= inputBuffers.audio.getNumChannels())
+        if (srcChan < 0)
             continue;
-        
-        auto src = inputBuffers.audio.getSingleChannelBlock (srcChan);
-        auto dest = pc.buffers.audio.getSingleChannelBlock (destChan);
+
+        if (destChan < 0)
+            continue;
+
+        if ((size_t) srcChan >= inputBuffers.audio.getNumChannels())
+            continue;
+
+        auto src = inputBuffers.audio.getSingleChannelBlock ((size_t) srcChan);
+        auto dest = pc.buffers.audio.getSingleChannelBlock ((size_t) destChan);
         auto gain = dbToGain (std::get<2> (chan)->getCurrentValue());
         
         dest.copyFrom (src);

@@ -19,3 +19,4 @@
 #define GRAPH_UNIT_TESTS_WAVENODE          1
 #define GRAPH_UNIT_TESTS_MIDINODE          1
 #define GRAPH_UNIT_TESTS_RACKNODE          1
+#define GRAPH_UNIT_TESTS_EDITNODE          1

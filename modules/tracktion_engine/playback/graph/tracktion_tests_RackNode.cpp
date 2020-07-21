@@ -31,7 +31,7 @@ public:
         auto& engine = *tracktion_engine::Engine::getEngines()[0];
         engine.getPluginManager().createBuiltInType<ToneGeneratorPlugin>();
         engine.getPluginManager().createBuiltInType<LatencyPlugin>();
-        
+                
         runAllTests<tracktion_graph::NodePlayer>();
         runAllTests<tracktion_graph::LockFreeMultiThreadedNodePlayer>();
     }

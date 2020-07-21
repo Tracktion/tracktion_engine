@@ -529,9 +529,6 @@ std::unique_ptr<tracktion_graph::Node> createNodeForPlugin (Plugin& plugin, cons
                                                   plugin,
                                                   params.sampleRate, params.blockSize,
                                                   trackMuteState, playHeadState, params.forRendering);
-    
-    //TODO:
-    // Fine-grain automation
 
     return node;
 }
