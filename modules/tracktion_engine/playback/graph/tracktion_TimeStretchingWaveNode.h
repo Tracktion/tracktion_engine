@@ -37,6 +37,7 @@ private:
     //==============================================================================
     AudioClipBase& c;
     tracktion_graph::PlayHeadState& playHeadState;
+    Clip::Ptr clipPtr;
 
     AudioFile file;
     AudioFileInfo fileInfo;

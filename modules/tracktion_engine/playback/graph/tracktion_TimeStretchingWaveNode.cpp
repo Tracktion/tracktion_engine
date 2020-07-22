@@ -14,7 +14,7 @@ namespace tracktion_engine
 //==============================================================================
 //==============================================================================
 TimeStretchingWaveNode::TimeStretchingWaveNode (AudioClipBase& clip, tracktion_graph::PlayHeadState& playHeadStateToUse)
-    : c (clip), playHeadState (playHeadStateToUse),
+    : c (clip), playHeadState (playHeadStateToUse), clipPtr (clip),
       file (c.getAudioFile()),
       fileInfo (file.getInfo()),
       sampleRate (fileInfo.sampleRate),
@@ -67,7 +67,8 @@ void TimeStretchingWaveNode::prepareToPlay (const tracktion_graph::PlaybackIniti
 {
     CRASH_TRACER
 
-    stretchBlockSize = std::max (info.blockSize, 512);
+    // Elastique can't handle blocks larger than 1024
+    stretchBlockSize = std::min (std::max (info.blockSize, 512), 1024);
     sampleRate = info.sampleRate;
 
     const TimeStretcher::Mode m = c.getTimeStretchMode();
