@@ -487,6 +487,17 @@ struct TransportControl::PlayHeadWrapper
     }
    #endif
 
+    void play()
+    {
+       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+        if (auto ph = getNodePlayHead())
+            ph->play();
+       #endif
+
+        if (auto ph = getPlayHead())
+            ph->play();
+    }
+
     void play (EditTimeRange timeRange, bool looped)
     {
        #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
@@ -1416,12 +1427,23 @@ bool TransportControl::performRecord()
                     prerollStart -= 0.2;
 
                 if (looping)
+                {
+                    // The order of this is critical as the audio thread might jump in and reset the
+                    // roll-in-to-loop status of the loop-range is not set first
+                    auto lr = getLoopRange();
+                    lr.end = std::max (lr.end, lr.start + 0.001);
+                    playHeadWrapper->setLoopTimes (true, lr);
                     playHeadWrapper->setRollInToLoop (prerollStart);
-
-                // Set the playhead loop times before preparing the context as this will be used by
-                // the RecordingContext to initialise itself
-                playHeadWrapper->setLoopTimes (false, { prerollStart, transportState->endTime });
-                playHeadWrapper->play ({ prerollStart, transportState->endTime }, false);
+                    playHeadWrapper->play();
+                }
+                else
+                {
+                    // Set the playhead loop times before preparing the context as this will be used by
+                    // the RecordingContext to initialise itself
+                    playHeadWrapper->setLoopTimes (false, { prerollStart, transportState->endTime });
+                    playHeadWrapper->play ({ prerollStart, transportState->endTime }, false);
+                }
+                
                 playHeadWrapper->setPosition (prerollStart);
                 position = prerollStart;
 
@@ -1433,14 +1455,6 @@ bool TransportControl::performRecord()
                 else
                     edit.setClickTrackRange ({});
                 
-                // Finally update the loop range
-                if (looping)
-                {
-                    auto lr = getLoopRange();
-                    lr.end = std::max (lr.end, lr.start + 0.001);
-                    playHeadWrapper->setLoopTimes (true, lr);
-                }
-
                 transportState->playing = true; // N.B. set these after the devices have been rebuilt and the playingFlag has been set
                 screenSaverDefeater = std::make_unique<ScreenSaverDefeater>();
             }
