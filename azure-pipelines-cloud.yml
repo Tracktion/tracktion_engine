@@ -2,7 +2,7 @@ trigger:
   batch: true
 
 jobs:
-  job: Run Tests
+- job: Run Tests
   timeoutInMinutes: 0
   strategy:
     matrix:
