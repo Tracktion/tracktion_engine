@@ -159,7 +159,7 @@ private:
     void buildParameterList();
     void refreshParameterValues();
     void updateDebugName();
-    void processPluginBlock (const PluginRenderContext&);
+    void processPluginBlock (const PluginRenderContext&, bool processedBypass);
 
     std::unique_ptr<juce::PluginDescription> findMatchingPlugin() const;
     std::unique_ptr<juce::PluginDescription> findDescForUID (int uid) const;

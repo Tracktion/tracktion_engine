@@ -1187,7 +1187,9 @@ void ExternalPlugin::prepareIncomingMidiMessages (MidiMessageArray& incoming, in
 
 void ExternalPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
-    if (pluginInstance != nullptr && isEnabled())
+    const bool processedBypass = fc.allowBypassedProcessing && ! isEnabled();
+    
+    if (pluginInstance != nullptr && (processedBypass || isEnabled()))
     {
         CRASH_TRACER_PLUGIN (getDebugName());
         const ScopedLock sl (lock);
@@ -1212,7 +1214,7 @@ void ExternalPlugin::applyToBuffer (const PluginRenderContext& fc)
 
             if (destNumChans == numChansToProcess)
             {
-                processPluginBlock (fc);
+                processPluginBlock (fc, processedBypass);
             }
             else
             {
@@ -1244,7 +1246,7 @@ void ExternalPlugin::applyToBuffer (const PluginRenderContext& fc)
                 fc2.destBuffer = &asb.buffer;
                 fc2.bufferStartSample = 0;
 
-                processPluginBlock (fc2);
+                processPluginBlock (fc2, processedBypass);
 
                 // Copy sample data back clearing unprocessed channels
                 for (int i = 0; i < destNumChans; ++i)
@@ -1262,7 +1264,11 @@ void ExternalPlugin::applyToBuffer (const PluginRenderContext& fc)
         {
             AudioScratchBuffer asb (jmax (pluginInstance->getTotalNumInputChannels(),
                                           pluginInstance->getTotalNumOutputChannels()), fc.bufferNumSamples);
-            pluginInstance->processBlock (asb.buffer, midiBuffer);
+            
+            if (processedBypass)
+                pluginInstance->processBlockBypassed (asb.buffer, midiBuffer);
+            else
+                pluginInstance->processBlock (asb.buffer, midiBuffer);
         }
 
         if (fc.bufferForMidiMessages != nullptr)
@@ -1287,7 +1293,7 @@ void ExternalPlugin::applyToBuffer (const PluginRenderContext& fc)
     }
 }
 
-void ExternalPlugin::processPluginBlock (const PluginRenderContext& fc)
+void ExternalPlugin::processPluginBlock (const PluginRenderContext& fc, bool processedBypass)
 {
     juce::AudioBuffer<float> asb (fc.destBuffer->getArrayOfWritePointers(), fc.destBuffer->getNumChannels(),
                                   fc.bufferStartSample, fc.bufferNumSamples);
@@ -1297,7 +1303,11 @@ void ExternalPlugin::processPluginBlock (const PluginRenderContext& fc)
 
     if (dry <= 0.00004f)
     {
-        pluginInstance->processBlock (asb, midiBuffer);
+        if (processedBypass)
+            pluginInstance->processBlockBypassed (asb, midiBuffer);
+        else
+            pluginInstance->processBlock (asb, midiBuffer);
+
         zeroDenormalisedValuesIfNeeded (asb);
 
         if (wet < 0.999f)
@@ -1311,7 +1321,11 @@ void ExternalPlugin::processPluginBlock (const PluginRenderContext& fc)
         for (int i = 0; i < numChans; ++i)
             dryAudio.buffer.copyFrom (i, 0, asb, i, 0, fc.bufferNumSamples);
 
-        pluginInstance->processBlock (asb, midiBuffer);
+        if (processedBypass)
+            pluginInstance->processBlockBypassed (asb, midiBuffer);
+        else
+            pluginInstance->processBlock (asb, midiBuffer);
+
         zeroDenormalisedValuesIfNeeded (asb);
 
         if (wet < 0.999f)

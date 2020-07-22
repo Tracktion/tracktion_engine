@@ -15,12 +15,14 @@ PluginRenderContext::PluginRenderContext (juce::AudioBuffer<float>* buffer,
                                           const juce::AudioChannelSet& bufferChannels,
                                           int bufferStart, int bufferSize,
                                           MidiMessageArray* midiBuffer, double midiOffset,
-                                          double editStartTime, bool playing, bool scrubbing, bool rendering) noexcept
+                                          double editStartTime, bool playing, bool scrubbing, bool rendering,
+                                          bool shouldAllowBypassedProcessing) noexcept
     : destBuffer (buffer), destBufferChannels (bufferChannels),
       bufferStartSample (bufferStart), bufferNumSamples (bufferSize),
       bufferForMidiMessages (midiBuffer), midiBufferOffset (midiOffset),
       editTime (editStartTime),
-      isPlaying (playing), isScrubbing (scrubbing), isRendering (rendering)
+      isPlaying (playing), isScrubbing (scrubbing), isRendering (rendering),
+      allowBypassedProcessing (shouldAllowBypassedProcessing)
 {}
 
 PluginRenderContext::PluginRenderContext (const AudioRenderContext& rc)

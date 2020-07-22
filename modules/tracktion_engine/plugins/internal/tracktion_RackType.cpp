@@ -291,14 +291,14 @@ struct RackType::PluginRenderingInfo
                                                                           pluginOutput.getNumSamples(),
                                                                           &pluginMidiOutput, 0.0,
                                                                           editTime,
-                                                                          isPlaying, isScrubbing, isRendering));
+                                                                          isPlaying, isScrubbing, isRendering, false));
 
             if (modifier != nullptr && ! modifier->baseClassNeedsInitialising())
                 modifier->applyToBuffer (PluginRenderContext (&pluginOutput, pluginOutputChannels,
                                                               0, pluginOutput.getNumSamples(),
                                                               &pluginMidiOutput, 0.0,
                                                               editTime,
-                                                              isPlaying, isScrubbing, isRendering));
+                                                              isPlaying, isScrubbing, isRendering, false));
         }
 
         if (destBuffer != nullptr)
@@ -627,7 +627,7 @@ private:
         // The context
         PluginRenderContext pc (nullptr, AudioChannelSet(), 0, 0,
                                 nullptr, 0.0,
-                                editTime, isPlaying, isScrubbing, isRendering);
+                                editTime, isPlaying, isScrubbing, isRendering, true);
         inputProvider->setContext (&pc);
         
         

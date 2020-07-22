@@ -71,6 +71,7 @@ private:
     double sampleRate = 44100.0;
     tracktion_engine::MidiMessageArray midiMessageArray;
     int subBlockSizeToUse = -1;
+    bool canProcessBypassed = false;
 
     //==============================================================================
     void initialisePlugin (double sampleRateToUse, int blockSizeToUse);

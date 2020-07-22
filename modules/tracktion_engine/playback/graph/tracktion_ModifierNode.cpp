@@ -147,7 +147,7 @@ PluginRenderContext ModifierNode::getPluginRenderContext (int64_t referenceSampl
              0, destBuffer.getNumSamples(),
              &midiMessageArray, 0.0,
              tracktion_graph::sampleToTime (playHead.referenceSamplePositionToTimelinePosition (referenceSamplePosition), sampleRate),
-             playHead.isPlaying(), playHead.isUserDragging(), isRendering };
+             playHead.isPlaying(), playHead.isUserDragging(), isRendering, false };
 }
 
 }

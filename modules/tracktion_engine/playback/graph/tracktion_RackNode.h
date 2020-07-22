@@ -118,7 +118,7 @@ public:
         // They should only be referencing this for time and continuity
         tracktion_engine::PluginRenderContext rc (nullptr, juce::AudioChannelSet(), 0, 0,
                                                   nullptr, 0.0,
-                                                  editTime, isPlaying, isScrubbing, isRendering);
+                                                  editTime, isPlaying, isScrubbing, isRendering, true);
 
         inputProvider->setContext (&rc);
      

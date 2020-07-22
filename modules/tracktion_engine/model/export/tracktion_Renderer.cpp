@@ -655,7 +655,7 @@ void Renderer::RenderTask::flushAllPlugins (const Plugin::Array& plugins,
 
                     ep->applyToBuffer (PluginRenderContext (&buffer, channels, 0, samplesPerBlock,
                                                             nullptr, 0.0,
-                                                            0.0, false, false, true));
+                                                            0.0, false, false, true, true));
 
                     if (isAudioDataAlmostSilent (buffer.getReadPointer (0), samplesPerBlock))
                         break;

@@ -84,6 +84,9 @@ void PluginNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInf
     
     if (shouldUseFineGrainAutomation (*plugin))
         subBlockSizeToUse = std::max (128, 128 * juce::roundToInt (info.sampleRate / 44100.0));
+    
+    canProcessBypassed = dynamic_cast<ExternalPlugin*> (plugin.get()) != nullptr
+                            && plugin->getLatencySeconds() > 0;
 }
 
 void PluginNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
@@ -117,7 +120,7 @@ void PluginNode::process (const ProcessContext& pc)
     size_t numSamplesLeft = inputAudioBlock.getNumSamples();
     
     midiMessageArray.clear();
-    bool shouldProcessPlugin = plugin->isEnabled();
+    bool shouldProcessPlugin = canProcessBypassed || plugin->isEnabled();
     bool isAllNotesOff = inputBuffers.midi.isAllNotesOff;
     
     if (playHeadState != nullptr && playHeadState->didPlayheadJump())
@@ -216,7 +219,7 @@ PluginRenderContext PluginNode::getPluginRenderContext (int64_t referenceSampleP
              0, destBuffer.getNumSamples(),
              &midiMessageArray, 0.0,
              tracktion_graph::sampleToTime (playHead.referenceSamplePositionToTimelinePosition (referenceSamplePosition), sampleRate),
-             playHead.isPlaying(), playHead.isUserDragging(), isRendering };
+             playHead.isPlaying(), playHead.isUserDragging(), isRendering, canProcessBypassed };
 }
 
 }

@@ -40,7 +40,8 @@ struct PluginRenderContext
                          const juce::AudioChannelSet& bufferChannels,
                          int bufferStart, int bufferSize,
                          MidiMessageArray* midiBuffer, double midiOffset,
-                         double editTime, bool playing, bool scrubbing, bool rendering) noexcept;
+                         double editTime, bool playing, bool scrubbing, bool rendering,
+                         bool allowBypassedProcessing) noexcept;
 
     /** Creates a PluginRenderContext from an AudioRenderContext. */
     PluginRenderContext (const AudioRenderContext&);
@@ -86,6 +87,12 @@ struct PluginRenderContext
 
     /** True if the rendering is happening as part of an offline render rather than live playback. */
     bool isRendering = false;
+
+    /** If this is true and the plugin supports it, this will call the bypassed processing method of the plugin.
+        If this is false, the plugin simply won't be processed. This can be used to ensure bypassed plugins
+        still introduce their reported latency.
+    */
+    bool allowBypassedProcessing = false;
 };
 
 
