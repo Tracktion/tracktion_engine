@@ -282,6 +282,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
              || c.hasType (IDs::RACK)
              || c.hasType (IDs::PLUGININSTANCE)
              || c.hasType (IDs::CONNECTION)
+             || p.hasType (IDs::CHANNELS)
              || c.hasType (IDs::CHANNELS)
              || c.hasType (IDs::SIDECHAINCONNECTION)
              || c.hasType (IDs::MACROPARAMETERS)
