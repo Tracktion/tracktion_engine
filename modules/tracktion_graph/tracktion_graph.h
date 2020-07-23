@@ -55,16 +55,20 @@
 
 
 //==============================================================================
+#include "tracktion_graph/tracktion_graph_Utility.h"
+
 #include "utilities/tracktion_AudioFifo.h"
 #include "utilities/tracktion_MidiMessageArray.h"
 #include "utilities/tracktion_Threads.h"
+#include "utilities/tracktion_graph_LatencyProcessor.h"
 
 #include "tracktion_graph/tracktion_graph_PlayHead.h"
-#include "tracktion_graph/tracktion_graph_Utility.h"
 
 #include "tracktion_graph/tracktion_graph_Node.h"
 #include "tracktion_graph/tracktion_graph_PlayHeadState.h"
 
 #include "tracktion_graph/tracktion_graph_NodePlayer.h"
 #include "tracktion_graph/tracktion_graph_LockFreeMultiThreadedNodePlayer.h"
-#include "tracktion_graph/tracktion_graph_UtilityNodes.h"
+
+#include "tracktion_graph/nodes/tracktion_graph_LatencyNode.h"
+#include "tracktion_graph/nodes/tracktion_graph_SummingNode.h"

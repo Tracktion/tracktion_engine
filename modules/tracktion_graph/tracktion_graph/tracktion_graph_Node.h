@@ -76,6 +76,16 @@ namespace tracktion_graph
 class Node;
 
 //==============================================================================
+//==============================================================================
+/** Creates a node of the given type and returns it as the base Node class. */
+template<typename NodeType, typename... Args>
+std::unique_ptr<Node> makeNode (Args&&... args)
+{
+    return std::unique_ptr<tracktion_graph::Node> (std::move (std::make_unique<NodeType> (std::forward<Args> (args)...)));
+}
+
+
+//==============================================================================
 /** Passed into Nodes when they are being initialised, to give them useful
     contextual information that they may need
 */
