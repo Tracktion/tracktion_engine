@@ -49,6 +49,9 @@ SpeedRampWaveNode::SpeedRampWaveNode (const AudioFile& af,
      channelsToUse (channelSetToUse),
      destChannels (destChannelsToFill)
 {
+    // Both ramp times should not be empty!
+    assert ((! speedFadeDescription.inTimeRange.isEmpty())
+            || (! speedFadeDescription.outTimeRange.isEmpty()));
 }
 
 tracktion_graph::NodeProperties SpeedRampWaveNode::getNodeProperties()
@@ -116,8 +119,9 @@ int64_t SpeedRampWaveNode::editTimeToFileSample (double editTime) const noexcept
     editTime = juce::jlimit (speedFadeDescription.inTimeRange.getStart(),
                              speedFadeDescription.outTimeRange.getEnd(),
                              editTime);
-    
-    if (speedFadeDescription.inTimeRange.containsInclusive (editTime))
+
+    if (! speedFadeDescription.inTimeRange.isEmpty()
+        && speedFadeDescription.inTimeRange.containsInclusive (editTime))
     {
         const double timeFromStart = editTime - speedFadeDescription.inTimeRange.getStart();
         const double proportionOfFade = timeFromStart / speedFadeDescription.inTimeRange.getLength();
@@ -128,7 +132,8 @@ int64_t SpeedRampWaveNode::editTimeToFileSample (double editTime) const noexcept
 
         jassert (speedFadeDescription.inTimeRange.containsInclusive (editTime));
     }
-    else if (speedFadeDescription.outTimeRange.containsInclusive (editTime))
+    else if (! speedFadeDescription.outTimeRange.isEmpty()
+             && speedFadeDescription.outTimeRange.containsInclusive (editTime))
     {
         const double timeFromStart = editTime - speedFadeDescription.outTimeRange.getStart();
         const double proportionOfFade = timeFromStart / speedFadeDescription.outTimeRange.getLength();

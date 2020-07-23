@@ -221,11 +221,19 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioClip (AudioClipBase& cl
             desc.inTimeRange = EditTimeRange::withStartAndLength (clipPos.getStart(), clip.getFadeIn());
             desc.fadeInType = clip.getFadeInType();
         }
+        else
+        {
+            desc.inTimeRange = EditTimeRange::withStartAndLength (clipPos.getStart(), 0.0);
+        }
         
         if (clip.getFadeOutBehaviour() == AudioClipBase::speedRamp)
         {
             desc.outTimeRange = EditTimeRange::withStartAndLength (clipPos.getEnd() - clip.getFadeOut(), clip.getFadeOut());
             desc.fadeOutType = clip.getFadeOutType();
+        }
+        else
+        {
+            desc.outTimeRange = EditTimeRange::withStartAndLength (clipPos.getEnd(), 0.0);
         }
 
         node = tracktion_graph::makeNode<SpeedRampWaveNode> (playFile,
