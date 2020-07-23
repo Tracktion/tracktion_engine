@@ -286,12 +286,16 @@ void Track::sendMirrorUpdateToAllPlugins (Plugin& p) const
 
 void Track::flipAllPluginsEnablement()
 {
-    auto isVolPan = [] (Plugin* p) { return dynamic_cast<VolumeAndPanPlugin*> (p) != nullptr; };
+    auto isVolPanVCA = [] (Plugin* p)
+    {
+        return dynamic_cast<VolumeAndPanPlugin*> (p) != nullptr
+            || dynamic_cast<VCAPlugin*> (p) != nullptr;
+    };
 
-    auto areAnyOn = [&isVolPan] (const PluginList& pl) -> bool
+    auto areAnyOn = [&isVolPanVCA] (const PluginList& pl) -> bool
     {
         for (auto p : pl)
-            if (! isVolPan (p) && p->canBeDisabled() && p->isEnabled())
+            if (! isVolPanVCA (p) && p->canBeDisabled() && p->isEnabled())
                 return true;
 
         return false;
@@ -300,7 +304,7 @@ void Track::flipAllPluginsEnablement()
     const bool enable = ! areAnyOn (pluginList);
 
     for (auto p : pluginList)
-        if (! isVolPan (p) && p->canBeDisabled())
+        if (! isVolPanVCA (p) && p->canBeDisabled())
             p->setEnabled (enable);
 }
 
