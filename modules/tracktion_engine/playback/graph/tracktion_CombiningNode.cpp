@@ -27,18 +27,47 @@ namespace combining_node_utils
 //==============================================================================
 struct CombiningNode::TimedNode
 {
-    TimedNode (std::unique_ptr<Node> n, EditTimeRange t)
-        : time (t), node (std::move (n))
+    TimedNode (std::unique_ptr<Node> sourceNode, EditTimeRange t)
+        : time (t), node (std::move (sourceNode))
     {
+        for (auto n = node.get();;)
+        {
+            nodesToProcess.insert (nodesToProcess.begin(), n);
+            auto inputNodes = n->getDirectInputNodes();
+            
+            if (inputNodes.empty())
+                break;
+            
+            // This doesn't work with parallel input Nodes
+            assert (inputNodes.size() == 1);
+            n = inputNodes.front();
+        }
     }
 
-    EditTimeRange time;
-    const std::unique_ptr<Node> node;
+    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+    {
+        for (auto n : nodesToProcess)
+            n->initialise (info);
+    }
+    
+    bool isReadyToProcess() const
+    {
+        return nodesToProcess.front()->isReadyToProcess();
+    }
 
+    void prefetchBlock (juce::Range<int64_t> referenceSampleRange) const
+    {
+        for (auto n : nodesToProcess)
+            n->prepareForNextBlock (referenceSampleRange);
+    }
+    
     void process (const ProcessContext& pc) const
     {
-        node->process (pc.referenceSampleRange);
+        // Process all the Nodes
+        for (auto n : nodesToProcess)
+            n->process (pc.referenceSampleRange);
         
+        // Then get the output from the source Node
         auto nodeOutput = node->getProcessedOutput();
         const auto numDestChannels = pc.buffers.audio.getNumChannels();
         const auto numChannelsToAdd = std::min (nodeOutput.audio.getNumChannels(), numDestChannels);
@@ -49,6 +78,12 @@ struct CombiningNode::TimedNode
         
         pc.buffers.midi.mergeFrom (nodeOutput.midi);
     }
+
+    EditTimeRange time;
+
+private:
+    const std::unique_ptr<Node> node;
+    std::vector<Node*> nodesToProcess;
 
     JUCE_DECLARE_NON_COPYABLE (TimedNode)
 };
@@ -119,26 +154,38 @@ tracktion_graph::NodeProperties CombiningNode::getNodeProperties()
 void CombiningNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
 {
     for (auto& i : inputs)
-        i->node->initialise (info);
+        i->prepareToPlay (info);
 }
 
 bool CombiningNode::isReadyToProcess()
 {
-    for (auto& i : inputs)
-        if (! i->node->isReadyToProcess())
-            return false;
-
-    return true;
+    return isReadyToProcessBlock.load (std::memory_order_acquire);
 }
 
 void CombiningNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
 {
     SCOPED_REALTIME_CHECK
 
-    prefetchGroup (referenceSampleRange, getEditTimeRange().getStart());
+    const double time = getEditTimeRange().getStart();
+    prefetchGroup (referenceSampleRange, time);
 
     if (getPlayHeadState().isLastBlockOfLoop())
         prefetchGroup (referenceSampleRange, tracktion_graph::sampleToTime (getPlayHead().getLoopRange().getStart(), processState.sampleRate));
+
+    // Update ready to process state based on nodes intersecting this time
+    isReadyToProcessBlock.store (true, std::memory_order_release);
+    
+    if (auto g = groups[combining_node_utils::timeToGroupIndex (time)])
+    {
+        for (auto tan : *g)
+        {
+            if (! tan->isReadyToProcess())
+            {
+                isReadyToProcessBlock.store (false, std::memory_order_release);
+                break;
+            }
+        }
+    }
 }
 
 void CombiningNode::process (const ProcessContext& pc)
@@ -165,7 +212,7 @@ void CombiningNode::prefetchGroup (juce::Range<int64_t> referenceSampleRange, do
 {
     if (auto g = groups[combining_node_utils::timeToGroupIndex (time)])
         for (auto tan : *g)
-            tan->node->prepareForNextBlock (referenceSampleRange);
+            tan->prefetchBlock (referenceSampleRange);
 }
 
 }
