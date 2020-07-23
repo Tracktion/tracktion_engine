@@ -62,7 +62,7 @@ private:
     std::unique_ptr<Node> input;
     tracktion_engine::Plugin::Ptr plugin;
     std::shared_ptr<InputProvider> audioRenderContextProvider;
-    
+
     const TrackMuteState* trackMuteState = nullptr;
     tracktion_graph::PlayHeadState* playHeadState = nullptr;
     bool isRendering = false;
@@ -72,10 +72,13 @@ private:
     tracktion_engine::MidiMessageArray midiMessageArray;
     int subBlockSizeToUse = -1;
     bool canProcessBypassed = false;
+    
+    std::shared_ptr<tracktion_graph::LatencyProcessor> latencyProcessor;
 
     //==============================================================================
     void initialisePlugin (double sampleRateToUse, int blockSizeToUse);
     PluginRenderContext getPluginRenderContext (int64_t, juce::AudioBuffer<float>&);
+    void replaceLatencyProcessorIfPossible (Node*);
 };
 
 }

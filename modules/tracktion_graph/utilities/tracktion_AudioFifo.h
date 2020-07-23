@@ -103,6 +103,11 @@ public:
         fifo.finishedRead (size1 + size2);
         return true;
     }
+    
+    void removeSamples (int numSamples)
+    {
+        fifo.finishedRead (numSamples);
+    }
 
 private:
     juce::AbstractFifo fifo;

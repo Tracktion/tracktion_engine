@@ -98,6 +98,32 @@ struct LatencyProcessor
         }
     }
     
+    void clearAudio (int numSamples)
+    {
+        fifo.removeSamples (numSamples);
+    }
+
+    void clearMIDI (int numSamples)
+    {
+        // And read out any delayed items
+        const double blockTimeSeconds = sampleToTime (numSamples, sampleRate);
+
+        // TODO: This will deallocate, we need a MIDI message array that doesn't adjust its storage
+        for (int i = midi.size(); --i >= 0;)
+           if (midi[i].getTimeStamp() <= blockTimeSeconds)
+               midi.remove (i);
+
+        // Shuffle down remaining items by block time
+        midi.addToTimestamps (-blockTimeSeconds);
+
+        // Ensure there are no negative time messages
+        for (auto& m : midi)
+        {
+           juce::ignoreUnused (m);
+           jassert (m.getTimeStamp() >= 0.0);
+        }
+    }
+
 private:
     int latencyNumSamples = 0;
     double sampleRate = 44100.0;

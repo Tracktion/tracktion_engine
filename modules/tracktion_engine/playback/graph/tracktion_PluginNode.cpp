@@ -87,6 +87,19 @@ void PluginNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInf
     
     canProcessBypassed = dynamic_cast<ExternalPlugin*> (plugin.get()) != nullptr
                             && plugin->getLatencySeconds() > 0;
+    
+    if (canProcessBypassed)
+    {
+        replaceLatencyProcessorIfPossible (info.rootNodeToReplace);
+        
+        if (! latencyProcessor)
+        {
+            auto props = getNodeProperties();
+            latencyProcessor = std::make_shared<tracktion_graph::LatencyProcessor>();
+            latencyProcessor->setLatencyNumSamples (props.latencyNumSamples);
+            latencyProcessor->prepareToPlay (info.sampleRate, info.blockSize, props.numberOfChannels);
+        }
+    }
 }
 
 void PluginNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
@@ -100,8 +113,14 @@ void PluginNode::process (const ProcessContext& pc)
     auto& inputAudioBlock = inputBuffers.audio;
     
     auto& outputBuffers = pc.buffers;
-    auto& outputAudioBlock = outputBuffers.audio;
+    auto outputAudioBlock = outputBuffers.audio;
     jassert (inputAudioBlock.getNumSamples() == outputAudioBlock.getNumSamples());
+    
+    if (latencyProcessor)
+    {
+        latencyProcessor->writeAudio (inputBuffers.audio);
+        latencyProcessor->writeMIDI (inputBuffers.midi);
+    }
 
     // Copy the inputs to the outputs, then process using the
     // output buffers as that will be the correct size
@@ -165,7 +184,6 @@ void PluginNode::process (const ProcessContext& pc)
         }
         
         // Process the plugin
-        //TODO: If a plugin is disabled we should probably apply our own latency to the plugin
         if (shouldProcessPlugin)
             plugin->applyToBufferWithAutomation (getPluginRenderContext (pc.referenceSampleRange.getStart() + (int64_t) numSamplesDone, outputAudioBuffer));
 
@@ -179,6 +197,26 @@ void PluginNode::process (const ProcessContext& pc)
             break;
 
         isAllNotesOff = false;
+    }
+
+    // If the plugin was bypassed, use the delayed audio
+    if (latencyProcessor)
+    {
+        // A slightly better approach would be to crossfade between the processed and latency block to minimise any discrepancies
+        if (plugin->isEnabled())
+        {
+            const int numSamples = (int) inputAudioBlock.getNumSamples();
+            latencyProcessor->clearAudio (numSamples);
+            latencyProcessor->clearMIDI (numSamples);
+        }
+        else
+        {
+            outputBuffers.midi.clear();
+            outputBuffers.audio.clear();
+
+            latencyProcessor->readAudio (outputAudioBlock);
+            latencyProcessor->readMIDI (outputBuffers.midi, (int) inputAudioBlock.getNumSamples());
+        }
     }
 }
 
@@ -220,6 +258,34 @@ PluginRenderContext PluginNode::getPluginRenderContext (int64_t referenceSampleP
              &midiMessageArray, 0.0,
              tracktion_graph::sampleToTime (playHead.referenceSamplePositionToTimelinePosition (referenceSamplePosition), sampleRate),
              playHead.isPlaying(), playHead.isUserDragging(), isRendering, canProcessBypassed };
+}
+
+void PluginNode::replaceLatencyProcessorIfPossible (Node* rootNodeToReplace)
+{
+    if (rootNodeToReplace == nullptr)
+        return;
+    
+    auto nodeIDToLookFor = getNodeProperties().nodeID;
+    
+    if (nodeIDToLookFor == 0)
+        return;
+
+    auto visitor = [this, nodeIDToLookFor] (Node& node)
+    {
+        if (auto other = dynamic_cast<PluginNode*> (&node))
+        {
+            if (other->getNodeProperties().nodeID == nodeIDToLookFor)
+            {
+                if (! latencyProcessor
+                    || (other->latencyProcessor
+                        && latencyProcessor->hasSameConfigurationAs (*other->latencyProcessor)))
+                {
+                    latencyProcessor = other->latencyProcessor;
+                }
+            }
+        }
+    };
+    visitNodes (*rootNodeToReplace, visitor, true);
 }
 
 }
