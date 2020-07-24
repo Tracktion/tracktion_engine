@@ -15,6 +15,18 @@ namespace tracktion_engine
 //==============================================================================
 namespace
 {
+    template<typename PluginType>
+    juce::Array<PluginType*> getAllPluginsOfType (Edit& edit)
+    {
+        juce::Array<PluginType*> plugins;
+        
+        for (auto p : edit.getPluginCache().getPlugins())
+            if (auto pt = dynamic_cast<PluginType*> (p))
+                plugins.add (pt);
+        
+        return plugins;
+    }
+
     using namespace tracktion_graph;
 
     int getSidechainBusID (EditItemID sidechainSourceID)
@@ -51,7 +63,7 @@ namespace
     {
         const auto itemID = t.itemID;
 
-        for (auto p : tracktion_engine::getAllPlugins (t.edit, false))
+        for (auto p : t.edit.getPluginCache().getPlugins())
             if (p->getSidechainSourceID() == itemID)
                 return true;
 
@@ -98,26 +110,13 @@ namespace
         return 0;
     }
 
-    template<typename PluginType>
-    juce::Array<PluginType*> getAllPluginsOfType (const Edit& edit, bool includeMasterVolume)
-    {
-        juce::Array<PluginType*> plugins;
-        
-        for (auto p : getAllPlugins (edit, includeMasterVolume))
-            if (auto pt = dynamic_cast<PluginType*> (p))
-                plugins.add (pt);
-        
-        return plugins;
-    }
-
     juce::Array<RackInstance*> getInstancesForRack (RackType& type)
     {
         juce::Array<RackInstance*> instances;
 
-        for (auto p : getAllPlugins (type.edit, false))
-            if (auto ri = dynamic_cast<RackInstance*> (p))
-                if (ri->type.get() == &type)
-                    instances.add (ri);
+        for (auto ri : getAllPluginsOfType<RackInstance> (type.edit))
+            if (ri->type.get() == &type)
+                instances.add (ri);
         
         return instances;
     }
@@ -1017,7 +1016,7 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, const CreateNodePar
 {
     Edit& edit = epc.edit;
     auto& playHeadState = params.processState.playHeadState;
-    auto insertPlugins = getAllPluginsOfType<InsertPlugin> (edit, false);
+    auto insertPlugins = getAllPluginsOfType<InsertPlugin> (edit);
     
     using TrackNodeVector = std::vector<std::unique_ptr<tracktion_graph::Node>>;
     std::map<OutputDevice*, TrackNodeVector> deviceNodes;

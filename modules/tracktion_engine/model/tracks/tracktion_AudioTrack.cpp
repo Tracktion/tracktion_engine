@@ -1489,7 +1489,7 @@ AudioNode* AudioTrack::createFreezeAudioNode (bool addAntiDenormalisationNoise)
 
 bool AudioTrack::isSidechainSource() const
 {
-    for (auto p : tracktion_engine::getAllPlugins (edit, false))
+    for (auto p : edit.getPluginCache().getPlugins())
         if (p->getSidechainSourceID() == itemID)
             return true;
 
