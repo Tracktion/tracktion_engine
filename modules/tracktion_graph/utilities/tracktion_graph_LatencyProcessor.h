@@ -26,7 +26,15 @@ struct LatencyProcessor
             && sampleRate == o.sampleRate
             && fifo.getNumChannels() == o.fifo.getNumChannels();
     }
-    
+
+    /** Returns ture if the the sample rate, channels etc. are those specified. */
+    bool hasConfiguration (int numLatencySamples, double preparedSampleRate, int numberOfChannels) const
+    {
+        return latencyNumSamples == numLatencySamples
+            && sampleRate == preparedSampleRate
+            && fifo.getNumChannels() == numberOfChannels;
+    }
+
     int getLatencyNumSamples() const
     {
         return latencyNumSamples;

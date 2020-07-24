@@ -66,7 +66,6 @@ PluginNode::~PluginNode()
 tracktion_graph::NodeProperties PluginNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
-    const auto latencyNumSamples = juce::roundToInt (plugin->getLatencySeconds() * sampleRate);
 
     props.numberOfChannels = juce::jmax (1, props.numberOfChannels, plugin->getNumOutputChannelsGivenInputs (props.numberOfChannels));
     props.hasAudio = props.hasAudio || plugin->producesAudioWhenNoAudioInput();
@@ -86,7 +85,7 @@ void PluginNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInf
         subBlockSizeToUse = std::max (128, 128 * juce::roundToInt (info.sampleRate / 44100.0));
     
     canProcessBypassed = dynamic_cast<ExternalPlugin*> (plugin.get()) != nullptr
-                            && plugin->getLatencySeconds() > 0;
+                            && latencyNumSamples > 0;
     
     if (canProcessBypassed)
     {
@@ -96,7 +95,7 @@ void PluginNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInf
         {
             auto props = getNodeProperties();
             latencyProcessor = std::make_shared<tracktion_graph::LatencyProcessor>();
-            latencyProcessor->setLatencyNumSamples (props.latencyNumSamples);
+            latencyProcessor->setLatencyNumSamples (latencyNumSamples);
             latencyProcessor->prepareToPlay (info.sampleRate, info.blockSize, props.numberOfChannels);
         }
     }
@@ -233,6 +232,7 @@ void PluginNode::initialisePlugin (double sampleRateToUse, int blockSizeToUse)
     isInitialised = true;
 
     sampleRate = sampleRateToUse;
+    latencyNumSamples = juce::roundToInt (plugin->getLatencySeconds() * sampleRate);
 }
 
 PluginRenderContext PluginNode::getPluginRenderContext (int64_t referenceSamplePosition, juce::AudioBuffer<float>& destBuffer)
@@ -265,23 +265,31 @@ void PluginNode::replaceLatencyProcessorIfPossible (Node* rootNodeToReplace)
     if (rootNodeToReplace == nullptr)
         return;
     
-    auto nodeIDToLookFor = getNodeProperties().nodeID;
+    auto props = getNodeProperties();
+    auto nodeIDToLookFor = props.nodeID;
     
     if (nodeIDToLookFor == 0)
         return;
 
-    auto visitor = [this, nodeIDToLookFor] (Node& node)
+    auto visitor = [this, nodeIDToLookFor, props] (Node& node)
     {
         if (auto other = dynamic_cast<PluginNode*> (&node))
         {
             if (other->getNodeProperties().nodeID == nodeIDToLookFor)
             {
-                if (! latencyProcessor
-                    || (other->latencyProcessor
-                        && latencyProcessor->hasSameConfigurationAs (*other->latencyProcessor)))
+                if (! other->latencyProcessor)
+                    return;
+                
+                if (! latencyProcessor)
                 {
-                    latencyProcessor = other->latencyProcessor;
+                    if (other->latencyProcessor->hasConfiguration (latencyNumSamples, sampleRate, props.numberOfChannels))
+                        latencyProcessor = other->latencyProcessor;
+
+                    return;
                 }
+
+                if (latencyProcessor->hasSameConfigurationAs (*other->latencyProcessor))
+                    latencyProcessor = other->latencyProcessor;
             }
         }
     };

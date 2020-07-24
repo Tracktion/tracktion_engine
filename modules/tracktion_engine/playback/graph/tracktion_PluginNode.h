@@ -69,6 +69,7 @@ private:
     
     bool isInitialised = false;
     double sampleRate = 44100.0;
+    int latencyNumSamples = 0;
     tracktion_engine::MidiMessageArray midiMessageArray;
     int subBlockSizeToUse = -1;
     bool canProcessBypassed = false;
