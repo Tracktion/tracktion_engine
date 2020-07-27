@@ -38,16 +38,11 @@ struct EditNodeBuilder
 };
 
 //==============================================================================
-struct EditNodeContext
-{
-    std::unique_ptr<tracktion_graph::Node> node;
-};
+/** Creates a Node to play back an Edit with live inputs and outputs. */
+std::unique_ptr<tracktion_graph::Node> createNodeForEdit (EditPlaybackContext&, const CreateNodeParams&);
 
-/** Creates a Node to play back an Edit. */
-EditNodeContext createNodeForEdit (EditPlaybackContext&, const CreateNodeParams&);
-
-/** Creates a Node to play back an Edit. */
-EditNodeContext createNodeForEdit (Edit&, const CreateNodeParams&);
+/** Creates a Node to render an Edit. */
+std::unique_ptr<tracktion_graph::Node> createNodeForEdit (Edit&, const CreateNodeParams&);
 
 
 } // namespace tracktion_engine

@@ -109,7 +109,7 @@ private:
         params.sampleRate = sampleRate;
         params.blockSize = blockSize;
         params.forRendering = true; // Required for audio files to be read
-        return createNodeForEdit (edit, params).node;
+        return createNodeForEdit (edit, params);
     }
 };
 

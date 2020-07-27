@@ -26,16 +26,16 @@ namespace tracktion_engine
          player.setNumThreads (std::min (numThreads, maxNumThreads));
      }
      
-     void setNodeContext (EditNodeContext editNodeContext)
+     void setNode (std::unique_ptr<Node> node)
      {
-         player.setNode (std::move (editNodeContext.node));
+         player.setNode (std::move (node));
      }
      
-     void setNodeContext (EditNodeContext editNodeContext, double newSampleRate, int blockSize)
+     void setNode (std::unique_ptr<Node> node, double newSampleRate, int blockSize)
      {
          sampleRate = newSampleRate;
          blockSize = juce::roundToInt (blockSize * (1.0 + (10.0 * 0.01))); // max speed comp
-         player.setNode (std::move (editNodeContext.node), sampleRate, blockSize);
+         player.setNode (std::move (node), sampleRate, blockSize);
      }
      
      void setSpeedCompensation (double plusOrMinus)
@@ -515,12 +515,12 @@ void EditPlaybackContext::createNode()
     CreateNodeParams cnp { nodePlaybackContext->processState };
     cnp.sampleRate = dm.getSampleRate();
     cnp.blockSize = dm.getBlockSize();
-    auto editNodeContext = createNodeForEdit (*this, cnp);
+    auto editNode = createNodeForEdit (*this, cnp);
 
     const auto& tempoSections = edit.tempoSequence.getTempoSections();
     const bool hasTempoChanged = tempoSections.getChangeCount() != lastTempoSections.getChangeCount();
 
-    nodePlaybackContext->setNodeContext (std::move (editNodeContext), cnp.sampleRate, cnp.blockSize);
+    nodePlaybackContext->setNode (std::move (editNode), cnp.sampleRate, cnp.blockSize);
     updateNumCPUs();
 
     if (hasTempoChanged && lastTempoSections.size() > 0)

@@ -1013,7 +1013,7 @@ std::unique_ptr<tracktion_graph::Node> createMasterFadeInOutNode (Edit& edit, tr
 }
 
 //==============================================================================
-EditNodeContext createNodeForEdit (EditPlaybackContext& epc, const CreateNodeParams& params)
+std::unique_ptr<tracktion_graph::Node> createNodeForEdit (EditPlaybackContext& epc, const CreateNodeParams& params)
 {
     Edit& edit = epc.edit;
     auto& playHeadState = params.processState.playHeadState;
@@ -1107,10 +1107,10 @@ EditNodeContext createNodeForEdit (EditPlaybackContext& epc, const CreateNodePar
     finalNode = makeNode<LevelMeasuringNode> (std::move (finalNode), epc.masterLevels);
     finalNode = createRackNode (std::move (finalNode), edit.getRackList(), params);
     
-    return { std::move (finalNode) };
+    return finalNode;
 }
 
-EditNodeContext createNodeForEdit (Edit& edit, const CreateNodeParams& params)
+std::unique_ptr<tracktion_graph::Node> createNodeForEdit (Edit& edit, const CreateNodeParams& params)
 {
     std::vector<std::unique_ptr<tracktion_graph::Node>> trackNodes;
     auto& playHeadState = params.processState.playHeadState;
@@ -1132,7 +1132,7 @@ EditNodeContext createNodeForEdit (Edit& edit, const CreateNodeParams& params)
     node = createMasterFadeInOutNode (edit, playHeadState, std::move (node));
     node = createRackNode (std::move (node), edit.getRackList(), params);
 
-    return { std::move (node) };
+    return node;
 }
 
 std::function<std::unique_ptr<tracktion_graph::Node> (std::unique_ptr<tracktion_graph::Node>)> EditNodeBuilder::insertOptionalLastStageNode

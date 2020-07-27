@@ -311,7 +311,7 @@ bool EditRenderJob::RenderPass::initialise()
 
             callBlocking ([this, &node, &cnp]
             {
-                node = std::move (createNodeForEdit (*r.edit, cnp).node);
+                node = createNodeForEdit (*r.edit, cnp);
             });
 
             if (node)
