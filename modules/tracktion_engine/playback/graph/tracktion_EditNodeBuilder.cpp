@@ -361,7 +361,8 @@ std::unique_ptr<tracktion_graph::Node> createNodeForClips (const juce::Array<Cli
     
     for (auto clip : clips)
         if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
-            combiner->addInput (createNodeForClip (*clip, trackMuteState, params), clip->getPosition().time);
+            if (auto clipNode = createNodeForClip (*clip, trackMuteState, params))
+                combiner->addInput (std::move (clipNode), clip->getPosition().time);
         
     return combiner;
 }
