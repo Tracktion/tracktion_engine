@@ -1077,7 +1077,6 @@ void DeviceManager::audioDeviceIOCallback (const float** inputChannelData, int n
                     FloatVectorOperations::clear (dest, numSamples);
 
             currentCpuUsage = jmin (0.9, currentCpuUsage * 0.99);
-            Thread::sleep (1);
         }
         else
         {
