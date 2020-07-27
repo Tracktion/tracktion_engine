@@ -290,9 +290,14 @@ void EditPlaybackContext::clearNodes()
     // Because the nodePlaybackContext is lock-free, it doesn't immediately delete its current node
     // To avoid it referencing input devices that have been deleted, fully delete the context
     nodePlaybackContext->playHead.stop();
-    nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.engine.getDeviceManager().getSampleRate(),
-                                                                 edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio(),
-                                                                 size_t (edit.getIsPreviewEdit() ? 0 : juce::SystemStats::getNumCpus() - 1));
+    
+    {
+        const juce::SpinLock::ScopedLockType sl (audioCallbackLock);
+        nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.engine.getDeviceManager().getSampleRate(),
+                                                                     edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio(),
+                                                                     size_t (edit.getIsPreviewEdit() ? 0 : juce::SystemStats::getNumCpus() - 1));
+    }
+    
     nodePlaybackContext->setNumThreads (0);
    #endif
 }
@@ -868,6 +873,8 @@ void EditPlaybackContext::fillNextNodeBlock (float** allChannels, int numChannel
         return;
 
     SCOPED_REALTIME_CHECK
+    const juce::SpinLock::ScopedLockType sl (audioCallbackLock);
+    
     if (nodePlaybackContext)
     {
         nodePlaybackContext->updateReferenceSampleRange (numSamples);

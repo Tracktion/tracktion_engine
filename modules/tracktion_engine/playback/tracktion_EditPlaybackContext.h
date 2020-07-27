@@ -129,6 +129,7 @@ private:
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     struct NodePlaybackContext;
     std::unique_ptr<NodePlaybackContext> nodePlaybackContext;
+    juce::SpinLock audioCallbackLock;
 
     juce::WeakReference<EditPlaybackContext> nodeContextToSyncTo;
     bool nodeHasSynced = false;
