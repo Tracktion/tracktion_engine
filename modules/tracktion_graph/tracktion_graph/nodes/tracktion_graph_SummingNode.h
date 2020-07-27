@@ -94,7 +94,10 @@ public:
     
     bool transform (Node&) override
     {
-        return createLatencyNodes();
+        const bool hasFlattened = flattenSummingNodes();
+        const bool hasCreatedLatency = createLatencyNodes();
+        
+        return hasFlattened || hasCreatedLatency;
     }
 
     void prepareToPlay (const PlaybackInitialisationInfo& info) override
@@ -198,6 +201,45 @@ private:
     }
 
     //==============================================================================
+    bool flattenSummingNodes()
+    {
+        bool hasChanged = false;
+        
+        std::vector<std::unique_ptr<Node>> ownedNodesToAdd;
+        std::vector<Node*> nodesToAdd, nodesToErase;
+
+        for (auto& n : ownedNodes)
+        {
+            if (auto summingNode = dynamic_cast<SummingNode*> (n.get()))
+            {
+                for (auto& ownedNodeToAdd : summingNode->ownedNodes)
+                    ownedNodesToAdd.push_back (std::move (ownedNodeToAdd));
+
+                for (auto& nodeToAdd : summingNode->nodes)
+                    nodesToAdd.push_back (std::move (nodeToAdd));
+
+                nodesToErase.push_back (n.get());
+                hasChanged = true;
+            }
+        }
+        
+        for (auto& n : ownedNodesToAdd)
+            ownedNodes.push_back (std::move (n));
+
+        for (auto& n : nodesToAdd)
+            nodes.push_back (std::move (n));
+
+        ownedNodes.erase (std::remove_if (ownedNodes.begin(), ownedNodes.end(),
+                                          [&] (auto& n) { return std::find (nodesToErase.begin(), nodesToErase.end(), n.get()) != nodesToErase.end(); }),
+                          ownedNodes.end());
+
+        nodes.erase (std::remove_if (nodes.begin(), nodes.end(),
+                                     [&] (auto& n) { return std::find (nodesToErase.begin(), nodesToErase.end(), n) != nodesToErase.end(); }),
+                     nodes.end());
+
+        return hasChanged;
+    }
+    
     bool createLatencyNodes()
     {
         bool topologyChanged = false;

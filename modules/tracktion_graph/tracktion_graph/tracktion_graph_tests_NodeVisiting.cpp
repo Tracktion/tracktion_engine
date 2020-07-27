@@ -75,9 +75,9 @@ private:
         auto C = c.get();
         auto e = makeNode<SendNode> (makeNode<SinNode> (4.0f), 1);
         auto E = e.get();
-        auto b = makeSummingNode ({ d.release(), f.release() });
+        auto b = makeBaicSummingNode ({ d.release(), f.release() });
         auto B = b.get();
-        auto a = makeSummingNode ({ b.release(), c.release(), e.release() });
+        auto a = makeBaicSummingNode ({ b.release(), c.release(), e.release() });
         auto A = a.get();
         
         // Prepare the topology
