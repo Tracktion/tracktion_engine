@@ -114,21 +114,21 @@ void PluginNode::process (const ProcessContext& pc)
     auto& outputBuffers = pc.buffers;
     auto outputAudioBlock = outputBuffers.audio;
     jassert (inputAudioBlock.getNumSamples() == outputAudioBlock.getNumSamples());
-    
+
+    const size_t numInputChannelsToCopy = std::min (inputAudioBlock.getNumChannels(), outputAudioBlock.getNumChannels());
+
     if (latencyProcessor)
     {
-        latencyProcessor->writeAudio (inputBuffers.audio);
+        if (numInputChannelsToCopy > 0)
+            latencyProcessor->writeAudio (inputAudioBlock.getSubsetChannelBlock (0, numInputChannelsToCopy));
+        
         latencyProcessor->writeMIDI (inputBuffers.midi);
     }
 
     // Copy the inputs to the outputs, then process using the
     // output buffers as that will be the correct size
-    {
-        const size_t numInputChannelsToCopy = std::min (inputAudioBlock.getNumChannels(), outputAudioBlock.getNumChannels());
-        
-        if (numInputChannelsToCopy > 0)
-            outputAudioBlock.copyFrom (inputAudioBlock.getSubsetChannelBlock (0, numInputChannelsToCopy));
-    }
+    if (numInputChannelsToCopy > 0)
+        outputAudioBlock.copyFrom (inputAudioBlock.getSubsetChannelBlock (0, numInputChannelsToCopy));
     
     // Init block
     const size_t subBlockSize = subBlockSizeToUse == -1 ? inputAudioBlock.getNumSamples()
@@ -213,7 +213,10 @@ void PluginNode::process (const ProcessContext& pc)
             outputBuffers.midi.clear();
             outputBuffers.audio.clear();
 
-            latencyProcessor->readAudio (outputAudioBlock);
+            // If no inputs have been added to the fifo, there won't be any samples available so skip
+            if (numInputChannelsToCopy > 0)
+                latencyProcessor->readAudio (outputAudioBlock);
+            
             latencyProcessor->readMIDI (outputBuffers.midi, (int) inputAudioBlock.getNumSamples());
         }
     }
