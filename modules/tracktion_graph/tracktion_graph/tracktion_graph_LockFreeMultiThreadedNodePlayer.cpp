@@ -268,7 +268,7 @@ void LockFreeMultiThreadedNodePlayer::resetProcessQueue()
     numNodesQueued += numNodesJustQueued;
 }
 
-void LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
+Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
 {
     auto playbackNode = static_cast<PlaybackNode*> (node.internal);
     
@@ -282,10 +282,20 @@ void LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
             jassert (outputPlaybackNode->node.isReadyToProcess());
             jassert (! outputPlaybackNode->hasBeenQueued);
             outputPlaybackNode->hasBeenQueued = true;
-            preparedNode.nodesReadyToBeProcessed.enqueue (&outputPlaybackNode->node);
-            numNodesQueued.fetch_add (1, std::memory_order_release);
+            
+            if (playbackNode->outputs.size() == 1)
+            {
+                return &outputPlaybackNode->node;
+            }
+            else
+            {
+                preparedNode.nodesReadyToBeProcessed.enqueue (&outputPlaybackNode->node);
+                numNodesQueued.fetch_add (1, std::memory_order_release);
+            }
         }
     }
+    
+    return nullptr;
 }
 
 //==============================================================================
@@ -332,17 +342,34 @@ bool LockFreeMultiThreadedNodePlayer::processNextFreeNode()
     if (! preparedNode.nodesReadyToBeProcessed.try_dequeue (nodeToProcess))
         return false;
 
-   #if JUCE_DEBUG
-    jassert (nodeToProcess != nullptr);
-    jassert (! static_cast<PlaybackNode*> (nodeToProcess->internal)->hasBeenDequeued);
-    static_cast<PlaybackNode*> (nodeToProcess->internal)->hasBeenDequeued = true;
-   #endif
     numNodesQueued.fetch_sub (1, std::memory_order_release);
 
-    nodeToProcess->process (referenceSampleRange);
-    updateProcessQueueForNode (*nodeToProcess);
+    assert (nodeToProcess != nullptr);
+    processNode (*nodeToProcess);
     
     return true;
+}
+
+void LockFreeMultiThreadedNodePlayer::processNode (Node& node)
+{
+    auto* nodeToProcess = &node;
+    
+    // Attempt to process serial Node chains on this thread
+    // to reduce context switched and overhead
+    for (;;)
+    {
+        #if JUCE_DEBUG
+         jassert (! static_cast<PlaybackNode*> (nodeToProcess->internal)->hasBeenDequeued);
+         static_cast<PlaybackNode*> (nodeToProcess->internal)->hasBeenDequeued = true;
+        #endif
+
+        // Process Node
+        nodeToProcess->process (referenceSampleRange);
+        nodeToProcess = updateProcessQueueForNode (*nodeToProcess);
+        
+        if (! nodeToProcess)
+            break;
+    }
 }
 
 }

@@ -130,7 +130,8 @@ private:
     //==============================================================================
     static void buildNodesOutputLists (PreparedNode&);
     void resetProcessQueue();
-    void updateProcessQueueForNode (Node&);
+    Node* updateProcessQueueForNode (Node&);
+    void processNode (Node&);
 
     //==============================================================================
     void processNextFreeNodeOrWait();
