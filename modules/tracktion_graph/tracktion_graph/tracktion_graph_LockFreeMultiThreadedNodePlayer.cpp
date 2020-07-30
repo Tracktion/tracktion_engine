@@ -142,15 +142,9 @@ void LockFreeMultiThreadedNodePlayer::createThreads()
     }
 }
 
-inline void pause8()
+inline void LockFreeMultiThreadedNodePlayer::pause()
 {
    #if JUCE_INTEL
-    _mm_pause();
-    _mm_pause();
-    _mm_pause();
-    _mm_pause();
-    _mm_pause();
-    _mm_pause();
     _mm_pause();
     _mm_pause();
    #else
@@ -158,17 +152,17 @@ inline void pause8()
    #endif
 }
 
-inline void LockFreeMultiThreadedNodePlayer::pause()
-{
-    pause8();
-    pause8();
-}
-
 //==============================================================================
 void LockFreeMultiThreadedNodePlayer::setNewCurrentNode (std::unique_ptr<Node> newRoot, std::vector<Node*> newNodes)
 {
     while (isUpdatingPreparedNode)
         pause();
+    
+    std::stable_sort (newNodes.begin(), newNodes.end(),
+                      [] (auto n1, auto n2)
+                      {
+                          return n1->isReadyToProcess() && ! n2->isReadyToProcess();
+                      });
     
     pendingPreparedNode = nullptr;
     rootNode = newRoot.get();
