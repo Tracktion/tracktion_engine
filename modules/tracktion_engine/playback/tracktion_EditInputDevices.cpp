@@ -137,15 +137,18 @@ void EditInputDevices::removeNonExistantInputDeviceStates()
     devices.addArray (dm.midiInputs);
     devices.addArray (dm.waveInputs);
 
-    for (auto* at : getAudioTracks (edit))
+    if (! edit.isLoading())
     {
-        if (auto* wid = &at->getWaveInputDevice())
-            if (wid->isEnabled())
-                devices.add (wid);
+        for (auto* at : getAudioTracks (edit))
+        {
+            if (auto* wid = &at->getWaveInputDevice())
+                if (wid->isEnabled())
+                    devices.add (wid);
 
-        if (auto* mid = &at->getMidiInputDevice())
-            if (mid->isEnabled())
-                devices.add (mid);
+            if (auto* mid = &at->getMidiInputDevice())
+                if (mid->isEnabled())
+                    devices.add (mid);
+        }
     }
 
     auto isDevicePresent = [devices] (const juce::ValueTree& v)

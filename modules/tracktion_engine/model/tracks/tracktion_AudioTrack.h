@@ -61,8 +61,8 @@ public:
     bool areMidiPatchesZeroBased() const;
 
     //==============================================================================
-    WaveInputDevice& getWaveInputDevice() const noexcept        { return *waveInputDevice; }
-    MidiInputDevice& getMidiInputDevice() const noexcept        { return *midiInputDevice; }
+    WaveInputDevice& getWaveInputDevice() const noexcept        { jassert (waveInputDevice); return *waveInputDevice; }
+    MidiInputDevice& getMidiInputDevice() const noexcept        { jassert (midiInputDevice); return *midiInputDevice; }
 
     TrackOutput& getOutput() const noexcept                     { return *output; }
 
