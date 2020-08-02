@@ -58,7 +58,7 @@ public:
             auto f = File::createTempFile (".ogg");
             f.replaceWithData (PlaybackDemoAudio::BITs_Export_2_ogg, PlaybackDemoAudio::BITs_Export_2_oggSize);
             
-            edit = ste::createEmptyEdit (engine, editFile);
+            edit = te::createEmptyEdit (engine, editFile);
             edit->getTransport().addChangeListener (this);
             auto clip = EngineHelpers::loadAudioFileAsClip (*edit, f);
             EngineHelpers::loopAroundClip (*clip);
