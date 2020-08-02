@@ -49,15 +49,23 @@ private:
 };
 
 //==============================================================================
+/** Loads an edit from file, ready for playback / edtiing */
+std::unique_ptr<Edit> loadEditFromFile (Engine&, const juce::File&);
+
+/** Creates a new edit for a file, ready for playback / edtiing */
+std::unique_ptr<Edit> createEmptyEdit (Engine&, const juce::File&);
+
 /** Uses the ProjectManager to find an Edit file and load it as a ValueTree. */
 juce::ValueTree loadEditFromProjectManager (ProjectManager&, ProjectItemID);
 
-/** Loads a ValueTree from a file to load an Edit.
+/** Legacy, will be deprecated soon. Use version that returns an edit.
+    Loads a ValueTree from a file to load an Edit.
     If the file is empty, a new Edit state will be created with the given ProjectItemID.
 */
 juce::ValueTree loadEditFromFile (Engine&, const juce::File&, ProjectItemID);
 
-/** Creates an empty Edit with no project. */
+/** Legacy, will be deprecated soon. Use version that returns an edit.
+    Creates an empty Edit with no project. */
 juce::ValueTree createEmptyEdit (Engine&);
 
 /** Converts old edit formats to the latest structure */

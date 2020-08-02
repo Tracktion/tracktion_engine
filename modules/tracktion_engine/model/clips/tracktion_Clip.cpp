@@ -439,6 +439,8 @@ void Clip::setCurrentSourceFile (const juce::File& f)
 {
     if (currentSourceFile != f)
     {
+        jassert (f.existsAsFile());
+        
         currentSourceFile = f;
         changed();
     }
