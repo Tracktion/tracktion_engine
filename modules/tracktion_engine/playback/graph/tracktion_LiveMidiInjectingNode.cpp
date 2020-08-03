@@ -86,10 +86,6 @@ void LiveMidiInjectingNode::process (const ProcessContext& pc)
         return;
     
     destMidiBlock.mergeFromAndClear (liveMidiMessages);
-    
-    DBG("LIVE");
-    for (auto& m : destMidiBlock)
-        DBG(m.getDescription());
 }
 
 //==============================================================================
