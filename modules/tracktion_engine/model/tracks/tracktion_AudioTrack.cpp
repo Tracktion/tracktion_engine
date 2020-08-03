@@ -1168,7 +1168,11 @@ bool AudioTrack::hasAnyTracksFeedingIn()
 //==============================================================================
 void AudioTrack::injectLiveMidiMessage (const MidiMessageArray::MidiMessageWithSource& message)
 {
-    if (! LiveMidiInjectingAudioNode::injectMidiMessageForTrack (this, message))
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    bool wasUsed = LiveMidiInjectingAudioNode::injectMidiMessageForTrack (this, message);
+    listeners.call (&Listener::injectLiveMidiMessage, *this, message, wasUsed);
+
+    if (! wasUsed)
         edit.warnOfWastedMidiMessages (nullptr, this);
 }
 

@@ -83,6 +83,9 @@ extern "C"
  #include "playback/graph/tracktion_LevelMeasuringNode.h"
  #include "playback/graph/tracktion_LevelMeasuringNode.cpp"
 
+ #include "playback/graph/tracktion_LiveMidiInjectingNode.h"
+ #include "playback/graph/tracktion_LiveMidiInjectingNode.cpp"
+
  #include "playback/graph/tracktion_LiveMidiOutputNode.h"
  #include "playback/graph/tracktion_LiveMidiOutputNode.cpp"
 

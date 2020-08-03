@@ -159,6 +159,12 @@ public:
         /* Destructor */
         virtual ~Listener() = default;
 
+        /** Called when a MidiMessage (i.e. from a soft-keyboard) should be injected in to the playback graph.
+            If the message was used, the listener should set the wasUsed argument to true or a
+            message may be shown to the user to notify them of why they couldn't hear the sound.
+        */
+        virtual void injectLiveMidiMessage (AudioTrack&, const MidiMessageArray::MidiMessageWithSource&, bool& wasUsed) = 0;
+
         /** Called when a recorded MidiMessage (i.e. from a clip) has been sent to the plugin chain.
             This will be called from the message thread.
         */
