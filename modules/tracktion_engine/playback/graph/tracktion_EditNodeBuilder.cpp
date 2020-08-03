@@ -472,6 +472,9 @@ std::unique_ptr<tracktion_graph::Node> createLiveInputsNode (AudioTrack& track, 
                     if (auto node = createLiveInputNodeForDevice (*in, playHeadState))
                         nodes.push_back (std::move (node));
 
+    if (nodes.empty())
+        return {};
+
     if (nodes.size() == 1)
         return std::move (nodes.front());
 
