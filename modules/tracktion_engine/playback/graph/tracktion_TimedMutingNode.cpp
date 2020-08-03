@@ -53,7 +53,7 @@ void TimedMutingNode::process (const ProcessContext& pc)
     
     auto sourceBuffers = input->getProcessedOutput();
     auto destAudioBlock = pc.buffers.audio;
-    auto destMidiBlock = pc.buffers.midi;
+    auto& destMidiBlock = pc.buffers.midi;
     jassert (sourceBuffers.audio.getNumChannels() == destAudioBlock.getNumChannels());
 
     destMidiBlock.copyFrom (sourceBuffers.midi);
