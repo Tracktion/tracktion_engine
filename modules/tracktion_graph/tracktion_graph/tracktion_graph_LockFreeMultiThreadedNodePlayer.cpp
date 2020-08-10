@@ -13,6 +13,16 @@
 namespace tracktion_graph
 {
 
+LockFreeMultiThreadedNodePlayer::LockFreeMultiThreadedNodePlayer()
+{
+    threadPool = getPoolCreatorFunction (ThreadPoolStrategy::realTime) (*this);
+}
+
+LockFreeMultiThreadedNodePlayer::LockFreeMultiThreadedNodePlayer (ThreadPoolCreator poolCreator)
+{
+    threadPool = poolCreator (*this);
+}
+
 LockFreeMultiThreadedNodePlayer::~LockFreeMultiThreadedNodePlayer()
 {
     clearThreads();
@@ -77,7 +87,7 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
                 break;
             
             if (! processNextFreeNode())
-                pause();
+                threadPool->waitForFinalNode();
         }
     }
 
@@ -99,8 +109,7 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
 //==============================================================================
 std::vector<Node*> LockFreeMultiThreadedNodePlayer::prepareToPlay (Node* node, Node* oldNode, double sampleRateToUse, int blockSizeToUse)
 {
-    if (threads.empty())
-        createThreads();
+    createThreads();
 
     sampleRate = sampleRateToUse;
     blockSize = blockSizeToUse;
@@ -122,24 +131,12 @@ void LockFreeMultiThreadedNodePlayer::updatePreparedNode()
 //==============================================================================
 void LockFreeMultiThreadedNodePlayer::clearThreads()
 {
-    threadsShouldExit = true;
-
-    for (auto& t : threads)
-        t.join();
-    
-    threads.clear();
+    threadPool->clearThreads();
 }
 
 void LockFreeMultiThreadedNodePlayer::createThreads()
 {
-    threadsShouldExit = false;
-    
-    // If there is 0 threads, simply process on the audio thread
-    for (size_t i = 0; i < numThreadsToUse.load(); ++i)
-    {
-        threads.emplace_back ([this] { processNextFreeNodeOrWait(); });
-        setThreadPriority (threads.back(), 10);
-    }
+    threadPool->createThreads (numThreadsToUse.load());
 }
 
 inline void LockFreeMultiThreadedNodePlayer::pause()
@@ -260,6 +257,7 @@ void LockFreeMultiThreadedNodePlayer::resetProcessQueue()
     // Make sure this is only incremented after all the nodes have been queued
     // or the threads will start queueing Nodes at the same time
     numNodesQueued += numNodesJustQueued;
+    threadPool->signalAll();
 }
 
 Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
@@ -285,6 +283,7 @@ Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
             {
                 preparedNode.nodesReadyToBeProcessed.enqueue (&outputPlaybackNode->node);
                 numNodesQueued.fetch_add (1, std::memory_order_release);
+                threadPool->signalOne();
             }
         }
     }
@@ -293,39 +292,6 @@ Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
 }
 
 //==============================================================================
-void LockFreeMultiThreadedNodePlayer::processNextFreeNodeOrWait()
-{
-    // The pause and sleep counts avoid starving the CPU if there aren't enough queued nodes
-    // This only happens on the worker threads so the main audio thread never interacts with the thread scheduler
-    thread_local int pauseCount = 0;
-    
-    for (;;)
-    {
-        if (threadsShouldExit.load (std::memory_order_acquire))
-            return;
-        
-        if (! processNextFreeNode())
-        {
-            ++pauseCount;
-            
-            if (pauseCount < 50)
-                pause();
-            else if (pauseCount < 100)
-                std::this_thread::yield();
-            else if (pauseCount < 150)
-                std::this_thread::sleep_for (std::chrono::milliseconds (1));
-            else if (pauseCount < 200)
-                std::this_thread::sleep_for (std::chrono::milliseconds (5));
-            else
-                pauseCount = 0;
-        }
-        else
-        {
-            pauseCount = 0;
-        }
-    }
-}
-
 bool LockFreeMultiThreadedNodePlayer::processNextFreeNode()
 {
     Node* nodeToProcess = nullptr;

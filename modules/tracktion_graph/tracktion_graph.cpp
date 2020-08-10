@@ -34,5 +34,6 @@
 #include "tracktion_graph/tracktion_graph_Utility.cpp"
 
 #include "tracktion_graph/tracktion_graph_LockFreeMultiThreadedNodePlayer.cpp"
+#include "tracktion_graph/tracktion_graph_NodePlayerThreadPools.cpp"
 
 #include "utilities/tracktion_Threads.cpp"

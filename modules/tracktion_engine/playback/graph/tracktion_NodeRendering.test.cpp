@@ -31,11 +31,11 @@ public:
         ts.sampleRate = 96000.0;
         ts.blockSize = 128;
         
-        runWaveRendering (ts, 30.0, 2, 20, 12, true, false);
-        runWaveRendering (ts, 30.0, 2, 20, 12, false, false);
+        runWaveRendering (ts, 30.0, 2, 20, 12, true, false, tracktion_graph::ThreadPoolStrategy::realTime);
+        runWaveRendering (ts, 30.0, 2, 20, 12, false, false, tracktion_graph::ThreadPoolStrategy::realTime);
         
-        runWaveRendering (ts, 30.0, 2, 20, 12, true, true);
-        runWaveRendering (ts, 30.0, 2, 20, 12, false, true);
+        runWaveRendering (ts, 30.0, 2, 20, 12, true, true, tracktion_graph::ThreadPoolStrategy::realTime);
+        runWaveRendering (ts, 30.0, 2, 20, 12, false, true, tracktion_graph::ThreadPoolStrategy::realTime);
     }
 
 private:
@@ -47,7 +47,8 @@ private:
                            int numTracks,
                            int numFilesPerTrack,
                            bool useSingleFile,
-                           bool isMultiThreaded)
+                           bool isMultiThreaded,
+                           tracktion_graph::ThreadPoolStrategy poolType)
     {
         // Create Edit with 20 tracks
         // Create 12 5s files per track
@@ -78,7 +79,8 @@ private:
 
         //===
         beginTest ("Wave - preparing: " + description);
-        TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize),
+        TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
+                                                                                             tracktion_graph::getPoolCreatorFunction (poolType)),
                                                       ts, numChannels, context.edit->getLength(), false);
         
         if (! isMultiThreaded)

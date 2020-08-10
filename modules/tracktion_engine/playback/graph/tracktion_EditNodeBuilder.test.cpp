@@ -70,7 +70,8 @@ private:
             beginTest ("Basic Rack Creation: " + description);
             {
                 auto node = createNode (*edit, processState, ts.sampleRate, ts.blockSize);
-                TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize),
+                TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
+                                                                                                     getPoolCreatorFunction (ThreadPoolStrategy::realTime)),
                                                               ts, numChannels, durationInSeconds, false);
                 
                 if (! isMultiThreaded)
@@ -87,7 +88,8 @@ private:
             beginTest ("Unconnected Inputs/Outputs: " + description);
             {
                 auto node = createNode (*edit, processState, ts.sampleRate, ts.blockSize);
-                TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize),
+                TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
+                                                                                                     getPoolCreatorFunction (ThreadPoolStrategy::realTime)),
                                                               ts, numChannels, durationInSeconds, false);
                 
                 if (! isMultiThreaded)

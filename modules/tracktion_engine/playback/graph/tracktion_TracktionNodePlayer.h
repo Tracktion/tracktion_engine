@@ -23,17 +23,20 @@ class TracktionNodePlayer
 {
 public:
     /** Creates an NodePlayer to process a Node. */
-    TracktionNodePlayer (ProcessState& processStateToUse)
+    TracktionNodePlayer (ProcessState& processStateToUse,
+                         tracktion_graph::LockFreeMultiThreadedNodePlayer::ThreadPoolCreator poolCreator)
         : playHeadState (processStateToUse.playHeadState),
-          processState (processStateToUse)
+          processState (processStateToUse),
+          nodePlayer (std::move (poolCreator))
     {
     }
 
     /** Creates an NodePlayer to process a Node. */
     TracktionNodePlayer (std::unique_ptr<tracktion_graph::Node> node,
                          ProcessState& processStateToUse,
-                         double sampleRate, int blockSize)
-        : TracktionNodePlayer (processStateToUse)
+                         double sampleRate, int blockSize,
+                         tracktion_graph::LockFreeMultiThreadedNodePlayer::ThreadPoolCreator poolCreator)
+        : TracktionNodePlayer (processStateToUse, std::move (poolCreator))
     {
         nodePlayer.setNode (std::move (node), sampleRate, blockSize);
     }

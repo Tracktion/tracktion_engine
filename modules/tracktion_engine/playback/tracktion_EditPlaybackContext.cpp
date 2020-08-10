@@ -15,7 +15,9 @@ namespace tracktion_engine
  struct EditPlaybackContext::NodePlaybackContext
  {
      NodePlaybackContext (double sampleRateToUse, size_t numThreads, size_t maxNumThreadsToUse)
-        : sampleRate (sampleRateToUse), maxNumThreads (maxNumThreadsToUse)
+        : sampleRate (sampleRateToUse),
+          player (processState, getPoolCreatorFunction (static_cast<tracktion_graph::ThreadPoolStrategy> (getThreadPoolStrategy()))),
+          maxNumThreads (maxNumThreadsToUse)
      {
          setNumThreads (numThreads);
      }
@@ -98,7 +100,7 @@ namespace tracktion_engine
  private:
      AudioBuffer<float> scratchAudioBuffer;
      MidiMessageArray scratchMidiBuffer;
-     TracktionNodePlayer player { processState };
+     TracktionNodePlayer player;
      const size_t maxNumThreads;
      
      juce::Range<int64_t> referenceSampleRange;
@@ -1016,6 +1018,12 @@ namespace EditPlaybackContextInternal
         static bool enabled = false;
         return enabled;
     }
+
+    int& getThreadPoolStrategyType()
+    {
+        static int type = static_cast<int> (tracktion_graph::ThreadPoolStrategy::realTime);
+        return type;
+    }
 }
 
 void EditPlaybackContext::enableExperimentalGraphProcessing (bool enable)
@@ -1056,6 +1064,24 @@ void EditPlaybackContext::setSpeedCompensation (double plusOrMinus)
     if (nodePlaybackContext)
         nodePlaybackContext->setSpeedCompensation (plusOrMinus);
 }
+
+void EditPlaybackContext::setThreadPoolStrategy (int type)
+{
+    type = jlimit (static_cast<int> (tracktion_graph::ThreadPoolStrategy::conditionVariable),
+                   static_cast<int> (tracktion_graph::ThreadPoolStrategy::hybrid),
+                   type);
+    EditPlaybackContextInternal::getThreadPoolStrategyType() = type;
+}
+
+int EditPlaybackContext::getThreadPoolStrategy()
+{
+    const int type = jlimit (static_cast<int> (tracktion_graph::ThreadPoolStrategy::conditionVariable),
+                             static_cast<int> (tracktion_graph::ThreadPoolStrategy::hybrid),
+                             EditPlaybackContextInternal::getThreadPoolStrategyType());
+    
+    return type;
+}
+
 #endif
 
 //==============================================================================
