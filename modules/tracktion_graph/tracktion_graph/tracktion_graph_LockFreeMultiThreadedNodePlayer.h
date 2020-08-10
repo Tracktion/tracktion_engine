@@ -10,11 +10,6 @@
 
 #pragma once
 
-#include <thread>
-#ifndef __aarch64__
- #include <emmintrin.h>
-#endif
-
 #ifdef _MSC_VER
  #pragma warning (push)
  #pragma warning (disable: 4127)

@@ -10,6 +10,11 @@
 
 #pragma once
 
+#include <thread>
+#ifndef __aarch64__
+ #include <emmintrin.h>
+#endif
+
 namespace tracktion_graph
 {
 

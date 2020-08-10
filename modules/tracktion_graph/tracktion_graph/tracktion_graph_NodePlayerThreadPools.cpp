@@ -10,6 +10,12 @@
 
 #pragma once
 
+#include <thread>
+
+#ifdef _MSC_VER
+ #pragma warning (push)
+ #pragma warning (disable: 4127)
+#endif
 
 namespace tracktion_graph
 {
@@ -18,7 +24,7 @@ namespace tracktion_graph
 //==============================================================================
 namespace
 {
-    static const int timeOutMilliseconds = -1;
+    constexpr int timeOutMilliseconds = -1;
 
     inline void pause()
     {
@@ -355,5 +361,10 @@ LockFreeMultiThreadedNodePlayer::ThreadPoolCreator getPoolCreatorFunction (Threa
             return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolRT> (p); };
     }
 }
+
+
+#ifdef _MSC_VER
+ #pragma warning (pop)
+#endif
 
 }
