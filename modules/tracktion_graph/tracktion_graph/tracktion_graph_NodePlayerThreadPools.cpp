@@ -18,7 +18,7 @@ namespace tracktion_graph
 //==============================================================================
 namespace
 {
-    constexpr int timeOutMilliseconds = -1;
+    static const int timeOutMilliseconds = -1;
 
     inline void pause()
     {
