@@ -1019,11 +1019,13 @@ namespace EditPlaybackContextInternal
         return enabled;
     }
 
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     int& getThreadPoolStrategyType()
     {
         static int type = static_cast<int> (tracktion_graph::ThreadPoolStrategy::realTime);
         return type;
     }
+   #endif
 }
 
 void EditPlaybackContext::enableExperimentalGraphProcessing (bool enable)
