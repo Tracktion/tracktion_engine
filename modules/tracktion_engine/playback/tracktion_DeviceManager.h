@@ -50,7 +50,7 @@ public:
     float getCpuUsage() const noexcept                  { return (float) currentCpuUsage; }
 
     // Sets an upper limit on the proportion of CPU time being used - if getCpuUsage() exceeds this,
-    // the processing will be muted to keep the system running. Defaults to 0.95
+    // the processing will be muted to keep the system running. Defaults to 0.98
     void setCpuLimitBeforeMuting (double newLimit)      { jassert (newLimit > 0); cpuLimitBeforeMuting = newLimit; }
 
     void updateNumCPUs(); // should be called when active num CPUs is changed
