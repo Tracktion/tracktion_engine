@@ -709,10 +709,10 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioTrack (AudioTrack& at, 
     
     auto liveInputNode = createLiveInputsNode (at, playHeadState, params);
     
-    if (! at.getListeners().isEmpty())
+    if (node && ! at.getListeners().isEmpty())
         node = makeNode<LiveMidiOutputNode> (at, std::move (node));
     
-    if (node != nullptr)
+    if (node)
         node = makeNode<LiveMidiInjectingNode> (at, std::move (node));
 
     if (node == nullptr && inputTracks.isEmpty() && liveInputNode == nullptr)

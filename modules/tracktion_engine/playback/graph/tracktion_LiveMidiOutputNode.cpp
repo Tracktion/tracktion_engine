@@ -16,6 +16,7 @@ namespace tracktion_engine
 LiveMidiOutputNode::LiveMidiOutputNode (AudioTrack& at, std::unique_ptr<tracktion_graph::Node> inputNode)
     : track (at), trackPtr (at), input (std::move (inputNode))
 {
+    jassert (input);
     pendingMessages.reserve (50);
     dispatchingMessages.reserve (50);
 }
