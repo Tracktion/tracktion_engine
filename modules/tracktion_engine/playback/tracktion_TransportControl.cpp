@@ -1326,7 +1326,8 @@ void TransportControl::performPlay()
                 // if we're playing from near time = 0, roll back a fraction so we
                 // don't miss the first block - this won't be noticable further along
                 // in the edit.
-                playHeadWrapper->setPosition (transportState->startTime - 0.2);
+                if (! EditPlaybackContext::isExperimentalGraphProcessingEnabled())
+                    playHeadWrapper->setPosition (transportState->startTime - 0.2);
             }
         }
         else
