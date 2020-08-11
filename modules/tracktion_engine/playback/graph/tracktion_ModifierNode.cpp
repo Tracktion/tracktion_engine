@@ -66,6 +66,11 @@ void ModifierNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationI
 {
     juce::ignoreUnused (info);
     jassert (sampleRate == info.sampleRate);
+    
+    auto props = getNodeProperties();
+
+    if (props.latencyNumSamples > 0)
+        automationAdjustmentTime = -tracktion_graph::sampleToTime (props.latencyNumSamples, sampleRate);
 }
 
 void ModifierNode::process (const ProcessContext& pc)
@@ -146,7 +151,7 @@ PluginRenderContext ModifierNode::getPluginRenderContext (int64_t referenceSampl
              juce::AudioChannelSet::canonicalChannelSet (destBuffer.getNumChannels()),
              0, destBuffer.getNumSamples(),
              &midiMessageArray, 0.0,
-             tracktion_graph::sampleToTime (playHead.referenceSamplePositionToTimelinePosition (referenceSamplePosition), sampleRate),
+             tracktion_graph::sampleToTime (playHead.referenceSamplePositionToTimelinePosition (referenceSamplePosition), sampleRate) + automationAdjustmentTime,
              playHead.isPlaying(), playHead.isUserDragging(), isRendering, false };
 }
 

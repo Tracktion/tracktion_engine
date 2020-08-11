@@ -83,6 +83,11 @@ void PluginNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInf
     juce::ignoreUnused (info);
     jassert (sampleRate == info.sampleRate);
     
+    auto props = getNodeProperties();
+
+    if (props.latencyNumSamples > 0)
+        automationAdjustmentTime = -tracktion_graph::sampleToTime (props.latencyNumSamples, sampleRate);
+    
     if (shouldUseFineGrainAutomation (*plugin))
         subBlockSizeToUse = std::max (128, 128 * juce::roundToInt (info.sampleRate / 44100.0));
     
@@ -95,7 +100,6 @@ void PluginNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInf
         
         if (! latencyProcessor)
         {
-            auto props = getNodeProperties();
             latencyProcessor = std::make_shared<tracktion_graph::LatencyProcessor>();
             latencyProcessor->setLatencyNumSamples (latencyNumSamples);
             latencyProcessor->prepareToPlay (info.sampleRate, info.blockSize, props.numberOfChannels);
@@ -261,7 +265,7 @@ PluginRenderContext PluginNode::getPluginRenderContext (int64_t referenceSampleP
              juce::AudioChannelSet::canonicalChannelSet (destBuffer.getNumChannels()),
              0, destBuffer.getNumSamples(),
              &midiMessageArray, 0.0,
-             tracktion_graph::sampleToTime (playHead.referenceSamplePositionToTimelinePosition (referenceSamplePosition), sampleRate),
+             tracktion_graph::sampleToTime (playHead.referenceSamplePositionToTimelinePosition (referenceSamplePosition), sampleRate) + automationAdjustmentTime,
              playHead.isPlaying(), playHead.isUserDragging(), isRendering, canProcessBypassed };
 }
 
