@@ -153,8 +153,15 @@ tracktion_graph::NodeProperties CombiningNode::getNodeProperties()
 
 void CombiningNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
 {
+    isReadyToProcessBlock.store (true, std::memory_order_release);
+
     for (auto& i : inputs)
+    {
         i->prepareToPlay (info);
+        
+        if (! i->isReadyToProcess())
+            isReadyToProcessBlock.store (false, std::memory_order_release);
+    }
 }
 
 bool CombiningNode::isReadyToProcess()
