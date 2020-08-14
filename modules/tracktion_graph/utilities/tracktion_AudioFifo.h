@@ -99,6 +99,7 @@ public:
         const int internalBufferNumChannels = buffer.getNumChannels();
         const int destNumChannels = (int) dest.getNumChannels();
         
+        juce::ignoreUnused (internalBufferNumChannels, destNumChannels);
         jassert (destNumChannels <= internalBufferNumChannels);
         const int numSamples = (int) dest.getNumSamples();
         int start1, size1, start2, size2;
