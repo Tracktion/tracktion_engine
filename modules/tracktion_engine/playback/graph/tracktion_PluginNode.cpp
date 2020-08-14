@@ -69,7 +69,7 @@ tracktion_graph::NodeProperties PluginNode::getNodeProperties()
 
     // Assume a stereo output here to corretly initialise plugins
     // We might need to modify this to return a number of channels passed as an argument if there are differences with mono renders
-    props.numberOfChannels = juce::jmax (1, props.numberOfChannels, plugin->getNumOutputChannelsGivenInputs (std::max (2, props.numberOfChannels)));
+    props.numberOfChannels = juce::jmax (2, props.numberOfChannels, plugin->getNumOutputChannelsGivenInputs (std::max (2, props.numberOfChannels)));
     props.hasAudio = props.hasAudio || plugin->producesAudioWhenNoAudioInput();
     props.hasMidi  = props.hasMidi || plugin->takesMidiInput();
     props.latencyNumSamples = std::max (props.latencyNumSamples, latencyNumSamples);
