@@ -47,7 +47,10 @@ public:
 
     bool write (juce::dsp::AudioBlock<float> block)
     {
-        jassert (buffer.getNumChannels() <= (int) block.getNumChannels());
+        const int internalBufferNumChannels = buffer.getNumChannels();
+        const int inputNumChannels = (int) block.getNumChannels();
+
+        jassert (inputNumChannels <= internalBufferNumChannels); // Needs to be prepared with at least the num input channels!
         int numSamples = (int) block.getNumSamples();
         int start1, size1, start2, size2;
         fifo.prepareToWrite (numSamples, start1, size1, start2, size2);
@@ -55,10 +58,17 @@ public:
         if (size1 + size2 < numSamples)
             return false;
 
-        for (int i = buffer.getNumChannels(); --i >= 0;)
+        for (int i = inputNumChannels; --i >= 0;)
         {
             buffer.copyFrom (i, start1, block.getChannelPointer ((size_t) i), size1);
             buffer.copyFrom (i, start2, block.getChannelPointer ((size_t) i) + size1, size2);
+        }
+        
+        // Clear additional channels
+        for (int i = internalBufferNumChannels; --i >= inputNumChannels;)
+        {
+            buffer.clear (i, start1, size1);
+            buffer.clear (i, start2, size2);
         }
 
         fifo.finishedWrite (size1 + size2);
@@ -86,7 +96,10 @@ public:
 
     bool readAdding (const juce::dsp::AudioBlock<float>& dest)
     {
-        jassert ((int) dest.getNumChannels() == buffer.getNumChannels());
+        const int internalBufferNumChannels = buffer.getNumChannels();
+        const int destNumChannels = (int) dest.getNumChannels();
+        
+        jassert (destNumChannels <= internalBufferNumChannels);
         const int numSamples = (int) dest.getNumSamples();
         int start1, size1, start2, size2;
         fifo.prepareToRead (numSamples, start1, size1, start2, size2);

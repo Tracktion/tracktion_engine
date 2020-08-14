@@ -60,7 +60,7 @@ struct LatencyProcessor
         if (fifo.getNumChannels() == 0)
             return;
 
-        jassert (fifo.getNumChannels() == (int) src.getNumChannels());
+        jassert (fifo.getNumChannels() >= (int) src.getNumChannels());
         fifo.write (src);
     }
     
