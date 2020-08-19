@@ -716,7 +716,20 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioTrack (AudioTrack& at, 
         node = makeNode<LiveMidiInjectingNode> (at, std::move (node));
 
     if (node == nullptr && inputTracks.isEmpty() && liveInputNode == nullptr)
-        return {};
+    {
+        // If there are synths on the track, create a stub Node to feed them
+        for (auto plugin : at.pluginList)
+        {
+            if (plugin->producesAudioWhenNoAudioInput())
+            {
+                node = makeNode<SilentNode> (2);
+                break;
+            }
+        }
+        
+        if (! node)
+            return {};
+    }
     
     if (liveInputNode)
     {
