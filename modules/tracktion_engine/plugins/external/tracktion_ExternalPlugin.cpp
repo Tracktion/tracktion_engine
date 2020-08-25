@@ -11,9 +11,11 @@
 namespace tracktion_engine
 {
 
-struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorListener
+struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorListener,
+                                                  private juce::AsyncUpdater
 {
-    ProcessorChangedManager (ExternalPlugin& p) : plugin (p)
+    ProcessorChangedManager (ExternalPlugin& p)
+        : plugin (p)
     {
         if (auto pi = plugin.getAudioPluginInstance())
             pi->addListener (this);
@@ -23,6 +25,8 @@ struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorLis
 
     ~ProcessorChangedManager() override
     {
+        cancelPendingUpdate();
+        
         if (auto pi = plugin.getAudioPluginInstance())
             pi->removeListener (this);
         else
@@ -33,13 +37,29 @@ struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorLis
     {
     }
 
-    void audioProcessorChanged (AudioProcessor* ap) override
+    void audioProcessorChanged (AudioProcessor*) override
     {
         if (plugin.edit.isLoading())
             return;
 
-        if (plugin.latencySamples != ap->getLatencySamples())
-            plugin.edit.getTransport().triggerClearDevicesOnStop();
+        if (MessageManager::existsAndIsCurrentThread())
+            updateFromPlugin();
+        else
+            triggerAsyncUpdate();
+    }
+
+    ExternalPlugin& plugin;
+
+private:
+    JUCE_DECLARE_NON_COPYABLE (ProcessorChangedManager)
+    
+    void updateFromPlugin()
+    {
+        TRACKTION_ASSERT_MESSAGE_THREAD
+        
+        if (auto instance = plugin.getAudioPluginInstance())
+            if (plugin.latencySamples != instance->getLatencySamples())
+                plugin.edit.getTransport().triggerClearDevicesOnStop();
 
         if (auto pi = plugin.getAudioPluginInstance())
         {
@@ -65,11 +85,11 @@ struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorLis
         plugin.changed();
         plugin.edit.pluginChanged (plugin);
     }
-
-    ExternalPlugin& plugin;
-
-private:
-    JUCE_DECLARE_NON_COPYABLE (ProcessorChangedManager)
+    
+    void handleAsyncUpdate() override
+    {
+        updateFromPlugin();
+    }
 };
 
 //==============================================================================
