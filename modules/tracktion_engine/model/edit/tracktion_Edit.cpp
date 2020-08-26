@@ -249,7 +249,8 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
                         || i == IDs::leftTo || i == IDs::rightTo || i == IDs::leftFrom || i == IDs::rightFrom)
                        restart();
                 }
-                else if (i == IDs::outputDevice || i == IDs::manualAdjustMs || i == IDs::sidechainSourceID || i == IDs::ignoreVca || i == IDs::busNum)
+                else if (i == IDs::outputDevice || i == IDs::inputDevice
+                         || i == IDs::manualAdjustMs || i == IDs::sidechainSourceID || i == IDs::ignoreVca || i == IDs::busNum)
                 {
                     restart();
                 }
