@@ -27,6 +27,9 @@ public:
     void createPlayAudioNodes (double startTime);
     void createPlayAudioNodesIfNeeded (double startTime);
     void reallocate();
+    
+    /** Returns true if a playback graph is currently allocated. */
+    bool isPlaybackGraphAllocated() const       { return isAllocated; }
 
     // Prepares the graph but doesn't actually start the playhead
     void prepareForPlaying (double startTime);
