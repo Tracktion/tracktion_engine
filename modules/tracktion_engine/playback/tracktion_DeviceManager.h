@@ -121,6 +121,11 @@ public:
     void broadcastStreamTimeToMidiDevices (double streamTime);
     bool shouldSendMidiTimecode() const noexcept                { return sendMidiTimecode; }
 
+    /** Returns the current block's stream time.
+        This shouldn't really be used and may be removed in future.
+    */
+    double getCurrentStreamTime() const noexcept                { return streamTime; }
+
     bool isMSWavetableSynthPresent() const;
     void resetToDefaults (bool resetInputDevices, bool resetOutputDevices);
 

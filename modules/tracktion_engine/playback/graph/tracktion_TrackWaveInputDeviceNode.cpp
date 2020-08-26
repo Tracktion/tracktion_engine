@@ -31,7 +31,7 @@ tracktion_graph::NodeProperties TrackWaveInputDeviceNode::getNodeProperties()
 void TrackWaveInputDeviceNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
-    offsetSamples = info.blockSize;
+    offsetSamples = waveInputDevice.engine.getDeviceManager().getBlockSize();
 }
 
 bool TrackWaveInputDeviceNode::isReadyToProcess()
@@ -60,7 +60,8 @@ void TrackWaveInputDeviceNode::process (const ProcessContext& pc)
         const float* chans[3] = { sourceBuffers.audio.getChannelPointer (0),
                                   numChans > 1 ? sourceBuffers.audio.getChannelPointer (1) : nullptr,
                                   nullptr };
-        const double streamTime = tracktion_graph::sampleToTime (pc.referenceSampleRange.getStart() - offsetSamples, sampleRate);
+        const double streamTime = waveInputDevice.engine.getDeviceManager().getCurrentStreamTime()
+                                    + tracktion_graph::sampleToTime (offsetSamples, sampleRate);
         waveInputDevice.consumeNextAudioBlock (chans, numChans, (int) sourceBuffers.audio.getNumSamples(), streamTime);
     }
 }
