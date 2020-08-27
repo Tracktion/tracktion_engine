@@ -237,7 +237,11 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
             else if (v.hasType (IDs::PLUGIN))
             {
                 const auto type = v[IDs::type].toString();
-                
+
+                if (i == IDs::enabled
+                    && edit.engine.getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph())
+                   restart();
+
                 if (type == AuxSendPlugin::xmlTypeName || type == AuxReturnPlugin::xmlTypeName)
                 {
                     if (i == IDs::enabled)

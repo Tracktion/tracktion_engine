@@ -306,6 +306,7 @@ bool EditRenderJob::RenderPass::initialise()
             cnp.forRendering = true;
             cnp.includePlugins = r.usePlugins;
             cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
+            cnp.includeBypassedPlugins = ! r.engine->getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph();
 
             std::unique_ptr<tracktion_graph::Node> node;
 

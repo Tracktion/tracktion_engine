@@ -534,6 +534,9 @@ std::unique_ptr<tracktion_graph::Node> createNodeForPlugin (Plugin& plugin, cons
 
     if (plugin.isDisabled())
         return node;
+    
+    if (! plugin.isEnabled() && ! params.includeBypassedPlugins)
+        return node;
 
     node = createSidechainInputNodeForPlugin (plugin, std::move (node));
     node = tracktion_graph::makeNode<PluginNode> (std::move (node),

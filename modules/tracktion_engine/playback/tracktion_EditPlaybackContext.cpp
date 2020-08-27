@@ -517,6 +517,7 @@ void EditPlaybackContext::createNode()
     CreateNodeParams cnp { nodePlaybackContext->processState };
     cnp.sampleRate = dm.getSampleRate();
     cnp.blockSize = dm.getBlockSize();
+    cnp.includeBypassedPlugins = ! edit.engine.getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph();
     auto editNode = createNodeForEdit (*this, cnp);
 
     const auto& tempoSections = edit.tempoSequence.getTempoSections();

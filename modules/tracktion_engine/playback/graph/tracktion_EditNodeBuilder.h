@@ -29,6 +29,7 @@ struct CreateNodeParams
     bool forRendering = false;
     bool includePlugins = true;
     bool addAntiDenormalisationNoise = false;
+    bool includeBypassedPlugins = true;
 };
 
 //==============================================================================

@@ -41,6 +41,14 @@ public:
     */
     virtual void setPluginDisabled (const juce::String& /*idString*/, bool /*shouldBeDisabled*/) {}
 
+    /** Should return if plugins which have been bypassed should be included in the playback graph.
+        By default this is false and bypassed plugins will still call processBypassed and introduce
+        the same latency as if they weren't.
+        But by returning false here, you can opt to remove them from the playback graph entirely
+        which means they won't introduce latency which can be useful for tracking.
+    */
+    virtual bool shouldBypassedPluginsBeRemovedFromPlaybackGraph()                { return false; }
+
     /** Gives plugins an opportunity to save custom data when the plugin state gets flushed. */
     virtual void saveCustomPluginProperties (juce::ValueTree&, juce::AudioPluginInstance&, juce::UndoManager*) {}
 
