@@ -319,4 +319,104 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
     return false;
 }
 
+juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
+                                            Renderer::Parameters& r,
+                                            std::unique_ptr<tracktion_graph::Node> n,
+                                            std::unique_ptr<tracktion_graph::PlayHead> playHead,
+                                            std::unique_ptr<tracktion_graph::PlayHeadState> playHeadState,
+                                            std::unique_ptr<ProcessState> processState,
+                                            std::atomic<float>& progress)
+{
+    const int samplesPerBlock = r.blockSizeForAudio;
+    const double sampleRate = r.sampleRateForAudio;
+    const double blockLength = tracktion_graph::sampleToTime (samplesPerBlock, sampleRate);
+    double streamTime = r.time.getStart();
+
+    auto nodePlayer = std::make_unique<TracktionNodePlayer> (std::move (n), *processState,
+                                                             sampleRate, samplesPerBlock,
+                                                             getPoolCreatorFunction (ThreadPoolStrategy::hybrid));
+
+    //TODO: Should really purge any non-MIDI nodes here then return if no MIDI has been found
+    
+    playHead->stop();
+    playHead->setPosition (tracktion_graph::timeToSample (streamTime, sampleRate));
+    playHead->playSyncedToRange (tracktion_graph::timeToSample ({ streamTime, Edit::maximumLength }, sampleRate));
+
+    playHeadState->update (tracktion_graph::timeToSample ({ streamTime, streamTime + blockLength }, sampleRate));
+
+    // Wait for any nodes to render their sources or proxies
+    auto leafNodesReady = [nodes = getNodes (*nodePlayer->getNode(), VertexOrdering::postordering)]
+    {
+        for (auto node : nodes)
+            if (node->getDirectInputNodes().empty() && ! node->isReadyToProcess())
+                return false;
+        
+        return true;
+    };
+    
+    while (! leafNodesReady())
+    {
+        juce::Thread::sleep (100);
+        
+        if (owner.shouldExit())
+            return TRANS("Render cancelled");
+    }
+
+    // Then render the blocks
+    TempoSequencePosition currentTempoPosition (r.edit->tempoSequence);
+    
+    juce::AudioBuffer<float> renderingBuffer (2, samplesPerBlock + 256);
+    tracktion_engine::MidiMessageArray blockMidiBuffer;
+    juce::MidiMessageSequence outputSequence;
+
+    for (;;)
+    {
+        if (owner.shouldExit())
+            return TRANS("Render cancelled");
+
+        if (streamTime > r.time.getEnd())
+            break;
+
+        auto blockEnd = streamTime + blockLength;
+        const EditTimeRange streamTimeRange (streamTime, blockEnd);
+        
+        // Update modifier timers
+        r.edit->updateModifierTimers (streamTime, samplesPerBlock);
+        
+        // Then once eveything is ready, render the block
+        currentTempoPosition.setTime (streamTime);
+
+        renderingBuffer.clear();
+        blockMidiBuffer.clear();
+        const auto referenceSampleRange = tracktion_graph::timeToSample (streamTimeRange, sampleRate);
+        juce::dsp::AudioBlock<float> destBlock (renderingBuffer.getArrayOfWritePointers(),
+                                                (size_t) renderingBuffer.getNumChannels(), (size_t) referenceSampleRange.getLength());
+        nodePlayer->process ({ referenceSampleRange, { destBlock, blockMidiBuffer} });
+
+        // Set MIDI messages to beats and update final sequence
+        for (auto& m : blockMidiBuffer)
+        {
+            TempoSequencePosition eventPos (currentTempoPosition);
+            eventPos.setTime (m.getTimeStamp() + streamTime - r.time.getStart());
+
+            outputSequence.addEvent (juce::MidiMessage (m, Edit::ticksPerQuarterNote * eventPos.getPPQTime()));
+        }
+
+        streamTime = blockEnd;
+
+        progress = juce::jlimit (0.0f, 1.0f, (float) ((streamTime - r.time.getStart()) / r.time.getLength()));
+    }
+    
+    playHead->stop();
+    
+    if (outputSequence.getNumEvents() == 0)
+        return TRANS("No MIDI found to render");
+
+    if (! Renderer::RenderTask::addMidiMetaDataAndWriteToFile (r.destFile, std::move (outputSequence), r.edit->tempoSequence))
+        return TRANS("Unable to write to destination file");
+
+    return {};
+}
+
+
 } // namespace tracktion_engine

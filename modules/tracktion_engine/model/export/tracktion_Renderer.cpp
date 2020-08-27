@@ -679,6 +679,19 @@ void Renderer::RenderTask::setAllPluginsRealtime (const Plugin::Array& plugins, 
 bool Renderer::RenderTask::renderMidi (Renderer::Parameters& r)
 {
     CRASH_TRACER
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+    if (isUsingGraphNode)
+    {
+        errorMessage = NodeRenderContext::renderMidi (*this, r,
+                                                      std::move (graphNode),
+                                                      std::move (playHead),
+                                                      std::move (playHeadState),
+                                                      std::move (processState),
+                                                      progress);
+        return errorMessage.isEmpty();
+    }
+   #endif
+    
     node->purgeSubNodes (false, true);
 
     {
@@ -771,48 +784,53 @@ bool Renderer::RenderTask::renderMidi (Renderer::Parameters& r)
 
     callBlocking ([this] { node->releaseAudioNodeResources(); });
     localPlayhead.stop();
+    
+    return addMidiMetaDataAndWriteToFile (r.destFile, std::move (outputSequence), r.edit->tempoSequence);
+}
 
+bool Renderer::RenderTask::addMidiMetaDataAndWriteToFile (juce::File destFile, juce::MidiMessageSequence outputSequence, const TempoSequence& tempoSequence)
+{
     outputSequence.updateMatchedPairs();
 
-    if (outputSequence.getNumEvents() > 0)
+    if (outputSequence.getNumEvents() == 0)
+        return false;
+
+    FileOutputStream out (destFile);
+
+    if (out.openedOk())
     {
-        FileOutputStream out (r.destFile);
+        MidiMessageSequence midiTempoSequence;
+        TempoSequencePosition currentTempoPosition (tempoSequence);
 
-        if (out.openedOk())
+        for (int i = 0; i < tempoSequence.getNumTempos(); ++i)
         {
-            MidiMessageSequence tempoSequence;
-            TempoSequencePosition currentTempoPosition (r.edit->tempoSequence);
+            auto ts = tempoSequence.getTempo (i);
+            auto& matchingTimeSig = ts->getMatchingTimeSig();
 
-            for (int i = 0; i < r.edit->tempoSequence.getNumTempos(); ++i)
-            {
-                auto ts = r.edit->tempoSequence.getTempo (i);
-                auto& matchingTimeSig = ts->getMatchingTimeSig();
+            currentTempoPosition.setTime (ts->getStartTime());
 
-                currentTempoPosition.setTime (ts->getStartTime());
+            const double time = Edit::ticksPerQuarterNote * currentTempoPosition.getPPQTime();
+            const double beatLengthMicrosecs = 60000000.0 / ts->getBpm();
+            const double microsecondsPerQuarterNote = beatLengthMicrosecs * matchingTimeSig.denominator / 4.0;
 
-                const double time = Edit::ticksPerQuarterNote * currentTempoPosition.getPPQTime();
-                const double beatLengthMicrosecs = 60000000.0 / ts->getBpm();
-                const double microsecondsPerQuarterNote = beatLengthMicrosecs * matchingTimeSig.denominator / 4.0;
+            MidiMessage m (MidiMessage::timeSignatureMetaEvent (matchingTimeSig.numerator,
+                                                                matchingTimeSig.denominator));
+            m.setTimeStamp (time);
+            midiTempoSequence.addEvent (m);
 
-                MidiMessage m (MidiMessage::timeSignatureMetaEvent (matchingTimeSig.numerator,
-                                                                    matchingTimeSig.denominator));
-                m.setTimeStamp (time);
-                tempoSequence.addEvent (m);
-
-                m = MidiMessage::tempoMetaEvent (roundToInt (microsecondsPerQuarterNote));
-                m.setTimeStamp (time);
-                tempoSequence.addEvent (m);
-            }
-
-            MidiFile mf;
-            mf.addTrack (tempoSequence);
-            mf.addTrack (outputSequence);
-
-            mf.setTicksPerQuarterNote (Edit::ticksPerQuarterNote);
-            mf.writeTo (out);
-
-            return true;
+            m = MidiMessage::tempoMetaEvent (roundToInt (microsecondsPerQuarterNote));
+            m.setTimeStamp (time);
+            midiTempoSequence.addEvent (m);
         }
+
+        MidiFile mf;
+        mf.addTrack (midiTempoSequence);
+        mf.addTrack (outputSequence);
+
+        mf.setTicksPerQuarterNote (Edit::ticksPerQuarterNote);
+        mf.writeTo (out);
+
+        return true;
     }
 
     return false;

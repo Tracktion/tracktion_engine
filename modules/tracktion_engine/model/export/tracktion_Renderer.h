@@ -120,6 +120,7 @@ public:
         //==============================================================================
         static void flushAllPlugins (const Plugin::Array&, double sampleRate, int samplesPerBlock);
         static void setAllPluginsRealtime (const Plugin::Array&, bool realtime);
+        static bool addMidiMetaDataAndWriteToFile (juce::File, juce::MidiMessageSequence, const TempoSequence&);
         bool performNormalisingAndTrimming (const Renderer::Parameters& target,
                                             const Renderer::Parameters& intermediate);
 

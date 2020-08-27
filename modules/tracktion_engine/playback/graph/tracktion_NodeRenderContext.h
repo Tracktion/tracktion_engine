@@ -40,6 +40,15 @@ public:
     /** Renders the next block of audio. Returns true when finished, false if it needs to run again. */
     bool renderNextBlock (std::atomic<float>& progressToUpdate);
 
+    //==============================================================================
+    /** Renders the MIDI of an Edit to a sequence. */
+    static juce::String renderMidi (Renderer::RenderTask&, Renderer::Parameters&,
+                                    std::unique_ptr<tracktion_graph::Node>,
+                                    std::unique_ptr<tracktion_graph::PlayHead>,
+                                    std::unique_ptr<tracktion_graph::PlayHeadState>,
+                                    std::unique_ptr<ProcessState>,
+                                    std::atomic<float>& progressToUpdate);
+
 private:
     //==============================================================================
     struct Ditherers
