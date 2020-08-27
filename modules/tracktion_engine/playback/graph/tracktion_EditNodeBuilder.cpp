@@ -630,7 +630,10 @@ std::unique_ptr<tracktion_graph::Node> createPluginNodeForTrack (AudioTrack& at,
 {
     node = createModifierNodeForList (at.getModifierList(), Modifier::ProcessingPosition::preFX,
                                       trackMuteState, std::move (node), playHeadState, params);
-    node = createPluginNodeForList (at.pluginList, &trackMuteState, std::move (node), playHeadState, params);
+    
+    if (params.includePlugins)
+        node = createPluginNodeForList (at.pluginList, &trackMuteState, std::move (node), playHeadState, params);
+    
     node = createModifierNodeForList (at.getModifierList(), Modifier::ProcessingPosition::postFX,
                                       trackMuteState, std::move (node), playHeadState, params);
 
