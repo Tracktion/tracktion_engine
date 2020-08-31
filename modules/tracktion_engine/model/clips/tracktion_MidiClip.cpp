@@ -255,8 +255,13 @@ AudioNode* MidiClip::createAudioNode (const CreateAudioNodeParams& params)
     auto channels = mpeMode ? Range<int> (2, 15)
                             : Range<int>::withStartAndLength (getMidiChannel().getChannelNumber(), 1);
 
-    return new MidiAudioNode (std::move (sequence), channels, getEditTimeRange(),
-                              level->dbGain, level->mute, *this, nodeToReplace);
+    AudioNode* node = new MidiAudioNode (std::move (sequence), channels, getEditTimeRange(),
+                                         level->dbGain, level->mute, *this, nodeToReplace);
+
+    if (! listeners.isEmpty())
+        node = new LiveMidiOutputAudioNode (*this, node);
+
+    return node;
 }
 
 MidiList& MidiClip::getSequence() const noexcept

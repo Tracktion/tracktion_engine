@@ -405,6 +405,7 @@ AudioNode* StepClip::createAudioNode (const CreateAudioNodeParams& params)
 {
     CRASH_TRACER
 
+    AudioNode* node = nullptr;
     if (usesProbability())
     {
         std::vector<MidiMessageSequence> sequences;
@@ -417,7 +418,7 @@ AudioNode* StepClip::createAudioNode (const CreateAudioNodeParams& params)
             sequences.push_back (sequence);
         }
 
-        return new MidiAudioNode (std::move (sequences), { 1, 16 }, getEditTimeRange(), level->dbGain, level->mute, *this,
+        node = new MidiAudioNode (std::move (sequences), { 1, 16 }, getEditTimeRange(), level->dbGain, level->mute, *this,
                                   getClipIfPresentInNode (params.audioNodeToBeReplaced, *this));
     }
     else
@@ -425,9 +426,14 @@ AudioNode* StepClip::createAudioNode (const CreateAudioNodeParams& params)
         MidiMessageSequence sequence;
         generateMidiSequence (sequence);
 
-        return new MidiAudioNode (std::move (sequence), { 1, 16 }, getEditTimeRange(), level->dbGain, level->mute, *this,
+        node = new MidiAudioNode (std::move (sequence), { 1, 16 }, getEditTimeRange(), level->dbGain, level->mute, *this,
                                   getClipIfPresentInNode (params.audioNodeToBeReplaced, *this));
     }
+
+    if (! listeners.isEmpty())
+        node = new LiveMidiOutputAudioNode (*this, node);
+
+    return node;
 }
 
 //==============================================================================

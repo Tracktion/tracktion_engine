@@ -197,6 +197,28 @@ public:
     virtual PatternGenerator* getPatternGenerator() { return {}; }
 
     //==============================================================================
+    /** Listener interface to be notified of recorded MIDI being sent to the plugins. */
+    struct Listener
+    {
+        /* Destructor */
+        virtual ~Listener() = default;
+
+        /** Called when a recorded MidiMessage has been generated and sent.
+            to the playback graph. This applies to Step and Midi clips.
+         */
+        virtual void midiMessageGenerated (Clip&, const juce::MidiMessage&) = 0;
+    };
+
+    /** Adds a Listener. */
+    void addListener (Listener*);
+
+    /** Removes a Listener. */
+    void removeListener (Listener*);
+
+    /** Returns the listener list so Nodes can manually call them. */
+    juce::ListenerList<Listener>& getListeners()            { return listeners; }
+
+    //==============================================================================
     void changed() override;
 
     juce::UndoManager* getUndoManager() const;
@@ -208,6 +230,7 @@ protected:
     friend class Track;
     friend class ClipTrack;
     friend class CollectionClip;
+    struct LiveMidiOutputAudioNode;
 
     bool isInitialised = false;
     bool cloneInProgress = false;
@@ -221,6 +244,8 @@ protected:
     juce::CachedValue<bool> showingTakes;
     std::unique_ptr<PatternGenerator> patternGenerator;
     AsyncCaller updateLinkedClipsCaller;
+
+    juce::ListenerList<Listener> listeners;
 
     void setCurrentSourceFile (const juce::File&);
     virtual void setTrack (ClipTrack*);
