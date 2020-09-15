@@ -789,9 +789,7 @@ void AudioTrack::addListener (Listener* l)
 void AudioTrack::removeListener (Listener* l)
 {
     listeners.remove (l);
-
-    if (listeners.isEmpty())
-        edit.restartPlayback();
+    // N.B. Don't call restartPlayback here or it will be impossible to clear the audio graph
 }
 
 //==============================================================================

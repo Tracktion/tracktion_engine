@@ -171,7 +171,9 @@ public:
         virtual void recordedMidiMessageSentToPlugins (AudioTrack&, const juce::MidiMessage&) = 0;
     };
 
-    /** Adds a Listener. */
+    /** Adds a Listener.
+        This will automatically call Edit::restartPlayback for the callbacks to take effect.
+    */
     void addListener (Listener*);
 
     /** Removes a Listener. */
