@@ -23,7 +23,7 @@ class AudioClipBase::TimestretchingPreviewAudioNode  : public AudioNode
 {
 public:
     TimestretchingPreviewAudioNode (AudioClipBase& clip)
-        : c (clip), file (c.getAudioFile()),
+        : c (clip), clipPtr (clip), file (c.getAudioFile()),
           fileInfo (file.getInfo()),
           sampleRate (fileInfo.sampleRate),
           fifo (jmax (1, fileInfo.numChannels), 8192)
@@ -154,6 +154,7 @@ public:
 
 private:
     AudioClipBase& c;
+    Clip::Ptr clipPtr;
 
     AudioFile file;
     AudioFileInfo fileInfo;
