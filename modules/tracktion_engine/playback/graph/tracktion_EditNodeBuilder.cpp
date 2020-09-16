@@ -1018,6 +1018,9 @@ std::unique_ptr<tracktion_graph::Node> createNodeForDevice (EditPlaybackContext&
 
 std::unique_ptr<tracktion_graph::Node> createMasterPluginsNode (Edit& edit, tracktion_graph::PlayHeadState& playHeadState, std::unique_ptr<Node> node, const CreateNodeParams& params)
 {
+    if (! params.includeMasterPlugins)
+        return node;
+
     node = createPluginNodeForList (edit.getMasterPluginList(), nullptr, std::move (node), playHeadState, params);
 
     if (auto masterVolPlugin = edit.getMasterVolumePlugin())
@@ -1026,8 +1029,11 @@ std::unique_ptr<tracktion_graph::Node> createMasterPluginsNode (Edit& edit, trac
     return node;
 }
 
-std::unique_ptr<tracktion_graph::Node> createMasterFadeInOutNode (Edit& edit, tracktion_graph::PlayHeadState& playHeadState, std::unique_ptr<Node> node)
+std::unique_ptr<tracktion_graph::Node> createMasterFadeInOutNode (Edit& edit, tracktion_graph::PlayHeadState& playHeadState, std::unique_ptr<Node> node, const CreateNodeParams& params)
 {
+    if (! params.includeMasterPlugins)
+        return node;
+    
     if (edit.masterFadeIn > 0 || edit.masterFadeOut > 0)
     {
         auto length = edit.getLength();
@@ -1120,7 +1126,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForEdit (EditPlaybackContext& e
             if (edit.engine.getDeviceManager().getDefaultWaveOutDevice() == device)
                 node = createMasterPluginsNode (edit, playHeadState, std::move (node), params);
             
-            node = createMasterFadeInOutNode (edit, playHeadState, std::move (node));
+            node = createMasterFadeInOutNode (edit, playHeadState, std::move (node), params);
             node = EditNodeBuilder::insertOptionalLastStageNode (std::move (node));
 
             if (edit.getIsPreviewEdit() && node != nullptr)
@@ -1161,7 +1167,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForEdit (Edit& edit, const Crea
 
     auto node = std::unique_ptr<Node> (std::move (sumNode));
     node = createMasterPluginsNode (edit, playHeadState, std::move (node), params);
-    node = createMasterFadeInOutNode (edit, playHeadState, std::move (node));
+    node = createMasterFadeInOutNode (edit, playHeadState, std::move (node), params);
     node = createRackNode (std::move (node), edit.getRackList(), params);
 
     return node;

@@ -305,6 +305,7 @@ bool EditRenderJob::RenderPass::initialise()
             cnp.allowedTracks = r.tracksToDo.isZero() ? nullptr : &tracksToDo;
             cnp.forRendering = true;
             cnp.includePlugins = r.usePlugins;
+            cnp.includeMasterPlugins = r.useMasterPlugins;
             cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
             cnp.includeBypassedPlugins = ! r.engine->getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph();
 

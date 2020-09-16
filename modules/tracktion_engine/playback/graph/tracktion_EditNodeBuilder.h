@@ -21,20 +21,24 @@ class TrackMuteState;
 */
 struct CreateNodeParams
 {
-    ProcessState& processState;
-    double sampleRate = 44100.0;
-    int blockSize = 256;
-    const juce::Array<Clip*>* allowedClips = nullptr;
-    const juce::Array<Track*>* allowedTracks = nullptr;
-    bool forRendering = false;
-    bool includePlugins = true;
-    bool addAntiDenormalisationNoise = false;
-    bool includeBypassedPlugins = true;
+    ProcessState& processState;                         /**< The process state of the graph. */
+    double sampleRate = 44100.0;                        /**< The sample rate to use. */
+    int blockSize = 256;                                /**< The block size to use. */
+    const juce::Array<Clip*>* allowedClips = nullptr;   /**< The clips to include. If nullptr, all clips will be included. */
+    const juce::Array<Track*>* allowedTracks = nullptr; /**< The tracks to include. If nullptr, all tracks will be included. */
+    bool forRendering = false;                          /**< If the node is for rendering or not. In renders, freeze files won't be used. */
+    bool includePlugins = true;                         /**< Whether to include track plugins. */
+    bool includeMasterPlugins = true;                   /**< Whether to include master plugins, fades and volume. */
+    bool addAntiDenormalisationNoise = false;           /**< Whether to add low level anti-denormalisation noise to the output. */
+    bool includeBypassedPlugins = true;                 /**< If false, bypassed plugins will be completely ommited from the graph. */
 };
 
 //==============================================================================
 struct EditNodeBuilder
 {
+    /** If set, this will be called to give an opportunity to add an additional final
+        node which could be used to add copy-protection noise or similar.
+    */
     static std::function<std::unique_ptr<tracktion_graph::Node> (std::unique_ptr<tracktion_graph::Node>)> insertOptionalLastStageNode;
 };
 
