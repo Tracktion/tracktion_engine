@@ -11,7 +11,7 @@
 #pragma once
 
 #include <thread>
-#ifndef __aarch64__
+#if JUCE_INTEL 
  #include <emmintrin.h>
 #endif
 

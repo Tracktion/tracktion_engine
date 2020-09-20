@@ -36,7 +36,7 @@ namespace tracktion_graph
     template<typename HandleType>
     bool setThreadPriority (HandleType handle, int priority)
     {
-        assert (handle != nullptr);
+        assert (handle != HandleType());
         
         struct sched_param param;
         int policy;

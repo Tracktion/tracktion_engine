@@ -99,7 +99,7 @@ private:
 
         beginTest ("Basic visting");
         {
-            expectEquals<size_t> (allNodes.size(), 7);
+            expectEquals<juce::uint64> (allNodes.size(), 7);
         
             std::vector<Node*> nodes;
             visitInputs (*A, [&] (auto& node)
