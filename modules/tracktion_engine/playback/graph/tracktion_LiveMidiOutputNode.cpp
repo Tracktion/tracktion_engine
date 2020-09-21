@@ -14,7 +14,15 @@ namespace tracktion_engine
 //==============================================================================
 //==============================================================================
 LiveMidiOutputNode::LiveMidiOutputNode (AudioTrack& at, std::unique_ptr<tracktion_graph::Node> inputNode)
-    : track (at), trackPtr (at), input (std::move (inputNode))
+    : track (&at), trackPtr (at), input (std::move (inputNode))
+{
+    jassert (input);
+    pendingMessages.reserve (50);
+    dispatchingMessages.reserve (50);
+}
+
+LiveMidiOutputNode::LiveMidiOutputNode (Clip& c, std::unique_ptr<tracktion_graph::Node> inputNode)
+    : clipPtr (c), input (std::move (inputNode))
 {
     jassert (input);
     pendingMessages.reserve (50);
@@ -69,8 +77,13 @@ void LiveMidiOutputNode::handleAsyncUpdate()
         pendingMessages.swapWith (dispatchingMessages);
     }
 
-    for (auto& m : dispatchingMessages)
-        track.getListeners().call (&AudioTrack::Listener::recordedMidiMessageSentToPlugins, track, m);
+    if (track != nullptr)
+        for (auto& m : dispatchingMessages)
+            track->getListeners().call (&AudioTrack::Listener::recordedMidiMessageSentToPlugins, *track, m);
+
+    if (clipPtr != nullptr)
+        for (auto& m : dispatchingMessages)
+            clipPtr->getListeners().call (&Clip::Listener::midiMessageGenerated, *clipPtr, m);
 
     dispatchingMessages.clear();
 }

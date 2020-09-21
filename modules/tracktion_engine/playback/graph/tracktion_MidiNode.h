@@ -18,7 +18,16 @@ class MidiNode final    : public tracktion_graph::Node,
                           public TracktionEngineNode
 {
 public:
-    MidiNode (juce::MidiMessageSequence,
+    MidiNode (juce::MidiMessageSequence sequence,
+              juce::Range<int> midiChannelNumbers,
+              bool useMPE,
+              EditTimeRange editSection,
+              LiveClipLevel,
+              ProcessState&,
+              EditItemID,
+              std::function<bool()> shouldBeMutedDelegate = nullptr);
+
+    MidiNode (std::vector<juce::MidiMessageSequence> sequences,
               juce::Range<int> midiChannelNumbers,
               bool useMPE,
               EditTimeRange editSection,
@@ -34,7 +43,9 @@ public:
 
 private:
     //==============================================================================
-    juce::MidiMessageSequence ms;
+    std::vector<juce::MidiMessageSequence> ms;
+    double lastStart = 0;
+    size_t currentSequence = 0;
     juce::Range<int> channelNumbers;
     bool useMPEChannelMode;
     EditTimeRange editSection;

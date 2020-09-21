@@ -21,6 +21,7 @@ class LiveMidiOutputNode final : public tracktion_graph::Node,
 {
 public:
     LiveMidiOutputNode (AudioTrack&, std::unique_ptr<tracktion_graph::Node>);
+    LiveMidiOutputNode (Clip&, std::unique_ptr<tracktion_graph::Node>);
 
     //==============================================================================
     tracktion_graph::NodeProperties getNodeProperties() override;
@@ -31,8 +32,11 @@ public:
 
 private:
     //==============================================================================
-    AudioTrack& track;
+    AudioTrack* track = nullptr;
     Track::Ptr trackPtr;
+
+    Clip::Ptr clipPtr;
+
     std::unique_ptr<tracktion_graph::Node> input;
 
     juce::CriticalSection lock;

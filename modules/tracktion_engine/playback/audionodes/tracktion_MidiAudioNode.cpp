@@ -64,6 +64,14 @@ void MidiAudioNode::renderSection (const AudioRenderContext& rc, EditTimeRange e
     {
         auto localTime = editTime - editSection.getStart();
 
+        if (ms.size() > 0 && editTime.getStart() < lastStart )
+        {
+            currentSequence++;
+            if (currentSequence >= ms.size())
+                currentSequence = 0;
+        }
+        lastStart = editTime.getStart();
+
         if (mute)
         {
             if (mute != wasMute)
@@ -126,13 +134,7 @@ void MidiAudioNode::renderSection (const AudioRenderContext& rc, EditTimeRange e
         }
 
         if (rc.isLastBlockOfLoop())
-        {
             createNoteOffs (*rc.bufferForMidiMessages, ms[currentSequence], localTime.getEnd(), rc.midiBufferOffset + localTime.getLength(), rc.playhead.isPlaying());
-
-            currentSequence++;
-            if (currentSequence >= ms.size())
-                currentSequence = 0;
-        }
     }
 }
 

@@ -311,23 +311,61 @@ std::unique_ptr<tracktion_graph::Node> createNodeForMidiClip (MidiClip& clip, co
 std::unique_ptr<tracktion_graph::Node> createNodeForStepClip (StepClip& clip, const TrackMuteState& trackMuteState, const CreateNodeParams& params)
 {
     CRASH_TRACER
-    juce::MidiMessageSequence sequence;
-    clip.generateMidiSequence (sequence);
 
-    return tracktion_graph::makeNode<MidiNode> (std::move (sequence),
-                                                juce::Range<int> (1, 16),
-                                                false,
-                                                clip.getEditTimeRange(),
-                                                clip.getLiveClipLevel(),
-                                                params.processState,
-                                                clip.itemID,
-                                                [&trackMuteState]
-                                                {
-                                                    if (! trackMuteState.shouldTrackBeAudible())
-                                                        return ! trackMuteState.shouldTrackMidiBeProcessed();
-                                                    
-                                                    return false;
-                                                });
+    std::unique_ptr<tracktion_graph::Node> node;
+
+    if (clip.usesProbability())
+    {
+        std::vector<juce::MidiMessageSequence> sequences;
+
+        for (int i = 0; i < 64; i++)
+        {
+            juce::MidiMessageSequence sequence;
+            clip.generateMidiSequence (sequence);
+
+            sequences.push_back (sequence);
+        }
+
+        node = tracktion_graph::makeNode<MidiNode> (std::move (sequences),
+                                                    juce::Range<int> (1, 16),
+                                                    false,
+                                                    clip.getEditTimeRange(),
+                                                    clip.getLiveClipLevel(),
+                                                    params.processState,
+                                                    clip.itemID,
+                                                    [&trackMuteState]
+                                                    {
+                                                        if (! trackMuteState.shouldTrackBeAudible())
+                                                            return ! trackMuteState.shouldTrackMidiBeProcessed();
+
+                                                        return false;
+                                                    });
+    }
+    else
+    {
+        juce::MidiMessageSequence sequence;
+        clip.generateMidiSequence (sequence);
+
+        node = tracktion_graph::makeNode<MidiNode> (std::move (sequence),
+                                                    juce::Range<int> (1, 16),
+                                                    false,
+                                                    clip.getEditTimeRange(),
+                                                    clip.getLiveClipLevel(),
+                                                    params.processState,
+                                                    clip.itemID,
+                                                    [&trackMuteState]
+                                                    {
+                                                        if (! trackMuteState.shouldTrackBeAudible())
+                                                            return ! trackMuteState.shouldTrackMidiBeProcessed();
+
+                                                        return false;
+                                                    });
+    }
+
+    if (node && ! clip.getListeners().isEmpty())
+        node = makeNode<LiveMidiOutputNode> (clip, std::move (node));
+
+    return node;
 }
 
 std::unique_ptr<tracktion_graph::Node> createNodeForClip (Clip& clip, const TrackMuteState& trackMuteState, const CreateNodeParams& params)

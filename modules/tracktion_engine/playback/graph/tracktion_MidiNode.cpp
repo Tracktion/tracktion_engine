@@ -20,7 +20,6 @@ MidiNode::MidiNode (juce::MidiMessageSequence sequence,
                     EditItemID editItemIDToUse,
                     std::function<bool()> shouldBeMuted)
     : TracktionEngineNode (processState),
-      ms (std::move (sequence)),
       channelNumbers (midiChannelNumbers),
       useMPEChannelMode (useMPE),
       editSection (editTimeRange),
@@ -30,8 +29,37 @@ MidiNode::MidiNode (juce::MidiMessageSequence sequence,
       wasMute (liveClipLevel.isMute())
 {
     jassert (channelNumbers.getStart() > 0 && channelNumbers.getEnd() <= 16);
-    ms.updateMatchedPairs();
+    ms.emplace_back (sequence);
+
+    for (auto& s : ms)
+        s.updateMatchedPairs();
     
+    controllerMessagesScratchBuffer.ensureStorageAllocated (32);
+}
+
+MidiNode::MidiNode (std::vector<juce::MidiMessageSequence> sequences,
+                    juce::Range<int> midiChannelNumbers,
+                    bool useMPE,
+                    EditTimeRange editTimeRange,
+                    LiveClipLevel liveClipLevel,
+                    ProcessState& processState,
+                    EditItemID editItemIDToUse,
+                    std::function<bool()> shouldBeMuted)
+    : TracktionEngineNode (processState),
+      ms (std::move (sequences)),
+      channelNumbers (midiChannelNumbers),
+      useMPEChannelMode (useMPE),
+      editSection (editTimeRange),
+      clipLevel (liveClipLevel),
+      editItemID (editItemIDToUse),
+      shouldBeMutedDelegate (std::move (shouldBeMuted)),
+      wasMute (liveClipLevel.isMute())
+{
+    jassert (channelNumbers.getStart() > 0 && channelNumbers.getEnd() <= 16);
+
+    for (auto& s : ms)
+        s.updateMatchedPairs();
+
     controllerMessagesScratchBuffer.ensureStorageAllocated (32);
 }
 
@@ -86,6 +114,14 @@ void MidiNode::processSection (const ProcessContext& pc, juce::Range<int64_t> ti
     
     if (shouldBeMutedDelegate && shouldBeMutedDelegate())
         return;
+
+    if (ms.size() > 0 && timelineRange.getStart() < lastStart )
+    {
+        currentSequence++;
+        if (currentSequence >= ms.size())
+            currentSequence = 0;
+    }
+    lastStart = timelineRange.getStart();
     
     const auto sectionEditTime = getEditTimeRange();
     const auto localTime = sectionEditTime - editSection.getStart();
@@ -101,7 +137,7 @@ void MidiNode::processSection (const ProcessContext& pc, juce::Range<int64_t> ti
         if (mute != wasMute)
         {
             wasMute = mute;
-            createNoteOffs (pc.buffers.midi, ms, localTime.getStart(), 0.0, getPlayHead().isPlaying());
+            createNoteOffs (pc.buffers.midi, ms[currentSequence], localTime.getStart(), 0.0, getPlayHead().isPlaying());
         }
 
         return;
@@ -113,20 +149,20 @@ void MidiNode::processSection (const ProcessContext& pc, juce::Range<int64_t> ti
         shouldCreateMessagesForTime = false;
     }
 
-    auto numEvents = ms.getNumEvents();
+    auto numEvents = ms[currentSequence].getNumEvents();
 
     if (numEvents != 0)
     {
         currentIndex = juce::jlimit (0, numEvents - 1, currentIndex);
 
-        if (ms.getEventTime (currentIndex) >= localTime.getStart())
+        if (ms[currentSequence].getEventTime (currentIndex) >= localTime.getStart())
         {
-            while (currentIndex > 0 && ms.getEventTime (currentIndex - 1) >= localTime.getStart())
+            while (currentIndex > 0 && ms[currentSequence].getEventTime (currentIndex - 1) >= localTime.getStart())
                 --currentIndex;
         }
         else
         {
-            while (currentIndex < numEvents && ms.getEventTime (currentIndex) < localTime.getStart())
+            while (currentIndex < numEvents && ms[currentSequence].getEventTime (currentIndex) < localTime.getStart())
                 ++currentIndex;
         }
     }
@@ -135,7 +171,7 @@ void MidiNode::processSection (const ProcessContext& pc, juce::Range<int64_t> ti
 
     for (;;)
     {
-        if (auto meh = ms.getEventPointer (currentIndex++))
+        if (auto meh = ms[currentSequence].getEventPointer (currentIndex++))
         {
             auto eventTime = meh->message.getTimeStamp();
 
@@ -158,19 +194,19 @@ void MidiNode::processSection (const ProcessContext& pc, juce::Range<int64_t> ti
     }
 
     if (getPlayHeadState().isLastBlockOfLoop())
-        createNoteOffs (pc.buffers.midi, ms, localTime.getEnd(), localTime.getLength(), getPlayHead().isPlaying());
+        createNoteOffs (pc.buffers.midi, ms[currentSequence], localTime.getEnd(), localTime.getLength(), getPlayHead().isPlaying());
 }
 
 void MidiNode::createMessagesForTime (double time, MidiMessageArray& buffer)
 {
     if (useMPEChannelMode)
     {
-        const int indexOfTime = ms.getNextIndexAtTime (time);
+        const int indexOfTime = ms[currentSequence].getNextIndexAtTime (time);
 
         controllerMessagesScratchBuffer.clearQuick();
 
         for (int i = channelNumbers.getStart(); i <= channelNumbers.getEnd(); ++i)
-            MPEStartTrimmer::reconstructExpression (controllerMessagesScratchBuffer, ms, indexOfTime, i);
+            MPEStartTrimmer::reconstructExpression (controllerMessagesScratchBuffer, ms[currentSequence], indexOfTime, i);
 
         for (auto& m : controllerMessagesScratchBuffer)
             buffer.addMidiMessage (m, 0.0001, midiSourceID);
@@ -181,7 +217,7 @@ void MidiNode::createMessagesForTime (double time, MidiMessageArray& buffer)
             controllerMessagesScratchBuffer.clearQuick();
 
             for (int i = channelNumbers.getStart(); i <= channelNumbers.getEnd(); ++i)
-                ms.createControllerUpdatesForTime (i, time, controllerMessagesScratchBuffer);
+            ms[currentSequence].createControllerUpdatesForTime (i, time, controllerMessagesScratchBuffer);
 
             for (auto& m : controllerMessagesScratchBuffer)
                 buffer.addMidiMessage (m, midiSourceID);
@@ -191,9 +227,9 @@ void MidiNode::createMessagesForTime (double time, MidiMessageArray& buffer)
         {
             auto volScale = clipLevel.getGain();
 
-            for (int i = 0; i < ms.getNumEvents(); ++i)
+            for (int i = 0; i < ms[currentSequence].getNumEvents(); ++i)
             {
-                if (auto meh = ms.getEventPointer (i))
+                if (auto meh = ms[currentSequence].getEventPointer (i))
                 {
                     if (meh->noteOffObject != nullptr
                         && meh->message.isNoteOn())
