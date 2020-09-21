@@ -44,7 +44,7 @@ public:
 private:
     //==============================================================================
     std::vector<juce::MidiMessageSequence> ms;
-    double lastStart = 0;
+    int64_t lastStart = 0;
     size_t currentSequence = 0;
     juce::Range<int> channelNumbers;
     bool useMPEChannelMode;
