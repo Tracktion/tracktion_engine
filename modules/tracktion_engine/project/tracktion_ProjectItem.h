@@ -124,6 +124,9 @@ public:
     /** Returns the file that should be used as a preview for this Edit. */
     juce::File getEditPreviewFile() const;
 
+    /** Returns the file that should be used as a visual preview for this Edit. */
+    juce::File getEditThumbnailFile() const;
+
     //==============================================================================
     juce::File getSourceFile();
     juce::String getRawFileName() const       { return file; }
