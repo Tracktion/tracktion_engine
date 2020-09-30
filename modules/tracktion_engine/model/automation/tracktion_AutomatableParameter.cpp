@@ -343,8 +343,8 @@ struct AutomatableParameter::AutomationSourceList  : private ValueTreeObjectList
 
     bool isActive() const
     {
-        jassert (numSources.load() == objects.size());
-        return numSources.load() > 0;
+        jassert (numSources.load (std::memory_order_acquire) == objects.size());
+        return numSources.load (std::memory_order_acquire) > 0;
     }
 
     template<typename Fn>
