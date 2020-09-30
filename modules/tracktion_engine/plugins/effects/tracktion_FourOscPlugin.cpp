@@ -1408,6 +1408,8 @@ void FourOscPlugin::flushPluginStateToValueTree()
     }
 
     state.addChild (mm, -1, um);
+    
+    Plugin::flushPluginStateToValueTree(); // Add any parameter values that are being modified
 }
 
 void FourOscPlugin::initialise (const PlaybackInitialisationInfo& info)
