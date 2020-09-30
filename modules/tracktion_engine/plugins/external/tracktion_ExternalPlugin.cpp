@@ -42,10 +42,7 @@ struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorLis
         if (plugin.edit.isLoading())
             return;
 
-        if (MessageManager::existsAndIsCurrentThread())
-            updateFromPlugin();
-        else
-            triggerAsyncUpdate();
+        triggerAsyncUpdate();
     }
 
     ExternalPlugin& plugin;
@@ -57,12 +54,21 @@ private:
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         
-        if (auto instance = plugin.getAudioPluginInstance())
-            if (plugin.latencySamples != instance->getLatencySamples())
-                plugin.edit.getTransport().triggerClearDevicesOnStop();
-
         if (auto pi = plugin.getAudioPluginInstance())
         {
+            if (plugin.latencySamples != pi->getLatencySamples())
+            {
+                if (plugin.isInstancePrepared)
+                {
+                    plugin.latencySamples = pi->getLatencySamples();
+                    plugin.latencySeconds = plugin.latencySamples / plugin.sampleRate;
+                }
+
+                plugin.edit.restartPlayback(); // Restart playback to rebuild audio graph for the new latency to take effect
+                
+                plugin.edit.getTransport().triggerClearDevicesOnStop(); // This will fully re-initialise pluigns
+            }
+
             pi->refreshParameterList();
             
             // refreshParameterList can delete the AudioProcessorParameter that our ExternalAutomatableParameters
