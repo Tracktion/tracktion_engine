@@ -50,14 +50,26 @@ struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorLis
 private:
     JUCE_DECLARE_NON_COPYABLE (ProcessorChangedManager)
     
+    static bool hasAnyModifiers (AutomatableEditItem& item)
+    {
+        for (auto param : item.getAutomatableParameters())
+            if (! getModifiersOfType<Modifier> (*param).isEmpty())
+                return true;
+            
+        return false;
+    }
+
     void updateFromPlugin()
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
+        bool wasLatencyChange = false;
         
         if (auto pi = plugin.getAudioPluginInstance())
         {
             if (plugin.latencySamples != pi->getLatencySamples())
             {
+                wasLatencyChange = true;
+                
                 if (plugin.isInstancePrepared)
                 {
                     plugin.latencySamples = pi->getLatencySamples();
@@ -87,7 +99,12 @@ private:
             jassertfalse;
         }
 
-        plugin.refreshParameterValues();
+        // Annoyingly, because we can't tell the cause of the plugin change, we'll have to simply not
+        // refresh parameter values if any modifiers have been assigned or they'll blow away the original
+        // modifier values
+        if (! wasLatencyChange && ! hasAnyModifiers (plugin))
+            plugin.refreshParameterValues();
+        
         plugin.changed();
         plugin.edit.pluginChanged (plugin);
     }
