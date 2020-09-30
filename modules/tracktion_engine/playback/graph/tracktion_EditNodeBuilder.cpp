@@ -1196,6 +1196,17 @@ std::unique_ptr<tracktion_graph::Node> createNodeForEdit (Edit& edit, const Crea
         if (params.allowedTracks != nullptr && ! params.allowedTracks->contains (t))
             continue;
 
+        // Skip tracks that don't output to a device or feed in to other tracks
+        if (auto output = getTrackOutput (*t))
+        {
+            if (output->getDestinationTrack() != nullptr)
+                continue;
+        }
+        else
+        {
+            continue;
+        }
+
         if (auto node = createNodeForTrack (*t, params))
             trackNodes.push_back (std::move (node));
     }

@@ -31,6 +31,9 @@ public:
         ts.sampleRate = 44100.0;
         ts.blockSize = 256;
         
+        runTrackDestinationRendering (ts, 3.0, 2, true);
+        runTrackDestinationRendering (ts, 3.0, 2, false);
+        
         runRackRendering (ts, 3.0, 2, true);
         runRackRendering (ts, 3.0, 2, false);
     }
@@ -101,6 +104,61 @@ private:
             }
         }
     }
+    
+    /** Has two tracks with a sin clip at 0.5 magnitude on each track, both sent to a third track as their destination.
+        Once rendered, the resulting file should have a magnitude of 1.0.
+    */
+    void runTrackDestinationRendering (test_utilities::TestSetup ts,
+                                       double durationInSeconds,
+                                       int numChannels,
+                                       bool isMultiThreaded)
+    {
+        using namespace tracktion_graph;
+        using namespace test_utilities;
+        auto& engine = *tracktion_engine::Engine::getEngines()[0];
+        const auto description = test_utilities::getDescription (ts)
+                                    + juce::String (isMultiThreaded ? ", MT" : ", ST");
+        
+        tracktion_graph::PlayHead playHead;
+        tracktion_graph::PlayHeadState playHeadState { playHead };
+        ProcessState processState { playHeadState };
+
+        {
+            auto sinFile = tracktion_graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds, 2, 220.0f);
+
+            auto edit = Edit::createSingleTrackEdit (engine);
+            edit->ensureNumberOfAudioTracks (3);
+            edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
+            auto destTrack = getAudioTracks (*edit)[2];
+            
+            for (int trackIndex : { 0, 1 })
+            {
+                auto track = getAudioTracks (*edit)[trackIndex];
+                track->insertWaveClip ({}, sinFile->getFile(), ClipPosition { { 0.0, durationInSeconds } }, false);
+                track->getVolumePlugin()->setVolumeDb (gainToDb (0.5f));
+                track->getOutput().setOutputToTrack (destTrack);
+            }
+            
+            beginTest ("Track Destination Rendering: " + description);
+            {
+                auto node = createNode (*edit, processState, ts.sampleRate, ts.blockSize);
+                TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
+                                                                                                     getPoolCreatorFunction (ThreadPoolStrategy::hybrid)),
+                                                              ts, numChannels, durationInSeconds, true);
+                
+                if (! isMultiThreaded)
+                    testContext.getNodePlayer().setNumThreads (0);
+                
+                testContext.setPlayHead (&playHeadState.playHead);
+                playHeadState.playHead.playSyncedToRange ({});
+                auto result = testContext.processAll();
+                
+                expectAudioBuffer (*this, result->buffer, 0, 1.0f, 0.707f);
+                expectAudioBuffer (*this, result->buffer, 1, 1.0f, 0.707f);
+            }
+        }
+    }
+
     
     //==============================================================================
     //==============================================================================
