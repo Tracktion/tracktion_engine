@@ -72,7 +72,7 @@ tracktion_graph::NodeProperties PluginNode::getNodeProperties()
     props.numberOfChannels = juce::jmax (2, props.numberOfChannels, plugin->getNumOutputChannelsGivenInputs (std::max (2, props.numberOfChannels)));
     props.hasAudio = props.hasAudio || plugin->producesAudioWhenNoAudioInput();
     props.hasMidi  = props.hasMidi || plugin->takesMidiInput();
-    props.latencyNumSamples = std::max (props.latencyNumSamples, latencyNumSamples);
+    props.latencyNumSamples = props.latencyNumSamples + latencyNumSamples;
     props.nodeID = (size_t) plugin->itemID.getRawID();
 
     return props;
