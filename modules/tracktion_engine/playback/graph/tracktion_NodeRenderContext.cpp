@@ -60,6 +60,9 @@ NodeRenderContext::NodeRenderContext (Renderer::RenderTask& owner_, Renderer::Pa
     nodePlayer = std::make_unique<TracktionNodePlayer> (std::move (n), *processState, r.sampleRateForAudio, r.blockSizeForAudio,
                                                         getPoolCreatorFunction (ThreadPoolStrategy::realTime));
     nodePlayer->setNumThreads ((size_t) p.engine->getEngineBehaviour().getNumberOfCPUsToUseForAudio() - 1);
+    
+    numLatencySamplesToDrop = nodePlayer->getNode()->getNodeProperties().latencyNumSamples;
+    r.time.end += sampleToTime (numLatencySamplesToDrop, r.sampleRateForAudio);
 
     if (r.edit->getTransport().isPlayContextActive())
     {
@@ -108,9 +111,6 @@ NodeRenderContext::NodeRenderContext (Renderer::RenderTask& owner_, Renderer::Pa
         return;
     }
 
-    thresholdForStopping = dbToGain (-70.0f);
-
-    renderingBuffer.setSize (numOutputChans, r.blockSizeForAudio + 256);
     blockLength = r.blockSizeForAudio / r.sampleRateForAudio;
 
     // number of blank blocks to play before starting, to give plugins time to warm up
@@ -205,6 +205,8 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
     if (precount == 0)
     {
         streamTime = r.time.getStart();
+        blockEnd = streamTime + blockLength;
+        
         playHead->playSyncedToRange (timeToSample (EditTimeRange (streamTime, Edit::maximumLength), r.sampleRateForAudio));
         playHeadState->update (tracktion_graph::timeToSample (EditTimeRange (streamTime, blockEnd), r.sampleRateForAudio));
     }
@@ -241,6 +243,7 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
     while (! (leafNodesReady || owner.shouldExit()))
         return false;
 
+    juce::AudioBuffer<float> renderingBuffer (numOutputChans, r.blockSizeForAudio + 256);
     renderingBuffer.clear();
     midiBuffer.clear();
     const auto referenceSampleRange = tracktion_graph::timeToSample (streamTimeRange, originalParams.sampleRateForAudio);
@@ -248,54 +251,33 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
                                             (size_t) renderingBuffer.getNumChannels(), (size_t) referenceSampleRange.getLength());
     nodePlayer->process ({ referenceSampleRange, { destBlock, midiBuffer} });
 
-    streamTime = blockEnd;
-
     if (precount <= 0)
     {
-        CRASH_TRACER
         jassert (playHeadState->isContiguousWithPreviousBlock());
+
         int numSamplesDone = (int) juce::jmin (samplesToWrite, (int64_t) r.blockSizeForAudio);
         samplesToWrite -= numSamplesDone;
 
-        if (r.ditheringEnabled && r.bitDepth < 32)
-            ditherers.apply (renderingBuffer, r.blockSizeForAudio);
+        size_t blockSize = size_t (numSamplesDone);
+        size_t blockOffset = 0;
 
-        auto mag = renderingBuffer.getMagnitude (0, numSamplesDone);
-        peak = juce::jmax (peak, mag);
-
-        if (! hasStartedSavingToFile)
-            hasStartedSavingToFile = (mag > 0.0f);
-
-        for (int i = renderingBuffer.getNumChannels(); --i >= 0;)
+        if (numLatencySamplesToDrop > 0)
         {
-            rmsTotal += renderingBuffer.getRMSLevel (i, 0, numSamplesDone);
-            ++rmsNumSamps;
+            const int numToDrop = std::min (numLatencySamplesToDrop, numSamplesDone);
+            numLatencySamplesToDrop -= numToDrop;
+            numSamplesDone -= numToDrop;
+            
+            blockSize = (size_t) numSamplesDone;
+            blockOffset = destBlock.getNumSamples() - blockSize;
         }
 
-        for (int i = numSamplesDone; --i >= 0;)
-            if (renderingBuffer.getMagnitude (i, 1) > 0.0001)
-                numNonZeroSamps++;
-
-        if (! hasStartedSavingToFile)
-            samplesTrimmed += r.blockSizeForAudio;
-
-        if (sourceToUpdate != nullptr && numSamplesDone > 0)
+        if (blockSize > 0)
         {
-            float* chans[32];
+            jassert (blockSize <= destBlock.getNumSamples());
 
-            for (int i = 0; i < numOutputChans; ++i)
-                chans[i] = renderingBuffer.getWritePointer (i, 0);
-
-            const juce::AudioBuffer<float> buffer (chans, numOutputChans, numSamplesDone);
-            auto samplesDone = int64_t ((streamTime - r.time.getStart()) * r.sampleRateForAudio);
-            sourceToUpdate->addBlock (samplesDone, buffer, 0, numSamplesDone);
+            if (writeAudioBlock (destBlock.getSubBlock (blockOffset, blockSize)) == WriteResult::failed)
+                return true;
         }
-
-        // NB buffer gets trashed by this call
-        if (numSamplesDone > 0 && hasStartedSavingToFile
-             && writer->isOpen()
-             && ! writer->appendBuffer (renderingBuffer, numSamplesDone))
-            return true;
     }
     else
     {
@@ -303,10 +285,17 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
         juce::Thread::sleep ((int) (blockLength * 1000));
     }
 
-    if (streamTime > r.time.getEnd() + r.endAllowance
-        || (streamTime > r.time.getEnd()
-            && renderingBuffer.getMagnitude (0, r.blockSizeForAudio) <= thresholdForStopping))
+    if (streamTime > r.time.getEnd() + r.endAllowance)
+    {
+        // Ending after end time and end allowance has elapsed
         return true;
+    }
+    else if (streamTime > r.time.getEnd()
+             && renderingBuffer.getMagnitude (0, r.blockSizeForAudio) <= thresholdForStopping)
+    {
+        // Ending during end allowance period due to low magnitude
+        return true;
+    }
 
     auto prog = (float) ((streamTime - r.time.getStart()) / juce::jmax (1.0, r.time.getLength()));
 
@@ -316,10 +305,66 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
     jassert (! std::isnan (prog));
     progressToUpdate = juce::jlimit (0.0f, 1.0f, prog);
     --precount;
+    streamTime = blockEnd;
 
     return false;
 }
 
+//==============================================================================
+NodeRenderContext::WriteResult NodeRenderContext::writeAudioBlock (juce::dsp::AudioBlock<float> block)
+{
+    CRASH_TRACER
+    // Prepare buffer to use
+    const int blockSizeSamples = (int) block.getNumSamples();
+    
+    float* chans[32];
+
+    for (int i = 0; i < numOutputChans; ++i)
+        chans[i] = block.getChannelPointer ((size_t) i);
+
+    juce::AudioBuffer<float> buffer (chans, numOutputChans, blockSizeSamples);
+
+    // Apply dithering and mag/rms analysis
+    if (r.ditheringEnabled && r.bitDepth < 32)
+        ditherers.apply (buffer, blockSizeSamples);
+
+    auto mag = buffer.getMagnitude (0, blockSizeSamples);
+    peak = juce::jmax (peak, mag);
+
+    if (! hasStartedSavingToFile)
+        hasStartedSavingToFile = (mag > 0.0f);
+
+    for (int i = buffer.getNumChannels(); --i >= 0;)
+    {
+        rmsTotal += buffer.getRMSLevel (i, 0, blockSizeSamples);
+        ++rmsNumSamps;
+    }
+
+    for (int i = blockSizeSamples; --i >= 0;)
+        if (buffer.getMagnitude (i, 1) > 0.0001)
+            numNonZeroSamps++;
+
+    if (! hasStartedSavingToFile)
+        samplesTrimmed += blockSizeSamples;
+
+    // Update thumbnail source
+    if (sourceToUpdate != nullptr && blockSizeSamples > 0)
+    {
+        sourceToUpdate->addBlock (numSamplesWrittenToSource, buffer, 0, blockSizeSamples);
+        numSamplesWrittenToSource += blockSizeSamples;
+    }
+
+    // And finally write to the file
+    // NB buffer gets trashed by this call
+    if (blockSizeSamples > 0 && hasStartedSavingToFile
+         && writer->isOpen()
+         && ! writer->appendBuffer (buffer, blockSizeSamples))
+        return WriteResult::failed;
+    
+    return WriteResult::succeeded;
+}
+
+//==============================================================================
 juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
                                             Renderer::Parameters& r,
                                             std::unique_ptr<tracktion_graph::Node> n,

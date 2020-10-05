@@ -90,12 +90,12 @@ private:
 
     //==============================================================================
     Ditherers ditherers;
-    juce::AudioBuffer<float> renderingBuffer;
     MidiMessageArray midiBuffer;
 
-    float thresholdForStopping = 0;
+    const float thresholdForStopping { dbToGain (-70.0f) };
     double blockLength = 0;
     int numPreRenderBlocks = 0;
+    int numLatencySamplesToDrop = 0;
     int realTimePerBlock = 0;
 
     double lastTime = 0;
@@ -112,10 +112,19 @@ private:
 
     int64_t samplesTrimmed = 0;
     bool hasStartedSavingToFile = 0;
-    int64_t samplesToWrite = 0;
+    int64_t samplesToWrite = 0, numSamplesWrittenToSource = 0;
 
     std::unique_ptr<juce::TemporaryFile> intermediateFile;
     juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* sourceToUpdate;
+
+    //==============================================================================
+    enum class WriteResult
+    {
+        succeeded,
+        failed
+    };
+    
+    WriteResult writeAudioBlock (juce::dsp::AudioBlock<float>);
 };
 
 } // namespace tracktion_engine
