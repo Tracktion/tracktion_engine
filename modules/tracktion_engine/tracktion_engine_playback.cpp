@@ -80,6 +80,7 @@ extern "C"
  #include "playback/graph/tracktion_InsertReturnNode.h"
  #include "playback/graph/tracktion_InsertReturnNode.cpp"
 
+ #include "playback/graph/tracktion_LevelMeasurerProcessingNode.h"
  #include "playback/graph/tracktion_LevelMeasuringNode.h"
  #include "playback/graph/tracktion_LevelMeasuringNode.cpp"
 

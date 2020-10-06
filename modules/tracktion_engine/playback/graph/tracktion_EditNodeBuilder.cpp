@@ -627,7 +627,11 @@ std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList& list
         if (! params.forRendering && p->isFrozen())
             continue;
         
-        if (auto sendPlugin = dynamic_cast<AuxSendPlugin*> (p))
+        if (auto meterPlugin = dynamic_cast<LevelMeterPlugin*> (p))
+        {
+            node = makeNode<LevelMeasurerProcessingNode> (std::move (node), *meterPlugin);
+        }
+        else if (auto sendPlugin = dynamic_cast<AuxSendPlugin*> (p))
         {
             if (sendPlugin->isEnabled())
                 node = makeNode<SendNode> (std::move (node), sendPlugin->busNumber,
