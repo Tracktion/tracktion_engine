@@ -518,7 +518,7 @@ void EditPlaybackContext::createNode()
     cnp.sampleRate = dm.getSampleRate();
     cnp.blockSize = dm.getBlockSize();
     cnp.includeBypassedPlugins = ! edit.engine.getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph();
-    auto editNode = createNodeForEdit (*this, cnp);
+    auto editNode = createNodeForEdit (*this, audiblePlaybackTime, cnp);
 
     const auto& tempoSections = edit.tempoSequence.getTempoSections();
     const bool hasTempoChanged = tempoSections.getChangeCount() != lastTempoSections.getChangeCount();
@@ -1048,6 +1048,12 @@ tracktion_graph::PlayHead* EditPlaybackContext::getNodePlayHead() const
 {
     return nodePlaybackContext ? &nodePlaybackContext->playHead
                                : nullptr;
+}
+
+double EditPlaybackContext::getAudibleTimelineTime()
+{
+    return nodePlaybackContext ? audiblePlaybackTime.load()
+                               : transport.getCurrentPosition();
 }
 
 double EditPlaybackContext::getSampleRate() const

@@ -103,6 +103,7 @@ extern "C"
  #include "playback/graph/tracktion_WaveNode.cpp"
 
  #include "playback/graph/tracktion_TrackMutingNode.h"
+ #include "playback/graph/tracktion_PlayHeadPositionNode.h"
  #include "playback/graph/tracktion_PluginNode.h"
  #include "playback/graph/tracktion_ModifierNode.h"
  #include "playback/graph/tracktion_RackInstanceNode.h"

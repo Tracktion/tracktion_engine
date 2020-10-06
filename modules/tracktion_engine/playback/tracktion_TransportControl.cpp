@@ -543,7 +543,18 @@ struct TransportControl::PlayHeadWrapper
         
         return false;
     }
-    
+
+    /** Returns the transport position to show in the UI, taking in to account any latency. */
+    double getLiveTransportPosition() const
+    {
+       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+        if (getNodePlayHead() != nullptr && transport.playbackContext != nullptr)
+            return transport.playbackContext->getAudibleTimelineTime();
+       #endif
+
+        return getPosition();
+    }
+
     double getPosition() const
     {
        #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
@@ -1023,7 +1034,7 @@ void TransportControl::timerCallback()
     {
         if ((! transportState->userDragging) && Time::getMillisecondCounter() - transportState->lastUserDragTime > 200)
         {
-            const double currentTime = playHeadWrapper->getPosition();
+            const double currentTime = playHeadWrapper->getLiveTransportPosition();
             transportState->setVideoPosition (currentTime, false);
             transportState->updatePositionFromPlayhead (currentTime);
         }

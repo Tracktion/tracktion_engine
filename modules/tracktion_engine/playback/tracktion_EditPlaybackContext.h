@@ -88,6 +88,7 @@ public:
 
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     tracktion_graph::PlayHead* getNodePlayHead() const;
+    double getAudibleTimelineTime();
     double getSampleRate() const;
     void updateNumCPUs();
     void setSpeedCompensation (double plusOrMinus);
@@ -140,6 +141,7 @@ private:
     juce::WeakReference<EditPlaybackContext> nodeContextToSyncTo;
     bool nodeHasSynced = false;
     int64_t lastTimelinePos = 0;
+    std::atomic<double> audiblePlaybackTime { 0.0 };
 
     void createNode();
     void fillNextNodeBlock (float** allChannels, int numChannels, int numSamples);
