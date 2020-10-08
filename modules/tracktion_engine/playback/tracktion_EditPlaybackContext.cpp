@@ -294,10 +294,11 @@ void EditPlaybackContext::clearNodes()
     nodePlaybackContext->playHead.stop();
     
     {
+        auto newContext = std::make_unique<NodePlaybackContext> (edit.engine.getDeviceManager().getSampleRate(),
+                                                                 edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio(),
+                                                                 size_t (edit.getIsPreviewEdit() ? 0 : juce::SystemStats::getNumCpus() - 1));
         const juce::SpinLock::ScopedLockType sl (audioCallbackLock);
-        nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.engine.getDeviceManager().getSampleRate(),
-                                                                     edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio(),
-                                                                     size_t (edit.getIsPreviewEdit() ? 0 : juce::SystemStats::getNumCpus() - 1));
+        std::swap (newContext, nodePlaybackContext);
     }
     
     nodePlaybackContext->setNumThreads (0);
@@ -511,6 +512,9 @@ static AudioNode* createPlaybackAudioNode (Edit& edit, OutputDeviceInstance& dev
 void EditPlaybackContext::createNode()
 {
     CRASH_TRACER
+    // Reset this until it's updated by the play graph
+    audiblePlaybackTime = transport.getCurrentPosition();
+    
     isAllocated = true;
     
     auto& dm = edit.engine.getDeviceManager();

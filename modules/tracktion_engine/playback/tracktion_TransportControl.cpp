@@ -548,7 +548,7 @@ struct TransportControl::PlayHeadWrapper
     double getLiveTransportPosition() const
     {
        #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-        if (getNodePlayHead() != nullptr && transport.playbackContext != nullptr)
+        if (getNodePlayHead() != nullptr && transport.playbackContext != nullptr && transport.playbackContext->isPlaybackGraphAllocated())
             return transport.playbackContext->getAudibleTimelineTime();
        #endif
 
