@@ -47,7 +47,8 @@ Engine::Engine (String applicationName)  : Engine (applicationName, nullptr, nul
 void Engine::initialise()
 {
     Selectable::initialise();
-
+    AudioScratchBuffer::initialise();
+    
     projectManager.reset (new ProjectManager (*this));
     activeEdits.reset (new ActiveEdits());
     temporaryFileManager.reset (new TemporaryFileManager (*this));

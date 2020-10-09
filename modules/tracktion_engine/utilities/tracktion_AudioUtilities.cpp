@@ -539,4 +539,10 @@ AudioScratchBuffer::~AudioScratchBuffer() noexcept
     allocatedBuffer->isFree = true;
 }
 
+void AudioScratchBuffer::initialise()
+{
+    BufferList::getInstance();
+}
+
+
 }
