@@ -1018,9 +1018,9 @@ void EditPlaybackContext::setAddAntiDenormalisationNoise (Engine& e, bool b)
 //==============================================================================
 namespace EditPlaybackContextInternal
 {
-    bool& getExperimentalGraphProcessingFlag()
+    std::atomic<bool>& getExperimentalGraphProcessingFlag()
     {
-        static bool enabled = false;
+        static std::atomic<bool> enabled { false };
         return enabled;
     }
 
@@ -1050,6 +1050,9 @@ bool EditPlaybackContext::isExperimentalGraphProcessingEnabled()
 #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
 tracktion_graph::PlayHead* EditPlaybackContext::getNodePlayHead() const
 {
+    if (! isExperimentalGraphProcessingEnabled())
+        return nullptr;
+    
     return nodePlaybackContext ? &nodePlaybackContext->playHead
                                : nullptr;
 }
