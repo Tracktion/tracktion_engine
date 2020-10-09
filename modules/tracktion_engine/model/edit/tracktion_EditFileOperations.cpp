@@ -459,6 +459,51 @@ ValueTree loadEditFromFile (Engine& e, const File& f, ProjectItemID itemID)
     return state;
 }
 
+std::unique_ptr<Edit> loadEditFromFile (Engine& engine, const juce::File& editFile)
+{
+    auto editState = loadEditFromFile (engine, editFile, {});
+    auto id = ProjectItemID::fromProperty (editState, IDs::projectID);
+    
+    if (! id.isValid())
+        id = ProjectItemID::createNewID (0);
+    
+    Edit::Options options =
+    {
+        engine,
+        editState,
+        id,
+        
+        Edit::forEditing,
+        nullptr,
+        Edit::getDefaultNumUndoLevels(),
+        
+        [editFile] { return editFile; },
+        {}
+    };
+    
+    return std::make_unique<Edit> (options);
+}
+
+std::unique_ptr<Edit> createEmptyEdit (Engine& engine, const juce::File& editFile)
+{
+    auto id = ProjectItemID::createNewID (0);
+    Edit::Options options =
+    {
+        engine,
+        loadEditFromFile (engine, {}, id),
+        id,
+        
+        Edit::forEditing,
+        nullptr,
+        Edit::getDefaultNumUndoLevels(),
+        
+        [editFile] { return editFile; },
+        {}
+    };
+    
+    return std::make_unique<Edit> (options);
+}
+
 ValueTree createEmptyEdit (Engine& e)
 {
     return loadEditFromFile (e, {}, ProjectItemID::createNewID (0));

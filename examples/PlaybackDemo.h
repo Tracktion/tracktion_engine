@@ -44,7 +44,7 @@ public:
 
         if (editFile.existsAsFile())
         {
-            edit = std::make_unique<te::Edit> (engine, te::loadEditFromFile (engine, editFile, {}), te::Edit::forEditing, nullptr, 0);
+            edit = te::loadEditFromFile (engine, editFile);
             auto& transport = edit->getTransport();
             transport.setLoopRange ({ 0.0, edit->getLength() });
             transport.looping = true;
@@ -58,7 +58,7 @@ public:
             auto f = File::createTempFile (".ogg");
             f.replaceWithData (PlaybackDemoAudio::BITs_Export_2_ogg, PlaybackDemoAudio::BITs_Export_2_oggSize);
             
-            edit = std::make_unique<te::Edit> (engine, te::createEmptyEdit (engine), te::Edit::forEditing, nullptr, 0);
+            edit = te::createEmptyEdit (engine, editFile);
             edit->getTransport().addChangeListener (this);
             auto clip = EngineHelpers::loadAudioFileAsClip (*edit, f);
             EngineHelpers::loopAroundClip (*clip);

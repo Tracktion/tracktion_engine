@@ -199,10 +199,10 @@ private:
         editComponent = nullptr;
         
         if (editFile.existsAsFile())
-            edit = std::make_unique<te::Edit> (engine, ValueTree::fromXml (editFile.loadFileAsString()), te::Edit::forEditing, nullptr, 0);
+            edit = te::loadEditFromFile (engine, editFile);
         else
-            edit = std::make_unique<te::Edit> (engine, te::createEmptyEdit (engine), te::Edit::forEditing, nullptr, 0);
-        
+            edit = te::createEmptyEdit (engine, editFile);
+
         edit->editFileRetriever = [editFile] { return editFile; };
         edit->playInStopEnabled = true;
         

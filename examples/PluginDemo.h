@@ -180,13 +180,12 @@ private:
         
         selectionManager.deselectAll();
         editComponent = nullptr;
-        
+
         if (editFile.existsAsFile())
-            edit = std::make_unique<te::Edit> (engine, ValueTree::fromXml (editFile.loadFileAsString()), te::Edit::forEditing, nullptr, 0);
+            edit = te::loadEditFromFile (engine, editFile);
         else
-            edit = std::make_unique<te::Edit> (engine, te::createEmptyEdit (engine), te::Edit::forEditing, nullptr, 0);
-        
-        edit->editFileRetriever = [editFile] { return editFile; };
+            edit = te::createEmptyEdit (engine, editFile);
+
         edit->playInStopEnabled = true;
         
         auto& transport = edit->getTransport();
