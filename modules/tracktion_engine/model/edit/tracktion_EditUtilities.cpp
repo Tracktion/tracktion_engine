@@ -324,9 +324,14 @@ void deleteRegionOfTracks (Edit& edit, EditTimeRange rangeToDelete, bool onlySel
         jassert (selectionManager != nullptr);
 
         if (selectionManager != nullptr)
+		{
             for (auto track : selectionManager->getItemsOfType<Track>())
+			{
+				tracks.addIfNotAlreadyThere (track);
                 for (auto t : track->getAllSubTracks (true))
                     tracks.addIfNotAlreadyThere (t);
+			}
+		}
     }
     else
     {
