@@ -253,7 +253,7 @@ AudioNode* MidiClip::createAudioNode (const CreateAudioNodeParams& params)
     const auto nodeToReplace = getClipIfPresentInNode (params.audioNodeToBeReplaced, *this);
 
     auto channels = mpeMode ? Range<int> (2, 15)
-                            : Range<int>::withStartAndLength (getMidiChannel().getChannelNumber(), 1);
+                            : Range<int>::withStartAndLength (getMidiChannel().getChannelNumber(), 0);
 
     return new MidiAudioNode (std::move (sequence), channels, getEditTimeRange(),
                               volumeDb, mute, *this, nodeToReplace);
