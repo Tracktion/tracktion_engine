@@ -32,7 +32,8 @@ namespace
         _mm_pause();
         _mm_pause();
        #else
-        #warning Implement for ARM
+        __asm__ __volatile__ ("yield")
+        __asm__ __volatile__ ("yield")
        #endif
     }
 }
@@ -46,31 +47,31 @@ struct ThreadPoolCV : public LockFreeMultiThreadedNodePlayer::ThreadPool
         : ThreadPool (p)
     {
     }
-    
+
     void createThreads (size_t numThreads) override
     {
         if (threads.size() == numThreads)
             return;
-        
+
         resetExitSignal();
-        
+
         for (size_t i = 0; i < numThreads; ++i)
         {
             threads.emplace_back ([this] { runThread(); });
             setThreadPriority (threads.back(), 10);
         }
     }
-    
+
     void clearThreads() override
     {
         signalShouldExit();
-        
+
         for (auto& t : threads)
             t.join();
-        
+
         threads.clear();
     }
-    
+
     void signalOne() override
     {
         condition.notify_one();
@@ -80,14 +81,14 @@ struct ThreadPoolCV : public LockFreeMultiThreadedNodePlayer::ThreadPool
     {
         condition.notify_all();
     }
-    
+
     void wait()
     {
         if (! shouldWait())
             return;
 
         std::unique_lock<std::mutex> lock (mutex);
-        
+
         if (timeOutMilliseconds < 0)
         {
             condition.wait (lock, [this] { return ! shouldWait(); });
@@ -101,19 +102,19 @@ struct ThreadPoolCV : public LockFreeMultiThreadedNodePlayer::ThreadPool
             }
         }
     }
-    
+
     void waitForFinalNode() override
     {
         if (isFinalNodeReady())
             return;
-        
+
         if (! shouldWait())
             return;
 
         pause();
         return;
     }
-            
+
 private:
     std::vector<std::thread> threads;
     mutable std::mutex mutex;
@@ -125,7 +126,7 @@ private:
         {
             if (shouldExit())
                 return;
-            
+
             if (! process())
                 wait();
         }
@@ -141,31 +142,31 @@ struct ThreadPoolRT : public LockFreeMultiThreadedNodePlayer::ThreadPool
         : ThreadPool (p)
     {
     }
-    
+
     void createThreads (size_t numThreads) override
     {
         if (threads.size() == numThreads)
             return;
-        
+
         resetExitSignal();
-        
+
         for (size_t i = 0; i < numThreads; ++i)
         {
             threads.emplace_back ([this] { runThread(); });
             setThreadPriority (threads.back(), 10);
         }
     }
-    
+
     void clearThreads() override
     {
         signalShouldExit();
-        
+
         for (auto& t : threads)
             t.join();
-        
+
         threads.clear();
     }
-    
+
     void signalOne() override
     {
     }
@@ -173,17 +174,17 @@ struct ThreadPoolRT : public LockFreeMultiThreadedNodePlayer::ThreadPool
     void signalAll() override
     {
     }
-    
+
     void wait()
     {
         // The pause and sleep counts avoid starving the CPU if there aren't enough queued nodes
         // This only happens on the worker threads so the main audio thread never interacts with the thread scheduler
         thread_local int pauseCount = 0;
-        
+
         if (shouldWait())
         {
             ++pauseCount;
-            
+
             if (pauseCount < 50)
                 pause();
             else if (pauseCount < 100)
@@ -200,12 +201,12 @@ struct ThreadPoolRT : public LockFreeMultiThreadedNodePlayer::ThreadPool
             pauseCount = 0;
         }
     }
-    
+
     void waitForFinalNode() override
     {
         pause();
     }
-            
+
 private:
     std::vector<std::thread> threads;
 
@@ -215,19 +216,20 @@ private:
         {
             if (shouldExit())
                 return;
-            
+
             if (! process())
                 wait();
         }
     }
-    
+
     inline void pause()
     {
        #if JUCE_INTEL
         _mm_pause();
         _mm_pause();
        #else
-        #warning Implement for ARM
+        __asm__ __volatile__ ("yield")
+        __asm__ __volatile__ ("yield")
        #endif
     }
 };
@@ -241,31 +243,31 @@ struct ThreadPoolHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
         : ThreadPool (p)
     {
     }
-    
+
     void createThreads (size_t numThreads) override
     {
         if (threads.size() == numThreads)
             return;
-        
+
         resetExitSignal();
-        
+
         for (size_t i = 0; i < numThreads; ++i)
         {
             threads.emplace_back ([this] { runThread(); });
             setThreadPriority (threads.back(), 10);
         }
     }
-    
+
     void clearThreads() override
     {
         signalShouldExit();
-        
+
         for (auto& t : threads)
             t.join();
-        
+
         threads.clear();
     }
-    
+
     void signalOne() override
     {
         condition.notify_one();
@@ -275,18 +277,18 @@ struct ThreadPoolHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
     {
         condition.notify_all();
     }
-    
+
     void wait()
     {
         thread_local int pauseCount = 0;
-        
+
         if (shouldExit())
             return;
-        
+
         if (shouldWait())
         {
             ++pauseCount;
-            
+
             if (pauseCount < 25)
             {
                 pause();
@@ -301,7 +303,7 @@ struct ThreadPoolHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
                 // Fall back to locking
                 std::unique_lock<std::mutex> lock (mutex);
-            
+
                 if (timeOutMilliseconds < 0)
                 {
                     condition.wait (lock, [this] { return ! shouldWait(); });
@@ -321,7 +323,7 @@ struct ThreadPoolHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
             pauseCount = 0;
         }
     }
-  
+
     void waitForFinalNode() override
     {
         pause();
@@ -338,7 +340,7 @@ private:
         {
             if (shouldExit())
                 return;
-            
+
             if (! process())
                 wait();
         }

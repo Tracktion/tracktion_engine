@@ -23,7 +23,7 @@ namespace test_utilities
     {
         juce::MidiMessageSequence sequence;
         int noteNumber = -1;
-        
+
         for (double time = 0.0; time < durationSeconds; time += r.nextDouble() * 0.5 + 0.1)
         {
             if (noteNumber != -1)
@@ -37,7 +37,7 @@ namespace test_utilities
                 sequence.addEvent (juce::MidiMessage::noteOn (1, noteNumber, 1.0f), time);
             }
         }
-        
+
         return sequence;
     }
 
@@ -45,7 +45,7 @@ namespace test_utilities
     static inline juce::MidiMessageSequence createMidiMessageSequence (const juce::MidiBuffer& buffer, double sampleRate)
     {
         juce::MidiMessageSequence sequence;
-        
+
         for (auto itr : buffer)
         {
             const auto& result = itr.getMessage();
@@ -54,7 +54,7 @@ namespace test_utilities
             const double time = samplePosition / sampleRate;
             sequence.addEvent (result, time);
         }
-        
+
         return sequence;
     }
 
@@ -62,10 +62,10 @@ namespace test_utilities
     {
         const float increment = juce::MathConstants<float>::twoPi / buffer.getNumSamples();
         float* sample = buffer.getWritePointer (0);
-        
+
         for (int i = 0; i < buffer.getNumSamples(); ++i)
             *sample++ = std::sin (increment * i);
-        
+
         for (int i = 1; i < buffer.getNumChannels(); ++i)
             buffer.copyFrom (i, 0, buffer, 0, 0, buffer.getNumSamples());
     }
@@ -125,12 +125,12 @@ namespace test_utilities
         std::vector<size_t> nodeIDs;
         visitNodes (node, [&] (Node& n) { nodeIDs.push_back (n.getNodeProperties().nodeID); }, false);
         std::sort (nodeIDs.begin(), nodeIDs.end());
-        
+
         if (ignoreZeroIDs)
             nodeIDs.erase (std::remove_if (nodeIDs.begin(), nodeIDs.end(),
                                            [] (auto nID) { return nID == 0; }),
                            nodeIDs.end());
-        
+
         auto uniqueEnd = std::unique (nodeIDs.begin(), nodeIDs.end());
         return uniqueEnd == nodeIDs.end();
     }
@@ -166,7 +166,7 @@ namespace test_utilities
         for (int c = 0; c < numChannels; ++c)
         {
             float* samples = buffer.getWritePointer (c);
-            
+
             for (int i = 0; i < numSamples; ++i)
                 samples[i] = osc.processSample (0.0);
         }
@@ -174,13 +174,13 @@ namespace test_utilities
         // Then write it to a temp file
         AudioFormatType format;
         auto f = std::make_unique<juce::TemporaryFile> (format.getFileExtensions()[0]);
-        
+
         if (auto fileStream = f->getFile().createOutputStream())
         {
             const int numQualityOptions = format.getQualityOptions().size();
             const int qualityOptionIndex = numQualityOptions == 0 ? 0 : (numQualityOptions / 2);
             const int bitDepth = format.getPossibleBitDepths().contains (16) ? 16 : 32;
-            
+
             if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (AudioFormatType().createWriterFor (fileStream.get(), sampleRate, (uint32_t) numChannels, bitDepth, {}, qualityOptionIndex)))
             {
                 fileStream.release();
@@ -196,14 +196,14 @@ namespace test_utilities
     static inline void expectMidiMessageSequence (juce::UnitTest& ut, const juce::MidiMessageSequence& actual, const juce::MidiMessageSequence& expected)
     {
         ut.expectEquals (actual.getNumEvents(), expected.getNumEvents(), "Num MIDI events not equal");
-        
+
         bool sequencesTheSame = true;
-        
+
         for (int i = 0; i < std::min (actual.getNumEvents(), expected.getNumEvents()); ++i)
         {
             auto event1 = actual.getEventPointer (i);
             auto event2 = expected.getEventPointer (i);
-            
+
             auto desc1 = event1->message.getDescription();
             auto desc2 = event2->message.getDescription();
 
@@ -214,7 +214,7 @@ namespace test_utilities
                 sequencesTheSame = false;
             }
         }
-        
+
         for (int i = actual.getNumEvents(); i < expected.getNumEvents(); ++i)
         {
             auto event2 = expected.getEventPointer (i);
@@ -256,7 +256,7 @@ namespace test_utilities
                                                     0, numSampleToSplitAt);
             expectAudioBuffer (ut, trimmedBuffer, channel, mag1, rms1);
         }
-        
+
         {
             juce::AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(),
                                                     buffer.getNumChannels(),
@@ -281,7 +281,7 @@ namespace test_utilities
     {
         auto areUnique = areNodeIDsUnique (node, ignoreZeroIDs);
         ut.expect (areUnique, "nodeIDs are not unique");
-        
+
         if (! areUnique)
             visitNodes (node, [&] (Node& n) { ut.logMessage (juce::String (typeid (n).name()) + " - " + juce::String (n.getNodeProperties().nodeID)); }, false);
     }
@@ -302,12 +302,12 @@ namespace test_utilities
         return juce::String (ts.sampleRate, 0) + ", " + juce::String (ts.blockSize)
             + juce::String (ts.randomiseBlockSizes ? ", random" : "");
     }
-    
+
     /** Returns a set of TestSetups to be used for testing. */
     static inline std::vector<TestSetup> getTestSetups (juce::UnitTest& ut)
     {
         std::vector<TestSetup> setups;
-        
+
        #if JUCE_DEBUG
         for (double sampleRate : { 44100.0, 96000.0 })
             for (int blockSize : { 64, 512 })
@@ -348,7 +348,7 @@ namespace test_utilities
                                                                                                            ts.sampleRate, (uint32_t) numChannels, 16, {}, 0));
             setPlayer (std::move (playerToUse));
         }
-        
+
         Node& getNode() const
         {
             return *player->getNode();
@@ -364,19 +364,19 @@ namespace test_utilities
             jassert (newNode != nullptr);
             player->setNode (std::move (newNode));
         }
-        
+
         void setPlayer (std::unique_ptr<NodePlayerType> newPlayerToUse)
         {
             jassert (newPlayerToUse != nullptr);
             player = std::move (newPlayerToUse);
             player->prepareToPlay (testSetup.sampleRate, testSetup.blockSize);
         }
-        
+
         void setPlayHead (tracktion_graph::PlayHead* newPlayHead)
         {
             playHead = newPlayHead;
         }
-                
+
         /** Processes a number of samples.
             Returns true if there is still more processing to be done.
         */
@@ -389,44 +389,44 @@ namespace test_utilities
                 const int numThisTime = std::min (maxNumSamples, maxNumThisTime);
                 buffer.clear();
                 midi.clear();
-                
+
                 juce::AudioBuffer<float> subSectionBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
                                                            0, numThisTime);
                 const auto referenceSampleRange = juce::Range<int64_t>::withStartAndLength ((int64_t) numSamplesDone, (int64_t) numThisTime);
 
                 if (playHead)
                     playHead->setReferenceSampleRange (referenceSampleRange);
-                
+
                 numProcessMisses += player->process ({ referenceSampleRange,
                                                        { { subSectionBuffer }, midi } });
-                
+
                 if (writer)
                     writer->writeFromAudioSampleBuffer (subSectionBuffer, 0, subSectionBuffer.getNumSamples());
-                
+
                 // Copy MIDI to buffer
                 for (const auto& m : midi)
                 {
                     const int sampleNumber = (int) std::floor (m.getTimeStamp() * testSetup.sampleRate);
                     context->midi.addEvent (m, numSamplesDone + sampleNumber);
                 }
-                
+
                 numSamplesToDo -= numThisTime;
                 numSamplesDone += numThisTime;
                 maxNumSamples -=  numThisTime;
-                
+
                 if (maxNumSamples <= 0)
                     break;
             }
-            
+
             return numSamplesToDo > 0;
         }
-        
+
         std::shared_ptr<TestContext> processAll()
         {
             process (numSamplesToDo);
             return getTestResult();
         }
-        
+
         std::shared_ptr<TestContext> getTestResult()
         {
             if (writer)
@@ -441,19 +441,19 @@ namespace test_utilities
                     context->buffer = std::move (tempBuffer);
                 }
             }
-            
+
             return context;
         }
-        
+
     private:
         std::unique_ptr<NodePlayerType> player;
         TestSetup testSetup;
         const int numChannels;
         tracktion_graph::PlayHead* playHead = nullptr;
 
-		std::shared_ptr<TestContext> context;
-		std::unique_ptr<juce::AudioFormatWriter> writer;
-        
+        std::shared_ptr<TestContext> context;
+        std::unique_ptr<juce::AudioFormatWriter> writer;
+
         juce::AudioBuffer<float> buffer;
         tracktion_engine::MidiMessageArray midi;
         int numSamplesToDo = 0;
