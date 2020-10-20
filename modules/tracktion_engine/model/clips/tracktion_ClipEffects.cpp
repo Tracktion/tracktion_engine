@@ -1316,8 +1316,7 @@ void PluginEffect::propertiesButtonPressed (SelectionManager& sm)
     {
         sm.selectOnly (*plugin);
 
-        if (auto ep = dynamic_cast<ExternalPlugin*> (plugin.get()))
-            ep->showWindowExplicitly();
+        plugin->showWindowExplicitly();
     }
 }
 
