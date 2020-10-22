@@ -177,7 +177,7 @@ public:
         minNumNotes         = 2,
         maxNumNotes         = 512,
 
-        minNumChannels      = 2,
+        minNumChannels      = 1,
         maxNumChannels      = 60
     };
 
