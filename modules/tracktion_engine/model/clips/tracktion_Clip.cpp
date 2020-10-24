@@ -607,6 +607,13 @@ TrackItem* Clip::getGroupParent() const
     return getGroupClip();
 }
 
+void Clip::setGroup (EditItemID newGroupID)
+{
+    groupID = newGroupID;
+    if (groupID == EditItemID())
+        state.removeProperty (IDs::groupID, getUndoManager());
+}
+
 juce::Colour Clip::getColour() const
 {
     return colour.get();

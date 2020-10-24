@@ -138,7 +138,7 @@ public:
     //==============================================================================
     bool isGrouped() const override                 { return groupID.get().isValid(); }
     TrackItem* getGroupParent() const override;
-    void setGroup (EditItemID newGroupID)           { groupID = newGroupID; }
+    void setGroup (EditItemID newGroupID);
     EditItemID getGroupID() const noexcept          { return groupID; }
     CollectionClip* getGroupClip() const;
 
