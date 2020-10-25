@@ -1130,6 +1130,9 @@ void AudioClipBase::disableLooping()
 
     setLoopRange ({});
     setPosition (pos);
+    
+    if (getPosition().getLength() > getMaximumLength())
+        setLength (getMaximumLength(), true);
 }
 
 EditTimeRange AudioClipBase::getLoopRange() const
