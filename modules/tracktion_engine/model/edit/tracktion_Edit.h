@@ -257,7 +257,7 @@ public:
     EditItemID createNewItemID (const std::vector<EditItemID>& idsToAvoid) const;
 
     //==============================================================================
-    juce::Array<Clip*> findClipsInLinkGroup (EditItemID linkGroupID) const;
+    juce::Array<Clip*> findClipsInLinkGroup (juce::String linkGroupID) const;
 
     //==============================================================================
     void updateMirroredPlugin (Plugin&);

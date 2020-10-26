@@ -165,7 +165,7 @@ struct IDRemapping
 {
     static bool isIDDeclaration (juce::StringRef att)
     {
-        return att == IDs::id || att == IDs::groupID || att == IDs::linkID;
+        return att == IDs::id || att == IDs::groupID;
     }
 
     static bool isIDReference (const juce::Identifier& parentType, juce::StringRef att)

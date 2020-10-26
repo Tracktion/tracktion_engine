@@ -143,9 +143,9 @@ public:
     CollectionClip* getGroupClip() const;
 
     //==============================================================================
-    bool isLinked() const                           { return linkID.get().isValid(); }
-    void setLinkGroupID (EditItemID newLinkID)      { linkID = newLinkID; }
-    EditItemID getLinkGroupID() const               { return linkID; }
+    bool isLinked() const                           { return linkID.get().isNotEmpty(); }
+    void setLinkGroupID (juce::String newLinkID)    { linkID = newLinkID; }
+    juce::String getLinkGroupID() const             { return linkID; }
 
     //==============================================================================
     ClipTrack* getClipTrack() const                 { return track; }
@@ -238,7 +238,8 @@ protected:
     ClipTrack* track = nullptr;
     juce::CachedValue<double> clipStart, length, offset, speedRatio;
     SourceFileReference sourceFileReference;
-    juce::CachedValue<EditItemID> groupID, linkID;
+    juce::CachedValue<EditItemID> groupID;
+    juce::CachedValue<juce::String> linkID;
     juce::File currentSourceFile;
     juce::CachedValue<SyncType> syncType;
     juce::CachedValue<bool> showingTakes;

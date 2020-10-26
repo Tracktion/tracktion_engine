@@ -382,7 +382,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
         linkedClipsMapDirty = true;
     }
 
-    juce::Array<Clip*> getClipsInLinkGroup (EditItemID linkGroupid)
+    juce::Array<Clip*> getClipsInLinkGroup (const juce::String& linkGroupid)
     {
         jassert (! edit.isLoading());
 
@@ -394,7 +394,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
             {
                 if (auto ct = dynamic_cast<ClipTrack*> (&t))
                     for (auto c : ct->getClips())
-                        if (c->getLinkGroupID().isValid())
+                        if (c->getLinkGroupID().isNotEmpty())
                             linkedClipsMap[c->getLinkGroupID()].add (c);
 
                 return true;
@@ -415,7 +415,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
     }
 
     bool linkedClipsMapDirty = true;
-    std::map<EditItemID, juce::Array<Clip*>> linkedClipsMap;
+    std::map<String, juce::Array<Clip*>> linkedClipsMap;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TreeWatcher)
 };
@@ -1627,7 +1627,7 @@ double Edit::getFirstClipTime() const
     return gotOne ? t : 0.0;
 }
 
-juce::Array<Clip*> Edit::findClipsInLinkGroup (EditItemID linkGroupID) const
+juce::Array<Clip*> Edit::findClipsInLinkGroup (juce::String linkGroupID) const
 {
     if (treeWatcher != nullptr)
         return treeWatcher->getClipsInLinkGroup (linkGroupID);
