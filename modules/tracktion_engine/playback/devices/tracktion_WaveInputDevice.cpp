@@ -923,7 +923,17 @@ public:
 
             if (context.playhead.isPlaying() || recordBuffer->wasRecentlyPlaying (edit))
             {
-                auto adjust = -wi.getAdjustmentSeconds() + edit.engine.getDeviceManager().getBlockSizeMs() / 1000.0;
+                const double blockSizeSeconds = edit.engine.getDeviceManager().getBlockSizeMs() / 1000.0;
+                auto adjust = -wi.getAdjustmentSeconds() + blockSizeSeconds;
+                
+               #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+                adjust -= tracktion_graph::sampleToTime (context.getLatencySamples(), edit.engine.getDeviceManager().getSampleRate());
+ 
+                // TODO: Still not quite sure why the adjustment needs to be a block more with
+                // the tracktion_graph engine, this may need correcting in the future
+                if (context.getNodePlayHead() != nullptr)
+                    adjust += blockSizeSeconds;
+               #endif
 
                 if (context.playhead.isPlaying())
                 {
