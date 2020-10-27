@@ -356,6 +356,8 @@ public:
                 // the tracktion_graph engine, this may need correcting in the future
                 if (context.getNodePlayHead() != nullptr)
                     rc->adjustSamples -= blockSizeSamples;
+               #else
+                juce::ignoreUnused (blockSizeSamples);
                #endif
 
                 if (! isLivePunch)
