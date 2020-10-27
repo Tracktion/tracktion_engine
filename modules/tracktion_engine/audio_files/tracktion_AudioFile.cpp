@@ -169,7 +169,9 @@ void AudioFileWriter::closeForWriting()
         writer.reset();
     }
     
-    file.engine->getAudioFileManager().releaseFile (file);
+    auto& audioFileManager = file.engine->getAudioFileManager();
+    audioFileManager.releaseFile (file);
+    audioFileManager.checkFileForChanges (file);
 }
 
 bool AudioFileWriter::appendBuffer (juce::AudioBuffer<float>& buffer, int num)

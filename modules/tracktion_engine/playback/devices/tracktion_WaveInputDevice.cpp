@@ -915,7 +915,7 @@ public:
 
             auto clipName = getNewClipName (*dstTrack);
             double start = 0;
-            double recordedLength = AudioFile (dstTrack->edit.engine, recordedFile).getLength();
+            const double recordedLength = AudioFile (dstTrack->edit.engine, recordedFile).getLength();
 
             if (context.playhead.isPlaying() || recordBuffer->wasRecentlyPlaying (edit))
             {
