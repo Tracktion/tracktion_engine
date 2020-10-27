@@ -28,16 +28,19 @@ namespace tracktion_engine
          player.setNumThreads (std::min (numThreads, maxNumThreads));
      }
      
-     void setNode (std::unique_ptr<Node> node)
-     {
-         player.setNode (std::move (node));
-     }
-     
      void setNode (std::unique_ptr<Node> node, double newSampleRate, int blockSize)
      {
          sampleRate = newSampleRate;
          blockSize = juce::roundToInt (blockSize * (1.0 + (10.0 * 0.01))); // max speed comp
          player.setNode (std::move (node), sampleRate, blockSize);
+         
+         if (auto currentNode = player.getNode())
+             latencySamples = currentNode->getNodeProperties().latencyNumSamples;
+     }
+     
+     int getLatencySamples() const
+     {
+         return latencySamples;
      }
      
      void setSpeedCompensation (double plusOrMinus)
@@ -103,6 +106,7 @@ namespace tracktion_engine
      TracktionNodePlayer player;
      const size_t maxNumThreads;
      
+     int latencySamples = 0;
      juce::Range<int64_t> referenceSampleRange;
      double speedCompensation = 0.0;
      std::vector<std::unique_ptr<juce::LagrangeInterpolator>> interpolators;
@@ -1055,6 +1059,15 @@ tracktion_graph::PlayHead* EditPlaybackContext::getNodePlayHead() const
     
     return nodePlaybackContext ? &nodePlaybackContext->playHead
                                : nullptr;
+}
+
+int EditPlaybackContext::getLatencySamples() const
+{
+    if (! isExperimentalGraphProcessingEnabled())
+        return 0;
+    
+    return nodePlaybackContext ? nodePlaybackContext->getLatencySamples()
+                               : 0;
 }
 
 double EditPlaybackContext::getAudibleTimelineTime()

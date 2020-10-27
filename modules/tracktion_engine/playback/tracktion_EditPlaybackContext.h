@@ -88,6 +88,9 @@ public:
 
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     tracktion_graph::PlayHead* getNodePlayHead() const;
+    
+    /** Returns the overall latency of the currently prepared graph. */
+    int getLatencySamples() const;
     double getAudibleTimelineTime();
     double getSampleRate() const;
     void updateNumCPUs();
