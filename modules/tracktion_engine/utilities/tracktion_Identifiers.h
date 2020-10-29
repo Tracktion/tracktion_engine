@@ -38,7 +38,6 @@ namespace IDs
     DECLARE_ID (automationLocked)
     DECLARE_ID (recordPunchInOut)
     DECLARE_ID (endToEnd)
-    DECLARE_ID (processMutedTracks)
     DECLARE_ID (midiTimecodeOffset)
     DECLARE_ID (midiTimecodeEnabled)
     DECLARE_ID (midiTimecodeIgnoringHours)

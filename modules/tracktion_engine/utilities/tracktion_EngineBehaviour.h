@@ -92,6 +92,9 @@ public:
 
     virtual int getNumberOfCPUsToUseForAudio()                                      { return juce::jmax (1, juce::SystemStats::getNumCpus()); }
 
+    /** Should muted tracks processing be disabled to save CPU */
+    virtual bool shouldProcessMutedTracks()                                         { return false; }
+
     virtual bool areAudioClipsRemappedWhenTempoChanges()                            { return true; }
     virtual void setAudioClipsRemappedWhenTempoChanges (bool)                       {}
     virtual bool areAutoTempoClipsRemappedWhenTempoChanges()                        { return true; }

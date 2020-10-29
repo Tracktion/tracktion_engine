@@ -778,7 +778,6 @@ void Edit::initialiseTimecode (juce::ValueTree& transportState)
 
     recordingPunchInOut.referTo (transportState, IDs::recordPunchInOut, nullptr);
     playInStopEnabled.referTo (transportState, IDs::endToEnd, nullptr, true);
-    processMutedTracks.referTo (transportState, IDs::processMutedTracks, nullptr, false);
 
     timecodeOffset.referTo (transportState, IDs::midiTimecodeOffset, nullptr);
     midiTimecodeSourceDeviceEnabled.referTo (transportState, IDs::midiTimecodeEnabled, nullptr);
