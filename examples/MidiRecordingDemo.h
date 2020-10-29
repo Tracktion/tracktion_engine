@@ -216,10 +216,7 @@ private:
             editFile.revealToUser();
         };
         
-        if (! editFile.existsAsFile())
-            createTracksAndAssignInputs();
-        else
-            edit->getTransport().ensureContextAllocated();
+        createTracksAndAssignInputs();
         
         te::EditFileOperations (*edit).save (true, true, false);
         
@@ -262,17 +259,20 @@ private:
         
         edit->getTransport().ensureContextAllocated();
         
-        int trackNum = 0;
-        for (auto instance : edit->getAllInputDevices())
+        if (te::getAudioTracks (*edit).size () == 0)
         {
-            if (instance->getInputDevice().getDeviceType() == te::InputDevice::physicalMidiDevice)
+            int trackNum = 0;
+            for (auto instance : edit->getAllInputDevices())
             {
-                if (auto t = EngineHelpers::getOrInsertAudioTrackAt (*edit, trackNum))
+                if (instance->getInputDevice().getDeviceType() == te::InputDevice::physicalMidiDevice)
                 {
-                    instance->setTargetTrack (*t, 0, true);
-                    instance->setRecordingEnabled (*t, true);
+                    if (auto t = EngineHelpers::getOrInsertAudioTrackAt (*edit, trackNum))
+                    {
+                        instance->setTargetTrack (*t, 0, true);
+                        instance->setRecordingEnabled (*t, true);
                     
-                    trackNum++;
+                        trackNum++;
+                    }
                 }
             }
         }
