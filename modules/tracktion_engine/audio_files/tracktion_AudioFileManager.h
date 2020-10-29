@@ -52,6 +52,7 @@ private:
     void handleAsyncUpdate();
     bool checkFileTime (KnownFile&);
     void callListeners (const AudioFile&);
+    void callListenersOnMessageThread (const AudioFile&);
 
     friend class SmartThumbnail;
     std::unique_ptr<juce::AudioThumbnailCache> thumbnailCache;
