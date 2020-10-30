@@ -1127,6 +1127,11 @@ void AudioClipBase::disableLooping()
         pos.time.end = getTimeOfRelativeBeat (loopLengthBeats);
         pos.offset = getTimeOfRelativeBeat (loopStartBeats) - pos.getStart();
     }
+    else
+    {
+        pos.time.end = pos.time.start + loopLength;
+        pos.offset = loopStart;
+    }
 
     setLoopRange ({});
     setPosition (pos);
