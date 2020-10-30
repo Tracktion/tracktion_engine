@@ -279,7 +279,7 @@ void deleteRegionOfSelectedClips (SelectionManager& selectionManager, EditTimeRa
 
     for (auto c : selectedClips)
         if (c->getPosition().time.overlaps (rangeToDelete))
-            if (auto* t = c->getClipTrack())
+            if (auto t = c->getClipTrack())
                 tracks.addIfNotAlreadyThere (t);
 
     if (tracks.isEmpty())
@@ -292,7 +292,7 @@ void deleteRegionOfSelectedClips (SelectionManager& selectionManager, EditTimeRa
 
     for (auto c : selectedClips)
         if (c->getPosition().time.overlaps (rangeToDelete))
-            if (auto* t = c->getClipTrack())
+            if (auto t = c->getClipTrack())
                 t->deleteRegionOfClip (c, rangeToDelete, &selectionManager);
 
     if (closeGap)

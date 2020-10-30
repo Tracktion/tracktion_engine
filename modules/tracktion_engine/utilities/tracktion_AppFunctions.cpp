@@ -131,7 +131,29 @@ namespace AppFunctions
             if (sm->containsType<Track>())
                 deleteRegionOfTracks (*sm->edit, getCurrentUIBehaviour().getEditingRange (*sm->edit), true, false, sm);
             else
+                deleteRegionOfSelectedClips (*sm, getCurrentUIBehaviour().getEditingRange (*sm->edit), false, false);
+        }
+    }
+
+    void deleteRegionAndCloseGapFromSelected()
+    {
+        if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
+        {
+            if (sm->containsType<Track>())
+                deleteRegionOfTracks (*sm->edit, getCurrentUIBehaviour().getEditingRange (*sm->edit), true, true, sm);
+            else
                 deleteRegionOfSelectedClips (*sm, getCurrentUIBehaviour().getEditingRange (*sm->edit), true, false);
+        }
+    }
+
+    void deleteRegionAndCloseGap()
+    {
+        if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
+        {
+            if (sm->containsType<Track>())
+                deleteRegionOfTracks (*sm->edit, getCurrentUIBehaviour().getEditingRange (*sm->edit), true, true, sm);
+            else
+                deleteRegionOfSelectedClips (*sm, getCurrentUIBehaviour().getEditingRange (*sm->edit), true, true);
         }
     }
 
