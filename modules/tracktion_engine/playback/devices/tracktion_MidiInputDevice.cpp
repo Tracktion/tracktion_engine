@@ -698,7 +698,14 @@ public:
         recorded.updateMatchedPairs();
         auto channelToApply = mi.recordToNoteAutomation ? mi.getChannelToUse()
                                                         : applyChannel (recorded, mi.getChannelToUse());
-        applyTimeAdjustment (recorded, mi.getManualAdjustmentMs());
+        auto timeAdjustMs = mi.getManualAdjustmentMs();
+        
+       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+        if (context.getNodePlayHead() != nullptr)
+            timeAdjustMs -= 1000.0 * tracktion_graph::sampleToTime (context.getLatencySamples(), edit.engine.getDeviceManager().getSampleRate());
+       #endif
+        
+        applyTimeAdjustment (recorded, timeAdjustMs);
 
         auto recordingStart = recordedRange.start;
         auto recordingEnd = recordedRange.end;
@@ -961,7 +968,14 @@ public:
             sequence.updateMatchedPairs();
             auto channelToApply = mi.recordToNoteAutomation ? mi.getChannelToUse()
                                                             : applyChannel (sequence, mi.getChannelToUse());
-            applyTimeAdjustment (sequence, mi.getManualAdjustmentMs());
+            auto timeAdjustMs = mi.getManualAdjustmentMs();
+            
+           #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+            if (context.getNodePlayHead() != nullptr)
+                timeAdjustMs -= 1000.0 * tracktion_graph::sampleToTime (context.getLatencySamples(), edit.engine.getDeviceManager().getSampleRate());
+           #endif
+            
+            applyTimeAdjustment (sequence, timeAdjustMs);
 
             auto clipStart = Time::getMillisecondCounterHiRes() * 0.001 - retrospective->lengthInSeconds + mi.getAdjustSecs();
             sequence.addTimeToMessages (-clipStart);
