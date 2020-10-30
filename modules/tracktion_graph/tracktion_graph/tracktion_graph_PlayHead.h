@@ -157,7 +157,7 @@ private:
         int64_t playoutSyncPosition = 0;
     };
     
-    std::atomic<SyncPositions> syncPositions;
+    std::atomic<SyncPositions> syncPositions { SyncPositions() };
 
     //==============================================================================
     std::atomic<juce::Range<int64_t>> referenceSampleRange { juce::Range<int64_t>() };
