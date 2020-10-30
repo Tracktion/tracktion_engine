@@ -450,7 +450,6 @@ void DeviceManager::resetToDefaults (bool resetInputDevices, bool resetOutputDev
     setInternalBufferMultiplier (1);
 
     storage.setProperty (SettingID::use64Bit, false);
-    storage.setProperty (SettingID::showOnlyEnabledDevices, false);
 
     if (resetInputDevices)
         for (auto wid : waveInputs)

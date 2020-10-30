@@ -114,7 +114,6 @@ String PropertyStorage::settingToString (SettingID setting)
         case SettingID::reWireEnabled:                 return "ReWireEnabled";
         case SettingID::simplifyAfterRecording:        return "simplifyAfterRecording";
         case SettingID::sendControllerOffMessages:     return "sendControllerOffMessages";
-        case SettingID::showOnlyEnabledDevices:        return "showOnlyEnabledDevices";
         case SettingID::tempDirectory:                 return "tempDirectory";
         case SettingID::snapCursor:                    return "snapCursor";
         case SettingID::trackExpansionMode:            return "trackExpansionMode";
