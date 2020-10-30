@@ -35,6 +35,11 @@ struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorLis
 
     void audioProcessorParameterChanged (AudioProcessor*, int, float) override
     {
+        if (plugin.edit.isLoading())
+            return;
+
+        paramChanged = true;
+        triggerAsyncUpdate();
     }
 
     void audioProcessorChanged (AudioProcessor*) override
@@ -42,6 +47,7 @@ struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorLis
         if (plugin.edit.isLoading())
             return;
 
+        processorChanged = true;
         triggerAsyncUpdate();
     }
 
@@ -111,8 +117,19 @@ private:
     
     void handleAsyncUpdate() override
     {
-        updateFromPlugin();
+        if (paramChanged)
+        {
+            paramChanged = false;
+            plugin.edit.pluginChanged (plugin);
+        }
+        if (processorChanged)
+        {
+            processorChanged = false;
+            updateFromPlugin();
+        }
     }
+
+    bool paramChanged = false, processorChanged = false;
 };
 
 //==============================================================================
@@ -592,7 +609,7 @@ void ExternalPlugin::buildParameterList()
 
         for (int i = 0; i < maxAutoParams; ++i)
         {
-            auto* parameter = parameters.getUnchecked (i);
+            auto parameter = parameters.getUnchecked (i);
 
             if (parameter->isAutomatable() && ! isParameterBlacklisted (*this, *pluginInstance, *parameter))
             {
