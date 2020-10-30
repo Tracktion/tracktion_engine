@@ -771,7 +771,7 @@ double PatternGenerator::getMaximumChordLength() const
         case Mode::bass:
         case Mode::melody:
         default:
-            return 16.0;
+            return 1024.0;
     }
 }
 
@@ -1568,7 +1568,7 @@ void PatternGenerator::generateChordPattern()
             {
                 auto c = bar.getChild (j);
 
-                for (int k = 0; k < 16 / barLen; k++)
+                for (int k = 0; k < getMaximumChordLength() / barLen; k++)
                     notes.getReference (i).add (ChordNote (float (c.getProperty (IDs::start)) + barLen * k,
                                                            c.getProperty (IDs::length),
                                                            c.getProperty (IDs::velocity)));
@@ -1578,7 +1578,7 @@ void PatternGenerator::generateChordPattern()
     else
     {
         notes.add ({});
-        notes.getReference (0).add (ChordNote (0.0f, 16.0f, 127.0f));
+        notes.getReference (0).add (ChordNote (0.0f, float (getMaximumChordLength()), 127.0f));
     }
 
     auto um = mc->getUndoManager();
@@ -1689,9 +1689,9 @@ void PatternGenerator::generateMelodyPattern()
 
     juce::Array<ChordNote> notes;
 
-    for (int i = 0; i < std::ceil (16 / noteLengthBeat) * 4; i++)
+    for (int i = 0; i < std::ceil (getMaximumChordLength() / noteLengthBeat) * 4; i++)
         notes.add (ChordNote (i * noteLengthBeat,
-                              std::min (noteLengthBeat, 16 - i * noteLengthBeat), 127.0f));
+                              std::min (noteLengthBeat, float (getMaximumChordLength()) - i * noteLengthBeat), 127.0f));
 
     int progressionCur = 0; // Current step in the chord progression
 
@@ -1853,7 +1853,7 @@ void PatternGenerator::generateBassPattern()
             {
                 auto c = bar.getChild (j);
 
-                for (int k = 0; k < 16 / barLen; k++)
+                for (int k = 0; k < getMaximumChordLength() / barLen; k++)
                 {
                     notes.getReference (i).add ({ float (c.getProperty (IDs::start)) + barLen * k,
                                                   c.getProperty (IDs::length),
@@ -1867,7 +1867,7 @@ void PatternGenerator::generateBassPattern()
     else
     {
         notes.add ({});
-        notes.getReference (0).add ({ 0.0f, 16.0f, 127.0f, 0, 0 });
+        notes.getReference (0).add ({ 0.0f, float (getMaximumChordLength()), 127.0f, 0, 0 });
     }
 
     auto um = mc->getUndoManager();
