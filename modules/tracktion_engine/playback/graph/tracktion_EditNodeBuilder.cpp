@@ -754,13 +754,19 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioTrack (AudioTrack& at, 
     auto inputTracks = getDirectInputTracks (at);
     const bool muteForInputsWhenRecording = inputTracks.isEmpty();
     const bool processMidiWhenMuted = at.state.getProperty (IDs::processMidiWhenMuted, false);
-    auto trackMuteState = std::make_unique<TrackMuteState> (at, muteForInputsWhenRecording, processMidiWhenMuted);
+    auto clipsMuteState = std::make_unique<TrackMuteState> (at, muteForInputsWhenRecording, processMidiWhenMuted);
+    auto trackMuteState = std::make_unique<TrackMuteState> (at, false, processMidiWhenMuted);
 
     const auto& clips = at.getClips();
-    std::unique_ptr<Node> node = createClipsNode (clips, *trackMuteState, params);
+    std::unique_ptr<Node> node = createClipsNode (clips, *clipsMuteState, params);
     
     if (node)
+    {
+        // When recording, clips should be muted but the plugin should still be audible so use two muting Nodes
+        node = makeNode<TrackMutingNode> (std::move (clipsMuteState), std::move (node));
+        
         node = createTrackCompNode (at, playHeadState, std::move (node));
+    }
     
     auto liveInputNode = createLiveInputsNode (at, playHeadState, params);
     
