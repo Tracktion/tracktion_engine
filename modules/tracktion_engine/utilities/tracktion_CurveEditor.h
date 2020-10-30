@@ -136,7 +136,7 @@ protected:
     bool areAnyPointsSelected();
     CurveEditorPoint* getSelectedPoint (int);
 
-    static constexpr const float pointRadius = 3.0f;
+    static constexpr const float pointRadius = 5.0f;
 
     Edit& edit;
     juce::UndoManager& undoManager;

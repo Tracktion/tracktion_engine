@@ -219,6 +219,7 @@ void CurveEditor::paint (juce::Graphics& g)
                                       pos.y - pointRadius,
                                       pointRadius * 2,
                                       pointRadius * 2);
+            r = r.reduced (2);
 
             if (r.getX() > clipBounds.getRight())
                 break;
@@ -252,6 +253,7 @@ void CurveEditor::paint (juce::Graphics& g)
                                       pos.y - pointRadius,
                                       pointRadius * 2,
                                       pointRadius * 2);
+            r = r.reduced (2);
 
             if (r.getX() > clipBounds.getRight())
                 break;
