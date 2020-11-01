@@ -15,7 +15,8 @@ namespace Helpers
 {
     static inline void addAndMakeVisible (Component& parent, const Array<Component*>& children)
     {
-        for (auto* c : children) parent.addAndMakeVisible (c);
+        for (auto c : children)
+            parent.addAndMakeVisible (c);
     }
 
     static inline String getStringOrDefault (const String& stringToTest, const String& stringToReturnIfEmpty)
