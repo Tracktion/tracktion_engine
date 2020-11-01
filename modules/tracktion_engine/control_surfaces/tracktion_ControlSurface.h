@@ -320,7 +320,7 @@ public:
     Edit* getEditIfOnEditScreen() const;
 
     //==============================================================================
-    /** These values need to be set by the subclass.. */
+    /** These values need to be set by the subclass. */
     juce::String deviceDescription;
 
     // does this driver need to be able to send MIDI messages
