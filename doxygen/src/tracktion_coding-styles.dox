@@ -2,7 +2,7 @@
 	@page coding-styles Coding styles
 
 	@section intro Introduction
-		The JUCE and also Tracktion codebase has a very strict and consistent coding style. 
+		The JUCE and also Tracktion codebase have a very strict and consistent coding style. 
 		The style evolved gradually over the years, incorporating generally acknowledged best-practice C++ advice, experience, and personal preference.
 		<br/>A full discussion on the topic that lead to that document can be found <a href="https://juce.com/discover/stories/coding-standards">Here</a>
 
