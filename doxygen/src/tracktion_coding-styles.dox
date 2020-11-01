@@ -1,9 +1,11 @@
 /**
 	@page coding-styles Coding styles
+
 	@section intro Introduction
 		The JUCE and also Tracktion codebase has a very strict and consistent coding style. 
 		The style evolved gradually over the years, incorporating generally acknowledged best-practice C++ advice, experience, and personal preference.
 		<br/>A full discussion on the topic that lead to that document can be found <a href="https://juce.com/discover/stories/coding-standards">Here</a>
+
 	@section DontRepeat	Don't Repeat Yourself!
 
 	This principle pretty much summarises the essence of what it means to write good code, in all languages, at all levels. Other people have explained it better than we can do here – google for 	<a href="https://en.wikipedia.org/wiki/Don't_repeat_yourself">D.R.Y</a> and you’ll find many tutorials. 
