@@ -19,9 +19,9 @@ namespace tracktion_engine
     To get going quickly, just use the constructor that takes an application name,
     which uses default settings.
 
-	Typical declaration in your main component:
-	@code
-	private:
+    Typical declaration in your main component:
+    @code
+    private:
         tracktion_engine::Engine engine { ProjectInfo::projectName}
     @endcode
 
@@ -29,8 +29,7 @@ namespace tracktion_engine
     @code
     private:
         tracktion_engine::Engine engine { ProjectInfo::projectName, std::make_unique<ExtendedUIBehaviour>(), nullptr };
-	@endcode
-	
+    @endcode
 */
 class Engine
 {
@@ -49,11 +48,11 @@ public:
     TemporaryFileManager& getTemporaryFileManager() const; ///< Get the shared temporary file manager allowing to handle default app and user temporary folders.
     AudioFileFormatManager& getAudioFileFormatManager() const; ///< Get the audio files format manager that maintains a list of available wave file formats.
     PropertyStorage& getPropertyStorage() const; ///< Get the top level User settings customizable xml file.
-    UIBehaviour& getUIBehaviour() const; ///< Get the engine UI elements customization helper class allowing to change default ui engine elements
-	EngineBehaviour& getEngineBehaviour() const; ///< Get engine customization helper class allowing to change the engine default behavior
+    UIBehaviour& getUIBehaviour() const; ///< Get the engine UI elements customization helper class allowing to change default ui engine elements.
+    EngineBehaviour& getEngineBehaviour() const; ///< Get engine customization helper class allowing to change the engine default behavior.
     DeviceManager& getDeviceManager() const; ///< Get the top level class for handling audio / midi devices @see juce::AudioDeviceManager.
-    MidiProgramManager& getMidiProgramManager() const; ///< Get the top level class that handles midi banks, programs, sets or presets
-    ExternalControllerManager& getExternalControllerManager() const; ///< Get the external controller manager such as a Mackie Control protocol compatible control surface .
+    MidiProgramManager& getMidiProgramManager() const; ///< Get the top level class that handles midi banks, programs, sets or presets.
+    ExternalControllerManager& getExternalControllerManager() const; ///< Get the external controller manager such as a Mackie Control protocol compatible control surface.
     RenderManager& getRenderManager() const; ///< Get the render jobs manager, allows to retrieve or create new render jobs that typically manipulate AudioFile objects @see RenderManager::Job.
     BackgroundJobManager& getBackgroundJobs() const;
     AudioFileManager& getAudioFileManager() const;
