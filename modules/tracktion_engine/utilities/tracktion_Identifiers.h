@@ -307,7 +307,6 @@ namespace IDs
     DECLARE_ID (currentSidePanel)
     DECLARE_ID (scrollWhenPlaying)
     DECLARE_ID (scrollSmoothly)
-    DECLARE_ID (keepCursorOnScreen)
     DECLARE_ID (loopPlayback)
     DECLARE_ID (snapToTimecode)
     DECLARE_ID (showTaggedTracks)
