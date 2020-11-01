@@ -1,5 +1,5 @@
 /**
-	@page coding-styles Coding styles /standards
+	@page coding-styles Coding styles
 	
 	The TRACKTION engine code uses the following main coding standard rules:
 	
@@ -41,7 +41,7 @@
             resizeToFitEditor();
         }
     }	
-    @encode
+    @endcode
 	
 	- For anything else not aforementioned
 		Please look at the existing code and try to keep your code harmonized, then suggest more rules to be added here!
