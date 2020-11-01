@@ -1,0 +1,48 @@
+/**
+	@page coding-styles Coding styles /standards
+	
+	The TRACKTION engine code uses the following main coding standard rules:
+	
+	- Typing standard
+		 CamelCase (see https://en.wikipedia.org/wiki/Camel_case)
+	
+	- Indentation:
+		- 4 spaces are used for indentation
+		- Spaces, not tabs!
+	
+	- Whitespace
+		- Use blank lines to group statements together where suited
+		- Always use only one blank line
+		- Always use a single space after a keyword and before a curly brace
+	
+	- Line breaks
+		Keep lines shorter than 120 characters; wrap if necessary	
+	
+	- Brackets and block layout
+		- Use a new line before starting a new bracket
+		- Indent the closing bracket to match the starting one
+		- Newlines should not be added to code blocks except for functions/methods and namespaces
+		- Code inside Namespace brackets should _not_ be indented
+
+	Code example:
+	
+	@code
+    void resized() override
+    {
+        if (editor != nullptr)
+            editor->setBounds (getLocalBounds());
+    }
+	
+    void childBoundsChanged (juce::Component* c) override
+    {
+        if (c == editor.get())
+        {
+            plugin.edit.pluginChanged (plugin);
+            resizeToFitEditor();
+        }
+    }	
+    @encode
+	
+	- For anything else not aforementioned
+		Please look at the existing code and try to keep your code harmonized, then suggest more rules to be added here!
+*/
