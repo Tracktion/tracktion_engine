@@ -45,15 +45,15 @@ public:
    #endif
     static juce::Array<Engine*> getEngines();
 
-    TemporaryFileManager& getTemporaryFileManager() const; ///< Get the shared temporary file manager allowing to handle default app and user temporary folders.
-    AudioFileFormatManager& getAudioFileFormatManager() const; ///< Get the audio files format manager that maintains a list of available wave file formats.
-    PropertyStorage& getPropertyStorage() const; ///< Get the top level User settings customizable xml file.
-    UIBehaviour& getUIBehaviour() const; ///< Get the engine UI elements customization helper class allowing to change default ui engine elements.
-    EngineBehaviour& getEngineBehaviour() const; ///< Get engine customization helper class allowing to change the engine default behavior.
-    DeviceManager& getDeviceManager() const; ///< Get the top level class for handling audio / midi devices @see juce::AudioDeviceManager.
-    MidiProgramManager& getMidiProgramManager() const; ///< Get the top level class that handles midi banks, programs, sets or presets.
-    ExternalControllerManager& getExternalControllerManager() const; ///< Get the external controller manager such as a Mackie Control protocol compatible control surface.
-    RenderManager& getRenderManager() const; ///< Get the render jobs manager, allows to retrieve or create new render jobs that typically manipulate AudioFile objects @see RenderManager::Job.
+    TemporaryFileManager& getTemporaryFileManager() const; ///< Get the temporary file manager allowing to handle the default app and user temporary folders.
+    AudioFileFormatManager& getAudioFileFormatManager() const; ///< Get the audio files format manager that maintains a list of available audio file formats.
+    PropertyStorage& getPropertyStorage() const; ///< Get the top-level user settings customisable xml file.
+    UIBehaviour& getUIBehaviour() const; ///< Get the engine UI elements customization helper class allowing to change default UI engine elements.
+    EngineBehaviour& getEngineBehaviour() const; ///< Get the engine customisation helper class allowing to change the engine default behaviour.
+    DeviceManager& getDeviceManager() const; ///< Get the top-level class for handling audio / MIDI devices @see juce::AudioDeviceManager.
+    MidiProgramManager& getMidiProgramManager() const; ///< Get the top-level class that handles midi banks, programs, sets or presets.
+    ExternalControllerManager& getExternalControllerManager() const; ///< Get the top-level class that handles midi banks, programs, sets or presets.
+    RenderManager& getRenderManager() const; ///< Get the top-level class that handles midi banks, programs, sets or presets.
     BackgroundJobManager& getBackgroundJobs() const;
     AudioFileManager& getAudioFileManager() const;
     MidiLearnState& getMidiLearnState() const;
