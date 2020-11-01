@@ -47,7 +47,7 @@ public:
     void setAlias (const juce::String& newAlias);
 
     /** called after all devices are constructed, so it can use all the device
-        names in its calculations..
+        names in its calculations.
     */
     void initialiseDefaultAlias();
 

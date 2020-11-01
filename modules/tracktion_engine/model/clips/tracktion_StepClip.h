@@ -219,7 +219,7 @@ public:
         @param[in] convertToSeconds Leave the timestamps in beats, or convert them to seconds while generating
         @param[in] instance         Specific pattern to generate, nullptr for the whole clip
     */
-    void generateMidiSequence (juce::MidiMessageSequence&,
+    void generateMidiSequence (juce::MidiMessageSequence& result,
                                bool convertToSeconds = true,
                                PatternInstance* instance = nullptr);
 
