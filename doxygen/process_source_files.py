@@ -103,6 +103,9 @@ if __name__ == "__main__":
 
         # Parse the module header to get module information.
         module_header = os.path.join(module_path, module_name + ".h")
+        if not os.path.isfile(module_header):
+            print("Failed to find module header for ",module_header, ", skipping...")
+            continue
         with open(module_header, "r") as f:
             content = f.read()
         block_info_result = re.match(r".*BEGIN_JUCE_MODULE_DECLARATION"
