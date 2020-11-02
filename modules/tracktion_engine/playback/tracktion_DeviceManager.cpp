@@ -1110,14 +1110,12 @@ void DeviceManager::audioDeviceIOCallback (const float** inputChannelData, int n
                 }
             }
 
-           #if JUCE_MAC
             for (int i = totalNumOutputChannels; --i >= 0;)
                 if (auto* dest = outputChannelData[i])
                     if (activeOutChannels[i])
                         for (int j = 0; j < numSamples; ++j)
                             if (! std::isnormal (dest[j]))
                                 dest[j] = 0;
-           #endif
 
             streamTime = blockStreamTime.getEnd();
             currentCpuUsage = deviceManager.getCpuUsage();
