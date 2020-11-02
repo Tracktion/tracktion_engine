@@ -57,8 +57,8 @@ public:
     /** Set the 'glide' or crossfade length it'll use to patch the data back into
         the edit.
     */
-    double getGlideSeconds() const;
-    void setGlideSeconds (double secs);
+    static double getGlideSeconds (Engine&);
+    static void setGlideSeconds (Engine&, double secs);
 
     Engine& engine;
 
@@ -92,7 +92,6 @@ private:
     bool writingAutomation = false;
     juce::CachedValue<bool> readingAutomation;
     bool wasPlaying = false;
-    double glideLength = 0;
 
     friend class AutomatableParameter;
     void postFirstAutomationChange (AutomatableParameter&, float originalValue);

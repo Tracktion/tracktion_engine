@@ -31,7 +31,7 @@ AutomationRecordManager::AutomationRecordManager (Edit& ed)
             jassertfalse;
     }
 
-    glideLength = engine.getPropertyStorage().getProperty (SettingID::glideLength);
+    
     readingAutomation.referTo (edit.getTransport().state, IDs::automationRead, nullptr, true);
 }
 
@@ -63,18 +63,14 @@ void AutomationRecordManager::setWritingAutomation (bool b)
     }
 }
 
-double AutomationRecordManager::getGlideSeconds() const
+double AutomationRecordManager::getGlideSeconds (Engine& e) 
 {
-    return glideLength;
+    return e.getPropertyStorage().getProperty (SettingID::glideLength);;
 }
 
-void AutomationRecordManager::setGlideSeconds (double secs)
+void AutomationRecordManager::setGlideSeconds (Engine& e, double secs)
 {
-    if (glideLength != secs)
-    {
-        glideLength = secs;
-        engine.getPropertyStorage().setProperty (SettingID::glideLength, secs);
-    }
+    e.getPropertyStorage().setProperty (SettingID::glideLength, secs);
 }
 
 void AutomationRecordManager::changeListenerCallback (ChangeBroadcaster* source)
@@ -198,6 +194,8 @@ void AutomationRecordManager::applyChangesToParameter (AutomationParamData* para
         if (curve->getNumPoints() > 0)
             newCurves.add (curve.release());
     }
+
+    auto glideLength = getGlideSeconds (engine);
 
     for (int i = 0; i < newCurves.size(); ++i)
     {
