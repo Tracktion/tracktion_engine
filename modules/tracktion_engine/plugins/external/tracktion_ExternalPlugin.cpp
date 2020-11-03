@@ -1769,7 +1769,7 @@ juce::String PluginWetDryAutomatableParam::valueToString (float value)
 
 float PluginWetDryAutomatableParam::stringToValue (const juce::String& s)
 {
-    return dbStringToDb (s);
+    return juce::Decibels::decibelsToGain (dbStringToDb (s));
 }
 
 }
