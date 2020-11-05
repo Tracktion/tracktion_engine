@@ -196,8 +196,11 @@ private:
             pc.buffers.midi.mergeFrom (inputFromNode.midi);
         }
         
-        auto floatBlock = pc.buffers.audio.getSubsetChannelBlock (0, numChannels);
-        addBlock (floatBlock, doubleBlock, numChannels);
+        if (numChannels > 0)
+        {
+            auto floatBlock = pc.buffers.audio.getSubsetChannelBlock (0, numChannels);
+            addBlock (floatBlock, doubleBlock, numChannels);
+        }
     }
 
     //==============================================================================
