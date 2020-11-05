@@ -84,6 +84,25 @@ private:
             auto testContext = createBasicTestContext (std::move (sumNode), testSetup, 1, 5.0);
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 0.0f, 0.0f);
         }
+
+        // This is just a check to ensure the following code compiles
+        {
+            float clipGain = 1.0f;
+            std::vector<std::unique_ptr<Node>> trackOneClipNodes;
+            trackOneClipNodes.push_back (std::make_unique<SinNode> (220.0f, 1));
+            trackOneClipNodes.push_back (std::make_unique<SinNode> (220.0f, 1));
+            
+            auto trackOneNode = std::make_unique<SummingNode> (std::move (trackOneClipNodes));
+
+            auto trackTwoClipNode = std::make_unique<SinNode> (220.0f, 1);
+            auto trackTwoNode = std::make_unique<GainNode> (std::move (trackTwoClipNode), [clipGain] { return clipGain; });
+            
+            std::vector<std::unique_ptr<Node>> trackNodes;
+            trackNodes.push_back (std::move (trackOneNode));
+            trackNodes.push_back (std::move (trackTwoNode));
+            auto mainOutput = std::make_unique<SummingNode> (std::move (trackNodes));
+            juce::ignoreUnused (mainOutput);
+        }
     }
 
     void runSinOctaveTests (TestSetup testSetup)
