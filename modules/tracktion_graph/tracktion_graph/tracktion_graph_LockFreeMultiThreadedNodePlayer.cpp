@@ -45,7 +45,7 @@ void LockFreeMultiThreadedNodePlayer::setNumThreads (size_t newNumThreads)
 
 void LockFreeMultiThreadedNodePlayer::setNode (std::unique_ptr<Node> newNode)
 {
-    setNode (std::move (newNode), sampleRate, blockSize);
+    setNode (std::move (newNode), getSampleRate(), blockSize);
 }
 
 void LockFreeMultiThreadedNodePlayer::setNode (std::unique_ptr<Node> newNode, double sampleRateToUse, int blockSizeToUse)
@@ -116,7 +116,7 @@ std::vector<Node*> LockFreeMultiThreadedNodePlayer::prepareToPlay (Node* node, N
 {
     createThreads();
 
-    sampleRate = sampleRateToUse;
+    sampleRate.store (sampleRateToUse, std::memory_order_release);
     blockSize = blockSizeToUse;
 
     return node_player_utils::prepareToPlay (node, oldNode, sampleRateToUse, blockSizeToUse);

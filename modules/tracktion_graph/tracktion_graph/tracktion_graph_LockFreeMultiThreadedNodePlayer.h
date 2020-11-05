@@ -165,7 +165,7 @@ public:
     /** Returns the current sample rate. */
     double getSampleRate() const
     {
-        return sampleRate;
+        return sampleRate.load (std::memory_order_acquire);
     }
 
 private:
@@ -207,7 +207,7 @@ private:
     std::atomic<size_t> numNodesQueued { 0 };
 
     //==============================================================================
-    double sampleRate = 44100.0;
+    std::atomic<double> sampleRate { 44100.0 };
     int blockSize = 512;
     
     //==============================================================================
