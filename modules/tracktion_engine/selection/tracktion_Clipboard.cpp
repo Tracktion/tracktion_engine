@@ -641,6 +641,13 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
         jassert (targetTrack != nullptr);
     }
 
+    // We can't paste into a folder or submix track, so find the next clip track
+    while (targetTrack != nullptr && targetTrack->isFolderTrack())
+        targetTrack = targetTrack->getSiblingTrack (1, false);
+
+    if (targetTrack == nullptr)
+        return false;
+
     std::map<EditItemID, EditItemID> remappedIDs;
     SelectableList itemsAdded;
 
