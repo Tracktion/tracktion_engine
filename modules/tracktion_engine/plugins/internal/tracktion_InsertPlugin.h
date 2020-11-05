@@ -78,6 +78,7 @@ private:
     //==============================================================================
     juce::AudioBuffer<float> sendBuffer { 2, 32 }, returnBuffer;
     MidiMessageArray sendMidiBuffer, returnMidiBuffer;
+    juce::CriticalSection bufferLock;
 
     double latencySeconds = 0.0;
     DeviceType sendDeviceType = noDevice, returnDeviceType = noDevice;

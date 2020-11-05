@@ -46,7 +46,6 @@ bool InsertSendNode::isReadyToProcess()
 void InsertSendNode::process (const ProcessContext& pc)
 {
     owner.fillSendBuffer (&pc.buffers.audio, &pc.buffers.midi);
-
 }
 
 } // namespace tracktion_engine

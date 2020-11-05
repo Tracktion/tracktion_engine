@@ -1138,6 +1138,21 @@ std::unique_ptr<tracktion_graph::Node> createNodeForEdit (EditPlaybackContext& e
         }
     }
 
+    // Add deviceNodes for any devices only being used by InsertPlugins
+    for (auto ins : insertPlugins)
+    {
+        if (ins->getSendDeviceType() != InsertPlugin::noDevice)
+        {
+            if (auto device = edit.engine.getDeviceManager().findOutputDeviceWithName (ins->outputDevice))
+            {
+                auto& trackNodeVector = deviceNodes[device];
+                juce::ignoreUnused (trackNodeVector);
+                // We don't need to add anything to the vector, just ensure the device is in the map
+            }
+        }
+    }
+
+
     auto outputNode = std::make_unique<tracktion_graph::SummingNode>();
         
     for (auto& deviceAndTrackNode : deviceNodes)

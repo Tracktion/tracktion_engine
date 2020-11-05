@@ -244,11 +244,14 @@ bool InsertPlugin::needsConstantBufferSize()                                 { r
 
 void InsertPlugin::initialise (const PlaybackInitialisationInfo& info)
 {
-    sendBuffer.setSize (2, info.blockSizeSamples, false);
-    sendBuffer.clear();
+    {
+        const ScopedLock sl (bufferLock);
+        sendBuffer.setSize (2, info.blockSizeSamples, false);
+        sendBuffer.clear();
 
-    returnBuffer.setSize (2, info.blockSizeSamples, false);
-    returnBuffer.clear();
+        returnBuffer.setSize (2, info.blockSizeSamples, false);
+        returnBuffer.clear();
+    }
 
     initialiseWithoutStopping (info);
 }
@@ -261,6 +264,8 @@ void InsertPlugin::initialiseWithoutStopping (const PlaybackInitialisationInfo& 
 
 void InsertPlugin::deinitialise()
 {
+    const ScopedLock sl (bufferLock);
+
     sendBuffer.setSize (2, 32, false);
     returnBuffer.setSize (2, 32, false);
 
@@ -271,6 +276,8 @@ void InsertPlugin::deinitialise()
 void InsertPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     CRASH_TRACER
+    const ScopedLock sl (bufferLock);
+
     // Fill send buffer with data
     if (sendDeviceType == audioDevice && fc.destBuffer != nullptr)
     {
@@ -283,6 +290,7 @@ void InsertPlugin::applyToBuffer (const PluginRenderContext& fc)
     }
     else if (sendDeviceType == midiDevice && fc.bufferForMidiMessages != nullptr)
     {
+        sendMidiBuffer.clear();
         sendMidiBuffer.mergeFromAndClear (*fc.bufferForMidiMessages);
     }
 
@@ -372,33 +380,37 @@ void InsertPlugin::getPossibleDeviceNames (Engine& e,
 bool InsertPlugin::hasAudio() const       { return sendDeviceType == audioDevice  || returnDeviceType == audioDevice; }
 bool InsertPlugin::hasMidi() const        { return sendDeviceType == midiDevice   || returnDeviceType == midiDevice; }
 
-void InsertPlugin::fillSendBuffer (const juce::dsp::AudioBlock<float>* srcAudio, MidiMessageArray* srcMidi)
+void InsertPlugin::fillSendBuffer (const juce::dsp::AudioBlock<float>* destAudio, MidiMessageArray* destMidi)
 {
     CRASH_TRACER
+    const ScopedLock sl (bufferLock);
+    
     if (sendDeviceType == audioDevice)
     {
-        if (srcAudio == nullptr)
+        if (destAudio == nullptr)
             return;
 
-        const int numChans      = jmin (sendBuffer.getNumChannels(), (int) srcAudio->getNumChannels());
-        const int numSamples    = jmin (sendBuffer.getNumSamples(), (int) srcAudio->getNumSamples());
+        const int numChans      = jmin (sendBuffer.getNumChannels(), (int) destAudio->getNumChannels());
+        const int numSamples    = jmin (sendBuffer.getNumSamples(), (int) destAudio->getNumSamples());
 
         for (int i = numChans; --i >= 0;)
         {
-            auto destAudio = juce::dsp::AudioBlock<float> (sendBuffer).getSingleChannelBlock ((size_t) i).getSubBlock (0, (size_t) numSamples);
-            srcAudio->getSingleChannelBlock ((size_t) i).getSubBlock (0, (size_t) numSamples).copyFrom (destAudio);
+            auto sendChannelBlock = juce::dsp::AudioBlock<float> (sendBuffer).getSingleChannelBlock ((size_t) i).getSubBlock (0, (size_t) numSamples);
+            destAudio->getSingleChannelBlock ((size_t) i).getSubBlock (0, (size_t) numSamples).copyFrom (sendChannelBlock);
         }
     }
     else if (sendDeviceType == midiDevice)
     {
-        if (srcMidi != nullptr)
-            srcMidi->mergeFromAndClear (sendMidiBuffer);
+        if (destMidi != nullptr)
+            destMidi->mergeFromAndClear (sendMidiBuffer);
     }
 }
 
 void InsertPlugin::fillReturnBuffer (const juce::dsp::AudioBlock<float>* srcAudio, MidiMessageArray* srcMidi)
 {
     CRASH_TRACER
+    const ScopedLock sl (bufferLock);
+    
     if (returnDeviceType == audioDevice)
     {
         if (srcAudio == nullptr)
@@ -416,7 +428,7 @@ void InsertPlugin::fillReturnBuffer (const juce::dsp::AudioBlock<float>* srcAudi
     else if (returnDeviceType == midiDevice)
     {
         if (srcMidi != nullptr)
-            returnMidiBuffer.mergeFromAndClear (*srcMidi);
+            returnMidiBuffer.mergeFrom (*srcMidi);
     }
 }
 
