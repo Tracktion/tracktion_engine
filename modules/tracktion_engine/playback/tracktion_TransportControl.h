@@ -82,6 +82,7 @@ public:
 
     void setUserDragging (bool);
     bool isUserDragging() const noexcept;
+    bool isPositionUpdatingFromPlayhead() const;
 
     //==============================================================================
     void setLoopIn (double);

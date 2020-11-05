@@ -1125,6 +1125,11 @@ bool TransportControl::isUserDragging() const noexcept
     return transportState->userDragging;
 }
 
+bool TransportControl::isPositionUpdatingFromPlayhead() const
+{
+    return transportState->updatingFromPlayHead;
+}
+
 //==============================================================================
 void TransportControl::setLoopIn (double t)
 {

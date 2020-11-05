@@ -306,6 +306,7 @@ namespace IDs
     DECLARE_ID (lastMarkerMode)
     DECLARE_ID (currentSidePanel)
     DECLARE_ID (scrollWhenPlaying)
+    DECLARE_ID (scrollSuspended)
     DECLARE_ID (scrollSmoothly)
     DECLARE_ID (loopPlayback)
     DECLARE_ID (snapToTimecode)
