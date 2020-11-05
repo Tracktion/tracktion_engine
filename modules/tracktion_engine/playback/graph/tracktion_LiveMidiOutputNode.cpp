@@ -61,11 +61,19 @@ void LiveMidiOutputNode::process (const ProcessContext& pc)
 
     destMidiBlock.copyFrom (sourceBuffers.midi);
     destAudioBlock.copyFrom (sourceBuffers.audio);
-    
-    for (auto& m : sourceBuffers.midi)
-        pendingMessages.add (m);
 
-    if (! pendingMessages.isEmpty())
+    bool needToUpdate = false;
+    
+    {
+        const juce::ScopedLock sl (lock);
+
+        for (auto& m : sourceBuffers.midi)
+            pendingMessages.add (m);
+
+        needToUpdate = ! pendingMessages.isEmpty();
+    }
+    
+    if (needToUpdate)
         triggerAsyncUpdate();
 }
 
