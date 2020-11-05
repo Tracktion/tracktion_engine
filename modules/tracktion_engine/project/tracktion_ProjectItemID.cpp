@@ -11,9 +11,6 @@
 namespace tracktion_engine
 {
 
-ProjectItemID::ProjectItemID() noexcept {}
-ProjectItemID::~ProjectItemID() noexcept {}
-
 ProjectItemID::ProjectItemID (const juce::String& asString) noexcept
 {
     int mid = 0;
@@ -52,17 +49,6 @@ ProjectItemID::ProjectItemID (const juce::String& asString) noexcept
 ProjectItemID::ProjectItemID (int itemID, int projectID) noexcept
    : combinedID ((((juce::int64) projectID) << 32) | itemID)
 {
-}
-
-ProjectItemID::ProjectItemID (const ProjectItemID& other) noexcept
-   : combinedID (other.combinedID)
-{
-}
-
-ProjectItemID ProjectItemID::operator= (const ProjectItemID& other) noexcept
-{
-    combinedID = other.combinedID;
-    return *this;
 }
 
 int ProjectItemID::getProjectID() const         { return (int) (combinedID >> 32); }

@@ -493,7 +493,7 @@ public:
 private:
     //==============================================================================
     const int instanceId;
-    ProjectItemID editProjectItemID;
+    std::atomic<ProjectItemID> editProjectItemID { ProjectItemID() };
 
     // persistent properties (i.e. stuff that gets saved)
     juce::CachedValue<juce::String> clickTrackDevice;
