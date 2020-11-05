@@ -362,6 +362,7 @@ void EditRenderJob::renderSeparateTracks()
     // 4. Only tracks that are contained in the tracksToDo mask
 
     auto originalTracksToDo = params.tracksToDo;
+    Array<File> createdFiles;
 
     for (int i = 0; i <= originalTracksToDo.getHighestBit(); ++i)
     {
@@ -404,17 +405,26 @@ void EditRenderJob::renderSeparateTracks()
                 auto file = proxy.getFile();
                 auto trackFile = file.getSiblingFile (file.getFileNameWithoutExtension()
                                                        + " " + track->getName()
-                                                       + " " + TRANS("Render") + " 1"
+                                                       + " " + TRANS("Render") + " 0"
                                                        + file.getFileExtension());
 
                 params.destFile = File (File::createLegalPathName (getNonExistentSiblingWithIncrementedNumberSuffix (trackFile, false).getFullPathName()));
+
                 params.tracksToDo = tracksToDo;
 
                 if (Renderer::checkTargetFile (track->edit.engine, params.destFile))
                     renderPasses.add (new RenderPass (*this, params, getDescription()));
+
+                // Temporarily create the output file so that it affects the next call to
+                // getNonExistentSiblingWithIncrementedNumberSuffix
+                createdFiles.add (params.destFile);
+                params.destFile.replaceWithText ("");
             }
         }
     }
+
+    for (auto f : createdFiles)
+        f.deleteFile();
 
     params.tracksToDo = originalTracksToDo;
 }
