@@ -59,6 +59,7 @@
 
 #include "utilities/tracktion_AudioFifo.h"
 #include "utilities/tracktion_MidiMessageArray.h"
+#include "utilities/tracktion_RealTimeSpinLock.h"
 #include "utilities/tracktion_Threads.h"
 #include "utilities/tracktion_graph_LatencyProcessor.h"
 
