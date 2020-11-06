@@ -162,6 +162,14 @@ public:
     /** Process a block of the Node. */
     int process (const Node::ProcessContext&);
     
+    /** Clears the current Node.
+        Note that this shouldn't be called concurrently with setNode.
+        If it's called concurrently with process, it will block until the current process call has finished.
+        This should be used sparingly as its a heavyweight operation which has to stop any
+        processing threads and restart them again afterwrds.
+    */
+    void clearNode();
+
     /** Returns the current sample rate. */
     double getSampleRate() const
     {
@@ -205,6 +213,7 @@ private:
     std::atomic<PreparedNode*> pendingPreparedNode { nullptr };
     std::atomic<bool> isUpdatingPreparedNode { false };
     std::atomic<size_t> numNodesQueued { 0 };
+    RealTimeSpinLock clearNodesLock;
 
     //==============================================================================
     std::atomic<double> sampleRate { 44100.0 };

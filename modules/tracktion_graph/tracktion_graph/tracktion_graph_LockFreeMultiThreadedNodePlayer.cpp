@@ -62,6 +62,11 @@ void LockFreeMultiThreadedNodePlayer::prepareToPlay (double sampleRateToUse, int
 
 int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
 {
+    std::unique_lock<RealTimeSpinLock> tryLock (clearNodesLock, std::try_to_lock);
+    
+    if (! tryLock.owns_lock())
+        return -1;
+
     updatePreparedNode();
 
     if (! preparedNode.rootNode)
@@ -108,6 +113,28 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
     }
 
     return -1;
+}
+
+void LockFreeMultiThreadedNodePlayer::clearNode()
+{
+    std::lock_guard<RealTimeSpinLock> sl (clearNodesLock);
+    
+    // N.B. The threads will be trying to read the preparedNodes so we need to actually stop these first
+    clearThreads();
+    
+    setNode (nullptr);
+    updatePreparedNode();
+
+    // N.B. This needs to be called twice to clear the current and prepared Nodes
+    setNode (nullptr);
+    updatePreparedNode();
+
+    createThreads();
+    
+    assert (pendingPreparedNode == nullptr);
+    assert (preparedNode.rootNode == nullptr);
+    assert (pendingPreparedNodeStorage.rootNode == nullptr);
+    assert (rootNode == nullptr);
 }
 
 //==============================================================================

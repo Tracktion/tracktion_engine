@@ -120,6 +120,18 @@ public:
         return numMisses;
     }
     
+    /** Clears the Node currently playing. */
+    void clearNode()
+    {
+        nodePlayer.clearNode();
+    }
+    
+    /** Returns the current sample rate. */
+    double getSampleRate() const
+    {
+        return nodePlayer.getSampleRate();        
+    }
+    
 private:
     tracktion_graph::PlayHeadState& playHeadState;
     ProcessState& processState;

@@ -14,9 +14,8 @@ namespace tracktion_engine
 #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
  struct EditPlaybackContext::NodePlaybackContext
  {
-     NodePlaybackContext (double sampleRateToUse, size_t numThreads, size_t maxNumThreadsToUse)
-        : sampleRate (sampleRateToUse),
-          player (processState, getPoolCreatorFunction (static_cast<tracktion_graph::ThreadPoolStrategy> (getThreadPoolStrategy()))),
+     NodePlaybackContext (size_t numThreads, size_t maxNumThreadsToUse)
+        : player (processState, getPoolCreatorFunction (static_cast<tracktion_graph::ThreadPoolStrategy> (getThreadPoolStrategy()))),
           maxNumThreads (maxNumThreadsToUse)
      {
          setNumThreads (numThreads);
@@ -28,14 +27,18 @@ namespace tracktion_engine
          player.setNumThreads (std::min (numThreads, maxNumThreads));
      }
      
-     void setNode (std::unique_ptr<Node> node, double newSampleRate, int blockSize)
+     void setNode (std::unique_ptr<Node> node, double sampleRate, int blockSize)
      {
-         sampleRate = newSampleRate;
          blockSize = juce::roundToInt (blockSize * (1.0 + (10.0 * 0.01))); // max speed comp
          player.setNode (std::move (node), sampleRate, blockSize);
          
          if (auto currentNode = player.getNode())
              latencySamples = currentNode->getNodeProperties().latencyNumSamples;
+     }
+     
+     void clearNode()
+     {
+         player.clearNode();
      }
      
      int getLatencySamples() const
@@ -95,7 +98,11 @@ namespace tracktion_engine
          }
      }
      
-     double sampleRate;
+     double getSampleRate() const
+     {
+         return player.getSampleRate();
+     }
+     
      tracktion_graph::PlayHead playHead;
      tracktion_graph::PlayHeadState playHeadState { playHead };
      ProcessState processState { playHeadState };
@@ -155,9 +162,9 @@ EditPlaybackContext::EditPlaybackContext (TransportControl& tc)
     if (edit.shouldPlay())
     {
         #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-         nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.engine.getDeviceManager().getSampleRate(),
-                                                                      edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio(),
-                                                                      size_t (edit.getIsPreviewEdit() ? 0 : juce::SystemStats::getNumCpus() - 1));
+        if (isExperimentalGraphProcessingEnabled())
+            nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio(),
+                                                                         size_t (edit.getIsPreviewEdit() ? 0 : juce::SystemStats::getNumCpus() - 1));
         #endif
 
         // This ensures the referenceSampleRange of the new context has been synced
@@ -294,18 +301,13 @@ void EditPlaybackContext::clearNodes()
 
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     // Because the nodePlaybackContext is lock-free, it doesn't immediately delete its current node
-    // To avoid it referencing input devices that have been deleted, fully delete the context
-    nodePlaybackContext->playHead.stop();
-    
+    // so we need to explicity call clearNode
+    if (nodePlaybackContext)
     {
-        auto newContext = std::make_unique<NodePlaybackContext> (edit.engine.getDeviceManager().getSampleRate(),
-                                                                 edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio(),
-                                                                 size_t (edit.getIsPreviewEdit() ? 0 : juce::SystemStats::getNumCpus() - 1));
-        const juce::SpinLock::ScopedLockType sl (audioCallbackLock);
-        std::swap (newContext, nodePlaybackContext);
+        nodePlaybackContext->playHead.stop();
+        nodePlaybackContext->clearNode();
+        nodePlaybackContext->setNumThreads (0);
     }
-    
-    nodePlaybackContext->setNumThreads (0);
    #endif
 }
 
@@ -884,70 +886,68 @@ void EditPlaybackContext::fillNextNodeBlock (float** allChannels, int numChannel
         return;
 
     SCOPED_REALTIME_CHECK
-    const juce::SpinLock::ScopedLockType sl (audioCallbackLock);
-    
-    if (nodePlaybackContext)
+    if (! nodePlaybackContext)
+        return;
+
+    nodePlaybackContext->updateReferenceSampleRange (numSamples);
+
+    // Sync this playback context with a master context
+    if (nodeContextToSyncTo != nullptr && nodePlaybackContext->playHead.isPlaying())
     {
-        nodePlaybackContext->updateReferenceSampleRange (numSamples);
+        const double sampleRate     = nodeContextToSyncTo->getSampleRate();
+        const auto timelinePosition = nodeContextToSyncTo->getNodePlayHead()->getPosition();
+        const bool masterPlaying    = nodeContextToSyncTo->getNodePlayHead()->isPlaying();
+        const auto loopTimes        = transport.getLoopRange();
 
-        // Sync this playback context with a master context
-        if (nodeContextToSyncTo != nullptr && nodePlaybackContext->playHead.isPlaying())
+        if (! nodeHasSynced)
         {
-            const double sampleRate     = nodeContextToSyncTo->getSampleRate();
-            const auto timelinePosition = nodeContextToSyncTo->getNodePlayHead()->getPosition();
-            const bool masterPlaying    = nodeContextToSyncTo->getNodePlayHead()->isPlaying();
-            const auto loopTimes        = transport.getLoopRange();
+            auto masterPosition = tracktion_graph::sampleToTime (timelinePosition, sampleRate);
+            auto masterOffset = std::fmod (masterPosition - previousBarTime, syncInterval);
+            jassert (masterPosition - previousBarTime >= 0);
+            jassert (masterOffset > 0);
 
-            if (! nodeHasSynced)
+            // if the next bar is too far away, start playing now
+            auto startPosition = masterOffset - syncInterval;
+
+            if (nodePlaybackContext->playHead.isLooping() && startPosition < -0.6)
+                startPosition = masterOffset;
+
+            startPosition = std::fmod (startPosition, loopTimes.getLength());
+
+            nodePlaybackContext->playHead.setRollInToLoop (tracktion_graph::timeToSample (startPosition, sampleRate));
+            nodeHasSynced = true;
+        }
+        else if (! masterPlaying || std::abs (tracktion_graph::sampleToTime (lastTimelinePos - timelinePosition, sampleRate)) > 0.2)
+        {
+            const auto rt = std::chrono::system_clock::now() - nodeContextToSyncTo->getNodePlayHead()->getLastUserInteractionTime();
+            const auto numSecondsSinceUserInteraction = std::chrono::duration_cast<std::chrono::seconds> (rt).count();
+            
+            if (! masterPlaying || numSecondsSinceUserInteraction < 0.2)
             {
-                auto masterPosition = tracktion_graph::sampleToTime (timelinePosition, sampleRate);
+                // User has moved  or stopped the playhead -- break the sync
+                nodeContextToSyncTo = nullptr;
+            }
+            else
+            {
+                auto masterPosition = tracktion_graph::sampleToTime (nodeContextToSyncTo->playhead.getPosition(), sampleRate);
                 auto masterOffset = std::fmod (masterPosition - previousBarTime, syncInterval);
-                jassert (masterPosition - previousBarTime >= 0);
-                jassert (masterOffset > 0);
+                auto editTime = tracktion_graph::sampleToTime (nodePlaybackContext->playHead.getPosition(), sampleRate);
 
-                // if the next bar is too far away, start playing now
-                auto startPosition = masterOffset - syncInterval;
+                auto newEditTime = std::floor (editTime / syncInterval) * syncInterval + masterOffset;
+                newEditTime = std::fmod (newEditTime, loopTimes.getLength());
 
-                if (nodePlaybackContext->playHead.isLooping() && startPosition < -0.6)
-                    startPosition = masterOffset;
-
-                startPosition = std::fmod (startPosition, loopTimes.getLength());
-
-                nodePlaybackContext->playHead.setRollInToLoop (tracktion_graph::timeToSample (startPosition, sampleRate));
-                nodeHasSynced = true;
+                nodePlaybackContext->playHead.setRollInToLoop (tracktion_graph::timeToSample (newEditTime, sampleRate));
             }
-            else if (! masterPlaying || std::abs (tracktion_graph::sampleToTime (lastTimelinePos - timelinePosition, sampleRate)) > 0.2)
-            {
-                const auto rt = std::chrono::system_clock::now() - nodeContextToSyncTo->getNodePlayHead()->getLastUserInteractionTime();
-                const auto numSecondsSinceUserInteraction = std::chrono::duration_cast<std::chrono::seconds> (rt).count();
-                
-                if (! masterPlaying || numSecondsSinceUserInteraction < 0.2)
-                {
-                    // User has moved  or stopped the playhead -- break the sync
-                    nodeContextToSyncTo = nullptr;
-                }
-                else
-                {
-                    auto masterPosition = tracktion_graph::sampleToTime (nodeContextToSyncTo->playhead.getPosition(), sampleRate);
-                    auto masterOffset = std::fmod (masterPosition - previousBarTime, syncInterval);
-                    auto editTime = tracktion_graph::sampleToTime (nodePlaybackContext->playHead.getPosition(), sampleRate);
-
-                    auto newEditTime = std::floor (editTime / syncInterval) * syncInterval + masterOffset;
-                    newEditTime = std::fmod (newEditTime, loopTimes.getLength());
-
-                    nodePlaybackContext->playHead.setRollInToLoop (tracktion_graph::timeToSample (newEditTime, sampleRate));
-                }
-            }
-
-            lastTimelinePos = timelinePosition;
         }
 
-        nodePlaybackContext->process (allChannels, numChannels, numSamples);
-        
-        // Dispatch any MIDI messages that have been injected in to the MidiOutputDeviceInstances by the Node
-        const double editTime = tracktion_graph::sampleToTime (nodePlaybackContext->playHead.getPosition(), nodePlaybackContext->sampleRate);
-        midiDispatcher.dispatchPendingMessagesForDevices (editTime);
+        lastTimelinePos = timelinePosition;
     }
+
+    nodePlaybackContext->process (allChannels, numChannels, numSamples);
+    
+    // Dispatch any MIDI messages that have been injected in to the MidiOutputDeviceInstances by the Node
+    const double editTime = tracktion_graph::sampleToTime (nodePlaybackContext->playHead.getPosition(), nodePlaybackContext->getSampleRate());
+    midiDispatcher.dispatchPendingMessagesForDevices (editTime);
 }
 #endif
 
@@ -1078,7 +1078,7 @@ double EditPlaybackContext::getAudibleTimelineTime()
 
 double EditPlaybackContext::getSampleRate() const
 {
-    return nodePlaybackContext ? nodePlaybackContext->sampleRate
+    return nodePlaybackContext ? nodePlaybackContext->getSampleRate()
                                : 44100.0;
 }
 
