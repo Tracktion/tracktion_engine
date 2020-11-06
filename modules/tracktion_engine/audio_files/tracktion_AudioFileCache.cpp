@@ -85,8 +85,12 @@ public:
 
     bool updateBlocks()
     {
-        if (mapEntireFile && readers.size() > 0)
-            return false;
+        {
+            const juce::ScopedReadLock sl (readerLock);
+            
+            if (mapEntireFile && readers.size() > 0)
+                return false;
+        }
 
         const juce::ScopedLock scl (blockUpdateLock);
 
@@ -259,6 +263,8 @@ public:
 
     bool isUnused() const
     {
+        const juce::ScopedReadLock sl (clientListLock);
+        
         return clients.isEmpty();
     }
 

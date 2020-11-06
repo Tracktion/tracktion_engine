@@ -119,6 +119,8 @@ void LevelMeasurer::Client::updateAudioLevel (int channel, DbTimePair newAudioLe
 
 void LevelMeasurer::Client::updateMidiLevel (DbTimePair newMidiLevel) noexcept
 {
+    juce::SpinLock::ScopedLockType sl (mutex);
+    
     if (midiLevels.dB >= midiLevels.dB)
         midiLevels = newMidiLevel;
 }

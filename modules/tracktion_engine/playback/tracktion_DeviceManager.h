@@ -195,8 +195,7 @@ private:
     bool finishedInitialising = false;
     bool sendMidiTimecode = false;
 
-    std::atomic<double> currentCpuUsage { 0 }, streamTime { 0 };
-    double cpuLimitBeforeMuting = 0.98;
+    std::atomic<double> currentCpuUsage { 0 }, streamTime { 0 }, cpuLimitBeforeMuting { 0.98 };
     double currentLatencyMs = 0, outputLatencyTime = 0, currentSampleRate = 0;
     double speedCompensation = 0;
     int internalBufferMultiplier = 1;
