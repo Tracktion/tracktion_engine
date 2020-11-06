@@ -34,6 +34,7 @@ struct PluginWindowState  : private juce::Timer
     std::unique_ptr<juce::Component> pluginWindow;
     int windowShowerCount = 0;
     bool windowLocked;
+    bool temporarilyHidden = false;
     bool wasExplicitlyClosed = false;
     juce::Rectangle<int> lastWindowBounds;
     juce::Time windowOpenTime;
