@@ -68,10 +68,15 @@ private:
 
     int latencyNumSamples = 0;
     bool updateReferencePositionOnJump = true;
+
+    struct State
+    {
+        int64_t numLatencySamplesToCountDown = 0;
+        int64_t lastReferenceSamplePosition = 0;
+        int64_t referencePositionOnJump = 0;
+    };
     
-    int64_t numLatencySamplesToCountDown = 0;
-    int64_t lastReferenceSamplePosition = 0;
-    int64_t referencePositionOnJump = 0;
+    std::shared_ptr<State> state { std::make_shared<State>() };
     
     void updatePlayHeadTime (int64_t numSamples)
     {
@@ -79,27 +84,27 @@ private:
         
         if (getPlayHeadState().didPlayheadJump() || updateReferencePositionOnJump)
         {
-            numLatencySamplesToCountDown = latencyNumSamples;
-            referencePositionOnJump = updateReferencePositionOnJump ? referenceSamplePosition - numSamples
-                                                                    : lastReferenceSamplePosition;
+            state->numLatencySamplesToCountDown = latencyNumSamples;
+            state->referencePositionOnJump = updateReferencePositionOnJump ? referenceSamplePosition - numSamples
+                                                                           : state->lastReferenceSamplePosition;
             // TODO: Need to determine why the last position is the "correct" visual position
         }
         
-        lastReferenceSamplePosition = referenceSamplePosition;
+        state->lastReferenceSamplePosition = referenceSamplePosition;
 
-        if (numLatencySamplesToCountDown > 0)
+        if (state->numLatencySamplesToCountDown > 0)
         {
-            const int64_t numSamplesToDecrement = std::min (numLatencySamplesToCountDown, numSamples);
-            numLatencySamplesToCountDown -= numSamplesToDecrement;
+            const int64_t numSamplesToDecrement = std::min (state->numLatencySamplesToCountDown, numSamples);
+            state->numLatencySamplesToCountDown -= numSamplesToDecrement;
         }
 
-        if (getPlayHead().isPlaying() && numLatencySamplesToCountDown <= 0)
+        if (getPlayHead().isPlaying() && state->numLatencySamplesToCountDown <= 0)
         {
             referenceSamplePosition -= latencyNumSamples;
         }
         else
         {
-            referenceSamplePosition = referencePositionOnJump;
+            referenceSamplePosition = state->referencePositionOnJump;
         }
 
         const int64_t timelinePosition = getPlayHead().referenceSamplePositionToTimelinePosition (referenceSamplePosition);
@@ -125,9 +130,7 @@ private:
             {
                 if (other->getNodeProperties().nodeID == nodeIDToLookFor)
                 {
-                    numLatencySamplesToCountDown = other->numLatencySamplesToCountDown;
-                    lastReferenceSamplePosition = other->lastReferenceSamplePosition;
-                    referencePositionOnJump = other->referencePositionOnJump;
+                    state = other->state;
                     updateReferencePositionOnJump = false;
                 }
             }
