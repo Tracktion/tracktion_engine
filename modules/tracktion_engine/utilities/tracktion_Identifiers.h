@@ -541,6 +541,7 @@ namespace IDs
     DECLARE_ID (octaveDown)
     DECLARE_ID (inversion)
     DECLARE_ID (pitches)
+    DECLARE_ID (chordName)
     DECLARE_ID (arpUpDown)
     DECLARE_ID (arpPlayroot)
     DECLARE_ID (arpPatternLength)

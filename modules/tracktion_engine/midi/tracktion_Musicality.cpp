@@ -566,14 +566,19 @@ PatternGenerator::ProgressionItem::ProgressionItem (PatternGenerator& g, const j
 {
     auto um = temporary ? nullptr : g.clip.getUndoManager();
 
-    chordName.referTo (state, IDs::name, um);
+    chordName.referTo (state, IDs::chordName, um);
     pitches.referTo (state, IDs::pitches, um);
     lengthInBeats.referTo (state, IDs::length, um, 4);
     octave.referTo (state, IDs::octave, um);
     inversion.referTo (state, IDs::inversion, um);
 
     // Chord name format changed between W8 and W9 - update to new version
-    chordName = fixLegacyChordNames (chordName);
+    juce::String oldName = state[IDs::name];
+    if (oldName.isNotEmpty() && chordName.get().isEmpty())
+	{
+        chordName = fixLegacyChordNames (oldName);
+        state.removeProperty (IDs::name, nullptr);
+    }
 }
 
 PatternGenerator::ProgressionItem::~ProgressionItem() noexcept
