@@ -1524,7 +1524,7 @@ void TransportControl::performStop()
         clearPlayingFlags();
         playHeadWrapper->stop();
         playbackContext->recordingFinished ({ transportState->startTime, recEndTime },
-                                            transportState->discardRecordings);
+                                              transportState->discardRecordings);
 
         position = transportState->discardRecordings ? transportState->startTime
                                                      : (looping ? recEndPos

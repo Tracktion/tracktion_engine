@@ -84,6 +84,20 @@ namespace
         return true;
     }
 
+    std::vector<std::pair<int, int>> makeChannelMapRepeatingLastChannel (const juce::AudioChannelSet& source,
+                                                                         const juce::AudioChannelSet& dest)
+    {
+        std::vector<std::pair<int, int>> map;
+        
+        for (int destNum = 0; destNum < dest.size(); ++destNum)
+        {
+            const int sourceNum = std::min (destNum, source.size() - 1);
+            map.push_back ({ sourceNum, destNum });
+        }
+        
+        return map;
+    }
+
     AudioTrack* getTrackContainingTrackDevice (Edit& edit, WaveInputDevice& device)
     {
         for (auto t : getAudioTracks (edit))
@@ -204,7 +218,19 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioClip (AudioClipBase& cl
         auto& li = clip.getLoopInfo();
 
         if (li.getNumBeats() > 0.0 || li.getRootNote() != -1)
-            return makeNode<TimeStretchingWaveNode> (clip, playHeadState);
+        {
+            auto node = makeNode<TimeStretchingWaveNode> (clip, playHeadState);
+
+            const auto sourceChannels = juce::AudioChannelSet::canonicalChannelSet (clip.getAudioFile().getNumChannels());
+            const auto destChannels = juce::AudioChannelSet::canonicalChannelSet (std::max (2, sourceChannels.size()));
+
+            if (sourceChannels.size() != destChannels.size())
+                node = makeNode<ChannelRemappingNode> (std::move (node),
+                                                       makeChannelMapRepeatingLastChannel (sourceChannels, destChannels),
+                                                       false);
+            
+            return node;
+        }
     }
 
     std::unique_ptr<Node> node;
