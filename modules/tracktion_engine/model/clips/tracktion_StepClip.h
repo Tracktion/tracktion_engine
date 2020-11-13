@@ -231,6 +231,8 @@ public:
 
     int getBeatsPerBar();
 
+    void resizeClipForPatternInstances();
+
     //==============================================================================
     bool canGoOnTrack (Track&) override;
     juce::String getSelectableDescription() override;

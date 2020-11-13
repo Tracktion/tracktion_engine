@@ -260,6 +260,32 @@ double StepClip::getEndBeatOf (PatternInstance* instance)
     return getBeatTimesOfPatternStarts()[index];
 }
 
+void StepClip::resizeClipForPatternInstances()
+{
+    if (auto instance = patternInstanceList.getLast().get())
+    {
+        double end = -getOffsetInBeats();
+
+        auto ratio              = 1.0 / speedRatio;
+
+        for (auto p : patternInstanceList)
+        {
+            auto pattern = p->getPattern();
+            end += pattern.getNumNotes() * (pattern.getNoteLength() * ratio);
+        }
+
+        if (end > getLengthInBeats())
+        {
+            auto& ts = edit.tempoSequence;
+            auto pos = getPosition();
+            auto startBeat = ts.timeToBeats (pos.getStart());
+            auto endBeat = startBeat + end;
+
+            setEnd (ts.beatsToTime (endBeat), false);
+        }
+    }
+}
+
 int StepClip::getBeatsPerBar()
 {
     return edit.tempoSequence.getTimeSigAt (getPosition().getStart()).numerator;
