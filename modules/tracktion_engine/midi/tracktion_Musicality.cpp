@@ -2128,11 +2128,14 @@ juce::Array<KeyResult> determineKeyOfNotes (const juce::Array<MidiNote*>& notes)
             s3Minor += (durations[i] - yAve) * (durations[i] - yAve);
         }
 
-        double rMajor = s1Major / std::sqrt (s2Major * s3Major);
-        double rMinor = s1Minor / std::sqrt (s2Minor * s3Minor);
+        if (s2Major * s3Major > 0)
+        {
+            double rMajor = s1Major / std::sqrt (s2Major * s3Major);
+            double rMinor = s1Minor / std::sqrt (s2Minor * s3Minor);
 
-        results.add ({ rMajor, key, Scale::major });
-        results.add ({ rMinor, key, Scale::minor });
+            results.add ({ rMajor, key, Scale::major });
+            results.add ({ rMinor, key, Scale::minor });
+        }
     }
 
     results.sort();
