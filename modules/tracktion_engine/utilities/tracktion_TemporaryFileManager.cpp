@@ -93,7 +93,7 @@ bool TemporaryFileManager::isDiskSpaceDangerouslyLow() const
 
 juce::int64 TemporaryFileManager::getMaxSpaceAllowedForTempFiles() const
 {
-    juce::int64 minAbsoluteSize = 1024 * 1024 * 500;
+    juce::int64 minAbsoluteSize = 1024 * 1024 * 750;
     juce::int64 minProportionOfDisk = tempDir.getBytesFreeOnVolume() / 4;
 
     return std::min (minProportionOfDisk, minAbsoluteSize);
@@ -101,7 +101,7 @@ juce::int64 TemporaryFileManager::getMaxSpaceAllowedForTempFiles() const
 
 int TemporaryFileManager::getMaxNumTempFiles() const
 {
-    return 500;
+    return 1000;
 }
 
 static bool shouldDeleteTempFile (const File& f, bool spaceIsShort)
@@ -116,7 +116,7 @@ static bool shouldDeleteTempFile (const File& f, bool spaceIsShort)
 
     auto daysOld = (Time::getCurrentTime() - f.getLastAccessTime()).inDays();
 
-    return daysOld > 10.0 || (spaceIsShort && daysOld > 1.0);
+    return daysOld > 60.0 || (spaceIsShort && daysOld > 1.0);
 }
 
 static void deleteEditPreviewsNotInUse (Engine& engine, juce::Array<juce::File>& files)
