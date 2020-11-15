@@ -262,11 +262,11 @@ String ClipEffect::getTypeDisplayName (EffectType t)
     switch (t)
     {
         case EffectType::volume:            return TRANS("Volume");
-        case EffectType::fadeInOut:         return TRANS("Fade In/Out");
-        case EffectType::tapeStartStop:     return TRANS("Tape Stop/Start");
-        case EffectType::stepVolume:        return TRANS("Step Volume");
-        case EffectType::pitchShift:        return TRANS("Pitch Shift");
-        case EffectType::warpTime:          return TRANS("Warp Time");
+        case EffectType::fadeInOut:         return TRANS("Fade in/out");
+        case EffectType::tapeStartStop:     return TRANS("Tape stop/start");
+        case EffectType::stepVolume:        return TRANS("Step volume");
+        case EffectType::pitchShift:        return TRANS("Pitch shift");
+        case EffectType::warpTime:          return TRANS("Warp time");
         case EffectType::normalise:         return TRANS("Normalise");
         case EffectType::makeMono:          return TRANS("Mono");
         case EffectType::reverse:           return TRANS("Reverse");
@@ -286,10 +286,10 @@ void ClipEffect::addEffectsToMenu (PopupMenu& m)
             m.addItem ((int) e, getTypeDisplayName (e));
     };
 
-    addItems (TRANS("Volume"),      { EffectType::volume, EffectType::fadeInOut, EffectType::stepVolume });
+    addItems (TRANS("Volume"),      { EffectType::fadeInOut, EffectType::stepVolume, EffectType::volume });
     addItems (TRANS("Time/Pitch"),  { EffectType::pitchShift, EffectType::tapeStartStop, EffectType::warpTime });
     addItems (TRANS("Effects"),     { EffectType::filter, EffectType::reverse });
-    addItems (TRANS("Mastering"),   { EffectType::normalise, EffectType::makeMono, EffectType::invert });
+    addItems (TRANS("Mastering"),   { EffectType::makeMono, EffectType::normalise, EffectType::invert });
 }
 
 ClipEffect::EffectType ClipEffect::getType() const
