@@ -514,6 +514,10 @@ void FolderTrack::setDirtyClips()
 
 bool FolderTrack::isFrozen (FreezeType t) const
 {
+    // Submix tracks can't be frozen as they can't contain clips
+    if (isSubmixFolder())
+        return false;
+    
     for (auto at : getAllAudioSubTracks (true))
         if (at->isFrozen (t))
             return true;
