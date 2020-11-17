@@ -2253,10 +2253,28 @@ void RackTypeList::removeRackType (const RackType::Ptr& type)
 {
     if (list->objects.contains (type.get()))
     {
+        auto allTracks = getAllTracks (edit);
+        
         for (auto f : getAllPlugins (edit, false))
             if (auto rf = dynamic_cast<RackInstance*> (f))
                 if (rf->type == type)
                     rf->deleteFromParent();
+
+        // Remove any Macros or Modifiers that might be assigned
+        type->macroParameterList.hideMacroParametersFromTracks();
+
+        for (auto macro : type->macroParameterList.getMacroParameters())
+            for (auto param : getAllParametersBeingModifiedBy (edit, *macro))
+                param->removeModifier (*macro);
+
+        for (auto modifier : type->getModifierList().getModifiers())
+        {
+            for (auto t : allTracks)
+                t->hideAutomatableParametersForSource (modifier->itemID);
+            
+            for (auto param : getAllParametersBeingModifiedBy (edit, *modifier))
+                param->removeModifier (*modifier);
+        }
 
         type->hideWindowForShutdown();
         state.removeChild (type->state, &edit.getUndoManager());
