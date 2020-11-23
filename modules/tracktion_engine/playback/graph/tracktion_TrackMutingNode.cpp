@@ -48,7 +48,7 @@ bool TrackMuteState::shouldTrackBeAudible() const
 
 bool TrackMuteState::shouldTrackContentsBeProcessed() const
 {
-    return callInputWhileMuted && wasBeingPlayedFlag;
+    return callInputWhileMuted || wasBeingPlayedFlag;
 }
 
 bool TrackMuteState::shouldTrackMidiBeProcessed() const
