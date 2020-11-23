@@ -20,9 +20,13 @@ namespace
     {
         juce::Array<PluginType*> plugins;
         
+        // N.B. There is a bit of a hack here checking if the plugin is actually still in the Edit
+        // as they are removed from the PluginCache async and we don't want to flush it every time
+        // we call this method. This should probably be moved to an EditItemCache like Clips and Tracks
         for (auto p : edit.getPluginCache().getPlugins())
             if (auto pt = dynamic_cast<PluginType*> (p))
-                plugins.add (pt);
+                if (pt->state.getParent().isValid())
+                    plugins.add (pt);
         
         return plugins;
     }
@@ -131,6 +135,14 @@ namespace
         for (auto ri : getAllPluginsOfType<RackInstance> (type.edit))
             if (ri->type.get() == &type)
                 instances.add (ri);
+        
+        return instances;
+    }
+
+    juce::Array<RackInstance*> getEnabledInstancesForRack (RackType& type)
+    {
+        auto instances = getInstancesForRack (type);
+        instances.removeIf ([] (auto instance) { return ! instance->isEnabled(); });
         
         return instances;
     }
@@ -989,7 +1001,7 @@ std::vector<std::unique_ptr<Node>> createNodesForRacks (RackTypeList& rackTypeLi
     std::vector<std::unique_ptr<Node>> nodes;
     
     for (auto rackType : rackTypeList.getTypes())
-        if (getInstancesForRack (*rackType).size() > 0)
+        if (getEnabledInstancesForRack (*rackType).size() > 0)
             if (auto rackNode = createNodeForRackType (*rackType, params))
                 nodes.push_back (std::move (rackNode));
     
