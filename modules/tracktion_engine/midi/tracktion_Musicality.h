@@ -303,20 +303,7 @@ private:
     std::unique_ptr<juce::Timer> editLoadedCallback;
 
     //==============================================================================
-    struct AutoUpdateManager : private ValueTreeAllEventListener,
-                               public juce::AsyncUpdater
-    {
-        AutoUpdateManager (PatternGenerator& owner);
-        ~AutoUpdateManager() override;
-
-        void valueTreeChanged() override {}
-        void valueTreePropertyChanged (juce::ValueTree& p, const juce::Identifier& c) override;
-
-        void handleAsyncUpdate() override;
-
-        PatternGenerator& owner;
-    };
-
+    struct AutoUpdateManager;
     std::unique_ptr<AutoUpdateManager> autoUpdateManager;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PatternGenerator)

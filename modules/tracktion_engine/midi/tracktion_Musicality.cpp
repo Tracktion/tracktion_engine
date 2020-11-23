@@ -707,6 +707,46 @@ int PatternGenerator::ProgressionItem::getRootNote (int key, const Scale& scale)
     return 0;
 }
 
+
+//==============================================================================
+//==============================================================================
+struct PatternGenerator::AutoUpdateManager : private ValueTreeAllEventListener,
+                                             public juce::AsyncUpdater
+{
+    AutoUpdateManager (PatternGenerator& owner_)
+        : owner (owner_)
+    {
+        owner.clip.state.addListener (this);
+    }
+
+    ~AutoUpdateManager() override
+    {
+        owner.clip.state.removeListener (this);
+    }
+
+    void valueTreeChanged() override
+    {}
+    
+    void valueTreePropertyChanged (juce::ValueTree& p, const juce::Identifier& c) override
+    {
+        if (Clip::isClipState (p))
+            if (c == IDs::start || c == IDs::length || c == IDs::offset)
+                if (! owner.clip.edit.getUndoManager().isPerformingUndoRedo())
+                    triggerAsyncUpdate();
+    }
+
+    void handleAsyncUpdate() override
+    {
+        if (owner.getAutoUpdate())
+            owner.generatePattern();
+    }
+
+private:
+    PatternGenerator& owner;
+};
+
+
+//==============================================================================
 //==============================================================================
 const int PatternGenerator::scaleRootGlobalTrack    = -1;
 const int PatternGenerator::scaleRootChordTrack     = -2;
@@ -2059,28 +2099,38 @@ void PatternGenerator::refreshPatternIfNeeded()
 }
 
 //==============================================================================
-PatternGenerator::AutoUpdateManager::AutoUpdateManager (PatternGenerator& owner_) : owner (owner_)
-{
-    owner.clip.state.addListener (this);
-}
-
-PatternGenerator::AutoUpdateManager::~AutoUpdateManager()
-{
-    owner.clip.state.removeListener (this);
-}
-
-void PatternGenerator::AutoUpdateManager::valueTreePropertyChanged (juce::ValueTree& p, const juce::Identifier& c)
-{
-    if (Clip::isClipState (p))
-        if (c == IDs::start || c == IDs::length || c == IDs::offset)
-            triggerAsyncUpdate();
-}
-
-void PatternGenerator::AutoUpdateManager::handleAsyncUpdate()
-{
-    if (owner.getAutoUpdate())
-        owner.generatePattern();
-}
+//dddPatternGenerator::AutoUpdateManager::AutoUpdateManager (PatternGenerator& owner_) : owner (owner_)
+//{
+//    owner.clip.state.addListener (this);
+//}
+//
+//PatternGenerator::AutoUpdateManager::~AutoUpdateManager()
+//{
+//    owner.clip.state.removeListener (this);
+//}
+//
+//void PatternGenerator::AutoUpdateManager::valueTreePropertyChanged (juce::ValueTree& p, const juce::Identifier& c)
+//{
+//    if (Clip::isClipState (p))
+//    {
+//        if (c == IDs::start || c == IDs::length || c == IDs::offset)
+//        {
+//            // We want this to be a single transaction so it can be undone
+//            if (! undoInhibitor)
+//                undoInhibitor = std::make_unique<Edit::UndoTransactionInhibitor> (owner.clip.edit);
+//
+//            triggerAsyncUpdate();
+//        }
+//    }
+//}
+//
+//void PatternGenerator::AutoUpdateManager::handleAsyncUpdate()
+//{
+//    if (owner.getAutoUpdate())
+//        owner.generatePattern();
+//
+//    undoInhibitor.reset();
+//}
 
 //==============================================================================
 // Krumhansl-Schmuckler Key-Finding Algorithm.
