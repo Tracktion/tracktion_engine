@@ -335,7 +335,7 @@ public:
                 lock.exitRead();
         }
 
-        juce::MemoryMappedAudioFormatReader* reader;
+        juce::MemoryMappedAudioFormatReader* reader = nullptr;
         juce::ReadWriteLock& lock;
         bool isLocked = true;
 

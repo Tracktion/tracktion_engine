@@ -1391,7 +1391,7 @@ void FourOscPlugin::flushPluginStateToValueTree()
 
     auto mm = ValueTree (IDs::MODMATRIX);
 
-    for (auto itr : modMatrix)
+    for (const auto& itr : modMatrix)
     {
         for (int s = lfo1; s < numModSources; s++)
         {

@@ -228,7 +228,7 @@ private:
     struct ClipPos
     {
         Selectable::WeakRef clip;
-        double startBeat, endBeat, contentStartBeat;
+        double startBeat = 0.0, endBeat = 0.0, contentStartBeat = 0.0;
     };
 
     struct AutomationPos

@@ -96,7 +96,7 @@ struct PitchShiftPlugin::Pimpl
     PitchShiftPlugin& owner;
 
     std::unique_ptr<TimeStretcher> timestretcher;
-    TimeStretcher::Mode mode;
+    TimeStretcher::Mode mode = TimeStretcher::disabled;
     TimeStretcher::ElastiqueProOptions elastiqueOptions;
 
     AudioFifo inputFifo { 2, 2000 }, outputFifo { 2, 2000 };

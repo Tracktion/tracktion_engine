@@ -13,7 +13,7 @@ namespace tracktion_engine
 
 struct BeatDetect
 {
-    BeatDetect() {}
+    BeatDetect() = default;
 
     void setSampleRate (double sampleRate)
     {
@@ -37,7 +37,7 @@ struct BeatDetect
             const float* const c = inputs[chan];
 
             for (int i = 0; i < blockSize; ++i)
-                blockEnergy += c[i] * c[i];
+                blockEnergy += static_cast<double> (c[i] * c[i]);
         }
 
         pushEnergy (blockEnergy);
@@ -45,11 +45,11 @@ struct BeatDetect
 
     int getBlockSize()                      { return blockSize; }
     int getNumBeats()                       { return beatBlocks.size(); }
-    juce::int64 getBeat (int idx) const     { return beatBlocks[idx] * blockSize; }
+    juce::int64 getBeat (int idx) const     { return beatBlocks[idx] * static_cast<juce::int64> (blockSize); }
 
 private:
     enum { historyLength = 43 };
-    double energy [historyLength];
+    double energy[historyLength] = {};
     int curBlock = 0;
     int lastBlock = -2;
     int blockSize = 0;

@@ -78,7 +78,7 @@ public:
     }
 
     int dataStartOffset;
-    bool bigEndian;
+    bool bigEndian = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FloatAudioFormatReader)
 };

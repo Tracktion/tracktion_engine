@@ -74,7 +74,7 @@ public:
 
     private:
         DbTimePair audioLevels[maxNumChannels];
-        bool overload[maxNumChannels];
+        bool overload[maxNumChannels] = {};
         DbTimePair midiLevels;
         int numChannelsUsed = 0;
         bool clearOverload = true;

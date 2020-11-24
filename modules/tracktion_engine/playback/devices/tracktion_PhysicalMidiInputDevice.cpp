@@ -150,7 +150,7 @@ private:
     {
         TCMessage (int tp) : type (tp) {}
 
-        int type;
+        int type = 0;
         MidiMessage::MidiMachineControlCommand command;
         int data[4];
     };

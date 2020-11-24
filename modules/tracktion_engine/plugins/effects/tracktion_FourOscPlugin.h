@@ -361,7 +361,7 @@ public:
         }
 
         int firstModIndex = -1, lastModIndex = -1;
-        float depths[numModSources];
+        float depths[numModSources] = {};
     };
 
     std::unordered_map<AutomatableParameter*, ModAssign> modMatrix;

@@ -65,7 +65,7 @@ private:
 //==============================================================================
 struct TrackSection
 {
-    Track* track;
+    Track* track = nullptr;
     EditTimeRange range;
 
     bool merge (const TrackItem& c)

@@ -151,8 +151,8 @@ private:
     juce::ValueTree targetTree;
     juce::Identifier targetProperty;
     juce::UndoManager* undoManager;
-    Type defaultValue;
-    Type cachedValue;
+    Type defaultValue = Type();
+    Type cachedValue = Type();
     std::function<Type (Type)> constrainer;
 
     //==============================================================================

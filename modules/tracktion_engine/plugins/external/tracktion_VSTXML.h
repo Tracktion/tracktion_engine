@@ -38,12 +38,12 @@ public:
 
     struct Param  : public Base
     {
-        int paramID;
+        int paramID = 0;
         juce::String expr, name, label;
         juce::StringArray shortNames;
         juce::String type;
-        int numberOfStates;
-        float defaultValue;
+        int numberOfStates = 0;
+        float defaultValue = 0.0f;
     };
 
     struct Group  : public Base

@@ -36,7 +36,7 @@ public:
 private:
     //==============================================================================
     double filterVals[2][8];
-    double sweep, sweepFactor, minSweep;
+    double sweep = 0.0, sweepFactor = 0.0, minSweep = 0.0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PhaserPlugin)
 };

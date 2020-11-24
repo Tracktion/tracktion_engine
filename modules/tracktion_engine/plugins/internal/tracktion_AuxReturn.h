@@ -47,7 +47,7 @@ public:
 
 private:
     std::unique_ptr<juce::AudioBuffer<float>> previousBuffer, currentBuffer;
-    int samplesInPreviousBuffer, samplesInCurrentBuffer;
+    int samplesInPreviousBuffer = 0, samplesInCurrentBuffer = 0;
     bool initialised = false;
     juce::CriticalSection addingAudioLock;
 

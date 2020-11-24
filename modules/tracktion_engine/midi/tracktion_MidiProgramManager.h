@@ -56,7 +56,7 @@ protected:
         void updateFromXml (const juce::XmlElement&);
 
         juce::String name;
-        int id;
+        int id = 0;
         std::map<int, juce::String> programNames;
     };
 

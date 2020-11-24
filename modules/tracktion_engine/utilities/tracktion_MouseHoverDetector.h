@@ -84,7 +84,7 @@ private:
                                    public juce::Timer
     {
     public:
-        MouseHoverDetector* owner;
+        MouseHoverDetector* owner = nullptr;
         juce::Point<int> lastPos;
 
         void timerCallback() override

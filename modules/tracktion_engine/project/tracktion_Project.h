@@ -157,7 +157,7 @@ private:
 
     struct ObjectInfo
     {
-        int itemID, fileOffset;
+        int itemID = 0, fileOffset = 0;
         ProjectItem::Ptr item;
     };
 

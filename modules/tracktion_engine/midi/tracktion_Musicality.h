@@ -312,12 +312,12 @@ private:
 //==============================================================================
 struct KeyResult
 {
-    KeyResult() {}
+    KeyResult() = default;
     KeyResult (double r_, int k_, Scale::ScaleType s_) : r (r_), key (k_), scale (s_) {}
 
     double r = 0; // correlation coefficient
     int key = 0;  // midi note = 0 - 11
-    Scale::ScaleType scale; // major or minor
+    Scale::ScaleType scale = Scale::major; // major or minor
 
     bool operator< (const KeyResult& other) const { return r < other.r; }
 };
