@@ -401,8 +401,8 @@ int StepClip::PatternInstance::getSequenceIndex() const
 String StepClip::PatternInstance::getSelectableDescription()
 {
     return clip.getName() + "  -  "
-         + TRANS("Section 123").replace ("123", String (getSequenceIndex() + 1)) + " ("
-         + TRANS("Pattern 123").replace ("123", String (patternIndex + 1)) + ")";
+         + TRANS("Variation 123").replace ("123", String (getSequenceIndex() + 1)) + " ("
+         + TRANS("Variation 123").replace ("123", String (patternIndex + 1)) + ")";
 }
 
 }
