@@ -150,7 +150,7 @@
 #endif
 
 /** Config: TRACKTION_AIR_WINDOWS
-    Adds AirWindows effect plugins. Requires complaiance with AirWindows MIT license.
+    Adds AirWindows effect plugins. Requires compliance with AirWindows MIT license.
  */
 #ifndef TRACKTION_AIR_WINDOWS
  #define TRACKTION_AIR_WINDOWS 0
