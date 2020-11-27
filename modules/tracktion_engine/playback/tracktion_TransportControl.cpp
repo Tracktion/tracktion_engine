@@ -971,9 +971,10 @@ void TransportControl::syncToEdit (Edit* editToSyncTo, bool isPreview)
     }
 }
 
-bool TransportControl::isPlaying() const              { return transportState->playing; }
-bool TransportControl::isRecording() const            { return transportState->recording; }
-bool TransportControl::isSafeRecording() const        { return isRecording() && transportState->safeRecording; }
+bool TransportControl::isPlaying() const                { return transportState->playing; }
+bool TransportControl::isRecording() const              { return transportState->recording; }
+bool TransportControl::isSafeRecording() const          { return isRecording() && transportState->safeRecording; }
+bool TransportControl::isStopping() const               { return isStopInProgress; }
 
 double TransportControl::getTimeWhenStarted() const   { return transportState->startTime; }
 
@@ -1498,6 +1499,7 @@ void TransportControl::performStop()
 {
     CRASH_TRACER
 
+    const ScopedValueSetter<bool> svs (isStopInProgress, true);
     screenSaverDefeater.reset();
     sectionPlayer.reset();
 

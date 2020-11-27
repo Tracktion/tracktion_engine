@@ -69,11 +69,22 @@ public:
 
     void syncToEdit (Edit* editToSyncTo, bool isPreview); // plays in sync with another Edit
 
-    /** (this is also true if we're recording */
+    /** Returns true if the transport is playing. (This is also true during recording). */
     bool isPlaying() const;
+    
+    /** Returns true if recording is in progress. */
     bool isRecording() const;
+    
+    /** Returns true if safe-recording is in progress. */
     bool isSafeRecording() const;
 
+    /** Returns true if the transport is currently being stopped.
+        isPlaying will return false during this period but position changes etc. could still
+        be sent out so this method lets you know if this.
+    */
+    bool isStopping() const;
+
+    /** Returns the time when the transport was started. */
     double getTimeWhenStarted() const;
 
     //==============================================================================
@@ -186,6 +197,7 @@ private:
     TimecodeSnapType currentSnapType;
     bool isDelayedChangePending = false;
     int loopUpdateCounter = 10;
+    bool isStopInProgress = false;
 
     struct ScreenSaverDefeater;
     std::unique_ptr<ScreenSaverDefeater> screenSaverDefeater;
