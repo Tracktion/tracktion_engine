@@ -459,6 +459,10 @@ void ProjectItem::setName (const String& n, SetNameMode mode)
 
                 startTimer (1);
             }
+            else
+            {
+                engine.getUIBehaviour().editNamesMayHaveChanged();
+            }
 
             sendChange();
         }
