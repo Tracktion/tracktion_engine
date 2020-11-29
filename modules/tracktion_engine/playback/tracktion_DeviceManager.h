@@ -127,7 +127,7 @@ public:
     double getCurrentStreamTime() const noexcept                { return streamTime; }
 
     bool isMSWavetableSynthPresent() const;
-    void resetToDefaults (bool resetInputDevices, bool resetOutputDevices);
+    void resetToDefaults (bool deviceSettings, bool resetInputDevices, bool resetOutputDevices, bool latencySettings, bool mixSettings);
 
     //==============================================================================
     // list of all input devices..

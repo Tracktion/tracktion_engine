@@ -432,24 +432,34 @@ bool DeviceManager::isMSWavetableSynthPresent() const
     return false;
 }
 
-void DeviceManager::resetToDefaults (bool resetInputDevices, bool resetOutputDevices)
+void DeviceManager::resetToDefaults (bool deviceSettings, bool resetInputDevices, bool resetOutputDevices, bool latencySettings, bool mixSettings)
 {
     TRACKTION_LOG ("Returning audio settings to defaults");
     deviceManager.removeAudioCallback (this);
 
     auto& storage = engine.getPropertyStorage();
 
-    storage.removeProperty (SettingID::audio_device_setup);
-    storage.removePropertyItem (SettingID::audiosettings, deviceManager.getCurrentAudioDeviceType());
+    if (deviceSettings)
+    {
+        storage.removeProperty (SettingID::audio_device_setup);
+        storage.removePropertyItem (SettingID::audiosettings, deviceManager.getCurrentAudioDeviceType());
+    }
 
-    storage.setProperty (SettingID::cpu, SystemStats::getNumCpus());
-    updateNumCPUs();
-    storage.setProperty (SettingID::maxLatency, 5.0f);
-    storage.setProperty (SettingID::lowLatencyBuffer, 5.8f);
-    storage.setProperty (SettingID::internalBuffer, 1);
-    setInternalBufferMultiplier (1);
+    if (latencySettings)
+    {
+        storage.setProperty (SettingID::maxLatency, 5.0f);
+        storage.setProperty (SettingID::lowLatencyBuffer, 5.8f);
+        storage.setProperty (SettingID::internalBuffer, 1);
+        setInternalBufferMultiplier (1);
+    }
 
-    storage.setProperty (SettingID::use64Bit, false);
+    if (mixSettings)
+    {
+        storage.setProperty (SettingID::cpu, SystemStats::getNumCpus());
+        updateNumCPUs();
+
+        storage.setProperty (SettingID::use64Bit, false);
+    }
 
     if (resetInputDevices)
         for (auto wid : waveInputs)
