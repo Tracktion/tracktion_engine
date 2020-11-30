@@ -119,22 +119,6 @@ namespace test_utilities
         writeToFile (file, createAudioBuffer (block), sampleRate);
     }
 
-    /** Returns true if all the nodes in the graph have a unique nodeID. */
-    static inline bool areNodeIDsUnique (Node& node, bool ignoreZeroIDs)
-    {
-        std::vector<size_t> nodeIDs;
-        visitNodes (node, [&] (Node& n) { nodeIDs.push_back (n.getNodeProperties().nodeID); }, false);
-        std::sort (nodeIDs.begin(), nodeIDs.end());
-
-        if (ignoreZeroIDs)
-            nodeIDs.erase (std::remove_if (nodeIDs.begin(), nodeIDs.end(),
-                                           [] (auto nID) { return nID == 0; }),
-                           nodeIDs.end());
-
-        auto uniqueEnd = std::unique (nodeIDs.begin(), nodeIDs.end());
-        return uniqueEnd == nodeIDs.end();
-    }
-
     //==============================================================================
     /** Returns the ammount of internal memory allocated for buffers. */
     static inline size_t getMemoryUsage (const std::vector<Node*>& nodes, int prepareBlockSize)
@@ -279,7 +263,7 @@ namespace test_utilities
     /** Checks that there are no duplicate nodeIDs in a Node. */
     static inline void expectUniqueNodeIDs (juce::UnitTest& ut, Node& node, bool ignoreZeroIDs)
     {
-        auto areUnique = areNodeIDsUnique (node, ignoreZeroIDs);
+        auto areUnique = node_player_utils::areNodeIDsUnique (node, ignoreZeroIDs);
         ut.expect (areUnique, "nodeIDs are not unique");
 
         if (! areUnique)

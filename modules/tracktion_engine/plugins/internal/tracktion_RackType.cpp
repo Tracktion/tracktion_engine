@@ -566,7 +566,7 @@ private:
         
         inputProvider = std::make_shared<InputProvider>();
         auto rackNode = RackNodeBuilder::createRackNode (type, type.sampleRate, type.blockSize, inputProvider);
-        jassert (tracktion_graph::test_utilities::areNodeIDsUnique (*rackNode, true));
+        jassert (tracktion_graph::node_player_utils::areNodeIDsUnique (*rackNode, true));
 
         processor = std::make_unique<RackNodePlayer<tracktion_graph::NodePlayer>> (std::move (rackNode), inputProvider, false);
         processor->prepareToPlay (type.sampleRate, type.blockSize);

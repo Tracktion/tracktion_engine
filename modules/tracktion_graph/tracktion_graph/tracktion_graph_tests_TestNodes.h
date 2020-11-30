@@ -330,7 +330,13 @@ public:
 
     NodeProperties getNodeProperties() override
     {
-        return input->getNodeProperties();
+        auto props = input->getNodeProperties();
+        constexpr size_t gainNodeMagicHash = 0x6761696e4e6f6465;
+        
+        if (props.nodeID != 0)
+            hash_combine (props.nodeID, gainNodeMagicHash);
+        
+        return props;
     }
     
     std::vector<Node*> getDirectInputNodes() override
@@ -402,7 +408,13 @@ public:
                                                 
     NodeProperties getNodeProperties() override
     {
-        return input->getNodeProperties();
+        auto props = input->getNodeProperties();
+        constexpr size_t sendNodeMagicHash = 0x73656e644e6f6465;
+        
+        if (props.nodeID != 0)
+            hash_combine (props.nodeID, sendNodeMagicHash);
+        
+        return props;
     }
     
     std::vector<Node*> getDirectInputNodes() override
@@ -462,6 +474,11 @@ public:
             props.latencyNumSamples = std::max (props.latencyNumSamples, nodeProps.latencyNumSamples);
             hash_combine (props.nodeID, nodeProps.nodeID);
         }
+        
+        constexpr size_t returnNodeMagicHash = 0x72657475726e4e6f6465;
+        
+        if (props.nodeID != 0)
+            hash_combine (props.nodeID, returnNodeMagicHash);
 
         return props;
     }
@@ -608,6 +625,11 @@ public:
             props.numberOfChannels = std::max (props.numberOfChannels, channel.second + 1);
         }
         
+        constexpr size_t channelNodeMagicHash = 0x6368616e6e656c4e6f6465;
+        
+        if (props.nodeID != 0)
+            hash_combine (props.nodeID, channelNodeMagicHash);
+
         return props;
     }
     
