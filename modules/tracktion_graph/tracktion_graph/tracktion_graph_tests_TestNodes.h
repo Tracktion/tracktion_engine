@@ -475,7 +475,7 @@ public:
             hash_combine (props.nodeID, nodeProps.nodeID);
         }
         
-        constexpr size_t returnNodeMagicHash = 0x72657475726e4e6f6465;
+        constexpr size_t returnNodeMagicHash = 0x72657475726e;
         
         if (props.nodeID != 0)
             hash_combine (props.nodeID, returnNodeMagicHash);
@@ -625,7 +625,7 @@ public:
             props.numberOfChannels = std::max (props.numberOfChannels, channel.second + 1);
         }
         
-        constexpr size_t channelNodeMagicHash = 0x6368616e6e656c4e6f6465;
+        constexpr size_t channelNodeMagicHash = 0x6368616e6e656c;
         
         if (props.nodeID != 0)
             hash_combine (props.nodeID, channelNodeMagicHash);
