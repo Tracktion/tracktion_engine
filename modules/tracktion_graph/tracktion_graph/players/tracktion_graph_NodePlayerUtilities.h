@@ -41,12 +41,6 @@ namespace node_player_utils
         // First give the Nodes a chance to transform
         transformNodes (*node);
         
-       #if JUCE_DEBUG
-        // If we don't have unique IDs there can be problems copying internal buffers etc.
-        const bool uniqueIDs = areNodeIDsUnique (*node, true);
-        jassert (uniqueIDs);
-       #endif
-
         // Next, initialise all the nodes, this will call prepareToPlay on them and also
         // give them a chance to do things like balance latency
         const PlaybackInitialisationInfo info { sampleRate, blockSize, *node, oldNode };
