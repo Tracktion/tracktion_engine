@@ -143,22 +143,43 @@ public:
     int isAllowedToReallocate() const noexcept;
 
     //==============================================================================
-    static juce::Array<TransportControl*> getAllActiveTransports (Engine&);
-    static int getNumPlayingTransports (Engine&);
-    static void stopAllTransports (Engine&, bool discardRecordings, bool clearDevices);
-    static void restartAllTransports (Engine&, bool clearDevices);
-
-    //==============================================================================
     struct ScopedPlaybackRestarter
     {
         ScopedPlaybackRestarter (TransportControl& o) : tc (o), wasPlaying (tc.isPlaying()) {}
         ~ScopedPlaybackRestarter()   { if (wasPlaying) tc.play (false); }
 
         TransportControl& tc;
-        bool wasPlaying;
+        bool wasPlaying = false;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ScopedPlaybackRestarter)
     };
+
+    //==============================================================================
+    /** Frees the playback context and then re-allocates it upon destruction. */
+    struct ScopedContextAllocator
+    {
+        ScopedContextAllocator (TransportControl& o)
+            : tc (o), wasAllocated (tc.isPlayContextActive())
+        {}
+        
+        ~ScopedContextAllocator()
+        {
+            if (wasAllocated)
+                tc.ensureContextAllocated();
+        }
+
+        TransportControl& tc;
+        bool wasAllocated = false;
+        ScopedPlaybackRestarter playbackRestarter { tc };
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ScopedContextAllocator)
+    };
+
+    //==============================================================================
+    static juce::Array<TransportControl*> getAllActiveTransports (Engine&);
+    static int getNumPlayingTransports (Engine&);
+    static void stopAllTransports (Engine&, bool discardRecordings, bool clearDevices);
+    static std::vector<std::unique_ptr<ScopedContextAllocator>> restartAllTransports (Engine&, bool clearDevices);
 
     //==============================================================================
     struct Listener

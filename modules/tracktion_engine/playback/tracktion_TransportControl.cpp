@@ -710,15 +710,17 @@ void TransportControl::stopAllTransports (Engine& engine, bool discardRecordings
         tc->stop (discardRecordings, clearDevices);
 }
 
-void TransportControl::restartAllTransports (Engine& engine, bool clearDevices)
+std::vector<std::unique_ptr<TransportControl::ScopedContextAllocator>> TransportControl::restartAllTransports (Engine& engine, bool clearDevices)
 {
+    std::vector<std::unique_ptr<ScopedContextAllocator>> restartHandles;
+    
     for (auto tc : getAllActiveTransports (engine))
     {
         std::unique_ptr<ScopedPlaybackRestarter> spr;
 
         if (clearDevices)
         {
-            spr = std::make_unique<ScopedPlaybackRestarter> (*tc);
+            restartHandles.push_back (std::make_unique<ScopedContextAllocator> (*tc));
             tc->stop (false, true);
             tc->freePlaybackContext();
         }
@@ -729,6 +731,8 @@ void TransportControl::restartAllTransports (Engine& engine, bool clearDevices)
 
         tc->edit.restartPlayback();
     }
+    
+    return restartHandles;
 }
 
 TransportControl::PlayingFlag::PlayingFlag (Engine& e) noexcept : engine (e)    { ++engine.getActiveEdits().numTransportsPlaying; }
