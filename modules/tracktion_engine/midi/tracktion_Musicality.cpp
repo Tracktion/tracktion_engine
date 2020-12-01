@@ -1530,7 +1530,8 @@ void PatternGenerator::generateArpPattern()
                 const int stepIndex = styleValues[stepCur];
                 const int note = chordRoot + intervals[stepIndex] + octaveOffset;
 
-                addNote (sequence, note, curBeat, stepLength * lengthFactor, int (velocity / 100.0f * 127), 0, um);
+                addNote (sequence, note, curBeat, stepLength * lengthFactor, int (velocity / 100.0f * 127),
+                         mc->edit.engine.getEngineBehaviour().getDefaultNoteColour(), um);
 
                 // if we are at first beat of a new stage in the progression, play the root note if wanted
                 if (stepStart && arpPlayRoot)
@@ -1538,7 +1539,8 @@ void PatternGenerator::generateArpPattern()
                     stepStart = false;
 
                     const int rootNote = chordRoot + octaveOffset - 12;
-                    addNote (sequence, rootNote, curBeat, stepLengthLeft, int (velocity / 100.0f * 127), 0, um);
+                    addNote (sequence, rootNote, curBeat, stepLengthLeft, int (velocity / 100.0f * 127),
+                             mc->edit.engine.getEngineBehaviour().getDefaultNoteColour(), um);
                 }
             }
 
@@ -1683,7 +1685,8 @@ void PatternGenerator::generateChordPattern()
                         {
                             addNote (sequence, note, curBeat + chordNote.start,
                                      std::min (chordNote.length * lengthFactor, float (patternLength) - chordNote.start),
-                                     int (velocity / 100.0f * chordNote.velocity), 0, um);
+                                     int (velocity / 100.0f * chordNote.velocity),
+                                     mc->edit.engine.getEngineBehaviour().getDefaultNoteColour(), um);
                         }
                     }
                 }
@@ -1798,7 +1801,8 @@ void PatternGenerator::generateMelodyPattern()
                                         if (auto newNote = addNote (sequence, note1, curBeat + chordNote.start,
                                                                      std::min (chordNote.length * lengthFactor,
                                                                                float (patternLength) - chordNote.start),
-                                                                     (int) (velocity / 100.0f * chordNote.velocity), 0, um))
+                                                                     (int) (velocity / 100.0f * chordNote.velocity),
+                                                                     mc->edit.engine.getEngineBehaviour().getDefaultNoteColour(), um))
                                         {
                                             newNote->setMute (true, um);
                                             newNote->setColour (chordSteps.contains (note1) ? 0 : 2, um);
@@ -1823,7 +1827,8 @@ void PatternGenerator::generateMelodyPattern()
                                 if (auto newNote = addNote (sequence, note1, curBeat + chordNote.start,
                                                              std::min (chordNote.length * lengthFactor,
                                                                        float (patternLength) - chordNote.start),
-                                                             (int) (velocity / 100.0f * chordNote.velocity), 0, um))
+                                                             (int) (velocity / 100.0f * chordNote.velocity),
+                                                             mc->edit.engine.getEngineBehaviour().getDefaultNoteColour(), um))
                                     newNote->setMute (true, um);
 
 
@@ -1833,7 +1838,8 @@ void PatternGenerator::generateMelodyPattern()
                                 if (auto newNote = addNote (sequence, note2, curBeat + chordNote.start,
                                                              std::min (chordNote.length * lengthFactor,
                                                                        float (patternLength) - chordNote.start),
-                                                             (int) (velocity / 100.0f * chordNote.velocity), 0, um))
+                                                             (int) (velocity / 100.0f * chordNote.velocity),
+                                                             mc->edit.engine.getEngineBehaviour().getDefaultNoteColour(), um))
                                     newNote->setMute (true, um);
 
                         }
@@ -1964,7 +1970,8 @@ void PatternGenerator::generateBassPattern()
                             addNote (sequence, note, curBeat + bassNote.start,
                                      std::min (bassNote.length * lengthFactor,
                                                float (patternLength) - bassNote.start),
-                                     (int) (velocity / 100.0f * bassNote.velocity), 0, um);
+                                     (int) (velocity / 100.0f * bassNote.velocity),
+                                     mc->edit.engine.getEngineBehaviour().getDefaultNoteColour(), um);
                         }
                     }
                 }

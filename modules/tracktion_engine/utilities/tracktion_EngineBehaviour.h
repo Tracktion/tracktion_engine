@@ -76,6 +76,10 @@ public:
     virtual int getMiddleCOctave()                                                  { return 4; }
     virtual void setMiddleCOctave (int /*newOctave*/)                               {}
 
+    // Default colour for notes. How this index maps to an actual colour is host dependant.
+    // Waveform uses yellow, green, blue, purple, red, auto (based on key)
+    virtual int getDefaultNoteColour()                                              { return 0; }
+
     // Notifies the host application that an edit has just been saved
     virtual void editHasBeenSaved (Edit& /*edit*/, juce::File /*path*/)             {}
 

@@ -1674,7 +1674,7 @@ void MidiList::importMidiSequence (const juce::MidiMessageSequence& sequence, Ed
                          beatTime,
                          ts != nullptr ? ((ts->timeToBeats (keyUpTime) - firstBeatNum) - beatTime)
                                        : (keyUpTime - beatTime),
-                         m.getVelocity(), 0, um);
+                         m.getVelocity(), edit != nullptr ? edit->engine.getEngineBehaviour().getDefaultNoteColour() : 0, um);
             }
             else if (m.isAftertouch())
             {
