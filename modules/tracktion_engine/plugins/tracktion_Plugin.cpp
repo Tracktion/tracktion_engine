@@ -943,6 +943,17 @@ AutomatableParameter::Ptr Plugin::getQuickControlParameter() const
                 {
                     if (rf->type != nullptr)
                     {
+                        // First check macros
+                        for (auto param : rf->type->macroParameterList.getAutomatableParameters())
+                        {
+                            if (param->paramID == currentID)
+                            {
+                                quickControlParameter = param;
+                                break;
+                            }
+                        }
+
+                        // Then plugins
                         for (auto p : rf->type->getPlugins())
                         {
                             for (int j = 0; j < p->getNumAutomatableParameters(); j++)
