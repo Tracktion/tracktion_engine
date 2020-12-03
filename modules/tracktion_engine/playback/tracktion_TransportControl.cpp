@@ -585,7 +585,7 @@ struct TransportControl::PlayHeadWrapper
     {
        #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         if (auto ph = getNodePlayHead())
-            ph->setPosition (timeToSample (newPos, getSampleRate()));
+            transport.playbackContext->postPosition (newPos);
        #endif
 
         if (auto ph = getPlayHead())

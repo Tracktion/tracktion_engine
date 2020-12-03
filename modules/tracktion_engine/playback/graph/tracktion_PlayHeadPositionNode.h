@@ -72,7 +72,6 @@ private:
     struct State
     {
         int64_t numLatencySamplesToCountDown = 0;
-        int64_t lastReferenceSamplePosition = 0;
         int64_t referencePositionOnJump = 0;
     };
     
@@ -85,13 +84,9 @@ private:
         if (getPlayHeadState().didPlayheadJump() || updateReferencePositionOnJump)
         {
             state->numLatencySamplesToCountDown = latencyNumSamples;
-            state->referencePositionOnJump = updateReferencePositionOnJump ? referenceSamplePosition - numSamples
-                                                                           : state->lastReferenceSamplePosition;
-            // TODO: Need to determine why the last position is the "correct" visual position
+            state->referencePositionOnJump = referenceSamplePosition;
         }
         
-        state->lastReferenceSamplePosition = referenceSamplePosition;
-
         if (state->numLatencySamplesToCountDown > 0)
         {
             const int64_t numSamplesToDecrement = std::min (state->numLatencySamplesToCountDown, numSamples);

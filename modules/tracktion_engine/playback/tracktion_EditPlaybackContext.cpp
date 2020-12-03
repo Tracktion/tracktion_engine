@@ -46,6 +46,12 @@ namespace tracktion_engine
          return latencySamples;
      }
      
+     void postPosition (double newPosition)
+     {
+         pendingPosition.store (newPosition, std::memory_order_release);
+         positionUpdatePending = true;
+     }
+     
      void setSpeedCompensation (double plusOrMinus)
      {
          speedCompensation = jlimit (-10.0, 10.0, plusOrMinus);
@@ -62,6 +68,9 @@ namespace tracktion_engine
      
      void process (float** allChannels, int numChannels, int destNumSamples)
      {
+         if (positionUpdatePending.exchange (false))
+             playHead.setPosition (timeToSample (pendingPosition.load (std::memory_order_acquire), getSampleRate()));
+         
          const auto numSamples = referenceSampleRange.getLength();
          scratchMidiBuffer.clear();
 
@@ -115,6 +124,8 @@ namespace tracktion_engine
      
      int latencySamples = 0;
      juce::Range<int64_t> referenceSampleRange;
+     std::atomic<double> pendingPosition { 0.0 };
+     std::atomic<bool> positionUpdatePending { false };
      double speedCompensation = 0.0;
      std::vector<std::unique_ptr<juce::LagrangeInterpolator>> interpolators;
      bool isUsingInterpolator = false;
@@ -1092,6 +1103,12 @@ void EditPlaybackContext::setSpeedCompensation (double plusOrMinus)
 {
     if (nodePlaybackContext)
         nodePlaybackContext->setSpeedCompensation (plusOrMinus);
+}
+
+void EditPlaybackContext::postPosition (double newPosition)
+{
+    if (nodePlaybackContext)
+        nodePlaybackContext->postPosition (newPosition);
 }
 
 void EditPlaybackContext::setThreadPoolStrategy (int type)

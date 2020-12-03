@@ -95,6 +95,7 @@ public:
     double getSampleRate() const;
     void updateNumCPUs();
     void setSpeedCompensation (double plusOrMinus);
+    void postPosition (double);
 
     static void setThreadPoolStrategy (int);
     static int getThreadPoolStrategy();
