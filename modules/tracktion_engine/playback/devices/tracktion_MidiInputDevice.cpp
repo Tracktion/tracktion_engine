@@ -599,9 +599,9 @@ public:
     virtual void handleMMCMessage (const MidiMessage&) {}
     virtual bool handleTimecodeMessage (const MidiMessage&) { return false; }
 
-    String prepareToRecord (double start, double, double, int, bool) override
+    String prepareToRecord (double, double punchIn, double, int, bool) override
     {
-        startTime = start;
+        startTime = punchIn;
         recorded.clear();
         livePlayOver = context.transport.looping;
 
