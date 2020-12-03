@@ -1284,7 +1284,15 @@ void AudioTrack::setFrozen (bool b, FreezeType type)
         {
             if (! edit.isLoading())
             {
-                if (b && getOutput().getDestinationTrack() != nullptr)
+                const auto outputsToSubmixTrack = [this]
+                {
+                    if (auto folder = getParentFolderTrack())
+                        return folder->isSubmixFolder();
+                        
+                    return false;
+                };
+                
+                if (b && (getOutput().getDestinationTrack() != nullptr || outputsToSubmixTrack()))
                 {
                     edit.engine.getUIBehaviour().showWarningMessage (TRANS("Tracks which output to another track can't themselves be frozen; "
                                                                            "instead, you should freeze the track they input into."));
