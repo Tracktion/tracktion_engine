@@ -158,6 +158,10 @@ bool GrooveTemplate::isEmpty() const
 }
 
 //==============================================================================
+const char* basic8SwingXML  = "<GROOVETEMPLATE name=\"Basic 8th Swing\" numberOfNotes=\"2\" notesPerBeat=\"2\" parameterized=\"1\"><SHIFT delta=\"0.0\"/><SHIFT delta=\"0.66\"/></GROOVETEMPLATE>";
+const char* basic16SwingXML = "<GROOVETEMPLATE name=\"Basic 16th Swing\" numberOfNotes=\"2\" notesPerBeat=\"4\" parameterized=\"1\"><SHIFT delta=\"0.0\"/><SHIFT delta=\"0.66\"/></GROOVETEMPLATE>";
+
+//==============================================================================
 GrooveTemplateManager::GrooveTemplateManager (Engine& e)
     : engine (e)
 {
@@ -186,6 +190,27 @@ GrooveTemplateManager::GrooveTemplateManager (Engine& e)
             forEachXmlChildElementWithTagName (*defSettings, n, GrooveTemplate::grooveXmlTag)
                 knownGrooves.add (new GrooveTemplate (n));
     }
+
+    // Load even newer presets
+    auto hasGroove = [this] (const GrooveTemplate& gt)
+    {
+        for (auto g : knownGrooves)
+            if (g->getName() == gt.getName())
+                return true;
+
+        return false;
+    };
+
+    auto addGrooveIfNotExists = [this, &hasGroove] (String xmlString)
+    {
+        auto xml = XmlDocument::parse (xmlString);
+        auto gt = std::make_unique<GrooveTemplate> (xml.get());
+        if (! hasGroove (*gt))
+            knownGrooves.add (gt.release());
+    };
+
+    addGrooveIfNotExists (basic8SwingXML);
+    addGrooveIfNotExists (basic16SwingXML);
 }
 
 //==============================================================================
