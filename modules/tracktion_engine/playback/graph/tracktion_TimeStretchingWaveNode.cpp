@@ -103,6 +103,9 @@ void TimeStretchingWaveNode::process (const ProcessContext& pc)
     const auto timelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.referenceSampleRange).timelineRange1;
     const auto editRange = tracktion_graph::sampleToTime (timelineRange, sampleRate);
 
+    if (timelineRange.isEmpty())
+        return;
+
     auto destAudioBlock = pc.buffers.audio;
 
     if (! playHeadState.isContiguousWithPreviousBlock() || editRange.getStart() != nextEditTime)
