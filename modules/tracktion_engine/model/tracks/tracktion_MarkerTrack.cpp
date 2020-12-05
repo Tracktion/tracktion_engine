@@ -22,7 +22,7 @@ MarkerTrack::~MarkerTrack()
 
 bool MarkerTrack::isMarkerTrack() const                  { return true; }
 juce::String MarkerTrack::getSelectableDescription()     { return getName(); }
-juce::String MarkerTrack::getName()                      { return TRANS("Markers"); }
+juce::String MarkerTrack::getName()                      { return TRANS("Marker"); }
 bool MarkerTrack::canContainPlugin (Plugin*) const       { return false; }
 
 }

@@ -1886,7 +1886,11 @@ void Edit::ensureTempoTrack()
 
 void Edit::ensureMarkerTrack()
 {
-    if (getMarkerTrack() == nullptr)
+    if (auto t = getMarkerTrack())
+    {
+        t->setName (TRANS("Marker"));
+    }
+    else
     {
         juce::ValueTree v (IDs::MARKERTRACK);
         v.setProperty (IDs::name, TRANS("Marker"), nullptr);
@@ -1896,10 +1900,14 @@ void Edit::ensureMarkerTrack()
 
 void Edit::ensureChordTrack()
 {
-    if (getChordTrack() == nullptr)
+    if (auto t = getChordTrack())
+    {
+        t->setName (TRANS("Chord"));
+    }
+    else
     {
         juce::ValueTree v (IDs::CHORDTRACK);
-        v.setProperty (IDs::name, TRANS("Chords"), nullptr);
+        v.setProperty (IDs::name, TRANS("Chord"), nullptr);
         state.addChild (v, 0, &getUndoManager());
     }
 }
