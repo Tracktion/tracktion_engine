@@ -74,6 +74,7 @@
 #include "tracktion_graph/tracktion_graph_LockFreeMultiThreadedNodePlayer.h"
 #include "tracktion_graph/tracktion_graph_NodePlayerThreadPools.h"
 
+#include "tracktion_graph/nodes/tracktion_graph_ConnectedNode.h"
 #include "tracktion_graph/nodes/tracktion_graph_LatencyNode.h"
 #include "tracktion_graph/nodes/tracktion_graph_SummingNode.h"
 
