@@ -834,6 +834,9 @@ struct TransportControl::ScreenSaverDefeater
 {
     ScreenSaverDefeater()
     {
+        if (Desktop::getInstance().isHeadless())
+            return;
+
         TRACKTION_ASSERT_MESSAGE_THREAD
         ++numScreenSaverDefeaters;
         Desktop::setScreenSaverEnabled (numScreenSaverDefeaters == 0);
@@ -841,6 +844,9 @@ struct TransportControl::ScreenSaverDefeater
 
     ~ScreenSaverDefeater()
     {
+        if (Desktop::getInstance().isHeadless())
+            return;
+
         TRACKTION_ASSERT_MESSAGE_THREAD
         --numScreenSaverDefeaters;
         jassert (numScreenSaverDefeaters >= 0);
