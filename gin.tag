@@ -2812,6 +2812,20 @@
     <class kind="class">tracktion_engine::EditFileOperations</class>
     <namespace>tracktion_engine</namespace>
     <member kind="function">
+      <type>std::unique_ptr&lt; Edit &gt;</type>
+      <name>loadEditFromFile</name>
+      <anchorfile>namespacetracktion__engine.html</anchorfile>
+      <anchor>a3f693a481bd0c76efaef9918f318a86c</anchor>
+      <arglist>(Engine &amp;, const juce::File &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::unique_ptr&lt; Edit &gt;</type>
+      <name>createEmptyEdit</name>
+      <anchorfile>namespacetracktion__engine.html</anchorfile>
+      <anchor>a57bb0d4a9fa1223d3c5bd184d08a5214</anchor>
+      <arglist>(Engine &amp;, const juce::File &amp;)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::ValueTree</type>
       <name>loadEditFromProjectManager</name>
       <anchorfile>namespacetracktion__engine.html</anchorfile>
@@ -3116,6 +3130,13 @@
       <anchorfile>namespacetracktion__engine.html</anchorfile>
       <anchor>a1fbb7899ea7b5ac9b0720504303d44df</anchor>
       <arglist>(const SelectableList &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; ClipEffect * &gt;</type>
+      <name>getAllClipEffects</name>
+      <anchorfile>namespacetracktion__engine.html</anchorfile>
+      <anchor>aebcd977354b0044d278b7b6bf1644630</anchor>
+      <arglist>(Edit &amp;edit)</arglist>
     </member>
     <member kind="function">
       <type>MidiNote *</type>
@@ -16488,6 +16509,13 @@
       <enumvalue file="classtracktion__engine_1_1ClipEffect.html" anchor="a2db4cad593f6e7b028f6c3fdf38cdce4ab2c97ae425dd751b0e48a3acae79cf4a">filter</enumvalue>
       <enumvalue file="classtracktion__engine_1_1ClipEffect.html" anchor="a2db4cad593f6e7b028f6c3fdf38cdce4ad954c3afd09ae63bdc4cbd99783be9cc">firstEffect</enumvalue>
       <enumvalue file="classtracktion__engine_1_1ClipEffect.html" anchor="a2db4cad593f6e7b028f6c3fdf38cdce4aca66c1e383e0dc2c7267725360153d43">lastEffect</enumvalue>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>initialise</name>
+      <anchorfile>classtracktion__engine_1_1ClipEffect.html</anchorfile>
+      <anchor>a0c187966278e59002f31fc8ddb069163</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -47620,6 +47648,13 @@
       <arglist>(const juce::ValueTree &amp;, ClipEffects &amp;)</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>initialise</name>
+      <anchorfile>structtracktion__engine_1_1PitchShiftEffect.html</anchorfile>
+      <anchor>a734cdfe0c80f24a6c4da788dabb44e20</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
       <type>juce::ReferenceCountedObjectPtr&lt; ClipEffectRenderJob &gt;</type>
       <name>createRenderJob</name>
       <anchorfile>structtracktion__engine_1_1PitchShiftEffect.html</anchorfile>
@@ -49284,6 +49319,13 @@
       <anchorfile>structtracktion__engine_1_1PluginEffect.html</anchorfile>
       <anchor>a820a3fb8c419e1dbb5a5a845f2d8a7cb</anchor>
       <arglist>(const AudioFile &amp;, double sourceLength) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>initialise</name>
+      <anchorfile>structtracktion__engine_1_1PluginEffect.html</anchorfile>
+      <anchor>ab260674bcb3689069d3452dc87c1fce8</anchor>
+      <arglist>() override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -60499,6 +60541,13 @@
       <arglist>(Edit &amp;, OutputDevice &amp;)</arglist>
     </member>
     <member kind="function" static="yes">
+      <type>static juce::String</type>
+      <name>getDeviceIDFromFreezeFile</name>
+      <anchorfile>classtracktion__engine_1_1TemporaryFileManager.html</anchorfile>
+      <anchor>af7707900e5604458b74f3206f58b4267</anchor>
+      <arglist>(Edit &amp;, const juce::File &amp;deviceFreezeFile)</arglist>
+    </member>
+    <member kind="function" static="yes">
       <type>static juce::File</type>
       <name>getFreezeFileForTrack</name>
       <anchorfile>classtracktion__engine_1_1TemporaryFileManager.html</anchorfile>
@@ -70021,6 +70070,13 @@
       <arglist>(const AudioFile &amp;sourceFile, double sourceLength) override</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>initialise</name>
+      <anchorfile>structtracktion__engine_1_1VolumeEffect.html</anchorfile>
+      <anchor>af33bcfb7375536aea1a4910ca1586e82</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
       <type>bool</type>
       <name>hasProperties</name>
       <anchorfile>structtracktion__engine_1_1VolumeEffect.html</anchorfile>
@@ -72435,6 +72491,20 @@
       <arglist>(ModifierList &amp;, EditItemID)</arglist>
     </member>
     <member kind="function">
+      <type>std::unique_ptr&lt; Edit &gt;</type>
+      <name>loadEditFromFile</name>
+      <anchorfile>namespacetracktion__engine.html</anchorfile>
+      <anchor>a3f693a481bd0c76efaef9918f318a86c</anchor>
+      <arglist>(Engine &amp;, const juce::File &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::unique_ptr&lt; Edit &gt;</type>
+      <name>createEmptyEdit</name>
+      <anchorfile>namespacetracktion__engine.html</anchorfile>
+      <anchor>a57bb0d4a9fa1223d3c5bd184d08a5214</anchor>
+      <arglist>(Engine &amp;, const juce::File &amp;)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::ValueTree</type>
       <name>loadEditFromProjectManager</name>
       <anchorfile>namespacetracktion__engine.html</anchorfile>
@@ -72671,6 +72741,13 @@
       <anchorfile>namespacetracktion__engine.html</anchorfile>
       <anchor>a1fbb7899ea7b5ac9b0720504303d44df</anchor>
       <arglist>(const SelectableList &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; ClipEffect * &gt;</type>
+      <name>getAllClipEffects</name>
+      <anchorfile>namespacetracktion__engine.html</anchorfile>
+      <anchor>aebcd977354b0044d278b7b6bf1644630</anchor>
+      <arglist>(Edit &amp;edit)</arglist>
     </member>
     <member kind="function">
       <type>MidiNote *</type>
@@ -76136,14 +76213,6 @@
     <subgroup>tracktion_engine-utilities</subgroup>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph.html</filename>
-    <subgroup>tracktion_graph-docs</subgroup>
-    <subgroup>tracktion_graph-tracktion_graph</subgroup>
-    <subgroup>tracktion_graph-utilities</subgroup>
-  </compound>
-  <compound kind="group">
     <name>tracktion_graph-tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph-tracktion__graph.html</filename>
@@ -76172,6 +76241,14 @@
     <class kind="struct">tracktion_graph::test_utilities::TestProcess</class>
     <class kind="class">tracktion_graph::LatencyNode</class>
     <class kind="class">tracktion_graph::SummingNode</class>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph.html</filename>
+    <subgroup>tracktion_graph-docs</subgroup>
+    <subgroup>tracktion_graph-tracktion_graph</subgroup>
+    <subgroup>tracktion_graph-utilities</subgroup>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-utilities</name>

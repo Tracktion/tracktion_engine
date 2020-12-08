@@ -200,7 +200,7 @@ var searchData=
   ['createeditforpreviewingfile',['createEditForPreviewingFile',['../classtracktion__engine_1_1Edit.html#aa71874dce2060c9c0fbd71ad9e5f7589',1,'tracktion_engine::Edit']]],
   ['createeditforpreviewingpreset',['createEditForPreviewingPreset',['../classtracktion__engine_1_1Edit.html#aefd9fa1638e1596824d67b436ee83e7c',1,'tracktion_engine::Edit']]],
   ['createeffectandaddtovaluetree',['createEffectAndAddToValueTree',['../classtracktion__engine_1_1ClipEffect.html#a39ffde333c6d135d5eb829990cf0e74f',1,'tracktion_engine::ClipEffect']]],
-  ['createemptyedit',['createEmptyEdit',['../namespacetracktion__engine.html#a2acb0714054805da01e82681b8ce804a',1,'tracktion_engine']]],
+  ['createemptyedit',['createEmptyEdit',['../namespacetracktion__engine.html#a57bb0d4a9fa1223d3c5bd184d08a5214',1,'tracktion_engine::createEmptyEdit(Engine &amp;, const juce::File &amp;)'],['../namespacetracktion__engine.html#a2acb0714054805da01e82681b8ce804a',1,'tracktion_engine::createEmptyEdit(Engine &amp;)']]],
   ['createemptystate',['createEmptyState',['../classtracktion__engine_1_1TempoSequence.html#a3adf7dfa67d0f055853ccac81bdbc79c',1,'tracktion_engine::TempoSequence']]],
   ['createexistingplugin',['createExistingPlugin',['../classtracktion__engine_1_1PluginManager.html#a1afd1202413101a712e0c2a0e00bbf40',1,'tracktion_engine::PluginManager']]],
   ['createfor',['createFor',['../classtracktion__engine_1_1VSTXML.html#adf3788342e56ee7895f22fb71bbbc031',1,'tracktion_engine::VSTXML']]],

@@ -84,6 +84,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8df7a5eb64f6c75a7e17b84d7aafe884"><td class="memItemLeft" align="right" valign="top">juce::ReferenceCountedObjectPtr&lt; ClipEffectRenderJob &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1VolumeEffect.html#a8df7a5eb64f6c75a7e17b84d7aafe884">createRenderJob</a> (const <a class="el" href="classtracktion__engine_1_1AudioFile.html">AudioFile</a> &amp;sourceFile, double sourceLength) override</td></tr>
 <tr class="memdesc:a8df7a5eb64f6c75a7e17b84d7aafe884"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subclasses should return a job that can render the source.  <a href="#a8df7a5eb64f6c75a7e17b84d7aafe884">More...</a><br /></td></tr>
 <tr class="separator:a8df7a5eb64f6c75a7e17b84d7aafe884"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af33bcfb7375536aea1a4910ca1586e82"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1VolumeEffect.html#af33bcfb7375536aea1a4910ca1586e82">initialise</a> () override</td></tr>
+<tr class="separator:af33bcfb7375536aea1a4910ca1586e82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c36b66e55fecfee0b3bbdfcab694fc8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1VolumeEffect.html#a0c36b66e55fecfee0b3bbdfcab694fc8">hasProperties</a> () override</td></tr>
 <tr class="memdesc:a0c36b66e55fecfee0b3bbdfcab694fc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true here to show a properties button in the editor and enable the propertiesButtonPressed callback.  <a href="#a0c36b66e55fecfee0b3bbdfcab694fc8">More...</a><br /></td></tr>
 <tr class="separator:a0c36b66e55fecfee0b3bbdfcab694fc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -252,6 +254,35 @@ Additional Inherited Members</h2></td></tr>
 <p>N.B. because the sourceFile may not be valid at the time of job creation you should use the sourceLength parameter to determine how to build the render node. </p>
 
 <p>Implements <a class="el" href="classtracktion__engine_1_1ClipEffect.html#a0b9d055ec17167e00b8699ab5a3b846a">tracktion_engine::ClipEffect</a>.</p>
+
+</div>
+</div>
+<a id="af33bcfb7375536aea1a4910ca1586e82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af33bcfb7375536aea1a4910ca1586e82">&#9670;&nbsp;</a></span>initialise()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion_engine::VolumeEffect::initialise </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classtracktion__engine_1_1ClipEffect.html#a0c187966278e59002f31fc8ddb069163">tracktion_engine::ClipEffect</a>.</p>
+
+<p class="reference">References <a class="el" href="classtracktion__engine_1_1ClipEffect.html#af620b6b18cf33d12cd70ebc49188d2f3">tracktion_engine::ClipEffect::getIndividualHash()</a>, <a class="el" href="classtracktion__engine_1_1ClipEffect.html#ab8f73c7892a936b42f3466a3fa67fe66">tracktion_engine::ClipEffect::hasProperties()</a>, <a class="el" href="classtracktion__engine_1_1ClipEffect.html#a51d4565ac6069b7729998ab955300c7f">tracktion_engine::ClipEffect::propertiesButtonPressed()</a>, <a class="el" href="classtracktion__engine_1_1ClipEffect.html#a0f8e7f172712eb79b7885e0cbb8ef3e9">tracktion_engine::ClipEffect::valueTreeChanged()</a>, and <a class="el" href="structtracktion__engine_1_1ValueTreeAllEventListener.html#af93f6549f20e5a99a7208fe5a6a8affd">tracktion_engine::ValueTreeAllEventListener::valueTreePropertyChanged()</a>.</p>
 
 </div>
 </div>
@@ -462,7 +493,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 10 2020 15:50:38 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Dec 8 2020 11:34:45 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

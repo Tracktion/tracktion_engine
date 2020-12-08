@@ -1091,14 +1091,20 @@ Functions</h2></td></tr>
 <tr class="memitem:a2e7932644221356e289f5830bfa8e929"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion__engine_1_1Modifier.html#a4b163857373a7eb35df5a75cb5fcb329">Modifier::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#a2e7932644221356e289f5830bfa8e929">findModifierForID</a> (<a class="el" href="classtracktion__engine_1_1ModifierList.html">ModifierList</a> &amp;, <a class="el" href="structtracktion__engine_1_1EditItemID.html">EditItemID</a>)</td></tr>
 <tr class="memdesc:a2e7932644221356e289f5830bfa8e929"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a <a class="el" href="structtracktion__engine_1_1Modifier.html">Modifier</a> if it can be found in the list.  <a href="#a2e7932644221356e289f5830bfa8e929">More...</a><br /></td></tr>
 <tr class="separator:a2e7932644221356e289f5830bfa8e929"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f693a481bd0c76efaef9918f318a86c"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#a3f693a481bd0c76efaef9918f318a86c">loadEditFromFile</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;)</td></tr>
+<tr class="memdesc:a3f693a481bd0c76efaef9918f318a86c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads an edit from file, ready for playback / edtiing.  <a href="#a3f693a481bd0c76efaef9918f318a86c">More...</a><br /></td></tr>
+<tr class="separator:a3f693a481bd0c76efaef9918f318a86c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57bb0d4a9fa1223d3c5bd184d08a5214"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#a57bb0d4a9fa1223d3c5bd184d08a5214">createEmptyEdit</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;)</td></tr>
+<tr class="memdesc:a57bb0d4a9fa1223d3c5bd184d08a5214"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new edit for a file, ready for playback / edtiing.  <a href="#a57bb0d4a9fa1223d3c5bd184d08a5214">More...</a><br /></td></tr>
+<tr class="separator:a57bb0d4a9fa1223d3c5bd184d08a5214"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5942543dc42901e4ebf512d0a928ef68"><td class="memItemLeft" align="right" valign="top">juce::ValueTree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#a5942543dc42901e4ebf512d0a928ef68">loadEditFromProjectManager</a> (<a class="el" href="classtracktion__engine_1_1ProjectManager.html">ProjectManager</a> &amp;, <a class="el" href="classtracktion__engine_1_1ProjectItemID.html">ProjectItemID</a>)</td></tr>
 <tr class="memdesc:a5942543dc42901e4ebf512d0a928ef68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uses the <a class="el" href="classtracktion__engine_1_1ProjectManager.html">ProjectManager</a> to find an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class! ">Edit</a> file and load it as a ValueTree.  <a href="#a5942543dc42901e4ebf512d0a928ef68">More...</a><br /></td></tr>
 <tr class="separator:a5942543dc42901e4ebf512d0a928ef68"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add7837b714ace371f92271e9e260dc07"><td class="memItemLeft" align="right" valign="top">juce::ValueTree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#add7837b714ace371f92271e9e260dc07">loadEditFromFile</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;, <a class="el" href="classtracktion__engine_1_1ProjectItemID.html">ProjectItemID</a>)</td></tr>
-<tr class="memdesc:add7837b714ace371f92271e9e260dc07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a ValueTree from a file to load an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class! ">Edit</a>.  <a href="#add7837b714ace371f92271e9e260dc07">More...</a><br /></td></tr>
+<tr class="memdesc:add7837b714ace371f92271e9e260dc07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Legacy, will be deprecated soon.  <a href="#add7837b714ace371f92271e9e260dc07">More...</a><br /></td></tr>
 <tr class="separator:add7837b714ace371f92271e9e260dc07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2acb0714054805da01e82681b8ce804a"><td class="memItemLeft" align="right" valign="top">juce::ValueTree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#a2acb0714054805da01e82681b8ce804a">createEmptyEdit</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;)</td></tr>
-<tr class="memdesc:a2acb0714054805da01e82681b8ce804a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an empty <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class! ">Edit</a> with no project.  <a href="#a2acb0714054805da01e82681b8ce804a">More...</a><br /></td></tr>
+<tr class="memdesc:a2acb0714054805da01e82681b8ce804a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Legacy, will be deprecated soon.  <a href="#a2acb0714054805da01e82681b8ce804a">More...</a><br /></td></tr>
 <tr class="separator:a2acb0714054805da01e82681b8ce804a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae829e0bdd800bba532ba110250ba8ed5"><td class="memItemLeft" align="right" valign="top">juce::ValueTree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#ae829e0bdd800bba532ba110250ba8ed5">updateLegacyEdit</a> (const juce::ValueTree &amp;)</td></tr>
 <tr class="memdesc:ae829e0bdd800bba532ba110250ba8ed5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts old edit formats to the latest structure.  <a href="#ae829e0bdd800bba532ba110250ba8ed5">More...</a><br /></td></tr>
@@ -1194,6 +1200,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a1fbb7899ea7b5ac9b0720504303d44df"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion__engine_1_1SelectableList.html">SelectableList</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#a1fbb7899ea7b5ac9b0720504303d44df">getClipSelectionWithCollectionClipContents</a> (const <a class="el" href="structtracktion__engine_1_1SelectableList.html">SelectableList</a> &amp;)</td></tr>
 <tr class="memdesc:a1fbb7899ea7b5ac9b0720504303d44df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a list of clips.  <a href="#a1fbb7899ea7b5ac9b0720504303d44df">More...</a><br /></td></tr>
 <tr class="separator:a1fbb7899ea7b5ac9b0720504303d44df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aebcd977354b0044d278b7b6bf1644630"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="classtracktion__engine_1_1ClipEffect.html">ClipEffect</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#aebcd977354b0044d278b7b6bf1644630">getAllClipEffects</a> (<a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;edit)</td></tr>
+<tr class="memdesc:aebcd977354b0044d278b7b6bf1644630"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns all clip effects.  <a href="#aebcd977354b0044d278b7b6bf1644630">More...</a><br /></td></tr>
+<tr class="separator:aebcd977354b0044d278b7b6bf1644630"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab06afe5c8c12e06674689b9328f6d0c1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1MidiNote.html">MidiNote</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#ab06afe5c8c12e06674689b9328f6d0c1">findNoteForState</a> (const <a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;, const juce::ValueTree &amp;)</td></tr>
 <tr class="memdesc:ab06afe5c8c12e06674689b9328f6d0c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classtracktion__engine_1_1MidiNote.html">MidiNote</a> with a given state.  <a href="#ab06afe5c8c12e06674689b9328f6d0c1">More...</a><br /></td></tr>
 <tr class="separator:ab06afe5c8c12e06674689b9328f6d0c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2502,6 +2511,70 @@ template&lt;typename ModifierType &gt; </div>
 
 </div>
 </div>
+<a id="a3f693a481bd0c76efaef9918f318a86c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f693a481bd0c76efaef9918f318a86c">&#9670;&nbsp;</a></span>loadEditFromFile() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a>&gt; tracktion_engine::loadEditFromFile </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::File &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Loads an edit from file, ready for playback / edtiing. </p>
+
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1EditFileOperations.html#ab94324474063e08c8bfd3f434b2d308c">tracktion_engine::EditFileOperations::getTimeOfLastSave()</a>.</p>
+
+</div>
+</div>
+<a id="a57bb0d4a9fa1223d3c5bd184d08a5214"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57bb0d4a9fa1223d3c5bd184d08a5214">&#9670;&nbsp;</a></span>createEmptyEdit() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a>&gt; tracktion_engine::createEmptyEdit </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::File &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a new edit for a file, ready for playback / edtiing. </p>
+
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1EditFileOperations.html#ab94324474063e08c8bfd3f434b2d308c">tracktion_engine::EditFileOperations::getTimeOfLastSave()</a>.</p>
+
+</div>
+</div>
 <a id="a5942543dc42901e4ebf512d0a928ef68"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5942543dc42901e4ebf512d0a928ef68">&#9670;&nbsp;</a></span>loadEditFromProjectManager()</h2>
 
@@ -2535,7 +2608,7 @@ template&lt;typename ModifierType &gt; </div>
 </div>
 </div>
 <a id="add7837b714ace371f92271e9e260dc07"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add7837b714ace371f92271e9e260dc07">&#9670;&nbsp;</a></span>loadEditFromFile()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#add7837b714ace371f92271e9e260dc07">&#9670;&nbsp;</a></span>loadEditFromFile() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2566,15 +2639,13 @@ template&lt;typename ModifierType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Loads a ValueTree from a file to load an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class! ">Edit</a>. </p>
-<p>If the file is empty, a new <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class! ">Edit</a> state will be created with the given <a class="el" href="classtracktion__engine_1_1ProjectItemID.html" title="An ID representing one of the items in a Project. ">ProjectItemID</a>. </p>
-
-<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1EditFileOperations.html#ab94324474063e08c8bfd3f434b2d308c">tracktion_engine::EditFileOperations::getTimeOfLastSave()</a>.</p>
+<p>Legacy, will be deprecated soon. </p>
+<p>Use version that returns an edit. Loads a ValueTree from a file to load an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class! ">Edit</a>. If the file is empty, a new <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class! ">Edit</a> state will be created with the given <a class="el" href="classtracktion__engine_1_1ProjectItemID.html" title="An ID representing one of the items in a Project. ">ProjectItemID</a>. </p>
 
 </div>
 </div>
 <a id="a2acb0714054805da01e82681b8ce804a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2acb0714054805da01e82681b8ce804a">&#9670;&nbsp;</a></span>createEmptyEdit()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2acb0714054805da01e82681b8ce804a">&#9670;&nbsp;</a></span>createEmptyEdit() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2589,9 +2660,8 @@ template&lt;typename ModifierType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Creates an empty <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class! ">Edit</a> with no project. </p>
-
-<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1EditFileOperations.html#ab94324474063e08c8bfd3f434b2d308c">tracktion_engine::EditFileOperations::getTimeOfLastSave()</a>.</p>
+<p>Legacy, will be deprecated soon. </p>
+<p>Use version that returns an edit. Creates an empty <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class! ">Edit</a> with no project. </p>
 
 </div>
 </div>
@@ -3435,6 +3505,26 @@ template&lt;typename TrackType &gt; </div>
 
 <p>Returns a list of clips. </p>
 <p>If any of these are collection clips, this will return their contained clips. </p>
+
+</div>
+</div>
+<a id="aebcd977354b0044d278b7b6bf1644630"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aebcd977354b0044d278b7b6bf1644630">&#9670;&nbsp;</a></span>getAllClipEffects()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::Array&lt;<a class="el" href="classtracktion__engine_1_1ClipEffect.html">ClipEffect</a>*&gt; tracktion_engine::getAllClipEffects </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;&#160;</td>
+          <td class="paramname"><em>edit</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns all clip effects. </p>
 
 </div>
 </div>
@@ -11147,7 +11237,7 @@ template&lt;typename Type , typename UnaryFunction &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 10 2020 15:50:37 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Dec 8 2020 11:34:43 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>
