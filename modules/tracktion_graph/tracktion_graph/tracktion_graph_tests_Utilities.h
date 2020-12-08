@@ -292,7 +292,7 @@ namespace test_utilities
     {
         std::vector<TestSetup> setups;
 
-       #if JUCE_DEBUG
+       #if JUCE_DEBUG || GRAPH_UNIT_TESTS_QUICK_VALIDATE
         for (double sampleRate : { 44100.0, 96000.0 })
             for (int blockSize : { 64, 512 })
        #else

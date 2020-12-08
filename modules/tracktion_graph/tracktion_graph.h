@@ -46,6 +46,20 @@
 #pragma once
 #define TRACKTION_GRAPH_H_INCLUDED
 
+
+//==============================================================================
+/** Config: GRAPH_UNIT_TESTS_QUICK_VALIDATE
+
+    If this is enabled, only a minimal set of buffer sizes will be tested.
+    This gives a good idea if the module works correctly but also optomises CI
+    completion speed.
+*/
+#ifndef GRAPH_UNIT_TESTS_QUICK_VALIDATE
+ #define GRAPH_UNIT_TESTS_QUICK_VALIDATE 0
+#endif
+
+//==============================================================================
+//==============================================================================
 #include <cassert>
 #include <thread>
 
