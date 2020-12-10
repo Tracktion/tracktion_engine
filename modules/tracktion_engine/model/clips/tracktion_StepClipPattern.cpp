@@ -201,7 +201,7 @@ void StepClip::Pattern::setVelocity (int channel, int index, int value)
     if (! isPositiveAndBelow (channel, (int) maxNumChannels))
         return;
 
-    setNote (channel, index, value != 0);
+    setNote (channel, index, true);
 
     auto velocities = getVelocities (channel);
     const int size = velocities.size();
