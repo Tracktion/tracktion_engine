@@ -9,9 +9,6 @@
 
 #if ! JUCE_PROJUCER_LIVE_BUILD
 
-#include <atomic>
-#include <numeric>
-#include <set>
 #include <string>
 #include <math.h>
 

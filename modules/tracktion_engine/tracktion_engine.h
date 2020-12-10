@@ -37,12 +37,8 @@
 #if ! JUCE_PROJUCER_LIVE_BUILD
 
 #include <sys/stat.h>
-#include <memory>
-#include <map>
 #include <set>
-#include <unordered_set>
 #include <unordered_map>
-#include <atomic>
 #include <random>
 
 #include <juce_audio_basics/juce_audio_basics.h>
