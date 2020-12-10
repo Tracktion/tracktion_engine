@@ -74,6 +74,14 @@ bool LevelMeasurer::Client::getAndClearOverload() noexcept
     return result;
 }
 
+bool LevelMeasurer::Client::getAndClearPeak() noexcept
+{
+    juce::SpinLock::ScopedLockType sl (mutex);
+    auto result = clearPeak;
+    clearPeak = false;
+    return result;
+}
+
 DbTimePair LevelMeasurer::Client::getAndClearMidiLevel() noexcept
 {
     juce::SpinLock::ScopedLockType sl (mutex);
@@ -107,6 +115,12 @@ void LevelMeasurer::Client::setClearOverload (bool clear) noexcept
 {
     juce::SpinLock::ScopedLockType sl (mutex);
     clearOverload = clear;
+}
+
+void LevelMeasurer::Client::setClearPeak (bool clear) noexcept
+{
+    juce::SpinLock::ScopedLockType sl (mutex);
+    clearPeak = clear;
 }
 
 void LevelMeasurer::Client::updateAudioLevel (int channel, DbTimePair newAudioLevel) noexcept
@@ -242,6 +256,14 @@ void LevelMeasurer::clearOverload()
 
     for (auto c : clients)
         c->setClearOverload (true);
+}
+
+void LevelMeasurer::clearPeak()
+{
+    const ScopedLock sl (clientsMutex);
+
+    for (auto c : clients)
+        c->setClearPeak (true);
 }
 
 void LevelMeasurer::clear()

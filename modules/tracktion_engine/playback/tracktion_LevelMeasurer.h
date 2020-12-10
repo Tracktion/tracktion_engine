@@ -36,6 +36,7 @@ public:
 
     void clear();
     void clearOverload();
+    void clearPeak();
 
     //==============================================================================
     enum Mode
@@ -59,6 +60,7 @@ public:
 
         void reset() noexcept;
         bool getAndClearOverload() noexcept;
+        bool getAndClearPeak() noexcept;
         DbTimePair getAndClearMidiLevel() noexcept;
         DbTimePair getAndClearAudioLevel (int chan) noexcept;
 
@@ -68,6 +70,7 @@ public:
         void setNumChannelsUsed (int) noexcept;
         void setOverload (int channel, bool hasOverloaded) noexcept;
         void setClearOverload (bool) noexcept;
+        void setClearPeak (bool) noexcept;
 
         void updateAudioLevel (int channel, DbTimePair) noexcept;
         void updateMidiLevel (DbTimePair) noexcept;
@@ -78,6 +81,7 @@ public:
         DbTimePair midiLevels;
         int numChannelsUsed = 0;
         bool clearOverload = true;
+        bool clearPeak = true;
 
         juce::SpinLock mutex;
     };

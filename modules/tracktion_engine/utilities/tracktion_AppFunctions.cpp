@@ -567,6 +567,11 @@ namespace AppFunctions
         getCurrentUIBehaviour().resetOverloads();
     }
 
+    void resetPeaks()
+    {
+        getCurrentUIBehaviour().resetPeaks();
+    }
+
     void toggleTrackFreeze()
     {
         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())

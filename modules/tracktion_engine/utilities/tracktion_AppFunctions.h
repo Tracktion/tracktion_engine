@@ -100,6 +100,7 @@ namespace AppFunctions
     void showEditScreen();
 
     void resetOverloads();
+    void resetPeaks();
     void toggleTrackFreeze();
 }
 

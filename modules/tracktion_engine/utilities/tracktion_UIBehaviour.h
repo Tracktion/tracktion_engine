@@ -124,6 +124,7 @@ public:
 
     virtual void stopPreviewPlayback()                                              {}
     virtual void resetOverloads()                                                   {}
+    virtual void resetPeaks()                                                       {}
 
     virtual void zoomHorizontal (float /*increment*/)                               {}
     virtual void zoomVertical (float /*amount*/)                                    {}
