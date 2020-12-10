@@ -108,10 +108,11 @@ static inline void sprintf (char* dest, size_t maxLength, const char* format, ..
     #include "Mackie/C4Translator.h"
     #include "Mackie/C4Translator.cpp"
   }
+
+  #include "control_surfaces/types/tracktion_MackieC4.cpp"
  #endif
 
  #include "control_surfaces/types/tracktion_AlphaTrack.cpp"
- #include "control_surfaces/types/tracktion_MackieC4.cpp"
  #include "control_surfaces/types/tracktion_MackieMCU.cpp"
  #include "control_surfaces/types/tracktion_MackieXT.cpp"
  #include "control_surfaces/types/tracktion_NovationRemoteSl.cpp"

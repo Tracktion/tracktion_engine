@@ -560,7 +560,11 @@ namespace tracktion_engine
 
 #if TRACKTION_ENABLE_CONTROL_SURFACES
  #include "control_surfaces/types/tracktion_AlphaTrack.h"
- #include "control_surfaces/types/tracktion_MackieC4.h"
+
+ #if TRACKTION_ENABLE_CONTROL_SURFACE_MACKIEC4
+  #include "control_surfaces/types/tracktion_MackieC4.h"
+ #endif
+
  #include "control_surfaces/types/tracktion_MackieMCU.h"
  #include "control_surfaces/types/tracktion_MackieXT.h"
  #include "control_surfaces/types/tracktion_NovationRemoteSl.h"
