@@ -1335,8 +1335,7 @@ void TransportControl::performPlay()
         transportState->safeRecording = false;
         playingFlag = std::make_unique<PlayingFlag> (engine);
 
-        if (transportState->cursorPosAtPlayStart < -100.0)
-            transportState->cursorPosAtPlayStart = position.get();
+        transportState->cursorPosAtPlayStart = position.get();
 
         ensureContextAllocated();
 
@@ -1590,9 +1589,6 @@ void TransportControl::performPositionChange()
 
     if (playbackContext != nullptr && isPlaying())
         playHeadWrapper->setPosition (newPos);
-
-    if (! isPlaying())
-        transportState->cursorPosAtPlayStart = newPos;
 
     position = newPos;
 
