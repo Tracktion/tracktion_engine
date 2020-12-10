@@ -994,7 +994,7 @@ bool Renderer::renderToFile (const String& taskDescription,
         cnp.includePlugins = usePlugins;
         cnp.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (engine);
 
-        if (auto* node = createRenderingNodeFromEdit (edit, cnp, true))
+        if (auto node = createRenderingNodeFromEdit (edit, cnp, usePlugins))
         {
             Parameters r (edit);
             r.destFile = outputFile;
@@ -1012,16 +1012,25 @@ bool Renderer::renderToFile (const String& taskDescription,
             auto& tempo = edit.tempoSequence.getTempoAt (range.start);
             auto& timeSig = edit.tempoSequence.getTimeSigAt (range.start);
 
-            r.metadata.set (WavAudioFormat::acidOneShot, "0");
-            r.metadata.set (WavAudioFormat::acidRootSet, "1");
-            r.metadata.set (WavAudioFormat::acidStretch, "1");
-            r.metadata.set (WavAudioFormat::acidDiskBased, "1");
-            r.metadata.set (WavAudioFormat::acidizerFlag, "1");
-            r.metadata.set (WavAudioFormat::acidRootNote, String (pitch.getPitch()));
-            r.metadata.set (WavAudioFormat::acidBeats, String (tempo.getBpm() * (range.getLength() / 60)));
-            r.metadata.set (WavAudioFormat::acidDenominator, String (timeSig.denominator.get()));
-            r.metadata.set (WavAudioFormat::acidNumerator, String (timeSig.numerator.get()));
-            r.metadata.set (WavAudioFormat::acidTempo, String (tempo.getBpm()));
+			r.metadata.set (WavAudioFormat::acidOneShot, "0");
+			r.metadata.set (WavAudioFormat::acidRootSet, "1");
+			r.metadata.set (WavAudioFormat::acidDiskBased, "1");
+			r.metadata.set (WavAudioFormat::acidizerFlag, "1");
+			r.metadata.set (WavAudioFormat::acidRootNote, String (pitch.getPitch()));
+
+            auto beats = tempo.getBpm() * (range.getLength() / 60);
+            if (std::abs (beats - int (beats)) < 0.001)
+            {
+                r.metadata.set (WavAudioFormat::acidStretch, "1");
+                r.metadata.set (WavAudioFormat::acidBeats, String (roundToInt (bpm)));
+                r.metadata.set (WavAudioFormat::acidDenominator, String (timeSig.denominator.get()));
+                r.metadata.set (WavAudioFormat::acidNumerator, String (timeSig.numerator.get()));
+                r.metadata.set (WavAudioFormat::acidTempo, String (tempo.getBpm()));
+            }
+            else
+            {
+                r.metadata.set (WavAudioFormat::acidStretch, "0");
+            }
 
             RenderTask task (taskDescription, r, node);
 
