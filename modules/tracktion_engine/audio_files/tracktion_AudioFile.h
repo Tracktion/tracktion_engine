@@ -92,6 +92,8 @@ public:
     bool isFlacFile() const;
     bool isRexFile() const;
 
+    bool isCompressed() const { return isOggFile() || isMp3File() || isFlacFile(); }
+
     Engine* engine = nullptr;
 
 private:
