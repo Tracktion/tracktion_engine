@@ -323,7 +323,7 @@ void InsertPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 void InsertPlugin::updateDeviceTypes()
 {
     CRASH_TRACER
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     StringArray devices, aliases;
     BigInteger hasAudio, hasMidi;

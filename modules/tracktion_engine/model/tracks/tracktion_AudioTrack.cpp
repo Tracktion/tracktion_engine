@@ -842,7 +842,7 @@ void AudioTrack::valueTreePropertyChanged (ValueTree& v, const juce::Identifier&
     }
     else if (Clip::isClipState (v))
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD;
+        JUCE_ASSERT_MESSAGE_THREAD;
 
         if (i == IDs::start || i == IDs::length)
             asyncCaller.updateAsync (updateAutoCrossfadesFlag);

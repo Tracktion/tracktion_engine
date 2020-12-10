@@ -58,7 +58,7 @@ EditPlaybackContext::~EditPlaybackContext()
 
 void EditPlaybackContext::releaseDeviceList()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
 
     const ScopedValueSetter<bool> alocateSetter (isAllocated, isAllocated);
@@ -74,7 +74,7 @@ void EditPlaybackContext::releaseDeviceList()
 
 void EditPlaybackContext::rebuildDeviceList()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
 
     jassert (waveInputs.isEmpty() && midiInputs.isEmpty()
@@ -545,7 +545,7 @@ static SelectionManager* findAppropriateSelectionManager (Edit& ed)
 
 Clip::Array EditPlaybackContext::stopRecording (InputDeviceInstance& in, EditTimeRange recordedRange, bool discardRecordings)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
 
     const auto loopRange = transport.getLoopRange();
@@ -559,7 +559,7 @@ Clip::Array EditPlaybackContext::stopRecording (InputDeviceInstance& in, EditTim
 
 Clip::Array EditPlaybackContext::recordingFinished (EditTimeRange recordedRange, bool discardRecordings)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
     Clip::Array clips;
 
@@ -571,7 +571,7 @@ Clip::Array EditPlaybackContext::recordingFinished (EditTimeRange recordedRange,
 
 Result EditPlaybackContext::applyRetrospectiveRecord (Array<Clip*>* clips)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
 
     bool inputAssigned = false;
@@ -699,7 +699,7 @@ void EditPlaybackContext::fillNextAudioBlock (EditTimeRange streamTime, float** 
 
 InputDeviceInstance* EditPlaybackContext::getInputFor (InputDevice* d) const
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     for (auto i : waveInputs)
         if (&i->owner == d)

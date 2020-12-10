@@ -229,7 +229,7 @@ private:
 
         const juce::Array<EventType*>& getSortedList()
         {
-            TRACKTION_ASSERT_MESSAGE_THREAD
+            JUCE_ASSERT_MESSAGE_THREAD
 
             const juce::ScopedLock sl (lock);
 

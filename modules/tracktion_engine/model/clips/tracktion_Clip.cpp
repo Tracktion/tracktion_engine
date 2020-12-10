@@ -494,7 +494,7 @@ void Clip::valueTreeParentChanged (juce::ValueTree& v)
 
 void Clip::updateParentTrack()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     auto parent = state.getParent();
 
     if (TrackList::isTrack (parent))

@@ -51,7 +51,7 @@ public:
 
     MelodyneInstance* createInstance (ExternalPlugin& p, ARADocumentControllerRef dcRef)
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         jassert (plugin != nullptr);
 
         std::unique_ptr<MelodyneInstance> w (new MelodyneInstance());
@@ -76,7 +76,7 @@ private:
 
     MelodyneInstanceFactory (Engine& engine)
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         CRASH_TRACER
 
         plugin = createMelodynePlugin (engine);
@@ -146,7 +146,7 @@ private:
 
     bool setExtensionInstance (MelodyneInstance& w, ARADocumentControllerRef dcRef)
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         CRASH_TRACER
 
         if (dcRef == nullptr)
@@ -245,7 +245,7 @@ static std::unique_ptr<AudioPluginInstance> createMelodynePlugin (Engine& engine
 static std::unique_ptr<AudioPluginInstance> createMelodynePlugin (Engine& engine)
 {
     CRASH_TRACER
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     auto araDescs = engine.getPluginManager().getARACompatiblePlugDescriptions();
 

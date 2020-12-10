@@ -156,7 +156,7 @@ private:
           numChannels (af.getNumChannels()),
           reader (e.getAudioFileManager().cache.createReader (af))
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         // N.B. The argumnet to the Job constructor is the proxy file to use
         // Don't send the audio file here or it will get deleted!
         jassert (proxy.isNull());

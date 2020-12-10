@@ -26,7 +26,7 @@ public:
 
         ~Thumbnail()
         {
-            TRACKTION_ASSERT_MESSAGE_THREAD
+            JUCE_ASSERT_MESSAGE_THREAD
             engine.getRecordingThumbnailManager().thumbs.removeAllInstancesOf (this);
         }
 
@@ -52,7 +52,7 @@ public:
                      engine.getAudioFileManager().getAudioThumbnailCache()),
                 file (f), hash (f.hashCode64())
         {
-            TRACKTION_ASSERT_MESSAGE_THREAD
+            JUCE_ASSERT_MESSAGE_THREAD
             engine.getRecordingThumbnailManager().thumbs.addIfNotAlreadyThere (this);
         }
 
@@ -62,7 +62,7 @@ public:
     //==============================================================================
     Thumbnail::Ptr getThumbnailFor (const juce::File& f)
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         for (auto* t : thumbs)
             if (t->file == f)

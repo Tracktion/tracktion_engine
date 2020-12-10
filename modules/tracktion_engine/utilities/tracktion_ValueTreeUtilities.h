@@ -241,7 +241,7 @@ struct SortedValueTreeObjectList    : protected ValueTreeObjectList<ObjectType>
     /** Returns the object for a given state. */
     const juce::Array<ObjectType*>& getSortedObjects() const
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         jassert (! insidePropertyChangedMethod);
 
         if (setIfDifferent (needsSorting, false))
@@ -285,7 +285,7 @@ private:
 
     void triggerSort() const
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         needsSorting = true;
     }
 

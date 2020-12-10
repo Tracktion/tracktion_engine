@@ -351,7 +351,7 @@ bool InputDeviceInstance::isLivePlayEnabled (const Track& t) const
 void InputDeviceInstance::prepareAndPunchRecord()
 {
     CRASH_TRACER
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     if (auto t = getTargetTracks().getFirst())
     {

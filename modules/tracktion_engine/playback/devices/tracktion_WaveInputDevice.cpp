@@ -426,7 +426,7 @@ public:
 
     bool isRecording() override
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         return recordingContext != nullptr;
     }
 
@@ -513,7 +513,7 @@ public:
                                           bool discardRecordings,
                                           SelectionManager* selectionManager) override
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         CRASH_TRACER
         
         Clip::Array clips;

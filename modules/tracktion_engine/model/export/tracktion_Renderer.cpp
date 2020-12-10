@@ -148,7 +148,7 @@ struct Renderer::RenderTask::RendererContext
           sourceToUpdate (sourceToUpdate_)
     {
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         jassert (r.engine != nullptr);
         jassert (r.edit != nullptr);
         jassert (r.time.getLength() > 0.0);

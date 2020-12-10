@@ -470,14 +470,14 @@ SmartThumbnail::SmartThumbnail (Engine& e, const AudioFile& f, juce::Component& 
                           e.getAudioFileManager().getAudioThumbnailCache()),
       file (f), engine (e), edit (ed), component (componentToRepaint)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     startTimer (initialTimerDelay);
     engine.getAudioFileManager().activeThumbnails.add (this);
 }
 
 SmartThumbnail::~SmartThumbnail()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     engine.getAudioFileManager().activeThumbnails.removeAllInstancesOf (this);
     clear();
@@ -485,7 +485,7 @@ SmartThumbnail::~SmartThumbnail()
 
 bool SmartThumbnail::areThumbnailsFullyLoaded (Engine& engine)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     for (auto thumb : engine.getAudioFileManager().activeThumbnails)
         if (! thumb->isFullyLoaded())
@@ -667,7 +667,7 @@ bool AudioFileManager::checkFileTime (KnownFile& f)
 void AudioFileManager::checkFileForChanges (const AudioFile& file)
 {
     CRASH_TRACER
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     bool changed = false;
 
@@ -687,7 +687,7 @@ void AudioFileManager::checkFileForChanges (const AudioFile& file)
 
 void AudioFileManager::checkFilesForChanges()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     juce::Array<AudioFile> changedFiles;
 
@@ -731,7 +731,7 @@ void AudioFileManager::releaseFile (const AudioFile& file)
 void AudioFileManager::callListeners (const AudioFile& file)
 {
     CRASH_TRACER
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     thumbnailCache->removeThumb (file.getHash());
 
@@ -745,7 +745,7 @@ void AudioFileManager::callListeners (const AudioFile& file)
 void AudioFileManager::forceFileUpdate (const AudioFile& file)
 {
     CRASH_TRACER
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     // this doesn't check for file time and is used when files are changed rapidly such as when recording
     const juce::ScopedLock sl (knownFilesLock);

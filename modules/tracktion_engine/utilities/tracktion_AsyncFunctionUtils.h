@@ -180,7 +180,7 @@ private:
     void handleAsyncUpdate() override
     {
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         performAction();
         finished.set (1);

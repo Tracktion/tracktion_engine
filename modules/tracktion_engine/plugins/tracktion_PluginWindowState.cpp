@@ -25,21 +25,21 @@ void PluginWindowState::deleteWindow()
 
 void PluginWindowState::incRefCount()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     ++windowShowerCount;
     startTimer (100);
 }
 
 void PluginWindowState::decRefCount()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     --windowShowerCount;
     startTimer (100);
 }
 
 void PluginWindowState::showWindowExplicitly()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     wasExplicitlyClosed = false;
     stopTimer();
     showWindow();
@@ -47,7 +47,7 @@ void PluginWindowState::showWindowExplicitly()
 
 void PluginWindowState::closeWindowExplicitly()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     if (pluginWindow && pluginWindow->isVisible())
     {

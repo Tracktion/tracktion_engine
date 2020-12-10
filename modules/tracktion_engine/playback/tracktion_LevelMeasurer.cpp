@@ -49,7 +49,7 @@ LevelMeasurer::LevelMeasurer()
 
 LevelMeasurer::~LevelMeasurer()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 }
 
 //==============================================================================

@@ -25,7 +25,7 @@ struct ThreadedEditFileWriter   : private Thread
 
     void writeTreeToFile (ValueTree&& v, const File& f)
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         pending.add (std::pair<ValueTree, File> (v, f));
         waiter.signal();
         startThread();
@@ -33,7 +33,7 @@ struct ThreadedEditFileWriter   : private Thread
 
     void flushAllFiles()
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         waiter.signal();
         startThread();
 

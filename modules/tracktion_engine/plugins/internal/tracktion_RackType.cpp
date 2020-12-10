@@ -98,7 +98,7 @@ struct RackType::PluginRenderingInfo
                      const OwnedArray<PluginRenderingInfo>& renderContexts)
     {
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         if (! initialised)
         {
@@ -412,14 +412,14 @@ struct RackType::ConnectionList  : public ValueTreeObjectList<RackConnection>
     RackConnection* createNewObject (const juce::ValueTree& v) override
     {
         if (! type.edit.isLoading())
-            TRACKTION_ASSERT_MESSAGE_THREAD
+            JUCE_ASSERT_MESSAGE_THREAD
 
         return new RackConnection (v, type.getUndoManager());
     }
 
     void deleteObject (RackConnection* t) override
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         jassert (t != nullptr);
         delete t;
     }
@@ -1112,7 +1112,7 @@ void RackType::addConnection (EditItemID srcId, int sourcePin,
 void RackType::removeConnection (EditItemID srcId, int sourcePin,
                                  EditItemID dstId, int destPin)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     for (int i = connectionList->objects.size(); --i >= 0;)
     {
@@ -1131,7 +1131,7 @@ void RackType::removeConnection (EditItemID srcId, int sourcePin,
 void RackType::checkConnections()
 {
     if (! edit.isLoading())
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
     for (int i = connectionList->objects.size(); --i >= 0;)
     {
@@ -1428,7 +1428,7 @@ int RackType::addOutput (int index, const String& name)
 
 void RackType::removeInput (int index)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     int toRemove = findIndexOfNthInstanceOf (state, IDs::INPUT, index);
 
     if (toRemove >= 0)
@@ -1444,7 +1444,7 @@ void RackType::removeInput (int index)
 
 void RackType::removeOutput (int index)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     int toRemove = findIndexOfNthInstanceOf (state, IDs::OUTPUT, index);
 
     if (toRemove >= 0)
@@ -1488,7 +1488,7 @@ UndoManager* RackType::getUndoManager() const
 void RackType::countInstancesInEdit()
 {
     CRASH_TRACER
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     numberOfInstancesInEdit = 0;
 
@@ -1725,7 +1725,7 @@ private:
 
 double RackType::getLatencySeconds (double rate, int bufferSize)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     if (latencyCalculation)
         if (latencyCalculation->sampleRate != rate || latencyCalculation->bufferSize != bufferSize)
@@ -1740,7 +1740,7 @@ double RackType::getLatencySeconds (double rate, int bufferSize)
 //==============================================================================
 void RackType::updateTempBuferSizes()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
     const ScopedLock sl (renderLock);
 
@@ -2328,7 +2328,7 @@ void RackType::triggerUpdate()
 void RackType::updateRenderContext()
 {
     if (edit.isLoading())
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 }
 
 //==============================================================================

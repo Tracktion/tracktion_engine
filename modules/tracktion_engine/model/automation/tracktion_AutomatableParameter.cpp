@@ -167,7 +167,7 @@ public:
     {
         jassert (! parameter.getEdit().isLoading());
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         std::unique_ptr<AutomationIterator> newStream;
 
@@ -200,7 +200,7 @@ public:
 
     float getValueAt (double time) override
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         return curve.getValueAt (time);
     }
 
@@ -282,7 +282,7 @@ struct MacroSource : public AutomationModifierSource
 
     float getValueAt (double time) override
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         auto macroValue = macro->getCurve().getValueAt (time);
         return AutomationScaleHelpers::mapValue (macroValue, assignment->offset, assignment->value, assignment->curve);
     }
@@ -357,7 +357,7 @@ struct AutomatableParameter::AutomationSourceList  : private ValueTreeObjectList
 
     juce::ReferenceCountedObjectPtr<AutomationModifierSource> getSourceFor (ModifierAssignment& ass)
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         for (auto o : objects)
             if (o->assignment.get() == &ass)
@@ -368,7 +368,7 @@ struct AutomatableParameter::AutomationSourceList  : private ValueTreeObjectList
 
     juce::ReferenceCountedObjectPtr<AutomationModifierSource> getSourceFor (ModifierSource& mod)
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         for (auto o : objects)
             if (o->assignment->isForModifierSource (mod))
@@ -700,7 +700,7 @@ AutomatableParameter::ModifierAssignment::Ptr AutomatableParameter::addModifier 
 
 void AutomatableParameter::removeModifier (ModifierAssignment& assignment)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     if (auto existing = getAutomationSourceList().getSourceFor (assignment))
         existing->state.getParent().removeChild (existing->state, &getEdit().getUndoManager());
@@ -710,7 +710,7 @@ void AutomatableParameter::removeModifier (ModifierAssignment& assignment)
 
 void AutomatableParameter::removeModifier (ModifierSource& source)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     if (auto existing = getAutomationSourceList().getSourceFor (source))
         existing->state.getParent().removeChild (existing->state, &getEdit().getUndoManager());
@@ -720,7 +720,7 @@ void AutomatableParameter::removeModifier (ModifierSource& source)
 
 juce::ReferenceCountedArray<AutomatableParameter::ModifierAssignment> AutomatableParameter::getAssignments() const
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     juce::ReferenceCountedArray<ModifierAssignment> assignments;
 
     getAutomationSourceList()
@@ -1072,7 +1072,7 @@ AutomatableParameter::AutomationSourceList& AutomatableParameter::getAutomationS
 
 void AutomatableParameter::updateToFollowCurve (double time)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     float newModifierValue = 0.0f;
 
     getAutomationSourceList()

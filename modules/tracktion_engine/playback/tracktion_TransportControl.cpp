@@ -644,14 +644,14 @@ struct TransportControl::ScreenSaverDefeater
 {
     ScreenSaverDefeater()
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         ++numScreenSaverDefeaters;
         Desktop::setScreenSaverEnabled (numScreenSaverDefeaters == 0);
     }
 
     ~ScreenSaverDefeater()
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         --numScreenSaverDefeaters;
         jassert (numScreenSaverDefeaters >= 0);
         Desktop::setScreenSaverEnabled (numScreenSaverDefeaters == 0);

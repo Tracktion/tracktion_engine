@@ -100,7 +100,7 @@ bool EditClip::needsRender() const
 
 RenderManager::Job::Ptr EditClip::getRenderJob (const AudioFile& destFile)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     // do this here so we don't end up creating a new instance of our Edit
     if (auto existing = edit.engine.getRenderManager().getRenderJobWithoutCreating (destFile))
@@ -125,7 +125,7 @@ void EditClip::renderComplete()
 
 String EditClip::getRenderMessage()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     if (renderJob == nullptr || getCurrentSourceFile().existsAsFile())
         return {};
@@ -236,7 +236,7 @@ void EditClip::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i
 {
     if (v == state && i == IDs::renderEnabled)
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         renderEnabled.forceUpdateOfCachedValue();
 
         setUsesProxy (renderEnabled);

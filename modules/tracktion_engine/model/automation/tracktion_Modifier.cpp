@@ -56,7 +56,7 @@ void Modifier::remove()
 //==============================================================================
 void Modifier::baseClassInitialise (const PlaybackInitialisationInfo& info)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     if (initialiseCount++ == 0)
     {
         CRASH_TRACER
@@ -69,7 +69,7 @@ void Modifier::baseClassInitialise (const PlaybackInitialisationInfo& info)
 
 void Modifier::baseClassDeinitialise()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     jassert (initialiseCount > 0);
 
     if (--initialiseCount == 0)
@@ -110,7 +110,7 @@ bool ModifierList::isModifier (const juce::Identifier& i)
 ReferenceCountedArray<Modifier> ModifierList::getModifiers() const
 {
     if (! edit.isLoading())
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
     ReferenceCountedArray<Modifier> mods;
 
@@ -123,7 +123,7 @@ ReferenceCountedArray<Modifier> ModifierList::getModifiers() const
 //==============================================================================
 ReferenceCountedObjectPtr<Modifier> ModifierList::insertModifier (ValueTree v, int index, SelectionManager* sm)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     jassert (isSuitableType (v));
     auto um = &edit.getUndoManager();
 

@@ -128,7 +128,7 @@ double AutomationCurve::getLength() const
 //==============================================================================
 float AutomationCurve::getValueAt (double time) const
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     auto index = nextIndexAfter (time);
 
     if (index <= 0)

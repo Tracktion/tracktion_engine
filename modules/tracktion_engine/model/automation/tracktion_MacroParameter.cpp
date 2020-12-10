@@ -56,7 +56,7 @@ void MacroParameter::parameterChanged (float, bool byAutomation)
     if (byAutomation)
         return;
 
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     auto cursorPos = edit.getTransport().getCurrentPosition();
 
     for (auto ap : getAllParametersBeingModifiedBy (edit, *this))
@@ -160,12 +160,12 @@ MacroParameterList::MacroParameterList (Edit& e, const ValueTree& v)
 
 MacroParameterList::~MacroParameterList()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 }
 
 MacroParameter* MacroParameterList::createMacroParameter()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     auto* um = &edit.getUndoManager();
 
     ValueTree v (IDs::MACROPARAMETER);
@@ -183,7 +183,7 @@ MacroParameter* MacroParameterList::createMacroParameter()
 
 void MacroParameterList::removeMacroParameter (MacroParameter& mp)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     jassert (list != nullptr);
     auto* um = &edit.getUndoManager();
 
@@ -208,7 +208,7 @@ void MacroParameterList::hideMacroParametersFromTracks() const
 {
     if (! edit.isLoading())
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
     }
 
     for (auto mp : getMacroParameters())
@@ -227,7 +227,7 @@ ReferenceCountedArray<MacroParameter> MacroParameterList::getMacroParameters() c
 
 Track* MacroParameterList::getTrack() const
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     for (auto p (state.getParent()); p.isValid(); p = p.getParent())
         if (TrackList::isTrack (p))

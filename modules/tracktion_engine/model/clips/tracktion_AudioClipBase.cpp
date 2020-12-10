@@ -1776,7 +1776,7 @@ void AudioClipBase::sendMirrorUpdateToAllPlugins (Plugin& p) const
 //==============================================================================
 bool AudioClipBase::setupARA (Edit& ed, bool dontPopupErrorMessages)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     static bool araReentrancyCheck = false;
 
     if (araReentrancyCheck)
@@ -1961,7 +1961,7 @@ void AudioClipBase::updateSourceFile()
     if (! isInitialised)
         return;
 
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     // check to see if our source file already exists, it may have been created by another clip
     // if it does exist, we will just use that, otherwise we need to start our own render operation
@@ -1986,7 +1986,7 @@ void AudioClipBase::updateSourceFile()
 
 void AudioClipBase::renderSource()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     jassert (isInitialised);
 
     const AudioFile audioFile (edit.engine, getCurrentSourceFile());
@@ -2029,7 +2029,7 @@ void AudioClipBase::renderSource()
 
 void AudioClipBase::renderComplete()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     // Updates the thumbnail message
     changed();
 
@@ -2511,7 +2511,7 @@ void AudioClipBase::beginRenderingNewProxyIfNeeded()
 //==============================================================================
 void AudioClipBase::jobFinished (RenderManager::Job& job, bool completedOk)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     if (&job == renderJob.get())
     {

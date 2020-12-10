@@ -275,7 +275,7 @@ MidiList& MidiClip::getSequence() const noexcept
 MidiList& MidiClip::getSequenceLooped()
 {
     CRASH_TRACER
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     if (! isLooping())
         return getSequence();

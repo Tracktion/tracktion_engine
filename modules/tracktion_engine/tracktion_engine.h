@@ -177,10 +177,6 @@
 #endif
 
 //==============================================================================
-#define TRACKTION_ASSERT_MESSAGE_THREAD \
-    jassert (juce::MessageManager::getInstance()->currentThreadHasLockedMessageManager());
-
-//==============================================================================
 namespace tracktion_engine
 {
     class Engine;

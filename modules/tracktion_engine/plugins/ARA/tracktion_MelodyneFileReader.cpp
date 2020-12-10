@@ -76,7 +76,7 @@ struct ARAClipPlayer  : private SelectableListener
         file (c.getAudioFile()),
         edit (ed)
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         jassert (file.getFile().existsAsFile());
         edit.tempoSequence.addSelectableListener (this);
     }
@@ -84,7 +84,7 @@ struct ARAClipPlayer  : private SelectableListener
     ~ARAClipPlayer()
     {
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         edit.tempoSequence.removeSelectableListener (this);
 
@@ -124,7 +124,7 @@ struct ARAClipPlayer  : private SelectableListener
     //==============================================================================
     bool initialise (ARAClipPlayer* clipToClone)
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         CRASH_TRACER
 
         if (auto doc = getDocument())
@@ -174,7 +174,7 @@ struct ARAClipPlayer  : private SelectableListener
     void updateContent (ARAClipPlayer* clipToClone)
     {
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         if (MessageManager::getInstance()->isThisTheMessageThread()
             && getEdit().getTransport().isAllowedToReallocate())
@@ -247,8 +247,8 @@ struct ARAClipPlayer  : private SelectableListener
     }
 
     //==============================================================================
-    void startProcessing()  { TRACKTION_ASSERT_MESSAGE_THREAD if (playbackRegionAndSource != nullptr) playbackRegionAndSource->enable(); }
-    void stopProcessing()   { TRACKTION_ASSERT_MESSAGE_THREAD if (playbackRegionAndSource != nullptr) playbackRegionAndSource->disable(); }
+    void startProcessing()  { JUCE_ASSERT_MESSAGE_THREAD if (playbackRegionAndSource != nullptr) playbackRegionAndSource->enable(); }
+    void stopProcessing()   { JUCE_ASSERT_MESSAGE_THREAD if (playbackRegionAndSource != nullptr) playbackRegionAndSource->disable(); }
 
     class ContentAnalyser
     {
@@ -391,7 +391,7 @@ private:
     void recreateTrack (ARAClipPlayer* clipToClone)
     {
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         jassert (melodyneInstance != nullptr);
         jassert (melodyneInstance->factory != nullptr);
@@ -414,7 +414,7 @@ private:
     void internalUpdateContent (ARAClipPlayer* clipToClone)
     {
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         if (auto doc = getDocument())
         {
@@ -501,7 +501,7 @@ private:
 //==============================================================================
 MelodyneFileReader::MelodyneFileReader (Edit& ed, AudioClipBase& clip)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
 
     player.reset (new ARAClipPlayer (ed, *this, clip));
@@ -512,7 +512,7 @@ MelodyneFileReader::MelodyneFileReader (Edit& ed, AudioClipBase& clip)
 
 MelodyneFileReader::MelodyneFileReader (Edit& ed, AudioClipBase& clip, MelodyneFileReader& other)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
 
     if (other.player != nullptr)
@@ -528,7 +528,7 @@ MelodyneFileReader::MelodyneFileReader (Edit& ed, AudioClipBase& clip, MelodyneF
 
 MelodyneFileReader::~MelodyneFileReader()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
 
     if (player != nullptr)
@@ -847,7 +847,7 @@ struct ARADocumentHolder::Pimpl
 
     void initialise()
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         araDocument.reset (ARAClipPlayer::createDocument (edit));
 
         if (araDocument != nullptr)
@@ -879,7 +879,7 @@ ARADocumentHolder::ARADocumentHolder (Edit& e, const juce::ValueTree& v)
 
 ARADocumentHolder::~ARADocumentHolder()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
     pimpl = nullptr;
 }
@@ -898,7 +898,7 @@ ARADocumentHolder::Pimpl* ARADocumentHolder::getPimpl()
 
 void ARADocumentHolder::flushStateToValueTree()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     if (pimpl != nullptr)
         if (pimpl->araDocument != nullptr)

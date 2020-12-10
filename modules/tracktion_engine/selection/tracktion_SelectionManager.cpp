@@ -121,7 +121,7 @@ bool Selectable::isSelectableValid (const Selectable* s) noexcept
 
 void Selectable::addSelectableListener (SelectableListener* l)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     jassert (l != nullptr);
     jassert (! isCallingListeners);
     jassert (! hasNotifiedListenersOfDeletion);
@@ -130,14 +130,14 @@ void Selectable::addSelectableListener (SelectableListener* l)
 
 void Selectable::removeSelectableListener (SelectableListener* l)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     jassert (! isCallingListeners);
     selectableListeners.remove (l);
 }
 
 void Selectable::sendChangeCallbackToListenersIfNeeded()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     needsAnUpdate = false;
 
     const ScopedValueSetter<bool> svs (isCallingListeners, true);

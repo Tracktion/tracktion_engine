@@ -67,7 +67,7 @@ public:
 
     void beginEditing (bool dontCheckMusicalContext)
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         if (canEdit (dontCheckMusicalContext))
             dci->beginEditing (dcRef);
@@ -75,7 +75,7 @@ public:
 
     void endEditing (bool dontCheckMusicalContext)
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         if (canEdit (dontCheckMusicalContext))
             dci->endEditing (dcRef);
@@ -84,7 +84,7 @@ public:
     void flushStateToValueTree (ValueTree& v)
     {
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         MemoryBlock data;
         MemoryOutputStream out (data, false);
@@ -104,7 +104,7 @@ public:
     void beginRestoringState (const juce::ValueTree& state)
     {
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         jassert (state.hasType (IDs::ARADOCUMENT));
 
@@ -126,7 +126,7 @@ public:
     void endRestoringState()
     {
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         if (lastArchiveState != nullptr)
             dci->endRestoringDocumentFromArchive (dcRef, toHostRef (lastArchiveState.get()));
@@ -186,7 +186,7 @@ struct ARADocumentCreatorCallback : private MessageThreadCallback
     void performAction() override
     {
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         result.reset (createDocumentInternal (edit));
     }
@@ -206,7 +206,7 @@ static ARADocument* createDocument (Edit& edit)
 static ARADocument* createDocumentInternal (Edit& edit)
 {
     CRASH_TRACER
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     ReferenceCountedObjectPtr<ExternalPlugin> plugin (MelodyneInstanceFactory::getInstance (edit.engine).createPlugin (edit));
 
@@ -313,7 +313,7 @@ public:
     MusicalContextWrapper (ARADocument& doc)  : document (doc)
     {
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         if (document.dci != nullptr)
         {
@@ -327,7 +327,7 @@ public:
     ~MusicalContextWrapper()
     {
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         if (document.dci != nullptr && musicalContextRef != nullptr)
             document.dci->destroyMusicalContext (document.dcRef, musicalContextRef);
@@ -336,7 +336,7 @@ public:
     void update()
     {
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         if (document.dci != nullptr && musicalContextRef != nullptr)
             document.dci->updateMusicalContextContent (document.dcRef, musicalContextRef,
@@ -773,7 +773,7 @@ public:
         itemID (audioClip.getAudioFile().getHashString() + "_" + audioClip.itemID.toString())
     {
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         updateAudioSourceProperties();
         auto audioSourceProperties = getAudioSourceProperties();
@@ -782,7 +782,7 @@ public:
     ~AudioSourceWrapper()
     {
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         if (audioSourceRef != nullptr)
         {
@@ -794,7 +794,7 @@ public:
     NodeReader* createReader()
     {
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         return new NodeReader (clip.getAudioFile());
     }
 
@@ -879,7 +879,7 @@ public:
         persistentID (itemID)
     {
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         updateAudioModificationProperties();
         auto audioModificationProperties = getAudioModificationProperties();
@@ -925,7 +925,7 @@ public:
           track (track_)
     {
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         updateRegionSequenceProperties();
         auto regionSequenceProperties = getRegionSequenceProperties();
@@ -982,7 +982,7 @@ public:
         flags (factory.supportedPlaybackTransformationFlags)
     {
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
         doc.willCreatePlaybackRegionOnTrack (clip.getTrack());
 
@@ -1000,7 +1000,7 @@ public:
         if (playbackRegionRef != nullptr)
         {
             CRASH_TRACER
-            TRACKTION_ASSERT_MESSAGE_THREAD
+            JUCE_ASSERT_MESSAGE_THREAD
             // TODO ARA2
             // At this point the track has already been destroyed, so this
             // function won't work properly. What to do?

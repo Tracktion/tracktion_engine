@@ -626,7 +626,7 @@ public:
 
     bool isRecording() override
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         return recording;
     }
 

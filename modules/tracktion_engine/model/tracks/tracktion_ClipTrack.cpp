@@ -332,7 +332,7 @@ void ClipTrack::flushStateToValueTree()
 //==============================================================================
 void ClipTrack::refreshTrackItems() const
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     if (trackItemsDirty)
     {

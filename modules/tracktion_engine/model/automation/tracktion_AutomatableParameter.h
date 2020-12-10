@@ -294,7 +294,7 @@ juce::Array<AutomatableParameter*> getAllAutomatableParameter (Edit&);
 template<typename AssignmentType, typename ModifierSourceType>
 juce::ReferenceCountedArray<AssignmentType> getAssignmentsForSource (Edit& edit, const ModifierSourceType& source)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     juce::ReferenceCountedArray<AssignmentType> assignments;
 
     for (auto* ap : getAllAutomatableParameter (edit))

@@ -389,7 +389,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
     {
         if (! edit.isLoading())
         {
-            TRACKTION_ASSERT_MESSAGE_THREAD
+            JUCE_ASSERT_MESSAGE_THREAD
         }
     }
 
@@ -413,7 +413,7 @@ struct Edit::ChangedPluginsList
     /** Flushes the plugin state to the Edit if it has changed. */
     void flushPluginStateIfNeeded (Plugin& p)
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         const int index = plugins.indexOf (&p);
 
         if (index != -1)
@@ -640,7 +640,7 @@ void Edit::setProjectItemID (ProjectItemID newID)
 Edit::ScopedRenderStatus::ScopedRenderStatus (Edit& ed, bool shouldReallocateOnDestruction)
     : edit (ed), reallocateOnDestruction (shouldReallocateOnDestruction)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     jassert (edit.performingRenderCount >= 0);
     ++edit.performingRenderCount;
     edit.getTransport().freePlaybackContext();
@@ -648,7 +648,7 @@ Edit::ScopedRenderStatus::ScopedRenderStatus (Edit& ed, bool shouldReallocateOnD
 
 Edit::ScopedRenderStatus::~ScopedRenderStatus()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     jassert (edit.performingRenderCount > 0);
     --edit.performingRenderCount;
 
@@ -1488,7 +1488,7 @@ void Edit::toggleTimecodeMode()
 //==============================================================================
 void Edit::sendTempoOrPitchSequenceChangedUpdates()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     // notify clips of tempo changes
     for (auto t : getClipTracks (*this))
@@ -2915,7 +2915,7 @@ std::unique_ptr<Edit> Edit::createSingleTrackEdit (Engine& engine)
 
 //==============================================================================
 EditDeleter::EditDeleter() = default;
-EditDeleter::~EditDeleter() { TRACKTION_ASSERT_MESSAGE_THREAD }
+EditDeleter::~EditDeleter() { JUCE_ASSERT_MESSAGE_THREAD }
 
 void EditDeleter::deleteEdit (std::unique_ptr<Edit> ed)
 {

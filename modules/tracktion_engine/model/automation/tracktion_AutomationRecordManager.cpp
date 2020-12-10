@@ -236,7 +236,7 @@ void AutomationRecordManager::toggleWriteAutomationMode()
 
 void AutomationRecordManager::postFirstAutomationChange (AutomatableParameter& param, float originalValue)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     auto entry = std::make_unique<AutomationParamData> (param, originalValue);
 
     // recording status has changed, so inform our listeners
@@ -248,7 +248,7 @@ void AutomationRecordManager::postFirstAutomationChange (AutomatableParameter& p
 
 void AutomationRecordManager::postAutomationChange (AutomatableParameter& param, double time, float value)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     const ScopedLock sl (lock);
 
     for (auto p : recordedParams)

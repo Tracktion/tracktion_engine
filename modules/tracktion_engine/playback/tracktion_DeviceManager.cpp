@@ -248,7 +248,7 @@ String DeviceManager::getDefaultMidiInDeviceName (bool translated)
 void DeviceManager::closeDevices()
 {
     CRASH_TRACER
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     jassert (activeContexts.isEmpty());
     clearAllContextDevices();
@@ -283,7 +283,7 @@ DeviceManager::ContextDeviceListRebuilder::~ContextDeviceListRebuilder()
 void DeviceManager::initialiseMidi()
 {
     CRASH_TRACER
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     ContextDeviceListRebuilder deviceRebuilder (*this);
 
     midiInputs.clear();
@@ -467,7 +467,7 @@ void DeviceManager::resetToDefaults (bool resetInputDevices, bool resetOutputDev
 Result DeviceManager::createVirtualMidiDevice (const String& name)
 {
     CRASH_TRACER
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     {
         StringArray virtualDevices;
@@ -498,7 +498,7 @@ Result DeviceManager::createVirtualMidiDevice (const String& name)
 void DeviceManager::deleteVirtualMidiDevice (VirtualMidiInputDevice* vmi)
 {
     CRASH_TRACER
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     ContextDeviceListRebuilder deviceRebuilder (*this);
 
     engine.getPropertyStorage().removePropertyItem (SettingID::virtualmidiin, vmi->getName());
@@ -544,7 +544,7 @@ bool DeviceManager::waveDeviceListNeedsRebuilding()
 void DeviceManager::rebuildWaveDeviceList()
 {
     CRASH_TRACER
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     static bool reentrant = false;
     jassert (! reentrant);
@@ -965,7 +965,7 @@ int DeviceManager::getNumMidiInDevices() const
 
 MidiInputDevice* DeviceManager::getMidiInDevice (int index) const
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     return midiInputs[index];
 }
 
@@ -1208,7 +1208,7 @@ void DeviceManager::updateNumCPUs()
 
 void DeviceManager::addContext (EditPlaybackContext* c)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     double lastStreamTime;
 

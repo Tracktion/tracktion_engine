@@ -770,7 +770,7 @@ void ExternalPlugin::doFullInitialisation()
 //==============================================================================
 ExternalPlugin::~ExternalPlugin()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
     CRASH_TRACER_PLUGIN (getDebugName());
     notifyListenersOfDeletion();
     windowState->hideWindowForShutdown();
@@ -813,7 +813,7 @@ void ExternalPlugin::flushPluginStateToValueTree()
 		if (pluginInstance->getNumPrograms() > 0)
 			state.setProperty (IDs::programNum,  pluginInstance->getCurrentProgram(), um);
 
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
         MemoryBlock chunk;
 
         pluginInstance->suspendProcessing (true);
@@ -897,7 +897,7 @@ void ExternalPlugin::getPluginStateFromTree (MemoryBlock& mb)
 
 void ExternalPlugin::updateFromMirroredPluginIfNeeded (Plugin& changedPlugin)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     if (changedPlugin.itemID == masterPluginID)
     {

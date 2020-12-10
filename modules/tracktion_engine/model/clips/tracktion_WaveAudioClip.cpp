@@ -524,7 +524,7 @@ WaveCompManager& WaveAudioClip::getCompManager()
 //==============================================================================
 RenderManager::Job::Ptr WaveAudioClip::getRenderJob (const AudioFile& destFile)
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     // do this here so we don't end up creating a multiple copies of a File
     if (auto existing = edit.engine.getRenderManager().getRenderJobWithoutCreating (destFile))
@@ -556,7 +556,7 @@ RenderManager::Job::Ptr WaveAudioClip::getRenderJob (const AudioFile& destFile)
 
 String WaveAudioClip::getRenderMessage()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    JUCE_ASSERT_MESSAGE_THREAD
 
     if (renderJob == nullptr || getAudioFile().isValid())
         return {};

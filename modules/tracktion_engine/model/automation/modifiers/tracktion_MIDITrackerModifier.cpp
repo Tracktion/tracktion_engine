@@ -185,7 +185,7 @@ void MIDITrackerModifier::refreshCurrentValue()
 void MIDITrackerModifier::updateMapFromTree()
 {
     if (! edit.isLoading())
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        JUCE_ASSERT_MESSAGE_THREAD
 
     Map newMap;
 
