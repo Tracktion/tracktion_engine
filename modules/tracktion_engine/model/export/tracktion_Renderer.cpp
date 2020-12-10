@@ -1022,7 +1022,7 @@ bool Renderer::renderToFile (const String& taskDescription,
             if (std::abs (beats - int (beats)) < 0.001)
             {
                 r.metadata.set (WavAudioFormat::acidStretch, "1");
-                r.metadata.set (WavAudioFormat::acidBeats, String (roundToInt (bpm)));
+                r.metadata.set (WavAudioFormat::acidBeats, String (roundToInt (beats)));
                 r.metadata.set (WavAudioFormat::acidDenominator, String (timeSig.denominator.get()));
                 r.metadata.set (WavAudioFormat::acidNumerator, String (timeSig.numerator.get()));
                 r.metadata.set (WavAudioFormat::acidTempo, String (tempo.getBpm()));
