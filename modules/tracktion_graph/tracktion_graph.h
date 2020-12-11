@@ -64,6 +64,13 @@
 #include <thread>
 
 //==============================================================================
+#if __has_include(<choc/audio/choc_SampleBuffers.h>)
+ #include <choc/audio/choc_SampleBuffers.h>
+#else
+ #include "../3rd_party/choc/audio/choc_SampleBuffers.h"
+#endif
+
+//==============================================================================
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <juce_dsp/juce_dsp.h>
 
@@ -71,6 +78,7 @@
 //==============================================================================
 #include "tracktion_graph/tracktion_graph_Utility.h"
 
+#include "utilities/tracktion_GlueCode.h"
 #include "utilities/tracktion_AudioFifo.h"
 #include "utilities/tracktion_MidiMessageArray.h"
 #include "utilities/tracktion_RealTimeSpinLock.h"

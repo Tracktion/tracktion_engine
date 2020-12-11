@@ -18,16 +18,20 @@ namespace tracktion_engine
 struct InputProvider
 {
     InputProvider() = default;
-    InputProvider (int numChannelsToUse) : numChannels (numChannelsToUse) {}
+    InputProvider (choc::buffer::ChannelCount numChannelsToUse)
+        : numChannels (numChannelsToUse)
+    {}
 
     void setInputs (tracktion_graph::Node::AudioAndMidiBuffer newBuffers)
     {
-        audio = numChannels > 0 ? newBuffers.audio.getSubsetChannelBlock (0, (size_t) numChannels) : newBuffers.audio;
+        audio = numChannels > 0 ? newBuffers.audio.getChannelRange ({ 0, numChannels }) : newBuffers.audio;
+        tracktion_graph::sanityCheckView (audio);
         midi.copyFrom (newBuffers.midi);
     }
     
     tracktion_graph::Node::AudioAndMidiBuffer getInputs()
     {
+        tracktion_graph::sanityCheckView (audio);
         return { audio, midi };
     }
     
@@ -45,8 +49,8 @@ struct InputProvider
         return *context;
     }
     
-    int numChannels = 0;
-    juce::dsp::AudioBlock<float> audio;
+    choc::buffer::ChannelCount numChannels = 0;
+    choc::buffer::ChannelArrayView<float> audio;
     tracktion_engine::MidiMessageArray midi;
 
     tracktion_engine::PluginRenderContext* context = nullptr;

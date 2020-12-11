@@ -620,8 +620,8 @@ private:
         jassert (outputBuffer.getNumSamples() == inputBuffer.getNumSamples());
 
         // Set up the inputs
-        juce::dsp::AudioBlock<float> intputBlock (inputBuffer);
-        inputProvider->setInputs ({ intputBlock, midiIn });
+        auto intputView = tracktion_graph::toBufferView (inputBuffer);
+        inputProvider->setInputs ({ intputView, midiIn });
 
         
         // The context
@@ -634,8 +634,8 @@ private:
         // Then process
         //TODO: This probably should be the master stream time
         auto streamSampleRange = juce::Range<int64_t>::withStartAndLength (0, inputBuffer.getNumSamples());
-        juce::dsp::AudioBlock<float> outputBlock (outputBuffer);
-        processor->process ({ streamSampleRange, { outputBlock, midiOut } },
+        auto outputView = tracktion_graph::toBufferView (outputBuffer);
+        processor->process ({ streamSampleRange, { outputView, midiOut } },
                             editTime, isPlaying, isScrubbing, isRendering);
     }
    #endif

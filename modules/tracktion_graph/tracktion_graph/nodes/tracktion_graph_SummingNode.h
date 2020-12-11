@@ -105,7 +105,8 @@ public:
         useDoublePrecision = useDoublePrecision && nodes.size() > 1;
         
         if (useDoublePrecision)
-            tempDoubleBuffer.setSize (getNodeProperties().numberOfChannels, info.blockSize);
+            tempDoubleBuffer.resize ({ (choc::buffer::ChannelCount) getNodeProperties().numberOfChannels,
+                                       (choc::buffer::FrameCount) info.blockSize });
     }
 
     bool isReadyToProcess() override
@@ -117,7 +118,7 @@ public:
         return true;
     }
     
-    void process (const ProcessContext& pc) override
+    void process (ProcessContext& pc) override
     {
         if (useDoublePrecision)
             processDoublePrecision (pc);
@@ -131,25 +132,26 @@ private:
     std::vector<Node*> nodes;
     
     bool useDoublePrecision = false;
-    juce::AudioBuffer<double> tempDoubleBuffer;
+    choc::buffer::ChannelArrayBuffer<double> tempDoubleBuffer;
     
     //==============================================================================
     template<typename DestType, typename SourceType>
-    static void addBlock (juce::dsp::AudioBlock<DestType>& dest, const juce::dsp::AudioBlock<SourceType>& src,
-                          size_t numChannels)
+    static void addBlock (choc::buffer::ChannelArrayView<DestType>& dest,
+                          const choc::buffer::ChannelArrayView<SourceType>& src,
+                          choc::buffer::ChannelCount numChannels)
     {
         assert (dest.getNumChannels() <= numChannels);
         assert (src.getNumChannels() <= numChannels);
-        assert (dest.getNumSamples() == src.getNumSamples());
-        const auto numSamples = dest.getNumSamples();
+        assert (dest.getNumFrames() == src.getNumFrames());
+        const auto numSamples = dest.getNumFrames();
 
-        for (size_t c = 0; c < numChannels; ++c)
+        for (choc::buffer::ChannelCount c = 0; c < numChannels; ++c)
         {
-            DestType* destChan = dest.getChannelPointer (c);
-            const SourceType* srcChan = src.getChannelPointer (c);
-
-            for (size_t i = 0; i < numSamples; ++i)
-                *destChan++ += static_cast<DestType> (*srcChan++);
+            auto destIterator = dest.getIterator (c);
+            auto srcIterator = src.getIterator (c);
+            
+            for (choc::buffer::FrameCount i = 0; i < numSamples; ++i)
+                *destIterator++ += static_cast<DestType> (*srcIterator++);
         }
     }
     
@@ -165,8 +167,8 @@ private:
             const auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels);
 
             if (numChannelsToAdd > 0)
-                pc.buffers.audio.getSubsetChannelBlock (0, numChannelsToAdd)
-                    .add (node->getProcessedOutput().audio.getSubsetChannelBlock (0, numChannelsToAdd));
+                choc::buffer::add (pc.buffers.audio.getChannelRange ({ 0, numChannelsToAdd }),
+                                   node->getProcessedOutput().audio.getChannelRange ({ 0, numChannelsToAdd }));
             
             pc.buffers.midi.mergeFrom (inputFromNode.midi);
         }
@@ -176,8 +178,8 @@ private:
     {
         const auto numChannels = pc.buffers.audio.getNumChannels();
         tempDoubleBuffer.clear();
-        assert (tempDoubleBuffer.getNumChannels() == (int) numChannels);
-        auto doubleBlock (juce::dsp::AudioBlock<double> (tempDoubleBuffer).getSubBlock (0, pc.buffers.audio.getNumSamples()));
+        assert (tempDoubleBuffer.getNumChannels() == (choc::buffer::ChannelCount) numChannels);
+        auto doubleBlock = tempDoubleBuffer.getView().getStart (pc.buffers.audio.getNumFrames());
 
         // Get each of the inputs and add them to dest
         for (auto& node : nodes)
@@ -188,8 +190,8 @@ private:
 
             if (numChannelsToAdd > 0)
             {
-                auto destBlock = doubleBlock.getSubsetChannelBlock (0, numChannelsToAdd);
-                auto srcBlock = node->getProcessedOutput().audio.getSubsetChannelBlock (0, numChannelsToAdd);
+                auto destBlock = doubleBlock.getChannelRange ({ 0, numChannelsToAdd });
+                auto srcBlock = node->getProcessedOutput().audio.getChannelRange ({ 0, numChannelsToAdd });
                 addBlock (destBlock, srcBlock, numChannelsToAdd);
             }
             
@@ -198,7 +200,7 @@ private:
         
         if (numChannels > 0)
         {
-            auto floatBlock = pc.buffers.audio.getSubsetChannelBlock (0, numChannels);
+            auto floatBlock = pc.buffers.audio.getChannelRange ({ 0, numChannels });
             addBlock (floatBlock, doubleBlock, numChannels);
         }
     }

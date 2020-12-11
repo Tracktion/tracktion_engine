@@ -41,10 +41,11 @@ bool InsertReturnNode::isReadyToProcess()
     return input->hasProcessed();
 }
 
-void InsertReturnNode::process (const ProcessContext&)
+void InsertReturnNode::process (ProcessContext&)
 {
     auto sourceBuffers = input->getProcessedOutput();
-    owner.fillReturnBuffer (&sourceBuffers.audio, &sourceBuffers.midi);
+    auto sourceBlock = tracktion_graph::toAudioBlock (sourceBuffers.audio);
+    owner.fillReturnBuffer (&sourceBlock, &sourceBuffers.midi);
 
 }
 

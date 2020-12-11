@@ -52,7 +52,7 @@ bool LiveMidiOutputNode::isReadyToProcess()
     return input->hasProcessed();
 }
 
-void LiveMidiOutputNode::process (const ProcessContext& pc)
+void LiveMidiOutputNode::process (ProcessContext& pc)
 {
     auto sourceBuffers = input->getProcessedOutput();
     auto destAudioBlock = pc.buffers.audio;
@@ -60,7 +60,7 @@ void LiveMidiOutputNode::process (const ProcessContext& pc)
     jassert (sourceBuffers.audio.getNumChannels() == destAudioBlock.getNumChannels());
 
     destMidiBlock.copyFrom (sourceBuffers.midi);
-    destAudioBlock.copyFrom (sourceBuffers.audio);
+    choc::buffer::copy (destAudioBlock, sourceBuffers.audio);
 
     bool needToUpdate = false;
     

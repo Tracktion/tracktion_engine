@@ -65,7 +65,7 @@ bool MidiInputDeviceNode::isReadyToProcess()
     return true;
 }
 
-void MidiInputDeviceNode::process (const ProcessContext& pc)
+void MidiInputDeviceNode::process (ProcessContext& pc)
 {
     SCOPED_REALTIME_CHECK
 
@@ -122,7 +122,7 @@ void MidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& me
     }
 }
 
-void MidiInputDeviceNode::processSection (const ProcessContext& pc, juce::Range<int64_t> timelineRange)
+void MidiInputDeviceNode::processSection (ProcessContext& pc, juce::Range<int64_t> timelineRange)
 {
     const auto editTime = tracktion_graph::sampleToTime (timelineRange, sampleRate);
     const auto timeNow = juce::Time::getApproximateMillisecondCounter();

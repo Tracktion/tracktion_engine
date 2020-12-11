@@ -61,7 +61,7 @@ struct CombiningNode::TimedNode
             n->prepareForNextBlock (referenceSampleRange);
     }
     
-    void process (const ProcessContext& pc) const
+    void process (ProcessContext& pc) const
     {
         // Process all the Nodes
         for (auto n : nodesToProcess)
@@ -73,8 +73,8 @@ struct CombiningNode::TimedNode
         const auto numChannelsToAdd = std::min (nodeOutput.audio.getNumChannels(), numDestChannels);
 
         if (numChannelsToAdd > 0)
-            pc.buffers.audio.getSubsetChannelBlock (0, numChannelsToAdd)
-                .add (nodeOutput.audio.getSubsetChannelBlock (0, numChannelsToAdd));
+            choc::buffer::add (pc.buffers.audio.getChannelRange ({ 0, numChannelsToAdd }),
+                               nodeOutput.audio.getChannelRange ({ 0, numChannelsToAdd }));
         
         pc.buffers.midi.mergeFrom (nodeOutput.midi);
     }
@@ -195,7 +195,7 @@ void CombiningNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
     }
 }
 
-void CombiningNode::process (const ProcessContext& pc)
+void CombiningNode::process (ProcessContext& pc)
 {
     SCOPED_REALTIME_CHECK
     const auto editTime = getEditTimeRange();

@@ -73,7 +73,7 @@ void ModifierNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationI
         automationAdjustmentTime = -tracktion_graph::sampleToTime (props.latencyNumSamples, sampleRate);
 }
 
-void ModifierNode::process (const ProcessContext& pc)
+void ModifierNode::process (ProcessContext& pc)
 {
     auto inputBuffers = input->getProcessedOutput();
     auto& inputAudioBlock = inputBuffers.audio;
@@ -84,17 +84,17 @@ void ModifierNode::process (const ProcessContext& pc)
     // Copy the inputs to the outputs, then process using the
     // output buffers as that will be the correct size
     {
-        const size_t numInputChannelsToCopy = std::min (inputAudioBlock.getNumChannels(), outputAudioBlock.getNumChannels());
+        const auto numInputChannelsToCopy = std::min (inputAudioBlock.getNumChannels(), outputAudioBlock.getNumChannels());
         
         if (numInputChannelsToCopy > 0)
         {
-            jassert (inputAudioBlock.getNumSamples() == outputAudioBlock.getNumSamples());
-            outputAudioBlock.copyFrom (inputAudioBlock.getSubsetChannelBlock (0, numInputChannelsToCopy));
+            jassert (inputAudioBlock.getNumFrames() == outputAudioBlock.getNumFrames());
+            choc::buffer::copy (outputAudioBlock, inputAudioBlock.getChannelRange ({ 0, numInputChannelsToCopy }));
         }
     }
 
     // Setup audio buffers
-    auto outputAudioBuffer = tracktion_graph::test_utilities::createAudioBuffer (outputAudioBlock);
+    auto outputAudioBuffer = tracktion_graph::createAudioBuffer (outputAudioBlock);
 
     // Then MIDI buffers
     midiMessageArray.copyFrom (inputBuffers.midi);

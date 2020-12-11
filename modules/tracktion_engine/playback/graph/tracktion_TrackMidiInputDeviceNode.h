@@ -23,7 +23,7 @@ public:
     tracktion_graph::NodeProperties getNodeProperties() override;
     void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
-    void process (const ProcessContext&) override;
+    void process (ProcessContext&) override;
 
 private:
     //==============================================================================

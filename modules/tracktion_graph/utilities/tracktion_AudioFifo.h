@@ -45,6 +45,12 @@ public:
         }
     }
 
+    template<typename SampleType, template<typename> typename LayoutType>
+    bool write (const choc::buffer::BufferView<SampleType, LayoutType>& source)
+    {
+        return write (toAudioBlock (source));
+    }
+
     bool write (juce::dsp::AudioBlock<float> block)
     {
         const int internalBufferNumChannels = buffer.getNumChannels();
@@ -92,6 +98,12 @@ public:
         fifo.finishedWrite (size1 + size2);
 
         return true;
+    }
+
+    template<typename SampleType, template<typename> typename LayoutType>
+    bool readAdding (choc::buffer::BufferView<SampleType, LayoutType>& dest)
+    {
+        return readAdding (toAudioBlock (dest));
     }
 
     bool readAdding (const juce::dsp::AudioBlock<float>& dest)

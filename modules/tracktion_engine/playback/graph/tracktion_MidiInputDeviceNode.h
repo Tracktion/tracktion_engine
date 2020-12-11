@@ -26,7 +26,7 @@ public:
     tracktion_graph::NodeProperties getNodeProperties() override;
     void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
-    void process (const ProcessContext&) override;
+    void process (ProcessContext&) override;
 
     void handleIncomingMidiMessage (const juce::MidiMessage&) override;
 
@@ -47,7 +47,7 @@ private:
     double sampleRate = 44100.0, lastPlayheadTime = 0;
 
     //==============================================================================
-    void processSection (const ProcessContext&, juce::Range<int64_t> timelineRange);
+    void processSection (ProcessContext&, juce::Range<int64_t> timelineRange);
     void createProgramChanges (MidiMessageArray&);
     bool isLivePlayOverActive();
 };

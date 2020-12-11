@@ -49,9 +49,10 @@ public:
     {
     }
     
-    void process (const ProcessContext&) override
+    void process (ProcessContext&) override
     {
         auto inputs = input->getProcessedOutput();
+        tracktion_graph::sanityCheckView (inputs.audio);
         inputProvider->setInputs (inputs);
     }
     
@@ -111,26 +112,29 @@ public:
     {
     }
     
-    void process (const ProcessContext& pc) override
+    void process (ProcessContext& pc) override
     {
         auto inputBuffers = inputProvider->getInputs();
+        tracktion_graph::sanityCheckView (inputBuffers.audio);
 
         if (numChannels > 0)
         {
             auto& outputBuffers = pc.buffers;
             
             // The InputProvider may have less channels than this Node requires so only take the number available
-            const size_t numInputChannelsToCopy = std::min (inputBuffers.audio.getNumChannels(), outputBuffers.audio.getNumChannels());
+            const auto numInputChannelsToCopy = std::min (inputBuffers.audio.getNumChannels(), outputBuffers.audio.getNumChannels());
             
             if (numInputChannelsToCopy > 0)
             {
                 // For testing purposes, the last block might be smaller than the InputProvider
                 // so we'll just take the number of samples required
-                jassert (inputBuffers.audio.getNumSamples() >= outputBuffers.audio.getNumSamples());
-                auto inputAudioBlock = inputBuffers.audio.getSubsetChannelBlock (0, numInputChannelsToCopy)
-                                        .getSubBlock (0, outputBuffers.audio.getNumSamples());
-                auto outputAudioBlock = outputBuffers.audio.getSubsetChannelBlock (0, numInputChannelsToCopy);
-                outputAudioBlock.add (inputAudioBlock);
+                jassert (inputBuffers.audio.getNumFrames() >= outputBuffers.audio.getNumFrames());
+                auto inputAudioBlock = inputBuffers.audio.getChannelRange ({ 0, numInputChannelsToCopy })
+                                        .getStart (outputBuffers.audio.getNumFrames());
+                auto outputAudioBlock = outputBuffers.audio.getChannelRange ({ 0, numInputChannelsToCopy });
+                jassert (outputAudioBlock.getIterator (0).sample != nullptr);
+                jassert (inputAudioBlock.getIterator (0).sample != nullptr);
+                choc::buffer::add (outputAudioBlock, inputAudioBlock);
             }
         }
         
@@ -177,10 +181,11 @@ public:
         return input->hasProcessed();
     }
     
-    void process (const ProcessContext& pc) override
+    void process (ProcessContext& pc) override
     {
         auto inputBuffers = input->getProcessedOutput();
-        pc.buffers.audio.copyFrom (inputBuffers.audio);
+
+        choc::buffer::copy (pc.buffers.audio, inputBuffers.audio);
         pc.buffers.midi.copyFrom (inputBuffers.midi);
     }
 
@@ -217,7 +222,7 @@ public:
         return true;
     }
     
-    void process (const ProcessContext&) override
+    void process (ProcessContext&) override
     {
     }
 

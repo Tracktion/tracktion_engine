@@ -28,7 +28,7 @@ public:
     std::vector<Node*> getDirectInputNodes() override;
     void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
-    void process (const ProcessContext&) override;
+    void process (ProcessContext&) override;
 
 private:
     //==============================================================================
@@ -38,8 +38,8 @@ private:
     double sampleRate = 44100.0;
 
     //==============================================================================
-    void processSection (const juce::dsp::AudioBlock<float>&, EditTimeRange);
-    void muteSection (const juce::dsp::AudioBlock<float>&, int64_t startSample, int64_t numSamples);
+    void processSection (choc::buffer::ChannelArrayView<float>&, EditTimeRange);
+    void muteSection (choc::buffer::ChannelArrayView<float>&, choc::buffer::FrameCount startSample, choc::buffer::FrameCount numSamples);
 };
 
 } // namespace tracktion_engine

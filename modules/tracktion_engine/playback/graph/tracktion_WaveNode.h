@@ -41,7 +41,7 @@ public:
     tracktion_graph::NodeProperties getNodeProperties() override;
     void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
-    void process (const ProcessContext&) override;
+    void process (ProcessContext&) override;
 
 private:
     //==============================================================================
@@ -64,7 +64,7 @@ private:
     int64_t editPositionToFileSample (int64_t) const noexcept;
     int64_t editTimeToFileSample (double) const noexcept;
     bool updateFileSampleRate();
-    void processSection (const ProcessContext&, juce::Range<int64_t> timelineRange);
+    void processSection (ProcessContext&, juce::Range<int64_t> timelineRange);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveNode)
 };

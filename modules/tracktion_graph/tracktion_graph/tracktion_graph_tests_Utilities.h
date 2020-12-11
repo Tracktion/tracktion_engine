@@ -324,7 +324,7 @@ namespace test_utilities
             context = std::make_shared<TestContext>();
             context->tempFile = std::make_unique<juce::TemporaryFile> (".wav");
 
-            buffer.setSize  (numChannels, ts.blockSize);
+            buffer.resize  ({ (choc::buffer::ChannelCount) numChannels, (choc::buffer::FrameCount) ts.blockSize });
             numSamplesToDo = juce::roundToInt (durationInSeconds * ts.sampleRate);
 
             if (writeToFile && numChannels > 0)
@@ -374,18 +374,20 @@ namespace test_utilities
                 buffer.clear();
                 midi.clear();
 
-                juce::AudioBuffer<float> subSectionBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
-                                                           0, numThisTime);
+                auto subSectionView = buffer.getView().getStart ((choc::buffer::FrameCount) numThisTime);
                 const auto referenceSampleRange = juce::Range<int64_t>::withStartAndLength ((int64_t) numSamplesDone, (int64_t) numThisTime);
 
                 if (playHead)
                     playHead->setReferenceSampleRange (referenceSampleRange);
 
                 numProcessMisses += player->process ({ referenceSampleRange,
-                                                       { { subSectionBuffer }, midi } });
+                                                       { subSectionView, midi } });
 
                 if (writer)
-                    writer->writeFromAudioSampleBuffer (subSectionBuffer, 0, subSectionBuffer.getNumSamples());
+                {
+                    auto audioBuffer = tracktion_graph::createAudioBuffer (subSectionView);
+                    writer->writeFromAudioSampleBuffer (audioBuffer, 0, audioBuffer.getNumSamples());
+                }
 
                 // Copy MIDI to buffer
                 for (const auto& m : midi)
@@ -438,7 +440,7 @@ namespace test_utilities
         std::shared_ptr<TestContext> context;
         std::unique_ptr<juce::AudioFormatWriter> writer;
 
-        juce::AudioBuffer<float> buffer;
+        choc::buffer::ChannelArrayBuffer<float> buffer;
         tracktion_engine::MidiMessageArray midi;
         int numSamplesToDo = 0;
         int numSamplesDone = 0;

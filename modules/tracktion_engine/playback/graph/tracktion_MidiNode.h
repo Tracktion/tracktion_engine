@@ -39,7 +39,7 @@ public:
     tracktion_graph::NodeProperties getNodeProperties() override;
     void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
-    void process (const ProcessContext&) override;
+    void process (ProcessContext&) override;
 
 private:
     //==============================================================================
@@ -64,7 +64,7 @@ private:
     void createMessagesForTime (double time, MidiMessageArray&);
     void createNoteOffs (MidiMessageArray& destination, const juce::MidiMessageSequence& source,
                          double time, double midiTimeOffset, bool isPlaying);
-    void processSection (const ProcessContext&, juce::Range<int64_t> timelineRange);
+    void processSection (ProcessContext&, juce::Range<int64_t> timelineRange);
 };
 
 } // namespace tracktion_engine

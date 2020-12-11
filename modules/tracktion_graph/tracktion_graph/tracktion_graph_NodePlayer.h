@@ -136,7 +136,7 @@ protected:
             const auto firstRange = pc.referenceSampleRange.withLength (firstNumSamples);
             
             {
-                auto inputAudio = pc.buffers.audio.getSubBlock (0, (size_t) firstNumSamples);
+                auto inputAudio = pc.buffers.audio.getStart ((choc::buffer::FrameCount) firstNumSamples);
                 auto& inputMidi = pc.buffers.midi;
                 
                 phs.update (firstRange);
@@ -148,7 +148,7 @@ protected:
                 const auto secondNumSamples = splitTimelineRange.timelineRange2.getLength();
                 const auto secondRange = juce::Range<int64_t>::withStartAndLength (firstRange.getEnd(), secondNumSamples);
                 
-                auto inputAudio = pc.buffers.audio.getSubBlock ((size_t) firstNumSamples, (size_t) secondNumSamples);
+                auto inputAudio = pc.buffers.audio.getFrameRange (tracktion_graph::frameRangeWithStartAndLength ((choc::buffer::FrameCount) firstNumSamples, (choc::buffer::FrameCount) secondNumSamples));
                 auto& inputMidi = pc.buffers.midi;
                 
                 //TODO: Use a scratch MidiMessageArray and then merge it back with the offset time
@@ -195,10 +195,11 @@ protected:
             if (numNodesProcessed == allNodes.size())
             {
                 auto output = rootNode.getProcessedOutput();
-                const size_t numAudioChannels = std::min (output.audio.getNumChannels(), pc.buffers.audio.getNumChannels());
+                const auto numAudioChannels = std::min (output.audio.getNumChannels(), pc.buffers.audio.getNumChannels());
                 
                 if (numAudioChannels > 0)
-                    pc.buffers.audio.getSubsetChannelBlock (0, numAudioChannels).add (output.audio.getSubsetChannelBlock (0, numAudioChannels));
+                    choc::buffer::add (pc.buffers.audio.getChannelRange ({ 0, numAudioChannels }),
+                                       output.audio.getChannelRange ({ 0, numAudioChannels }));
                 
                 pc.buffers.midi.mergeFrom (output.midi);
 

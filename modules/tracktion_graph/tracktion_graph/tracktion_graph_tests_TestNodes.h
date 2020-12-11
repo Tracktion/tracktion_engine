@@ -42,7 +42,7 @@ public:
         sampleRate = info.sampleRate;
     }
     
-    void process (const ProcessContext& pc) override
+    void process (ProcessContext& pc) override
     {
         const int numSamples = (int) pc.referenceSampleRange.getLength();
         const double blockDuration = numSamples / sampleRate;
@@ -107,11 +107,11 @@ public:
         osc.prepare ({ double (info.sampleRate), uint32_t (info.blockSize), (uint32_t) numChannels });
     }
     
-    void process (const ProcessContext& pc) override
+    void process (ProcessContext& pc) override
     {
-        auto block = pc.buffers.audio;
+        auto block = toAudioBlock (pc.buffers.audio);
         osc.process (juce::dsp::ProcessContextReplacing<float> { block });
-        jassert (pc.buffers.audio.getNumChannels() == (size_t) getNodeProperties().numberOfChannels);
+        jassert (pc.buffers.audio.getNumChannels() == (choc::buffer::ChannelCount) getNodeProperties().numberOfChannels);
     }
     
 private:
@@ -153,7 +153,7 @@ public:
     {
     }
     
-    void process (const ProcessContext&) override
+    void process (ProcessContext&) override
     {
     }
     
@@ -209,7 +209,7 @@ public:
         return true;
     }
     
-    void process (const ProcessContext& pc) override
+    void process (ProcessContext& pc) override
     {
         const auto numChannels = pc.buffers.audio.getNumChannels();
 
@@ -219,10 +219,9 @@ public:
             auto inputFromNode = node->getProcessedOutput();
             
             const auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels);
-
-            if (numChannelsToAdd > 0)
-                pc.buffers.audio.getSubsetChannelBlock (0, numChannelsToAdd)
-                    .add (node->getProcessedOutput().audio.getSubsetChannelBlock (0, numChannelsToAdd));
+            const choc::buffer::ChannelRange channelRange { 0, numChannelsToAdd };
+            choc::buffer::add (pc.buffers.audio.getChannelRange (channelRange),
+                               inputFromNode.audio.getChannelRange (channelRange));
             
             pc.buffers.midi.mergeFrom (inputFromNode.midi);
         }
@@ -273,21 +272,21 @@ public:
         return node->hasProcessed();
     }
     
-    void process (const ProcessContext& pc) override
+    void process (ProcessContext& pc) override
     {
         auto inputBuffer = node->getProcessedOutput().audio;
 
-        const int numSamples = (int) pc.referenceSampleRange.getLength();
-        const int numChannels = std::min ((int) inputBuffer.getNumChannels(), (int) pc.buffers.audio.getNumChannels());
-        jassert ((int) inputBuffer.getNumSamples() == numSamples);
+        const choc::buffer::FrameCount numSamples = (choc::buffer::FrameCount) pc.referenceSampleRange.getLength();
+        const auto numChannels = std::min (inputBuffer.getNumChannels(), pc.buffers.audio.getNumChannels());
+        jassert (inputBuffer.getNumFrames() == numSamples);
 
-        for (int c = 0; c < numChannels; ++c)
+        for (choc::buffer::ChannelCount c = 0; c < numChannels; ++c)
         {
-            const float* inputSamples = inputBuffer.getChannelPointer ((size_t) c);
-            float* outputSamples = pc.buffers.audio.getChannelPointer ((size_t) c);
-            
-            for (int i = 0; i < numSamples; ++i)
-                outputSamples[i] = function (inputSamples[i]);
+            auto destIter = pc.buffers.audio.getIterator (c);
+            auto sourceIter = inputBuffer.getIterator (c);
+
+            for (choc::buffer::FrameCount i = 0; i < numSamples; ++i)
+                *destIter++ = function (*sourceIter++);
         }
     }
     
@@ -349,12 +348,12 @@ public:
         return input->hasProcessed();
     }
     
-    void process (const ProcessContext& pc) override
+    void process (ProcessContext& pc) override
     {
         jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
 
         // Just pass out input on to our output
-        pc.buffers.audio.copyFrom (input->getProcessedOutput().audio);
+        choc::buffer::copy (pc.buffers.audio, input->getProcessedOutput().audio);
         pc.buffers.midi.mergeFrom (input->getProcessedOutput().midi);
         
         float gain = gainFunction();
@@ -364,14 +363,14 @@ public:
             if (gain == 0.0f)
                 pc.buffers.audio.clear();
             else if (gain != 1.0f)
-                pc.buffers.audio *= gain;
+                choc::buffer::applyGain (pc.buffers.audio, gain);
         }
         else
         {
             juce::SmoothedValue<float> smoother (lastGain);
             smoother.setTargetValue (gain);
-            smoother.reset ((int) pc.buffers.audio.getNumSamples());
-            pc.buffers.audio.multiplyBy (smoother);
+            smoother.reset ((int) pc.buffers.audio.getNumFrames());
+            multiplyBy (pc.buffers.audio, smoother);
         }
         
         lastGain = gain;
@@ -427,12 +426,12 @@ public:
         return input->hasProcessed();
     }
     
-    void process (const ProcessContext& pc) override
+    void process (ProcessContext& pc) override
     {
         jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
 
         // Just pass out input on to our output
-        pc.buffers.audio.copyFrom (input->getProcessedOutput().audio);
+        choc::buffer::copy (pc.buffers.audio, input->getProcessedOutput().audio);
         pc.buffers.midi.mergeFrom (input->getProcessedOutput().midi);
     }
     
@@ -507,7 +506,7 @@ public:
         return ! input || input->hasProcessed();
     }
     
-    void process (const ProcessContext& pc) override
+    void process (ProcessContext& pc) override
     {
         if (! input)
             return;
@@ -515,7 +514,7 @@ public:
         jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
 
         // Copy the input on to our output, the SummingNode will copy all the sends and get all the input
-        pc.buffers.audio.copyFrom (input->getProcessedOutput().audio);
+        choc::buffer::copy (pc.buffers.audio, input->getProcessedOutput().audio);
         pc.buffers.midi.mergeFrom (input->getProcessedOutput().midi);
     }
     
@@ -643,7 +642,7 @@ public:
         return input->hasProcessed();
     }
     
-    void process (const ProcessContext& pc) override
+    void process (ProcessContext& pc) override
     {
         auto inputBuffers = input->getProcessedOutput();
         
@@ -660,9 +659,9 @@ public:
             if ((int) sourceAudio.getNumChannels() <= channel.first)
                 continue;
                 
-            auto sourceChanelBlock = sourceAudio.getSubsetChannelBlock ((size_t) channel.first, 1);
-            auto destChanelBlock = destAudio.getSubsetChannelBlock ((size_t) channel.second, 1);
-            destChanelBlock.add (sourceChanelBlock);
+            auto sourceChanelView = sourceAudio.getChannelRange (tracktion_graph::channelRangeWithStartAndLength ((choc::buffer::ChannelCount) channel.first, 1));
+            auto destChanelView = destAudio.getChannelRange (tracktion_graph::channelRangeWithStartAndLength ((choc::buffer::ChannelCount) channel.second, 1));
+            choc::buffer::add (destChanelView, sourceChanelView);
         }
     }
 
@@ -715,7 +714,7 @@ public:
         return input->hasProcessed();
     }
     
-    void process (const ProcessContext&) override
+    void process (ProcessContext&) override
     {
     }
 

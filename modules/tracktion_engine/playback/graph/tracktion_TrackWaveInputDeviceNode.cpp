@@ -39,7 +39,7 @@ bool TrackWaveInputDeviceNode::isReadyToProcess()
     return input->hasProcessed();
 }
 
-void TrackWaveInputDeviceNode::process (const ProcessContext& pc)
+void TrackWaveInputDeviceNode::process (ProcessContext& pc)
 {
     SCOPED_REALTIME_CHECK
 
@@ -48,7 +48,7 @@ void TrackWaveInputDeviceNode::process (const ProcessContext& pc)
 
     if (copyInputsToOutputs)
     {
-        pc.buffers.audio.copyFrom (sourceBuffers.audio);
+        choc::buffer::copy (pc.buffers.audio, sourceBuffers.audio);
         pc.buffers.midi.copyFrom (sourceBuffers.midi);
     }
 
@@ -57,12 +57,12 @@ void TrackWaveInputDeviceNode::process (const ProcessContext& pc)
 
     if (numChans > 0)
     {
-        const float* chans[3] = { sourceBuffers.audio.getChannelPointer (0),
-                                  numChans > 1 ? sourceBuffers.audio.getChannelPointer (1) : nullptr,
+        const float* chans[3] = { sourceBuffers.audio.getIterator (0).sample,
+                                  numChans > 1 ? sourceBuffers.audio.getIterator (1).sample : nullptr,
                                   nullptr };
         const double streamTime = waveInputDevice.engine.getDeviceManager().getCurrentStreamTime()
                                     + tracktion_graph::sampleToTime (offsetSamples, sampleRate);
-        waveInputDevice.consumeNextAudioBlock (chans, numChans, (int) sourceBuffers.audio.getNumSamples(), streamTime);
+        waveInputDevice.consumeNextAudioBlock (chans, numChans, (int) sourceBuffers.audio.getNumFrames(), streamTime);
     }
 }
 

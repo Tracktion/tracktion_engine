@@ -44,12 +44,12 @@ bool MidiOutputDeviceInstanceInjectingNode::isReadyToProcess()
     return input->hasProcessed();
 }
 
-void MidiOutputDeviceInstanceInjectingNode::process (const ProcessContext& pc)
+void MidiOutputDeviceInstanceInjectingNode::process (ProcessContext& pc)
 {
     auto sourceBuffers = input->getProcessedOutput();
 
     pc.buffers.midi.copyFrom (sourceBuffers.midi);
-    pc.buffers.audio.copyFrom (sourceBuffers.audio);
+    choc::buffer::copy (pc.buffers.audio, sourceBuffers.audio);
     
     if (sourceBuffers.midi.isEmpty())
         return;

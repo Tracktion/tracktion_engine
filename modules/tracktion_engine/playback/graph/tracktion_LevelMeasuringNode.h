@@ -22,7 +22,7 @@ public:
     tracktion_graph::NodeProperties getNodeProperties() override        { return input->getNodeProperties(); }
     std::vector<tracktion_graph::Node*> getDirectInputNodes() override  { return { input.get() }; }
     bool isReadyToProcess() override                                    { return input->hasProcessed(); }
-    void process (const tracktion_graph::Node::ProcessContext&) override;
+    void process (tracktion_graph::Node::ProcessContext&) override;
     
 private:
     std::unique_ptr<tracktion_graph::Node> input;

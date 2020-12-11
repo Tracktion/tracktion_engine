@@ -47,7 +47,7 @@ bool ClickNode::isReadyToProcess()
     return true;
 }
 
-void ClickNode::process (const ProcessContext& pc)
+void ClickNode::process (ProcessContext& pc)
 {
     SCOPED_REALTIME_CHECK
 
@@ -56,7 +56,8 @@ void ClickNode::process (const ProcessContext& pc)
 
     const auto splitTimelinePosition = referenceSampleRangeToSplitTimelineRange (playHead, pc.referenceSampleRange);
     const EditTimeRange editTime (tracktion_graph::sampleToTime (splitTimelinePosition.timelineRange1, sampleRate));
-    clickGenerator.processBlock (&pc.buffers.audio, &pc.buffers.midi, editTime);
+    auto audoBlock = tracktion_graph::toAudioBlock (pc.buffers.audio);
+    clickGenerator.processBlock (&audoBlock, &pc.buffers.midi, editTime);
 }
 
 }

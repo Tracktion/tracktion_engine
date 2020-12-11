@@ -185,12 +185,12 @@ bool MelodyneNode::isReadyToProcess()
     return ! analysingContent;
 }
 
-void MelodyneNode::process (const ProcessContext& pc)
+void MelodyneNode::process (ProcessContext& pc)
 {
     CRASH_TRACER
     auto& dest = pc.buffers.audio;
 
-    if (dest.getNumSamples() == 0 || dest.getNumChannels() == 0 || melodyneProxy == nullptr)
+    if (dest.getNumFrames() == 0 || dest.getNumChannels() == 0 || melodyneProxy == nullptr)
         return;
 
     if (auto plugin = melodyneProxy->getPlugin())
@@ -212,7 +212,7 @@ void MelodyneNode::process (const ProcessContext& pc)
                                           tracktion_graph::sampleToTime (loopPositions, sampleRate));
             }
 
-            auto asb = tracktion_graph::test_utilities::createAudioBuffer (dest);
+            auto asb = tracktion_graph::createAudioBuffer (dest);
             pluginInstance->processBlock (asb, midiMessages);
 
             float gains[2];

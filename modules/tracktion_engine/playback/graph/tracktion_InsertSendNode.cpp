@@ -43,9 +43,10 @@ bool InsertSendNode::isReadyToProcess()
     return true;
 }
 
-void InsertSendNode::process (const ProcessContext& pc)
+void InsertSendNode::process (ProcessContext& pc)
 {
-    owner.fillSendBuffer (&pc.buffers.audio, &pc.buffers.midi);
+    auto block = tracktion_graph::toAudioBlock (pc.buffers.audio);
+    owner.fillSendBuffer (&block, &pc.buffers.midi);
 }
 
 } // namespace tracktion_engine

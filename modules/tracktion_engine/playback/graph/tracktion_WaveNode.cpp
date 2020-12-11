@@ -99,7 +99,7 @@ bool WaveNode::isReadyToProcess()
     return true;
 }
 
-void WaveNode::process (const ProcessContext& pc)
+void WaveNode::process (ProcessContext& pc)
 {
     SCOPED_REALTIME_CHECK
     assert (outputSampleRate == getSampleRate());
@@ -140,7 +140,7 @@ bool WaveNode::updateFileSampleRate()
     return true;
 }
 
-void WaveNode::processSection (const ProcessContext& pc, juce::Range<int64_t> timelineRange)
+void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timelineRange)
 {
     const auto sectionEditTime = tracktion_graph::sampleToTime (timelineRange, outputSampleRate);
     
@@ -161,7 +161,7 @@ void WaveNode::processSection (const ProcessContext& pc, juce::Range<int64_t> ti
     reader->setReadPosition (fileStart);
 
     auto destBuffer = pc.buffers.audio;
-    const int numSamples = (int) destBuffer.getNumSamples();
+    const int numSamples = (int) destBuffer.getNumFrames();
     const auto destBufferChannels = juce::AudioChannelSet::canonicalChannelSet ((int) destBuffer.getNumChannels());
     const int numChannels = destBufferChannels.size();
     assert ((int) pc.buffers.audio.getNumChannels() == numChannels);
@@ -213,7 +213,7 @@ void WaveNode::processSection (const ProcessContext& pc, juce::Range<int64_t> ti
         if (channel < channelState.size())
         {
             const auto src = fileData.buffer.getReadPointer (channel);
-            const auto dest = destBuffer.getChannelPointer ((size_t) channel);
+            const auto dest = destBuffer.getIterator ((choc::buffer::ChannelCount) channel).sample;
 
             auto& state = *channelState.getUnchecked (channel);
             state.resampler.processAdding (ratio, src, dest, numSamples, gains[channel & 1]);
@@ -231,7 +231,7 @@ void WaveNode::processSection (const ProcessContext& pc, juce::Range<int64_t> ti
         }
         else
         {
-            destBuffer.getSubsetChannelBlock ((size_t) channel, 1).clear();
+            destBuffer.getChannelRange (tracktion_graph::channelRangeWithStartAndLength ((choc::buffer::ChannelCount) channel, 1)).clear();
         }
     }
     
@@ -242,10 +242,10 @@ void WaveNode::processSection (const ProcessContext& pc, juce::Range<int64_t> ti
         const int64_t numSamplesToClearAtEnd = timelineRange.getEnd() - editPositionInSamples.getEnd();
 
         if (numSamplesToClearAtStart > 0)
-            destBuffer.getSubBlock (0, (size_t) numSamplesToClearAtStart).clear();        
+            destBuffer.getStart ((choc::buffer::FrameCount) numSamplesToClearAtStart).clear();
 
         if (numSamplesToClearAtEnd > 0)
-            destBuffer.getSubBlock ((size_t) (numSamples - numSamplesToClearAtEnd), (size_t) numSamplesToClearAtEnd).clear();
+            destBuffer.getFrameRange (tracktion_graph::frameRangeWithStartAndLength ((choc::buffer::FrameCount) (numSamples - numSamplesToClearAtEnd), (choc::buffer::FrameCount) numSamplesToClearAtEnd)).clear();
     }
 }
 

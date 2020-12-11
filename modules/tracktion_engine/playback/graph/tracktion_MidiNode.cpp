@@ -101,13 +101,13 @@ bool MidiNode::isReadyToProcess()
     return true;
 }
 
-void MidiNode::process (const ProcessContext& pc)
+void MidiNode::process (ProcessContext& pc)
 {
     SCOPED_REALTIME_CHECK
     processSection (pc, getTimelineSampleRange());
 }
 
-void MidiNode::processSection (const ProcessContext& pc, juce::Range<int64_t> timelineRange)
+void MidiNode::processSection (ProcessContext& pc, juce::Range<int64_t> timelineRange)
 {
     if (timelineRange.isEmpty())
         return;

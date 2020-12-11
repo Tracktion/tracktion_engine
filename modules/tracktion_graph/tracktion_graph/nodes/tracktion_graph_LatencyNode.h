@@ -59,15 +59,15 @@ public:
         replaceLatencyProcessorIfPossible (info.rootNodeToReplace);
     }
     
-    void process (const ProcessContext& pc) override
+    void process (ProcessContext& pc) override
     {
-        auto outputBlock = pc.buffers.audio;
+        auto outputBlock = toAudioBlock (pc.buffers.audio);
         auto inputBuffer = input->getProcessedOutput().audio;
         auto& inputMidi = input->getProcessedOutput().midi;
         const int numSamples = (int) pc.referenceSampleRange.getLength();
         jassert (outputBlock.getNumChannels() == 0 || numSamples == (int) outputBlock.getNumSamples());
 
-        latencyProcessor->writeAudio (inputBuffer);
+        latencyProcessor->writeAudio (toAudioBlock (inputBuffer));
         latencyProcessor->writeMIDI (inputMidi);
         
         latencyProcessor->readAudio (outputBlock);

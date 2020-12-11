@@ -82,7 +82,7 @@ public:
     void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override {}
     bool isReadyToProcess() override;
     void prefetchBlock (juce::Range<int64_t>) override;
-    void process (const ProcessContext&) override;
+    void process (ProcessContext&) override;
 
 private:
     //==============================================================================
@@ -90,7 +90,7 @@ private:
     std::unique_ptr<tracktion_graph::Node> input;
 
     //==============================================================================
-    void rampBlock (juce::dsp::AudioBlock<float>&, float start, float end);
+    void rampBlock (choc::buffer::ChannelArrayView<float>&, float start, float end);
     void sendAllNotesOffIfDesired (MidiMessageArray&);
 };
 

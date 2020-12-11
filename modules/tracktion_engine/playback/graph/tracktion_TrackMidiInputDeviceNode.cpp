@@ -38,7 +38,7 @@ bool TrackMidiInputDeviceNode::isReadyToProcess()
     return input->hasProcessed();
 }
 
-void TrackMidiInputDeviceNode::process (const ProcessContext& pc)
+void TrackMidiInputDeviceNode::process (ProcessContext& pc)
 {
     SCOPED_REALTIME_CHECK
 
@@ -47,7 +47,7 @@ void TrackMidiInputDeviceNode::process (const ProcessContext& pc)
 
     if (copyInputsToOutputs)
     {
-        pc.buffers.audio.copyFrom (sourceBuffers.audio);
+        choc::buffer::copy (pc.buffers.audio, sourceBuffers.audio);
         pc.buffers.midi.copyFrom (sourceBuffers.midi);
     }
 

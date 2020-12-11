@@ -104,7 +104,7 @@ bool SpeedRampWaveNode::isReadyToProcess()
     return true;
 }
 
-void SpeedRampWaveNode::process (const ProcessContext& pc)
+void SpeedRampWaveNode::process (ProcessContext& pc)
 {
     SCOPED_REALTIME_CHECK
     assert (outputSampleRate == getSampleRate());
@@ -168,7 +168,7 @@ bool SpeedRampWaveNode::updateFileSampleRate()
     return true;
 }
 
-void SpeedRampWaveNode::processSection (const ProcessContext& pc, juce::Range<int64_t> timelineRange)
+void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timelineRange)
 {
     const auto sectionEditTime = tracktion_graph::sampleToTime (timelineRange, outputSampleRate);
     
@@ -195,7 +195,7 @@ void SpeedRampWaveNode::processSection (const ProcessContext& pc, juce::Range<in
     reader->setReadPosition (fileStart);
 
     auto destBuffer = pc.buffers.audio;
-    const int numSamples = (int) destBuffer.getNumSamples();
+    const int numSamples = (int) destBuffer.getNumFrames();
     const auto destBufferChannels = juce::AudioChannelSet::canonicalChannelSet ((int) destBuffer.getNumChannels());
     const int numChannels = destBufferChannels.size();
     assert ((int) pc.buffers.audio.getNumChannels() == numChannels);
@@ -247,7 +247,7 @@ void SpeedRampWaveNode::processSection (const ProcessContext& pc, juce::Range<in
         if (channel < channelState.size())
         {
             const auto src = fileData.buffer.getReadPointer (channel);
-            const auto dest = destBuffer.getChannelPointer ((size_t) channel);
+            const auto dest = destBuffer.getIterator ((choc::buffer::ChannelCount) channel).sample;
 
             auto& state = *channelState.getUnchecked (channel);
             state.resampler.processAdding (ratio, src, dest, numSamples, gains[channel & 1]);
@@ -265,7 +265,7 @@ void SpeedRampWaveNode::processSection (const ProcessContext& pc, juce::Range<in
         }
         else
         {
-            destBuffer.getSubsetChannelBlock ((size_t) channel, 1).clear();
+            destBuffer.getChannelRange (tracktion_graph::channelRangeWithStartAndLength ((choc::buffer::ChannelCount) channel, 1)).clear();
         }
     }
     
@@ -279,7 +279,7 @@ void SpeedRampWaveNode::processSection (const ProcessContext& pc, juce::Range<in
             return;
         }
 
-        auto bufferRef = tracktion_graph::test_utilities::createAudioBuffer (destBuffer);
+        auto bufferRef = tracktion_graph::createAudioBuffer (destBuffer);
         bufferRef.applyGainRamp (0, bufferRef.getNumSamples(),
                                  1.0f, 0.0f);
         
@@ -290,7 +290,7 @@ void SpeedRampWaveNode::processSection (const ProcessContext& pc, juce::Range<in
     {
         if (! playedLastBlock)
         {
-            auto bufferRef = tracktion_graph::test_utilities::createAudioBuffer (destBuffer);
+            auto bufferRef = tracktion_graph::createAudioBuffer (destBuffer);
             bufferRef.applyGainRamp (0, bufferRef.getNumSamples(),
                                      0.0f, 1.0f);
         }
@@ -306,10 +306,10 @@ void SpeedRampWaveNode::processSection (const ProcessContext& pc, juce::Range<in
         const int64_t numSamplesToClearAtEnd = timelineRange.getEnd() - editPositionInSamples.getEnd();
 
         if (numSamplesToClearAtStart > 0)
-            destBuffer.getSubBlock (0, (size_t) numSamplesToClearAtStart).clear();        
+            destBuffer.getStart ((choc::buffer::FrameCount) numSamplesToClearAtStart).clear();
 
         if (numSamplesToClearAtEnd > 0)
-            destBuffer.getSubBlock ((size_t) (numSamples - numSamplesToClearAtEnd), (size_t) numSamplesToClearAtEnd).clear();
+            destBuffer.getFrameRange (tracktion_graph::frameRangeWithStartAndLength ((choc::buffer::FrameCount) (numSamples - numSamplesToClearAtEnd), (choc::buffer::FrameCount) numSamplesToClearAtEnd)).clear();
     }
 }
 

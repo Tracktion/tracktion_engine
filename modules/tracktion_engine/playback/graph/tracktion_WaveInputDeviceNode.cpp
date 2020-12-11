@@ -48,7 +48,7 @@ bool WaveInputDeviceNode::isReadyToProcess()
     return true;
 }
 
-void WaveInputDeviceNode::process (const ProcessContext& pc)
+void WaveInputDeviceNode::process (ProcessContext& pc)
 {
     SCOPED_REALTIME_CHECK
 
@@ -63,21 +63,25 @@ void WaveInputDeviceNode::process (const ProcessContext& pc)
     lastCallbackTime = timeNow;
 
     auto& destAudio = pc.buffers.audio;
-    const int numSamples = (int) destAudio.getNumSamples();
-    const size_t numChannelsToRead = std::min (destAudio.getNumChannels(), (size_t) audioFifo.getNumChannels());
+    const int numSamples = (int) destAudio.getNumFrames();
+    const auto numChannelsToRead = std::min (destAudio.getNumChannels(), (choc::buffer::ChannelCount) audioFifo.getNumChannels());
     jassert ((int) destAudio.getNumChannels() >= audioFifo.getNumChannels());
 
-    const auto numToRead = (size_t) std::min (audioFifo.getNumReady(), numSamples);
+    const auto numToRead = (choc::buffer::FrameCount) std::min (audioFifo.getNumReady(), numSamples);
 
     if (numToRead > 0)
     {
-        const auto destSubBlock = destAudio.getSubsetChannelBlock (0, numChannelsToRead)
-                                           .getSubBlock (0, numToRead);
-        audioFifo.readAdding (destSubBlock);
+        auto destSubView = destAudio.getChannelRange ({ 0, numChannelsToRead })
+                                    .getStart (numToRead);
+        audioFifo.readAdding (destSubView);
     
         // Copy any additional channels from the last one
-        for (size_t c = numChannelsToRead; c < destAudio.getNumChannels(); ++c)
-            destAudio.getSubsetChannelBlock (c, 1).getSubBlock (0, numToRead).copyFrom (destSubBlock);
+        {
+            auto lastChannelView = destSubView.getChannel (destSubView.getNumChannels() - 1);
+            
+            for (auto c = numChannelsToRead; c < destAudio.getNumChannels(); ++c)
+                choc::buffer::copy (destAudio.getChannel (c).getStart (numToRead), lastChannelView);
+        }
     }
 }
 

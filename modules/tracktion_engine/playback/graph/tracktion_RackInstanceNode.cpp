@@ -54,7 +54,7 @@ bool RackInstanceNode::isReadyToProcess()
     return input->hasProcessed();
 }
 
-void RackInstanceNode::process (const ProcessContext& pc)
+void RackInstanceNode::process (ProcessContext& pc)
 {
     assert (pc.buffers.audio.getNumChannels() == (size_t) maxNumChannels);
     auto inputBuffers = input->getProcessedOutput();
@@ -76,26 +76,26 @@ void RackInstanceNode::process (const ProcessContext& pc)
         if (destChan < 0)
             continue;
 
-        if ((size_t) srcChan >= inputBuffers.audio.getNumChannels())
+        if ((choc::buffer::ChannelCount) srcChan >= inputBuffers.audio.getNumChannels())
             continue;
 
-        auto src = inputBuffers.audio.getSingleChannelBlock ((size_t) srcChan);
-        auto dest = pc.buffers.audio.getSingleChannelBlock ((size_t) destChan);
+        auto src = inputBuffers.audio.getChannel ((choc::buffer::ChannelCount) srcChan);
+        auto dest = pc.buffers.audio.getChannel ((choc::buffer::ChannelCount) destChan);
         auto gain = dbToGain (std::get<2> (chan)->getCurrentValue());
         
-        dest.copyFrom (src);
+        choc::buffer::copy (dest, src);
 
         if (gain == lastGain[channel])
         {
             if (gain != 1.0f)
-                dest.multiplyBy (gain);
+                choc::buffer::applyGain (dest, gain);
         }
         else
         {
             juce::SmoothedValue<float> smoother (lastGain[channel]);
             smoother.setTargetValue (gain);
-            smoother.reset ((int) dest.getNumSamples());
-            dest.multiplyBy (smoother);
+            smoother.reset ((int) dest.getNumFrames());
+            tracktion_graph::multiplyBy (dest, smoother);
             
             lastGain[channel] = gain;
         }

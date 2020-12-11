@@ -55,7 +55,7 @@ public:
     bool isReadyToProcess() override                    { return input->hasProcessed(); }
     void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
     void prefetchBlock (juce::Range<int64_t>) override;
-    void process (const ProcessContext&) override;
+    void process (ProcessContext&) override;
     
 private:
     //==============================================================================

@@ -97,7 +97,7 @@ bool TimeStretchingWaveNode::isReadyToProcess()
     return reader != nullptr && reader->getSampleRate() > 0.0;
 }
 
-void TimeStretchingWaveNode::process (const ProcessContext& pc)
+void TimeStretchingWaveNode::process (ProcessContext& pc)
 {
     CRASH_TRACER
     const auto timelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.referenceSampleRange).timelineRange1;
@@ -106,12 +106,12 @@ void TimeStretchingWaveNode::process (const ProcessContext& pc)
     if (timelineRange.isEmpty())
         return;
 
-    auto destAudioBlock = pc.buffers.audio;
+    auto destAudioView = pc.buffers.audio;
 
     if (! playHeadState.isContiguousWithPreviousBlock() || editRange.getStart() != nextEditTime)
         reset (editRange.getStart());
 
-    auto numSamples = (int) destAudioBlock.getNumSamples();
+    auto numSamples = (int) destAudioView.getNumFrames();
     auto start = 0;
 
     while (numSamples > 0)
@@ -120,7 +120,8 @@ void TimeStretchingWaveNode::process (const ProcessContext& pc)
 
         if (numReady > 0)
         {
-            const bool res = fifo.readAdding (destAudioBlock.getSubBlock ((size_t) start, (size_t) numReady));
+            auto destBlock = tracktion_graph::toAudioBlock (destAudioView.getFrameRange (tracktion_graph::frameRangeWithStartAndLength (choc::buffer::FrameCount (start), choc::buffer::FrameCount (numReady))));
+            const bool res = fifo.readAdding (destBlock);
             jassert (res); juce::ignoreUnused (res);
 
             start += numReady;

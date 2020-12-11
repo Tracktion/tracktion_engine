@@ -247,9 +247,12 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
     renderingBuffer.clear();
     midiBuffer.clear();
     const auto referenceSampleRange = tracktion_graph::timeToSample (streamTimeRange, originalParams.sampleRateForAudio);
-    juce::dsp::AudioBlock<float> destBlock (renderingBuffer.getArrayOfWritePointers(),
-                                            (size_t) renderingBuffer.getNumChannels(), (size_t) referenceSampleRange.getLength());
-    nodePlayer->process ({ referenceSampleRange, { destBlock, midiBuffer} });
+    auto destView = choc::buffer::createChannelArrayView (renderingBuffer.getArrayOfWritePointers(),
+                                                          (choc::buffer::ChannelCount) renderingBuffer.getNumChannels(),
+                                                          (choc::buffer::FrameCount) referenceSampleRange.getLength());
+    auto destBlock = tracktion_graph::toAudioBlock (destView);
+    
+    nodePlayer->process ({ referenceSampleRange, { destView, midiBuffer} });
 
     if (precount <= 0)
     {
@@ -436,9 +439,10 @@ juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
         renderingBuffer.clear();
         blockMidiBuffer.clear();
         const auto referenceSampleRange = tracktion_graph::timeToSample (streamTimeRange, sampleRate);
-        juce::dsp::AudioBlock<float> destBlock (renderingBuffer.getArrayOfWritePointers(),
-                                                (size_t) renderingBuffer.getNumChannels(), (size_t) referenceSampleRange.getLength());
-        nodePlayer->process ({ referenceSampleRange, { destBlock, blockMidiBuffer} });
+        auto destView = choc::buffer::createChannelArrayView (renderingBuffer.getArrayOfWritePointers(),
+                                                              (choc::buffer::ChannelCount) renderingBuffer.getNumChannels(), (choc::buffer::FrameCount) referenceSampleRange.getLength());
+
+        nodePlayer->process ({ referenceSampleRange, { destView, blockMidiBuffer} });
 
         // Set MIDI messages to beats and update final sequence
         for (auto& m : blockMidiBuffer)

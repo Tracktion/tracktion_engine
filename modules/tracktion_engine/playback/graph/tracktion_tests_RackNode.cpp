@@ -378,7 +378,7 @@ private:
                 {
                     test_utilities::fillBufferWithSinData (inputBuffer);
                     tracktion_engine::MidiMessageArray midi;
-                    inputProvider->setInputs ({ juce::dsp::AudioBlock<float> (inputBuffer), midi });
+                    inputProvider->setInputs ({ toBufferView (inputBuffer), midi });
                 }
 
                 // Process Rack
@@ -426,7 +426,7 @@ private:
                     {
                         inputProvider->numChannels = 1;
                         tracktion_engine::MidiMessageArray midi;
-                        inputProvider->setInputs ({ juce::dsp::AudioBlock<float> (inputBuffer), midi });
+                        inputProvider->setInputs ({ toBufferView (inputBuffer), midi });
 
                         auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
                         test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
@@ -469,7 +469,7 @@ private:
                 {
                     test_utilities::fillBufferWithSinData (inputBuffer);
                     tracktion_engine::MidiMessageArray midi;
-                    inputProvider->setInputs ({ juce::dsp::AudioBlock<float> (inputBuffer), midi });
+                    inputProvider->setInputs ({ toBufferView (inputBuffer), midi });
                 }
 
                 // Process Rack
@@ -595,7 +595,7 @@ private:
                 {
                     test_utilities::fillBufferWithSinData (inputBuffer);
                     tracktion_engine::MidiMessageArray midi;
-                    inputProvider->setInputs ({ juce::dsp::AudioBlock<float> (inputBuffer), midi });
+                    inputProvider->setInputs ({ toBufferView (inputBuffer), midi });
                 }
 
                 auto rackNode = RackNodeBuilder::createRackNode (*rack, ts.sampleRate, ts.blockSize, inputProvider);

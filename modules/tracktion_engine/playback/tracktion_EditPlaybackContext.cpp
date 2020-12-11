@@ -84,8 +84,8 @@ namespace tracktion_engine
              scratchAudioBuffer.setSize (numChannels, (int) numSamples, false, false, true);
              scratchAudioBuffer.clear();
              
-             juce::dsp::AudioBlock<float> audioBlock (scratchAudioBuffer);
-             tracktion_graph::Node::ProcessContext pc { referenceSampleRange, { audioBlock, scratchMidiBuffer } };
+             auto audioView = tracktion_graph::toBufferView (scratchAudioBuffer);
+             tracktion_graph::Node::ProcessContext pc { referenceSampleRange, { audioView, scratchMidiBuffer } };
              player.process (pc);
              
              // Then resample them to the dest num samples
@@ -101,8 +101,10 @@ namespace tracktion_engine
          }
          else
          {
-             juce::dsp::AudioBlock<float> audioBlock (allChannels, (size_t) numChannels, (size_t) numSamples);
-             tracktion_graph::Node::ProcessContext pc { referenceSampleRange, { audioBlock, scratchMidiBuffer } };
+             auto audioView = choc::buffer::createChannelArrayView (allChannels,
+                                                                    (choc::buffer::ChannelCount) numChannels,
+                                                                    (choc::buffer::FrameCount) numSamples);
+             tracktion_graph::Node::ProcessContext pc { referenceSampleRange, { audioView, scratchMidiBuffer } };
              player.process (pc);
          }
      }

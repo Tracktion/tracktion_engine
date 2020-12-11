@@ -50,14 +50,14 @@ public:
         updateFromPreviousNode (info.rootNodeToReplace);
     }
     
-    void process (const ProcessContext& pc) override
+    void process (ProcessContext& pc) override
     {
         // Copy the input buffers to the outputs
         auto sourceBuffers = input->getProcessedOutput();
         jassert (sourceBuffers.audio.getNumChannels() == pc.buffers.audio.getNumChannels());
 
         pc.buffers.midi.copyFrom (sourceBuffers.midi);
-        pc.buffers.audio.copyFrom (sourceBuffers.audio);
+        choc::buffer::copy (pc.buffers.audio, sourceBuffers.audio);
         
         updatePlayHeadTime (pc.referenceSampleRange.getLength());
     }

@@ -54,7 +54,7 @@ public:
     std::vector<Node*> getDirectInputNodes() override   { return { input.get() }; }
     bool isReadyToProcess() override                    { return input->hasProcessed(); }
     void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
-    void process (const ProcessContext&) override;
+    void process (ProcessContext&) override;
     
 private:
     //==============================================================================

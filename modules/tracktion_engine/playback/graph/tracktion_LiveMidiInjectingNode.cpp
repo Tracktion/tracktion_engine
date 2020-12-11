@@ -70,7 +70,7 @@ bool LiveMidiInjectingNode::isReadyToProcess()
     return input->hasProcessed();
 }
 
-void LiveMidiInjectingNode::process (const ProcessContext& pc)
+void LiveMidiInjectingNode::process (ProcessContext& pc)
 {
     auto sourceBuffers = input->getProcessedOutput();
     auto destAudioBlock = pc.buffers.audio;
@@ -78,7 +78,7 @@ void LiveMidiInjectingNode::process (const ProcessContext& pc)
     jassert (sourceBuffers.audio.getNumChannels() == destAudioBlock.getNumChannels());
 
     destMidiBlock.copyFrom (sourceBuffers.midi);
-    destAudioBlock.copyFrom (sourceBuffers.audio);
+    choc::buffer::copy (destAudioBlock, sourceBuffers.audio);
 
     const juce::ScopedLock sl (liveMidiLock);
     
