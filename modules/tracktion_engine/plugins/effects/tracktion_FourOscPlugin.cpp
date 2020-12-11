@@ -1622,6 +1622,10 @@ juce::String FourOscPlugin::modulationSourceToName (ModSource src)
         case mpeTimbre:     return TRANS("MPE Timbre");
         case midiNoteNum:   return TRANS("MIDI Note Number");
         case midiVelocity:  return TRANS("MIDI Velocity");
+        case none:
+        case ccBankSelect:
+        case ccPolyMode:
+        case numModSources:
         default:
         {
             if (src >= ccBankSelect && src <= ccPolyMode)
@@ -1651,6 +1655,10 @@ juce::String FourOscPlugin::modulationSourceToID (FourOscPlugin::ModSource src)
         case mpeTimbre:     return "mpeTimbre";
         case midiNoteNum:   return "midiNote";
         case midiVelocity:  return "midiVelocity";
+        case none:
+        case ccBankSelect:
+        case ccPolyMode:
+        case numModSources:
         default:
         {
             if (src >= ccBankSelect && src <= ccPolyMode)

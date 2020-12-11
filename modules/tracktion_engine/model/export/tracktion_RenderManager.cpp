@@ -146,6 +146,7 @@ void RenderManager::Job::handleMessage (const Message& message)
             }
             break;
 
+        case UpdateMessage::unknown:
         default:
             break;
     }

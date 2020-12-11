@@ -41,6 +41,7 @@ namespace ModifierCommon
             case sixtyFourthT:  return 1.0 / 64.0 * triplet;
             case sixtyFourth:   return 1.0 / 64.0;
             case sixtyFourthD:  return 1.0 / 64.0 * dot;
+            case hertz:
             default:            return 1.0;
         };
     }

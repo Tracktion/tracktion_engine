@@ -163,6 +163,7 @@ juce::String Chord::getName() const
         case diminishedNinthChord:          return TRANS("Diminished Ninth");
         case diminishedMinorNinthChord:     return TRANS("Diminished Minor Ninth");
         case customChord:                   jassert (symbol.isNotEmpty()); return symbol;
+        case invalidChord:
         default: jassertfalse;              return {};
     }
 }
@@ -198,6 +199,7 @@ juce::String Chord::getShortName() const
         case diminishedNinthChord:          return TRANS("dim 9");
         case diminishedMinorNinthChord:     return TRANS("dim min 9");
         case customChord:                   jassert (symbol.isNotEmpty()); return symbol;
+        case invalidChord:
         default: jassertfalse;              return {};
     }
 }
@@ -233,6 +235,7 @@ juce::String Chord::getSymbol() const
         case diminishedNinthChord:          return "o9";
         case diminishedMinorNinthChord:     return "o" + flat + "9";
         case customChord:                   jassert (symbol.isNotEmpty()); return symbol;
+        case invalidChord:
         default: jassertfalse;              return {};
     }
 }
@@ -268,7 +271,8 @@ juce::Array<int> Chord::getSteps() const
         case diminishedNinthChord:          return { 0, 3, 6, 9, 14 };
         case diminishedMinorNinthChord:     return { 0, 3, 6, 9, 13 };
         case customChord:                   return steps;
-        default:               return {};
+        case invalidChord:
+        default:                            return {};
     }
 }
 
@@ -512,11 +516,40 @@ juce::String Scale::getIntervalName (Intervals interval) const
 
     switch (triads[(int)interval].getType())
     {
-        case Chord::majorTriad:        name = name.toUpperCase(); break;
-        case Chord::minorTriad:        break;
-        case Chord::augmentedTriad:    name = name.toUpperCase() + "+"; break;
-        case Chord::diminishedTriad:   name = name + juce::String::charToString (176); break;
-        default: jassertfalse; break;
+        case Chord::majorTriad:        name = name.toUpperCase();
+            break;
+        case Chord::minorTriad:
+            break;
+        case Chord::augmentedTriad:    name = name.toUpperCase() + "+";
+            break;
+        case Chord::diminishedTriad:   name = name + juce::String::charToString (176);
+            break;
+        case Chord::customChord:
+        case Chord::invalidChord:
+        case Chord::majorSixthChord:
+        case Chord::minorSixthChord:
+        case Chord::dominatSeventhChord:
+        case Chord::majorSeventhChord:
+        case Chord::minorSeventhChord:
+        case Chord::augmentedSeventhChord:
+        case Chord::diminishedSeventhChord:
+        case Chord::halfDiminishedSeventhChord:
+        case Chord::minorMajorSeventhChord:
+        case Chord::suspendedSecond:
+        case Chord::suspendedFourth:
+        case Chord::powerChord:
+        case Chord::majorNinthChord:
+        case Chord::dominantNinthChord:
+        case Chord::minorMajorNinthChord:
+        case Chord::minorDominantNinthChord:
+        case Chord::augmentedMajorNinthChord:
+        case Chord::augmentedDominantNinthChord:
+        case Chord::halfDiminishedNinthChord:
+        case Chord::halfDiminishedMinorNinthChord:
+        case Chord::diminishedNinthChord:
+        case Chord::diminishedMinorNinthChord:
+        default:                        jassertfalse;
+            break;
     }
 
     return name;
@@ -815,6 +848,7 @@ double PatternGenerator::getMaximumChordLength() const
         case Mode::chords:
         case Mode::bass:
         case Mode::melody:
+        case Mode::off:
         default:
             return 1024.0;
     }

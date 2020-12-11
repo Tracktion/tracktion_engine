@@ -23,7 +23,7 @@ public:
     {
     }
     
-    ~LevelMeasurerProcessingNode()
+    ~LevelMeasurerProcessingNode() override
     {
         if (isInitialised && ! meterPlugin.baseClassNeedsInitialising())
             meterPlugin.baseClassDeinitialise();

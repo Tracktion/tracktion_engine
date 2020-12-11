@@ -1061,6 +1061,7 @@ void AudioClipBase::copyFadeToAutomation (bool useFadeIn, bool removeClipFade)
             break;
         }
 
+        case AudioFadeCurve::linear:
         default:
         {
             curve.addPoint (0.0, useFadeIn ? valueLimits.getStart() : valueLimits.getLength(), 0.0f);

@@ -1681,7 +1681,7 @@ private:
 		{
 		}
 		
-		virtual ~ProducerBase() { };
+		virtual ~ProducerBase() { }
 		
 		template<typename U>
 		inline bool dequeue(U& element)

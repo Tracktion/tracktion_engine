@@ -18,9 +18,9 @@ class PlayHeadPositionNode final    : public tracktion_graph::Node,
                                       public TracktionEngineNode
 {
 public:
-    PlayHeadPositionNode (ProcessState& processState, std::unique_ptr<tracktion_graph::Node> inputNode,
+    PlayHeadPositionNode (ProcessState& processStateToUse, std::unique_ptr<tracktion_graph::Node> inputNode,
                           std::atomic<double>& playHeadTimeToUpdate)
-        : TracktionEngineNode (processState),
+        : TracktionEngineNode (processStateToUse),
           input (std::move (inputNode)),
           playHeadTime (playHeadTimeToUpdate)
     {

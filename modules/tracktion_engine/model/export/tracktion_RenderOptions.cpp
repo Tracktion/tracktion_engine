@@ -510,6 +510,9 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
         case replaceClips:
             trackToUse = dynamic_cast<AudioTrack*> (lastTrack.get());
 
+        case addTrack:
+        case replaceTrack:
+        case none:
         default:
             break;
     }
@@ -834,13 +837,14 @@ String RenderOptions::getFormatTypeName (TargetFileFormat fmt)
 
     switch (fmt)
     {
-        case wav:       return am.getWavFormat()->getFormatName();
-        case aiff:      return am.getAiffFormat()->getFormatName();
-        case flac:      return am.getFlacFormat()->getFormatName();
-        case ogg:       return am.getOggFormat()->getFormatName();
-        case mp3:       return am.getLameFormat() == nullptr ? String() : am.getLameFormat()->getFormatName();
-        case midi:      return "MIDI file";
-        default:        return {};
+        case wav:           return am.getWavFormat()->getFormatName();
+        case aiff:          return am.getAiffFormat()->getFormatName();
+        case flac:          return am.getFlacFormat()->getFormatName();
+        case ogg:           return am.getOggFormat()->getFormatName();
+        case mp3:           return am.getLameFormat() == nullptr ? String() : am.getLameFormat()->getFormatName();
+        case midi:          return "MIDI file";
+        case numFormats:    return "MIDI file";
+        default:            return {};
     }
 }
 

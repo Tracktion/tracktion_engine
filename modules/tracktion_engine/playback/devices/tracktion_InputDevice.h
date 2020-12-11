@@ -226,7 +226,10 @@ public:
                 case InputDevice::waveDevice:           return new WaveInputDeviceDestination (input, v);
                 case InputDevice::physicalMidiDevice:   return new MidiInputDeviceDestination (input, v);
                 case InputDevice::virtualMidiDevice:    return new VirtualMidiInputDeviceDestination (input, v);
-                default:                                return new InputDeviceDestination (input, v);
+                case InputDevice::trackWaveDevice:
+                case InputDevice::trackMidiDevice:
+                default:
+                    return new InputDeviceDestination (input, v);
             }
         }
 

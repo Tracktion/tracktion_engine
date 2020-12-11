@@ -272,6 +272,7 @@ String ClipEffect::getTypeDisplayName (EffectType t)
         case EffectType::reverse:           return TRANS("Reverse");
         case EffectType::invert:            return TRANS("Phase Invert");
         case EffectType::filter:            return TRANS("Plugin");
+        case EffectType::none:
         default:                            return "<" + TRANS ("None") + ">";
     }
 }
@@ -790,18 +791,28 @@ ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> FadeInOutEffect::crea
         case EffectType::fadeInOut:
             if (fadeIn > 0.0 || fadeOut > 0.0)
                 n = new FadeInOutAudioNode (n, fadeInRange, fadeOutRange, fadeInType, fadeOutType);
-
+            
             break;
-
+            
         case EffectType::tapeStartStop:
             if (fadeIn > 0.0 || fadeOut > 0.0)
             {
                 n = new SpeedRampAudioNode (n, fadeInRange, fadeOutRange, fadeInType, fadeOutType);
                 blockSize = 128;
             }
-
+            
             break;
-
+            
+        case EffectType::none:
+        case EffectType::volume:
+        case EffectType::stepVolume:
+        case EffectType::pitchShift:
+        case EffectType::warpTime:
+        case EffectType::normalise:
+        case EffectType::makeMono:
+        case EffectType::reverse:
+        case EffectType::invert:
+        case EffectType::filter:
         default:
             jassertfalse;
             break;
