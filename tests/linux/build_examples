@@ -30,8 +30,11 @@ buildExample()
     EXAMPLE_PIP_FILE="$EXAMPLES_DIR/$1.h"
     EXAMPLE_DEST_DIR="$EXAMPLES_DIR/projects"
     EXAMPLE_ROOT_DIR="$EXAMPLE_DEST_DIR/$EXAMPLE_NAME"
+    EXAMLE_PJ_FILE="$EXAMPLE_DEST_DIR/$EXAMPLE_NAME/$EXAMPLE_NAME.jucer"
+
     "$PROJUCER_EXE" --create-project-from-pip "$EXAMPLE_PIP_FILE" "$EXAMPLE_DEST_DIR" "$JUCE_DIR/modules" "$TRACKTION_ENGINE_DIR"
-    "$PROJUCER_EXE" --resave "$EXAMPLE_ROOT_DIR/$EXAMPLE_NAME.jucer"
+    sed -i.bak s/'<JUCERPROJECT /<JUCERPROJECT cppLanguageStandard="17" /' "$EXAMLE_PJ_FILE"
+    "$PROJUCER_EXE" --resave "$EXAMLE_PJ_FILE"
 
     if [ -z "$DISABLE_BUILD" ]; then
         cd "$EXAMPLE_ROOT_DIR/Builds/LinuxMakefile"
