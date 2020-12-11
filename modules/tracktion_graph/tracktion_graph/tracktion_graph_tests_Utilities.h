@@ -100,19 +100,6 @@ namespace test_utilities
         }
     }
 
-    /** Creates an AudioBuffer from an AudioBlock. */
-    static inline juce::AudioBuffer<float> createAudioBuffer (const juce::dsp::AudioBlock<float>& block)
-    {
-        constexpr int maxNumChannels = 128;
-        const int numChannels = std::min (maxNumChannels, (int) block.getNumChannels());
-        float* chans[maxNumChannels] = {};
-
-        for (int i = 0; i < numChannels; ++i)
-            chans[i] = block.getChannelPointer ((size_t) i);
-
-        return juce::AudioBuffer<float> (chans, numChannels, (int) block.getNumSamples());
-    }
-
     /** Writes an audio block to a file. */
     static inline void writeToFile (juce::File file, const juce::dsp::AudioBlock<float>& block, double sampleRate)
     {

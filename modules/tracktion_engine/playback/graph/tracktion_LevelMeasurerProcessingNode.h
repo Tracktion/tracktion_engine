@@ -116,7 +116,7 @@ private:
     
     void processLevelMeasurer (LevelMeasurer& measurer, juce::dsp::AudioBlock<float> block, MidiMessageArray& midi)
     {
-        auto buffer = tracktion_graph::test_utilities::createAudioBuffer (block);
+        auto buffer = tracktion_graph::createAudioBuffer (block);
         measurer.processBuffer (buffer, 0, buffer.getNumSamples());
 
         measurer.setShowMidi (meterPlugin.showMidiActivity);
