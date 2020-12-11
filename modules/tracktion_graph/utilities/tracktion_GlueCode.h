@@ -17,8 +17,9 @@ template <typename SampleType, template<typename> typename LayoutType>
 juce::dsp::AudioBlock<float> toAudioBlock (const choc::buffer::BufferView<SampleType, LayoutType>& view)
 {
     return juce::dsp::AudioBlock<float> (view.data.channels,
-                                         view.size.numChannels,
-                                         view.size.numFrames);
+                                         (size_t) view.size.numChannels,
+                                         (size_t) view.data.offset,
+                                         (size_t) view.size.numFrames);
 }
 
 /** Converts a choc::buffer to a juce::dsp::AudioBlock<float>. */

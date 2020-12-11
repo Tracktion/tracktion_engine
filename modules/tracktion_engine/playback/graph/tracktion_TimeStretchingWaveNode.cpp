@@ -120,7 +120,9 @@ void TimeStretchingWaveNode::process (ProcessContext& pc)
 
         if (numReady > 0)
         {
-            auto destBlock = tracktion_graph::toAudioBlock (destAudioView.getFrameRange (tracktion_graph::frameRangeWithStartAndLength (choc::buffer::FrameCount (start), choc::buffer::FrameCount (numReady))));
+            const auto frameRange = tracktion_graph::frameRangeWithStartAndLength (choc::buffer::FrameCount (start), choc::buffer::FrameCount (numReady));
+            auto destBlock = tracktion_graph::toAudioBlock (destAudioView.getFrameRange (frameRange));
+            
             const bool res = fifo.readAdding (destBlock);
             jassert (res); juce::ignoreUnused (res);
 
