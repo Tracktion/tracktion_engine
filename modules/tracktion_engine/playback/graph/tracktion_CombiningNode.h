@@ -44,6 +44,8 @@ public:
     void prefetchBlock (juce::Range<int64_t> /*referenceSampleRange*/) override;
     void process (ProcessContext&) override;
 
+    size_t getAllocatedBytes() const override;
+
 private:
     struct TimedNode;
     juce::OwnedArray<TimedNode> inputs;

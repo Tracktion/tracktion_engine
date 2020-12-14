@@ -79,6 +79,16 @@ struct CombiningNode::TimedNode
         pc.buffers.midi.mergeFrom (nodeOutput.midi);
     }
 
+    size_t getAllocatedBytes() const
+    {
+        size_t size = 0;
+        
+        for (auto n : nodesToProcess)
+            size += n->getAllocatedBytes();
+
+        return size;
+    }
+    
     EditTimeRange time;
 
 private:
@@ -213,6 +223,16 @@ void CombiningNode::process (ProcessContext& pc)
             }
         }
     }
+}
+
+size_t CombiningNode::getAllocatedBytes() const
+{
+    size_t size = 0;
+    
+    for (const auto& i : inputs)
+        size += i->getAllocatedBytes();
+    
+    return size;
 }
 
 void CombiningNode::prefetchGroup (juce::Range<int64_t> referenceSampleRange, double time)

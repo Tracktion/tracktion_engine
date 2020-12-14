@@ -187,7 +187,7 @@ public:
     //==============================================================================
     /** @internal */
     void* internal = nullptr;
-    size_t getAllocatedBytes() const;
+    virtual size_t getAllocatedBytes() const;
 
 protected:
     /** Called once before playback begins for each node.
