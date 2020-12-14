@@ -349,7 +349,7 @@ void LockFreeMultiThreadedNodePlayer::processNode (Node& node)
     auto* nodeToProcess = &node;
 
     // Attempt to process serial Node chains on this thread
-    // to reduce context switched and overhead
+    // to reduce context switches and overhead
     for (;;)
     {
         #if JUCE_DEBUG

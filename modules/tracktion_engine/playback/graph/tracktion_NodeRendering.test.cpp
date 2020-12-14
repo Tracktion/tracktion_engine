@@ -27,15 +27,19 @@ public:
     
     void runTest() override
     {
-        tracktion_graph::test_utilities::TestSetup ts;
+        using namespace tracktion_graph;
+        test_utilities::TestSetup ts;
         ts.sampleRate = 96000.0;
         ts.blockSize = 128;
         
-        runWaveRendering (ts, 30.0, 2, 20, 12, true, false, tracktion_graph::ThreadPoolStrategy::realTime);
-        runWaveRendering (ts, 30.0, 2, 20, 12, false, false, tracktion_graph::ThreadPoolStrategy::realTime);
-        
-        runWaveRendering (ts, 30.0, 2, 20, 12, true, true, tracktion_graph::ThreadPoolStrategy::realTime);
-        runWaveRendering (ts, 30.0, 2, 20, 12, false, true, tracktion_graph::ThreadPoolStrategy::realTime);
+        for (auto strategy : { ThreadPoolStrategy::conditionVariable, ThreadPoolStrategy::realTime, ThreadPoolStrategy::hybrid })
+        {
+            runWaveRendering (ts, 30.0, 2, 20, 12, true, false, strategy);
+            runWaveRendering (ts, 30.0, 2, 20, 12, false, false, strategy);
+            
+            runWaveRendering (ts, 30.0, 2, 20, 12, true, true, strategy);
+            runWaveRendering (ts, 30.0, 2, 20, 12, false, true, strategy);
+        }
     }
 
 private:
@@ -58,7 +62,8 @@ private:
         auto& engine = *tracktion_engine::Engine::getEngines()[0];
         const auto description = test_utilities::getDescription (ts)
                                     + juce::String (useSingleFile ? ", single file" : ", multiple files")
-                                    + juce::String (isMultiThreaded ? ", MT" : ", ST");
+                                    + juce::String (isMultiThreaded ? ", MT" : ", ST")
+                                    + ", " + test_utilities::getName (poolType);
         
         tracktion_graph::PlayHead playHead;
         tracktion_graph::PlayHeadState playHeadState { playHead };
@@ -93,7 +98,7 @@ private:
         beginTest ("Wave - memory use: " + description);
         const auto nodes = tracktion_graph::getNodes (testContext.getNode(), tracktion_graph::VertexOrdering::postordering);
         std::cout << "Num nodes: " << nodes.size() << "\n";
-        std::cout << juce::File::descriptionOfSizeInBytes ((int64_t) test_utilities::getMemoryUsage (nodes, ts.blockSize)) << "\n";
+        std::cout << juce::File::descriptionOfSizeInBytes ((int64_t) test_utilities::getMemoryUsage (nodes)) << "\n";
         expect (true);
 
         beginTest ("Wave - rendering: " + description);

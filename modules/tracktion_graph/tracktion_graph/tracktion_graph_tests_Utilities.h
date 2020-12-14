@@ -108,20 +108,35 @@ namespace test_utilities
 
     //==============================================================================
     /** Returns the ammount of internal memory allocated for buffers. */
-    static inline size_t getMemoryUsage (const std::vector<Node*>& nodes, int prepareBlockSize)
+    static inline size_t getMemoryUsage (const std::vector<Node*>& nodes)
     {
         return std::accumulate (nodes.begin(), nodes.end(), (size_t) 0,
-                                [prepareBlockSize] (size_t total, Node* n)
+                                [] (size_t total, Node* n)
                                 {
-                                    return total + (size_t (n->getNodeProperties().numberOfChannels * prepareBlockSize) * sizeof (float));
+                                    return total + n->getAllocatedBytes();
                                 });
     }
 
     /** Returns the ammount of internal memory allocated for buffers. */
-    static inline size_t getMemoryUsage (Node& node, int prepareBlockSize)
+    static inline size_t getMemoryUsage (Node& node)
     {
-        return getMemoryUsage (tracktion_graph::getNodes (node, tracktion_graph::VertexOrdering::postordering), prepareBlockSize);
+        return getMemoryUsage (tracktion_graph::getNodes (node, tracktion_graph::VertexOrdering::postordering));
     }
+
+    /** Returns the ammount of internal memory allocated for buffers. */
+    inline juce::String getName (ThreadPoolStrategy type)
+    {
+        switch (type)
+        {
+            case ThreadPoolStrategy::conditionVariable: return "conditionVariable";
+            case ThreadPoolStrategy::realTime:          return "realTime";
+            case ThreadPoolStrategy::hybrid:            return "hybrid";
+        }
+
+        jassertfalse;
+        return {};
+    }
+
 
     //==============================================================================
     template<typename AudioFormatType>
