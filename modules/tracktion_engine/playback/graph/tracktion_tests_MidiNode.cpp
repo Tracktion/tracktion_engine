@@ -91,7 +91,7 @@ private:
         
         beginTest ("Offset MIDI");
         {
-            const editTimeRange = EditTimeRange::withStartAndLength (1.0, duration);
+            const auto editTimeRange = EditTimeRange::withStartAndLength (1.0, duration);
             auto node = std::make_unique<tracktion_engine::MidiNode> (masterSequence,
                                                                       juce::Range<int>::withStartAndLength (1, 1),
                                                                       false,
