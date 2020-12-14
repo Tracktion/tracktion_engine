@@ -187,6 +187,7 @@ public:
     //==============================================================================
     /** @internal */
     void* internal = nullptr;
+    size_t getAllocatedBytes() const;
 
 protected:
     /** Called once before playback begins for each node.
@@ -332,6 +333,12 @@ inline Node::AudioAndMidiBuffer Node::getProcessedOutput()
     return { audioBuffer.getView().getStart ((choc::buffer::FrameCount) numSamplesProcessed.load (std::memory_order_acquire)), midiBuffer };
 }
 
+inline size_t Node::getAllocatedBytes() const
+{
+    return audioBuffer.getView().data.getBytesNeeded (audioBuffer.getSize())
+        + (size_t (midiBuffer.size()) * sizeof (tracktion_engine::MidiMessageArray::MidiMessageWithSource));
+}
+
 
 //==============================================================================
 //==============================================================================
@@ -431,6 +438,5 @@ inline std::vector<Node*> getNodes (Node& node, VertexOrdering vertexOrdering)
     
     return visitedNodes;
 }
-
 
 }
