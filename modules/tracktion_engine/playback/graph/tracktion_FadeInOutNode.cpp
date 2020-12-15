@@ -61,14 +61,20 @@ void FadeInOutNode::process (ProcessContext& pc)
     auto sourceBuffers = input->getProcessedOutput();
     auto destAudioBlock = pc.buffers.audio;
     auto& destMidiBlock = pc.buffers.midi;
-    jassert (sourceBuffers.audio.getNumChannels() == destAudioBlock.getNumChannels());
+    jassert (sourceBuffers.audio.getSize() == destAudioBlock.getSize());
 
     destMidiBlock.copyFrom (sourceBuffers.midi);
-    choc::buffer::copy (destAudioBlock, sourceBuffers.audio);
 
     if (! renderingNeeded (timelineRange))
+    {
+        // If we don't need to apply the fade, just pass through the buffer
+        setAudioOutput (sourceBuffers.audio);
         return;
-    
+    }
+
+    // Otherwise copy the source in to the dest ready for fading
+    choc::buffer::copy (destAudioBlock, sourceBuffers.audio);
+
     const int numSamples = (int) destAudioBlock.getNumFrames();
     jassert (numSamples == (int) timelineRange.getLength());
 

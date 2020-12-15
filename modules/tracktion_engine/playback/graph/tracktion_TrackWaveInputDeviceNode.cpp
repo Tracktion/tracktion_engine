@@ -48,7 +48,7 @@ void TrackWaveInputDeviceNode::process (ProcessContext& pc)
 
     if (copyInputsToOutputs)
     {
-        choc::buffer::copy (pc.buffers.audio, sourceBuffers.audio);
+        setAudioOutput (sourceBuffers.audio);
         pc.buffers.midi.copyFrom (sourceBuffers.midi);
     }
 

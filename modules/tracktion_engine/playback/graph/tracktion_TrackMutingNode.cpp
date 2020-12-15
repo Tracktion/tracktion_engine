@@ -114,17 +114,26 @@ void TrackMutingNode::process (ProcessContext& pc)
 {
     auto sourceBuffers = input->getProcessedOutput();
     auto destAudioView = pc.buffers.audio;
-    jassert (sourceBuffers.audio.getNumChannels() == destAudioView.getNumChannels());
+    jassert (sourceBuffers.audio.getSize() == destAudioView.getSize());
+    
+    const bool wasJustMuted = trackMuteState->wasJustMuted();
+    const bool wasJustUnMuted = trackMuteState->wasJustUnMuted();
 
     if (trackMuteState->shouldTrackBeAudible())
     {
         pc.buffers.midi.copyFrom (sourceBuffers.midi);
-        choc::buffer::copy (destAudioView, sourceBuffers.audio);
+        
+        // If we've just been muted/unmuted we need to copy the data to
+        // apply a fade to, otherwise we can just pass on the view
+        if (wasJustMuted || wasJustUnMuted)
+            choc::buffer::copy (destAudioView, sourceBuffers.audio);
+        else
+            setAudioOutput (sourceBuffers.audio);
     }
 
-    if (trackMuteState->wasJustMuted())
+    if (wasJustMuted)
         rampBlock (destAudioView, 1.0f, 0.0f);
-    else if (trackMuteState->wasJustUnMuted())
+    else if (wasJustUnMuted)
         rampBlock (destAudioView, 0.0f, 1.0f);
 }
 

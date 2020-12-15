@@ -54,14 +54,18 @@ void TimedMutingNode::process (ProcessContext& pc)
     auto sourceBuffers = input->getProcessedOutput();
     auto destAudioBlock = pc.buffers.audio;
     auto& destMidiBlock = pc.buffers.midi;
-    jassert (sourceBuffers.audio.getNumChannels() == destAudioBlock.getNumChannels());
+    jassert (sourceBuffers.audio.getSize() == destAudioBlock.getSize());
 
     destMidiBlock.copyFrom (sourceBuffers.midi);
-    choc::buffer::copy (destAudioBlock, sourceBuffers.audio);
 
     if (! playHeadState.playHead.isPlaying())
+    {
+        // If we're not playing, jas pass the source to our destination
+        setAudioOutput (sourceBuffers.audio);
         return;
-    
+    }
+
+    choc::buffer::copy (destAudioBlock, sourceBuffers.audio);
     processSection (destAudioBlock, tracktion_graph::sampleToTime (timelineRange, sampleRate));
 }
 

@@ -208,9 +208,16 @@ protected:
     */
     virtual void process (ProcessContext&) = 0;
 
+    /** This can be called during your process function to set a view to the output.
+        This is useful to avoid having to allocate an internal buffer and always fill it if you're
+        just passing on data.
+    */
+    void setAudioOutput (const choc::buffer::ChannelArrayView<float>&);
+    
 private:
     std::atomic<bool> hasBeenProcessed { false };
     choc::buffer::ChannelArrayBuffer<float> audioBuffer;
+    choc::buffer::ChannelArrayView<float> audioView;
     tracktion_engine::MidiMessageArray midiBuffer;
     std::atomic<int> numSamplesProcessed { 0 };
     
@@ -305,10 +312,11 @@ inline void Node::process (juce::Range<int64_t> referenceSampleRange)
     jassert (numSamples > 0); // This must be a valid number of samples to process
     jassert (numChannelsBeforeProcessing == 0 || numSamples <= (int) audioBuffer.getNumFrames());
 
-    auto inputBlock = audioBuffer.getView().getStart ((choc::buffer::FrameCount) numSamples);
+    audioView = audioBuffer.getView().getStart ((choc::buffer::FrameCount) numSamples);
+    auto destAudioView = audioView;
     ProcessContext pc {
                         referenceSampleRange,
-                        { inputBlock , midiBuffer }
+                        { destAudioView , midiBuffer }
                       };
     process (pc);
     numSamplesProcessed.store (numSamples, std::memory_order_release);
@@ -316,6 +324,9 @@ inline void Node::process (juce::Range<int64_t> referenceSampleRange)
     
     jassert (numChannelsBeforeProcessing == audioBuffer.getNumChannels());
     jassert (numSamplesBeforeProcessing == audioBuffer.getNumFrames());
+
+    // If you've set a new view with setAudioOutput, they must be the same size!
+    jassert (destAudioView.getSize() == audioView.getSize());
 
    #if JUCE_DEBUG
     isBeingProcessed = false;
@@ -330,7 +341,7 @@ inline bool Node::hasProcessed() const
 inline Node::AudioAndMidiBuffer Node::getProcessedOutput()
 {
     jassert (hasProcessed());
-    return { audioBuffer.getView().getStart ((choc::buffer::FrameCount) numSamplesProcessed.load (std::memory_order_acquire)), midiBuffer };
+    return { audioView.getStart ((choc::buffer::FrameCount) numSamplesProcessed.load (std::memory_order_acquire)), midiBuffer };
 }
 
 inline size_t Node::getAllocatedBytes() const
@@ -339,6 +350,10 @@ inline size_t Node::getAllocatedBytes() const
         + (size_t (midiBuffer.size()) * sizeof (tracktion_engine::MidiMessageArray::MidiMessageWithSource));
 }
 
+inline void Node::setAudioOutput (const choc::buffer::ChannelArrayView<float>& newAudioView)
+{
+    audioView = newAudioView;
+}
 
 //==============================================================================
 //==============================================================================

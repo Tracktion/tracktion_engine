@@ -51,7 +51,7 @@ void SharedLevelMeasuringNode::process (ProcessContext& pc)
     // Pass on input to output
     auto sourceBuffers = input->getProcessedOutput();
 
-    choc::buffer::copy (pc.buffers.audio, sourceBuffers.audio);
+    setAudioOutput (sourceBuffers.audio);
     pc.buffers.midi.copyFrom (sourceBuffers.midi);
 
     // And pass audio to level measurer

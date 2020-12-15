@@ -428,11 +428,12 @@ public:
     
     void process (ProcessContext& pc) override
     {
-        jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
+        auto source = input->getProcessedOutput();
+        jassert (pc.buffers.audio.getSize() == source.audio.getSize());
 
         // Just pass out input on to our output
-        choc::buffer::copy (pc.buffers.audio, input->getProcessedOutput().audio);
-        pc.buffers.midi.mergeFrom (input->getProcessedOutput().midi);
+        setAudioOutput (source.audio);
+        pc.buffers.midi.mergeFrom (source.midi);
     }
     
 private:
@@ -511,11 +512,12 @@ public:
         if (! input)
             return;
 
-        jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
+        auto source = input->getProcessedOutput();
+        jassert (pc.buffers.audio.getNumChannels() == source.audio.getNumChannels());
 
         // Copy the input on to our output, the SummingNode will copy all the sends and get all the input
-        choc::buffer::copy (pc.buffers.audio, input->getProcessedOutput().audio);
-        pc.buffers.midi.mergeFrom (input->getProcessedOutput().midi);
+        setAudioOutput (source.audio);
+        pc.buffers.midi.mergeFrom (source.midi);
     }
     
 private:

@@ -19,14 +19,15 @@ LevelMeasuringNode::LevelMeasuringNode (std::unique_ptr<tracktion_graph::Node> i
 
 void LevelMeasuringNode::process (tracktion_graph::Node::ProcessContext& pc)
 {
-    jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
+    auto sourceBuffers = input->getProcessedOutput();
+    jassert (pc.buffers.audio.getSize() == sourceBuffers.audio.getSize());
 
     // Just pass out input on to our output
-    choc::buffer::copy (pc.buffers.audio, input->getProcessedOutput().audio);
+    setAudioOutput (sourceBuffers.audio);
     pc.buffers.midi.mergeFrom (input->getProcessedOutput().midi);
 
     // Then update the levels
-    auto buffer = tracktion_graph::createAudioBuffer (pc.buffers.audio);
+    auto buffer = tracktion_graph::createAudioBuffer (sourceBuffers.audio);
     levelMeasurer.processBuffer (buffer, 0, buffer.getNumSamples());
     levelMeasurer.processMidi (pc.buffers.midi, nullptr);
 }
