@@ -393,6 +393,8 @@ public:
         : input (std::move (inputNode)), busID (busIDToUse),
           gainFunction (std::move (getGainFunc))
     {
+        setOptimisations ({ ClearBuffers::no,
+                            AllocateAudioBuffer::no });
     }
     
     int getBusID() const
@@ -432,8 +434,9 @@ public:
         jassert (pc.buffers.audio.getSize() == source.audio.getSize());
 
         // Just pass out input on to our output
+        // N.B We need to clear manually here due to optimisations
         setAudioOutput (source.audio);
-        pc.buffers.midi.mergeFrom (source.midi);
+        pc.buffers.midi.copyFrom (source.midi);
     }
     
 private:
@@ -451,11 +454,15 @@ public:
     ReturnNode (int busIDToUse)
         : busID (busIDToUse)
     {
+        setOptimisations ({ ClearBuffers::no,
+                            AllocateAudioBuffer::no });
     }
 
     ReturnNode (std::unique_ptr<Node> inputNode, int busIDToUse)
         : input (std::move (inputNode)), busID (busIDToUse)
     {
+        setOptimisations ({ ClearBuffers::no,
+                            AllocateAudioBuffer::no });
     }
 
     NodeProperties getNodeProperties() override
@@ -509,11 +516,14 @@ public:
     
     void process (ProcessContext& pc) override
     {
+        auto source = input->getProcessedOutput();
+        jassert (pc.buffers.audio.getSize() == source.audio.getSize());
+
+        // N.B We need to clear manually here due to optimisations
+        pc.buffers.midi.clear();
+
         if (! input)
             return;
-
-        auto source = input->getProcessedOutput();
-        jassert (pc.buffers.audio.getNumChannels() == source.audio.getNumChannels());
 
         // Copy the input on to our output, the SummingNode will copy all the sends and get all the input
         setAudioOutput (source.audio);
