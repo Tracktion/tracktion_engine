@@ -15,6 +15,8 @@ namespace tracktion_engine
 LevelMeasuringNode::LevelMeasuringNode (std::unique_ptr<tracktion_graph::Node> inputNode, LevelMeasurer& measurer)
     : input (std::move (inputNode)), levelMeasurer (measurer)
 {
+    setOptimisations ({ tracktion_graph::ClearBuffers::no,
+                        tracktion_graph::AllocateAudioBuffer::no });
 }
 
 void LevelMeasuringNode::process (tracktion_graph::Node::ProcessContext& pc)
@@ -24,7 +26,7 @@ void LevelMeasuringNode::process (tracktion_graph::Node::ProcessContext& pc)
 
     // Just pass out input on to our output
     setAudioOutput (sourceBuffers.audio);
-    pc.buffers.midi.mergeFrom (input->getProcessedOutput().midi);
+    pc.buffers.midi.copyFrom (input->getProcessedOutput().midi);
 
     // Then update the levels
     auto buffer = tracktion_graph::createAudioBuffer (sourceBuffers.audio);

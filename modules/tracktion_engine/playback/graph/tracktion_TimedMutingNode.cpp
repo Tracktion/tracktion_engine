@@ -21,6 +21,9 @@ TimedMutingNode::TimedMutingNode (std::unique_ptr<tracktion_graph::Node> inputNo
       muteTimes (std::move (muteTimes_))
 {
     jassert (! muteTimes.isEmpty());
+
+    setOptimisations ({ tracktion_graph::ClearBuffers::no,
+                        tracktion_graph::AllocateAudioBuffer::yes });
 }
 
 //==============================================================================

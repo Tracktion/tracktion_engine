@@ -16,6 +16,9 @@ namespace tracktion_engine
 LiveMidiInjectingNode::LiveMidiInjectingNode (AudioTrack& at, std::unique_ptr<tracktion_graph::Node> inputNode)
     : track (at), input (std::move (inputNode))
 {
+    setOptimisations ({ tracktion_graph::ClearBuffers::no,
+                        tracktion_graph::AllocateAudioBuffer::no });
+
     track->addListener (this);
 }
 

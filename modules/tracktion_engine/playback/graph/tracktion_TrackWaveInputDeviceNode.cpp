@@ -16,6 +16,9 @@ TrackWaveInputDeviceNode::TrackWaveInputDeviceNode (WaveInputDevice& owner, std:
     : waveInputDevice (owner), input (std::move (inputNode)), copyInputsToOutputs (owner.isEndToEndEnabled())
 {
     jassert (waveInputDevice.isTrackDevice());
+
+    setOptimisations ({ tracktion_graph::ClearBuffers::yes,
+                        tracktion_graph::AllocateAudioBuffer::no });
 }
 
 std::vector<tracktion_graph::Node*> TrackWaveInputDeviceNode::getDirectInputNodes()

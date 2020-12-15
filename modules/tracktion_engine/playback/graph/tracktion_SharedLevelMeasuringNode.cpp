@@ -16,6 +16,9 @@ SharedLevelMeasuringNode::SharedLevelMeasuringNode (SharedLevelMeasurer::Ptr sou
     : levelMeasurer (std::move (source)), input (std::move (inputNode))
 {
     jassert (levelMeasurer != nullptr);
+
+    setOptimisations ({ tracktion_graph::ClearBuffers::no,
+                        tracktion_graph::AllocateAudioBuffer::no });
 }
 
 std::vector<tracktion_graph::Node*> SharedLevelMeasuringNode::getDirectInputNodes()

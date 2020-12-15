@@ -84,6 +84,9 @@ TrackMutingNode::TrackMutingNode (std::unique_ptr<TrackMuteState> muteState, std
     : trackMuteState (std::move (muteState)), input (std::move (inputNode))
 {
     assert (trackMuteState);
+
+    setOptimisations ({ tracktion_graph::ClearBuffers::no,
+                        tracktion_graph::AllocateAudioBuffer::yes });
 }
 
 //==============================================================================
@@ -129,6 +132,11 @@ void TrackMutingNode::process (ProcessContext& pc)
             choc::buffer::copy (destAudioView, sourceBuffers.audio);
         else
             setAudioOutput (sourceBuffers.audio);
+    }
+    else
+    {
+        destAudioView.clear();
+        pc.buffers.midi.clear();
     }
 
     if (wasJustMuted)

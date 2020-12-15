@@ -17,6 +17,10 @@ LiveMidiOutputNode::LiveMidiOutputNode (AudioTrack& at, std::unique_ptr<tracktio
     : track (&at), trackPtr (at), input (std::move (inputNode))
 {
     jassert (input);
+
+    setOptimisations ({ tracktion_graph::ClearBuffers::no,
+                        tracktion_graph::AllocateAudioBuffer::no });
+
     pendingMessages.reserve (50);
     dispatchingMessages.reserve (50);
 }
@@ -25,6 +29,10 @@ LiveMidiOutputNode::LiveMidiOutputNode (Clip& c, std::unique_ptr<tracktion_graph
     : clipPtr (c), input (std::move (inputNode))
 {
     jassert (input);
+
+    setOptimisations ({ tracktion_graph::ClearBuffers::no,
+                        tracktion_graph::AllocateAudioBuffer::no });
+
     pendingMessages.reserve (50);
     dispatchingMessages.reserve (50);
 }
