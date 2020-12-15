@@ -226,16 +226,22 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
     resetFP();
 
     const EditTimeRange streamTimeRange (streamTime, blockEnd);
+    const auto referenceSampleRange = tracktion_graph::timeToSample (streamTimeRange, originalParams.sampleRateForAudio);
 
     // Update modifier timers
     r.edit->updateModifierTimers (streamTime, r.blockSizeForAudio);
 
     // Wait for any nodes to render their sources or proxies
-    auto leafNodesReady = [this]
+    auto leafNodesReady = [this, referenceSampleRange]
     {
         for (auto node : getNodes (*nodePlayer->getNode(), VertexOrdering::postordering))
+        {
+            // Call prepare for next block here to ensure isReadyToProcess internals are updated
+            node->prepareForNextBlock (referenceSampleRange);
+         
             if (node->getDirectInputNodes().empty() && ! node->isReadyToProcess())
                 return false;
+        }
         
         return true;
     }();
@@ -246,7 +252,6 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
     juce::AudioBuffer<float> renderingBuffer (numOutputChans, r.blockSizeForAudio + 256);
     renderingBuffer.clear();
     midiBuffer.clear();
-    const auto referenceSampleRange = tracktion_graph::timeToSample (streamTimeRange, originalParams.sampleRateForAudio);
     auto destView = choc::buffer::createChannelArrayView (renderingBuffer.getArrayOfWritePointers(),
                                                           (choc::buffer::ChannelCount) renderingBuffer.getNumChannels(),
                                                           (choc::buffer::FrameCount) referenceSampleRange.getLength());
