@@ -76,10 +76,10 @@ void FadeInOutNode::process (ProcessContext& pc)
     }
 
     // Otherwise copy the source in to the dest ready for fading
-    choc::buffer::copy (destAudioBlock, sourceBuffers.audio);
+    copy (destAudioBlock, sourceBuffers.audio);
 
-    const int numSamples = (int) destAudioBlock.getNumFrames();
-    jassert (numSamples == (int) timelineRange.getLength());
+    auto numSamples = destAudioBlock.getNumFrames();
+    jassert (numSamples == timelineRange.getLength());
 
     if (timelineRange.intersects (fadeInSampleRange) && fadeInSampleRange.getLength() > 0)
     {
@@ -113,7 +113,7 @@ void FadeInOutNode::process (ProcessContext& pc)
 
         if (endSamp > startSamp)
         {
-            auto buffer = tracktion_graph::createAudioBuffer (destAudioBlock);
+            auto buffer = tracktion_graph::toAudioBuffer (destAudioBlock);
             AudioFadeCurve::applyCrossfadeSection (buffer,
                                                    startSamp, endSamp - startSamp,
                                                    fadeInType,
@@ -133,16 +133,16 @@ void FadeInOutNode::process (ProcessContext& pc)
             alpha1 = (timelineRange.getStart() - fadeOutSampleRange.getStart()) / (double) fadeOutSampleRange.getLength();
         }
 
-        int endSamp;
+        uint32_t endSamp;
         double alpha2;
 
         if (timelineRange.getEnd() >= fadeOutSampleRange.getEnd())
         {
-            endSamp = int (timelineRange.getEnd() - fadeOutSampleRange.getEnd());
+            endSamp = (uint32_t) (timelineRange.getEnd() - fadeOutSampleRange.getEnd());
             alpha2 = 1.0;
 
             if (clearExtraSamples && endSamp < numSamples)
-                destAudioBlock.getFrameRange (tracktion_graph::frameRangeWithStartAndLength ((choc::buffer::FrameCount) endSamp, choc::buffer::FrameCount (numSamples - endSamp))).clear();
+                destAudioBlock.fromFrame (endSamp).clear();
         }
         else
         {
@@ -150,11 +150,11 @@ void FadeInOutNode::process (ProcessContext& pc)
             alpha2 = (timelineRange.getEnd() - fadeOutSampleRange.getStart()) / (double) fadeOutSampleRange.getLength();
         }
 
-        if (endSamp > startSamp)
+        if (endSamp > (uint32_t) startSamp)
         {
-            auto buffer = tracktion_graph::createAudioBuffer (destAudioBlock);
+            auto buffer = tracktion_graph::toAudioBuffer (destAudioBlock);
             AudioFadeCurve::applyCrossfadeSection (buffer,
-                                                   startSamp, endSamp - startSamp,
+                                                   startSamp, (int) endSamp - startSamp,
                                                    fadeOutType,
                                                    juce::jlimit (0.0f, 1.0f, (float) (1.0 - alpha1)),
                                                    juce::jlimit (0.0f, 1.0f, (float) (1.0 - alpha2)));

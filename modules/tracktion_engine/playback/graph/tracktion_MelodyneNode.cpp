@@ -212,7 +212,7 @@ void MelodyneNode::process (ProcessContext& pc)
                                           tracktion_graph::sampleToTime (loopPositions, sampleRate));
             }
 
-            auto asb = tracktion_graph::createAudioBuffer (dest);
+            auto asb = tracktion_graph::toAudioBuffer (dest);
             pluginInstance->processBlock (asb, midiMessages);
 
             float gains[2];

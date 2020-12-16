@@ -94,16 +94,18 @@ namespace test_utilities
     static inline void writeToFile (juce::File file, const juce::AudioBuffer<float>& buffer, double sampleRate)
     {
         if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (juce::WavAudioFormat().createWriterFor (file.createOutputStream().release(),
-                                                                                                            sampleRate, (uint32_t) buffer.getNumChannels(), 16, {}, 0)))
+                                                                                                            sampleRate,
+                                                                                                            (uint32_t) buffer.getNumChannels(),
+                                                                                                            16, {}, 0)))
         {
             writer->writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());
         }
     }
 
     /** Writes an audio block to a file. */
-    static inline void writeToFile (juce::File file, const juce::dsp::AudioBlock<float>& block, double sampleRate)
+    static inline void writeToFile (juce::File file, choc::buffer::ChannelArrayView<float> block, double sampleRate)
     {
-        writeToFile (file, createAudioBuffer (block), sampleRate);
+        writeToFile (file, toAudioBuffer (block), sampleRate);
     }
 
     //==============================================================================
@@ -139,22 +141,41 @@ namespace test_utilities
 
 
     //==============================================================================
+    struct SineOscillator
+    {
+        void reset (float frequency, double sampleRate)
+        {
+            phase = 0;
+            phaseIncrement = (float) ((frequency * juce::MathConstants<double>::pi * 2.0) / sampleRate);
+        }
+
+        float getNext()
+        {
+            auto v = std::sin (phase);
+            phase = std::fmod (phase + phaseIncrement, juce::MathConstants<float>::pi * 2.0f);
+            return v;
+        }
+
+        float phase = 0, phaseIncrement = 0;
+    };
+
+    //==============================================================================
     template<typename AudioFormatType>
     std::unique_ptr<juce::TemporaryFile> getSinFile (double sampleRate, double durationInSeconds, int numChannels = 1, float frequency = 220.0f)
     {
         juce::AudioBuffer<float> buffer (numChannels, static_cast<int> (sampleRate * durationInSeconds));
-        juce::dsp::Oscillator<float> osc ([] (float in) { return std::sin (in); });
-        osc.setFrequency (frequency, true);
-        osc.prepare ({ double (sampleRate), uint32_t (buffer.getNumSamples()), uint32_t (buffer.getNumChannels()) });
 
-        int numSamples = buffer.getNumSamples();
+        SineOscillator osc;
+        osc.reset (frequency, sampleRate);
+
+        auto numSamples = buffer.getNumSamples();
 
         for (int c = 0; c < numChannels; ++c)
         {
             float* samples = buffer.getWritePointer (c);
 
             for (int i = 0; i < numSamples; ++i)
-                samples[i] = osc.processSample (0.0);
+                samples[i] = osc.getNext();
         }
 
         // Then write it to a temp file
@@ -167,7 +188,11 @@ namespace test_utilities
             const int qualityOptionIndex = numQualityOptions == 0 ? 0 : (numQualityOptions / 2);
             const int bitDepth = format.getPossibleBitDepths().contains (16) ? 16 : 32;
 
-            if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (AudioFormatType().createWriterFor (fileStream.get(), sampleRate, (uint32_t) numChannels, bitDepth, {}, qualityOptionIndex)))
+            if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (AudioFormatType().createWriterFor (fileStream.get(),
+                                                                                                           sampleRate,
+                                                                                                           (uint32_t) numChannels,
+                                                                                                           bitDepth, {},
+                                                                                                           qualityOptionIndex)))
             {
                 fileStream.release();
                 writer->writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());
@@ -370,24 +395,24 @@ namespace test_utilities
         {
             for (;;)
             {
-                const int maxNumThisTime = testSetup.randomiseBlockSizes ? std::min (testSetup.random.nextInt ({ 1, testSetup.blockSize }), numSamplesToDo)
-                                                                         : std::min (testSetup.blockSize, numSamplesToDo);
-                const int numThisTime = std::min (maxNumSamples, maxNumThisTime);
-                buffer.clear();
+                auto maxNumThisTime = testSetup.randomiseBlockSizes ? std::min (testSetup.random.nextInt ({ 1, testSetup.blockSize }), numSamplesToDo)
+                                                                    : std::min (testSetup.blockSize, numSamplesToDo);
+                auto numThisTime = std::min (maxNumSamples, maxNumThisTime);
                 midi.clear();
 
-                auto subSectionView = buffer.getView().getStart ((choc::buffer::FrameCount) numThisTime);
+                auto subSectionView = buffer.getStart ((choc::buffer::FrameCount) numThisTime);
+                subSectionView.clear();
+
                 const auto referenceSampleRange = juce::Range<int64_t>::withStartAndLength ((int64_t) numSamplesDone, (int64_t) numThisTime);
 
                 if (playHead)
                     playHead->setReferenceSampleRange (referenceSampleRange);
 
-                numProcessMisses += player->process ({ referenceSampleRange,
-                                                       { subSectionView, midi } });
+                numProcessMisses += player->process ({ referenceSampleRange, { subSectionView, midi } });
 
                 if (writer)
                 {
-                    auto audioBuffer = tracktion_graph::createAudioBuffer (subSectionView);
+                    auto audioBuffer = tracktion_graph::toAudioBuffer (subSectionView);
                     writer->writeFromAudioSampleBuffer (audioBuffer, 0, audioBuffer.getNumSamples());
                 }
 

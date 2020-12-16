@@ -49,12 +49,13 @@ public:
 
         // Finally copy the output from the root Node to our player buffers
         auto output = rootNode->getProcessedOutput();
-        const auto numAudioChannels = std::min (output.audio.getNumChannels(), pc.buffers.audio.getNumChannels());
+        auto numAudioChannels = std::min (output.audio.getNumChannels(),
+                                          pc.buffers.audio.getNumChannels());
                 
         if (numAudioChannels > 0)
-            choc::buffer::add (pc.buffers.audio.getChannelRange ({ 0, numAudioChannels }),
-                               output.audio.getChannelRange ({ 0, numAudioChannels }));
-                
+            add (pc.buffers.audio.getFirstChannels (numAudioChannels),
+                 output.audio.getFirstChannels (numAudioChannels));
+
         pc.buffers.midi.mergeFrom (output.midi);
     }
     

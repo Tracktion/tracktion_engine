@@ -80,10 +80,9 @@ private:
 class SinNode final : public Node
 {
 public:
-    SinNode (float frequency, int numChannelsToUse = 1, size_t nodeIDToUse = 0)
-        : numChannels (numChannelsToUse), nodeID (nodeIDToUse)
+    SinNode (float frequencyToUse, int numChannelsToUse = 1, size_t nodeIDToUse = 0)
+        : numChannels (numChannelsToUse), nodeID (nodeIDToUse), frequency (frequencyToUse)
     {
-        osc.setFrequency (frequency, true);
     }
     
     NodeProperties getNodeProperties() override
@@ -104,20 +103,19 @@ public:
     
     void prepareToPlay (const PlaybackInitialisationInfo& info) override
     {
-        osc.prepare ({ double (info.sampleRate), uint32_t (info.blockSize), (uint32_t) numChannels });
+        oscillator.reset (frequency, info.sampleRate);
     }
-    
+
     void process (ProcessContext& pc) override
     {
-        auto block = toAudioBlock (pc.buffers.audio);
-        osc.process (juce::dsp::ProcessContextReplacing<float> { block });
-        jassert (pc.buffers.audio.getNumChannels() == (choc::buffer::ChannelCount) getNodeProperties().numberOfChannels);
+        setAllFrames (pc.buffers.audio, [&] { return oscillator.getNext(); });
     }
     
 private:
-    juce::dsp::Oscillator<float> osc { [] (float in) { return std::sin (in); } };
     const int numChannels;
     size_t nodeID = 0;
+    test_utilities::SineOscillator oscillator;
+    float frequency = 0;
 };
 
 
@@ -208,7 +206,7 @@ public:
         
         return true;
     }
-    
+
     void process (ProcessContext& pc) override
     {
         const auto numChannels = pc.buffers.audio.getNumChannels();
@@ -218,10 +216,9 @@ public:
         {
             auto inputFromNode = node->getProcessedOutput();
             
-            const auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels);
-            const choc::buffer::ChannelRange channelRange { 0, numChannelsToAdd };
-            choc::buffer::add (pc.buffers.audio.getChannelRange (channelRange),
-                               inputFromNode.audio.getChannelRange (channelRange));
+            if (auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels))
+                add (pc.buffers.audio.getFirstChannels (numChannelsToAdd),
+                     inputFromNode.audio.getFirstChannels (numChannelsToAdd));
             
             pc.buffers.midi.mergeFrom (inputFromNode.midi);
         }
@@ -276,16 +273,16 @@ public:
     {
         auto inputBuffer = node->getProcessedOutput().audio;
 
-        const choc::buffer::FrameCount numSamples = (choc::buffer::FrameCount) pc.referenceSampleRange.getLength();
+        auto numFrames = pc.referenceSampleRange.getLength();
         const auto numChannels = std::min (inputBuffer.getNumChannels(), pc.buffers.audio.getNumChannels());
-        jassert (inputBuffer.getNumFrames() == numSamples);
+        jassert (inputBuffer.getNumFrames() == numFrames);
 
         for (choc::buffer::ChannelCount c = 0; c < numChannels; ++c)
         {
             auto destIter = pc.buffers.audio.getIterator (c);
             auto sourceIter = inputBuffer.getIterator (c);
 
-            for (choc::buffer::FrameCount i = 0; i < numSamples; ++i)
+            for (choc::buffer::FrameCount i = 0; i < numFrames; ++i)
                 *destIter++ = function (*sourceIter++);
         }
     }
@@ -353,7 +350,7 @@ public:
         jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
 
         // Just pass out input on to our output
-        choc::buffer::copy (pc.buffers.audio, input->getProcessedOutput().audio);
+        copy (pc.buffers.audio, input->getProcessedOutput().audio);
         pc.buffers.midi.mergeFrom (input->getProcessedOutput().midi);
         
         float gain = gainFunction();
@@ -363,14 +360,14 @@ public:
             if (gain == 0.0f)
                 pc.buffers.audio.clear();
             else if (gain != 1.0f)
-                choc::buffer::applyGain (pc.buffers.audio, gain);
+                applyGain (pc.buffers.audio, gain);
         }
         else
         {
             juce::SmoothedValue<float> smoother (lastGain);
             smoother.setTargetValue (gain);
             smoother.reset ((int) pc.buffers.audio.getNumFrames());
-            multiplyBy (pc.buffers.audio, smoother);
+            applyGainPerFrame (pc.buffers.audio, [&] { return smoother.getNextValue(); });
         }
         
         lastGain = gain;
@@ -663,18 +660,10 @@ public:
             pc.buffers.midi.mergeFrom (inputBuffers.midi);
         
         // Remap audio
-        auto sourceAudio = inputBuffers.audio;
-        auto destAudio = pc.buffers.audio;
-
         for (auto channel : channelMap)
-        {
-            if ((int) sourceAudio.getNumChannels() <= channel.first)
-                continue;
-                
-            auto sourceChanelView = sourceAudio.getChannelRange (tracktion_graph::channelRangeWithStartAndLength ((choc::buffer::ChannelCount) channel.first, 1));
-            auto destChanelView = destAudio.getChannelRange (tracktion_graph::channelRangeWithStartAndLength ((choc::buffer::ChannelCount) channel.second, 1));
-            choc::buffer::add (destChanelView, sourceChanelView);
-        }
+            if (channel.first < (int) inputBuffers.audio.getNumChannels())
+                add (pc.buffers.audio.getChannel ((choc::buffer::ChannelCount) channel.second),
+                     inputBuffers.audio.getChannel ((choc::buffer::ChannelCount) channel.first));
     }
 
 private:

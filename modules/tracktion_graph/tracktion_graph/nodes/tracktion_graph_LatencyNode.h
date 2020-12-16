@@ -61,16 +61,15 @@ public:
     
     void process (ProcessContext& pc) override
     {
-        auto outputBlock = toAudioBlock (pc.buffers.audio);
         auto inputBuffer = input->getProcessedOutput().audio;
         auto& inputMidi = input->getProcessedOutput().midi;
-        const int numSamples = (int) pc.referenceSampleRange.getLength();
-        jassert (outputBlock.getNumChannels() == 0 || numSamples == (int) outputBlock.getNumSamples());
+        auto numSamples = (int) pc.referenceSampleRange.getLength();
+        jassert (pc.buffers.audio.getNumChannels() == 0 || numSamples == (int) pc.buffers.audio.getNumFrames());
 
-        latencyProcessor->writeAudio (toAudioBlock (inputBuffer));
+        latencyProcessor->writeAudio (inputBuffer);
         latencyProcessor->writeMIDI (inputMidi);
         
-        latencyProcessor->readAudio (outputBlock);
+        latencyProcessor->readAudio (pc.buffers.audio);
         latencyProcessor->readMIDI (pc.buffers.midi, numSamples);
     }
     

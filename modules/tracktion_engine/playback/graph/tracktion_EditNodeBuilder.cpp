@@ -638,17 +638,17 @@ std::unique_ptr<tracktion_graph::Node> createNodeForRackInstance (RackInstance& 
     
     // Send
     // N.B. the channel indicies from the RackInstance start a 1 so we need to subtract this to get a 0-indexed channel
-    std::array<std::tuple<int, int, AutomatableParameter::Ptr>, 2> sendChannelMap;
-    sendChannelMap[0] = std::tuple<int, int, AutomatableParameter::Ptr> (0, rackInstance.leftInputGoesTo - 1, rackInstance.leftInDb);
-    sendChannelMap[1] = std::tuple<int, int, AutomatableParameter::Ptr> (1, rackInstance.rightInputGoesTo - 1, rackInstance.rightInDb);
+    RackInstanceNode::ChannelMap sendChannelMap;
+    sendChannelMap[0] = { 0, rackInstance.leftInputGoesTo - 1, rackInstance.leftInDb };
+    sendChannelMap[1] = { 1, rackInstance.rightInputGoesTo - 1, rackInstance.rightInDb };
     node = makeNode<RackInstanceNode> (std::move (node), std::move (sendChannelMap));
     node = makeNode<SendNode> (std::move (node), rackInputID);
     node = makeNode<ReturnNode> (makeNode<SinkNode> (std::move (node)), rackOutputID);
 
     // Return
-    std::array<std::tuple<int, int, AutomatableParameter::Ptr>, 2> returnChannelMap;
-    returnChannelMap[0] = std::tuple<int, int, AutomatableParameter::Ptr> (rackInstance.leftOutputComesFrom - 1, 0, rackInstance.leftOutDb);
-    returnChannelMap[1] = std::tuple<int, int, AutomatableParameter::Ptr> (rackInstance.rightOutputComesFrom - 1, 1, rackInstance.rightOutDb);
+    RackInstanceNode::ChannelMap returnChannelMap;
+    returnChannelMap[0] = { rackInstance.leftOutputComesFrom - 1, 0, rackInstance.leftOutDb };
+    returnChannelMap[1] = { rackInstance.rightOutputComesFrom - 1, 1, rackInstance.rightOutDb };
     node = makeNode<RackInstanceNode> (std::move (node), std::move (returnChannelMap));
     auto wetNode = makeNode<GainNode> (std::move (node), [wetGain = rackInstance.wetGain] { return wetGain->getCurrentValue(); });
     auto dryNode = makeNode<GainNode> (inputNode, [dryGain = rackInstance.dryGain] { return dryGain->getCurrentValue(); });

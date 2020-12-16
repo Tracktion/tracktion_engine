@@ -32,7 +32,7 @@ struct LatencyProcessor
     {
         return latencyNumSamples == numLatencySamples
             && sampleRate == preparedSampleRate
-            && fifo.getNumChannels() == numberOfChannels;
+            && fifo.getNumChannels() == (choc::buffer::ChannelCount) numberOfChannels;
     }
 
     int getLatencyNumSamples() const
@@ -50,17 +50,17 @@ struct LatencyProcessor
         sampleRate = sampleRateToUse;
         latencyTimeSeconds = sampleToTime (latencyNumSamples, sampleRate);
         
-        fifo.setSize (numChannels, latencyNumSamples + blockSize + 1);
-        fifo.writeSilence (latencyNumSamples);
+        fifo.setSize ((choc::buffer::ChannelCount) numChannels, (choc::buffer::FrameCount) (latencyNumSamples + blockSize + 1));
+        fifo.writeSilence ((choc::buffer::FrameCount) latencyNumSamples);
         jassert (fifo.getNumReady() == latencyNumSamples);
     }
     
-    void writeAudio (const juce::dsp::AudioBlock<float>& src)
+    void writeAudio (choc::buffer::ChannelArrayView<float> src)
     {
         if (fifo.getNumChannels() == 0)
             return;
 
-        jassert (fifo.getNumChannels() >= (int) src.getNumChannels());
+        jassert (fifo.getNumChannels() >= src.getNumChannels());
         fifo.write (src);
     }
     
@@ -69,12 +69,12 @@ struct LatencyProcessor
         midi.mergeFromWithOffset (src, latencyTimeSeconds);
     }
 
-    void readAudio (juce::dsp::AudioBlock<float>& dst)
+    void readAudio (choc::buffer::ChannelArrayView<float> dst)
     {
         if (fifo.getNumChannels() == 0)
             return;
 
-        jassert (fifo.getNumReady() >= (int) dst.getNumSamples());
+        jassert (fifo.getNumReady() >= (int) dst.getNumFrames());
         fifo.readAdding (dst);
     }
     

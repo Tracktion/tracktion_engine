@@ -18,7 +18,7 @@ TimeStretchingWaveNode::TimeStretchingWaveNode (AudioClipBase& clip, tracktion_g
       file (c.getAudioFile()),
       fileInfo (file.getInfo()),
       sampleRate (fileInfo.sampleRate),
-      fifo (std::max (1, fileInfo.numChannels), 8192)
+      fifo ((choc::buffer::ChannelCount) std::max (1, fileInfo.numChannels), 8192)
 {
     CRASH_TRACER
 
@@ -83,7 +83,8 @@ void TimeStretchingWaveNode::prepareToPlay (const tracktion_graph::PlaybackIniti
         timestretcher.setSpeedAndPitch (timestetchSpeedRatio, timestetchSemitonesUp);
     }
 
-    fifo.setSize (fileInfo.numChannels, timestretcher.getMaxFramesNeeded());
+    fifo.setSize ((choc::buffer::ChannelCount) fileInfo.numChannels,
+                  (choc::buffer::FrameCount) timestretcher.getMaxFramesNeeded());
 }
 
 bool TimeStretchingWaveNode::isReadyToProcess()
@@ -111,19 +112,16 @@ void TimeStretchingWaveNode::process (ProcessContext& pc)
     if (! playHeadState.isContiguousWithPreviousBlock() || editRange.getStart() != nextEditTime)
         reset (editRange.getStart());
 
-    auto numSamples = (int) destAudioView.getNumFrames();
-    auto start = 0;
+    auto numSamples = destAudioView.getNumFrames();
+    choc::buffer::FrameCount start = 0;
 
     while (numSamples > 0)
     {
-        const int numReady = std::min (numSamples, fifo.getNumReady());
+        auto numReady = std::min (numSamples, (choc::buffer::FrameCount) fifo.getNumReady());
 
         if (numReady > 0)
         {
-            const auto frameRange = tracktion_graph::frameRangeWithStartAndLength (choc::buffer::FrameCount (start), choc::buffer::FrameCount (numReady));
-            auto destBlock = tracktion_graph::toAudioBlock (destAudioView.getFrameRange (frameRange));
-            
-            const bool res = fifo.readAdding (destBlock);
+            const bool res = fifo.readAdding (destAudioView.getFrameRange ({ start, start + numReady }));
             jassert (res); juce::ignoreUnused (res);
 
             start += numReady;
@@ -176,9 +174,12 @@ bool TimeStretchingWaveNode::fillNextBlock()
 
     AudioScratchBuffer fifoScratch (fileInfo.numChannels, stretchBlockSize);
 
-    float* outs[] = { fifoScratch.buffer.getWritePointer (0),
+    float* outs[] =
+    {
+        fifoScratch.buffer.getWritePointer (0),
         fileInfo.numChannels > 1 ? fifoScratch.buffer.getWritePointer (1) : nullptr,
-        nullptr };
+        nullptr
+    };
 
     if (needed >= 0)
     {
@@ -193,7 +194,9 @@ bool TimeStretchingWaveNode::fillNextBlock()
             // don't worry about failed reads -- they are cache misses. It'll catch up
         }
 
-        const float* ins[] = { scratch.buffer.getReadPointer (0),
+        const float* ins[] =
+        {
+            scratch.buffer.getReadPointer (0),
             fileInfo.numChannels > 1 ? scratch.buffer.getReadPointer (1) : nullptr,
             nullptr
         };
@@ -210,7 +213,9 @@ bool TimeStretchingWaveNode::fillNextBlock()
         timestretcher.flush (outs);
     }
 
-    const bool res = fifo.write (fifoScratch.buffer);
+    const bool res = fifo.write (choc::buffer::createChannelArrayView (fifoScratch.buffer.getArrayOfWritePointers(),
+                                                                       (choc::buffer::ChannelCount) fifoScratch.buffer.getNumChannels(),
+                                                                       (choc::buffer::FrameCount) stretchBlockSize));
     jassert (res); juce::ignoreUnused (res);
 
     return true;

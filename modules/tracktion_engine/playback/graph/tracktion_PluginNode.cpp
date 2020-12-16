@@ -121,12 +121,13 @@ void PluginNode::process (ProcessContext& pc)
     auto outputAudioView = outputBuffers.audio;
     jassert (inputAudioBlock.getNumFrames() == outputAudioView.getNumFrames());
 
-    const auto numInputChannelsToCopy = std::min (inputAudioBlock.getNumChannels(), outputAudioView.getNumChannels());
+    const auto numInputChannelsToCopy = std::min (inputAudioBlock.getNumChannels(),
+                                                  outputAudioView.getNumChannels());
 
     if (latencyProcessor)
     {
         if (numInputChannelsToCopy > 0)
-            latencyProcessor->writeAudio (tracktion_graph::toAudioBlock (inputAudioBlock.getChannelRange ({ 0, numInputChannelsToCopy })));
+            latencyProcessor->writeAudio (inputAudioBlock.getFirstChannels (numInputChannelsToCopy));
         
         latencyProcessor->writeMIDI (inputBuffers.midi);
     }
@@ -134,12 +135,12 @@ void PluginNode::process (ProcessContext& pc)
     // Copy the inputs to the outputs, then process using the
     // output buffers as that will be the correct size
     if (numInputChannelsToCopy > 0)
-        choc::buffer::copy (outputAudioView.getChannelRange ({ 0, numInputChannelsToCopy }),
-                            inputAudioBlock.getChannelRange ({ 0, numInputChannelsToCopy }));
+        copy (outputAudioView.getFirstChannels (numInputChannelsToCopy),
+              inputAudioBlock.getFirstChannels (numInputChannelsToCopy));
     
     // Init block
-    const auto subBlockSize = subBlockSizeToUse == -1 ? inputAudioBlock.getNumFrames()
-                                                      : (choc::buffer::FrameCount) subBlockSizeToUse;
+    auto subBlockSize = subBlockSizeToUse < 0 ? inputAudioBlock.getNumFrames()
+                                              : (choc::buffer::FrameCount) subBlockSizeToUse;
     
     choc::buffer::FrameCount numSamplesDone = 0;
     auto numSamplesLeft = inputAudioBlock.getNumFrames();
@@ -169,7 +170,7 @@ void PluginNode::process (ProcessContext& pc)
     {
         auto numSamplesThisBlock = std::min (subBlockSize, numSamplesLeft);
 
-        auto outputAudioBuffer = tracktion_graph::createAudioBuffer (outputAudioView.getFrameRange (tracktion_graph::frameRangeWithStartAndLength (numSamplesDone, numSamplesThisBlock)));
+        auto outputAudioBuffer = tracktion_graph::toAudioBuffer (outputAudioView.getFrameRange (tracktion_graph::frameRangeWithStartAndLength (numSamplesDone, numSamplesThisBlock)));
         
         const auto subBlockTimeRange = tracktion_graph::sampleToTime (juce::Range<size_t>::withStartAndLength (numSamplesDone, numSamplesThisBlock), sampleRate);
         midiMessageArray.copyFrom (inputBuffers.midi);
@@ -211,9 +212,9 @@ void PluginNode::process (ProcessContext& pc)
         // A slightly better approach would be to crossfade between the processed and latency block to minimise any discrepancies
         if (plugin->isEnabled())
         {
-            const auto numSamples = inputAudioBlock.getNumFrames();
-            latencyProcessor->clearAudio ((int) numSamples);
-            latencyProcessor->clearMIDI ((int) numSamples);
+            auto numSamples = (int) inputAudioBlock.getNumFrames();
+            latencyProcessor->clearAudio (numSamples);
+            latencyProcessor->clearMIDI (numSamples);
         }
         else
         {
@@ -222,10 +223,7 @@ void PluginNode::process (ProcessContext& pc)
 
             // If no inputs have been added to the fifo, there won't be any samples available so skip
             if (numInputChannelsToCopy > 0)
-            {
-                auto destBlock = tracktion_graph::toAudioBlock (outputAudioView);
-                latencyProcessor->readAudio (destBlock);
-            }
+                latencyProcessor->readAudio (outputAudioView);
             
             latencyProcessor->readMIDI (outputBuffers.midi, (int) inputAudioBlock.getNumFrames());
         }

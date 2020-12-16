@@ -17,11 +17,12 @@ namespace tracktion_engine
 class RackInstanceNode final    : public tracktion_graph::Node
 {
 public:
+    using ChannelMap = std::array<std::tuple<int, int, AutomatableParameter::Ptr>, 2>;
+
     /** Creates a RackInstanceNode that maps an input node channel to an output channel
         and applies a gain parameter to each mapped channel.
     */
-    RackInstanceNode (std::unique_ptr<Node>,
-                      std::array<std::tuple<int, int, AutomatableParameter::Ptr>, 2> channelMap);
+    RackInstanceNode (std::unique_ptr<Node>, ChannelMap channelMap);
 
     std::vector<Node*> getDirectInputNodes() override;
     tracktion_graph::NodeProperties getNodeProperties() override;
@@ -32,7 +33,7 @@ public:
 private:
     //==============================================================================
     std::unique_ptr<Node> input;
-    std::array<std::tuple<int, int, AutomatableParameter::Ptr>, 2> channelMap;
+    ChannelMap channelMap;
     int maxNumChannels = 0;
     float lastGain[2];
 };

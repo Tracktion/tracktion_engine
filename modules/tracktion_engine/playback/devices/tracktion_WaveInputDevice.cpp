@@ -1054,8 +1054,9 @@ public:
             const ScopedLock sl (consumerLock);
 
             for (auto n : consumers)
-                n->acceptInputBuffer (juce::dsp::AudioBlock<float> (inputBuffer.getArrayOfWritePointers(),
-                                                                    size_t (inputBuffer.getNumChannels()), (size_t) numSamples));
+                n->acceptInputBuffer (choc::buffer::createChannelArrayView (inputBuffer.getArrayOfWritePointers(),
+                                                                            (choc::buffer::ChannelCount) inputBuffer.getNumChannels(),
+                                                                            (choc::buffer::FrameCount) numSamples));
         }
 
         const ScopedLock sl (contextLock);
@@ -1253,19 +1254,19 @@ protected:
             }
         }
 
-        void acceptInputBuffer (const juce::dsp::AudioBlock<float>& newBlock) override
+        void acceptInputBuffer (choc::buffer::ChannelArrayView<float> newBlock) override
         {
             const ScopedLock sl (bufferLock);
 
-            const int newSamps = (int) newBlock.getNumSamples();
+            auto newSamps = newBlock.getNumFrames();
 
-            if (validSamples > buffer.getNumSamples() - newSamps)
+            if (validSamples + (int) newSamps > buffer.getNumSamples())
                 validSamples = 0;
 
             for (int i = buffer.getNumChannels(); --i >= 0;)
                 buffer.copyFrom (i, validSamples,
-                                 newBlock.getChannelPointer ((size_t) jmin ((int) newBlock.getNumChannels() - 1, i)),
-                                 newSamps);
+                                 newBlock.getChannel (jmin (newBlock.getNumChannels() - 1, (uint32_t) i)).data.data,
+                                 (int) newSamps);
 
             validSamples += newSamps;
         }

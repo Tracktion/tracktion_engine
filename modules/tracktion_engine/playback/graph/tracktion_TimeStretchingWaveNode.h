@@ -48,7 +48,7 @@ private:
     float speedRatio = 1.0f, pitchSemitones = 0;
     float timestetchSpeedRatio = 1.0f, timestetchSemitonesUp = 1.0f;
 
-    AudioFifo fifo;
+    tracktion_graph::AudioFifo fifo;
     int stretchBlockSize = 512;
 
     //==============================================================================

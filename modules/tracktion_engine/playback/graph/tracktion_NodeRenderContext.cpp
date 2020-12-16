@@ -252,38 +252,38 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
     juce::AudioBuffer<float> renderingBuffer (numOutputChans, r.blockSizeForAudio + 256);
     renderingBuffer.clear();
     midiBuffer.clear();
+
     auto destView = choc::buffer::createChannelArrayView (renderingBuffer.getArrayOfWritePointers(),
                                                           (choc::buffer::ChannelCount) renderingBuffer.getNumChannels(),
                                                           (choc::buffer::FrameCount) referenceSampleRange.getLength());
-    auto destBlock = tracktion_graph::toAudioBlock (destView);
-    
+
     nodePlayer->process ({ referenceSampleRange, { destView, midiBuffer} });
 
     if (precount <= 0)
     {
         jassert (playHeadState->isContiguousWithPreviousBlock());
 
-        int numSamplesDone = (int) juce::jmin (samplesToWrite, (int64_t) r.blockSizeForAudio);
+        auto numSamplesDone = (uint32_t) juce::jmin (samplesToWrite, (int64_t) r.blockSizeForAudio);
         samplesToWrite -= numSamplesDone;
 
-        size_t blockSize = size_t (numSamplesDone);
-        size_t blockOffset = 0;
+        auto blockSize = (uint32_t) numSamplesDone;
+        uint32_t blockOffset = 0;
 
         if (numLatencySamplesToDrop > 0)
         {
-            const int numToDrop = std::min (numLatencySamplesToDrop, numSamplesDone);
+            auto numToDrop = std::min ((uint32_t) numLatencySamplesToDrop, numSamplesDone);
             numLatencySamplesToDrop -= numToDrop;
             numSamplesDone -= numToDrop;
             
-            blockSize = (size_t) numSamplesDone;
-            blockOffset = destBlock.getNumSamples() - blockSize;
+            blockSize = numSamplesDone;
+            blockOffset = destView.getNumFrames() - blockSize;
         }
 
         if (blockSize > 0)
         {
-            jassert (blockSize <= destBlock.getNumSamples());
+            jassert (blockSize <= destView.getNumFrames());
 
-            if (writeAudioBlock (destBlock.getSubBlock (blockOffset, blockSize)) == WriteResult::failed)
+            if (writeAudioBlock (destView.getFrameRange ({ blockOffset, blockOffset + blockSize })) == WriteResult::failed)
                 return true;
         }
     }
@@ -319,18 +319,13 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
 }
 
 //==============================================================================
-NodeRenderContext::WriteResult NodeRenderContext::writeAudioBlock (juce::dsp::AudioBlock<float> block)
+NodeRenderContext::WriteResult NodeRenderContext::writeAudioBlock (choc::buffer::ChannelArrayView<float> block)
 {
     CRASH_TRACER
     // Prepare buffer to use
-    const int blockSizeSamples = (int) block.getNumSamples();
+    auto blockSizeSamples = (int) block.getNumFrames();
     
-    float* chans[32];
-
-    for (int i = 0; i < numOutputChans; ++i)
-        chans[i] = block.getChannelPointer ((size_t) i);
-
-    juce::AudioBuffer<float> buffer (chans, numOutputChans, blockSizeSamples);
+    juce::AudioBuffer<float> buffer (block.data.channels, numOutputChans, blockSizeSamples);
 
     // Apply dithering and mag/rms analysis
     if (r.ditheringEnabled && r.bitDepth < 32)

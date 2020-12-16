@@ -56,16 +56,17 @@ void TrackWaveInputDeviceNode::process (ProcessContext& pc)
     }
 
     // And pass audio to device
-    const int numChans = juce::jmin (2, (int) sourceBuffers.audio.getNumChannels());
-
-    if (numChans > 0)
+    if (auto numChans = juce::jmin (2u, sourceBuffers.audio.getNumChannels()))
     {
-        const float* chans[3] = { sourceBuffers.audio.getIterator (0).sample,
-                                  numChans > 1 ? sourceBuffers.audio.getIterator (1).sample : nullptr,
+        const float* chans[3] = { sourceBuffers.audio.getChannel(0).data.data,
+                                  numChans > 1 ? sourceBuffers.audio.getChannel(1).data.data
+                                               : nullptr,
                                   nullptr };
+
         const double streamTime = waveInputDevice.engine.getDeviceManager().getCurrentStreamTime()
                                     + tracktion_graph::sampleToTime (offsetSamples, sampleRate);
-        waveInputDevice.consumeNextAudioBlock (chans, numChans, (int) sourceBuffers.audio.getNumFrames(), streamTime);
+
+        waveInputDevice.consumeNextAudioBlock (chans, (int) numChans, (int) sourceBuffers.audio.getNumFrames(), streamTime);
     }
 }
 

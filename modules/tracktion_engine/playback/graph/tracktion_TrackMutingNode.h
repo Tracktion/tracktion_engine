@@ -90,7 +90,7 @@ private:
     std::unique_ptr<tracktion_graph::Node> input;
 
     //==============================================================================
-    void rampBlock (choc::buffer::ChannelArrayView<float>&, float start, float end);
+    void rampBlock (choc::buffer::ChannelArrayView<float>, float start, float end);
     void sendAllNotesOffIfDesired (MidiMessageArray&);
 };
 

@@ -58,7 +58,7 @@ void SharedLevelMeasuringNode::process (ProcessContext& pc)
     pc.buffers.midi.copyFrom (sourceBuffers.midi);
 
     // And pass audio to level measurer
-    auto buffer = tracktion_graph::createAudioBuffer (sourceBuffers.audio);
+    auto buffer = tracktion_graph::toAudioBuffer (sourceBuffers.audio);
     levelMeasurer->addBuffer (buffer, 0, buffer.getNumSamples());
 }
 

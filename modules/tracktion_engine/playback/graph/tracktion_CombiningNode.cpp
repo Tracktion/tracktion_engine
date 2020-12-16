@@ -60,7 +60,7 @@ struct CombiningNode::TimedNode
         for (auto n : nodesToProcess)
             n->prepareForNextBlock (referenceSampleRange);
     }
-    
+
     void process (ProcessContext& pc) const
     {
         // Process all the Nodes
@@ -73,8 +73,8 @@ struct CombiningNode::TimedNode
         const auto numChannelsToAdd = std::min (nodeOutput.audio.getNumChannels(), numDestChannels);
 
         if (numChannelsToAdd > 0)
-            choc::buffer::add (pc.buffers.audio.getChannelRange ({ 0, numChannelsToAdd }),
-                               nodeOutput.audio.getChannelRange ({ 0, numChannelsToAdd }));
+            add (pc.buffers.audio.getFirstChannels (numChannelsToAdd),
+                 nodeOutput.audio.getFirstChannels (numChannelsToAdd));
         
         pc.buffers.midi.mergeFrom (nodeOutput.midi);
     }

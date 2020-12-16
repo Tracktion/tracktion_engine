@@ -36,8 +36,8 @@ tracktion_graph::NodeProperties WaveInputDeviceNode::getNodeProperties()
 
 void WaveInputDeviceNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
 {
-    const int numIncommingChannels = (waveInputDevice.isStereoPair()) ? 2 : 1;
-    audioFifo.setSize (numIncommingChannels, info.blockSize * 8);
+    auto numIncommingChannels = (waveInputDevice.isStereoPair()) ? 2u : 1u;
+    audioFifo.setSize (numIncommingChannels, (uint32_t) info.blockSize * 8);
     lastCallbackTime = juce::Time::getMillisecondCounter();
 
     instance.addConsumer (this);
@@ -63,31 +63,28 @@ void WaveInputDeviceNode::process (ProcessContext& pc)
     lastCallbackTime = timeNow;
 
     auto& destAudio = pc.buffers.audio;
-    const int numSamples = (int) destAudio.getNumFrames();
-    const auto numChannelsToRead = std::min (destAudio.getNumChannels(), (choc::buffer::ChannelCount) audioFifo.getNumChannels());
-    jassert ((int) destAudio.getNumChannels() >= audioFifo.getNumChannels());
+    auto numSamples = destAudio.getNumFrames();
+    const auto numChannelsToRead = std::min (destAudio.getNumChannels(),
+                                             audioFifo.getNumChannels());
+    jassert (destAudio.getNumChannels() >= audioFifo.getNumChannels());
 
-    const auto numToRead = (choc::buffer::FrameCount) std::min (audioFifo.getNumReady(), numSamples);
-
-    if (numToRead > 0)
+    if (auto numToRead = std::min ((choc::buffer::FrameCount) audioFifo.getNumReady(), numSamples))
     {
-        auto destSubView = destAudio.getChannelRange ({ 0, numChannelsToRead })
+        auto destSubView = destAudio.getFirstChannels (numChannelsToRead)
                                     .getStart (numToRead);
         audioFifo.readAdding (destSubView);
     
         // Copy any additional channels from the last one
-        {
-            auto lastChannelView = destSubView.getChannel (destSubView.getNumChannels() - 1);
-            
-            for (auto c = numChannelsToRead; c < destAudio.getNumChannels(); ++c)
-                choc::buffer::copy (destAudio.getChannel (c).getStart (numToRead), lastChannelView);
-        }
+        auto lastChannelView = destSubView.getChannel (destSubView.getNumChannels() - 1);
+        
+        for (auto c = numChannelsToRead; c < destAudio.getNumChannels(); ++c)
+            copy (destAudio.getChannel (c).getStart (numToRead), lastChannelView);
     }
 }
 
-void WaveInputDeviceNode::acceptInputBuffer (const juce::dsp::AudioBlock<float>& newBlock)
+void WaveInputDeviceNode::acceptInputBuffer (choc::buffer::ChannelArrayView<float> newBlock)
 {
-    jassert (audioFifo.getNumChannels() == (int) newBlock.getNumChannels());
+    jassert (audioFifo.getNumChannels() == newBlock.getNumChannels());
     audioFifo.reset();
     audioFifo.write (newBlock);
 }

@@ -104,11 +104,11 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
     // Add output from graph to buffers
     {
         auto output = preparedNode.rootNode->getProcessedOutput();
-        const auto numAudioChannels = std::min (output.audio.getNumChannels(), pc.buffers.audio.getNumChannels());
+        auto numAudioChannels = std::min (output.audio.getNumChannels(), pc.buffers.audio.getNumChannels());
 
         if (numAudioChannels > 0)
-            choc::buffer::add (pc.buffers.audio.getChannelRange ({ 0, numAudioChannels }),
-                               output.audio.getChannelRange ({ 0, numAudioChannels }));
+            add (pc.buffers.audio.getFirstChannels (numAudioChannels),
+                 output.audio.getFirstChannels (numAudioChannels));
 
         pc.buffers.midi.mergeFrom (output.midi);
     }
