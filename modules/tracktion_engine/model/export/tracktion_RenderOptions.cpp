@@ -308,7 +308,10 @@ Renderer::Parameters RenderOptions::getRenderParameters (Edit& edit, SelectionMa
     params.separateTracks           = tracksToSeparateFiles;
     params.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (edit.engine);
 
-    if (markedRegion && isMarkedRegionBigEnough (markedRegionTime))
+    if (! isMarkedRegionBigEnough (markedRegionTime))
+        markedRegion = false;
+    
+    if (markedRegion)
         params.time = markedRegionTime;
     else
         params.time = { 0.0, edit.getLength() };
