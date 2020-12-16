@@ -725,7 +725,7 @@ EditClip::Ptr ClipTrack::insertEditClip (EditTimeRange position, ProjectItemID s
     auto newState = createNewClipState (name, TrackItem::Type::edit, edit.createNewItemID(), { position, 0.0 });
     newState.setProperty (IDs::source, sourceID.toString(), nullptr);
 
-    if (auto c = insertClipWithState (newState, name, TrackItem::Type::wave, { position, 0.0 }, false, false))
+    if (auto c = insertClipWithState (newState, name, TrackItem::Type::edit, { position, 0.0 }, false, false))
     {
         if (auto ec = dynamic_cast<EditClip*> (c))
             return *ec;
