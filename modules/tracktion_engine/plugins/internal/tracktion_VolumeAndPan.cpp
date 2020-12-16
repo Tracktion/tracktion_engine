@@ -54,7 +54,7 @@ struct PanAutomatableParameter : public AutomatableParameter
 
     float stringToValue (const String& str) override
     {
-        const float v = str.retainCharacters ("012345679.-").getFloatValue();
+        const float v = str.retainCharacters ("0123456789.-").getFloatValue();
         return str.contains (TRANS("Left")) ? -v : v;
     }
 };
