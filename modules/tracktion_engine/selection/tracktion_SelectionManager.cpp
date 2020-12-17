@@ -572,7 +572,7 @@ bool SelectionManager::copySelected()
 
         if (editViewID != -1)
         {
-            clipboardParams.edit = edit;
+            clipboardParams.edit = getEdit();
             clipboardParams.editViewID = editViewID;
         }
 
@@ -647,6 +647,11 @@ void SelectionManager::keepSelectedObjectsOnScreen()
 
     if (auto cls = getFirstSelectableClass())
         cls->keepSelectedObjectOnScreen (selected);
+}
+
+Edit* SelectionManager::getEdit() const
+{
+    return dynamic_cast<Edit*> (edit.get());
 }
 
 SelectionManager* SelectionManager::findSelectionManager (const Component* c)

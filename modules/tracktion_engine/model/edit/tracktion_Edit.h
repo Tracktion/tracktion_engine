@@ -212,7 +212,7 @@ public:
         ~UndoTransactionInhibitor();
 
     private:
-        juce::WeakReference<Edit> edit;
+        Edit::WeakRef edit;
     };
 
     static int getDefaultNumUndoLevels() noexcept               { return 30; }
@@ -484,11 +484,6 @@ public:
 
     SharedLevelMeasurer::Ptr getPreviewLevelMeasurer()          { return previewLevelMeasurer; }
     void setPreviewLevelMeasurer (SharedLevelMeasurer::Ptr p)   { previewLevelMeasurer = p; }
-
-    using WeakRef = juce::WeakReference<Edit>;
-    WeakRef::Master masterReference;
-
-    WeakRef getWeakRef()                                        { return WeakRef (this); }
 
 private:
     //==============================================================================

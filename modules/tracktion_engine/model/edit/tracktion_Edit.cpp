@@ -447,8 +447,8 @@ struct Edit::ChangedPluginsList
     /** Flushes all changed plugins to the Edit. */
     void flushAll()
     {
-        for (auto p : plugins)
-            if (p != nullptr)
+        for (auto plugin : plugins)
+            if (auto p = dynamic_cast<Plugin*> (plugin.get()))
                 p->flushPluginStateToValueTree();
 
         plugins.clear();
@@ -1111,8 +1111,8 @@ void Edit::undo()           { undoOrRedo (true); }
 void Edit::redo()           { undoOrRedo (false); }
 
 Edit::UndoTransactionInhibitor::UndoTransactionInhibitor (Edit& e) : edit (&e)                                  { ++e.numUndoTransactionInhibitors; }
-Edit::UndoTransactionInhibitor::UndoTransactionInhibitor (const UndoTransactionInhibitor& o) : edit (o.edit)    { if (edit != nullptr) ++(edit->numUndoTransactionInhibitors); }
-Edit::UndoTransactionInhibitor::~UndoTransactionInhibitor()                                                     { if (edit != nullptr) --(edit->numUndoTransactionInhibitors); }
+Edit::UndoTransactionInhibitor::UndoTransactionInhibitor (const UndoTransactionInhibitor& o) : edit (o.edit)    { if (auto e = dynamic_cast<Edit*> (edit.get())) ++(e->numUndoTransactionInhibitors); }
+Edit::UndoTransactionInhibitor::~UndoTransactionInhibitor()                                                     { if (auto e = dynamic_cast<Edit*> (edit.get())) --(e->numUndoTransactionInhibitors); }
 
 //==============================================================================
 EditItemID Edit::createNewItemID (const std::vector<EditItemID>& idsToAvoid) const
@@ -1951,8 +1951,8 @@ void Edit::updateMirroredPlugins()
     mirroredPluginUpdateTimer->stopTimer();
 
     for (auto changed : mirroredPluginUpdateTimer->changedPlugins)
-        if (changed != nullptr)
-            sendMirrorUpdateToAllPlugins (*changed);
+        if (auto p = dynamic_cast<Plugin*> (changed.get()))
+            sendMirrorUpdateToAllPlugins (*p);
 
     mirroredPluginUpdateTimer->changedPlugins.clear();
 }

@@ -605,7 +605,8 @@ AutomatableParameter::AutomatableParameter (const juce::String& paramID_,
     : paramID (paramID_),
       valueRange (vr),
       automatableEditElement (owner),
-      paramName (name_)
+      paramName (name_),
+      editRef (&automatableEditElement.edit)
 {
     if (auto p = dynamic_cast<Plugin*> (&owner))
     {
@@ -627,8 +628,6 @@ AutomatableParameter::AutomatableParameter (const juce::String& paramID_,
         jassertfalse; // Unknown AutomatableEditItem type
     }
 
-    editRef = &automatableEditElement.edit;
-
     modifiersState = parentState.getOrCreateChildWithName (IDs::MODIFIERASSIGNMENTS, &owner.edit.getUndoManager());
     curveSource = std::make_unique<AutomationCurveSource> (*this);
 
@@ -640,8 +639,8 @@ AutomatableParameter::AutomatableParameter (const juce::String& paramID_,
 
 AutomatableParameter::~AutomatableParameter()
 {
-    if (editRef != nullptr)
-        editRef->getAutomationRecordManager().parameterBeingDeleted (*this);
+    if (auto edit = dynamic_cast<Edit*> (editRef.get()))
+        edit->getAutomationRecordManager().parameterBeingDeleted (*this);
 
     notifyListenersOfDeletion();
 

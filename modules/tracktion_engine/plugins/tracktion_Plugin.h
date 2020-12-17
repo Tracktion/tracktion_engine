@@ -113,7 +113,6 @@ public:
 
     //==============================================================================
     using Ptr      = juce::ReferenceCountedObjectPtr<Plugin>;
-    using WeakRef  = juce::WeakReference<Plugin>;
     using Array    = juce::ReferenceCountedArray<Plugin>;
 
     /** called by the system to let the plugin manage its automation stuff */
@@ -416,7 +415,6 @@ private:
     struct WireList;
     std::unique_ptr<WireList> sidechainWireList;
 
-    JUCE_DECLARE_WEAK_REFERENCEABLE (Plugin)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Plugin)
 };
 

@@ -20,8 +20,8 @@ bool UIBehaviour::paste (const Clipboard& clipboard)
             if (sm->pasteSelected())
                 return true;
 
-            if (sm->insertPoint != nullptr)
-                return content->pasteIntoEdit (*sm->edit, *sm->insertPoint, sm);
+            if (sm->insertPoint != nullptr && sm->getEdit() != nullptr)
+                return content->pasteIntoEdit (*sm->getEdit(), *sm->insertPoint, sm);
         }
     }
 

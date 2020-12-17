@@ -105,14 +105,14 @@ void synchroniseEditPosition (Edit& edit, const juce::AudioPlayHead::CurrentPosi
             || currentDetails.numerator != newNumerator
             || currentDetails.denominator != newDenominator)
         {
-            MessageManager::callAsync ([editRef = WeakReference<Edit> (&edit),
+            MessageManager::callAsync ([&edit, editRef = Edit::WeakRef (&edit),
                                         newBpm, newNumerator, newDenominator]
                                        {
                                             if (! editRef)
                                                 return;
                                             
                                             // N.B. This assumes only a simple tempo sequence with a single point
-                                            auto& tempoSequence = editRef->tempoSequence;
+                                            auto& tempoSequence = edit.tempoSequence;
                                             auto tempoSetting = tempoSequence.getTempo (0);
                                             auto timeSigSetting = tempoSequence.getTimeSig (0);
 

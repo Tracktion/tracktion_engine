@@ -114,7 +114,7 @@ namespace AppFunctions
         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
             if (sm->insertPoint != nullptr)
                 if (auto clips = Clipboard::getInstance()->getContentWithType<Clipboard::Clips>())
-                    clips->pasteInsertingAtCursorPos (*sm->edit, *sm->insertPoint, *sm);
+                    clips->pasteInsertingAtCursorPos (*sm->getEdit(), *sm->insertPoint, *sm);
     }
 
     void deleteSelected()
@@ -129,9 +129,9 @@ namespace AppFunctions
         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
         {
             if (sm->containsType<Track>())
-                deleteRegionOfTracks (*sm->edit, getCurrentUIBehaviour().getEditingRange (*sm->edit), true, false, sm);
+                deleteRegionOfTracks (*sm->getEdit(), getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), true, false, sm);
             else
-                deleteRegionOfSelectedClips (*sm, getCurrentUIBehaviour().getEditingRange (*sm->edit), false, false);
+                deleteRegionOfSelectedClips (*sm, getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), false, false);
         }
     }
 
@@ -140,9 +140,9 @@ namespace AppFunctions
         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
         {
             if (sm->containsType<Track>())
-                deleteRegionOfTracks (*sm->edit, getCurrentUIBehaviour().getEditingRange (*sm->edit), true, true, sm);
+                deleteRegionOfTracks (*sm->getEdit(), getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), true, true, sm);
             else
-                deleteRegionOfSelectedClips (*sm, getCurrentUIBehaviour().getEditingRange (*sm->edit), true, false);
+                deleteRegionOfSelectedClips (*sm, getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), true, false);
         }
     }
 
@@ -151,9 +151,9 @@ namespace AppFunctions
         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
         {
             if (sm->containsType<Track>())
-                deleteRegionOfTracks (*sm->edit, getCurrentUIBehaviour().getEditingRange (*sm->edit), true, true, sm);
+                deleteRegionOfTracks (*sm->getEdit(), getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), true, true, sm);
             else
-                deleteRegionOfSelectedClips (*sm, getCurrentUIBehaviour().getEditingRange (*sm->edit), true, true);
+                deleteRegionOfSelectedClips (*sm, getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), true, true);
         }
     }
 
@@ -436,7 +436,7 @@ namespace AppFunctions
     {
         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
         {
-            auto& edit = *sm->edit;
+            auto& edit = *sm->getEdit();
             auto& tempoSequence = edit.tempoSequence;
 
             if (tempoSequence.getNumTempos() >= 128)
@@ -460,7 +460,7 @@ namespace AppFunctions
     void insertPitchChange()
     {
         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
-            if (auto newPitch = sm->edit->pitchSequence.insertPitch (getCurrentUIBehaviour().getEditingPosition (*sm->edit)))
+            if (auto newPitch = sm->getEdit()->pitchSequence.insertPitch (getCurrentUIBehaviour().getEditingPosition (*sm->getEdit())))
                 sm->selectOnly (*newPitch);
     }
 
@@ -468,7 +468,7 @@ namespace AppFunctions
     {
         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
         {
-            auto& edit = *sm->edit;
+            auto& edit = *sm->getEdit();
             auto& tempoSequence = edit.tempoSequence;
 
             if (tempoSequence.getNumTimeSigs() >= 128)
@@ -493,7 +493,7 @@ namespace AppFunctions
     {
         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
         {
-            auto& edit = *sm->edit;
+            auto& edit = *sm->getEdit();
 
             if (auto ct = edit.getChordTrack())
             {
@@ -522,7 +522,7 @@ namespace AppFunctions
         {
             auto selected = sm->getSelectedObjects();
             selected.mergeArray (splitClips (getCurrentUIBehaviour().getAssociatedClipsToEdit (selected),
-                                             getCurrentUIBehaviour().getEditingPosition (*sm->edit)));
+                                             getCurrentUIBehaviour().getEditingPosition (*sm->getEdit())));
             sm->select (selected);
         }
     }

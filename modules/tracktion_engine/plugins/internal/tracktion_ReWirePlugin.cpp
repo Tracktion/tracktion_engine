@@ -179,7 +179,7 @@ public:
         storedMessages.clear();
 
         sampleRate = sr;
-        containerEdit = edit;
+        editRef = edit;
 
         bufferSourceChannels.setBit (leftChanIndex);
         bufferSourceChannels.setBit (rightChanIndex);
@@ -527,6 +527,8 @@ public:
 
     void timerCallback() override
     {
+        auto containerEdit = getEdit();
+
         if (timeSigRequest)
         {
             CRASH_TRACER
@@ -710,7 +712,7 @@ public:
 
     TransportControl* getTransport() const
     {
-        if (containerEdit != nullptr)
+        if (auto containerEdit = getEdit())
             return &containerEdit->getTransport();
 
         return {};
@@ -741,7 +743,9 @@ private:
     int references = 0, pluginsServedThisFrame = 0;
     double sampleRate = 0, lastTime = 0, timePerBlock = 0;
     bool wasPlaying = false;
-    Edit::WeakRef containerEdit;
+    Edit::WeakRef editRef;
+
+    Edit* getEdit() const   { return dynamic_cast<Edit*> (editRef.get()); }
 
     double requestedPosition = 0;
     int requestedTempo = 0, requestedTimeSigNum = 0, requestedTimeSigDenom = 0;

@@ -427,9 +427,9 @@ Plugin::Plugin (PluginCreationInfo info)
 
         MessageManager::callAsync ([=, &e]() mutable
         {
-            if (ref != nullptr)
+            if (auto plugin = dynamic_cast<Plugin*> (ref.get()))
                 if (auto na = e.getExternalControllerManager().getAutomap())
-                    na->pluginChanged (ref);
+                    na->pluginChanged (plugin);
         });
     }
    #endif
