@@ -146,7 +146,7 @@ private:
             
             if (auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels))
                 add (pc.buffers.audio.getFirstChannels (numChannelsToAdd),
-                     node->getProcessedOutput().audio.getFirstChannels (numChannelsToAdd));
+                     inputFromNode.audio.getFirstChannels (numChannelsToAdd));
             
             pc.buffers.midi.mergeFrom (inputFromNode.midi);
         }
@@ -165,7 +165,7 @@ private:
             
             if (auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels))
                 add (doubleView.getFirstChannels (numChannelsToAdd),
-                     node->getProcessedOutput().audio.getFirstChannels (numChannelsToAdd));
+                     inputFromNode.audio.getFirstChannels (numChannelsToAdd));
 
             pc.buffers.midi.mergeFrom (inputFromNode.midi);
         }

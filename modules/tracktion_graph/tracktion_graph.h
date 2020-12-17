@@ -25,7 +25,7 @@
   website:          http://www.tracktion.com
   license:          Proprietary
 
-  dependencies:     juce_audio_processors juce_audio_formats
+  dependencies:     juce_audio_formats
 
  END_JUCE_MODULE_DECLARATION
 
@@ -73,8 +73,7 @@
 #endif
 
 //==============================================================================
-#include <juce_audio_processors/juce_audio_processors.h>
-#include <juce_audio_formats/juce_audio_formats.h>
+#include <juce_audio_basics/juce_audio_basics.h>
 
 //==============================================================================
 #include "tracktion_graph/tracktion_graph_Utility.h"

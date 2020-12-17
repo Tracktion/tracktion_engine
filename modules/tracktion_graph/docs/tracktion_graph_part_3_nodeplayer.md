@@ -96,7 +96,7 @@ void process (const Node::ProcessContext& pc)
     }
 }
 ```
-The `process` method takes an audio buffer (juce::dsp::AudioBlock) and a MidiMessageArray and a streamSampleRange contained in the `ProcessContext`. However, in this instance we're not using the audio and MIDI as input, the buffers will just be used to fill the output of the Node and be passed on to an audio device or file writer etc, whoever is playing the Node.
+The `process` method takes an audio buffer (choc::buffer::ChannelArrayView) and a MidiMessageArray and a streamSampleRange contained in the `ProcessContext`. However, in this instance we're not using the audio and MIDI as input, the buffers will just be used to fill the output of the Node and be passed on to an audio device or file writer etc, whoever is playing the Node.
 
 The first step to processing is to call `Node::prepareForNextBlock()` on all the Nodes. As we mentioned before, this resets the Nodes ready for the next process call.
 
