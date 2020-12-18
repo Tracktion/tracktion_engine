@@ -1083,7 +1083,7 @@ static juce::Array<SelectionManager*> getSelectionManagers (const Edit& ed)
     juce::Array<SelectionManager*> sms;
 
     for (SelectionManager::Iterator sm; sm.next();)
-        if (sm->edit == &ed)
+        if (sm->getEdit() == &ed)
             sms.add (sm.get());
 
     return sms;

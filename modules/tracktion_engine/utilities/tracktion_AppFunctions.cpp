@@ -47,7 +47,7 @@ namespace AppFunctions
 
         if (auto ed = getCurrentlyFocusedEdit())
             for (SelectionManager::Iterator sm; sm.next();)
-                if (sm->edit == ed)
+                if (sm->getEdit() == ed)
                     for (auto s : sm->getSelectedObjects())
                         items.addIfNotAlreadyThere (s);
 

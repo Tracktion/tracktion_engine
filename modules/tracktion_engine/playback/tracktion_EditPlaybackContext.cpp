@@ -728,7 +728,7 @@ static SelectionManager* findAppropriateSelectionManager (Edit& ed)
 
     for (SelectionManager::Iterator iter; iter.next();)
         if (auto sm = iter.get())
-            if (sm->edit == &ed)
+            if (sm->getEdit() == &ed)
                 if (found == nullptr || found->editViewID == -1)
                     found = sm;
 
