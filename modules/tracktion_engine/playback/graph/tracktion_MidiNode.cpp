@@ -193,8 +193,10 @@ void MidiNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
         }
     }
 
+    // N.B. if the note-off is added on the last time it may not be sent to the plugin which can break the active note-state.
+    // To avoid this, make sure any added messages are nudged back by 0.00001s
     if (getPlayHeadState().isLastBlockOfLoop())
-        createNoteOffs (pc.buffers.midi, ms[currentSequence], localTime.getEnd(), localTime.getLength(), getPlayHead().isPlaying());
+        createNoteOffs (pc.buffers.midi, ms[currentSequence], localTime.getEnd(), localTime.getLength() - 0.00001, getPlayHead().isPlaying());
 }
 
 void MidiNode::createMessagesForTime (double time, MidiMessageArray& buffer)
@@ -268,7 +270,7 @@ void MidiNode::createNoteOffs (MidiMessageArray& destination, const juce::MidiMe
 
                 if (meh->message.getTimeStamp() < time
                      && meh->noteOffObject != nullptr
-                     && meh->noteOffObject->message.getTimeStamp() > time)
+                     && meh->noteOffObject->message.getTimeStamp() >= time)
                     destination.addMidiMessage (meh->noteOffObject->message, midiTimeOffset, midiSourceID);
             }
         }
