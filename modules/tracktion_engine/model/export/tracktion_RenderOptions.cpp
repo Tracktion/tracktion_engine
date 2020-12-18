@@ -726,7 +726,8 @@ std::unique_ptr<RenderOptions> RenderOptions::forClipRender (Array<Clip*>& clips
         updateLastUsedRenderPath (*ro, edit.getProjectItemID().toString());
 
         ro->allowedClips = clips;
-
+        bool areAllClipsMono = true;
+        
         for (auto c : clips)
         {
             if (auto t = c->getTrack())
@@ -737,11 +738,23 @@ std::unique_ptr<RenderOptions> RenderOptions::forClipRender (Array<Clip*>& clips
                     if (auto dest = at->getOutput().getDestinationTrack())
                         ro->tracks.addIfNotAlreadyThere (dest->itemID);
             }
+            
+            // Assume any non-audio clips should be rendered in stereo
+            if (auto audioClip = dynamic_cast<AudioClipBase*> (c))
+            {
+                if (audioClip->getWaveInfo().numChannels > 1)
+                    areAllClipsMono = false;
+            }
+            else
+            {
+                areAllClipsMono = false;
+            }
         }
-
+        
         ro->type = midiNotes ? RenderType::midi
                              : RenderType::clip;
 
+        ro->stereo            = ! areAllClipsMono;
         ro->selectedClips     = false;
         ro->endAllowance      = ro->usePlugins ? findEndAllowance (edit, &ro->tracks, &clips) : 0.0;
         ro->removeSilence     = midiNotes;
