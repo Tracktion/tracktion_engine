@@ -244,7 +244,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
 
                 if (type == AuxSendPlugin::xmlTypeName || type == AuxReturnPlugin::xmlTypeName)
                 {
-                    if (i == IDs::enabled)
+                    if (i == IDs::enabled || i == IDs::busNum)
                         restart();
                 }
                 else if (type == RackInstance::xmlTypeName)
