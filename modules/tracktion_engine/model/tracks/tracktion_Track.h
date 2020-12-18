@@ -101,7 +101,7 @@ public:
 
     //==============================================================================
     juce::ValueTree getParentTrackTree() const;
-    Track* getParentTrack() const                               { return cachedParentTrack.get(); }
+    Track* getParentTrack() const                               { return dynamic_cast<Track*> (cachedParentTrack.get()); }
     FolderTrack* getParentFolderTrack() const                   { return getParentTrack() != nullptr ? cachedParentFolderTrack : nullptr; }
     bool isAChildOf (const Track&) const;
     bool isPartOfSubmix() const;
@@ -180,8 +180,6 @@ public:
     juce::ValueTree state;
     PluginList pluginList;
 
-    juce::WeakReference<Track>::Master masterReference;
-
 protected:
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
     void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override;
@@ -209,7 +207,7 @@ private:
     bool imageChanged = false;
     std::atomic<bool> isAudible { true };
 
-    juce::WeakReference<Track> cachedParentTrack;
+    juce::WeakReference<Selectable> cachedParentTrack;
     FolderTrack* cachedParentFolderTrack = nullptr;
 
     //==============================================================================
