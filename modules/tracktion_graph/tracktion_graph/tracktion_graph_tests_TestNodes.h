@@ -455,14 +455,14 @@ public:
         : busID (busIDToUse)
     {
         setOptimisations ({ ClearBuffers::no,
-                            AllocateAudioBuffer::no });
+                            AllocateAudioBuffer::yes });
     }
 
     ReturnNode (std::unique_ptr<Node> inputNode, int busIDToUse)
         : input (std::move (inputNode)), busID (busIDToUse)
     {
         setOptimisations ({ ClearBuffers::no,
-                            AllocateAudioBuffer::no });
+                            AllocateAudioBuffer::yes });
     }
 
     NodeProperties getNodeProperties() override
@@ -516,18 +516,21 @@ public:
     
     void process (ProcessContext& pc) override
     {
+        if (! input)
+        {
+            // N.B We need to clear manually here due to optimisations
+            pc.buffers.midi.clear();
+            pc.buffers.audio.clear();
+
+            return;
+        }
+
         auto source = input->getProcessedOutput();
         jassert (pc.buffers.audio.getSize() == source.audio.getSize());
 
-        // N.B We need to clear manually here due to optimisations
-        pc.buffers.midi.clear();
-
-        if (! input)
-            return;
-
         // Copy the input on to our output, the SummingNode will copy all the sends and get all the input
         setAudioOutput (source.audio);
-        pc.buffers.midi.mergeFrom (source.midi);
+        pc.buffers.midi.copyFrom (source.midi);
     }
     
 private:
