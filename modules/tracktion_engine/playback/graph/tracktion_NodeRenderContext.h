@@ -124,7 +124,7 @@ private:
         failed
     };
     
-    WriteResult writeAudioBlock (juce::dsp::AudioBlock<float>);
+    WriteResult writeAudioBlock (choc::buffer::ChannelArrayView<float>);
 };
 
 } // namespace tracktion_engine

@@ -195,14 +195,14 @@ void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t>
     reader->setReadPosition (fileStart);
 
     auto destBuffer = pc.buffers.audio;
-    const int numSamples = (int) destBuffer.getNumFrames();
+    auto numSamples = destBuffer.getNumFrames();
     const auto destBufferChannels = juce::AudioChannelSet::canonicalChannelSet ((int) destBuffer.getNumChannels());
-    const int numChannels = destBufferChannels.size();
-    assert ((int) pc.buffers.audio.getNumChannels() == numChannels);
+    auto numChannels = (choc::buffer::ChannelCount) destBufferChannels.size();
+    assert (pc.buffers.audio.getNumChannels() == numChannels);
 
-    AudioScratchBuffer fileData (numChannels, numFileSamples + 2);
+    AudioScratchBuffer fileData ((int) numChannels, numFileSamples + 2);
 
-    int lastSampleFadeLength = 0;
+    uint32_t lastSampleFadeLength = 0;
 
     {
         SCOPED_REALTIME_CHECK
@@ -212,11 +212,11 @@ void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t>
                                  isOfflineRender ? 5000 : 3))
         {
             if (! getPlayHeadState().isContiguousWithPreviousBlock() && ! getPlayHeadState().isFirstBlockOfLoop())
-                lastSampleFadeLength = std::min (numSamples, getPlayHead().isUserDragging() ? 40 : 10);
+                lastSampleFadeLength = std::min (numSamples, getPlayHead().isUserDragging() ? 40u : 10u);
         }
         else
         {
-            lastSampleFadeLength = std::min (numSamples, 40);
+            lastSampleFadeLength = std::min (numSamples, 40u);
             fileData.buffer.clear();
         }
     }
@@ -240,21 +240,21 @@ void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t>
     if (ratio <= 0.0)
         return;
     
-    jassert (numChannels <= channelState.size()); // this should always have been made big enough
+    jassert ((int) numChannels <= channelState.size()); // this should always have been made big enough
 
-    for (int channel = 0; channel < numChannels; ++channel)
+    for (choc::buffer::ChannelCount channel = 0; channel < numChannels; ++channel)
     {
-        if (channel < channelState.size())
+        if (channel < (choc::buffer::ChannelCount) channelState.size())
         {
-            const auto src = fileData.buffer.getReadPointer (channel);
-            const auto dest = destBuffer.getIterator ((choc::buffer::ChannelCount) channel).sample;
+            const auto src = fileData.buffer.getReadPointer ((int) channel);
+            const auto dest = destBuffer.getChannel (channel).data.data;
 
-            auto& state = *channelState.getUnchecked (channel);
-            state.resampler.processAdding (ratio, src, dest, numSamples, gains[channel & 1]);
+            auto& state = *channelState.getUnchecked ((int) channel);
+            state.resampler.processAdding (ratio, src, dest, (int) numSamples, gains[channel & 1]);
 
             if (lastSampleFadeLength > 0)
             {
-                for (int i = 0; i < lastSampleFadeLength; ++i)
+                for (uint32_t i = 0; i < lastSampleFadeLength; ++i)
                 {
                     auto alpha = i / (float) lastSampleFadeLength;
                     dest[i] = alpha * dest[i] + state.lastSample * (1.0f - alpha);
@@ -265,7 +265,7 @@ void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t>
         }
         else
         {
-            destBuffer.getChannelRange (tracktion_graph::channelRangeWithStartAndLength ((choc::buffer::ChannelCount) channel, 1)).clear();
+            destBuffer.getChannel (channel).clear();
         }
     }
     
@@ -279,7 +279,7 @@ void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t>
             return;
         }
 
-        auto bufferRef = tracktion_graph::createAudioBuffer (destBuffer);
+        auto bufferRef = tracktion_graph::toAudioBuffer (destBuffer);
         bufferRef.applyGainRamp (0, bufferRef.getNumSamples(),
                                  1.0f, 0.0f);
         
@@ -290,7 +290,7 @@ void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t>
     {
         if (! playedLastBlock)
         {
-            auto bufferRef = tracktion_graph::createAudioBuffer (destBuffer);
+            auto bufferRef = tracktion_graph::toAudioBuffer (destBuffer);
             bufferRef.applyGainRamp (0, bufferRef.getNumSamples(),
                                      0.0f, 1.0f);
         }
@@ -302,14 +302,14 @@ void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t>
     // Silence any samples before or after our edit time range
     // N.B. this shouldn't happen when using a clip combiner as the times should be clipped correctly
     {
-        const int64_t numSamplesToClearAtStart = editPositionInSamples.getStart() - timelineRange.getStart();
-        const int64_t numSamplesToClearAtEnd = timelineRange.getEnd() - editPositionInSamples.getEnd();
+        auto numSamplesToClearAtStart = editPositionInSamples.getStart() - timelineRange.getStart();
+        auto numSamplesToClearAtEnd = timelineRange.getEnd() - editPositionInSamples.getEnd();
 
         if (numSamplesToClearAtStart > 0)
             destBuffer.getStart ((choc::buffer::FrameCount) numSamplesToClearAtStart).clear();
 
         if (numSamplesToClearAtEnd > 0)
-            destBuffer.getFrameRange (tracktion_graph::frameRangeWithStartAndLength ((choc::buffer::FrameCount) (numSamples - numSamplesToClearAtEnd), (choc::buffer::FrameCount) numSamplesToClearAtEnd)).clear();
+            destBuffer.getEnd ((choc::buffer::FrameCount) numSamplesToClearAtEnd).clear();
     }
 }
 

@@ -84,8 +84,7 @@ namespace tracktion_engine
              scratchAudioBuffer.setSize (numChannels, (int) numSamples, false, false, true);
              scratchAudioBuffer.clear();
              
-             auto audioView = tracktion_graph::toBufferView (scratchAudioBuffer);
-             tracktion_graph::Node::ProcessContext pc { referenceSampleRange, { audioView, scratchMidiBuffer } };
+             tracktion_graph::Node::ProcessContext pc { referenceSampleRange, { tracktion_graph::toBufferView (scratchAudioBuffer), scratchMidiBuffer } };
              player.process (pc);
              
              // Then resample them to the dest num samples

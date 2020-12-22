@@ -135,26 +135,6 @@ private:
     choc::buffer::ChannelArrayBuffer<double> tempDoubleBuffer;
     
     //==============================================================================
-    template<typename DestType, typename SourceType>
-    static void addBlock (choc::buffer::ChannelArrayView<DestType>& dest,
-                          const choc::buffer::ChannelArrayView<SourceType>& src,
-                          choc::buffer::ChannelCount numChannels)
-    {
-        assert (dest.getNumChannels() <= numChannels);
-        assert (src.getNumChannels() <= numChannels);
-        assert (dest.getNumFrames() == src.getNumFrames());
-        const auto numSamples = dest.getNumFrames();
-
-        for (choc::buffer::ChannelCount c = 0; c < numChannels; ++c)
-        {
-            auto destIterator = dest.getIterator (c);
-            auto srcIterator = src.getIterator (c);
-            
-            for (choc::buffer::FrameCount i = 0; i < numSamples; ++i)
-                *destIterator++ += static_cast<DestType> (*srcIterator++);
-        }
-    }
-    
     void processSinglePrecision (const ProcessContext& pc)
     {
         const auto numChannels = pc.buffers.audio.getNumChannels();
@@ -164,45 +144,36 @@ private:
         {
             auto inputFromNode = node->getProcessedOutput();
             
-            const auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels);
-
-            if (numChannelsToAdd > 0)
-                choc::buffer::add (pc.buffers.audio.getChannelRange ({ 0, numChannelsToAdd }),
-                                   node->getProcessedOutput().audio.getChannelRange ({ 0, numChannelsToAdd }));
+            if (auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels))
+                add (pc.buffers.audio.getFirstChannels (numChannelsToAdd),
+                     inputFromNode.audio.getFirstChannels (numChannelsToAdd));
             
             pc.buffers.midi.mergeFrom (inputFromNode.midi);
         }
     }
-    
+
     void processDoublePrecision (const ProcessContext& pc)
     {
         const auto numChannels = pc.buffers.audio.getNumChannels();
-        tempDoubleBuffer.clear();
-        assert (tempDoubleBuffer.getNumChannels() == (choc::buffer::ChannelCount) numChannels);
-        auto doubleBlock = tempDoubleBuffer.getView().getStart (pc.buffers.audio.getNumFrames());
+        auto doubleView = tempDoubleBuffer.getView().getStart (pc.buffers.audio.getNumFrames());
+        doubleView.clear();
 
         // Get each of the inputs and add them to dest
         for (auto& node : nodes)
         {
             auto inputFromNode = node->getProcessedOutput();
             
-            const auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels);
+            if (auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels))
+                add (doubleView.getFirstChannels (numChannelsToAdd),
+                     inputFromNode.audio.getFirstChannels (numChannelsToAdd));
 
-            if (numChannelsToAdd > 0)
-            {
-                auto destBlock = doubleBlock.getChannelRange ({ 0, numChannelsToAdd });
-                auto srcBlock = node->getProcessedOutput().audio.getChannelRange ({ 0, numChannelsToAdd });
-                addBlock (destBlock, srcBlock, numChannelsToAdd);
-            }
-            
             pc.buffers.midi.mergeFrom (inputFromNode.midi);
         }
-        
-        if (numChannels > 0)
-        {
-            auto floatBlock = pc.buffers.audio.getChannelRange ({ 0, numChannels });
-            addBlock (floatBlock, doubleBlock, numChannels);
-        }
+
+        assert (doubleView.getNumChannels() == (choc::buffer::ChannelCount) numChannels);
+
+        if (numChannels != 0)
+            add (pc.buffers.audio.getFirstChannels (numChannels), doubleView);
     }
 
     //==============================================================================

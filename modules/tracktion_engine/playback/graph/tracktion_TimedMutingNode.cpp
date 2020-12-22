@@ -68,11 +68,11 @@ void TimedMutingNode::process (ProcessContext& pc)
         return;
     }
 
-    choc::buffer::copy (destAudioBlock, sourceBuffers.audio);
+    copy (destAudioBlock, sourceBuffers.audio);
     processSection (destAudioBlock, tracktion_graph::sampleToTime (timelineRange, sampleRate));
 }
 
-void TimedMutingNode::processSection (choc::buffer::ChannelArrayView<float>& view, EditTimeRange editTime)
+void TimedMutingNode::processSection (choc::buffer::ChannelArrayView<float> view, EditTimeRange editTime)
 {
     for (auto r : muteTimes)
     {
@@ -88,18 +88,18 @@ void TimedMutingNode::processSection (choc::buffer::ChannelArrayView<float>& vie
                 }
                 else if (editTime.contains (mute))
                 {
-                    auto startSample = (choc::buffer::FrameCount) tracktion_graph::timeToSample (mute.getStart() - editTime.getStart(), sampleRate);
-                    auto numSamples = (choc::buffer::FrameCount) tracktion_graph::timeToSample (mute.getEnd() - mute.getStart(), sampleRate);
+                    auto startSample = tracktion_graph::timeToSample (mute.getStart() - editTime.getStart(), sampleRate);
+                    auto numSamples  = tracktion_graph::timeToSample (mute.getLength(), sampleRate);
                     muteSection (view, startSample, numSamples);
                 }
                 else if (mute.getEnd() <= editTime.getEnd())
                 {
-                    auto numSamples = (choc::buffer::FrameCount) tracktion_graph::timeToSample (editTime.getEnd() - mute.getEnd(), sampleRate);
+                    auto numSamples = tracktion_graph::timeToSample (editTime.getEnd() - mute.getEnd(), sampleRate);
                     muteSection (view, 0, numSamples);
                 }
                 else if (mute.getStart() >= editTime.getStart())
                 {
-                    auto startSample = (choc::buffer::FrameCount) tracktion_graph::timeToSample (mute.getStart() - editTime.getStart(), sampleRate);
+                    auto startSample = tracktion_graph::timeToSample (mute.getStart() - editTime.getStart(), sampleRate);
                     muteSection (view, startSample, choc::buffer::FrameCount (view.getNumFrames()) - startSample);
                 }
             }
@@ -110,12 +110,11 @@ void TimedMutingNode::processSection (choc::buffer::ChannelArrayView<float>& vie
     }
 }
 
-void TimedMutingNode::muteSection (choc::buffer::ChannelArrayView<float>& view, choc::buffer::FrameCount startSample, choc::buffer::FrameCount numSamples)
+void TimedMutingNode::muteSection (choc::buffer::ChannelArrayView<float> block, int64_t startSample, int64_t numSamples)
 {
-    if (numSamples == 0)
-        return;
-    
-    view.getFrameRange (tracktion_graph::frameRangeWithStartAndLength (startSample, numSamples)).clear();
+    if (numSamples > 0)
+        block.getFrameRange ({ (choc::buffer::FrameCount) startSample,
+                               (choc::buffer::FrameCount) (startSample + numSamples) }).clear();
 }
 
 } // namespace tracktion_engine

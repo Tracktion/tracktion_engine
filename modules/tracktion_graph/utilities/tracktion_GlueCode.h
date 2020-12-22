@@ -12,55 +12,11 @@ namespace tracktion_graph
 {
 
 //==============================================================================
-/** Converts a choc::buffer::BufferView to a juce::dsp::AudioBlock<float>. */
-template <typename SampleType, template<typename> typename LayoutType>
-juce::dsp::AudioBlock<float> toAudioBlock (const choc::buffer::BufferView<SampleType, LayoutType>& view)
-{
-    return juce::dsp::AudioBlock<float> (view.data.channels,
-                                         (size_t) view.size.numChannels,
-                                         (size_t) view.data.offset,
-                                         (size_t) view.size.numFrames);
-}
-
-/** Converts a choc::buffer to a juce::dsp::AudioBlock<float>. */
-template<typename ChocBufferType>
-juce::dsp::AudioBlock<float> toAudioBlock (const ChocBufferType& buffer)
-{
-    return toAudioBlock (buffer.getView());
-}
-
-/** Creates a juce::AudioBuffer from a juce::AudioBlock. */
-inline juce::AudioBuffer<float> createAudioBuffer (const juce::dsp::AudioBlock<float>& block)
-{
-    constexpr int maxNumChannels = 128;
-    const int numChannels = std::min (maxNumChannels, (int) block.getNumChannels());
-    float* chans[maxNumChannels] = {};
-
-    for (int i = 0; i < numChannels; ++i)
-        chans[i] = block.getChannelPointer ((size_t) i);
-
-    return juce::AudioBuffer<float> (chans, numChannels, (int) block.getNumSamples());
-}
-
 /** Creates a juce::AudioBuffer from a choc::buffer::BufferView. */
-template <typename SampleType, template<typename> typename LayoutType>
-inline juce::AudioBuffer<float> createAudioBuffer (const choc::buffer::BufferView<SampleType, LayoutType>& view)
+inline juce::AudioBuffer<float> toAudioBuffer (choc::buffer::ChannelArrayView<float> view)
 {
-    return createAudioBuffer (toAudioBlock (view));
+    return juce::AudioBuffer<float> (view.data.channels, (int) view.getNumChannels(), (int) view.getNumFrames());
 }
-
-/** Creates a juce::AudioBuffer from a choc::buffer. */
-template<typename ChocBufferType>
-inline juce::AudioBuffer<float> createAudioBuffer (const ChocBufferType& buffer)
-{
-    return createAudioBuffer (toAudioBlock (buffer));
-}
-
-/** This type of conversion isn't possible as you can't get an array of pointers from an AudioBlock.
-    Use the original block source to create the view instead.
-*/
-template<typename SampleType>
-choc::buffer::BufferView<SampleType, choc::buffer::SeparateChannelLayout> toBufferView (const juce::dsp::AudioBlock<SampleType>&);
 
 /** Converts a juce::AudioBuffer<SampleType> to a choc::buffer::BufferView. */
 template<typename SampleType>
@@ -70,7 +26,6 @@ inline choc::buffer::BufferView<SampleType, choc::buffer::SeparateChannelLayout>
                                                  (choc::buffer::ChannelCount) buffer.getNumChannels(),
                                                  (choc::buffer::FrameCount) buffer.getNumSamples());
 }
-
 
 //==============================================================================
 /** Mutiplies a choc::buffer::BufferView by a juce::SmoothedValue. */

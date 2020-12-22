@@ -620,8 +620,7 @@ private:
         jassert (outputBuffer.getNumSamples() == inputBuffer.getNumSamples());
 
         // Set up the inputs
-        auto intputView = tracktion_graph::toBufferView (inputBuffer);
-        inputProvider->setInputs ({ intputView, midiIn });
+        inputProvider->setInputs ({ tracktion_graph::toBufferView (inputBuffer), midiIn });
 
         
         // The context
@@ -634,8 +633,8 @@ private:
         // Then process
         //TODO: This probably should be the master stream time
         auto streamSampleRange = juce::Range<int64_t>::withStartAndLength (0, inputBuffer.getNumSamples());
-        auto outputView = tracktion_graph::toBufferView (outputBuffer);
-        processor->process ({ streamSampleRange, { outputView, midiOut } },
+
+        processor->process ({ streamSampleRange, { tracktion_graph::toBufferView (outputBuffer), midiOut } },
                             editTime, isPlaying, isScrubbing, isRendering);
     }
    #endif

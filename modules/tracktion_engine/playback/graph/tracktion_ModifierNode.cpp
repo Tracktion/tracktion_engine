@@ -83,18 +83,15 @@ void ModifierNode::process (ProcessContext& pc)
 
     // Copy the inputs to the outputs, then process using the
     // output buffers as that will be the correct size
+    if (auto numInputChannelsToCopy = std::min (inputAudioBlock.getNumChannels(),
+                                                outputAudioBlock.getNumChannels()))
     {
-        const auto numInputChannelsToCopy = std::min (inputAudioBlock.getNumChannels(), outputAudioBlock.getNumChannels());
-        
-        if (numInputChannelsToCopy > 0)
-        {
-            jassert (inputAudioBlock.getNumFrames() == outputAudioBlock.getNumFrames());
-            choc::buffer::copy (outputAudioBlock, inputAudioBlock.getChannelRange ({ 0, numInputChannelsToCopy }));
-        }
+        jassert (inputAudioBlock.getNumFrames() == outputAudioBlock.getNumFrames());
+        copy (outputAudioBlock, inputAudioBlock.getFirstChannels (numInputChannelsToCopy));
     }
 
     // Setup audio buffers
-    auto outputAudioBuffer = tracktion_graph::createAudioBuffer (outputAudioBlock);
+    auto outputAudioBuffer = tracktion_graph::toAudioBuffer (outputAudioBlock);
 
     // Then MIDI buffers
     midiMessageArray.copyFrom (inputBuffers.midi);

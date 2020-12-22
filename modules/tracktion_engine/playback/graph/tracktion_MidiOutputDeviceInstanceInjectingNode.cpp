@@ -49,7 +49,7 @@ void MidiOutputDeviceInstanceInjectingNode::process (ProcessContext& pc)
     auto sourceBuffers = input->getProcessedOutput();
 
     pc.buffers.midi.copyFrom (sourceBuffers.midi);
-    choc::buffer::copy (pc.buffers.audio, sourceBuffers.audio);
+    copy (pc.buffers.audio, sourceBuffers.audio);
     
     if (sourceBuffers.midi.isEmpty())
         return;

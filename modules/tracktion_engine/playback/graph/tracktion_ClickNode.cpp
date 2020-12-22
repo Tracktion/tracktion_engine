@@ -56,8 +56,7 @@ void ClickNode::process (ProcessContext& pc)
 
     const auto splitTimelinePosition = referenceSampleRangeToSplitTimelineRange (playHead, pc.referenceSampleRange);
     const EditTimeRange editTime (tracktion_graph::sampleToTime (splitTimelinePosition.timelineRange1, sampleRate));
-    auto audoBlock = tracktion_graph::toAudioBlock (pc.buffers.audio);
-    clickGenerator.processBlock (&audoBlock, &pc.buffers.midi, editTime);
+    clickGenerator.processBlock (&pc.buffers.audio, &pc.buffers.midi, editTime);
 }
 
 }

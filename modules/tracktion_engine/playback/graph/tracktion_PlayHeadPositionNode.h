@@ -57,7 +57,7 @@ public:
         jassert (sourceBuffers.audio.getNumChannels() == pc.buffers.audio.getNumChannels());
 
         pc.buffers.midi.copyFrom (sourceBuffers.midi);
-        choc::buffer::copy (pc.buffers.audio, sourceBuffers.audio);
+        copy (pc.buffers.audio, sourceBuffers.audio);
         
         updatePlayHeadTime (pc.referenceSampleRange.getLength());
     }

@@ -98,26 +98,6 @@ public:
         return true;
     }
 
-    bool write (juce::dsp::AudioBlock<float> block)
-    {
-        jassert (buffer.getNumChannels() <= (int) block.getNumChannels());
-        int numSamples = (int) block.getNumSamples();
-        int start1, size1, start2, size2;
-        fifo.prepareToWrite (numSamples, start1, size1, start2, size2);
-
-        if (size1 + size2 < numSamples)
-            return false;
-
-        for (int i = buffer.getNumChannels(); --i >= 0;)
-        {
-            buffer.copyFrom (i, start1, block.getChannelPointer ((size_t) i), size1);
-            buffer.copyFrom (i, start2, block.getChannelPointer ((size_t) i) + size1, size2);
-        }
-
-        fifo.finishedWrite (size1 + size2);
-        return true;
-    }
-
     bool writeSilence (int numSamples)
     {
         if (numSamples <= 0)
@@ -183,31 +163,12 @@ public:
             dest.addFrom (i, startSampleInDestBuffer, buffer, i, start1, size1);
             dest.addFrom (i, startSampleInDestBuffer + size1, buffer, i, start2, size2);
         }
+
         for (int i = dest.getNumChannels(); --i >= buffer.getNumChannels();)
         {
             dest.addFrom (i, startSampleInDestBuffer, buffer, buffer.getNumChannels() - 1, start1, size1);
             dest.addFrom (i, startSampleInDestBuffer + size1, buffer, buffer.getNumChannels() - 1, start2, size2);
         }
-
-        fifo.finishedRead (size1 + size2);
-        return true;
-    }
-
-    bool readAdding (const juce::dsp::AudioBlock<float>& dest)
-    {
-        jassert ((int) dest.getNumChannels() == buffer.getNumChannels());
-        const int numSamples = (int) dest.getNumSamples();
-        int start1, size1, start2, size2;
-        fifo.prepareToRead (numSamples, start1, size1, start2, size2);
-
-        if ((size1 + size2) < numSamples)
-            return false;
-
-        juce::dsp::AudioBlock<float> sourceBlock (buffer);
-        dest.add (sourceBlock.getSubBlock ((size_t) start1, (size_t) size1));
-
-        if (size2 > 0)
-            dest.getSubBlock ((size_t) size1, (size_t) size2).add (sourceBlock.getSubBlock ((size_t) start2, (size_t) size2));
 
         fifo.finishedRead (size1 + size2);
         return true;

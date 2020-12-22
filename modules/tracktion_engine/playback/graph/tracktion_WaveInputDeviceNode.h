@@ -27,7 +27,7 @@ public:
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 
-    void acceptInputBuffer (const juce::dsp::AudioBlock<float>&) override;
+    void acceptInputBuffer (choc::buffer::ChannelArrayView<float>) override;
 
 private:
     //==============================================================================

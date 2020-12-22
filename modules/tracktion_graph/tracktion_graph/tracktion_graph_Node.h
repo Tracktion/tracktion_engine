@@ -249,7 +249,7 @@ private:
     tracktion_engine::MidiMessageArray midiBuffer;
     std::atomic<int> numSamplesProcessed { 0 };
     NodeOptimisations nodeOptimisations;
-    
+
    #if JUCE_DEBUG
     std::atomic<bool> isBeingProcessed { false };
    #endif
@@ -315,7 +315,8 @@ inline void Node::initialise (const PlaybackInitialisationInfo& info)
     prepareToPlay (info);
     
     auto props = getNodeProperties();
-    audioBufferSize = choc::buffer::Size::create ((choc::buffer::ChannelCount) props.numberOfChannels, (choc::buffer::FrameCount) info.blockSize);
+    audioBufferSize = choc::buffer::Size::create ((choc::buffer::ChannelCount) props.numberOfChannels,
+                                                  (choc::buffer::FrameCount) info.blockSize);
     
     if (nodeOptimisations.allocate == AllocateAudioBuffer::yes)
         audioBuffer.resize (audioBufferSize);
@@ -344,20 +345,18 @@ inline void Node::process (juce::Range<int64_t> referenceSampleRange)
     const auto numSamplesBeforeProcessing = audioBuffer.getNumFrames();
     juce::ignoreUnused (numChannelsBeforeProcessing, numSamplesBeforeProcessing);
 
-    const int numSamples = (int) referenceSampleRange.getLength();
+    auto numSamples = (int) referenceSampleRange.getLength();
     jassert (numSamples > 0); // This must be a valid number of samples to process
     jassert (numChannelsBeforeProcessing == 0 || numSamples <= (int) audioBuffer.getNumFrames());
 
-    audioView = (nodeOptimisations.allocate == AllocateAudioBuffer::yes ? audioBuffer.getView()
-                                                                        : choc::buffer::ChannelArrayView<float> { {}, audioBufferSize })
+    audioView = ((nodeOptimisations.allocate == AllocateAudioBuffer::yes ? audioBuffer.getView()
+                                                                         : choc::buffer::ChannelArrayView<float> { {}, audioBufferSize }))
                     .getStart ((choc::buffer::FrameCount) numSamples);
+
     auto destAudioView = audioView;
-    ProcessContext pc {
-                        referenceSampleRange,
-                        { destAudioView , midiBuffer }
-                      };
+    ProcessContext pc { referenceSampleRange, { destAudioView, midiBuffer } };
     process (pc);
-    numSamplesProcessed.store (numSamples, std::memory_order_release);
+    numSamplesProcessed.store ((int) numSamples, std::memory_order_release);
     hasBeenProcessed.store (true, std::memory_order_release);
     
     jassert (numChannelsBeforeProcessing == audioBuffer.getNumChannels());
@@ -379,7 +378,8 @@ inline bool Node::hasProcessed() const
 inline Node::AudioAndMidiBuffer Node::getProcessedOutput()
 {
     jassert (hasProcessed());
-    return { audioView.getStart ((choc::buffer::FrameCount) numSamplesProcessed.load (std::memory_order_acquire)), midiBuffer };
+    return { audioView.getStart ((choc::buffer::FrameCount) numSamplesProcessed.load (std::memory_order_acquire)),
+             midiBuffer };
 }
 
 inline size_t Node::getAllocatedBytes() const

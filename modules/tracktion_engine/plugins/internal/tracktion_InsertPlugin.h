@@ -71,12 +71,12 @@ public:
                                         bool forInput);
 
     /** @internal. */
-    void fillSendBuffer (const juce::dsp::AudioBlock<float>*, MidiMessageArray*);
-    void fillReturnBuffer (const juce::dsp::AudioBlock<float>*, MidiMessageArray*);
+    void fillSendBuffer (choc::buffer::ChannelArrayView<float>*, MidiMessageArray*);
+    void fillReturnBuffer (choc::buffer::ChannelArrayView<float>*, MidiMessageArray*);
 
 private:
     //==============================================================================
-    juce::AudioBuffer<float> sendBuffer { 2, 32 }, returnBuffer;
+    choc::buffer::ChannelArrayBuffer<float> sendBuffer, returnBuffer;
     MidiMessageArray sendMidiBuffer, returnMidiBuffer;
     juce::CriticalSection bufferLock;
 

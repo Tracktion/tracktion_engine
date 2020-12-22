@@ -44,8 +44,7 @@ bool InsertReturnNode::isReadyToProcess()
 void InsertReturnNode::process (ProcessContext&)
 {
     auto sourceBuffers = input->getProcessedOutput();
-    auto sourceBlock = tracktion_graph::toAudioBlock (sourceBuffers.audio);
-    owner.fillReturnBuffer (&sourceBlock, &sourceBuffers.midi);
+    owner.fillReturnBuffer (&sourceBuffers.audio, &sourceBuffers.midi);
 
 }
 

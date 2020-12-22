@@ -28,7 +28,7 @@ public:
     void prepareToPlay (double sampleRate, double startTime);
 
     /** Adds clicks to a block of audio and MIDI for a given time range. */
-    void processBlock (const juce::dsp::AudioBlock<float>*, MidiMessageArray*, EditTimeRange);
+    void processBlock (choc::buffer::ChannelArrayView<float>*, MidiMessageArray*, EditTimeRange);
 
 private:
     const Edit& edit;

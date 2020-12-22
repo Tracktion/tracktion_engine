@@ -259,7 +259,7 @@ public:
         virtual ~Consumer() = default;
 
         /** Override this to receive audio input from the device if it has any. */
-        virtual void acceptInputBuffer (const juce::dsp::AudioBlock<float>&) {}
+        virtual void acceptInputBuffer (choc::buffer::ChannelArrayView<float>) {}
 
         /** Override this to receive MIDI input from the device if it has any. */
         virtual void handleIncomingMidiMessage (const juce::MidiMessage&) {}

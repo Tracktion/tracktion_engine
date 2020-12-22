@@ -122,7 +122,8 @@ void ClickGenerator::prepareToPlay (double newSampleRate, double startTime)
             break;
 }
 
-void ClickGenerator::processBlock (const juce::dsp::AudioBlock<float>* destBuffer, MidiMessageArray* bufferForMidiMessages, EditTimeRange editTime)
+void ClickGenerator::processBlock (choc::buffer::ChannelArrayView<float>* destBuffer,
+                                   MidiMessageArray* bufferForMidiMessages, EditTimeRange editTime)
 {
     if (isMutedAtTime (editTime.getStart()))
         return;
@@ -166,20 +167,16 @@ void ClickGenerator::processBlock (const juce::dsp::AudioBlock<float>* destBuffe
             {
                 auto clickStartOffset = roundToInt ((t - editTime.getStart()) * sampleRate);
 
-                const int dstStart = jmax (0, clickStartOffset);
-                const int srcStart = jmax (0, -clickStartOffset);
-                const int num = jmin (b.getNumSamples() - srcStart,
-                                      int (destBuffer->getNumSamples()) - dstStart);
+                auto dstStart = (choc::buffer::FrameCount) std::max (0, clickStartOffset);
+                auto srcStart = (choc::buffer::FrameCount) std::max (0, -clickStartOffset);
+                auto num = std::min (b.getNumSamples() - (int) srcStart,
+                                     (int) destBuffer->getNumFrames() - (int) dstStart);
 
                 if (num > 0)
                 {
-                    for (int i = (int) destBuffer->getNumChannels(); -- i >= 0;)
-                    {
-                        juce::dsp::AudioBlock<float> sourceBlock (b.getArrayOfWritePointers(),
-                                                                  (size_t) b.getNumChannels(), (size_t) srcStart, (size_t) num);
-                        juce::dsp::AudioBlock<float>::process (sourceBlock, destBuffer->getSingleChannelBlock ((size_t) i).getSubBlock ((size_t) dstStart, (size_t) num),
-                                                               [gain] (float s) { return s * gain; });
-                    }
+                    auto dstView = destBuffer->getFrameRange ({ dstStart, dstStart + (choc::buffer::FrameCount) num });
+                    copyRemappingChannels (dstView, toBufferView (b).getFrameRange ({ srcStart, srcStart + (choc::buffer::FrameCount) num }));
+                    applyGain (dstView, gain);
                 }
             }
 

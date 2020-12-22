@@ -97,13 +97,13 @@ public:
             
             {
                 const double firstDuration = processState.editTimeRange.getLength();
-                const auto secondNumSamples = splitTimelineRange.timelineRange2.getLength();
+                const auto secondNumSamples = (choc::buffer::FrameCount) splitTimelineRange.timelineRange2.getLength();
                 const auto secondRange = juce::Range<int64_t>::withStartAndLength (firstRange.getEnd(), secondNumSamples);
                 
-                auto destAudio = pc.buffers.audio.getFrameRange (tracktion_graph::frameRangeWithStartAndLength (firstNumSamples, (choc::buffer::FrameCount) secondNumSamples));
+                auto destAudio = pc.buffers.audio.getFrameRange ({ firstNumSamples, firstNumSamples + secondNumSamples });
                 scratchMidi.clear();
                 
-                tracktion_graph::Node::ProcessContext pc2 { secondRange, { destAudio , scratchMidi } };
+                tracktion_graph::Node::ProcessContext pc2 { secondRange, { destAudio, scratchMidi } };
                 processState.update (nodePlayer.getSampleRate(), secondRange);
                 numMisses += nodePlayer.process (pc2);
 

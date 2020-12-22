@@ -38,8 +38,8 @@ private:
     double sampleRate = 44100.0;
 
     //==============================================================================
-    void processSection (choc::buffer::ChannelArrayView<float>&, EditTimeRange);
-    void muteSection (choc::buffer::ChannelArrayView<float>&, choc::buffer::FrameCount startSample, choc::buffer::FrameCount numSamples);
+    void processSection (choc::buffer::ChannelArrayView<float>, EditTimeRange);
+    void muteSection (choc::buffer::ChannelArrayView<float>, int64_t startSample, int64_t numSamples);
 };
 
 } // namespace tracktion_engine

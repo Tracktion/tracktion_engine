@@ -129,7 +129,7 @@ void TrackMutingNode::process (ProcessContext& pc)
         // If we've just been muted/unmuted we need to copy the data to
         // apply a fade to, otherwise we can just pass on the view
         if (wasJustMuted || wasJustUnMuted)
-            choc::buffer::copy (destAudioView, sourceBuffers.audio);
+            copy (destAudioView, sourceBuffers.audio);
         else
             setAudioOutput (sourceBuffers.audio);
     }
@@ -146,12 +146,12 @@ void TrackMutingNode::process (ProcessContext& pc)
 }
 
 //==============================================================================
-void TrackMutingNode::rampBlock (choc::buffer::ChannelArrayView<float>& view, float start, float end)
+void TrackMutingNode::rampBlock (choc::buffer::ChannelArrayView<float> view, float start, float end)
 {
     if (view.getNumChannels() == 0)
         return;
     
-    auto buffer = tracktion_graph::createAudioBuffer (view);
+    auto buffer = tracktion_graph::toAudioBuffer (view);
     buffer.applyGainRamp (0, buffer.getNumSamples(), start, end);
 }
 

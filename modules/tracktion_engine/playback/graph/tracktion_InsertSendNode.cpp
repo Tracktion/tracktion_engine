@@ -45,8 +45,7 @@ bool InsertSendNode::isReadyToProcess()
 
 void InsertSendNode::process (ProcessContext& pc)
 {
-    auto block = tracktion_graph::toAudioBlock (pc.buffers.audio);
-    owner.fillSendBuffer (&block, &pc.buffers.midi);
+    owner.fillSendBuffer (&pc.buffers.audio, &pc.buffers.midi);
 }
 
 } // namespace tracktion_engine

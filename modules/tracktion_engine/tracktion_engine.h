@@ -51,6 +51,14 @@
 #include <juce_dsp/juce_dsp.h>
 #include <juce_osc/juce_osc.h>
 
+#if __has_include(<choc/audio/choc_SampleBuffers.h>)
+ #include <choc/audio/choc_SampleBuffers.h>
+ #include <choc/audio/choc_MIDI.h>
+#else
+ #include "../3rd_party/choc/audio/choc_SampleBuffers.h"
+ #include "../3rd_party/choc/audio/choc_MIDI.h"
+#endif
+
 #undef __TEXT
 
 /** Config: TRACKTION_ENABLE_SINGLETONS

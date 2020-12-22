@@ -29,7 +29,7 @@ void LevelMeasuringNode::process (tracktion_graph::Node::ProcessContext& pc)
     pc.buffers.midi.copyFrom (input->getProcessedOutput().midi);
 
     // Then update the levels
-    auto buffer = tracktion_graph::createAudioBuffer (sourceBuffers.audio);
+    auto buffer = tracktion_graph::toAudioBuffer (sourceBuffers.audio);
     levelMeasurer.processBuffer (buffer, 0, buffer.getNumSamples());
     levelMeasurer.processMidi (pc.buffers.midi, nullptr);
 }

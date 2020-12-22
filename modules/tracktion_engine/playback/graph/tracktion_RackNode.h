@@ -24,7 +24,8 @@ struct InputProvider
 
     void setInputs (tracktion_graph::Node::AudioAndMidiBuffer newBuffers)
     {
-        audio = numChannels > 0 ? newBuffers.audio.getChannelRange ({ 0, numChannels }) : newBuffers.audio;
+        audio = numChannels > 0 ? newBuffers.audio.getFirstChannels (numChannels)
+                                : newBuffers.audio;
         tracktion_graph::sanityCheckView (audio);
         midi.copyFrom (newBuffers.midi);
     }
