@@ -143,7 +143,7 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, EditTimeRange time)
 
         int j;
         for (j = 0; j < g->size(); ++j)
-            if (g->getUnchecked(j)->time.start >= time.start)
+            if (g->getUnchecked (j)->time.start >= time.start)
                 break;
 
         jassert (tan != nullptr);

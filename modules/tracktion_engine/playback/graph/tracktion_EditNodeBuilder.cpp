@@ -432,8 +432,36 @@ std::unique_ptr<tracktion_graph::Node> createNodeForClips (const juce::Array<Cli
         if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
             return createNodeForClip (*clip, trackMuteState, params);
     }
+    
+    const bool clipsHaveLatency = [&]
+    {
+        if (params.includePlugins)
+            for (auto clip : clips)
+                if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
+                    if (auto pluginList = clip->getPluginList())
+                        for (auto p : *pluginList)
+                            if (p->getLatencySeconds() > 0.0)
+                                return true;
+
+        return false;
+    }();
+    
+    // If any of the clips have latency, it's impossible to use a CombiningNode as it doesn't
+    // continuously process Nodes which means the latency FIFO doesn't get flushed. So just
+    // use a normal SummingNode instead
+    if (clipsHaveLatency)
+    {
+        auto combiner = std::make_unique<SummingNode>();
         
-    auto combiner =  std::make_unique<CombiningNode> (params.processState);
+        for (auto clip : clips)
+            if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
+                if (auto clipNode = createNodeForClip (*clip, trackMuteState, params))
+                    combiner->addInput (std::move (clipNode));
+            
+        return combiner;
+    }
+
+    auto combiner = std::make_unique<CombiningNode> (params.processState);
     
     for (auto clip : clips)
         if (params.allowedClips == nullptr || params.allowedClips->contains (clip))

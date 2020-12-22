@@ -112,7 +112,7 @@ void WaveNode::process (ProcessContext& pc)
 int64_t WaveNode::editPositionToFileSample (int64_t timelinePosition) const noexcept
 {
     // Convert timelinePosition in samples to edit time
-    return editTimeToFileSample (timelinePosition / outputSampleRate);
+    return editTimeToFileSample (tracktion_graph::sampleToTime (timelinePosition, outputSampleRate));
 }
 
 int64_t WaveNode::editTimeToFileSample (double editTime) const noexcept
