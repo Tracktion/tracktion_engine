@@ -60,7 +60,7 @@ public:
     bool isWarpEndMarkerEnabled() const noexcept                { return endMarkerEnabled; }
 
     void setEndMarkersLimited (bool);
-    bool areEndMarkesLimited() const noexcept                   { return endMarkersLimited; }
+    bool areEndMarkersLimited() const noexcept                  { return endMarkersLimited; }
 
     const juce::Array<WarpMarker*>& getMarkers() const          { return markers->objects; }
 
