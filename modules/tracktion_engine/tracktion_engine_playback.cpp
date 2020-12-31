@@ -110,6 +110,7 @@ extern "C"
  #include "playback/graph/tracktion_RackInstanceNode.cpp"
  #include "playback/graph/tracktion_RackNode.h"
  #include "playback/graph/tracktion_RackNode.cpp"
+ #include "playback/graph/tracktion_RackNode.test.cpp"
  #include "playback/graph/tracktion_PluginNode.cpp"
  #include "playback/graph/tracktion_ModifierNode.cpp"
 
