@@ -91,6 +91,9 @@ private:
 //==============================================================================
 inline void ConnectedNode::addAudioConnection (std::shared_ptr<Node> input, ChannelConnection newConnection)
 {
+    jassert (newConnection.sourceChannel >= 0);
+    jassert (newConnection.destChannel >= 0);
+    
     // Check for existing connections first
     for (auto& connection : connections)
     {
@@ -137,7 +140,7 @@ inline NodeProperties ConnectedNode::getNodeProperties()
         auto nodeProps = connection.node->getNodeProperties();
         props.hasAudio = props.hasAudio || ! connection.connectedChannels.empty();
         props.hasMidi = props.hasMidi || connection.connectMidi;
-        props.numberOfChannels = std::max (props.numberOfChannels, getMaxDestChannel (connection));
+        props.numberOfChannels = std::max (props.numberOfChannels, getMaxDestChannel (connection)) + 1;
         props.latencyNumSamples = std::max (props.latencyNumSamples, nodeProps.latencyNumSamples);
         
         // Hash inputs
@@ -204,16 +207,16 @@ inline void ConnectedNode::process (ProcessContext& pc)
         for (const auto& channelConnection : connection.connectedChannels)
         {
             auto sourceChan = channelConnection.sourceChannel;
-            auto destChan = channelConnection.sourceChannel;
+            auto destChan = channelConnection.destChannel;
             
-            if (sourceChan <= 0 || destChan <= 0)
+            if (sourceChan < 0 || destChan < 0)
             {
                 jassertfalse;
                 continue;
             }
             
-            copy (destAudio.getChannel ((choc::buffer::ChannelCount) sourceChan),
-                  sourceAudio.getChannel ((choc::buffer::ChannelCount) destChan));
+            copy (destAudio.getChannel ((choc::buffer::ChannelCount) destChan),
+                  sourceAudio.getChannel ((choc::buffer::ChannelCount) sourceChan));
         }
     }
 }
