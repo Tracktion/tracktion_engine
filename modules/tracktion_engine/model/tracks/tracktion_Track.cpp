@@ -554,7 +554,13 @@ void Track::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
         else if (i == IDs::name)
         {
             changed();
-            MessageManager::callAsync ([] { SelectionManager::refreshAllPropertyPanels(); });
+            
+            if (! edit.isLoading())
+                MessageManager::callAsync ([trackRef = getWeakRef()]
+                                           {
+                                                if (trackRef != nullptr)
+                                                    SelectionManager::refreshAllPropertyPanelsShowing (*trackRef);
+                                           });
         }
         else if (i == IDs::colour)
         {
