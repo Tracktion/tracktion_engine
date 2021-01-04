@@ -199,7 +199,7 @@ private:
             std::vector<std::unique_ptr<Node>> nodes;
             nodes.push_back (std::make_unique<SinNode> ((float) sinFrequency));
 
-            auto sinNode = std::make_unique<SinNode> ((float) sinFrequency);
+            auto sinNode = makeNode<SinNode> ((float) sinFrequency);
             auto latencySinNode = makeNode<LatencyNode> (std::move (sinNode), numLatencySamples);
             nodes.push_back (std::move (latencySinNode));
 
@@ -358,7 +358,7 @@ private:
             
             const int latencyNumSamples = juce::roundToInt (sampleRate / 100.0);
             const double delayedTime = latencyNumSamples / sampleRate;
-            auto midiNode = std::make_unique<MidiNode> (sequence);
+            auto midiNode = makeNode<MidiNode> (sequence);
             auto delayedNode = makeNode<LatencyNode> (std::move (midiNode), latencyNumSamples);
 
             auto testContext = createBasicTestContext (std::move (delayedNode), testSetup, 1, duration);
