@@ -46,13 +46,22 @@ class ConnectedNode : public Node
 public:
     /** Creates a ConnectedNode with no connections. */
     ConnectedNode() = default;
-    
-    //==============================================================================
-    /** Adds an audio connection. */
-    void addAudioConnection (std::shared_ptr<Node>, ChannelConnection);
 
-    /** Adds a MIDI connection. */
-    void addMidiConnection (std::shared_ptr<Node>);
+    /** Creates a ConnectedNode with no connections but a base nodeID. */
+    ConnectedNode (size_t nodeID);
+
+    //==============================================================================
+    /** Adds an audio connection.
+        Returns false if the Node was unable to be added due to a cycle or if there
+        was already a connection between these Nodes.
+    */
+    bool addAudioConnection (std::shared_ptr<Node>, ChannelConnection);
+
+    /** Adds a MIDI connection.
+        Returns false if the Node was unable to be added due to a cycle or if there
+        was already a connection between these Nodes.
+    */
+    bool addMidiConnection (std::shared_ptr<Node>);
 
     //==============================================================================
     NodeProperties getNodeProperties() override;
@@ -80,8 +89,8 @@ private:
         return maxChannel;
     }
     
+    size_t nodeID = 0;
     std::vector<NodeConnection> connections;
-    std::vector<std::shared_ptr<Node>> latencyNodeInputs;
 
     bool createLatencyNodes();
 };
@@ -89,11 +98,22 @@ private:
 
 //==============================================================================
 //==============================================================================
-inline void ConnectedNode::addAudioConnection (std::shared_ptr<Node> input, ChannelConnection newConnection)
+inline ConnectedNode::ConnectedNode (size_t nodeIDToUse)
+    : nodeID (nodeIDToUse)
+{
+}
+
+inline bool ConnectedNode::addAudioConnection (std::shared_ptr<Node> input, ChannelConnection newConnection)
 {
     jassert (newConnection.sourceChannel >= 0);
     jassert (newConnection.destChannel >= 0);
+   
+    bool cycleDetected = false;
+    visitNodes (*input, [this, &cycleDetected] (auto& n) { cycleDetected = cycleDetected || &n == this; }, false);
     
+    if (cycleDetected)
+        return false;
+
     // Check for existing connections first
     for (auto& connection : connections)
     {
@@ -101,31 +121,44 @@ inline void ConnectedNode::addAudioConnection (std::shared_ptr<Node> input, Chan
         {
             for (const auto& channelConnection : connection.connectedChannels)
                 if (newConnection == channelConnection)
-                    return;
+                    return false;
             
             connection.connectedChannels.push_back (newConnection);
-            return;
+            return true;
         }
     }
 
     // Otherwise add a new connection
     connections.push_back ({ std::move (input), false, { newConnection } });
+    
+    return true;
 }
 
-inline void ConnectedNode::addMidiConnection (std::shared_ptr<Node> input)
+inline bool ConnectedNode::addMidiConnection (std::shared_ptr<Node> input)
 {
+    bool cycleDetected = false;
+    visitNodes (*input, [this, &cycleDetected] (auto& n) { cycleDetected = cycleDetected || &n == this; }, false);
+    
+    if (cycleDetected)
+        return false;
+    
     // Check for existing MIDI connections first
     for (auto& connection : connections)
     {
         if (connection.node.get() == input.get())
         {
+            if (connection.connectMidi)
+                return false;
+            
             connection.connectMidi = true;
-            return;
+            return true;
         }
     }
 
     // Otherwise add a new connection
     connections.push_back ({ std::move (input), true, {} });
+
+    return true;
 }
 
 inline NodeProperties ConnectedNode::getNodeProperties()
@@ -134,6 +167,12 @@ inline NodeProperties ConnectedNode::getNodeProperties()
     props.hasAudio = false;
     props.hasMidi = false;
     props.numberOfChannels = 0;
+    props.nodeID = nodeID;
+
+    constexpr size_t connectedNodeMagicHash = 0x636f6e6e656374;
+    
+    if (props.nodeID != 0)
+        tracktion_graph::hash_combine (props.nodeID, connectedNodeMagicHash);
 
     for (const auto& connection : connections)
     {
@@ -153,7 +192,7 @@ inline NodeProperties ConnectedNode::getNodeProperties()
             hash_combine (props.nodeID, channelConnection.destChannel);
         }
     }
-
+    
     return props;
 }
 
@@ -237,12 +276,9 @@ inline bool ConnectedNode::createLatencyNodes()
             continue;
         
         // We should be the only thing owning this Node or we can't release it!
-        jassert (node.use_count() == 1);
-        
         // We shouldn't be stacking LatencyNodes, rather we should modify their latency
         jassert (dynamic_cast<LatencyNode*> (node.get()) == nullptr);
-        latencyNodeInputs.push_back (node);
-        node = std::make_shared<LatencyNode> (node.get(), latencyToAdd);
+        node = std::make_shared<LatencyNode> (std::move (node), latencyToAdd);
 
         topologyChanged = true;
     }

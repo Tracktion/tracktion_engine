@@ -24,6 +24,12 @@ public:
         ownedInput = std::move (inputNode);
     }
 
+    LatencyNode (std::shared_ptr<Node> inputNode, int numSamplesToDelay)
+        : LatencyNode (inputNode.get(), numSamplesToDelay)
+    {
+        sharedInput = std::move (inputNode);
+    }
+
     LatencyNode (Node* inputNode, int numSamplesToDelay)
         : input (inputNode)
     {
@@ -75,7 +81,8 @@ public:
     
 private:
     std::unique_ptr<Node> ownedInput;
-    Node* input;
+    std::shared_ptr<Node> sharedInput;
+    Node* input = nullptr;
     std::shared_ptr<LatencyProcessor> latencyProcessor { std::make_shared<LatencyProcessor>() };
     
     void replaceLatencyProcessorIfPossible (Node* rootNodeToReplace)

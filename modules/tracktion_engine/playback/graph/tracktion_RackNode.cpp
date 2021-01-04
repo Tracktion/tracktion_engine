@@ -151,55 +151,6 @@ private:
 
 //==============================================================================
 //==============================================================================
-/** Takes a non-owning input node and simply forwards its outputs on. */
-class ForwardingNode final  : public tracktion_graph::Node
-{
-public:
-    ForwardingNode (tracktion_graph::Node* inputNode)
-        : input (inputNode)
-    {
-        jassert (input);
-    }
-
-    ForwardingNode (std::shared_ptr<tracktion_graph::Node> inputNode)
-        : ForwardingNode (inputNode.get())
-    {
-        nodePtr = std::move (inputNode);
-    }
-
-    tracktion_graph::NodeProperties getNodeProperties() override
-    {
-        auto props = input->getNodeProperties();
-        tracktion_graph::hash_combine (props.nodeID, nodeID);
-        
-        return props;
-    }
-    
-    std::vector<tracktion_graph::Node*> getDirectInputNodes() override
-    {
-        return { input };
-    }
-
-    bool isReadyToProcess() override
-    {
-        return input->hasProcessed();
-    }
-    
-    void process (ProcessContext& pc) override
-    {
-        auto inputBuffers = input->getProcessedOutput();
-        copy (pc.buffers.audio, inputBuffers.audio);
-        pc.buffers.midi.copyFrom (inputBuffers.midi);
-    }
-
-private:
-    tracktion_graph::Node* input;
-    std::shared_ptr<tracktion_graph::Node> nodePtr;
-    const size_t nodeID { (size_t) juce::Random::getSystemRandom().nextInt() };
-};
-
-//==============================================================================
-//==============================================================================
 /** Takes ownership of a number of nodes but doesn't do any processing. */
 class HoldingNode final : public tracktion_graph::Node
 {
@@ -371,7 +322,7 @@ namespace RackNodeBuilder
                 {
                     if (pluginNode->getPlugin().itemID == sourceID)
                     {
-                        inputNode = tracktion_graph::makeNode<ForwardingNode> (pluginNode);
+                        inputNode = tracktion_graph::makeNode<tracktion_graph::ForwardingNode> (pluginNode);
                         break;
                     }
                 }
@@ -379,7 +330,7 @@ namespace RackNodeBuilder
                 {
                     if (modifierNode->getModifier().itemID == sourceID)
                     {
-                        inputNode = tracktion_graph::makeNode<ForwardingNode> (modifierNode);
+                        inputNode = tracktion_graph::makeNode<tracktion_graph::ForwardingNode> (modifierNode);
                         break;
                     }
                 }
@@ -550,23 +501,23 @@ namespace RackNodeBuilder
         if (playHeadState)
         {
             for (auto plugin : rack.getPlugins())
-                itemNodes[plugin->itemID] = makeNode<PluginNode> (makeNode<ConnectedNode>(),
+                itemNodes[plugin->itemID] = makeNode<PluginNode> (makeNode<ConnectedNode> ((size_t) plugin->itemID.getRawID()),
                                                                   plugin, sampleRate, blockSize, nullptr,
                                                                   *playHeadState, isRendering);
             
             for (auto m : rack.getModifierList().getModifiers())
-                itemNodes[m->itemID] = makeNode<ModifierNode> (makeNode<ConnectedNode>(),
+                itemNodes[m->itemID] = makeNode<ModifierNode> (makeNode<ConnectedNode> ((size_t) m->itemID.getRawID()),
                                                                m, sampleRate, blockSize, nullptr,
                                                                *playHeadState, isRendering);
         }
         else
         {
             for (auto plugin : rack.getPlugins())
-                itemNodes[plugin->itemID] = makeNode<PluginNode> (makeNode<ConnectedNode>(),
+                itemNodes[plugin->itemID] = makeNode<PluginNode> (makeNode<ConnectedNode> ((size_t) plugin->itemID.getRawID()),
                                                                   plugin, sampleRate, blockSize, inputProvider);
 
             for (auto m : rack.getModifierList().getModifiers())
-                itemNodes[m->itemID] = makeNode<ModifierNode> (makeNode<ConnectedNode>(),
+                itemNodes[m->itemID] = makeNode<ModifierNode> (makeNode<ConnectedNode> ((size_t) m->itemID.getRawID()),
                                                                m, sampleRate, blockSize, inputProvider);
         }
         
@@ -585,7 +536,6 @@ namespace RackNodeBuilder
             if (sourceID.isInvalid() && destID.isInvalid())
             {
                 // Direct input -> output connection
-
                 if (sourcePin == 0 && destPin == 0)
                     outputNode->addMidiConnection (inputNode);
                 else if (sourcePin > 0 && destPin > 0)
