@@ -206,6 +206,25 @@ namespace RackNodeBuilder
         return *dynamic_cast<tracktion_graph::ConnectedNode*> (connectedNode);
     }
 
+    /** Returns a input channel index from 0 for a Modifier or Plugin Node.
+     
+        This horrible function is required because Modifier nodes may have a MIDI input pin in which
+        case pin 0 is MIDI and any subsequent pins are audio but if they don't have an MIDI pin,
+        audio channels start from pin 0.
+        Plugin nodes always have a MIDI input pin so audio always starts from pin 1.
+    */
+    inline int getDestChannelIndex (tracktion_graph::Node& destPluginOrModifierNode, int destPinIndex)
+    {
+        if (auto node = dynamic_cast<PluginNode*> (&destPluginOrModifierNode))
+            return destPinIndex - 1;
+        
+        if (auto node = dynamic_cast<ModifierNode*> (&destPluginOrModifierNode))
+            return destPinIndex - node->getModifier().getMidiInputNames().size();
+
+        jassertfalse;
+        return -1;
+    }
+
     static inline tracktion_graph::SummingNode& getSummingNode (tracktion_graph::Node& pluginOrModifierNode)
     {
         tracktion_graph::Node* node = dynamic_cast<PluginNode*> (&pluginOrModifierNode);
@@ -549,11 +568,11 @@ namespace RackNodeBuilder
                 if (auto destNode = itemNodes[destID])
                 {
                     auto& destConnectedNode = getConnectedNode (*destNode);
-                    
+
                     if (sourcePin == 0 && destPin == 0)
                         destConnectedNode.addMidiConnection (inputNode);
-                    else if (sourcePin > 0 && destPin > 0)
-                        destConnectedNode.addAudioConnection (inputNode, ChannelConnection { sourcePin - 1, destPin - 1 });
+                    else if (sourcePin > 0 && destPin >= 0) // N.B. This has to account for the dest pin being an audio input to a Modifier
+                        destConnectedNode.addAudioConnection (inputNode, ChannelConnection { sourcePin - 1, getDestChannelIndex (*destNode, destPin) });
                     else
                         jassertfalse;
                 }
@@ -596,7 +615,7 @@ namespace RackNodeBuilder
                     if (sourcePin == 0 && destPin == 0)
                         destConnectedNode.addMidiConnection (sourceNode);
                     else if (sourcePin > 0 && destPin > 0)
-                        destConnectedNode.addAudioConnection (sourceNode, ChannelConnection { sourcePin - 1, destPin - 1 });
+                        destConnectedNode.addAudioConnection (sourceNode, ChannelConnection { sourcePin - 1, getDestChannelIndex (*destNode, destPin) });
                     else
                         jassertfalse;
                 }
@@ -610,7 +629,7 @@ namespace RackNodeBuilder
         for (auto& node : itemNodes)
             if (auto modifierNode = dynamic_cast<ModifierNode*> (node.second.get()))
                 if (getConnectionsFrom (rack, modifierNode->getModifier().itemID).empty())
-                    finalOutput->addInput (makeNode<ForwardingNode> (modifierNode));
+                    finalOutput->addInput (makeNode<ForwardingNode> (node.second));
         
         if (finalOutput->getDirectInputNodes().size() > 0)
         {
