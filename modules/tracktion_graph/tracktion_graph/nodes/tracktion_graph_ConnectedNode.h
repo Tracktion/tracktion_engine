@@ -215,8 +215,8 @@ inline void ConnectedNode::process (ProcessContext& pc)
                 continue;
             }
             
-            copy (destAudio.getChannel ((choc::buffer::ChannelCount) destChan),
-                  sourceAudio.getChannel ((choc::buffer::ChannelCount) sourceChan));
+            add (destAudio.getChannel ((choc::buffer::ChannelCount) destChan),
+                 sourceAudio.getChannel ((choc::buffer::ChannelCount) sourceChan));
         }
     }
 }
