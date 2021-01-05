@@ -89,7 +89,7 @@ private:
             // Process Rack
             {
                 auto inputProvider = std::make_shared<InputProvider>();
-                auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
                 test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
 
                 auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, true, testSetup.sampleRate, testSetup.blockSize);
@@ -121,7 +121,7 @@ private:
             // Process Rack
             {
                 auto inputProvider = std::make_shared<InputProvider>();
-                auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
                 test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
 
                 auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, true, testSetup.sampleRate, testSetup.blockSize);
@@ -149,7 +149,7 @@ private:
             // Process Rack
             {
                 auto inputProvider = std::make_shared<InputProvider>();
-                auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
                 test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
 
                 auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, true, testSetup.sampleRate, testSetup.blockSize);
@@ -187,7 +187,7 @@ private:
             // Process Rack
             {
                 auto inputProvider = std::make_shared<InputProvider> (2);
-                auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
                 test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
 
                 auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, true, testSetup.sampleRate, testSetup.blockSize);
@@ -234,7 +234,7 @@ private:
             // Process Rack
             {
                 auto inputProvider = std::make_shared<InputProvider>();
-                auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
                 test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
 
                 auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, true, testSetup.sampleRate, testSetup.blockSize);
@@ -289,7 +289,7 @@ private:
             // Process Rack
             {
                 auto inputProvider = std::make_shared<InputProvider>();
-                auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
                 test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
 
                 auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, true, testSetup.sampleRate, testSetup.blockSize);
@@ -328,7 +328,7 @@ private:
             // Process Rack
             {
                 auto inputProvider = std::make_shared<InputProvider>();
-                auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
                 test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
 
                 auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, true, testSetup.sampleRate, testSetup.blockSize);
@@ -383,7 +383,7 @@ private:
 
                 // Process Rack
                 {
-                    auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                    auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
                     test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
                     auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, false, testSetup.sampleRate, testSetup.blockSize);
                     auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
@@ -413,7 +413,7 @@ private:
 
                     // Process Rack
                     {
-                        auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                        auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
                         test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
                         auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, false, testSetup.sampleRate, testSetup.blockSize);
                         auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
@@ -428,7 +428,7 @@ private:
                         tracktion_engine::MidiMessageArray midi;
                         inputProvider->setInputs ({ toBufferView (inputBuffer), midi });
 
-                        auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                        auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
                         test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
                         auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, false, testSetup.sampleRate, testSetup.blockSize);
                         auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
@@ -474,7 +474,7 @@ private:
 
                 // Process Rack
                 {
-                    auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                    auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
                     test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
                     auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, false, testSetup.sampleRate, testSetup.blockSize);
                     auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
@@ -530,7 +530,7 @@ private:
             // Process Rack
             {
                 auto inputProvider = std::make_shared<InputProvider>();
-                auto rackNode = RackNodeBuilder::createRackNode (*rack, ts.sampleRate, ts.blockSize, inputProvider);
+                auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, ts.sampleRate, ts.blockSize, inputProvider);
                 test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
 
                 auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, true, ts.sampleRate, ts.blockSize);
@@ -598,7 +598,7 @@ private:
                     inputProvider->setInputs ({ toBufferView (inputBuffer), midi });
                 }
 
-                auto rackNode = RackNodeBuilder::createRackNode (*rack, ts.sampleRate, ts.blockSize, inputProvider);
+                auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, ts.sampleRate, ts.blockSize, inputProvider);
                 test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
 
                 auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, false, ts.sampleRate, ts.blockSize);

@@ -1017,7 +1017,8 @@ std::unique_ptr<Node> createNodeForRackType (RackType& rackType, const CreateNod
     const auto rackOutputID = getRackOutputBusID (rackType.rackID);
     
     auto rackInputNode = makeNode<ReturnNode> (rackInputID);
-    auto rackNode = RackNodeBuilder::createRackNode (rackType, params.sampleRate, params.blockSize, std::move (rackInputNode),
+    auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode,
+                                                     rackType, params.sampleRate, params.blockSize, std::move (rackInputNode),
                                                      params.processState.playHeadState, params.forRendering);
     auto rackOutputNode = makeNode<SendNode> (std::move (rackNode), rackOutputID);
 
