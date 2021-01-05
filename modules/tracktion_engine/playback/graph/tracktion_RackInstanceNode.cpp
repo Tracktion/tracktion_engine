@@ -21,8 +21,7 @@ RackInstanceNode::RackInstanceNode (std::unique_ptr<Node> inputNode, ChannelMap 
     {
 		assert (std::get<2> (chan) != nullptr);
         maxNumChannels = std::max (maxNumChannels,
-                                   std::max (std::get<0> (chan),
-                                             std::get<1> (chan)) + 1);
+                                   std::get<1> (chan) + 1);
     }
     
     for (size_t chan = 0; chan < 2; ++chan)
