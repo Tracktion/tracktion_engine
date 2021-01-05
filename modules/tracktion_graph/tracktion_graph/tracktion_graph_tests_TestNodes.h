@@ -130,6 +130,8 @@ public:
     SilentNode (int numChannelsToUse = 1)
         : numChannels (numChannelsToUse)
     {
+        setOptimisations ({ ClearBuffers::no,
+                            AllocateAudioBuffer::no });
     }
     
     NodeProperties getNodeProperties() override
@@ -147,16 +149,22 @@ public:
         return true;
     }
     
-    void prepareToPlay (const PlaybackInitialisationInfo&) override
+    void prepareToPlay (const PlaybackInitialisationInfo& info) override
     {
+        audioBuffer.resize (choc::buffer::Size::create ((choc::buffer::ChannelCount) numChannels,
+                                                        (choc::buffer::FrameCount) info.blockSize));
+        audioBuffer.clear();
     }
     
-    void process (ProcessContext&) override
+    void process (ProcessContext& pc) override
     {
+        pc.buffers.midi.clear();
+        setAudioOutput (audioBuffer.getView().getStart (pc.buffers.audio.getNumFrames()));
     }
     
 private:
     const int numChannels;
+    choc::buffer::ChannelArrayBuffer<float> audioBuffer;
 };
 
 

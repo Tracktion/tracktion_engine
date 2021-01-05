@@ -678,11 +678,11 @@ std::unique_ptr<tracktion_graph::Node> createNodeForRackInstance (RackInstance& 
     returnChannelMap[0] = { rackInstance.leftOutputComesFrom - 1, 0, rackInstance.leftOutDb };
     returnChannelMap[1] = { rackInstance.rightOutputComesFrom - 1, 1, rackInstance.rightOutDb };
     node = makeNode<RackInstanceNode> (std::move (node), std::move (returnChannelMap));
-    auto wetNode = makeNode<GainNode> (std::move (node), [wetGain = rackInstance.wetGain] { return wetGain->getCurrentValue(); });
-    auto dryNode = makeNode<GainNode> (inputNode, [dryGain = rackInstance.dryGain] { return dryGain->getCurrentValue(); });
-    auto sumNode = makeSummingNode ({ wetNode.release(), dryNode.release() });
 
-    return std::move (sumNode);
+    return makeNode<RackReturnNode> (std::move (node),
+                                     [wetGain = rackInstance.wetGain] { return wetGain->getCurrentValue(); },
+                                     inputNode,
+                                     [dryGain = rackInstance.dryGain] { return dryGain->getCurrentValue(); });
 }
 
 std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList& list, const TrackMuteState* trackMuteState, std::unique_ptr<Node> node,

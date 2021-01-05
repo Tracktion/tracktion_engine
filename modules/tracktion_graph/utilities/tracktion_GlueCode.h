@@ -76,5 +76,51 @@ void sanityCheckView (const choc::buffer::BufferView<SampleType, LayoutType>& vi
         jassert (view.getIterator (channel).sample != nullptr);
 }
 
+/** Adds two buffers applying a gain. */
+template <typename DestBuffer, typename SourceBuffer, typename GainType>
+static void add (DestBuffer&& dest, const SourceBuffer& source, GainType gain)
+{
+    auto size = source.getSize();
+    CHOC_ASSERT (size == dest.getSize());
+
+    for (decltype (size.numChannels) chan = 0; chan < size.numChannels; ++chan)
+    {
+        auto src = source.getIterator (chan);
+        auto dst = dest.getIterator (chan);
+
+        for (decltype (size.numFrames) i = 0; i < size.numFrames; ++i)
+        {
+            *dst += static_cast<decltype (dst.get())> (src.get() * gain);
+            ++dst;
+            ++src;
+        }
+    }
+}
+
+/** Adds two buffers applying a smoothed gain. */
+template <typename DestBuffer, typename SourceBuffer, typename GainType>
+static void addApplyingGainRamp (DestBuffer&& dest, const SourceBuffer& source, GainType startGain, GainType endGain)
+{
+    auto size = source.getSize();
+    CHOC_ASSERT (size == dest.getSize());
+    
+    const auto delta = (endGain - startGain) / size.numFrames;
+
+    for (decltype (size.numChannels) chan = 0; chan < size.numChannels; ++chan)
+    {
+        auto src = source.getIterator (chan);
+        auto dst = dest.getIterator (chan);
+        auto gain = startGain;
+
+        for (decltype (size.numFrames) i = 0; i < size.numFrames; ++i)
+        {
+            *dst += static_cast<decltype (dst.get())> (src.get() * gain);
+            ++dst;
+            ++src;
+            gain += delta;
+        }
+    }
+}
+
 
 } // namespace tracktion_graph

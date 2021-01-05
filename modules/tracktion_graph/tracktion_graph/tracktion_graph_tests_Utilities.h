@@ -140,6 +140,28 @@ namespace test_utilities
         return {};
     }
 
+    /** Logs the graph structure to the console. */
+    inline void logGraph (Node& node)
+    {
+        struct Visitor
+        {
+            static void logNode (Node& n, int depth)
+            {
+                juce::Logger::writeToLog (juce::String::repeatedString (" ", depth * 2) + typeid (n).name());
+            }
+
+            static void visitInputs (Node& n, int depth)
+            {
+                logNode (n, depth);
+                
+                for (auto input : n.getDirectInputNodes())
+                    visitInputs (*input, depth + 1);
+            }
+        };
+        
+        Visitor::visitInputs (node, 0);
+    }
+
 
     //==============================================================================
     struct SineOscillator
