@@ -66,8 +66,8 @@ private:
             const double numSamplesPerCycle = sampleRate / sinFrequency;
             const int numLatencySamples = juce::roundToInt (numSamplesPerCycle / 2.0);
 
-            auto sinNode1 = std::make_shared<SinNode> (sinFrequency);
-            auto sinNode2 = std::make_shared<LatencyNode> (makeNode<SinNode> (sinFrequency), numLatencySamples);
+            auto sinNode1 = std::make_shared<SinNode> ((float) sinFrequency);
+            auto sinNode2 = std::make_shared<LatencyNode> (makeNode<SinNode> ((float) sinFrequency), numLatencySamples);
             auto connectedNode = std::make_unique<ConnectedNode>();
             
             connectedNode->addAudioConnection (sinNode1, { 0, 0 });
