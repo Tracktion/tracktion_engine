@@ -524,21 +524,24 @@ std::unique_ptr<tracktion_graph::Node> createARAClipsNode (const juce::Array<Cli
     return std::make_unique<SummingNode> (std::move (nodes));
 }
 
-std::unique_ptr<tracktion_graph::SummingNode> createClipsNode (const juce::Array<Clip*>& clips, const TrackMuteState& trackMuteState,
-                                                               const CreateNodeParams& params)
+std::unique_ptr<tracktion_graph::Node> createClipsNode (const juce::Array<Clip*>& clips, const TrackMuteState& trackMuteState,
+                                                        const CreateNodeParams& params)
 {
-    auto summingNode = std::make_unique<tracktion_graph::SummingNode>();
+    std::vector<std::unique_ptr<Node>> nodes;
 
     if (auto clipsNode = createNodeForClips (clips, trackMuteState, params))
-        summingNode->addInput (std::move (clipsNode));
+        nodes.push_back (std::move (clipsNode));
     
     if (auto araNode = createARAClipsNode (clips, trackMuteState, params.processState.playHeadState, params))
-        summingNode->addInput (std::move (araNode));
+        nodes.push_back (std::move (araNode));
     
-    if (summingNode->getDirectInputNodes().empty())
+    if (nodes.empty())
         return {};
     
-    return summingNode;
+    if (nodes.size() == 1)
+        return std::move (nodes.front());
+    
+    return std::make_unique<SummingNode> (std::move (nodes));
 }
 
 std::unique_ptr<tracktion_graph::Node> createLiveInputNodeForDevice (InputDeviceInstance& inputDeviceInstance, tracktion_graph::PlayHeadState& playHeadState)
