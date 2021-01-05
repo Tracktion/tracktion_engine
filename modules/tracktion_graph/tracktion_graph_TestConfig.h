@@ -14,6 +14,7 @@
 #define GRAPH_UNIT_TESTS_NODE              1
 #define GRAPH_UNIT_TESTS_NODEVISITING      1
 #define GRAPH_UNIT_TESTS_SAMPLECONVERSION  1
+#define GRAPH_UNIT_TESTS_CONNECTEDNODE     1
 
 // Defined in tracktion_engine
 #define GRAPH_UNIT_TESTS_WAVENODE          1
