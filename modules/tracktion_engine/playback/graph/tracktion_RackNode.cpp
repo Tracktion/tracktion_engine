@@ -507,17 +507,22 @@ namespace RackNodeBuilder
 
     std::unique_ptr<tracktion_graph::Node> createRackNodeConnectedNode (te::RackType& rack,
                                                                         double sampleRate, int blockSize,
+                                                                        std::unique_ptr<tracktion_graph::Node> inputNodeToUse,
                                                                         std::shared_ptr<InputProvider> inputProvider,
                                                                         tracktion_graph::PlayHeadState* playHeadState,
                                                                         bool isRendering)
     {
         using namespace tracktion_graph;
         
+        std::shared_ptr<Node> inputNode (std::move (inputNodeToUse));
+        
         // Gather all the PluginNodes and ModifierNodes with a ConnectedNode
         std::map<EditItemID, std::shared_ptr<Node>> itemNodes;
         
         if (playHeadState)
         {
+            jassert (inputNode);
+            
             for (auto plugin : rack.getPlugins())
                 itemNodes[plugin->itemID] = makeNode<PluginNode> (makeNode<ConnectedNode> ((size_t) plugin->itemID.getRawID()),
                                                                   plugin, sampleRate, blockSize, nullptr,
@@ -530,6 +535,9 @@ namespace RackNodeBuilder
         }
         else
         {
+            jassert (inputProvider);
+            inputNode = std::make_shared<InputNode> (inputProvider, rack.getInputNames().size() - 1, true);
+
             for (auto plugin : rack.getPlugins())
                 itemNodes[plugin->itemID] = makeNode<PluginNode> (makeNode<ConnectedNode> ((size_t) plugin->itemID.getRawID()),
                                                                   plugin, sampleRate, blockSize, inputProvider);
@@ -540,7 +548,6 @@ namespace RackNodeBuilder
         }
         
         // Create an input node and an output summing node
-        auto inputNode = std::make_shared<InputNode> (inputProvider, rack.getInputNames().size() - 1, true);
         auto outputNode = std::make_unique<ConnectedNode>();
 
         // Iterate all the connections and make Node connections between them
@@ -655,6 +662,7 @@ namespace RackNodeBuilder
         jassert (algorithm == Algorithm::connectedNode);
         return createRackNodeConnectedNode (rack,
                                             sampleRate, blockSize,
+                                            nullptr,
                                             inputProvider, playHeadState, isRendering);
     }
 
@@ -664,6 +672,12 @@ namespace RackNodeBuilder
                                                            std::unique_ptr<tracktion_graph::Node> node,
                                                            tracktion_graph::PlayHeadState& playHeadState, bool isRendering)
     {
+        if (algorithm == Algorithm::connectedNode)
+            return createRackNodeConnectedNode (rackType,
+                                                sampleRate, blockSize,
+                                                std::move (node),
+                                                nullptr, &playHeadState, isRendering);
+
         auto inputProvider = std::make_shared<InputProvider>();
         
         auto inputFiller = tracktion_graph::makeNode<InputProviderFillerNode> (std::move (node), inputProvider);
