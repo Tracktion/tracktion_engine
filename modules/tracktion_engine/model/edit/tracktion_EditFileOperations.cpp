@@ -55,20 +55,9 @@ private:
 
     void writeToFile (std::pair<ValueTree, File> item)
     {
-        {
-            item.second.deleteFile();
-            FileOutputStream os (item.second);
-            item.first.writeToStream (os);
-        }
-        
-       #if JUCE_DEBUG
-        if (juce::FileInputStream is (item.second); is.openedOk())
-        {
-            auto savedState = ValueTree::readFromStream (is);
-            jassert (savedState.hasType (IDs::EDIT));
-            jassert (savedState.isEquivalentTo (item.first));
-        }
-       #endif
+        item.second.deleteFile();
+        FileOutputStream os (item.second);
+        item.first.writeToStream (os);
     }
 
     juce::Array<std::pair<ValueTree, File>, CriticalSection> pending;
