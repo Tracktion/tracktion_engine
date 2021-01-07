@@ -17,8 +17,9 @@ TrackWaveInputDeviceNode::TrackWaveInputDeviceNode (WaveInputDevice& owner, std:
 {
     jassert (waveInputDevice.isTrackDevice());
 
-    setOptimisations ({ tracktion_graph::ClearBuffers::yes,
-                        tracktion_graph::AllocateAudioBuffer::no });
+    if (copyInputsToOutputs)
+        setOptimisations ({ tracktion_graph::ClearBuffers::no,
+                            tracktion_graph::AllocateAudioBuffer::no });
 }
 
 std::vector<tracktion_graph::Node*> TrackWaveInputDeviceNode::getDirectInputNodes()
