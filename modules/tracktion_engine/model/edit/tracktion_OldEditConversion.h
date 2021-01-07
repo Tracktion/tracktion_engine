@@ -21,6 +21,8 @@ struct OldEditConversion
 {
     static juce::ValueTree convert (const juce::ValueTree& v)
     {
+        jassert (v.isValid());
+        
         if (auto xml = std::unique_ptr<juce::XmlElement> (v.createXml()))
         {
             convert (*xml);
