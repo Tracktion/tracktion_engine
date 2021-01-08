@@ -173,7 +173,6 @@ void PluginNode::process (ProcessContext& pc)
         auto outputAudioBuffer = tracktion_graph::toAudioBuffer (outputAudioView.getFrameRange (tracktion_graph::frameRangeWithStartAndLength (numSamplesDone, numSamplesThisBlock)));
         
         const auto subBlockTimeRange = tracktion_graph::sampleToTime (juce::Range<size_t>::withStartAndLength (numSamplesDone, numSamplesThisBlock), sampleRate);
-        midiMessageArray.copyFrom (inputBuffers.midi);
         
         midiMessageArray.clear();
         midiMessageArray.isAllNotesOff = isAllNotesOff;
