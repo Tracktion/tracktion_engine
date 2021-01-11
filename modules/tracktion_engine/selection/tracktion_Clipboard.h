@@ -74,8 +74,15 @@ public:
         bool pasteInsertingAtCursorPos (Edit&, EditInsertPoint&, SelectionManager&) const;
         bool pasteAfterSelected (Edit&, EditInsertPoint&, SelectionManager&) const;
 
+        enum class AutomationLocked
+        {
+            no, /**< Don't copy autmation. */
+            yes /**< Do copy autmation. */
+        };
+        
         void addClip (int trackOffset, const juce::ValueTree& state);
-        void addSelectedClips (const SelectableList&, EditTimeRange range, bool automationLocked);
+        void addSelectedClips (const SelectableList&, EditTimeRange range, AutomationLocked);
+        void addAutomation (const juce::Array<TrackSection>&, EditTimeRange range);
 
         struct ClipInfo
         {
@@ -95,7 +102,7 @@ public:
             juce::Range<float> valueRange;
         };
 
-        juce::Array<AutomationCurveSection> automationCurves;
+        std::vector<AutomationCurveSection> automationCurves;
     };
 
     struct Tracks  : public ContentType

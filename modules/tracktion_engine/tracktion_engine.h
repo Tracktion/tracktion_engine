@@ -497,8 +497,6 @@ namespace tracktion_engine
 
 #include "model/clips/tracktion_EditClip.h"
 
-#include "selection/tracktion_Clipboard.h"
-
 #include "playback/audionodes/tracktion_FadeInOutAudioNode.h"
 #include "playback/audionodes/tracktion_TimedMutingAudioNode.h"
 
@@ -512,6 +510,8 @@ namespace tracktion_engine
 #include "model/tracks/tracktion_TrackCompManager.h"
 #include "model/export/tracktion_RenderOptions.h"
 #include "model/clips/tracktion_EditClipRenderJob.h"
+
+#include "selection/tracktion_Clipboard.h"
 
 #include "playback/devices/tracktion_InputDevice.h"
 #include "playback/devices/tracktion_MidiInputDevice.h"

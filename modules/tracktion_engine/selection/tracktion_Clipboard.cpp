@@ -428,7 +428,7 @@ void Clipboard::Clips::addClip (int trackOffset, const ValueTree& state)
     clips.push_back (ci);
 }
 
-void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects, EditTimeRange range, bool automationLocked)
+void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects, EditTimeRange range, AutomationLocked automationLocked)
 {
     if (range.isEmpty())
         range = Edit::getMaximumEditTimeRange();
@@ -503,58 +503,74 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects, 
         }
     }
 
-    if (automationLocked)
+    if (automationLocked == AutomationLocked::yes)
+        addAutomation (TrackSection::findSections (clipsToPaste), range);
+}
+
+void Clipboard::Clips::addAutomation (const juce::Array<TrackSection>& trackSections, EditTimeRange range)
+{
+    if (range.isEmpty() || trackSections.isEmpty())
+        return;
+    
+    auto allTracks = getAllTracks (trackSections.getFirst().track->edit);
+    auto firstTrackIndex = Edit::maxNumTracks;
+    auto overallStartTime = Edit::maximumLength;
+
+    for (const auto& trackSection : trackSections)
     {
-        for (auto& trackSection : TrackSection::findSections (clipsToPaste))
+        overallStartTime = jmin (overallStartTime, jmax (trackSection.range.getStart(), range.getStart()));
+        firstTrackIndex = jmin (firstTrackIndex, jmax (0, allTracks.indexOf (trackSection.track)));
+    }
+    
+    for (const auto& trackSection : trackSections)
+    {
+        for (auto plugin : trackSection.track->pluginList)
         {
-            for (auto plugin : trackSection.track->pluginList)
+            for (int k = 0; k < plugin->getNumAutomatableParameters(); k++)
             {
-                for (int k = 0; k < plugin->getNumAutomatableParameters(); k++)
+                auto param = plugin->getAutomatableParameter (k);
+
+                if (param->getCurve().getNumPoints() > 0)
                 {
-                    auto param = plugin->getAutomatableParameter (k);
+                    AutomationCurveSection section;
+                    section.pluginName = plugin->getName();
+                    section.paramID = param->paramID;
+                    section.trackOffset = jmax (0, allTracks.indexOf (trackSection.track) - firstTrackIndex);
+                    section.valueRange = param->getCurve().getValueLimits();
 
-                    if (param->getCurve().getNumPoints() > 0)
+                    const double endTolerence = 0.0001;
+                    auto intersection = trackSection.range.getIntersectionWith (range);
+                    auto reducedIntersection = intersection.reduced (endTolerence);
+                    auto clippedStart = intersection.getStart();
+                    auto clippedEnd   = intersection.getEnd();
+
+                    for (int l = 0; l < param->getCurve().getNumPoints(); ++l)
                     {
-                        AutomationCurveSection section;
-                        section.pluginName = plugin->getName();
-                        section.paramID = param->paramID;
-                        section.trackOffset = jmax (0, allTracks.indexOf (trackSection.track) - firstTrackIndex);
-                        section.valueRange = param->getCurve().getValueLimits();
+                        auto pt = param->getCurve().getPoint (l);
 
-                        const double endTolerence = 0.0001;
-                        auto intersection = trackSection.range.getIntersectionWith (range);
-                        auto reducedIntersection = intersection.reduced (endTolerence);
-                        auto clippedStart = intersection.getStart();
-                        auto clippedEnd   = intersection.getEnd();
-
-                        for (int l = 0; l < param->getCurve().getNumPoints(); ++l)
-                        {
-                            auto pt = param->getCurve().getPoint (l);
-
-                            if (reducedIntersection.containsInclusive (pt.time))
-                                section.points.push_back ({ pt.time, pt.value, pt.curve });
-                        }
-
-                        if (section.points.empty())
-                        {
-                            section.points.push_back ({ clippedStart, param->getCurve().getValueAt (clippedStart), 1.0f });
-                            section.points.push_back ({ clippedEnd, param->getCurve().getValueAt (clippedEnd), 0.0f });
-                        }
-                        else
-                        {
-                            if (section.points[0].time > clippedStart + endTolerence)
-                                section.points.insert (section.points.begin(), { clippedStart + endTolerence, param->getCurve().getValueAt (clippedStart + endTolerence), 0.0f });
-
-                            if (section.points[section.points.size() - 1].time < clippedEnd - endTolerence)
-                                section.points.push_back ({ clippedEnd - endTolerence, param->getCurve().getValueAt (clippedEnd - endTolerence), 0.0f });
-                        }
-
-                        for (auto& p : section.points)
-                            p.time -= overallStartTime;
-
-                        std::sort (section.points.begin(), section.points.end());
-                        automationCurves.add (std::move (section));
+                        if (reducedIntersection.containsInclusive (pt.time))
+                            section.points.push_back ({ pt.time, pt.value, pt.curve });
                     }
+
+                    if (section.points.empty())
+                    {
+                        section.points.push_back ({ clippedStart, param->getCurve().getValueAt (clippedStart), 1.0f });
+                        section.points.push_back ({ clippedEnd, param->getCurve().getValueAt (clippedEnd), 0.0f });
+                    }
+                    else
+                    {
+                        if (section.points[0].time > clippedStart + endTolerence)
+                            section.points.insert (section.points.begin(), { clippedStart + endTolerence, param->getCurve().getValueAt (clippedStart + endTolerence), 0.0f });
+
+                        if (section.points[section.points.size() - 1].time < clippedEnd - endTolerence)
+                            section.points.push_back ({ clippedEnd - endTolerence, param->getCurve().getValueAt (clippedEnd - endTolerence), 0.0f });
+                    }
+
+                    for (auto& p : section.points)
+                        p.time -= overallStartTime;
+
+                    std::sort (section.points.begin(), section.points.end());
+                    automationCurves.push_back (std::move (section));
                 }
             }
         }
