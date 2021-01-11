@@ -254,6 +254,9 @@ inline void ConnectedNode::process (ProcessContext& pc)
                 continue;
             }
             
+            if (sourceChan >= (int) sourceAudio.getNumChannels())
+                continue;
+            
             add (destAudio.getChannel ((choc::buffer::ChannelCount) destChan),
                  sourceAudio.getChannel ((choc::buffer::ChannelCount) sourceChan));
         }
