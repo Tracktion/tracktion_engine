@@ -249,7 +249,7 @@ void deleteRegionOfClip (Clip& c, EditTimeRange timeRangeToDelete)
 }
 
 void deleteRegionOfSelectedClips (SelectionManager& selectionManager, EditTimeRange rangeToDelete,
-                                  bool closeGap, bool moveAllSubsequentClipsOnTrack)
+                                  CloseGap closeGap, bool moveAllSubsequentClipsOnTrack)
 {
     Clip::Array selectedClips;
 
@@ -295,7 +295,7 @@ void deleteRegionOfSelectedClips (SelectionManager& selectionManager, EditTimeRa
             if (auto t = c->getClipTrack())
                 t->deleteRegionOfClip (c, rangeToDelete, &selectionManager);
 
-    if (closeGap)
+    if (closeGap == CloseGap::yes)
     {
         auto centreTime = (rangeToDelete.getStart() + rangeToDelete.getEnd()) * 0.5;
 
@@ -315,7 +315,7 @@ void deleteRegionOfSelectedClips (SelectionManager& selectionManager, EditTimeRa
     }
 }
 
-void deleteRegionOfTracks (Edit& edit, EditTimeRange rangeToDelete, bool onlySelected, bool closeGap, SelectionManager* selectionManager)
+void deleteRegionOfTracks (Edit& edit, EditTimeRange rangeToDelete, bool onlySelected, CloseGap closeGap, SelectionManager* selectionManager)
 {
     juce::Array<Track*> tracks;
 
@@ -392,7 +392,7 @@ void deleteRegionOfTracks (Edit& edit, EditTimeRange rangeToDelete, bool onlySel
             for (auto c : clipsToRemove)
                 c->removeFromParentTrack();
 
-            if (closeGap)
+            if (closeGap == CloseGap::yes)
             {
                 for (auto& c : t->getClips())
                     if (c->getPosition().getStart() > rangeToDelete.getCentre())

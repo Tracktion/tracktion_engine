@@ -588,7 +588,7 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
             if (markedRegion)
             {
                 if (selectionManager != nullptr)
-                    deleteRegionOfSelectedClips (*selectionManager, time, false, false);
+                    deleteRegionOfSelectedClips (*selectionManager, time, CloseGap::no, false);
 
                 newClip->setStart (time.getStart(), false, true);
             }

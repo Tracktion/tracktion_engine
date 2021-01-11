@@ -101,15 +101,22 @@ void visitAllTrackItems (const Edit&, std::function<bool (TrackItem&)>);
 /** Returns the time range covered by the given items. */
 EditTimeRange getTimeRangeForSelectedItems (const SelectableList&);
 
+/** An enum to specify if gaps deleted should be closed or not. */
+enum class CloseGap
+{
+    no, /**< Don't move up subsequent track content. */
+    yes /**< Do move up subsequent track content. */
+};
+
 /** Deletes a time range of an Edit, optionally closing the gap. */
-void deleteRegionOfTracks (Edit&, EditTimeRange rangeToDelete, bool onlySelectedTracks, bool closeGap, SelectionManager*);
+void deleteRegionOfTracks (Edit&, EditTimeRange rangeToDelete, bool onlySelectedTracks, CloseGap, SelectionManager*);
 
 /** Deletes a time range of a Clip. */
 void deleteRegionOfClip (Clip&, EditTimeRange rangeToDelete);
 
 /** Deletes a time range of a Clip selection, optionally closing the gap. */
 void deleteRegionOfSelectedClips (SelectionManager&, EditTimeRange rangeToDelete,
-                                  bool closeGap, bool moveAllSubsequentClipsOnTrack);
+                                  CloseGap, bool moveAllSubsequentClipsOnTrack);
 
 /** Splits the clips at a given time. */
 SelectableList splitClips (const SelectableList& clips, double time);

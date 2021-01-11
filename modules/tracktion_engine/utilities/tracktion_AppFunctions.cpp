@@ -129,9 +129,9 @@ namespace AppFunctions
         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
         {
             if (sm->containsType<Track>())
-                deleteRegionOfTracks (*sm->getEdit(), getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), true, false, sm);
+                deleteRegionOfTracks (*sm->getEdit(), getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), true, CloseGap::no, sm);
             else
-                deleteRegionOfSelectedClips (*sm, getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), false, false);
+                deleteRegionOfSelectedClips (*sm, getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), CloseGap::no, false);
         }
     }
 
@@ -140,9 +140,9 @@ namespace AppFunctions
         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
         {
             if (sm->containsType<Track>())
-                deleteRegionOfTracks (*sm->getEdit(), getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), true, true, sm);
+                deleteRegionOfTracks (*sm->getEdit(), getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), true, CloseGap::yes, sm);
             else
-                deleteRegionOfSelectedClips (*sm, getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), true, false);
+                deleteRegionOfSelectedClips (*sm, getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), CloseGap::yes, false);
         }
     }
 
@@ -151,9 +151,9 @@ namespace AppFunctions
         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
         {
             if (sm->containsType<Track>())
-                deleteRegionOfTracks (*sm->getEdit(), getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), true, true, sm);
+                deleteRegionOfTracks (*sm->getEdit(), getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), true, CloseGap::yes, sm);
             else
-                deleteRegionOfSelectedClips (*sm, getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), true, true);
+                deleteRegionOfSelectedClips (*sm, getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), CloseGap::yes, true);
         }
     }
 
