@@ -411,7 +411,8 @@ void deleteRegionOfTracks (Edit& edit, EditTimeRange rangeToDelete, bool onlySel
         removeAutomationRangeOfPlugin (*p);
 
     // N.B. Delete tempo last
-    edit.tempoSequence.deleteRegion (rangeToDelete);
+    if (! onlySelected || tracks.contains (edit.getTempoTrack()))
+        edit.tempoSequence.deleteRegion (rangeToDelete);
 }
 
 void moveSelectedClips (const SelectableList& selectedObjectsIn, Edit& edit, MoveClipAction mode, bool automationLocked)
