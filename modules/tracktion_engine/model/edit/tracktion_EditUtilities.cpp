@@ -54,7 +54,7 @@ void insertSpaceIntoEditFromBeatRange (Edit& edit, juce::Range<double> beatRange
 {
     auto& ts = edit.tempoSequence;
     const double timeToInsertAt = ts.beatsToTime (beatRange.getStart());
-    auto& tempoAtInsertionPoint = ts.getTempoAt (timeToInsertAt);
+    auto& tempoAtInsertionPoint = ts.getTempoAt (timeToInsertAt - 0.0001);
 
     const double lengthInTimeToInsert = beatRange.getLength() * tempoAtInsertionPoint.getApproxBeatLength();
     insertSpaceIntoEdit (edit, EditTimeRange::withStartAndLength (timeToInsertAt, lengthInTimeToInsert));
