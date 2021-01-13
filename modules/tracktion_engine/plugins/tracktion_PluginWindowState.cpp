@@ -59,7 +59,7 @@ void PluginWindowState::closeWindowExplicitly()
 
 bool PluginWindowState::isWindowShowing() const
 {
-    return pluginWindow != nullptr && pluginWindow->isShowing();
+    return pluginWindow != nullptr && pluginWindow->isVisible();
 }
 
 void PluginWindowState::recreateWindowIfShowing()
