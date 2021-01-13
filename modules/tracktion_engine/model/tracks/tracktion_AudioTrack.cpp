@@ -1506,9 +1506,10 @@ bool AudioTrack::isSidechainSource() const
     return false;
 }
 
-bool AudioTrack::isRackSource() const
+bool AudioTrack::isRackOrAuxSource() const
 {
-    return pluginList.findFirstPluginOfType<RackInstance>() != nullptr;
+    return pluginList.findFirstPluginOfType<RackInstance>() != nullptr
+        || pluginList.findFirstPluginOfType<AuxSendPlugin>() != nullptr;
 }
 
 juce::Array<Track*> AudioTrack::findSidechainSourceTracks() const

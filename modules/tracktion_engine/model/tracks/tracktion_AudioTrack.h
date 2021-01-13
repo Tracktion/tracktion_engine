@@ -36,7 +36,7 @@ public:
     juce::String getName() override;
 
     bool canContainPlugin (Plugin*) const override;
-    bool processAudioNodesWhileMuted() const override       { return edit.engine.getEngineBehaviour().shouldProcessMutedTracks() || isSidechainSource() || isRackSource(); }
+    bool processAudioNodesWhileMuted() const override       { return edit.engine.getEngineBehaviour().shouldProcessMutedTracks() || isSidechainSource() || isRackOrAuxSource(); }
 
     //==============================================================================
     /** returns a warning message about this track not being playable, or "" if it's ok */
@@ -238,7 +238,7 @@ private:
 
     void updateTracksToGhost();
     bool isSidechainSource() const;
-    bool isRackSource() const;
+    bool isRackOrAuxSource() const;
 
     void updateMidiNoteMapCache();
 
