@@ -382,8 +382,8 @@ void SelectedMidiEvents::moveNotes (double deltaStart, double deltaLength, int d
             note->setNoteNumber (note->getNoteNumber() + deltaNote, undoManager);
 
             auto pos = note->getEditTimeRange (*clip);
-            auto newStartBeat = clip->getContentBeatAtTime (pos.start + deltaStart);
-            auto newEndBeat = clip->getContentBeatAtTime (pos.end + deltaStart + deltaLength);
+            auto newStartBeat = clip->getContentBeatAtTime (pos.start + deltaStart) + clip->getLoopStartBeats();
+            auto newEndBeat = clip->getContentBeatAtTime (pos.end + deltaStart + deltaLength) + clip->getLoopStartBeats();
 
             note->setStartAndLength (newStartBeat, newEndBeat - newStartBeat, undoManager);
         }
@@ -394,7 +394,7 @@ void SelectedMidiEvents::moveNotes (double deltaStart, double deltaLength, int d
         if (auto* clip = clipForEvent (sysexEvent))
         {
             auto deltaTime = sysexEvent->getEditTime (*clip) + deltaStart;
-            sysexEvent->setBeatPosition (clip->getContentBeatAtTime (deltaTime), undoManager);
+            sysexEvent->setBeatPosition (clip->getContentBeatAtTime (deltaTime) + clip->getLoopStartBeats(), undoManager);
         }
     }
 
@@ -402,8 +402,8 @@ void SelectedMidiEvents::moveNotes (double deltaStart, double deltaLength, int d
     {
         auto& clip = *clipForEvent (controllerEvent);
 
-        auto deltaTime = controllerEvent->getEditTime (clip) + deltaStart;
-        controllerEvent->setBeatPosition (clip.getContentBeatAtTime(deltaTime), undoManager);
+        auto deltaTime = controllerEvent->getEditTime (clip) + deltaStart ;
+        controllerEvent->setBeatPosition (clip.getContentBeatAtTime(deltaTime)+ clip.getLoopStartBeats(), undoManager);
     }
 }
 

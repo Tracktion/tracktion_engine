@@ -676,7 +676,7 @@ double MidiNote::getEditEndTime (const MidiClip& c) const
 
 EditTimeRange MidiNote::getEditTimeRange (const MidiClip& c) const
 {
-    auto quantisedStartBeat = c.getQuantisation().roundBeatToNearest (startBeat + c.getContentStartBeat());
+    auto quantisedStartBeat = c.getQuantisation().roundBeatToNearest (startBeat - c.getLoopStartBeats() + c.getContentStartBeat());
 
     return { c.edit.tempoSequence.beatsToTime (quantisedStartBeat),
              c.edit.tempoSequence.beatsToTime (quantisedStartBeat + lengthInBeats) };
@@ -849,7 +849,7 @@ juce::String MidiControllerEvent::getControllerTypeName (int type) noexcept
 double MidiControllerEvent::getEditTime (const MidiClip& c) const
 {
     const double quantisedBeatInEdit = c.getQuantisation()
-                                        .roundBeatToNearest (beatNumber + c.getContentStartBeat());
+                                        .roundBeatToNearest (beatNumber - c.getLoopStartBeats() + c.getContentStartBeat());
 
     return c.edit.tempoSequence.beatsToTime (quantisedBeatInEdit);
 }
@@ -1015,7 +1015,7 @@ struct MidiList::EventDelegate<MidiSysexEvent>
 
 double MidiSysexEvent::getEditTime (const MidiClip& c) const
 {
-    auto quantisedBeatInEdit = c.getQuantisation().roundBeatToNearest (message.getTimeStamp() + c.getContentStartBeat());
+    auto quantisedBeatInEdit = c.getQuantisation().roundBeatToNearest (message.getTimeStamp() - c.getLoopStartBeats() + c.getContentStartBeat());
 
     return c.edit.tempoSequence.beatsToTime (quantisedBeatInEdit);
 }
