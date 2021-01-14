@@ -186,6 +186,7 @@ public:
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
         std::vector<juce::ValueTree> plugins;
+        std::vector<std::pair<Selectable::WeakRef /* editRef */, juce::ValueTree>> rackTypes;
     };
 
     struct Takes  : public ContentType

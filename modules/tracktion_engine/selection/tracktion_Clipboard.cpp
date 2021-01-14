@@ -1368,6 +1368,17 @@ Clipboard::Plugins::Plugins (const Plugin::Array& items)
     {
         item->edit.flushPluginStateIfNeeded (*item);
         plugins.push_back (item->state.createCopy());
+        
+        if (auto rackInstance = dynamic_cast<RackInstance*> (item))
+        {
+            if (auto type = rackInstance->type)
+            {
+                auto newEntry = std::make_pair (type->edit.getWeakRef(), type->state);
+                
+                if (std::find (rackTypes.begin(), rackTypes.end(), newEntry) == rackTypes.end())
+                    rackTypes.push_back (newEntry);
+            }
+        }
     }
 }
 
@@ -1387,7 +1398,7 @@ static bool pastePluginBasedOnSelection (Edit& edit, const Plugin::Ptr& newPlugi
 
     if (Plugin::Ptr selectedPlugin = selectionManager->getFirstItemOfType<Plugin>())
     {
-        if (auto* list = selectedPlugin->getOwnerList())
+        if (auto list = selectedPlugin->getOwnerList())
         {
             auto index = list->indexOf (selectedPlugin.get());
 
@@ -1428,10 +1439,30 @@ static bool pastePluginIntoTrack (const Plugin::Ptr& newPlugin, EditInsertPoint&
     return false;
 }
 
+static EditItemID::IDMap pasteRackTypesInToEdit (Edit& edit, const std::vector<std::pair<Selectable::WeakRef, juce::ValueTree>>& editAndTypeStates)
+{
+    EditItemID::IDMap reassignedIDs;
+
+    for (const auto& editAndTypeState : editAndTypeStates)
+    {
+        if (editAndTypeState.first == &edit)
+            continue;
+        
+        auto typeState = editAndTypeState.second;
+        auto reassignedRackType = typeState.createCopy();
+        EditItemID::remapIDs (reassignedRackType, nullptr, edit, &reassignedIDs);
+        edit.getRackList().addRackTypeFrom (reassignedRackType);
+    }
+    
+    return reassignedIDs;
+}
+
 bool Clipboard::Plugins::pasteIntoEdit (const EditPastingOptions& options) const
 {
     CRASH_TRACER
     bool anyPasted = false;
+    
+    auto rackIDMap = pasteRackTypesInToEdit (options.edit, rackTypes);
 
     auto pluginsToPaste = plugins;
     std::reverse (pluginsToPaste.begin(), pluginsToPaste.end()); // Reverse the array so they get pasted in the correct order
@@ -1440,6 +1471,16 @@ bool Clipboard::Plugins::pasteIntoEdit (const EditPastingOptions& options) const
     {
         auto stateCopy = item.createCopy();
         EditItemID::remapIDs (stateCopy, nullptr, options.edit);
+        
+        // Remap RackTypes after the otehr IDs or it will get overwritten
+        if (stateCopy[IDs::type].toString() == IDs::rack.toString())
+        {
+            auto oldRackID = EditItemID::fromProperty (stateCopy, IDs::rackType);
+            auto remappedRackID = rackIDMap[oldRackID];
+            
+            if (remappedRackID.isValid())
+                remappedRackID.setProperty (stateCopy, IDs::rackType, nullptr);
+        }
 
         if (auto newPlugin = options.edit.getPluginCache().getOrCreatePluginFor (stateCopy))
         {
