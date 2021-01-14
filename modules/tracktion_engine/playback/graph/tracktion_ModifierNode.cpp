@@ -87,7 +87,8 @@ void ModifierNode::process (ProcessContext& pc)
                                                 outputAudioBlock.getNumChannels()))
     {
         jassert (inputAudioBlock.getNumFrames() == outputAudioBlock.getNumFrames());
-        copy (outputAudioBlock, inputAudioBlock.getFirstChannels (numInputChannelsToCopy));
+        copy (outputAudioBlock.getFirstChannels (numInputChannelsToCopy),
+              inputAudioBlock.getFirstChannels (numInputChannelsToCopy));
     }
 
     // Setup audio buffers

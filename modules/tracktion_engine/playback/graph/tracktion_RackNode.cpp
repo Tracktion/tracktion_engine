@@ -620,7 +620,7 @@ namespace RackNodeBuilder
 
                     if (sourcePin == 0 && destPin == 0)
                         destConnectedNode.addMidiConnection (sourceNode);
-                    else if (sourcePin > 0 && destPin > 0)
+                    else if (sourcePin > 0 && destPin >= 0) // N.B. This has to account for the dest pin being an audio input to a Modifier
                         destConnectedNode.addAudioConnection (sourceNode, ChannelConnection { sourcePin - 1, getDestChannelIndex (*destNode, destPin) });
                     else
                         jassertfalse;
