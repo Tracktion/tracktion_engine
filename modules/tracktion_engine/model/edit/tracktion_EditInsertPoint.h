@@ -16,16 +16,17 @@ class EditInsertPoint
 {
 public:
     EditInsertPoint (Edit&);
+    virtual ~EditInsertPoint() = default;
 
     void setNextInsertPoint (double time, const juce::ReferenceCountedObjectPtr<Track>&);
     void setNextInsertPoint (double time);
     void setNextInsertPointAfterSelected();
     void lockInsertPoint (bool lock) noexcept;
 
-    void chooseInsertPoint (juce::ReferenceCountedObjectPtr<Track>&,
-                            double& start, bool pasteAfterSelection, SelectionManager*);
+    virtual void chooseInsertPoint (juce::ReferenceCountedObjectPtr<Track>&,
+                                    double& start, bool pasteAfterSelection, SelectionManager*);
 
-private:
+protected:
     Edit& edit;
     double nextInsertPointTime = 0;
     EditItemID nextInsertPointTrack;
