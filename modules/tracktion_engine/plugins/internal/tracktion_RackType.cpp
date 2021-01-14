@@ -484,16 +484,9 @@ struct RackType::WindowStateList  : public ValueTreeObjectList<WindowState>
 //==============================================================================
 struct RackType::RenderContext
 {
-    RenderContext (RackType& type, bool useExperimentalProcessing)
+    RenderContext (RackType& type)
     {
-        juce::ignoreUnused (useExperimentalProcessing);
-        
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-        if (useExperimentalProcessing)
-            createExperiemntalProcessor (type);
-        else
-       #endif
-            createRenderContexts (type);
+        createRenderContexts (type);
     }
     
     double getLatencySeconds() const
@@ -514,65 +507,25 @@ struct RackType::RenderContext
                   MidiMessageArray& midiIn,
                   bool isPlaying, bool isScrubbing, bool isRendering)
     {
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-        if (processor)
+        for (int i = renderContexts.size(); --i >= 0;)
         {
-            processExperiemntal (editTime,
-                                 outputBuffer, inputBuffer,
-                                 midiOut, midiIn,
-                                 isPlaying,
-                                 isScrubbing,
-                                 isRendering);
-        }
-        else
-       #endif
-        {
-            for (int i = renderContexts.size(); --i >= 0;)
-            {
-                auto fw = renderContexts.getUnchecked (i);
+            auto fw = renderContexts.getUnchecked (i);
 
-                if (fw->isConnectedToOutput)
-                    fw->addToRackOutput (editTime,
-                                         outputBuffer,
-                                         inputBuffer,
-                                         midiOut,
-                                         midiIn,
-                                         isPlaying,
-                                         isScrubbing,
-                                         isRendering);
-            }
+            if (fw->isConnectedToOutput)
+                fw->addToRackOutput (editTime,
+                                     outputBuffer,
+                                     inputBuffer,
+                                     midiOut,
+                                     midiIn,
+                                     isPlaying,
+                                     isScrubbing,
+                                     isRendering);
         }
     }
 
 private:
     OwnedArray<PluginRenderingInfo> renderContexts;
     double latencySeconds = 0.0;
-
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-    std::shared_ptr<InputProvider> inputProvider;
-    std::unique_ptr<RackNodePlayer<tracktion_graph::NodePlayer>> processor;
-   #endif
-
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-    void createExperiemntalProcessor (RackType& type)
-    {
-        if (type.sampleRate == 0.0 || type.blockSize == 0
-            || type.numActiveInstances.load() == 0)
-        {
-            processor.reset();
-            inputProvider.reset();
-           return;
-        }
-        
-        inputProvider = std::make_shared<InputProvider>();
-        auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, type, type.sampleRate, type.blockSize, inputProvider);
-        jassert (tracktion_graph::node_player_utils::areNodeIDsUnique (*rackNode, true));
-
-        processor = std::make_unique<RackNodePlayer<tracktion_graph::NodePlayer>> (std::move (rackNode), inputProvider, false);
-        processor->prepareToPlay (type.sampleRate, type.blockSize);
-        latencySeconds = processor->getLatencySamples() / type.sampleRate;
-    }
-   #endif
 
     void createRenderContexts (RackType& type)
     {
@@ -608,36 +561,6 @@ private:
         for (auto fw : renderContexts)
             fw->initialise (type.blockSize, type, renderContexts);
     }
-
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-    void processExperiemntal (double editTime,
-                              juce::AudioBuffer<float>& outputBuffer,
-                              juce::AudioBuffer<float>& inputBuffer,
-                              MidiMessageArray& midiOut,
-                              MidiMessageArray& midiIn,
-                              bool isPlaying, bool isScrubbing, bool isRendering)
-    {
-        jassert (outputBuffer.getNumSamples() == inputBuffer.getNumSamples());
-
-        // Set up the inputs
-        inputProvider->setInputs ({ tracktion_graph::toBufferView (inputBuffer), midiIn });
-
-        
-        // The context
-        PluginRenderContext pc (nullptr, AudioChannelSet(), 0, 0,
-                                nullptr, 0.0,
-                                editTime, isPlaying, isScrubbing, isRendering, true);
-        inputProvider->setContext (&pc);
-        
-        
-        // Then process
-        //TODO: This probably should be the master stream time
-        auto streamSampleRange = juce::Range<int64_t>::withStartAndLength (0, inputBuffer.getNumSamples());
-
-        processor->process ({ streamSampleRange, { tracktion_graph::toBufferView (outputBuffer), midiOut } },
-                            editTime, isPlaying, isScrubbing, isRendering);
-    }
-   #endif
 };
 
 //==============================================================================
@@ -687,7 +610,7 @@ RackType::RackType (const juce::ValueTree& v, Edit& owner)
     renderContextBuilder.setFunction ([this]
                                       {
                                           std::atomic_exchange (&renderContext,
-                                                                std::make_shared<RenderContext> (*this, isExperimentalGraphProcessingEnabled()));
+                                                                std::make_shared<RenderContext> (*this));
                                       });
 }
 
@@ -1536,14 +1459,11 @@ void RackType::initialisePluginsIfNeeded (const PlaybackInitialisationInfo& info
 {
     latencyCalculation.reset();
 
-    if (! RackType::isExperimentalGraphProcessingEnabled())
-    {
-        for (auto f : getPlugins())
-            f->baseClassInitialise (info);
+    for (auto f : getPlugins())
+        f->baseClassInitialise (info);
 
-        for (auto& m : getModifierList().getModifiers())
-            m->baseClassInitialise (info.sampleRate, info.blockSizeSamples);
-    }
+    for (auto& m : getModifierList().getModifiers())
+        m->baseClassInitialise (info.sampleRate, info.blockSizeSamples);
 }
 
 void RackType::deregisterInstance (RackInstance* instance)
@@ -1568,14 +1488,11 @@ void RackType::deregisterInstance (RackInstance* instance)
     {
         renderContextBuilder.handleUpdateNowIfNeeded();
         
-        if (! RackType::isExperimentalGraphProcessingEnabled())
-        {
-            for (auto f : getPlugins())
-                f->baseClassDeinitialise();
+        for (auto f : getPlugins())
+            f->baseClassDeinitialise();
 
-            for (auto m : getModifierList().getModifiers())
-                m->baseClassDeinitialise();
-        }
+        for (auto m : getModifierList().getModifiers())
+            m->baseClassDeinitialise();
     }
 
     countInstancesInEdit();
@@ -2117,30 +2034,6 @@ bool RackType::pasteClipboard()
 ModifierList& RackType::getModifierList() const noexcept
 {
     return *modifierList;
-}
-
-//==============================================================================
-namespace
-{
-    bool& getExperimentalGraphProcessingFlag()
-    {
-        static bool enabled = false;
-        return enabled;
-    }
-}
-
-void RackType::enableExperimentalGraphProcessing (bool enable)
-{
-    getExperimentalGraphProcessingFlag() = enable;
-}
-
-bool RackType::isExperimentalGraphProcessingEnabled()
-{
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-    return getExperimentalGraphProcessingFlag();
-   #else
-    return false;
-   #endif
 }
 
 //==============================================================================
