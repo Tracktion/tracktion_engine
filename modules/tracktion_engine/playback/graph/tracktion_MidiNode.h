@@ -53,7 +53,7 @@ private:
     EditItemID editItemID;
     std::function<bool()> shouldBeMutedDelegate = nullptr;
     
-    double sampleRate = 44100.0;
+    double sampleRate = 44100.0, timeForOneSample = 0.0;
     int currentIndex = 0;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
     bool wasMute = false, shouldCreateMessagesForTime = false;
