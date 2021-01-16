@@ -100,7 +100,7 @@ private:
                                                                       processState,
                                                                       EditItemID());
             
-            auto testContext = createTracktionTestContext (processState, std::move (node), ts, 0, duration + 1.0);
+            auto testContext = createTracktionTestContext (processState, std::move (node), ts, 0, editTimeRange.getEnd());
 
             juce::MidiMessageSequence expectedSequence;
             expectedSequence.addSequence (masterSequence,
@@ -109,6 +109,7 @@ private:
                                           editTimeRange.getEnd());
 
             expectGreaterThan (expectedSequence.getNumEvents(), 0);
+            expectEquals (expectedSequence.getNumEvents(), masterSequence.getNumEvents());
             test_utilities::expectMidiBuffer (*this, testContext->midi, sampleRate, expectedSequence);
         }
     }
