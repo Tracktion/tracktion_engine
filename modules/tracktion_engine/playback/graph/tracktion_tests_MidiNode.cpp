@@ -43,7 +43,7 @@ private:
                                                                                     test_utilities::TestSetup ts, int numChannels, double durationInSeconds)
     {
         test_utilities::TestProcess<TracktionNodePlayer> testProcess (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
-                                                                                                             getPoolCreatorFunction (ThreadPoolStrategy::realTime)),
+                                                                                                             getPoolCreatorFunction (ThreadPoolStrategy::hybrid)),
                                                                       ts, numChannels, durationInSeconds, true);
         testProcess.setPlayHead (&processState.playHeadState.playHead);
         
