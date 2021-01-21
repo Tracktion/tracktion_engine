@@ -257,11 +257,13 @@ void LockFreeMultiThreadedNodePlayer::resetProcessQueue()
         playbackNode->numInputsToBeProcessed.store (playbackNode->numInputs, std::memory_order_release);
 
         // Check only ready nodes will be queued
+       #if JUCE_DEBUG
         if (playbackNode->node.isReadyToProcess())
             jassert (playbackNode->numInputsToBeProcessed == 0);
 
         if (playbackNode->numInputsToBeProcessed == 0)
             jassert (playbackNode->node.isReadyToProcess());
+       #endif
     }
 
    #if JUCE_DEBUG

@@ -67,9 +67,11 @@
 #if __has_include(<choc/audio/choc_SampleBuffers.h>)
  #include <choc/audio/choc_SampleBuffers.h>
  #include <choc/audio/choc_MIDI.h>
+ #include <choc/audio/choc_MultipleReaderMultipleWriterFIFO.h>
 #else
  #include "../3rd_party/choc/audio/choc_SampleBuffers.h"
  #include "../3rd_party/choc/audio/choc_MIDI.h"
+ #include "../3rd_party/choc/containers/choc_MultipleReaderMultipleWriterFIFO.h"
 #endif
 
 //==============================================================================
@@ -93,6 +95,7 @@
 #include "tracktion_graph/players/tracktion_graph_NodePlayerUtilities.h"
 
 #include "tracktion_graph/tracktion_graph_NodePlayer.h"
+#include "tracktion_graph/tracktion_graph_MultiThreadedNodePlayer.h"
 #include "tracktion_graph/tracktion_graph_LockFreeMultiThreadedNodePlayer.h"
 #include "tracktion_graph/tracktion_graph_NodePlayerThreadPools.h"
 
