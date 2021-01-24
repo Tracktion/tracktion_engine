@@ -719,7 +719,7 @@ Plugin::Array getAllPlugins (const Edit& edit, bool includeMasterVolume)
                                               if (auto abc = dynamic_cast<AudioClipBase*> (clip))
                                               {
                                                   if (auto pluginList = abc->getPluginList())
-                                                      list.addArray (t.getAllPlugins());
+                                                      list.addArray (pluginList->getPlugins());
 
                                                   if (auto clipEffects = abc->getClipEffects())
                                                       for (auto effect : *clipEffects)
