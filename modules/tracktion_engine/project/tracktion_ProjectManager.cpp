@@ -142,9 +142,9 @@ static void findProjects (ProjectManager& pm, const juce::ValueTree& folder, Ref
 
 juce::ReferenceCountedArray<Project> ProjectManager::getAllProjects()
 {
-	ReferenceCountedArray<Project> list;
-	findProjects (*this, folders, list);
-	return list;
+    ReferenceCountedArray<Project> list;
+    findProjects (*this, folders, list);
+    return list;
 }
 
 ReferenceCountedArray<Project> ProjectManager::getAllProjects (const juce::ValueTree& folder)
