@@ -1282,8 +1282,12 @@ std::unique_ptr<tracktion_graph::Node> createNodeForEdit (EditPlaybackContext& e
         }
         
         if (edit.isClickTrackDevice (*device))
-            outputNode->addInput (makeNode<ClickNode> (edit, getNumChannelsFromDevice (*device),
-                                                       device->isMidi(), playHeadState.playHead));
+        {
+            auto clickAndTracksNode = makeSummingNode ({ node.release(),
+                                                         makeNode<ClickNode> (edit, getNumChannelsFromDevice (*device),
+                                                                              device->isMidi(), playHeadState.playHead).release() });
+            node = std::move (clickAndTracksNode);
+        }
 
         outputNode->addInput (createNodeForDevice (epc, *device, playHeadState, std::move (node)));
     }
