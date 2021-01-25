@@ -1222,6 +1222,20 @@ std::unique_ptr<tracktion_graph::Node> createNodeForEdit (EditPlaybackContext& e
         }
     }
 
+    // Add deviceNodes for any devices only being used by the click track
+    for (int i = edit.engine.getDeviceManager().getNumOutputDevices(); --i >= 0;)
+    {
+        if (auto device = edit.engine.getDeviceManager().getOutputDeviceAt (i))
+        {
+            if (! edit.isClickTrackDevice (*device))
+                continue;
+            
+            auto& trackNodeVector = deviceNodes[device];
+            juce::ignoreUnused (trackNodeVector);
+            // We don't need to add anything to the vector, just ensure the device is in the map
+        }
+    }
+
 
     auto outputNode = std::make_unique<tracktion_graph::SummingNode>();
         
