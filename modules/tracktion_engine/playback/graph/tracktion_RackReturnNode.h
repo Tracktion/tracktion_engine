@@ -27,16 +27,18 @@ public:
 
     std::vector<Node*> getDirectInputNodes() override;
     tracktion_graph::NodeProperties getNodeProperties() override;
+    bool transform (Node&) override;
     void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 
 private:
     //==============================================================================
-    std::unique_ptr<Node> wetInput;
+    std::unique_ptr<Node> wetInput, dryLatencyNode;
     Node* dryInput = nullptr;
     std::function<float()> wetGainFunction, dryGainFunction;
     float lastWetGain = 0.0f, lastDryGain = 0.0f;
+    bool hasTransformed = false;
 };
 
 } // namespace tracktion_engine

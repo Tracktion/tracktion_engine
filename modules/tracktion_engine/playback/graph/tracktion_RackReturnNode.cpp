@@ -39,11 +39,10 @@ tracktion_graph::NodeProperties RackReturnNode::getNodeProperties()
     auto wetProps = wetInput->getNodeProperties();
     auto dryProps = dryInput->getNodeProperties();
     
-    assert (wetProps.latencyNumSamples == dryProps.latencyNumSamples);
-    
     auto props = wetProps;
     props.hasAudio = true;
     props.numberOfChannels = std::max (wetProps.numberOfChannels, dryProps.numberOfChannels);
+    props.latencyNumSamples = std::max (wetProps.latencyNumSamples, dryProps.latencyNumSamples);
     tracktion_graph::hash_combine (props.nodeID, dryProps.nodeID);
 
     constexpr size_t rackReturnNodeMagicHash = 0x726b52657475726e;
@@ -52,6 +51,28 @@ tracktion_graph::NodeProperties RackReturnNode::getNodeProperties()
         tracktion_graph::hash_combine (props.nodeID, rackReturnNodeMagicHash);
 
     return props;
+}
+
+bool RackReturnNode::transform (Node&)
+{
+    if (hasTransformed)
+        return false;
+    
+    hasTransformed = true;
+    auto wetProps = wetInput->getNodeProperties();
+    auto dryProps = dryInput->getNodeProperties();
+    assert (dryProps.latencyNumSamples <= wetProps.latencyNumSamples);
+    
+    if (wetProps.latencyNumSamples > dryProps.latencyNumSamples)
+    {
+        const int numLatencySamples = wetProps.latencyNumSamples - dryProps.latencyNumSamples;
+        dryLatencyNode = tracktion_graph::makeNode<tracktion_graph::LatencyNode> (dryInput, numLatencySamples);
+        dryInput = dryLatencyNode.get();
+        
+        return true;
+    }
+
+    return false;
 }
 
 void RackReturnNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&)
@@ -77,7 +98,7 @@ void RackReturnNode::process (ProcessContext& pc)
     const float dryGain = dryGainFunction();
 
     
-    // Always copy MIDI (N.B. MIDI is always the we signal with no gain applied)
+    // Always copy MIDI (N.B. MIDI is always the wet signal with no gain applied)
     pc.buffers.midi.copyFrom (wetSource.midi);
 
     
