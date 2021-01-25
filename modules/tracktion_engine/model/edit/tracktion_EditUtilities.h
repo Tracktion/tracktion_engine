@@ -169,6 +169,9 @@ bool areAnyPluginsMissing (const Edit&);
 /** Returns all of the instances of a specific RackType in an Edit. */
 juce::Array<RackInstance*> getRackInstancesInEditForType (const RackType&);
 
+/** Toggles the enabled state of all plugins in an Edit. */
+void muteOrUnmuteAllPlugins (Edit&);
+
 //==============================================================================
 // Automation and parameters
 //==============================================================================

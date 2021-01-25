@@ -1974,20 +1974,6 @@ void Edit::sendStartStopMessageToPlugins()
         p->playStartedOrStopped();
 }
 
-void Edit::muteOrUnmuteAllPlugins()
-{
-    auto allPlugins = getAllPlugins (*this, true);
-
-    int numEnabled = 0;
-
-    for (auto p : allPlugins)
-        if (p->isEnabled())
-            ++numEnabled;
-
-    for (auto p : allPlugins)
-        p->setEnabled (numEnabled == 0);
-}
-
 void Edit::addModifierTimer (ModifierTimer& mt)
 {
     jassert (! modifierTimers.contains (&mt));

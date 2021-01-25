@@ -340,7 +340,7 @@ int AutomationCurve::movePoint (int index, double newTime, float newValue, bool 
                 auto t = getPointTime (i);
 
                 if (t < t1)
-                   break;
+                    break;
                 
                 // If points lay at the same time, don't remove them
                 if (t == oldTime)

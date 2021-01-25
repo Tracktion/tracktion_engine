@@ -780,6 +780,20 @@ juce::Array<RackInstance*> getRackInstancesInEditForType (const RackType& rt)
     return instances;
 }
 
+void muteOrUnmuteAllPlugins (Edit& edit)
+{
+    auto allPlugins = getAllPlugins (edit, true);
+
+    int numEnabled = 0;
+
+    for (auto p : allPlugins)
+        if (p->isEnabled())
+            ++numEnabled;
+
+    for (auto p : allPlugins)
+        p->setEnabled (numEnabled == 0);
+}
+
 
 //==============================================================================
 juce::Array<AutomatableEditItem*> getAllAutomatableEditItems (const Edit& edit)
