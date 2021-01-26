@@ -25,7 +25,7 @@ namespace
         // we call this method. This should probably be moved to an EditItemCache like Clips and Tracks
         for (auto p : edit.getPluginCache().getPlugins())
             if (auto pt = dynamic_cast<PluginType*> (p))
-                if (pt->state.getParent().isValid())
+                if (pt->state.getParent().isValid() && pt->state.getRoot() == edit.state)
                     plugins.add (pt);
         
         return plugins;
