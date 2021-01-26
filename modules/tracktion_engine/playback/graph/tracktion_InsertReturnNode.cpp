@@ -45,7 +45,6 @@ void InsertReturnNode::process (ProcessContext&)
 {
     auto sourceBuffers = input->getProcessedOutput();
     owner.fillReturnBuffer (&sourceBuffers.audio, &sourceBuffers.midi);
-
 }
 
 } // namespace tracktion_engine

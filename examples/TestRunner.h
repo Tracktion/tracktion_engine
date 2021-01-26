@@ -55,7 +55,7 @@ private:
             startThread();
         }
 
-        ~TaskRunner()
+        ~TaskRunner() override
         {
             task.signalJobShouldExit();
             waitForThreadToExit (10000);

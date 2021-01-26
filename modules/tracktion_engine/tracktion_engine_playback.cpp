@@ -76,9 +76,11 @@ extern "C"
  #include "playback/graph/tracktion_FadeInOutNode.h"
  #include "playback/graph/tracktion_FadeInOutNode.cpp"
 
+ #include "playback/graph/tracktion_PluginNode.h"
+
  #include "playback/graph/tracktion_InsertSendNode.h"
- #include "playback/graph/tracktion_InsertSendNode.cpp"
  #include "playback/graph/tracktion_InsertReturnNode.h"
+ #include "playback/graph/tracktion_InsertSendNode.cpp"
  #include "playback/graph/tracktion_InsertReturnNode.cpp"
 
  #include "playback/graph/tracktion_LevelMeasurerProcessingNode.h"
@@ -105,7 +107,6 @@ extern "C"
 
  #include "playback/graph/tracktion_TrackMutingNode.h"
  #include "playback/graph/tracktion_PlayHeadPositionNode.h"
- #include "playback/graph/tracktion_PluginNode.h"
  #include "playback/graph/tracktion_ModifierNode.h"
  #include "playback/graph/tracktion_RackInstanceNode.h"
  #include "playback/graph/tracktion_RackInstanceNode.cpp"

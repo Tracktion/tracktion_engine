@@ -721,6 +721,11 @@ std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList& list
         {
             node = createNodeForRackInstance (*rackInstance, std::move (node));
         }
+        else if (auto insertPlugin = dynamic_cast<InsertPlugin*> (p))
+        {
+            node = makeNode<InsertSendReturnDependencyNode> (std::move (node), *insertPlugin);
+            node = createNodeForPlugin (*p, trackMuteState, std::move (node), playHeadState, params);
+        }
         else
         {
             node = createNodeForPlugin (*p, trackMuteState, std::move (node), playHeadState, params);

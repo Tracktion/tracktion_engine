@@ -22,6 +22,8 @@ class InsertReturnNode final    : public tracktion_graph::Node
 public:
     InsertReturnNode (InsertPlugin&, std::unique_ptr<tracktion_graph::Node>);
 
+    InsertPlugin& getInsert() const     { return owner; }
+
     //==============================================================================
     tracktion_graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override;
