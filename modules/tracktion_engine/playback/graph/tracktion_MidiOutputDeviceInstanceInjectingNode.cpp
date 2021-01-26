@@ -51,7 +51,7 @@ void MidiOutputDeviceInstanceInjectingNode::process (ProcessContext& pc)
     pc.buffers.midi.copyFrom (sourceBuffers.midi);
     copy (pc.buffers.audio, sourceBuffers.audio);
     
-    if (sourceBuffers.midi.isEmpty())
+    if (sourceBuffers.midi.isEmpty() && ! sourceBuffers.midi.isAllNotesOff)
         return;
 
     // Merge in the MIDI from the current block to the device to be dispatched
