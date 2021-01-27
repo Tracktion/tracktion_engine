@@ -120,7 +120,7 @@ namespace test_utilities
     {
         if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (juce::WavAudioFormat().createWriterFor (file.createOutputStream().release(),
                                                                                                             sampleRate,
-                                                                                                            block.getNumFrames(),
+                                                                                                            block.getNumChannels(),
                                                                                                             16, {}, 0)))
         {
             writer->writeFromAudioSampleBuffer (toAudioBuffer (block), 0, (int) block.getNumFrames());
