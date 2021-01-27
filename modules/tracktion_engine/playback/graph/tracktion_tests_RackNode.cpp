@@ -372,13 +372,13 @@ private:
 
                 // Sin input provider
                 const auto inputProvider = std::make_shared<InputProvider>();
-                juce::AudioBuffer<float> inputBuffer (4, testSetup.blockSize);
+                choc::buffer::ChannelArrayBuffer<float> inputBuffer (4, (choc::buffer::FrameCount) testSetup.blockSize);
 
                 // Fill inputs with sin data
                 {
                     test_utilities::fillBufferWithSinData (inputBuffer);
                     tracktion_engine::MidiMessageArray midi;
-                    inputProvider->setInputs ({ toBufferView (inputBuffer), midi });
+                    inputProvider->setInputs ({ inputBuffer, midi });
                 }
 
                 // Process Rack
@@ -426,7 +426,7 @@ private:
                     {
                         inputProvider->numChannels = 1;
                         tracktion_engine::MidiMessageArray midi;
-                        inputProvider->setInputs ({ toBufferView (inputBuffer), midi });
+                        inputProvider->setInputs ({ inputBuffer, midi });
 
                         auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
                         test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
@@ -463,13 +463,13 @@ private:
 
                 // Sin input provider
                 const auto inputProvider = std::make_shared<InputProvider>();
-                juce::AudioBuffer<float> inputBuffer (1, testSetup.blockSize);
+                choc::buffer::ChannelArrayBuffer<float> inputBuffer (1, (choc::buffer::FrameCount) testSetup.blockSize);
 
                 // Fill inputs with sin data
                 {
                     test_utilities::fillBufferWithSinData (inputBuffer);
                     tracktion_engine::MidiMessageArray midi;
-                    inputProvider->setInputs ({ toBufferView (inputBuffer), midi });
+                    inputProvider->setInputs ({ inputBuffer, midi });
                 }
 
                 // Process Rack
@@ -589,13 +589,13 @@ private:
             {
                 // Sin input provider
                 const auto inputProvider = std::make_shared<InputProvider>();
-                juce::AudioBuffer<float> inputBuffer (2, ts.blockSize);
+                choc::buffer::ChannelArrayBuffer<float> inputBuffer (2, (choc::buffer::FrameCount) ts.blockSize);
 
                 // Fill inputs with sin data
                 {
                     test_utilities::fillBufferWithSinData (inputBuffer);
                     tracktion_engine::MidiMessageArray midi;
-                    inputProvider->setInputs ({ toBufferView (inputBuffer), midi });
+                    inputProvider->setInputs ({ inputBuffer, midi });
                 }
 
                 auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, ts.sampleRate, ts.blockSize, inputProvider);

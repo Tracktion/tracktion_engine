@@ -59,16 +59,40 @@ namespace test_utilities
         return sequence;
     }
 
-    static inline void fillBufferWithSinData (juce::AudioBuffer<float>& buffer)
+    //==============================================================================
+    static inline float getPhaseIncrement (float frequency, double sampleRate)
     {
-        const float increment = juce::MathConstants<float>::twoPi / buffer.getNumSamples();
-        float* sample = buffer.getWritePointer (0);
+        return (float) ((frequency * juce::MathConstants<double>::pi * 2.0) / sampleRate);
+    }
 
-        for (int i = 0; i < buffer.getNumSamples(); ++i)
-            *sample++ = std::sin (increment * i);
+    struct SineOscillator
+    {
+        void reset (float frequency, double sampleRate)
+        {
+            phase = 0;
+            phaseIncrement = getPhaseIncrement (frequency, sampleRate);
+        }
 
-        for (int i = 1; i < buffer.getNumChannels(); ++i)
-            buffer.copyFrom (i, 0, buffer, 0, 0, buffer.getNumSamples());
+        float getNext()
+        {
+            auto v = std::sin (phase);
+            phase = std::fmod (phase + phaseIncrement, juce::MathConstants<float>::pi * 2.0f);
+            return v;
+        }
+
+        float phase = 0, phaseIncrement = 0;
+    };
+
+    static inline void fillBufferWithSinData (choc::buffer::ChannelArrayView<float> buffer)
+    {
+        auto phaseIncrement = juce::MathConstants<float>::twoPi / buffer.getNumFrames();
+        setAllFrames (buffer, [=] (auto frame) { return std::sin ((float) (frame * phaseIncrement)); });
+    }
+
+    static inline auto createSineBuffer (int numChannels, int numFrames, double phaseIncrement)
+    {
+        return choc::buffer::createChannelArrayBuffer (numChannels, numFrames,
+                                                       [=] (auto, auto frame) { return std::sin ((float) (frame * phaseIncrement)); });
     }
 
     /** Logs a MidiMessageSequence. */
@@ -92,21 +116,15 @@ namespace test_utilities
     }
 
     /** Writes an audio buffer to a file. */
-    static inline void writeToFile (juce::File file, const juce::AudioBuffer<float>& buffer, double sampleRate)
+    static inline void writeToFile (juce::File file, choc::buffer::ChannelArrayView<float> block, double sampleRate)
     {
         if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (juce::WavAudioFormat().createWriterFor (file.createOutputStream().release(),
                                                                                                             sampleRate,
-                                                                                                            (uint32_t) buffer.getNumChannels(),
+                                                                                                            block.getNumFrames(),
                                                                                                             16, {}, 0)))
         {
-            writer->writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());
+            writer->writeFromAudioSampleBuffer (toAudioBuffer (block), 0, (int) block.getNumFrames());
         }
-    }
-
-    /** Writes an audio block to a file. */
-    static inline void writeToFile (juce::File file, choc::buffer::ChannelArrayView<float> block, double sampleRate)
-    {
-        writeToFile (file, toAudioBuffer (block), sampleRate);
     }
 
     //==============================================================================
@@ -164,64 +182,16 @@ namespace test_utilities
 
 
     //==============================================================================
-    struct SineOscillator
-    {
-        void reset (float frequency, double sampleRate)
-        {
-            phase = 0;
-            phaseIncrement = (float) ((frequency * juce::MathConstants<double>::pi * 2.0) / sampleRate);
-        }
-
-        float getNext()
-        {
-            auto v = std::sin (phase);
-            phase = std::fmod (phase + phaseIncrement, juce::MathConstants<float>::pi * 2.0f);
-            return v;
-        }
-
-        float phase = 0, phaseIncrement = 0;
-    };
-
-    //==============================================================================
     template<typename AudioFormatType>
-    std::unique_ptr<juce::TemporaryFile> getSinFile (double sampleRate, double durationInSeconds, int numChannels = 1, float frequency = 220.0f)
+    std::unique_ptr<juce::TemporaryFile> getSinFile (double sampleRate, double durationInSeconds,
+                                                     int numChannels = 1, float frequency = 220.0f)
     {
-        juce::AudioBuffer<float> buffer (numChannels, static_cast<int> (sampleRate * durationInSeconds));
+        auto buffer = createSineBuffer (numChannels, (int) (sampleRate * durationInSeconds),
+                                        getPhaseIncrement (frequency, sampleRate));
 
-        SineOscillator osc;
-        osc.reset (frequency, sampleRate);
-
-        auto numSamples = buffer.getNumSamples();
-
-        for (int c = 0; c < numChannels; ++c)
-        {
-            float* samples = buffer.getWritePointer (c);
-
-            for (int i = 0; i < numSamples; ++i)
-                samples[i] = osc.getNext();
-        }
-
-        // Then write it to a temp file
         AudioFormatType format;
         auto f = std::make_unique<juce::TemporaryFile> (format.getFileExtensions()[0]);
-
-        if (auto fileStream = f->getFile().createOutputStream())
-        {
-            const int numQualityOptions = format.getQualityOptions().size();
-            const int qualityOptionIndex = numQualityOptions == 0 ? 0 : (numQualityOptions / 2);
-            const int bitDepth = format.getPossibleBitDepths().contains (16) ? 16 : 32;
-
-            if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (AudioFormatType().createWriterFor (fileStream.get(),
-                                                                                                           sampleRate,
-                                                                                                           (uint32_t) numChannels,
-                                                                                                           bitDepth, {},
-                                                                                                           qualityOptionIndex)))
-            {
-                fileStream.release();
-                writer->writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());
-            }
-        }
-
+        writeToFile (f->getFile(), buffer, sampleRate);
         return f;
     }
 
