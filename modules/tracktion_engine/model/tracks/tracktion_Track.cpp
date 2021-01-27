@@ -392,25 +392,6 @@ void Track::setCurrentlyShownAutoParam (const AutomatableParameter::Ptr& param)
     currentAutoParamID      = param == nullptr ? String()     : param->paramID;
 }
 
-AutomatableParameter* Track::chooseDefaultAutomationCurve() const
-{
-    auto allParams (getAllAutomatableParams());
-
-    for (int i = allParams.size(); --i >= 0;)
-        if (auto p = allParams.getUnchecked (i))
-            if (p->hasAutomationPoints())
-                return p;
-
-    // otherwise look for the volume parameter
-    for (int i = allParams.size(); --i >= 0;)
-        if (auto p = allParams.getUnchecked (i))
-            if (dynamic_cast<VolumeAndPanPlugin*> (p->getPlugin()) != nullptr)
-                if (p->getParameterName().containsIgnoreCase (TRANS("Volume")))
-                    return p;
-
-    return allParams[0];
-}
-
 void Track::hideAutomatableParametersForSource (EditItemID pluginOrParameterID)
 {
     if (currentAutoParamPlugin == pluginOrParameterID
