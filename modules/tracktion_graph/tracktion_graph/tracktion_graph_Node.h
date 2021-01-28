@@ -357,7 +357,6 @@ inline void Node::process (juce::Range<int64_t> referenceSampleRange)
     ProcessContext pc { referenceSampleRange, { destAudioView, midiBuffer } };
     process (pc);
     numSamplesProcessed.store ((int) numSamples, std::memory_order_release);
-    hasBeenProcessed.store (true, std::memory_order_release);
     
     jassert (numChannelsBeforeProcessing == audioBuffer.getNumChannels());
     jassert (numSamplesBeforeProcessing == audioBuffer.getNumFrames());
@@ -368,6 +367,9 @@ inline void Node::process (juce::Range<int64_t> referenceSampleRange)
    #if JUCE_DEBUG
     isBeingProcessed = false;
    #endif
+
+    // N.B. This must be set last to release the Node back to the player
+    hasBeenProcessed.store (true, std::memory_order_release);
 }
 
 inline bool Node::hasProcessed() const
