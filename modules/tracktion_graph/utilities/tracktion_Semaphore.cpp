@@ -70,7 +70,7 @@ bool LightweightSemaphore::try_wait()
 
 bool LightweightSemaphore::timed_wait (std::uint64_t usecs)
 {
-    return pimpl->wait (usecs);
+    return pimpl->wait ((std::int64_t) usecs);
 }
 
 void LightweightSemaphore::signal (int count)

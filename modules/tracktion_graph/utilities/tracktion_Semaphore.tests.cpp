@@ -34,30 +34,22 @@ private:
         {
             {
                 SemaphoreType event (1);
-                event.wait();
-                expect (true); // Count of 1 doesn't block
+                expect (event.wait()); // Count of 1 doesn't block
             }
 
             {
                 SemaphoreType event (2);
                 event.wait();
-                event.wait();
-                expect (true); // Count of 2 doesn't block
+                expect (event.timed_wait (100)); // Count of 2 doesn't block
+                // expect (! event.wait()); // 3rd wait would block
             }
 
             {
                 SemaphoreType event (2);
-                event.wait();
-                event.wait();
+                expect (event.wait());
+                expect (event.wait());
                 expect (! event.try_wait()); // 3rd wait fails
-            }
-
-            {
-                // This is an example where the 3rd wait would block
-                // SemaphoreType event (2);
-                // event.wait();
-                // event.wait();
-                // expect (! event.wait()); // 3rd wait wold block
+                expect (! event.timed_wait (100)); // Timed wait fails
             }
         }
         

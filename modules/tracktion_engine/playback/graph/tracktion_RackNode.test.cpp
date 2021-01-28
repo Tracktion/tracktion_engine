@@ -207,7 +207,7 @@ public:
         // Then multi threaded with different strategies
         renderEdit (*this, editName, *edit, ts, MultiThreaded::yes, LockFree::no, ThreadPoolStrategy::conditionVariable);
 
-        for (auto strategy : { ThreadPoolStrategy::conditionVariable, ThreadPoolStrategy::realTime, ThreadPoolStrategy::hybrid })
+        for (auto strategy : test_utilities::getThreadPoolStrategies())
             renderEdit (*this, editName, *edit, ts, MultiThreaded::yes, LockFree::yes, strategy);
     }
 };

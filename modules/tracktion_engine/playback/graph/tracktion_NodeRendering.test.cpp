@@ -32,7 +32,7 @@ public:
         ts.sampleRate = 96000.0;
         ts.blockSize = 128;
         
-        for (auto strategy : { ThreadPoolStrategy::conditionVariable, ThreadPoolStrategy::realTime, ThreadPoolStrategy::hybrid })
+        for (auto strategy : test_utilities::getThreadPoolStrategies())
         {
             runWaveRendering (ts, 30.0, 2, 20, 12, true, false, strategy);
             runWaveRendering (ts, 30.0, 2, 20, 12, false, false, strategy);

@@ -388,6 +388,213 @@ private:
 
 //==============================================================================
 //==============================================================================
+template<typename SemaphoreType>
+struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
+{
+    ThreadPoolSem (LockFreeMultiThreadedNodePlayer& p)
+        : ThreadPool (p)
+    {
+    }
+
+    void createThreads (size_t numThreads) override
+    {
+        if (threads.size() == numThreads)
+            return;
+
+        resetExitSignal();
+        semaphore = std::make_unique<SemaphoreType> ((int) numThreads);
+
+        for (size_t i = 0; i < numThreads; ++i)
+        {
+            threads.emplace_back ([this] { runThread(); });
+            setThreadPriority (threads.back(), 10);
+        }
+    }
+
+    void clearThreads() override
+    {
+        signalShouldExit();
+
+        for (auto& t : threads)
+            t.join();
+
+        threads.clear();
+        semaphore.reset();
+    }
+
+    void signalOne() override
+    {
+        semaphore->signal();
+    }
+
+    void signalAll() override
+    {
+        semaphore->signal ((int) threads.size());
+    }
+
+    void wait()
+    {
+        if (! shouldWait())
+            return;
+
+        if (timeOutMilliseconds < 0)
+        {
+            semaphore->wait();
+        }
+        else
+        {
+            using namespace std::chrono;
+            semaphore->timed_wait ((std::uint64_t) duration_cast<microseconds> (milliseconds (timeOutMilliseconds)).count());
+        }
+    }
+
+    void waitForFinalNode() override
+    {
+        if (isFinalNodeReady())
+            return;
+
+        if (! shouldWait())
+            return;
+
+        pause();
+        return;
+    }
+
+private:
+    std::vector<std::thread> threads;
+    std::unique_ptr<SemaphoreType> semaphore;
+
+    void runThread()
+    {
+        for (;;)
+        {
+            if (shouldExit())
+                return;
+
+            if (! process())
+                wait();
+        }
+    }
+};
+
+
+//==============================================================================
+//==============================================================================
+template<typename SemaphoreType>
+struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
+{
+    ThreadPoolSemHybrid (LockFreeMultiThreadedNodePlayer& p)
+        : ThreadPool (p)
+    {
+    }
+
+    void createThreads (size_t numThreads) override
+    {
+        if (threads.size() == numThreads)
+            return;
+
+        resetExitSignal();
+        semaphore = std::make_unique<SemaphoreType> ((int) numThreads);
+
+        for (size_t i = 0; i < numThreads; ++i)
+        {
+            threads.emplace_back ([this] { runThread(); });
+            setThreadPriority (threads.back(), 10);
+        }
+    }
+
+    void clearThreads() override
+    {
+        signalShouldExit();
+
+        for (auto& t : threads)
+            t.join();
+
+        threads.clear();
+        semaphore.reset();
+    }
+
+    void signalOne() override
+    {
+        semaphore->signal();
+    }
+
+    void signalAll() override
+    {
+        semaphore->signal ((int) threads.size());
+    }
+
+    void wait()
+    {
+        thread_local int pauseCount = 0;
+
+        if (shouldExit())
+            return;
+
+        if (shouldWait())
+        {
+            ++pauseCount;
+
+            if (pauseCount < 25)
+            {
+                pause();
+            }
+            else if (pauseCount < 50)
+            {
+                std::this_thread::yield();
+            }
+            else
+            {
+                pauseCount = 0;
+
+                // Fall back to locking
+                if (timeOutMilliseconds < 0)
+                {
+                    semaphore->wait();
+                }
+                else
+                {
+                    using namespace std::chrono;
+                    semaphore->timed_wait ((std::uint64_t) duration_cast<microseconds> (milliseconds (timeOutMilliseconds)).count());
+                }
+            }
+        }
+        else
+        {
+            pauseCount = 0;
+        }
+    }
+
+    void waitForFinalNode() override
+    {
+        if (isFinalNodeReady())
+            return;
+
+        if (! shouldWait())
+            return;
+
+        pause();
+        return;
+    }
+
+private:
+    std::vector<std::thread> threads;
+    std::unique_ptr<SemaphoreType> semaphore;
+
+    void runThread()
+    {
+        for (;;)
+        {
+            if (shouldExit())
+                return;
+
+            if (! process())
+                wait();
+        }
+    }
+};
+//==============================================================================
+//==============================================================================
 LockFreeMultiThreadedNodePlayer::ThreadPoolCreator getPoolCreatorFunction (ThreadPoolStrategy poolType)
 {
     switch (poolType)
@@ -396,6 +603,12 @@ LockFreeMultiThreadedNodePlayer::ThreadPoolCreator getPoolCreatorFunction (Threa
             return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolCV> (p); };
         case ThreadPoolStrategy::hybrid:
             return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolHybrid> (p); };
+        case ThreadPoolStrategy::semaphore:
+            return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSem<Semaphore>> (p); };
+        case ThreadPoolStrategy::lightweightSemaphore:
+            return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSem<LightweightSemaphore>> (p); };
+        case ThreadPoolStrategy::lightweightSemHybrid:
+            return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSemHybrid<LightweightSemaphore>> (p); };
         case ThreadPoolStrategy::realTime:
         default:
             return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolRT> (p); };

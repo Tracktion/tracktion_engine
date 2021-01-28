@@ -149,13 +149,26 @@ namespace test_utilities
     {
         switch (type)
         {
-            case ThreadPoolStrategy::conditionVariable: return "conditionVariable";
-            case ThreadPoolStrategy::realTime:          return "realTime";
-            case ThreadPoolStrategy::hybrid:            return "hybrid";
+            case ThreadPoolStrategy::conditionVariable:     return "conditionVariable";
+            case ThreadPoolStrategy::realTime:              return "realTime";
+            case ThreadPoolStrategy::hybrid:                return "hybrid";
+            case ThreadPoolStrategy::semaphore:             return "semaphore";
+            case ThreadPoolStrategy::lightweightSemaphore:  return "lightweightSemaphore";
+            case ThreadPoolStrategy::lightweightSemHybrid:  return "lightweightSemaphoreHybrid";
         }
 
         jassertfalse;
         return {};
+    }
+
+    inline std::vector<ThreadPoolStrategy> getThreadPoolStrategies()
+    {
+        return { ThreadPoolStrategy::lightweightSemHybrid,
+                 ThreadPoolStrategy::lightweightSemaphore,
+                 ThreadPoolStrategy::semaphore,
+                 ThreadPoolStrategy::conditionVariable,
+                 ThreadPoolStrategy::realTime,
+                 ThreadPoolStrategy::hybrid };
     }
 
     /** Logs the graph structure to the console. */
