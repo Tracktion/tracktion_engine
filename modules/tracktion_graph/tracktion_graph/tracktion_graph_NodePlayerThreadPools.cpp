@@ -74,11 +74,21 @@ struct ThreadPoolCV : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
     void signalOne() override
     {
+        {
+            std::unique_lock<std::mutex> lock (mutex);
+            triggered.store (true, std::memory_order_release);
+        }
+        
         condition.notify_one();
     }
 
     void signalAll() override
     {
+        {
+            std::unique_lock<std::mutex> lock (mutex);
+            triggered.store (true, std::memory_order_release);
+        }
+
         condition.notify_all();
     }
 
@@ -119,7 +129,16 @@ private:
     std::vector<std::thread> threads;
     mutable std::mutex mutex;
     mutable std::condition_variable condition;
+    mutable std::atomic<bool> triggered { false };
 
+    bool shouldWaitOrIsNotTriggered()
+    {
+        if (! triggered.load (std::memory_order_acquire))
+            return false;
+        
+        return shouldWait();
+    }
+    
     void runThread()
     {
         for (;;)
@@ -270,11 +289,21 @@ struct ThreadPoolHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
     void signalOne() override
     {
+        {
+            std::unique_lock<std::mutex> lock (mutex);
+            triggered.store (true, std::memory_order_release);
+        }
+        
         condition.notify_one();
     }
 
     void signalAll() override
     {
+        {
+            std::unique_lock<std::mutex> lock (mutex);
+            triggered.store (true, std::memory_order_release);
+        }
+
         condition.notify_all();
     }
 
@@ -306,12 +335,12 @@ struct ThreadPoolHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
                 if (timeOutMilliseconds < 0)
                 {
-                    condition.wait (lock, [this] { return ! shouldWait(); });
+                    condition.wait (lock, [this] { return ! shouldWaitOrIsNotTriggered(); });
                 }
                 else
                 {
                     if (! condition.wait_for (lock, std::chrono::milliseconds (timeOutMilliseconds),
-                                              [this] { return ! shouldWait(); }))
+                                              [this] { return ! shouldWaitOrIsNotTriggered(); }))
                     {
                         return;
                     }
@@ -333,7 +362,16 @@ private:
     std::vector<std::thread> threads;
     mutable std::mutex mutex;
     mutable std::condition_variable condition;
+    mutable std::atomic<bool> triggered { false };
 
+    bool shouldWaitOrIsNotTriggered()
+    {
+        if (! triggered.load (std::memory_order_acquire))
+            return false;
+        
+        return shouldWait();
+    }
+    
     void runThread()
     {
         for (;;)

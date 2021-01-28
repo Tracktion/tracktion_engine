@@ -55,11 +55,21 @@ public:
 
     void signalOne()
     {
+        {
+            std::unique_lock<std::mutex> lock (mutex);
+            triggered.store (true, std::memory_order_release);
+        }
+        
         condition.notify_one();
     }
 
     void signalAll()
     {
+        {
+            std::unique_lock<std::mutex> lock (mutex);
+            triggered.store (true, std::memory_order_release);
+        }
+
         condition.notify_all();
     }
 
@@ -88,7 +98,7 @@ public:
 
                 // Fall back to locking
                 std::unique_lock<std::mutex> lock (mutex);
-                condition.wait (lock, [this] { return ! shouldWait(); });
+                condition.wait (lock, [this] { return ! shouldWaitOrIsNotTriggered(); });
             }
         }
         else
@@ -149,7 +159,16 @@ private:
     std::vector<std::thread> threads;
     mutable std::mutex mutex;
     mutable std::condition_variable condition;
+    mutable std::atomic<bool> triggered { false };
 
+    bool shouldWaitOrIsNotTriggered()
+    {
+        if (! triggered.load (std::memory_order_acquire))
+            return false;
+        
+        return shouldWait();
+    }
+    
     void runThread()
     {
         for (;;)
