@@ -30,7 +30,8 @@ LockFreeMultiThreadedNodePlayer::LockFreeMultiThreadedNodePlayer (ThreadPoolCrea
 
 LockFreeMultiThreadedNodePlayer::~LockFreeMultiThreadedNodePlayer()
 {
-    clearThreads();
+    if (numThreadsToUse > 0)
+        clearThreads();
 }
 
 void LockFreeMultiThreadedNodePlayer::setNumThreads (size_t newNumThreads)
