@@ -16,6 +16,8 @@
 #define GRAPH_UNIT_TESTS_SAMPLECONVERSION  1
 #define GRAPH_UNIT_TESTS_CONNECTEDNODE     1
 
+#define GRAPH_UNIT_TESTS_SEMAPHORE         1
+
 // Defined in tracktion_engine
 #define GRAPH_UNIT_TESTS_WAVENODE          1
 #define GRAPH_UNIT_TESTS_MIDINODE          1
