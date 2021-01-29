@@ -424,12 +424,12 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
     void signalOne() override
     {
-        semaphore->signal();
+        if (semaphore) semaphore->signal();
     }
 
     void signalAll() override
     {
-        semaphore->signal ((int) threads.size());
+        if (semaphore) semaphore->signal ((int) threads.size());
     }
 
     void wait()
@@ -516,12 +516,12 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
     void signalOne() override
     {
-        semaphore->signal();
+        if (semaphore) semaphore->signal();
     }
 
     void signalAll() override
     {
-        semaphore->signal ((int) threads.size());
+        if (semaphore) semaphore->signal ((int) threads.size());
     }
 
     void wait()
