@@ -1115,7 +1115,7 @@ void EditPlaybackContext::postPosition (double newPosition)
 void EditPlaybackContext::setThreadPoolStrategy (int type)
 {
     type = jlimit (static_cast<int> (tracktion_graph::ThreadPoolStrategy::conditionVariable),
-                   static_cast<int> (tracktion_graph::ThreadPoolStrategy::hybrid),
+                   static_cast<int> (tracktion_graph::ThreadPoolStrategy::lightweightSemHybrid),
                    type);
     EditPlaybackContextInternal::getThreadPoolStrategyType() = type;
 }
@@ -1123,7 +1123,7 @@ void EditPlaybackContext::setThreadPoolStrategy (int type)
 int EditPlaybackContext::getThreadPoolStrategy()
 {
     const int type = jlimit (static_cast<int> (tracktion_graph::ThreadPoolStrategy::conditionVariable),
-                             static_cast<int> (tracktion_graph::ThreadPoolStrategy::hybrid),
+                             static_cast<int> (tracktion_graph::ThreadPoolStrategy::lightweightSemHybrid),
                              EditPlaybackContextInternal::getThreadPoolStrategyType());
     
     return type;
