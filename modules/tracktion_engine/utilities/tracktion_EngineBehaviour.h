@@ -149,7 +149,7 @@ public:
     /** Must return the default looped sequence type to use.
 
         Current options are:
-        0: loopRangeDefinesAllRepetitions           // The looped sequence is the same for all repititions including the first.
+        0: loopRangeDefinesAllRepetitions           // The looped sequence is the same for all repetitions including the first.
         1: loopRangeDefinesSubsequentRepetitions    // The first section is the whole sequence, subsequent repitions are determined by the loop range.
     */
     virtual int getDefaultLoopedSequenceType()                                      { return 0; }

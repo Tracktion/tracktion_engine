@@ -126,7 +126,7 @@ public:
 
     enum class LoopedSequenceType : int
     {
-        loopRangeDefinesAllRepetitions          = 0,    /**< The looped sequence is the same for all repititions including the first. */
+        loopRangeDefinesAllRepetitions          = 0,    /**< The looped sequence is the same for all repetitions including the first. */
         loopRangeDefinesSubsequentRepetitions   = 1     /**< The first section is the whole sequence, subsequent repitions are determined by the loop range. */
     };
 
