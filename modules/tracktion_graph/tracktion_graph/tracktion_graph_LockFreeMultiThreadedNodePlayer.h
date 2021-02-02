@@ -15,7 +15,16 @@
  #pragma warning (disable: 4127)
 #endif
 
+#if defined (__clang__) || defined (__GNUC__)
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wsign-conversion"
+#endif
+
 #include "../3rd_party/concurrentqueue.h"
+
+#if defined (__clang__) || defined (__GNUC__)
+ #pragma GCC diagnostic pop
+#endif
 
 #ifdef _MSC_VER
  #pragma warning (pop)

@@ -9,8 +9,13 @@
 */
 
 #if defined (__clang__) || defined (__GNUC__)
- #pragma clang diagnostic push
- #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+ #pragma GCC diagnostic ignored "-Wunused-variable"
+
+ #if ! defined (__clang__)
+  #pragma GCC diagnostic ignored "-Wclass-memaccess"
+ #endif
 #endif
 
 extern "C"
@@ -19,5 +24,5 @@ extern "C"
 }
 
 #if defined (__clang__) || defined (__GNUC__)
- #pragma clang diagnostic pop
+ #pragma GCC diagnostic pop
 #endif

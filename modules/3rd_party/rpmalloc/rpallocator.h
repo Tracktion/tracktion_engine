@@ -119,7 +119,7 @@ public:
 
     //==============================================================================
     /** Constructor. */
-    rpallocator() noexcept = default;
+    rpallocator() = default;
 
     /** Copy constructor. */
     rpallocator (const rpallocator&) noexcept {}
