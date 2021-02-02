@@ -170,7 +170,6 @@ private:
         {
             // Create 100 threads
             // Randomly push or pop ints in to a vector
-            juce::Random r;
             
             constexpr int numThreads = 100;
             constexpr size_t maxSize = 100'000;
@@ -178,8 +177,9 @@ private:
             std::atomic<bool> shouldExit { false };
 
             for (int threadNum = 0; threadNum < numThreads; ++threadNum)
-                pool.emplace_back ([&r, &shouldExit]
+                pool.emplace_back ([&shouldExit]
                                    {
+                                       juce::Random r;
                                        std::vector<int, rpallocator<int>> vec;
                     
                                        while (! shouldExit)
@@ -202,7 +202,7 @@ private:
                                                    vec.push_back (r.nextInt());
                                            }
                                        }
-                                        
+
                                       #if LOG_RPALLOCATIONS
                                        std::cout << "num ints: " << vec.size() << "\n";
                                       #endif

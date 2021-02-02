@@ -11,6 +11,7 @@
 #pragma once
 
 #include "rpmalloc.h"
+#include "../../tracktion_graph/utilities/tracktion_RealTimeSpinLock.h"
 
 #ifndef LOG_RPALLOCATIONS
  #define LOG_RPALLOCATIONS 0
@@ -33,6 +34,8 @@ namespace details
                #if LOG_RPALLOCATIONS
                 std::cout << "\trpmalloc_initialize\n";
                #endif
+
+                const std::lock_guard<std::mutex> l (getInitMutex());
                 rpmalloc_initialize();
             }
         }
@@ -48,15 +51,23 @@ namespace details
                #if LOG_RPALLOCATIONS
                 std::cout << "\trpmalloc_finalize\n";
                #endif
+
+                const std::lock_guard<std::mutex> l (getInitMutex());
                 rpmalloc_finalize();
             }
         }
         
     private:
-        std::atomic<int>& getInitCount()
+        static std::atomic<int>& getInitCount()
         {
             static std::atomic<int> initCount { 0 };
             return initCount;
+        }
+        
+        static std::mutex& getInitMutex()
+        {
+            static std::mutex m;
+            return m;
         }
     };
 
@@ -69,7 +80,21 @@ namespace details
            #if LOG_RPALLOCATIONS
             std::cout << std::this_thread::get_id() << " ~ScopedRPThreadFinaliser()\n";
            #endif
+            
+            // With high thread counts (100+) there seems to be too much contention on the
+            // finalize call and it stalls so serialise them here
+            const std::lock_guard l (getFinaliseMutex());
             rpmalloc_thread_finalize();
+        }
+        
+        // This is here to ensure rpmalloc isn't deinitialised untill all threads have finished
+        ScopedRPMallocInitialiser scopedRPMallocInitialiser;
+    
+    private:
+        static tracktion_graph::RealTimeSpinLock& getFinaliseMutex()
+        {
+            static tracktion_graph::RealTimeSpinLock m;
+            return m;
         }
     };
 }
@@ -107,8 +132,8 @@ public:
     value_type* allocate (std::size_t numElements)
     {
         rpmalloc_thread_initialize();
-        thread_local details::ScopedRPThreadFinaliser init;
-        
+        initThreadFinaliser();
+
         const auto numBytes = numElements * sizeof (value_type);
         
        #if LOG_RPALLOCATIONS
@@ -122,7 +147,7 @@ public:
     void deallocate (T* p, [[maybe_unused]] std::size_t numElements)
     {
         rpmalloc_thread_initialize();
-        thread_local details::ScopedRPThreadFinaliser init;
+        initThreadFinaliser();
 
        #if LOG_RPALLOCATIONS
         std::cout << "Dealloc " << numElements * sizeof (value_type) << " bytes.\n";
@@ -134,4 +159,9 @@ public:
 private:
     //==============================================================================
     details::ScopedRPMallocInitialiser scopedRPMallocInitialiser;
+    
+    void initThreadFinaliser()
+    {
+        thread_local details::ScopedRPThreadFinaliser init;
+    }
 };
