@@ -244,7 +244,7 @@ protected:
 private:
     std::atomic<bool> hasBeenProcessed { false };
     choc::buffer::Size audioBufferSize;
-    choc::buffer::ChannelArrayBuffer<float> audioBuffer;
+    choc::buffer::AllocatedBuffer<float, choc::buffer::SeparateChannelLayout, rpallocator<char>> audioBuffer;
     choc::buffer::ChannelArrayView<float> audioView;
     tracktion_engine::MidiMessageArray midiBuffer;
     std::atomic<int> numSamplesProcessed { 0 };

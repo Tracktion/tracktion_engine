@@ -74,6 +74,8 @@
  #include "../3rd_party/choc/containers/choc_MultipleReaderMultipleWriterFIFO.h"
 #endif
 
+#include "../3rd_party/rpmalloc/rpallocator.h"
+
 //==============================================================================
 #include <juce_audio_basics/juce_audio_basics.h>
 
