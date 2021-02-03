@@ -10,7 +10,7 @@
 
 #pragma once
 
-#if JUCE_INTEL
+#if __has_include (<emmintrin.h>)
  #include <emmintrin.h>
 #endif
 
@@ -34,7 +34,7 @@ public:
 
             for (int i = 0; i < 10; ++i)
             {
-                #if JUCE_INTEL
+                #if __has_include (<emmintrin.h>)
                  _mm_pause();
                 #else
                  __asm__ __volatile__ ("yield");
