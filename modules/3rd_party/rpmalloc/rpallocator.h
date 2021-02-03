@@ -131,8 +131,8 @@ public:
     /** Allocates a number of elements of T. */
     value_type* allocate (std::size_t numElements)
     {
-        rpmalloc_thread_initialize();
         initThreadFinaliser();
+        rpmalloc_thread_initialize();
 
         const auto numBytes = numElements * sizeof (value_type);
         
@@ -146,8 +146,8 @@ public:
     /** Dellocates a previously allocated pointer. */
     void deallocate (T* p, [[maybe_unused]] std::size_t numElements)
     {
-        rpmalloc_thread_initialize();
         initThreadFinaliser();
+        rpmalloc_thread_initialize();
 
        #if LOG_RPALLOCATIONS
         std::cout << "Dealloc " << numElements * sizeof (value_type) << " bytes.\n";
@@ -158,8 +158,6 @@ public:
 
 private:
     //==============================================================================
-    details::ScopedRPMallocInitialiser scopedRPMallocInitialiser;
-    
     void initThreadFinaliser()
     {
         thread_local details::ScopedRPThreadFinaliser init;
