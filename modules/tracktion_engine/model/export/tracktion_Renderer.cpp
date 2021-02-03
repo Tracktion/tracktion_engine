@@ -52,6 +52,36 @@ struct Ditherers
 };
 
 //==============================================================================
+static void addAcidInfo (Edit& edit, Renderer::Parameters& r)
+{
+    if (r.destFile.hasFileExtension (".wav") && r.endAllowance == 0.0)
+    {
+        auto& pitch = edit.pitchSequence.getPitchAt (r.time.start);
+        auto& tempo = edit.tempoSequence.getTempoAt (r.time.start);
+        auto& timeSig = edit.tempoSequence.getTimeSigAt (r.time.start);
+
+        r.metadata.set (WavAudioFormat::acidOneShot, "0");
+        r.metadata.set (WavAudioFormat::acidRootSet, "1");
+        r.metadata.set (WavAudioFormat::acidDiskBased, "1");
+        r.metadata.set (WavAudioFormat::acidizerFlag, "1");
+        r.metadata.set (WavAudioFormat::acidRootNote, String (pitch.getPitch()));
+
+        auto beats = tempo.getBpm() * (r.time.getLength() / 60);
+        if (std::abs (beats - int (beats)) < 0.001)
+        {
+            r.metadata.set (WavAudioFormat::acidStretch, "1");
+            r.metadata.set (WavAudioFormat::acidBeats, String (roundToInt (beats)));
+            r.metadata.set (WavAudioFormat::acidDenominator, String (timeSig.denominator.get()));
+            r.metadata.set (WavAudioFormat::acidNumerator, String (timeSig.numerator.get()));
+            r.metadata.set (WavAudioFormat::acidTempo, String (tempo.getBpm()));
+        }
+        else
+        {
+            r.metadata.set (WavAudioFormat::acidStretch, "0");
+        }
+    }
+}
+
 static bool trackLoopsBackInto (const Array<Track*>& allTracks, AudioTrack& t, const BigInteger* tracksToCheck)
 {
     for (int j = allTracks.size(); --j >= 0;)
@@ -1008,29 +1038,7 @@ bool Renderer::renderToFile (const String& taskDescription,
             r.allowedClips = clips;
             r.createMidiFile = outputFile.hasFileExtension (".mid");
 
-            auto& pitch = edit.pitchSequence.getPitchAt (range.start);
-            auto& tempo = edit.tempoSequence.getTempoAt (range.start);
-            auto& timeSig = edit.tempoSequence.getTimeSigAt (range.start);
-
-			r.metadata.set (WavAudioFormat::acidOneShot, "0");
-			r.metadata.set (WavAudioFormat::acidRootSet, "1");
-			r.metadata.set (WavAudioFormat::acidDiskBased, "1");
-			r.metadata.set (WavAudioFormat::acidizerFlag, "1");
-			r.metadata.set (WavAudioFormat::acidRootNote, String (pitch.getPitch()));
-
-            auto beats = tempo.getBpm() * (range.getLength() / 60);
-            if (std::abs (beats - int (beats)) < 0.001)
-            {
-                r.metadata.set (WavAudioFormat::acidStretch, "1");
-                r.metadata.set (WavAudioFormat::acidBeats, String (roundToInt (beats)));
-                r.metadata.set (WavAudioFormat::acidDenominator, String (timeSig.denominator.get()));
-                r.metadata.set (WavAudioFormat::acidNumerator, String (timeSig.numerator.get()));
-                r.metadata.set (WavAudioFormat::acidTempo, String (tempo.getBpm()));
-            }
-            else
-            {
-                r.metadata.set (WavAudioFormat::acidStretch, "0");
-            }
+            addAcidInfo (edit, r);
 
             RenderTask task (taskDescription, r, node);
 

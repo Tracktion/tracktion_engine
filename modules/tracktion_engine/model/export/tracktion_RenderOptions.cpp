@@ -211,6 +211,8 @@ RenderManager::Job::Ptr RenderOptions::performBackgroundRender (Edit& edit, Sele
     if (isTrackRender())
         p.endAllowance = markedRegion ? 0.0 : 10.0;
 
+    addAcidInfo (edit, p);
+
     return (p.audioFormat != nullptr || p.createMidiFile)
                 ? EditRenderJob::getOrCreateRenderJob (edit.engine, p, false, false, false)
                 : nullptr;
