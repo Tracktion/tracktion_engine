@@ -15,6 +15,9 @@ namespace tracktion_graph
 /** Creates a juce::AudioBuffer from a choc::buffer::BufferView. */
 inline juce::AudioBuffer<float> toAudioBuffer (choc::buffer::ChannelArrayView<float> view)
 {
+    if (view.getNumChannels() == 0)
+        return juce::AudioBuffer<float>();
+        
     return juce::AudioBuffer<float> (view.data.channels, (int) view.getNumChannels(), (int) view.data.offset, (int) view.getNumFrames());
 }
 
