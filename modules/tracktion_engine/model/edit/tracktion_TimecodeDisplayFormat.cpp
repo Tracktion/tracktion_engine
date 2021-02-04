@@ -98,7 +98,7 @@ String TimecodeSnapType::getDescription (const TempoSetting& tempo) const
     if (level == 0) return TRANS("1/100 frame");
     if (level == 1) return TRANS("Frame");
 
-    return TRANS(getMinSecDivisions (level - 2).name);
+    return TRANS(getMinSecDivisions (level + 2).name);
 }
 
 double TimecodeSnapType::getApproxIntervalTime (const TempoSetting& tempo) const
