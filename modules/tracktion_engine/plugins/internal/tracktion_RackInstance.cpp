@@ -153,14 +153,16 @@ void RackInstance::replaceRackWithPluginSequence (SelectionManager* sm)
         {
             bool operator< (const PluginIndexAndPos& other) const     { return x < other.x; }
 
-            int index;
-            float x;
+            float x = 0.0f;
+            Plugin* plugin = nullptr;
         };
 
+        auto rackPlugins = thisType->getPlugins();
         juce::Array<PluginIndexAndPos> pluginLocations;
 
-        for (int i = 0; i < thisType->getPlugins().size(); ++i)
-            pluginLocations.add ({ i, thisType->getPluginPosition (i).x });
+        for (int i = 0; i < rackPlugins.size(); ++i)
+            if (auto rackPlugin = rackPlugins[i])
+                pluginLocations.add ({ thisType->getPluginPosition (rackPlugin).x, rackPlugin });
 
         std::sort (pluginLocations.begin(), pluginLocations.end());
 
@@ -170,7 +172,8 @@ void RackInstance::replaceRackWithPluginSequence (SelectionManager* sm)
 
             for (int i = pluginLocations.size(); --i >= 0;)
             {
-                auto srcPlugin = thisType->getPlugins()[pluginLocations.getUnchecked (i).index];
+                auto srcPlugin = pluginLocations.getUnchecked (i).plugin;
+                jassert (srcPlugin != nullptr);
                 srcPlugin->flushPluginStateToValueTree();
                 auto pluginState = srcPlugin->state;
 
