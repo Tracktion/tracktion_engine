@@ -177,6 +177,13 @@ public:
     */
     AudioAndMidiBuffer getProcessedOutput();
 
+    /** Frees the interal buffer resources.
+        This is a performance step you can take when all dependant Nodes have finished
+        with this one to reuse the memory in other Nodes and reduce the overall memory
+        usage of the graph.
+    */
+    void deallocateBuffers();
+    
     //==============================================================================
     /** Called after construction to give the node a chance to modify its topology.
         This should return true if any changes were made to the topology as this
@@ -242,13 +249,14 @@ protected:
     void setAudioOutput (const choc::buffer::ChannelArrayView<float>&);
     
 private:
-    std::atomic<bool> hasBeenProcessed { false };
+    std::atomic<bool> hasBeenProcessed { false }, hasAllocated { false };
     choc::buffer::Size audioBufferSize;
-    choc::buffer::AllocatedBuffer<float, choc::buffer::SeparateChannelLayout, rpallocator<char>> audioBuffer;
+    choc::buffer::AllocatedBuffer<float, choc::buffer::SeparateChannelLayout, std::allocator<char>> audioBuffer;
     choc::buffer::ChannelArrayView<float> audioView;
     tracktion_engine::MidiMessageArray midiBuffer;
     std::atomic<int> numSamplesProcessed { 0 };
     NodeOptimisations nodeOptimisations;
+    bool allocateAtProcess = true;
 
    #if JUCE_DEBUG
     std::atomic<bool> isBeingProcessed { false };
@@ -318,8 +326,11 @@ inline void Node::initialise (const PlaybackInitialisationInfo& info)
     audioBufferSize = choc::buffer::Size::create ((choc::buffer::ChannelCount) props.numberOfChannels,
                                                   (choc::buffer::FrameCount) info.blockSize);
     
-    if (nodeOptimisations.allocate == AllocateAudioBuffer::yes)
+    if (nodeOptimisations.allocate == AllocateAudioBuffer::yes && ! allocateAtProcess)
+    {
         audioBuffer.resize (audioBufferSize);
+        hasAllocated.store (true, std::memory_order_release);
+    }
 }
 
 inline void Node::prepareForNextBlock (juce::Range<int64_t> referenceSampleRange)
@@ -334,6 +345,12 @@ inline void Node::process (juce::Range<int64_t> referenceSampleRange)
     assert (! isBeingProcessed);
     isBeingProcessed = true;
    #endif
+    
+    if (nodeOptimisations.allocate == AllocateAudioBuffer::yes && allocateAtProcess)
+    {
+        audioBuffer.resize (audioBufferSize);
+        hasAllocated.store (true, std::memory_order_release);
+    }
 
     if (nodeOptimisations.clear == ClearBuffers::yes)
     {
@@ -382,6 +399,23 @@ inline Node::AudioAndMidiBuffer Node::getProcessedOutput()
     jassert (hasProcessed());
     return { audioView.getStart ((choc::buffer::FrameCount) numSamplesProcessed.load (std::memory_order_acquire)),
              midiBuffer };
+}
+
+inline void Node::deallocateBuffers()
+{
+    // N.B. This won't work because Nodes which simply pass through their views still
+    // have a reference to an upstream buffer which may be deallocated by this call
+    if (nodeOptimisations.allocate == AllocateAudioBuffer::no)
+        return;
+        
+    if (! hasAllocated.load (std::memory_order_acquire))
+        return;
+    
+    for (auto input : getDirectInputNodes())
+        jassert (input->hasProcessed());
+    
+    hasAllocated.store (false, std::memory_order_release);
+    audioBuffer.resize ({});
 }
 
 inline size_t Node::getAllocatedBytes() const

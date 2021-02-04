@@ -83,7 +83,10 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
     if (numThreadsToUse.load (std::memory_order_acquire) == 0)
     {
         for (auto node : preparedNode.allNodes)
+        {
             node->process (referenceSampleRange);
+            deallocateInputsIfPossible (*node);
+        }
     }
     else
     {
@@ -359,11 +362,34 @@ void LockFreeMultiThreadedNodePlayer::processNode (Node& node)
         #endif
 
         // Process Node
+        auto nodeToDeallocate = nodeToProcess;
         nodeToProcess->process (referenceSampleRange);
         nodeToProcess = updateProcessQueueForNode (*nodeToProcess);
+        
+        deallocateInputsIfPossible (*nodeToDeallocate);
 
         if (! nodeToProcess)
             break;
+    }
+}
+
+void LockFreeMultiThreadedNodePlayer::deallocateInputsIfPossible (Node& node)
+{
+    for (auto input : node.getDirectInputNodes())
+    {
+        // Deallocate input if all outputs have been processed
+        [[ maybe_unused ]] bool canDeallocate = [&]
+        {
+            for (auto outputNode : static_cast<PlaybackNode*> (input->internal)->outputs)
+                if (! outputNode->hasProcessed())
+                    return false;
+                
+            return true;
+        }();
+        
+// N.B this is commented out because it won't work. See deallocateBuffers for details
+//        if (canDeallocate)
+//            input->deallocateBuffers();
     }
 }
 

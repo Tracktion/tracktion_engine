@@ -248,6 +248,7 @@ private:
     void resetProcessQueue();
     Node* updateProcessQueueForNode (Node&);
     void processNode (Node&);
+    void deallocateInputsIfPossible (Node&);
 
     //==============================================================================
     bool processNextFreeNode();
