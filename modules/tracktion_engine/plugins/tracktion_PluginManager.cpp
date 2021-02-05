@@ -95,7 +95,7 @@ struct PluginScanMasterProcess  : private ChildProcessMaster
             if (reply->getNumChildElements() == 0)
                 TRACKTION_LOG ("No plugins found in: " + fileOrIdentifier);
 
-            forEachXmlChildElement (*reply, e)
+            for (auto e : reply->getChildIterator())
             {
                 PluginDescription desc;
 

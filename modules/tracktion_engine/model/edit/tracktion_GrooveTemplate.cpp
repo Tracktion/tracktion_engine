@@ -31,7 +31,7 @@ GrooveTemplate::GrooveTemplate (const juce::XmlElement* node)
         name = node->getStringAttribute ("name", TRANS("Unnamed"));
         parameterized = node->getBoolAttribute ("parameterized", false);
 
-        forEachXmlChildElementWithTagName (*node, n, "SHIFT")
+        for (auto n : node->getChildWithTagNameIterator ("SHIFT"))
             latenesses.add ((float) n->getDoubleAttribute ("delta", 0.0));
     }
 }
@@ -187,7 +187,7 @@ GrooveTemplateManager::GrooveTemplateManager (Engine& e)
         std::unique_ptr<XmlElement> defSettings (XmlDocument::parse (TracktionBinaryData::groove_templates_2_xml));
 
         if (defSettings != nullptr && defSettings->hasTagName ("GROOVETEMPLATES"))
-            forEachXmlChildElementWithTagName (*defSettings, n, GrooveTemplate::grooveXmlTag)
+            for (auto n : defSettings->getChildWithTagNameIterator (GrooveTemplate::grooveXmlTag))
                 knownGrooves.add (new GrooveTemplate (n));
     }
 
@@ -243,7 +243,7 @@ void GrooveTemplateManager::reload (const juce::XmlElement* grooves)
     knownGrooves.clearQuick (true);
 
     if (grooves != nullptr && grooves->hasTagName ("GROOVETEMPLATES"))
-        forEachXmlChildElementWithTagName (*grooves, n, GrooveTemplate::grooveXmlTag)
+        for (auto n : grooves->getChildWithTagNameIterator (GrooveTemplate::grooveXmlTag))
             knownGrooves.add (new GrooveTemplate (n));
 
     useParameterizedGrooves (useParameterized);

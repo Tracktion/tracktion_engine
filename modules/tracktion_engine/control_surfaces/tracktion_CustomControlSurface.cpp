@@ -180,7 +180,7 @@ Array<ControlSurface*> CustomControlSurface::getCustomSurfaces (ExternalControll
     Array<ControlSurface*> surfaces;
 
     if (auto n = ecm.engine.getPropertyStorage().getXmlProperty (SettingID::customMidiControllers))
-        forEachXmlChildElement (*n, controllerXml)
+        for (auto controllerXml : n->getChildIterator())
             surfaces.add (new CustomControlSurface (ecm, *controllerXml));
 
     return surfaces;
@@ -233,7 +233,7 @@ bool CustomControlSurface::loadFromXml (const juce::XmlElement& xml)
 
     mappings.clear();
 
-    forEachXmlChildElementWithTagName (xml, node, "MAPPING")
+    for (auto node : xml.getChildWithTagNameIterator ("MAPPING"))
     {
         auto mapping = mappings.add (new Mapping());
         mapping->id       = node->getIntAttribute ("id");
