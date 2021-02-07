@@ -106,7 +106,7 @@ juce::XmlElement* convertMidnamToXml (const juce::File& src)
     if (auto manufacturerXml = devXml->getChildByName ("Manufacturer"))
         manufacturer += manufacturerXml->getAllSubText();
 
-    forEachXmlChildElementWithTagName (*devXml, modelXml, "Model")
+    for (auto modelXml : devXml->getChildWithTagNameIterator ("Model"))
         models.add (modelXml->getAllSubText());
 
     ProgramSet programSet;
@@ -117,12 +117,12 @@ juce::XmlElement* convertMidnamToXml (const juce::File& src)
 
     programSet.name.trim();
 
-    forEachXmlChildElementWithTagName (*devXml, patchNameListXml, "PatchNameList")
+    for (auto patchNameListXml : devXml->getChildWithTagNameIterator ("PatchNameList"))
     {
         auto name = patchNameListXml->getStringAttribute("Name");
         auto bankSet = getBankSet (programSet, name);
 
-        forEachXmlChildElementWithTagName (*patchNameListXml, patchXml, "Patch")
+        for (auto patchXml : patchNameListXml->getChildWithTagNameIterator ("Patch"))
         {
             auto patchName = patchXml->getStringAttribute ("Name");
 
@@ -139,16 +139,16 @@ juce::XmlElement* convertMidnamToXml (const juce::File& src)
         }
     }
 
-    forEachXmlChildElementWithTagName (*devXml, channelNameSetXml, "ChannelNameSet")
+    for (auto channelNameSetXml : devXml->getChildWithTagNameIterator ("ChannelNameSet"))
     {
-        forEachXmlChildElementWithTagName (*channelNameSetXml, patchBankXml, "PatchBank")
+        for (auto patchBankXml : channelNameSetXml->getChildWithTagNameIterator ("PatchBank"))
         {
             auto name = patchBankXml->getStringAttribute ("Name");
             auto bankSet = getBankSet (programSet, name);
 
             if (auto midiCommandsXml = patchBankXml->getChildByName ("MIDICommands"))
             {
-                forEachXmlChildElementWithTagName (*midiCommandsXml, controlChangeXml, "ControlChange")
+                for (auto controlChangeXml : midiCommandsXml->getChildWithTagNameIterator ("ControlChange"))
                 {
                     if (controlChangeXml->hasAttribute ("Control") && controlChangeXml->hasAttribute("Value"))
                     {
@@ -163,7 +163,7 @@ juce::XmlElement* convertMidnamToXml (const juce::File& src)
 
             if (auto patchNameListXml = patchBankXml->getChildByName ("PatchNameList"))
             {
-                forEachXmlChildElementWithTagName (*patchNameListXml, patchXml, "Patch")
+                for (auto patchXml : patchNameListXml->getChildWithTagNameIterator ("Patch"))
                 {
                     auto patchName = patchXml->getStringAttribute("Name");
 
@@ -222,7 +222,7 @@ void MidiProgramManager::MidiBank::updateFromXml (const juce::XmlElement& n)
     name = n.getStringAttribute ("name");
     id = n.getIntAttribute ("high") * 256 + n.getIntAttribute ("low");
 
-    forEachXmlChildElementWithTagName (n, programXml, "program")
+    for (auto programXml : n.getChildWithTagNameIterator ("program"))
     {
         programNames[programXml->getIntAttribute ("number")]
             = programXml->getStringAttribute ("name");
@@ -249,7 +249,7 @@ void MidiProgramManager::MidiProgramSet::updateFromXml (const juce::XmlElement& 
 
     int idx = 0;
 
-    forEachXmlChildElement (n, currentChildXml)
+    for (auto currentChildXml : n.getChildIterator())
     {
         if (currentChildXml->hasTagName ("bank"))
             midiBanks[idx++].updateFromXml (*currentChildXml);
@@ -267,7 +267,7 @@ MidiProgramManager::MidiProgramManager (Engine& e)
 
     if (xml != nullptr)
     {
-        forEachXmlChildElement (*xml, currentSetXml)
+        for (auto currentSetXml : xml->getChildIterator())
         {
             auto* currentSet = new MidiProgramSet();
             currentSet->updateFromXml (*currentSetXml);

@@ -8,8 +8,6 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#pragma once
-
 #include <thread>
 
 #ifdef _MSC_VER
