@@ -683,8 +683,10 @@ juce::Result mergeMidiClips (juce::Array<MidiClip*> clips)
                     MidiList sourceList;
                     sourceList.copyFrom (c->getSequenceLooped(), nullptr);
 
-                    sourceList.trimOutside (c->getOffsetInBeats(), c->getOffsetInBeats() + c->getLengthInBeats(), nullptr);
-                    sourceList.moveAllBeatPositions (c->getStartBeat() - startBeat - c->getOffsetInBeats(), nullptr);
+                    auto offset = c->getPosition().getOffset() * c->edit.tempoSequence.getBeatsPerSecondAt (c->getPosition().getStart(), true);
+
+                    sourceList.trimOutside (offset, offset + c->getLengthInBeats(), nullptr);
+                    sourceList.moveAllBeatPositions (c->getStartBeat() - startBeat - offset, nullptr);
 
                     destinationList.addFrom (sourceList, nullptr);
                 }

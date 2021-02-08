@@ -527,6 +527,23 @@ double TempoSequence::getBpmAt (double time) const
     return 120.0;
 }
 
+double TempoSequence::getBeatsPerSecondAt (double time, bool lengthOfOneBeatDependsOnTimeSignature) const
+{
+    if (lengthOfOneBeatDependsOnTimeSignature)
+    {
+        updateTempoDataIfNeeded();
+        for (int i = internalTempos.size(); --i >= 0;)
+        {
+            auto& it = internalTempos.getReference (i);
+
+            if (it.startTime <= time || i == 0)
+                return it.beatsPerSecond;
+        }
+    }
+
+    return getBpmAt (time) / 60.0;
+}
+
 bool TempoSequence::isTripletsAtTime (double time) const
 {
     return getTimeSigAt (time).triplets;
