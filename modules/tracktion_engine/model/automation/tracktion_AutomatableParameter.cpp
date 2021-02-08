@@ -811,7 +811,7 @@ void AutomatableParameter::valueTreePropertyChanged (juce::ValueTree& v, const j
     }
     else if (attachedValue != nullptr && attachedValue->updateIfMatches (v, i))
     {
-        currentValue = attachedValue->getValue();
+        currentParameterValue = currentValue = attachedValue->getValue();
 
         SCOPED_REALTIME_CHECK
         listeners.call (&Listener::currentValueChanged, *this, currentValue);
@@ -844,7 +844,7 @@ void AutomatableParameter::valueTreeRedirected (juce::ValueTree&)    { jassertfa
 //==============================================================================
 void AutomatableParameter::attachToCurrentValue (juce::CachedValue<float>& v)
 {
-    currentValue = v;
+    currentParameterValue = currentValue = v;
     jassert (attachedValue == nullptr);
     attachedValue.reset (new AttachedFloatValue (*this, v));
     v.getValueTree().addListener (this);
@@ -852,7 +852,7 @@ void AutomatableParameter::attachToCurrentValue (juce::CachedValue<float>& v)
 
 void AutomatableParameter::attachToCurrentValue (juce::CachedValue<int>& v)
 {
-    currentValue = (float) v.get();
+    currentParameterValue = currentValue = (float) v.get();
     jassert (attachedValue == nullptr);
     attachedValue.reset (new AttachedIntValue (*this, v));
     v.getValueTree().addListener (this);
@@ -860,7 +860,7 @@ void AutomatableParameter::attachToCurrentValue (juce::CachedValue<int>& v)
 
 void AutomatableParameter::attachToCurrentValue (juce::CachedValue<bool>& v)
 {
-    currentValue = v;
+    currentParameterValue = currentValue = v;
     jassert (attachedValue == nullptr);
     attachedValue.reset (new AttachedBoolValue (*this, v));
     v.getValueTree().addListener (this);
