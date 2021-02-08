@@ -811,8 +811,6 @@ void AutomatableParameter::valueTreePropertyChanged (juce::ValueTree& v, const j
     }
     else if (attachedValue != nullptr && attachedValue->updateIfMatches (v, i))
     {
-        currentParameterValue = currentValue = attachedValue->getValue();
-
         SCOPED_REALTIME_CHECK
         listeners.call (&Listener::currentValueChanged, *this, currentValue);
     }

@@ -1608,6 +1608,9 @@ void FourOscPlugin::restorePluginStateFromValueTree (const ValueTree& v)
         state.addChild (mm.createCopy(), -1, um);
 
     valueTreePropertyChanged (state, IDs::voiceMode);
+
+    for (auto p : getAutomatableParameters())
+        p->updateFromAttachedValue();
 }
 
 juce::String FourOscPlugin::modulationSourceToName (ModSource src)
