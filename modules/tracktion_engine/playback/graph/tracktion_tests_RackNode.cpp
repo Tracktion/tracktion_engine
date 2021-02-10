@@ -323,7 +323,7 @@ private:
             rack->addConnection (vol2Plugin->itemID, 1, {}, 1);
             expectEquals (rack->getConnections().size(), 4);
 
-            dynamic_cast<ToneGeneratorPlugin*> (tonePlugin.get())->level = 0.5f;
+            dynamic_cast<ToneGeneratorPlugin*> (tonePlugin.get())->levelParam->setParameter (0.5f, juce::dontSendNotification);
             
             // Process Rack
             {
