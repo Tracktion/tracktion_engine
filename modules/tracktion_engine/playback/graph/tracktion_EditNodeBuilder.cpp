@@ -493,7 +493,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForFrozenAudioTrack (AudioTrack
     if (isSidechainSource (track))
         node = makeNode<SendNode> (std::move (node), getSidechainBusID (track.itemID));
 
-    node = makeNode<TrackMutingNode> (std::move (trackMuteState), std::move (node));
+    node = makeNode<TrackMutingNode> (std::move (trackMuteState), std::move (node), false);
 
     return node;
 }
@@ -706,9 +706,11 @@ std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList& list
                 node = makeNode<SendNode> (std::move (node), sendPlugin->busNumber,
                                            [sendPlugin, trackMuteState]
                                            {
-                                               if (trackMuteState && ! trackMuteState->shouldTrackBeAudible())
-                                                   return 0.0f;
-                    
+                                               if (trackMuteState
+                                                   && ! trackMuteState->shouldTrackBeAudible()
+                                                   && ! trackMuteState->shouldTrackContentsBeProcessed())
+                                                  return 0.0f;
+
                                                return volumeFaderPositionToGain (sendPlugin->gain->getCurrentValue());
                                            });
         }
@@ -826,9 +828,8 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioTrack (AudioTrack& at, 
         return createNodeForFrozenAudioTrack (at, playHeadState, params);
 
     auto inputTracks = getDirectInputTracks (at);
-    const bool muteForInputsWhenRecording = inputTracks.isEmpty();
     const bool processMidiWhenMuted = at.state.getProperty (IDs::processMidiWhenMuted, false);
-    auto clipsMuteState = std::make_unique<TrackMuteState> (at, muteForInputsWhenRecording, processMidiWhenMuted);
+    auto clipsMuteState = std::make_unique<TrackMuteState> (at, true, processMidiWhenMuted);
     auto trackMuteState = std::make_unique<TrackMuteState> (at, false, processMidiWhenMuted);
 
     const auto& clips = at.getClips();
@@ -837,7 +838,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioTrack (AudioTrack& at, 
     if (node)
     {
         // When recording, clips should be muted but the plugin should still be audible so use two muting Nodes
-        node = makeNode<TrackMutingNode> (std::move (clipsMuteState), std::move (node));
+        node = makeNode<TrackMutingNode> (std::move (clipsMuteState), std::move (node), true);
         
         node = createTrackCompNode (at, playHeadState, std::move (node));
     }
@@ -900,7 +901,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioTrack (AudioTrack& at, 
     if (isSidechainSource (at))
         node = makeNode<SendNode> (std::move (node), getSidechainBusID (at.itemID));
 
-    node = makeNode<TrackMutingNode> (std::move (trackMuteState), std::move (node));
+    node = makeNode<TrackMutingNode> (std::move (trackMuteState), std::move (node), false);
 
     if (! params.forRendering)
     {
@@ -976,7 +977,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForSubmixTrack (FolderTrack& su
     if (params.includePlugins)
         node = createPluginNodeForList (submixTrack.pluginList, trackMuteState.get(), std::move (node), params.processState.playHeadState, params);
 
-    node = makeNode<TrackMutingNode> (std::move (trackMuteState), std::move (node));
+    node = makeNode<TrackMutingNode> (std::move (trackMuteState), std::move (node), false);
 
     return node;
 }
@@ -1106,7 +1107,7 @@ std::unique_ptr<tracktion_graph::Node> createGroupFreezeNodeForDevice (Edit& edi
                                                              0.0, EditTimeRange(), LiveClipLevel(),
                                                              1.0, juce::AudioChannelSet::stereo(), juce::AudioChannelSet::stereo(),
                                                              processState, EditItemID::fromRawID ((uint64_t) device.getName().hash()), false);
-            return makeNode<TrackMutingNode> (std::make_unique<TrackMuteState> (edit), std::move (node));
+            return makeNode<TrackMutingNode> (std::make_unique<TrackMuteState> (edit), std::move (node), false);
         }
     }
 

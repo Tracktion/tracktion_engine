@@ -74,7 +74,8 @@ private:
 class TrackMutingNode final : public tracktion_graph::Node
 {
 public:
-    TrackMutingNode (std::unique_ptr<TrackMuteState>, std::unique_ptr<tracktion_graph::Node> input);
+    TrackMutingNode (std::unique_ptr<TrackMuteState>, std::unique_ptr<tracktion_graph::Node> input,
+                     bool dontMuteIfTrackContentsShouldBeProcessed);
 
     //==============================================================================
     tracktion_graph::NodeProperties getNodeProperties() override;
@@ -88,6 +89,7 @@ private:
     //==============================================================================
     std::unique_ptr<TrackMuteState> trackMuteState;
     std::unique_ptr<tracktion_graph::Node> input;
+    bool dontMuteIfTrackContentsShouldBeProcessed = false;
 
     //==============================================================================
     void rampBlock (choc::buffer::ChannelArrayView<float>, float start, float end);

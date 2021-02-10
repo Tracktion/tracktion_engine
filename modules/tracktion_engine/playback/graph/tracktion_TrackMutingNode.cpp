@@ -80,8 +80,10 @@ size_t TrackMuteState::getItemID() const
 
 //==============================================================================
 //==============================================================================
-TrackMutingNode::TrackMutingNode (std::unique_ptr<TrackMuteState> muteState, std::unique_ptr<tracktion_graph::Node> inputNode)
-    : trackMuteState (std::move (muteState)), input (std::move (inputNode))
+TrackMutingNode::TrackMutingNode (std::unique_ptr<TrackMuteState> muteState, std::unique_ptr<tracktion_graph::Node> inputNode,
+                                  bool dontMuteIfTrackContentsShouldBeProcessed_)
+    : trackMuteState (std::move (muteState)), input (std::move (inputNode)),
+      dontMuteIfTrackContentsShouldBeProcessed (dontMuteIfTrackContentsShouldBeProcessed_)
 {
     assert (trackMuteState);
 
@@ -119,10 +121,11 @@ void TrackMutingNode::process (ProcessContext& pc)
     auto destAudioView = pc.buffers.audio;
     jassert (sourceBuffers.audio.getSize() == destAudioView.getSize());
     
-    const bool wasJustMuted = trackMuteState->wasJustMuted();
-    const bool wasJustUnMuted = trackMuteState->wasJustUnMuted();
+    const bool ignoreMuteStates = dontMuteIfTrackContentsShouldBeProcessed && trackMuteState->shouldTrackContentsBeProcessed();
+    const bool wasJustMuted     = ! ignoreMuteStates && trackMuteState->wasJustMuted();
+    const bool wasJustUnMuted   = ! ignoreMuteStates && trackMuteState->wasJustUnMuted();
 
-    if (trackMuteState->shouldTrackBeAudible())
+    if (trackMuteState->shouldTrackBeAudible() || ignoreMuteStates)
     {
         pc.buffers.midi.copyFrom (sourceBuffers.midi);
         

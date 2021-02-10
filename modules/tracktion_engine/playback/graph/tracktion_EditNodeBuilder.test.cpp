@@ -33,7 +33,10 @@ public:
         
         runTrackDestinationRendering (ts, 3.0, 2, true);
         runTrackDestinationRendering (ts, 3.0, 2, false);
-        
+
+        runAuxSend (ts, 3.0, 2, true);
+        runAuxSend (ts, 3.0, 2, false);
+
         runRackRendering (ts, 3.0, 2, true);
         runRackRendering (ts, 3.0, 2, false);
     }
@@ -104,7 +107,65 @@ private:
             }
         }
     }
-    
+
+    /** Has two tracks, one with a sin clip and aux send which is muted, one with an
+        aux return which is unmuted. The second track should be audible even though
+        the aux source is muted.
+    */
+    void runAuxSend (test_utilities::TestSetup ts,
+                     double durationInSeconds,
+                     int numChannels,
+                     bool isMultiThreaded)
+    {
+        using namespace tracktion_graph;
+        using namespace test_utilities;
+        auto& engine = *tracktion_engine::Engine::getEngines()[0];
+        const auto description = test_utilities::getDescription (ts)
+                                    + juce::String (isMultiThreaded ? ", MT" : ", ST");
+        
+        tracktion_graph::PlayHead playHead;
+        tracktion_graph::PlayHeadState playHeadState { playHead };
+        ProcessState processState { playHeadState };
+
+        {
+            auto sinFile = tracktion_graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds, 2, 220.0f);
+
+            auto edit = Edit::createSingleTrackEdit (engine);
+            edit->ensureNumberOfAudioTracks (2);
+            edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
+            
+            {
+                auto auxSourceTrack = getAudioTracks (*edit)[0];
+                auxSourceTrack->insertWaveClip ({}, sinFile->getFile(), ClipPosition { { 0.0, durationInSeconds } }, false);
+                auxSourceTrack->pluginList.insertPlugin (edit->getPluginCache().createNewPlugin (AuxSendPlugin::xmlTypeName, {}), 0, nullptr);
+                auxSourceTrack->setMute (true);
+            }
+
+            {
+                auto auxReturnTrack = getAudioTracks (*edit)[1];
+                auxReturnTrack->pluginList.insertPlugin (edit->getPluginCache().createNewPlugin (AuxReturnPlugin::xmlTypeName, {}), 0, nullptr);
+            }
+
+            beginTest ("Aux Send Mute Rendering: " + description);
+            {
+                auto node = createNode (*edit, processState, ts.sampleRate, ts.blockSize);
+                TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
+                                                                                                     getPoolCreatorFunction (ThreadPoolStrategy::hybrid)),
+                                                              ts, numChannels, durationInSeconds, true);
+                
+                if (! isMultiThreaded)
+                    testContext.getNodePlayer().setNumThreads (0);
+                
+                testContext.setPlayHead (&playHeadState.playHead);
+                playHeadState.playHead.playSyncedToRange ({});
+                auto result = testContext.processAll();
+                
+                expectAudioBuffer (*this, result->buffer, 0, 1.0f, 0.707f);
+                expectAudioBuffer (*this, result->buffer, 1, 1.0f, 0.707f);
+            }
+        }
+    }
+
     /** Has two tracks with a sin clip at 0.5 magnitude on each track, both sent to a third track as their destination.
         Once rendered, the resulting file should have a magnitude of 1.0.
     */
