@@ -209,6 +209,7 @@ void CombiningNode::process (ProcessContext& pc)
 {
     SCOPED_REALTIME_CHECK
     const auto editTime = getEditTimeRange();
+    const auto initialEvents = pc.buffers.midi.size();
     
     if (auto g = groups[combining_node_utils::timeToGroupIndex (editTime.getStart())])
     {
@@ -223,6 +224,9 @@ void CombiningNode::process (ProcessContext& pc)
             }
         }
     }
+
+    if (pc.buffers.midi.size() > initialEvents)
+        pc.buffers.midi.sortByTimestamp();
 }
 
 size_t CombiningNode::getAllocatedBytes() const

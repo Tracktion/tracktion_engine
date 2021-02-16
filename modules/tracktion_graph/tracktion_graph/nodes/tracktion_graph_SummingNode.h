@@ -139,6 +139,8 @@ private:
     {
         const auto numChannels = pc.buffers.audio.getNumChannels();
 
+        int nodesWithMidi = pc.buffers.midi.isEmpty() ? 0 : 1;
+
         // Get each of the inputs and add them to dest
         for (auto& node : nodes)
         {
@@ -147,9 +149,15 @@ private:
             if (auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels))
                 add (pc.buffers.audio.getFirstChannels (numChannelsToAdd),
                      inputFromNode.audio.getFirstChannels (numChannelsToAdd));
-            
+
+            if (inputFromNode.midi.isNotEmpty())
+                nodesWithMidi++;
+
             pc.buffers.midi.mergeFrom (inputFromNode.midi);
         }
+
+        if (nodesWithMidi > 1)
+            pc.buffers.midi.sortByTimestamp();
     }
 
     void processDoublePrecision (const ProcessContext& pc)
@@ -157,6 +165,8 @@ private:
         const auto numChannels = pc.buffers.audio.getNumChannels();
         auto doubleView = tempDoubleBuffer.getView().getStart (pc.buffers.audio.getNumFrames());
         doubleView.clear();
+
+        int nodesWithMidi = pc.buffers.midi.isEmpty() ? 0 : 1;
 
         // Get each of the inputs and add them to dest
         for (auto& node : nodes)
@@ -167,6 +177,9 @@ private:
                 add (doubleView.getFirstChannels (numChannelsToAdd),
                      inputFromNode.audio.getFirstChannels (numChannelsToAdd));
 
+            if (inputFromNode.midi.isNotEmpty())
+                nodesWithMidi++;
+
             pc.buffers.midi.mergeFrom (inputFromNode.midi);
         }
 
@@ -174,6 +187,9 @@ private:
 
         if (numChannels != 0)
             add (pc.buffers.audio.getFirstChannels (numChannels), doubleView);
+
+        if (nodesWithMidi > 1)
+            pc.buffers.midi.sortByTimestamp();
     }
 
     //==============================================================================
