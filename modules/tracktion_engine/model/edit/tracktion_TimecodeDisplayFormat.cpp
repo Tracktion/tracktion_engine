@@ -78,13 +78,16 @@ static TimeAndName getMinSecDivisions (int level) noexcept
     return minSecDivisions [jmin (13, level)];
 }
 
-String TimecodeSnapType::getDescription (const TempoSetting& tempo) const
+String TimecodeSnapType::getDescription (const TempoSetting& tempo, bool isTripletOverride) const
 {
     if (type == TimecodeType::barsBeats)
     {
         if (level < 9)
-            return TRANS (tempo.getMatchingTimeSig().triplets ? subBeatFractionsTriplets[level].name
-                                                              : subBeatFractions[level].name);
+        {
+            bool triplets = isTripletOverride || tempo.getMatchingTimeSig().triplets;
+            return TRANS (triplets ? subBeatFractionsTriplets[level].name
+                                   : subBeatFractions[level].name);
+        }
 
         if (level == 9)   return TRANS("Beat");
         if (level == 10)  return TRANS("Bar");
@@ -103,7 +106,7 @@ String TimecodeSnapType::getDescription (const TempoSetting& tempo) const
 
 double TimecodeSnapType::getApproxIntervalTime (const TempoSetting& tempo) const
 {
-    return getApproxIntervalTime (tempo, tempo.getMatchingTimeSig().triplets);
+    return getApproxIntervalTime (tempo, false);
 }
 
 double TimecodeSnapType::getApproxIntervalTime (const TempoSetting& tempo, bool isTripletsOverride) const
@@ -114,7 +117,7 @@ double TimecodeSnapType::getApproxIntervalTime (const TempoSetting& tempo, bool 
 
         if (level < 9)
         {
-            if (isTripletsOverride)
+            if (isTripletsOverride || tempo.getMatchingTimeSig().triplets)
                 return beatLen * subBeatFractionsTriplets [level].time;
 
             return beatLen * subBeatFractions [level].time;
@@ -200,6 +203,11 @@ int TimecodeSnapType::getOneBarLevel() const noexcept
 double TimecodeSnapType::roundTimeDown (double t, const TempoSequence& sequence) const
 {
     return roundTime (t, sequence, 0.0);
+}
+
+double TimecodeSnapType::roundTimeDown (double t, const TempoSequence& sequence, bool isTripletsOverride) const
+{
+    return roundTime (t, sequence, 0.0, isTripletsOverride);
 }
 
 double TimecodeSnapType::roundTimeNearest (double t, const TempoSequence& sequence) const
@@ -580,7 +588,7 @@ String TimecodeDisplayFormat::toFullTimecode (double seconds, int subSecondDivis
 }
 
 //==============================================================================
-TimecodeSnapType TimecodeDisplayFormat::getBestSnapType (const TempoSetting& tempo, double onScreenTimePerPixel) const
+TimecodeSnapType TimecodeDisplayFormat::getBestSnapType (const TempoSetting& tempo, double onScreenTimePerPixel, bool isTripletOverride) const
 {
     if (type >= TimecodeType::fps24 && (1.0 / getSubSecondDivisions()) / onScreenTimePerPixel > 2)
         return TimecodeSnapType (type, 1);
@@ -590,7 +598,7 @@ TimecodeSnapType TimecodeDisplayFormat::getBestSnapType (const TempoSetting& tem
     for (int i = 0; i < numSnapTypes; ++i)
     {
         TimecodeSnapType snap (type, i);
-        auto res = snap.getApproxIntervalTime (tempo);
+        auto res = snap.getApproxIntervalTime (tempo, isTripletOverride);
         auto t = res / onScreenTimePerPixel;
 
         if (t > 12)
@@ -612,16 +620,17 @@ TimecodeSnapType TimecodeDisplayFormat::getSnapType (int index) const
 }
 
 //==============================================================================
-TimecodeDisplayIterator::TimecodeDisplayIterator (const Edit& edit, double startTime, TimecodeSnapType minSnapTypeToUse)
+TimecodeDisplayIterator::TimecodeDisplayIterator (const Edit& edit, double startTime, TimecodeSnapType minSnapTypeToUse, bool to)
     : sequence (edit.tempoSequence),
       minSnapType (minSnapTypeToUse),
-      time (minSnapType.roundTimeDown (startTime, sequence))
+      time (minSnapType.roundTimeDown (startTime, sequence)),
+      isTripletOverride (to)
 {
 }
 
 double TimecodeDisplayIterator::next()
 {
-    const bool triplets = sequence.isTripletsAtTime (time);
+    const bool triplets = isTripletOverride || sequence.isTripletsAtTime (time);
     double nextTime = jmax (0.0, minSnapType.roundTimeUp (time + 1.0e-5, sequence, triplets));
 
     if (nextTime <= time)
