@@ -38,8 +38,8 @@ ReverbPlugin::ReverbPlugin (PluginCreationInfo info) : Plugin (info)
                               [] (float value)     { return String ((int) (100.0f * value)) + "%"; },
                               [] (const String& s) { return s.getFloatValue(); });
 
-    modeParam     = addParam ("mode", TRANS("Mode"), { 0.0f, 1.0f },
-                              [] (float value)     { return value >= freezemode ? TRANS("Freeze") : TRANS("Normal"); },
+    modeParam     = addParam ("mode", TRANS("Freeze"), { 0.0f, 1.0f },
+                              [] (float value)     { return value >= freezemode ? TRANS("On") : TRANS("Off"); },
                               [] (const String& s) { return s.getFloatValue(); });
 
     auto um = getUndoManager();
