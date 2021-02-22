@@ -37,7 +37,7 @@ struct TimecodeSnapType
     TimecodeSnapType (TimecodeType t, int lev) noexcept : type (t), level (lev) {}
 
     //==============================================================================
-    juce::String getDescription (const TempoSetting&) const;
+    juce::String getDescription (const TempoSetting&, bool isTripletOverride) const;
     double getApproxIntervalTime (const TempoSetting&) const; // may not be accurate for stuff like ramped tempos
 
     /** Similar to above expect that the isTripletsOverride argument is used instead of the tempo owner sequence. */
@@ -48,7 +48,9 @@ struct TimecodeSnapType
                                     bool useStartLabelIfZero) const;
 
     double roundTimeDown (double t, const TempoSequence&) const;
+    double roundTimeDown (double t, const TempoSequence&, bool isTripletsOverride) const;
     double roundTimeNearest (double t, const TempoSequence&) const;
+    double roundTimeNearest (double t, const TempoSequence&, bool isTripletsOverride) const;
     double roundTimeUp (double t, const TempoSequence&) const;
     double roundTimeUp (double t, const TempoSequence&, bool tripletsOverride) const;
 
@@ -70,7 +72,6 @@ private:
     double getIntervalNonBarsBeats() const;
     double roundTime (double t, const TempoSequence&, double adjustment) const;
     double roundTime (double t, const TempoSequence&, double adjustment, bool isTripletsOverride) const;
-    double roundTimeNearest (double t, const TempoSequence&, bool isTripletsOverride) const;
 };
 
 
@@ -116,7 +117,7 @@ struct TimecodeDisplayFormat
                                     int part, int newValue, bool isRelative) const;
 
     //==============================================================================
-    TimecodeSnapType getBestSnapType (const TempoSetting&, double onScreenTimePerPixel) const;
+    TimecodeSnapType getBestSnapType (const TempoSetting&, double onScreenTimePerPixel, bool isTripletOverride) const;
 
     int getNumSnapTypes() const;
     TimecodeSnapType getSnapType (int index) const;
@@ -141,7 +142,7 @@ struct TimecodeDisplayFormat
 */
 struct TimecodeDisplayIterator
 {
-    TimecodeDisplayIterator (const Edit&, double startTime, TimecodeSnapType minSnapTypeToUse);
+    TimecodeDisplayIterator (const Edit&, double startTime, TimecodeSnapType minSnapTypeToUse, bool isTripletOverride);
 
     /** returns the next time. */
     double next();
@@ -159,6 +160,7 @@ private:
     const TempoSequence& sequence;
     TimecodeSnapType minSnapType, currentSnapType;
     double time;
+    bool isTripletOverride;
 
     JUCE_DECLARE_NON_COPYABLE (TimecodeDisplayIterator)
 };
