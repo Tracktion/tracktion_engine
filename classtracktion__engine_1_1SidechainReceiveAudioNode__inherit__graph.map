@@ -1,4 +1,5 @@
 <map id="tracktion_engine::SidechainReceiveAudioNode" name="tracktion_engine::SidechainReceiveAudioNode">
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1SingleInputAudioNode.html" title="tracktion_engine::Single\lInputAudioNode" alt="" coords="19,80,181,121"/>
-<area shape="rect" id="node3" href="$classtracktion__engine_1_1AudioNode.html" title="Base class for nodes in an audio playback graph. " alt="" coords="5,5,195,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="9,169,212,211"/>
+<area shape="rect" id="node2" href="$classtracktion__engine_1_1SingleInputAudioNode.html" title=" " alt="" coords="21,80,200,121"/>
+<area shape="rect" id="node3" href="$classtracktion__engine_1_1AudioNode.html" title="Base class for nodes in an audio playback graph." alt="" coords="5,5,216,32"/>
 </map>

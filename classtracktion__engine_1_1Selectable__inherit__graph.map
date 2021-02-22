@@ -1,50 +1,51 @@
 <map id="tracktion_engine::Selectable" name="tracktion_engine::Selectable">
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1AutomatableParameter.html" title="tracktion_engine::Automatable\lParameter" alt="" coords="252,159,451,200"/>
-<area shape="rect" id="node8" href="$classtracktion__engine_1_1ControlSurface.html" title="Base class for types of control surface. " alt="" coords="268,544,435,585"/>
-<area shape="rect" id="node17" href="$classtracktion__engine_1_1CurveEditorPoint.html" title="tracktion_engine::CurveEditor\lPoint" alt="" coords="254,820,449,861"/>
-<area shape="rect" id="node19" href="$classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class! " alt="" coords="277,915,425,942"/>
-<area shape="rect" id="node20" href="$classtracktion__engine_1_1InputDevice.html" title="Represents an input device. " alt="" coords="254,966,449,993"/>
-<area shape="rect" id="node23" href="$structtracktion__engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html" title="tracktion_engine::InputDevice\lInstance::InputDeviceDestination" alt="" coords="243,1061,459,1103"/>
-<area shape="rect" id="node27" href="$structtracktion__engine_1_1MakeMonoEffect.html" title="tracktion_engine::MakeMono\lEffect" alt="" coords="257,1135,446,1176"/>
-<area shape="rect" id="node28" href="$structtracktion__engine_1_1Modifier.html" title="tracktion_engine::Modifier" alt="" coords="266,1201,437,1227"/>
-<area shape="rect" id="node35" href="$structtracktion__engine_1_1NormaliseEffect.html" title="tracktion_engine::Normalise\lEffect" alt="" coords="259,1252,443,1293"/>
-<area shape="rect" id="node36" href="$classtracktion__engine_1_1OutputDevice.html" title="Base class for audio or midi output devices, to which a track&#39;s output can be sent. " alt="" coords="269,1317,433,1359"/>
-<area shape="rect" id="node38" href="$classtracktion__engine_1_1Plugin.html" title="tracktion_engine::Plugin" alt="" coords="271,1383,432,1410"/>
-<area shape="rect" id="node39" href="$classtracktion__engine_1_1Project.html" title="A tracktion project. " alt="" coords="268,1434,435,1461"/>
-<area shape="rect" id="node40" href="$classtracktion__engine_1_1ProjectItem.html" title="Represents a file&#45;based resource that is used in a project. " alt="" coords="255,1485,447,1511"/>
-<area shape="rect" id="node41" href="$classtracktion__engine_1_1RackType.html" title="tracktion_engine::RackType" alt="" coords="259,1535,444,1562"/>
-<area shape="rect" id="node42" href="$classtracktion__engine_1_1SelectedMidiEvents.html" title="Represents a set of selected MIDI notes. " alt="" coords="263,1587,439,1628"/>
-<area shape="rect" id="node43" href="$structtracktion__engine_1_1StepClip_1_1Channel.html" title="tracktion_engine::StepClip\l::Channel" alt="" coords="264,1652,439,1693"/>
-<area shape="rect" id="node44" href="$structtracktion__engine_1_1StepClip_1_1PatternInstance.html" title="tracktion_engine::StepClip\l::PatternInstance" alt="" coords="264,1717,439,1759"/>
-<area shape="rect" id="node45" href="$structtracktion__engine_1_1StepVolumeEffect.html" title="tracktion_engine::StepVolume\lEffect" alt="" coords="253,1783,449,1824"/>
-<area shape="rect" id="node46" href="$classtracktion__engine_1_1TempoSequence.html" title="Holds a list of TempoSetting objects, to form a sequence of tempo changes. " alt="" coords="240,1849,463,1875"/>
-<area shape="rect" id="node47" href="$classtracktion__engine_1_1Track.html" title="tracktion_engine::Track" alt="" coords="272,1899,431,1926"/>
-<area shape="rect" id="node48" href="$structtracktion__engine_1_1TrackCompManager_1_1TrackComp.html" title="tracktion_engine::TrackComp\lManager::TrackComp" alt="" coords="255,1951,448,1992"/>
-<area shape="rect" id="node49" href="$classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a track, e.g. " alt="" coords="259,2017,443,2043"/>
-<area shape="rect" id="node3" href="$structtracktion__engine_1_1DiscreteLabelledParameter.html" title="tracktion_engine::Discrete\lLabelledParameter" alt="" coords="549,5,723,47"/>
-<area shape="rect" id="node4" href="$classtracktion__engine_1_1ExternalAutomatableParameter.html" title="tracktion_engine::External\lAutomatableParameter" alt="" coords="549,71,723,112"/>
-<area shape="rect" id="node5" href="$classtracktion__engine_1_1MacroParameter.html" title="A MacroParameter is an AutomatableParameter which is a collection of Mappings. " alt="" coords="525,137,747,163"/>
-<area shape="rect" id="node6" href="$structtracktion__engine_1_1PluginWetDryAutomatableParam.html" title="specialised AutomatableParameter for wet/dry. " alt="" coords="547,188,725,229"/>
-<area shape="rect" id="node7" href="$structtracktion__engine_1_1SuffixedParameter.html" title="tracktion_engine::Suffixed\lParameter" alt="" coords="549,253,723,295"/>
-<area shape="rect" id="node9" href="$classtracktion__engine_1_1AlphaTrackControlSurface.html" title="tracktion_engine::AlphaTrack\lControlSurface" alt="" coords="541,319,731,360"/>
-<area shape="rect" id="node10" href="$classtracktion__engine_1_1CustomControlSurface.html" title="tracktion_engine::Custom\lControlSurface" alt="" coords="551,384,721,425"/>
-<area shape="rect" id="node11" href="$classtracktion__engine_1_1MackieC4.html" title="tracktion_engine::MackieC4" alt="" coords="544,450,728,477"/>
-<area shape="rect" id="node12" href="$classtracktion__engine_1_1MackieMCU.html" title="tracktion_engine::MackieMCU" alt="" coords="537,501,735,527"/>
-<area shape="rect" id="node13" href="$classtracktion__engine_1_1MackieXT.html" title="tracktion_engine::MackieXT" alt="" coords="544,551,728,578"/>
-<area shape="rect" id="node14" href="$classtracktion__engine_1_1NovationRemoteSl.html" title="tracktion_engine::Novation\lRemoteSl" alt="" coords="547,603,725,644"/>
-<area shape="rect" id="node15" href="$classtracktion__engine_1_1RemoteSLCompact.html" title="tracktion_engine::Remote\lSLCompact" alt="" coords="551,668,721,709"/>
-<area shape="rect" id="node16" href="$classtracktion__engine_1_1TranzportControlSurface.html" title="tracktion_engine::Tranzport\lControlSurface" alt="" coords="546,733,726,775"/>
-<area shape="rect" id="node18" href="$classtracktion__engine_1_1TempoSetting.html" title="A tempo value, as used in a TempoSequence. " alt="" coords="533,799,739,826"/>
-<area shape="rect" id="node21" href="$classtracktion__engine_1_1MidiInputDevice.html" title="tracktion_engine::MidiInput\lDevice" alt="" coords="547,851,725,892"/>
-<area shape="rect" id="node22" href="$classtracktion__engine_1_1WaveInputDevice.html" title="A (virtual) audio input device. " alt="" coords="542,916,730,957"/>
-<area shape="rect" id="node24" href="$structtracktion__engine_1_1InputDeviceInstance_1_1MidiInputDeviceDestination.html" title="tracktion_engine::InputDevice\lInstance::MidiInputDeviceDestination" alt="" coords="516,981,756,1023"/>
-<area shape="rect" id="node25" href="$structtracktion__engine_1_1InputDeviceInstance_1_1VirtualMidiInputDeviceDestination.html" title="tracktion_engine::InputDevice\lInstance::VirtualMidiInputDevice\lDestination" alt="" coords="531,1047,741,1103"/>
-<area shape="rect" id="node26" href="$structtracktion__engine_1_1InputDeviceInstance_1_1WaveInputDeviceDestination.html" title="tracktion_engine::InputDevice\lInstance::WaveInputDeviceDestination" alt="" coords="511,1128,761,1169"/>
-<area shape="rect" id="node29" href="$classtracktion__engine_1_1BreakpointOscillatorModifier.html" title="tracktion_engine::Breakpoint\lOscillatorModifier" alt="" coords="543,1193,729,1235"/>
-<area shape="rect" id="node30" href="$classtracktion__engine_1_1EnvelopeFollowerModifier.html" title="tracktion_engine::Envelope\lFollowerModifier" alt="" coords="547,1259,725,1300"/>
-<area shape="rect" id="node31" href="$classtracktion__engine_1_1LFOModifier.html" title="tracktion_engine::LFOModifier" alt="" coords="538,1325,734,1351"/>
-<area shape="rect" id="node32" href="$classtracktion__engine_1_1MIDITrackerModifier.html" title="tracktion_engine::MIDITracker\lModifier" alt="" coords="537,1376,735,1417"/>
-<area shape="rect" id="node33" href="$classtracktion__engine_1_1RandomModifier.html" title="tracktion_engine::Random\lModifier" alt="" coords="549,1441,723,1483"/>
-<area shape="rect" id="node34" href="$classtracktion__engine_1_1StepModifier.html" title="tracktion_engine::StepModifier" alt="" coords="537,1507,735,1534"/>
-<area shape="rect" id="node37" href="$classtracktion__engine_1_1MidiOutputDevice.html" title="tracktion_engine::MidiOutput\lDevice" alt="" coords="542,1559,730,1600"/>
+<area shape="rect" id="node1" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,1409,212,1435"/>
+<area shape="rect" id="node2" href="$classtracktion__engine_1_1AutomatableParameter.html" title=" " alt="" coords="271,159,494,200"/>
+<area shape="rect" id="node8" href="$classtracktion__engine_1_1ControlSurface.html" title="Base class for types of control surface." alt="" coords="289,544,476,585"/>
+<area shape="rect" id="node17" href="$classtracktion__engine_1_1CurveEditorPoint.html" title=" " alt="" coords="275,820,490,861"/>
+<area shape="rect" id="node19" href="$classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!" alt="" coords="301,915,465,942"/>
+<area shape="rect" id="node20" href="$classtracktion__engine_1_1InputDevice.html" title="Represents an input device." alt="" coords="274,966,491,993"/>
+<area shape="rect" id="node23" href="$structtracktion__engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html" title=" " alt="" coords="263,1061,502,1103"/>
+<area shape="rect" id="node27" href="$structtracktion__engine_1_1MakeMonoEffect.html" title=" " alt="" coords="277,1135,488,1176"/>
+<area shape="rect" id="node28" href="$structtracktion__engine_1_1Modifier.html" title=" " alt="" coords="287,1201,479,1227"/>
+<area shape="rect" id="node35" href="$structtracktion__engine_1_1NormaliseEffect.html" title=" " alt="" coords="279,1252,486,1293"/>
+<area shape="rect" id="node36" href="$classtracktion__engine_1_1OutputDevice.html" title="Base class for audio or midi output devices, to which a track&#39;s output can be sent." alt="" coords="291,1317,474,1359"/>
+<area shape="rect" id="node38" href="$classtracktion__engine_1_1Plugin.html" title=" " alt="" coords="293,1383,472,1410"/>
+<area shape="rect" id="node39" href="$classtracktion__engine_1_1Project.html" title="A tracktion project." alt="" coords="291,1434,475,1461"/>
+<area shape="rect" id="node40" href="$classtracktion__engine_1_1ProjectItem.html" title="Represents a file&#45;based resource that is used in a project." alt="" coords="275,1485,490,1511"/>
+<area shape="rect" id="node41" href="$classtracktion__engine_1_1RackType.html" title=" " alt="" coords="282,1535,483,1562"/>
+<area shape="rect" id="node42" href="$classtracktion__engine_1_1SelectedMidiEvents.html" title="Represents a set of selected MIDI notes." alt="" coords="285,1587,480,1628"/>
+<area shape="rect" id="node43" href="$structtracktion__engine_1_1StepClip_1_1Channel.html" title=" " alt="" coords="286,1652,479,1693"/>
+<area shape="rect" id="node44" href="$structtracktion__engine_1_1StepClip_1_1PatternInstance.html" title=" " alt="" coords="286,1717,479,1759"/>
+<area shape="rect" id="node45" href="$structtracktion__engine_1_1StepVolumeEffect.html" title=" " alt="" coords="274,1783,491,1824"/>
+<area shape="rect" id="node46" href="$classtracktion__engine_1_1TempoSequence.html" title="Holds a list of TempoSetting objects, to form a sequence of tempo changes." alt="" coords="260,1849,505,1875"/>
+<area shape="rect" id="node47" href="$classtracktion__engine_1_1Track.html" title=" " alt="" coords="296,1899,469,1926"/>
+<area shape="rect" id="node48" href="$structtracktion__engine_1_1TrackCompManager_1_1TrackComp.html" title=" " alt="" coords="277,1951,488,1992"/>
+<area shape="rect" id="node49" href="$classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a track, e.g." alt="" coords="281,2017,484,2043"/>
+<area shape="rect" id="node3" href="$structtracktion__engine_1_1DiscreteLabelledParameter.html" title=" " alt="" coords="594,5,787,47"/>
+<area shape="rect" id="node4" href="$classtracktion__engine_1_1ExternalAutomatableParameter.html" title=" " alt="" coords="594,71,787,112"/>
+<area shape="rect" id="node5" href="$classtracktion__engine_1_1MacroParameter.html" title="A MacroParameter is an AutomatableParameter which is a collection of Mappings." alt="" coords="567,137,814,163"/>
+<area shape="rect" id="node6" href="$structtracktion__engine_1_1PluginWetDryAutomatableParam.html" title="specialised AutomatableParameter for wet/dry." alt="" coords="593,188,788,229"/>
+<area shape="rect" id="node7" href="$structtracktion__engine_1_1SuffixedParameter.html" title=" " alt="" coords="595,253,786,295"/>
+<area shape="rect" id="node9" href="$classtracktion__engine_1_1AlphaTrackControlSurface.html" title=" " alt="" coords="585,319,796,360"/>
+<area shape="rect" id="node10" href="$classtracktion__engine_1_1CustomControlSurface.html" title=" " alt="" coords="596,384,785,425"/>
+<area shape="rect" id="node11" href="$classtracktion__engine_1_1MackieC4.html" title=" " alt="" coords="589,450,792,477"/>
+<area shape="rect" id="node12" href="$classtracktion__engine_1_1MackieMCU.html" title=" " alt="" coords="582,501,799,527"/>
+<area shape="rect" id="node13" href="$classtracktion__engine_1_1MackieXT.html" title=" " alt="" coords="589,551,792,578"/>
+<area shape="rect" id="node14" href="$classtracktion__engine_1_1NovationRemoteSl.html" title=" " alt="" coords="591,603,790,644"/>
+<area shape="rect" id="node15" href="$classtracktion__engine_1_1RemoteSLCompact.html" title=" " alt="" coords="595,668,786,709"/>
+<area shape="rect" id="node16" href="$classtracktion__engine_1_1TranzportControlSurface.html" title=" " alt="" coords="591,733,790,775"/>
+<area shape="rect" id="node18" href="$classtracktion__engine_1_1TempoSetting.html" title="A tempo value, as used in a TempoSequence." alt="" coords="577,799,805,826"/>
+<area shape="rect" id="node21" href="$classtracktion__engine_1_1MidiInputDevice.html" title=" " alt="" coords="591,851,791,892"/>
+<area shape="rect" id="node22" href="$classtracktion__engine_1_1WaveInputDevice.html" title="A (virtual) audio input device." alt="" coords="587,916,795,957"/>
+<area shape="rect" id="node24" href="$structtracktion__engine_1_1InputDeviceInstance_1_1MidiInputDeviceDestination.html" title=" " alt="" coords="557,981,824,1023"/>
+<area shape="rect" id="node25" href="$structtracktion__engine_1_1InputDeviceInstance_1_1VirtualMidiInputDeviceDestination.html" title=" " alt="" coords="573,1047,808,1103"/>
+<area shape="rect" id="node26" href="$structtracktion__engine_1_1InputDeviceInstance_1_1WaveInputDeviceDestination.html" title=" " alt="" coords="553,1128,828,1169"/>
+<area shape="rect" id="node29" href="$classtracktion__engine_1_1BreakpointOscillatorModifier.html" title=" " alt="" coords="585,1193,796,1235"/>
+<area shape="rect" id="node30" href="$classtracktion__engine_1_1EnvelopeFollowerModifier.html" title=" " alt="" coords="591,1259,790,1300"/>
+<area shape="rect" id="node31" href="$classtracktion__engine_1_1LFOModifier.html" title=" " alt="" coords="582,1325,799,1351"/>
+<area shape="rect" id="node32" href="$classtracktion__engine_1_1MIDITrackerModifier.html" title=" " alt="" coords="583,1376,798,1417"/>
+<area shape="rect" id="node33" href="$classtracktion__engine_1_1RandomModifier.html" title=" " alt="" coords="594,1441,787,1483"/>
+<area shape="rect" id="node34" href="$classtracktion__engine_1_1StepModifier.html" title=" " alt="" coords="580,1507,801,1534"/>
+<area shape="rect" id="node37" href="$classtracktion__engine_1_1MidiOutputDevice.html" title=" " alt="" coords="585,1559,796,1600"/>
 </map>

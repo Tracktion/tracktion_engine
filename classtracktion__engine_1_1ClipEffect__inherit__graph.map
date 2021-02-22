@@ -1,13 +1,14 @@
 <map id="tracktion_engine::ClipEffect" name="tracktion_engine::ClipEffect">
-<area shape="rect" id="node3" href="$structtracktion__engine_1_1FadeInOutEffect.html" title="tracktion_engine::FadeIn\lOutEffect" alt="" coords="483,5,649,47"/>
-<area shape="rect" id="node4" href="$structtracktion__engine_1_1InvertEffect.html" title="tracktion_engine::Invert\lEffect" alt="" coords="487,71,645,112"/>
-<area shape="rect" id="node5" href="$structtracktion__engine_1_1MakeMonoEffect.html" title="tracktion_engine::MakeMono\lEffect" alt="" coords="471,136,661,177"/>
-<area shape="rect" id="node6" href="$structtracktion__engine_1_1NormaliseEffect.html" title="tracktion_engine::Normalise\lEffect" alt="" coords="474,201,658,243"/>
-<area shape="rect" id="node7" href="$structtracktion__engine_1_1PitchShiftEffect.html" title="tracktion_engine::PitchShift\lEffect" alt="" coords="475,267,657,308"/>
-<area shape="rect" id="node8" href="$structtracktion__engine_1_1PluginEffect.html" title="tracktion_engine::Plugin\lEffect" alt="" coords="485,332,647,373"/>
-<area shape="rect" id="node9" href="$structtracktion__engine_1_1ReverseEffect.html" title="tracktion_engine::Reverse\lEffect" alt="" coords="479,397,653,439"/>
-<area shape="rect" id="node10" href="$structtracktion__engine_1_1StepVolumeEffect.html" title="tracktion_engine::StepVolume\lEffect" alt="" coords="468,463,664,504"/>
-<area shape="rect" id="node11" href="$structtracktion__engine_1_1VolumeEffect.html" title="tracktion_engine::Volume\lEffect" alt="" coords="481,528,651,569"/>
-<area shape="rect" id="node12" href="$structtracktion__engine_1_1WarpTimeEffect.html" title="tracktion_engine::WarpTime\lEffect" alt="" coords="473,593,659,635"/>
-<area shape="rect" id="node2" href="$structtracktion__engine_1_1ValueTreeAllEventListener.html" title="tracktion_engine::ValueTree\lAllEventListener" alt="" coords="5,300,189,341"/>
+<area shape="rect" id="node1" title=" " alt="" coords="256,307,457,334"/>
+<area shape="rect" id="node3" href="$structtracktion__engine_1_1FadeInOutEffect.html" title=" " alt="" coords="523,5,705,47"/>
+<area shape="rect" id="node4" href="$structtracktion__engine_1_1InvertEffect.html" title=" " alt="" coords="525,71,703,112"/>
+<area shape="rect" id="node5" href="$structtracktion__engine_1_1MakeMonoEffect.html" title=" " alt="" coords="509,136,719,177"/>
+<area shape="rect" id="node6" href="$structtracktion__engine_1_1NormaliseEffect.html" title=" " alt="" coords="511,201,717,243"/>
+<area shape="rect" id="node7" href="$structtracktion__engine_1_1PitchShiftEffect.html" title=" " alt="" coords="514,267,714,308"/>
+<area shape="rect" id="node8" href="$structtracktion__engine_1_1PluginEffect.html" title=" " alt="" coords="525,332,703,373"/>
+<area shape="rect" id="node9" href="$structtracktion__engine_1_1ReverseEffect.html" title=" " alt="" coords="518,397,710,439"/>
+<area shape="rect" id="node10" href="$structtracktion__engine_1_1StepVolumeEffect.html" title=" " alt="" coords="505,463,723,504"/>
+<area shape="rect" id="node11" href="$structtracktion__engine_1_1VolumeEffect.html" title=" " alt="" coords="520,528,708,569"/>
+<area shape="rect" id="node12" href="$structtracktion__engine_1_1WarpTimeEffect.html" title=" " alt="" coords="511,593,717,635"/>
+<area shape="rect" id="node2" href="$structtracktion__engine_1_1ValueTreeAllEventListener.html" title=" " alt="" coords="5,300,208,341"/>
 </map>

@@ -1,4 +1,0 @@
-<map id="tracktion_engine::soundtouch::FIFOSamplePipe" name="tracktion_engine::soundtouch::FIFOSamplePipe">
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1soundtouch_1_1FIFOProcessor.html" title="Base&#45;class for sound processing routines working in FIFO principle. " alt="" coords="245,5,437,47"/>
-<area shape="rect" id="node3" href="$classtracktion__engine_1_1soundtouch_1_1FIFOSampleBuffer.html" title="Sample buffer working in FIFO (first&#45;in&#45;first&#45;out) principle. " alt="" coords="245,71,437,112"/>
-</map>

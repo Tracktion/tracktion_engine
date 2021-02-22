@@ -1,3 +1,4 @@
 <map id="tracktion_engine::ClickNode" name="tracktion_engine::ClickNode">
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1AudioNode.html" title="Base class for nodes in an audio playback graph. " alt="" coords="5,5,195,32"/>
+<area shape="rect" id="node1" title="An AudioNode that produces a click track." alt="" coords="8,80,213,107"/>
+<area shape="rect" id="node2" href="$classtracktion__engine_1_1AudioNode.html" title="Base class for nodes in an audio playback graph." alt="" coords="5,5,216,32"/>
 </map>

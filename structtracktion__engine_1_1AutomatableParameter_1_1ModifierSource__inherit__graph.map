@@ -1,10 +1,11 @@
 <map id="tracktion_engine::AutomatableParameter::ModifierSource" name="tracktion_engine::AutomatableParameter::ModifierSource">
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1MacroParameter.html" title="A MacroParameter is an AutomatableParameter which is a collection of Mappings. " alt="" coords="252,115,473,142"/>
-<area shape="rect" id="node3" href="$structtracktion__engine_1_1Modifier.html" title="tracktion_engine::Modifier" alt="" coords="277,166,448,193"/>
-<area shape="rect" id="node4" href="$classtracktion__engine_1_1BreakpointOscillatorModifier.html" title="tracktion_engine::Breakpoint\lOscillatorModifier" alt="" coords="527,5,714,47"/>
-<area shape="rect" id="node5" href="$classtracktion__engine_1_1EnvelopeFollowerModifier.html" title="tracktion_engine::Envelope\lFollowerModifier" alt="" coords="531,71,710,112"/>
-<area shape="rect" id="node6" href="$classtracktion__engine_1_1LFOModifier.html" title="tracktion_engine::LFOModifier" alt="" coords="523,137,719,163"/>
-<area shape="rect" id="node7" href="$classtracktion__engine_1_1MIDITrackerModifier.html" title="tracktion_engine::MIDITracker\lModifier" alt="" coords="521,188,720,229"/>
-<area shape="rect" id="node8" href="$classtracktion__engine_1_1RandomModifier.html" title="tracktion_engine::Random\lModifier" alt="" coords="533,253,708,295"/>
-<area shape="rect" id="node9" href="$classtracktion__engine_1_1StepModifier.html" title="tracktion_engine::StepModifier" alt="" coords="521,319,720,346"/>
+<area shape="rect" id="node1" title="Base class for things that can be used to modify parameters." alt="" coords="5,133,228,175"/>
+<area shape="rect" id="node2" href="$classtracktion__engine_1_1MacroParameter.html" title="A MacroParameter is an AutomatableParameter which is a collection of Mappings." alt="" coords="276,115,523,142"/>
+<area shape="rect" id="node3" href="$structtracktion__engine_1_1Modifier.html" title=" " alt="" coords="303,166,495,193"/>
+<area shape="rect" id="node4" href="$classtracktion__engine_1_1BreakpointOscillatorModifier.html" title=" " alt="" coords="576,5,787,47"/>
+<area shape="rect" id="node5" href="$classtracktion__engine_1_1EnvelopeFollowerModifier.html" title=" " alt="" coords="582,71,781,112"/>
+<area shape="rect" id="node6" href="$classtracktion__engine_1_1LFOModifier.html" title=" " alt="" coords="573,137,790,163"/>
+<area shape="rect" id="node7" href="$classtracktion__engine_1_1MIDITrackerModifier.html" title=" " alt="" coords="574,188,789,229"/>
+<area shape="rect" id="node8" href="$classtracktion__engine_1_1RandomModifier.html" title=" " alt="" coords="585,253,778,295"/>
+<area shape="rect" id="node9" href="$classtracktion__engine_1_1StepModifier.html" title=" " alt="" coords="571,319,792,346"/>
 </map>

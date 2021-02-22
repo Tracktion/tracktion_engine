@@ -3,7 +3,7 @@
   <compound kind="file">
     <name>tracktion_AbletonLink.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/</path>
-    <filename>tracktion__AbletonLink_8h</filename>
+    <filename>tracktion__AbletonLink_8h.html</filename>
     <class kind="class">tracktion_engine::AbletonLink</class>
     <class kind="struct">tracktion_engine::AbletonLink::Listener</class>
     <namespace>tracktion_engine</namespace>
@@ -11,14 +11,14 @@
   <compound kind="file">
     <name>tracktion_ActiveNoteList.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/midi/</path>
-    <filename>tracktion__ActiveNoteList_8h</filename>
+    <filename>tracktion__ActiveNoteList_8h.html</filename>
     <class kind="struct">tracktion_engine::ActiveNoteList</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_AirWindows.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/airwindows/</path>
-    <filename>tracktion__AirWindows_8h</filename>
+    <filename>tracktion__AirWindows_8h.html</filename>
     <class kind="class">tracktion_engine::AirWindowsCallback</class>
     <class kind="class">tracktion_engine::AirWindowsPlugin</class>
     <namespace>tracktion_engine</namespace>
@@ -1335,14 +1335,14 @@
   <compound kind="file">
     <name>tracktion_AlphaTrack.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/control_surfaces/types/</path>
-    <filename>tracktion__AlphaTrack_8h</filename>
+    <filename>tracktion__AlphaTrack_8h.html</filename>
     <class kind="class">tracktion_engine::AlphaTrackControlSurface</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_AppFunctions.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__AppFunctions_8h</filename>
+    <filename>tracktion__AppFunctions_8h.html</filename>
     <namespace>tracktion_engine</namespace>
     <namespace>tracktion_engine::AppFunctions</namespace>
     <member kind="function">
@@ -1832,7 +1832,7 @@
   <compound kind="file">
     <name>tracktion_ARAWrapperFunctions.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/ARA/</path>
-    <filename>tracktion__ARAWrapperFunctions_8h</filename>
+    <filename>tracktion__ARAWrapperFunctions_8h.html</filename>
     <class kind="struct">ArchivingFunctions</class>
     <class kind="struct">EditProxyFunctions</class>
     <class kind="struct">ModelUpdateFunctions</class>
@@ -1841,7 +1841,7 @@
   <compound kind="file">
     <name>tracktion_ARAWrapperInterfaces.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/ARA/</path>
-    <filename>tracktion__ARAWrapperInterfaces_8h</filename>
+    <filename>tracktion__ARAWrapperInterfaces_8h.html</filename>
     <class kind="class">ARADocument</class>
     <class kind="struct">ARADocumentCreatorCallback</class>
     <class kind="class">MusicalContextWrapper</class>
@@ -1855,7 +1855,7 @@
   <compound kind="file">
     <name>tracktion_ArchiveFile.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/export/</path>
-    <filename>tracktion__ArchiveFile_8h</filename>
+    <filename>tracktion__ArchiveFile_8h.html</filename>
     <class kind="class">tracktion_engine::TracktionArchiveFile</class>
     <class kind="struct">tracktion_engine::TracktionArchiveFile::IndexEntry</class>
     <namespace>tracktion_engine</namespace>
@@ -1863,21 +1863,21 @@
   <compound kind="file">
     <name>tracktion_ArrangerClip.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
-    <filename>tracktion__ArrangerClip_8h</filename>
+    <filename>tracktion__ArrangerClip_8h.html</filename>
     <class kind="class">tracktion_engine::ArrangerClip</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_ArrangerTrack.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/tracks/</path>
-    <filename>tracktion__ArrangerTrack_8h</filename>
+    <filename>tracktion__ArrangerTrack_8h.html</filename>
     <class kind="class">tracktion_engine::ArrangerTrack</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_AsyncFunctionUtils.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__AsyncFunctionUtils_8h</filename>
+    <filename>tracktion__AsyncFunctionUtils_8h.html</filename>
     <class kind="struct">tracktion_engine::AsyncCaller</class>
     <class kind="struct">tracktion_engine::AsyncFunctionCaller</class>
     <class kind="class">tracktion_engine::LambdaTimer</class>
@@ -1895,7 +1895,7 @@
   <compound kind="file">
     <name>tracktion_AudioClipBase.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
-    <filename>tracktion__AudioClipBase_8h</filename>
+    <filename>tracktion__AudioClipBase_8h.html</filename>
     <class kind="class">tracktion_engine::AudioClipBase</class>
     <class kind="struct">tracktion_engine::AudioClipBase::ProxyRenderingInfo</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion_engine::AudioClipBase::FadeBehaviour &gt;</class>
@@ -1906,7 +1906,7 @@
   <compound kind="file">
     <name>tracktion_AudioFadeCurve.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__AudioFadeCurve_8h</filename>
+    <filename>tracktion__AudioFadeCurve_8h.html</filename>
     <class kind="struct">tracktion_engine::AudioFadeCurve</class>
     <class kind="struct">tracktion_engine::AudioFadeCurve::Linear</class>
     <class kind="struct">tracktion_engine::AudioFadeCurve::Convex</class>
@@ -1920,21 +1920,21 @@
   <compound kind="file">
     <name>tracktion_engine/audio_files/tracktion_AudioFifo.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/</path>
-    <filename>tracktion__engine_2audio__files_2tracktion__AudioFifo_8h</filename>
+    <filename>tracktion__engine_2audio__files_2tracktion__AudioFifo_8h.html</filename>
     <class kind="class">tracktion_engine::AudioFifo</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_graph/utilities/tracktion_AudioFifo.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_graph/utilities/</path>
-    <filename>tracktion__graph_2utilities_2tracktion__AudioFifo_8h</filename>
+    <filename>tracktion__graph_2utilities_2tracktion__AudioFifo_8h.html</filename>
     <class kind="class">tracktion_graph::AudioFifo</class>
     <namespace>tracktion_graph</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_AudioFile.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/</path>
-    <filename>tracktion__AudioFile_8h</filename>
+    <filename>tracktion__AudioFile_8h.html</filename>
     <class kind="struct">tracktion_engine::AudioFileInfo</class>
     <class kind="class">tracktion_engine::AudioFile</class>
     <namespace>tracktion_engine</namespace>
@@ -1942,7 +1942,7 @@
   <compound kind="file">
     <name>tracktion_AudioFileCache.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/</path>
-    <filename>tracktion__AudioFileCache_8h</filename>
+    <filename>tracktion__AudioFileCache_8h.html</filename>
     <class kind="class">tracktion_engine::AudioFileCache</class>
     <class kind="class">tracktion_engine::AudioFileCache::Reader</class>
     <namespace>tracktion_engine</namespace>
@@ -1950,14 +1950,14 @@
   <compound kind="file">
     <name>tracktion_AudioFileManager.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/</path>
-    <filename>tracktion__AudioFileManager_8h</filename>
+    <filename>tracktion__AudioFileManager_8h.html</filename>
     <class kind="class">tracktion_engine::AudioFileManager</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_AudioFileUtils.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/</path>
-    <filename>tracktion__AudioFileUtils_8h</filename>
+    <filename>tracktion__AudioFileUtils_8h.html</filename>
     <class kind="struct">tracktion_engine::AudioFileUtils</class>
     <class kind="class">tracktion_engine::AudioFileUtils::EnvelopeFollower</class>
     <namespace>tracktion_engine</namespace>
@@ -1965,21 +1965,21 @@
   <compound kind="file">
     <name>tracktion_AudioFileWriter.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/</path>
-    <filename>tracktion__AudioFileWriter_8h</filename>
+    <filename>tracktion__AudioFileWriter_8h.html</filename>
     <class kind="class">tracktion_engine::AudioFileWriter</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_AudioFormatManager.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/</path>
-    <filename>tracktion__AudioFormatManager_8h</filename>
+    <filename>tracktion__AudioFormatManager_8h.html</filename>
     <class kind="class">tracktion_engine::AudioFileFormatManager</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_AudioNode.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__AudioNode_8h</filename>
+    <filename>tracktion__AudioNode_8h.html</filename>
     <class kind="struct">tracktion_engine::AudioNodeProperties</class>
     <class kind="struct">tracktion_engine::PlaybackInitialisationInfo</class>
     <class kind="struct">tracktion_engine::CreateAudioNodeParams</class>
@@ -1992,7 +1992,7 @@
   <compound kind="file">
     <name>tracktion_AudioProxyGenerator.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/</path>
-    <filename>tracktion__AudioProxyGenerator_8h</filename>
+    <filename>tracktion__AudioProxyGenerator_8h.html</filename>
     <class kind="class">tracktion_engine::AudioProxyGenerator</class>
     <class kind="struct">tracktion_engine::AudioProxyGenerator::GeneratorJob</class>
     <namespace>tracktion_engine</namespace>
@@ -2000,14 +2000,14 @@
   <compound kind="file">
     <name>tracktion_AudioScratchBuffer.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__AudioScratchBuffer_8h</filename>
+    <filename>tracktion__AudioScratchBuffer_8h.html</filename>
     <class kind="class">tracktion_engine::AudioScratchBuffer</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_AudioSegmentList.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
-    <filename>tracktion__AudioSegmentList_8h</filename>
+    <filename>tracktion__AudioSegmentList_8h.html</filename>
     <class kind="class">tracktion_engine::AudioSegmentList</class>
     <class kind="struct">tracktion_engine::AudioSegmentList::Segment</class>
     <namespace>tracktion_engine</namespace>
@@ -2015,7 +2015,7 @@
   <compound kind="file">
     <name>tracktion_AudioTrack.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/tracks/</path>
-    <filename>tracktion__AudioTrack_8h</filename>
+    <filename>tracktion__AudioTrack_8h.html</filename>
     <class kind="class">tracktion_engine::AudioTrack</class>
     <class kind="struct">tracktion_engine::AudioTrack::FreezePointRemovalInhibitor</class>
     <class kind="struct">tracktion_engine::AudioTrack::Listener</class>
@@ -2024,7 +2024,7 @@
   <compound kind="file">
     <name>tracktion_AudioUtilities.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__AudioUtilities_8h</filename>
+    <filename>tracktion__AudioUtilities_8h.html</filename>
     <class kind="class">tracktion_engine::AudioMidiFifo</class>
     <class kind="class">tracktion_engine::AudioBufferSnapshot</class>
     <namespace>tracktion_engine</namespace>
@@ -2257,7 +2257,7 @@
   <compound kind="file">
     <name>tracktion_AutomatableEditItem.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/automation/</path>
-    <filename>tracktion__AutomatableEditItem_8h</filename>
+    <filename>tracktion__AutomatableEditItem_8h.html</filename>
     <class kind="class">tracktion_engine::AutomatableEditItem</class>
     <class kind="struct">tracktion_engine::AutomatableEditItem::ParameterListChangeListener</class>
     <namespace>tracktion_engine</namespace>
@@ -2265,7 +2265,7 @@
   <compound kind="file">
     <name>tracktion_AutomatableParameter.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/automation/</path>
-    <filename>tracktion__AutomatableParameter_8h</filename>
+    <filename>tracktion__AutomatableParameter_8h.html</filename>
     <class kind="class">tracktion_engine::AutomatableParameter</class>
     <class kind="struct">tracktion_engine::AutomatableParameter::ModifierSource</class>
     <class kind="struct">tracktion_engine::AutomatableParameter::ModifierAssignment</class>
@@ -2348,7 +2348,7 @@
   <compound kind="file">
     <name>tracktion_AutomatableParameterTree.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/automation/</path>
-    <filename>tracktion__AutomatableParameterTree_8h</filename>
+    <filename>tracktion__AutomatableParameterTree_8h.html</filename>
     <class kind="class">tracktion_engine::AutomatableParameterTree</class>
     <class kind="struct">tracktion_engine::AutomatableParameterTree::TreeNode</class>
     <namespace>tracktion_engine</namespace>
@@ -2356,7 +2356,7 @@
   <compound kind="file">
     <name>tracktion_AutomationCurve.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/automation/</path>
-    <filename>tracktion__AutomationCurve_8h</filename>
+    <filename>tracktion__AutomationCurve_8h.html</filename>
     <class kind="class">tracktion_engine::AutomationCurve</class>
     <class kind="struct">tracktion_engine::AutomationCurve::AutomationPoint</class>
     <namespace>tracktion_engine</namespace>
@@ -2371,7 +2371,7 @@
   <compound kind="file">
     <name>tracktion_AutomationRecordManager.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/automation/</path>
-    <filename>tracktion__AutomationRecordManager_8h</filename>
+    <filename>tracktion__AutomationRecordManager_8h.html</filename>
     <class kind="class">tracktion_engine::AutomationRecordManager</class>
     <class kind="struct">tracktion_engine::AutomationRecordManager::AutomationParamData::Change</class>
     <namespace>tracktion_engine</namespace>
@@ -2379,28 +2379,28 @@
   <compound kind="file">
     <name>tracktion_AutomationTrack.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/tracks/</path>
-    <filename>tracktion__AutomationTrack_8h</filename>
+    <filename>tracktion__AutomationTrack_8h.html</filename>
     <class kind="class">tracktion_engine::AutomationTrack</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_AuxReturn.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/internal/</path>
-    <filename>tracktion__AuxReturn_8h</filename>
+    <filename>tracktion__AuxReturn_8h.html</filename>
     <class kind="class">tracktion_engine::AuxReturnPlugin</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_AuxSend.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/internal/</path>
-    <filename>tracktion__AuxSend_8h</filename>
+    <filename>tracktion__AuxSend_8h.html</filename>
     <class kind="class">tracktion_engine::AuxSendPlugin</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_BackgroundJobs.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__BackgroundJobs_8h</filename>
+    <filename>tracktion__BackgroundJobs_8h.html</filename>
     <class kind="class">tracktion_engine::ThreadPoolJobWithProgress</class>
     <class kind="class">tracktion_engine::BackgroundJobManager</class>
     <class kind="struct">tracktion_engine::BackgroundJobManager::JobInfo</class>
@@ -2410,14 +2410,14 @@
   <compound kind="file">
     <name>tracktion_BeatDetect.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/timestretch/</path>
-    <filename>tracktion__BeatDetect_8h</filename>
+    <filename>tracktion__BeatDetect_8h.html</filename>
     <class kind="struct">tracktion_engine::BeatDetect</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_BinaryData.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__BinaryData_8h</filename>
+    <filename>tracktion__BinaryData_8h.html</filename>
     <namespace>tracktion_engine</namespace>
     <namespace>tracktion_engine::TracktionBinaryData</namespace>
     <member kind="function">
@@ -2515,7 +2515,7 @@
   <compound kind="file">
     <name>tracktion_BreakpointOscillatorModifier.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/automation/modifiers/</path>
-    <filename>tracktion__BreakpointOscillatorModifier_8h</filename>
+    <filename>tracktion__BreakpointOscillatorModifier_8h.html</filename>
     <class kind="class">tracktion_engine::BreakpointOscillatorModifier</class>
     <class kind="struct">tracktion_engine::BreakpointOscillatorModifier::Assignment</class>
     <class kind="struct">tracktion_engine::BreakpointOscillatorModifier::Stage</class>
@@ -2524,49 +2524,49 @@
   <compound kind="file">
     <name>tracktion_BufferingAudioNode.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__BufferingAudioNode_8h</filename>
+    <filename>tracktion__BufferingAudioNode_8h.html</filename>
     <class kind="class">tracktion_engine::BufferingAudioNode</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_ChordClip.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
-    <filename>tracktion__ChordClip_8h</filename>
+    <filename>tracktion__ChordClip_8h.html</filename>
     <class kind="class">tracktion_engine::ChordClip</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_ChordTrack.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/tracks/</path>
-    <filename>tracktion__ChordTrack_8h</filename>
+    <filename>tracktion__ChordTrack_8h.html</filename>
     <class kind="class">tracktion_engine::ChordTrack</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_Chorus.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/effects/</path>
-    <filename>tracktion__Chorus_8h</filename>
+    <filename>tracktion__Chorus_8h.html</filename>
     <class kind="class">tracktion_engine::ChorusPlugin</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_ClickMutingNode.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__ClickMutingNode_8h</filename>
+    <filename>tracktion__ClickMutingNode_8h.html</filename>
     <class kind="class">tracktion_engine::ClickMutingNode</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_ClickNode.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__ClickNode_8h</filename>
+    <filename>tracktion__ClickNode_8h.html</filename>
     <class kind="class">tracktion_engine::ClickNode</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_Clip.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
-    <filename>tracktion__Clip_8h</filename>
+    <filename>tracktion__Clip_8h.html</filename>
     <class kind="class">tracktion_engine::Clip</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion_engine::Clip::SyncType &gt;</class>
     <namespace>tracktion_engine</namespace>
@@ -2590,7 +2590,7 @@
   <compound kind="file">
     <name>tracktion_Clipboard.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/selection/</path>
-    <filename>tracktion__Clipboard_8h</filename>
+    <filename>tracktion__Clipboard_8h.html</filename>
     <class kind="class">tracktion_engine::Clipboard</class>
     <class kind="struct">tracktion_engine::Clipboard::ContentType</class>
     <class kind="struct">tracktion_engine::Clipboard::ContentType::EditPastingOptions</class>
@@ -2614,7 +2614,7 @@
   <compound kind="file">
     <name>tracktion_ClipEffects.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
-    <filename>tracktion__ClipEffects_8h</filename>
+    <filename>tracktion__ClipEffects_8h.html</filename>
     <class kind="class">tracktion_engine::ClipEffect</class>
     <class kind="class">tracktion_engine::ClipEffects</class>
     <class kind="struct">tracktion_engine::ClipEffects::Listener</class>
@@ -2636,28 +2636,28 @@
   <compound kind="file">
     <name>tracktion_ClipTrack.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/tracks/</path>
-    <filename>tracktion__ClipTrack_8h</filename>
+    <filename>tracktion__ClipTrack_8h.html</filename>
     <class kind="class">tracktion_engine::ClipTrack</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_CollectionClip.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
-    <filename>tracktion__CollectionClip_8h</filename>
+    <filename>tracktion__CollectionClip_8h.html</filename>
     <class kind="class">tracktion_engine::CollectionClip</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_CombiningAudioNode.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__CombiningAudioNode_8h</filename>
+    <filename>tracktion__CombiningAudioNode_8h.html</filename>
     <class kind="class">tracktion_engine::CombiningAudioNode</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_CompManager.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
-    <filename>tracktion__CompManager_8h</filename>
+    <filename>tracktion__CompManager_8h.html</filename>
     <class kind="class">tracktion_engine::CompManager</class>
     <class kind="class">tracktion_engine::CompFactory</class>
     <class kind="class">tracktion_engine::WaveCompManager</class>
@@ -2667,21 +2667,21 @@
   <compound kind="file">
     <name>tracktion_Compressor.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/effects/</path>
-    <filename>tracktion__Compressor_8h</filename>
+    <filename>tracktion__Compressor_8h.html</filename>
     <class kind="class">tracktion_engine::CompressorPlugin</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_ConstrainedCachedValue.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__ConstrainedCachedValue_8h</filename>
+    <filename>tracktion__ConstrainedCachedValue_8h.html</filename>
     <class kind="class">tracktion_engine::ConstrainedCachedValue</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_ControlSurface.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/control_surfaces/</path>
-    <filename>tracktion__ControlSurface_8h</filename>
+    <filename>tracktion__ControlSurface_8h.html</filename>
     <class kind="struct">tracktion_engine::ParameterSetting</class>
     <class kind="struct">tracktion_engine::MarkerSetting</class>
     <class kind="class">tracktion_engine::ControlSurface</class>
@@ -2690,7 +2690,7 @@
   <compound kind="file">
     <name>tracktion_CpuMeasurement.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__CpuMeasurement_8h</filename>
+    <filename>tracktion__CpuMeasurement_8h.html</filename>
     <class kind="struct">tracktion_engine::ScopedCpuMeter</class>
     <class kind="struct">tracktion_engine::StopwatchTimer</class>
     <namespace>tracktion_engine</namespace>
@@ -2712,7 +2712,7 @@
   <compound kind="file">
     <name>tracktion_CrashTracer.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__CrashTracer_8h</filename>
+    <filename>tracktion__CrashTracer_8h.html</filename>
     <class kind="struct">tracktion_engine::CrashStackTracer</class>
     <class kind="struct">tracktion_engine::DeadMansPedalMessage</class>
     <namespace>tracktion_engine</namespace>
@@ -2734,7 +2734,7 @@
   <compound kind="file">
     <name>tracktion_CurveEditor.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__CurveEditor_8h</filename>
+    <filename>tracktion__CurveEditor_8h.html</filename>
     <class kind="struct">tracktion_engine::TransparentToMouseInTrackItemComp</class>
     <class kind="struct">tracktion_engine::CurvePoint</class>
     <class kind="class">tracktion_engine::CurveEditorPoint</class>
@@ -2744,7 +2744,7 @@
   <compound kind="file">
     <name>tracktion_CustomControlSurface.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/control_surfaces/</path>
-    <filename>tracktion__CustomControlSurface_8h</filename>
+    <filename>tracktion__CustomControlSurface_8h.html</filename>
     <class kind="class">tracktion_engine::CustomControlSurface</class>
     <class kind="struct">tracktion_engine::CustomControlSurface::MappingSet</class>
     <class kind="struct">tracktion_engine::CustomControlSurface::Mapping</class>
@@ -2753,7 +2753,7 @@
   <compound kind="file">
     <name>tracktion_Delay.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/effects/</path>
-    <filename>tracktion__Delay_8h</filename>
+    <filename>tracktion__Delay_8h.html</filename>
     <class kind="struct">tracktion_engine::DelayBufferBase</class>
     <class kind="class">tracktion_engine::DelayPlugin</class>
     <namespace>tracktion_engine</namespace>
@@ -2761,7 +2761,7 @@
   <compound kind="file">
     <name>tracktion_DeviceManager.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/</path>
-    <filename>tracktion__DeviceManager_8h</filename>
+    <filename>tracktion__DeviceManager_8h.html</filename>
     <class kind="class">tracktion_engine::DeviceManager</class>
     <class kind="struct">tracktion_engine::DeviceManager::CPUUsageListener</class>
     <class kind="struct">tracktion_engine::DeviceManager::ContextDeviceListRebuilder</class>
@@ -2770,14 +2770,14 @@
   <compound kind="file">
     <name>tracktion_Ditherer.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__Ditherer_8h</filename>
+    <filename>tracktion__Ditherer_8h.html</filename>
     <class kind="struct">tracktion_engine::Ditherer</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_Edit.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
-    <filename>tracktion__Edit_8h</filename>
+    <filename>tracktion__Edit_8h.html</filename>
     <class kind="class">tracktion_engine::Edit</class>
     <class kind="struct">tracktion_engine::Edit::LoadContext</class>
     <class kind="struct">tracktion_engine::Edit::Options</class>
@@ -2794,21 +2794,21 @@
   <compound kind="file">
     <name>tracktion_EditClip.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
-    <filename>tracktion__EditClip_8h</filename>
+    <filename>tracktion__EditClip_8h.html</filename>
     <class kind="class">tracktion_engine::EditClip</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_EditClipRenderJob.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
-    <filename>tracktion__EditClipRenderJob_8h</filename>
+    <filename>tracktion__EditClipRenderJob_8h.html</filename>
     <class kind="class">tracktion_engine::EditRenderJob</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_EditFileOperations.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
-    <filename>tracktion__EditFileOperations_8h</filename>
+    <filename>tracktion__EditFileOperations_8h.html</filename>
     <class kind="class">tracktion_engine::EditFileOperations</class>
     <namespace>tracktion_engine</namespace>
     <member kind="function">
@@ -2864,21 +2864,21 @@
   <compound kind="file">
     <name>tracktion_EditInputDevices.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/</path>
-    <filename>tracktion__EditInputDevices_8h</filename>
+    <filename>tracktion__EditInputDevices_8h.html</filename>
     <class kind="class">tracktion_engine::EditInputDevices</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_EditInsertPoint.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
-    <filename>tracktion__EditInsertPoint_8h</filename>
+    <filename>tracktion__EditInsertPoint_8h.html</filename>
     <class kind="class">tracktion_engine::EditInsertPoint</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_EditItem.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
-    <filename>tracktion__EditItem_8h</filename>
+    <filename>tracktion__EditItem_8h.html</filename>
     <class kind="struct">tracktion_engine::EditItemID</class>
     <class kind="class">tracktion_engine::EditItem</class>
     <class kind="struct">tracktion_engine::EditItemCache</class>
@@ -2889,7 +2889,7 @@
   <compound kind="file">
     <name>tracktion_EditPlaybackContext.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/</path>
-    <filename>tracktion__EditPlaybackContext_8h</filename>
+    <filename>tracktion__EditPlaybackContext_8h.html</filename>
     <class kind="class">tracktion_engine::EditPlaybackContext</class>
     <class kind="struct">tracktion_engine::EditPlaybackContext::ScopedDeviceListReleaser</class>
     <class kind="struct">tracktion_engine::EditPlaybackContext::RealtimePriorityDisabler</class>
@@ -2898,7 +2898,7 @@
   <compound kind="file">
     <name>tracktion_EditSnapshot.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
-    <filename>tracktion__EditSnapshot_8h</filename>
+    <filename>tracktion__EditSnapshot_8h.html</filename>
     <class kind="class">tracktion_engine::EditSnapshot</class>
     <class kind="struct">tracktion_engine::EditSnapshot::Marker</class>
     <class kind="struct">tracktion_engine::EditSnapshot::Listener</class>
@@ -2907,7 +2907,7 @@
   <compound kind="file">
     <name>tracktion_EditTimeRange.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/tracks/</path>
-    <filename>tracktion__EditTimeRange_8h</filename>
+    <filename>tracktion__EditTimeRange_8h.html</filename>
     <class kind="struct">tracktion_engine::EditTimeRange</class>
     <class kind="struct">tracktion_engine::ClipPosition</class>
     <namespace>tracktion_engine</namespace>
@@ -2915,7 +2915,7 @@
   <compound kind="file">
     <name>tracktion_EditUtilities.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
-    <filename>tracktion__EditUtilities_8h</filename>
+    <filename>tracktion__EditUtilities_8h.html</filename>
     <namespace>tracktion_engine</namespace>
     <member kind="enumeration">
       <type></type>
@@ -3149,8 +3149,8 @@
       <type>juce::Result</type>
       <name>mergeMidiClips</name>
       <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>a7ccba44ab7d10c1dc6f72b3a52cf35e3</anchor>
-      <arglist>(juce::Array&lt; MidiClip *&gt;)</arglist>
+      <anchor>a9c0d9c51fe09f53456b7eddebbca9b9b</anchor>
+      <arglist>(juce::Array&lt; MidiClip * &gt;)</arglist>
     </member>
     <member kind="function">
       <type>Plugin::Array</type>
@@ -3261,7 +3261,7 @@
   <compound kind="file">
     <name>tracktion_Engine.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__Engine_8h</filename>
+    <filename>tracktion__Engine_8h.html</filename>
     <class kind="class">tracktion_engine::Engine</class>
     <namespace>tracktion_engine</namespace>
     <member kind="function">
@@ -3275,7 +3275,7 @@
   <compound kind="file">
     <name>tracktion_engine_RackNode.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/graph/</path>
-    <filename>tracktion__engine__RackNode_8h</filename>
+    <filename>tracktion__engine__RackNode_8h.html</filename>
     <class kind="struct">tracktion_engine::InputProvider</class>
     <class kind="class">tracktion_engine::InputNode</class>
     <class kind="class">tracktion_engine::PluginNode</class>
@@ -3292,7 +3292,7 @@
   <compound kind="file">
     <name>tracktion_EngineBehaviour.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__EngineBehaviour_8h</filename>
+    <filename>tracktion__EngineBehaviour_8h.html</filename>
     <class kind="class">tracktion_engine::EngineBehaviour</class>
     <class kind="struct">tracktion_engine::EngineBehaviour::LevelMeterSettings</class>
     <namespace>tracktion_engine</namespace>
@@ -3300,7 +3300,7 @@
   <compound kind="file">
     <name>tracktion_Envelope.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__Envelope_8h</filename>
+    <filename>tracktion__Envelope_8h.html</filename>
     <class kind="class">tracktion_engine::ExpEnvelope</class>
     <class kind="struct">tracktion_engine::ExpEnvelope::Parameters</class>
     <class kind="class">tracktion_engine::LinEnvelope</class>
@@ -3310,7 +3310,7 @@
   <compound kind="file">
     <name>tracktion_EnvelopeFollowerModifier.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/automation/modifiers/</path>
-    <filename>tracktion__EnvelopeFollowerModifier_8h</filename>
+    <filename>tracktion__EnvelopeFollowerModifier_8h.html</filename>
     <class kind="class">tracktion_engine::EnvelopeFollowerModifier</class>
     <class kind="struct">tracktion_engine::EnvelopeFollowerModifier::Assignment</class>
     <namespace>tracktion_engine</namespace>
@@ -3318,14 +3318,14 @@
   <compound kind="file">
     <name>tracktion_Equaliser.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/effects/</path>
-    <filename>tracktion__Equaliser_8h</filename>
+    <filename>tracktion__Equaliser_8h.html</filename>
     <class kind="class">tracktion_engine::EqualiserPlugin</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_Exportable.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/export/</path>
-    <filename>tracktion__Exportable_8h</filename>
+    <filename>tracktion__Exportable_8h.html</filename>
     <class kind="class">tracktion_engine::Exportable</class>
     <class kind="struct">tracktion_engine::Exportable::ReferencedItem</class>
     <namespace>tracktion_engine</namespace>
@@ -3333,35 +3333,35 @@
   <compound kind="file">
     <name>tracktion_ExportJob.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/export/</path>
-    <filename>tracktion__ExportJob_8h</filename>
+    <filename>tracktion__ExportJob_8h.html</filename>
     <class kind="class">tracktion_engine::ExportJob</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_ExternalAutomatableParameter.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/external/</path>
-    <filename>tracktion__ExternalAutomatableParameter_8h</filename>
+    <filename>tracktion__ExternalAutomatableParameter_8h.html</filename>
     <class kind="class">tracktion_engine::ExternalAutomatableParameter</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_ExternalController.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/control_surfaces/</path>
-    <filename>tracktion__ExternalController_8h</filename>
+    <filename>tracktion__ExternalController_8h.html</filename>
     <class kind="class">tracktion_engine::ExternalController</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_ExternalControllerManager.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/control_surfaces/</path>
-    <filename>tracktion__ExternalControllerManager_8h</filename>
+    <filename>tracktion__ExternalControllerManager_8h.html</filename>
     <class kind="class">tracktion_engine::ExternalControllerManager</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_ExternalPlayheadSynchroniser.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__ExternalPlayheadSynchroniser_8h</filename>
+    <filename>tracktion__ExternalPlayheadSynchroniser_8h.html</filename>
     <class kind="class">tracktion_engine::ExternalPlayheadSynchroniser</class>
     <namespace>tracktion_engine</namespace>
     <member kind="function">
@@ -3382,7 +3382,7 @@
   <compound kind="file">
     <name>tracktion_ExternalPlugin.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/external/</path>
-    <filename>tracktion__ExternalPlugin_8h</filename>
+    <filename>tracktion__ExternalPlugin_8h.html</filename>
     <class kind="class">tracktion_engine::ExternalPlugin</class>
     <class kind="struct">tracktion_engine::PluginWetDryAutomatableParam</class>
     <namespace>tracktion_engine</namespace>
@@ -3390,20 +3390,20 @@
   <compound kind="file">
     <name>tracktion_ExternalPluginBlacklist.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/external/</path>
-    <filename>tracktion__ExternalPluginBlacklist_8h</filename>
+    <filename>tracktion__ExternalPluginBlacklist_8h.html</filename>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_FadeInOutAudioNode.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__FadeInOutAudioNode_8h</filename>
+    <filename>tracktion__FadeInOutAudioNode_8h.html</filename>
     <class kind="class">tracktion_engine::FadeInOutAudioNode</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_FileUtilities.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__FileUtilities_8h</filename>
+    <filename>tracktion__FileUtilities_8h.html</filename>
     <class kind="struct">tracktion_engine::ScopedDirectoryDeleter</class>
     <class kind="struct">tracktion_engine::FileDragList</class>
     <namespace>tracktion_engine</namespace>
@@ -3572,21 +3572,21 @@
   <compound kind="file">
     <name>tracktion_FloatAudioFileFormat.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/formats/</path>
-    <filename>tracktion__FloatAudioFileFormat_8h</filename>
+    <filename>tracktion__FloatAudioFileFormat_8h.html</filename>
     <class kind="class">tracktion_engine::FloatAudioFormat</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_FolderTrack.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/tracks/</path>
-    <filename>tracktion__FolderTrack_8h</filename>
+    <filename>tracktion__FolderTrack_8h.html</filename>
     <class kind="class">tracktion_engine::FolderTrack</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_FourOscPlugin.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/effects/</path>
-    <filename>tracktion__FourOscPlugin_8h</filename>
+    <filename>tracktion__FourOscPlugin_8h.html</filename>
     <class kind="class">tracktion_engine::ValueSmoother</class>
     <class kind="class">tracktion_engine::SimpleLFO</class>
     <class kind="struct">tracktion_engine::SimpleLFO::Parameters</class>
@@ -3600,7 +3600,7 @@
   <compound kind="file">
     <name>tracktion_FreezePoint.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/internal/</path>
-    <filename>tracktion__FreezePoint_8h</filename>
+    <filename>tracktion__FreezePoint_8h.html</filename>
     <class kind="class">tracktion_engine::FreezePointPlugin</class>
     <class kind="struct">tracktion_engine::FreezePointPlugin::ScopedTrackUnsoloer</class>
     <class kind="struct">tracktion_engine::FreezePointPlugin::ScopedTrackSoloIsolator</class>
@@ -3611,14 +3611,14 @@
   <compound kind="file">
     <name>tracktion_graph_MultiThreadedNodePlayer.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_graph/tracktion_graph/</path>
-    <filename>tracktion__graph__MultiThreadedNodePlayer_8h</filename>
+    <filename>tracktion__graph__MultiThreadedNodePlayer_8h.html</filename>
     <class kind="class">tracktion_graph::MultiThreadedNodePlayer</class>
     <namespace>tracktion_graph</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_graph_Node.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_graph/tracktion_graph/</path>
-    <filename>tracktion__graph__Node_8h</filename>
+    <filename>tracktion__graph__Node_8h.html</filename>
     <class kind="struct">tracktion_graph::PlaybackInitialisationInfo</class>
     <class kind="struct">tracktion_graph::NodeProperties</class>
     <class kind="class">tracktion_graph::Node</class>
@@ -3649,14 +3649,14 @@
   <compound kind="file">
     <name>tracktion_graph_NodePlayer.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_graph/tracktion_graph/</path>
-    <filename>tracktion__graph__NodePlayer_8h</filename>
+    <filename>tracktion__graph__NodePlayer_8h.html</filename>
     <class kind="class">tracktion_graph::NodePlayer</class>
     <namespace>tracktion_graph</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_graph_tests_TestNodes.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_graph/tracktion_graph/</path>
-    <filename>tracktion__graph__tests__TestNodes_8h</filename>
+    <filename>tracktion__graph__tests__TestNodes_8h.html</filename>
     <class kind="class">tracktion_graph::MidiNode</class>
     <class kind="class">tracktion_graph::SinNode</class>
     <class kind="class">tracktion_graph::SilentNode</class>
@@ -3671,7 +3671,7 @@
   <compound kind="file">
     <name>tracktion_graph_tests_Utilities.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_graph/tracktion_graph/</path>
-    <filename>tracktion__graph__tests__Utilities_8h</filename>
+    <filename>tracktion__graph__tests__Utilities_8h.html</filename>
     <class kind="struct">tracktion_graph::test_utilities::TestSetup</class>
     <class kind="struct">tracktion_graph::test_utilities::TestContext</class>
     <class kind="struct">tracktion_graph::test_utilities::TestProcess</class>
@@ -3681,7 +3681,7 @@
   <compound kind="file">
     <name>tracktion_graph_Utility.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_graph/tracktion_graph/</path>
-    <filename>tracktion__graph__Utility_8h</filename>
+    <filename>tracktion__graph__Utility_8h.html</filename>
     <namespace>tracktion_graph</namespace>
     <member kind="function">
       <type>void</type>
@@ -3708,7 +3708,7 @@
   <compound kind="file">
     <name>tracktion_graph_UtilityNodes.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_graph/tracktion_graph/</path>
-    <filename>tracktion__graph__UtilityNodes_8h</filename>
+    <filename>tracktion__graph__UtilityNodes_8h.html</filename>
     <class kind="class">tracktion_graph::LatencyNode</class>
     <class kind="class">tracktion_graph::SummingNode</class>
     <namespace>tracktion_graph</namespace>
@@ -3723,7 +3723,7 @@
   <compound kind="file">
     <name>tracktion_GrooveTemplate.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
-    <filename>tracktion__GrooveTemplate_8h</filename>
+    <filename>tracktion__GrooveTemplate_8h.html</filename>
     <class kind="class">tracktion_engine::GrooveTemplate</class>
     <class kind="class">tracktion_engine::GrooveTemplateManager</class>
     <namespace>tracktion_engine</namespace>
@@ -3731,14 +3731,14 @@
   <compound kind="file">
     <name>tracktion_HissingAudioNode.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__HissingAudioNode_8h</filename>
+    <filename>tracktion__HissingAudioNode_8h.html</filename>
     <class kind="class">tracktion_engine::HissingAudioNode</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_HostedAudioDevice.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/</path>
-    <filename>tracktion__HostedAudioDevice_8h</filename>
+    <filename>tracktion__HostedAudioDevice_8h.html</filename>
     <class kind="class">tracktion_engine::HostedAudioDeviceInterface</class>
     <class kind="struct">tracktion_engine::HostedAudioDeviceInterface::Parameters</class>
     <namespace>tracktion_engine</namespace>
@@ -3746,7 +3746,7 @@
   <compound kind="file">
     <name>tracktion_Identifiers.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__Identifiers_8h</filename>
+    <filename>tracktion__Identifiers_8h.html</filename>
     <namespace>tracktion_engine</namespace>
     <namespace>tracktion_engine::IDs</namespace>
     <member kind="define">
@@ -3760,7 +3760,7 @@
   <compound kind="file">
     <name>tracktion_InputDevice.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/devices/</path>
-    <filename>tracktion__InputDevice_8h</filename>
+    <filename>tracktion__InputDevice_8h.html</filename>
     <class kind="class">tracktion_engine::InputDevice</class>
     <class kind="class">tracktion_engine::InputDeviceInstance</class>
     <class kind="struct">tracktion_engine::InputDeviceInstance::InputDeviceDestination</class>
@@ -3773,28 +3773,28 @@
   <compound kind="file">
     <name>tracktion_InsertPlugin.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/internal/</path>
-    <filename>tracktion__InsertPlugin_8h</filename>
+    <filename>tracktion__InsertPlugin_8h.html</filename>
     <class kind="class">tracktion_engine::InsertPlugin</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_LAMEManager.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/formats/</path>
-    <filename>tracktion__LAMEManager_8h</filename>
+    <filename>tracktion__LAMEManager_8h.html</filename>
     <class kind="class">tracktion_engine::LAMEManager</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_LatencyPlugin.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/effects/</path>
-    <filename>tracktion__LatencyPlugin_8h</filename>
+    <filename>tracktion__LatencyPlugin_8h.html</filename>
     <class kind="class">tracktion_engine::LatencyPlugin</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_LevelMeasurer.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/</path>
-    <filename>tracktion__LevelMeasurer_8h</filename>
+    <filename>tracktion__LevelMeasurer_8h.html</filename>
     <class kind="struct">tracktion_engine::DbTimePair</class>
     <class kind="class">tracktion_engine::LevelMeasurer</class>
     <class kind="struct">tracktion_engine::LevelMeasurer::Client</class>
@@ -3805,14 +3805,14 @@
   <compound kind="file">
     <name>tracktion_LevelMeter.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/internal/</path>
-    <filename>tracktion__LevelMeter_8h</filename>
+    <filename>tracktion__LevelMeter_8h.html</filename>
     <class kind="class">tracktion_engine::LevelMeterPlugin</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_LFOModifier.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/automation/modifiers/</path>
-    <filename>tracktion__LFOModifier_8h</filename>
+    <filename>tracktion__LFOModifier_8h.html</filename>
     <class kind="class">tracktion_engine::LFOModifier</class>
     <class kind="struct">tracktion_engine::LFOModifier::Assignment</class>
     <namespace>tracktion_engine</namespace>
@@ -3820,7 +3820,7 @@
   <compound kind="file">
     <name>tracktion_LoopInfo.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/</path>
-    <filename>tracktion__LoopInfo_8h</filename>
+    <filename>tracktion__LoopInfo_8h.html</filename>
     <class kind="class">tracktion_engine::LoopInfo</class>
     <class kind="struct">tracktion_engine::LoopInfo::LoopPoint</class>
     <namespace>tracktion_engine</namespace>
@@ -3828,35 +3828,35 @@
   <compound kind="file">
     <name>tracktion_LowPass.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/effects/</path>
-    <filename>tracktion__LowPass_8h</filename>
+    <filename>tracktion__LowPass_8h.html</filename>
     <class kind="class">tracktion_engine::LowPassPlugin</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_MackieC4.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/control_surfaces/types/</path>
-    <filename>tracktion__MackieC4_8h</filename>
+    <filename>tracktion__MackieC4_8h.html</filename>
     <class kind="class">tracktion_engine::MackieC4</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_MackieMCU.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/control_surfaces/types/</path>
-    <filename>tracktion__MackieMCU_8h</filename>
+    <filename>tracktion__MackieMCU_8h.html</filename>
     <class kind="class">tracktion_engine::MackieMCU</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_MackieXT.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/control_surfaces/types/</path>
-    <filename>tracktion__MackieXT_8h</filename>
+    <filename>tracktion__MackieXT_8h.html</filename>
     <class kind="class">tracktion_engine::MackieXT</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_MacroParameter.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/automation/</path>
-    <filename>tracktion__MacroParameter_8h</filename>
+    <filename>tracktion__MacroParameter_8h.html</filename>
     <class kind="class">tracktion_engine::MacroParameter</class>
     <class kind="struct">tracktion_engine::MacroParameter::Assignment</class>
     <class kind="class">tracktion_engine::MacroParameterList</class>
@@ -3880,28 +3880,28 @@
   <compound kind="file">
     <name>tracktion_MarkerClip.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
-    <filename>tracktion__MarkerClip_8h</filename>
+    <filename>tracktion__MarkerClip_8h.html</filename>
     <class kind="class">tracktion_engine::MarkerClip</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_MarkerManager.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
-    <filename>tracktion__MarkerManager_8h</filename>
+    <filename>tracktion__MarkerManager_8h.html</filename>
     <class kind="class">tracktion_engine::MarkerManager</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_MarkerTrack.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/tracks/</path>
-    <filename>tracktion__MarkerTrack_8h</filename>
+    <filename>tracktion__MarkerTrack_8h.html</filename>
     <class kind="class">tracktion_engine::MarkerTrack</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_MelodyneFileReader.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/ARA/</path>
-    <filename>tracktion__MelodyneFileReader_8h</filename>
+    <filename>tracktion__MelodyneFileReader_8h.html</filename>
     <class kind="class">tracktion_engine::MelodyneFileReader</class>
     <class kind="struct">tracktion_engine::ARADocumentHolder</class>
     <namespace>tracktion_engine</namespace>
@@ -3909,14 +3909,14 @@
   <compound kind="file">
     <name>tracktion_MelodyneInstanceFactory.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/ARA/</path>
-    <filename>tracktion__MelodyneInstanceFactory_8h</filename>
+    <filename>tracktion__MelodyneInstanceFactory_8h.html</filename>
     <class kind="struct">MelodyneInstance</class>
     <class kind="struct">MelodyneInstanceFactory</class>
   </compound>
   <compound kind="file">
     <name>tracktion_MidiAudioNode.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__MidiAudioNode_8h</filename>
+    <filename>tracktion__MidiAudioNode_8h.html</filename>
     <class kind="class">tracktion_engine::MidiAudioNode</class>
     <namespace>tracktion_engine</namespace>
     <member kind="function">
@@ -3930,14 +3930,14 @@
   <compound kind="file">
     <name>tracktion_MidiChannel.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/midi/</path>
-    <filename>tracktion__MidiChannel_8h</filename>
+    <filename>tracktion__MidiChannel_8h.html</filename>
     <class kind="struct">tracktion_engine::MidiChannel</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_MidiClip.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
-    <filename>tracktion__MidiClip_8h</filename>
+    <filename>tracktion__MidiClip_8h.html</filename>
     <class kind="class">tracktion_engine::MidiClip</class>
     <class kind="struct">tracktion_engine::MidiClip::ScopedEventsList</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion_engine::MidiClip::LoopedSequenceType &gt;</class>
@@ -3947,21 +3947,21 @@
   <compound kind="file">
     <name>tracktion_MidiControllerEvent.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/midi/</path>
-    <filename>tracktion__MidiControllerEvent_8h</filename>
+    <filename>tracktion__MidiControllerEvent_8h.html</filename>
     <class kind="class">tracktion_engine::MidiControllerEvent</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_MidiExpression.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/midi/</path>
-    <filename>tracktion__MidiExpression_8h</filename>
+    <filename>tracktion__MidiExpression_8h.html</filename>
     <class kind="struct">tracktion_engine::MidiExpression</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_MidiInputDevice.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/devices/</path>
-    <filename>tracktion__MidiInputDevice_8h</filename>
+    <filename>tracktion__MidiInputDevice_8h.html</filename>
     <class kind="class">tracktion_engine::MidiInputDevice</class>
     <class kind="struct">tracktion_engine::MidiInputDevice::MidiKeyChangeDispatcher</class>
     <class kind="struct">tracktion_engine::MidiInputDevice::MidiKeyChangeDispatcher::Listener</class>
@@ -3970,7 +3970,7 @@
   <compound kind="file">
     <name>tracktion_MidiLearn.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/automation/</path>
-    <filename>tracktion__MidiLearn_8h</filename>
+    <filename>tracktion__MidiLearn_8h.html</filename>
     <class kind="class">tracktion_engine::MidiLearnState</class>
     <class kind="struct">tracktion_engine::MidiLearnState::ScopedChangeCaller</class>
     <class kind="struct">tracktion_engine::MidiLearnState::Listener</class>
@@ -3981,14 +3981,14 @@
   <compound kind="file">
     <name>tracktion_MidiList.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/midi/</path>
-    <filename>tracktion__MidiList_8h</filename>
+    <filename>tracktion__MidiList_8h.html</filename>
     <class kind="class">tracktion_engine::MidiList</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_MidiMessageArray.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_graph/utilities/</path>
-    <filename>tracktion__MidiMessageArray_8h</filename>
+    <filename>tracktion__MidiMessageArray_8h.html</filename>
     <class kind="struct">tracktion_engine::MidiMessageArray</class>
     <class kind="struct">tracktion_engine::MidiMessageArray::MidiMessageWithSource</class>
     <namespace>tracktion_engine</namespace>
@@ -3996,28 +3996,28 @@
   <compound kind="file">
     <name>tracktion_MidiModifier.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/effects/</path>
-    <filename>tracktion__MidiModifier_8h</filename>
+    <filename>tracktion__MidiModifier_8h.html</filename>
     <class kind="class">tracktion_engine::MidiModifierPlugin</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_MidiNote.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/midi/</path>
-    <filename>tracktion__MidiNote_8h</filename>
+    <filename>tracktion__MidiNote_8h.html</filename>
     <class kind="class">tracktion_engine::MidiNote</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_MidiNoteDispatcher.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/</path>
-    <filename>tracktion__MidiNoteDispatcher_8h</filename>
+    <filename>tracktion__MidiNoteDispatcher_8h.html</filename>
     <class kind="class">tracktion_engine::MidiNoteDispatcher</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_MidiOutputDevice.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/devices/</path>
-    <filename>tracktion__MidiOutputDevice_8h</filename>
+    <filename>tracktion__MidiOutputDevice_8h.html</filename>
     <class kind="class">tracktion_engine::MidiOutputDevice</class>
     <class kind="class">tracktion_engine::SoftwareMidiOutputDevice</class>
     <class kind="class">tracktion_engine::MidiOutputDeviceInstance</class>
@@ -4026,7 +4026,7 @@
   <compound kind="file">
     <name>tracktion_MidiPatchBay.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/effects/</path>
-    <filename>tracktion__MidiPatchBay_8h</filename>
+    <filename>tracktion__MidiPatchBay_8h.html</filename>
     <class kind="class">tracktion_engine::MidiPatchBayPlugin</class>
     <class kind="struct">tracktion_engine::MidiPatchBayPlugin::Mappings</class>
     <namespace>tracktion_engine</namespace>
@@ -4034,7 +4034,7 @@
   <compound kind="file">
     <name>tracktion_MidiProgramManager.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/midi/</path>
-    <filename>tracktion__MidiProgramManager_8h</filename>
+    <filename>tracktion__MidiProgramManager_8h.html</filename>
     <class kind="class">tracktion_engine::MidiProgramManager</class>
     <class kind="struct">tracktion_engine::MidiProgramManager::MidiBank</class>
     <class kind="struct">tracktion_engine::MidiProgramManager::MidiProgramSet</class>
@@ -4043,14 +4043,14 @@
   <compound kind="file">
     <name>tracktion_MidiSysexEvent.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/midi/</path>
-    <filename>tracktion__MidiSysexEvent_8h</filename>
+    <filename>tracktion__MidiSysexEvent_8h.html</filename>
     <class kind="class">tracktion_engine::MidiSysexEvent</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_MIDITrackerModifier.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/automation/modifiers/</path>
-    <filename>tracktion__MIDITrackerModifier_8h</filename>
+    <filename>tracktion__MIDITrackerModifier_8h.html</filename>
     <class kind="class">tracktion_engine::MIDITrackerModifier</class>
     <class kind="struct">tracktion_engine::MIDITrackerModifier::Assignment</class>
     <namespace>tracktion_engine</namespace>
@@ -4058,7 +4058,7 @@
   <compound kind="file">
     <name>tracktion_MiscUtilities.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__MiscUtilities_8h</filename>
+    <filename>tracktion__MiscUtilities_8h.html</filename>
     <class kind="class">tracktion_engine::ScopedWaitCursor</class>
     <namespace>tracktion_engine</namespace>
     <member kind="function">
@@ -4114,14 +4114,14 @@
   <compound kind="file">
     <name>tracktion_MixerAudioNode.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__MixerAudioNode_8h</filename>
+    <filename>tracktion__MixerAudioNode_8h.html</filename>
     <class kind="class">tracktion_engine::MixerAudioNode</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_Modifier.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/automation/</path>
-    <filename>tracktion__Modifier_8h</filename>
+    <filename>tracktion__Modifier_8h.html</filename>
     <class kind="struct">tracktion_engine::ModifierTimer</class>
     <class kind="struct">tracktion_engine::Modifier</class>
     <class kind="class">tracktion_engine::ModifierList</class>
@@ -4144,7 +4144,7 @@
   <compound kind="file">
     <name>tracktion_ModifierCommon.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/automation/modifiers/</path>
-    <filename>tracktion__ModifierCommon_8h</filename>
+    <filename>tracktion__ModifierCommon_8h.html</filename>
     <namespace>tracktion_engine</namespace>
     <namespace>tracktion_engine::ModifierCommon</namespace>
     <member kind="enumeration">
@@ -4329,7 +4329,7 @@
   <compound kind="file">
     <name>tracktion_ModifierInternal.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/automation/modifiers/</path>
-    <filename>tracktion__ModifierInternal_8h</filename>
+    <filename>tracktion__ModifierInternal_8h.html</filename>
     <class kind="struct">tracktion_engine::Ramp</class>
     <class kind="struct">tracktion_engine::DiscreteLabelledParameter</class>
     <class kind="struct">tracktion_engine::SuffixedParameter</class>
@@ -4339,26 +4339,26 @@
   <compound kind="file">
     <name>tracktion_modules.dox</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/</path>
-    <filename>tracktion__modules_8dox</filename>
+    <filename>tracktion__modules_8dox.html</filename>
   </compound>
   <compound kind="file">
     <name>tracktion_MouseHoverDetector.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__MouseHoverDetector_8h</filename>
+    <filename>tracktion__MouseHoverDetector_8h.html</filename>
     <class kind="class">tracktion_engine::MouseHoverDetector</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_MPEStartTrimmer.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/</path>
-    <filename>tracktion__MPEStartTrimmer_8h</filename>
+    <filename>tracktion__MPEStartTrimmer_8h.html</filename>
     <class kind="struct">tracktion_engine::MPEStartTrimmer</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_Musicality.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/midi/</path>
-    <filename>tracktion__Musicality_8h</filename>
+    <filename>tracktion__Musicality_8h.html</filename>
     <class kind="class">tracktion_engine::Chord</class>
     <class kind="class">tracktion_engine::Scale</class>
     <class kind="class">tracktion_engine::PatternGenerator</class>
@@ -4373,26 +4373,26 @@
       <type>juce::Array&lt; KeyResult &gt;</type>
       <name>determineKeyOfNotes</name>
       <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>a61f4614e33f570755bbccd31e788ee4b</anchor>
-      <arglist>(const juce::Array&lt; MidiNote *&gt; &amp;notes)</arglist>
+      <anchor>abe0e1401ed2f8667c2e6988872e7752e</anchor>
+      <arglist>(const juce::Array&lt; MidiNote * &gt; &amp;notes)</arglist>
     </member>
   </compound>
   <compound kind="file">
     <name>tracktion_NovationAutomap.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/control_surfaces/types/</path>
-    <filename>tracktion__NovationAutomap_8h</filename>
+    <filename>tracktion__NovationAutomap_8h.html</filename>
   </compound>
   <compound kind="file">
     <name>tracktion_NovationRemoteSl.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/control_surfaces/types/</path>
-    <filename>tracktion__NovationRemoteSl_8h</filename>
+    <filename>tracktion__NovationRemoteSl_8h.html</filename>
     <class kind="class">tracktion_engine::NovationRemoteSl</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_OldEditConversion.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
-    <filename>tracktion__OldEditConversion_8h</filename>
+    <filename>tracktion__OldEditConversion_8h.html</filename>
     <class kind="struct">tracktion_engine::OldEditConversion</class>
     <namespace>tracktion_engine</namespace>
     <member kind="function">
@@ -4413,7 +4413,7 @@
   <compound kind="file">
     <name>tracktion_Oscillators.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__Oscillators_8h</filename>
+    <filename>tracktion__Oscillators_8h.html</filename>
     <class kind="class">tracktion_engine::BandlimitedWaveLookupTables</class>
     <class kind="class">tracktion_engine::Oscillator</class>
     <class kind="class">tracktion_engine::MultiVoiceOscillator</class>
@@ -4422,7 +4422,7 @@
   <compound kind="file">
     <name>tracktion_OutputDevice.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/devices/</path>
-    <filename>tracktion__OutputDevice_8h</filename>
+    <filename>tracktion__OutputDevice_8h.html</filename>
     <class kind="class">tracktion_engine::OutputDevice</class>
     <class kind="class">tracktion_engine::OutputDeviceInstance</class>
     <namespace>tracktion_engine</namespace>
@@ -4430,7 +4430,7 @@
   <compound kind="file">
     <name>tracktion_ParameterChangeHandler.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/automation/</path>
-    <filename>tracktion__ParameterChangeHandler_8h</filename>
+    <filename>tracktion__ParameterChangeHandler_8h.html</filename>
     <class kind="class">tracktion_engine::ParameterChangeHandler</class>
     <class kind="struct">tracktion_engine::ParameterChangeHandler::Disabler</class>
     <namespace>tracktion_engine</namespace>
@@ -4438,7 +4438,7 @@
   <compound kind="file">
     <name>tracktion_ParameterControlMappings.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/automation/</path>
-    <filename>tracktion__ParameterControlMappings_8h</filename>
+    <filename>tracktion__ParameterControlMappings_8h.html</filename>
     <class kind="class">tracktion_engine::ParameterControlMappings</class>
     <class kind="struct">tracktion_engine::ParameterControlMappings::Mapping</class>
     <namespace>tracktion_engine</namespace>
@@ -4446,7 +4446,7 @@
   <compound kind="file">
     <name>tracktion_PatchBay.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/effects/</path>
-    <filename>tracktion__PatchBay_8h</filename>
+    <filename>tracktion__PatchBay_8h.html</filename>
     <class kind="class">tracktion_engine::PatchBayPlugin</class>
     <class kind="struct">tracktion_engine::PatchBayPlugin::Wire</class>
     <namespace>tracktion_engine</namespace>
@@ -4454,35 +4454,35 @@
   <compound kind="file">
     <name>tracktion_Phaser.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/effects/</path>
-    <filename>tracktion__Phaser_8h</filename>
+    <filename>tracktion__Phaser_8h.html</filename>
     <class kind="class">tracktion_engine::PhaserPlugin</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_PhysicalMidiInputDevice.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/devices/</path>
-    <filename>tracktion__PhysicalMidiInputDevice_8h</filename>
+    <filename>tracktion__PhysicalMidiInputDevice_8h.html</filename>
     <class kind="class">tracktion_engine::PhysicalMidiInputDevice</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_Pitch.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__Pitch_8h</filename>
+    <filename>tracktion__Pitch_8h.html</filename>
     <class kind="struct">tracktion_engine::Pitch</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_PitchSequence.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
-    <filename>tracktion__PitchSequence_8h</filename>
+    <filename>tracktion__PitchSequence_8h.html</filename>
     <class kind="class">tracktion_engine::PitchSequence</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_PitchSetting.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
-    <filename>tracktion__PitchSetting_8h</filename>
+    <filename>tracktion__PitchSetting_8h.html</filename>
     <class kind="class">tracktion_engine::PitchSetting</class>
     <namespace>tracktion_engine</namespace>
     <member kind="function">
@@ -4496,14 +4496,14 @@
   <compound kind="file">
     <name>tracktion_PitchShift.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/effects/</path>
-    <filename>tracktion__PitchShift_8h</filename>
+    <filename>tracktion__PitchShift_8h.html</filename>
     <class kind="class">tracktion_engine::PitchShiftPlugin</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_PlayHead.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/</path>
-    <filename>tracktion__PlayHead_8h</filename>
+    <filename>tracktion__PlayHead_8h.html</filename>
     <class kind="class">tracktion_engine::PlayHead</class>
     <class kind="struct">tracktion_engine::PlayHead::EditTimeWindow</class>
     <namespace>tracktion_engine</namespace>
@@ -4511,14 +4511,14 @@
   <compound kind="file">
     <name>tracktion_PlayHeadAudioNode.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__PlayHeadAudioNode_8h</filename>
+    <filename>tracktion__PlayHeadAudioNode_8h.html</filename>
     <class kind="class">tracktion_engine::PlayHeadAudioNode</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_Plugin.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/</path>
-    <filename>tracktion__Plugin_8h</filename>
+    <filename>tracktion__Plugin_8h.html</filename>
     <class kind="struct">tracktion_engine::PluginCreationInfo</class>
     <class kind="class">tracktion_engine::Plugin</class>
     <class kind="struct">tracktion_engine::Plugin::Wire</class>
@@ -4528,21 +4528,21 @@
   <compound kind="file">
     <name>tracktion_PluginComponent.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__PluginComponent_8h</filename>
+    <filename>tracktion__PluginComponent_8h.html</filename>
     <class kind="struct">tracktion_engine::PluginComponent</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_PluginList.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/</path>
-    <filename>tracktion__PluginList_8h</filename>
+    <filename>tracktion__PluginList_8h.html</filename>
     <class kind="class">tracktion_engine::PluginList</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_PluginManager.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/</path>
-    <filename>tracktion__PluginManager_8h</filename>
+    <filename>tracktion__PluginManager_8h.html</filename>
     <class kind="class">tracktion_engine::PluginManager</class>
     <class kind="struct">tracktion_engine::PluginManager::BuiltInType</class>
     <class kind="struct">tracktion_engine::PluginManager::BuiltInTypeBase</class>
@@ -4552,28 +4552,28 @@
   <compound kind="file">
     <name>tracktion_PluginWindowState.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/</path>
-    <filename>tracktion__PluginWindowState_8h</filename>
+    <filename>tracktion__PluginWindowState_8h.html</filename>
     <class kind="struct">tracktion_engine::PluginWindowState</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_Project.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/project/</path>
-    <filename>tracktion__Project_8h</filename>
+    <filename>tracktion__Project_8h.html</filename>
     <class kind="class">tracktion_engine::Project</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_ProjectItem.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/project/</path>
-    <filename>tracktion__ProjectItem_8h</filename>
+    <filename>tracktion__ProjectItem_8h.html</filename>
     <class kind="class">tracktion_engine::ProjectItem</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_ProjectItemID.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/project/</path>
-    <filename>tracktion__ProjectItemID_8h</filename>
+    <filename>tracktion__ProjectItemID_8h.html</filename>
     <class kind="class">tracktion_engine::ProjectItemID</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion_engine::ProjectItemID &gt;</class>
     <namespace>tracktion_engine</namespace>
@@ -4582,7 +4582,7 @@
   <compound kind="file">
     <name>tracktion_ProjectManager.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/project/</path>
-    <filename>tracktion__ProjectManager_8h</filename>
+    <filename>tracktion__ProjectManager_8h.html</filename>
     <class kind="class">tracktion_engine::ProjectManager</class>
     <class kind="struct">tracktion_engine::ProjectManager::TempProject</class>
     <namespace>tracktion_engine</namespace>
@@ -4590,7 +4590,7 @@
   <compound kind="file">
     <name>tracktion_ProjectSearchIndex.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/project/</path>
-    <filename>tracktion__ProjectSearchIndex_8h</filename>
+    <filename>tracktion__ProjectSearchIndex_8h.html</filename>
     <class kind="class">tracktion_engine::ProjectSearchIndex</class>
     <class kind="class">tracktion_engine::SearchOperation</class>
     <namespace>tracktion_engine</namespace>
@@ -4605,28 +4605,28 @@
   <compound kind="file">
     <name>tracktion_PropertyStorage.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__PropertyStorage_8h</filename>
+    <filename>tracktion__PropertyStorage_8h.html</filename>
     <class kind="class">tracktion_engine::PropertyStorage</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_QuantisationType.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
-    <filename>tracktion__QuantisationType_8h</filename>
+    <filename>tracktion__QuantisationType_8h.html</filename>
     <class kind="class">tracktion_engine::QuantisationType</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_RackInstance.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/internal/</path>
-    <filename>tracktion__RackInstance_8h</filename>
+    <filename>tracktion__RackInstance_8h.html</filename>
     <class kind="class">tracktion_engine::RackInstance</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_RackType.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/internal/</path>
-    <filename>tracktion__RackType_8h</filename>
+    <filename>tracktion__RackType_8h.html</filename>
     <class kind="struct">tracktion_engine::RackConnection</class>
     <class kind="class">tracktion_engine::RackType</class>
     <class kind="struct">tracktion_engine::RackType::WindowState</class>
@@ -4636,7 +4636,7 @@
   <compound kind="file">
     <name>tracktion_RandomModifier.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/automation/modifiers/</path>
-    <filename>tracktion__RandomModifier_8h</filename>
+    <filename>tracktion__RandomModifier_8h.html</filename>
     <class kind="class">tracktion_engine::RandomModifier</class>
     <class kind="struct">tracktion_engine::RandomModifier::Assignment</class>
     <namespace>tracktion_engine</namespace>
@@ -4644,7 +4644,7 @@
   <compound kind="file">
     <name>tracktion_RecordingThumbnailManager.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/</path>
-    <filename>tracktion__RecordingThumbnailManager_8h</filename>
+    <filename>tracktion__RecordingThumbnailManager_8h.html</filename>
     <class kind="class">tracktion_engine::RecordingThumbnailManager</class>
     <class kind="struct">tracktion_engine::RecordingThumbnailManager::Thumbnail</class>
     <namespace>tracktion_engine</namespace>
@@ -4652,7 +4652,7 @@
   <compound kind="file">
     <name>tracktion_ReferencedMaterialList.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/export/</path>
-    <filename>tracktion__ReferencedMaterialList_8h</filename>
+    <filename>tracktion__ReferencedMaterialList_8h.html</filename>
     <class kind="class">tracktion_engine::ReferencedMaterialList</class>
     <class kind="struct">tracktion_engine::ReferencedMaterialList::IntervalList</class>
     <namespace>tracktion_engine</namespace>
@@ -4660,14 +4660,14 @@
   <compound kind="file">
     <name>tracktion_RemoteSLCompact.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/control_surfaces/types/</path>
-    <filename>tracktion__RemoteSLCompact_8h</filename>
+    <filename>tracktion__RemoteSLCompact_8h.html</filename>
     <class kind="class">tracktion_engine::RemoteSLCompact</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_Renderer.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/export/</path>
-    <filename>tracktion__Renderer_8h</filename>
+    <filename>tracktion__Renderer_8h.html</filename>
     <class kind="class">tracktion_engine::Renderer</class>
     <class kind="struct">tracktion_engine::Renderer::Parameters</class>
     <class kind="class">tracktion_engine::Renderer::RenderTask</class>
@@ -4678,7 +4678,7 @@
   <compound kind="file">
     <name>tracktion_RenderManager.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/export/</path>
-    <filename>tracktion__RenderManager_8h</filename>
+    <filename>tracktion__RenderManager_8h.html</filename>
     <class kind="class">tracktion_engine::RenderManager</class>
     <class kind="class">tracktion_engine::RenderManager::Job</class>
     <class kind="struct">tracktion_engine::RenderManager::Job::Listener</class>
@@ -4687,7 +4687,7 @@
   <compound kind="file">
     <name>tracktion_RenderOptions.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/export/</path>
-    <filename>tracktion__RenderOptions_8h</filename>
+    <filename>tracktion__RenderOptions_8h.html</filename>
     <class kind="class">tracktion_engine::RenderOptions</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion_engine::RenderOptions::RenderType &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion_engine::RenderOptions::TargetFileFormat &gt;</class>
@@ -4698,31 +4698,31 @@
   <compound kind="file">
     <name>tracktion_Reverb.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/effects/</path>
-    <filename>tracktion__Reverb_8h</filename>
+    <filename>tracktion__Reverb_8h.html</filename>
     <class kind="class">tracktion_engine::ReverbPlugin</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_ReverseRenderJob.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
-    <filename>tracktion__ReverseRenderJob_8h</filename>
+    <filename>tracktion__ReverseRenderJob_8h.html</filename>
     <class kind="class">tracktion_engine::ReverseRenderJob</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_ReWirePlugin.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/internal/</path>
-    <filename>tracktion__ReWirePlugin_8h</filename>
+    <filename>tracktion__ReWirePlugin_8h.html</filename>
   </compound>
   <compound kind="file">
     <name>tracktion_RexFileFormat.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/formats/</path>
-    <filename>tracktion__RexFileFormat_8h</filename>
+    <filename>tracktion__RexFileFormat_8h.html</filename>
   </compound>
   <compound kind="file">
     <name>tracktion_SamplerPlugin.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/effects/</path>
-    <filename>tracktion__SamplerPlugin_8h</filename>
+    <filename>tracktion__SamplerPlugin_8h.html</filename>
     <class kind="class">tracktion_engine::SamplerPlugin</class>
     <class kind="struct">tracktion_engine::SamplerPlugin::SamplerSound</class>
     <namespace>tracktion_engine</namespace>
@@ -4730,7 +4730,7 @@
   <compound kind="file">
     <name>tracktion_ScopedSteadyLoad.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/</path>
-    <filename>tracktion__ScopedSteadyLoad_8h</filename>
+    <filename>tracktion__ScopedSteadyLoad_8h.html</filename>
     <class kind="class">tracktion_engine::ScopedSteadyLoad</class>
     <class kind="struct">tracktion_engine::ScopedSteadyLoad::Context</class>
     <namespace>tracktion_engine</namespace>
@@ -4738,7 +4738,7 @@
   <compound kind="file">
     <name>tracktion_Selectable.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/selection/</path>
-    <filename>tracktion__Selectable_8h</filename>
+    <filename>tracktion__Selectable_8h.html</filename>
     <class kind="class">tracktion_engine::SelectableListener</class>
     <class kind="class">tracktion_engine::Selectable</class>
     <class kind="struct">tracktion_engine::SelectableList</class>
@@ -4747,7 +4747,7 @@
   <compound kind="file">
     <name>tracktion_SelectableClass.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/selection/</path>
-    <filename>tracktion__SelectableClass_8h</filename>
+    <filename>tracktion__SelectableClass_8h.html</filename>
     <class kind="class">tracktion_engine::SelectableClass</class>
     <class kind="struct">tracktion_engine::SelectableClass::AddClipboardEntryParams</class>
     <class kind="struct">tracktion_engine::SelectableClass::SelectOtherObjectsParams</class>
@@ -4774,14 +4774,14 @@
   <compound kind="file">
     <name>tracktion_SelectedMidiEvents.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/midi/</path>
-    <filename>tracktion__SelectedMidiEvents_8h</filename>
+    <filename>tracktion__SelectedMidiEvents_8h.html</filename>
     <class kind="class">tracktion_engine::SelectedMidiEvents</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_SelectionManager.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/selection/</path>
-    <filename>tracktion__SelectionManager_8h</filename>
+    <filename>tracktion__SelectionManager_8h.html</filename>
     <class kind="class">tracktion_engine::SelectionManager</class>
     <class kind="struct">tracktion_engine::SelectionManager::ChangedSelectionDetector</class>
     <class kind="struct">tracktion_engine::SelectionManager::ScopedSelectionState</class>
@@ -4792,7 +4792,7 @@
   <compound kind="file">
     <name>tracktion_SettingID.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__SettingID_8h</filename>
+    <filename>tracktion__SettingID_8h.html</filename>
     <namespace>tracktion_engine</namespace>
     <member kind="enumeration">
       <type></type>
@@ -4920,7 +4920,7 @@
   <compound kind="file">
     <name>tracktion_SidechainAudioNode.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__SidechainAudioNode_8h</filename>
+    <filename>tracktion__SidechainAudioNode_8h.html</filename>
     <class kind="class">tracktion_engine::SidechainSendAudioNode</class>
     <class kind="class">tracktion_engine::SidechainReceiveAudioNode</class>
     <class kind="class">tracktion_engine::SidechainReceiveWrapperAudioNode</class>
@@ -4929,21 +4929,21 @@
   <compound kind="file">
     <name>tracktion_SmartThumbnail.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/</path>
-    <filename>tracktion__SmartThumbnail_8h</filename>
+    <filename>tracktion__SmartThumbnail_8h.html</filename>
     <class kind="class">tracktion_engine::SmartThumbnail</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_SourceFileReference.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
-    <filename>tracktion__SourceFileReference_8h</filename>
+    <filename>tracktion__SourceFileReference_8h.html</filename>
     <class kind="class">tracktion_engine::SourceFileReference</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_SpeedRampAudioNode.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__SpeedRampAudioNode_8h</filename>
+    <filename>tracktion__SpeedRampAudioNode_8h.html</filename>
     <class kind="class">tracktion_engine::SubSampleWaveAudioNode</class>
     <class kind="class">tracktion_engine::SpeedRampAudioNode</class>
     <namespace>tracktion_engine</namespace>
@@ -4951,14 +4951,14 @@
   <compound kind="file">
     <name>tracktion_Spline.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__Spline_8h</filename>
+    <filename>tracktion__Spline_8h.html</filename>
     <class kind="struct">tracktion_engine::Spline</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_StepClip.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
-    <filename>tracktion__StepClip_8h</filename>
+    <filename>tracktion__StepClip_8h.html</filename>
     <class kind="class">tracktion_engine::StepClip</class>
     <class kind="struct">tracktion_engine::StepClip::Channel</class>
     <class kind="struct">tracktion_engine::StepClip::Pattern</class>
@@ -4969,7 +4969,7 @@
   <compound kind="file">
     <name>tracktion_StepModifier.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/automation/modifiers/</path>
-    <filename>tracktion__StepModifier_8h</filename>
+    <filename>tracktion__StepModifier_8h.html</filename>
     <class kind="class">tracktion_engine::StepModifier</class>
     <class kind="struct">tracktion_engine::StepModifier::Assignment</class>
     <namespace>tracktion_engine</namespace>
@@ -4977,63 +4977,21 @@
   <compound kind="file">
     <name>tracktion_TempoDetect.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/timestretch/</path>
-    <filename>tracktion__TempoDetect_8h</filename>
-    <class kind="class">tracktion_engine::soundtouch::FIFOSamplePipe</class>
-    <class kind="class">tracktion_engine::soundtouch::FIFOProcessor</class>
-    <class kind="class">tracktion_engine::soundtouch::FIFOSampleBuffer</class>
-    <class kind="struct">tracktion_engine::soundtouch::BEAT</class>
-    <class kind="class">tracktion_engine::soundtouch::IIR2_filter</class>
-    <class kind="class">tracktion_engine::soundtouch::BPMDetect</class>
+    <filename>tracktion__TempoDetect_8h.html</filename>
     <class kind="class">tracktion_engine::TempoDetect</class>
     <namespace>tracktion_engine</namespace>
-    <namespace>tracktion_engine::soundtouch</namespace>
-    <member kind="typedef">
-      <type>unsigned int</type>
-      <name>uint</name>
-      <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>a31612764f92ef1348cc47762e9ec6e30</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="typedef">
-      <type>unsigned long</type>
-      <name>ulong</name>
-      <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>a080260976a66655603a8daee013d085e</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="typedef">
-      <type>ulong</type>
-      <name>ulongptr</name>
-      <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>afcdea0d874166ba7763146d0f37011c7</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="typedef">
-      <type>float</type>
-      <name>SAMPLETYPE</name>
-      <anchorfile>namespacetracktion__engine_1_1soundtouch.html</anchorfile>
-      <anchor>a001bbe809c9a3908d5dfac7e56d83589</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="typedef">
-      <type>double</type>
-      <name>LONG_SAMPLETYPE</name>
-      <anchorfile>namespacetracktion__engine_1_1soundtouch.html</anchorfile>
-      <anchor>ae1be4f290c1fb55b41b4d9add60ef8e2</anchor>
-      <arglist></arglist>
-    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_TemporaryFileManager.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__TemporaryFileManager_8h</filename>
+    <filename>tracktion__TemporaryFileManager_8h.html</filename>
     <class kind="class">tracktion_engine::TemporaryFileManager</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_TempoSequence.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
-    <filename>tracktion__TempoSequence_8h</filename>
+    <filename>tracktion__TempoSequence_8h.html</filename>
     <class kind="class">tracktion_engine::TempoSequence</class>
     <class kind="struct">tracktion_engine::TempoSequence::BarsAndBeats</class>
     <class kind="struct">tracktion_engine::TempoSequence::SectionDetails</class>
@@ -5045,35 +5003,35 @@
   <compound kind="file">
     <name>tracktion_TempoSetting.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
-    <filename>tracktion__TempoSetting_8h</filename>
+    <filename>tracktion__TempoSetting_8h.html</filename>
     <class kind="class">tracktion_engine::TempoSetting</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_TempoTrack.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/tracks/</path>
-    <filename>tracktion__TempoTrack_8h</filename>
+    <filename>tracktion__TempoTrack_8h.html</filename>
     <class kind="class">tracktion_engine::TempoTrack</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_TextPlugin.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/internal/</path>
-    <filename>tracktion__TextPlugin_8h</filename>
+    <filename>tracktion__TextPlugin_8h.html</filename>
     <class kind="class">tracktion_engine::TextPlugin</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_Thumbnail.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/</path>
-    <filename>tracktion__Thumbnail_8h</filename>
+    <filename>tracktion__Thumbnail_8h.html</filename>
     <class kind="class">tracktion_engine::TracktionThumbnail</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_TimecodeDisplayFormat.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
-    <filename>tracktion__TimecodeDisplayFormat_8h</filename>
+    <filename>tracktion__TimecodeDisplayFormat_8h.html</filename>
     <class kind="struct">tracktion_engine::TimecodeSnapType</class>
     <class kind="struct">tracktion_engine::TimecodeDisplayFormat</class>
     <class kind="struct">tracktion_engine::TimecodeDisplayIterator</class>
@@ -5096,21 +5054,21 @@
   <compound kind="file">
     <name>tracktion_TimedMutingAudioNode.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__TimedMutingAudioNode_8h</filename>
+    <filename>tracktion__TimedMutingAudioNode_8h.html</filename>
     <class kind="class">tracktion_engine::TimedMutingAudioNode</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_TimeSigSetting.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
-    <filename>tracktion__TimeSigSetting_8h</filename>
+    <filename>tracktion__TimeSigSetting_8h.html</filename>
     <class kind="class">tracktion_engine::TimeSigSetting</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_TimeStretch.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/timestretch/</path>
-    <filename>tracktion__TimeStretch_8h</filename>
+    <filename>tracktion__TimeStretch_8h.html</filename>
     <class kind="class">tracktion_engine::TimeStretcher</class>
     <class kind="struct">tracktion_engine::TimeStretcher::ElastiqueProOptions</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion_engine::TimeStretcher::Mode &gt;</class>
@@ -5121,21 +5079,21 @@
   <compound kind="file">
     <name>tracktion_ToneGenerator.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/effects/</path>
-    <filename>tracktion__ToneGenerator_8h</filename>
+    <filename>tracktion__ToneGenerator_8h.html</filename>
     <class kind="class">tracktion_engine::ToneGeneratorPlugin</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_Track.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/tracks/</path>
-    <filename>tracktion__Track_8h</filename>
+    <filename>tracktion__Track_8h.html</filename>
     <class kind="class">tracktion_engine::Track</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_TrackCompManager.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/tracks/</path>
-    <filename>tracktion__TrackCompManager_8h</filename>
+    <filename>tracktion__TrackCompManager_8h.html</filename>
     <class kind="class">tracktion_engine::TrackCompManager</class>
     <class kind="struct">tracktion_engine::TrackCompManager::CompSection</class>
     <class kind="struct">tracktion_engine::TrackCompManager::TrackComp</class>
@@ -5147,28 +5105,28 @@
   <compound kind="file">
     <name>tracktion_TrackItem.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/tracks/</path>
-    <filename>tracktion__TrackItem_8h</filename>
+    <filename>tracktion__TrackItem_8h.html</filename>
     <class kind="class">tracktion_engine::TrackItem</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_TrackMutingAudioNode.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__TrackMutingAudioNode_8h</filename>
+    <filename>tracktion__TrackMutingAudioNode_8h.html</filename>
     <class kind="class">tracktion_engine::TrackMutingAudioNode</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_TrackOutput.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/tracks/</path>
-    <filename>tracktion__TrackOutput_8h</filename>
+    <filename>tracktion__TrackOutput_8h.html</filename>
     <class kind="class">tracktion_engine::TrackOutput</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_TrackUtils.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/tracks/</path>
-    <filename>tracktion__TrackUtils_8h</filename>
+    <filename>tracktion__TrackUtils_8h.html</filename>
     <class kind="struct">tracktion_engine::TrackInsertPoint</class>
     <class kind="struct">tracktion_engine::TrackList</class>
     <class kind="struct">tracktion_engine::TrackSection</class>
@@ -5186,8 +5144,8 @@
       <type>bool</type>
       <name>checkRenderParametersAndConfirmWithUser</name>
       <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>ad53350ae318b88a178663b5d759b68ef</anchor>
-      <arglist>(const juce::Array&lt; Track *&gt; &amp;, EditTimeRange markedRange, bool silent=false)</arglist>
+      <anchor>af2862ed5aa4a4dad8e7e033b0f7e3b4a</anchor>
+      <arglist>(const juce::Array&lt; Track * &gt; &amp;, EditTimeRange markedRange, bool silent=false)</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -5207,7 +5165,7 @@
   <compound kind="file">
     <name>tracktion_TransportControl.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/</path>
-    <filename>tracktion__TransportControl_8h</filename>
+    <filename>tracktion__TransportControl_8h.html</filename>
     <class kind="class">tracktion_engine::TransportControl</class>
     <class kind="struct">tracktion_engine::TransportControl::ReallocationInhibitor</class>
     <class kind="struct">tracktion_engine::TransportControl::ScopedPlaybackRestarter</class>
@@ -5273,21 +5231,21 @@
   <compound kind="file">
     <name>tracktion_Tranzport.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/control_surfaces/types/</path>
-    <filename>tracktion__Tranzport_8h</filename>
+    <filename>tracktion__Tranzport_8h.html</filename>
     <class kind="class">tracktion_engine::TranzportControlSurface</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_UIBehaviour.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__UIBehaviour_8h</filename>
+    <filename>tracktion__UIBehaviour_8h.html</filename>
     <class kind="class">tracktion_engine::UIBehaviour</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_ValueTreeUtilities.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
-    <filename>tracktion__ValueTreeUtilities_8h</filename>
+    <filename>tracktion__ValueTreeUtilities_8h.html</filename>
     <class kind="struct">juce::VariantConverter&lt; Colour &gt;</class>
     <class kind="class">tracktion_engine::ValueTreeObjectList</class>
     <class kind="struct">tracktion_engine::SortedValueTreeObjectList</class>
@@ -5307,8 +5265,8 @@
       <type>void</type>
       <name>forEachItem</name>
       <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>a1bcd51c5679e6258431a5de3957459ba</anchor>
-      <arglist>(const juce::Array&lt; Type *&gt; &amp;items, const UnaryFunction &amp;fn)</arglist>
+      <anchor>a8a4248d69aa8f9522309589a788c0e92</anchor>
+      <arglist>(const juce::Array&lt; Type * &gt; &amp;items, const UnaryFunction &amp;fn)</arglist>
     </member>
     <member kind="function">
       <type>juce::Array&lt; juce::ValueTree &gt; &amp;</type>
@@ -5342,28 +5300,28 @@
   <compound kind="file">
     <name>tracktion_VCA.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/internal/</path>
-    <filename>tracktion__VCA_8h</filename>
+    <filename>tracktion__VCA_8h.html</filename>
     <class kind="class">tracktion_engine::VCAPlugin</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_VirtualMidiInputDevice.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/devices/</path>
-    <filename>tracktion__VirtualMidiInputDevice_8h</filename>
+    <filename>tracktion__VirtualMidiInputDevice_8h.html</filename>
     <class kind="class">tracktion_engine::VirtualMidiInputDevice</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_VolumeAndPan.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/internal/</path>
-    <filename>tracktion__VolumeAndPan_8h</filename>
+    <filename>tracktion__VolumeAndPan_8h.html</filename>
     <class kind="class">tracktion_engine::VolumeAndPanPlugin</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_VSTXML.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/external/</path>
-    <filename>tracktion__VSTXML_8h</filename>
+    <filename>tracktion__VSTXML_8h.html</filename>
     <class kind="class">tracktion_engine::VSTXML</class>
     <class kind="struct">tracktion_engine::VSTXML::Base</class>
     <class kind="struct">tracktion_engine::VSTXML::Param</class>
@@ -5377,7 +5335,7 @@
   <compound kind="file">
     <name>tracktion_WarpTimeManager.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
-    <filename>tracktion__WarpTimeManager_8h</filename>
+    <filename>tracktion__WarpTimeManager_8h.html</filename>
     <class kind="struct">tracktion_engine::WarpMarker</class>
     <class kind="class">tracktion_engine::WarpTimeManager</class>
     <class kind="class">tracktion_engine::WarpTimeFactory</class>
@@ -5386,21 +5344,21 @@
   <compound kind="file">
     <name>tracktion_WarpTimeRenderJob.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
-    <filename>tracktion__WarpTimeRenderJob_8h</filename>
+    <filename>tracktion__WarpTimeRenderJob_8h.html</filename>
     <class kind="class">tracktion_engine::WarpTimeRenderJob</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_WaveAudioClip.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
-    <filename>tracktion__WaveAudioClip_8h</filename>
+    <filename>tracktion__WaveAudioClip_8h.html</filename>
     <class kind="class">tracktion_engine::WaveAudioClip</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_WaveAudioNode.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__WaveAudioNode_8h</filename>
+    <filename>tracktion__WaveAudioNode_8h.html</filename>
     <class kind="struct">tracktion_engine::ClipLevel</class>
     <class kind="struct">tracktion_engine::LiveClipLevel</class>
     <class kind="class">tracktion_engine::WaveAudioNode</class>
@@ -5409,7 +5367,7 @@
   <compound kind="file">
     <name>tracktion_WaveDeviceDescription.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/devices/</path>
-    <filename>tracktion__WaveDeviceDescription_8h</filename>
+    <filename>tracktion__WaveDeviceDescription_8h.html</filename>
     <class kind="struct">tracktion_engine::ChannelIndex</class>
     <class kind="struct">tracktion_engine::WaveDeviceDescription</class>
     <namespace>tracktion_engine</namespace>
@@ -5445,7 +5403,7 @@
   <compound kind="file">
     <name>tracktion_WaveInputDevice.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/devices/</path>
-    <filename>tracktion__WaveInputDevice_8h</filename>
+    <filename>tracktion__WaveInputDevice_8h.html</filename>
     <class kind="class">tracktion_engine::WaveInputDevice</class>
     <class kind="class">tracktion_engine::WaveInputRecordingThread</class>
     <class kind="struct">tracktion_engine::WaveInputRecordingThread::ScopedInitialiser</class>
@@ -5454,7 +5412,7 @@
   <compound kind="file">
     <name>tracktion_WaveOutputDevice.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/devices/</path>
-    <filename>tracktion__WaveOutputDevice_8h</filename>
+    <filename>tracktion__WaveOutputDevice_8h.html</filename>
     <class kind="class">tracktion_engine::WaveOutputDevice</class>
     <class kind="class">tracktion_engine::WaveOutputDeviceInstance</class>
     <namespace>tracktion_engine</namespace>
@@ -6844,6 +6802,39 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion_engine::BreakpointOscillatorModifier::Assignment</name>
+    <filename>structtracktion__engine_1_1BreakpointOscillatorModifier_1_1Assignment.html</filename>
+    <base>tracktion_engine::AutomatableParameter::ModifierAssignment</base>
+    <member kind="function">
+      <type></type>
+      <name>Assignment</name>
+      <anchorfile>structtracktion__engine_1_1BreakpointOscillatorModifier_1_1Assignment.html</anchorfile>
+      <anchor>a7e8e7b5e358f134176391dd62a6482c1</anchor>
+      <arglist>(const juce::ValueTree &amp;, const BreakpointOscillatorModifier &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isForModifierSource</name>
+      <anchorfile>structtracktion__engine_1_1BreakpointOscillatorModifier_1_1Assignment.html</anchorfile>
+      <anchor>ab2a9478a32392858b043139692282438</anchor>
+      <arglist>(const ModifierSource &amp;) const override</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ReferenceCountedObjectPtr&lt; BreakpointOscillatorModifier &gt;</type>
+      <name>getModifier</name>
+      <anchorfile>structtracktion__engine_1_1BreakpointOscillatorModifier_1_1Assignment.html</anchorfile>
+      <anchor>a4fb8f5ca5cf1a6d70ed634fa811f2034</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="variable">
+      <type>const EditItemID</type>
+      <name>breakpointOscillatorModifierID</name>
+      <anchorfile>structtracktion__engine_1_1BreakpointOscillatorModifier_1_1Assignment.html</anchorfile>
+      <anchor>a050349bbe82190b5a47c21f9375e2fe2</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion_engine::LFOModifier::Assignment</name>
     <filename>structtracktion__engine_1_1LFOModifier_1_1Assignment.html</filename>
     <base>tracktion_engine::AutomatableParameter::ModifierAssignment</base>
@@ -6972,39 +6963,6 @@
       <name>stepModifierID</name>
       <anchorfile>structtracktion__engine_1_1StepModifier_1_1Assignment.html</anchorfile>
       <anchor>a69b677d069b782b94bda9f5fbc3b46f4</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion_engine::BreakpointOscillatorModifier::Assignment</name>
-    <filename>structtracktion__engine_1_1BreakpointOscillatorModifier_1_1Assignment.html</filename>
-    <base>tracktion_engine::AutomatableParameter::ModifierAssignment</base>
-    <member kind="function">
-      <type></type>
-      <name>Assignment</name>
-      <anchorfile>structtracktion__engine_1_1BreakpointOscillatorModifier_1_1Assignment.html</anchorfile>
-      <anchor>a7e8e7b5e358f134176391dd62a6482c1</anchor>
-      <arglist>(const juce::ValueTree &amp;, const BreakpointOscillatorModifier &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isForModifierSource</name>
-      <anchorfile>structtracktion__engine_1_1BreakpointOscillatorModifier_1_1Assignment.html</anchorfile>
-      <anchor>ab2a9478a32392858b043139692282438</anchor>
-      <arglist>(const ModifierSource &amp;) const override</arglist>
-    </member>
-    <member kind="function">
-      <type>juce::ReferenceCountedObjectPtr&lt; BreakpointOscillatorModifier &gt;</type>
-      <name>getModifier</name>
-      <anchorfile>structtracktion__engine_1_1BreakpointOscillatorModifier_1_1Assignment.html</anchorfile>
-      <anchor>a4fb8f5ca5cf1a6d70ed634fa811f2034</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="variable">
-      <type>const EditItemID</type>
-      <name>breakpointOscillatorModifierID</name>
-      <anchorfile>structtracktion__engine_1_1BreakpointOscillatorModifier_1_1Assignment.html</anchorfile>
-      <anchor>a050349bbe82190b5a47c21f9375e2fe2</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -8750,6 +8708,80 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>tracktion_graph::AudioFifo</name>
+    <filename>classtracktion__graph_1_1AudioFifo.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>AudioFifo</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>a7b2806d028aa41265e33a3a9d2bf4200</anchor>
+      <arglist>(int channels, int numSamples)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setSize</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>a7bbb2c1aa157950eb602b5bfc0fcce96</anchor>
+      <arglist>(int numChannels, int numSamples)</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getFreeSpace</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>a7aa7c4eb64ad54d847fb4234e88d6993</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getNumReady</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>a0aea03dc987c68ecc313a8ba386404e9</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getNumChannels</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>ae6bfa15c94225005402e2f2f3803412a</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>reset</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>a93a753f2d5524d66a25394d4177115c0</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>ensureFreeSpace</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>a50c1bba73e69152c914d8c4ebebf7329</anchor>
+      <arglist>(int numSamples)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>write</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>a9c478b7d5f858c0bfc21a9af88a399d2</anchor>
+      <arglist>(juce::dsp::AudioBlock&lt; float &gt; block)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>writeSilence</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>a9ee7aeb980fdb7673a7b14d44dbe92a6</anchor>
+      <arglist>(int numSamples)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>readAdding</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>ad0d7cf6a1ebcfec3a05ddfc3042a454d</anchor>
+      <arglist>(const juce::dsp::AudioBlock&lt; float &gt; &amp;dest)</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>tracktion_engine::AudioFifo</name>
     <filename>classtracktion__engine_1_1AudioFifo.html</filename>
     <member kind="function">
@@ -8869,80 +8901,6 @@
       <name>readAdding</name>
       <anchorfile>classtracktion__engine_1_1AudioFifo.html</anchorfile>
       <anchor>a95f52c986432027fa274f740199dbbe1</anchor>
-      <arglist>(const juce::dsp::AudioBlock&lt; float &gt; &amp;dest)</arglist>
-    </member>
-  </compound>
-  <compound kind="class">
-    <name>tracktion_graph::AudioFifo</name>
-    <filename>classtracktion__graph_1_1AudioFifo.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>AudioFifo</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a7b2806d028aa41265e33a3a9d2bf4200</anchor>
-      <arglist>(int channels, int numSamples)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>setSize</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a7bbb2c1aa157950eb602b5bfc0fcce96</anchor>
-      <arglist>(int numChannels, int numSamples)</arglist>
-    </member>
-    <member kind="function">
-      <type>int</type>
-      <name>getFreeSpace</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a7aa7c4eb64ad54d847fb4234e88d6993</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>int</type>
-      <name>getNumReady</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a0aea03dc987c68ecc313a8ba386404e9</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>int</type>
-      <name>getNumChannels</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>ae6bfa15c94225005402e2f2f3803412a</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>reset</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a93a753f2d5524d66a25394d4177115c0</anchor>
-      <arglist>() noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>ensureFreeSpace</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a50c1bba73e69152c914d8c4ebebf7329</anchor>
-      <arglist>(int numSamples)</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>write</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a9c478b7d5f858c0bfc21a9af88a399d2</anchor>
-      <arglist>(juce::dsp::AudioBlock&lt; float &gt; block)</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>writeSilence</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a9ee7aeb980fdb7673a7b14d44dbe92a6</anchor>
-      <arglist>(int numSamples)</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>readAdding</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>ad0d7cf6a1ebcfec3a05ddfc3042a454d</anchor>
       <arglist>(const juce::dsp::AudioBlock&lt; float &gt; &amp;dest)</arglist>
     </member>
   </compound>
@@ -13428,24 +13386,6 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion_engine::soundtouch::BEAT</name>
-    <filename>structtracktion__engine_1_1soundtouch_1_1BEAT.html</filename>
-    <member kind="variable">
-      <type>float</type>
-      <name>pos</name>
-      <anchorfile>structtracktion__engine_1_1soundtouch_1_1BEAT.html</anchorfile>
-      <anchor>a53d920fbe4a71d26383746619c925650</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>float</type>
-      <name>strength</name>
-      <anchorfile>structtracktion__engine_1_1soundtouch_1_1BEAT.html</anchorfile>
-      <anchor>abceb716b11ce663214b62aadf027158f</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
     <name>tracktion_engine::BeatDetect</name>
     <filename>structtracktion__engine_1_1BeatDetect.html</filename>
     <member kind="function">
@@ -13508,213 +13448,6 @@
       <anchorfile>structtracktion__engine_1_1BlockingFunction.html</anchorfile>
       <anchor>aa88169f8117a963c3084760055864404</anchor>
       <arglist>(std::function&lt; void(void)&gt; f)</arglist>
-    </member>
-  </compound>
-  <compound kind="class">
-    <name>tracktion_engine::soundtouch::BPMDetect</name>
-    <filename>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>BPMDetect</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>afee62708fb625053d287712eb6b2c60e</anchor>
-      <arglist>(int numChannels, int sampleRate)</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual</type>
-      <name>~BPMDetect</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>a235d4a33e55e114344a4f39663c5d6c7</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>inputSamples</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>ab1fe231aae8a7cf0fae56a8ac111de1d</anchor>
-      <arglist>(const soundtouch::SAMPLETYPE *samples, int numSamples)</arglist>
-    </member>
-    <member kind="function">
-      <type>float</type>
-      <name>getBpm</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>aa8da415a1fa1f464c92611bcfed4b67f</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>int</type>
-      <name>getBeats</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>a8bd43902952343334aa38be5a0cdefb5</anchor>
-      <arglist>(float *pos, float *strength, int max_num)</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>void</type>
-      <name>updateXCorr</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>a515f8e7317d7a421e078471713d4c3c9</anchor>
-      <arglist>(int process_samples)</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>int</type>
-      <name>decimate</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>adfb71dff0fb0d068b4d10d5a1c2c22be</anchor>
-      <arglist>(soundtouch::SAMPLETYPE *dest, const soundtouch::SAMPLETYPE *src, int numsamples)</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>void</type>
-      <name>calcEnvelope</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>aa0747fef50ece4a787a8a0460d0245de</anchor>
-      <arglist>(soundtouch::SAMPLETYPE *samples, int numsamples)</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>void</type>
-      <name>removeBias</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>ad531e772fc5211a981d6d9bc5d211ff9</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>void</type>
-      <name>updateBeatPos</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>a087831a0a7d92dfd81000035f7bbcc4c</anchor>
-      <arglist>(int process_samples)</arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>float *</type>
-      <name>xcorr</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>a672e8c62591075f82f36dcdfee103db8</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>int</type>
-      <name>decimateCount</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>a4ca972186eeca563b3c586dd99cb0676</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>soundtouch::LONG_SAMPLETYPE</type>
-      <name>decimateSum</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>a2901c0cdf35be31aec47d8bea2a24677</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>int</type>
-      <name>decimateBy</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>ad154a48e0dc842c08988fd8ab947fab9</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>int</type>
-      <name>windowLen</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>aec7f4b6b843c5ce76a7e8d9347731702</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>int</type>
-      <name>channels</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>ac8610594c69f33128edb2a32bc571985</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>int</type>
-      <name>sampleRate</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>a121d4826d4ea45081fc28e6b24cec8a9</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>int</type>
-      <name>windowStart</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>abccbbb9191ba5c3f84d0dee3cca9fcf1</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>float *</type>
-      <name>hamw</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>ad2319c4296a4b6f3e8b24b61815ce946</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>float *</type>
-      <name>hamw2</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>a2bafc9c395acc1d1c181c375c3f7288e</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>int</type>
-      <name>pos</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>ac5bd0a586a9273abe3e39afab277a879</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>int</type>
-      <name>peakPos</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>a83750a99bd0f265e7e727f7443b31224</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>int</type>
-      <name>beatcorr_ringbuffpos</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>a13449496ea4c922717a09e340ede8e6f</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>int</type>
-      <name>init_scaler</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>a55cf4a93c40bc0217e3b309b89436fec</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>float</type>
-      <name>peakVal</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>a96e982d3f849bb5bc6125c6aadf86380</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>float *</type>
-      <name>beatcorr_ringbuff</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>a95bc4be59331410e5c2cb17b625bee6f</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>soundtouch::FIFOSampleBuffer *</type>
-      <name>buffer</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>a5c3f5970a46abbd52684ed2f345c7ff8</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>std::vector&lt; BEAT &gt;</type>
-      <name>beats</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>a42bc88cd55b96c247b071e6b80b1201e</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>IIR2_filter</type>
-      <name>beat_lpf</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
-      <anchor>a4110764154a2564325f6b8b72ecfbb22</anchor>
-      <arglist></arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -18540,7 +18273,7 @@
   <compound kind="class">
     <name>tracktion_engine::ConstrainedCachedValue</name>
     <filename>classtracktion__engine_1_1ConstrainedCachedValue.html</filename>
-    <templarg>Type</templarg>
+    <templarg></templarg>
     <member kind="function">
       <type></type>
       <name>ConstrainedCachedValue</name>
@@ -25970,7 +25703,7 @@
   <compound kind="struct">
     <name>tracktion_engine::EditItemCache</name>
     <filename>structtracktion__engine_1_1EditItemCache.html</filename>
-    <templarg>EditItemType</templarg>
+    <templarg></templarg>
     <member kind="function">
       <type></type>
       <name>EditItemCache</name>
@@ -26536,8 +26269,8 @@
       <type>juce::Result</type>
       <name>applyRetrospectiveRecord</name>
       <anchorfile>classtracktion__engine_1_1EditPlaybackContext.html</anchorfile>
-      <anchor>a677cb266111e4999e73c6359665ce5bb</anchor>
-      <arglist>(juce::Array&lt; Clip *&gt; *clipsCreated=nullptr)</arglist>
+      <anchor>a9728e15e807d570de384c58bdecfd856</anchor>
+      <arglist>(juce::Array&lt; Clip * &gt; *clipsCreated=nullptr)</arglist>
     </member>
     <member kind="function">
       <type>juce::Array&lt; InputDeviceInstance * &gt;</type>
@@ -30689,272 +30422,6 @@
       <arglist>() const override</arglist>
     </member>
   </compound>
-  <compound kind="class">
-    <name>tracktion_engine::soundtouch::FIFOProcessor</name>
-    <filename>classtracktion__engine_1_1soundtouch_1_1FIFOProcessor.html</filename>
-    <base>tracktion_engine::soundtouch::FIFOSamplePipe</base>
-    <member kind="function" virtualness="virtual">
-      <type>virtual uint</type>
-      <name>receiveSamples</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
-      <anchor>adf966cee81db0bcd6d8202a8af10d72c</anchor>
-      <arglist>(SAMPLETYPE *outBuffer, uint maxSamples)</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual uint</type>
-      <name>receiveSamples</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
-      <anchor>a1ce79831ca67b6fd479b391e203fd2aa</anchor>
-      <arglist>(uint maxSamples)</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual uint</type>
-      <name>numSamples</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
-      <anchor>af1c250c4bb361fdda725a979b6e98ee8</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual int</type>
-      <name>isEmpty</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
-      <anchor>ac374678387a07b4923c58a6c6c9cc651</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual uint</type>
-      <name>adjustAmountOfSamples</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
-      <anchor>ab4dc7f65a4fcbb74dc071d4ab67ecb62</anchor>
-      <arglist>(uint numSamples)</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>void</type>
-      <name>setOutPipe</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
-      <anchor>a98b7b431a4ec0963a436c5086b30039f</anchor>
-      <arglist>(FIFOSamplePipe *pOutput)</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type></type>
-      <name>FIFOProcessor</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
-      <anchor>aee096e7d2fc75b2bde1900b811a5dbd1</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type></type>
-      <name>FIFOProcessor</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
-      <anchor>ac1766da028eb3031be0634114fffb976</anchor>
-      <arglist>(FIFOSamplePipe *pOutput)</arglist>
-    </member>
-    <member kind="function" protection="protected" virtualness="virtual">
-      <type>virtual</type>
-      <name>~FIFOProcessor</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
-      <anchor>ab6aa7dcf5479e9d0b9a2a845f9e27645</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" protection="protected" virtualness="virtual">
-      <type>virtual SAMPLETYPE *</type>
-      <name>ptrBegin</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
-      <anchor>a3aeeb752aa23992ac70966e2842df1e8</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>FIFOSamplePipe *</type>
-      <name>output</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
-      <anchor>aaeef4dbcc1d3f82728d554c1650e8ecd</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="class">
-    <name>tracktion_engine::soundtouch::FIFOSampleBuffer</name>
-    <filename>classtracktion__engine_1_1soundtouch_1_1FIFOSampleBuffer.html</filename>
-    <base>tracktion_engine::soundtouch::FIFOSamplePipe</base>
-    <member kind="function">
-      <type></type>
-      <name>FIFOSampleBuffer</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
-      <anchor>aa878d89724aa768d465b28d080a4f9b5</anchor>
-      <arglist>(int numChannels=2)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>~FIFOSampleBuffer</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
-      <anchor>aa0a320f51c61b71c7ec04709b090e101</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual SAMPLETYPE *</type>
-      <name>ptrBegin</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
-      <anchor>aae242b2cfbbbc11f959203550ec30e39</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>SAMPLETYPE *</type>
-      <name>ptrEnd</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
-      <anchor>a915704e8d3a77d555d408f9e9516c8d3</anchor>
-      <arglist>(uint slackCapacity)</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>putSamples</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
-      <anchor>a9e878d5a409a57b0a04125a651b5ad6a</anchor>
-      <arglist>(const SAMPLETYPE *samples, uint numSamples)</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>putSamples</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
-      <anchor>a482a2e78bcfa7b21601f11448ea5fb98</anchor>
-      <arglist>(uint numSamples)</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual uint</type>
-      <name>receiveSamples</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
-      <anchor>a7f274bb76f71b6182ae2dd77042d5341</anchor>
-      <arglist>(SAMPLETYPE *output, uint maxSamples)</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual uint</type>
-      <name>receiveSamples</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
-      <anchor>ac17e997c567da9a11f1f9bdb1ac84759</anchor>
-      <arglist>(uint maxSamples)</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual uint</type>
-      <name>numSamples</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
-      <anchor>a479819929e79e4260a80e8c856972814</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>setChannels</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
-      <anchor>a6a93c8b5f2b16eb6aac7bed1b43ea837</anchor>
-      <arglist>(int numChannels)</arglist>
-    </member>
-    <member kind="function">
-      <type>int</type>
-      <name>getChannels</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
-      <anchor>a634f77aaf2eaceef43f4950ec32d1b98</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual int</type>
-      <name>isEmpty</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
-      <anchor>a8439138c909eb4256a6bfb717a337e99</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>clear</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
-      <anchor>a9c2aeda55dc149da7f909daa3916fc39</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>uint</type>
-      <name>adjustAmountOfSamples</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
-      <anchor>a4db1c7bda634f62de29826a88688c74b</anchor>
-      <arglist>(uint numSamples)</arglist>
-    </member>
-  </compound>
-  <compound kind="class">
-    <name>tracktion_engine::soundtouch::FIFOSamplePipe</name>
-    <filename>classtracktion__engine_1_1soundtouch_1_1FIFOSamplePipe.html</filename>
-    <member kind="function" virtualness="virtual">
-      <type>virtual</type>
-      <name>~FIFOSamplePipe</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
-      <anchor>a4531f449b5becdd5bf7f951754b50754</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual SAMPLETYPE *</type>
-      <name>ptrBegin</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
-      <anchor>a0f976502a929772bc24ea4917cd49c56</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>putSamples</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
-      <anchor>a89325842d156388cc235fb28b37d66d8</anchor>
-      <arglist>(const SAMPLETYPE *samples, uint numSamples)=0</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>moveSamples</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
-      <anchor>a5d6b606e4aef3ba1ee6b95d450790157</anchor>
-      <arglist>(FIFOSamplePipe &amp;other)</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual uint</type>
-      <name>receiveSamples</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
-      <anchor>a216c913b96b1775974a648ec5592881b</anchor>
-      <arglist>(SAMPLETYPE *output, uint maxSamples)=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual uint</type>
-      <name>receiveSamples</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
-      <anchor>a3418a2c4e6d6152609518b31bd48a8aa</anchor>
-      <arglist>(uint maxSamples)=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual uint</type>
-      <name>numSamples</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
-      <anchor>a0a67b87463f74370d1aeb70e6360c34e</anchor>
-      <arglist>() const =0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual int</type>
-      <name>isEmpty</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
-      <anchor>afd511c359a5c6d64a247067ae52f82ea</anchor>
-      <arglist>() const =0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>clear</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
-      <anchor>a72828282c15eb082da720eb68432abf2</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual uint</type>
-      <name>adjustAmountOfSamples</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
-      <anchor>adbca818a8225595ca0626e33e4d39baf</anchor>
-      <arglist>(uint numSamples)=0</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>bool</type>
-      <name>verifyNumberOfChannels</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
-      <anchor>a9cf2af47b13f2b415edad5aa7d9028ab</anchor>
-      <arglist>(int nChannels) const</arglist>
-    </member>
-  </compound>
   <compound kind="struct">
     <name>tracktion_engine::FileDragList</name>
     <filename>structtracktion__engine_1_1FileDragList.html</filename>
@@ -33056,24 +32523,6 @@
       <arglist></arglist>
     </member>
   </compound>
-  <compound kind="class">
-    <name>tracktion_engine::soundtouch::IIR2_filter</name>
-    <filename>classtracktion__engine_1_1soundtouch_1_1IIR2__filter.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>IIR2_filter</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1IIR2__filter.html</anchorfile>
-      <anchor>a501ea5b45bbf0c210d5e16d1eb9204cb</anchor>
-      <arglist>(const double *lpf_coeffs)</arglist>
-    </member>
-    <member kind="function">
-      <type>float</type>
-      <name>update</name>
-      <anchorfile>classtracktion__engine_1_1soundtouch_1_1IIR2__filter.html</anchorfile>
-      <anchor>aec3cb6207fc85d59ea056579fdb5e781</anchor>
-      <arglist>(float x)</arglist>
-    </member>
-  </compound>
   <compound kind="struct">
     <name>tracktion_engine::TracktionArchiveFile::IndexEntry</name>
     <filename>structtracktion__engine_1_1TracktionArchiveFile_1_1IndexEntry.html</filename>
@@ -33363,8 +32812,8 @@
       <type>static void</type>
       <name>setRetrospectiveLock</name>
       <anchorfile>classtracktion__engine_1_1InputDevice.html</anchorfile>
-      <anchor>af5154feddf80000acbbee72d08dd7a12</anchor>
-      <arglist>(Engine &amp;engine, const juce::Array&lt; InputDeviceInstance *&gt; &amp;devices, bool lock)</arglist>
+      <anchor>a3e9814b25c78bb2549a2168a7465f30c</anchor>
+      <arglist>(Engine &amp;engine, const juce::Array&lt; InputDeviceInstance * &gt; &amp;devices, bool lock)</arglist>
     </member>
     <member kind="variable">
       <type>Engine &amp;</type>
@@ -35728,6 +35177,176 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion_engine::AbletonLink::Listener</name>
+    <filename>structtracktion__engine_1_1AbletonLink_1_1Listener.html</filename>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~Listener</name>
+      <anchorfile>structtracktion__engine_1_1AbletonLink_1_1Listener.html</anchorfile>
+      <anchor>a19e2bb1925e91cca4aaa323ac696be5d</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>linkRequestedTempoChange</name>
+      <anchorfile>structtracktion__engine_1_1AbletonLink_1_1Listener.html</anchorfile>
+      <anchor>a46911e2d164cf4db4c2f2270c3162d8c</anchor>
+      <arglist>(double newBpm)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>linkRequestedPositionChange</name>
+      <anchorfile>structtracktion__engine_1_1AbletonLink_1_1Listener.html</anchorfile>
+      <anchor>ab9061dd8c49b5c6dd12c0439b9586c69</anchor>
+      <arglist>(double adjustmentInBeats)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>linkConnectionChanged</name>
+      <anchorfile>structtracktion__engine_1_1AbletonLink_1_1Listener.html</anchorfile>
+      <anchor>a9ebb33dfc807f219ad06bf104d4a99e7</anchor>
+      <arglist>()=0</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion_engine::TransportControl::Listener</name>
+    <filename>structtracktion__engine_1_1TransportControl_1_1Listener.html</filename>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~Listener</name>
+      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
+      <anchor>a8972c55267e3fc83d275fd67a02501c2</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>playbackContextChanged</name>
+      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
+      <anchor>af14fb6032703baff7ea208504b4ac326</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>autoSaveNow</name>
+      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
+      <anchor>a96cfe277102097c2d260da3201a1bcc2</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>setAllLevelMetersActive</name>
+      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
+      <anchor>a8b53579b003169f9e385a27ac4a0d3c3</anchor>
+      <arglist>(bool)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>setVideoPosition</name>
+      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
+      <anchor>a0da0a6bb675696134a5d74e448b591b1</anchor>
+      <arglist>(double time, bool forceJump)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>startVideo</name>
+      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
+      <anchor>a5d18a9eb8a107e0ffda8e76c361230fb</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>stopVideo</name>
+      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
+      <anchor>a23a0a9a05256d9d75200b5e174702743</anchor>
+      <arglist>()=0</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion_engine::AutomatableParameter::Listener</name>
+    <filename>structtracktion__engine_1_1AutomatableParameter_1_1Listener.html</filename>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~Listener</name>
+      <anchorfile>structtracktion__engine_1_1AutomatableParameter_1_1Listener.html</anchorfile>
+      <anchor>a63d17b60bf20adc03c94d1bfa0ef79e0</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>curveHasChanged</name>
+      <anchorfile>structtracktion__engine_1_1AutomatableParameter_1_1Listener.html</anchorfile>
+      <anchor>a5c3c0c73fa4d5565409b2512b00ec01b</anchor>
+      <arglist>(AutomatableParameter &amp;)=0</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>currentValueChanged</name>
+      <anchorfile>structtracktion__engine_1_1AutomatableParameter_1_1Listener.html</anchorfile>
+      <anchor>ae7804734c9b9742b0c7478d30ce3fec9</anchor>
+      <arglist>(AutomatableParameter &amp;, float)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>parameterChanged</name>
+      <anchorfile>structtracktion__engine_1_1AutomatableParameter_1_1Listener.html</anchorfile>
+      <anchor>af9f027f8682d68c85a8481ffcdad68e4</anchor>
+      <arglist>(AutomatableParameter &amp;, float)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>parameterChangeGestureBegin</name>
+      <anchorfile>structtracktion__engine_1_1AutomatableParameter_1_1Listener.html</anchorfile>
+      <anchor>a5d1db3ef066de4fcaec310e735e33ea5</anchor>
+      <arglist>(AutomatableParameter &amp;)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>parameterChangeGestureEnd</name>
+      <anchorfile>structtracktion__engine_1_1AutomatableParameter_1_1Listener.html</anchorfile>
+      <anchor>ac984e98ff3ebf32e7d9aef026c404fd8</anchor>
+      <arglist>(AutomatableParameter &amp;)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion_engine::MidiLearnState::Listener</name>
+    <filename>structtracktion__engine_1_1MidiLearnState_1_1Listener.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>Listener</name>
+      <anchorfile>structtracktion__engine_1_1MidiLearnState_1_1Listener.html</anchorfile>
+      <anchor>ad3cde8e5291e4a21b632e828b6fa4464</anchor>
+      <arglist>(MidiLearnState &amp;)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~Listener</name>
+      <anchorfile>structtracktion__engine_1_1MidiLearnState_1_1Listener.html</anchorfile>
+      <anchor>aecdcfc3707c836144cecf1488cc408dc</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>midiLearnStatusChanged</name>
+      <anchorfile>structtracktion__engine_1_1MidiLearnState_1_1Listener.html</anchorfile>
+      <anchor>ae9dc97f784d473aeb8214a878fc11f32</anchor>
+      <arglist>(bool isActive)=0</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>midiLearnAssignmentChanged</name>
+      <anchorfile>structtracktion__engine_1_1MidiLearnState_1_1Listener.html</anchorfile>
+      <anchor>a74c841d6c5236fa862f24486614f8422</anchor>
+      <arglist>(ChangeType)</arglist>
+    </member>
+    <member kind="variable">
+      <type>MidiLearnState &amp;</type>
+      <name>ownerState</name>
+      <anchorfile>structtracktion__engine_1_1MidiLearnState_1_1Listener.html</anchorfile>
+      <anchor>abdd5025fea6d85e339d3ae2f497d29c5</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion_engine::ClipEffects::Listener</name>
     <filename>structtracktion__engine_1_1ClipEffects_1_1Listener.html</filename>
     <member kind="function" virtualness="virtual">
@@ -35773,24 +35392,6 @@
       <arglist>()</arglist>
     </member>
   </compound>
-  <compound kind="struct">
-    <name>tracktion_engine::EditSnapshot::Listener</name>
-    <filename>structtracktion__engine_1_1EditSnapshot_1_1Listener.html</filename>
-    <member kind="function" virtualness="virtual">
-      <type>virtual</type>
-      <name>~Listener</name>
-      <anchorfile>structtracktion__engine_1_1EditSnapshot_1_1Listener.html</anchorfile>
-      <anchor>ad5318f27aaa54ff9d1a1ba8c8ac71448</anchor>
-      <arglist>()=default</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>editChanged</name>
-      <anchorfile>structtracktion__engine_1_1EditSnapshot_1_1Listener.html</anchorfile>
-      <anchor>a04b2513445adb03fd1805eccc618137d</anchor>
-      <arglist>(EditSnapshot &amp;)=0</arglist>
-    </member>
-  </compound>
   <compound kind="class">
     <name>tracktion_engine::BackgroundJobManager::Listener</name>
     <filename>classtracktion__engine_1_1BackgroundJobManager_1_1Listener.html</filename>
@@ -35807,6 +35408,24 @@
       <anchorfile>classtracktion__engine_1_1BackgroundJobManager_1_1Listener.html</anchorfile>
       <anchor>a8f7aac5df75a53c45f4aa8d67b2f06fb</anchor>
       <arglist>()=0</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion_engine::EditSnapshot::Listener</name>
+    <filename>structtracktion__engine_1_1EditSnapshot_1_1Listener.html</filename>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~Listener</name>
+      <anchorfile>structtracktion__engine_1_1EditSnapshot_1_1Listener.html</anchorfile>
+      <anchor>ad5318f27aaa54ff9d1a1ba8c8ac71448</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>editChanged</name>
+      <anchorfile>structtracktion__engine_1_1EditSnapshot_1_1Listener.html</anchorfile>
+      <anchor>a04b2513445adb03fd1805eccc618137d</anchor>
+      <arglist>(EditSnapshot &amp;)=0</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -35868,176 +35487,6 @@
       <anchorfile>structtracktion__engine_1_1MidiInputDevice_1_1MidiKeyChangeDispatcher_1_1Listener.html</anchorfile>
       <anchor>a5d51ee0ab3a60870b1bea19defda8a36</anchor>
       <arglist>(AudioTrack *, const juce::Array&lt; int &gt; &amp;notes, const juce::Array&lt; int &gt; &amp;vels)=0</arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion_engine::AutomatableParameter::Listener</name>
-    <filename>structtracktion__engine_1_1AutomatableParameter_1_1Listener.html</filename>
-    <member kind="function" virtualness="virtual">
-      <type>virtual</type>
-      <name>~Listener</name>
-      <anchorfile>structtracktion__engine_1_1AutomatableParameter_1_1Listener.html</anchorfile>
-      <anchor>a63d17b60bf20adc03c94d1bfa0ef79e0</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>curveHasChanged</name>
-      <anchorfile>structtracktion__engine_1_1AutomatableParameter_1_1Listener.html</anchorfile>
-      <anchor>a5c3c0c73fa4d5565409b2512b00ec01b</anchor>
-      <arglist>(AutomatableParameter &amp;)=0</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>currentValueChanged</name>
-      <anchorfile>structtracktion__engine_1_1AutomatableParameter_1_1Listener.html</anchorfile>
-      <anchor>ae7804734c9b9742b0c7478d30ce3fec9</anchor>
-      <arglist>(AutomatableParameter &amp;, float)</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>parameterChanged</name>
-      <anchorfile>structtracktion__engine_1_1AutomatableParameter_1_1Listener.html</anchorfile>
-      <anchor>af9f027f8682d68c85a8481ffcdad68e4</anchor>
-      <arglist>(AutomatableParameter &amp;, float)</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>parameterChangeGestureBegin</name>
-      <anchorfile>structtracktion__engine_1_1AutomatableParameter_1_1Listener.html</anchorfile>
-      <anchor>a5d1db3ef066de4fcaec310e735e33ea5</anchor>
-      <arglist>(AutomatableParameter &amp;)</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>parameterChangeGestureEnd</name>
-      <anchorfile>structtracktion__engine_1_1AutomatableParameter_1_1Listener.html</anchorfile>
-      <anchor>ac984e98ff3ebf32e7d9aef026c404fd8</anchor>
-      <arglist>(AutomatableParameter &amp;)</arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion_engine::AbletonLink::Listener</name>
-    <filename>structtracktion__engine_1_1AbletonLink_1_1Listener.html</filename>
-    <member kind="function" virtualness="virtual">
-      <type>virtual</type>
-      <name>~Listener</name>
-      <anchorfile>structtracktion__engine_1_1AbletonLink_1_1Listener.html</anchorfile>
-      <anchor>a19e2bb1925e91cca4aaa323ac696be5d</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>linkRequestedTempoChange</name>
-      <anchorfile>structtracktion__engine_1_1AbletonLink_1_1Listener.html</anchorfile>
-      <anchor>a46911e2d164cf4db4c2f2270c3162d8c</anchor>
-      <arglist>(double newBpm)=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>linkRequestedPositionChange</name>
-      <anchorfile>structtracktion__engine_1_1AbletonLink_1_1Listener.html</anchorfile>
-      <anchor>ab9061dd8c49b5c6dd12c0439b9586c69</anchor>
-      <arglist>(double adjustmentInBeats)=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>linkConnectionChanged</name>
-      <anchorfile>structtracktion__engine_1_1AbletonLink_1_1Listener.html</anchorfile>
-      <anchor>a9ebb33dfc807f219ad06bf104d4a99e7</anchor>
-      <arglist>()=0</arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion_engine::MidiLearnState::Listener</name>
-    <filename>structtracktion__engine_1_1MidiLearnState_1_1Listener.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>Listener</name>
-      <anchorfile>structtracktion__engine_1_1MidiLearnState_1_1Listener.html</anchorfile>
-      <anchor>ad3cde8e5291e4a21b632e828b6fa4464</anchor>
-      <arglist>(MidiLearnState &amp;)</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual</type>
-      <name>~Listener</name>
-      <anchorfile>structtracktion__engine_1_1MidiLearnState_1_1Listener.html</anchorfile>
-      <anchor>aecdcfc3707c836144cecf1488cc408dc</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>midiLearnStatusChanged</name>
-      <anchorfile>structtracktion__engine_1_1MidiLearnState_1_1Listener.html</anchorfile>
-      <anchor>ae9dc97f784d473aeb8214a878fc11f32</anchor>
-      <arglist>(bool isActive)=0</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>midiLearnAssignmentChanged</name>
-      <anchorfile>structtracktion__engine_1_1MidiLearnState_1_1Listener.html</anchorfile>
-      <anchor>a74c841d6c5236fa862f24486614f8422</anchor>
-      <arglist>(ChangeType)</arglist>
-    </member>
-    <member kind="variable">
-      <type>MidiLearnState &amp;</type>
-      <name>ownerState</name>
-      <anchorfile>structtracktion__engine_1_1MidiLearnState_1_1Listener.html</anchorfile>
-      <anchor>abdd5025fea6d85e339d3ae2f497d29c5</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion_engine::TransportControl::Listener</name>
-    <filename>structtracktion__engine_1_1TransportControl_1_1Listener.html</filename>
-    <member kind="function" virtualness="virtual">
-      <type>virtual</type>
-      <name>~Listener</name>
-      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>a8972c55267e3fc83d275fd67a02501c2</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>playbackContextChanged</name>
-      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>af14fb6032703baff7ea208504b4ac326</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>autoSaveNow</name>
-      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>a96cfe277102097c2d260da3201a1bcc2</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>setAllLevelMetersActive</name>
-      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>a8b53579b003169f9e385a27ac4a0d3c3</anchor>
-      <arglist>(bool)=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>setVideoPosition</name>
-      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>a0da0a6bb675696134a5d74e448b591b1</anchor>
-      <arglist>(double time, bool forceJump)=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>startVideo</name>
-      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>a5d18a9eb8a107e0ffda8e76c361230fb</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>stopVideo</name>
-      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>a23a0a9a05256d9d75200b5e174702743</anchor>
-      <arglist>()=0</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -36121,7 +35570,7 @@
   <compound kind="struct">
     <name>tracktion_engine::Edit::LoadFinishedCallback</name>
     <filename>structtracktion__engine_1_1Edit_1_1LoadFinishedCallback.html</filename>
-    <templarg>OwnerType</templarg>
+    <templarg></templarg>
     <member kind="function">
       <type></type>
       <name>LoadFinishedCallback</name>
@@ -37946,6 +37395,38 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion_engine::ParameterControlMappings::Mapping</name>
+    <filename>structtracktion__engine_1_1ParameterControlMappings_1_1Mapping.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>Mapping</name>
+      <anchorfile>structtracktion__engine_1_1ParameterControlMappings_1_1Mapping.html</anchorfile>
+      <anchor>a736cd4d8c88465795481b827b9ddd1db</anchor>
+      <arglist>(AutomatableParameter *p, int cont, int chan)</arglist>
+    </member>
+    <member kind="variable">
+      <type>AutomatableParameter *</type>
+      <name>parameter</name>
+      <anchorfile>structtracktion__engine_1_1ParameterControlMappings_1_1Mapping.html</anchorfile>
+      <anchor>a6c9fd7cd440a9bf3ce9c9fadcc2a7990</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>controllerID</name>
+      <anchorfile>structtracktion__engine_1_1ParameterControlMappings_1_1Mapping.html</anchorfile>
+      <anchor>a610d0c646484016e072d1366c3d28e4f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>channelID</name>
+      <anchorfile>structtracktion__engine_1_1ParameterControlMappings_1_1Mapping.html</anchorfile>
+      <anchor>a6556e138af7588624ae95f7604f4f188</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion_engine::CustomControlSurface::Mapping</name>
     <filename>structtracktion__engine_1_1CustomControlSurface_1_1Mapping.html</filename>
     <member kind="variable">
@@ -37981,38 +37462,6 @@
       <name>function</name>
       <anchorfile>structtracktion__engine_1_1CustomControlSurface_1_1Mapping.html</anchorfile>
       <anchor>a5978c0bc86538f1b561380c3ba8156d1</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion_engine::ParameterControlMappings::Mapping</name>
-    <filename>structtracktion__engine_1_1ParameterControlMappings_1_1Mapping.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>Mapping</name>
-      <anchorfile>structtracktion__engine_1_1ParameterControlMappings_1_1Mapping.html</anchorfile>
-      <anchor>a736cd4d8c88465795481b827b9ddd1db</anchor>
-      <arglist>(AutomatableParameter *p, int cont, int chan)</arglist>
-    </member>
-    <member kind="variable">
-      <type>AutomatableParameter *</type>
-      <name>parameter</name>
-      <anchorfile>structtracktion__engine_1_1ParameterControlMappings_1_1Mapping.html</anchorfile>
-      <anchor>a6c9fd7cd440a9bf3ce9c9fadcc2a7990</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>controllerID</name>
-      <anchorfile>structtracktion__engine_1_1ParameterControlMappings_1_1Mapping.html</anchorfile>
-      <anchor>a610d0c646484016e072d1366c3d28e4f</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>channelID</name>
-      <anchorfile>structtracktion__engine_1_1ParameterControlMappings_1_1Mapping.html</anchorfile>
-      <anchor>a6556e138af7588624ae95f7604f4f188</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -39173,8 +38622,8 @@
       <type>void</type>
       <name>legatoNote</name>
       <anchorfile>classtracktion__engine_1_1MidiClip.html</anchorfile>
-      <anchor>a6321d1314a9da2156ca94703de3e6c7a</anchor>
-      <arglist>(MidiNote &amp;note, const juce::Array&lt; MidiNote *&gt; &amp;notesToUse, double maxEndBeat, juce::UndoManager &amp;)</arglist>
+      <anchor>aa104de1d62f00f67e135a2faf044b62b</anchor>
+      <arglist>(MidiNote &amp;note, const juce::Array&lt; MidiNote * &gt; &amp;notesToUse, double maxEndBeat, juce::UndoManager &amp;)</arglist>
     </member>
     <member kind="function">
       <type>float</type>
@@ -41775,8 +41224,8 @@
       <type>juce::Array&lt; MidiNote * &gt;</type>
       <name>pasteIntoClip</name>
       <anchorfile>structtracktion__engine_1_1Clipboard_1_1MIDINotes.html</anchorfile>
-      <anchor>a54fd80ee001dcce483b86c1ef3fd0a0c</anchor>
-      <arglist>(MidiClip &amp;, const juce::Array&lt; MidiNote *&gt; &amp;selectedNotes, double cursorPosition, const std::function&lt; double(double)&gt; &amp;snapBeat) const</arglist>
+      <anchor>a2b75b19632fddb47944402865430e782</anchor>
+      <arglist>(MidiClip &amp;, const juce::Array&lt; MidiNote * &gt; &amp;selectedNotes, double cursorPosition, const std::function&lt; double(double)&gt; &amp;snapBeat) const</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -45517,6 +44966,66 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion_engine::HostedAudioDeviceInterface::Parameters</name>
+    <filename>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</filename>
+    <member kind="variable">
+      <type>double</type>
+      <name>sampleRate</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a05687012e71d8ecd455cc940a957de4a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>blockSize</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a22f02d68dff12d51f3ea1f81655dbaea</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>useMidiDevices</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a3f2505c158909ee30ca58455bb254fd7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>inputChannels</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a0b4fbeafa74f726691ae8f681d0b4e7f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>outputChannels</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>ae0fc6112d00d084a824f5d567dd94996</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>fixedBlockSize</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>aed3b302ceedbd1099eacb7984d88e04e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::StringArray</type>
+      <name>inputNames</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a3fb5da1d11b102ba7b1f9451c53bbf0f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::StringArray</type>
+      <name>outputNames</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a06c8157286b8b57614604a1f0f41b42b</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion_engine::SimpleLFO::Parameters</name>
     <filename>structtracktion__engine_1_1SimpleLFO_1_1Parameters.html</filename>
     <member kind="function">
@@ -45900,66 +45409,6 @@
       <name>resultAudioDuration</name>
       <anchorfile>structtracktion__engine_1_1Renderer_1_1Parameters.html</anchorfile>
       <anchor>a15d56f3ffe40efa03d2813fcbfe9f65a</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion_engine::HostedAudioDeviceInterface::Parameters</name>
-    <filename>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</filename>
-    <member kind="variable">
-      <type>double</type>
-      <name>sampleRate</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a05687012e71d8ecd455cc940a957de4a</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>blockSize</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a22f02d68dff12d51f3ea1f81655dbaea</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>useMidiDevices</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a3f2505c158909ee30ca58455bb254fd7</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>inputChannels</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a0b4fbeafa74f726691ae8f681d0b4e7f</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>outputChannels</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>ae0fc6112d00d084a824f5d567dd94996</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>fixedBlockSize</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>aed3b302ceedbd1099eacb7984d88e04e</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::StringArray</type>
-      <name>inputNames</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a3fb5da1d11b102ba7b1f9451c53bbf0f</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::StringArray</type>
-      <name>outputNames</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a06c8157286b8b57614604a1f0f41b42b</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -47878,6 +47327,38 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion_graph::PlaybackInitialisationInfo</name>
+    <filename>structtracktion__graph_1_1PlaybackInitialisationInfo.html</filename>
+    <member kind="variable">
+      <type>double</type>
+      <name>sampleRate</name>
+      <anchorfile>structtracktion__graph_1_1PlaybackInitialisationInfo.html</anchorfile>
+      <anchor>acd346b611cf42f45b7188cc2c04de442</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>blockSize</name>
+      <anchorfile>structtracktion__graph_1_1PlaybackInitialisationInfo.html</anchorfile>
+      <anchor>a8797e66809d521e2fff4b67f19996cdc</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Node &amp;</type>
+      <name>rootNode</name>
+      <anchorfile>structtracktion__graph_1_1PlaybackInitialisationInfo.html</anchorfile>
+      <anchor>a4a343e6606f59686571edad950033860</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Node *</type>
+      <name>rootNodeToReplace</name>
+      <anchorfile>structtracktion__graph_1_1PlaybackInitialisationInfo.html</anchorfile>
+      <anchor>ab190874ca5866bf85a249678b7196b26</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion_engine::PlaybackInitialisationInfo</name>
     <filename>structtracktion__engine_1_1PlaybackInitialisationInfo.html</filename>
     <member kind="variable">
@@ -47913,38 +47394,6 @@
       <name>playhead</name>
       <anchorfile>structtracktion__engine_1_1PlaybackInitialisationInfo.html</anchorfile>
       <anchor>a2be48c8431922cbbb9db65746fd15649</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion_graph::PlaybackInitialisationInfo</name>
-    <filename>structtracktion__graph_1_1PlaybackInitialisationInfo.html</filename>
-    <member kind="variable">
-      <type>double</type>
-      <name>sampleRate</name>
-      <anchorfile>structtracktion__graph_1_1PlaybackInitialisationInfo.html</anchorfile>
-      <anchor>acd346b611cf42f45b7188cc2c04de442</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>blockSize</name>
-      <anchorfile>structtracktion__graph_1_1PlaybackInitialisationInfo.html</anchorfile>
-      <anchor>a8797e66809d521e2fff4b67f19996cdc</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>Node &amp;</type>
-      <name>rootNode</name>
-      <anchorfile>structtracktion__graph_1_1PlaybackInitialisationInfo.html</anchorfile>
-      <anchor>a4a343e6606f59686571edad950033860</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>Node *</type>
-      <name>rootNodeToReplace</name>
-      <anchorfile>structtracktion__graph_1_1PlaybackInitialisationInfo.html</anchorfile>
-      <anchor>ab190874ca5866bf85a249678b7196b26</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -51985,6 +51434,38 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion_engine::RackNodeBuilder::RackConnection</name>
+    <filename>structtracktion__engine_1_1RackNodeBuilder_1_1RackConnection.html</filename>
+    <member kind="variable">
+      <type>te::EditItemID</type>
+      <name>sourceID</name>
+      <anchorfile>structtracktion__engine_1_1RackNodeBuilder_1_1RackConnection.html</anchorfile>
+      <anchor>a7cbc5737b0478e43035f3d80955fca61</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>te::EditItemID</type>
+      <name>destID</name>
+      <anchorfile>structtracktion__engine_1_1RackNodeBuilder_1_1RackConnection.html</anchorfile>
+      <anchor>a3d1fbc5399a1e30627a92a9d602e01f2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>sourcePin</name>
+      <anchorfile>structtracktion__engine_1_1RackNodeBuilder_1_1RackConnection.html</anchorfile>
+      <anchor>a63f58b44217c5bde4e962e4a84e69d53</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>destPin</name>
+      <anchorfile>structtracktion__engine_1_1RackNodeBuilder_1_1RackConnection.html</anchorfile>
+      <anchor>a08c4609b219a7fc3ccd394d52d3c36e1</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion_engine::RackConnection</name>
     <filename>structtracktion__engine_1_1RackConnection.html</filename>
     <member kind="function">
@@ -52027,38 +51508,6 @@
       <name>destPin</name>
       <anchorfile>structtracktion__engine_1_1RackConnection.html</anchorfile>
       <anchor>a00931522e9c65f7d094c2b3bb0de4884</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion_engine::RackNodeBuilder::RackConnection</name>
-    <filename>structtracktion__engine_1_1RackNodeBuilder_1_1RackConnection.html</filename>
-    <member kind="variable">
-      <type>te::EditItemID</type>
-      <name>sourceID</name>
-      <anchorfile>structtracktion__engine_1_1RackNodeBuilder_1_1RackConnection.html</anchorfile>
-      <anchor>a7cbc5737b0478e43035f3d80955fca61</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>te::EditItemID</type>
-      <name>destID</name>
-      <anchorfile>structtracktion__engine_1_1RackNodeBuilder_1_1RackConnection.html</anchorfile>
-      <anchor>a3d1fbc5399a1e30627a92a9d602e01f2</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>sourcePin</name>
-      <anchorfile>structtracktion__engine_1_1RackNodeBuilder_1_1RackConnection.html</anchorfile>
-      <anchor>a63f58b44217c5bde4e962e4a84e69d53</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>destPin</name>
-      <anchorfile>structtracktion__engine_1_1RackNodeBuilder_1_1RackConnection.html</anchorfile>
-      <anchor>a08c4609b219a7fc3ccd394d52d3c36e1</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -54076,8 +53525,8 @@
       <type>static bool</type>
       <name>renderToFile</name>
       <anchorfile>classtracktion__engine_1_1Renderer.html</anchorfile>
-      <anchor>a395fa89f0e50ffbc383cf7af5568f08f</anchor>
-      <arglist>(const juce::String &amp;taskDescription, const juce::File &amp;outputFile, Edit &amp;edit, EditTimeRange range, const juce::BigInteger &amp;tracksToDo, bool usePlugins=true, juce::Array&lt; Clip *&gt; clips={}, bool useThread=true)</arglist>
+      <anchor>ab62f93b98e3c184a246b575c6da9bc92</anchor>
+      <arglist>(const juce::String &amp;taskDescription, const juce::File &amp;outputFile, Edit &amp;edit, EditTimeRange range, const juce::BigInteger &amp;tracksToDo, bool usePlugins=true, juce::Array&lt; Clip * &gt; clips={}, bool useThread=true)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static AudioNode *</type>
@@ -54803,15 +54252,15 @@
       <type>static std::unique_ptr&lt; RenderOptions &gt;</type>
       <name>forTrackRender</name>
       <anchorfile>classtracktion__engine_1_1RenderOptions.html</anchorfile>
-      <anchor>a259f9187e955e68eb49d929cd91e6f70</anchor>
-      <arglist>(juce::Array&lt; Track *&gt; &amp;tracks, AddRenderOptions addOption)</arglist>
+      <anchor>a335f51f97409468791711d91c1e3b540</anchor>
+      <arglist>(juce::Array&lt; Track * &gt; &amp;tracks, AddRenderOptions addOption)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static std::unique_ptr&lt; RenderOptions &gt;</type>
       <name>forClipRender</name>
       <anchorfile>classtracktion__engine_1_1RenderOptions.html</anchorfile>
-      <anchor>ad0fc858fc81de8f4c32ad993bd367dff</anchor>
-      <arglist>(juce::Array&lt; Clip *&gt; &amp;clips, bool midiNotes)</arglist>
+      <anchor>a30c2e03904329978809ff6537394e3ce</anchor>
+      <arglist>(juce::Array&lt; Clip * &gt; &amp;clips, bool midiNotes)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static std::unique_ptr&lt; RenderOptions &gt;</type>
@@ -54824,8 +54273,8 @@
       <type>static double</type>
       <name>findEndAllowance</name>
       <anchorfile>classtracktion__engine_1_1RenderOptions.html</anchorfile>
-      <anchor>a99a0635bb0c6e036a70db5789fd57424</anchor>
-      <arglist>(Edit &amp;, juce::Array&lt; EditItemID &gt; *tracks, juce::Array&lt; Clip *&gt; *)</arglist>
+      <anchor>a0990c7307a4bb8366835dc2f0c5b7dc7</anchor>
+      <arglist>(Edit &amp;, juce::Array&lt; EditItemID &gt; *tracks, juce::Array&lt; Clip * &gt; *)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static bool</type>
@@ -57405,15 +56854,15 @@
       <type></type>
       <name>SelectableList</name>
       <anchorfile>structtracktion__engine_1_1SelectableList.html</anchorfile>
-      <anchor>a2131b01d0200a60ffd4424721e0789f2</anchor>
-      <arglist>(const std::initializer_list&lt; Selectable *&gt; &amp;initialItems)</arglist>
+      <anchor>a7da4fb59d197e7cf1e4e0680ab7e49e2</anchor>
+      <arglist>(const std::initializer_list&lt; Selectable * &gt; &amp;initialItems)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>SelectableList</name>
       <anchorfile>structtracktion__engine_1_1SelectableList.html</anchorfile>
-      <anchor>a16598690a1a2775c9b2864f581078c3f</anchor>
-      <arglist>(const juce::Array&lt; SelectableType *&gt; &amp;initialItems)</arglist>
+      <anchor>aa114fcf1e1586fdd86b5e832d115ec7b</anchor>
+      <arglist>(const juce::Array&lt; SelectableType * &gt; &amp;initialItems)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -57701,8 +57150,8 @@
       <type></type>
       <name>SelectedMidiEvents</name>
       <anchorfile>classtracktion__engine_1_1SelectedMidiEvents.html</anchorfile>
-      <anchor>a2dc62c013d6a32278f5b62b4322f211e</anchor>
-      <arglist>(juce::Array&lt; MidiClip *&gt;)</arglist>
+      <anchor>a2a2da6834f3f95c7175f2fe8006a6b9e</anchor>
+      <arglist>(juce::Array&lt; MidiClip * &gt;)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -57785,22 +57234,22 @@
       <type>void</type>
       <name>setSelected</name>
       <anchorfile>classtracktion__engine_1_1SelectedMidiEvents.html</anchorfile>
-      <anchor>a3883aed51850a2f3fbfabb4b029001d1</anchor>
-      <arglist>(SelectionManager &amp;, const juce::Array&lt; MidiNote *&gt; &amp;, bool addToSelection)</arglist>
+      <anchor>a27c672a28655f9eba97d3258c1393892</anchor>
+      <arglist>(SelectionManager &amp;, const juce::Array&lt; MidiNote * &gt; &amp;, bool addToSelection)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>setSelected</name>
       <anchorfile>classtracktion__engine_1_1SelectedMidiEvents.html</anchorfile>
-      <anchor>a9fea01cd95d5368e869784cb18309a67</anchor>
-      <arglist>(SelectionManager &amp;, const juce::Array&lt; MidiSysexEvent *&gt; &amp;, bool addToSelection)</arglist>
+      <anchor>af1da1718298c9928764cf192b00fd167</anchor>
+      <arglist>(SelectionManager &amp;, const juce::Array&lt; MidiSysexEvent * &gt; &amp;, bool addToSelection)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>setSelected</name>
       <anchorfile>classtracktion__engine_1_1SelectedMidiEvents.html</anchorfile>
-      <anchor>a3cffd52c226e93eb7551da584e38a780</anchor>
-      <arglist>(SelectionManager &amp;, const juce::Array&lt; MidiControllerEvent *&gt; &amp;, bool addToSelection)</arglist>
+      <anchor>a2d3b7436eee9ff9cda98fd0e6bbb72ce</anchor>
+      <arglist>(SelectionManager &amp;, const juce::Array&lt; MidiControllerEvent * &gt; &amp;, bool addToSelection)</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -57925,8 +57374,8 @@
       <type>void</type>
       <name>setClips</name>
       <anchorfile>classtracktion__engine_1_1SelectedMidiEvents.html</anchorfile>
-      <anchor>a606881202c874b60bb76f7a58da7b2cc</anchor>
-      <arglist>(juce::Array&lt; MidiClip *&gt; clips)</arglist>
+      <anchor>a9c8f71d4063271a6b8a79ac145e641ea</anchor>
+      <arglist>(juce::Array&lt; MidiClip * &gt; clips)</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -58977,8 +58426,8 @@
       <type>virtual void</type>
       <name>sortObjects</name>
       <anchorfile>structtracktion__engine_1_1SortedValueTreeObjectList.html</anchorfile>
-      <anchor>abe45f98d65a267768604c899d371aa9b</anchor>
-      <arglist>(juce::Array&lt; ObjectType *&gt; &amp;objectsToBeSorted) const =0</arglist>
+      <anchor>abb12c2a158583998b502b202ffde96c3</anchor>
+      <arglist>(juce::Array&lt; ObjectType * &gt; &amp;objectsToBeSorted) const =0</arglist>
     </member>
     <member kind="function" virtualness="pure">
       <type>virtual bool</type>
@@ -60167,15 +59616,15 @@
       <type></type>
       <name>SummingNode</name>
       <anchorfile>classtracktion__graph_1_1SummingNode.html</anchorfile>
-      <anchor>a3848cd9ed65a1916bc15e791e9ac265b</anchor>
-      <arglist>(std::vector&lt; Node *&gt; inputs)</arglist>
+      <anchor>a382fed876d0150551ccc8b1ec7122e31</anchor>
+      <arglist>(std::vector&lt; Node * &gt; inputs)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>SummingNode</name>
       <anchorfile>classtracktion__graph_1_1SummingNode.html</anchorfile>
-      <anchor>a29965173e6d1bdca1b330f2913ad5183</anchor>
-      <arglist>(std::vector&lt; std::unique_ptr&lt; Node &gt;&gt; ownedInputs, std::vector&lt; Node *&gt; referencedInputs)</arglist>
+      <anchor>ae41e50f9316d62fce4746f1832e5bc58</anchor>
+      <arglist>(std::vector&lt; std::unique_ptr&lt; Node &gt;&gt; ownedInputs, std::vector&lt; Node * &gt; referencedInputs)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -61446,7 +60895,7 @@
   <compound kind="struct">
     <name>tracktion_graph::test_utilities::TestProcess</name>
     <filename>structtracktion__graph_1_1test__utilities_1_1TestProcess.html</filename>
-    <templarg>NodeProcessorType</templarg>
+    <templarg></templarg>
     <member kind="function">
       <type></type>
       <name>TestProcess</name>
@@ -61906,8 +61355,8 @@
       <type>TimecodeSnapType</type>
       <name>getBestSnapType</name>
       <anchorfile>structtracktion__engine_1_1TimecodeDisplayFormat.html</anchorfile>
-      <anchor>a96a064abefc354f2e855f65e6de4502a</anchor>
-      <arglist>(const TempoSetting &amp;, double onScreenTimePerPixel) const</arglist>
+      <anchor>aae5a4ae6c0f8ca5fdb719e99fce1d8aa</anchor>
+      <arglist>(const TempoSetting &amp;, double onScreenTimePerPixel, bool isTripletOverride) const</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -61952,8 +61401,8 @@
       <type></type>
       <name>TimecodeDisplayIterator</name>
       <anchorfile>structtracktion__engine_1_1TimecodeDisplayIterator.html</anchorfile>
-      <anchor>a1428c85b49928596a3869bdb36957253</anchor>
-      <arglist>(const Edit &amp;, double startTime, TimecodeSnapType minSnapTypeToUse)</arglist>
+      <anchor>ae04718094968ce57745eb769808d1531</anchor>
+      <arglist>(const Edit &amp;, double startTime, TimecodeSnapType minSnapTypeToUse, bool isTripletOverride)</arglist>
     </member>
     <member kind="function">
       <type>double</type>
@@ -62012,8 +61461,8 @@
       <type>juce::String</type>
       <name>getDescription</name>
       <anchorfile>structtracktion__engine_1_1TimecodeSnapType.html</anchorfile>
-      <anchor>abd2052f1e5f0e9f3348604a6d5b34a73</anchor>
-      <arglist>(const TempoSetting &amp;) const</arglist>
+      <anchor>aab8ea61bb2c4ccbd33c2464814d762ed</anchor>
+      <arglist>(const TempoSetting &amp;, bool isTripletOverride) const</arglist>
     </member>
     <member kind="function">
       <type>double</type>
@@ -62045,10 +61494,24 @@
     </member>
     <member kind="function">
       <type>double</type>
+      <name>roundTimeDown</name>
+      <anchorfile>structtracktion__engine_1_1TimecodeSnapType.html</anchorfile>
+      <anchor>a8a69e03bfba8ffdb3a802abeae3e3141</anchor>
+      <arglist>(double t, const TempoSequence &amp;, bool isTripletsOverride) const</arglist>
+    </member>
+    <member kind="function">
+      <type>double</type>
       <name>roundTimeNearest</name>
       <anchorfile>structtracktion__engine_1_1TimecodeSnapType.html</anchorfile>
       <anchor>aaf2a839f1819a28d20aa94f07ba01157</anchor>
       <arglist>(double t, const TempoSequence &amp;) const</arglist>
+    </member>
+    <member kind="function">
+      <type>double</type>
+      <name>roundTimeNearest</name>
+      <anchorfile>structtracktion__engine_1_1TimecodeSnapType.html</anchorfile>
+      <anchor>a8350b46ac5b8e721a5c26ea405201d32</anchor>
+      <arglist>(double t, const TempoSequence &amp;, bool isTripletsOverride) const</arglist>
     </member>
     <member kind="function">
       <type>double</type>
@@ -64626,15 +64089,15 @@
       <type>static void</type>
       <name>getPossibleOutputDeviceNames</name>
       <anchorfile>classtracktion__engine_1_1TrackOutput.html</anchorfile>
-      <anchor>a420c6e2055ca3a7e916aa736d1789a40</anchor>
-      <arglist>(const juce::Array&lt; AudioTrack *&gt; &amp;tracks, juce::StringArray &amp;s, juce::StringArray &amp;a, juce::BigInteger &amp;hasAudio, juce::BigInteger &amp;hasMidi)</arglist>
+      <anchor>a0ccb0d6ae7d8bccfc4e0afe860d9fe5c</anchor>
+      <arglist>(const juce::Array&lt; AudioTrack * &gt; &amp;tracks, juce::StringArray &amp;s, juce::StringArray &amp;a, juce::BigInteger &amp;hasAudio, juce::BigInteger &amp;hasMidi)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static void</type>
       <name>getPossibleOutputNames</name>
       <anchorfile>classtracktion__engine_1_1TrackOutput.html</anchorfile>
-      <anchor>a3588dc1e192917d851f92346c5514772</anchor>
-      <arglist>(const juce::Array&lt; AudioTrack *&gt; &amp;tracks, juce::StringArray &amp;s, juce::StringArray &amp;a, juce::BigInteger &amp;hasAudio, juce::BigInteger &amp;hasMidi)</arglist>
+      <anchor>a2008ecb3113cdddf80f5ffa672892026</anchor>
+      <arglist>(const juce::Array&lt; AudioTrack * &gt; &amp;tracks, juce::StringArray &amp;s, juce::StringArray &amp;a, juce::BigInteger &amp;hasAudio, juce::BigInteger &amp;hasMidi)</arglist>
     </member>
     <member kind="variable">
       <type>juce::ValueTree</type>
@@ -66011,8 +65474,8 @@
       <type>virtual void</type>
       <name>nudgeSelectedClips</name>
       <anchorfile>classtracktion__engine_1_1UIBehaviour.html</anchorfile>
-      <anchor>a50bdb8df57f96520aa535c327f00f089</anchor>
-      <arglist>(TimecodeSnapType, const juce::String &amp;commandDesc, SelectionManager &amp;, const juce::Array&lt; Clip *&gt; &amp;, bool automationLocked)</arglist>
+      <anchor>a07029106274d7f64f08a857f48435002</anchor>
+      <arglist>(TimecodeSnapType, const juce::String &amp;commandDesc, SelectionManager &amp;, const juce::Array&lt; Clip * &gt; &amp;, bool automationLocked)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -66134,7 +65597,7 @@
   <compound kind="class">
     <name>tracktion_engine::ValueSmoother</name>
     <filename>classtracktion__engine_1_1ValueSmoother.html</filename>
-    <templarg>T</templarg>
+    <templarg></templarg>
     <member kind="function">
       <type>void</type>
       <name>reset</name>
@@ -66313,15 +65776,15 @@
       <type>int</type>
       <name>compareElements</name>
       <anchorfile>structtracktion__engine_1_1ValueTreeComparator.html</anchorfile>
-      <anchor>a20905887129f0258f2f431c646b15de2</anchor>
+      <anchor>a9af38abc5bc33607afab3120a061cfbb</anchor>
       <arglist>(const juce::ValueTree &amp;first, const juce::ValueTree &amp;second) const</arglist>
     </member>
   </compound>
   <compound kind="class">
     <name>tracktion_engine::ValueTreeObjectList</name>
     <filename>classtracktion__engine_1_1ValueTreeObjectList.html</filename>
-    <templarg>ObjectType</templarg>
-    <templarg>CriticalSectionType</templarg>
+    <templarg></templarg>
+    <templarg></templarg>
     <member kind="typedef">
       <type>CriticalSectionType::ScopedLockType</type>
       <name>ScopedLockType</name>
@@ -66740,7 +66203,7 @@
       <arglist>(ClipEffect *first, ClipEffect *second) const</arglist>
     </member>
     <member kind="variable">
-      <type>juce::Array&lt; ClipEffect *&gt;</type>
+      <type>juce::Array&lt; ClipEffect * &gt;</type>
       <name>objects</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
       <anchor>a992ab3d196ff71dd60f9d788e96b3d28</anchor>
@@ -66975,7 +66438,7 @@
       <arglist>(CompSection *first, CompSection *second) const</arglist>
     </member>
     <member kind="variable">
-      <type>juce::Array&lt; CompSection *&gt;</type>
+      <type>juce::Array&lt; CompSection * &gt;</type>
       <name>objects</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
       <anchor>a992ab3d196ff71dd60f9d788e96b3d28</anchor>
@@ -67210,7 +66673,7 @@
       <arglist>(EventType *first, EventType *second) const</arglist>
     </member>
     <member kind="variable">
-      <type>juce::Array&lt; EventType *&gt;</type>
+      <type>juce::Array&lt; EventType * &gt;</type>
       <name>objects</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
       <anchor>a992ab3d196ff71dd60f9d788e96b3d28</anchor>
@@ -67445,7 +66908,7 @@
       <arglist>(InputDeviceDestination *first, InputDeviceDestination *second) const</arglist>
     </member>
     <member kind="variable">
-      <type>juce::Array&lt; InputDeviceDestination *&gt;</type>
+      <type>juce::Array&lt; InputDeviceDestination * &gt;</type>
       <name>objects</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
       <anchor>a992ab3d196ff71dd60f9d788e96b3d28</anchor>
@@ -67680,7 +67143,7 @@
       <arglist>(Modifier *first, Modifier *second) const</arglist>
     </member>
     <member kind="variable">
-      <type>juce::Array&lt; Modifier *&gt;</type>
+      <type>juce::Array&lt; Modifier * &gt;</type>
       <name>objects</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
       <anchor>a992ab3d196ff71dd60f9d788e96b3d28</anchor>
@@ -67915,7 +67378,7 @@
       <arglist>(ObjectType *first, ObjectType *second) const</arglist>
     </member>
     <member kind="variable">
-      <type>juce::Array&lt; ObjectType *&gt;</type>
+      <type>juce::Array&lt; ObjectType * &gt;</type>
       <name>objects</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
       <anchor>a992ab3d196ff71dd60f9d788e96b3d28</anchor>
@@ -68150,7 +67613,7 @@
       <arglist>(Track *first, Track *second) const</arglist>
     </member>
     <member kind="variable">
-      <type>juce::Array&lt; Track *&gt;</type>
+      <type>juce::Array&lt; Track * &gt;</type>
       <name>objects</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
       <anchor>a992ab3d196ff71dd60f9d788e96b3d28</anchor>
@@ -68385,7 +67848,7 @@
       <arglist>(tracktion_engine::MidiControllerEvent *first, tracktion_engine::MidiControllerEvent *second) const</arglist>
     </member>
     <member kind="variable">
-      <type>juce::Array&lt; tracktion_engine::MidiControllerEvent *&gt;</type>
+      <type>juce::Array&lt; tracktion_engine::MidiControllerEvent * &gt;</type>
       <name>objects</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
       <anchor>a992ab3d196ff71dd60f9d788e96b3d28</anchor>
@@ -68620,7 +68083,7 @@
       <arglist>(tracktion_engine::MidiNote *first, tracktion_engine::MidiNote *second) const</arglist>
     </member>
     <member kind="variable">
-      <type>juce::Array&lt; tracktion_engine::MidiNote *&gt;</type>
+      <type>juce::Array&lt; tracktion_engine::MidiNote * &gt;</type>
       <name>objects</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
       <anchor>a992ab3d196ff71dd60f9d788e96b3d28</anchor>
@@ -68855,7 +68318,7 @@
       <arglist>(tracktion_engine::MidiSysexEvent *first, tracktion_engine::MidiSysexEvent *second) const</arglist>
     </member>
     <member kind="variable">
-      <type>juce::Array&lt; tracktion_engine::MidiSysexEvent *&gt;</type>
+      <type>juce::Array&lt; tracktion_engine::MidiSysexEvent * &gt;</type>
       <name>objects</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
       <anchor>a992ab3d196ff71dd60f9d788e96b3d28</anchor>
@@ -69090,7 +68553,7 @@
       <arglist>(WarpMarker *first, WarpMarker *second) const</arglist>
     </member>
     <member kind="variable">
-      <type>juce::Array&lt; WarpMarker *&gt;</type>
+      <type>juce::Array&lt; WarpMarker * &gt;</type>
       <name>objects</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
       <anchor>a992ab3d196ff71dd60f9d788e96b3d28</anchor>
@@ -69783,8 +69246,8 @@
       <type>static void</type>
       <name>visit</name>
       <anchorfile>structtracktion__graph_1_1detail_1_1VisitNodesWithRecord.html</anchorfile>
-      <anchor>a2065d57421c288dacc5ee03223b81d66</anchor>
-      <arglist>(std::vector&lt; Node *&gt; &amp;visitedNodes, Node &amp;visitingNode, Visitor &amp;&amp;visitor, bool preordering)</arglist>
+      <anchor>aa70d5e41e77015e86c81f4ce954802c8</anchor>
+      <arglist>(std::vector&lt; Node * &gt; &amp;visitedNodes, Node &amp;visitingNode, Visitor &amp;&amp;visitor, bool preordering)</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -71745,38 +71208,6 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion_engine::Plugin::Wire</name>
-    <filename>structtracktion__engine_1_1Plugin_1_1Wire.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>Wire</name>
-      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
-      <anchor>a5b4229b171a927ec1d746c1c30c3637f</anchor>
-      <arglist>(const juce::ValueTree &amp;, juce::UndoManager *)</arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::ValueTree</type>
-      <name>state</name>
-      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
-      <anchor>a14734b9a38f37621bd3c15c60c8593f8</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::CachedValue&lt; int &gt;</type>
-      <name>sourceChannelIndex</name>
-      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
-      <anchor>a56be586eeab530d1a9baa7750460c837</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::CachedValue&lt; int &gt;</type>
-      <name>destChannelIndex</name>
-      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
-      <anchor>a940044f0fb34b8e4cfac5ec49a51f83a</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
     <name>tracktion_engine::PatchBayPlugin::Wire</name>
     <filename>structtracktion__engine_1_1PatchBayPlugin_1_1Wire.html</filename>
     <member kind="function">
@@ -71815,6 +71246,38 @@
       <arglist></arglist>
     </member>
   </compound>
+  <compound kind="struct">
+    <name>tracktion_engine::Plugin::Wire</name>
+    <filename>structtracktion__engine_1_1Plugin_1_1Wire.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>Wire</name>
+      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
+      <anchor>a5b4229b171a927ec1d746c1c30c3637f</anchor>
+      <arglist>(const juce::ValueTree &amp;, juce::UndoManager *)</arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::ValueTree</type>
+      <name>state</name>
+      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
+      <anchor>a14734b9a38f37621bd3c15c60c8593f8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; int &gt;</type>
+      <name>sourceChannelIndex</name>
+      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
+      <anchor>a56be586eeab530d1a9baa7750460c837</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; int &gt;</type>
+      <name>destChannelIndex</name>
+      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
+      <anchor>a940044f0fb34b8e4cfac5ec49a51f83a</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
   <compound kind="namespace">
     <name>juce</name>
     <filename>namespacejuce.html</filename>
@@ -71846,7 +71309,6 @@
     <namespace>tracktion_engine::ModifierCommon</namespace>
     <namespace>tracktion_engine::PredefinedWavetable</namespace>
     <namespace>tracktion_engine::RackNodeBuilder</namespace>
-    <namespace>tracktion_engine::soundtouch</namespace>
     <namespace>tracktion_engine::TracktionBinaryData</namespace>
     <class kind="class">tracktion_engine::AbletonLink</class>
     <class kind="struct">tracktion_engine::ActiveEdits</class>
@@ -72169,27 +71631,6 @@
     <class kind="class">tracktion_engine::WaveInputRecordingThread</class>
     <class kind="class">tracktion_engine::WaveOutputDevice</class>
     <class kind="class">tracktion_engine::WaveOutputDeviceInstance</class>
-    <member kind="typedef">
-      <type>unsigned int</type>
-      <name>uint</name>
-      <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>a31612764f92ef1348cc47762e9ec6e30</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="typedef">
-      <type>unsigned long</type>
-      <name>ulong</name>
-      <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>a080260976a66655603a8daee013d085e</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="typedef">
-      <type>ulong</type>
-      <name>ulongptr</name>
-      <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>afcdea0d874166ba7763146d0f37011c7</anchor>
-      <arglist></arglist>
-    </member>
     <member kind="enumeration">
       <type></type>
       <name>MoveClipAction</name>
@@ -72382,8 +71823,8 @@
       <type>juce::Array&lt; KeyResult &gt;</type>
       <name>determineKeyOfNotes</name>
       <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>a61f4614e33f570755bbccd31e788ee4b</anchor>
-      <arglist>(const juce::Array&lt; MidiNote *&gt; &amp;notes)</arglist>
+      <anchor>abe0e1401ed2f8667c2e6988872e7752e</anchor>
+      <arglist>(const juce::Array&lt; MidiNote * &gt; &amp;notes)</arglist>
     </member>
     <member kind="function">
       <type>juce::ReferenceCountedArray&lt; AssignmentType &gt;</type>
@@ -72760,8 +72201,8 @@
       <type>juce::Result</type>
       <name>mergeMidiClips</name>
       <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>a7ccba44ab7d10c1dc6f72b3a52cf35e3</anchor>
-      <arglist>(juce::Array&lt; MidiClip *&gt;)</arglist>
+      <anchor>a9c0d9c51fe09f53456b7eddebbca9b9b</anchor>
+      <arglist>(juce::Array&lt; MidiClip * &gt;)</arglist>
     </member>
     <member kind="function">
       <type>Plugin::Array</type>
@@ -72886,8 +72327,8 @@
       <type>bool</type>
       <name>checkRenderParametersAndConfirmWithUser</name>
       <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>ad53350ae318b88a178663b5d759b68ef</anchor>
-      <arglist>(const juce::Array&lt; Track *&gt; &amp;, EditTimeRange markedRange, bool silent=false)</arglist>
+      <anchor>af2862ed5aa4a4dad8e7e033b0f7e3b4a</anchor>
+      <arglist>(const juce::Array&lt; Track * &gt; &amp;, EditTimeRange markedRange, bool silent=false)</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -74615,8 +74056,8 @@
       <type>void</type>
       <name>forEachItem</name>
       <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>a1bcd51c5679e6258431a5de3957459ba</anchor>
-      <arglist>(const juce::Array&lt; Type *&gt; &amp;items, const UnaryFunction &amp;fn)</arglist>
+      <anchor>a8a4248d69aa8f9522309589a788c0e92</anchor>
+      <arglist>(const juce::Array&lt; Type * &gt; &amp;items, const UnaryFunction &amp;fn)</arglist>
     </member>
     <member kind="function">
       <type>juce::Array&lt; juce::ValueTree &gt; &amp;</type>
@@ -75469,30 +74910,6 @@
     <class kind="struct">tracktion_engine::RackNodeBuilder::RackPinConnections</class>
   </compound>
   <compound kind="namespace">
-    <name>tracktion_engine::soundtouch</name>
-    <filename>namespacetracktion__engine_1_1soundtouch.html</filename>
-    <class kind="struct">tracktion_engine::soundtouch::BEAT</class>
-    <class kind="class">tracktion_engine::soundtouch::BPMDetect</class>
-    <class kind="class">tracktion_engine::soundtouch::FIFOProcessor</class>
-    <class kind="class">tracktion_engine::soundtouch::FIFOSampleBuffer</class>
-    <class kind="class">tracktion_engine::soundtouch::FIFOSamplePipe</class>
-    <class kind="class">tracktion_engine::soundtouch::IIR2_filter</class>
-    <member kind="typedef">
-      <type>float</type>
-      <name>SAMPLETYPE</name>
-      <anchorfile>namespacetracktion__engine_1_1soundtouch.html</anchorfile>
-      <anchor>a001bbe809c9a3908d5dfac7e56d83589</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="typedef">
-      <type>double</type>
-      <name>LONG_SAMPLETYPE</name>
-      <anchorfile>namespacetracktion__engine_1_1soundtouch.html</anchorfile>
-      <anchor>ae1be4f290c1fb55b41b4d9add60ef8e2</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="namespace">
     <name>tracktion_engine::TracktionBinaryData</name>
     <filename>namespacetracktion__engine_1_1TracktionBinaryData.html</filename>
     <member kind="function">
@@ -75677,48 +75094,11 @@
     <name>tracktion_engine-audio_files</name>
     <title>audio_files</title>
     <filename>group__tracktion__engine-audio__files.html</filename>
-    <namespace>tracktion_engine</namespace>
-    <class kind="class">tracktion_engine::FloatAudioFormat</class>
-    <class kind="class">tracktion_engine::LAMEManager</class>
-    <class kind="class">tracktion_engine::AudioFifo</class>
-    <class kind="struct">tracktion_engine::AudioFileInfo</class>
-    <class kind="class">tracktion_engine::AudioFile</class>
-    <class kind="class">tracktion_engine::AudioFileCache::Reader</class>
-    <class kind="class">tracktion_engine::AudioFileCache</class>
-    <class kind="class">tracktion_engine::AudioFileManager</class>
-    <class kind="class">tracktion_engine::AudioFileUtils::EnvelopeFollower</class>
-    <class kind="struct">tracktion_engine::AudioFileUtils</class>
-    <class kind="class">tracktion_engine::AudioFileWriter</class>
-    <class kind="class">tracktion_engine::AudioFileFormatManager</class>
-    <class kind="struct">tracktion_engine::AudioProxyGenerator::GeneratorJob</class>
-    <class kind="class">tracktion_engine::AudioProxyGenerator</class>
-    <class kind="struct">tracktion_engine::LoopInfo::LoopPoint</class>
-    <class kind="class">tracktion_engine::LoopInfo</class>
-    <class kind="struct">tracktion_engine::RecordingThumbnailManager::Thumbnail</class>
-    <class kind="class">tracktion_engine::RecordingThumbnailManager</class>
-    <class kind="class">tracktion_engine::SmartThumbnail</class>
-    <class kind="class">tracktion_engine::TracktionThumbnail</class>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-control_surfaces</name>
     <title>control_surfaces</title>
     <filename>group__tracktion__engine-control__surfaces.html</filename>
-    <namespace>tracktion_engine</namespace>
-    <class kind="struct">tracktion_engine::ParameterSetting</class>
-    <class kind="struct">tracktion_engine::MarkerSetting</class>
-    <class kind="class">tracktion_engine::ControlSurface</class>
-    <class kind="struct">tracktion_engine::CustomControlSurface::MappingSet</class>
-    <class kind="struct">tracktion_engine::CustomControlSurface::Mapping</class>
-    <class kind="class">tracktion_engine::CustomControlSurface</class>
-    <class kind="class">tracktion_engine::ExternalController</class>
-    <class kind="class">tracktion_engine::ExternalControllerManager</class>
-    <class kind="class">tracktion_engine::AlphaTrackControlSurface</class>
-    <class kind="class">tracktion_engine::MackieC4</class>
-    <class kind="class">tracktion_engine::MackieMCU</class>
-    <class kind="class">tracktion_engine::MackieXT</class>
-    <class kind="class">tracktion_engine::NovationRemoteSl</class>
-    <class kind="class">tracktion_engine::RemoteSLCompact</class>
-    <class kind="class">tracktion_engine::TranzportControlSurface</class>
   </compound>
   <compound kind="group">
     <name>tracktion_graph-docs</name>
@@ -75729,472 +75109,36 @@
     <name>tracktion_engine-midi</name>
     <title>midi</title>
     <filename>group__tracktion__engine-midi.html</filename>
-    <namespace>tracktion_engine</namespace>
-    <namespace>juce</namespace>
-    <class kind="struct">tracktion_engine::ActiveNoteList</class>
-    <class kind="struct">tracktion_engine::MidiChannel</class>
-    <class kind="class">tracktion_engine::MidiControllerEvent</class>
-    <class kind="struct">tracktion_engine::MidiExpression</class>
-    <class kind="class">tracktion_engine::MidiList</class>
-    <class kind="class">tracktion_engine::MidiNote</class>
-    <class kind="struct">tracktion_engine::MidiProgramManager::MidiBank</class>
-    <class kind="struct">tracktion_engine::MidiProgramManager::MidiProgramSet</class>
-    <class kind="class">tracktion_engine::MidiProgramManager</class>
-    <class kind="class">tracktion_engine::MidiSysexEvent</class>
-    <class kind="class">tracktion_engine::Chord</class>
-    <class kind="class">tracktion_engine::Scale</class>
-    <class kind="struct">tracktion_engine::PatternGenerator::ProgressionItem</class>
-    <class kind="class">tracktion_engine::PatternGenerator</class>
-    <class kind="struct">tracktion_engine::KeyResult</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion_engine::Chord::ChordType &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion_engine::Scale::ScaleType &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion_engine::PatternGenerator::Mode &gt;</class>
-    <class kind="class">tracktion_engine::SelectedMidiEvents</class>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-model</name>
     <title>model</title>
     <filename>group__tracktion__engine-model.html</filename>
-    <namespace>tracktion_engine</namespace>
-    <namespace>tracktion_engine::ModifierCommon</namespace>
-    <namespace>tracktion_engine::PredefinedWavetable</namespace>
-    <namespace>juce</namespace>
-    <namespace>tracktion_engine::ClipConstants</namespace>
-    <class kind="struct">tracktion_engine::BreakpointOscillatorModifier::Assignment</class>
-    <class kind="struct">tracktion_engine::BreakpointOscillatorModifier::Stage</class>
-    <class kind="class">tracktion_engine::BreakpointOscillatorModifier</class>
-    <class kind="struct">tracktion_engine::EnvelopeFollowerModifier::Assignment</class>
-    <class kind="class">tracktion_engine::EnvelopeFollowerModifier</class>
-    <class kind="struct">tracktion_engine::LFOModifier::Assignment</class>
-    <class kind="class">tracktion_engine::LFOModifier</class>
-    <class kind="struct">tracktion_engine::MIDITrackerModifier::Assignment</class>
-    <class kind="class">tracktion_engine::MIDITrackerModifier</class>
-    <class kind="struct">tracktion_engine::Ramp</class>
-    <class kind="struct">tracktion_engine::DiscreteLabelledParameter</class>
-    <class kind="struct">tracktion_engine::SuffixedParameter</class>
-    <class kind="struct">tracktion_engine::RandomModifier::Assignment</class>
-    <class kind="class">tracktion_engine::RandomModifier</class>
-    <class kind="struct">tracktion_engine::StepModifier::Assignment</class>
-    <class kind="class">tracktion_engine::StepModifier</class>
-    <class kind="struct">tracktion_engine::AutomatableEditItem::ParameterListChangeListener</class>
-    <class kind="class">tracktion_engine::AutomatableEditItem</class>
-    <class kind="struct">tracktion_engine::AutomatableParameter::ModifierSource</class>
-    <class kind="struct">tracktion_engine::AutomatableParameter::ModifierAssignment</class>
-    <class kind="struct">tracktion_engine::AutomatableParameter::Listener</class>
-    <class kind="class">tracktion_engine::AutomatableParameter</class>
-    <class kind="class">tracktion_engine::AutomationDragDropTarget</class>
-    <class kind="class">tracktion_engine::ParameterisableDragDropSource</class>
-    <class kind="struct">tracktion_engine::AutomationIterator</class>
-    <class kind="struct">tracktion_engine::AutomatableParameterTree::TreeNode</class>
-    <class kind="class">tracktion_engine::AutomatableParameterTree</class>
-    <class kind="struct">tracktion_engine::AutomationCurve::AutomationPoint</class>
-    <class kind="class">tracktion_engine::AutomationCurve</class>
-    <class kind="struct">tracktion_engine::AutomationRecordManager::AutomationParamData::Change</class>
-    <class kind="class">tracktion_engine::AutomationRecordManager</class>
-    <class kind="struct">tracktion_engine::MacroParameter::Assignment</class>
-    <class kind="class">tracktion_engine::MacroParameter</class>
-    <class kind="class">tracktion_engine::MacroParameterList</class>
-    <class kind="class">tracktion_engine::MacroParameterElement</class>
-    <class kind="struct">tracktion_engine::MidiLearnState::ScopedChangeCaller</class>
-    <class kind="struct">tracktion_engine::MidiLearnState::Listener</class>
-    <class kind="class">tracktion_engine::MidiLearnState</class>
-    <class kind="struct">tracktion_engine::MidiAssignable::Assignment</class>
-    <class kind="class">tracktion_engine::MidiAssignable</class>
-    <class kind="struct">tracktion_engine::ModifierTimer</class>
-    <class kind="struct">tracktion_engine::Modifier</class>
-    <class kind="class">tracktion_engine::ModifierList</class>
-    <class kind="struct">tracktion_engine::ParameterChangeHandler::Disabler</class>
-    <class kind="class">tracktion_engine::ParameterChangeHandler</class>
-    <class kind="struct">tracktion_engine::ParameterControlMappings::Mapping</class>
-    <class kind="class">tracktion_engine::ParameterControlMappings</class>
-    <class kind="class">tracktion_engine::ArrangerClip</class>
-    <class kind="struct">tracktion_engine::AudioClipBase::ProxyRenderingInfo</class>
-    <class kind="class">tracktion_engine::AudioClipBase</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion_engine::AudioClipBase::FadeBehaviour &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion_engine::AudioClipBase::AutoPitchMode &gt;</class>
-    <class kind="struct">tracktion_engine::AudioSegmentList::Segment</class>
-    <class kind="class">tracktion_engine::AudioSegmentList</class>
-    <class kind="class">tracktion_engine::ChordClip</class>
-    <class kind="class">tracktion_engine::Clip</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion_engine::Clip::SyncType &gt;</class>
-    <class kind="class">tracktion_engine::ClipEffect</class>
-    <class kind="struct">tracktion_engine::ClipEffects::Listener</class>
-    <class kind="struct">tracktion_engine::ClipEffects::RenderInhibitor</class>
-    <class kind="class">tracktion_engine::ClipEffects</class>
-    <class kind="struct">tracktion_engine::ScopedPluginUnloadInhibitor</class>
-    <class kind="struct">tracktion_engine::VolumeEffect</class>
-    <class kind="struct">tracktion_engine::FadeInOutEffect</class>
-    <class kind="struct">tracktion_engine::StepClip::Pattern::CachedPattern</class>
-    <class kind="struct">tracktion_engine::StepVolumeEffect::Pattern</class>
-    <class kind="struct">tracktion_engine::StepVolumeEffect</class>
-    <class kind="struct">tracktion_engine::PitchShiftEffect</class>
-    <class kind="struct">tracktion_engine::WarpTimeEffect</class>
-    <class kind="struct">tracktion_engine::PluginEffect</class>
-    <class kind="struct">tracktion_engine::NormaliseEffect</class>
-    <class kind="struct">tracktion_engine::MakeMonoEffect</class>
-    <class kind="struct">tracktion_engine::ReverseEffect</class>
-    <class kind="struct">tracktion_engine::InvertEffect</class>
-    <class kind="class">tracktion_engine::CollectionClip</class>
-    <class kind="class">tracktion_engine::CompManager</class>
-    <class kind="class">tracktion_engine::CompFactory</class>
-    <class kind="class">tracktion_engine::WaveCompManager</class>
-    <class kind="class">tracktion_engine::MidiCompManager</class>
-    <class kind="class">tracktion_engine::EditClip</class>
-    <class kind="class">tracktion_engine::EditRenderJob</class>
-    <class kind="class">tracktion_engine::MarkerClip</class>
-    <class kind="struct">tracktion_engine::MidiClip::ScopedEventsList</class>
-    <class kind="class">tracktion_engine::MidiClip</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion_engine::MidiClip::LoopedSequenceType &gt;</class>
-    <class kind="class">tracktion_engine::ReverseRenderJob</class>
-    <class kind="struct">tracktion_engine::StepClip::Channel</class>
-    <class kind="struct">tracktion_engine::StepClip::Pattern</class>
-    <class kind="struct">tracktion_engine::StepClip::PatternInstance</class>
-    <class kind="class">tracktion_engine::StepClip</class>
-    <class kind="struct">tracktion_engine::WarpMarker</class>
-    <class kind="class">tracktion_engine::WarpTimeManager</class>
-    <class kind="class">tracktion_engine::WarpTimeFactory</class>
-    <class kind="class">tracktion_engine::WarpTimeRenderJob</class>
-    <class kind="class">tracktion_engine::WaveAudioClip</class>
-    <class kind="struct">tracktion_engine::Edit::LoadContext</class>
-    <class kind="struct">tracktion_engine::Edit::Options</class>
-    <class kind="struct">tracktion_engine::Edit::ScopedRenderStatus</class>
-    <class kind="struct">tracktion_engine::Edit::UndoTransactionInhibitor</class>
-    <class kind="struct">tracktion_engine::Edit::GlobalMacros</class>
-    <class kind="struct">tracktion_engine::Edit::Metadata</class>
-    <class kind="struct">tracktion_engine::Edit::LoadFinishedCallback</class>
-    <class kind="struct">tracktion_engine::Edit::WastedMidiMessagesListener</class>
-    <class kind="class">tracktion_engine::Edit</class>
-    <class kind="struct">tracktion_engine::EditDeleter</class>
-    <class kind="struct">tracktion_engine::ActiveEdits</class>
-    <class kind="class">tracktion_engine::EditFileOperations</class>
-    <class kind="class">tracktion_engine::EditInsertPoint</class>
-    <class kind="struct">tracktion_engine::EditItemID</class>
-    <class kind="class">tracktion_engine::EditItem</class>
-    <class kind="struct">tracktion_engine::EditItemCache</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion_engine::EditItemID &gt;</class>
-    <class kind="struct">tracktion_engine::EditSnapshot::Marker</class>
-    <class kind="struct">tracktion_engine::EditSnapshot::Listener</class>
-    <class kind="class">tracktion_engine::EditSnapshot</class>
-    <class kind="class">tracktion_engine::GrooveTemplate</class>
-    <class kind="class">tracktion_engine::GrooveTemplateManager</class>
-    <class kind="class">tracktion_engine::MarkerManager</class>
-    <class kind="struct">tracktion_engine::OldEditConversion</class>
-    <class kind="class">tracktion_engine::PitchSequence</class>
-    <class kind="class">tracktion_engine::PitchSetting</class>
-    <class kind="class">tracktion_engine::QuantisationType</class>
-    <class kind="class">tracktion_engine::SourceFileReference</class>
-    <class kind="struct">tracktion_engine::TempoSequence::BarsAndBeats</class>
-    <class kind="struct">tracktion_engine::TempoSequence::SectionDetails</class>
-    <class kind="struct">tracktion_engine::TempoSequence::TempoSections</class>
-    <class kind="class">tracktion_engine::TempoSequence</class>
-    <class kind="class">tracktion_engine::TempoSequencePosition</class>
-    <class kind="struct">tracktion_engine::EditTimecodeRemapperSnapshot</class>
-    <class kind="class">tracktion_engine::TempoSetting</class>
-    <class kind="struct">tracktion_engine::TimecodeSnapType</class>
-    <class kind="struct">tracktion_engine::TimecodeDisplayFormat</class>
-    <class kind="struct">tracktion_engine::TimecodeDisplayIterator</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion_engine::TimecodeDisplayFormat &gt;</class>
-    <class kind="class">tracktion_engine::TimeSigSetting</class>
-    <class kind="struct">tracktion_engine::TracktionArchiveFile::IndexEntry</class>
-    <class kind="class">tracktion_engine::TracktionArchiveFile</class>
-    <class kind="struct">tracktion_engine::Exportable::ReferencedItem</class>
-    <class kind="class">tracktion_engine::Exportable</class>
-    <class kind="class">tracktion_engine::ExportJob</class>
-    <class kind="struct">tracktion_engine::ReferencedMaterialList::IntervalList</class>
-    <class kind="class">tracktion_engine::ReferencedMaterialList</class>
-    <class kind="struct">tracktion_engine::Renderer::Parameters</class>
-    <class kind="class">tracktion_engine::Renderer::RenderTask</class>
-    <class kind="struct">tracktion_engine::Renderer::Statistics</class>
-    <class kind="struct">tracktion_engine::Renderer::RenderResult</class>
-    <class kind="class">tracktion_engine::Renderer</class>
-    <class kind="struct">tracktion_engine::RenderManager::Job::Listener</class>
-    <class kind="class">tracktion_engine::RenderManager::Job</class>
-    <class kind="class">tracktion_engine::RenderManager</class>
-    <class kind="class">tracktion_engine::RenderOptions</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion_engine::RenderOptions::RenderType &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion_engine::RenderOptions::TargetFileFormat &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion_engine::RenderOptions::AddRenderOptions &gt;</class>
-    <class kind="class">tracktion_engine::ArrangerTrack</class>
-    <class kind="struct">tracktion_engine::AudioTrack::FreezePointRemovalInhibitor</class>
-    <class kind="struct">tracktion_engine::AudioTrack::Listener</class>
-    <class kind="class">tracktion_engine::AudioTrack</class>
-    <class kind="class">tracktion_engine::AutomationTrack</class>
-    <class kind="class">tracktion_engine::ChordTrack</class>
-    <class kind="class">tracktion_engine::ClipTrack</class>
-    <class kind="struct">tracktion_engine::EditTimeRange</class>
-    <class kind="struct">tracktion_engine::ClipPosition</class>
-    <class kind="class">tracktion_engine::FolderTrack</class>
-    <class kind="class">tracktion_engine::MarkerTrack</class>
-    <class kind="class">tracktion_engine::TempoTrack</class>
-    <class kind="class">tracktion_engine::Track</class>
-    <class kind="struct">tracktion_engine::TrackCompManager::CompSection</class>
-    <class kind="struct">tracktion_engine::TrackCompManager::TrackComp::Section</class>
-    <class kind="struct">tracktion_engine::TrackCompManager::TrackComp</class>
-    <class kind="class">tracktion_engine::TrackCompManager</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion_engine::TrackCompManager::TrackComp::TimeFormat &gt;</class>
-    <class kind="class">tracktion_engine::TrackItem</class>
-    <class kind="class">tracktion_engine::TrackOutput</class>
-    <class kind="struct">tracktion_engine::TrackInsertPoint</class>
-    <class kind="struct">tracktion_engine::TrackList</class>
-    <class kind="struct">tracktion_engine::TrackSection</class>
-    <class kind="struct">tracktion_engine::TrackAutomationSection::ActiveParameters</class>
-    <class kind="struct">tracktion_engine::TrackAutomationSection</class>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-playback</name>
     <title>playback</title>
     <filename>group__tracktion__engine-playback.html</filename>
-    <namespace>tracktion_engine</namespace>
-    <namespace>tracktion_engine::RackNodeBuilder</namespace>
-    <class kind="struct">tracktion_engine::AudioNodeProperties</class>
-    <class kind="struct">tracktion_engine::PlaybackInitialisationInfo</class>
-    <class kind="struct">tracktion_engine::CreateAudioNodeParams</class>
-    <class kind="struct">tracktion_engine::AudioRenderContext</class>
-    <class kind="class">tracktion_engine::AudioNode</class>
-    <class kind="class">tracktion_engine::SingleInputAudioNode</class>
-    <class kind="struct">tracktion_engine::MuteAudioNode</class>
-    <class kind="class">tracktion_engine::BufferingAudioNode</class>
-    <class kind="class">tracktion_engine::ClickMutingNode</class>
-    <class kind="class">tracktion_engine::ClickNode</class>
-    <class kind="class">tracktion_engine::CombiningAudioNode</class>
-    <class kind="class">tracktion_engine::FadeInOutAudioNode</class>
-    <class kind="class">tracktion_engine::HissingAudioNode</class>
-    <class kind="class">tracktion_engine::MidiAudioNode</class>
-    <class kind="class">tracktion_engine::MixerAudioNode</class>
-    <class kind="class">tracktion_engine::PlayHeadAudioNode</class>
-    <class kind="class">tracktion_engine::SidechainSendAudioNode</class>
-    <class kind="class">tracktion_engine::SidechainReceiveAudioNode</class>
-    <class kind="class">tracktion_engine::SidechainReceiveWrapperAudioNode</class>
-    <class kind="class">tracktion_engine::SubSampleWaveAudioNode</class>
-    <class kind="class">tracktion_engine::SpeedRampAudioNode</class>
-    <class kind="class">tracktion_engine::TimedMutingAudioNode</class>
-    <class kind="class">tracktion_engine::TrackMutingAudioNode</class>
-    <class kind="struct">tracktion_engine::ClipLevel</class>
-    <class kind="struct">tracktion_engine::LiveClipLevel</class>
-    <class kind="class">tracktion_engine::WaveAudioNode</class>
-    <class kind="class">tracktion_engine::InputDevice</class>
-    <class kind="struct">tracktion_engine::InputDeviceInstance::InputDeviceDestination</class>
-    <class kind="struct">tracktion_engine::InputDeviceInstance::WaveInputDeviceDestination</class>
-    <class kind="struct">tracktion_engine::InputDeviceInstance::MidiInputDeviceDestination</class>
-    <class kind="struct">tracktion_engine::InputDeviceInstance::VirtualMidiInputDeviceDestination</class>
-    <class kind="struct">tracktion_engine::InputDeviceInstance::InputDeviceDestinationList</class>
-    <class kind="class">tracktion_engine::InputDeviceInstance</class>
-    <class kind="struct">tracktion_engine::MidiInputDevice::MidiKeyChangeDispatcher::Listener</class>
-    <class kind="struct">tracktion_engine::MidiInputDevice::MidiKeyChangeDispatcher</class>
-    <class kind="class">tracktion_engine::MidiInputDevice</class>
-    <class kind="class">tracktion_engine::MidiOutputDevice</class>
-    <class kind="class">tracktion_engine::SoftwareMidiOutputDevice</class>
-    <class kind="class">tracktion_engine::MidiOutputDeviceInstance</class>
-    <class kind="class">tracktion_engine::OutputDevice</class>
-    <class kind="class">tracktion_engine::OutputDeviceInstance</class>
-    <class kind="class">tracktion_engine::PhysicalMidiInputDevice</class>
-    <class kind="class">tracktion_engine::VirtualMidiInputDevice</class>
-    <class kind="struct">tracktion_engine::ChannelIndex</class>
-    <class kind="struct">tracktion_engine::WaveDeviceDescription</class>
-    <class kind="class">tracktion_engine::WaveInputDevice</class>
-    <class kind="struct">tracktion_engine::WaveInputRecordingThread::ScopedInitialiser</class>
-    <class kind="class">tracktion_engine::WaveInputRecordingThread</class>
-    <class kind="class">tracktion_engine::WaveOutputDevice</class>
-    <class kind="class">tracktion_engine::WaveOutputDeviceInstance</class>
-    <class kind="struct">tracktion_engine::InputProvider</class>
-    <class kind="class">tracktion_engine::InputNode</class>
-    <class kind="class">tracktion_engine::PluginNode</class>
-    <class kind="class">tracktion_engine::ModifierNode</class>
-    <class kind="class">tracktion_engine::ForwardingNode</class>
-    <class kind="class">tracktion_engine::HoldingNode</class>
-    <class kind="class">tracktion_engine::RackNodePlayer</class>
-    <class kind="struct">tracktion_engine::RackNodeBuilder::RackConnection</class>
-    <class kind="struct">tracktion_engine::RackNodeBuilder::RackPinConnections</class>
-    <class kind="struct">tracktion_engine::RackNodeBuilder::ChannelMap</class>
-    <class kind="struct">tracktion_engine::AbletonLink::Listener</class>
-    <class kind="class">tracktion_engine::AbletonLink</class>
-    <class kind="struct">tracktion_engine::DeviceManager::CPUUsageListener</class>
-    <class kind="struct">tracktion_engine::DeviceManager::ContextDeviceListRebuilder</class>
-    <class kind="class">tracktion_engine::DeviceManager</class>
-    <class kind="class">tracktion_engine::EditInputDevices</class>
-    <class kind="struct">tracktion_engine::EditPlaybackContext::ScopedDeviceListReleaser</class>
-    <class kind="struct">tracktion_engine::EditPlaybackContext::RealtimePriorityDisabler</class>
-    <class kind="class">tracktion_engine::EditPlaybackContext</class>
-    <class kind="struct">tracktion_engine::HostedAudioDeviceInterface::Parameters</class>
-    <class kind="class">tracktion_engine::HostedAudioDeviceInterface</class>
-    <class kind="struct">tracktion_engine::DbTimePair</class>
-    <class kind="struct">tracktion_engine::LevelMeasurer::Client</class>
-    <class kind="class">tracktion_engine::LevelMeasurer</class>
-    <class kind="class">tracktion_engine::SharedLevelMeasurer</class>
-    <class kind="class">tracktion_engine::LevelMeasuringAudioNode</class>
-    <class kind="class">tracktion_engine::MidiNoteDispatcher</class>
-    <class kind="struct">tracktion_engine::MPEStartTrimmer</class>
-    <class kind="struct">tracktion_engine::PlayHead::EditTimeWindow</class>
-    <class kind="class">tracktion_engine::PlayHead</class>
-    <class kind="struct">tracktion_engine::ScopedSteadyLoad::Context</class>
-    <class kind="class">tracktion_engine::ScopedSteadyLoad</class>
-    <class kind="struct">tracktion_engine::TransportControl::ReallocationInhibitor</class>
-    <class kind="struct">tracktion_engine::TransportControl::ScopedPlaybackRestarter</class>
-    <class kind="struct">tracktion_engine::TransportControl::Listener</class>
-    <class kind="class">tracktion_engine::TransportControl</class>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-plugins</name>
     <title>plugins</title>
     <filename>group__tracktion__engine-plugins.html</filename>
-    <namespace>tracktion_engine</namespace>
-    <class kind="class">tracktion_engine::AirWindowsCallback</class>
-    <class kind="class">tracktion_engine::AirWindowsPlugin</class>
-    <class kind="struct">ArchivingFunctions</class>
-    <class kind="struct">EditProxyFunctions</class>
-    <class kind="struct">ModelUpdateFunctions</class>
-    <class kind="struct">MusicalContextFunctions</class>
-    <class kind="class">ARADocument</class>
-    <class kind="struct">ARADocumentCreatorCallback</class>
-    <class kind="class">MusicalContextWrapper</class>
-    <class kind="class">NodeReader</class>
-    <class kind="class">AudioSourceWrapper</class>
-    <class kind="class">AudioModificationWrapper</class>
-    <class kind="class">RegionSequenceWrapper</class>
-    <class kind="class">PlaybackRegionWrapper</class>
-    <class kind="class">PlaybackRegionAndSource</class>
-    <class kind="class">tracktion_engine::MelodyneFileReader</class>
-    <class kind="struct">tracktion_engine::ARADocumentHolder</class>
-    <class kind="struct">MelodyneInstance</class>
-    <class kind="struct">MelodyneInstanceFactory</class>
-    <class kind="class">tracktion_engine::ChorusPlugin</class>
-    <class kind="class">tracktion_engine::CompressorPlugin</class>
-    <class kind="struct">tracktion_engine::DelayBufferBase</class>
-    <class kind="class">tracktion_engine::DelayPlugin</class>
-    <class kind="class">tracktion_engine::EqualiserPlugin</class>
-    <class kind="class">tracktion_engine::ValueSmoother</class>
-    <class kind="struct">tracktion_engine::SimpleLFO::Parameters</class>
-    <class kind="class">tracktion_engine::SimpleLFO</class>
-    <class kind="struct">tracktion_engine::FourOscPlugin::OscParams</class>
-    <class kind="struct">tracktion_engine::FourOscPlugin::LFOParams</class>
-    <class kind="struct">tracktion_engine::FourOscPlugin::MODEnvParams</class>
-    <class kind="struct">tracktion_engine::FourOscPlugin::ModAssign</class>
-    <class kind="class">tracktion_engine::FourOscPlugin</class>
-    <class kind="class">tracktion_engine::LatencyPlugin</class>
-    <class kind="class">tracktion_engine::LowPassPlugin</class>
-    <class kind="class">tracktion_engine::MidiModifierPlugin</class>
-    <class kind="struct">tracktion_engine::MidiPatchBayPlugin::Mappings</class>
-    <class kind="class">tracktion_engine::MidiPatchBayPlugin</class>
-    <class kind="struct">tracktion_engine::PatchBayPlugin::Wire</class>
-    <class kind="class">tracktion_engine::PatchBayPlugin</class>
-    <class kind="class">tracktion_engine::PhaserPlugin</class>
-    <class kind="class">tracktion_engine::PitchShiftPlugin</class>
-    <class kind="class">tracktion_engine::ReverbPlugin</class>
-    <class kind="struct">tracktion_engine::SamplerPlugin::SamplerSound</class>
-    <class kind="class">tracktion_engine::SamplerPlugin</class>
-    <class kind="class">tracktion_engine::ToneGeneratorPlugin</class>
-    <class kind="class">tracktion_engine::ExternalAutomatableParameter</class>
-    <class kind="class">tracktion_engine::ExternalPlugin</class>
-    <class kind="struct">tracktion_engine::PluginWetDryAutomatableParam</class>
-    <class kind="struct">tracktion_engine::VSTXML::Base</class>
-    <class kind="struct">tracktion_engine::VSTXML::Param</class>
-    <class kind="struct">tracktion_engine::VSTXML::Group</class>
-    <class kind="struct">tracktion_engine::VSTXML::Range</class>
-    <class kind="struct">tracktion_engine::VSTXML::Entry</class>
-    <class kind="struct">tracktion_engine::VSTXML::ValueType</class>
-    <class kind="struct">tracktion_engine::VSTXML::Template</class>
-    <class kind="class">tracktion_engine::VSTXML</class>
-    <class kind="class">tracktion_engine::AuxReturnPlugin</class>
-    <class kind="class">tracktion_engine::AuxSendPlugin</class>
-    <class kind="struct">tracktion_engine::FreezePointPlugin::ScopedTrackUnsoloer</class>
-    <class kind="struct">tracktion_engine::FreezePointPlugin::ScopedTrackSoloIsolator</class>
-    <class kind="struct">tracktion_engine::FreezePointPlugin::ScopedPluginDisabler</class>
-    <class kind="struct">tracktion_engine::FreezePointPlugin::ScopedTrackFreezer</class>
-    <class kind="class">tracktion_engine::FreezePointPlugin</class>
-    <class kind="class">tracktion_engine::InsertPlugin</class>
-    <class kind="class">tracktion_engine::LevelMeterPlugin</class>
-    <class kind="class">tracktion_engine::RackInstance</class>
-    <class kind="struct">tracktion_engine::RackConnection</class>
-    <class kind="struct">tracktion_engine::RackType::WindowState</class>
-    <class kind="class">tracktion_engine::RackType</class>
-    <class kind="class">tracktion_engine::RackTypeList</class>
-    <class kind="class">tracktion_engine::TextPlugin</class>
-    <class kind="class">tracktion_engine::VCAPlugin</class>
-    <class kind="class">tracktion_engine::VolumeAndPanPlugin</class>
-    <class kind="struct">tracktion_engine::PluginCreationInfo</class>
-    <class kind="struct">tracktion_engine::Plugin::Wire</class>
-    <class kind="struct">tracktion_engine::Plugin::WindowState</class>
-    <class kind="class">tracktion_engine::Plugin</class>
-    <class kind="class">tracktion_engine::PluginList</class>
-    <class kind="struct">tracktion_engine::PluginManager::BuiltInType</class>
-    <class kind="struct">tracktion_engine::PluginManager::BuiltInTypeBase</class>
-    <class kind="class">tracktion_engine::PluginManager</class>
-    <class kind="class">tracktion_engine::PluginCache</class>
-    <class kind="struct">tracktion_engine::PluginWindowState</class>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-project</name>
     <title>project</title>
     <filename>group__tracktion__engine-project.html</filename>
-    <namespace>tracktion_engine</namespace>
-    <namespace>juce</namespace>
-    <class kind="class">tracktion_engine::Project</class>
-    <class kind="class">tracktion_engine::ProjectItem</class>
-    <class kind="class">tracktion_engine::ProjectItemID</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion_engine::ProjectItemID &gt;</class>
-    <class kind="struct">tracktion_engine::ProjectManager::TempProject</class>
-    <class kind="class">tracktion_engine::ProjectManager</class>
-    <class kind="class">tracktion_engine::ProjectSearchIndex</class>
-    <class kind="class">tracktion_engine::SearchOperation</class>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-selection</name>
     <title>selection</title>
     <filename>group__tracktion__engine-selection.html</filename>
-    <namespace>tracktion_engine</namespace>
-    <class kind="struct">tracktion_engine::Clipboard::ContentType::EditPastingOptions</class>
-    <class kind="struct">tracktion_engine::Clipboard::ContentType</class>
-    <class kind="struct">tracktion_engine::Clipboard::ProjectItems::ItemInfo</class>
-    <class kind="struct">tracktion_engine::Clipboard::ProjectItems</class>
-    <class kind="struct">tracktion_engine::Clipboard::Clips::ClipInfo</class>
-    <class kind="struct">tracktion_engine::Clipboard::Clips::AutomationCurveSection</class>
-    <class kind="struct">tracktion_engine::Clipboard::Clips</class>
-    <class kind="struct">tracktion_engine::Clipboard::Tracks</class>
-    <class kind="struct">tracktion_engine::Clipboard::TempoChanges::TempoChange</class>
-    <class kind="struct">tracktion_engine::Clipboard::TempoChanges</class>
-    <class kind="struct">tracktion_engine::Clipboard::AutomationPoints</class>
-    <class kind="struct">tracktion_engine::Clipboard::MIDINotes</class>
-    <class kind="struct">tracktion_engine::Clipboard::Pitches</class>
-    <class kind="struct">tracktion_engine::Clipboard::TimeSigs</class>
-    <class kind="struct">tracktion_engine::Clipboard::Plugins</class>
-    <class kind="struct">tracktion_engine::Clipboard::Takes</class>
-    <class kind="struct">tracktion_engine::Clipboard::Modifiers</class>
-    <class kind="class">tracktion_engine::Clipboard</class>
-    <class kind="class">tracktion_engine::SelectableListener</class>
-    <class kind="class">tracktion_engine::Selectable</class>
-    <class kind="struct">tracktion_engine::SelectableList</class>
-    <class kind="struct">tracktion_engine::SelectableClass::AddClipboardEntryParams</class>
-    <class kind="struct">tracktion_engine::SelectableClass::SelectOtherObjectsParams</class>
-    <class kind="struct">tracktion_engine::SelectableClass::ClassInstanceBase</class>
-    <class kind="struct">tracktion_engine::SelectableClass::ClassInstance</class>
-    <class kind="class">tracktion_engine::SelectableClass</class>
-    <class kind="class">tracktion_engine::SelectableClassWithVolume</class>
-    <class kind="class">tracktion_engine::SelectableClassWithPan</class>
-    <class kind="struct">tracktion_engine::SelectionManager::ChangedSelectionDetector</class>
-    <class kind="struct">tracktion_engine::SelectionManager::ScopedSelectionState</class>
-    <class kind="struct">tracktion_engine::SelectionManager::Iterator</class>
-    <class kind="struct">tracktion_engine::SelectionManager::ComponentWithSelectionManager</class>
-    <class kind="class">tracktion_engine::SelectionManager</class>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-timestretch</name>
     <title>timestretch</title>
     <filename>group__tracktion__engine-timestretch.html</filename>
-    <namespace>tracktion_engine</namespace>
-    <namespace>tracktion_engine::soundtouch</namespace>
-    <namespace>juce</namespace>
-    <class kind="struct">tracktion_engine::BeatDetect</class>
-    <class kind="class">tracktion_engine::soundtouch::FIFOSamplePipe</class>
-    <class kind="class">tracktion_engine::soundtouch::FIFOProcessor</class>
-    <class kind="class">tracktion_engine::soundtouch::FIFOSampleBuffer</class>
-    <class kind="struct">tracktion_engine::soundtouch::BEAT</class>
-    <class kind="class">tracktion_engine::soundtouch::IIR2_filter</class>
-    <class kind="class">tracktion_engine::soundtouch::BPMDetect</class>
-    <class kind="class">tracktion_engine::TempoDetect</class>
-    <class kind="struct">tracktion_engine::TimeStretcher::ElastiqueProOptions</class>
-    <class kind="class">tracktion_engine::TimeStretcher</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion_engine::TimeStretcher::Mode &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion_engine::TimeStretcher::ElastiqueProOptions &gt;</class>
   </compound>
   <compound kind="group">
     <name>tracktion_engine</name>
@@ -76216,31 +75160,6 @@
     <name>tracktion_graph-tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph-tracktion__graph.html</filename>
-    <namespace>tracktion_graph</namespace>
-    <namespace>tracktion_graph::detail</namespace>
-    <namespace>tracktion_graph::test_utilities</namespace>
-    <class kind="class">tracktion_graph::MultiThreadedNodePlayer</class>
-    <class kind="struct">tracktion_graph::PlaybackInitialisationInfo</class>
-    <class kind="struct">tracktion_graph::NodeProperties</class>
-    <class kind="struct">tracktion_graph::Node::AudioAndMidiBuffer</class>
-    <class kind="struct">tracktion_graph::Node::ProcessContext</class>
-    <class kind="class">tracktion_graph::Node</class>
-    <class kind="struct">tracktion_graph::detail::VisitNodesWithRecord</class>
-    <class kind="class">tracktion_graph::NodePlayer</class>
-    <class kind="class">tracktion_graph::MidiNode</class>
-    <class kind="class">tracktion_graph::SinNode</class>
-    <class kind="class">tracktion_graph::SilentNode</class>
-    <class kind="class">tracktion_graph::BasicSummingNode</class>
-    <class kind="class">tracktion_graph::FunctionNode</class>
-    <class kind="class">tracktion_graph::SendNode</class>
-    <class kind="class">tracktion_graph::ReturnNode</class>
-    <class kind="class">tracktion_graph::ChannelRemappingNode</class>
-    <class kind="class">tracktion_graph::SinkNode</class>
-    <class kind="struct">tracktion_graph::test_utilities::TestSetup</class>
-    <class kind="struct">tracktion_graph::test_utilities::TestContext</class>
-    <class kind="struct">tracktion_graph::test_utilities::TestProcess</class>
-    <class kind="class">tracktion_graph::LatencyNode</class>
-    <class kind="class">tracktion_graph::SummingNode</class>
   </compound>
   <compound kind="group">
     <name>tracktion_graph</name>
@@ -76251,78 +75170,13 @@
     <subgroup>tracktion_graph-utilities</subgroup>
   </compound>
   <compound kind="group">
-    <name>tracktion_engine-utilities</name>
-    <title>utilities</title>
-    <filename>group__tracktion__engine-utilities.html</filename>
-    <namespace>tracktion_engine</namespace>
-    <namespace>tracktion_engine::AppFunctions</namespace>
-    <namespace>juce</namespace>
-    <namespace>tracktion_engine::TracktionBinaryData</namespace>
-    <namespace>tracktion_engine::IDs</namespace>
-    <class kind="struct">tracktion_engine::AsyncCaller</class>
-    <class kind="struct">tracktion_engine::AsyncFunctionCaller</class>
-    <class kind="class">tracktion_engine::LambdaTimer</class>
-    <class kind="class">tracktion_engine::MessageThreadCallback</class>
-    <class kind="struct">tracktion_engine::BlockingFunction</class>
-    <class kind="struct">tracktion_engine::AudioFadeCurve::Linear</class>
-    <class kind="struct">tracktion_engine::AudioFadeCurve::Convex</class>
-    <class kind="struct">tracktion_engine::AudioFadeCurve::Concave</class>
-    <class kind="struct">tracktion_engine::AudioFadeCurve::SCurve</class>
-    <class kind="struct">tracktion_engine::AudioFadeCurve::CrossfadeLevels</class>
-    <class kind="struct">tracktion_engine::AudioFadeCurve</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion_engine::AudioFadeCurve::Type &gt;</class>
-    <class kind="class">tracktion_engine::AudioScratchBuffer</class>
-    <class kind="class">tracktion_engine::AudioMidiFifo</class>
-    <class kind="class">tracktion_engine::AudioBufferSnapshot</class>
-    <class kind="class">tracktion_engine::ThreadPoolJobWithProgress</class>
-    <class kind="struct">tracktion_engine::BackgroundJobManager::JobInfo</class>
-    <class kind="class">tracktion_engine::BackgroundJobManager::Listener</class>
-    <class kind="class">tracktion_engine::BackgroundJobManager</class>
-    <class kind="class">tracktion_engine::ConstrainedCachedValue</class>
-    <class kind="struct">tracktion_engine::ScopedCpuMeter</class>
-    <class kind="struct">tracktion_engine::StopwatchTimer</class>
-    <class kind="struct">tracktion_engine::CrashStackTracer</class>
-    <class kind="struct">tracktion_engine::DeadMansPedalMessage</class>
-    <class kind="struct">tracktion_engine::CurvePoint</class>
-    <class kind="class">tracktion_engine::CurveEditorPoint</class>
-    <class kind="class">tracktion_engine::CurveEditor</class>
-    <class kind="struct">tracktion_engine::Ditherer</class>
-    <class kind="class">tracktion_engine::Engine</class>
-    <class kind="struct">tracktion_engine::EngineBehaviour::LevelMeterSettings</class>
-    <class kind="class">tracktion_engine::EngineBehaviour</class>
-    <class kind="struct">tracktion_engine::ExpEnvelope::Parameters</class>
-    <class kind="class">tracktion_engine::ExpEnvelope</class>
-    <class kind="struct">tracktion_engine::LinEnvelope::Parameters</class>
-    <class kind="class">tracktion_engine::LinEnvelope</class>
-    <class kind="class">tracktion_engine::ExternalPlayheadSynchroniser</class>
-    <class kind="struct">tracktion_engine::ScopedDirectoryDeleter</class>
-    <class kind="struct">tracktion_engine::FileDragList</class>
-    <class kind="class">tracktion_engine::ScopedWaitCursor</class>
-    <class kind="class">tracktion_engine::MouseHoverDetector</class>
-    <class kind="class">tracktion_engine::BandlimitedWaveLookupTables</class>
-    <class kind="class">tracktion_engine::Oscillator</class>
-    <class kind="class">tracktion_engine::MultiVoiceOscillator</class>
-    <class kind="struct">tracktion_engine::Pitch</class>
-    <class kind="struct">tracktion_engine::PluginComponent</class>
-    <class kind="class">tracktion_engine::PropertyStorage</class>
-    <class kind="struct">tracktion_engine::Spline</class>
-    <class kind="class">tracktion_engine::TemporaryFileManager</class>
-    <class kind="class">tracktion_engine::UIBehaviour</class>
-    <class kind="struct">juce::VariantConverter&lt; Colour &gt;</class>
-    <class kind="class">tracktion_engine::ValueTreeObjectList</class>
-    <class kind="struct">tracktion_engine::SortedValueTreeObjectList</class>
-    <class kind="struct">tracktion_engine::ValueTreeAllEventListener</class>
-    <class kind="struct">tracktion_engine::ValueTreeComparator</class>
-    <class kind="class">tracktion_engine::ReferenceCountedValueTree</class>
-  </compound>
-  <compound kind="group">
     <name>tracktion_graph-utilities</name>
     <title>utilities</title>
     <filename>group__tracktion__graph-utilities.html</filename>
-    <namespace>tracktion_graph</namespace>
-    <namespace>tracktion_engine</namespace>
-    <class kind="class">tracktion_graph::AudioFifo</class>
-    <class kind="struct">tracktion_engine::MidiMessageArray::MidiMessageWithSource</class>
-    <class kind="struct">tracktion_engine::MidiMessageArray</class>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_engine-utilities</name>
+    <title>utilities</title>
+    <filename>group__tracktion__engine-utilities.html</filename>
   </compound>
 </tagfile>

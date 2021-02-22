@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['airwindowsplugin',['AIRWINDOWSPLUGIN',['../tracktion__AirWindows_8h.html#a4eb7742fcf649047c78ea5229fe97e4e',1,'tracktion_AirWindows.h']]]
+  ['crash_5ftracer_12361',['CRASH_TRACER',['../tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17',1,'tracktion_CrashTracer.h']]],
+  ['crash_5ftracer_5fplugin_12362',['CRASH_TRACER_PLUGIN',['../tracktion__CrashTracer_8h.html#a8fa50910309f1ebb6a0dc72340bcb54c',1,'tracktion_CrashTracer.h']]]
 ];

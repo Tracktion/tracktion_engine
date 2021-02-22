@@ -1,6 +1,7 @@
 <map id="tracktion_engine::RenderManager::Job::Listener" name="tracktion_engine::RenderManager::Job::Listener">
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1AudioClipBase.html" title="Base class for Clips that produce some kind of audio e.g. " alt="" coords="93,102,304,129"/>
-<area shape="rect" id="node5" href="$classtracktion__engine_1_1WarpTimeManager.html" title="tracktion_engine::WarpTime\lManager" alt="" coords="329,95,514,136"/>
-<area shape="rect" id="node3" href="$classtracktion__engine_1_1EditClip.html" title="This is the main source of an Edit clip and is responsible for managing its properties and creating a..." alt="" coords="5,184,176,211"/>
-<area shape="rect" id="node4" href="$classtracktion__engine_1_1WaveAudioClip.html" title="tracktion_engine::WaveAudioClip" alt="" coords="201,184,415,211"/>
+<area shape="rect" id="node1" title=" " alt="" coords="247,5,433,47"/>
+<area shape="rect" id="node2" href="$classtracktion__engine_1_1AudioClipBase.html" title="Base class for Clips that produce some kind of audio e.g." alt="" coords="102,102,335,129"/>
+<area shape="rect" id="node5" href="$classtracktion__engine_1_1WarpTimeManager.html" title=" " alt="" coords="360,95,565,136"/>
+<area shape="rect" id="node3" href="$classtracktion__engine_1_1EditClip.html" title="This is the main source of an Edit clip and is responsible for managing its properties and creating a..." alt="" coords="5,184,195,211"/>
+<area shape="rect" id="node4" href="$classtracktion__engine_1_1WaveAudioClip.html" title=" " alt="" coords="219,184,456,211"/>
 </map>

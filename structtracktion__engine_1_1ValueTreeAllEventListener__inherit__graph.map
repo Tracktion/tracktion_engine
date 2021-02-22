@@ -1,49 +1,50 @@
 <map id="tracktion_engine::ValueTreeAllEventListener" name="tracktion_engine::ValueTreeAllEventListener">
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1BreakpointOscillatorModifier.html" title="tracktion_engine::Breakpoint\lOscillatorModifier" alt="" coords="243,307,430,348"/>
-<area shape="rect" id="node3" href="$classtracktion__engine_1_1ClipEffect.html" title="tracktion_engine::ClipEffect" alt="" coords="245,373,428,399"/>
-<area shape="rect" id="node14" href="$classtracktion__engine_1_1EnvelopeFollowerModifier.html" title="tracktion_engine::Envelope\lFollowerModifier" alt="" coords="247,1105,426,1147"/>
-<area shape="rect" id="node15" href="$classtracktion__engine_1_1LFOModifier.html" title="tracktion_engine::LFOModifier" alt="" coords="239,1171,435,1198"/>
-<area shape="rect" id="node16" href="$classtracktion__engine_1_1MIDITrackerModifier.html" title="tracktion_engine::MIDITracker\lModifier" alt="" coords="237,1223,436,1264"/>
-<area shape="rect" id="node17" href="$classtracktion__engine_1_1PatternGenerator.html" title="tracktion_engine::Pattern\lGenerator" alt="" coords="253,1288,420,1329"/>
-<area shape="rect" id="node18" href="$classtracktion__engine_1_1PitchSetting.html" title="tracktion_engine::PitchSetting" alt="" coords="239,1354,435,1381"/>
-<area shape="rect" id="node19" href="$classtracktion__engine_1_1Plugin.html" title="tracktion_engine::Plugin" alt="" coords="256,1405,417,1431"/>
-<area shape="rect" id="node46" href="$classtracktion__engine_1_1RandomModifier.html" title="tracktion_engine::Random\lModifier" alt="" coords="249,1456,424,1497"/>
-<area shape="rect" id="node47" href="$classtracktion__engine_1_1StepModifier.html" title="tracktion_engine::StepModifier" alt="" coords="237,1522,436,1549"/>
-<area shape="rect" id="node48" href="$classtracktion__engine_1_1TimeSigSetting.html" title="tracktion_engine::TimeSig\lSetting" alt="" coords="250,1573,423,1615"/>
-<area shape="rect" id="node4" href="$structtracktion__engine_1_1FadeInOutEffect.html" title="tracktion_engine::FadeIn\lOutEffect" alt="" coords="507,5,672,47"/>
-<area shape="rect" id="node5" href="$structtracktion__engine_1_1InvertEffect.html" title="tracktion_engine::Invert\lEffect" alt="" coords="510,71,669,112"/>
-<area shape="rect" id="node6" href="$structtracktion__engine_1_1MakeMonoEffect.html" title="tracktion_engine::MakeMono\lEffect" alt="" coords="495,136,684,177"/>
-<area shape="rect" id="node7" href="$structtracktion__engine_1_1NormaliseEffect.html" title="tracktion_engine::Normalise\lEffect" alt="" coords="497,201,681,243"/>
-<area shape="rect" id="node8" href="$structtracktion__engine_1_1PitchShiftEffect.html" title="tracktion_engine::PitchShift\lEffect" alt="" coords="498,267,681,308"/>
-<area shape="rect" id="node9" href="$structtracktion__engine_1_1PluginEffect.html" title="tracktion_engine::Plugin\lEffect" alt="" coords="509,332,670,373"/>
-<area shape="rect" id="node10" href="$structtracktion__engine_1_1ReverseEffect.html" title="tracktion_engine::Reverse\lEffect" alt="" coords="502,397,677,439"/>
-<area shape="rect" id="node11" href="$structtracktion__engine_1_1StepVolumeEffect.html" title="tracktion_engine::StepVolume\lEffect" alt="" coords="491,463,687,504"/>
-<area shape="rect" id="node12" href="$structtracktion__engine_1_1VolumeEffect.html" title="tracktion_engine::Volume\lEffect" alt="" coords="505,528,674,569"/>
-<area shape="rect" id="node13" href="$structtracktion__engine_1_1WarpTimeEffect.html" title="tracktion_engine::WarpTime\lEffect" alt="" coords="497,593,682,635"/>
-<area shape="rect" id="node20" href="$classtracktion__engine_1_1AirWindowsPlugin.html" title="tracktion_engine::AirWindows\lPlugin" alt="" coords="492,659,687,700"/>
-<area shape="rect" id="node21" href="$classtracktion__engine_1_1AuxReturnPlugin.html" title="tracktion_engine::AuxReturn\lPlugin" alt="" coords="496,724,683,765"/>
-<area shape="rect" id="node22" href="$classtracktion__engine_1_1AuxSendPlugin.html" title="tracktion_engine::AuxSend\lPlugin" alt="" coords="500,789,679,831"/>
-<area shape="rect" id="node23" href="$classtracktion__engine_1_1ChorusPlugin.html" title="tracktion_engine::Chorus\lPlugin" alt="" coords="506,855,673,896"/>
-<area shape="rect" id="node24" href="$classtracktion__engine_1_1CompressorPlugin.html" title="tracktion_engine::Compressor\lPlugin" alt="" coords="491,920,687,961"/>
-<area shape="rect" id="node25" href="$classtracktion__engine_1_1DelayPlugin.html" title="tracktion_engine::DelayPlugin" alt="" coords="492,986,687,1013"/>
-<area shape="rect" id="node26" href="$classtracktion__engine_1_1EqualiserPlugin.html" title="tracktion_engine::Equaliser\lPlugin" alt="" coords="500,1037,679,1079"/>
-<area shape="rect" id="node27" href="$classtracktion__engine_1_1ExternalPlugin.html" title="tracktion_engine::External\lPlugin" alt="" coords="503,1103,676,1144"/>
-<area shape="rect" id="node28" href="$classtracktion__engine_1_1FourOscPlugin.html" title="tracktion_engine::FourOsc\lPlugin" alt="" coords="502,1168,677,1209"/>
-<area shape="rect" id="node29" href="$classtracktion__engine_1_1FreezePointPlugin.html" title="tracktion_engine::Freeze\lPointPlugin" alt="" coords="507,1233,672,1275"/>
-<area shape="rect" id="node30" href="$classtracktion__engine_1_1InsertPlugin.html" title="tracktion_engine::Insert\lPlugin" alt="" coords="510,1299,669,1340"/>
-<area shape="rect" id="node31" href="$classtracktion__engine_1_1LatencyPlugin.html" title="A test plugin that introduces latency to the incomming signal. " alt="" coords="504,1364,675,1405"/>
-<area shape="rect" id="node32" href="$classtracktion__engine_1_1LevelMeterPlugin.html" title="tracktion_engine::LevelMeter\lPlugin" alt="" coords="495,1429,684,1471"/>
-<area shape="rect" id="node33" href="$classtracktion__engine_1_1LowPassPlugin.html" title="tracktion_engine::LowPass\lPlugin" alt="" coords="500,1495,679,1536"/>
-<area shape="rect" id="node34" href="$classtracktion__engine_1_1MidiModifierPlugin.html" title="tracktion_engine::MidiModifier\lPlugin" alt="" coords="492,1560,687,1601"/>
-<area shape="rect" id="node35" href="$classtracktion__engine_1_1MidiPatchBayPlugin.html" title="tracktion_engine::MidiPatch\lBayPlugin" alt="" coords="498,1625,681,1667"/>
-<area shape="rect" id="node36" href="$classtracktion__engine_1_1PatchBayPlugin.html" title="tracktion_engine::PatchBay\lPlugin" alt="" coords="498,1691,681,1732"/>
-<area shape="rect" id="node37" href="$classtracktion__engine_1_1PhaserPlugin.html" title="tracktion_engine::Phaser\lPlugin" alt="" coords="506,1756,673,1797"/>
-<area shape="rect" id="node38" href="$classtracktion__engine_1_1PitchShiftPlugin.html" title="tracktion_engine::PitchShift\lPlugin" alt="" coords="498,1821,681,1863"/>
-<area shape="rect" id="node39" href="$classtracktion__engine_1_1RackInstance.html" title="tracktion_engine::RackInstance" alt="" coords="486,1887,693,1914"/>
-<area shape="rect" id="node40" href="$classtracktion__engine_1_1ReverbPlugin.html" title="tracktion_engine::Reverb\lPlugin" alt="" coords="506,1939,673,1980"/>
-<area shape="rect" id="node41" href="$classtracktion__engine_1_1SamplerPlugin.html" title="tracktion_engine::Sampler\lPlugin" alt="" coords="503,2004,676,2045"/>
-<area shape="rect" id="node42" href="$classtracktion__engine_1_1TextPlugin.html" title="tracktion_engine::TextPlugin" alt="" coords="496,2070,683,2097"/>
-<area shape="rect" id="node43" href="$classtracktion__engine_1_1ToneGeneratorPlugin.html" title="tracktion_engine::ToneGenerator\lPlugin" alt="" coords="484,2121,695,2163"/>
-<area shape="rect" id="node44" href="$classtracktion__engine_1_1VCAPlugin.html" title="The VCA plugin sits on a folder track to control the overall level of all the volume/pan plugins in i..." alt="" coords="495,2187,684,2214"/>
-<area shape="rect" id="node45" href="$classtracktion__engine_1_1VolumeAndPanPlugin.html" title="The built&#45;in Tracktion volume/pan plugin. " alt="" coords="505,2239,674,2280"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,1288,208,1329"/>
+<area shape="rect" id="node2" href="$classtracktion__engine_1_1BreakpointOscillatorModifier.html" title=" " alt="" coords="261,307,472,348"/>
+<area shape="rect" id="node3" href="$classtracktion__engine_1_1ClipEffect.html" title=" " alt="" coords="266,373,467,399"/>
+<area shape="rect" id="node14" href="$classtracktion__engine_1_1EnvelopeFollowerModifier.html" title=" " alt="" coords="267,1105,466,1147"/>
+<area shape="rect" id="node15" href="$classtracktion__engine_1_1LFOModifier.html" title=" " alt="" coords="258,1171,475,1198"/>
+<area shape="rect" id="node16" href="$classtracktion__engine_1_1MIDITrackerModifier.html" title=" " alt="" coords="259,1223,474,1264"/>
+<area shape="rect" id="node17" href="$classtracktion__engine_1_1PatternGenerator.html" title=" " alt="" coords="274,1288,459,1329"/>
+<area shape="rect" id="node18" href="$classtracktion__engine_1_1PitchSetting.html" title=" " alt="" coords="258,1354,475,1381"/>
+<area shape="rect" id="node19" href="$classtracktion__engine_1_1Plugin.html" title=" " alt="" coords="277,1405,456,1431"/>
+<area shape="rect" id="node46" href="$classtracktion__engine_1_1RandomModifier.html" title=" " alt="" coords="270,1456,463,1497"/>
+<area shape="rect" id="node47" href="$classtracktion__engine_1_1StepModifier.html" title=" " alt="" coords="256,1522,477,1549"/>
+<area shape="rect" id="node48" href="$classtracktion__engine_1_1TimeSigSetting.html" title=" " alt="" coords="271,1573,463,1615"/>
+<area shape="rect" id="node4" href="$structtracktion__engine_1_1FadeInOutEffect.html" title=" " alt="" coords="552,5,733,47"/>
+<area shape="rect" id="node5" href="$structtracktion__engine_1_1InvertEffect.html" title=" " alt="" coords="554,71,731,112"/>
+<area shape="rect" id="node6" href="$structtracktion__engine_1_1MakeMonoEffect.html" title=" " alt="" coords="537,136,748,177"/>
+<area shape="rect" id="node7" href="$structtracktion__engine_1_1NormaliseEffect.html" title=" " alt="" coords="539,201,746,243"/>
+<area shape="rect" id="node8" href="$structtracktion__engine_1_1PitchShiftEffect.html" title=" " alt="" coords="543,267,743,308"/>
+<area shape="rect" id="node9" href="$structtracktion__engine_1_1PluginEffect.html" title=" " alt="" coords="553,332,732,373"/>
+<area shape="rect" id="node10" href="$structtracktion__engine_1_1ReverseEffect.html" title=" " alt="" coords="547,397,739,439"/>
+<area shape="rect" id="node11" href="$structtracktion__engine_1_1StepVolumeEffect.html" title=" " alt="" coords="534,463,751,504"/>
+<area shape="rect" id="node12" href="$structtracktion__engine_1_1VolumeEffect.html" title=" " alt="" coords="549,528,737,569"/>
+<area shape="rect" id="node13" href="$structtracktion__engine_1_1WarpTimeEffect.html" title=" " alt="" coords="540,593,745,635"/>
+<area shape="rect" id="node20" href="$classtracktion__engine_1_1AirWindowsPlugin.html" title=" " alt="" coords="535,659,751,700"/>
+<area shape="rect" id="node21" href="$classtracktion__engine_1_1AuxReturnPlugin.html" title=" " alt="" coords="539,724,746,765"/>
+<area shape="rect" id="node22" href="$classtracktion__engine_1_1AuxSendPlugin.html" title=" " alt="" coords="545,789,741,831"/>
+<area shape="rect" id="node23" href="$classtracktion__engine_1_1ChorusPlugin.html" title=" " alt="" coords="551,855,735,896"/>
+<area shape="rect" id="node24" href="$classtracktion__engine_1_1CompressorPlugin.html" title=" " alt="" coords="534,920,751,961"/>
+<area shape="rect" id="node25" href="$classtracktion__engine_1_1DelayPlugin.html" title=" " alt="" coords="534,986,751,1013"/>
+<area shape="rect" id="node26" href="$classtracktion__engine_1_1EqualiserPlugin.html" title=" " alt="" coords="543,1037,742,1079"/>
+<area shape="rect" id="node27" href="$classtracktion__engine_1_1ExternalPlugin.html" title=" " alt="" coords="546,1103,739,1144"/>
+<area shape="rect" id="node28" href="$classtracktion__engine_1_1FourOscPlugin.html" title=" " alt="" coords="547,1168,738,1209"/>
+<area shape="rect" id="node29" href="$classtracktion__engine_1_1FreezePointPlugin.html" title=" " alt="" coords="551,1233,734,1275"/>
+<area shape="rect" id="node30" href="$classtracktion__engine_1_1InsertPlugin.html" title=" " alt="" coords="555,1299,731,1340"/>
+<area shape="rect" id="node31" href="$classtracktion__engine_1_1LatencyPlugin.html" title="A test plugin that introduces latency to the incomming signal." alt="" coords="547,1364,738,1405"/>
+<area shape="rect" id="node32" href="$classtracktion__engine_1_1LevelMeterPlugin.html" title=" " alt="" coords="537,1429,749,1471"/>
+<area shape="rect" id="node33" href="$classtracktion__engine_1_1LowPassPlugin.html" title=" " alt="" coords="545,1495,740,1536"/>
+<area shape="rect" id="node34" href="$classtracktion__engine_1_1MidiModifierPlugin.html" title=" " alt="" coords="533,1560,753,1601"/>
+<area shape="rect" id="node35" href="$classtracktion__engine_1_1MidiPatchBayPlugin.html" title=" " alt="" coords="541,1625,744,1667"/>
+<area shape="rect" id="node36" href="$classtracktion__engine_1_1PatchBayPlugin.html" title=" " alt="" coords="543,1691,742,1732"/>
+<area shape="rect" id="node37" href="$classtracktion__engine_1_1PhaserPlugin.html" title=" " alt="" coords="551,1756,734,1797"/>
+<area shape="rect" id="node38" href="$classtracktion__engine_1_1PitchShiftPlugin.html" title=" " alt="" coords="543,1821,743,1863"/>
+<area shape="rect" id="node39" href="$classtracktion__engine_1_1RackInstance.html" title=" " alt="" coords="529,1887,756,1914"/>
+<area shape="rect" id="node40" href="$classtracktion__engine_1_1ReverbPlugin.html" title=" " alt="" coords="550,1939,735,1980"/>
+<area shape="rect" id="node41" href="$classtracktion__engine_1_1SamplerPlugin.html" title=" " alt="" coords="546,2004,739,2045"/>
+<area shape="rect" id="node42" href="$classtracktion__engine_1_1TextPlugin.html" title=" " alt="" coords="539,2070,746,2097"/>
+<area shape="rect" id="node43" href="$classtracktion__engine_1_1ToneGeneratorPlugin.html" title=" " alt="" coords="525,2121,760,2163"/>
+<area shape="rect" id="node44" href="$classtracktion__engine_1_1VCAPlugin.html" title="The VCA plugin sits on a folder track to control the overall level of all the volume/pan plugins in i..." alt="" coords="539,2187,746,2214"/>
+<area shape="rect" id="node45" href="$classtracktion__engine_1_1VolumeAndPanPlugin.html" title="The built&#45;in Tracktion volume/pan plugin." alt="" coords="549,2239,737,2280"/>
 </map>
