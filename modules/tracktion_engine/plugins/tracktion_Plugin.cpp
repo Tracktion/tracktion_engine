@@ -1180,6 +1180,22 @@ RackInstance* Plugin::wrapSelectedPluginsInRack (SelectionManager& selectionMana
     return {};
 }
 
+void Plugin::sortPlugins (Plugin::Array& plugins)
+{
+    if (auto first = plugins.getFirst())
+    {
+        PluginList list (first->edit);
+        list.initialise (first->state.getParent());
+
+        std::sort (plugins.begin(), plugins.end(),
+                   [&list] (Plugin* a, Plugin* b)
+                   {
+                       jassert (a != nullptr && b != nullptr);
+                       return list.indexOf (a) < list.indexOf (b);
+                   });
+    }
+}
+
 void Plugin::sortPlugins (std::vector<Plugin*>& plugins)
 {
     if (plugins.size() == 0 || plugins[0] == nullptr)

@@ -324,6 +324,7 @@ public:
     //==============================================================================
     static bool areSelectedPluginsRackable (SelectionManager&);
     static RackInstance* wrapSelectedPluginsInRack (SelectionManager&);
+    static void sortPlugins (Plugin::Array&);
     static void sortPlugins (std::vector<Plugin*>&);
 
     //==============================================================================
