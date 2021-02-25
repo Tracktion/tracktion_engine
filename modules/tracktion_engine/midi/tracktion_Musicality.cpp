@@ -967,7 +967,7 @@ Scale PatternGenerator::getScaleAtBeat (double beat) const
     {
         if (scaleRoot == scaleRootGlobalTrack)
         {
-            auto t = clip.getTimeOfContentBeat (beat);
+            auto t = clip.getTimeOfContentBeat (beat) + 0.0001;
             scale = Scale (clip.edit.pitchSequence.getPitchAt (t).getScale());
         }
         else
@@ -977,7 +977,7 @@ Scale PatternGenerator::getScaleAtBeat (double beat) const
     }
     else if (mode == Mode::off || scaleRoot == scaleRootChordTrack)
     {
-        auto t = clip.getTimeOfContentBeat (beat);
+        auto t = clip.getTimeOfContentBeat (beat) + 0.0001;
 
         if (auto cc = getChordClipAt (t))
         {
@@ -989,7 +989,7 @@ Scale PatternGenerator::getScaleAtBeat (double beat) const
     }
     else if (scaleRoot == scaleRootGlobalTrack)
     {
-        const double t = clip.getTimeOfContentBeat (beat);
+        const double t = clip.getTimeOfContentBeat (beat) + 0.0001;
         scale = Scale (clip.edit.pitchSequence.getPitchAt (t).getScale());
     }
     else
@@ -1012,7 +1012,7 @@ int PatternGenerator::getNoteAtBeat (double beat) const
 
     if (mode == Mode::off || scaleRoot == scaleRootChordTrack)
     {
-        auto t = clip.getTimeOfContentBeat (beat);
+        auto t = clip.getTimeOfContentBeat (beat) + 0.0001;
 
         if (auto cc = getChordClipAt (t))
         {
@@ -1198,7 +1198,7 @@ PatternGenerator::NoteType PatternGenerator::getTypeForNote (const MidiClip& mc,
         {
             const double len = item->lengthInBeats;
 
-            if (note.getBeatPosition() >= curBeat && note.getBeatPosition() < curBeat + len)
+            if (note.getBeatPosition() + 0.0001 >= curBeat && note.getBeatPosition() + 0.0001 < curBeat + len)
             {
                 if (item->getChord (s).isValid())
                 {
