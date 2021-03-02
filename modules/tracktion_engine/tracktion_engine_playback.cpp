@@ -67,6 +67,11 @@ extern "C"
  #include "playback/graph/tracktion_TracktionNodePlayer.h"
  #include "playback/graph/tracktion_MultiThreadedNodePlayer.h"
 
+ #include "playback/graph/tracktion_TrackMutingNode.h"
+
+ #include "playback/graph/tracktion_AuxSendNode.h"
+ #include "playback/graph/tracktion_AuxSendNode.cpp"
+
  #include "playback/graph/tracktion_ClickNode.h"
  #include "playback/graph/tracktion_ClickNode.cpp"
 
@@ -105,7 +110,6 @@ extern "C"
  #include "playback/graph/tracktion_WaveNode.h"
  #include "playback/graph/tracktion_WaveNode.cpp"
 
- #include "playback/graph/tracktion_TrackMutingNode.h"
  #include "playback/graph/tracktion_PlayHeadPositionNode.h"
  #include "playback/graph/tracktion_ModifierNode.h"
  #include "playback/graph/tracktion_RackInstanceNode.h"

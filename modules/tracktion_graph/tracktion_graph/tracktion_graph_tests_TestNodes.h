@@ -390,7 +390,7 @@ private:
 
 //==============================================================================
 //==============================================================================
-class SendNode final    : public Node
+class SendNode  : public Node
 {
 public:
     SendNode (std::unique_ptr<Node> inputNode, int busIDToUse,

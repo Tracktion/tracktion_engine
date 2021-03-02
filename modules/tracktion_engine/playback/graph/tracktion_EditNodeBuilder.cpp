@@ -703,16 +703,8 @@ std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList& list
         else if (auto sendPlugin = dynamic_cast<AuxSendPlugin*> (p))
         {
             if (sendPlugin->isEnabled())
-                node = makeNode<SendNode> (std::move (node), sendPlugin->busNumber,
-                                           [sendPlugin, trackMuteState]
-                                           {
-                                               if (trackMuteState
-                                                   && ! trackMuteState->shouldTrackBeAudible()
-                                                   && ! trackMuteState->shouldTrackContentsBeProcessed())
-                                                  return 0.0f;
-
-                                               return volumeFaderPositionToGain (sendPlugin->gain->getCurrentValue());
-                                           });
+                node = makeNode<AuxSendNode> (std::move (node), sendPlugin->busNumber, *sendPlugin,
+                                              playHeadState, trackMuteState);
         }
         else if (auto returnPlugin = dynamic_cast<AuxReturnPlugin*> (p))
         {
