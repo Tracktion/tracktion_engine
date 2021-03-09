@@ -105,6 +105,7 @@ public:
     void setTargetTrack (AudioTrack&, int index, bool moveToTrack);
     void removeTargetTrack (AudioTrack&);
     void removeTargetTrack (AudioTrack&, int index);
+    void removeTargetTrack (EditItemID, int index);
     void clearFromTracks();
     bool isAttachedToTrack() const;
 
