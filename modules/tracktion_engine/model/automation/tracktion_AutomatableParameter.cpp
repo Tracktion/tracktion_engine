@@ -812,6 +812,7 @@ void AutomatableParameter::valueTreePropertyChanged (juce::ValueTree& v, const j
     else if (attachedValue != nullptr && attachedValue->updateIfMatches (v, i))
     {
         SCOPED_REALTIME_CHECK
+        attachedValue->updateParameterFromValue();
         listeners.call (&Listener::currentValueChanged, *this, currentValue);
     }
 }
@@ -1044,6 +1045,12 @@ void AutomatableParameter::setParameter (float value, juce::NotificationType nt)
     {
         jassert (nt != juce::sendNotificationAsync); // Async notifications not yet supported
         listeners.call (&Listener::parameterChanged, *this, currentValue);
+
+        if (attachedValue != nullptr)
+        {
+            // Updates the ValueTree via the CachedValue to the current parameter value synchronously
+            attachedValue->handleAsyncUpdate();
+        }
     }
 }
 
