@@ -109,7 +109,7 @@ private:
     }
 
     /** Has two tracks, one with a sin clip and aux send which is muted, one with an
-        aux return which is unmuted. The second track should be audible even though
+        aux return which is unmuted. The second track should not be audible because
         the aux source is muted.
     */
     void runAuxSend (test_utilities::TestSetup ts,
@@ -160,8 +160,8 @@ private:
                 playHeadState.playHead.playSyncedToRange ({});
                 auto result = testContext.processAll();
                 
-                expectAudioBuffer (*this, result->buffer, 0, 1.0f, 0.707f);
-                expectAudioBuffer (*this, result->buffer, 1, 1.0f, 0.707f);
+                expectAudioBuffer (*this, result->buffer, 0, 0.0f, 0.0f);
+                expectAudioBuffer (*this, result->buffer, 1, 0.0f, 0.0f);
             }
         }
     }
