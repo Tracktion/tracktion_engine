@@ -941,7 +941,7 @@ void EditPlaybackContext::fillNextNodeBlock (float** allChannels, int numChannel
             }
             else
             {
-                auto masterPosition = tracktion_graph::sampleToTime (nodeContextToSyncTo->playhead.getPosition(), sampleRate);
+                auto masterPosition = tracktion_graph::sampleToTime (nodeContextToSyncTo->getNodePlayHead()->getPosition(), sampleRate);
                 auto masterOffset = std::fmod (masterPosition - previousBarTime, syncInterval);
                 auto editTime = tracktion_graph::sampleToTime (nodePlaybackContext->playHead.getPosition(), sampleRate);
 
