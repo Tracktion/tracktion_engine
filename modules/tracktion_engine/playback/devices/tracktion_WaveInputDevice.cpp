@@ -304,7 +304,7 @@ public:
         return Result::ok();
     }
 
-    String prepareToRecord (double playStart, double punchIn, double sr, int blockSizeSamples, bool isLivePunch) override
+    String prepareToRecord (double playStart, double punchIn, double sr, int /*blockSizeSamples*/, bool isLivePunch) override
     {
         CRASH_TRACER
 
@@ -351,13 +351,6 @@ public:
 
                #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
                 rc->adjustSamples += context.getLatencySamples();
-                
-                // TODO: Still not quite sure why the adjustment needs to be a block less with
-                // the tracktion_graph engine, this may need correcting in the future
-                if (context.getNodePlayHead() != nullptr)
-                    rc->adjustSamples -= blockSizeSamples;
-               #else
-                juce::ignoreUnused (blockSizeSamples);
                #endif
 
                 if (! isLivePunch)
