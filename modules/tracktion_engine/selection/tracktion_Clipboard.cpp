@@ -849,13 +849,21 @@ bool Clipboard::Tracks::pasteIntoEdit (const EditPastingOptions& options) const
 {
     CRASH_TRACER
 
-    if (options.selectionManager != nullptr)
-        options.selectionManager->deselectAll();
-
     Array<Track::Ptr> newTracks;
     std::map<EditItemID, EditItemID> remappedIDs;
 
     auto targetTrack = options.startTrack;
+
+    // When pasting tracks, always paste after the selected group of tracks if the target is
+    // withing the selection
+    auto allTracks = getAllTracks (options.edit);
+    if (options.selectionManager != nullptr && options.selectionManager->isSelected (targetTrack.get()))
+        for (auto t : options.selectionManager->getItemsOfType<Track>())
+            if (allTracks.indexOf (t) > allTracks.indexOf (targetTrack.get()))
+                targetTrack = t;
+
+    if (options.selectionManager != nullptr)
+        options.selectionManager->deselectAll();
 
     for (auto& trackState : tracks)
     {
