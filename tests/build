@@ -70,11 +70,12 @@ function buildExample()
     if [[ "$PLATFORM" == "linux" ]]; then
         BINARY_NAME="$PROJECT_NAME"
         APP_NAME=$BINARY_NAME
-        APP_DIR="${CMAKE_BUILD_DIR}/${PROJECT_NAME}_artefacts"
+        APP_DIR="${CMAKE_BUILD_DIR}/${PROJECT_NAME}_artefacts/Release"
         APP_FILE=$APP_DIR/$BINARY_NAME
         APP_BINARY="$APP_FILE"
 
         CMAKE_GENERATOR="Unix Makefiles"
+        CMAKE_PLATFORM_ARGS="-DCMAKE_BUILD_TYPE=Release"
     elif [[ "$PLATFORM" == "mac" ]]; then
         BINARY_NAME="$PROJECT_NAME"
         APP_NAME=$BINARY_NAME
