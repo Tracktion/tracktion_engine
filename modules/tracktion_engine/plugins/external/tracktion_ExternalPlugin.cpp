@@ -1490,6 +1490,18 @@ String ExternalPlugin::getProgramName (int index)
     return {};
 }
 
+bool ExternalPlugin::hasNameForMidiNoteNumber (int note, int midiChannel, juce::String& name)
+{
+    ignoreUnused (note, midiChannel, name);
+   #if TRACKTION_JUCE
+    if (takesMidiInput())
+        if (pluginInstance != nullptr)
+            return pluginInstance->hasNameForMidiNoteNumber (note, midiChannel, name);
+   #endif
+
+    return false;
+}
+
 bool ExternalPlugin::hasNameForMidiProgram (int programNum, int bank, String& name)
 {
     if (takesMidiInput() && isSynth() && getNumPrograms() > 0)

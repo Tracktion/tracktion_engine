@@ -100,6 +100,7 @@ public:
     void setCurrentProgram (int index, bool sendChangeMessage);
     void setCurrentProgramName (const juce::String& name);
     bool hasNameForMidiProgram (int programNum, int bank, juce::String& name) override;
+    bool hasNameForMidiNoteNumber (int note, int midiChannel, juce::String& name) override;
 
     //==============================================================================
     const VSTXML* getVSTXML() const noexcept        { return vstXML.get(); }
