@@ -93,7 +93,19 @@ struct MacroParameterList::List : public ValueTreeObjectList<MacroParameter>
 
     ReferenceCountedArray<MacroParameter> getMacroParameters() const
     {
-        return macroParameters;
+        ReferenceCountedArray<MacroParameter> params;
+        
+        // This is verbose but directly returning macroParameters causes a
+        // crash in optomised gcc Linux builds, could be a compiler bug
+        {
+            const ScopedLock sl (macroParameters.getLock());
+            params.ensureStorageAllocated (macroParameters.size());
+            
+            for (auto& p : macroParameters)
+                params.add (p);
+        }
+        
+        return params;
     }
 
     MacroParameterList& macroParameterList;
