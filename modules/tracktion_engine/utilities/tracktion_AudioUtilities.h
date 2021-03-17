@@ -48,12 +48,6 @@ inline void yieldGUIThread() noexcept
 }
 
 //==============================================================================
-/** Creates a juce::AudioBuffer from a choc::buffer::BufferView. */
-inline juce::AudioBuffer<float> toAudioBuffer (choc::buffer::ChannelArrayView<float> view)
-{
-    return juce::AudioBuffer<float> (view.data.channels, (int) view.getNumChannels(), (int) view.getNumFrames());
-}
-
 /** Converts a juce::AudioBuffer<SampleType> to a choc::buffer::BufferView. */
 template<typename SampleType>
 inline choc::buffer::BufferView<SampleType, choc::buffer::SeparateChannelLayout> toBufferView (juce::AudioBuffer<SampleType>& buffer)

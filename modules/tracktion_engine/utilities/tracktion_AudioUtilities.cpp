@@ -545,4 +545,92 @@ void AudioScratchBuffer::initialise()
 }
 
 
+//==============================================================================
+//==============================================================================
+#if TRACKTION_UNIT_TESTS
+
+class PanLawTests : public UnitTest
+{
+public:
+    PanLawTests() : UnitTest ("PanLaw", "Tracktion") {}
+
+    //==============================================================================
+    void runTest() override
+    {
+        // N.B. Linear pan boosts L/R signals when panned (up to +6dB)
+        // Equal power modes are 0dB hard L/R
+
+        beginTest ("Linear");
+        {
+            testPanLaw (PanLawLinear, 0.0f, 0.0f, 0.0f, 0.0f);  // Zero
+            testPanLaw (PanLawLinear, 1.0f, 0.0f, 1.0f, 1.0f);  // Unity
+            testPanLaw (PanLawLinear, 1.0f, -1.0f, 2.0f, 0.0f); // Hard left
+            testPanLaw (PanLawLinear, 1.0f, 1.0f, 0.0f, 2.0f);  // Hard right
+
+            testPanLaw (PanLawLinear, 0.5f, 0.0f, 0.5f, 0.5f);  // Centre -6dB
+            testPanLaw (PanLawLinear, 0.5f, -1.0f, 1.0f, 0.0f); // Hard left -6dB
+            testPanLaw (PanLawLinear, 0.5f, 1.0f, 0.0f, 1.0f);  // Hard right -6dB
+
+            testPanLaw (PanLawLinear, 1.0f, -0.5f, 1.5f, 0.5f); // 1/2 left
+            testPanLaw (PanLawLinear, 1.0f, 0.5f, 0.5f, 1.5f);  // 1 right
+        }
+        
+        beginTest ("-2.5dB");
+        {
+            const auto centreGain = juce::Decibels::decibelsToGain (-2.5f);
+            testPanLaw (PanLaw2point5dBCenter, 0.0f, 0.0f, 0.0f, 0.0f);                 // Zero
+            testPanLaw (PanLaw2point5dBCenter, 1.0f, 0.0f, centreGain, centreGain);     // Unity
+            testPanLaw (PanLaw2point5dBCenter, 1.0f, -1.0f, 1.0f, 0.0f);                // Hard left
+            testPanLaw (PanLaw2point5dBCenter, 1.0f, 1.0f, 0.0f, 1.0f);                 // Hard right
+        }
+
+        beginTest ("-3dB");
+        {
+            const auto centreGain = juce::Decibels::decibelsToGain (-3.0f);
+            testPanLaw (PanLaw3dBCenter, 0.0f, 0.0f, 0.0f, 0.0f);                 // Zero
+            testPanLaw (PanLaw3dBCenter, 1.0f, 0.0f, centreGain, centreGain);     // Unity
+            testPanLaw (PanLaw3dBCenter, 1.0f, -1.0f, 1.0f, 0.0f);                // Hard left
+            testPanLaw (PanLaw3dBCenter, 1.0f, 1.0f, 0.0f, 1.0f);                 // Hard right
+        }
+
+        beginTest ("-4.5dB");
+        {
+            const auto centreGain = juce::Decibels::decibelsToGain (-4.5f);
+            testPanLaw (PanLaw4point5dBCenter, 0.0f, 0.0f, 0.0f, 0.0f);             // Zero
+            testPanLaw (PanLaw4point5dBCenter, 1.0f, 0.0f, centreGain, centreGain); // Unity
+            testPanLaw (PanLaw4point5dBCenter, 1.0f, -1.0f, 1.0f, 0.0f);            // Hard left
+            testPanLaw (PanLaw4point5dBCenter, 1.0f, 1.0f, 0.0f, 1.0f);             // Hard right
+        }
+
+        beginTest ("-6dB");
+        {
+            const auto centreGain = juce::Decibels::decibelsToGain (-6.0f);
+            testPanLaw (PanLaw6dBCenter, 0.0f, 0.0f, 0.0f, 0.0f);               // Zero
+            testPanLaw (PanLaw6dBCenter, 1.0f, 0.0f, centreGain, centreGain);   // Unity
+            testPanLaw (PanLaw6dBCenter, 1.0f, -1.0f, 1.0f, 0.0f);              // Hard left
+            testPanLaw (PanLaw6dBCenter, 1.0f, 1.0f, 0.0f, 1.0f);               // Hard right
+        }
+    }
+
+private:
+    void testPanLaw (PanLaw pl, float gain, float pan,
+                     float expectedLeftGain, float expectedRightGain)
+    {
+        expectGreaterOrEqual (gain, 0.0f);
+        expectGreaterOrEqual (pan, -1.0f);
+        expectLessOrEqual (pan, 1.0f);
+        
+        float leftGain = 0.0;
+        float rightGain = 0.0;
+        getGainsFromVolumeFaderPositionAndPan (gainToVolumeFaderPosition (gain), pan, pl,
+                                               leftGain, rightGain);
+        expectWithinAbsoluteError (leftGain, expectedLeftGain, 0.01f);
+        expectWithinAbsoluteError (rightGain, expectedRightGain, 0.01f);
+    }
+};
+
+static PanLawTests panLawTests;
+
+#endif // TRACKTION_UNIT_TESTS
+
 }
