@@ -60,6 +60,7 @@ bool FadeInOutNode::isReadyToProcess()
 void FadeInOutNode::process (ProcessContext& pc)
 {
     const auto timelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.referenceSampleRange).timelineRange1;
+    jassert (timelineRange.isEmpty() || timelineRange.getLength() == pc.referenceSampleRange.getLength());
     
     auto sourceBuffers = input->getProcessedOutput();
     auto destAudioBlock = pc.buffers.audio;
@@ -102,7 +103,7 @@ void FadeInOutNode::process (ProcessContext& pc)
 
         if (timelineRange.getEnd() >= fadeInSampleRange.getEnd())
         {
-            endSamp = int (timelineRange.getEnd() - fadeInSampleRange.getEnd());
+            endSamp = int (fadeInSampleRange.getEnd() - timelineRange.getStart());
             alpha2 = 1.0;
         }
         else
@@ -113,9 +114,11 @@ void FadeInOutNode::process (ProcessContext& pc)
 
         if (endSamp > startSamp)
         {
+            const int numFadeInSamples = endSamp - startSamp;
+            jassert (numFadeInSamples <= (int) fadeInSampleRange.getLength());
             auto buffer = tracktion_graph::toAudioBuffer (destAudioBlock);
             AudioFadeCurve::applyCrossfadeSection (buffer,
-                                                   startSamp, endSamp - startSamp,
+                                                   startSamp, numFadeInSamples,
                                                    fadeInType,
                                                    (float) alpha1,
                                                    (float) alpha2);
