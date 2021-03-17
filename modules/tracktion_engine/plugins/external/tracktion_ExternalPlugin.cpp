@@ -691,17 +691,17 @@ std::unique_ptr<PluginDescription> ExternalPlugin::findDescForFileOrID (const St
     return {};
 }
 
-static std::unique_ptr<PluginDescription> findDescForName (Engine& engine, const String& name)
+static std::unique_ptr<PluginDescription> findDescForName (Engine& engine, const String& name, const String& format)
 {
     if (name.isEmpty())
         return {};
 
     auto& pm = engine.getPluginManager();
 
-    auto findName = [&pm] (const String& nameToFind) -> std::unique_ptr<PluginDescription>
+    auto findName = [&pm, format] (const String& nameToFind) -> std::unique_ptr<PluginDescription>
     {
         for (auto d : pm.knownPluginList.getTypes())
-            if (d.name == nameToFind)
+            if (d.name == nameToFind && d.pluginFormatName == format)
                 return std::make_unique<PluginDescription> (d);
 
         return {};
@@ -744,7 +744,16 @@ std::unique_ptr<PluginDescription> ExternalPlugin::findMatchingPlugin() const
     if (auto p = findDescForUID (desc.uid))
         return p;
 
-    if (auto p = findDescForName (engine, desc.name))
+    auto getPreferredFormat = [] (juce::PluginDescription d)
+    {
+        auto file = d.fileOrIdentifier.toLowerCase();
+        if (file.endsWith (".vst3"))                            return "VST3";
+        if (file.endsWith (".vst") || file.endsWith (".dll"))   return "VST";
+        if (file.startsWith ("audiounit:"))                     return "AudioUnit";
+        return "";
+    };
+
+    if (auto p = findDescForName (engine, desc.name, getPreferredFormat (desc)))
         return p;
 
     for (auto d : pm.knownPluginList.getTypes())
