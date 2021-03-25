@@ -32,19 +32,6 @@ struct TracktionThumbnail::MinMaxValue
     {
         values[0] = (juce::int8) juce::jlimit (-128, 127, juce::roundToInt (newMin * 127.0f));
         values[1] = (juce::int8) juce::jlimit (-128, 127, juce::roundToInt (newMax * 127.0f));
-
-        if (values[0] == values[1])
-        {
-            if (values[1] == 127)
-                values[0]--;
-            else
-                values[1]++;
-        }
-    }
-
-    inline bool isNonZero() const noexcept
-    {
-        return values[1] > values[0];
     }
 
     inline int getPeak() const noexcept
@@ -378,7 +365,6 @@ public:
                 if (useHighRes)
                 {
                     float lastY = std::max (midY - cacheData->getMaxValue() * vscale - 0.3f, topY);
-                    bool drewLast = true;
 
                     juce::Path p;
                     p.preallocateSpace (clip.getWidth() * 2 * 2 + 3);
@@ -388,25 +374,12 @@ public:
 
                     for (int w = clip.getWidth() - 1; --w >= 0;)
                     {
-                        if (cacheData->isNonZero())
-                        {
-                            auto top = std::max (midY - cacheData->getMaxValue() * vscale - 0.3f, topY);
+                        auto top = juce::jlimit (topY, bottomY, midY - cacheData->getMaxValue() * vscale - 0.3f);
 
-                            if (top != lastY || w == 0)
-                            {
-                                if (! drewLast)
-                                    p.lineTo (x - 1.0f, lastY);
+                        p.lineTo (x - 1.0f, lastY);
+                        p.lineTo (x, top);
 
-                                p.lineTo (x, top);
-                                drewLast = true;
-                            }
-                            else
-                            {
-                                drewLast = false;
-                            }
-
-                            lastY = top;
-                        }
+                        lastY = top;
 
                         x += 1.0f;
                         ++cacheData;
@@ -417,25 +390,12 @@ public:
                         x -= 1.0f;
                         --cacheData;
 
-                        if (cacheData->isNonZero())
-                        {
-                            auto bottom = std::min (midY - cacheData->getMinValue() * vscale + 0.3f, bottomY);
+                        auto bottom = juce::jlimit (topY, bottomY, midY - cacheData->getMinValue() * vscale + 0.3f);
 
-                            if (bottom != lastY || w == clip.getWidth())
-                            {
-                                if (! drewLast)
-                                    p.lineTo (x + 1, lastY);
+                        p.lineTo (x + 1, lastY);
+                        p.lineTo (x, bottom);
 
-                                p.lineTo (x, bottom);
-                                drewLast = true;
-                            }
-                            else
-                            {
-                                drewLast = false;
-                            }
-
-                            lastY = bottom;
-                        }
+                        lastY = bottom;
                     }
 
                     p.closeSubPath();
@@ -448,13 +408,10 @@ public:
 
                     for (int w = clip.getWidth(); --w >= 0;)
                     {
-                        if (cacheData->isNonZero())
-                        {
-                            auto top    = std::max (midY - cacheData->getMaxValue() * vscale - 0.3f, topY);
-                            auto bottom = std::min (midY - cacheData->getMinValue() * vscale + 0.3f, bottomY);
+                        auto top    = std::max (midY - cacheData->getMaxValue() * vscale - 0.3f, topY);
+                        auto bottom = std::min (midY - cacheData->getMinValue() * vscale + 0.3f, bottomY);
 
-                            waveform.addWithoutMerging ({ x, top, 1.0f, bottom - top });
-                        }
+                        waveform.addWithoutMerging ({ x, top, 1.0f, bottom - top });
 
                         x += 1.0f;
                         ++cacheData;
