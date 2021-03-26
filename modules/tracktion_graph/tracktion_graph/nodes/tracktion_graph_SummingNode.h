@@ -29,11 +29,14 @@ public:
     {
         for (auto& ownedNode : ownedNodes)
             nodes.push_back (ownedNode.get());
+
+        assert (std::find (nodes.begin(), nodes.end(), nullptr) == nodes.end());
     }
 
     SummingNode (std::vector<Node*> inputs)
         : nodes (std::move (inputs))
     {
+        assert (std::find (nodes.begin(), nodes.end(), nullptr) == nodes.end());
     }
     
     SummingNode (std::vector<std::unique_ptr<Node>> ownedInputs,
@@ -41,6 +44,7 @@ public:
         : SummingNode (std::move (ownedInputs))
     {
         nodes.insert (nodes.begin(), referencedInputs.begin(), referencedInputs.end());
+        assert (std::find (nodes.begin(), nodes.end(), nullptr) == nodes.end());
     }
 
     //==============================================================================
