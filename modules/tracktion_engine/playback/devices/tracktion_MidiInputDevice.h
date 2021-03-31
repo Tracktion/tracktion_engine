@@ -98,7 +98,7 @@ public:
             virtual ~Listener() {}
 
             /** Callback to indicate notes have been played for the given track. */
-            virtual void midiKeyStateChanged (AudioTrack*, const juce::Array<int>& notes, const juce::Array<int>& vels) = 0;
+            virtual void midiKeyStateChanged (AudioTrack*, const juce::Array<int>& notesOn, const juce::Array<int>& vels, const juce::Array<int>& notesOff) = 0;
         };
 
         juce::ListenerList<Listener> listeners;
@@ -121,7 +121,7 @@ protected:
     int bankToUse = 0;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
 
-    bool keysDown[128];
+    bool keysDown[128], keysUp[128];
     juce::uint8 keyDownVelocities[128];
     juce::SharedResourcePointer<MidiKeyChangeDispatcher> midiKeyChangeDispatcher;
 

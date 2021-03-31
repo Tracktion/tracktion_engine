@@ -191,6 +191,7 @@ MidiInputDevice::MidiInputDevice (Engine& e, const String& type, const String& n
 
     endToEndEnabled = true;
     zeromem (keysDown, sizeof (keysDown));
+    zeromem (keysUp, sizeof (keysUp));
     zeromem (keyDownVelocities, sizeof (keyDownVelocities));
 
     keyboardState.addListener (this);
@@ -443,29 +444,41 @@ void MidiInputDevice::sendNoteOnToMidiKeyListeners (MidiMessage& message)
 
         startTimer (50);
     }
+    else if (message.isNoteOff())
+    {
+        const int noteNum = message.getNoteNumber();
+
+        keysUp[noteNum] = true;
+        startTimer (50);
+    }
 }
 
 void MidiInputDevice::timerCallback()
 {
     stopTimer();
 
+    Array<int> down, vels, up;
+
+    for (int i = 0; i < 128; ++i)
+    {
+        if (keysDown[i])
+        {
+            down.add (i);
+            vels.add (keyDownVelocities[i]);
+        }
+        else if (keysUp[i])
+        {
+            up.add (i);
+        }
+    }
+
+    zeromem (keysDown, sizeof (keysDown));
+    zeromem (keysUp, sizeof (keysUp));
+    zeromem (keyDownVelocities, sizeof (keyDownVelocities));
+
     for (auto t : getDestinationTracks())
     {
-        Array<int> keys, vels;
-
-        for (int i = 0; i < 128; ++i)
-        {
-            if (keysDown[i])
-            {
-                keys.add (i);
-                vels.add (keyDownVelocities[i]);
-            }
-        }
-
-        zeromem (keysDown, sizeof (keysDown));
-        zeromem (keyDownVelocities, sizeof (keyDownVelocities));
-
-        midiKeyChangeDispatcher->listeners.call (&MidiKeyChangeDispatcher::Listener::midiKeyStateChanged, t, keys, vels);
+        midiKeyChangeDispatcher->listeners.call (&MidiKeyChangeDispatcher::Listener::midiKeyStateChanged, t, down, vels, up);
     }
 }
 
