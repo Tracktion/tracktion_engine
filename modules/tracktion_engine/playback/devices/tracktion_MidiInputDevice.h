@@ -121,6 +121,7 @@ protected:
     int bankToUse = 0;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
 
+    juce::CriticalSection noteLock;
     bool keysDown[128], keysUp[128];
     juce::uint8 keyDownVelocities[128];
     juce::SharedResourcePointer<MidiKeyChangeDispatcher> midiKeyChangeDispatcher;

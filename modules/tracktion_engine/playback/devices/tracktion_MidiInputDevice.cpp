@@ -439,8 +439,11 @@ void MidiInputDevice::sendNoteOnToMidiKeyListeners (MidiMessage& message)
 
         const int noteNum = message.getNoteNumber();
 
-        keysDown[noteNum] = true;
-        keyDownVelocities[noteNum] = message.getVelocity();
+        {
+            juce::ScopedLock sl (noteLock);
+            keysDown[noteNum] = true;
+            keyDownVelocities[noteNum] = message.getVelocity();
+        }
 
         startTimer (50);
     }
@@ -448,8 +451,12 @@ void MidiInputDevice::sendNoteOnToMidiKeyListeners (MidiMessage& message)
     {
         const int noteNum = message.getNoteNumber();
 
-        keysUp[noteNum] = true;
-        startTimer (50);
+        {
+            juce::ScopedLock sl (noteLock);
+            keysUp[noteNum] = true;
+        }
+
+        startTimer (25);
     }
 }
 
@@ -459,27 +466,37 @@ void MidiInputDevice::timerCallback()
 
     Array<int> down, vels, up;
 
+    bool keysDownCopy[128], keysUpCopy[128];
+    juce::uint8 keyDownVelocitiesCopy[128];
+
+    {
+        juce::ScopedLock sl (noteLock);
+
+        memcpy (keysUpCopy, keysUp, sizeof (keysUp));
+        memcpy (keysDownCopy, keysDown, sizeof (keysDown));
+        memcpy (keyDownVelocitiesCopy, keyDownVelocities, sizeof (keyDownVelocities));
+
+        zeromem (keysDown, sizeof (keysDown));
+        zeromem (keysUp, sizeof (keysUp));
+        zeromem (keyDownVelocities, sizeof (keyDownVelocities));
+    }
+
     for (int i = 0; i < 128; ++i)
     {
-        if (keysDown[i])
+        if (keysDownCopy[i])
         {
             down.add (i);
-            vels.add (keyDownVelocities[i]);
+            vels.add (keyDownVelocitiesCopy[i]);
         }
-        else if (keysUp[i])
+        if (keysUpCopy[i])
         {
             up.add (i);
         }
     }
 
-    zeromem (keysDown, sizeof (keysDown));
-    zeromem (keysUp, sizeof (keysUp));
-    zeromem (keyDownVelocities, sizeof (keyDownVelocities));
-
-    for (auto t : getDestinationTracks())
-    {
-        midiKeyChangeDispatcher->listeners.call (&MidiKeyChangeDispatcher::Listener::midiKeyStateChanged, t, down, vels, up);
-    }
+    if (down.size() > 0 || up.size() > 0)
+        for (auto t : getDestinationTracks())
+            midiKeyChangeDispatcher->listeners.call (&MidiKeyChangeDispatcher::Listener::midiKeyStateChanged, t, down, vels, up);
 }
 
 //==============================================================================
