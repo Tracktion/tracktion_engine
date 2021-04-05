@@ -83,8 +83,6 @@ target_link_libraries(ConsoleAppExample
     PRIVATE
         # ConsoleAppData            # If you'd created a binary data target, you'd link to it here
         juce::juce_core
-        juce::tracktion_engine
-        juce::tracktion_graph
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_warning_flags)

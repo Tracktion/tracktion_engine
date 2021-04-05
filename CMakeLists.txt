@@ -1,6 +1,6 @@
 include_guard()
 
-cmake_minimum_required(3.17...3.20)
+cmake_minimum_required(3.15...3.20)
 
 project(
         tracktion_engine
@@ -11,7 +11,7 @@ project(
         HOMEPAGE_URL "https://github.com/Tracktion/tracktion_engine"
 )
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/modules)
+add_subdirectory(modules)
 
 if (JUCE_BUILD_EXAMPLES)
     add_subdirectory(examples)
