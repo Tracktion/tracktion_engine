@@ -1,6 +1,8 @@
 #pragma once
 
 #include <juce_audio_processors/juce_audio_processors.h>
+#include <tracktion_engine/tracktion_engine.h>
+#include <tracktion_graph/tracktion_graph.h>
 
 //==============================================================================
 class AudioPluginAudioProcessor  : public juce::AudioProcessor
