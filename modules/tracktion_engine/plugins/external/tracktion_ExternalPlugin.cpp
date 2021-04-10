@@ -33,7 +33,7 @@ struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorLis
     {
     }
 
-    void audioProcessorChanged (AudioProcessor* ap) override
+    void audioProcessorChanged (AudioProcessor* ap, const ChangeDetails& details) override
     {
         if (plugin.edit.isLoading())
             return;
