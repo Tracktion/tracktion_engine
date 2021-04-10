@@ -11,13 +11,18 @@
 namespace tracktion_engine
 {
 
+// JUCE Changed the format of PluginDescription::createIdentifierString
+// breaking all our saved files. This reverts to the old format
+juce::String createIdentifierString (const juce::PluginDescription&);
+
+
 class ExternalPlugin  : public Plugin
 {
 public:
     ExternalPlugin (PluginCreationInfo);
     ~ExternalPlugin() override;
 
-    juce::String getIdentifierString() override { return desc.createIdentifierString(); }
+    juce::String getIdentifierString() override { return createIdentifierString (desc); }
 
     using Ptr = juce::ReferenceCountedObjectPtr<ExternalPlugin>;
 
@@ -77,7 +82,7 @@ public:
 
     //==============================================================================
     juce::File getFile() const;
-    juce::String getPluginUID() const           { return juce::String::toHexString (desc.uid); }
+    juce::String getPluginUID() const           { return juce::String::toHexString (desc.deprecatedUid); }
 
     const char* getDebugName() const noexcept   { return debugName.toUTF8(); }
 
@@ -163,7 +168,7 @@ private:
     void processPluginBlock (const PluginRenderContext&, bool processedBypass);
 
     std::unique_ptr<juce::PluginDescription> findMatchingPlugin() const;
-    std::unique_ptr<juce::PluginDescription> findDescForUID (int uid) const;
+    std::unique_ptr<juce::PluginDescription> findDescForUID (int uid, int deprecatedUid) const;
     std::unique_ptr<juce::PluginDescription> findDescForFileOrID (const juce::String&) const;
 
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;

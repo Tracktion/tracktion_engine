@@ -165,6 +165,7 @@ namespace IDs
     DECLARE_ID (x)
     DECLARE_ID (y)
     DECLARE_ID (uid)
+    DECLARE_ID (uniqueId)
     DECLARE_ID (filename)
     DECLARE_ID (enabled)
     DECLARE_ID (manufacturer)
