@@ -587,8 +587,19 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
         newClip = trackToUse->insertWaveClip (newClipName, projectItem->getID(), { insertPos, 0.0 }, false);
         if (auto ac = dynamic_cast<WaveAudioClip*> (newClip.get()))
         {
-            ac->setAutoTempo (allowAutoTempo);
-            ac->setAutoPitch (allowAutoPitch);
+            // We only want to enable auto tempo is the rendered clip has tempo information
+            // We can't rely on the LoopInfo to determine if tempo information is present or not,
+            // since if it is not present in the source file, then the WaveAudioClip will calculate a
+            // bpm for the clip based on it's length and edit bpm. So we need to go to the source file
+            // and check the metadata
+            AudioFile af (edit.engine, ac->getOriginalFile());
+            auto metadata = af.getInfo().metadata;
+            if (metadata[WavAudioFormat::acidBeats].getIntValue() > 0)
+                ac->setAutoTempo (allowAutoTempo);
+
+            // Only enable auto pitch, if we have pitch information
+            if (ac->getLoopInfo().getRootNote() != -1)
+                ac->setAutoPitch (allowAutoPitch);
         }
     }
 
