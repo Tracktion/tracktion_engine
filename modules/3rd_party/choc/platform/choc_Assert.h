@@ -16,50 +16,21 @@
 //   WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 //   CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef CHOC_SPINLOCK_HEADER_INCLUDED
-#define CHOC_SPINLOCK_HEADER_INCLUDED
+#ifndef CHOC_ASSERT_HEADER_INCLUDED
+#define CHOC_ASSERT_HEADER_INCLUDED
 
-#include <atomic>
-
-namespace choc::threading
-{
-
-//==============================================================================
-/**
-    A minimal no-frills spin-lock.
-
-    To use an RAII pattern for locking a SpinLock, it's compatible with the normal
-    std::lock_guard class.
-*/
-struct SpinLock
-{
-    SpinLock() = default;
-    ~SpinLock() = default;
-
-    void lock();
-    bool try_lock();
-    void unlock();
-
-private:
-    std::atomic_flag flag = ATOMIC_FLAG_INIT;
-};
-
-
-//==============================================================================
-//        _        _           _  _
-//     __| |  ___ | |_   __ _ (_)| | ___
-//    / _` | / _ \| __| / _` || || |/ __|
-//   | (_| ||  __/| |_ | (_| || || |\__ \ _  _  _
-//    \__,_| \___| \__| \__,_||_||_||___/(_)(_)(_)
-//
-//   Code beyond this point is implementation detail...
-//
-//==============================================================================
-
-inline void SpinLock::lock()     { while (flag.test_and_set (std::memory_order_acquire)) {} }
-inline bool SpinLock::try_lock() { return ! flag.test_and_set (std::memory_order_acquire); }
-inline void SpinLock::unlock()   { flag.clear(); }
-
-} // choc::fifo
-
+// If the project doesn't define a custom implementation for CHOC_ASSERT, the default
+// behaviour is just to call the normal system assert()
+#ifndef CHOC_ASSERT
+ #include <cassert>
+ #define CHOC_ASSERT(x)  assert(x);
 #endif
+
+// It's never a smart idea to include any C headers before your C++ ones, as they
+// often pollute your namespace with all kinds of dangerous macros like these ones.
+// This file is included by many of the choc headers, so is a convenient place to
+// undef these.
+#undef max
+#undef min
+
+#endif // CHOC_ASSERT_HEADER_INCLUDED

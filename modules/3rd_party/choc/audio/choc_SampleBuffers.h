@@ -1,33 +1,26 @@
-/*
-    ██████ ██   ██  ██████   ██████
-   ██      ██   ██ ██    ██ ██         Clean Header-Only Classes
-   ██      ███████ ██    ██ ██         Copyright (C)2020 Julian Storer
-   ██      ██   ██ ██    ██ ██
-    ██████ ██   ██  ██████   ██████
-
-   The code in this file is provided under the terms of the ISC license:
-
-   Permission to use, copy, modify, and/or distribute this software for any purpose with
-   or without fee is hereby granted, provided that the above copyright notice and this
-   permission notice appear in all copies.
-
-   THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO
-   THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
-   SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR
-   ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF
-   CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
-   OR PERFORMANCE OF THIS SOFTWARE.
-*/
+//
+//    ██████ ██   ██  ██████   ██████
+//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ███████ ██    ██ ██
+//   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
+//    ██████ ██   ██  ██████   ██████
+//
+//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//
+//   Permission to use, copy, modify, and/or distribute this software for any purpose with or
+//   without fee is hereby granted, provided that the above copyright notice and this permission
+//   notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
+//   WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+//   AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+//   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+//   WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+//   CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #ifndef CHOC_SAMPLE_BUFFERS_HEADER_INCLUDED
 #define CHOC_SAMPLE_BUFFERS_HEADER_INCLUDED
 
 #include <memory>
-#include <cassert>
-
-#ifndef CHOC_ASSERT
- #define CHOC_ASSERT(x)  assert(x);
-#endif
+#include "../platform/choc_Assert.h"
 
 /**
     A collection of classes for creating views and buffers to operate on multichannel sample data.
@@ -826,6 +819,16 @@ static void copyIntersectionAndClearOutside (DestBuffer&& dest, const SourceBuff
 
     if (overlap.numChannels < dstSize.numChannels)
         dest.getChannelRange ({ overlap.numChannels, dstSize.numChannels }).clear();
+}
+
+template <typename DestBuffer, typename SourceBuffer>
+static void addIntersection (DestBuffer&& dest, const SourceBuffer& source)
+{
+    auto overlap = dest.getSize().getIntersection (source.getSize());
+
+    if (! overlap.isEmpty())
+        add (dest.getSection (overlap.getChannelRange(), overlap.getFrameRange()),
+             source.getSection (overlap.getChannelRange(), overlap.getFrameRange()));
 }
 
 template <typename BufferType, typename GainType>

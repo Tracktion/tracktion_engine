@@ -1,25 +1,20 @@
-/*
-    ██████ ██   ██  ██████   ██████
-   ██      ██   ██ ██    ██ ██         Clean Header-Only Classes
-   ██      ███████ ██    ██ ██         Copyright (C)2020 Julian Storer
-   ██      ██   ██ ██    ██ ██
-    ██████ ██   ██  ██████   ██████    https://github.com/julianstorer/choc
-
-   This file is part of the CHOC C++ collection - see the github page to find out more.
-
-   The code in this file is provided under the terms of the ISC license:
-
-   Permission to use, copy, modify, and/or distribute this software for any purpose with
-   or without fee is hereby granted, provided that the above copyright notice and this
-   permission notice appear in all copies.
-
-   THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO
-   THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
-   SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR
-   ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF
-   CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
-   OR PERFORMANCE OF THIS SOFTWARE.
-*/
+//
+//    ██████ ██   ██  ██████   ██████
+//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ███████ ██    ██ ██
+//   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
+//    ██████ ██   ██  ██████   ██████
+//
+//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//
+//   Permission to use, copy, modify, and/or distribute this software for any purpose with or
+//   without fee is hereby granted, provided that the above copyright notice and this permission
+//   notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
+//   WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+//   AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+//   CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+//   WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+//   CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #ifndef CHOC_STRING_UTILS_HEADER_INCLUDED
 #define CHOC_STRING_UTILS_HEADER_INCLUDED
@@ -27,55 +22,54 @@
 #include <string>
 #include <vector>
 #include <cmath>
-#include <assert.h>
-
-#ifndef CHOC_ASSERT
- #define CHOC_ASSERT(x)  assert(x);
-#endif
+#include <chrono>
+#include <memory>
+#include <algorithm>
+#include "../platform/choc_Assert.h"
 
 namespace choc::text
 {
 
 //==============================================================================
 inline bool isWhitespace (char c)                               { return c == ' ' || (c <= 13 && c >= 9); }
+inline bool isDigit (char c)                                    { return static_cast<uint32_t> (c - '0') < 10; }
 
-/** Replaces all occurrences of a one or more substrings.
-    The arguments must be a sequence of pairs of strings, where the first of each pair is the string to
-    look for, followed by its replacement.
-*/
+/// Replaces all occurrences of a one or more substrings.
+/// The arguments must be a sequence of pairs of strings, where the first of each pair is the string to
+/// look for, followed by its replacement.
 template <typename StringType, typename... OtherReplacements>
 std::string replace (StringType textToSearch,
                      std::string_view firstSubstringToReplace, std::string_view firstReplacement,
                      OtherReplacements&&... otherPairsOfStringsToReplace);
 
-/** Returns a string with any whitespace trimmed from its start and end. */
+/// Returns a string with any whitespace trimmed from its start and end.
 std::string trim (std::string textToTrim);
 
-/** Returns a string with any whitespace trimmed from its start and end. */
+/// Returns a string with any whitespace trimmed from its start and end.
 std::string_view trim (std::string_view textToTrim);
 
-/** Returns a string with any whitespace trimmed from its start and end. */
+/// Returns a string with any whitespace trimmed from its start and end.
 std::string_view trim (const char* textToTrim);
 
-/** Returns a string with any whitespace trimmed from its start. */
+/// Returns a string with any whitespace trimmed from its start.
 std::string trimStart (std::string textToTrim);
 
-/** Returns a string with any whitespace trimmed from its start. */
+/// Returns a string with any whitespace trimmed from its start.
 std::string_view trimStart (std::string_view textToTrim);
 
-/** Returns a string with any whitespace trimmed from its start. */
+/// Returns a string with any whitespace trimmed from its start.
 std::string_view trimStart (const char* textToTrim);
 
-/** Returns a string with any whitespace trimmed from its end. */
+/// Returns a string with any whitespace trimmed from its end.
 std::string trimEnd (std::string textToTrim);
 
-/** Returns a string with any whitespace trimmed from its end. */
+/// Returns a string with any whitespace trimmed from its end.
 std::string_view trimEnd (std::string_view textToTrim);
 
-/** Returns a string with any whitespace trimmed from its end. */
+/// Returns a string with any whitespace trimmed from its end.
 std::string_view trimEnd (const char* textToTrim);
 
-/** If the given character is at the start and end of the string, it trims it away. */
+/// If the given character is at the start and end of the string, it trims it away.
 std::string removeOuterCharacter (std::string text, char outerChar);
 
 inline std::string removeDoubleQuotes (std::string text)       { return removeOuterCharacter (std::move (text), '"'); }
@@ -83,6 +77,9 @@ inline std::string removeSingleQuotes (std::string text)       { return removeOu
 
 inline std::string addDoubleQuotes (std::string text)          { return "\"" + std::move (text) + "\""; }
 inline std::string addSingleQuotes (std::string text)          { return "'" + std::move (text) + "'"; }
+
+std::string toLowerCase (std::string);
+std::string toUpperCase (std::string);
 
 template <typename IsDelimiterChar>
 std::vector<std::string> splitString (std::string_view textToSplit,
@@ -101,23 +98,45 @@ std::vector<std::string> splitString (std::string_view textToSplit,
 
 std::vector<std::string> splitAtWhitespace (std::string_view text, bool keepDelimiters = false);
 
-/** Splits a string at newline characters, returning an array of strings. */
+/// Splits a string at newline characters, returning an array of strings.
 std::vector<std::string> splitIntoLines (std::string_view text, bool includeNewLinesInResult);
 
-/** Calculates the Levenstein distance between two strings. */
+/// Joins some kind of array of strings into a single string, adding the given separator
+/// between them (but not adding it at the start or end)
+template <typename ArrayOfStrings>
+std::string joinStrings (const ArrayOfStrings& strings, std::string_view separator);
+
+/// Returns true if this text contains the given sub-string.
+bool contains (std::string_view text, std::string_view possibleSubstring);
+/// Returns true if this text starts with the given character.
+bool startsWith (std::string_view text, char possibleStart);
+/// Returns true if this text starts with the given sub-string.
+bool startsWith (std::string_view text, std::string_view possibleStart);
+/// Returns true if this text ends with the given sub-string.
+bool endsWith (std::string_view text, char possibleEnd);
+/// Returns true if this text ends with the given sub-string.
+bool endsWith (std::string_view text, std::string_view possibleEnd);
+
+/// Calculates the Levenstein distance between two strings.
 template <typename StringType>
 size_t getLevenshteinDistance (const StringType& string1,
                                const StringType& string2);
 
-/** Converts a hex character to a number 0-15, or -1 if it's not a valid hex digit. */
+/// Converts a hex character to a number 0-15, or -1 if it's not a valid hex digit.
 int hexDigitToInt (uint32_t unicodeChar);
 
-/** Returns a hex string for the given value.
-    If the minimum number of digits is non-zero, it will be zero-padded to fill this length;
-*/
+/// Returns a hex string for the given value.
+/// If the minimum number of digits is non-zero, it will be zero-padded to fill this length;
 template <typename IntegerType>
 std::string createHexString (IntegerType value, int minNumDigits = 0);
 
+/// Returns a truncated, easy-to-read version of a time as hours, seconds or milliseconds,
+/// depending on its magnitude. The use-cases include things like logging or console app output.
+std::string getDurationDescription (std::chrono::duration<double, std::micro>);
+
+/// Returns an easy-to-read description of a size in bytes. Depending on the magnitude,
+/// it might choose different units such as GB, MB, KB or just bytes.
+std::string getByteSizeDescription (uint64_t sizeInBytes);
 
 
 //==============================================================================
@@ -271,6 +290,18 @@ inline std::string removeOuterCharacter (std::string t, char outerChar)
     return t;
 }
 
+inline std::string toLowerCase (std::string s)
+{
+    std::transform (s.begin(), s.end(), s.begin(), [] (auto c) { return std::tolower (c); });
+    return s;
+}
+
+inline std::string toUpperCase (std::string s)
+{
+    std::transform (s.begin(), s.end(), s.begin(), [] (auto c) { return std::toupper (c); });
+    return s;
+}
+
 template <typename CharStartsDelimiter, typename CharIsInDelimiterBody>
 std::vector<std::string> splitString (std::string_view source,
                                       CharStartsDelimiter&& isDelimiterStart,
@@ -351,6 +382,102 @@ inline std::vector<std::string> splitIntoLines (std::string_view text, bool incl
     return splitString (text, '\n', includeNewLinesInResult);
 }
 
+template <typename ArrayOfStrings>
+inline std::string joinStrings (const ArrayOfStrings& strings, std::string_view sep)
+{
+    if (strings.empty())
+        return {};
+
+    auto spaceNeeded = sep.length() * strings.size();
+
+    for (auto& s : strings)
+        spaceNeeded += s.length();
+
+    std::string result (strings.front());
+    result.reserve (spaceNeeded);
+
+    for (size_t i = 1; i < strings.size(); ++i)
+    {
+        result += sep;
+        result += strings[i];
+    }
+
+    return result;
+}
+
+inline bool contains   (std::string_view t, std::string_view s)   { return t.find (s) != std::string::npos; }
+inline bool startsWith (std::string_view t, char s)               { return ! t.empty() && t.front() == s; }
+inline bool endsWith   (std::string_view t, char s)               { return ! t.empty() && t.back()  == s; }
+
+inline bool startsWith (std::string_view t, std::string_view s)
+{
+    auto len = s.length();
+    return t.length() >= len && t.substr (0, len) == s;
+}
+
+inline bool endsWith (std::string_view t, std::string_view s)
+{
+    auto len1 = t.length(), len2 = s.length();
+    return len1 >= len2 && t.substr (len1 - len2) == s;
+}
+
+inline std::string getDurationDescription (std::chrono::duration<double, std::micro> d)
+{
+    auto microseconds = std::chrono::duration_cast<std::chrono::microseconds> (d).count();
+
+    if (microseconds < 0)    return "-" + getDurationDescription (-d);
+    if (microseconds == 0)   return "0 sec";
+
+    std::string result;
+
+    auto addLevel = [&] (int64_t size, std::string_view units, int64_t decimalScale, int64_t modulo) -> bool
+    {
+        if (microseconds < size)
+            return false;
+
+        if (! result.empty())
+            result += ' ';
+
+        auto scaled = (microseconds * decimalScale + size / 2) / size;
+        auto whole = scaled / decimalScale;
+
+        if (modulo != 0)
+            whole = whole % modulo;
+
+        result += std::to_string (whole);
+
+        if (auto fraction = scaled % decimalScale)
+        {
+            result += '.';
+            result += static_cast<char> ('0' + (fraction / 10));
+
+            if (fraction % 10 != 0)
+                result += static_cast<char> ('0' + (fraction % 10));
+        }
+
+        result += (whole == 1 && units.length() > 3 && units.back() == 's') ? units.substr (0, units.length() - 1) : units;
+        return true;
+    };
+
+    bool hours = addLevel (60000000ll * 60ll, " hours", 1, 0);
+    bool mins  = addLevel (60000000ll,        " min", 1, hours ? 60 : 0);
+
+    if (hours)
+        return result;
+
+    if (mins)
+    {
+        addLevel (1000000, " sec", 1, 60);
+    }
+    else
+    {
+        if (! addLevel (1000000,   " sec", 100, 0))
+            if (! addLevel (1000,  " ms", 100, 0))
+                addLevel (1,       " microseconds", 100, 0);
+    }
+
+    return result;
+}
 
 template <typename StringType>
 size_t getLevenshteinDistance (const StringType& string1, const StringType& string2)
@@ -398,6 +525,31 @@ size_t getLevenshteinDistance (const StringType& string1, const StringType& stri
     return calculate (costs.get(), sizeNeeded, string1, string2);
 }
 
+inline std::string getByteSizeDescription (uint64_t size)
+{
+    auto intToStringWith1DecPlace = [] (uint64_t n, uint64_t divisor) -> std::string
+    {
+        auto scaled = (n * 10 + divisor / 2) / divisor;
+        auto result = std::to_string (scaled / 10);
+
+        if (auto fraction = scaled % 10)
+        {
+            result += '.';
+            result += static_cast<char> ('0' + fraction);
+        }
+
+        return result;
+    };
+
+    static constexpr uint64_t maxValue = std::numeric_limits<uint64_t>::max() / 10;
+
+    if (size >= 0x40000000)  return intToStringWith1DecPlace (std::min (maxValue, size), 0x40000000) + " GB";
+    if (size >= 0x100000)    return intToStringWith1DecPlace (size, 0x100000) + " MB";
+    if (size >= 0x400)       return intToStringWith1DecPlace (size, 0x400)    + " KB";
+    if (size != 1)           return std::to_string (size) + " bytes";
+
+    return "1 byte";
+}
 
 } // namespace choc::text
 
