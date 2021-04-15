@@ -374,20 +374,19 @@ inline const uint8_t* Message::data() const  { return reinterpret_cast<const uin
 
 inline uint8_t Message::operator[] (size_t i) const { CHOC_ASSERT (i < content.length()); return static_cast<uint8_t> (content[i]); }
 
+static constexpr char sysexStartByte = -16; // 0xf0
+static constexpr char metaEventStartByte = -1;  // 0xff
 inline bool Message::isShortMessage() const
 {
-    auto len = content.length();
-
-    if (len == 0 || len > 3)
-        return false;
-
-    auto firstByte = content[0];
-    return firstByte != (char) 0xff && firstByte != (char) 0xf0;
+	auto len = content.length();
+	if (len == 0 || len > 3)
+		return false;
+	auto firstByte = content[0];
+	return firstByte != sysexStartByte && firstByte != metaEventStartByte;
 }
-
-inline bool Message::isSysex() const                         { return content.length() > 1 && content[0] == (char) 0xf0; }
-inline bool Message::isMetaEvent() const                     { return content.length() > 2 && content[0] == (char) 0xff; }
-inline bool Message::isMetaEventOfType (uint8_t type) const  { return content.length() > 2 && content[1] == (char) type && content[0] == (char) 0xff; }
+inline bool Message::isSysex() const { return content.length() > 1 && content[0] == sysexStartByte; }
+inline bool Message::isMetaEvent() const { return content.length() > 2 && content[0] == metaEventStartByte; }
+inline bool Message::isMetaEventOfType(uint8_t type) const { return content.length() > 2 && content[1] == (char)type && content[0] == metaEventStartByte; }
 
 inline ShortMessage Message::getShortMessage() const
 {
