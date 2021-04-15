@@ -20,7 +20,7 @@
 #define CHOC_UTF8_HEADER_INCLUDED
 
 #include <cstddef>
-#include "../platform/choc_Assert.h"
+#include "choc_StringUtilities.h"
 
 namespace choc::text
 {
@@ -395,8 +395,6 @@ inline UTF8Pointer UTF8Pointer::find (const char* textToFind) const
     for (auto t = *this;; ++t)
         if (t.startsWith (textToFind) || t.empty())
             return t;
-
-    return {};
 }
 
 inline bool UTF8Pointer::skipIfStartsWith (char charToMatch)
@@ -444,7 +442,7 @@ inline UTF8Pointer UTF8Pointer::findStartOfLine (UTF8Pointer start) const
         return {};
 
     auto l = *this;
-    CHOC_ASSERT (l.text >= start.text && start.text != nullptr)
+    CHOC_ASSERT (l.text >= start.text && start.text != nullptr);
 
     while (l.text > start.text)
     {
@@ -460,7 +458,7 @@ inline UTF8Pointer UTF8Pointer::findStartOfLine (UTF8Pointer start) const
     return l;
 }
 
-UTF8Pointer UTF8Pointer::findEndOfLine() const
+inline UTF8Pointer UTF8Pointer::findEndOfLine() const
 {
     if (text == nullptr)
         return {};

@@ -175,7 +175,7 @@ inline bool VariableSizeFIFO::push (const void* sourceData, uint32_t numBytes)
             if (bytesNeeded >= readPos) // check whether there'll be enough space after padding
                 return false;
 
-            std::fill (dest, dest + headerSize, 0); // header of 0 = skip to the end
+            std::memset (dest, 0, headerSize); // header of 0 = skip to the end
             dest = buffer.data();
             destOffset = 0;
         }

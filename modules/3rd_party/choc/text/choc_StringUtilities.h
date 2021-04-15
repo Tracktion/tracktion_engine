@@ -25,7 +25,6 @@
 #include <chrono>
 #include <memory>
 #include <algorithm>
-#include <cctype>
 #include "../platform/choc_Assert.h"
 
 namespace choc::text
@@ -293,13 +292,13 @@ inline std::string removeOuterCharacter (std::string t, char outerChar)
 
 inline std::string toLowerCase (std::string s)
 {
-    std::transform (s.begin(), s.end(), s.begin(), [] (unsigned char c) { return static_cast<char> (std::tolower (c)); });
+    std::transform (s.begin(), s.end(), s.begin(), [] (auto c) { return static_cast<char> (std::tolower (static_cast<unsigned char> (c))); });
     return s;
 }
 
 inline std::string toUpperCase (std::string s)
 {
-    std::transform (s.begin(), s.end(), s.begin(), [] (unsigned char c) { return static_cast<char> (std::toupper (c)); });
+    std::transform (s.begin(), s.end(), s.begin(), [] (auto c) { return static_cast<char> (std::toupper (static_cast<unsigned char> (c))); });
     return s;
 }
 
