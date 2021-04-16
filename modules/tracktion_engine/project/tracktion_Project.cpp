@@ -463,6 +463,23 @@ ProjectItem::Ptr Project::getProjectItemAt (int i)
     return {};
 }
 
+juce::Array<ProjectItem::Ptr> Project::getAllProjectItems()
+{
+    Array<ProjectItem::Ptr> dest;
+
+    const ScopedLock sl (objectLock);
+
+    for (auto& o : objects)
+    {
+        if (o.item == nullptr)
+            loadProjectItem (o);
+        
+        dest.add (o.item);
+    }
+
+    return dest;
+}
+
 ProjectItem::Ptr Project::getProjectItemForID (ProjectItemID targetId)
 {
     const ScopedLock sl (objectLock);
