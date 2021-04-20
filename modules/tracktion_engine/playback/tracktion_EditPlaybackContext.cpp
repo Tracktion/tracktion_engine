@@ -29,6 +29,8 @@ namespace tracktion_engine
      
      void setNode (std::unique_ptr<Node> node, double sampleRate, int blockSize)
      {
+         jassert (sampleRate > 0.0);
+         jassert (blockSize > 0);
          blockSize = juce::roundToInt (blockSize * (1.0 + (10.0 * 0.01))); // max speed comp
          player.setNode (std::move (node), sampleRate, blockSize);
          
@@ -539,6 +541,13 @@ void EditPlaybackContext::createNode()
     CreateNodeParams cnp { nodePlaybackContext->processState };
     cnp.sampleRate = dm.getSampleRate();
     cnp.blockSize = dm.getBlockSize();
+    
+    if (cnp.sampleRate <= 0.0 || cnp.blockSize <= 0)
+    {
+        clearNodes();
+        return;
+    }
+    
     cnp.includeBypassedPlugins = ! edit.engine.getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph();
     auto editNode = createNodeForEdit (*this, audiblePlaybackTime, cnp);
 
