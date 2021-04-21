@@ -137,13 +137,14 @@ private:
     bool hasSynced = false;
     double lastStreamPos = 0;
     
+    struct ContextSyncroniser;
+    std::unique_ptr<ContextSyncroniser> contextSyncroniser;
+    
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     struct NodePlaybackContext;
     std::unique_ptr<NodePlaybackContext> nodePlaybackContext;
 
     juce::WeakReference<EditPlaybackContext> nodeContextToSyncTo;
-    bool nodeHasSynced = false;
-    int64_t lastTimelinePos = 0;
     std::atomic<double> audiblePlaybackTime { 0.0 };
 
     void createNode();
