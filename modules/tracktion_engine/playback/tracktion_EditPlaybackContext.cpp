@@ -89,7 +89,7 @@ private:
             auto newTimelineTime = sourceDurationSinceLastBarStart - syncInterval;
 
             // If the next bar is too far away, start playing now
-            if (destIsLooping && newTimelineTime < -0.6)
+            if (destIsLooping && newTimelineTime < -syncInterval)
                 newTimelineTime = sourceDurationSinceLastBarStart;
 
             newTimelineTime = std::fmod (newTimelineTime, destLoopDuration);
@@ -111,9 +111,9 @@ private:
             }
             else
             {
-                // This +0.5 is here to prevent rounding errors causing the playhead to jump back by a sync interval each loop iteration
+                // This +0.1 is here to prevent rounding errors causing the playhead to jump back by a sync interval each loop iteration
                 const auto sourceDurationSinceLastBarStart = std::fmod (sourceTimelineTime - previousBarTime, syncInterval);
-                auto newTimelineTime = std::floor ((destTimelineTime + 0.5) / syncInterval) * syncInterval + sourceDurationSinceLastBarStart;
+                auto newTimelineTime = std::floor ((destTimelineTime + 0.1) / syncInterval) * syncInterval + sourceDurationSinceLastBarStart;
                 newTimelineTime = std::fmod (newTimelineTime, destLoopDuration);
 
                 return { SyncAction::rollInToLoop, newTimelineTime };
@@ -1048,7 +1048,7 @@ void EditPlaybackContext::fillNextNodeBlock (float** allChannels, int numChannel
     nodePlaybackContext->updateReferenceSampleRange (numSamples);
     
     // Sync this playback context with a master context
-    if (nodeContextToSyncTo && nodePlaybackContext->playHead.isPlaying())
+    if (nodeContextToSyncTo && nodePlaybackContext->playHead.isPlaying() && nodeContextToSyncTo->getNodePlayHead() != nullptr)
     {
         jassert (contextSyncroniser);
         jassert (nodeContextToSyncTo->getNodePlayHead() != nullptr);
