@@ -1713,7 +1713,7 @@ struct AggregateJob  : public RenderManager::Job
                 afm.releaseFile (currentJob->destination);
                
                 if (! currentJob->destination.isNull())
-                    callBlocking ([&afm, &hasValidated, fileToValidate = currentJob->destination]()
+                    callBlocking ([&afm, fileToValidate = currentJob->destination]
                                   {
                                       afm.validateFile (fileToValidate, true);
                                       jassert (fileToValidate.isValid());
