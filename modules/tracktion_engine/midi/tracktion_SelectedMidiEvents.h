@@ -51,7 +51,7 @@ public:
     const juce::Array<MidiControllerEvent*>& getSelectedControllers() const noexcept    { return selectedControllers; }
 
     //==============================================================================
-    void moveNotes (double deltaStart, double deltaLength, int deltaNote);
+    void moveEvents (double deltaStart, double deltaLength, int deltaNote);
     void setNoteLengths (double newLength);
     void setVelocities (int newVelocity);
     void changeColour (juce::uint8 newColour);
@@ -67,6 +67,17 @@ public:
     const juce::Array<MidiClip*>& getClips()                                            { return clips; }
 
     void setClips (juce::Array<MidiClip*> clips);
+
+    /** Moves all controller data in 'clips' between edit times. Optionally moves the data making
+        a copy at the original location
+     */
+    static void moveControllerData (const juce::Array<MidiClip*>& clips, const juce::Array<MidiControllerEvent*>* onlyTheseEvents,
+                                    double deltaBeats, double startTime, double endTime, bool makeCopy);
+
+    /** Host should set this callback to specify if it wants MIDI CC locked to MIDI notes when
+        nudging
+     */
+    std::function<bool()> shouldLockControllerToNotes;
 
 private:
     juce::Array<MidiClip*> clips;
