@@ -33,6 +33,7 @@ struct EditPlaybackContext::ContextSyncroniser
     };
     
     //==============================================================================
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     SyncAndPosition getSyncAction (tracktion_graph::PlayHead& sourcePlayHead, tracktion_graph::PlayHead& destPlayHead,
                                    double sampleRate)
     {
@@ -58,6 +59,7 @@ struct EditPlaybackContext::ContextSyncroniser
         return getSyncAction (sourcePlayHead.getPosition(), sourcePlayHead.isPlaying(), sourcePlayHead.getLastUserInteractionTime(),
                               destPlayHead.getPosition(), destPlayHead.isLooping(), destPlayHead.getLoopTimes().getLength());
     }
+   #endif
     
     void reset (double previousBarTime_, double syncInterval_)
     {
