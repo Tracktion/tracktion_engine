@@ -146,28 +146,30 @@ public:
         juce::Range<float> valueRange;
     };
 
-    struct MIDINotes  : public ContentType
+    struct MIDIEvents  : public ContentType
     {
-        MIDINotes();
-        ~MIDINotes() override;
+        MIDIEvents();
+        ~MIDIEvents() override;
 
-        juce::Array<MidiNote*> pasteIntoClip (MidiClip&, const juce::Array<MidiNote*>& selectedNotes,
-                                              double cursorPosition, const std::function<double(double)>& snapBeat) const;
+        std::pair<juce::Array<MidiNote*>, juce::Array<MidiControllerEvent*>> pasteIntoClip (MidiClip&,
+                                                                                            const juce::Array<MidiNote*>& selectedNotes,
+                                                                                            const juce::Array<MidiControllerEvent*>& selectedEvents,
+                                                                                            double cursorPosition, const std::function<double(double)>& snapBeat) const;
+
+
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
         std::vector<juce::ValueTree> notes;
-    };
+        std::vector<juce::ValueTree> controllers;
 
-    struct MIDIControllers  : public ContentType
-    {
-        MIDIControllers();
-        ~MIDIControllers() override;
+    private:
+        juce::Array<MidiNote*> pasteNotesIntoClip (MidiClip&, const juce::Array<MidiNote*>& selectedNotes,
+                                                   double cursorPosition, const std::function<double(double)>& snapBeat) const;
 
-        juce::Array<MidiControllerEvent*> pasteIntoClip (MidiClip&, const juce::Array<MidiControllerEvent*>& selectedEvents,
-                                                         double cursorPosition, const std::function<double(double)>& snapBeat) const;
-        bool pasteIntoEdit (const EditPastingOptions&) const override;
-
-        std::vector<juce::ValueTree> events;
+        juce::Array<MidiControllerEvent*> pasteControllersIntoClip (MidiClip& clip,
+                                                                    const juce::Array<MidiNote*>& selectedNotes,
+                                                                    const juce::Array<MidiControllerEvent*>& selectedEvents,
+                                                                    double cursorPosition, const std::function<double(double)>& snapBeat) const;
     };
 
     struct Pitches  : public ContentType
