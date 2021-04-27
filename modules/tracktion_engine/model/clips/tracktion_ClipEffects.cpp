@@ -1710,14 +1710,13 @@ struct AggregateJob  : public RenderManager::Job
                     return true;
 
                 auto& afm = engine.getAudioFileManager();
-
                 afm.releaseFile (currentJob->destination);
-
+               
                 if (! currentJob->destination.isNull())
-                    callBlocking ([this, &afm]()
+                    callBlocking ([&afm, &hasValidated, fileToValidate = currentJob->destination]()
                                   {
-                                      afm.validateFile (currentJob->destination, true);
-                                      jassert (currentJob->destination.isValid());
+                                      afm.validateFile (fileToValidate, true);
+                                      jassert (fileToValidate.isValid());
                                   });
 
                 lastFile = currentJob->destination.getFile();
