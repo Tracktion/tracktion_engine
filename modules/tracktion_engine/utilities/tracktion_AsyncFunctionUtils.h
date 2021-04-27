@@ -129,7 +129,7 @@ public:
     ~MessageThreadCallback() override       { cancelPendingUpdate(); }
 
     /** Returns true if the callback has completed. */
-    bool hasFinished() const noexcept       { return finished.get() != 0; }
+    bool hasFinished() const noexcept       { return finished; }
 
     /** Triggers the callback to happen on the message thread and blocks
         until it has returned or the thread signals it should exit.
@@ -149,6 +149,12 @@ public:
             while (! (job->shouldExit() || hasFinished()))
                 waiter.wait (50);
 
+            if (job->shouldExit())
+            {
+                hasBeenCancelled = true;
+                cancelPendingUpdate();
+            }
+            
             return;
         }
 
@@ -156,6 +162,12 @@ public:
         {
             while (! (thread->threadShouldExit() || hasFinished()))
                 waiter.wait (50);
+            
+            if (thread->threadShouldExit())
+            {
+                hasBeenCancelled = true;
+                cancelPendingUpdate();
+            }
 
             return;
         }
@@ -164,7 +176,7 @@ public:
         jassertfalse;
         waiter.wait (50);
 
-        if (finished.get() == 0)
+        if (! hasFinished())
         {
             jassertfalse;
             TRACKTION_LOG_ERROR ("triggerAndWaitForCallback() unable to complete");
@@ -174,16 +186,19 @@ public:
     virtual void performAction() = 0;
 
 private:
-    juce::Atomic<int> finished;
+    std::atomic<bool> finished { false }, hasBeenCancelled { false };
     juce::WaitableEvent waiter;
 
     void handleAsyncUpdate() override
     {
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
+        
+        if (hasBeenCancelled)
+            return;
 
         performAction();
-        finished.set (1);
+        finished = true;
         waiter.signal();
     }
 
@@ -193,18 +208,20 @@ private:
 //==============================================================================
 struct BlockingFunction  : public MessageThreadCallback
 {
-    BlockingFunction (std::function<void(void)> f)  : fn (f) {}
+    BlockingFunction (std::function<void()> f)  : fn (f) {}
 
 private:
-    std::function<void(void)> fn;
+    std::function<void()> fn;
     void performAction() override    { fn(); }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BlockingFunction)
 };
 
-inline void callBlocking (std::function<void(void)> f)
+inline bool callBlocking (std::function<void()> f)
 {
-    BlockingFunction (f).triggerAndWaitForCallback();
+    BlockingFunction bf (f);
+    bf.triggerAndWaitForCallback();
+    return bf.hasFinished();
 }
 
 } // namespace tracktion_engine
