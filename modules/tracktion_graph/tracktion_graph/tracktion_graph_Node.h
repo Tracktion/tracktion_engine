@@ -95,6 +95,7 @@ struct PlaybackInitialisationInfo
     int blockSize;
     Node& rootNode;
     Node* rootNodeToReplace = nullptr;
+    std::function<choc::buffer::ChannelArrayView<float> (choc::buffer::Size)> allocateAudioBuffer = nullptr;
 };
 
 /** Holds some really basic properties of a node */
@@ -245,7 +246,7 @@ private:
     std::atomic<bool> hasBeenProcessed { false };
     choc::buffer::Size audioBufferSize;
     choc::buffer::ChannelArrayBuffer<float> audioBuffer;
-    choc::buffer::ChannelArrayView<float> audioView;
+    choc::buffer::ChannelArrayView<float> audioView, allocatedView;
     tracktion_engine::MidiMessageArray midiBuffer;
     std::atomic<int> numSamplesProcessed { 0 };
     NodeOptimisations nodeOptimisations;
@@ -318,7 +319,9 @@ inline void Node::initialise (const PlaybackInitialisationInfo& info)
     audioBufferSize = choc::buffer::Size::create ((choc::buffer::ChannelCount) props.numberOfChannels,
                                                   (choc::buffer::FrameCount) info.blockSize);
     
-    if (nodeOptimisations.allocate == AllocateAudioBuffer::yes)
+    if (info.allocateAudioBuffer)
+        allocatedView = info.allocateAudioBuffer (audioBufferSize);
+    else if (nodeOptimisations.allocate == AllocateAudioBuffer::yes)
         audioBuffer.resize (audioBufferSize);
 }
 
@@ -348,10 +351,20 @@ inline void Node::process (juce::Range<int64_t> referenceSampleRange)
     auto numSamples = (int) referenceSampleRange.getLength();
     jassert (numSamples > 0); // This must be a valid number of samples to process
     jassert (numChannelsBeforeProcessing == 0 || numSamples <= (int) audioBuffer.getNumFrames());
-
-    audioView = ((nodeOptimisations.allocate == AllocateAudioBuffer::yes ? audioBuffer.getView()
-                                                                         : choc::buffer::ChannelArrayView<float> { {}, audioBufferSize }))
-                    .getStart ((choc::buffer::FrameCount) numSamples);
+    
+    if (allocatedView.getSize() == audioBufferSize)
+    {
+        // Use a pre-allocated view if one has been initialised
+        audioView = allocatedView;
+    }
+    else
+    {
+        // Fallback to the internal buffer or an empty view
+        audioView = ((nodeOptimisations.allocate == AllocateAudioBuffer::yes ? audioBuffer.getView()
+                                                                             : choc::buffer::ChannelArrayView<float> { {}, audioBufferSize }));
+    }
+    
+    audioView = audioView.getStart ((choc::buffer::FrameCount) numSamples);
 
     auto destAudioView = audioView;
     ProcessContext pc { referenceSampleRange, { destAudioView, midiBuffer } };

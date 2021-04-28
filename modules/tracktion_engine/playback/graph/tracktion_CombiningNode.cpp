@@ -46,8 +46,28 @@ struct CombiningNode::TimedNode
 
     void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
     {
+        // Allocate storage for Nodes
+        {
+            int numberOfChannels = 0;
+            
+            for (auto n : nodesToProcess)
+                numberOfChannels = std::max (numberOfChannels, n->getNodeProperties().numberOfChannels);
+
+            audioBuffer.resize (choc::buffer::Size::create ((choc::buffer::ChannelCount) numberOfChannels,
+                                                            (choc::buffer::FrameCount) info.blockSize));
+        }
+        
+        auto info2 = info;
+        info2.allocateAudioBuffer = [this] (choc::buffer::Size size)
+                                    {
+                                        jassert (audioBuffer.getNumFrames() == size.numFrames);
+                                        jassert (audioBuffer.getNumChannels() <= size.numChannels);
+                                        
+                                        return audioBuffer.getView().getFirstChannels (size.numChannels);
+                                    };
+        
         for (auto n : nodesToProcess)
-            n->initialise (info);
+            n->initialise (info2);
     }
     
     bool isReadyToProcess() const
@@ -63,6 +83,9 @@ struct CombiningNode::TimedNode
 
     void process (ProcessContext& pc) const
     {
+        // Clear the allocated storage
+        audioBuffer.clear();
+        
         // Process all the Nodes
         for (auto n : nodesToProcess)
             n->process (pc.referenceSampleRange);
@@ -81,7 +104,7 @@ struct CombiningNode::TimedNode
 
     size_t getAllocatedBytes() const
     {
-        size_t size = 0;
+        size_t size = audioBuffer.getView().data.getBytesNeeded (audioBuffer.getSize());
         
         for (auto n : nodesToProcess)
             size += n->getAllocatedBytes();
@@ -94,6 +117,7 @@ struct CombiningNode::TimedNode
 private:
     const std::unique_ptr<Node> node;
     std::vector<Node*> nodesToProcess;
+    choc::buffer::ChannelArrayBuffer<float> audioBuffer;
 
     JUCE_DECLARE_NON_COPYABLE (TimedNode)
 };
