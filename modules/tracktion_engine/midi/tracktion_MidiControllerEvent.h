@@ -19,7 +19,6 @@ public:
     static juce::ValueTree createControllerEvent (const MidiControllerEvent&, double beat);
 
     MidiControllerEvent (const juce::ValueTree&);
-    MidiControllerEvent (MidiControllerEvent&&) = default;
 
     //==============================================================================
     int getControllerValue() const noexcept                         { return value; }

@@ -158,18 +158,6 @@ public:
         std::vector<juce::ValueTree> notes;
     };
 
-    struct MIDIControllers  : public ContentType
-    {
-        MIDIControllers();
-        ~MIDIControllers() override;
-
-        juce::Array<MidiControllerEvent*> pasteIntoClip (MidiClip&, const juce::Array<MidiControllerEvent*>& selectedEvents,
-                                                         double cursorPosition, const std::function<double(double)>& snapBeat) const;
-        bool pasteIntoEdit (const EditPastingOptions&) const override;
-
-        std::vector<juce::ValueTree> events;
-    };
-
     struct Pitches  : public ContentType
     {
         Pitches();
