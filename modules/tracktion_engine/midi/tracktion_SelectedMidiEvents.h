@@ -36,9 +36,9 @@ public:
     void removeSelectedEvent (MidiNote*);
     void removeSelectedEvent (MidiSysexEvent*);
     void removeSelectedEvent (MidiControllerEvent*);
-    void setSelected (SelectionManager&, const juce::Array<MidiNote*>&, bool addToSelection, bool allowMixedSelection = false);
-    void setSelected (SelectionManager&, const juce::Array<MidiSysexEvent*>&, bool addToSelection, bool allowMixedSelection = false);
-    void setSelected (SelectionManager&, const juce::Array<MidiControllerEvent*>&, bool addToSelection, bool allowMixedSelection = false);
+    void setSelected (SelectionManager&, const juce::Array<MidiNote*>&, bool addToSelection);
+    void setSelected (SelectionManager&, const juce::Array<MidiSysexEvent*>&, bool addToSelection);
+    void setSelected (SelectionManager&, const juce::Array<MidiControllerEvent*>&, bool addToSelection);
     bool isSelected (const MidiNote*) const;
     bool isSelected (const MidiSysexEvent*) const;
     bool isSelected (const MidiControllerEvent*) const;

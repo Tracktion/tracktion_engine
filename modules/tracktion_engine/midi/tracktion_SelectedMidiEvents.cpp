@@ -198,7 +198,7 @@ void SelectedMidiEvents::removeSelectedEvent (MidiControllerEvent* controller)
         deselect();
 }
 
-void SelectedMidiEvents::setSelected (SelectionManager& sm, const juce::Array<MidiNote*>& notes, bool addToSelection, bool allowMixedSelection)
+void SelectedMidiEvents::setSelected (SelectionManager& sm, const juce::Array<MidiNote*>& notes, bool addToSelection)
 {
     if (! addToSelection)
         selectedNotes.clearQuick();
@@ -214,19 +214,25 @@ void SelectedMidiEvents::setSelected (SelectionManager& sm, const juce::Array<Mi
 
     sendSelectionChangedMessage (&sm);
 
-    if (selectedSysexes.size() > 0 && ! allowMixedSelection)
+    if (selectedSysexes.size() > 0)
+    {
         selectedSysexes.clearQuick();
+        deselect();
+    }
 
-    if (selectedControllers.size() > 0 && ! allowMixedSelection)
+    if (selectedControllers.size() > 0)
+    {
         selectedControllers.clearQuick();
+        deselect();
+    }
 
-    if (getNumSelected() > 0)
+    if (selectedNotes.size() > 0)
         sm.selectOnly (this);
     else
         deselect();
 }
 
-void SelectedMidiEvents::setSelected (SelectionManager& sm, const juce::Array<MidiSysexEvent*>& events, bool addToSelection, bool allowMixedSelection)
+void SelectedMidiEvents::setSelected (SelectionManager& sm, const juce::Array<MidiSysexEvent*>& events, bool addToSelection)
 {
     selectedNotes.clearQuick();
 
@@ -244,19 +250,25 @@ void SelectedMidiEvents::setSelected (SelectionManager& sm, const juce::Array<Mi
 
     sendSelectionChangedMessage (&sm);
 
-    if (selectedNotes.size() > 0 && ! allowMixedSelection)
+    if (selectedNotes.size() > 0)
+    {
         selectedNotes.clearQuick();
+        deselect();
+    }
 
-    if (selectedControllers.size() > 0 && ! allowMixedSelection)
+    if (selectedControllers.size() > 0)
+    {
         selectedControllers.clearQuick();
+        deselect();
+    }
 
-    if (getNumSelected() > 0)
+    if (selectedSysexes.size() > 0)
         sm.selectOnly (this);
     else
         deselect();
 }
 
-void SelectedMidiEvents::setSelected (SelectionManager& sm, const juce::Array<MidiControllerEvent*>& events, bool addToSelection, bool allowMixedSelection)
+void SelectedMidiEvents::setSelected (SelectionManager& sm, const juce::Array<MidiControllerEvent*>& events, bool addToSelection)
 {
     if (! addToSelection)
         selectedControllers.clearQuick();
@@ -272,13 +284,19 @@ void SelectedMidiEvents::setSelected (SelectionManager& sm, const juce::Array<Mi
 
     sendSelectionChangedMessage (&sm);
 
-    if (selectedNotes.size() > 0 && ! allowMixedSelection)
+    if (selectedNotes.size() > 0)
+    {
         selectedNotes.clearQuick();
+        deselect();
+    }
 
-    if (selectedSysexes.size() > 0 && ! allowMixedSelection)
+    if (selectedSysexes.size() > 0)
+    {
         selectedSysexes.clearQuick();
+        deselect();
+    }
 
-    if (getNumSelected() > 0)
+    if (selectedControllers.size() > 0)
         sm.selectOnly (this);
     else
         deselect();
