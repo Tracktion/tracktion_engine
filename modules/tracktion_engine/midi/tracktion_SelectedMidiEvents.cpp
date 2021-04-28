@@ -352,38 +352,20 @@ void SelectedMidiEvents::selectionStatusChanged (bool isNowSelected)
     }
 }
 
-void SelectedMidiEvents::moveEvents (double deltaStart, double deltaLength, int deltaNote)
+void SelectedMidiEvents::moveNotes (double deltaStart, double deltaLength, int deltaNote)
 {
     auto* undoManager = &getEdit().getUndoManager();
     auto notes = selectedNotes; // Use a copy in case any of them get deleted while moving
 
-    juce::Array<MidiClip*> uniqueClips;
-
-    double startTime = std::numeric_limits<double>::max();
-    double endTime   = std::numeric_limits<double>::lowest();
-
-    std::optional<double> deltaBeat;
-
-    for (auto note : notes)
+    for (auto* note : notes)
     {
-        if (auto clip = clipForEvent (note))
+        if (auto* clip = clipForEvent (note))
         {
             note->setNoteNumber (note->getNoteNumber() + deltaNote, undoManager);
-
-            if (shouldLockControllerToNotes && shouldLockControllerToNotes())
-            {
-                uniqueClips.addIfNotAlreadyThere (clip);
-
-                startTime = std::min (startTime, note->getEditStartTime (*clip));
-                endTime   = std::max (endTime, note->getEditEndTime (*clip));
-            }
 
             auto pos = note->getEditTimeRange (*clip);
             auto newStartBeat = clip->getContentBeatAtTime (pos.start + deltaStart) + clip->getLoopStartBeats();
             auto newEndBeat = clip->getContentBeatAtTime (pos.end + deltaStart + deltaLength) + clip->getLoopStartBeats();
-
-            if (! deltaBeat.has_value())
-                deltaBeat = newStartBeat - note->getBeatPosition();
 
             note->setStartAndLength (newStartBeat, newEndBeat - newStartBeat, undoManager);
         }
@@ -391,36 +373,19 @@ void SelectedMidiEvents::moveEvents (double deltaStart, double deltaLength, int 
 
     for (auto sysexEvent : selectedSysexes)
     {
-        if (auto clip = clipForEvent (sysexEvent))
+        if (auto* clip = clipForEvent (sysexEvent))
         {
             auto deltaTime = sysexEvent->getEditTime (*clip) + deltaStart;
             sysexEvent->setBeatPosition (clip->getContentBeatAtTime (deltaTime) + clip->getLoopStartBeats(), undoManager);
         }
     }
 
-    if (shouldLockControllerToNotes && shouldLockControllerToNotes() && notes.size() > 0)
+    for (auto controllerEvent : selectedControllers)
     {
-        moveControllerData (uniqueClips, nullptr, *deltaBeat, startTime, endTime, false);
-    }
-    else
-    {
-        for (auto controllerEvent : selectedControllers)
-        {
-            auto& clip = *clipForEvent (controllerEvent);
+        auto& clip = *clipForEvent (controllerEvent);
 
-            uniqueClips.addIfNotAlreadyThere (&clip);
-
-            startTime = std::min (startTime, controllerEvent->getEditTime (clip));
-            endTime   = std::max (endTime, controllerEvent->getEditTime (clip));
-
-            auto start = controllerEvent->getEditTime (clip);
-            auto newStartBeat = clip.getContentBeatAtTime (start + deltaStart) + clip.getLoopStartBeats();
-
-            if (! deltaBeat.has_value())
-                deltaBeat = newStartBeat - controllerEvent->getBeatPosition();
-        }
-
-        moveControllerData (uniqueClips, &selectedControllers, *deltaBeat, startTime, endTime, false);
+        auto deltaTime = controllerEvent->getEditTime (clip) + deltaStart ;
+        controllerEvent->setBeatPosition (clip.getContentBeatAtTime(deltaTime)+ clip.getLoopStartBeats(), undoManager);
     }
 }
 
@@ -461,7 +426,7 @@ void SelectedMidiEvents::nudge (TimecodeSnapType snapType, int leftRight, int up
     {
         if (auto firstSelected = selectedNotes.getFirst())
         {
-            if (auto clip = clips[0])
+            if (auto* clip = clips[0])
             {
                 double start = firstSelected->getEditStartTime (*clip);
 
@@ -472,25 +437,10 @@ void SelectedMidiEvents::nudge (TimecodeSnapType snapType, int leftRight, int up
                 double delta = ed.tempoSequence.timeToBeats (snapped)
                                 - ed.tempoSequence.timeToBeats (start);
 
-                juce::Array<MidiClip*> uniqueClips;
-                double startTime = std::numeric_limits<double>::max();
-                double endTime   = std::numeric_limits<double>::lowest();
-
                 for (auto note : selectedNotes)
-                {
-                    auto noteClip = clipForEvent (note);
-                    uniqueClips.addIfNotAlreadyThere (noteClip);
-
-                    startTime = std::min (startTime, note->getEditStartTime (*noteClip));
-                    endTime   = std::max (endTime, note->getEditEndTime (*noteClip));
-
                     note->setStartAndLength (note->getStartBeat() + delta,
                                              note->getLengthBeats(),
                                              undoManager);
-                }
-
-                if (shouldLockControllerToNotes && shouldLockControllerToNotes())
-                    moveControllerData (uniqueClips, nullptr, delta, startTime, endTime, false);
             }
         }
     }
@@ -553,44 +503,6 @@ void SelectedMidiEvents::setClips (juce::Array<MidiClip*> clips_)
     for (int i = selectedControllers.size(); --i >= 0;)
         if (clipForEvent (selectedControllers[i]) == nullptr)
             selectedControllers.remove (i);
-}
-
-void SelectedMidiEvents::moveControllerData (const juce::Array<MidiClip*>& clips, const juce::Array<MidiControllerEvent*>* onlyTheseEvents,
-                                             double deltaBeats, double startTime, double endTime, bool makeCopy)
-{
-    for (auto c : clips)
-    {
-        juce::Array<juce::ValueTree> itemsToRemove;
-
-        auto& seq = c->getSequence();
-
-        juce::Array<MidiControllerEvent*> movedEvents;
-        for (auto evt : seq.getControllerEvents())
-        {
-            if (evt->getEditTime (*c) >= startTime && evt->getEditTime (*c) < endTime)
-            {
-                if (makeCopy)
-                    seq.addControllerEvent (MidiControllerEvent (evt->state.createCopy()), c->getUndoManager());
-
-                auto beat = evt->getBeatPosition() + deltaBeats;
-                evt->setBeatPosition (beat, c->getUndoManager());
-                movedEvents.add (evt);
-            }
-        }
-
-        auto& ts = c->edit.tempoSequence;
-
-        double startTimeAfter = ts.beatsToTime (ts.timeToBeats (startTime) + deltaBeats);
-        double endTimeAfter   = ts.beatsToTime (ts.timeToBeats (endTime) + deltaBeats);
-
-        for (auto evt : seq.getControllerEvents())
-            if (onlyTheseEvents == nullptr || onlyTheseEvents->contains (evt))
-                if (! movedEvents.contains (evt) && evt->getEditTime (*c) >= startTimeAfter && evt->getEditTime (*c) <= endTimeAfter)
-                    itemsToRemove.add (evt->state);
-
-        for (auto& v : itemsToRemove)
-            seq.state.removeChild (v, c->getUndoManager());
-    }
 }
 
 }
