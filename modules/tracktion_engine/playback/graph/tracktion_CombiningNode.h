@@ -51,6 +51,7 @@ private:
     juce::OwnedArray<TimedNode> inputs;
     juce::OwnedArray<juce::Array<TimedNode*>> groups;
     std::atomic<bool> isReadyToProcessBlock { false };
+    choc::buffer::ChannelArrayBuffer<float> tempAudioBuffer;
 
     tracktion_graph::NodeProperties nodeProperties;
 
