@@ -1211,11 +1211,22 @@ bool Clipboard::AutomationPoints::pasteAutomationCurve (AutomationCurve& targetC
 
 //==============================================================================
 //==============================================================================
-Clipboard::MIDINotes::MIDINotes() {}
-Clipboard::MIDINotes::~MIDINotes() {}
+Clipboard::MIDIEvents::MIDIEvents() {}
+Clipboard::MIDIEvents::~MIDIEvents() {}
 
-juce::Array<MidiNote*> Clipboard::MIDINotes::pasteIntoClip (MidiClip& clip, const juce::Array<MidiNote*>& selectedNotes,
-                                                            double cursorPosition, const std::function<double(double)>& snapBeat) const
+std::pair<juce::Array<MidiNote*>, juce::Array<MidiControllerEvent*>> Clipboard::MIDIEvents::pasteIntoClip (MidiClip& clip,
+                                                                                                           const juce::Array<MidiNote*>& selectedNotes,
+                                                                                                           const juce::Array<MidiControllerEvent*>& selectedEvents,
+                                                                                                           double cursorPosition, const std::function<double(double)>& snapBeat) const
+{
+    auto notesAdded         = pasteNotesIntoClip (clip, selectedNotes, cursorPosition, snapBeat);
+    auto controllersAdded   = pasteControllersIntoClip (clip, selectedNotes, selectedEvents, cursorPosition, snapBeat);
+
+    return { notesAdded, controllersAdded };
+}
+
+juce::Array<MidiNote*> Clipboard::MIDIEvents::pasteNotesIntoClip (MidiClip& clip, const juce::Array<MidiNote*>& selectedNotes,
+                                                                  double cursorPosition, const std::function<double(double)>& snapBeat) const
 {
     if (notes.empty())
         return {};
@@ -1281,7 +1292,95 @@ juce::Array<MidiNote*> Clipboard::MIDINotes::pasteIntoClip (MidiClip& clip, cons
     return notesAdded;
 }
 
-bool Clipboard::MIDINotes::pasteIntoEdit (const EditPastingOptions&) const
+juce::Array<MidiControllerEvent*> Clipboard::MIDIEvents::pasteControllersIntoClip (MidiClip& clip,
+                                                                                   const juce::Array<MidiNote*>& selectedNotes,
+                                                                                   const juce::Array<MidiControllerEvent*>& selectedEvents,
+                                                                                   double cursorPosition, const std::function<double(double)>& snapBeat) const
+{
+    if (controllers.empty())
+        return {};
+
+    juce::Array<MidiControllerEvent> midiEvents;
+
+    for (auto& e : controllers)
+        midiEvents.add (MidiControllerEvent (e));
+
+    auto controllerType = midiEvents.getReference (0).getType();
+
+    auto beatRange = juce::Range<double>::withStartAndLength (midiEvents.getReference(0).getBeatPosition(), 0.0);
+
+    for (auto& e : midiEvents)
+        beatRange = beatRange.getUnionWith (juce::Range<double>::withStartAndLength (e.getBeatPosition(), 0.0));
+
+    double insertPos = 0.0;
+    if (clip.isLooping())
+        insertPos = clip.getContentBeatAtTime (cursorPosition) + clip.getLoopStartBeats();
+    else
+        insertPos = clip.getContentBeatAtTime (cursorPosition);
+
+    if (! selectedNotes.isEmpty())
+    {
+        double endOfSelection = 0;
+
+        for (auto* n : selectedNotes)
+            endOfSelection = jmax (endOfSelection, n->getEndBeat());
+
+        insertPos = endOfSelection;
+    }
+    else if (! selectedEvents.isEmpty())
+    {
+        double endOfSelection = 0;
+
+        for (auto e : selectedEvents)
+            endOfSelection = jmax (endOfSelection, e->getBeatPosition());
+
+        insertPos = endOfSelection + 1.0f;
+    }
+
+    if (clip.isLooping())
+    {
+        const double offsetBeats = clip.getOffsetInBeats() + clip.getLoopStartBeats();
+
+        if (insertPos - offsetBeats < 0 || insertPos - offsetBeats >= clip.getLoopLengthBeats() - 0.001)
+            return {};
+    }
+    else
+    {
+        const double offsetBeats = clip.getOffsetInBeats();
+
+        if (insertPos - offsetBeats < 0 || insertPos - offsetBeats >= clip.getLengthInBeats() - 0.001)
+            return {};
+    }
+
+    double deltaBeats = insertPos - beatRange.getStart();
+
+    if (snapBeat != nullptr)
+        deltaBeats = snapBeat (deltaBeats);
+
+    auto& sequence = clip.getSequence();
+    auto um = &clip.edit.getUndoManager();
+    juce::Array<MidiControllerEvent*> eventsAdded;
+
+    Array<ValueTree> itemsToRemove;
+    for (auto evt : sequence.getControllerEvents())
+        if (evt->getType() == controllerType && evt->getBeatPosition() >= beatRange.getStart() + deltaBeats && evt->getBeatPosition() <= beatRange.getEnd() + deltaBeats)
+            itemsToRemove.add (evt->state);
+
+    for (auto& v : itemsToRemove)
+        sequence.state.removeChild (v, um);
+
+    for (auto& e : midiEvents)
+    {
+        e.setBeatPosition (e.getBeatPosition() + deltaBeats, um);
+
+        if (auto evt = sequence.addControllerEvent (e, um))
+            eventsAdded.add (evt);
+    }
+
+    return eventsAdded;
+}
+
+bool Clipboard::MIDIEvents::pasteIntoEdit (const EditPastingOptions&) const
 {
     return false;
 }

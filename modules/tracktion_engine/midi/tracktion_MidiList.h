@@ -87,8 +87,9 @@ public:
     MidiControllerEvent* getControllerEvent (int index) const       { return getControllerEvents()[index]; }
     MidiControllerEvent* getControllerEventAt (double beatNumber, int controllerType) const;
 
-    void addControllerEvent (double beat, int controllerType, int controllerValue, juce::UndoManager*);
-    void addControllerEvent (double beat, int controllerType, int controllerValue, int metadata, juce::UndoManager*);
+    MidiControllerEvent* addControllerEvent (const MidiControllerEvent&, juce::UndoManager*);
+    MidiControllerEvent* addControllerEvent (double beat, int controllerType, int controllerValue, juce::UndoManager*);
+    MidiControllerEvent* addControllerEvent (double beat, int controllerType, int controllerValue, int metadata, juce::UndoManager*);
 
     void removeControllerEvent (MidiControllerEvent&, juce::UndoManager*);
     void removeAllControllers (juce::UndoManager*);

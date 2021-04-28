@@ -1301,14 +1301,25 @@ bool MidiList::containsController (int controllerType) const
     return false;
 }
 
-void MidiList::addControllerEvent (double beat, int controllerType, int controllerValue, juce::UndoManager* um)
+MidiControllerEvent* MidiList::addControllerEvent (const MidiControllerEvent& event, juce::UndoManager* um)
 {
-    state.addChild (MidiControllerEvent::createControllerEvent (beat, controllerType, controllerValue), -1, um);
+    auto v = event.state.createCopy();
+    state.addChild (v, -1, um);
+    return controllerList->getEventFor (v);
 }
 
-void MidiList::addControllerEvent (double beat, int controllerType, int controllerValue, int metadata, juce::UndoManager* um)
+MidiControllerEvent* MidiList::addControllerEvent (double beat, int controllerType, int controllerValue, juce::UndoManager* um)
 {
-    state.addChild (MidiControllerEvent::createControllerEvent (beat, controllerType, controllerValue, metadata), -1, um);
+    auto v = MidiControllerEvent::createControllerEvent (beat, controllerType, controllerValue);
+    state.addChild (v, -1, um);
+    return controllerList->getEventFor (v);
+}
+
+MidiControllerEvent* MidiList::addControllerEvent (double beat, int controllerType, int controllerValue, int metadata, juce::UndoManager* um)
+{
+    auto v = MidiControllerEvent::createControllerEvent (beat, controllerType, controllerValue, metadata);
+    state.addChild (v, -1, um);
+    return controllerList->getEventFor (v);
 }
 
 void MidiList::removeControllerEvent (MidiControllerEvent& e, juce::UndoManager* um)

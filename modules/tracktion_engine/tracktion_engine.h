@@ -44,6 +44,7 @@
 #include <unordered_map>
 #include <atomic>
 #include <random>
+#include <optional>
 
 #include <juce_audio_basics/juce_audio_basics.h>
 #include <juce_audio_utils/juce_audio_utils.h>
