@@ -1211,22 +1211,11 @@ bool Clipboard::AutomationPoints::pasteAutomationCurve (AutomationCurve& targetC
 
 //==============================================================================
 //==============================================================================
-Clipboard::MIDIEvents::MIDIEvents() {}
-Clipboard::MIDIEvents::~MIDIEvents() {}
+Clipboard::MIDINotes::MIDINotes() {}
+Clipboard::MIDINotes::~MIDINotes() {}
 
-std::pair<juce::Array<MidiNote*>, juce::Array<MidiControllerEvent*>> Clipboard::MIDIEvents::pasteIntoClip (MidiClip& clip,
-                                                                                                           const juce::Array<MidiNote*>& selectedNotes,
-                                                                                                           const juce::Array<MidiControllerEvent*>& selectedEvents,
-                                                                                                           double cursorPosition, const std::function<double(double)>& snapBeat) const
-{
-    auto notesAdded         = pasteNotesIntoClip (clip, selectedNotes, cursorPosition, snapBeat);
-    auto controllersAdded   = pasteControllersIntoClip (clip, selectedNotes, selectedEvents, cursorPosition, snapBeat);
-
-    return { notesAdded, controllersAdded };
-}
-
-juce::Array<MidiNote*> Clipboard::MIDIEvents::pasteNotesIntoClip (MidiClip& clip, const juce::Array<MidiNote*>& selectedNotes,
-                                                                  double cursorPosition, const std::function<double(double)>& snapBeat) const
+juce::Array<MidiNote*> Clipboard::MIDINotes::pasteIntoClip (MidiClip& clip, const juce::Array<MidiNote*>& selectedNotes,
+                                                            double cursorPosition, const std::function<double(double)>& snapBeat) const
 {
     if (notes.empty())
         return {};
@@ -1292,17 +1281,25 @@ juce::Array<MidiNote*> Clipboard::MIDIEvents::pasteNotesIntoClip (MidiClip& clip
     return notesAdded;
 }
 
-juce::Array<MidiControllerEvent*> Clipboard::MIDIEvents::pasteControllersIntoClip (MidiClip& clip,
-                                                                                   const juce::Array<MidiNote*>& selectedNotes,
-                                                                                   const juce::Array<MidiControllerEvent*>& selectedEvents,
-                                                                                   double cursorPosition, const std::function<double(double)>& snapBeat) const
+bool Clipboard::MIDINotes::pasteIntoEdit (const EditPastingOptions&) const
 {
-    if (controllers.empty())
+    return false;
+}
+
+//==============================================================================
+//==============================================================================
+Clipboard::MIDIControllers::MIDIControllers() {}
+Clipboard::MIDIControllers::~MIDIControllers() {}
+
+juce::Array<MidiControllerEvent*> Clipboard::MIDIControllers::pasteIntoClip (MidiClip& clip, const juce::Array<MidiControllerEvent*>& selectedEvents,
+                                                                  double cursorPosition, const std::function<double(double)>& snapBeat) const
+{
+    if (events.empty())
         return {};
 
     juce::Array<MidiControllerEvent> midiEvents;
 
-    for (auto& e : controllers)
+    for (auto& e : events)
         midiEvents.add (MidiControllerEvent (e));
 
     auto controllerType = midiEvents.getReference (0).getType();
@@ -1318,16 +1315,7 @@ juce::Array<MidiControllerEvent*> Clipboard::MIDIEvents::pasteControllersIntoCli
     else
         insertPos = clip.getContentBeatAtTime (cursorPosition);
 
-    if (! selectedNotes.isEmpty())
-    {
-        double endOfSelection = 0;
-
-        for (auto* n : selectedNotes)
-            endOfSelection = jmax (endOfSelection, n->getEndBeat());
-
-        insertPos = endOfSelection;
-    }
-    else if (! selectedEvents.isEmpty())
+    if (! selectedEvents.isEmpty())
     {
         double endOfSelection = 0;
 
@@ -1380,7 +1368,7 @@ juce::Array<MidiControllerEvent*> Clipboard::MIDIEvents::pasteControllersIntoCli
     return eventsAdded;
 }
 
-bool Clipboard::MIDIEvents::pasteIntoEdit (const EditPastingOptions&) const
+bool Clipboard::MIDIControllers::pasteIntoEdit (const EditPastingOptions&) const
 {
     return false;
 }
