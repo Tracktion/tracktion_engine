@@ -910,6 +910,15 @@ juce::String MidiControllerEvent::getLevelDescription (MidiClip* ownerClip) cons
     return juce::String (coarseValue);
 }
 
+void MidiControllerEvent::setMetadata (int m, juce::UndoManager* um)
+{
+    if (metadata != m)
+    {
+        state.setProperty (IDs::metadata, m, um);
+        m = metadata;
+    }
+}
+
 void MidiControllerEvent::setBeatPosition (double newBeatNumber, juce::UndoManager* um)
 {
     newBeatNumber = std::max (0.0, newBeatNumber);
@@ -918,6 +927,15 @@ void MidiControllerEvent::setBeatPosition (double newBeatNumber, juce::UndoManag
     {
         state.setProperty (IDs::b, newBeatNumber, um);
         beatNumber = newBeatNumber;
+    }
+}
+
+void MidiControllerEvent::setType (int t, juce::UndoManager* um)
+{
+    if (t != type)
+    {
+        state.setProperty (IDs::type, t, um);
+        type = t;
     }
 }
 

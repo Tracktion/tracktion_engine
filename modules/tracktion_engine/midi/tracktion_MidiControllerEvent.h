@@ -42,6 +42,7 @@ public:
     //==============================================================================
     /** Controller type, from the list below */
     int getType() const noexcept                { return type; }
+    void setType (int type, juce::UndoManager* um);
 
     enum ExtraControllerTypes
     {
