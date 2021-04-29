@@ -157,10 +157,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:afaa297d9523fe7e8337708cb87ff1809"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8f9a914476d9a47f9946a35b1f47567"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1MidiControllerEvent.html">MidiControllerEvent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiList.html#ad8f9a914476d9a47f9946a35b1f47567">getControllerEventAt</a> (double beatNumber, int controllerType) const</td></tr>
 <tr class="separator:ad8f9a914476d9a47f9946a35b1f47567"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5044ac7fff9a233693fa421552ad918b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiList.html#a5044ac7fff9a233693fa421552ad918b">addControllerEvent</a> (double beat, int controllerType, int controllerValue, juce::UndoManager *)</td></tr>
-<tr class="separator:a5044ac7fff9a233693fa421552ad918b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7d5e3225332114fe4e6f0a122f94cde"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiList.html#ad7d5e3225332114fe4e6f0a122f94cde">addControllerEvent</a> (double beat, int controllerType, int controllerValue, int metadata, juce::UndoManager *)</td></tr>
-<tr class="separator:ad7d5e3225332114fe4e6f0a122f94cde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91748255526ee83874c15d48032a5182"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1MidiControllerEvent.html">MidiControllerEvent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiList.html#a91748255526ee83874c15d48032a5182">addControllerEvent</a> (const <a class="el" href="classtracktion__engine_1_1MidiControllerEvent.html">MidiControllerEvent</a> &amp;, juce::UndoManager *)</td></tr>
+<tr class="separator:a91748255526ee83874c15d48032a5182"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3810a798fe7ebd8c0876f2490d8270a4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1MidiControllerEvent.html">MidiControllerEvent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiList.html#a3810a798fe7ebd8c0876f2490d8270a4">addControllerEvent</a> (double beat, int controllerType, int controllerValue, juce::UndoManager *)</td></tr>
+<tr class="separator:a3810a798fe7ebd8c0876f2490d8270a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e0a3838976ad297d3b8eb6369aaba04"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1MidiControllerEvent.html">MidiControllerEvent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiList.html#a8e0a3838976ad297d3b8eb6369aaba04">addControllerEvent</a> (double beat, int controllerType, int controllerValue, int metadata, juce::UndoManager *)</td></tr>
+<tr class="separator:a8e0a3838976ad297d3b8eb6369aaba04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72590094d88db2dab79278d1c5b0641e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiList.html#a72590094d88db2dab79278d1c5b0641e">removeControllerEvent</a> (<a class="el" href="classtracktion__engine_1_1MidiControllerEvent.html">MidiControllerEvent</a> &amp;, juce::UndoManager *)</td></tr>
 <tr class="separator:a72590094d88db2dab79278d1c5b0641e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ab720e89987b7dbf38b1e1e768b8c68"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiList.html#a3ab720e89987b7dbf38b1e1e768b8c68">removeAllControllers</a> (juce::UndoManager *)</td></tr>
@@ -1054,14 +1056,42 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a5044ac7fff9a233693fa421552ad918b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5044ac7fff9a233693fa421552ad918b">&#9670;&nbsp;</a></span>addControllerEvent() <span class="overload">[1/2]</span></h2>
+<a id="a91748255526ee83874c15d48032a5182"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91748255526ee83874c15d48032a5182">&#9670;&nbsp;</a></span>addControllerEvent() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion_engine::MidiList::addControllerEvent </td>
+          <td class="memname"><a class="el" href="classtracktion__engine_1_1MidiControllerEvent.html">MidiControllerEvent</a>* tracktion_engine::MidiList::addControllerEvent </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion__engine_1_1MidiControllerEvent.html">MidiControllerEvent</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::UndoManager *&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3810a798fe7ebd8c0876f2490d8270a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3810a798fe7ebd8c0876f2490d8270a4">&#9670;&nbsp;</a></span>addControllerEvent() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion__engine_1_1MidiControllerEvent.html">MidiControllerEvent</a>* tracktion_engine::MidiList::addControllerEvent </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>beat</em>, </td>
@@ -1094,14 +1124,14 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ad7d5e3225332114fe4e6f0a122f94cde"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad7d5e3225332114fe4e6f0a122f94cde">&#9670;&nbsp;</a></span>addControllerEvent() <span class="overload">[2/2]</span></h2>
+<a id="a8e0a3838976ad297d3b8eb6369aaba04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e0a3838976ad297d3b8eb6369aaba04">&#9670;&nbsp;</a></span>addControllerEvent() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion_engine::MidiList::addControllerEvent </td>
+          <td class="memname"><a class="el" href="classtracktion__engine_1_1MidiControllerEvent.html">MidiControllerEvent</a>* tracktion_engine::MidiList::addControllerEvent </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>beat</em>, </td>
@@ -1885,7 +1915,7 @@ template&lt;typename Type &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:54:59 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:53 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

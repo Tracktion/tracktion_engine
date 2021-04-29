@@ -36,7 +36,7 @@
 <!-- Node5 -->
 <g id="node5" class="node">
 <title>Node5</title>
-<g id="a_node5"><a xlink:href="classtracktion__engine_1_1WarpTimeManager.html" target="_top" xlink:title=" ">
+<g id="a_node5"><a xlink:href="classtracktion__engine_1_1WarpTimeManager.html" target="_top" xlink:title="A WarpTimeManager contains a list of WarpMarkers and some source material and maps times from a linea...">
 <polygon fill="none" stroke="black" points="266,-56.5 266,-86.5 420,-86.5 420,-56.5 266,-56.5"/>
 <text text-anchor="start" x="274" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::WarpTime</text>
 <text text-anchor="middle" x="343" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00">Manager</text>

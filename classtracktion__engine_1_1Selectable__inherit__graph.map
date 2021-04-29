@@ -19,9 +19,9 @@
 <area shape="rect" id="node44" href="$structtracktion__engine_1_1StepClip_1_1PatternInstance.html" title=" " alt="" coords="286,1717,479,1759"/>
 <area shape="rect" id="node45" href="$structtracktion__engine_1_1StepVolumeEffect.html" title=" " alt="" coords="274,1783,491,1824"/>
 <area shape="rect" id="node46" href="$classtracktion__engine_1_1TempoSequence.html" title="Holds a list of TempoSetting objects, to form a sequence of tempo changes." alt="" coords="260,1849,505,1875"/>
-<area shape="rect" id="node47" href="$classtracktion__engine_1_1Track.html" title=" " alt="" coords="296,1899,469,1926"/>
+<area shape="rect" id="node47" href="$classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s]." alt="" coords="296,1899,469,1926"/>
 <area shape="rect" id="node48" href="$structtracktion__engine_1_1TrackCompManager_1_1TrackComp.html" title=" " alt="" coords="277,1951,488,1992"/>
-<area shape="rect" id="node49" href="$classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a track, e.g." alt="" coords="281,2017,484,2043"/>
+<area shape="rect" id="node49" href="$classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g." alt="" coords="281,2017,484,2043"/>
 <area shape="rect" id="node3" href="$structtracktion__engine_1_1DiscreteLabelledParameter.html" title=" " alt="" coords="594,5,787,47"/>
 <area shape="rect" id="node4" href="$classtracktion__engine_1_1ExternalAutomatableParameter.html" title=" " alt="" coords="594,71,787,112"/>
 <area shape="rect" id="node5" href="$classtracktion__engine_1_1MacroParameter.html" title="A MacroParameter is an AutomatableParameter which is a collection of Mappings." alt="" coords="567,137,814,163"/>

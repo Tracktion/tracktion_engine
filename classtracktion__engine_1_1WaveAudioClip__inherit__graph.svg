@@ -50,7 +50,7 @@
 <!-- Node4 -->
 <g id="node4" class="node">
 <title>Node4</title>
-<g id="a_node4"><a xlink:href="classtracktion__engine_1_1TrackItem.html" target="_top" xlink:title="Base class for EditItems that live in a track, e.g.">
+<g id="a_node4"><a xlink:href="classtracktion__engine_1_1TrackItem.html" target="_top" xlink:title="Base class for EditItems that live in a Track, e.g.">
 <polygon fill="none" stroke="black" points="81,-179.5 81,-198.5 233,-198.5 233,-179.5 81,-179.5"/>
 <text text-anchor="middle" x="157" y="-186.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::TrackItem</text>
 </a>

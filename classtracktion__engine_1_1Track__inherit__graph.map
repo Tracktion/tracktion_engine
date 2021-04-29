@@ -1,5 +1,5 @@
 <map id="tracktion_engine::Track" name="tracktion_engine::Track">
-<area shape="rect" id="node1" title=" " alt="" coords="300,126,473,153"/>
+<area shape="rect" id="node1" title="Base class for tracks which contain clips and plugins and can be added to Edit[s]." alt="" coords="300,126,473,153"/>
 <area shape="rect" id="node5" href="$classtracktion__engine_1_1AutomationTrack.html" title=" " alt="" coords="522,31,737,72"/>
 <area shape="rect" id="node6" href="$classtracktion__engine_1_1ClipTrack.html" title=" " alt="" coords="530,97,729,123"/>
 <area shape="rect" id="node11" href="$classtracktion__engine_1_1FolderTrack.html" title=" " alt="" coords="540,148,719,189"/>

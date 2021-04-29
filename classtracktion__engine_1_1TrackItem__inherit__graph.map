@@ -1,5 +1,5 @@
 <map id="tracktion_engine::TrackItem" name="tracktion_engine::TrackItem">
-<area shape="rect" id="node1" title="Base class for EditItems that live in a track, e.g." alt="" coords="260,208,463,235"/>
+<area shape="rect" id="node1" title="Base class for EditItems that live in a Track, e.g." alt="" coords="260,208,463,235"/>
 <area shape="rect" id="node4" href="$classtracktion__engine_1_1Clip.html" title="A clip in an edit." alt="" coords="543,132,707,159"/>
 <area shape="rect" id="node13" href="$classtracktion__engine_1_1CollectionClip.html" title=" " alt="" coords="511,183,740,209"/>
 <area shape="rect" id="node14" href="$classtracktion__engine_1_1PitchSetting.html" title=" " alt="" coords="517,233,734,260"/>

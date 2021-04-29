@@ -165,6 +165,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9dadbef61158e5d7000dab4510a7cc5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a14a8068ab50a63860df5b952b5bdb6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1SelectionManager.html#a4a14a8068ab50a63860df5b952b5bdb6">selectableObjectAboutToBeDeleted</a> (<a class="el" href="classtracktion__engine_1_1Selectable.html">Selectable</a> *) override</td></tr>
 <tr class="separator:a4a14a8068ab50a63860df5b952b5bdb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e1c12b2be52b6d0bca854c40465f9f3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1SelectionManager.html#a9e1c12b2be52b6d0bca854c40465f9f3">getEdit</a> () const</td></tr>
+<tr class="separator:a9e1c12b2be52b6d0bca854c40465f9f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -187,9 +189,9 @@ Static Public Member Functions</h2></td></tr>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a14ae0918b97447b56ab9c54439eaac9d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1SelectionManager.html#a14ae0918b97447b56ab9c54439eaac9d">selectionChangeCount</a> = 0</td></tr>
 <tr class="separator:a14ae0918b97447b56ab9c54439eaac9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7422bfa8ab0824b34a12baa76c7c0621"><td class="memItemLeft" align="right" valign="top">juce::WeakReference&lt; <a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1SelectionManager.html#a7422bfa8ab0824b34a12baa76c7c0621">edit</a></td></tr>
-<tr class="memdesc:a7422bfa8ab0824b34a12baa76c7c0621"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this <a class="el" href="classtracktion__engine_1_1SelectionManager.html" title="Manages a list of items that are currently selected.">SelectionManager</a> is being used to represent items inside a particular view of an edit, this id should be set so you can find it by iterating the SelectionManagers.  <a href="classtracktion__engine_1_1SelectionManager.html#a7422bfa8ab0824b34a12baa76c7c0621">More...</a><br /></td></tr>
-<tr class="separator:a7422bfa8ab0824b34a12baa76c7c0621"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a348e2fa193b2aa02a6fffc43101066b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1Selectable.html#a03901c25cc0479dcdb3fa3ce8b8b28ae">Selectable::WeakRef</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1SelectionManager.html#a348e2fa193b2aa02a6fffc43101066b3">edit</a></td></tr>
+<tr class="memdesc:a348e2fa193b2aa02a6fffc43101066b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this <a class="el" href="classtracktion__engine_1_1SelectionManager.html" title="Manages a list of items that are currently selected.">SelectionManager</a> is being used to represent items inside a particular view of an edit, this id should be set so you can find it by iterating the SelectionManagers.  <a href="classtracktion__engine_1_1SelectionManager.html#a348e2fa193b2aa02a6fffc43101066b3">More...</a><br /></td></tr>
+<tr class="separator:a348e2fa193b2aa02a6fffc43101066b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b427cf0247befe83bf009ec4316ced2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1SelectionManager.html#a4b427cf0247befe83bf009ec4316ced2">editViewID</a> = -1</td></tr>
 <tr class="separator:a4b427cf0247befe83bf009ec4316ced2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56d0c7fe499070102a5da60fb933b3a5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1EditInsertPoint.html">EditInsertPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1SelectionManager.html#a56d0c7fe499070102a5da60fb933b3a5">insertPoint</a> = nullptr</td></tr>
@@ -982,6 +984,23 @@ template&lt;typename SelectableClass &gt; </div>
 
 </div>
 </div>
+<a id="a9e1c12b2be52b6d0bca854c40465f9f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e1c12b2be52b6d0bca854c40465f9f3">&#9670;&nbsp;</a></span>getEdit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a>* tracktion_engine::SelectionManager::getEdit </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="a14ae0918b97447b56ab9c54439eaac9d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a14ae0918b97447b56ab9c54439eaac9d">&#9670;&nbsp;</a></span>selectionChangeCount</h2>
@@ -997,14 +1016,14 @@ template&lt;typename SelectableClass &gt; </div>
 
 </div>
 </div>
-<a id="a7422bfa8ab0824b34a12baa76c7c0621"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7422bfa8ab0824b34a12baa76c7c0621">&#9670;&nbsp;</a></span>edit</h2>
+<a id="a348e2fa193b2aa02a6fffc43101066b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a348e2fa193b2aa02a6fffc43101066b3">&#9670;&nbsp;</a></span>edit</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">juce::WeakReference&lt;<a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a>&gt; tracktion_engine::SelectionManager::edit</td>
+          <td class="memname"><a class="el" href="classtracktion__engine_1_1Selectable.html#a03901c25cc0479dcdb3fa3ce8b8b28ae">Selectable::WeakRef</a> tracktion_engine::SelectionManager::edit</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1061,7 +1080,7 @@ template&lt;typename SelectableClass &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:55:00 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:53 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

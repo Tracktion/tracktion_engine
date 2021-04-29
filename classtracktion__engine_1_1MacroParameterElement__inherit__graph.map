@@ -1,9 +1,9 @@
 <map id="tracktion_engine::MacroParameterElement" name="tracktion_engine::MacroParameterElement">
 <area shape="rect" id="node1" title="Base class for elements which can contain macro parameters." alt="" coords="5,867,252,908"/>
-<area shape="rect" id="node2" href="$structtracktion__engine_1_1Edit_1_1GlobalMacros.html" title=" " alt="" coords="319,783,483,824"/>
+<area shape="rect" id="node2" href="$structtracktion__engine_1_1Edit_1_1GlobalMacros.html" title="Holds the global Macros for the Edit." alt="" coords="319,783,483,824"/>
 <area shape="rect" id="node3" href="$classtracktion__engine_1_1Plugin.html" title=" " alt="" coords="311,849,490,875"/>
 <area shape="rect" id="node30" href="$classtracktion__engine_1_1RackType.html" title=" " alt="" coords="300,899,501,926"/>
-<area shape="rect" id="node31" href="$classtracktion__engine_1_1Track.html" title=" " alt="" coords="314,1717,487,1743"/>
+<area shape="rect" id="node31" href="$classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s]." alt="" coords="314,1717,487,1743"/>
 <area shape="rect" id="node4" href="$classtracktion__engine_1_1AirWindowsPlugin.html" title=" " alt="" coords="559,5,775,47"/>
 <area shape="rect" id="node5" href="$classtracktion__engine_1_1AuxReturnPlugin.html" title=" " alt="" coords="563,71,770,112"/>
 <area shape="rect" id="node6" href="$classtracktion__engine_1_1AuxSendPlugin.html" title=" " alt="" coords="569,136,765,177"/>

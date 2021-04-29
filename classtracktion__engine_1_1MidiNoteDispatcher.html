@@ -83,12 +83,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6b1cd5f8dd41090bd1a63f0e34311d88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0311e2eddd72e516a72d5055659adff4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiNoteDispatcher.html#a0311e2eddd72e516a72d5055659adff4">setMidiDeviceList</a> (const juce::OwnedArray&lt; <a class="el" href="classtracktion__engine_1_1MidiOutputDeviceInstance.html">MidiOutputDeviceInstance</a> &gt; &amp;)</td></tr>
 <tr class="separator:a0311e2eddd72e516a72d5055659adff4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27f5c09c5c601ea92fe985743d23e6ee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiNoteDispatcher.html#a27f5c09c5c601ea92fe985743d23e6ee">nextBlockStarted</a> (<a class="el" href="classtracktion__engine_1_1PlayHead.html">PlayHead</a> &amp;playhead, <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> streamTime, int blockSize)</td></tr>
-<tr class="separator:a27f5c09c5c601ea92fe985743d23e6ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac856847c4bbfd02cc50e072cc06d8237"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiNoteDispatcher.html#ac856847c4bbfd02cc50e072cc06d8237">masterTimeUpdate</a> (<a class="el" href="classtracktion__engine_1_1PlayHead.html">PlayHead</a> &amp;playhead, double streamTime)</td></tr>
-<tr class="separator:ac856847c4bbfd02cc50e072cc06d8237"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace4a4cf1d36ad2fe95b00ee9a27ffbc9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiNoteDispatcher.html#ace4a4cf1d36ad2fe95b00ee9a27ffbc9">prepareToPlay</a> (<a class="el" href="classtracktion__engine_1_1PlayHead.html">PlayHead</a> &amp;playhead, double start)</td></tr>
-<tr class="separator:ace4a4cf1d36ad2fe95b00ee9a27ffbc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07982cf4fb5287ab5bdbf4eb84f57de8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiNoteDispatcher.html#a07982cf4fb5287ab5bdbf4eb84f57de8">renderDevices</a> (<a class="el" href="classtracktion__engine_1_1PlayHead.html">PlayHead</a> &amp;, <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> streamTime, int blockSize)</td></tr>
+<tr class="separator:a07982cf4fb5287ab5bdbf4eb84f57de8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a185d327801ab6a3aae2b096fbd744217"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiNoteDispatcher.html#a185d327801ab6a3aae2b096fbd744217">dispatchPendingMessagesForDevices</a> (double editTime)</td></tr>
+<tr class="separator:a185d327801ab6a3aae2b096fbd744217"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0d14d3ed41225a24beb2744f6ce2efe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiNoteDispatcher.html#ae0d14d3ed41225a24beb2744f6ce2efe">masterTimeUpdate</a> (double editTime)</td></tr>
+<tr class="separator:ae0d14d3ed41225a24beb2744f6ce2efe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac16b83256f28e5d587e03c96f123895b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiNoteDispatcher.html#ac16b83256f28e5d587e03c96f123895b">prepareToPlay</a> (double editTime)</td></tr>
+<tr class="separator:ac16b83256f28e5d587e03c96f123895b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85f9e70ab8db5f4ccac42fee4bc07a51"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiNoteDispatcher.html#a85f9e70ab8db5f4ccac42fee4bc07a51">hiResTimerCallback</a> () override</td></tr>
 <tr class="separator:a85f9e70ab8db5f4ccac42fee4bc07a51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -154,17 +156,17 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a27f5c09c5c601ea92fe985743d23e6ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a27f5c09c5c601ea92fe985743d23e6ee">&#9670;&nbsp;</a></span>nextBlockStarted()</h2>
+<a id="a07982cf4fb5287ab5bdbf4eb84f57de8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07982cf4fb5287ab5bdbf4eb84f57de8">&#9670;&nbsp;</a></span>renderDevices()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion_engine::MidiNoteDispatcher::nextBlockStarted </td>
+          <td class="memname">void tracktion_engine::MidiNoteDispatcher::renderDevices </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion__engine_1_1PlayHead.html">PlayHead</a> &amp;&#160;</td>
-          <td class="paramname"><em>playhead</em>, </td>
+          <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -188,8 +190,26 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac856847c4bbfd02cc50e072cc06d8237"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac856847c4bbfd02cc50e072cc06d8237">&#9670;&nbsp;</a></span>masterTimeUpdate()</h2>
+<a id="a185d327801ab6a3aae2b096fbd744217"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a185d327801ab6a3aae2b096fbd744217">&#9670;&nbsp;</a></span>dispatchPendingMessagesForDevices()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion_engine::MidiNoteDispatcher::dispatchPendingMessagesForDevices </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>editTime</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae0d14d3ed41225a24beb2744f6ce2efe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0d14d3ed41225a24beb2744f6ce2efe">&#9670;&nbsp;</a></span>masterTimeUpdate()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -197,27 +217,17 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void tracktion_engine::MidiNoteDispatcher::masterTimeUpdate </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1PlayHead.html">PlayHead</a> &amp;&#160;</td>
-          <td class="paramname"><em>playhead</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>streamTime</em>&#160;</td>
-        </tr>
-        <tr>
+          <td class="paramname"><em>editTime</em></td><td>)</td>
           <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="ace4a4cf1d36ad2fe95b00ee9a27ffbc9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ace4a4cf1d36ad2fe95b00ee9a27ffbc9">&#9670;&nbsp;</a></span>prepareToPlay()</h2>
+<a id="ac16b83256f28e5d587e03c96f123895b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac16b83256f28e5d587e03c96f123895b">&#9670;&nbsp;</a></span>prepareToPlay()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -225,19 +235,9 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void tracktion_engine::MidiNoteDispatcher::prepareToPlay </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1PlayHead.html">PlayHead</a> &amp;&#160;</td>
-          <td class="paramname"><em>playhead</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>start</em>&#160;</td>
-        </tr>
-        <tr>
+          <td class="paramname"><em>editTime</em></td><td>)</td>
           <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -275,7 +275,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:54:59 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:53 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

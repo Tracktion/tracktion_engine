@@ -72,17 +72,25 @@ $(function() {
 <div class="title">tracktion_engine::Edit::LoadContext Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>A context passed to the <a class="el" href="structtracktion__engine_1_1Edit_1_1Options.html" title="Determines how the Edit will be created.">Options</a> struct which will get updated about load process and can be signaled to stop loading the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  
+ <a href="structtracktion__engine_1_1Edit_1_1LoadContext.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:afd274f74b34fe2558fad704c13d9fad1"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Edit_1_1LoadContext.html#afd274f74b34fe2558fad704c13d9fad1">progress</a> { 0.0f }</td></tr>
+<tr class="memdesc:afd274f74b34fe2558fad704c13d9fad1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Progress will be updated as the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> loads.  <a href="structtracktion__engine_1_1Edit_1_1LoadContext.html#afd274f74b34fe2558fad704c13d9fad1">More...</a><br /></td></tr>
 <tr class="separator:afd274f74b34fe2558fad704c13d9fad1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad74cc2d60134457d4f77044a638cad3c"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Edit_1_1LoadContext.html#ad74cc2d60134457d4f77044a638cad3c">completed</a> { false }</td></tr>
+<tr class="memdesc:ad74cc2d60134457d4f77044a638cad3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set to true once the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> has loaded.  <a href="structtracktion__engine_1_1Edit_1_1LoadContext.html#ad74cc2d60134457d4f77044a638cad3c">More...</a><br /></td></tr>
 <tr class="separator:ad74cc2d60134457d4f77044a638cad3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac843030db4b4cc7dfce3334fbd459077"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Edit_1_1LoadContext.html#ac843030db4b4cc7dfce3334fbd459077">shouldExit</a> { false }</td></tr>
+<tr class="memdesc:ac843030db4b4cc7dfce3334fbd459077"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can be set to true to cancel loading the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="structtracktion__engine_1_1Edit_1_1LoadContext.html#ac843030db4b4cc7dfce3334fbd459077">More...</a><br /></td></tr>
 <tr class="separator:ac843030db4b4cc7dfce3334fbd459077"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Data Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A context passed to the <a class="el" href="structtracktion__engine_1_1Edit_1_1Options.html" title="Determines how the Edit will be created.">Options</a> struct which will get updated about load process and can be signaled to stop loading the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>. </p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="afd274f74b34fe2558fad704c13d9fad1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afd274f74b34fe2558fad704c13d9fad1">&#9670;&nbsp;</a></span>progress</h2>
 
@@ -94,6 +102,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Progress will be updated as the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> loads. </p>
 
 </div>
 </div>
@@ -109,6 +119,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Set to true once the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> has loaded. </p>
+
 </div>
 </div>
 <a id="ac843030db4b4cc7dfce3334fbd459077"></a>
@@ -123,6 +135,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Can be set to true to cancel loading the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>. </p>
+
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
@@ -131,7 +145,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:54:59 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:52 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

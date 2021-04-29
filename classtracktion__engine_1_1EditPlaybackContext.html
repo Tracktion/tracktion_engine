@@ -106,6 +106,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9bd74566327fa7bd310cbd64f0921018"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8b54bdb7925bbc8228b829252e79586"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html#ab8b54bdb7925bbc8228b829252e79586">reallocate</a> ()</td></tr>
 <tr class="separator:ab8b54bdb7925bbc8228b829252e79586"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1df8913064c40bbd41e9a5d2e37b1ea"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html#ab1df8913064c40bbd41e9a5d2e37b1ea">isPlaybackGraphAllocated</a> () const</td></tr>
+<tr class="memdesc:ab1df8913064c40bbd41e9a5d2e37b1ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if a playback graph is currently allocated.  <a href="classtracktion__engine_1_1EditPlaybackContext.html#ab1df8913064c40bbd41e9a5d2e37b1ea">More...</a><br /></td></tr>
+<tr class="separator:ab1df8913064c40bbd41e9a5d2e37b1ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb8cd8d3d8a60d782e9eef4825866571"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html#afb8cd8d3d8a60d782e9eef4825866571">prepareForPlaying</a> (double startTime)</td></tr>
 <tr class="separator:afb8cd8d3d8a60d782e9eef4825866571"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa992b263adb32a97348985521e70e14e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html#aa992b263adb32a97348985521e70e14e">prepareForRecording</a> (double startTime, double punchIn)</td></tr>
@@ -122,6 +125,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a904b81463bc0abc8045e0738979b1bdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa87a6e890fb734f46b30456745b1e422"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html#aa87a6e890fb734f46b30456745b1e422">getInputFor</a> (<a class="el" href="classtracktion__engine_1_1InputDevice.html">InputDevice</a> *) const</td></tr>
 <tr class="separator:aa87a6e890fb734f46b30456745b1e422"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba247a63758a41c0aff43648026157b7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1OutputDeviceInstance.html">OutputDeviceInstance</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html#aba247a63758a41c0aff43648026157b7">getOutputFor</a> (<a class="el" href="classtracktion__engine_1_1OutputDevice.html">OutputDevice</a> *) const</td></tr>
+<tr class="separator:aba247a63758a41c0aff43648026157b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -129,6 +134,11 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a4e285943e25ae7f914adcde46640d65c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8911ee48f106bcb688f69415c3bbdc5d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html#a8911ee48f106bcb688f69415c3bbdc5d">setAddAntiDenormalisationNoise</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;, bool)</td></tr>
 <tr class="separator:a8911ee48f106bcb688f69415c3bbdc5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2853b8c5c6ad1408bee899444f921a3"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html#aa2853b8c5c6ad1408bee899444f921a3">enableExperimentalGraphProcessing</a> (bool)</td></tr>
+<tr class="memdesc:aa2853b8c5c6ad1408bee899444f921a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables the new <a class="el" href="namespacetracktion__graph.html">tracktion_graph</a> module for internal processing.  <a href="classtracktion__engine_1_1EditPlaybackContext.html#aa2853b8c5c6ad1408bee899444f921a3">More...</a><br /></td></tr>
+<tr class="separator:aa2853b8c5c6ad1408bee899444f921a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89a9a8232e1999cdac9a26a4112ace22"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html#a89a9a8232e1999cdac9a26a4112ace22">isExperimentalGraphProcessingEnabled</a> ()</td></tr>
+<tr class="separator:a89a9a8232e1999cdac9a26a4112ace22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -308,6 +318,25 @@ Static Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab1df8913064c40bbd41e9a5d2e37b1ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1df8913064c40bbd41e9a5d2e37b1ea">&#9670;&nbsp;</a></span>isPlaybackGraphAllocated()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion_engine::EditPlaybackContext::isPlaybackGraphAllocated </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if a playback graph is currently allocated. </p>
 
 </div>
 </div>
@@ -506,6 +535,24 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aba247a63758a41c0aff43648026157b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba247a63758a41c0aff43648026157b7">&#9670;&nbsp;</a></span>getOutputFor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion__engine_1_1OutputDeviceInstance.html">OutputDeviceInstance</a>* tracktion_engine::EditPlaybackContext::getOutputFor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1OutputDevice.html">OutputDevice</a> *&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a4e285943e25ae7f914adcde46640d65c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4e285943e25ae7f914adcde46640d65c">&#9670;&nbsp;</a></span>shouldAddAntiDenormalisationNoise()</h2>
 
@@ -557,6 +604,60 @@ Static Public Attributes</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa2853b8c5c6ad1408bee899444f921a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2853b8c5c6ad1408bee899444f921a3">&#9670;&nbsp;</a></span>enableExperimentalGraphProcessing()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void tracktion_engine::EditPlaybackContext::enableExperimentalGraphProcessing </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enables the new <a class="el" href="namespacetracktion__graph.html">tracktion_graph</a> module for internal processing. </p>
+<p>N.B. This is for development only and this method will be removed in the future. </p>
+
+</div>
+</div>
+<a id="a89a9a8232e1999cdac9a26a4112ace22"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89a9a8232e1999cdac9a26a4112ace22">&#9670;&nbsp;</a></span>isExperimentalGraphProcessingEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool tracktion_engine::EditPlaybackContext::isExperimentalGraphProcessingEnabled </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -667,7 +768,7 @@ Static Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:54:59 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:52 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

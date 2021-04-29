@@ -66,26 +66,185 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">tracktion_engine::RackNodeBuilder Namespace Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1RackNodeBuilder_1_1ChannelMap.html">ChannelMap</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1RackNodeBuilder_1_1RackConnection.html">RackConnection</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1RackNodeBuilder_1_1RackPinConnections.html">RackPinConnections</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents all the pin connections between a single source and destination.  <a href="structtracktion__engine_1_1RackNodeBuilder_1_1RackPinConnections.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:ae02e342ca0780f356dbc00753b33c460"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine_1_1RackNodeBuilder.html#ae02e342ca0780f356dbc00753b33c460">Algorithm</a> { <a class="el" href="namespacetracktion__engine_1_1RackNodeBuilder.html#ae02e342ca0780f356dbc00753b33c460a56345a2ea3e821c40921950a7912e781">Algorithm::remappingNode</a>, 
+<a class="el" href="namespacetracktion__engine_1_1RackNodeBuilder.html#ae02e342ca0780f356dbc00753b33c460a202794f32e79bb82cb46fca36b6c8900">Algorithm::connectedNode</a>
+ }</td></tr>
+<tr class="separator:ae02e342ca0780f356dbc00753b33c460"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a150b225d887609ddc8021f7508777ff9"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classtracktion__graph_1_1Node.html">tracktion_graph::Node</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine_1_1RackNodeBuilder.html#a150b225d887609ddc8021f7508777ff9">createRackNode</a> (<a class="el" href="namespacetracktion__engine_1_1RackNodeBuilder.html#ae02e342ca0780f356dbc00753b33c460">Algorithm</a>, <a class="el" href="classtracktion__engine_1_1RackType.html">tracktion_engine::RackType</a> &amp;, double sampleRate, int blockSize, std::shared_ptr&lt; <a class="el" href="structtracktion__engine_1_1InputProvider.html">InputProvider</a> &gt;, <a class="el" href="classtracktion__graph_1_1PlayHeadState.html">tracktion_graph::PlayHeadState</a> *playHeadState=nullptr, bool isRendering=true)</td></tr>
+<tr class="memdesc:a150b225d887609ddc8021f7508777ff9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a Node for processing a Rack.  <a href="namespacetracktion__engine_1_1RackNodeBuilder.html#a150b225d887609ddc8021f7508777ff9">More...</a><br /></td></tr>
+<tr class="separator:a150b225d887609ddc8021f7508777ff9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f382f04480493b5441075570b83cf01"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classtracktion__graph_1_1Node.html">tracktion_graph::Node</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine_1_1RackNodeBuilder.html#a4f382f04480493b5441075570b83cf01">createRackNode</a> (<a class="el" href="namespacetracktion__engine_1_1RackNodeBuilder.html#ae02e342ca0780f356dbc00753b33c460">Algorithm</a>, <a class="el" href="classtracktion__engine_1_1RackType.html">tracktion_engine::RackType</a> &amp;, double sampleRate, int blockSize, std::unique_ptr&lt; <a class="el" href="classtracktion__graph_1_1Node.html">tracktion_graph::Node</a> &gt;, <a class="el" href="classtracktion__graph_1_1PlayHeadState.html">tracktion_graph::PlayHeadState</a> &amp;, bool isRendering)</td></tr>
+<tr class="memdesc:a4f382f04480493b5441075570b83cf01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a Node for processing a Rack where the input comes from a Node.  <a href="namespacetracktion__engine_1_1RackNodeBuilder.html#a4f382f04480493b5441075570b83cf01">More...</a><br /></td></tr>
+<tr class="separator:a4f382f04480493b5441075570b83cf01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="ae02e342ca0780f356dbc00753b33c460"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae02e342ca0780f356dbc00753b33c460">&#9670;&nbsp;</a></span>Algorithm</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespacetracktion__engine_1_1RackNodeBuilder.html#ae02e342ca0780f356dbc00753b33c460">tracktion_engine::RackNodeBuilder::Algorithm</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ae02e342ca0780f356dbc00753b33c460a56345a2ea3e821c40921950a7912e781"></a>remappingNode&#160;</td><td class="fielddoc"><p>An algorithm using ChannelRemappingNodes. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ae02e342ca0780f356dbc00753b33c460a202794f32e79bb82cb46fca36b6c8900"></a>connectedNode&#160;</td><td class="fielddoc"><p>An algorithm using ConnectedNodes. </p>
+<p>Should use less Nodes but is less well tested. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a150b225d887609ddc8021f7508777ff9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a150b225d887609ddc8021f7508777ff9">&#9670;&nbsp;</a></span>createRackNode() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classtracktion__graph_1_1Node.html">tracktion_graph::Node</a>&gt; tracktion_engine::RackNodeBuilder::createRackNode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacetracktion__engine_1_1RackNodeBuilder.html#ae02e342ca0780f356dbc00753b33c460">Algorithm</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1RackType.html">tracktion_engine::RackType</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>sampleRate</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>blockSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="structtracktion__engine_1_1InputProvider.html">InputProvider</a> &gt;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtracktion__graph_1_1PlayHeadState.html">tracktion_graph::PlayHeadState</a> *&#160;</td>
+          <td class="paramname"><em>playHeadState</em> = <code>nullptr</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isRendering</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a Node for processing a Rack. </p>
+<p>The <a class="el" href="structtracktion__engine_1_1InputProvider.html">InputProvider</a> must be used for providing audio and MIDI input to the Rack. </p>
+
+</div>
+</div>
+<a id="a4f382f04480493b5441075570b83cf01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f382f04480493b5441075570b83cf01">&#9670;&nbsp;</a></span>createRackNode() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classtracktion__graph_1_1Node.html">tracktion_graph::Node</a>&gt; tracktion_engine::RackNodeBuilder::createRackNode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacetracktion__engine_1_1RackNodeBuilder.html#ae02e342ca0780f356dbc00753b33c460">Algorithm</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1RackType.html">tracktion_engine::RackType</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>sampleRate</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>blockSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classtracktion__graph_1_1Node.html">tracktion_graph::Node</a> &gt;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtracktion__graph_1_1PlayHeadState.html">tracktion_graph::PlayHeadState</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isRendering</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a Node for processing a Rack where the input comes from a Node. </p>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:55:00 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:53 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

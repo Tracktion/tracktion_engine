@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="node1" class="node">
 <title>Node1</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="An iterable list of Track[s] that live either in an Edit or as subtracks of a Track.">
 <polygon fill="#bfbfbf" stroke="black" points="2.5,-0.5 2.5,-19.5 149.5,-19.5 149.5,-0.5 2.5,-0.5"/>
 <text text-anchor="middle" x="76" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::TrackList</text>
 </a>

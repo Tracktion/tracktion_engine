@@ -77,9 +77,9 @@ $(function() {
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a778df744af3fe658a7162b451a3cf1c7"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1MidiInputDevice_1_1MidiKeyChangeDispatcher_1_1Listener.html#a778df744af3fe658a7162b451a3cf1c7">~Listener</a> ()</td></tr>
 <tr class="separator:a778df744af3fe658a7162b451a3cf1c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d51ee0ab3a60870b1bea19defda8a36"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1MidiInputDevice_1_1MidiKeyChangeDispatcher_1_1Listener.html#a5d51ee0ab3a60870b1bea19defda8a36">midiKeyStateChanged</a> (<a class="el" href="classtracktion__engine_1_1AudioTrack.html">AudioTrack</a> *, const juce::Array&lt; int &gt; &amp;notes, const juce::Array&lt; int &gt; &amp;vels)=0</td></tr>
-<tr class="memdesc:a5d51ee0ab3a60870b1bea19defda8a36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback to indicate notes have been played for the given track.  <a href="structtracktion__engine_1_1MidiInputDevice_1_1MidiKeyChangeDispatcher_1_1Listener.html#a5d51ee0ab3a60870b1bea19defda8a36">More...</a><br /></td></tr>
-<tr class="separator:a5d51ee0ab3a60870b1bea19defda8a36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95b660279e813a5231c54f60bcfd9544"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1MidiInputDevice_1_1MidiKeyChangeDispatcher_1_1Listener.html#a95b660279e813a5231c54f60bcfd9544">midiKeyStateChanged</a> (<a class="el" href="classtracktion__engine_1_1AudioTrack.html">AudioTrack</a> *, const juce::Array&lt; int &gt; &amp;notesOn, const juce::Array&lt; int &gt; &amp;vels, const juce::Array&lt; int &gt; &amp;notesOff)=0</td></tr>
+<tr class="memdesc:a95b660279e813a5231c54f60bcfd9544"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback to indicate notes have been played for the given track.  <a href="structtracktion__engine_1_1MidiInputDevice_1_1MidiKeyChangeDispatcher_1_1Listener.html#a95b660279e813a5231c54f60bcfd9544">More...</a><br /></td></tr>
+<tr class="separator:a95b660279e813a5231c54f60bcfd9544"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a778df744af3fe658a7162b451a3cf1c7"></a>
@@ -108,8 +108,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a5d51ee0ab3a60870b1bea19defda8a36"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d51ee0ab3a60870b1bea19defda8a36">&#9670;&nbsp;</a></span>midiKeyStateChanged()</h2>
+<a id="a95b660279e813a5231c54f60bcfd9544"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95b660279e813a5231c54f60bcfd9544">&#9670;&nbsp;</a></span>midiKeyStateChanged()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -127,13 +127,19 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const juce::Array&lt; int &gt; &amp;&#160;</td>
-          <td class="paramname"><em>notes</em>, </td>
+          <td class="paramname"><em>notesOn</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const juce::Array&lt; int &gt; &amp;&#160;</td>
-          <td class="paramname"><em>vels</em>&#160;</td>
+          <td class="paramname"><em>vels</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::Array&lt; int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>notesOff</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -158,7 +164,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:54:59 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:53 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

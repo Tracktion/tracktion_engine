@@ -83,6 +83,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__graph_1_1NodeProperties.html">tracktion_graph::NodeProperties</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds some really basic properties of a node.  <a href="structtracktion__graph_1_1NodeProperties.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__graph_1_1NodeOptimisations.html">tracktion_graph::NodeOptimisations</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds some hints that <em>might</em> be used by the <a class="el" href="classtracktion__graph_1_1Node.html" title="Main graph Node processor class.">Node</a> or players to improve efficiency.  <a href="structtracktion__graph_1_1NodeOptimisations.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1Node.html">tracktion_graph::Node</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main graph <a class="el" href="classtracktion__graph_1_1Node.html" title="Main graph Node processor class.">Node</a> processor class.  <a href="classtracktion__graph_1_1Node.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -94,6 +97,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__graph_1_1detail_1_1VisitNodesWithRecord.html">tracktion_graph::detail::VisitNodesWithRecord</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__graph_1_1detail_1_1VisitNodesWithRecordBFS.html">tracktion_graph::detail::VisitNodesWithRecordBFS</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -104,25 +109,45 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a184300edcc70de77310266edbee53aa4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__graph.html#a184300edcc70de77310266edbee53aa4">tracktion_graph::VertexOrdering</a> { <a class="el" href="namespacetracktion__graph.html#a184300edcc70de77310266edbee53aa4ac9a7dcee6c8867427cad06075090ea8c">tracktion_graph::VertexOrdering::preordering</a>, 
+<tr class="memitem:a8f75f3ff4488c522b757e48e94f129b3"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__graph.html#a8f75f3ff4488c522b757e48e94f129b3">tracktion_graph::ClearBuffers</a> { <a class="el" href="namespacetracktion__graph.html#a8f75f3ff4488c522b757e48e94f129b3a7fa3b767c460b54a2be4d49030b349c7">tracktion_graph::ClearBuffers::no</a>, 
+<a class="el" href="namespacetracktion__graph.html#a8f75f3ff4488c522b757e48e94f129b3aa6105c0a611b41b08f1209506350279e">tracktion_graph::ClearBuffers::yes</a>
+ }</td></tr>
+<tr class="separator:a8f75f3ff4488c522b757e48e94f129b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b0f2f3ab8bb6d8f8de4c151e4edc7e7"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__graph.html#a7b0f2f3ab8bb6d8f8de4c151e4edc7e7">tracktion_graph::AllocateAudioBuffer</a> { <a class="el" href="namespacetracktion__graph.html#a7b0f2f3ab8bb6d8f8de4c151e4edc7e7a7fa3b767c460b54a2be4d49030b349c7">tracktion_graph::AllocateAudioBuffer::no</a>, 
+<a class="el" href="namespacetracktion__graph.html#a7b0f2f3ab8bb6d8f8de4c151e4edc7e7aa6105c0a611b41b08f1209506350279e">tracktion_graph::AllocateAudioBuffer::yes</a>
+ }</td></tr>
+<tr class="separator:a7b0f2f3ab8bb6d8f8de4c151e4edc7e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a184300edcc70de77310266edbee53aa4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__graph.html#a184300edcc70de77310266edbee53aa4">tracktion_graph::VertexOrdering</a> { <br />
+&#160;&#160;<a class="el" href="namespacetracktion__graph.html#a184300edcc70de77310266edbee53aa4ac9a7dcee6c8867427cad06075090ea8c">tracktion_graph::VertexOrdering::preordering</a>, 
 <a class="el" href="namespacetracktion__graph.html#a184300edcc70de77310266edbee53aa4aa594bbe6c0bebbd5e0ac45a054a7ea19">tracktion_graph::VertexOrdering::postordering</a>, 
 <a class="el" href="namespacetracktion__graph.html#a184300edcc70de77310266edbee53aa4aae32c07adc26714e62b0e2cd5f77f72d">tracktion_graph::VertexOrdering::reversePreordering</a>, 
-<a class="el" href="namespacetracktion__graph.html#a184300edcc70de77310266edbee53aa4afe1fe1181a7b661c316a10925c500c9e">tracktion_graph::VertexOrdering::reversePostordering</a>
+<a class="el" href="namespacetracktion__graph.html#a184300edcc70de77310266edbee53aa4afe1fe1181a7b661c316a10925c500c9e">tracktion_graph::VertexOrdering::reversePostordering</a>, 
+<br />
+&#160;&#160;<a class="el" href="namespacetracktion__graph.html#a184300edcc70de77310266edbee53aa4a867d33f817886982c81cc3934e489e24">tracktion_graph::VertexOrdering::bfsPreordering</a>, 
+<a class="el" href="namespacetracktion__graph.html#a184300edcc70de77310266edbee53aa4a25f364f7adcbbf7a7cc5874f97ae1f12">tracktion_graph::VertexOrdering::bfsReversePreordering</a>
+<br />
  }</td></tr>
 <tr class="memdesc:a184300edcc70de77310266edbee53aa4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies the ordering algorithm.  <a href="namespacetracktion__graph.html#a184300edcc70de77310266edbee53aa4">More...</a><br /></td></tr>
 <tr class="separator:a184300edcc70de77310266edbee53aa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a70160bf762a45db8470e801a964254df"><td class="memTemplParams" colspan="2">template&lt;typename NodeType , typename... Args&gt; </td></tr>
+<tr class="memitem:a70160bf762a45db8470e801a964254df"><td class="memTemplItemLeft" align="right" valign="top">std::unique_ptr&lt; Node &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion__graph.html#a70160bf762a45db8470e801a964254df">tracktion_graph::makeNode</a> (Args &amp;&amp;... args)</td></tr>
+<tr class="memdesc:a70160bf762a45db8470e801a964254df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a node of the given type and returns it as the base <a class="el" href="classtracktion__graph_1_1Node.html" title="Main graph Node processor class.">Node</a> class.  <a href="namespacetracktion__graph.html#a70160bf762a45db8470e801a964254df">More...</a><br /></td></tr>
+<tr class="separator:a70160bf762a45db8470e801a964254df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a628d15d4a6b61b204cf1103799d923c5"><td class="memTemplParams" colspan="2">template&lt;typename Visitor &gt; </td></tr>
 <tr class="memitem:a628d15d4a6b61b204cf1103799d923c5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion__graph.html#a628d15d4a6b61b204cf1103799d923c5">tracktion_graph::visitNodes</a> (Node &amp;, Visitor &amp;&amp;, bool preordering)</td></tr>
 <tr class="memdesc:a628d15d4a6b61b204cf1103799d923c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should call the visitor for any direct inputs to the node exactly once.  <a href="namespacetracktion__graph.html#a628d15d4a6b61b204cf1103799d923c5">More...</a><br /></td></tr>
 <tr class="separator:a628d15d4a6b61b204cf1103799d923c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e0b66cc695290098bf9125f159de667"><td class="memTemplParams" colspan="2">template&lt;typename Visitor &gt; </td></tr>
+<tr class="memitem:a8e0b66cc695290098bf9125f159de667"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion__graph.html#a8e0b66cc695290098bf9125f159de667">tracktion_graph::visitNodesBFS</a> (Node &amp;node, Visitor &amp;&amp;visitor)</td></tr>
+<tr class="separator:a8e0b66cc695290098bf9125f159de667"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:54:59 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:52 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

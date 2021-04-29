@@ -84,6 +84,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TransportControl_1_1ReallocationInhibitor.html">ReallocationInhibitor</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TransportControl_1_1ScopedContextAllocator.html">ScopedContextAllocator</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees the playback context and then re-allocates it upon destruction.  <a href="structtracktion__engine_1_1TransportControl_1_1ScopedContextAllocator.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TransportControl_1_1ScopedPlaybackRestarter.html">ScopedPlaybackRestarter</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -112,13 +115,19 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a44ff7385fd4737c934e5986eed4084ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a44ff7385fd4737c934e5986eed4084ea">syncToEdit</a> (<a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> *editToSyncTo, bool isPreview)</td></tr>
 <tr class="separator:a44ff7385fd4737c934e5986eed4084ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2789400ce74395c9003a60465856a0c7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a2789400ce74395c9003a60465856a0c7">isPlaying</a> () const</td></tr>
-<tr class="memdesc:a2789400ce74395c9003a60465856a0c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">(this is also true if we're recording  <a href="classtracktion__engine_1_1TransportControl.html#a2789400ce74395c9003a60465856a0c7">More...</a><br /></td></tr>
+<tr class="memdesc:a2789400ce74395c9003a60465856a0c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the transport is playing.  <a href="classtracktion__engine_1_1TransportControl.html#a2789400ce74395c9003a60465856a0c7">More...</a><br /></td></tr>
 <tr class="separator:a2789400ce74395c9003a60465856a0c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4106d0c769426e78a1d89e92a7cdbfc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#aa4106d0c769426e78a1d89e92a7cdbfc">isRecording</a> () const</td></tr>
+<tr class="memdesc:aa4106d0c769426e78a1d89e92a7cdbfc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if recording is in progress.  <a href="classtracktion__engine_1_1TransportControl.html#aa4106d0c769426e78a1d89e92a7cdbfc">More...</a><br /></td></tr>
 <tr class="separator:aa4106d0c769426e78a1d89e92a7cdbfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62664f93dbee721c5bf6e4329b1c88ca"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a62664f93dbee721c5bf6e4329b1c88ca">isSafeRecording</a> () const</td></tr>
+<tr class="memdesc:a62664f93dbee721c5bf6e4329b1c88ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if safe-recording is in progress.  <a href="classtracktion__engine_1_1TransportControl.html#a62664f93dbee721c5bf6e4329b1c88ca">More...</a><br /></td></tr>
 <tr class="separator:a62664f93dbee721c5bf6e4329b1c88ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac80b44a2eefa3c62ad23db4257d55026"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#ac80b44a2eefa3c62ad23db4257d55026">isStopping</a> () const</td></tr>
+<tr class="memdesc:ac80b44a2eefa3c62ad23db4257d55026"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the transport is currently being stopped.  <a href="classtracktion__engine_1_1TransportControl.html#ac80b44a2eefa3c62ad23db4257d55026">More...</a><br /></td></tr>
+<tr class="separator:ac80b44a2eefa3c62ad23db4257d55026"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae57647f221bbe2b777e9e3a9902f697c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#ae57647f221bbe2b777e9e3a9902f697c">getTimeWhenStarted</a> () const</td></tr>
+<tr class="memdesc:ae57647f221bbe2b777e9e3a9902f697c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the time when the transport was started.  <a href="classtracktion__engine_1_1TransportControl.html#ae57647f221bbe2b777e9e3a9902f697c">More...</a><br /></td></tr>
 <tr class="separator:ae57647f221bbe2b777e9e3a9902f697c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33b6350e76272c7f2367bd0d9a82f1cd"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a33b6350e76272c7f2367bd0d9a82f1cd">getCurrentPosition</a> () const</td></tr>
 <tr class="separator:a33b6350e76272c7f2367bd0d9a82f1cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -128,6 +137,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a76dc0068694459bb6ff3adbaf91cf184"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7165e08005243f1cea5b20a5b902b8f0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a7165e08005243f1cea5b20a5b902b8f0">isUserDragging</a> () const noexcept</td></tr>
 <tr class="separator:a7165e08005243f1cea5b20a5b902b8f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c7a9c4e3116852ca69270bd5936a0f8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a2c7a9c4e3116852ca69270bd5936a0f8">isPositionUpdatingFromPlayhead</a> () const</td></tr>
+<tr class="separator:a2c7a9c4e3116852ca69270bd5936a0f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e19079c406a3f9b994fdc17857c669a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a5e19079c406a3f9b994fdc17857c669a">setLoopIn</a> (double)</td></tr>
 <tr class="separator:a5e19079c406a3f9b994fdc17857c669a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ca017c50f3ee004737d356aa84539c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a5ca017c50f3ee004737d356aa84539c2">setLoopOut</a> (double)</td></tr>
@@ -181,8 +192,8 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a0ba563940f3d4bee96940ac138dc0456"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6a01300cc381b57cf724d5a3e3fd931"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#ad6a01300cc381b57cf724d5a3e3fd931">stopAllTransports</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;, bool discardRecordings, bool clearDevices)</td></tr>
 <tr class="separator:ad6a01300cc381b57cf724d5a3e3fd931"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adccac6a42aab0473342c356c8eb0479f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#adccac6a42aab0473342c356c8eb0479f">restartAllTransports</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;, bool clearDevices)</td></tr>
-<tr class="separator:adccac6a42aab0473342c356c8eb0479f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06540294d976cca3d6974cacf71aeaf8"><td class="memItemLeft" align="right" valign="top">static std::vector&lt; std::unique_ptr&lt; <a class="el" href="structtracktion__engine_1_1TransportControl_1_1ScopedContextAllocator.html">ScopedContextAllocator</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a06540294d976cca3d6974cacf71aeaf8">restartAllTransports</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;, bool clearDevices)</td></tr>
+<tr class="separator:a06540294d976cca3d6974cacf71aeaf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -467,7 +478,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>(this is also true if we're recording </p>
+<p>Returns true if the transport is playing. </p>
+<p>(This is also true during recording). </p>
 
 </div>
 </div>
@@ -486,6 +498,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns true if recording is in progress. </p>
+
 </div>
 </div>
 <a id="a62664f93dbee721c5bf6e4329b1c88ca"></a>
@@ -503,6 +517,28 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns true if safe-recording is in progress. </p>
+
+</div>
+</div>
+<a id="ac80b44a2eefa3c62ad23db4257d55026"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac80b44a2eefa3c62ad23db4257d55026">&#9670;&nbsp;</a></span>isStopping()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion_engine::TransportControl::isStopping </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if the transport is currently being stopped. </p>
+<p>isPlaying will return false during this period but position changes etc. could still be sent out so this method lets you know if this. </p>
+
 </div>
 </div>
 <a id="ae57647f221bbe2b777e9e3a9902f697c"></a>
@@ -519,6 +555,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the time when the transport was started. </p>
 
 </div>
 </div>
@@ -596,6 +634,23 @@ Public Attributes</h2></td></tr>
 <span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2c7a9c4e3116852ca69270bd5936a0f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c7a9c4e3116852ca69270bd5936a0f8">&#9670;&nbsp;</a></span>isPositionUpdatingFromPlayhead()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion_engine::TransportControl::isPositionUpdatingFromPlayhead </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>
@@ -807,6 +862,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="structtracktion__engine_1_1TransportControl_1_1ScopedContextAllocator.html#a1a468990c9ead78a52b3b186aae04059">tracktion_engine::TransportControl::ScopedContextAllocator::~ScopedContextAllocator()</a>.</p>
 
 </div>
 </div>
@@ -1067,8 +1124,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="adccac6a42aab0473342c356c8eb0479f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adccac6a42aab0473342c356c8eb0479f">&#9670;&nbsp;</a></span>restartAllTransports()</h2>
+<a id="a06540294d976cca3d6974cacf71aeaf8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06540294d976cca3d6974cacf71aeaf8">&#9670;&nbsp;</a></span>restartAllTransports()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1077,7 +1134,7 @@ Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static void tracktion_engine::TransportControl::restartAllTransports </td>
+          <td class="memname">static std::vector&lt;std::unique_ptr&lt;<a class="el" href="structtracktion__engine_1_1TransportControl_1_1ScopedContextAllocator.html">ScopedContextAllocator</a>&gt; &gt; tracktion_engine::TransportControl::restartAllTransports </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;&#160;</td>
           <td class="paramname">, </td>
@@ -1272,7 +1329,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:55:00 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:53 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

@@ -316,7 +316,7 @@
 <!-- Node77 -->
 <g id="node47" class="node">
 <title>Node77</title>
-<g id="a_node47"><a xlink:href="classtracktion__engine_1_1Track.html" target="_top" xlink:title=" ">
+<g id="a_node47"><a xlink:href="classtracktion__engine_1_1Track.html" target="_top" xlink:title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">
 <polygon fill="none" stroke="red" points="218,-88.5 218,-107.5 348,-107.5 348,-88.5 218,-88.5"/>
 <text text-anchor="middle" x="283" y="-95.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::Track</text>
 </a>
@@ -347,7 +347,7 @@
 <!-- Node87 -->
 <g id="node49" class="node">
 <title>Node87</title>
-<g id="a_node49"><a xlink:href="classtracktion__engine_1_1TrackItem.html" target="_top" xlink:title="Base class for EditItems that live in a track, e.g.">
+<g id="a_node49"><a xlink:href="classtracktion__engine_1_1TrackItem.html" target="_top" xlink:title="Base class for EditItems that live in a Track, e.g.">
 <polygon fill="none" stroke="red" points="207,-0.5 207,-19.5 359,-19.5 359,-0.5 207,-0.5"/>
 <text text-anchor="middle" x="283" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::TrackItem</text>
 </a>

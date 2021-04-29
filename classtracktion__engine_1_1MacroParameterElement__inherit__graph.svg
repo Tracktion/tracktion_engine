@@ -21,7 +21,7 @@
 <!-- Node2 -->
 <g id="node2" class="node">
 <title>Node2</title>
-<g id="a_node2"><a xlink:href="structtracktion__engine_1_1Edit_1_1GlobalMacros.html" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="structtracktion__engine_1_1Edit_1_1GlobalMacros.html" target="_top" xlink:title="Holds the global Macros for the Edit.">
 <polygon fill="none" stroke="black" points="235,-778 235,-808 358,-808 358,-778 235,-778"/>
 <text text-anchor="start" x="243" y="-796" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::Edit</text>
 <text text-anchor="middle" x="296.5" y="-785" font-family="Helvetica,sans-Serif" font-size="10.00">::GlobalMacros</text>
@@ -67,7 +67,7 @@
 <!-- Node31 -->
 <g id="node31" class="node">
 <title>Node31</title>
-<g id="a_node31"><a xlink:href="classtracktion__engine_1_1Track.html" target="_top" xlink:title=" ">
+<g id="a_node31"><a xlink:href="classtracktion__engine_1_1Track.html" target="_top" xlink:title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">
 <polygon fill="none" stroke="black" points="231.5,-88.5 231.5,-107.5 361.5,-107.5 361.5,-88.5 231.5,-88.5"/>
 <text text-anchor="middle" x="296.5" y="-95.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::Track</text>
 </a>

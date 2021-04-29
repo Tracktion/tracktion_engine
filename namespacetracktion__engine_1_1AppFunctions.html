@@ -88,6 +88,10 @@ Functions</h2></td></tr>
 <tr class="separator:a0627ed317829f0448430df39d6f788f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac450dca2bf2e2a8723a42eda1f2bc98e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine_1_1AppFunctions.html#ac450dca2bf2e2a8723a42eda1f2bc98e">deleteRegion</a> ()</td></tr>
 <tr class="separator:ac450dca2bf2e2a8723a42eda1f2bc98e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1dd7b4762808dfd4132c675b5ed3d2ec"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine_1_1AppFunctions.html#a1dd7b4762808dfd4132c675b5ed3d2ec">deleteRegionAndCloseGapFromSelected</a> ()</td></tr>
+<tr class="separator:a1dd7b4762808dfd4132c675b5ed3d2ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6aed13711244d4782513784e3f35811"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine_1_1AppFunctions.html#ab6aed13711244d4782513784e3f35811">deleteRegionAndCloseGap</a> ()</td></tr>
+<tr class="separator:ab6aed13711244d4782513784e3f35811"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1363143b0b7b37d262b2b1000d126ec2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine_1_1AppFunctions.html#a1363143b0b7b37d262b2b1000d126ec2">goToStart</a> ()</td></tr>
 <tr class="separator:a1363143b0b7b37d262b2b1000d126ec2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac73a600025a6647990af9c8d4022a2d1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine_1_1AppFunctions.html#ac73a600025a6647990af9c8d4022a2d1">goToEnd</a> ()</td></tr>
@@ -210,6 +214,8 @@ Functions</h2></td></tr>
 <tr class="separator:a634660b556fc94b4200fde79fea5cd67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a165f60ab1c5991a5eec1d31fa6510135"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine_1_1AppFunctions.html#a165f60ab1c5991a5eec1d31fa6510135">resetOverloads</a> ()</td></tr>
 <tr class="separator:a165f60ab1c5991a5eec1d31fa6510135"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3062751be4bdd33ce43fc8e600010610"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine_1_1AppFunctions.html#a3062751be4bdd33ce43fc8e600010610">resetPeaks</a> ()</td></tr>
+<tr class="separator:a3062751be4bdd33ce43fc8e600010610"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adcc143e17ea322df071590a63913e800"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine_1_1AppFunctions.html#adcc143e17ea322df071590a63913e800">toggleTrackFreeze</a> ()</td></tr>
 <tr class="separator:adcc143e17ea322df071590a63913e800"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -246,7 +252,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classNodeReader.html#afe234073b0959b63689a14db86a096c0">NodeReader::readAudioSamples()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1PlayHeadPositionNode.html#af3753e1a98b07f5ccd0a097e862f5210">tracktion_engine::PlayHeadPositionNode::process()</a>, <a class="el" href="classtracktion__engine_1_1LevelMeasurerProcessingNode.html#a9f2664279074449d297b8224f5a77dd2">tracktion_engine::LevelMeasurerProcessingNode::process()</a>, <a class="el" href="classtracktion__graph_1_1GainNode.html#a376fe28eb68b7a043aecf32ec2568570">tracktion_graph::GainNode::process()</a>, <a class="el" href="classtracktion__graph_1_1ForwardingNode.html#a6b0199ee6bf36df2a0c8598d3c21132f">tracktion_graph::ForwardingNode::process()</a>, and <a class="el" href="classNodeReader.html#afe234073b0959b63689a14db86a096c0">NodeReader::readAudioSamples()</a>.</p>
 
 </div>
 </div>
@@ -327,6 +333,40 @@ Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">void tracktion_engine::AppFunctions::deleteRegion </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1dd7b4762808dfd4132c675b5ed3d2ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1dd7b4762808dfd4132c675b5ed3d2ec">&#9670;&nbsp;</a></span>deleteRegionAndCloseGapFromSelected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion_engine::AppFunctions::deleteRegionAndCloseGapFromSelected </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab6aed13711244d4782513784e3f35811"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6aed13711244d4782513784e3f35811">&#9670;&nbsp;</a></span>deleteRegionAndCloseGap()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion_engine::AppFunctions::deleteRegionAndCloseGap </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -419,7 +459,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1ReferencedMaterialList.html#a1730a8308bb40e42b7f9c65b1de92b20">tracktion_engine::ReferencedMaterialList::add()</a>, and <a class="el" href="structtracktion__engine_1_1ReferencedMaterialList_1_1IntervalList.html#aa5d2e256883cd1a666ab501f48ea856e">tracktion_engine::ReferencedMaterialList::IntervalList::addInterval()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1ReferencedMaterialList.html#a1730a8308bb40e42b7f9c65b1de92b20">tracktion_engine::ReferencedMaterialList::add()</a>, <a class="el" href="structtracktion__engine_1_1ReferencedMaterialList_1_1IntervalList.html#aa5d2e256883cd1a666ab501f48ea856e">tracktion_engine::ReferencedMaterialList::IntervalList::addInterval()</a>, <a class="el" href="namespacetracktion__graph.html#a4af9987141067c848f11ed0f494ec353">tracktion_graph::channelRangeWithStartAndLength()</a>, and <a class="el" href="namespacetracktion__graph.html#a0a906c43b10f8d4281761df063bbd4d4">tracktion_graph::frameRangeWithStartAndLength()</a>.</p>
 
 </div>
 </div>
@@ -1375,6 +1415,23 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a3062751be4bdd33ce43fc8e600010610"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3062751be4bdd33ce43fc8e600010610">&#9670;&nbsp;</a></span>resetPeaks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion_engine::AppFunctions::resetPeaks </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="adcc143e17ea322df071590a63913e800"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adcc143e17ea322df071590a63913e800">&#9670;&nbsp;</a></span>toggleTrackFreeze()</h2>
 
@@ -1395,7 +1452,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:55:00 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:53 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

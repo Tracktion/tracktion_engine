@@ -102,6 +102,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a490ea648572ddb42a81e28880dc4ddd6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a490ea648572ddb42a81e28880dc4ddd6">setPluginDisabled</a> (const juce::String &amp;, bool)</td></tr>
 <tr class="memdesc:a490ea648572ddb42a81e28880dc4ddd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should implement a way of saving if plugin is disabled or not.  <a href="classtracktion__engine_1_1EngineBehaviour.html#a490ea648572ddb42a81e28880dc4ddd6">More...</a><br /></td></tr>
 <tr class="separator:a490ea648572ddb42a81e28880dc4ddd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a713f3f9c43e38f54c122bf8f776baf5c"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a713f3f9c43e38f54c122bf8f776baf5c">shouldBypassedPluginsBeRemovedFromPlaybackGraph</a> ()</td></tr>
+<tr class="memdesc:a713f3f9c43e38f54c122bf8f776baf5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return if plugins which have been bypassed should be included in the playback graph.  <a href="classtracktion__engine_1_1EngineBehaviour.html#a713f3f9c43e38f54c122bf8f776baf5c">More...</a><br /></td></tr>
+<tr class="separator:a713f3f9c43e38f54c122bf8f776baf5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6b9f88882a144a1cd5b95ff86e77231"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#ae6b9f88882a144a1cd5b95ff86e77231">saveCustomPluginProperties</a> (juce::ValueTree &amp;, juce::AudioPluginInstance &amp;, juce::UndoManager *)</td></tr>
 <tr class="memdesc:ae6b9f88882a144a1cd5b95ff86e77231"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives plugins an opportunity to save custom data when the plugin state gets flushed.  <a href="classtracktion__engine_1_1EngineBehaviour.html#ae6b9f88882a144a1cd5b95ff86e77231">More...</a><br /></td></tr>
 <tr class="separator:ae6b9f88882a144a1cd5b95ff86e77231"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -114,6 +117,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa20ea4e4d7d897728b48ddf8061b1091"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74b3245e5d9297e43796a6ff241dde38"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a74b3245e5d9297e43796a6ff241dde38">setMiddleCOctave</a> (int)</td></tr>
 <tr class="separator:a74b3245e5d9297e43796a6ff241dde38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ea7dff9bac1313730b30f0bf96c39eb"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a7ea7dff9bac1313730b30f0bf96c39eb">getDefaultNoteColour</a> ()</td></tr>
+<tr class="separator:a7ea7dff9bac1313730b30f0bf96c39eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69dbcf4e2c2777ba228f588eb6f6d41b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a69dbcf4e2c2777ba228f588eb6f6d41b">editHasBeenSaved</a> (<a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;, juce::File)</td></tr>
 <tr class="separator:a69dbcf4e2c2777ba228f588eb6f6d41b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78ffa6137c47ca6b8d738ec9551b62c1"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a78ffa6137c47ca6b8d738ec9551b62c1">isMidiDriverUsedForIncommingMessageTiming</a> ()</td></tr>
@@ -125,6 +130,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9bf39576bb4362282f9487f0347540a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5be38ef38a6834e83f2c144e35cfdab5"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a5be38ef38a6834e83f2c144e35cfdab5">getNumberOfCPUsToUseForAudio</a> ()</td></tr>
 <tr class="separator:a5be38ef38a6834e83f2c144e35cfdab5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b28bacc0d1dc730f2df81d953ab8ee7"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a6b28bacc0d1dc730f2df81d953ab8ee7">shouldProcessMutedTracks</a> ()</td></tr>
+<tr class="memdesc:a6b28bacc0d1dc730f2df81d953ab8ee7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should muted tracks processing be disabled to save CPU.  <a href="classtracktion__engine_1_1EngineBehaviour.html#a6b28bacc0d1dc730f2df81d953ab8ee7">More...</a><br /></td></tr>
+<tr class="separator:a6b28bacc0d1dc730f2df81d953ab8ee7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92647732698a6d19d161ff94f9b02cbb"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a92647732698a6d19d161ff94f9b02cbb">areAudioClipsRemappedWhenTempoChanges</a> ()</td></tr>
 <tr class="separator:a92647732698a6d19d161ff94f9b02cbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fb22a484aead305c5bd9c7351b38e83"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a2fb22a484aead305c5bd9c7351b38e83">setAudioClipsRemappedWhenTempoChanges</a> (bool)</td></tr>
@@ -377,6 +385,34 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a713f3f9c43e38f54c122bf8f776baf5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a713f3f9c43e38f54c122bf8f776baf5c">&#9670;&nbsp;</a></span>shouldBypassedPluginsBeRemovedFromPlaybackGraph()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion_engine::EngineBehaviour::shouldBypassedPluginsBeRemovedFromPlaybackGraph </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Should return if plugins which have been bypassed should be included in the playback graph. </p>
+<p>By default this is false and bypassed plugins will still call processBypassed and introduce the same latency as if they weren't. But by returning false here, you can opt to remove them from the playback graph entirely which means they won't introduce latency which can be useful for tracking. </p>
+
+</div>
+</div>
 <a id="ae6b9f88882a144a1cd5b95ff86e77231"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae6b9f88882a144a1cd5b95ff86e77231">&#9670;&nbsp;</a></span>saveCustomPluginProperties()</h2>
 
@@ -529,6 +565,31 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a7ea7dff9bac1313730b30f0bf96c39eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ea7dff9bac1313730b30f0bf96c39eb">&#9670;&nbsp;</a></span>getDefaultNoteColour()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int tracktion_engine::EngineBehaviour::getDefaultNoteColour </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a69dbcf4e2c2777ba228f588eb6f6d41b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a69dbcf4e2c2777ba228f588eb6f6d41b">&#9670;&nbsp;</a></span>editHasBeenSaved()</h2>
 
@@ -666,6 +727,35 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6b28bacc0d1dc730f2df81d953ab8ee7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b28bacc0d1dc730f2df81d953ab8ee7">&#9670;&nbsp;</a></span>shouldProcessMutedTracks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion_engine::EngineBehaviour::shouldProcessMutedTracks </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Should muted tracks processing be disabled to save CPU. </p>
+
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1AudioTrack.html#a41c5a47f3c4b6f884b2341126662dd52">tracktion_engine::AudioTrack::processAudioNodesWhileMuted()</a>.</p>
 
 </div>
 </div>
@@ -1076,7 +1166,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Must return the default looped sequence type to use. </p>
-<p>Current options are: 0: loopRangeDefinesAllRepetitions // The looped sequence is the same for all repititions including the first. 1: loopRangeDefinesSubsequentRepetitions // The first section is the whole sequence, subsequent repitions are determined by the loop range. </p>
+<p>Current options are: 0: loopRangeDefinesAllRepetitions // The looped sequence is the same for all repetitions including the first. 1: loopRangeDefinesSubsequentRepetitions // The first section is the whole sequence, subsequent repitions are determined by the loop range. </p>
 
 </div>
 </div>
@@ -1086,7 +1176,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:54:59 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:52 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

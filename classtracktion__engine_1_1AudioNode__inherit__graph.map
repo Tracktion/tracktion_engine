@@ -1,6 +1,6 @@
 <map id="tracktion_engine::AudioNode" name="tracktion_engine::AudioNode">
 <area shape="rect" id="node1" title="Base class for nodes in an audio playback graph." alt="" coords="5,319,216,346"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1ClickNode.html" title="An AudioNode that produces a click track." alt="" coords="285,151,490,178"/>
+<area shape="rect" id="node2" href="$classtracktion__engine_1_1ClickAudioNode.html" title="An AudioNode that produces a click track." alt="" coords="266,151,509,178"/>
 <area shape="rect" id="node3" href="$classtracktion__engine_1_1CombiningAudioNode.html" title="An AudioNode that mixes a sequence of clips of other nodes." alt="" coords="283,203,492,244"/>
 <area shape="rect" id="node4" href="$classtracktion__engine_1_1MidiAudioNode.html" title="An AudioNode that plays MIDI data from a MidiMessageSequence, at a specific MIDI channel." alt="" coords="268,269,507,295"/>
 <area shape="rect" id="node5" href="$classtracktion__engine_1_1MixerAudioNode.html" title="An AudioNode that mixes together a set of parallel input nodes." alt="" coords="264,319,511,346"/>

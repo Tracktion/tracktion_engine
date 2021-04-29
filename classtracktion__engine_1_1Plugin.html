@@ -102,8 +102,6 @@ Public Types</h2></td></tr>
 <tr class="separator:a17ac29b5ddf4c9bb692922f797c55483"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a97f7d1afcf0045b5f21a027d58b0c072"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a97f7d1afcf0045b5f21a027d58b0c072">Ptr</a> = juce::ReferenceCountedObjectPtr&lt; <a class="el" href="classtracktion__engine_1_1Plugin.html">Plugin</a> &gt;</td></tr>
 <tr class="separator:a97f7d1afcf0045b5f21a027d58b0c072"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab419a9883ad9a9aa7b961d66706f815a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#ab419a9883ad9a9aa7b961d66706f815a">WeakRef</a> = juce::WeakReference&lt; <a class="el" href="classtracktion__engine_1_1Plugin.html">Plugin</a> &gt;</td></tr>
-<tr class="separator:ab419a9883ad9a9aa7b961d66706f815a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7cceeba3a734d2accacf3f3a34bf5c9"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#af7cceeba3a734d2accacf3f3a34bf5c9">Array</a> = juce::ReferenceCountedArray&lt; <a class="el" href="classtracktion__engine_1_1Plugin.html">Plugin</a> &gt;</td></tr>
 <tr class="separator:af7cceeba3a734d2accacf3f3a34bf5c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_classtracktion__engine_1_1Selectable"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classtracktion__engine_1_1Selectable')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classtracktion__engine_1_1Selectable.html">tracktion_engine::Selectable</a></td></tr>
@@ -169,14 +167,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae205cd44a0bfddeb5ad40bbfa0b7969c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#ae205cd44a0bfddeb5ad40bbfa0b7969c">reset</a> ()</td></tr>
 <tr class="memdesc:ae205cd44a0bfddeb5ad40bbfa0b7969c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should reset synth voices, tails, clear delay buffers, etc.  <a href="classtracktion__engine_1_1Plugin.html#ae205cd44a0bfddeb5ad40bbfa0b7969c">More...</a><br /></td></tr>
 <tr class="separator:ae205cd44a0bfddeb5ad40bbfa0b7969c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2046bedbce3f694dae2e0a8d33070747"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a2046bedbce3f694dae2e0a8d33070747">applyToBuffer</a> (const <a class="el" href="structtracktion__engine_1_1AudioRenderContext.html">AudioRenderContext</a> &amp;)=0</td></tr>
-<tr class="memdesc:a2046bedbce3f694dae2e0a8d33070747"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process the next block of data.  <a href="classtracktion__engine_1_1Plugin.html#a2046bedbce3f694dae2e0a8d33070747">More...</a><br /></td></tr>
-<tr class="separator:a2046bedbce3f694dae2e0a8d33070747"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2124224597486ae47a69723f2f4677b0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a2124224597486ae47a69723f2f4677b0">prepareForNextBlock</a> (const <a class="el" href="structtracktion__engine_1_1AudioRenderContext.html">AudioRenderContext</a> &amp;)</td></tr>
-<tr class="memdesc:a2124224597486ae47a69723f2f4677b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called between successive rendering blocks.  <a href="classtracktion__engine_1_1Plugin.html#a2124224597486ae47a69723f2f4677b0">More...</a><br /></td></tr>
-<tr class="separator:a2124224597486ae47a69723f2f4677b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b113589ef059e0437cb8f67e47907c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a6b113589ef059e0437cb8f67e47907c9">applyToBufferWithAutomation</a> (const <a class="el" href="structtracktion__engine_1_1AudioRenderContext.html">AudioRenderContext</a> &amp;)</td></tr>
-<tr class="separator:a6b113589ef059e0437cb8f67e47907c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe5319659f633b941474518f0a21408a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#afe5319659f633b941474518f0a21408a">applyToBuffer</a> (const <a class="el" href="structtracktion__engine_1_1PluginRenderContext.html">PluginRenderContext</a> &amp;)=0</td></tr>
+<tr class="memdesc:afe5319659f633b941474518f0a21408a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process the next block of data.  <a href="classtracktion__engine_1_1Plugin.html#afe5319659f633b941474518f0a21408a">More...</a><br /></td></tr>
+<tr class="separator:afe5319659f633b941474518f0a21408a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd28773b3b7a5d7316f61e4566ffdab0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#acd28773b3b7a5d7316f61e4566ffdab0">prepareForNextBlock</a> (double)</td></tr>
+<tr class="memdesc:acd28773b3b7a5d7316f61e4566ffdab0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called between successive rendering blocks.  <a href="classtracktion__engine_1_1Plugin.html#acd28773b3b7a5d7316f61e4566ffdab0">More...</a><br /></td></tr>
+<tr class="separator:acd28773b3b7a5d7316f61e4566ffdab0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acff9936f7ed124188c0259cce7e0f2bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#acff9936f7ed124188c0259cce7e0f2bd">applyToBufferWithAutomation</a> (const <a class="el" href="structtracktion__engine_1_1PluginRenderContext.html">PluginRenderContext</a> &amp;)</td></tr>
+<tr class="separator:acff9936f7ed124188c0259cce7e0f2bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f280a342ee069d4ec9d7969cd32c293"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a6f280a342ee069d4ec9d7969cd32c293">createAudioNode</a> (<a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *input, bool applyAntiDenormalisationNoise)</td></tr>
 <tr class="memdesc:a6f280a342ee069d4ec9d7969cd32c293"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new audio node that will render this plugin.  <a href="classtracktion__engine_1_1Plugin.html#a6f280a342ee069d4ec9d7969cd32c293">More...</a><br /></td></tr>
 <tr class="separator:a6f280a342ee069d4ec9d7969cd32c293"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -201,8 +199,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:afbce44fd6f67ca2af4b3c4bfc6a40233"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9bf4119d5a51e064bef7f7b82326e75e"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a9bf4119d5a51e064bef7f7b82326e75e">getTailLength</a> () const</td></tr>
 <tr class="separator:a9bf4119d5a51e064bef7f7b82326e75e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a426ff1ddd094bfcf014a934e44ddd2ae"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a426ff1ddd094bfcf014a934e44ddd2ae">mustBePlayedLiveWhenOnAClip</a> () const</td></tr>
-<tr class="separator:a426ff1ddd094bfcf014a934e44ddd2ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1fa15dcc524ce17df7e13fda1083c8fc"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a1fa15dcc524ce17df7e13fda1083c8fc">canSidechain</a> ()</td></tr>
 <tr class="separator:a1fa15dcc524ce17df7e13fda1083c8fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb6f522296753aa2edf7c72ce6b052ca"><td class="memItemLeft" align="right" valign="top">juce::StringArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#acb6f522296753aa2edf7c72ce6b052ca">getInputChannelNames</a> ()</td></tr>
@@ -413,6 +409,8 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a6c6d550c6af01e3f14c1b957826343f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d5681f9799d50ec53f578641d05828e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a7d5681f9799d50ec53f578641d05828e">sortPlugins</a> (<a class="el" href="classtracktion__engine_1_1Plugin.html#af7cceeba3a734d2accacf3f3a34bf5c9">Plugin::Array</a> &amp;)</td></tr>
 <tr class="separator:a7d5681f9799d50ec53f578641d05828e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1eda84babeec2a54983312be1fd0fc6f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a1eda84babeec2a54983312be1fd0fc6f">sortPlugins</a> (std::vector&lt; <a class="el" href="classtracktion__engine_1_1Plugin.html">Plugin</a> * &gt; &amp;)</td></tr>
+<tr class="separator:a1eda84babeec2a54983312be1fd0fc6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_static_methods_classtracktion__engine_1_1Selectable"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classtracktion__engine_1_1Selectable')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classtracktion__engine_1_1Selectable.html">tracktion_engine::Selectable</a></td></tr>
 <tr class="memitem:af14c45320a137f788381bab45aedd731 inherit pub_static_methods_classtracktion__engine_1_1Selectable"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Selectable.html#af14c45320a137f788381bab45aedd731">initialise</a> ()</td></tr>
 <tr class="separator:af14c45320a137f788381bab45aedd731 inherit pub_static_methods_classtracktion__engine_1_1Selectable"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -534,20 +532,6 @@ Protected Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="classtracktion__engine_1_1Plugin.html#a97f7d1afcf0045b5f21a027d58b0c072">tracktion_engine::Plugin::Ptr</a> =  juce::ReferenceCountedObjectPtr&lt;<a class="el" href="classtracktion__engine_1_1Plugin.html">Plugin</a>&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab419a9883ad9a9aa7b961d66706f815a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab419a9883ad9a9aa7b961d66706f815a">&#9670;&nbsp;</a></span>WeakRef</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="classtracktion__engine_1_1Plugin.html#ab419a9883ad9a9aa7b961d66706f815a">tracktion_engine::Plugin::WeakRef</a> =  juce::WeakReference&lt;<a class="el" href="classtracktion__engine_1_1Plugin.html">Plugin</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1113,7 +1097,7 @@ Protected Attributes</h2></td></tr>
 <p>The sample rate and the average block size - although the blocks won't always be the same, and may be bigger.</p>
 <p>Don't call this directly or the initialise count will become out of sync. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1Plugin.html#aa094395f74a1adde429affaa9cc7adb0">baseClassInitialise</a> </dd></dl>
 
-<p>Implemented in <a class="el" href="classtracktion__engine_1_1FourOscPlugin.html#a25b9bd89e70262aa5b0e780337f18d02">tracktion_engine::FourOscPlugin</a>, <a class="el" href="classtracktion__engine_1_1FreezePointPlugin.html#aee618ea5d27680549a9e9b181199c198">tracktion_engine::FreezePointPlugin</a>, <a class="el" href="classtracktion__engine_1_1DelayPlugin.html#a7b7c3c5a64c5d101fd7c5dd419c9e003">tracktion_engine::DelayPlugin</a>, <a class="el" href="classtracktion__engine_1_1SamplerPlugin.html#a0439223ee1b83719a8a58e1e006ef283">tracktion_engine::SamplerPlugin</a>, <a class="el" href="classtracktion__engine_1_1AirWindowsPlugin.html#a6ee51b1343d3462616c2369d9022320e">tracktion_engine::AirWindowsPlugin</a>, <a class="el" href="classtracktion__engine_1_1VolumeAndPanPlugin.html#aba133b5d37a634976506e03be31a86f8">tracktion_engine::VolumeAndPanPlugin</a>, <a class="el" href="classtracktion__engine_1_1PatchBayPlugin.html#ae63b9643d0f47c28382cf4d800b52f85">tracktion_engine::PatchBayPlugin</a>, <a class="el" href="classtracktion__engine_1_1VCAPlugin.html#a256f03d063a4afd1840e83f75c32dc08">tracktion_engine::VCAPlugin</a>, <a class="el" href="classtracktion__engine_1_1ExternalPlugin.html#aaadfea1c75a3d93f22bdafea0adcfcac">tracktion_engine::ExternalPlugin</a>, <a class="el" href="classtracktion__engine_1_1AuxSendPlugin.html#a96cfd7d651122007a3d6083f804ccfc2">tracktion_engine::AuxSendPlugin</a>, <a class="el" href="classtracktion__engine_1_1InsertPlugin.html#aadb14e7e896d81a382d797e3a9f8c104">tracktion_engine::InsertPlugin</a>, <a class="el" href="classtracktion__engine_1_1EqualiserPlugin.html#a494ff9d6fdcd9a11f8aa12e540b9f4c3">tracktion_engine::EqualiserPlugin</a>, <a class="el" href="classtracktion__engine_1_1CompressorPlugin.html#ac4fafa330e08fe29ed34cd9c59222b96">tracktion_engine::CompressorPlugin</a>, <a class="el" href="classtracktion__engine_1_1LevelMeterPlugin.html#aa7c47c3b27eb22ed6bb22b3ba1f901d2">tracktion_engine::LevelMeterPlugin</a>, <a class="el" href="classtracktion__engine_1_1MidiModifierPlugin.html#a7937056456e53034964ac9dccdc5c49c">tracktion_engine::MidiModifierPlugin</a>, <a class="el" href="classtracktion__engine_1_1LatencyPlugin.html#aafbfdf9efd3877cdebad345887e6b591">tracktion_engine::LatencyPlugin</a>, <a class="el" href="classtracktion__engine_1_1MidiPatchBayPlugin.html#a82defd453aafbf9f5f6ce0d0e90e5ea7">tracktion_engine::MidiPatchBayPlugin</a>, <a class="el" href="classtracktion__engine_1_1PitchShiftPlugin.html#a0d54fa1d8d1e90f0adc81b2ced4a1fbb">tracktion_engine::PitchShiftPlugin</a>, <a class="el" href="classtracktion__engine_1_1ToneGeneratorPlugin.html#a37daa52394f497e1c06aaa8bd3ba8a8f">tracktion_engine::ToneGeneratorPlugin</a>, <a class="el" href="classtracktion__engine_1_1LowPassPlugin.html#a0225b4fec5e56d78599b09b2fdb54bfd">tracktion_engine::LowPassPlugin</a>, <a class="el" href="classtracktion__engine_1_1TextPlugin.html#a9853c14ad2bd8052fe5083e3a3dbe403">tracktion_engine::TextPlugin</a>, <a class="el" href="classtracktion__engine_1_1ChorusPlugin.html#a34b1e1e14d6a92e88d0f78cf1d0b3855">tracktion_engine::ChorusPlugin</a>, <a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#a88ac69c9143632dabf03ad308fbfcdb3">tracktion_engine::AuxReturnPlugin</a>, <a class="el" href="classtracktion__engine_1_1RackInstance.html#a9b562dcf9a0d0425ef503d5b497c1c3d">tracktion_engine::RackInstance</a>, <a class="el" href="classtracktion__engine_1_1ReverbPlugin.html#aabf29a5acc0e68b9e8692fe0456364dc">tracktion_engine::ReverbPlugin</a>, and <a class="el" href="classtracktion__engine_1_1PhaserPlugin.html#abc76d92283f68451486736517c19f637">tracktion_engine::PhaserPlugin</a>.</p>
+<p>Implemented in <a class="el" href="classtracktion__engine_1_1FourOscPlugin.html#a25b9bd89e70262aa5b0e780337f18d02">tracktion_engine::FourOscPlugin</a>, <a class="el" href="classtracktion__engine_1_1FreezePointPlugin.html#aee618ea5d27680549a9e9b181199c198">tracktion_engine::FreezePointPlugin</a>, <a class="el" href="classtracktion__engine_1_1DelayPlugin.html#a7b7c3c5a64c5d101fd7c5dd419c9e003">tracktion_engine::DelayPlugin</a>, <a class="el" href="classtracktion__engine_1_1SamplerPlugin.html#a0439223ee1b83719a8a58e1e006ef283">tracktion_engine::SamplerPlugin</a>, <a class="el" href="classtracktion__engine_1_1AirWindowsPlugin.html#a6ee51b1343d3462616c2369d9022320e">tracktion_engine::AirWindowsPlugin</a>, <a class="el" href="classtracktion__engine_1_1VolumeAndPanPlugin.html#aba133b5d37a634976506e03be31a86f8">tracktion_engine::VolumeAndPanPlugin</a>, <a class="el" href="classtracktion__engine_1_1PatchBayPlugin.html#ae63b9643d0f47c28382cf4d800b52f85">tracktion_engine::PatchBayPlugin</a>, <a class="el" href="classtracktion__engine_1_1ExternalPlugin.html#aaadfea1c75a3d93f22bdafea0adcfcac">tracktion_engine::ExternalPlugin</a>, <a class="el" href="classtracktion__engine_1_1VCAPlugin.html#a256f03d063a4afd1840e83f75c32dc08">tracktion_engine::VCAPlugin</a>, <a class="el" href="classtracktion__engine_1_1AuxSendPlugin.html#a96cfd7d651122007a3d6083f804ccfc2">tracktion_engine::AuxSendPlugin</a>, <a class="el" href="classtracktion__engine_1_1InsertPlugin.html#aadb14e7e896d81a382d797e3a9f8c104">tracktion_engine::InsertPlugin</a>, <a class="el" href="classtracktion__engine_1_1EqualiserPlugin.html#a494ff9d6fdcd9a11f8aa12e540b9f4c3">tracktion_engine::EqualiserPlugin</a>, <a class="el" href="classtracktion__engine_1_1CompressorPlugin.html#ac4fafa330e08fe29ed34cd9c59222b96">tracktion_engine::CompressorPlugin</a>, <a class="el" href="classtracktion__engine_1_1LevelMeterPlugin.html#aa7c47c3b27eb22ed6bb22b3ba1f901d2">tracktion_engine::LevelMeterPlugin</a>, <a class="el" href="classtracktion__engine_1_1MidiModifierPlugin.html#a7937056456e53034964ac9dccdc5c49c">tracktion_engine::MidiModifierPlugin</a>, <a class="el" href="classtracktion__engine_1_1LatencyPlugin.html#aafbfdf9efd3877cdebad345887e6b591">tracktion_engine::LatencyPlugin</a>, <a class="el" href="classtracktion__engine_1_1MidiPatchBayPlugin.html#a82defd453aafbf9f5f6ce0d0e90e5ea7">tracktion_engine::MidiPatchBayPlugin</a>, <a class="el" href="classtracktion__engine_1_1PitchShiftPlugin.html#a0d54fa1d8d1e90f0adc81b2ced4a1fbb">tracktion_engine::PitchShiftPlugin</a>, <a class="el" href="classtracktion__engine_1_1ToneGeneratorPlugin.html#a37daa52394f497e1c06aaa8bd3ba8a8f">tracktion_engine::ToneGeneratorPlugin</a>, <a class="el" href="classtracktion__engine_1_1LowPassPlugin.html#a0225b4fec5e56d78599b09b2fdb54bfd">tracktion_engine::LowPassPlugin</a>, <a class="el" href="classtracktion__engine_1_1TextPlugin.html#a9853c14ad2bd8052fe5083e3a3dbe403">tracktion_engine::TextPlugin</a>, <a class="el" href="classtracktion__engine_1_1ChorusPlugin.html#a34b1e1e14d6a92e88d0f78cf1d0b3855">tracktion_engine::ChorusPlugin</a>, <a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#a88ac69c9143632dabf03ad308fbfcdb3">tracktion_engine::AuxReturnPlugin</a>, <a class="el" href="classtracktion__engine_1_1RackInstance.html#a9b562dcf9a0d0425ef503d5b497c1c3d">tracktion_engine::RackInstance</a>, <a class="el" href="classtracktion__engine_1_1ReverbPlugin.html#aabf29a5acc0e68b9e8692fe0456364dc">tracktion_engine::ReverbPlugin</a>, and <a class="el" href="classtracktion__engine_1_1PhaserPlugin.html#abc76d92283f68451486736517c19f637">tracktion_engine::PhaserPlugin</a>.</p>
 
 </div>
 </div>
@@ -1174,7 +1158,7 @@ Protected Attributes</h2></td></tr>
 <p>Called after play stops to release resources. </p>
 <p>Don't call this directly or the initialise count will become out of sync. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1Plugin.html#ae3be7cb46294b445eece2be76d020c9d">baseClassDeinitialise</a> </dd></dl>
 
-<p>Implemented in <a class="el" href="classtracktion__engine_1_1FourOscPlugin.html#a6992e024dc374dc8c5ff815d03f59708">tracktion_engine::FourOscPlugin</a>, <a class="el" href="classtracktion__engine_1_1FreezePointPlugin.html#a11b8c51b29445e00a6aa59ed71ee92c1">tracktion_engine::FreezePointPlugin</a>, <a class="el" href="classtracktion__engine_1_1DelayPlugin.html#a0e219482e3d71e2055f2035ae1f0c9b8">tracktion_engine::DelayPlugin</a>, <a class="el" href="classtracktion__engine_1_1SamplerPlugin.html#a6229ed7e56b1bca62bb8833ed4db2e93">tracktion_engine::SamplerPlugin</a>, <a class="el" href="classtracktion__engine_1_1AirWindowsPlugin.html#a9614591dd9d8518a20b0765974a7fccd">tracktion_engine::AirWindowsPlugin</a>, <a class="el" href="classtracktion__engine_1_1VolumeAndPanPlugin.html#ac0e7602778057f961c0ce387c66457af">tracktion_engine::VolumeAndPanPlugin</a>, <a class="el" href="classtracktion__engine_1_1PatchBayPlugin.html#ad30a63f8adac929d1adcc0f92d63e38e">tracktion_engine::PatchBayPlugin</a>, <a class="el" href="classtracktion__engine_1_1VCAPlugin.html#af2d5c303d271cd42b7d7f3e36357422a">tracktion_engine::VCAPlugin</a>, <a class="el" href="classtracktion__engine_1_1AuxSendPlugin.html#a2fe69f8384a74bc5444bae801082e2d3">tracktion_engine::AuxSendPlugin</a>, <a class="el" href="classtracktion__engine_1_1InsertPlugin.html#abd42eb10db51d55f23b646f0f2fd55ea">tracktion_engine::InsertPlugin</a>, <a class="el" href="classtracktion__engine_1_1ExternalPlugin.html#a9d7ee859014bb11fca8180b338eedad5">tracktion_engine::ExternalPlugin</a>, <a class="el" href="classtracktion__engine_1_1EqualiserPlugin.html#a00a911a4b17e4b2a9de447dbebed20e9">tracktion_engine::EqualiserPlugin</a>, <a class="el" href="classtracktion__engine_1_1LevelMeterPlugin.html#a711834f5ad26f1e4cc716a23a6f3d17a">tracktion_engine::LevelMeterPlugin</a>, <a class="el" href="classtracktion__engine_1_1CompressorPlugin.html#a90fc6f8d5839693fb78d188e7d45c094">tracktion_engine::CompressorPlugin</a>, <a class="el" href="classtracktion__engine_1_1MidiModifierPlugin.html#a9a4253f14afad2c2d2e37059b9e83ad1">tracktion_engine::MidiModifierPlugin</a>, <a class="el" href="classtracktion__engine_1_1LatencyPlugin.html#ad7de2d7ba0be3caa11e482999e630d07">tracktion_engine::LatencyPlugin</a>, <a class="el" href="classtracktion__engine_1_1MidiPatchBayPlugin.html#a8f4acfb595a50f7f4a4176fc86720852">tracktion_engine::MidiPatchBayPlugin</a>, <a class="el" href="classtracktion__engine_1_1PitchShiftPlugin.html#a206543c7ecbf04c788f0baffecade8a6">tracktion_engine::PitchShiftPlugin</a>, <a class="el" href="classtracktion__engine_1_1ToneGeneratorPlugin.html#ad7a0544b2e30f5382f29cb2648bf8bcf">tracktion_engine::ToneGeneratorPlugin</a>, <a class="el" href="classtracktion__engine_1_1LowPassPlugin.html#a66baa90a9570cebfb509a9513880cd3c">tracktion_engine::LowPassPlugin</a>, <a class="el" href="classtracktion__engine_1_1RackInstance.html#a7460a262c4c20e731c822ecc40ed4367">tracktion_engine::RackInstance</a>, <a class="el" href="classtracktion__engine_1_1TextPlugin.html#aa19cdc3e3180c026ce691763907aa94e">tracktion_engine::TextPlugin</a>, <a class="el" href="classtracktion__engine_1_1ChorusPlugin.html#a7dbf47d40885e70cf72a01c357c4e64a">tracktion_engine::ChorusPlugin</a>, <a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#aa5dc0302774a6f0f0fd3b5dbdd097e60">tracktion_engine::AuxReturnPlugin</a>, <a class="el" href="classtracktion__engine_1_1ReverbPlugin.html#a60ba8d8a5d47762dce60eaa4055f453c">tracktion_engine::ReverbPlugin</a>, and <a class="el" href="classtracktion__engine_1_1PhaserPlugin.html#add395d6c69057198bd88643803a636bc">tracktion_engine::PhaserPlugin</a>.</p>
+<p>Implemented in <a class="el" href="classtracktion__engine_1_1FourOscPlugin.html#a6992e024dc374dc8c5ff815d03f59708">tracktion_engine::FourOscPlugin</a>, <a class="el" href="classtracktion__engine_1_1FreezePointPlugin.html#a11b8c51b29445e00a6aa59ed71ee92c1">tracktion_engine::FreezePointPlugin</a>, <a class="el" href="classtracktion__engine_1_1DelayPlugin.html#a0e219482e3d71e2055f2035ae1f0c9b8">tracktion_engine::DelayPlugin</a>, <a class="el" href="classtracktion__engine_1_1SamplerPlugin.html#a6229ed7e56b1bca62bb8833ed4db2e93">tracktion_engine::SamplerPlugin</a>, <a class="el" href="classtracktion__engine_1_1AirWindowsPlugin.html#a9614591dd9d8518a20b0765974a7fccd">tracktion_engine::AirWindowsPlugin</a>, <a class="el" href="classtracktion__engine_1_1VolumeAndPanPlugin.html#ac0e7602778057f961c0ce387c66457af">tracktion_engine::VolumeAndPanPlugin</a>, <a class="el" href="classtracktion__engine_1_1PatchBayPlugin.html#ad30a63f8adac929d1adcc0f92d63e38e">tracktion_engine::PatchBayPlugin</a>, <a class="el" href="classtracktion__engine_1_1ExternalPlugin.html#a9d7ee859014bb11fca8180b338eedad5">tracktion_engine::ExternalPlugin</a>, <a class="el" href="classtracktion__engine_1_1VCAPlugin.html#af2d5c303d271cd42b7d7f3e36357422a">tracktion_engine::VCAPlugin</a>, <a class="el" href="classtracktion__engine_1_1AuxSendPlugin.html#a2fe69f8384a74bc5444bae801082e2d3">tracktion_engine::AuxSendPlugin</a>, <a class="el" href="classtracktion__engine_1_1InsertPlugin.html#abd42eb10db51d55f23b646f0f2fd55ea">tracktion_engine::InsertPlugin</a>, <a class="el" href="classtracktion__engine_1_1EqualiserPlugin.html#a00a911a4b17e4b2a9de447dbebed20e9">tracktion_engine::EqualiserPlugin</a>, <a class="el" href="classtracktion__engine_1_1LevelMeterPlugin.html#a711834f5ad26f1e4cc716a23a6f3d17a">tracktion_engine::LevelMeterPlugin</a>, <a class="el" href="classtracktion__engine_1_1CompressorPlugin.html#a90fc6f8d5839693fb78d188e7d45c094">tracktion_engine::CompressorPlugin</a>, <a class="el" href="classtracktion__engine_1_1MidiModifierPlugin.html#a9a4253f14afad2c2d2e37059b9e83ad1">tracktion_engine::MidiModifierPlugin</a>, <a class="el" href="classtracktion__engine_1_1LatencyPlugin.html#ad7de2d7ba0be3caa11e482999e630d07">tracktion_engine::LatencyPlugin</a>, <a class="el" href="classtracktion__engine_1_1MidiPatchBayPlugin.html#a8f4acfb595a50f7f4a4176fc86720852">tracktion_engine::MidiPatchBayPlugin</a>, <a class="el" href="classtracktion__engine_1_1PitchShiftPlugin.html#a206543c7ecbf04c788f0baffecade8a6">tracktion_engine::PitchShiftPlugin</a>, <a class="el" href="classtracktion__engine_1_1ToneGeneratorPlugin.html#ad7a0544b2e30f5382f29cb2648bf8bcf">tracktion_engine::ToneGeneratorPlugin</a>, <a class="el" href="classtracktion__engine_1_1LowPassPlugin.html#a66baa90a9570cebfb509a9513880cd3c">tracktion_engine::LowPassPlugin</a>, <a class="el" href="classtracktion__engine_1_1RackInstance.html#a7460a262c4c20e731c822ecc40ed4367">tracktion_engine::RackInstance</a>, <a class="el" href="classtracktion__engine_1_1TextPlugin.html#aa19cdc3e3180c026ce691763907aa94e">tracktion_engine::TextPlugin</a>, <a class="el" href="classtracktion__engine_1_1ChorusPlugin.html#a7dbf47d40885e70cf72a01c357c4e64a">tracktion_engine::ChorusPlugin</a>, <a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#aa5dc0302774a6f0f0fd3b5dbdd097e60">tracktion_engine::AuxReturnPlugin</a>, <a class="el" href="classtracktion__engine_1_1ReverbPlugin.html#a60ba8d8a5d47762dce60eaa4055f453c">tracktion_engine::ReverbPlugin</a>, and <a class="el" href="classtracktion__engine_1_1PhaserPlugin.html#add395d6c69057198bd88643803a636bc">tracktion_engine::PhaserPlugin</a>.</p>
 
 </div>
 </div>
@@ -1207,8 +1191,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a2046bedbce3f694dae2e0a8d33070747"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2046bedbce3f694dae2e0a8d33070747">&#9670;&nbsp;</a></span>applyToBuffer()</h2>
+<a id="afe5319659f633b941474518f0a21408a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe5319659f633b941474518f0a21408a">&#9670;&nbsp;</a></span>applyToBuffer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1219,7 +1203,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual void tracktion_engine::Plugin::applyToBuffer </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtracktion__engine_1_1AudioRenderContext.html">AudioRenderContext</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structtracktion__engine_1_1PluginRenderContext.html">PluginRenderContext</a> &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1236,12 +1220,12 @@ Protected Attributes</h2></td></tr>
 <p>The buffer should be resized to the number of output channels that the plugin wants to return (which should be the same or less than the number of output channel names it returns from <a class="el" href="classtracktion__engine_1_1Plugin.html#a6d1741e49102e7118e27ab109fb43fb9">getChannelNames()</a> - never more than this).</p>
 <p>Other parameters and principles are similar to AudioNode::readBlock() </p>
 
-<p>Implemented in <a class="el" href="classtracktion__engine_1_1FourOscPlugin.html#a3a470531c20a268a8babe362df15aae4">tracktion_engine::FourOscPlugin</a>, <a class="el" href="classtracktion__engine_1_1FreezePointPlugin.html#a21acb7222be1f2dc260466ba0b888255">tracktion_engine::FreezePointPlugin</a>, <a class="el" href="classtracktion__engine_1_1DelayPlugin.html#afe82ef7ac0d3e2bace33f1503330b041">tracktion_engine::DelayPlugin</a>, <a class="el" href="classtracktion__engine_1_1SamplerPlugin.html#a7329801233ed7934a5609dafc33abc06">tracktion_engine::SamplerPlugin</a>, <a class="el" href="classtracktion__engine_1_1AirWindowsPlugin.html#ac6c8cd0f5494b7fcc0c94e5c7492da70">tracktion_engine::AirWindowsPlugin</a>, <a class="el" href="classtracktion__engine_1_1VolumeAndPanPlugin.html#aa0d5b28cd2dd778e2fcacd4683dfcaca">tracktion_engine::VolumeAndPanPlugin</a>, <a class="el" href="classtracktion__engine_1_1PatchBayPlugin.html#a78a16d1e95a3eaecd92610f437d97f36">tracktion_engine::PatchBayPlugin</a>, <a class="el" href="classtracktion__engine_1_1VCAPlugin.html#a059da0a16024e1c68e150c66f5af8f51">tracktion_engine::VCAPlugin</a>, <a class="el" href="classtracktion__engine_1_1ExternalPlugin.html#a277d5bc8191a238c45aba47491eefe0a">tracktion_engine::ExternalPlugin</a>, <a class="el" href="classtracktion__engine_1_1AuxSendPlugin.html#a47e9e2b7721bc17467eb387e1dd6fa25">tracktion_engine::AuxSendPlugin</a>, <a class="el" href="classtracktion__engine_1_1InsertPlugin.html#ac86f638ceef850296b4434b642439e53">tracktion_engine::InsertPlugin</a>, <a class="el" href="classtracktion__engine_1_1RackInstance.html#a1c9e88af236f32a5a4e0495fe8f960ee">tracktion_engine::RackInstance</a>, <a class="el" href="classtracktion__engine_1_1MidiModifierPlugin.html#a3e3ddf94dd40c096c521d01d5da2735c">tracktion_engine::MidiModifierPlugin</a>, <a class="el" href="classtracktion__engine_1_1EqualiserPlugin.html#ad6fa83332faa23012e6090ae09746c0a">tracktion_engine::EqualiserPlugin</a>, <a class="el" href="classtracktion__engine_1_1LevelMeterPlugin.html#a0eb8c0d245ac4e57291915f3bf3fe56f">tracktion_engine::LevelMeterPlugin</a>, <a class="el" href="classtracktion__engine_1_1CompressorPlugin.html#a637806bbbd5559e52b74bead34399baf">tracktion_engine::CompressorPlugin</a>, <a class="el" href="classtracktion__engine_1_1PitchShiftPlugin.html#a399415e134d69735b6a037e9bf6702fa">tracktion_engine::PitchShiftPlugin</a>, <a class="el" href="classtracktion__engine_1_1LatencyPlugin.html#ac8ce0f46adfe0c429767ad54b3c45aa9">tracktion_engine::LatencyPlugin</a>, <a class="el" href="classtracktion__engine_1_1LowPassPlugin.html#acf40156b6f37d561eebc0eb2ef254ce3">tracktion_engine::LowPassPlugin</a>, <a class="el" href="classtracktion__engine_1_1MidiPatchBayPlugin.html#a3cb32ecf544aa4232a43e9da7fd2b50a">tracktion_engine::MidiPatchBayPlugin</a>, <a class="el" href="classtracktion__engine_1_1ToneGeneratorPlugin.html#a5d69a692a48b393b607cafbb37834469">tracktion_engine::ToneGeneratorPlugin</a>, <a class="el" href="classtracktion__engine_1_1ReverbPlugin.html#a65ae50a345fd28f2a863f3aa52a6f2e6">tracktion_engine::ReverbPlugin</a>, <a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#a8c5d366e6944053d47cda77a3990a635">tracktion_engine::AuxReturnPlugin</a>, <a class="el" href="classtracktion__engine_1_1TextPlugin.html#abd6067fc7275ba0a3f9416c8d32f7465">tracktion_engine::TextPlugin</a>, <a class="el" href="classtracktion__engine_1_1ChorusPlugin.html#a8855f5e4fc8f1dbaa1062a8bf1f14b73">tracktion_engine::ChorusPlugin</a>, and <a class="el" href="classtracktion__engine_1_1PhaserPlugin.html#ae34fd693283ce8bef147f96d2a0bcd7f">tracktion_engine::PhaserPlugin</a>.</p>
+<p>Implemented in <a class="el" href="classtracktion__engine_1_1FourOscPlugin.html#a580e4953ee4bcd9601caf8f5f83b1ddd">tracktion_engine::FourOscPlugin</a>, <a class="el" href="classtracktion__engine_1_1FreezePointPlugin.html#a12c763160b184fad1a8344c29f6429c2">tracktion_engine::FreezePointPlugin</a>, <a class="el" href="classtracktion__engine_1_1DelayPlugin.html#a8a4206e3b24c951d86229bba4fe6fcc7">tracktion_engine::DelayPlugin</a>, <a class="el" href="classtracktion__engine_1_1SamplerPlugin.html#a0b978bcb95a29fced3ce63e18d02c2ef">tracktion_engine::SamplerPlugin</a>, <a class="el" href="classtracktion__engine_1_1AirWindowsPlugin.html#a64121f09777571a761eb6aaf3a8daf6d">tracktion_engine::AirWindowsPlugin</a>, <a class="el" href="classtracktion__engine_1_1VolumeAndPanPlugin.html#a913c70687ea3767b83482c2eea2eea17">tracktion_engine::VolumeAndPanPlugin</a>, <a class="el" href="classtracktion__engine_1_1PatchBayPlugin.html#a3ea55e5ad0692c00ee6f518d8c8a1531">tracktion_engine::PatchBayPlugin</a>, <a class="el" href="classtracktion__engine_1_1ExternalPlugin.html#aad6629a8b50a92f91ffe89e9d83ff6db">tracktion_engine::ExternalPlugin</a>, <a class="el" href="classtracktion__engine_1_1VCAPlugin.html#a9cab1f8a0deadd015e98bdd5ff8247cf">tracktion_engine::VCAPlugin</a>, <a class="el" href="classtracktion__engine_1_1AuxSendPlugin.html#a6a58aeecb839d5c073f9838717e39642">tracktion_engine::AuxSendPlugin</a>, <a class="el" href="classtracktion__engine_1_1InsertPlugin.html#af61ff32f21115e3fccc48615a22ab920">tracktion_engine::InsertPlugin</a>, <a class="el" href="classtracktion__engine_1_1RackInstance.html#a6888f7bc7f821e08251b9084fdb3490f">tracktion_engine::RackInstance</a>, <a class="el" href="classtracktion__engine_1_1MidiModifierPlugin.html#a5e445abb8190fc336e1daf93f51bb1e1">tracktion_engine::MidiModifierPlugin</a>, <a class="el" href="classtracktion__engine_1_1EqualiserPlugin.html#ab061df405e8f853d68e5dcdc0f309d3e">tracktion_engine::EqualiserPlugin</a>, <a class="el" href="classtracktion__engine_1_1LevelMeterPlugin.html#a308b499af983fa5674fb1349dd081af8">tracktion_engine::LevelMeterPlugin</a>, <a class="el" href="classtracktion__engine_1_1CompressorPlugin.html#af5ef45df8059ce21ad02987491af96b3">tracktion_engine::CompressorPlugin</a>, <a class="el" href="classtracktion__engine_1_1PitchShiftPlugin.html#a65f9d6fda045bfa49e1e0a6dae125a69">tracktion_engine::PitchShiftPlugin</a>, <a class="el" href="classtracktion__engine_1_1LatencyPlugin.html#a468728ead73c380c576df8b7c31ac4c2">tracktion_engine::LatencyPlugin</a>, <a class="el" href="classtracktion__engine_1_1LowPassPlugin.html#aa8b59055f7d88a53969be43fe69f1456">tracktion_engine::LowPassPlugin</a>, <a class="el" href="classtracktion__engine_1_1MidiPatchBayPlugin.html#a1534008d81eb9ae43065b12c0fbf39a7">tracktion_engine::MidiPatchBayPlugin</a>, <a class="el" href="classtracktion__engine_1_1ToneGeneratorPlugin.html#a486e5dd8d3db86a55e86f826f686564d">tracktion_engine::ToneGeneratorPlugin</a>, <a class="el" href="classtracktion__engine_1_1ReverbPlugin.html#a9cfcc80ac1106197cd25e2daeae34fc8">tracktion_engine::ReverbPlugin</a>, <a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#af605947fea2562e3bdff820f0e4616bf">tracktion_engine::AuxReturnPlugin</a>, <a class="el" href="classtracktion__engine_1_1TextPlugin.html#a1e2074b80378b6f14a3eb82f97fc2c6b">tracktion_engine::TextPlugin</a>, <a class="el" href="classtracktion__engine_1_1ChorusPlugin.html#a5420a275e3037fcee32582cf4ca68423">tracktion_engine::ChorusPlugin</a>, and <a class="el" href="classtracktion__engine_1_1PhaserPlugin.html#a7b357181778d01a9c2a7715f4e99b4d1">tracktion_engine::PhaserPlugin</a>.</p>
 
 </div>
 </div>
-<a id="a2124224597486ae47a69723f2f4677b0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2124224597486ae47a69723f2f4677b0">&#9670;&nbsp;</a></span>prepareForNextBlock()</h2>
+<a id="acd28773b3b7a5d7316f61e4566ffdab0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd28773b3b7a5d7316f61e4566ffdab0">&#9670;&nbsp;</a></span>prepareForNextBlock()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1252,7 +1236,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual void tracktion_engine::Plugin::prepareForNextBlock </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtracktion__engine_1_1AudioRenderContext.html">AudioRenderContext</a> &amp;&#160;</td>
+          <td class="paramtype">double&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1266,12 +1250,12 @@ Protected Attributes</h2></td></tr>
 
 <p>Called between successive rendering blocks. </p>
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1RackInstance.html#ae5872f95d52340c2880c7db74db1d871">tracktion_engine::RackInstance</a>, and <a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#a4ffa3b64bc187c351deccdaec722ac9d">tracktion_engine::AuxReturnPlugin</a>.</p>
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1RackInstance.html#ac3ccbc27f1d73a88ce2f75115cce5e68">tracktion_engine::RackInstance</a>, and <a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#a916c6112a7e74b4c067a2b588b49b606">tracktion_engine::AuxReturnPlugin</a>.</p>
 
 </div>
 </div>
-<a id="a6b113589ef059e0437cb8f67e47907c9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b113589ef059e0437cb8f67e47907c9">&#9670;&nbsp;</a></span>applyToBufferWithAutomation()</h2>
+<a id="acff9936f7ed124188c0259cce7e0f2bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acff9936f7ed124188c0259cce7e0f2bd">&#9670;&nbsp;</a></span>applyToBufferWithAutomation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1279,7 +1263,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">void tracktion_engine::Plugin::applyToBufferWithAutomation </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtracktion__engine_1_1AudioRenderContext.html">AudioRenderContext</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structtracktion__engine_1_1PluginRenderContext.html">PluginRenderContext</a> &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1492,7 +1476,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1FourOscPlugin.html#aeb56118c09a0aa3f228fe23b802e8a04">tracktion_engine::FourOscPlugin</a>, <a class="el" href="classtracktion__engine_1_1SamplerPlugin.html#a22eaaae84e86ae8d6e9ee140b0bf4a9d">tracktion_engine::SamplerPlugin</a>, <a class="el" href="classtracktion__engine_1_1AirWindowsPlugin.html#ada483e84b63f267a923cac8e04c8226b">tracktion_engine::AirWindowsPlugin</a>, <a class="el" href="classtracktion__engine_1_1ExternalPlugin.html#a1cd07e7ea3696fae4368520bd6a4a313">tracktion_engine::ExternalPlugin</a>, <a class="el" href="classtracktion__engine_1_1AuxSendPlugin.html#a34381e50d77d4176a23a8baeaf3a57d2">tracktion_engine::AuxSendPlugin</a>, <a class="el" href="classtracktion__engine_1_1MidiModifierPlugin.html#a5c2e2545a2e6299bcab84dc2ecf74270">tracktion_engine::MidiModifierPlugin</a>, <a class="el" href="classtracktion__engine_1_1InsertPlugin.html#ad5174a12f5d148136931f45065abdd9e">tracktion_engine::InsertPlugin</a>, <a class="el" href="classtracktion__engine_1_1MidiPatchBayPlugin.html#a9e222779179332b6f05e0f13d450d59e">tracktion_engine::MidiPatchBayPlugin</a>, <a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#a9202bdd6520c93137d058ac7a291eafe">tracktion_engine::AuxReturnPlugin</a>, and <a class="el" href="classtracktion__engine_1_1RackInstance.html#ad62b664d8cb889c6560218c65ee08055">tracktion_engine::RackInstance</a>.</p>
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1FourOscPlugin.html#aeb56118c09a0aa3f228fe23b802e8a04">tracktion_engine::FourOscPlugin</a>, <a class="el" href="classtracktion__engine_1_1ExternalPlugin.html#a1cd07e7ea3696fae4368520bd6a4a313">tracktion_engine::ExternalPlugin</a>, <a class="el" href="classtracktion__engine_1_1SamplerPlugin.html#a22eaaae84e86ae8d6e9ee140b0bf4a9d">tracktion_engine::SamplerPlugin</a>, <a class="el" href="classtracktion__engine_1_1AirWindowsPlugin.html#ada483e84b63f267a923cac8e04c8226b">tracktion_engine::AirWindowsPlugin</a>, <a class="el" href="classtracktion__engine_1_1AuxSendPlugin.html#a34381e50d77d4176a23a8baeaf3a57d2">tracktion_engine::AuxSendPlugin</a>, <a class="el" href="classtracktion__engine_1_1MidiModifierPlugin.html#a5c2e2545a2e6299bcab84dc2ecf74270">tracktion_engine::MidiModifierPlugin</a>, <a class="el" href="classtracktion__engine_1_1InsertPlugin.html#ad5174a12f5d148136931f45065abdd9e">tracktion_engine::InsertPlugin</a>, <a class="el" href="classtracktion__engine_1_1MidiPatchBayPlugin.html#a9e222779179332b6f05e0f13d450d59e">tracktion_engine::MidiPatchBayPlugin</a>, <a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#a9202bdd6520c93137d058ac7a291eafe">tracktion_engine::AuxReturnPlugin</a>, and <a class="el" href="classtracktion__engine_1_1RackInstance.html#ad62b664d8cb889c6560218c65ee08055">tracktion_engine::RackInstance</a>.</p>
 
 <p class="reference">References <a class="el" href="classtracktion__engine_1_1Plugin.html#aabf1e8563929a5ef3a8fc1e411f3a7a9">isSynth()</a>.</p>
 
@@ -1521,7 +1505,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1FourOscPlugin.html#acf15b6c42af922546cf5a096fedfdcdc">tracktion_engine::FourOscPlugin</a>, <a class="el" href="classtracktion__engine_1_1AirWindowsPlugin.html#adf76dd67be35a79c2a7b1864e8dda0be">tracktion_engine::AirWindowsPlugin</a>, <a class="el" href="classtracktion__engine_1_1SamplerPlugin.html#a03b619510aa4862a76585229b592e961">tracktion_engine::SamplerPlugin</a>, <a class="el" href="classtracktion__engine_1_1ExternalPlugin.html#a40b076ece4f111846f1bc44cca4e35dd">tracktion_engine::ExternalPlugin</a>, <a class="el" href="classtracktion__engine_1_1InsertPlugin.html#aefffe2cc42e25fd4a8070bb046cc6111">tracktion_engine::InsertPlugin</a>, <a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#acc7aeb5d6684ad37bf0040505379ca71">tracktion_engine::AuxReturnPlugin</a>, and <a class="el" href="classtracktion__engine_1_1RackInstance.html#af50df6bc099d0b90f4cdde6b49b9a100">tracktion_engine::RackInstance</a>.</p>
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1FourOscPlugin.html#acf15b6c42af922546cf5a096fedfdcdc">tracktion_engine::FourOscPlugin</a>, <a class="el" href="classtracktion__engine_1_1ExternalPlugin.html#a40b076ece4f111846f1bc44cca4e35dd">tracktion_engine::ExternalPlugin</a>, <a class="el" href="classtracktion__engine_1_1AirWindowsPlugin.html#adf76dd67be35a79c2a7b1864e8dda0be">tracktion_engine::AirWindowsPlugin</a>, <a class="el" href="classtracktion__engine_1_1SamplerPlugin.html#a03b619510aa4862a76585229b592e961">tracktion_engine::SamplerPlugin</a>, <a class="el" href="classtracktion__engine_1_1InsertPlugin.html#aefffe2cc42e25fd4a8070bb046cc6111">tracktion_engine::InsertPlugin</a>, <a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#acc7aeb5d6684ad37bf0040505379ca71">tracktion_engine::AuxReturnPlugin</a>, and <a class="el" href="classtracktion__engine_1_1RackInstance.html#af50df6bc099d0b90f4cdde6b49b9a100">tracktion_engine::RackInstance</a>.</p>
 
 </div>
 </div>
@@ -1605,31 +1589,6 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1ExternalPlugin.html#ac6dfec83866d3f411d3fbcfe8e0c203f">tracktion_engine::ExternalPlugin</a>.</p>
-
-</div>
-</div>
-<a id="a426ff1ddd094bfcf014a934e44ddd2ae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a426ff1ddd094bfcf014a934e44ddd2ae">&#9670;&nbsp;</a></span>mustBePlayedLiveWhenOnAClip()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool tracktion_engine::Plugin::mustBePlayedLiveWhenOnAClip </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
 
 </div>
 </div>
@@ -1891,7 +1850,7 @@ Protected Attributes</h2></td></tr>
 <p>If it's a synth that names its notes, this can return the name it uses for this note 0-127. </p>
 <p>Midi channel is 1-16 </p>
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1SamplerPlugin.html#a1c492e52a48b42a48c92be9732fffde7">tracktion_engine::SamplerPlugin</a>.</p>
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1ExternalPlugin.html#ab71e3cf73423af8b85df6c6c51b45d4a">tracktion_engine::ExternalPlugin</a>, and <a class="el" href="classtracktion__engine_1_1SamplerPlugin.html#a1c492e52a48b42a48c92be9732fffde7">tracktion_engine::SamplerPlugin</a>.</p>
 
 </div>
 </div>
@@ -2163,7 +2122,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classtracktion__engine_1_1FourOscPlugin.html#a4d17c2f9850695de370bf3f9824d1e79">tracktion_engine::FourOscPlugin</a>, <a class="el" href="classtracktion__engine_1_1FreezePointPlugin.html#afcbd0c5044acf5c5da35dc775b683572">tracktion_engine::FreezePointPlugin</a>, <a class="el" href="classtracktion__engine_1_1AirWindowsPlugin.html#a4ac9bc91ed93b46d143c66eabf4af4fd">tracktion_engine::AirWindowsPlugin</a>, <a class="el" href="classtracktion__engine_1_1ExternalPlugin.html#a4decd1044e051f74953ee4aec35a8399">tracktion_engine::ExternalPlugin</a>, <a class="el" href="classtracktion__engine_1_1DelayPlugin.html#a543b717d4dbf205c42a28ab92a7c01f9">tracktion_engine::DelayPlugin</a>, <a class="el" href="classtracktion__engine_1_1SamplerPlugin.html#adf4f60bd9e47eaca6f59fb3c97adf9e0">tracktion_engine::SamplerPlugin</a>, <a class="el" href="classtracktion__engine_1_1AuxSendPlugin.html#a29dd59ffed9671c54d2602b7e661a704">tracktion_engine::AuxSendPlugin</a>, <a class="el" href="classtracktion__engine_1_1VolumeAndPanPlugin.html#a94d602e67c8bb9583761616008b80eda">tracktion_engine::VolumeAndPanPlugin</a>, <a class="el" href="classtracktion__engine_1_1PatchBayPlugin.html#ad5d4b27a441c3b1e0b499bdecb2ed79e">tracktion_engine::PatchBayPlugin</a>, <a class="el" href="classtracktion__engine_1_1VCAPlugin.html#a9671f3759ded37bcc16d8a3ab5c989aa">tracktion_engine::VCAPlugin</a>, <a class="el" href="classtracktion__engine_1_1InsertPlugin.html#a91c8e4ea1e96560924eaf09a41754f7c">tracktion_engine::InsertPlugin</a>, <a class="el" href="classtracktion__engine_1_1MidiModifierPlugin.html#a59d90798b39b70609489d64e2187854b">tracktion_engine::MidiModifierPlugin</a>, <a class="el" href="classtracktion__engine_1_1RackInstance.html#ace96d441771dc782ebf4eb5fd7c09caa">tracktion_engine::RackInstance</a>, <a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#a755489288f17c983c2fa0420d2826e0a">tracktion_engine::AuxReturnPlugin</a>, <a class="el" href="classtracktion__engine_1_1LatencyPlugin.html#aba06646cbdcf4f886c3e672528e5cf20">tracktion_engine::LatencyPlugin</a>, <a class="el" href="classtracktion__engine_1_1CompressorPlugin.html#aa96d103a69f2e7eefcb0a57dcd740723">tracktion_engine::CompressorPlugin</a>, <a class="el" href="classtracktion__engine_1_1ToneGeneratorPlugin.html#ad4a9e3563b9aea4e713f94039a38c9ab">tracktion_engine::ToneGeneratorPlugin</a>, <a class="el" href="classtracktion__engine_1_1TextPlugin.html#aab8cd56044e2d18c9a60ce85879a7b66">tracktion_engine::TextPlugin</a>, <a class="el" href="classtracktion__engine_1_1ChorusPlugin.html#a648505b898bc5692520c32de784692b7">tracktion_engine::ChorusPlugin</a>, <a class="el" href="classtracktion__engine_1_1EqualiserPlugin.html#a588944d1d1daded1f87fd79ff0029051">tracktion_engine::EqualiserPlugin</a>, <a class="el" href="classtracktion__engine_1_1LevelMeterPlugin.html#a300b6f34d636307606e45d7795e1fb19">tracktion_engine::LevelMeterPlugin</a>, <a class="el" href="classtracktion__engine_1_1MidiPatchBayPlugin.html#a7fa9d3e033f452aa7080e8f33bc6c450">tracktion_engine::MidiPatchBayPlugin</a>, <a class="el" href="classtracktion__engine_1_1PitchShiftPlugin.html#a12d10fc4b1b327fcd2d5d041c6fb7283">tracktion_engine::PitchShiftPlugin</a>, <a class="el" href="classtracktion__engine_1_1LowPassPlugin.html#aae937e8e1f18be398aa87cdd16817206">tracktion_engine::LowPassPlugin</a>, <a class="el" href="classtracktion__engine_1_1PhaserPlugin.html#a7a950a26c919b67a96c78a20af045c03">tracktion_engine::PhaserPlugin</a>, and <a class="el" href="classtracktion__engine_1_1ReverbPlugin.html#a8cbddd88874c55ad584a87645442fcdc">tracktion_engine::ReverbPlugin</a>.</p>
+<p>Implemented in <a class="el" href="classtracktion__engine_1_1FourOscPlugin.html#a4d17c2f9850695de370bf3f9824d1e79">tracktion_engine::FourOscPlugin</a>, <a class="el" href="classtracktion__engine_1_1FreezePointPlugin.html#afcbd0c5044acf5c5da35dc775b683572">tracktion_engine::FreezePointPlugin</a>, <a class="el" href="classtracktion__engine_1_1ExternalPlugin.html#a4decd1044e051f74953ee4aec35a8399">tracktion_engine::ExternalPlugin</a>, <a class="el" href="classtracktion__engine_1_1AirWindowsPlugin.html#a4ac9bc91ed93b46d143c66eabf4af4fd">tracktion_engine::AirWindowsPlugin</a>, <a class="el" href="classtracktion__engine_1_1DelayPlugin.html#a543b717d4dbf205c42a28ab92a7c01f9">tracktion_engine::DelayPlugin</a>, <a class="el" href="classtracktion__engine_1_1SamplerPlugin.html#adf4f60bd9e47eaca6f59fb3c97adf9e0">tracktion_engine::SamplerPlugin</a>, <a class="el" href="classtracktion__engine_1_1AuxSendPlugin.html#a29dd59ffed9671c54d2602b7e661a704">tracktion_engine::AuxSendPlugin</a>, <a class="el" href="classtracktion__engine_1_1VolumeAndPanPlugin.html#a94d602e67c8bb9583761616008b80eda">tracktion_engine::VolumeAndPanPlugin</a>, <a class="el" href="classtracktion__engine_1_1PatchBayPlugin.html#ad5d4b27a441c3b1e0b499bdecb2ed79e">tracktion_engine::PatchBayPlugin</a>, <a class="el" href="classtracktion__engine_1_1VCAPlugin.html#a9671f3759ded37bcc16d8a3ab5c989aa">tracktion_engine::VCAPlugin</a>, <a class="el" href="classtracktion__engine_1_1InsertPlugin.html#a91c8e4ea1e96560924eaf09a41754f7c">tracktion_engine::InsertPlugin</a>, <a class="el" href="classtracktion__engine_1_1MidiModifierPlugin.html#a59d90798b39b70609489d64e2187854b">tracktion_engine::MidiModifierPlugin</a>, <a class="el" href="classtracktion__engine_1_1RackInstance.html#ace96d441771dc782ebf4eb5fd7c09caa">tracktion_engine::RackInstance</a>, <a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#a755489288f17c983c2fa0420d2826e0a">tracktion_engine::AuxReturnPlugin</a>, <a class="el" href="classtracktion__engine_1_1LatencyPlugin.html#aba06646cbdcf4f886c3e672528e5cf20">tracktion_engine::LatencyPlugin</a>, <a class="el" href="classtracktion__engine_1_1CompressorPlugin.html#aa96d103a69f2e7eefcb0a57dcd740723">tracktion_engine::CompressorPlugin</a>, <a class="el" href="classtracktion__engine_1_1ToneGeneratorPlugin.html#ad4a9e3563b9aea4e713f94039a38c9ab">tracktion_engine::ToneGeneratorPlugin</a>, <a class="el" href="classtracktion__engine_1_1TextPlugin.html#aab8cd56044e2d18c9a60ce85879a7b66">tracktion_engine::TextPlugin</a>, <a class="el" href="classtracktion__engine_1_1ChorusPlugin.html#a648505b898bc5692520c32de784692b7">tracktion_engine::ChorusPlugin</a>, <a class="el" href="classtracktion__engine_1_1EqualiserPlugin.html#a588944d1d1daded1f87fd79ff0029051">tracktion_engine::EqualiserPlugin</a>, <a class="el" href="classtracktion__engine_1_1LevelMeterPlugin.html#a300b6f34d636307606e45d7795e1fb19">tracktion_engine::LevelMeterPlugin</a>, <a class="el" href="classtracktion__engine_1_1MidiPatchBayPlugin.html#a7fa9d3e033f452aa7080e8f33bc6c450">tracktion_engine::MidiPatchBayPlugin</a>, <a class="el" href="classtracktion__engine_1_1PitchShiftPlugin.html#a12d10fc4b1b327fcd2d5d041c6fb7283">tracktion_engine::PitchShiftPlugin</a>, <a class="el" href="classtracktion__engine_1_1LowPassPlugin.html#aae937e8e1f18be398aa87cdd16817206">tracktion_engine::LowPassPlugin</a>, <a class="el" href="classtracktion__engine_1_1PhaserPlugin.html#a7a950a26c919b67a96c78a20af045c03">tracktion_engine::PhaserPlugin</a>, and <a class="el" href="classtracktion__engine_1_1ReverbPlugin.html#a8cbddd88874c55ad584a87645442fcdc">tracktion_engine::ReverbPlugin</a>.</p>
 
 </div>
 </div>
@@ -2661,7 +2620,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a7d5681f9799d50ec53f578641d05828e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7d5681f9799d50ec53f578641d05828e">&#9670;&nbsp;</a></span>sortPlugins()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d5681f9799d50ec53f578641d05828e">&#9670;&nbsp;</a></span>sortPlugins() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2673,6 +2632,32 @@ Protected Attributes</h2></td></tr>
           <td class="memname">static void tracktion_engine::Plugin::sortPlugins </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion__engine_1_1Plugin.html#af7cceeba3a734d2accacf3f3a34bf5c9">Plugin::Array</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1eda84babeec2a54983312be1fd0fc6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1eda84babeec2a54983312be1fd0fc6f">&#9670;&nbsp;</a></span>sortPlugins() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void tracktion_engine::Plugin::sortPlugins </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="classtracktion__engine_1_1Plugin.html">Plugin</a> * &gt; &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -2772,6 +2757,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1LevelMeasurerProcessingNode.html#ae158b82bd7cde03d0a4c917fa35356f6">tracktion_engine::LevelMeasurerProcessingNode::~LevelMeasurerProcessingNode()</a>.</p>
+
 </div>
 </div>
 <a id="aa094395f74a1adde429affaa9cc7adb0"></a>
@@ -2806,6 +2793,8 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1LevelMeasurerProcessingNode.html#ae158b82bd7cde03d0a4c917fa35356f6">tracktion_engine::LevelMeasurerProcessingNode::~LevelMeasurerProcessingNode()</a>.</p>
 
 </div>
 </div>
@@ -3494,7 +3483,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:54:59 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:53 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

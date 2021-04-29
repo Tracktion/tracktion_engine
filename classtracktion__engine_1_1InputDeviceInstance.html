@@ -81,6 +81,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1InputDeviceInstance_1_1Consumer.html">Consumer</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base class for classes that want to listen to an <a class="el" href="classtracktion__engine_1_1InputDevice.html" title="Represents an input device.">InputDevice</a> and get a callback for each block of input.  <a href="structtracktion__engine_1_1InputDeviceInstance_1_1Consumer.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html">InputDeviceDestination</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1InputDeviceInstance_1_1InputDeviceDestinationList.html">InputDeviceDestinationList</a></td></tr>
@@ -114,6 +117,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae4cec0f664965b953c4df636c10e170b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc2a1a410e686e16943abd91fdabde5e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1InputDeviceInstance.html#abc2a1a410e686e16943abd91fdabde5e">removeTargetTrack</a> (<a class="el" href="classtracktion__engine_1_1AudioTrack.html">AudioTrack</a> &amp;, int index)</td></tr>
 <tr class="separator:abc2a1a410e686e16943abd91fdabde5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fabcfa81c83d45e7bc24dd4e2eab9d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1InputDeviceInstance.html#a2fabcfa81c83d45e7bc24dd4e2eab9d7">removeTargetTrack</a> (<a class="el" href="structtracktion__engine_1_1EditItemID.html">EditItemID</a>, int index)</td></tr>
+<tr class="separator:a2fabcfa81c83d45e7bc24dd4e2eab9d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa478613c2c1a11081cd7246831f61fc5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1InputDeviceInstance.html#aa478613c2c1a11081cd7246831f61fc5">clearFromTracks</a> ()</td></tr>
 <tr class="separator:aa478613c2c1a11081cd7246831f61fc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa576a7e74b189c69f38b1a19f8fdeb4e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1InputDeviceInstance.html#aa576a7e74b189c69f38b1a19f8fdeb4e">isAttachedToTrack</a> () const</td></tr>
@@ -158,6 +163,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a44e9b682b44e37c8a7a054ea4a57f95e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab65719b1399751be82a7119d2448b210"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion__engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html">InputDeviceDestination</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1InputDeviceInstance.html#ab65719b1399751be82a7119d2448b210">getDestination</a> (const <a class="el" href="classtracktion__engine_1_1Track.html">Track</a> &amp;track, int index)</td></tr>
 <tr class="separator:ab65719b1399751be82a7119d2448b210"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed097af358d727551b91da56fc4d6a01"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1InputDeviceInstance.html#aed097af358d727551b91da56fc4d6a01">addConsumer</a> (<a class="el" href="structtracktion__engine_1_1InputDeviceInstance_1_1Consumer.html">Consumer</a> *)=0</td></tr>
+<tr class="memdesc:aed097af358d727551b91da56fc4d6a01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base classes should override this to add any Consumers internally.  <a href="classtracktion__engine_1_1InputDeviceInstance.html#aed097af358d727551b91da56fc4d6a01">More...</a><br /></td></tr>
+<tr class="separator:aed097af358d727551b91da56fc4d6a01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f1eb3da3409da58faf3fa97e79e9f72"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1InputDeviceInstance.html#a8f1eb3da3409da58faf3fa97e79e9f72">removeConsumer</a> (<a class="el" href="structtracktion__engine_1_1InputDeviceInstance_1_1Consumer.html">Consumer</a> *)=0</td></tr>
+<tr class="memdesc:a8f1eb3da3409da58faf3fa97e79e9f72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base classes should override this to remove the <a class="el" href="structtracktion__engine_1_1InputDeviceInstance_1_1Consumer.html" title="Base class for classes that want to listen to an InputDevice and get a callback for each block of inp...">Consumer</a> internally.  <a href="classtracktion__engine_1_1InputDeviceInstance.html#a8f1eb3da3409da58faf3fa97e79e9f72">More...</a><br /></td></tr>
+<tr class="separator:a8f1eb3da3409da58faf3fa97e79e9f72"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -389,7 +400,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="ae4cec0f664965b953c4df636c10e170b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae4cec0f664965b953c4df636c10e170b">&#9670;&nbsp;</a></span>removeTargetTrack() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4cec0f664965b953c4df636c10e170b">&#9670;&nbsp;</a></span>removeTargetTrack() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -407,7 +418,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="abc2a1a410e686e16943abd91fdabde5e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abc2a1a410e686e16943abd91fdabde5e">&#9670;&nbsp;</a></span>removeTargetTrack() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#abc2a1a410e686e16943abd91fdabde5e">&#9670;&nbsp;</a></span>removeTargetTrack() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -416,6 +427,34 @@ Protected Attributes</h2></td></tr>
           <td class="memname">void tracktion_engine::InputDeviceInstance::removeTargetTrack </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion__engine_1_1AudioTrack.html">AudioTrack</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2fabcfa81c83d45e7bc24dd4e2eab9d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2fabcfa81c83d45e7bc24dd4e2eab9d7">&#9670;&nbsp;</a></span>removeTargetTrack() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion_engine::InputDeviceInstance::removeTargetTrack </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtracktion__engine_1_1EditItemID.html">EditItemID</a>&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
@@ -1007,6 +1046,62 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aed097af358d727551b91da56fc4d6a01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed097af358d727551b91da56fc4d6a01">&#9670;&nbsp;</a></span>addConsumer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion_engine::InputDeviceInstance::addConsumer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtracktion__engine_1_1InputDeviceInstance_1_1Consumer.html">Consumer</a> *&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Base classes should override this to add any Consumers internally. </p>
+
+</div>
+</div>
+<a id="a8f1eb3da3409da58faf3fa97e79e9f72"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f1eb3da3409da58faf3fa97e79e9f72">&#9670;&nbsp;</a></span>removeConsumer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion_engine::InputDeviceInstance::removeConsumer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtracktion__engine_1_1InputDeviceInstance_1_1Consumer.html">Consumer</a> *&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Base classes should override this to remove the <a class="el" href="structtracktion__engine_1_1InputDeviceInstance_1_1Consumer.html" title="Base class for classes that want to listen to an InputDevice and get a callback for each block of inp...">Consumer</a> internally. </p>
+
+</div>
+</div>
 <a id="a9f5a2b3472fd701d09d47b53ec7be5c0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9f5a2b3472fd701d09d47b53ec7be5c0">&#9670;&nbsp;</a></span>valueTreePropertyChanged()</h2>
 
@@ -1290,7 +1385,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:54:59 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:52 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

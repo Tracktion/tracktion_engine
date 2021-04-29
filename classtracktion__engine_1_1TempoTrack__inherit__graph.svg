@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="node2" class="node">
 <title>Node2</title>
-<g id="a_node2"><a xlink:href="classtracktion__engine_1_1Track.html" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="classtracktion__engine_1_1Track.html" target="_top" xlink:title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">
 <polygon fill="none" stroke="black" points="221,-50 221,-69 351,-69 351,-50 221,-50"/>
 <text text-anchor="middle" x="286" y="-57" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::Track</text>
 </a>

@@ -1,8 +1,8 @@
 <map id="tracktion_engine::EditItem" name="tracktion_engine::EditItem">
 <area shape="rect" id="node1" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,2053,200,2079"/>
 <area shape="rect" id="node2" href="$classtracktion__engine_1_1AutomatableEditItem.html" title="Base class for elements that have some kind of automatable parameters." alt="" coords="248,697,471,739"/>
-<area shape="rect" id="node38" href="$classtracktion__engine_1_1Track.html" title=" " alt="" coords="273,2053,446,2079"/>
-<area shape="rect" id="node45" href="$classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a track, e.g." alt="" coords="258,2242,461,2269"/>
+<area shape="rect" id="node38" href="$classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s]." alt="" coords="273,2053,446,2079"/>
+<area shape="rect" id="node45" href="$classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g." alt="" coords="258,2242,461,2269"/>
 <area shape="rect" id="node3" href="$classtracktion__engine_1_1MacroParameterList.html" title=" " alt="" coords="519,178,788,205"/>
 <area shape="rect" id="node4" href="$structtracktion__engine_1_1Modifier.html" title=" " alt="" coords="557,229,749,255"/>
 <area shape="rect" id="node11" href="$classtracktion__engine_1_1Plugin.html" title=" " alt="" coords="564,1149,743,1175"/>

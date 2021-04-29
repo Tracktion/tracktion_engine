@@ -89,11 +89,33 @@ Functions</h2></td></tr>
 <tr class="memitem:a132ffd98f6fad38b25e0deea64ff0c88"><td class="memTemplParams" colspan="2">template&lt;typename It &gt; </td></tr>
 <tr class="memitem:a132ffd98f6fad38b25e0deea64ff0c88"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion__graph.html#a132ffd98f6fad38b25e0deea64ff0c88">tracktion_graph::hash_range</a> (std::size_t &amp;seed, It first, It last)</td></tr>
 <tr class="separator:a132ffd98f6fad38b25e0deea64ff0c88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdbd470502b43f0bd3994eb4d5e4031a"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:acdbd470502b43f0bd3994eb4d5e4031a"><td class="memTemplItemLeft" align="right" valign="top">size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion__graph.html#acdbd470502b43f0bd3994eb4d5e4031a">tracktion_graph::hash</a> (size_t seed, const T &amp;v)</td></tr>
+<tr class="memdesc:acdbd470502b43f0bd3994eb4d5e4031a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hashes a type with a given seed and returns the new hash value.  <a href="namespacetracktion__graph.html#acdbd470502b43f0bd3994eb4d5e4031a">More...</a><br /></td></tr>
+<tr class="separator:acdbd470502b43f0bd3994eb4d5e4031a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ee639a5e7d4339dc212105eb1099654"><td class="memTemplParams" colspan="2">template&lt;typename IntType &gt; </td></tr>
+<tr class="memitem:a5ee639a5e7d4339dc212105eb1099654"><td class="memTemplItemLeft" align="right" valign="top">constexpr double&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion__graph.html#a5ee639a5e7d4339dc212105eb1099654">tracktion_graph::sampleToTime</a> (IntType samplePosition, double sampleRate)</td></tr>
+<tr class="memdesc:a5ee639a5e7d4339dc212105eb1099654"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an integer sample number to a time in seconds.  <a href="namespacetracktion__graph.html#a5ee639a5e7d4339dc212105eb1099654">More...</a><br /></td></tr>
+<tr class="separator:a5ee639a5e7d4339dc212105eb1099654"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa4aa243e49c9113a21f00ebae9886d4"><td class="memItemLeft" align="right" valign="top">constexpr int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__graph.html#afa4aa243e49c9113a21f00ebae9886d4">tracktion_graph::timeToSample</a> (double timeInSeconds, double sampleRate)</td></tr>
+<tr class="memdesc:afa4aa243e49c9113a21f00ebae9886d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a time in seconds to a sample number.  <a href="namespacetracktion__graph.html#afa4aa243e49c9113a21f00ebae9886d4">More...</a><br /></td></tr>
+<tr class="separator:afa4aa243e49c9113a21f00ebae9886d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0aa1737af5c1896d9b40bf9168d6767"><td class="memTemplParams" colspan="2">template&lt;typename IntType &gt; </td></tr>
+<tr class="memitem:ab0aa1737af5c1896d9b40bf9168d6767"><td class="memTemplItemLeft" align="right" valign="top">constexpr juce::Range&lt; double &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion__graph.html#ab0aa1737af5c1896d9b40bf9168d6767">tracktion_graph::sampleToTime</a> (juce::Range&lt; IntType &gt; sampleRange, double sampleRate)</td></tr>
+<tr class="memdesc:ab0aa1737af5c1896d9b40bf9168d6767"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an integer sample range to a time range in seconds.  <a href="namespacetracktion__graph.html#ab0aa1737af5c1896d9b40bf9168d6767">More...</a><br /></td></tr>
+<tr class="separator:ab0aa1737af5c1896d9b40bf9168d6767"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a262237c25a6e015c4cdb265039319c91"><td class="memItemLeft" align="right" valign="top">constexpr juce::Range&lt; int64_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__graph.html#a262237c25a6e015c4cdb265039319c91">tracktion_graph::timeToSample</a> (juce::Range&lt; double &gt; timeInSeconds, double sampleRate)</td></tr>
+<tr class="memdesc:a262237c25a6e015c4cdb265039319c91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a time range in seconds to a range of sample numbers.  <a href="namespacetracktion__graph.html#a262237c25a6e015c4cdb265039319c91">More...</a><br /></td></tr>
+<tr class="separator:a262237c25a6e015c4cdb265039319c91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2790080555ade150fcfc142b83824bdc"><td class="memTemplParams" colspan="2">template&lt;typename RangeType &gt; </td></tr>
+<tr class="memitem:a2790080555ade150fcfc142b83824bdc"><td class="memTemplItemLeft" align="right" valign="top">constexpr juce::Range&lt; int64_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion__graph.html#a2790080555ade150fcfc142b83824bdc">tracktion_graph::timeToSample</a> (RangeType timeInSeconds, double sampleRate)</td></tr>
+<tr class="memdesc:a2790080555ade150fcfc142b83824bdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a time range in seconds to a range of sample numbers.  <a href="namespacetracktion__graph.html#a2790080555ade150fcfc142b83824bdc">More...</a><br /></td></tr>
+<tr class="separator:a2790080555ade150fcfc142b83824bdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:54:59 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:52 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

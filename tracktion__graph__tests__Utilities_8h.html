@@ -67,7 +67,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">tracktion_graph_tests_Utilities.h File Reference</div>  </div>
 </div><!--header-->
@@ -75,11 +76,13 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__graph_1_1test__utilities_1_1SineOscillator.html">tracktion_graph::test_utilities::SineOscillator</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__graph_1_1test__utilities_1_1TestSetup.html">tracktion_graph::test_utilities::TestSetup</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__graph_1_1test__utilities_1_1TestContext.html">tracktion_graph::test_utilities::TestContext</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__graph_1_1test__utilities_1_1TestProcess.html">tracktion_graph::test_utilities::TestProcess&lt; NodeProcessorType &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__graph_1_1test__utilities_1_1TestProcess.html">tracktion_graph::test_utilities::TestProcess&lt; NodePlayerType &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
@@ -88,11 +91,25 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacetracktion__graph_1_1test__utilities"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__graph_1_1test__utilities.html">tracktion_graph::test_utilities</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:aed97ccb88dfa8204a9ec8d765489d02b"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__graph_1_1test__utilities.html#aed97ccb88dfa8204a9ec8d765489d02b">tracktion_graph::test_utilities::getName</a> (ThreadPoolStrategy type)</td></tr>
+<tr class="memdesc:aed97ccb88dfa8204a9ec8d765489d02b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the ammount of internal memory allocated for buffers.  <a href="namespacetracktion__graph_1_1test__utilities.html#aed97ccb88dfa8204a9ec8d765489d02b">More...</a><br /></td></tr>
+<tr class="separator:aed97ccb88dfa8204a9ec8d765489d02b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8864a4a7318e010378fc7efa8a91f098"><td class="memItemLeft" align="right" valign="top">std::vector&lt; ThreadPoolStrategy &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__graph_1_1test__utilities.html#a8864a4a7318e010378fc7efa8a91f098">tracktion_graph::test_utilities::getThreadPoolStrategies</a> ()</td></tr>
+<tr class="separator:a8864a4a7318e010378fc7efa8a91f098"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35253f1f5d0c08e738f7afa29aca8cad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__graph_1_1test__utilities.html#a35253f1f5d0c08e738f7afa29aca8cad">tracktion_graph::test_utilities::logGraph</a> (Node &amp;node)</td></tr>
+<tr class="memdesc:a35253f1f5d0c08e738f7afa29aca8cad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs the graph structure to the console.  <a href="namespacetracktion__graph_1_1test__utilities.html#a35253f1f5d0c08e738f7afa29aca8cad">More...</a><br /></td></tr>
+<tr class="separator:a35253f1f5d0c08e738f7afa29aca8cad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3a3074138a390667b2e8434b6a98c25"><td class="memTemplParams" colspan="2">template&lt;typename AudioFormatType &gt; </td></tr>
+<tr class="memitem:ab3a3074138a390667b2e8434b6a98c25"><td class="memTemplItemLeft" align="right" valign="top">std::unique_ptr&lt; juce::TemporaryFile &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion__graph_1_1test__utilities.html#ab3a3074138a390667b2e8434b6a98c25">tracktion_graph::test_utilities::getSinFile</a> (double sampleRate, double durationInSeconds, int numChannels=1, float frequency=220.0f)</td></tr>
+<tr class="separator:ab3a3074138a390667b2e8434b6a98c25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:54:59 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:52 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

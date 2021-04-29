@@ -72,17 +72,24 @@ $(function() {
 <div class="title">tracktion_engine::Edit::WastedMidiMessagesListener Struct Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Interface for classes that need to know about unused MIDI messages.  
+ <a href="structtracktion__engine_1_1Edit_1_1WastedMidiMessagesListener.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9cb0b098e4bb779e3b8fba3f777295df"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Edit_1_1WastedMidiMessagesListener.html#a9cb0b098e4bb779e3b8fba3f777295df">~WastedMidiMessagesListener</a> ()</td></tr>
-<tr class="separator:a9cb0b098e4bb779e3b8fba3f777295df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06be739be23c512d05e481b13d700343"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Edit_1_1WastedMidiMessagesListener.html#a06be739be23c512d05e481b13d700343">~WastedMidiMessagesListener</a> ()=default</td></tr>
+<tr class="memdesc:a06be739be23c512d05e481b13d700343"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="structtracktion__engine_1_1Edit_1_1WastedMidiMessagesListener.html#a06be739be23c512d05e481b13d700343">More...</a><br /></td></tr>
+<tr class="separator:a06be739be23c512d05e481b13d700343"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1708987a7cd9dae1f1c767b2635078d8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Edit_1_1WastedMidiMessagesListener.html#a1708987a7cd9dae1f1c767b2635078d8">warnOfWastedMidiMessages</a> (<a class="el" href="classtracktion__engine_1_1InputDevice.html">InputDevice</a> *, <a class="el" href="classtracktion__engine_1_1Track.html">Track</a> *)=0</td></tr>
+<tr class="memdesc:a1708987a7cd9dae1f1c767b2635078d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback to be ntified when a MIDI message isn't used by a track because it doesn't have a plugin which receives MIDI input on it.  <a href="structtracktion__engine_1_1Edit_1_1WastedMidiMessagesListener.html#a1708987a7cd9dae1f1c767b2635078d8">More...</a><br /></td></tr>
 <tr class="separator:a1708987a7cd9dae1f1c767b2635078d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a9cb0b098e4bb779e3b8fba3f777295df"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9cb0b098e4bb779e3b8fba3f777295df">&#9670;&nbsp;</a></span>~WastedMidiMessagesListener()</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Interface for classes that need to know about unused MIDI messages. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a06be739be23c512d05e481b13d700343"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06be739be23c512d05e481b13d700343">&#9670;&nbsp;</a></span>~WastedMidiMessagesListener()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -99,10 +106,12 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Destructor. </p>
 
 </div>
 </div>
@@ -141,6 +150,8 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Callback to be ntified when a MIDI message isn't used by a track because it doesn't have a plugin which receives MIDI input on it. </p>
+
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
@@ -149,7 +160,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:54:59 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:52 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['idmap_11741',['IDMap',['../structtracktion__engine_1_1EditItemID.html#ab0805fd7a423fe0c76ce8cc15990d00e',1,'tracktion_engine::EditItemID']]]
+  ['channelmap_12345',['ChannelMap',['../classtracktion__engine_1_1RackInstanceNode.html#a495ac7b83f0c02f08880cb88e873b79a',1,'tracktion_engine::RackInstanceNode']]]
 ];

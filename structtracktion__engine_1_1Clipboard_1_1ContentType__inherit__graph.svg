@@ -53,10 +53,10 @@
 <!-- Node4 -->
 <g id="node4" class="node">
 <title>Node4</title>
-<g id="a_node4"><a xlink:href="structtracktion__engine_1_1Clipboard_1_1MIDINotes.html" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="structtracktion__engine_1_1Clipboard_1_1MIDIEvents.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="187,-392.5 187,-422.5 338,-422.5 338,-392.5 187,-392.5"/>
 <text text-anchor="start" x="195" y="-410.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::Clipboard</text>
-<text text-anchor="middle" x="262.5" y="-399.5" font-family="Helvetica,sans-Serif" font-size="10.00">::MIDINotes</text>
+<text text-anchor="middle" x="262.5" y="-399.5" font-family="Helvetica,sans-Serif" font-size="10.00">::MIDIEvents</text>
 </a>
 </g>
 </g>

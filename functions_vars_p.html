@@ -123,9 +123,6 @@ $(function() {
 <li>parentTrackID
 : <a class="el" href="structtracktion__engine_1_1TrackInsertPoint.html#af48a5cf508481f81c3ed03781d9ba40a">tracktion_engine::TrackInsertPoint</a>
 </li>
-<li>passMidi
-: <a class="el" href="structtracktion__engine_1_1RackNodeBuilder_1_1ChannelMap.html#a88c2d770a31443ee6d8cf97b00a892e0">tracktion_engine::RackNodeBuilder::ChannelMap</a>
-</li>
 <li>pattern
 : <a class="el" href="structtracktion__engine_1_1StepVolumeEffect.html#ac04e0cd5dee2ce64f2e0da127efefcea">tracktion_engine::StepVolumeEffect</a>
 </li>
@@ -146,6 +143,10 @@ $(function() {
 </li>
 <li>phase
 : <a class="el" href="classtracktion__engine_1_1LFOModifier.html#a2e6fa5aab77060bc73ca75b93f0b4f16">tracktion_engine::LFOModifier</a>
+, <a class="el" href="structtracktion__graph_1_1test__utilities_1_1SineOscillator.html#aa34c68de5df04303b075c4e8439c733c">tracktion_graph::test_utilities::SineOscillator</a>
+</li>
+<li>phaseIncrement
+: <a class="el" href="structtracktion__graph_1_1test__utilities_1_1SineOscillator.html#a41a8b1728a329754c29b67f310a4689a">tracktion_graph::test_utilities::SineOscillator</a>
 </li>
 <li>phaseInvert
 : <a class="el" href="classtracktion__engine_1_1EqualiserPlugin.html#ab26e017bfca382ba2236f0ef1bc83151">tracktion_engine::EqualiserPlugin</a>
@@ -155,9 +156,6 @@ $(function() {
 </li>
 <li>phaseParam
 : <a class="el" href="classtracktion__engine_1_1LFOModifier.html#a2f06b0e5ffb1b1a5575e666a8ba7e215">tracktion_engine::LFOModifier</a>
-</li>
-<li>pins
-: <a class="el" href="structtracktion__engine_1_1RackNodeBuilder_1_1RackPinConnections.html#a1cf9ca1d7a137f401e5633ef0a0bb781">tracktion_engine::RackNodeBuilder::RackPinConnections</a>
 </li>
 <li>pitch
 : <a class="el" href="classtracktion__engine_1_1PitchSetting.html#a7a83358ca09226715840ab5e30bef20c">tracktion_engine::PitchSetting</a>
@@ -178,10 +176,20 @@ $(function() {
 <li>playbackRegionRef
 : <a class="el" href="classPlaybackRegionWrapper.html#a61ba32a728316b6b21bc7e0698281a30">PlaybackRegionWrapper</a>
 </li>
+<li>playbackRestarter
+: <a class="el" href="structtracktion__engine_1_1TransportControl_1_1ScopedContextAllocator.html#a55618d92520ce8de6e4120a3835d2e95">tracktion_engine::TransportControl::ScopedContextAllocator</a>
+</li>
 <li>playhead
 : <a class="el" href="structtracktion__engine_1_1AudioRenderContext.html#a613cd202058230031e2b5fc8e88f4036">tracktion_engine::AudioRenderContext</a>
 , <a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html#afb8bf349123bfcf16aad96b0c19026e1">tracktion_engine::EditPlaybackContext</a>
 , <a class="el" href="structtracktion__engine_1_1PlaybackInitialisationInfo.html#a2be48c8431922cbbb9db65746fd15649">tracktion_engine::PlaybackInitialisationInfo</a>
+</li>
+<li>playHead
+: <a class="el" href="classtracktion__graph_1_1PlayHeadState.html#a4ee79389ecf6b70e199e30d9754e9e2f">tracktion_graph::PlayHeadState</a>
+</li>
+<li>playHeadState
+: <a class="el" href="structtracktion__engine_1_1ProcessState.html#aabad5029e1de0642c1b85428b80fbe3e">tracktion_engine::ProcessState</a>
+, <a class="el" href="classtracktion__graph_1_1NodePlayer.html#a5dd6c0c10b4ba72c187512132b8a163b">tracktion_graph::NodePlayer</a>
 </li>
 <li>playing
 : <a class="el" href="classtracktion__engine_1_1MidiOutputDevice.html#af13cde284f96371d43caab2da934d75c">tracktion_engine::MidiOutputDevice</a>
@@ -271,8 +279,9 @@ $(function() {
 <li>processing
 : <a class="el" href="classtracktion__engine_1_1Plugin.html#a377f442af6e4e8fe45f47936c19dbe5a">tracktion_engine::Plugin</a>
 </li>
-<li>processMutedTracks
-: <a class="el" href="classtracktion__engine_1_1Edit.html#a14fb0aa53840fceca6fcea56d32ea78a">tracktion_engine::Edit</a>
+<li>processState
+: <a class="el" href="structtracktion__engine_1_1CreateNodeParams.html#a244f1cd9208068c7ee796820724d561c">tracktion_engine::CreateNodeParams</a>
+, <a class="el" href="classtracktion__engine_1_1TracktionEngineNode.html#a27b6be49cca6e09ad6a82d355c6dbd2a">tracktion_engine::TracktionEngineNode</a>
 </li>
 <li>programNames
 : <a class="el" href="structtracktion__engine_1_1MidiProgramManager_1_1MidiBank.html#a3868bbb9e822b33db7ad6fdb8f802b27">tracktion_engine::MidiProgramManager::MidiBank</a>
@@ -327,7 +336,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:55:00 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:54 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

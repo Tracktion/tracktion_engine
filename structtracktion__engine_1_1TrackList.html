@@ -74,6 +74,9 @@ $(function() {
 <div class="title">tracktion_engine::TrackList Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>An iterable list of <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>[s] that live either in an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> or as subtracks of a <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>.  
+ <a href="structtracktion__engine_1_1TrackList.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for tracktion_engine::TrackList:</div>
 <div class="dyncontent">
@@ -83,18 +86,24 @@ Inheritance diagram for tracktion_engine::TrackList:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a89d2b5534c4ca31e5fa12fe1ce55e552"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#a89d2b5534c4ca31e5fa12fe1ce55e552">TrackList</a> (<a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;e, const juce::ValueTree &amp;<a class="el" href="classtracktion__engine_1_1ValueTreeObjectList.html#ab7daae817b12421e345c992b1319c873">parent</a>)</td></tr>
-<tr class="separator:a89d2b5534c4ca31e5fa12fe1ce55e552"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2475e9a3d314ea2ba7acda4ad3fd773"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#ae2475e9a3d314ea2ba7acda4ad3fd773">TrackList</a> (<a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;, const juce::ValueTree &amp;<a class="el" href="classtracktion__engine_1_1ValueTreeObjectList.html#ab7daae817b12421e345c992b1319c873">parent</a>)</td></tr>
+<tr class="memdesc:ae2475e9a3d314ea2ba7acda4ad3fd773"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="structtracktion__engine_1_1TrackList.html" title="An iterable list of Track[s] that live either in an Edit or as subtracks of a Track.">TrackList</a> for a parent state.  <a href="structtracktion__engine_1_1TrackList.html#ae2475e9a3d314ea2ba7acda4ad3fd773">More...</a><br /></td></tr>
+<tr class="separator:ae2475e9a3d314ea2ba7acda4ad3fd773"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01d1d3c0531a7c902495b2934c369d19"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#a01d1d3c0531a7c902495b2934c369d19">~TrackList</a> () override</td></tr>
+<tr class="memdesc:a01d1d3c0531a7c902495b2934c369d19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="structtracktion__engine_1_1TrackList.html#a01d1d3c0531a7c902495b2934c369d19">More...</a><br /></td></tr>
 <tr class="separator:a01d1d3c0531a7c902495b2934c369d19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a7621e9d7c7cc6343a0900e64fd402d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1Track.html">Track</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#a6a7621e9d7c7cc6343a0900e64fd402d">getTrackFor</a> (const juce::ValueTree &amp;) const</td></tr>
+<tr class="memdesc:a6a7621e9d7c7cc6343a0900e64fd402d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> for a given state.  <a href="structtracktion__engine_1_1TrackList.html#a6a7621e9d7c7cc6343a0900e64fd402d">More...</a><br /></td></tr>
 <tr class="separator:a6a7621e9d7c7cc6343a0900e64fd402d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a199d0bb6f00e083cadaad0fa1bfd09"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#a0a199d0bb6f00e083cadaad0fa1bfd09">visitAllRecursive</a> (const std::function&lt; bool(<a class="el" href="classtracktion__engine_1_1Track.html">Track</a> &amp;)&gt; &amp;f) const</td></tr>
-<tr class="separator:a0a199d0bb6f00e083cadaad0fa1bfd09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ad4f497a8fb8a2931d609abc34961bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#a6ad4f497a8fb8a2931d609abc34961bf">visitAllTopLevel</a> (const std::function&lt; bool(<a class="el" href="classtracktion__engine_1_1Track.html">Track</a> &amp;)&gt; &amp;f) const</td></tr>
-<tr class="separator:a6ad4f497a8fb8a2931d609abc34961bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20785200af3223095595c14efbdfd5e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#a20785200af3223095595c14efbdfd5e7">visitAllTracks</a> (const std::function&lt; bool(<a class="el" href="classtracktion__engine_1_1Track.html">Track</a> &amp;)&gt; &amp;f, bool recursive) const</td></tr>
-<tr class="separator:a20785200af3223095595c14efbdfd5e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4bfb695817832402f7bfcfb67bcf31c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#ad4bfb695817832402f7bfcfb67bcf31c">visitAllRecursive</a> (const std::function&lt; bool(<a class="el" href="classtracktion__engine_1_1Track.html">Track</a> &amp;)&gt; &amp;) const</td></tr>
+<tr class="memdesc:ad4bfb695817832402f7bfcfb67bcf31c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls the given function on all <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>[s].  <a href="structtracktion__engine_1_1TrackList.html#ad4bfb695817832402f7bfcfb67bcf31c">More...</a><br /></td></tr>
+<tr class="separator:ad4bfb695817832402f7bfcfb67bcf31c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a148582762f0ea8f72f0980f397930f59"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#a148582762f0ea8f72f0980f397930f59">visitAllTopLevel</a> (const std::function&lt; bool(<a class="el" href="classtracktion__engine_1_1Track.html">Track</a> &amp;)&gt; &amp;) const</td></tr>
+<tr class="memdesc:a148582762f0ea8f72f0980f397930f59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls the given function on all top-level <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>[s].  <a href="structtracktion__engine_1_1TrackList.html#a148582762f0ea8f72f0980f397930f59">More...</a><br /></td></tr>
+<tr class="separator:a148582762f0ea8f72f0980f397930f59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afed637352b41c055230e2f3db084bf70"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#afed637352b41c055230e2f3db084bf70">visitAllTracks</a> (const std::function&lt; bool(<a class="el" href="classtracktion__engine_1_1Track.html">Track</a> &amp;)&gt; &amp;, bool recursive) const</td></tr>
+<tr class="memdesc:afed637352b41c055230e2f3db084bf70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls the given function on all <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>[s], optionally recursively.  <a href="structtracktion__engine_1_1TrackList.html#afed637352b41c055230e2f3db084bf70">More...</a><br /></td></tr>
+<tr class="separator:afed637352b41c055230e2f3db084bf70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab67419006a6be2c201de9f335ce93b38"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#ab67419006a6be2c201de9f335ce93b38">isSuitableType</a> (const juce::ValueTree &amp;) const override</td></tr>
 <tr class="separator:ab67419006a6be2c201de9f335ce93b38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d3f897821aef4608a1a3b9d1ad8292c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1Track.html">Track</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#a1d3f897821aef4608a1a3b9d1ad8292c">createNewObject</a> (const juce::ValueTree &amp;) override</td></tr>
@@ -150,24 +159,34 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a0cb9733df924806b11c9a345c2b13ac5"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#a0cb9733df924806b11c9a345c2b13ac5">isMovableTrack</a> (const juce::ValueTree &amp;) noexcept</td></tr>
+<tr class="memdesc:a0cb9733df924806b11c9a345c2b13ac5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the track is movable.  <a href="structtracktion__engine_1_1TrackList.html#a0cb9733df924806b11c9a345c2b13ac5">More...</a><br /></td></tr>
 <tr class="separator:a0cb9733df924806b11c9a345c2b13ac5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02fc55d5a16b2b0eb53700b0fbc5283c"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#a02fc55d5a16b2b0eb53700b0fbc5283c">isArrangerTrack</a> (const juce::ValueTree &amp;) noexcept</td></tr>
+<tr class="memdesc:a02fc55d5a16b2b0eb53700b0fbc5283c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the state is for an <a class="el" href="classtracktion__engine_1_1ArrangerTrack.html" title="A track similar to the MarkerTrack but can be used to move sections of an Edit around.">ArrangerTrack</a>.  <a href="structtracktion__engine_1_1TrackList.html#a02fc55d5a16b2b0eb53700b0fbc5283c">More...</a><br /></td></tr>
 <tr class="separator:a02fc55d5a16b2b0eb53700b0fbc5283c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae161cb74fbf68dd842bb05f47d72f66a"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#ae161cb74fbf68dd842bb05f47d72f66a">isChordTrack</a> (const juce::ValueTree &amp;) noexcept</td></tr>
+<tr class="memdesc:ae161cb74fbf68dd842bb05f47d72f66a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the state is for a <a class="el" href="classtracktion__engine_1_1ChordTrack.html">ChordTrack</a>.  <a href="structtracktion__engine_1_1TrackList.html#ae161cb74fbf68dd842bb05f47d72f66a">More...</a><br /></td></tr>
 <tr class="separator:ae161cb74fbf68dd842bb05f47d72f66a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad20a92bf8c9b7d1b7b0cb66ec58f3eb4"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#ad20a92bf8c9b7d1b7b0cb66ec58f3eb4">isMarkerTrack</a> (const juce::ValueTree &amp;) noexcept</td></tr>
+<tr class="memdesc:ad20a92bf8c9b7d1b7b0cb66ec58f3eb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the state is for a <a class="el" href="classtracktion__engine_1_1MarkerTrack.html">MarkerTrack</a>.  <a href="structtracktion__engine_1_1TrackList.html#ad20a92bf8c9b7d1b7b0cb66ec58f3eb4">More...</a><br /></td></tr>
 <tr class="separator:ad20a92bf8c9b7d1b7b0cb66ec58f3eb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1129d81311930a428fd0b7dc60c613a"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#ab1129d81311930a428fd0b7dc60c613a">isTempoTrack</a> (const juce::ValueTree &amp;) noexcept</td></tr>
+<tr class="memdesc:ab1129d81311930a428fd0b7dc60c613a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the state is for a <a class="el" href="classtracktion__engine_1_1TempoTrack.html">TempoTrack</a>.  <a href="structtracktion__engine_1_1TrackList.html#ab1129d81311930a428fd0b7dc60c613a">More...</a><br /></td></tr>
 <tr class="separator:ab1129d81311930a428fd0b7dc60c613a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54317744994818091517a502b5355205"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#a54317744994818091517a502b5355205">isFixedTrack</a> (const juce::ValueTree &amp;) noexcept</td></tr>
+<tr class="memdesc:a54317744994818091517a502b5355205"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the track is fixed.  <a href="structtracktion__engine_1_1TrackList.html#a54317744994818091517a502b5355205">More...</a><br /></td></tr>
 <tr class="separator:a54317744994818091517a502b5355205"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab951b2f835c0d757f4731c393e516a5d"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#ab951b2f835c0d757f4731c393e516a5d">isTrack</a> (const juce::ValueTree &amp;) noexcept</td></tr>
+<tr class="memdesc:ab951b2f835c0d757f4731c393e516a5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the given ValeTree is for a known <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> type.  <a href="structtracktion__engine_1_1TrackList.html#ab951b2f835c0d757f4731c393e516a5d">More...</a><br /></td></tr>
 <tr class="separator:ab951b2f835c0d757f4731c393e516a5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e497d4db3a399a9f21ca06081594f06"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#a0e497d4db3a399a9f21ca06081594f06">isTrack</a> (const juce::Identifier &amp;) noexcept</td></tr>
+<tr class="memdesc:a0e497d4db3a399a9f21ca06081594f06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the given Identifier is for a known <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> type.  <a href="structtracktion__engine_1_1TrackList.html#a0e497d4db3a399a9f21ca06081594f06">More...</a><br /></td></tr>
 <tr class="separator:a0e497d4db3a399a9f21ca06081594f06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adafdd9046c6cda39a6ace4a4b097b7bc"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#adafdd9046c6cda39a6ace4a4b097b7bc">hasAnySubTracks</a> (const juce::ValueTree &amp;)</td></tr>
+<tr class="memdesc:adafdd9046c6cda39a6ace4a4b097b7bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the track has any sub tracks.  <a href="structtracktion__engine_1_1TrackList.html#adafdd9046c6cda39a6ace4a4b097b7bc">More...</a><br /></td></tr>
 <tr class="separator:adafdd9046c6cda39a6ace4a4b097b7bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03f21b7cc0412bfcdde9aa85b45ba9a1"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackList.html#a03f21b7cc0412bfcdde9aa85b45ba9a1">sortTracksByType</a> (juce::ValueTree &amp;editState, juce::UndoManager *)</td></tr>
+<tr class="memdesc:a03f21b7cc0412bfcdde9aa85b45ba9a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sorts a list of tracks by their type, placing global tracks at the top.  <a href="structtracktion__engine_1_1TrackList.html#a03f21b7cc0412bfcdde9aa85b45ba9a1">More...</a><br /></td></tr>
 <tr class="separator:a03f21b7cc0412bfcdde9aa85b45ba9a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -200,9 +219,12 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:ab7daae817b12421e345c992b1319c873 inherit pro_attribs_classtracktion__engine_1_1ValueTreeObjectList"><td class="memItemLeft" align="right" valign="top">juce::ValueTree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ValueTreeObjectList.html#ab7daae817b12421e345c992b1319c873">parent</a></td></tr>
 <tr class="separator:ab7daae817b12421e345c992b1319c873 inherit pro_attribs_classtracktion__engine_1_1ValueTreeObjectList"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a89d2b5534c4ca31e5fa12fe1ce55e552"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a89d2b5534c4ca31e5fa12fe1ce55e552">&#9670;&nbsp;</a></span>TrackList()</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>An iterable list of <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>[s] that live either in an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> or as subtracks of a <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1Edit.html#a6f79931ad877e42da155f2ab9a23972f" title="Returns the TrackList for the Edit which contains all the top level tracks.">Edit::getTrackList</a>, <a class="el" href="classtracktion__engine_1_1Track.html#a6865b248a6b46af08efa5532bc094a14" title="Returns the TrackList if this Track has any sub-tracks.">Track::getSubTrackList</a> </dd></dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ae2475e9a3d314ea2ba7acda4ad3fd773"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2475e9a3d314ea2ba7acda4ad3fd773">&#9670;&nbsp;</a></span>TrackList()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -211,7 +233,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">tracktion_engine::TrackList::TrackList </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;&#160;</td>
-          <td class="paramname"><em>e</em>, </td>
+          <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -226,6 +248,8 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Creates a <a class="el" href="structtracktion__engine_1_1TrackList.html" title="An iterable list of Track[s] that live either in an Edit or as subtracks of a Track.">TrackList</a> for a parent state. </p>
 
 </div>
 </div>
@@ -252,6 +276,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Destructor. </p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -271,10 +297,12 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns a <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> for a given state. </p>
+
 </div>
 </div>
-<a id="a0a199d0bb6f00e083cadaad0fa1bfd09"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0a199d0bb6f00e083cadaad0fa1bfd09">&#9670;&nbsp;</a></span>visitAllRecursive()</h2>
+<a id="ad4bfb695817832402f7bfcfb67bcf31c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4bfb695817832402f7bfcfb67bcf31c">&#9670;&nbsp;</a></span>visitAllRecursive()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -283,16 +311,19 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">bool tracktion_engine::TrackList::visitAllRecursive </td>
           <td>(</td>
           <td class="paramtype">const std::function&lt; bool(<a class="el" href="classtracktion__engine_1_1Track.html">Track</a> &amp;)&gt; &amp;&#160;</td>
-          <td class="paramname"><em>f</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p>Calls the given function on all <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>[s]. </p>
+<p>Return false from the function to stop the traversal. </p><dl class="section return"><dt>Returns</dt><dd>true if all tracks were visited, false otherwise </dd></dl>
+
 </div>
 </div>
-<a id="a6ad4f497a8fb8a2931d609abc34961bf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ad4f497a8fb8a2931d609abc34961bf">&#9670;&nbsp;</a></span>visitAllTopLevel()</h2>
+<a id="a148582762f0ea8f72f0980f397930f59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a148582762f0ea8f72f0980f397930f59">&#9670;&nbsp;</a></span>visitAllTopLevel()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -301,16 +332,19 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">void tracktion_engine::TrackList::visitAllTopLevel </td>
           <td>(</td>
           <td class="paramtype">const std::function&lt; bool(<a class="el" href="classtracktion__engine_1_1Track.html">Track</a> &amp;)&gt; &amp;&#160;</td>
-          <td class="paramname"><em>f</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p>Calls the given function on all top-level <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>[s]. </p>
+<p>Return false from the function to stop the traversal. </p><dl class="section return"><dt>Returns</dt><dd>true if all tracks were visited, false otherwise </dd></dl>
+
 </div>
 </div>
-<a id="a20785200af3223095595c14efbdfd5e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a20785200af3223095595c14efbdfd5e7">&#9670;&nbsp;</a></span>visitAllTracks()</h2>
+<a id="afed637352b41c055230e2f3db084bf70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afed637352b41c055230e2f3db084bf70">&#9670;&nbsp;</a></span>visitAllTracks()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -319,7 +353,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">void tracktion_engine::TrackList::visitAllTracks </td>
           <td>(</td>
           <td class="paramtype">const std::function&lt; bool(<a class="el" href="classtracktion__engine_1_1Track.html">Track</a> &amp;)&gt; &amp;&#160;</td>
-          <td class="paramname"><em>f</em>, </td>
+          <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -334,6 +368,15 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Calls the given function on all <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>[s], optionally recursively. </p>
+<p>Return false from the function to stop the traversal. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">recursive</td><td>Whether nested tracks should be visited </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if all tracks were visited, false otherwise </dd></dl>
 
 </div>
 </div>
@@ -361,6 +404,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns true if the track is movable. </p>
+<p>I.e. not a global track. </p>
+
 </div>
 </div>
 <a id="a02fc55d5a16b2b0eb53700b0fbc5283c"></a>
@@ -386,6 +432,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns true if the state is for an <a class="el" href="classtracktion__engine_1_1ArrangerTrack.html" title="A track similar to the MarkerTrack but can be used to move sections of an Edit around.">ArrangerTrack</a>. </p>
 
 </div>
 </div>
@@ -413,6 +461,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns true if the state is for a <a class="el" href="classtracktion__engine_1_1ChordTrack.html">ChordTrack</a>. </p>
+
 </div>
 </div>
 <a id="ad20a92bf8c9b7d1b7b0cb66ec58f3eb4"></a>
@@ -438,6 +488,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns true if the state is for a <a class="el" href="classtracktion__engine_1_1MarkerTrack.html">MarkerTrack</a>. </p>
 
 </div>
 </div>
@@ -465,6 +517,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns true if the state is for a <a class="el" href="classtracktion__engine_1_1TempoTrack.html">TempoTrack</a>. </p>
+
 </div>
 </div>
 <a id="a54317744994818091517a502b5355205"></a>
@@ -490,6 +544,9 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns true if the track is fixed. </p>
+<p>I.e. a global track. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1TempoTrack.html">TempoTrack</a>, <a class="el" href="classtracktion__engine_1_1MarkerTrack.html">MarkerTrack</a>, <a class="el" href="classtracktion__engine_1_1ChordTrack.html">ChordTrack</a>, <a class="el" href="classtracktion__engine_1_1ArrangerTrack.html" title="A track similar to the MarkerTrack but can be used to move sections of an Edit around.">ArrangerTrack</a> </dd></dl>
 
 </div>
 </div>
@@ -517,6 +574,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns true if the given ValeTree is for a known <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> type. </p>
+
 </div>
 </div>
 <a id="a0e497d4db3a399a9f21ca06081594f06"></a>
@@ -543,6 +602,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns true if the given Identifier is for a known <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> type. </p>
+
 </div>
 </div>
 <a id="adafdd9046c6cda39a6ace4a4b097b7bc"></a>
@@ -568,6 +629,9 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns true if the track has any sub tracks. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1FolderTrack.html">FolderTrack</a>, <a class="el" href="classtracktion__engine_1_1AutomationTrack.html">AutomationTrack</a> </dd></dl>
 
 </div>
 </div>
@@ -604,6 +668,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Sorts a list of tracks by their type, placing global tracks at the top. </p>
 
 </div>
 </div>
@@ -809,7 +875,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:55:00 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:53 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

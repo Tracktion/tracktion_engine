@@ -80,8 +80,8 @@ $(function() {
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aaabc04fb0835d104d091afc0b8cadf0e"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1ModifierTimer.html#aaabc04fb0835d104d091afc0b8cadf0e">~ModifierTimer</a> ()=default</td></tr>
 <tr class="separator:aaabc04fb0835d104d091afc0b8cadf0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e9007dd94f056e31597646ff3a3d73c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1ModifierTimer.html#a2e9007dd94f056e31597646ff3a3d73c">updateStreamTime</a> (<a class="el" href="classtracktion__engine_1_1PlayHead.html">PlayHead</a> &amp;, <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> streamTime, int numSamples)=0</td></tr>
-<tr class="separator:a2e9007dd94f056e31597646ff3a3d73c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6d3dcb8835f2aee49628468aaba4f20"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1ModifierTimer.html#ad6d3dcb8835f2aee49628468aaba4f20">updateStreamTime</a> (double editTime, int numSamples)=0</td></tr>
+<tr class="separator:ad6d3dcb8835f2aee49628468aaba4f20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base class for objects which need to know about the global <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> time every block. </p>
@@ -113,8 +113,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a2e9007dd94f056e31597646ff3a3d73c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2e9007dd94f056e31597646ff3a3d73c">&#9670;&nbsp;</a></span>updateStreamTime()</h2>
+<a id="ad6d3dcb8835f2aee49628468aaba4f20"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6d3dcb8835f2aee49628468aaba4f20">&#9670;&nbsp;</a></span>updateStreamTime()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -125,14 +125,8 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual void tracktion_engine::ModifierTimer::updateStreamTime </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1PlayHead.html">PlayHead</a> &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a>&#160;</td>
-          <td class="paramname"><em>streamTime</em>, </td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>editTime</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -161,7 +155,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:54:59 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:53 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

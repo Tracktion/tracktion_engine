@@ -74,26 +74,35 @@ $(function() {
 <div class="title">tracktion_engine::TrackSection Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Defines a time raneg sectin of a <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>.  
+ <a href="structtracktion__engine_1_1TrackSection.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a7a2f21f865117ed94d7666617ec04589"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackSection.html#a7a2f21f865117ed94d7666617ec04589">merge</a> (const <a class="el" href="classtracktion__engine_1_1TrackItem.html">TrackItem</a> &amp;c)</td></tr>
+<tr class="memdesc:a7a2f21f865117ed94d7666617ec04589"><td class="mdescLeft">&#160;</td><td class="mdescRight">Merges an overlapping <a class="el" href="classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g.">TrackItem</a> track/time range with this section.  <a href="structtracktion__engine_1_1TrackSection.html#a7a2f21f865117ed94d7666617ec04589">More...</a><br /></td></tr>
 <tr class="separator:a7a2f21f865117ed94d7666617ec04589"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a220c1eb489b8c8975b9a296b2c3c301d"><td class="memTemplParams" colspan="2">template&lt;typename TrackItemArray &gt; </td></tr>
 <tr class="memitem:a220c1eb489b8c8975b9a296b2c3c301d"><td class="memTemplItemLeft" align="right" valign="top">static juce::Array&lt; <a class="el" href="structtracktion__engine_1_1TrackSection.html">TrackSection</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackSection.html#a220c1eb489b8c8975b9a296b2c3c301d">findSections</a> (const TrackItemArray &amp;trackItems)</td></tr>
+<tr class="memdesc:a220c1eb489b8c8975b9a296b2c3c301d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a set of TrackSections for the given TrackItems.  <a href="structtracktion__engine_1_1TrackSection.html#a220c1eb489b8c8975b9a296b2c3c301d">More...</a><br /></td></tr>
 <tr class="separator:a220c1eb489b8c8975b9a296b2c3c301d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:af6de9f9e55ad8c555989860b1755719d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1Track.html">Track</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackSection.html#af6de9f9e55ad8c555989860b1755719d">track</a></td></tr>
+<tr class="memitem:af6de9f9e55ad8c555989860b1755719d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1Track.html">Track</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackSection.html#af6de9f9e55ad8c555989860b1755719d">track</a> = nullptr</td></tr>
+<tr class="memdesc:af6de9f9e55ad8c555989860b1755719d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> this section refers to.  <a href="structtracktion__engine_1_1TrackSection.html#af6de9f9e55ad8c555989860b1755719d">More...</a><br /></td></tr>
 <tr class="separator:af6de9f9e55ad8c555989860b1755719d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b0f5bbe8431a10a6de6f4b923490de8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TrackSection.html#a4b0f5bbe8431a10a6de6f4b923490de8">range</a></td></tr>
+<tr class="memdesc:a4b0f5bbe8431a10a6de6f4b923490de8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The time range this section refers to.  <a href="structtracktion__engine_1_1TrackSection.html#a4b0f5bbe8431a10a6de6f4b923490de8">More...</a><br /></td></tr>
 <tr class="separator:a4b0f5bbe8431a10a6de6f4b923490de8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Defines a time raneg sectin of a <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a7a2f21f865117ed94d7666617ec04589"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7a2f21f865117ed94d7666617ec04589">&#9670;&nbsp;</a></span>merge()</h2>
 
@@ -109,6 +118,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Merges an overlapping <a class="el" href="classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g.">TrackItem</a> track/time range with this section. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if this item was from the same track and overlapping time range and could be merged. false if it didn't intersect and should be its own section. </dd></dl>
 
 <p class="reference">References <a class="el" href="structtracktion__engine_1_1EditTimeRange.html#a134581488a477b1e244b39b26fd57a57">tracktion_engine::EditTimeRange::expanded()</a>, <a class="el" href="classtracktion__engine_1_1TrackItem.html#a370965a10caf924bae19f55b0ff9b75c">tracktion_engine::TrackItem::getEditTimeRange()</a>, <a class="el" href="classtracktion__engine_1_1TrackItem.html#ac93af4dd4fc312b77587150e2db12967">tracktion_engine::TrackItem::getTrack()</a>, <a class="el" href="structtracktion__engine_1_1EditTimeRange.html#a41cacc0e9d4ae6e85cd605f4ab2b24a5">tracktion_engine::EditTimeRange::getUnionWith()</a>, <a class="el" href="structtracktion__engine_1_1EditTimeRange.html#a05f2d17c135e4a40ef517300c5d33326">tracktion_engine::EditTimeRange::overlaps()</a>, <a class="el" href="structtracktion__engine_1_1TrackSection.html#a4b0f5bbe8431a10a6de6f4b923490de8">range</a>, and <a class="el" href="structtracktion__engine_1_1TrackSection.html#af6de9f9e55ad8c555989860b1755719d">track</a>.</p>
 
@@ -140,6 +152,8 @@ template&lt;typename TrackItemArray &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p>Returns a set of TrackSections for the given TrackItems. </p>
+
 <p class="reference">References <a class="el" href="structtracktion__engine_1_1TrackSection.html#a4b0f5bbe8431a10a6de6f4b923490de8">range</a>, and <a class="el" href="structtracktion__engine_1_1TrackSection.html#af6de9f9e55ad8c555989860b1755719d">track</a>.</p>
 
 </div>
@@ -152,10 +166,12 @@ template&lt;typename TrackItemArray &gt; </div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classtracktion__engine_1_1Track.html">Track</a>* tracktion_engine::TrackSection::track</td>
+          <td class="memname"><a class="el" href="classtracktion__engine_1_1Track.html">Track</a>* tracktion_engine::TrackSection::track = nullptr</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>The <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> this section refers to. </p>
 
 <p class="reference">Referenced by <a class="el" href="structtracktion__engine_1_1TrackSection.html#a220c1eb489b8c8975b9a296b2c3c301d">findSections()</a>, and <a class="el" href="structtracktion__engine_1_1TrackSection.html#a7a2f21f865117ed94d7666617ec04589">merge()</a>.</p>
 
@@ -173,6 +189,8 @@ template&lt;typename TrackItemArray &gt; </div>
       </table>
 </div><div class="memdoc">
 
+<p>The time range this section refers to. </p>
+
 <p class="reference">Referenced by <a class="el" href="structtracktion__engine_1_1TrackSection.html#a220c1eb489b8c8975b9a296b2c3c301d">findSections()</a>, and <a class="el" href="structtracktion__engine_1_1TrackSection.html#a7a2f21f865117ed94d7666617ec04589">merge()</a>.</p>
 
 </div>
@@ -183,7 +201,7 @@ template&lt;typename TrackItemArray &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:55:00 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:53 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

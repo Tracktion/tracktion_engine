@@ -75,30 +75,32 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7b2806d028aa41265e33a3a9d2bf4200"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#a7b2806d028aa41265e33a3a9d2bf4200">AudioFifo</a> (int channels, int numSamples)</td></tr>
-<tr class="separator:a7b2806d028aa41265e33a3a9d2bf4200"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7bbb2c1aa157950eb602b5bfc0fcce96"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#a7bbb2c1aa157950eb602b5bfc0fcce96">setSize</a> (int numChannels, int numSamples)</td></tr>
-<tr class="separator:a7bbb2c1aa157950eb602b5bfc0fcce96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ac8067579acf4594fe8f1ff880e6a47"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#a0ac8067579acf4594fe8f1ff880e6a47">AudioFifo</a> (choc::buffer::ChannelCount numChannels, choc::buffer::FrameCount numFrames)</td></tr>
+<tr class="separator:a0ac8067579acf4594fe8f1ff880e6a47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8cb51227f0088991762df7201af9043"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#ac8cb51227f0088991762df7201af9043">setSize</a> (choc::buffer::ChannelCount numChannels, choc::buffer::FrameCount numFrames)</td></tr>
+<tr class="separator:ac8cb51227f0088991762df7201af9043"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7aa7c4eb64ad54d847fb4234e88d6993"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#a7aa7c4eb64ad54d847fb4234e88d6993">getFreeSpace</a> () const noexcept</td></tr>
 <tr class="separator:a7aa7c4eb64ad54d847fb4234e88d6993"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0aea03dc987c68ecc313a8ba386404e9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#a0aea03dc987c68ecc313a8ba386404e9">getNumReady</a> () const noexcept</td></tr>
 <tr class="separator:a0aea03dc987c68ecc313a8ba386404e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6bfa15c94225005402e2f2f3803412a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#ae6bfa15c94225005402e2f2f3803412a">getNumChannels</a> () const noexcept</td></tr>
-<tr class="separator:ae6bfa15c94225005402e2f2f3803412a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a081275aaca600c9cb55274ce5fd0e329"><td class="memItemLeft" align="right" valign="top">choc::buffer::ChannelCount&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#a081275aaca600c9cb55274ce5fd0e329">getNumChannels</a> () const noexcept</td></tr>
+<tr class="separator:a081275aaca600c9cb55274ce5fd0e329"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93a753f2d5524d66a25394d4177115c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#a93a753f2d5524d66a25394d4177115c0">reset</a> () noexcept</td></tr>
 <tr class="separator:a93a753f2d5524d66a25394d4177115c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50c1bba73e69152c914d8c4ebebf7329"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#a50c1bba73e69152c914d8c4ebebf7329">ensureFreeSpace</a> (int numSamples)</td></tr>
-<tr class="separator:a50c1bba73e69152c914d8c4ebebf7329"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c478b7d5f858c0bfc21a9af88a399d2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#a9c478b7d5f858c0bfc21a9af88a399d2">write</a> (juce::dsp::AudioBlock&lt; float &gt; block)</td></tr>
-<tr class="separator:a9c478b7d5f858c0bfc21a9af88a399d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ee7aeb980fdb7673a7b14d44dbe92a6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#a9ee7aeb980fdb7673a7b14d44dbe92a6">writeSilence</a> (int numSamples)</td></tr>
-<tr class="separator:a9ee7aeb980fdb7673a7b14d44dbe92a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0d7cf6a1ebcfec3a05ddfc3042a454d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#ad0d7cf6a1ebcfec3a05ddfc3042a454d">readAdding</a> (const juce::dsp::AudioBlock&lt; float &gt; &amp;dest)</td></tr>
-<tr class="separator:ad0d7cf6a1ebcfec3a05ddfc3042a454d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3948016c1ea0c3a827d20e53c0657c6d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#a3948016c1ea0c3a827d20e53c0657c6d">ensureFreeSpace</a> (int numFrames)</td></tr>
+<tr class="separator:a3948016c1ea0c3a827d20e53c0657c6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e70bf3c563702fc92db4f6bb3f27173"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#a6e70bf3c563702fc92db4f6bb3f27173">write</a> (choc::buffer::ChannelArrayView&lt; float &gt; block)</td></tr>
+<tr class="separator:a6e70bf3c563702fc92db4f6bb3f27173"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a855ba9959ca37d48fedb2c6dffec5881"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#a855ba9959ca37d48fedb2c6dffec5881">writeSilence</a> (choc::buffer::FrameCount numFrames)</td></tr>
+<tr class="separator:a855ba9959ca37d48fedb2c6dffec5881"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b1a6241a2738598d411ba4a120a4b3f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#a2b1a6241a2738598d411ba4a120a4b3f">readAdding</a> (choc::buffer::ChannelArrayView&lt; float &gt; dest)</td></tr>
+<tr class="separator:a2b1a6241a2738598d411ba4a120a4b3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76be18bb53b26279f141553416930686"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#a76be18bb53b26279f141553416930686">removeSamples</a> (int numSamples)</td></tr>
+<tr class="separator:a76be18bb53b26279f141553416930686"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a7b2806d028aa41265e33a3a9d2bf4200"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7b2806d028aa41265e33a3a9d2bf4200">&#9670;&nbsp;</a></span>AudioFifo()</h2>
+<a id="a0ac8067579acf4594fe8f1ff880e6a47"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ac8067579acf4594fe8f1ff880e6a47">&#9670;&nbsp;</a></span>AudioFifo()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -106,14 +108,14 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">tracktion_graph::AudioFifo::AudioFifo </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>channels</em>, </td>
+          <td class="paramtype">choc::buffer::ChannelCount&#160;</td>
+          <td class="paramname"><em>numChannels</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>numSamples</em>&#160;</td>
+          <td class="paramtype">choc::buffer::FrameCount&#160;</td>
+          <td class="paramname"><em>numFrames</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -123,11 +125,13 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="reference">References <a class="el" href="classtracktion__graph_1_1AudioFifo.html#ac8cb51227f0088991762df7201af9043">setSize()</a>.</p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a7bbb2c1aa157950eb602b5bfc0fcce96"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7bbb2c1aa157950eb602b5bfc0fcce96">&#9670;&nbsp;</a></span>setSize()</h2>
+<a id="ac8cb51227f0088991762df7201af9043"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8cb51227f0088991762df7201af9043">&#9670;&nbsp;</a></span>setSize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -135,14 +139,14 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void tracktion_graph::AudioFifo::setSize </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">choc::buffer::ChannelCount&#160;</td>
           <td class="paramname"><em>numChannels</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>numSamples</em>&#160;</td>
+          <td class="paramtype">choc::buffer::FrameCount&#160;</td>
+          <td class="paramname"><em>numFrames</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -151,6 +155,8 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classtracktion__graph_1_1AudioFifo.html#a0ac8067579acf4594fe8f1ff880e6a47">AudioFifo()</a>, and <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#ab98063b8f2faf9e7524fa436c98d22bf">tracktion_graph::LatencyProcessor::prepareToPlay()</a>.</p>
 
 </div>
 </div>
@@ -177,7 +183,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classtracktion__graph_1_1AudioFifo.html#a50c1bba73e69152c914d8c4ebebf7329">ensureFreeSpace()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion__graph_1_1AudioFifo.html#a3948016c1ea0c3a827d20e53c0657c6d">ensureFreeSpace()</a>.</p>
 
 </div>
 </div>
@@ -204,12 +210,12 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classtracktion__graph_1_1AudioFifo.html#a50c1bba73e69152c914d8c4ebebf7329">ensureFreeSpace()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion__graph_1_1AudioFifo.html#a3948016c1ea0c3a827d20e53c0657c6d">ensureFreeSpace()</a>, <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#ab98063b8f2faf9e7524fa436c98d22bf">tracktion_graph::LatencyProcessor::prepareToPlay()</a>, and <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a6273828be7163788f18b6e6b767f200c">tracktion_graph::LatencyProcessor::readAudio()</a>.</p>
 
 </div>
 </div>
-<a id="ae6bfa15c94225005402e2f2f3803412a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae6bfa15c94225005402e2f2f3803412a">&#9670;&nbsp;</a></span>getNumChannels()</h2>
+<a id="a081275aaca600c9cb55274ce5fd0e329"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a081275aaca600c9cb55274ce5fd0e329">&#9670;&nbsp;</a></span>getNumChannels()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -218,7 +224,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int tracktion_graph::AudioFifo::getNumChannels </td>
+          <td class="memname">choc::buffer::ChannelCount tracktion_graph::AudioFifo::getNumChannels </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -230,6 +236,8 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a02d21c3818e199f6276d3f93de0954bb">tracktion_graph::LatencyProcessor::hasConfiguration()</a>, <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a54a637ecb3d88205bf3f078b97023e44">tracktion_graph::LatencyProcessor::hasSameConfigurationAs()</a>, <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a6273828be7163788f18b6e6b767f200c">tracktion_graph::LatencyProcessor::readAudio()</a>, and <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a34aa8fee8d5042c7840e65bf083a856a">tracktion_graph::LatencyProcessor::writeAudio()</a>.</p>
 
 </div>
 </div>
@@ -258,8 +266,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a50c1bba73e69152c914d8c4ebebf7329"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a50c1bba73e69152c914d8c4ebebf7329">&#9670;&nbsp;</a></span>ensureFreeSpace()</h2>
+<a id="a3948016c1ea0c3a827d20e53c0657c6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3948016c1ea0c3a827d20e53c0657c6d">&#9670;&nbsp;</a></span>ensureFreeSpace()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -268,7 +276,7 @@ Public Member Functions</h2></td></tr>
           <td class="memname">void tracktion_graph::AudioFifo::ensureFreeSpace </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>numSamples</em></td><td>)</td>
+          <td class="paramname"><em>numFrames</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -278,8 +286,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a9c478b7d5f858c0bfc21a9af88a399d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c478b7d5f858c0bfc21a9af88a399d2">&#9670;&nbsp;</a></span>write()</h2>
+<a id="a6e70bf3c563702fc92db4f6bb3f27173"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e70bf3c563702fc92db4f6bb3f27173">&#9670;&nbsp;</a></span>write()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -287,23 +295,65 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">bool tracktion_graph::AudioFifo::write </td>
           <td>(</td>
-          <td class="paramtype">juce::dsp::AudioBlock&lt; float &gt;&#160;</td>
+          <td class="paramtype">choc::buffer::ChannelArrayView&lt; float &gt;&#160;</td>
           <td class="paramname"><em>block</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p class="reference">Referenced by <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a34aa8fee8d5042c7840e65bf083a856a">tracktion_graph::LatencyProcessor::writeAudio()</a>.</p>
+
 </div>
 </div>
-<a id="a9ee7aeb980fdb7673a7b14d44dbe92a6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9ee7aeb980fdb7673a7b14d44dbe92a6">&#9670;&nbsp;</a></span>writeSilence()</h2>
+<a id="a855ba9959ca37d48fedb2c6dffec5881"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a855ba9959ca37d48fedb2c6dffec5881">&#9670;&nbsp;</a></span>writeSilence()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">bool tracktion_graph::AudioFifo::writeSilence </td>
+          <td>(</td>
+          <td class="paramtype">choc::buffer::FrameCount&#160;</td>
+          <td class="paramname"><em>numFrames</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#ab98063b8f2faf9e7524fa436c98d22bf">tracktion_graph::LatencyProcessor::prepareToPlay()</a>.</p>
+
+</div>
+</div>
+<a id="a2b1a6241a2738598d411ba4a120a4b3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b1a6241a2738598d411ba4a120a4b3f">&#9670;&nbsp;</a></span>readAdding()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion_graph::AudioFifo::readAdding </td>
+          <td>(</td>
+          <td class="paramtype">choc::buffer::ChannelArrayView&lt; float &gt;&#160;</td>
+          <td class="paramname"><em>dest</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a6273828be7163788f18b6e6b767f200c">tracktion_graph::LatencyProcessor::readAudio()</a>.</p>
+
+</div>
+</div>
+<a id="a76be18bb53b26279f141553416930686"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76be18bb53b26279f141553416930686">&#9670;&nbsp;</a></span>removeSamples()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion_graph::AudioFifo::removeSamples </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>numSamples</em></td><td>)</td>
@@ -312,23 +362,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="ad0d7cf6a1ebcfec3a05ddfc3042a454d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad0d7cf6a1ebcfec3a05ddfc3042a454d">&#9670;&nbsp;</a></span>readAdding()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool tracktion_graph::AudioFifo::readAdding </td>
-          <td>(</td>
-          <td class="paramtype">const juce::dsp::AudioBlock&lt; float &gt; &amp;&#160;</td>
-          <td class="paramname"><em>dest</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p class="reference">Referenced by <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#aed3f9da2af92dcad337bb7c949a2b049">tracktion_graph::LatencyProcessor::clearAudio()</a>.</p>
 
 </div>
 </div>
@@ -338,7 +372,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:55:00 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:53 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

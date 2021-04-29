@@ -75,11 +75,20 @@ $(function() {
 
 <p><a class="el" href="structtracktion__engine_1_1AudioTrack_1_1Listener.html" title="Listener interface to be notified of recorded MIDI being sent to the plugins.">Listener</a> interface to be notified of recorded MIDI being sent to the plugins.  
  <a href="structtracktion__engine_1_1AudioTrack_1_1Listener.html#details">More...</a></p>
+<div class="dynheader">
+Inheritance diagram for tracktion_engine::AudioTrack::Listener:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="structtracktion__engine_1_1AudioTrack_1_1Listener__inherit__graph.svg" width="222" height="142"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a4698b30653f11bc79bca17bc40657987"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioTrack_1_1Listener.html#a4698b30653f11bc79bca17bc40657987">~Listener</a> ()=default</td></tr>
 <tr class="separator:a4698b30653f11bc79bca17bc40657987"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac52bb6405b00c7ea044cb298f8140070"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioTrack_1_1Listener.html#ac52bb6405b00c7ea044cb298f8140070">injectLiveMidiMessage</a> (<a class="el" href="classtracktion__engine_1_1AudioTrack.html">AudioTrack</a> &amp;, const <a class="el" href="structtracktion__engine_1_1MidiMessageArray_1_1MidiMessageWithSource.html">MidiMessageArray::MidiMessageWithSource</a> &amp;, bool &amp;wasUsed)=0</td></tr>
+<tr class="memdesc:ac52bb6405b00c7ea044cb298f8140070"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when a MidiMessage (i.e.  <a href="structtracktion__engine_1_1AudioTrack_1_1Listener.html#ac52bb6405b00c7ea044cb298f8140070">More...</a><br /></td></tr>
+<tr class="separator:ac52bb6405b00c7ea044cb298f8140070"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29d168652ab3bfdb3f4ac904f90197af"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioTrack_1_1Listener.html#a29d168652ab3bfdb3f4ac904f90197af">recordedMidiMessageSentToPlugins</a> (<a class="el" href="classtracktion__engine_1_1AudioTrack.html">AudioTrack</a> &amp;, const juce::MidiMessage &amp;)=0</td></tr>
 <tr class="memdesc:a29d168652ab3bfdb3f4ac904f90197af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when a recorded MidiMessage (i.e.  <a href="structtracktion__engine_1_1AudioTrack_1_1Listener.html#a29d168652ab3bfdb3f4ac904f90197af">More...</a><br /></td></tr>
 <tr class="separator:a29d168652ab3bfdb3f4ac904f90197af"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -113,6 +122,51 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ac52bb6405b00c7ea044cb298f8140070"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac52bb6405b00c7ea044cb298f8140070">&#9670;&nbsp;</a></span>injectLiveMidiMessage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion_engine::AudioTrack::Listener::injectLiveMidiMessage </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1AudioTrack.html">AudioTrack</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtracktion__engine_1_1MidiMessageArray_1_1MidiMessageWithSource.html">MidiMessageArray::MidiMessageWithSource</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &amp;&#160;</td>
+          <td class="paramname"><em>wasUsed</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called when a MidiMessage (i.e. </p>
+<p>from a soft-keyboard) should be injected in to the playback graph. If the message was used, the listener should set the wasUsed argument to true or a message may be shown to the user to notify them of why they couldn't hear the sound. </p>
+
+</div>
+</div>
 <a id="a29d168652ab3bfdb3f4ac904f90197af"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a29d168652ab3bfdb3f4ac904f90197af">&#9670;&nbsp;</a></span>recordedMidiMessageSentToPlugins()</h2>
 
@@ -158,7 +212,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:54:59 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:52 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

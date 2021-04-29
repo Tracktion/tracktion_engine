@@ -67,28 +67,45 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classtracktion__engine_1_1AudioScratchBuffer-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">tracktion_engine::AudioScratchBuffer Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>An audio scratch buffer that has pooled storage.  
+ <a href="classtracktion__engine_1_1AudioScratchBuffer.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a711b5c8955abd55762a9ecfc1ba3f732"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioScratchBuffer.html#a711b5c8955abd55762a9ecfc1ba3f732">AudioScratchBuffer</a> (int numChans, int numSamples)</td></tr>
+<tr class="memdesc:a711b5c8955abd55762a9ecfc1ba3f732"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a buffer for a given number of channels and samples.  <a href="classtracktion__engine_1_1AudioScratchBuffer.html#a711b5c8955abd55762a9ecfc1ba3f732">More...</a><br /></td></tr>
 <tr class="separator:a711b5c8955abd55762a9ecfc1ba3f732"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b0c2c7a873eadf4c24511345e21e071"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioScratchBuffer.html#a6b0c2c7a873eadf4c24511345e21e071">AudioScratchBuffer</a> (const juce::AudioBuffer&lt; float &gt; &amp;bufferToCopy)</td></tr>
+<tr class="memdesc:a6b0c2c7a873eadf4c24511345e21e071"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a buffer copying an existing AudioBuffer in to it.  <a href="classtracktion__engine_1_1AudioScratchBuffer.html#a6b0c2c7a873eadf4c24511345e21e071">More...</a><br /></td></tr>
 <tr class="separator:a6b0c2c7a873eadf4c24511345e21e071"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa07a4650ed1af6b9f830933775524dd0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioScratchBuffer.html#aa07a4650ed1af6b9f830933775524dd0">~AudioScratchBuffer</a> () noexcept</td></tr>
+<tr class="memdesc:aa07a4650ed1af6b9f830933775524dd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="classtracktion__engine_1_1AudioScratchBuffer.html#aa07a4650ed1af6b9f830933775524dd0">More...</a><br /></td></tr>
 <tr class="separator:aa07a4650ed1af6b9f830933775524dd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a28c7a271e9b4f56a7deb8defee98f95c"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioScratchBuffer.html#a28c7a271e9b4f56a7deb8defee98f95c">initialise</a> ()</td></tr>
+<tr class="memdesc:a28c7a271e9b4f56a7deb8defee98f95c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialises the internal buffer list.  <a href="classtracktion__engine_1_1AudioScratchBuffer.html#a28c7a271e9b4f56a7deb8defee98f95c">More...</a><br /></td></tr>
+<tr class="separator:a28c7a271e9b4f56a7deb8defee98f95c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a72e7ede976677c597b8c6b0c4db84b40"><td class="memItemLeft" align="right" valign="top">juce::AudioBuffer&lt; float &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioScratchBuffer.html#a72e7ede976677c597b8c6b0c4db84b40">buffer</a></td></tr>
+<tr class="memdesc:a72e7ede976677c597b8c6b0c4db84b40"><td class="mdescLeft">&#160;</td><td class="mdescRight">The buffer to use.  <a href="classtracktion__engine_1_1AudioScratchBuffer.html#a72e7ede976677c597b8c6b0c4db84b40">More...</a><br /></td></tr>
 <tr class="separator:a72e7ede976677c597b8c6b0c4db84b40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>An audio scratch buffer that has pooled storage. </p>
+<p>Create one of these on the stack to use as a temporary buffer. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a711b5c8955abd55762a9ecfc1ba3f732"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a711b5c8955abd55762a9ecfc1ba3f732">&#9670;&nbsp;</a></span>AudioScratchBuffer() <span class="overload">[1/2]</span></h2>
 
@@ -115,6 +132,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Creates a buffer for a given number of channels and samples. </p>
+
 </div>
 </div>
 <a id="a6b0c2c7a873eadf4c24511345e21e071"></a>
@@ -132,6 +151,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Creates a buffer copying an existing AudioBuffer in to it. </p>
 
 </div>
 </div>
@@ -158,6 +179,36 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Destructor. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a28c7a271e9b4f56a7deb8defee98f95c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28c7a271e9b4f56a7deb8defee98f95c">&#9670;&nbsp;</a></span>initialise()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void tracktion_engine::AudioScratchBuffer::initialise </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Initialises the internal buffer list. </p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -173,6 +224,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>The buffer to use. </p>
+<p>Don't reassign or resize this. </p>
+
 <p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1TempoDetect.html#ae43b14ef573d71471a976318234bf680">tracktion_engine::TempoDetect::processSection()</a>, <a class="el" href="classtracktion__engine_1_1SidechainReceiveAudioNode.html#ab52190d080844e1cc6c96400fbf4dbdc">tracktion_engine::SidechainReceiveAudioNode::renderOver()</a>, and <a class="el" href="classtracktion__engine_1_1SubSampleWaveAudioNode.html#ac071c240941006d3ae390bf74f92ac45">tracktion_engine::SubSampleWaveAudioNode::renderSection()</a>.</p>
 
 </div>
@@ -183,7 +237,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:54:59 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:52 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

@@ -1,0 +1,5 @@
+<map id="tracktion_engine::InputDeviceInstance::Consumer" name="tracktion_engine::InputDeviceInstance::Consumer">
+<area shape="rect" id="node1" title="Base class for classes that want to listen to an InputDevice and get a callback for each block of inp..." alt="" coords="110,5,327,47"/>
+<area shape="rect" id="node2" href="$classtracktion__engine_1_1MidiInputDeviceNode.html" title="A Node that intercepts incoming live MIDI and inserts it in to the playback graph." alt="" coords="5,95,205,136"/>
+<area shape="rect" id="node3" href="$classtracktion__engine_1_1WaveInputDeviceNode.html" title="A Node that intercepts incoming live audio and inserts it in to the playback graph." alt="" coords="229,95,437,136"/>
+</map>

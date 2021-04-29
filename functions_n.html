@@ -169,12 +169,18 @@ $(function() {
 : <a class="el" href="structtracktion__engine_1_1SelectionManager_1_1Iterator.html#af43235c4e413e5c80badcee8163117a4">tracktion_engine::SelectionManager::Iterator</a>
 , <a class="el" href="structtracktion__engine_1_1TimecodeDisplayIterator.html#a2eb57f6d0594f5b713aa1f15dd7a0050">tracktion_engine::TimecodeDisplayIterator</a>
 </li>
-<li>nextBlockStarted()
-: <a class="el" href="classtracktion__engine_1_1MidiNoteDispatcher.html#a27f5c09c5c601ea92fe985743d23e6ee">tracktion_engine::MidiNoteDispatcher</a>
-</li>
 <li>nextIndexAfter()
 : <a class="el" href="classtracktion__engine_1_1AutomationCurve.html#a5d4e87b2b5b1f777951e9e53ae16677a">tracktion_engine::AutomationCurve</a>
 , <a class="el" href="classtracktion__engine_1_1CurveEditor.html#a07b4d3ba3ad11c346178e30eeefed95f">tracktion_engine::CurveEditor</a>
+</li>
+<li>nextInsertIsAfterSelected
+: <a class="el" href="classtracktion__engine_1_1EditInsertPoint.html#a64af8570c83cbf75b5c8b39793457c43">tracktion_engine::EditInsertPoint</a>
+</li>
+<li>nextInsertPointTime
+: <a class="el" href="classtracktion__engine_1_1EditInsertPoint.html#ae20e1a6ce0030fc676d0801b15c36755">tracktion_engine::EditInsertPoint</a>
+</li>
+<li>nextInsertPointTrack
+: <a class="el" href="classtracktion__engine_1_1EditInsertPoint.html#a320b934819583b18d98c276bc56c8f3d">tracktion_engine::EditInsertPoint</a>
 </li>
 <li>nextMarker()
 : <a class="el" href="classtracktion__engine_1_1CustomControlSurface.html#af618079850941179c109521ec66c1bf9">tracktion_engine::CustomControlSurface</a>
@@ -192,10 +198,13 @@ $(function() {
 : <a class="el" href="structtracktion__graph_1_1NodeProperties.html#a8fc8d7b990770efa796917d8fcb44283">tracktion_graph::NodeProperties</a>
 </li>
 <li>NodePlayer()
-: <a class="el" href="classtracktion__graph_1_1NodePlayer.html#ad512f976f3f8963b2c4121f9c9bb50e0">tracktion_graph::NodePlayer</a>
+: <a class="el" href="classtracktion__graph_1_1NodePlayer.html#a165942d6976426e78454e598ee2c0dcb">tracktion_graph::NodePlayer</a>
 </li>
 <li>NodeReader()
 : <a class="el" href="classNodeReader.html#ab8fb99cf25f7ecbc7f6492e48ad96f4e">NodeReader</a>
+</li>
+<li>NodeRenderContext()
+: <a class="el" href="classtracktion__engine_1_1NodeRenderContext.html#aaa566e7a340b48c85ac51699c7156acb">tracktion_engine::NodeRenderContext</a>
 </li>
 <li>NodeType
 : <a class="el" href="classtracktion__engine_1_1AutomatableParameterTree.html#ae2cc80a091deed4407517e89007ab453">tracktion_engine::AutomatableParameterTree</a>
@@ -250,6 +259,9 @@ $(function() {
 <li>noteLength
 : <a class="el" href="structtracktion__engine_1_1StepVolumeEffect.html#a705ebb1309984c59c77043c22f6964e2">tracktion_engine::StepVolumeEffect</a>
 </li>
+<li>noteLock
+: <a class="el" href="classtracktion__engine_1_1MidiInputDevice.html#acae2176cb863503bcf6c125721f34e4a">tracktion_engine::MidiInputDevice</a>
+</li>
 <li>noteNumber
 : <a class="el" href="structtracktion__engine_1_1StepClip_1_1Channel.html#a1a76d6c00c62d185b279e7ff46cbeb06">tracktion_engine::StepClip::Channel</a>
 </li>
@@ -265,7 +277,7 @@ $(function() {
 : <a class="el" href="classtracktion__engine_1_1MidiOutputDevice.html#a2c21282784abf02cbda9851fe186d681">tracktion_engine::MidiOutputDevice</a>
 </li>
 <li>notes
-: <a class="el" href="structtracktion__engine_1_1Clipboard_1_1MIDINotes.html#af41359c09ff48801d22fbb96cb035256">tracktion_engine::Clipboard::MIDINotes</a>
+: <a class="el" href="structtracktion__engine_1_1Clipboard_1_1MIDIEvents.html#a13d94352c1088230f2ff59110862e654">tracktion_engine::Clipboard::MIDIEvents</a>
 , <a class="el" href="structtracktion__engine_1_1StepClip_1_1Pattern_1_1CachedPattern.html#a06ec05b65fb2f6afe98212936c868849">tracktion_engine::StepClip::Pattern::CachedPattern</a>
 </li>
 <li>NoteType
@@ -328,7 +340,7 @@ $(function() {
 : <a class="el" href="classtracktion__engine_1_1CustomControlSurface.html#afd5a2df81c9aa2cc64e85994facd04eda1a090f4411256d6ebfac3456e2b816ac">tracktion_engine::CustomControlSurface</a>
 </li>
 <li>nudgeSelected()
-: <a class="el" href="classtracktion__engine_1_1UIBehaviour.html#ab3f749b8eb881d8201638158222f4585">tracktion_engine::UIBehaviour</a>
+: <a class="el" href="classtracktion__engine_1_1UIBehaviour.html#a31b943c3fce59e0ab9d699ee2e56fee3">tracktion_engine::UIBehaviour</a>
 </li>
 <li>nudgeSelectedClips()
 : <a class="el" href="classtracktion__engine_1_1UIBehaviour.html#a07029106274d7f64f08a857f48435002">tracktion_engine::UIBehaviour</a>
@@ -363,7 +375,7 @@ $(function() {
 </li>
 <li>numChannels
 : <a class="el" href="structtracktion__engine_1_1AudioFileInfo.html#a34647d86f4cd2920e06b832e5e8104fc">tracktion_engine::AudioFileInfo</a>
-, <a class="el" href="structtracktion__engine_1_1InputProvider.html#aa614488e0271ec964dbdef62221864fc">tracktion_engine::InputProvider</a>
+, <a class="el" href="structtracktion__engine_1_1InputProvider.html#aaa4deffe249630f4e3f709f4ff6a112d">tracktion_engine::InputProvider</a>
 </li>
 <li>numCharactersForAuxLabels
 : <a class="el" href="classtracktion__engine_1_1ControlSurface.html#a88af7ced8998a76466c95230bbe07c6e">tracktion_engine::ControlSurface</a>
@@ -396,6 +408,9 @@ $(function() {
 <li>numProcessMisses
 : <a class="el" href="structtracktion__graph_1_1test__utilities_1_1TestContext.html#a29d2ff7b76cbad5fdc53f3d858d4fbab">tracktion_graph::test_utilities::TestContext</a>
 </li>
+<li>numSamples
+: <a class="el" href="structtracktion__engine_1_1ProcessState.html#a68dab3e5a46a12b15a0d00634609700c">tracktion_engine::ProcessState</a>
+</li>
 <li>numSteps
 : <a class="el" href="classtracktion__engine_1_1StepModifier.html#a3b013112f2466e0e763049a9bfdd472e">tracktion_engine::StepModifier</a>
 </li>
@@ -409,7 +424,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:55:00 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:53 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

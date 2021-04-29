@@ -81,6 +81,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7dec39b2b3dbd9c4f9ec484650cbbc12"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1RackNodePlayer.html#a7dec39b2b3dbd9c4f9ec484650cbbc12">RackNodePlayer</a> (std::unique_ptr&lt; <a class="el" href="classtracktion__graph_1_1Node.html">tracktion_graph::Node</a> &gt; nodeToProcess, std::shared_ptr&lt; <a class="el" href="structtracktion__engine_1_1InputProvider.html">InputProvider</a> &gt; inputProviderToUse, bool overrideInputProvider)</td></tr>
 <tr class="memdesc:a7dec39b2b3dbd9c4f9ec484650cbbc12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an <a class="el" href="classtracktion__engine_1_1RackNodePlayer.html" title="Simple processor for a Node which uses an InputProvider to pass input in to the graph.">RackNodePlayer</a> to process an Node with input.  <a href="classtracktion__engine_1_1RackNodePlayer.html#a7dec39b2b3dbd9c4f9ec484650cbbc12">More...</a><br /></td></tr>
 <tr class="separator:a7dec39b2b3dbd9c4f9ec484650cbbc12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a328dd04d54646acd2daa657df94a47e3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1RackNodePlayer.html#a328dd04d54646acd2daa657df94a47e3">RackNodePlayer</a> (std::unique_ptr&lt; <a class="el" href="classtracktion__graph_1_1Node.html">tracktion_graph::Node</a> &gt; nodeToProcess, std::shared_ptr&lt; <a class="el" href="structtracktion__engine_1_1InputProvider.html">InputProvider</a> &gt; inputProviderToUse, bool overrideInputProvider, double sampleRateToUse, int blockSizeToUse)</td></tr>
+<tr class="memdesc:a328dd04d54646acd2daa657df94a47e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an <a class="el" href="classtracktion__engine_1_1RackNodePlayer.html" title="Simple processor for a Node which uses an InputProvider to pass input in to the graph.">RackNodePlayer</a> to process an Node with input, sample rate and block size.  <a href="classtracktion__engine_1_1RackNodePlayer.html#a328dd04d54646acd2daa657df94a47e3">More...</a><br /></td></tr>
+<tr class="separator:a328dd04d54646acd2daa657df94a47e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59b01c06116bbea8f59ced9101f3750c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1RackNodePlayer.html#a59b01c06116bbea8f59ced9101f3750c">prepareToPlay</a> (double sampleRate, int blockSize)</td></tr>
 <tr class="memdesc:a59b01c06116bbea8f59ced9101f3750c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Preapres the processor to be played.  <a href="classtracktion__engine_1_1RackNodePlayer.html#a59b01c06116bbea8f59ced9101f3750c">More...</a><br /></td></tr>
 <tr class="separator:a59b01c06116bbea8f59ced9101f3750c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -89,9 +92,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a77ad130aed89432e6c6a5f7f7384506e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1RackNodePlayer.html#a77ad130aed89432e6c6a5f7f7384506e">process</a> (const <a class="el" href="structtracktion__graph_1_1Node_1_1ProcessContext.html">tracktion_graph::Node::ProcessContext</a> &amp;pc)</td></tr>
 <tr class="memdesc:a77ad130aed89432e6c6a5f7f7384506e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes a block of audio and MIDI data.  <a href="classtracktion__engine_1_1RackNodePlayer.html#a77ad130aed89432e6c6a5f7f7384506e">More...</a><br /></td></tr>
 <tr class="separator:a77ad130aed89432e6c6a5f7f7384506e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c447e60caa5df9b35a7ec9185acde0d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1RackNodePlayer.html#a1c447e60caa5df9b35a7ec9185acde0d">process</a> (const <a class="el" href="structtracktion__graph_1_1Node_1_1ProcessContext.html">tracktion_graph::Node::ProcessContext</a> &amp;pc, <a class="el" href="classtracktion__engine_1_1PlayHead.html">PlayHead</a> &amp;ph, <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> stream)</td></tr>
-<tr class="memdesc:a1c447e60caa5df9b35a7ec9185acde0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes a block of audio and MIDI data with a given <a class="el" href="classtracktion__engine_1_1PlayHead.html">PlayHead</a> and <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a>.  <a href="classtracktion__engine_1_1RackNodePlayer.html#a1c447e60caa5df9b35a7ec9185acde0d">More...</a><br /></td></tr>
-<tr class="separator:a1c447e60caa5df9b35a7ec9185acde0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a363e47a9b32f62713cfc44479f1b14aa"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1RackNodePlayer.html#a363e47a9b32f62713cfc44479f1b14aa">process</a> (const <a class="el" href="structtracktion__graph_1_1Node_1_1ProcessContext.html">tracktion_graph::Node::ProcessContext</a> &amp;pc, double editTime, bool isPlaying, bool isScrubbing, bool isRendering)</td></tr>
+<tr class="memdesc:a363e47a9b32f62713cfc44479f1b14aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes a block of audio and MIDI data with a given <a class="el" href="classtracktion__engine_1_1PlayHead.html">PlayHead</a> and <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a>.  <a href="classtracktion__engine_1_1RackNodePlayer.html#a363e47a9b32f62713cfc44479f1b14aa">More...</a><br /></td></tr>
+<tr class="separator:a363e47a9b32f62713cfc44479f1b14aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename NodePlayerType&gt;<br />
@@ -101,7 +104,7 @@ class tracktion_engine::RackNodePlayer&lt; NodePlayerType &gt;</h3>
 <p>This simply iterate all the nodes attempting to process them in a single thread. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a7dec39b2b3dbd9c4f9ec484650cbbc12"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7dec39b2b3dbd9c4f9ec484650cbbc12">&#9670;&nbsp;</a></span>RackNodePlayer()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7dec39b2b3dbd9c4f9ec484650cbbc12">&#9670;&nbsp;</a></span>RackNodePlayer() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -135,6 +138,56 @@ template&lt;typename NodePlayerType &gt; </div>
 </div><div class="memdoc">
 
 <p>Creates an <a class="el" href="classtracktion__engine_1_1RackNodePlayer.html" title="Simple processor for a Node which uses an InputProvider to pass input in to the graph.">RackNodePlayer</a> to process an Node with input. </p>
+
+</div>
+</div>
+<a id="a328dd04d54646acd2daa657df94a47e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a328dd04d54646acd2daa657df94a47e3">&#9670;&nbsp;</a></span>RackNodePlayer() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename NodePlayerType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion__engine_1_1RackNodePlayer.html">tracktion_engine::RackNodePlayer</a>&lt; NodePlayerType &gt;::<a class="el" href="classtracktion__engine_1_1RackNodePlayer.html">RackNodePlayer</a> </td>
+          <td>(</td>
+          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classtracktion__graph_1_1Node.html">tracktion_graph::Node</a> &gt;&#160;</td>
+          <td class="paramname"><em>nodeToProcess</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="structtracktion__engine_1_1InputProvider.html">InputProvider</a> &gt;&#160;</td>
+          <td class="paramname"><em>inputProviderToUse</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>overrideInputProvider</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>sampleRateToUse</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>blockSizeToUse</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates an <a class="el" href="classtracktion__engine_1_1RackNodePlayer.html" title="Simple processor for a Node which uses an InputProvider to pass input in to the graph.">RackNodePlayer</a> to process an Node with input, sample rate and block size. </p>
 
 </div>
 </div>
@@ -213,8 +266,8 @@ template&lt;typename NodePlayerType &gt; </div>
 
 </div>
 </div>
-<a id="a1c447e60caa5df9b35a7ec9185acde0d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1c447e60caa5df9b35a7ec9185acde0d">&#9670;&nbsp;</a></span>process() <span class="overload">[2/2]</span></h2>
+<a id="a363e47a9b32f62713cfc44479f1b14aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a363e47a9b32f62713cfc44479f1b14aa">&#9670;&nbsp;</a></span>process() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -230,14 +283,26 @@ template&lt;typename NodePlayerType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1PlayHead.html">PlayHead</a> &amp;&#160;</td>
-          <td class="paramname"><em>ph</em>, </td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>editTime</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a>&#160;</td>
-          <td class="paramname"><em>stream</em>&#160;</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isPlaying</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isScrubbing</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isRendering</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -250,17 +315,17 @@ template&lt;typename NodePlayerType &gt; </div>
 <p>Processes a block of audio and MIDI data with a given <a class="el" href="classtracktion__engine_1_1PlayHead.html">PlayHead</a> and <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a>. </p>
 <p>This should be used when processing ExternalPlugins or they will crash when getting the playhead info. </p>
 
-<p class="reference">References <a class="el" href="structtracktion__graph_1_1Node_1_1ProcessContext.html#a66de1f0f7d31c6c64e30a654764702be">tracktion_graph::Node::ProcessContext::buffers</a>, and <a class="el" href="structtracktion__engine_1_1AudioRenderContext.html#a9afec5cd6a8831e483bad2f49cc64db0ac9bcee53c142bd4cbf490c4b9740449c">tracktion_engine::AudioRenderContext::contiguous</a>.</p>
+<p class="reference">References <a class="el" href="structtracktion__graph_1_1Node_1_1ProcessContext.html#a66de1f0f7d31c6c64e30a654764702be">tracktion_graph::Node::ProcessContext::buffers</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li><a class="el" href="tracktion__engine__RackNode_8h.html">tracktion_engine_RackNode.h</a></li>
+<li><a class="el" href="tracktion__RackNode_8h.html">tracktion_RackNode.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 23 2021 18:54:59 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 29 2021 13:14:53 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>
