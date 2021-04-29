@@ -122,5 +122,32 @@ static void addApplyingGainRamp (DestBuffer&& dest, const SourceBuffer& source, 
     }
 }
 
+/** Copies the contents of one view or buffer to a destination.
+    If the source and dest point to the same buffer, this will skip the copy.
+    This will assert if the two views do not have exactly the same size.
+*/
+template <typename DestBuffer, typename SourceBuffer>
+static void copyIfNotAliased (DestBuffer&& dest, const SourceBuffer& source)
+{
+    auto size = source.getSize();
+    CHOC_ASSERT (size == dest.getSize());
+
+    for (decltype (size.numChannels) chan = 0; chan < size.numChannels; ++chan)
+    {
+        auto src = source.getIterator (chan);
+        auto dst = dest.getIterator (chan);
+        
+        if (src.sample == dst.sample)
+            continue;
+
+        for (decltype (size.numFrames) i = 0; i < size.numFrames; ++i)
+        {
+            *dst = static_cast<decltype (dst.get())> (src.get());
+            ++dst;
+            ++src;
+        }
+    }
+
+}
 
 } // namespace tracktion_graph
