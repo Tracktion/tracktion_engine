@@ -219,6 +219,7 @@ void CurveEditor::paint (juce::Graphics& g)
                                       pos.y - pointRadius,
                                       pointRadius * 2,
                                       pointRadius * 2);
+            r = r.reduced (2);
 
             if (r.getX() > clipBounds.getRight())
                 break;
@@ -252,6 +253,7 @@ void CurveEditor::paint (juce::Graphics& g)
                                       pos.y - pointRadius,
                                       pointRadius * 2,
                                       pointRadius * 2);
+            r = r.reduced (2);
 
             if (r.getX() > clipBounds.getRight())
                 break;
@@ -538,7 +540,7 @@ void CurveEditor::mouseUp (const MouseEvent& e)
         {
             auto newPoint = getPosition (pointUnderMouse);
 
-            for (int i = jmax (0, pointBeingMoved - 1); i < pointBeingMoved + 2; ++i)
+            for (int i = std::max (0, pointBeingMoved - 1); i < std::min (pointBeingMoved + 2, getNumPoints()); ++i)
             {
                 auto pos = getPosition (i);
 

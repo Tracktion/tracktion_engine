@@ -39,7 +39,7 @@ public:
     bool canBeAddedToClip() override;
     bool needsConstantBufferSize() override;
 
-    void applyToBuffer (const AudioRenderContext&) override;
+    void applyToBuffer (const PluginRenderContext&) override;
 
     juce::String getSelectableDescription() override;
 

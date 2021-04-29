@@ -26,7 +26,7 @@ struct AbletonLink::ImplBase  : public Timer
         else
         {
             stopTimer();
-            transport.engine.getDeviceManager().setSpeedCompensation (0.0);
+            setSpeedCompensation (0.0);
         }
     }
 
@@ -66,8 +66,7 @@ struct AbletonLink::ImplBase  : public Timer
         else
         {
             const double speedComp = jlimit (-10.0, 10.0, offset * 10.0);
-
-            deviceManager.setSpeedCompensation (speedComp);
+            setSpeedCompensation (speedComp);
         }
     }
 
@@ -157,6 +156,16 @@ struct AbletonLink::ImplBase  : public Timer
     static inline double negativeAwareFmod (double a, double b)
     {
         return a - b * std::floor (a / b);
+    }
+
+    void setSpeedCompensation (double speedComp)
+    {
+        transport.engine.getDeviceManager().setSpeedCompensation (speedComp);
+
+        #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+         if (auto epc = transport.getCurrentPlaybackContext())
+             epc->setSpeedCompensation (speedComp);
+        #endif
     }
 
     TransportControl& transport;

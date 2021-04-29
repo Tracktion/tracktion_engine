@@ -153,14 +153,16 @@ void RackInstance::replaceRackWithPluginSequence (SelectionManager* sm)
         {
             bool operator< (const PluginIndexAndPos& other) const     { return x < other.x; }
 
-            int index;
-            float x;
+            float x = 0.0f;
+            Plugin* plugin = nullptr;
         };
 
+        auto rackPlugins = thisType->getPlugins();
         juce::Array<PluginIndexAndPos> pluginLocations;
 
-        for (int i = 0; i < thisType->getPlugins().size(); ++i)
-            pluginLocations.add ({ i, thisType->getPluginPosition (i).x });
+        for (int i = 0; i < rackPlugins.size(); ++i)
+            if (auto rackPlugin = rackPlugins[i])
+                pluginLocations.add ({ thisType->getPluginPosition (rackPlugin).x, rackPlugin });
 
         std::sort (pluginLocations.begin(), pluginLocations.end());
 
@@ -170,7 +172,8 @@ void RackInstance::replaceRackWithPluginSequence (SelectionManager* sm)
 
             for (int i = pluginLocations.size(); --i >= 0;)
             {
-                auto srcPlugin = thisType->getPlugins()[pluginLocations.getUnchecked (i).index];
+                auto srcPlugin = pluginLocations.getUnchecked (i).plugin;
+                jassert (srcPlugin != nullptr);
                 srcPlugin->flushPluginStateToValueTree();
                 auto pluginState = srcPlugin->state;
 
@@ -340,14 +343,13 @@ double RackInstance::getLatencySeconds()
     return 0.0;
 }
 
-void RackInstance::prepareForNextBlock (const AudioRenderContext& rc)
+void RackInstance::prepareForNextBlock (double)
 {
-    // N.B. This will be called by the EditPlaybackContext during normal playback
-    if (type != nullptr && rc.isRendering)
+    if (type != nullptr)
         type->newBlockStarted();
 }
 
-void RackInstance::applyToBuffer (const AudioRenderContext& fc)
+void RackInstance::applyToBuffer (const PluginRenderContext& fc)
 {
     const float wet = wetGain->getCurrentValue();
 
@@ -388,7 +390,10 @@ void RackInstance::setInputLevel (Channel c, float v)
     param->setParameter (v, sendNotification);
 
     if (linkInputs)
-        param->setParameter (v, sendNotification);
+    {
+        const auto& linkedParam = c == left ? rightInDb : leftInDb;
+        linkedParam->setParameter (v, sendNotification);
+    }
 }
 
 void RackInstance::setOutputLevel (Channel c, float v)
@@ -398,7 +403,10 @@ void RackInstance::setOutputLevel (Channel c, float v)
     param->setParameter (v, sendNotification);
 
     if (linkOutputs)
-        param->setParameter (v, sendNotification);
+    {
+        const auto& linkedParam = c == left ? rightOutDb : leftOutDb;
+        linkedParam->setParameter (v, sendNotification);
+    }
 }
 
 juce::String RackInstance::getInputName (Channel c)

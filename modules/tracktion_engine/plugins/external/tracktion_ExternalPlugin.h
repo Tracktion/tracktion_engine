@@ -11,13 +11,18 @@
 namespace tracktion_engine
 {
 
+// JUCE Changed the format of PluginDescription::createIdentifierString
+// breaking all our saved files. This reverts to the old format
+juce::String createIdentifierString (const juce::PluginDescription&);
+
+
 class ExternalPlugin  : public Plugin
 {
 public:
     ExternalPlugin (PluginCreationInfo);
     ~ExternalPlugin() override;
 
-    juce::String getIdentifierString() override { return desc.createIdentifierString(); }
+    juce::String getIdentifierString() override { return createIdentifierString (desc); }
 
     using Ptr = juce::ReferenceCountedObjectPtr<ExternalPlugin>;
 
@@ -45,7 +50,7 @@ public:
     void reset() override;
     void setEnabled (bool enabled) override;
 
-    void applyToBuffer (const AudioRenderContext&) override;
+    void applyToBuffer (const PluginRenderContext&) override;
 
     bool producesAudioWhenNoAudioInput() override   { return isAutomationNeeded() || isSynth() || ! noTail(); }
     int getNumOutputChannelsGivenInputs (int numInputs) override;
@@ -77,7 +82,7 @@ public:
 
     //==============================================================================
     juce::File getFile() const;
-    juce::String getPluginUID() const           { return juce::String::toHexString (desc.uid); }
+    juce::String getPluginUID() const           { return juce::String::toHexString (desc.deprecatedUid); }
 
     const char* getDebugName() const noexcept   { return debugName.toUTF8(); }
 
@@ -100,6 +105,7 @@ public:
     void setCurrentProgram (int index, bool sendChangeMessage);
     void setCurrentProgramName (const juce::String& name);
     bool hasNameForMidiProgram (int programNum, int bank, juce::String& name) override;
+    bool hasNameForMidiNoteNumber (int note, int midiChannel, juce::String& name) override;
 
     //==============================================================================
     const VSTXML* getVSTXML() const noexcept        { return vstXML.get(); }
@@ -159,10 +165,10 @@ private:
     void buildParameterList();
     void refreshParameterValues();
     void updateDebugName();
-    void processPluginBlock (const AudioRenderContext&);
+    void processPluginBlock (const PluginRenderContext&, bool processedBypass);
 
     std::unique_ptr<juce::PluginDescription> findMatchingPlugin() const;
-    std::unique_ptr<juce::PluginDescription> findDescForUID (int uid) const;
+    std::unique_ptr<juce::PluginDescription> findDescForUID (int uid, int deprecatedUid) const;
     std::unique_ptr<juce::PluginDescription> findDescForFileOrID (const juce::String&) const;
 
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;

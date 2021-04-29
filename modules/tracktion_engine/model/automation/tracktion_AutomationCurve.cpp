@@ -330,16 +330,32 @@ int AutomationCurve::movePoint (int index, double newTime, float newValue, bool 
         if (removeInterveningPoints)
         {
             auto oldTime = getPointTime (index);
+            const bool movingPointBack = newTime < oldTime;
 
             auto t1 = jmin (newTime, oldTime) - 0.00001;
             auto t2 = jmax (newTime, oldTime) + 0.00001;
 
             for (int i = getNumPoints(); --i >= 0;)
             {
-                auto t = getPointTime(i);
+                auto t = getPointTime (i);
 
                 if (t < t1)
                     break;
+                
+                // If points lay at the same time, don't remove them
+                if (t == oldTime)
+                {
+                    if (movingPointBack)
+                    {
+                        if (index < i)
+                           break;
+                    }
+                    else
+                    {
+                        if (index > i)
+                           break;
+                    }
+                }
 
                 if (t < t2 && i != index)
                 {

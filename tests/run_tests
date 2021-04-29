@@ -18,6 +18,8 @@ fi
 
 ROOT=$(cd "$(dirname "$0")/.."; pwd)
 echo ROOT: "$ROOT"
+echo DISABLE_TOOLS: "$DISABLE_TOOLS"
+echo GRAPH_UNIT_TESTS_QUICK_VALIDATE: "$GRAPH_UNIT_TESTS_QUICK_VALIDATE"
 
 # Remove all build products
 rm -rf "$ROOT/bin"
@@ -50,16 +52,23 @@ function runTestApp()
         APP_EXE=$APP_ROOT/build/Release/$APP_NAME
         cd "$APP_ROOT"
 
-        xcodebuild -configuration Release LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
-        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME.xml"
+        xcodebuild -configuration Release LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES GRAPH_UNIT_TESTS_QUICK_VALIDATE=${GRAPH_UNIT_TESTS_QUICK_VALIDATE}
+        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
         
-        xcodebuild -configuration Release -enableAddressSanitizer YES LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
-        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME_asan.xml"
+        if [ -n "$DISABLE_TOOLS" ]; then
+            echo INFO: Skipping instrumented builds
+            return
+        fi
 
-        xcodebuild -configuration Release -enableThreadSanitizer YES LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES
-        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME_tsan.xml"
+        if [ "$2" != "DISABLE_TOOLS" ]; then
+            xcodebuild -configuration Release -enableAddressSanitizer YES LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES GRAPH_UNIT_TESTS_QUICK_VALIDATE=${GRAPH_UNIT_TESTS_QUICK_VALIDATE}
+            "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_asan.xml"
 
-        xcodebuild analyze -quiet -configuration Release LLVM_LTO=NO
+            xcodebuild -configuration Release -enableThreadSanitizer YES LLVM_LTO=NO GCC_TREAT_WARNINGS_AS_ERRORS=YES GRAPH_UNIT_TESTS_QUICK_VALIDATE=${GRAPH_UNIT_TESTS_QUICK_VALIDATE}
+            "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_tsan.xml"
+
+            xcodebuild analyze -quiet -configuration Release LLVM_LTO=NO
+        fi
     fi
 
     # ==========================================================
@@ -72,9 +81,10 @@ function runTestApp()
         APP_EXE=$APP_ROOT/x64/Release/ConsoleApp/$APP_NAME.exe
         cd "$APP_ROOT"
 
+        export CL=/DGRAPH_UNIT_TESTS_QUICK_VALIDATE=${GRAPH_UNIT_TESTS_QUICK_VALIDATE}
         "$MSBUILD_EXE" "$APP_NAME.sln" -p:VisualStudioVersion=15.0 -m -p:Configuration=Release -p:Platform=x64 -p:PreferredToolArchitecture=x64
 
-        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME.xml"
+        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
     fi
 
     # ==========================================================
@@ -84,12 +94,19 @@ function runTestApp()
         cd "$APP_ROOT"
 
         make clean
-        make CONFIG=Release -j$(nproc)
+        make CONFIG=Release -j$(nproc) TARGET_ARCH="-latomic -m64" CPPFLAGS=-DGRAPH_UNIT_TESTS_QUICK_VALIDATE=${GRAPH_UNIT_TESTS_QUICK_VALIDATE}
 
-        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME.xml"
+        "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
+
+        if [ -n "$DISABLE_TOOLS" ]; then
+            echo INFO: Skipping instrumented builds
+            return
+        fi
         
-        if [ -z "$DISABLE_VALGRIND" ]; then
-            valgrind "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-$APP_NAME_valgrind.xml"
+        if [ "$2" != "DISABLE_TOOLS" ]; then
+            if [ -z "$DISABLE_VALGRIND" ]; then
+                valgrind "$APP_EXE" --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_valgrind.xml"
+            fi
         fi
     fi
 }
@@ -97,5 +114,6 @@ function runTestApp()
 #==========================================================
 # Run the apps
 #==========================================================
-runTestApp "AudioNodeDev"
+runTestApp "tracktion_graph_PerformanceTests" "DISABLE_TOOLS"
+runTestApp "tracktion_graph_TestRunner"
 runTestApp "TestRunner"

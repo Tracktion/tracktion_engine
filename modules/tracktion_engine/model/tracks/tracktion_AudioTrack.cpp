@@ -789,9 +789,7 @@ void AudioTrack::addListener (Listener* l)
 void AudioTrack::removeListener (Listener* l)
 {
     listeners.remove (l);
-
-    if (listeners.isEmpty())
-        edit.restartPlayback();
+    // N.B. Don't call restartPlayback here or it will be impossible to clear the audio graph
 }
 
 //==============================================================================
@@ -983,10 +981,6 @@ AudioNode* AudioTrack::createAudioNode (const CreateAudioNodeParams& params)
             }
         }
 
-        for (int i = clips.size(); --i >= 0;)
-            if (auto pl = clips.getUnchecked (i)->getPluginList())
-                clipsNode = pl->attachNodesForPluginsNeedingLivePlay (clipsNode);
-
         if (compGroup != -1)
             if (auto tc = edit.getTrackCompManager().getTrackComp (this))
                 clipsNode = tc->createAudioNode (*this, clipsNode);
@@ -1172,7 +1166,11 @@ bool AudioTrack::hasAnyTracksFeedingIn()
 //==============================================================================
 void AudioTrack::injectLiveMidiMessage (const MidiMessageArray::MidiMessageWithSource& message)
 {
-    if (! LiveMidiInjectingAudioNode::injectMidiMessageForTrack (this, message))
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    bool wasUsed = LiveMidiInjectingAudioNode::injectMidiMessageForTrack (this, message);
+    listeners.call (&Listener::injectLiveMidiMessage, *this, message, wasUsed);
+
+    if (! wasUsed)
         edit.warnOfWastedMidiMessages (nullptr, this);
 }
 
@@ -1286,7 +1284,15 @@ void AudioTrack::setFrozen (bool b, FreezeType type)
         {
             if (! edit.isLoading())
             {
-                if (b && getOutput().getDestinationTrack() != nullptr)
+                const auto outputsToSubmixTrack = [this]
+                {
+                    if (auto folder = getParentFolderTrack())
+                        return folder->isSubmixFolder();
+                        
+                    return false;
+                };
+                
+                if (b && (getOutput().getDestinationTrack() != nullptr || outputsToSubmixTrack()))
                 {
                     edit.engine.getUIBehaviour().showWarningMessage (TRANS("Tracks which output to another track can't themselves be frozen; "
                                                                            "instead, you should freeze the track they input into."));
@@ -1493,16 +1499,11 @@ AudioNode* AudioTrack::createFreezeAudioNode (bool addAntiDenormalisationNoise)
 
 bool AudioTrack::isSidechainSource() const
 {
-    for (auto p : tracktion_engine::getAllPlugins (edit, false))
+    for (auto p : edit.getPluginCache().getPlugins())
         if (p->getSidechainSourceID() == itemID)
             return true;
 
     return false;
-}
-
-bool AudioTrack::isRackSource() const
-{
-    return pluginList.findFirstPluginOfType<RackInstance>() != nullptr;
 }
 
 juce::Array<Track*> AudioTrack::findSidechainSourceTracks() const

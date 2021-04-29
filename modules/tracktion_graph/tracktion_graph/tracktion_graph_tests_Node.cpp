@@ -12,6 +12,8 @@
 namespace tracktion_graph
 {
 
+#if GRAPH_UNIT_TESTS_NODE
+
 using namespace test_utilities;
 
 //==============================================================================
@@ -81,6 +83,25 @@ private:
             
             auto testContext = createBasicTestContext (std::move (sumNode), testSetup, 1, 5.0);
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 0.0f, 0.0f);
+        }
+
+        // This is just a check to ensure the following code compiles
+        {
+            float clipGain = 1.0f;
+            std::vector<std::unique_ptr<Node>> trackOneClipNodes;
+            trackOneClipNodes.push_back (std::make_unique<SinNode> (220.0f, 1));
+            trackOneClipNodes.push_back (std::make_unique<SinNode> (220.0f, 1));
+            
+            auto trackOneNode = std::make_unique<SummingNode> (std::move (trackOneClipNodes));
+
+            auto trackTwoClipNode = std::make_unique<SinNode> (220.0f, 1);
+            auto trackTwoNode = std::make_unique<GainNode> (std::move (trackTwoClipNode), [clipGain] { return clipGain; });
+            
+            std::vector<std::unique_ptr<Node>> trackNodes;
+            trackNodes.push_back (std::move (trackOneNode));
+            trackNodes.push_back (std::move (trackTwoNode));
+            auto mainOutput = std::make_unique<SummingNode> (std::move (trackNodes));
+            juce::ignoreUnused (mainOutput);
         }
     }
 
@@ -178,7 +199,7 @@ private:
             std::vector<std::unique_ptr<Node>> nodes;
             nodes.push_back (std::make_unique<SinNode> ((float) sinFrequency));
 
-            auto sinNode = std::make_unique<SinNode> ((float) sinFrequency);
+            auto sinNode = makeNode<SinNode> ((float) sinFrequency);
             auto latencySinNode = makeNode<LatencyNode> (std::move (sinNode), numLatencySamples);
             nodes.push_back (std::move (latencySinNode));
 
@@ -337,7 +358,7 @@ private:
             
             const int latencyNumSamples = juce::roundToInt (sampleRate / 100.0);
             const double delayedTime = latencyNumSamples / sampleRate;
-            auto midiNode = std::make_unique<MidiNode> (sequence);
+            auto midiNode = makeNode<MidiNode> (sequence);
             auto delayedNode = makeNode<LatencyNode> (std::move (midiNode), latencyNumSamples);
 
             auto testContext = createBasicTestContext (std::move (delayedNode), testSetup, 1, duration);
@@ -517,7 +538,7 @@ private:
             const double totalDuration = 5.0;
             const int totalNumSamples = (int) std::floor (totalDuration * testSetup.sampleRate);
             TestProcess<NodePlayer> playerContext (std::make_unique<NodePlayer> (std::make_unique<SinNode> (220.0f)),
-                                                   testSetup, 1, totalDuration);
+                                                   testSetup, 1, totalDuration, true);
             const int firstHalfNumSamples = totalNumSamples / 2;
             
             playerContext.process (firstHalfNumSamples);
@@ -552,7 +573,7 @@ private:
             auto node = makeSinNode();
             const size_t expectedNodeID = node->getNodeProperties().nodeID;
             TestProcess<NodePlayer> playerContext (std::make_unique<NodePlayer> (std::move (node)),
-                                                   testSetup, 1, totalDuration);
+                                                   testSetup, 1, totalDuration, true);
             const int firstHalfNumSamples = totalNumSamples / 2;
             
             playerContext.process (firstHalfNumSamples);
@@ -563,7 +584,7 @@ private:
 
             // Make a new sin node and switch that in to the test context
             node = makeSinNode();
-            expectEquals (node->getNodeProperties().nodeID, expectedNodeID);
+            expectEquals (juce::uint64 (node->getNodeProperties().nodeID), juce::uint64 (expectedNodeID));
             playerContext.setPlayer (std::make_unique<NodePlayer> (std::move (node)));
             const int secondHalfNumSamples = totalNumSamples - firstHalfNumSamples;
             playerContext.process (secondHalfNumSamples);
@@ -596,7 +617,7 @@ private:
             auto node = makeSinNode();
             const size_t expectedNodeID = node->getNodeProperties().nodeID;
             TestProcess<NodePlayer> playerContext (std::make_unique<NodePlayer> (std::move (node)),
-                                                   testSetup, 1, totalDuration);
+                                                   testSetup, 1, totalDuration, true);
             const int firstHalfNumSamples = totalNumSamples / 2;
             
             playerContext.process (firstHalfNumSamples);
@@ -608,7 +629,7 @@ private:
             // Make a new sin node and switch that in to the test context
             node = makeSinNode();
             test_utilities::expectUniqueNodeIDs (*this, *node, false);
-            expectEquals (node->getNodeProperties().nodeID, expectedNodeID);
+            expectEquals (juce::uint64 (node->getNodeProperties().nodeID), juce::uint64 (expectedNodeID));
             playerContext.setNode (std::move (node));
             const int secondHalfNumSamples = totalNumSamples - firstHalfNumSamples;
             playerContext.process (secondHalfNumSamples);
@@ -646,6 +667,8 @@ private:
     }
 };
 
-static NodeTests NodeTests;
+static NodeTests nodeTests;
+
+#endif
 
 }

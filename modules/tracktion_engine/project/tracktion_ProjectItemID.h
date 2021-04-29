@@ -20,10 +20,10 @@ namespace tracktion_engine
 class ProjectItemID
 {
 public:
-    ProjectItemID() noexcept;
-    ProjectItemID (const ProjectItemID&) noexcept;
-    ProjectItemID operator= (const ProjectItemID&) noexcept;
-    ~ProjectItemID() noexcept;
+    ProjectItemID() noexcept = default;
+    ProjectItemID (const ProjectItemID&) noexcept = default;
+    ProjectItemID& operator= (const ProjectItemID&) noexcept = default;
+    ~ProjectItemID() noexcept = default;
 
     /** takes a string created by toString(). */
     explicit ProjectItemID (const juce::String& stringID) noexcept;

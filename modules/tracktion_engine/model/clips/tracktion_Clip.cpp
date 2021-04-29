@@ -12,6 +12,61 @@ namespace tracktion_engine
 {
 
 //==============================================================================
+struct Clip::LiveMidiOutputAudioNode  : public SingleInputAudioNode,
+                                        private juce::AsyncUpdater
+{
+    LiveMidiOutputAudioNode (Clip& c, AudioNode* source)
+        : SingleInputAudioNode (source), clip (c), clipPtr (&c)
+    {
+        pendingMessages.reserve (50);
+        dispatchingMessages.reserve (50);
+    }
+
+    void renderOver (const AudioRenderContext& rc) override
+    {
+        if (rc.bufferForMidiMessages != nullptr)
+            callRenderAdding (rc);
+        else
+            input->renderOver (rc);
+    }
+
+    void renderAdding (const AudioRenderContext& rc) override
+    {
+        input->renderAdding (rc);
+
+        const ScopedLock sl (lock);
+
+        if (rc.bufferForMidiMessages != nullptr)
+            for (auto& m : *rc.bufferForMidiMessages)
+                pendingMessages.add (m);
+
+        if (! pendingMessages.isEmpty())
+            triggerAsyncUpdate();
+    }
+
+private:
+    Clip& clip;
+    Clip::Ptr clipPtr;
+
+    CriticalSection lock;
+    MidiMessageArray pendingMessages, dispatchingMessages;
+
+    void handleAsyncUpdate() override
+    {
+        {
+            const ScopedLock sl (lock);
+            pendingMessages.swapWith (dispatchingMessages);
+        }
+
+        for (auto& m : dispatchingMessages)
+            clip.listeners.call (&Clip::Listener::midiMessageGenerated, clip, m);
+
+        dispatchingMessages.clear();
+    }
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LiveMidiOutputAudioNode)
+};
+//==============================================================================
 Clip::Clip (const juce::ValueTree& v, ClipTrack& targetTrack, EditItemID id, Type t)
     : TrackItem (targetTrack.edit, id, t),
       state (v), track (&targetTrack),
@@ -439,8 +494,6 @@ void Clip::setCurrentSourceFile (const juce::File& f)
 {
     if (currentSourceFile != f)
     {
-        jassert (f.existsAsFile());
-        
         currentSourceFile = f;
         changed();
     }
@@ -552,9 +605,33 @@ TrackItem* Clip::getGroupParent() const
     return getGroupClip();
 }
 
+void Clip::setGroup (EditItemID newGroupID)
+{
+    groupID = newGroupID;
+    if (groupID == EditItemID())
+        state.removeProperty (IDs::groupID, getUndoManager());
+}
+
 juce::Colour Clip::getColour() const
 {
     return colour.get();
+}
+
+//==============================================================================
+void Clip::addListener (Listener* l)
+{
+    if (listeners.isEmpty())
+        edit.restartPlayback();
+
+    listeners.add (l);
+}
+
+void Clip::removeListener (Listener* l)
+{
+    listeners.remove (l);
+
+    if (listeners.isEmpty())
+        edit.restartPlayback();
 }
 
 }

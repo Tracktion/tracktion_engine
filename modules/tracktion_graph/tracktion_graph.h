@@ -25,7 +25,7 @@
   website:          http://www.tracktion.com
   license:          Proprietary
 
-  dependencies:     juce_audio_processors juce_dsp
+  dependencies:     juce_audio_formats
 
  END_JUCE_MODULE_DECLARATION
 
@@ -46,17 +46,62 @@
 #pragma once
 #define TRACKTION_GRAPH_H_INCLUDED
 
-//==============================================================================
-#include <juce_audio_processors/juce_audio_processors.h>
-#include <juce_dsp/juce_dsp.h>
-
 
 //==============================================================================
+/** Config: GRAPH_UNIT_TESTS_QUICK_VALIDATE
+
+    If this is enabled, only a minimal set of buffer sizes will be tested.
+    This gives a good idea if the module works correctly but also optomises CI
+    completion speed.
+*/
+#ifndef GRAPH_UNIT_TESTS_QUICK_VALIDATE
+ #define GRAPH_UNIT_TESTS_QUICK_VALIDATE 0
+#endif
+
+//==============================================================================
+//==============================================================================
+#include <cassert>
+#include <thread>
+
+//==============================================================================
+#if __has_include(<choc/audio/choc_SampleBuffers.h>)
+ #include <choc/audio/choc_SampleBuffers.h>
+ #include <choc/audio/choc_MIDI.h>
+ #include <choc/audio/choc_MultipleReaderMultipleWriterFIFO.h>
+#else
+ #include "../3rd_party/choc/audio/choc_SampleBuffers.h"
+ #include "../3rd_party/choc/audio/choc_MIDI.h"
+ #include "../3rd_party/choc/containers/choc_MultipleReaderMultipleWriterFIFO.h"
+#endif
+
+//==============================================================================
+#include <juce_audio_basics/juce_audio_basics.h>
+
+//==============================================================================
+#include "tracktion_graph/tracktion_graph_Utility.h"
+
+#include "utilities/tracktion_GlueCode.h"
 #include "utilities/tracktion_AudioFifo.h"
 #include "utilities/tracktion_MidiMessageArray.h"
+#include "utilities/tracktion_RealTimeSpinLock.h"
+#include "utilities/tracktion_Semaphore.h"
+#include "utilities/tracktion_Threads.h"
+#include "utilities/tracktion_graph_LatencyProcessor.h"
 
-#include "tracktion_graph/tracktion_graph_Utility.h"
+#include "tracktion_graph/tracktion_graph_PlayHead.h"
+
 #include "tracktion_graph/tracktion_graph_Node.h"
+#include "tracktion_graph/tracktion_graph_PlayHeadState.h"
+
+#include "tracktion_graph/players/tracktion_graph_NodePlayerUtilities.h"
+
 #include "tracktion_graph/tracktion_graph_NodePlayer.h"
 #include "tracktion_graph/tracktion_graph_MultiThreadedNodePlayer.h"
-#include "tracktion_graph/tracktion_graph_UtilityNodes.h"
+#include "tracktion_graph/tracktion_graph_LockFreeMultiThreadedNodePlayer.h"
+#include "tracktion_graph/tracktion_graph_NodePlayerThreadPools.h"
+
+#include "tracktion_graph/nodes/tracktion_graph_ConnectedNode.h"
+#include "tracktion_graph/nodes/tracktion_graph_LatencyNode.h"
+#include "tracktion_graph/nodes/tracktion_graph_SummingNode.h"
+
+#include "tracktion_graph/players/tracktion_graph_SimpleNodePlayer.h"

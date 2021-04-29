@@ -54,7 +54,7 @@ struct PanAutomatableParameter : public AutomatableParameter
 
     float stringToValue (const String& str) override
     {
-        const float v = str.retainCharacters ("012345679.-").getFloatValue();
+        const float v = str.retainCharacters ("0123456789.-").getFloatValue();
         return str.contains (TRANS("Left")) ? -v : v;
     }
 };
@@ -180,7 +180,7 @@ static float getParentVcaDb (Track& track, double time)
     return volumeFaderPositionToDB (decibelsToVolumeFaderPosition (0) + posOffset);
 }
 
-void VolumeAndPanPlugin::applyToBuffer (const AudioRenderContext& fc)
+void VolumeAndPanPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     if (isEnabled())
     {
@@ -190,7 +190,7 @@ void VolumeAndPanPlugin::applyToBuffer (const AudioRenderContext& fc)
         {
             const int numChansIn = fc.destBuffer->getNumChannels();
             const float vcaPosDelta = vcaTrack != nullptr
-                                    ? decibelsToVolumeFaderPosition (getParentVcaDb (*vcaTrack, fc.getEditTime().editRange1.getStart()))
+                                    ? decibelsToVolumeFaderPosition (getParentVcaDb (*vcaTrack, fc.editTime))
                                         - decibelsToVolumeFaderPosition (0.0f)
                                     : 0.0f;
 

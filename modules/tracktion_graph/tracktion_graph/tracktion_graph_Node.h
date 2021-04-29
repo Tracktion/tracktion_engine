@@ -76,6 +76,16 @@ namespace tracktion_graph
 class Node;
 
 //==============================================================================
+//==============================================================================
+/** Creates a node of the given type and returns it as the base Node class. */
+template<typename NodeType, typename... Args>
+std::unique_ptr<Node> makeNode (Args&&... args)
+{
+    return std::unique_ptr<tracktion_graph::Node> (std::move (std::make_unique<NodeType> (std::forward<Args> (args)...)));
+}
+
+
+//==============================================================================
 /** Passed into Nodes when they are being initialised, to give them useful
     contextual information that they may need
 */
@@ -90,11 +100,32 @@ struct PlaybackInitialisationInfo
 /** Holds some really basic properties of a node */
 struct NodeProperties
 {
-    bool hasAudio;
-    bool hasMidi;
-    int numberOfChannels;
+    bool hasAudio = false;
+    bool hasMidi = false;
+    int numberOfChannels = 0;
     int latencyNumSamples = 0;
     size_t nodeID = 0;
+};
+
+//==============================================================================
+//==============================================================================
+enum class ClearBuffers
+{
+    no, /**< Don't clear buffers before passing them to process, your subclass will take care of that. */
+    yes /**< Do clear buffers before passing to process so your subclass can simply add in to them. */
+};
+
+enum class AllocateAudioBuffer
+{
+    no, /**< Don't allocate an audio buffer, your subclass will ignore the dest buffer passed to process and simply use setAudioOutput to pass the buffer along. */
+    yes /**< Do allocate an audio buffer so your subclass use the dest buffer passed to process. */
+};
+
+/** Holds some hints that _might_ be used by the Node or players to improve efficiency. */
+struct NodeOptimisations
+{
+    ClearBuffers clear = ClearBuffers::yes;
+    AllocateAudioBuffer allocate = AllocateAudioBuffer::yes;
 };
 
 //==============================================================================
@@ -118,18 +149,18 @@ public:
     void initialise (const PlaybackInitialisationInfo&);
     
     /** Call before processing the next block, used to reset the process status. */
-    void prepareForNextBlock();
+    void prepareForNextBlock (juce::Range<int64_t> referenceSampleRange);
     
     /** Call to process the node, which will in turn call the process method with the
         buffers to fill.
-        @param streamSampleRange The monotonic stream time in samples.
-                                 This will be passed to the ProcessContext during the
-                                 process callback so nodes can use this to determine file
-                                 reading positions etc.
-                                 Some nodes may ignore this completely but it should at the
-                                 least specify the number to samples to process in this block.
+        @param referenceSampleRange The monotonic stream time in samples.
+                                    This will be passed to the ProcessContext during the
+                                    process callback so nodes can use this to determine file
+                                    reading positions etc.
+                                    Some nodes may ignore this completely but it should at the
+                                    least specify the number to samples to process in this block.
     */
-    void process (juce::Range<int64_t> streamSampleRange);
+    void process (juce::Range<int64_t> referenceSampleRange);
     
     /** Returns true if this node has processed and its outputs can be retrieved. */
     bool hasProcessed() const;
@@ -137,7 +168,7 @@ public:
     /** Contains the buffers for a processing operation. */
     struct AudioAndMidiBuffer
     {
-        juce::dsp::AudioBlock<float> audio;
+        choc::buffer::ChannelArrayView<float> audio;
         tracktion_engine::MidiMessageArray& midi;
     };
 
@@ -170,10 +201,15 @@ public:
     /** Struct to describe a single iteration of a process call. */
     struct ProcessContext
     {
-        juce::Range<int64_t> streamSampleRange;
+        juce::Range<int64_t> referenceSampleRange;
         AudioAndMidiBuffer buffers;
     };
     
+    //==============================================================================
+    /** @internal */
+    void* internal = nullptr;
+    virtual size_t getAllocatedBytes() const;
+
 protected:
     /** Called once before playback begins for each node.
         Use this to allocate buffers etc.
@@ -183,16 +219,40 @@ protected:
     */
     virtual void prepareToPlay (const PlaybackInitialisationInfo&) {}
 
+    /** Called before once on all Nodes before they are processed.
+        This can be used to prefetch audio data or update mute statuses etc..
+    */
+    virtual void prefetchBlock (juce::Range<int64_t> /*referenceSampleRange*/) {}
+
     /** Called when the node is to be processed.
         This should add in to the buffers available making sure not to change their size at all.
     */
-    virtual void process (const ProcessContext&) = 0;
+    virtual void process (ProcessContext&) = 0;
 
+    //==============================================================================
+    /** This can be called to provide some hints about allocating or playing back a Node to improve efficiency.
+        Be careful with these as they change the default and often expected behaviour.
+    */
+    void setOptimisations (NodeOptimisations);
+    
+    /** This can be called during your process function to set a view to the output.
+        This is useful to avoid having to allocate an internal buffer and always fill it if you're
+        just passing on data.
+    */
+    void setAudioOutput (const choc::buffer::ChannelArrayView<float>&);
+    
 private:
     std::atomic<bool> hasBeenProcessed { false };
-    juce::AudioBuffer<float> audioBuffer;
+    choc::buffer::Size audioBufferSize;
+    choc::buffer::ChannelArrayBuffer<float> audioBuffer;
+    choc::buffer::ChannelArrayView<float> audioView;
     tracktion_engine::MidiMessageArray midiBuffer;
-    int numSamplesProcessed = 0;
+    std::atomic<int> numSamplesProcessed { 0 };
+    NodeOptimisations nodeOptimisations;
+
+   #if JUCE_DEBUG
+    std::atomic<bool> isBeingProcessed { false };
+   #endif
 };
 
 //==============================================================================
@@ -213,7 +273,9 @@ enum class VertexOrdering
     preordering,            // The order in which nodes are first visited
     postordering,           // The order in which nodes are last visited
     reversePreordering,     // The reverse of the preordering
-    reversePostordering     // The reverse of the postordering
+    reversePostordering,    // The reverse of the postordering
+    bfsPreordering,         // A breadth-first search
+    bfsReversePreordering   // A reversed breadth-first search
 };
 
 /** Returns all the nodes in a Node graph in the order given by vertexOrdering. */
@@ -253,50 +315,90 @@ inline void Node::initialise (const PlaybackInitialisationInfo& info)
     prepareToPlay (info);
     
     auto props = getNodeProperties();
-    audioBuffer.setSize (props.numberOfChannels, info.blockSize);
+    audioBufferSize = choc::buffer::Size::create ((choc::buffer::ChannelCount) props.numberOfChannels,
+                                                  (choc::buffer::FrameCount) info.blockSize);
+    
+    if (nodeOptimisations.allocate == AllocateAudioBuffer::yes)
+        audioBuffer.resize (audioBufferSize);
 }
 
-inline void Node::prepareForNextBlock()
+inline void Node::prepareForNextBlock (juce::Range<int64_t> referenceSampleRange)
 {
-    hasBeenProcessed = false;
+    hasBeenProcessed.store (false, std::memory_order_release);
+    prefetchBlock (referenceSampleRange);
 }
 
-inline void Node::process (juce::Range<int64_t> streamSampleRange)
+inline void Node::process (juce::Range<int64_t> referenceSampleRange)
 {
-    audioBuffer.clear();
-    midiBuffer.clear();
-    const int numChannelsBeforeProcessing = audioBuffer.getNumChannels();
-    const int numSamplesBeforeProcessing = audioBuffer.getNumSamples();
+   #if JUCE_DEBUG
+    assert (! isBeingProcessed);
+    isBeingProcessed = true;
+   #endif
+
+    if (nodeOptimisations.clear == ClearBuffers::yes)
+    {
+        audioBuffer.clear();
+        midiBuffer.clear();
+    }
+    
+    const auto numChannelsBeforeProcessing = audioBuffer.getNumChannels();
+    const auto numSamplesBeforeProcessing = audioBuffer.getNumFrames();
     juce::ignoreUnused (numChannelsBeforeProcessing, numSamplesBeforeProcessing);
 
-    const int numSamples = (int) streamSampleRange.getLength();
+    auto numSamples = (int) referenceSampleRange.getLength();
     jassert (numSamples > 0); // This must be a valid number of samples to process
-    
-    auto inputBlock = numChannelsBeforeProcessing > 0 ? juce::dsp::AudioBlock<float> (audioBuffer).getSubBlock (0, (size_t) numSamples)
-                                                      : juce::dsp::AudioBlock<float>();
-    ProcessContext pc {
-                        streamSampleRange,
-                        { inputBlock , midiBuffer }
-                      };
+    jassert (numChannelsBeforeProcessing == 0 || numSamples <= (int) audioBuffer.getNumFrames());
+
+    audioView = ((nodeOptimisations.allocate == AllocateAudioBuffer::yes ? audioBuffer.getView()
+                                                                         : choc::buffer::ChannelArrayView<float> { {}, audioBufferSize }))
+                    .getStart ((choc::buffer::FrameCount) numSamples);
+
+    auto destAudioView = audioView;
+    ProcessContext pc { referenceSampleRange, { destAudioView, midiBuffer } };
     process (pc);
-    numSamplesProcessed = numSamples;
-    hasBeenProcessed = true;
+    numSamplesProcessed.store ((int) numSamples, std::memory_order_release);
     
     jassert (numChannelsBeforeProcessing == audioBuffer.getNumChannels());
-    jassert (numSamplesBeforeProcessing == audioBuffer.getNumSamples());
+    jassert (numSamplesBeforeProcessing == audioBuffer.getNumFrames());
+
+    // If you've set a new view with setAudioOutput, they must be the same size!
+    jassert (destAudioView.getSize() == audioView.getSize());
+
+   #if JUCE_DEBUG
+    isBeingProcessed = false;
+   #endif
+
+    // N.B. This must be set last to release the Node back to the player
+    hasBeenProcessed.store (true, std::memory_order_release);
 }
 
 inline bool Node::hasProcessed() const
 {
-    return hasBeenProcessed;
+    return hasBeenProcessed.load (std::memory_order_acquire);
 }
 
 inline Node::AudioAndMidiBuffer Node::getProcessedOutput()
 {
     jassert (hasProcessed());
-    return { juce::dsp::AudioBlock<float> (audioBuffer).getSubBlock (0, (size_t) numSamplesProcessed), midiBuffer };
+    return { audioView.getStart ((choc::buffer::FrameCount) numSamplesProcessed.load (std::memory_order_acquire)),
+             midiBuffer };
 }
 
+inline size_t Node::getAllocatedBytes() const
+{
+    return audioBuffer.getView().data.getBytesNeeded (audioBuffer.getSize())
+        + (size_t (midiBuffer.size()) * sizeof (tracktion_engine::MidiMessageArray::MidiMessageWithSource));
+}
+
+inline void Node::setOptimisations (NodeOptimisations newOptimisations)
+{
+    nodeOptimisations = newOptimisations;
+}
+
+inline void Node::setAudioOutput (const choc::buffer::ChannelArrayView<float>& newAudioView)
+{
+    audioView = newAudioView;
+}
 
 //==============================================================================
 //==============================================================================
@@ -326,6 +428,34 @@ namespace detail
             }
         }
     };
+
+    struct VisitNodesWithRecordBFS
+    {
+        template<typename Visitor>
+        static void visit (std::vector<Node*>& visitedNodes, Node& visitingNode, Visitor&& visitor)
+        {
+            if (std::find (visitedNodes.begin(), visitedNodes.end(), &visitingNode) == visitedNodes.end())
+            {
+                visitedNodes.push_back (&visitingNode);
+                visitor (visitingNode);
+            }
+            
+            auto inputs = visitingNode.getDirectInputNodes();
+            
+            // Visit each node then go back to the first and recurse
+            for (auto n : inputs)
+            {
+                if (std::find (visitedNodes.begin(), visitedNodes.end(), n) == visitedNodes.end())
+                {
+                    visitedNodes.push_back (n);
+                    visitor (visitingNode);
+                }
+            }
+            
+            for (auto n : inputs)
+                visit  (visitedNodes, *n, visitor);
+        }
+    };
 }
 
 template<typename Visitor>
@@ -335,8 +465,27 @@ inline void visitNodes (Node& node, Visitor&& visitor, bool preordering)
     detail::VisitNodesWithRecord::visit (visitedNodes, node, visitor, preordering);
 }
 
+template<typename Visitor>
+inline void visitNodesBFS (Node& node, Visitor&& visitor)
+{
+    std::vector<Node*> visitedNodes;
+    detail::VisitNodesWithRecordBFS::visit (visitedNodes, node, visitor);
+}
+
 inline std::vector<Node*> getNodes (Node& node, VertexOrdering vertexOrdering)
 {
+    if (vertexOrdering == VertexOrdering::bfsPreordering
+        || vertexOrdering == VertexOrdering::bfsReversePreordering)
+    {
+        std::vector<Node*> visitedNodes;
+        detail::VisitNodesWithRecordBFS::visit (visitedNodes, node, [](auto&){});
+
+        if (vertexOrdering == VertexOrdering::bfsReversePreordering)
+            std::reverse (visitedNodes.begin(), visitedNodes.end());
+
+        return visitedNodes;
+    }
+    
     bool preordering = vertexOrdering == VertexOrdering::preordering
                     || vertexOrdering == VertexOrdering::reversePreordering;
     
@@ -349,6 +498,5 @@ inline std::vector<Node*> getNodes (Node& node, VertexOrdering vertexOrdering)
     
     return visitedNodes;
 }
-
 
 }

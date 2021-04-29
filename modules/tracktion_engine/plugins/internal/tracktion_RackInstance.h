@@ -39,8 +39,8 @@ public:
     double getLatencySeconds() override;
     bool needsConstantBufferSize() override             { return true; }
 
-    void prepareForNextBlock (const AudioRenderContext&) override;
-    void applyToBuffer (const AudioRenderContext&) override;
+    void prepareForNextBlock (double) override;
+    void applyToBuffer (const PluginRenderContext&) override;
     void updateAutomatableParamPosition (double time) override;
 
     juce::String getSelectableDescription() override;

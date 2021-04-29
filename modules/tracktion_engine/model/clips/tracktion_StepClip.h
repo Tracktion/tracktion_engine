@@ -177,7 +177,7 @@ public:
         minNumNotes         = 2,
         maxNumNotes         = 512,
 
-        minNumChannels      = 2,
+        minNumChannels      = 1,
         maxNumChannels      = 60
     };
 
@@ -209,7 +209,8 @@ public:
     juce::Array<Pattern> getPatterns();
 
     //==============================================================================
-    void setVolumeDb (float v)                      { volumeDb = juce::jlimit (-100.0f, 0.0f, v); }
+    float getVolumeDb() const                       { return level->dbGain; }
+    void setVolumeDb (float v)                      { level->dbGain = juce::jlimit (-100.0f, 0.0f, v); }
 
     //==============================================================================
     /** Generate a MidiMessageSequence from either the entire clip or
@@ -230,6 +231,8 @@ public:
 
     int getBeatsPerBar();
 
+    void resizeClipForPatternInstances();
+
     //==============================================================================
     bool canGoOnTrack (Track&) override;
     juce::String getSelectableDescription() override;
@@ -245,13 +248,14 @@ public:
     double getLoopStart() const override                { return 0.0; }
     double getLoopLengthBeats() const override          { return 0.0; }
     double getLoopLength() const override               { return 0.0; }
-    bool isMuted() const override                       { return mute; }
-    void setMuted (bool m) override                     { mute = m; }
+    bool isMuted() const override                       { return level->mute; }
+    void setMuted (bool m) override                     { level->mute = m; }
+
+    LiveClipLevel getLiveClipLevel();
 
     AudioNode* createAudioNode (const CreateAudioNodeParams&) override;
 
-    juce::CachedValue<bool> repeatSequence, mute;
-    juce::CachedValue<float> volumeDb;
+    juce::CachedValue<bool> repeatSequence;
 
 private:
     void generateMidiSequenceForChannels (juce::MidiMessageSequence&, bool convertToSeconds,
@@ -262,6 +266,7 @@ private:
     struct ChannelList;
     std::unique_ptr<ChannelList> channelList;
     PatternArray patternInstanceList;
+    std::shared_ptr<ClipLevel> level { std::make_shared<ClipLevel>() };
 
     const PatternInstance::Ptr getPatternInstance (int index, bool repeatSequence) const;
     void updatePatternList();

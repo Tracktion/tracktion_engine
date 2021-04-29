@@ -21,6 +21,8 @@ struct OldEditConversion
 {
     static juce::ValueTree convert (const juce::ValueTree& v)
     {
+        jassert (v.isValid());
+        
         if (auto xml = std::unique_ptr<juce::XmlElement> (v.createXml()))
         {
             convert (*xml);
@@ -79,11 +81,11 @@ private:
     }
     static void convertSequenceMidiVersion (juce::XmlElement& xml, double timeToBeatFactor)
     {
-        forEachXmlChildElementWithTagName (xml, seq, "MIDISEQUENCE")
+        for (auto seq : xml.getChildWithTagNameIterator ("MIDISEQUENCE"))
         {
             if (seq->getIntAttribute (IDs::ver, 0) < 1)
             {
-                forEachXmlChildElement (*seq, e)
+                for (auto e : seq->getChildIterator())
                 {
                     if (e->hasTagName (IDs::NOTE))
                     {
@@ -108,17 +110,17 @@ private:
             }
         }
 
-        forEachXmlChildElement (xml, e)
+        for (auto e : xml.getChildIterator())
             if (! e->hasTagName ("MIDISEQUENCE"))
                 convertSequenceMidiVersion (*e, timeToBeatFactor);
 
         // Convert note automation to midi expression, and tag the note automation as
         // converted so it doesn't happen again.
-        forEachXmlChildElementWithTagName (xml, seq, "MIDISEQUENCE")
+        for (auto seq : xml.getChildWithTagNameIterator ("MIDISEQUENCE"))
         {
-            forEachXmlChildElementWithTagName (*seq, note, IDs::NOTE)
+            for (auto note : seq->getChildWithTagNameIterator (IDs::NOTE))
             {
-                if (auto* na = note->getChildByName (IDs::NA))
+                if (auto na = note->getChildByName (IDs::NA))
                 {
                     if (auto* naseq = na->getChildByName ("MIDISEQUENCE"))
                     {
@@ -128,7 +130,7 @@ private:
 
                         naseq->setAttribute (IDs::converted, true);
 
-                        forEachXmlChildElementWithTagName (*naseq, control, IDs::CONTROL)
+                        for (auto control : naseq->getChildWithTagNameIterator (IDs::CONTROL))
                         {
                             // Timbre
                             if (control->getIntAttribute (IDs::type) == 71)
@@ -168,7 +170,7 @@ private:
 
     static void convertTrackMidiVersion (juce::XmlElement& track, double editTempo)
     {
-        forEachXmlChildElementWithTagName (track, clip, "CLIP")
+        for (auto clip : track.getChildWithTagNameIterator ("CLIP"))
         {
             const double clipSpeed = clip->getDoubleAttribute (IDs::speed, 1.0);
             const double timeToBeatFactor = (editTempo / 60.0) / clipSpeed;
@@ -184,7 +186,7 @@ private:
         {
             auto editTempo = t->getDoubleAttribute (IDs::bpm);
 
-            forEachXmlChildElementWithTagName (editXml, e, IDs::TRACK)
+            for (auto e : editXml.getChildWithTagNameIterator (IDs::TRACK))
                 convertTrackMidiVersion (*e, editTempo);
         }
     }
@@ -193,13 +195,13 @@ private:
     {
         // We recursively search for CLIP elements, because NOISE's clips
         // live in SLOTs, whose Identifier isn't available here.
-        forEachXmlChildElement (xmlToSearchRecursively, element)
+        for (auto element : xmlToSearchRecursively.getChildIterator())
         {
             if (element->hasTagName ("CLIP"))
             {
                 if (auto* sequence = element->getChildByName ("MIDISEQUENCE"))
                 {
-                    forEachXmlChildElementWithTagName (*sequence, note, IDs::NOTE)
+                    for (auto note : sequence->getChildWithTagNameIterator (IDs::NOTE))
                     {
                         if (note->getFirstChildElement() != nullptr
                              && ! note->hasAttribute (IDs::bend))
@@ -228,10 +230,10 @@ private:
         auto patterns = new juce::XmlElement (IDs::PATTERNS);
         auto channels = new juce::XmlElement (IDs::CHANNELS);
 
-        forEachXmlChildElementWithTagName (xml, e, IDs::PATTERN)
+        for (auto e : xml.getChildWithTagNameIterator (IDs::PATTERN))
             patterns->addChildElement (new juce::XmlElement (*e));
 
-        forEachXmlChildElementWithTagName (xml, e, IDs::CHANNEL)
+        for (auto e : xml.getChildWithTagNameIterator (IDs::CHANNEL))
             channels->addChildElement (new juce::XmlElement (*e));
 
         xml.deleteAllChildElements();
@@ -239,9 +241,9 @@ private:
         xml.addChildElement (channels);
         xml.addChildElement (patterns);
 
-        forEachXmlChildElement (*patterns, e)
+        for (auto e : patterns->getChildIterator())
         {
-            forEachXmlChildElementWithTagName (*e, chan, IDs::CHANNEL)
+            for (auto chan : e->getChildWithTagNameIterator (IDs::CHANNEL))
             {
                 chan->setAttribute (IDs::pattern, chan->getAllSubText().trim());
                 chan->deleteAllChildElements();
@@ -249,7 +251,7 @@ private:
             }
         }
 
-        forEachXmlChildElement (*channels, e)
+        for (auto e : channels->getChildIterator())
         {
             renameAttribute (*e, IDs::noteNumber, IDs::note);
             renameAttribute (*e, IDs::noteValue, IDs::velocity);
@@ -258,7 +260,7 @@ private:
 
     static void convertPluginsAndClips (juce::XmlElement& xml)
     {
-        forEachXmlChildElement (xml, e)
+        for (auto e : xml.getChildIterator())
         {
             convertPluginsAndClips (*e);
 
@@ -290,7 +292,7 @@ private:
     {
         juce::Array<juce::XmlElement*> oldTempos;
 
-        forEachXmlChildElementWithTagName (xml, e, IDs::TEMPO)
+        for (auto e : xml.getChildWithTagNameIterator (IDs::TEMPO))
             oldTempos.add (e);
 
         if (oldTempos.size() > 0)
@@ -323,7 +325,7 @@ private:
         {
             bool foundOld = false;
 
-            forEachXmlChildElementWithTagName (*tempoSequence, e, IDs::TEMPO)
+            for (auto e : tempoSequence->getChildWithTagNameIterator (IDs::TEMPO))
             {
                 if (! (e->hasAttribute (IDs::numerator) || e->hasAttribute (IDs::denominator) || e->hasAttribute (IDs::triplets)))
                     continue;
@@ -334,7 +336,7 @@ private:
 
             if (foundOld)
             {
-                for (auto* e : oldTempos)
+                for (auto e : oldTempos)
                 {
                     juce::XmlElement timesig (IDs::TIMESIG);
                     timesig.setAttribute (IDs::startBeat, e->getIntAttribute (IDs::startBeat));
@@ -362,7 +364,7 @@ private:
             juce::Array<int> numbers;
             juce::Array<double> times;
 
-            forEachXmlChildElementWithTagName (*viewStateXML, e, IDs::MARKER)
+            for (auto e : viewStateXML->getChildWithTagNameIterator (IDs::MARKER))
             {
                 numbers.add (e->getIntAttribute (IDs::number));
                 times.add (e->getDoubleAttribute (IDs::time));
@@ -438,7 +440,7 @@ private:
     static void convertV9PitchSequence (juce::XmlElement& xml)
     {
         if (auto pitchSequence = xml.getChildByName (IDs::PITCHSEQUENCE))
-            forEachXmlChildElementWithTagName (*pitchSequence, e, IDs::PITCH)
+            for (auto e : pitchSequence->getChildWithTagNameIterator (IDs::PITCH))
                 renameAttribute (*e, IDs::start, IDs::startBeat);
     }
 
@@ -448,12 +450,12 @@ private:
         {
             juce::Array<juce::XmlElement*> tracksToRemove;
 
-            forEachXmlChildElementWithTagName (xml, markerTrack, IDs::MARKERTRACK)
+            for (auto markerTrack : xml.getChildWithTagNameIterator (IDs::MARKERTRACK))
             {
                 if (firstMarkerTrack == markerTrack)
                     continue;
 
-                forEachXmlChildElementWithTagName (*markerTrack, clip, "CLIP")
+                for (auto clip : markerTrack->getChildWithTagNameIterator ("CLIP"))
                     firstMarkerTrack->addChildElement (new juce::XmlElement (*clip));
 
                 tracksToRemove.add (markerTrack);
@@ -477,7 +479,7 @@ private:
 
     static void addTracks (juce::Array<juce::XmlElement*>& tracks, juce::XmlElement& xml)
     {
-        forEachXmlChildElement (xml, e)
+        for (auto e : xml.getChildIterator())
         {
             if (TrackList::isTrack (e->getTagName()))
             {
@@ -547,7 +549,7 @@ private:
         if (xml.hasTagName (tagName))
             plugins.add (&xml);
 
-        forEachXmlChildElement (xml, e)
+        for (auto e : xml.getChildIterator())
             addNodeRecursively (plugins, *e, tagName);
     }
 
@@ -581,7 +583,7 @@ private:
                 if (modifiers == nullptr)
                     modifiers = t->createNewChildElement (IDs::MODIFIERS);
 
-                forEachXmlChildElementWithTagName (*lfos, lfo, IDs::LFO)
+                for (auto lfo : lfos->getChildWithTagNameIterator (IDs::LFO))
                 {
                     auto newLFO = new juce::XmlElement (*lfo);
                     modifiers->addChildElement (newLFO);
@@ -620,7 +622,7 @@ private:
             if (modifierAssignments == nullptr)
                 modifierAssignments = f->createNewChildElement (IDs::MODIFIERASSIGNMENTS);
 
-            forEachXmlChildElementWithTagName (*f, e, IDs::AUTOMATIONSOURCE)
+            for (auto e : f->getChildWithTagNameIterator (IDs::AUTOMATIONSOURCE))
             {
                 if (e->hasAttribute (IDs::lfoSource))
                 {
@@ -682,7 +684,7 @@ private:
 
     static void renameLegacyIDs (juce::XmlElement& xml)
     {
-        forEachXmlChildElement (xml, e)
+        for (auto e : xml.getChildIterator())
             renameLegacyIDs (*e);
 
         if (xml.hasTagName (IDs::TAKE) || xml.hasTagName (IDs::SOUND))
@@ -837,7 +839,7 @@ private:
 
     static void recurseDoingLegacyConversions (juce::XmlElement& xml)
     {
-        forEachXmlChildElement (xml, e)
+        for (auto e : xml.getChildIterator())
             recurseDoingLegacyConversions (*e);
 
         convertLegacyFilterTagsToPlugin (xml);

@@ -1,0 +1,171 @@
+#!/bin/bash -e
+
+#========================================================
+# Generates IDE files, runs tests and analysis for
+# example projects
+# 
+# By default this will do all of the above. You can
+# selectively disable behaviour by setting the following 
+# enviroment variables:
+# 
+# DISABLE_BUILD:    Set to 1 to disable building
+# DISABLE_TOOLS:    Set to 1 to disable Tsan and Asan builds
+# 
+#========================================================
+
+#========================================================
+# Configure build environment
+#========================================================
+cmake --version
+
+if [[ "$OSTYPE" == "linux-gnu" ]]; then PLATFORM=linux
+elif [[ "$OSTYPE" == "darwin"* ]]; then PLATFORM=mac
+elif [[ "$OSTYPE" == "msys" ]];    then PLATFORM=windows
+fi
+
+if [ -z "$PLATFORM" ]; then
+    echo ERROR: Unknown platform
+    exit 1
+fi
+
+ROOT=$(cd "$(dirname "$0")/.."; pwd)
+EXAMPLES_ROOT="$ROOT/examples"
+
+if [ -z "$ROOT" ]; then
+    echo "ERROR: Unknown workspace"
+    exit 1
+fi
+
+if [ ! -d "$ROOT/modules/juce/modules" ]; then
+    echo "ERROR: juce library module not preset!"
+    exit 1
+fi
+
+echo "\n=========================================="
+echo PLATFORM: "$PLATFORM"
+echo ROOT: "$ROOT"
+echo DISABLE_BUILD: "$DISABLE_BUILD"
+echo DISABLE_TOOLS: "$DISABLE_TOOLS"
+
+
+#============================================================
+#   Build an example
+#============================================================
+function buildExample()
+{
+    PROJECT_NAME="$1"
+    RUN_EXAMPLE="$2"
+
+    if [ -z "$PROJECT_NAME" ]; then
+        echo "ERROR: Must supply a project name!"
+        exit 1
+    fi
+
+    #============================================================
+    #   Configure build vars
+    #============================================================
+    EXAMPLE_DIR="${EXAMPLES_ROOT}/${PROJECT_NAME}"
+    CMAKE_BUILD_DIR="${EXAMPLE_DIR}/build"
+
+    if [[ "$PLATFORM" == "linux" ]]; then
+        BINARY_NAME="$PROJECT_NAME"
+        APP_NAME=$BINARY_NAME
+        APP_DIR="${CMAKE_BUILD_DIR}/${PROJECT_NAME}_artefacts/Release"
+        APP_FILE=$APP_DIR/$BINARY_NAME
+        APP_BINARY="$APP_FILE"
+
+        CMAKE_GENERATOR="Unix Makefiles"
+        CMAKE_PLATFORM_ARGS="-DCMAKE_BUILD_TYPE=Release"
+    elif [[ "$PLATFORM" == "mac" ]]; then
+        BINARY_NAME="$PROJECT_NAME"
+        APP_NAME=$BINARY_NAME
+        APP_DIR=$CMAKE_BUILD_DIR/${PROJECT_NAME}_artefacts/Release
+        APP_FILE=$APP_DIR/$APP_NAME
+        APP_BINARY="$APP_FILE/Contents/MacOS/${PROJECT_NAME}"
+
+        CMAKE_GENERATOR="Xcode"
+    elif [[ "$PLATFORM" == "windows" ]]; then
+        BINARY_NAME="$PROJECT_NAME".exe
+        APP_NAME="$BINARY_NAME"
+        APP_DIR=$CMAKE_BUILD_DIR/${PROJECT_NAME}_artefacts/Release
+        APP_FILE="$APP_DIR/$BINARY_NAME"
+        APP_BINARY="$APP_FILE"
+
+        CMAKE_GENERATOR="Visual Studio 15 2017"
+        CMAKE_PLATFORM_ARGS="-A x64"
+
+        if [ -z "$MSBUILD_EXE" ]; then
+            echo MSBuild not found at "${MSBUILD_EXE}", using default
+            MSBUILD_EXE="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MSBuild.exe"
+        fi
+
+        if [ ! -f "$MSBUILD_EXE" ]; then
+            echo MSBuild.exe not found at "${MSBUILD_EXE}"
+            exit 1
+        fi
+    fi
+
+    echo PROJECT_NAME: "$PROJECT_NAME"
+    echo BINARY_NAME: "$BINARY_NAME"
+    echo APP_NAME: "$APP_NAME"
+    echo APP_DIR: "$APP_DIR"
+    echo APP_FILE: "$APP_FILE"
+    echo CMAKE_BUILD_DIR: "$CMAKE_BUILD_DIR"
+    echo CMAKE_GENERATOR: "$CMAKE_GENERATOR"
+    echo RUN_EXAMPLE: "$RUN_EXAMPLE"
+
+    #============================================================
+    #   Build
+    #============================================================
+    # rm -rf "$CMAKE_BUILD_DIR"
+    cd "$EXAMPLE_DIR"
+    pwd
+
+    # Generate build files
+    cmake -B "$CMAKE_BUILD_DIR" -G "$CMAKE_GENERATOR" $CMAKE_PLATFORM_ARGS
+
+    if [ "$DISABLE_BUILD" != "1" ]; then
+        # Build project
+        cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release
+    fi
+
+    if [ "$RUN_EXAMPLE" = "1" ]; then
+        echo INFO: Running example: ${APP_FILE}
+        ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
+
+        if [ "$DISABLE_TOOLS" != "1" ]; then
+            if [ "$PLATFORM" = "mac" ]; then
+                cd "$CMAKE_BUILD_DIR"
+
+                echo INFO: Running with Asan: ${APP_FILE}
+                cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableAddressSanitizer YES LLVM_LTO=NO
+                ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_asan.xml"
+
+                echo INFO: Running with Tsan: ${APP_FILE}
+                cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableThreadSanitizer YES LLVM_LTO=NO
+                ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_tsan.xml"
+
+                echo INFO: Running static analyser: ${APP_FILE}
+                xcodebuild analyze -quiet -configuration Release LLVM_LTO=NO
+            fi
+        fi
+    else
+        echo INFO: Not running example: ${APP_FILE}
+    fi
+}
+
+
+# First build and test these examples
+buildExample "TestRunner" "1"
+buildExample "tracktion_graph_TestRunner" "1"
+buildExample "tracktion_graph_PerformanceTests" "1"
+
+# Then just build these examples
+buildExample "EngineInPluginDemo"
+buildExample "MidiRecordingDemo"
+buildExample "PatternGeneratorDemo"
+buildExample "PitchAndTimeDemo"
+buildExample "PlaybackDemo"
+buildExample "PluginDemo"
+buildExample "RecordingDemo"
+buildExample "StepSequencerDemo"

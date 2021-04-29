@@ -12,19 +12,29 @@ namespace tracktion_engine
 {
 
 //==============================================================================
+//==============================================================================
 /**
+    A WarpMarker is a point that maps from a linear "source" time to a "warped"
+    time.
 */
 struct WarpMarker
 {
+    /** Creates an empty WarpMarker. */
     WarpMarker() noexcept {}
-    WarpMarker (double s, double w) : sourceTime (s), warpTime (w) {}
 
-    WarpMarker (const juce::ValueTree& v) : state (v)
+    /** Creates a WarpMarker with a source and warp time. */
+    WarpMarker (double s, double w)
+        : sourceTime (s), warpTime (w) {}
+
+    /** Loads a WarpMarker from a saved state. */
+    WarpMarker (const juce::ValueTree& v)
+        : state (v)
     {
         updateFrom (v, IDs::sourceTime);
         updateFrom (v, IDs::warpTime);
     }
 
+    /** Updates this WarpMarker from a ValueTree property. */
     void updateFrom (const juce::ValueTree& v, const juce::Identifier& i)
     {
         if (i == IDs::sourceTime)
@@ -33,61 +43,111 @@ struct WarpMarker
             warpTime = double (v.getProperty (IDs::warpTime));
     }
 
+    /** Returns a hash for this marker. */
     juce::int64 getHash() const noexcept;
 
     juce::ValueTree state;
     double sourceTime = 0, warpTime = 0;
 };
 
+
+//==============================================================================
 //==============================================================================
 /**
+    A WarpTimeManager contains a list of WarpMarkers and some source material and
+    maps times from a linear "view" time to a "wapred" source time.
+    
+    Once created this can be used to generate an AudioSegmentList to play the
+    source material back warped.
 */
 class WarpTimeManager : public juce::SingleThreadedReferenceCountedObject,
                         public RenderManager::Job::Listener
 {
 public:
+    //==============================================================================
     using Ptr = juce::ReferenceCountedObjectPtr<WarpTimeManager>;
 
-    WarpTimeManager (AudioClipBase& source);
+    /** Creates a WarpTimeManager to warp a clip. */
+    WarpTimeManager (AudioClipBase&);
+
+    /** Creates a WarpTimeManager to warp an audio file.
+        The WarpMarker state will get added to the parentTree as a child.
+    */
     WarpTimeManager (Edit&, const AudioFile& sourceFile, juce::ValueTree parentTree);
+    
+    /** Destructor. */
     ~WarpTimeManager() override;
 
+    //==============================================================================
+    /** Sets a source fiel to warp. */
     void setSourceFile (const AudioFile&);
+    
+    /** Returns the current source file. */
     AudioFile getSourceFile() const;
+    
+    /** Returns the length of the source file. */
     double getSourceLength() const;
 
-    void setWarpEndMarkerEnabled (bool);
+    //==============================================================================
+    /** Returns true if the end marker is being used as the end of the source material.
+        @see setWarpEndMarkerTime
+    */
     bool isWarpEndMarkerEnabled() const noexcept                { return endMarkerEnabled; }
 
-    void setEndMarkersLimited (bool);
-    bool areEndMarkesLimited() const noexcept                   { return endMarkersLimited; }
+    /** Returns true if the markers are limited to the end of the source length.
+        @see getSourceLength
+    */
+    bool areEndMarkersLimited() const noexcept                  { return endMarkersLimited; }
 
+    /** Returns a list of the current WarpMarkers. */
     const juce::Array<WarpMarker*>& getMarkers() const          { return markers->objects; }
 
+    /** Inserts a new WarpMarker. */
     int insertMarker (WarpMarker);
+    
+    /** Removes a WarpMarker at a given index. */
     void removeMarker (int index);
+    
+    /** Removes all WarpMarkers. */
     void removeAllMarkers();
+    
+    /** Moves a WarpMarker at a given index to a new time. */
     double moveMarker (int index, double newWarpTime);
+
+    /** Sets the end time of the source material.
+        Only functional if isWarpEndMarkerEnabled returns true.
+    */
     void setWarpEndMarkerTime (double endTime);
 
+    //==============================================================================
     /** Time region can be longer than the clip and the returned array will loop over the clip to match the length */
     juce::Array<EditTimeRange> getWarpTimeRegions (EditTimeRange overallTimeRegion) const;
+    
+    /** Returns an array of transient times that have been detected from the source file.
+        The bool here will be false if the detection job hasn't finished running yet so call it again peridically
+        until it is true.
+    */
     std::pair<bool, juce::Array<double>> getTransientTimes() const    { return transientTimes; }
 
+    /** Converts a warp time (i.e. a linear time) to the time in the source file after warping has been applied. */
     double warpTimeToSourceTime (double warpTime) const;
+
+    /** Converts a source time (i.e. time in the file) to a linear time after warping has been applied. */
     double sourceTimeToWarpTime (double sourceTime) const;
 
-    /** returns the start time of the warped region (can be -ve) */
+    /** Returns the start time of the warped region (can be -ve) */
     double getWarpedStart() const;
 
-    /** returns the endTime of the entire warped region */
+    /** Returns the endTime of the entire warped region */
     double getWarpedEnd() const;
 
-    /** sets position in warped region of the redered file end point */
+    /** Sets position in warped region of the redered file end point */
     double getWarpEndMarkerTime() const;
 
+    /** Returns a hash representing this warp list. */
     juce::int64 getHash() const;
 
+    /** @internal */
     void editFinishedLoading();
 
     Edit& edit;
@@ -150,13 +210,26 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WarpTimeManager)
 };
 
+
 //==============================================================================
+//==============================================================================
+/**
+    A WarpTimeFactory manages WarpTimeManagers for Clips living in an Edit.
+*/
 class WarpTimeFactory
 {
 public:
+    /** Constructs the WarpTimeFactory. */
     WarpTimeFactory() = default;
+    
+    /** Destructor. */
     ~WarpTimeFactory()  { jassert (warpTimeManagers.isEmpty()); }
 
+    /** Returns a WarpTimeManager for a given clip.
+        If there are any existing references to a WarpTimeManager for this clip
+        this will return the same instance. Otherwise an instance will be created
+        for this Clip.
+    */
     WarpTimeManager::Ptr getWarpTimeManager (const Clip&);
 
 private:

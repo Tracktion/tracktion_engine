@@ -55,7 +55,7 @@ public:
 
     /** Returns true if the RackType has a valid render context to use or if it is still loading. */
     bool isReadyToRender() const;
-    void process (const AudioRenderContext&,
+    void process (const PluginRenderContext&,
                   int leftInputGoesTo, float leftInputGain1, float leftInputGain2,
                   int rightInputGoesTo, float rightInputGain1, float rightInputGain2,
                   int leftOutComesFrom, float leftOutGain1, float leftOutGain2,
@@ -153,12 +153,6 @@ public:
     const EditItemID rackID;  // these two members!
 
     juce::CachedValue<juce::String> rackName;
-
-    /** Enables the new tracktion_graph module for internal Rack processing.
-        N.B. This is for development only and this method will be removed in the future.
-    */
-    static void enableExperimentalGraphProcessing (bool);
-    static bool isExperimentalGraphProcessingEnabled();
 
 private:
     struct PluginInfo

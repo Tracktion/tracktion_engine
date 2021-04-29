@@ -38,6 +38,9 @@ Start with the `PitchAndTimeDemo` or `StepSequencerDemo` to see some basic apps 
 ## Tutorials
 Once you're ready to dive in to the code, open the IDE files and have a read through the tutorials in `/tutorials`. You can view these on GitHub [here](/tutorials) to see the rendered Markdown.
 
+## Documentation
+We are still in the process of fleshing out Doxygen formatted comments but the Doxygen generated documentation can be found here: https://tracktion.github.io/tracktion_engine/modules.html
+
 ## Contributing
 Tracktion Engine is provided in JUCE module format, for bug reports and features requests, please visit the [JUCE Forum](https://forum.juce.com/) -
 the Tracktion Engine developers are active there and will read every post and respond accordingly.

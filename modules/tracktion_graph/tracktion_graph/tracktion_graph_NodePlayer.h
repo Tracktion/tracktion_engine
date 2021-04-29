@@ -10,15 +10,10 @@
 
 #pragma once
 
-#include <thread>
-#include <emmintrin.h>
-
 
 namespace tracktion_graph
 {
 
-//==============================================================================
-//==============================================================================
 /**
     Simple player for an Node.
     This simply iterate all the nodes attempting to process them in a single thread.
@@ -26,40 +21,57 @@ namespace tracktion_graph
 class NodePlayer
 {
 public:
-    /** Creates an NodePlayer to process an Node. */
-    NodePlayer (std::unique_ptr<Node> nodeToProcess)
-        : input (std::move (nodeToProcess))
+    /** Creates an empty NodePlayer. */
+    NodePlayer() = default;
+    
+    /** Creates an NodePlayer to process a Node. */
+    NodePlayer (std::unique_ptr<Node> nodeToProcess, PlayHeadState* playHeadStateToUse = nullptr)
+        : input (std::move (nodeToProcess)), playHeadState (playHeadStateToUse)
     {
     }
     
-    Node& getNode()
+    /** Returns the current Node. */
+    Node* getNode()
     {
-        return *input;
+        return input.get();
     }
 
+    /** Sets the Node to process. */
     void setNode (std::unique_ptr<Node> newNode)
     {
-        auto oldNode = std::move (input);
-        input = std::move (newNode);
-        prepareToPlay (sampleRate, blockSize, oldNode.get());
+        setNode (std::move (newNode), sampleRate, blockSize);
     }
-    
-    /** Prepares the processor to be played. */
+
+    /** Sets the Node to process with a new sample rate and block size. */
+    void setNode (std::unique_ptr<Node> newNode, double sampleRateToUse, int blockSizeToUse)
+    {
+        auto newNodes = prepareToPlay (newNode.get(), input.get(), sampleRateToUse, blockSizeToUse);
+        std::unique_ptr<Node> oldNode;
+        
+        {
+            const juce::SpinLock::ScopedLockType sl (inputAndNodesLock);
+            oldNode = std::move (input);
+            input = std::move (newNode);
+            allNodes = std::move (newNodes);
+        }
+    }
+
+    /** Prepares the current Node to be played. */
     void prepareToPlay (double sampleRateToUse, int blockSizeToUse, Node* oldNode = nullptr)
+    {
+        allNodes = prepareToPlay (input.get(), oldNode, sampleRateToUse, blockSizeToUse);
+    }
+
+    /** Prepares a specific Node to be played and returns all the Nodes. */
+    std::vector<Node*> prepareToPlay (Node* node, Node* oldNode, double sampleRateToUse, int blockSizeToUse)
     {
         sampleRate = sampleRateToUse;
         blockSize = blockSizeToUse;
         
-        // First give the Nodes a chance to transform
-        transformNodes (*input);
+        if (playHeadState != nullptr)
+            playHeadState->playHead.setScrubbingBlockLength (timeToSample (0.08, sampleRate));
         
-        // Next, initialise all the nodes, this will call prepareToPlay on them and also
-        // give them a chance to do things like balance latency
-        const PlaybackInitialisationInfo info { sampleRate, blockSize, *input, oldNode };
-        visitNodes (*input, [&] (Node& n) { n.initialise (info); }, false);
-        
-        // Then find all the nodes as it might have changed after initialisation
-        allNodes = tracktion_graph::getNodes (*input, tracktion_graph::VertexOrdering::postordering);
+        return node_player_utils::prepareToPlay (node, oldNode, sampleRateToUse, blockSizeToUse);
     }
 
     /** Processes a block of audio and MIDI data.
@@ -67,22 +79,100 @@ public:
     */
     int process (const Node::ProcessContext& pc)
     {
-        return processPostorderedNodes (*input, allNodes, pc);
+        if (inputAndNodesLock.tryEnter())
+        {
+            if (! input)
+            {
+                inputAndNodesLock.exit();
+                return 0;
+            }
+            
+            int numMisses = 0;
+            
+            if (playHeadState != nullptr)
+                numMisses = processWithPlayHeadState (*playHeadState, *input, allNodes, pc);
+            else
+                numMisses = processPostorderedNodes (*input, allNodes, pc);
+            
+            inputAndNodesLock.exit();
+            
+            return numMisses;
+        }
+        
+        return 0;
     }
     
-private:
+    double getSampleRate() const
+    {
+        return sampleRate;
+    }
+    
+    int processPostorderedNodes (Node& rootNodeToProcess, const std::vector<Node*>& nodes, const Node::ProcessContext& pc)
+    {
+        return processPostorderedNodesSingleThreaded (rootNodeToProcess, nodes, pc);
+    }
+
+protected:
     std::unique_ptr<Node> input;
+    PlayHeadState* playHeadState = nullptr;
+    
     std::vector<Node*> allNodes;
     double sampleRate = 44100.0;
     int blockSize = 512;
+    
+    juce::SpinLock inputAndNodesLock;
+    
+    int processWithPlayHeadState (PlayHeadState& phs, Node& rootNodeToProcess, const std::vector<Node*>& nodes,
+                                  const Node::ProcessContext& pc)
+    {
+        int numMisses = 0;
+        
+        // Check to see if the timeline needs to be processed in two halves due to looping
+        const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (phs.playHead, pc.referenceSampleRange);
+        
+        if (splitTimelineRange.isSplit)
+        {
+            const auto firstNumSamples = splitTimelineRange.timelineRange1.getLength();
+            const auto firstRange = pc.referenceSampleRange.withLength (firstNumSamples);
+            
+            {
+                auto inputAudio = pc.buffers.audio.getStart ((choc::buffer::FrameCount) firstNumSamples);
+                auto& inputMidi = pc.buffers.midi;
+                
+                phs.update (firstRange);
+                tracktion_graph::Node::ProcessContext pc1 { firstRange, { inputAudio , inputMidi } };
+                numMisses += processPostorderedNodes (rootNodeToProcess, nodes, pc1);
+            }
+            
+            {
+                const auto secondNumSamples = splitTimelineRange.timelineRange2.getLength();
+                const auto secondRange = juce::Range<int64_t>::withStartAndLength (firstRange.getEnd(), secondNumSamples);
+                
+                auto inputAudio = pc.buffers.audio.getFrameRange (tracktion_graph::frameRangeWithStartAndLength ((choc::buffer::FrameCount) firstNumSamples, (choc::buffer::FrameCount) secondNumSamples));
+                auto& inputMidi = pc.buffers.midi;
+                
+                //TODO: Use a scratch MidiMessageArray and then merge it back with the offset time
+                tracktion_graph::Node::ProcessContext pc2 { secondRange, { inputAudio , inputMidi } };
+                phs.update (secondRange);
+                numMisses += processPostorderedNodes (rootNodeToProcess, nodes, pc2);
+            }
+        }
+        else
+        {
+            phs.update (pc.referenceSampleRange);
+            numMisses += processPostorderedNodes (rootNodeToProcess, nodes, pc);
+        }
+        
+        return numMisses;
+    }
 
     /** Processes a group of Nodes assuming a postordering VertexOrdering.
         If these conditions are met the Nodes should be processed in a single loop iteration.
     */
-    static int processPostorderedNodes (Node& rootNode, const std::vector<Node*>& allNodes, const Node::ProcessContext& pc)
+    static int processPostorderedNodesSingleThreaded (Node& rootNode, const std::vector<Node*>& allNodes, const Node::ProcessContext& pc)
     {
         for (auto node : allNodes)
-            node->prepareForNextBlock();
+            node->prepareForNextBlock (pc.referenceSampleRange);
         
         int numMisses = 0;
         size_t numNodesProcessed = 0;
@@ -93,7 +183,7 @@ private:
             {
                 if (! node->hasProcessed() && node->isReadyToProcess())
                 {
-                    node->process (pc.streamSampleRange);
+                    node->process (pc.referenceSampleRange);
                     ++numNodesProcessed;
                 }
                 else
@@ -105,8 +195,14 @@ private:
             if (numNodesProcessed == allNodes.size())
             {
                 auto output = rootNode.getProcessedOutput();
-                pc.buffers.audio.copyFrom (output.audio);
-                pc.buffers.midi.copyFrom (output.midi);
+                auto numAudioChannels = std::min (output.audio.getNumChannels(),
+                                                  pc.buffers.audio.getNumChannels());
+                
+                if (numAudioChannels > 0)
+                    add (pc.buffers.audio.getFirstChannels (numAudioChannels),
+                         output.audio.getFirstChannels (numAudioChannels));
+                
+                pc.buffers.midi.mergeFrom (output.midi);
 
                 break;
             }

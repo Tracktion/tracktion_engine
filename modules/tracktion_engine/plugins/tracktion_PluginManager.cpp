@@ -95,7 +95,7 @@ struct PluginScanMasterProcess  : private ChildProcessMaster
             if (reply->getNumChildElements() == 0)
                 TRACKTION_LOG ("No plugins found in: " + fileOrIdentifier);
 
-            forEachXmlChildElement (*reply, e)
+            for (auto e : reply->getChildIterator())
             {
                 PluginDescription desc;
 
@@ -664,6 +664,9 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const String& type, const 
 
     if (type.equalsIgnoreCase (RackInstance::xmlTypeName))
     {
+        // If you're creating a RackInstance, you need to specify the Rack index!
+        jassert (desc.fileOrIdentifier.isNotEmpty());
+        
         RackType::Ptr rackType;
         auto rackIndex = desc.fileOrIdentifier.getTrailingIntValue();
 

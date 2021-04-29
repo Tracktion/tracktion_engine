@@ -20,33 +20,38 @@ MidiNoteDispatcher::~MidiNoteDispatcher()
     stopTimer();
 }
 
-void MidiNoteDispatcher::nextBlockStarted (PlayHead& playhead, EditTimeRange streamTime, int blockSize)
+void MidiNoteDispatcher::renderDevices (PlayHead& playhead, EditTimeRange streamTime, int blockSize)
 {
+    auto editTime = playhead.streamTimeToSourceTime (streamTime.getStart());
+    
     ScopedLock s (deviceLock);
 
     for (auto state : devices)
     {
-        auto delay = state->device->getMidiOutput().getDeviceDelay();
-        auto& buffer = state->device->refillBuffer (playhead, streamTime - delay, blockSize);
-        state->device->context.masterLevels.processMidi (buffer, nullptr);
-        
-        if (! state->device->sendMessages (playhead, buffer, streamTime - delay))
-            state->buffer.mergeFromAndClear (buffer);
+        auto delay = state->device.getMidiOutput().getDeviceDelay();
+        state->device.refillBuffer (playhead, streamTime - delay, blockSize);
+        dispatchPendingMessages (*state, editTime);
     }
 }
 
-void MidiNoteDispatcher::masterTimeUpdate (PlayHead& playhead, double streamTime)
+void MidiNoteDispatcher::dispatchPendingMessagesForDevices (double editTime)
+{
+    ScopedLock s (deviceLock);
+
+    for (auto state : devices)
+        dispatchPendingMessages (*state, editTime);
+}
+
+void MidiNoteDispatcher::masterTimeUpdate (double editTime)
 {
     const ScopedLock s (timeLock);
-    masterTime = playhead.streamTimeToSourceTime (streamTime);
+    masterTime = editTime;
     hiResClockOfMasterTime = Time::getMillisecondCounterHiRes();
 }
 
-void MidiNoteDispatcher::prepareToPlay (PlayHead& playhead, double start)
+void MidiNoteDispatcher::prepareToPlay (double editTime)
 {
-    const ScopedLock s (timeLock);
-    masterTime = playhead.streamTimeToSourceTime (start);
-    hiResClockOfMasterTime = Time::getMillisecondCounterHiRes();
+    masterTimeUpdate (editTime);
 }
 
 double MidiNoteDispatcher::getCurrentTime() const
@@ -55,13 +60,24 @@ double MidiNoteDispatcher::getCurrentTime() const
     return masterTime + (Time::getMillisecondCounterHiRes() - hiResClockOfMasterTime) * 0.001;
 }
 
+void MidiNoteDispatcher::dispatchPendingMessages (DeviceState& state, double editTime)
+{
+    // N.B. This should only be called under a deviceLock
+    auto& pendingBuffer = state.device.getPendingMessages();
+    state.device.context.masterLevels.processMidi (pendingBuffer, nullptr);
+    const double delay = state.device.getMidiOutput().getDeviceDelay();
+    
+    if (! state.device.sendMessages (pendingBuffer, editTime - delay))
+        state.buffer.mergeFromAndClear (pendingBuffer);
+}
+
 void MidiNoteDispatcher::setMidiDeviceList (const OwnedArray<MidiOutputDeviceInstance>& newList)
 {
     CRASH_TRACER
     OwnedArray<DeviceState> newDevices;
 
-    for (auto* d : newList)
-        newDevices.add (new DeviceState (d));
+    for (auto d : newList)
+        newDevices.add (new DeviceState (*d));
 
     if (newList.isEmpty())
         stopTimer();
@@ -94,9 +110,9 @@ void MidiNoteDispatcher::hiResTimerCallback()
 
         for (auto d : devices)
         {
-            auto* device = d->device;
+            auto& device = d->device;
             auto& buffer = d->buffer;
-            auto& midiOut = device->getMidiOutput();
+            auto& midiOut = device.getMidiOutput();
 
             if (buffer.isAllNotesOff)
             {
@@ -112,13 +128,13 @@ void MidiNoteDispatcher::hiResTimerCallback()
                     auto noteTime = message.getTimeStamp();
                     auto currentTime = getCurrentTime();
 
-                    if (noteTime > currentTime + 0.2)
+                    if (noteTime > currentTime + 0.25)
                     {
                         buffer.remove (0);
                     }
                     else if (noteTime <= currentTime)
                     {
-                        messagesToSend.add ({ device, message });
+                        messagesToSend.add ({ &device, message });
                         buffer.remove (0);
                     }
                     else

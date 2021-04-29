@@ -53,7 +53,7 @@ struct PitchShiftPlugin::Pimpl
         latencySeconds = latencySamples / sr;
     }
 
-    void applyToBuffer (const AudioRenderContext& fc, float semis)
+    void applyToBuffer (const PluginRenderContext& fc, float semis)
     {
         SCOPED_REALTIME_CHECK
 
@@ -96,7 +96,7 @@ struct PitchShiftPlugin::Pimpl
     PitchShiftPlugin& owner;
 
     std::unique_ptr<TimeStretcher> timestretcher;
-    TimeStretcher::Mode mode;
+    TimeStretcher::Mode mode = TimeStretcher::disabled;
     TimeStretcher::ElastiqueProOptions elastiqueOptions;
 
     AudioFifo inputFifo { 2, 2000 }, outputFifo { 2, 2000 };
@@ -161,7 +161,7 @@ void PitchShiftPlugin::deinitialise()
 {
 }
 
-void PitchShiftPlugin::applyToBuffer (const AudioRenderContext& fc)
+void PitchShiftPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     pimpl->applyToBuffer (fc, semitones->getCurrentValue());
 

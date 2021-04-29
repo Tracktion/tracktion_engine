@@ -211,6 +211,8 @@ RenderManager::Job::Ptr RenderOptions::performBackgroundRender (Edit& edit, Sele
     if (isTrackRender())
         p.endAllowance = markedRegion ? 0.0 : 10.0;
 
+    addAcidInfo (edit, p);
+
     return (p.audioFormat != nullptr || p.createMidiFile)
                 ? EditRenderJob::getOrCreateRenderJob (edit.engine, p, false, false, false)
                 : nullptr;
@@ -308,7 +310,10 @@ Renderer::Parameters RenderOptions::getRenderParameters (Edit& edit, SelectionMa
     params.separateTracks           = tracksToSeparateFiles;
     params.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (edit.engine);
 
-    if (markedRegion && isMarkedRegionBigEnough (markedRegionTime))
+    if (! isMarkedRegionBigEnough (markedRegionTime))
+        markedRegion = false;
+    
+    if (markedRegion)
         params.time = markedRegionTime;
     else
         params.time = { 0.0, edit.getLength() };
@@ -510,6 +515,9 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
         case replaceClips:
             trackToUse = dynamic_cast<AudioTrack*> (lastTrack.get());
 
+        case addTrack:
+        case replaceTrack:
+        case none:
         default:
             break;
     }
@@ -554,9 +562,46 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
     Clip::Ptr newClip;
 
     if (isMidiRender() || format == midi)
+    {
         newClip = trackToUse->insertMIDIClip (newClipName, insertPos, nullptr);
+    }
     else
+    {
+        bool allowAutoTempo = true;
+        bool allowAutoPitch = true;
+
+        for (auto c : allowedClips)
+        {
+            if (auto ac = dynamic_cast<WaveAudioClip*> (c))
+            {
+                if (! ac->getAutoTempo()) allowAutoTempo = false;
+                if (! ac->getAutoPitch()) allowAutoPitch = false;
+            }
+            else
+            {
+                allowAutoTempo = false;
+                allowAutoPitch = false;
+            }
+        }
+
         newClip = trackToUse->insertWaveClip (newClipName, projectItem->getID(), { insertPos, 0.0 }, false);
+        if (auto ac = dynamic_cast<WaveAudioClip*> (newClip.get()))
+        {
+            // We only want to enable auto tempo is the rendered clip has tempo information
+            // We can't rely on the LoopInfo to determine if tempo information is present or not,
+            // since if it is not present in the source file, then the WaveAudioClip will calculate a
+            // bpm for the clip based on it's length and edit bpm. So we need to go to the source file
+            // and check the metadata
+            AudioFile af (edit.engine, ac->getOriginalFile());
+            auto metadata = af.getInfo().metadata;
+            if (metadata[WavAudioFormat::acidBeats].getIntValue() > 0)
+                ac->setAutoTempo (allowAutoTempo);
+
+            // Only enable auto pitch, if we have pitch information
+            if (ac->getLoopInfo().getRootNote() != -1)
+                ac->setAutoPitch (allowAutoPitch);
+        }
+    }
 
     if (newClip == nullptr)
     {
@@ -582,7 +627,7 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
             if (markedRegion)
             {
                 if (selectionManager != nullptr)
-                    deleteRegionOfSelectedClips (*selectionManager, time, false, false);
+                    deleteRegionOfSelectedClips (*selectionManager, time, CloseGap::no, false);
 
                 newClip->setStart (time.getStart(), false, true);
             }
@@ -720,7 +765,8 @@ std::unique_ptr<RenderOptions> RenderOptions::forClipRender (Array<Clip*>& clips
         updateLastUsedRenderPath (*ro, edit.getProjectItemID().toString());
 
         ro->allowedClips = clips;
-
+        bool areAllClipsMono = true;
+        
         for (auto c : clips)
         {
             if (auto t = c->getTrack())
@@ -731,11 +777,23 @@ std::unique_ptr<RenderOptions> RenderOptions::forClipRender (Array<Clip*>& clips
                     if (auto dest = at->getOutput().getDestinationTrack())
                         ro->tracks.addIfNotAlreadyThere (dest->itemID);
             }
+            
+            // Assume any non-audio clips should be rendered in stereo
+            if (auto audioClip = dynamic_cast<AudioClipBase*> (c))
+            {
+                if (audioClip->getWaveInfo().numChannels > 1)
+                    areAllClipsMono = false;
+            }
+            else
+            {
+                areAllClipsMono = false;
+            }
         }
-
+        
         ro->type = midiNotes ? RenderType::midi
                              : RenderType::clip;
 
+        ro->stereo            = ! areAllClipsMono;
         ro->selectedClips     = false;
         ro->endAllowance      = ro->usePlugins ? findEndAllowance (edit, &ro->tracks, &clips) : 0.0;
         ro->removeSilence     = midiNotes;
@@ -834,13 +892,14 @@ String RenderOptions::getFormatTypeName (TargetFileFormat fmt)
 
     switch (fmt)
     {
-        case wav:       return am.getWavFormat()->getFormatName();
-        case aiff:      return am.getAiffFormat()->getFormatName();
-        case flac:      return am.getFlacFormat()->getFormatName();
-        case ogg:       return am.getOggFormat()->getFormatName();
-        case mp3:       return am.getLameFormat() == nullptr ? String() : am.getLameFormat()->getFormatName();
-        case midi:      return "MIDI file";
-        default:        return {};
+        case wav:           return am.getWavFormat()->getFormatName();
+        case aiff:          return am.getAiffFormat()->getFormatName();
+        case flac:          return am.getFlacFormat()->getFormatName();
+        case ogg:           return am.getOggFormat()->getFormatName();
+        case mp3:           return am.getLameFormat() == nullptr ? String() : am.getLameFormat()->getFormatName();
+        case midi:          return "MIDI file";
+        case numFormats:    return "MIDI file";
+        default:            return {};
     }
 }
 

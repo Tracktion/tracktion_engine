@@ -54,13 +54,15 @@ void Modifier::remove()
 }
 
 //==============================================================================
-void Modifier::baseClassInitialise (const PlaybackInitialisationInfo& info)
+void Modifier::baseClassInitialise (double newSampleRate, int blockSizeSamples)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
+    sampleRate = newSampleRate;
+
     if (initialiseCount++ == 0)
     {
         CRASH_TRACER
-        initialise (info);
+        initialise (sampleRate, blockSizeSamples);
     }
 
     CRASH_TRACER

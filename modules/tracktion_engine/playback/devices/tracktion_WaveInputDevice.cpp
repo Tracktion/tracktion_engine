@@ -150,6 +150,7 @@ struct RetrospectiveRecordBuffer
 
     void syncToEdit (Edit& edit, EditPlaybackContext& context, double streamTime, int numSamplesIn)
     {
+        const juce::SpinLock::ScopedLockType sl (editInfoLock);
         auto& pei = editInfo[edit.getProjectItemID()];
 
         if (context.playhead.isPlaying())
@@ -165,6 +166,7 @@ struct RetrospectiveRecordBuffer
 
     bool wasRecentlyPlaying (Edit& edit)
     {
+        const juce::SpinLock::ScopedLockType sl (editInfoLock);
         auto& pei = editInfo[edit.getProjectItemID()];
 
         return (pei.lastEditTime >= 0 && pei.pausedTime < 20);
@@ -172,6 +174,7 @@ struct RetrospectiveRecordBuffer
 
     void removeEditSync (Edit& edit)
     {
+        const juce::SpinLock::ScopedLockType sl (editInfoLock);
         auto itr = editInfo.find (edit.getProjectItemID());
 
         if (itr != editInfo.end())
@@ -194,6 +197,7 @@ struct RetrospectiveRecordBuffer
     };
 
     std::map<ProjectItemID, PerEditInfo> editInfo;
+    juce::SpinLock editInfoLock;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RetrospectiveRecordBuffer)
 };
@@ -342,8 +346,12 @@ public:
                 rc->firstRecCallback = true;
                 muteTrackNow = false;
 
-                auto adjustSeconds = wi.getAdjustmentSeconds();
+                const auto adjustSeconds = wi.getAdjustmentSeconds();
                 rc->adjustSamples = roundToInt (adjustSeconds * sr);
+
+               #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+                rc->adjustSamples += context.getLatencySamples();
+               #endif
 
                 if (! isLivePunch)
                 {
@@ -906,11 +914,21 @@ public:
 
             auto clipName = getNewClipName (*dstTrack);
             double start = 0;
-            double recordedLength = AudioFile (dstTrack->edit.engine, recordedFile).getLength();
+            const double recordedLength = AudioFile (dstTrack->edit.engine, recordedFile).getLength();
 
             if (context.playhead.isPlaying() || recordBuffer->wasRecentlyPlaying (edit))
             {
-                auto adjust = -wi.getAdjustmentSeconds() + edit.engine.getDeviceManager().getBlockSizeMs() / 1000.0;
+                const double blockSizeSeconds = edit.engine.getDeviceManager().getBlockSizeMs() / 1000.0;
+                auto adjust = -wi.getAdjustmentSeconds() + blockSizeSeconds;
+                
+               #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+                adjust -= tracktion_graph::sampleToTime (context.getLatencySamples(), edit.engine.getDeviceManager().getSampleRate());
+ 
+                // TODO: Still not quite sure why the adjustment needs to be a block more with
+                // the tracktion_graph engine, this may need correcting in the future
+                if (context.getNodePlayHead() != nullptr)
+                    adjust += blockSizeSeconds;
+               #endif
 
                 if (context.playhead.isPlaying())
                 {
@@ -1029,7 +1047,9 @@ public:
             const ScopedLock sl (consumerLock);
 
             for (auto n : consumers)
-                n->acceptInputBuffer (inputBuffer, numSamples);
+                n->acceptInputBuffer (choc::buffer::createChannelArrayView (inputBuffer.getArrayOfWritePointers(),
+                                                                            (choc::buffer::ChannelCount) inputBuffer.getNumChannels(),
+                                                                            (choc::buffer::FrameCount) numSamples));
         }
 
         const ScopedLock sl (contextLock);
@@ -1122,7 +1142,8 @@ protected:
     WaveInputDevice& getWaveInput() const noexcept    { return static_cast<WaveInputDevice&> (owner); }
 
     //==============================================================================
-    class InputAudioNode  : public AudioNode
+    class InputAudioNode  : public Consumer,
+                            public AudioNode
     {
     public:
         InputAudioNode (WaveInputDeviceInstance& d)
@@ -1226,17 +1247,19 @@ protected:
             }
         }
 
-        void acceptInputBuffer (juce::AudioBuffer<float>& newBuffer, int newSamps)
+        void acceptInputBuffer (choc::buffer::ChannelArrayView<float> newBlock) override
         {
             const ScopedLock sl (bufferLock);
 
-            if (validSamples > buffer.getNumSamples() - newSamps)
+            auto newSamps = newBlock.getNumFrames();
+
+            if (validSamples + (int) newSamps > buffer.getNumSamples())
                 validSamples = 0;
 
             for (int i = buffer.getNumChannels(); --i >= 0;)
                 buffer.copyFrom (i, validSamples,
-                                 newBuffer, jmin (newBuffer.getNumChannels() - 1, i), 0,
-                                 newSamps);
+                                 newBlock.getChannel (jmin (newBlock.getNumChannels() - 1, (uint32_t) i)).data.data,
+                                 (int) newSamps);
 
             validSamples += newSamps;
         }
@@ -1252,16 +1275,16 @@ protected:
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InputAudioNode)
     };
 
-    Array<InputAudioNode*> consumers;
+    Array<Consumer*> consumers;
     CriticalSection consumerLock;
 
-    void addConsumer (InputAudioNode* consumer)
+    void addConsumer (Consumer* consumer) override
     {
         const ScopedLock sl (consumerLock);
         consumers.addIfNotAlreadyThere (consumer);
     }
 
-    void removeConsumer (InputAudioNode* consumer)
+    void removeConsumer (Consumer* consumer) override
     {
         const ScopedLock sl (consumerLock);
         consumers.removeAllInstancesOf (consumer);

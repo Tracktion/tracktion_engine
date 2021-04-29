@@ -11,12 +11,48 @@
 namespace tracktion_engine
 {
 
-/** An AudioNode that produces a click track. */
-class ClickNode  : public AudioNode
+//==============================================================================
+/**
+   Generates click audio and MIDI and adds them to the provided buffer.
+ */
+class ClickGenerator
 {
 public:
-    ClickNode (bool isMidi, Edit&, double endTime);
-    ~ClickNode() override;
+    //==============================================================================
+    /** Creates a click generator for an Edit. */
+    ClickGenerator (Edit&, bool isMidi, double endTime);
+
+    /** Prepares a ClickGenerator to be played.
+        Must be called before processBlock
+    */
+    void prepareToPlay (double sampleRate, double startTime);
+
+    /** Adds clicks to a block of audio and MIDI for a given time range. */
+    void processBlock (choc::buffer::ChannelArrayView<float>*, MidiMessageArray*, EditTimeRange);
+
+private:
+    const Edit& edit;
+    bool midi = false;
+    juce::Array<double> beatTimes;
+    juce::BigInteger loudBeats;
+    int currentBeat = 0;
+
+    double sampleRate = 44100.0;
+    juce::AudioBuffer<float> bigClick, littleClick;
+    int bigClickMidiNote = 37, littleClickMidiNote = 76;
+
+    //==============================================================================
+    bool isMutedAtTime (double time) const;
+};
+
+
+//==============================================================================
+/** An AudioNode that produces a click track. */
+class ClickAudioNode  : public AudioNode
+{
+public:
+    ClickAudioNode (bool isMidi, Edit&, double endTime);
+    ~ClickAudioNode() override;
 
     void getAudioNodeProperties (AudioNodeProperties&) override;
     void visitNodes (const VisitorFn&) override;
@@ -45,7 +81,7 @@ private:
     juce::AudioBuffer<float> bigClick, littleClick;
     int bigClickMidiNote = 37, littleClickMidiNote = 76;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ClickNode)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ClickAudioNode)
 };
 
 } // namespace tracktion_engine

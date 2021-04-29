@@ -179,7 +179,7 @@ public:
         storedMessages.clear();
 
         sampleRate = sr;
-        containerEdit = edit;
+        editRef = edit;
 
         bufferSourceChannels.setBit (leftChanIndex);
         bufferSourceChannels.setBit (rightChanIndex);
@@ -289,7 +289,7 @@ public:
         pluginsServedThisFrame = 0;
     }
 
-    void getAudioOutput (const AudioRenderContext& fc,
+    void getAudioOutput (const PluginRenderContext& fc,
                          int leftChannelIndex, int rightChannelIndex,
                          int bus, int channel)
     {
@@ -435,11 +435,11 @@ public:
         e.fEventTarget.fChannel = (unsigned short) channel;
     }
 
-    bool isPlaying (const AudioRenderContext& fc, ReWireDriveAudioInputParams& in)
+    bool isPlaying (const PluginRenderContext& fc, ReWireDriveAudioInputParams& in)
     {
-        auto playheadOutputTime = fc.getEditTime().editRange1.getStart();
+        auto playheadOutputTime = fc.editTime;
 
-        if ((fc.playhead.isPlaying() && playheadOutputTime >= 0) || fc.isRendering)
+        if ((fc.isPlaying && playheadOutputTime >= 0) || fc.isRendering)
         {
             if (lastTime > playheadOutputTime || lastTime < playheadOutputTime - timePerBlock)
                 in.fPlayMode = kReWirePlayModeChaseAndPlay;
@@ -527,6 +527,8 @@ public:
 
     void timerCallback() override
     {
+        auto containerEdit = getEdit();
+
         if (timeSigRequest)
         {
             CRASH_TRACER
@@ -710,7 +712,7 @@ public:
 
     TransportControl* getTransport() const
     {
-        if (containerEdit != nullptr)
+        if (auto containerEdit = getEdit())
             return &containerEdit->getTransport();
 
         return {};
@@ -741,7 +743,9 @@ private:
     int references = 0, pluginsServedThisFrame = 0;
     double sampleRate = 0, lastTime = 0, timePerBlock = 0;
     bool wasPlaying = false;
-    Edit::WeakRef containerEdit;
+    Edit::WeakRef editRef;
+
+    Edit* getEdit() const   { return dynamic_cast<Edit*> (editRef.get()); }
 
     double requestedPosition = 0;
     int requestedTempo = 0, requestedTimeSigNum = 0, requestedTimeSigDenom = 0;
@@ -1104,17 +1108,17 @@ void ReWirePlugin::deinitialise()
         device->deinitialise();
 }
 
-void ReWirePlugin::prepareForNextBlock (const AudioRenderContext& rc)
+void ReWirePlugin::prepareForNextBlock (double editTime)
 {
     if (currentTempoPosition != nullptr && device != nullptr)
     {
-        currentTempoPosition->setTime (rc.playhead.streamTimeToSourceTime (rc.streamTime.getStart()));
+        currentTempoPosition->setTime (editTime);
 
         device->updateTempoInfo (TempoSequencePosition (*currentTempoPosition));
     }
 }
 
-void ReWirePlugin::applyToBuffer (const AudioRenderContext& fc)
+void ReWirePlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     if (fc.destBuffer != nullptr && device != nullptr)
     {

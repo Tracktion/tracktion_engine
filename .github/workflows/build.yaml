@@ -1,0 +1,96 @@
+name: Build
+on:
+  schedule:
+    - cron: '* 0 * * *'
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Linux
+            os: ubuntu-16.04
+            platform: linux
+          - name: macOS
+            os: macos-latest
+            platform: mac
+          - name: Windows
+            os: windows-2016
+            platform: windows
+        # cfg:
+        # - { name: Linux, os: ubuntu-16.04, platform: linux }
+        # - { name: macOS, os: macos-latest, platform: mac }
+        # - { name: Windows, os: windows-latest, platform: windows }
+    runs-on: ${{ matrix.os }}
+    steps:
+      # Install dependencies
+      - name: Install dependencies
+        if: ${{ matrix.platform == 'linux' }}
+        run: |
+            sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+            sudo apt-get update
+            sudo apt-get install -y gcc-7 g++-7 freeglut3-dev g++ libasound2-dev libcurl4-openssl-dev libfreetype6-dev libjack-jackd2-dev libx11-dev libxcomposite-dev libxcursor-dev libxinerama-dev libxrandr-dev mesa-common-dev ladspa-sdk webkit2gtk-4.0 libgtk-3-dev xvfb
+
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      # Build products
+      - name: "Build products"
+        shell: bash
+        run: |
+          if [[ "$OSTYPE" == "linux-gnu" ]]; then
+            export DISABLE_VALGRIND=1
+            export CC=/usr/bin/gcc-7
+            export CXX=/usr/bin/g++-7
+            gcc -v
+            g++ -v
+          elif [[ "$OSTYPE" == "msys" ]]; then
+            export MSBUILD_EXE="C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe"
+          fi
+
+          if [[ ${{ github.event_name }} == 'schedule' ]]; then
+            export DISABLE_TOOLS=0
+          else
+            export DISABLE_TOOLS=1
+          fi
+
+          ./tests/build
+
+      # Upload test results
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: test_results_${{ matrix.name }}
+          path: ./bin/test_results/**/TEST-*.xml
+
+  # Upload test results
+  deploy:
+    if: always()
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: ./
+
+      - name: Display structure of downloaded files
+        run: ls -la
+    
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1.6
+        with:
+          check_name: Unit Test Results
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          files: ./**/TEST-*.xml
+
+      - name: Publish Performance Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1.6
+        with:
+          check_name: Performance Test Results
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          files: ./**/TEST-*PerformanceTests*.xml

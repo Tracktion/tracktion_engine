@@ -428,7 +428,7 @@ void Clipboard::Clips::addClip (int trackOffset, const ValueTree& state)
     clips.push_back (ci);
 }
 
-void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects, EditTimeRange range, bool automationLocked)
+void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects, EditTimeRange range, AutomationLocked automationLocked)
 {
     if (range.isEmpty())
         range = Edit::getMaximumEditTimeRange();
@@ -503,58 +503,74 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects, 
         }
     }
 
-    if (automationLocked)
+    if (automationLocked == AutomationLocked::yes)
+        addAutomation (TrackSection::findSections (clipsToPaste), range);
+}
+
+void Clipboard::Clips::addAutomation (const juce::Array<TrackSection>& trackSections, EditTimeRange range)
+{
+    if (range.isEmpty() || trackSections.isEmpty())
+        return;
+    
+    auto allTracks = getAllTracks (trackSections.getFirst().track->edit);
+    auto firstTrackIndex = Edit::maxNumTracks;
+    auto overallStartTime = Edit::maximumLength;
+
+    for (const auto& trackSection : trackSections)
     {
-        for (auto& trackSection : TrackSection::findSections (clipsToPaste))
+        overallStartTime = jmin (overallStartTime, jmax (trackSection.range.getStart(), range.getStart()));
+        firstTrackIndex = jmin (firstTrackIndex, jmax (0, allTracks.indexOf (trackSection.track)));
+    }
+    
+    for (const auto& trackSection : trackSections)
+    {
+        for (auto plugin : trackSection.track->pluginList)
         {
-            for (auto plugin : trackSection.track->pluginList)
+            for (int k = 0; k < plugin->getNumAutomatableParameters(); k++)
             {
-                for (int k = 0; k < plugin->getNumAutomatableParameters(); k++)
+                auto param = plugin->getAutomatableParameter (k);
+
+                if (param->getCurve().getNumPoints() > 0)
                 {
-                    auto param = plugin->getAutomatableParameter (k);
+                    AutomationCurveSection section;
+                    section.pluginName = plugin->getName();
+                    section.paramID = param->paramID;
+                    section.trackOffset = jmax (0, allTracks.indexOf (trackSection.track) - firstTrackIndex);
+                    section.valueRange = param->getCurve().getValueLimits();
 
-                    if (param->getCurve().getNumPoints() > 0)
+                    const double endTolerence = 0.0001;
+                    auto intersection = trackSection.range.getIntersectionWith (range);
+                    auto reducedIntersection = intersection.reduced (endTolerence);
+                    auto clippedStart = intersection.getStart();
+                    auto clippedEnd   = intersection.getEnd();
+
+                    for (int l = 0; l < param->getCurve().getNumPoints(); ++l)
                     {
-                        AutomationCurveSection section;
-                        section.pluginName = plugin->getName();
-                        section.paramID = param->paramID;
-                        section.trackOffset = jmax (0, allTracks.indexOf (trackSection.track) - firstTrackIndex);
-                        section.valueRange = param->getCurve().getValueLimits();
+                        auto pt = param->getCurve().getPoint (l);
 
-                        const double endTolerence = 0.0001;
-                        auto intersection = trackSection.range.getIntersectionWith (range);
-                        auto reducedIntersection = intersection.reduced (endTolerence);
-                        auto clippedStart = intersection.getStart();
-                        auto clippedEnd   = intersection.getEnd();
-
-                        for (int l = 0; l < param->getCurve().getNumPoints(); ++l)
-                        {
-                            auto pt = param->getCurve().getPoint (l);
-
-                            if (reducedIntersection.containsInclusive (pt.time))
-                                section.points.push_back ({ pt.time, pt.value, pt.curve });
-                        }
-
-                        if (section.points.empty())
-                        {
-                            section.points.push_back ({ clippedStart, param->getCurve().getValueAt (clippedStart), 1.0f });
-                            section.points.push_back ({ clippedEnd, param->getCurve().getValueAt (clippedEnd), 0.0f });
-                        }
-                        else
-                        {
-                            if (section.points[0].time > clippedStart + endTolerence)
-                                section.points.insert (section.points.begin(), { clippedStart + endTolerence, param->getCurve().getValueAt (clippedStart + endTolerence), 0.0f });
-
-                            if (section.points[section.points.size() - 1].time < clippedEnd - endTolerence)
-                                section.points.push_back ({ clippedEnd - endTolerence, param->getCurve().getValueAt (clippedEnd - endTolerence), 0.0f });
-                        }
-
-                        for (auto& p : section.points)
-                            p.time -= overallStartTime;
-
-                        std::sort (section.points.begin(), section.points.end());
-                        automationCurves.add (std::move (section));
+                        if (reducedIntersection.containsInclusive (pt.time))
+                            section.points.push_back ({ pt.time, pt.value, pt.curve });
                     }
+
+                    if (section.points.empty())
+                    {
+                        section.points.push_back ({ clippedStart, param->getCurve().getValueAt (clippedStart), 1.0f });
+                        section.points.push_back ({ clippedEnd, param->getCurve().getValueAt (clippedEnd), 0.0f });
+                    }
+                    else
+                    {
+                        if (section.points[0].time > clippedStart + endTolerence)
+                            section.points.insert (section.points.begin(), { clippedStart + endTolerence, param->getCurve().getValueAt (clippedStart + endTolerence), 0.0f });
+
+                        if (section.points[section.points.size() - 1].time < clippedEnd - endTolerence)
+                            section.points.push_back ({ clippedEnd - endTolerence, param->getCurve().getValueAt (clippedEnd - endTolerence), 0.0f });
+                    }
+
+                    for (auto& p : section.points)
+                        p.time -= overallStartTime;
+
+                    std::sort (section.points.begin(), section.points.end());
+                    automationCurves.push_back (std::move (section));
                 }
             }
         }
@@ -640,6 +656,13 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
         options.insertPoint.chooseInsertPoint (targetTrack, t, false, options.selectionManager);
         jassert (targetTrack != nullptr);
     }
+
+    // We can't paste into a folder or submix track, so find the next clip track
+    while (targetTrack != nullptr && targetTrack->isFolderTrack())
+        targetTrack = targetTrack->getSiblingTrack (1, false);
+
+    if (targetTrack == nullptr)
+        return false;
 
     std::map<EditItemID, EditItemID> remappedIDs;
     SelectableList itemsAdded;
@@ -826,13 +849,21 @@ bool Clipboard::Tracks::pasteIntoEdit (const EditPastingOptions& options) const
 {
     CRASH_TRACER
 
-    if (options.selectionManager != nullptr)
-        options.selectionManager->deselectAll();
-
     Array<Track::Ptr> newTracks;
     std::map<EditItemID, EditItemID> remappedIDs;
 
     auto targetTrack = options.startTrack;
+
+    // When pasting tracks, always paste after the selected group of tracks if the target is
+    // withing the selection
+    auto allTracks = getAllTracks (options.edit);
+    if (options.selectionManager != nullptr && options.selectionManager->isSelected (targetTrack.get()))
+        for (auto t : options.selectionManager->getItemsOfType<Track>())
+            if (allTracks.indexOf (t) > allTracks.indexOf (targetTrack.get()))
+                targetTrack = t;
+
+    if (options.selectionManager != nullptr)
+        options.selectionManager->deselectAll();
 
     for (auto& trackState : tracks)
     {
@@ -1180,11 +1211,22 @@ bool Clipboard::AutomationPoints::pasteAutomationCurve (AutomationCurve& targetC
 
 //==============================================================================
 //==============================================================================
-Clipboard::MIDINotes::MIDINotes() {}
-Clipboard::MIDINotes::~MIDINotes() {}
+Clipboard::MIDIEvents::MIDIEvents() {}
+Clipboard::MIDIEvents::~MIDIEvents() {}
 
-juce::Array<MidiNote*> Clipboard::MIDINotes::pasteIntoClip (MidiClip& clip, const juce::Array<MidiNote*>& selectedNotes,
-                                                            double cursorPosition, const std::function<double(double)>& snapBeat) const
+std::pair<juce::Array<MidiNote*>, juce::Array<MidiControllerEvent*>> Clipboard::MIDIEvents::pasteIntoClip (MidiClip& clip,
+                                                                                                           const juce::Array<MidiNote*>& selectedNotes,
+                                                                                                           const juce::Array<MidiControllerEvent*>& selectedEvents,
+                                                                                                           double cursorPosition, const std::function<double(double)>& snapBeat) const
+{
+    auto notesAdded         = pasteNotesIntoClip (clip, selectedNotes, cursorPosition, snapBeat);
+    auto controllersAdded   = pasteControllersIntoClip (clip, selectedNotes, selectedEvents, cursorPosition, snapBeat);
+
+    return { notesAdded, controllersAdded };
+}
+
+juce::Array<MidiNote*> Clipboard::MIDIEvents::pasteNotesIntoClip (MidiClip& clip, const juce::Array<MidiNote*>& selectedNotes,
+                                                                  double cursorPosition, const std::function<double(double)>& snapBeat) const
 {
     if (notes.empty())
         return {};
@@ -1250,7 +1292,95 @@ juce::Array<MidiNote*> Clipboard::MIDINotes::pasteIntoClip (MidiClip& clip, cons
     return notesAdded;
 }
 
-bool Clipboard::MIDINotes::pasteIntoEdit (const EditPastingOptions&) const
+juce::Array<MidiControllerEvent*> Clipboard::MIDIEvents::pasteControllersIntoClip (MidiClip& clip,
+                                                                                   const juce::Array<MidiNote*>& selectedNotes,
+                                                                                   const juce::Array<MidiControllerEvent*>& selectedEvents,
+                                                                                   double cursorPosition, const std::function<double(double)>& snapBeat) const
+{
+    if (controllers.empty())
+        return {};
+
+    juce::Array<MidiControllerEvent> midiEvents;
+
+    for (auto& e : controllers)
+        midiEvents.add (MidiControllerEvent (e));
+
+    auto controllerType = midiEvents.getReference (0).getType();
+
+    auto beatRange = juce::Range<double>::withStartAndLength (midiEvents.getReference(0).getBeatPosition(), 0.0);
+
+    for (auto& e : midiEvents)
+        beatRange = beatRange.getUnionWith (juce::Range<double>::withStartAndLength (e.getBeatPosition(), 0.0));
+
+    double insertPos = 0.0;
+    if (clip.isLooping())
+        insertPos = clip.getContentBeatAtTime (cursorPosition) + clip.getLoopStartBeats();
+    else
+        insertPos = clip.getContentBeatAtTime (cursorPosition);
+
+    if (! selectedNotes.isEmpty())
+    {
+        double endOfSelection = 0;
+
+        for (auto* n : selectedNotes)
+            endOfSelection = jmax (endOfSelection, n->getEndBeat());
+
+        insertPos = endOfSelection;
+    }
+    else if (! selectedEvents.isEmpty())
+    {
+        double endOfSelection = 0;
+
+        for (auto e : selectedEvents)
+            endOfSelection = jmax (endOfSelection, e->getBeatPosition());
+
+        insertPos = endOfSelection + 1.0f;
+    }
+
+    if (clip.isLooping())
+    {
+        const double offsetBeats = clip.getOffsetInBeats() + clip.getLoopStartBeats();
+
+        if (insertPos - offsetBeats < 0 || insertPos - offsetBeats >= clip.getLoopLengthBeats() - 0.001)
+            return {};
+    }
+    else
+    {
+        const double offsetBeats = clip.getOffsetInBeats();
+
+        if (insertPos - offsetBeats < 0 || insertPos - offsetBeats >= clip.getLengthInBeats() - 0.001)
+            return {};
+    }
+
+    double deltaBeats = insertPos - beatRange.getStart();
+
+    if (snapBeat != nullptr)
+        deltaBeats = snapBeat (deltaBeats);
+
+    auto& sequence = clip.getSequence();
+    auto um = &clip.edit.getUndoManager();
+    juce::Array<MidiControllerEvent*> eventsAdded;
+
+    Array<ValueTree> itemsToRemove;
+    for (auto evt : sequence.getControllerEvents())
+        if (evt->getType() == controllerType && evt->getBeatPosition() >= beatRange.getStart() + deltaBeats && evt->getBeatPosition() <= beatRange.getEnd() + deltaBeats)
+            itemsToRemove.add (evt->state);
+
+    for (auto& v : itemsToRemove)
+        sequence.state.removeChild (v, um);
+
+    for (auto& e : midiEvents)
+    {
+        e.setBeatPosition (e.getBeatPosition() + deltaBeats, um);
+
+        if (auto evt = sequence.addControllerEvent (e, um))
+            eventsAdded.add (evt);
+    }
+
+    return eventsAdded;
+}
+
+bool Clipboard::MIDIEvents::pasteIntoEdit (const EditPastingOptions&) const
 {
     return false;
 }
@@ -1345,6 +1475,17 @@ Clipboard::Plugins::Plugins (const Plugin::Array& items)
     {
         item->edit.flushPluginStateIfNeeded (*item);
         plugins.push_back (item->state.createCopy());
+        
+        if (auto rackInstance = dynamic_cast<RackInstance*> (item))
+        {
+            if (auto type = rackInstance->type)
+            {
+                auto newEntry = std::make_pair (type->edit.getWeakRef(), type->state);
+                
+                if (std::find (rackTypes.begin(), rackTypes.end(), newEntry) == rackTypes.end())
+                    rackTypes.push_back (newEntry);
+            }
+        }
     }
 }
 
@@ -1364,7 +1505,7 @@ static bool pastePluginBasedOnSelection (Edit& edit, const Plugin::Ptr& newPlugi
 
     if (Plugin::Ptr selectedPlugin = selectionManager->getFirstItemOfType<Plugin>())
     {
-        if (auto* list = selectedPlugin->getOwnerList())
+        if (auto list = selectedPlugin->getOwnerList())
         {
             auto index = list->indexOf (selectedPlugin.get());
 
@@ -1405,10 +1546,30 @@ static bool pastePluginIntoTrack (const Plugin::Ptr& newPlugin, EditInsertPoint&
     return false;
 }
 
+static EditItemID::IDMap pasteRackTypesInToEdit (Edit& edit, const std::vector<std::pair<Selectable::WeakRef, juce::ValueTree>>& editAndTypeStates)
+{
+    EditItemID::IDMap reassignedIDs;
+
+    for (const auto& editAndTypeState : editAndTypeStates)
+    {
+        if (editAndTypeState.first == &edit)
+            continue;
+        
+        auto typeState = editAndTypeState.second;
+        auto reassignedRackType = typeState.createCopy();
+        EditItemID::remapIDs (reassignedRackType, nullptr, edit, &reassignedIDs);
+        edit.getRackList().addRackTypeFrom (reassignedRackType);
+    }
+    
+    return reassignedIDs;
+}
+
 bool Clipboard::Plugins::pasteIntoEdit (const EditPastingOptions& options) const
 {
     CRASH_TRACER
     bool anyPasted = false;
+    
+    auto rackIDMap = pasteRackTypesInToEdit (options.edit, rackTypes);
 
     auto pluginsToPaste = plugins;
     std::reverse (pluginsToPaste.begin(), pluginsToPaste.end()); // Reverse the array so they get pasted in the correct order
@@ -1417,6 +1578,16 @@ bool Clipboard::Plugins::pasteIntoEdit (const EditPastingOptions& options) const
     {
         auto stateCopy = item.createCopy();
         EditItemID::remapIDs (stateCopy, nullptr, options.edit);
+        
+        // Remap RackTypes after the otehr IDs or it will get overwritten
+        if (stateCopy[IDs::type].toString() == IDs::rack.toString())
+        {
+            auto oldRackID = EditItemID::fromProperty (stateCopy, IDs::rackType);
+            auto remappedRackID = rackIDMap[oldRackID];
+            
+            if (remappedRackID.isValid())
+                remappedRackID.setProperty (stateCopy, IDs::rackType, nullptr);
+        }
 
         if (auto newPlugin = options.edit.getPluginCache().getOrCreatePluginFor (stateCopy))
         {

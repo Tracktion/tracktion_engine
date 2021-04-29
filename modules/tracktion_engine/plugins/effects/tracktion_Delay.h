@@ -70,7 +70,7 @@ public:
     void initialise (const PlaybackInitialisationInfo&) override;
     void deinitialise() override;
     void reset() override;
-    void applyToBuffer (const AudioRenderContext&) override;
+    void applyToBuffer (const PluginRenderContext&) override;
 
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 

@@ -286,12 +286,16 @@ void Track::sendMirrorUpdateToAllPlugins (Plugin& p) const
 
 void Track::flipAllPluginsEnablement()
 {
-    auto isVolPan = [] (Plugin* p) { return dynamic_cast<VolumeAndPanPlugin*> (p) != nullptr; };
+    auto isVolPanVCA = [] (Plugin* p)
+    {
+        return dynamic_cast<VolumeAndPanPlugin*> (p) != nullptr
+            || dynamic_cast<VCAPlugin*> (p) != nullptr;
+    };
 
-    auto areAnyOn = [&isVolPan] (const PluginList& pl) -> bool
+    auto areAnyOn = [&isVolPanVCA] (const PluginList& pl) -> bool
     {
         for (auto p : pl)
-            if (! isVolPan (p) && p->canBeDisabled() && p->isEnabled())
+            if (! isVolPanVCA (p) && p->canBeDisabled() && p->isEnabled())
                 return true;
 
         return false;
@@ -300,7 +304,7 @@ void Track::flipAllPluginsEnablement()
     const bool enable = ! areAnyOn (pluginList);
 
     for (auto p : pluginList)
-        if (! isVolPan (p) && p->canBeDisabled())
+        if (! isVolPanVCA (p) && p->canBeDisabled())
             p->setEnabled (enable);
 }
 
@@ -386,25 +390,6 @@ void Track::setCurrentlyShownAutoParam (const AutomatableParameter::Ptr& param)
 {
     currentAutoParamPlugin  = param == nullptr ? EditItemID() : param->getOwnerID();
     currentAutoParamID      = param == nullptr ? String()     : param->paramID;
-}
-
-AutomatableParameter* Track::chooseDefaultAutomationCurve() const
-{
-    auto allParams (getAllAutomatableParams());
-
-    for (int i = allParams.size(); --i >= 0;)
-        if (auto p = allParams.getUnchecked (i))
-            if (p->hasAutomationPoints())
-                return p;
-
-    // otherwise look for the volume parameter
-    for (int i = allParams.size(); --i >= 0;)
-        if (auto p = allParams.getUnchecked (i))
-            if (dynamic_cast<VolumeAndPanPlugin*> (p->getPlugin()) != nullptr)
-                if (p->getParameterName().containsIgnoreCase (TRANS("Volume")))
-                    return p;
-
-    return allParams[0];
 }
 
 void Track::hideAutomatableParametersForSource (EditItemID pluginOrParameterID)
@@ -550,7 +535,13 @@ void Track::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
         else if (i == IDs::name)
         {
             changed();
-            MessageManager::callAsync ([] { SelectionManager::refreshAllPropertyPanels(); });
+            
+            if (! edit.isLoading())
+                MessageManager::callAsync ([trackRef = getWeakRef()]
+                                           {
+                                                if (trackRef != nullptr)
+                                                    SelectionManager::refreshAllPropertyPanelsShowing (*trackRef);
+                                           });
         }
         else if (i == IDs::colour)
         {

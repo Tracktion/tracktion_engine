@@ -25,7 +25,7 @@ struct MPEStartTrimmer
         be added to the mpeMessagesToAddAtStart array. These messages should be played back
         (in order) to properly restore the MPE 'state' at the trimIndex.
     */
-    static void reconstructExpression (Array<MidiMessage>& mpeMessagesToAddAtStart,
+    static void reconstructExpression (juce::Array<juce::MidiMessage>& mpeMessagesToAddAtStart,
                                        const juce::MidiMessageSequence& data,
                                        int trimIndex, int channel)
     {
@@ -40,21 +40,21 @@ struct MPEStartTrimmer
         const auto initial = searchBackForExpression (data, lastNoteOnIndex, channel, MessageToStopAt::noteOff);
         const auto mostRecent = searchBackForExpression (data, trimIndex, channel, MessageToStopAt::noteOn);
 
-        const int centrePitchbend = MidiMessage::pitchbendToPitchwheelPos (0.0f, 12.f);
+        const int centrePitchbend = juce::MidiMessage::pitchbendToPitchwheelPos (0.0f, 12.f);
 
-        mpeMessagesToAddAtStart.add (MidiMessage::controllerEvent       (channel, 74, wasFound (initial.timbre)    ? initial.timbre    : 64));
-        mpeMessagesToAddAtStart.add (MidiMessage::channelPressureChange (channel,     wasFound (initial.pressure)  ? initial.pressure  : 0));
-        mpeMessagesToAddAtStart.add (MidiMessage::pitchWheel            (channel,     wasFound (initial.pitchBend) ? initial.pitchBend : centrePitchbend));
-        mpeMessagesToAddAtStart.add (MidiMessage::noteOn (channel, noteOn.getNoteNumber(), noteOn.getVelocity()));
+        mpeMessagesToAddAtStart.add (juce::MidiMessage::controllerEvent       (channel, 74, wasFound (initial.timbre)    ? initial.timbre    : 64));
+        mpeMessagesToAddAtStart.add (juce::MidiMessage::channelPressureChange (channel,     wasFound (initial.pressure)  ? initial.pressure  : 0));
+        mpeMessagesToAddAtStart.add (juce::MidiMessage::pitchWheel            (channel,     wasFound (initial.pitchBend) ? initial.pitchBend : centrePitchbend));
+        mpeMessagesToAddAtStart.add (juce::MidiMessage::noteOn (channel, noteOn.getNoteNumber(), noteOn.getVelocity()));
 
         if (wasFound (mostRecent.timbre))
-            mpeMessagesToAddAtStart.add (MidiMessage::controllerEvent (channel, 74, mostRecent.timbre));
+            mpeMessagesToAddAtStart.add (juce::MidiMessage::controllerEvent (channel, 74, mostRecent.timbre));
 
         if (wasFound (mostRecent.pressure))
-            mpeMessagesToAddAtStart.add (MidiMessage::channelPressureChange (channel, mostRecent.pressure));
+            mpeMessagesToAddAtStart.add (juce::MidiMessage::channelPressureChange (channel, mostRecent.pressure));
 
         if (wasFound (mostRecent.pitchBend))
-            mpeMessagesToAddAtStart.add (MidiMessage::pitchWheel (channel, mostRecent.pitchBend));
+            mpeMessagesToAddAtStart.add (juce::MidiMessage::pitchWheel (channel, mostRecent.pitchBend));
     }
 
 private:

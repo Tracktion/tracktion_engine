@@ -116,7 +116,7 @@ void PatchBayPlugin::deinitialise()
 {
 }
 
-void PatchBayPlugin::applyToBuffer (const AudioRenderContext& fc)
+void PatchBayPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     if (fc.destBuffer != nullptr)
     {

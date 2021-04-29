@@ -163,6 +163,7 @@ juce::String Chord::getName() const
         case diminishedNinthChord:          return TRANS("Diminished Ninth");
         case diminishedMinorNinthChord:     return TRANS("Diminished Minor Ninth");
         case customChord:                   jassert (symbol.isNotEmpty()); return symbol;
+        case invalidChord:
         default: jassertfalse;              return {};
     }
 }
@@ -198,6 +199,7 @@ juce::String Chord::getShortName() const
         case diminishedNinthChord:          return TRANS("dim 9");
         case diminishedMinorNinthChord:     return TRANS("dim min 9");
         case customChord:                   jassert (symbol.isNotEmpty()); return symbol;
+        case invalidChord:
         default: jassertfalse;              return {};
     }
 }
@@ -233,6 +235,7 @@ juce::String Chord::getSymbol() const
         case diminishedNinthChord:          return "o9";
         case diminishedMinorNinthChord:     return "o" + flat + "9";
         case customChord:                   jassert (symbol.isNotEmpty()); return symbol;
+        case invalidChord:
         default: jassertfalse;              return {};
     }
 }
@@ -268,7 +271,8 @@ juce::Array<int> Chord::getSteps() const
         case diminishedNinthChord:          return { 0, 3, 6, 9, 14 };
         case diminishedMinorNinthChord:     return { 0, 3, 6, 9, 13 };
         case customChord:                   return steps;
-        default:               return {};
+        case invalidChord:
+        default:                            return {};
     }
 }
 
@@ -512,11 +516,40 @@ juce::String Scale::getIntervalName (Intervals interval) const
 
     switch (triads[(int)interval].getType())
     {
-        case Chord::majorTriad:        name = name.toUpperCase(); break;
-        case Chord::minorTriad:        break;
-        case Chord::augmentedTriad:    name = name.toUpperCase() + "+"; break;
-        case Chord::diminishedTriad:   name = name + juce::String::charToString (176); break;
-        default: jassertfalse; break;
+        case Chord::majorTriad:        name = name.toUpperCase();
+            break;
+        case Chord::minorTriad:
+            break;
+        case Chord::augmentedTriad:    name = name.toUpperCase() + "+";
+            break;
+        case Chord::diminishedTriad:   name = name + juce::String::charToString (176);
+            break;
+        case Chord::customChord:
+        case Chord::invalidChord:
+        case Chord::majorSixthChord:
+        case Chord::minorSixthChord:
+        case Chord::dominatSeventhChord:
+        case Chord::majorSeventhChord:
+        case Chord::minorSeventhChord:
+        case Chord::augmentedSeventhChord:
+        case Chord::diminishedSeventhChord:
+        case Chord::halfDiminishedSeventhChord:
+        case Chord::minorMajorSeventhChord:
+        case Chord::suspendedSecond:
+        case Chord::suspendedFourth:
+        case Chord::powerChord:
+        case Chord::majorNinthChord:
+        case Chord::dominantNinthChord:
+        case Chord::minorMajorNinthChord:
+        case Chord::minorDominantNinthChord:
+        case Chord::augmentedMajorNinthChord:
+        case Chord::augmentedDominantNinthChord:
+        case Chord::halfDiminishedNinthChord:
+        case Chord::halfDiminishedMinorNinthChord:
+        case Chord::diminishedNinthChord:
+        case Chord::diminishedMinorNinthChord:
+        default:                        jassertfalse;
+            break;
     }
 
     return name;
@@ -566,14 +599,19 @@ PatternGenerator::ProgressionItem::ProgressionItem (PatternGenerator& g, const j
 {
     auto um = temporary ? nullptr : g.clip.getUndoManager();
 
-    chordName.referTo (state, IDs::name, um);
+    chordName.referTo (state, IDs::chordName, um);
     pitches.referTo (state, IDs::pitches, um);
     lengthInBeats.referTo (state, IDs::length, um, 4);
     octave.referTo (state, IDs::octave, um);
     inversion.referTo (state, IDs::inversion, um);
 
     // Chord name format changed between W8 and W9 - update to new version
-    chordName = fixLegacyChordNames (chordName);
+    juce::String oldName = state[IDs::name];
+    if (oldName.isNotEmpty() && chordName.get().isEmpty())
+	{
+        chordName = fixLegacyChordNames (oldName);
+        state.removeProperty (IDs::name, nullptr);
+    }
 }
 
 PatternGenerator::ProgressionItem::~ProgressionItem() noexcept
@@ -702,6 +740,46 @@ int PatternGenerator::ProgressionItem::getRootNote (int key, const Scale& scale)
     return 0;
 }
 
+
+//==============================================================================
+//==============================================================================
+struct PatternGenerator::AutoUpdateManager : private ValueTreeAllEventListener,
+                                             public juce::AsyncUpdater
+{
+    AutoUpdateManager (PatternGenerator& owner_)
+        : owner (owner_)
+    {
+        owner.clip.state.addListener (this);
+    }
+
+    ~AutoUpdateManager() override
+    {
+        owner.clip.state.removeListener (this);
+    }
+
+    void valueTreeChanged() override
+    {}
+    
+    void valueTreePropertyChanged (juce::ValueTree& p, const juce::Identifier& c) override
+    {
+        if (Clip::isClipState (p))
+            if (c == IDs::start || c == IDs::length || c == IDs::offset)
+                if (! owner.clip.edit.getUndoManager().isPerformingUndoRedo())
+                    triggerAsyncUpdate();
+    }
+
+    void handleAsyncUpdate() override
+    {
+        if (owner.getAutoUpdate())
+            owner.generatePattern();
+    }
+
+private:
+    PatternGenerator& owner;
+};
+
+
+//==============================================================================
 //==============================================================================
 const int PatternGenerator::scaleRootGlobalTrack    = -1;
 const int PatternGenerator::scaleRootChordTrack     = -2;
@@ -770,8 +848,9 @@ double PatternGenerator::getMaximumChordLength() const
         case Mode::chords:
         case Mode::bass:
         case Mode::melody:
+        case Mode::off:
         default:
-            return 16.0;
+            return 1024.0;
     }
 }
 
@@ -888,7 +967,7 @@ Scale PatternGenerator::getScaleAtBeat (double beat) const
     {
         if (scaleRoot == scaleRootGlobalTrack)
         {
-            auto t = clip.getTimeOfContentBeat (beat);
+            auto t = clip.getTimeOfContentBeat (beat) + 0.0001;
             scale = Scale (clip.edit.pitchSequence.getPitchAt (t).getScale());
         }
         else
@@ -898,7 +977,7 @@ Scale PatternGenerator::getScaleAtBeat (double beat) const
     }
     else if (mode == Mode::off || scaleRoot == scaleRootChordTrack)
     {
-        auto t = clip.getTimeOfContentBeat (beat);
+        auto t = clip.getTimeOfContentBeat (beat) + 0.0001;
 
         if (auto cc = getChordClipAt (t))
         {
@@ -910,7 +989,7 @@ Scale PatternGenerator::getScaleAtBeat (double beat) const
     }
     else if (scaleRoot == scaleRootGlobalTrack)
     {
-        const double t = clip.getTimeOfContentBeat (beat);
+        const double t = clip.getTimeOfContentBeat (beat) + 0.0001;
         scale = Scale (clip.edit.pitchSequence.getPitchAt (t).getScale());
     }
     else
@@ -933,7 +1012,7 @@ int PatternGenerator::getNoteAtBeat (double beat) const
 
     if (mode == Mode::off || scaleRoot == scaleRootChordTrack)
     {
-        auto t = clip.getTimeOfContentBeat (beat);
+        auto t = clip.getTimeOfContentBeat (beat) + 0.0001;
 
         if (auto cc = getChordClipAt (t))
         {
@@ -1119,7 +1198,7 @@ PatternGenerator::NoteType PatternGenerator::getTypeForNote (const MidiClip& mc,
         {
             const double len = item->lengthInBeats;
 
-            if (note.getBeatPosition() >= curBeat && note.getBeatPosition() < curBeat + len)
+            if (note.getBeatPosition() + 0.0001 >= curBeat && note.getBeatPosition() + 0.0001 < curBeat + len)
             {
                 if (item->getChord (s).isValid())
                 {
@@ -1485,7 +1564,8 @@ void PatternGenerator::generateArpPattern()
                 const int stepIndex = styleValues[stepCur];
                 const int note = chordRoot + intervals[stepIndex] + octaveOffset;
 
-                addNote (sequence, note, curBeat, stepLength * lengthFactor, int (velocity / 100.0f * 127), 0, um);
+                addNote (sequence, note, curBeat, stepLength * lengthFactor, int (velocity / 100.0f * 127),
+                         mc->edit.engine.getEngineBehaviour().getDefaultNoteColour(), um);
 
                 // if we are at first beat of a new stage in the progression, play the root note if wanted
                 if (stepStart && arpPlayRoot)
@@ -1493,7 +1573,8 @@ void PatternGenerator::generateArpPattern()
                     stepStart = false;
 
                     const int rootNote = chordRoot + octaveOffset - 12;
-                    addNote (sequence, rootNote, curBeat, stepLengthLeft, int (velocity / 100.0f * 127), 0, um);
+                    addNote (sequence, rootNote, curBeat, stepLengthLeft, int (velocity / 100.0f * 127),
+                             mc->edit.engine.getEngineBehaviour().getDefaultNoteColour(), um);
                 }
             }
 
@@ -1568,7 +1649,7 @@ void PatternGenerator::generateChordPattern()
             {
                 auto c = bar.getChild (j);
 
-                for (int k = 0; k < 16 / barLen; k++)
+                for (int k = 0; k < getMaximumChordLength() / barLen; k++)
                     notes.getReference (i).add (ChordNote (float (c.getProperty (IDs::start)) + barLen * k,
                                                            c.getProperty (IDs::length),
                                                            c.getProperty (IDs::velocity)));
@@ -1578,7 +1659,7 @@ void PatternGenerator::generateChordPattern()
     else
     {
         notes.add ({});
-        notes.getReference (0).add (ChordNote (0.0f, 16.0f, 127.0f));
+        notes.getReference (0).add (ChordNote (0.0f, float (getMaximumChordLength()), 127.0f));
     }
 
     auto um = mc->getUndoManager();
@@ -1638,7 +1719,8 @@ void PatternGenerator::generateChordPattern()
                         {
                             addNote (sequence, note, curBeat + chordNote.start,
                                      std::min (chordNote.length * lengthFactor, float (patternLength) - chordNote.start),
-                                     int (velocity / 100.0f * chordNote.velocity), 0, um);
+                                     int (velocity / 100.0f * chordNote.velocity),
+                                     mc->edit.engine.getEngineBehaviour().getDefaultNoteColour(), um);
                         }
                     }
                 }
@@ -1689,9 +1771,9 @@ void PatternGenerator::generateMelodyPattern()
 
     juce::Array<ChordNote> notes;
 
-    for (int i = 0; i < std::ceil (16 / noteLengthBeat) * 4; i++)
+    for (int i = 0; i < std::ceil (getMaximumChordLength() / noteLengthBeat) * 4; i++)
         notes.add (ChordNote (i * noteLengthBeat,
-                              std::min (noteLengthBeat, 16 - i * noteLengthBeat), 127.0f));
+                              std::min (noteLengthBeat, float (getMaximumChordLength()) - i * noteLengthBeat), 127.0f));
 
     int progressionCur = 0; // Current step in the chord progression
 
@@ -1753,7 +1835,8 @@ void PatternGenerator::generateMelodyPattern()
                                         if (auto newNote = addNote (sequence, note1, curBeat + chordNote.start,
                                                                      std::min (chordNote.length * lengthFactor,
                                                                                float (patternLength) - chordNote.start),
-                                                                     (int) (velocity / 100.0f * chordNote.velocity), 0, um))
+                                                                     (int) (velocity / 100.0f * chordNote.velocity),
+                                                                     mc->edit.engine.getEngineBehaviour().getDefaultNoteColour(), um))
                                         {
                                             newNote->setMute (true, um);
                                             newNote->setColour (chordSteps.contains (note1) ? 0 : 2, um);
@@ -1778,7 +1861,8 @@ void PatternGenerator::generateMelodyPattern()
                                 if (auto newNote = addNote (sequence, note1, curBeat + chordNote.start,
                                                              std::min (chordNote.length * lengthFactor,
                                                                        float (patternLength) - chordNote.start),
-                                                             (int) (velocity / 100.0f * chordNote.velocity), 0, um))
+                                                             (int) (velocity / 100.0f * chordNote.velocity),
+                                                             mc->edit.engine.getEngineBehaviour().getDefaultNoteColour(), um))
                                     newNote->setMute (true, um);
 
 
@@ -1788,7 +1872,8 @@ void PatternGenerator::generateMelodyPattern()
                                 if (auto newNote = addNote (sequence, note2, curBeat + chordNote.start,
                                                              std::min (chordNote.length * lengthFactor,
                                                                        float (patternLength) - chordNote.start),
-                                                             (int) (velocity / 100.0f * chordNote.velocity), 0, um))
+                                                             (int) (velocity / 100.0f * chordNote.velocity),
+                                                             mc->edit.engine.getEngineBehaviour().getDefaultNoteColour(), um))
                                     newNote->setMute (true, um);
 
                         }
@@ -1853,7 +1938,7 @@ void PatternGenerator::generateBassPattern()
             {
                 auto c = bar.getChild (j);
 
-                for (int k = 0; k < 16 / barLen; k++)
+                for (int k = 0; k < getMaximumChordLength() / barLen; k++)
                 {
                     notes.getReference (i).add ({ float (c.getProperty (IDs::start)) + barLen * k,
                                                   c.getProperty (IDs::length),
@@ -1867,7 +1952,7 @@ void PatternGenerator::generateBassPattern()
     else
     {
         notes.add ({});
-        notes.getReference (0).add ({ 0.0f, 16.0f, 127.0f, 0, 0 });
+        notes.getReference (0).add ({ 0.0f, float (getMaximumChordLength()), 127.0f, 0, 0 });
     }
 
     auto um = mc->getUndoManager();
@@ -1919,7 +2004,8 @@ void PatternGenerator::generateBassPattern()
                             addNote (sequence, note, curBeat + bassNote.start,
                                      std::min (bassNote.length * lengthFactor,
                                                float (patternLength) - bassNote.start),
-                                     (int) (velocity / 100.0f * bassNote.velocity), 0, um);
+                                     (int) (velocity / 100.0f * bassNote.velocity),
+                                     mc->edit.engine.getEngineBehaviour().getDefaultNoteColour(), um);
                         }
                     }
                 }
@@ -2053,29 +2139,6 @@ void PatternGenerator::refreshPatternIfNeeded()
         autoUpdateManager->triggerAsyncUpdate();
 }
 
-//==============================================================================
-PatternGenerator::AutoUpdateManager::AutoUpdateManager (PatternGenerator& owner_) : owner (owner_)
-{
-    owner.clip.state.addListener (this);
-}
-
-PatternGenerator::AutoUpdateManager::~AutoUpdateManager()
-{
-    owner.clip.state.removeListener (this);
-}
-
-void PatternGenerator::AutoUpdateManager::valueTreePropertyChanged (juce::ValueTree& p, const juce::Identifier& c)
-{
-    if (Clip::isClipState (p))
-        if (c == IDs::start || c == IDs::length || c == IDs::offset)
-            triggerAsyncUpdate();
-}
-
-void PatternGenerator::AutoUpdateManager::handleAsyncUpdate()
-{
-    if (owner.getAutoUpdate())
-        owner.generatePattern();
-}
 
 //==============================================================================
 // Krumhansl-Schmuckler Key-Finding Algorithm.
@@ -2123,11 +2186,14 @@ juce::Array<KeyResult> determineKeyOfNotes (const juce::Array<MidiNote*>& notes)
             s3Minor += (durations[i] - yAve) * (durations[i] - yAve);
         }
 
-        double rMajor = s1Major / std::sqrt (s2Major * s3Major);
-        double rMinor = s1Minor / std::sqrt (s2Minor * s3Minor);
+        if (s2Major * s3Major > 0)
+        {
+            double rMajor = s1Major / std::sqrt (s2Major * s3Major);
+            double rMinor = s1Minor / std::sqrt (s2Minor * s3Minor);
 
-        results.add ({ rMajor, key, Scale::major });
-        results.add ({ rMinor, key, Scale::minor });
+            results.add ({ rMajor, key, Scale::major });
+            results.add ({ rMinor, key, Scale::minor });
+        }
     }
 
     results.sort();

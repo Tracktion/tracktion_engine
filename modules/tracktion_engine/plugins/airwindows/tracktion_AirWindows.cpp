@@ -194,7 +194,7 @@ void AirWindowsPlugin::deinitialise()
 {
 }
 
-void AirWindowsPlugin::applyToBuffer (const AudioRenderContext& fc)
+void AirWindowsPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     // We need to lock the processing while a preset is being loaded or the parameters
     // will overwrite the plugin state before we can update the parameters from the

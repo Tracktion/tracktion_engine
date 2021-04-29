@@ -83,7 +83,6 @@ enum class SettingID
     safeRecord,
     sendControllerOffMessages,
     simplifyAfterRecording,
-    showOnlyEnabledDevices,
     snapCursor,
     tempDirectory,
     trackExpansionMode,

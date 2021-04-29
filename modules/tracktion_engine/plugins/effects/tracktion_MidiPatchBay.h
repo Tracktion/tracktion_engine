@@ -31,7 +31,7 @@ public:
     bool needsConstantBufferSize() override                                 { return false; }
     void initialise (const PlaybackInitialisationInfo&) override;
     void deinitialise() override;
-    void applyToBuffer (const AudioRenderContext&) override;
+    void applyToBuffer (const PluginRenderContext&) override;
     juce::String getSelectableDescription() override                        { return TRANS("MIDI Patch Bay Plugin"); }
     bool takesAudioInput() override                                         { return false; }
     int getNumOutputChannelsGivenInputs (int) override                      { return 0; }

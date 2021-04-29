@@ -40,6 +40,7 @@ public:
     Project::Ptr getProject (int projectID);
     Project::Ptr getProject (const juce::File&);
 
+    juce::ReferenceCountedArray<Project> getAllProjects();
     juce::ReferenceCountedArray<Project> getAllProjects (const juce::ValueTree& folder);
 
     //==============================================================================

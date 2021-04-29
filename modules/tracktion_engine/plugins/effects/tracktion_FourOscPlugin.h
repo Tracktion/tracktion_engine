@@ -187,7 +187,7 @@ public:
 
     void reset() override;
 
-    void applyToBuffer (const AudioRenderContext&) override;
+    void applyToBuffer (const PluginRenderContext&) override;
 
     //==============================================================================
     bool takesMidiInput() override                      { return true; }
@@ -361,7 +361,7 @@ public:
         }
 
         int firstModIndex = -1, lastModIndex = -1;
-        float depths[numModSources];
+        float depths[numModSources] = {};
     };
 
     std::unordered_map<AutomatableParameter*, ModAssign> modMatrix;

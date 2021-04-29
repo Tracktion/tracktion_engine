@@ -300,7 +300,8 @@ public:
             auto t = m.getTimeStamp() * audioIf.parameters.sampleRate;
             midi.addEvent (m, int (t));
         }
-        toSend.clear ();
+        
+        toSend.clear();
     }
 
     void sendMessageNow (const MidiMessage& message) override
@@ -318,11 +319,12 @@ private:
         {
         }
 
-        bool sendMessages (PlayHead& playhead, MidiMessageArray& mma, EditTimeRange streamTime) override
+        bool sendMessages (MidiMessageArray& mma, double editTime) override
         {
-            auto editTime = playhead.streamTimeToEditWindow (streamTime);
-            mma.addToTimestamps (-editTime.editRange1.getStart() - outputDevice.getDeviceDelay());
-            outputDevice.toSend.mergeFromAndClear (mma);
+            // Adjust these messages to be relative to time 0.0 which will be the next call to processBlock
+            // The device delay is also subtracted as this will have been added when rendering
+            const auto deltaTime = -editTime - outputDevice.getDeviceDelay();
+            outputDevice.toSend.mergeFromAndClearWithOffset (mma, deltaTime);
             return true;
         }
 

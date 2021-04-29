@@ -29,7 +29,7 @@ String ChordTrack::getTrackWarning() const
         auto pos1 = clips.getUnchecked(i)->getPosition().time;
 
         for (int j = i + 1; j < clips.size(); ++j)
-            if (pos1.overlaps (clips.getUnchecked(j)->getPosition().time))
+            if (pos1.overlaps (clips.getUnchecked(j)->getPosition().time.reduced (0.0001)))
                 return TRANS("This track contains overlapping chords. Portions of some chord are ignored.");
     }
 

@@ -124,10 +124,10 @@ AudioNode* MIDITrackerModifier::createPreFXAudioNode (AudioNode* an)
     return new ModifierAudioNode (an, *this);
 }
 
-void MIDITrackerModifier::applyToBuffer (const AudioRenderContext& rc)
+void MIDITrackerModifier::applyToBuffer (const PluginRenderContext& pc)
 {
-    if (rc.bufferForMidiMessages != nullptr)
-        for (auto& m : *rc.bufferForMidiMessages)
+    if (pc.bufferForMidiMessages != nullptr)
+        for (auto& m : *pc.bufferForMidiMessages)
             if (m.isNoteOn())
                 midiEvent (m);
 }

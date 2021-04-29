@@ -91,8 +91,8 @@ MidiClip::MidiClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTr
     if (state.hasProperty (IDs::quantisation))
         quantisation->setType (state.getProperty (IDs::quantisation));
 
-    volumeDb.referTo (state, IDs::volDb, um, 0.0f);
-    mute.referTo (state, IDs::mute, um, false);
+    level->dbGain.referTo (state, IDs::volDb, um, 0.0f);
+    level->mute.referTo (state, IDs::mute, um, false);
     sendPatch.referTo (state, IDs::sendProgramChange, um, true);
     sendBankChange.referTo (state, IDs::sendBankChange, um, true);
     mpeMode.referTo (state, IDs::mpeMode, um, false);
@@ -193,12 +193,12 @@ void MidiClip::cloneFrom (Clip* c)
     {
         Clip::cloneFrom (other);
 
+        level->dbGain           .setValue (other->level->dbGain, nullptr);
+        level->mute             .setValue (other->level->mute, nullptr);
         currentTake             .setValue (other->currentTake, nullptr);
         mpeMode                 .setValue (other->mpeMode, nullptr);
-        volumeDb                .setValue (other->volumeDb, nullptr);
         originalLength          .setValue (other->originalLength, nullptr);
         sendPatch               .setValue (other->sendPatch, nullptr);
-        mute                    .setValue (other->mute, nullptr);
         sendBankChange          .setValue (other->sendBankChange, nullptr);
         grooveTemplate          .setValue (other->grooveTemplate, nullptr);
         grooveStrength          .setValue (other->grooveStrength, nullptr);
@@ -255,8 +255,13 @@ AudioNode* MidiClip::createAudioNode (const CreateAudioNodeParams& params)
     auto channels = mpeMode ? Range<int> (2, 15)
                             : Range<int>::withStartAndLength (getMidiChannel().getChannelNumber(), 0);
 
-    return new MidiAudioNode (std::move (sequence), channels, getEditTimeRange(),
-                              volumeDb, mute, *this, nodeToReplace);
+    AudioNode* node = new MidiAudioNode (std::move (sequence), channels, getEditTimeRange(),
+                                         level->dbGain, level->mute, *this, nodeToReplace);
+
+    if (! listeners.isEmpty())
+        node = new LiveMidiOutputAudioNode (*this, node);
+
+    return node;
 }
 
 MidiList& MidiClip::getSequence() const noexcept
@@ -752,6 +757,11 @@ void MidiClip::setSendingBankChanges (bool sendBank)
 {
     if (sendBank != sendBankChange)
         sendBankChange = ! sendBankChange;
+}
+
+LiveClipLevel MidiClip::getLiveClipLevel()
+{
+    return { level };
 }
 
 void MidiClip::valueTreePropertyChanged (ValueTree& tree, const juce::Identifier& id)

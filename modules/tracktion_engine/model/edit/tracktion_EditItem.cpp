@@ -165,7 +165,7 @@ struct IDRemapping
 {
     static bool isIDDeclaration (juce::StringRef att)
     {
-        return att == IDs::id || att == IDs::groupID || att == IDs::linkID;
+        return att == IDs::id || att == IDs::groupID;
     }
 
     static bool isIDReference (const juce::Identifier& parentType, juce::StringRef att)
@@ -208,7 +208,7 @@ struct IDRemapping
             if (isIDDeclaration (xml.getAttributeName (i)))
                 visitor (xml.getAttributeValue (i));
 
-        forEachXmlChildElement (xml, e)
+        for (auto e : xml.getChildIterator())
             visitAllIDDecls (*e, visitor);
     }
 
@@ -274,7 +274,7 @@ struct IDRemapping
                 EditItemID::applyNewIDsToExternalXML (xml, attName, newIDsToApply);
         }
 
-        forEachXmlChildElement (xml, e)
+        for (auto e : xml.getChildIterator())
             applyNewIDs (*e, newIDsToApply);
     }
 

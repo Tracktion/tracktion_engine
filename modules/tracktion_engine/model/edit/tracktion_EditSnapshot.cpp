@@ -107,7 +107,7 @@ void EditSnapshot::refreshCacheAndNotifyListeners()
 
 void EditSnapshot::addSubTracksRecursively (const juce::XmlElement& parent, int& audioTrackNameNumber)
 {
-    forEachXmlChildElement (parent, track)
+    for (auto track : parent.getChildIterator())
     {
         juce::Identifier trackType (track->getTagName());
 
@@ -265,14 +265,14 @@ void EditSnapshot::clear()
 
 void EditSnapshot::addEditClips (const juce::XmlElement& track)
 {
-    forEachXmlChildElement (track, clip)
+    for (auto clip : track.getChildIterator())
         if (clip->hasTagName (IDs::EDITCLIP))
             editClipIDs.add (ProjectItemID (clip->getStringAttribute ("source")));
 }
 
 void EditSnapshot::addClipSources (const juce::XmlElement& track)
 {
-    forEachXmlChildElement (track, clip)
+    for (auto clip : track.getChildIterator())
     {
         auto sourceID = clip->getStringAttribute ("source");
 
@@ -283,7 +283,7 @@ void EditSnapshot::addClipSources (const juce::XmlElement& track)
 
 void EditSnapshot::addMarkers (const juce::XmlElement& track)
 {
-    forEachXmlChildElement (track, clip)
+    for (auto clip : track.getChildIterator())
     {
         Marker m;
         m.name      = clip->getStringAttribute ("name", TRANS("unnamed"));

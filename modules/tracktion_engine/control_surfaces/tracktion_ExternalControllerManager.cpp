@@ -574,8 +574,9 @@ void ExternalControllerManager::auxSendLevelsChanged()
 void ExternalControllerManager::userMovedFader (int channelNum, float newSliderPos)
 {
     CRASH_TRACER
+    auto track = getChannelTrack (channelNum);
 
-    if (auto at = dynamic_cast<AudioTrack*> (getChannelTrack (channelNum)))
+    if (auto at = dynamic_cast<AudioTrack*> (track))
     {
         if (auto vp = at->getVolumePlugin())
             vp->setSliderPos (newSliderPos);
@@ -583,10 +584,12 @@ void ExternalControllerManager::userMovedFader (int channelNum, float newSliderP
             moveFader (mapTrackNumToChannelNum (channelNum), decibelsToVolumeFaderPosition (0.0f));
     }
 
-    if (auto ft = dynamic_cast<FolderTrack*> (getChannelTrack (channelNum)))
+    if (auto ft = dynamic_cast<FolderTrack*> (track))
     {
         if (auto vca = ft->getVCAPlugin())
             vca->setSliderPos (newSliderPos);
+        else if (auto vp = ft->getVolumePlugin())
+            vp->setSliderPos (newSliderPos);
         else
             moveFader (mapTrackNumToChannelNum (channelNum), decibelsToVolumeFaderPosition (0.0f));
     }
@@ -606,9 +609,18 @@ void ExternalControllerManager::userMovedMasterPanPot (Edit* ed, float newLevel)
 
 void ExternalControllerManager::userMovedPanPot (int channelNum, float newPan)
 {
-    if (auto t = dynamic_cast<AudioTrack*> (getChannelTrack (channelNum)))
+    auto track = getChannelTrack (channelNum);
+    
+    if (auto t = dynamic_cast<AudioTrack*> (track))
+    {
         if (auto vp = t->getVolumePlugin())
             vp->setPan (newPan);
+    }
+    else if (auto ft = dynamic_cast<FolderTrack*> (track))
+    {
+        if (auto vp = ft->getVolumePlugin())
+            vp->setPan (newPan);
+    }
 }
 
 void ExternalControllerManager::userMovedAux (int channelNum, int auxNum, float newPosition)

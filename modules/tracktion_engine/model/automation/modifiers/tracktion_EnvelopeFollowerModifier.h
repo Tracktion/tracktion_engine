@@ -35,10 +35,11 @@ public:
 
     juce::StringArray getAudioInputNames() override;
     AudioNode* createPostFXAudioNode (AudioNode*) override;
+    ProcessingPosition getProcessingPosition() override { return ProcessingPosition::postFX; }
 
-    void initialise (const PlaybackInitialisationInfo&) override;
+    void initialise (double sampleRate, int blockSizeSamples) override;
     void deinitialise() override;
-    void applyToBuffer (const AudioRenderContext&) override;
+    void applyToBuffer (const PluginRenderContext&) override;
 
     //==============================================================================
     struct Assignment : public AutomatableParameter::ModifierAssignment
@@ -68,7 +69,6 @@ private:
     std::atomic<float> envelopeValue;
     std::unique_ptr<EnvelopeFollower> envelopeFollower;
     juce::IIRFilter lowPassFilter, highPassFilter;
-    double currentSampleRate = 44100.0;
     float currentLowPassFrequency = 0.0f, currentHighPassFrequency = 0.0f;
     LambdaTimer changedTimer;
 

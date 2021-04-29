@@ -397,6 +397,21 @@ File ProjectItem::getEditPreviewFile() const
     return {};
 }
 
+juce::File ProjectItem::getEditThumbnailFile() const
+{
+    jassert (isEdit());
+
+    if (auto p = getProject())
+    {
+        auto dir = engine.getTemporaryFileManager().getTempDirectory().getChildFile ("previews");
+        dir.createDirectory();
+
+        return dir.getChildFile ("preview_" + getID().toStringSuitableForFilename()).withFileExtension ("png");
+    }
+
+    return {};
+}
+
 //==============================================================================
 Project::Ptr ProjectItem::getProject() const
 {
@@ -443,6 +458,10 @@ void ProjectItem::setName (const String& n, SetNameMode mode)
                                                      .withFileExtension (src.getFileExtension());
 
                 startTimer (1);
+            }
+            else
+            {
+                engine.getUIBehaviour().editNamesMayHaveChanged();
             }
 
             sendChange();

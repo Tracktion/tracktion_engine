@@ -103,7 +103,9 @@ struct DeviceManager::WaveDeviceList
 
         for (int i = 0; i < channelNames.size(); ++i)
         {
-            if (isInput ? dm.isDeviceInChannelStereo (i) : dm.isDeviceOutChannelStereo (i))
+            const bool canBeStereo = i < channelNames.size() - 1;
+            
+            if (canBeStereo && (isInput ? dm.isDeviceInChannelStereo (i) : dm.isDeviceOutChannelStereo (i)))
             {
                 descriptions.push_back (WaveDeviceDescription (mergeTwoNames (channelNames[i], channelNames[i + 1]),
                                                                i, i + 1, isDeviceEnabled (i) || isDeviceEnabled (i + 1)));
@@ -430,25 +432,34 @@ bool DeviceManager::isMSWavetableSynthPresent() const
     return false;
 }
 
-void DeviceManager::resetToDefaults (bool resetInputDevices, bool resetOutputDevices)
+void DeviceManager::resetToDefaults (bool deviceSettings, bool resetInputDevices, bool resetOutputDevices, bool latencySettings, bool mixSettings)
 {
     TRACKTION_LOG ("Returning audio settings to defaults");
     deviceManager.removeAudioCallback (this);
 
     auto& storage = engine.getPropertyStorage();
 
-    storage.removeProperty (SettingID::audio_device_setup);
-    storage.removePropertyItem (SettingID::audiosettings, deviceManager.getCurrentAudioDeviceType());
+    if (deviceSettings)
+    {
+        storage.removeProperty (SettingID::audio_device_setup);
+        storage.removePropertyItem (SettingID::audiosettings, deviceManager.getCurrentAudioDeviceType());
+    }
 
-    storage.setProperty (SettingID::cpu, SystemStats::getNumCpus());
-    updateNumCPUs();
-    storage.setProperty (SettingID::maxLatency, 5.0f);
-    storage.setProperty (SettingID::lowLatencyBuffer, 5.8f);
-    storage.setProperty (SettingID::internalBuffer, 1);
-    setInternalBufferMultiplier (1);
+    if (latencySettings)
+    {
+        storage.setProperty (SettingID::maxLatency, 5.0f);
+        storage.setProperty (SettingID::lowLatencyBuffer, 5.8f);
+        storage.setProperty (SettingID::internalBuffer, 1);
+        setInternalBufferMultiplier (1);
+    }
 
-    storage.setProperty (SettingID::use64Bit, false);
-    storage.setProperty (SettingID::showOnlyEnabledDevices, false);
+    if (mixSettings)
+    {
+        storage.setProperty (SettingID::cpu, SystemStats::getNumCpus());
+        updateNumCPUs();
+
+        storage.setProperty (SettingID::use64Bit, false);
+    }
 
     if (resetInputDevices)
         for (auto wid : waveInputs)
@@ -1075,7 +1086,6 @@ void DeviceManager::audioDeviceIOCallback (const float** inputChannelData, int n
                     FloatVectorOperations::clear (dest, numSamples);
 
             currentCpuUsage = jmin (0.9, currentCpuUsage * 0.99);
-            Thread::sleep (1);
         }
         else
         {
@@ -1101,17 +1111,21 @@ void DeviceManager::audioDeviceIOCallback (const float** inputChannelData, int n
                 blockStreamTime = { streamTime, streamTime + blockLength };
 
                 for (auto c : activeContexts)
+                {
                     c->fillNextAudioBlock (blockStreamTime, outputChannelData, numSamples);
+                    
+                   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+                    c->fillNextNodeBlock (outputChannelData, totalNumOutputChannels, numSamples);
+                   #endif
+                }
             }
 
-           #if JUCE_MAC
             for (int i = totalNumOutputChannels; --i >= 0;)
                 if (auto* dest = outputChannelData[i])
                     if (activeOutChannels[i])
                         for (int j = 0; j < numSamples; ++j)
                             if (! std::isnormal (dest[j]))
                                 dest[j] = 0;
-           #endif
 
             streamTime = blockStreamTime.getEnd();
             currentCpuUsage = deviceManager.getCpuUsage();
@@ -1204,6 +1218,13 @@ void DeviceManager::updateNumCPUs()
 {
     const ScopedLock sl (deviceManager.getAudioCallbackLock());
     MixerAudioNode::updateNumCPUs (engine);
+    
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+    const ScopedLock cl (contextLock);
+
+    for (auto c : activeContexts)
+        c->updateNumCPUs();
+   #endif
 }
 
 void DeviceManager::addContext (EditPlaybackContext* c)

@@ -8,8 +8,22 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+namespace tracktion_graph
+{
+    class Node;
+    class PlayHead;
+    class PlayHeadState;
+}
+#endif
+
 namespace tracktion_engine
 {
+
+#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+class NodeRenderContext;
+struct ProcessState;
+#endif
 
 //==============================================================================
 /**
@@ -84,6 +98,17 @@ public:
                     std::atomic<float>& progressToUpdate,
                     juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver*);
 
+       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+        RenderTask (const juce::String& taskDescription,
+                    const Renderer::Parameters&,
+                    std::unique_ptr<tracktion_graph::Node>,
+                    std::unique_ptr<tracktion_graph::PlayHead>,
+                    std::unique_ptr<tracktion_graph::PlayHeadState>,
+                    std::unique_ptr<ProcessState>,
+                    std::atomic<float>& progressToUpdate,
+                    juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver*);
+       #endif
+
         ~RenderTask() override;
 
         JobStatus runJob() override;
@@ -92,25 +117,35 @@ public:
         Renderer::Parameters params;
         juce::String errorMessage;
 
+        //==============================================================================
+        static void flushAllPlugins (const Plugin::Array&, double sampleRate, int samplesPerBlock);
+        static void setAllPluginsRealtime (const Plugin::Array&, bool realtime);
+        static bool addMidiMetaDataAndWriteToFile (juce::File, juce::MidiMessageSequence, const TempoSequence&);
+        bool performNormalisingAndTrimming (const Renderer::Parameters& target,
+                                            const Renderer::Parameters& intermediate);
+
     private:
         //==============================================================================
         struct RendererContext;
 
         std::unique_ptr<AudioNode> node;
         std::unique_ptr<RendererContext> context;
+       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+        const bool isUsingGraphNode = false;
+        std::unique_ptr<tracktion_graph::Node> graphNode;
+        std::unique_ptr<tracktion_graph::PlayHead> playHead;
+        std::unique_ptr<tracktion_graph::PlayHeadState> playHeadState;
+        std::unique_ptr<ProcessState> processState;
+        std::unique_ptr<NodeRenderContext> nodeRenderContext;
+       #endif
 
         std::atomic<float> progressInternal { 0.0f };
         std::atomic<float>& progress;
         juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* sourceToUpdate = nullptr;
 
         //==============================================================================
-        bool performNormalisingAndTrimming (const Renderer::Parameters& target,
-                                            const Renderer::Parameters& intermediate);
         bool renderAudio (Renderer::Parameters&);
         bool renderMidi (Renderer::Parameters&);
-
-        static void flushAllPlugins (PlayHead&, const Plugin::Array&, double sampleRate, int samplesPerBlock);
-        static void setAllPluginsRealtime (const Plugin::Array&, bool realtime);
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RenderTask)
     };

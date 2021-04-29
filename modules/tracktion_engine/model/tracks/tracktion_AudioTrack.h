@@ -36,7 +36,7 @@ public:
     juce::String getName() override;
 
     bool canContainPlugin (Plugin*) const override;
-    bool processAudioNodesWhileMuted() const override       { return edit.processMutedTracks || isSidechainSource() || isRackSource(); }
+    bool processAudioNodesWhileMuted() const override       { return edit.engine.getEngineBehaviour().shouldProcessMutedTracks() || isSidechainSource(); }
 
     //==============================================================================
     /** returns a warning message about this track not being playable, or "" if it's ok */
@@ -61,8 +61,8 @@ public:
     bool areMidiPatchesZeroBased() const;
 
     //==============================================================================
-    WaveInputDevice& getWaveInputDevice() const noexcept        { return *waveInputDevice; }
-    MidiInputDevice& getMidiInputDevice() const noexcept        { return *midiInputDevice; }
+    WaveInputDevice& getWaveInputDevice() const noexcept        { jassert (waveInputDevice); return *waveInputDevice; }
+    MidiInputDevice& getMidiInputDevice() const noexcept        { jassert (midiInputDevice); return *midiInputDevice; }
 
     TrackOutput& getOutput() const noexcept                     { return *output; }
 
@@ -159,17 +159,28 @@ public:
         /* Destructor */
         virtual ~Listener() = default;
 
+        /** Called when a MidiMessage (i.e. from a soft-keyboard) should be injected in to the playback graph.
+            If the message was used, the listener should set the wasUsed argument to true or a
+            message may be shown to the user to notify them of why they couldn't hear the sound.
+        */
+        virtual void injectLiveMidiMessage (AudioTrack&, const MidiMessageArray::MidiMessageWithSource&, bool& wasUsed) = 0;
+
         /** Called when a recorded MidiMessage (i.e. from a clip) has been sent to the plugin chain.
             This will be called from the message thread.
         */
         virtual void recordedMidiMessageSentToPlugins (AudioTrack&, const juce::MidiMessage&) = 0;
     };
 
-    /** Adds a Listener. */
+    /** Adds a Listener.
+        This will automatically call Edit::restartPlayback for the callbacks to take effect.
+    */
     void addListener (Listener*);
 
     /** Removes a Listener. */
     void removeListener (Listener*);
+    
+    /** Returns the listener list so Nodes can manually call them. */
+    juce::ListenerList<Listener>& getListeners()            { return listeners; }
 
 protected:
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
@@ -227,7 +238,6 @@ private:
 
     void updateTracksToGhost();
     bool isSidechainSource() const;
-    bool isRackSource() const;
 
     void updateMidiNoteMapCache();
 

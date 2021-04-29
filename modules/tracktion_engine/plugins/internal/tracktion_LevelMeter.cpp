@@ -57,7 +57,7 @@ void LevelMeterPlugin::deinitialise()
     stopTimer();
 }
 
-void LevelMeterPlugin::applyToBuffer (const AudioRenderContext& fc)
+void LevelMeterPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     SCOPED_REALTIME_CHECK
 

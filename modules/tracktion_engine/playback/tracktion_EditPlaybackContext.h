@@ -27,6 +27,9 @@ public:
     void createPlayAudioNodes (double startTime);
     void createPlayAudioNodesIfNeeded (double startTime);
     void reallocate();
+    
+    /** Returns true if a playback graph is currently allocated. */
+    bool isPlaybackGraphAllocated() const       { return isAllocated; }
 
     // Prepares the graph but doesn't actually start the playhead
     void prepareForPlaying (double startTime);
@@ -41,6 +44,7 @@ public:
 
     juce::Array<InputDeviceInstance*> getAllInputs();
     InputDeviceInstance* getInputFor (InputDevice*) const;
+    OutputDeviceInstance* getOutputFor (OutputDevice*) const;
 
     Edit& edit;
     TransportControl& transport;
@@ -74,6 +78,28 @@ public:
 
         Engine& engine;
     };
+
+    //==============================================================================
+    /** Enables the new tracktion_graph module for internal processing.
+        N.B. This is for development only and this method will be removed in the future.
+    */
+    static void enableExperimentalGraphProcessing (bool);
+    static bool isExperimentalGraphProcessingEnabled();
+
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+    tracktion_graph::PlayHead* getNodePlayHead() const;
+    
+    /** Returns the overall latency of the currently prepared graph. */
+    int getLatencySamples() const;
+    double getAudibleTimelineTime();
+    double getSampleRate() const;
+    void updateNumCPUs();
+    void setSpeedCompensation (double plusOrMinus);
+    void postPosition (double);
+
+    static void setThreadPoolStrategy (int);
+    static int getThreadPoolStrategy();
+   #endif
 
 private:
     bool isAllocated = false;
@@ -110,6 +136,20 @@ private:
     double syncInterval = 0;
     bool hasSynced = false;
     double lastStreamPos = 0;
+    
+    struct ContextSyncroniser;
+    std::unique_ptr<ContextSyncroniser> contextSyncroniser;
+    
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+    struct NodePlaybackContext;
+    std::unique_ptr<NodePlaybackContext> nodePlaybackContext;
+
+    juce::WeakReference<EditPlaybackContext> nodeContextToSyncTo;
+    std::atomic<double> audiblePlaybackTime { 0.0 };
+
+    void createNode();
+    void fillNextNodeBlock (float** allChannels, int numChannels, int numSamples);
+   #endif
 
     JUCE_DECLARE_WEAK_REFERENCEABLE (EditPlaybackContext)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EditPlaybackContext)

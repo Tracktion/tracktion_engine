@@ -87,6 +87,12 @@ struct MidiTimecodeReader  : private MessageListener,
                     }
 
                     transport.engine.getDeviceManager().setSpeedCompensation (speedComp);
+                    
+                   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+                    if (auto epc = transport.getCurrentPlaybackContext())
+                        epc->setSpeedCompensation (speedComp);
+                   #endif
+                        
                     break;
                 }
 
@@ -144,7 +150,7 @@ private:
     {
         TCMessage (int tp) : type (tp) {}
 
-        int type;
+        int type = 0;
         MidiMessage::MidiMachineControlCommand command;
         int data[4];
     };

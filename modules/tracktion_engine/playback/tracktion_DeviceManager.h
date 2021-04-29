@@ -50,7 +50,7 @@ public:
     float getCpuUsage() const noexcept                  { return (float) currentCpuUsage; }
 
     // Sets an upper limit on the proportion of CPU time being used - if getCpuUsage() exceeds this,
-    // the processing will be muted to keep the system running. Defaults to 0.95
+    // the processing will be muted to keep the system running. Defaults to 0.98
     void setCpuLimitBeforeMuting (double newLimit)      { jassert (newLimit > 0); cpuLimitBeforeMuting = newLimit; }
 
     void updateNumCPUs(); // should be called when active num CPUs is changed
@@ -121,8 +121,13 @@ public:
     void broadcastStreamTimeToMidiDevices (double streamTime);
     bool shouldSendMidiTimecode() const noexcept                { return sendMidiTimecode; }
 
+    /** Returns the current block's stream time.
+        This shouldn't really be used and may be removed in future.
+    */
+    double getCurrentStreamTime() const noexcept                { return streamTime; }
+
     bool isMSWavetableSynthPresent() const;
-    void resetToDefaults (bool resetInputDevices, bool resetOutputDevices);
+    void resetToDefaults (bool deviceSettings, bool resetInputDevices, bool resetOutputDevices, bool latencySettings, bool mixSettings);
 
     //==============================================================================
     // list of all input devices..
@@ -190,8 +195,7 @@ private:
     bool finishedInitialising = false;
     bool sendMidiTimecode = false;
 
-    std::atomic<double> currentCpuUsage { 0 }, streamTime { 0 };
-    double cpuLimitBeforeMuting = 0.95;
+    std::atomic<double> currentCpuUsage { 0 }, streamTime { 0 }, cpuLimitBeforeMuting { 0.98 };
     double currentLatencyMs = 0, outputLatencyTime = 0, currentSampleRate = 0;
     double speedCompensation = 0;
     int internalBufferMultiplier = 1;

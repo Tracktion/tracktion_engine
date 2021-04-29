@@ -47,7 +47,7 @@ namespace AppFunctions
 
         if (auto ed = getCurrentlyFocusedEdit())
             for (SelectionManager::Iterator sm; sm.next();)
-                if (sm->edit == ed)
+                if (sm->getEdit() == ed)
                     for (auto s : sm->getSelectedObjects())
                         items.addIfNotAlreadyThere (s);
 
@@ -114,7 +114,7 @@ namespace AppFunctions
         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
             if (sm->insertPoint != nullptr)
                 if (auto clips = Clipboard::getInstance()->getContentWithType<Clipboard::Clips>())
-                    clips->pasteInsertingAtCursorPos (*sm->edit, *sm->insertPoint, *sm);
+                    clips->pasteInsertingAtCursorPos (*sm->getEdit(), *sm->insertPoint, *sm);
     }
 
     void deleteSelected()
@@ -129,9 +129,31 @@ namespace AppFunctions
         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
         {
             if (sm->containsType<Track>())
-                deleteRegionOfTracks (*sm->edit, getCurrentUIBehaviour().getEditingRange (*sm->edit), true, false, sm);
+                deleteRegionOfTracks (*sm->getEdit(), getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), true, CloseGap::no, sm);
             else
-                deleteRegionOfSelectedClips (*sm, getCurrentUIBehaviour().getEditingRange (*sm->edit), true, false);
+                deleteRegionOfSelectedClips (*sm, getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), CloseGap::no, false);
+        }
+    }
+
+    void deleteRegionAndCloseGapFromSelected()
+    {
+        if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
+        {
+            if (sm->containsType<Track>())
+                deleteRegionOfTracks (*sm->getEdit(), getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), true, CloseGap::yes, sm);
+            else
+                deleteRegionOfSelectedClips (*sm, getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), CloseGap::yes, false);
+        }
+    }
+
+    void deleteRegionAndCloseGap()
+    {
+        if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
+        {
+            if (sm->containsType<Track>())
+                deleteRegionOfTracks (*sm->getEdit(), getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), true, CloseGap::yes, sm);
+            else
+                deleteRegionOfSelectedClips (*sm, getCurrentUIBehaviour().getEditingRange (*sm->getEdit()), CloseGap::yes, true);
         }
     }
 
@@ -414,7 +436,7 @@ namespace AppFunctions
     {
         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
         {
-            auto& edit = *sm->edit;
+            auto& edit = *sm->getEdit();
             auto& tempoSequence = edit.tempoSequence;
 
             if (tempoSequence.getNumTempos() >= 128)
@@ -438,7 +460,7 @@ namespace AppFunctions
     void insertPitchChange()
     {
         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
-            if (auto newPitch = sm->edit->pitchSequence.insertPitch (getCurrentUIBehaviour().getEditingPosition (*sm->edit)))
+            if (auto newPitch = sm->getEdit()->pitchSequence.insertPitch (getCurrentUIBehaviour().getEditingPosition (*sm->getEdit())))
                 sm->selectOnly (*newPitch);
     }
 
@@ -446,7 +468,7 @@ namespace AppFunctions
     {
         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
         {
-            auto& edit = *sm->edit;
+            auto& edit = *sm->getEdit();
             auto& tempoSequence = edit.tempoSequence;
 
             if (tempoSequence.getNumTimeSigs() >= 128)
@@ -471,7 +493,7 @@ namespace AppFunctions
     {
         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())
         {
-            auto& edit = *sm->edit;
+            auto& edit = *sm->getEdit();
 
             if (auto ct = edit.getChordTrack())
             {
@@ -500,7 +522,7 @@ namespace AppFunctions
         {
             auto selected = sm->getSelectedObjects();
             selected.mergeArray (splitClips (getCurrentUIBehaviour().getAssociatedClipsToEdit (selected),
-                                             getCurrentUIBehaviour().getEditingPosition (*sm->edit)));
+                                             getCurrentUIBehaviour().getEditingPosition (*sm->getEdit())));
             sm->select (selected);
         }
     }
@@ -543,6 +565,11 @@ namespace AppFunctions
     void resetOverloads()
     {
         getCurrentUIBehaviour().resetOverloads();
+    }
+
+    void resetPeaks()
+    {
+        getCurrentUIBehaviour().resetPeaks();
     }
 
     void toggleTrackFreeze()

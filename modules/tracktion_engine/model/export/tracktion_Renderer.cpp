@@ -52,6 +52,36 @@ struct Ditherers
 };
 
 //==============================================================================
+static void addAcidInfo (Edit& edit, Renderer::Parameters& r)
+{
+    if (r.destFile.hasFileExtension (".wav") && r.endAllowance == 0.0)
+    {
+        auto& pitch = edit.pitchSequence.getPitchAt (r.time.start);
+        auto& tempo = edit.tempoSequence.getTempoAt (r.time.start);
+        auto& timeSig = edit.tempoSequence.getTimeSigAt (r.time.start);
+
+        r.metadata.set (WavAudioFormat::acidOneShot, "0");
+        r.metadata.set (WavAudioFormat::acidRootSet, "1");
+        r.metadata.set (WavAudioFormat::acidDiskBased, "1");
+        r.metadata.set (WavAudioFormat::acidizerFlag, "1");
+        r.metadata.set (WavAudioFormat::acidRootNote, String (pitch.getPitch()));
+
+        auto beats = tempo.getBpm() * (r.time.getLength() / 60);
+        if (std::abs (beats - int (beats)) < 0.001)
+        {
+            r.metadata.set (WavAudioFormat::acidStretch, "1");
+            r.metadata.set (WavAudioFormat::acidBeats, String (roundToInt (beats)));
+            r.metadata.set (WavAudioFormat::acidDenominator, String (timeSig.denominator.get()));
+            r.metadata.set (WavAudioFormat::acidNumerator, String (timeSig.numerator.get()));
+            r.metadata.set (WavAudioFormat::acidTempo, String (tempo.getBpm()));
+        }
+        else
+        {
+            r.metadata.set (WavAudioFormat::acidStretch, "0");
+        }
+    }
+}
+
 static bool trackLoopsBackInto (const Array<Track*>& allTracks, AudioTrack& t, const BigInteger* tracksToCheck)
 {
     for (int j = allTracks.size(); --j >= 0;)
@@ -115,6 +145,23 @@ Renderer::RenderTask::RenderTask (const String& taskDescription, const Renderer:
      params (rp), node (n), progress (progressToUpdate), sourceToUpdate (source)
 {
 }
+
+#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
+                                  const Renderer::Parameters& rp,
+                                  std::unique_ptr<tracktion_graph::Node> n,
+                                  std::unique_ptr<tracktion_graph::PlayHead> playHead_,
+                                  std::unique_ptr<tracktion_graph::PlayHeadState> playHeadState_,
+                                  std::unique_ptr<ProcessState> processState_,
+                                  std::atomic<float>& progressToUpdate,
+                                  juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* source)
+   : ThreadPoolJobWithProgress (taskDescription),
+     params (rp), isUsingGraphNode (true),
+     graphNode (std::move (n)), playHead (std::move (playHead_)), playHeadState (std::move (playHeadState_)), processState (std::move (processState_)),
+     progress (progressToUpdate), sourceToUpdate (source)
+{
+}
+#endif
 
 Renderer::RenderTask::~RenderTask()
 {
@@ -253,7 +300,7 @@ struct Renderer::RenderTask::RendererContext
             node->prepareAudioNodeToPlay (info);
         }
 
-        flushAllPlugins (localPlayhead, plugins, r.sampleRateForAudio, r.blockSizeForAudio);
+        flushAllPlugins (plugins, r.sampleRateForAudio, r.blockSizeForAudio);
 
         samplesTrimmed = 0;
         hasStartedSavingToFile = ! r.trimSilenceAtEnds;
@@ -395,7 +442,7 @@ struct Renderer::RenderTask::RendererContext
 
         rc->streamTime = { streamTime, blockEnd };
 
-        r.edit->updateModifierTimers (localPlayhead, rc->streamTime, r.blockSizeForAudio);
+        r.edit->updateModifierTimers (localPlayhead.streamTimeToSourceTime (rc->streamTime.getStart()), r.blockSizeForAudio);
         node->prepareForNextBlock (*rc);
 
         // wait for any nodes to render their sources or proxies
@@ -559,6 +606,35 @@ bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parame
 bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
 {
     CRASH_TRACER
+    
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+    if (isUsingGraphNode)
+    {
+        if (! nodeRenderContext)
+        {
+            callBlocking ([&, this] { nodeRenderContext = std::make_unique<NodeRenderContext> (*this, r,
+                                                                                               std::move (graphNode),
+                                                                                               std::move (playHead),
+                                                                                               std::move (playHeadState),
+                                                                                               std::move (processState),
+                                                                                               sourceToUpdate); });
+
+            if (! nodeRenderContext->getStatus().wasOk())
+            {
+                errorMessage = nodeRenderContext->getStatus().getErrorMessage();
+                return true;
+            }
+        }
+        
+        if (! nodeRenderContext->renderNextBlock (progress))
+            return false;
+        
+        nodeRenderContext.reset();
+        progress = 1.0f;
+        
+        return true;
+    }
+   #endif
 
     if (context == nullptr)
     {
@@ -581,7 +657,7 @@ bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
     return true;
 }
 
-void Renderer::RenderTask::flushAllPlugins (PlayHead& playhead, const Plugin::Array& plugins,
+void Renderer::RenderTask::flushAllPlugins (const Plugin::Array& plugins,
                                             double sampleRate, int samplesPerBlock)
 {
     CRASH_TRACER
@@ -607,10 +683,9 @@ void Renderer::RenderTask::flushAllPlugins (PlayHead& playhead, const Plugin::Ar
                     buffer.clear();
                     const AudioChannelSet channels = AudioChannelSet::canonicalChannelSet (buffer.getNumChannels());
 
-                    ep->applyToBuffer (AudioRenderContext (playhead,
-                                                           { -1.0, samplesPerBlock / sampleRate - 1.0 },
-                                                           &buffer, channels, 0, samplesPerBlock,
-                                                           nullptr, 0, true, true));
+                    ep->applyToBuffer (PluginRenderContext (&buffer, channels, 0, samplesPerBlock,
+                                                            nullptr, 0.0,
+                                                            0.0, false, false, true, true));
 
                     if (isAudioDataAlmostSilent (buffer.getReadPointer (0), samplesPerBlock))
                         break;
@@ -634,6 +709,19 @@ void Renderer::RenderTask::setAllPluginsRealtime (const Plugin::Array& plugins, 
 bool Renderer::RenderTask::renderMidi (Renderer::Parameters& r)
 {
     CRASH_TRACER
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+    if (isUsingGraphNode)
+    {
+        errorMessage = NodeRenderContext::renderMidi (*this, r,
+                                                      std::move (graphNode),
+                                                      std::move (playHead),
+                                                      std::move (playHeadState),
+                                                      std::move (processState),
+                                                      progress);
+        return errorMessage.isEmpty();
+    }
+   #endif
+    
     node->purgeSubNodes (false, true);
 
     {
@@ -726,48 +814,53 @@ bool Renderer::RenderTask::renderMidi (Renderer::Parameters& r)
 
     callBlocking ([this] { node->releaseAudioNodeResources(); });
     localPlayhead.stop();
+    
+    return addMidiMetaDataAndWriteToFile (r.destFile, std::move (outputSequence), r.edit->tempoSequence);
+}
 
+bool Renderer::RenderTask::addMidiMetaDataAndWriteToFile (juce::File destFile, juce::MidiMessageSequence outputSequence, const TempoSequence& tempoSequence)
+{
     outputSequence.updateMatchedPairs();
 
-    if (outputSequence.getNumEvents() > 0)
+    if (outputSequence.getNumEvents() == 0)
+        return false;
+
+    FileOutputStream out (destFile);
+
+    if (out.openedOk())
     {
-        FileOutputStream out (r.destFile);
+        MidiMessageSequence midiTempoSequence;
+        TempoSequencePosition currentTempoPosition (tempoSequence);
 
-        if (out.openedOk())
+        for (int i = 0; i < tempoSequence.getNumTempos(); ++i)
         {
-            MidiMessageSequence tempoSequence;
-            TempoSequencePosition currentTempoPosition (r.edit->tempoSequence);
+            auto ts = tempoSequence.getTempo (i);
+            auto& matchingTimeSig = ts->getMatchingTimeSig();
 
-            for (int i = 0; i < r.edit->tempoSequence.getNumTempos(); ++i)
-            {
-                auto ts = r.edit->tempoSequence.getTempo (i);
-                auto& matchingTimeSig = ts->getMatchingTimeSig();
+            currentTempoPosition.setTime (ts->getStartTime());
 
-                currentTempoPosition.setTime (ts->getStartTime());
+            const double time = Edit::ticksPerQuarterNote * currentTempoPosition.getPPQTime();
+            const double beatLengthMicrosecs = 60000000.0 / ts->getBpm();
+            const double microsecondsPerQuarterNote = beatLengthMicrosecs * matchingTimeSig.denominator / 4.0;
 
-                const double time = Edit::ticksPerQuarterNote * currentTempoPosition.getPPQTime();
-                const double beatLengthMicrosecs = 60000000.0 / ts->getBpm();
-                const double microsecondsPerQuarterNote = beatLengthMicrosecs * matchingTimeSig.denominator / 4.0;
+            MidiMessage m (MidiMessage::timeSignatureMetaEvent (matchingTimeSig.numerator,
+                                                                matchingTimeSig.denominator));
+            m.setTimeStamp (time);
+            midiTempoSequence.addEvent (m);
 
-                MidiMessage m (MidiMessage::timeSignatureMetaEvent (matchingTimeSig.numerator,
-                                                                    matchingTimeSig.denominator));
-                m.setTimeStamp (time);
-                tempoSequence.addEvent (m);
-
-                m = MidiMessage::tempoMetaEvent (roundToInt (microsecondsPerQuarterNote));
-                m.setTimeStamp (time);
-                tempoSequence.addEvent (m);
-            }
-
-            MidiFile mf;
-            mf.addTrack (tempoSequence);
-            mf.addTrack (outputSequence);
-
-            mf.setTicksPerQuarterNote (Edit::ticksPerQuarterNote);
-            mf.writeTo (out);
-
-            return true;
+            m = MidiMessage::tempoMetaEvent (roundToInt (microsecondsPerQuarterNote));
+            m.setTimeStamp (time);
+            midiTempoSequence.addEvent (m);
         }
+
+        MidiFile mf;
+        mf.addTrack (midiTempoSequence);
+        mf.addTrack (outputSequence);
+
+        mf.setTicksPerQuarterNote (Edit::ticksPerQuarterNote);
+        mf.writeTo (out);
+
+        return true;
     }
 
     return false;
@@ -931,7 +1024,7 @@ bool Renderer::renderToFile (const String& taskDescription,
         cnp.includePlugins = usePlugins;
         cnp.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (engine);
 
-        if (auto* node = createRenderingNodeFromEdit (edit, cnp, true))
+        if (auto node = createRenderingNodeFromEdit (edit, cnp, usePlugins))
         {
             Parameters r (edit);
             r.destFile = outputFile;
@@ -945,20 +1038,7 @@ bool Renderer::renderToFile (const String& taskDescription,
             r.allowedClips = clips;
             r.createMidiFile = outputFile.hasFileExtension (".mid");
 
-            auto& pitch = edit.pitchSequence.getPitchAt (range.start);
-            auto& tempo = edit.tempoSequence.getTempoAt (range.start);
-            auto& timeSig = edit.tempoSequence.getTimeSigAt (range.start);
-
-            r.metadata.set (WavAudioFormat::acidOneShot, "0");
-            r.metadata.set (WavAudioFormat::acidRootSet, "1");
-            r.metadata.set (WavAudioFormat::acidStretch, "1");
-            r.metadata.set (WavAudioFormat::acidDiskBased, "1");
-            r.metadata.set (WavAudioFormat::acidizerFlag, "1");
-            r.metadata.set (WavAudioFormat::acidRootNote, String (pitch.getPitch()));
-            r.metadata.set (WavAudioFormat::acidBeats, String (tempo.getBpm() * (range.getLength() / 60)));
-            r.metadata.set (WavAudioFormat::acidDenominator, String (timeSig.denominator.get()));
-            r.metadata.set (WavAudioFormat::acidNumerator, String (timeSig.numerator.get()));
-            r.metadata.set (WavAudioFormat::acidTempo, String (tempo.getBpm()));
+            addAcidInfo (edit, r);
 
             RenderTask task (taskDescription, r, node);
 

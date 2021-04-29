@@ -191,6 +191,7 @@ MidiInputDevice::MidiInputDevice (Engine& e, const String& type, const String& n
 
     endToEndEnabled = true;
     zeromem (keysDown, sizeof (keysDown));
+    zeromem (keysUp, sizeof (keysUp));
     zeromem (keyDownVelocities, sizeof (keyDownVelocities));
 
     keyboardState.addListener (this);
@@ -438,10 +439,24 @@ void MidiInputDevice::sendNoteOnToMidiKeyListeners (MidiMessage& message)
 
         const int noteNum = message.getNoteNumber();
 
-        keysDown[noteNum] = true;
-        keyDownVelocities[noteNum] = message.getVelocity();
+        {
+            juce::ScopedLock sl (noteLock);
+            keysDown[noteNum] = true;
+            keyDownVelocities[noteNum] = message.getVelocity();
+        }
 
         startTimer (50);
+    }
+    else if (message.isNoteOff())
+    {
+        const int noteNum = message.getNoteNumber();
+
+        {
+            juce::ScopedLock sl (noteLock);
+            keysUp[noteNum] = true;
+        }
+
+        startTimer (25);
     }
 }
 
@@ -449,24 +464,39 @@ void MidiInputDevice::timerCallback()
 {
     stopTimer();
 
-    for (auto t : getDestinationTracks())
-    {
-        Array<int> keys, vels;
+    Array<int> down, vels, up;
 
-        for (int i = 0; i < 128; ++i)
-        {
-            if (keysDown[i])
-            {
-                keys.add (i);
-                vels.add (keyDownVelocities[i]);
-            }
-        }
+    bool keysDownCopy[128], keysUpCopy[128];
+    juce::uint8 keyDownVelocitiesCopy[128];
+
+    {
+        juce::ScopedLock sl (noteLock);
+
+        memcpy (keysUpCopy, keysUp, sizeof (keysUp));
+        memcpy (keysDownCopy, keysDown, sizeof (keysDown));
+        memcpy (keyDownVelocitiesCopy, keyDownVelocities, sizeof (keyDownVelocities));
 
         zeromem (keysDown, sizeof (keysDown));
+        zeromem (keysUp, sizeof (keysUp));
         zeromem (keyDownVelocities, sizeof (keyDownVelocities));
-
-        midiKeyChangeDispatcher->listeners.call (&MidiKeyChangeDispatcher::Listener::midiKeyStateChanged, t, keys, vels);
     }
+
+    for (int i = 0; i < 128; ++i)
+    {
+        if (keysDownCopy[i])
+        {
+            down.add (i);
+            vels.add (keyDownVelocitiesCopy[i]);
+        }
+        if (keysUpCopy[i])
+        {
+            up.add (i);
+        }
+    }
+
+    if (down.size() > 0 || up.size() > 0)
+        for (auto t : getDestinationTracks())
+            midiKeyChangeDispatcher->listeners.call (&MidiKeyChangeDispatcher::Listener::midiKeyStateChanged, t, down, vels, up);
 }
 
 //==============================================================================
@@ -599,9 +629,9 @@ public:
     virtual void handleMMCMessage (const MidiMessage&) {}
     virtual bool handleTimecodeMessage (const MidiMessage&) { return false; }
 
-    String prepareToRecord (double start, double, double, int, bool) override
+    String prepareToRecord (double, double punchIn, double, int, bool) override
     {
-        startTime = start;
+        startTime = punchIn;
         recorded.clear();
         livePlayOver = context.transport.looping;
 
@@ -626,7 +656,6 @@ public:
 
     bool isRecording() override
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
         return recording;
     }
 
@@ -699,7 +728,14 @@ public:
         recorded.updateMatchedPairs();
         auto channelToApply = mi.recordToNoteAutomation ? mi.getChannelToUse()
                                                         : applyChannel (recorded, mi.getChannelToUse());
-        applyTimeAdjustment (recorded, mi.getManualAdjustmentMs());
+        auto timeAdjustMs = mi.getManualAdjustmentMs();
+        
+       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+        if (context.getNodePlayHead() != nullptr)
+            timeAdjustMs -= 1000.0 * tracktion_graph::sampleToTime (context.getLatencySamples(), edit.engine.getDeviceManager().getSampleRate());
+       #endif
+        
+        applyTimeAdjustment (recorded, timeAdjustMs);
 
         auto recordingStart = recordedRange.start;
         auto recordingEnd = recordedRange.end;
@@ -962,7 +998,14 @@ public:
             sequence.updateMatchedPairs();
             auto channelToApply = mi.recordToNoteAutomation ? mi.getChannelToUse()
                                                             : applyChannel (sequence, mi.getChannelToUse());
-            applyTimeAdjustment (sequence, mi.getManualAdjustmentMs());
+            auto timeAdjustMs = mi.getManualAdjustmentMs();
+            
+           #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+            if (context.getNodePlayHead() != nullptr)
+                timeAdjustMs -= 1000.0 * tracktion_graph::sampleToTime (context.getLatencySamples(), edit.engine.getDeviceManager().getSampleRate());
+           #endif
+            
+            applyTimeAdjustment (sequence, timeAdjustMs);
 
             auto clipStart = Time::getMillisecondCounterHiRes() * 0.001 - retrospective->lengthInSeconds + mi.getAdjustSecs();
             sequence.addTimeToMessages (-clipStart);
@@ -1046,12 +1089,13 @@ public:
 
     MidiInputDevice& getMidiInput() const   { return static_cast<MidiInputDevice&> (owner); }
 
-    bool volatile recording = false, livePlayOver = false;
+    std::atomic<bool> recording { false }, livePlayOver { false };
     double startTime = 0;
     juce::MidiMessageSequence recorded;
 
 private:
-    struct InputAudioNode  : public AudioNode
+    struct InputAudioNode  : public Consumer,
+                             public AudioNode
     {
         InputAudioNode (MidiInputDeviceInstanceBase& m, MidiMessageArray::MPESourceID msi)
             : owner (m), midiSourceID (msi)
@@ -1105,7 +1149,7 @@ private:
                 numLiveMessagesToPlay = 0;
             }
 
-            owner.add (this);
+            owner.addConsumer (this);
         }
 
         bool isReadyToRender() override
@@ -1115,7 +1159,7 @@ private:
 
         void releaseAudioNodeResources() override
         {
-            owner.remove (this);
+            owner.removeConsumer (this);
 
             const ScopedLock sl (bufferLock);
             numMessages = 0;
@@ -1210,7 +1254,7 @@ private:
             }
         }
 
-        void handleIncomingMidiMessage (const MidiMessage& message)
+        void handleIncomingMidiMessage (const MidiMessage& message) override
         {
             auto& mi = getMidiInput();
             auto channelToUse = mi.getChannelToUse().getChannelNumber();
@@ -1278,13 +1322,13 @@ private:
     };
 
     CriticalSection nodeLock;
-    Array<InputAudioNode*> nodes;
+    Array<Consumer*> nodes;
     double lastEditTime = -1.0;
     double pausedTime = 0;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
 
-    void add (InputAudioNode* node)     { ScopedLock sl (nodeLock); nodes.addIfNotAlreadyThere (node); }
-    void remove (InputAudioNode* node)  { ScopedLock sl (nodeLock); nodes.removeAllInstancesOf (node); }
+    void addConsumer (Consumer* node) override      { ScopedLock sl (nodeLock); nodes.addIfNotAlreadyThere (node); }
+    void removeConsumer (Consumer* node) override   { ScopedLock sl (nodeLock); nodes.removeAllInstancesOf (node); }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiInputDeviceInstanceBase)
 };

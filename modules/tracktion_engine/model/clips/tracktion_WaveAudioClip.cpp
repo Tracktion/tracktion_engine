@@ -60,8 +60,8 @@ double WaveAudioClip::getSourceLength() const
         // However, we know that the effects will produce an audio file of the same length as the originial so we'll return this
         // This could however be a problem with standard warp time, Edit clips and reverse etc...
 
-        sourceLength = clipEffects != nullptr ? AudioFile (edit.engine, getOriginalFile()).getLength()
-                                              : getAudioFile().getLength();
+        sourceLength = clipEffects != nullptr || isReversed ? AudioFile (edit.engine, getOriginalFile()).getLength()
+                                                            : getAudioFile().getLength();
     }
 
     jassert (sourceLength >= 0.0);

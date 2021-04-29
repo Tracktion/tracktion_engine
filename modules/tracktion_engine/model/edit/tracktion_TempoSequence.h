@@ -55,7 +55,7 @@ public:
     TempoSetting& getTempoAt (double time) const;
     TempoSetting& getTempoAtBeat (double beat) const;
     double getBpmAt (double time) const; // takes ramping into account
-    double getBeatsPerSecondAt (double time) const      { return getBpmAt (time) / 60.0; }
+    double getBeatsPerSecondAt (double time, bool lengthOfOneBeatDependsOnTimeSignature = false) const;
     bool isTripletsAtTime (double time) const;
 
     int indexOfTempoAt (double t) const;
@@ -228,7 +228,7 @@ private:
     struct ClipPos
     {
         Selectable::WeakRef clip;
-        double startBeat, endBeat, contentStartBeat;
+        double startBeat = 0.0, endBeat = 0.0, contentStartBeat = 0.0;
     };
 
     struct AutomationPos

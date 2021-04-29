@@ -283,7 +283,7 @@ void SamplerPlugin::allNotesOff()
     highlightedNotes.clear();
 }
 
-void SamplerPlugin::applyToBuffer (const AudioRenderContext& fc)
+void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     if (fc.destBuffer != nullptr)
     {

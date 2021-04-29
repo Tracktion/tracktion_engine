@@ -11,9 +11,22 @@
 namespace tracktion_engine
 {
 
-struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorListener
+static juce::String getDeprecatedPluginDescSuffix (const juce::PluginDescription& d)
 {
-    ProcessorChangedManager (ExternalPlugin& p) : plugin (p)
+    return "-" + String::toHexString (d.fileOrIdentifier.hashCode())
+         + "-" + String::toHexString (d.deprecatedUid);
+}
+
+juce::String createIdentifierString (const juce::PluginDescription& d)
+{
+    return d.pluginFormatName + "-" + d.name + getDeprecatedPluginDescSuffix (d);
+}
+
+struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorListener,
+                                                  private juce::AsyncUpdater
+{
+    ProcessorChangedManager (ExternalPlugin& p)
+        : plugin (p)
     {
         if (auto pi = plugin.getAudioPluginInstance())
             pi->addListener (this);
@@ -23,6 +36,8 @@ struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorLis
 
     ~ProcessorChangedManager() override
     {
+        cancelPendingUpdate();
+        
         if (auto pi = plugin.getAudioPluginInstance())
             pi->removeListener (this);
         else
@@ -31,18 +46,58 @@ struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorLis
 
     void audioProcessorParameterChanged (AudioProcessor*, int, float) override
     {
+        if (plugin.edit.isLoading())
+            return;
+
+        paramChanged = true;
+        triggerAsyncUpdate();
     }
 
-    void audioProcessorChanged (AudioProcessor* ap) override
+    void audioProcessorChanged (AudioProcessor*, const ChangeDetails&) override
     {
         if (plugin.edit.isLoading())
             return;
 
-        if (plugin.latencySamples != ap->getLatencySamples())
-            plugin.edit.getTransport().triggerClearDevicesOnStop();
+        processorChanged = true;
+        triggerAsyncUpdate();
+    }
 
+    ExternalPlugin& plugin;
+
+private:
+    JUCE_DECLARE_NON_COPYABLE (ProcessorChangedManager)
+    
+    static bool hasAnyModifiers (AutomatableEditItem& item)
+    {
+        for (auto param : item.getAutomatableParameters())
+            if (! getModifiersOfType<Modifier> (*param).isEmpty())
+                return true;
+            
+        return false;
+    }
+
+    void updateFromPlugin()
+    {
+        TRACKTION_ASSERT_MESSAGE_THREAD
+        bool wasLatencyChange = false;
+        
         if (auto pi = plugin.getAudioPluginInstance())
         {
+            if (plugin.latencySamples != pi->getLatencySamples())
+            {
+                wasLatencyChange = true;
+                
+                if (plugin.isInstancePrepared)
+                {
+                    plugin.latencySamples = pi->getLatencySamples();
+                    plugin.latencySeconds = plugin.latencySamples / plugin.sampleRate;
+                }
+
+                plugin.edit.restartPlayback(); // Restart playback to rebuild audio graph for the new latency to take effect
+                
+                plugin.edit.getTransport().triggerClearDevicesOnStop(); // This will fully re-initialise pluigns
+            }
+
             pi->refreshParameterList();
             
             // refreshParameterList can delete the AudioProcessorParameter that our ExternalAutomatableParameters
@@ -61,15 +116,31 @@ struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorLis
             jassertfalse;
         }
 
-        plugin.refreshParameterValues();
+        // Annoyingly, because we can't tell the cause of the plugin change, we'll have to simply not
+        // refresh parameter values if any modifiers have been assigned or they'll blow away the original
+        // modifier values
+        if (! wasLatencyChange && ! hasAnyModifiers (plugin))
+            plugin.refreshParameterValues();
+        
         plugin.changed();
         plugin.edit.pluginChanged (plugin);
     }
+    
+    void handleAsyncUpdate() override
+    {
+        if (paramChanged)
+        {
+            paramChanged = false;
+            plugin.edit.pluginChanged (plugin);
+        }
+        if (processorChanged)
+        {
+            processorChanged = false;
+            updateFromPlugin();
+        }
+    }
 
-    ExternalPlugin& plugin;
-
-private:
-    JUCE_DECLARE_NON_COPYABLE (ProcessorChangedManager)
+    bool paramChanged = false, processorChanged = false;
 };
 
 //==============================================================================
@@ -204,17 +275,15 @@ public:
                  reference to the context hanging around; it may well have dissapeared by the time these plugins
                  get around to calling it. The best we can do is keep the last info we got.
     */
-    void setCurrentContext (const AudioRenderContext* rc)
+    void setCurrentContext (const PluginRenderContext* rc)
     {
         if (rc != nullptr)
         {
-            playhead    = &rc->playhead;
-            time        = rc->getEditTime().editRange1.getStart();
-            isPlaying   = rc->playhead.isPlaying();
+            time        = rc->editTime;
+            isPlaying   = rc->isPlaying;
         }
         else
         {
-            playhead    = nullptr;
             time        = 0.0;
             isPlaying   = false;
         }
@@ -225,24 +294,24 @@ public:
         zerostruct (result);
         result.frameRate = getFrameRate();
 
-        if (currentPos == nullptr || playhead == nullptr)
+        if (currentPos == nullptr)
             return false;
 
-        auto& ph = *playhead;
         auto& transport = plugin.edit.getTransport();
         double localTime = time;
 
         result.isPlaying        = isPlaying;
         result.isRecording      = transport.isRecording();
         result.editOriginTime   = transport.getTimeWhenStarted();
-        result.isLooping        = ph.isLooping();
+        result.isLooping        = transport.looping;
 
         if (result.isLooping)
         {
-            loopStart->setTime (ph.getLoopTimes().start);
+            const auto loopTimes = transport.getLoopRange();
+            loopStart->setTime (loopTimes.start);
             result.ppqLoopStart = loopStart->getPPQTime();
 
-            loopEnd->setTime (ph.getLoopTimes().end);
+            loopEnd->setTime (loopTimes.end);
             result.ppqLoopEnd = loopEnd->getPPQTime();
         }
 
@@ -264,7 +333,6 @@ public:
 private:
     ExternalPlugin& plugin;
     std::unique_ptr<TempoSequencePosition> currentPos, loopStart, loopEnd;
-    std::atomic<PlayHead*> playhead { nullptr };
     std::atomic<double> time { 0 };
     std::atomic<bool> isPlaying { false };
 
@@ -466,12 +534,13 @@ ExternalPlugin::ExternalPlugin (PluginCreationInfo info)  : Plugin (info)
     dryGain->attachToCurrentValue (dryValue);
     wetGain->attachToCurrentValue (wetValue);
 
-    desc.uid = (int) state[IDs::uid].toString().getHexValue64();
+    desc.uniqueId = (int) state[IDs::uniqueId].toString().getHexValue64();
+    desc.deprecatedUid = (int) state[IDs::uid].toString().getHexValue64();
     desc.fileOrIdentifier = state[IDs::filename];
     setEnabled (state.getProperty (IDs::enabled, true));
     desc.name = state[IDs::name];
     desc.manufacturerName = state[IDs::manufacturer];
-    identiferString = desc.createIdentifierString();
+    identiferString = createIdentifierString (desc);
 
     initialiseFully();
 }
@@ -480,8 +549,8 @@ ValueTree ExternalPlugin::create (Engine& e, const PluginDescription& desc)
 {
     ValueTree v (IDs::PLUGIN);
     v.setProperty (IDs::type, xmlTypeName, nullptr);
-
-    v.setProperty (IDs::uid, String::toHexString (desc.uid), nullptr);
+    v.setProperty (IDs::uniqueId, String::toHexString (desc.uniqueId), nullptr);
+    v.setProperty (IDs::uid, String::toHexString (desc.deprecatedUid), nullptr);
     v.setProperty (IDs::filename, desc.fileOrIdentifier, nullptr);
     v.setProperty (IDs::name, desc.name, nullptr);
     v.setProperty (IDs::manufacturer, desc.manufacturerName, nullptr);
@@ -552,7 +621,7 @@ void ExternalPlugin::buildParameterList()
 
         for (int i = 0; i < maxAutoParams; ++i)
         {
-            auto* parameter = parameters.getUnchecked (i);
+            auto parameter = parameters.getUnchecked (i);
 
             if (parameter->isAutomatable() && ! isParameterBlacklisted (*this, *pluginInstance, *parameter))
             {
@@ -608,11 +677,16 @@ void ExternalPlugin::refreshParameterValues()
             p->valueChangedByPlugin();
 }
 
-std::unique_ptr<PluginDescription> ExternalPlugin::findDescForUID (int uid) const
+std::unique_ptr<PluginDescription> ExternalPlugin::findDescForUID (int uid, int deprecatedUid) const
 {
     if (uid != 0)
         for (auto d : engine.getPluginManager().knownPluginList.getTypes())
-            if (d.uid == uid)
+            if (d.uniqueId == uid)
+                return std::make_unique<PluginDescription> (d);
+    
+    if (deprecatedUid != 0)
+        for (auto d : engine.getPluginManager().knownPluginList.getTypes())
+            if (d.deprecatedUid == deprecatedUid)
                 return std::make_unique<PluginDescription> (d);
 
     return {};
@@ -634,17 +708,17 @@ std::unique_ptr<PluginDescription> ExternalPlugin::findDescForFileOrID (const St
     return {};
 }
 
-static std::unique_ptr<PluginDescription> findDescForName (Engine& engine, const String& name)
+static std::unique_ptr<PluginDescription> findDescForName (Engine& engine, const String& name, const String& format)
 {
     if (name.isEmpty())
         return {};
 
     auto& pm = engine.getPluginManager();
 
-    auto findName = [&pm] (const String& nameToFind) -> std::unique_ptr<PluginDescription>
+    auto findName = [&pm, format] (const String& nameToFind) -> std::unique_ptr<PluginDescription>
     {
         for (auto d : pm.knownPluginList.getTypes())
-            if (d.name == nameToFind)
+            if (d.name == nameToFind && d.pluginFormatName == format)
                 return std::make_unique<PluginDescription> (d);
 
         return {};
@@ -684,10 +758,19 @@ std::unique_ptr<PluginDescription> ExternalPlugin::findMatchingPlugin() const
     if (auto p = findDescForFileOrID (desc.fileOrIdentifier))
         return p;
 
-    if (auto p = findDescForUID (desc.uid))
+    if (auto p = findDescForUID (desc.uniqueId, desc.deprecatedUid))
         return p;
 
-    if (auto p = findDescForName (engine, desc.name))
+    auto getPreferredFormat = [] (juce::PluginDescription d)
+    {
+        auto file = d.fileOrIdentifier.toLowerCase();
+        if (file.endsWith (".vst3"))                            return "VST3";
+        if (file.endsWith (".vst") || file.endsWith (".dll"))   return "VST";
+        if (file.startsWith ("audiounit:"))                     return "AudioUnit";
+        return "";
+    };
+
+    if (auto p = findDescForName (engine, desc.name, getPreferredFormat (desc)))
         return p;
 
     for (auto d : pm.knownPluginList.getTypes())
@@ -698,8 +781,8 @@ std::unique_ptr<PluginDescription> ExternalPlugin::findMatchingPlugin() const
         if (File::createFileWithoutCheckingPath (d.fileOrIdentifier).getFileNameWithoutExtension() == desc.name)
             return std::make_unique<PluginDescription> (d);
 
-    if (desc.uid == 0x4d44416a) // old JX-10: hack to update to JX-16
-        if (auto p = findDescForUID (0x4D44414A))
+    if (desc.uniqueId == 0x4d44416a || desc.deprecatedUid == 0x4d44416a) // old JX-10: hack to update to JX-16
+        if (auto p = findDescForUID (0x4D44414A, 0x4D44414A))
             return p;
 
     return {};
@@ -730,7 +813,7 @@ void ExternalPlugin::doFullInitialisation()
     if (auto foundDesc = findMatchingPlugin())
     {
         desc = *foundDesc;
-        identiferString = desc.createIdentifierString();
+        identiferString = createIdentifierString (desc);
         updateDebugName();
 
         if (processing && pluginInstance == nullptr && edit.shouldLoadPlugins())
@@ -1188,9 +1271,11 @@ void ExternalPlugin::prepareIncomingMidiMessages (MidiMessageArray& incoming, in
     incoming.clear();
 }
 
-void ExternalPlugin::applyToBuffer (const AudioRenderContext& fc)
+void ExternalPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
-    if (pluginInstance != nullptr && isEnabled())
+    const bool processedBypass = fc.allowBypassedProcessing && ! isEnabled();
+    
+    if (pluginInstance != nullptr && (processedBypass || isEnabled()))
     {
         CRASH_TRACER_PLUGIN (getDebugName());
         const ScopedLock sl (lock);
@@ -1202,7 +1287,7 @@ void ExternalPlugin::applyToBuffer (const AudioRenderContext& fc)
         midiBuffer.clear();
 
         if (fc.bufferForMidiMessages != nullptr)
-            prepareIncomingMidiMessages (*fc.bufferForMidiMessages, fc.bufferNumSamples, fc.playhead.isPlaying());
+            prepareIncomingMidiMessages (*fc.bufferForMidiMessages, fc.bufferNumSamples, fc.isPlaying);
 
         if (fc.destBuffer != nullptr)
         {
@@ -1215,7 +1300,7 @@ void ExternalPlugin::applyToBuffer (const AudioRenderContext& fc)
 
             if (destNumChans == numChansToProcess)
             {
-                processPluginBlock (fc);
+                processPluginBlock (fc, processedBypass);
             }
             else
             {
@@ -1243,11 +1328,11 @@ void ExternalPlugin::applyToBuffer (const AudioRenderContext& fc)
                     buffer.applyGain (0, 0, fc.bufferNumSamples, 0.5f);
                 }
 
-                AudioRenderContext fc2 (fc);
+                PluginRenderContext fc2 (fc);
                 fc2.destBuffer = &asb.buffer;
                 fc2.bufferStartSample = 0;
 
-                processPluginBlock (fc2);
+                processPluginBlock (fc2, processedBypass);
 
                 // Copy sample data back clearing unprocessed channels
                 for (int i = 0; i < destNumChans; ++i)
@@ -1265,7 +1350,11 @@ void ExternalPlugin::applyToBuffer (const AudioRenderContext& fc)
         {
             AudioScratchBuffer asb (jmax (pluginInstance->getTotalNumInputChannels(),
                                           pluginInstance->getTotalNumOutputChannels()), fc.bufferNumSamples);
-            pluginInstance->processBlock (asb.buffer, midiBuffer);
+            
+            if (processedBypass)
+                pluginInstance->processBlockBypassed (asb.buffer, midiBuffer);
+            else
+                pluginInstance->processBlock (asb.buffer, midiBuffer);
         }
 
         if (fc.bufferForMidiMessages != nullptr)
@@ -1290,7 +1379,7 @@ void ExternalPlugin::applyToBuffer (const AudioRenderContext& fc)
     }
 }
 
-void ExternalPlugin::processPluginBlock (const AudioRenderContext& fc)
+void ExternalPlugin::processPluginBlock (const PluginRenderContext& fc, bool processedBypass)
 {
     juce::AudioBuffer<float> asb (fc.destBuffer->getArrayOfWritePointers(), fc.destBuffer->getNumChannels(),
                                   fc.bufferStartSample, fc.bufferNumSamples);
@@ -1300,7 +1389,11 @@ void ExternalPlugin::processPluginBlock (const AudioRenderContext& fc)
 
     if (dry <= 0.00004f)
     {
-        pluginInstance->processBlock (asb, midiBuffer);
+        if (processedBypass)
+            pluginInstance->processBlockBypassed (asb, midiBuffer);
+        else
+            pluginInstance->processBlock (asb, midiBuffer);
+
         zeroDenormalisedValuesIfNeeded (asb);
 
         if (wet < 0.999f)
@@ -1314,7 +1407,11 @@ void ExternalPlugin::processPluginBlock (const AudioRenderContext& fc)
         for (int i = 0; i < numChans; ++i)
             dryAudio.buffer.copyFrom (i, 0, asb, i, 0, fc.bufferNumSamples);
 
-        pluginInstance->processBlock (asb, midiBuffer);
+        if (processedBypass)
+            pluginInstance->processBlockBypassed (asb, midiBuffer);
+        else
+            pluginInstance->processBlock (asb, midiBuffer);
+
         zeroDenormalisedValuesIfNeeded (asb);
 
         if (wet < 0.999f)
@@ -1417,6 +1514,18 @@ String ExternalPlugin::getProgramName (int index)
         return pluginInstance->getProgramName (index);
 
     return {};
+}
+
+bool ExternalPlugin::hasNameForMidiNoteNumber (int note, int midiChannel, juce::String& name)
+{
+    ignoreUnused (note, midiChannel, name);
+   #if TRACKTION_JUCE
+    if (takesMidiInput())
+        if (pluginInstance != nullptr)
+            return pluginInstance->hasNameForMidiNoteNumber (note, midiChannel, name);
+   #endif
+
+    return false;
 }
 
 bool ExternalPlugin::hasNameForMidiProgram (int programNum, int bank, String& name)
@@ -1698,7 +1807,7 @@ juce::String PluginWetDryAutomatableParam::valueToString (float value)
 
 float PluginWetDryAutomatableParam::stringToValue (const juce::String& s)
 {
-    return dbStringToDb (s);
+    return juce::Decibels::decibelsToGain (dbStringToDb (s));
 }
 
 }

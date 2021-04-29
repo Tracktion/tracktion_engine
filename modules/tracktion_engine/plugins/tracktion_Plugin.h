@@ -30,6 +30,74 @@ struct PluginCreationInfo
 
 
 //==============================================================================
+//==============================================================================
+/**
+    The context passed to plugin render methods to provide it with buffers to fill.
+*/
+struct PluginRenderContext
+{
+    PluginRenderContext (juce::AudioBuffer<float>* buffer,
+                         const juce::AudioChannelSet& bufferChannels,
+                         int bufferStart, int bufferSize,
+                         MidiMessageArray* midiBuffer, double midiOffset,
+                         double editTime, bool playing, bool scrubbing, bool rendering,
+                         bool allowBypassedProcessing) noexcept;
+
+    /** Creates a PluginRenderContext from an AudioRenderContext. */
+    PluginRenderContext (const AudioRenderContext&);
+    
+    /** Creates a copy of another PluginRenderContext. */
+    PluginRenderContext (const PluginRenderContext&) = default;
+    PluginRenderContext (PluginRenderContext&&) = default;
+
+    /** Deleted assignment operators. */
+    PluginRenderContext& operator= (const PluginRenderContext&) = delete;
+    PluginRenderContext& operator= (PluginRenderContext&&) = delete;
+
+    /** The target audio buffer which needs to be filled.
+        This may be nullptr if no audio is being processed.
+    */
+    juce::AudioBuffer<float>* destBuffer = nullptr;
+
+    /** A description of the type of channels in each of the channels in destBuffer. */
+    juce::AudioChannelSet destBufferChannels;
+
+    /** The index of the start point in the audio buffer from which data must be written. */
+    int bufferStartSample = 0;
+
+    /** The number of samples to write into the audio buffer. */
+    int bufferNumSamples = 0;
+
+    /** A buffer of MIDI events to process.
+        This may be nullptr if no MIDI is being sent
+    */
+    MidiMessageArray* bufferForMidiMessages = nullptr;
+
+    /** A time offset to add to the timestamp of any events in the MIDI buffer. */
+    double midiBufferOffset = 0.0;
+
+    /** The time in seconds that the start of this context represents. */
+    double editTime = 0.0;
+
+    /** True if the the playhead is currently playing. */
+    bool isPlaying = false;
+
+    /** True if the the audio is currently being scrubbed. */
+    bool isScrubbing = false;
+
+    /** True if the rendering is happening as part of an offline render rather than live playback. */
+    bool isRendering = false;
+
+    /** If this is true and the plugin supports it, this will call the bypassed processing method of the plugin.
+        If this is false, the plugin simply won't be processed. This can be used to ensure bypassed plugins
+        still introduce their reported latency.
+    */
+    bool allowBypassedProcessing = false;
+};
+
+
+//==============================================================================
+//==============================================================================
 class Plugin  : public Selectable,
                 public juce::ReferenceCountedObject,
                 public Exportable,
@@ -45,7 +113,6 @@ public:
 
     //==============================================================================
     using Ptr      = juce::ReferenceCountedObjectPtr<Plugin>;
-    using WeakRef  = juce::WeakReference<Plugin>;
     using Array    = juce::ReferenceCountedArray<Plugin>;
 
     /** called by the system to let the plugin manage its automation stuff */
@@ -124,13 +191,13 @@ public:
 
         Other parameters and principles are similar to AudioNode::readBlock()
     */
-    virtual void applyToBuffer (const AudioRenderContext&) = 0;
+    virtual void applyToBuffer (const PluginRenderContext&) = 0;
 
     /** Called between successive rendering blocks. */
-    virtual void prepareForNextBlock (const AudioRenderContext&) {}
+    virtual void prepareForNextBlock (double /*editTime*/) {}
 
     // wrapper on applyTobuffer, called by the node
-    void applyToBufferWithAutomation (const AudioRenderContext&);
+    void applyToBufferWithAutomation (const PluginRenderContext&);
 
     /** Creates a new audio node that will render this plugin. */
     AudioNode* createAudioNode (AudioNode* input, bool applyAntiDenormalisationNoise);
@@ -156,7 +223,6 @@ public:
     virtual bool isSynth()                              { return false; }
     virtual double getLatencySeconds()                  { return 0.0; }
     virtual double getTailLength() const                { return 0.0; }
-    virtual bool mustBePlayedLiveWhenOnAClip() const    { return false; }
     virtual bool canSidechain();
 
     juce::StringArray getInputChannelNames();
@@ -259,6 +325,7 @@ public:
     static bool areSelectedPluginsRackable (SelectionManager&);
     static RackInstance* wrapSelectedPluginsInRack (SelectionManager&);
     static void sortPlugins (Plugin::Array&);
+    static void sortPlugins (std::vector<Plugin*>&);
 
     //==============================================================================
     // setting a master plugin whose settings will be mirrored
@@ -349,7 +416,6 @@ private:
     struct WireList;
     std::unique_ptr<WireList> sidechainWireList;
 
-    JUCE_DECLARE_WEAK_REFERENCEABLE (Plugin)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Plugin)
 };
 

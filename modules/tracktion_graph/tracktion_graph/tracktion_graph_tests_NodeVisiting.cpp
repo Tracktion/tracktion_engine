@@ -12,6 +12,8 @@
 namespace tracktion_graph
 {
 
+#if GRAPH_UNIT_TESTS_NODEVISITING
+
 using namespace test_utilities;
 
 //==============================================================================
@@ -73,9 +75,9 @@ private:
         auto C = c.get();
         auto e = makeNode<SendNode> (makeNode<SinNode> (4.0f), 1);
         auto E = e.get();
-        auto b = makeSummingNode ({ d.release(), f.release() });
+        auto b = makeBaicSummingNode ({ d.release(), f.release() });
         auto B = b.get();
-        auto a = makeSummingNode ({ b.release(), c.release(), e.release() });
+        auto a = makeBaicSummingNode ({ b.release(), c.release(), e.release() });
         auto A = a.get();
         
         // Prepare the topology
@@ -97,7 +99,7 @@ private:
 
         beginTest ("Basic visting");
         {
-            expectEquals<size_t> (allNodes.size(), 7);
+            expectEquals<juce::uint64> (allNodes.size(), 7);
         
             std::vector<Node*> nodes;
             visitInputs (*A, [&] (auto& node)
@@ -139,6 +141,10 @@ private:
                              { D, E, F, B, G, C, A });
             expectNodeOrder (allNodes, trimEndNodes (getNodes (*A, VertexOrdering::reversePostordering)),
                              { A, C, G, B, F, E, D });
+            expectNodeOrder (allNodes, trimEndNodes (getNodes (*A, VertexOrdering::bfsPreordering)),
+                             { A, B, C, E, D, F, G });
+            expectNodeOrder (allNodes, trimEndNodes (getNodes (*A, VertexOrdering::bfsReversePreordering)),
+                             { G, F, D, E, C, B, A });
         }
     }
     
@@ -170,5 +176,7 @@ private:
 };
 
 static NodeVistingTests nodeVistingTests;
+
+#endif
 
 }

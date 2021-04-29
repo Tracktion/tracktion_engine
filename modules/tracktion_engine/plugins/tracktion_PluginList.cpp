@@ -316,20 +316,7 @@ AudioNode* PluginList::createAudioNode (AudioNode* n, bool addNoise)
 
     if (list != nullptr)
         for (auto f : list->objects)
-            if (! f->mustBePlayedLiveWhenOnAClip())
-                n = f->createAudioNode (n, (i++ == 0) && addNoise);
-
-    return n;
-}
-
-AudioNode* PluginList::attachNodesForPluginsNeedingLivePlay (AudioNode* n)
-{
-    jassert (list != nullptr);
-
-    if (list != nullptr)
-        for (auto f : list->objects)
-            if (f->mustBePlayedLiveWhenOnAClip())
-                n = f->createAudioNode (n, false);
+            n = f->createAudioNode (n, (i++ == 0) && addNoise);
 
     return n;
 }

@@ -43,7 +43,7 @@ public:
     void initialise (const PlaybackInitialisationInfo&) override;
     void initialiseWithoutStopping (const PlaybackInitialisationInfo&) override;
     void deinitialise() override;
-    void applyToBuffer (const AudioRenderContext&) override;
+    void applyToBuffer (const PluginRenderContext&) override;
     juce::String getSelectableDescription() override;
 
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
@@ -57,6 +57,12 @@ public:
     void updateDeviceTypes();
     void showLatencyTester();
 
+    /** Returns true if either the send or return types are audio. */
+    bool hasAudio() const;
+
+    /** Returns true if either the send or return types are MIDI. */
+    bool hasMidi() const;
+
     static void getPossibleDeviceNames (Engine&,
                                         juce::StringArray& devices,
                                         juce::StringArray& aliases,
@@ -64,19 +70,18 @@ public:
                                         juce::BigInteger& hasMidi,
                                         bool forInput);
 
+    /** @internal. */
+    void fillSendBuffer (choc::buffer::ChannelArrayView<float>*, MidiMessageArray*);
+    void fillReturnBuffer (choc::buffer::ChannelArrayView<float>*, MidiMessageArray*);
+
 private:
     //==============================================================================
-    juce::AudioBuffer<float> sendBuffer { 2, 32 }, returnBuffer;
+    choc::buffer::ChannelArrayBuffer<float> sendBuffer, returnBuffer;
     MidiMessageArray sendMidiBuffer, returnMidiBuffer;
+    juce::CriticalSection bufferLock;
 
     double latencySeconds = 0.0;
     DeviceType sendDeviceType = noDevice, returnDeviceType = noDevice;
-
-    bool hasAudio() const;
-    bool hasMidi() const;
-
-    void fillSendBuffer (const AudioRenderContext&);
-    void fillReturnBuffer (const AudioRenderContext&);
 
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
 

@@ -237,8 +237,18 @@ struct MidiMessageArray
 
     void sortByTimestamp()
     {
-        std::sort (messages.begin(), messages.end(),
-                   [] (const juce::MidiMessage& a, const juce::MidiMessage& b) { return a.getTimeStamp() < b.getTimeStamp(); });
+        std::stable_sort (messages.begin(), messages.end(), [] (const juce::MidiMessage& a, const juce::MidiMessage& b)
+        {
+            auto t1 = a.getTimeStamp();
+            auto t2 = b.getTimeStamp();
+
+            if (t1 == t2)
+            {
+                if (a.isNoteOff() && b.isNoteOn()) return true;
+                if (a.isNoteOn() && b.isNoteOff()) return false;
+            }
+            return t1 < t2;
+        });
     }
 
     void reserve (int size)
@@ -249,6 +259,7 @@ struct MidiMessageArray
     bool isAllNotesOff = false;
 
 private:
+
     juce::Array<MidiMessageWithSource> messages;
 };
 

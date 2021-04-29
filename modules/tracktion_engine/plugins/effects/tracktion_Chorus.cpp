@@ -43,7 +43,7 @@ void ChorusPlugin::deinitialise()
     delayBuffer.releaseBuffer();
 }
 
-void ChorusPlugin::applyToBuffer (const AudioRenderContext& fc)
+void ChorusPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     if (fc.destBuffer == nullptr)
         return;

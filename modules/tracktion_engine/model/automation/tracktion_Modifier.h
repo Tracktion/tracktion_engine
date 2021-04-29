@@ -17,7 +17,7 @@ namespace tracktion_engine
 struct ModifierTimer
 {
     virtual ~ModifierTimer() = default;
-    virtual void updateStreamTime (PlayHead&, EditTimeRange streamTime, int numSamples) = 0;
+    virtual void updateStreamTime (double editTime, int numSamples) = 0;
 };
 
 //==============================================================================
@@ -52,14 +52,24 @@ struct Modifier : public AutomatableEditItem,
 
     virtual AudioNode* createPreFXAudioNode (AudioNode* input)  { return input; }
     virtual AudioNode* createPostFXAudioNode (AudioNode* input) { return input; }
+    
+    enum class ProcessingPosition
+    {
+        none,
+        preFX,
+        postFX
+    };
+    
+    /** Should return the position in the plugin chain that this Modifier should be processed. */
+    virtual ProcessingPosition getProcessingPosition()          { return ProcessingPosition::none; }
 
-    virtual void initialise (const PlaybackInitialisationInfo&) {}
+    virtual void initialise (double /*sampleRate*/, int /*blockSizeSamples*/) {}
     virtual void deinitialise() {}
-    virtual void applyToBuffer (const AudioRenderContext&) {}
+    virtual void applyToBuffer (const PluginRenderContext&) {}
 
     //==============================================================================
-    bool baseClassNeedsInitialising() const noexcept        { return initialiseCount == 0; }
-    void baseClassInitialise (const PlaybackInitialisationInfo&);
+    bool baseClassNeedsInitialising() const noexcept            { return initialiseCount == 0; }
+    void baseClassInitialise (double sampleRate, int blockSizeSamples);
     void baseClassDeinitialise();
 
     //==============================================================================
@@ -72,8 +82,12 @@ struct Modifier : public AutomatableEditItem,
     juce::CachedValue<float> enabled;
     AutomatableParameter::Ptr enabledParam;
 
+protected:
+    double getSampleRate() const                                { return sampleRate; }
+
 private:
     int initialiseCount = 0;
+    double sampleRate = 44100.0;
 };
 
 //==============================================================================

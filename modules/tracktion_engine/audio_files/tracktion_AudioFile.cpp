@@ -169,7 +169,9 @@ void AudioFileWriter::closeForWriting()
         writer.reset();
     }
     
-    file.engine->getAudioFileManager().releaseFile (file);
+    auto& audioFileManager = file.engine->getAudioFileManager();
+    audioFileManager.releaseFile (file);
+    audioFileManager.checkFileForChanges (file);
 }
 
 bool AudioFileWriter::appendBuffer (juce::AudioBuffer<float>& buffer, int num)
@@ -667,21 +669,20 @@ bool AudioFileManager::checkFileTime (KnownFile& f)
 void AudioFileManager::checkFileForChanges (const AudioFile& file)
 {
     CRASH_TRACER
-    TRACKTION_ASSERT_MESSAGE_THREAD
 
     bool changed = false;
 
     {
         const juce::ScopedLock sl (knownFilesLock);
 
-        if (auto f = knownFiles [file.getHash()])
+        if (auto f = knownFiles[file.getHash()])
             changed = checkFileTime (*f);
     }
 
     if (changed)
     {
         releaseFile (file);
-        callListeners (file);
+        callListenersOnMessageThread (file);
     }
 }
 
@@ -740,6 +741,18 @@ void AudioFileManager::callListeners (const AudioFile& file)
     for (auto t : activeThumbnails)
         if (t->file == file)
             t->audioFileChanged();
+}
+
+void AudioFileManager::callListenersOnMessageThread (const AudioFile& file)
+{
+    if (juce::MessageManager::existsAndIsCurrentThread())
+        callListeners (file);
+    else
+        juce::MessageManager::callAsync ([file, eng = Engine::WeakRef (&engine)]
+                                         {
+                                             if (eng != nullptr)
+                                                 eng->getAudioFileManager().callListeners (file);
+                                         });
 }
 
 void AudioFileManager::forceFileUpdate (const AudioFile& file)

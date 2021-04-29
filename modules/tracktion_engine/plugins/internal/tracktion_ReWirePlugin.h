@@ -84,8 +84,8 @@ public:
     void getChannelNames (juce::StringArray*, juce::StringArray*) override;
     int getNumOutputChannelsGivenInputs (int) override     { return 2; }
 
-    void prepareForNextBlock (const AudioRenderContext&) override;
-    void applyToBuffer (const AudioRenderContext&) override;
+    void prepareForNextBlock (double editTime) override;
+    void applyToBuffer (const PluginRenderContext&) override;
 
     juce::String getSelectableDescription() override    { return TRANS("ReWire Filter"); }
 

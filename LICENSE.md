@@ -1,6 +1,6 @@
 # tracktion_engine license
 
-Tracktion Engine is published under a dual [GPL3](https://www.gnu.org/licenses/gpl-3.0.en.html)/[Commercial license](https://www.tracktion.com/develop/tracktion-engine).
+Tracktion Engine is published under a dual [GPL3 (or later)](https://www.gnu.org/licenses/gpl-3.0.en.html)/[Commercial license](https://www.tracktion.com/develop/tracktion-engine).
 
 There are multiple commercial licensing tiers for Tracktion Engine, with different terms for each.
 For prices, see the [Tracktion Developers Page](https://www.tracktion.com/develop/tracktion-engine).

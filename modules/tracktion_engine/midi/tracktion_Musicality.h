@@ -303,20 +303,7 @@ private:
     std::unique_ptr<juce::Timer> editLoadedCallback;
 
     //==============================================================================
-    struct AutoUpdateManager : private ValueTreeAllEventListener,
-                               public juce::AsyncUpdater
-    {
-        AutoUpdateManager (PatternGenerator& owner);
-        ~AutoUpdateManager() override;
-
-        void valueTreeChanged() override {}
-        void valueTreePropertyChanged (juce::ValueTree& p, const juce::Identifier& c) override;
-
-        void handleAsyncUpdate() override;
-
-        PatternGenerator& owner;
-    };
-
+    struct AutoUpdateManager;
     std::unique_ptr<AutoUpdateManager> autoUpdateManager;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PatternGenerator)
@@ -325,12 +312,12 @@ private:
 //==============================================================================
 struct KeyResult
 {
-    KeyResult() {}
+    KeyResult() = default;
     KeyResult (double r_, int k_, Scale::ScaleType s_) : r (r_), key (k_), scale (s_) {}
 
     double r = 0; // correlation coefficient
     int key = 0;  // midi note = 0 - 11
-    Scale::ScaleType scale; // major or minor
+    Scale::ScaleType scale = Scale::major; // major or minor
 
     bool operator< (const KeyResult& other) const { return r < other.r; }
 };

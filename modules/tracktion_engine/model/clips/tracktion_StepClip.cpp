@@ -55,8 +55,8 @@ StepClip::StepClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTr
     auto um = getUndoManager();
     channelList.reset (new ChannelList (*this, state.getOrCreateChildWithName (IDs::CHANNELS, um)));
     repeatSequence.referTo (state, IDs::repeatSequence, um);
-    volumeDb.referTo (state, IDs::volDb, um, 0.0f);
-    mute.referTo (state, IDs::mute, um, false);
+    level->dbGain.referTo (state, IDs::volDb, um, 0.0f);
+    level->mute.referTo (state, IDs::mute, um, false);
 
     if (getChannels().isEmpty())
     {
@@ -106,8 +106,8 @@ void StepClip::cloneFrom (Clip* c)
         Clip::cloneFrom (other);
 
         repeatSequence  .setValue (other->repeatSequence, nullptr);
-        volumeDb        .setValue (other->volumeDb, nullptr);
-        mute            .setValue (other->mute, nullptr);
+        level->dbGain   .setValue (other->level->dbGain, nullptr);
+        level->mute     .setValue (other->level->mute, nullptr);
 
         auto chans = state.getChildWithName (IDs::CHANNELS);
         auto patterns = state.getChildWithName (IDs::PATTERNS);
@@ -260,6 +260,32 @@ double StepClip::getEndBeatOf (PatternInstance* instance)
     return getBeatTimesOfPatternStarts()[index];
 }
 
+void StepClip::resizeClipForPatternInstances()
+{
+    if (auto instance = patternInstanceList.getLast().get())
+    {
+        double end = -getOffsetInBeats();
+
+        auto ratio              = 1.0 / speedRatio;
+
+        for (auto p : patternInstanceList)
+        {
+            auto pattern = p->getPattern();
+            end += pattern.getNumNotes() * (pattern.getNoteLength() * ratio);
+        }
+
+        if (end > getLengthInBeats())
+        {
+            auto& ts = edit.tempoSequence;
+            auto pos = getPosition();
+            auto startBeat = ts.timeToBeats (pos.getStart());
+            auto endBeat = startBeat + end;
+
+            setEnd (ts.beatsToTime (endBeat), false);
+        }
+    }
+}
+
 int StepClip::getBeatsPerBar()
 {
     return edit.tempoSequence.getTimeSigAt (getPosition().getStart()).numerator;
@@ -405,6 +431,7 @@ AudioNode* StepClip::createAudioNode (const CreateAudioNodeParams& params)
 {
     CRASH_TRACER
 
+    AudioNode* node = nullptr;
     if (usesProbability())
     {
         std::vector<MidiMessageSequence> sequences;
@@ -417,7 +444,7 @@ AudioNode* StepClip::createAudioNode (const CreateAudioNodeParams& params)
             sequences.push_back (sequence);
         }
 
-        return new MidiAudioNode (std::move (sequences), { 1, 16 }, getEditTimeRange(), volumeDb, mute, *this,
+        node = new MidiAudioNode (std::move (sequences), { 1, 16 }, getEditTimeRange(), level->dbGain, level->mute, *this,
                                   getClipIfPresentInNode (params.audioNodeToBeReplaced, *this));
     }
     else
@@ -425,15 +452,25 @@ AudioNode* StepClip::createAudioNode (const CreateAudioNodeParams& params)
         MidiMessageSequence sequence;
         generateMidiSequence (sequence);
 
-        return new MidiAudioNode (std::move (sequence), { 1, 16 }, getEditTimeRange(), volumeDb, mute, *this,
+        node = new MidiAudioNode (std::move (sequence), { 1, 16 }, getEditTimeRange(), level->dbGain, level->mute, *this,
                                   getClipIfPresentInNode (params.audioNodeToBeReplaced, *this));
     }
+
+    if (! listeners.isEmpty())
+        node = new LiveMidiOutputAudioNode (*this, node);
+
+    return node;
 }
 
 //==============================================================================
 Colour StepClip::getDefaultColour() const
 {
     return Colours::red.withHue (3.0f / 9.0f);
+}
+
+LiveClipLevel StepClip::getLiveClipLevel()
+{
+    return { level };
 }
 
 //==============================================================================

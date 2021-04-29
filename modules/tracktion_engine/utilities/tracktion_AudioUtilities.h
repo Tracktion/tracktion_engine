@@ -48,6 +48,16 @@ inline void yieldGUIThread() noexcept
 }
 
 //==============================================================================
+/** Converts a juce::AudioBuffer<SampleType> to a choc::buffer::BufferView. */
+template<typename SampleType>
+inline choc::buffer::BufferView<SampleType, choc::buffer::SeparateChannelLayout> toBufferView (juce::AudioBuffer<SampleType>& buffer)
+{
+    return choc::buffer::createChannelArrayView (buffer.getArrayOfWritePointers(),
+                                                 (choc::buffer::ChannelCount) buffer.getNumChannels(),
+                                                 (choc::buffer::FrameCount) buffer.getNumSamples());
+}
+
+//==============================================================================
 /** All laws have been designed to be equal-power, excluding linear respectively */
 enum PanLaw
 {

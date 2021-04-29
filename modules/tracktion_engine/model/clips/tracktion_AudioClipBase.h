@@ -151,6 +151,9 @@ public:
     void setRightChannelActive (bool);
     bool isRightChannelActive() const;
 
+    /** Returns the layout of the active channels. */
+    juce::AudioChannelSet getActiveChannels() const     { return activeChannels; }
+
     //==============================================================================
     bool setFadeIn (double length);
     double getFadeIn() const;
@@ -344,12 +347,28 @@ public:
     juce::ReferenceCountedObjectPtr<MelodyneFileReader> melodyneProxy;
 
     bool isUsingMelodyne() const;
-    void loadMelodyneState (Edit&);
+    void loadMelodyneState();
     void showMelodyneWindow();
     void hideMelodyneWindow();
     void melodyneConvertToMIDI();
 
     juce::CachedValue<TimeStretcher::ElastiqueProOptions> elastiqueProOptions;
+
+    /** This internal method is used solely to find out if createAudioNode()
+        should return nullptr or not.
+
+        Though a bit spaghetti, the ARA node generation will be handled elsewhere,
+        the parent AudioTrack, for the sake of live-play.
+
+        @returns False if something went wrong!
+
+                 It's possible no ARA-compatible plugins were found,
+                 or that ARA complained about something resulting
+                 in failure to set it up accordingly.
+                 Celemony's ARA is really flaky and touchy, so the latter
+                 is most likely!
+    */
+    bool setupARA (bool dontPopupErrorMessages);
 
 protected:
     //==============================================================================
@@ -428,22 +447,6 @@ private:
     //==============================================================================
     void jobFinished (RenderManager::Job& job, bool completedOk) override;
     void timerCallback() override;
-
-    /** This internal method is used solely to find out if createAudioNode()
-        should return nullptr or not.
-
-        Though a bit spaghetti, the ARA node generation will be handled elsewhere,
-        the parent AudioTrack, for the sake of live-play.
-
-        @returns False if something went wrong!
-
-                 It's possible no ARA-compatible plugins were found,
-                 or that ARA complained about something resulting
-                 in failure to set it up accordingly.
-                 Celemony's ARA is really flaky and touchy, so the latter
-                 is most likely!
-    */
-    bool setupARA (Edit&, bool dontPopupErrorMessages);
 
     AudioNode* createNode (EditTimeRange editTime, LiveClipLevel, bool includeMelodyne);
 

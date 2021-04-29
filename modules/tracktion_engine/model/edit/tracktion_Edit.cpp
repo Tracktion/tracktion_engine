@@ -236,8 +236,28 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
             }
             else if (v.hasType (IDs::PLUGIN))
             {
-                if (i == IDs::outputDevice || i == IDs::manualAdjustMs || i == IDs::sidechainSourceID || i == IDs::ignoreVca)
+                const auto type = v[IDs::type].toString();
+
+                if (i == IDs::enabled
+                    && edit.engine.getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph())
+                   restart();
+
+                if (type == AuxSendPlugin::xmlTypeName || type == AuxReturnPlugin::xmlTypeName)
+                {
+                    if (i == IDs::enabled || i == IDs::busNum)
+                        restart();
+                }
+                else if (type == RackInstance::xmlTypeName)
+                {
+                    if (i == IDs::enabled
+                        || i == IDs::leftTo || i == IDs::rightTo || i == IDs::leftFrom || i == IDs::rightFrom)
+                       restart();
+                }
+                else if (i == IDs::outputDevice || i == IDs::inputDevice
+                         || i == IDs::manualAdjustMs || i == IDs::sidechainSourceID || i == IDs::ignoreVca || i == IDs::busNum)
+                {
                     restart();
+                }
             }
             else if (v.hasType (IDs::MASTERVOLUME))
             {
@@ -267,6 +287,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
              || c.hasType (IDs::RACK)
              || c.hasType (IDs::PLUGININSTANCE)
              || c.hasType (IDs::CONNECTION)
+             || p.hasType (IDs::CHANNELS)
              || c.hasType (IDs::CHANNELS)
              || c.hasType (IDs::SIDECHAINCONNECTION)
              || c.hasType (IDs::MACROPARAMETERS)
@@ -361,7 +382,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
         linkedClipsMapDirty = true;
     }
 
-    juce::Array<Clip*> getClipsInLinkGroup (EditItemID linkGroupid)
+    juce::Array<Clip*> getClipsInLinkGroup (const juce::String& linkGroupid)
     {
         jassert (! edit.isLoading());
 
@@ -373,7 +394,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
             {
                 if (auto ct = dynamic_cast<ClipTrack*> (&t))
                     for (auto c : ct->getClips())
-                        if (c->getLinkGroupID().isValid())
+                        if (c->getLinkGroupID().isNotEmpty())
                             linkedClipsMap[c->getLinkGroupID()].add (c);
 
                 return true;
@@ -394,7 +415,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
     }
 
     bool linkedClipsMapDirty = true;
-    std::map<EditItemID, juce::Array<Clip*>> linkedClipsMap;
+    std::map<String, juce::Array<Clip*>> linkedClipsMap;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TreeWatcher)
 };
@@ -426,8 +447,8 @@ struct Edit::ChangedPluginsList
     /** Flushes all changed plugins to the Edit. */
     void flushAll()
     {
-        for (auto p : plugins)
-            if (p != nullptr)
+        for (auto plugin : plugins)
+            if (auto p = dynamic_cast<Plugin*> (plugin.get()))
                 p->flushPluginStateToValueTree();
 
         plugins.clear();
@@ -490,7 +511,7 @@ Edit::Edit (Options options)
 
     jassert (state.isValid());
     jassert (state.hasType (IDs::EDIT));
-    jassert (editProjectItemID.isValid()); // This must be valid or it won't be able to create temp files etc.
+    jassert (editProjectItemID.load().isValid()); // This must be valid or it won't be able to create temp files etc.
 
     if (options.editFileRetriever)
         editFileRetriever = std::move (options.editFileRetriever);
@@ -634,7 +655,7 @@ juce::String Edit::getName()
 void Edit::setProjectItemID (ProjectItemID newID)
 {
     editProjectItemID = newID;
-    state.setProperty (IDs::projectID, editProjectItemID.toString(), nullptr);
+    state.setProperty (IDs::projectID, editProjectItemID.load().toString(), nullptr);
 }
 
 Edit::ScopedRenderStatus::ScopedRenderStatus (Edit& ed, bool shouldReallocateOnDestruction)
@@ -757,7 +778,6 @@ void Edit::initialiseTimecode (juce::ValueTree& transportState)
 
     recordingPunchInOut.referTo (transportState, IDs::recordPunchInOut, nullptr);
     playInStopEnabled.referTo (transportState, IDs::endToEnd, nullptr, true);
-    processMutedTracks.referTo (transportState, IDs::processMutedTracks, nullptr, false);
 
     timecodeOffset.referTo (transportState, IDs::midiTimecodeOffset, nullptr);
     midiTimecodeSourceDeviceEnabled.referTo (transportState, IDs::midiTimecodeEnabled, nullptr);
@@ -980,7 +1000,7 @@ void Edit::flushState()
 
     state.setProperty (IDs::appVersion, engine.getPropertyStorage().getApplicationVersion(), nullptr);
     state.setProperty (IDs::modifiedBy, engine.getPropertyStorage().getUserName(), nullptr);
-    state.setProperty (IDs::projectID, editProjectItemID.toString(), nullptr);
+    state.setProperty (IDs::projectID, editProjectItemID.load().toString(), nullptr);
 
     for (auto p : getAllPlugins (*this, true))
         p->flushPluginStateToValueTree();
@@ -1063,7 +1083,7 @@ static juce::Array<SelectionManager*> getSelectionManagers (const Edit& ed)
     juce::Array<SelectionManager*> sms;
 
     for (SelectionManager::Iterator sm; sm.next();)
-        if (sm->edit == &ed)
+        if (sm->getEdit() == &ed)
             sms.add (sm.get());
 
     return sms;
@@ -1091,8 +1111,8 @@ void Edit::undo()           { undoOrRedo (true); }
 void Edit::redo()           { undoOrRedo (false); }
 
 Edit::UndoTransactionInhibitor::UndoTransactionInhibitor (Edit& e) : edit (&e)                                  { ++e.numUndoTransactionInhibitors; }
-Edit::UndoTransactionInhibitor::UndoTransactionInhibitor (const UndoTransactionInhibitor& o) : edit (o.edit)    { if (edit != nullptr) ++(edit->numUndoTransactionInhibitors); }
-Edit::UndoTransactionInhibitor::~UndoTransactionInhibitor()                                                     { if (edit != nullptr) --(edit->numUndoTransactionInhibitors); }
+Edit::UndoTransactionInhibitor::UndoTransactionInhibitor (const UndoTransactionInhibitor& o) : edit (o.edit)    { if (auto e = dynamic_cast<Edit*> (edit.get())) ++(e->numUndoTransactionInhibitors); }
+Edit::UndoTransactionInhibitor::~UndoTransactionInhibitor()                                                     { if (auto e = dynamic_cast<Edit*> (edit.get())) --(e->numUndoTransactionInhibitors); }
 
 //==============================================================================
 EditItemID Edit::createNewItemID (const std::vector<EditItemID>& idsToAvoid) const
@@ -1606,7 +1626,7 @@ double Edit::getFirstClipTime() const
     return gotOne ? t : 0.0;
 }
 
-juce::Array<Clip*> Edit::findClipsInLinkGroup (EditItemID linkGroupID) const
+juce::Array<Clip*> Edit::findClipsInLinkGroup (juce::String linkGroupID) const
 {
     if (treeWatcher != nullptr)
         return treeWatcher->getClipsInLinkGroup (linkGroupID);
@@ -1866,7 +1886,11 @@ void Edit::ensureTempoTrack()
 
 void Edit::ensureMarkerTrack()
 {
-    if (getMarkerTrack() == nullptr)
+    if (auto t = getMarkerTrack())
+    {
+        t->setName (TRANS("Marker"));
+    }
+    else
     {
         juce::ValueTree v (IDs::MARKERTRACK);
         v.setProperty (IDs::name, TRANS("Marker"), nullptr);
@@ -1876,10 +1900,14 @@ void Edit::ensureMarkerTrack()
 
 void Edit::ensureChordTrack()
 {
-    if (getChordTrack() == nullptr)
+    if (auto t = getChordTrack())
+    {
+        t->setName (TRANS("Chord"));
+    }
+    else
     {
         juce::ValueTree v (IDs::CHORDTRACK);
-        v.setProperty (IDs::name, TRANS("Chords"), nullptr);
+        v.setProperty (IDs::name, TRANS("Chord"), nullptr);
         state.addChild (v, 0, &getUndoManager());
     }
 }
@@ -1923,8 +1951,8 @@ void Edit::updateMirroredPlugins()
     mirroredPluginUpdateTimer->stopTimer();
 
     for (auto changed : mirroredPluginUpdateTimer->changedPlugins)
-        if (changed != nullptr)
-            sendMirrorUpdateToAllPlugins (*changed);
+        if (auto p = dynamic_cast<Plugin*> (changed.get()))
+            sendMirrorUpdateToAllPlugins (*p);
 
     mirroredPluginUpdateTimer->changedPlugins.clear();
 }
@@ -1946,20 +1974,6 @@ void Edit::sendStartStopMessageToPlugins()
         p->playStartedOrStopped();
 }
 
-void Edit::muteOrUnmuteAllPlugins()
-{
-    auto allPlugins = getAllPlugins (*this, true);
-
-    int numEnabled = 0;
-
-    for (auto p : allPlugins)
-        if (p->isEnabled())
-            ++numEnabled;
-
-    for (auto p : allPlugins)
-        p->setEnabled (numEnabled == 0);
-}
-
 void Edit::addModifierTimer (ModifierTimer& mt)
 {
     jassert (! modifierTimers.contains (&mt));
@@ -1971,12 +1985,12 @@ void Edit::removeModifierTimer (ModifierTimer& mt)
     modifierTimers.removeFirstMatchingValue (&mt);
 }
 
-void Edit::updateModifierTimers (PlayHead& ph, EditTimeRange streamTime, int numSamples) const
+void Edit::updateModifierTimers (double editTime, int numSamples) const
 {
     const juce::ScopedLock sl (modifierTimers.getLock());
 
     for (auto mt : modifierTimers)
-        mt->updateStreamTime (ph, streamTime, numSamples);
+        mt->updateStreamTime (editTime, numSamples);
 }
 
 //==============================================================================

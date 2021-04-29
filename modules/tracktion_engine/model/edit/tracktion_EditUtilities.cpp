@@ -54,7 +54,7 @@ void insertSpaceIntoEditFromBeatRange (Edit& edit, juce::Range<double> beatRange
 {
     auto& ts = edit.tempoSequence;
     const double timeToInsertAt = ts.beatsToTime (beatRange.getStart());
-    auto& tempoAtInsertionPoint = ts.getTempoAt (timeToInsertAt);
+    auto& tempoAtInsertionPoint = ts.getTempoAt (timeToInsertAt - 0.0001);
 
     const double lengthInTimeToInsert = beatRange.getLength() * tempoAtInsertionPoint.getApproxBeatLength();
     insertSpaceIntoEdit (edit, EditTimeRange::withStartAndLength (timeToInsertAt, lengthInTimeToInsert));
@@ -125,6 +125,17 @@ AudioTrack* getFirstAudioTrack (const Edit& edit)
 bool containsTrack (const Edit& edit, const Track& track)
 {
     return findTrackForPredicate (edit, [&track] (Track& t) { return &track == &t; }) != nullptr;
+}
+
+TrackOutput* getTrackOutput (Track& track)
+{
+    if (auto t = dynamic_cast<AudioTrack*> (&track))
+        return &t->getOutput();
+
+    if (auto t = dynamic_cast<FolderTrack*> (&track))
+        return t->getOutput();
+    
+    return {};
 }
 
 juce::Array<Track*> findAllTracksContainingSelectedItems (const SelectableList& items)
@@ -238,7 +249,7 @@ void deleteRegionOfClip (Clip& c, EditTimeRange timeRangeToDelete)
 }
 
 void deleteRegionOfSelectedClips (SelectionManager& selectionManager, EditTimeRange rangeToDelete,
-                                  bool closeGap, bool moveAllSubsequentClipsOnTrack)
+                                  CloseGap closeGap, bool moveAllSubsequentClipsOnTrack)
 {
     Clip::Array selectedClips;
 
@@ -268,7 +279,7 @@ void deleteRegionOfSelectedClips (SelectionManager& selectionManager, EditTimeRa
 
     for (auto c : selectedClips)
         if (c->getPosition().time.overlaps (rangeToDelete))
-            if (auto* t = c->getClipTrack())
+            if (auto t = c->getClipTrack())
                 tracks.addIfNotAlreadyThere (t);
 
     if (tracks.isEmpty())
@@ -281,10 +292,10 @@ void deleteRegionOfSelectedClips (SelectionManager& selectionManager, EditTimeRa
 
     for (auto c : selectedClips)
         if (c->getPosition().time.overlaps (rangeToDelete))
-            if (auto* t = c->getClipTrack())
+            if (auto t = c->getClipTrack())
                 t->deleteRegionOfClip (c, rangeToDelete, &selectionManager);
 
-    if (closeGap)
+    if (closeGap == CloseGap::yes)
     {
         auto centreTime = (rangeToDelete.getStart() + rangeToDelete.getEnd()) * 0.5;
 
@@ -304,7 +315,7 @@ void deleteRegionOfSelectedClips (SelectionManager& selectionManager, EditTimeRa
     }
 }
 
-void deleteRegionOfTracks (Edit& edit, EditTimeRange rangeToDelete, bool onlySelected, bool closeGap, SelectionManager* selectionManager)
+void deleteRegionOfTracks (Edit& edit, EditTimeRange rangeToDelete, bool onlySelected, CloseGap closeGap, SelectionManager* selectionManager)
 {
     juce::Array<Track*> tracks;
 
@@ -313,9 +324,14 @@ void deleteRegionOfTracks (Edit& edit, EditTimeRange rangeToDelete, bool onlySel
         jassert (selectionManager != nullptr);
 
         if (selectionManager != nullptr)
+		{
             for (auto track : selectionManager->getItemsOfType<Track>())
+			{
+				tracks.addIfNotAlreadyThere (track);
                 for (auto t : track->getAllSubTracks (true))
                     tracks.addIfNotAlreadyThere (t);
+			}
+		}
     }
     else
     {
@@ -376,7 +392,7 @@ void deleteRegionOfTracks (Edit& edit, EditTimeRange rangeToDelete, bool onlySel
             for (auto c : clipsToRemove)
                 c->removeFromParentTrack();
 
-            if (closeGap)
+            if (closeGap == CloseGap::yes)
             {
                 for (auto& c : t->getClips())
                     if (c->getPosition().getStart() > rangeToDelete.getCentre())
@@ -395,7 +411,8 @@ void deleteRegionOfTracks (Edit& edit, EditTimeRange rangeToDelete, bool onlySel
         removeAutomationRangeOfPlugin (*p);
 
     // N.B. Delete tempo last
-    edit.tempoSequence.deleteRegion (rangeToDelete);
+    if (! onlySelected || tracks.contains (edit.getTempoTrack()))
+        edit.tempoSequence.deleteRegion (rangeToDelete);
 }
 
 void moveSelectedClips (const SelectableList& selectedObjectsIn, Edit& edit, MoveClipAction mode, bool automationLocked)
@@ -666,8 +683,10 @@ juce::Result mergeMidiClips (juce::Array<MidiClip*> clips)
                     MidiList sourceList;
                     sourceList.copyFrom (c->getSequenceLooped(), nullptr);
 
-                    sourceList.trimOutside (c->getOffsetInBeats(), c->getOffsetInBeats() + c->getLengthInBeats(), nullptr);
-                    sourceList.moveAllBeatPositions (c->getStartBeat() - startBeat - c->getOffsetInBeats(), nullptr);
+                    auto offset = c->getPosition().getOffset() * c->edit.tempoSequence.getBeatsPerSecondAt (c->getPosition().getStart(), true);
+
+                    sourceList.trimOutside (offset, offset + c->getLengthInBeats(), nullptr);
+                    sourceList.moveAllBeatPositions (c->getStartBeat() - startBeat - offset, nullptr);
 
                     destinationList.addFrom (sourceList, nullptr);
                 }
@@ -702,7 +721,7 @@ Plugin::Array getAllPlugins (const Edit& edit, bool includeMasterVolume)
                                               if (auto abc = dynamic_cast<AudioClipBase*> (clip))
                                               {
                                                   if (auto pluginList = abc->getPluginList())
-                                                      list.addArray (t.getAllPlugins());
+                                                      list.addArray (pluginList->getPlugins());
 
                                                   if (auto clipEffects = abc->getClipEffects())
                                                       for (auto effect : *clipEffects)
@@ -761,6 +780,20 @@ juce::Array<RackInstance*> getRackInstancesInEditForType (const RackType& rt)
                 instances.add (ri);
 
     return instances;
+}
+
+void muteOrUnmuteAllPlugins (Edit& edit)
+{
+    auto allPlugins = getAllPlugins (edit, true);
+
+    int numEnabled = 0;
+
+    for (auto p : allPlugins)
+        if (p->isEnabled())
+            ++numEnabled;
+
+    for (auto p : allPlugins)
+        p->setEnabled (numEnabled == 0);
 }
 
 

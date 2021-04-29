@@ -14,20 +14,20 @@ namespace tracktion_engine
 struct StepModifier::StepModifierTimer : public ModifierTimer
 {
     StepModifierTimer (StepModifier& sm)
-        : stepModifier (sm), tempoSequence (sm.edit.tempoSequence)
+        : modifier (sm), tempoSequence (sm.edit.tempoSequence)
     {
     }
 
-    void updateStreamTime (PlayHead& ph, EditTimeRange streamTime, int /*numSamples*/) override
+    void updateStreamTime (double editTime, int numSamples) override
     {
-        auto editTime = (float) ph.streamTimeToSourceTime (streamTime.getStart());
-        stepModifier.updateParameterStreams (editTime);
+        const double blockLength = numSamples / modifier.getSampleRate();
+        modifier.updateParameterStreams (editTime);
 
-        const auto syncTypeThisBlock = roundToInt (stepModifier.syncTypeParam->getCurrentValue());
-        const auto rateTypeThisBlock = getTypedParamValue<ModifierCommon::RateType> (*stepModifier.rateTypeParam);
+        const auto syncTypeThisBlock = roundToInt (modifier.syncTypeParam->getCurrentValue());
+        const auto rateTypeThisBlock = getTypedParamValue<ModifierCommon::RateType> (*modifier.rateTypeParam);
 
-        const float numStepsThisBlock = stepModifier.numStepsParam->getCurrentValue();
-        const float rateThisBlock = stepModifier.rateParam->getCurrentValue();
+        const float numStepsThisBlock = modifier.numStepsParam->getCurrentValue();
+        const float rateThisBlock = modifier.rateParam->getCurrentValue();
 
         if (rateTypeThisBlock == ModifierCommon::hertz)
         {
@@ -35,13 +35,13 @@ struct StepModifier::StepModifierTimer : public ModifierTimer
             ramp.setDuration (durationPerPattern);
 
             if (syncTypeThisBlock == ModifierCommon::transport)
-                ramp.setPosition (std::fmod (editTime, durationPerPattern));
+                ramp.setPosition (std::fmod ((float) editTime, durationPerPattern));
 
             const int step = static_cast<int> (std::floor (numStepsThisBlock * ramp.getProportion()));
-            stepModifier.currentStep.store (step, std::memory_order_release);
+            modifier.currentStep.store (step, std::memory_order_release);
 
             // Move the ramp on for the next block
-            ramp.process ((float) streamTime.getLength());
+            ramp.process ((float) blockLength);
         }
         else
         {
@@ -58,7 +58,7 @@ struct StepModifier::StepModifierTimer : public ModifierTimer
                 {
                     const double virtualBars = bars / proportionOfBar;
                     const int step = static_cast<int> (std::fmod (virtualBars, numStepsThisBlock));
-                    stepModifier.currentStep.store (step, std::memory_order_release);
+                    modifier.currentStep.store (step, std::memory_order_release);
                 }
             }
             else
@@ -70,29 +70,29 @@ struct StepModifier::StepModifierTimer : public ModifierTimer
                 ramp.setDuration (secondsPerPattern);
 
                 const int step = static_cast<int> (std::floor (numStepsThisBlock * ramp.getProportion()));
-                stepModifier.currentStep.store (step, std::memory_order_release);
+                modifier.currentStep.store (step, std::memory_order_release);
 
                 // Move the ramp on for the next block
-                ramp.process ((float) streamTime.getLength());
+                ramp.process ((float) blockLength);
             }
         }
     }
 
-    void resync (EditTimeRange streamTime)
+    void resync (double duration)
     {
-        const auto type = roundToInt (stepModifier.syncTypeParam->getCurrentValue());
+        const auto type = roundToInt (modifier.syncTypeParam->getCurrentValue());
 
         if (type == ModifierCommon::note)
         {
             ramp.setPosition (0.0f);
-            stepModifier.currentStep.store (0, std::memory_order_release);
+            modifier.currentStep.store (0, std::memory_order_release);
 
             // Move the ramp on for the next block
-            ramp.process ((float) streamTime.getLength());
+            ramp.process ((float) duration);
         }
     }
 
-    StepModifier& stepModifier;
+    StepModifier& modifier;
     Ramp ramp;
     TempoSequencePosition tempoSequence;
 };
@@ -102,25 +102,14 @@ struct StepModifier::StepModifierAudioNode    : public SingleInputAudioNode
 {
     StepModifierAudioNode (AudioNode* source, StepModifier& sm)
         : SingleInputAudioNode (source),
-          stepModifier (&sm)
+          modifier (&sm)
     {
     }
 
     void renderOver (const AudioRenderContext& rc) override
     {
         SingleInputAudioNode::renderOver (rc);
-
-        if (rc.bufferForMidiMessages != nullptr)
-        {
-            for (auto& m : *rc.bufferForMidiMessages)
-            {
-                if (m.isNoteOn())
-                {
-                    stepModifier->stepModifierTimer->resync (rc.streamTime);
-                    break;
-                }
-            }
-        }
+        modifier->applyToBuffer (rc);
     }
 
     void renderAdding (const AudioRenderContext& rc) override
@@ -128,7 +117,7 @@ struct StepModifier::StepModifierAudioNode    : public SingleInputAudioNode
         callRenderOver (rc);
     }
 
-    StepModifier::Ptr stepModifier;
+    StepModifier::Ptr modifier;
 };
 
 //==============================================================================
@@ -237,6 +226,16 @@ AutomatableParameter::ModifierAssignment* StepModifier::createAssignment (const 
 AudioNode* StepModifier::createPreFXAudioNode (AudioNode* an)
 {
     return new StepModifierAudioNode (an, *this);
+}
+
+void StepModifier::applyToBuffer (const PluginRenderContext& prc)
+{
+    if (prc.bufferForMidiMessages == nullptr)
+        return;
+    
+    for (auto& m : *prc.bufferForMidiMessages)
+        if (m.isNoteOn())
+            stepModifierTimer->resync (prc.bufferNumSamples / getSampleRate());
 }
 
 //==============================================================================

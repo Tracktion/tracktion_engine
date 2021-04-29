@@ -31,7 +31,7 @@ GrooveTemplate::GrooveTemplate (const juce::XmlElement* node)
         name = node->getStringAttribute ("name", TRANS("Unnamed"));
         parameterized = node->getBoolAttribute ("parameterized", false);
 
-        forEachXmlChildElementWithTagName (*node, n, "SHIFT")
+        for (auto n : node->getChildWithTagNameIterator ("SHIFT"))
             latenesses.add ((float) n->getDoubleAttribute ("delta", 0.0));
     }
 }
@@ -158,6 +158,10 @@ bool GrooveTemplate::isEmpty() const
 }
 
 //==============================================================================
+const char* basic8SwingXML  = "<GROOVETEMPLATE name=\"Basic 8th Swing\" numberOfNotes=\"2\" notesPerBeat=\"2\" parameterized=\"1\"><SHIFT delta=\"0.0\"/><SHIFT delta=\"0.66\"/></GROOVETEMPLATE>";
+const char* basic16SwingXML = "<GROOVETEMPLATE name=\"Basic 16th Swing\" numberOfNotes=\"2\" notesPerBeat=\"4\" parameterized=\"1\"><SHIFT delta=\"0.0\"/><SHIFT delta=\"0.66\"/></GROOVETEMPLATE>";
+
+//==============================================================================
 GrooveTemplateManager::GrooveTemplateManager (Engine& e)
     : engine (e)
 {
@@ -183,9 +187,30 @@ GrooveTemplateManager::GrooveTemplateManager (Engine& e)
         std::unique_ptr<XmlElement> defSettings (XmlDocument::parse (TracktionBinaryData::groove_templates_2_xml));
 
         if (defSettings != nullptr && defSettings->hasTagName ("GROOVETEMPLATES"))
-            forEachXmlChildElementWithTagName (*defSettings, n, GrooveTemplate::grooveXmlTag)
+            for (auto n : defSettings->getChildWithTagNameIterator (GrooveTemplate::grooveXmlTag))
                 knownGrooves.add (new GrooveTemplate (n));
     }
+
+    // Load even newer presets
+    auto hasGroove = [this] (const GrooveTemplate& gt)
+    {
+        for (auto g : knownGrooves)
+            if (g->getName() == gt.getName())
+                return true;
+
+        return false;
+    };
+
+    auto addGrooveIfNotExists = [this, &hasGroove] (String xmlString)
+    {
+        auto xml = XmlDocument::parse (xmlString);
+        auto gt = std::make_unique<GrooveTemplate> (xml.get());
+        if (! hasGroove (*gt))
+            knownGrooves.add (gt.release());
+    };
+
+    addGrooveIfNotExists (basic8SwingXML);
+    addGrooveIfNotExists (basic16SwingXML);
 }
 
 //==============================================================================
@@ -218,7 +243,7 @@ void GrooveTemplateManager::reload (const juce::XmlElement* grooves)
     knownGrooves.clearQuick (true);
 
     if (grooves != nullptr && grooves->hasTagName ("GROOVETEMPLATES"))
-        forEachXmlChildElementWithTagName (*grooves, n, GrooveTemplate::grooveXmlTag)
+        for (auto n : grooves->getChildWithTagNameIterator (GrooveTemplate::grooveXmlTag))
             knownGrooves.add (new GrooveTemplate (n));
 
     useParameterizedGrooves (useParameterized);

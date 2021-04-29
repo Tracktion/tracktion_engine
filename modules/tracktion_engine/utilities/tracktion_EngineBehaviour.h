@@ -41,6 +41,14 @@ public:
     */
     virtual void setPluginDisabled (const juce::String& /*idString*/, bool /*shouldBeDisabled*/) {}
 
+    /** Should return if plugins which have been bypassed should be included in the playback graph.
+        By default this is false and bypassed plugins will still call processBypassed and introduce
+        the same latency as if they weren't.
+        But by returning false here, you can opt to remove them from the playback graph entirely
+        which means they won't introduce latency which can be useful for tracking.
+    */
+    virtual bool shouldBypassedPluginsBeRemovedFromPlaybackGraph()                { return false; }
+
     /** Gives plugins an opportunity to save custom data when the plugin state gets flushed. */
     virtual void saveCustomPluginProperties (juce::ValueTree&, juce::AudioPluginInstance&, juce::UndoManager*) {}
 
@@ -68,6 +76,10 @@ public:
     virtual int getMiddleCOctave()                                                  { return 4; }
     virtual void setMiddleCOctave (int /*newOctave*/)                               {}
 
+    // Default colour for notes. How this index maps to an actual colour is host dependant.
+    // Waveform uses yellow, green, blue, purple, red, auto (based on key)
+    virtual int getDefaultNoteColour()                                              { return 0; }
+
     // Notifies the host application that an edit has just been saved
     virtual void editHasBeenSaved (Edit& /*edit*/, juce::File /*path*/)             {}
 
@@ -83,6 +95,9 @@ public:
     virtual bool shouldPlayMidiGuideNotes()                                         { return false; }
 
     virtual int getNumberOfCPUsToUseForAudio()                                      { return juce::jmax (1, juce::SystemStats::getNumCpus()); }
+
+    /** Should muted tracks processing be disabled to save CPU */
+    virtual bool shouldProcessMutedTracks()                                         { return false; }
 
     virtual bool areAudioClipsRemappedWhenTempoChanges()                            { return true; }
     virtual void setAudioClipsRemappedWhenTempoChanges (bool)                       {}
@@ -134,7 +149,7 @@ public:
     /** Must return the default looped sequence type to use.
 
         Current options are:
-        0: loopRangeDefinesAllRepetitions           // The looped sequence is the same for all repititions including the first.
+        0: loopRangeDefinesAllRepetitions           // The looped sequence is the same for all repetitions including the first.
         1: loopRangeDefinesSubsequentRepetitions    // The first section is the whole sequence, subsequent repitions are determined by the loop range.
     */
     virtual int getDefaultLoopedSequenceType()                                      { return 0; }

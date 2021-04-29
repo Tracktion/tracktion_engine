@@ -61,7 +61,7 @@ void AuxReturnPlugin::deinitialise()
     currentBuffer = nullptr;
 }
 
-void AuxReturnPlugin::prepareForNextBlock (const AudioRenderContext&)
+void AuxReturnPlugin::prepareForNextBlock (double)
 {
     const ScopedLock sl (addingAudioLock);
 
@@ -170,7 +170,7 @@ void AuxReturnPlugin::applyAudioFromSend (const juce::AudioBuffer<float>& buffer
     }
 }
 
-void AuxReturnPlugin::applyToBuffer (const AudioRenderContext& fc)
+void AuxReturnPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     if (fc.destBuffer == nullptr)
         return;

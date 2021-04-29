@@ -417,8 +417,8 @@ void MidiClipComponent::paint (Graphics& g)
             
             if (auto p = getParentComponent())
             {
-                double t1 = editViewState.timeToX (s, p->getWidth()) - getX();
-                double t2 = editViewState.timeToX (e, p->getWidth()) - getX();
+                auto t1 = (double) editViewState.timeToX (s, p->getWidth()) - getX();
+                auto t2 = (double) editViewState.timeToX (e, p->getWidth()) - getX();
                 
                 double y = (1.0 - double (n->getNoteNumber()) / 127.0) * getHeight();
                 

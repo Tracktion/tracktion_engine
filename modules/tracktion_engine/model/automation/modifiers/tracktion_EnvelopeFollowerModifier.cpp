@@ -230,7 +230,7 @@ struct EnvelopeFollowerModifier::EnvelopeFollowerModifierAudioNode  : public Sin
     void prepareAudioNodeToPlay (const PlaybackInitialisationInfo& info) override
     {
         SingleInputAudioNode::prepareAudioNodeToPlay (info);
-        envelopeFollowerModifier->baseClassInitialise (info);
+        envelopeFollowerModifier->baseClassInitialise (info.sampleRate, info.blockSizeSamples);
     }
 
     void renderOver (const AudioRenderContext& rc) override
@@ -339,9 +339,9 @@ AudioNode* EnvelopeFollowerModifier::createPostFXAudioNode (AudioNode* an)
     return new EnvelopeFollowerModifierAudioNode (an, *this);
 }
 
-void EnvelopeFollowerModifier::initialise (const PlaybackInitialisationInfo& info)
+void EnvelopeFollowerModifier::initialise (double newSampleRate, int)
 {
-    prepareToPlay (info.sampleRate);
+    prepareToPlay (newSampleRate);
 }
 
 void EnvelopeFollowerModifier::deinitialise()
@@ -349,20 +349,17 @@ void EnvelopeFollowerModifier::deinitialise()
     reset();
 }
 
-void EnvelopeFollowerModifier::applyToBuffer (const AudioRenderContext& rc)
+void EnvelopeFollowerModifier::applyToBuffer (const PluginRenderContext& pc)
 {
-    if (rc.destBuffer == nullptr)
+    if (pc.destBuffer == nullptr)
         return;
 
-    updateParameterStreams (rc.getEditTime().editRange1.getStart());
+    updateParameterStreams (pc.editTime);
 
-    if (rc.didPlayheadJump())
-        reset();
-
-    AudioBuffer<float> ab (rc.destBuffer->getArrayOfWritePointers(),
-                           rc.destBuffer->getNumChannels(),
-                           rc.bufferStartSample,
-                           rc.bufferNumSamples);
+    AudioBuffer<float> ab (pc.destBuffer->getArrayOfWritePointers(),
+                           pc.destBuffer->getNumChannels(),
+                           pc.bufferStartSample,
+                           pc.bufferNumSamples);
     processBlock (ab);
 }
 
@@ -390,10 +387,9 @@ EnvelopeFollowerModifier::Ptr EnvelopeFollowerModifier::Assignment::getEnvelopeF
 }
 
 //==============================================================================
-void EnvelopeFollowerModifier::prepareToPlay (double sampleRate)
+void EnvelopeFollowerModifier::prepareToPlay (double newSampleRate)
 {
-    envelopeFollower->setSampleRate ((float) sampleRate);
-    currentSampleRate = sampleRate;
+    envelopeFollower->setSampleRate ((float) newSampleRate);
 }
 
 void EnvelopeFollowerModifier::processBlock (const juce::AudioBuffer<float>& ab)
@@ -426,10 +422,10 @@ void EnvelopeFollowerModifier::processBlock (const juce::AudioBuffer<float>& ab)
 
     // Filter if required
     if (setIfDifferent (currentLowPassFrequency, lowPassFrequencyParam->getCurrentValue()))
-        lowPassFilter.setCoefficients (IIRCoefficients::makeLowPass (currentSampleRate, currentLowPassFrequency));
+        lowPassFilter.setCoefficients (IIRCoefficients::makeLowPass (getSampleRate(), currentLowPassFrequency));
 
     if (setIfDifferent (currentHighPassFrequency, highPassFrequencyParam->getCurrentValue()))
-        highPassFilter.setCoefficients (IIRCoefficients::makeHighPass (currentSampleRate, currentHighPassFrequency));
+        highPassFilter.setCoefficients (IIRCoefficients::makeHighPass (getSampleRate(), currentHighPassFrequency));
 
     if (lowPass)
         lowPassFilter.processSamples (scratchData, numSamples);
@@ -441,6 +437,7 @@ void EnvelopeFollowerModifier::processBlock (const juce::AudioBuffer<float>& ab)
     for (int i = 0; i < numSamples; ++i)
         envelope = envelopeFollower->processSingleSample (scratchData[i]);
 
+    jassert (! std::isnan (envelope));
     envelopeValue.store (envelope, std::memory_order_release);
 }
 

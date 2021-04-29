@@ -442,14 +442,21 @@ ValueTree loadEditFromFile (Engine& e, const File& f, ProjectItemID itemID)
 
     if (! state.isValid())
     {
-        FileInputStream is (f);
-
-        if (is.openedOk())
-            state = updateLegacyEdit (ValueTree::readFromStream (is));
+        if (FileInputStream is (f); is.openedOk())
+        {
+            if (state = ValueTree::readFromStream (is); state.hasType (IDs::EDIT))
+                state = updateLegacyEdit (state);
+            else
+                state = {};
+        }
     }
 
     if (! state.isValid())
     {
+        // If the file already exists and is not empty, don't write over it as it could have been corrupted and be recoverable
+        if (f.existsAsFile() && f.getSize() > 0)
+            return {};
+        
         state = ValueTree (IDs::EDIT);
         state.setProperty (IDs::appVersion, e.getPropertyStorage().getApplicationVersion(), nullptr);
     }

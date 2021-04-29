@@ -11,6 +11,35 @@
 namespace tracktion_engine
 {
 
+PluginRenderContext::PluginRenderContext (juce::AudioBuffer<float>* buffer,
+                                          const juce::AudioChannelSet& bufferChannels,
+                                          int bufferStart, int bufferSize,
+                                          MidiMessageArray* midiBuffer, double midiOffset,
+                                          double editStartTime, bool playing, bool scrubbing, bool rendering,
+                                          bool shouldAllowBypassedProcessing) noexcept
+    : destBuffer (buffer), destBufferChannels (bufferChannels),
+      bufferStartSample (bufferStart), bufferNumSamples (bufferSize),
+      bufferForMidiMessages (midiBuffer), midiBufferOffset (midiOffset),
+      editTime (editStartTime),
+      isPlaying (playing), isScrubbing (scrubbing), isRendering (rendering),
+      allowBypassedProcessing (shouldAllowBypassedProcessing)
+{}
+
+PluginRenderContext::PluginRenderContext (const AudioRenderContext& rc)
+    : destBuffer (rc.destBuffer),
+      destBufferChannels (rc.destBufferChannels),
+      bufferStartSample (rc.bufferStartSample),
+      bufferNumSamples (rc.bufferNumSamples),
+      bufferForMidiMessages (rc.bufferForMidiMessages),
+      midiBufferOffset (rc.midiBufferOffset),
+      editTime (rc.getEditTime().editRange1.getStart()),
+      isPlaying (rc.playhead.isPlaying()),
+      isScrubbing (rc.playhead.isUserDragging()),
+      isRendering (rc.isRendering)
+{
+}
+
+//==============================================================================
 Plugin::Wire::Wire (const juce::ValueTree& v, UndoManager* um)  : state (v)
 {
     sourceChannelIndex.referTo (state, IDs::srcChan, um);
@@ -203,7 +232,7 @@ public:
 
     void prepareForNextBlock (const AudioRenderContext& rc) override
     {
-        plugin->prepareForNextBlock (rc);
+        plugin->prepareForNextBlock (rc.getEditTime().editRange1.getStart());
         input->prepareForNextBlock (rc);
     }
 
@@ -398,9 +427,9 @@ Plugin::Plugin (PluginCreationInfo info)
 
         MessageManager::callAsync ([=, &e]() mutable
         {
-            if (ref != nullptr)
+            if (auto plugin = dynamic_cast<Plugin*> (ref.get()))
                 if (auto na = e.getExternalControllerManager().getAutomap())
-                    na->pluginChanged (ref);
+                    na->pluginChanged (plugin);
         });
     }
    #endif
@@ -914,6 +943,17 @@ AutomatableParameter::Ptr Plugin::getQuickControlParameter() const
                 {
                     if (rf->type != nullptr)
                     {
+                        // First check macros
+                        for (auto param : rf->type->macroParameterList.getAutomatableParameters())
+                        {
+                            if (param->paramID == currentID)
+                            {
+                                quickControlParameter = param;
+                                break;
+                            }
+                        }
+
+                        // Then plugins
                         for (auto p : rf->type->getPlugins())
                         {
                             for (int j = 0; j < p->getNumAutomatableParameters(); j++)
@@ -944,7 +984,7 @@ void Plugin::setQuickControlParameter (AutomatableParameter* param)
         quickParamName = param->paramID;
 }
 
-void Plugin::applyToBufferWithAutomation (const AudioRenderContext& fc)
+void Plugin::applyToBufferWithAutomation (const PluginRenderContext& pc)
 {
     SCOPED_REALTIME_CHECK
 
@@ -958,26 +998,26 @@ void Plugin::applyToBufferWithAutomation (const AudioRenderContext& fc)
     if (isAutomationNeeded()
         && (arm.isReadingAutomation() || isClipEffect.load()))
     {
-        if (fc.playhead.isUserDragging() || ! fc.playhead.isPlaying())
+        if (pc.isScrubbing || ! pc.isPlaying)
         {
             SCOPED_REALTIME_CHECK
             auto& tc = edit.getTransport();
-            updateParameterStreams (tc.isPlayContextActive() && ! fc.isRendering
+            updateParameterStreams (tc.isPlayContextActive() && ! pc.isRendering
                                         ? tc.getCurrentPosition()
-                                        : fc.getEditTime().editRange1.getStart());
-            applyToBuffer (fc);
+                                        : pc.editTime);
+            applyToBuffer (pc);
         }
         else
         {
             SCOPED_REALTIME_CHECK
-            updateParameterStreams (fc.getEditTime().editRange1.getStart());
-            applyToBuffer (fc);
+            updateParameterStreams (pc.editTime);
+            applyToBuffer (pc);
         }
     }
     else
     {
         SCOPED_REALTIME_CHECK
-        applyToBuffer (fc);
+        applyToBuffer (pc);
     }
 }
 
@@ -1154,6 +1194,24 @@ void Plugin::sortPlugins (Plugin::Array& plugins)
                        return list.indexOf (a) < list.indexOf (b);
                    });
     }
+}
+
+void Plugin::sortPlugins (std::vector<Plugin*>& plugins)
+{
+    if (plugins.size() == 0 || plugins[0] == nullptr)
+        return;
+    
+    auto first = plugins[0];
+
+    PluginList list (first->edit);
+    list.initialise (first->state.getParent());
+
+    std::sort (plugins.begin(), plugins.end(),
+               [&list] (Plugin* a, Plugin* b)
+               {
+                   jassert (a != nullptr && b != nullptr);
+                   return list.indexOf (a) < list.indexOf (b);
+               });
 }
 
 void Plugin::getLeftRightChannelNames (StringArray* chans)

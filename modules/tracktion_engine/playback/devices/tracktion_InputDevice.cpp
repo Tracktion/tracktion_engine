@@ -233,16 +233,21 @@ void InputDeviceInstance::removeTargetTrack (AudioTrack& track)
 
 void InputDeviceInstance::removeTargetTrack (AudioTrack& track, int index)
 {
+    removeTargetTrack (track.itemID, index);
+}
+
+void InputDeviceInstance::removeTargetTrack (EditItemID trackID, int index)
+{
     if (isRecording())
     {
         edit.engine.getUIBehaviour().showWarningMessage (TRANS("Can't change tracks whilst recording is active"));
         return;
     }
-    
+
     for (int i = destTracks.size(); --i >= 0;)
     {
         auto& dt = *destTracks[i];
-        if (dt.targetTrack == track.itemID && dt.targetIndex == index)
+        if (dt.targetTrack == trackID && dt.targetIndex == index)
             state.removeChild (dt.state, &edit.getUndoManager());
     }
 }

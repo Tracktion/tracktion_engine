@@ -44,12 +44,21 @@
 #include <unordered_map>
 #include <atomic>
 #include <random>
+#include <optional>
 
 #include <juce_audio_basics/juce_audio_basics.h>
 #include <juce_audio_utils/juce_audio_utils.h>
 #include <juce_gui_extra/juce_gui_extra.h>
 #include <juce_dsp/juce_dsp.h>
 #include <juce_osc/juce_osc.h>
+
+#if __has_include(<choc/audio/choc_SampleBuffers.h>)
+ #include <choc/audio/choc_SampleBuffers.h>
+ #include <choc/audio/choc_MIDI.h>
+#else
+ #include "../3rd_party/choc/audio/choc_SampleBuffers.h"
+ #include "../3rd_party/choc/audio/choc_MIDI.h"
+#endif
 
 #undef __TEXT
 
@@ -150,7 +159,7 @@
 #endif
 
 /** Config: TRACKTION_AIR_WINDOWS
-    Adds AirWindows effect plugins. Requires complaiance with AirWindows MIT license.
+    Adds AirWindows effect plugins. Requires compliance with AirWindows MIT license.
  */
 #ifndef TRACKTION_AIR_WINDOWS
  #define TRACKTION_AIR_WINDOWS 0
@@ -181,6 +190,14 @@
     jassert (juce::MessageManager::getInstance()->currentThreadHasLockedMessageManager());
 
 //==============================================================================
+#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+ namespace tracktion_graph
+ {
+     class PlayHead;
+ }
+#endif //ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+
+//==============================================================================
 namespace tracktion_engine
 {
     class Engine;
@@ -193,6 +210,7 @@ namespace tracktion_engine
     class Plugin;
     class AudioNode;
     struct AudioRenderContext;
+    struct PluginRenderContext;
     class AudioFile;
     class PlayHead;
     class Project;
@@ -295,6 +313,7 @@ namespace tracktion_engine
     struct RetrospectiveRecordBuffer;
     class Clipboard;
     class PropertyStorage;
+    class TrackOutput;
 }
 
 //==============================================================================
@@ -479,8 +498,6 @@ namespace tracktion_engine
 
 #include "model/clips/tracktion_EditClip.h"
 
-#include "selection/tracktion_Clipboard.h"
-
 #include "playback/audionodes/tracktion_FadeInOutAudioNode.h"
 #include "playback/audionodes/tracktion_TimedMutingAudioNode.h"
 
@@ -494,6 +511,8 @@ namespace tracktion_engine
 #include "model/tracks/tracktion_TrackCompManager.h"
 #include "model/export/tracktion_RenderOptions.h"
 #include "model/clips/tracktion_EditClipRenderJob.h"
+
+#include "selection/tracktion_Clipboard.h"
 
 #include "playback/devices/tracktion_InputDevice.h"
 #include "playback/devices/tracktion_MidiInputDevice.h"

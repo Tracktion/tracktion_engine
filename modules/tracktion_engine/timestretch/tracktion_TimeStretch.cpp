@@ -368,6 +368,8 @@ TimeStretcher::Mode TimeStretcher::checkModeIsAvailable (Mode m)
         case elastiqueMonophonic:
             return m;
        #endif
+        case disabled:
+        case melodyne:
         default:
             return m;
     }
@@ -432,6 +434,9 @@ juce::String TimeStretcher::getNameOfMode (const Mode mode)
         case soundtouchNormal:      return getSoundTouchNormal();
         case soundtouchBetter:      return getSoundTouchBetter();
         case melodyne:              return getMelodyne();
+        case disabled:
+        case elastiqueTransient:
+        case elastiqueTonal:
         default:                    jassertfalse; break;
     }
 

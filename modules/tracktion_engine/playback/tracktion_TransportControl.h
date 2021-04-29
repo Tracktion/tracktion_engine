@@ -69,11 +69,22 @@ public:
 
     void syncToEdit (Edit* editToSyncTo, bool isPreview); // plays in sync with another Edit
 
-    /** (this is also true if we're recording */
+    /** Returns true if the transport is playing. (This is also true during recording). */
     bool isPlaying() const;
+    
+    /** Returns true if recording is in progress. */
     bool isRecording() const;
+    
+    /** Returns true if safe-recording is in progress. */
     bool isSafeRecording() const;
 
+    /** Returns true if the transport is currently being stopped.
+        isPlaying will return false during this period but position changes etc. could still
+        be sent out so this method lets you know if this.
+    */
+    bool isStopping() const;
+
+    /** Returns the time when the transport was started. */
     double getTimeWhenStarted() const;
 
     //==============================================================================
@@ -82,6 +93,7 @@ public:
 
     void setUserDragging (bool);
     bool isUserDragging() const noexcept;
+    bool isPositionUpdatingFromPlayhead() const;
 
     //==============================================================================
     void setLoopIn (double);
@@ -131,22 +143,43 @@ public:
     int isAllowedToReallocate() const noexcept;
 
     //==============================================================================
-    static juce::Array<TransportControl*> getAllActiveTransports (Engine&);
-    static int getNumPlayingTransports (Engine&);
-    static void stopAllTransports (Engine&, bool discardRecordings, bool clearDevices);
-    static void restartAllTransports (Engine&, bool clearDevices);
-
-    //==============================================================================
     struct ScopedPlaybackRestarter
     {
         ScopedPlaybackRestarter (TransportControl& o) : tc (o), wasPlaying (tc.isPlaying()) {}
         ~ScopedPlaybackRestarter()   { if (wasPlaying) tc.play (false); }
 
         TransportControl& tc;
-        bool wasPlaying;
+        bool wasPlaying = false;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ScopedPlaybackRestarter)
     };
+
+    //==============================================================================
+    /** Frees the playback context and then re-allocates it upon destruction. */
+    struct ScopedContextAllocator
+    {
+        ScopedContextAllocator (TransportControl& o)
+            : tc (o), wasAllocated (tc.isPlayContextActive())
+        {}
+        
+        ~ScopedContextAllocator()
+        {
+            if (wasAllocated)
+                tc.ensureContextAllocated();
+        }
+
+        TransportControl& tc;
+        bool wasAllocated = false;
+        ScopedPlaybackRestarter playbackRestarter { tc };
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ScopedContextAllocator)
+    };
+
+    //==============================================================================
+    static juce::Array<TransportControl*> getAllActiveTransports (Engine&);
+    static int getNumPlayingTransports (Engine&);
+    static void stopAllTransports (Engine&, bool discardRecordings, bool clearDevices);
+    static std::vector<std::unique_ptr<ScopedContextAllocator>> restartAllTransports (Engine&, bool clearDevices);
 
     //==============================================================================
     struct Listener
@@ -185,6 +218,7 @@ private:
     TimecodeSnapType currentSnapType;
     bool isDelayedChangePending = false;
     int loopUpdateCounter = 10;
+    bool isStopInProgress = false;
 
     struct ScreenSaverDefeater;
     std::unique_ptr<ScreenSaverDefeater> screenSaverDefeater;
@@ -202,6 +236,9 @@ private:
 
     struct SectionPlayer;
     std::unique_ptr<SectionPlayer> sectionPlayer;
+    
+    struct PlayHeadWrapper;
+    std::unique_ptr<PlayHeadWrapper> playHeadWrapper;
 
     bool lastPlayStatus = false, lastRecordStatus = false;
     void startedOrStopped();

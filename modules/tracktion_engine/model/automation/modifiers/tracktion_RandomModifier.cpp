@@ -18,9 +18,9 @@ struct RandomModifier::RandomModifierTimer    : public ModifierTimer
     {
     }
 
-    void updateStreamTime (PlayHead& ph, EditTimeRange streamTime, int /*numSamples*/) override
+    void updateStreamTime (double editTime, int numSamples) override
     {
-        auto editTime = (float) ph.streamTimeToSourceTime (streamTime.getStart());
+        const double blockLength = numSamples / modifier.getSampleRate();
         modifier.updateParameterStreams (editTime);
 
         const auto syncTypeThisBlock = roundToInt (modifier.syncTypeParam->getCurrentValue());
@@ -34,12 +34,12 @@ struct RandomModifier::RandomModifierTimer    : public ModifierTimer
             ramp.setDuration (durationPerPattern);
 
             if (syncTypeThisBlock == ModifierCommon::transport)
-                ramp.setPosition (std::fmod (editTime, durationPerPattern));
+                ramp.setPosition (std::fmod ((float) editTime, durationPerPattern));
 
             modifier.setPhase (ramp.getProportion());
 
             // Move the ramp on for the next block
-            ramp.process ((float) streamTime.getLength());
+            ramp.process ((float) blockLength);
         }
         else
         {
@@ -69,12 +69,12 @@ struct RandomModifier::RandomModifierTimer    : public ModifierTimer
                 modifier.setPhase (ramp.getProportion());
 
                 // Move the ramp on for the next block
-                ramp.process ((float) streamTime.getLength());
+                ramp.process ((float) blockLength);
             }
         }
     }
 
-    void resync (EditTimeRange streamTime)
+    void resync (double duration)
     {
         if (roundToInt (modifier.syncTypeParam->getCurrentValue()) == ModifierCommon::note)
         {
@@ -82,7 +82,7 @@ struct RandomModifier::RandomModifierTimer    : public ModifierTimer
             modifier.setPhase (0.0f);
 
             // Move the ramp on for the next block
-            ramp.process ((float) streamTime.getLength());
+            ramp.process ((float) duration);
         }
     }
 
@@ -105,18 +105,7 @@ struct RandomModifier::ModifierAudioNode    : public SingleInputAudioNode
     void renderOver (const AudioRenderContext& rc) override
     {
         SingleInputAudioNode::renderOver (rc);
-
-        if (rc.bufferForMidiMessages != nullptr)
-        {
-            for (auto& m : *rc.bufferForMidiMessages)
-            {
-                if (m.isNoteOn())
-                {
-                    modifier->modifierTimer->resync (rc.streamTime);
-                    break;
-                }
-            }
-        }
+        modifier->applyToBuffer (rc);
     }
 
     void renderAdding (const AudioRenderContext& rc) override
@@ -225,6 +214,16 @@ AutomatableParameter::ModifierAssignment* RandomModifier::createAssignment (cons
 AudioNode* RandomModifier::createPreFXAudioNode (AudioNode* an)
 {
     return new ModifierAudioNode (an, *this);
+}
+
+void RandomModifier::applyToBuffer (const PluginRenderContext& prc)
+{
+    if (prc.bufferForMidiMessages == nullptr)
+        return;
+    
+    for (auto& m : *prc.bufferForMidiMessages)
+        if (m.isNoteOn())
+            modifierTimer->resync (prc.bufferNumSamples / getSampleRate());
 }
 
 //==============================================================================

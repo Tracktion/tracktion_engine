@@ -221,7 +221,7 @@ private:
     AudioFileCache::Reader::Ptr reader;
 
     juce::LagrangeInterpolator resampler[8];
-    float lastSample[8];
+    float lastSample[8] = {};
 
     double editTimeToFileSample (double editTime) const noexcept
     {

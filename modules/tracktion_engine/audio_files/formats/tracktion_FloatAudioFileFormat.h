@@ -12,7 +12,7 @@ namespace tracktion_engine
 {
 
 /**
-    A raw, proprietory, simple floating point format used for freeze files, etc.
+    A raw, proprietary, simple floating point format used for freeze files, etc.
 */
 class FloatAudioFormat   : public juce::AudioFormat
 {

@@ -70,6 +70,7 @@ public:
     juce::Array<ProjectItemID> getAllProjectItemIDs() const;
     juce::Array<int> getAllItemIDs() const;
     ProjectItem::Ptr getProjectItemAt (int index);
+    juce::Array<ProjectItem::Ptr> getAllProjectItems();
     int getIndexOf (ProjectItemID) const;
 
     ProjectItem::Ptr getProjectItemForID (ProjectItemID);
@@ -157,7 +158,7 @@ private:
 
     struct ObjectInfo
     {
-        int itemID, fileOffset;
+        int itemID = 0, fileOffset = 0;
         ProjectItem::Ptr item;
     };
 

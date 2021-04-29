@@ -18,9 +18,9 @@ struct LFOModifier::LFOModifierTimer    : public ModifierTimer
     {
     }
 
-    void updateStreamTime (PlayHead& ph, EditTimeRange streamTime, int /*numSamples*/) override
+    void updateStreamTime (double editTime, int numSamples) override
     {
-        const float editTime = (float) ph.streamTimeToSourceTime (streamTime.getStart());
+        const double blockLength = numSamples / modifier.getSampleRate();
         modifier.updateParameterStreams (editTime);
 
         const auto syncTypeThisBlock = roundToInt (modifier.syncTypeParam->getCurrentValue());
@@ -34,12 +34,12 @@ struct LFOModifier::LFOModifierTimer    : public ModifierTimer
             ramp.setDuration (durationPerPattern);
 
             if (syncTypeThisBlock == ModifierCommon::transport)
-                ramp.setPosition (std::fmod (editTime, durationPerPattern));
+                ramp.setPosition (std::fmod ((float) editTime, durationPerPattern));
 
             setPhase (ramp.getProportion());
 
             // Move the ramp on for the next block
-            ramp.process ((float) streamTime.getLength());
+            ramp.process ((float) blockLength);
         }
         else
         {
@@ -69,7 +69,7 @@ struct LFOModifier::LFOModifierTimer    : public ModifierTimer
                 setPhase (ramp.getProportion());
 
                 // Move the ramp on for the next block
-                ramp.process ((float) streamTime.getLength());
+                ramp.process ((float) blockLength);
             }
         }
     }
@@ -122,7 +122,7 @@ struct LFOModifier::LFOModifierTimer    : public ModifierTimer
         modifier.currentValue.store (newValue, std::memory_order_release);
     }
 
-    void resync (EditTimeRange streamTime)
+    void resync (double duration)
     {
         const auto type = roundToInt (modifier.syncTypeParam->getCurrentValue());
 
@@ -132,7 +132,7 @@ struct LFOModifier::LFOModifierTimer    : public ModifierTimer
             setPhase (0.0f);
 
             // Move the ramp on for the next block
-            ramp.process ((float) streamTime.getLength());
+            ramp.process ((float) duration);
         }
     }
 
@@ -158,18 +158,7 @@ struct LFOModifier::ModifierAudioNode    : public SingleInputAudioNode
     void renderOver (const AudioRenderContext& rc) override
     {
         SingleInputAudioNode::renderOver (rc);
-
-        if (rc.bufferForMidiMessages != nullptr)
-        {
-            for (auto& m : *rc.bufferForMidiMessages)
-            {
-                if (m.isNoteOn())
-                {
-                    modifier->modifierTimer->resync (rc.streamTime);
-                    break;
-                }
-            }
-        }
+        modifier->applyToBuffer (rc);
     }
 
     void renderAdding (const AudioRenderContext& rc) override
@@ -268,6 +257,16 @@ AutomatableParameter::ModifierAssignment* LFOModifier::createAssignment (const V
 AudioNode* LFOModifier::createPreFXAudioNode (AudioNode* an)
 {
     return new ModifierAudioNode (an, *this);
+}
+
+void LFOModifier::applyToBuffer (const PluginRenderContext& prc)
+{
+    if (prc.bufferForMidiMessages == nullptr)
+        return;
+    
+    for (auto& m : *prc.bufferForMidiMessages)
+        if (m.isNoteOn())
+            modifierTimer->resync (prc.bufferNumSamples / getSampleRate());
 }
 
 //==============================================================================

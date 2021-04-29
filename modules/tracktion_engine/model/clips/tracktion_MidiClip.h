@@ -82,14 +82,16 @@ public:
                      double maxEndBeat, juce::UndoManager&);
 
     //==============================================================================
-    float getVolumeDb() const                       { return volumeDb; }
-    void setVolumeDb (float v)                      { volumeDb = juce::jlimit (-100.0f, 0.0f, v); }
+    float getVolumeDb() const                       { return level->dbGain; }
+    void setVolumeDb (float v)                      { level->dbGain = juce::jlimit (-100.0f, 0.0f, v); }
 
     bool isSendingBankChanges() const noexcept      { return sendBankChange; }
     void setSendingBankChanges (bool sendBank);
 
-    bool isMuted() const override                   { return mute; }
-    void setMuted (bool m) override                 { mute = m; }
+    bool isMuted() const override                   { return level->mute; }
+    void setMuted (bool m) override                 { level->mute = m; }
+
+    LiveClipLevel getLiveClipLevel();
 
     //==============================================================================
     void initialise() override;
@@ -124,7 +126,7 @@ public:
 
     enum class LoopedSequenceType : int
     {
-        loopRangeDefinesAllRepetitions          = 0,    /**< The looped sequence is the same for all repititions including the first. */
+        loopRangeDefinesAllRepetitions          = 0,    /**< The looped sequence is the same for all repetitions including the first. */
         loopRangeDefinesSubsequentRepetitions   = 1     /**< The first section is the whole sequence, subsequent repitions are determined by the loop range. */
     };
 
@@ -159,12 +161,13 @@ private:
 
     //==============================================================================
     juce::OwnedArray<MidiList> channelSequence;
+    std::shared_ptr<ClipLevel> level { std::make_shared<ClipLevel>() };
 
     juce::CachedValue<int> currentTake;
-    juce::CachedValue<float> volumeDb, grooveStrength;
+    juce::CachedValue<float> grooveStrength;
     juce::CachedValue<double> loopStartBeats, loopLengthBeats, originalLength;
     std::unique_ptr<QuantisationType> quantisation;
-    juce::CachedValue<bool> sendPatch, mute, sendBankChange, mpeMode;
+    juce::CachedValue<bool> sendPatch, sendBankChange, mpeMode;
     juce::CachedValue<juce::String> grooveTemplate;
 
     bool shouldWarnAboutMultiChannel = false;

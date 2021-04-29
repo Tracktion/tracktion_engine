@@ -76,7 +76,6 @@ public:
     //==============================================================================
     // Creates a node that will play the whole sequence.
     AudioNode* createAudioNode (AudioNode* input, bool addNoise);
-    AudioNode* attachNodesForPluginsNeedingLivePlay (AudioNode* input);
 
     //==============================================================================
     juce::ValueTree state;

@@ -676,7 +676,7 @@ double MidiNote::getEditEndTime (const MidiClip& c) const
 
 EditTimeRange MidiNote::getEditTimeRange (const MidiClip& c) const
 {
-    auto quantisedStartBeat = c.getQuantisation().roundBeatToNearest (startBeat + c.getContentStartBeat());
+    auto quantisedStartBeat = c.getQuantisation().roundBeatToNearest (startBeat - c.getLoopStartBeats() + c.getContentStartBeat());
 
     return { c.edit.tempoSequence.beatsToTime (quantisedStartBeat),
              c.edit.tempoSequence.beatsToTime (quantisedStartBeat + lengthInBeats) };
@@ -849,7 +849,7 @@ juce::String MidiControllerEvent::getControllerTypeName (int type) noexcept
 double MidiControllerEvent::getEditTime (const MidiClip& c) const
 {
     const double quantisedBeatInEdit = c.getQuantisation()
-                                        .roundBeatToNearest (beatNumber + c.getContentStartBeat());
+                                        .roundBeatToNearest (beatNumber - c.getLoopStartBeats() + c.getContentStartBeat());
 
     return c.edit.tempoSequence.beatsToTime (quantisedBeatInEdit);
 }
@@ -1015,7 +1015,7 @@ struct MidiList::EventDelegate<MidiSysexEvent>
 
 double MidiSysexEvent::getEditTime (const MidiClip& c) const
 {
-    auto quantisedBeatInEdit = c.getQuantisation().roundBeatToNearest (message.getTimeStamp() + c.getContentStartBeat());
+    auto quantisedBeatInEdit = c.getQuantisation().roundBeatToNearest (message.getTimeStamp() - c.getLoopStartBeats() + c.getContentStartBeat());
 
     return c.edit.tempoSequence.beatsToTime (quantisedBeatInEdit);
 }
@@ -1301,14 +1301,25 @@ bool MidiList::containsController (int controllerType) const
     return false;
 }
 
-void MidiList::addControllerEvent (double beat, int controllerType, int controllerValue, juce::UndoManager* um)
+MidiControllerEvent* MidiList::addControllerEvent (const MidiControllerEvent& event, juce::UndoManager* um)
 {
-    state.addChild (MidiControllerEvent::createControllerEvent (beat, controllerType, controllerValue), -1, um);
+    auto v = event.state.createCopy();
+    state.addChild (v, -1, um);
+    return controllerList->getEventFor (v);
 }
 
-void MidiList::addControllerEvent (double beat, int controllerType, int controllerValue, int metadata, juce::UndoManager* um)
+MidiControllerEvent* MidiList::addControllerEvent (double beat, int controllerType, int controllerValue, juce::UndoManager* um)
 {
-    state.addChild (MidiControllerEvent::createControllerEvent (beat, controllerType, controllerValue, metadata), -1, um);
+    auto v = MidiControllerEvent::createControllerEvent (beat, controllerType, controllerValue);
+    state.addChild (v, -1, um);
+    return controllerList->getEventFor (v);
+}
+
+MidiControllerEvent* MidiList::addControllerEvent (double beat, int controllerType, int controllerValue, int metadata, juce::UndoManager* um)
+{
+    auto v = MidiControllerEvent::createControllerEvent (beat, controllerType, controllerValue, metadata);
+    state.addChild (v, -1, um);
+    return controllerList->getEventFor (v);
 }
 
 void MidiList::removeControllerEvent (MidiControllerEvent& e, juce::UndoManager* um)
@@ -1674,7 +1685,7 @@ void MidiList::importMidiSequence (const juce::MidiMessageSequence& sequence, Ed
                          beatTime,
                          ts != nullptr ? ((ts->timeToBeats (keyUpTime) - firstBeatNum) - beatTime)
                                        : (keyUpTime - beatTime),
-                         m.getVelocity(), 0, um);
+                         m.getVelocity(), edit != nullptr ? edit->engine.getEngineBehaviour().getDefaultNoteColour() : 0, um);
             }
             else if (m.isAftertouch())
             {

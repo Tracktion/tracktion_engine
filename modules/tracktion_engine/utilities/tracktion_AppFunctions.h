@@ -21,6 +21,8 @@ namespace AppFunctions
 
     void deleteSelected();
     void deleteRegion();
+    void deleteRegionAndCloseGapFromSelected();
+    void deleteRegionAndCloseGap();
 
     void goToStart();
     void goToEnd();
@@ -98,6 +100,7 @@ namespace AppFunctions
     void showEditScreen();
 
     void resetOverloads();
+    void resetPeaks();
     void toggleTrackFreeze();
 }
 

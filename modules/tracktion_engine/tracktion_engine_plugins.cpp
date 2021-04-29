@@ -23,6 +23,10 @@
 #include <numeric>
 
 #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+ #if TRACKTION_UNIT_TESTS
+  #include <tracktion_graph/tracktion_graph_TestConfig.h>
+ #endif
+
  #include <tracktion_graph/tracktion_graph.h>
  
  #include <tracktion_graph/tracktion_graph/tracktion_graph_tests_Utilities.h>
@@ -34,8 +38,9 @@
 using namespace juce;
 
 #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
- #include "playback/graph/tracktion_engine_RackNode.h"
- #include "playback/graph/tracktion_engine_tests_RackNode.cpp"
+ #include "playback/graph/tracktion_PluginNode.h"
+ #include "playback/graph/tracktion_TrackMutingNode.h"
+ #include "playback/graph/tracktion_RackNode.h"
 #endif
 
 #include "model/automation/modifiers/tracktion_ModifierInternal.h"

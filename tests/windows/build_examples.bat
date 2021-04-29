@@ -20,7 +20,10 @@ call "%TESTS_DIR%/build_projucer.bat" || exit 1
 ::============================================================
 ::   Build examples
 ::============================================================
-call :BuildExample "AudioNodeDev"
+call :BuildExample "tracktion_graph_PerformanceTests"
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+call :BuildExample "tracktion_graph_TestRunner"
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
 call :BuildExample "TestRunner"
@@ -59,12 +62,15 @@ exit /b 0
     set EXAMPLE_PIP_FILE=%EXAMPLES_DIR%/%EXAMPLE_NAME%.h
     set EXAMPLE_DEST_DIR=%EXAMPLES_DIR%/projects
     set EXAMPLE_ROOT_DIR=%EXAMPLE_DEST_DIR%/%EXAMPLE_NAME%
+    set EXAMLE_PJ_FILE=%EXAMPLE_ROOT_DIR%/%EXAMPLE_NAME%/%EXAMPLE_NAME%.jucer
 
     if exist "%EXAMPLE_ROOT_DIR%/Builds/VisualStudio2017" rmdir /s /q "%EXAMPLE_ROOT_DIR%/Builds/VisualStudio2017"
 
     call "%PROJUCER_EXE%" --create-project-from-pip "%EXAMPLE_PIP_FILE%" "%EXAMPLE_DEST_DIR%" "%JUCE_DIR%/modules" "%TRACKTION_ENGINE_DIR%"
     if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
-    call "%PROJUCER_EXE%" --resave "%EXAMPLE_ROOT_DIR%/%EXAMPLE_NAME%.jucer"
+    powershell -Command "(Get-Content '%EXAMLE_PJ_FILE%') -replace '<JUCERPROJECT ', '<JUCERPROJECT cppLanguageStandard=\"17\" ' | Set-Content '%EXAMLE_PJ_FILE%'"
+    if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+    call "%PROJUCER_EXE%" --resave "%EXAMLE_PJ_FILE%"
     if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
     if defined DISABLE_BUILD goto builtSection

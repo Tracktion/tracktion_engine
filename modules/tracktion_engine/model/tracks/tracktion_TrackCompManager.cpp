@@ -108,42 +108,8 @@ Array<EditTimeRange> TrackCompManager::TrackComp::getMuteTimes (const Array<Edit
     return muteTimes;
 }
 
-EditTimeRange TrackCompManager::TrackComp::getTimeRange() const
+juce::Array<EditTimeRange> TrackCompManager::TrackComp::getNonMuteTimes (Track& t, double crossfadeTime) const
 {
-    EditTimeRange time;
-
-    auto crossfadeTimeMs = edit.engine.getPropertyStorage().getProperty (SettingID::compCrossfadeMs, 20.0);
-    auto crossfadeTime = static_cast<double> (crossfadeTimeMs) / 1000.0;
-    auto halfCrossfade = crossfadeTime / 2.0;
-
-    auto& ts = edit.tempoSequence;
-    bool convertFromBeats = timeFormat == beats;
-
-    for (const auto& sec : getSectionsForTrack ({}))
-    {
-        if (! sec.compSection->getTrack().isValid())
-            continue;
-
-        auto s = sec.timeRange.getStart();
-        auto e = sec.timeRange.getEnd();
-
-        if (convertFromBeats)
-        {
-            s = ts.beatsToTime (s);
-            e = ts.beatsToTime (e);
-        }
-
-        EditTimeRange secTime (s - halfCrossfade, e + halfCrossfade);
-        time = time.isEmpty() ? secTime : time.getUnionWith (secTime);
-    }
-
-    return time;
-}
-
-AudioNode* TrackCompManager::TrackComp::createAudioNode (Track& t, AudioNode* input)
-{
-    auto crossfadeTimeMs = edit.engine.getPropertyStorage().getProperty (SettingID::compCrossfadeMs, 20.0);
-    auto crossfadeTime = static_cast<double> (crossfadeTimeMs) / 1000.0;
     auto halfCrossfade = crossfadeTime / 2.0;
     Array<EditTimeRange> nonMuteTimes;
 
@@ -180,6 +146,47 @@ AudioNode* TrackCompManager::TrackComp::createAudioNode (Track& t, AudioNode* in
         }
     }
 
+    return nonMuteTimes;
+}
+
+EditTimeRange TrackCompManager::TrackComp::getTimeRange() const
+{
+    EditTimeRange time;
+
+    auto crossfadeTimeMs = edit.engine.getPropertyStorage().getProperty (SettingID::compCrossfadeMs, 20.0);
+    auto crossfadeTime = static_cast<double> (crossfadeTimeMs) / 1000.0;
+    auto halfCrossfade = crossfadeTime / 2.0;
+
+    auto& ts = edit.tempoSequence;
+    bool convertFromBeats = timeFormat == beats;
+
+    for (const auto& sec : getSectionsForTrack ({}))
+    {
+        if (! sec.compSection->getTrack().isValid())
+            continue;
+
+        auto s = sec.timeRange.getStart();
+        auto e = sec.timeRange.getEnd();
+
+        if (convertFromBeats)
+        {
+            s = ts.beatsToTime (s);
+            e = ts.beatsToTime (e);
+        }
+
+        EditTimeRange secTime (s - halfCrossfade, e + halfCrossfade);
+        time = time.isEmpty() ? secTime : time.getUnionWith (secTime);
+    }
+
+    return time;
+}
+
+AudioNode* TrackCompManager::TrackComp::createAudioNode (Track& t, AudioNode* input)
+{
+    auto crossfadeTimeMs = edit.engine.getPropertyStorage().getProperty (SettingID::compCrossfadeMs, 20.0);
+    auto crossfadeTime = static_cast<double> (crossfadeTimeMs) / 1000.0;
+    auto nonMuteTimes = getNonMuteTimes (t, crossfadeTime);
+    
     return TrackCompManager::createTrackCompAudioNode (input, getMuteTimes (nonMuteTimes),
                                                        nonMuteTimes, crossfadeTime);
 }

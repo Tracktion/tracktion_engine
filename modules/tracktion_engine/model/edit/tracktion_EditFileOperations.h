@@ -49,10 +49,10 @@ private:
 };
 
 //==============================================================================
-/** Loads an edit from file, ready for playback / edtiing */
+/** Loads an edit from file, ready for playback / editing */
 std::unique_ptr<Edit> loadEditFromFile (Engine&, const juce::File&);
 
-/** Creates a new edit for a file, ready for playback / edtiing */
+/** Creates a new edit for a file, ready for playback / editing */
 std::unique_ptr<Edit> createEmptyEdit (Engine&, const juce::File&);
 
 /** Uses the ProjectManager to find an Edit file and load it as a ValueTree. */

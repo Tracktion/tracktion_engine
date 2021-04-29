@@ -74,8 +74,15 @@ public:
         bool pasteInsertingAtCursorPos (Edit&, EditInsertPoint&, SelectionManager&) const;
         bool pasteAfterSelected (Edit&, EditInsertPoint&, SelectionManager&) const;
 
+        enum class AutomationLocked
+        {
+            no, /**< Don't copy autmation. */
+            yes /**< Do copy autmation. */
+        };
+        
         void addClip (int trackOffset, const juce::ValueTree& state);
-        void addSelectedClips (const SelectableList&, EditTimeRange range, bool automationLocked);
+        void addSelectedClips (const SelectableList&, EditTimeRange range, AutomationLocked);
+        void addAutomation (const juce::Array<TrackSection>&, EditTimeRange range);
 
         struct ClipInfo
         {
@@ -95,7 +102,7 @@ public:
             juce::Range<float> valueRange;
         };
 
-        juce::Array<AutomationCurveSection> automationCurves;
+        std::vector<AutomationCurveSection> automationCurves;
     };
 
     struct Tracks  : public ContentType
@@ -139,16 +146,30 @@ public:
         juce::Range<float> valueRange;
     };
 
-    struct MIDINotes  : public ContentType
+    struct MIDIEvents  : public ContentType
     {
-        MIDINotes();
-        ~MIDINotes() override;
+        MIDIEvents();
+        ~MIDIEvents() override;
 
-        juce::Array<MidiNote*> pasteIntoClip (MidiClip&, const juce::Array<MidiNote*>& selectedNotes,
-                                              double cursorPosition, const std::function<double(double)>& snapBeat) const;
+        std::pair<juce::Array<MidiNote*>, juce::Array<MidiControllerEvent*>> pasteIntoClip (MidiClip&,
+                                                                                            const juce::Array<MidiNote*>& selectedNotes,
+                                                                                            const juce::Array<MidiControllerEvent*>& selectedEvents,
+                                                                                            double cursorPosition, const std::function<double(double)>& snapBeat) const;
+
+
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
         std::vector<juce::ValueTree> notes;
+        std::vector<juce::ValueTree> controllers;
+
+    private:
+        juce::Array<MidiNote*> pasteNotesIntoClip (MidiClip&, const juce::Array<MidiNote*>& selectedNotes,
+                                                   double cursorPosition, const std::function<double(double)>& snapBeat) const;
+
+        juce::Array<MidiControllerEvent*> pasteControllersIntoClip (MidiClip& clip,
+                                                                    const juce::Array<MidiNote*>& selectedNotes,
+                                                                    const juce::Array<MidiControllerEvent*>& selectedEvents,
+                                                                    double cursorPosition, const std::function<double(double)>& snapBeat) const;
     };
 
     struct Pitches  : public ContentType
@@ -179,6 +200,7 @@ public:
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
         std::vector<juce::ValueTree> plugins;
+        std::vector<std::pair<Selectable::WeakRef /* editRef */, juce::ValueTree>> rackTypes;
     };
 
     struct Takes  : public ContentType

@@ -46,6 +46,7 @@ public:
 
 private:
     std::vector<juce::MidiMessageSequence> ms;
+    double lastStart = 0;
     size_t currentSequence = 0;
     int currentIndex = 0;
     EditTimeRange editSection;

@@ -105,6 +105,7 @@ public:
     void setTargetTrack (AudioTrack&, int index, bool moveToTrack);
     void removeTargetTrack (AudioTrack&);
     void removeTargetTrack (AudioTrack&, int index);
+    void removeTargetTrack (EditItemID, int index);
     void clearFromTracks();
     bool isAttachedToTrack() const;
 
@@ -226,7 +227,10 @@ public:
                 case InputDevice::waveDevice:           return new WaveInputDeviceDestination (input, v);
                 case InputDevice::physicalMidiDevice:   return new MidiInputDeviceDestination (input, v);
                 case InputDevice::virtualMidiDevice:    return new VirtualMidiInputDeviceDestination (input, v);
-                default:                                return new InputDeviceDestination (input, v);
+                case InputDevice::trackWaveDevice:
+                case InputDevice::trackMidiDevice:
+                default:
+                    return new InputDeviceDestination (input, v);
             }
         }
 
@@ -245,6 +249,28 @@ public:
     InputDeviceDestination* getDestination (const Track& track, int index);
 
     InputDeviceDestinationList destTracks {*this, state};
+
+    //==============================================================================
+    /** Base class for classes that want to listen to an InputDevice and get a callback for each block of input.
+        Subclasses of this can be used to output live audio/MIDI or for visualisations etc.
+     */
+    struct Consumer
+    {
+        /** Destructor. */
+        virtual ~Consumer() = default;
+
+        /** Override this to receive audio input from the device if it has any. */
+        virtual void acceptInputBuffer (choc::buffer::ChannelArrayView<float>) {}
+
+        /** Override this to receive MIDI input from the device if it has any. */
+        virtual void handleIncomingMidiMessage (const juce::MidiMessage&) {}
+    };
+
+    /** Base classes should override this to add any Consumers internally. */
+    virtual void addConsumer (Consumer*) = 0;
+
+    /** Base classes should override this to remove the Consumer internally. */
+    virtual void removeConsumer (Consumer*) = 0;
 
 protected:
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;

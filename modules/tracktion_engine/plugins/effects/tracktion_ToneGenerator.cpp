@@ -65,7 +65,7 @@ void ToneGeneratorPlugin::deinitialise()
 {
 }
 
-void ToneGeneratorPlugin::applyToBuffer (const AudioRenderContext& fc)
+void ToneGeneratorPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     if (fc.destBuffer == nullptr)
         return;
@@ -114,6 +114,9 @@ void ToneGeneratorPlugin::restorePluginStateFromValueTree (const juce::ValueTree
 {
     CachedValue<float>* cvsFloat[] = { &oscType, &bandLimit, &frequency, &level, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+
+    for (auto p : getAutomatableParameters())
+        p->updateFromAttachedValue();
 }
 
 //==============================================================================

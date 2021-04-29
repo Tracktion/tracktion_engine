@@ -10,6 +10,9 @@
 
 #pragma once
 
+#include <numeric>
+#include <juce_audio_formats/juce_audio_formats.h>
+
 namespace tracktion_graph
 {
 
@@ -21,7 +24,7 @@ namespace test_utilities
     {
         juce::MidiMessageSequence sequence;
         int noteNumber = -1;
-        
+
         for (double time = 0.0; time < durationSeconds; time += r.nextDouble() * 0.5 + 0.1)
         {
             if (noteNumber != -1)
@@ -35,7 +38,7 @@ namespace test_utilities
                 sequence.addEvent (juce::MidiMessage::noteOn (1, noteNumber, 1.0f), time);
             }
         }
-        
+
         return sequence;
     }
 
@@ -43,7 +46,7 @@ namespace test_utilities
     static inline juce::MidiMessageSequence createMidiMessageSequence (const juce::MidiBuffer& buffer, double sampleRate)
     {
         juce::MidiMessageSequence sequence;
-        
+
         for (auto itr : buffer)
         {
             const auto& result = itr.getMessage();
@@ -52,20 +55,44 @@ namespace test_utilities
             const double time = samplePosition / sampleRate;
             sequence.addEvent (result, time);
         }
-        
+
         return sequence;
     }
 
-    static inline void fillBufferWithSinData (juce::AudioBuffer<float>& buffer)
+    //==============================================================================
+    static inline float getPhaseIncrement (float frequency, double sampleRate)
     {
-        const float increment = juce::MathConstants<float>::twoPi / buffer.getNumSamples();
-        float* sample = buffer.getWritePointer (0);
-        
-        for (int i = 0; i < buffer.getNumSamples(); ++i)
-            *sample++ = std::sin (increment * i);
-        
-        for (int i = 1; i < buffer.getNumChannels(); ++i)
-            buffer.copyFrom (i, 0, buffer, 0, 0, buffer.getNumSamples());
+        return (float) ((frequency * juce::MathConstants<double>::pi * 2.0) / sampleRate);
+    }
+
+    struct SineOscillator
+    {
+        void reset (float frequency, double sampleRate)
+        {
+            phase = 0;
+            phaseIncrement = getPhaseIncrement (frequency, sampleRate);
+        }
+
+        float getNext()
+        {
+            auto v = std::sin (phase);
+            phase = std::fmod (phase + phaseIncrement, juce::MathConstants<float>::pi * 2.0f);
+            return v;
+        }
+
+        float phase = 0, phaseIncrement = 0;
+    };
+
+    static inline void fillBufferWithSinData (choc::buffer::ChannelArrayView<float> buffer)
+    {
+        auto phaseIncrement = juce::MathConstants<float>::twoPi / buffer.getNumFrames();
+        setAllFrames (buffer, [=] (auto frame) { return std::sin ((float) (frame * phaseIncrement)); });
+    }
+
+    static inline auto createSineBuffer (int numChannels, int numFrames, double phaseIncrement)
+    {
+        return choc::buffer::createChannelArrayBuffer (numChannels, numFrames,
+                                                       [=] (auto, auto frame) { return std::sin ((float) (frame * phaseIncrement)); });
     }
 
     /** Logs a MidiMessageSequence. */
@@ -89,71 +116,138 @@ namespace test_utilities
     }
 
     /** Writes an audio buffer to a file. */
-    static inline void writeToFile (juce::File file, const juce::AudioBuffer<float>& buffer, double sampleRate)
+    static inline void writeToFile (juce::File file, choc::buffer::ChannelArrayView<float> block, double sampleRate)
     {
         if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (juce::WavAudioFormat().createWriterFor (file.createOutputStream().release(),
-                                                                                                            sampleRate, (uint32_t) buffer.getNumChannels(), 16, {}, 0)))
+                                                                                                            sampleRate,
+                                                                                                            block.getNumChannels(),
+                                                                                                            16, {}, 0)))
         {
-            writer->writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());
+            writer->writeFromAudioSampleBuffer (toAudioBuffer (block), 0, (int) block.getNumFrames());
         }
     }
 
-    /** Writes an audio block to a file. */
-    static inline void writeToFile (juce::File file, const juce::dsp::AudioBlock<float>& block, double sampleRate)
+    //==============================================================================
+    /** Returns the ammount of internal memory allocated for buffers. */
+    static inline size_t getMemoryUsage (const std::vector<Node*>& nodes)
     {
-        const int numChannels = (int) block.getNumChannels();
-        float* chans[32] = {};
-
-        for (int i = 0; i < numChannels; ++i)
-            chans[i] = block.getChannelPointer ((size_t) i);
-
-        const juce::AudioBuffer<float> buffer (chans, numChannels, (int) block.getNumSamples());
-        writeToFile (file, buffer, sampleRate);
+        return std::accumulate (nodes.begin(), nodes.end(), (size_t) 0,
+                                [] (size_t total, Node* n)
+                                {
+                                    return total + n->getAllocatedBytes();
+                                });
     }
 
-    /** Returns true if all the nodes in the graph have a unique nodeID. */
-    static inline bool areNodeIDsUnique (Node& node, bool ignoreZeroIDs)
+    /** Returns the ammount of internal memory allocated for buffers. */
+    static inline size_t getMemoryUsage (Node& node)
     {
-        std::vector<size_t> nodeIDs;
-        visitNodes (node, [&] (Node& n) { nodeIDs.push_back (n.getNodeProperties().nodeID); }, false);
-        std::sort (nodeIDs.begin(), nodeIDs.end());
+        return getMemoryUsage (tracktion_graph::getNodes (node, tracktion_graph::VertexOrdering::postordering));
+    }
+
+    /** Returns the ammount of internal memory allocated for buffers. */
+    inline juce::String getName (ThreadPoolStrategy type)
+    {
+        switch (type)
+        {
+            case ThreadPoolStrategy::conditionVariable:     return "conditionVariable";
+            case ThreadPoolStrategy::realTime:              return "realTime";
+            case ThreadPoolStrategy::hybrid:                return "hybrid";
+            case ThreadPoolStrategy::semaphore:             return "semaphore";
+            case ThreadPoolStrategy::lightweightSemaphore:  return "lightweightSemaphore";
+            case ThreadPoolStrategy::lightweightSemHybrid:  return "lightweightSemaphoreHybrid";
+        }
+
+        jassertfalse;
+        return {};
+    }
+
+    inline std::vector<ThreadPoolStrategy> getThreadPoolStrategies()
+    {
+        return { ThreadPoolStrategy::lightweightSemHybrid,
+                 ThreadPoolStrategy::lightweightSemaphore,
+                 ThreadPoolStrategy::semaphore,
+                 ThreadPoolStrategy::conditionVariable,
+                 ThreadPoolStrategy::realTime,
+                 ThreadPoolStrategy::hybrid };
+    }
+
+    /** Logs the graph structure to the console. */
+    inline void logGraph (Node& node)
+    {
+        struct Visitor
+        {
+            static void logNode (Node& n, int depth)
+            {
+                juce::Logger::writeToLog (juce::String::repeatedString (" ", depth * 2) + typeid (n).name());
+            }
+
+            static void visitInputs (Node& n, int depth)
+            {
+                logNode (n, depth);
+                
+                for (auto input : n.getDirectInputNodes())
+                    visitInputs (*input, depth + 1);
+            }
+        };
         
-        if (ignoreZeroIDs)
-            nodeIDs.erase (std::remove_if (nodeIDs.begin(), nodeIDs.end(),
-                                           [] (auto nID) { return nID == 0; }),
-                           nodeIDs.end());
-        
-        auto uniqueEnd = std::unique (nodeIDs.begin(), nodeIDs.end());
-        return uniqueEnd == nodeIDs.end();
+        Visitor::visitInputs (node, 0);
+    }
+
+
+    //==============================================================================
+    template<typename AudioFormatType>
+    std::unique_ptr<juce::TemporaryFile> getSinFile (double sampleRate, double durationInSeconds,
+                                                     int numChannels = 1, float frequency = 220.0f)
+    {
+        auto buffer = createSineBuffer (numChannels, (int) (sampleRate * durationInSeconds),
+                                        getPhaseIncrement (frequency, sampleRate));
+
+        AudioFormatType format;
+        auto f = std::make_unique<juce::TemporaryFile> (format.getFileExtensions()[0]);
+        writeToFile (f->getFile(), buffer, sampleRate);
+        return f;
     }
 
     //==============================================================================
     /** Compares two MidiMessageSequences and expects them to be equal. */
-    static inline void expectMidiMessageSequence (juce::UnitTest& ut, const juce::MidiMessageSequence& seq1, const juce::MidiMessageSequence& seq2)
+    static inline void expectMidiMessageSequence (juce::UnitTest& ut, const juce::MidiMessageSequence& actual, const juce::MidiMessageSequence& expected)
     {
-        ut.expectEquals (seq1.getNumEvents(), seq2.getNumEvents(), "Num MIDI events not equal");
-        
-        if (seq1.getNumEvents() != seq2.getNumEvents())
-            return;
-        
+        ut.expectEquals (actual.getNumEvents(), expected.getNumEvents(), "Num MIDI events not equal");
+
         bool sequencesTheSame = true;
-        
-        for (int i = 0; i < seq1.getNumEvents(); ++i)
+
+        for (int i = 0; i < std::min (actual.getNumEvents(), expected.getNumEvents()); ++i)
         {
-            auto event1 = seq1.getEventPointer (i);
-            auto event2 = seq2.getEventPointer (i);
-            
+            auto event1 = actual.getEventPointer (i);
+            auto event2 = expected.getEventPointer (i);
+
             auto desc1 = event1->message.getDescription();
             auto desc2 = event2->message.getDescription();
 
             if (desc1 != desc2)
             {
-                ut.logMessage (juce::String ("Event at index 123 is:\n\tseq1: XXX\n\tseq2 is: YYY")
+                ut.logMessage (juce::String ("Event at index 123 is:\n\tactual: XXX\n\texpected is: YYY")
                                 .replace ("123", juce::String (i)).replace ("XXX", desc1).replace ("YYY", desc2));
                 sequencesTheSame = false;
             }
         }
-        
+
+        for (int i = actual.getNumEvents(); i < expected.getNumEvents(); ++i)
+        {
+            auto event2 = expected.getEventPointer (i);
+            auto desc2 = event2->message.getDescription();
+            ut.logMessage (juce::String ("Missing event at index 123 is:\n\texpected is: YYY, TTT")
+                            .replace ("123", juce::String (i)).replace ("YYY", desc2).replace ("TTT", juce::String (event2->message.getTimeStamp())));
+        }
+
+        for (int i = expected.getNumEvents(); i < actual.getNumEvents(); ++i)
+        {
+            auto event2 = actual.getEventPointer (i);
+            auto desc2 = event2->message.getDescription();
+            ut.logMessage (juce::String ("Extra event at index 123 is:\n\tactual is: YYY, TTT")
+                            .replace ("123", juce::String (i)).replace ("YYY", desc2).replace ("TTT", juce::String (event2->message.getTimeStamp())));
+        }
+
         ut.expect (sequencesTheSame, "MIDI sequence contents not equal");
     }
 
@@ -179,7 +273,7 @@ namespace test_utilities
                                                     0, numSampleToSplitAt);
             expectAudioBuffer (ut, trimmedBuffer, channel, mag1, rms1);
         }
-        
+
         {
             juce::AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(),
                                                     buffer.getNumChannels(),
@@ -189,21 +283,22 @@ namespace test_utilities
     }
 
     /** Extracts a section of a buffer and expects a specific magnitude and RMS it. */
-    static inline void expectAudioBuffer (juce::UnitTest& ut, juce::AudioBuffer<float>& buffer, int channel, juce::Range<int> sampleRange,
+    template<typename IntType>
+    static inline void expectAudioBuffer (juce::UnitTest& ut, juce::AudioBuffer<float>& buffer, int channel, juce::Range<IntType> sampleRange,
                                           float mag, float rms)
     {
         juce::AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(),
                                                 buffer.getNumChannels(),
-                                                sampleRange.getStart(), sampleRange.getLength());
+                                                (int) sampleRange.getStart(), (int) sampleRange.getLength());
         expectAudioBuffer (ut, trimmedBuffer, channel, mag, rms);
     }
 
     /** Checks that there are no duplicate nodeIDs in a Node. */
     static inline void expectUniqueNodeIDs (juce::UnitTest& ut, Node& node, bool ignoreZeroIDs)
     {
-        auto areUnique = areNodeIDsUnique (node, ignoreZeroIDs);
+        auto areUnique = node_player_utils::areNodeIDsUnique (node, ignoreZeroIDs);
         ut.expect (areUnique, "nodeIDs are not unique");
-        
+
         if (! areUnique)
             visitNodes (node, [&] (Node& n) { ut.logMessage (juce::String (typeid (n).name()) + " - " + juce::String (n.getNodeProperties().nodeID)); }, false);
     }
@@ -217,13 +312,20 @@ namespace test_utilities
         bool randomiseBlockSizes = false;
         juce::Random random;
     };
-    
+
+    /** Returns a the descriptions of s TestSetup. */
+    static inline juce::String getDescription (const TestSetup& ts)
+    {
+        return juce::String (ts.sampleRate, 0) + ", " + juce::String (ts.blockSize)
+            + juce::String (ts.randomiseBlockSizes ? ", random" : "");
+    }
+
     /** Returns a set of TestSetups to be used for testing. */
     static inline std::vector<TestSetup> getTestSetups (juce::UnitTest& ut)
     {
         std::vector<TestSetup> setups;
-        
-       #if JUCE_DEBUG
+
+       #if JUCE_DEBUG || GRAPH_UNIT_TESTS_QUICK_VALIDATE
         for (double sampleRate : { 44100.0, 96000.0 })
             for (int blockSize : { 64, 512 })
        #else
@@ -245,129 +347,157 @@ namespace test_utilities
         int numProcessMisses = 0;
     };
 
-    template<typename NodeProcessorType>
+    template<typename NodePlayerType>
     struct TestProcess
     {
-        TestProcess (std::unique_ptr<NodeProcessorType> playerToUse, TestSetup ts,
-                     const int numChannelsToUse, const double durationInSeconds)
+        TestProcess (std::unique_ptr<NodePlayerType> playerToUse, TestSetup ts,
+                     const int numChannelsToUse, const double durationInSeconds, bool writeToFile)
             : testSetup (ts), numChannels (numChannelsToUse)
         {
             context = std::make_shared<TestContext>();
             context->tempFile = std::make_unique<juce::TemporaryFile> (".wav");
 
-            buffer.setSize  (numChannels, ts.blockSize);
+            buffer.resize  ({ (choc::buffer::ChannelCount) numChannels, (choc::buffer::FrameCount) ts.blockSize });
             numSamplesToDo = juce::roundToInt (durationInSeconds * ts.sampleRate);
 
-            writer = std::unique_ptr<juce::AudioFormatWriter> (juce::WavAudioFormat().createWriterFor (context->tempFile->getFile().createOutputStream().release(),
-                                                                                                       ts.sampleRate, (uint32_t) numChannels, 16, {}, 0));
+            if (writeToFile && numChannels > 0)
+                writer = std::unique_ptr<juce::AudioFormatWriter> (juce::WavAudioFormat().createWriterFor (context->tempFile->getFile().createOutputStream().release(),
+                                                                                                           ts.sampleRate, (uint32_t) numChannels, 16, {}, 0));
             setPlayer (std::move (playerToUse));
+        }
+
+        Node& getNode() const
+        {
+            return *player->getNode();
+        }
+
+        NodePlayerType& getNodePlayer() const
+        {
+            return *player;
         }
 
         void setNode (std::unique_ptr<Node> newNode)
         {
             jassert (newNode != nullptr);
-            processor->setNode (std::move (newNode));
+            player->setNode (std::move (newNode));
         }
-        
-        void setPlayer (std::unique_ptr<NodeProcessorType> newPlayerToUse)
+
+        void setPlayer (std::unique_ptr<NodePlayerType> newPlayerToUse)
         {
             jassert (newPlayerToUse != nullptr);
-            processor = std::move (newPlayerToUse);
-            processor->prepareToPlay (testSetup.sampleRate, testSetup.blockSize);
+            player = std::move (newPlayerToUse);
+            player->prepareToPlay (testSetup.sampleRate, testSetup.blockSize);
         }
-                
+
+        void setPlayHead (tracktion_graph::PlayHead* newPlayHead)
+        {
+            playHead = newPlayHead;
+        }
+
         /** Processes a number of samples.
             Returns true if there is still more processing to be done.
         */
         bool process (int maxNumSamples)
         {
-            if (! writer)
-                return false;
-            
             for (;;)
             {
-                const int maxNumThisTime = testSetup.randomiseBlockSizes ? std::min (testSetup.random.nextInt ({ 1, testSetup.blockSize }), numSamplesToDo)
-                                                                         : std::min (testSetup.blockSize, numSamplesToDo);
-                const int numThisTime = std::min (maxNumSamples, maxNumThisTime);
-                buffer.clear();
+                auto maxNumThisTime = testSetup.randomiseBlockSizes ? std::min (testSetup.random.nextInt ({ 1, testSetup.blockSize }), numSamplesToDo)
+                                                                    : std::min (testSetup.blockSize, numSamplesToDo);
+                auto numThisTime = std::min (maxNumSamples, maxNumThisTime);
                 midi.clear();
-                
-                juce::AudioBuffer<float> subSectionBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
-                                                           0, numThisTime);
 
-                numProcessMisses += processor->process ({ juce::Range<int64_t>::withStartAndLength ((int64_t) numSamplesDone, (int64_t) numThisTime),
-                                                        { { subSectionBuffer }, midi } });
-                
-                writer->writeFromAudioSampleBuffer (subSectionBuffer, 0, subSectionBuffer.getNumSamples());
-                
+                auto subSectionView = buffer.getStart ((choc::buffer::FrameCount) numThisTime);
+                subSectionView.clear();
+
+                const auto referenceSampleRange = juce::Range<int64_t>::withStartAndLength ((int64_t) numSamplesDone, (int64_t) numThisTime);
+
+                if (playHead)
+                    playHead->setReferenceSampleRange (referenceSampleRange);
+
+                numProcessMisses += player->process ({ referenceSampleRange, { subSectionView, midi } });
+
+                if (writer)
+                {
+                    auto audioBuffer = tracktion_graph::toAudioBuffer (subSectionView);
+                    writer->writeFromAudioSampleBuffer (audioBuffer, 0, audioBuffer.getNumSamples());
+                }
+
                 // Copy MIDI to buffer
                 for (const auto& m : midi)
                 {
                     const int sampleNumber = (int) std::floor (m.getTimeStamp() * testSetup.sampleRate);
                     context->midi.addEvent (m, numSamplesDone + sampleNumber);
                 }
-                
+
                 numSamplesToDo -= numThisTime;
                 numSamplesDone += numThisTime;
                 maxNumSamples -=  numThisTime;
-                
+
                 if (maxNumSamples <= 0)
                     break;
             }
-            
+
             return numSamplesToDo > 0;
         }
-        
+
         std::shared_ptr<TestContext> processAll()
         {
             process (numSamplesToDo);
             return getTestResult();
         }
-        
+
         std::shared_ptr<TestContext> getTestResult()
         {
-            writer->flush();
-
-            // Then read it back in to the buffer
-            if (auto reader = std::unique_ptr<juce::AudioFormatReader> (juce::WavAudioFormat().createReaderFor (context->tempFile->getFile().createInputStream().release(), true)))
+            if (writer)
             {
-                juce::AudioBuffer<float> tempBuffer (numChannels, (int) reader->lengthInSamples);
-                reader->read (&tempBuffer, 0, tempBuffer.getNumSamples(), 0, true, true);
-                context->buffer = std::move (tempBuffer);
-                context->numProcessMisses = numProcessMisses;
-                
-                return context;
+                writer->flush();
+
+                // Then read it back in to the buffer
+                if (auto reader = std::unique_ptr<juce::AudioFormatReader> (juce::WavAudioFormat().createReaderFor (context->tempFile->getFile().createInputStream().release(), true)))
+                {
+                    juce::AudioBuffer<float> tempBuffer (numChannels, (int) reader->lengthInSamples);
+                    reader->read (&tempBuffer, 0, tempBuffer.getNumSamples(), 0, true, true);
+                    context->buffer = std::move (tempBuffer);
+                }
             }
-            
-            return {};
+
+            return context;
         }
-        
+
     private:
-        std::unique_ptr<NodeProcessorType> processor;
+        std::unique_ptr<NodePlayerType> player;
         TestSetup testSetup;
         const int numChannels;
+        tracktion_graph::PlayHead* playHead = nullptr;
 
-		std::shared_ptr<TestContext> context;
-		std::unique_ptr<juce::AudioFormatWriter> writer;
-        
-        juce::AudioBuffer<float> buffer;
+        std::shared_ptr<TestContext> context;
+        std::unique_ptr<juce::AudioFormatWriter> writer;
+
+        choc::buffer::ChannelArrayBuffer<float> buffer;
         tracktion_engine::MidiMessageArray midi;
         int numSamplesToDo = 0;
         int numSamplesDone = 0;
         int numProcessMisses = 0;
     };
 
-    template<typename NodeProcessorType>
-    static inline std::shared_ptr<TestContext> createTestContext (std::unique_ptr<NodeProcessorType> processor, TestSetup ts,
+    template<typename NodePlayerType>
+    static inline std::shared_ptr<TestContext> createTestContext (std::unique_ptr<NodePlayerType> player, TestSetup ts,
                                                                   const int numChannels, const double durationInSeconds)
     {
-        return TestProcess<NodeProcessorType> (std::move (processor), ts, numChannels, durationInSeconds).processAll();
+        return TestProcess<NodePlayerType> (std::move (player), ts, numChannels, durationInSeconds, true).processAll();
     }
 
     static inline std::shared_ptr<TestContext> createBasicTestContext (std::unique_ptr<Node> node, const TestSetup ts,
                                                                        const int numChannels, const double durationInSeconds)
     {
         auto player = std::make_unique<NodePlayer> (std::move (node));
+        return createTestContext (std::move (player), ts, numChannels, durationInSeconds);
+    }
+
+    static inline std::shared_ptr<TestContext> createBasicTestContext (std::unique_ptr<Node> node, PlayHeadState& playHeadStateToUse,
+                                                                       const TestSetup ts, const int numChannels, const double durationInSeconds)
+    {
+        auto player = std::make_unique<NodePlayer> (std::move (node), &playHeadStateToUse);
         return createTestContext (std::move (player), ts, numChannels, durationInSeconds);
     }
 }

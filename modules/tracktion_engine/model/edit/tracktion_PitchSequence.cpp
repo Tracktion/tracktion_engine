@@ -216,6 +216,8 @@ void PitchSequence::movePitchStart (PitchSetting& p, double deltaBeats, bool sna
 
 void PitchSequence::insertSpaceIntoSequence (double time, double amountOfSpaceInSeconds, bool snapToBeat)
 {
+    // there may be a temp change at this time so we need to find the tempo to the left of it hence the nudge
+    time = time - 0.00001;
     auto beatsToInsert = getEdit().tempoSequence.getBeatsPerSecondAt (time) * amountOfSpaceInSeconds;
     auto endIndex = indexOfNextPitchAt (time);
 

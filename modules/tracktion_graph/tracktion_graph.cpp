@@ -17,11 +17,32 @@
  #error "Incorrect use of JUCE cpp file"
 #endif
 
+//==============================================================================
+#include <juce_audio_formats/juce_audio_formats.h>
+
+//==============================================================================
+#include "tracktion_graph_TestConfig.h"
+
+//==============================================================================
 #include "tracktion_graph.h"
 
 //==============================================================================
 #include "tracktion_graph/tracktion_graph_tests_Utilities.h"
 #include "tracktion_graph/tracktion_graph_tests_TestNodes.h"
 
+#include "tracktion_graph/tracktion_graph_PlayHeadState.cpp"
+#include "tracktion_graph/tracktion_graph_PlayHead.cpp"
 #include "tracktion_graph/tracktion_graph_tests_Node.cpp"
 #include "tracktion_graph/tracktion_graph_tests_NodeVisiting.cpp"
+#include "tracktion_graph/tracktion_graph_Utility.cpp"
+
+#include "tracktion_graph/tracktion_graph_MultiThreadedNodePlayer.cpp"
+#include "tracktion_graph/tracktion_graph_LockFreeMultiThreadedNodePlayer.cpp"
+#include "tracktion_graph/tracktion_graph_NodePlayerThreadPools.cpp"
+
+#include "tracktion_graph/nodes/tracktion_graph_ConnectedNode.test.cpp"
+
+#include "utilities/tracktion_Semaphore.cpp"
+#include "utilities/tracktion_Semaphore.tests.cpp"
+#include "utilities/tracktion_Threads.cpp"
+

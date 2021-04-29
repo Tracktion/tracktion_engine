@@ -267,7 +267,7 @@ void EqualiserPlugin::deinitialise()
 {
 }
 
-void EqualiserPlugin::applyToBuffer (const AudioRenderContext& fc)
+void EqualiserPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     if (fc.destBuffer != nullptr)
     {

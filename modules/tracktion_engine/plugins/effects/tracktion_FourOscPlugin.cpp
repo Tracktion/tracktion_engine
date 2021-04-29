@@ -1391,7 +1391,7 @@ void FourOscPlugin::flushPluginStateToValueTree()
 
     auto mm = ValueTree (IDs::MODMATRIX);
 
-    for (auto itr : modMatrix)
+    for (const auto& itr : modMatrix)
     {
         for (int s = lfo1; s < numModSources; s++)
         {
@@ -1408,6 +1408,8 @@ void FourOscPlugin::flushPluginStateToValueTree()
     }
 
     state.addChild (mm, -1, um);
+    
+    Plugin::flushPluginStateToValueTree(); // Add any parameter values that are being modified
 }
 
 void FourOscPlugin::initialise (const PlaybackInitialisationInfo& info)
@@ -1436,7 +1438,7 @@ void FourOscPlugin::reset()
     turnOffAllVoices (false);
 }
 
-void FourOscPlugin::applyToBuffer (const AudioRenderContext& fc)
+void FourOscPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     juce::ScopedLock sl (voicesLock);
 
@@ -1445,7 +1447,7 @@ void FourOscPlugin::applyToBuffer (const AudioRenderContext& fc)
         SCOPED_REALTIME_CHECK
 
         // find the tempo
-        double now = fc.getEditTime().editRange1.getStart();
+        double now = fc.editTime;
         currentPos.setTime (now);
         currentTempo = float (currentPos.getCurrentTempo().bpm);
 
@@ -1606,6 +1608,9 @@ void FourOscPlugin::restorePluginStateFromValueTree (const ValueTree& v)
         state.addChild (mm.createCopy(), -1, um);
 
     valueTreePropertyChanged (state, IDs::voiceMode);
+
+    for (auto p : getAutomatableParameters())
+        p->updateFromAttachedValue();
 }
 
 juce::String FourOscPlugin::modulationSourceToName (ModSource src)
@@ -1620,6 +1625,10 @@ juce::String FourOscPlugin::modulationSourceToName (ModSource src)
         case mpeTimbre:     return TRANS("MPE Timbre");
         case midiNoteNum:   return TRANS("MIDI Note Number");
         case midiVelocity:  return TRANS("MIDI Velocity");
+        case none:
+        case ccBankSelect:
+        case ccPolyMode:
+        case numModSources:
         default:
         {
             if (src >= ccBankSelect && src <= ccPolyMode)
@@ -1649,6 +1658,10 @@ juce::String FourOscPlugin::modulationSourceToID (FourOscPlugin::ModSource src)
         case mpeTimbre:     return "mpeTimbre";
         case midiNoteNum:   return "midiNote";
         case midiVelocity:  return "midiVelocity";
+        case none:
+        case ccBankSelect:
+        case ccPolyMode:
+        case numModSources:
         default:
         {
             if (src >= ccBankSelect && src <= ccPolyMode)

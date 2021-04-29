@@ -725,11 +725,9 @@ void ParameterControlMappings::savePreset (int index)
     xmlNew.addChildElement (xml);
 
     if (auto xmlOld = edit.engine.getPropertyStorage().getXmlProperty (SettingID::filterControlMappingPresets))
-    {
-        forEachXmlChildElement (*xmlOld, n)
+        for (auto n : xmlOld->getChildIterator())
             if (n->getStringAttribute ("name") != name)
                 xmlNew.addChildElement (new juce::XmlElement (*n));
-    }
 
     edit.engine.getPropertyStorage().setXmlProperty (SettingID::filterControlMappingPresets, xmlNew);
    #endif
@@ -796,7 +794,7 @@ void ParameterControlMappings::loadPreset (int index)
 
                 if (plugin != nullptr)
                 {
-                    forEachXmlChildElement (*mapping, item)
+                    for (auto item : mapping->getChildIterator())
                     {
                         controllerIDs.add (item->getStringAttribute ("controller").getIntValue());
                         channelIDs.add (item->getStringAttribute ("channel").getIntValue());
@@ -816,7 +814,7 @@ StringArray ParameterControlMappings::getPresets() const
     StringArray result;
 
     if (auto xml = edit.engine.getPropertyStorage().getXmlProperty (SettingID::filterControlMappingPresets))
-        forEachXmlChildElement (*xml, e)
+        for (auto e : xml->getChildIterator())
             result.add (e->getStringAttribute ("name"));
 
     return result;

@@ -19,7 +19,7 @@ namespace tracktion_graph
     Plays back a MIDI sequence.
     This simply plays it back from start to finish with no notation of a playhead.
 */
-class MidiNode : public Node
+class MidiNode final    : public Node
 {
 public:
     MidiNode (juce::MidiMessageSequence sequenceToPlay)
@@ -42,9 +42,9 @@ public:
         sampleRate = info.sampleRate;
     }
     
-    void process (const ProcessContext& pc) override
+    void process (ProcessContext& pc) override
     {
-        const int numSamples = (int) pc.streamSampleRange.getLength();
+        const int numSamples = (int) pc.referenceSampleRange.getLength();
         const double blockDuration = numSamples / sampleRate;
         const auto timeRange = juce::Range<double>::withStartAndLength (lastTime, blockDuration);
         
@@ -77,13 +77,12 @@ private:
 
 //==============================================================================
 //==============================================================================
-class SinNode : public Node
+class SinNode final : public Node
 {
 public:
-    SinNode (float frequency, int numChannelsToUse = 1, size_t nodeIDToUse = 0)
-        : numChannels (numChannelsToUse), nodeID (nodeIDToUse)
+    SinNode (float frequencyToUse, int numChannelsToUse = 1, size_t nodeIDToUse = 0)
+        : numChannels (numChannelsToUse), nodeID (nodeIDToUse), frequency (frequencyToUse)
     {
-        osc.setFrequency (frequency, true);
     }
     
     NodeProperties getNodeProperties() override
@@ -104,20 +103,19 @@ public:
     
     void prepareToPlay (const PlaybackInitialisationInfo& info) override
     {
-        osc.prepare ({ double (info.sampleRate), uint32_t (info.blockSize), (uint32_t) numChannels });
+        oscillator.reset (frequency, info.sampleRate);
     }
-    
-    void process (const ProcessContext& pc) override
+
+    void process (ProcessContext& pc) override
     {
-        auto block = pc.buffers.audio;
-        osc.process (juce::dsp::ProcessContextReplacing<float> { block });
-        jassert (pc.buffers.audio.getNumChannels() == (size_t) getNodeProperties().numberOfChannels);
+        setAllFrames (pc.buffers.audio, [&] { return oscillator.getNext(); });
     }
     
 private:
-    juce::dsp::Oscillator<float> osc { [] (float in) { return std::sin (in); } };
     const int numChannels;
     size_t nodeID = 0;
+    test_utilities::SineOscillator oscillator;
+    float frequency = 0;
 };
 
 
@@ -126,12 +124,14 @@ private:
 /**
     Just a simple audio node that doesn't take any input so can be used as a stub.
 */
-class SilentNode   : public Node
+class SilentNode final  : public Node
 {
 public:
     SilentNode (int numChannelsToUse = 1)
         : numChannels (numChannelsToUse)
     {
+        setOptimisations ({ ClearBuffers::no,
+                            AllocateAudioBuffer::no });
     }
     
     NodeProperties getNodeProperties() override
@@ -149,22 +149,28 @@ public:
         return true;
     }
     
-    void prepareToPlay (const PlaybackInitialisationInfo&) override
+    void prepareToPlay (const PlaybackInitialisationInfo& info) override
     {
+        audioBuffer.resize (choc::buffer::Size::create ((choc::buffer::ChannelCount) numChannels,
+                                                        (choc::buffer::FrameCount) info.blockSize));
+        audioBuffer.clear();
     }
     
-    void process (const ProcessContext&) override
+    void process (ProcessContext& pc) override
     {
+        pc.buffers.midi.clear();
+        setAudioOutput (audioBuffer.getView().getStart (pc.buffers.audio.getNumFrames()));
     }
     
 private:
     const int numChannels;
+    choc::buffer::ChannelArrayBuffer<float> audioBuffer;
 };
 
 
 //==============================================================================
 //==============================================================================
-class BasicSummingNode : public Node
+class BasicSummingNode final    : public Node
 {
 public:
     BasicSummingNode (std::vector<std::unique_ptr<Node>> inputs)
@@ -182,8 +188,8 @@ public:
         for (auto& node : nodes)
         {
             auto nodeProps = node->getNodeProperties();
-            props.hasAudio = props.hasAudio | nodeProps.hasAudio;
-            props.hasMidi = props.hasMidi | nodeProps.hasMidi;
+            props.hasAudio = props.hasAudio || nodeProps.hasAudio;
+            props.hasMidi = props.hasMidi || nodeProps.hasMidi;
             props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);
         }
 
@@ -208,8 +214,8 @@ public:
         
         return true;
     }
-    
-    void process (const ProcessContext& pc) override
+
+    void process (ProcessContext& pc) override
     {
         const auto numChannels = pc.buffers.audio.getNumChannels();
 
@@ -218,11 +224,9 @@ public:
         {
             auto inputFromNode = node->getProcessedOutput();
             
-            const auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels);
-
-            if (numChannelsToAdd > 0)
-                pc.buffers.audio.getSubsetChannelBlock (0, numChannelsToAdd)
-                    .add (node->getProcessedOutput().audio.getSubsetChannelBlock (0, numChannelsToAdd));
+            if (auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels))
+                add (pc.buffers.audio.getFirstChannels (numChannelsToAdd),
+                     inputFromNode.audio.getFirstChannels (numChannelsToAdd));
             
             pc.buffers.midi.mergeFrom (inputFromNode.midi);
         }
@@ -247,7 +251,7 @@ static inline std::unique_ptr<BasicSummingNode> makeBaicSummingNode (std::initia
 
 //==============================================================================
 //==============================================================================
-class FunctionNode : public Node
+class FunctionNode final    : public Node
 {
 public:
     FunctionNode (std::unique_ptr<Node> input,
@@ -273,21 +277,21 @@ public:
         return node->hasProcessed();
     }
     
-    void process (const ProcessContext& pc) override
+    void process (ProcessContext& pc) override
     {
         auto inputBuffer = node->getProcessedOutput().audio;
 
-        const int numSamples = (int) pc.streamSampleRange.getLength();
-        const int numChannels = std::min ((int) inputBuffer.getNumChannels(), (int) pc.buffers.audio.getNumChannels());
-        jassert ((int) inputBuffer.getNumSamples() == numSamples);
+        auto numFrames = pc.referenceSampleRange.getLength();
+        const auto numChannels = std::min (inputBuffer.getNumChannels(), pc.buffers.audio.getNumChannels());
+        jassert (inputBuffer.getNumFrames() == numFrames);
 
-        for (int c = 0; c < numChannels; ++c)
+        for (choc::buffer::ChannelCount c = 0; c < numChannels; ++c)
         {
-            const float* inputSamples = inputBuffer.getChannelPointer ((size_t) c);
-            float* outputSamples = pc.buffers.audio.getChannelPointer ((size_t) c);
-            
-            for (int i = 0; i < numSamples; ++i)
-                outputSamples[i] = function (inputSamples[i]);
+            auto destIter = pc.buffers.audio.getIterator (c);
+            auto sourceIter = inputBuffer.getIterator (c);
+
+            for (choc::buffer::FrameCount i = 0; i < numFrames; ++i)
+                *destIter++ = function (*sourceIter++);
         }
     }
     
@@ -303,15 +307,99 @@ static inline std::unique_ptr<Node> makeGainNode (std::unique_ptr<Node> input, f
     return makeNode<FunctionNode> (std::move (input), [gain] (float s) { return s * gain; });
 }
 
+//==============================================================================
+//==============================================================================
+class GainNode final : public Node
+{
+public:
+    /** Creates a GainNode that doesn't own its input. */
+    GainNode (Node* inputNode, std::function<float()> gainFunc)
+        : input (inputNode), gainFunction (std::move (gainFunc))
+    {
+        assert (input != nullptr);
+        assert (gainFunction);
+        lastGain = gainFunction();
+    }
+
+    /** Creates a GainNode that owns its input. */
+    GainNode (std::unique_ptr<Node> inputNode, std::function<float()> gainFunc)
+        : ownedInput (std::move (inputNode)), input (ownedInput.get()),
+          gainFunction (std::move (gainFunc))
+    {
+        assert (ownedInput != nullptr);
+        assert (input != nullptr);
+        assert (gainFunction);
+        lastGain = gainFunction();
+    }
+
+    NodeProperties getNodeProperties() override
+    {
+        auto props = input->getNodeProperties();
+        constexpr size_t gainNodeMagicHash = 0x6761696e4e6f6465;
+        
+        if (props.nodeID != 0)
+            hash_combine (props.nodeID, gainNodeMagicHash);
+        
+        return props;
+    }
+    
+    std::vector<Node*> getDirectInputNodes() override
+    {
+        return { input };
+    }
+
+    bool isReadyToProcess() override
+    {
+        return input->hasProcessed();
+    }
+    
+    void process (ProcessContext& pc) override
+    {
+        jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
+
+        // Just pass out input on to our output
+        copy (pc.buffers.audio, input->getProcessedOutput().audio);
+        pc.buffers.midi.mergeFrom (input->getProcessedOutput().midi);
+        
+        float gain = gainFunction();
+        
+        if (gain == lastGain)
+        {
+            if (gain == 0.0f)
+                pc.buffers.audio.clear();
+            else if (gain != 1.0f)
+                applyGain (pc.buffers.audio, gain);
+        }
+        else
+        {
+            juce::SmoothedValue<float> smoother (lastGain);
+            smoother.setTargetValue (gain);
+            smoother.reset ((int) pc.buffers.audio.getNumFrames());
+            applyGainPerFrame (pc.buffers.audio, [&] { return smoother.getNextValue(); });
+        }
+        
+        lastGain = gain;
+    }
+    
+private:
+    std::unique_ptr<Node> ownedInput;
+    Node* input = nullptr;
+    std::function<float()> gainFunction;
+    float lastGain = 0.0f;
+};
 
 //==============================================================================
 //==============================================================================
-class SendNode : public Node
+class SendNode  : public Node
 {
 public:
-    SendNode (std::unique_ptr<Node> inputNode, int busIDToUse)
-        : input (std::move (inputNode)), busID (busIDToUse)
+    SendNode (std::unique_ptr<Node> inputNode, int busIDToUse,
+              std::function<float()> getGainFunc = nullptr)
+        : input (std::move (inputNode)), busID (busIDToUse),
+          gainFunction (std::move (getGainFunc))
     {
+        setOptimisations ({ ClearBuffers::no,
+                            AllocateAudioBuffer::no });
     }
     
     int getBusID() const
@@ -319,9 +407,20 @@ public:
         return busID;
     }
     
+    std::function<float()> getGainFunction()
+    {
+        return gainFunction;
+    }
+                                                
     NodeProperties getNodeProperties() override
     {
-        return input->getNodeProperties();
+        auto props = input->getNodeProperties();
+        constexpr size_t sendNodeMagicHash = 0x73656e644e6f6465;
+        
+        if (props.nodeID != 0)
+            hash_combine (props.nodeID, sendNodeMagicHash);
+        
+        return props;
     }
     
     std::vector<Node*> getDirectInputNodes() override
@@ -334,31 +433,43 @@ public:
         return input->hasProcessed();
     }
     
-    void process (const ProcessContext& pc) override
+    void process (ProcessContext& pc) override
     {
-        jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
+        auto source = input->getProcessedOutput();
+        jassert (pc.buffers.audio.getSize() == source.audio.getSize());
 
         // Just pass out input on to our output
-        pc.buffers.audio.copyFrom (input->getProcessedOutput().audio);
-        pc.buffers.midi.mergeFrom (input->getProcessedOutput().midi);
+        // N.B We need to clear manually here due to optimisations
+        setAudioOutput (source.audio);
+        pc.buffers.midi.copyFrom (source.midi);
     }
     
 private:
     std::unique_ptr<Node> input;
     const int busID;
+    std::function<float()> gainFunction;
 };
 
 
 //==============================================================================
 //==============================================================================
-class ReturnNode : public Node
+class ReturnNode final  : public Node
 {
 public:
+    ReturnNode (int busIDToUse)
+        : busID (busIDToUse)
+    {
+        setOptimisations ({ ClearBuffers::no,
+                            AllocateAudioBuffer::yes });
+    }
+
     ReturnNode (std::unique_ptr<Node> inputNode, int busIDToUse)
         : input (std::move (inputNode)), busID (busIDToUse)
     {
+        setOptimisations ({ ClearBuffers::no,
+                            AllocateAudioBuffer::yes });
     }
-    
+
     NodeProperties getNodeProperties() override
     {
         NodeProperties props;
@@ -369,18 +480,26 @@ public:
         for (auto& node : getDirectInputNodes())
         {
             auto nodeProps = node->getNodeProperties();
-            props.hasAudio = props.hasAudio | nodeProps.hasAudio;
-            props.hasMidi = props.hasMidi | nodeProps.hasMidi;
+            props.hasAudio = props.hasAudio || nodeProps.hasAudio;
+            props.hasMidi = props.hasMidi || nodeProps.hasMidi;
             props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);
             props.latencyNumSamples = std::max (props.latencyNumSamples, nodeProps.latencyNumSamples);
             hash_combine (props.nodeID, nodeProps.nodeID);
         }
+        
+        constexpr size_t returnNodeMagicHash = 0x72657475726e;
+        
+        if (props.nodeID != 0)
+            hash_combine (props.nodeID, returnNodeMagicHash);
 
         return props;
     }
     
     std::vector<Node*> getDirectInputNodes() override
     {
+        if (! input)
+            return {};
+
         return { input.get() };
     }
     
@@ -397,21 +516,30 @@ public:
 
     bool isReadyToProcess() override
     {
-        return input->hasProcessed();
+        return ! input || input->hasProcessed();
     }
     
-    void process (const ProcessContext& pc) override
+    void process (ProcessContext& pc) override
     {
-        jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
+        if (! input)
+        {
+            // N.B We need to clear manually here due to optimisations
+            pc.buffers.midi.clear();
+            pc.buffers.audio.clear();
+
+            return;
+        }
+
+        auto source = input->getProcessedOutput();
+        jassert (pc.buffers.audio.getSize() == source.audio.getSize());
 
         // Copy the input on to our output, the SummingNode will copy all the sends and get all the input
-        pc.buffers.audio.copyFrom (input->getProcessedOutput().audio);
-        pc.buffers.midi.mergeFrom (input->getProcessedOutput().midi);
+        setAudioOutput (source.audio);
+        pc.buffers.midi.copyFrom (source.midi);
     }
     
 private:
     std::unique_ptr<Node> input;
-    std::vector<Node*> sendNodes;
     const int busID;
     bool hasInitialised = false;
     
@@ -423,7 +551,7 @@ private:
         if (hasInitialised)
             return;
         
-        std::vector<Node*> sends;
+        std::vector<SendNode*> sends;
         visitNodes (rootNode,
                     [&] (Node& n)
                     {
@@ -453,9 +581,23 @@ private:
         if (sends.size() > 0)
         {
             std::vector<std::unique_ptr<Node>> ownedNodes;
-            ownedNodes.push_back (std::move (input));
+
+            if (input)
+                ownedNodes.push_back (std::move (input));
             
-            auto node = makeNode<SummingNode> (std::move (ownedNodes), std::move (sends));
+            // For each of the sends create a live gain node
+            for (int i = (int) sends.size(); --i >= 0;)
+            {
+                auto gainFunction = sends[(size_t) i]->getGainFunction();
+                
+                if (! gainFunction)
+                    continue;
+                
+                ownedNodes.push_back (makeNode<GainNode> (std::move (sends[(size_t) i]), std::move (gainFunction)));
+				sends.erase (std::find (sends.begin(), sends.end(), sends[(size_t) i]));
+			}
+
+            auto node = makeNode<SummingNode> (std::move (ownedNodes), std::vector<Node*> (sends.begin(), sends.end()));
             input.swap (node);
         }
         
@@ -467,7 +609,7 @@ private:
 //==============================================================================
 //==============================================================================
 /** Maps channels from one to another. */
-class ChannelRemappingNode  : public Node
+class ChannelRemappingNode final    : public Node
 {
 public:
     ChannelRemappingNode (std::unique_ptr<Node> inputNode,
@@ -502,6 +644,11 @@ public:
             props.numberOfChannels = std::max (props.numberOfChannels, channel.second + 1);
         }
         
+        constexpr size_t channelNodeMagicHash = 0x6368616e6e656c;
+        
+        if (props.nodeID != 0)
+            hash_combine (props.nodeID, channelNodeMagicHash);
+
         return props;
     }
     
@@ -515,7 +662,7 @@ public:
         return input->hasProcessed();
     }
     
-    void process (const ProcessContext& pc) override
+    void process (ProcessContext& pc) override
     {
         auto inputBuffers = input->getProcessedOutput();
         
@@ -524,18 +671,10 @@ public:
             pc.buffers.midi.mergeFrom (inputBuffers.midi);
         
         // Remap audio
-        auto sourceAudio = inputBuffers.audio;
-        auto destAudio = pc.buffers.audio;
-
         for (auto channel : channelMap)
-        {
-            if ((int) sourceAudio.getNumChannels() <= channel.first)
-                continue;
-                
-            auto sourceChanelBlock = sourceAudio.getSubsetChannelBlock ((size_t) channel.first, 1);
-            auto destChanelBlock = destAudio.getSubsetChannelBlock ((size_t) channel.second, 1);
-            destChanelBlock.add (sourceChanelBlock);
-        }
+            if (channel.first < (int) inputBuffers.audio.getNumChannels())
+                add (pc.buffers.audio.getChannel ((choc::buffer::ChannelCount) channel.second),
+                     inputBuffers.audio.getChannel ((choc::buffer::ChannelCount) channel.first));
     }
 
 private:
@@ -559,7 +698,7 @@ static inline std::vector<std::pair<int, int>> makeChannelMap (std::initializer_
 //==============================================================================
 //==============================================================================
 /** Blocks audio and MIDI input from reaching the outputs. */
-class SinkNode  : public Node
+class SinkNode final    : public Node
 {
 public:
     SinkNode (std::unique_ptr<Node> inputNode)
@@ -587,12 +726,62 @@ public:
         return input->hasProcessed();
     }
     
-    void process (const ProcessContext&) override
+    void process (ProcessContext&) override
     {
     }
 
 private:
     std::unique_ptr<Node> input;
+};
+
+
+//==============================================================================
+//==============================================================================
+/** Takes a non-owning input node and simply forwards its outputs on. */
+class ForwardingNode final  : public tracktion_graph::Node
+{
+public:
+    ForwardingNode (tracktion_graph::Node* inputNode)
+        : input (inputNode)
+    {
+        jassert (input);
+    }
+
+    ForwardingNode (std::shared_ptr<tracktion_graph::Node> inputNode)
+        : ForwardingNode (inputNode.get())
+    {
+        nodePtr = std::move (inputNode);
+    }
+
+    tracktion_graph::NodeProperties getNodeProperties() override
+    {
+        auto props = input->getNodeProperties();
+        tracktion_graph::hash_combine (props.nodeID, nodeID);
+        
+        return props;
+    }
+    
+    std::vector<tracktion_graph::Node*> getDirectInputNodes() override
+    {
+        return { input };
+    }
+
+    bool isReadyToProcess() override
+    {
+        return input->hasProcessed();
+    }
+    
+    void process (ProcessContext& pc) override
+    {
+        auto inputBuffers = input->getProcessedOutput();
+        copy (pc.buffers.audio, inputBuffers.audio);
+        pc.buffers.midi.copyFrom (inputBuffers.midi);
+    }
+
+private:
+    tracktion_graph::Node* input;
+    std::shared_ptr<tracktion_graph::Node> nodePtr;
+    const size_t nodeID { (size_t) juce::Random::getSystemRandom().nextInt() };
 };
 
 }

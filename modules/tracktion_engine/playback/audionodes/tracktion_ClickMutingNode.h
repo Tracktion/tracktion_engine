@@ -15,7 +15,7 @@ namespace tracktion_engine
 class ClickMutingNode   : public SingleInputAudioNode
 {
 public:
-    ClickMutingNode (ClickNode* clickNodeInput, Edit& e)
+    ClickMutingNode (ClickAudioNode* clickNodeInput, Edit& e)
         : SingleInputAudioNode (clickNodeInput), clickNode (clickNodeInput), edit (e)
     {
     }
@@ -42,7 +42,7 @@ public:
     }
 
 private:
-    ClickNode* clickNode = nullptr;
+    ClickAudioNode* clickNode = nullptr;
     const Edit& edit;
 
     bool isMutedAtTime (double time) const

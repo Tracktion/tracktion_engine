@@ -23,7 +23,7 @@ class AudioClipBase::TimestretchingPreviewAudioNode  : public AudioNode
 {
 public:
     TimestretchingPreviewAudioNode (AudioClipBase& clip)
-        : c (clip), file (c.getAudioFile()),
+        : c (clip), clipPtr (clip), file (c.getAudioFile()),
           fileInfo (file.getInfo()),
           sampleRate (fileInfo.sampleRate),
           fifo (jmax (1, fileInfo.numChannels), 8192)
@@ -154,6 +154,7 @@ public:
 
 private:
     AudioClipBase& c;
+    Clip::Ptr clipPtr;
 
     AudioFile file;
     AudioFileInfo fileInfo;
@@ -1060,6 +1061,7 @@ void AudioClipBase::copyFadeToAutomation (bool useFadeIn, bool removeClipFade)
             break;
         }
 
+        case AudioFadeCurve::linear:
         default:
         {
             curve.addPoint (0.0, useFadeIn ? valueLimits.getStart() : valueLimits.getLength(), 0.0f);
@@ -1126,9 +1128,17 @@ void AudioClipBase::disableLooping()
         pos.time.end = getTimeOfRelativeBeat (loopLengthBeats);
         pos.offset = getTimeOfRelativeBeat (loopStartBeats) - pos.getStart();
     }
+    else
+    {
+        pos.time.end = pos.time.start + loopLength;
+        pos.offset = loopStart;
+    }
 
     setLoopRange ({});
     setPosition (pos);
+    
+    if (getPosition().getLength() > getMaximumLength())
+        setLength (getMaximumLength(), true);
 }
 
 EditTimeRange AudioClipBase::getLoopRange() const
@@ -1271,9 +1281,9 @@ bool AudioClipBase::isUsingMelodyne() const
     return TimeStretcher::isMelodyne (timeStretchMode);
 }
 
-void AudioClipBase::loadMelodyneState (Edit& ed)
+void AudioClipBase::loadMelodyneState()
 {
-    setupARA (ed, true);
+    setupARA (true);
 }
 
 void AudioClipBase::showMelodyneWindow()
@@ -1774,7 +1784,7 @@ void AudioClipBase::sendMirrorUpdateToAllPlugins (Plugin& p) const
 }
 
 //==============================================================================
-bool AudioClipBase::setupARA (Edit& ed, bool dontPopupErrorMessages)
+bool AudioClipBase::setupARA (bool dontPopupErrorMessages)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     static bool araReentrancyCheck = false;
@@ -1790,7 +1800,7 @@ bool AudioClipBase::setupARA (Edit& ed, bool dontPopupErrorMessages)
         if (melodyneProxy == nullptr)
         {
             TRACKTION_LOG ("Created ARA reader!");
-            melodyneProxy = new MelodyneFileReader (ed, *this);
+            melodyneProxy = new MelodyneFileReader (edit, *this);
         }
 
         if (melodyneProxy != nullptr && melodyneProxy->isValid())
@@ -1801,11 +1811,11 @@ bool AudioClipBase::setupARA (Edit& ed, bool dontPopupErrorMessages)
             TRACKTION_LOG_ERROR ("Failed setting up ARA for audio clip!");
 
             if (TimeStretcher::isMelodyne (timeStretchMode)
-                  && ed.engine.getPluginManager().getARACompatiblePlugDescriptions().size() <= 0)
+                  && edit.engine.getPluginManager().getARACompatiblePlugDescriptions().size() <= 0)
             {
                 TRACKTION_LOG_ERROR ("No ARA-compatible plugins were found!");
 
-                ed.engine.getUIBehaviour().showWarningMessage (TRANS ("This audio clip is setup with Melodyne's time-stretching, but there aren't any ARA-compatible plugins available!")
+                edit.engine.getUIBehaviour().showWarningMessage (TRANS ("This audio clip is setup with Melodyne's time-stretching, but there aren't any ARA-compatible plugins available!")
                                                                  + "\n\n"
                                                                  + TRANS ("If you know you have ARA-compatible plugins installed, they must be scanned and part of the list of known plugins!"));
             }
@@ -1813,7 +1823,7 @@ bool AudioClipBase::setupARA (Edit& ed, bool dontPopupErrorMessages)
     }
    #endif
 
-    juce::ignoreUnused (dontPopupErrorMessages, ed);
+    juce::ignoreUnused (dontPopupErrorMessages);
     return false;
 }
 
@@ -1891,7 +1901,7 @@ AudioNode* AudioClipBase::createNode (EditTimeRange editTime, LiveClipLevel lcl,
     if (playFile.isNull())
         return {};
 
-    if (setupARA (edit, false))
+    if (setupARA (false))
     {
         jassert (melodyneProxy != nullptr);
 
@@ -2198,13 +2208,15 @@ AudioFile AudioClipBase::getProxyFileToCreate (bool renderTimestretched)
 //==============================================================================
 struct StretchSegment
 {
+    static constexpr int maxNumChannels = 8;
+    
     StretchSegment (Engine& engine, const AudioFile& file,
                     const AudioClipBase::ProxyRenderingInfo& info,
                     double sampleRate, const AudioSegmentList::Segment& s)
         : segment (s),
           fileInfo (file.getInfo()),
           crossfadeSamples ((int) (sampleRate * info.audioSegmentList->getCrossfadeLength())),
-          fifo (jmax (1, fileInfo.numChannels), outputBufferSize)
+          numChannelsToUse (jlimit (1, maxNumChannels, fileInfo.numChannels))
     {
         CRASH_TRACER
         reader = engine.getAudioFileManager().cache.createReader (file);
@@ -2223,7 +2235,7 @@ struct StretchSegment
                 reader->setReadPosition (0);
             }
 
-            timestretcher.initialise (fileInfo.sampleRate, outputBufferSize, fileInfo.numChannels,
+            timestretcher.initialise (fileInfo.sampleRate, outputBufferSize, numChannelsToUse,
                                       info.mode, info.options, false);
 
             timestretcher.setSpeedAndPitch ((float) (1.0 / segment.getStretchRatio()),
@@ -2281,30 +2293,33 @@ struct StretchSegment
     void fillNextBlock()
     {
         CRASH_TRACER
-        float* outs[] = { fifo.getWritePointer (0),
-                          fileInfo.numChannels > 1 ? fifo.getWritePointer (1) : nullptr,
-                          nullptr };
+        float* outs[maxNumChannels] = {};
+        
+        for (int i = 0; i < numChannelsToUse; ++i)
+            outs[i] = fifo.getWritePointer (i);
 
         const int needed = timestretcher.getFramesNeeded();
 
         if (needed >= 0)
         {
-            AudioScratchBuffer scratch (fileInfo.numChannels, needed);
-            const AudioChannelSet bufferChannels = AudioChannelSet::canonicalChannelSet (fileInfo.numChannels);
-            const AudioChannelSet channelsToUse = AudioChannelSet::stereo();
+            AudioScratchBuffer scratch (numChannelsToUse, needed);
+            scratch.buffer.clear();
+            const AudioChannelSet bufferChannels = AudioChannelSet::canonicalChannelSet (numChannelsToUse);
+            const AudioChannelSet sourceChannelsToUse = bufferChannels;
 
             if (needed > 0)
             {
                #if JUCE_DEBUG
-                jassert (reader->readSamples (needed, scratch.buffer, bufferChannels, 0, channelsToUse, 5000));
+                jassert (reader->readSamples (needed, scratch.buffer, bufferChannels, 0, sourceChannelsToUse, 5000));
                #else
-                reader->readSamples (needed, scratch.buffer, bufferChannels, 0, channelsToUse, 5000);
+                reader->readSamples (needed, scratch.buffer, bufferChannels, 0, sourceChannelsToUse, 5000);
                #endif
             }
 
-            const float* ins[] = { scratch.buffer.getReadPointer (0),
-                                   fileInfo.numChannels > 1 ? scratch.buffer.getReadPointer (1) : nullptr,
-                                   nullptr };
+            const float* ins[maxNumChannels] = {};
+            
+            for (int i = 0; i < numChannelsToUse; ++i)
+                ins[i] = scratch.buffer.getReadPointer (i);
 
             timestretcher.processData (ins, needed, outs);
         }
@@ -2377,8 +2392,8 @@ struct StretchSegment
     const int outputBufferSize = 1024;
     int readySamplesStart = 0, readySamplesEnd = 0;
     int64 readySampleOutputPos = 0;
-    const int crossfadeSamples;
-    juce::AudioBuffer<float> fifo;
+    const int crossfadeSamples, numChannelsToUse;
+    juce::AudioBuffer<float> fifo { numChannelsToUse, outputBufferSize };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StretchSegment)
 };
@@ -2504,8 +2519,28 @@ int64 AudioClipBase::getProxyHash()
 
 void AudioClipBase::beginRenderingNewProxyIfNeeded()
 {
-    if (canUseProxy() && isTimerRunning())
+    if (! canUseProxy())
+        return;
+    
+    if (isTimerRunning())
+    {
         startTimer (1);
+        return;
+    }
+    
+    const AudioFile playFile (getPlaybackFile());
+
+    if (playFile.isNull())
+        return;
+
+    auto original = getAudioFile();
+
+    if (shouldAttemptRender() && ! original.isValid())
+        createNewProxyAsync();
+
+    if (usesTimeStretchedProxy() || original.getInfo().needsCachedProxy)
+        if (playFile.getSampleRate() <= 0.0)
+            createNewProxyAsync();
 }
 
 //==============================================================================

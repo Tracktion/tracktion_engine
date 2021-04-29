@@ -343,8 +343,8 @@ struct AutomatableParameter::AutomationSourceList  : private ValueTreeObjectList
 
     bool isActive() const
     {
-        jassert (numSources.load() == objects.size());
-        return numSources.load() > 0;
+        jassert (numSources.load (std::memory_order_acquire) == objects.size());
+        return numSources.load (std::memory_order_acquire) > 0;
     }
 
     template<typename Fn>
@@ -605,7 +605,8 @@ AutomatableParameter::AutomatableParameter (const juce::String& paramID_,
     : paramID (paramID_),
       valueRange (vr),
       automatableEditElement (owner),
-      paramName (name_)
+      paramName (name_),
+      editRef (&automatableEditElement.edit)
 {
     if (auto p = dynamic_cast<Plugin*> (&owner))
     {
@@ -627,8 +628,6 @@ AutomatableParameter::AutomatableParameter (const juce::String& paramID_,
         jassertfalse; // Unknown AutomatableEditItem type
     }
 
-    editRef = &automatableEditElement.edit;
-
     modifiersState = parentState.getOrCreateChildWithName (IDs::MODIFIERASSIGNMENTS, &owner.edit.getUndoManager());
     curveSource = std::make_unique<AutomationCurveSource> (*this);
 
@@ -640,8 +639,8 @@ AutomatableParameter::AutomatableParameter (const juce::String& paramID_,
 
 AutomatableParameter::~AutomatableParameter()
 {
-    if (editRef != nullptr)
-        editRef->getAutomationRecordManager().parameterBeingDeleted (*this);
+    if (auto edit = dynamic_cast<Edit*> (editRef.get()))
+        edit->getAutomationRecordManager().parameterBeingDeleted (*this);
 
     notifyListenersOfDeletion();
 
@@ -772,7 +771,11 @@ void AutomatableParameter::updateFromAutomationSources (double time)
                            m.setPosition (time);
 
                            if (m.isEnabled())
-                               newModifierValue += m.getCurrentValue();
+                           {
+                               float currentModValue = m.getCurrentValue();
+                               jassert (! std::isnan (currentModValue));
+                               newModifierValue += currentModValue;
+                           }
                        });
 
     const float newBaseValue = [this, time]
@@ -808,9 +811,13 @@ void AutomatableParameter::valueTreePropertyChanged (juce::ValueTree& v, const j
     }
     else if (attachedValue != nullptr && attachedValue->updateIfMatches (v, i))
     {
-        currentValue = attachedValue->getValue();
-
+        // N.B.You shouldn't be directly setting the value of an attachedValue managed parameter.
+        // To avoid feedback loops of sync issues, always go via setParameter
+        
         SCOPED_REALTIME_CHECK
+        // N.B. we shouldn't call attachedValue->updateParameterFromValue here as this
+        // will set the base value of the parameter. The change in property could be due
+        // to a Modifier or automation change so we don't want to force that to be the base value
         listeners.call (&Listener::currentValueChanged, *this, currentValue);
     }
 }
@@ -841,7 +848,7 @@ void AutomatableParameter::valueTreeRedirected (juce::ValueTree&)    { jassertfa
 //==============================================================================
 void AutomatableParameter::attachToCurrentValue (juce::CachedValue<float>& v)
 {
-    currentValue = v;
+    currentParameterValue = currentValue = v;
     jassert (attachedValue == nullptr);
     attachedValue.reset (new AttachedFloatValue (*this, v));
     v.getValueTree().addListener (this);
@@ -849,7 +856,7 @@ void AutomatableParameter::attachToCurrentValue (juce::CachedValue<float>& v)
 
 void AutomatableParameter::attachToCurrentValue (juce::CachedValue<int>& v)
 {
-    currentValue = (float) v.get();
+    currentParameterValue = currentValue = (float) v.get();
     jassert (attachedValue == nullptr);
     attachedValue.reset (new AttachedIntValue (*this, v));
     v.getValueTree().addListener (this);
@@ -857,7 +864,7 @@ void AutomatableParameter::attachToCurrentValue (juce::CachedValue<int>& v)
 
 void AutomatableParameter::attachToCurrentValue (juce::CachedValue<bool>& v)
 {
-    currentValue = v;
+    currentParameterValue = currentValue = v;
     jassert (attachedValue == nullptr);
     attachedValue.reset (new AttachedBoolValue (*this, v));
     v.getValueTree().addListener (this);
@@ -1043,6 +1050,12 @@ void AutomatableParameter::setParameter (float value, juce::NotificationType nt)
     {
         jassert (nt != juce::sendNotificationAsync); // Async notifications not yet supported
         listeners.call (&Listener::parameterChanged, *this, currentValue);
+
+        if (attachedValue != nullptr)
+        {
+            // Updates the ValueTree via the CachedValue to the current parameter value synchronously
+            attachedValue->handleAsyncUpdate();
+        }
     }
 }
 
@@ -1079,7 +1092,11 @@ void AutomatableParameter::updateToFollowCurve (double time)
         .visitSources ([&newModifierValue, time] (AutomationModifierSource& m) mutable
                        {
                            if (m.isEnabledAt (time))
-                               newModifierValue += m.getValueAt (time);
+                           {
+                               const float sourceModValue = m.getValueAt (time);
+                               jassert (! std::isnan (sourceModValue));
+                               newModifierValue += sourceModValue;
+                           }
                        });
 
     const float newBaseValue = [this, time]
@@ -1197,6 +1214,7 @@ AutomationIterator::AutomationIterator (const AutomatableParameter& p)
     const double minValueDelta  = (p.getValueRange().getLength()) / 256.0;
 
     int curveIndex = 0;
+    int lastCurveIndex = -1;
     double t = 0.0;
     float lastValue = 1.0e10;
     auto lastTime = curve.getPointTime (curve.getNumPoints() - 1) + 1.0;
@@ -1262,7 +1280,7 @@ AutomationIterator::AutomationIterator (const AutomatableParameter& p)
             }
         }
 
-        if (std::abs (v - lastValue) >= minValueDelta)
+        if (std::abs (v - lastValue) >= minValueDelta || curveIndex != lastCurveIndex)
         {
             jassert (t >= t1 && t <= t2);
 
@@ -1274,6 +1292,7 @@ AutomationIterator::AutomationIterator (const AutomatableParameter& p)
             points.add (point);
 
             lastValue = v;
+            lastCurveIndex = curveIndex;
         }
 
         t += timeDelta;

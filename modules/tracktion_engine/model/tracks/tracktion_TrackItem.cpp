@@ -35,6 +35,8 @@ const char* TrackItem::typeToString (TrackItem::Type t)
         case Type::video:         return "video";
         case Type::chord:         return "chord";
         case Type::arranger:      return "arranger";
+        case Type::recording:
+        case Type::unknown:
         default:                  return "unknown";
     }
 }
@@ -69,6 +71,12 @@ juce::Identifier TrackItem::clipTypeToXMLType (TrackItem::Type t)
         case Type::marker:        return IDs::MARKERCLIP;
         case Type::chord:         return IDs::CHORDCLIP;
         case Type::arranger:      return IDs::ARRANGERCLIP;
+        case Type::pitch:
+        case Type::timeSig:
+        case Type::collection:
+        case Type::video:
+        case Type::recording:
+        case Type::unknown:
         default:                  jassertfalse; return nullptr;
     }
 }
@@ -102,6 +110,8 @@ String TrackItem::getSuggestedNameForNewItem (Type t)
         case Type::timeSig:
         case Type::collection:
         case Type::video:
+        case Type::recording:
+        case Type::unknown:
         default:                  jassertfalse; break;
     }
 

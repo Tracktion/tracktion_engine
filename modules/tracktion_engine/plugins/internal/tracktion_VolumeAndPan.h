@@ -55,7 +55,7 @@ public:
     void initialise (const PlaybackInitialisationInfo&) override;
     void initialiseWithoutStopping (const PlaybackInitialisationInfo&) override;
     void deinitialise() override;
-    void applyToBuffer (const AudioRenderContext&) override;
+    void applyToBuffer (const PluginRenderContext&) override;
     int getNumOutputChannelsGivenInputs (int numInputs) override    { return juce::jmax (2, numInputs); }
 
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;

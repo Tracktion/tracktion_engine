@@ -59,7 +59,7 @@ public:
     /** Contains the buffers for a processing operation. */
     struct AudioAndMidiBuffer
     {
-        juce::dsp::AudioBlock<float> audio;
+        choc::buffer::ChannelArrayView<float> audio;
         tracktion_engine::MidiMessageArray& midi;
     };
 
@@ -204,7 +204,7 @@ Once a Node has been processed, other nodes can safely call `getProcessedOutput`
 ```
 struct AudioAndMidiBuffer
 {
-    juce::dsp::AudioBlock<float> audio;
+    choc::buffer::ChannelArrayView<float> audio;
     tracktion_engine::MidiMessageArray& midi;
 };
 ```

@@ -10,182 +10,133 @@
 
 #pragma once
 
-#include <thread>
-#include <emmintrin.h>
-
 namespace tracktion_graph
 {
 
 /**
     Plays back a node with mutiple threads.
+    This uses a simpler internal mechanism than the LockFreeMultiThreadedNodePlayer but uses spin locks
+    do do so so isn't completely wait-free.
+ 
+    The thread pool uses a hybrid method of trying to keep processing threads spinning where possible but
+    falling back to a condition variable if they spin for too long.
+ 
+    This is mainly here to compare performance with the LockFreeMultiThreadedNodePlayer.
+    @see LockFreeMultiThreadedNodePlayer
 */
 class MultiThreadedNodePlayer
 {
 public:
-    MultiThreadedNodePlayer (std::unique_ptr<Node> node)
-        : rootNode (std::move (node))
-    {
-    }
+    //==============================================================================
+    /** Creates an empty MultiThreadedNodePlayer. */
+    MultiThreadedNodePlayer();
     
-    ~MultiThreadedNodePlayer()
-    {
-        clearThreads();
-    }
+    /** Destructor. */
+    ~MultiThreadedNodePlayer();
     
-    Node& getNode()
-    {
-        return *rootNode;
-    }
+    //==============================================================================
+    /** Sets the number of threads to use for rendering.
+        This can be 0 in which case only the process calling thread will be used for processing.
+        N.B. this will pause processing whilst updating the threads so there will be a gap in the audio.
+    */
+    void setNumThreads (size_t);
     
-    void setNode (std::unique_ptr<Node> newNode)
-    {
-        clearThreads();
+    /** Sets the Node to process. */
+    void setNode (std::unique_ptr<Node>);
 
-        auto oldNode = std::move (rootNode);
-        rootNode = std::move (newNode);
-        prepareToPlay (sampleRate, blockSize, oldNode.get());
+    /** Sets the Node to process with a new sample rate and block size. */
+    void setNode (std::unique_ptr<Node> newNode, double sampleRateToUse, int blockSizeToUse);
+
+    /** Prepares the current Node to be played. */
+    void prepareToPlay (double sampleRateToUse, int blockSizeToUse, Node* oldNode = nullptr);
+
+    /** Returns the current Node. */
+    Node* getNode()
+    {
+        return currentNode.load (std::memory_order_acquire);
     }
 
-    void prepareToPlay (double sampleRateToUse, int blockSizeToUse, Node* oldNode = nullptr)
-    {
-        sampleRate = sampleRateToUse;
-        blockSize = blockSizeToUse;
-        
-        // First give the Nodes a chance to transform
-        transformNodes (*rootNode);
-        
-        // First, initiliase all the nodes, this will call prepareToPlay on them and also
-        // give them a chance to do things like balance latency
-        const PlaybackInitialisationInfo info { sampleRate, blockSize, *rootNode, oldNode };
-        visitNodes (*rootNode, [&] (Node& n) { n.initialise (info); }, false);
-        
-        // Then find all the nodes as it might have changed after initialisation
-        allNodes = tracktion_graph::getNodes (*rootNode, tracktion_graph::VertexOrdering::postordering);
-
-        createThreads();
-    }
-
-    int process (const Node::ProcessContext& pc)
-    {
-        // Reset the stream range
-        streamSampleRange = pc.streamSampleRange;
-        
-        // Prepare all the nodes to be played back
-        for (auto node : allNodes)
-            node->prepareForNextBlock();
-
-        // Then set the vector to be processed
-        // Threads are always running so will process as soon numNodesLeftToProcess is non-zero
-        numNodesLeftToProcess = allNodes.size();
-        
-        // Try to process Nodes until they're all processed
-        for (;;)
-        {
-            if (! processNextFreeNode())
-                break;
-        }
-        
-        // Wait for any threads to finish processing
-        while (! rootNode->hasProcessed())
-            pause();
-
-        auto output = rootNode->getProcessedOutput();
-        pc.buffers.audio.copyFrom (output.audio);
-        pc.buffers.midi.copyFrom (output.midi);
-        
-        return -1;
-    }
+    /** Process a block of the Node. */
+    int process (const Node::ProcessContext&);
     
+    /** Clears the current Node.
+        Note that this shouldn't be called concurrently with setNode.
+        If it's called concurrently with process, it will block until the current process call has finished.
+        This should be used sparingly as its a heavyweight operation which has to stop any
+        processing threads and restart them again afterwrds.
+    */
+    void clearNode();
+
+    /** Returns the current sample rate. */
+    double getSampleRate() const
+    {
+        return sampleRate.load (std::memory_order_acquire);
+    }
+
 private:
     //==============================================================================
-    std::unique_ptr<Node> rootNode;
-    std::vector<std::thread> threads;
-    std::vector<Node*> allNodes;
-    
-    juce::Range<int64_t> streamSampleRange;
+    std::atomic<size_t> numThreadsToUse { std::max ((size_t) 0, (size_t) std::thread::hardware_concurrency() - 1) };
+    juce::Range<int64_t> referenceSampleRange;
     std::atomic<bool> threadsShouldExit { false };
-    std::atomic<size_t> numNodesLeftToProcess { 0 };
+
+    class ThreadPool;
+    std::unique_ptr<ThreadPool> threadPool;
+    
+    struct PlaybackNode
+    {
+        PlaybackNode (Node& n)
+            : node (n), numInputs (node.getDirectInputNodes().size())
+        {}
+        
+        Node& node;
+        const size_t numInputs;
+        std::vector<Node*> outputs;
+        std::atomic<size_t> numInputsToBeProcessed { 0 };
+        std::atomic<bool> hasBeenQueued { true };
+       #if JUCE_DEBUG
+        std::atomic<bool> hasBeenDequeued { false };
+       #endif
+    };
+    
+    struct PreparedNode
+    {
+        std::unique_ptr<Node> rootNode;
+        std::vector<Node*> allNodes;
+        std::vector<std::unique_ptr<PlaybackNode>> playbackNodes;
+        choc::fifo::MultipleReaderMultipleWriterFIFO<Node*> nodesReadyToBeProcessed;
+    };
+    
+    RealTimeSpinLock preparedNodeMutex;
+    std::unique_ptr<PreparedNode> preparedNode;
+    std::atomic<Node*> currentNode { nullptr };
+
+    std::atomic<size_t> numNodesQueued { 0 };
+    RealTimeSpinLock clearNodesLock;
 
     //==============================================================================
-    double sampleRate = 44100.0;
+    std::atomic<double> sampleRate { 44100.0 };
     int blockSize = 512;
     
     //==============================================================================
-    void clearThreads()
-    {
-        threadsShouldExit = true;
-
-        for (auto& t : threads)
-            t.join();
-        
-        threads.clear();
-    }
-    
-    void createThreads()
-    {
-        size_t numThreadsToUse = 0;
-        
-        for (auto node : allNodes)
-            if (node->isReadyToProcess())
-                ++numThreadsToUse;
-        
-        numThreadsToUse = std::min (numThreadsToUse, (size_t) std::thread::hardware_concurrency()) - 1;
-             
-        for (size_t i = 0; i < numThreadsToUse; ++i)
-            threads.emplace_back ([this] { processNextFreeNodeOrWait(); });
-    }
-    
-    inline void pause()
-    {
-        _mm_pause();
-        _mm_pause();
-        _mm_pause();
-        _mm_pause();
-        _mm_pause();
-        _mm_pause();
-        _mm_pause();
-        _mm_pause();
-    }
+    /** Prepares a specific Node to be played and returns all the Nodes. */
+    std::vector<Node*> prepareToPlay (Node* node, Node* oldNode, double sampleRateToUse, int blockSizeToUse);
 
     //==============================================================================
-    void processNextFreeNodeOrWait()
-    {
-        for (;;)
-        {
-            if (threadsShouldExit)
-                return;
-            
-            if (! processNextFreeNode())
-                pause();
-        }
-    }
+    void clearThreads();
+    void createThreads();
+    static void pause();
 
-    bool processNextFreeNode()
-    {
-        size_t expectedNumNodesLeft = numNodesLeftToProcess;
-        
-        if (expectedNumNodesLeft == 0)
-            return false;
+    //==============================================================================
+    void setNewCurrentNode (std::unique_ptr<Node> newRoot, std::vector<Node*> newNodes);
+    
+    //==============================================================================
+    static void buildNodesOutputLists (std::vector<Node*>&, std::vector<std::unique_ptr<PlaybackNode>>&);
+    void resetProcessQueue();
+    Node* updateProcessQueueForNode (Node&);
+    void processNode (Node&);
 
-        const size_t nodeToReserve = expectedNumNodesLeft - 1;
-
-        if (numNodesLeftToProcess.compare_exchange_strong (expectedNumNodesLeft, nodeToReserve))
-        {
-            const size_t nodeIndex = allNodes.size() - nodeToReserve - 1;
-            auto node = allNodes[nodeIndex];
-
-            // Wait until this node is actually ready to be processed
-            // It might be waiting for other Nodes
-            while (! node->isReadyToProcess())
-                pause();
-            
-            node->process (streamSampleRange);
-            
-            return true;
-        }
-        
-        return false;
-    }
+    //==============================================================================
+    bool processNextFreeNode();
 };
 
 }
