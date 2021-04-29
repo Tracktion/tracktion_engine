@@ -135,8 +135,8 @@ void PluginNode::process (ProcessContext& pc)
     // Copy the inputs to the outputs, then process using the
     // output buffers as that will be the correct size
     if (numInputChannelsToCopy > 0)
-        copy (outputAudioView.getFirstChannels (numInputChannelsToCopy),
-              inputAudioBlock.getFirstChannels (numInputChannelsToCopy));
+        tracktion_graph::copyIfNotAliased (outputAudioView.getFirstChannels (numInputChannelsToCopy),
+                                           inputAudioBlock.getFirstChannels (numInputChannelsToCopy));
     
     // Init block
     auto subBlockSize = subBlockSizeToUse < 0 ? inputAudioBlock.getNumFrames()

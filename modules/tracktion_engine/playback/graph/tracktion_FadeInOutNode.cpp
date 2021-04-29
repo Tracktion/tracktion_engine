@@ -77,7 +77,7 @@ void FadeInOutNode::process (ProcessContext& pc)
     }
 
     // Otherwise copy the source in to the dest ready for fading
-    copy (destAudioBlock, sourceBuffers.audio);
+    tracktion_graph::copyIfNotAliased (destAudioBlock, sourceBuffers.audio);
 
     auto numSamples = destAudioBlock.getNumFrames();
     jassert (numSamples == timelineRange.getLength());
