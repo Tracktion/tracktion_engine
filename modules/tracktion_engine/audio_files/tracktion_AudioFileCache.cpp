@@ -207,7 +207,7 @@ public:
 
             for (auto m : newReaders)
                 if (m != nullptr)
-                    totalBytesInUse -= m->getNumBytesUsed();
+                    totalBytesInUse -= static_cast<juce::int64> (m->getNumBytesUsed());
 
             anythingChanged = true;
         }
@@ -242,7 +242,7 @@ public:
                                   : r->mapEntireFile())
              && ! r->getMappedSection().isEmpty())
         {
-            totalBytesInUse += r->getNumBytesUsed();
+            totalBytesInUse += static_cast<juce::int64> (r->getNumBytesUsed());
             failedToOpenFile = false;
 
             info = AudioFileInfo (file, r.get(), af);
@@ -1021,6 +1021,7 @@ struct CacheAudioFormatReader  :  public juce::AudioFormatReader
         reader = file.engine->getAudioFileManager().cache.createReader (file);
     }
 
+    using juce::AudioFormatReader::readMaxLevels;
     void readMaxLevels (juce::int64 startSample, juce::int64 numSamples,
                         float& lowestLeft, float& highestLeft,
                         float& lowestRight, float& highestRight) override

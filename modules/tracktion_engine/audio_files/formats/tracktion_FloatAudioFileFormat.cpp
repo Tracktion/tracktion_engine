@@ -205,6 +205,7 @@ public:
                 ::read (&result, 0, 1, sourceData, 1, (int) numChannels);
     }
 
+    using juce::MemoryMappedAudioFormatReader::readMaxLevels;
     void readMaxLevels (juce::int64 startSampleInFile, juce::int64 numSamples, juce::Range<float>* results, int numChannelsToRead) override
     {
         if (numSamples <= 0)
@@ -230,8 +231,12 @@ public:
             case 8:     scanMinAndMax<juce::AudioData::UInt8> (startSampleInFile, numSamples, results, numChannelsToRead); break;
             case 16:    scanMinAndMax<juce::AudioData::Int16> (startSampleInFile, numSamples, results, numChannelsToRead); break;
             case 24:    scanMinAndMax<juce::AudioData::Int24> (startSampleInFile, numSamples, results, numChannelsToRead); break;
-            case 32:    if (usesFloatingPointData) scanMinAndMax<juce::AudioData::Float32> (startSampleInFile, numSamples, results, numChannelsToRead);
-                        else                       scanMinAndMax<juce::AudioData::Int32>   (startSampleInFile, numSamples, results, numChannelsToRead); break;
+            case 32:
+            {
+                if (usesFloatingPointData) scanMinAndMax<juce::AudioData::Float32> (startSampleInFile, numSamples, results, numChannelsToRead);
+                else                       scanMinAndMax<juce::AudioData::Int32>   (startSampleInFile, numSamples, results, numChannelsToRead);
+                break;
+            }
             default:    jassertfalse; break;
         }
     }

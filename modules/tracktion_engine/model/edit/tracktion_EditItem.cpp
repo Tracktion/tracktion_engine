@@ -293,9 +293,13 @@ struct IDRemapping
                     auto newID = newIDsToApply.find (oldID);
 
                     if (newID != newIDsToApply.end())
+                    {
                         newID->second.setProperty (v, propName, um);
+                    }
                     else
+                    {
                         DBG ("Dangling ID found: " << oldID);
+                    }
                 }
             }
             else if (isIDList (propName))

@@ -33,6 +33,7 @@ public:
 
     bool isUsedForExternalControl() const           { return externalController != nullptr; }
 
+    using MidiInputDevice::handleIncomingMidiMessage;
     void handleIncomingMidiMessage (const juce::MidiMessage&) override;
 
     void loadProps() override;

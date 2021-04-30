@@ -74,7 +74,8 @@ private:
         const double durationOfFile = durationInSeconds / numFilesPerTrack;
         auto context = createTestContext (engine, numTracks, numFilesPerTrack, durationOfFile, ts.sampleRate, ts.random, useSingleFile);
         expect (context.edit != nullptr);
-        expect (useSingleFile || (context.files.size() == size_t (numTracks * numFilesPerTrack)));
+        const auto totalNumFiles = size_t (numTracks * numFilesPerTrack);
+        expect (useSingleFile || (context.files.size() == totalNumFiles));
         expectWithinAbsoluteError (context.edit->getLength(), durationInSeconds, 0.01);
 
         //===

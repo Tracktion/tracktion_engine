@@ -13,7 +13,7 @@ namespace tracktion_engine
 
 namespace ModifierCommon
 {
-    constexpr double getBarFraction (RateType rt) noexcept
+    double getBarFraction (RateType rt) noexcept
     {
         const double dot = 1.5;
         const double triplet = 2.0 / 3.0;

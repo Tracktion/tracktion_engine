@@ -59,6 +59,7 @@ public:
 
     void releaseResources() override {}
 
+    using AudioProcessor::processBlock;
     void processBlock (AudioBuffer<float>& buffer, MidiBuffer& midi) override
     {
         // Update position info first

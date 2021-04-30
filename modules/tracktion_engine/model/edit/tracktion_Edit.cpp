@@ -2569,7 +2569,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
 
     if (auto firstClip = midiTrack->getClips().getFirst())
     {
-        if (auto sc = dynamic_cast<StepClip*> (firstClip))
+        if (dynamic_cast<StepClip*> (firstClip) != nullptr)
             isDrums = true;
         else if (auto mc = dynamic_cast<MidiClip*> (firstClip))
             isDrums = forceMidiToDrums || mc->isRhythm();

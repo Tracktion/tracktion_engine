@@ -45,15 +45,15 @@ struct CombiningNode::TimedNode
     }
 
     void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info,
-                        choc::buffer::ChannelArrayView<float> audioView)
+                        choc::buffer::ChannelArrayView<float> view)
     {
         auto info2 = info;
-        info2.allocateAudioBuffer = [&audioView] (choc::buffer::Size size)
+        info2.allocateAudioBuffer = [&view] (choc::buffer::Size size)
                                     {
-                                        jassert (audioView.getNumFrames() == size.numFrames);
-                                        jassert (audioView.getNumChannels() <= size.numChannels);
+                                        jassert (view.getNumFrames() == size.numFrames);
+                                        jassert (view.getNumChannels() <= size.numChannels);
                                         
-                                        return audioView.getFirstChannels (size.numChannels);
+                                        return view.getFirstChannels (size.numChannels);
                                     };
         
         for (auto n : nodesToProcess)

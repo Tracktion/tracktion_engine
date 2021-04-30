@@ -54,7 +54,7 @@ public:
         setSize (600, 400);
     }
 
-    ~PatternGeneratorComponent()
+    ~PatternGeneratorComponent() override
     {
         edit.getTempDirectory (false).deleteRecursively();
     }

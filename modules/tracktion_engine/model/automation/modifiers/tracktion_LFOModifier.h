@@ -22,6 +22,7 @@ public:
     using Ptr = juce::ReferenceCountedObjectPtr<LFOModifier>;
     using Array = juce::ReferenceCountedArray<LFOModifier>;
 
+    using Modifier::initialise;
     void initialise() override;
     juce::String getName() override                     { return TRANS("LFO Modifier"); }
 

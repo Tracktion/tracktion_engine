@@ -23,6 +23,7 @@ public:
     using Ptr = juce::ReferenceCountedObjectPtr<StepModifier>;
     using Array = juce::ReferenceCountedArray<StepModifier>;
 
+    using Modifier::initialise;
     void initialise() override;
     float getCurrentValue() override;
 

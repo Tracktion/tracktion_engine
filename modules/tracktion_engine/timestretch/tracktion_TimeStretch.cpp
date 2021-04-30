@@ -480,6 +480,12 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
             stretcher.reset (new ElastiqueStretcher (sourceSampleRate, samplesPerBlock, numChannels,
                                                      mode, options, realtime ? 0.25f : 0.1f));
             break;
+       #else
+        case elastiquePro:          [[fallthrough]];
+        case elastiqueEfficient:    [[fallthrough]];
+        case elastiqueMobile:       [[fallthrough]];
+        case elastiqueMonophonic:
+            break;
        #endif
 
        #if TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
@@ -489,8 +495,16 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
             stretcher.reset (new SoundTouchStretcher (sourceSampleRate, samplesPerBlock, numChannels,
                                                       mode == soundtouchBetter));
             break;
+       #else
+        case soundtouchNormal:      [[fallthrough]];
+        case soundtouchBetter:
+            break;
        #endif
 
+        case disabled:              [[fallthrough]];
+        case melodyne:              [[fallthrough]];
+        case elastiqueTransient:    [[fallthrough]];
+        case elastiqueTonal:        [[fallthrough]];
         default:
             break;
     }

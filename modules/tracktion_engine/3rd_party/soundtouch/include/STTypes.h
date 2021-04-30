@@ -159,7 +159,7 @@ namespace soundtouch
 
     #endif  // SOUNDTOUCH_INTEGER_SAMPLES
 
-};
+}
 
 // define ST_NO_EXCEPTION_HANDLING switch to disable throwing std exceptions:
 // #define ST_NO_EXCEPTION_HANDLING    1

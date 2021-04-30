@@ -691,7 +691,7 @@ const char* ride_ogg = (const char*) temp_binary_data_7;
 const char* getNamedResource (const char* resourceNameUTF8, int& numBytes)
 {
     unsigned int hash = 0;
-    if (resourceNameUTF8 != 0)
+    if (resourceNameUTF8 != nullptr)
         while (*resourceNameUTF8 != 0)
             hash = 31 * hash + (unsigned int) *resourceNameUTF8++;
 

@@ -23,6 +23,7 @@ public:
     using Ptr = juce::ReferenceCountedObjectPtr<RandomModifier>;
     using Array = juce::ReferenceCountedArray<RandomModifier>;
 
+    using Modifier::initialise;
     void initialise() override;
     juce::String getName() override                     { return TRANS("Random Modifier"); }
 

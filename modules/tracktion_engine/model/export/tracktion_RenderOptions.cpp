@@ -916,7 +916,7 @@ int64 RenderOptions::getTracksHash() const
     int64 tracksHash = 0;
 
     for (auto& t : tracks)
-        tracksHash ^= t.getRawID(); // TODO: this will probably be buggy if the IDs are all low sequential integers!
+        tracksHash ^= static_cast<int64> (t.getRawID()); // TODO: this will probably be buggy if the IDs are all low sequential integers!
 
     return tracksHash;
 }

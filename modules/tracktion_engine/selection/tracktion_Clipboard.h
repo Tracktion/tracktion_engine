@@ -51,6 +51,7 @@ public:
         ProjectItems();
         ~ProjectItems() override;
 
+        using ContentType::pasteIntoEdit;
         bool pasteIntoEdit (const EditPastingOptions&) const override;
         bool pasteIntoProject (Project&) const;
 
@@ -110,6 +111,7 @@ public:
         Tracks();
         ~Tracks() override;
 
+        using ContentType::pasteIntoEdit;
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
         std::vector<juce::ValueTree> tracks;
@@ -120,6 +122,7 @@ public:
         TempoChanges (const TempoSequence&, EditTimeRange range);
         ~TempoChanges() override;
 
+        using ContentType::pasteIntoEdit;
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
         bool pasteTempoSequence (TempoSequence&, EditTimeRange targetRange) const;
@@ -138,6 +141,7 @@ public:
         AutomationPoints (const AutomationCurve&, EditTimeRange range);
         ~AutomationPoints() override;
 
+        using ContentType::pasteIntoEdit;
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
         bool pasteAutomationCurve (AutomationCurve&, EditTimeRange targetRange) const;
@@ -157,6 +161,7 @@ public:
                                                                                             double cursorPosition, const std::function<double(double)>& snapBeat) const;
 
 
+        using ContentType::pasteIntoEdit;
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
         std::vector<juce::ValueTree> notes;
@@ -177,6 +182,7 @@ public:
         Pitches();
         ~Pitches() override;
 
+        using ContentType::pasteIntoEdit;
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
         std::vector<juce::ValueTree> pitches;
@@ -187,6 +193,7 @@ public:
         TimeSigs();
         ~TimeSigs() override;
 
+        using ContentType::pasteIntoEdit;
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
         std::vector<juce::ValueTree> timeSigs;
@@ -197,6 +204,7 @@ public:
         Plugins (const Plugin::Array&);
         ~Plugins() override;
 
+        using ContentType::pasteIntoEdit;
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
         std::vector<juce::ValueTree> plugins;
@@ -218,6 +226,7 @@ public:
         Modifiers();
         ~Modifiers() override;
 
+        using ContentType::pasteIntoEdit;
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
         std::vector<juce::ValueTree> modifiers;

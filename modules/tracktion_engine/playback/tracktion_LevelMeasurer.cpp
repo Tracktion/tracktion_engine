@@ -148,7 +148,6 @@ void LevelMeasurer::processBuffer (juce::AudioBuffer<float>& buffer, int start, 
     if (clients.isEmpty())
         return;
 
-    float newLevel[Client::maxNumChannels] = {};
     auto numChans = jmin ((int) Client::maxNumChannels, buffer.getNumChannels());
     auto now = Time::getApproximateMillisecondCounter();
 
@@ -158,7 +157,6 @@ void LevelMeasurer::processBuffer (juce::AudioBuffer<float>& buffer, int start, 
         for (int i = numChans; --i >= 0;)
         {
             auto gain = buffer.getMagnitude (i, start, numSamples);
-            newLevel[i] = gain;
             bool overloaded = gain > 0.999f;
             auto newDB = gainToDb (gain);
 
@@ -179,7 +177,6 @@ void LevelMeasurer::processBuffer (juce::AudioBuffer<float>& buffer, int start, 
         for (int i = numChans; --i >= 0;)
         {
             auto gain = buffer.getRMSLevel (i, start, numSamples);
-            newLevel[i] = gain;
             bool overloaded = gain > 0.999f;
             auto newDB = gainToDb (gain);
 
@@ -199,8 +196,6 @@ void LevelMeasurer::processBuffer (juce::AudioBuffer<float>& buffer, int start, 
         // sum + diff
         float sum, diff;
         getSumAndDiff (buffer, sum, diff, start, numSamples);
-        newLevel[0] = sum;
-        newLevel[1] = diff;
 
         auto sumDB  = gainToDb (sum);
         auto diffDB = gainToDb (diff);

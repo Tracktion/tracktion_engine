@@ -272,7 +272,7 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
         if (numLatencySamplesToDrop > 0)
         {
             auto numToDrop = std::min ((uint32_t) numLatencySamplesToDrop, numSamplesDone);
-            numLatencySamplesToDrop -= numToDrop;
+            numLatencySamplesToDrop -= (int) numToDrop;
             numSamplesDone -= numToDrop;
             
             blockSize = numSamplesDone;

@@ -33,7 +33,7 @@ public:
     {
         time = currentTimeSeconds;
         isPlaying = playing;
-        looping = isLooping;
+        isLooping = looping;
         loopTimeRange = loopTimes;
     }
 

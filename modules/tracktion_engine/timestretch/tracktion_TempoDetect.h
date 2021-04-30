@@ -25,12 +25,26 @@ namespace tracktion_engine
  #pragma clang diagnostic ignored "-Wextra-semi"
 #endif
 
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wsign-conversion"
+ #if ! __clang__
+  #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+ #endif
+ #pragma GCC diagnostic ignored "-Wunused-variable"
+ #pragma GCC diagnostic ignored "-Wpedantic"
+ #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#endif
+
 #include "../3rd_party/soundtouch/include/BPMDetect.h"
 
 #ifdef __clang__
  #pragma clang diagnostic pop
 #endif
 
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
+#endif
 
 /**
     Uses the SoundTouch BPMDetect class to guess the tempo of some audio.

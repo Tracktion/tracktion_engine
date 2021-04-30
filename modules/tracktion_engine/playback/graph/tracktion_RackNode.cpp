@@ -215,7 +215,7 @@ namespace RackNodeBuilder
     */
     inline int getDestChannelIndex (tracktion_graph::Node& destPluginOrModifierNode, int destPinIndex)
     {
-        if (auto node = dynamic_cast<PluginNode*> (&destPluginOrModifierNode))
+        if (dynamic_cast<PluginNode*> (&destPluginOrModifierNode) != nullptr)
             return destPinIndex - 1;
         
         if (auto node = dynamic_cast<ModifierNode*> (&destPluginOrModifierNode))

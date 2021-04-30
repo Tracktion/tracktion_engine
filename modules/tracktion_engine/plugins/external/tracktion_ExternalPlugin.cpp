@@ -1191,9 +1191,9 @@ void ExternalPlugin::prepareIncomingMidiMessages (MidiMessageArray& incoming, in
         {
             midiBuffer.addEvent (MidiMessage::noteOff (chan, noteNumber), 0);
 
-            if ((eventsSentOnChannel & (1 << chan)) == 0)
+            if ((eventsSentOnChannel & (1u << chan)) == 0)
             {
-                eventsSentOnChannel |= (1 << chan);
+                eventsSentOnChannel |= (1u << chan);
 
                 if (! supportsMPE)
                 {

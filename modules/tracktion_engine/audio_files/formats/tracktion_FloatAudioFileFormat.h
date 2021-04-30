@@ -28,10 +28,13 @@ public:
     bool canHandleFile (const juce::File&) override;
 
     //==============================================================================
+    using juce::AudioFormat::createReaderFor;
     juce::AudioFormatReader* createReaderFor (juce::InputStream*, bool deleteStreamIfOpeningFails) override;
 
+    using juce::AudioFormat::createMemoryMappedReader;
     juce::MemoryMappedAudioFormatReader* createMemoryMappedReader (const juce::File&) override;
 
+    using juce::AudioFormat::createWriterFor;
     juce::AudioFormatWriter* createWriterFor (juce::OutputStream*, double sampleRate,
                                               unsigned int numChannels, int bitsPerSample,
                                               const juce::StringPairArray& metadataValues,

@@ -262,7 +262,7 @@ double StepClip::getEndBeatOf (PatternInstance* instance)
 
 void StepClip::resizeClipForPatternInstances()
 {
-    if (auto instance = patternInstanceList.getLast().get())
+    if (patternInstanceList.getLast().get() != nullptr)
     {
         double end = -getOffsetInBeats();
 
