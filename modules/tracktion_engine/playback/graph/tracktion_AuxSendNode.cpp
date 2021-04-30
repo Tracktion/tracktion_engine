@@ -14,21 +14,21 @@ namespace tracktion_engine
 {
 
 AuxSendNode::AuxSendNode (std::unique_ptr<Node> inputNode, int busIDToUse,
-                          AuxSendPlugin& sendPlugin, tracktion_graph::PlayHeadState& phs,
+                          AuxSendPlugin& sourceSendPlugin, tracktion_graph::PlayHeadState& phs,
                           const TrackMuteState* trackMuteState)
     : SendNode (std::move (inputNode), busIDToUse,
-                [&sendPlugin, trackMuteState]
+                [&sourceSendPlugin, trackMuteState]
                 {
                     if (trackMuteState
                         && ! trackMuteState->shouldTrackBeAudible()
                         && ! trackMuteState->shouldTrackContentsBeProcessed())
                        return 0.0f;
 
-                    return volumeFaderPositionToGain (sendPlugin.gain->getCurrentValue());
+                    return volumeFaderPositionToGain (sourceSendPlugin.gain->getCurrentValue());
                }),
       playHeadState (phs),
-      pluginPtr (sendPlugin),
-      sendPlugin (sendPlugin)
+      pluginPtr (sourceSendPlugin),
+      sendPlugin (sourceSendPlugin)
 {
     jassert (pluginPtr != nullptr);
 }
