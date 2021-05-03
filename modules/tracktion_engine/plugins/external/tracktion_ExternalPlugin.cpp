@@ -743,15 +743,15 @@ std::unique_ptr<PluginDescription> ExternalPlugin::findMatchingPlugin() const
     CRASH_TRACER
     auto& pm = engine.getPluginManager();
 
-    if (auto p = pm.knownPluginList.getTypeForIdentifierString (desc.createIdentifierString()))
+    if (auto p = pm.knownPluginList.getTypeForIdentifierString (createIdentifierString (desc)))
         return p;
 
     if (desc.pluginFormatName.isEmpty())
     {
-        if (auto p = pm.knownPluginList.getTypeForIdentifierString ("VST" + desc.createIdentifierString()))
+        if (auto p = pm.knownPluginList.getTypeForIdentifierString ("VST" + createIdentifierString (desc)))
             return p;
 
-        if (auto p = pm.knownPluginList.getTypeForIdentifierString ("AudioUnit" + desc.createIdentifierString()))
+        if (auto p = pm.knownPluginList.getTypeForIdentifierString ("AudioUnit" + createIdentifierString (desc)))
             return p;
     }
 
