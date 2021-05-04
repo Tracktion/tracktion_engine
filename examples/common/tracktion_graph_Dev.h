@@ -76,6 +76,9 @@ struct CoutLogger : public Logger
 {
     void logMessage (const String& message) override
     {
+        static CriticalSection mutex;
+        
+        const ScopedLock sl (mutex);
         std::cout << message << "\n";
     }
 };
