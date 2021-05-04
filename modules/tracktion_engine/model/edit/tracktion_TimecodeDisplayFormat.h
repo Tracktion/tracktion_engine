@@ -74,6 +74,26 @@ private:
     double roundTime (double t, const TempoSequence&, double adjustment, bool isTripletsOverride) const;
 };
 
+/** Stores a duration in both beats and seconds */
+class TimecodeDuration : public juce::ReferenceCountedObject
+{
+public:
+    TimecodeDuration() = default;
+    static TimecodeDuration fromSeconds (Edit& e, double start, double end);
+    static TimecodeDuration fromBeatsOnly (double beats, int beatsPerBar);
+    static TimecodeDuration fromSecondsOnly (double seconds);
+
+    bool operator== (const TimecodeDuration&) const;
+    bool operator!= (const TimecodeDuration&) const;
+
+    std::optional<double> seconds;
+    std::optional<double> beats;
+
+    int beatsPerBar = 0;
+
+private:
+    TimecodeDuration (std::optional<double> s, std::optional<double> b, int bpb);
+};
 
 //==============================================================================
 /**
@@ -109,11 +129,11 @@ struct TimecodeDisplayFormat
     int getNumParts() const;
     juce::String getSeparator (int part) const;
     int getMaxCharsInPart (int part, bool canBeNegative) const;
-    int getMaxValueOfPart (const TempoSequence&, double currentTime, int part, bool isRelative) const;
+    int getMaxValueOfPart (const TempoSequence&, TimecodeDuration currentTime, int part, bool isRelative) const;
     int getMinValueOfPart (int part, bool isRelative) const;
 
-    void getPartStrings (double time, const TempoSequence&, bool isRelative, juce::String results[4]) const;
-    double getNewTimeWithPartValue (double oldTime, const TempoSequence&,
+    void getPartStrings (TimecodeDuration duration, const TempoSequence&, bool isRelative, juce::String results[4]) const;
+    TimecodeDuration getNewTimeWithPartValue (TimecodeDuration oldTime, const TempoSequence&,
                                     int part, int newValue, bool isRelative) const;
 
     //==============================================================================

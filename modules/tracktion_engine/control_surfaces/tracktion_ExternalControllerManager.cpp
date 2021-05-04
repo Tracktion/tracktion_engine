@@ -538,7 +538,7 @@ void ExternalControllerManager::editPositionChanged (Edit* ed, double newCursorP
     {
         CRASH_TRACER
         String parts[4];
-        ed->getTimecodeFormat().getPartStrings (newCursorPosition,
+        ed->getTimecodeFormat().getPartStrings (TimecodeDuration::fromSecondsOnly (newCursorPosition),
                                                 ed->tempoSequence,
                                                 false, parts);
 
