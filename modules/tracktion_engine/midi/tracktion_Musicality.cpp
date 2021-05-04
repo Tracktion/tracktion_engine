@@ -1143,7 +1143,7 @@ void PatternGenerator::removeRangeFromProgression (int startIndex, int numberToR
         numberToRemove = endIndex - startIndex;
 
         for (int i = 0; i < numberToRemove; ++i)
-            progression.removeChild (i, &um);
+            progression.removeChild (endIndex - i - 1, &um);
     }
 }
 
