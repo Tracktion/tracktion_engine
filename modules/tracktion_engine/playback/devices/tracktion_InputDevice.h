@@ -229,6 +229,11 @@ public:
                 case InputDevice::physicalMidiDevice:   [[ fallthrough ]];
                 case InputDevice::trackMidiDevice:      return new MidiInputDeviceDestination (input, v);
                 case InputDevice::virtualMidiDevice:    return new VirtualMidiInputDeviceDestination (input, v);
+                default:
+                {
+                    jassertfalse;
+                    return new InputDeviceDestination (input, v);
+                }
             }
         }
 
