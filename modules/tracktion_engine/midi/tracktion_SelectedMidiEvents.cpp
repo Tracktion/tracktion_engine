@@ -228,8 +228,6 @@ void SelectedMidiEvents::setSelected (SelectionManager& sm, const juce::Array<Mi
 
 void SelectedMidiEvents::setSelected (SelectionManager& sm, const juce::Array<MidiSysexEvent*>& events, bool addToSelection, bool allowMixedSelection)
 {
-    selectedNotes.clearQuick();
-
     if (! addToSelection)
         selectedSysexes.clearQuick();
 
