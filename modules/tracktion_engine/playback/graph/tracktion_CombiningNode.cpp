@@ -50,8 +50,8 @@ struct CombiningNode::TimedNode
         auto info2 = info;
         info2.allocateAudioBuffer = [&view] (choc::buffer::Size size)
                                     {
-                                        jassert (view.getNumFrames() == size.numFrames);
-                                        jassert (view.getNumChannels() <= size.numChannels);
+                                        jassert (size.numFrames == view.getNumFrames());
+                                        jassert (size.numChannels <= view.getNumChannels());
                                         
                                         return view.getFirstChannels (size.numChannels);
                                     };
