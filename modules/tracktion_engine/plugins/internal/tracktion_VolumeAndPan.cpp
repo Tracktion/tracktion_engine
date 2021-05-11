@@ -94,7 +94,9 @@ struct MasterPanParameter  : public PanAutomatableParameter
 };
 
 //==============================================================================
-VolumeAndPanPlugin::VolumeAndPanPlugin (PluginCreationInfo info, bool isMasterVolumeNode) : Plugin (info)
+VolumeAndPanPlugin::VolumeAndPanPlugin (PluginCreationInfo info, bool isMasterVolumeNode)
+    : Plugin (info),
+      isMasterVolume (isMasterVolumeNode)
 {
     auto um = getUndoManager();
 
