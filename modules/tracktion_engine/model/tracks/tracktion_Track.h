@@ -113,7 +113,7 @@ public:
     bool isMovable() const                                      { return isAudioTrack() || isFolderTrack(); }
 
     /** Returns true if this a global Track and should be on top of others. @see MarkerTrack, TempoTrack */
-    bool isOnTop() const                                        { return isMarkerTrack() || isTempoTrack() || isChordTrack() || isArrangerTrack() || isMasterTrack(); }
+    bool isOnTop() const;
 
     /** Returns true if this track can have inputs assigned to it. @see AudioTrack */
     bool acceptsInput() const                                   { return isAudioTrack(); }

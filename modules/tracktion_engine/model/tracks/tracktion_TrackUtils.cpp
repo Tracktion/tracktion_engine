@@ -129,7 +129,13 @@ bool TrackList::isChordTrack (const juce::ValueTree& v) noexcept    { return v.h
 bool TrackList::isMarkerTrack (const juce::ValueTree& v) noexcept   { return v.hasType (IDs::MARKERTRACK); }
 bool TrackList::isTempoTrack (const juce::ValueTree& v) noexcept    { return v.hasType (IDs::TEMPOTRACK); }
 bool TrackList::isMasterTrack (const juce::ValueTree& v) noexcept   { return v.hasType (IDs::MASTERTRACK); }
-bool TrackList::isFixedTrack (const juce::ValueTree& v) noexcept    { return isMarkerTrack (v) || isTempoTrack (v) || isChordTrack (v) || isArrangerTrack (v) || isMasterTrack (v); }
+
+bool TrackList::isFixedTrack (const juce::ValueTree& v) noexcept
+{
+    return isMarkerTrack (v) || isTempoTrack (v) || isChordTrack (v) || isArrangerTrack (v) || isMasterTrack (v)
+        || (v.hasType (IDs::AUTOMATIONTRACK) && isMasterTrack (v.getParent()));
+}
+
 bool TrackList::isTrack (const juce::ValueTree& v) noexcept         { return isMovableTrack (v) || isFixedTrack (v); }
 
 bool TrackList::isTrack (const juce::Identifier& i) noexcept
