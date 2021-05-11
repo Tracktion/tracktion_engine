@@ -226,7 +226,7 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
     resetFP();
 
     const EditTimeRange streamTimeRange (streamTime, blockEnd);
-    const auto referenceSampleRange = tracktion_graph::timeToSample (streamTimeRange, originalParams.sampleRateForAudio);
+    const auto referenceSampleRange = juce::Range<int64_t>::withStartAndLength (tracktion_graph::timeToSample (streamTimeRange.start, originalParams.sampleRateForAudio), r.blockSizeForAudio);
 
     // Update modifier timers
     r.edit->updateModifierTimers (streamTime, r.blockSizeForAudio);
