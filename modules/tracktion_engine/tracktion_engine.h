@@ -224,6 +224,7 @@ namespace tracktion_engine
     class ArrangerTrack;
     class ChordTrack;
     class MarkerTrack;
+    class MasterTrack;
     class TempoTrack;
     struct TrackInsertPoint;
     struct TrackList;
@@ -507,6 +508,7 @@ namespace tracktion_engine
 #include "model/tracks/tracktion_ChordTrack.h"
 #include "model/tracks/tracktion_FolderTrack.h"
 #include "model/tracks/tracktion_MarkerTrack.h"
+#include "model/tracks/tracktion_MasterTrack.h"
 #include "model/tracks/tracktion_TempoTrack.h"
 #include "model/tracks/tracktion_TrackCompManager.h"
 #include "model/export/tracktion_RenderOptions.h"

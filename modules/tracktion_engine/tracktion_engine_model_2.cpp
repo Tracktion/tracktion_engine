@@ -35,6 +35,7 @@ using namespace juce;
 #include "model/tracks/tracktion_ChordTrack.cpp"
 #include "model/tracks/tracktion_ClipTrack.cpp"
 #include "model/tracks/tracktion_MarkerTrack.cpp"
+#include "model/tracks/tracktion_MasterTrack.cpp"
 #include "model/tracks/tracktion_TempoTrack.cpp"
 #include "model/tracks/tracktion_EditTimeRange.cpp"
 #include "model/tracks/tracktion_TrackItem.cpp"

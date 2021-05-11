@@ -909,6 +909,7 @@ void Edit::initialiseTracks()
     ensureTempoTrack();
     ensureMarkerTrack();
     ensureChordTrack();
+    ensureMasterTrack();
     removeZeroLengthClips();
     TrackList::sortTracksByType (state, nullptr);
 
@@ -1255,6 +1256,7 @@ Track::Ptr Edit::createTrack (const juce::ValueTree& v)
     if (v.hasType (IDs::TEMPOTRACK))       return createAndInitialiseTrack<TempoTrack> (*this, v);
     if (v.hasType (IDs::CHORDTRACK))       return createAndInitialiseTrack<ChordTrack> (*this, v);
     if (v.hasType (IDs::ARRANGERTRACK))    return createAndInitialiseTrack<ArrangerTrack> (*this, v);
+    if (v.hasType (IDs::MASTERTRACK))      return createAndInitialiseTrack<MasterTrack> (*this, v);
 
     jassertfalse;
     return {};
@@ -1912,6 +1914,20 @@ void Edit::ensureChordTrack()
     }
 }
 
+void Edit::ensureMasterTrack()
+{
+    if (auto t = getMasterTrack())
+    {
+        t->setName (TRANS("Master"));
+    }
+    else
+    {
+        juce::ValueTree v (IDs::MASTERTRACK);
+        v.setProperty (IDs::name, TRANS("Master"), nullptr);
+        state.addChild (v, 0, &getUndoManager());
+    }
+}
+
 void Edit::ensureNumberOfAudioTracks (int minimumNumTracks)
 {
     while (getAudioTracks (*this).size() < minimumNumTracks)
@@ -2470,6 +2486,11 @@ TempoTrack* Edit::getTempoTrack() const
 ChordTrack* Edit::getChordTrack() const
 {
     return dynamic_cast<ChordTrack*> (findTrackForPredicate (*this, [] (Track& t) { return t.isChordTrack(); }));
+}
+
+MasterTrack* Edit::getMasterTrack() const
+{
+    return dynamic_cast<MasterTrack*> (findTrackForPredicate (*this, [] (Track& t) { return t.isMasterTrack(); }));
 }
 
 Edit::Metadata Edit::getEditMetadata()
