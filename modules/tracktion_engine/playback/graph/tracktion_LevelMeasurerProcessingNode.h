@@ -82,8 +82,7 @@ public:
         tempMidiBuffer.clear();
         
         auto tempBlock = tempAudioBuffer.getStart (numFrames);
-        tempBlock.clear();
-        latencyProcessor->readAudio (tempBlock);
+        latencyProcessor->readAudioOverwriting (tempBlock);
         latencyProcessor->readMIDI (tempMidiBuffer, (int) numFrames);
         
         processLevelMeasurer (meterPlugin.measurer, tempBlock, tempMidiBuffer);

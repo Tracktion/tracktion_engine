@@ -75,7 +75,7 @@ public:
         latencyProcessor->writeAudio (inputBuffer);
         latencyProcessor->writeMIDI (inputMidi);
         
-        latencyProcessor->readAudio (pc.buffers.audio);
+        latencyProcessor->readAudioOverwriting (pc.buffers.audio);
         latencyProcessor->readMIDI (pc.buffers.midi, numSamples);
     }
     

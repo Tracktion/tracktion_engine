@@ -218,11 +218,10 @@ void PluginNode::process (ProcessContext& pc)
         else
         {
             outputBuffers.midi.clear();
-            outputBuffers.audio.clear();
 
             // If no inputs have been added to the fifo, there won't be any samples available so skip
             if (numInputChannelsToCopy > 0)
-                latencyProcessor->readAudio (outputAudioView);
+                latencyProcessor->readAudioOverwriting (outputAudioView);
             
             latencyProcessor->readMIDI (outputBuffers.midi, (int) inputAudioBlock.getNumFrames());
         }
