@@ -138,6 +138,22 @@ private:
     bool useDoublePrecision = false;
     choc::buffer::ChannelArrayBuffer<double> tempDoubleBuffer;
     
+    static void sortByTimestampUnstable (tracktion_engine::MidiMessageArray& messages) noexcept
+    {
+        std::sort (messages.begin(), messages.end(), [] (const juce::MidiMessage& a, const juce::MidiMessage& b)
+        {
+            auto t1 = a.getTimeStamp();
+            auto t2 = b.getTimeStamp();
+
+            if (t1 == t2)
+            {
+                if (a.isNoteOff() && b.isNoteOn()) return true;
+                if (a.isNoteOn() && b.isNoteOff()) return false;
+            }
+            return t1 < t2;
+        });
+    }
+
     //==============================================================================
     void processSinglePrecision (const ProcessContext& pc)
     {
@@ -161,7 +177,7 @@ private:
         }
 
         if (nodesWithMidi > 1)
-            pc.buffers.midi.sortByTimestamp();
+            sortByTimestampUnstable (pc.buffers.midi);
     }
 
     void processDoublePrecision (const ProcessContext& pc)
@@ -193,7 +209,7 @@ private:
             add (pc.buffers.audio.getFirstChannels (numChannels), doubleView);
 
         if (nodesWithMidi > 1)
-            pc.buffers.midi.sortByTimestamp();
+            sortByTimestampUnstable (pc.buffers.midi);
     }
 
     //==============================================================================
