@@ -649,7 +649,8 @@ std::unique_ptr<tracktion_graph::Node> createNodeForPlugin (Plugin& plugin, cons
     node = tracktion_graph::makeNode<PluginNode> (std::move (node),
                                                   plugin,
                                                   params.sampleRate, params.blockSize,
-                                                  trackMuteState, playHeadState, params.forRendering);
+                                                  trackMuteState, playHeadState,
+                                                  params.forRendering, params.includeBypassedPlugins);
 
     return node;
 }

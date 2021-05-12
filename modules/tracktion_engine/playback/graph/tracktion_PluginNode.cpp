@@ -44,12 +44,14 @@ PluginNode::PluginNode (std::unique_ptr<Node> inputNode,
                         tracktion_engine::Plugin::Ptr pluginToProcess,
                         double sampleRateToUse, int blockSizeToUse,
                         const TrackMuteState* trackMuteStateToUse,
-                        tracktion_graph::PlayHeadState& playHeadStateToUse, bool rendering)
+                        tracktion_graph::PlayHeadState& playHeadStateToUse,
+                        bool rendering, bool canBalanceLatency)
     : input (std::move (inputNode)),
       plugin (std::move (pluginToProcess)),
       trackMuteState (trackMuteStateToUse),
       playHeadState (&playHeadStateToUse),
-      isRendering (rendering)
+      isRendering (rendering),
+      balanceLatency (canBalanceLatency)
 {
     jassert (input != nullptr);
     jassert (plugin != nullptr);
@@ -91,7 +93,8 @@ void PluginNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInf
     if (shouldUseFineGrainAutomation (*plugin))
         subBlockSizeToUse = std::max (128, 128 * juce::roundToInt (info.sampleRate / 44100.0));
     
-    canProcessBypassed = dynamic_cast<ExternalPlugin*> (plugin.get()) != nullptr
+    canProcessBypassed = balanceLatency
+                            && dynamic_cast<ExternalPlugin*> (plugin.get()) != nullptr
                             && latencyNumSamples > 0;
     
     if (canProcessBypassed)
@@ -145,7 +148,6 @@ void PluginNode::process (ProcessContext& pc)
     choc::buffer::FrameCount numSamplesDone = 0;
     auto numSamplesLeft = inputAudioBlock.getNumFrames();
     
-    midiMessageArray.clear();
     bool shouldProcessPlugin = canProcessBypassed || plugin->isEnabled();
     bool isAllNotesOff = inputBuffers.midi.isAllNotesOff;
     
@@ -177,7 +179,7 @@ void PluginNode::process (ProcessContext& pc)
         midiMessageArray.clear();
         midiMessageArray.isAllNotesOff = isAllNotesOff;
         
-        for (; inputMidiIter != inputBuffers.midi.end(); ++inputMidiIter)
+        for (auto end = inputBuffers.midi.end(); inputMidiIter != end; ++inputMidiIter)
         {
             const auto timestamp = inputMidiIter->getTimeStamp();
             
