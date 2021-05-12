@@ -84,6 +84,7 @@ public:
         latencyProcessor->writeAudio (inputBuffer);
         latencyProcessor->writeMIDI (inputMidi);
         
+        pc.buffers.midi.clear();
         latencyProcessor->readAudioOverwriting (pc.buffers.audio);
         latencyProcessor->readMIDI (pc.buffers.midi, numSamples);
     }
