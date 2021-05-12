@@ -66,7 +66,12 @@ void LiveMidiOutputNode::process (ProcessContext& pc)
     auto& destMidiBlock = pc.buffers.midi;
     jassert (sourceBuffers.audio.getSize() == pc.buffers.audio.getSize());
 
-    destMidiBlock.copyFrom (sourceBuffers.midi);
+    // If the source only outputs to this node, we can steal its data
+    if (numOutputNodes == 1)
+        destMidiBlock.swapWith (sourceBuffers.midi);
+    else
+        destMidiBlock.copyFrom (sourceBuffers.midi);
+
     setAudioOutput (sourceBuffers.audio);
 
     bool needToUpdate = false;

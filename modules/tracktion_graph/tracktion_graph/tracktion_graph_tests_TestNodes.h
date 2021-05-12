@@ -441,7 +441,12 @@ public:
         // Just pass out input on to our output
         // N.B We need to clear manually here due to optimisations
         setAudioOutput (source.audio);
-        pc.buffers.midi.copyFrom (source.midi);
+
+        // If the source only outputs to this node, we can steal its data
+        if (numOutputNodes == 1)
+            pc.buffers.midi.swapWith (source.midi);
+        else
+            pc.buffers.midi.copyFrom (source.midi);
     }
     
 private:

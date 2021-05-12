@@ -26,7 +26,12 @@ void LevelMeasuringNode::process (tracktion_graph::Node::ProcessContext& pc)
 
     // Just pass out input on to our output
     setAudioOutput (sourceBuffers.audio);
-    pc.buffers.midi.copyFrom (input->getProcessedOutput().midi);
+    
+    // If the source only outputs to this node, we can steal its data
+    if (numOutputNodes == 1)
+        pc.buffers.midi.swapWith (sourceBuffers.midi);
+    else
+        pc.buffers.midi.copyFrom (sourceBuffers.midi);
 
     // Then update the levels
     auto buffer = tracktion_graph::toAudioBuffer (sourceBuffers.audio);

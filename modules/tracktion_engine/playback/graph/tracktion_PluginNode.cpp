@@ -168,7 +168,7 @@ void PluginNode::process (ProcessContext& pc)
     auto inputMidiIter = inputBuffers.midi.begin();
 
     // Process in blocks
-    for (;;)
+    for (int subBlockNum = 0;; ++subBlockNum)
     {
         auto numSamplesThisBlock = std::min (subBlockSize, numSamplesLeft);
 
@@ -196,7 +196,10 @@ void PluginNode::process (ProcessContext& pc)
             plugin->applyToBufferWithAutomation (getPluginRenderContext (pc.referenceSampleRange.getStart() + (int64_t) numSamplesDone, outputAudioBuffer));
 
         // Then copy the buffers to the outputs
-        outputBuffers.midi.mergeFrom (midiMessageArray);
+        if (subBlockNum == 0)
+            outputBuffers.midi.swapWith (midiMessageArray);
+        else
+            outputBuffers.midi.mergeFrom (midiMessageArray);
 
         numSamplesDone += numSamplesThisBlock;
         numSamplesLeft -= numSamplesThisBlock;

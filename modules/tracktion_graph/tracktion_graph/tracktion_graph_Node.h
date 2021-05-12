@@ -209,6 +209,7 @@ public:
     //==============================================================================
     /** @internal */
     void* internal = nullptr;
+    int numOutputNodes = -1;
     virtual size_t getAllocatedBytes() const;
 
 protected:
