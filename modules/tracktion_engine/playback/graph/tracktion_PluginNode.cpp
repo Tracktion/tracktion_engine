@@ -45,12 +45,14 @@ PluginNode::PluginNode (std::unique_ptr<Node> inputNode,
                         double sampleRateToUse, int blockSizeToUse,
                         const TrackMuteState* trackMuteStateToUse,
                         tracktion_graph::PlayHeadState& playHeadStateToUse,
-                        bool rendering, bool canBalanceLatency)
+                        bool rendering, bool canBalanceLatency,
+                        int maxNumChannelsToUse)
     : input (std::move (inputNode)),
       plugin (std::move (pluginToProcess)),
       trackMuteState (trackMuteStateToUse),
       playHeadState (&playHeadStateToUse),
       isRendering (rendering),
+      maxNumChannels (maxNumChannelsToUse),
       balanceLatency (canBalanceLatency)
 {
     jassert (input != nullptr);
@@ -72,6 +74,10 @@ tracktion_graph::NodeProperties PluginNode::getNodeProperties()
     // Assume a stereo output here to corretly initialise plugins
     // We might need to modify this to return a number of channels passed as an argument if there are differences with mono renders
     props.numberOfChannels = juce::jmax (2, props.numberOfChannels, plugin->getNumOutputChannelsGivenInputs (std::max (2, props.numberOfChannels)));
+    
+    if (maxNumChannels > 0)
+        props.numberOfChannels = std::min (maxNumChannels, props.numberOfChannels);
+    
     props.hasAudio = props.hasAudio || plugin->producesAudioWhenNoAudioInput();
     props.hasMidi  = props.hasMidi || plugin->takesMidiInput();
     props.latencyNumSamples = props.latencyNumSamples + latencyNumSamples;
