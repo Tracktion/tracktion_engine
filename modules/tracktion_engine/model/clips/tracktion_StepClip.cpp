@@ -189,6 +189,13 @@ void StepClip::valueTreeChildRemoved (ValueTree& p, juce::ValueTree& c, int oldI
         changed();
 }
 
+void StepClip::valueTreeChildOrderChanged (juce::ValueTree& p, int o, int n)
+{
+    Clip::valueTreeChildOrderChanged (p, o, n);
+
+    changed();
+}
+
 //==============================================================================
 bool StepClip::canGoOnTrack (Track& t)
 {
