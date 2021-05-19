@@ -317,7 +317,6 @@ namespace IDs
     DECLARE_ID (disabledSearchLibraries)
     DECLARE_ID (tempoTrackVisible)
     DECLARE_ID (chordTrackVisible)
-    DECLARE_ID (masterTrackVisible)
     DECLARE_ID (controlsVisible)
     DECLARE_ID (inputsVisible)
     DECLARE_ID (pluginsVisible)
