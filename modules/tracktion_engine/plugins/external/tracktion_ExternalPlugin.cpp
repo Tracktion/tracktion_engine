@@ -841,6 +841,8 @@ void ExternalPlugin::doFullInitialisation()
 
                 pluginInstance->setPlayHead (playhead.get());
                 supportsMPE = pluginInstance->supportsMPE();
+
+                engine.getEngineBehaviour().doAdditionalInitialisation (*this);
             }
             else
             {

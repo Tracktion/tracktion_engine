@@ -41,6 +41,9 @@ public:
     */
     virtual void setPluginDisabled (const juce::String& /*idString*/, bool /*shouldBeDisabled*/) {}
 
+    /** Gives the host a chance to do any extra configuration after a plugin is loaded */
+    virtual void doAdditionalInitialisation (ExternalPlugin&)                       {}
+
     /** Should return if plugins which have been bypassed should be included in the playback graph.
         By default this is false and bypassed plugins will still call processBypassed and introduce
         the same latency as if they weren't.
