@@ -230,6 +230,7 @@ void LockFreeMultiThreadedNodePlayer::buildNodesOutputLists (PreparedNode& prepa
             // Check the input is actually still in the graph
             jassert (std::find (preparedNode.allNodes.begin(), preparedNode.allNodes.end(), inputNode) != preparedNode.allNodes.end());
             static_cast<PlaybackNode*> (inputNode->internal)->outputs.push_back (node);
+            inputNode->numOutputNodes++;
         }
     }
 }

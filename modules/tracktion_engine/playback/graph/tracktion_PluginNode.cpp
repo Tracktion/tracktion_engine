@@ -44,12 +44,16 @@ PluginNode::PluginNode (std::unique_ptr<Node> inputNode,
                         tracktion_engine::Plugin::Ptr pluginToProcess,
                         double sampleRateToUse, int blockSizeToUse,
                         const TrackMuteState* trackMuteStateToUse,
-                        tracktion_graph::PlayHeadState& playHeadStateToUse, bool rendering)
+                        tracktion_graph::PlayHeadState& playHeadStateToUse,
+                        bool rendering, bool canBalanceLatency,
+                        int maxNumChannelsToUse)
     : input (std::move (inputNode)),
       plugin (std::move (pluginToProcess)),
       trackMuteState (trackMuteStateToUse),
       playHeadState (&playHeadStateToUse),
-      isRendering (rendering)
+      isRendering (rendering),
+      maxNumChannels (maxNumChannelsToUse),
+      balanceLatency (canBalanceLatency)
 {
     jassert (input != nullptr);
     jassert (plugin != nullptr);
@@ -70,6 +74,10 @@ tracktion_graph::NodeProperties PluginNode::getNodeProperties()
     // Assume a stereo output here to corretly initialise plugins
     // We might need to modify this to return a number of channels passed as an argument if there are differences with mono renders
     props.numberOfChannels = juce::jmax (2, props.numberOfChannels, plugin->getNumOutputChannelsGivenInputs (std::max (2, props.numberOfChannels)));
+    
+    if (maxNumChannels > 0)
+        props.numberOfChannels = std::min (maxNumChannels, props.numberOfChannels);
+    
     props.hasAudio = props.hasAudio || plugin->producesAudioWhenNoAudioInput();
     props.hasMidi  = props.hasMidi || plugin->takesMidiInput();
     props.latencyNumSamples = props.latencyNumSamples + latencyNumSamples;
@@ -91,7 +99,8 @@ void PluginNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInf
     if (shouldUseFineGrainAutomation (*plugin))
         subBlockSizeToUse = std::max (128, 128 * juce::roundToInt (info.sampleRate / 44100.0));
     
-    canProcessBypassed = dynamic_cast<ExternalPlugin*> (plugin.get()) != nullptr
+    canProcessBypassed = balanceLatency
+                            && dynamic_cast<ExternalPlugin*> (plugin.get()) != nullptr
                             && latencyNumSamples > 0;
     
     if (canProcessBypassed)
@@ -145,7 +154,6 @@ void PluginNode::process (ProcessContext& pc)
     choc::buffer::FrameCount numSamplesDone = 0;
     auto numSamplesLeft = inputAudioBlock.getNumFrames();
     
-    midiMessageArray.clear();
     bool shouldProcessPlugin = canProcessBypassed || plugin->isEnabled();
     bool isAllNotesOff = inputBuffers.midi.isAllNotesOff;
     
@@ -166,7 +174,7 @@ void PluginNode::process (ProcessContext& pc)
     auto inputMidiIter = inputBuffers.midi.begin();
 
     // Process in blocks
-    for (;;)
+    for (int subBlockNum = 0;; ++subBlockNum)
     {
         auto numSamplesThisBlock = std::min (subBlockSize, numSamplesLeft);
 
@@ -177,7 +185,7 @@ void PluginNode::process (ProcessContext& pc)
         midiMessageArray.clear();
         midiMessageArray.isAllNotesOff = isAllNotesOff;
         
-        for (; inputMidiIter != inputBuffers.midi.end(); ++inputMidiIter)
+        for (auto end = inputBuffers.midi.end(); inputMidiIter != end; ++inputMidiIter)
         {
             const auto timestamp = inputMidiIter->getTimeStamp();
             
@@ -194,7 +202,10 @@ void PluginNode::process (ProcessContext& pc)
             plugin->applyToBufferWithAutomation (getPluginRenderContext (pc.referenceSampleRange.getStart() + (int64_t) numSamplesDone, outputAudioBuffer));
 
         // Then copy the buffers to the outputs
-        outputBuffers.midi.mergeFrom (midiMessageArray);
+        if (subBlockNum == 0)
+            outputBuffers.midi.swapWith (midiMessageArray);
+        else
+            outputBuffers.midi.mergeFrom (midiMessageArray);
 
         numSamplesDone += numSamplesThisBlock;
         numSamplesLeft -= numSamplesThisBlock;
@@ -218,11 +229,10 @@ void PluginNode::process (ProcessContext& pc)
         else
         {
             outputBuffers.midi.clear();
-            outputBuffers.audio.clear();
 
             // If no inputs have been added to the fifo, there won't be any samples available so skip
             if (numInputChannelsToCopy > 0)
-                latencyProcessor->readAudio (outputAudioView);
+                latencyProcessor->readAudioOverwriting (outputAudioView);
             
             latencyProcessor->readMIDI (outputBuffers.midi, (int) inputAudioBlock.getNumFrames());
         }

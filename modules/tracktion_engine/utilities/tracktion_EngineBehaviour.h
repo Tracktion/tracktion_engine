@@ -111,6 +111,9 @@ public:
     virtual bool arePluginsRemappedWhenTempoChanges()                               { return true; }
     virtual void setPluginsRemappedWhenTempoChanges (bool)                          {}
 
+    /** Should return the maximum number of plugins that can be added to the master bus. */
+    virtual int getMaxNumMasterPlugins()                                            { return 4; }
+
     /** If this returns true, it means that the length (in seconds) of one "beat" at
         any point in an edit is considered to be the length of one division in the current
         bar's time signature.

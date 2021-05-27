@@ -435,7 +435,7 @@ namespace RackNodeBuilder
             for (auto plugin : rack.getPlugins())
                 itemNodes.push_back (tracktion_graph::makeNode<PluginNode> (tracktion_graph::makeNode<tracktion_graph::SummingNode>(),
                                                                             plugin, sampleRate, blockSize, nullptr,
-                                                                            *playHeadState, isRendering));
+                                                                            *playHeadState, isRendering, true, -1));
             for (auto m : rack.getModifierList().getModifiers())
                 itemNodes.push_back (tracktion_graph::makeNode<ModifierNode> (tracktion_graph::makeNode<tracktion_graph::SummingNode>(),
                                                                               m, sampleRate, blockSize, nullptr,
@@ -526,7 +526,7 @@ namespace RackNodeBuilder
             for (auto plugin : rack.getPlugins())
                 itemNodes[plugin->itemID] = makeNode<PluginNode> (makeNode<ConnectedNode> ((size_t) plugin->itemID.getRawID()),
                                                                   plugin, sampleRate, blockSize, nullptr,
-                                                                  *playHeadState, isRendering);
+                                                                  *playHeadState, isRendering, true, -1);
             
             for (auto m : rack.getModifierList().getModifiers())
                 itemNodes[m->itemID] = makeNode<ModifierNode> (makeNode<ConnectedNode> ((size_t) m->itemID.getRawID()),

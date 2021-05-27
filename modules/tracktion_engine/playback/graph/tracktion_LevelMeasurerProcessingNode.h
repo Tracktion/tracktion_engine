@@ -63,13 +63,22 @@ public:
         auto sourceBuffers = input->getProcessedOutput();
         jassert (sourceBuffers.audio.getNumChannels() == pc.buffers.audio.getNumChannels());
 
-        pc.buffers.midi.copyFrom (sourceBuffers.midi);
-        copy (pc.buffers.audio, sourceBuffers.audio);
+        // If the source only outputs to this node, we can steal its data
+        if (numOutputNodes == 1)
+        {
+            pc.buffers.midi.swapWith (sourceBuffers.midi);
+            setAudioOutput (sourceBuffers.audio);
+        }
+        else
+        {
+            pc.buffers.midi.copyFrom (sourceBuffers.midi);
+            copy (pc.buffers.audio, sourceBuffers.audio);
+        }
             
         // If we have no latency, simply process the meter
         if (! latencyProcessor)
         {
-            processLevelMeasurer (meterPlugin.measurer, pc.buffers.audio, pc.buffers.midi);
+            processLevelMeasurer (meterPlugin.measurer, sourceBuffers.audio, pc.buffers.midi);
             return;
         }
         
@@ -82,8 +91,7 @@ public:
         tempMidiBuffer.clear();
         
         auto tempBlock = tempAudioBuffer.getStart (numFrames);
-        tempBlock.clear();
-        latencyProcessor->readAudio (tempBlock);
+        latencyProcessor->readAudioOverwriting (tempBlock);
         latencyProcessor->readMIDI (tempMidiBuffer, (int) numFrames);
         
         processLevelMeasurer (meterPlugin.measurer, tempBlock, tempMidiBuffer);

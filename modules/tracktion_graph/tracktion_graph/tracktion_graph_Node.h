@@ -209,6 +209,7 @@ public:
     //==============================================================================
     /** @internal */
     void* internal = nullptr;
+    int numOutputNodes = -1;
     virtual size_t getAllocatedBytes() const;
 
 protected:
@@ -318,7 +319,7 @@ inline void Node::initialise (const PlaybackInitialisationInfo& info)
     auto props = getNodeProperties();
     audioBufferSize = choc::buffer::Size::create ((choc::buffer::ChannelCount) props.numberOfChannels,
                                                   (choc::buffer::FrameCount) info.blockSize);
-    
+
     if (info.allocateAudioBuffer)
         allocatedView = info.allocateAudioBuffer (audioBufferSize);
     else if (nodeOptimisations.allocate == AllocateAudioBuffer::yes)

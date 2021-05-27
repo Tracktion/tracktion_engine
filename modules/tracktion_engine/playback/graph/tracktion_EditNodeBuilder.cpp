@@ -645,11 +645,20 @@ std::unique_ptr<tracktion_graph::Node> createNodeForPlugin (Plugin& plugin, cons
     if (! plugin.isEnabled() && ! params.includeBypassedPlugins)
         return node;
 
+    int maxNumChannels = -1;
+    
+    // If this plugin is on a track or clip and doesn't have a sidechain input we can limit the number of channels it uses
+    if (plugin.getOwnerTrack() != nullptr || plugin.getOwnerClip() != nullptr)
+        if (! plugin.getSidechainSourceID().isValid())
+            maxNumChannels = 2;
+    
     node = createSidechainInputNodeForPlugin (plugin, std::move (node));
     node = tracktion_graph::makeNode<PluginNode> (std::move (node),
                                                   plugin,
                                                   params.sampleRate, params.blockSize,
-                                                  trackMuteState, playHeadState, params.forRendering);
+                                                  trackMuteState, playHeadState,
+                                                  params.forRendering, params.includeBypassedPlugins,
+                                                  maxNumChannels);
 
     return node;
 }

@@ -36,13 +36,20 @@ public:
         @param const TrackMuteState*    The optional TrackMuteState to use
         @param PlayHeadState            The PlayHeadState to monitor for jumps
         @param rendering                Should be true if this is an offline render
-     
+        @param balanceLatency           If set to true, this creates a copy of the dry input and
+                                        delays it by the plugin's latency and uses this when the
+                                        plugin is bypassed to avoid changes in latency
+        @param maxNumChannelsToUse      Limits the maximum number of channels to use, set this
+                                        to -1 to disable limitations
+
     */
     PluginNode (std::unique_ptr<Node> input,
                 tracktion_engine::Plugin::Ptr,
                 double sampleRateToUse, int blockSizeToUse,
                 const TrackMuteState*,
-                tracktion_graph::PlayHeadState&, bool rendering);
+                tracktion_graph::PlayHeadState&,
+                bool rendering, bool balanceLatency,
+                int maxNumChannelsToUse);
 
     /** Destructor. */
     ~PluginNode() override;
@@ -69,10 +76,10 @@ private:
     
     bool isInitialised = false;
     double sampleRate = 44100.0;
-    int latencyNumSamples = 0;
+    int latencyNumSamples = 0, maxNumChannels = -1;
     tracktion_engine::MidiMessageArray midiMessageArray;
     int subBlockSizeToUse = -1;
-    bool canProcessBypassed = false;
+    bool balanceLatency = true, canProcessBypassed = false;
     double automationAdjustmentTime = 0.0;
     
     std::shared_ptr<tracktion_graph::LatencyProcessor> latencyProcessor;
