@@ -29,6 +29,7 @@ Tracktion/**/[Rr]elease64*/
 
 # Build products
 build/
+build*/
 *.o
 
 # Other source repository archive directories (protects when importing)
