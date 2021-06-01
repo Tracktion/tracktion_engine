@@ -80,6 +80,7 @@
 //==============================================================================
 #include "tracktion_graph/tracktion_graph_Utility.h"
 
+#include "utilities/tracktion_AudioBufferPool.h"
 #include "utilities/tracktion_GlueCode.h"
 #include "utilities/tracktion_AudioFifo.h"
 #include "utilities/tracktion_MidiMessageArray.h"
