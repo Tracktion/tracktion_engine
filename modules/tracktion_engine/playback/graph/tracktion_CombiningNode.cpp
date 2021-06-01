@@ -48,12 +48,12 @@ struct CombiningNode::TimedNode
                         choc::buffer::ChannelArrayView<float> view)
     {
         auto info2 = info;
-        info2.allocateAudioBuffer = [&view] (choc::buffer::Size size)
+        info2.allocateAudioBuffer = [&view] (choc::buffer::Size size) -> tracktion_graph::NodeBuffer
                                     {
                                         jassert (size.numFrames == view.getNumFrames());
                                         jassert (size.numChannels <= view.getNumChannels());
                                         
-                                        return view.getFirstChannels (size.numChannels);
+                                        return { view.getFirstChannels (size.numChannels), {} };
                                     };
         
         for (auto n : nodesToProcess)
