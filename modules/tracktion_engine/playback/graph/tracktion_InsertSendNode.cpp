@@ -90,7 +90,7 @@ bool InsertSendReturnDependencyNode::isReadyToProcess()
 void InsertSendReturnDependencyNode::process (ProcessContext& pc)
 {
     auto inputBuffers = input->getProcessedOutput();
-    setAudioOutput (inputBuffers.audio.getStart (pc.buffers.audio.getNumFrames()));
+    setAudioOutput (input.get(), inputBuffers.audio.getStart (pc.buffers.audio.getNumFrames()));
     pc.buffers.midi.copyFrom (inputBuffers.midi);
 }
 

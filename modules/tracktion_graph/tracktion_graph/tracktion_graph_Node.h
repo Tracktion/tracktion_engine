@@ -106,7 +106,7 @@ struct PlaybackInitialisationInfo
     Node& rootNode;
     Node* rootNodeToReplace = nullptr;
     std::function<NodeBuffer (choc::buffer::Size)> allocateAudioBuffer = nullptr;
-    std::function<void (NodeBuffer)> deallocateAudioBuffer = nullptr;
+    std::function<void (NodeBuffer&&)> deallocateAudioBuffer = nullptr;
 };
 
 /** Holds some really basic properties of a node */
@@ -218,6 +218,19 @@ public:
     };
 
     //==============================================================================
+    /** Retains the buffers so they won't be deallocated after the Node has processed.
+        You shouldn't normally need to call this unles your Node player has special
+        requirements.
+    */
+    void retain();
+
+    /** Releases the buffers allowing internal storage to be deallocated.
+        You shouldn't normally need to call this unles your Node player has special
+        requirements.
+    */
+    void release();
+
+    //==============================================================================
     /** @internal */
     void* internal = nullptr;
     int numOutputNodes = -1;
@@ -252,7 +265,7 @@ protected:
         This is useful to avoid having to allocate an internal buffer and always fill it if you're
         just passing on data.
     */
-    void setAudioOutput (const choc::buffer::ChannelArrayView<float>&);
+    void setAudioOutput (Node* sourceNode, const choc::buffer::ChannelArrayView<float>&);
     
 private:
     std::atomic<bool> hasBeenProcessed { false };
@@ -264,15 +277,13 @@ private:
     NodeOptimisations nodeOptimisations;
 
     std::vector<Node*> inputNodes;
+    Node* nodeToRelease = nullptr;
     std::function<NodeBuffer (choc::buffer::Size)> allocateAudioBuffer = nullptr;
-    std::function<void (NodeBuffer)> deallocateAudioBuffer = nullptr;
+    std::function<void (NodeBuffer&&)> deallocateAudioBuffer = nullptr;
 
    #if JUCE_DEBUG
     std::atomic<bool> isBeingProcessed { false };
    #endif
-
-    void retain();
-    void release();
 };
 
 //==============================================================================
@@ -354,6 +365,8 @@ inline void Node::initialise (const PlaybackInitialisationInfo& info)
 inline void Node::prepareForNextBlock (juce::Range<int64_t> referenceSampleRange)
 {
     assert (retainCount == 0);
+    assert (inputNodes.size() == getDirectInputNodes().size());
+
     retain();
     
     for (auto& n : inputNodes)
@@ -368,6 +381,9 @@ inline void Node::process (juce::Range<int64_t> referenceSampleRange)
    #if JUCE_DEBUG
     assert (! isBeingProcessed);
     isBeingProcessed = true;
+    
+    for (auto n : inputNodes)
+        assert (n->hasProcessed());
    #endif
     
     // First, allocate buffers if possible
@@ -376,6 +392,7 @@ inline void Node::process (juce::Range<int64_t> referenceSampleRange)
         auto nodeBuffer = allocateAudioBuffer (audioBufferSize);
         audioBuffer = std::move (nodeBuffer.data);
         allocatedView = std::move (nodeBuffer.view);
+        assert (audioBufferSize == allocatedView.getSize());
     }
 
     if (nodeOptimisations.clear == ClearBuffers::yes)
@@ -411,14 +428,14 @@ inline void Node::process (juce::Range<int64_t> referenceSampleRange)
     process (pc);
     numSamplesProcessed.store ((int) numSamples, std::memory_order_release);
     
+    jassert (numChannelsBeforeProcessing == audioBuffer.getNumChannels());
+    jassert (numSamplesBeforeProcessing == audioBuffer.getNumFrames());
+
     release();
     
     for (auto& n : inputNodes)
         n->release();
-
-    jassert (numChannelsBeforeProcessing == audioBuffer.getNumChannels());
-    jassert (numSamplesBeforeProcessing == audioBuffer.getNumFrames());
-
+    
     // If you've set a new view with setAudioOutput, they must be the same size!
     jassert (destAudioView.getSize() == audioView.getSize());
 
@@ -453,9 +470,13 @@ inline void Node::setOptimisations (NodeOptimisations newOptimisations)
     nodeOptimisations = newOptimisations;
 }
 
-inline void Node::setAudioOutput (const choc::buffer::ChannelArrayView<float>& newAudioView)
+inline void Node::setAudioOutput (Node* sourceNode, const choc::buffer::ChannelArrayView<float>& newAudioView)
 {
+    if (sourceNode)
+        sourceNode->retain();
+    
     audioView = newAudioView;
+    nodeToRelease = sourceNode;
 }
 
 inline void Node::retain()
@@ -465,9 +486,16 @@ inline void Node::retain()
 
 inline void Node::release()
 {
+    assert (retainCount.load() >= 0);
+    
     if (retainCount.fetch_sub (1, std::memory_order_relaxed) == 1)
+    {
+        if (nodeToRelease)
+            nodeToRelease->release();
+
         if (deallocateAudioBuffer)
             deallocateAudioBuffer ({ std::move (allocatedView), std::move (audioBuffer) });
+    }
 }
 
 //==============================================================================

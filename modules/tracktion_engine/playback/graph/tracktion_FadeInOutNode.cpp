@@ -72,7 +72,7 @@ void FadeInOutNode::process (ProcessContext& pc)
     if (! renderingNeeded (timelineRange))
     {
         // If we don't need to apply the fade, just pass through the buffer
-        setAudioOutput (sourceBuffers.audio);
+        setAudioOutput (input.get(), sourceBuffers.audio);
         return;
     }
 

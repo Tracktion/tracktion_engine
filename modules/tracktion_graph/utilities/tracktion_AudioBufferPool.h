@@ -27,6 +27,15 @@ public:
     /** Create an empty pool capabale of holding the given number of buffers. */
     AudioBufferPool (size_t numBuffers);
 
+    ~AudioBufferPool()
+    {
+        if (numReserved < maxInUse)
+        {
+            DBG("Reserved: " << numReserved.load());
+            DBG("Used: " << maxInUse.load());
+        }
+    }
+
     /** Returns an allocated buffer for a given size from the pool.
         This will attempt to get a buffer from the pre-allocated pool that can
         fit the size but if one can't easily be found, it will allocate one with
@@ -53,17 +62,19 @@ public:
 
     /** Reserves space for a number of buffers.
         This is the maximum number of buffers the pool can use.
+        This doesn't actually allocate any though, use reserve for that.
     */
-    void reserve (size_t numBuffers);
+    void reset (size_t numBuffers);
 
     /** Reserves a number of buffers of a given size, preallocating them. */
-    void reserve (size_t numBuffers, choc::buffer::Size);
+    void reserve (size_t numBuffers, choc::buffer::Size, size_t maxCapacity);
 
     /** Returns the currently allocated size of all the buffers in bytes. */
     size_t getAllocatedSize();
 
 private:
     choc::fifo::MultipleReaderMultipleWriterFIFO<choc::buffer::ChannelArrayBuffer<float>> fifo;
+    std::atomic<int> counter { 0 }, numInUse { 0 }, maxInUse { 0 }, numReserved { 0 };
 };
 
 
@@ -78,18 +89,24 @@ private:
 //
 //==============================================================================
 inline AudioBufferPool::AudioBufferPool()
-    :AudioBufferPool (0)
+    : AudioBufferPool (0)
 {
 }
 
 inline AudioBufferPool::AudioBufferPool (size_t numBuffers)
 {
-    reserve (numBuffers);
+    reset (numBuffers);
 }
 
 inline choc::buffer::ChannelArrayBuffer<float> AudioBufferPool::allocate (choc::buffer::Size size)
 {
     choc::buffer::ChannelArrayBuffer<float> buffer;
+
+    --counter;
+    ++numInUse;
+    
+    while (maxInUse < numInUse)
+        maxInUse = numInUse.load();
     
     if (fifo.pop (buffer))
     {
@@ -102,6 +119,8 @@ inline choc::buffer::ChannelArrayBuffer<float> AudioBufferPool::allocate (choc::
     }
     else
     {
+        DBG("allocating: " << (int)size.numChannels << " - " << (int)size.numFrames);
+        //assert (false && "Buffer requested not reserved. Allocating inline");
         buffer.resize (size);
     }
         
@@ -110,6 +129,8 @@ inline choc::buffer::ChannelArrayBuffer<float> AudioBufferPool::allocate (choc::
 
 inline bool AudioBufferPool::release (choc::buffer::ChannelArrayBuffer<float>&& buffer)
 {
+    --numInUse;
+    ++counter;
     return fifo.push (std::move (buffer));
 }
 
@@ -119,17 +140,19 @@ inline void AudioBufferPool::reset()
     fifo.reset (0);
 }
 
-inline void AudioBufferPool::reserve (size_t numBuffers)
+inline void AudioBufferPool::reset (size_t numBuffers)
 {
     fifo.reset ((size_t) numBuffers);
 }
 
-inline void AudioBufferPool::reserve (size_t numBuffers, choc::buffer::Size size)
+inline void AudioBufferPool::reserve (size_t numBuffers, choc::buffer::Size size, size_t maxCapacity)
 {
+    assert (numBuffers <= maxCapacity);
+    DBG("reserve: " << (int)numBuffers << " - " << (int)size.numChannels << " - " << (int)size.numFrames);
     std::vector<choc::buffer::ChannelArrayBuffer<float>> buffers;
     
     // Remove all the buffers
-    for (uint32_t i = 0; i < fifo.getFreeSlots(); ++i)
+    for (uint32_t i = 0; i < fifo.getUsedSlots(); ++i)
     {
         choc::buffer::ChannelArrayBuffer<float> tempBuffer;
         [[ maybe_unused ]] bool succeeded = fifo.pop (tempBuffer);
@@ -150,8 +173,8 @@ inline void AudioBufferPool::reserve (size_t numBuffers, choc::buffer::Size size
     }
     
     // Reset the fifo storage to hold the new number of buffers
-    const int numToAdd = static_cast<int> (buffers.size()) - static_cast<int> (numBuffers);
-    fifo.reset ((size_t) numBuffers);
+    const int numToAdd = static_cast<int> (numBuffers) - static_cast<int> (buffers.size());
+    fifo.reset (maxCapacity);
 
     // Push the temp buffers back
     for (auto& b : buffers)
@@ -163,6 +186,13 @@ inline void AudioBufferPool::reserve (size_t numBuffers, choc::buffer::Size size
     // Push any additional buffers
     for (int i = 0; i < numToAdd; ++i)
         fifo.push (choc::buffer::ChannelArrayBuffer<float> (size));
+    
+    assert (fifo.getUsedSlots() == (uint32_t) numBuffers);
+    assert (fifo.getFreeSlots() == (maxCapacity - numBuffers + 1));
+    counter = (int) numBuffers;
+    numReserved = (int) numBuffers;
+    maxInUse = 0;
+    numInUse = 0;
 }
 
 inline size_t AudioBufferPool::getAllocatedSize()

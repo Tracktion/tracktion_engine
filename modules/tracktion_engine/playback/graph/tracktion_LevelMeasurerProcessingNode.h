@@ -67,7 +67,7 @@ public:
         if (numOutputNodes == 1)
         {
             pc.buffers.midi.swapWith (sourceBuffers.midi);
-            setAudioOutput (sourceBuffers.audio);
+            setAudioOutput (input.get(), sourceBuffers.audio);
         }
         else
         {

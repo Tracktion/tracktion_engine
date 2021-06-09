@@ -150,8 +150,10 @@ public:
     /** Sets the Node to process with a new sample rate and block size. */
     void setNode (std::unique_ptr<Node> newNode, double sampleRateToUse, int blockSizeToUse);
 
-    /** Prepares the current Node to be played. */
-    void prepareToPlay (double sampleRateToUse, int blockSizeToUse, Node* oldNode = nullptr);
+    /** Prepares the current Node to be played.
+        Calling this will cause a drop in the output stream as the Node is re-prepared.
+    */
+    void prepareToPlay (double sampleRateToUse, int blockSizeToUse);
 
     /** Returns the current Node. */
     Node* getNode()
@@ -206,6 +208,7 @@ private:
         std::vector<Node*> allNodes;
         std::vector<std::unique_ptr<PlaybackNode>> playbackNodes;
         moodycamel::ConcurrentQueue<Node*> nodesReadyToBeProcessed;
+        std::unique_ptr<AudioBufferPool> audioBufferPool { std::make_unique<AudioBufferPool>() };
     };
     
     Node* rootNode = nullptr;
@@ -221,7 +224,9 @@ private:
     
     //==============================================================================
     /** Prepares a specific Node to be played and returns all the Nodes. */
-    std::vector<Node*> prepareToPlay (Node* node, Node* oldNode, double sampleRateToUse, int blockSizeToUse);
+    std::vector<Node*> prepareToPlay (Node* node, Node* oldNode,
+                                      double sampleRateToUse, int blockSizeToUse,
+                                      AudioBufferPool*);
 
     //==============================================================================
     void updatePreparedNode();
@@ -232,7 +237,7 @@ private:
     void pause();
 
     //==============================================================================
-    void setNewCurrentNode (std::unique_ptr<Node> newRoot, std::vector<Node*> newNodes);
+    void setNewCurrentNode (std::unique_ptr<Node> newRoot, double sampleRateToUse, int blockSizeToUse);
     
     //==============================================================================
     static void buildNodesOutputLists (PreparedNode&);
