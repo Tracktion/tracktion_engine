@@ -276,7 +276,7 @@ private:
     std::atomic<int> numSamplesProcessed { 0 }, retainCount { 0 };
     NodeOptimisations nodeOptimisations;
 
-    std::vector<Node*> inputNodes;
+    std::vector<Node*> directInputNodes;
     Node* nodeToRelease = nullptr;
     std::function<NodeBuffer (choc::buffer::Size)> allocateAudioBuffer = nullptr;
     std::function<void (NodeBuffer&&)> deallocateAudioBuffer = nullptr;
@@ -359,17 +359,17 @@ inline void Node::initialise (const PlaybackInitialisationInfo& info)
         audioBuffer.resize (audioBufferSize);
     }
     
-    inputNodes = getDirectInputNodes();
+    directInputNodes = getDirectInputNodes();
 }
 
 inline void Node::prepareForNextBlock (juce::Range<int64_t> referenceSampleRange)
 {
     assert (retainCount == 0);
-    assert (inputNodes.size() == getDirectInputNodes().size());
+    assert (directInputNodes.size() == getDirectInputNodes().size());
 
     retain();
     
-    for (auto& n : inputNodes)
+    for (auto& n : directInputNodes)
         n->retain();
     
     hasBeenProcessed.store (false, std::memory_order_release);
@@ -382,7 +382,7 @@ inline void Node::process (juce::Range<int64_t> referenceSampleRange)
     assert (! isBeingProcessed);
     isBeingProcessed = true;
     
-    for (auto n : inputNodes)
+    for (auto n : directInputNodes)
         assert (n->hasProcessed());
    #endif
     
@@ -433,7 +433,7 @@ inline void Node::process (juce::Range<int64_t> referenceSampleRange)
 
     release();
     
-    for (auto& n : inputNodes)
+    for (auto& n : directInputNodes)
         n->release();
     
     // If you've set a new view with setAudioOutput, they must be the same size!
