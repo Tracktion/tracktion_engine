@@ -57,7 +57,7 @@ struct MultipleReaderMultipleWriterFIFO
     bool push (const Item& item)                                { return fifo.push (item); }
 
     /** Attempts to push an into into the FIFO, returning false if no space was available. */
-    bool push (Item&& item)                                     { return fifo.push (item); }
+    bool push (Item&& item)                                     { return fifo.push (std::move (item)); }
 
     /** If any items are available, this copies the first into the given target, and returns true. */
     bool pop (Item&);
