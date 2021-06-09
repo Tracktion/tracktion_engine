@@ -77,7 +77,7 @@ namespace node_player_utils
                 ++numLeafNodes;
         }
         
-        const size_t numBuffersRequired = 1 + maxNumInputs * std::min (numThreads, numLeafNodes);
+        const size_t numBuffersRequired = 1 + maxNumInputs * std::min (numThreads + 1, numLeafNodes);
         DBG("");
         DBG("Num Nodes:\t\t" << (int) allNodes.size());
         DBG("maxNumInputs:\t\t" << (int) maxNumInputs);

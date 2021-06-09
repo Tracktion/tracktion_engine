@@ -152,7 +152,7 @@ inline void AudioBufferPool::reserve (size_t numBuffers, choc::buffer::Size size
     std::vector<choc::buffer::ChannelArrayBuffer<float>> buffers;
     
     // Remove all the buffers
-    for (uint32_t i = 0; i < fifo.getUsedSlots(); ++i)
+    for (uint32_t i = 0; i < std::min ((uint32_t) numBuffers, fifo.getUsedSlots()); ++i)
     {
         choc::buffer::ChannelArrayBuffer<float> tempBuffer;
         [[ maybe_unused ]] bool succeeded = fifo.pop (tempBuffer);
@@ -174,6 +174,7 @@ inline void AudioBufferPool::reserve (size_t numBuffers, choc::buffer::Size size
     
     // Reset the fifo storage to hold the new number of buffers
     const int numToAdd = static_cast<int> (numBuffers) - static_cast<int> (buffers.size());
+    assert (numToAdd >= 0);
     fifo.reset (maxCapacity);
 
     // Push the temp buffers back
