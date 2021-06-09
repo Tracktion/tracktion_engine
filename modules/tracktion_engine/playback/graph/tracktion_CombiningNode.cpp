@@ -48,13 +48,14 @@ struct CombiningNode::TimedNode
                         choc::buffer::ChannelArrayView<float> view)
     {
         auto info2 = info;
-        info2.allocateAudioBuffer = [&view] (choc::buffer::Size size) -> tracktion_graph::NodeBuffer
+        info2.allocateAudioBuffer = [view] (choc::buffer::Size size) -> tracktion_graph::NodeBuffer
                                     {
                                         jassert (size.numFrames == view.getNumFrames());
                                         jassert (size.numChannels <= view.getNumChannels());
                                         
                                         return { view.getFirstChannels (size.numChannels), {} };
                                     };
+        info2.deallocateAudioBuffer = nullptr;
         
         for (auto n : nodesToProcess)
             n->initialise (info2);
@@ -65,13 +66,18 @@ struct CombiningNode::TimedNode
         return nodesToProcess.front()->isReadyToProcess();
     }
 
-    void prefetchBlock (juce::Range<int64_t> referenceSampleRange) const
+    void prefetchBlock (juce::Range<int64_t> referenceSampleRange)
     {
+        if (hasPrefetched)
+            return;
+        
         for (auto n : nodesToProcess)
             n->prepareForNextBlock (referenceSampleRange);
+
+        hasPrefetched = true;
     }
 
-    void process (ProcessContext& pc) const
+    void process (ProcessContext& pc)
     {
         // Process all the Nodes
         for (auto n : nodesToProcess)
@@ -87,6 +93,8 @@ struct CombiningNode::TimedNode
                  nodeOutput.audio.getFirstChannels (numChannelsToAdd));
         
         pc.buffers.midi.mergeFrom (nodeOutput.midi);
+        
+        hasPrefetched = false;
     }
 
     size_t getAllocatedBytes() const
@@ -104,6 +112,7 @@ struct CombiningNode::TimedNode
 private:
     const std::unique_ptr<Node> node;
     std::vector<Node*> nodesToProcess;
+    bool hasPrefetched = false;
 
     JUCE_DECLARE_NON_COPYABLE (TimedNode)
 };
@@ -197,9 +206,6 @@ void CombiningNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
 
     const double time = getEditTimeRange().getStart();
     prefetchGroup (referenceSampleRange, time);
-
-    if (getPlayHeadState().isLastBlockOfLoop())
-        prefetchGroup (referenceSampleRange, tracktion_graph::sampleToTime (getPlayHead().getLoopRange().getStart(), processState.sampleRate));
 
     // Update ready to process state based on nodes intersecting this time
     isReadyToProcessBlock.store (true, std::memory_order_release);
