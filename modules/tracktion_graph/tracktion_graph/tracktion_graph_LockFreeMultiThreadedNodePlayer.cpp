@@ -152,6 +152,13 @@ void LockFreeMultiThreadedNodePlayer::clearNode()
 }
 
 //==============================================================================
+void LockFreeMultiThreadedNodePlayer::enablePooledMemoryAllocations (bool usePool)
+{
+    if (useMemoryPool.exchange (usePool) != usePool)
+        prepareToPlay (sampleRate, blockSize);
+}
+
+//==============================================================================
 //==============================================================================
 std::vector<Node*> LockFreeMultiThreadedNodePlayer::prepareToPlay (Node* node, Node* oldNode,
                                                                    double sampleRateToUse, int blockSizeToUse,
@@ -173,8 +180,7 @@ std::vector<Node*> LockFreeMultiThreadedNodePlayer::prepareToPlay (Node* node, N
                                              },
                                              [pool] (auto b)
                                              {
-                                                 [[ maybe_unused ]] bool wasReleased = pool->release (std::move (b.data));
-                                                 assert (wasReleased);
+                                                 pool->release (std::move (b.data));
                                              });
 }
 
@@ -218,10 +224,11 @@ void LockFreeMultiThreadedNodePlayer::setNewCurrentNode (std::unique_ptr<Node> n
     while (isUpdatingPreparedNode)
         pause();
 
+    const bool useAudioBufferPool = useMemoryPool;
     auto currentRoot = preparedNode.rootNode.get();
     auto newNodes = prepareToPlay (newRoot.get(), currentRoot,
                                    sampleRateToUse, blockSizeToUse,
-                                   pendingPreparedNodeStorage.audioBufferPool.get());
+                                   useAudioBufferPool ? pendingPreparedNodeStorage.audioBufferPool.get() : nullptr);
 
     std::stable_sort (newNodes.begin(), newNodes.end(),
                       [] (auto n1, auto n2)
@@ -234,10 +241,18 @@ void LockFreeMultiThreadedNodePlayer::setNewCurrentNode (std::unique_ptr<Node> n
     pendingPreparedNodeStorage.rootNode = std::move (newRoot);
     pendingPreparedNodeStorage.allNodes = std::move (newNodes);
     buildNodesOutputLists (pendingPreparedNodeStorage);
-    node_player_utils::reserveAudioBufferPool (pendingPreparedNodeStorage.rootNode.get(),
-                                               pendingPreparedNodeStorage.allNodes,
-                                               *pendingPreparedNodeStorage.audioBufferPool,
-                                               numThreadsToUse, blockSize);
+    
+    if (useAudioBufferPool)
+    {
+        node_player_utils::reserveAudioBufferPool (pendingPreparedNodeStorage.rootNode.get(),
+                                                   pendingPreparedNodeStorage.allNodes,
+                                                   *pendingPreparedNodeStorage.audioBufferPool,
+                                                   numThreadsToUse, blockSize);
+    }
+    else
+    {
+        pendingPreparedNodeStorage.audioBufferPool.reset();
+    }
 
     pendingPreparedNode = &pendingPreparedNodeStorage;
 }

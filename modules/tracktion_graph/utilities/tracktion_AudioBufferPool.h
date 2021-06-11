@@ -8,11 +8,32 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#ifdef _MSC_VER
+ #pragma warning (push)
+ #pragma warning (disable: 4127)
+#endif
+
+#include "../3rd_party/concurrentqueue.h"
+
+#ifdef _MSC_VER
+ #pragma warning (pop)
+#endif
+
 namespace tracktion_graph
 {
 
 //==============================================================================
 /**
+    A lock-free pool of audio buffers.
+ 
+    If you need to quickly create and then return some audio buffers this class
+    enables you to do that in a lock free way.
+ 
+    Note that the buffers can be pre-allocated but if you ask for a buffer which
+    isn't in the pool, it will either resize an existing one or allocate a new one.
+    
+    After processing a constant audio graph for a while though this should be
+    completely allocation and lock-free.
 */
 class AudioBufferPool
 {
@@ -22,19 +43,7 @@ public:
         number of buffers for it to use first.
         @see reserve
     */
-    AudioBufferPool();
-
-    /** Create an empty pool capabale of holding the given number of buffers. */
-    AudioBufferPool (size_t numBuffers);
-
-    ~AudioBufferPool()
-    {
-        if (numReserved < maxInUse)
-        {
-            DBG("Reserved: " << numReserved.load());
-            DBG("Used: " << maxInUse.load());
-        }
-    }
+    AudioBufferPool() = default;
 
     /** Returns an allocated buffer for a given size from the pool.
         This will attempt to get a buffer from the pre-allocated pool that can
@@ -50,31 +59,30 @@ public:
     */
     choc::buffer::ChannelArrayBuffer<float> allocate (choc::buffer::Size);
     
-    /** Releases an allocated buffer back to the pool.
-        If the pool didn't have enough storage to add this buffer, it will simply be
-        deallocated and this method will return false.
-    */
-    bool release (choc::buffer::ChannelArrayBuffer<float>&&);
+    /** Releases an allocated buffer back to the pool. */
+    void release (choc::buffer::ChannelArrayBuffer<float>&&);
 
     //==============================================================================
     /** Releases all the internal allocated storage. */
     void reset();
 
-    /** Reserves space for a number of buffers.
-        This is the maximum number of buffers the pool can use.
-        This doesn't actually allocate any though, use reserve for that.
-    */
-    void reset (size_t numBuffers);
-
     /** Reserves a number of buffers of a given size, preallocating them. */
-    void reserve (size_t numBuffers, choc::buffer::Size, size_t maxCapacity);
+    void reserve (size_t numBuffers, choc::buffer::Size);
 
-    /** Returns the currently allocated size of all the buffers in bytes. */
+    //==============================================================================
+    /** Returns the current number of buffers in the pool.
+        N.B. This isn't safe to call concurrently with any other methods.
+    */
+    size_t getNumBuffers();
+
+    /** Returns the currently allocated size of all the buffers in bytes.
+        N.B. This isn't safe to call concurrently with any other methods as it needs
+        to pop and then push all the elements to examine their size.
+    */
     size_t getAllocatedSize();
 
 private:
-    choc::fifo::MultipleReaderMultipleWriterFIFO<choc::buffer::ChannelArrayBuffer<float>> fifo;
-    std::atomic<int> counter { 0 }, numInUse { 0 }, maxInUse { 0 }, numReserved { 0 };
+    moodycamel::ConcurrentQueue<choc::buffer::ChannelArrayBuffer<float>> fifo;
 };
 
 
@@ -88,27 +96,11 @@ private:
 //   Code beyond this point is implementation detail...
 //
 //==============================================================================
-inline AudioBufferPool::AudioBufferPool()
-    : AudioBufferPool (0)
-{
-}
-
-inline AudioBufferPool::AudioBufferPool (size_t numBuffers)
-{
-    reset (numBuffers);
-}
-
 inline choc::buffer::ChannelArrayBuffer<float> AudioBufferPool::allocate (choc::buffer::Size size)
 {
     choc::buffer::ChannelArrayBuffer<float> buffer;
 
-    --counter;
-    ++numInUse;
-    
-    while (maxInUse < numInUse)
-        maxInUse = numInUse.load();
-    
-    if (fifo.pop (buffer))
+    if (fifo.try_dequeue (buffer))
     {
         if (auto bufferSize = buffer.getSize();
             bufferSize.numChannels < size.numChannels
@@ -119,43 +111,27 @@ inline choc::buffer::ChannelArrayBuffer<float> AudioBufferPool::allocate (choc::
     }
     else
     {
-        DBG("allocating: " << (int)size.numChannels << " - " << (int)size.numFrames);
-        //assert (false && "Buffer requested not reserved. Allocating inline");
         buffer.resize (size);
     }
         
     return buffer;
 }
 
-inline bool AudioBufferPool::release (choc::buffer::ChannelArrayBuffer<float>&& buffer)
+inline void AudioBufferPool::release (choc::buffer::ChannelArrayBuffer<float>&& buffer)
 {
-    --numInUse;
-    ++counter;
-    return fifo.push (std::move (buffer));
+    fifo.enqueue (std::move (buffer));
 }
 
 //==============================================================================
-inline void AudioBufferPool::reset()
+inline void AudioBufferPool::reserve (size_t numBuffers, choc::buffer::Size size)
 {
-    fifo.reset (0);
-}
-
-inline void AudioBufferPool::reset (size_t numBuffers)
-{
-    fifo.reset ((size_t) numBuffers);
-}
-
-inline void AudioBufferPool::reserve (size_t numBuffers, choc::buffer::Size size, size_t maxCapacity)
-{
-    assert (numBuffers <= maxCapacity);
-    DBG("reserve: " << (int)numBuffers << " - " << (int)size.numChannels << " - " << (int)size.numFrames);
     std::vector<choc::buffer::ChannelArrayBuffer<float>> buffers;
     
     // Remove all the buffers
-    for (uint32_t i = 0; i < std::min ((uint32_t) numBuffers, fifo.getUsedSlots()); ++i)
+    for (uint32_t i = 0; i < std::min ((uint32_t) numBuffers, (uint32_t) fifo.size_approx()); ++i)
     {
         choc::buffer::ChannelArrayBuffer<float> tempBuffer;
-        [[ maybe_unused ]] bool succeeded = fifo.pop (tempBuffer);
+        [[ maybe_unused ]] bool succeeded = fifo.try_dequeue (tempBuffer);
         assert (succeeded);
 
         buffers.emplace_back (std::move (tempBuffer));
@@ -175,30 +151,49 @@ inline void AudioBufferPool::reserve (size_t numBuffers, choc::buffer::Size size
     // Reset the fifo storage to hold the new number of buffers
     const int numToAdd = static_cast<int> (numBuffers) - static_cast<int> (buffers.size());
     assert (numToAdd >= 0);
-    fifo.reset (maxCapacity);
 
     // Push the temp buffers back
     for (auto& b : buffers)
     {
-        [[ maybe_unused ]] bool succeeded = fifo.push (std::move (b));
+        [[ maybe_unused ]] bool succeeded = fifo.try_enqueue (std::move (b));
         assert (succeeded);
     }
     
     // Push any additional buffers
     for (int i = 0; i < numToAdd; ++i)
-        fifo.push (choc::buffer::ChannelArrayBuffer<float> (size));
-    
-    assert (fifo.getUsedSlots() == (uint32_t) numBuffers);
-    assert (fifo.getFreeSlots() == (maxCapacity - numBuffers + 1));
-    counter = (int) numBuffers;
-    numReserved = (int) numBuffers;
-    maxInUse = 0;
-    numInUse = 0;
+        fifo.enqueue (choc::buffer::ChannelArrayBuffer<float> (size));
+}
+
+inline size_t AudioBufferPool::getNumBuffers()
+{
+    return fifo.size_approx();
 }
 
 inline size_t AudioBufferPool::getAllocatedSize()
 {
-    return 0;
+    size_t size = 0;
+    std::vector<choc::buffer::ChannelArrayBuffer<float>> buffers;
+
+    // Remove all the buffers
+    for (;;)
+    {
+        choc::buffer::ChannelArrayBuffer<float> tempBuffer;
+        
+        if (! fifo.try_dequeue (tempBuffer))
+            break;
+        
+        buffers.emplace_back (std::move (tempBuffer));
+    }
+
+    // Calculate the size of them
+    for (auto& b : buffers)
+        size +=  b.getView().data.getBytesNeeded (b.getSize());
+    
+    // Then put them back in the fifo
+    for (auto& b : buffers)
+        fifo.enqueue (std::move (b));
+
+    return size;
 }
 
 } // namespace tracktion_graph

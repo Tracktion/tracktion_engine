@@ -366,7 +366,8 @@ inline void Node::prepareForNextBlock (juce::Range<int64_t> referenceSampleRange
 {
     assert (retainCount == 0);
     assert (directInputNodes.size() == getDirectInputNodes().size());
-
+    nodeToRelease = nullptr; // Reset in case the output node behaviour changes
+    
     retain();
     
     for (auto& n : directInputNodes)
@@ -481,12 +482,13 @@ inline void Node::setAudioOutput (Node* sourceNode, const choc::buffer::ChannelA
 
 inline void Node::retain()
 {
+    assert (retainCount.load() >= 0);
     retainCount.fetch_add (1, std::memory_order_relaxed);
 }
 
 inline void Node::release()
 {
-    assert (retainCount.load() >= 0);
+    assert (retainCount.load() > 0);
     
     if (retainCount.fetch_sub (1, std::memory_order_relaxed) == 1)
     {

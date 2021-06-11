@@ -132,6 +132,12 @@ public:
         return nodePlayer.getSampleRate();        
     }
     
+    /** @internal */
+    void enablePooledMemoryAllocations (bool enablePooledMemory)
+    {
+        nodePlayer.enablePooledMemoryAllocations (enablePooledMemory);
+    }
+    
 private:
     tracktion_graph::PlayHeadState& playHeadState;
     ProcessState& processState;

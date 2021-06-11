@@ -178,11 +178,18 @@ public:
         return sampleRate.load (std::memory_order_acquire);
     }
 
+    //==============================================================================
+    /** Enables or disables the use on an AudioBufferPool to reduce memory consumption.
+        Don't rely on this, it is a temporary method used for benchmarking and will go
+        away in the future.
+    */
+    void enablePooledMemoryAllocations (bool);
+
 private:
     //==============================================================================
     std::atomic<size_t> numThreadsToUse { std::max ((size_t) 0, (size_t) std::thread::hardware_concurrency() - 1) };
     juce::Range<int64_t> referenceSampleRange;
-    std::atomic<bool> threadsShouldExit { false };
+    std::atomic<bool> threadsShouldExit { false }, useMemoryPool { false };
 
     std::unique_ptr<ThreadPool> threadPool;
     

@@ -79,6 +79,8 @@ struct CombiningNode::TimedNode
 
     void process (ProcessContext& pc)
     {
+        jassert (hasPrefetched);
+        
         // Process all the Nodes
         for (auto n : nodesToProcess)
             n->process (pc.referenceSampleRange);
@@ -204,13 +206,13 @@ void CombiningNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
 {
     SCOPED_REALTIME_CHECK
 
-    const double time = getEditTimeRange().getStart();
-    prefetchGroup (referenceSampleRange, time);
+    const auto editTime = getEditTimeRange();
+    prefetchGroup (referenceSampleRange, editTime);
 
     // Update ready to process state based on nodes intersecting this time
     isReadyToProcessBlock.store (true, std::memory_order_release);
     
-    if (auto g = groups[combining_node_utils::timeToGroupIndex (time)])
+    if (auto g = groups[combining_node_utils::timeToGroupIndex (editTime.getStart())])
     {
         for (auto tan : *g)
         {
@@ -262,11 +264,21 @@ size_t CombiningNode::getAllocatedBytes() const
     return size;
 }
 
-void CombiningNode::prefetchGroup (juce::Range<int64_t> referenceSampleRange, double time)
+void CombiningNode::prefetchGroup (juce::Range<int64_t> referenceSampleRange, EditTimeRange editTime)
 {
-    if (auto g = groups[combining_node_utils::timeToGroupIndex (time)])
+    if (auto g = groups[combining_node_utils::timeToGroupIndex (editTime.getStart())])
+    {
         for (auto tan : *g)
-            tan->prefetchBlock (referenceSampleRange);
+        {
+            if (tan->time.end > editTime.getStart())
+            {
+                if (tan->time.start >= editTime.getEnd())
+                    break;
+
+                tan->prefetchBlock (referenceSampleRange);
+            }
+        }
+    }
 }
 
 }

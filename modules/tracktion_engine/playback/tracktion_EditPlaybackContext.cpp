@@ -13,6 +13,32 @@ namespace tracktion_engine
 
 //==============================================================================
 //==============================================================================
+namespace EditPlaybackContextInternal
+{
+    std::atomic<bool>& getExperimentalGraphProcessingFlag()
+    {
+        static std::atomic<bool> enabled { false };
+        return enabled;
+    }
+
+   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+    int& getThreadPoolStrategyType()
+    {
+        static int type = static_cast<int> (tracktion_graph::ThreadPoolStrategy::realTime);
+        return type;
+    }
+
+    bool& getPooledMemoryFlag()
+    {
+        static bool usePool = false;
+        return usePool;
+    }
+   #endif
+}
+
+
+//==============================================================================
+//==============================================================================
 struct EditPlaybackContext::ContextSyncroniser
 {
     //==============================================================================
@@ -137,6 +163,7 @@ private:
           maxNumThreads (maxNumThreadsToUse)
      {
          setNumThreads (numThreads);
+         player.enablePooledMemoryAllocations (EditPlaybackContextInternal::getPooledMemoryFlag());
      }
      
      void setNumThreads (size_t numThreads)
@@ -1154,23 +1181,6 @@ void EditPlaybackContext::setAddAntiDenormalisationNoise (Engine& e, bool b)
 }
 
 //==============================================================================
-namespace EditPlaybackContextInternal
-{
-    std::atomic<bool>& getExperimentalGraphProcessingFlag()
-    {
-        static std::atomic<bool> enabled { false };
-        return enabled;
-    }
-
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-    int& getThreadPoolStrategyType()
-    {
-        static int type = static_cast<int> (tracktion_graph::ThreadPoolStrategy::realTime);
-        return type;
-    }
-   #endif
-}
-
 void EditPlaybackContext::enableExperimentalGraphProcessing (bool enable)
 {
     EditPlaybackContextInternal::getExperimentalGraphProcessingFlag() = enable;
@@ -1249,6 +1259,11 @@ int EditPlaybackContext::getThreadPoolStrategy()
                              EditPlaybackContextInternal::getThreadPoolStrategyType());
     
     return type;
+}
+
+void EditPlaybackContext::enablePooledMemory (bool enable)
+{
+    EditPlaybackContextInternal::getPooledMemoryFlag() = enable;
 }
 
 #endif

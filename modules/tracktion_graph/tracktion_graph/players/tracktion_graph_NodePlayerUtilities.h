@@ -59,13 +59,17 @@ namespace node_player_utils
         if (rootNode == nullptr)
             return;
 
-        // To find the number of buffers:
+        // To find the number of buffers required:
         // - Find the maximum buffer::Size in the graph
         // - Multiply it by the maximum number of inputs any Node has
         // - Then multiply that by the number of threads that will be used (or the num leaf Nodes if that’s smaller)
         // - Add one for the root node so the ouput can be retained
-        size_t maxNumChannels = 0, maxNumInputs = 0, numLeafNodes = 0;
+        [[ maybe_unused ]] size_t maxNumChannels = 0, maxNumInputs = 0, numLeafNodes = 0;
         
+        // However, this algorithm is too pessimistic as it assumes there can be
+        // numThreads * maxNumInputs which is unlikely to be true.
+        // It's probably better to stack up numThreads maxNumInputs and use the min of that size and numThreads
+
         for (auto n : allNodes)
         {
             const auto numInputs = n->getDirectInputNodes().size();
@@ -77,13 +81,8 @@ namespace node_player_utils
                 ++numLeafNodes;
         }
         
-        const size_t numBuffersRequired = 1 + maxNumInputs * std::min (numThreads + 1, numLeafNodes);
-        DBG("");
-        DBG("Num Nodes:\t\t" << (int) allNodes.size());
-        DBG("maxNumInputs:\t\t" << (int) maxNumInputs);
-        DBG("numThreads:\t\t" << (int) numThreads);
-        DBG("numLeafNodes:\t\t" << (int) numLeafNodes);
-        audioBufferPool.reserve (numBuffersRequired, choc::buffer::Size::create (maxNumChannels, blockSize), allNodes.size());
+        const size_t numBuffersRequired = 1 + numThreads;
+        audioBufferPool.reserve (numBuffersRequired, choc::buffer::Size::create (maxNumChannels, blockSize));
     }
 }
 
