@@ -1791,6 +1791,16 @@ void ExternalPlugin::valueTreePropertyChanged (ValueTree& v, const juce::Identif
     }
 }
 
+juce::Array<Exportable::ReferencedItem> ExternalPlugin::getReferencedItems()
+{
+    return engine.getEngineBehaviour().getReferencedItems (*this);
+}
+
+void ExternalPlugin::reassignReferencedItem (const ReferencedItem& itm, ProjectItemID newID, double newStartTime)
+{
+    engine.getEngineBehaviour().reassignReferencedItem (*this, itm, newID, newStartTime);
+}
+
 //==============================================================================
 PluginWetDryAutomatableParam::PluginWetDryAutomatableParam (const juce::String& xmlTag, const juce::String& name, Plugin& owner)
     : AutomatableParameter (xmlTag, name, owner, { 0.0f, 1.0f })

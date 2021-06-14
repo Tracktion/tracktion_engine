@@ -50,6 +50,9 @@ public:
     void reset() override;
     void setEnabled (bool enabled) override;
 
+    juce::Array<Exportable::ReferencedItem> getReferencedItems() override;
+    void reassignReferencedItem (const ReferencedItem&, ProjectItemID newID, double newStartTime) override;
+
     void applyToBuffer (const PluginRenderContext&) override;
 
     bool producesAudioWhenNoAudioInput() override   { return isAutomationNeeded() || isSynth() || ! noTail(); }
