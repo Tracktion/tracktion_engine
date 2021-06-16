@@ -364,14 +364,17 @@ inline void Node::initialise (const PlaybackInitialisationInfo& info)
 
 inline void Node::prepareForNextBlock (juce::Range<int64_t> referenceSampleRange)
 {
-    assert (retainCount == 0);
-    assert (directInputNodes.size() == getDirectInputNodes().size());
-    nodeToRelease = nullptr; // Reset in case the output node behaviour changes
-    
-    retain();
-    
-    for (auto& n : directInputNodes)
-        n->retain();
+    // Only do this once as prepare may be called multiple times
+    if (retainCount == 0)
+    {
+        assert (directInputNodes.size() == getDirectInputNodes().size());
+        nodeToRelease = nullptr; // Reset in case the output node behaviour changes
+        
+        retain();
+        
+        for (auto& n : directInputNodes)
+            n->retain();
+    }
     
     hasBeenProcessed.store (false, std::memory_order_release);
     prefetchBlock (referenceSampleRange);
@@ -490,7 +493,7 @@ inline void Node::release()
 {
     assert (retainCount.load() > 0);
     
-    if (retainCount.fetch_sub (1, std::memory_order_relaxed) == 1)
+    if (retainCount.fetch_sub (1, std::memory_order_acq_rel) == 1)
     {
         if (nodeToRelease)
             nodeToRelease->release();
