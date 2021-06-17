@@ -418,7 +418,7 @@ void SelectedMidiEvents::moveEvents (double deltaStart, double deltaLength, int 
                 deltaBeat = newStartBeat - controllerEvent->getBeatPosition();
         }
 
-        moveControllerData (uniqueClips, &selectedControllers, *deltaBeat, startTime, endTime, false);
+        moveControllerData (uniqueClips, &selectedControllers, *deltaBeat, startTime - 0.001, endTime + 0.001, false);
     }
 }
 
