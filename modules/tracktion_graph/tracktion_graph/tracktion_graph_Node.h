@@ -277,7 +277,7 @@ private:
     NodeOptimisations nodeOptimisations;
 
     std::vector<Node*> directInputNodes;
-    Node* nodeToRelease = nullptr;
+    std::atomic<Node*> nodeToRelease { nullptr };
     std::function<NodeBuffer (choc::buffer::Size)> allocateAudioBuffer = nullptr;
     std::function<void (NodeBuffer&&)> deallocateAudioBuffer = nullptr;
 
@@ -368,7 +368,7 @@ inline void Node::prepareForNextBlock (juce::Range<int64_t> referenceSampleRange
     if (retainCount == 0)
     {
         assert (directInputNodes.size() == getDirectInputNodes().size());
-        nodeToRelease = nullptr; // Reset in case the output node behaviour changes
+        nodeToRelease.store (nullptr, std::memory_order_relaxed); // Reset in case the output node behaviour changes
         
         retain();
         
@@ -480,7 +480,7 @@ inline void Node::setAudioOutput (Node* sourceNode, const choc::buffer::ChannelA
         sourceNode->retain();
     
     audioView = newAudioView;
-    nodeToRelease = sourceNode;
+    nodeToRelease.store (sourceNode, std::memory_order_relaxed);
 }
 
 inline void Node::retain()
@@ -495,8 +495,8 @@ inline void Node::release()
     
     if (retainCount.fetch_sub (1, std::memory_order_acq_rel) == 1)
     {
-        if (nodeToRelease)
-            nodeToRelease->release();
+        if (auto node = nodeToRelease.load (std::memory_order_relaxed))
+            node->release();
 
         if (deallocateAudioBuffer)
             deallocateAudioBuffer ({ std::move (allocatedView), std::move (audioBuffer) });

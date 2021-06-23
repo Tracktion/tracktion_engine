@@ -359,7 +359,7 @@ Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
         auto outputPlaybackNode = static_cast<PlaybackNode*> (output->internal);
 
         // fetch_sub returns the previous value so it will now be 0
-        if (outputPlaybackNode->numInputsToBeProcessed.fetch_sub (1, std::memory_order_release) == 1)
+        if (outputPlaybackNode->numInputsToBeProcessed.fetch_sub (1, std::memory_order_acq_rel) == 1)
         {
             jassert (outputPlaybackNode->node.isReadyToProcess());
             jassert (! outputPlaybackNode->hasBeenQueued);
@@ -371,7 +371,7 @@ Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
                return &outputPlaybackNode->node;
             
             preparedNode.nodesReadyToBeProcessed.enqueue (&outputPlaybackNode->node);
-            numNodesQueued.fetch_add (1, std::memory_order_release);
+            numNodesQueued.fetch_add (1, std::memory_order_acq_rel);
             threadPool->signalOne();
         }
     }
@@ -390,7 +390,7 @@ bool LockFreeMultiThreadedNodePlayer::processNextFreeNode()
     if (! preparedNode.nodesReadyToBeProcessed.try_dequeue (nodeToProcess))
         return false;
 
-    numNodesQueued.fetch_sub (1, std::memory_order_release);
+    numNodesQueued.fetch_sub (1, std::memory_order_acq_rel);
 
     assert (nodeToProcess != nullptr);
     processNode (*nodeToProcess);
