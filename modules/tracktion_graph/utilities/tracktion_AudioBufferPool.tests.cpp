@@ -56,7 +56,7 @@ private:
 
                 expectEquals<size_t> (pool.getNumBuffers(), 1);
                 pool.release (std::move (buffer));
-                expectEquals<size_t> (pool.getNumBuffers(), 0);
+                expectEquals<size_t> (pool.getNumBuffers(), 2);
             }
         }
     }
