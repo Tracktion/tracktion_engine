@@ -696,7 +696,7 @@ void AlphaTrackControlSurface::handleAsyncUpdate()
     if (flip)
         updateFlip();
 
-    if (auto edit = getEdit())
+    if (auto e = getEdit())
     {
         if (auto track = externalControllerManager.getChannelTrack (currentTrack))
         {
@@ -718,7 +718,7 @@ void AlphaTrackControlSurface::handleAsyncUpdate()
                 {
                     int bus = as->getBusNumber();
 
-                    name = edit->getAuxBusName (bus);
+                    name = e->getAuxBusName (bus);
 
                     if (name.isEmpty())
                         name = "Send #" + String (bus + 1);
@@ -760,7 +760,7 @@ void AlphaTrackControlSurface::handleAsyncUpdate()
                     if (auto send = dynamic_cast<AuxSendPlugin*> (f))
                     {
                         int bus = send->getBusNumber();
-                        String name = edit->getAuxBusName(bus);
+                        String name = e->getAuxBusName(bus);
                         if (name.isEmpty())
                             name = "snd" + String (bus + 1);
 

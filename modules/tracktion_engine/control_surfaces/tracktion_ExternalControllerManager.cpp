@@ -111,7 +111,10 @@ void ExternalControllerManager::initialise()
 
     refreshXTOrder();
 
+   #if TRACKTION_ENABLE_CONTROL_SURFACE_MACKIEC4
     addNewController (new MackieC4 (*this));
+   #endif
+
     addNewController (new TranzportControlSurface (*this));
     addNewController (new AlphaTrackControlSurface (*this));
     addNewController (new NovationRemoteSl (*this));
