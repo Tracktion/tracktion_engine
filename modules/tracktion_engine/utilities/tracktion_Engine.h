@@ -18,6 +18,18 @@ namespace tracktion_engine
     customise how the engine behaves or pass nullptr to use the defaults.
     To get going quickly, just use the constructor that takes an application name,
     which uses default settings.
+
+    Typical declaration in your main component:
+    @code
+    private:
+        tracktion_engine::Engine engine { ProjectInfo::projectName}
+    @endcode
+
+    For Extended UI use:
+    @code
+    private:
+        tracktion_engine::Engine engine { ProjectInfo::projectName, std::make_unique<ExtendedUIBehaviour>(), nullptr };
+    @endcode
 */
 class Engine
 {
@@ -33,15 +45,15 @@ public:
    #endif
     static juce::Array<Engine*> getEngines();
 
-    TemporaryFileManager& getTemporaryFileManager() const;
-    AudioFileFormatManager& getAudioFileFormatManager() const;
-    PropertyStorage& getPropertyStorage() const;
-    UIBehaviour& getUIBehaviour() const;
-    EngineBehaviour& getEngineBehaviour() const;
-    DeviceManager& getDeviceManager() const;
-    MidiProgramManager& getMidiProgramManager() const;
-    ExternalControllerManager& getExternalControllerManager() const;
-    RenderManager& getRenderManager() const;
+    TemporaryFileManager& getTemporaryFileManager() const; ///< Get the temporary file manager allowing to handle the default app and user temporary folders.
+    AudioFileFormatManager& getAudioFileFormatManager() const; ///< Get the audio files format manager that maintains a list of available audio file formats.
+    PropertyStorage& getPropertyStorage() const; ///< Get the top-level user settings customisable xml file.
+    UIBehaviour& getUIBehaviour() const; ///< Get the engine UI elements customization helper class allowing to change default UI engine elements.
+    EngineBehaviour& getEngineBehaviour() const; ///< Get the engine customisation helper class allowing to change the engine default behaviour.
+    DeviceManager& getDeviceManager() const; ///< Get the top-level class for handling audio / MIDI devices @see juce::AudioDeviceManager.
+    MidiProgramManager& getMidiProgramManager() const; ///< Get the top-level class that handles MIDI banks, programs, sets or presets.
+    ExternalControllerManager& getExternalControllerManager() const; ///< Get the top-level class that handles MIDI banks, programs, sets or presets.
+    RenderManager& getRenderManager() const; ///< Get the top-level class that handles MIDI banks, programs, sets or presets.
     BackgroundJobManager& getBackgroundJobs() const;
     AudioFileManager& getAudioFileManager() const;
     MidiLearnState& getMidiLearnState() const;

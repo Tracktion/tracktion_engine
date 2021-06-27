@@ -63,9 +63,12 @@ public:
     double getStartTime() const;
 
     /** Sets the properties of this tempo setting.
+        @param startBeatNum         The new start beat number to set.
+        @param newBpm               The new bpm value to set.
+        @param newCurve             The new curve to set.
         @param remapEditPositions   If true, this will adjust any Edit items start/end
-                                    positions so they fall on the same beat as they
-                                    currently do.
+                                      positions so they fall on the same beat as they
+                                      currently do.
     */
     void set (double startBeatNum, double newBpm, float newCurve, bool remapEditPositions);
 
