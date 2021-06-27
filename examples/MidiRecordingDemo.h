@@ -100,7 +100,7 @@ public:
     void resized() override
     {
         auto r = getLocalBounds();
-        int w = r.getWidth() / 7;
+        int w = r.getWidth() / 8;
         auto topR = r.removeFromTop (30);
         settingsButton.setBounds (topR.removeFromLeft (w).reduced (2));
         pluginsButton.setBounds (topR.removeFromLeft (w).reduced (2));
