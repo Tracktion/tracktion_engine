@@ -764,7 +764,7 @@ void Edit::initialise()
 void Edit::initialiseTempoAndPitch()
 {
     const bool needToLoadOldTempoData = ! state.getChildWithName (IDs::TEMPOSEQUENCE).isValid();
-    tempoSequence.setState (state.getOrCreateChildWithName (IDs::TEMPOSEQUENCE, nullptr));
+    tempoSequence.setState (state.getOrCreateChildWithName (IDs::TEMPOSEQUENCE, nullptr), false);
 
     if (needToLoadOldTempoData)
         loadOldTimeSigInfo();
