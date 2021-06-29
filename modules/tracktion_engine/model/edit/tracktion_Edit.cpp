@@ -2457,8 +2457,14 @@ juce::Array<AutomatableParameter*> Edit::getAllAutomatableParams (bool includeTr
 
     if (includeTrackParams)
     {
+        // Skip the MasterTrack as that is covered by the masterPluginList above
+        auto masterTrack = getMasterTrack();
+        
         for (auto t : getAllTracks (*this))
         {
+            if (t == masterTrack)
+                continue;
+            
             list.addArray (t->macroParameterList.getMacroParameters());
             list.addArray (t->getAllAutomatableParams());
         }
