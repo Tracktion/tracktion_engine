@@ -158,7 +158,8 @@ public:
         std::pair<juce::Array<MidiNote*>, juce::Array<MidiControllerEvent*>> pasteIntoClip (MidiClip&,
                                                                                             const juce::Array<MidiNote*>& selectedNotes,
                                                                                             const juce::Array<MidiControllerEvent*>& selectedEvents,
-                                                                                            double cursorPosition, const std::function<double(double)>& snapBeat) const;
+                                                                                            double cursorPosition, const std::function<double(double)>& snapBeat,
+                                                                                            int destController) const;
 
 
         using ContentType::pasteIntoEdit;
@@ -174,7 +175,8 @@ public:
         juce::Array<MidiControllerEvent*> pasteControllersIntoClip (MidiClip& clip,
                                                                     const juce::Array<MidiNote*>& selectedNotes,
                                                                     const juce::Array<MidiControllerEvent*>& selectedEvents,
-                                                                    double cursorPosition, const std::function<double(double)>& snapBeat) const;
+                                                                    double cursorPosition, const std::function<double(double)>& snapBeat,
+                                                                    int destController) const;
     };
 
     struct Pitches  : public ContentType
