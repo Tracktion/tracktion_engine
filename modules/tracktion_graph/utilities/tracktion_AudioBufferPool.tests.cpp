@@ -36,10 +36,10 @@ private:
             
             {
                 AudioBufferPool pool;
-                expectEquals<size_t> (pool.getNumBuffers(), 0);
+                expectEquals<int> ((int) pool.getNumBuffers(), 0);
                 pool.release (ChannelArrayBuffer<float> (size));
-                expectEquals<size_t> (pool.getNumBuffers(), 1);
-                expectEquals<size_t> (pool.getAllocatedSize(), SeparateChannelLayout<float>::getBytesNeeded (size));
+                expectEquals<int> ((int) pool.getNumBuffers(), 1);
+                expectEquals<int> ((int) pool.getAllocatedSize(), (int) SeparateChannelLayout<float>::getBytesNeeded (size));
             }
 
             {
@@ -52,11 +52,11 @@ private:
                 const auto bufferSize = buffer.getSize();
                 expectGreaterOrEqual ((int) bufferSize.numFrames, (int) size.numFrames);
                 expectGreaterOrEqual ((int) bufferSize.numChannels, (int) size.numChannels);
-                expectEquals<size_t> (pool.getAllocatedSize(), SeparateChannelLayout<float>::getBytesNeeded (size));
+                expectEquals<int> ((int) pool.getAllocatedSize(), (int) SeparateChannelLayout<float>::getBytesNeeded (size));
 
-                expectEquals<size_t> (pool.getNumBuffers(), 1);
+                expectEquals<int> ((int) pool.getNumBuffers(), 1);
                 pool.release (std::move (buffer));
-                expectEquals<size_t> (pool.getNumBuffers(), 2);
+                expectEquals<int> ((int) pool.getNumBuffers(), 2);
             }
         }
     }
