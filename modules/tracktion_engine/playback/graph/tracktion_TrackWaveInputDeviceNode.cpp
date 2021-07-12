@@ -52,7 +52,7 @@ void TrackWaveInputDeviceNode::process (ProcessContext& pc)
 
     if (copyInputsToOutputs)
     {
-        setAudioOutput (sourceBuffers.audio);
+        setAudioOutput (input.get(), sourceBuffers.audio);
         pc.buffers.midi.copyFrom (sourceBuffers.midi);
     }
 

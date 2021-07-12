@@ -24,6 +24,7 @@ MidiOutputDeviceInstanceInjectingNode::MidiOutputDeviceInstanceInjectingNode (Mi
 tracktion_graph::NodeProperties MidiOutputDeviceInstanceInjectingNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
+    props.numberOfChannels = 0;
     props.nodeID = 0;
 
     return props;
@@ -49,7 +50,7 @@ void MidiOutputDeviceInstanceInjectingNode::process (ProcessContext& pc)
     auto sourceBuffers = input->getProcessedOutput();
 
     pc.buffers.midi.copyFrom (sourceBuffers.midi);
-    copy (pc.buffers.audio, sourceBuffers.audio);
+    // Block the audio input from reaching the output
     
     if (sourceBuffers.midi.isEmpty() && ! sourceBuffers.midi.isAllNotesOff)
         return;

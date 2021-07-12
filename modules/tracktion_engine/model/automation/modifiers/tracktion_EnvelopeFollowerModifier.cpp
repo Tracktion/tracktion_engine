@@ -180,6 +180,7 @@ public:
             envelope = releaseCoeff * (envelope - input) + input;
         }
 
+        jassert (! std::isnan (envelope));
         jassert (envelope == 0.0f || std::isnormal (envelope));
         envelope = jlimit (0.0f, 1.0f, envelope);
 

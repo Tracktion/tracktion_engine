@@ -172,8 +172,13 @@ UndoManager* TempoSequence::getUndoManager() const noexcept
 }
 
 //==============================================================================
-void TempoSequence::setState (const ValueTree& v)
+void TempoSequence::setState (const ValueTree& v, bool remapEdit)
 {
+    EditTimecodeRemapperSnapshot snap;
+
+    if (remapEdit)
+        snap.savePreChangeState (edit);
+
     freeResources();
 
     state = v;
@@ -199,11 +204,14 @@ void TempoSequence::setState (const ValueTree& v)
                                                 getTimeSig (i - 1)->startBeatNumber.get() + 1);
 
     updateTempoData();
+
+    if (remapEdit)
+        snap.remapEdit (edit);
 }
 
 void TempoSequence::createEmptyState()
 {
-    setState (ValueTree (IDs::TEMPOSEQUENCE));
+    setState (ValueTree (IDs::TEMPOSEQUENCE), false);
 }
 
 void TempoSequence::copyFrom (const TempoSequence& other)

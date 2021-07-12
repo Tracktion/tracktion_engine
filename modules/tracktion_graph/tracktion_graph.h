@@ -36,7 +36,7 @@
  PLEASE READ!
  
  tracktion_graph is an experimental module. It is currently in an early stage of
- development so the API or functionaility it contains is in no way stable. It
+ development so the API or functionality it contains is in no way stable. It
  will change so if you do want to use this in your own code please be aware of
  this and prepare yourself for a lot of updating.
 
@@ -80,6 +80,8 @@
 //==============================================================================
 #include "tracktion_graph/tracktion_graph_Utility.h"
 
+#include "utilities/tracktion_AudioBufferPool.h"
+#include "utilities/tracktion_AudioBufferStack.h"
 #include "utilities/tracktion_GlueCode.h"
 #include "utilities/tracktion_AudioFifo.h"
 #include "utilities/tracktion_MidiMessageArray.h"

@@ -99,6 +99,8 @@ public:
 
     static void setThreadPoolStrategy (int);
     static int getThreadPoolStrategy();
+    
+    static void enablePooledMemory (bool);
    #endif
 
 private:

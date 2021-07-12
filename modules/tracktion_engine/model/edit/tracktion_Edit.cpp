@@ -764,7 +764,7 @@ void Edit::initialise()
 void Edit::initialiseTempoAndPitch()
 {
     const bool needToLoadOldTempoData = ! state.getChildWithName (IDs::TEMPOSEQUENCE).isValid();
-    tempoSequence.setState (state.getOrCreateChildWithName (IDs::TEMPOSEQUENCE, nullptr));
+    tempoSequence.setState (state.getOrCreateChildWithName (IDs::TEMPOSEQUENCE, nullptr), false);
 
     if (needToLoadOldTempoData)
         loadOldTimeSigInfo();
@@ -2457,8 +2457,14 @@ juce::Array<AutomatableParameter*> Edit::getAllAutomatableParams (bool includeTr
 
     if (includeTrackParams)
     {
+        // Skip the MasterTrack as that is covered by the masterPluginList above
+        auto masterTrack = getMasterTrack();
+        
         for (auto t : getAllTracks (*this))
         {
+            if (t == masterTrack)
+                continue;
+            
             list.addArray (t->macroParameterList.getMacroParameters());
             list.addArray (t->getAllAutomatableParams());
         }

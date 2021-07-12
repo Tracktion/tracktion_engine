@@ -194,7 +194,9 @@ struct TrackSection
                 TrackSection cs;
                 cs.range = c->getEditTimeRange();
                 cs.track = c->getTrack();
-                result.add (cs);
+                
+                if (cs.track != nullptr)
+                    result.add (cs);
             }
         }
 

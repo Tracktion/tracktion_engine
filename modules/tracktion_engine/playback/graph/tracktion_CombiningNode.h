@@ -55,7 +55,7 @@ private:
 
     tracktion_graph::NodeProperties nodeProperties;
 
-    void prefetchGroup (juce::Range<int64_t>, double time);
+    void prefetchGroup (juce::Range<int64_t>, EditTimeRange);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CombiningNode)
 };

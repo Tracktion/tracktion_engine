@@ -1195,6 +1195,9 @@ std::unique_ptr<tracktion_graph::Node> createNodeForEdit (EditPlaybackContext& e
         {
             if (auto device = output->getOutputDevice (false))
             {
+                if (! device->isEnabled())
+                    continue;
+                
                 if (t->isFrozen (Track::groupFreeze))
                 {
                     if (std::find (devicesWithFrozenNodes.begin(), devicesWithFrozenNodes.end(), device)
@@ -1296,7 +1299,8 @@ std::unique_ptr<tracktion_graph::Node> createNodeForEdit (EditPlaybackContext& e
             node = std::move (clickAndTracksNode);
         }
 
-        outputNode->addInput (createNodeForDevice (epc, *device, playHeadState, std::move (node)));
+        if (auto outputDeviceNode = createNodeForDevice (epc, *device, playHeadState, std::move (node)))
+            outputNode->addInput (std::move (outputDeviceNode));
     }
     
     std::unique_ptr<Node> finalNode (std::move (outputNode));

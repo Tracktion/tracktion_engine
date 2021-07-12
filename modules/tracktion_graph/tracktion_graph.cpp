@@ -42,6 +42,7 @@
 
 #include "tracktion_graph/nodes/tracktion_graph_ConnectedNode.test.cpp"
 
+#include "utilities/tracktion_AudioBufferPool.tests.cpp"
 #include "utilities/tracktion_Semaphore.cpp"
 #include "utilities/tracktion_Semaphore.tests.cpp"
 #include "utilities/tracktion_Threads.cpp"

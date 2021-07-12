@@ -72,7 +72,7 @@ void LiveMidiOutputNode::process (ProcessContext& pc)
     else
         destMidiBlock.copyFrom (sourceBuffers.midi);
 
-    setAudioOutput (sourceBuffers.audio);
+    setAudioOutput (input.get(), sourceBuffers.audio);
 
     bool needToUpdate = false;
     
