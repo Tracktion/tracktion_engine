@@ -34,21 +34,64 @@ public:
         
         using namespace benchmark_utilities;
         BenchmarkOptions opts;
+        opts.editName = "Wave Edit";
         opts.testSetup = ts;
+        opts.poolType = ThreadPoolStrategy::lightweightSemaphore;
+        opts.isMultiThreaded = MultiThreaded::no;
+        opts.poolMemoryAllocations = PoolMemoryAllocations::no;
+
+        bool singleFile = true;
         
-        for (auto strategy : test_utilities::getThreadPoolStrategies())
+        // Single threaded
         {
-            opts.poolType = strategy;
+            singleFile = true;
+            runWaveRendering (30.0, 20, 12, singleFile, opts);
             
-            opts.isMultiThreaded = MultiThreaded::no;
-            runWaveRendering (30.0, 20, 12, true, opts);
+            singleFile = false;
+            runWaveRendering (30.0, 20, 12, singleFile, opts);
+        }
+        
+        // Multi-threaded strategies
+        {
             opts.isMultiThreaded = MultiThreaded::yes;
-            runWaveRendering (30.0, 20, 12, false, opts);
-            
+
+            for (auto strategy : test_utilities::getThreadPoolStrategies())
+            {
+                opts.poolType = strategy;
+                
+                singleFile = true;
+                runWaveRendering (30.0, 20, 12, singleFile, opts);
+                
+                singleFile = false;
+                runWaveRendering (30.0, 20, 12, singleFile, opts);
+            }
+        }
+
+        // Pooled memory
+        {
+            // Single-threaded
+            singleFile = true;
             opts.isMultiThreaded = MultiThreaded::no;
-            runWaveRendering (30.0, 20, 12, true, opts);
+
+            opts.poolMemoryAllocations = PoolMemoryAllocations::no;
+            runWaveRendering (30.0, 20, 12, singleFile, opts);
+
+            opts.poolMemoryAllocations = PoolMemoryAllocations::yes;
+            runWaveRendering (30.0, 20, 12, singleFile, opts);
+
+            // Multi-threaded
             opts.isMultiThreaded = MultiThreaded::yes;
-            runWaveRendering (30.0, 20, 12, false, opts);
+
+            for (auto strategy : test_utilities::getThreadPoolStrategies())
+            {
+                opts.poolType = strategy;
+                
+                opts.poolMemoryAllocations = PoolMemoryAllocations::no;
+                runWaveRendering (30.0, 20, 12, singleFile, opts);
+
+                opts.poolMemoryAllocations = PoolMemoryAllocations::yes;
+                runWaveRendering (30.0, 20, 12, singleFile, opts);
+            }
         }
     }
 
@@ -75,7 +118,7 @@ private:
         ProcessState processState { playHeadState };
 
         //===
-        beginTest ("Wave Edit - creation: " + description);
+        beginTest (opts.editName + " - creation: " + description);
         const double durationOfFile = durationInSeconds / numFilesPerTrack;
         auto context = createTestContext (engine, numTracks, numFilesPerTrack, durationOfFile, opts.testSetup.sampleRate, opts.testSetup.random, useSingleFile);
         expect (context.edit != nullptr);

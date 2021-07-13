@@ -38,9 +38,18 @@ namespace benchmark_utilities
     inline juce::String getDescription (const BenchmarkOptions& opts)
     {
         using namespace tracktion_graph;
-        return test_utilities::getDescription (opts.testSetup)
-             + juce::String (opts.isMultiThreaded == MultiThreaded::yes ? ", MT" : ", ST")
-             + ", " + test_utilities::getName (opts.poolType);
+        auto s = test_utilities::getDescription (opts.testSetup)
+                    + juce::String (opts.isMultiThreaded == MultiThreaded::yes ? ", MT" : ", ST");
+        
+        if (opts.isMultiThreaded == MultiThreaded::yes && opts.isLockFree == LockFree::yes)
+            s << ", lock-free";
+
+        if (opts.poolMemoryAllocations == PoolMemoryAllocations::yes)
+            s << ", pooled-memory";
+
+        s << ", " + test_utilities::getName (opts.poolType);
+        
+        return s;
     }
 
     //==============================================================================
@@ -89,10 +98,7 @@ namespace benchmark_utilities
     inline void renderEdit (juce::UnitTest& ut, BenchmarkOptions opts)
     {
         assert (opts.edit != nullptr);
-        const auto description = tracktion_graph::test_utilities::getDescription (opts.testSetup)
-                                    + juce::String (opts.isMultiThreaded == MultiThreaded::yes ? ", MT" : ", ST")
-                                    + juce::String (opts.isLockFree == LockFree::yes ? ", lock-free" : ", locking")
-                                    + juce::String (opts.isLockFree == LockFree::no ? "" : ", " + tracktion_graph::test_utilities::getName (opts.poolType));
+        const auto description = getDescription (opts);
 
         tracktion_graph::PlayHead playHead;
         tracktion_graph::PlayHeadState playHeadState { playHead };
@@ -109,6 +115,10 @@ namespace benchmark_utilities
             tracktion_graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, opts.testSetup.sampleRate,opts.testSetup.blockSize,
                                                                                                                                   tracktion_graph::getPoolCreatorFunction (opts.poolType)),
                                                                                            opts.testSetup, 2, opts.edit->getLength(), false);
+            
+            if (opts.poolMemoryAllocations == PoolMemoryAllocations::yes)
+                testContext.getNodePlayer().enablePooledMemoryAllocations (true);
+                
             prepareRenderAndDestroy (ut, opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);
         }
         else
