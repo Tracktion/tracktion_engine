@@ -201,14 +201,14 @@ public:
         }
 
         // Render single threaded first
-        renderEdit (*this, editName, *edit, ts, MultiThreaded::no, LockFree::no, ThreadPoolStrategy::conditionVariable);
-        renderEdit (*this, editName, *edit, ts, MultiThreaded::no, LockFree::yes, ThreadPoolStrategy::conditionVariable);
+        renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::no, LockFree::no, ThreadPoolStrategy::conditionVariable });
+        renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::no, LockFree::yes, ThreadPoolStrategy::conditionVariable });
 
         // Then multi threaded with different strategies
-        renderEdit (*this, editName, *edit, ts, MultiThreaded::yes, LockFree::no, ThreadPoolStrategy::conditionVariable);
+        renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::no, ThreadPoolStrategy::conditionVariable });
 
         for (auto strategy : test_utilities::getThreadPoolStrategies())
-            renderEdit (*this, editName, *edit, ts, MultiThreaded::yes, LockFree::yes, strategy);
+            renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, strategy });
     }
 };
 
