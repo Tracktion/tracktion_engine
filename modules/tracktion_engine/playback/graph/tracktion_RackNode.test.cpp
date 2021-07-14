@@ -209,6 +209,11 @@ public:
 
         for (auto strategy : test_utilities::getThreadPoolStrategies())
             renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, strategy });
+
+        // Then multi threaded with pooled memory
+        renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::semaphore, PoolMemoryAllocations::yes });
+        renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::yes });
+        renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemHybrid, PoolMemoryAllocations::yes });
     }
 };
 

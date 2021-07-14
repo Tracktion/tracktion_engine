@@ -365,7 +365,12 @@ namespace test_utilities
                                                                                                            ts.sampleRate, (uint32_t) numChannels, 16, {}, 0));
             setPlayer (std::move (playerToUse));
         }
-
+        
+        PerformanceMeasurement::Statistics getStatisticsAndReset()
+        {
+            return performanceMeasurement.getStatisticsAndReset();
+        }
+        
         Node& getNode() const
         {
             return *player->getNode();
@@ -401,6 +406,8 @@ namespace test_utilities
         {
             for (;;)
             {
+                const ScopedPerformanceMeasurement spm (performanceMeasurement);
+                
                 auto maxNumThisTime = testSetup.randomiseBlockSizes ? std::min (testSetup.random.nextInt ({ 1, testSetup.blockSize }), numSamplesToDo)
                                                                     : std::min (testSetup.blockSize, numSamplesToDo);
                 auto numThisTime = std::min (maxNumSamples, maxNumThisTime);
@@ -478,6 +485,8 @@ namespace test_utilities
         int numSamplesToDo = 0;
         int numSamplesDone = 0;
         int numProcessMisses = 0;
+        
+        PerformanceMeasurement performanceMeasurement { "TestProcess" , -1 };
     };
 
     template<typename NodePlayerType>

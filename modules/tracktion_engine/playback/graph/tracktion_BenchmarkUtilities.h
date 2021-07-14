@@ -88,6 +88,7 @@ namespace benchmark_utilities
         const StopwatchTimer sw;
         auto result = testContext.processAll();
         std::cout << sw.getDescription() << "\n";
+        std::cout << testContext.getStatisticsAndReset().toString() << "\n";
         ut.expect (true);
 
         ut.beginTest (editName + " - destroying: " + description);
