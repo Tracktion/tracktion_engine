@@ -210,10 +210,29 @@ public:
         for (auto strategy : test_utilities::getThreadPoolStrategies())
             renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, strategy });
 
+        // Directly compare not-pooled
+        {
+            renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::semaphore, PoolMemoryAllocations::no });
+            renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::no });
+            renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemHybrid, PoolMemoryAllocations::no });
+        }
+
         // Then multi threaded with pooled memory
-        renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::semaphore, PoolMemoryAllocations::yes });
-        renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::yes });
-        renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemHybrid, PoolMemoryAllocations::yes });
+        {
+            renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::semaphore, PoolMemoryAllocations::yes });
+            renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::yes });
+            renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemHybrid, PoolMemoryAllocations::yes });
+        }
+
+        // Lightweight semaphore seems to have the best performance so compare this over different buffer sizes
+        {
+            for (int blockSize : { 128, 256, 512, 1024, 2048 })
+            {
+                ts.blockSize = blockSize;
+                renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::no });
+                renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::yes });
+            }
+        }
     }
 };
 

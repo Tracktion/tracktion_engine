@@ -46,11 +46,11 @@ public:
         {
             singleFile = true;
             runWaveRendering (30.0, 20, 12, singleFile, opts);
-            
+
             singleFile = false;
             runWaveRendering (30.0, 20, 12, singleFile, opts);
         }
-        
+
         // Multi-threaded strategies
         {
             opts.isMultiThreaded = MultiThreaded::yes;
@@ -58,10 +58,10 @@ public:
             for (auto strategy : test_utilities::getThreadPoolStrategies())
             {
                 opts.poolType = strategy;
-                
+
                 singleFile = true;
                 runWaveRendering (30.0, 20, 12, singleFile, opts);
-                
+
                 singleFile = false;
                 runWaveRendering (30.0, 20, 12, singleFile, opts);
             }
@@ -85,6 +85,25 @@ public:
             for (auto strategy : test_utilities::getThreadPoolStrategies())
             {
                 opts.poolType = strategy;
+
+                opts.poolMemoryAllocations = PoolMemoryAllocations::no;
+                runWaveRendering (30.0, 20, 12, singleFile, opts);
+
+                opts.poolMemoryAllocations = PoolMemoryAllocations::yes;
+                runWaveRendering (30.0, 20, 12, singleFile, opts);
+            }
+        }
+        
+        // Lightweight semaphore seems to have the best performance so compare this over different buffer sizes
+        {
+            singleFile = true;
+            opts.poolType = ThreadPoolStrategy::lightweightSemaphore;
+            opts.isMultiThreaded = MultiThreaded::yes;
+            opts.isLockFree = LockFree::yes;
+
+            for (int blockSize : { 128, 256, 512, 1024, 2048 })
+            {
+                opts.testSetup.blockSize = blockSize;
                 
                 opts.poolMemoryAllocations = PoolMemoryAllocations::no;
                 runWaveRendering (30.0, 20, 12, singleFile, opts);
