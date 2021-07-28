@@ -47,7 +47,8 @@ namespace benchmark_utilities
         if (opts.poolMemoryAllocations == PoolMemoryAllocations::yes)
             s << ", pooled-memory";
 
-        s << ", " + test_utilities::getName (opts.poolType);
+        if (opts.isMultiThreaded == MultiThreaded::yes)
+            s << ", " + test_utilities::getName (opts.poolType);
         
         return s;
     }

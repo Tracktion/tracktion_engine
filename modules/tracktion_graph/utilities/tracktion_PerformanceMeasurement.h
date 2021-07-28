@@ -11,6 +11,41 @@
 #include <chrono>
 #include <iostream>
 
+#ifdef __APPLE__
+ #include <sys/kdebug_signpost.h>
+#endif
+
+//==============================================================================
+//==============================================================================
+/**
+    A macOS specific class to start/stop a signpost for use in Instruments.
+*/
+struct ScopedSignpost
+{
+    /** Starts a signpost with a given index. */
+    ScopedSignpost (uint32_t signpostIndex)
+        : index (signpostIndex)
+    {
+       #ifdef __APPLE__
+        kdebug_signpost_start (index, 0, 0, 0, 0);
+       #endif
+    }
+    
+    /** Stops the signpost previously started. */
+    ~ScopedSignpost()
+    {
+       #ifdef __APPLE__
+        kdebug_signpost_end (index, 0, 0, 0, 0);
+       #endif
+    }
+    
+private:
+    //==============================================================================
+    [[ maybe_unused ]] const uint32_t index;
+};
+
+
+//==============================================================================
 //==============================================================================
 /** A timer for measuring performance of code.
 
@@ -177,17 +212,16 @@ inline std::string PerformanceMeasurement::Statistics::toString() const
     auto timeToString = [] (double secs)
     {
         return std::to_string ((int64_t) (secs * (secs < 0.01 ? 1000000.0 : 1000.0) + 0.5))
-                + (secs < 0.01 ? " microsecs" : " millisecs");
+                + (secs < 0.01 ? " us" : " ms");
     };
 
     const double variance = m2 / (double) numRuns;
     std::string s = "Performance count for \"" + name + "\" over " + std::to_string (numRuns) + " run(s)\n"
-                    + "Average = "      + timeToString (meanSeconds)
-                    + ", minimum = "    + timeToString (minimumSeconds)
-                    + ", maximum = "    + timeToString (maximumSeconds)
-                    + ", variance = "   + timeToString (variance)
-                    + ", SD = "         + timeToString (std::sqrt (variance))
-                    + ", total = "      + timeToString (totalSeconds) + "\n";
+                    + "Mean = "     + timeToString (meanSeconds)
+                    + ", min = "    + timeToString (minimumSeconds)
+                    + ", max = "    + timeToString (maximumSeconds)
+                    + ", SD = "     + timeToString (std::sqrt (variance))
+                    + ", total = "  + timeToString (totalSeconds) + "\n";
 
     return s;
 }
