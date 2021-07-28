@@ -26,6 +26,7 @@ struct ScopedSignpost
     ScopedSignpost (uint32_t signpostIndex)
         : index (signpostIndex)
     {
+        (void) index;
        #ifdef __APPLE__
         kdebug_signpost_start (index, 0, 0, 0, 0);
        #endif
@@ -41,7 +42,7 @@ struct ScopedSignpost
     
 private:
     //==============================================================================
-    [[ maybe_unused ]] const uint32_t index;
+    const uint32_t index;
 };
 
 
