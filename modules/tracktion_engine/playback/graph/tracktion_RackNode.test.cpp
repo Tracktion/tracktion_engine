@@ -195,7 +195,7 @@ public:
             expectGreaterOrEqual (audioTracks.size(), 8);
             
             for (int i = 0; i < 8; ++i)
-                audioTracks[i]->insertWaveClip ("clip", sinFile->getFile(), ClipPosition { EditTimeRange::withStartAndLength (0.0, fileLength) }, false);
+                audioTracks[i]->insertMIDIClip (EditTimeRange::withStartAndLength (0.0, fileLength), nullptr);
 
             expectEquals (edit->getLength(), fileLength);
         }
