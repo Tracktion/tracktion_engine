@@ -240,6 +240,7 @@ void LockFreeMultiThreadedNodePlayer::setNewCurrentNode (std::unique_ptr<Node> n
     rootNode = newRoot.get();
     pendingPreparedNodeStorage.rootNode = std::move (newRoot);
     pendingPreparedNodeStorage.allNodes = std::move (newNodes);
+    pendingPreparedNodeStorage.nodesReadyToBeProcessed = std::make_unique<LockFreeFifo<Node*>> ((int) pendingPreparedNodeStorage.allNodes.size());
     buildNodesOutputLists (pendingPreparedNodeStorage);
     
     if (useAudioBufferPool)
@@ -299,7 +300,7 @@ void LockFreeMultiThreadedNodePlayer::resetProcessQueue()
     {
         Node* temp;
 
-        if (! preparedNode.nodesReadyToBeProcessed.try_dequeue (temp))
+        if (! preparedNode.nodesReadyToBeProcessed->try_dequeue (temp))
             break;
     }
 
@@ -342,7 +343,7 @@ void LockFreeMultiThreadedNodePlayer::resetProcessQueue()
         {
             jassert (! playbackNode->hasBeenQueued);
             playbackNode->hasBeenQueued = true;
-            preparedNode.nodesReadyToBeProcessed.enqueue (&playbackNode->node);
+            preparedNode.nodesReadyToBeProcessed->try_enqueue (&playbackNode->node);
             ++numNodesJustQueued;
         }
     }
@@ -373,7 +374,7 @@ Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
                 || output == playbackNode->outputs.back())
                return &outputPlaybackNode->node;
             
-            preparedNode.nodesReadyToBeProcessed.enqueue (&outputPlaybackNode->node);
+            preparedNode.nodesReadyToBeProcessed->try_enqueue (&outputPlaybackNode->node);
             numNodesQueued.fetch_add (1, std::memory_order_acq_rel);
             threadPool->signalOne();
         }
@@ -390,7 +391,7 @@ bool LockFreeMultiThreadedNodePlayer::processNextFreeNode()
     if (numNodesQueued.load (std::memory_order_acquire) == 0)
         return false;
 
-    if (! preparedNode.nodesReadyToBeProcessed.try_dequeue (nodeToProcess))
+    if (! preparedNode.nodesReadyToBeProcessed->try_dequeue (nodeToProcess))
         return false;
 
     numNodesQueued.fetch_sub (1, std::memory_order_acq_rel);

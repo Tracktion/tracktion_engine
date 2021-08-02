@@ -15,7 +15,10 @@
  #pragma warning (disable: 4127)
 #endif
 
-#include "../3rd_party/concurrentqueue.h"
+namespace tracktion_graph
+{
+#include "../3rd_party/farbot/include/farbot/fifo.hpp"
+}
 
 #ifdef _MSC_VER
  #pragma warning (pop)
@@ -187,6 +190,22 @@ public:
 
 private:
     //==============================================================================
+    template<typename Type>
+    class LockFreeFifo
+    {
+    public:
+        LockFreeFifo (int capacity)
+            : fifo (std::make_unique<farbot::fifo<Type>> (juce::nextPowerOfTwo (capacity)))
+        {}
+        
+        bool try_enqueue (Type&& item)      { return fifo->push (std::move (item)); }
+        bool try_dequeue (Type& item)       { return fifo->pop (item); }
+        
+    private:
+        std::unique_ptr<farbot::fifo<Type>> fifo;
+    };
+
+    //==============================================================================
     std::atomic<size_t> numThreadsToUse { std::max ((size_t) 0, (size_t) std::thread::hardware_concurrency() - 1) };
     juce::Range<int64_t> referenceSampleRange;
     std::atomic<bool> threadsShouldExit { false }, useMemoryPool { false };
@@ -214,7 +233,7 @@ private:
         std::unique_ptr<Node> rootNode;
         std::vector<Node*> allNodes;
         std::vector<std::unique_ptr<PlaybackNode>> playbackNodes;
-        moodycamel::ConcurrentQueue<Node*> nodesReadyToBeProcessed;
+        std::unique_ptr<LockFreeFifo<Node*>> nodesReadyToBeProcessed;
         std::unique_ptr<AudioBufferPool> audioBufferPool { std::make_unique<AudioBufferPool>() };
     };
     
