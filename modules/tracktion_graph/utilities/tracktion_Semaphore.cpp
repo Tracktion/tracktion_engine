@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include "../3rd_party/concurrentqueue.h"
 #include "../3rd_party/lightweightsemaphore.h"
 
 namespace tracktion_graph

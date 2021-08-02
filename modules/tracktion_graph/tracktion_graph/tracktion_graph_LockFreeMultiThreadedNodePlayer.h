@@ -234,7 +234,7 @@ private:
         std::vector<Node*> allNodes;
         std::vector<std::unique_ptr<PlaybackNode>> playbackNodes;
         std::unique_ptr<LockFreeFifo<Node*>> nodesReadyToBeProcessed;
-        std::unique_ptr<AudioBufferPool> audioBufferPool { std::make_unique<AudioBufferPool>() };
+        std::unique_ptr<AudioBufferPool> audioBufferPool;
     };
     
     Node* rootNode = nullptr;

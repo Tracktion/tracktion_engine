@@ -33,9 +33,10 @@ private:
         beginTest ("Allocation");
         {
             const auto size = Size::create (2, 128);
-            
+
             {
                 AudioBufferPool pool;
+                pool.setCapacity (1);
                 expectEquals<int> ((int) pool.getNumBuffers(), 0);
                 pool.release (ChannelArrayBuffer<float> (size));
                 expectEquals<int> ((int) pool.getNumBuffers(), 1);
@@ -43,7 +44,15 @@ private:
             }
 
             {
-                AudioBufferPool pool;
+                AudioBufferPool pool (1);
+                expectEquals<int> ((int) pool.getNumBuffers(), 0);
+                pool.release (ChannelArrayBuffer<float> (size));
+                expectEquals<int> ((int) pool.getNumBuffers(), 1);
+                expectEquals<int> ((int) pool.getAllocatedSize(), (int) SeparateChannelLayout<float>::getBytesNeeded (size));
+            }
+
+            {
+                AudioBufferPool pool (2);
                 pool.reserve (1, size);
                 
                 pool.release (ChannelArrayBuffer<float> (size));
