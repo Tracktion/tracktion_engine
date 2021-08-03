@@ -31,6 +31,7 @@ public:
         test_utilities::TestSetup ts;
         ts.sampleRate = 96000.0;
         ts.blockSize = 128;
+        const double fileDuration = 20.0;
         
         using namespace benchmark_utilities;
         BenchmarkOptions opts;
@@ -45,10 +46,10 @@ public:
         // Single threaded
         {
             singleFile = true;
-            runWaveRendering (30.0, 20, 12, singleFile, opts);
+            runWaveRendering (fileDuration, 20, 12, singleFile, opts);
 
             singleFile = false;
-            runWaveRendering (30.0, 20, 12, singleFile, opts);
+            runWaveRendering (fileDuration, 20, 12, singleFile, opts);
         }
 
         // Multi-threaded strategies
@@ -60,40 +61,13 @@ public:
                 opts.poolType = strategy;
 
                 singleFile = true;
-                runWaveRendering (30.0, 20, 12, singleFile, opts);
+                runWaveRendering (fileDuration, 20, 12, singleFile, opts);
 
                 singleFile = false;
-                runWaveRendering (30.0, 20, 12, singleFile, opts);
+                runWaveRendering (fileDuration, 20, 12, singleFile, opts);
             }
         }
 
-        // Pooled memory
-        {
-            // Single-threaded
-            singleFile = true;
-            opts.isMultiThreaded = MultiThreaded::no;
-
-            opts.poolMemoryAllocations = PoolMemoryAllocations::no;
-            runWaveRendering (30.0, 20, 12, singleFile, opts);
-
-            opts.poolMemoryAllocations = PoolMemoryAllocations::yes;
-            runWaveRendering (30.0, 20, 12, singleFile, opts);
-
-            // Multi-threaded
-            opts.isMultiThreaded = MultiThreaded::yes;
-
-            for (auto strategy : test_utilities::getThreadPoolStrategies())
-            {
-                opts.poolType = strategy;
-
-                opts.poolMemoryAllocations = PoolMemoryAllocations::no;
-                runWaveRendering (30.0, 20, 12, singleFile, opts);
-
-                opts.poolMemoryAllocations = PoolMemoryAllocations::yes;
-                runWaveRendering (30.0, 20, 12, singleFile, opts);
-            }
-        }
-        
         // Lightweight semaphore seems to have the best performance so compare this over different buffer sizes
         {
             singleFile = true;
@@ -104,12 +78,7 @@ public:
             for (int blockSize : { 128, 256, 512, 1024, 2048 })
             {
                 opts.testSetup.blockSize = blockSize;
-                
-                opts.poolMemoryAllocations = PoolMemoryAllocations::no;
-                runWaveRendering (30.0, 20, 12, singleFile, opts);
-
-                opts.poolMemoryAllocations = PoolMemoryAllocations::yes;
-                runWaveRendering (30.0, 20, 12, singleFile, opts);
+                runWaveRendering (fileDuration, 20, 12, singleFile, opts);
             }
         }
     }

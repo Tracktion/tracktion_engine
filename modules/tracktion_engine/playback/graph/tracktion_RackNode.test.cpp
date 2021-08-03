@@ -183,7 +183,7 @@ public:
 
         const auto editName = "RackMixBus";
         auto edit = openEditFromZipData (engine, RackMixBus_zip, sizeof (RackMixBus_zip));
-        const double fileLength = 30.0;
+        const double fileLength = 20.0;
         auto sinFile = test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, fileLength, 2);
         
         beginTest ("Load Edit");
