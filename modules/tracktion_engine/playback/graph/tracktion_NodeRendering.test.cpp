@@ -68,6 +68,7 @@ public:
             }
         }
 
+       #if TRACKTION_GRAPH_ADVANCED_PERFORMANCE_TESTS
         // Lightweight semaphore seems to have the best performance so compare this over different buffer sizes
         {
             singleFile = true;
@@ -81,6 +82,7 @@ public:
                 runWaveRendering (fileDuration, 20, 12, singleFile, opts);
             }
         }
+       #endif
     }
 
 private:
