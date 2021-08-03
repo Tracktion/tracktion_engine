@@ -193,6 +193,12 @@ namespace test_utilities
         Visitor::visitInputs (node, 0);
     }
 
+    /** Returns the graph structure in a dot textual description.
+        Save this to a file and then run it through graphviz's dot program to plot the graph.
+        E.g. `cat output.txt | dot -Tsvg > output.svg`
+    */
+    std::string createGraphDescription (Node&);
+
 
     //==============================================================================
     template<typename AudioFormatType>
