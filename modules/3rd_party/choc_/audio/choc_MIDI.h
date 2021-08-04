@@ -88,7 +88,6 @@ struct ShortMessage
 {
     ShortMessage() = default;
     ShortMessage (uint8_t byte0, uint8_t byte1, uint8_t byte2)  : data { byte0, byte1, byte2 } {}
-    ShortMessage (const void* sourceData, size_t numBytes);
 
     /// The raw data. (Actual message length is determined by interpreting the content)
     uint8_t data[3] = {};
@@ -243,26 +242,6 @@ private:
 //   Code beyond this point is implementation detail...
 //
 //==============================================================================
-
-inline ShortMessage::ShortMessage (const void* sourceData, size_t numBytes)
-{
-    if (numBytes > 0)
-    {
-        auto source = static_cast<const uint8_t*> (sourceData);
-        data[0] = source[0];
-
-        if (numBytes > 1)
-        {
-            data[1] = source[1];
-
-            if (numBytes > 2)
-            {
-                data[2] = source[2];
-                CHOC_ASSERT (numBytes == 3);
-            }
-        }
-    }
-}
 
 inline uint8_t ShortMessage::length() const
 {

@@ -19,9 +19,10 @@
 #ifndef CHOC_TESTS_HEADER_INCLUDED
 #define CHOC_TESTS_HEADER_INCLUDED
 
+#include <iostream>
+
 #include "../platform/choc_Platform.h"
 #include "../platform/choc_SpinLock.h"
-#include "../platform/choc_DynamicLibrary.h"
 #include "../text/choc_CodePrinter.h"
 #include "../text/choc_FloatToString.h"
 #include "../text/choc_HTML.h"
@@ -38,17 +39,15 @@
 #include "../containers/choc_VariableSizeFIFO.h"
 #include "../containers/choc_SmallVector.h"
 #include "../containers/choc_PoolAllocator.h"
-#include "../containers/choc_ObjectPointer.h"
-#include "../containers/choc_ObjectReference.h"
 #include "../audio/choc_MIDI.h"
 #include "../audio/choc_MIDIFile.h"
 #include "../audio/choc_SampleBuffers.h"
-#include "../audio/choc_SincInterpolator.h"
-#include "../audio/choc_SampleBufferUtilities.h"
-#include "../audio/choc_AudioMIDIBlockDispatcher.h"
-#include "../javascript/choc_javascript.h"
 
-#include <iostream>
+#ifndef CHOC_JAVASCRIPT_IMPLEMENTATION
+ #define CHOC_JAVASCRIPT_IMPLEMENTATION 1
+#endif
+
+#include "../javascript/choc_javascript.h"
 
 /**
     To keep things simpole for users, I've just shoved all the tests for everything into this
@@ -221,29 +220,6 @@ inline void testContainerUtils (TestProgress& progress)
         CHOC_EXPECT_TRUE (choc::span<int> (v).tail().size() == 2);
         CHOC_EXPECT_TRUE (choc::span<int> (v).createVector().size() == 3);
         CHOC_EXPECT_TRUE (choc::span<int> (v) == choc::span<int> (a));
-    }
-
-    {
-        CHOC_TEST (SmartPointers)
-
-        struct Foo { int x; };
-        using P = choc::ObjectPointer<Foo>;
-        Foo f1, f2;
-        P a;
-        CHOC_EXPECT_TRUE (a == nullptr && ! a);
-        P b = f1;
-        CHOC_EXPECT_TRUE (b != nullptr && !! b);
-        CHOC_EXPECT_TRUE (a != b);
-        CHOC_EXPECT_TRUE (b == f1);
-        CHOC_EXPECT_TRUE (std::addressof (*b) == std::addressof (f1));
-        b = f2;
-        CHOC_EXPECT_TRUE (std::addressof (*b) == std::addressof (f2));
-
-        using R = choc::ObjectReference<Foo>;
-        R c (f1);
-        CHOC_EXPECT_TRUE (c == f1);
-        c = f2;
-        CHOC_EXPECT_TRUE (c == f2);
     }
 }
 
@@ -565,9 +541,9 @@ inline void testValues (TestProgress& progress)
         }
 
         auto v2 = choc::value::createObject ("foo",
-                                             "x", choc::value::createVector (3, [] (uint32_t) { return true; }),
-                                             "y", choc::value::createVector (3, [] (uint32_t) { return true; }),
-                                             "z", choc::value::createVector (3, [] (uint32_t) { return 1.0; }));
+                                            "x", choc::value::createVector (3, [] (uint32_t) { return true; }),
+                                            "y", choc::value::createVector (3, [] (uint32_t) { return true; }),
+                                            "z", choc::value::createVector (3, [] (uint32_t) { return 1.0; }));
 
         CHOC_EXPECT_EQ (3u, ((size_t) v2["y"].getRawData()) & 3);
         CHOC_EXPECT_EQ (2u, ((size_t) v2["z"].getRawData()) & 3);
@@ -683,13 +659,10 @@ inline void testJSON (TestProgress& progress)
     {
         CHOC_TEST (ConvertDoubles)
 
-        CHOC_EXPECT_EQ ("2.5",            choc::json::doubleToString (2.5));
-        CHOC_EXPECT_EQ ("\"NaN\"",        choc::json::doubleToString (std::numeric_limits<double>::quiet_NaN()));
-        CHOC_EXPECT_EQ ("\"Infinity\"",   choc::json::doubleToString (std::numeric_limits<double>::infinity()));
-        CHOC_EXPECT_EQ ("\"-Infinity\"",  choc::json::doubleToString (-std::numeric_limits<double>::infinity()));
-        CHOC_EXPECT_EQ (1.28,             choc::json::parseValue ("1.28").getFloat64());
-        CHOC_EXPECT_EQ (-4,               choc::json::parseValue ("-4.0").getFloat64());
-        CHOC_EXPECT_EQ ("1234",           std::string (choc::json::parseValue ("\"1234\"").getString()));
+        CHOC_EXPECT_EQ ("2.5",                      choc::json::doubleToString (2.5));
+        CHOC_EXPECT_EQ ("\"NaN\"",                  choc::json::doubleToString (std::numeric_limits<double>::quiet_NaN()));
+        CHOC_EXPECT_EQ ("\"Infinity\"",             choc::json::doubleToString (std::numeric_limits<double>::infinity()));
+        CHOC_EXPECT_EQ ("\"-Infinity\"",            choc::json::doubleToString (-std::numeric_limits<double>::infinity()));
     }
 
     auto checkError = [&] (const std::string& json, const std::string& message, size_t line, size_t column)
@@ -918,17 +891,6 @@ inline void testMIDI (TestProgress& progress)
 inline void testChannelSets (TestProgress& progress)
 {
     CHOC_CATEGORY (ChannelSets);
-
-    auto findMaxDiff = [] (auto buffer1, auto buffer2)
-    {
-        float maxDiff = 0;
-
-        for (choc::buffer::FrameCount frame = 0; frame < buffer1.getNumFrames(); ++frame)
-            for (choc::buffer::ChannelCount chan = 0; chan < buffer1.getNumChannels(); ++chan)
-                maxDiff = std::max (maxDiff, std::abs (buffer1.getSample (chan, frame) - buffer2.getSample (chan, frame)));
-
-        return maxDiff;
-    };
 
     {
         CHOC_TEST (InterleavedChannelSetApplyClear)
@@ -1350,62 +1312,6 @@ inline void testChannelSets (TestProgress& progress)
         copy (dest, source);
         CHOC_EXPECT_EQ (true, contentMatches (source, dest));
     }
-
-    {
-        CHOC_TEST (SincInterpolator)
-
-        auto sourceBuffer = choc::buffer::createChannelArrayBuffer (2, 2200, [] (choc::buffer::ChannelCount,
-                                                                                 choc::buffer::FrameCount frame) -> float
-        {
-            return -0.75f + std::fmod (static_cast<float> (frame) * 0.025f, 1.5f);
-        });
-
-        for (auto ratio : { 1.0, 1.0181, 1.1013, 1.2417, 1.97004, 2.0, 2.0628, 3.77391 })
-        {
-            auto resampledNumFrames = static_cast<choc::buffer::FrameCount> (ratio * sourceBuffer.getNumFrames());
-
-            choc::buffer::ChannelArrayBuffer<float> resampledBuffer (sourceBuffer.getNumChannels(), resampledNumFrames);
-            choc::interpolation::sincInterpolate (resampledBuffer, sourceBuffer);
-
-            choc::buffer::ChannelArrayBuffer<float> roundTripResult (sourceBuffer.getSize());
-            choc::interpolation::sincInterpolate (roundTripResult, resampledBuffer);
-
-            choc::buffer::FrameCount margin = 50;
-            choc::buffer::FrameRange range { margin, sourceBuffer.getNumFrames() - margin };
-
-            auto maxDiff = findMaxDiff (sourceBuffer.getFrameRange (range),
-                                        roundTripResult.getFrameRange (range));
-            CHOC_EXPECT_TRUE (maxDiff < 0.01f);
-        }
-    }
-
-    {
-        CHOC_TEST (Interleaving)
-
-        choc::buffer::InterleavingScratchBuffer<float> ib;
-        choc::buffer::DeinterleavingScratchBuffer<float> db;
-
-        auto test = [&] (choc::buffer::ChannelCount numChans, choc::buffer::FrameCount numFrames)
-        {
-            auto source = choc::buffer::createChannelArrayBuffer (numChans, numFrames,
-                                                                  [] (choc::buffer::ChannelCount chan,
-                                                                      choc::buffer::FrameCount frame) -> float
-            {
-                return (float) chan + (float) frame * 0.01f;
-            });
-
-            auto interleaved = ib.interleave (source);
-            auto roundTripped = db.deinterleave (interleaved);
-
-            auto maxDiff = findMaxDiff (source, roundTripped);
-            CHOC_EXPECT_TRUE (maxDiff < 0.01f);
-        };
-
-        test (1, 50);
-        test (2, 100);
-        test (3, 50);
-        test (5, 120);
-    }
 }
 
 //==============================================================================
@@ -1611,7 +1517,7 @@ inline void testJavascript (TestProgress& progress)
         }
         catch (const choc::javascript::Error& e)
         {
-            CHOC_EXPECT_EQ ("SyntaxError: parse error (line 1, end of input)", e.message);
+            CHOC_EXPECT_EQ ("SyntaxError: parse error (line 1, end of input)\n    at [anon] (eval:1) internal\n    at [anon] (duk_js_compiler.c:3740) internal", e.message);
         }
     }
 
@@ -1622,21 +1528,20 @@ inline void testJavascript (TestProgress& progress)
         {
             choc::javascript::Context context;
 
-            context.registerFunction ("addUp", [] (choc::javascript::ArgumentList args) -> choc::value::Value
+            context.registerFunction ("addUp", [] (const choc::value::Value* args, size_t numArgs) -> choc::value::Value
                                                    {
                                                        int total = 0;
-                                                       for (size_t i = 0; i < args.numArgs; ++i)
-                                                           total += args.get<int>(i);
+                                                       for (size_t i = 0; i < numArgs; ++i)
+                                                           total += args[i].get<int>();
 
                                                        return choc::value::createInt32 (total);
                                                    });
 
-            context.registerFunction ("concat", [] (choc::javascript::ArgumentList args) -> choc::value::Value
+            context.registerFunction ("concat", [] (const choc::value::Value* args, size_t numArgs) -> choc::value::Value
                                                    {
                                                        std::string s;
-
-                                                       for (auto& arg : args)
-                                                           s += arg.get<std::string>();
+                                                       for (size_t i = 0; i < numArgs; ++i)
+                                                           s += args[i].get<std::string>();
 
                                                        return choc::value::createString (s);
                                                    });
@@ -1646,21 +1551,11 @@ inline void testJavascript (TestProgress& progress)
             CHOC_EXPECT_EQ ("abcdef", context.evaluate ("concat (\"abc\", \"def\")").get<std::string>());
             CHOC_EXPECT_TRUE (context.evaluate ("const xx = concat (\"abc\", \"def\")").isVoid());
 
-            CHOC_EXPECT_EQ (0,   context.invoke ("addUp").get<int>());
-            CHOC_EXPECT_EQ (123, context.invoke ("addUp", 123).get<int>());
-            CHOC_EXPECT_EQ (100, context.invoke ("addUp", 50, 50).get<int>());
-            CHOC_EXPECT_EQ (300, context.invoke ("addUp", 100, choc::value::createInt32 (200)).get<int>());
-            CHOC_EXPECT_EQ (16,  context.invoke ("addUp", 2.0, choc::value::createFloat64 (4.0), 8, 2).get<int>());
-
-            std::vector<int> args = { 100, 1, 10 };
-            CHOC_EXPECT_EQ (111, context.invokeWithArgList ("addUp", args).get<int>());
-
-            context.evaluate ("function appendStuff (n) { return n + \"xx\"; }");
-
-            CHOC_EXPECT_EQ ("abcxx",  std::string (context.invoke ("appendStuff", std::string_view ("abc")).getString()));
-            CHOC_EXPECT_EQ ("abcxx",  std::string (context.invoke ("appendStuff", std::string ("abc")).getString()));
-            CHOC_EXPECT_EQ ("abcxx",  std::string (context.invoke ("appendStuff", "abc").getString()));
-            CHOC_EXPECT_EQ ("truexx", std::string (context.invoke ("appendStuff", true).getString()));
+            choc::value::Value args[] = { choc::value::createInt32 (100), choc::value::createInt32 (200), choc::value::createInt32 (300) };
+            CHOC_EXPECT_EQ (0, context.invoke ("addUp", (const choc::value::ValueView*) nullptr, 0).get<int>());
+            CHOC_EXPECT_EQ (100, context.invoke ("addUp", args, 1).get<int>());
+            CHOC_EXPECT_EQ (300, context.invoke ("addUp", args, 2).get<int>());
+            CHOC_EXPECT_EQ (600, context.invoke ("addUp", args, 3).get<int>());
         }
         CHOC_CATCH_UNEXPECTED_EXCEPTION
     }

@@ -43,24 +43,18 @@ std::string floatToString (double value);
 
 //==============================================================================
 /** Converts a 32-bit float to an accurate, round-trip-safe string.
-    If maxDecimalPlaces is -1, a default is used.
-    If omitDecimalPointForRoundNumbers is true, then values such as "2.0" are returned
-    without the decimal point, e.g. simply "2".
 
     The algorithm used is "Grisu3" from the paper "Printing Floating-Point Numbers
     Quickly and Accurately with Integers" by Florian Loitsch.
 */
-std::string floatToString (float value, int maxDecimalPlaces, bool omitDecimalPointForRoundNumbers = false);
+std::string floatToString (float value, int maxDecimalPlaces);
 
 /** Converts a 64-bit double to an accurate, round-trip-safe string.
-    If maxDecimalPlaces is -1, a default is used.
-    If omitDecimalPointForRoundNumbers is true, then values such as "2.0" are returned
-    without the decimal point, e.g. simply "2".
 
     The algorithm used is "Grisu3" from the paper "Printing Floating-Point Numbers
     Quickly and Accurately with Integers" by Florian Loitsch.
 */
-std::string floatToString (double value, int maxDecimalPlaces, bool omitDecimalPointForRoundNumbers = false);
+std::string floatToString (double value, int maxDecimalPlaces);
 
 
 //==============================================================================
@@ -76,8 +70,8 @@ std::string floatToString (double value, int maxDecimalPlaces, bool omitDecimalP
 template <typename FloatOrDouble>
 struct FloatToStringBuffer
 {
-    FloatToStringBuffer (FloatOrDouble value, int maxDecimalPlaces, bool omitPointIfPossible)
-       : stringEnd (writeAndGetEnd (storage, value, maxDecimalPlaces, omitPointIfPossible)) {}
+    FloatToStringBuffer (FloatOrDouble value)                        : stringEnd (writeAndGetEnd (storage, value, -1)) {}
+    FloatToStringBuffer (FloatOrDouble value, int maxDecimalPlaces)  : stringEnd (writeAndGetEnd (storage, value, maxDecimalPlaces)) {}
 
     const char* begin() const       { return storage; }
     const char* end() const         { return stringEnd; }
@@ -288,9 +282,8 @@ private:
         MantissaAndExponent lower, upper;
     };
 
-    static const char* writeAndGetEnd (char* pos, FloatOrDouble value, int maxDecimalPlaces, bool omitPointIfPossible)
+    static const char* writeAndGetEnd (char* pos, FloatOrDouble value, int maxDecimalPlaces)
     {
-        auto startPos = pos;
         auto floatBits = getFloatBits (value);
 
         if ((floatBits & signMask) == 0)
@@ -322,12 +315,7 @@ private:
         lowerBound.mantissa++;
 
         auto totalLength = generateDigits (pos, upperBound, upperBound.mantissa - w.mantissa, upperBound.mantissa - lowerBound.mantissa, K);
-        auto end = addDecimalPointAndExponent (pos, totalLength, K, maxDecimalPlaces < 0 ? defaultNumDecimalPlaces : maxDecimalPlaces);
-
-        if (omitPointIfPossible && end > startPos + 1 && end[-1] == '0' && end[-2] == '.')
-            end -= 2;
-
-        return end;
+        return addDecimalPointAndExponent (pos, totalLength, K, maxDecimalPlaces < 0 ? defaultNumDecimalPlaces : maxDecimalPlaces);
     }
 
     static const char* addDecimalPointAndExponent (char* pos, uint32_t totalLength, int K, int maxDecimalPlaces)
@@ -387,10 +375,10 @@ private:
     }
 };
 
-inline std::string floatToString (float value)                                              { return FloatToStringBuffer<float>  (value, -1, false).toString(); }
-inline std::string floatToString (double value)                                             { return FloatToStringBuffer<double> (value, -1, false).toString(); }
-inline std::string floatToString (float value, int maxDecimals, bool omitPointIfPossible)   { return FloatToStringBuffer<float>  (value, maxDecimals, omitPointIfPossible).toString(); }
-inline std::string floatToString (double value, int maxDecimals, bool omitPointIfPossible)  { return FloatToStringBuffer<double> (value, maxDecimals, omitPointIfPossible).toString(); }
+inline std::string floatToString (float value)                          { return FloatToStringBuffer<float>  (value).toString(); }
+inline std::string floatToString (double value)                         { return FloatToStringBuffer<double> (value).toString(); }
+inline std::string floatToString (float value, int maxDecimalPlaces)    { return FloatToStringBuffer<float>  (value, maxDecimalPlaces).toString(); }
+inline std::string floatToString (double value, int maxDecimalPlaces)   { return FloatToStringBuffer<double> (value, maxDecimalPlaces).toString(); }
 
 } // namespace choc::text
 

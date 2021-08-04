@@ -16,16 +16,49 @@
 //   WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 //   CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-#include "choc_tests.h"
+#ifndef CHOC_PLATFORM_DETECT_HEADER_INCLUDED
+#define CHOC_PLATFORM_DETECT_HEADER_INCLUDED
 
-int main()
-{
-    choc::test::TestProgress progress;
-    return choc::test::runAllTests (progress) ? 0 : 1;
-}
+/*
+    These conditionals declare the macros
+      - CHOC_WINDOWS
+      - CHOC_ANDROID
+      - CHOC_LINUX
+      - CHOC_OSX
+      - CHOC_IOS
+    ...based on the current operating system.
 
-// include this after all the tests to make sure they don't rely on
-// anything that isn't included by the header.
-#undef CHOC_JAVASCRIPT_IMPLEMENTATION
-#define CHOC_JAVASCRIPT_IMPLEMENTATION 1
-#include "../javascript/choc_javascript.h"
+    It also declares a string literal macro CHOC_OPERATING_SYSTEM_NAME
+    which can be used if you need a text description of the OS.
+*/
+#if defined (_WIN32) || defined (_WIN64)
+ #define  CHOC_WINDOWS 1
+ #define  CHOC_OPERATING_SYSTEM_NAME   "Windows"
+#elif __ANDROID__
+ #define  CHOC_ANDROID 1
+ #define  CHOC_OPERATING_SYSTEM_NAME   "Android"
+#elif defined (LINUX) || defined (__linux__)
+ #define  CHOC_LINUX 1
+ #define  CHOC_OPERATING_SYSTEM_NAME   "Linux"
+#elif __APPLE__
+ #define CHOC_APPLE 1
+ #include <TargetConditionals.h>
+ #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
+  #define  CHOC_IOS 1
+  #define  CHOC_OPERATING_SYSTEM_NAME   "iOS"
+ #else
+  #define  CHOC_OSX 1
+  #define  CHOC_OPERATING_SYSTEM_NAME   "OSX"
+ #endif
+#elif defined (__FreeBSD__) || (__OpenBSD__)
+ #define  CHOC_BSD 1
+ #define  CHOC_OPERATING_SYSTEM_NAME   "BSD"
+#elif defined (_POSIX_VERSION)
+ #define  CHOC_POSIX 1
+ #define  CHOC_OPERATING_SYSTEM_NAME   "Posix"
+#else
+ #error "Unknown platform!"
+#endif
+
+
+#endif  // CHOC_PLATFORM_DETECT_HEADER_INCLUDED

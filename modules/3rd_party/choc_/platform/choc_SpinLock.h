@@ -16,16 +16,50 @@
 //   WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 //   CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-#include "choc_tests.h"
+#ifndef CHOC_SPINLOCK_HEADER_INCLUDED
+#define CHOC_SPINLOCK_HEADER_INCLUDED
 
-int main()
+#include <atomic>
+
+namespace choc::threading
 {
-    choc::test::TestProgress progress;
-    return choc::test::runAllTests (progress) ? 0 : 1;
-}
 
-// include this after all the tests to make sure they don't rely on
-// anything that isn't included by the header.
-#undef CHOC_JAVASCRIPT_IMPLEMENTATION
-#define CHOC_JAVASCRIPT_IMPLEMENTATION 1
-#include "../javascript/choc_javascript.h"
+//==============================================================================
+/**
+    A minimal no-frills spin-lock.
+
+    To use an RAII pattern for locking a SpinLock, it's compatible with the normal
+    std::lock_guard class.
+*/
+struct SpinLock
+{
+    SpinLock() = default;
+    ~SpinLock() = default;
+
+    void lock();
+    bool try_lock();
+    void unlock();
+
+private:
+    std::atomic_flag flag = ATOMIC_FLAG_INIT;
+};
+
+
+//==============================================================================
+//        _        _           _  _
+//     __| |  ___ | |_   __ _ (_)| | ___
+//    / _` | / _ \| __| / _` || || |/ __|
+//   | (_| ||  __/| |_ | (_| || || |\__ \ _  _  _
+//    \__,_| \___| \__| \__,_||_||_||___/(_)(_)(_)
+//
+//   Code beyond this point is implementation detail...
+//
+//==============================================================================
+
+inline void SpinLock::lock()     { while (flag.test_and_set (std::memory_order_acquire)) {} }
+inline bool SpinLock::try_lock() { return ! flag.test_and_set (std::memory_order_acquire); }
+inline void SpinLock::unlock()   { flag.clear(); }
+
+} // choc::fifo
+
+#endif

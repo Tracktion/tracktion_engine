@@ -16,16 +16,21 @@
 //   WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 //   CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-#include "choc_tests.h"
+#ifndef CHOC_ASSERT_HEADER_INCLUDED
+#define CHOC_ASSERT_HEADER_INCLUDED
 
-int main()
-{
-    choc::test::TestProgress progress;
-    return choc::test::runAllTests (progress) ? 0 : 1;
-}
+// If the project doesn't define a custom implementation for CHOC_ASSERT, the default
+// behaviour is just to call the normal system assert()
+#ifndef CHOC_ASSERT
+ #include <cassert>
+ #define CHOC_ASSERT(x)  assert(x);
+#endif
 
-// include this after all the tests to make sure they don't rely on
-// anything that isn't included by the header.
-#undef CHOC_JAVASCRIPT_IMPLEMENTATION
-#define CHOC_JAVASCRIPT_IMPLEMENTATION 1
-#include "../javascript/choc_javascript.h"
+// It's never a smart idea to include any C headers before your C++ ones, as they
+// often pollute your namespace with all kinds of dangerous macros like these ones.
+// This file is included by many of the choc headers, so is a convenient place to
+// undef these.
+#undef max
+#undef min
+
+#endif // CHOC_ASSERT_HEADER_INCLUDED

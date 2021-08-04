@@ -43,26 +43,26 @@ struct FIFOReadWritePosition
     static constexpr IndexType invalidIndex = std::numeric_limits<IndexType>::max();
 
     //==============================================================================
-    /// Resets the positions and initialises the number of items in the FIFO.
+    /** Resets the positions and initialises the number of items in the FIFO. */
     void reset (size_t numItems);
 
-    /// Resets the FIFO positions, keeping the current size.
+    /** Resets the FIFO positions, keeping the current size. */
     void reset();
 
-    /// Returns the total number of items that the FIFO has been set up to hold.
+    /** Returns the total number of items that the FIFO has been set up to hold. */
     IndexType getTotalCapacity() const                   { return capacity; }
-    /// Returns the number of items in the FIFO.
+    /** Returns the number of items in the FIFO. */
     IndexType getUsedSlots() const                       { return getUsed (readPos, writePos); }
-    /// Returns the number of free slots in the FIFO.
+    /** Returns the number of free slots in the FIFO. */
     IndexType getFreeSlots() const                       { return getFree (readPos, writePos); }
 
     //==============================================================================
     struct WriteSlot
     {
-        /// Returns true if a free slot was successfully obtained.
+        /** Returns true if a free slot was successfully obtained. */
         operator bool() const       { return index != invalidIndex; }
 
-        /// The index of the slot that should be written to.
+        /** The index of the slot that should be written to. */
         IndexType index;
 
     private:
@@ -70,24 +70,26 @@ struct FIFOReadWritePosition
         IndexType newEnd;
     };
 
-    /// Attempts to get a slot into which the next item can be pushed.
-    /// The WriteSlot object that is returned must be checked for validity by using its
-    /// cast to bool operator - if the FIFO is full, it will be invalid. If it's valid
-    /// then the caller must read what it needs from the slot at the index provided, and
-    /// then immediately afterwards call unlock() to release the slot.
+    /** Attempts to get a slot into which the next item can be pushed.
+        The WriteSlot object that is returned must be checked for validity by using its
+        cast to bool operator - if the FIFO is full, it will be invalid. If it's valid
+        then the caller must read what it needs from the slot at the index provided, and
+        then immediately afterwards call unlock() to release the slot.
+    */
     WriteSlot lockSlotForWriting();
 
-    /// This must be called immediately after writing an item into the slot provided by
-    /// lockSlotForWriting().
+    /** This must be called immediately after writing an item into the slot provided by
+        lockSlotForWriting().
+    */
     void unlock (WriteSlot);
 
     //==============================================================================
     struct ReadSlot
     {
-        /// Returns true if a readable slot was successfully obtained.
+        /** Returns true if a readable slot was successfully obtained. */
         operator bool() const       { return index != invalidIndex; }
 
-        /// The index of the slot that should be read.
+        /** The index of the slot that should be read. */
         IndexType index;
 
     private:
@@ -95,15 +97,17 @@ struct FIFOReadWritePosition
         IndexType newStart;
     };
 
-    /// Attempts to get a slot from which the first item can be read.
-    /// The ReadSlot object that is returned must be checked for validity by using its
-    /// cast to bool operator - if the FIFO is empty, it will be invalid. If it's valid
-    /// then the caller must read what it needs from the slot at the index provided, and
-    /// then immediately afterwards call unlock() to release the slot.
+    /** Attempts to get a slot from which the first item can be read.
+        The ReadSlot object that is returned must be checked for validity by using its
+        cast to bool operator - if the FIFO is empty, it will be invalid. If it's valid
+        then the caller must read what it needs from the slot at the index provided, and
+        then immediately afterwards call unlock() to release the slot.
+    */
     ReadSlot lockSlotForReading();
 
-    /// This must be called immediately after reading an item from the slot provided by
-    /// lockSlotForReading().
+    /** This must be called immediately after reading an item from the slot provided by
+        lockSlotForReading().
+    */
     void unlock (ReadSlot);
 
 

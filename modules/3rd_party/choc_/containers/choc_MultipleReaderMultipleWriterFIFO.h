@@ -34,30 +34,32 @@ struct MultipleReaderMultipleWriterFIFO
     MultipleReaderMultipleWriterFIFO() = default;
     ~MultipleReaderMultipleWriterFIFO() = default;
 
-    /// Clears the FIFO and allocates a size for it.
-    /// Note that this is not thread-safe with respect to the other methods - it must
-    /// only be called when nothing else is modifying the FIFO.
+    /** Clears the FIFO and allocates a size for it.
+        Note that this is not thread-safe with respect to the other methods - it must
+        only be called when nothing else is modifying the FIFO.
+    */
     void reset (size_t numItems)                                { fifo.reset (numItems); }
 
-    /// Clears the FIFO and allocates a size for it, filling the slots with
-    /// copies of the given object.
+    /** Clears the FIFO and allocates a size for it, filling the slots with
+        copies of the given object.
+    */
     void reset (size_t numItems, const Item& itemInitialiser)   { fifo.reset (numItems, itemInitialiser); }
 
-    /// Resets the FIFO, keeping the current size.
+    /** Resets the FIFO, keeping the current size. */
     void reset()                                                { fifo.reset(); }
 
-    /// Returns the number of items in the FIFO.
+    /** Returns the number of items in the FIFO. */
     uint32_t getUsedSlots() const                               { return fifo.getUsedSlots(); }
-    /// Returns the number of free slots in the FIFO.
+    /** Returns the number of free slots in the FIFO. */
     uint32_t getFreeSlots() const                               { return fifo.getFreeSlots(); }
 
-    /// Attempts to push an into into the FIFO, returning false if no space was available.
+    /** Attempts to push an into into the FIFO, returning false if no space was available. */
     bool push (const Item& item)                                { return fifo.push (item); }
 
-    /// Attempts to push an into into the FIFO, returning false if no space was available.
+    /** Attempts to push an into into the FIFO, returning false if no space was available. */
     bool push (Item&& item)                                     { return fifo.push (std::move (item)); }
 
-    /// If any items are available, this copies the first into the given target, and returns true.
+    /** If any items are available, this copies the first into the given target, and returns true. */
     bool pop (Item&);
 
 private:

@@ -143,9 +143,6 @@ public:
     bool isArrayOfVectors() const;
     bool isVectorSize1() const;
 
-    /// Returns true if the type is the same as the provided template type (which must be a primitive)
-    template <typename PrimitiveType> bool isPrimitiveType() const noexcept;
-
     /** Returns the number of elements in an array, vector or object. Throws an Error if the type is void. */
     uint32_t getNumElements() const;
 
@@ -1508,12 +1505,6 @@ inline constexpr Type::MainType Type::selectMainType()
     if constexpr (std::is_same<const PrimitiveType, const std::string>::value)   return MainType::string;
 
     return MainType::void_;
-}
-
-template <typename PrimitiveType>
-bool Type::isPrimitiveType() const noexcept
-{
-    return (mainType == selectMainType<PrimitiveType>());
 }
 
 template <typename PrimitiveType>
