@@ -17,10 +17,10 @@ using namespace tracktion_graph;
 
 //==============================================================================
 //==============================================================================
-class RackAudioNodeTests : public juce::UnitTest
+class RackNodeTests : public juce::UnitTest
 {
 public:
-    RackAudioNodeTests()
+    RackNodeTests()
         : juce::UnitTest ("RackNode", "tracktion_graph")
     {
     }
@@ -623,7 +623,7 @@ private:
     }
 };
 
-static RackAudioNodeTests rackAudioNodeTests;
+static RackNodeTests rackNodeTests;
 
 #endif //TRACKTION_UNIT_TESTS
 
