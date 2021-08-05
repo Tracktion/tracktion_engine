@@ -16,10 +16,8 @@ namespace tracktion_engine
 /** Node that reads from a file node and timestretches its output.
 
     Annoyingly, this has to replicate a lot of the functionality in WaveNode.
-    Note that this isn't designed to be a fully fledged AudioNode, it doesn't deal
+    Note that this isn't designed to be a fully fledged Node, it doesn't deal
     with clip offsets, loops etc. It's only designed for previewing files.
-
-    A cleaner approach might be to take a WaveAudioNode and stretch the contents.
 */
 class TimeStretchingWaveNode final : public tracktion_graph::Node
 {

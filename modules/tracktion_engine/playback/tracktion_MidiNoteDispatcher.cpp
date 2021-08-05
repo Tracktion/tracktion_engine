@@ -20,20 +20,6 @@ MidiNoteDispatcher::~MidiNoteDispatcher()
     stopTimer();
 }
 
-void MidiNoteDispatcher::renderDevices (PlayHead& playhead, EditTimeRange streamTime, int blockSize)
-{
-    auto editTime = playhead.streamTimeToSourceTime (streamTime.getStart());
-    
-    ScopedLock s (deviceLock);
-
-    for (auto state : devices)
-    {
-        auto delay = state->device.getMidiOutput().getDeviceDelay();
-        state->device.refillBuffer (playhead, streamTime - delay, blockSize);
-        dispatchPendingMessages (*state, editTime);
-    }
-}
-
 void MidiNoteDispatcher::dispatchPendingMessagesForDevices (double editTime)
 {
     ScopedLock s (deviceLock);

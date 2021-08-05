@@ -30,8 +30,6 @@ public:
     bool isMidi() const override                                    { return false; }
     bool isMuted() const override                                   { return false; }
 
-    AudioNode* createAudioNode (const CreateAudioNodeParams&) override      { return {}; }
-
 protected:
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
 

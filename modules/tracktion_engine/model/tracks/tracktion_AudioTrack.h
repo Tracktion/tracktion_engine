@@ -82,11 +82,6 @@ public:
     void freezeTrackAsync() const;
 
     //==============================================================================
-    /** creates an audio node to play this track.
-        (only creates one if this track doesn't feed into another track)
-    */
-    AudioNode* createAudioNode (const CreateAudioNodeParams&);
-
     bool hasAnyLiveInputs();
     bool hasAnyTracksFeedingIn();
 
@@ -192,7 +187,6 @@ private:
     //==============================================================================
     struct TrackMuter;
     struct FreezeUpdater;
-    struct LiveMidiOutputAudioNode;
     friend struct TrackMuter;
     friend class Edit;
     friend class Clip;
@@ -225,8 +219,6 @@ private:
     juce::ListenerList<Listener> listeners;
 
     //==============================================================================
-    bool canUseBufferedAudioNode();
-
     void freezeTrack();
     bool insertFreezePointIfRequired();
     int getIndexOfDefaultFreezePoint();
@@ -234,7 +226,6 @@ private:
     void freezePlugins (juce::Range<int> pluginsToFreeze);
     void unFreezeTrack();
     juce::File getFreezeFile() const noexcept;
-    AudioNode* createFreezeAudioNode (bool addAntiDenormalisationNoise);
 
     void updateTracksToGhost();
     bool isSidechainSource() const;

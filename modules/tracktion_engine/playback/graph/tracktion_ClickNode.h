@@ -11,6 +11,51 @@
 namespace tracktion_engine
 {
 
+//==============================================================================
+namespace Click
+{
+    int getMidiClickNote (Engine&, bool big);
+    juce::String getClickWaveFile (Engine&, bool big);
+    void setMidiClickNote (Engine&, bool big, int noteNum);
+    void setClickWaveFile (Engine&, bool big, const juce::String& filename);
+}
+
+//==============================================================================
+/**
+   Generates click audio and MIDI and adds them to the provided buffer.
+ */
+class ClickGenerator
+{
+public:
+    //==============================================================================
+    /** Creates a click generator for an Edit. */
+    ClickGenerator (Edit&, bool isMidi, double endTime);
+
+    /** Prepares a ClickGenerator to be played.
+        Must be called before processBlock
+    */
+    void prepareToPlay (double sampleRate, double startTime);
+
+    /** Adds clicks to a block of audio and MIDI for a given time range. */
+    void processBlock (choc::buffer::ChannelArrayView<float>*, MidiMessageArray*, EditTimeRange);
+
+private:
+    const Edit& edit;
+    bool midi = false;
+    juce::Array<double> beatTimes;
+    juce::BigInteger loudBeats;
+    int currentBeat = 0;
+
+    double sampleRate = 44100.0;
+    juce::AudioBuffer<float> bigClick, littleClick;
+    int bigClickMidiNote = 37, littleClickMidiNote = 76;
+
+    //==============================================================================
+    bool isMutedAtTime (double time) const;
+};
+
+
+//==============================================================================
 /**
     Adds audio and MIDI clicks to the input buffers.
 */

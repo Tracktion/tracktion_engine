@@ -145,7 +145,7 @@ ValueTree VolumeAndPanPlugin::create()
 const char* VolumeAndPanPlugin::xmlTypeName = "volume";
 
 //==============================================================================
-void VolumeAndPanPlugin::initialise (const PlaybackInitialisationInfo&)
+void VolumeAndPanPlugin::initialise (const PluginInitialisationInfo&)
 {
     refreshVCATrack();
     auto sliderPos = getSliderPos();
@@ -153,7 +153,7 @@ void VolumeAndPanPlugin::initialise (const PlaybackInitialisationInfo&)
     lastGainS = volumeFaderPositionToGain (sliderPos);
 }
 
-void VolumeAndPanPlugin::initialiseWithoutStopping (const PlaybackInitialisationInfo&)
+void VolumeAndPanPlugin::initialiseWithoutStopping (const PluginInitialisationInfo&)
 {
     refreshVCATrack();
 }

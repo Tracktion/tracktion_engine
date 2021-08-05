@@ -214,39 +214,6 @@ protected:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EnvelopeFollower)
 };
 
-//==============================================================================
-struct EnvelopeFollowerModifier::EnvelopeFollowerModifierAudioNode  : public SingleInputAudioNode
-{
-    EnvelopeFollowerModifierAudioNode (AudioNode* source, EnvelopeFollowerModifier& efm)
-        : SingleInputAudioNode (source),
-          envelopeFollowerModifier (&efm)
-    {
-    }
-
-    bool purgeSubNodes (bool keepAudio, bool keepMidi) override
-    {
-        return keepAudio || SingleInputAudioNode::purgeSubNodes (keepAudio, keepMidi);
-    }
-
-    void prepareAudioNodeToPlay (const PlaybackInitialisationInfo& info) override
-    {
-        SingleInputAudioNode::prepareAudioNodeToPlay (info);
-        envelopeFollowerModifier->baseClassInitialise (info.sampleRate, info.blockSizeSamples);
-    }
-
-    void renderOver (const AudioRenderContext& rc) override
-    {
-        SingleInputAudioNode::renderOver (rc);
-        envelopeFollowerModifier->applyToBuffer (rc);
-    }
-
-    void renderAdding (const AudioRenderContext& rc) override
-    {
-        callRenderOver (rc);
-    }
-
-    EnvelopeFollowerModifier::Ptr envelopeFollowerModifier;
-};
 
 //==============================================================================
 EnvelopeFollowerModifier::EnvelopeFollowerModifier (Edit& e, const ValueTree& v)
@@ -333,11 +300,6 @@ AutomatableParameter::ModifierAssignment* EnvelopeFollowerModifier::createAssign
 StringArray EnvelopeFollowerModifier::getAudioInputNames()
 {
     return { TRANS("Audio input left"), TRANS("Audio input right") };
-}
-
-AudioNode* EnvelopeFollowerModifier::createPostFXAudioNode (AudioNode* an)
-{
-    return new EnvelopeFollowerModifierAudioNode (an, *this);
 }
 
 void EnvelopeFollowerModifier::initialise (double newSampleRate, int)

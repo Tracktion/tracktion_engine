@@ -24,8 +24,6 @@ public:
     InsertPlugin (PluginCreationInfo);
     ~InsertPlugin() override;
 
-    AudioNode* createSendAudioNode (OutputDevice&);
-
     //==============================================================================
     static const char* getPluginName()          { return NEEDS_TRANS("Insert"); }
     static const char* xmlTypeName;
@@ -40,8 +38,8 @@ public:
     bool canBeAddedToClip() override;
     bool needsConstantBufferSize() override;
 
-    void initialise (const PlaybackInitialisationInfo&) override;
-    void initialiseWithoutStopping (const PlaybackInitialisationInfo&) override;
+    void initialise (const PluginInitialisationInfo&) override;
+    void initialiseWithoutStopping (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;
     juce::String getSelectableDescription() override;
@@ -84,9 +82,6 @@ private:
     DeviceType sendDeviceType = noDevice, returnDeviceType = noDevice;
 
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
-
-    class InsertAudioNode;
-    class InsertReturnAudioNode;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InsertPlugin)
 };

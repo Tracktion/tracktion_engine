@@ -43,6 +43,8 @@ using namespace juce;
  #include "playback/graph/tracktion_RackNode.h"
 #endif
 
+#include "playback/audionodes/tracktion_AudioNode.h"
+
 #include "model/automation/modifiers/tracktion_ModifierInternal.h"
 
 #include "plugins/tracktion_Plugin.cpp"

@@ -125,22 +125,4 @@ public:
     juce::AudioBuffer<float> sumBuffer;
 };
 
-//==============================================================================
-/**
-    Applies a SharedLevelMeter to the audio passing through this node
-*/
-class LevelMeasuringAudioNode  : public SingleInputAudioNode
-{
-public:
-    LevelMeasuringAudioNode (SharedLevelMeasurer::Ptr, AudioNode* input);
-
-    void prepareAudioNodeToPlay (const PlaybackInitialisationInfo&) override;
-    void prepareForNextBlock (const AudioRenderContext&) override;
-    void renderOver (const AudioRenderContext&) override;
-    void renderAdding (const AudioRenderContext&) override;
-
-private:
-    SharedLevelMeasurer::Ptr levelMeasurer;
-};
-
 } // namespace tracktion_engine

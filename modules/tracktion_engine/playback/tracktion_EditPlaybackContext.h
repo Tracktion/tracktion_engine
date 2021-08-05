@@ -51,7 +51,6 @@ public:
     PlayHead playhead;
     LevelMeasurer masterLevels;
     MidiNoteDispatcher midiDispatcher;
-    static std::function<AudioNode*(AudioNode*)> insertOptionalLastStageNode;
 
     /** Releases and then optionally reallocates the context's device list safely. */
     struct ScopedDeviceListReleaser
@@ -125,13 +124,11 @@ private:
     void releaseDeviceList();
     void rebuildDeviceList();
 
-    void createAudioNodes (double startTime, bool addAntiDenormalisationNoise);
     void prepareOutputDevices (double start);
     void startRecording (double start, double punchIn);
     void startPlaying (double start);
 
     friend class DeviceManager;
-    void fillNextAudioBlock (EditTimeRange streamTime, float** allChannels, int numSamples);
 
     juce::WeakReference<EditPlaybackContext> contextToSyncTo;
     double previousBarTime = 0;

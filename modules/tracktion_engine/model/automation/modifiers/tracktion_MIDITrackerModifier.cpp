@@ -11,28 +11,6 @@
 namespace tracktion_engine
 {
 
-struct MIDITrackerModifier::ModifierAudioNode    : public SingleInputAudioNode
-{
-    ModifierAudioNode (AudioNode* source, MIDITrackerModifier& mtm)
-        : SingleInputAudioNode (source),
-          modifier (&mtm)
-    {
-    }
-
-    void renderOver (const AudioRenderContext& rc) override
-    {
-        SingleInputAudioNode::renderOver (rc);
-        modifier->applyToBuffer (rc);
-    }
-
-    void renderAdding (const AudioRenderContext& rc) override
-    {
-        callRenderOver (rc);
-    }
-
-    MIDITrackerModifier::Ptr modifier;
-};
-
 //==============================================================================
 MIDITrackerModifier::MIDITrackerModifier (Edit& e, const ValueTree& v)
     : Modifier (e, v)
@@ -117,11 +95,6 @@ AutomatableParameter::ModifierAssignment* MIDITrackerModifier::createAssignment 
 StringArray MIDITrackerModifier::getMidiInputNames()
 {
     return { TRANS("MIDI input") };
-}
-
-AudioNode* MIDITrackerModifier::createPreFXAudioNode (AudioNode* an)
-{
-    return new ModifierAudioNode (an, *this);
 }
 
 void MIDITrackerModifier::applyToBuffer (const PluginRenderContext& pc)

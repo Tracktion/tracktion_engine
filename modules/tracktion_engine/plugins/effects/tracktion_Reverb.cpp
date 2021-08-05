@@ -73,7 +73,7 @@ ReverbPlugin::~ReverbPlugin()
 
 const char* ReverbPlugin::xmlTypeName = "reverb";
 
-void ReverbPlugin::initialise (const PlaybackInitialisationInfo& info)
+void ReverbPlugin::initialise (const PluginInitialisationInfo& info)
 {
     outputSilent = true;
     reverb.setSampleRate (info.sampleRate);

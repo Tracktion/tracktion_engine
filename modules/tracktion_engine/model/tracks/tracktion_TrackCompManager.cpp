@@ -181,16 +181,6 @@ EditTimeRange TrackCompManager::TrackComp::getTimeRange() const
     return time;
 }
 
-AudioNode* TrackCompManager::TrackComp::createAudioNode (Track& t, AudioNode* input)
-{
-    auto crossfadeTimeMs = edit.engine.getPropertyStorage().getProperty (SettingID::compCrossfadeMs, 20.0);
-    auto crossfadeTime = static_cast<double> (crossfadeTimeMs) / 1000.0;
-    auto nonMuteTimes = getNonMuteTimes (t, crossfadeTime);
-    
-    return TrackCompManager::createTrackCompAudioNode (input, getMuteTimes (nonMuteTimes),
-                                                       nonMuteTimes, crossfadeTime);
-}
-
 void TrackCompManager::TrackComp::setName (const String& n)
 {
     name = n;
@@ -647,28 +637,6 @@ Array<Track*> TrackCompManager::getTracksInComp (int index)
 TrackCompManager::TrackComp::Ptr TrackCompManager::getTrackComp (AudioTrack* at)
 {
     return at == nullptr ? nullptr : trackCompList->objects[at->getCompGroup()];
-}
-
-AudioNode* TrackCompManager::createTrackCompAudioNode (AudioNode* input, const Array<EditTimeRange>& muteTimes,
-                                                       const Array<EditTimeRange>& nonMuteTimes, double crossfadeTime)
-{
-    if (muteTimes.isEmpty())
-        return input;
-
-    input = new TimedMutingAudioNode (input, muteTimes);
-
-    for (auto r : nonMuteTimes)
-    {
-        auto fadeIn = r.withLength (crossfadeTime) - 0.0001;
-        auto fadeOut = fadeIn.movedToEndAt (r.getEnd() + 0.0001);
-
-        if (! (fadeIn.isEmpty() && fadeOut.isEmpty()))
-            input = new FadeInOutAudioNode (input, fadeIn, fadeOut,
-                                            AudioFadeCurve::convex,
-                                            AudioFadeCurve::convex, false);
-    }
-
-    return input;
 }
 
 }

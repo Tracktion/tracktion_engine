@@ -27,7 +27,7 @@ PhaserPlugin::~PhaserPlugin()
 
 const char* PhaserPlugin::xmlTypeName = "phaser";
 
-void PhaserPlugin::initialise (const PlaybackInitialisationInfo& info)
+void PhaserPlugin::initialise (const PluginInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
     zeromem (filterVals, sizeof (filterVals));

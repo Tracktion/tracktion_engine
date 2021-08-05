@@ -1415,7 +1415,7 @@ void FourOscPlugin::flushPluginStateToValueTree()
     Plugin::flushPluginStateToValueTree(); // Add any parameter values that are being modified
 }
 
-void FourOscPlugin::initialise (const PlaybackInitialisationInfo& info)
+void FourOscPlugin::initialise (const PluginInitialisationInfo& info)
 {
     setCurrentPlaybackSampleRate (info.sampleRate);
 

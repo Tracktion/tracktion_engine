@@ -40,8 +40,6 @@ public:
     
     juce::Array<Track*> getInputTracks() const override;
 
-    AudioNode* createAudioNode (const CreateAudioNodeParams&);
-
     //==============================================================================
     bool isFrozen (FreezeType) const override;
 

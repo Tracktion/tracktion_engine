@@ -93,7 +93,6 @@ String PropertyStorage::settingToString (SettingID setting)
         case SettingID::lowLatencyBuffer:              return "lowLatencyBuffer";
         case SettingID::glideLength:                   return "glideLength";
         case SettingID::grooveTemplates:               return "GrooveTemplates";
-        case SettingID::internalBuffer:                return "internalBuffer";
         case SettingID::MCUoneTouchRecord:             return "MCUoneTouchRecord";
         case SettingID::midiin:                        return "midiin";
         case SettingID::midiout:                       return "midiout";

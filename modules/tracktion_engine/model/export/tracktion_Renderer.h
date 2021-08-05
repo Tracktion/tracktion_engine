@@ -88,16 +88,6 @@ public:
     class RenderTask    : public ThreadPoolJobWithProgress
     {
     public:
-        RenderTask (const juce::String& taskDescription,
-                    const Renderer::Parameters&,
-                    AudioNode*);
-
-        RenderTask (const juce::String& taskDescription,
-                    const Renderer::Parameters&,
-                    AudioNode*,
-                    std::atomic<float>& progressToUpdate,
-                    juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver*);
-
        #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         RenderTask (const juce::String& taskDescription,
                     const Renderer::Parameters&,
@@ -105,7 +95,7 @@ public:
                     std::unique_ptr<tracktion_graph::PlayHead>,
                     std::unique_ptr<tracktion_graph::PlayHeadState>,
                     std::unique_ptr<ProcessState>,
-                    std::atomic<float>& progressToUpdate,
+                    std::atomic<float>* progressToUpdate,
                     juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver*);
        #endif
 
@@ -126,10 +116,6 @@ public:
 
     private:
         //==============================================================================
-        struct RendererContext;
-
-        std::unique_ptr<AudioNode> node;
-        std::unique_ptr<RendererContext> context;
        #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         const bool isUsingGraphNode = false;
         std::unique_ptr<tracktion_graph::Node> graphNode;
@@ -175,9 +161,6 @@ public:
                               bool usePlugins = true,
                               juce::Array<Clip*> clips = {},
                               bool useThread = true);
-
-    /** Creates an AudioNode to render the given Edit i.e. a single graph rather than split over devices. */
-    static AudioNode* createRenderingAudioNode (const Parameters&);
 
     //==============================================================================
     /** @see measureStatistics()

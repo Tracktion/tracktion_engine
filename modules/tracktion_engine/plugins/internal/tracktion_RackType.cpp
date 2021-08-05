@@ -1425,7 +1425,7 @@ void RackType::countInstancesInEdit()
 }
 
 //==============================================================================
-void RackType::registerInstance (RackInstance* instance, const PlaybackInitialisationInfo& info)
+void RackType::registerInstance (RackInstance* instance, const PluginInitialisationInfo& info)
 {
     CRASH_TRACER
     const ScopedLock sl (renderLock);
@@ -1455,7 +1455,7 @@ void RackType::registerInstance (RackInstance* instance, const PlaybackInitialis
     countInstancesInEdit();
 }
 
-void RackType::initialisePluginsIfNeeded (const PlaybackInitialisationInfo& info) const
+void RackType::initialisePluginsIfNeeded (const PluginInitialisationInfo& info) const
 {
     latencyCalculation.reset();
 

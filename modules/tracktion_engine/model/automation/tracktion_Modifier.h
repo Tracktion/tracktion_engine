@@ -50,9 +50,6 @@ struct Modifier : public AutomatableEditItem,
     /** Can return an array of names represeting audio inputs. */
     virtual juce::StringArray getAudioInputNames()              { return {}; }
 
-    virtual AudioNode* createPreFXAudioNode (AudioNode* input)  { return input; }
-    virtual AudioNode* createPostFXAudioNode (AudioNode* input) { return input; }
-    
     enum class ProcessingPosition
     {
         none,

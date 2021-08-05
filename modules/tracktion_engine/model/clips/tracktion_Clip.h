@@ -11,6 +11,35 @@
 namespace tracktion_engine
 {
 
+struct ClipLevel
+{
+    juce::CachedValue<float> dbGain, pan;
+    juce::CachedValue<bool> mute;
+};
+
+struct LiveClipLevel
+{
+    LiveClipLevel() noexcept = default;
+    LiveClipLevel (std::shared_ptr<ClipLevel> l) noexcept
+        : levels (std::move (l)) {}
+
+    float getGain() const noexcept              { return levels ? dbToGain (levels->dbGain) : 1.0f; }
+    float getPan() const noexcept               { return levels ? levels->pan.get() : 0.0f; }
+    bool isMute() const noexcept                { return levels && levels->mute.get(); }
+    float getGainIncludingMute() const noexcept { return isMute() ? 0.0f : getGain(); }
+
+    void getLeftAndRightGains (float& left, float& right) const noexcept
+    {
+        const float g = getGainIncludingMute();
+        const float pv = getPan() * g;
+        left  = g - pv;
+        right = g + pv;
+    }
+
+private:
+    std::shared_ptr<ClipLevel> levels;
+};
+
 //==============================================================================
 /**
     A clip in an edit.
@@ -168,10 +197,6 @@ public:
     virtual PluginList* getPluginList()                        { return {}; }
 
     //==============================================================================
-    // Creates the audio node that will be used to play/render this clip.
-    virtual AudioNode* createAudioNode (const CreateAudioNodeParams&) = 0;
-
-    //==============================================================================
     virtual juce::Colour getDefaultColour() const = 0;
 
     //==============================================================================
@@ -230,7 +255,6 @@ protected:
     friend class Track;
     friend class ClipTrack;
     friend class CollectionClip;
-    struct LiveMidiOutputAudioNode;
 
     bool isInitialised = false;
     bool cloneInProgress = false;

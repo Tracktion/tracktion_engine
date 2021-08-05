@@ -145,11 +145,6 @@ public:
 
     virtual juce::Array<Clip*> applyRetrospectiveRecord (SelectionManager*) = 0;
 
-    /** can return a new node which can be used to suck data from this device
-        for end-to-end'ing.
-    */
-    virtual AudioNode* createLiveInputNode() = 0;
-
     juce::ValueTree state;
     InputDevice& owner;
     EditPlaybackContext& context;

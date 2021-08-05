@@ -38,7 +38,6 @@ public:
 
     AutomatableParameter::ModifierAssignment* createAssignment (const juce::ValueTree&) override;
 
-    AudioNode* createPreFXAudioNode (AudioNode*) override;
     ProcessingPosition getProcessingPosition() override { return ProcessingPosition::preFX; }
     void applyToBuffer (const PluginRenderContext&) override;
 
@@ -74,7 +73,6 @@ public:
 private:
     struct RandomModifierTimer;
     std::unique_ptr<RandomModifierTimer> modifierTimer;
-    struct ModifierAudioNode;
 
     juce::Random rand;
     LambdaTimer changedTimer;

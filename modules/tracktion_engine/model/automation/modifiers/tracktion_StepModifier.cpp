@@ -98,29 +98,6 @@ struct StepModifier::StepModifierTimer : public ModifierTimer
 };
 
 //==============================================================================
-struct StepModifier::StepModifierAudioNode    : public SingleInputAudioNode
-{
-    StepModifierAudioNode (AudioNode* source, StepModifier& sm)
-        : SingleInputAudioNode (source),
-          modifier (&sm)
-    {
-    }
-
-    void renderOver (const AudioRenderContext& rc) override
-    {
-        SingleInputAudioNode::renderOver (rc);
-        modifier->applyToBuffer (rc);
-    }
-
-    void renderAdding (const AudioRenderContext& rc) override
-    {
-        callRenderOver (rc);
-    }
-
-    StepModifier::Ptr modifier;
-};
-
-//==============================================================================
 StepModifier::StepModifier (Edit& e, const ValueTree& v)
     : Modifier (e, v)
 {
@@ -221,11 +198,6 @@ int StepModifier::getCurrentStep() const noexcept
 AutomatableParameter::ModifierAssignment* StepModifier::createAssignment (const ValueTree& v)
 {
     return new Assignment (v, *this);
-}
-
-AudioNode* StepModifier::createPreFXAudioNode (AudioNode* an)
-{
-    return new StepModifierAudioNode (an, *this);
 }
 
 void StepModifier::applyToBuffer (const PluginRenderContext& prc)

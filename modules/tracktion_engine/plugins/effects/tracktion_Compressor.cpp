@@ -83,7 +83,7 @@ void CompressorPlugin::getChannelNames (StringArray* ins, StringArray* outs)
         ins->add (TRANS("Sidechain Trigger"));
 }
 
-void CompressorPlugin::initialise (const PlaybackInitialisationInfo&)
+void CompressorPlugin::initialise (const PluginInitialisationInfo&)
 {
     currentLevel = 0.0;
     lastSamp = 0.0f;

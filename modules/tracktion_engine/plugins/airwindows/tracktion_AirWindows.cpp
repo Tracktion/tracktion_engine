@@ -185,7 +185,7 @@ int AirWindowsPlugin::getNumOutputChannelsGivenInputs (int)
     return impl->getNumOutputs();
 }
 
-void AirWindowsPlugin::initialise (const PlaybackInitialisationInfo& info)
+void AirWindowsPlugin::initialise (const PluginInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
 }

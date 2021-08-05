@@ -49,16 +49,21 @@ void MidiOutputDeviceInstanceInjectingNode::process (ProcessContext& pc)
 {
     auto sourceBuffers = input->getProcessedOutput();
 
+    // Block the audio input from reaching the output by not copying
     pc.buffers.midi.copyFrom (sourceBuffers.midi);
-    // Block the audio input from reaching the output
+    
+    const auto timelineSampleRange = referenceSampleRangeToSplitTimelineRange (playHead, pc.referenceSampleRange);
+    assert (! timelineSampleRange.isSplit);
+    const auto editTimeRange = tracktion_graph::sampleToTime (timelineSampleRange.timelineRange1, sampleRate);
+
+    // Add MIDI clock for the current time to the device to be dispatched
+    deviceInstance.addMidiClockMessagesToCurrentBlock (playHead.isPlaying(), playHead.isUserDragging(), editTimeRange);
     
     if (sourceBuffers.midi.isEmpty() && ! sourceBuffers.midi.isAllNotesOff)
         return;
 
     // Merge in the MIDI from the current block to the device to be dispatched
-    const auto timelineSamplePosition = playHead.referenceSamplePositionToTimelinePosition (pc.referenceSampleRange.getStart());
-    const double editTime = tracktion_graph::sampleToTime (timelineSamplePosition, sampleRate);
-    deviceInstance.mergeInMidiMessages (sourceBuffers.midi, editTime);
+    deviceInstance.mergeInMidiMessages (sourceBuffers.midi, editTimeRange.getStart());
 }
 
 } // namespace tracktion_engine

@@ -33,12 +33,9 @@ public:
     bool isAnalysingContent();
     juce::MidiMessageSequence getAnalysedMIDISequence();
 
-    AudioNode* createAudioNode (LiveClipLevel);
     void sourceClipChanged();
 
 private:
-    class MelodyneAudioNode;
-
     std::unique_ptr<ARAClipPlayer> player;
     juce::MidiBuffer midiBuffer;
 

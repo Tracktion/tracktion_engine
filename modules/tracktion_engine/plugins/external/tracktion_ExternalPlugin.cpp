@@ -1093,7 +1093,7 @@ struct ExternalPlugin::MPEChannelRemapper
 };
 
 //==============================================================================
-void ExternalPlugin::initialise (const PlaybackInitialisationInfo& info)
+void ExternalPlugin::initialise (const PluginInitialisationInfo& info)
 {
     CRASH_TRACER_PLUGIN (getDebugName());
 

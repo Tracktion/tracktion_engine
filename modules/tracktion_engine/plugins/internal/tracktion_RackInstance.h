@@ -26,8 +26,8 @@ public:
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getTooltip() override;
 
-    void initialise (const PlaybackInitialisationInfo&) override;
-    void initialiseWithoutStopping (const PlaybackInitialisationInfo&) override;
+    void initialise (const PluginInitialisationInfo&) override;
+    void initialiseWithoutStopping (const PluginInitialisationInfo&) override;
     void deinitialise() override;
 
     bool takesAudioInput() override                     { return true; }

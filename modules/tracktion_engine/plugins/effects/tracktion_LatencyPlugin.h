@@ -29,7 +29,7 @@ public:
     juce::String getPluginType() override                   { return xmlTypeName; }
     juce::String getSelectableDescription() override        { return getName(); }
 
-    void initialise (const PlaybackInitialisationInfo&) override;
+    void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;
 

@@ -285,7 +285,7 @@ void RackInstance::setOutputName (Channel c, const String& outputName)
     }
 }
 
-void RackInstance::initialise (const PlaybackInitialisationInfo& info)
+void RackInstance::initialise (const PluginInitialisationInfo& info)
 {
     if (type != nullptr)
         type->registerInstance (this, info);
@@ -293,7 +293,7 @@ void RackInstance::initialise (const PlaybackInitialisationInfo& info)
     initialiseWithoutStopping (info);
 }
 
-void RackInstance::initialiseWithoutStopping (const PlaybackInitialisationInfo& info)
+void RackInstance::initialiseWithoutStopping (const PluginInitialisationInfo& info)
 {
     auto latencySeconds = getLatencySeconds();
     

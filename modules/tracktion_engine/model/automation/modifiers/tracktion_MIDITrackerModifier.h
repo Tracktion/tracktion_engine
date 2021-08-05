@@ -37,7 +37,6 @@ public:
     AutomatableParameter::ModifierAssignment* createAssignment (const juce::ValueTree&) override;
 
     juce::StringArray getMidiInputNames() override;
-    AudioNode* createPreFXAudioNode (AudioNode*) override;
     ProcessingPosition getProcessingPosition() override { return ProcessingPosition::preFX; }
 
     void applyToBuffer (const PluginRenderContext&) override;
@@ -85,8 +84,6 @@ public:
     AutomatableParameter::Ptr typeParam, modeParam, relativeRootParam, relativeSpreadParam;
 
 private:
-    struct ModifierAudioNode;
-
     juce::ValueTree nodeState;
 
     LambdaTimer changedTimer;

@@ -151,7 +151,7 @@ ValueTree PitchShiftPlugin::create()
 const char* PitchShiftPlugin::xmlTypeName = "pitchShifter";
 
 //==============================================================================
-void PitchShiftPlugin::initialise (const PlaybackInitialisationInfo& info)
+void PitchShiftPlugin::initialise (const PluginInitialisationInfo& info)
 {
     pimpl->initialise (info.sampleRate, semitones->getCurrentValue(),
                        (TimeStretcher::Mode) mode.get(), elastiqueOptions.get());

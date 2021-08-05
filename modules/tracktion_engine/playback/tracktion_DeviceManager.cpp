@@ -179,7 +179,6 @@ DeviceManager::DeviceManager (Engine& e) : engine (e)
     CRASH_TRACER
 
     contextDeviceClearer = std::make_unique<ContextDeviceClearer> (*this);
-    setInternalBufferMultiplier (engine.getPropertyStorage().getProperty (SettingID::internalBuffer, 1));
 
     deviceManager.addChangeListener (this);
 
@@ -449,8 +448,6 @@ void DeviceManager::resetToDefaults (bool deviceSettings, bool resetInputDevices
     {
         storage.setProperty (SettingID::maxLatency, 5.0f);
         storage.setProperty (SettingID::lowLatencyBuffer, 5.8f);
-        storage.setProperty (SettingID::internalBuffer, 1);
-        setInternalBufferMultiplier (1);
     }
 
     if (mixSettings)
@@ -639,19 +636,6 @@ void DeviceManager::rebuildWaveDeviceList()
 void DeviceManager::setSpeedCompensation (double plusOrMinus)
 {
     speedCompensation = jlimit (-10.0, 10.0, plusOrMinus);
-}
-
-void DeviceManager::setInternalBufferMultiplier (int multiplier)
-{
-    internalBufferMultiplier = jlimit (1, 10, multiplier);
-
-    const ScopedLock sl (contextLock);
-
-    for (auto c : activeContexts)
-    {
-        c->clearNodes();
-        c->edit.restartPlayback();
-    }
 }
 
 void DeviceManager::loadSettings()
@@ -1112,8 +1096,6 @@ void DeviceManager::audioDeviceIOCallback (const float** inputChannelData, int n
 
                 for (auto c : activeContexts)
                 {
-                    c->fillNextAudioBlock (blockStreamTime, outputChannelData, numSamples);
-                    
                    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
                     c->fillNextNodeBlock (outputChannelData, totalNumOutputChannels, numSamples);
                    #endif
@@ -1217,7 +1199,6 @@ void DeviceManager::audioDeviceStopped()
 void DeviceManager::updateNumCPUs()
 {
     const ScopedLock sl (deviceManager.getAudioCallbackLock());
-    MixerAudioNode::updateNumCPUs (engine);
     
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     const ScopedLock cl (contextLock);

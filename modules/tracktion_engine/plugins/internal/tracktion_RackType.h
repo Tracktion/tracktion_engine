@@ -43,8 +43,8 @@ public:
     //==============================================================================
     // tells the rack type about each instance that will be using it..
     // These are called by the initialise methods of the instances.
-    void registerInstance (RackInstance*, const PlaybackInitialisationInfo&);
-    void initialisePluginsIfNeeded (const PlaybackInitialisationInfo&) const;
+    void registerInstance (RackInstance*, const PluginInitialisationInfo&);
+    void initialisePluginsIfNeeded (const PluginInitialisationInfo&) const;
     void deregisterInstance (RackInstance*);
 
     void updateAutomatableParamPositions (double time);

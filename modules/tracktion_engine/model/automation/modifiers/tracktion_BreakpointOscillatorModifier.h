@@ -41,7 +41,6 @@ public:
 
     AutomatableParameter::ModifierAssignment* createAssignment (const juce::ValueTree&) override;
 
-    AudioNode* createPreFXAudioNode (AudioNode*) override;
     ProcessingPosition getProcessingPosition() override { return ProcessingPosition::preFX; }
 
     void applyToBuffer (const PluginRenderContext&) override;
@@ -87,8 +86,6 @@ public:
 private:
     struct BreakpointOscillatorModifierTimer;
     std::unique_ptr<BreakpointOscillatorModifierTimer> modifierTimer;
-    struct ModifierAudioNode;
-
     LambdaTimer changedTimer;
     std::atomic<float> currentPhase { 1.0f }, currentValue { 0.0f }, currentEnvelopeValue { 0.0f };
 

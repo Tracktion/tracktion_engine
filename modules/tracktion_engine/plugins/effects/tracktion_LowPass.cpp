@@ -52,7 +52,7 @@ void LowPassPlugin::updateFilters()
     }
 }
 
-void LowPassPlugin::initialise (const PlaybackInitialisationInfo& info)
+void LowPassPlugin::initialise (const PluginInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
 

@@ -61,7 +61,7 @@ ValueTree VCAPlugin::create()
 
 const char* VCAPlugin::xmlTypeName = "vca";
 
-void VCAPlugin::initialise (const PlaybackInitialisationInfo&) {}
+void VCAPlugin::initialise (const PluginInitialisationInfo&) {}
 void VCAPlugin::deinitialise() {}
 void VCAPlugin::applyToBuffer (const PluginRenderContext&) {}
 

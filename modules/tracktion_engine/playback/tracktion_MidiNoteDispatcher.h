@@ -20,7 +20,6 @@ public:
     //==============================================================================
     void setMidiDeviceList (const juce::OwnedArray<MidiOutputDeviceInstance>&);
 
-    void renderDevices (PlayHead&, EditTimeRange streamTime, int blockSize);
     void dispatchPendingMessagesForDevices (double editTime);
     
     void masterTimeUpdate (double editTime);

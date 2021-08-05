@@ -328,39 +328,4 @@ void SharedLevelMeasurer::addBuffer (const juce::AudioBuffer<float>& inBuffer, i
         sumBuffer.addFrom (i, 0, inBuffer, i, startSample, numSamples);
 }
 
-//==============================================================================
-LevelMeasuringAudioNode::LevelMeasuringAudioNode (SharedLevelMeasurer::Ptr lm, AudioNode* source)
-    : SingleInputAudioNode (source), levelMeasurer (lm)
-{
-}
-
-void LevelMeasuringAudioNode::prepareAudioNodeToPlay (const PlaybackInitialisationInfo& info)
-{
-    input->prepareAudioNodeToPlay (info);
-
-    if (levelMeasurer != nullptr)
-        levelMeasurer->setSize (2, info.blockSizeSamples);
-}
-
-void LevelMeasuringAudioNode::prepareForNextBlock (const AudioRenderContext& rc)
-{
-    input->prepareForNextBlock (rc);
-
-    if (levelMeasurer != nullptr)
-        levelMeasurer->startNextBlock (rc.streamTime.getStart());
-}
-
-void LevelMeasuringAudioNode::renderOver (const AudioRenderContext& rc)
-{
-    input->renderOver (rc);
-
-    if (levelMeasurer != nullptr)
-        levelMeasurer->addBuffer (*rc.destBuffer, rc.bufferStartSample, rc.bufferNumSamples);
-}
-
-void LevelMeasuringAudioNode::renderAdding (const AudioRenderContext& rc)
-{
-    callRenderOver (rc);
-}
-
 }

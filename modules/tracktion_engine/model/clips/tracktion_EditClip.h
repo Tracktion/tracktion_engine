@@ -14,7 +14,7 @@ namespace tracktion_engine
 //==============================================================================
 /**
     This is the main source of an Edit clip and is responsible for managing its
-    properties and creating a playable AudioNode to pass to the audio graph.
+    properties.
 */
 class EditClip    : public AudioClipBase,
                     private EditSnapshot::Listener

@@ -200,59 +200,59 @@ public:
 
 private:
     //==============================================================================
-    class HostedMidiInputAudioNode : public AudioNode
-    {
-    public:
-        HostedMidiInputAudioNode (MidiBuffer& midi_) : midi (midi_) {}
-
-        void getAudioNodeProperties (AudioNodeProperties& p) override
-        {
-            p.hasAudio = false;
-            p.hasMidi  = true;
-            p.numberOfChannels = 0;
-        }
-
-        void prepareAudioNodeToPlay (const PlaybackInitialisationInfo& info) override
-        {
-            sampleRate = info.sampleRate;
-        }
-
-        bool purgeSubNodes (bool keepAudio, bool keepMidi) override
-        {
-            ignoreUnused (keepAudio);
-            return keepMidi;
-        }
-
-        void releaseAudioNodeResources() override       {}
-        void visitNodes (const VisitorFn& v) override   { v (*this); }
-        bool isReadyToRender() override                 { return true; }
-
-        void renderOver (const AudioRenderContext& rc) override
-        {
-            rc.clearMidiBuffer();
-            callRenderAdding (rc);
-        }
-
-        void renderAdding (const AudioRenderContext& rc) override
-        {
-            if (rc.bufferForMidiMessages != nullptr)
-            {
-                for (auto itr : midi)
-                {
-                    auto msg = itr.getMessage();
-                    int pos = itr.samplePosition;
-
-                    msg.setTimeStamp (pos / sampleRate + rc.midiBufferOffset);
-                    rc.bufferForMidiMessages->addMidiMessage (msg, mpeSource);
-                }
-            }
-        }
-
-    private:
-        MidiBuffer& midi;
-        double sampleRate = 44100.0;
-        MidiMessageArray::MPESourceID mpeSource { MidiMessageArray::createUniqueMPESourceID() };
-    };
+//ddd    class HostedMidiInputAudioNode : public AudioNode
+//    {
+//    public:
+//        HostedMidiInputAudioNode (MidiBuffer& midi_) : midi (midi_) {}
+//
+//        void getAudioNodeProperties (AudioNodeProperties& p) override
+//        {
+//            p.hasAudio = false;
+//            p.hasMidi  = true;
+//            p.numberOfChannels = 0;
+//        }
+//
+//        void prepareAudioNodeToPlay (const PlaybackInitialisationInfo& info) override
+//        {
+//            sampleRate = info.sampleRate;
+//        }
+//
+//        bool purgeSubNodes (bool keepAudio, bool keepMidi) override
+//        {
+//            ignoreUnused (keepAudio);
+//            return keepMidi;
+//        }
+//
+//        void releaseAudioNodeResources() override       {}
+//        void visitNodes (const VisitorFn& v) override   { v (*this); }
+//        bool isReadyToRender() override                 { return true; }
+//
+//        void renderOver (const AudioRenderContext& rc) override
+//        {
+//            rc.clearMidiBuffer();
+//            callRenderAdding (rc);
+//        }
+//
+//        void renderAdding (const AudioRenderContext& rc) override
+//        {
+//            if (rc.bufferForMidiMessages != nullptr)
+//            {
+//                for (auto itr : midi)
+//                {
+//                    auto msg = itr.getMessage();
+//                    int pos = itr.samplePosition;
+//
+//                    msg.setTimeStamp (pos / sampleRate + rc.midiBufferOffset);
+//                    rc.bufferForMidiMessages->addMidiMessage (msg, mpeSource);
+//                }
+//            }
+//        }
+//
+//    private:
+//        MidiBuffer& midi;
+//        double sampleRate = 44100.0;
+//        MidiMessageArray::MPESourceID mpeSource { MidiMessageArray::createUniqueMPESourceID() };
+//    };
 
     //==============================================================================
     class HostedMidiInputDeviceInstance : public MidiInputDeviceInstanceBase
@@ -264,7 +264,7 @@ private:
         }
 
         bool startRecording() override              { return false; }
-        AudioNode* createLiveInputNode() override   { return new HostedMidiInputAudioNode (midi); }
+        //ddd AudioNode* createLiveInputNode() override   { return new HostedMidiInputAudioNode (midi); }
         void processBlock (MidiBuffer& m)           { midi = m; }
 
     private:

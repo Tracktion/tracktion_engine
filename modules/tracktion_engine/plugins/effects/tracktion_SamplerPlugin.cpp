@@ -220,7 +220,7 @@ void SamplerPlugin::handleAsyncUpdate()
     changed();
 }
 
-void SamplerPlugin::initialise (const PlaybackInitialisationInfo&)
+void SamplerPlugin::initialise (const PluginInitialisationInfo&)
 {
     const ScopedLock sl (lock);
     allNotesOff();

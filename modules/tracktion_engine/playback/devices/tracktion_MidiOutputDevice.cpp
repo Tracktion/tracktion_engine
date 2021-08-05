@@ -676,54 +676,6 @@ void MidiOutputDeviceInstance::stop()
     }
 }
 
-MidiMessageArray& MidiOutputDeviceInstance::refillBuffer (PlayHead& playhead, EditTimeRange streamTime, int blockSize)
-{
-    // Render the current block
-    renderBlock (playhead, streamTime, blockSize);
-    
-    // Then add the relevent MIDI timecode and clock messages
-    auto editTime = playhead.streamTimeToEditWindow (streamTime);
-    addMidiClockMessagesToCurrentBlock (playhead.isPlaying(), playhead.isUserDragging(), editTime.editRange1);
-    
-    if (editTime.isSplit)
-        addMidiClockMessagesToCurrentBlock (playhead.isPlaying(), playhead.isUserDragging(), editTime.editRange2);
-
-    // Add device delay to the current block of messages
-    midiMessages.addToTimestamps (editTime.editRange1.getStart() + getMidiOutput().getDeviceDelay());
-    midiMessages.sortByTimestamp();
-
-    return getPendingMessages();
-}
-
-void MidiOutputDeviceInstance::renderBlock (PlayHead& playhead, EditTimeRange streamTime, int blockSize)
-{
-    const int numChannels = 2;
-    AudioScratchBuffer dummyBuffer (numChannels, blockSize + 128);
-    auto dummyChannelSet = AudioChannelSet::canonicalChannelSet (numChannels);
-
-    JUCE_TRY
-    {
-        const ScopedLock sl (audioNodeLock);
-
-        if (audioNode != nullptr)
-        {
-            AudioRenderContext rc (playhead, streamTime,
-                                   &dummyBuffer.buffer, dummyChannelSet, 0, blockSize,
-                                   &midiMessages, 0,
-                                   AudioRenderContext::contiguous, false);
-
-            {
-                SCOPED_REALTIME_CHECK_LONGER
-                audioNode->prepareForNextBlock (rc);
-            }
-
-            SCOPED_REALTIME_CHECK_LONGER
-            audioNode->renderAdding (rc);
-        }
-    }
-    JUCE_CATCH_EXCEPTION
-}
-
 void MidiOutputDeviceInstance::mergeInMidiMessages (const MidiMessageArray& source, double editTime)
 {
     midiMessages.mergeFromWithOffset (source, editTime + getMidiOutput().getDeviceDelay());

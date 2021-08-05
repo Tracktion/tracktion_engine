@@ -244,26 +244,6 @@ bool MidiClip::usesGrooveStrength() const
     return false;
 }
 
-AudioNode* MidiClip::createAudioNode (const CreateAudioNodeParams& params)
-{
-    CRASH_TRACER
-    MidiMessageSequence sequence;
-    getSequenceLooped().exportToPlaybackMidiSequence (sequence, *this, mpeMode);
-
-    const auto nodeToReplace = getClipIfPresentInNode (params.audioNodeToBeReplaced, *this);
-
-    auto channels = mpeMode ? Range<int> (2, 15)
-                            : Range<int>::withStartAndLength (getMidiChannel().getChannelNumber(), 0);
-
-    AudioNode* node = new MidiAudioNode (std::move (sequence), channels, getEditTimeRange(),
-                                         level->dbGain, level->mute, *this, nodeToReplace);
-
-    if (! listeners.isEmpty())
-        node = new LiveMidiOutputAudioNode (*this, node);
-
-    return node;
-}
-
 MidiList& MidiClip::getSequence() const noexcept
 {
     if (! hasValidSequence())

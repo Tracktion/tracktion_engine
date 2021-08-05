@@ -45,7 +45,7 @@ public:
 
     void updateFromMirroredPluginIfNeeded (Plugin&) override;
 
-    void initialise (const PlaybackInitialisationInfo&) override;
+    void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     void reset() override;
     void setEnabled (bool enabled) override;

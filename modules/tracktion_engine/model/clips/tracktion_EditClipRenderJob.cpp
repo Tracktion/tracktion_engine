@@ -310,43 +310,17 @@ bool EditRenderJob::RenderPass::initialise()
             cnp.includeBypassedPlugins = ! r.engine->getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph();
 
             std::unique_ptr<tracktion_graph::Node> node;
-
-            callBlocking ([this, &node, &cnp]
-            {
-                node = createNodeForEdit (*r.edit, cnp);
-            });
+            callBlocking ([this, &node, &cnp] { node = createNodeForEdit (*r.edit, cnp); });
 
             if (node)
             {
                 task.reset (new Renderer::RenderTask (desc, r,
                                                       std::move (node), std::move (playHead), std::move (playHeadState), std::move (processState),
-                                                      owner.progress, &owner.thumbnailToUpdate));
+                                                      &owner.progress, &owner.thumbnailToUpdate));
                 return task->errorMessage.isEmpty();
             }
         }
-        else
        #endif
-        {
-            AudioNode* node = nullptr;
-
-            CreateAudioNodeParams cnp;
-            cnp.allowedClips = r.allowedClips.isEmpty() ? nullptr : &r.allowedClips;
-            cnp.allowedTracks = &r.tracksToDo;
-            cnp.forRendering = true;
-            cnp.includePlugins = r.usePlugins;
-            cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
-
-            callBlocking ([this, &node, &cnp]
-            {
-                node = createRenderingNodeFromEdit (*r.edit, cnp, r.useMasterPlugins);
-            });
-
-            if (node != nullptr)
-            {
-                task.reset (new Renderer::RenderTask (desc, r, node, owner.progress, &owner.thumbnailToUpdate));
-                return task->errorMessage.isEmpty();
-            }
-        }
     }
 
     return false;

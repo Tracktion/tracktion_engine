@@ -28,7 +28,7 @@ ChorusPlugin::~ChorusPlugin()
 
 const char* ChorusPlugin::xmlTypeName = "chorus";
 
-void ChorusPlugin::initialise (const PlaybackInitialisationInfo& info)
+void ChorusPlugin::initialise (const PluginInitialisationInfo& info)
 {
     const float delayMs = 20.0f;
     const int maxLengthMs = 1 + roundToInt (delayMs + depthMs);

@@ -37,7 +37,7 @@ const char* MidiModifierPlugin::xmlTypeName ("midiModifier");
 String MidiModifierPlugin::getName()                                               { return TRANS("MIDI Modifier"); }
 String MidiModifierPlugin::getPluginType()                                         { return xmlTypeName; }
 String MidiModifierPlugin::getShortName (int)                                      { return TRANS("MIDI Modifier"); }
-void MidiModifierPlugin::initialise (const PlaybackInitialisationInfo&)            {}
+void MidiModifierPlugin::initialise (const PluginInitialisationInfo&)            {}
 void MidiModifierPlugin::deinitialise()                                            {}
 double MidiModifierPlugin::getLatencySeconds()                                     { return 0.0; }
 int MidiModifierPlugin::getNumOutputChannelsGivenInputs (int)                      { return 0; }

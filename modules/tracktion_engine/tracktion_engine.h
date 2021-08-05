@@ -208,7 +208,6 @@ namespace tracktion_engine
     class Track;
     class Clip;
     class Plugin;
-    class AudioNode;
     struct AudioRenderContext;
     struct PluginRenderContext;
     class AudioFile;
@@ -350,7 +349,6 @@ namespace tracktion_engine
 #include "project/tracktion_ProjectItemID.h"
 
 #include "playback/tracktion_PlayHead.h"
-#include "playback/audionodes/tracktion_AudioNode.h"
 #include "playback/devices/tracktion_WaveDeviceDescription.h"
 
 //==============================================================================
@@ -477,8 +475,6 @@ namespace tracktion_engine
 #include "model/export/tracktion_Renderer.h"
 #include "model/export/tracktion_RenderManager.h"
 
-#include "playback/audionodes/tracktion_WaveAudioNode.h"
-
 #include "model/edit/tracktion_QuantisationType.h"
 
 #include "model/clips/tracktion_WarpTimeManager.h"
@@ -498,9 +494,6 @@ namespace tracktion_engine
 #include "model/edit/tracktion_MarkerManager.h"
 
 #include "model/clips/tracktion_EditClip.h"
-
-#include "playback/audionodes/tracktion_FadeInOutAudioNode.h"
-#include "playback/audionodes/tracktion_TimedMutingAudioNode.h"
 
 #include "model/tracks/tracktion_TrackUtils.h"
 #include "model/tracks/tracktion_ArrangerTrack.h"
@@ -533,18 +526,6 @@ namespace tracktion_engine
 #include "playback/tracktion_MidiNoteDispatcher.h"
 #include "playback/tracktion_EditPlaybackContext.h"
 #include "playback/tracktion_EditInputDevices.h"
-
-#include "playback/audionodes/tracktion_BufferingAudioNode.h"
-#include "playback/audionodes/tracktion_ClickNode.h"
-#include "playback/audionodes/tracktion_ClickMutingNode.h"
-#include "playback/audionodes/tracktion_CombiningAudioNode.h"
-#include "playback/audionodes/tracktion_HissingAudioNode.h"
-#include "playback/audionodes/tracktion_MidiAudioNode.h"
-#include "playback/audionodes/tracktion_MixerAudioNode.h"
-#include "playback/audionodes/tracktion_PlayHeadAudioNode.h"
-#include "playback/audionodes/tracktion_SidechainAudioNode.h"
-#include "playback/audionodes/tracktion_TrackMutingAudioNode.h"
-#include "playback/audionodes/tracktion_SpeedRampAudioNode.h"
 
 #if TRACKTION_AIR_WINDOWS
 #include "plugins/airwindows/tracktion_AirWindows.h"

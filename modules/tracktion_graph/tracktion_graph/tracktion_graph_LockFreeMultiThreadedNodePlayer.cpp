@@ -245,8 +245,12 @@ void LockFreeMultiThreadedNodePlayer::setNewCurrentNode (std::unique_ptr<Node> n
     
     if (useAudioBufferPool)
     {
+        const size_t poolCapacity = pendingPreparedNodeStorage.allNodes.size();
+        
         if (! pendingPreparedNodeStorage.audioBufferPool)
-            pendingPreparedNodeStorage.audioBufferPool = std::make_unique<AudioBufferPool> (pendingPreparedNodeStorage.allNodes.size());
+            pendingPreparedNodeStorage.audioBufferPool = std::make_unique<AudioBufferPool> (poolCapacity);
+        else if (pendingPreparedNodeStorage.audioBufferPool->getCapacity() < poolCapacity)
+            pendingPreparedNodeStorage.audioBufferPool->setCapacity (poolCapacity);
         
         node_player_utils::reserveAudioBufferPool (pendingPreparedNodeStorage.rootNode.get(),
                                                    pendingPreparedNodeStorage.allNodes,

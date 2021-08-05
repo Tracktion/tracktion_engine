@@ -31,8 +31,6 @@ public:
     bool isMidi() const override         { return false; }
     bool isMuted() const override        { return false; }
 
-    AudioNode* createAudioNode (const CreateAudioNodeParams&) override      { return {}; }
-
     PatternGenerator* getPatternGenerator() override;
     void pitchTempoTrackChanged() override;
 

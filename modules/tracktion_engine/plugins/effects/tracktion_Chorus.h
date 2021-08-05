@@ -26,7 +26,7 @@ public:
     juce::String getShortName (int) override            { return getName(); }
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }
-    void initialise (const PlaybackInitialisationInfo&) override;
+    void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;
     juce::String getSelectableDescription() override    { return TRANS("Chorus Plugin"); }

@@ -253,8 +253,6 @@ public:
 
     LiveClipLevel getLiveClipLevel();
 
-    AudioNode* createAudioNode (const CreateAudioNodeParams&) override;
-
     juce::CachedValue<bool> repeatSequence;
 
 private:

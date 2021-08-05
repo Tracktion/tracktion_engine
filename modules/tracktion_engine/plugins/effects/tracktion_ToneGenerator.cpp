@@ -48,7 +48,7 @@ ToneGeneratorPlugin::~ToneGeneratorPlugin()
 
 const char* ToneGeneratorPlugin::xmlTypeName = "toneGenerator";
 
-void ToneGeneratorPlugin::initialise (const PlaybackInitialisationInfo& info)
+void ToneGeneratorPlugin::initialise (const PluginInitialisationInfo& info)
 {
     scratch.setSize (1, info.blockSizeSamples);
     auto samplesPerBlock = uint32 (info.blockSizeSamples);

@@ -68,9 +68,6 @@ public:
     RetrospectiveRecordBuffer* getRetrospectiveRecordBuffer()   { return retrospectiveBuffer.get(); }
     void updateRetrospectiveBufferLength (double length) override;
 
-    /** Creates an AudioNode that calls consumeNextAudioBlock during it's render callback. */
-    AudioNode* createWaveInputDeviceNode (AudioNode* input);
-
     //==============================================================================
     juce::String getSelectableDescription() override;
 
@@ -79,7 +76,6 @@ protected:
     void closeDevice();
 
 private:
-    class WaveInputDeviceAudioNode;
     friend class DeviceManager;
     friend class WaveInputDeviceInstance;
 

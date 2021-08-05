@@ -298,11 +298,6 @@ public:
     PluginList* getPluginList() override           { return &pluginList; }
 
     //==============================================================================
-    /** Creates the AudioNode used to playback this Clip in an Edit. */
-    AudioNode* createAudioNode (const CreateAudioNodeParams&) override;
-    AudioNode* createMelodyneAudioNode();
-
-    //==============================================================================
     /** Holds information about how to render a proxy for this clip. */
     struct ProxyRenderingInfo
     {
@@ -372,7 +367,6 @@ public:
 
 protected:
     //==============================================================================
-    friend class MelodyneAudioNode;
     friend class WaveCompManager;
 
     //==============================================================================
@@ -427,7 +421,6 @@ protected:
 
 private:
     //==============================================================================
-    class TimestretchingPreviewAudioNode;
     class TempoDetectTask;
     class BeatSensitivityComp;
 
@@ -447,10 +440,6 @@ private:
     //==============================================================================
     void jobFinished (RenderManager::Job& job, bool completedOk) override;
     void timerCallback() override;
-
-    AudioNode* createNode (EditTimeRange editTime, LiveClipLevel, bool includeMelodyne);
-
-    AudioNode* createFadeInOutNode (AudioNode*);
 
     double clipTimeToSourceFileTime (double clipTime);
 

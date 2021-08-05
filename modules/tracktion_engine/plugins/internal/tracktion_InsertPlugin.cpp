@@ -68,120 +68,6 @@ static void getPossibleOutputDeviceNames (Engine& e,
     }
 }
 
-//==============================================================================
-/** The output device will create one of these via the InsertPlugin.
-    During the render callback the buffer should be filled with data which will
-    be sent to the external device.
-*/
-class InsertPlugin::InsertAudioNode  : public AudioNode
-{
-public:
-    InsertAudioNode (InsertPlugin& o) : owner (o), plugin (&o) {}
-
-    void getAudioNodeProperties (AudioNodeProperties& info) override
-    {
-        info.hasAudio = owner.hasAudio();
-        info.hasMidi = owner.hasMidi();
-        info.numberOfChannels = info.hasAudio ? 2 : 1;
-    }
-
-    void visitNodes (const VisitorFn& v) override               { v (*this); }
-    bool isReadyToRender() override                             { return true; }
-
-    bool purgeSubNodes (bool keepAudio, bool keepMidi) override
-    {
-        if (keepAudio && owner.hasAudio())
-            return true;
-
-        return keepMidi && owner.hasMidi();
-    }
-
-    void prepareAudioNodeToPlay (const PlaybackInitialisationInfo&) override {}
-
-    void releaseAudioNodeResources() override                       {}
-    void prepareForNextBlock (const AudioRenderContext&) override   {}
-    void renderOver (const AudioRenderContext& rc) override         { callRenderAdding (rc); }
-    void renderAdding (const AudioRenderContext& rc) override
-    {
-        if (rc.destBuffer != nullptr)
-        {
-            auto audio = toBufferView (*rc.destBuffer)
-                            .getFrameRange ({ (choc::buffer::FrameCount) rc.bufferStartSample,
-                                              (choc::buffer::FrameCount) (rc.bufferStartSample + rc.bufferNumSamples) });
-
-            owner.fillSendBuffer (&audio, rc.bufferForMidiMessages);
-        }
-        else
-        {
-            owner.fillSendBuffer (nullptr, rc.bufferForMidiMessages);
-        }
-    }
-
-private:
-    InsertPlugin& owner;
-    Plugin::Ptr plugin;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InsertAudioNode)
-};
-
-//==============================================================================
-/** The return audio node hooks into the input device.
-    After the call to renderOver or renderAdding, the buffer will contain the input
-    data which should in turn be routed to the main audio node output.
-*/
-class InsertPlugin::InsertReturnAudioNode  : public SingleInputAudioNode
-{
-public:
-    InsertReturnAudioNode (InsertPlugin& o, AudioNode* inputDeviceAudioNode)
-        : SingleInputAudioNode (inputDeviceAudioNode), owner (o), plugin (&o)
-    {
-    }
-
-    bool purgeSubNodes (bool keepAudio, bool keepMidi) override
-    {
-        if (keepAudio && owner.hasAudio())
-            return true;
-
-        return keepMidi && owner.hasMidi();
-    }
-
-    void renderOver (const AudioRenderContext& rc) override
-    {
-        callRenderAdding (rc);
-    }
-
-    void renderAdding (const AudioRenderContext& rc) override
-    {
-        const int numChans = rc.destBuffer->getNumChannels();
-        const int numSamples = rc.destBuffer->getNumSamples();
-
-        AudioRenderContext rc2 (rc);
-        AudioScratchBuffer scratch (numChans, numSamples);
-
-        rc2.destBuffer = &scratch.buffer;
-        rc2.bufferStartSample = 0;
-        scratch.buffer.clear();
-
-        rc2.bufferForMidiMessages = &midiScratch;
-        midiScratch.clear();
-
-        SingleInputAudioNode::renderAdding (rc2);
-        auto audio = toBufferView (scratch.buffer);
-        owner.fillReturnBuffer (&audio, &midiScratch);
-    }
-
-    void releaseAudioNodeResources() override
-    {
-        midiScratch.clear();
-    }
-
-private:
-    InsertPlugin& owner;
-    Plugin::Ptr plugin;
-    MidiMessageArray midiScratch;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InsertReturnAudioNode)
-};
 
 //==============================================================================
 InsertPlugin::InsertPlugin (PluginCreationInfo info)  : Plugin (info)
@@ -200,38 +86,6 @@ InsertPlugin::~InsertPlugin()
     notifyListenersOfDeletion();
 }
 
-AudioNode* InsertPlugin::createSendAudioNode (OutputDevice& device)
-{
-    CRASH_TRACER
-    AudioNode* node = nullptr;
-
-    if (outputDevice == device.getName())
-    {
-        node = new InsertAudioNode (*this);
-
-        auto getReturnNode = [this] () -> AudioNode*
-        {
-            if (returnDeviceType != noDevice)
-                for (auto i : edit.getAllInputDevices())
-                    if (i->owner.getName() == inputDevice)
-                        return new InsertReturnAudioNode (*this, i->createLiveInputNode());
-
-            return {};
-        };
-
-        if (AudioNode* returnNode = getReturnNode())
-        {
-            MixerAudioNode* mixer = new MixerAudioNode (false, false);
-            mixer->addInput (node);
-            mixer->addInput (returnNode);
-
-            node = mixer;
-        }
-    }
-
-    return node;
-}
-
 //==============================================================================
 const char* InsertPlugin::xmlTypeName ("insert");
 
@@ -245,7 +99,7 @@ bool InsertPlugin::takesMidiInput()                                          { r
 bool InsertPlugin::canBeAddedToClip()                                        { return false; }
 bool InsertPlugin::needsConstantBufferSize()                                 { return true; }
 
-void InsertPlugin::initialise (const PlaybackInitialisationInfo& info)
+void InsertPlugin::initialise (const PluginInitialisationInfo& info)
 {
     {
         const ScopedLock sl (bufferLock);
@@ -259,7 +113,7 @@ void InsertPlugin::initialise (const PlaybackInitialisationInfo& info)
     initialiseWithoutStopping (info);
 }
 
-void InsertPlugin::initialiseWithoutStopping (const PlaybackInitialisationInfo& info)
+void InsertPlugin::initialiseWithoutStopping (const PluginInitialisationInfo& info)
 {
     // This latency number is from trial and error, may need more testing
     latencySeconds = manualAdjustMs / 1000.0 + (double)info.blockSizeSamples / info.sampleRate;
