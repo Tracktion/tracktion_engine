@@ -34,7 +34,6 @@ private:
     //==============================================================================
     InputDeviceInstance& instance;
     const  MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::notMPE;
-    tracktion_graph::PlayHeadState& playHeadState;
 
     tracktion_graph::RealTimeSpinLock bufferMutex;
     MidiMessageArray incomingMessages;

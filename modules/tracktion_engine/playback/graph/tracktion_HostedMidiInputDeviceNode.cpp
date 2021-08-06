@@ -12,10 +12,9 @@ namespace tracktion_engine
 {
 
 HostedMidiInputDeviceNode::HostedMidiInputDeviceNode (InputDeviceInstance& idi, MidiInputDevice&, MidiMessageArray::MPESourceID msi,
-                                                      tracktion_graph::PlayHeadState& phs)
+                                                      tracktion_graph::PlayHeadState&)
     : instance (idi),
-      midiSourceID (msi),
-      playHeadState (phs)
+      midiSourceID (msi)
 {
 }
 

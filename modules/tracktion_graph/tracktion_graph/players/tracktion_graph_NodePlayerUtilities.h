@@ -81,7 +81,7 @@ namespace node_player_utils
                 ++numLeafNodes;
         }
         
-        const size_t numBuffersRequired = 1 + numThreads;
+        const size_t numBuffersRequired = std::min (allNodes.size(), 1 + numThreads);
         audioBufferPool.reserve (numBuffersRequired, choc::buffer::Size::create (maxNumChannels, blockSize));
     }
 }
