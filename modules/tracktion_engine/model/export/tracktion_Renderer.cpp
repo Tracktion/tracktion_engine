@@ -18,14 +18,53 @@ void Renderer::turnOffAllPlugins (Edit& edit)
             f->baseClassDeinitialise();
 }
 
-static void resetFPU() noexcept
+namespace render_utils
 {
-   #if JUCE_WINDOWS
-    resetFP();
-    #if JUCE_32BIT
-     _control87 (_PC_64, _MCW_PC);
-    #endif
-   #endif
+    Array<Track*> getTrackBitset (Edit& edit, juce::BigInteger tracks)
+    {
+        Array<Track*> trackPtrs;
+
+        // Find Track pointers for bitset
+        auto allTracks = getAllTracks (edit);
+
+        for (auto bit = tracks.findNextSetBit (0); bit != -1; bit = tracks.findNextSetBit (bit + 1))
+            trackPtrs.add (allTracks[bit]);
+        
+        return trackPtrs;
+    }
+
+    std::unique_ptr<Renderer::RenderTask> createRenderTask (Renderer::Parameters r, juce::String desc,
+                                                            std::atomic<float>* progressToUpdate,
+                                                            juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* thumbnail)
+    {
+        auto tracksToDo = getTrackBitset (*r.edit, r.tracksToDo);
+        
+        // Initialise playhead and continuity
+        auto playHead = std::make_unique<tracktion_graph::PlayHead>();
+        auto playHeadState = std::make_unique<tracktion_graph::PlayHeadState> (*playHead);
+        auto processState = std::make_unique<ProcessState> (*playHeadState);
+
+        CreateNodeParams cnp { *processState };
+        cnp.sampleRate = r.sampleRateForAudio;
+        cnp.blockSize = r.blockSizeForAudio;
+        cnp.allowedClips = r.allowedClips.isEmpty() ? nullptr : &r.allowedClips;
+        cnp.allowedTracks = r.tracksToDo.isZero() ? nullptr : &tracksToDo;
+        cnp.forRendering = true;
+        cnp.includePlugins = r.usePlugins;
+        cnp.includeMasterPlugins = r.useMasterPlugins;
+        cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
+        cnp.includeBypassedPlugins = ! r.engine->getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph();
+
+        std::unique_ptr<tracktion_graph::Node> node;
+        callBlocking ([&r, &node, &cnp] { node = createNodeForEdit (*r.edit, cnp); });
+
+        if (! node)
+            return {};
+        
+        return std::make_unique<Renderer::RenderTask> (desc, r,
+                                                       std::move (node), std::move (playHead), std::move (playHeadState), std::move (processState),
+                                                       progressToUpdate, thumbnail);
+    }
 }
 
 //==============================================================================
@@ -80,36 +119,6 @@ static void addAcidInfo (Edit& edit, Renderer::Parameters& r)
             r.metadata.set (WavAudioFormat::acidStretch, "0");
         }
     }
-}
-
-static bool trackLoopsBackInto (const Array<Track*>& allTracks, AudioTrack& t, const BigInteger* tracksToCheck)
-{
-    for (int j = allTracks.size(); --j >= 0;)
-        if (tracksToCheck == nullptr || (*tracksToCheck)[j])
-            if (auto other = dynamic_cast<AudioTrack*> (allTracks.getUnchecked (j)))
-                if (t.getOutput().feedsInto (other))
-                    return true;
-
-    return false;
-}
-
-static Array<Track*> getTracksIncludedInRender (const Array<Track*>& allTracks, const BigInteger* tracksToCheck)
-{
-    if (tracksToCheck == nullptr)
-        return allTracks;
-
-    Array<Track*> tracks;
-
-    for (int i = 0; i < allTracks.size(); ++i)
-        if ((*tracksToCheck)[i])
-            tracks.add (allTracks[i]);
-
-    return tracks;
-}
-
-static bool isTrackIncludedInRender (const Array<Track*>& allTracks, const BigInteger* tracksToCheck, Track& trackToLookFor)
-{
-    return getTracksIncludedInRender (allTracks, tracksToCheck).contains (&trackToLookFor);
 }
 
 //==============================================================================
@@ -400,40 +409,32 @@ bool Renderer::renderToFile (const String& taskDescription,
 
     if (tracksToDo.countNumberOfSetBits() > 0)
     {
-//ddd        CreateAudioNodeParams cnp;
-//        cnp.allowedTracks = &tracksToDo;
-//        cnp.forRendering = true;
-//        cnp.includePlugins = usePlugins;
-//        cnp.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (engine);
-//
-//        if (auto node = createRenderingNodeFromEdit (edit, cnp, usePlugins))
-//        {
-//            Parameters r (edit);
-//            r.destFile = outputFile;
-//            r.audioFormat = edit.engine.getAudioFileFormatManager().getDefaultFormat();
-//            r.bitDepth = 24;
-//            r.sampleRateForAudio = edit.engine.getDeviceManager().getSampleRate();
-//            r.blockSizeForAudio  = edit.engine.getDeviceManager().getBlockSize();
-//            r.time = range;
-//            r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (engine);
-//            r.usePlugins = usePlugins;
-//            r.allowedClips = clips;
-//            r.createMidiFile = outputFile.hasFileExtension (".mid");
-//
-//            addAcidInfo (edit, r);
-//
-//            RenderTask task (taskDescription, r, node);
-//
-//            if (useThread)
-//            {
-//                engine.getUIBehaviour().runTaskWithProgressBar (task);
-//            }
-//            else
-//            {
-//                while (task.runJob() == ThreadPoolJob::jobNeedsRunningAgain)
-//                {}
-//            }
-//        }
+        Parameters r (edit);
+        r.destFile = outputFile;
+        r.audioFormat = edit.engine.getAudioFileFormatManager().getDefaultFormat();
+        r.bitDepth = 24;
+        r.sampleRateForAudio = edit.engine.getDeviceManager().getSampleRate();
+        r.blockSizeForAudio  = edit.engine.getDeviceManager().getBlockSize();
+        r.time = range;
+        r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (engine);
+        r.usePlugins = usePlugins;
+        r.allowedClips = clips;
+        r.createMidiFile = outputFile.hasFileExtension (".mid");
+
+        addAcidInfo (edit, r);
+        
+        if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))
+        {
+            if (useThread)
+            {
+                engine.getUIBehaviour().runTaskWithProgressBar (*task);
+            }
+            else
+            {
+                while (task->runJob() == ThreadPoolJob::jobNeedsRunningAgain)
+                {}
+            }
+        }
     }
 
     turnOffAllPlugins (edit);
@@ -457,35 +458,32 @@ juce::File Renderer::renderToFile (const String& taskDescription, const Paramete
          && r.destFile.hasWriteAccess()
          && ! r.destFile.isDirectory())
     {
-//ddd        auto& ui = r.edit->engine.getUIBehaviour();
-//
-//        if (auto node = createRenderingAudioNode (r))
-//        {
-//            RenderTask task (taskDescription, r, node);
-//
-//            ui.runTaskWithProgressBar (task);
-//
-//            turnOffAllPlugins (*r.edit);
-//
-//            if (r.destFile.existsAsFile())
-//            {
-//                if (task.errorMessage.isNotEmpty())
-//                {
-//                    r.destFile.deleteFile();
-//                    ui.showWarningMessage (task.errorMessage);
-//                    return {};
-//                }
-//
-//                return r.destFile;
-//            }
-//
-//            if (task.getCurrentTaskProgress() >= 0.9f && task.errorMessage.isNotEmpty())
-//                ui.showWarningMessage (task.errorMessage);
-//        }
-//        else
-//        {
-//            ui.showWarningMessage (TRANS("Couldn't render, as the selected region was empty"));
-//        }
+        auto& ui = r.edit->engine.getUIBehaviour();
+        
+        if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))
+        {
+            ui.runTaskWithProgressBar (*task);
+            turnOffAllPlugins (*r.edit);
+
+            if (r.destFile.existsAsFile())
+            {
+                if (task->errorMessage.isNotEmpty())
+                {
+                    r.destFile.deleteFile();
+                    ui.showWarningMessage (task->errorMessage);
+                    return {};
+                }
+
+                return r.destFile;
+            }
+
+            if (task->getCurrentTaskProgress() >= 0.9f && task->errorMessage.isNotEmpty())
+                ui.showWarningMessage (task->errorMessage);
+        }
+        else
+        {
+            ui.showWarningMessage (TRANS("Couldn't render, as the selected region was empty"));
+        }
     }
 
     return {};
@@ -550,36 +548,26 @@ Renderer::Statistics Renderer::measureStatistics (const String& taskDescription,
     Statistics result;
 
     const Edit::ScopedRenderStatus srs (edit, true);
-
     TransportControl::stopAllTransports (edit.engine, false, true);
 
     turnOffAllPlugins (edit);
 
     if (tracksToDo.countNumberOfSetBits() > 0)
     {
-//ddd        CreateAudioNodeParams cnp;
-//        cnp.allowedTracks = &tracksToDo;
-//        cnp.forRendering = true;
-//        cnp.includePlugins = true;
-//        cnp.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (edit.engine);
-//
-//        if (auto node = createRenderingNodeFromEdit (edit, cnp, true))
-//        {
-//            Parameters r (edit);
-//
-//            r.audioFormat = edit.engine.getAudioFileFormatManager().getDefaultFormat();
-//            r.blockSizeForAudio = blockSizeForAudio;
-//            r.time = range;
-//            r.addAntiDenormalisationNoise = cnp.addAntiDenormalisationNoise;
-//
-//            RenderTask task (taskDescription, r, node);
-//
-//            edit.engine.getUIBehaviour().runTaskWithProgressBar (task);
-//
-//            result.peak          = task.params.resultMagnitude;
-//            result.average       = task.params.resultRMS;
-//            result.audioDuration = task.params.resultAudioDuration;
-//        }
+        Parameters r (edit);
+        r.audioFormat = edit.engine.getAudioFileFormatManager().getDefaultFormat();
+        r.blockSizeForAudio = blockSizeForAudio;
+        r.time = range;
+        r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (edit.engine);
+        
+        if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))
+        {
+            edit.engine.getUIBehaviour().runTaskWithProgressBar (*task);
+
+            result.peak          = task->params.resultMagnitude;
+            result.average       = task->params.resultRMS;
+            result.audioDuration = task->params.resultAudioDuration;
+        }
     }
 
     turnOffAllPlugins (edit);

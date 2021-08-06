@@ -168,7 +168,7 @@ public:
         if (! rc.isContiguousWithPreviousBlock())
             plugin->updateParameterStreams (rc.getEditTime().editRange1.getStart());
 
-        plugin->applyToBufferWithAutomation (rc);
+        plugin->applyToBufferWithAutomation (createPluginRenderContext (rc));
     }
 
     void prepareForNextBlock (const AudioRenderContext& rc) override
@@ -184,6 +184,15 @@ protected:
     bool hasAudioInput = false, hasMidiInput = false, applyAntiDenormalisationNoise = false, hasInitialised = false;
     double latencySeconds = 0.0;
 
+    PluginRenderContext createPluginRenderContext (const AudioRenderContext& rc)
+    {
+        return { rc.destBuffer, rc.destBufferChannels, rc.bufferStartSample, rc.bufferNumSamples,
+                 rc.bufferForMidiMessages, rc.midiBufferOffset,
+                 rc.getEditTime().editRange1.getStart(),
+                 rc.playhead.isPlaying(), rc.playhead.isUserDragging(), rc.isRendering,
+                 false };
+    }
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginAudioNode)
 };
 

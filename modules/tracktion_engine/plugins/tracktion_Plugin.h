@@ -53,9 +53,6 @@ struct PluginRenderContext
                          double editTime, bool playing, bool scrubbing, bool rendering,
                          bool allowBypassedProcessing) noexcept;
 
-    /** Creates a PluginRenderContext from an AudioRenderContext. */
-    PluginRenderContext (const AudioRenderContext&);
-    
     /** Creates a copy of another PluginRenderContext. */
     PluginRenderContext (const PluginRenderContext&) = default;
     PluginRenderContext (PluginRenderContext&&) = default;

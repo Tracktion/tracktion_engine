@@ -12,14 +12,15 @@ namespace tracktion_engine
 {
 
 class HostedAudioDeviceType;
-/**
- The HostedAudioDeviceInterface allows an application or plugin
- to pass audio and midi buffers to the engine, rather than the engine
- directly opening the audio devices. This may be required for plugins
- or applications that run multiple copies of the engine.
 
- Don't create this class directly, it can be optained from the DeviceManager
- via getHostedAudioDeviceInterface()
+/**
+    The HostedAudioDeviceInterface allows an application or plugin
+    to pass audio and midi buffers to the engine, rather than the engine
+    directly opening the audio devices. This may be required for plugins
+    or applications that run multiple copies of the engine.
+
+    Don't create this class directly, it can be optained from the DeviceManager
+    via getHostedAudioDeviceInterface()
 */
 class HostedAudioDeviceInterface
 {
@@ -67,6 +68,9 @@ public:
     // the last call to prepareToPlay.
     void processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer&);
 
+    /** Returns true if the MidiInput device is a HostedMidiInputDevice. */
+    static bool isHostedMidiInputDevice (const MidiInputDevice&);
+    
 private:
     friend DeviceManager;
     friend class HostedAudioDevice;

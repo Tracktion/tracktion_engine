@@ -145,6 +145,9 @@ extern "C"
  #include "playback/graph/tracktion_MidiInputDeviceNode.h"
  #include "playback/graph/tracktion_MidiInputDeviceNode.cpp"
 
+#include "playback/graph/tracktion_HostedMidiInputDeviceNode.h"
+#include "playback/graph/tracktion_HostedMidiInputDeviceNode.cpp"
+
  #include "playback/graph/tracktion_WaveInputDeviceNode.h"
  #include "playback/graph/tracktion_WaveInputDeviceNode.cpp"
 

@@ -25,21 +25,6 @@ PluginRenderContext::PluginRenderContext (juce::AudioBuffer<float>* buffer,
       allowBypassedProcessing (shouldAllowBypassedProcessing)
 {}
 
-PluginRenderContext::PluginRenderContext (const AudioRenderContext& rc)
-    : destBuffer (rc.destBuffer),
-      destBufferChannels (rc.destBufferChannels),
-      bufferStartSample (rc.bufferStartSample),
-      bufferNumSamples (rc.bufferNumSamples),
-      bufferForMidiMessages (rc.bufferForMidiMessages),
-      midiBufferOffset (rc.midiBufferOffset),
-      editTime (rc.getEditTime().editRange1.getStart()),
-      isPlaying (rc.playhead.isPlaying()),
-      isScrubbing (rc.playhead.isUserDragging()),
-      isRendering (rc.isRendering)
-{
-    //ddd Remove this!
-}
-
 //==============================================================================
 Plugin::Wire::Wire (const juce::ValueTree& v, UndoManager* um)  : state (v)
 {

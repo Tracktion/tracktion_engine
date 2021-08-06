@@ -314,9 +314,9 @@ bool EditRenderJob::RenderPass::initialise()
 
             if (node)
             {
-                task.reset (new Renderer::RenderTask (desc, r,
-                                                      std::move (node), std::move (playHead), std::move (playHeadState), std::move (processState),
-                                                      &owner.progress, &owner.thumbnailToUpdate));
+                task = std::make_unique<Renderer::RenderTask> (desc, r,
+                                                               std::move (node), std::move (playHead), std::move (playHeadState), std::move (processState),
+                                                               &owner.progress, &owner.thumbnailToUpdate);
                 return task->errorMessage.isEmpty();
             }
         }

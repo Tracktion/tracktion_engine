@@ -672,12 +672,12 @@ public:
         if (recording)
             recorded.addEvent (MidiMessage (message, context.playhead.streamTimeToSourceTimeUnlooped (message.getTimeStamp())));
 
-        ScopedLock sl (nodeLock);
+        ScopedLock sl (consumerLock);
 
-        for (auto n : nodes)
-            n->handleIncomingMidiMessage (message);
+        for (auto c : consumers)
+            c->handleIncomingMidiMessage (message);
 
-        return recording || nodes.size() > 0;
+        return recording || consumers.size() > 0;
     }
 
     MidiChannel applyChannel (juce::MidiMessageSequence& sequence, MidiChannel channelToApply)
@@ -1089,14 +1089,14 @@ public:
     juce::MidiMessageSequence recorded;
 
 private:
-    CriticalSection nodeLock;
-    Array<Consumer*> nodes;
+    CriticalSection consumerLock;
+    Array<Consumer*> consumers;
     double lastEditTime = -1.0;
     double pausedTime = 0;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
 
-    void addConsumer (Consumer* node) override      { ScopedLock sl (nodeLock); nodes.addIfNotAlreadyThere (node); }
-    void removeConsumer (Consumer* node) override   { ScopedLock sl (nodeLock); nodes.removeAllInstancesOf (node); }
+    void addConsumer (Consumer* c) override      { ScopedLock sl (consumerLock); consumers.addIfNotAlreadyThere (c); }
+    void removeConsumer (Consumer* c) override   { ScopedLock sl (consumerLock); consumers.removeAllInstancesOf (c); }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiInputDeviceInstanceBase)
 };
