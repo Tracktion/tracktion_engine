@@ -132,7 +132,7 @@ Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
                                   std::atomic<float>* progressToUpdate,
                                   juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* source)
    : ThreadPoolJobWithProgress (taskDescription),
-     params (rp), isUsingGraphNode (true),
+     params (rp),
      graphNode (std::move (n)), playHead (std::move (playHead_)), playHeadState (std::move (playHeadState_)), processState (std::move (processState_)),
      progress (progressToUpdate == nullptr ? progressInternal : *progressToUpdate),
      sourceToUpdate (source)
@@ -240,32 +240,29 @@ bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
     CRASH_TRACER
     
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-    if (isUsingGraphNode)
+    if (! nodeRenderContext)
     {
-        if (! nodeRenderContext)
-        {
-            callBlocking ([&, this] { nodeRenderContext = std::make_unique<NodeRenderContext> (*this, r,
-                                                                                               std::move (graphNode),
-                                                                                               std::move (playHead),
-                                                                                               std::move (playHeadState),
-                                                                                               std::move (processState),
-                                                                                               sourceToUpdate); });
+        callBlocking ([&, this] { nodeRenderContext = std::make_unique<NodeRenderContext> (*this, r,
+                                                                                           std::move (graphNode),
+                                                                                           std::move (playHead),
+                                                                                           std::move (playHeadState),
+                                                                                           std::move (processState),
+                                                                                           sourceToUpdate); });
 
-            if (! nodeRenderContext->getStatus().wasOk())
-            {
-                errorMessage = nodeRenderContext->getStatus().getErrorMessage();
-                return true;
-            }
+        if (! nodeRenderContext->getStatus().wasOk())
+        {
+            errorMessage = nodeRenderContext->getStatus().getErrorMessage();
+            return true;
         }
-        
-        if (! nodeRenderContext->renderNextBlock (progress))
-            return false;
-        
-        nodeRenderContext.reset();
-        progress = 1.0f;
-        
-        return true;
     }
+    
+    if (! nodeRenderContext->renderNextBlock (progress))
+        return false;
+    
+    nodeRenderContext.reset();
+    progress = 1.0f;
+    
+    return true;
    #endif
 }
 
@@ -322,16 +319,13 @@ bool Renderer::RenderTask::renderMidi (Renderer::Parameters& r)
 {
     CRASH_TRACER
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-    if (isUsingGraphNode)
-    {
-        errorMessage = NodeRenderContext::renderMidi (*this, r,
-                                                      std::move (graphNode),
-                                                      std::move (playHead),
-                                                      std::move (playHeadState),
-                                                      std::move (processState),
-                                                      progress);
-        return errorMessage.isEmpty();
-    }
+    errorMessage = NodeRenderContext::renderMidi (*this, r,
+                                                  std::move (graphNode),
+                                                  std::move (playHead),
+                                                  std::move (playHeadState),
+                                                  std::move (processState),
+                                                  progress);
+    return errorMessage.isEmpty();
    #endif
 }
 

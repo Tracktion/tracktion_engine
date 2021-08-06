@@ -153,10 +153,10 @@ struct RetrospectiveRecordBuffer
         const juce::SpinLock::ScopedLockType sl (editInfoLock);
         auto& pei = editInfo[edit.getProjectItemID()];
 
-        if (context.playhead.isPlaying())
+        if (context.isPlaying())
         {
             pei.pausedTime = 0;
-            pei.lastEditTime = context.playhead.streamTimeToSourceTime (streamTime);
+            pei.lastEditTime = context.globalStreamTimeToEditTime (streamTime);
         }
         else
         {
@@ -364,8 +364,8 @@ public:
                         auto muteStart = jmax (punchInTime, loopRange.getStart());
                         auto muteEnd = endRecTime;
 
-                        if (edit.getNumCountInBeats() > 0 && context.playhead.getLoopTimes().start > loopRange.getStart())
-                            punchInTime = context.playhead.getLoopTimes().start;
+                        if (edit.getNumCountInBeats() > 0 && context.getLoopTimes().start > loopRange.getStart())
+                            punchInTime = context.getLoopTimes().start;
 
                         if (playStart < loopRange.getEnd() - 0.5)
                         {
@@ -375,9 +375,9 @@ public:
 
                         rc->muteTimes = { muteStart, muteEnd };
                     }
-                    else if (context.playhead.isLooping())
+                    else if (context.isLooping())
                     {
-                        punchInTime = context.playhead.getLoopTimes().start;
+                        punchInTime = context.getLoopTimes().start;
                     }
                 }
 
@@ -448,7 +448,7 @@ public:
 
         return context.stopRecording (*this,
                                       { recordingContext->punchTimes.getStart(),
-                                        context.playhead.getUnloopedPosition() },
+                                        context.getUnloopedPosition() },
                                       false);
     }
 
@@ -916,7 +916,7 @@ public:
             double start = 0;
             const double recordedLength = AudioFile (dstTrack->edit.engine, recordedFile).getLength();
 
-            if (context.playhead.isPlaying() || recordBuffer->wasRecentlyPlaying (edit))
+            if (context.isPlaying() || recordBuffer->wasRecentlyPlaying (edit))
             {
                 const double blockSizeSeconds = edit.engine.getDeviceManager().getBlockSizeMs() / 1000.0;
                 auto adjust = -wi.getAdjustmentSeconds() + blockSizeSeconds;
@@ -930,9 +930,9 @@ public:
                     adjust += blockSizeSeconds;
                #endif
 
-                if (context.playhead.isPlaying())
+                if (context.isPlaying())
                 {
-                    start = context.playhead.streamTimeToSourceTime (recordBuffer->lastStreamTime) - recordedLength + adjust;
+                    start = context.globalStreamTimeToEditTime (recordBuffer->lastStreamTime) - recordedLength + adjust;
                 }
                 else
                 {
@@ -943,7 +943,7 @@ public:
             }
             else
             {
-                auto position = context.playhead.getPosition();
+                auto position = context.getPosition();
 
                 if (position >= 5)
                     start = position - recordedLength;
@@ -1051,7 +1051,7 @@ public:
 
         if (recordingContext != nullptr)
         {
-            auto blockStart = context.playhead.streamTimeToSourceTimeUnlooped (streamTime);
+            auto blockStart = context.globalStreamTimeToEditTimeUnlooped (streamTime);
             const EditTimeRange blockRange (blockStart, blockStart + numSamples / recordingContext->sampleRate);
 
             muteTrackNow = recordingContext->muteTimes.overlaps (blockRange);

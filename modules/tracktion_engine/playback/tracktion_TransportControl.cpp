@@ -467,12 +467,6 @@ struct TransportControl::PlayHeadWrapper
         : transport (t)
     {}
     
-    tracktion_engine::PlayHead* getPlayHead() const
-    {
-        return transport.playbackContext ? &transport.playbackContext->playhead
-                                         : nullptr;
-    }
-
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     tracktion_graph::PlayHead* getNodePlayHead() const
     {
@@ -493,9 +487,6 @@ struct TransportControl::PlayHeadWrapper
         if (auto ph = getNodePlayHead())
             ph->play();
        #endif
-
-        if (auto ph = getPlayHead())
-            ph->play();
     }
 
     void play (EditTimeRange timeRange, bool looped)
@@ -504,9 +495,6 @@ struct TransportControl::PlayHeadWrapper
         if (auto ph = getNodePlayHead())
             ph->play (timeToSample (timeRange, getSampleRate()), looped);
        #endif
-
-        if (auto ph = getPlayHead())
-            ph->play (timeRange, looped);
     }
     
     void setRollInToLoop (double prerollStartTime)
@@ -515,9 +503,6 @@ struct TransportControl::PlayHeadWrapper
         if (auto ph = getNodePlayHead())
             ph->setRollInToLoop (timeToSample (prerollStartTime, getSampleRate()));
        #endif
-
-        if (auto ph = getPlayHead())
-            ph->setRollInToLoop (prerollStartTime);
     }
     
     void stop()
@@ -526,9 +511,6 @@ struct TransportControl::PlayHeadWrapper
         if (auto ph = getNodePlayHead())
             ph->stop();
        #endif
-        
-        if (auto ph = getPlayHead())
-            ph->stop();
     }
     
     bool isPlaying() const
@@ -537,9 +519,6 @@ struct TransportControl::PlayHeadWrapper
         if (auto ph = getNodePlayHead())
             return ph->isPlaying();
        #endif
-
-        if (auto ph = getPlayHead())
-            return ph->isPlaying();
         
         return false;
     }
@@ -561,9 +540,6 @@ struct TransportControl::PlayHeadWrapper
         if (auto ph = getNodePlayHead())
             return sampleToTime (ph->getPosition(), getSampleRate());
        #endif
-
-        if (auto ph = getPlayHead())
-            return ph->getPosition();
         
         return 0.0;
     }
@@ -574,9 +550,6 @@ struct TransportControl::PlayHeadWrapper
         if (auto ph = getNodePlayHead())
             return sampleToTime (ph->getUnloopedPosition(), getSampleRate());
        #endif
-
-        if (auto ph = getPlayHead())
-            return ph->getUnloopedPosition();
         
         return 0.0;
     }
@@ -587,9 +560,6 @@ struct TransportControl::PlayHeadWrapper
         if (getNodePlayHead() != nullptr)
             transport.playbackContext->postPosition (newPos);
        #endif
-
-        if (auto ph = getPlayHead())
-            ph->setPosition (newPos);
     }
     
     bool isLooping() const
@@ -598,9 +568,6 @@ struct TransportControl::PlayHeadWrapper
         if (auto ph = getNodePlayHead())
             return ph->isLooping();
        #endif
-
-        if (auto ph = getPlayHead())
-            return ph->isLooping();
         
         return false;
     }
@@ -611,9 +578,6 @@ struct TransportControl::PlayHeadWrapper
         if (auto ph = getNodePlayHead())
             return sampleToTime (ph->getLoopRange(), getSampleRate());
        #endif
-
-        if (auto ph = getPlayHead())
-            return ph->getLoopTimes();
         
         return {};
     }
@@ -624,9 +588,6 @@ struct TransportControl::PlayHeadWrapper
         if (auto ph = getNodePlayHead())
             ph->setLoopRange (loop, timeToSample (newRange, getSampleRate()));
        #endif
-        
-        if (auto ph = getPlayHead())
-            ph->setLoopTimes (loop, newRange);
     }
     
     void setUserIsDragging (bool isDragging)
@@ -635,9 +596,6 @@ struct TransportControl::PlayHeadWrapper
          if (auto ph = getNodePlayHead())
              ph->setUserIsDragging (isDragging);
         #endif
-         
-        if (auto ph = getPlayHead())
-            ph->setUserIsDragging (isDragging);
     }
                               
 private:
@@ -680,12 +638,6 @@ TransportControl::~TransportControl()
 
     CRASH_TRACER
     stop (false, true);
-}
-
-PlayHead* TransportControl::getCurrentPlayhead() const
-{
-    return playbackContext ? &playbackContext->playhead
-                            : nullptr;
 }
 
 //==============================================================================
@@ -967,13 +919,13 @@ void TransportControl::syncToEdit (Edit* editToSyncTo, bool isPreview)
             auto& tempo   = tempoSequence.getTempoAt (position);
             auto& timeSig = tempoSequence.getTimeSigAt (position);
 
-            auto barsBeats = tempoSequence.timeToBarsBeats (targetContext->playhead.isLooping()
-                                                              ? targetContext->playhead.getLoopTimes().start
+            auto barsBeats = tempoSequence.timeToBarsBeats (targetContext->isLooping()
+                                                              ? targetContext->getLoopTimes().start
                                                               : position);
 
             auto previousBarTime = tempoSequence.barsBeatsToTime ({ barsBeats.bars, 0.0 });
 
-            auto syncInterval = isPreview ? targetContext->playhead.getLoopTimes().getLength()
+            auto syncInterval = isPreview ? targetContext->getLoopTimes().getLength()
                                           : (60.0 / tempo.getBpm() * timeSig.numerator);
 
             playbackContext->syncToContext (targetContext, previousBarTime, syncInterval);

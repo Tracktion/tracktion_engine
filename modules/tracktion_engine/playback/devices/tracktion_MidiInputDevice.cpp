@@ -664,13 +664,13 @@ public:
         if (! recording)
             return {};
 
-        return context.stopRecording (*this, { startTime, context.playhead.getUnloopedPosition() }, false);
+        return context.stopRecording (*this, { startTime, context.getUnloopedPosition() }, false);
     }
 
     bool handleIncomingMidiMessage (const MidiMessage& message)
     {
         if (recording)
-            recorded.addEvent (MidiMessage (message, context.playhead.streamTimeToSourceTimeUnlooped (message.getTimeStamp())));
+            recorded.addEvent (MidiMessage (message, context.globalStreamTimeToEditTimeUnlooped (message.getTimeStamp())));
 
         ScopedLock sl (consumerLock);
 
@@ -1014,9 +1014,9 @@ public:
             double length = retrospective->lengthInSeconds;
             double offset = 0;
 
-            if (context.playhead.isPlaying())
+            if (context.isPlaying())
             {
-                start = jmax (0.0, context.playhead.getPosition()) - length;
+                start = jmax (0.0, context.getPosition()) - length;
             }
             else if (lastEditTime >= 0 && pausedTime < 20)
             {
@@ -1025,12 +1025,12 @@ public:
             }
             else
             {
-                auto position = context.playhead.getPosition();
+                auto position = context.getPosition();
 
                 if (position >= 5)
                     start = position - length;
                 else
-                    start = jmax (0.0, context.playhead.getPosition());
+                    start = jmax (0.0, context.getPosition());
             }
 
             if (sequence.getNumEvents() > 0)
@@ -1066,10 +1066,10 @@ public:
 
     void masterTimeUpdate (double time)
     {
-        if (context.playhead.isPlaying())
+        if (context.isPlaying())
         {
             pausedTime = 0;
-            lastEditTime = context.playhead.streamTimeToSourceTime (time);
+            lastEditTime = context.globalStreamTimeToEditTime (time);
         }
         else
         {

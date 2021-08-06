@@ -64,7 +64,7 @@ struct MidiTimecodeReader  : private MessageListener,
 
                     correctedTime = lastTime - owner.edit.getTimecodeOffset();
 
-                    const double drift = correctedTime - owner.context.playhead.getPosition();
+                    const double drift = correctedTime - owner.context.getPosition();
 
                     averageDrift = averageDrift * 0.9 + drift * 0.1;
                     ++averageDriftNumSamples;
@@ -73,7 +73,7 @@ struct MidiTimecodeReader  : private MessageListener,
                     {
                         if (std::abs (drift) > 2.0)
                         {
-                            owner.context.playhead.setPosition (correctedTime);
+                            owner.context.postPosition (correctedTime);
                             averageDrift = 0.0;
                             averageDriftNumSamples = 0;
                         }

@@ -521,7 +521,6 @@ private:
             
             tonePlugin->levelParam->addModifier (*modifier, -1.0f);
             
-            PlayHead playhead;
             edit->updateModifierTimers (0.0, 0);
             tonePlugin->levelParam->updateToFollowCurve (0.0); // Force an update of the param value for testing
             expectWithinAbsoluteError (lfoModifier->getCurrentValue(), 0.5f, 0.001f);
@@ -580,7 +579,6 @@ private:
             // This value should modify the volume to -6dB
             volPlugin->volParam->addModifier (*modifier, -0.193f);
             
-            PlayHead playhead;
             edit->updateModifierTimers (0.0, 0);
             volPlugin->updateActiveParameters();
             volPlugin->volParam->updateToFollowCurve (0.0); // Force an update of the param value for testing

@@ -348,7 +348,6 @@ namespace tracktion_engine
 
 #include "project/tracktion_ProjectItemID.h"
 
-#include "playback/tracktion_PlayHead.h"
 #include "playback/devices/tracktion_WaveDeviceDescription.h"
 
 //==============================================================================

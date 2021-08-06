@@ -998,16 +998,16 @@ void AutomatableParameter::setParameterValue (float value, bool isFollowingCurve
 
             curveHasChanged();
 
-            if (auto playhead = ed.getTransport().getCurrentPlayhead())
+            if (auto epc = ed.getTransport().getCurrentPlaybackContext())
             {
-                if (! playhead->isUserDragging())
+                if (! epc->isDragging())
                 {
                     auto numPoints = curve.getNumPoints();
                     auto& arm = ed.getAutomationRecordManager();
 
-                    if (playhead->isPlaying() && arm.isWritingAutomation())
+                    if (epc->isPlaying() && arm.isWritingAutomation())
                     {
-                        auto time = playhead->getPosition();
+                        auto time = epc->getPosition();
 
                         if (! isRecording)
                         {

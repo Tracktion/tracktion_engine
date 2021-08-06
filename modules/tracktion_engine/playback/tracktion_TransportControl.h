@@ -50,9 +50,6 @@ public:
     ~TransportControl();
 
     //==============================================================================
-    PlayHead* getCurrentPlayhead() const;
-
-    //==============================================================================
     void play (bool justSendMMCIfEnabled);
     void playSectionAndReset (EditTimeRange rangeToPlay);
 

@@ -19,8 +19,8 @@ juce::AudioPlayHead::CurrentPositionInfo getCurrentPositionInfo (Edit& edit)
     
     double currentTime = transport.getCurrentPosition();
     
-    if (auto playhead = transport.getCurrentPlayhead())
-        currentTime = playhead->getPosition();
+    if (auto epc = transport.getCurrentPlaybackContext())
+        currentTime = epc->getPosition();
     
     TempoSequencePosition position (tempoSequence);
     position.setTime (currentTime);
@@ -38,8 +38,8 @@ juce::AudioPlayHead::CurrentPositionInfo getCurrentPositionInfo (Edit& edit)
     info.isRecording = transport.isRecording();
     info.isLooping = transport.looping;
 
-    if (auto playhead = transport.getCurrentPlayhead())
-        info.isPlaying = playhead->isPlaying();
+    if (auto epc = transport.getCurrentPlaybackContext())
+        info.isPlaying = epc->isPlaying();
 
     info.timeInSamples = (int64) std::floor ((info.timeInSeconds * edit.engine.getDeviceManager().getSampleRate()) + 0.5);
 
@@ -61,7 +61,7 @@ void synchroniseEditPosition (Edit& edit, const juce::AudioPlayHead::CurrentPosi
     auto& transport = edit.getTransport();
     
     // First synchronise position
-    if (auto playhead = transport.getCurrentPlayhead())
+    if (auto epc = transport.getCurrentPlaybackContext())
     {
         // N.B. Because we don't have full tempo sequence info from the host, we have
         // to assume that the tempo is constant and just sync to that
@@ -71,24 +71,24 @@ void synchroniseEditPosition (Edit& edit, const juce::AudioPlayHead::CurrentPosi
         const double timeOffset = beatsSinceStart * secondsPerBeat;
         
         const double blockSizeInSeconds = edit.engine.getDeviceManager().getBlockSizeMs() / 1000.0;
-        const double currentPositionInSeconds = playhead->getPosition() + blockSizeInSeconds;
+        const double currentPositionInSeconds = epc->getPosition() + blockSizeInSeconds;
         // N.B we add the blockSizeInSeconds here as the playhead position will be at the end of the last block.
         // This avoids us re-syncing every block
         
         if (info.isPlaying)
         {
             if (std::abs (timeOffset - currentPositionInSeconds) > (blockSizeInSeconds / 2.0))
-                playhead->overridePosition (timeOffset);
+                epc->postPosition (timeOffset);
             
-            if (! playhead->isPlaying())
-                playhead->play();
+            if (! epc->isPlaying())
+                epc->play();
         }
         else
         {
             transport.setCurrentPosition (timeOffset);
             
-            if (! playhead->isStopped())
-                playhead->stop();
+            if (epc->isPlaying())
+                epc->stop();
         }
     }
     

@@ -48,7 +48,6 @@ public:
 
     Edit& edit;
     TransportControl& transport;
-    PlayHead playhead;
     LevelMeasurer masterLevels;
     MidiNoteDispatcher midiDispatcher;
 
@@ -87,6 +86,15 @@ public:
 
    #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     tracktion_graph::PlayHead* getNodePlayHead() const;
+
+    // These methods deal directly with the playhead so won't have any latency induced by syncing to the messaged thread.
+    bool isPlaying() const;
+    bool isLooping() const;
+    bool isDragging() const;
+
+    double getPosition() const;
+    double getUnloopedPosition() const;
+    EditTimeRange getLoopTimes() const;
     
     /** Returns the overall latency of the currently prepared graph. */
     int getLatencySamples() const;
@@ -95,6 +103,12 @@ public:
     void updateNumCPUs();
     void setSpeedCompensation (double plusOrMinus);
     void postPosition (double);
+    void play();
+    void stop();
+    
+    double globalStreamTimeToEditTime (double) const;
+    double globalStreamTimeToEditTimeUnlooped (double) const;
+    void resyncToGlobalStreamTime (juce::Range<double>);
 
     static void setThreadPoolStrategy (int);
     static int getThreadPoolStrategy();

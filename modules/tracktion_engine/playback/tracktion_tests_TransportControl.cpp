@@ -75,12 +75,12 @@ public:
             transport.stop (false, false);
 
             transport.record (false, false);
-            auto& playhead = *transport.getCurrentPlayhead();
+            auto& epc = *transport.getCurrentPlaybackContext();
             processThread.waitForThreadToStart();
-            waitUntilPlayheadPosition (playhead, 1.0);
+            waitUntilPlayheadPosition (epc, 1.0);
 
             processThread.insertImpulseIntoNextBlock();
-            waitUntilPlayheadPosition (playhead, 2.0);
+            waitUntilPlayheadPosition (epc, 2.0);
             expect (! processThread.needsToInsertImpulse(), "Impulse not inserted");
 
             transport.stop (false, true);
@@ -129,11 +129,11 @@ public:
             std::this_thread::yield();
     }
     
-    void waitUntilPlayheadPosition (const PlayHead& playhead, double time)
+    void waitUntilPlayheadPosition (const EditPlaybackContext& epc, double time)
     {
         using namespace std::chrono_literals;
         
-        while (playhead.getUnloopedPosition() < time)
+        while (epc.getUnloopedPosition() < time)
             std::this_thread::sleep_for (1ms);
     }
 

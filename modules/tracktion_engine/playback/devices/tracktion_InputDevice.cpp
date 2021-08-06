@@ -364,7 +364,7 @@ void InputDeviceInstance::prepareAndPunchRecord()
             return;
 
         auto& dm = edit.engine.getDeviceManager();
-        const double start = context.playhead.getPosition();
+        const double start = context.getPosition();
         const double sampleRate = dm.getSampleRate();
         const int blockSize = dm.getBlockSize();
 

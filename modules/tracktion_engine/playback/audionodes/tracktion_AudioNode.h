@@ -10,6 +10,9 @@
 
 #pragma once
 
+#include "tracktion_PlayHead.h"
+
+
 namespace tracktion_engine
 {
 

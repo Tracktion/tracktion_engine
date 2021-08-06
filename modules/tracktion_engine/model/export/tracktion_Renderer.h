@@ -117,7 +117,6 @@ public:
     private:
         //==============================================================================
        #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-        const bool isUsingGraphNode = false;
         std::unique_ptr<tracktion_graph::Node> graphNode;
         std::unique_ptr<tracktion_graph::PlayHead> playHead;
         std::unique_ptr<tracktion_graph::PlayHeadState> playHeadState;

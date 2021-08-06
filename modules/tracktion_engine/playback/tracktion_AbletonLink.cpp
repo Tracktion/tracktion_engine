@@ -103,8 +103,8 @@ struct AbletonLink::ImplBase  : public Timer
 
     double getCurrentPositionSeconds() const
     {
-        if (auto* playhead = transport.getCurrentPlayhead())
-            return playhead->getPosition();
+        if (auto epc = transport.getCurrentPlaybackContext())
+            return epc->getPosition();
 
         return transport.getCurrentPosition();
     }

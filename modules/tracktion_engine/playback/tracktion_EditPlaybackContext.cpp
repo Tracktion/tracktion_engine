@@ -76,15 +76,6 @@ struct EditPlaybackContext::ContextSyncroniser
         return getSyncAction (sourceTimelineTime, sourcePlayHead.isPlaying(), sourceLastInteractionTime,
                               destTimelineTime, destPlayHead.isLooping(), destLoopDuration);
     }
-    
-    SyncAndPosition getSyncAction (tracktion_engine::PlayHead& sourcePlayHead, tracktion_engine::PlayHead& destPlayHead)
-    {
-        if (! isValid)
-            return  { SyncAction::none, 0.0 };
-        
-        return getSyncAction (sourcePlayHead.getPosition(), sourcePlayHead.isPlaying(), sourcePlayHead.getLastUserInteractionTime(),
-                              destPlayHead.getPosition(), destPlayHead.isLooping(), destPlayHead.getLoopTimes().getLength());
-    }
    #endif
     
     void reset (double previousBarTime_, double syncInterval_)
@@ -219,6 +210,15 @@ private:
 
          referenceSampleRange = juce::Range<int64_t>::withStartAndLength (referenceSampleRange.getEnd(), (int64_t) numSamples);
          playHead.setReferenceSampleRange (referenceSampleRange);
+     }
+     
+     void resyncToReferenceSampleRange (juce::Range<int64_t> newReferenceSampleRange)
+     {
+         const double sampleRate = getSampleRate();
+         const auto currentPos = tracktion_graph::sampleToTime (playHead.getPosition(), sampleRate);
+         referenceSampleRange = newReferenceSampleRange;
+         playHead.setReferenceSampleRange (referenceSampleRange);
+         playHead.setPosition (tracktion_graph::timeToSample (currentPos, sampleRate));
      }
      
      void process (float** allChannels, int numChannels, int destNumSamples)
@@ -535,7 +535,7 @@ void EditPlaybackContext::createPlayAudioNodesIfNeeded (double startTime)
 
 void EditPlaybackContext::reallocate()
 {
-    createPlayAudioNodes (playhead.getPosition());
+    createPlayAudioNodes (getPosition());
 }
 
 void EditPlaybackContext::startPlaying (double start)
@@ -600,7 +600,7 @@ void EditPlaybackContext::prepareOutputDevices (double start)
     double sampleRate = dm.getSampleRate();
     int blockSize = dm.getBlockSize();
 
-    start = playhead.streamTimeToSourceTime (start);
+    start = globalStreamTimeToEditTime (start);
 
     for (auto wo : waveOutputs)
         wo->prepareToPlay (sampleRate, blockSize);
@@ -856,6 +856,39 @@ tracktion_graph::PlayHead* EditPlaybackContext::getNodePlayHead() const
                                : nullptr;
 }
 
+bool EditPlaybackContext::isPlaying() const
+{
+    return nodePlaybackContext->playHead.isPlaying();
+}
+
+bool EditPlaybackContext::isLooping() const
+{
+    return nodePlaybackContext->playHead.isLooping();
+}
+
+bool EditPlaybackContext::isDragging() const
+{
+    return nodePlaybackContext->playHead.isUserDragging();
+}
+
+double EditPlaybackContext::getPosition() const
+{
+    return tracktion_graph::sampleToTime (nodePlaybackContext->playHead.getPosition(),
+                                          nodePlaybackContext->getSampleRate());
+}
+
+double EditPlaybackContext::getUnloopedPosition() const
+{
+    return tracktion_graph::sampleToTime (nodePlaybackContext->playHead.getUnloopedPosition(),
+                                          nodePlaybackContext->getSampleRate());
+}
+
+EditTimeRange EditPlaybackContext::getLoopTimes() const
+{
+    return tracktion_graph::sampleToTime (nodePlaybackContext->playHead.getLoopRange(),
+                                          nodePlaybackContext->getSampleRate());
+}
+
 int EditPlaybackContext::getLatencySamples() const
 {
     if (! isExperimentalGraphProcessingEnabled())
@@ -893,6 +926,52 @@ void EditPlaybackContext::postPosition (double newPosition)
 {
     if (nodePlaybackContext)
         nodePlaybackContext->postPosition (newPosition);
+}
+
+void EditPlaybackContext::play()
+{
+    if (nodePlaybackContext)
+        nodePlaybackContext->playHead.play();
+}
+
+void EditPlaybackContext::stop()
+{
+    if (nodePlaybackContext)
+        nodePlaybackContext->playHead.stop();
+}
+
+double EditPlaybackContext::globalStreamTimeToEditTime (double globalStreamTime) const
+{
+    if (! nodePlaybackContext)
+        return 0.0;
+    
+    const auto sampleRate = getSampleRate();
+    const auto globalSamplePos = tracktion_graph::timeToSample (globalStreamTime, sampleRate);
+    const auto timelinePosition = nodePlaybackContext->playHead.referenceSamplePositionToTimelinePosition (globalSamplePos);
+    
+    return tracktion_graph::sampleToTime (timelinePosition, sampleRate);
+}
+
+double EditPlaybackContext::globalStreamTimeToEditTimeUnlooped (double globalStreamTime) const
+{
+    if (! nodePlaybackContext)
+        return 0.0;
+    
+    const auto sampleRate = getSampleRate();
+    const auto globalSamplePos = tracktion_graph::timeToSample (globalStreamTime, sampleRate);
+    const auto timelinePosition = nodePlaybackContext->playHead.referenceSamplePositionToTimelinePositionUnlooped (globalSamplePos);
+    
+    return tracktion_graph::sampleToTime (timelinePosition, sampleRate);
+}
+
+void EditPlaybackContext::resyncToGlobalStreamTime (juce::Range<double> globalStreamTime)
+{
+    if (! nodePlaybackContext)
+        return;
+    
+    const double sampleRate = getSampleRate();
+    const auto globalSampleRange = tracktion_graph::timeToSample (globalStreamTime, sampleRate);
+    nodePlaybackContext->resyncToReferenceSampleRange (globalSampleRange);
 }
 
 void EditPlaybackContext::setThreadPoolStrategy (int type)

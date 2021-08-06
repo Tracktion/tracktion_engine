@@ -1169,10 +1169,7 @@ void DeviceManager::audioDeviceAboutToStart (AudioIODevice* device)
     const ScopedLock sl (contextLock);
 
     for (auto c : activeContexts)
-    {
-        c->playhead.deviceManagerPositionUpdate (streamTime, streamTime + device->getCurrentBufferSizeSamples() / currentSampleRate);
-        c->playhead.setPosition (c->transport.getCurrentPosition());
-    }
+        c->resyncToGlobalStreamTime ({ streamTime, streamTime + device->getCurrentBufferSizeSamples() / currentSampleRate });
 
     if (globalOutputAudioProcessor != nullptr)
         globalOutputAudioProcessor->prepareToPlay (currentSampleRate, device->getCurrentBufferSizeSamples());
@@ -1217,6 +1214,7 @@ void DeviceManager::addContext (EditPlaybackContext* c)
     {
         const ScopedLock sl (contextLock);
         lastStreamTime = streamTime;
+        c->resyncToGlobalStreamTime ({ lastStreamTime, lastStreamTime + getBlockSize() / currentSampleRate });
         activeContexts.addIfNotAlreadyThere (c);
     }
 
