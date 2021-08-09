@@ -165,13 +165,6 @@
  #define TRACKTION_AIR_WINDOWS 0
 #endif
 
-/** Config: ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-    Enables the new tracktion_graph features
-*/
-#ifndef ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
- #define ENABLE_EXPERIMENTAL_TRACKTION_GRAPH 0
-#endif
-
 //==============================================================================
 #ifndef TRACKTION_LOG_ENABLED
  #define TRACKTION_LOG_ENABLED 1
@@ -190,12 +183,10 @@
     jassert (juce::MessageManager::getInstance()->currentThreadHasLockedMessageManager());
 
 //==============================================================================
-#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
- namespace tracktion_graph
- {
-     class PlayHead;
- }
-#endif //ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+namespace tracktion_graph
+{
+    class PlayHead;
+}
 
 //==============================================================================
 namespace tracktion_engine

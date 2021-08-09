@@ -15,13 +15,6 @@ namespace tracktion_engine
 //==============================================================================
 namespace EditPlaybackContextInternal
 {
-    std::atomic<bool>& getExperimentalGraphProcessingFlag()
-    {
-        static std::atomic<bool> enabled { false };
-        return enabled;
-    }
-
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     int& getThreadPoolStrategyType()
     {
         static int type = static_cast<int> (tracktion_graph::ThreadPoolStrategy::realTime);
@@ -33,7 +26,6 @@ namespace EditPlaybackContextInternal
         static bool usePool = false;
         return usePool;
     }
-   #endif
 }
 
 
@@ -59,7 +51,6 @@ struct EditPlaybackContext::ContextSyncroniser
     };
     
     //==============================================================================
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     SyncAndPosition getSyncAction (tracktion_graph::PlayHead& sourcePlayHead, tracktion_graph::PlayHead& destPlayHead,
                                    double sampleRate)
     {
@@ -76,7 +67,6 @@ struct EditPlaybackContext::ContextSyncroniser
         return getSyncAction (sourceTimelineTime, sourcePlayHead.isPlaying(), sourceLastInteractionTime,
                               destTimelineTime, destPlayHead.isLooping(), destLoopDuration);
     }
-   #endif
     
     void reset (double previousBarTime_, double syncInterval_)
     {
@@ -146,7 +136,6 @@ private:
 
 //==============================================================================
 //==============================================================================
-#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
  struct EditPlaybackContext::NodePlaybackContext
  {
      NodePlaybackContext (size_t numThreads, size_t maxNumThreadsToUse)
@@ -299,7 +288,6 @@ private:
              interpolators.push_back (std::make_unique<juce::LagrangeInterpolator>());
      }
 };
-#endif
 
 //==============================================================================
 EditPlaybackContext::ScopedDeviceListReleaser::ScopedDeviceListReleaser (EditPlaybackContext& e, bool reallocate)
@@ -332,14 +320,9 @@ EditPlaybackContext::EditPlaybackContext (TransportControl& tc)
 
     if (edit.shouldPlay())
     {
-        #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-        if (isExperimentalGraphProcessingEnabled())
-        {
-            nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio(),
-                                                                         size_t (edit.getIsPreviewEdit() ? 0 : juce::SystemStats::getNumCpus() - 1));
-            contextSyncroniser = std::make_unique<ContextSyncroniser>();
-        }
-        #endif
+        nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio(),
+                                                                     size_t (edit.getIsPreviewEdit() ? 0 : juce::SystemStats::getNumCpus() - 1));
+        contextSyncroniser = std::make_unique<ContextSyncroniser>();
 
         // This ensures the referenceSampleRange of the new context has been synced
         edit.engine.getDeviceManager().addContext (this);
@@ -460,7 +443,6 @@ void EditPlaybackContext::clearNodes()
     priorityBooster = nullptr;
     isAllocated = false;
 
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     // Because the nodePlaybackContext is lock-free, it doesn't immediately delete its current node
     // so we need to explicity call clearNode
     if (nodePlaybackContext)
@@ -469,10 +451,8 @@ void EditPlaybackContext::clearNodes()
         nodePlaybackContext->clearNode();
         nodePlaybackContext->setNumThreads (0);
     }
-   #endif
 }
 
-#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
 void EditPlaybackContext::createNode()
 {
     CRASH_TRACER
@@ -515,15 +495,10 @@ void EditPlaybackContext::createNode()
     if (hasTempoChanged)
         lastTempoSections = tempoSections;
 }
-#endif
 
 void EditPlaybackContext::createPlayAudioNodes (double startTime)
 {
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-    if (isExperimentalGraphProcessingEnabled())
-        createNode();
-   #endif
-    
+    createNode();
     startPlaying (startTime);
 }
 
@@ -713,7 +688,6 @@ Array<InputDeviceInstance*> EditPlaybackContext::getAllInputs()
 }
 
 //==============================================================================
-#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
 void EditPlaybackContext::fillNextNodeBlock (float** allChannels, int numChannels, int numSamples)
 {
     CRASH_TRACER
@@ -761,7 +735,6 @@ void EditPlaybackContext::fillNextNodeBlock (float** allChannels, int numChannel
     const double editTime = tracktion_graph::sampleToTime (nodePlaybackContext->playHead.getPosition(), nodePlaybackContext->getSampleRate());
     midiDispatcher.dispatchPendingMessagesForDevices (editTime);
 }
-#endif
 
 InputDeviceInstance* EditPlaybackContext::getInputFor (InputDevice* d) const
 {
@@ -801,13 +774,11 @@ void EditPlaybackContext::syncToContext (EditPlaybackContext* newContextToSyncTo
     syncInterval    = newSyncInterval;
     hasSynced       = false;
 
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     if (newContextToSyncTo != nullptr && newContextToSyncTo->getNodePlayHead() != nullptr)
     {
         nodeContextToSyncTo = newContextToSyncTo;
         contextSyncroniser->reset (previousBarTime, syncInterval);
     }
-   #endif
 }
 
 static bool hasCheckedDenormNoise = false;
@@ -832,26 +803,9 @@ void EditPlaybackContext::setAddAntiDenormalisationNoise (Engine& e, bool b)
 }
 
 //==============================================================================
-void EditPlaybackContext::enableExperimentalGraphProcessing (bool enable)
-{
-    EditPlaybackContextInternal::getExperimentalGraphProcessingFlag() = enable;
-}
-
-bool EditPlaybackContext::isExperimentalGraphProcessingEnabled()
-{
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-    return EditPlaybackContextInternal::getExperimentalGraphProcessingFlag();
-   #else
-    return false;
-   #endif
-}
-
-#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
 tracktion_graph::PlayHead* EditPlaybackContext::getNodePlayHead() const
 {
-    if (! isExperimentalGraphProcessingEnabled())
-        return nullptr;
-    
+    //ddd can this be removed?
     return nodePlaybackContext ? &nodePlaybackContext->playHead
                                : nullptr;
 }
@@ -891,9 +845,6 @@ EditTimeRange EditPlaybackContext::getLoopTimes() const
 
 int EditPlaybackContext::getLatencySamples() const
 {
-    if (! isExperimentalGraphProcessingEnabled())
-        return 0;
-    
     return nodePlaybackContext ? nodePlaybackContext->getLatencySamples()
                                : 0;
 }
@@ -995,8 +946,6 @@ void EditPlaybackContext::enablePooledMemory (bool enable)
 {
     EditPlaybackContextInternal::getPooledMemoryFlag() = enable;
 }
-
-#endif
 
 //==============================================================================
 #if JUCE_WINDOWS

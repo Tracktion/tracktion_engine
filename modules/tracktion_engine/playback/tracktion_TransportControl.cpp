@@ -467,7 +467,6 @@ struct TransportControl::PlayHeadWrapper
         : transport (t)
     {}
     
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     tracktion_graph::PlayHead* getNodePlayHead() const
     {
         return transport.playbackContext ? transport.playbackContext->getNodePlayHead()
@@ -479,46 +478,35 @@ struct TransportControl::PlayHeadWrapper
         return transport.playbackContext ? transport.playbackContext->getSampleRate()
                                          : 44100.0;
     }
-   #endif
 
     void play()
     {
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         if (auto ph = getNodePlayHead())
             ph->play();
-       #endif
     }
 
     void play (EditTimeRange timeRange, bool looped)
     {
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         if (auto ph = getNodePlayHead())
             ph->play (timeToSample (timeRange, getSampleRate()), looped);
-       #endif
     }
     
     void setRollInToLoop (double prerollStartTime)
     {
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         if (auto ph = getNodePlayHead())
             ph->setRollInToLoop (timeToSample (prerollStartTime, getSampleRate()));
-       #endif
     }
     
     void stop()
     {
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         if (auto ph = getNodePlayHead())
             ph->stop();
-       #endif
     }
     
     bool isPlaying() const
     {
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         if (auto ph = getNodePlayHead())
             return ph->isPlaying();
-       #endif
         
         return false;
     }
@@ -526,76 +514,60 @@ struct TransportControl::PlayHeadWrapper
     /** Returns the transport position to show in the UI, taking in to account any latency. */
     double getLiveTransportPosition() const
     {
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         if (getNodePlayHead() != nullptr && transport.playbackContext != nullptr && transport.playbackContext->isPlaybackGraphAllocated())
             return transport.playbackContext->getAudibleTimelineTime();
-       #endif
 
         return getPosition();
     }
 
     double getPosition() const
     {
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         if (auto ph = getNodePlayHead())
             return sampleToTime (ph->getPosition(), getSampleRate());
-       #endif
         
         return 0.0;
     }
     
     double getUnloopedPosition() const
     {
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         if (auto ph = getNodePlayHead())
             return sampleToTime (ph->getUnloopedPosition(), getSampleRate());
-       #endif
         
         return 0.0;
     }
     
     void setPosition (double newPos)
     {
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         if (getNodePlayHead() != nullptr)
             transport.playbackContext->postPosition (newPos);
-       #endif
     }
     
     bool isLooping() const
     {
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         if (auto ph = getNodePlayHead())
             return ph->isLooping();
-       #endif
         
         return false;
     }
     
     EditTimeRange getLoopTimes() const
     {
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         if (auto ph = getNodePlayHead())
             return sampleToTime (ph->getLoopRange(), getSampleRate());
-       #endif
         
         return {};
     }
     
     void setLoopTimes (bool loop, EditTimeRange newRange)
     {
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         if (auto ph = getNodePlayHead())
             ph->setLoopRange (loop, timeToSample (newRange, getSampleRate()));
-       #endif
     }
     
     void setUserIsDragging (bool isDragging)
     {
-        #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
          if (auto ph = getNodePlayHead())
              ph->setUserIsDragging (isDragging);
-        #endif
     }
                               
 private:
@@ -1296,17 +1268,7 @@ void TransportControl::performPlay()
             playHeadWrapper->play ({ transportState->startTime, transportState->endTime }, looping);
 
             if (looping)
-            {
                 playHeadWrapper->setPosition (position);
-            }
-            else if (transportState->startTime < 0.2)
-            {
-                // if we're playing from near time = 0, roll back a fraction so we
-                // don't miss the first block - this won't be noticable further along
-                // in the edit.
-                if (! EditPlaybackContext::isExperimentalGraphProcessingEnabled())
-                    playHeadWrapper->setPosition (transportState->startTime - 0.2);
-            }
         }
         else
         {

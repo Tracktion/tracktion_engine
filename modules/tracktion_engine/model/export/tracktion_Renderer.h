@@ -8,22 +8,18 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
 namespace tracktion_graph
 {
     class Node;
     class PlayHead;
     class PlayHeadState;
 }
-#endif
 
 namespace tracktion_engine
 {
 
-#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
 class NodeRenderContext;
 struct ProcessState;
-#endif
 
 //==============================================================================
 /**
@@ -88,7 +84,6 @@ public:
     class RenderTask    : public ThreadPoolJobWithProgress
     {
     public:
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         RenderTask (const juce::String& taskDescription,
                     const Renderer::Parameters&,
                     std::unique_ptr<tracktion_graph::Node>,
@@ -97,7 +92,6 @@ public:
                     std::unique_ptr<ProcessState>,
                     std::atomic<float>* progressToUpdate,
                     juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver*);
-       #endif
 
         ~RenderTask() override;
 
@@ -116,13 +110,11 @@ public:
 
     private:
         //==============================================================================
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         std::unique_ptr<tracktion_graph::Node> graphNode;
         std::unique_ptr<tracktion_graph::PlayHead> playHead;
         std::unique_ptr<tracktion_graph::PlayHeadState> playHeadState;
         std::unique_ptr<ProcessState> processState;
         std::unique_ptr<NodeRenderContext> nodeRenderContext;
-       #endif
 
         std::atomic<float> progressInternal { 0.0f };
         std::atomic<float>& progress;

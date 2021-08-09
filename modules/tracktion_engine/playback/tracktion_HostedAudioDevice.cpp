@@ -215,16 +215,13 @@ private:
             // N.B. This assumes that the number of samples processed per block is constant.
             // I.e. that there is no speed compensation set (which shouldn't be the case when
             // running as a plugin)
-            if (auto playHead = context.getNodePlayHead())
+            for (const MidiMessageMetadata mmm : midi)
             {
-                for (const MidiMessageMetadata mmm : midi)
-                {
-                    const auto referenceTime = tracktion_graph::sampleToTime (mmm.samplePosition, sampleRate);
+                const auto referenceTime = tracktion_graph::sampleToTime (mmm.samplePosition, sampleRate);
 
-                    auto msg = mmm.getMessage();
-                    msg.setTimeStamp (referenceTime);
-                    handleIncomingMidiMessage (std::move (msg));
-                }
+                auto msg = mmm.getMessage();
+                msg.setTimeStamp (referenceTime);
+                handleIncomingMidiMessage (std::move (msg));
             }
         }
         

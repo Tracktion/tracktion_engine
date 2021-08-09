@@ -122,7 +122,6 @@ static void addAcidInfo (Edit& edit, Renderer::Parameters& r)
 }
 
 //==============================================================================
-#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
 Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
                                   const Renderer::Parameters& rp,
                                   std::unique_ptr<tracktion_graph::Node> n,
@@ -138,7 +137,6 @@ Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
      sourceToUpdate (source)
 {
 }
-#endif
 
 Renderer::RenderTask::~RenderTask()
 {
@@ -239,7 +237,6 @@ bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
 {
     CRASH_TRACER
     
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     if (! nodeRenderContext)
     {
         callBlocking ([&, this] { nodeRenderContext = std::make_unique<NodeRenderContext> (*this, r,
@@ -263,7 +260,6 @@ bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
     progress = 1.0f;
     
     return true;
-   #endif
 }
 
 void Renderer::RenderTask::flushAllPlugins (const Plugin::Array& plugins,
@@ -318,7 +314,6 @@ void Renderer::RenderTask::setAllPluginsRealtime (const Plugin::Array& plugins, 
 bool Renderer::RenderTask::renderMidi (Renderer::Parameters& r)
 {
     CRASH_TRACER
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     errorMessage = NodeRenderContext::renderMidi (*this, r,
                                                   std::move (graphNode),
                                                   std::move (playHead),
@@ -326,7 +321,6 @@ bool Renderer::RenderTask::renderMidi (Renderer::Parameters& r)
                                                   std::move (processState),
                                                   progress);
     return errorMessage.isEmpty();
-   #endif
 }
 
 bool Renderer::RenderTask::addMidiMetaDataAndWriteToFile (juce::File destFile, juce::MidiMessageSequence outputSequence, const TempoSequence& tempoSequence)

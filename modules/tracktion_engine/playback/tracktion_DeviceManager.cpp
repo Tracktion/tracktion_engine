@@ -1095,11 +1095,7 @@ void DeviceManager::audioDeviceIOCallback (const float** inputChannelData, int n
                 blockStreamTime = { streamTime, streamTime + blockLength };
 
                 for (auto c : activeContexts)
-                {
-                   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
                     c->fillNextNodeBlock (outputChannelData, totalNumOutputChannels, numSamples);
-                   #endif
-                }
             }
 
             for (int i = totalNumOutputChannels; --i >= 0;)
@@ -1196,13 +1192,10 @@ void DeviceManager::audioDeviceStopped()
 void DeviceManager::updateNumCPUs()
 {
     const ScopedLock sl (deviceManager.getAudioCallbackLock());
-    
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     const ScopedLock cl (contextLock);
 
     for (auto c : activeContexts)
         c->updateNumCPUs();
-   #endif
 }
 
 void DeviceManager::addContext (EditPlaybackContext* c)

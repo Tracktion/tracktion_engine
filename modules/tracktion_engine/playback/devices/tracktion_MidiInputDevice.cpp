@@ -730,10 +730,8 @@ public:
                                                         : applyChannel (recorded, mi.getChannelToUse());
         auto timeAdjustMs = mi.getManualAdjustmentMs();
         
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         if (context.getNodePlayHead() != nullptr)
             timeAdjustMs -= 1000.0 * tracktion_graph::sampleToTime (context.getLatencySamples(), edit.engine.getDeviceManager().getSampleRate());
-       #endif
         
         applyTimeAdjustment (recorded, timeAdjustMs);
 
@@ -1000,10 +998,8 @@ public:
                                                             : applyChannel (sequence, mi.getChannelToUse());
             auto timeAdjustMs = mi.getManualAdjustmentMs();
             
-           #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
             if (context.getNodePlayHead() != nullptr)
                 timeAdjustMs -= 1000.0 * tracktion_graph::sampleToTime (context.getLatencySamples(), edit.engine.getDeviceManager().getSampleRate());
-           #endif
             
             applyTimeAdjustment (sequence, timeAdjustMs);
 

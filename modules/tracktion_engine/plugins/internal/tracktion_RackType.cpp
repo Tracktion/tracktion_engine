@@ -2236,9 +2236,7 @@ void RackType::triggerUpdate()
     countInstancesInEdit();
     renderContextBuilder.triggerAsyncUpdate();
     
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     edit.restartPlayback();
-   #endif
 }
 
 void RackType::updateRenderContext()
