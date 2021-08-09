@@ -633,11 +633,6 @@ void DeviceManager::rebuildWaveDeviceList()
     deviceManager.addAudioCallback (this);
 }
 
-void DeviceManager::setSpeedCompensation (double plusOrMinus)
-{
-    speedCompensation = jlimit (-10.0, 10.0, plusOrMinus);
-}
-
 void DeviceManager::loadSettings()
 {
     String error;
@@ -1088,9 +1083,6 @@ void DeviceManager::audioDeviceIOCallback (const float** inputChannelData, int n
                         FloatVectorOperations::clear (dest, numSamples);
 
                 double blockLength = numSamples / currentSampleRate;
-
-                if (speedCompensation != 0.0)
-                    blockLength *= (1.0 + (speedCompensation * 0.01));
 
                 blockStreamTime = { streamTime, streamTime + blockLength };
 

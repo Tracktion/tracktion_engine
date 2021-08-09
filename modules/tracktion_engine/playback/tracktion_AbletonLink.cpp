@@ -160,8 +160,6 @@ struct AbletonLink::ImplBase  : public Timer
 
     void setSpeedCompensation (double speedComp)
     {
-        transport.engine.getDeviceManager().setSpeedCompensation (speedComp);
-
          if (auto epc = transport.getCurrentPlaybackContext())
              epc->setSpeedCompensation (speedComp);
     }
