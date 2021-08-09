@@ -193,8 +193,6 @@ private:
         EngineWrapper()
             : audioInterface (engine.getDeviceManager().getHostedAudioDeviceInterface())
         {
-            te::EditPlaybackContext::enableExperimentalGraphProcessing (true);
-            
             JUCE_ASSERT_MESSAGE_THREAD
             audioInterface.initialise ({});
 
