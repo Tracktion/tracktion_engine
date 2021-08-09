@@ -149,7 +149,7 @@ inline void  AudioBufferPool::setCapacity (size_t maxCapacity)
     if (maxCapacity <= capacity)
         return;
     
-    fifo = std::make_unique<farbot::fifo<choc::buffer::ChannelArrayBuffer<float>>> (maxCapacity);
+    fifo = std::make_unique<farbot::fifo<choc::buffer::ChannelArrayBuffer<float>>> ((int) maxCapacity);
     capacity = maxCapacity;
 }
 
