@@ -86,6 +86,11 @@ public:
     public:
         RenderTask (const juce::String& taskDescription,
                     const Renderer::Parameters&,
+                    std::atomic<float>* progressToUpdate,
+                    juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver*);
+        
+        RenderTask (const juce::String& taskDescription,
+                    const Renderer::Parameters&,
                     std::unique_ptr<tracktion_graph::Node>,
                     std::unique_ptr<tracktion_graph::PlayHead>,
                     std::unique_ptr<tracktion_graph::PlayHeadState>,
@@ -137,13 +142,13 @@ public:
     static void turnOffAllPlugins (Edit&);
 
     //==============================================================================
-    /** */
+    /** Renders an Edit to a file and creates a new ProjectItem for it. */
     static ProjectItem::Ptr renderToProjectItem (const juce::String& taskDescription, const Parameters& params);
 
-    /** */
+    /** Renders an Edit to a file given by the Parameters. */
     static juce::File renderToFile (const juce::String& taskDescription, const Parameters& params);
 
-    /** */
+    /** Renders an Edit to a file within the given time range and the track indicies described by the BigInteger. */
     static bool renderToFile (const juce::String& taskDescription,
                               const juce::File& outputFile,
                               Edit& edit,

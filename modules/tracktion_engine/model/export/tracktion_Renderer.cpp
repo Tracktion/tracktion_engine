@@ -20,7 +20,7 @@ void Renderer::turnOffAllPlugins (Edit& edit)
 
 namespace render_utils
 {
-    Array<Track*> getTrackBitset (Edit& edit, juce::BigInteger tracks)
+    Array<Track*> getTracksFromBitset (Edit& edit, juce::BigInteger tracks)
     {
         Array<Track*> trackPtrs;
 
@@ -37,7 +37,7 @@ namespace render_utils
                                                             std::atomic<float>* progressToUpdate,
                                                             juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* thumbnail)
     {
-        auto tracksToDo = getTrackBitset (*r.edit, r.tracksToDo);
+        auto tracksToDo = getTracksFromBitset (*r.edit, r.tracksToDo);
         
         // Initialise playhead and continuity
         auto playHead = std::make_unique<tracktion_graph::PlayHead>();
@@ -122,6 +122,36 @@ static void addAcidInfo (Edit& edit, Renderer::Parameters& r)
 }
 
 //==============================================================================
+Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
+                                  const Renderer::Parameters& r,
+                                  std::atomic<float>* progressToUpdate,
+                                  juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* source)
+    : ThreadPoolJobWithProgress (taskDescription),
+      params (r),
+      progress (progressToUpdate == nullptr ? progressInternal : *progressToUpdate),
+      sourceToUpdate (source)
+{
+    auto tracksToDo = render_utils::getTracksFromBitset (*r.edit, r.tracksToDo);
+    
+    // Initialise playhead and continuity
+    playHead = std::make_unique<tracktion_graph::PlayHead>();
+    playHeadState = std::make_unique<tracktion_graph::PlayHeadState> (*playHead);
+    processState = std::make_unique<ProcessState> (*playHeadState);
+
+    CreateNodeParams cnp { *processState };
+    cnp.sampleRate = r.sampleRateForAudio;
+    cnp.blockSize = r.blockSizeForAudio;
+    cnp.allowedClips = r.allowedClips.isEmpty() ? nullptr : &r.allowedClips;
+    cnp.allowedTracks = r.tracksToDo.isZero() ? nullptr : &tracksToDo;
+    cnp.forRendering = true;
+    cnp.includePlugins = r.usePlugins;
+    cnp.includeMasterPlugins = r.useMasterPlugins;
+    cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
+    cnp.includeBypassedPlugins = ! r.engine->getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph();
+
+    callBlocking ([this, &r, &cnp] { graphNode = createNodeForEdit (*r.edit, cnp); });
+}
+
 Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
                                   const Renderer::Parameters& rp,
                                   std::unique_ptr<tracktion_graph::Node> n,
