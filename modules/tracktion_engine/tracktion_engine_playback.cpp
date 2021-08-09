@@ -46,8 +46,8 @@ extern "C"
 
 #include <tracktion_graph/tracktion_graph.h>
 
-#include <tracktion_graph/tracktion_graph/tracktion_graph_tests_Utilities.h>
-#include <tracktion_graph/tracktion_graph/tracktion_graph_tests_TestNodes.h>
+#include <tracktion_graph/tracktion_graph/tracktion_graph_TestUtilities.h>
+#include <tracktion_graph/tracktion_graph/tracktion_graph_TestNodes.h>
 
 #include "tracktion_engine.h"
 
@@ -63,6 +63,8 @@ extern "C"
 #include "playback/graph/tracktion_TracktionEngineNode.cpp"
 #include "playback/graph/tracktion_TracktionNodePlayer.h"
 #include "playback/graph/tracktion_MultiThreadedNodePlayer.h"
+
+#include "playback/graph/tracktion_BenchmarkUtilities.h"
 
 #include "playback/graph/tracktion_TrackMutingNode.h"
 
@@ -157,9 +159,9 @@ extern "C"
 
 #include "playback/graph/tracktion_NodeRendering.test.cpp"
 
-#include "playback/graph/tracktion_tests_WaveNode.cpp"
-#include "playback/graph/tracktion_tests_MidiNode.cpp"
-#include "playback/graph/tracktion_tests_RackNode.cpp"
+#include "playback/graph/tracktion_WaveNode.test.cpp"
+#include "playback/graph/tracktion_MidiNode.test.cpp"
+#include "playback/graph/tracktion_RackBenchmarks.test.cpp"
 
 using namespace juce;
 
@@ -168,7 +170,7 @@ using namespace juce;
 #include "playback/tracktion_EditInputDevices.cpp"
 #include "playback/tracktion_LevelMeasurer.cpp"
 #include "playback/tracktion_MidiNoteDispatcher.cpp"
-#include "playback/tracktion_tests_TransportControl.cpp"
+#include "playback/tracktion_TransportControl.test.cpp"
 #include "playback/tracktion_TransportControl.cpp"
 #include "playback/tracktion_AbletonLink.cpp"
 

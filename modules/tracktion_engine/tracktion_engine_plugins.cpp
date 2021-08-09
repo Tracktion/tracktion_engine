@@ -28,8 +28,8 @@
 
 #include <tracktion_graph/tracktion_graph.h>
 
-#include <tracktion_graph/tracktion_graph/tracktion_graph_tests_Utilities.h>
-#include <tracktion_graph/tracktion_graph/tracktion_graph_tests_TestNodes.h>
+#include <tracktion_graph/tracktion_graph/tracktion_graph_TestUtilities.h>
+#include <tracktion_graph/tracktion_graph/tracktion_graph_TestNodes.h>
 
 #include "tracktion_engine.h"
 
@@ -63,7 +63,7 @@ using namespace juce;
 #include "plugins/internal/tracktion_TextPlugin.cpp"
 #include "plugins/internal/tracktion_VCA.cpp"
 #include "plugins/internal/tracktion_VolumeAndPan.cpp"
-#include "plugins/internal/tracktion_tests_InternalPlugins.cpp"
+#include "plugins/internal/tracktion_InternalPlugins.test.cpp"
 
 #include "plugins/effects/tracktion_Chorus.cpp"
 #include "plugins/effects/tracktion_Compressor.cpp"
@@ -83,6 +83,6 @@ using namespace juce;
 
 #include "plugins/ARA/tracktion_MelodyneFileReader.cpp"
 
-#include "plugins/tracktion_tests_Plugins.cpp"
+#include "plugins/tracktion_Plugins.test.cpp"
 
 #endif

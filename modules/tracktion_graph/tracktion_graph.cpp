@@ -27,14 +27,14 @@
 #include "tracktion_graph.h"
 
 //==============================================================================
-#include "tracktion_graph/tracktion_graph_tests_Utilities.h"
-#include "tracktion_graph/tracktion_graph_tests_TestNodes.h"
-#include "tracktion_graph/tracktion_graph_tests_Utilities.cpp"
+#include "tracktion_graph/tracktion_graph_TestUtilities.h"
+#include "tracktion_graph/tracktion_graph_TestNodes.h"
+#include "tracktion_graph/tracktion_graph_TestUtilities.cpp"
 
 #include "tracktion_graph/tracktion_graph_PlayHeadState.cpp"
 #include "tracktion_graph/tracktion_graph_PlayHead.cpp"
-#include "tracktion_graph/tracktion_graph_tests_Node.cpp"
-#include "tracktion_graph/tracktion_graph_tests_NodeVisiting.cpp"
+#include "tracktion_graph/tracktion_graph_Node.test.cpp"
+#include "tracktion_graph/tracktion_graph_NodeVisiting.test.cpp"
 #include "tracktion_graph/tracktion_graph_Utility.cpp"
 
 #include "tracktion_graph/tracktion_graph_MultiThreadedNodePlayer.cpp"
