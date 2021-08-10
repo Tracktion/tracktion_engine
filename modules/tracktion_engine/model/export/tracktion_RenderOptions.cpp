@@ -89,7 +89,7 @@ void RenderOptions::loadFromUserSettings()
         if (format != wav || format != aiff)
             format = wav;
 
-        sampleRate        = storage.getProperty (SettingID::trackRenderSampRate, 44100.0);
+        sampleRate        = engine.getDeviceManager().getSampleRate();
         bitDepth          = storage.getProperty (SettingID::trackRenderBits, 16);
         usePlugins        = storage.getProperty (SettingID::bypassFilters, true);
 
@@ -107,7 +107,7 @@ void RenderOptions::loadFromUserSettings()
         peakLevelDb       = storage.getProperty (SettingID::renderPeakLevelDb, 0.0);
         removeSilence     = storage.getProperty (SettingID::renderTrimSilence, false);
         stereo            = storage.getProperty (SettingID::renderStereo, true);
-        sampleRate        = storage.getProperty (SettingID::renderSampRate, 44100);
+        sampleRate        = engine.getDeviceManager().getSampleRate();
         bitDepth          = storage.getProperty (SettingID::renderBits, 16);
         dither            = storage.getProperty (SettingID::renderDither, true);
         qualityIndex      = storage.getProperty (SettingID::quality, 5);
@@ -117,7 +117,7 @@ void RenderOptions::loadFromUserSettings()
     }
     else if (isEditClipRender())
     {
-        sampleRate        = storage.getProperty (SettingID::editClipRenderSampRate, 44100.0);
+        sampleRate        = engine.getDeviceManager().getSampleRate();
         bitDepth          = storage.getProperty (SettingID::editClipRenderBits, 16);
         dither            = storage.getProperty (SettingID::editClipRenderDither, true);
         realTime          = storage.getProperty (SettingID::editClipRealtime, false);
@@ -226,6 +226,7 @@ void RenderOptions::relinkCachedValues (UndoManager* um)
     format.referTo (state, IDs::renderFormat, um, wav);
 
     stereo.referTo (state, IDs::renderStereo, um, true);
+
     sampleRate.referTo (state, IDs::renderSampleRate, um, 44100.0);
     bitDepth.referTo (state, IDs::renderBitDepth, um, 32);
     qualityIndex.referTo (state, IDs::renderQualityIndex, um, 5);
@@ -248,6 +249,7 @@ void RenderOptions::relinkCachedValues (UndoManager* um)
     reverseRender.referTo (state, IDs::reverseRender, um, false);
     addMetadata.referTo (state, IDs::renderAddMetadata, um, false);
 
+    sampleRate = engine.getDeviceManager().getSampleRate();
     tracks = EditItemID::parseStringList (tracksProperty);
     updateHash();
 }
@@ -916,7 +918,7 @@ int64 RenderOptions::getTracksHash() const
     int64 tracksHash = 0;
 
     for (auto& t : tracks)
-        tracksHash ^= t.getRawID(); // TODO: this will probably be buggy if the IDs are all low sequential integers!
+        tracksHash ^= static_cast<int64> (t.getRawID()); // TODO: this will probably be buggy if the IDs are all low sequential integers!
 
     return tracksHash;
 }

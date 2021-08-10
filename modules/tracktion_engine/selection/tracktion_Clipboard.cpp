@@ -1217,10 +1217,11 @@ Clipboard::MIDIEvents::~MIDIEvents() {}
 std::pair<juce::Array<MidiNote*>, juce::Array<MidiControllerEvent*>> Clipboard::MIDIEvents::pasteIntoClip (MidiClip& clip,
                                                                                                            const juce::Array<MidiNote*>& selectedNotes,
                                                                                                            const juce::Array<MidiControllerEvent*>& selectedEvents,
-                                                                                                           double cursorPosition, const std::function<double(double)>& snapBeat) const
+                                                                                                           double cursorPosition, const std::function<double(double)>& snapBeat,
+                                                                                                           int destController) const
 {
     auto notesAdded         = pasteNotesIntoClip (clip, selectedNotes, cursorPosition, snapBeat);
-    auto controllersAdded   = pasteControllersIntoClip (clip, selectedNotes, selectedEvents, cursorPosition, snapBeat);
+    auto controllersAdded   = pasteControllersIntoClip (clip, selectedNotes, selectedEvents, cursorPosition, snapBeat, destController);
 
     return { notesAdded, controllersAdded };
 }
@@ -1295,7 +1296,8 @@ juce::Array<MidiNote*> Clipboard::MIDIEvents::pasteNotesIntoClip (MidiClip& clip
 juce::Array<MidiControllerEvent*> Clipboard::MIDIEvents::pasteControllersIntoClip (MidiClip& clip,
                                                                                    const juce::Array<MidiNote*>& selectedNotes,
                                                                                    const juce::Array<MidiControllerEvent*>& selectedEvents,
-                                                                                   double cursorPosition, const std::function<double(double)>& snapBeat) const
+                                                                                   double cursorPosition, const std::function<double(double)>& snapBeat,
+                                                                                   int destController) const
 {
     if (controllers.empty())
         return {};
@@ -1305,7 +1307,19 @@ juce::Array<MidiControllerEvent*> Clipboard::MIDIEvents::pasteControllersIntoCli
     for (auto& e : controllers)
         midiEvents.add (MidiControllerEvent (e));
 
-    auto controllerType = midiEvents.getReference (0).getType();
+    if (notes.size() > 0)
+        destController = -1;
+
+    Array<int> controllerTypes;
+    for (auto& e : midiEvents)
+        controllerTypes.addIfNotAlreadyThere (e.getType());
+
+    if (controllerTypes.size() > 1)
+        destController = -1;
+
+    if (destController != -1)
+        for (auto& e : midiEvents)
+            e.setType (destController, nullptr);
 
     auto beatRange = juce::Range<double>::withStartAndLength (midiEvents.getReference(0).getBeatPosition(), 0.0);
 
@@ -1363,7 +1377,7 @@ juce::Array<MidiControllerEvent*> Clipboard::MIDIEvents::pasteControllersIntoCli
 
     Array<ValueTree> itemsToRemove;
     for (auto evt : sequence.getControllerEvents())
-        if (evt->getType() == controllerType && evt->getBeatPosition() >= beatRange.getStart() + deltaBeats && evt->getBeatPosition() <= beatRange.getEnd() + deltaBeats)
+        if (controllerTypes.contains (evt->getType()) && evt->getBeatPosition() >= beatRange.getStart() + deltaBeats && evt->getBeatPosition() <= beatRange.getEnd() + deltaBeats)
             itemsToRemove.add (evt->state);
 
     for (auto& v : itemsToRemove)

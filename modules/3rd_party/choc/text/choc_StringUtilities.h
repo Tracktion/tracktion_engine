@@ -19,7 +19,6 @@
 #ifndef CHOC_STRING_UTILS_HEADER_INCLUDED
 #define CHOC_STRING_UTILS_HEADER_INCLUDED
 
-#include <cctype>
 #include <string>
 #include <vector>
 #include <cmath>

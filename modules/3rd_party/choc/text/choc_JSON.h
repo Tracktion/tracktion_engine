@@ -34,49 +34,46 @@ namespace choc::json
 {
 
 //==============================================================================
-/** A parse exception, thrown by choc::json::parse() as needed. */
+/// A parse exception, thrown by choc::json::parse() as needed.
 struct ParseError
 {
     const char* message;
     choc::text::LineAndColumn lineAndColumn;
 };
 
-/** Parses some JSON text into a choc::value::Value object, using the given pool.
-    Any errors will result in a ParseError exception being thrown.
-*/
+/// Parses some JSON text into a choc::value::Value object, using the given pool.
+/// Any errors will result in a ParseError exception being thrown.
 value::Value parse (text::UTF8Pointer);
 
-/** Parses some JSON text into a choc::value::Value object, using the given pool.
-    Any errors will result in a ParseError exception being thrown.
-*/
+/// Parses some JSON text into a choc::value::Value object, using the given pool.
+/// Any errors will result in a ParseError exception being thrown.
 value::Value parse (std::string_view);
 
+/// Attempts to parse a bare JSON value such as a number, string, object etc
+value::Value parseValue (std::string_view);
+
 //==============================================================================
-/** Formats a value as a JSON string. */
+/// Formats a value as a JSON string.
 std::string toString (const value::ValueView&);
 
-/** Writes a version of a string to an output stream, with any illegal or non-ascii
-    written as their equivalent JSON escape sequences.
-*/
+/// Writes a version of a string to an output stream, with any illegal or non-ascii
+/// written as their equivalent JSON escape sequences.
 template <typename OutputStreamType>
 void writeWithEscapeCharacters (OutputStreamType&, text::UTF8Pointer sourceString);
 
-/** Returns a version of a string with illegal or non-ascii converted into the
-    equivalent JSON escape sequences.
-*/
+/// Returns a version of a string with illegal or non-ascii converted into the
+/// equivalent JSON escape sequences.
 std::string addEscapeCharacters (text::UTF8Pointer sourceString);
 
-/** Returns a version of a string with illegal or non-ascii converted into the
-    equivalent JSON escape sequences.
-*/
+/// Returns a version of a string with illegal or non-ascii converted into the
+/// equivalent JSON escape sequences.
 std::string addEscapeCharacters (std::string_view sourceString);
 
-/** Returns a version of a string with illegal or non-ascii converted into the
-    equivalent JSON escape sequences.
-*/
+/// Returns a version of a string with illegal or non-ascii converted into the
+/// equivalent JSON escape sequences.
 std::string getEscapedQuotedString (std::string_view sourceString);
 
-/** Converts a double to a JSON-format string representation. */
+/// Converts a double to a JSON-format string representation.
 std::string doubleToString (double value);
 
 //==============================================================================
@@ -148,8 +145,8 @@ inline std::string getEscapedQuotedString (std::string_view s)
 
 inline std::string doubleToString (double value)
 {
-    if (std::isfinite (value))    return choc::text::floatToString (value);
-    if (std::isnan (value))       return "\"NaN\"";
+    if (std::isfinite (value))  return choc::text::floatToString (value, -1, true);
+    if (std::isnan (value))     return "\"NaN\"";
 
     return value >= 0 ?  "\"Infinity\""
                       : "\"-Infinity\"";
@@ -168,7 +165,7 @@ void writeAsJSON (Stream& output, const value::ValueView& value)
             if (v.isVoid())                   { out << "null"; return; }
             if (v.isString())                 { out << getEscapedQuotedString (v.getString()); return; }
             if (v.isBool())                   { out << (v.getBool() ? "true" : "false"); return; }
-            if (v.isFloat())                  { out << v.get<double>(); return; }
+            if (v.isFloat())                  { out << doubleToString (v.get<double>()); return; }
             if (v.isInt())                    { out << v.get<int64_t>(); return; }
             if (v.isObject())                 return dumpObject (v);
             if (v.isArray() || v.isVector())  return dumpArrayOrVector (v);
@@ -222,7 +219,7 @@ inline std::string toString (const value::ValueView& v)
     throw ParseError { error, text::findLineAndColumn (source, errorPos) };
 }
 
-inline value::Value parse (text::UTF8Pointer text)
+inline value::Value parse (text::UTF8Pointer text, bool parseBareValue)
 {
     struct Parser
     {
@@ -289,7 +286,7 @@ inline value::Value parse (text::UTF8Pointer text)
 
                 if (! popIf ('"')) throwError ("Expected a name");
                 auto errorPos = current;
-                auto name = parseString ('"');
+                auto name = parseString();
 
                 if (name.empty())
                     throwError ("Property names cannot be empty", errorPos);
@@ -317,7 +314,7 @@ inline value::Value parse (text::UTF8Pointer text)
             {
                 case '[':                                 return parseArray();
                 case '{':                                 return parseObject();
-                case '"':                                 return value::createString (parseString ('"'));
+                case '"':                                 return value::createString (parseString());
                 case '-':                                 skipWhitespace(); return parseNumber (true);
                 case '0': case '1': case '2':
                 case '3': case '4': case '5':
@@ -377,7 +374,7 @@ inline value::Value parse (text::UTF8Pointer text)
             }
         }
 
-        std::string parseString (uint32_t terminatingQuote)
+        std::string parseString()
         {
             std::ostringstream s;
 
@@ -385,7 +382,7 @@ inline value::Value parse (text::UTF8Pointer text)
             {
                 auto c = pop();
 
-                if (c == terminatingQuote)
+                if (c == '"')
                     break;
 
                 if (c == '\\')
@@ -450,20 +447,22 @@ inline value::Value parse (text::UTF8Pointer text)
     };
 
     Parser p { text, text };
-    return p.parseTopLevel();
+    return parseBareValue ? p.parseValue()
+                          : p.parseTopLevel();
 }
 
-inline value::Value parse (const char* text, size_t numbytes)
+inline value::Value parse (const char* text, size_t numbytes, bool parseBareValue)
 {
     CHOC_ASSERT (text != nullptr);
 
     if (auto error = text::findInvalidUTF8Data (text, numbytes))
         throwParseError ("Illegal UTF8 data", text::UTF8Pointer (text), text::UTF8Pointer (error));
 
-    return parse (text::UTF8Pointer (text));
+    return parse (text::UTF8Pointer (text), parseBareValue);
 }
 
-inline value::Value parse (std::string_view text)       { return parse (text.data(), text.length()); }
+inline value::Value parse (std::string_view text)       { return parse (text.data(), text.length(), false); }
+inline value::Value parseValue (std::string_view text)  { return parse (text.data(), text.length(), true); }
 
 
 } // namespace choc::json

@@ -388,6 +388,9 @@ public:
     /** Creates a ChordTrack if there isn't currently one. */
     void ensureChordTrack();
 
+    /** Creates a ChordTrack if there isn't currently one. */
+    void ensureMasterTrack();
+    
     /** Returns the global ArrangerTrack. */
     ArrangerTrack* getArrangerTrack() const;
 
@@ -399,6 +402,9 @@ public:
 
     /** Returns the global ChordTrack. */
     ChordTrack* getChordTrack() const;
+
+    /** Returns the global MasterTrack. */
+    MasterTrack* getMasterTrack() const;
 
     //==============================================================================
     /** Returns true if any tracks are muted. */

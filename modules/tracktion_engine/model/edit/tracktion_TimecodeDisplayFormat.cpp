@@ -11,6 +11,49 @@
 namespace tracktion_engine
 {
 
+TimecodeDuration::TimecodeDuration (std::optional<double> s, std::optional<double> b, int bpb)
+    : seconds (s), beats (b), beatsPerBar (bpb)
+{
+}
+
+bool TimecodeDuration::operator== (const TimecodeDuration& o) const
+{
+    if (seconds.has_value() != o.seconds.has_value()) return false;
+    if (beats.has_value()   != o.beats.has_value())   return false;
+
+    if (seconds.has_value())
+        if (*seconds != *o.seconds)
+            return false;
+
+    if (beats.has_value())
+        if (*beats != *o.beats)
+            return false;
+
+    return true;
+}
+
+bool TimecodeDuration::operator!= (const TimecodeDuration& o) const
+{
+    return !(*this == o);
+}
+
+TimecodeDuration TimecodeDuration::fromSeconds (Edit& e, double start, double end)
+{
+    return TimecodeDuration (end - start,
+                     e.tempoSequence.timeToBeats (end) - e.tempoSequence.timeToBeats (start),
+                     e.tempoSequence.getTimeSigAt (start).numerator);
+}
+
+TimecodeDuration TimecodeDuration::fromSecondsOnly (double duration)
+{
+    return TimecodeDuration (duration, {}, {});
+}
+
+TimecodeDuration TimecodeDuration::fromBeatsOnly (double duration, int beatsPerBar)
+{
+    return TimecodeDuration ({}, duration, beatsPerBar);
+}
+
 struct TimeAndName
 {
     double time;
@@ -409,10 +452,15 @@ int TimecodeDisplayFormat::getMaxCharsInPart (int part, bool canBeNegative) cons
     return m[static_cast<int> (type)][part];
 }
 
-int TimecodeDisplayFormat::getMaxValueOfPart (const TempoSequence& sequence, double currentTime, int part, bool isRelative) const
+int TimecodeDisplayFormat::getMaxValueOfPart (const TempoSequence& sequence, TimecodeDuration currentTime, int part, bool isRelative) const
 {
     if (type == TimecodeType::barsBeats && part == 1)
-        return sequence.getTimeSigAt (currentTime).numerator - (isRelative ? 1 : 0);
+    {
+        if (currentTime.beatsPerBar != 0.0)
+            return currentTime.beatsPerBar - (isRelative ? 1 : 0);
+
+        return sequence.getTimeSigAt (*currentTime.seconds).numerator - (isRelative ? 1 : 0);
+    }
 
     const short m[5][4] = { { 999, 59, 59,  48 },
                             { 959, 99, 999, 9999 },
@@ -436,17 +484,30 @@ static String twoCharString (juce_wchar n)
     return String (n);
 }
 
-void TimecodeDisplayFormat::getPartStrings (double time, const TempoSequence& tempo, bool isRelative, String results[4]) const
+void TimecodeDisplayFormat::getPartStrings (TimecodeDuration duration, const TempoSequence& tempo, bool isRelative, String results[4]) const
 {
     if (type == TimecodeType::barsBeats)
     {
-        if (time < 0)
-        {
-            time = -time;
-            results[2] = "-";
-        }
+        TempoSequence::BarsAndBeats barsBeats;
 
-        auto barsBeats = tempo.timeToBarsBeats (time + nudge);
+        if (duration.beats.has_value())
+        {
+            auto t = *duration.beats + nudge;
+
+            barsBeats.bars  = int (t / duration.beatsPerBar);
+            barsBeats.beats = t - (barsBeats.bars * duration.beatsPerBar);
+        }
+        else if (duration.seconds.has_value())
+        {
+            auto time = *duration.seconds;
+            if (time < 0)
+            {
+                time = -time;
+                results[2] = "-";
+            }
+
+            barsBeats = tempo.timeToBarsBeats (time + nudge);
+        }
 
         {
             auto val = (int) (barsBeats.getFractionalBeats() * Edit::ticksPerQuarterNote);
@@ -469,9 +530,9 @@ void TimecodeDisplayFormat::getPartStrings (double time, const TempoSequence& te
             results[part] << val;
         }
     }
-    else
+    else if (duration.seconds.has_value())
     {
-        auto t = std::abs (time) + nudge;
+        auto t = std::abs (*duration.seconds) + nudge;
 
         if (type == TimecodeType::millisecs)
         {
@@ -498,7 +559,7 @@ void TimecodeDisplayFormat::getPartStrings (double time, const TempoSequence& te
             results[0] = twoCharString (((int) (t * 30)) % 30);
         }
 
-        if (time < 0)
+        if (*duration.seconds < 0)
             results[3] = "-";
 
         auto hours = (int) (t * (1.0 / 3600.0));
@@ -510,29 +571,50 @@ void TimecodeDisplayFormat::getPartStrings (double time, const TempoSequence& te
         auto secs = (((int) t) % 60);
         results[1] = twoCharString (secs);
     }
+    else
+    {
+        jassertfalse;
+    }
 }
 
-double TimecodeDisplayFormat::getNewTimeWithPartValue (double time, const TempoSequence& tempo,
-                                                       int part, int newValue, bool isRelative) const
+TimecodeDuration TimecodeDisplayFormat::getNewTimeWithPartValue (TimecodeDuration time, const TempoSequence& tempo,
+                                                         int part, int newValue, bool isRelative) const
 {
     if (type == TimecodeType::barsBeats)
     {
-        auto t = std::abs (time);
+        if (time.beats.has_value())
+        {
+            auto t = *time.beats;
 
-        TempoSequencePosition pos (tempo);
-        pos.setTime (t);
+            auto bars  = int (t / time.beatsPerBar);
+            auto beats = t - (bars * time.beatsPerBar);
+            auto ticks = std::fmod (beats, 1.0);
+            beats = int (beats);
 
-        auto barsBeats = tempo.timeToBarsBeats (t);
+            if (part == 2)      bars  = newValue;
+            else if (part == 1) beats = newValue;
+            else if (part == 0) ticks = newValue / double (Edit::ticksPerQuarterNote);
 
-        if (part == 0)       pos.addBeats ((newValue / (double) Edit::ticksPerQuarterNote) - barsBeats.getFractionalBeats());
-        else if (part == 1)  pos.addBeats ((isRelative ? newValue : (newValue - 1)) - barsBeats.getWholeBeats());
-        else if (part == 2)  pos.addBars  ((isRelative ? newValue : (newValue - 1)) - barsBeats.bars);
+            return TimecodeDuration::fromBeatsOnly (bars * time.beatsPerBar + beats + ticks, time.beatsPerBar);
+        }
+        else
+        {
+            auto t = std::abs (*time.seconds);
 
-        return time < 0 ? -pos.getTime()
-                        :  pos.getTime();
+            TempoSequencePosition pos (tempo);
+            pos.setTime (t);
+
+            auto barsBeats = tempo.timeToBarsBeats (t);
+
+            if (part == 0)       pos.addBeats ((newValue / (double) Edit::ticksPerQuarterNote) - barsBeats.getFractionalBeats());
+            else if (part == 1)  pos.addBeats ((isRelative ? newValue : (newValue - 1)) - barsBeats.getWholeBeats());
+            else if (part == 2)  pos.addBars  ((isRelative ? newValue : (newValue - 1)) - barsBeats.bars);
+
+            return TimecodeDuration::fromSecondsOnly (*time.seconds < 0 ? -pos.getTime() : pos.getTime());
+        }
     }
 
-    auto t = std::abs (time);
+    auto t = std::abs (*time.seconds);
     auto intT = (int) t;
     auto hours = (int) (t / 3600.0);
     auto mins  = (intT / 60) % 60;
@@ -559,7 +641,7 @@ double TimecodeDisplayFormat::getNewTimeWithPartValue (double time, const TempoS
 
     t = hours * 3600.0 + mins * 60.0 + secs + frac;
 
-    return time < 0 ? -t : t;
+    return TimecodeDuration::fromSecondsOnly (*time.seconds < 0 ? -t : t);
 }
 
 //==============================================================================

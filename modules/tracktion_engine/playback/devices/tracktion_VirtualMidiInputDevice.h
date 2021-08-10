@@ -18,6 +18,8 @@ public:
     ~VirtualMidiInputDevice() override;
 
     InputDeviceInstance* createInstance (EditPlaybackContext&) override;
+    
+    using MidiInputDevice::handleIncomingMidiMessage;
     void handleIncomingMidiMessage (const juce::MidiMessage&) override;
     juce::String getSelectableDescription() override;
 

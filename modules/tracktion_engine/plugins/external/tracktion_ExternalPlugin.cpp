@@ -743,15 +743,15 @@ std::unique_ptr<PluginDescription> ExternalPlugin::findMatchingPlugin() const
     CRASH_TRACER
     auto& pm = engine.getPluginManager();
 
-    if (auto p = pm.knownPluginList.getTypeForIdentifierString (desc.createIdentifierString()))
+    if (auto p = pm.knownPluginList.getTypeForIdentifierString (createIdentifierString (desc)))
         return p;
 
     if (desc.pluginFormatName.isEmpty())
     {
-        if (auto p = pm.knownPluginList.getTypeForIdentifierString ("VST" + desc.createIdentifierString()))
+        if (auto p = pm.knownPluginList.getTypeForIdentifierString ("VST" + createIdentifierString (desc)))
             return p;
 
-        if (auto p = pm.knownPluginList.getTypeForIdentifierString ("AudioUnit" + desc.createIdentifierString()))
+        if (auto p = pm.knownPluginList.getTypeForIdentifierString ("AudioUnit" + createIdentifierString (desc)))
             return p;
     }
 
@@ -841,6 +841,8 @@ void ExternalPlugin::doFullInitialisation()
 
                 pluginInstance->setPlayHead (playhead.get());
                 supportsMPE = pluginInstance->supportsMPE();
+
+                engine.getEngineBehaviour().doAdditionalInitialisation (*this);
             }
             else
             {
@@ -1191,9 +1193,9 @@ void ExternalPlugin::prepareIncomingMidiMessages (MidiMessageArray& incoming, in
         {
             midiBuffer.addEvent (MidiMessage::noteOff (chan, noteNumber), 0);
 
-            if ((eventsSentOnChannel & (1 << chan)) == 0)
+            if ((eventsSentOnChannel & (1u << chan)) == 0)
             {
-                eventsSentOnChannel |= (1 << chan);
+                eventsSentOnChannel |= (1u << chan);
 
                 if (! supportsMPE)
                 {
@@ -1787,6 +1789,16 @@ void ExternalPlugin::valueTreePropertyChanged (ValueTree& v, const juce::Identif
     {
         Plugin::valueTreePropertyChanged (v, id);
     }
+}
+
+juce::Array<Exportable::ReferencedItem> ExternalPlugin::getReferencedItems()
+{
+    return engine.getEngineBehaviour().getReferencedItems (*this);
+}
+
+void ExternalPlugin::reassignReferencedItem (const ReferencedItem& itm, ProjectItemID newID, double newStartTime)
+{
+    engine.getEngineBehaviour().reassignReferencedItem (*this, itm, newID, newStartTime);
 }
 
 //==============================================================================

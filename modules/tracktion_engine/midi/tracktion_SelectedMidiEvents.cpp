@@ -228,8 +228,6 @@ void SelectedMidiEvents::setSelected (SelectionManager& sm, const juce::Array<Mi
 
 void SelectedMidiEvents::setSelected (SelectionManager& sm, const juce::Array<MidiSysexEvent*>& events, bool addToSelection, bool allowMixedSelection)
 {
-    selectedNotes.clearQuick();
-
     if (! addToSelection)
         selectedSysexes.clearQuick();
 
@@ -420,7 +418,7 @@ void SelectedMidiEvents::moveEvents (double deltaStart, double deltaLength, int 
                 deltaBeat = newStartBeat - controllerEvent->getBeatPosition();
         }
 
-        moveControllerData (uniqueClips, &selectedControllers, *deltaBeat, startTime, endTime, false);
+        moveControllerData (uniqueClips, &selectedControllers, *deltaBeat, startTime - 0.001, endTime + 0.001, false);
     }
 }
 

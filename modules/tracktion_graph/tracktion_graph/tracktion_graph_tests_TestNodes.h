@@ -159,7 +159,7 @@ public:
     void process (ProcessContext& pc) override
     {
         pc.buffers.midi.clear();
-        setAudioOutput (audioBuffer.getView().getStart (pc.buffers.audio.getNumFrames()));
+        setAudioOutput (nullptr, audioBuffer.getView().getStart (pc.buffers.audio.getNumFrames()));
     }
     
 private:
@@ -440,8 +440,13 @@ public:
 
         // Just pass out input on to our output
         // N.B We need to clear manually here due to optimisations
-        setAudioOutput (source.audio);
-        pc.buffers.midi.copyFrom (source.midi);
+        setAudioOutput (input.get(), source.audio);
+
+        // If the source only outputs to this node, we can steal its data
+        if (numOutputNodes == 1)
+            pc.buffers.midi.swapWith (source.midi);
+        else
+            pc.buffers.midi.copyFrom (source.midi);
     }
     
 private:
@@ -534,7 +539,7 @@ public:
         jassert (pc.buffers.audio.getSize() == source.audio.getSize());
 
         // Copy the input on to our output, the SummingNode will copy all the sends and get all the input
-        setAudioOutput (source.audio);
+        setAudioOutput (input.get(), source.audio);
         pc.buffers.midi.copyFrom (source.midi);
     }
     

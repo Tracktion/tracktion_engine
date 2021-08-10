@@ -25,12 +25,21 @@ void LevelMeasuringNode::process (tracktion_graph::Node::ProcessContext& pc)
     jassert (pc.buffers.audio.getSize() == sourceBuffers.audio.getSize());
 
     // Just pass out input on to our output
-    setAudioOutput (sourceBuffers.audio);
-    pc.buffers.midi.copyFrom (input->getProcessedOutput().midi);
+    setAudioOutput (input.get(), sourceBuffers.audio);
+    
+    // If the source only outputs to this node, we can steal its data
+    if (numOutputNodes == 1)
+        pc.buffers.midi.swapWith (sourceBuffers.midi);
+    else
+        pc.buffers.midi.copyFrom (sourceBuffers.midi);
 
     // Then update the levels
-    auto buffer = tracktion_graph::toAudioBuffer (sourceBuffers.audio);
-    levelMeasurer.processBuffer (buffer, 0, buffer.getNumSamples());
+    if (sourceBuffers.audio.getNumChannels() > 0)
+    {
+        auto buffer = tracktion_graph::toAudioBuffer (sourceBuffers.audio);
+        levelMeasurer.processBuffer (buffer, 0, buffer.getNumSamples());
+    }
+
     levelMeasurer.processMidi (pc.buffers.midi, nullptr);
 }
 

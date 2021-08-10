@@ -37,9 +37,14 @@ struct CodePrinter
     ~CodePrinter() = default;
     CodePrinter (CodePrinter&&) = default;
     CodePrinter (const CodePrinter&) = default;
+    CodePrinter& operator= (const CodePrinter&) = default;
+    CodePrinter& operator= (CodePrinter&&) = default;
 
-    /** Returns the finished contents of the stream as a string. */
+    /// Returns the finished contents of the stream as a string.
     std::string toString() const;
+
+    /// Clears and resets the state of the printer.
+    void reset();
 
     //==============================================================================
     CodePrinter& operator<< (const char*);
@@ -49,66 +54,62 @@ struct CodePrinter
     CodePrinter& operator<< (double);
     CodePrinter& operator<< (float);
 
-    /** Prints any kind of integer type. */
+    /// Prints any kind of integer type.
     template <typename IntegerType>
     CodePrinter& operator<< (IntegerType);
 
-    /** This class is used as a sentinel which when passed to the `<<` operator, writes a new-line. */
+    /// This class is used as a sentinel which when passed to the `<<` operator, writes a new-line.
     struct NewLine {};
-    /** This class is used as a sentinel which when passed to the `<<` operator, writes a blank line. */
+    /// This class is used as a sentinel which when passed to the `<<` operator, writes a blank line.
     struct BlankLine {};
-    /** This class is used as a sentinel which when passed to the `<<` operator, writes a section break. */
+    /// This class is used as a sentinel which when passed to the `<<` operator, writes a section break.
     struct SectionBreak {};
 
-    /** Emits a new-line */
+    /// Emits a new-line
     CodePrinter& operator<< (const NewLine&);
-    /** Emits either one or two new-lines, in order to leave exactly one blank line */
+    /// Emits either one or two new-lines, in order to leave exactly one blank line
     CodePrinter& operator<< (const BlankLine&);
-    /** Emits the section-break text. @see setSectionBreak() */
+    /// Emits the section-break text. @see setSectionBreak()
     CodePrinter& operator<< (const SectionBreak&);
 
     //==============================================================================
-    /** Sets the current tab size. Note that this won't modify any previously-written lines,
-        it just affects the subsequent printing.
-    */
+    /// Sets the current tab size. Note that this won't modify any previously-written lines,
+    /// it just affects the subsequent printing.
     void setTabSize (size_t numSpaces);
-    /** Sets a text string to use as a section break - the default is a commented-out line of dashes. */
+    /// Sets a text string to use as a section break - the default is a commented-out line of dashes.
     void setSectionBreak (std::string newSectionBreakString);
-    /** Modifies the new-line sequence.
-        By default this is just a `\n`, but you may want to change it to a `\r\n` sequence.
-    */
+    /// Modifies the new-line sequence.
+    /// By default this is just a `\n`, but you may want to change it to a `\r\n` sequence.
     void setNewLine (const char* newLineSequence);
-    /** This sets a line length limit, so that longer lines will be wrapped where possible.
-        Setting this to 0 turns off line-wrap.
-    */
+    /// This sets a line length limit, so that longer lines will be wrapped where possible.
+    /// Setting this to 0 turns off line-wrap.
     void setLineWrapLength (size_t lineWrapCharacters);
-    /** Returns the current line-wrap length, where 0 means no wrapping. */
+    /// Returns the current line-wrap length, where 0 means no wrapping.
     size_t getLineWrapLength() const            { return lineWrapLength; }
 
     //==============================================================================
-    /** An RAII class which resets the indent level when it is deleted. */
+    /// An RAII class which resets the indent level when it is deleted.
     struct Indent;
 
-    /** Returns an Indent object which adds an indentation of the default amount. */
+    /// Returns an Indent object which adds an indentation of the default amount.
     [[nodiscard]] Indent createIndent();
-    /** Returns an Indent object which adds an indentation of the given amount. */
+    /// Returns an Indent object which adds an indentation of the given amount.
     [[nodiscard]] Indent createIndent (size_t numSpaces);
-    /** Returns an Indent object which modifies the indent level and adds a pair of brace characters around the block. */
+    /// Returns an Indent object which modifies the indent level and adds a pair of brace characters around the block.
     [[nodiscard]] Indent createIndent (char openBrace, char closeBrace);
-    /** Returns an Indent object which modifies the indent level and adds a pair of brace characters around the block. */
+    /// Returns an Indent object which modifies the indent level and adds a pair of brace characters around the block.
     [[nodiscard]] Indent createIndent (size_t numSpaces, char openBrace, char closeBrace);
-    /** Returns an Indent object which modifies the indent level and adds default curly-braces around the block. */
+    /// Returns an Indent object which modifies the indent level and adds default curly-braces around the block.
     [[nodiscard]] Indent createIndentWithBraces();
-    /** Returns an Indent object which modifies the indent level and adds default curly-braces around the block. */
+    /// Returns an Indent object which modifies the indent level and adds default curly-braces around the block.
     [[nodiscard]] Indent createIndentWithBraces (size_t numSpaces);
 
-    /** Returns the total number of spaces that will be used for indenting the current line. */
+    /// Returns the total number of spaces that will be used for indenting the current line.
     size_t getTotalIndent() const;
-    /** Adds or removes some indentation to the current level. (The Indent class provides a better
-        way to indent blocks than manually changing this value). @see createIndent()
-    */
+    /// Adds or removes some indentation to the current level. (The Indent class provides a better
+    /// way to indent blocks than manually changing this value). @see createIndent()
     void addIndent (int spacesToAdd);
-    /** Modifies the current total indent level. @see createIndent() */
+    /// Modifies the current total indent level. @see createIndent()
     void setTotalIndent (size_t newTotalNumSpaces);
 
 private:
@@ -143,6 +144,8 @@ private:
 //   Code beyond this point is implementation detail...
 //
 //==============================================================================
+
+inline void CodePrinter::reset()    { *this = {}; }
 
 inline CodePrinter& CodePrinter::operator<< (const char* s)            { writeBlock (s); return *this; }
 inline CodePrinter& CodePrinter::operator<< (const std::string& s)     { writeBlock (s); return *this; }

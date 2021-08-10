@@ -82,7 +82,7 @@ public:
         setSize (600, 400);
     }
 
-    ~PluginDemo()
+    ~PluginDemo() override
     {
         te::EditFileOperations (*edit).save (true, true, false);
         engine.getTemporaryFileManager().getTempDirectory().deleteRecursively();

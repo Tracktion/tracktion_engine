@@ -98,6 +98,9 @@ struct TrackList    : public ValueTreeObjectList<Track>,
     /** Returns true if the state is for a TempoTrack. */
     static bool isTempoTrack (const juce::ValueTree&) noexcept;
 
+    /** Returns true if the state is for a MasterTrack. */
+    static bool isMasterTrack (const juce::ValueTree&) noexcept;
+
     /** Returns true if the track is fixed. I.e. a global track.
         @see TempoTrack, MarkerTrack, ChordTrack, ArrangerTrack
     */
@@ -191,7 +194,9 @@ struct TrackSection
                 TrackSection cs;
                 cs.range = c->getEditTimeRange();
                 cs.track = c->getTrack();
-                result.add (cs);
+                
+                if (cs.track != nullptr)
+                    result.add (cs);
             }
         }
 

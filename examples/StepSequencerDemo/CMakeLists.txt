@@ -12,6 +12,15 @@ if (APPLE)
     set (CMAKE_OSX_DEPLOYMENT_TARGET "10.11" CACHE INTERNAL "")
 endif()
 
+# Compile with werror in release builds
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
+    CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Werror")
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /WX")
+endif()
+
 
 # Adds all the module sources so they appear correctly in the IDE
 set_property(GLOBAL PROPERTY USE_FOLDERS YES)
@@ -63,6 +72,10 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
     juce::juce_audio_processors
     juce::juce_audio_utils
     juce::juce_recommended_warning_flags)
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unknown-pragmas")
+endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE "-latomic")

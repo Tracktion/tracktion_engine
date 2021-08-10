@@ -23,3 +23,9 @@ int main()
     choc::test::TestProgress progress;
     return choc::test::runAllTests (progress) ? 0 : 1;
 }
+
+// include this after all the tests to make sure they don't rely on
+// anything that isn't included by the header.
+#undef CHOC_JAVASCRIPT_IMPLEMENTATION
+#define CHOC_JAVASCRIPT_IMPLEMENTATION 1
+#include "../javascript/choc_javascript.h"

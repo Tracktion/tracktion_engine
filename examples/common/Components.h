@@ -159,7 +159,7 @@ class TrackHeaderComponent : public Component,
 {
 public:
     TrackHeaderComponent (EditViewState&, te::Track::Ptr);
-    ~TrackHeaderComponent();
+    ~TrackHeaderComponent() override;
     
     void paint (Graphics& g) override;
     void mouseDown (const MouseEvent& e) override;
@@ -182,8 +182,9 @@ class PluginComponent : public TextButton
 {
 public:
     PluginComponent (EditViewState&, te::Plugin::Ptr);
-    ~PluginComponent();
+    ~PluginComponent() override;
     
+    using TextButton::clicked;
     void clicked (const ModifierKeys& modifiers) override;
     
 private:
@@ -198,10 +199,10 @@ class TrackFooterComponent : public Component,
 {
 public:
     TrackFooterComponent (EditViewState&, te::Track::Ptr);
-    ~TrackFooterComponent();
+    ~TrackFooterComponent() override;
     
-    void paint (Graphics& g) override;
-    void mouseDown (const MouseEvent& e) override;
+    void paint (Graphics&) override;
+    void mouseDown (const MouseEvent&) override;
     void resized() override;
     
 private:
@@ -231,7 +232,7 @@ class TrackComponent : public Component,
 {
 public:
     TrackComponent (EditViewState&, te::Track::Ptr);
-    ~TrackComponent();
+    ~TrackComponent() override;
     
     void paint (Graphics& g) override;
     void mouseDown (const MouseEvent& e) override;
@@ -292,7 +293,7 @@ class EditComponent : public Component,
 {
 public:
     EditComponent (te::Edit&, te::SelectionManager&);
-    ~EditComponent();
+    ~EditComponent() override;
     
     EditViewState& getEditViewState()   { return editViewState; }
     

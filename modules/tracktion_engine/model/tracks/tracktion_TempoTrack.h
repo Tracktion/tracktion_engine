@@ -11,32 +11,27 @@
 namespace tracktion_engine
 {
 
-/** */
-class TempoTrack  : public Track
+/**
+    A track to represent the master plugins.
+    This isn't a "real" track, it wraps the master plugin list.
+*/
+class MasterTrack   : public Track
 {
 public:
-    TempoTrack (Edit&, const juce::ValueTree&);
-    ~TempoTrack() override;
+    MasterTrack (Edit&, const juce::ValueTree&);
+    ~MasterTrack() override;
 
-    using Ptr = juce::ReferenceCountedObjectPtr<TempoTrack>;
+    using Ptr = juce::ReferenceCountedObjectPtr<MasterTrack>;
 
-    bool isTempoTrack() const override;
+    void initialise() override;
+    bool isMasterTrack() const override;
     juce::String getName() override;
     juce::String getSelectableDescription() override;
 
-    int getNumTrackItems() const override;
-    TrackItem* getTrackItem (int idx) const override;
-    int indexOfTrackItem (TrackItem*) const override;
-    int getIndexOfNextTrackItemAt (double time) override;
-    TrackItem* getNextTrackItemAt (double time) override;
     bool canContainPlugin (Plugin*) const override;
 
-    void insertSpaceIntoTrack (double time, double amountOfSpace) override;
-
 private:
-    juce::Array<TrackItem*> buildTrackItemList() const;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TempoTrack)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MasterTrack)
 };
 
 } // namespace tracktion_engine

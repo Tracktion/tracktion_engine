@@ -175,6 +175,24 @@ bool isUnicodeLowSurrogate (UnicodeChar codepoint);
 /// Combines a high and low surrogate into a single codepoint.
 UnicodeChar createUnicodeFromHighAndLowSurrogates (UnicodeChar high, UnicodeChar low);
 
+/// Checks a UTF-8/CESU-8 string to see if it contains any surrogate pairs.
+/// If it does, then to use it as UTF-8 you'll probably need to run it through
+/// convertSurrogatePairsToUTF8().
+bool containsSurrogatePairs (UTF8Pointer);
+
+/// Returns a string where any surrogate pairs have been converted to UTF-8 codepoints.
+std::string convertSurrogatePairsToUTF8 (UTF8Pointer);
+
+/// Returns true if the given UTF-8 string can be used as CESU-8 without conversion. If not,
+/// you'll need to run it through convertUTF8ToCESU8() to convert the 32-bit code-points
+/// to surrogate pairs.
+bool isValidCESU8 (std::string_view utf8);
+
+/// Converts any 32-bit characters in this UTF-8 string to surrogate pairs, which makes
+/// the resulting string suitable for use at CESU-8.
+std::string convertUTF8ToCESU8 (UTF8Pointer utf8);
+
+
 //==============================================================================
 /// Represents a line and column index within a block of text.
 struct LineAndColumn
@@ -542,6 +560,75 @@ inline UnicodeChar createUnicodeFromHighAndLowSurrogates (UnicodeChar codepoint1
 
     return (codepoint1 << 10) + codepoint2 - 0x35fdc00u;
 }
+
+inline bool containsSurrogatePairs (UTF8Pointer text)
+{
+    for (;;)
+    {
+        auto c = text.popFirstChar();
+
+        if (c == 0)
+            return false;
+
+        if (isUnicodeHighSurrogate (c))
+            return true;
+    }
+}
+
+inline std::string convertSurrogatePairsToUTF8 (UTF8Pointer text)
+{
+    std::string result;
+
+    for (;;)
+    {
+        auto c = text.popFirstChar();
+
+        if (choc::text::isUnicodeHighSurrogate (c))
+            c = createUnicodeFromHighAndLowSurrogates (c, text.popFirstChar());
+
+        if (c == 0)
+            return result;
+
+        appendUTF8 (result, c);
+    }
+}
+
+inline bool isValidCESU8 (std::string_view utf8)
+{
+    for (auto c : utf8)
+        if (static_cast<uint8_t> (c) >= 0xe8)
+            return false;
+
+    return true;
+}
+
+inline std::string convertUTF8ToCESU8 (UTF8Pointer utf8)
+{
+    std::string result;
+
+    for (;;)
+    {
+        auto c = utf8.popFirstChar();
+
+        if (c == 0)
+            return result;
+
+        if (c >= 0x10000)
+        {
+            appendUTF8 (result, static_cast<UnicodeChar> (0xd800u + ((c - 0x10000u) >> 10)));
+            appendUTF8 (result, static_cast<UnicodeChar> (0xdc00u + (c & 0x3ffu)));
+        }
+        else if (c >= 128)
+        {
+            appendUTF8 (result, c);
+        }
+        else
+        {
+            result += (char) c;
+        }
+    }
+}
+
 
 } // namespace choc::text
 

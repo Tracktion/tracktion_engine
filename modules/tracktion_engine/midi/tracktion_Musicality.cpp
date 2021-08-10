@@ -608,7 +608,7 @@ PatternGenerator::ProgressionItem::ProgressionItem (PatternGenerator& g, const j
     // Chord name format changed between W8 and W9 - update to new version
     juce::String oldName = state[IDs::name];
     if (oldName.isNotEmpty() && chordName.get().isEmpty())
-	{
+    {
         chordName = fixLegacyChordNames (oldName);
         state.removeProperty (IDs::name, nullptr);
     }
@@ -759,7 +759,7 @@ struct PatternGenerator::AutoUpdateManager : private ValueTreeAllEventListener,
 
     void valueTreeChanged() override
     {}
-    
+
     void valueTreePropertyChanged (juce::ValueTree& p, const juce::Identifier& c) override
     {
         if (Clip::isClipState (p))
@@ -1143,7 +1143,7 @@ void PatternGenerator::removeRangeFromProgression (int startIndex, int numberToR
         numberToRemove = endIndex - startIndex;
 
         for (int i = 0; i < numberToRemove; ++i)
-            progression.removeChild (i, &um);
+            progression.removeChild (endIndex - i - 1, &um);
     }
 }
 

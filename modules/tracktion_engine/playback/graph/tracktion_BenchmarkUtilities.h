@@ -17,18 +17,43 @@ namespace tracktion_engine
 
 namespace benchmark_utilities
 {
-    enum class MultiThreaded
+    //==============================================================================
+    enum class MultiThreaded            { no, yes };
+
+    enum class LockFree                 { no, yes };
+
+    enum class PoolMemoryAllocations    { no, yes };
+
+    struct BenchmarkOptions
     {
-        no,
-        yes
+        Edit* edit = nullptr;
+        juce::String editName;
+        tracktion_graph::test_utilities::TestSetup testSetup;
+        MultiThreaded isMultiThreaded;
+        LockFree isLockFree;
+        tracktion_graph::ThreadPoolStrategy poolType;
+        PoolMemoryAllocations poolMemoryAllocations = PoolMemoryAllocations::no;
     };
 
-    enum class LockFree
+    inline juce::String getDescription (const BenchmarkOptions& opts)
     {
-        no,
-        yes
-    };
+        using namespace tracktion_graph;
+        auto s = test_utilities::getDescription (opts.testSetup)
+                    + juce::String (opts.isMultiThreaded == MultiThreaded::yes ? ", MT" : ", ST");
+        
+        if (opts.isMultiThreaded == MultiThreaded::yes && opts.isLockFree == LockFree::yes)
+            s << ", lock-free";
 
+        if (opts.poolMemoryAllocations == PoolMemoryAllocations::yes)
+            s << ", pooled-memory";
+
+        if (opts.isMultiThreaded == MultiThreaded::yes)
+            s << ", " + test_utilities::getName (opts.poolType);
+        
+        return s;
+    }
+
+    //==============================================================================
     inline std::unique_ptr<tracktion_graph::Node> createNode (Edit& edit, ProcessState& processState,
                                                               double sampleRate, int blockSize)
     {
@@ -64,10 +89,49 @@ namespace benchmark_utilities
         const StopwatchTimer sw;
         auto result = testContext.processAll();
         std::cout << sw.getDescription() << "\n";
+        std::cout << testContext.getStatisticsAndReset().toString() << "\n";
         ut.expect (true);
 
         ut.beginTest (editName + " - destroying: " + description);
         result.reset();
+        ut.expect (true);
+    }
+
+    inline void renderEdit (juce::UnitTest& ut, BenchmarkOptions opts)
+    {
+        assert (opts.edit != nullptr);
+        const auto description = getDescription (opts);
+
+        tracktion_graph::PlayHead playHead;
+        tracktion_graph::PlayHeadState playHeadState { playHead };
+        ProcessState processState { playHeadState };
+
+        //===
+        ut.beginTest (opts.editName + " - building: " + description);
+        auto node = createNode (*opts.edit, processState, opts.testSetup.sampleRate, opts.testSetup.blockSize);
+        ut.expect (node != nullptr);
+
+        //===
+        if (opts.isLockFree == LockFree::yes)
+        {
+            tracktion_graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, opts.testSetup.sampleRate,opts.testSetup.blockSize,
+                                                                                                                                  tracktion_graph::getPoolCreatorFunction (opts.poolType)),
+                                                                                           opts.testSetup, 2, opts.edit->getLength(), false);
+            
+            if (opts.poolMemoryAllocations == PoolMemoryAllocations::yes)
+                testContext.getNodePlayer().enablePooledMemoryAllocations (true);
+                
+            prepareRenderAndDestroy (ut, opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);
+        }
+        else
+        {
+            tracktion_graph::test_utilities::TestProcess<MultiThreadedNodePlayer> testContext (std::make_unique<MultiThreadedNodePlayer> (std::move (node), processState, opts.testSetup.sampleRate, opts.testSetup.blockSize),
+                                                                                               opts.testSetup, 2, opts.edit->getLength(), false);
+            prepareRenderAndDestroy (ut, opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);
+        }
+        
+        ut.beginTest (opts.editName + " - cleanup: " + description);
+        // This is deliberately empty as RAII will take care of cleanup
         ut.expect (true);
     }
 
@@ -79,40 +143,10 @@ namespace benchmark_utilities
                             LockFree isLockFree,
                             tracktion_graph::ThreadPoolStrategy poolType)
     {
-        const auto description = tracktion_graph::test_utilities::getDescription (ts)
-                                    + juce::String (isMultiThreaded == MultiThreaded::yes ? ", MT" : ", ST")
-                                    + juce::String (isLockFree == LockFree::yes ? ", lock-free" : ", locking")
-                                    + juce::String (isLockFree == LockFree::no ? "" : ", " + tracktion_graph::test_utilities::getName (poolType));
-
-        tracktion_graph::PlayHead playHead;
-        tracktion_graph::PlayHeadState playHeadState { playHead };
-        ProcessState processState { playHeadState };
-
-        //===
-        ut.beginTest (editName + " - building: " + description);
-        auto node = createNode (edit, processState, ts.sampleRate, ts.blockSize);
-        ut.expect (node != nullptr);
-
-        //===
-        if (isLockFree == LockFree::yes)
-        {
-            tracktion_graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
-                                                                                                                                  tracktion_graph::getPoolCreatorFunction (poolType)),
-                                                                                           ts, 2, edit.getLength(), false);
-            prepareRenderAndDestroy (ut, editName, description, testContext, playHeadState, isMultiThreaded);
-        }
-        else
-        {
-            tracktion_graph::test_utilities::TestProcess<MultiThreadedNodePlayer> testContext (std::make_unique<MultiThreadedNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize),
-                                                                                               ts, 2, edit.getLength(), false);
-            prepareRenderAndDestroy (ut, editName, description, testContext, playHeadState, isMultiThreaded);
-        }
-        
-        ut.beginTest (editName + " - cleanup: " + description);
-        // This is deliberately empty as RAII will take care of cleanup
-        ut.expect (true);
+        renderEdit (ut, { &edit, editName, ts, isMultiThreaded, isLockFree, poolType });
     }
 
+    //==============================================================================
     inline std::unique_ptr<Edit> openEditfromArchiveData (Engine& engine, const char* data, int size)
     {
         std::unique_ptr<Edit> edit;

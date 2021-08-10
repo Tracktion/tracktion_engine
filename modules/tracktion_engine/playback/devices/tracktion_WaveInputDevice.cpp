@@ -1261,7 +1261,7 @@ protected:
                                  newBlock.getChannel (jmin (newBlock.getNumChannels() - 1, (uint32_t) i)).data.data,
                                  (int) newSamps);
 
-            validSamples += newSamps;
+            validSamples += static_cast<int> (newSamps);
         }
 
     private:

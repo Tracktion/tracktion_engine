@@ -66,7 +66,7 @@ namespace ModifierCommon
     }
 
     /** Returns the fraction of a bar to be used for a given rate type. */
-    static constexpr double getBarFraction (RateType) noexcept;
+    double getBarFraction (RateType) noexcept;
 
     enum SyncType
     {

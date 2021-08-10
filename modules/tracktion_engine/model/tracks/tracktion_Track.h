@@ -90,6 +90,9 @@ public:
     /** Returns true if this is an ArrangerTrack. */
     virtual bool isArrangerTrack() const                        { return false; }
 
+    /** Returns true if this is a MasterTrack. */
+    virtual bool isMasterTrack() const                          { return false; }
+
     //==============================================================================
     /** Returns true if this Track can contain MarkerClip[s]. */
     bool canContainMarkers() const                              { return isMarkerTrack(); }
@@ -104,13 +107,13 @@ public:
     bool canContainEditClips() const                            { return isAudioTrack(); }
 
     /** Returns true if this Track can contain Plugin[s]. */
-    bool canContainPlugins() const                              { return isAudioTrack() || isFolderTrack(); }
+    bool canContainPlugins() const                              { return isAudioTrack() || isFolderTrack() || isMasterTrack(); }
 
     /** Returns true if this Track is movable. @see AudioTrack, FolderTrack */
     bool isMovable() const                                      { return isAudioTrack() || isFolderTrack(); }
 
     /** Returns true if this a global Track and should be on top of others. @see MarkerTrack, TempoTrack */
-    bool isOnTop() const                                        { return isMarkerTrack() || isTempoTrack() || isChordTrack() || isArrangerTrack(); }
+    bool isOnTop() const;
 
     /** Returns true if this track can have inputs assigned to it. @see AudioTrack */
     bool acceptsInput() const                                   { return isAudioTrack(); }

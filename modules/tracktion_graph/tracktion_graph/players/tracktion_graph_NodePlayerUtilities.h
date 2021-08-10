@@ -33,7 +33,9 @@ namespace node_player_utils
     }
 
     /** Prepares a specific Node to be played and returns all the Nodes. */
-    static std::vector<Node*> prepareToPlay (Node* node, Node* oldNode, double sampleRate, int blockSize)
+    static std::vector<Node*> prepareToPlay (Node* node, Node* oldNode, double sampleRate, int blockSize,
+                                             std::function<NodeBuffer (choc::buffer::Size)> allocateAudioBuffer = nullptr,
+                                             std::function<void (NodeBuffer&&)> deallocateAudioBuffer = nullptr)
     {
         if (node == nullptr)
             return {};
@@ -43,11 +45,44 @@ namespace node_player_utils
         
         // Next, initialise all the nodes, this will call prepareToPlay on them and also
         // give them a chance to do things like balance latency
-        const PlaybackInitialisationInfo info { sampleRate, blockSize, *node, oldNode };
+        const PlaybackInitialisationInfo info { sampleRate, blockSize, *node, oldNode,
+                                                allocateAudioBuffer, deallocateAudioBuffer };
         visitNodes (*node, [&] (Node& n) { n.initialise (info); }, false);
         
         // Then find all the nodes as it might have changed after initialisation
         return tracktion_graph::getNodes (*node, tracktion_graph::VertexOrdering::postordering);
+    }
+
+    inline void reserveAudioBufferPool (Node* rootNode, const std::vector<Node*>& allNodes,
+                                        AudioBufferPool& audioBufferPool, size_t numThreads, int blockSize)
+    {
+        if (rootNode == nullptr)
+            return;
+
+        // To find the number of buffers required:
+        // - Find the maximum buffer::Size in the graph
+        // - Multiply it by the maximum number of inputs any Node has
+        // - Then multiply that by the number of threads that will be used (or the num leaf Nodes if that’s smaller)
+        // - Add one for the root node so the ouput can be retained
+        [[ maybe_unused ]] size_t maxNumChannels = 0, maxNumInputs = 0, numLeafNodes = 0;
+        
+        // However, this algorithm is too pessimistic as it assumes there can be
+        // numThreads * maxNumInputs which is unlikely to be true.
+        // It's probably better to stack up numThreads maxNumInputs and use the min of that size and numThreads
+
+        for (auto n : allNodes)
+        {
+            const auto numInputs = n->getDirectInputNodes().size();
+            const auto props = n->getNodeProperties();
+            maxNumInputs    = std::max (maxNumInputs, numInputs);
+            maxNumChannels  = std::max (maxNumChannels, (size_t) props.numberOfChannels);
+            
+            if (numInputs == 0)
+                ++numLeafNodes;
+        }
+        
+        const size_t numBuffersRequired = 1 + numThreads;
+        audioBufferPool.reserve (numBuffersRequired, choc::buffer::Size::create (maxNumChannels, blockSize));
     }
 }
 

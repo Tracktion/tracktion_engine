@@ -85,7 +85,7 @@ public:
         setSize (600, 400);
     }
 
-    ~MidiRecordingDemo()
+    ~MidiRecordingDemo() override
     {
         te::EditFileOperations (*edit).save (true, true, false);
         engine.getTemporaryFileManager().getTempDirectory().deleteRecursively();

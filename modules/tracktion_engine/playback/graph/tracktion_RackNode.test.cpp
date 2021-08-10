@@ -183,7 +183,7 @@ public:
 
         const auto editName = "RackMixBus";
         auto edit = openEditFromZipData (engine, RackMixBus_zip, sizeof (RackMixBus_zip));
-        const double fileLength = 30.0;
+        const double fileLength = 20.0;
         auto sinFile = test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, fileLength, 2);
         
         beginTest ("Load Edit");
@@ -195,20 +195,46 @@ public:
             expectGreaterOrEqual (audioTracks.size(), 8);
             
             for (int i = 0; i < 8; ++i)
-                audioTracks[i]->insertWaveClip ("clip", sinFile->getFile(), ClipPosition { EditTimeRange::withStartAndLength (0.0, fileLength) }, false);
+                audioTracks[i]->insertMIDIClip (EditTimeRange::withStartAndLength (0.0, fileLength), nullptr);
 
             expectEquals (edit->getLength(), fileLength);
         }
 
         // Render single threaded first
-        renderEdit (*this, editName, *edit, ts, MultiThreaded::no, LockFree::no, ThreadPoolStrategy::conditionVariable);
-        renderEdit (*this, editName, *edit, ts, MultiThreaded::no, LockFree::yes, ThreadPoolStrategy::conditionVariable);
+        renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::no, LockFree::no, ThreadPoolStrategy::conditionVariable });
+        renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::no, LockFree::yes, ThreadPoolStrategy::conditionVariable });
 
         // Then multi threaded with different strategies
-        renderEdit (*this, editName, *edit, ts, MultiThreaded::yes, LockFree::no, ThreadPoolStrategy::conditionVariable);
+        renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::no, ThreadPoolStrategy::lightweightSemaphore });
 
         for (auto strategy : test_utilities::getThreadPoolStrategies())
-            renderEdit (*this, editName, *edit, ts, MultiThreaded::yes, LockFree::yes, strategy);
+            renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, strategy });
+
+        // Directly compare not-pooled
+        {
+            renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::semaphore, PoolMemoryAllocations::no });
+            renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::no });
+            renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemHybrid, PoolMemoryAllocations::no });
+        }
+
+       #if TRACKTION_GRAPH_ADVANCED_PERFORMANCE_TESTS
+        // Then multi threaded with pooled memory
+        {
+            renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::semaphore, PoolMemoryAllocations::yes });
+            renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::yes });
+            renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemHybrid, PoolMemoryAllocations::yes });
+        }
+       #endif
+
+        // Lightweight semaphore seems to have the best performance so compare this over different buffer sizes
+        {
+            for (int blockSize : { 128, 256, 512, 1024, 2048 })
+            {
+                ts.blockSize = blockSize;
+                renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::no });
+                renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::yes });
+            }
+        }
     }
 };
 

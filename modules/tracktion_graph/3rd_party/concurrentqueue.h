@@ -37,6 +37,7 @@
 // upon assigning any computed values)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
 
 #ifdef MCDBGQ_USE_RELACY
 #pragma GCC diagnostic ignored "-Wint-to-pointer-cast"

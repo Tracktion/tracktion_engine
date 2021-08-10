@@ -22,18 +22,27 @@ public:
         : LatencyNode (inputNode.get(), numSamplesToDelay)
     {
         ownedInput = std::move (inputNode);
+
+        setOptimisations ({ tracktion_graph::ClearBuffers::no,
+                            tracktion_graph::AllocateAudioBuffer::yes });
     }
 
     LatencyNode (std::shared_ptr<Node> inputNode, int numSamplesToDelay)
         : LatencyNode (inputNode.get(), numSamplesToDelay)
     {
         sharedInput = std::move (inputNode);
+
+        setOptimisations ({ tracktion_graph::ClearBuffers::no,
+                            tracktion_graph::AllocateAudioBuffer::yes });
     }
 
     LatencyNode (Node* inputNode, int numSamplesToDelay)
         : input (inputNode)
     {
         latencyProcessor->setLatencyNumSamples (numSamplesToDelay);
+        
+        setOptimisations ({ tracktion_graph::ClearBuffers::no,
+                            tracktion_graph::AllocateAudioBuffer::yes });
     }
 
     NodeProperties getNodeProperties() override
@@ -75,7 +84,8 @@ public:
         latencyProcessor->writeAudio (inputBuffer);
         latencyProcessor->writeMIDI (inputMidi);
         
-        latencyProcessor->readAudio (pc.buffers.audio);
+        pc.buffers.midi.clear();
+        latencyProcessor->readAudioOverwriting (pc.buffers.audio);
         latencyProcessor->readMIDI (pc.buffers.midi, numSamples);
     }
     

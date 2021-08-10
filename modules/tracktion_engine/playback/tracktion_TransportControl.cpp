@@ -584,7 +584,7 @@ struct TransportControl::PlayHeadWrapper
     void setPosition (double newPos)
     {
        #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-        if (auto ph = getNodePlayHead())
+        if (getNodePlayHead() != nullptr)
             transport.playbackContext->postPosition (newPos);
        #endif
 

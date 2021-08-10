@@ -31,28 +31,68 @@ public:
         test_utilities::TestSetup ts;
         ts.sampleRate = 96000.0;
         ts.blockSize = 128;
+        const double fileDuration = 20.0;
         
-        for (auto strategy : test_utilities::getThreadPoolStrategies())
+        using namespace benchmark_utilities;
+        BenchmarkOptions opts;
+        opts.editName = "Wave Edit";
+        opts.testSetup = ts;
+        opts.poolType = ThreadPoolStrategy::lightweightSemaphore;
+        opts.isMultiThreaded = MultiThreaded::no;
+        opts.poolMemoryAllocations = PoolMemoryAllocations::no;
+
+        bool singleFile = true;
+        
+        // Single threaded
         {
-            runWaveRendering (ts, 30.0, 2, 20, 12, true, false, strategy);
-            runWaveRendering (ts, 30.0, 2, 20, 12, false, false, strategy);
-            
-            runWaveRendering (ts, 30.0, 2, 20, 12, true, true, strategy);
-            runWaveRendering (ts, 30.0, 2, 20, 12, false, true, strategy);
+            singleFile = true;
+            runWaveRendering (fileDuration, 20, 12, singleFile, opts);
+
+            singleFile = false;
+            runWaveRendering (fileDuration, 20, 12, singleFile, opts);
         }
+
+        // Multi-threaded strategies
+        {
+            opts.isMultiThreaded = MultiThreaded::yes;
+
+            for (auto strategy : test_utilities::getThreadPoolStrategies())
+            {
+                opts.poolType = strategy;
+
+                singleFile = true;
+                runWaveRendering (fileDuration, 20, 12, singleFile, opts);
+
+                singleFile = false;
+                runWaveRendering (fileDuration, 20, 12, singleFile, opts);
+            }
+        }
+
+       #if TRACKTION_GRAPH_ADVANCED_PERFORMANCE_TESTS
+        // Lightweight semaphore seems to have the best performance so compare this over different buffer sizes
+        {
+            singleFile = true;
+            opts.poolType = ThreadPoolStrategy::lightweightSemaphore;
+            opts.isMultiThreaded = MultiThreaded::yes;
+            opts.isLockFree = LockFree::yes;
+
+            for (int blockSize : { 128, 256, 512, 1024, 2048 })
+            {
+                opts.testSetup.blockSize = blockSize;
+                runWaveRendering (fileDuration, 20, 12, singleFile, opts);
+            }
+        }
+       #endif
     }
 
 private:
     //==============================================================================
     //==============================================================================
-    void runWaveRendering (test_utilities::TestSetup ts,
-                           double durationInSeconds,
-                           int numChannels,
+    void runWaveRendering (double durationInSeconds,
                            int numTracks,
                            int numFilesPerTrack,
                            bool useSingleFile,
-                           bool isMultiThreaded,
-                           tracktion_graph::ThreadPoolStrategy poolType)
+                           benchmark_utilities::BenchmarkOptions opts)
     {
         // Create Edit with 20 tracks
         // Create 12 5s files per track
@@ -60,58 +100,25 @@ private:
         using namespace tracktion_graph;
         using namespace test_utilities;
         auto& engine = *tracktion_engine::Engine::getEngines()[0];
-        const auto description = test_utilities::getDescription (ts)
-                                    + juce::String (useSingleFile ? ", single file" : ", multiple files")
-                                    + juce::String (isMultiThreaded ? ", MT" : ", ST")
-                                    + ", " + test_utilities::getName (poolType);
+        const auto description = benchmark_utilities::getDescription (opts)
+                                    + juce::String (useSingleFile ? ", single file" : ", multiple files");
         
         tracktion_graph::PlayHead playHead;
         tracktion_graph::PlayHeadState playHeadState { playHead };
         ProcessState processState { playHeadState };
 
         //===
-        beginTest ("Wave Edit - creation: " + description);
+        beginTest (opts.editName + " - creation: " + description);
         const double durationOfFile = durationInSeconds / numFilesPerTrack;
-        auto context = createTestContext (engine, numTracks, numFilesPerTrack, durationOfFile, ts.sampleRate, ts.random, useSingleFile);
+        auto context = createTestContext (engine, numTracks, numFilesPerTrack, durationOfFile, opts.testSetup.sampleRate, opts.testSetup.random, useSingleFile);
         expect (context.edit != nullptr);
-        expect (useSingleFile || (context.files.size() == size_t (numTracks * numFilesPerTrack)));
+        opts.edit = context.edit.get();
+
+        const auto totalNumFiles = size_t (numTracks * numFilesPerTrack);
+        expect (useSingleFile || (context.files.size() == totalNumFiles));
         expectWithinAbsoluteError (context.edit->getLength(), durationInSeconds, 0.01);
 
-        //===
-        beginTest ("Wave - building: " + description);
-        auto node = createNode (*context.edit, processState, ts.sampleRate, ts.blockSize);
-        expect (node != nullptr);
-
-        //===
-        beginTest ("Wave - preparing: " + description);
-        TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
-                                                                                             tracktion_graph::getPoolCreatorFunction (poolType)),
-                                                      ts, numChannels, context.edit->getLength(), false);
-        
-        if (! isMultiThreaded)
-            testContext.getNodePlayer().setNumThreads (0);
-        
-        testContext.setPlayHead (&playHeadState.playHead);
-        playHeadState.playHead.playSyncedToRange ({});
-        expect (true);
-
-        beginTest ("Wave - memory use: " + description);
-        const auto nodes = tracktion_graph::getNodes (testContext.getNode(), tracktion_graph::VertexOrdering::postordering);
-        std::cout << "Num nodes: " << nodes.size() << "\n";
-        std::cout << juce::File::descriptionOfSizeInBytes ((int64_t) test_utilities::getMemoryUsage (nodes)) << "\n";
-        expect (true);
-
-        beginTest ("Wave - rendering: " + description);
-        auto result = testContext.processAll();
-        expect (true);
-
-        beginTest ("Wave - destroying: " + description);
-        result.reset();
-        expect (true);
-        
-        beginTest ("Wave - cleanup: " + description);
-        // This is deliberately empty as RAII will take care of cleanup
-        expect (true);
+        renderEdit (*this, opts);
     }
     
     //==============================================================================
@@ -152,16 +159,6 @@ private:
         }
                 
         return { std::move (edit), std::move (files) };
-    }
-    
-    static std::unique_ptr<tracktion_graph::Node> createNode (Edit& edit, ProcessState& processState,
-                                                              double sampleRate, int blockSize)
-    {
-        CreateNodeParams params { processState };
-        params.sampleRate = sampleRate;
-        params.blockSize = blockSize;
-        params.forRendering = true; // Required for audio files to be read
-        return createNodeForEdit (edit, params);
     }
 };
 

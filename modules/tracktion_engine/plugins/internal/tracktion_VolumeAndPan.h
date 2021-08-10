@@ -57,6 +57,7 @@ public:
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;
     int getNumOutputChannelsGivenInputs (int numInputs) override    { return juce::jmax (2, numInputs); }
+    bool canBeMoved() override                              { return ! isMasterVolume; }
 
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 
@@ -72,6 +73,7 @@ private:
     float lastGainL = 0.0f, lastGainR = 0.0f, lastGainS = 0.0f, lastVolumeBeforeMute = 0.0f;
 
     juce::ReferenceCountedObjectPtr<AudioTrack> vcaTrack;
+    const bool isMasterVolume = false;
 
     void refreshVCATrack();
 

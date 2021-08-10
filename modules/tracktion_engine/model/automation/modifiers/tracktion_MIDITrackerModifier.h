@@ -23,6 +23,7 @@ public:
     using Ptr = juce::ReferenceCountedObjectPtr<MIDITrackerModifier>;
     using Array = juce::ReferenceCountedArray<MIDITrackerModifier>;
 
+    using Modifier::initialise;
     void initialise() override;
     juce::String getName() override                     { return TRANS("MIDI Tracker Modifier"); }
 

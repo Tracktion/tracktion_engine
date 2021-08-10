@@ -72,12 +72,12 @@ void FadeInOutNode::process (ProcessContext& pc)
     if (! renderingNeeded (timelineRange))
     {
         // If we don't need to apply the fade, just pass through the buffer
-        setAudioOutput (sourceBuffers.audio);
+        setAudioOutput (input.get(), sourceBuffers.audio);
         return;
     }
 
     // Otherwise copy the source in to the dest ready for fading
-    copy (destAudioBlock, sourceBuffers.audio);
+    tracktion_graph::copyIfNotAliased (destAudioBlock, sourceBuffers.audio);
 
     auto numSamples = destAudioBlock.getNumFrames();
     jassert (numSamples == timelineRange.getLength());

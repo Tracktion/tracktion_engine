@@ -134,7 +134,7 @@ void TrackMutingNode::process (ProcessContext& pc)
         if (wasJustMuted || wasJustUnMuted)
             copy (destAudioView, sourceBuffers.audio);
         else
-            setAudioOutput (sourceBuffers.audio);
+            setAudioOutput (input.get(), sourceBuffers.audio);
     }
     else
     {

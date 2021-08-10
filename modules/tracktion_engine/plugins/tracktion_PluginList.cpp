@@ -11,6 +11,15 @@
 namespace tracktion_engine
 {
 
+namespace
+{
+    bool isMasterList (PluginList& pl)
+    {
+        return pl.getOwnerTrack() == nullptr
+            || pl.getOwnerTrack() == pl.getEdit().getMasterTrack();
+    }
+}
+
 struct PluginList::ObjectList  : public ValueTreeObjectList<Plugin>
 {
     ObjectList (PluginList& l, const juce::ValueTree& parentTree)
@@ -73,6 +82,7 @@ PluginList::~PluginList()
 void PluginList::initialise (const juce::ValueTree& v)
 {
     jassert (v.hasType (IDs::MASTERPLUGINS)
+              || v.hasType (IDs::MASTERTRACK)
               || v.hasType (IDs::TRACK)
               || v.hasType (IDs::FOLDERTRACK)
               || v.hasType (IDs::AUDIOCLIP)
@@ -172,7 +182,7 @@ bool PluginList::canInsertPlugin()
 {
     return ! ((ownerClip != nullptr && size() >= Edit::maxPluginsOnClip)
               || (ownerTrack != nullptr && size() >= Edit::maxPluginsOnTrack)
-              || (ownerTrack == nullptr && size() >= Edit::maxNumMasterPlugins));
+              || (isMasterList (*this) && size() >= edit.engine.getEngineBehaviour().getMaxNumMasterPlugins()));
 }
 
 void PluginList::insertPlugin (const Plugin::Ptr& plugin, int index, SelectionManager* sm)
@@ -224,7 +234,7 @@ Plugin::Ptr PluginList::insertPlugin (const juce::ValueTree& v, int index)
 
         if ((ownerClip != nullptr && numPlugins >= Edit::maxPluginsOnClip)
              || (ownerTrack != nullptr && numPlugins >= Edit::maxPluginsOnTrack)
-             || (ownerTrack == nullptr && numPlugins >= Edit::maxNumMasterPlugins))
+             || (isMasterList (*this) && numPlugins >= edit.engine.getEngineBehaviour().getMaxNumMasterPlugins()))
         {
             jassertfalse;
             return {};

@@ -294,12 +294,12 @@ void AudioClipComponent::paint (Graphics& g)
 void AudioClipComponent::drawWaveform (Graphics& g, te::AudioClipBase& c, te::SmartThumbnail& thumb, Colour colour,
                                        int left, int right, int y, int h, int xOffset)
 {
-    auto getTimeRangeForDrawing = [this] (const int left, const int right) -> te::EditTimeRange
+    auto getTimeRangeForDrawing = [this] (const int l, const int r) -> te::EditTimeRange
     {
         if (auto p = getParentComponent())
         {
-            double t1 = editViewState.xToTime (left, p->getWidth());
-            double t2 = editViewState.xToTime (right, p->getWidth());
+            double t1 = editViewState.xToTime (l, p->getWidth());
+            double t2 = editViewState.xToTime (r, p->getWidth());
             
             return { t1, t2 };
         }

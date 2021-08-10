@@ -193,6 +193,7 @@ public:
                 hostedInstance->processBlock (midi);
     }
 
+    using MidiInputDevice::handleIncomingMidiMessage;
     void handleIncomingMidiMessage (const juce::MidiMessage&) override {}
     juce::String openDevice() override { return {}; }
     void closeDevice() override {}

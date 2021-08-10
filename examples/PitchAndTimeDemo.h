@@ -78,7 +78,7 @@ public:
                                           };
     }
 
-    ~PitchAndTimeComponent()
+    ~PitchAndTimeComponent() override
     {
         edit.getTempDirectory (false).deleteRecursively();
     }

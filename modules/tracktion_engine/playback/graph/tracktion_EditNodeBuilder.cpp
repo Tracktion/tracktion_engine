@@ -645,11 +645,20 @@ std::unique_ptr<tracktion_graph::Node> createNodeForPlugin (Plugin& plugin, cons
     if (! plugin.isEnabled() && ! params.includeBypassedPlugins)
         return node;
 
+    int maxNumChannels = -1;
+    
+    // If this plugin is on a track or clip and doesn't have a sidechain input we can limit the number of channels it uses
+    if (plugin.getOwnerTrack() != nullptr || plugin.getOwnerClip() != nullptr)
+        if (! plugin.getSidechainSourceID().isValid())
+            maxNumChannels = 2;
+    
     node = createSidechainInputNodeForPlugin (plugin, std::move (node));
     node = tracktion_graph::makeNode<PluginNode> (std::move (node),
                                                   plugin,
                                                   params.sampleRate, params.blockSize,
-                                                  trackMuteState, playHeadState, params.forRendering);
+                                                  trackMuteState, playHeadState,
+                                                  params.forRendering, params.includeBypassedPlugins,
+                                                  maxNumChannels);
 
     return node;
 }
@@ -1186,6 +1195,9 @@ std::unique_ptr<tracktion_graph::Node> createNodeForEdit (EditPlaybackContext& e
         {
             if (auto device = output->getOutputDevice (false))
             {
+                if (! device->isEnabled())
+                    continue;
+                
                 if (t->isFrozen (Track::groupFreeze))
                 {
                     if (std::find (devicesWithFrozenNodes.begin(), devicesWithFrozenNodes.end(), device)
@@ -1287,7 +1299,8 @@ std::unique_ptr<tracktion_graph::Node> createNodeForEdit (EditPlaybackContext& e
             node = std::move (clickAndTracksNode);
         }
 
-        outputNode->addInput (createNodeForDevice (epc, *device, playHeadState, std::move (node)));
+        if (auto outputDeviceNode = createNodeForDevice (epc, *device, playHeadState, std::move (node)))
+            outputNode->addInput (std::move (outputDeviceNode));
     }
     
     std::unique_ptr<Node> finalNode (std::move (outputNode));

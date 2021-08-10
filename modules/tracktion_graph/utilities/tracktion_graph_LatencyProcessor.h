@@ -69,7 +69,7 @@ struct LatencyProcessor
         midi.mergeFromWithOffset (src, latencyTimeSeconds);
     }
 
-    void readAudio (choc::buffer::ChannelArrayView<float> dst)
+    void readAudioAdding (choc::buffer::ChannelArrayView<float> dst)
     {
         if (fifo.getNumChannels() == 0)
             return;
@@ -77,7 +77,16 @@ struct LatencyProcessor
         jassert (fifo.getNumReady() >= (int) dst.getNumFrames());
         fifo.readAdding (dst);
     }
-    
+
+    void readAudioOverwriting (choc::buffer::ChannelArrayView<float> dst)
+    {
+        if (fifo.getNumChannels() == 0)
+            return;
+
+        jassert (fifo.getNumReady() >= (int) dst.getNumFrames());
+        fifo.readOverwriting (dst);
+    }
+
     void readMIDI (tracktion_engine::MidiMessageArray& dst, int numSamples)
     {
         // And read out any delayed items

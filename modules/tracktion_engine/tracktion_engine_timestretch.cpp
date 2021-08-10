@@ -24,13 +24,28 @@ using namespace juce;
  #pragma clang diagnostic ignored "-Wsign-conversion"
  #pragma clang diagnostic ignored "-Wunused-parameter"
  #pragma clang diagnostic ignored "-Wshadow"
+ #pragma clang diagnostic ignored "-Wshadow-all"
  #pragma clang diagnostic ignored "-Wmacro-redefined"
  #pragma clang diagnostic ignored "-Wconversion"
  #pragma clang diagnostic ignored "-Wunused"
+ #pragma clang diagnostic ignored "-Wcast-align"
  #if __has_warning("-Wzero-as-null-pointer-constant")
   #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
  #endif
  #pragma clang diagnostic ignored "-Wextra-semi"
+#endif
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wsign-conversion"
+ #if ! __clang__
+  #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+  #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+ #endif
+ #pragma GCC diagnostic ignored "-Wunused-variable"
+ #pragma GCC diagnostic ignored "-Wunused-parameter"
+ #pragma GCC diagnostic ignored "-Wpedantic"
+ #pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #endif
 
 #ifdef JUCE_MSVC
@@ -70,6 +85,10 @@ namespace tracktion_engine
 
 #ifdef __clang__
  #pragma clang diagnostic pop
+#endif
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
 #endif
 
 #endif

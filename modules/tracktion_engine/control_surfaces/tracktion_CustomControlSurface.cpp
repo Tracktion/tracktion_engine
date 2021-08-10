@@ -459,7 +459,7 @@ void CustomControlSurface::oscMessageReceived (const juce::OSCMessage& m)
             oscControlTapsWhileTouched[addr]++;
             oscActiveAddr = addr;
 
-            if (auto ed = getEdit())
+            if (getEdit() != nullptr)
             {
                 for (auto* mapping : mappings)
                 {

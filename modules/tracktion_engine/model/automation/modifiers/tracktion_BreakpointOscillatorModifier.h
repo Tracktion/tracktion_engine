@@ -22,6 +22,7 @@ public:
     using Ptr = juce::ReferenceCountedObjectPtr<BreakpointOscillatorModifier>;
     using Array = juce::ReferenceCountedArray<BreakpointOscillatorModifier>;
 
+    using Modifier::initialise;
     void initialise() override;
     juce::String getName() override                     { return TRANS("Breakpoint Modifier"); }
 

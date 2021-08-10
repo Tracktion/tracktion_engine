@@ -29,7 +29,7 @@ public:
     Edit& getEdit() const                           { return edit; }
 
     const juce::ValueTree& getState() const         { return state; }
-    void setState (const juce::ValueTree&);
+    void setState (const juce::ValueTree&, bool remapEdit);
     void createEmptyState();
 
     void copyFrom (const TempoSequence&);

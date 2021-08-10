@@ -189,6 +189,13 @@ void StepClip::valueTreeChildRemoved (ValueTree& p, juce::ValueTree& c, int oldI
         changed();
 }
 
+void StepClip::valueTreeChildOrderChanged (juce::ValueTree& p, int o, int n)
+{
+    Clip::valueTreeChildOrderChanged (p, o, n);
+
+    changed();
+}
+
 //==============================================================================
 bool StepClip::canGoOnTrack (Track& t)
 {
@@ -262,7 +269,7 @@ double StepClip::getEndBeatOf (PatternInstance* instance)
 
 void StepClip::resizeClipForPatternInstances()
 {
-    if (auto instance = patternInstanceList.getLast().get())
+    if (patternInstanceList.getLast().get() != nullptr)
     {
         double end = -getOffsetInBeats();
 

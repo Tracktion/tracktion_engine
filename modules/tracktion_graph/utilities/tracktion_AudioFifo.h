@@ -125,6 +125,32 @@ public:
         return true;
     }
 
+    bool readOverwriting (choc::buffer::ChannelArrayView<float> dest)
+    {
+        jassert (dest.getNumChannels() <= buffer.getNumChannels());
+
+        auto numFrames = (int) dest.getNumFrames();
+        int start1, size1, start2, size2;
+        fifo.prepareToRead (numFrames, start1, size1, start2, size2);
+
+        if (size1 + size2 < numFrames)
+            return false;
+
+        auto fifo1 = buffer.getFrameRange ({ (choc::buffer::FrameCount) start1, (choc::buffer::FrameCount) (start1 + size1) });
+        auto block1 = dest.getStart ((choc::buffer::FrameCount) size1);
+        copy (block1, fifo1);
+
+        if (size2 != 0)
+        {
+            auto fifo2 = buffer.getFrameRange ({ (choc::buffer::FrameCount) start2, (choc::buffer::FrameCount) (start2 + size2) });
+            auto block2 = dest.getFrameRange ({ (choc::buffer::FrameCount) size1, (choc::buffer::FrameCount) (size1 + size2) });
+            copy (block2, fifo2);
+        }
+
+        fifo.finishedRead (size1 + size2);
+        return true;
+    }
+    
     void removeSamples (int numSamples)
     {
         fifo.finishedRead (numSamples);

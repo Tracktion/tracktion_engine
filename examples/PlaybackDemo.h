@@ -99,7 +99,7 @@ public:
         startTimerHz (5);
     }
 
-    ~PlaybackDemo()
+    ~PlaybackDemo() override
     {
         engine.getTemporaryFileManager().getTempDirectory().deleteRecursively();
     }

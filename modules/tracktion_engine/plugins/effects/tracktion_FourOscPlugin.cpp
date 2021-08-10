@@ -57,13 +57,15 @@ public:
         sampleRate = sr;
         numSamples = (int) std::ceil (maximumDelay * sampleRate);
         sampleBuffer.resize ((size_t) numSamples);
-        memset (sampleBuffer.data(), 0, sizeof(float) * (size_t) numSamples);
+        const auto num = (size_t) numSamples; // Workaround for a GCC warning
+        memset (sampleBuffer.data(), 0, sizeof(float) * num);
         currentPos = 0;
     }
 
     void reset()
     {
-        memset (sampleBuffer.data(), 0, sizeof(float) * (size_t) numSamples);
+        const auto num = (size_t) numSamples; // Workaround for a GCC warning
+        memset (sampleBuffer.data(), 0, sizeof(float) * num);
     }
 
     inline float samplesToSeconds (float numSamplesIn, float sampleRateIn)
@@ -397,6 +399,7 @@ public:
         return v * std::pow (25.0f, v) * 0.04f;
     }
 
+    using MPESynthesiserVoice::renderNextBlock;
     void renderNextBlock (juce::AudioBuffer<float>& outputBuffer, int startSample, int numSamples) override
     {
         ScopedValueSetter<bool> svs (snapAllValues, firstBlock ? true : snapAllValues);

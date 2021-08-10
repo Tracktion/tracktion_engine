@@ -64,7 +64,7 @@ void TimedMutingNode::process (ProcessContext& pc)
     if (! playHeadState.playHead.isPlaying())
     {
         // If we're not playing, jas pass the source to our destination
-        setAudioOutput (sourceBuffers.audio);
+        setAudioOutput (input.get(), sourceBuffers.audio);
         return;
     }
 

@@ -92,6 +92,12 @@ void Track::resetName()
     trackName.resetToDefault();
 }
 
+bool Track::isOnTop() const
+{
+    return isMarkerTrack() || isTempoTrack() || isChordTrack() || isArrangerTrack() || isMasterTrack()
+        || (isAutomationTrack() && getParentTrack() != nullptr && getParentTrack()->isMasterTrack());
+}
+
 int Track::getIndexInEditTrackList() const
 {
     int index = 0, result = -1;

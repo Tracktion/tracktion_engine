@@ -44,10 +44,21 @@ struct CombiningNode::TimedNode
         }
     }
 
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info,
+                        choc::buffer::ChannelArrayView<float> view)
     {
+        auto info2 = info;
+        info2.allocateAudioBuffer = [view] (choc::buffer::Size size) -> tracktion_graph::NodeBuffer
+                                    {
+                                        jassert (size.numFrames == view.getNumFrames());
+                                        jassert (size.numChannels <= view.getNumChannels());
+                                        
+                                        return { view.getFirstChannels (size.numChannels), {} };
+                                    };
+        info2.deallocateAudioBuffer = nullptr;
+        
         for (auto n : nodesToProcess)
-            n->initialise (info);
+            n->initialise (info2);
     }
     
     bool isReadyToProcess() const
@@ -55,14 +66,21 @@ struct CombiningNode::TimedNode
         return nodesToProcess.front()->isReadyToProcess();
     }
 
-    void prefetchBlock (juce::Range<int64_t> referenceSampleRange) const
+    void prefetchBlock (juce::Range<int64_t> referenceSampleRange)
     {
+        if (hasPrefetched)
+            return;
+        
         for (auto n : nodesToProcess)
             n->prepareForNextBlock (referenceSampleRange);
+
+        hasPrefetched = true;
     }
 
-    void process (ProcessContext& pc) const
+    void process (ProcessContext& pc)
     {
+        jassert (hasPrefetched);
+        
         // Process all the Nodes
         for (auto n : nodesToProcess)
             n->process (pc.referenceSampleRange);
@@ -77,6 +95,8 @@ struct CombiningNode::TimedNode
                  nodeOutput.audio.getFirstChannels (numChannelsToAdd));
         
         pc.buffers.midi.mergeFrom (nodeOutput.midi);
+        
+        hasPrefetched = false;
     }
 
     size_t getAllocatedBytes() const
@@ -94,6 +114,7 @@ struct CombiningNode::TimedNode
 private:
     const std::unique_ptr<Node> node;
     std::vector<Node*> nodesToProcess;
+    bool hasPrefetched = false;
 
     JUCE_DECLARE_NON_COPYABLE (TimedNode)
 };
@@ -164,10 +185,12 @@ tracktion_graph::NodeProperties CombiningNode::getNodeProperties()
 void CombiningNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
 {
     isReadyToProcessBlock.store (true, std::memory_order_release);
+    tempAudioBuffer.resize (choc::buffer::Size::create ((choc::buffer::ChannelCount) nodeProperties.numberOfChannels,
+                                                        (choc::buffer::FrameCount) info.blockSize));
 
     for (auto& i : inputs)
     {
-        i->prepareToPlay (info);
+        i->prepareToPlay (info, tempAudioBuffer.getView());
         
         if (! i->isReadyToProcess())
             isReadyToProcessBlock.store (false, std::memory_order_release);
@@ -183,16 +206,13 @@ void CombiningNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
 {
     SCOPED_REALTIME_CHECK
 
-    const double time = getEditTimeRange().getStart();
-    prefetchGroup (referenceSampleRange, time);
-
-    if (getPlayHeadState().isLastBlockOfLoop())
-        prefetchGroup (referenceSampleRange, tracktion_graph::sampleToTime (getPlayHead().getLoopRange().getStart(), processState.sampleRate));
+    const auto editTime = getEditTimeRange();
+    prefetchGroup (referenceSampleRange, editTime);
 
     // Update ready to process state based on nodes intersecting this time
     isReadyToProcessBlock.store (true, std::memory_order_release);
     
-    if (auto g = groups[combining_node_utils::timeToGroupIndex (time)])
+    if (auto g = groups[combining_node_utils::timeToGroupIndex (editTime.getStart())])
     {
         for (auto tan : *g)
         {
@@ -210,7 +230,7 @@ void CombiningNode::process (ProcessContext& pc)
     SCOPED_REALTIME_CHECK
     const auto editTime = getEditTimeRange();
     const auto initialEvents = pc.buffers.midi.size();
-    
+
     if (auto g = groups[combining_node_utils::timeToGroupIndex (editTime.getStart())])
     {
         for (auto tan : *g)
@@ -220,6 +240,11 @@ void CombiningNode::process (ProcessContext& pc)
                 if (tan->time.start >= editTime.getEnd())
                     break;
 
+                // Clear the allocated storage
+                tempAudioBuffer.clear();
+                
+                // Then process the buffer.
+                // This will use the local buffer for the Nodes in the TimedNode and put the result in pc.buffers
                 tan->process (pc);
             }
         }
@@ -231,7 +256,7 @@ void CombiningNode::process (ProcessContext& pc)
 
 size_t CombiningNode::getAllocatedBytes() const
 {
-    size_t size = 0;
+    size_t size = tempAudioBuffer.getView().data.getBytesNeeded (tempAudioBuffer.getSize());
     
     for (const auto& i : inputs)
         size += i->getAllocatedBytes();
@@ -239,11 +264,21 @@ size_t CombiningNode::getAllocatedBytes() const
     return size;
 }
 
-void CombiningNode::prefetchGroup (juce::Range<int64_t> referenceSampleRange, double time)
+void CombiningNode::prefetchGroup (juce::Range<int64_t> referenceSampleRange, EditTimeRange editTime)
 {
-    if (auto g = groups[combining_node_utils::timeToGroupIndex (time)])
+    if (auto g = groups[combining_node_utils::timeToGroupIndex (editTime.getStart())])
+    {
         for (auto tan : *g)
-            tan->prefetchBlock (referenceSampleRange);
+        {
+            if (tan->time.end > editTime.getStart())
+            {
+                if (tan->time.start >= editTime.getEnd())
+                    break;
+
+                tan->prefetchBlock (referenceSampleRange);
+            }
+        }
+    }
 }
 
 }

@@ -196,6 +196,10 @@ using namespace juce;
 
 #include "playback/tracktion_HostedAudioDevice.cpp"
 
+#ifdef JUCE_MSVC
+ #pragma warning (disable: 4996)
+#endif
+
 static inline void sprintf (char* dest, size_t maxLength, const char* format, ...) noexcept
 {
     va_list list;

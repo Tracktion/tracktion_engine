@@ -66,7 +66,8 @@ public:
     {
         for (int i = 0; i < numSamples; ++i)
         {
-            bufferWritePos = ++bufferWritePos % maxBufferSize;
+            ++bufferWritePos;
+            bufferWritePos = bufferWritePos % maxBufferSize;
             buffer[bufferWritePos] = samples[i];
 
             int bufferReadPos = bufferWritePos - bufferSize;
@@ -93,7 +94,8 @@ public:
 
         for (int i = 0; i < numSamples; ++i)
         {
-            bufferWritePos = ++bufferWritePos % maxBufferSize;
+            ++bufferWritePos;
+            bufferWritePos = bufferWritePos % maxBufferSize;
             buffer[bufferWritePos] = samples[i];
 
             int bufferReadPos = bufferWritePos - bufferSize;

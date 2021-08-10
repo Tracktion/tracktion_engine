@@ -49,14 +49,22 @@ void LockFreeMultiThreadedNodePlayer::setNode (std::unique_ptr<Node> newNode)
 
 void LockFreeMultiThreadedNodePlayer::setNode (std::unique_ptr<Node> newNode, double sampleRateToUse, int blockSizeToUse)
 {
-    auto currentRoot = preparedNode.rootNode.get();
-    auto newNodes = prepareToPlay (newNode.get(), currentRoot, sampleRateToUse, blockSizeToUse);
-    setNewCurrentNode (std::move (newNode), newNodes);
+    setNewCurrentNode (std::move (newNode), sampleRateToUse, blockSizeToUse);
 }
 
-void LockFreeMultiThreadedNodePlayer::prepareToPlay (double sampleRateToUse, int blockSizeToUse, Node* oldNode)
+void LockFreeMultiThreadedNodePlayer::prepareToPlay (double sampleRateToUse, int blockSizeToUse)
 {
-    preparedNode.allNodes = prepareToPlay (preparedNode.rootNode.get(), oldNode, sampleRateToUse, blockSizeToUse);
+    std::unique_ptr<Node> currentNode;
+    
+    {
+        std::lock_guard<RealTimeSpinLock> sl (clearNodesLock);
+        updatePreparedNode();
+        currentNode = std::move (preparedNode.rootNode);
+    }
+    
+    clearNode();
+
+    setNode (std::move (currentNode), sampleRateToUse, blockSizeToUse);
 }
 
 int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
@@ -77,6 +85,9 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
     // Prepare all the nodes to be played back
     for (auto node : preparedNode.allNodes)
         node->prepareForNextBlock (referenceSampleRange);
+
+    // We need to retain the root so we can get the output from it
+    preparedNode.rootNode->retain();
 
     if (numThreadsToUse.load (std::memory_order_acquire) == 0)
     {
@@ -112,6 +123,9 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
         pc.buffers.midi.mergeFrom (output.midi);
     }
 
+    // We need to retain the root so we can get the output from it
+    preparedNode.rootNode->release();
+
     return -1;
 }
 
@@ -138,15 +152,36 @@ void LockFreeMultiThreadedNodePlayer::clearNode()
 }
 
 //==============================================================================
+void LockFreeMultiThreadedNodePlayer::enablePooledMemoryAllocations (bool usePool)
+{
+    if (useMemoryPool.exchange (usePool) != usePool)
+        prepareToPlay (sampleRate, blockSize);
+}
+
 //==============================================================================
-std::vector<Node*> LockFreeMultiThreadedNodePlayer::prepareToPlay (Node* node, Node* oldNode, double sampleRateToUse, int blockSizeToUse)
+//==============================================================================
+std::vector<Node*> LockFreeMultiThreadedNodePlayer::prepareToPlay (Node* node, Node* oldNode,
+                                                                   double sampleRateToUse, int blockSizeToUse,
+                                                                   AudioBufferPool* pool)
 {
     createThreads();
 
     sampleRate.store (sampleRateToUse, std::memory_order_release);
     blockSize = blockSizeToUse;
+    
+    if (pool == nullptr)
+        return node_player_utils::prepareToPlay (node, oldNode, sampleRateToUse, blockSizeToUse);
 
-    return node_player_utils::prepareToPlay (node, oldNode, sampleRateToUse, blockSizeToUse);
+    return node_player_utils::prepareToPlay (node, oldNode, sampleRateToUse, blockSizeToUse,
+                                             [pool] (auto s) -> NodeBuffer
+                                             {
+                                                auto data = pool->allocate (s);
+                                                return { data.getView().getFirstChannels (s.numChannels).getStart (s.numFrames), std::move (data) };
+                                             },
+                                             [pool] (auto b)
+                                             {
+                                                 pool->release (std::move (b.data));
+                                             });
 }
 
 //==============================================================================
@@ -183,10 +218,17 @@ inline void LockFreeMultiThreadedNodePlayer::pause()
 }
 
 //==============================================================================
-void LockFreeMultiThreadedNodePlayer::setNewCurrentNode (std::unique_ptr<Node> newRoot, std::vector<Node*> newNodes)
+void LockFreeMultiThreadedNodePlayer::setNewCurrentNode (std::unique_ptr<Node> newRoot,
+                                                         double sampleRateToUse, int blockSizeToUse)
 {
     while (isUpdatingPreparedNode)
         pause();
+
+    const bool useAudioBufferPool = useMemoryPool;
+    auto currentRoot = preparedNode.rootNode.get();
+    auto newNodes = prepareToPlay (newRoot.get(), currentRoot,
+                                   sampleRateToUse, blockSizeToUse,
+                                   useAudioBufferPool ? pendingPreparedNodeStorage.audioBufferPool.get() : nullptr);
 
     std::stable_sort (newNodes.begin(), newNodes.end(),
                       [] (auto n1, auto n2)
@@ -198,7 +240,23 @@ void LockFreeMultiThreadedNodePlayer::setNewCurrentNode (std::unique_ptr<Node> n
     rootNode = newRoot.get();
     pendingPreparedNodeStorage.rootNode = std::move (newRoot);
     pendingPreparedNodeStorage.allNodes = std::move (newNodes);
+    pendingPreparedNodeStorage.nodesReadyToBeProcessed = std::make_unique<LockFreeFifo<Node*>> ((int) pendingPreparedNodeStorage.allNodes.size());
     buildNodesOutputLists (pendingPreparedNodeStorage);
+    
+    if (useAudioBufferPool)
+    {
+        if (! pendingPreparedNodeStorage.audioBufferPool)
+            pendingPreparedNodeStorage.audioBufferPool = std::make_unique<AudioBufferPool> (pendingPreparedNodeStorage.allNodes.size());
+        
+        node_player_utils::reserveAudioBufferPool (pendingPreparedNodeStorage.rootNode.get(),
+                                                   pendingPreparedNodeStorage.allNodes,
+                                                   *pendingPreparedNodeStorage.audioBufferPool,
+                                                   numThreadsToUse, blockSize);
+    }
+    else
+    {
+        pendingPreparedNodeStorage.audioBufferPool.reset();
+    }
 
     pendingPreparedNode = &pendingPreparedNodeStorage;
 }
@@ -230,6 +288,7 @@ void LockFreeMultiThreadedNodePlayer::buildNodesOutputLists (PreparedNode& prepa
             // Check the input is actually still in the graph
             jassert (std::find (preparedNode.allNodes.begin(), preparedNode.allNodes.end(), inputNode) != preparedNode.allNodes.end());
             static_cast<PlaybackNode*> (inputNode->internal)->outputs.push_back (node);
+            inputNode->numOutputNodes++;
         }
     }
 }
@@ -241,7 +300,7 @@ void LockFreeMultiThreadedNodePlayer::resetProcessQueue()
     {
         Node* temp;
 
-        if (! preparedNode.nodesReadyToBeProcessed.try_dequeue (temp))
+        if (! preparedNode.nodesReadyToBeProcessed->try_dequeue (temp))
             break;
     }
 
@@ -284,7 +343,7 @@ void LockFreeMultiThreadedNodePlayer::resetProcessQueue()
         {
             jassert (! playbackNode->hasBeenQueued);
             playbackNode->hasBeenQueued = true;
-            preparedNode.nodesReadyToBeProcessed.enqueue (&playbackNode->node);
+            preparedNode.nodesReadyToBeProcessed->try_enqueue (&playbackNode->node);
             ++numNodesJustQueued;
         }
     }
@@ -304,7 +363,7 @@ Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
         auto outputPlaybackNode = static_cast<PlaybackNode*> (output->internal);
 
         // fetch_sub returns the previous value so it will now be 0
-        if (outputPlaybackNode->numInputsToBeProcessed.fetch_sub (1, std::memory_order_release) == 1)
+        if (outputPlaybackNode->numInputsToBeProcessed.fetch_sub (1, std::memory_order_acq_rel) == 1)
         {
             jassert (outputPlaybackNode->node.isReadyToProcess());
             jassert (! outputPlaybackNode->hasBeenQueued);
@@ -315,8 +374,8 @@ Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
                 || output == playbackNode->outputs.back())
                return &outputPlaybackNode->node;
             
-            preparedNode.nodesReadyToBeProcessed.enqueue (&outputPlaybackNode->node);
-            numNodesQueued.fetch_add (1, std::memory_order_release);
+            preparedNode.nodesReadyToBeProcessed->try_enqueue (&outputPlaybackNode->node);
+            numNodesQueued.fetch_add (1, std::memory_order_acq_rel);
             threadPool->signalOne();
         }
     }
@@ -332,10 +391,10 @@ bool LockFreeMultiThreadedNodePlayer::processNextFreeNode()
     if (numNodesQueued.load (std::memory_order_acquire) == 0)
         return false;
 
-    if (! preparedNode.nodesReadyToBeProcessed.try_dequeue (nodeToProcess))
+    if (! preparedNode.nodesReadyToBeProcessed->try_dequeue (nodeToProcess))
         return false;
 
-    numNodesQueued.fetch_sub (1, std::memory_order_release);
+    numNodesQueued.fetch_sub (1, std::memory_order_acq_rel);
 
     assert (nodeToProcess != nullptr);
     processNode (*nodeToProcess);

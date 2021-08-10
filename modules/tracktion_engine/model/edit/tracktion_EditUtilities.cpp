@@ -837,7 +837,7 @@ juce::Array<AutomatableEditItem*> getAllAutomatableEditItems (const Edit& edit)
 
 void deleteAutomation (const SelectableList& selectedClips)
 {
-    if (auto clip = selectedClips.getFirstOfType<Clip>())
+    if (selectedClips.containsType<Clip>())
     {
         for (auto& section : TrackSection::findSections (selectedClips.getItemsOfType<TrackItem>()))
         {

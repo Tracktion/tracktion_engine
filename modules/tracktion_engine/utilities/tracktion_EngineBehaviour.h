@@ -41,6 +41,15 @@ public:
     */
     virtual void setPluginDisabled (const juce::String& /*idString*/, bool /*shouldBeDisabled*/) {}
 
+    /** Gives the host a chance to do any extra configuration after a plugin is loaded */
+    virtual void doAdditionalInitialisation (ExternalPlugin&)                       {}
+
+    /** If you have any special VST plugins that access items in the Edit, you need to return them */
+    virtual juce::Array<Exportable::ReferencedItem> getReferencedItems (ExternalPlugin&) { return {}; }
+
+    /** If you have any special VST plugins that access items in the Edit, you need to reassign them */
+    virtual void reassignReferencedItem (ExternalPlugin&, const Exportable::ReferencedItem&, ProjectItemID, double)  {}
+
     /** Should return if plugins which have been bypassed should be included in the playback graph.
         By default this is false and bypassed plugins will still call processBypassed and introduce
         the same latency as if they weren't.
@@ -107,6 +116,9 @@ public:
     virtual void setMidiClipsRemappedWhenTempoChanges (bool)                        {}
     virtual bool arePluginsRemappedWhenTempoChanges()                               { return true; }
     virtual void setPluginsRemappedWhenTempoChanges (bool)                          {}
+
+    /** Should return the maximum number of plugins that can be added to the master bus. */
+    virtual int getMaxNumMasterPlugins()                                            { return 4; }
 
     /** If this returns true, it means that the length (in seconds) of one "beat" at
         any point in an edit is considered to be the length of one division in the current

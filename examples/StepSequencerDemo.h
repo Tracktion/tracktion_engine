@@ -70,7 +70,7 @@ struct StepEditor   : public Component,
         clip.addSelectableListener (this);
     }
 
-    ~StepEditor()
+    ~StepEditor() override
     {
         clip.removeSelectableListener (this);
     }
@@ -452,7 +452,7 @@ public:
         setSize (600, 400);
     }
 
-    ~StepSequencerDemo()
+    ~StepSequencerDemo() override
     {
         // Clean up our temporary sample files and projects
         engine.getTemporaryFileManager().getTempDirectory().deleteRecursively();

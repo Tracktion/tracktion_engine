@@ -50,38 +50,35 @@ struct DirtyList
 
     using Handle = uint32_t;
 
-    /** Prepares the list by giving it the complete set of objects that it will manage.
-        The return value is the set of handles assigned to each of the objects. The handles
-        are later needed by the caller in order to call markAsDirty().
-
-        Note that this method is not thread-safe, and must be performed before any other
-        operations begin. It can be called multiple times to re-initialise the same list
-        for other objects, as long as thread-safety is observed.
-    */
+    /// Prepares the list by giving it the complete set of objects that it will manage.
+    /// The return value is the set of handles assigned to each of the objects. The handles
+    /// are later needed by the caller in order to call markAsDirty().
+    ///
+    /// Note that this method is not thread-safe, and must be performed before any other
+    /// operations begin. It can be called multiple times to re-initialise the same list
+    /// for other objects, as long as thread-safety is observed.
     template <typename Array>
     std::vector<Handle> initialise (const Array& objects);
 
-    /** Clears the queue of pending items and resets the 'dirty' state of all objects. */
+    /// Clears the queue of pending items and resets the 'dirty' state of all objects.
     void resetAll();
 
-    /** Marks an object as dirty.
-        This may be called from any thread, and is lock-free.
-
-        If the object is already marked as dirty, this function does nothing. If not, then
-        the object is marked as dirty and added to the queue of objects which will later
-        be returned by calls to popNextDirtyObject().
-    */
+    /// Marks an object as dirty.
+    ///
+    /// This may be called from any thread, and is lock-free.
+    /// If the object is already marked as dirty, this function does nothing. If not, then
+    /// the object is marked as dirty and added to the queue of objects which will later
+    /// be returned by calls to popNextDirtyObject().
     void markAsDirty (Handle objectHandle);
 
-    /** Returns a pointer to the next dirty object (and in doing so marks that object
-        as now being 'clean').
-        If no objects are dirty, this returns nullptr.
-        This method is lock-free, but is designed to be called by only a single reader
-        thread.
-    */
+    /// Returns a pointer to the next dirty object (and in doing so marks that object
+    /// as now being 'clean').
+    /// If no objects are dirty, this returns nullptr.
+    /// This method is lock-free, but is designed to be called by only a single reader
+    /// thread.
     ObjectType* popNextDirtyObject();
 
-    /** Returns true if any objects are currently queued for attention. */
+    /// Returns true if any objects are currently queued for attention.
     bool areAnyObjectsDirty() const;
 
 private:
