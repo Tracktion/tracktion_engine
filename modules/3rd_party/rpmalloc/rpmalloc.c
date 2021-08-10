@@ -694,7 +694,9 @@ static int32_t _huge_pages_peak;
 static pthread_key_t _memory_thread_heap;
 #else
 #  ifdef _MSC_VER
-#    define _Thread_local __declspec(thread)
+#    ifndef _Thread_local
+#      define _Thread_local __declspec(thread)
+#    endif
 #    define TLS_MODEL
 #  else
 #    ifndef __HAIKU__

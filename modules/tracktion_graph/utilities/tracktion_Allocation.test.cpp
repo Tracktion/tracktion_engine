@@ -72,7 +72,7 @@ private:
                             {
                                 rpmalloc_thread_initialize();
 
-                                data1 = static_cast<decltype (data1)> (rpmalloc (numBytes));
+                                data1 = static_cast<int*> (rpmalloc (numBytes));
                                 expect (data1 != nullptr);
                                 std::fill_n (data1, numInts, 42);
                                 expectEquals (*data1, 42);
@@ -86,7 +86,7 @@ private:
                                 t1.join();
                                 rpmalloc_thread_initialize();
 
-                                data2 = static_cast<decltype (data2)> (rpmalloc (numBytes));
+                                data2 = static_cast<int*> (rpmalloc (numBytes));
                                 expect (data2 != nullptr);
                                 std::fill_n (data2, numInts, 42);
                                 expectEquals (*data2, 42);
@@ -172,13 +172,13 @@ private:
             // Randomly push or pop ints in to a vector
             
             constexpr int numThreads = 100;
-            constexpr size_t maxSize = 100'000;
             std::vector<std::thread> pool;
             std::atomic<bool> shouldExit { false };
 
             for (int threadNum = 0; threadNum < numThreads; ++threadNum)
                 pool.emplace_back ([&shouldExit]
                                    {
+                                       constexpr size_t maxSize = 100'000;
                                        juce::Random r;
                                        std::vector<int, rpallocator<int>> vec;
                     
