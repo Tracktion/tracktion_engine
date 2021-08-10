@@ -48,3 +48,6 @@
 #include "utilities/tracktion_Semaphore.tests.cpp"
 #include "utilities/tracktion_Threads.cpp"
 
+// Put this last to avoid macro leakage
+#include "utilities/tracktion_Allocation.test.cpp"
+#include "../../3rd_party/rpmalloc/rpallocator.cpp"

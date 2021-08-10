@@ -18,6 +18,7 @@
 
 #define GRAPH_UNIT_TESTS_AUDIOBUFFERPOOL   1
 #define GRAPH_UNIT_TESTS_SEMAPHORE         1
+#define GRAPH_UNIT_TESTS_ALLOCATION        1
 
 // Defined in tracktion_engine
 #define GRAPH_UNIT_TESTS_WAVENODE          1
