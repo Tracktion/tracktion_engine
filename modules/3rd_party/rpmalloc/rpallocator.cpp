@@ -14,7 +14,9 @@
  #pragma GCC diagnostic ignored "-Wunused-variable"
 
  #if ! defined (__clang__)
-  #pragma GCC diagnostic ignored "-Wclass-memaccess"
+  #if __GNUC__ >= 8
+   #pragma GCC diagnostic ignored "-Wclass-memaccess"
+  #endif
  #endif
 #endif
 

@@ -178,7 +178,7 @@ private:
             for (int threadNum = 0; threadNum < numThreads; ++threadNum)
                 pool.emplace_back ([&shouldExit]
                                    {
-                                       constexpr size_t maxSize = 100'000;
+                                       const size_t maxSize = 100'000;
                                        juce::Random r;
                                        std::vector<int, rpallocator<int>> vec;
                     
