@@ -142,6 +142,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8d3a814ace968b53fda9c16bb0dfd69a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ExternalPlugin.html#a8d3a814ace968b53fda9c16bb0dfd69a">setEnabled</a> (bool <a class="el" href="classtracktion__engine_1_1Plugin.html#aa67513f32682c1cfc6dfb7cf6367ef47">enabled</a>) override</td></tr>
 <tr class="memdesc:a8d3a814ace968b53fda9c16bb0dfd69a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable/disable the plugin.  <a href="classtracktion__engine_1_1ExternalPlugin.html#a8d3a814ace968b53fda9c16bb0dfd69a">More...</a><br /></td></tr>
 <tr class="separator:a8d3a814ace968b53fda9c16bb0dfd69a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a589336155f06a2173b0330741c6023d7"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="structtracktion__engine_1_1Exportable_1_1ReferencedItem.html">Exportable::ReferencedItem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ExternalPlugin.html#a589336155f06a2173b0330741c6023d7">getReferencedItems</a> () override</td></tr>
+<tr class="separator:a589336155f06a2173b0330741c6023d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b93c983b291e50cf93c99774f7c5cd8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ExternalPlugin.html#a1b93c983b291e50cf93c99774f7c5cd8">reassignReferencedItem</a> (const <a class="el" href="structtracktion__engine_1_1Exportable_1_1ReferencedItem.html">ReferencedItem</a> &amp;, <a class="el" href="classtracktion__engine_1_1ProjectItemID.html">ProjectItemID</a> newID, double newStartTime) override</td></tr>
+<tr class="separator:a1b93c983b291e50cf93c99774f7c5cd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad6629a8b50a92f91ffe89e9d83ff6db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ExternalPlugin.html#aad6629a8b50a92f91ffe89e9d83ff6db">applyToBuffer</a> (const <a class="el" href="structtracktion__engine_1_1PluginRenderContext.html">PluginRenderContext</a> &amp;) override</td></tr>
 <tr class="memdesc:aad6629a8b50a92f91ffe89e9d83ff6db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process the next block of data.  <a href="classtracktion__engine_1_1ExternalPlugin.html#aad6629a8b50a92f91ffe89e9d83ff6db">More...</a><br /></td></tr>
 <tr class="separator:aad6629a8b50a92f91ffe89e9d83ff6db"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1053,6 +1057,77 @@ Additional Inherited Members</h2></td></tr>
  </p>
 
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Plugin.html#a7dce115871aa0b824d6fd3f7a6b70ad7">tracktion_engine::Plugin</a>.</p>
+
+</div>
+</div>
+<a id="a589336155f06a2173b0330741c6023d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a589336155f06a2173b0330741c6023d7">&#9670;&nbsp;</a></span>getReferencedItems()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::Array&lt;<a class="el" href="structtracktion__engine_1_1Exportable_1_1ReferencedItem.html">Exportable::ReferencedItem</a>&gt; tracktion_engine::ExternalPlugin::getReferencedItems </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classtracktion__engine_1_1Exportable.html#a243881f563227f28871f5db8de8bf836">tracktion_engine::Exportable</a>.</p>
+
+</div>
+</div>
+<a id="a1b93c983b291e50cf93c99774f7c5cd8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b93c983b291e50cf93c99774f7c5cd8">&#9670;&nbsp;</a></span>reassignReferencedItem()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion_engine::ExternalPlugin::reassignReferencedItem </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtracktion__engine_1_1Exportable_1_1ReferencedItem.html">ReferencedItem</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1ProjectItemID.html">ProjectItemID</a>&#160;</td>
+          <td class="paramname"><em>newID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>newStartTime</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classtracktion__engine_1_1Exportable.html#ac2b41967cab8e5c34de148d63d477d7f">tracktion_engine::Exportable</a>.</p>
 
 </div>
 </div>
@@ -2279,7 +2354,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 6 2021 09:02:32 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 10 2021 09:52:54 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

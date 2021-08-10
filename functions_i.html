@@ -243,6 +243,7 @@ $(function() {
 , <a class="el" href="classtracktion__engine_1_1LowPassPlugin.html#a0225b4fec5e56d78599b09b2fdb54bfd">tracktion_engine::LowPassPlugin</a>
 , <a class="el" href="classtracktion__engine_1_1MacroParameter.html#a1c5c6cc197a158d4e802ba54234e9750">tracktion_engine::MacroParameter</a>
 , <a class="el" href="classtracktion__engine_1_1MarkerClip.html#a8860309573ec3fbe8e4f2e6276bafc60">tracktion_engine::MarkerClip</a>
+, <a class="el" href="classtracktion__engine_1_1MasterTrack.html#ad16b5459701f97828c701e161efd95ac">tracktion_engine::MasterTrack</a>
 , <a class="el" href="classtracktion__engine_1_1MidiClip.html#a6cae30b780f5c0c58688b6272ba2fbcb">tracktion_engine::MidiClip</a>
 , <a class="el" href="classtracktion__engine_1_1MidiCompManager.html#ae43b123694540c003a542420465e9322">tracktion_engine::MidiCompManager</a>
 , <a class="el" href="classtracktion__engine_1_1MidiModifierPlugin.html#a7937056456e53034964ac9dccdc5c49c">tracktion_engine::MidiModifierPlugin</a>
@@ -818,6 +819,9 @@ $(function() {
 <li>isLoading()
 : <a class="el" href="classtracktion__engine_1_1Edit.html#a59cc0b2023c0e8ac47a88734a495b4da">tracktion_engine::Edit</a>
 </li>
+<li>isLockFree
+: <a class="el" href="structtracktion__engine_1_1benchmark__utilities_1_1BenchmarkOptions.html#a2c84b09fe12dcc8dd6776ef3ead95e51">tracktion_engine::benchmark_utilities::BenchmarkOptions</a>
+</li>
 <li>isLoopable()
 : <a class="el" href="classtracktion__engine_1_1LoopInfo.html#a0065e68ff4bfa3c1864f766a3df369ab">tracktion_engine::LoopInfo</a>
 </li>
@@ -839,6 +843,11 @@ $(function() {
 : <a class="el" href="classtracktion__engine_1_1MarkerTrack.html#adada9604238cc90d6bc3b206d18893e9">tracktion_engine::MarkerTrack</a>
 , <a class="el" href="classtracktion__engine_1_1Track.html#ac1688c951a0ed757e3f8e80228482636">tracktion_engine::Track</a>
 , <a class="el" href="structtracktion__engine_1_1TrackList.html#ad20a92bf8c9b7d1b7b0cb66ec58f3eb4">tracktion_engine::TrackList</a>
+</li>
+<li>isMasterTrack()
+: <a class="el" href="classtracktion__engine_1_1MasterTrack.html#a1402d23d8610ce40099cb2ce0dcf7006">tracktion_engine::MasterTrack</a>
+, <a class="el" href="classtracktion__engine_1_1Track.html#a2ddd9f26904372d8f74826cc46ecdcdf">tracktion_engine::Track</a>
+, <a class="el" href="structtracktion__engine_1_1TrackList.html#aee687133a58b6b9ac210d0230824c8b2">tracktion_engine::TrackList</a>
 </li>
 <li>isMelodyne()
 : <a class="el" href="classtracktion__engine_1_1TimeStretcher.html#a88dedf819f299f670343d457befde994">tracktion_engine::TimeStretcher</a>
@@ -899,6 +908,9 @@ $(function() {
 </li>
 <li>isMSWavetableSynthPresent()
 : <a class="el" href="classtracktion__engine_1_1DeviceManager.html#ace515f0384d7fe995919080f10e47903">tracktion_engine::DeviceManager</a>
+</li>
+<li>isMultiThreaded
+: <a class="el" href="structtracktion__engine_1_1benchmark__utilities_1_1BenchmarkOptions.html#a6157c3d3ba0a4a734667ce32a5e144d6">tracktion_engine::benchmark_utilities::BenchmarkOptions</a>
 </li>
 <li>isMusicalContextContentAvailable()
 : <a class="el" href="classMusicalContextWrapper.html#ad645196eb3376b33bee90ea9d78283eb">MusicalContextWrapper</a>
@@ -1091,7 +1103,7 @@ $(function() {
 , <a class="el" href="classtracktion__engine_1_1TransportControl.html#aa4106d0c769426e78a1d89e92a7cdbfc">tracktion_engine::TransportControl</a>
 </li>
 <li>isRecordingActive()
-: <a class="el" href="classtracktion__engine_1_1InputDeviceInstance.html#adb7a2d2cbf8208364daeafac07c0dd79">tracktion_engine::InputDeviceInstance</a>
+: <a class="el" href="classtracktion__engine_1_1InputDeviceInstance.html#a4da61233e3d42d6b61be94987a3330b2">tracktion_engine::InputDeviceInstance</a>
 </li>
 <li>isRecordingAutomation()
 : <a class="el" href="classtracktion__engine_1_1AutomationRecordManager.html#a83578d92285da54ec3836ba15e63a501">tracktion_engine::AutomationRecordManager</a>
@@ -1140,7 +1152,7 @@ $(function() {
 : <a class="el" href="classtracktion__engine_1_1Selectable.html#a5ac76b0a90e6323c2f3246cec58405a5">tracktion_engine::Selectable</a>
 </li>
 <li>isSelected()
-: <a class="el" href="classtracktion__engine_1_1SelectedMidiEvents.html#a14b35d4375ed5875ef53797642a75d2e">tracktion_engine::SelectedMidiEvents</a>
+: <a class="el" href="classtracktion__engine_1_1SelectedMidiEvents.html#a20615b5908cabfbc69dffe52fde55967">tracktion_engine::SelectedMidiEvents</a>
 , <a class="el" href="classtracktion__engine_1_1SelectionManager.html#a95f4c983ee77fa8ea5bee2c2b9ea1b0d">tracktion_engine::SelectionManager</a>
 </li>
 <li>isSendingBankChanges()
@@ -1224,7 +1236,7 @@ $(function() {
 , <a class="el" href="classtracktion__engine_1_1ToneGeneratorPlugin.html#a8e34b07893602c854c69db6791a33e6a">tracktion_engine::ToneGeneratorPlugin</a>
 </li>
 <li>isTakeComp()
-: <a class="el" href="classtracktion__engine_1_1CompManager.html#a59c62704d04d84b1bada1ec03e211fa1">tracktion_engine::CompManager</a>
+: <a class="el" href="classtracktion__engine_1_1CompManager.html#a037370b8370b63d5270dfbee08d0bba1">tracktion_engine::CompManager</a>
 </li>
 <li>isTakingControllerMessages
 : <a class="el" href="classtracktion__engine_1_1PhysicalMidiInputDevice.html#a92e978455125cbd19af4512feb324c91">tracktion_engine::PhysicalMidiInputDevice</a>
@@ -1241,7 +1253,7 @@ $(function() {
 : <a class="el" href="classtracktion__engine_1_1Edit.html#a7baba0055f4f44c18cc3c1f3cde429cb">tracktion_engine::Edit</a>
 </li>
 <li>isTrack()
-: <a class="el" href="structtracktion__engine_1_1TrackList.html#ab951b2f835c0d757f4731c393e516a5d">tracktion_engine::TrackList</a>
+: <a class="el" href="structtracktion__engine_1_1TrackList.html#a0e497d4db3a399a9f21ca06081594f06">tracktion_engine::TrackList</a>
 </li>
 <li>isTrackAudible()
 : <a class="el" href="classtracktion__engine_1_1AudioTrack.html#a4f68473915d0a0d780d9e8d6098dd9cf">tracktion_engine::AudioTrack</a>
@@ -1377,7 +1389,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 6 2021 09:02:34 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 10 2021 09:52:56 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

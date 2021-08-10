@@ -328,9 +328,9 @@
 <path fill="none" stroke="midnightblue" d="M78.44,-446.11C79.42,-386.35 90.93,-206.99 191,-117 198.56,-110.2 207.91,-105.6 217.71,-102.52"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="74.94,-446.38 78.36,-456.41 81.94,-446.43 74.94,-446.38"/>
 </g>
-<!-- Node86 -->
+<!-- Node87 -->
 <g id="node48" class="node">
-<title>Node86</title>
+<title>Node87</title>
 <g id="a_node48"><a xlink:href="structtracktion__engine_1_1TrackCompManager_1_1TrackComp.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="204,-39 204,-69 362,-69 362,-39 204,-39"/>
 <text text-anchor="start" x="212" y="-57" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::TrackComp</text>
@@ -338,24 +338,24 @@
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node86 -->
+<!-- Node1&#45;&gt;Node87 -->
 <g id="edge47" class="edge">
-<title>Node1&#45;&gt;Node86</title>
+<title>Node1&#45;&gt;Node87</title>
 <path fill="none" stroke="midnightblue" d="M77.97,-445.97C77.44,-382.48 84.73,-183.71 191,-79 194.85,-75.21 199.22,-71.97 203.91,-69.22"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="74.48,-446.26 78.14,-456.2 81.48,-446.14 74.48,-446.26"/>
 </g>
-<!-- Node87 -->
+<!-- Node88 -->
 <g id="node49" class="node">
-<title>Node87</title>
+<title>Node88</title>
 <g id="a_node49"><a xlink:href="classtracktion__engine_1_1TrackItem.html" target="_top" xlink:title="Base class for EditItems that live in a Track, e.g.">
 <polygon fill="none" stroke="red" points="207,-0.5 207,-19.5 359,-19.5 359,-0.5 207,-0.5"/>
 <text text-anchor="middle" x="283" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::TrackItem</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node87 -->
+<!-- Node1&#45;&gt;Node88 -->
 <g id="edge48" class="edge">
-<title>Node1&#45;&gt;Node87</title>
+<title>Node1&#45;&gt;Node88</title>
 <path fill="none" stroke="midnightblue" d="M80.83,-446.24C90.32,-368.97 128.62,-88.57 191,-29 195.67,-24.54 201.1,-21.01 206.94,-18.23"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="77.31,-446.13 79.59,-456.48 84.26,-446.97 77.31,-446.13"/>
 </g>

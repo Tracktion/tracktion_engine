@@ -102,6 +102,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a490ea648572ddb42a81e28880dc4ddd6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a490ea648572ddb42a81e28880dc4ddd6">setPluginDisabled</a> (const juce::String &amp;, bool)</td></tr>
 <tr class="memdesc:a490ea648572ddb42a81e28880dc4ddd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should implement a way of saving if plugin is disabled or not.  <a href="classtracktion__engine_1_1EngineBehaviour.html#a490ea648572ddb42a81e28880dc4ddd6">More...</a><br /></td></tr>
 <tr class="separator:a490ea648572ddb42a81e28880dc4ddd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31d3d454835a27dcc11a9b997e6de597"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a31d3d454835a27dcc11a9b997e6de597">doAdditionalInitialisation</a> (<a class="el" href="classtracktion__engine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;)</td></tr>
+<tr class="memdesc:a31d3d454835a27dcc11a9b997e6de597"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the host a chance to do any extra configuration after a plugin is loaded.  <a href="classtracktion__engine_1_1EngineBehaviour.html#a31d3d454835a27dcc11a9b997e6de597">More...</a><br /></td></tr>
+<tr class="separator:a31d3d454835a27dcc11a9b997e6de597"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56f47e37a519b93ce407846ede9bac8d"><td class="memItemLeft" align="right" valign="top">virtual juce::Array&lt; <a class="el" href="structtracktion__engine_1_1Exportable_1_1ReferencedItem.html">Exportable::ReferencedItem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a56f47e37a519b93ce407846ede9bac8d">getReferencedItems</a> (<a class="el" href="classtracktion__engine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;)</td></tr>
+<tr class="memdesc:a56f47e37a519b93ce407846ede9bac8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">If you have any special VST plugins that access items in the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>, you need to return them.  <a href="classtracktion__engine_1_1EngineBehaviour.html#a56f47e37a519b93ce407846ede9bac8d">More...</a><br /></td></tr>
+<tr class="separator:a56f47e37a519b93ce407846ede9bac8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecf47c305db00c62f916e263c8762112"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#aecf47c305db00c62f916e263c8762112">reassignReferencedItem</a> (<a class="el" href="classtracktion__engine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;, const <a class="el" href="structtracktion__engine_1_1Exportable_1_1ReferencedItem.html">Exportable::ReferencedItem</a> &amp;, <a class="el" href="classtracktion__engine_1_1ProjectItemID.html">ProjectItemID</a>, double)</td></tr>
+<tr class="memdesc:aecf47c305db00c62f916e263c8762112"><td class="mdescLeft">&#160;</td><td class="mdescRight">If you have any special VST plugins that access items in the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>, you need to reassign them.  <a href="classtracktion__engine_1_1EngineBehaviour.html#aecf47c305db00c62f916e263c8762112">More...</a><br /></td></tr>
+<tr class="separator:aecf47c305db00c62f916e263c8762112"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a713f3f9c43e38f54c122bf8f776baf5c"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a713f3f9c43e38f54c122bf8f776baf5c">shouldBypassedPluginsBeRemovedFromPlaybackGraph</a> ()</td></tr>
 <tr class="memdesc:a713f3f9c43e38f54c122bf8f776baf5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return if plugins which have been bypassed should be included in the playback graph.  <a href="classtracktion__engine_1_1EngineBehaviour.html#a713f3f9c43e38f54c122bf8f776baf5c">More...</a><br /></td></tr>
 <tr class="separator:a713f3f9c43e38f54c122bf8f776baf5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -149,6 +158,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a299927f6737fdee15ae40041f5b89544"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa362dfbbc7a480f1dc07759414515928"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#aa362dfbbc7a480f1dc07759414515928">setPluginsRemappedWhenTempoChanges</a> (bool)</td></tr>
 <tr class="separator:aa362dfbbc7a480f1dc07759414515928"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9afd31d20912074d1958e801e3a2b71e"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a9afd31d20912074d1958e801e3a2b71e">getMaxNumMasterPlugins</a> ()</td></tr>
+<tr class="memdesc:a9afd31d20912074d1958e801e3a2b71e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the maximum number of plugins that can be added to the master bus.  <a href="classtracktion__engine_1_1EngineBehaviour.html#a9afd31d20912074d1958e801e3a2b71e">More...</a><br /></td></tr>
+<tr class="separator:a9afd31d20912074d1958e801e3a2b71e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f38b64d05ab5af9d4fb2f9f9c169415"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a4f38b64d05ab5af9d4fb2f9f9c169415">lengthOfOneBeatDependsOnTimeSignature</a> ()</td></tr>
 <tr class="memdesc:a4f38b64d05ab5af9d4fb2f9f9c169415"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this returns true, it means that the length (in seconds) of one "beat" at any point in an edit is considered to be the length of one division in the current bar's time signature.  <a href="classtracktion__engine_1_1EngineBehaviour.html#a4f38b64d05ab5af9d4fb2f9f9c169415">More...</a><br /></td></tr>
 <tr class="separator:a4f38b64d05ab5af9d4fb2f9f9c169415"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -382,6 +394,112 @@ Public Member Functions</h2></td></tr>
 
 <p>Should implement a way of saving if plugin is disabled or not. </p>
 <p>N.B. only in use for ExternalPlugins at the moment. </p>
+
+</div>
+</div>
+<a id="a31d3d454835a27dcc11a9b997e6de597"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31d3d454835a27dcc11a9b997e6de597">&#9670;&nbsp;</a></span>doAdditionalInitialisation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion_engine::EngineBehaviour::doAdditionalInitialisation </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gives the host a chance to do any extra configuration after a plugin is loaded. </p>
+
+</div>
+</div>
+<a id="a56f47e37a519b93ce407846ede9bac8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56f47e37a519b93ce407846ede9bac8d">&#9670;&nbsp;</a></span>getReferencedItems()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual juce::Array&lt;<a class="el" href="structtracktion__engine_1_1Exportable_1_1ReferencedItem.html">Exportable::ReferencedItem</a>&gt; tracktion_engine::EngineBehaviour::getReferencedItems </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>If you have any special VST plugins that access items in the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>, you need to return them. </p>
+
+</div>
+</div>
+<a id="aecf47c305db00c62f916e263c8762112"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aecf47c305db00c62f916e263c8762112">&#9670;&nbsp;</a></span>reassignReferencedItem()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion_engine::EngineBehaviour::reassignReferencedItem </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtracktion__engine_1_1Exportable_1_1ReferencedItem.html">Exportable::ReferencedItem</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1ProjectItemID.html">ProjectItemID</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>If you have any special VST plugins that access items in the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>, you need to reassign them. </p>
 
 </div>
 </div>
@@ -963,6 +1081,33 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a9afd31d20912074d1958e801e3a2b71e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9afd31d20912074d1958e801e3a2b71e">&#9670;&nbsp;</a></span>getMaxNumMasterPlugins()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int tracktion_engine::EngineBehaviour::getMaxNumMasterPlugins </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Should return the maximum number of plugins that can be added to the master bus. </p>
+
+</div>
+</div>
 <a id="a4f38b64d05ab5af9d4fb2f9f9c169415"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4f38b64d05ab5af9d4fb2f9f9c169415">&#9670;&nbsp;</a></span>lengthOfOneBeatDependsOnTimeSignature()</h2>
 
@@ -1176,7 +1321,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 6 2021 09:02:32 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 10 2021 09:52:54 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

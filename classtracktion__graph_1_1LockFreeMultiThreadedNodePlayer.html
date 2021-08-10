@@ -109,9 +109,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2cfef336d18985f9eef0806242a415f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1LockFreeMultiThreadedNodePlayer.html#a2cfef336d18985f9eef0806242a415f0">setNode</a> (std::unique_ptr&lt; <a class="el" href="classtracktion__graph_1_1Node.html">Node</a> &gt; newNode, double sampleRateToUse, int blockSizeToUse)</td></tr>
 <tr class="memdesc:a2cfef336d18985f9eef0806242a415f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the <a class="el" href="classtracktion__graph_1_1Node.html" title="Main graph Node processor class.">Node</a> to process with a new sample rate and block size.  <a href="classtracktion__graph_1_1LockFreeMultiThreadedNodePlayer.html#a2cfef336d18985f9eef0806242a415f0">More...</a><br /></td></tr>
 <tr class="separator:a2cfef336d18985f9eef0806242a415f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32346aa2ef7d659789e005b62fba5c1b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1LockFreeMultiThreadedNodePlayer.html#a32346aa2ef7d659789e005b62fba5c1b">prepareToPlay</a> (double sampleRateToUse, int blockSizeToUse, <a class="el" href="classtracktion__graph_1_1Node.html">Node</a> *oldNode=nullptr)</td></tr>
-<tr class="memdesc:a32346aa2ef7d659789e005b62fba5c1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepares the current <a class="el" href="classtracktion__graph_1_1Node.html" title="Main graph Node processor class.">Node</a> to be played.  <a href="classtracktion__graph_1_1LockFreeMultiThreadedNodePlayer.html#a32346aa2ef7d659789e005b62fba5c1b">More...</a><br /></td></tr>
-<tr class="separator:a32346aa2ef7d659789e005b62fba5c1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a392cae7ebfa1c8740fd3a0916aaaaead"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1LockFreeMultiThreadedNodePlayer.html#a392cae7ebfa1c8740fd3a0916aaaaead">prepareToPlay</a> (double sampleRateToUse, int blockSizeToUse)</td></tr>
+<tr class="memdesc:a392cae7ebfa1c8740fd3a0916aaaaead"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepares the current <a class="el" href="classtracktion__graph_1_1Node.html" title="Main graph Node processor class.">Node</a> to be played.  <a href="classtracktion__graph_1_1LockFreeMultiThreadedNodePlayer.html#a392cae7ebfa1c8740fd3a0916aaaaead">More...</a><br /></td></tr>
+<tr class="separator:a392cae7ebfa1c8740fd3a0916aaaaead"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab57d66c18b34a80aaf2a770c9f637c30"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__graph_1_1Node.html">Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1LockFreeMultiThreadedNodePlayer.html#ab57d66c18b34a80aaf2a770c9f637c30">getNode</a> ()</td></tr>
 <tr class="memdesc:ab57d66c18b34a80aaf2a770c9f637c30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current <a class="el" href="classtracktion__graph_1_1Node.html" title="Main graph Node processor class.">Node</a>.  <a href="classtracktion__graph_1_1LockFreeMultiThreadedNodePlayer.html#ab57d66c18b34a80aaf2a770c9f637c30">More...</a><br /></td></tr>
 <tr class="separator:ab57d66c18b34a80aaf2a770c9f637c30"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -124,6 +124,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a60174c68a0ab834e9f2eec0c2400cebe"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1LockFreeMultiThreadedNodePlayer.html#a60174c68a0ab834e9f2eec0c2400cebe">getSampleRate</a> () const</td></tr>
 <tr class="memdesc:a60174c68a0ab834e9f2eec0c2400cebe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current sample rate.  <a href="classtracktion__graph_1_1LockFreeMultiThreadedNodePlayer.html#a60174c68a0ab834e9f2eec0c2400cebe">More...</a><br /></td></tr>
 <tr class="separator:a60174c68a0ab834e9f2eec0c2400cebe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5ac5224e0229c903ad0269a0bc02486"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1LockFreeMultiThreadedNodePlayer.html#af5ac5224e0229c903ad0269a0bc02486">enablePooledMemoryAllocations</a> (bool)</td></tr>
+<tr class="memdesc:af5ac5224e0229c903ad0269a0bc02486"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables the use on an <a class="el" href="classtracktion__graph_1_1AudioBufferPool.html" title="A lock-free pool of audio buffers.">AudioBufferPool</a> to reduce memory consumption.  <a href="classtracktion__graph_1_1LockFreeMultiThreadedNodePlayer.html#af5ac5224e0229c903ad0269a0bc02486">More...</a><br /></td></tr>
+<tr class="separator:af5ac5224e0229c903ad0269a0bc02486"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Plays back a node with mutiple threads. </p>
@@ -284,8 +287,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a32346aa2ef7d659789e005b62fba5c1b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a32346aa2ef7d659789e005b62fba5c1b">&#9670;&nbsp;</a></span>prepareToPlay()</h2>
+<a id="a392cae7ebfa1c8740fd3a0916aaaaead"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a392cae7ebfa1c8740fd3a0916aaaaead">&#9670;&nbsp;</a></span>prepareToPlay()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -300,13 +303,7 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>blockSizeToUse</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classtracktion__graph_1_1Node.html">Node</a> *&#160;</td>
-          <td class="paramname"><em>oldNode</em> = <code>nullptr</code>&#160;</td>
+          <td class="paramname"><em>blockSizeToUse</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -317,6 +314,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Prepares the current <a class="el" href="classtracktion__graph_1_1Node.html" title="Main graph Node processor class.">Node</a> to be played. </p>
+<p>Calling this will cause a drop in the output stream as the <a class="el" href="classtracktion__graph_1_1Node.html" title="Main graph Node processor class.">Node</a> is re-prepared. </p>
 
 <p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1TracktionNodePlayer.html#a8cac50fa917c236240f8b209d6179527">tracktion_engine::TracktionNodePlayer::prepareToPlay()</a>.</p>
 
@@ -406,13 +404,36 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="af5ac5224e0229c903ad0269a0bc02486"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5ac5224e0229c903ad0269a0bc02486">&#9670;&nbsp;</a></span>enablePooledMemoryAllocations()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion_graph::LockFreeMultiThreadedNodePlayer::enablePooledMemoryAllocations </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enables or disables the use on an <a class="el" href="classtracktion__graph_1_1AudioBufferPool.html" title="A lock-free pool of audio buffers.">AudioBufferPool</a> to reduce memory consumption. </p>
+<p>Don't rely on this, it is a temporary method used for benchmarking and will go away in the future. </p>
+
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1TracktionNodePlayer.html#a1b78c0e903ddbf586d27efc7a9a639fe">tracktion_engine::TracktionNodePlayer::enablePooledMemoryAllocations()</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="tracktion__graph__LockFreeMultiThreadedNodePlayer_8h.html">tracktion_graph_LockFreeMultiThreadedNodePlayer.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 6 2021 09:02:34 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 10 2021 09:52:55 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

@@ -66,6 +66,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
@@ -74,6 +75,11 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1benchmark__utilities_1_1BenchmarkOptions.html">tracktion_engine::benchmark_utilities::BenchmarkOptions</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespacetracktion__engine"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html">tracktion_engine</a></td></tr>
@@ -91,14 +97,22 @@ Enumerations</h2></td></tr>
 <a class="el" href="namespacetracktion__engine_1_1benchmark__utilities.html#a1e76217117ac020df92f9e10f26fae40aa6105c0a611b41b08f1209506350279e">tracktion_engine::benchmark_utilities::LockFree::yes</a>
  }</td></tr>
 <tr class="separator:a1e76217117ac020df92f9e10f26fae40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a516991ef908c48542b44f860913ac712"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine_1_1benchmark__utilities.html#a516991ef908c48542b44f860913ac712">tracktion_engine::benchmark_utilities::PoolMemoryAllocations</a> { <a class="el" href="namespacetracktion__engine_1_1benchmark__utilities.html#a516991ef908c48542b44f860913ac712a7fa3b767c460b54a2be4d49030b349c7">tracktion_engine::benchmark_utilities::PoolMemoryAllocations::no</a>, 
+<a class="el" href="namespacetracktion__engine_1_1benchmark__utilities.html#a516991ef908c48542b44f860913ac712aa6105c0a611b41b08f1209506350279e">tracktion_engine::benchmark_utilities::PoolMemoryAllocations::yes</a>
+ }</td></tr>
+<tr class="separator:a516991ef908c48542b44f860913ac712"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:aac90b0fc08be7e11e796786e6b5b84ec"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine_1_1benchmark__utilities.html#aac90b0fc08be7e11e796786e6b5b84ec">tracktion_engine::benchmark_utilities::getDescription</a> (const BenchmarkOptions &amp;opts)</td></tr>
+<tr class="separator:aac90b0fc08be7e11e796786e6b5b84ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e45f554b0542c7a0889ad49e51e4aee"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classtracktion__graph_1_1Node.html">tracktion_graph::Node</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine_1_1benchmark__utilities.html#a8e45f554b0542c7a0889ad49e51e4aee">tracktion_engine::benchmark_utilities::createNode</a> (Edit &amp;edit, ProcessState &amp;processState, double sampleRate, int blockSize)</td></tr>
 <tr class="separator:a8e45f554b0542c7a0889ad49e51e4aee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4c432535481e420e46cc12b86124f61"><td class="memTemplParams" colspan="2">template&lt;typename NodePlayerType &gt; </td></tr>
 <tr class="memitem:ac4c432535481e420e46cc12b86124f61"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine_1_1benchmark__utilities.html#ac4c432535481e420e46cc12b86124f61">tracktion_engine::benchmark_utilities::prepareRenderAndDestroy</a> (juce::UnitTest &amp;ut, juce::String editName, juce::String description, <a class="el" href="structtracktion__graph_1_1test__utilities_1_1TestProcess.html">tracktion_graph::test_utilities::TestProcess</a>&lt; NodePlayerType &gt; &amp;testContext, <a class="el" href="classtracktion__graph_1_1PlayHeadState.html">tracktion_graph::PlayHeadState</a> &amp;playHeadState, MultiThreaded isMultiThreaded)</td></tr>
 <tr class="separator:ac4c432535481e420e46cc12b86124f61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2332c73042ad7aa49efabb8053d510e4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine_1_1benchmark__utilities.html#a2332c73042ad7aa49efabb8053d510e4">tracktion_engine::benchmark_utilities::renderEdit</a> (juce::UnitTest &amp;ut, BenchmarkOptions opts)</td></tr>
+<tr class="separator:a2332c73042ad7aa49efabb8053d510e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2fd83dfc4859d85a9a07f6766a4a8a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine_1_1benchmark__utilities.html#ad2fd83dfc4859d85a9a07f6766a4a8a0">tracktion_engine::benchmark_utilities::renderEdit</a> (juce::UnitTest &amp;ut, juce::String editName, Edit &amp;edit, <a class="el" href="structtracktion__graph_1_1test__utilities_1_1TestSetup.html">tracktion_graph::test_utilities::TestSetup</a> ts, MultiThreaded isMultiThreaded, LockFree isLockFree, <a class="el" href="namespacetracktion__graph.html#a10337f019803d1cc6738fe931011dfef">tracktion_graph::ThreadPoolStrategy</a> poolType)</td></tr>
 <tr class="separator:ad2fd83dfc4859d85a9a07f6766a4a8a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf4565bda7d5749b1e9e8ac5abf10dd4"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; Edit &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine_1_1benchmark__utilities.html#aaf4565bda7d5749b1e9e8ac5abf10dd4">tracktion_engine::benchmark_utilities::openEditfromArchiveData</a> (Engine &amp;engine, const char *data, int size)</td></tr>
@@ -113,7 +127,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 6 2021 09:02:32 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 10 2021 09:52:54 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

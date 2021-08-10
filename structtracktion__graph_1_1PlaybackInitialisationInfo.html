@@ -86,6 +86,10 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a4a343e6606f59686571edad950033860"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab190874ca5866bf85a249678b7196b26"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__graph_1_1Node.html">Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__graph_1_1PlaybackInitialisationInfo.html#ab190874ca5866bf85a249678b7196b26">rootNodeToReplace</a> = nullptr</td></tr>
 <tr class="separator:ab190874ca5866bf85a249678b7196b26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad873e8c7d8f48dd05e1ba7f9c1a2a1d6"><td class="memItemLeft" align="right" valign="top">std::function&lt; <a class="el" href="structtracktion__graph_1_1NodeBuffer.html">NodeBuffer</a>(choc::buffer::Size)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__graph_1_1PlaybackInitialisationInfo.html#ad873e8c7d8f48dd05e1ba7f9c1a2a1d6">allocateAudioBuffer</a> = nullptr</td></tr>
+<tr class="separator:ad873e8c7d8f48dd05e1ba7f9c1a2a1d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acde6527ee71f9f918c0f17fc1b6a7e9b"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(<a class="el" href="structtracktion__graph_1_1NodeBuffer.html">NodeBuffer</a> &amp;&amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__graph_1_1PlaybackInitialisationInfo.html#acde6527ee71f9f918c0f17fc1b6a7e9b">deallocateAudioBuffer</a> = nullptr</td></tr>
+<tr class="separator:acde6527ee71f9f918c0f17fc1b6a7e9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Passed into Nodes when they are being initialised, to give them useful contextual information that they may need. </p>
@@ -154,13 +158,45 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ad873e8c7d8f48dd05e1ba7f9c1a2a1d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad873e8c7d8f48dd05e1ba7f9c1a2a1d6">&#9670;&nbsp;</a></span>allocateAudioBuffer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::function&lt;<a class="el" href="structtracktion__graph_1_1NodeBuffer.html">NodeBuffer</a> (choc::buffer::Size)&gt; tracktion_graph::PlaybackInitialisationInfo::allocateAudioBuffer = nullptr</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classtracktion__graph_1_1Node.html#ad46245f618dd2ac5109a43159580a504">tracktion_graph::Node::initialise()</a>.</p>
+
+</div>
+</div>
+<a id="acde6527ee71f9f918c0f17fc1b6a7e9b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acde6527ee71f9f918c0f17fc1b6a7e9b">&#9670;&nbsp;</a></span>deallocateAudioBuffer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::function&lt;void (<a class="el" href="structtracktion__graph_1_1NodeBuffer.html">NodeBuffer</a>&amp;&amp;)&gt; tracktion_graph::PlaybackInitialisationInfo::deallocateAudioBuffer = nullptr</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classtracktion__graph_1_1Node.html#ad46245f618dd2ac5109a43159580a504">tracktion_graph::Node::initialise()</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="tracktion__graph__Node_8h.html">tracktion_graph_Node.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 6 2021 09:02:34 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 10 2021 09:52:55 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

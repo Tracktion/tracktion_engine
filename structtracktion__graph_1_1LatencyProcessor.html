@@ -93,8 +93,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a34aa8fee8d5042c7840e65bf083a856a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3729b9f707815c6d5b6454e7a033e58f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a3729b9f707815c6d5b6454e7a033e58f">writeMIDI</a> (const <a class="el" href="structtracktion__engine_1_1MidiMessageArray.html">tracktion_engine::MidiMessageArray</a> &amp;src)</td></tr>
 <tr class="separator:a3729b9f707815c6d5b6454e7a033e58f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6273828be7163788f18b6e6b767f200c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a6273828be7163788f18b6e6b767f200c">readAudio</a> (choc::buffer::ChannelArrayView&lt; float &gt; dst)</td></tr>
-<tr class="separator:a6273828be7163788f18b6e6b767f200c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a543fa930a7c3831e5c6d76799c924352"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a543fa930a7c3831e5c6d76799c924352">readAudioAdding</a> (choc::buffer::ChannelArrayView&lt; float &gt; dst)</td></tr>
+<tr class="separator:a543fa930a7c3831e5c6d76799c924352"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a428ff983676fc870c2ea937a845ee5d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a428ff983676fc870c2ea937a845ee5d5">readAudioOverwriting</a> (choc::buffer::ChannelArrayView&lt; float &gt; dst)</td></tr>
+<tr class="separator:a428ff983676fc870c2ea937a845ee5d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a11d870360a19ea82a8a796e24436a322"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a11d870360a19ea82a8a796e24436a322">readMIDI</a> (<a class="el" href="structtracktion__engine_1_1MidiMessageArray.html">tracktion_engine::MidiMessageArray</a> &amp;dst, int numSamples)</td></tr>
 <tr class="separator:a11d870360a19ea82a8a796e24436a322"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed3f9da2af92dcad337bb7c949a2b049"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#aed3f9da2af92dcad337bb7c949a2b049">clearAudio</a> (int numSamples)</td></tr>
@@ -302,14 +304,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a6273828be7163788f18b6e6b767f200c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6273828be7163788f18b6e6b767f200c">&#9670;&nbsp;</a></span>readAudio()</h2>
+<a id="a543fa930a7c3831e5c6d76799c924352"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a543fa930a7c3831e5c6d76799c924352">&#9670;&nbsp;</a></span>readAudioAdding()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion_graph::LatencyProcessor::readAudio </td>
+          <td class="memname">void tracktion_graph::LatencyProcessor::readAudioAdding </td>
           <td>(</td>
           <td class="paramtype">choc::buffer::ChannelArrayView&lt; float &gt;&#160;</td>
           <td class="paramname"><em>dst</em></td><td>)</td>
@@ -319,6 +321,26 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">References <a class="el" href="classtracktion__graph_1_1AudioFifo.html#a081275aaca600c9cb55274ce5fd0e329">tracktion_graph::AudioFifo::getNumChannels()</a>, <a class="el" href="classtracktion__graph_1_1AudioFifo.html#a0aea03dc987c68ecc313a8ba386404e9">tracktion_graph::AudioFifo::getNumReady()</a>, and <a class="el" href="classtracktion__graph_1_1AudioFifo.html#a2b1a6241a2738598d411ba4a120a4b3f">tracktion_graph::AudioFifo::readAdding()</a>.</p>
+
+</div>
+</div>
+<a id="a428ff983676fc870c2ea937a845ee5d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a428ff983676fc870c2ea937a845ee5d5">&#9670;&nbsp;</a></span>readAudioOverwriting()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion_graph::LatencyProcessor::readAudioOverwriting </td>
+          <td>(</td>
+          <td class="paramtype">choc::buffer::ChannelArrayView&lt; float &gt;&#160;</td>
+          <td class="paramname"><em>dst</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classtracktion__graph_1_1AudioFifo.html#a081275aaca600c9cb55274ce5fd0e329">tracktion_graph::AudioFifo::getNumChannels()</a>, <a class="el" href="classtracktion__graph_1_1AudioFifo.html#a0aea03dc987c68ecc313a8ba386404e9">tracktion_graph::AudioFifo::getNumReady()</a>, and <a class="el" href="classtracktion__graph_1_1AudioFifo.html#a5657648c0b741caf7d5932697e139187">tracktion_graph::AudioFifo::readOverwriting()</a>.</p>
 
 </div>
 </div>
@@ -398,7 +420,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 6 2021 09:02:34 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 10 2021 09:52:55 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

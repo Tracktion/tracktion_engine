@@ -95,6 +95,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a855ba9959ca37d48fedb2c6dffec5881"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b1a6241a2738598d411ba4a120a4b3f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#a2b1a6241a2738598d411ba4a120a4b3f">readAdding</a> (choc::buffer::ChannelArrayView&lt; float &gt; dest)</td></tr>
 <tr class="separator:a2b1a6241a2738598d411ba4a120a4b3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5657648c0b741caf7d5932697e139187"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#a5657648c0b741caf7d5932697e139187">readOverwriting</a> (choc::buffer::ChannelArrayView&lt; float &gt; dest)</td></tr>
+<tr class="separator:a5657648c0b741caf7d5932697e139187"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76be18bb53b26279f141553416930686"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__graph_1_1AudioFifo.html#a76be18bb53b26279f141553416930686">removeSamples</a> (int numSamples)</td></tr>
 <tr class="separator:a76be18bb53b26279f141553416930686"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -210,7 +212,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classtracktion__graph_1_1AudioFifo.html#a3948016c1ea0c3a827d20e53c0657c6d">ensureFreeSpace()</a>, <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#ab98063b8f2faf9e7524fa436c98d22bf">tracktion_graph::LatencyProcessor::prepareToPlay()</a>, and <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a6273828be7163788f18b6e6b767f200c">tracktion_graph::LatencyProcessor::readAudio()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion__graph_1_1AudioFifo.html#a3948016c1ea0c3a827d20e53c0657c6d">ensureFreeSpace()</a>, <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#ab98063b8f2faf9e7524fa436c98d22bf">tracktion_graph::LatencyProcessor::prepareToPlay()</a>, <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a543fa930a7c3831e5c6d76799c924352">tracktion_graph::LatencyProcessor::readAudioAdding()</a>, and <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a428ff983676fc870c2ea937a845ee5d5">tracktion_graph::LatencyProcessor::readAudioOverwriting()</a>.</p>
 
 </div>
 </div>
@@ -237,7 +239,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a02d21c3818e199f6276d3f93de0954bb">tracktion_graph::LatencyProcessor::hasConfiguration()</a>, <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a54a637ecb3d88205bf3f078b97023e44">tracktion_graph::LatencyProcessor::hasSameConfigurationAs()</a>, <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a6273828be7163788f18b6e6b767f200c">tracktion_graph::LatencyProcessor::readAudio()</a>, and <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a34aa8fee8d5042c7840e65bf083a856a">tracktion_graph::LatencyProcessor::writeAudio()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a02d21c3818e199f6276d3f93de0954bb">tracktion_graph::LatencyProcessor::hasConfiguration()</a>, <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a54a637ecb3d88205bf3f078b97023e44">tracktion_graph::LatencyProcessor::hasSameConfigurationAs()</a>, <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a543fa930a7c3831e5c6d76799c924352">tracktion_graph::LatencyProcessor::readAudioAdding()</a>, <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a428ff983676fc870c2ea937a845ee5d5">tracktion_graph::LatencyProcessor::readAudioOverwriting()</a>, and <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a34aa8fee8d5042c7840e65bf083a856a">tracktion_graph::LatencyProcessor::writeAudio()</a>.</p>
 
 </div>
 </div>
@@ -342,7 +344,29 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a6273828be7163788f18b6e6b767f200c">tracktion_graph::LatencyProcessor::readAudio()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a543fa930a7c3831e5c6d76799c924352">tracktion_graph::LatencyProcessor::readAudioAdding()</a>.</p>
+
+</div>
+</div>
+<a id="a5657648c0b741caf7d5932697e139187"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5657648c0b741caf7d5932697e139187">&#9670;&nbsp;</a></span>readOverwriting()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion_graph::AudioFifo::readOverwriting </td>
+          <td>(</td>
+          <td class="paramtype">choc::buffer::ChannelArrayView&lt; float &gt;&#160;</td>
+          <td class="paramname"><em>dest</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="namespacetracktion__engine_1_1AppFunctions.html#a7461e01845c2c4a60c340d68d2973c93">tracktion_engine::AppFunctions::copy()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a428ff983676fc870c2ea937a845ee5d5">tracktion_graph::LatencyProcessor::readAudioOverwriting()</a>.</p>
 
 </div>
 </div>
@@ -372,7 +396,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 6 2021 09:02:33 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 10 2021 09:52:55 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

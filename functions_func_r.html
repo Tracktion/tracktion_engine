@@ -108,11 +108,14 @@ $(function() {
 : <a class="el" href="classtracktion__engine_1_1AudioFifo.html#a22ef06d29054503ab2bfcc9ebd7de04d">tracktion_engine::AudioFifo</a>
 , <a class="el" href="classtracktion__graph_1_1AudioFifo.html#a2b1a6241a2738598d411ba4a120a4b3f">tracktion_graph::AudioFifo</a>
 </li>
-<li>readAudio()
-: <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a6273828be7163788f18b6e6b767f200c">tracktion_graph::LatencyProcessor</a>
+<li>readAudioAdding()
+: <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a543fa930a7c3831e5c6d76799c924352">tracktion_graph::LatencyProcessor</a>
 </li>
 <li>readAudioAndMidi()
 : <a class="el" href="classtracktion__engine_1_1AudioMidiFifo.html#a3f118e5046e4fdaf7ad1de497b73c419">tracktion_engine::AudioMidiFifo</a>
+</li>
+<li>readAudioOverwriting()
+: <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a428ff983676fc870c2ea937a845ee5d5">tracktion_graph::LatencyProcessor</a>
 </li>
 <li>readAudioSamples()
 : <a class="el" href="classAudioSourceWrapper.html#a0526e39aa694565aa8388ac5fd3a6943">AudioSourceWrapper</a>
@@ -133,6 +136,9 @@ $(function() {
 <li>readOrCreateNewID()
 : <a class="el" href="structtracktion__engine_1_1EditItemID.html#a2adc2e4a6051fba86f635a00eda335bf">tracktion_engine::EditItemID</a>
 </li>
+<li>readOverwriting()
+: <a class="el" href="classtracktion__graph_1_1AudioFifo.html#a5657648c0b741caf7d5932697e139187">tracktion_graph::AudioFifo</a>
+</li>
 <li>readSamples()
 : <a class="el" href="classtracktion__engine_1_1AudioFileCache_1_1Reader.html#a21c2e603209c38dfa1108f65c8bf5d7e">tracktion_engine::AudioFileCache::Reader</a>
 </li>
@@ -151,7 +157,9 @@ $(function() {
 <li>reassignReferencedItem()
 : <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#afa53c0c388d82f8b3c8c385e83118347">tracktion_engine::AudioClipBase</a>
 , <a class="el" href="classtracktion__engine_1_1Clip.html#a009f43265ddf313e6aed9c15069dd8cc">tracktion_engine::Clip</a>
+, <a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#aecf47c305db00c62f916e263c8762112">tracktion_engine::EngineBehaviour</a>
 , <a class="el" href="classtracktion__engine_1_1Exportable.html#ac2b41967cab8e5c34de148d63d477d7f">tracktion_engine::Exportable</a>
+, <a class="el" href="classtracktion__engine_1_1ExternalPlugin.html#a1b93c983b291e50cf93c99774f7c5cd8">tracktion_engine::ExternalPlugin</a>
 , <a class="el" href="classtracktion__engine_1_1Plugin.html#a80f9d24b78428dc872fb2607560a907a">tracktion_engine::Plugin</a>
 , <a class="el" href="classtracktion__engine_1_1SamplerPlugin.html#a8dfbce8482a5aabcef6c3d9c49a44cf8">tracktion_engine::SamplerPlugin</a>
 , <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#a7447f8e4871f035366e850493ab0d12d">tracktion_engine::WaveAudioClip</a>
@@ -298,6 +306,11 @@ $(function() {
 </li>
 <li>registerXT()
 : <a class="el" href="classtracktion__engine_1_1MackieMCU.html#a5dd8191d779efba95a377766477ee7fb">tracktion_engine::MackieMCU</a>
+</li>
+<li>release()
+: <a class="el" href="classtracktion__graph_1_1AudioBufferPool.html#a448d814c612f5cafc92148ff4df0abaa">tracktion_graph::AudioBufferPool</a>
+, <a class="el" href="classtracktion__graph_1_1AudioBufferStack.html#a50ba8f6aee11905e2325b935ffac7457">tracktion_graph::AudioBufferStack</a>
+, <a class="el" href="classtracktion__graph_1_1Node.html#aeae1b51211c83c0605203884dfbf0d49">tracktion_graph::Node</a>
 </li>
 <li>releaseAllFiles()
 : <a class="el" href="classtracktion__engine_1_1AudioFileManager.html#ac4ac984fa5c0899d98a31d9c0a5db263">tracktion_engine::AudioFileManager</a>
@@ -673,7 +686,7 @@ $(function() {
 , <a class="el" href="classtracktion__engine_1_1WaveAudioNode.html#a4800ef0b76483e2a3c1b937f6456c72c">tracktion_engine::WaveAudioNode</a>
 </li>
 <li>RenderResult()
-: <a class="el" href="structtracktion__engine_1_1Renderer_1_1RenderResult.html#ac887cc95b91836293acd0c9b8a611e0f">tracktion_engine::Renderer::RenderResult</a>
+: <a class="el" href="structtracktion__engine_1_1Renderer_1_1RenderResult.html#a7fe513cf9cc79ea52d53395a2eb87062">tracktion_engine::Renderer::RenderResult</a>
 </li>
 <li>renderSection()
 : <a class="el" href="classtracktion__engine_1_1ClickAudioNode.html#ab61b3900dd123baceca5f636b2691d98">tracktion_engine::ClickAudioNode</a>
@@ -693,7 +706,7 @@ $(function() {
 : <a class="el" href="classtracktion__engine_1_1Renderer_1_1RenderTask.html#a126e0a2bd337899944871b6c4465a617">tracktion_engine::Renderer::RenderTask</a>
 </li>
 <li>renderToFile()
-: <a class="el" href="classtracktion__engine_1_1Renderer.html#ab62f93b98e3c184a246b575c6da9bc92">tracktion_engine::Renderer</a>
+: <a class="el" href="classtracktion__engine_1_1Renderer.html#a3b813e010dcea26184bf50faffc9a74f">tracktion_engine::Renderer</a>
 </li>
 <li>renderToProjectItem()
 : <a class="el" href="classtracktion__engine_1_1Renderer.html#ae49135e9ee22a8133b0ce0d75a1d3090">tracktion_engine::Renderer</a>
@@ -754,6 +767,8 @@ $(function() {
 </li>
 <li>reserve()
 : <a class="el" href="structtracktion__engine_1_1MidiMessageArray.html#a32bf0da09def8db982da825b10ca4bf8">tracktion_engine::MidiMessageArray</a>
+, <a class="el" href="classtracktion__graph_1_1AudioBufferPool.html#a9784f02f4cc160aac5570d3de31578d6">tracktion_graph::AudioBufferPool</a>
+, <a class="el" href="classtracktion__graph_1_1AudioBufferStack.html#a63891af30a5eaa73a58096dc5cab9a2d">tracktion_graph::AudioBufferStack</a>
 </li>
 <li>reset()
 : <a class="el" href="structtracktion__engine_1_1ActiveNoteList.html#ad716b7274d630498ee939b6dea7e5420">tracktion_engine::ActiveNoteList</a>
@@ -773,6 +788,8 @@ $(function() {
 , <a class="el" href="classtracktion__engine_1_1TimeStretcher.html#a564e165b30714e26d1a82eba89686805">tracktion_engine::TimeStretcher</a>
 , <a class="el" href="classtracktion__engine_1_1TracktionThumbnail.html#ae84901c3bf44076033418120620a8337">tracktion_engine::TracktionThumbnail</a>
 , <a class="el" href="classtracktion__engine_1_1ValueSmoother.html#afcce6df3a2e5e597cd47fecebf557ff1">tracktion_engine::ValueSmoother&lt; T &gt;</a>
+, <a class="el" href="classtracktion__graph_1_1AudioBufferPool.html#abcc01d118ce3881ce0ea81b5b82d21e0">tracktion_graph::AudioBufferPool</a>
+, <a class="el" href="classtracktion__graph_1_1AudioBufferStack.html#a19a30a3937e2c3fb34a4229d3a35948a">tracktion_graph::AudioBufferStack</a>
 , <a class="el" href="classtracktion__graph_1_1AudioFifo.html#a93a753f2d5524d66a25394d4177115c0">tracktion_graph::AudioFifo</a>
 , <a class="el" href="structtracktion__graph_1_1test__utilities_1_1SineOscillator.html#a4d38c3fee82535f9ea759d845d6abc91">tracktion_graph::test_utilities::SineOscillator</a>
 </li>
@@ -859,6 +876,9 @@ $(function() {
 <li>restoreStateFromValueTree()
 : <a class="el" href="classtracktion__engine_1_1RackType.html#a41bc52f5c176dfbaa9fc14c12eb0aa96">tracktion_engine::RackType</a>
 </li>
+<li>retain()
+: <a class="el" href="classtracktion__graph_1_1Node.html#a2f17511d4ec829448fc07a258e8c3e9e">tracktion_graph::Node</a>
+</li>
 <li>ReturnNode()
 : <a class="el" href="classtracktion__graph_1_1ReturnNode.html#a79edf188757e176965bed95daef7e6c4">tracktion_graph::ReturnNode</a>
 </li>
@@ -890,7 +910,7 @@ $(function() {
 : <a class="el" href="classtracktion__engine_1_1QuantisationType.html#a9766b524792090c3eb02a58c602dacde">tracktion_engine::QuantisationType</a>
 </li>
 <li>roundTimeDown()
-: <a class="el" href="structtracktion__engine_1_1TimecodeSnapType.html#a8a69e03bfba8ffdb3a802abeae3e3141">tracktion_engine::TimecodeSnapType</a>
+: <a class="el" href="structtracktion__engine_1_1TimecodeSnapType.html#a6f1b23665c6071113ca8d502fc5fd7c9">tracktion_engine::TimecodeSnapType</a>
 </li>
 <li>roundTimeNearest()
 : <a class="el" href="structtracktion__engine_1_1TimecodeSnapType.html#aaf2a839f1819a28d20aa94f07ba01157">tracktion_engine::TimecodeSnapType</a>
@@ -920,7 +940,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 6 2021 09:02:34 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 10 2021 09:52:56 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>
