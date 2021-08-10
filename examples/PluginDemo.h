@@ -15,7 +15,7 @@
                     juce_gui_basics, juce_gui_extra, juce_osc, tracktion_engine
   exporters:        linux_make, vs2017, xcode_iphone, xcode_mac
 
-  moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1, JUCE_PLUGINHOST_AU=1, JUCE_PLUGINHOST_VST3=1
+  moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1, JUCE_PLUGINHOST_AU=1, JUCE_PLUGINHOST_VST3=1, JUCE_MODAL_LOOPS_PERMITTED=1
 
   type:             Component
   mainClass:        PluginDemo
