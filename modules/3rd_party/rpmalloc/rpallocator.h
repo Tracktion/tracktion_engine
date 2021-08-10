@@ -11,6 +11,9 @@
 #pragma once
 
 #include "rpmalloc.h"
+#undef min
+#undef max
+
 #include "../../tracktion_graph/utilities/tracktion_RealTimeSpinLock.h"
 
 #ifndef LOG_RPALLOCATIONS
@@ -126,6 +129,10 @@ public:
 
     /** Move constructor. */
     rpallocator (rpallocator&&) noexcept {}
+
+    /** Templated copy constructor. */
+    template<typename _Tp1>
+    rpallocator (const rpallocator<_Tp1>&) noexcept {}
 
     //==============================================================================
     /** Allocates a number of elements of T. */
