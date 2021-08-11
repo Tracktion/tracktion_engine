@@ -347,7 +347,6 @@ namespace test_utilities
     //==============================================================================
     struct TestContext
     {
-        std::unique_ptr<juce::TemporaryFile> tempFile;
         juce::AudioBuffer<float> buffer;
         juce::MidiBuffer midi;
         int numProcessMisses = 0;
@@ -357,18 +356,28 @@ namespace test_utilities
     struct TestProcess
     {
         TestProcess (std::unique_ptr<NodePlayerType> playerToUse, TestSetup ts,
-                     const int numChannelsToUse, const double durationInSeconds, bool writeToFile)
+                     const int numChannelsToUse, const double durationInSeconds,
+                     bool writeToBuffer)
             : testSetup (ts), numChannels (numChannelsToUse)
         {
             context = std::make_shared<TestContext>();
-            context->tempFile = std::make_unique<juce::TemporaryFile> (".wav");
 
             buffer.resize  ({ (choc::buffer::ChannelCount) numChannels, (choc::buffer::FrameCount) ts.blockSize });
             numSamplesToDo = juce::roundToInt (durationInSeconds * ts.sampleRate);
 
-            if (writeToFile && numChannels > 0)
-                writer = std::unique_ptr<juce::AudioFormatWriter> (juce::WavAudioFormat().createWriterFor (context->tempFile->getFile().createOutputStream().release(),
-                                                                                                           ts.sampleRate, (uint32_t) numChannels, 16, {}, 0));
+            if (writeToBuffer && numChannels > 0)
+            {
+                if (auto os = std::make_unique<juce::MemoryOutputStream> (audioOutputBlock, false))
+                {
+                    writer = std::unique_ptr<juce::AudioFormatWriter> (juce::WavAudioFormat().createWriterFor (os.release(),
+                                                                                                               ts.sampleRate, (uint32_t) numChannels, 16, {}, 0));
+                }
+                else
+                {
+                    jassertfalse;
+                }
+            }
+            
             setPlayer (std::move (playerToUse));
         }
         
@@ -464,13 +473,17 @@ namespace test_utilities
             if (writer)
             {
                 writer->flush();
+                writer.reset();
 
                 // Then read it back in to the buffer
-                if (auto reader = std::unique_ptr<juce::AudioFormatReader> (juce::WavAudioFormat().createReaderFor (context->tempFile->getFile().createInputStream().release(), true)))
+                if (auto is = std::make_unique<juce::MemoryInputStream> (audioOutputBlock, false))
                 {
-                    juce::AudioBuffer<float> tempBuffer (numChannels, (int) reader->lengthInSamples);
-                    reader->read (&tempBuffer, 0, tempBuffer.getNumSamples(), 0, true, true);
-                    context->buffer = std::move (tempBuffer);
+                    if (auto reader = std::unique_ptr<juce::AudioFormatReader> (juce::WavAudioFormat().createReaderFor (is.release(), true)))
+                    {
+                        juce::AudioBuffer<float> tempBuffer (numChannels, (int) reader->lengthInSamples);
+                        reader->read (&tempBuffer, 0, tempBuffer.getNumSamples(), 0, true, true);
+                        context->buffer = std::move (tempBuffer);
+                    }
                 }
             }
 
@@ -484,6 +497,7 @@ namespace test_utilities
         tracktion_graph::PlayHead* playHead = nullptr;
 
         std::shared_ptr<TestContext> context;
+        juce::MemoryBlock audioOutputBlock;
         std::unique_ptr<juce::AudioFormatWriter> writer;
 
         choc::buffer::ChannelArrayBuffer<float> buffer;
