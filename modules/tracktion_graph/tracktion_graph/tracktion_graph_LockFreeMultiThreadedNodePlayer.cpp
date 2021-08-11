@@ -89,7 +89,7 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
     // We need to retain the root so we can get the output from it
     preparedNode.rootNode->retain();
 
-    if (numThreadsToUse.load (std::memory_order_acquire) == 0)
+    if (numThreadsToUse.load (std::memory_order_acquire) == 0 || preparedNode.allNodes.size() == 1)
     {
         for (auto node : preparedNode.allNodes)
             node->process (referenceSampleRange);
