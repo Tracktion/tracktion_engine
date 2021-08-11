@@ -473,7 +473,6 @@ namespace test_utilities
             if (writer)
             {
                 writer->flush();
-                writer.reset();
 
                 // Then read it back in to the buffer
                 if (auto is = std::make_unique<juce::MemoryInputStream> (audioOutputBlock, false))
