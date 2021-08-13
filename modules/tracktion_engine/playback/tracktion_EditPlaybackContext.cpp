@@ -310,8 +310,6 @@ EditPlaybackContext::ScopedDeviceListReleaser::~ScopedDeviceListReleaser()
 EditPlaybackContext::EditPlaybackContext (TransportControl& tc)
     : edit (tc.edit), transport (tc)
 {
-    rebuildDeviceList();
-
     if (edit.isRendering())
     {
         jassertfalse;
@@ -327,6 +325,8 @@ EditPlaybackContext::EditPlaybackContext (TransportControl& tc)
         // This ensures the referenceSampleRange of the new context has been synced
         edit.engine.getDeviceManager().addContext (this);
     }
+
+    rebuildDeviceList();
 }
 
 EditPlaybackContext::~EditPlaybackContext()
