@@ -118,6 +118,15 @@ void PluginNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInf
 
 void PluginNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
 {
+    if (playHeadState != nullptr)
+    {
+        auto& playHead = playHeadState->playHead;
+        const auto editTime = tracktion_graph::sampleToTime (playHead.referenceSamplePositionToTimelinePosition (referenceSampleRange.getStart()), sampleRate) + automationAdjustmentTime;
+        plugin->prepareForNextBlock (editTime);
+        
+        return;
+    }
+    
     plugin->prepareForNextBlock (tracktion_graph::sampleToTime (referenceSampleRange.getStart(), sampleRate));
 }
 
