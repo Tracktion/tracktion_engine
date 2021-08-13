@@ -17,7 +17,7 @@ namespace EditPlaybackContextInternal
 {
     int& getThreadPoolStrategyType()
     {
-        static int type = static_cast<int> (tracktion_graph::ThreadPoolStrategy::realTime);
+        static int type = static_cast<int> (tracktion_graph::ThreadPoolStrategy::lightweightSemHybrid);
         return type;
     }
 
