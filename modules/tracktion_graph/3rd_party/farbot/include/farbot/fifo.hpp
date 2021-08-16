@@ -1,8 +1,11 @@
 #pragma once
-#include <vector>
-#include <atomic>
-#include <cassert>
-#include <thread>
+
+#if 0 // Not included for internal tracktion_graph usage
+ #include <vector>
+ #include <atomic>
+ #include <cassert>
+ #include <thread>
+#endif
 
 namespace farbot
 {
