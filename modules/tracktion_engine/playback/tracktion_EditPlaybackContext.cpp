@@ -729,10 +729,12 @@ void EditPlaybackContext::fillNextNodeBlock (float** allChannels, int numChannel
         }
     }
 
+    const double editTime = tracktion_graph::sampleToTime (nodePlaybackContext->playHead.getPosition(), nodePlaybackContext->getSampleRate());
+    edit.updateModifierTimers (editTime, numSamples);
+    
     nodePlaybackContext->process (allChannels, numChannels, numSamples);
     
     // Dispatch any MIDI messages that have been injected in to the MidiOutputDeviceInstances by the Node
-    const double editTime = tracktion_graph::sampleToTime (nodePlaybackContext->playHead.getPosition(), nodePlaybackContext->getSampleRate());
     midiDispatcher.dispatchPendingMessagesForDevices (editTime);
 }
 
