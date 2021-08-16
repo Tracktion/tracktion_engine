@@ -12,7 +12,7 @@ namespace tracktion_engine
 {
 
 MasterTrack::MasterTrack (Edit& e, const ValueTree& v)
-    : Track (e, v, 40, 13, 200)
+    : Track (e, v, 40, 13, 500)
 {    
 }
 
