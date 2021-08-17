@@ -1,6 +1,6 @@
 include_guard()
 
-cmake_minimum_required(VERSION 3.15...3.20)
+cmake_minimum_required (VERSION 3.15...3.20)
 
 project(
         tracktion_engine
@@ -13,6 +13,6 @@ project(
 
 add_subdirectory(modules)
 
-if (JUCE_BUILD_EXAMPLES)
+if (TRACKTION_BUILD_EXAMPLES)
     add_subdirectory(examples)
-endif ()
+endif()
