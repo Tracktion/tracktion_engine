@@ -892,8 +892,13 @@ void AudioTrack::freezeTrack()
     r.category = ProjectItem::Category::frozen;
 
     const Edit::ScopedRenderStatus srs (edit, true);
-    auto renderedItem = Renderer::renderToProjectItem (TRANS("Creating track freeze for \"XDVX\"")
-                                                        .replace ("XDVX", getName()) + "...", r);
+    const auto desc = TRANS("Creating track freeze for \"XDVX\"")
+                        .replace ("XDVX", getName()) + "...";
+    
+    if (r.engine->getProjectManager().getProject (edit) != nullptr)
+        Renderer::renderToProjectItem (desc, r);
+    else
+        Renderer::renderToFile (desc, r);
 
     freezePlugins (Range<int> (0, getIndexOfFreezePoint()));
     setMute (shouldBeMuted);
