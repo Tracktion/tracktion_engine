@@ -114,7 +114,7 @@ void ModifierNode::process (ProcessContext& pc)
 
     // Process the plugin
     if (shouldProcess)
-        modifier->applyToBuffer (getPluginRenderContext (pc.referenceSampleRange.getStart(), outputAudioBuffer));
+        modifier->baseClassApplyToBuffer (getPluginRenderContext (pc.referenceSampleRange.getStart(), outputAudioBuffer));
     
     // Then copy the buffers to the outputs
     outputBuffers.midi.copyFrom (midiMessageArray);

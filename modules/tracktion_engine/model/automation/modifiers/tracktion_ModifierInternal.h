@@ -95,6 +95,16 @@ private:
 };
 
 //==============================================================================
+namespace modifier
+{
+    inline StringArray getEnabledNames()
+    {
+        return { NEEDS_TRANS("Disabled"),
+                 NEEDS_TRANS("Enabled") };
+    }
+}
+
+//==============================================================================
 struct DiscreteLabelledParameter  : public AutomatableParameter
 {
     DiscreteLabelledParameter (const juce::String& xmlTag,

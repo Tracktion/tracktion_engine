@@ -59,9 +59,11 @@
 #if __has_include(<choc/audio/choc_SampleBuffers.h>)
  #include <choc/audio/choc_SampleBuffers.h>
  #include <choc/audio/choc_MIDI.h>
+ #include <choc/containers/choc_SingleReaderSingleWriterFIFO.h>
 #else
  #include "../3rd_party/choc/audio/choc_SampleBuffers.h"
  #include "../3rd_party/choc/audio/choc_MIDI.h"
+ #include "../3rd_party/choc/containers/choc_SingleReaderSingleWriterFIFO.h"
 #endif
 
 #undef __TEXT

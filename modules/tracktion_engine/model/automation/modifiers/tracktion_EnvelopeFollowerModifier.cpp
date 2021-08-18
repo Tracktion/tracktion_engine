@@ -259,8 +259,8 @@ EnvelopeFollowerModifier::EnvelopeFollowerModifier (Edit& e, const ValueTree& v)
     releaseParam            = addParam          ("release",             TRANS("Release"),               { 1.0f, 5000.0f }, 50.0f,           release,            "ms");
     depthParam              = addParam          ("depth",               TRANS("Depth"),                 { -1.0f, 1.0f }, 0.0f,              depth,              {});
     offsetParam             = addParam          ("offset",              TRANS("Offset"),                { 0.0f, 1.0f }, 0.5f,               offset,             {});
-    lowPassEnabledParam     = addDiscreteParam  ("lowPassEnabled",      TRANS("Low-pass Enabled"),      { 0.0f, 1.0f },                     lowPassEnabled,     getEnabledNames());
-    highPassEnabledParam    = addDiscreteParam  ("highPassEnabled",     TRANS("High-pass Enabled"),     { 0.0f, 1.0f },                     highPassEnabled,    getEnabledNames());
+    lowPassEnabledParam     = addDiscreteParam  ("lowPassEnabled",      TRANS("Low-pass Enabled"),      { 0.0f, 1.0f },                     lowPassEnabled,     modifier::getEnabledNames());
+    highPassEnabledParam    = addDiscreteParam  ("highPassEnabled",     TRANS("High-pass Enabled"),     { 0.0f, 1.0f },                     highPassEnabled,    modifier::getEnabledNames());
     lowPassFrequencyParam   = addParam          ("lowPassFrequency",    TRANS("Low-pass Frequency"),    freqRange, 700.0f,                  lowPassFrequency,   "Hz");
     highPassFrequencyParam  = addParam          ("highPassFrequency",   TRANS("High-pass Frequency"),   freqRange, 700.0f,                  highPassFrequency,  "Hz");
 
