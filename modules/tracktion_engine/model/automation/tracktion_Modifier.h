@@ -95,6 +95,15 @@ struct Modifier : public AutomatableEditItem,
     void baseClassApplyToBuffer (const PluginRenderContext&);
 
     //==============================================================================
+    /** The max number of seconds of modifier value history that is stored. */
+    static constexpr double maxHistoryTime = 3.0;
+    
+    /** Returns the edit time of the current value.
+        @see getCurrentValue, getValueAt
+        [[ audio_thread ]]
+    */
+    double getCurrentTime() const;
+
     /** Returns the value of the at a given time in the past.
         [[ audio_thread ]]
     */
@@ -116,9 +125,13 @@ struct Modifier : public AutomatableEditItem,
     /** Returns the sample rate the Modifier has been initialised with. */
     double getSampleRate() const                                { return sampleRate; }
 
+protected:
+    /** Subclasses can call this to update the edit time of the current value. */
+    void setEditTime (double newEditTime)                       { lastEditTime = newEditTime; }
+    
 private:
     int initialiseCount = 0;
-    double sampleRate = 44100.0;
+    double sampleRate = 44100.0, lastEditTime = 0.0;
     
     class ValueFifo;
     std::unique_ptr<ValueFifo> valueFifo, messageThreadValueFifo;

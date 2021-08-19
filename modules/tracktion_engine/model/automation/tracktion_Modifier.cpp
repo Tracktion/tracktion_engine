@@ -139,7 +139,7 @@ void Modifier::baseClassInitialise (double newSampleRate, int blockSizeSamples)
         CRASH_TRACER
         initialise (sampleRate, blockSizeSamples);
 
-        const double numSecondsToStore = 3.0;
+        const double numSecondsToStore = maxHistoryTime;
         valueFifo = std::make_unique<ValueFifo> (sampleRate, numSecondsToStore);
         messageThreadValueFifo = std::make_unique<ValueFifo> (sampleRate, numSecondsToStore);
         
@@ -186,6 +186,11 @@ void Modifier::baseClassApplyToBuffer (const PluginRenderContext& prc)
 }
 
 //==============================================================================
+double Modifier::getCurrentTime() const
+{
+    return lastEditTime;
+}
+
 float Modifier::getValueAt (double numSecondsBeforeNow) const
 {
     if (valueFifo)

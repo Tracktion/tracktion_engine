@@ -105,6 +105,7 @@ struct BreakpointOscillatorModifier::BreakpointOscillatorModifierTimer    : publ
     {
         using namespace ModifierCommon;
         const double blockLength = numSamples / modifier.getSampleRate();
+        modifier.setEditTime (editTime);
         modifier.updateParameterStreams (editTime);
 
         const auto syncTypeThisBlock = getTypedParamValue<SyncType> (*modifier.syncTypeParam);

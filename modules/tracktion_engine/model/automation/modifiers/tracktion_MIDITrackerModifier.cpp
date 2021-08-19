@@ -99,6 +99,8 @@ StringArray MIDITrackerModifier::getMidiInputNames()
 
 void MIDITrackerModifier::applyToBuffer (const PluginRenderContext& pc)
 {
+    setEditTime (pc.editTime);
+    
     if (pc.bufferForMidiMessages != nullptr)
         for (auto& m : *pc.bufferForMidiMessages)
             if (m.isNoteOn())

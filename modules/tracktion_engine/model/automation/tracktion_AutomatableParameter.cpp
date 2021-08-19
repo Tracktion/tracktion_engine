@@ -121,7 +121,11 @@ struct ModifierAutomationSource : public AutomationModifierSource
     // Modifiers will be updated at the start of each block so can't be repositioned
     float getValueAt (double) override          { return getCurrentValue(); }
     bool isEnabledAt (double) override          { return true; }
-    void setPosition (double) override          {}
+    
+    void setPosition (double newEditTime) override
+    {
+        editTimeToReturn = newEditTime;
+    }
 
     bool isEnabled() override
     {
@@ -130,11 +134,19 @@ struct ModifierAutomationSource : public AutomationModifierSource
 
     float getCurrentValue() override
     {
-        const float baseValue = modifier->getCurrentValue();
+        float baseValue = modifier->getCurrentValue();
+
+        const auto currentTime = modifier->getCurrentTime();
+        const auto deltaTime = currentTime - editTimeToReturn;
+        
+        if (deltaTime > 0.0 && deltaTime < Modifier::maxHistoryTime)
+            baseValue = modifier->getValueAt (deltaTime);
+        
         return AutomationScaleHelpers::mapValue (baseValue, assignment->offset, assignment->value, assignment->curve);
     }
 
     const Modifier::Ptr modifier;
+    double editTimeToReturn = 0.0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ModifierAutomationSource)
 };

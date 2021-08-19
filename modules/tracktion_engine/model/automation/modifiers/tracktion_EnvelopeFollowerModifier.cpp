@@ -314,6 +314,8 @@ void EnvelopeFollowerModifier::deinitialise()
 
 void EnvelopeFollowerModifier::applyToBuffer (const PluginRenderContext& pc)
 {
+    setEditTime (pc.editTime);
+    
     if (pc.destBuffer == nullptr)
         return;
 

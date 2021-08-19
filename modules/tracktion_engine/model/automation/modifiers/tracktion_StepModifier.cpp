@@ -21,6 +21,7 @@ struct StepModifier::StepModifierTimer : public ModifierTimer
     void updateStreamTime (double editTime, int numSamples) override
     {
         const double blockLength = numSamples / modifier.getSampleRate();
+        modifier.setEditTime (editTime);
         modifier.updateParameterStreams (editTime);
 
         const auto syncTypeThisBlock = roundToInt (modifier.syncTypeParam->getCurrentValue());
