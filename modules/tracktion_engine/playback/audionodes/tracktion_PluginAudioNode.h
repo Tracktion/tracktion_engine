@@ -87,10 +87,6 @@ public:
 
     bool isReadyToRender() override
     {
-        if (auto rf = dynamic_cast<RackInstance*> (plugin.get()))
-            if (rf->type != nullptr)
-                return rf->type->isReadyToRender();
-
         if (input != nullptr)
             return input->isReadyToRender();
 
