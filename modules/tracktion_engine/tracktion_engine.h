@@ -372,6 +372,13 @@ namespace tracktion_engine
 #include "../tracktion_graph/utilities/tracktion_MidiMessageArray.h"
 #include "midi/tracktion_ActiveNoteList.h"
 
+#include "midi/tracktion_MidiProgramManager.h"
+#include "midi/tracktion_MidiControllerEvent.h"
+#include "midi/tracktion_MidiSysexEvent.h"
+#include "midi/tracktion_MidiExpression.h"
+#include "midi/tracktion_MidiChannel.h"
+#include "midi/tracktion_MidiList.h"
+
 #include "plugins/tracktion_PluginWindowState.h"
 #include "plugins/tracktion_Plugin.h"
 #include "plugins/tracktion_PluginList.h"
@@ -444,12 +451,6 @@ namespace tracktion_engine
 #include "audio_files/formats/tracktion_LAMEManager.h"
 #include "audio_files/formats/tracktion_RexFileFormat.h"
 
-#include "midi/tracktion_MidiProgramManager.h"
-#include "midi/tracktion_MidiControllerEvent.h"
-#include "midi/tracktion_MidiSysexEvent.h"
-#include "midi/tracktion_MidiExpression.h"
-#include "midi/tracktion_MidiChannel.h"
-#include "midi/tracktion_MidiList.h"
 #include "midi/tracktion_SelectedMidiEvents.h"
 
 #include "model/automation/tracktion_AutomationRecordManager.h"

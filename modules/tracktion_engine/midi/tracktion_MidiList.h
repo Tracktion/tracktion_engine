@@ -131,6 +131,9 @@ public:
     // Add equivalent events to the sequence, for playback
     void exportToPlaybackMidiSequence (juce::MidiMessageSequence&, MidiClip&, bool generateMPE) const;
 
+    /** Creates the default MIDI playback sequence. */
+    static juce::MidiMessageSequence createDefaultPlaybackMidiSequence (const MidiList&, MidiClip&, bool generateMPE);
+
     //==============================================================================
     static bool looksLikeMPEData (const juce::File&);
 
