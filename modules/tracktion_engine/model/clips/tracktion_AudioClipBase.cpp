@@ -2279,6 +2279,19 @@ void AudioClipBase::valueTreePropertyChanged (ValueTree& tree, const juce::Ident
             || id == IDs::elastiqueOptions || id == IDs::warpTime
             || id == IDs::effectsVisible || id == IDs::autoPitchMode)
         {
+            if (id == IDs::warpTime)
+            {
+                warpTime.forceUpdateOfCachedValue();
+                
+                if (! getWarpTime())
+                {
+                    if (shouldAttemptRender())
+                        updateSourceFile();
+                    else
+                        setCurrentSourceFile (getOriginalFile());
+                }
+            }
+            
             changed();
         }
         else if (id == IDs::gain)
