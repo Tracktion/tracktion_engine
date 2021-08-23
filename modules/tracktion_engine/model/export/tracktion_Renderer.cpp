@@ -436,6 +436,7 @@ bool Renderer::renderToFile (const String& taskDescription,
         r.time = range;
         r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (engine);
         r.usePlugins = usePlugins;
+        r.useMasterPlugins = usePlugins;
         r.allowedClips = clips;
         r.createMidiFile = outputFile.hasFileExtension (".mid");
 
