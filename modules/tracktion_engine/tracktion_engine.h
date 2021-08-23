@@ -25,7 +25,7 @@
   website:          http://www.tracktion.com
   license:          Proprietary
 
-  dependencies:     juce_audio_devices juce_audio_utils juce_gui_extra juce_dsp juce_osc
+  dependencies:     juce_audio_devices juce_audio_utils juce_gui_extra juce_dsp juce_osc tracktion_graph
 
  END_JUCE_MODULE_DECLARATION
 
