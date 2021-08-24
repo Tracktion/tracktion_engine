@@ -46,7 +46,6 @@ public:
     /** Returns the WaveCompManager for this clip. */
     WaveCompManager& getCompManager();
 
-    
     //==============================================================================
     /** @internal */
     bool needsRender() const override;

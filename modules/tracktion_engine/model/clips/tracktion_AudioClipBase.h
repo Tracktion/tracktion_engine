@@ -41,18 +41,6 @@ public:
     ~AudioClipBase() override;
 
     //==============================================================================
-    void initialise() override;
-    void cloneFrom (Clip*) override;
-    void flushStateToValueTree() override;
-
-    //==============================================================================
-    void setTrack (ClipTrack*) override;
-    bool canGoOnTrack (Track&) override;
-    void changed() override;
-
-    //==============================================================================
-    juce::Colour getDefaultColour() const override;
-
     /** Returns the maximum length for this clip.
         This can change depending on the clips properties e.g. if the clip is
         timestretched then this will return a proportion of getSourceLength, if it
@@ -127,137 +115,276 @@ public:
     /** Override this to return a custom message to display over the clip where the "file missing" text usually goes. */
     virtual juce::String getClipMessage()               { return {}; }
 
+    /** If a render is in progress, this will cancel it. */
     void cancelCurrentRender();
 
-    PatternGenerator* getPatternGenerator() override;
-
     //==============================================================================
+    /** Sets the gain of the clip in dB. */
     void setGainDB (float dB);
+    /** Returns the gain of the clip in dB. */
     float getGainDB() const noexcept                    { return level->dbGain; }
+    /** Returns the gain of the clip. */
     float getGain() const noexcept                      { return dbToGain (level->dbGain); }
 
+    /** Sets the pan of the clip.
+        @param pan -1 = full left, 0 = centre, 1 = full right
+    */
     void setPan (float pan);
+    /** Returns the pan of the clip from -1 to 1 @see setPan. */
     float getPan() const noexcept                       { return level->pan; }
 
+    /** @internal */
     void setMuted (bool shouldBeMuted) override         { level->mute = shouldBeMuted; }
+    /** @internal */
     bool isMuted() const override                       { return level->mute; }
 
+    /** Returns a LiveClipLevel which can be used to read the gain, pan and mute statuses. */
     LiveClipLevel getLiveClipLevel();
 
     //==============================================================================
+    /** Enables the left channel of the clip. */
     void setLeftChannelActive (bool);
+    /** Returns whether the left channel of the clip is enabled. */
     bool isLeftChannelActive() const;
 
+    /** Enables the right channel of the clip. */
     void setRightChannelActive (bool);
+    /** Returns whether the right channel of the clip is enabled. */
     bool isRightChannelActive() const;
 
     /** Returns the layout of the active channels. */
     juce::AudioChannelSet getActiveChannels() const     { return activeChannels; }
 
     //==============================================================================
+    /** Sets the fade in duration in seconds.
+        If the duration is longer than the clip or overlaps the fade out, this will
+        reduce the fade out accordingly.
+    */
     bool setFadeIn (double length);
+    /** Returns the fade in duration in seconds. */
     double getFadeIn() const;
 
+    /** Sets the fade out duration in seconds.
+        If the duration is longer than the clip or overlaps the fade in, this will
+        reduce the fade in accordingly.
+    */
     bool setFadeOut (double length);
+    /** Returns the fade out duration in seconds. */
     double getFadeOut() const;
 
-    void setFadeInType (AudioFadeCurve::Type newType);
+    /** Sets the curve shape for the fade in to use. */
+    void setFadeInType (AudioFadeCurve::Type);
+    /** Returns the curve shape for the fade in to use. */
     AudioFadeCurve::Type getFadeInType() const          { return fadeInType; }
 
+    /** Sets the curve shape for the fade out to use. */
     void setFadeOutType (AudioFadeCurve::Type newType);
+    /** Returns the curve shape for the fade out to use. */
     AudioFadeCurve::Type getFadeOutType() const         { return fadeOutType; }
 
+    /** Enables/disables auto-crossfading.
+        When enabled, the fade in/out length will automatically be set to the length
+        of any overlapping clip regions.
+    */
     void setAutoCrossfade (bool shouldAutoCrossfade)    { autoCrossfade = shouldAutoCrossfade; }
+    /** Returns whether auto-crossfade is enabled. */
     bool getAutoCrossfade() const noexcept              { return autoCrossfade; }
 
+    /** Triggers an update of the auto-crossfades.
+        N.B. you shouldn't normally need to call this, it's called by the
+        AudioTrack when clips are moved.
+        @param updateOverlapped If true, this will also update any other clips that overlap this one.
+    */
     void updateAutoCrossfadesAsync (bool updateOverlapped);
+    /** Sets the fade in/out lengths to be 0.03s to avoid any clicks at the start/end of th clip. */
     void applyEdgeFades();
+
+    /** Copies the fade in curve to a volume automation curve.
+        @param fadeIn           If true, this copies the fade-in, if false, the fade-out
+        @param removeClipFade   If true, the fade in will be set to 0 @see setFadeIn
+    */
     void copyFadeToAutomation (bool fadeIn, bool removeClipFade);
 
     //==============================================================================
+    /** Describes the fade behaviour. */
     enum FadeBehaviour
     {
-        gainFade = 0,
-        speedRamp
+        gainFade = 0,   /**< Fade is a volume/gain ramp. */
+        speedRamp       /**< Fade is a change of playback speed for tape start/stop effects. */
     };
 
+    /** Sets the fade in behaviour. */
     void setFadeInBehaviour (FadeBehaviour newBehaviour)    { fadeInBehaviour = newBehaviour; }
+    /** Returns the fade in behaviour. */
     FadeBehaviour getFadeInBehaviour() const                { return fadeInBehaviour; }
 
+    /** Sets the fade out behaviour. */
     void setFadeOutBehaviour (FadeBehaviour newBehaviour)   { fadeOutBehaviour = newBehaviour; }
+    /** Returns the fade out behaviour. */
     FadeBehaviour getFadeOutBehaviour() const               { return fadeOutBehaviour; }
 
     //==============================================================================
     /** Override this to fill in the LoopInfo structure as best fits the source. */
     virtual void setLoopDefaults() = 0;
 
+    /** Sets a LoopInfo to describe this clip's tempo, time sig etc. which is used
+        when syncing to the TempoSequence and PitchSequence.
+        @see LoopInfo. */
     void setLoopInfo (const LoopInfo&);
+    /** Returns the LoopInfo being used to describe this clip. */
     const LoopInfo& getLoopInfo() const                 { return loopInfo; }
+    /** Returns the LoopInfo being used to describe this clip. */
     LoopInfo& getLoopInfo()                             { return loopInfo; }
 
-    bool canLoop() const override                       { return ! isUsingMelodyne(); }
-    bool isLooping() const override                     { return getAutoTempo() ? (loopLengthBeats > 0.0) : (loopLength > 0.0); }
-    bool beatBasedLooping() const override              { return isLooping() && getAutoTempo(); }
-    void setNumberOfLoops (int num) override;
-    void disableLooping() override;
-
+    /** Returns the loop range in seconds. */
     EditTimeRange getLoopRange() const;
-    double getLoopStartBeats() const override;
-    double getLoopStart() const override;
-    double getLoopLengthBeats() const override;
-    double getLoopLength() const override;
 
+    /** @internal */
+    bool canLoop() const override                       { return ! isUsingMelodyne(); }
+    /** @internal */
+    bool isLooping() const override                     { return getAutoTempo() ? (loopLengthBeats > 0.0) : (loopLength > 0.0); }
+    /** @internal */
+    bool beatBasedLooping() const override              { return isLooping() && getAutoTempo(); }
+    /** @internal */
+    void setNumberOfLoops (int num) override;
+    /** @internal */
+    void disableLooping() override;
+    /** @internal */
+    double getLoopStartBeats() const override;
+    /** @internal */
+    double getLoopStart() const override;
+    /** @internal */
+    double getLoopLengthBeats() const override;
+    /** @internal */
+    double getLoopLength() const override;
+    /** @internal */
     void setLoopRange (EditTimeRange) override;
+    /** @internal */
     void setLoopRangeBeats (juce::Range<double>) override;
 
+    /** Enables auto-detection of beats.
+        If this is true the LoopInfo will be set based on what beats were detected.
+        This will aso updat eif the sensitivity is changed @see setBeatSensitivity.
+        [[ blocks ]]
+    */
     void setAutoDetectBeats (bool);
+    /** Returns true if auto-detect of beats is enabled. */
     bool getAutoDetectBeats() const                     { return autoDetectBeats; }
 
+    /** Sets the beat sensitivity, triggering a LoopInfo update if auto-detect is enabled.
+        @see setAutoDetectBeats
+    */
     void setBeatSensitivity (float s);
+    /** Returns the beat sensitivity. */
     float getBeatSensitivity() const                    { return beatSensitivity; }
 
+    /** @internal */
     void pitchTempoTrackChanged() override;
-    void clearCachedAudioSegmentList();
-    const AudioSegmentList* getAudioSegmentList();
 
     //==============================================================================
+    /** @internal */
     void setSpeedRatio (double newSpeed) override;
+    
+    /** Sets a time-stretch mode to use. */
     void setTimeStretchMode (TimeStretcher::Mode mode);
+    
+    /** Returns the time-stretch mode that has been set. */
     TimeStretcher::Mode getTimeStretchMode() const noexcept;
+    
+    /** Returns the time-stretch mode that is in use.
+        Note that even if not time-stretch mode has been set e.g. for speed changes,
+        if auto-pitch or auto-tempo is enabled, a time-stretch mode will have to be
+        used and this returns it.
+    */
     TimeStretcher::Mode getActualTimeStretchMode() const noexcept;
 
     //==============================================================================
+    /** Defines the auto pitch mode. */
     enum AutoPitchMode
     {
-        pitchTrack = 0,
-        chordTrackMono,
-        chordTrackPoly
+        pitchTrack = 0, /**< Clip tracks the Edit's PitchSequence. */
+        chordTrackMono, /**< Clip tracks the chord track with a monophonic pitch change. */
+        chordTrackPoly  /**< Clip tracks the pitch track with a polyphonic pitch change. */
     };
 
+    /** Enables/disables auto-tempo.
+        If enabled, this clip will adjust its playback speed to stay in sync with the Edit's TempoSequence.
+    */
     void setAutoTempo (bool shouldUseAutoTempo)         { autoTempo = shouldUseAutoTempo; }
+    
+    /** Returns true if auto-tempo has been set. */
     bool getAutoTempo() const                           { return autoTempo; }
+
+    /** Enables/disables auto-pitch.
+        If enabled, this clip will adjust its playback pitch to stay in sync with the Edit's PitchSequence.
+    */
     void setAutoPitch (bool shouldUseAutoPitch)         { autoPitch = shouldUseAutoPitch; }
+
+    /** Returns true if auto-pitch has been set. */
     bool getAutoPitch() const                           { return autoPitch; }
+
+    /** Sets the AutoPitchMode to use. */
     void setAutoPitchMode (AutoPitchMode m)             { autoPitchMode = m; }
+    
+    /** Returns the AutoPitchMode in use. */
     AutoPitchMode getAutoPitchMode()                    { return autoPitchMode; }
+    
+    /** Enables/disables warp time.
+        Warp Time enables segmented warping of the audio. @see WarpTimeManager
+    */
     void setWarpTime (bool shouldUseWarpTime)           { warpTime = shouldUseWarpTime; }
+    
+    /** Returns true if warp time is enabled. */
     bool getWarpTime() const                            { return warpTime; }
+
+    /** Returns the WarpTimeManager for this clip used to maipluate warp markers. */
     WarpTimeManager& getWarpTimeManager() const;
 
+    /** Sets the number of semitones to transpose the clip by. */
     void setTranspose (int numSemitones)                { transpose = juce::jlimit (-24, 24, numSemitones); }
+
+    /** Returns the number of semitones this clip will be changed by.
+        N.B. this is used if auto-pitch is enabled.
+        @param includeAutoPitch If true, this will include the changes defined by auto-pitch.
+                                If false, this will only be the number explicitly set in setTranspose
+    */
     int getTransposeSemiTones (bool includeAutoPitch) const;
 
+    /** Sets the number of semitones to transpose the clip by.
+        N.B. this is only used if auto-pitch is disabled.
+    */
     void setPitchChange (float semitones)               { pitchChange = juce::jlimit (-48.0f, 48.0f, semitones); }
+    
+    /** Returns the number of semitones to transpose the clip by. */
     float getPitchChange() const                        { return pitchChange; }
+    
+    /** Returns the pitch change as a normalised ratio. 0 = no change, <0 = pitched down, >0 = pitched up. */
     float getPitchRatio() const                         { return juce::jlimit (0.1f, 10.0f, std::pow (2.0f, pitchChange / 12.0f)); }
 
+    /** Enables reversing of the clip's source material. */
     void setIsReversed (bool shouldBeReversed)          { isReversed = shouldBeReversed; }
+
+    /** Returns true if the clip's source material is reversed. */
     bool getIsReversed() const noexcept                 { return isReversed; }
 
-    LoopInfo autoDetectBeatMarkers (const LoopInfo& current, bool autoBeat, float sens) const;
+    /** Scans the current source file for any beats and adds them to the LoopInfo returned.
+        @param current      A LoopInfo to initialise the result from
+        @param autoBeat     Whether to auto detect the beats from the source file
+        @param sensitivity  The sensitivity to use 0-1
+        [[ blocks ]]
+    */
+    LoopInfo autoDetectBeatMarkers (const LoopInfo& current, bool autoBeat, float sensitivity) const;
+    
+    /** Performs a tempo-detection task and if successful sets the clip's LoopInfo tempo to this.
+        @returns true if the tempo was sensibly detected
+        [[ blocks ]]
+    */
     bool performTempoDetect();
 
+    /** Returns an array of the root note choices e.g. "C#" etc. */
     static juce::StringArray getRootNoteChoices (Engine&);
+
+    /** Returns an array describng what pitch each semitone change will be. */
     juce::StringArray getPitchChoices();
 
     //==============================================================================
@@ -365,6 +492,29 @@ public:
     */
     bool setupARA (bool dontPopupErrorMessages);
 
+    //==============================================================================
+    /** @internal */
+    void initialise() override;
+    /** @internal */
+    void cloneFrom (Clip*) override;
+    /** @internal */
+    void flushStateToValueTree() override;
+
+    //==============================================================================
+    /** @internal */
+    void setTrack (ClipTrack*) override;
+    /** @internal */
+    bool canGoOnTrack (Track&) override;
+    /** @internal */
+    void changed() override;
+
+    //==============================================================================
+    /** @internal */
+    juce::Colour getDefaultColour() const override;
+    /** @internal */
+    PatternGenerator* getPatternGenerator() override;
+
+
 protected:
     //==============================================================================
     friend class WaveCompManager;
@@ -436,6 +586,9 @@ private:
     */
     void renderSource();
     bool shouldAttemptRender() const    { return (! lastRenderJobFailed) && needsRender(); }
+
+    void clearCachedAudioSegmentList();
+    const AudioSegmentList* getAudioSegmentList();
 
     //==============================================================================
     void jobFinished (RenderManager::Job& job, bool completedOk) override;

@@ -405,20 +405,29 @@ protected:
 
     juce::ListenerList<Listener> listeners;
 
+    /** Sets a new source file for this clip. */
     void setCurrentSourceFile (const juce::File&);
-    virtual void setTrack (ClipTrack*);
-    void updateParentTrack();
 
-    // returns the mark points relative to the start of the clip, rescaled to the current speed
+    /** Moves this clip to a new ClipTrack. */
+    virtual void setTrack (ClipTrack*);
+
+    /** Returns the mark points relative to the start of the clip, rescaled to the current speed. */
     virtual juce::Array<double> getRescaledMarkPoints() const;
 
+    /** @internal */
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
+    /** @internal */
     void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override {}
+    /** @internal */
     void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override {}
+    /** @internal */
     void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override {}
+    /** @internal */
     void valueTreeParentChanged (juce::ValueTree&) override;
 
 private:
+    void updateParentTrack();
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Clip)
 };
 
