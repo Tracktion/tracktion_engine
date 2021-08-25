@@ -388,47 +388,54 @@ public:
     juce::StringArray getPitchChoices();
 
     //==============================================================================
+    /** Returns true if this clip can have ClipEffects added to it. */
     virtual bool canHaveEffects() const                 { return ! (warpTime || isReversed); }
-    void enableEffects (bool, bool warn);
+
+    /** Enables/disables ClipEffects for this clip.
+        @param enable   Whether to turn on/off clip FX for this clip
+        @param warn     If true and clip FX are enabled, this will show a confirmation dialog to the user first
+    */
+    void enableEffects (bool enable, bool warn);
+    
+    /** Returns true if ClipEffects are enabled. */
     bool effectsEnabled() const                         { return clipEffects != nullptr; }
 
+    /** Adds a ClipEffect to this clip. */
     void addEffect (const juce::ValueTree& effectsTree);
 
+    /** Sets the effectsVisible flag for this clip. */
     void setEffectsVisible (bool b)                     { clipEffectsVisible = b; }
+    
+    /** Returns true if the effectsVisible flag is set for this clip. */
     bool getEffectsVisible() const                      { return clipEffectsVisible; }
 
+    /** Returns the ClipEffects for this clip if it has been enabled. */
     ClipEffects* getClipEffects() const noexcept        { return clipEffects.get(); }
 
     //==============================================================================
-    void addMark (double relCursorPos);
-    void moveMarkTo (double relCursorPos);
-    void deleteMark (double relCursorPos);
-
-    juce::Array<double> getRescaledMarkPoints() const override;
-
-    //==============================================================================
+    /** Returns true if source file has a bwav time reference metadata property. */
     bool canSnapToOriginalBWavTime();
+    
+    /** Moves the clip to the bwav time reference metadata property time. */
     void snapToOriginalBWavTime();
 
     //==============================================================================
-    juce::Array<ReferencedItem> getReferencedItems() override;
-    void reassignReferencedItem (const ReferencedItem&, ProjectItemID newID, double newStartTime) override;
-
+    /** Returns the ProjectItemID of the clip's takes. */
     virtual juce::Array<ProjectItemID> getTakes() const;
 
     //==============================================================================
+    /** Returns an empty string if this plugin can be added, otherwise an error message
+        due to the clip plugin being an incorrect type (e.g. MIDI) or the list is full.
+    */
     juce::String canAddClipPlugin (const Plugin::Ptr&) const;
-    bool addClipPlugin (const Plugin::Ptr&, SelectionManager&) override;
-    Plugin::Array getAllPlugins() override;
-    void sendMirrorUpdateToAllPlugins (Plugin&) const override;
-
-    PluginList* getPluginList() override           { return &pluginList; }
 
     //==============================================================================
     /** Holds information about how to render a proxy for this clip. */
     struct ProxyRenderingInfo
     {
+        /** Constructor. */
         ProxyRenderingInfo();
+        /** Destructor. */
         ~ProxyRenderingInfo();
 
         std::unique_ptr<AudioSegmentList> audioSegmentList;
@@ -437,6 +444,7 @@ public:
         TimeStretcher::Mode mode;
         TimeStretcher::ElastiqueProOptions options;
 
+        /** Renders this audio segment list to an AudioFile. */
         bool render (Engine&, const AudioFile&, AudioFileWriter&, juce::ThreadPoolJob* const&, std::atomic<float>& progress) const;
 
     private:
@@ -446,35 +454,72 @@ public:
     /** Should return true if the clip is referencing the file in any way. */
     virtual bool isUsingFile (const AudioFile&);
 
+    /** Returns the AudioFile to create to play this clip back.
+        @param renderTimestretched If true, this should be a time-stretched version of the clip @see setAutoTempo
+    */
     AudioFile getProxyFileToCreate (bool renderTimestretched);
+    
+    /** Can be used to disable proxy file generation for this clip.
+        N.B. if disabled, this clip won't fully sync to the TempoSequence.
+    */
     void setUsesProxy (bool canUseProxy) noexcept;
+    
+    /** Retuns true if this clip can use a proxy file. */
     bool canUseProxy() const noexcept               { return proxyAllowed && edit.canRenderProxies(); }
+
+    /** Retuns true if this clip use a proxy file due to timestretching.
+        This can be because auto-tempo, auto-pitch or a pitch change has been set.
+    */
     bool usesTimeStretchedProxy() const;
+    
+    /** Creates a ProxyRenderingInfo object to decribe the stretch segements of this clip. */
     std::unique_ptr<ProxyRenderingInfo> createProxyRenderingInfo();
 
+    /** Returns a hash identifying the proxy settings. */
     juce::int64 getProxyHash();
+
+    /** Triggers creation of a new proxy file if one is required. */
     void beginRenderingNewProxyIfNeeded();
 
+    /** Can be enabled to use a simpler playback node for time-stretched previews. */
     void setUsesTimestretchedPreview (bool shouldUsePreview) noexcept   { useTimestretchedPreview = shouldUsePreview; }
+
+    /** Returns true if this clp should use a time-stretched preview. */
     bool usesTimestretchedPreview() const noexcept                      { return useTimestretchedPreview; }
 
+    //==============================================================================
+    /** Reverses the loop points to expose the same section of the source file but reversed. */
     void reverseLoopPoints();
+    
+    /** Trims the fade in out lengths to avoid any overlap between them. */
     void checkFadeLengthsForOverrun();
 
+    /** Defines a prevous/next direction. @see getOverlappingClip */
     enum class ClipDirection { previous, next, none };
+    
+    /** Returns the previous/next overlapping clip if one exists. */
     AudioClipBase* getOverlappingClip (ClipDirection) const;
 
-    void getRescaledMarkPoints (juce::Array<double>& rescaled, juce::Array<int>& orig) const;
-
+    //==============================================================================
+    /** The MelodyneFileReader proxy if this clip is using Melodyne. */
     juce::ReferenceCountedObjectPtr<MelodyneFileReader> melodyneProxy;
 
+    /** Returns true if this clip is using Melodyne. */
     bool isUsingMelodyne() const;
-    void loadMelodyneState();
+
+    /** Shows the Melodyne window if this clip is using Melodyne. */
     void showMelodyneWindow();
+
+    /** Hides the Melodyne window if this clip is using Melodyne. */
     void hideMelodyneWindow();
+
+    /** If this clip is using Melodyne, this will create a new MIDI clip based
+        on the Melodyne analysis.
+    */
     void melodyneConvertToMIDI();
 
-    juce::CachedValue<TimeStretcher::ElastiqueProOptions> elastiqueProOptions;
+    /** @internal */
+    void loadMelodyneState();
 
     /** This internal method is used solely to find out if createAudioNode()
         should return nullptr or not.
@@ -491,6 +536,9 @@ public:
                  is most likely!
     */
     bool setupARA (bool dontPopupErrorMessages);
+
+    /** The ElastiqueProOptions for fine tuning Elastique (if available). */
+    juce::CachedValue<TimeStretcher::ElastiqueProOptions> elastiqueProOptions;
 
     //==============================================================================
     /** @internal */
@@ -514,6 +562,32 @@ public:
     /** @internal */
     PatternGenerator* getPatternGenerator() override;
 
+    //==============================================================================
+    /** @internal */
+    void addMark (double relCursorPos);
+    /** @internal */
+    void moveMarkTo (double relCursorPos);
+    /** @internal */
+    void deleteMark (double relCursorPos);
+    /** @internal */
+    void getRescaledMarkPoints (juce::Array<double>& rescaled, juce::Array<int>& orig) const;
+    /** @internal */
+    juce::Array<double> getRescaledMarkPoints() const override;
+
+    /** @internal */
+    juce::Array<ReferencedItem> getReferencedItems() override;
+    /** @internal */
+    void reassignReferencedItem (const ReferencedItem&, ProjectItemID newID, double newStartTime) override;
+
+    //==============================================================================
+    /** @internal */
+    bool addClipPlugin (const Plugin::Ptr&, SelectionManager&) override;
+    /** @internal */
+    Plugin::Array getAllPlugins() override;
+    /** @internal */
+    void sendMirrorUpdateToAllPlugins (Plugin&) const override;
+    /** @internal */
+    PluginList* getPluginList() override           { return &pluginList; }
 
 protected:
     //==============================================================================
@@ -563,10 +637,15 @@ protected:
     */
     void createNewProxyAsync();
 
+    /** @internal */
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
+    /** @internal */
     void valueTreeChildAdded (juce::ValueTree& parent, juce::ValueTree&) override;
+    /** @internal */
     void valueTreeChildRemoved (juce::ValueTree& parent, juce::ValueTree&, int) override;
+    /** @internal */
     void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override;
+    /** @internal */
     void valueTreeParentChanged (juce::ValueTree&) override;
 
 private:

@@ -1412,13 +1412,13 @@ void AudioClipBase::deleteMark (double relCursorPos)
 
 bool AudioClipBase::canSnapToOriginalBWavTime()
 {
-    return getAudioFile().getMetadata() [WavAudioFormat::bwavTimeReference].isNotEmpty();
+    return getAudioFile().getMetadata()[WavAudioFormat::bwavTimeReference].isNotEmpty();
 }
 
 void AudioClipBase::snapToOriginalBWavTime()
 {
     auto f = getAudioFile();
-    const String bwavTime (f.getMetadata() [WavAudioFormat::bwavTimeReference]);
+    const String bwavTime (f.getMetadata()[WavAudioFormat::bwavTimeReference]);
 
     if (bwavTime.isNotEmpty())
     {
