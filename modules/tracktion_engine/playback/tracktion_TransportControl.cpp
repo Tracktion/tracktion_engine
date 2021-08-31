@@ -680,7 +680,7 @@ void TransportControl::editHasChanged()
     engine.getExternalControllerManager().updateAllDevices();
 }
 
-int TransportControl::isAllowedToReallocate() const noexcept
+bool TransportControl::isAllowedToReallocate() const noexcept
 {
     return transportState->reallocationInhibitors <= 0;
 }
