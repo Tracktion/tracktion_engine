@@ -634,7 +634,7 @@ std::unique_ptr<tracktion_graph::Node> createSidechainInputNodeForPlugin (Plugin
 
     auto sumNode = makeSummingNode ({ directInput.release(), sidechainInput.release() });
 
-    return std::move (sumNode);
+    return sumNode;
 }
 
 std::unique_ptr<tracktion_graph::Node> createNodeForPlugin (Plugin& plugin, const TrackMuteState* trackMuteState, std::unique_ptr<Node> node,
