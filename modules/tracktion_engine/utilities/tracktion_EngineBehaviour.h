@@ -108,6 +108,9 @@ public:
     /** Should muted tracks processing be disabled to save CPU */
     virtual bool shouldProcessMutedTracks()                                         { return false; }
 
+    /** Should audio inputs be audible when monitor-enabled but not record enabled.  */
+    virtual bool monitorAudioInputsWithoutRecordEnable()                            { return false; }
+
     virtual bool areAudioClipsRemappedWhenTempoChanges()                            { return true; }
     virtual void setAudioClipsRemappedWhenTempoChanges (bool)                       {}
     virtual bool areAutoTempoClipsRemappedWhenTempoChanges()                        { return true; }

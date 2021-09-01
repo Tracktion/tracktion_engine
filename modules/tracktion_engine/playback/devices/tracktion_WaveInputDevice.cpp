@@ -979,7 +979,7 @@ public:
     bool isLivePlayEnabled (const Track& t) const override
     {
         return owner.isEndToEndEnabled()
-                && isRecordingEnabled (t)
+                && (isRecordingEnabled (t) || edit.engine.getEngineBehaviour().monitorAudioInputsWithoutRecordEnable())
                 && InputDeviceInstance::isLivePlayEnabled (t);
     }
 
