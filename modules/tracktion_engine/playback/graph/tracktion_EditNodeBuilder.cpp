@@ -978,8 +978,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForSubmixTrack (FolderTrack& su
     std::unique_ptr<Node> node = std::move (sumNode);
     auto trackMuteState = std::make_unique<TrackMuteState> (submixTrack, false, false);
 
-    if (params.includePlugins)
-        node = createPluginNodeForList (submixTrack.pluginList, trackMuteState.get(), std::move (node), params.processState.playHeadState, params);
+    node = createPluginNodeForTrack (submixTrack, *trackMuteState, std::move (node), params.processState.playHeadState, params);
 
     node = makeNode<TrackMutingNode> (std::move (trackMuteState), std::move (node), false);
 
