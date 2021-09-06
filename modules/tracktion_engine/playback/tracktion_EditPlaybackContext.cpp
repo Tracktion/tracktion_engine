@@ -807,14 +807,15 @@ void EditPlaybackContext::setAddAntiDenormalisationNoise (Engine& e, bool b)
 //==============================================================================
 tracktion_graph::PlayHead* EditPlaybackContext::getNodePlayHead() const
 {
-    //ddd can this be removed?
+    //TODO  can this be removed?
     return nodePlaybackContext ? &nodePlaybackContext->playHead
                                : nullptr;
 }
 
 bool EditPlaybackContext::isPlaying() const
 {
-    return nodePlaybackContext->playHead.isPlaying();
+    return nodePlaybackContext ? nodePlaybackContext->playHead.isPlaying()
+                               : false;
 }
 
 bool EditPlaybackContext::isLooping() const
