@@ -124,11 +124,13 @@ namespace tracktion_engine
 			CachedValue<bool>* cvsBool[] = { &useSidechainTrigger, nullptr };
 			copyPropertiesToNullTerminatedCachedValues(v, cvsFloat);
 			copyPropertiesToNullTerminatedCachedValues(v, cvsBool);
+			*/
+
 
 			for (auto p : getAutomatableParameters())
 				p->updateFromAttachedValue();
 
-				*/
+				
 		}
 
 		void valueTreePropertyChanged(ValueTree& v, const juce::Identifier& id)
@@ -182,9 +184,14 @@ public:
 		edit->getTransport().addChangeListener(this);
 
 
-		WaveAudioClip::Ptr clip;
 
-		if (auto track = EngineHelpers::getOrInsertAudioTrackAt(*edit, 0))
+
+		//Creates clip. Loads clip from file f.
+		//Creates track. Loads clip into track.
+		WaveAudioClip::Ptr clip;
+		auto track = EngineHelpers::getOrInsertAudioTrackAt(*edit, 0);
+
+		if (track)
 		{
 			// Add a new clip to this track
 			te::AudioFile audioFile(edit->engine, f);
@@ -195,6 +202,9 @@ public:
 		
 		}
 
+
+		//Places clip on track 1, sets loop start to beginning of clip and loop end to end of clip.
+		//Looping set to true, and play set to true to start the loop.
 		auto& transport = clip->edit.getTransport();
 		transport.setLoopRange(clip->getEditTimeRange());
 		transport.looping = true;
@@ -202,7 +212,8 @@ public:
 		transport.play(false);
 
 
-		EngineHelpers::loopAroundClip(*clip);
+		//Now I need to find out how to embed transport output into the PluginRenderContext.
+
 
 
 
