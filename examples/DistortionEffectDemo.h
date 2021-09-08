@@ -73,7 +73,6 @@ namespace tracktion_engine
 
 		DistortionPlugin(PluginCreationInfo info) : Plugin(info)
 		{
-
 		}
 
 		~DistortionPlugin() override
@@ -85,18 +84,19 @@ namespace tracktion_engine
 
 
 
-		void initialise(const PluginInitialisationInfo&) override
+		void initialise(const PluginInitialisationInfo&)
 		{
 			currentLevel = 0.0;
 			lastSamp = 0.0f;
 		}
 
-		void deinitialise() override
+		void deinitialise()
 		{
 		}
 
 		//Currently trying to see whether or not any processing is applied by attempting to apply a gain of 0.
-		void applyToBuffer (const PluginRenderContext& fc) override
+		
+		void applyToBuffer (const PluginRenderContext& fc)
 		{
 	
 		//	clearChannels(*fc.destBuffer, 0,1, fc.bufferStartSample, fc.bufferNumSamples);
@@ -167,6 +167,8 @@ public:
 
 		engine.getPluginManager().createBuiltInType<DistortionPlugin>();
 
+		
+
 		const auto editFilePath = JUCEApplication::getCommandLineParameters().replace("-NSDocumentRevisionsDebugMode YES", "").unquoted().trim();
 
 		const File editFile(editFilePath);
@@ -178,9 +180,30 @@ public:
 
 		edit = te::createEmptyEdit(engine, editFile);
 		edit->getTransport().addChangeListener(this);
-		auto clip = EngineHelpers::loadAudioFileAsClip(*edit, f);
+
+
+		WaveAudioClip::Ptr clip;
+
+		if (auto track = EngineHelpers::getOrInsertAudioTrackAt(*edit, 0))
+		{
+			// Add a new clip to this track
+			te::AudioFile audioFile(edit->engine, f);
+
+			clip = track->insertWaveClip(f.getFileNameWithoutExtension(), f,
+				{ { 0.0, audioFile.getLength() }, 0.0 }, false);
+
+		
+		}
+
+		auto& transport = clip->edit.getTransport();
+		transport.setLoopRange(clip->getEditTimeRange());
+		transport.looping = true;
+		transport.position = 0.0;
+		transport.play(false);
+
 
 		EngineHelpers::loopAroundClip(*clip);
+
 
 
 
