@@ -160,15 +160,12 @@ class DistortionEffectDemo : public Component,
 {
 public:
 
-	void initialize()
-	{
-		engine.getPluginManager().createBuiltInType<DistortionPlugin>();
-	}
+
 	//==============================================================================
 	DistortionEffectDemo()
 	{
 
-
+		engine.getPluginManager().createBuiltInType<DistortionPlugin>();
 
 		const auto editFilePath = JUCEApplication::getCommandLineParameters().replace("-NSDocumentRevisionsDebugMode YES", "").unquoted().trim();
 
