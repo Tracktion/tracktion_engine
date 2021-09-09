@@ -28,141 +28,70 @@ END_JUCE_PIP_METADATA
 
 #include "common/Utilities.h"
 #include "common/Components.h"
-#include "common/PluginWindow.h"
+#include "common/PlaybackDemoAudio.h"
 
 using namespace tracktion_engine;
 
 namespace tracktion_engine
 {
-
-    struct MasterGainParameter : public AutomatableParameter
-    {
-        MasterGainParameter(const String& xmlTag, const String& name, Plugin& owner, Range<float> r)
-            : AutomatableParameter(xmlTag, name, owner, r)
-        {
-        }
-
-        ~MasterGainParameter() override
-        {
-            notifyListenersOfDeletion();
-        }
-
-        String getPluginAndParamName() const override { return getParameterName(); }
-        String getFullName() const override { return getParameterName(); }
-    };
-    class DistortionPlugin : public Plugin
+    //==============================================================================
+    class DistortionPlugin  : public Plugin
     {
     public:
-
-
-
-
         static const char* getPluginName() { return NEEDS_TRANS("DistortionEffectDemo"); }
-
-
         static const char* xmlTypeName;
 
-
-        juce::String getName() override { return TRANS("DistortionEffectDemo"); }
-        juce::String getPluginType() override { return xmlTypeName; }
-        juce::String getShortName(int) override { return TRANS("Dist"); }
-        int getNumOutputChannelsGivenInputs(int numInputChannels) override { return juce::jmin(numInputChannels, 2); }
-
-        bool needsConstantBufferSize() override { return false; }
-
-
-
-        juce::String getSelectableDescription() override { return TRANS("Distortion Effect Demo"); }
-
-
-
-
-
-        static float getMinThreshold() { return 0.01f; }
-        static float getMaxThreshold() { return 1.0f; }
-
-        double currentLevel = 0.0;
-        float lastSamp = 0.0f;
-
-
-
-
-        DistortionPlugin(PluginCreationInfo info) : Plugin(info)
+        DistortionPlugin (PluginCreationInfo info) : Plugin (info)
         {
             auto um = getUndoManager();
-            gainValue.referTo(state, IDs::gain, um);
+            gainValue.referTo (state, IDs::gain, um, 1.0f);
 
-
-            //Initializes gain parameter and attaches to gain value
-            addAutomatableParameter(gainParam = new MasterGainParameter("master gain", TRANS("Master gain"), *this, { 0.0f,10.0f }));
-            gainParam->attachToCurrentValue(gainValue);
+            // Initializes gain parameter and attaches to gain value
+            gainParam = addParam ("gain", TRANS("Master gain"), { 0.0f, 10.0f });
+            gainParam->attachToCurrentValue (gainValue);
         }
-
 
         ~DistortionPlugin() override
         {
             notifyListenersOfDeletion();
 
             gainParam->detachFromCurrentValue();
-
         }
 
-        void initialise(const PluginInitialisationInfo&) override
+        juce::String getName() override                                     { return getPluginName(); }
+        juce::String getPluginType() override                               { return xmlTypeName; }
+        bool needsConstantBufferSize() override                             { return false; }
+        juce::String getSelectableDescription() override                    { return getName(); }
+
+        void initialise(const PluginInitialisationInfo&) override           {}
+        void deinitialise() override                                        {}
+        
+        void applyToBuffer (const PluginRenderContext& fc) override
         {
-
-        }
-
-        void deinitialise()
-        {
-        }
-
-
-        juce::CachedValue<float> gainValue;
-        AutomatableParameter::Ptr gainParam;
-
-        //Currently applying tanh distortion with a gain of 3.0f
-        void applyToBuffer(const PluginRenderContext& fc) override
-        {
-            if (isEnabled())
+            // Apply a tanh distortion with a gain of 3.0f
+            if (! isEnabled())
+                return;
+            
+            for (int channel = 0; channel < fc.destBuffer->getNumChannels(); ++channel)
             {
-                fc.destBuffer->applyGainRamp(0, 0, fc.bufferNumSamples, 0, 0);
-                auto outL = fc.destBuffer->getWritePointer(0);
-                auto outR = fc.destBuffer->getWritePointer(1);
-                for (int i = 0; i < fc.bufferNumSamples; i++)
-                {
-                    outL[i] = tanh(gainValue * outL[i]);
-                    outR[i] = tanh(gainValue * outR[i]);
-
-                    //		outL[i] = 0.0f;
-                    //		outR[i] = 0.0f;
-                }
+                auto dest = fc.destBuffer->getWritePointer (channel);
+                
+                for (int i = 0; i < fc.bufferNumSamples; ++i)
+                    dest[i] = std::tanh (gainValue * dest[i]);
             }
         }
 
-
-
-        void restorePluginStateFromValueTree(const juce::ValueTree& v)
+        void restorePluginStateFromValueTree (const juce::ValueTree& v) override
         {
             CachedValue<float>* cvsFloat[] = { &gainValue, nullptr };
-            copyPropertiesToNullTerminatedCachedValues(v, cvsFloat);
+            copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
 
             for (auto p : getAutomatableParameters())
                 p->updateFromAttachedValue();
-
         }
 
-        void valueTreePropertyChanged(ValueTree& v, const juce::Identifier& id)
-        {
-            if (v == state && id == IDs::sidechainTrigger)
-                propertiesChanged();
-
-            Plugin::valueTreePropertyChanged(v, id);
-        }
-
-        void setGainSliderPos(float slider_value)
-        {
-            gainValue = slider_value;
-        }
+        juce::CachedValue<float> gainValue;
+        AutomatableParameter::Ptr gainParam;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DistortionPlugin)
     };
@@ -170,164 +99,89 @@ namespace tracktion_engine
     const char* DistortionPlugin::xmlTypeName = "Distortion";
 }
 
-//==============================================================================
-#pragma once
-
-#include "common/Utilities.h"
-#include "common/PlaybackDemoAudio.h"
 
 //==============================================================================
-class DistortionEffectDemo : public Component,
-    private ChangeListener,
-    private Timer
+//==============================================================================
+class DistortionEffectDemo  : public Component,
+                              private ChangeListener
 {
 public:
-
-    Slider gainSlider;
-
     //==============================================================================
     DistortionEffectDemo()
     {
-
-        Helpers::addAndMakeVisible(*this, { &gainSlider, &settingsButton, &playPauseButton });
-
-
-
-
-        const auto editFilePath = JUCEApplication::getCommandLineParameters().replace("-NSDocumentRevisionsDebugMode YES", "").unquoted().trim();
-
-        const File editFile(editFilePath);
-
-
-
-        auto f = File::createTempFile(".ogg");
-        f.replaceWithData(PlaybackDemoAudio::BITs_Export_2_ogg, PlaybackDemoAudio::BITs_Export_2_oggSize);
-
-        edit = te::createEmptyEdit(engine, editFile);
-
-
-        edit->getTransport().addChangeListener(this);
-
+        // Register our custom plugin with the engine so it can be found using PluginCache::createNewPlugin
         engine.getPluginManager().createBuiltInType<DistortionPlugin>();
+        
+        Helpers::addAndMakeVisible (*this, { &gainSlider, &settingsButton, &playPauseButton });
 
+        oggTempFile = std::make_unique<TemporaryFile> (".ogg");
+        auto f = oggTempFile->getFile();
+        f.replaceWithData (PlaybackDemoAudio::BITs_Export_2_ogg, PlaybackDemoAudio::BITs_Export_2_oggSize);
 
+        // Creates clip. Loads clip from file f.
+        // Creates track. Loads clip into track.
+        auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 0);
+        jassert (track != nullptr);
+        
+        // Add a new clip to this track
+        te::AudioFile audioFile (edit.engine, f);
 
+        auto clip = track->insertWaveClip (f.getFileNameWithoutExtension(), f,
+                                           { { 0.0, audioFile.getLength() }, 0.0 }, false);
+        jassert (clip != nullptr);
 
+        // Creates new instance of Distortion Plugin and inserts to track 1
+        auto pluginPtr = edit.getPluginCache().createNewPlugin (DistortionPlugin::xmlTypeName, {});
+        track->pluginList.insertPlugin (pluginPtr, 0, nullptr);
 
-        //Creates clip. Loads clip from file f.
-        //Creates track. Loads clip into track.
-        WaveAudioClip::Ptr clip;
-        auto track = EngineHelpers::getOrInsertAudioTrackAt(*edit, 0);
+        // Set the loop points to the start/end of the clip, enable looping and start playback
+        edit.getTransport().addChangeListener (this);
+        EngineHelpers::loopAroundClip (*clip);
 
-        if (track)
-        {
-            // Add a new clip to this track
-            te::AudioFile audioFile(edit->engine, f);
-
-            clip = track->insertWaveClip(f.getFileNameWithoutExtension(), f,
-                { { 0.0, audioFile.getLength() }, 0.0 }, false);
-
-
-        }
-
-        //Creates new instance of Distortion Plugin and inserts to track 1
-        Plugin::Ptr pluginPtr = edit->getPluginCache().createNewPlugin(DistortionPlugin::xmlTypeName, {});
-        track->pluginList.insertPlugin(pluginPtr, 0, nullptr);
-
-
-
-        //When slider is moved, trigger plugin function
-        gainSlider.onDragEnd = [this] {};
-
-
-        //Places clip on track 1, sets loop start to beginning of clip and loop end to end of clip.
-        //Looping set to true, and play set to true to start the loop.
-        auto& transport = clip->edit.getTransport();
-        transport.setLoopRange(clip->getEditTimeRange());
-        transport.looping = true;
-        transport.position = 0.0;
-        transport.play(false);
-
-
-
-
-
-
-
-        editNameLabel.setText("Demo Song", dontSendNotification);
-
-        playPauseButton.onClick = [this] { EngineHelpers::togglePlay(*edit); };
-
-
-
+        // Setup button callbacks
+        playPauseButton.onClick = [this] { EngineHelpers::togglePlay(edit); };
         settingsButton.onClick = [this] { EngineHelpers::showAudioDeviceSettings(engine); };
+
         updatePlayButtonText();
-        editNameLabel.setJustificationType(Justification::centred);
-        cpuLabel.setJustificationType(Justification::centred);
 
-
-
-
-        setSize(600, 400);
-        startTimerHz(5);
-    }
-
-
-
-
-    ~DistortionEffectDemo() override
-    {
-        engine.getTemporaryFileManager().getTempDirectory().deleteRecursively();
+        setSize (600, 400);
     }
 
     //==============================================================================
     void paint(Graphics& g) override
     {
-        g.fillAll(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+        g.fillAll(getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
     }
 
     void resized() override
     {
         auto r = getLocalBounds();
-        auto topR = r.removeFromTop(30);
-        pluginsButton.setBounds(topR.removeFromLeft(topR.getWidth() / 3).reduced(2));
-        settingsButton.setBounds(topR.removeFromLeft(topR.getWidth() / 2).reduced(2));
-        playPauseButton.setBounds(topR.reduced(2));
+        auto topR = r.removeFromTop (30);
+        pluginsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 3).reduced (2));
+        settingsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 2).reduced (2));
+        playPauseButton.setBounds (topR.reduced(2));
 
-        auto middleR = r.withSizeKeepingCentre(r.getWidth(), 40);
-
-        cpuLabel.setBounds(middleR.removeFromBottom(20));
-        editNameLabel.setBounds(middleR);
-
-        gainSlider.setBounds(50, 50, 500, 50);
+        gainSlider.setBounds (50, 50, 500, 50);
     }
 
 private:
     //==============================================================================
     te::Engine engine{ ProjectInfo::projectName };
-    std::unique_ptr<te::Edit> edit;
+    te::Edit edit { Edit::Options { engine, te::createEmptyEdit (engine), ProjectItemID::createNewID (0) } };
+    std::unique_ptr<TemporaryFile> oggTempFile;
 
-
-
-
-    TextButton pluginsButton{ "Plugins" }, settingsButton{ "Settings" }, playPauseButton{ "Play" };
-    Label editNameLabel{ "No Edit Loaded" }, cpuLabel;
+    TextButton pluginsButton { "Plugins" }, settingsButton { "Settings" }, playPauseButton { "Play" };
+    Slider gainSlider;
 
     //==============================================================================
     void updatePlayButtonText()
     {
-        if (edit != nullptr)
-            playPauseButton.setButtonText(edit->getTransport().isPlaying() ? "Pause" : "Play");
+        playPauseButton.setButtonText (edit.getTransport().isPlaying() ? "Pause" : "Play");
     }
 
     void changeListenerCallback(ChangeBroadcaster*) override
     {
         updatePlayButtonText();
-    }
-
-    void timerCallback() override
-    {
-        cpuLabel.setText(String::formatted("CPU: %d%%", int(engine.getDeviceManager().getCpuUsage() * 100)), dontSendNotification);
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DistortionEffectDemo)
