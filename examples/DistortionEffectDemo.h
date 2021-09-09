@@ -34,6 +34,8 @@ using namespace tracktion_engine;
 
 namespace tracktion_engine
 {
+
+
 	class DistortionPlugin : public Plugin
 	{
 	public:
@@ -41,13 +43,13 @@ namespace tracktion_engine
 
 
 
-		static const char* getPluginName() { return NEEDS_TRANS("Distortion"); }
+		static const char* getPluginName() { return NEEDS_TRANS("DistortionEffectDemo"); }
 
 
 		static const char* xmlTypeName;
 
 
-		juce::String getName() override { return TRANS("Distortion"); }
+		juce::String getName() override { return TRANS("DistortionEffectDemo"); }
 		juce::String getPluginType() override { return xmlTypeName; }
 		juce::String getShortName(int) override { return TRANS("Dist"); }
 		int getNumOutputChannelsGivenInputs(int numInputChannels) override { return juce::jmin(numInputChannels, 2); }
@@ -56,7 +58,7 @@ namespace tracktion_engine
 
 
 
-		juce::String getSelectableDescription() override { return TRANS("Distortion Plugin"); }
+		juce::String getSelectableDescription() override { return TRANS("Distortion Effect Demo"); }
 
 
 
@@ -75,6 +77,13 @@ namespace tracktion_engine
 		{
 		}
 
+		DistortionPlugin(Edit& ed, const juce::ValueTree& v)
+			:
+			DistortionPlugin(PluginCreationInfo(ed, v, false))
+		{
+	
+		}
+
 		~DistortionPlugin() override
 		{
 			notifyListenersOfDeletion();
@@ -82,21 +91,19 @@ namespace tracktion_engine
 
 		}
 
-
-
-		void initialise(const PluginInitialisationInfo&)
+		void initialise(const PluginInitialisationInfo&) override
 		{
-			currentLevel = 0.0;
-			lastSamp = 0.0f;
+
 		}
 
 		void deinitialise()
 		{
 		}
 
-		//Currently trying to see whether or not any processing is applied by attempting to apply a gain of 0.
+
+		//Currently applying tanh distortion with a gain of 3.0f
 		
-		void applyToBuffer (const PluginRenderContext& fc)
+		void applyToBuffer (const PluginRenderContext& fc) override
 		{
 	
 		//	clearChannels(*fc.destBuffer, 0,1, fc.bufferStartSample, fc.bufferNumSamples);
@@ -105,9 +112,11 @@ namespace tracktion_engine
 			auto outR = fc.destBuffer->getWritePointer(1);
 			for (int i = 0; i < fc.bufferNumSamples; i++)
 			{
-				fc.destBuffer->applyGain(0.0f);
-				outL[i] *= 0.0f;
-				outR[i] *= 0.0f;
+				outL[i] = tanh(3.0f * outL[i]);
+				outR[i] = tanh(3.0f * outR[i]);
+
+		//		outL[i] = 0.0f;
+		//		outR[i] = 0.0f;
 			}
 
 	//		fc.destBuffer->clear();
@@ -167,7 +176,7 @@ public:
 	DistortionEffectDemo()
 	{
 
-		engine.getPluginManager().createBuiltInType<DistortionPlugin>();
+
 
 		
 
@@ -181,7 +190,12 @@ public:
 		f.replaceWithData(PlaybackDemoAudio::BITs_Export_2_ogg, PlaybackDemoAudio::BITs_Export_2_oggSize);
 
 		edit = te::createEmptyEdit(engine, editFile);
+
+
 		edit->getTransport().addChangeListener(this);
+
+		engine.getPluginManager().createBuiltInType<DistortionPlugin>();
+
 
 
 
@@ -201,6 +215,10 @@ public:
 
 		
 		}
+
+		//Creates new instance of Distortion Plugin and inserts to track 1
+		Plugin::Ptr pluginPtr = edit->getPluginCache().createNewPlugin(DistortionPlugin::xmlTypeName, {});
+		track->pluginList.insertPlugin(pluginPtr, 0, nullptr);
 
 
 		//Places clip on track 1, sets loop start to beginning of clip and loop end to end of clip.
@@ -222,26 +240,7 @@ public:
 
 		playPauseButton.onClick = [this] { EngineHelpers::togglePlay(*edit); };
 
-		// Show the plugin scan dialog
-		// If you're loading an Edit with plugins in, you'll need to perform a scan first
-		pluginsButton.onClick = [this]
-		{
-			DialogWindow::LaunchOptions o;
-			o.dialogTitle = TRANS("Plugins");
-			o.dialogBackgroundColour = Colours::black;
-			o.escapeKeyTriggersCloseButton = true;
-			o.useNativeTitleBar = true;
-			o.resizable = true;
-			o.useBottomRightCornerResizer = true;
 
-			auto v = new PluginListComponent(engine.getPluginManager().pluginFormatManager,
-				engine.getPluginManager().knownPluginList,
-				engine.getTemporaryFileManager().getTempFile("PluginScanDeadMansPedal"),
-				te::getApplicationSettings());
-			v->setSize(800, 600);
-			o.content.setOwned(v);
-			o.launchAsync();
-		};
 
 		settingsButton.onClick = [this] { EngineHelpers::showAudioDeviceSettings(engine); };
 		updatePlayButtonText();
@@ -285,6 +284,9 @@ private:
 	//==============================================================================
 	te::Engine engine{ ProjectInfo::projectName };
 	std::unique_ptr<te::Edit> edit;
+
+
+
 
 	TextButton pluginsButton{ "Plugins" }, settingsButton{ "Settings" }, playPauseButton{ "Play" };
 	Label editNameLabel{ "No Edit Loaded" }, cpuLabel;
