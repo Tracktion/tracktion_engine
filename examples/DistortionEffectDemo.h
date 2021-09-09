@@ -47,7 +47,7 @@ namespace tracktion_engine
             gainValue.referTo (state, IDs::gain, um, 1.0f);
 
             // Initializes gain parameter and attaches to gain value
-            gainParam = addParam ("gain", TRANS("Master gain"), { 0.0f, 10.0f });
+            gainParam = addParam ("gain", TRANS("Gain"), { 0.1f, 20.0f });
             gainParam->attachToCurrentValue (gainValue);
         }
 
@@ -102,6 +102,68 @@ namespace tracktion_engine
 
 //==============================================================================
 //==============================================================================
+/**
+    Wraps a te::AutomatableParameter as a juce::ValueSource so it can be used as
+    a Value for example in a Slider.
+*/
+class ParameterValueSource  : public juce::Value::ValueSource,
+                              private AutomatableParameter::Listener
+{
+public:
+    ParameterValueSource (AutomatableParameter::Ptr p)
+        : param (p)
+    {
+        param->addListener (this);
+    }
+    
+    ~ParameterValueSource() override
+    {
+        param->removeListener (this);
+    }
+    
+    var getValue() const override
+    {
+        return param->getCurrentValue();
+    }
+
+    void setValue (const var& newValue) override
+    {
+        param->setParameter (static_cast<float> (newValue), juce::sendNotification);
+    }
+
+private:
+    AutomatableParameter::Ptr param;
+    
+    void curveHasChanged (AutomatableParameter&) override
+    {
+        sendChangeMessage (false);
+    }
+    
+    void currentValueChanged (AutomatableParameter&, float /*newValue*/) override
+    {
+        sendChangeMessage (false);
+    }
+};
+
+//==============================================================================
+/** Binds an te::AutomatableParameter to a juce::Slider so changes in either are
+    reflected across the other.
+*/
+void bindSliderToParameter (juce::Slider& s, AutomatableParameter& p)
+{
+    const auto v = p.valueRange;
+    const auto range = NormalisableRange<double> (static_cast<double> (v.start),
+                                                  static_cast<double> (v.end),
+                                                  static_cast<double> (v.interval),
+                                                  static_cast<double> (v.skew),
+                                                  v.symmetricSkew);
+
+    s.setNormalisableRange (range);
+    s.getValueObject().referTo (juce::Value (new ParameterValueSource (p)));
+}
+
+//==============================================================================
+//==============================================================================
 class DistortionEffectDemo  : public Component,
                               private ChangeListener
 {
@@ -131,8 +193,8 @@ public:
         jassert (clip != nullptr);
 
         // Creates new instance of Distortion Plugin and inserts to track 1
-        auto pluginPtr = edit.getPluginCache().createNewPlugin (DistortionPlugin::xmlTypeName, {});
-        track->pluginList.insertPlugin (pluginPtr, 0, nullptr);
+        auto gainPlugin = edit.getPluginCache().createNewPlugin (DistortionPlugin::xmlTypeName, {});
+        track->pluginList.insertPlugin (gainPlugin, 0, nullptr);
 
         // Set the loop points to the start/end of the clip, enable looping and start playback
         edit.getTransport().addChangeListener (this);
@@ -142,6 +204,10 @@ public:
         playPauseButton.onClick = [this] { EngineHelpers::togglePlay(edit); };
         settingsButton.onClick = [this] { EngineHelpers::showAudioDeviceSettings(engine); };
 
+        // Setup slider value source
+        auto gainParam = gainPlugin->getAutomatableParameterByID ("gain");
+        bindSliderToParameter (gainSlider, *gainParam);
+
         updatePlayButtonText();
 
         setSize (600, 400);
@@ -150,7 +216,7 @@ public:
     //==============================================================================
     void paint(Graphics& g) override
     {
-        g.fillAll(getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+        g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
     }
 
     void resized() override
@@ -159,7 +225,7 @@ public:
         auto topR = r.removeFromTop (30);
         pluginsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 3).reduced (2));
         settingsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 2).reduced (2));
-        playPauseButton.setBounds (topR.reduced(2));
+        playPauseButton.setBounds (topR.reduced (2));
 
         gainSlider.setBounds (50, 50, 500, 50);
     }
