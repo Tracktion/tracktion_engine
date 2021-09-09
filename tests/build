@@ -161,6 +161,7 @@ buildExample "tracktion_graph_TestRunner" "1"
 buildExample "tracktion_graph_PerformanceTests" "1"
 
 # Then just build these examples
+buildExample "DistortionEffectDemo"
 buildExample "EngineInPluginDemo"
 buildExample "MidiRecordingDemo"
 buildExample "PatternGeneratorDemo"
