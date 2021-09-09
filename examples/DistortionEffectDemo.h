@@ -35,7 +35,21 @@ using namespace tracktion_engine;
 namespace tracktion_engine
 {
 
+	struct MasterGainParameter : public AutomatableParameter
+	{
+		MasterGainParameter(const String& xmlTag, const String& name, Plugin& owner, Range<float> r)
+			: AutomatableParameter(xmlTag, name, owner, r)
+		{
+		}
 
+		~MasterGainParameter() override
+		{
+			notifyListenersOfDeletion();
+		}
+
+		String getPluginAndParamName() const override { return getParameterName(); }
+		String getFullName() const override { return getParameterName(); }
+	};
 	class DistortionPlugin : public Plugin
 	{
 	public:
@@ -75,19 +89,21 @@ namespace tracktion_engine
 
 		DistortionPlugin(PluginCreationInfo info) : Plugin(info)
 		{
+			auto um = getUndoManager();
+			gainValue.referTo(state, IDs::gain, um);
+
+
+			//Initializes gain parameter and attaches to gain value
+			addAutomatableParameter(gainParam = new MasterGainParameter("master gain", TRANS("Master gain"), *this, { 0.0f,10.0f }));
+			gainParam->attachToCurrentValue(gainValue);
 		}
 
-		DistortionPlugin(Edit& ed, const juce::ValueTree& v)
-			:
-			DistortionPlugin(PluginCreationInfo(ed, v, false))
-		{
-	
-		}
 
 		~DistortionPlugin() override
 		{
 			notifyListenersOfDeletion();
 
+			gainParam->detachFromCurrentValue();
 
 		}
 
@@ -101,44 +117,37 @@ namespace tracktion_engine
 		}
 
 
+		juce::CachedValue<float> gainValue;
+		AutomatableParameter::Ptr gainParam;
+
 		//Currently applying tanh distortion with a gain of 3.0f
-		
 		void applyToBuffer (const PluginRenderContext& fc) override
 		{
-	
-		//	clearChannels(*fc.destBuffer, 0,1, fc.bufferStartSample, fc.bufferNumSamples);
-			fc.destBuffer->applyGainRamp(0, 0, fc.bufferNumSamples, 0, 0);
-			auto outL = fc.destBuffer->getWritePointer(0);
-			auto outR = fc.destBuffer->getWritePointer(1);
-			for (int i = 0; i < fc.bufferNumSamples; i++)
+			if (isEnabled())
 			{
-				outL[i] = tanh(3.0f * outL[i]);
-				outR[i] = tanh(3.0f * outR[i]);
+				fc.destBuffer->applyGainRamp(0, 0, fc.bufferNumSamples, 0, 0);
+				auto outL = fc.destBuffer->getWritePointer(0);
+				auto outR = fc.destBuffer->getWritePointer(1);
+				for (int i = 0; i < fc.bufferNumSamples; i++)
+				{
+					outL[i] = tanh(gainValue * outL[i]);
+					outR[i] = tanh(gainValue * outR[i]);
 
-		//		outL[i] = 0.0f;
-		//		outR[i] = 0.0f;
+			//		outL[i] = 0.0f;
+			//		outR[i] = 0.0f;
+				}
 			}
-
-	//		fc.destBuffer->clear();
-
 		}
 
 
 
 		void restorePluginStateFromValueTree(const juce::ValueTree& v)
 		{
-
-			/*
-			CachedValue<float>* cvsFloat[] = { &thresholdValue, &ratioValue, &attackValue, &releaseValue, &outputValue, &sidechainValue, nullptr };
-			CachedValue<bool>* cvsBool[] = { &useSidechainTrigger, nullptr };
+			CachedValue<float>* cvsFloat[] = { &gainValue, nullptr };
 			copyPropertiesToNullTerminatedCachedValues(v, cvsFloat);
-			copyPropertiesToNullTerminatedCachedValues(v, cvsBool);
-			*/
-
 
 			for (auto p : getAutomatableParameters())
 				p->updateFromAttachedValue();
-
 				
 		}
 
@@ -150,7 +159,10 @@ namespace tracktion_engine
 			Plugin::valueTreePropertyChanged(v, id);
 		}
 
-
+		void setGainSliderPos(float slider_value)
+		{
+			gainValue = slider_value;
+		}
 
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DistortionPlugin)
 	};
@@ -171,13 +183,15 @@ class DistortionEffectDemo : public Component,
 {
 public:
 
+	Slider gainSlider;
 
 	//==============================================================================
 	DistortionEffectDemo()
 	{
 
+		Helpers::addAndMakeVisible(*this, { &gainSlider, &settingsButton, &playPauseButton });
 
-
+		
 		
 
 		const auto editFilePath = JUCEApplication::getCommandLineParameters().replace("-NSDocumentRevisionsDebugMode YES", "").unquoted().trim();
@@ -221,6 +235,11 @@ public:
 		track->pluginList.insertPlugin(pluginPtr, 0, nullptr);
 
 
+		
+		//When slider is moved, trigger plugin function
+		gainSlider.onDragEnd = [this] {};
+
+
 		//Places clip on track 1, sets loop start to beginning of clip and loop end to end of clip.
 		//Looping set to true, and play set to true to start the loop.
 		auto& transport = clip->edit.getTransport();
@@ -230,7 +249,6 @@ public:
 		transport.play(false);
 
 
-		//Now I need to find out how to embed transport output into the PluginRenderContext.
 
 
 
@@ -246,7 +264,7 @@ public:
 		updatePlayButtonText();
 		editNameLabel.setJustificationType(Justification::centred);
 		cpuLabel.setJustificationType(Justification::centred);
-		Helpers::addAndMakeVisible(*this, { &pluginsButton, &settingsButton, &playPauseButton, &editNameLabel, &cpuLabel });
+//		Helpers::addAndMakeVisible(*this, { &pluginsButton, &settingsButton, &playPauseButton, &editNameLabel, &cpuLabel });
 
 
 
@@ -254,6 +272,9 @@ public:
 		setSize(600, 400);
 		startTimerHz(5);
 	}
+
+
+
 
 	~DistortionEffectDemo() override
 	{
@@ -278,6 +299,8 @@ public:
 
 		cpuLabel.setBounds(middleR.removeFromBottom(20));
 		editNameLabel.setBounds(middleR);
+
+		gainSlider.setBounds(50, 50, 500, 50);
 	}
 
 private:
