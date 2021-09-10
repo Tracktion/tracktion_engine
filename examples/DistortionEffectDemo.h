@@ -54,7 +54,6 @@ namespace tracktion_engine
         ~DistortionPlugin() override
         {
             notifyListenersOfDeletion();
-
             gainParam->detachFromCurrentValue();
         }
 
