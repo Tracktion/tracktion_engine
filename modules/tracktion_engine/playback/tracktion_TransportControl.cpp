@@ -659,6 +659,11 @@ std::vector<std::unique_ptr<TransportControl::ScopedContextAllocator>> Transport
     return restartHandles;
 }
 
+void TransportControl::callRecordingFinishedListeners (InputDeviceInstance& in, Clip::Array recordedClips, EditTimeRange recordedRange)
+{
+    listeners.call (&Listener::recordingFinished, in, recordedClips, recordedRange);
+}
+
 TransportControl::PlayingFlag::PlayingFlag (Engine& e) noexcept : engine (e)    { ++engine.getActiveEdits().numTransportsPlaying; }
 TransportControl::PlayingFlag::~PlayingFlag() noexcept                          { --engine.getActiveEdits().numTransportsPlaying; }
 

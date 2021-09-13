@@ -618,10 +618,13 @@ Clip::Array EditPlaybackContext::stopRecording (InputDeviceInstance& in, EditTim
     const auto loopRange = transport.getLoopRange();
     in.stop();
 
-    return in.applyLastRecordingToEdit (recordedRange,
-                                        transport.looping, loopRange,
-                                        discardRecordings,
-                                        findAppropriateSelectionManager (edit));
+    auto clips = in.applyLastRecordingToEdit (recordedRange,
+                                              transport.looping, loopRange,
+                                              discardRecordings,
+                                              findAppropriateSelectionManager (edit));
+    transport.callRecordingFinishedListeners (in, clips, recordedRange);
+    
+    return clips;
 }
 
 Clip::Array EditPlaybackContext::recordingFinished (EditTimeRange recordedRange, bool discardRecordings)
