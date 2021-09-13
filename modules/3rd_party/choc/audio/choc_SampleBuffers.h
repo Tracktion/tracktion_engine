@@ -40,7 +40,7 @@ using FrameCount    = uint32_t;
 /// The buffer classes use this type for referring to numbers of channels
 using ChannelCount  = uint32_t;
 
-template <typename SampleType, template<typename> typename LayoutType> struct AllocatedBuffer;
+template <typename SampleType, template<typename> typename LayoutType, typename AllocatorType = std::allocator<char>> struct AllocatedBuffer;
 template <typename SampleType> struct MonoLayout;
 
 //==============================================================================
@@ -257,7 +257,7 @@ struct BufferView
     There are also various helper functions to create an AllocatedBuffer, such as
     createInterleavedBuffer(), createMonoBuffer(), createChannelArrayBuffer().
 */
-template <typename SampleType, template<typename> typename LayoutType>
+template <typename SampleType, template<typename> typename LayoutType, typename AllocatorType>
 struct AllocatedBuffer
 {
     using Sample         = SampleType;
@@ -266,7 +266,10 @@ struct AllocatedBuffer
 
     /// Creates an empty buffer with a zero size.
     AllocatedBuffer() = default;
-    ~AllocatedBuffer()                  { view.data.freeAllocatedData(); }
+    /// Creates an empty buffer with a zero size and a given allocator.
+    AllocatedBuffer (const AllocatorType& alloc) : allocator (alloc) {}
+    /// Destructor.
+    ~AllocatedBuffer()                  { view.data.freeAllocatedData (view.size, allocator); }
 
     explicit AllocatedBuffer (const AllocatedBuffer& other)  : AllocatedBuffer (other.view) {}
     AllocatedBuffer (AllocatedBuffer&& other)  : view (other.view)    { other.view = {}; }
@@ -276,7 +279,7 @@ struct AllocatedBuffer
     /// Allocates a buffer of the given size (without clearing its content!)
     /// For efficiency, this will allocate but not clear the data needed, so be sure to call
     /// clear() after construction if you need an empty buffer.
-    AllocatedBuffer (Size size)  : view { size.isEmpty() ? Layout() : Layout::createAllocated (size), size } {}
+    AllocatedBuffer (Size size)  : view { size.isEmpty() ? Layout() : Layout::createAllocated (size, allocator), size } {}
 
     /// Allocates a buffer of the given size (without clearing its content!)
     /// For efficiency, this will allocate but not clear the data needed, so be sure to call
@@ -344,8 +347,12 @@ struct AllocatedBuffer
     /// the new size, and will clear any newly-allocated areas.
     void resize (Size newSize);
 
+    /// Returns the allocator in use.
+    AllocatorType& getAllocator()                                               { return allocator; }
+    
 private:
     BufferView<Sample, LayoutType> view;
+    AllocatorType allocator;
 };
 
 //==============================================================================
@@ -459,11 +466,12 @@ struct SeparateChannelLayout
         return dataSize + listSize;
     }
 
-    static SeparateChannelLayout createAllocated (Size size)
+    template<typename AllocatorType>
+    static SeparateChannelLayout createAllocated (Size size, AllocatorType& allocator)
     {
         if (size.numChannels == 0)
         {
-            void** allocated = new void*[1];
+            void** allocated = reinterpret_cast<void**> (allocator.allocate (sizeof (void*[1])));
             *allocated = allocated;
             return { reinterpret_cast<SampleType* const*> (allocated), 0 };
         }
@@ -471,7 +479,7 @@ struct SeparateChannelLayout
         auto channelDataSize = getChannelDataSize (size.numFrames);
         auto dataSize = channelDataSize * size.numChannels;
         auto listSize = sizeof (SampleType*) * size.numChannels;
-        auto allocated = new char[dataSize + listSize];
+        auto allocated = allocator.allocate (dataSize + listSize);
         auto list = reinterpret_cast<SampleType**> (allocated + dataSize);
 
         for (decltype (size.numChannels) i = 0; i < size.numChannels; ++i)
@@ -480,10 +488,16 @@ struct SeparateChannelLayout
         return { list, 0 };
     }
 
-    void freeAllocatedData()
+    template<typename AllocatorType>
+    void freeAllocatedData (Size size, AllocatorType& allocator)
     {
         if (channels != nullptr)
-            delete[] channels[0];
+        {
+            auto channelDataSize = getChannelDataSize (size.numFrames);
+            auto dataSize = channelDataSize * size.numChannels;
+            auto listSize = sizeof (SampleType*) * size.numChannels;
+            allocator.deallocate (reinterpret_cast<char*> (channels[0]), dataSize + listSize);
+        }
     }
 
     static constexpr size_t getChannelDataSize (FrameCount numFrames)    { return ((sizeof (SampleType) * numFrames) + 15u) & ~15u; }
@@ -929,39 +943,39 @@ auto createChannelArrayBuffer (ChannelCountType numChannels, FrameCountType numF
     return result;
 }
 
-template <typename SampleType, template<typename> typename LayoutType>
+template <typename SampleType, template<typename> typename LayoutType, typename AllocatorType>
 template <typename SourceView>
-AllocatedBuffer<SampleType, LayoutType>::AllocatedBuffer (const SourceView& viewToCopy)  : AllocatedBuffer (viewToCopy.getSize())
+AllocatedBuffer<SampleType, LayoutType, AllocatorType>::AllocatedBuffer (const SourceView& viewToCopy)  : AllocatedBuffer (viewToCopy.getSize())
 {
     copy (view, viewToCopy);
 }
 
-template <typename SampleType, template<typename> typename LayoutType>
-AllocatedBuffer<SampleType, LayoutType>& AllocatedBuffer<SampleType, LayoutType>::operator= (const AllocatedBuffer& other)
+template <typename SampleType, template<typename> typename LayoutType, typename AllocatorType>
+AllocatedBuffer<SampleType, LayoutType, AllocatorType>& AllocatedBuffer<SampleType, LayoutType, AllocatorType>::operator= (const AllocatedBuffer& other)
 {
-    view.data.freeAllocatedData();
-    view = { Layout::createAllocated (other.view.size), other.view.size };
+    view.data.freeAllocatedData (view.size, allocator);
+    view = { Layout::createAllocated (other.view.size, allocator), other.view.size };
     copy (view, other.view);
     return *this;
 }
 
-template <typename SampleType, template<typename> typename LayoutType>
-AllocatedBuffer<SampleType, LayoutType>& AllocatedBuffer<SampleType, LayoutType>::operator= (AllocatedBuffer&& other)
+template <typename SampleType, template<typename> typename LayoutType, typename AllocatorType>
+AllocatedBuffer<SampleType, LayoutType, AllocatorType>& AllocatedBuffer<SampleType, LayoutType, AllocatorType>::operator= (AllocatedBuffer&& other)
 {
-    view.data.freeAllocatedData();
+    view.data.freeAllocatedData (view.size, allocator);
     view = other.view;
     other.view = {};
     return *this;
 }
 
-template <typename SampleType, template<typename> typename LayoutType>
-void AllocatedBuffer<SampleType, LayoutType>::resize (Size newSize)
+template <typename SampleType, template<typename> typename LayoutType, typename AllocatorType>
+void AllocatedBuffer<SampleType, LayoutType, AllocatorType>::resize (Size newSize)
 {
     if (view.getSize() != newSize)
     {
-        auto newView = decltype(view) { Layout::createAllocated (newSize), newSize };
+        auto newView = decltype(view) { Layout::createAllocated (newSize, allocator), newSize };
         copyIntersectionAndClearOutside (newView, view);
-        view.data.freeAllocatedData();
+        view.data.freeAllocatedData (view.size, allocator);
         view = newView;
     }
 }
