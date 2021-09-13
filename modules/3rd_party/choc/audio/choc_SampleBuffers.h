@@ -517,8 +517,8 @@ template <typename SampleType>
 using ChannelArrayView = BufferView<SampleType, SeparateChannelLayout>;
 
 /// A handy typedef which is a more readable way to create an allocated channel-array buffer.
-template <typename SampleType>
-using ChannelArrayBuffer = AllocatedBuffer<SampleType, SeparateChannelLayout>;
+template <typename SampleType, typename AllocatorType = std::allocator<char>>
+using ChannelArrayBuffer = AllocatedBuffer<SampleType, SeparateChannelLayout, AllocatorType>;
 
 /// A handy typedef which is a more readable way to create a mono view.
 template <typename SampleType>

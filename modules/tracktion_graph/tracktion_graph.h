@@ -63,6 +63,15 @@
 #include <cassert>
 #include <thread>
 
+#if __has_include (<memory_resource>)
+ #include <memory_resource>
+#elif __has_include (<experimental/memory_resource>)
+ #include <experimental/memory_resource>
+#else
+ #error "Compiling on a platform with no memory_resource support!"
+#endif
+
+
 //==============================================================================
 #if __has_include(<choc/audio/choc_SampleBuffers.h>)
  #include <choc/audio/choc_SampleBuffers.h>
