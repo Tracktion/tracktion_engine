@@ -21,6 +21,65 @@ We'll show you how to register plugins with the engine in order to add them to a
 `PluginManager` is a class for the management, registration and loading of plugins by the `Engine`.
 
 ## DistortionEffectDemo.h
+## ParameterValueSource Class
+
+We need to construct a class that wraps a `te::AutomatableParameter` as a `juce::ValueSource` so that it can be used as a `Value` in a `Slider`.
+
+- `param` is a pointer to an `AutomatableParameter`
+
+
+In the `ParameterValueSource` constructor, we attach a listener to
+the `AutomatableParameter`
+
+```
+ParameterValueSource (AutomatableParameter::Ptr p)
+    : param (p)
+{
+    param->addListener (this);
+}
+```
+
+
+
+`setValue()` is automatically called whenever the value changes. We need to override the function to update `param` to reflect the new value.
+
+```
+void setValue (const var& newValue) override
+{
+    param->setParameter (static_cast<float> (newValue), juce::sendNotification);
+}
+```
+
+
+We need to override the function `getValue()` to return the value from `param`.
+
+```
+var getValue() const override
+{
+    return param->getCurrentValue();
+}
+```
+
+## bindSliderToParameter() Function
+
+Now that we have created a class to wrap an AutomatableParameter as a ValueSource, we need to bind the
+AutomatableParameter to a Slider so that changes in either are reflected across each other.
+
+- We can do this by getting the valueRange from the AutomatableParameter and using it to construct a NormalisableRange object `range`. We then set the NormalisableRange of the Slider to `range`.
+```
+const auto v = p.valueRange;
+const auto range = NormalisableRange<double> (static_cast<double> (v.start),
+                                              static_cast<double> (v.end),
+                                              static_cast<double> (v.interval),
+                                              static_cast<double> (v.skew),
+                                              v.symmetricSkew);
+s.setNormalisableRange (range);
+```
+- We can then create a new ParameterValueSource object from AutomatableParameter `p`, cast it to the
+`Value` type and refer the slider's `Value` object to it.
+```
+s.getValueObject().referTo (juce::Value (new ParameterValueSource (p)));
+```
 
 
 ## DistortionPlugin Class
@@ -62,7 +121,7 @@ if (! isEnabled())
 for (int channel = 0; channel < fc.destBuffer->getNumChannels(); ++channel)
 {
     auto dest = fc.destBuffer->getWritePointer (channel);
-                
+
     for (int i = 0; i < fc.bufferNumSamples; ++i)
         dest[i] = std::tanh (gainValue * dest[i]);
 }
@@ -114,7 +173,6 @@ f.replaceWithData (PlaybackDemoAudio::BITs_Export_2_ogg, PlaybackDemoAudio::BITs
 ```
 auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 0);
 jassert (track != nullptr);
-
 te::AudioFile audioFile (edit.engine, f);
 auto clip = track->insertWaveClip (f.getFileNameWithoutExtension(), f,
                                   { { 0.0, audioFile.getLength() }, 0.0 }, false);
