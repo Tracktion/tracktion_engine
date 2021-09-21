@@ -45,6 +45,16 @@ namespace tracktion_engine
 		IRPlugin (PluginCreationInfo info)  : Plugin (info)
         {
    //         auto um = getUndoManager();
+
+
+            // Load IR file
+            IRTempFile = std::make_unique <TemporaryFile>(".wav");
+            auto IRFile = IRTempFile->getFile();
+            IRFile.replaceWithData(IRs::AC30_brilliant_bx44_neve_close_dc_wav, IRs::AC30_brilliant_bx44_neve_close_dc_wavSize);
+            
+            // Load IR file into convolver
+            loadIRFile (IRFile, IRFile.getSize(), dsp::Convolution::Stereo::yes, 
+                                                  dsp::Convolution::Trim::no);
         }
 
         ~IRPlugin() override
@@ -63,8 +73,7 @@ namespace tracktion_engine
             convolver.reset();
         }
 
-        void deinitialise() override         
-        {}
+        void deinitialise() override         {}
 
         void prepare (const juce::dsp::ProcessSpec& spec)
         {
@@ -73,19 +82,20 @@ namespace tracktion_engine
 
         virtual void loadIRFile (const File& fileImpulseResponse,size_t size_t, dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming)
         {
+            convolver.reset();
             convolver.loadImpulseResponse (File(fileImpulseResponse), isStereo, requiresTrimming, size_t);
         }
 
-
         void reset() noexcept
         {
-            convolver.reset();     // [3]
+            convolver.reset();
         }
         
         void applyToBuffer (const PluginRenderContext& fc) override
         {
-            auto inoutBlock = dsp::AudioBlock<float> (*(fc.destBuffer)).getSubsetChannelBlock(0, 2);
-            convolver.process (dsp::ProcessContextReplacing<float> (inoutBlock));
+            dsp::AudioBlock<float> inoutBlock (*fc.destBuffer);
+            dsp::ProcessContextReplacing<float> context (inoutBlock);
+            convolver.process (context);       
         }
 
         void restorePluginStateFromValueTree (const juce::ValueTree& v) override
@@ -93,7 +103,7 @@ namespace tracktion_engine
             CachedValue<float>* cvsFloat[] = { &gainValue, nullptr };
             copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
 
-            for (auto p : getAutomatableParameters())
+            for (auto p  : getAutomatableParameters())
                 p->updateFromAttachedValue();
         }
 
@@ -108,7 +118,7 @@ namespace tracktion_engine
 
         juce::dsp::Convolution convolver;
 
-		
+        std::unique_ptr<TemporaryFile> IRTempFile;
 
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (IRPlugin)
@@ -196,17 +206,12 @@ public:
         
         Helpers::addAndMakeVisible (*this, { &gainSlider, &settingsButton, &playPauseButton });
 
-        //TODO: Load IR file
-        IRTempFile = std::make_unique<TemporaryFile>(".wav");
-        auto IRFile = IRTempFile->getFile();
-
-        IRFile.replaceWithData(IRs::AC30_brilliantbass_AT4033a_stalevel_dc_wav, IRs::AC30_brilliantbass_AT4033a_stalevel_dc_wavSize);
-
-        //Load demo audio file
-        oggTempFile = std::make_unique<TemporaryFile> (".ogg");
-        auto demoFile = oggTempFile->getFile();
-        
+        // Load demo audio file
+        oggTempFile = std::make_unique <TemporaryFile> (".ogg");
+        auto demoFile = oggTempFile->getFile();      
         demoFile.replaceWithData (PlaybackDemoAudio::BITs_Export_2_ogg, PlaybackDemoAudio::BITs_Export_2_oggSize);
+
+        // TODO: Set up dropdown menu for IR selection
 
         // Creates clip. Loads clip from file f.
         // Creates track. Loads clip into track.
@@ -225,10 +230,6 @@ public:
                 
         track->pluginList.insertPlugin (plugin, 0, nullptr);
 
-        //Load IR file into convolver
-        track->pluginList.findFirstPluginOfType <IRPlugin>()->loadIRFile (IRFile, IRFile.getSize(), dsp::Convolution::Stereo::yes,
-                                                                                                    dsp::Convolution::Trim::yes);
-
         // Set the loop points to the start/end of the clip, enable looping and start playback
         edit.getTransport().addChangeListener (this);
         EngineHelpers::loopAroundClip (*clip);
@@ -238,7 +239,7 @@ public:
         settingsButton.onClick =  [this] { EngineHelpers::showAudioDeviceSettings (engine); };
 
         // Setup slider value source
-        // TODO: Add slider parameters
+        // TODO: Add sliders and IR loader parameters.
 
         updatePlayButtonText();
 
