@@ -29,6 +29,7 @@ END_JUCE_PIP_METADATA
 #include "common/Utilities.h"
 #include "common/Components.h"
 #include "common/PlaybackDemoAudio.h"
+#include "common/IRData.h"
 
 using namespace tracktion_engine;
 
@@ -41,7 +42,7 @@ namespace tracktion_engine
         static const char* getPluginName() { return NEEDS_TRANS("IRPluginDemo"); }
         static const char* xmlTypeName;
 
-		IRPlugin(PluginCreationInfo info) : Plugin (info)
+		IRPlugin (PluginCreationInfo info)  : Plugin (info)
         {
    //         auto um = getUndoManager();
         }
@@ -70,15 +71,11 @@ namespace tracktion_engine
             convolver.prepare (spec);
         }
 
-        virtual void loadIRFile (const File& fileImpulseResponse,int size_t, dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming, dsp::Convolution::Normalise requiresNormalisation)
+        virtual void loadIRFile (const File& fileImpulseResponse,size_t size_t, dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming)
         {
             convolver.loadImpulseResponse (File(fileImpulseResponse), isStereo, requiresTrimming, size_t);
         }
 
-        void loadImpulseResponse(AudioBuffer<float>&& impulseBuffer, double sampleRate, dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming, dsp::Convolution::Normalise requiresNormalisation)
-        {
-    //        convolver.loadImpulseResponse(impulseBuffer, sampleRate, isStereo, requiresTrimming, 1024);
-        }
 
         void reset() noexcept
         {
@@ -199,11 +196,17 @@ public:
         
         Helpers::addAndMakeVisible (*this, { &gainSlider, &settingsButton, &playPauseButton });
 
-        //TODO: Load IR file from binary representation.
-        oggTempFile = std::make_unique<TemporaryFile> (".ogg");
-        auto f = oggTempFile->getFile();
-        
+        //TODO: Load IR file
+        IRTempFile = std::make_unique<TemporaryFile>(".wav");
+        auto IRFile = IRTempFile->getFile();
 
+        IRFile.replaceWithData(IRs::AC30_brilliantbass_AT4033a_stalevel_dc_wav, IRs::AC30_brilliantbass_AT4033a_stalevel_dc_wavSize);
+
+        //Load demo audio file
+        oggTempFile = std::make_unique<TemporaryFile> (".ogg");
+        auto demoFile = oggTempFile->getFile();
+        
+        demoFile.replaceWithData (PlaybackDemoAudio::BITs_Export_2_ogg, PlaybackDemoAudio::BITs_Export_2_oggSize);
 
         // Creates clip. Loads clip from file f.
         // Creates track. Loads clip into track.
@@ -211,9 +214,9 @@ public:
         jassert (track != nullptr);
         
         // Add a new clip to this track
-        te::AudioFile audioFile (edit.engine, f);
+        te::AudioFile audioFile (edit.engine, demoFile);
 
-        auto clip = track->insertWaveClip (f.getFileNameWithoutExtension(), f,
+        auto clip = track->insertWaveClip (demoFile.getFileNameWithoutExtension(), demoFile,
                                            { { 0.0, audioFile.getLength() }, 0.0 }, false);
         jassert (clip != nullptr);
 
@@ -223,9 +226,8 @@ public:
         track->pluginList.insertPlugin (plugin, 0, nullptr);
 
         //Load IR file into convolver
-        track->pluginList.findFirstPluginOfType <IRPlugin>()->loadIRFile (f, f.getSize(), dsp::Convolution::Stereo::yes, 
-                                                                                          dsp::Convolution::Trim::yes, 
-                                                                                          dsp::Convolution::Normalise::yes);
+        track->pluginList.findFirstPluginOfType <IRPlugin>()->loadIRFile (IRFile, IRFile.getSize(), dsp::Convolution::Stereo::yes,
+                                                                                                    dsp::Convolution::Trim::yes);
 
         // Set the loop points to the start/end of the clip, enable looping and start playback
         edit.getTransport().addChangeListener (this);
@@ -264,7 +266,7 @@ private:
     //==============================================================================
     te::Engine engine { ProjectInfo::projectName };
     te::Edit edit { Edit::Options { engine, te::createEmptyEdit (engine), ProjectItemID::createNewID (0) } };
-    std::unique_ptr<TemporaryFile> oggTempFile;
+    std::unique_ptr<TemporaryFile> oggTempFile,IRTempFile;
 
     TextButton pluginsButton { "Plugins" }, settingsButton { "Settings" }, playPauseButton { "Play" };
     Slider gainSlider;
