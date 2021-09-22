@@ -36,26 +36,30 @@ using namespace tracktion_engine;
 namespace tracktion_engine
 {
     //==============================================================================
-    class IRPlugin  : public Plugin
+    class IRPlugin    :  public Plugin
     {
     public:
-        static const char* getPluginName() { return NEEDS_TRANS("IRPluginDemo"); }
+        static const char* getPluginName() { return NEEDS_TRANS ("IRPluginDemo"); }
         static const char* xmlTypeName;
 
-		IRPlugin (PluginCreationInfo info)  : Plugin (info)
+		IRPlugin (PluginCreationInfo info)    :  Plugin (info)
         {
    //         auto um = getUndoManager();
 
 
 
             // Load IR file
-            IRTempFile = std::make_unique <TemporaryFile>(".wav");
-            auto IRFile = IRTempFile->getFile();
-            IRFile.replaceWithData(IRs::AC30_brilliant_bx44_neve_close_dc_wav, IRs::AC30_brilliant_bx44_neve_close_dc_wavSize);
+
+
+
             
-            // Load IR file into convolver
-            loadIRFile (IRFile, IRFile.getSize(), dsp::Convolution::Stereo::yes, 
-                                                  dsp::Convolution::Trim::no);
+
+
+      //      auto& filter = processorChain.get <filterIndex>();
+      //      filter.setCutoffFrequencyHz (10.0f);
+      //      filter.setResonance (0.7f);
+
+  //          updateConvolution();
         }
 
         ~IRPlugin() override
@@ -69,58 +73,104 @@ namespace tracktion_engine
         bool needsConstantBufferSize() override                             { return false; }
         juce::String getSelectableDescription() override                    { return getName(); }
 
-        void initialise (const PluginInitialisationInfo&) override           
-        {
-            convolver.reset();
-        }
-
-        void deinitialise() override         {}
+        void initialise (const PluginInitialisationInfo&) override          {}
+        void deinitialise() override                                        {}
 
         void prepare (const juce::dsp::ProcessSpec& spec)
         {
-            convolver.prepare (spec);
+            sampleRate = spec.sampleRate;
+            processorChain.prepare (spec);
+        }
+
+        enum
+        {
+            convolutionIndex,
+            filterIndex
+        };
+
+        void loadReadyImpulse()
+        {
+            auto dir = juce::File::getCurrentWorkingDirectory();
+
+            int numTries = 0;
+
+            while (!dir.getChildFile("Resources").exists() && numTries++ < 15)
+                dir = dir.getParentDirectory();
+
+            auto& convolution = processorChain.get<convolutionIndex>();
+
+
+            convolution.loadImpulseResponse(dir.getChildFile("Resources").getChildFile("cassette_recorder.wav"),
+                juce::dsp::Convolution::Stereo::yes,
+                juce::dsp::Convolution::Trim::no,
+                1024);
         }
 
         void loadIRFile (const File& fileImpulseResponse,size_t size_t, dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming)
         {
-            convolver.get<0>().loadImpulseResponse (File(fileImpulseResponse), isStereo, requiresTrimming, size_t);
+            processorChain.get <convolutionIndex> ().loadImpulseResponse(fileImpulseResponse, isStereo, requiresTrimming, size_t);
+        }
+
+        void loadIRFile(AudioSampleBuffer&& bufferImpulseResponse, dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming, dsp::Convolution::Normalise requiresNormalisation)
+        {
+            processorChain.get <convolutionIndex>().loadImpulseResponse (std::move(bufferImpulseResponse), sampleRate, isStereo, requiresTrimming, requiresNormalisation);
+        }
+
+
+        void setIRBuffer(AudioSampleBuffer buf)
+        {
+            IRBuffer.setSize (buf.getNumChannels(), buf.getNumSamples());
+            for (int channel = 0; channel < buf.getNumChannels(); channel++)
+            {
+                auto out = buf.getWritePointer(channel);
+                auto outIR = IRBuffer.getWritePointer(channel);
+                for (int sample = 0; sample < buf.getNumSamples(); sample++)
+                {
+                    outIR[sample] = out[sample];
+                }
+            }
+        }
+
+        void updateConvolution() {
+            auto& convolution = processorChain.get<convolutionIndex>();
+            convolution.reset();
+            convolution.loadImpulseResponse(std::move(IRBuffer), sampleRate, dsp::Convolution::Stereo::yes, dsp::Convolution::Trim::yes, dsp::Convolution::Normalise::yes);
         }
 
         void reset() noexcept
         {
-            convolver.reset();
+            processorChain.reset();
         }
         
         void applyToBuffer (const PluginRenderContext& fc) override
         {
-            dsp::AudioBlock<float> inoutBlock (*fc.destBuffer);
-            dsp::ProcessContextReplacing<float> context (inoutBlock);
-            convolver.process (context);  
+
+            updateConvolution();
+
+            dsp::AudioBlock <float> inoutBlock (*fc.destBuffer);
+            dsp::ProcessContextReplacing <float> context (inoutBlock);
+            processorChain.process (context);
         }
 
         void restorePluginStateFromValueTree (const juce::ValueTree& v) override
         {
-            CachedValue<float>* cvsFloat[] = { &gainValue, nullptr };
+            CachedValue <float>* cvsFloat[] = { &gainValue, nullptr };
             copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
 
-            for (auto p  : getAutomatableParameters())
+            for (auto p    :  getAutomatableParameters())
                 p->updateFromAttachedValue();
         }
 
-        juce::CachedValue<float> gainValue;
+        juce::CachedValue <float> gainValue;
         AutomatableParameter::Ptr gainParam;
 
-
-
-
     private:
-
-
-    //    juce::dsp::Convolution convolver;
-        juce::dsp::ProcessorChain < juce::dsp::Convolution> convolver;
+        dsp::ProcessorChain < dsp::Convolution, dsp::LadderFilter<float> > processorChain;
+        dsp::ProcessSpec processSpec;
 
         std::unique_ptr<TemporaryFile> IRTempFile;
 
+        AudioSampleBuffer IRBuffer;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (IRPlugin)
     };
@@ -137,11 +187,11 @@ namespace tracktion_engine
     Wraps a te::AutomatableParameter as a juce::ValueSource so it can be used as
     a Value for example in a Slider.
 */
-class ParameterValueSource  : public juce::Value::ValueSource,
-                              private AutomatableParameter::Listener
+class ParameterValueSource    :  public juce::Value::ValueSource,
+                                 private AutomatableParameter::Listener
 {
 public:
-    ParameterValueSource (AutomatableParameter::Ptr p)  : param (p)
+    ParameterValueSource (AutomatableParameter::Ptr p)    :  param (p)
     {
         param->addListener (this);
     }
@@ -194,8 +244,8 @@ void bindSliderToParameter (juce::Slider& s, AutomatableParameter& p)
 
 //==============================================================================
 //==============================================================================
-class IRPluginDemo  : public Component,
-                      private ChangeListener
+class IRPluginDemo    :  public Component,
+                         private ChangeListener
 {
 public:
     //==============================================================================
@@ -225,7 +275,7 @@ public:
                                            { { 0.0, audioFile.getLength() }, 0.0 }, false);
         jassert (clip != nullptr);
 
-        // Creates new instance of Distortion Plugin and inserts to track 1
+        // Creates new instance of IR Loader Plugin and inserts to track 1
         auto plugin = edit.getPluginCache().createNewPlugin (IRPlugin::xmlTypeName, {});
                 
         track->pluginList.insertPlugin (plugin, 0, nullptr);
@@ -239,7 +289,7 @@ public:
         // Setup button callbacks
         playPauseButton.onClick = [this] { EngineHelpers::togglePlay (edit); };
         settingsButton.onClick =  [this] { EngineHelpers::showAudioDeviceSettings (engine); };
-        IRButton.onClick =        [this] { loadIRFile(); };
+        IRButton.onClick =        [this] { loadIRFileIntoPluginBuffer(); };
 
         // Setup slider value source
         // TODO: Add sliders and IR loader parameters.
@@ -250,23 +300,40 @@ public:
     }
 
     std::unique_ptr <FileChooser> myChooser;
+    File wavFile;
+    AudioFormatManager formatManager;
+    AudioSampleBuffer fileBuffer;
 
-    void loadIRFile()
+    void loadIRFileIntoPluginBuffer()
     {
-        myChooser = std::make_unique <juce::FileChooser> ("Select a Wave file to play...",
+        myChooser = std::make_unique <juce::FileChooser> ("Select an impulse...",
             juce::File{},
             "*.wav");
 
         auto chooserFlags = juce::FileBrowserComponent::openMode
                           | juce::FileBrowserComponent::canSelectFiles;
 
+        formatManager.registerBasicFormats();
+
         myChooser->launchAsync (chooserFlags, [this] (const FileChooser& chooser)
         {
-                File wavFile(chooser.getResult());
-                EngineHelpers::getOrInsertAudioTrackAt (edit, 0)->pluginList.getPluginsOfType <IRPlugin>()[0]->loadIRFile (wavFile, wavFile.getSize(), dsp::Convolution::Stereo::yes,
-                                                                                                                                                       dsp::Convolution::Trim::no);
-        });
+                wavFile = File (chooser.getResult());
+                std::unique_ptr <juce::AudioFormatReader> reader (formatManager.createReaderFor (wavFile));
 
+                fileBuffer.setSize ((int) reader->numChannels, (int) reader->lengthInSamples);
+                reader->read (&fileBuffer,
+                    0,
+                    (int) reader->lengthInSamples,
+                    0,
+                    true,
+                    true);
+
+        //        EngineHelpers::getOrInsertAudioTrackAt (edit, 0)->pluginList.getPluginsOfType <IRPlugin>()[0]->loadIRFile (std::move(fileBuffer), dsp::Convolution::Stereo::yes,
+        //                                                                                                                              dsp::Convolution::Trim::no,dsp::Convolution::Normalise::yes);
+
+                auto plugin = EngineHelpers::getOrInsertAudioTrackAt (edit, 0)->pluginList.getPluginsOfType <IRPlugin>()[0];
+                plugin->setIRBuffer (fileBuffer);
+        });
 
 
 
@@ -295,7 +362,7 @@ private:
     te::Edit edit { Edit::Options { engine, te::createEmptyEdit (engine), ProjectItemID::createNewID (0) } };
     std::unique_ptr<TemporaryFile> oggTempFile,IRTempFile;
 
-    TextButton IRButton { "IRs" }, settingsButton { "Settings" }, playPauseButton { "Play" };
+    TextButton IRButton { "Load IR" }, settingsButton { "Settings" }, playPauseButton { "Play" };
     Slider gainSlider;
 
     //==============================================================================
