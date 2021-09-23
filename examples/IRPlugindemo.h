@@ -33,6 +33,14 @@ END_JUCE_PIP_METADATA
 
 using namespace tracktion_engine;
 
+
+//TODO:
+// 1. Clean up Code and remove unnecessary functions
+// 2. Add labels to sliders
+// 
+//==
+
+
 namespace tracktion_engine
 {
     //==============================================================================
@@ -44,28 +52,50 @@ namespace tracktion_engine
 
 		IRPlugin (PluginCreationInfo info)    :  Plugin (info)
         {
-   //         auto um = getUndoManager();
+            auto um = getUndoManager();
+            preGainValue.referTo (state, "preGain", um, 1.0f);
+            postGainValue.referTo (state, "postGain", um, 1.0f);
+            HPFCutoffValue.referTo (state, "HPFCutoff", um, 0);
+            LPFCutoffValue.referTo (state, "LPFCutoff", um, 20000);
 
+            //Initializes parameter and attaches to value
+            preGainParam = addParam ("preGain", TRANS ("PreGain"), { 0.1f, 20.0f });
+            preGainParam->attachToCurrentValue (preGainValue);
+
+            postGainParam = addParam ("postGain", TRANS ("PostGain"), { 0.1f, 20.0f });
+            postGainParam->attachToCurrentValue (postGainValue);
+
+            HPFCutoffParam = addParam ("HPFCutoff", TRANS ("HPFCutoff"), { 0.1f, 20000.0f });
+            HPFCutoffParam->attachToCurrentValue (HPFCutoffValue);
+
+            LPFCutoffParam = addParam ("LPFCutoff", TRANS ("LPFCutoff"), { 0.1f, 20000.0f });
+            LPFCutoffParam->attachToCurrentValue (LPFCutoffValue);
 
 
             // Load IR file
+            auto& HPF = processorChain.get <HPFIndex>();
+            HPF.setMode (dsp::LadderFilterMode::HPF24);
+
+            auto& LPF = processorChain.get <LPFIndex>();
+            LPF.setMode (dsp::LadderFilterMode::LPF24);
 
 
 
-            
-
-
-      //      auto& filter = processorChain.get <filterIndex>();
-      //      filter.setCutoffFrequencyHz (10.0f);
-      //      filter.setResonance (0.7f);
 
   //          updateConvolution();
+
+
+
+
         }
 
         ~IRPlugin() override
         {
             notifyListenersOfDeletion();
-            gainParam->detachFromCurrentValue();
+            preGainParam->detachFromCurrentValue();
+            postGainParam->detachFromCurrentValue();
+            HPFCutoffParam->detachFromCurrentValue();
+            LPFCutoffParam->detachFromCurrentValue();
         }
 
         juce::String getName() override                                     { return getPluginName(); }
@@ -73,19 +103,28 @@ namespace tracktion_engine
         bool needsConstantBufferSize() override                             { return false; }
         juce::String getSelectableDescription() override                    { return getName(); }
 
-        void initialise (const PluginInitialisationInfo&) override          {}
-        void deinitialise() override                                        {}
+        void initialise (const PluginInitialisationInfo&) override          
+        {
+            processSpec.maximumBlockSize = blockSizeSamples;
+            processSpec.numChannels = 2;
+            processSpec.sampleRate = sampleRate;
+            prepare(processSpec);
+        }
+
+        void deinitialise() override                                        { }
 
         void prepare (const juce::dsp::ProcessSpec& spec)
         {
-            sampleRate = spec.sampleRate;
             processorChain.prepare (spec);
         }
 
         enum
         {
+            preGainIndex,
             convolutionIndex,
-            filterIndex
+            HPFIndex,
+            LPFIndex,
+            postGainIndex
         };
 
         void loadReadyImpulse()
@@ -99,23 +138,21 @@ namespace tracktion_engine
 
             auto& convolution = processorChain.get<convolutionIndex>();
 
-
-            convolution.loadImpulseResponse(dir.getChildFile("Resources").getChildFile("cassette_recorder.wav"),
+            convolution.loadImpulseResponse (dir.getChildFile ("Resources").getChildFile ("cassette_recorder.wav"),
                 juce::dsp::Convolution::Stereo::yes,
                 juce::dsp::Convolution::Trim::no,
                 1024);
         }
 
-        void loadIRFile (const File& fileImpulseResponse,size_t size_t, dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming)
+        void loadIRFile (const File& fileImpulseResponse, size_t sizeInBytes, dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming)
         {
-            processorChain.get <convolutionIndex> ().loadImpulseResponse(fileImpulseResponse, isStereo, requiresTrimming, size_t);
+            processorChain.get<convolutionIndex>().loadImpulseResponse (fileImpulseResponse, isStereo, requiresTrimming, sizeInBytes);
         }
 
         void loadIRFile(AudioSampleBuffer&& bufferImpulseResponse, dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming, dsp::Convolution::Normalise requiresNormalisation)
         {
-            processorChain.get <convolutionIndex>().loadImpulseResponse (std::move(bufferImpulseResponse), sampleRate, isStereo, requiresTrimming, requiresNormalisation);
+            processorChain.get<convolutionIndex>().loadImpulseResponse (std::move (bufferImpulseResponse), sampleRate, isStereo, requiresTrimming, requiresNormalisation);
         }
-
 
         void setIRBuffer(AudioSampleBuffer buf)
         {
@@ -131,10 +168,11 @@ namespace tracktion_engine
             }
         }
 
-        void updateConvolution() {
-            auto& convolution = processorChain.get<convolutionIndex>();
+        void updateConvolution() 
+        {
+            auto& convolution = processorChain.get <convolutionIndex>();
             convolution.reset();
-            convolution.loadImpulseResponse(std::move(IRBuffer), sampleRate, dsp::Convolution::Stereo::yes, dsp::Convolution::Trim::yes, dsp::Convolution::Normalise::yes);
+            convolution.loadImpulseResponse (std::move (IRBuffer), sampleRate, dsp::Convolution::Stereo::yes, dsp::Convolution::Trim::yes, dsp::Convolution::Normalise::yes);
         }
 
         void reset() noexcept
@@ -144,8 +182,20 @@ namespace tracktion_engine
         
         void applyToBuffer (const PluginRenderContext& fc) override
         {
+            auto& preGain = processorChain.get <preGainIndex>();
+            preGain.setGainLinear(preGainValue);
 
-            updateConvolution();
+            auto& HPF = processorChain.get <HPFIndex>();
+            HPF.setCutoffFrequencyHz(HPFCutoffValue);
+            HPF.setResonance (0.7f);
+
+            auto& LPF = processorChain.get <LPFIndex>();
+            LPF.setCutoffFrequencyHz(LPFCutoffValue);
+            LPF.setResonance (0.7f);
+
+            auto& postGain = processorChain.get <postGainIndex>();
+            postGain.setGainLinear (postGainValue);
+
 
             dsp::AudioBlock <float> inoutBlock (*fc.destBuffer);
             dsp::ProcessContextReplacing <float> context (inoutBlock);
@@ -154,18 +204,26 @@ namespace tracktion_engine
 
         void restorePluginStateFromValueTree (const juce::ValueTree& v) override
         {
-            CachedValue <float>* cvsFloat[] = { &gainValue, nullptr };
+            CachedValue <float>* cvsFloat[] = { &preGainValue, &postGainValue, &HPFCutoffValue, &LPFCutoffValue, nullptr };
             copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
 
             for (auto p    :  getAutomatableParameters())
                 p->updateFromAttachedValue();
         }
 
-        juce::CachedValue <float> gainValue;
-        AutomatableParameter::Ptr gainParam;
+        juce::CachedValue <float> preGainValue, postGainValue;
+        AutomatableParameter::Ptr preGainParam, postGainParam;
+
+        juce::CachedValue <float> HPFCutoffValue, LPFCutoffValue;
+        AutomatableParameter::Ptr HPFCutoffParam, LPFCutoffParam;
 
     private:
-        dsp::ProcessorChain < dsp::Convolution, dsp::LadderFilter<float> > processorChain;
+        dsp::ProcessorChain <dsp::Gain<float>, 
+                             dsp::Convolution,
+                             dsp::LadderFilter<float>,
+                             dsp::LadderFilter<float>,
+                             dsp::Gain<float>> processorChain;
+
         dsp::ProcessSpec processSpec;
 
         std::unique_ptr<TemporaryFile> IRTempFile;
@@ -232,7 +290,7 @@ private:
 void bindSliderToParameter (juce::Slider& s, AutomatableParameter& p)
 {
     const auto v = p.valueRange;
-    const auto range = NormalisableRange<double> (static_cast<double> (v.start),
+    const auto range = NormalisableRange <double> (static_cast<double> (v.start),
                                                   static_cast<double> (v.end),
                                                   static_cast<double> (v.interval),
                                                   static_cast<double> (v.skew),
@@ -254,7 +312,7 @@ public:
         // Register our custom plugin with the engine so it can be found using PluginCache::createNewPlugin
         engine.getPluginManager().createBuiltInType <IRPlugin>();
         
-        Helpers::addAndMakeVisible (*this, { &gainSlider, &settingsButton, &playPauseButton, &IRButton });
+        Helpers::addAndMakeVisible (*this, { &preGainSlider, &postGainSlider, &HPFCutoffSlider, &LPFCutoffSlider, &settingsButton, &playPauseButton, &IRButton });
 
         // Load demo audio file
         oggTempFile = std::make_unique <TemporaryFile> (".ogg");
@@ -292,6 +350,22 @@ public:
         IRButton.onClick =        [this] { loadIRFileIntoPluginBuffer(); };
 
         // Setup slider value source
+        auto preGainParam = plugin->getAutomatableParameterByID ("preGain");
+        bindSliderToParameter (preGainSlider, *preGainParam);
+
+        auto postGainParam = plugin->getAutomatableParameterByID ("postGain");
+        bindSliderToParameter (postGainSlider, *postGainParam);
+
+        auto HPFCutoffParam = plugin->getAutomatableParameterByID ("HPFCutoff");
+        bindSliderToParameter (HPFCutoffSlider, *HPFCutoffParam);
+
+        auto LPFCutoffParam = plugin->getAutomatableParameterByID ("LPFCutoff");
+        bindSliderToParameter (LPFCutoffSlider, *LPFCutoffParam);
+
+
+        // 
+        // 
+        // 
         // TODO: Add sliders and IR loader parameters.
 
         updatePlayButtonText();
@@ -332,7 +406,8 @@ public:
         //                                                                                                                              dsp::Convolution::Trim::no,dsp::Convolution::Normalise::yes);
 
                 auto plugin = EngineHelpers::getOrInsertAudioTrackAt (edit, 0)->pluginList.getPluginsOfType <IRPlugin>()[0];
-                plugin->setIRBuffer (fileBuffer);
+                plugin->loadIRFile (std::move (fileBuffer), dsp::Convolution::Stereo::yes, dsp::Convolution::Trim::no,dsp::Convolution::Normalise::yes);
+         //       plugin->setIRBuffer (fileBuffer);
         });
 
 
@@ -353,7 +428,10 @@ public:
         settingsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 2).reduced (2));
         playPauseButton.setBounds (topR.reduced (2));
 
-        gainSlider.setBounds (50, 50, 500, 50);
+        preGainSlider.setBounds (50, 50, 500, 50);
+        HPFCutoffSlider.setBounds (50, 100, 500, 50);
+        LPFCutoffSlider.setBounds (50, 150, 500, 50);
+        postGainSlider.setBounds (50, 200, 500, 50);
     }
 
 private:
@@ -363,7 +441,7 @@ private:
     std::unique_ptr<TemporaryFile> oggTempFile,IRTempFile;
 
     TextButton IRButton { "Load IR" }, settingsButton { "Settings" }, playPauseButton { "Play" };
-    Slider gainSlider;
+    Slider preGainSlider, postGainSlider, HPFCutoffSlider, LPFCutoffSlider;
 
     //==============================================================================
     void updatePlayButtonText()
