@@ -8,7 +8,7 @@ name:             IRPluginDemo
 version:          0.0.1
 vendor:           Tracktion
 website:          www.tracktion.com
-description:      This example simply loads a project from the command line and plays it back in a loop.
+description:      This example loads an Impulse Response and performs convolution on a looping audio file.
 
 dependencies:     juce_audio_basics, juce_audio_devices, juce_audio_formats, juce_audio_processors, juce_audio_utils,
             juce_core, juce_data_structures, juce_dsp, juce_events, juce_graphics,
@@ -32,14 +32,6 @@ END_JUCE_PIP_METADATA
 #include "common/IRData.h"
 
 using namespace tracktion_engine;
-
-
-//TODO:
-// 1. Clean up Code and remove unnecessary functions -- DONE
-// 2. Add labels to sliders
-// 
-//==
-
 
 namespace tracktion_engine
 {
