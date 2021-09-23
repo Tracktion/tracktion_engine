@@ -47,8 +47,8 @@ namespace tracktion_engine
             auto um = getUndoManager();
             preGainValue.referTo   (state, "preGain", um, 1.0f);
             postGainValue.referTo  (state, "postGain", um, 1.0f);
-            HPFCutoffValue.referTo (state, "HPFCutoff", um, 0);
-            LPFCutoffValue.referTo (state, "LPFCutoff", um, 20000);
+            HPFCutoffValue.referTo (state, "HPFCutoff", um, 0.1f);
+            LPFCutoffValue.referTo (state, "LPFCutoff", um, 20000.0f);
 
             //Initializes parameter and attaches to value
             preGainParam = addParam ("preGain", TRANS ("PreGain"), { 0.1f, 20.0f });
@@ -63,7 +63,7 @@ namespace tracktion_engine
             LPFCutoffParam = addParam ("LPFCutoff", TRANS ("LPFCutoff"), { 0.1f, 20000.0f });
             LPFCutoffParam->attachToCurrentValue (LPFCutoffValue);
 
-            // Load IR file
+            // Set Filters to High Pass and Low Pass modes
             auto& HPF = processorChain.get <HPFIndex>();
             HPF.setMode (dsp::LadderFilterMode::HPF24);
 
@@ -177,8 +177,6 @@ namespace tracktion_engine
     };
 
     const char* IRPlugin::xmlTypeName = "IRPlugin";
-
-
 }
 
 
@@ -234,10 +232,10 @@ void bindSliderToParameter (juce::Slider& s, AutomatableParameter& p)
 {
     const auto v = p.valueRange;
     const auto range = NormalisableRange <double> (static_cast<double> (v.start),
-                                                  static_cast<double> (v.end),
-                                                  static_cast<double> (v.interval),
-                                                  static_cast<double> (v.skew),
-                                                  v.symmetricSkew);
+                                                   static_cast<double> (v.end),
+                                                   static_cast<double> (v.interval),
+                                                   static_cast<double> (v.skew),
+                                                   v.symmetricSkew);
 
     s.setNormalisableRange (range);
     s.getValueObject().referTo (juce::Value (new ParameterValueSource (p)));
@@ -342,7 +340,7 @@ public:
                               true,
                               true);
 
-                auto plugin = EngineHelpers::getOrInsertAudioTrackAt (edit, 0)->pluginList.getPluginsOfType <IRPlugin>()[0];
+                auto plugin = EngineHelpers::getOrInsertAudioTrackAt (edit, 0)->pluginList.getPluginsOfType <IRPlugin> ()[0];
                 plugin->loadIRFile (std::move (fileBuffer), dsp::Convolution::Stereo::yes, dsp::Convolution::Trim::no,dsp::Convolution::Normalise::yes);
         });
     }
