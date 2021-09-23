@@ -263,7 +263,7 @@ public:
         // Register our custom plugin with the engine so it can be found using PluginCache::createNewPlugin
         engine.getPluginManager().createBuiltInType <IRPlugin>();
         
-        Helpers::addAndMakeVisible (*this, { &preGainSlider, &postGainSlider, &HPFCutoffSlider, &LPFCutoffSlider, &settingsButton, &playPauseButton, &IRButton });
+        Helpers::addAndMakeVisible (*this, { &preGainSlider, &postGainSlider, &HPFCutoffSlider, &LPFCutoffSlider, &settingsButton, &playPauseButton, &IRButton, &preGainLabel, &postGainLabel, &HPFCutoffLabel, &LPFCutoffLabel });
 
         // Load demo audio file
         oggTempFile = std::make_unique <TemporaryFile> (".ogg");
@@ -298,15 +298,23 @@ public:
         // Setup slider value source
         auto preGainParam = plugin->getAutomatableParameterByID ("preGain");
         bindSliderToParameter (preGainSlider, *preGainParam);
+        preGainLabel.attachToComponent (&preGainSlider,true);
+        preGainLabel.setText ("Pre",sendNotification);
 
         auto postGainParam = plugin->getAutomatableParameterByID ("postGain");
         bindSliderToParameter (postGainSlider, *postGainParam);
+        postGainLabel.attachToComponent (&postGainSlider, true);
+        postGainLabel.setText ("Post", sendNotification);
 
         auto HPFCutoffParam = plugin->getAutomatableParameterByID ("HPFCutoff");
         bindSliderToParameter (HPFCutoffSlider, *HPFCutoffParam);
+        HPFCutoffLabel.attachToComponent (&HPFCutoffSlider, true);
+        HPFCutoffLabel.setText ("HPF", sendNotification);
 
         auto LPFCutoffParam = plugin->getAutomatableParameterByID ("LPFCutoff");
         bindSliderToParameter (LPFCutoffSlider, *LPFCutoffParam);
+        LPFCutoffLabel.attachToComponent (&LPFCutoffSlider, true);
+        LPFCutoffLabel.setText ("LPF", sendNotification);
 
         updatePlayButtonText();
 
@@ -321,8 +329,8 @@ public:
     void loadIRFileIntoPluginBuffer()
     {
         myChooser = std::make_unique <juce::FileChooser> ("Select an impulse...",
-            juce::File{},
-            "*.wav");
+                                                          juce::File{},
+                                                          "*.wav");
 
         auto chooserFlags = juce::FileBrowserComponent::openMode
                           | juce::FileBrowserComponent::canSelectFiles;
@@ -375,6 +383,8 @@ private:
 
     TextButton IRButton { "Load IR" }, settingsButton { "Settings" }, playPauseButton { "Play" };
     Slider preGainSlider, postGainSlider, HPFCutoffSlider, LPFCutoffSlider;
+
+    Label preGainLabel, postGainLabel, HPFCutoffLabel, LPFCutoffLabel;
 
     //==============================================================================
     void updatePlayButtonText()
