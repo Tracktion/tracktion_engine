@@ -35,7 +35,7 @@ using namespace tracktion_engine;
 
 
 //TODO:
-// 1. Clean up Code and remove unnecessary functions
+// 1. Clean up Code and remove unnecessary functions -- DONE
 // 2. Add labels to sliders
 // 
 //==
@@ -53,8 +53,8 @@ namespace tracktion_engine
 		IRPlugin (PluginCreationInfo info)    :  Plugin (info)
         {
             auto um = getUndoManager();
-            preGainValue.referTo (state, "preGain", um, 1.0f);
-            postGainValue.referTo (state, "postGain", um, 1.0f);
+            preGainValue.referTo   (state, "preGain", um, 1.0f);
+            postGainValue.referTo  (state, "postGain", um, 1.0f);
             HPFCutoffValue.referTo (state, "HPFCutoff", um, 0);
             LPFCutoffValue.referTo (state, "LPFCutoff", um, 20000);
 
@@ -117,23 +117,6 @@ namespace tracktion_engine
             postGainIndex
         };
 
-        void loadReadyImpulse()
-        {
-            auto dir = juce::File::getCurrentWorkingDirectory();
-
-            int numTries = 0;
-
-            while (!dir.getChildFile ("Resources").exists() && numTries++ < 15)
-                dir = dir.getParentDirectory();
-
-            auto& convolution = processorChain.get<convolutionIndex>();
-
-            convolution.loadImpulseResponse (dir.getChildFile ("Resources").getChildFile ("cassette_recorder.wav"),
-                juce::dsp::Convolution::Stereo::yes,
-                juce::dsp::Convolution::Trim::no,
-                1024);
-        }
-
         void loadIRFile (const File& fileImpulseResponse, size_t sizeInBytes, dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming)
         {
             processorChain.get<convolutionIndex>().loadImpulseResponse (fileImpulseResponse, isStereo, requiresTrimming, sizeInBytes);
@@ -142,27 +125,6 @@ namespace tracktion_engine
         void loadIRFile(AudioSampleBuffer&& bufferImpulseResponse, dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming, dsp::Convolution::Normalise requiresNormalisation)
         {
             processorChain.get<convolutionIndex>().loadImpulseResponse (std::move (bufferImpulseResponse), sampleRate, isStereo, requiresTrimming, requiresNormalisation);
-        }
-
-        void setIRBuffer(AudioSampleBuffer buf)
-        {
-            IRBuffer.setSize (buf.getNumChannels(), buf.getNumSamples());
-            for (int channel = 0; channel < buf.getNumChannels(); channel++)
-            {
-                auto out = buf.getWritePointer(channel);
-                auto outIR = IRBuffer.getWritePointer(channel);
-                for (int sample = 0; sample < buf.getNumSamples(); sample++)
-                {
-                    outIR[sample] = out[sample];
-                }
-            }
-        }
-
-        void updateConvolution() 
-        {
-            auto& convolution = processorChain.get <convolutionIndex>();
-            convolution.reset();
-            convolution.loadImpulseResponse (std::move (IRBuffer), sampleRate, dsp::Convolution::Stereo::yes, dsp::Convolution::Trim::yes, dsp::Convolution::Normalise::yes);
         }
 
         void reset() noexcept
@@ -308,8 +270,6 @@ public:
         auto demoFile = oggTempFile->getFile();      
         demoFile.replaceWithData (PlaybackDemoAudio::BITs_Export_2_ogg, PlaybackDemoAudio::BITs_Export_2_oggSize);
 
-        // TODO: Set up dropdown menu for IR selection
-
         // Creates clip. Loads clip from file f.
         // Creates track. Loads clip into track.
         auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 0);
@@ -326,9 +286,6 @@ public:
         auto plugin = edit.getPluginCache().createNewPlugin (IRPlugin::xmlTypeName, {});
                 
         track->pluginList.insertPlugin (plugin, 0, nullptr);
-
-
-
         // Set the loop points to the start/end of the clip, enable looping and start playback
         edit.getTransport().addChangeListener (this);
         EngineHelpers::loopAroundClip (*clip);
@@ -350,12 +307,6 @@ public:
 
         auto LPFCutoffParam = plugin->getAutomatableParameterByID ("LPFCutoff");
         bindSliderToParameter (LPFCutoffSlider, *LPFCutoffParam);
-
-
-        // 
-        // 
-        // 
-        // TODO: Add sliders and IR loader parameters.
 
         updatePlayButtonText();
 
@@ -385,22 +336,15 @@ public:
 
                 fileBuffer.setSize ((int) reader->numChannels, (int) reader->lengthInSamples);
                 reader->read (&fileBuffer,
-                    0,
-                    (int) reader->lengthInSamples,
-                    0,
-                    true,
-                    true);
-
-        //        EngineHelpers::getOrInsertAudioTrackAt (edit, 0)->pluginList.getPluginsOfType <IRPlugin>()[0]->loadIRFile (std::move(fileBuffer), dsp::Convolution::Stereo::yes,
-        //                                                                                                                              dsp::Convolution::Trim::no,dsp::Convolution::Normalise::yes);
+                              0,
+                              (int) reader->lengthInSamples,
+                              0,
+                              true,
+                              true);
 
                 auto plugin = EngineHelpers::getOrInsertAudioTrackAt (edit, 0)->pluginList.getPluginsOfType <IRPlugin>()[0];
                 plugin->loadIRFile (std::move (fileBuffer), dsp::Convolution::Stereo::yes, dsp::Convolution::Trim::no,dsp::Convolution::Normalise::yes);
-         //       plugin->setIRBuffer (fileBuffer);
         });
-
-
-
     }
 
     //==============================================================================
@@ -417,10 +361,10 @@ public:
         settingsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 2).reduced (2));
         playPauseButton.setBounds (topR.reduced (2));
 
-        preGainSlider.setBounds (50, 50, 500, 50);
+        preGainSlider.setBounds   (50, 50,  500, 50);
         HPFCutoffSlider.setBounds (50, 100, 500, 50);
         LPFCutoffSlider.setBounds (50, 150, 500, 50);
-        postGainSlider.setBounds (50, 200, 500, 50);
+        postGainSlider.setBounds  (50, 200, 500, 50);
     }
 
 private:
