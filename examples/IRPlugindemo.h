@@ -71,22 +71,12 @@ namespace tracktion_engine
             LPFCutoffParam = addParam ("LPFCutoff", TRANS ("LPFCutoff"), { 0.1f, 20000.0f });
             LPFCutoffParam->attachToCurrentValue (LPFCutoffValue);
 
-
             // Load IR file
             auto& HPF = processorChain.get <HPFIndex>();
             HPF.setMode (dsp::LadderFilterMode::HPF24);
 
             auto& LPF = processorChain.get <LPFIndex>();
             LPF.setMode (dsp::LadderFilterMode::LPF24);
-
-
-
-
-  //          updateConvolution();
-
-
-
-
         }
 
         ~IRPlugin() override
@@ -108,7 +98,7 @@ namespace tracktion_engine
             processSpec.maximumBlockSize = blockSizeSamples;
             processSpec.numChannels = 2;
             processSpec.sampleRate = sampleRate;
-            prepare(processSpec);
+            prepare (processSpec);
         }
 
         void deinitialise() override                                        { }
@@ -133,7 +123,7 @@ namespace tracktion_engine
 
             int numTries = 0;
 
-            while (!dir.getChildFile("Resources").exists() && numTries++ < 15)
+            while (!dir.getChildFile ("Resources").exists() && numTries++ < 15)
                 dir = dir.getParentDirectory();
 
             auto& convolution = processorChain.get<convolutionIndex>();
@@ -183,19 +173,18 @@ namespace tracktion_engine
         void applyToBuffer (const PluginRenderContext& fc) override
         {
             auto& preGain = processorChain.get <preGainIndex>();
-            preGain.setGainLinear(preGainValue);
+            preGain.setGainLinear (preGainValue);
 
             auto& HPF = processorChain.get <HPFIndex>();
-            HPF.setCutoffFrequencyHz(HPFCutoffValue);
+            HPF.setCutoffFrequencyHz (HPFCutoffValue);
             HPF.setResonance (0.7f);
 
             auto& LPF = processorChain.get <LPFIndex>();
-            LPF.setCutoffFrequencyHz(LPFCutoffValue);
+            LPF.setCutoffFrequencyHz (LPFCutoffValue);
             LPF.setResonance (0.7f);
 
             auto& postGain = processorChain.get <postGainIndex>();
             postGain.setGainLinear (postGainValue);
-
 
             dsp::AudioBlock <float> inoutBlock (*fc.destBuffer);
             dsp::ProcessContextReplacing <float> context (inoutBlock);
