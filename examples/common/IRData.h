@@ -54,6 +54,14 @@ namespace IRs
     // If you provide the name of one of the binary resource variables above, this function will
     // return the corresponding original, non-mangled filename (or a null pointer if the name isn't found).
     const char* getNamedResourceOriginalFilename (const char* resourceNameUTF8);
+
+    //==============================================================================
+    // N.B. These are not part of the above list so can't be found via a namedResource
+    extern const char*   guitar_amp_wav;
+    const unsigned int   guitar_amp_wavSize = 90246;
+
+    extern const char*   cassette_recorder_wav;
+    const unsigned int   cassette_recorder_wavSize = 37902;
 }
 
 #include "IRData.cpp"

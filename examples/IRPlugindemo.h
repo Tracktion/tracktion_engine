@@ -47,7 +47,7 @@ namespace tracktion_engine
     {
     public:
         /** Creates an ImpulseResponsePlugin.
-            Initially this will be have no IR loaded, use one of the loadImpluseResponse
+            Initially this will be have no IR loaded, use one of the loadImpulseResponse
             methods to apply it to the audio.
         */
 		ImpulseResponsePlugin (PluginCreationInfo info)
@@ -91,10 +91,20 @@ namespace tracktion_engine
         static inline const char* xmlTypeName = "impulseResponse";
 
         //==============================================================================
+        /** Loads an impulse from binary audio file data i.e. not a block of raw floats.
+            @see juce::Convolution::loadImpulseResponse
+        */
+        void loadImpulseResponse (const void* sourceData, size_t sourceDataSize,
+                                  dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming, size_t size,
+                                  dsp::Convolution::Normalise requiresNormalisation)
+        {
+            processorChain.get<convolutionIndex>().loadImpulseResponse (sourceData, sourceDataSize, isStereo, requiresTrimming, size, requiresNormalisation);
+        }
+
         /** Loads an impulse from a file.
             @see juce::Convolution::loadImpulseResponse
         */
-        void loadImpluseResponse (const File& fileImpulseResponse, size_t sizeInBytes, dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming)
+        void loadImpulseResponse (const File& fileImpulseResponse, size_t sizeInBytes, dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming)
         {
             processorChain.get<convolutionIndex>().loadImpulseResponse (fileImpulseResponse, isStereo, requiresTrimming, sizeInBytes);
             
@@ -103,7 +113,7 @@ namespace tracktion_engine
         /** Loads an impulse from an AudioBuffer<float>.
             @see juce::Convolution::loadImpulseResponse
         */
-        void loadImpluseResponse (AudioBuffer<float>&& bufferImpulseResponse, dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming, dsp::Convolution::Normalise requiresNormalisation)
+        void loadImpulseResponse (AudioBuffer<float>&& bufferImpulseResponse, dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming, dsp::Convolution::Normalise requiresNormalisation)
         {
             processorChain.get<convolutionIndex>().loadImpulseResponse (std::move (bufferImpulseResponse), sampleRate, isStereo, requiresTrimming, requiresNormalisation);
         }
@@ -251,7 +261,7 @@ public:
         // Setup button callbacks
         playPauseButton.onClick = [this] { EngineHelpers::togglePlay (edit); };
         settingsButton.onClick =  [this] { EngineHelpers::showAudioDeviceSettings (engine); };
-        IRButton.onClick =        [this] { loadIRFileIntoPluginBuffer(); };
+        IRButton.onClick =        [this] { showIRButtonMenu(); };
 
         // Setup slider value source
         auto preGainParam = plugin->getAutomatableParameterByID ("preGain");
@@ -312,6 +322,25 @@ private:
     std::unique_ptr<juce::FileChooser> fileChooser;
     
     //==============================================================================
+    void showIRButtonMenu()
+    {
+        PopupMenu m;
+        m.addItem ("Guitar Amp",        [this] { loadIRFileIntoPluginBuffer (IRs::guitar_amp_wav, IRs::guitar_amp_wavSize); });
+        m.addItem ("Casette Recorder",  [this] { loadIRFileIntoPluginBuffer (IRs::cassette_recorder_wav, IRs::cassette_recorder_wavSize); });
+        m.addSeparator();
+        m.addItem ("Load from file...", [this] { loadIRFileIntoPluginBuffer(); });
+        
+        m.showMenuAsync ({});
+    }
+
+    void loadIRFileIntoPluginBuffer (const void* sourceData, size_t sourceDataSize)
+    {
+        auto plugin = EngineHelpers::getOrInsertAudioTrackAt (edit, 0)->pluginList.findFirstPluginOfType<ImpulseResponsePlugin>();
+        plugin->loadImpulseResponse (sourceData, sourceDataSize,
+                                     dsp::Convolution::Stereo::yes, dsp::Convolution::Trim::no, 0, dsp::Convolution::Normalise::yes);
+
+    }
+    
     void loadIRFileIntoPluginBuffer()
     {
         if (! fileChooser)
@@ -336,7 +365,7 @@ private:
                               true);
 
                 auto plugin = EngineHelpers::getOrInsertAudioTrackAt (edit, 0)->pluginList.findFirstPluginOfType<ImpulseResponsePlugin>();
-                plugin->loadImpluseResponse (std::move (fileBuffer), dsp::Convolution::Stereo::yes, dsp::Convolution::Trim::no, dsp::Convolution::Normalise::yes);
+                plugin->loadImpulseResponse (std::move (fileBuffer), dsp::Convolution::Stereo::yes, dsp::Convolution::Trim::no, dsp::Convolution::Normalise::yes);
             }
         });
     }
