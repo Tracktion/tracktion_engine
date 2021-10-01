@@ -31,7 +31,6 @@
 #define Point CarbonDummyPointName
 #define Component CarbonDummyCompName
 
-//#include "rubberband/rubberband-c.cpp"
 #include "../3rd_party/rubberband/src/StretcherProcess.cpp"
 #include "../3rd_party/rubberband/src/StretchCalculator.cpp"
 #include "../3rd_party/rubberband/src/StretcherChannelData.cpp"
@@ -40,8 +39,6 @@
 #include "../3rd_party/rubberband/src/system/sysutils.cpp"
 #include "../3rd_party/rubberband/src/system/Thread.cpp"
 #include "../3rd_party/rubberband/src/system/VectorOpsComplex.cpp"
-// #include "rubberband/pommier/neon_mathfun.h"
-// #include "rubberband/pommier/sse_mathfun.h"
 #include "../3rd_party/rubberband/src/dsp/AudioCurveCalculator.cpp"
 #include "../3rd_party/rubberband/src/dsp/FFT.cpp"
 #include "../3rd_party/rubberband/src/dsp/Resampler.cpp"
@@ -53,7 +50,6 @@
 #include "../3rd_party/rubberband/src/audiocurves/SilentAudioCurve.cpp"
 #include "../3rd_party/rubberband/src/audiocurves/SpectralDifferenceAudioCurve.cpp"
 #include "../3rd_party/rubberband/src/speex/resample.c"
-// #include "rubberband/jni/Rubbersrc/BandStretcherJNI.cpp"
 
 #include "../3rd_party/rubberband/src/RubberBandStretcher.cpp"
 
@@ -64,28 +60,27 @@
  #pragma GCC diagnostic pop
 #endif
 
-bool RubberStretcher::setSpeedAndPitch(float speedRatio, float semitonesUp)
+bool RubberStretcher::setSpeedAndPitch (float speedRatio, float semitonesUp)
 {
-    float pitch = juce::jlimit(0.25f, 4.0f, tracktion_engine::Pitch::semitonesToRatio (semitonesUp));
+    float pitch = juce::jlimit (0.25f, 4.0f, tracktion_engine::Pitch::semitonesToRatio (semitonesUp));
 
     // Not sure what to do with sync
 
     // bool sync = (elastiqueMode == TimeStretcher::elastiquePro) ? elastiqueProOptions.syncTimeStrPitchShft : false;
 
-    // TODO: Assert this works
-    thisRubberBandStretcher.setPitchScale(pitch);
-    thisRubberBandStretcher.setTimeRatio(speedRatio);
+    rubberBandStretcher.setPitchScale (pitch);
+    rubberBandStretcher.setTimeRatio (speedRatio);
 
-    int r = (thisRubberBandStretcher.getPitchScale() == pitch && thisRubberBandStretcher.getTimeRatio() == speedRatio);
-    jassert(r == 0); juce::ignoreUnused(r);
+    const bool r = (rubberBandStretcher.getPitchScale() == pitch && rubberBandStretcher.getTimeRatio() == speedRatio);
+    jassert (r == 0); juce::ignoreUnused(r);
 
     return r == 0;
 }
 
 int RubberStretcher::getFramesNeeded() const
 {
-    const int framesNeeded = thisRubberBandStretcher.available();
-    jassert(framesNeeded <= maxFramesNeeded);
+    const int framesNeeded = rubberBandStretcher.available();
+    jassert (framesNeeded <= maxFramesNeeded);
     return framesNeeded;
 }
 
@@ -96,19 +91,19 @@ int RubberStretcher::getMaxFramesNeeded() const
 
 void RubberStretcher::processData(const float* const* inChannels, int numSamples, float* const* outChannels)
 {
-    thisRubberBandStretcher.process((float**)outChannels, numSamples, false);
+    rubberBandStretcher.process ((float**) outChannels, numSamples, false);
 
-    TempBuffer.setDataToReferTo((float**)inChannels, 2, numSamples);
+    TempBuffer.setDataToReferTo ((float**) inChannels, 2, numSamples);
 
     auto readPointers = TempBuffer.getArrayOfReadPointers();
 
-    while (thisRubberBandStretcher.available() < numSamples)
+    while (rubberBandStretcher.available() < numSamples)
     {
 
-        thisRubberBandStretcher.process(readPointers, thisRubberBandStretcher.getSamplesRequired(), false);
+        rubberBandStretcher.process (readPointers, rubberBandStretcher.getSamplesRequired(), false);
     }
 
-    thisRubberBandStretcher.retrieve((float**)outChannels, numSamples);
+    rubberBandStretcher.retrieve ((float**) outChannels, numSamples);
 }
 
 
@@ -135,17 +130,17 @@ private:
     {
         beginTest ("Pitch shift");
         
-        RubberStretcher thisRubberBandStretcher = RubberStretcher (44100, 512, 2, RubberBandStretcher::Option::OptionProcessRealTime);
+        RubberStretcher rubberBandStretcher = RubberStretcher (44100, 512, 2, RubberBandStretcher::Option::OptionProcessRealTime);
         // Pitches the audio by 1 semitones, without performing time-stretching.
-        thisRubberBandStretcher.setSpeedAndPitch (1.0f, std::pow (2.0f, 1.0f / 12.0f));
+        rubberBandStretcher.setSpeedAndPitch (1.0f, std::pow (2.0f, 1.0f / 12.0f));
 
-        thisRubberBandStretcher.reset();
+        rubberBandStretcher.reset();
 
         AudioBuffer<float> sinBuffer;
-        sinBuffer.setSize(2, 44100);
+        sinBuffer.setSize (2, 44100);
 
-        auto wL = sinBuffer.getWritePointer(0);
-        auto wR = sinBuffer.getWritePointer(1);
+        auto wL = sinBuffer.getWritePointer (0);
+        auto wR = sinBuffer.getWritePointer (1);
 
         double currentAngle = 0.0, angleDelta = 0.0;
         float originalPitch = 432.0f; //A4
@@ -161,11 +156,8 @@ private:
             wR[sample] = currentSample;
         }
 
-        // Check number of zero crossings before - This line might not even be necessary. Just holding onto data
-        // int numZeroCrossings = getNumZeroCrossings (sinBuffer);
-
         // Process sin wave to shift pitch and store in testBuffer
-        thisRubberBandStretcher.processData(sinBuffer.getArrayOfReadPointers(), sinBuffer.getNumSamples(), sinBuffer.getArrayOfWritePointers());
+        rubberBandStretcher.processData (sinBuffer.getArrayOfReadPointers(), sinBuffer.getNumSamples(), sinBuffer.getArrayOfWritePointers());
 
         // Check number of zero crossings and estimate pitch
         int numZeroCrossingsShifted = getNumZeroCrossings (sinBuffer);
@@ -179,12 +171,12 @@ private:
     {
         beginTest ("Time-stretch");
 
-        RubberStretcher thisRubberBandStretcher = RubberStretcher (44100, 512, 2, RubberBandStretcher::Option::OptionProcessRealTime);
+        RubberStretcher rubberBandStretcher = RubberStretcher (44100, 512, 2, RubberBandStretcher::Option::OptionProcessRealTime);
 
-        thisRubberBandStretcher.reset();
+        rubberBandStretcher.reset();
 
         // Stretches the audio by /2, at the same pitch
-        thisRubberBandStretcher.setSpeedAndPitch (0.5f, 1.0f);
+        rubberBandStretcher.setSpeedAndPitch (0.5f, 1.0f);
 
         AudioBuffer<float> sinBuffer;
         sinBuffer.setSize (2, 44100);
@@ -207,31 +199,29 @@ private:
         }
 
         // Process sin wave to time stretch and store in testBuffer
-        thisRubberBandStretcher.processData (sinBuffer.getArrayOfReadPointers(), 44100, sinBuffer.getArrayOfWritePointers());
+        rubberBandStretcher.processData (sinBuffer.getArrayOfReadPointers(), 44100, sinBuffer.getArrayOfWritePointers());
 
         AudioBuffer<float> testBuffer;
         testBuffer.setSize (2, 22050);
 
-        auto t = testBuffer.getWritePointer (0);
-        auto s = sinBuffer.getWritePointer (0);
+        int zeroCountL = 0;
+        int zeroCountR = 0;
 
-        int scount = 0;
-
-        for (int sample = 0; sample < 44100; ++sample)
+        for (int sample = 22049; sample < 44100; ++sample)
         {
-            if (s[sample] != 0 && sample >= 22050)
+            if (wL[sample] == 0)
             {
-                t[sample] = s[sample];
+                ++zeroCountL;
             }
-            else
+            if (wR[sample] == 0)
             {
-                scount++;
+                ++zeroCountR;
             }
         }
 
         // Check whether buffer has resized
-        expectEquals (scount, 22050);
-        expectLessThan (std::abs (sinBuffer.getNumSamples() - testBuffer.getNumSamples() * 2), 10);
+        expectEquals (zeroCountL, 22050);
+        expectEquals (zeroCountR, 22050);
     }
 
     //==============================================================================
@@ -239,14 +229,14 @@ private:
     {
         float bufferTimeInSeconds = numSamples / sampleRate;
 
-        int numCycles = numZeroCrossings / 2;
+        float numCycles = numZeroCrossings / 2.0f;
 
         float pitchInHertz = numCycles / bufferTimeInSeconds;
 
         return pitchInHertz;
     }
 
-    int getNumZeroCrossings (AudioBuffer<float> buffer)
+    int getNumZeroCrossings (AudioBuffer<float>& buffer)
     {
         auto dest = buffer.getWritePointer(0);
 
@@ -255,9 +245,9 @@ private:
         for (int sample = 1; sample < buffer.getNumSamples(); ++sample)
         {
             if ((dest[sample] < 0.0f && dest[sample - 1] > 0.0f)
-                || (dest[sample] > 0.0f && dest[sample - 1] < 0.0f))
+             || (dest[sample] > 0.0f && dest[sample - 1] < 0.0f))
             {
-                numZeroCrossings++;
+                ++numZeroCrossings;
             }
         }
 

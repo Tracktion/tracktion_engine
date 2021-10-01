@@ -61,11 +61,6 @@ struct RubberStretcher  : public Stretcher
         thisRubberBandStretcher.reset();
     }
 
-    ~RubberStretcher() override
-    {
-
-    }
-
     bool isOk() const override { return &thisRubberBandStretcher != nullptr; }
 
     void reset() override { thisRubberBandStretcher.reset(); }
@@ -85,7 +80,7 @@ struct RubberStretcher  : public Stretcher
     {
     }
 
-    RubberBand::RubberBandStretcher thisRubberBandStretcher;
+
 
 private:
 
@@ -93,6 +88,7 @@ private:
 
     int maxFramesNeeded = 0;
 
+    RubberBand::RubberBandStretcher thisRubberBandStretcher;
 
     float sampleRate;
 
