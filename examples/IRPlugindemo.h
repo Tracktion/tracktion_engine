@@ -71,10 +71,6 @@ namespace tracktion_engine
 
             lowPassCutoffParam = addParam ("lowPassCutoff", TRANS("Low Pass Filter Cutoff"), { 0.1f, 20000.0f });
             lowPassCutoffParam->attachToCurrentValue (lowPassCutoffValue);
-
-            // Set Filters to High Pass and Low Pass modes
-            processorChain.get<HPFIndex>().setMode (dsp::LadderFilterMode::HPF24);
-            processorChain.get<LPFIndex>().setMode (dsp::LadderFilterMode::LPF24);
         }
 
         /** Destructor. */
@@ -169,13 +165,11 @@ namespace tracktion_engine
             auto& preGain = processorChain.get<preGainIndex>();
             preGain.setGainLinear (preGainParam->getCurrentValue());
 
-            auto& HPF = processorChain.get<HPFIndex>();
-            HPF.setCutoffFrequencyHz (highPassCutoffParam->getCurrentValue());
-            HPF.setResonance (0.7f);
+            auto hpf = processorChain.get<HPFIndex>().state;
+            *hpf = dsp::IIR::ArrayCoefficients<float>::makeHighPass (sampleRate, highPassCutoffParam->getCurrentValue());
 
-            auto& LPF = processorChain.get<LPFIndex>();
-            LPF.setCutoffFrequencyHz (lowPassCutoffParam->getCurrentValue());
-            LPF.setResonance (0.7f);
+            auto& lpf = processorChain.get<LPFIndex>().state;
+            *lpf = dsp::IIR::ArrayCoefficients<float>::makeLowPass (sampleRate, lowPassCutoffParam->getCurrentValue());
 
             auto& postGain = processorChain.get<postGainIndex>();
             postGain.setGainLinear (postGainParam->getCurrentValue());
@@ -208,8 +202,8 @@ namespace tracktion_engine
 
         dsp::ProcessorChain<dsp::Gain<float>,
                             dsp::Convolution,
-                            dsp::LadderFilter<float>,
-                            dsp::LadderFilter<float>,
+                            dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>>,
+                            dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>>,
                             dsp::Gain<float>> processorChain;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ImpulseResponsePlugin)
@@ -266,21 +260,25 @@ public:
         // Setup slider value source
         auto preGainParam = plugin->getAutomatableParameterByID ("preGain");
         bindSliderToParameter (preGainSlider, *preGainParam);
+        preGainSlider.setSkewFactorFromMidPoint (1.0);
         preGainLabel.attachToComponent (&preGainSlider,true);
         preGainLabel.setText ("Pre",sendNotification);
 
         auto postGainParam = plugin->getAutomatableParameterByID ("postGain");
         bindSliderToParameter (postGainSlider, *postGainParam);
+        postGainSlider.setSkewFactorFromMidPoint (1.0);
         postGainLabel.attachToComponent (&postGainSlider, true);
         postGainLabel.setText ("Post", sendNotification);
 
         auto highPassCutoffParam = plugin->getAutomatableParameterByID ("highPassCutoff");
         bindSliderToParameter (highPassCutoffSlider, *highPassCutoffParam);
+        highPassCutoffSlider.setSkewFactorFromMidPoint (2000.0);
         highPassCutoffLabel.attachToComponent (&highPassCutoffSlider, true);
         highPassCutoffLabel.setText ("HPF", sendNotification);
 
         auto lowPassCutoffParam = plugin->getAutomatableParameterByID ("lowPassCutoff");
         bindSliderToParameter (lowPassCutoffSlider, *lowPassCutoffParam);
+        lowPassCutoffSlider.setSkewFactorFromMidPoint (2000.0);
         lowPassCutoffLabel.attachToComponent (&lowPassCutoffSlider, true);
         lowPassCutoffLabel.setText ("LPF", sendNotification);
 
