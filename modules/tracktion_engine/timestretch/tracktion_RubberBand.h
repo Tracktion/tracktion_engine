@@ -76,17 +76,6 @@ struct RubberStretcher  : public Stretcher
 
     void processData(const float* const* inChannels, int numSamples, float* const* outChannels) override;
 
-    bool testPitchShift(float tolerance);
-    bool testTimeStretch(float tolerance);
-
-    float getPitchFromNumZeroCrossings(int numZeroCrossings, int numSamples);
-    int getNumZeroCrossings(AudioBuffer<float> buffer);
-
-    AudioBuffer<float> getTempBuffer()
-    {
-        return TempBuffer;
-    }
-
     int getSamplesRequired()
     {
         return thisRubberBandStretcher.getSamplesRequired();

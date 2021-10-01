@@ -111,141 +111,13 @@ void RubberStretcher::processData(const float* const* inChannels, int numSamples
     thisRubberBandStretcher.retrieve((float**)outChannels, numSamples);
 }
 
-bool RubberStretcher::testPitchShift(float tolerance)
-{
-    // Pitches the audio by 1 semitones, without performing time-stretching.
-    setSpeedAndPitch(1.0f, pow(2.0, 1.0 / 12.0));
-
-    AudioBuffer<float> sinBuffer;
-    sinBuffer.setSize(2, 44100);
-
-    auto wL = sinBuffer.getWritePointer(0);
-    auto wR = sinBuffer.getWritePointer(1);
-
-    double currentAngle = 0.0, angleDelta = 0.0;
-    float originalPitch = 432.0f; //A4
-    auto cyclesPerSample = originalPitch / 44100.0f;
-    angleDelta = cyclesPerSample * 2.0 * juce::MathConstants<double>::pi;
-
-    // Generate sin wave and store in testBuffer
-    for (int sample = 0; sample < 44100; ++sample)
-    {
-        auto currentSample = (float)std::sin(currentAngle);
-        currentAngle += angleDelta;
-        wL[sample] = currentSample;
-        wR[sample] = currentSample;
-    }
-
-    // Check number of zero crossings before - This line might not even be necessary. Just holding onto data
-    // int numZeroCrossings = getNumZeroCrossings (sinBuffer);
-
-    // Process sin wave to shift pitch and store in testBuffer
-    processData(sinBuffer.getArrayOfReadPointers(), sinBuffer.getNumSamples(), sinBuffer.getArrayOfWritePointers());
-
-    // Check number of zero crossings and estimate pitch
-    int numZeroCrossingsShifted = getNumZeroCrossings(sinBuffer);
-    float shiftedPitch = getPitchFromNumZeroCrossings(numZeroCrossingsShifted, sinBuffer.getNumSamples());
-
-    // Compare shiftedPitch to originalPitch with a tolerance
-    if (abs(shiftedPitch - (457.69)) < tolerance)
-        return true;
-
-    return false;
-}
-
-bool RubberStretcher::testTimeStretch(float tolerance)
-{
-    // Stretches the audio by /2, at the same pitch
-    setSpeedAndPitch(0.5f, 1.0f);
-
-    AudioBuffer<float> sinBuffer;
-    sinBuffer.setSize(2, 44100);
-
-    auto wL = sinBuffer.getWritePointer(0);
-    auto wR = sinBuffer.getWritePointer(1);
-
-    double currentAngle = 0.0, angleDelta = 0.0;
-    float originalPitch = 432.0f; //A4
-    auto cyclesPerSample = originalPitch / 44100.0f;
-    angleDelta = cyclesPerSample * 2.0 * juce::MathConstants<double>::pi;
-
-    // Generate sin wave and store in testBuffer
-    for (int sample = 0; sample < 44100; ++sample)
-    {
-        auto currentSample = (float)std::sin(currentAngle);
-        currentAngle += angleDelta;
-        wL[sample] = currentSample;
-        wR[sample] = currentSample;
-    }
-
-    // Process sin wave to time stretch and store in testBuffer
-    processData(sinBuffer.getArrayOfReadPointers(), 44100, sinBuffer.getArrayOfWritePointers());
-
-
-    AudioBuffer<float> testBuffer;
-    testBuffer.setSize(2, 22050);
-
-    auto t = testBuffer.getWritePointer(0);
-    auto s = sinBuffer.getWritePointer(0);
-
-    int scount = 0;
-
-    for (int sample = 0; sample < 44100; ++sample)
-    {
-        if (s[sample] != 0 && sample >= 22050)
-        {
-            t[sample] = s[sample];
-        }
-        else
-        {
-            scount++;
-        }
-    }
-
-
-
-    // Check whether buffer has resized
-    if (abs(sinBuffer.getNumSamples() - testBuffer.getNumSamples() * 2.0f) < tolerance && scount == 22050)
-        return true;
-
-    return false;
-}
-
-float RubberStretcher::getPitchFromNumZeroCrossings(int numZeroCrossings, int numSamples)
-{
-    float bufferTimeInSeconds = numSamples / sampleRate;
-
-    int numCycles = numZeroCrossings / 2;
-
-    float pitchInHertz = numCycles / bufferTimeInSeconds;
-
-    return pitchInHertz;
-}
-
-int RubberStretcher::getNumZeroCrossings(AudioBuffer<float> buffer)
-{
-    auto dest = buffer.getWritePointer(0);
-
-    int numZeroCrossings = 0;
-
-    for (int sample = 1; sample < buffer.getNumSamples(); ++sample)
-    {
-        if ((dest[sample] < 0.0f && dest[sample - 1] > 0.0f)
-            || (dest[sample] > 0.0f && dest[sample - 1] < 0.0f))
-        {
-            numZeroCrossings++;
-        }
-    }
-
-    return numZeroCrossings;
-}
-
 
 //==============================================================================
 //==============================================================================
 class RubberBandStretcherTests  : public UnitTest
 {
 public:
+    //==============================================================================
     RubberBandStretcherTests()
         : UnitTest ("RubberBandStretcherTests", "Tracktion")
     {
@@ -258,6 +130,7 @@ public:
     }
 
 private:
+    //==============================================================================
     void runPitchShiftTest()
     {
         beginTest ("Pitch shift");
@@ -295,8 +168,8 @@ private:
         thisRubberBandStretcher.processData(sinBuffer.getArrayOfReadPointers(), sinBuffer.getNumSamples(), sinBuffer.getArrayOfWritePointers());
 
         // Check number of zero crossings and estimate pitch
-        int numZeroCrossingsShifted = thisRubberBandStretcher.getNumZeroCrossings (sinBuffer);
-        float shiftedPitch = thisRubberBandStretcher.getPitchFromNumZeroCrossings (numZeroCrossingsShifted, sinBuffer.getNumSamples());
+        int numZeroCrossingsShifted = getNumZeroCrossings (sinBuffer);
+        float shiftedPitch = getPitchFromNumZeroCrossings (numZeroCrossingsShifted, sinBuffer.getNumSamples(), 44100);
 
         // Compare shiftedPitch to originalPitch with a tolerance
         expectLessThan (std::abs (shiftedPitch - (457.69f)), 2.0f);
@@ -360,6 +233,37 @@ private:
         expectEquals (scount, 22050);
         expectLessThan (std::abs (sinBuffer.getNumSamples() - testBuffer.getNumSamples() * 2), 10);
     }
+
+    //==============================================================================
+    float getPitchFromNumZeroCrossings (int numZeroCrossings, int numSamples, double sampleRate)
+    {
+        float bufferTimeInSeconds = numSamples / sampleRate;
+
+        int numCycles = numZeroCrossings / 2;
+
+        float pitchInHertz = numCycles / bufferTimeInSeconds;
+
+        return pitchInHertz;
+    }
+
+    int getNumZeroCrossings (AudioBuffer<float> buffer)
+    {
+        auto dest = buffer.getWritePointer(0);
+
+        int numZeroCrossings = 0;
+
+        for (int sample = 1; sample < buffer.getNumSamples(); ++sample)
+        {
+            if ((dest[sample] < 0.0f && dest[sample - 1] > 0.0f)
+                || (dest[sample] > 0.0f && dest[sample - 1] < 0.0f))
+            {
+                numZeroCrossings++;
+            }
+        }
+
+        return numZeroCrossings;
+    }
 };
 
+//==============================================================================
 static RubberBandStretcherTests rubberBandStretcherTests;
