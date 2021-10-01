@@ -73,3 +73,4 @@ tracktion*.deb
 examples/projects
 bin
 doxygen/doc
+**/3rd_party/rubberband
