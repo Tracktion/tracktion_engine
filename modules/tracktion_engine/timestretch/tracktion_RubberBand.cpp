@@ -93,14 +93,9 @@ void RubberStretcher::processData(const float* const* inChannels, int numSamples
 {
     rubberBandStretcher.process ((float**) outChannels, numSamples, false);
 
-    TempBuffer.setDataToReferTo ((float**) inChannels, 2, numSamples);
-
-    auto readPointers = TempBuffer.getArrayOfReadPointers();
-
-    while (rubberBandStretcher.available() < numSamples)
+    while (rubberBandStretcher.getSamplesRequired() < numSamples)
     {
-
-        rubberBandStretcher.process (readPointers, rubberBandStretcher.getSamplesRequired(), false);
+        rubberBandStretcher.process (inChannels, rubberBandStretcher.getSamplesRequired(), false);
     }
 
     rubberBandStretcher.retrieve ((float**) outChannels, numSamples);
@@ -172,7 +167,6 @@ private:
         beginTest ("Time-stretch");
 
         RubberStretcher rubberBandStretcher = RubberStretcher (44100, 512, 2, RubberBandStretcher::Option::OptionProcessRealTime);
-
         rubberBandStretcher.reset();
 
         // Stretches the audio by /2, at the same pitch
@@ -223,16 +217,13 @@ private:
         expectEquals (zeroCountL, 22050);
         expectEquals (zeroCountR, 22050);
     }
-
+        
     //==============================================================================
-    float getPitchFromNumZeroCrossings (int numZeroCrossings, int numSamples, double sampleRate)
+    float getPitchFromNumZeroCrossings (const int numZeroCrossings, const int numSamples, const double sampleRate)
     {
-        float bufferTimeInSeconds = numSamples / sampleRate;
-
+        float bufferTimeInSeconds = (float) numSamples / (float) sampleRate;
         float numCycles = numZeroCrossings / 2.0f;
-
         float pitchInHertz = numCycles / bufferTimeInSeconds;
-
         return pitchInHertz;
     }
 

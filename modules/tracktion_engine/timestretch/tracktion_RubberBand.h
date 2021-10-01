@@ -27,45 +27,44 @@ struct Stretcher
 
     virtual bool isOk() const = 0;
     virtual void reset() = 0;
-    virtual bool setSpeedAndPitch(float speedRatio, float semitonesUp) = 0;
+    virtual bool setSpeedAndPitch (float speedRatio, float semitonesUp) = 0;
     virtual int getFramesNeeded() const = 0;
     virtual int getMaxFramesNeeded() const = 0;
-    virtual void processData(const float* const* inChannels, int numSamples, float* const* outChannels) = 0;
-    virtual void flush(float* const* outChannels) = 0;
+    virtual void processData (const float* const* inChannels, int numSamples, float* const* outChannels) = 0;
+    virtual void flush (float* const* outChannels) = 0;
 };
 
 struct RubberStretcher  : public Stretcher
 {
-    RubberStretcher(double sourceSampleRate, int samplesPerBlock, int numChannels, RubberBand::RubberBandStretcher::Option option)
-                  : thisRubberBandStretcher(sourceSampleRate, numChannels, option, 1.0f, 0.5f)
+    RubberStretcher (double sourceSampleRate, int samplesPerBlock, int numChannels, RubberBand::RubberBandStretcher::Option option)
+                   : rubberBandStretcher(sourceSampleRate, numChannels, option, 1.0f, 0.5f)
 
     {
-
         sampleRate = sourceSampleRate;
-        TempBuffer.setSize(numChannels, sourceSampleRate);
 
-        if (&thisRubberBandStretcher == nullptr)
+        if (&rubberBandStretcher == nullptr)
         {
             jassertfalse;
-            TRACKTION_LOG_ERROR("Cannot create Rubber Band Stretcher");
+            TRACKTION_LOG_ERROR ("Cannot create Rubber Band Stretcher");
         }
         else
         {
             // This must be called first, before any other functions and can not
             // be called again
-            maxFramesNeeded = thisRubberBandStretcher.available();
+            maxFramesNeeded = rubberBandStretcher.available();
         }
 
         sampleRate = sourceSampleRate;
-
-        thisRubberBandStretcher.reset();
+        rubberBandStretcher.reset();
     }
 
-    bool isOk() const override { return &thisRubberBandStretcher != nullptr; }
+    bool isOk() const override { return &rubberBandStretcher != nullptr; };
 
-    void reset() override { thisRubberBandStretcher.reset(); }
 
-    bool setSpeedAndPitch(float speedRatio, float semitonesUp) override;
+
+    void reset() override { rubberBandStretcher.reset(); }
+
+    bool setSpeedAndPitch (float speedRatio, float semitonesUp) override;
     int getFramesNeeded() const override;
     int getMaxFramesNeeded() const override;
 
@@ -73,22 +72,17 @@ struct RubberStretcher  : public Stretcher
 
     int getSamplesRequired()
     {
-        return thisRubberBandStretcher.getSamplesRequired();
+        return rubberBandStretcher.getSamplesRequired();
     }
 
     void flush(float* const* outChannels) override
     {
     }
 
-
-
 private:
-
-    AudioBuffer<float> TempBuffer;
-
     int maxFramesNeeded = 0;
 
-    RubberBand::RubberBandStretcher thisRubberBandStretcher;
+    RubberBand::RubberBandStretcher rubberBandStretcher;
 
     float sampleRate;
 
