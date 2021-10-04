@@ -11,21 +11,21 @@
 #include "tracktion_RubberBand.h"
 
 #ifdef __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wsign-conversion"
-#pragma GCC diagnostic ignored "-Wconversion"
-#pragma GCC diagnostic ignored "-Wextra-semi"
-#pragma GCC diagnostic ignored "-Wshadow"
-#pragma GCC diagnostic ignored "-Wsign-compare"
-#pragma GCC diagnostic ignored "-Wcast-align"
-#if ! __clang__
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
-#endif
-#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-#pragma GCC diagnostic ignored "-Wpedantic"
-#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wsign-conversion"
+ #pragma GCC diagnostic ignored "-Wconversion"
+ #pragma GCC diagnostic ignored "-Wextra-semi"
+ #pragma GCC diagnostic ignored "-Wshadow"
+ #pragma GCC diagnostic ignored "-Wsign-compare"
+ #pragma GCC diagnostic ignored "-Wcast-align"
+ #if ! __clang__
+  #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+ #endif
+ #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+ #pragma GCC diagnostic ignored "-Wunused-variable"
+ #pragma GCC diagnostic ignored "-Wunused-parameter"
+ #pragma GCC diagnostic ignored "-Wpedantic"
+ #pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #endif
 
 #define WIN32_LEAN_AND_MEAN 1
@@ -60,7 +60,7 @@
 #undef Component
 
 #ifdef __GNUC__
-#pragma GCC diagnostic pop
+ #pragma GCC diagnostic pop
 #endif
 
 bool RubberStretcher::setSpeedAndPitch (float speedRatio, float semitonesUp)
