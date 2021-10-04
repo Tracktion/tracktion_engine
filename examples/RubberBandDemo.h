@@ -42,6 +42,8 @@ public:
 
         // This really should be a CLI but we'll just quit here instead
         JUCEApplicationBase::quit();
+        
+        setSize (600, 400);
     }
 
     //==============================================================================
