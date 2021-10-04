@@ -175,9 +175,9 @@ public:
         
         Helpers::addAndMakeVisible (*this, { &gainSlider, &settingsButton, &playPauseButton });
 
-        oggTempFile = std::make_unique<TemporaryFile> (".ogg");
+        oggTempFile = std::make_unique<TemporaryFile> (".mp3");
         auto f = oggTempFile->getFile();
-        f.replaceWithData (PlaybackDemoAudio::BITs_Export_2_ogg, PlaybackDemoAudio::BITs_Export_2_oggSize);
+        f.replaceWithData (PlaybackDemoAudio::david_render_mp3, PlaybackDemoAudio::david_render_mp3Size);
 
         // Creates clip. Loads clip from file f.
         // Creates track. Loads clip into track.
