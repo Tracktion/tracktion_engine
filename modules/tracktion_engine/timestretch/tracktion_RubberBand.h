@@ -21,6 +21,10 @@
 
 #include "../3rd_party/rubberband/rubberband/RubberBandStretcher.h"
 
+#include "../3rd_party/rubberband/src/base/RingBuffer.h"
+#include <tracktion_engine/3rd_party/soundtouch/include/FIFOSamplePipe.h>
+
+
 struct Stretcher
 {
     virtual ~Stretcher() {}
@@ -37,7 +41,10 @@ struct Stretcher
 struct RubberStretcher  : public Stretcher
 {
     RubberStretcher (double sourceSampleRate, int samplesPerBlock, int numChannels, RubberBand::RubberBandStretcher::Option option)
-                   : rubberBandStretcher(sourceSampleRate, numChannels, option, 1.0f, 0.5f)
+                   : rubberBandStretcher(sourceSampleRate, numChannels, option, 1.0f, 1.0f),
+                     m_reserve (samplesPerBlock),
+                     m_blockSize (samplesPerBlock),
+                     m_minfill (0)
 
     {
         sampleRate = sourceSampleRate;
@@ -54,8 +61,33 @@ struct RubberStretcher  : public Stretcher
             maxFramesNeeded = rubberBandStretcher.available();
         }
 
-        sampleRate = sourceSampleRate;
         rubberBandStretcher.reset();
+
+        m_input = new float* [numChannels];
+        m_output = new float* [numChannels];
+
+        int bufsize = m_blockSize + m_reserve + 8192;
+
+        ringBuffer = new RubberBand::RingBuffer<float> *[numChannels];
+        m_scratch = new float* [numChannels];
+
+        for (size_t c = 0; c < numChannels; ++c) 
+        {
+            m_input[c] = 0;
+            m_output[c] = 0;
+
+            ringBuffer[c] = new RubberBand::RingBuffer<float> (bufsize);
+
+            m_scratch[c] = new float[bufsize];
+            for (int i = 0; i < bufsize; ++i) 
+                m_scratch[c][i] = 0.f;
+        }
+
+        for (size_t c = 0; c < numChannels; ++c) 
+        {
+            ringBuffer[c]->reset();
+            ringBuffer[c]->zero (m_reserve);
+        }
     }
 
     bool isOk() const override { return &rubberBandStretcher != nullptr; };
@@ -69,6 +101,7 @@ struct RubberStretcher  : public Stretcher
     int getMaxFramesNeeded() const override;
 
     void processData(const float* const* inChannels, int numSamples, float* const* outChannels) override;
+    void processData(const float* const* inChannels, int numSamples, float* const* outChannels, unsigned long offset);
 
     int getSamplesRequired()
     {
@@ -82,10 +115,21 @@ struct RubberStretcher  : public Stretcher
 private:
     int maxFramesNeeded = 0;
 
+    AudioBuffer<float> TempBuffer;
+
     RubberBand::RubberBandStretcher rubberBandStretcher;
 
     float sampleRate;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RubberStretcher)
+    float** m_input;
+    float** m_output;
+    RubberBand::RingBuffer<float>** ringBuffer;
+    float** m_scratch;
+
+    size_t m_blockSize;
+    size_t m_reserve;
+    size_t m_minfill = 0;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RubberStretcher)
 
 };
