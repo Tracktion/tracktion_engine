@@ -175,7 +175,7 @@ public:
     void runTest() override
     {
         runPitchShiftTest();
-        runTimeStretchTest();
+        runTimestretchTest();
     }
 
 private:
@@ -197,155 +197,142 @@ private:
     {
         beginTest ("Pitch shift");
         
-        testPitchShift (1.0f, 466.16f);
-        testPitchShift (2.0f, 493.88f);
-        testPitchShift (5.0f, 587.33f);
-        testPitchShift (12.0f, 880.0f);
-        testPitchShift (24.0f, 1760.0f);
+        testStretcher (1.0f, 1.0f);
+        testStretcher (1.0f, 2.0f);
+        testStretcher (1.0f, 5.0f);
+        testStretcher (1.0f, 12.0f);
+        testStretcher (1.0f, 24.0f);
     }
-
-    void testPitchShift (float shiftNumSemitones, float expectedPitchValue)
-    {
-        const double sampleRate = 44100.0;
-        const int blockSize = 512;
-        const int numChannels = 2;
-        RubberStretcher rubberBandStretcher (sampleRate, 512, numChannels, RubberBandStretcher::Option::OptionProcessRealTime);
-        rubberBandStretcher.setSpeedAndPitch (1.0f, shiftNumSemitones);
-
-        AudioBuffer<float> sinBuffer (2, 44100), resultBuffer (2, 44100);
-        resultBuffer.clear();
-
-        auto wL = sinBuffer.getWritePointer (0);
-        auto wR = sinBuffer.getWritePointer (1);
-
-        double currentAngle = 0.0, angleDelta = 0.0;
-        float originalPitch = 440.0f; //A4
-        auto cyclesPerSample = originalPitch / 44100.0f;
-        angleDelta = cyclesPerSample * 2.0 * juce::MathConstants<double>::pi;
-
-        // Generate sin wave and store in testBuffer
-        for (int sample = 0; sample < 44100; ++sample)
-        {
-            auto currentSample = (float) std::sin (currentAngle);
-            currentAngle += angleDelta;
-            wL[sample] = currentSample;
-            wR[sample] = currentSample;
-        }
-
-        {
-            int numInputsDone = 0, numOutputsDone = 0;
-            
-            for (;;)
-            {
-                const int numInputSamplesLeft = sinBuffer.getNumSamples() - numInputsDone;
-                const int numInputSamplesThisBlock = std::min (rubberBandStretcher.getFramesNeeded(), numInputSamplesLeft);
-                const float* inputs[2] = { sinBuffer.getReadPointer (0, numInputsDone),
-                                           sinBuffer.getReadPointer (1, numInputsDone) };
-                float* outputs[2] = { resultBuffer.getWritePointer (0, numOutputsDone),
-                                      resultBuffer.getWritePointer (1, numOutputsDone) };
-                
-                // Process sin wave to shift pitch and store in resultBuffer
-                const int numOutputSamplesThisBlock = rubberBandStretcher.processData (inputs, numInputSamplesThisBlock,
-                                                                                       outputs);
-                jassert (numOutputSamplesThisBlock <= blockSize);
-                
-                numInputsDone += numInputSamplesThisBlock;
-                numOutputsDone += numOutputSamplesThisBlock;
-                
-                if (numInputsDone >= sinBuffer.getNumSamples())
-                    break;
-            }
-
-            // Flush until no outputs are left
-            for (;;)
-            {
-                float* outputs[2] = { resultBuffer.getWritePointer (0, numOutputsDone),
-                                      resultBuffer.getWritePointer (1, numOutputsDone) };
-                
-                const int numOutputSamplesThisBlock = rubberBandStretcher.flush (outputs);
-                jassert (numOutputSamplesThisBlock <= blockSize);
-                numOutputsDone += numOutputSamplesThisBlock;
-                
-                if (numOutputSamplesThisBlock < blockSize)
-                    break;
-            }
-        }
-        
-        // Check number of zero crossings and estimate pitch
-        int numZeroCrossingsShifted = getNumZeroCrossings (resultBuffer);
-        float shiftedPitch = getPitchFromNumZeroCrossings (numZeroCrossingsShifted, resultBuffer.getNumSamples(), 44100);
-
-        // Compare shiftedPitch to originalPitch with a tolerance
-        const float percentageDiff = std::abs (shiftedPitch - expectedPitchValue) / expectedPitchValue;
-        expectLessThan (percentageDiff, 0.03f);
-    }
-
-    void runTimeStretchTest()
+    
+    void runTimestretchTest()
     {
         beginTest ("Time-stretch");
 
-        RubberStretcher rubberBandStretcher = RubberStretcher (44100, 512, 2, RubberBandStretcher::Option::OptionProcessRealTime);
-        rubberBandStretcher.reset();
+        testStretcher (0.5f, 0.0f);
+        testStretcher (1.0f, 0.0f);
+        testStretcher (2.0f, 0.0f);
+    }
 
-        // Stretches the audio by /2, at the same pitch
-        rubberBandStretcher.setSpeedAndPitch (2.0f, 1.0f);
+    //==============================================================================
+    void testStretcher (float stretchRatio, float semitonesUp)
+    {
+        const double sampleRate = 44100.0;
+        const int numChannels = 2;
+        const int blockSize = 512;
+        const float sourcePitch = 440.0f;
 
-        AudioBuffer<float> sinBuffer;
-        sinBuffer.setSize (2, 44100);
+        RubberStretcher rubberBandStretcher (sampleRate, blockSize, numChannels, RubberBandStretcher::Option::OptionProcessRealTime);
+        rubberBandStretcher.setSpeedAndPitch (stretchRatio, semitonesUp);
 
-        auto wL = sinBuffer.getWritePointer (0);
-        auto wR = sinBuffer.getWritePointer (1);
+        const auto sourceBuffer = createSinBuffer (sampleRate, numChannels, 440.0f);
+        const auto resultBuffer = processBuffer (rubberBandStretcher, sourceBuffer, blockSize, stretchRatio);
 
-        double currentAngle = 0.0, angleDelta = 0.0;
-        float originalPitch = 440; //A4
-        auto cyclesPerSample = originalPitch / 44100.0f;
-        angleDelta = cyclesPerSample * 2.0 * juce::MathConstants<double>::pi;
+        writeToFile (juce::File::getSpecialLocation (juce::File::userDesktopDirectory).getChildFile ("original.wav"), sourceBuffer, sampleRate);
+        writeToFile (juce::File::getSpecialLocation (juce::File::userDesktopDirectory).getChildFile ("pitched.wav"), resultBuffer, sampleRate);
 
-        // Generate sin wave and store in testBuffer
-        for (int sample = 0; sample < 44100; ++sample)
-        {
-            auto currentSample = (float) std::sin (currentAngle);
-            currentAngle += angleDelta;
-            wL[sample] = currentSample;
-            wR[sample] = currentSample;
-        }
+        const float expectedPitchValue = sourcePitch * tracktion_engine::Pitch::semitonesToRatio (semitonesUp);
+        const int expectedSize = (int) std::ceil (sourceBuffer.getNumSamples() * stretchRatio);
 
-        AudioBuffer<float> tempBuffer;
-        tempBuffer.setSize (2, 22050);
+        // Check number of zero crossings and estimate pitch
+        const int numZeroCrossingsShifted = getNumZeroCrossings (resultBuffer);
+        const float shiftedPitch = getPitchFromNumZeroCrossings (numZeroCrossingsShifted, resultBuffer.getNumSamples(), 44100);
 
-        // Process sin wave to time stretch and store in testBuffer
-        rubberBandStretcher.processData (sinBuffer.getArrayOfReadPointers(), 44100, sinBuffer.getArrayOfWritePointers());
-
-        int zeroCountL = 0;
-        int zeroCountR = 0;
-
-        for (int sample = 22049; sample < 44100; ++sample)
-        {
-            if (wL[sample] == 0.0f)
-            {
-                zeroCountL++;
-            }
-            if (wR[sample] == 0.0f)
-            {
-                zeroCountR++;
-            }
-        }
-
-        // Check whether buffer has resized
-        expectEquals (zeroCountL, 22050);
-        expectEquals (zeroCountR, 22050);
+        // Compare shiftedPitch to expectedPitchValue with a 3% tolerance
+        const float percentageDiff = std::abs (shiftedPitch - expectedPitchValue) / expectedPitchValue;
+        expectLessThan (percentageDiff, 0.03f);
+        
+        // Compare expectedSize with the actual size of the results
+        expectEquals (resultBuffer.getNumSamples(), expectedSize);
     }
         
     //==============================================================================
-    float getPitchFromNumZeroCrossings (const int numZeroCrossings, const int numSamples, const double sampleRate)
+    static juce::AudioBuffer<float> createSinBuffer (double sampleRate, int numChannels, float pitch)
     {
-        float bufferTimeInSeconds = (float) numSamples / (float) sampleRate;
-        float numCycles = (float) numZeroCrossings / 2.0f;
-        float pitchInHertz = numCycles / bufferTimeInSeconds;
+        AudioBuffer<float> sinBuffer (numChannels, (int) sampleRate);
+
+        double currentAngle = 0.0, angleDelta = 0.0;
+        float originalPitch = pitch; //A4
+        auto cyclesPerSample = originalPitch / float (sampleRate);
+        angleDelta = cyclesPerSample * 2.0 * juce::MathConstants<double>::pi;
+
+        // Generate sin wave and store in buffer channel 0
+        {
+            auto chan = sinBuffer.getWritePointer (0);
+            
+            for (int sample = 0; sample < sinBuffer.getNumSamples(); ++sample)
+            {
+                chan[sample] = (float) std::sin (currentAngle);
+                currentAngle += angleDelta;
+            }
+        }
+        
+        // Then copy to subsequent channels
+        for (int c = 1; c < sinBuffer.getNumChannels(); ++c)
+            sinBuffer.copyFrom (c, 0, sinBuffer,
+                                0, 0, sinBuffer.getNumSamples());
+        
+        return sinBuffer;
+    }
+    
+    static juce::AudioBuffer<float> processBuffer (RubberStretcher& rubberBandStretcher,
+                                                   const juce::AudioBuffer<float>& sourceBuffer,
+                                                   const int blockSize, float stretchRatio)
+    {
+        const int destSize = (int) std::ceil (sourceBuffer.getNumSamples() * stretchRatio);
+        juce::AudioBuffer<float> resultBuffer (sourceBuffer.getNumChannels(), destSize);
+        int numInputsDone = 0, numOutputsDone = 0;
+
+        for (;;)
+        {
+            const int numInputSamplesLeft = sourceBuffer.getNumSamples() - numInputsDone;
+            const int numInputSamplesThisBlock = std::min (rubberBandStretcher.getFramesNeeded(), numInputSamplesLeft);
+            const float* inputs[2] = { sourceBuffer.getReadPointer (0, numInputsDone),
+                                       sourceBuffer.getReadPointer (1, numInputsDone) };
+            float* outputs[2] = { resultBuffer.getWritePointer (0, numOutputsDone),
+                                  resultBuffer.getWritePointer (1, numOutputsDone) };
+            
+            // Process sin wave to shift pitch and store in resultBuffer
+            const int numOutputSamplesThisBlock = rubberBandStretcher.processData (inputs, numInputSamplesThisBlock,
+                                                                                   outputs);
+            jassert (numOutputSamplesThisBlock <= blockSize);
+            
+            numInputsDone += numInputSamplesThisBlock;
+            numOutputsDone += numOutputSamplesThisBlock;
+            
+            if (numInputsDone >= sourceBuffer.getNumSamples())
+                break;
+        }
+
+        // Flush until no outputs are left
+        for (;;)
+        {
+            float* outputs[2] = { resultBuffer.getWritePointer (0, numOutputsDone),
+                                  resultBuffer.getWritePointer (1, numOutputsDone) };
+            
+            const int numOutputSamplesThisBlock = rubberBandStretcher.flush (outputs);
+            jassert (numOutputSamplesThisBlock <= blockSize);
+            numOutputsDone += numOutputSamplesThisBlock;
+            
+            if (numOutputSamplesThisBlock < blockSize)
+                break;
+        }
+        
+        // Trim output buffer size
+        resultBuffer.setSize (resultBuffer.getNumChannels(), numOutputsDone, true);
+        
+        return resultBuffer;
+    }
+    
+    static float getPitchFromNumZeroCrossings (const int numZeroCrossings, const int numSamples, const double sampleRate)
+    {
+        const float bufferTimeInSeconds = (float) numSamples / (float) sampleRate;
+        const float numCycles = (float) numZeroCrossings / 2.0f;
+        const float pitchInHertz = numCycles / bufferTimeInSeconds;
+        
         return pitchInHertz;
     }
 
-    int getNumZeroCrossings (const AudioBuffer<float>& buffer)
+    static int getNumZeroCrossings (const AudioBuffer<float>& buffer)
     {
         auto dest = buffer.getReadPointer (0);
         int numZeroCrossings = 0;
