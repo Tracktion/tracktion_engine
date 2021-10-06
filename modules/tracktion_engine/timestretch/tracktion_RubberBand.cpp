@@ -33,12 +33,15 @@
 #define Component CarbonDummyCompName
 
 #define USE_SPEEX 1
-#define USE_BUILTIN_FFT 1
-#define NO_THREADING 1
+
 #define NO_TIMING 1
+#define NO_THREADING 1
+#define NO_THREAD_CHECKS 1
 
 #if __APPLE__
  #define HAVE_VDSP 1
+#else
+ #define USE_BUILTIN_FFT 1
 #endif
 
 #include "../3rd_party/rubberband/src/dsp/Resampler.cpp"
@@ -77,12 +80,8 @@ struct RubberStretcher  : public Stretcher
     RubberStretcher (double sourceSampleRate, int samplesPerBlock, int numChannels,
                      RubberBand::RubberBandStretcher::Option option)
         : rubberBandStretcher ((size_t) sourceSampleRate, (size_t) numChannels, option),
-          maxFramesNeeded (samplesPerBlock + 1024 + 8192),
           samplesPerOutputBuffer (samplesPerBlock)
     {
-        // N.B. maxFramesNeeded calculation is adapted from the LADSPA example
-        rubberBandStretcher.setMaxProcessSize ((size_t) maxFramesNeeded);
-        fifo.setSize (numChannels, maxFramesNeeded);
     }
 
     bool isOk() const override
@@ -99,13 +98,9 @@ struct RubberStretcher  : public Stretcher
     {
         const float pitch = juce::jlimit (0.25f, 4.0f, tracktion_engine::Pitch::semitonesToRatio (semitonesUp));
 
-        // Not sure what to do with sync
-
-        // bool sync = (elastiqueMode == TimeStretcher::elastiquePro) ? elastiqueProOptions.syncTimeStrPitchShft : false;
-
         rubberBandStretcher.setPitchScale (pitch);
         rubberBandStretcher.setTimeRatio (speedRatio);
-
+        
         const bool r = rubberBandStretcher.getPitchScale() == pitch
                     && rubberBandStretcher.getTimeRatio() == speedRatio;
         jassert (r);
@@ -116,7 +111,7 @@ struct RubberStretcher  : public Stretcher
 
     int getFramesNeeded() const override
     {
-        return fifo.getFreeSpace();
+        return (int) rubberBandStretcher.getSamplesRequired();
     }
 
     int getMaxFramesNeeded() const override
@@ -124,102 +119,43 @@ struct RubberStretcher  : public Stretcher
         return maxFramesNeeded;
     }
 
-//    void processData(const float* const* inChannels, int numSamples, float* const* outChannels, unsigned long offset)
-//    {
-//        int processed = 0;
-//        int required_samples = rubberBandStretcher.getFramesNeeded();
-//
-//        size_t outTotal = 0;
-//
-//        const float* ptrs[2];
-//
-//        int numChannels = rubberBandStretcher.getChannelCount();
-//
-//        while (processed < numSamples)
-//        {
-//            int requiredSamples = rubberBandStretcher.getFramesNeeded();
-//            int inchunk = min (numSamples - processed, requiredSamples);
-//
-//            for (size_t c = 0; c < numChannels; ++c)
-//            {
-//                ptrs[c] = &(inChannels[c][offset + processed]);
-//            }
-//
-//            rubberBandStretcher.process (ptrs, inchunk, false);
-//            processed += inchunk;
-//
-//            int avail = rubberBandStretcher.available();
-//            int writable = ringBuffer[0]->getWriteSpace();
-//            int outchunk = min (avail, writable);
-//            size_t actual = rubberBandStretcher.retrieve (m_scratch, outchunk);
-//            outTotal += actual;
-//
-//            outchunk = actual;
-//
-//            for (size_t c = 0; c < numChannels; ++c) {
-//                ringBuffer[c]->write (m_scratch[c], outchunk);
-//            }
-//        }
-//
-//        for (size_t c = 0; c < numChannels; ++c)
-//        {
-//            int toRead = ringBuffer[c]->getReadSpace();
-//            int chunk = min (toRead, numSamples);
-//            ringBuffer[c]->read (&(outChannels[c][offset]), chunk);
-//        }
-//
-//        if (m_minfill == 0)
-//        {
-//            m_minfill = ringBuffer[0]->getReadSpace();
-//        }
-//    }
-
-    void processData (const float* const* inChannels, int numSamples, float* const* outChannels) override
+    int processData (const float* const* inChannels, int numSamples, float* const* outChannels) override
     {
-        // First add the input samples in to to the FIFO
-        {
-            jassert (numSamples <= fifo.getFreeSpace());
-            [[ maybe_unused ]] const bool writeSucceeded = fifo.write (inChannels, numSamples);
-            jassert (writeSucceeded);
-        }
-
-        // Write in to the stretcher until we have samplesPerOutputBuffer available
-        {
-            for (;;)
-            {
-                const int numThisTime = std::min (samplesPerOutputBuffer, fifo.getNumReady());
-
-                if (numThisTime == 0)
-                    break;
-                
-                tracktion_engine::AudioScratchBuffer scratch (fifo.getNumChannels(), numThisTime);
-                fifo.read (scratch.buffer, 0, numThisTime);
-                
-                rubberBandStretcher.process (scratch.buffer.getArrayOfReadPointers(), (size_t) scratch.buffer.getNumSamples(), false);
-                
-                if (rubberBandStretcher.available() >= samplesPerOutputBuffer)
-                    break;
-            }
-        }
+        jassert (numSamples <= getFramesNeeded());
+        rubberBandStretcher.process (inChannels, (size_t) numSamples, false);
 
         // Once there is output, read this in to the output buffer
         const int numAvailable = rubberBandStretcher.available();
-        jassert (numAvailable >= samplesPerOutputBuffer);
-
-        const int numRetrieved = (int) rubberBandStretcher.retrieve (outChannels, (size_t) samplesPerOutputBuffer);
-        jassert (numRetrieved == samplesPerOutputBuffer);
+        jassert (numAvailable >= 0);
+        
+        return (int) rubberBandStretcher.retrieve (outChannels, (size_t) numAvailable);
     }
 
-    void flush (float* const* /*outChannels*/) override
+    int flush (float* const* outChannels) override
     {
+        // Empty the FIFO in to the stretcher and mark the last block as final
+        if (! hasDoneFinalBlock)
+        {
+            float* inChannels[32] = { nullptr };
+            rubberBandStretcher.process (inChannels, 0, true);
+            hasDoneFinalBlock = true;
+        }
+        
+        // Then get the rest of the data out of the stretcher
+        const int numAvailable = rubberBandStretcher.available();
+        const int numThisBlock = std::min (numAvailable, samplesPerOutputBuffer);
+        
+        if (numThisBlock > 0)
+            return (int) rubberBandStretcher.retrieve (outChannels, (size_t) numThisBlock);
+
+        return 0;
     }
 
 private:
     RubberBand::RubberBandStretcher rubberBandStretcher;
-    const int maxFramesNeeded = 0;
+    const int maxFramesNeeded = 8192;
     const int samplesPerOutputBuffer = 0;
-    const int numLatencySamplesToProcess = 0;
-    tracktion_engine::AudioFifo fifo { 1, 32 };
+    bool hasDoneFinalBlock = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RubberStretcher)
 };
@@ -245,6 +181,8 @@ public:
 private:
     inline void writeToFile (juce::File file, const juce::AudioBuffer<float>& buffer, double sampleRate)
     {
+        file.deleteFile();
+        
         if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (juce::WavAudioFormat().createWriterFor (file.createOutputStream().release(),
                                                                                                             sampleRate,
                                                                                                             (uint32_t) buffer.getNumChannels(),
@@ -259,7 +197,6 @@ private:
     {
         beginTest ("Pitch shift");
         
-        testPitchShift (12.0f, 880.0f);
         testPitchShift (1.0f, 466.16f);
         testPitchShift (2.0f, 493.88f);
         testPitchShift (5.0f, 587.33f);
@@ -301,33 +238,46 @@ private:
             for (;;)
             {
                 const int numInputSamplesLeft = sinBuffer.getNumSamples() - numInputsDone;
-                const int numInputSamplesThisBlock = std::min (numInputSamplesLeft, rubberBandStretcher.getFramesNeeded());
+                const int numInputSamplesThisBlock = std::min (rubberBandStretcher.getFramesNeeded(), numInputSamplesLeft);
                 const float* inputs[2] = { sinBuffer.getReadPointer (0, numInputsDone),
                                            sinBuffer.getReadPointer (1, numInputsDone) };
                 float* outputs[2] = { resultBuffer.getWritePointer (0, numOutputsDone),
                                       resultBuffer.getWritePointer (1, numOutputsDone) };
                 
                 // Process sin wave to shift pitch and store in resultBuffer
-                rubberBandStretcher.processData (inputs, numInputSamplesThisBlock,
-                                                 outputs);
+                const int numOutputSamplesThisBlock = rubberBandStretcher.processData (inputs, numInputSamplesThisBlock,
+                                                                                       outputs);
+                jassert (numOutputSamplesThisBlock <= blockSize);
                 
                 numInputsDone += numInputSamplesThisBlock;
-                numOutputsDone += blockSize;
+                numOutputsDone += numOutputSamplesThisBlock;
                 
                 if (numInputsDone >= sinBuffer.getNumSamples())
                     break;
             }
+
+            // Flush until no outputs are left
+            for (;;)
+            {
+                float* outputs[2] = { resultBuffer.getWritePointer (0, numOutputsDone),
+                                      resultBuffer.getWritePointer (1, numOutputsDone) };
+                
+                const int numOutputSamplesThisBlock = rubberBandStretcher.flush (outputs);
+                jassert (numOutputSamplesThisBlock <= blockSize);
+                numOutputsDone += numOutputSamplesThisBlock;
+                
+                if (numOutputSamplesThisBlock < blockSize)
+                    break;
+            }
         }
         
-        writeToFile (juce::File::getSpecialLocation (juce::File::userDesktopDirectory).getChildFile ("original.wav"), sinBuffer, sampleRate);
-        writeToFile (juce::File::getSpecialLocation (juce::File::userDesktopDirectory).getChildFile ("pitched.wav"), resultBuffer, sampleRate);
-
         // Check number of zero crossings and estimate pitch
         int numZeroCrossingsShifted = getNumZeroCrossings (resultBuffer);
         float shiftedPitch = getPitchFromNumZeroCrossings (numZeroCrossingsShifted, resultBuffer.getNumSamples(), 44100);
 
         // Compare shiftedPitch to originalPitch with a tolerance
-        expectLessThan (std::abs (shiftedPitch - (expectedPitchValue)), 10.0f);
+        const float percentageDiff = std::abs (shiftedPitch - expectedPitchValue) / expectedPitchValue;
+        expectLessThan (percentageDiff, 0.03f);
     }
 
     void runTimeStretchTest()
@@ -395,16 +345,15 @@ private:
         return pitchInHertz;
     }
 
-    int getNumZeroCrossings (AudioBuffer<float>& buffer)
+    int getNumZeroCrossings (const AudioBuffer<float>& buffer)
     {
-        auto dest = buffer.getWritePointer(0);
-
+        auto dest = buffer.getReadPointer (0);
         int numZeroCrossings = 0;
 
         for (int sample = 1; sample < buffer.getNumSamples(); ++sample)
         {
-            if ((dest[sample] < 0.0f && dest[sample - 1] > 0.0f)
-             || (dest[sample] > 0.0f && dest[sample - 1] < 0.0f))
+            if (((dest[sample - 1] > 0.0f) && (dest[sample] <= 0.0f))
+             || ((dest[sample - 1] < 0.0f) && (dest[sample] >= 0.0f)))
             {
                 ++numZeroCrossings;
             }

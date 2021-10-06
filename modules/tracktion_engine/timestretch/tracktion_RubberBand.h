@@ -19,6 +19,6 @@ struct Stretcher
     virtual bool setSpeedAndPitch (float speedRatio, float semitonesUp) = 0;
     virtual int getFramesNeeded() const = 0;
     virtual int getMaxFramesNeeded() const = 0;
-    virtual void processData (const float* const* inChannels, int numSamples, float* const* outChannels) = 0;
-    virtual void flush (float* const* outChannels) = 0;
+    virtual int processData (const float* const* inChannels, int numSamples, float* const* outChannels) = 0;
+    virtual int flush (float* const* outChannels) = 0;
 };
