@@ -8,7 +8,10 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#include "tracktion_RubberBand.h"
+#if TRACKTION_UNIT_TESTS
+
+// Enable this to dump the output of the current test file to the desktop
+#define TIMESTRETCHER_WRITE_WRITE_TEST_FILES 0
 
 //==============================================================================
 //==============================================================================
@@ -41,6 +44,7 @@ public:
     }
 
 private:
+   #if TIMESTRETCHER_WRITE_WRITE_TEST_FILES
     inline void writeToFile (juce::File file, const juce::AudioBuffer<float>& buffer, double sampleRate)
     {
         file.deleteFile();
@@ -53,6 +57,7 @@ private:
             writer->writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());
         }
     }
+   #endif
 
     //==============================================================================
     void runPitchShiftTest (tracktion_engine::TimeStretcher::Mode mode)
@@ -92,8 +97,10 @@ private:
         const auto sourceBuffer = createSinBuffer (sampleRate, numChannels, 440.0f);
         const auto resultBuffer = processBuffer (stretcher, sourceBuffer, blockSize, stretchRatio);
 
+       #if TIMESTRETCHER_WRITE_WRITE_TEST_FILES
         writeToFile (juce::File::getSpecialLocation (juce::File::userDesktopDirectory).getChildFile ("original.wav"), sourceBuffer, sampleRate);
         writeToFile (juce::File::getSpecialLocation (juce::File::userDesktopDirectory).getChildFile ("pitched.wav"), resultBuffer, sampleRate);
+       #endif
 
         const float expectedPitchValue = sourcePitch * tracktion_engine::Pitch::semitonesToRatio (semitonesUp);
         const int expectedSize = (int) std::ceil (sourceBuffer.getNumSamples() * stretchRatio);
@@ -220,3 +227,5 @@ private:
 
 //==============================================================================
 static TimeStretcherTests timeStretcherTests;
+
+#endif // TRACKTION_UNIT_TESTS

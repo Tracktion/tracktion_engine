@@ -15,7 +15,7 @@ dependencies:     juce_audio_basics, juce_audio_devices, juce_audio_formats, juc
             juce_gui_basics, juce_gui_extra, juce_osc, tracktion_engine
 exporters:        linux_make, vs2017, xcode_iphone, xcode_mac
 
-moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1, JUCE_PLUGINHOST_AU=1, JUCE_PLUGINHOST_VST3=1, JUCE_MODAL_LOOPS_PERMITTED=1
+moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1, JUCE_PLUGINHOST_AU=1, JUCE_PLUGINHOST_VST3=1, JUCE_MODAL_LOOPS_PERMITTED=1, TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND=1, TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH=1, TRACKTION_UNIT_TESTS=1
 
 type:             Component
 mainClass:        RubberBandDemo
@@ -26,7 +26,7 @@ END_JUCE_PIP_METADATA
 
 #pragma once
 
-#include "../modules/tracktion_engine/timestretch/tracktion_RubberBand.cpp"
+#include "../modules/tracktion_engine/timestretch/tracktion_TimeStretch.test.cpp"
 
 //==============================================================================
 //==============================================================================
@@ -38,7 +38,7 @@ public:
     {
         // This example just runs the tests
         juce::UnitTestRunner tr;
-        tr.runTests ({ &rubberBandStretcherTests });
+        tr.runTests ({ &timeStretcherTests });
 
         // This really should be a CLI but we'll just quit here instead
         JUCEApplicationBase::quit();
