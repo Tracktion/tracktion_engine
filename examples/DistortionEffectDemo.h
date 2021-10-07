@@ -38,7 +38,7 @@ namespace tracktion_engine
     class DistortionPlugin  : public Plugin
     {
     public:
-        static const char* getPluginName() { return NEEDS_TRANS("DistortionEffectDemo"); }
+        static const char* getPluginName() { return NEEDS_TRANS ("DistortionEffectDemo"); }
         static const char* xmlTypeName;
 
         DistortionPlugin (PluginCreationInfo info) : Plugin (info)
@@ -177,7 +177,7 @@ public:
 
         oggTempFile = std::make_unique<TemporaryFile> (".mp3");
         auto f = oggTempFile->getFile();
-        f.replaceWithData (PlaybackDemoAudio::guitar_loop_mp3, PlaybackDemoAudio::guitar_loop_mp3Size);
+        f.replaceWithData (PlaybackDemoAudio::guitar_loop_wav, PlaybackDemoAudio::guitar_loop_wavSize);
 
         // Creates clip. Loads clip from file f.
         // Creates track. Loads clip into track.
