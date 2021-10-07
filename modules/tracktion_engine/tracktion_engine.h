@@ -134,6 +134,18 @@
  #define TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE 0
 #endif
 
+/** Config: TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
+    Enables time-stretching with the RubberBand library.
+    You must have RubberBand in your search path if you enable this.
+    
+    N.B. RubberBand is not owned by Tracktion and is licenced separately.
+    Please make sure you have a suitable licence if building with RubberBand
+    support. You can find more information here: https://breakfastquay.com/rubberband/
+*/
+#ifndef TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
+ #define TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND 0
+#endif
+
 /** Config: TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
     Enables time-stretching with the SoundTouch library.
 */

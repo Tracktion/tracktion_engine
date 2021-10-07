@@ -79,8 +79,8 @@ struct TimeStretcher::Stretcher
     virtual bool setSpeedAndPitch (float speedRatio, float semitonesUp) = 0;
     virtual int getFramesNeeded() const = 0;
     virtual int getMaxFramesNeeded() const = 0;
-    virtual void processData (const float* const* inChannels, int numSamples, float* const* outChannels) = 0;
-    virtual void flush (float* const* outChannels) = 0;
+    virtual int processData (const float* const* inChannels, int numSamples, float* const* outChannels) = 0;
+    virtual int flush (float* const* outChannels) = 0;
 };
 
 //==============================================================================
@@ -91,7 +91,8 @@ struct ElastiqueStretcher  : public TimeStretcher::Stretcher
     ElastiqueStretcher (double sourceSampleRate, int samplesPerBlock, int numChannels,
                         TimeStretcher::Mode mode, TimeStretcher::ElastiqueProOptions options, float minFactor)
         : elastiqueMode (mode),
-          elastiqueProOptions (options)
+          elastiqueProOptions (options),
+          samplesPerOutputBuffer (samplesPerBlock)
     {
         CRASH_TRACER
         int res = CElastiqueProV3If::CreateInstance (elastique, samplesPerBlock, numChannels, (float) sourceSampleRate,
@@ -151,23 +152,25 @@ struct ElastiqueStretcher  : public TimeStretcher::Stretcher
         return maxFramesNeeded;
     }
 
-    void processData (const float* const* inChannels, int numSamples, float* const* outChannels) override
+    int processData (const float* const* inChannels, int numSamples, float* const* outChannels) override
     {
         CRASH_TRACER
         int err = elastique->ProcessData ((float**) inChannels, numSamples, (float**) outChannels);
         jassert (err == 0); juce::ignoreUnused (err);
+        return samplesPerOutputBuffer;
     }
 
-    void flush (float* const* outChannels) override
+    int flush (float* const* outChannels) override
     {
         elastique->FlushBuffer ((float**) outChannels);
+        return samplesPerOutputBuffer;
     }
 
 private:
     CElastiqueProV3If* elastique = nullptr;
     TimeStretcher::Mode elastiqueMode;
     TimeStretcher::ElastiqueProOptions elastiqueProOptions;
-
+    const int samplesPerOutputBuffer;
     int maxFramesNeeded;
 
     static CElastiqueProV3If::ElastiqueMode_t getElastiqueMode (TimeStretcher::Mode mode)
@@ -223,12 +226,13 @@ struct SoundTouchStretcher  : public TimeStretcher::Stretcher,
 
     int getFramesNeeded() const override
     {
-        int ready = (int) numSamples();
+        int numAvailable = (int) numSamples();
 
-        if (ready < samplesPerOutputBuffer)
-            return getSetting (SETTING_INITIAL_LATENCY) + samplesPerOutputBuffer;
+        if (int numRequired = std::max (0, getSetting (SETTING_NOMINAL_INPUT_SEQUENCE) - numAvailable);
+            numRequired > 0)
+           return numRequired;
 
-        return 0;
+        return std::max (0, getSetting (SETTING_INITIAL_LATENCY) - numAvailable);
     }
 
     int getMaxFramesNeeded() const override
@@ -236,45 +240,42 @@ struct SoundTouchStretcher  : public TimeStretcher::Stretcher,
         return getSetting (SETTING_INITIAL_LATENCY);
     }
 
-    void processData (const float* const* inChannels, int numSamples, float* const* outChannels) override
+    int processData (const float* const* inChannels, int numSamples, float* const* outChannels) override
     {
         CRASH_TRACER
-        int offset = 0;
-        int numNeeded = samplesPerOutputBuffer;
-        bool hasWritten = false;
+        jassert (numSamples <= getFramesNeeded());
+        writeInput (inChannels, numSamples);
 
-        while (numNeeded > 0)
-        {
-            const int numDone = readOutput (outChannels, offset, numNeeded);
+        const int numAvailable = (int) soundtouch::SoundTouch::numSamples();
+        jassert (numAvailable >= 0);
+        
+        const int numToRead = std::min (numAvailable, samplesPerOutputBuffer);
+        
+        if (numToRead > 0)
+            return readOutput (outChannels, 0, numToRead);
 
-            if (numDone == 0)
-            {
-                if (hasWritten)
-                {
-                    jassertfalse;
-                    break;
-                }
-
-                hasWritten = true;
-                writeInput (inChannels, numSamples);
-            }
-
-            offset += numDone;
-            numNeeded -= numDone;
-        }
-
-        if (numNeeded > 0)
-            for (int chan = 0; chan < numChannels; ++chan)
-                FloatVectorOperations::clear (outChannels[chan] + offset, numNeeded);
+        return 0;
     }
 
-    void flush (float* const* /*outChannels*/) override
+    int flush (float* const* outChannels) override
     {
+        CRASH_TRACER
+        if (! hasDoneFinalBlock)
+        {
+            soundtouch::SoundTouch::flush();
+            hasDoneFinalBlock = true;
+        }
+
+        const int numAvailable = (int) numSamples();
+        const int numToRead = std::min (numAvailable, samplesPerOutputBuffer);
+        
+        return readOutput (outChannels, 0, numToRead);
     }
 
 private:
     int numChannels = 0, samplesPerOutputBuffer = 0;
-
+    bool hasDoneFinalBlock = false;
+    
     int readOutput (float* const* outChannels, int offset, int numNeeded)
     {
         float* interleaved = ptrBegin();
@@ -328,6 +329,130 @@ private:
 #endif
 
 //==============================================================================
+#if TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wsign-conversion"
+ #pragma GCC diagnostic ignored "-Wconversion"
+ #pragma GCC diagnostic ignored "-Wextra-semi"
+ #pragma GCC diagnostic ignored "-Wshadow"
+ #pragma GCC diagnostic ignored "-Wsign-compare"
+ #pragma GCC diagnostic ignored "-Wcast-align"
+ #if ! __clang__
+  #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+ #endif
+ #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+ #pragma GCC diagnostic ignored "-Wunused-variable"
+ #pragma GCC diagnostic ignored "-Wunused-parameter"
+ #pragma GCC diagnostic ignored "-Wpedantic"
+ #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#endif
+
+#define WIN32_LEAN_AND_MEAN 1
+#define Point CarbonDummyPointName
+#define Component CarbonDummyCompName
+
+} // namespace tracktion_engine
+#include "../3rd_party/rubberband/single/RubberBandSingle.cpp"
+namespace tracktion_engine {
+    
+#undef WIN32_LEAN_AND_MEAN
+#undef Point
+#undef Component
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
+#endif
+
+struct RubberBandStretcher  : public TimeStretcher::Stretcher
+{
+    RubberBandStretcher (double sourceSampleRate, int samplesPerBlock, int numChannels)
+        : rubberBandStretcher ((size_t) sourceSampleRate, (size_t) numChannels,
+                               RubberBand::RubberBandStretcher::Option::OptionProcessRealTime),
+          samplesPerOutputBuffer (samplesPerBlock)
+    {
+    }
+
+    bool isOk() const override
+    {
+        return true;
+    }
+
+    void reset() override
+    {
+        rubberBandStretcher.reset();
+    }
+
+    bool setSpeedAndPitch (float speedRatio, float semitonesUp) override
+    {
+        const float pitch = juce::jlimit (0.25f, 4.0f, tracktion_engine::Pitch::semitonesToRatio (semitonesUp));
+
+        rubberBandStretcher.setPitchScale (pitch);
+        rubberBandStretcher.setTimeRatio (speedRatio);
+        
+        const bool r = rubberBandStretcher.getPitchScale() == pitch
+                    && rubberBandStretcher.getTimeRatio() == speedRatio;
+        jassert (r);
+        juce::ignoreUnused (r);
+
+        return r;
+    }
+
+    int getFramesNeeded() const override
+    {
+        return (int) rubberBandStretcher.getSamplesRequired();
+    }
+
+    int getMaxFramesNeeded() const override
+    {
+        return maxFramesNeeded;
+    }
+
+    int processData (const float* const* inChannels, int numSamples, float* const* outChannels) override
+    {
+        jassert (numSamples <= getFramesNeeded());
+        rubberBandStretcher.process (inChannels, (size_t) numSamples, false);
+
+        // Once there is output, read this in to the output buffer
+        const int numAvailable = rubberBandStretcher.available();
+        jassert (numAvailable >= 0);
+        
+        return (int) rubberBandStretcher.retrieve (outChannels, (size_t) numAvailable);
+    }
+
+    int flush (float* const* outChannels) override
+    {
+        // Empty the FIFO in to the stretcher and mark the last block as final
+        if (! hasDoneFinalBlock)
+        {
+            float* inChannels[32] = { nullptr };
+            rubberBandStretcher.process (inChannels, 0, true);
+            hasDoneFinalBlock = true;
+        }
+        
+        // Then get the rest of the data out of the stretcher
+        const int numAvailable = rubberBandStretcher.available();
+        const int numThisBlock = std::min (numAvailable, samplesPerOutputBuffer);
+        
+        if (numThisBlock > 0)
+            return (int) rubberBandStretcher.retrieve (outChannels, (size_t) numThisBlock);
+
+        return 0;
+    }
+
+private:
+    RubberBand::RubberBandStretcher rubberBandStretcher;
+    const int maxFramesNeeded = 8192;
+    const int samplesPerOutputBuffer = 0;
+    bool hasDoneFinalBlock = false;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RubberBandStretcher)
+};
+
+#endif // TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
+
+//==============================================================================
 TimeStretcher::TimeStretcher() {}
 TimeStretcher::~TimeStretcher() {}
 
@@ -338,6 +463,7 @@ static juce::String getElastiqueMobile()      { return "Elastique (" + TRANS("Mo
 static juce::String getElastiqueMono()        { return "Elastique (" + TRANS("Monophonic") + ")"; }
 static juce::String getSoundTouchNormal()     { return "SoundTouch (" + TRANS("Normal") + ")"; }
 static juce::String getSoundTouchBetter()     { return "SoundTouch (" + TRANS("Better") + ")"; }
+static juce::String getRubberBand()           { return "RubberBand"; };
 
 TimeStretcher::Mode TimeStretcher::checkModeIsAvailable (Mode m)
 {
@@ -355,6 +481,9 @@ TimeStretcher::Mode TimeStretcher::checkModeIsAvailable (Mode m)
         case elastiqueMobile:
         case elastiqueMonophonic:
        #endif
+       #if ! TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
+        case rubberband:
+       #endif
             return defaultMode;
        #if TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
         case soundtouchNormal:
@@ -366,6 +495,10 @@ TimeStretcher::Mode TimeStretcher::checkModeIsAvailable (Mode m)
         case elastiqueEfficient:
         case elastiqueMobile:
         case elastiqueMonophonic:
+            return m;
+       #endif
+       #if TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
+        case rubberband:
             return m;
        #endif
         case disabled:
@@ -389,6 +522,10 @@ juce::StringArray TimeStretcher::getPossibleModes (Engine& e, bool excludeMelody
    #if TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
     s.add (getSoundTouchNormal());
     s.add (getSoundTouchBetter());
+   #endif
+    
+   #if TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
+    s.add (getRubberBand());
    #endif
 
    #if TRACKTION_ENABLE_ARA
@@ -433,6 +570,7 @@ juce::String TimeStretcher::getNameOfMode (const Mode mode)
         case elastiqueMonophonic:   return getElastiqueMono();
         case soundtouchNormal:      return getSoundTouchNormal();
         case soundtouchBetter:      return getSoundTouchBetter();
+        case rubberband:            return getRubberBand();
         case melodyne:              return getMelodyne();
         case disabled:
         case elastiqueTransient:
@@ -469,7 +607,7 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
     CRASH_TRACER
     jassert (stretcher == nullptr);
 
-   #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE || TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
+   #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE || TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND || TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
     switch (mode)
     {
        #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE
@@ -498,6 +636,13 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
        #else
         case soundtouchNormal:      [[fallthrough]];
         case soundtouchBetter:
+            break;
+       #endif
+            
+       #if TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
+        case rubberband:
+            juce::ignoreUnused (options, realtime);
+            stretcher.reset (new tracktion_engine::RubberBandStretcher (sourceSampleRate, samplesPerBlock, numChannels));
             break;
        #endif
 
@@ -550,10 +695,12 @@ int TimeStretcher::getMaxFramesNeeded() const
     return 0;
 }
 
-void TimeStretcher::processData (const float* const* inChannels, int numSamples, float* const* outChannels)
+int TimeStretcher::processData (const float* const* inChannels, int numSamples, float* const* outChannels)
 {
     if (stretcher != nullptr)
-        stretcher->processData (inChannels, numSamples, outChannels);
+        return stretcher->processData (inChannels, numSamples, outChannels);
+
+    return 0;
 }
 
 void TimeStretcher::processData (AudioFifo& inFifo, int numSamples, AudioFifo& outFifo)
@@ -574,10 +721,12 @@ void TimeStretcher::processData (AudioFifo& inFifo, int numSamples, AudioFifo& o
     outFifo.write (outBuffer.buffer, 0, samplesPerBlockRequested);
 }
 
-void TimeStretcher::flush (float* const* outChannels)
+int TimeStretcher::flush (float* const* outChannels)
 {
     if (stretcher != nullptr)
-        stretcher->flush (outChannels);
+        return stretcher->flush (outChannels);
+    
+    return 0;
 }
 
 }

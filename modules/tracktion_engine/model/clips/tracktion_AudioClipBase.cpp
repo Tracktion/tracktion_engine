@@ -1877,6 +1877,7 @@ struct StretchSegment
 
             timestretcher.initialise (fileInfo.sampleRate, outputBufferSize, numChannelsToUse,
                                       info.mode, info.options, false);
+            jassert (timestretcher.isInitialised()); // Have you enabled a TimeStretcher mode?
 
             timestretcher.setSpeedAndPitch ((float) (1.0 / segment.getStretchRatio()),
                                             segment.getTranspose());
@@ -1922,15 +1923,15 @@ struct StretchSegment
             }
             else
             {
-                fillNextBlock();
-                renderFades();
+                const int blockSize = fillNextBlock();
+                renderFades (blockSize);
 
-                readySampleOutputPos += outputBufferSize;
+                readySampleOutputPos += blockSize;
             }
         }
     }
 
-    void fillNextBlock()
+    int fillNextBlock()
     {
         CRASH_TRACER
         float* outs[maxNumChannels] = {};
@@ -1939,7 +1940,8 @@ struct StretchSegment
             outs[i] = fifo.getWritePointer (i);
 
         const int needed = timestretcher.getFramesNeeded();
-
+        int numRead = 0;
+        
         if (needed >= 0)
         {
             AudioScratchBuffer scratch (numChannelsToUse, needed);
@@ -1961,40 +1963,42 @@ struct StretchSegment
             for (int i = 0; i < numChannelsToUse; ++i)
                 ins[i] = scratch.buffer.getReadPointer (i);
 
-            timestretcher.processData (ins, needed, outs);
+            numRead = timestretcher.processData (ins, needed, outs);
         }
         else
         {
             jassert (needed == -1);
-            timestretcher.flush (outs);
+            numRead = timestretcher.flush (outs);
         }
 
         readySamplesStart = 0;
-        readySamplesEnd = outputBufferSize;
+        readySamplesEnd = numRead;
+        
+        return numRead;
     }
 
-    void renderFades()
+    void renderFades (int numSamples)
     {
         CRASH_TRACER
-        auto renderedEnd = readySampleOutputPos + outputBufferSize;
+        auto renderedEnd = readySampleOutputPos + numSamples;
 
         if (segment.hasFadeIn())
             if (readySampleOutputPos < crossfadeSamples)
-                renderFade (0, crossfadeSamples, false);
+                renderFade (0, crossfadeSamples, false, numSamples);
 
         if (segment.hasFadeOut())
         {
             auto fadeOutStart = (int64) (segment.getSampleRange().getLength() / segment.getStretchRatio()) - crossfadeSamples;
 
             if (renderedEnd > fadeOutStart)
-                renderFade (fadeOutStart, fadeOutStart + crossfadeSamples + 2, true);
+                renderFade (fadeOutStart, fadeOutStart + crossfadeSamples + 2, true, numSamples);
         }
     }
 
-    void renderFade (int64 start, int64 end, bool isFadeOut)
+    void renderFade (int64 start, int64 end, bool isFadeOut, int numSamples)
     {
         float alpha1 = 0.0f, alpha2 = 1.0f;
-        auto renderedEnd = readySampleOutputPos + outputBufferSize;
+        auto renderedEnd = readySampleOutputPos + numSamples;
 
         if (end > renderedEnd)
         {

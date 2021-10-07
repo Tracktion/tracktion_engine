@@ -30,9 +30,12 @@ public:
         elastiqueEfficient = 7,
         elastiqueMobile = 8,
         elastiqueMonophonic = 9,
+        rubberband = 10,
 
        #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE
         defaultMode = elastiquePro
+       #elif TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
+        defaultMode = rubberband
        #elif TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
         defaultMode = soundtouchBetter
        #else
@@ -72,9 +75,9 @@ public:
 
     int getFramesNeeded() const;
     int getMaxFramesNeeded() const;
-    void processData (const float* const* inChannels, int numSamples, float* const* outChannels);
+    int processData (const float* const* inChannels, int numSamples, float* const* outChannels);
     void processData (AudioFifo& inFifo, int numSamples, AudioFifo& outFifo);
-    void flush (float* const* outChannels);
+    int flush (float* const* outChannels);
 
     struct Stretcher;
 

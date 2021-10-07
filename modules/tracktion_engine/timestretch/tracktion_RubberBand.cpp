@@ -10,172 +10,34 @@
 
 #include "tracktion_RubberBand.h"
 
-#ifdef __GNUC__
- #pragma GCC diagnostic push
- #pragma GCC diagnostic ignored "-Wsign-conversion"
- #pragma GCC diagnostic ignored "-Wconversion"
- #pragma GCC diagnostic ignored "-Wextra-semi"
- #pragma GCC diagnostic ignored "-Wshadow"
- #pragma GCC diagnostic ignored "-Wsign-compare"
- #pragma GCC diagnostic ignored "-Wcast-align"
- #if ! __clang__
-  #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
- #endif
- #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
- #pragma GCC diagnostic ignored "-Wunused-variable"
- #pragma GCC diagnostic ignored "-Wunused-parameter"
- #pragma GCC diagnostic ignored "-Wpedantic"
- #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#endif
-
-#define WIN32_LEAN_AND_MEAN 1
-#define Point CarbonDummyPointName
-#define Component CarbonDummyCompName
-
-#define USE_SPEEX 1
-
-#define NO_TIMING 1
-#define NO_THREADING 1
-#define NO_THREAD_CHECKS 1
-
-#if __APPLE__
- #define HAVE_VDSP 1
-#else
- #define USE_BUILTIN_FFT 1
-#endif
-
-#include "../3rd_party/rubberband/src/dsp/Resampler.cpp"
-#include "../3rd_party/rubberband/src/StretcherProcess.cpp"
-#include "../3rd_party/rubberband/src/StretchCalculator.cpp"
-#include "../3rd_party/rubberband/src/StretcherChannelData.cpp"
-#include "../3rd_party/rubberband/src/StretcherImpl.cpp"
-#include "../3rd_party/rubberband/src/system/Allocators.cpp"
-#include "../3rd_party/rubberband/src/system/sysutils.cpp"
-#include "../3rd_party/rubberband/src/system/Thread.cpp"
-#include "../3rd_party/rubberband/src/system/VectorOpsComplex.cpp"
-#include "../3rd_party/rubberband/src/dsp/AudioCurveCalculator.cpp"
-#include "../3rd_party/rubberband/src/dsp/FFT.cpp"
-#include "../3rd_party/rubberband/src/base/Profiler.cpp"
-#include "../3rd_party/rubberband/src/audiocurves/CompoundAudioCurve.cpp"
-#include "../3rd_party/rubberband/src/audiocurves/ConstantAudioCurve.cpp"
-#include "../3rd_party/rubberband/src/audiocurves/HighFrequencyAudioCurve.cpp"
-#include "../3rd_party/rubberband/src/audiocurves/PercussiveAudioCurve.cpp"
-#include "../3rd_party/rubberband/src/audiocurves/SilentAudioCurve.cpp"
-#include "../3rd_party/rubberband/src/audiocurves/SpectralDifferenceAudioCurve.cpp"
-#include "../3rd_party/rubberband/src/speex/resample.c"
-
-#include "../3rd_party/rubberband/src/RubberBandStretcher.cpp"
-
-#undef WIN32_LEAN_AND_MEAN
-#undef Point
-#undef Component
-
-#ifdef __GNUC__
- #pragma GCC diagnostic pop
-#endif
-
-
-struct RubberStretcher  : public Stretcher
-{
-    RubberStretcher (double sourceSampleRate, int samplesPerBlock, int numChannels,
-                     RubberBand::RubberBandStretcher::Option option)
-        : rubberBandStretcher ((size_t) sourceSampleRate, (size_t) numChannels, option),
-          samplesPerOutputBuffer (samplesPerBlock)
-    {
-    }
-
-    bool isOk() const override
-    {
-        return true;
-    }
-
-    void reset() override
-    {
-        rubberBandStretcher.reset();
-    }
-
-    bool setSpeedAndPitch (float speedRatio, float semitonesUp) override
-    {
-        const float pitch = juce::jlimit (0.25f, 4.0f, tracktion_engine::Pitch::semitonesToRatio (semitonesUp));
-
-        rubberBandStretcher.setPitchScale (pitch);
-        rubberBandStretcher.setTimeRatio (speedRatio);
-        
-        const bool r = rubberBandStretcher.getPitchScale() == pitch
-                    && rubberBandStretcher.getTimeRatio() == speedRatio;
-        jassert (r);
-        juce::ignoreUnused (r);
-
-        return r;
-    }
-
-    int getFramesNeeded() const override
-    {
-        return (int) rubberBandStretcher.getSamplesRequired();
-    }
-
-    int getMaxFramesNeeded() const override
-    {
-        return maxFramesNeeded;
-    }
-
-    int processData (const float* const* inChannels, int numSamples, float* const* outChannels) override
-    {
-        jassert (numSamples <= getFramesNeeded());
-        rubberBandStretcher.process (inChannels, (size_t) numSamples, false);
-
-        // Once there is output, read this in to the output buffer
-        const int numAvailable = rubberBandStretcher.available();
-        jassert (numAvailable >= 0);
-        
-        return (int) rubberBandStretcher.retrieve (outChannels, (size_t) numAvailable);
-    }
-
-    int flush (float* const* outChannels) override
-    {
-        // Empty the FIFO in to the stretcher and mark the last block as final
-        if (! hasDoneFinalBlock)
-        {
-            float* inChannels[32] = { nullptr };
-            rubberBandStretcher.process (inChannels, 0, true);
-            hasDoneFinalBlock = true;
-        }
-        
-        // Then get the rest of the data out of the stretcher
-        const int numAvailable = rubberBandStretcher.available();
-        const int numThisBlock = std::min (numAvailable, samplesPerOutputBuffer);
-        
-        if (numThisBlock > 0)
-            return (int) rubberBandStretcher.retrieve (outChannels, (size_t) numThisBlock);
-
-        return 0;
-    }
-
-private:
-    RubberBand::RubberBandStretcher rubberBandStretcher;
-    const int maxFramesNeeded = 8192;
-    const int samplesPerOutputBuffer = 0;
-    bool hasDoneFinalBlock = false;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RubberStretcher)
-};
-
-
 //==============================================================================
 //==============================================================================
-class RubberBandStretcherTests  : public UnitTest
+class TimeStretcherTests  : public UnitTest
 {
 public:
     //==============================================================================
-    RubberBandStretcherTests()
-        : UnitTest ("RubberBandStretcherTests", "Tracktion")
+    TimeStretcherTests()
+        : UnitTest ("TimeStretcherTests", "Tracktion")
     {
     }
 
     void runTest() override
     {
-        runPitchShiftTest();
-        runTimestretchTest();
+       #if TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
+        {
+            const auto mode = tracktion_engine::TimeStretcher::soundtouchBetter;
+            runPitchShiftTest (mode);
+            runTimestretchTest (mode);
+        }
+       #endif
+
+       #if TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
+        {
+            const auto mode = tracktion_engine::TimeStretcher::rubberband;
+            runPitchShiftTest (mode);
+            runTimestretchTest (mode);
+        }
+       #endif
     }
 
 private:
@@ -193,39 +55,42 @@ private:
     }
 
     //==============================================================================
-    void runPitchShiftTest()
+    void runPitchShiftTest (tracktion_engine::TimeStretcher::Mode mode)
     {
-        beginTest ("Pitch shift");
+        beginTest ("Pitch shift: " + tracktion_engine::TimeStretcher::getNameOfMode (mode));
         
-        testStretcher (1.0f, 1.0f);
-        testStretcher (1.0f, 2.0f);
-        testStretcher (1.0f, 5.0f);
-        testStretcher (1.0f, 12.0f);
-        testStretcher (1.0f, 24.0f);
+        testStretcher (mode, 1.0f, 0.0f);
+        testStretcher (mode, 1.0f, 1.0f);
+        testStretcher (mode, 1.0f, 2.0f);
+        testStretcher (mode, 1.0f, 5.0f);
+        testStretcher (mode, 1.0f, 12.0f);
+        testStretcher (mode, 1.0f, 24.0f);
     }
     
-    void runTimestretchTest()
+    void runTimestretchTest (tracktion_engine::TimeStretcher::Mode mode)
     {
-        beginTest ("Time-stretch");
+        beginTest ("Time-stretch: " + tracktion_engine::TimeStretcher::getNameOfMode (mode));
 
-        testStretcher (0.5f, 0.0f);
-        testStretcher (1.0f, 0.0f);
-        testStretcher (2.0f, 0.0f);
+        testStretcher (mode, 0.5f, 0.0f);
+        testStretcher (mode, 1.0f, 0.0f);
+        testStretcher (mode, 2.0f, 0.0f);
     }
 
     //==============================================================================
-    void testStretcher (float stretchRatio, float semitonesUp)
+    void testStretcher (tracktion_engine::TimeStretcher::Mode mode, float stretchRatio, float semitonesUp)
     {
         const double sampleRate = 44100.0;
         const int numChannels = 2;
         const int blockSize = 512;
         const float sourcePitch = 440.0f;
 
-        RubberStretcher rubberBandStretcher (sampleRate, blockSize, numChannels, RubberBandStretcher::Option::OptionProcessRealTime);
-        rubberBandStretcher.setSpeedAndPitch (stretchRatio, semitonesUp);
+        tracktion_engine::TimeStretcher stretcher;
+        stretcher.initialise (sampleRate, blockSize, numChannels, mode,
+                              {}, true);
+        stretcher.setSpeedAndPitch (stretchRatio, semitonesUp);
 
         const auto sourceBuffer = createSinBuffer (sampleRate, numChannels, 440.0f);
-        const auto resultBuffer = processBuffer (rubberBandStretcher, sourceBuffer, blockSize, stretchRatio);
+        const auto resultBuffer = processBuffer (stretcher, sourceBuffer, blockSize, stretchRatio);
 
         writeToFile (juce::File::getSpecialLocation (juce::File::userDesktopDirectory).getChildFile ("original.wav"), sourceBuffer, sampleRate);
         writeToFile (juce::File::getSpecialLocation (juce::File::userDesktopDirectory).getChildFile ("pitched.wav"), resultBuffer, sampleRate);
@@ -274,26 +139,29 @@ private:
         return sinBuffer;
     }
     
-    static juce::AudioBuffer<float> processBuffer (RubberStretcher& rubberBandStretcher,
+    static juce::AudioBuffer<float> processBuffer (tracktion_engine::TimeStretcher& stretcher,
                                                    const juce::AudioBuffer<float>& sourceBuffer,
                                                    const int blockSize, float stretchRatio)
     {
-        const int destSize = (int) std::ceil (sourceBuffer.getNumSamples() * stretchRatio);
+        const int numChannels = sourceBuffer.getNumChannels();
+        jassert (numChannels == 2); // Expected stereo for now
+        
+        const int destSize = (int) std::ceil (sourceBuffer.getNumSamples() * stretchRatio) + 8192;
         juce::AudioBuffer<float> resultBuffer (sourceBuffer.getNumChannels(), destSize);
         int numInputsDone = 0, numOutputsDone = 0;
 
         for (;;)
         {
             const int numInputSamplesLeft = sourceBuffer.getNumSamples() - numInputsDone;
-            const int numInputSamplesThisBlock = std::min (rubberBandStretcher.getFramesNeeded(), numInputSamplesLeft);
+            const int numInputSamplesThisBlock = std::min (stretcher.getFramesNeeded(), numInputSamplesLeft);
             const float* inputs[2] = { sourceBuffer.getReadPointer (0, numInputsDone),
                                        sourceBuffer.getReadPointer (1, numInputsDone) };
             float* outputs[2] = { resultBuffer.getWritePointer (0, numOutputsDone),
                                   resultBuffer.getWritePointer (1, numOutputsDone) };
             
             // Process sin wave to shift pitch and store in resultBuffer
-            const int numOutputSamplesThisBlock = rubberBandStretcher.processData (inputs, numInputSamplesThisBlock,
-                                                                                   outputs);
+            const int numOutputSamplesThisBlock = stretcher.processData (inputs, numInputSamplesThisBlock,
+                                                                         outputs);
             jassert (numOutputSamplesThisBlock <= blockSize);
             
             numInputsDone += numInputSamplesThisBlock;
@@ -309,7 +177,7 @@ private:
             float* outputs[2] = { resultBuffer.getWritePointer (0, numOutputsDone),
                                   resultBuffer.getWritePointer (1, numOutputsDone) };
             
-            const int numOutputSamplesThisBlock = rubberBandStretcher.flush (outputs);
+            const int numOutputSamplesThisBlock = stretcher.flush (outputs);
             jassert (numOutputSamplesThisBlock <= blockSize);
             numOutputsDone += numOutputSamplesThisBlock;
             
@@ -351,4 +219,4 @@ private:
 };
 
 //==============================================================================
-static RubberBandStretcherTests rubberBandStretcherTests;
+static TimeStretcherTests timeStretcherTests;
