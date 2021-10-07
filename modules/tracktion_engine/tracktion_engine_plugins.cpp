@@ -71,6 +71,7 @@ using namespace juce;
 #include "plugins/effects/tracktion_FourOscPlugin.cpp"
 #include "plugins/effects/tracktion_LatencyPlugin.cpp"
 #include "plugins/effects/tracktion_Equaliser.cpp"
+#include "plugins/effects/tracktion_ImpulseResponsePlugin.cpp"
 #include "plugins/effects/tracktion_LowPass.cpp"
 #include "plugins/effects/tracktion_MidiModifier.cpp"
 #include "plugins/effects/tracktion_MidiPatchBay.cpp"
