@@ -55,7 +55,7 @@ public:
         // Load demo audio file
         oggTempFile = std::make_unique<TemporaryFile> (".ogg");
         auto demoFile = oggTempFile->getFile();      
-        demoFile.replaceWithData (PlaybackDemoAudio::BITs_Export_2_ogg, PlaybackDemoAudio::BITs_Export_2_oggSize);
+        demoFile.replaceWithData (PlaybackDemoAudio::guitar_loop_ogg, PlaybackDemoAudio::guitar_loop_oggSize);
 
         // Creates clip. Loads clip from file f
         // Creates track. Loads clip into track
