@@ -8,7 +8,7 @@ name:             DistortionEffectDemo
 version:          0.0.1
 vendor:           Tracktion
 website:          www.tracktion.com
-description:      This example simply loads a project from the command line and plays it back in a loop.
+description:      This example demonstrates the application of a distortion effect to a looping audio sample.
 
 dependencies:     juce_audio_basics, juce_audio_devices, juce_audio_formats, juce_audio_processors, juce_audio_utils,
             juce_core, juce_data_structures, juce_dsp, juce_events, juce_graphics,
@@ -92,7 +92,7 @@ namespace tracktion_engine
         juce::CachedValue<float> gainValue;
         AutomatableParameter::Ptr gainParam;
 
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DistortionPlugin)
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionPlugin)
     };
 
     const char* DistortionPlugin::xmlTypeName = "Distortion";
@@ -177,7 +177,7 @@ public:
 
         oggTempFile = std::make_unique<TemporaryFile> (".mp3");
         auto f = oggTempFile->getFile();
-        f.replaceWithData (PlaybackDemoAudio::david_render_mp3, PlaybackDemoAudio::david_render_mp3Size);
+        f.replaceWithData (PlaybackDemoAudio::guitar_loop_mp3, PlaybackDemoAudio::guitar_loop_mp3Size);
 
         // Creates clip. Loads clip from file f.
         // Creates track. Loads clip into track.
@@ -231,7 +231,7 @@ public:
 
 private:
     //==============================================================================
-    te::Engine engine{ ProjectInfo::projectName };
+    te::Engine engine { ProjectInfo::projectName };
     te::Edit edit { Edit::Options { engine, te::createEmptyEdit (engine), ProjectItemID::createNewID (0) } };
     std::unique_ptr<TemporaryFile> oggTempFile;
 
@@ -244,11 +244,11 @@ private:
         playPauseButton.setButtonText (edit.getTransport().isPlaying() ? "Pause" : "Play");
     }
 
-    void changeListenerCallback(ChangeBroadcaster*) override
+    void changeListenerCallback (ChangeBroadcaster*) override
     {
         updatePlayButtonText();
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DistortionEffectDemo)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionEffectDemo)
 };
 
