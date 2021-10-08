@@ -106,7 +106,7 @@ public:
         // Register our custom plugin with the engine so it can be found using PluginCache::createNewPlugin
         engine.getPluginManager().createBuiltInType<PitchShiftPlugin>();
         
-        Helpers::addAndMakeVisible (*this, { &pitchShiftSlider, &settingsButton, &playPauseButton });
+        Helpers::addAndMakeVisible (*this, { &modeButton, &pitchShiftSlider, &settingsButton, &playPauseButton });
 
         oggTempFile = std::make_unique<TemporaryFile> (".ogg");
         auto f = oggTempFile->getFile();
@@ -133,6 +133,8 @@ public:
         EngineHelpers::loopAroundClip (*clip);
 
         // Setup button callbacks
+        modeButton.onClick = [this, p = dynamic_cast<te::PitchShiftPlugin*> (pitchShiftPlugin.get())]
+                             { showModeMenu (*p); };
         playPauseButton.onClick = [this] { EngineHelpers::togglePlay (edit); };
         settingsButton.onClick = [this] { EngineHelpers::showAudioDeviceSettings (engine); };
 
@@ -156,7 +158,7 @@ public:
     {
         auto r = getLocalBounds();
         auto topR = r.removeFromTop (30);
-        pluginsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 3).reduced (2));
+        modeButton.setBounds (topR.removeFromLeft (topR.getWidth() / 3).reduced (2));
         settingsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 2).reduced (2));
         playPauseButton.setBounds (topR.reduced (2));
 
@@ -169,10 +171,24 @@ private:
     te::Edit edit { Edit::Options { engine, te::createEmptyEdit (engine), ProjectItemID::createNewID (0) } };
     std::unique_ptr<TemporaryFile> oggTempFile;
 
-    TextButton pluginsButton { "Plugins" }, settingsButton { "Settings" }, playPauseButton { "Play" };
+    TextButton modeButton { "Algorithm" }, settingsButton { "Settings" }, playPauseButton { "Play" };
     Slider pitchShiftSlider;
 
     //==============================================================================
+    void showModeMenu (te::PitchShiftPlugin& plugin)
+    {
+        PopupMenu m;
+        const int currentMode = plugin.mode;
+        
+        for (auto modeName : tracktion_engine::TimeStretcher::getPossibleModes (plugin.engine, true))
+        {
+            const auto mode = static_cast<int> (tracktion_engine::TimeStretcher::getModeFromName (plugin.engine, modeName));
+            m.addItem (PopupMenu::Item (modeName).setTicked (currentMode == mode).setAction ([&plugin, mode] { plugin.mode = mode; }));
+        }
+        
+        m.showMenuAsync ({});
+    }
+    
     void updatePlayButtonText()
     {
         playPauseButton.setButtonText (edit.getTransport().isPlaying() ? "Pause" : "Play");

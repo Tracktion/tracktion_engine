@@ -368,10 +368,20 @@ namespace tracktion_engine {
 
 struct RubberBandStretcher  : public TimeStretcher::Stretcher
 {
-    RubberBandStretcher (double sourceSampleRate, int samplesPerBlock, int numChannels)
+    static int getOptionFlags (bool percussive)
+    {
+        if (percussive)
+            return RubberBand::RubberBandStretcher::OptionProcessRealTime
+                | RubberBand::RubberBandStretcher::OptionPitchHighQuality
+                | RubberBand::RubberBandStretcher::PercussiveOptions;
+
+        return RubberBand::RubberBandStretcher::OptionProcessRealTime
+            | RubberBand::RubberBandStretcher::OptionPitchHighQuality;
+    }
+    
+    RubberBandStretcher (double sourceSampleRate, int samplesPerBlock, int numChannels, bool percussive)
         : rubberBandStretcher ((size_t) sourceSampleRate, (size_t) numChannels,
-                               RubberBand::RubberBandStretcher::OptionProcessRealTime
-                               | RubberBand::RubberBandStretcher::OptionPitchHighQuality),
+                               getOptionFlags (percussive)),
           samplesPerOutputBuffer (samplesPerBlock)
     {
     }
@@ -465,7 +475,8 @@ static juce::String getElastiqueMobile()      { return "Elastique (" + TRANS("Mo
 static juce::String getElastiqueMono()        { return "Elastique (" + TRANS("Monophonic") + ")"; }
 static juce::String getSoundTouchNormal()     { return "SoundTouch (" + TRANS("Normal") + ")"; }
 static juce::String getSoundTouchBetter()     { return "SoundTouch (" + TRANS("Better") + ")"; }
-static juce::String getRubberBand()           { return "RubberBand"; };
+static juce::String getRubberBandMelodic()    { return "RubberBand (" + TRANS("Melodic") + ")"; }
+static juce::String getRubberBandPercussive() { return "RubberBand (" + TRANS("Percussive") + ")"; }
 
 TimeStretcher::Mode TimeStretcher::checkModeIsAvailable (Mode m)
 {
@@ -500,7 +511,8 @@ TimeStretcher::Mode TimeStretcher::checkModeIsAvailable (Mode m)
             return m;
        #endif
        #if TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
-        case rubberband:
+        case rubberbandMelodic:
+        case rubberbandPercussive:
             return m;
        #endif
         case disabled:
@@ -527,7 +539,8 @@ juce::StringArray TimeStretcher::getPossibleModes (Engine& e, bool excludeMelody
    #endif
     
    #if TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
-    s.add (getRubberBand());
+    s.add (getRubberBandMelodic());
+    s.add (getRubberBandPercussive());
    #endif
 
    #if TRACKTION_ENABLE_ARA
@@ -547,6 +560,11 @@ TimeStretcher::Mode TimeStretcher::getModeFromName (Engine& e, const juce::Strin
     if (name == getElastiqueEfficeint())    return elastiqueEfficient;
     if (name == getElastiqueMobile())       return elastiqueMobile;
     if (name == getElastiqueMono())         return elastiqueMonophonic;
+   #endif
+
+   #if TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
+     if (name == getRubberBandMelodic())    return rubberbandMelodic;
+     if (name == getRubberBandPercussive()) return rubberbandPercussive;
    #endif
 
    #if TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
@@ -572,7 +590,8 @@ juce::String TimeStretcher::getNameOfMode (const Mode mode)
         case elastiqueMonophonic:   return getElastiqueMono();
         case soundtouchNormal:      return getSoundTouchNormal();
         case soundtouchBetter:      return getSoundTouchBetter();
-        case rubberband:            return getRubberBand();
+        case rubberbandMelodic:     return getRubberBandMelodic();
+        case rubberbandPercussive:  return getRubberBandPercussive();
         case melodyne:              return getMelodyne();
         case disabled:
         case elastiqueTransient:
@@ -642,9 +661,11 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
        #endif
             
        #if TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
-        case rubberband:
+        case rubberbandMelodic:
+        case rubberbandPercussive:
             juce::ignoreUnused (options, realtime);
-            stretcher.reset (new tracktion_engine::RubberBandStretcher (sourceSampleRate, samplesPerBlock, numChannels));
+            stretcher.reset (new tracktion_engine::RubberBandStretcher (sourceSampleRate, samplesPerBlock, numChannels,
+                                                                        mode == rubberbandPercussive));
             break;
        #else
         case rubberband:

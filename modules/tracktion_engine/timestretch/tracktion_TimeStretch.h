@@ -30,12 +30,13 @@ public:
         elastiqueEfficient = 7,
         elastiqueMobile = 8,
         elastiqueMonophonic = 9,
-        rubberband = 10,
+        rubberbandMelodic = 10,
+        rubberbandPercussive = 11,
 
        #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE
         defaultMode = elastiquePro
        #elif TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
-        defaultMode = rubberband
+        defaultMode = rubberbandMelodic
        #elif TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
         defaultMode = soundtouchBetter
        #else
