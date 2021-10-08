@@ -76,7 +76,7 @@ public:
     int getFramesNeeded() const;
     int getMaxFramesNeeded() const;
     int processData (const float* const* inChannels, int numSamples, float* const* outChannels);
-    void processData (AudioFifo& inFifo, int numSamples, AudioFifo& outFifo);
+    int processData (AudioFifo& inFifo, int numSamples, AudioFifo& outFifo);
     int flush (float* const* outChannels);
 
     struct Stretcher;

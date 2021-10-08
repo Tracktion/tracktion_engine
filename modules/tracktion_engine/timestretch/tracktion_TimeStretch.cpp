@@ -237,7 +237,8 @@ struct SoundTouchStretcher  : public TimeStretcher::Stretcher,
 
     int getMaxFramesNeeded() const override
     {
-        return getSetting (SETTING_INITIAL_LATENCY);
+        // This was derived by experimentation
+        return 8192;
     }
 
     int processData (const float* const* inChannels, int numSamples, float* const* outChannels) override
@@ -369,7 +370,8 @@ struct RubberBandStretcher  : public TimeStretcher::Stretcher
 {
     RubberBandStretcher (double sourceSampleRate, int samplesPerBlock, int numChannels)
         : rubberBandStretcher ((size_t) sourceSampleRate, (size_t) numChannels,
-                               RubberBand::RubberBandStretcher::Option::OptionProcessRealTime),
+                               RubberBand::RubberBandStretcher::OptionProcessRealTime
+                               | RubberBand::RubberBandStretcher::OptionPitchHighQuality),
           samplesPerOutputBuffer (samplesPerBlock)
     {
     }
@@ -644,6 +646,9 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
             juce::ignoreUnused (options, realtime);
             stretcher.reset (new tracktion_engine::RubberBandStretcher (sourceSampleRate, samplesPerBlock, numChannels));
             break;
+       #else
+        case rubberband:
+            break;
        #endif
 
         case disabled:              [[fallthrough]];
@@ -703,22 +708,23 @@ int TimeStretcher::processData (const float* const* inChannels, int numSamples, 
     return 0;
 }
 
-void TimeStretcher::processData (AudioFifo& inFifo, int numSamples, AudioFifo& outFifo)
+int TimeStretcher::processData (AudioFifo& inFifo, int numSamples, AudioFifo& outFifo)
 {
+    if (stretcher == nullptr)
+        return 0;
+    
+    jassert (numSamples == stretcher->getFramesNeeded());
     AudioScratchBuffer inBuffer (inFifo.getNumChannels(), numSamples);
     AudioScratchBuffer outBuffer (outFifo.getNumChannels(), samplesPerBlockRequested);
 
+    auto inChannels = inBuffer.buffer.getArrayOfReadPointers();
+    auto outChannels = outBuffer.buffer.getArrayOfWritePointers();
+
     inFifo.read (inBuffer.buffer, 0, numSamples);
+    const int numOutputFrames = stretcher->processData (inChannels, numSamples, outChannels);
+    outFifo.write (outBuffer.buffer, 0, numOutputFrames);
 
-    if (stretcher != nullptr)
-    {
-        auto inChannels = inBuffer.buffer.getArrayOfReadPointers();
-        auto outChannels = outBuffer.buffer.getArrayOfWritePointers();
-
-        stretcher->processData (inChannels, numSamples, outChannels);
-    }
-
-    outFifo.write (outBuffer.buffer, 0, samplesPerBlockRequested);
+    return numOutputFrames;
 }
 
 int TimeStretcher::flush (float* const* outChannels)
