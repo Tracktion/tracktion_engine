@@ -237,7 +237,7 @@ struct SoundTouchStretcher  : public TimeStretcher::Stretcher,
     int getMaxFramesNeeded() const override
     {
         // This was derived by experimentation
-        return 4096;
+        return 8192;
     }
 
     int processData (const float* const* inChannels, int numSamples, float* const* outChannels) override
@@ -355,7 +355,23 @@ private:
 #define Component CarbonDummyCompName
 
 } // namespace tracktion_engine
-#include "../3rd_party/rubberband/single/RubberBandSingle.cpp"
+#if TRACKTION_BUILD_RUBBERBAND
+ #if __has_include(<rubberband/single/RubberBandSingle.cpp>)
+  #include <rubberband/single/RubberBandSingle.cpp>
+ #elif __has_include("../3rd_party/rubberband/single/RubberBandSingle.cpp")
+  #include "../3rd_party/rubberband/single/RubberBandSingle.cpp"
+ #else
+  #error "TRACKTION_BUILD_RUBBERBAND enabled but not found in the search path!
+ #endif
+#else
+ #if __has_include(<rubberband/rubberband/RubberBandStretcher.h>)
+  #include <rubberband/rubberband/RubberBandStretcher.h>
+ #elif __has_include("../3rd_party/rubberband/rubberband/RubberBandStretcher.h")
+  #include "../3rd_party/rubberband/rubberband/RubberBandStretcher.h"
+ #else
+  #error "TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND enabled but not found in the search path!
+ #endif
+#endif
 namespace tracktion_engine {
     
 #undef WIN32_LEAN_AND_MEAN
@@ -372,11 +388,12 @@ struct RubberBandStretcher  : public TimeStretcher::Stretcher
     {
         if (percussive)
             return RubberBand::RubberBandStretcher::OptionProcessRealTime
-                | RubberBand::RubberBandStretcher::OptionPitchHighQuality
+                | RubberBand::RubberBandStretcher::OptionPitchHighConsistency
                 | RubberBand::RubberBandStretcher::PercussiveOptions;
 
         return RubberBand::RubberBandStretcher::OptionProcessRealTime
-            | RubberBand::RubberBandStretcher::OptionPitchHighQuality;
+            | RubberBand::RubberBandStretcher::OptionPitchHighConsistency
+            | RubberBand::RubberBandStretcher::OptionWindowShort;
     }
     
     RubberBandStretcher (double sourceSampleRate, int samplesPerBlock, int numChannels, bool percussive)
@@ -495,7 +512,8 @@ TimeStretcher::Mode TimeStretcher::checkModeIsAvailable (Mode m)
         case elastiqueMonophonic:
        #endif
        #if ! TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
-        case rubberband:
+        case rubberbandMelodic:
+        case rubberbandPercussive:
        #endif
             return defaultMode;
        #if TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
@@ -668,7 +686,8 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
                                                                         mode == rubberbandPercussive));
             break;
        #else
-        case rubberband:
+        case rubberbandMelodic:     [[fallthrough]];
+        case rubberbandPercussive:
             break;
        #endif
 

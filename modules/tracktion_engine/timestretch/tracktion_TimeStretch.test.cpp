@@ -41,6 +41,14 @@ public:
             runTimestretchTest (mode);
         }
        #endif
+        
+       #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE
+        {
+            const auto mode = tracktion_engine::TimeStretcher::elastiquePro;
+            runPitchShiftTest (mode);
+            runTimestretchTest (mode);
+        }
+       #endif
     }
 
 private:
