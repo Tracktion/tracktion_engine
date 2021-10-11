@@ -438,7 +438,7 @@ String MidiOutputDevice::openDevice()
 
             if (deviceIndex >= 0)
             {
-                outputDevice = MidiOutput::openDevice (deviceIndex);
+                outputDevice = MidiOutput::openDevice (MidiOutput::getAvailableDevices()[deviceIndex].identifier);
 
                 if (outputDevice == nullptr)
                 {

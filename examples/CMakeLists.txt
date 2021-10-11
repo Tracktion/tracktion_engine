@@ -1,4 +1,5 @@
 add_subdirectory(EngineInPluginDemo)
+add_subdirectory(IRPluginDemo)
 add_subdirectory(MidiRecordingDemo)
 add_subdirectory(PatternGeneratorDemo)
 add_subdirectory(PitchAndTimeDemo)

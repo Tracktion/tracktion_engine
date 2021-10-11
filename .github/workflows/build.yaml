@@ -12,7 +12,7 @@ jobs:
       matrix:
         include:
           - name: Linux
-            os: ubuntu-16.04
+            os: ubuntu-latest
             platform: linux
           - name: macOS
             os: macos-latest

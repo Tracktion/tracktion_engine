@@ -63,6 +63,18 @@ static String mergeTwoNames (const String& s1, const String& s2)
     return nm;
 }
 
+static StringArray getMidiDeviceNames (juce::Array<juce::MidiDeviceInfo> devices)
+{
+    StringArray deviceNames;
+
+    for (auto& d : devices)
+        deviceNames.add (d.name);
+
+    deviceNames.appendNumbersToDuplicates (true, false);
+    
+    return deviceNames;
+}
+
 //==============================================================================
 struct DeviceManager::WaveDeviceList
 {
@@ -299,13 +311,11 @@ void DeviceManager::initialiseMidi()
 
     TRACKTION_LOG ("Finding MIDI I/O");
     if (openHardwareMidi)
-        lastMidiInNames = MidiInput::getDevices();
-    lastMidiInNames.appendNumbersToDuplicates (true, false);
-
+        lastMidiInNames = getMidiDeviceNames (MidiInput::getAvailableDevices());
+    
     if (openHardwareMidi)
-        lastMidiOutNames = MidiOutput::getDevices();
-    lastMidiOutNames.appendNumbersToDuplicates (true, false);
-
+        lastMidiOutNames = getMidiDeviceNames (MidiOutput::getAvailableDevices());
+    
     int enabledMidiIns = 0, enabledMidiOuts = 0;
 
     // create all the devices before initialising them..
@@ -413,10 +423,8 @@ void DeviceManager::rescanMidiDeviceList (bool forceRescan)
 {
     CRASH_TRACER
 
-    auto midiIns = MidiInput::getDevices();
-    auto midiOuts = MidiOutput::getDevices();
-    midiIns.appendNumbersToDuplicates (true, false);
-    midiOuts.appendNumbersToDuplicates (true, false);
+    auto midiIns = getMidiDeviceNames (MidiInput::getAvailableDevices());
+    auto midiOuts = getMidiDeviceNames (MidiOutput::getAvailableDevices());
 
     if (lastMidiOutNames != midiOuts || lastMidiInNames != midiIns || forceRescan)
         initialiseMidi();
@@ -639,11 +647,10 @@ void DeviceManager::loadSettings()
     auto& storage = engine.getPropertyStorage();
 
     {
-
         CRASH_TRACER
         if (isHostedAudioDeviceInterfaceInUse())
         {
-            error = deviceManager.initialiseWithDefaultDevices (defaultNumInputChannelsToOpen, defaultNumOutputChannelsToOpen);
+            error = deviceManager.initialise (defaultNumInputChannelsToOpen, defaultNumOutputChannelsToOpen, nullptr, false, "Hosted Device", nullptr);
         }
         else
         {
