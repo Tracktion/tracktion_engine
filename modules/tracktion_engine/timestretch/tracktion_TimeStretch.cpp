@@ -221,24 +221,23 @@ struct SoundTouchStretcher  : public TimeStretcher::Stretcher,
     {
         setTempo (1.0f / speedRatio);
         setPitchSemiTones (semitonesUp);
+        inputOutputSampleRatio = getInputOutputSampleRatio();
+        
         return true;
     }
 
     int getFramesNeeded() const override
     {
-        int numAvailable = (int) numSamples();
-
-        if (int numRequired = std::max (0, getSetting (SETTING_NOMINAL_INPUT_SEQUENCE) - numAvailable);
-            numRequired > 0)
-           return numRequired;
-
-        return std::max (0, getSetting (SETTING_INITIAL_LATENCY) - numAvailable);
+        const int numAvailable = (int) numSamples();
+        const int numRequiredForOneBlock = juce::roundToInt (samplesPerOutputBuffer * inputOutputSampleRatio);
+        
+        return std::max (0, numRequiredForOneBlock - numAvailable);
     }
 
     int getMaxFramesNeeded() const override
     {
         // This was derived by experimentation
-        return 8192;
+        return 4096;
     }
 
     int processData (const float* const* inChannels, int numSamples, float* const* outChannels) override
@@ -276,6 +275,7 @@ struct SoundTouchStretcher  : public TimeStretcher::Stretcher,
 private:
     int numChannels = 0, samplesPerOutputBuffer = 0;
     bool hasDoneFinalBlock = false;
+    double inputOutputSampleRatio = 1.0;
     
     int readOutput (float* const* outChannels, int offset, int numNeeded)
     {
