@@ -647,11 +647,10 @@ void DeviceManager::loadSettings()
     auto& storage = engine.getPropertyStorage();
 
     {
-
         CRASH_TRACER
         if (isHostedAudioDeviceInterfaceInUse())
         {
-            error = deviceManager.initialiseWithDefaultDevices (defaultNumInputChannelsToOpen, defaultNumOutputChannelsToOpen);
+            error = deviceManager.initialise (defaultNumInputChannelsToOpen, defaultNumOutputChannelsToOpen, nullptr, false, "Hosted Device", nullptr);
         }
         else
         {
