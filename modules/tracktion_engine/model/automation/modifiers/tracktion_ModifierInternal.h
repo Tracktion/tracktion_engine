@@ -15,7 +15,7 @@ namespace PredefinedWavetable
 {
     static inline float getSinSample (float phase)
     {
-        return (std::sin (phase * juce::float_Pi * 2.0f) + 1.0f) / 2.0f;
+        return (std::sin (phase * juce::MathConstants<float>::pi * 2.0f) + 1.0f) / 2.0f;
     }
 
     static inline float getTriangleSample (float phase)

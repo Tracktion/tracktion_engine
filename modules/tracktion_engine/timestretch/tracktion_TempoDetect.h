@@ -120,7 +120,11 @@ public:
     {
         AudioScratchBuffer scratch (1, numChannels * numSamples);
         float* interleaved = scratch.buffer.getWritePointer (0);
-        juce::AudioDataConverters::interleaveSamples (inputSamples, interleaved, numSamples, numChannels);
+
+        using Format = juce::AudioData::Format<AudioData::Float32, AudioData::NativeEndian>;
+        juce::AudioData::interleaveSamples (juce::AudioData::NonInterleavedSource<Format> { inputSamples,   numChannels },
+                                            juce::AudioData::InterleavedDest<Format>      { interleaved,    numChannels },
+                                            numSamples);
 
         bpmDetect.inputSamples (interleaved, numSamples);
     }

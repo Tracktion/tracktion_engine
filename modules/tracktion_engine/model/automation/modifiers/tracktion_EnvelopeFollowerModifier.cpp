@@ -43,7 +43,7 @@ private:
 
     void update() noexcept
     {
-        coefficient = 1.0f - std::exp (-2.0f * float_Pi * 100.0f / sampleRate);
+        coefficient = 1.0f - std::exp (-2.0f * juce::MathConstants<float>::pi * 100.0f / sampleRate);
         state = 0.0f;
     }
 };
