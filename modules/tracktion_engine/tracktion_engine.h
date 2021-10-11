@@ -538,6 +538,7 @@ namespace tracktion_engine
 #include "plugins/effects/tracktion_Delay.h"
 #include "plugins/effects/tracktion_Chorus.h"
 #include "plugins/effects/tracktion_FourOscPlugin.h"
+#include "plugins/effects/tracktion_ImpulseResponsePlugin.h"
 #include "plugins/effects/tracktion_LatencyPlugin.h"
 #include "plugins/effects/tracktion_LowPass.h"
 #include "plugins/effects/tracktion_MidiModifier.h"
@@ -548,6 +549,7 @@ namespace tracktion_engine
 #include "plugins/effects/tracktion_Reverb.h"
 #include "plugins/effects/tracktion_SamplerPlugin.h"
 #include "plugins/effects/tracktion_ToneGenerator.h"
+
 
 #include "plugins/ARA/tracktion_MelodyneFileReader.h"
 
