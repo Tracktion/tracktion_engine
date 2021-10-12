@@ -165,8 +165,10 @@ public:
     */
     int flush (float* const* outChannels);
 
-private:
+    /** @internal */
     struct Stretcher;
+
+private:
     std::unique_ptr<Stretcher> stretcher;
     int samplesPerBlockRequested = 0;
 
