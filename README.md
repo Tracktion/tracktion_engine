@@ -1,8 +1,8 @@
 ![](tutorials/images/tracktion_engine_powered.png)
 
-master: [![Build Status](https://dev.azure.com/TracktionDev/tracktion_engine_dev/_apis/build/status/Tracktion.tracktion_engine_dev?branchName=master)](https://dev.azure.com/TracktionDev/tracktion_engine_dev/_apis/build/status/Tracktion.tracktion_engine_dev?branchName=master)
+master: [![Build](https://github.com/Tracktion/tracktion_engine/actions/workflows/build.yaml/badge.svg?branch=master)](https://github.com/Tracktion/tracktion_engine/actions/workflows/build.yaml)
 
-develop: [![Build Status](https://dev.azure.com/TracktionDev/tracktion_engine_dev/_apis/build/status/Tracktion.tracktion_engine_dev?branchName=develop)](https://dev.azure.com/TracktionDev/tracktion_engine_dev/_apis/build/status/Tracktion.tracktion_engine_dev?branchName=develop)
+develop: [![Build](https://github.com/Tracktion/tracktion_engine/actions/workflows/build.yaml/badge.svg?branch=develop)](https://github.com/Tracktion/tracktion_engine/actions/workflows/build.yaml)
 
 # tracktion_engine
 ##### Welcome to the Tracktion Engine repository!
