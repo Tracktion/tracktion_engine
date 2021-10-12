@@ -28,6 +28,7 @@
 
 #include "common/Utilities.h"
 #include "DistortionEffectDemo.h"
+#include "common/PlaybackDemoAudio.h"
 
 using namespace tracktion_engine;
 
@@ -98,6 +99,14 @@ public:
             modeButton.onClick = [this, p = dynamic_cast<te::PitchShiftPlugin*> (pitchShiftPlugin.get())]
                                  { showModeMenu (*p); };
         }
+        
+        // Load some example audio to start
+        {
+            defaultTempFile = std::make_unique<TemporaryFile> (".ogg");
+            auto f = defaultTempFile->getFile();
+            f.replaceWithData (PlaybackDemoAudio::guitar_loop_ogg, PlaybackDemoAudio::guitar_loop_oggSize);
+            setFile (f);
+        }
     }
 
     ~PitchAndTimeComponent() override
@@ -155,6 +164,7 @@ private:
     FileChooser audioFileChooser { "Please select an audio file to load...",
                                    engine.getPropertyStorage().getDefaultLoadSaveDirectory ("pitchAndTimeExample"),
                                    engine.getAudioFileFormatManager().readFormatManager.getWildcardForAllFormats() };
+    std::unique_ptr<TemporaryFile> defaultTempFile;
 
     TextButton settingsButton { "Settings" }, playPauseButton { "Play" }, loadFileButton { "Load file" };
     Thumbnail thumbnail { transport };
