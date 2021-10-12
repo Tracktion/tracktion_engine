@@ -36,7 +36,7 @@ public:
 
        #if TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
         {
-            const auto mode = tracktion_engine::TimeStretcher::rubberband;
+            const auto mode = tracktion_engine::TimeStretcher::rubberbandMelodic;
             runPitchShiftTest (mode);
             runTimestretchTest (mode);
         }
