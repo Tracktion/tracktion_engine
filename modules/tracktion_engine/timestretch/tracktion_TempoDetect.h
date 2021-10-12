@@ -28,6 +28,7 @@ namespace tracktion_engine
 #ifdef __GNUC__
  #pragma GCC diagnostic push
  #pragma GCC diagnostic ignored "-Wsign-conversion"
+ #pragma GCC diagnostic ignored "-Wshadow"
  #if ! __clang__
   #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
  #endif

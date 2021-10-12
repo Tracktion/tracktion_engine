@@ -45,9 +45,9 @@ struct VirtualMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
 Array<VirtualMidiInputDevice*, CriticalSection> virtualMidiDevices;
 
 //==============================================================================
-VirtualMidiInputDevice::VirtualMidiInputDevice (Engine& e, const String& name, DeviceType devType)
+VirtualMidiInputDevice::VirtualMidiInputDevice (Engine& e, const String& deviceName, DeviceType devType)
     : MidiInputDevice (e, devType == trackMidiDevice ? TRANS("Track MIDI Input")
-                                                     : TRANS("Virtual MIDI Input"), name),
+                                                     : TRANS("Virtual MIDI Input"), deviceName),
       deviceType (devType)
 {
     loadProps();

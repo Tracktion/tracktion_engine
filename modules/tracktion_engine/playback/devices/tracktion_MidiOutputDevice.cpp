@@ -258,8 +258,8 @@ private:
 };
 
 //==============================================================================
-MidiOutputDevice::MidiOutputDevice (Engine& e, const String& name, int index)
-    : OutputDevice (e, TRANS("MIDI Output"), name),
+MidiOutputDevice::MidiOutputDevice (Engine& e, const String& deviceName, int index)
+    : OutputDevice (e, TRANS("MIDI Output"), deviceName),
       deviceIndex (index)
 {
     timecodeGenerator = std::make_unique<MidiTimecodeGenerator>();

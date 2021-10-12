@@ -184,8 +184,8 @@ struct RetrospectiveMidiBuffer
 };
 
 //==============================================================================
-MidiInputDevice::MidiInputDevice (Engine& e, const String& type, const String& name)
-   : InputDevice (e, type, name)
+MidiInputDevice::MidiInputDevice (Engine& e, const String& deviceType, const String& deviceName)
+   : InputDevice (e, deviceType, deviceName)
 {
     levelMeasurer.setShowMidi (true);
 

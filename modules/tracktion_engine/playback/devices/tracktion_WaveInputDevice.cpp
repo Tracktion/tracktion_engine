@@ -1151,9 +1151,9 @@ protected:
 };
 
 //==============================================================================
-WaveInputDevice::WaveInputDevice (Engine& e, const juce::String& name, const juce::String& type,
+WaveInputDevice::WaveInputDevice (Engine& e, const juce::String& deviceName, const juce::String& devType,
                                   const std::vector<ChannelIndex>& channels, DeviceType t)
-    : InputDevice (e, type, name),
+    : InputDevice (e, devType, deviceName),
       deviceChannels (channels),
       deviceType (t),
       channelSet (createChannelSet (channels))

@@ -11,8 +11,8 @@
 namespace tracktion_engine
 {
 
-WaveOutputDevice::WaveOutputDevice (Engine& e, const String& name, const std::vector<ChannelIndex>& channels)
-    : OutputDevice (e, TRANS("Wave Audio Output"), name),
+WaveOutputDevice::WaveOutputDevice (Engine& e, const String& deviceName, const std::vector<ChannelIndex>& channels)
+    : OutputDevice (e, TRANS("Wave Audio Output"), deviceName),
       deviceChannels (channels),
       channelSet (createChannelSet (channels)),
       ditheringEnabled (false),

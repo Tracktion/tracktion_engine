@@ -114,8 +114,8 @@ protected:
 class SoftwareMidiOutputDevice  : public MidiOutputDevice
 {
 public:
-    SoftwareMidiOutputDevice (Engine& e, const juce::String& name)
-        : MidiOutputDevice (e, name, -1)
+    SoftwareMidiOutputDevice (Engine& e, const juce::String& deviceName)
+        : MidiOutputDevice (e, deviceName, -1)
     {
         softDevice = true;
     }

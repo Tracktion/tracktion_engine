@@ -309,8 +309,8 @@ private:
 };
 
 //==============================================================================
-PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine& e, const String& name, int deviceIndexToUse)
-   : MidiInputDevice (e, TRANS("MIDI Input"), name),
+PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine& e, const String& deviceName, int deviceIndexToUse)
+   : MidiInputDevice (e, TRANS("MIDI Input"), deviceName),
      deviceIndex (deviceIndexToUse)
 {
     controllerParser.reset (new MidiControllerParser (e));

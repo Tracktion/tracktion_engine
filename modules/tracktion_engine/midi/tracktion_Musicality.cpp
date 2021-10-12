@@ -1035,7 +1035,7 @@ juce::StringArray PatternGenerator::getPossibleTriadNames() const
 
     auto scale = getScaleAtBeat (0);
 
-    for (int interval = Scale::i; interval <= Scale::vii; interval++)
+    for (int interval = int (Scale::Intervals::i); interval <= int (Scale::Intervals::vii); interval++)
         res.add (scale.getIntervalName ((Scale::Intervals) interval));
 
     return res;
@@ -1046,7 +1046,7 @@ juce::StringArray PatternGenerator::getPossibleSeventhNames() const
     juce::StringArray res;
     auto scale = getScaleAtBeat (0);
 
-    for (int interval = Scale::i; interval <= Scale::vii; interval++)
+    for (int interval = int (Scale::Intervals::i); interval <= int (Scale::Intervals::vii); interval++)
         res.add (scale.getIntervalName ((Scale::Intervals) interval) + "7");
 
     return res;
