@@ -164,8 +164,26 @@ private:
     Steinberg::IPtr<entrypoint_t> getVST3EntryPoint (AudioPluginInstance& p)
     {
         entrypoint_t* ep = nullptr;
+        
+        auto getIComponent = [] (AudioPluginInstance& p) -> Steinberg::Vst::IComponent*
+        {
+            struct VST3Visitor : public juce::ExtensionsVisitor
+            {
+                void visitVST3Client (const VST3Client& client) override
+                {
+                    icomponent = static_cast<Steinberg::Vst::IComponent*> (client.getIComponentPtr());
+                }
+                
+                Steinberg::Vst::IComponent* icomponent = nullptr;
+            };
 
-        if (Steinberg::Vst::IComponent* component = (Steinberg::Vst::IComponent*) p.getPlatformSpecificData())
+            VST3Visitor vst3Visitor;
+            p.getExtensions (vst3Visitor);
+            
+            return vst3Visitor.icomponent;
+        };
+        
+        if (auto component = getIComponent (p))
             component->queryInterface (entrypoint_t::iid, (void**) &ep);
 
         return { ep };
