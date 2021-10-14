@@ -55,6 +55,7 @@ using namespace juce;
 #endif
 
 #include "timestretch/tracktion_TimeStretch.cpp"
+#include "timestretch/tracktion_TimeStretch.test.cpp"
 
 namespace tracktion_engine
 {
