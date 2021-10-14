@@ -338,8 +338,8 @@ namespace test_utilities
         for (double sampleRate : { 44100.0, 48000.0, 96000.0 })
             for (int blockSize : { 64, 256, 512, 1024 })
        #endif
-                for (bool randomiseBlockSizes : { false, true })
-                    setups.push_back ({ sampleRate, blockSize, randomiseBlockSizes, ut.getRandom() });
+        for (bool randomiseBlockSizes : { false, true })
+            setups.push_back ({ sampleRate, blockSize, randomiseBlockSizes, ut.getRandom() });
 
         return setups;
     }
