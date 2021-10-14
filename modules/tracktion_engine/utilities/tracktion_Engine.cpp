@@ -111,6 +111,11 @@ Engine::~Engine()
     engines.removeFirstMatchingValue (this);
 }
 
+juce::String Engine::getVersion()
+{
+    return "Tracktion Engine v1.1.0";
+}
+
 Array<Engine*> Engine::getEngines()
 {
     return engines;
