@@ -420,6 +420,28 @@ struct RubberBandStretcher  : public TimeStretcher::Stretcher
         rubberBandStretcher.setPitchScale (pitch);
         rubberBandStretcher.setTimeRatio (speedRatio);
         
+        if (numSamplesToDrop == -1)
+        {
+            // This is the first speed and pitch change so set up the padding and dropping
+            numSamplesToDrop = int (rubberBandStretcher.getLatency());
+            int numSamplesToPad = juce::roundToInt (numSamplesToDrop * pitch);
+            
+            if (numSamplesToPad > 0)
+            {
+                AudioScratchBuffer scratch (int (rubberBandStretcher.getChannelCount()), samplesPerOutputBuffer);
+                scratch.buffer.clear();
+                
+                while (numSamplesToPad > 0)
+                {
+                    const int numThisTime = std::min (numSamplesToPad, samplesPerOutputBuffer);
+                    rubberBandStretcher.process (scratch.buffer.getArrayOfReadPointers(), numThisTime, false);
+                    numSamplesToPad -= numThisTime;
+                }
+            }
+            
+            jassert (numSamplesToPad == 0);
+        }
+        
         const bool r = rubberBandStretcher.getPitchScale() == pitch
                     && rubberBandStretcher.getTimeRatio() == speedRatio;
         jassert (r);
@@ -444,10 +466,23 @@ struct RubberBandStretcher  : public TimeStretcher::Stretcher
         rubberBandStretcher.process (inChannels, (size_t) numSamples, false);
 
         // Once there is output, read this in to the output buffer
-        const int numAvailable = rubberBandStretcher.available();
+        int numAvailable = rubberBandStretcher.available();
         jassert (numAvailable >= 0);
         
-        return (int) rubberBandStretcher.retrieve (outChannels, (size_t) numAvailable);
+        if (numSamplesToDrop > 0)
+        {
+            const int numToDropThisTime = juce::jmin (numSamplesToDrop, numAvailable, samplesPerOutputBuffer);
+            rubberBandStretcher.retrieve (outChannels, (size_t) numToDropThisTime);
+            numSamplesToDrop -= numToDropThisTime;
+            jassert (numSamplesToDrop >= 0);
+            
+            numAvailable -= numToDropThisTime;
+        }
+        
+        if (numAvailable > 0)
+            return (int) rubberBandStretcher.retrieve (outChannels, (size_t) numAvailable);
+        
+        return 0;
     }
 
     int flush (float* const* outChannels) override
@@ -474,6 +509,7 @@ private:
     RubberBand::RubberBandStretcher rubberBandStretcher;
     const int maxFramesNeeded = 8192;
     const int samplesPerOutputBuffer = 0;
+    int numSamplesToDrop = -1;
     bool hasDoneFinalBlock = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RubberBandStretcher)
