@@ -361,7 +361,7 @@ private:
  #elif __has_include("../3rd_party/rubberband/single/RubberBandSingle.cpp")
   #include "../3rd_party/rubberband/single/RubberBandSingle.cpp"
  #else
-  #error "TRACKTION_BUILD_RUBBERBAND enabled but not found in the search path!
+  #error "TRACKTION_BUILD_RUBBERBAND enabled but not found in the search path!"
  #endif
 #else
  #if __has_include(<rubberband/rubberband/RubberBandStretcher.h>)
@@ -369,7 +369,7 @@ private:
  #elif __has_include("../3rd_party/rubberband/rubberband/RubberBandStretcher.h")
   #include "../3rd_party/rubberband/rubberband/RubberBandStretcher.h"
  #else
-  #error "TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND enabled but not found in the search path!
+  #error "TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND enabled but not found in the search path!"
  #endif
 #endif
 namespace tracktion_engine {
