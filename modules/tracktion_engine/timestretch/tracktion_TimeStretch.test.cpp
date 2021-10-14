@@ -122,7 +122,7 @@ private:
         expectLessThan (pitchPercentageDiff, 0.06f);
         
         // Compare expectedSize with the actual size of the results 0.5% tolerance
-        const float sizePercentageDiff = std::abs (resultBuffer.getNumSamples() - expectedSize) / expectedSize;
+        const float sizePercentageDiff = std::abs (resultBuffer.getNumSamples() - expectedSize) / float (expectedSize);
         expectLessThan (sizePercentageDiff, 0.005f);
     }
         
