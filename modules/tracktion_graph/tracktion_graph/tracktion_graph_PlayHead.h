@@ -170,7 +170,7 @@ private:
     std::atomic<int> speed { 0 };
     std::atomic<bool> looping { false }, userDragging { false }, rollInToLoop { false };
 
-    std::chrono::system_clock::time_point userInteractionTime;
+    std::atomic<std::chrono::system_clock::time_point> userInteractionTime { std::chrono::system_clock::now() };
 
     //==============================================================================
     SyncPositions getSyncPositions() const              { return syncPositions; }
