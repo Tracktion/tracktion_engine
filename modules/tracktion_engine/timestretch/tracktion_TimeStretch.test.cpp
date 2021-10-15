@@ -118,12 +118,10 @@ private:
         const float shiftedPitch = getPitchFromNumZeroCrossings (numZeroCrossingsShifted, resultBuffer.getNumSamples(), 44100);
 
         // Compare shiftedPitch to expectedPitchValue with a 6% tolerance
-        const float pitchPercentageDiff = std::abs (shiftedPitch - expectedPitchValue) / expectedPitchValue;
-        expectLessThan (pitchPercentageDiff, 0.06f);
+        expectWithinAbsoluteError (shiftedPitch, expectedPitchValue, expectedPitchValue * 0.06f);
         
         // Compare expectedSize with the actual size of the results 0.5% tolerance
-        const float sizePercentageDiff = std::abs (resultBuffer.getNumSamples() - expectedSize) / float (expectedSize);
-        expectLessThan (sizePercentageDiff, 0.005f);
+        expectWithinAbsoluteError (resultBuffer.getNumSamples(), expectedSize, juce::roundToInt (expectedSize * 0.5f));
     }
         
     //==============================================================================
