@@ -118,10 +118,10 @@ private:
 
                 reader->read (&loadIRBuffer, 0, (int) reader->lengthInSamples, 0, true, true);
 
-                if (reader->numChannels == 1)
-                    loadImpulseResponse (std::move (loadIRBuffer), dsp::Convolution::Stereo::no, dsp::Convolution::Trim::no, dsp::Convolution::Normalise::no);
-                else if (reader->numChannels == 2)
-                    loadImpulseResponse (std::move (loadIRBuffer), dsp::Convolution::Stereo::yes, dsp::Convolution::Trim::no, dsp::Convolution::Normalise::no);
+                jassert (reader->numChannels > 0 );
+                loadImpulseResponse (std::move (loadIRBuffer),
+                                     reader->numChannels > 1 ? dsp::Convolution::Stereo::yes : dsp::Convolution::Stereo::no,
+                                     dsp::Convolution::Trim::no, dsp::Convolution::Normalise::no);
             }
         }
     }
