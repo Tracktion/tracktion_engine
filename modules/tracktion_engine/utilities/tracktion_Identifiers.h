@@ -631,7 +631,7 @@ namespace IDs
     DECLARE_ID (apply)
     DECLARE_ID (oscType)
     DECLARE_ID (bandLimit)
-	DECLARE_ID (irFileData)
+    DECLARE_ID (irFileData)
 
     #undef DECLARE_ID
 }
