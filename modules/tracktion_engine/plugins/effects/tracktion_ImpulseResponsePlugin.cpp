@@ -38,6 +38,8 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
 
     lowPassCutoffParam = addParam ("lowPassCutoff", TRANS ("Low Pass Filter Cutoff"), { 0.1f, 20000.0f });
     lowPassCutoffParam->attachToCurrentValue (lowPassCutoffValue);
+
+    loadImpulseResponseFromState();
 }
 
 /** Destructor. */

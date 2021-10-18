@@ -105,6 +105,39 @@ private:
                         dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>>,
                         dsp::Gain<float>> processorChain;
 
+
+    void loadImpulseResponseFromState()
+    {
+        if (auto irFileData = ir.state.getProperty (IDs::irFileData).getBinaryData())
+        {
+            auto is = std::make_unique<MemoryInputStream> (*irFileData, false);
+            if (auto reader = std::unique_ptr<AudioFormatReader> (FlacAudioFormat().createReaderFor (is.release(), true)))
+            {
+
+
+                juce::AudioSampleBuffer loadIRBuffer ((int) reader->numChannels,
+                                                      (int) reader->lengthInSamples);
+
+                reader->read (&loadIRBuffer,
+                              0,
+                             (int) reader->lengthInSamples,
+                              0,
+                              true,
+                              true);
+
+                ir.loadImpulseResponse (std::move (loadIRBuffer), dsp::Convolution::Stereo::yes, dsp::Convolution::Trim::no, dsp::Convolution::Normalise::yes);
+            }
+        }
+    }
+
+    void valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i) override
+    {
+        if (v == state && id == IDs::irFileData)
+            propertiesChanged();
+
+        Plugin::valueTreePropertyChanged (v, id);
+    }
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ImpulseResponsePlugin)
 };
 
