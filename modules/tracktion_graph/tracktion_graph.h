@@ -65,8 +65,18 @@
 
 #if __has_include (<memory_resource>)
  #include <memory_resource>
+ namespace tracktion_graph
+ {
+    using memory_resource = std::pmr::memory_resource;
+    template<typename T> using polymorphic_allocator = std::pmr::polymorphic_allocator<T>;
+ }
 #elif __has_include (<experimental/memory_resource>)
  #include <experimental/memory_resource>
+ namespace tracktion_graph
+ {
+    using memory_resource = std::experimental::pmr::memory_resource;
+    template<typename T> using polymorphic_allocator = std::experimental::pmr::polymorphic_allocator<T>;
+ }
 #else
  #error "Compiling on a platform with no memory_resource support!"
 #endif

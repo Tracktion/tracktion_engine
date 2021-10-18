@@ -173,14 +173,18 @@ std::vector<Node*> LockFreeMultiThreadedNodePlayer::prepareToPlay (Node* node, N
         return node_player_utils::prepareToPlay (node, oldNode, sampleRateToUse, blockSizeToUse);
 
     return node_player_utils::prepareToPlay (node, oldNode, sampleRateToUse, blockSizeToUse,
-                                             [pool] (auto s) -> NodeBuffer
+                                             [allocator = polymorphic_allocator<char> (new rpmemory_resource())] (auto s) -> NodeBuffer
                                              {
-                                                auto data = pool->allocate (s);
-                                                return { data.getView().getFirstChannels (s.numChannels).getStart (s.numFrames), std::move (data) };
+                                                AudioBufferType buffer (allocator);
+                                                buffer.resize (s);
+                                                jassert (buffer.getSize() == s);
+
+                                                return { buffer.getView(), std::move (buffer) };
                                              },
-                                             [pool] (auto b)
+                                             [allocator = polymorphic_allocator<char> (new rpmemory_resource())] (auto&& b) mutable
                                              {
-                                                 pool->release (std::move (b.data));
+                                                auto& buffer = b.data;
+                                                buffer.getViewRef().data.freeAllocatedData (buffer.getSize(), allocator);
                                              });
 }
 

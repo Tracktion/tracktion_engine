@@ -27,6 +27,9 @@
 #include "tracktion_graph.h"
 
 //==============================================================================
+#include "../3rd_party/rpmalloc/rpallocator.h"
+#include "../3rd_party/rpmalloc/rpmemory_resource.h"
+
 #include "tracktion_graph/tracktion_graph_TestUtilities.h"
 #include "tracktion_graph/tracktion_graph_TestNodes.h"
 #include "tracktion_graph/tracktion_graph_TestUtilities.cpp"

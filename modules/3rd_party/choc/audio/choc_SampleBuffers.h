@@ -272,7 +272,7 @@ struct AllocatedBuffer
     ~AllocatedBuffer()                  { view.data.freeAllocatedData (view.size, allocator); }
 
     explicit AllocatedBuffer (const AllocatedBuffer& other)  : AllocatedBuffer (other.view) {}
-    AllocatedBuffer (AllocatedBuffer&& other)  : view (other.view)    { other.view = {}; }
+    AllocatedBuffer (AllocatedBuffer&& other)  : view (other.view)    { other.view = {}; CHOC_ASSERT(other.getSize() == Size()); CHOC_ASSERT(other.view.data.channels == nullptr); CHOC_ASSERT(other.view.data.offset == 0); }
     AllocatedBuffer& operator= (const AllocatedBuffer&);
     AllocatedBuffer& operator= (AllocatedBuffer&&);
 
@@ -350,6 +350,8 @@ struct AllocatedBuffer
     /// Returns the allocator in use.
     AllocatorType& getAllocator()                                               { return allocator; }
     
+    BufferView<Sample, LayoutType>& getViewRef()                                { return view; }
+
 private:
     BufferView<Sample, LayoutType> view;
     AllocatorType allocator;
@@ -493,10 +495,19 @@ struct SeparateChannelLayout
     {
         if (channels != nullptr)
         {
-            auto channelDataSize = getChannelDataSize (size.numFrames);
-            auto dataSize = channelDataSize * size.numChannels;
-            auto listSize = sizeof (SampleType*) * size.numChannels;
-            allocator.deallocate (reinterpret_cast<char*> (channels[0]), dataSize + listSize);
+            if (size.numChannels == 0)
+            {
+                allocator.deallocate (reinterpret_cast<char*> (channels[0]), sizeof (void*[1]));
+            }
+            else
+            {
+                auto channelDataSize = getChannelDataSize (size.numFrames);
+                auto dataSize = channelDataSize * size.numChannels;
+                auto listSize = sizeof (SampleType*) * size.numChannels;
+                allocator.deallocate (reinterpret_cast<char*> (channels[0]), dataSize + listSize);
+            }
+            
+            channels = nullptr;
         }
     }
 

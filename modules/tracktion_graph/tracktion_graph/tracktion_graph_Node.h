@@ -69,11 +69,50 @@
               be released back to the pool
 */
 
+class StandardMemoryResource : public tracktion_graph::memory_resource
+{
+public:
+    static StandardMemoryResource* getInstance()
+    {
+        static StandardMemoryResource instance;
+        return &instance;
+    }
+    
+    void* do_allocate (std::size_t bytes, [[ maybe_unused ]] std::size_t alignment) override
+    {
+        return std::malloc (bytes);
+    }
+      
+    void do_deallocate (void* p, [[ maybe_unused ]] std::size_t bytes, [[ maybe_unused ]] std::size_t alignment) override
+    {
+        std::free (p);
+    }
+    
+    bool do_is_equal (const memory_resource& o) const noexcept override
+    {
+        return dynamic_cast<const StandardMemoryResource*> (&o) != nullptr;
+    }
+};
+
+namespace std::experimental {
+inline namespace fundamentals_v1 {
+namespace pmr
+{
+    inline tracktion_graph::memory_resource* get_default_resource() noexcept
+    {
+        return StandardMemoryResource::getInstance();
+    }
+}
+}
+}
 
 namespace tracktion_graph
 {
 
 class Node;
+
+using AudioViewType = choc::buffer::ChannelArrayView<float>;
+using AudioBufferType = choc::buffer::ChannelArrayBuffer<float, polymorphic_allocator<char>>;
 
 //==============================================================================
 //==============================================================================
@@ -91,8 +130,8 @@ std::unique_ptr<Node> makeNode (Args&&... args)
 */
 struct NodeBuffer
 {
-    choc::buffer::ChannelArrayView<float> view;
-    choc::buffer::ChannelArrayBuffer<float> data;
+    AudioViewType view;
+    AudioBufferType data;
 };
 
 //==============================================================================
@@ -180,7 +219,7 @@ public:
     /** Contains the buffers for a processing operation. */
     struct AudioAndMidiBuffer
     {
-        choc::buffer::ChannelArrayView<float> audio;
+        AudioViewType audio;
         tracktion_engine::MidiMessageArray& midi;
     };
 
@@ -265,13 +304,13 @@ protected:
         This is useful to avoid having to allocate an internal buffer and always fill it if you're
         just passing on data.
     */
-    void setAudioOutput (Node* sourceNode, const choc::buffer::ChannelArrayView<float>&);
+    void setAudioOutput (Node* sourceNode, const AudioViewType&);
     
 private:
     std::atomic<bool> hasBeenProcessed { false };
     choc::buffer::Size audioBufferSize;
-    choc::buffer::ChannelArrayBuffer<float> audioBuffer;
-    choc::buffer::ChannelArrayView<float> audioView, allocatedView;
+    AudioBufferType audioBuffer;
+    AudioViewType audioView, allocatedView;
     tracktion_engine::MidiMessageArray midiBuffer;
     std::atomic<int> numSamplesProcessed { 0 }, retainCount { 0 };
     NodeOptimisations nodeOptimisations;
@@ -391,8 +430,9 @@ inline void Node::process (juce::Range<int64_t> referenceSampleRange)
    #endif
     
     // First, allocate buffers if possible
-    if (allocateAudioBuffer)
+    if (allocateAudioBuffer && ! audioBufferSize.isEmpty())
     {
+        assert (audioBufferSize.numChannels > 0 || audioBufferSize.numFrames == 0);
         auto nodeBuffer = allocateAudioBuffer (audioBufferSize);
         audioBuffer = std::move (nodeBuffer.data);
         allocatedView = std::move (nodeBuffer.view);
@@ -422,7 +462,7 @@ inline void Node::process (juce::Range<int64_t> referenceSampleRange)
     {
         // Fallback to the internal buffer or an empty view
         audioView = ((nodeOptimisations.allocate == AllocateAudioBuffer::yes ? audioBuffer.getView()
-                                                                             : choc::buffer::ChannelArrayView<float> { {}, audioBufferSize }));
+                                                                             : AudioViewType { {}, audioBufferSize }));
     }
     
     audioView = audioView.getStart ((choc::buffer::FrameCount) numSamples);
@@ -474,7 +514,7 @@ inline void Node::setOptimisations (NodeOptimisations newOptimisations)
     nodeOptimisations = newOptimisations;
 }
 
-inline void Node::setAudioOutput (Node* sourceNode, const choc::buffer::ChannelArrayView<float>& newAudioView)
+inline void Node::setAudioOutput (Node* sourceNode, const AudioViewType& newAudioView)
 {
     if (sourceNode)
         sourceNode->retain();
@@ -498,7 +538,7 @@ inline void Node::release()
         if (auto node = nodeToRelease.load (std::memory_order_relaxed))
             node->release();
 
-        if (deallocateAudioBuffer)
+        if (deallocateAudioBuffer && ! allocatedView.getSize().isEmpty())
             deallocateAudioBuffer ({ std::move (allocatedView), std::move (audioBuffer) });
     }
 }
