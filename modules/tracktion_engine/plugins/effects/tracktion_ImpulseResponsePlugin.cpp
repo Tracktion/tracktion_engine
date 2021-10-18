@@ -62,7 +62,9 @@ void ImpulseResponsePlugin::loadImpulseResponse (const void* sourceData, size_t 
     dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming, size_t size,
     dsp::Convolution::Normalise requiresNormalisation)
 {
-    auto is = std::make_unique<MemoryInputStream> (sourceData, false);
+
+    
+    auto is = std::make_unique<MemoryInputStream> (sourceData, sourceDataSize, false);
     if (auto reader = std::unique_ptr<AudioFormatReader> (FlacAudioFormat().createReaderFor (is.release(), true)))
     {
         MemoryBlock fileDataMemoryBlock;
@@ -78,6 +80,8 @@ void ImpulseResponsePlugin::loadImpulseResponse (const void* sourceData, size_t 
     }
 
     processorChain.get<convolutionIndex>().loadImpulseResponse (sourceData, sourceDataSize, isStereo, requiresTrimming, size, requiresNormalisation);
+
+    
 }
 
 /** Loads an impulse from a file.
