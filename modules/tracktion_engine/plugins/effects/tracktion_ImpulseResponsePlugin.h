@@ -111,21 +111,17 @@ private:
         if (auto irFileData = state.getProperty (IDs::irFileData).getBinaryData())
         {
             auto is = std::make_unique<MemoryInputStream> (*irFileData, false);
+
             if (auto reader = std::unique_ptr<AudioFormatReader> (FlacAudioFormat().createReaderFor (is.release(), true)))
             {
+                juce::AudioSampleBuffer loadIRBuffer ((int) reader->numChannels, (int) reader->lengthInSamples);
 
+                reader->read (&loadIRBuffer, 0, (int) reader->lengthInSamples, 0, true, true);
 
-                juce::AudioSampleBuffer loadIRBuffer ((int) reader->numChannels,
-                                                      (int) reader->lengthInSamples);
-
-                reader->read (&loadIRBuffer,
-                              0,
-                             (int) reader->lengthInSamples,
-                              0,
-                              true,
-                              true);
-
-                loadImpulseResponse (std::move (loadIRBuffer), dsp::Convolution::Stereo::yes, dsp::Convolution::Trim::no, dsp::Convolution::Normalise::yes);
+                if (reader->numChannels == 1)
+                    loadImpulseResponse (std::move (loadIRBuffer), dsp::Convolution::Stereo::no, dsp::Convolution::Trim::no, dsp::Convolution::Normalise::no);
+                else if (reader->numChannels == 2)
+                    loadImpulseResponse (std::move (loadIRBuffer), dsp::Convolution::Stereo::yes, dsp::Convolution::Trim::no, dsp::Convolution::Normalise::no);
             }
         }
     }
