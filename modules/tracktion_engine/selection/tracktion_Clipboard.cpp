@@ -1548,7 +1548,8 @@ static bool pastePluginIntoTrack (const Plugin::Ptr& newPlugin, EditInsertPoint&
 {
     double startPos = 0.0;
     Track::Ptr track;
-    insertPoint.chooseInsertPoint (track, startPos, false, sm);
+    insertPoint.chooseInsertPoint (track, startPos, false, sm,
+                                   [] (auto& track) { return track.isAudioTrack() || track.isFolderTrack() || track.isMasterTrack(); });
     jassert (track != nullptr);
 
     if (track != nullptr && track->canContainPlugin (newPlugin.get()))
