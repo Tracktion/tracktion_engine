@@ -37,19 +37,19 @@ public:
     /** Loads an impulse from binary audio file data i.e. not a block of raw floats.
         @see juce::Convolution::loadImpulseResponse
     */
-    void loadImpulseResponse (const void* sourceData, size_t sourceDataSize,
-                              dsp::Convolution::Stereo, dsp::Convolution::Trim, size_t size,
-                              dsp::Convolution::Normalise);
+    bool loadImpulseResponse (const void* sourceData, size_t sourceDataSize);
 
     /** Loads an impulse from a file.
         @see juce::Convolution::loadImpulseResponse
     */
-    void loadImpulseResponse (const File& fileImpulseResponse, size_t sizeInBytes, dsp::Convolution::Stereo, dsp::Convolution::Trim);
+    bool loadImpulseResponse (const File& fileImpulseResponse);
 
     /** Loads an impulse from an AudioBuffer<float>.
         @see juce::Convolution::loadImpulseResponse
     */
-    void loadImpulseResponse (AudioBuffer<float>&& bufferImpulseResponse, dsp::Convolution::Stereo, dsp::Convolution::Trim, dsp::Convolution::Normalise);
+    bool loadImpulseResponse (AudioBuffer<float>&& bufferImpulseResponse,
+                              double sampleRateToStore,
+                              int bitDepthToStore);
 
     //==============================================================================
     juce::CachedValue<float> preGainValue, postGainValue;
