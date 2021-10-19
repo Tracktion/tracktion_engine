@@ -25,7 +25,7 @@ public:
         Initially this will be have no IR loaded, use one of the loadImpulseResponse
         methods to apply it to the audio.
     */
-    ImpulseResponsePlugin (PluginCreationInfo info);
+    ImpulseResponsePlugin (PluginCreationInfo);
 
     /** Destructor. */
     ~ImpulseResponsePlugin() override;
@@ -37,19 +37,19 @@ public:
     /** Loads an impulse from binary audio file data i.e. not a block of raw floats.
         @see juce::Convolution::loadImpulseResponse
     */
-    void loadImpulseResponse (const void* sourceData, size_t sourceDataSize,
-        dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming, size_t size,
-        dsp::Convolution::Normalise requiresNormalisation);
+    bool loadImpulseResponse (const void* sourceData, size_t sourceDataSize);
 
     /** Loads an impulse from a file.
         @see juce::Convolution::loadImpulseResponse
     */
-    void loadImpulseResponse (const File& fileImpulseResponse, size_t sizeInBytes, dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming);
+    bool loadImpulseResponse (const File& fileImpulseResponse);
 
     /** Loads an impulse from an AudioBuffer<float>.
         @see juce::Convolution::loadImpulseResponse
     */
-    void loadImpulseResponse (AudioBuffer<float>&& bufferImpulseResponse, dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming, dsp::Convolution::Normalise requiresNormalisation);
+    bool loadImpulseResponse (AudioBuffer<float>&& bufferImpulseResponse,
+                              double sampleRateToStore,
+                              int bitDepthToStore);
 
     //==============================================================================
     juce::CachedValue<float> preGainValue, postGainValue;
@@ -74,7 +74,7 @@ public:
     double getLatencySeconds() override;
 
     /** @internal */
-    void initialise (const PluginInitialisationInfo& info) override;
+    void initialise (const PluginInitialisationInfo&) override;
 
     /** @internal */
     void deinitialise() override;
@@ -83,10 +83,10 @@ public:
     void reset() override;
 
     /** @internal */
-    void applyToBuffer (const PluginRenderContext& fc) override;
+    void applyToBuffer (const PluginRenderContext&) override;
 
     /** @internal */
-    void restorePluginStateFromValueTree (const juce::ValueTree& v) override;
+    void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 
 private:
     //==============================================================================
@@ -104,6 +104,10 @@ private:
                         dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>>,
                         dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>>,
                         dsp::Gain<float>> processorChain;
+
+    void loadImpulseResponseFromState();
+
+    void valueTreePropertyChanged (ValueTree&, const juce::Identifier&) override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ImpulseResponsePlugin)
 };

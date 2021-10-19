@@ -11,12 +11,8 @@
 
 namespace tracktion_engine
 {
-//==============================================================================
- /**
-     ImpulseResponsePlugin that loads an impulse response and applies it the audio stream.
-     Additionally this has high and low pass filters to shape the sound.
- */
 
+//==============================================================================
 ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
     : Plugin (info)
 {
@@ -38,9 +34,10 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
 
     lowPassCutoffParam = addParam ("lowPassCutoff", TRANS ("Low Pass Filter Cutoff"), { 0.1f, 20000.0f });
     lowPassCutoffParam->attachToCurrentValue (lowPassCutoffValue);
+
+    loadImpulseResponseFromState();
 }
 
-/** Destructor. */
 ImpulseResponsePlugin::~ImpulseResponsePlugin()
 {
     notifyListenersOfDeletion();
@@ -53,51 +50,69 @@ ImpulseResponsePlugin::~ImpulseResponsePlugin()
 const char* ImpulseResponsePlugin::getPluginName() { return NEEDS_TRANS ("Impulse Response"); }
 
 //==============================================================================
-/** Loads an impulse from binary audio file data i.e. not a block of raw floats.
-    @see juce::Convolution::loadImpulseResponse
-*/
-void ImpulseResponsePlugin::loadImpulseResponse (const void* sourceData, size_t sourceDataSize,
-    dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming, size_t size,
-    dsp::Convolution::Normalise requiresNormalisation)
+bool ImpulseResponsePlugin::loadImpulseResponse (const void* sourceData, size_t sourceDataSize)
 {
-    processorChain.get<convolutionIndex>().loadImpulseResponse (sourceData, sourceDataSize, isStereo, requiresTrimming, size, requiresNormalisation);
+    auto is = std::make_unique<MemoryInputStream> (sourceData, sourceDataSize, false);
+    auto& formatManager = engine.getAudioFileFormatManager().readFormatManager;
+    
+    if (auto reader = std::unique_ptr<AudioFormatReader> (formatManager.createReaderFor (std::move (is))))
+    {
+        juce::AudioBuffer<float> buffer;
+        reader->read (&buffer, 0, (int) reader->lengthInSamples,
+                      0, true, true);
+
+        return loadImpulseResponse (std::move (buffer), reader->sampleRate, (int) reader->bitsPerSample);
+    }
+    
+    return false;
 }
 
-/** Loads an impulse from a file.
-    @see juce::Convolution::loadImpulseResponse
-*/
-void ImpulseResponsePlugin::loadImpulseResponse (const File& fileImpulseResponse, size_t sizeInBytes, dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming)
+bool ImpulseResponsePlugin::loadImpulseResponse (const File& fileImpulseResponse)
 {
-    processorChain.get<convolutionIndex>().loadImpulseResponse (fileImpulseResponse, isStereo, requiresTrimming, sizeInBytes);
-
+    MemoryBlock fileDataMemoryBlock;
+    
+    if (fileImpulseResponse.loadFileAsData (fileDataMemoryBlock))
+        return loadImpulseResponse (fileDataMemoryBlock.getData(), fileDataMemoryBlock.getSize());
+    
+    return false;
 }
 
-/** Loads an impulse from an AudioBuffer<float>.
-    @see juce::Convolution::loadImpulseResponse
-*/
-void ImpulseResponsePlugin::loadImpulseResponse (AudioBuffer<float>&& bufferImpulseResponse, dsp::Convolution::Stereo isStereo, dsp::Convolution::Trim requiresTrimming, dsp::Convolution::Normalise requiresNormalisation)
+bool ImpulseResponsePlugin::loadImpulseResponse (AudioBuffer<float>&& bufferImpulseResponse,
+                                                 double sampleRateToStore,
+                                                 int bitDepthToStore)
 {
-    processorChain.get<convolutionIndex>().loadImpulseResponse (std::move (bufferImpulseResponse), sampleRate, isStereo, requiresTrimming, requiresNormalisation);
+    juce::MemoryBlock fileDataMemoryBlock;
+
+    if (auto writer = std::unique_ptr<AudioFormatWriter> (FlacAudioFormat().createWriterFor (new MemoryOutputStream (fileDataMemoryBlock, false),
+                                                                                             sampleRateToStore,
+                                                                                             (unsigned int) bufferImpulseResponse.getNumChannels(),
+                                                                                             std::min (24, bitDepthToStore),
+                                                                                             {},
+                                                                                             0)))
+    {
+        if (writer->writeFromAudioSampleBuffer (bufferImpulseResponse, 0, bufferImpulseResponse.getNumSamples()))
+        {
+            writer.reset(); // Delete the writer to flush the block before moving the buffer on
+            state.setProperty (IDs::irFileData, juce::var (std::move (fileDataMemoryBlock)), getUndoManager());
+            return true;
+        }
+    }
+
+    return false;
 }
 
 
 //==============================================================================
-/** @internal */
-juce::String ImpulseResponsePlugin::getName() { return getPluginName(); }
-/** @internal */
-juce::String ImpulseResponsePlugin::getPluginType() { return xmlTypeName; }
-/** @internal */
-bool ImpulseResponsePlugin::needsConstantBufferSize() { return false; }
-/** @internal */
-juce::String ImpulseResponsePlugin::getSelectableDescription() { return getName(); }
+juce::String ImpulseResponsePlugin::getName()                   { return getPluginName(); }
+juce::String ImpulseResponsePlugin::getPluginType()             { return xmlTypeName; }
+bool ImpulseResponsePlugin::needsConstantBufferSize()           { return false; }
+juce::String ImpulseResponsePlugin::getSelectableDescription()  { return getName(); }
 
-/** @internal */
 double ImpulseResponsePlugin::getLatencySeconds()
 {
     return processorChain.get<convolutionIndex>().getLatency() / sampleRate;
 }
 
-/** @internal */
 void ImpulseResponsePlugin::initialise (const PluginInitialisationInfo& info)
 {
     dsp::ProcessSpec processSpec;
@@ -107,17 +122,14 @@ void ImpulseResponsePlugin::initialise (const PluginInitialisationInfo& info)
     processorChain.prepare (processSpec);
 }
 
-/** @internal */
 void ImpulseResponsePlugin::deinitialise()
 {}
 
-/** @internal */
 void ImpulseResponsePlugin::reset()
 {
     processorChain.reset();
 }
 
-/** @internal */
 void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     auto& preGain = processorChain.get<preGainIndex>();
@@ -137,14 +149,46 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
     processorChain.process (context);
 }
 
-/** @internal */
 void ImpulseResponsePlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
     CachedValue <float>* cvsFloat[] = { &preGainValue, &postGainValue, &highPassCutoffValue, &lowPassCutoffValue, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+    
+    if (auto irFileData = v.getProperty (IDs::irFileData).getBinaryData())
+        state.setProperty (IDs::irFileData, juce::var (juce::MemoryBlock (*irFileData)), getUndoManager());
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();
+}
+
+//==============================================================================
+void ImpulseResponsePlugin::loadImpulseResponseFromState()
+{
+    if (auto irFileData = state.getProperty (IDs::irFileData).getBinaryData())
+    {
+        auto is = std::make_unique<MemoryInputStream> (*irFileData, false);
+
+        if (auto reader = std::unique_ptr<AudioFormatReader> (FlacAudioFormat().createReaderFor (is.release(), true)))
+        {
+            juce::AudioSampleBuffer loadIRBuffer ((int) reader->numChannels, (int) reader->lengthInSamples);
+            reader->read (&loadIRBuffer, 0, (int) reader->lengthInSamples, 0, true, true);
+
+            jassert (reader->numChannels > 0);
+            processorChain.get<convolutionIndex>().loadImpulseResponse (std::move (loadIRBuffer),
+                                                                        reader->sampleRate,
+                                                                        reader->numChannels > 1 ? dsp::Convolution::Stereo::yes : dsp::Convolution::Stereo::no,
+                                                                        dsp::Convolution::Trim::no,
+                                                                        dsp::Convolution::Normalise::no);
+        }
+    }
+}
+
+void ImpulseResponsePlugin::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& id)
+{
+    if (v == state && id == IDs::irFileData)
+        loadImpulseResponseFromState();
+    else
+        Plugin::valueTreePropertyChanged (v, id);
 }
 
 }
