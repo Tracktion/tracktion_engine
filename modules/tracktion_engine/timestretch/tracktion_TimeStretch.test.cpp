@@ -11,7 +11,7 @@
 #if TRACKTION_UNIT_TESTS
 
 // Enable this to dump the output of the current test file to the desktop
-#define TIMESTRETCHER_WRITE_WRITE_TEST_FILES 0
+#define TIMESTRETCHER_WRITE_WRITE_TEST_FILES 1
 
 //==============================================================================
 //==============================================================================
@@ -103,7 +103,8 @@ private:
         stretcher.setSpeedAndPitch (stretchRatio, semitonesUp);
 
         const auto sourceBuffer = createSinBuffer (sampleRate, numChannels, 440.0f);
-        const auto resultBuffer = processBuffer (stretcher, sourceBuffer, blockSize, stretchRatio);
+        const auto resultBuffer = processBuffer (stretcher, sourceBuffer, blockSize, stretchRatio,
+                                                 mode == tracktion_engine::TimeStretcher::elastiquePro);
 
        #if TIMESTRETCHER_WRITE_WRITE_TEST_FILES
         writeToFile (juce::File::getSpecialLocation (juce::File::userDesktopDirectory).getChildFile ("original.wav"), sourceBuffer, sampleRate);
@@ -114,8 +115,8 @@ private:
         const int expectedSize = (int) std::ceil (sourceBuffer.getNumSamples() * stretchRatio);
 
         // Check number of zero crossings and estimate pitch
-        const int numZeroCrossingsShifted = getNumZeroCrossings (resultBuffer);
-        const float shiftedPitch = getPitchFromNumZeroCrossings (numZeroCrossingsShifted, resultBuffer.getNumSamples(), 44100);
+        const int numZeroCrossingsShifted = getNumZeroCrossings (resultBuffer, expectedSize);
+        const float shiftedPitch = getPitchFromNumZeroCrossings (numZeroCrossingsShifted, expectedSize, sampleRate);
 
         // Compare shiftedPitch to expectedPitchValue with a 6% tolerance
         expectWithinAbsoluteError (shiftedPitch, expectedPitchValue, expectedPitchValue * 0.06f);
@@ -155,7 +156,8 @@ private:
     
     static juce::AudioBuffer<float> processBuffer (tracktion_engine::TimeStretcher& stretcher,
                                                    const juce::AudioBuffer<float>& sourceBuffer,
-                                                   const int blockSize, float stretchRatio)
+                                                   const int blockSize, float stretchRatio,
+                                                   bool stretcherRequiresFramesNeeded)
     {
         const int numChannels = sourceBuffer.getNumChannels();
         jassert (numChannels == 2); // Expected stereo for now
@@ -168,6 +170,10 @@ private:
         {
             const int numInputSamplesLeft = sourceBuffer.getNumSamples() - numInputsDone;
             const int numInputSamplesThisBlock = std::min (stretcher.getFramesNeeded(), numInputSamplesLeft);
+            
+            if (stretcherRequiresFramesNeeded && numInputSamplesThisBlock < stretcher.getFramesNeeded())
+                break;
+            
             const float* inputs[2] = { sourceBuffer.getReadPointer (0, numInputsDone),
                                        sourceBuffer.getReadPointer (1, numInputsDone) };
             float* outputs[2] = { resultBuffer.getWritePointer (0, numOutputsDone),
@@ -188,6 +194,9 @@ private:
         // Flush until no outputs are left
         for (;;)
         {
+            if (numOutputsDone >= resultBuffer.getNumSamples())
+                break;
+            
             float* outputs[2] = { resultBuffer.getWritePointer (0, numOutputsDone),
                                   resultBuffer.getWritePointer (1, numOutputsDone) };
             
@@ -214,12 +223,13 @@ private:
         return pitchInHertz;
     }
 
-    static int getNumZeroCrossings (const AudioBuffer<float>& buffer)
+    static int getNumZeroCrossings (const AudioBuffer<float>& buffer, int numSamplesToUse)
     {
+        jassert (numSamplesToUse <= buffer.getNumSamples());
         auto dest = buffer.getReadPointer (0);
         int numZeroCrossings = 0;
 
-        for (int sample = 1; sample < buffer.getNumSamples(); ++sample)
+        for (int sample = 1; sample < numSamplesToUse; ++sample)
         {
             if (((dest[sample - 1] > 0.0f) && (dest[sample] <= 0.0f))
              || ((dest[sample - 1] < 0.0f) && (dest[sample] >= 0.0f)))
