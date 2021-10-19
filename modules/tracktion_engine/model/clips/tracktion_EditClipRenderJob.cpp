@@ -304,7 +304,7 @@ bool EditRenderJob::RenderPass::initialise()
         cnp.includePlugins = r.usePlugins;
         cnp.includeMasterPlugins = r.useMasterPlugins;
         cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
-        cnp.includeBypassedPlugins = ! r.engine->getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph();
+        cnp.includeBypassedPlugins = false;
 
         std::unique_ptr<tracktion_graph::Node> node;
         callBlocking ([this, &node, &cnp] { node = createNodeForEdit (*r.edit, cnp); });

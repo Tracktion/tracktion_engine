@@ -53,7 +53,7 @@ namespace render_utils
         cnp.includePlugins = r.usePlugins;
         cnp.includeMasterPlugins = r.useMasterPlugins;
         cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
-        cnp.includeBypassedPlugins = ! r.engine->getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph();
+        cnp.includeBypassedPlugins = false;
 
         std::unique_ptr<tracktion_graph::Node> node;
         callBlocking ([&r, &node, &cnp] { node = createNodeForEdit (*r.edit, cnp); });
@@ -147,7 +147,7 @@ Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
     cnp.includePlugins = r.usePlugins;
     cnp.includeMasterPlugins = r.useMasterPlugins;
     cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
-    cnp.includeBypassedPlugins = ! r.engine->getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph();
+    cnp.includeBypassedPlugins = false;
 
     callBlocking ([this, &r, &cnp] { graphNode = createNodeForEdit (*r.edit, cnp); });
 }
