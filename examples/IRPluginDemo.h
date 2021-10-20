@@ -159,8 +159,7 @@ private:
     void loadIRFileIntoPluginBuffer (const void* sourceData, size_t sourceDataSize)
     {
         auto plugin = EngineHelpers::getOrInsertAudioTrackAt (edit, 0)->pluginList.findFirstPluginOfType<ImpulseResponsePlugin>();
-        plugin->loadImpulseResponse (sourceData, sourceDataSize,
-                                     dsp::Convolution::Stereo::yes, dsp::Convolution::Trim::no, 0, dsp::Convolution::Normalise::yes);
+        plugin->loadImpulseResponse (sourceData, sourceDataSize);
 
     }
     
@@ -188,7 +187,7 @@ private:
                               true);
 
                 auto plugin = EngineHelpers::getOrInsertAudioTrackAt (edit, 0)->pluginList.findFirstPluginOfType<ImpulseResponsePlugin>();
-                plugin->loadImpulseResponse (std::move (fileBuffer), dsp::Convolution::Stereo::yes, dsp::Convolution::Trim::no, dsp::Convolution::Normalise::yes);
+                plugin->loadImpulseResponse (std::move (fileBuffer), reader->sampleRate, (int) reader->bitsPerSample);
             }
         });
     }

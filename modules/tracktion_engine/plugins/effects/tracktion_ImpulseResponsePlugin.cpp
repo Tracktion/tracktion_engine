@@ -57,9 +57,8 @@ bool ImpulseResponsePlugin::loadImpulseResponse (const void* sourceData, size_t 
     
     if (auto reader = std::unique_ptr<AudioFormatReader> (formatManager.createReaderFor (std::move (is))))
     {
-        juce::AudioBuffer<float> buffer;
-        reader->read (&buffer, 0, (int) reader->lengthInSamples,
-                      0, true, true);
+        juce::AudioBuffer<float> buffer ((int) reader->numChannels, (int) reader->lengthInSamples);
+        reader->read (&buffer, 0, buffer.getNumSamples(), 0, true, true);
 
         return loadImpulseResponse (std::move (buffer), reader->sampleRate, (int) reader->bitsPerSample);
     }
