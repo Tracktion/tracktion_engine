@@ -78,8 +78,6 @@ public:
     };
 
     //==============================================================================
-    tracktion_graph::PlayHead* getNodePlayHead() const;
-
     // These methods deal directly with the playhead so won't have any latency induced by syncing to the messaged thread.
     bool isPlaying() const;
     bool isLooping() const;
@@ -103,9 +101,17 @@ public:
     double globalStreamTimeToEditTimeUnlooped (double) const;
     void resyncToGlobalStreamTime (juce::Range<double>);
 
+    /** @internal. Will be removed in a future release. */
+    tracktion_graph::PlayHead* getNodePlayHead() const;
+
+    /** @see tracktion_graph::ThreadPoolStrategy */
     static void setThreadPoolStrategy (int);
+    /** @see tracktion_graph::ThreadPoolStrategy */
     static int getThreadPoolStrategy();
     
+    /** Enables reusing of audio buffers during graph processing
+        which may reduce the memory use at the cost of some additional overhead.
+    */
     static void enablePooledMemory (bool);
 
 private:

@@ -578,6 +578,7 @@ Renderer::Statistics Renderer::measureStatistics (const String& taskDescription,
         r.blockSizeForAudio = blockSizeForAudio;
         r.time = range;
         r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (edit.engine);
+        r.tracksToDo = tracksToDo;
         
         if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))
         {

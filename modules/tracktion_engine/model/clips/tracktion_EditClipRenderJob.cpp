@@ -327,9 +327,10 @@ void EditRenderJob::renderSeparateTracks()
     // The logic here is fairly complicated but esseintially we want the following resulting tracks:
     // 1. Any top-level audio tracks
     // 2. Any top-level sub-mix folder tracks
-    // 3. Any audio or sub-mix folder tracks contained in Folder tracks (which aren't sub-mix tracks)
+    // 3. Any audio or sub-mix folder tracks contained in Folder tracks
     // 4. Only tracks that are contained in the tracksToDo mask
 
+    jassert (params.separateTracks);
     auto originalTracksToDo = params.tracksToDo;
     Array<File> createdFiles;
 
@@ -378,7 +379,6 @@ void EditRenderJob::renderSeparateTracks()
                                                        + file.getFileExtension());
 
                 params.destFile = File (File::createLegalPathName (getNonExistentSiblingWithIncrementedNumberSuffix (trackFile, false).getFullPathName()));
-
                 params.tracksToDo = tracksToDo;
 
                 if (Renderer::checkTargetFile (track->edit.engine, params.destFile))

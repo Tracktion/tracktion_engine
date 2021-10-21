@@ -147,6 +147,26 @@ namespace
         return instances;
     }
 
+    // If we're rendering and try to render a track in a submix,
+    // only render it if the parent track isn't included in the allowed tracks
+    // This allows us to render tracks contained inside submixes without the
+    // parent submix effects applied
+    bool shouldRenderTrackInSubmix (Track& t, const CreateNodeParams& params)
+    {
+        jassert (t.isPartOfSubmix());
+        
+        if (! params.forRendering)
+            return false;
+        
+        if (params.allowedTracks == nullptr)
+            return false;
+        
+        for (auto allowedTrack : *params.allowedTracks)
+            if (t.isAChildOf (*allowedTrack))
+                return false;
+        
+        return true;
+    }
 
 //==============================================================================
 //==============================================================================
@@ -924,7 +944,6 @@ std::unique_ptr<tracktion_graph::Node> createNodeForSubmixTrack (FolderTrack& su
 {
     CRASH_TRACER
     jassert (submixTrack.isSubmixFolder());
-    jassert (! submixTrack.isPartOfSubmix());
 
     juce::Array<AudioTrack*> subAudioTracks;
     juce::Array<FolderTrack*> subFolderTracks;
@@ -947,6 +966,9 @@ std::unique_ptr<tracktion_graph::Node> createNodeForSubmixTrack (FolderTrack& su
     // Create nodes for any submix tracks
     for (auto ft : subFolderTracks)
     {
+        if (params.allowedTracks != nullptr && ! params.allowedTracks->contains (ft))
+            continue;
+
         if (! ft->isProcessing (true))
             continue;
 
@@ -996,7 +1018,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForTrack (Track& track, const C
         if (! t->createsOutput())
             return {};
 
-        if (t->isPartOfSubmix())
+        if (t->isPartOfSubmix() && ! shouldRenderTrackInSubmix (*t, params))
             return {};
 
         if (t->isFrozen (Track::groupFreeze))
@@ -1010,7 +1032,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForTrack (Track& track, const C
         if (! t->isSubmixFolder())
             return {};
 
-        if (t->isPartOfSubmix())
+        if (t->isPartOfSubmix() && ! shouldRenderTrackInSubmix (*t, params))
             return {};
 
         if (t->getOutput() == nullptr)
