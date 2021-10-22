@@ -282,14 +282,8 @@ bool EditRenderJob::RenderPass::initialise()
         && r.destFile.hasWriteAccess()
         && ! r.destFile.isDirectory())
     {
-        Array<Track*> tracksToDo;
+        auto tracksToDo = toTrackArray (*r.edit, r.tracksToDo);
 
-        // Find Track pointers for bitset
-        auto allTracks = getAllTracks (*r.edit);
-
-        for (auto bit = r.tracksToDo.findNextSetBit (0); bit != -1; bit = r.tracksToDo.findNextSetBit (bit + 1))
-            tracksToDo.add (allTracks[bit]);
-        
         // Initialise playhead and continuity
         auto playHead = std::make_unique<tracktion_graph::PlayHead>();
         auto playHeadState = std::make_unique<tracktion_graph::PlayHeadState> (*playHead);

@@ -682,7 +682,7 @@ ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> VolumeEffect::createR
     auto n = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {}, 1.0, AudioChannelSet::stereo());
 
     return new AudioNodeRenderJob (edit.engine, new PluginAudioNode (plugin, n, false),
-                                   getDestinationFile(), sourceFile);
+                                   getDestinationFile(), sourceFile, 128);
 }
 
 bool VolumeEffect::hasProperties()

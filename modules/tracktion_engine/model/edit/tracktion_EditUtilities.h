@@ -79,6 +79,17 @@ bool containsTrack (const Edit&, const Track&);
 /** Returns the TrackOutput if the given track has one. */
 TrackOutput* getTrackOutput (Track&);
 
+/** Returns the set of tracks as a BigInteger with each bit corresponding to the
+    array of all tracks in an Edit. Used in Renderer.
+*/
+juce::BigInteger toBitSet (const juce::Array<Track*>&);
+
+/** Returns an Array of Track[s] corresponding to the set bits of all
+    tracks in an Edit. Used in Renderer.
+*/
+juce::Array<Track*> toTrackArray (Edit&, const juce::BigInteger&);
+
+
 //==============================================================================
 // Clips
 //==============================================================================
