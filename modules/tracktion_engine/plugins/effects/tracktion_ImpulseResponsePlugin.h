@@ -64,6 +64,8 @@ public:
     /** @internal */
     juce::String getName() override;
     /** @internal */
+    juce::String getShortName (int /*suggestedLength*/);
+    /** @internal */
     juce::String getPluginType() override;
     /** @internal */
     bool needsConstantBufferSize() override;

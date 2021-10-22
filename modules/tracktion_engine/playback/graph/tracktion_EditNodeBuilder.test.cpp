@@ -235,6 +235,7 @@ private:
         audio_1						= -12dB
         submix_1, audio_1			= 0dB/NA
         submix_1, submix_2			= 0dB/NA
+        submix_1                    = 0dB/NA
         submix_2					= 0dB/NA
     */
     void runSubmix (test_utilities::TestSetup ts,
