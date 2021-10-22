@@ -64,7 +64,7 @@ public:
     /** @internal */
     juce::String getName() override;
     /** @internal */
-    juce::String getShortName (int /*suggestedLength*/);
+    juce::String getShortName (int /*suggestedLength*/) override;
     /** @internal */
     juce::String getPluginType() override;
     /** @internal */
