@@ -25,20 +25,6 @@ PluginRenderContext::PluginRenderContext (juce::AudioBuffer<float>* buffer,
       allowBypassedProcessing (shouldAllowBypassedProcessing)
 {}
 
-PluginRenderContext::PluginRenderContext (const AudioRenderContext& rc)
-    : destBuffer (rc.destBuffer),
-      destBufferChannels (rc.destBufferChannels),
-      bufferStartSample (rc.bufferStartSample),
-      bufferNumSamples (rc.bufferNumSamples),
-      bufferForMidiMessages (rc.bufferForMidiMessages),
-      midiBufferOffset (rc.midiBufferOffset),
-      editTime (rc.getEditTime().editRange1.getStart()),
-      isPlaying (rc.playhead.isPlaying()),
-      isScrubbing (rc.playhead.isUserDragging()),
-      isRendering (rc.isRendering)
-{
-}
-
 //==============================================================================
 Plugin::Wire::Wire (const juce::ValueTree& v, UndoManager* um)  : state (v)
 {
@@ -74,315 +60,6 @@ struct Plugin::WireList : public ValueTreeObjectList<Plugin::Wire, CriticalSecti
     Plugin& plugin;
 };
 
-//==============================================================================
-class PluginAudioNode   : public AudioNode
-{
-public:
-    PluginAudioNode (const Plugin::Ptr& p, AudioNode* in, bool denormalisationNoise)
-        : plugin (p), input (in), applyAntiDenormalisationNoise (denormalisationNoise)
-    {
-        jassert (input != nullptr);
-        jassert (plugin != nullptr);
-    }
-
-    ~PluginAudioNode() override
-    {
-        input = nullptr;
-        releaseAudioNodeResources();
-    }
-
-    void getAudioNodeProperties (AudioNodeProperties& info) override
-    {
-        if (input != nullptr)
-        {
-            input->getAudioNodeProperties (info);
-        }
-        else
-        {
-            info.hasAudio = false;
-            info.hasMidi = false;
-            info.numberOfChannels = 0;
-        }
-
-        info.numberOfChannels = jmax (info.numberOfChannels, plugin->getNumOutputChannelsGivenInputs (info.numberOfChannels));
-        info.hasAudio = info.hasAudio || plugin->producesAudioWhenNoAudioInput();
-        info.hasMidi  = info.hasMidi  || plugin->takesMidiInput();
-        hasAudioInput = info.hasAudio;
-        hasMidiInput  = info.hasMidi;
-    }
-
-    void visitNodes (const VisitorFn& v) override
-    {
-        v (*this);
-
-        if (input != nullptr)
-            input->visitNodes (v);
-    }
-
-    Plugin::Ptr getPlugin() const override    { return plugin; }
-
-    bool purgeSubNodes (bool keepAudio, bool keepMidi) override
-    {
-        const bool pluginWantsMidi = plugin->takesMidiInput() || plugin->isSynth();
-
-        return (input != nullptr && input->purgeSubNodes (keepAudio, keepMidi || pluginWantsMidi))
-                || pluginWantsMidi
-                || ! plugin->noTail();
-    }
-
-    void prepareAudioNodeToPlay (const PlaybackInitialisationInfo& info) override
-    {
-        if (! hasInitialised)
-        {
-            hasInitialised = true;
-            plugin->baseClassInitialise (info);
-            latencySeconds = plugin->getLatencySeconds();
-
-            if (input != nullptr)
-                input->prepareAudioNodeToPlay (info);
-        }
-    }
-
-    bool isReadyToRender() override
-    {
-        if (auto rf = dynamic_cast<RackInstance*> (plugin.get()))
-            if (rf->type != nullptr)
-                return rf->type->isReadyToRender();
-
-        if (input != nullptr)
-            return input->isReadyToRender();
-
-        return true;
-    }
-
-    double getLatencySeconds() const noexcept
-    {
-        return latencySeconds;
-    }
-
-    void releaseAudioNodeResources() override
-    {
-        if (hasInitialised)
-        {
-            hasInitialised = false;
-
-            if (input != nullptr)
-                input->releaseAudioNodeResources();
-
-            plugin->baseClassDeinitialise();
-        }
-    }
-
-    void renderAdding (const AudioRenderContext& rc) override
-    {
-        if (plugin->isEnabled() && (rc.isRendering || (! plugin->isFrozen())))
-        {
-            callRenderOver (rc);
-        }
-        else
-        {
-            if (rc.didPlayheadJump())
-                plugin->reset();
-
-            if (input != nullptr)
-                input->renderAdding (rc);
-        }
-    }
-
-    void renderOver (const AudioRenderContext& rc) override
-    {
-        if (rc.didPlayheadJump())
-            plugin->reset();
-
-        if (plugin->isEnabled() && (rc.isRendering || (! plugin->isFrozen())))
-        {
-            if (latencySeconds > 0)
-            {
-                AudioRenderContext rc2 (rc);
-                rc2.streamTime = rc2.streamTime + latencySeconds;
-
-                input->renderOver (rc2);
-                renderPlugin (rc2);
-            }
-            else
-            {
-                input->renderOver (rc);
-                renderPlugin (rc);
-            }
-        }
-        else
-        {
-            plugin->cpuUsageMs = 0.0;
-            input->renderOver (rc);
-        }
-    }
-
-    virtual void renderPlugin (const AudioRenderContext& rc)
-    {
-        SCOPED_REALTIME_CHECK
-
-        if (applyAntiDenormalisationNoise)
-            rc.addAntiDenormalisationNoise();
-
-        if (! rc.isContiguousWithPreviousBlock())
-            plugin->updateParameterStreams (rc.getEditTime().editRange1.getStart());
-
-        plugin->applyToBufferWithAutomation (rc);
-    }
-
-    void prepareForNextBlock (const AudioRenderContext& rc) override
-    {
-        plugin->prepareForNextBlock (rc.getEditTime().editRange1.getStart());
-        input->prepareForNextBlock (rc);
-    }
-
-protected:
-    Plugin::Ptr plugin;
-    std::unique_ptr<AudioNode> input;
-
-    bool hasAudioInput = false, hasMidiInput = false, applyAntiDenormalisationNoise = false, hasInitialised = false;
-    double latencySeconds = 0.0;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginAudioNode)
-};
-
-//==============================================================================
-class FineGrainPluginAudioNode  : public PluginAudioNode
-{
-public:
-    FineGrainPluginAudioNode (const Plugin::Ptr& p, AudioNode* in, bool denormalisationNoise)
-        : PluginAudioNode (p, in, denormalisationNoise)
-    {
-    }
-
-    static bool needsFineGrainAutomation (Plugin& p)
-    {
-        if (! p.isAutomationNeeded())
-            return false;
-
-        if (auto pl = p.getOwnerList())
-            if (pl->needsConstantBufferSize())
-                return false;
-
-        if (p.engine.getPluginManager().canUseFineGrainAutomation)
-            return p.engine.getPluginManager().canUseFineGrainAutomation (p);
-
-        return true;
-    }
-
-    void prepareAudioNodeToPlay (const PlaybackInitialisationInfo& info) override
-    {
-        PluginAudioNode::prepareAudioNodeToPlay (info);
-
-        blockSizeToUse = jmax (128, 128 * roundToInt (info.sampleRate / 44100.0));
-    }
-
-    void renderPlugin (const AudioRenderContext& rc) override
-    {
-        if (rc.bufferNumSamples == blockSizeToUse)
-            return PluginAudioNode::renderPlugin (rc);
-
-        SCOPED_REALTIME_CHECK
-
-        if (applyAntiDenormalisationNoise)
-            rc.addAntiDenormalisationNoise();
-
-        const double editTime = rc.getEditTime().editRange1.getStart();
-        const double streamTimePerSample = rc.streamTime.getLength() / rc.bufferNumSamples;
-
-        if (! rc.isContiguousWithPreviousBlock())
-            plugin->updateParameterStreams (editTime);
-
-        int numSamplesLeft = rc.bufferNumSamples;
-        int numSamplesDone = 0;
-        int midiIndex = 0;
-        double timeOffset = 0;
-
-        midiInputScratch.clear();
-        midiOutputScratch.clear();
-
-        AudioRenderContext rc2 (rc);
-        rc2.bufferForMidiMessages = rc.bufferForMidiMessages != nullptr ? &midiInputScratch : nullptr;
-        rc2.midiBufferOffset = 0;
-
-        if (rc.bufferForMidiMessages != nullptr)
-            midiInputScratch.isAllNotesOff = rc.bufferForMidiMessages->isAllNotesOff;
-
-        while (numSamplesLeft > 0)
-        {
-            const int numThisTime = jmin (blockSizeToUse, numSamplesLeft);
-            auto timeForBlock = streamTimePerSample * numThisTime;
-            auto endTimeOfBlock = editTime + timeOffset + timeForBlock;
-
-            // Create a new MIDI buffer with appropriate timings
-            if (auto* sourceMidi = rc.bufferForMidiMessages)
-            {
-                while (midiIndex < sourceMidi->size())
-                {
-                    auto& m = (*sourceMidi)[midiIndex++];
-                    auto timeStamp = m.getTimeStamp();
-
-                    if (timeStamp < rc.midiBufferOffset)
-                        continue;
-
-                    midiInputScratch.add (m, timeStamp - timeOffset);
-
-                    if (m.getTimeStamp() > endTimeOfBlock)
-                        break;
-                }
-            }
-
-            juce::AudioBuffer<float> asb;
-
-            if (rc.destBuffer != nullptr)
-            {
-                asb.setDataToReferTo (rc.destBuffer->getArrayOfWritePointers(), rc.destBuffer->getNumChannels(),
-                                      rc.bufferStartSample + numSamplesDone, numThisTime);
-                rc2.destBuffer = &asb;
-            }
-            else
-            {
-                rc2.destBuffer = nullptr;
-            }
-
-            rc2.bufferStartSample = 0;
-            rc2.bufferNumSamples = numThisTime;
-            rc2.streamTime = EditTimeRange (Range<double>::withStartAndLength (rc.streamTime.getStart() + timeOffset, timeForBlock));
-
-          #if JUCE_DEBUG
-            // Assert on any plugin that re-allocates buffers. That is NOT ok.
-            if (rc.destBuffer != nullptr)
-            {
-                AudioBufferSnapshot abs (asb);
-                plugin->applyToBufferWithAutomation (rc2);
-
-                if (abs.hasBufferBeenReallocated())
-                    jassertfalse;
-            }
-            else
-           #endif
-            {
-                plugin->applyToBufferWithAutomation (rc2);
-            }
-
-            midiOutputScratch.mergeFromAndClearWithOffset (midiInputScratch, timeOffset);
-            midiInputScratch.clear();
-
-            timeOffset += timeForBlock;
-            numSamplesLeft -= numThisTime;
-            numSamplesDone += numThisTime;
-        }
-
-        if (rc.bufferForMidiMessages != nullptr)
-            rc.bufferForMidiMessages->swapWith (midiOutputScratch);
-    }
-
-private:
-    MidiMessageArray midiInputScratch, midiOutputScratch;
-    int blockSizeToUse = 128;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FineGrainPluginAudioNode)
-};
 
 //==============================================================================
 Plugin::WindowState::WindowState (Plugin& p) : PluginWindowState (p.edit), plugin (p)  {}
@@ -736,27 +413,6 @@ void Plugin::valueTreeParentChanged (juce::ValueTree& v)
 }
 
 //==============================================================================
-AudioNode* Plugin::createAudioNode (AudioNode* input, bool applyAntiDenormalisationNoise)
-{
-    jassert (input != nullptr);
-
-    if (isDisabled())
-        return input;
-
-    const bool usesSidechain = ! isMissing() && sidechainSourceID->isValid();
-    AudioNode* node = usesSidechain ? new SidechainReceiveAudioNode (this, input) : input;
-
-    if (FineGrainPluginAudioNode::needsFineGrainAutomation (*this))
-        node = new FineGrainPluginAudioNode (*this, node, applyAntiDenormalisationNoise);
-    else
-        node = new PluginAudioNode (*this, node, applyAntiDenormalisationNoise);
-
-    if (usesSidechain)
-        node = new SidechainReceiveWrapperAudioNode (node);
-
-    return node;
-}
-
 void Plugin::changed()
 {
     Selectable::changed();
@@ -768,6 +424,17 @@ void Plugin::changed()
 void Plugin::setEnabled (bool b)
 {
     enabled = (b || ! canBeDisabled());
+    
+    if (! enabled)
+        cpuUsageMs = 0.0;
+}
+
+void Plugin::setFrozen (bool shouldBeFrozen)
+{
+    frozen = shouldBeFrozen;
+
+    if (frozen)
+        cpuUsageMs = 0.0;
 }
 
 String Plugin::getTooltip()
@@ -780,7 +447,7 @@ void Plugin::reset()
 }
 
 //==============================================================================
-void Plugin::baseClassInitialise (const PlaybackInitialisationInfo& info)
+void Plugin::baseClassInitialise (const PluginInitialisationInfo& info)
 {
     const bool sampleRateOrBlockSizeChanged = (sampleRate != info.sampleRate) || (blockSizeSamples != info.blockSizeSamples);
     bool isUpdatingWithoutStopping = false;

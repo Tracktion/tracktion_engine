@@ -12,7 +12,7 @@ namespace tracktion_engine
 {
 
 /**
-    Create a subclass of UIBehaviour to custom UI elements creted by the engine
+    Create a subclass of UIBehaviour to custom UI elements created by the engine
 */
 class UIBehaviour
 {

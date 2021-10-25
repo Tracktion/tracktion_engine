@@ -28,6 +28,16 @@ struct PluginCreationInfo
     bool isNewPlugin = false;
 };
 
+//==============================================================================
+/** Passed into Plugins when they are being initialised, to give them useful
+    contextual information that they may need
+*/
+struct PluginInitialisationInfo
+{
+    double startTime;
+    double sampleRate;
+    int blockSizeSamples;
+};
 
 //==============================================================================
 //==============================================================================
@@ -43,9 +53,6 @@ struct PluginRenderContext
                          double editTime, bool playing, bool scrubbing, bool rendering,
                          bool allowBypassedProcessing) noexcept;
 
-    /** Creates a PluginRenderContext from an AudioRenderContext. */
-    PluginRenderContext (const AudioRenderContext&);
-    
     /** Creates a copy of another PluginRenderContext. */
     PluginRenderContext (const PluginRenderContext&) = default;
     PluginRenderContext (PluginRenderContext&&) = default;
@@ -145,7 +152,7 @@ public:
     bool isEnabled() const noexcept                         { return enabled; }
 
     /** This is a bit different to being enabled as when frozen a plugin can't be interacted with. */
-    void setFrozen (bool shouldBeFrozen)                    { frozen = shouldBeFrozen; }
+    void setFrozen (bool shouldBeFrozen);
     bool isFrozen() const noexcept                          { return frozen; }
 
     /** Enable/Disable processing. If processing is disabled, plugin should minimize memory usage
@@ -162,13 +169,13 @@ public:
         Don't call this directly or the initialise count will become out of sync.
         @see baseClassInitialise
     */
-    virtual void initialise (const PlaybackInitialisationInfo&) = 0;
+    virtual void initialise (const PluginInitialisationInfo&) = 0;
 
     /** Tells the plugin that the audio graph has changed but the plugin isn't being
         re-initialised - i.e. it's being re-used, maybe by being moved to a different
         track, etc.
     */
-    virtual void initialiseWithoutStopping (const PlaybackInitialisationInfo&)  {}
+    virtual void initialiseWithoutStopping (const PluginInitialisationInfo&)  {}
 
     /** Called after play stops to release resources.
         Don't call this directly or the initialise count will become out of sync.
@@ -188,8 +195,6 @@ public:
         The buffer should be resized to the number of output channels that the plugin wants to
         return (which should be the same or less than the number of output channel names it returns
         from getChannelNames() - never more than this).
-
-        Other parameters and principles are similar to AudioNode::readBlock()
     */
     virtual void applyToBuffer (const PluginRenderContext&) = 0;
 
@@ -198,9 +203,6 @@ public:
 
     // wrapper on applyTobuffer, called by the node
     void applyToBufferWithAutomation (const PluginRenderContext&);
-
-    /** Creates a new audio node that will render this plugin. */
-    AudioNode* createAudioNode (AudioNode* input, bool applyAntiDenormalisationNoise);
 
     double getCpuUsage() const noexcept     { return juce::jlimit (0.0, 1.0, timeToCpuScale * cpuUsageMs.load()); }
 
@@ -343,7 +345,7 @@ public:
 
     //==============================================================================
     bool baseClassNeedsInitialising() const noexcept        { return initialiseCount == 0; }
-    void baseClassInitialise (const PlaybackInitialisationInfo&);
+    void baseClassInitialise (const PluginInitialisationInfo&);
     void baseClassDeinitialise();
 
     //==============================================================================
@@ -402,9 +404,6 @@ protected:
     static void getLeftRightChannelNames (juce::StringArray* chans);
 
 private:
-    friend class PluginAudioNode;
-    friend class FineGrainPluginAudioNode;
-
     mutable AutomatableParameter::Ptr quickControlParameter;
 
     int initialiseCount = 0;

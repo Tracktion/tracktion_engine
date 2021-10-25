@@ -184,8 +184,8 @@ struct RetrospectiveMidiBuffer
 };
 
 //==============================================================================
-MidiInputDevice::MidiInputDevice (Engine& e, const String& type, const String& name)
-   : InputDevice (e, type, name)
+MidiInputDevice::MidiInputDevice (Engine& e, const String& deviceType, const String& deviceName)
+   : InputDevice (e, deviceType, deviceName)
 {
     levelMeasurer.setShowMidi (true);
 
@@ -664,20 +664,20 @@ public:
         if (! recording)
             return {};
 
-        return context.stopRecording (*this, { startTime, context.playhead.getUnloopedPosition() }, false);
+        return context.stopRecording (*this, { startTime, context.getUnloopedPosition() }, false);
     }
 
     bool handleIncomingMidiMessage (const MidiMessage& message)
     {
         if (recording)
-            recorded.addEvent (MidiMessage (message, context.playhead.streamTimeToSourceTimeUnlooped (message.getTimeStamp())));
+            recorded.addEvent (MidiMessage (message, context.globalStreamTimeToEditTimeUnlooped (message.getTimeStamp())));
 
-        ScopedLock sl (nodeLock);
+        ScopedLock sl (consumerLock);
 
-        for (auto n : nodes)
-            n->handleIncomingMidiMessage (message);
+        for (auto c : consumers)
+            c->handleIncomingMidiMessage (message);
 
-        return recording || nodes.size() > 0;
+        return recording || consumers.size() > 0;
     }
 
     MidiChannel applyChannel (juce::MidiMessageSequence& sequence, MidiChannel channelToApply)
@@ -730,10 +730,8 @@ public:
                                                         : applyChannel (recorded, mi.getChannelToUse());
         auto timeAdjustMs = mi.getManualAdjustmentMs();
         
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
         if (context.getNodePlayHead() != nullptr)
             timeAdjustMs -= 1000.0 * tracktion_graph::sampleToTime (context.getLatencySamples(), edit.engine.getDeviceManager().getSampleRate());
-       #endif
         
         applyTimeAdjustment (recorded, timeAdjustMs);
 
@@ -1000,10 +998,8 @@ public:
                                                             : applyChannel (sequence, mi.getChannelToUse());
             auto timeAdjustMs = mi.getManualAdjustmentMs();
             
-           #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
             if (context.getNodePlayHead() != nullptr)
                 timeAdjustMs -= 1000.0 * tracktion_graph::sampleToTime (context.getLatencySamples(), edit.engine.getDeviceManager().getSampleRate());
-           #endif
             
             applyTimeAdjustment (sequence, timeAdjustMs);
 
@@ -1014,9 +1010,9 @@ public:
             double length = retrospective->lengthInSeconds;
             double offset = 0;
 
-            if (context.playhead.isPlaying())
+            if (context.isPlaying())
             {
-                start = jmax (0.0, context.playhead.getPosition()) - length;
+                start = jmax (0.0, context.getPosition()) - length;
             }
             else if (lastEditTime >= 0 && pausedTime < 20)
             {
@@ -1025,12 +1021,12 @@ public:
             }
             else
             {
-                auto position = context.playhead.getPosition();
+                auto position = context.getPosition();
 
                 if (position >= 5)
                     start = position - length;
                 else
-                    start = jmax (0.0, context.playhead.getPosition());
+                    start = jmax (0.0, context.getPosition());
             }
 
             if (sequence.getNumEvents() > 0)
@@ -1066,10 +1062,10 @@ public:
 
     void masterTimeUpdate (double time)
     {
-        if (context.playhead.isPlaying())
+        if (context.isPlaying())
         {
             pausedTime = 0;
-            lastEditTime = context.playhead.streamTimeToSourceTime (time);
+            lastEditTime = context.globalStreamTimeToEditTime (time);
         }
         else
         {
@@ -1082,11 +1078,6 @@ public:
         return owner.isEndToEndEnabled() && InputDeviceInstance::isLivePlayEnabled (t);
     }
 
-    AudioNode* createLiveInputNode() override
-    {
-        return new InputAudioNode (*this, midiSourceID);
-    }
-
     MidiInputDevice& getMidiInput() const   { return static_cast<MidiInputDevice&> (owner); }
 
     std::atomic<bool> recording { false }, livePlayOver { false };
@@ -1094,241 +1085,14 @@ public:
     juce::MidiMessageSequence recorded;
 
 private:
-    struct InputAudioNode  : public Consumer,
-                             public AudioNode
-    {
-        InputAudioNode (MidiInputDeviceInstanceBase& m, MidiMessageArray::MPESourceID msi)
-            : owner (m), midiSourceID (msi)
-        {
-            for (int i = 256; --i >= 0;)
-                incomingMessages.add (new MidiMessage (0x80, 0, 0));
-        }
-
-        ~InputAudioNode() override
-        {
-            releaseAudioNodeResources();
-        }
-
-        void getAudioNodeProperties (AudioNodeProperties& info) override
-        {
-            info.hasAudio = false;
-            info.hasMidi = true;
-            info.numberOfChannels = 0;
-        }
-
-        void visitNodes (const VisitorFn& v) override
-        {
-            v (*this);
-        }
-
-        bool purgeSubNodes (bool, bool keepMidi) override
-        {
-            return keepMidi;
-        }
-
-        void prepareAudioNodeToPlay (const PlaybackInitialisationInfo& info) override
-        {
-            lastPlayheadTime = 0.0;
-            numMessages = 0;
-            maxExpectedMsPerBuffer = (unsigned int) (((info.blockSizeSamples * 1000) / info.sampleRate) * 2 + 100);
-            auto& mi = getMidiInput();
-
-            {
-                const ScopedLock sl (bufferLock);
-
-                auto channelToUse = mi.getChannelToUse();
-                auto programToUse = mi.getProgramToUse();
-
-                if (channelToUse.isValid() && programToUse > 0)
-                    handleIncomingMidiMessage (MidiMessage::programChange (channelToUse.getChannelNumber(), programToUse - 1));
-            }
-
-            {
-                const ScopedLock sl (bufferLock);
-                liveRecordedMessages.clear();
-                numLiveMessagesToPlay = 0;
-            }
-
-            owner.addConsumer (this);
-        }
-
-        bool isReadyToRender() override
-        {
-            return true;
-        }
-
-        void releaseAudioNodeResources() override
-        {
-            owner.removeConsumer (this);
-
-            const ScopedLock sl (bufferLock);
-            numMessages = 0;
-            numLiveMessagesToPlay = 0;
-        }
-
-        void createProgramChanges (MidiMessageArray& bufferForMidiMessages)
-        {
-            auto& mi = getMidiInput();
-            auto channelToUse = mi.getChannelToUse();
-            auto programToUse = mi.getProgramToUse();
-
-            if (programToUse > 0 && channelToUse.isValid())
-                bufferForMidiMessages.addMidiMessage (MidiMessage::programChange (channelToUse.getChannelNumber(), programToUse - 1),
-                                                      0, midiSourceID);
-        }
-
-        void renderOver (const AudioRenderContext& rc) override
-        {
-            callRenderAdding (rc);
-        }
-
-        void renderAdding (const AudioRenderContext& rc) override
-        {
-            invokeSplitRender (rc, *this);
-        }
-
-        void renderSection (const AudioRenderContext& rc, EditTimeRange editTime)
-        {
-            if (rc.bufferForMidiMessages != nullptr)
-            {
-                const auto timeNow = Time::getApproximateMillisecondCounter();
-
-                const ScopedLock sl (bufferLock);
-
-                if (! rc.isContiguousWithPreviousBlock())
-                    createProgramChanges (*rc.bufferForMidiMessages);
-
-                // if it's been a long time since the last block, clear the buffer because
-                // it means we were muted or glitching
-                if (timeNow > lastReadTime + maxExpectedMsPerBuffer)
-                {
-                    //jassertfalse
-                    numMessages = 0;
-                }
-
-                lastReadTime = timeNow;
-
-                jassert (numMessages <= incomingMessages.size());
-
-                if (int num = jmin (numMessages, incomingMessages.size()))
-                {
-                    // not quite right as the first event won't be at the start of the buffer, but near enough for live stuff
-                    auto timeAdjust = incomingMessages.getUnchecked (0)->getTimeStamp();
-
-                    for (int i = 0; i < num; ++i)
-                    {
-                        auto* m = incomingMessages.getUnchecked (i);
-                        rc.bufferForMidiMessages->addMidiMessage (*m,
-                                                                  jlimit (0.0, jmax (0.0, editTime.getLength()), m->getTimeStamp() - timeAdjust),
-                                                                  midiSourceID);
-                    }
-                }
-
-                numMessages = 0;
-
-                if (lastPlayheadTime > editTime.getStart())
-                    // when we loop, we can assume all the messages in here are now from the previous time round, so are playable
-                    numLiveMessagesToPlay = liveRecordedMessages.size();
-
-                lastPlayheadTime = editTime.getStart();
-
-                auto& mi = getMidiInput();
-
-                bool createTakes = mi.recordingEnabled && ! (mi.mergeRecordings || mi.replaceExistingClips);
-
-                if ((! createTakes && ! mi.replaceExistingClips)
-                     && numLiveMessagesToPlay > 0
-                     && rc.playhead.isPlaying())
-                {
-                    const ScopedLock sl2 (liveInputLock);
-
-                    for (int i = 0; i < numLiveMessagesToPlay; ++i)
-                    {
-                        auto& m = liveRecordedMessages[i];
-                        auto t = m.getTimeStamp();
-
-                        if (editTime.contains (t))
-                            rc.bufferForMidiMessages->add (m, t - editTime.getStart());
-                    }
-                }
-            }
-        }
-
-        void handleIncomingMidiMessage (const MidiMessage& message) override
-        {
-            auto& mi = getMidiInput();
-            auto channelToUse = mi.getChannelToUse().getChannelNumber();
-
-            {
-                const ScopedLock sl (bufferLock);
-
-                if (numMessages < incomingMessages.size())
-                {
-                    auto& m = *incomingMessages.getUnchecked (numMessages);
-                    m = message;
-
-                    if (channelToUse > 0)
-                        m.setChannel (channelToUse);
-
-                    ++numMessages;
-                }
-            }
-
-            if (owner.livePlayOver)
-            {
-                auto& playhead = owner.context.playhead;
-
-                if (playhead.isPlaying())
-                {
-                    auto sourceTime = playhead.streamTimeToSourceTime (message.getTimeStamp());
-
-                    if (message.isNoteOff())
-                        sourceTime = mi.quantisation.roundUp (sourceTime, owner.edit);
-                    else if (message.isNoteOn())
-                        sourceTime = mi.quantisation.roundToNearest (sourceTime, owner.edit);
-
-                    if (playhead.isLooping())
-                        if (sourceTime >= playhead.getLoopTimes().end)
-                            sourceTime = playhead.getLoopTimes().start;
-
-                    MidiMessage newMess (message, sourceTime);
-
-                    if (channelToUse > 0)
-                        newMess.setChannel (channelToUse);
-
-                    const ScopedLock sl (liveInputLock);
-
-                    liveRecordedMessages.addMidiMessage (newMess, sourceTime, midiSourceID);
-                }
-            }
-        }
-
-        MidiInputDevice& getMidiInput() const noexcept   { return owner.getMidiInput(); }
-
-    private:
-        MidiInputDeviceInstanceBase& owner;
-
-        CriticalSection bufferLock;
-        OwnedArray<MidiMessage> incomingMessages;
-        int numMessages = 0;
-        MidiMessageArray liveRecordedMessages;
-        int numLiveMessagesToPlay = 0; // the index of the first message that's been recorded in the current loop
-        MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::notMPE;
-        CriticalSection liveInputLock;
-        unsigned int lastReadTime = 0, maxExpectedMsPerBuffer = 0;
-        double lastPlayheadTime = 0;
-
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InputAudioNode)
-    };
-
-    CriticalSection nodeLock;
-    Array<Consumer*> nodes;
+    CriticalSection consumerLock;
+    Array<Consumer*> consumers;
     double lastEditTime = -1.0;
     double pausedTime = 0;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
 
-    void addConsumer (Consumer* node) override      { ScopedLock sl (nodeLock); nodes.addIfNotAlreadyThere (node); }
-    void removeConsumer (Consumer* node) override   { ScopedLock sl (nodeLock); nodes.removeAllInstancesOf (node); }
+    void addConsumer (Consumer* c) override      { ScopedLock sl (consumerLock); consumers.addIfNotAlreadyThere (c); }
+    void removeConsumer (Consumer* c) override   { ScopedLock sl (consumerLock); consumers.removeAllInstancesOf (c); }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiInputDeviceInstanceBase)
 };

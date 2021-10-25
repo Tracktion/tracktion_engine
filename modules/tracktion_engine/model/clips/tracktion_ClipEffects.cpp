@@ -8,6 +8,13 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#include "../../playback/audionodes/tracktion_AudioNode.h"
+#include "../../playback/audionodes/tracktion_WaveAudioNode.h"
+#include "../../playback/audionodes/tracktion_TrackCompAudioNode.h"
+#include "../../playback/audionodes/tracktion_SpeedRampAudioNode.h"
+#include "../../playback/audionodes/tracktion_PluginAudioNode.h"
+#include "../../playback/audionodes/tracktion_FadeInOutAudioNode.h"
+
 namespace tracktion_engine
 {
 
@@ -674,8 +681,8 @@ ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> VolumeEffect::createR
 
     auto n = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {}, 1.0, AudioChannelSet::stereo());
 
-    return new AudioNodeRenderJob (edit.engine, plugin->createAudioNode (n, false),
-                                   getDestinationFile(), sourceFile);
+    return new AudioNodeRenderJob (edit.engine, new PluginAudioNode (plugin, n, false),
+                                   getDestinationFile(), sourceFile, 128);
 }
 
 bool VolumeEffect::hasProperties()
@@ -943,7 +950,7 @@ ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> StepVolumeEffect::cre
     }
 
     auto waveNode = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {}, 1.0, AudioChannelSet::stereo());
-    auto compNode = TrackCompManager::createTrackCompAudioNode (waveNode, TrackCompManager::TrackComp::getMuteTimes (nonMuteTimes), nonMuteTimes, fade);
+    auto compNode = createTrackCompAudioNode (waveNode, TrackCompManager::TrackComp::getMuteTimes (nonMuteTimes), nonMuteTimes, fade);
 
     return new AudioNodeRenderJob (edit.engine, compNode, destFile, sourceFile);
 }
@@ -1087,7 +1094,7 @@ ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> PitchShiftEffect::cre
 
     // Use 1.0 second of preroll to be safe. We can't ask the plugin since it
     // may not be initialized yet
-    return new AudioNodeRenderJob (edit.engine, plugin->createAudioNode (n, false),
+    return new AudioNodeRenderJob (edit.engine, new PluginAudioNode (plugin, n, false),
                                    getDestinationFile(), sourceFile, 512, 1.0);
 }
 
@@ -1297,7 +1304,7 @@ ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> PluginEffect::createR
     if (plugin != nullptr)
     {
         plugin->setProcessingEnabled (true);
-        n = plugin->createAudioNode (n, false);
+        n = new PluginAudioNode (plugin, n, false);
     }
 
     // Use 1.0 second of preroll to be safe. We can't ask the plugin since it

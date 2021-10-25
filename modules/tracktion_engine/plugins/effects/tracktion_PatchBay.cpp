@@ -108,7 +108,7 @@ void PatchBayPlugin::getChannelNames (StringArray* ins, StringArray* outs)
     }
 }
 
-void PatchBayPlugin::initialise (const PlaybackInitialisationInfo&)
+void PatchBayPlugin::initialise (const PluginInitialisationInfo&)
 {
 }
 

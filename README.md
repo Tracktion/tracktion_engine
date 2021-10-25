@@ -1,8 +1,8 @@
 ![](tutorials/images/tracktion_engine_powered.png)
 
-master: [![Build Status](https://dev.azure.com/TracktionDev/tracktion_engine_dev/_apis/build/status/Tracktion.tracktion_engine_dev?branchName=master)](https://dev.azure.com/TracktionDev/tracktion_engine_dev/_apis/build/status/Tracktion.tracktion_engine_dev?branchName=master)
+master: [![Build](https://github.com/Tracktion/tracktion_engine/actions/workflows/build.yaml/badge.svg?branch=master)](https://github.com/Tracktion/tracktion_engine/actions/workflows/build.yaml)
 
-develop: [![Build Status](https://dev.azure.com/TracktionDev/tracktion_engine_dev/_apis/build/status/Tracktion.tracktion_engine_dev?branchName=develop)](https://dev.azure.com/TracktionDev/tracktion_engine_dev/_apis/build/status/Tracktion.tracktion_engine_dev?branchName=develop)
+develop: [![Build](https://github.com/Tracktion/tracktion_engine/actions/workflows/build.yaml/badge.svg?branch=develop)](https://github.com/Tracktion/tracktion_engine/actions/workflows/build.yaml)
 
 # tracktion_engine
 ##### Welcome to the Tracktion Engine repository!
@@ -42,7 +42,7 @@ Once you're ready to dive in to the code, open the IDE files and have a read thr
 We are still in the process of fleshing out Doxygen formatted comments but the Doxygen generated documentation can be found here: https://tracktion.github.io/tracktion_engine/modules.html
 
 ## Contributing
-Tracktion Engine is provided in JUCE module format, for bug reports and features requests, please visit the [JUCE Forum](https://forum.juce.com/) -
+Tracktion Engine is provided in JUCE module format, for bug reports and features requests, please visit the [JUCE Forum and post using the Tracktion Engine category](https://forum.juce.com/c/tracktion-engine) -
 the Tracktion Engine developers are active there and will read every post and respond accordingly.
 We don't accept third party GitHub pull requests directly due to copyright restrictions
 but if you would like to contribute any changes please contact us.

@@ -95,7 +95,7 @@ private:
 
                 plugin.edit.restartPlayback(); // Restart playback to rebuild audio graph for the new latency to take effect
                 
-                plugin.edit.getTransport().triggerClearDevicesOnStop(); // This will fully re-initialise pluigns
+                plugin.edit.getTransport().triggerClearDevicesOnStop(); // This will fully re-initialise plugins
             }
 
             pi->refreshParameterList();
@@ -1093,7 +1093,7 @@ struct ExternalPlugin::MPEChannelRemapper
 };
 
 //==============================================================================
-void ExternalPlugin::initialise (const PlaybackInitialisationInfo& info)
+void ExternalPlugin::initialise (const PluginInitialisationInfo& info)
 {
     CRASH_TRACER_PLUGIN (getDebugName());
 

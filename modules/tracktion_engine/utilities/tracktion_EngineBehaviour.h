@@ -108,6 +108,9 @@ public:
     /** Should muted tracks processing be disabled to save CPU */
     virtual bool shouldProcessMutedTracks()                                         { return false; }
 
+    /** Should audio inputs be audible when monitor-enabled but not record enabled.  */
+    virtual bool monitorAudioInputsWithoutRecordEnable()                            { return false; }
+
     virtual bool areAudioClipsRemappedWhenTempoChanges()                            { return true; }
     virtual void setAudioClipsRemappedWhenTempoChanges (bool)                       {}
     virtual bool areAutoTempoClipsRemappedWhenTempoChanges()                        { return true; }
@@ -158,6 +161,16 @@ public:
     */
     virtual void describeWaveDevices (std::vector<WaveDeviceDescription>&, juce::AudioIODevice&, bool /*isInput*/) {}
 
+    //==============================================================================
+    /** Called by the MidiList to create a MidiMessageSequence for playback.
+        You can override this to add your own messages but should generally follow the
+        procedure in MidiList::createDefaultPlaybackMidiSequence.
+    */
+    virtual juce::MidiMessageSequence createPlaybackMidiSequence (const MidiList& list, MidiClip& clip, bool generateMPE)
+    {
+        return MidiList::createDefaultPlaybackMidiSequence (list, clip, generateMPE);
+    }
+    
     /** Must return the default looped sequence type to use.
 
         Current options are:

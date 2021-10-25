@@ -38,6 +38,7 @@ using namespace juce;
 #ifdef __GNUC__
  #pragma GCC diagnostic push
  #pragma GCC diagnostic ignored "-Wsign-conversion"
+ #pragma GCC diagnostic ignored "-Wshadow"
  #if ! __clang__
   #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
   #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
@@ -54,6 +55,7 @@ using namespace juce;
 #endif
 
 #include "timestretch/tracktion_TimeStretch.cpp"
+#include "timestretch/tracktion_TimeStretch.test.cpp"
 
 namespace tracktion_engine
 {

@@ -268,12 +268,12 @@ private:
             
             auto getOwnedNode = [this] (auto nodeToFind)
             {
-                for (auto& ownedNode : ownedNodes)
+                for (auto& ownedN : ownedNodes)
                 {
-                    if (ownedNode.get() == nodeToFind)
+                    if (ownedN.get() == nodeToFind)
                     {
-                        auto nodeToReturn = std::move (ownedNode);
-                        ownedNode.reset();
+                        auto nodeToReturn = std::move (ownedN);
+                        ownedN.reset();
                         return nodeToReturn;
                     }
                 }

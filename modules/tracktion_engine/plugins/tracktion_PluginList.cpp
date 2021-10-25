@@ -318,17 +318,4 @@ void PluginList::addDefaultTrackPlugins (bool useVCA)
     }
 }
 
-AudioNode* PluginList::createAudioNode (AudioNode* n, bool addNoise)
-{
-    jassert (list != nullptr);
-    jassert (n != nullptr);
-    int i = 0;
-
-    if (list != nullptr)
-        for (auto f : list->objects)
-            n = f->createAudioNode (n, (i++ == 0) && addNoise);
-
-    return n;
-}
-
 }

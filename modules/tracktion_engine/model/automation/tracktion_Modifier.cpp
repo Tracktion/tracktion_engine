@@ -11,6 +11,81 @@
 namespace tracktion_engine
 {
 
+//==============================================================================
+class Modifier::ValueFifo
+{
+public:
+    ValueFifo (double newSampleRate, double maxNumSecondsToStore)
+        : sampleRate (newSampleRate)
+    {
+        jassert (sampleRate > 0.0);
+        
+        const auto numSamplesToStore = (size_t) tracktion_graph::timeToSample (maxNumSecondsToStore, newSampleRate);
+        values = std::vector<float> (numSamplesToStore, 0.0f);
+    }
+    
+    void addValue (int numSamplesDelta, float value)
+    {
+        jassert ((size_t) numSamplesDelta < values.size());
+        
+        const float delta = (value - lastValue) / numSamplesDelta;
+        float alpha = lastValue;
+        
+        while (--numSamplesDelta >= 0)
+        {
+            if (++headIndex == values.size())
+                headIndex = 0;
+                
+            alpha += delta;
+            values[headIndex] = alpha;
+        }
+            
+        lastValue = value;
+    }
+    
+    [[nodiscard]] float getValueAt (double numSeconds) const
+    {
+        const size_t sampleDelta = (size_t) tracktion_graph::timeToSample (numSeconds, sampleRate);
+        
+        if (sampleDelta > values.size())
+            return {};
+        
+        const int deltaIndex = int (headIndex) - int (sampleDelta);
+        const size_t valueIndex = (size_t) juce::negativeAwareModulo (deltaIndex, (int) values.size());
+        
+        return values[valueIndex];
+    }
+    
+    [[nodiscard]] std::vector<float> getValues (double numSecondsBeforeNow) const
+    {
+        std::vector<float> v;
+        
+        const auto numValues = std::min (values.size(),
+                                         (size_t) tracktion_graph::timeToSample (numSecondsBeforeNow, sampleRate));
+        v.reserve (numValues);
+
+        int index = (int) headIndex;
+        
+        for (int i = (int) numValues; --i >= 0;)
+        {
+            v.push_back (values[(size_t) index]);
+            
+            if (--index < 0)
+                index = (int) values.size() - 1;
+        }
+
+        return v;
+    }
+    
+private:
+    double sampleRate = 0.0;
+    float lastValue = 0.0;
+    std::vector<float> values;
+    size_t headIndex = 0;
+};
+
+//==============================================================================
+//==============================================================================
 Modifier::Modifier (Edit& e, const juce::ValueTree& v)
     : AutomatableEditItem (e, v),
       state (v)
@@ -20,7 +95,7 @@ Modifier::Modifier (Edit& e, const juce::ValueTree& v)
     enabled.referTo (state, IDs::enabled, um, true);
 
     enabledParam = new DiscreteLabelledParameter ("enabled", TRANS("Enabled"), *this, { 0.0f, 1.0f },
-                                                  getEnabledNames().size(), getEnabledNames());
+                                                  modifier::getEnabledNames().size(), modifier::getEnabledNames());
     addAutomatableParameter (enabledParam);
     enabledParam->attachToCurrentValue (enabled);
 
@@ -63,6 +138,14 @@ void Modifier::baseClassInitialise (double newSampleRate, int blockSizeSamples)
     {
         CRASH_TRACER
         initialise (sampleRate, blockSizeSamples);
+
+        const double numSecondsToStore = maxHistoryTime;
+        valueFifo = std::make_unique<ValueFifo> (sampleRate, numSecondsToStore);
+        messageThreadValueFifo = std::make_unique<ValueFifo> (sampleRate, numSecondsToStore);
+        
+        const int numSamples = (int) tracktion_graph::timeToSample (numSecondsToStore, sampleRate);
+        const int numBlocks = (numSamples / blockSizeSamples) * 2;
+        valueFifoQueue.reset ((size_t) numBlocks);
     }
 
     CRASH_TRACER
@@ -79,13 +162,61 @@ void Modifier::baseClassDeinitialise()
         CRASH_TRACER
         deinitialise();
         resetRecordingStatus();
+        valueFifo.reset();
     }
 }
 
-StringArray Modifier::getEnabledNames()
+void Modifier::baseClassApplyToBuffer (const PluginRenderContext& prc)
 {
-    return { NEEDS_TRANS("Disabled"),
-             NEEDS_TRANS("Enabled") };
+    applyToBuffer (prc);
+    jassert (valueFifo);
+    const float v = getCurrentValue();
+    valueFifo->addValue (prc.bufferNumSamples, getCurrentValue());
+    
+    // Queue a value change up to be dispatched on the message thread
+    const auto newV = std::make_pair (prc.bufferNumSamples, v);
+    
+    if (valueFifoQueue.getFreeSlots() == 0)
+    {
+        std::remove_cv_t<decltype(newV)> temp;
+        valueFifoQueue.pop (temp);
+    }
+    
+    valueFifoQueue.push (newV);
+}
+
+//==============================================================================
+double Modifier::getCurrentTime() const
+{
+    return lastEditTime;
+}
+
+float Modifier::getValueAt (double numSecondsBeforeNow) const
+{
+    if (valueFifo)
+        return valueFifo->getValueAt (numSecondsBeforeNow);
+        
+    return {};
+}
+
+std::vector<float> Modifier::getValues (double numSecondsBeforeNow) const
+{
+    if (! messageThreadValueFifo)
+        return {};
+    
+    // Dispatch pending values
+    for (;;)
+    {
+        std::pair<int, float> tmp;
+        
+        if (! valueFifoQueue.pop (tmp))
+            break;
+        
+        messageThreadValueFifo->addValue (tmp.first, tmp.second);
+    }
+    
+    // Then return the array of samples
+    return messageThreadValueFifo->getValues (numSecondsBeforeNow);
 }
 
 //==============================================================================

@@ -105,6 +105,7 @@ struct BreakpointOscillatorModifier::BreakpointOscillatorModifierTimer    : publ
     {
         using namespace ModifierCommon;
         const double blockLength = numSamples / modifier.getSampleRate();
+        modifier.setEditTime (editTime);
         modifier.updateParameterStreams (editTime);
 
         const auto syncTypeThisBlock = getTypedParamValue<SyncType> (*modifier.syncTypeParam);
@@ -176,28 +177,6 @@ struct BreakpointOscillatorModifier::BreakpointOscillatorModifierTimer    : publ
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BreakpointOscillatorModifierTimer)
 };
 
-//==============================================================================
-struct BreakpointOscillatorModifier::ModifierAudioNode    : public SingleInputAudioNode
-{
-    ModifierAudioNode (AudioNode* source, BreakpointOscillatorModifier& rm)
-        : SingleInputAudioNode (source),
-          modifier (&rm)
-    {
-    }
-
-    void renderOver (const AudioRenderContext& rc) override
-    {
-        SingleInputAudioNode::renderOver (rc);
-        modifier->applyToBuffer (rc);
-    }
-
-    void renderAdding (const AudioRenderContext& rc) override
-    {
-        callRenderOver (rc);
-    }
-
-    BreakpointOscillatorModifier::Ptr modifier;
-};
 
 //==============================================================================
 BreakpointOscillatorModifier::BreakpointOscillatorModifier (Edit& e, const ValueTree& v)
@@ -322,11 +301,6 @@ float BreakpointOscillatorModifier::getTotalTime() const
 AutomatableParameter::ModifierAssignment* BreakpointOscillatorModifier::createAssignment (const ValueTree& v)
 {
     return new Assignment (v, *this);
-}
-
-AudioNode* BreakpointOscillatorModifier::createPreFXAudioNode (AudioNode* an)
-{
-    return new ModifierAudioNode (an, *this);
 }
 
 void BreakpointOscillatorModifier::applyToBuffer (const PluginRenderContext& prc)

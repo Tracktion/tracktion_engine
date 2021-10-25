@@ -138,6 +138,34 @@ TrackOutput* getTrackOutput (Track& track)
     return {};
 }
 
+juce::BigInteger toBitSet (const Array<Track*>& tracks)
+{
+    juce::BigInteger bitset;
+    
+    if (auto first = tracks[0])
+    {
+        auto allTracks = getAllTracks (first->edit);
+        
+        for (auto t : allTracks)
+            if (int index = allTracks.indexOf (t); index >= 0)
+                bitset.setBit (index);
+    }
+    
+    return bitset;
+}
+
+juce::Array<Track*> toTrackArray (Edit& edit, const juce::BigInteger& tracksToAdd)
+{
+    Array<Track*> tracks;
+
+    auto allTracks = getAllTracks (edit);
+
+    for (auto bit = tracksToAdd.findNextSetBit (0); bit != -1; bit = tracksToAdd.findNextSetBit (bit + 1))
+        tracks.add (allTracks[bit]);
+    
+    return tracks;
+}
+
 juce::Array<Track*> findAllTracksContainingSelectedItems (const SelectableList& items)
 {
     auto tracks = items.getItemsOfType<Track>();

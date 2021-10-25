@@ -78,7 +78,7 @@ public:
     juce::String getName() override;
     juce::String getPluginType() override                                         { return xmlTypeName; }
 
-    void initialise (const PlaybackInitialisationInfo&) override;
+    void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
 
     void getChannelNames (juce::StringArray*, juce::StringArray*) override;

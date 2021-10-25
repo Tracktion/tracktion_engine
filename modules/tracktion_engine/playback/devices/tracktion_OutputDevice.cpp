@@ -104,18 +104,4 @@ OutputDeviceInstance::~OutputDeviceInstance()
 {
 }
 
-AudioNode* OutputDeviceInstance::getAudioNode() const
-{
-    return audioNode.get();
-}
-
-AudioNode* OutputDeviceInstance::replaceAudioNode (std::unique_ptr<AudioNode> newNode)
-{
-    const ScopedLock sl (audioNodeLock);
-
-    auto oldOne = audioNode.release();
-    audioNode = std::move (newNode);
-    return oldOne;
-}
-
 }

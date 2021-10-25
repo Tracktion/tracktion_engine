@@ -58,7 +58,7 @@ ThreadPoolJob::JobStatus RenderManager::Job::runJob()
     const bool completedOk = completeRender();
 
     if (! proxy.isNull() && completedOk)
-        callBlocking ([this]()
+        callBlocking ([this]
                       {
                           engine.getAudioFileManager().validateFile (proxy, true);
                           jassert (isMidiFile (proxy.getFile()) || proxy.isValid());

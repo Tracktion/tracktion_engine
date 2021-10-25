@@ -8,22 +8,18 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
 namespace tracktion_graph
 {
     class Node;
     class PlayHead;
     class PlayHeadState;
 }
-#endif
 
 namespace tracktion_engine
 {
 
-#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
 class NodeRenderContext;
 struct ProcessState;
-#endif
 
 //==============================================================================
 /**
@@ -90,24 +86,17 @@ public:
     public:
         RenderTask (const juce::String& taskDescription,
                     const Renderer::Parameters&,
-                    AudioNode*);
-
-        RenderTask (const juce::String& taskDescription,
-                    const Renderer::Parameters&,
-                    AudioNode*,
-                    std::atomic<float>& progressToUpdate,
+                    std::atomic<float>* progressToUpdate,
                     juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver*);
-
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+        
         RenderTask (const juce::String& taskDescription,
                     const Renderer::Parameters&,
                     std::unique_ptr<tracktion_graph::Node>,
                     std::unique_ptr<tracktion_graph::PlayHead>,
                     std::unique_ptr<tracktion_graph::PlayHeadState>,
                     std::unique_ptr<ProcessState>,
-                    std::atomic<float>& progressToUpdate,
+                    std::atomic<float>* progressToUpdate,
                     juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver*);
-       #endif
 
         ~RenderTask() override;
 
@@ -126,18 +115,11 @@ public:
 
     private:
         //==============================================================================
-        struct RendererContext;
-
-        std::unique_ptr<AudioNode> node;
-        std::unique_ptr<RendererContext> context;
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-        const bool isUsingGraphNode = false;
         std::unique_ptr<tracktion_graph::Node> graphNode;
         std::unique_ptr<tracktion_graph::PlayHead> playHead;
         std::unique_ptr<tracktion_graph::PlayHeadState> playHeadState;
         std::unique_ptr<ProcessState> processState;
         std::unique_ptr<NodeRenderContext> nodeRenderContext;
-       #endif
 
         std::atomic<float> progressInternal { 0.0f };
         std::atomic<float>& progress;
@@ -160,13 +142,13 @@ public:
     static void turnOffAllPlugins (Edit&);
 
     //==============================================================================
-    /** */
+    /** Renders an Edit to a file and creates a new ProjectItem for it. */
     static ProjectItem::Ptr renderToProjectItem (const juce::String& taskDescription, const Parameters& params);
 
-    /** */
+    /** Renders an Edit to a file given by the Parameters. */
     static juce::File renderToFile (const juce::String& taskDescription, const Parameters& params);
 
-    /** */
+    /** Renders an Edit to a file within the given time range and the track indicies described by the BigInteger. */
     static bool renderToFile (const juce::String& taskDescription,
                               const juce::File& outputFile,
                               Edit& edit,
@@ -175,9 +157,6 @@ public:
                               bool usePlugins = true,
                               juce::Array<Clip*> clips = {},
                               bool useThread = true);
-
-    /** Creates an AudioNode to render the given Edit i.e. a single graph rather than split over devices. */
-    static AudioNode* createRenderingAudioNode (const Parameters&);
 
     //==============================================================================
     /** @see measureStatistics()

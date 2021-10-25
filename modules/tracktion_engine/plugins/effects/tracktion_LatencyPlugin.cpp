@@ -151,7 +151,7 @@ LatencyPlugin::~LatencyPlugin()
     notifyListenersOfDeletion();
 }
 
-void LatencyPlugin::initialise (const PlaybackInitialisationInfo&)
+void LatencyPlugin::initialise (const PluginInitialisationInfo&)
 {
     jassert (sampleRate > 0.0);
 

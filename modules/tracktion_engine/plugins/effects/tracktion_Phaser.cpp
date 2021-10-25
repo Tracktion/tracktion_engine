@@ -27,13 +27,13 @@ PhaserPlugin::~PhaserPlugin()
 
 const char* PhaserPlugin::xmlTypeName = "phaser";
 
-void PhaserPlugin::initialise (const PlaybackInitialisationInfo& info)
+void PhaserPlugin::initialise (const PluginInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
     zeromem (filterVals, sizeof (filterVals));
 
     const float delayMs = 100.0f;
-    sweep = minSweep = (double_Pi * delayMs) / sampleRate;
+    sweep = minSweep = (juce::MathConstants<double>::pi * delayMs) / sampleRate;
     sweepFactor = 1.001f;
 }
 
@@ -53,7 +53,7 @@ void PhaserPlugin::applyToBuffer (const PluginRenderContext& fc)
     const double sweepDown = 1.0 / sweepUp;
 
     const float delayMs = 100.0f;
-    const float maxSweep = (float) ((double_Pi * delayMs * range) / sampleRate);
+    const float maxSweep = (float) ((juce::MathConstants<double>::pi * delayMs * range) / sampleRate);
 
     double swpFactor = sweepFactor > 1.0 ? sweepUp : sweepDown;
     double swp = sweep;

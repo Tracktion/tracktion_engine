@@ -72,9 +72,6 @@ public:
     Clip* addMidiToTrackAsTransaction (Clip* takeClip, AudioTrack&, juce::MidiMessageSequence&,
                                        EditTimeRange position, MergeMode, MidiChannel, SelectionManager*);
 
-    /** Creates an audio node that passes on any midi messages to this device. */
-    AudioNode* createMidiEventSnifferNode (AudioNode* input);
-
     juce::MidiKeyboardState keyboardState;
 
     void handleIncomingMidiMessage (juce::MidiInput*, const juce::MidiMessage&) override;

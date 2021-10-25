@@ -23,14 +23,14 @@ struct AudioFadeCurve
     /** A convex sine-shaped curve. */
     struct Convex
     {
-        inline static double preadjust (double alpha) noexcept  { return alpha * (0.5 * juce::double_Pi); }
+        inline static double preadjust (double alpha) noexcept  { return alpha * (0.5 * juce::MathConstants<double>::pi); }
         inline static float get (float alpha) noexcept          { return std::sin (alpha); }
     };
 
     /** A concave sine-shaped curve. */
     struct Concave
     {
-        inline static double preadjust (double alpha) noexcept  { return alpha * (0.5 * juce::double_Pi); }
+        inline static double preadjust (double alpha) noexcept  { return alpha * (0.5 * juce::MathConstants<double>::pi); }
         inline static float get (float alpha) noexcept          { return 1.0f - std::cos (alpha); }
     };
 
@@ -38,8 +38,8 @@ struct AudioFadeCurve
     struct SCurve
     {
         inline static double preadjust (double alpha) noexcept  { return alpha; }
-        inline static float get (float alpha) noexcept          { return (1.0f - alpha) * (1.0f - std::cos (alpha * (0.5f * juce::float_Pi)))
-                                                                            + alpha * std::sin (alpha * (0.5f * juce::float_Pi)); }
+        inline static float get (float alpha) noexcept          { return (1.0f - alpha) * (1.0f - std::cos (alpha * (0.5f * juce::MathConstants<float>::pi)))
+                                                                            + alpha * std::sin (alpha * (0.5f * juce::MathConstants<float>::pi)); }
     };
 
     /** A enumeration of the curve classes available. */

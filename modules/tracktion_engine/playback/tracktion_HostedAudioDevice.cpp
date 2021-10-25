@@ -200,61 +200,6 @@ public:
 
 private:
     //==============================================================================
-    class HostedMidiInputAudioNode : public AudioNode
-    {
-    public:
-        HostedMidiInputAudioNode (MidiBuffer& midi_) : midi (midi_) {}
-
-        void getAudioNodeProperties (AudioNodeProperties& p) override
-        {
-            p.hasAudio = false;
-            p.hasMidi  = true;
-            p.numberOfChannels = 0;
-        }
-
-        void prepareAudioNodeToPlay (const PlaybackInitialisationInfo& info) override
-        {
-            sampleRate = info.sampleRate;
-        }
-
-        bool purgeSubNodes (bool keepAudio, bool keepMidi) override
-        {
-            ignoreUnused (keepAudio);
-            return keepMidi;
-        }
-
-        void releaseAudioNodeResources() override       {}
-        void visitNodes (const VisitorFn& v) override   { v (*this); }
-        bool isReadyToRender() override                 { return true; }
-
-        void renderOver (const AudioRenderContext& rc) override
-        {
-            rc.clearMidiBuffer();
-            callRenderAdding (rc);
-        }
-
-        void renderAdding (const AudioRenderContext& rc) override
-        {
-            if (rc.bufferForMidiMessages != nullptr)
-            {
-                for (auto itr : midi)
-                {
-                    auto msg = itr.getMessage();
-                    int pos = itr.samplePosition;
-
-                    msg.setTimeStamp (pos / sampleRate + rc.midiBufferOffset);
-                    rc.bufferForMidiMessages->addMidiMessage (msg, mpeSource);
-                }
-            }
-        }
-
-    private:
-        MidiBuffer& midi;
-        double sampleRate = 44100.0;
-        MidiMessageArray::MPESourceID mpeSource { MidiMessageArray::createUniqueMPESourceID() };
-    };
-
-    //==============================================================================
     class HostedMidiInputDeviceInstance : public MidiInputDeviceInstanceBase
     {
     public:
@@ -264,11 +209,24 @@ private:
         }
 
         bool startRecording() override              { return false; }
-        AudioNode* createLiveInputNode() override   { return new HostedMidiInputAudioNode (midi); }
-        void processBlock (MidiBuffer& m)           { midi = m; }
 
+        void processBlock (MidiBuffer& midi)
+        {
+            // N.B. This assumes that the number of samples processed per block is constant.
+            // I.e. that there is no speed compensation set (which shouldn't be the case when
+            // running as a plugin)
+            for (const MidiMessageMetadata mmm : midi)
+            {
+                const auto referenceTime = tracktion_graph::sampleToTime (mmm.samplePosition, sampleRate);
+
+                auto msg = mmm.getMessage();
+                msg.setTimeStamp (referenceTime);
+                handleIncomingMidiMessage (std::move (msg));
+            }
+        }
+        
     private:
-        MidiBuffer midi;
+        const double sampleRate = context.getSampleRate();
     };
     
     //==============================================================================
@@ -458,6 +416,11 @@ void HostedAudioDeviceInterface::processBlock (AudioBuffer<float>& buffer, MidiB
 
         outputFifo.readAudioAndMidi (buffer, midi);
     }
+}
+
+bool HostedAudioDeviceInterface::isHostedMidiInputDevice (const MidiInputDevice& d)
+{
+    return dynamic_cast<const HostedMidiInputDevice*> (&d) != nullptr;
 }
 
 juce::StringArray HostedAudioDeviceInterface::getInputChannelNames()

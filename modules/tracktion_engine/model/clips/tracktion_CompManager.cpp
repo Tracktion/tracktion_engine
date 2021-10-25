@@ -8,6 +8,12 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#include "../../playback/audionodes/tracktion_AudioNode.h"
+#include "../../playback/audionodes/tracktion_WaveAudioNode.h"
+#include "../../playback/audionodes/tracktion_FadeInOutAudioNode.h"
+#include "../../playback/audionodes/tracktion_CombiningAudioNode.h"
+
+
 namespace tracktion_engine
 {
 

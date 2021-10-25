@@ -138,11 +138,11 @@ function buildExample()
                 cd "$CMAKE_BUILD_DIR"
 
                 echo INFO: Running with Asan: ${APP_FILE}
-                cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableAddressSanitizer YES LLVM_LTO=NO
+                cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableAddressSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
                 ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_asan.xml"
 
                 echo INFO: Running with Tsan: ${APP_FILE}
-                cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableThreadSanitizer YES LLVM_LTO=NO
+                cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableThreadSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
                 ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_tsan.xml"
 
                 echo INFO: Running static analyser: ${APP_FILE}
@@ -161,7 +161,9 @@ buildExample "tracktion_graph_TestRunner" "1"
 buildExample "tracktion_graph_PerformanceTests" "1"
 
 # Then just build these examples
+buildExample "DistortionEffectDemo"
 buildExample "EngineInPluginDemo"
+buildExample "IRPluginDemo"
 buildExample "MidiRecordingDemo"
 buildExample "PatternGeneratorDemo"
 buildExample "PitchAndTimeDemo"

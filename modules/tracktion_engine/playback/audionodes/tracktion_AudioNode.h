@@ -8,8 +8,16 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#pragma once
+
+#include "tracktion_PlayHead.h"
+
+
 namespace tracktion_engine
 {
+
+class AudioNode;
+
 
 /** Holds some really basic properties of a node */
 struct AudioNodeProperties

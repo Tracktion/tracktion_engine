@@ -28,7 +28,7 @@ ChorusPlugin::~ChorusPlugin()
 
 const char* ChorusPlugin::xmlTypeName = "chorus";
 
-void ChorusPlugin::initialise (const PlaybackInitialisationInfo& info)
+void ChorusPlugin::initialise (const PluginInitialisationInfo& info)
 {
     const float delayMs = 20.0f;
     const int maxLengthMs = 1 + roundToInt (delayMs + depthMs);
@@ -56,7 +56,7 @@ void ChorusPlugin::applyToBuffer (const PluginRenderContext& fc)
     const float delayMs = 20.0f;
     const float minSweepSamples = (float) ((delayMs * sampleRate) / 1000.0);
     const float maxSweepSamples = (float) (((delayMs + depthMs) * sampleRate) / 1000.0);
-    const float speed = (float)((double_Pi * 2.0) / (sampleRate / speedHz));
+    const float speed = (float)((juce::MathConstants<double>::pi * 2.0) / (sampleRate / speedHz));
     const int maxLengthMs = 1 + roundToInt (delayMs + depthMs);
     const int lengthInSamples = roundToInt ((maxLengthMs * sampleRate) / 1000.0);
 
@@ -77,7 +77,7 @@ void ChorusPlugin::applyToBuffer (const PluginRenderContext& fc)
 
         ph = phase;
         if (chan > 0)
-            ph += float_Pi * width;
+            ph += juce::MathConstants<float>::pi * width;
 
         bufPos = delayBuffer.bufferPos;
 

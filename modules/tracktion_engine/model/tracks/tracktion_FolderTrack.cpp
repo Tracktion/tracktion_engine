@@ -127,69 +127,6 @@ juce::Array<Track*> FolderTrack::getInputTracks() const
     return tracks;
 }
 
-AudioNode* FolderTrack::createAudioNode (const CreateAudioNodeParams& params)
-{
-    CRASH_TRACER
-
-    if (! isSubmixFolder())
-        return {};
-
-    juce::Array<Track*> allTracks (getAllTracks (edit));
-    juce::Array<AudioTrack*> subTracks (getAllAudioSubTracks (false));
-
-    juce::Array<FolderTrack*> subFolders;
-
-    for (auto t : getAllSubTracks (false))
-        if (auto ft = dynamic_cast<FolderTrack*> (t))
-            subFolders.add (ft);
-
-    if (subTracks.isEmpty() && subFolders.isEmpty())
-        return {};
-
-    const bool use64Bit = (params.forRendering || edit.engine.getPropertyStorage().getProperty (SettingID::use64Bit, false))
-                            && subTracks.size() > 1; // no point using 64 bit unless there's a lot of tracks to sum up
-
-    const bool shouldUseMultiCPU = (subTracks.size() + subFolders.size()) > 1
-                                    && edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio() > 1;
-
-    auto mixer = new MixerAudioNode (use64Bit, shouldUseMultiCPU);
-
-    // Create nodes for any submix tracks
-    for (auto t : subFolders)
-    {
-        if (! t->isProcessing (true))
-            continue;
-
-        if (t->isSubmixFolder())
-        {
-            mixer->addInput (t->createAudioNode (params));
-        }
-        else
-        {
-            for (auto at : t->getAllAudioSubTracks (false))
-                if (params.allowedTracks == nullptr || (*params.allowedTracks)[allTracks.indexOf (at)])
-                    mixer->addInput (at->createAudioNode (params));
-        }
-    }
-
-    // Then add any audio tracks
-    for (auto at : subTracks)
-        if (params.allowedTracks == nullptr || (*params.allowedTracks)[allTracks.indexOf (at)])
-            if (at->isProcessing (true))
-                mixer->addInput (at->createAudioNode (params));
-
-    // And finally the effects
-    AudioNode* finalNode = mixer;
-
-    if (finalNode != nullptr)
-        finalNode = params.includePlugins ? pluginList.createAudioNode (finalNode, params.addAntiDenormalisationNoise)
-                                          : finalNode;
-
-    finalNode = new TrackMutingAudioNode (*this, finalNode, false);
-
-    return finalNode;
-}
-
 bool FolderTrack::isMuted (bool includeMutingByDestination) const
 {
     if (muted)

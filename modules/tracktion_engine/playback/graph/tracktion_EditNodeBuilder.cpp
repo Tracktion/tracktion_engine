@@ -147,6 +147,26 @@ namespace
         return instances;
     }
 
+    // If we're rendering and try to render a track in a submix,
+    // only render it if the parent track isn't included in the allowed tracks
+    // This allows us to render tracks contained inside submixes without the
+    // parent submix effects applied
+    bool shouldRenderTrackInSubmix (Track& t, const CreateNodeParams& params)
+    {
+        jassert (t.isPartOfSubmix());
+        
+        if (! params.forRendering)
+            return false;
+        
+        if (params.allowedTracks == nullptr)
+            return false;
+        
+        for (auto allowedTrack : *params.allowedTracks)
+            if (t.isAChildOf (*allowedTrack))
+                return false;
+        
+        return true;
+    }
 
 //==============================================================================
 //==============================================================================
@@ -155,7 +175,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForTrack (Track&, const CreateN
 std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList&, const TrackMuteState*, std::unique_ptr<Node>,
                                                                 tracktion_graph::PlayHeadState&, const CreateNodeParams&);
 
-std::unique_ptr<tracktion_graph::Node> createPluginNodeForTrack (AudioTrack&, const TrackMuteState&, std::unique_ptr<Node>,
+std::unique_ptr<tracktion_graph::Node> createPluginNodeForTrack (Track&, TrackMuteState&, std::unique_ptr<Node>,
                                                                  tracktion_graph::PlayHeadState&, const CreateNodeParams&);
 
 std::unique_ptr<tracktion_graph::Node> createLiveInputNodeForDevice (InputDeviceInstance&, tracktion_graph::PlayHeadState&);
@@ -552,6 +572,9 @@ std::unique_ptr<tracktion_graph::Node> createLiveInputNodeForDevice (InputDevice
             if (auto sourceTrack = getTrackContainingTrackDevice (inputDeviceInstance.edit, *midiDevice))
                 return makeNode<TrackMidiInputDeviceNode> (*midiDevice, makeNode<ReturnNode> (getMidiInputDeviceBusID (sourceTrack->itemID)));
 
+        if (HostedAudioDeviceInterface::isHostedMidiInputDevice (*midiDevice))
+            return makeNode<HostedMidiInputDeviceNode> (inputDeviceInstance, *midiDevice, midiDevice->getMPESourceID(), playHeadState);
+
         return makeNode<MidiInputDeviceNode> (inputDeviceInstance, *midiDevice, midiDevice->getMPESourceID(), playHeadState);
     }
     else if (auto waveDevice = dynamic_cast<WaveInputDevice*> (&inputDeviceInstance.getInputDevice()))
@@ -631,7 +654,7 @@ std::unique_ptr<tracktion_graph::Node> createSidechainInputNodeForPlugin (Plugin
 
     auto sumNode = makeSummingNode ({ directInput.release(), sidechainInput.release() });
 
-    return std::move (sumNode);
+    return sumNode;
 }
 
 std::unique_ptr<tracktion_graph::Node> createNodeForPlugin (Plugin& plugin, const TrackMuteState* trackMuteState, std::unique_ptr<Node> node,
@@ -738,7 +761,7 @@ std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList& list
     return node;
 }
 
-std::unique_ptr<tracktion_graph::Node> createModifierNodeForList (ModifierList& list, Modifier::ProcessingPosition position, const TrackMuteState& trackMuteState,
+std::unique_ptr<tracktion_graph::Node> createModifierNodeForList (ModifierList& list, Modifier::ProcessingPosition position, TrackMuteState* trackMuteState,
                                                                   std::unique_ptr<Node> node,
                                                                   tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
@@ -748,23 +771,23 @@ std::unique_ptr<tracktion_graph::Node> createModifierNodeForList (ModifierList& 
             continue;
 
         node = makeNode<ModifierNode> (std::move (node), modifier, params.sampleRate, params.blockSize,
-                                       &trackMuteState, playHeadState, params.forRendering);
+                                       trackMuteState, playHeadState, params.forRendering);
     }
     
     return node;
 }
 
-std::unique_ptr<tracktion_graph::Node> createPluginNodeForTrack (AudioTrack& at, const TrackMuteState& trackMuteState, std::unique_ptr<Node> node,
+std::unique_ptr<tracktion_graph::Node> createPluginNodeForTrack (Track& t, TrackMuteState& trackMuteState, std::unique_ptr<Node> node,
                                                                  tracktion_graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
-    node = createModifierNodeForList (at.getModifierList(), Modifier::ProcessingPosition::preFX,
-                                      trackMuteState, std::move (node), playHeadState, params);
+    node = createModifierNodeForList (t.getModifierList(), Modifier::ProcessingPosition::preFX,
+                                      &trackMuteState, std::move (node), playHeadState, params);
     
     if (params.includePlugins)
-        node = createPluginNodeForList (at.pluginList, &trackMuteState, std::move (node), playHeadState, params);
+        node = createPluginNodeForList (t.pluginList, &trackMuteState, std::move (node), playHeadState, params);
     
-    node = createModifierNodeForList (at.getModifierList(), Modifier::ProcessingPosition::postFX,
-                                      trackMuteState, std::move (node), playHeadState, params);
+    node = createModifierNodeForList (t.getModifierList(), Modifier::ProcessingPosition::postFX,
+                                      &trackMuteState, std::move (node), playHeadState, params);
 
     return node;
 }
@@ -921,7 +944,6 @@ std::unique_ptr<tracktion_graph::Node> createNodeForSubmixTrack (FolderTrack& su
 {
     CRASH_TRACER
     jassert (submixTrack.isSubmixFolder());
-    jassert (! submixTrack.isPartOfSubmix());
 
     juce::Array<AudioTrack*> subAudioTracks;
     juce::Array<FolderTrack*> subFolderTracks;
@@ -944,6 +966,9 @@ std::unique_ptr<tracktion_graph::Node> createNodeForSubmixTrack (FolderTrack& su
     // Create nodes for any submix tracks
     for (auto ft : subFolderTracks)
     {
+        if (params.allowedTracks != nullptr && ! params.allowedTracks->contains (ft))
+            continue;
+
         if (! ft->isProcessing (true))
             continue;
 
@@ -975,8 +1000,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForSubmixTrack (FolderTrack& su
     std::unique_ptr<Node> node = std::move (sumNode);
     auto trackMuteState = std::make_unique<TrackMuteState> (submixTrack, false, false);
 
-    if (params.includePlugins)
-        node = createPluginNodeForList (submixTrack.pluginList, trackMuteState.get(), std::move (node), params.processState.playHeadState, params);
+    node = createPluginNodeForTrack (submixTrack, *trackMuteState, std::move (node), params.processState.playHeadState, params);
 
     node = makeNode<TrackMutingNode> (std::move (trackMuteState), std::move (node), false);
 
@@ -994,7 +1018,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForTrack (Track& track, const C
         if (! t->createsOutput())
             return {};
 
-        if (t->isPartOfSubmix())
+        if (t->isPartOfSubmix() && ! shouldRenderTrackInSubmix (*t, params))
             return {};
 
         if (t->isFrozen (Track::groupFreeze))
@@ -1008,7 +1032,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForTrack (Track& track, const C
         if (! t->isSubmixFolder())
             return {};
 
-        if (t->isPartOfSubmix())
+        if (t->isPartOfSubmix() && ! shouldRenderTrackInSubmix (*t, params))
             return {};
 
         if (t->getOutput() == nullptr)
@@ -1146,7 +1170,19 @@ std::unique_ptr<tracktion_graph::Node> createMasterPluginsNode (Edit& edit, trac
     if (! params.includeMasterPlugins)
         return node;
 
+    auto& tempoModList = edit.getTempoTrack()->getModifierList();
+    auto& masterModList = edit.getMasterTrack()->getModifierList();
+    node = createModifierNodeForList (tempoModList, Modifier::ProcessingPosition::preFX,
+                                      nullptr, std::move (node), playHeadState, params);
+    node = createModifierNodeForList (masterModList, Modifier::ProcessingPosition::preFX,
+                                      nullptr, std::move (node), playHeadState, params);
+
     node = createPluginNodeForList (edit.getMasterPluginList(), nullptr, std::move (node), playHeadState, params);
+
+    node = createModifierNodeForList (tempoModList, Modifier::ProcessingPosition::postFX,
+                                      nullptr, std::move (node), playHeadState, params);
+    node = createModifierNodeForList (masterModList, Modifier::ProcessingPosition::postFX,
+                                      nullptr, std::move (node), playHeadState, params);
 
     if (auto masterVolPlugin = edit.getMasterVolumePlugin())
         node = createNodeForPlugin (*masterVolPlugin, nullptr, std::move (node), playHeadState, params);

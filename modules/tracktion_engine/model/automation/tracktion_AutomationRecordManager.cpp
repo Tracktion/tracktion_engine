@@ -122,10 +122,10 @@ void AutomationRecordManager::punchOut (bool toEnd)
 
         // If the punch out was triggered by a position change, we want to make
         // sure the playhead position is used as the end time
-        if (auto ph = edit.getTransport().getCurrentPlayhead())
+        if (auto epc = edit.getTransport().getCurrentPlaybackContext())
         {
-            endTime = ph->isLooping() ? jmax (ph->getUnloopedPosition(), ph->getLoopTimes().getEnd())
-                                      : ph->getPosition();
+            endTime = epc->isLooping() ? jmax (epc->getUnloopedPosition(), epc->getLoopTimes().getEnd())
+                                       : epc->getPosition();
         }
 
         for (auto param : recordedParams)

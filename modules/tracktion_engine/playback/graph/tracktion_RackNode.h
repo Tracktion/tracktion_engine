@@ -135,7 +135,6 @@ private:
     
     std::shared_ptr<InputProvider> inputProvider;
     bool overrideInputs = true;
-    tracktion_engine::PlayHead playHead;
 };
 
 

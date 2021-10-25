@@ -30,7 +30,7 @@ public:
     juce::String getName() override;
     juce::String getPluginType() override;
     juce::String getShortName (int) override;
-    void initialise (const PlaybackInitialisationInfo&) override;
+    void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     double getLatencySeconds() override;
     int getNumOutputChannelsGivenInputs (int) override;

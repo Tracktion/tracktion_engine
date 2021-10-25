@@ -15,16 +15,9 @@ namespace tracktion_engine
 //==============================================================================
 namespace EditPlaybackContextInternal
 {
-    std::atomic<bool>& getExperimentalGraphProcessingFlag()
-    {
-        static std::atomic<bool> enabled { false };
-        return enabled;
-    }
-
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     int& getThreadPoolStrategyType()
     {
-        static int type = static_cast<int> (tracktion_graph::ThreadPoolStrategy::realTime);
+        static int type = static_cast<int> (tracktion_graph::ThreadPoolStrategy::lightweightSemHybrid);
         return type;
     }
 
@@ -33,7 +26,6 @@ namespace EditPlaybackContextInternal
         static bool usePool = false;
         return usePool;
     }
-   #endif
 }
 
 
@@ -59,7 +51,6 @@ struct EditPlaybackContext::ContextSyncroniser
     };
     
     //==============================================================================
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     SyncAndPosition getSyncAction (tracktion_graph::PlayHead& sourcePlayHead, tracktion_graph::PlayHead& destPlayHead,
                                    double sampleRate)
     {
@@ -76,16 +67,6 @@ struct EditPlaybackContext::ContextSyncroniser
         return getSyncAction (sourceTimelineTime, sourcePlayHead.isPlaying(), sourceLastInteractionTime,
                               destTimelineTime, destPlayHead.isLooping(), destLoopDuration);
     }
-    
-    SyncAndPosition getSyncAction (tracktion_engine::PlayHead& sourcePlayHead, tracktion_engine::PlayHead& destPlayHead)
-    {
-        if (! isValid)
-            return  { SyncAction::none, 0.0 };
-        
-        return getSyncAction (sourcePlayHead.getPosition(), sourcePlayHead.isPlaying(), sourcePlayHead.getLastUserInteractionTime(),
-                              destPlayHead.getPosition(), destPlayHead.isLooping(), destPlayHead.getLoopTimes().getLength());
-    }
-   #endif
     
     void reset (double previousBarTime_, double syncInterval_)
     {
@@ -155,7 +136,6 @@ private:
 
 //==============================================================================
 //==============================================================================
-#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
  struct EditPlaybackContext::NodePlaybackContext
  {
      NodePlaybackContext (size_t numThreads, size_t maxNumThreadsToUse)
@@ -219,6 +199,15 @@ private:
 
          referenceSampleRange = juce::Range<int64_t>::withStartAndLength (referenceSampleRange.getEnd(), (int64_t) numSamples);
          playHead.setReferenceSampleRange (referenceSampleRange);
+     }
+     
+     void resyncToReferenceSampleRange (juce::Range<int64_t> newReferenceSampleRange)
+     {
+         const double sampleRate = getSampleRate();
+         const auto currentPos = tracktion_graph::sampleToTime (playHead.getPosition(), sampleRate);
+         referenceSampleRange = newReferenceSampleRange;
+         playHead.setReferenceSampleRange (referenceSampleRange);
+         playHead.setPosition (tracktion_graph::timeToSample (currentPos, sampleRate));
      }
      
      void process (float** allChannels, int numChannels, int destNumSamples)
@@ -299,10 +288,6 @@ private:
              interpolators.push_back (std::make_unique<juce::LagrangeInterpolator>());
      }
 };
-#endif
-
-//==============================================================================
-std::function<AudioNode*(AudioNode*)> EditPlaybackContext::insertOptionalLastStageNode = [] (AudioNode* input)    { return input; };
 
 //==============================================================================
 EditPlaybackContext::ScopedDeviceListReleaser::ScopedDeviceListReleaser (EditPlaybackContext& e, bool reallocate)
@@ -325,8 +310,6 @@ EditPlaybackContext::ScopedDeviceListReleaser::~ScopedDeviceListReleaser()
 EditPlaybackContext::EditPlaybackContext (TransportControl& tc)
     : edit (tc.edit), transport (tc)
 {
-    rebuildDeviceList();
-
     if (edit.isRendering())
     {
         jassertfalse;
@@ -335,18 +318,15 @@ EditPlaybackContext::EditPlaybackContext (TransportControl& tc)
 
     if (edit.shouldPlay())
     {
-        #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-        if (isExperimentalGraphProcessingEnabled())
-        {
-            nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio(),
-                                                                         size_t (edit.getIsPreviewEdit() ? 0 : juce::SystemStats::getNumCpus() - 1));
-            contextSyncroniser = std::make_unique<ContextSyncroniser>();
-        }
-        #endif
+        nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio(),
+                                                                     size_t (edit.getIsPreviewEdit() ? 0 : juce::SystemStats::getNumCpus() - 1));
+        contextSyncroniser = std::make_unique<ContextSyncroniser>();
 
         // This ensures the referenceSampleRange of the new context has been synced
         edit.engine.getDeviceManager().addContext (this);
     }
+
+    rebuildDeviceList();
 }
 
 EditPlaybackContext::~EditPlaybackContext()
@@ -366,7 +346,7 @@ void EditPlaybackContext::releaseDeviceList()
     clearNodes();
     midiDispatcher.setMidiDeviceList (OwnedArray<MidiOutputDeviceInstance>());
 
-    // Clear the outputs before the inputs as the midi inputs will be referenced by the MidiDeviceInstanceBase::InputAudioNode
+    // Clear the outputs before the inputs as the midi inputs will be referenced by the MidiDeviceInstanceBase::Consumer
     waveOutputs.clear();
     midiOutputs.clear();
     waveInputs.clear();
@@ -461,22 +441,8 @@ void EditPlaybackContext::clearNodes()
         wi->stop();
 
     priorityBooster = nullptr;
-
-    // mustn't delete any of the nodes until all have been removed from
-    // the graph, because there could be interdependencies between some
-    // of them, e.g. aux sends
-    OwnedArray<AudioNode> removedNodes;
-
-    for (auto mo : midiOutputs)
-        removedNodes.add (mo->replaceAudioNode (nullptr));
-
-    for (auto wo : waveOutputs)
-        removedNodes.add (wo->replaceAudioNode (nullptr));
-
-    removedNodes.clear();
     isAllocated = false;
 
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     // Because the nodePlaybackContext is lock-free, it doesn't immediately delete its current node
     // so we need to explicity call clearNode
     if (nodePlaybackContext)
@@ -485,213 +451,8 @@ void EditPlaybackContext::clearNodes()
         nodePlaybackContext->clearNode();
         nodePlaybackContext->setNumThreads (0);
     }
-   #endif
 }
 
-static AudioNode* prepareNode (AudioNode* node, bool forMidi)
-{
-    if (node != nullptr)
-    {
-        {
-            CRASH_TRACER
-            node->purgeSubNodes (! forMidi, forMidi);
-        }
-
-        {
-            CRASH_TRACER
-            AudioNodeProperties info;
-            node->getAudioNodeProperties (info);
-        }
-    }
-
-    return node;
-}
-
-static void prepareNodesToPlay (Engine& engine, const Array<AudioNode*>& allNodes, double startTime, PlayHead& playhead)
-{
-    Array<AudioNode*> nonNullNodes (allNodes);
-    nonNullNodes.removeAllInstancesOf (nullptr);
-
-    auto& dm = engine.getDeviceManager();
-
-    PlaybackInitialisationInfo info =
-    {
-        startTime,
-        dm.getSampleRate(),
-        dm.getBlockSize(),
-        &nonNullNodes,
-        playhead
-    };
-
-    CRASH_TRACER
-
-    for (auto n : allNodes)
-        if (n != nullptr)
-            n->prepareAudioNodeToPlay (info);
-}
-
-static AudioNode* createPlaybackAudioNode (Edit& edit, OutputDeviceInstance& deviceInstance,
-                                           std::function<AudioNode*(AudioNode*)> insertOptionalLastStageNode,
-                                           bool addAntiDenormalisationNoise)
-{
-    CRASH_TRACER
-    OutputDevice& device = deviceInstance.owner;
-    auto& engine = edit.engine;
-    MixerAudioNode* mixer = nullptr;
-    bool addedFrozenTracksYet = false;
-
-    const bool shouldUse64Bit = engine.getPropertyStorage().getProperty (SettingID::use64Bit, false);
-    const bool shouldUseMultiCPU = (engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio() > 1);
-
-    CreateAudioNodeParams cnp;
-    cnp.audioNodeToBeReplaced = deviceInstance.getAudioNode();
-    cnp.forRendering = false;
-    cnp.includePlugins = true;
-    cnp.addAntiDenormalisationNoise = addAntiDenormalisationNoise;
-
-    for (auto t : getAudioTracks (edit))
-    {
-        if (t->isProcessing (true)
-             && t->createsOutput()
-             && (! t->isPartOfSubmix())
-             && &device == t->getOutput().getOutputDevice (false))
-        {
-            if (t->isFrozen (Track::groupFreeze))
-            {
-                if (! addedFrozenTracksYet)
-                {
-                    CRASH_TRACER
-                    addedFrozenTracksYet = true;
-
-                    for (auto& freezeFile : TemporaryFileManager::getFrozenTrackFiles (edit))
-                    {
-                        const String fn (freezeFile.getFileName());
-                        const String outId (fn.fromLastOccurrenceOf ("_", false, false)
-                                              .upToFirstOccurrenceOf (".", false, false));
-
-                        if (device.getDeviceID() == outId)
-                        {
-                            AudioFile af (edit.engine, freezeFile);
-                            const double length = af.getLength();
-
-                            if (length > 0)
-                            {
-                                AudioNode* node = new WaveAudioNode (af,
-                                                                     { 0.0, length },
-                                                                     0.0,
-                                                                     {},
-                                                                     LiveClipLevel(),
-                                                                     1.0, juce::AudioChannelSet::stereo());
-
-                                node = new TrackMutingAudioNode (edit, node);
-                                node = new PlayHeadAudioNode (node);
-
-                                if (mixer == nullptr)
-                                    mixer = new MixerAudioNode (shouldUse64Bit, shouldUseMultiCPU);
-
-                                mixer->addInput (node);
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if (mixer == nullptr)
-                    mixer = new MixerAudioNode (shouldUse64Bit, shouldUseMultiCPU);
-
-                mixer->addInput (t->createAudioNode (cnp));
-            }
-        }
-    }
-
-    // Create nodes for any submix tracks
-    for (auto t : getTracksOfType<FolderTrack> (edit, true))
-    {
-        if (t->isSubmixFolder() && (! t->isPartOfSubmix())
-            && t->getOutput() != nullptr && &device == t->getOutput()->getOutputDevice (false))
-        {
-            if (auto n = t->createAudioNode (cnp))
-            {
-                if (mixer == nullptr)
-                    mixer = new MixerAudioNode (shouldUse64Bit, shouldUseMultiCPU);
-
-                mixer->addInput (n);
-            }
-        }
-    }
-
-    // Create nodes for any insert plugins
-    bool deviceIsBeingUsedAsInsert = false;
-
-    for (auto p : getAllPlugins (edit, false))
-    {
-        if (auto ins = dynamic_cast<InsertPlugin*> (p))
-        {
-            if (ins->isFrozen())
-                continue;
-
-            if (auto sendNode = ins->createSendAudioNode (device))
-            {
-                if (mixer == nullptr)
-                    mixer = new MixerAudioNode (shouldUse64Bit, shouldUseMultiCPU);
-
-                mixer->addInput (sendNode);
-                deviceIsBeingUsedAsInsert = true;
-            }
-        }
-    }
-
-    AudioNode* finalNode = mixer;
-
-    // add any master plugins..
-    if (! deviceIsBeingUsedAsInsert && finalNode != nullptr)
-    {
-        CRASH_TRACER
-
-        // add any master plugins..
-        if (engine.getDeviceManager().getDefaultWaveOutDevice() == &device)
-        {
-            finalNode = edit.getMasterPluginList().createAudioNode (finalNode, addAntiDenormalisationNoise);
-            finalNode = edit.getMasterVolumePlugin()->createAudioNode (finalNode, false);
-        }
-
-        finalNode = insertOptionalLastStageNode (finalNode);
-
-        if (finalNode != nullptr)
-            finalNode = FadeInOutAudioNode::createForEdit (edit, finalNode);
-
-        if (edit.getIsPreviewEdit() && finalNode != nullptr)
-            finalNode = new LevelMeasuringAudioNode (edit.getPreviewLevelMeasurer(), finalNode);
-    }
-
-    if (edit.isClickTrackDevice (device))
-    {
-        CRASH_TRACER
-
-        auto clickNode = new ClickMutingNode (new ClickAudioNode (device.isMidi(), edit, Edit::maximumLength), edit);
-
-        auto finalMixer = dynamic_cast<MixerAudioNode*> (finalNode);
-
-        if (finalMixer == nullptr)
-        {
-            finalMixer = new MixerAudioNode (false, shouldUseMultiCPU);
-
-            finalMixer->addInput (clickNode);
-            finalMixer->addInput (finalNode);
-
-            finalNode = finalMixer;
-        }
-        else
-        {
-            finalMixer->addInput (clickNode);
-        }
-    }
-
-    return finalNode;
-}
-
-#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
 void EditPlaybackContext::createNode()
 {
     CRASH_TRACER
@@ -734,67 +495,10 @@ void EditPlaybackContext::createNode()
     if (hasTempoChanged)
         lastTempoSections = tempoSections;
 }
-#endif
-
-void EditPlaybackContext::createAudioNodes (double startTime, bool addAntiDenormalisationNoise)
-{
-    CRASH_TRACER
-
-    isAllocated = true;
-
-    Array<AudioNode*> allNodes;
-
-    for (auto mo : midiOutputs)
-        allNodes.add (prepareNode (createPlaybackAudioNode (edit, *mo, insertOptionalLastStageNode,
-                                                            addAntiDenormalisationNoise), true));
-
-    for (auto wo : waveOutputs)
-        allNodes.add (prepareNode (createPlaybackAudioNode (edit, *wo, insertOptionalLastStageNode,
-                                                            addAntiDenormalisationNoise), false));
-
-    prepareNodesToPlay (edit.engine, allNodes, startTime, playhead);
-
-    const auto& tempoSections = edit.tempoSequence.getTempoSections();
-    const bool hasTempoChanged = tempoSections.getChangeCount() != lastTempoSections.getChangeCount();
-
-    // mustn't delete any of the nodes until all have been removed from
-    // the graph, because there could be interdependencies between some
-    // of them, e.g. aux sends
-    OwnedArray<AudioNode> removedNodes;
-    removedNodes.ensureStorageAllocated (1024);
-
-    {
-        int i = 0;
-        ScopedLock sl (edit.engine.getDeviceManager().deviceManager.getAudioCallbackLock());
-
-        for (auto mo : midiOutputs)
-            removedNodes.add (mo->replaceAudioNode (std::unique_ptr<AudioNode> (allNodes.getUnchecked (i++))));
-
-        for (auto wo : waveOutputs)
-            removedNodes.add (wo->replaceAudioNode (std::unique_ptr<AudioNode> (allNodes.getUnchecked (i++))));
-
-        if (hasTempoChanged && lastTempoSections.size() > 0)
-        {
-            auto lastBeats = lastTempoSections.timeToBeats (playhead.getPosition());
-            auto lastPositionRemapped = tempoSections.beatsToTime (lastBeats);
-
-            playhead.overridePosition (lastPositionRemapped);
-        }
-    }
-
-    if (hasTempoChanged)
-        lastTempoSections = tempoSections;
-}
 
 void EditPlaybackContext::createPlayAudioNodes (double startTime)
 {
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-    if (isExperimentalGraphProcessingEnabled())
-        createNode();
-    else
-   #endif
-        createAudioNodes (startTime, shouldAddAntiDenormalisationNoise (edit.engine));
-    
+    createNode();
     startPlaying (startTime);
 }
 
@@ -806,7 +510,7 @@ void EditPlaybackContext::createPlayAudioNodesIfNeeded (double startTime)
 
 void EditPlaybackContext::reallocate()
 {
-    createPlayAudioNodes (playhead.getPosition());
+    createPlayAudioNodes (getPosition());
 }
 
 void EditPlaybackContext::startPlaying (double start)
@@ -871,7 +575,7 @@ void EditPlaybackContext::prepareOutputDevices (double start)
     double sampleRate = dm.getSampleRate();
     int blockSize = dm.getBlockSize();
 
-    start = playhead.streamTimeToSourceTime (start);
+    start = globalStreamTimeToEditTime (start);
 
     for (auto wo : waveOutputs)
         wo->prepareToPlay (sampleRate, blockSize);
@@ -914,10 +618,13 @@ Clip::Array EditPlaybackContext::stopRecording (InputDeviceInstance& in, EditTim
     const auto loopRange = transport.getLoopRange();
     in.stop();
 
-    return in.applyLastRecordingToEdit (recordedRange,
-                                        transport.looping, loopRange,
-                                        discardRecordings,
-                                        findAppropriateSelectionManager (edit));
+    auto clips = in.applyLastRecordingToEdit (recordedRange,
+                                              transport.looping, loopRange,
+                                              discardRecordings,
+                                              findAppropriateSelectionManager (edit));
+    transport.callRecordingFinishedListeners (in, clips, recordedRange);
+    
+    return clips;
 }
 
 Clip::Array EditPlaybackContext::recordingFinished (EditTimeRange recordedRange, bool discardRecordings)
@@ -984,85 +691,6 @@ Array<InputDeviceInstance*> EditPlaybackContext::getAllInputs()
 }
 
 //==============================================================================
-void EditPlaybackContext::fillNextAudioBlock (EditTimeRange streamTime, float** allChannels, int numSamples)
-{
-    CRASH_TRACER
-
-    if (edit.isRendering())
-        return;
-
-    SCOPED_REALTIME_CHECK
-
-    // update stream time for track inputs
-    for (auto in : midiInputs)
-        if (in->owner.getDeviceType() == InputDevice::trackMidiDevice)
-            in->owner.masterTimeUpdate (streamTime.getStart());
-
-    playhead.deviceManagerPositionUpdate (streamTime.getStart(), streamTime.getEnd());
-
-    // Update the dispatcher after the playhead reference time
-    midiDispatcher.masterTimeUpdate (playhead.streamTimeToSourceTime (streamTime.getStart()));
-
-    // sync this playback context with a master context
-    if (contextToSyncTo != nullptr && playhead.isPlaying())
-    {
-        const auto streamPos      = contextToSyncTo->playhead.getPosition();
-        const bool masterPlaying  = contextToSyncTo->playhead.isPlaying();
-
-        if (! hasSynced)
-        {
-            auto masterPosition = contextToSyncTo->playhead.getPosition();
-            auto masterOffset = std::fmod (masterPosition - previousBarTime, syncInterval);
-            jassert (masterPosition - previousBarTime >= 0);
-            jassert (masterOffset > 0);
-
-            // if the next bar is too far away, start playing now
-            auto startPosition = masterOffset - syncInterval;
-
-            if (playhead.isLooping() && startPosition < -0.6)
-                startPosition = masterOffset;
-
-            startPosition = std::fmod (startPosition, playhead.getLoopTimes().getLength());
-
-            playhead.setRollInToLoop (startPosition);
-            hasSynced = true;
-        }
-        else if (! masterPlaying || std::abs (lastStreamPos - streamPos) > 0.2)
-        {
-            const RelativeTime rt = Time::getCurrentTime() - contextToSyncTo->playhead.getLastUserInteractionTime();
-
-            if (! masterPlaying || rt.inSeconds() < 0.2)
-            {
-                // user has moved  or stopped the playhead -- break the sync
-                contextToSyncTo = nullptr;
-            }
-            else
-            {
-                auto masterPosition = contextToSyncTo->playhead.getPosition();
-                auto masterOffset = std::fmod (masterPosition - previousBarTime, syncInterval);
-                auto position = playhead.getPosition();
-
-                auto newPosition = std::floor (position / syncInterval) * syncInterval + masterOffset;
-                newPosition = std::fmod (newPosition, playhead.getLoopTimes().getLength());
-
-                playhead.setRollInToLoop (newPosition);
-            }
-        }
-
-        lastStreamPos = streamPos;
-    }
-
-    edit.updateModifierTimers (playhead.streamTimeToSourceTime (streamTime.getStart()), numSamples);
-    midiDispatcher.renderDevices (playhead, streamTime, numSamples);
-
-    for (auto r : edit.getRackList().getTypes())
-        r->newBlockStarted();
-
-    for (auto wo : waveOutputs)
-        wo->fillNextAudioBlock (playhead, streamTime, allChannels, numSamples);
-}
-
-#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
 void EditPlaybackContext::fillNextNodeBlock (float** allChannels, int numChannels, int numSamples)
 {
     CRASH_TRACER
@@ -1104,13 +732,14 @@ void EditPlaybackContext::fillNextNodeBlock (float** allChannels, int numChannel
         }
     }
 
+    const double editTime = tracktion_graph::sampleToTime (nodePlaybackContext->playHead.getPosition(), nodePlaybackContext->getSampleRate());
+    edit.updateModifierTimers (editTime, numSamples);
+    
     nodePlaybackContext->process (allChannels, numChannels, numSamples);
     
     // Dispatch any MIDI messages that have been injected in to the MidiOutputDeviceInstances by the Node
-    const double editTime = tracktion_graph::sampleToTime (nodePlaybackContext->playHead.getPosition(), nodePlaybackContext->getSampleRate());
     midiDispatcher.dispatchPendingMessagesForDevices (editTime);
 }
-#endif
 
 InputDeviceInstance* EditPlaybackContext::getInputFor (InputDevice* d) const
 {
@@ -1150,13 +779,11 @@ void EditPlaybackContext::syncToContext (EditPlaybackContext* newContextToSyncTo
     syncInterval    = newSyncInterval;
     hasSynced       = false;
 
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     if (newContextToSyncTo != nullptr && newContextToSyncTo->getNodePlayHead() != nullptr)
     {
         nodeContextToSyncTo = newContextToSyncTo;
         contextSyncroniser->reset (previousBarTime, syncInterval);
     }
-   #endif
 }
 
 static bool hasCheckedDenormNoise = false;
@@ -1181,35 +808,49 @@ void EditPlaybackContext::setAddAntiDenormalisationNoise (Engine& e, bool b)
 }
 
 //==============================================================================
-void EditPlaybackContext::enableExperimentalGraphProcessing (bool enable)
-{
-    EditPlaybackContextInternal::getExperimentalGraphProcessingFlag() = enable;
-}
-
-bool EditPlaybackContext::isExperimentalGraphProcessingEnabled()
-{
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-    return EditPlaybackContextInternal::getExperimentalGraphProcessingFlag();
-   #else
-    return false;
-   #endif
-}
-
-#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
 tracktion_graph::PlayHead* EditPlaybackContext::getNodePlayHead() const
 {
-    if (! isExperimentalGraphProcessingEnabled())
-        return nullptr;
-    
+    //TODO  can this be removed?
     return nodePlaybackContext ? &nodePlaybackContext->playHead
                                : nullptr;
 }
 
+bool EditPlaybackContext::isPlaying() const
+{
+    return nodePlaybackContext ? nodePlaybackContext->playHead.isPlaying()
+                               : false;
+}
+
+bool EditPlaybackContext::isLooping() const
+{
+    return nodePlaybackContext->playHead.isLooping();
+}
+
+bool EditPlaybackContext::isDragging() const
+{
+    return nodePlaybackContext->playHead.isUserDragging();
+}
+
+double EditPlaybackContext::getPosition() const
+{
+    return tracktion_graph::sampleToTime (nodePlaybackContext->playHead.getPosition(),
+                                          nodePlaybackContext->getSampleRate());
+}
+
+double EditPlaybackContext::getUnloopedPosition() const
+{
+    return tracktion_graph::sampleToTime (nodePlaybackContext->playHead.getUnloopedPosition(),
+                                          nodePlaybackContext->getSampleRate());
+}
+
+EditTimeRange EditPlaybackContext::getLoopTimes() const
+{
+    return tracktion_graph::sampleToTime (nodePlaybackContext->playHead.getLoopRange(),
+                                          nodePlaybackContext->getSampleRate());
+}
+
 int EditPlaybackContext::getLatencySamples() const
 {
-    if (! isExperimentalGraphProcessingEnabled())
-        return 0;
-    
     return nodePlaybackContext ? nodePlaybackContext->getLatencySamples()
                                : 0;
 }
@@ -1244,6 +885,52 @@ void EditPlaybackContext::postPosition (double newPosition)
         nodePlaybackContext->postPosition (newPosition);
 }
 
+void EditPlaybackContext::play()
+{
+    if (nodePlaybackContext)
+        nodePlaybackContext->playHead.play();
+}
+
+void EditPlaybackContext::stop()
+{
+    if (nodePlaybackContext)
+        nodePlaybackContext->playHead.stop();
+}
+
+double EditPlaybackContext::globalStreamTimeToEditTime (double globalStreamTime) const
+{
+    if (! nodePlaybackContext)
+        return 0.0;
+    
+    const auto sampleRate = getSampleRate();
+    const auto globalSamplePos = tracktion_graph::timeToSample (globalStreamTime, sampleRate);
+    const auto timelinePosition = nodePlaybackContext->playHead.referenceSamplePositionToTimelinePosition (globalSamplePos);
+    
+    return tracktion_graph::sampleToTime (timelinePosition, sampleRate);
+}
+
+double EditPlaybackContext::globalStreamTimeToEditTimeUnlooped (double globalStreamTime) const
+{
+    if (! nodePlaybackContext)
+        return 0.0;
+    
+    const auto sampleRate = getSampleRate();
+    const auto globalSamplePos = tracktion_graph::timeToSample (globalStreamTime, sampleRate);
+    const auto timelinePosition = nodePlaybackContext->playHead.referenceSamplePositionToTimelinePositionUnlooped (globalSamplePos);
+    
+    return tracktion_graph::sampleToTime (timelinePosition, sampleRate);
+}
+
+void EditPlaybackContext::resyncToGlobalStreamTime (juce::Range<double> globalStreamTime)
+{
+    if (! nodePlaybackContext)
+        return;
+    
+    const double sampleRate = getSampleRate();
+    const auto globalSampleRange = tracktion_graph::timeToSample (globalStreamTime, sampleRate);
+    nodePlaybackContext->resyncToReferenceSampleRange (globalSampleRange);
+}
+
 void EditPlaybackContext::setThreadPoolStrategy (int type)
 {
     type = jlimit (static_cast<int> (tracktion_graph::ThreadPoolStrategy::conditionVariable),
@@ -1265,8 +952,6 @@ void EditPlaybackContext::enablePooledMemory (bool enable)
 {
     EditPlaybackContextInternal::getPooledMemoryFlag() = enable;
 }
-
-#endif
 
 //==============================================================================
 #if JUCE_WINDOWS

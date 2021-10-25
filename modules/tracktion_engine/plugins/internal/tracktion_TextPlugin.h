@@ -27,7 +27,7 @@ public:
     bool canBeAddedToFolderTrack() override             { return true; }
     juce::String getName() override                     { return textTitle.get().isNotEmpty() ? textTitle : TRANS("Text Plugin"); }
     juce::String getPluginType() override               { return xmlTypeName; }
-    void initialise (const PlaybackInitialisationInfo&) override {}
+    void initialise (const PluginInitialisationInfo&) override {}
     void deinitialise() override                        {}
     void applyToBuffer (const PluginRenderContext&) override {}
     int getNumOutputChannelsGivenInputs (int numInputChannels) override     { return numInputChannels; }

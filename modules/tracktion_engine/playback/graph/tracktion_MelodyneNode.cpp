@@ -159,13 +159,7 @@ void MelodyneNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationI
             if (p->getSampleRate() != info.sampleRate
                  || p->getBlockSize() != info.blockSize)
             {
-                tracktion_engine::PlayHead enginePlayHead;
-                tracktion_engine::PlaybackInitialisationInfo teInfo =
-                {
-                    0.0, info.sampleRate, info.blockSize, {}, enginePlayHead
-                };
-
-                plugin->initialise (teInfo);
+                plugin->initialise ({ 0.0, info.sampleRate, info.blockSize });
             }
 
             p->setPlayHead (nullptr);

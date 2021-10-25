@@ -28,6 +28,7 @@ namespace tracktion_engine
 #ifdef __GNUC__
  #pragma GCC diagnostic push
  #pragma GCC diagnostic ignored "-Wsign-conversion"
+ #pragma GCC diagnostic ignored "-Wshadow"
  #if ! __clang__
   #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
  #endif
@@ -120,7 +121,11 @@ public:
     {
         AudioScratchBuffer scratch (1, numChannels * numSamples);
         float* interleaved = scratch.buffer.getWritePointer (0);
-        juce::AudioDataConverters::interleaveSamples (inputSamples, interleaved, numSamples, numChannels);
+
+        using Format = juce::AudioData::Format<AudioData::Float32, AudioData::NativeEndian>;
+        juce::AudioData::interleaveSamples (juce::AudioData::NonInterleavedSource<Format> { inputSamples,   numChannels },
+                                            juce::AudioData::InterleavedDest<Format>      { interleaved,    numChannels },
+                                            numSamples);
 
         bpmDetect.inputSamples (interleaved, numSamples);
     }

@@ -8,6 +8,11 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#pragma once
+
+#include "tracktion_AudioNode.h"
+
+
 namespace tracktion_engine
 {
 

@@ -11,241 +11,6 @@
 namespace tracktion_engine
 {
 
-/** AudioNode that reads from a file node and timestretches its output.
-
-    Annoyingly, this has to replicate a lot of the functionality in WaveAudioNode.
-    Note that this isn't designed to be a fully fledged AudioNode, it doesn't deal
-    with clip offsets, loops etc. It's only designed for previewing files.
-
-    A cleaner approach might be to take a WaveAudioNode and stretch the contents.
-*/
-class AudioClipBase::TimestretchingPreviewAudioNode  : public AudioNode
-{
-public:
-    TimestretchingPreviewAudioNode (AudioClipBase& clip)
-        : c (clip), clipPtr (clip), file (c.getAudioFile()),
-          fileInfo (file.getInfo()),
-          sampleRate (fileInfo.sampleRate),
-          fifo (jmax (1, fileInfo.numChannels), 8192)
-    {
-        CRASH_TRACER
-
-        reader = c.edit.engine.getAudioFileManager().cache.createReader (file);
-
-        auto wi = clip.getWaveInfo();
-        auto& li = c.getLoopInfo();
-
-        if (li.getNumBeats() > 0)
-        {
-            if (c.getAutoTempo() && wi.hashCode != 0)
-                speedRatio = (float) (li.getBpm (wi) / clip.edit.tempoSequence.getTempo (0)->getBpm());
-            else
-                speedRatio = (float) c.getSpeedRatio();
-        }
-
-        const int rootNote = li.getRootNote();
-
-        if (rootNote != -1)
-        {
-            if (c.getAutoPitch() && rootNote != -1)
-                pitchSemitones = (float) c.getTransposeSemiTones (true);
-            else
-                pitchSemitones = c.getPitchChange();
-        }
-
-        jassert (speedRatio >= 0.1f);
-        speedRatio = jmax (speedRatio, 0.1f);
-    }
-
-    void getAudioNodeProperties (AudioNodeProperties& info) override
-    {
-        info.hasAudio           = true;
-        info.hasMidi            = false;
-        info.numberOfChannels   = fileInfo.numChannels;
-    }
-
-    void visitNodes (const VisitorFn& v) override
-    {
-        v (*this);
-    }
-
-    bool purgeSubNodes (bool keepAudio, bool /*keepMidi*/) override
-    {
-        return keepAudio;
-    }
-
-    void releaseAudioNodeResources() override
-    {
-    }
-
-    void prepareAudioNodeToPlay (const PlaybackInitialisationInfo& info) override
-    {
-        CRASH_TRACER
-
-        stretchBlockSize = jmin (info.blockSizeSamples, 512);
-        sampleRate = info.sampleRate;
-
-        const TimeStretcher::Mode m = c.getTimeStretchMode();
-
-        if (TimeStretcher::canProcessFor (m))
-        {
-            fileSpeedRatio = float (fileInfo.sampleRate / sampleRate);
-            const float resamplingPitchRatio = fileSpeedRatio > 0.0f ? (float) std::log2 (fileSpeedRatio) : 1.0f;
-            timestretcher.initialise (info.sampleRate, stretchBlockSize, fileInfo.numChannels, m, c.elastiqueProOptions.get(), false);
-            timestetchSpeedRatio = jmax (0.1f, float (speedRatio / fileSpeedRatio));
-            timestetchSemitonesUp = float ((pitchSemitones + (resamplingPitchRatio * 12.0f)));
-            timestretcher.setSpeedAndPitch (timestetchSpeedRatio, timestetchSemitonesUp);
-        }
-
-        fifo.setSize (fileInfo.numChannels, timestretcher.getMaxFramesNeeded());
-    }
-
-    bool isReadyToRender() override
-    {
-        jassertfalse; // this shouldn't be used for rendering
-
-        if (file.getHash() == 0)
-            return true;
-
-        if (reader == nullptr)
-            reader = c.edit.engine.getAudioFileManager().cache.createReader (file);
-
-        return reader != nullptr && reader->getSampleRate() > 0.0;
-    }
-
-    void renderOver (const AudioRenderContext& rc) override
-    {
-        callRenderAdding (rc);
-    }
-
-    void renderAdding (const AudioRenderContext& rc) override
-    {
-        CRASH_TRACER
-
-        auto editRange = rc.getEditTime().editRange1;
-
-        if (! rc.isContiguousWithPreviousBlock() || editRange.getStart() != nextEditTime)
-            reset (editRange.getStart());
-
-        auto numSamples = rc.bufferNumSamples;
-        auto start = rc.bufferStartSample;
-
-        while (numSamples > 0)
-        {
-            const int numReady = jmin (numSamples, fifo.getNumReady());
-
-            if (numReady > 0)
-            {
-                const bool res = fifo.readAdding (*rc.destBuffer, start, numReady);
-                jassert (res); juce::ignoreUnused (res);
-
-                start += numReady;
-                numSamples -= numReady;
-            }
-            else
-            {
-                if (! fillNextBlock())
-                    break;
-            }
-        }
-
-        nextEditTime = editRange.getEnd();
-    }
-
-private:
-    AudioClipBase& c;
-    Clip::Ptr clipPtr;
-
-    AudioFile file;
-    AudioFileInfo fileInfo;
-    AudioFileCache::Reader::Ptr reader;
-
-    double sampleRate, fileSpeedRatio = 1.0, nextEditTime = -1.0;
-    TimeStretcher timestretcher;
-    float speedRatio = 1.0f, pitchSemitones = 0;
-    float timestetchSpeedRatio = 1.0f, timestetchSemitonesUp = 1.0f;
-
-    AudioFifo fifo;
-    int stretchBlockSize = 512;
-
-    int64 timeToFileSample (double time) const noexcept
-    {
-        const double fileStartTime = time / speedRatio;
-        return roundToInt (fileStartTime * fileInfo.sampleRate);
-    }
-
-    void reset (double newStartTime)
-    {
-        const int64 readPos = timeToFileSample (newStartTime);
-
-        if (reader != nullptr)
-        {
-            if (readPos == reader->getReadPosition())
-                return;
-
-            reader->setReadPosition (readPos);
-        }
-
-        fifo.reset();
-
-        timestretcher.reset();
-        timestretcher.setSpeedAndPitch (timestetchSpeedRatio, timestetchSemitonesUp);
-    }
-
-    bool fillNextBlock()
-    {
-        CRASH_TRACER
-        const int needed = timestretcher.getFramesNeeded();
-        jassert (needed < fifo.getFreeSpace());
-        jassert (reader != nullptr);
-
-        if (reader == nullptr)
-            return false;
-
-        AudioScratchBuffer fifoScratch (fileInfo.numChannels, stretchBlockSize);
-
-        float* outs[] = { fifoScratch.buffer.getWritePointer (0),
-            fileInfo.numChannels > 1 ? fifoScratch.buffer.getWritePointer (1) : nullptr,
-            nullptr };
-
-        if (needed >= 0)
-        {
-            AudioScratchBuffer scratch (fileInfo.numChannels, needed);
-            const AudioChannelSet bufChannels = fileInfo.numChannels == 1 ? AudioChannelSet::mono() : AudioChannelSet::stereo();
-            const AudioChannelSet channelsToUse = AudioChannelSet::stereo();
-
-            if (needed > 0)
-            {
-                bool b = reader->readSamples (needed, scratch.buffer, bufChannels, 0, channelsToUse, 3);
-                juce::ignoreUnused (b);
-                // don't worry about failed reads -- they are cache misses. It'll catch up
-            }
-
-            const float* ins[] = { scratch.buffer.getReadPointer (0),
-                fileInfo.numChannels > 1 ? scratch.buffer.getReadPointer (1) : nullptr,
-                nullptr };
-
-            if (TimeStretcher::canProcessFor (c.getTimeStretchMode()))
-                timestretcher.processData (ins, needed, outs);
-            else
-                for (int channel = fileInfo.numChannels; --channel >= 0;)
-                    FloatVectorOperations::copy (outs[channel], ins[channel], needed);
-        }
-        else
-        {
-            jassert (needed == -1);
-            timestretcher.flush (outs);
-        }
-
-        const bool res = fifo.write (fifoScratch.buffer);
-        jassert (res); juce::ignoreUnused (res);
-
-        return true;
-    }
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TimestretchingPreviewAudioNode)
-};
-
 //==============================================================================
 /**
     Performs a tempo detection task on a background thread.
@@ -1647,13 +1412,13 @@ void AudioClipBase::deleteMark (double relCursorPos)
 
 bool AudioClipBase::canSnapToOriginalBWavTime()
 {
-    return getAudioFile().getMetadata() [WavAudioFormat::bwavTimeReference].isNotEmpty();
+    return getAudioFile().getMetadata()[WavAudioFormat::bwavTimeReference].isNotEmpty();
 }
 
 void AudioClipBase::snapToOriginalBWavTime()
 {
     auto f = getAudioFile();
-    const String bwavTime (f.getMetadata() [WavAudioFormat::bwavTimeReference]);
+    const String bwavTime (f.getMetadata()[WavAudioFormat::bwavTimeReference]);
 
     if (bwavTime.isNotEmpty())
     {
@@ -1825,131 +1590,6 @@ bool AudioClipBase::setupARA (bool dontPopupErrorMessages)
 
     juce::ignoreUnused (dontPopupErrorMessages);
     return false;
-}
-
-AudioNode* AudioClipBase::createAudioNode (const CreateAudioNodeParams& params)
-{
-    CRASH_TRACER
-
-    if (auto node = createNode (getEditTimeRange(), getLiveClipLevel(), false))
-    {
-        if (params.includePlugins)
-        {
-            for (auto f : pluginList)
-                f->initialiseFully();
-
-            node = pluginList.createAudioNode (node, false);
-        }
-
-        auto fIn = getFadeIn();
-        auto fOut = getFadeOut();
-
-        if (fIn > 0.0 || fOut > 0.0)
-        {
-            const bool speedIn = getFadeInBehaviour() == speedRamp && fIn > 0.0;
-            const bool speedOut = getFadeOutBehaviour() == speedRamp && fOut > 0.0;
-
-            auto pos = getPosition();
-
-            if (speedIn || speedOut)
-                node = new SpeedRampAudioNode (node,
-                                               speedIn ? EditTimeRange (pos.getStart(), pos.getStart() + fIn)
-                                                       : EditTimeRange(),
-                                               speedOut ? EditTimeRange (pos.getEnd() - fOut, pos.getEnd())
-                                                        : EditTimeRange(),
-                                               fadeInType, fadeOutType);
-
-            node = new FadeInOutAudioNode (node,
-                                           speedIn ? EditTimeRange (pos.getStart(), pos.getStart() + jmin (0.003, fIn))
-                                                   : EditTimeRange (pos.getStart(), pos.getStart() + fIn),
-                                           speedOut ? EditTimeRange (pos.getEnd() - jmin (0.003, fOut), pos.getEnd())
-                                                    : EditTimeRange (pos.getEnd() - fOut, pos.getEnd()),
-                                           fadeInType, fadeOutType);
-        }
-
-        return node;
-    }
-
-    return {};
-}
-
-AudioNode* AudioClipBase::createMelodyneAudioNode()
-{
-    return createFadeInOutNode (createNode (getEditTimeRange(), getLiveClipLevel(), true));
-}
-
-AudioNode* AudioClipBase::createFadeInOutNode (AudioNode* node)
-{
-    if (getFadeIn() > 0.0 || getFadeOut() > 0.0)
-    {
-        auto pos = getPosition();
-
-        return new FadeInOutAudioNode (node,
-                                       { pos.getStart(), pos.getStart() + getFadeIn() },
-                                       { pos.getEnd() - getFadeOut(), pos.getEnd() },
-                                       fadeInType,
-                                       fadeOutType);
-    }
-
-    return node;
-}
-
-AudioNode* AudioClipBase::createNode (EditTimeRange editTime, LiveClipLevel lcl, bool includeMelodyne)
-{
-    const AudioFile playFile (getPlaybackFile());
-
-    if (playFile.isNull())
-        return {};
-
-    if (setupARA (false))
-    {
-        jassert (melodyneProxy != nullptr);
-
-        if (includeMelodyne)
-            return melodyneProxy->createAudioNode (lcl);
-
-        return {}; // the ARA node creation will be handled by the track to allow live-play...
-    }
-
-    melodyneProxy = nullptr;
-
-    auto original = getAudioFile();
-
-    double nodeOffset = 0.0, speed = 1.0;
-    EditTimeRange loopRange;
-    const bool usesTimestretchedProxy = usesTimeStretchedProxy();
-
-    if (shouldAttemptRender() && ! original.isValid())
-        createNewProxyAsync();
-
-    if (usesTimestretchedProxy || original.getInfo().needsCachedProxy)
-        if (playFile.getSampleRate() <= 0.0)
-            createNewProxyAsync();
-
-    if (! usesTimestretchedProxy)
-    {
-        nodeOffset = getPosition().getOffset();
-        loopRange = getLoopRange();
-        speed = getSpeedRatio();
-    }
-
-    if (useTimestretchedPreview)
-    {
-        auto& li = getLoopInfo();
-
-        if (li.getNumBeats() > 0.0 || li.getRootNote() != -1)
-            return new TimestretchingPreviewAudioNode (*this);
-    }
-
-    if ((getFadeInBehaviour() == speedRamp && fadeIn > 0.0)
-         || (getFadeOutBehaviour() == speedRamp && fadeOut > 0.0))
-        return new SubSampleWaveAudioNode (edit.engine, playFile, editTime, nodeOffset,
-                                           loopRange, lcl, speed,
-                                           activeChannels);
-
-    return new WaveAudioNode (playFile, editTime, nodeOffset,
-                              loopRange, lcl, speed,
-                              activeChannels);
 }
 
 LiveClipLevel AudioClipBase::getLiveClipLevel()
@@ -2237,6 +1877,7 @@ struct StretchSegment
 
             timestretcher.initialise (fileInfo.sampleRate, outputBufferSize, numChannelsToUse,
                                       info.mode, info.options, false);
+            jassert (timestretcher.isInitialised()); // Have you enabled a TimeStretcher mode?
 
             timestretcher.setSpeedAndPitch ((float) (1.0 / segment.getStretchRatio()),
                                             segment.getTranspose());
@@ -2282,15 +1923,15 @@ struct StretchSegment
             }
             else
             {
-                fillNextBlock();
-                renderFades();
+                const int blockSize = fillNextBlock();
+                renderFades (blockSize);
 
-                readySampleOutputPos += outputBufferSize;
+                readySampleOutputPos += blockSize;
             }
         }
     }
 
-    void fillNextBlock()
+    int fillNextBlock()
     {
         CRASH_TRACER
         float* outs[maxNumChannels] = {};
@@ -2299,7 +1940,8 @@ struct StretchSegment
             outs[i] = fifo.getWritePointer (i);
 
         const int needed = timestretcher.getFramesNeeded();
-
+        int numRead = 0;
+        
         if (needed >= 0)
         {
             AudioScratchBuffer scratch (numChannelsToUse, needed);
@@ -2321,40 +1963,42 @@ struct StretchSegment
             for (int i = 0; i < numChannelsToUse; ++i)
                 ins[i] = scratch.buffer.getReadPointer (i);
 
-            timestretcher.processData (ins, needed, outs);
+            numRead = timestretcher.processData (ins, needed, outs);
         }
         else
         {
             jassert (needed == -1);
-            timestretcher.flush (outs);
+            numRead = timestretcher.flush (outs);
         }
 
         readySamplesStart = 0;
-        readySamplesEnd = outputBufferSize;
+        readySamplesEnd = numRead;
+        
+        return numRead;
     }
 
-    void renderFades()
+    void renderFades (int numSamples)
     {
         CRASH_TRACER
-        auto renderedEnd = readySampleOutputPos + outputBufferSize;
+        auto renderedEnd = readySampleOutputPos + numSamples;
 
         if (segment.hasFadeIn())
             if (readySampleOutputPos < crossfadeSamples)
-                renderFade (0, crossfadeSamples, false);
+                renderFade (0, crossfadeSamples, false, numSamples);
 
         if (segment.hasFadeOut())
         {
             auto fadeOutStart = (int64) (segment.getSampleRange().getLength() / segment.getStretchRatio()) - crossfadeSamples;
 
             if (renderedEnd > fadeOutStart)
-                renderFade (fadeOutStart, fadeOutStart + crossfadeSamples + 2, true);
+                renderFade (fadeOutStart, fadeOutStart + crossfadeSamples + 2, true, numSamples);
         }
     }
 
-    void renderFade (int64 start, int64 end, bool isFadeOut)
+    void renderFade (int64 start, int64 end, bool isFadeOut, int numSamples)
     {
         float alpha1 = 0.0f, alpha2 = 1.0f;
-        auto renderedEnd = readySampleOutputPos + outputBufferSize;
+        auto renderedEnd = readySampleOutputPos + numSamples;
 
         if (end > renderedEnd)
         {
@@ -2639,6 +2283,19 @@ void AudioClipBase::valueTreePropertyChanged (ValueTree& tree, const juce::Ident
             || id == IDs::elastiqueOptions || id == IDs::warpTime
             || id == IDs::effectsVisible || id == IDs::autoPitchMode)
         {
+            if (id == IDs::warpTime)
+            {
+                warpTime.forceUpdateOfCachedValue();
+                
+                if (! getWarpTime())
+                {
+                    if (shouldAttemptRender())
+                        updateSourceFile();
+                    else
+                        setCurrentSourceFile (getOriginalFile());
+                }
+            }
+            
             changed();
         }
         else if (id == IDs::gain)

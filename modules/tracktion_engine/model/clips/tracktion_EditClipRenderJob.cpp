@@ -282,70 +282,33 @@ bool EditRenderJob::RenderPass::initialise()
         && r.destFile.hasWriteAccess()
         && ! r.destFile.isDirectory())
     {
-       #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-        if (EditPlaybackContext::isExperimentalGraphProcessingEnabled())
+        auto tracksToDo = toTrackArray (*r.edit, r.tracksToDo);
+
+        // Initialise playhead and continuity
+        auto playHead = std::make_unique<tracktion_graph::PlayHead>();
+        auto playHeadState = std::make_unique<tracktion_graph::PlayHeadState> (*playHead);
+        auto processState = std::make_unique<ProcessState> (*playHeadState);
+
+        CreateNodeParams cnp { *processState };
+        cnp.sampleRate = r.sampleRateForAudio;
+        cnp.blockSize = r.blockSizeForAudio;
+        cnp.allowedClips = r.allowedClips.isEmpty() ? nullptr : &r.allowedClips;
+        cnp.allowedTracks = r.tracksToDo.isZero() ? nullptr : &tracksToDo;
+        cnp.forRendering = true;
+        cnp.includePlugins = r.usePlugins;
+        cnp.includeMasterPlugins = r.useMasterPlugins;
+        cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
+        cnp.includeBypassedPlugins = false;
+
+        std::unique_ptr<tracktion_graph::Node> node;
+        callBlocking ([this, &node, &cnp] { node = createNodeForEdit (*r.edit, cnp); });
+
+        if (node)
         {
-            Array<Track*> tracksToDo;
-
-            // Find Track pointers for bitset
-            auto allTracks = getAllTracks (*r.edit);
-
-            for (auto bit = r.tracksToDo.findNextSetBit (0); bit != -1; bit = r.tracksToDo.findNextSetBit (bit + 1))
-                tracksToDo.add (allTracks[bit]);
-            
-            // Initialise playhead and continuity
-            auto playHead = std::make_unique<tracktion_graph::PlayHead>();
-            auto playHeadState = std::make_unique<tracktion_graph::PlayHeadState> (*playHead);
-            auto processState = std::make_unique<ProcessState> (*playHeadState);
-
-            CreateNodeParams cnp { *processState };
-            cnp.sampleRate = r.sampleRateForAudio;
-            cnp.blockSize = r.blockSizeForAudio;
-            cnp.allowedClips = r.allowedClips.isEmpty() ? nullptr : &r.allowedClips;
-            cnp.allowedTracks = r.tracksToDo.isZero() ? nullptr : &tracksToDo;
-            cnp.forRendering = true;
-            cnp.includePlugins = r.usePlugins;
-            cnp.includeMasterPlugins = r.useMasterPlugins;
-            cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
-            cnp.includeBypassedPlugins = ! r.engine->getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph();
-
-            std::unique_ptr<tracktion_graph::Node> node;
-
-            callBlocking ([this, &node, &cnp]
-            {
-                node = createNodeForEdit (*r.edit, cnp);
-            });
-
-            if (node)
-            {
-                task.reset (new Renderer::RenderTask (desc, r,
-                                                      std::move (node), std::move (playHead), std::move (playHeadState), std::move (processState),
-                                                      owner.progress, &owner.thumbnailToUpdate));
-                return task->errorMessage.isEmpty();
-            }
-        }
-        else
-       #endif
-        {
-            AudioNode* node = nullptr;
-
-            CreateAudioNodeParams cnp;
-            cnp.allowedClips = r.allowedClips.isEmpty() ? nullptr : &r.allowedClips;
-            cnp.allowedTracks = &r.tracksToDo;
-            cnp.forRendering = true;
-            cnp.includePlugins = r.usePlugins;
-            cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
-
-            callBlocking ([this, &node, &cnp]
-            {
-                node = createRenderingNodeFromEdit (*r.edit, cnp, r.useMasterPlugins);
-            });
-
-            if (node != nullptr)
-            {
-                task.reset (new Renderer::RenderTask (desc, r, node, owner.progress, &owner.thumbnailToUpdate));
-                return task->errorMessage.isEmpty();
-            }
+            task = std::make_unique<Renderer::RenderTask> (desc, r,
+                                                           std::move (node), std::move (playHead), std::move (playHeadState), std::move (processState),
+                                                           &owner.progress, &owner.thumbnailToUpdate);
+            return task->errorMessage.isEmpty();
         }
     }
 
@@ -358,9 +321,10 @@ void EditRenderJob::renderSeparateTracks()
     // The logic here is fairly complicated but esseintially we want the following resulting tracks:
     // 1. Any top-level audio tracks
     // 2. Any top-level sub-mix folder tracks
-    // 3. Any audio or sub-mix folder tracks contained in Folder tracks (which aren't sub-mix tracks)
+    // 3. Any audio or sub-mix folder tracks contained in Folder tracks
     // 4. Only tracks that are contained in the tracksToDo mask
 
+    jassert (params.separateTracks);
     auto originalTracksToDo = params.tracksToDo;
     Array<File> createdFiles;
 
@@ -409,7 +373,6 @@ void EditRenderJob::renderSeparateTracks()
                                                        + file.getFileExtension());
 
                 params.destFile = File (File::createLegalPathName (getNonExistentSiblingWithIncrementedNumberSuffix (trackFile, false).getFullPathName()));
-
                 params.tracksToDo = tracksToDo;
 
                 if (Renderer::checkTargetFile (track->edit.engine, params.destFile))

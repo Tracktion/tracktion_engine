@@ -41,7 +41,7 @@ DelayPlugin::~DelayPlugin()
 
 const char* DelayPlugin::xmlTypeName = "delay";
 
-void DelayPlugin::initialise (const PlaybackInitialisationInfo& info)
+void DelayPlugin::initialise (const PluginInitialisationInfo& info)
 {
     const int lengthInSamples = (int) (lengthMs * info.sampleRate / 1000.0);
     delayBuffer.ensureMaxBufferSize (lengthInSamples);

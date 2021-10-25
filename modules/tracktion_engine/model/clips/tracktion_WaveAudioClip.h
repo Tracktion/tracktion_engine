@@ -13,61 +13,102 @@ namespace tracktion_engine
 
 //==============================================================================
 /**
+    An audio clip that uses an audio file as its source.
 */
 class WaveAudioClip  : public AudioClipBase
 {
 public:
+    /** Creates a WaveAudioClip from a given state. @see ClipTrack::insertWaveClip. */
     WaveAudioClip (const juce::ValueTree&, EditItemID, ClipTrack&);
+    
+    /** Destructor. */
     ~WaveAudioClip() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<WaveAudioClip>;
 
     //==============================================================================
+    /** Adds a new take with the ProjectItemID as the source. */
+    void addTake (ProjectItemID);
+    
+    /** Adds a new take with the given file as the source. */
+    void addTake (const juce::File&);
+
+    /** Deletes all but the current takes.
+        @param deleteSourceFiles    If true, also deletes the source files
+    */
+    void deleteAllUnusedTakes (bool deleteSourceFiles);
+
+    /** Deletes all but the current takes but shows a confirmation dialog first.
+        @param deleteSourceFiles    If true, also deletes the source files
+    */
+    void deleteAllUnusedTakesConfirmingWithUser (bool deleteSourceFiles);
+
+    /** Returns the WaveCompManager for this clip. */
+    WaveCompManager& getCompManager();
+
+    //==============================================================================
+    /** @internal */
+    bool needsRender() const override;
+    /** @internal */
+    RenderManager::Job::Ptr getRenderJob (const AudioFile& destFile) override;
+    /** @internal */
+    juce::String getRenderMessage() override;
+    /** @internal */
+    void renderComplete() override;
+
+    /** @internal */
+    bool isUsingFile (const AudioFile&) override;
+
+    //==============================================================================
+    /** @internal */
     void initialise() override;
+    /** @internal */
     void cloneFrom (Clip*) override;
 
     //==============================================================================
+    /** @internal */
     juce::String getSelectableDescription() override;
 
+    /** @internal */
     bool isMidi() const override                                { return false; }
+    /** @internal */
     bool usesSourceFile() override                              { return true; }
 
+    /** @internal */
     double getSourceLength() const override;
+    /** @internal */
     void sourceMediaChanged() override;
 
+    /** @internal */
     juce::File getOriginalFile() const override;
+    /** @internal */
     juce::int64 getHash() const override;
 
+    /** @internal */
     void setLoopDefaults() override;
 
     //==============================================================================
-    void addTake (ProjectItemID);
-    void addTake (const juce::File&);
-    bool hasAnyTakes() const override                           { return getTakesTree().getNumChildren() > 0; }
-    int getNumTakes (bool includeComps) override;
-
-    juce::Array<ProjectItemID> getTakes() const override;
-    void clearTakes() override;
-    int getCurrentTake() const override;
-    void setCurrentTake (int takeIndex) override;
-    bool isCurrentTakeComp() override;
-
+    /** @internal */
     juce::StringArray getTakeDescriptions() const override;
-    void deleteAllUnusedTakes (bool deleteSourceFiles);
-    void deleteAllUnusedTakesConfirmingWithUser (bool deleteSourceFiles);
+    /** @internal */
+    bool hasAnyTakes() const override                           { return getTakesTree().getNumChildren() > 0; }
+    /** @internal */
+    int getNumTakes (bool includeComps) override;
+    /** @internal */
+    juce::Array<ProjectItemID> getTakes() const override;
+    /** @internal */
+    void clearTakes() override;
+    /** @internal */
+    int getCurrentTake() const override;
+    /** @internal */
+    void setCurrentTake (int takeIndex) override;
+    /** @internal */
+    bool isCurrentTakeComp() override;
+    /** @internal */
     Clip::Array unpackTakes (bool toNewTracks) override;
 
-    WaveCompManager& getCompManager();
-
+    /** @internal */
     void reassignReferencedItem (const ReferencedItem&, ProjectItemID newID, double newStartTime) override;
-
-    //==============================================================================
-    bool needsRender() const override;
-    RenderManager::Job::Ptr getRenderJob (const AudioFile& destFile) override;
-    juce::String getRenderMessage() override;
-    void renderComplete() override;
-
-    bool isUsingFile (const AudioFile& af) override;
 
 private:
     //==============================================================================

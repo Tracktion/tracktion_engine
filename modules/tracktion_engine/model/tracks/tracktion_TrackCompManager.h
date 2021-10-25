@@ -32,11 +32,6 @@ public:
 
     juce::Array<Track*> getTracksInComp (int index);
 
-    static AudioNode* createTrackCompAudioNode (AudioNode* input,
-                                                const juce::Array<EditTimeRange>& muteTimes,
-                                                const juce::Array<EditTimeRange>& nonMuteTimes,
-                                                double crossfadeTime);
-
     //==============================================================================
     struct CompSection  : public juce::ReferenceCountedObject
     {
@@ -90,7 +85,6 @@ public:
         static juce::Array<EditTimeRange> getMuteTimes (const juce::Array<EditTimeRange>& nonMuteTimes);
         juce::Array<EditTimeRange> getNonMuteTimes (Track&, double crossfadeTime) const;
         EditTimeRange getTimeRange() const;
-        AudioNode* createAudioNode (Track&, AudioNode* input);
 
         void setName (const juce::String&);
 
@@ -128,11 +122,12 @@ public:
         void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
 
         juce::ValueTree state;
+        Edit& edit;
+
         juce::CachedValue<juce::String> name;
         juce::CachedValue<juce::Colour> includedColour, excludedColour;
 
     private:
-        Edit& edit;
         juce::CachedValue<TimeFormat> timeFormat;
 
         CompSection* getCompSectionFor (const juce::ValueTree&);

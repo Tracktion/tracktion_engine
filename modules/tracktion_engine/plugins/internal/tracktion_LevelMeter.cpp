@@ -32,13 +32,13 @@ ValueTree LevelMeterPlugin::create()
 
 const char* LevelMeterPlugin::xmlTypeName = "level";
 
-void LevelMeterPlugin::initialise (const PlaybackInitialisationInfo& info)
+void LevelMeterPlugin::initialise (const PluginInitialisationInfo& info)
 {
     measurer.clear();
     initialiseWithoutStopping (info);
 }
 
-void LevelMeterPlugin::initialiseWithoutStopping (const PlaybackInitialisationInfo&)
+void LevelMeterPlugin::initialiseWithoutStopping (const PluginInitialisationInfo&)
 {
     if (auto t = getOwnerTrack())
     {

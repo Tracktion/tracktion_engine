@@ -34,7 +34,7 @@ ValueTree MidiPatchBayPlugin::create()
 
 const char* MidiPatchBayPlugin::xmlTypeName = "midipatchbay";
 
-void MidiPatchBayPlugin::initialise (const PlaybackInitialisationInfo&) {}
+void MidiPatchBayPlugin::initialise (const PluginInitialisationInfo&) {}
 void MidiPatchBayPlugin::deinitialise() {}
 
 void MidiPatchBayPlugin::applyToBuffer (const PluginRenderContext& fc)

@@ -15,7 +15,7 @@
                     juce_graphics, juce_gui_basics, juce_gui_extra, juce_dsp, juce_osc, tracktion_engine
   exporters:        vs2017, xcode_mac, linux_make
 
-  moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1
+  moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1, JUCE_MODAL_LOOPS_PERMITTED=1
   defines:          JucePlugin_IsSynth=1, JucePlugin_WantsMidiInput=1, JucePlugin_ProducesMidiOutput=1
                     JucePlugin_Vst3Category="Instrument", JucePlugin_AUMainType='aumu', JucePlugin_VSTCategory=kPlugCategSynth
 

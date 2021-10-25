@@ -70,83 +70,24 @@ String AuxSendPlugin::getShortName (int)
     return TRANS("Send") + ":" + String (busNumber + 1);
 }
 
-void AuxSendPlugin::initialise (const PlaybackInitialisationInfo& info)
+void AuxSendPlugin::initialise (const PluginInitialisationInfo& info)
 {
-    delayBuffer.setSize (2, info.blockSizeSamples, false);
-    delayBuffer.clear();
     lastGain = volumeFaderPositionToGain (gain->getCurrentValue());
-    latencySeconds = info.blockSizeSamples / info.sampleRate;
 
     initialiseWithoutStopping (info);
 }
 
-void AuxSendPlugin::initialiseWithoutStopping (const PlaybackInitialisationInfo& info)
+void AuxSendPlugin::initialiseWithoutStopping (const PluginInitialisationInfo&)
 {
     ownerTrack = getOwnerTrack();
-
-    juce::Array<AuxReturnPlugin*> result;
-
-    for (auto node : *info.rootNodes)
-        node->visitNodes ([&] (AudioNode& visitedNode)
-                          {
-                              if (auto ar = dynamic_cast<AuxReturnPlugin*> (visitedNode.getPlugin().get()))
-                                  result.add (ar);
-                          });
-
-
-    allAuxReturns.swapWith (result);
 }
 
 void AuxSendPlugin::deinitialise()
 {
-    allAuxReturns.clear();
-    delayBuffer.setSize (2, 32, false);
 }
 
-void AuxSendPlugin::applyToBuffer (const PluginRenderContext& fc)
+void AuxSendPlugin::applyToBuffer (const PluginRenderContext&)
 {
-    if (fc.destBuffer == nullptr)
-        return;
-
-    SCOPED_REALTIME_CHECK
-
-    auto gainScalar = volumeFaderPositionToGain (gain->getCurrentValue());
-
-    if (shouldProcess())
-    {
-        for (auto f : allAuxReturns)
-        {
-            if (f->busNumber == busNumber)
-            {
-                if (lastGain != gainScalar)
-                {
-                    f->applyAudioFromSend (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples, lastGain, gainScalar);
-                    lastGain = gainScalar;
-                }
-                else
-                {
-                    f->applyAudioFromSend (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples, gainScalar);
-                }
-            }
-        }
-    }
-
-    delayBuffer.setSize (jmax (fc.destBuffer->getNumChannels(), delayBuffer.getNumChannels()),
-                         jmax (fc.bufferNumSamples, delayBuffer.getNumSamples()),
-                         true);
-
-    for (int i = jmin (fc.destBuffer->getNumChannels(), delayBuffer.getNumChannels()); --i >= 0;)
-    {
-        auto delay = delayBuffer.getWritePointer (i);
-        auto dest = fc.destBuffer->getWritePointer (i, fc.bufferStartSample);
-
-        for (int j = 0; j < fc.bufferNumSamples; ++j)
-        {
-            auto v = dest[j];
-            dest[j] = delay[j];
-            delay[j] = v;
-        }
-    }
 }
 
 String AuxSendPlugin::getBusName()
@@ -198,7 +139,7 @@ String AuxSendPlugin::getDefaultBusName (int index)
     return "Bus #" + String (index + 1);
 }
 
-StringArray AuxSendPlugin::getBusNames (Edit& ed)
+StringArray AuxSendPlugin::getBusNames (Edit& ed, int maxNumBusses)
 {
     StringArray buses;
 

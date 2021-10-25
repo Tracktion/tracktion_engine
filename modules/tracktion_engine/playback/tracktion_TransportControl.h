@@ -41,34 +41,81 @@ void freePlaybackContextIfNotRecording (TransportControl&);
 
 
 //==============================================================================
+/**
+    Controls the transport of an Edit's playback.
+    This is responsible for starting/stopping playback and recording and changing
+    the position etc. It deals with looping/fast forward etc. and is resonsible
+    for managing the EditPlaybackContext which attaches the Edit to the DeviceManager.
+    
+    It also has higher level user concepts such as dragging/scrubbing.
+    @see EditPlaybackContext, DeviceManager
+ 
+    You shouldn't need to directly create one of these, create an Edit and then
+    obtain it from there. @see Edit::getTransport
+*/
 class TransportControl   : public juce::ChangeBroadcaster,
                            private juce::Timer
 
 {
 public:
+    /** Constructs a TransportControl for an Edit. */
     TransportControl (Edit&, const juce::ValueTree&);
-    ~TransportControl();
+    /** Destructor. */
+    ~TransportControl() override;
 
     //==============================================================================
-    PlayHead* getCurrentPlayhead() const;
-
-    //==============================================================================
+    /** Starts playback of an Edit.
+        @param justSendMMCIfEnabled If this is true, playback isn't actually started,
+                                    an MMC message is just output and playback will start
+                                    when the input MIDI device recieves one.
+    */
     void play (bool justSendMMCIfEnabled);
+
+    /** Plays a section of an Edit then stops playback, useful for previewing clips. */
     void playSectionAndReset (EditTimeRange rangeToPlay);
 
+    /** Starts recording. This will also start playback if stopped.
+        @param justSendMMCIfEnabled             If this is true, playback isn't actually started,
+                                                an MMC message is just output and recording will start
+                                                when the input MIDI device recieves one.
+        @param allowRecordingIfNoInputsArmed    If true, no inputs need to actually be armed so you
+                                                can live-punch on the fly.
+    */
     void record (bool justSendMMCIfEnabled, bool allowRecordingIfNoInputsArmed = false);
 
+    /** Stops recording, creating clips of newyly recorded files/MIDI data.
+        @param discardRecordings    If true, recordings will be discarded
+        @param clearDevices         If true, the playback graph will be cleared
+        @param canSendMMCStop       If true, an MMC stop message will also be sent
+        @param invertReturnToStartPosSelection  If true, the return to start behaviour will be inverted
+    */
     void stop (bool discardRecordings,
                bool clearDevices,
                bool canSendMMCStop = true,
                bool invertReturnToStartPosSelection = false);
+    
+    /** Stops playback only if recording is currently in progress.
+        @see isRecording
+    */
     void stopIfRecording();
 
+    //==============================================================================
+    /** Applys a retrospective record to any assigned input devices, creating clips
+        for any historical input.
+    */
     juce::Result applyRetrospectiveRecord();
+    
+    /** Perfoms a retrospective record operation and returns any new files. */
     juce::Array<juce::File> getRetrospectiveRecordAsAudioFiles();
 
-    void syncToEdit (Edit* editToSyncTo, bool isPreview); // plays in sync with another Edit
+    /** Syncs this Edit's playback to another Edit.
+        @param editToSyncTo             The Edit to sync playback to
+        @param syncToTargetLoopLength   If true the sync interval will be the source's
+                                        loop length, if false, it will be one bar
+    */
+    void syncToEdit (Edit* editToSyncTo, bool syncToTargetLoopLength);
 
+    //==============================================================================
     /** Returns true if the transport is playing. (This is also true during recording). */
     bool isPlaying() const;
     
@@ -88,50 +135,109 @@ public:
     double getTimeWhenStarted() const;
 
     //==============================================================================
+    /** Returns the current transport position.
+        N.B. This might be different from the actual audible time if the graph
+        introduces latency.
+        @see EditPlaybackContext::getAudibleTimelineTime, EditPlaybackContext::getLatencySamples
+    */
     double getCurrentPosition() const;
+    
+    /** Sets a new transport position. */
     void setCurrentPosition (double time);
 
+    /** Signifies a scrub-drag operation has started/stopped.
+        While dragging, a short section of the play position is looped repeatedly.
+    */
     void setUserDragging (bool);
+    
+    /** Returns true if a drag/scrub operation has been enabled.
+        @see setUserDragging
+    */
     bool isUserDragging() const noexcept;
+    
+    /** Returns true if the current position change was triggered from an update
+        directly from the playhead (rather than a call to setCurrentPosition).
+    */
     bool isPositionUpdatingFromPlayhead() const;
 
     //==============================================================================
+    /** Sets the loop in position. */
     void setLoopIn (double);
+
+    /** Sets a loop out position. */
     void setLoopOut (double);
+
+    /** Sets a loop point 1 position. */
     void setLoopPoint1 (double);
+
+    /** Sets a loop point 2 position. */
     void setLoopPoint2 (double);
+
+    /** Sets the loop points from a given range. */
     void setLoopRange (EditTimeRange range);
+
+    /** Returns the loop range. The loop range is between the two loop points. */
     EditTimeRange getLoopRange() const noexcept;
 
+    /** Sets a snap type to use. */
     void setSnapType (TimecodeSnapType);
+    
+    /** Returns the current snap type. */
     TimecodeSnapType getSnapType() const noexcept               { return currentSnapType; }
 
     //==============================================================================
+    /** Returns the active EditPlaybackContext if this Edit is attached to the DeviceManager for playback. */
     EditPlaybackContext* getCurrentPlaybackContext() const      { return playbackContext.get(); }
+    
+    /** Returns true if this Edit is attached to the DeviceManager for playback. */
     bool isPlayContextActive() const                            { return playbackContext != nullptr; }
 
+    /** Ensures an active EditPlaybackContext has been created so this Edit can be played back.
+        @param alwaysReallocate If true, this will always create a new playback graph.
+    */
     void ensureContextAllocated (bool alwaysReallocate = false);
+    
+    /** Detaches the current EditPlaybackContext, removing it from the DeviceManager.
+        Can be used to free up resources if you have multiple Edits open.
+    */
     void freePlaybackContext();
 
+    /** Triggers a graph rebuild when playback stops. Used internally to adjust
+        latency in response to plugin reported latency changes.
+    */
     void triggerClearDevicesOnStop();
+    
+    /** Triggers a cleanup of any unused freeze and proxy files. */
     void forceOrphanFreezeAndProxyFilesPurge();
 
     //==============================================================================
+    /** Starts/stops a rewind operation. */
     void setRewindButtonDown (bool isDown);
+
+    /** Starts/stops a fast-forward operation. */
     void setFastForwardButtonDown (bool isDown);
 
+    /** Moves the transport back slightly. */
     void nudgeLeft();
+
+    /** Moves the transport forwards slightly. */
     void nudgeRight();
 
     //==============================================================================
-    // Called by edit objects to rebuild the node graph when things change
+    /** Triggers a playback graph rebuild.
+        Called internally by Edit objects to rebuild the node graph when things change.
+    */
     void editHasChanged();
 
-    // prevents the nodes being regenerated while one of these exists, e.g. while
-    // dragging clips around, etc
+    /** Prevents the nodes being regenerated while one of these exists, e.g. while
+        dragging clips around, etc.
+    */
     struct ReallocationInhibitor
     {
+        /** Stops an Edit creating a new playback graph. */
         ReallocationInhibitor (TransportControl&);
+        
+        /** Enables playback graph regeneration. */
         ~ReallocationInhibitor();
 
     private:
@@ -139,13 +245,17 @@ public:
         JUCE_DECLARE_NON_COPYABLE (ReallocationInhibitor)
     };
 
-    // Returns true if no ReallocationInhibitors currently exist
-    int isAllowedToReallocate() const noexcept;
+    /** Returns true if no ReallocationInhibitors currently exist. */
+    bool isAllowedToReallocate() const noexcept;
 
     //==============================================================================
+    /** Is an Edit is playing back, this resumes playback when destroyed. */
     struct ScopedPlaybackRestarter
     {
+        /** Saves the playback state. */
         ScopedPlaybackRestarter (TransportControl& o) : tc (o), wasPlaying (tc.isPlaying()) {}
+        
+        /** Starts playback if playing when constructed. */
         ~ScopedPlaybackRestarter()   { if (wasPlaying) tc.play (false); }
 
         TransportControl& tc;
@@ -158,10 +268,12 @@ public:
     /** Frees the playback context and then re-allocates it upon destruction. */
     struct ScopedContextAllocator
     {
+        /** Saves whether the Edit was allocated. */
         ScopedContextAllocator (TransportControl& o)
             : tc (o), wasAllocated (tc.isPlayContextActive())
         {}
         
+        /** Allocated the Edit if it was allocated on construction. */
         ~ScopedContextAllocator()
         {
             if (wasAllocated)
@@ -176,37 +288,74 @@ public:
     };
 
     //==============================================================================
+    /** Returns all the active TransportControl[s] in the Engine. */
     static juce::Array<TransportControl*> getAllActiveTransports (Engine&);
+    
+    /** Returns the number of Edits currently playing. */
     static int getNumPlayingTransports (Engine&);
+    
+    /** Stops all TransportControl[s] in the Engine playing. @see stop. */
     static void stopAllTransports (Engine&, bool discardRecordings, bool clearDevices);
+    
+    /** Restarts all TransportControl[s] in the Edit. @see stop. */
     static std::vector<std::unique_ptr<ScopedContextAllocator>> restartAllTransports (Engine&, bool clearDevices);
 
     //==============================================================================
+    /** Listener interface to be notified of changes to the transport. */
     struct Listener
     {
+        /** Destructor. */
         virtual ~Listener() {}
 
         /** Called when an EditPlaybackContext is created or deleted. */
         virtual void playbackContextChanged() = 0;
 
+        /** Called periodically to indicate the Edit has changed in an audible way and should be auto-saved. */
         virtual void autoSaveNow() = 0;
 
-        virtual void setAllLevelMetersActive (bool) = 0;
+        /** If false, levels should be cleared. */
+        virtual void setAllLevelMetersActive (bool metersBecameInactive) = 0;
 
+        /** Should set a new position for any playing video. */
         virtual void setVideoPosition (double time, bool forceJump) = 0;
+        
+        /** Should start video playback. */
         virtual void startVideo() = 0;
+
+        /** Should stop video playback. */
         virtual void stopVideo() = 0;
+
+        /** Called when recording stops for a specific input instance.
+            @param InputDeviceInstance  The device instance that just stopped.
+            @param recordedClips        The clips resulting from the recording.
+            @param recordedRange        The time range of the recording. N.B. if the recording was looped,
+                                        this will be the unlooped end time.
+        */
+        virtual void recordingFinished (InputDeviceInstance&,
+                                        juce::ReferenceCountedArray<Clip> /*recordedClips*/,
+                                        EditTimeRange /*recordedRange*/)
+        {}
     };
 
+    /** Adds a Listener. */
     void addListener (Listener* l)          { listeners.add (l); }
+
+    /** Removes a Listener. */
     void removeListener (Listener* l)       { listeners.remove (l); }
 
-    Engine& engine;
-    Edit& edit;
-    juce::ValueTree state;
+    //==============================================================================
+    Engine& engine;         /**< The Engine this Edit belongs to. */
+    Edit& edit;             /**< The Edit this transport belongs to. @see Edit::getTransport. */
+    juce::ValueTree state;  /**< The state of this transport. */
 
+    /** @internal. */
     juce::CachedValue<double> position, loopPoint1, loopPoint2, scrubInterval;
+    /** @internal. */
     juce::CachedValue<bool> snapToTimecode, looping;
+
+    //==============================================================================
+    /** @internal */
+    void callRecordingFinishedListeners (InputDeviceInstance&, juce::ReferenceCountedArray<Clip> recordedClips, EditTimeRange recordedRange);
 
 private:
     //==============================================================================
@@ -267,7 +416,7 @@ private:
     struct ButtonRepeater;
     std::unique_ptr<ButtonRepeater> rwRepeater, ffRepeater;
 
-    void timerCallback();
+    void timerCallback() override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TransportControl)
 };

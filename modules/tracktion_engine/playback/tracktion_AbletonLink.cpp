@@ -103,8 +103,8 @@ struct AbletonLink::ImplBase  : public Timer
 
     double getCurrentPositionSeconds() const
     {
-        if (auto* playhead = transport.getCurrentPlayhead())
-            return playhead->getPosition();
+        if (auto epc = transport.getCurrentPlaybackContext())
+            return epc->getPosition();
 
         return transport.getCurrentPosition();
     }
@@ -160,12 +160,8 @@ struct AbletonLink::ImplBase  : public Timer
 
     void setSpeedCompensation (double speedComp)
     {
-        transport.engine.getDeviceManager().setSpeedCompensation (speedComp);
-
-        #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
          if (auto epc = transport.getCurrentPlaybackContext())
              epc->setSpeedCompensation (speedComp);
-        #endif
     }
 
     TransportControl& transport;

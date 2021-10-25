@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#pragma once
+
 namespace tracktion_engine
 {
 
@@ -442,16 +444,16 @@ private:
         switch (t)
         {
             case AudioFadeCurve::convex:
-                return rampUp ? (-2.0 * std::cos ((juce::double_Pi * proportion) / 2.0)) / juce::double_Pi + 1.0
-                              : 1.0 - ((-2.0 * std::cos ((juce::double_Pi * (proportion - 1.0)) / 2.0)) / juce::double_Pi + 1.0);
+                return rampUp ? (-2.0 * std::cos ((juce::MathConstants<double>::pi * proportion) / 2.0)) / juce::MathConstants<double>::pi + 1.0
+                              : 1.0 - ((-2.0 * std::cos ((juce::MathConstants<double>::pi * (proportion - 1.0)) / 2.0)) / juce::MathConstants<double>::pi + 1.0);
 
             case AudioFadeCurve::concave:
-                return rampUp ? proportion - (2.0 * std::sin ((juce::double_Pi * proportion) / 2.0)) / juce::double_Pi + (2.0 / juce::double_Pi)
-                              : ((2.0 * std::sin ((juce::double_Pi * (proportion + 1.0)) / 2.0)) / juce::double_Pi) + proportion - (2.0 / juce::double_Pi);
+                return rampUp ? proportion - (2.0 * std::sin ((juce::MathConstants<double>::pi * proportion) / 2.0)) / juce::MathConstants<double>::pi + (2.0 / juce::MathConstants<double>::pi)
+                              : ((2.0 * std::sin ((juce::MathConstants<double>::pi * (proportion + 1.0)) / 2.0)) / juce::MathConstants<double>::pi) + proportion - (2.0 / juce::MathConstants<double>::pi);
 
             case AudioFadeCurve::sCurve:
-                return rampUp ? (proportion / 2.0) - (std::sin (juce::double_Pi * proportion) / (2.0 * juce::double_Pi)) + 0.5
-                              : std::sin (juce::double_Pi * proportion) / (2.0 * juce::double_Pi) + (proportion / 2.0);
+                return rampUp ? (proportion / 2.0) - (std::sin (juce::MathConstants<double>::pi * proportion) / (2.0 * juce::MathConstants<double>::pi)) + 0.5
+                              : std::sin (juce::MathConstants<double>::pi * proportion) / (2.0 * juce::MathConstants<double>::pi) + (proportion / 2.0);
 
             case AudioFadeCurve::linear:
             default:

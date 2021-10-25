@@ -1805,16 +1805,23 @@ void MidiList::importFromEditTimeSequenceWithNoteExpression (const juce::MidiMes
 //==============================================================================
 void MidiList::exportToPlaybackMidiSequence (juce::MidiMessageSequence& destSequence, MidiClip& clip, bool generateMPE) const
 {
+    destSequence = clip.edit.engine.getEngineBehaviour().createPlaybackMidiSequence (*this, clip, generateMPE);
+}
+
+juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const MidiList& list, MidiClip& clip, bool generateMPE)
+{
+    juce::MidiMessageSequence destSequence;
+    
     auto& ts = clip.edit.tempoSequence;
     auto midiStartBeat = clip.getContentStartBeat();
-    auto channelNumber = getMidiChannel().getChannelNumber();
+    auto channelNumber = list.getMidiChannel().getChannelNumber();
 
     // NB: allow extra space here in case the notes get quantised or nudged around later on..
     const double overlapAllowance = 0.5;
     auto firstNoteTime = ts.timeToBeats (clip.getPosition().getStart()) - midiStartBeat - overlapAllowance;
     auto lastNoteTime  = ts.timeToBeats (clip.getPosition().getEnd())   - midiStartBeat + overlapAllowance;
 
-    auto& notes = getNotes();
+    auto& notes = list.getNotes();
     auto numNotes = notes.size();
     auto selectedEvents = clip.getSelectedEvents();
 
@@ -1874,7 +1881,7 @@ void MidiList::exportToPlaybackMidiSequence (juce::MidiMessageSequence& destSequ
         }
     }
 
-    auto& controllerEvents = getControllerEvents();
+    auto& controllerEvents = list.getControllerEvents();
 
     {
         // Add cumulative controller events that are off the start
@@ -1905,13 +1912,15 @@ void MidiList::exportToPlaybackMidiSequence (juce::MidiMessageSequence& destSequ
     }
 
     // Add the SysEx events:
-    for (auto e : getSysexEvents())
+    for (auto e : list.getSysexEvents())
     {
         auto beat = e->getBeatPosition();
 
         if (beat >= firstNoteTime && beat < lastNoteTime)
             addToSequence (destSequence, clip, *e);
     }
+    
+    return destSequence;
 }
 
 }

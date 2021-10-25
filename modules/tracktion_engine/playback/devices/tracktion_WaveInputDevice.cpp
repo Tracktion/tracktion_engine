@@ -153,10 +153,10 @@ struct RetrospectiveRecordBuffer
         const juce::SpinLock::ScopedLockType sl (editInfoLock);
         auto& pei = editInfo[edit.getProjectItemID()];
 
-        if (context.playhead.isPlaying())
+        if (context.isPlaying())
         {
             pei.pausedTime = 0;
-            pei.lastEditTime = context.playhead.streamTimeToSourceTime (streamTime);
+            pei.lastEditTime = context.globalStreamTimeToEditTime (streamTime);
         }
         else
         {
@@ -348,10 +348,7 @@ public:
 
                 const auto adjustSeconds = wi.getAdjustmentSeconds();
                 rc->adjustSamples = roundToInt (adjustSeconds * sr);
-
-               #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
                 rc->adjustSamples += context.getLatencySamples();
-               #endif
 
                 if (! isLivePunch)
                 {
@@ -364,8 +361,8 @@ public:
                         auto muteStart = jmax (punchInTime, loopRange.getStart());
                         auto muteEnd = endRecTime;
 
-                        if (edit.getNumCountInBeats() > 0 && context.playhead.getLoopTimes().start > loopRange.getStart())
-                            punchInTime = context.playhead.getLoopTimes().start;
+                        if (edit.getNumCountInBeats() > 0 && context.getLoopTimes().start > loopRange.getStart())
+                            punchInTime = context.getLoopTimes().start;
 
                         if (playStart < loopRange.getEnd() - 0.5)
                         {
@@ -375,9 +372,9 @@ public:
 
                         rc->muteTimes = { muteStart, muteEnd };
                     }
-                    else if (context.playhead.isLooping())
+                    else if (context.isLooping())
                     {
-                        punchInTime = context.playhead.getLoopTimes().start;
+                        punchInTime = context.getLoopTimes().start;
                     }
                 }
 
@@ -448,7 +445,7 @@ public:
 
         return context.stopRecording (*this,
                                       { recordingContext->punchTimes.getStart(),
-                                        context.playhead.getUnloopedPosition() },
+                                        context.getUnloopedPosition() },
                                       false);
     }
 
@@ -916,23 +913,21 @@ public:
             double start = 0;
             const double recordedLength = AudioFile (dstTrack->edit.engine, recordedFile).getLength();
 
-            if (context.playhead.isPlaying() || recordBuffer->wasRecentlyPlaying (edit))
+            if (context.isPlaying() || recordBuffer->wasRecentlyPlaying (edit))
             {
                 const double blockSizeSeconds = edit.engine.getDeviceManager().getBlockSizeMs() / 1000.0;
                 auto adjust = -wi.getAdjustmentSeconds() + blockSizeSeconds;
                 
-               #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
                 adjust -= tracktion_graph::sampleToTime (context.getLatencySamples(), edit.engine.getDeviceManager().getSampleRate());
  
                 // TODO: Still not quite sure why the adjustment needs to be a block more with
                 // the tracktion_graph engine, this may need correcting in the future
                 if (context.getNodePlayHead() != nullptr)
                     adjust += blockSizeSeconds;
-               #endif
 
-                if (context.playhead.isPlaying())
+                if (context.isPlaying())
                 {
-                    start = context.playhead.streamTimeToSourceTime (recordBuffer->lastStreamTime) - recordedLength + adjust;
+                    start = context.globalStreamTimeToEditTime (recordBuffer->lastStreamTime) - recordedLength + adjust;
                 }
                 else
                 {
@@ -943,7 +938,7 @@ public:
             }
             else
             {
-                auto position = context.playhead.getPosition();
+                auto position = context.getPosition();
 
                 if (position >= 5)
                     start = position - recordedLength;
@@ -984,13 +979,8 @@ public:
     bool isLivePlayEnabled (const Track& t) const override
     {
         return owner.isEndToEndEnabled()
-                && isRecordingEnabled (t)
+                && (isRecordingEnabled (t) || edit.engine.getEngineBehaviour().monitorAudioInputsWithoutRecordEnable())
                 && InputDeviceInstance::isLivePlayEnabled (t);
-    }
-
-    AudioNode* createLiveInputNode() override
-    {
-        return new InputAudioNode (*this);
     }
 
     void copyIncomingDataIntoBuffer (const float** allChannels, int numChannels, int numSamples)
@@ -1056,7 +1046,7 @@ public:
 
         if (recordingContext != nullptr)
         {
-            auto blockStart = context.playhead.streamTimeToSourceTimeUnlooped (streamTime);
+            auto blockStart = context.globalStreamTimeToEditTimeUnlooped (streamTime);
             const EditTimeRange blockRange (blockStart, blockStart + numSamples / recordingContext->sampleRate);
 
             muteTrackNow = recordingContext->muteTimes.overlaps (blockRange);
@@ -1142,139 +1132,6 @@ protected:
     WaveInputDevice& getWaveInput() const noexcept    { return static_cast<WaveInputDevice&> (owner); }
 
     //==============================================================================
-    class InputAudioNode  : public Consumer,
-                            public AudioNode
-    {
-    public:
-        InputAudioNode (WaveInputDeviceInstance& d)
-            : owner (d),
-              buffer (owner.getWaveInput().isStereoPair() ? 2 : 1, 512)
-        {
-            sampleRate = owner.edit.engine.getDeviceManager().getSampleRate();
-        }
-
-        ~InputAudioNode() override
-        {
-            releaseAudioNodeResources();
-        }
-
-        void getAudioNodeProperties (AudioNodeProperties& info) override
-        {
-            info.hasAudio = true;
-            info.hasMidi = false;
-            info.numberOfChannels = (owner.getWaveInput().isStereoPair()) ? 2 : 1;
-
-            buffer.setSize (info.numberOfChannels, 512);
-        }
-
-        void visitNodes (const VisitorFn& v) override
-        {
-            v (*this);
-        }
-
-        void prepareAudioNodeToPlay (const PlaybackInitialisationInfo& info) override
-        {
-            sampleRate = info.sampleRate;
-            validSamples = 0;
-            lastCallbackTime = Time::getMillisecondCounter();
-            buffer.setSize (buffer.getNumChannels(), info.blockSizeSamples * 8);
-
-            owner.addConsumer (this);
-        }
-
-        bool isReadyToRender() override
-        {
-            return true;
-        }
-
-        void releaseAudioNodeResources() override
-        {
-            owner.removeConsumer (this);
-        }
-
-        bool purgeSubNodes (bool keepAudio, bool) override
-        {
-            return keepAudio;
-        }
-
-        void renderOver (const AudioRenderContext& rc) override
-        {
-            callRenderAdding (rc);
-        }
-
-        void renderAdding (const AudioRenderContext& rc) override
-        {
-            auto now = Time::getMillisecondCounter();
-
-            if (now > lastCallbackTime + 150)
-            {
-                // if there's been a break in transmission, reset the valid samps to keep in in sync
-                const ScopedLock sl (bufferLock);
-                validSamples = 0;
-            }
-
-            lastCallbackTime = now;
-
-            if (rc.destBuffer != nullptr)
-            {
-                const ScopedLock sl (bufferLock);
-
-                const int numToDo = jmin (rc.bufferNumSamples, validSamples);
-
-                for (int i = jmin (2, rc.destBuffer->getNumChannels()); --i >= 0;)
-                {
-                    const int srcChan = jmin (buffer.getNumChannels() - 1, i);
-                    rc.destBuffer->addFrom (i, rc.bufferStartSample, buffer, srcChan, 0, numToDo);
-                }
-
-                validSamples = jmax (0, validSamples - numToDo);
-
-                if (validSamples > numToDo)
-                {
-                    validSamples = 0;
-                }
-                else
-                {
-                    for (int i = buffer.getNumChannels(); --i >= 0;)
-                    {
-                        float* d = buffer.getWritePointer (i, 0);
-                        const float* s = buffer.getReadPointer (i, numToDo);
-
-                        for (int j = 0; j < validSamples; ++j)
-                            d[j] = s[j];
-                    }
-                }
-            }
-        }
-
-        void acceptInputBuffer (choc::buffer::ChannelArrayView<float> newBlock) override
-        {
-            const ScopedLock sl (bufferLock);
-
-            auto newSamps = newBlock.getNumFrames();
-
-            if (validSamples + (int) newSamps > buffer.getNumSamples())
-                validSamples = 0;
-
-            for (int i = buffer.getNumChannels(); --i >= 0;)
-                buffer.copyFrom (i, validSamples,
-                                 newBlock.getChannel (jmin (newBlock.getNumChannels() - 1, (uint32_t) i)).data.data,
-                                 (int) newSamps);
-
-            validSamples += static_cast<int> (newSamps);
-        }
-
-    private:
-        WaveInputDeviceInstance& owner;
-        double sampleRate = 0;
-        CriticalSection bufferLock;
-        int validSamples = 0;
-        uint32 lastCallbackTime = 0;
-        juce::AudioBuffer<float> buffer;
-
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InputAudioNode)
-    };
-
     Array<Consumer*> consumers;
     CriticalSection consumerLock;
 
@@ -1294,9 +1151,9 @@ protected:
 };
 
 //==============================================================================
-WaveInputDevice::WaveInputDevice (Engine& e, const juce::String& name, const juce::String& type,
+WaveInputDevice::WaveInputDevice (Engine& e, const juce::String& deviceName, const juce::String& devType,
                                   const std::vector<ChannelIndex>& channels, DeviceType t)
-    : InputDevice (e, type, name),
+    : InputDevice (e, devType, deviceName),
       deviceChannels (channels),
       deviceType (t),
       channelSet (createChannelSet (channels))
@@ -1626,106 +1483,6 @@ void WaveInputDevice::consumeNextAudioBlock (const float** allChannels, int numC
 }
 
 //==============================================================================
-class WaveInputDevice::WaveInputDeviceAudioNode : public SingleInputAudioNode
-{
-public:
-    WaveInputDeviceAudioNode (AudioNode* source, WaveInputDevice& d)
-        : SingleInputAudioNode (source),
-          owner (d)
-    {
-    }
-
-    ~WaveInputDeviceAudioNode() override
-    {
-        releaseAudioNodeResources();
-    }
-
-    void prepareAudioNodeToPlay (const PlaybackInitialisationInfo& info) override
-    {
-        if (input != nullptr)
-            input->prepareAudioNodeToPlay (info);
-
-        previousBuffer.setSize (2, info.blockSizeSamples * 2);
-        previousBuffer.clear();
-
-        if (info.sampleRate > 0.0)
-            offsetSeconds = info.blockSizeSamples / info.sampleRate;
-
-        sampleRate = info.sampleRate;
-    }
-
-    void prepareForNextBlock (const AudioRenderContext& rc) override
-    {
-        if (input != nullptr)
-            input->prepareForNextBlock (rc);
-    }
-
-    void renderOver (const AudioRenderContext& rc) override
-    {
-        callRenderAdding (rc);
-    }
-
-    void renderAdding (const AudioRenderContext& rc) override
-    {
-        if (rc.destBuffer == nullptr)
-            return;
-
-        // Use a temp buffer so the previous track's contents aren't included
-        AudioScratchBuffer scratch (*rc.destBuffer);
-        scratch.buffer.clear();
-
-        AudioRenderContext rc2 (rc);
-        rc2.destBuffer = &scratch.buffer;
-        rc2.bufferStartSample = 0;
-
-        renderContent (rc2);
-
-        for (int i = rc.destBuffer->getNumChannels(); --i >= 0;)
-            rc.destBuffer->addFrom (i, rc.bufferStartSample,
-                                    scratch.buffer, i, 0,
-                                    rc.bufferNumSamples);
-    }
-
-    void releaseAudioNodeResources() override
-    {
-        if (input != nullptr)
-            input->releaseAudioNodeResources();
-
-        previousBuffer.setSize (2, 32);
-        offsetSeconds = 0.0;
-    }
-
-private:
-    WaveInputDevice& owner;
-    juce::AudioBuffer<float> previousBuffer;
-    double sampleRate = 0.0;
-    double offsetSeconds = 0.0;
-
-    void renderContent (const AudioRenderContext& rc)
-    {
-        if (input != nullptr)
-            input->renderAdding (rc);
-
-        const int numChans = jmin (2, previousBuffer.getNumChannels());
-        const float* chans[3] = { previousBuffer.getReadPointer (0, 0),
-                                  numChans > 1 ? previousBuffer.getReadPointer (1, 0) : nullptr,
-                                  nullptr };
-        owner.consumeNextAudioBlock (chans, numChans, rc.bufferNumSamples, rc.streamTime.getStart() - offsetSeconds);
-
-        for (int i = numChans; --i >= 0;)
-            previousBuffer.copyFrom (i, 0,
-                                     *rc.destBuffer, i, rc.bufferStartSample,
-                                     rc.bufferNumSamples);
-    }
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveInputDeviceAudioNode)
-};
-
-AudioNode* WaveInputDevice::createWaveInputDeviceNode (AudioNode* input)
-{
-    return new WaveInputDeviceAudioNode (input, *this);
-}
-
 void WaveInputDevice::updateRetrospectiveBufferLength (double length)
 {
     if (retrospectiveBuffer != nullptr)

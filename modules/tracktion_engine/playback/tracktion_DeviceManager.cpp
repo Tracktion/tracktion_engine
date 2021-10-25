@@ -63,6 +63,18 @@ static String mergeTwoNames (const String& s1, const String& s2)
     return nm;
 }
 
+static StringArray getMidiDeviceNames (juce::Array<juce::MidiDeviceInfo> devices)
+{
+    StringArray deviceNames;
+
+    for (auto& d : devices)
+        deviceNames.add (d.name);
+
+    deviceNames.appendNumbersToDuplicates (true, false);
+    
+    return deviceNames;
+}
+
 //==============================================================================
 struct DeviceManager::WaveDeviceList
 {
@@ -179,7 +191,6 @@ DeviceManager::DeviceManager (Engine& e) : engine (e)
     CRASH_TRACER
 
     contextDeviceClearer = std::make_unique<ContextDeviceClearer> (*this);
-    setInternalBufferMultiplier (engine.getPropertyStorage().getProperty (SettingID::internalBuffer, 1));
 
     deviceManager.addChangeListener (this);
 
@@ -300,13 +311,11 @@ void DeviceManager::initialiseMidi()
 
     TRACKTION_LOG ("Finding MIDI I/O");
     if (openHardwareMidi)
-        lastMidiInNames = MidiInput::getDevices();
-    lastMidiInNames.appendNumbersToDuplicates (true, false);
-
+        lastMidiInNames = getMidiDeviceNames (MidiInput::getAvailableDevices());
+    
     if (openHardwareMidi)
-        lastMidiOutNames = MidiOutput::getDevices();
-    lastMidiOutNames.appendNumbersToDuplicates (true, false);
-
+        lastMidiOutNames = getMidiDeviceNames (MidiOutput::getAvailableDevices());
+    
     int enabledMidiIns = 0, enabledMidiOuts = 0;
 
     // create all the devices before initialising them..
@@ -414,10 +423,8 @@ void DeviceManager::rescanMidiDeviceList (bool forceRescan)
 {
     CRASH_TRACER
 
-    auto midiIns = MidiInput::getDevices();
-    auto midiOuts = MidiOutput::getDevices();
-    midiIns.appendNumbersToDuplicates (true, false);
-    midiOuts.appendNumbersToDuplicates (true, false);
+    auto midiIns = getMidiDeviceNames (MidiInput::getAvailableDevices());
+    auto midiOuts = getMidiDeviceNames (MidiOutput::getAvailableDevices());
 
     if (lastMidiOutNames != midiOuts || lastMidiInNames != midiIns || forceRescan)
         initialiseMidi();
@@ -449,8 +456,6 @@ void DeviceManager::resetToDefaults (bool deviceSettings, bool resetInputDevices
     {
         storage.setProperty (SettingID::maxLatency, 5.0f);
         storage.setProperty (SettingID::lowLatencyBuffer, 5.8f);
-        storage.setProperty (SettingID::internalBuffer, 1);
-        setInternalBufferMultiplier (1);
     }
 
     if (mixSettings)
@@ -636,35 +641,16 @@ void DeviceManager::rebuildWaveDeviceList()
     deviceManager.addAudioCallback (this);
 }
 
-void DeviceManager::setSpeedCompensation (double plusOrMinus)
-{
-    speedCompensation = jlimit (-10.0, 10.0, plusOrMinus);
-}
-
-void DeviceManager::setInternalBufferMultiplier (int multiplier)
-{
-    internalBufferMultiplier = jlimit (1, 10, multiplier);
-
-    const ScopedLock sl (contextLock);
-
-    for (auto c : activeContexts)
-    {
-        c->clearNodes();
-        c->edit.restartPlayback();
-    }
-}
-
 void DeviceManager::loadSettings()
 {
     String error;
     auto& storage = engine.getPropertyStorage();
 
     {
-
         CRASH_TRACER
         if (isHostedAudioDeviceInterfaceInUse())
         {
-            error = deviceManager.initialiseWithDefaultDevices (defaultNumInputChannelsToOpen, defaultNumOutputChannelsToOpen);
+            error = deviceManager.initialise (defaultNumInputChannelsToOpen, defaultNumOutputChannelsToOpen, nullptr, false, "Hosted Device", nullptr);
         }
         else
         {
@@ -1105,19 +1091,10 @@ void DeviceManager::audioDeviceIOCallback (const float** inputChannelData, int n
 
                 double blockLength = numSamples / currentSampleRate;
 
-                if (speedCompensation != 0.0)
-                    blockLength *= (1.0 + (speedCompensation * 0.01));
-
                 blockStreamTime = { streamTime, streamTime + blockLength };
 
                 for (auto c : activeContexts)
-                {
-                    c->fillNextAudioBlock (blockStreamTime, outputChannelData, numSamples);
-                    
-                   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
                     c->fillNextNodeBlock (outputChannelData, totalNumOutputChannels, numSamples);
-                   #endif
-                }
             }
 
             for (int i = totalNumOutputChannels; --i >= 0;)
@@ -1187,10 +1164,7 @@ void DeviceManager::audioDeviceAboutToStart (AudioIODevice* device)
     const ScopedLock sl (contextLock);
 
     for (auto c : activeContexts)
-    {
-        c->playhead.deviceManagerPositionUpdate (streamTime, streamTime + device->getCurrentBufferSizeSamples() / currentSampleRate);
-        c->playhead.setPosition (c->transport.getCurrentPosition());
-    }
+        c->resyncToGlobalStreamTime ({ streamTime, streamTime + device->getCurrentBufferSizeSamples() / currentSampleRate });
 
     if (globalOutputAudioProcessor != nullptr)
         globalOutputAudioProcessor->prepareToPlay (currentSampleRate, device->getCurrentBufferSizeSamples());
@@ -1217,14 +1191,10 @@ void DeviceManager::audioDeviceStopped()
 void DeviceManager::updateNumCPUs()
 {
     const ScopedLock sl (deviceManager.getAudioCallbackLock());
-    MixerAudioNode::updateNumCPUs (engine);
-    
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     const ScopedLock cl (contextLock);
 
     for (auto c : activeContexts)
         c->updateNumCPUs();
-   #endif
 }
 
 void DeviceManager::addContext (EditPlaybackContext* c)
@@ -1236,6 +1206,7 @@ void DeviceManager::addContext (EditPlaybackContext* c)
     {
         const ScopedLock sl (contextLock);
         lastStreamTime = streamTime;
+        c->resyncToGlobalStreamTime ({ lastStreamTime, lastStreamTime + getBlockSize() / currentSampleRate });
         activeContexts.addIfNotAlreadyThere (c);
     }
 

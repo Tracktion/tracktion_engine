@@ -15,7 +15,7 @@
                     juce_gui_basics, juce_gui_extra, juce_osc, tracktion_engine
   exporters:        linux_make, vs2017, xcode_iphone, xcode_mac
 
-  moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1, JUCE_PLUGINHOST_VST3=1, JUCE_PLUGINHOST_AU=1, TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH=1
+  moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1, JUCE_PLUGINHOST_VST3=1, JUCE_PLUGINHOST_AU=1, TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH=1, JUCE_MODAL_LOOPS_PERMITTED=1, TRACKTION_BUILD_RUBBERBAND=1
 
   type:             Component
   mainClass:        PitchAndTimeComponent
@@ -27,7 +27,10 @@
 #pragma once
 
 #include "common/Utilities.h"
+#include "DistortionEffectDemo.h"
+#include "common/PlaybackDemoAudio.h"
 
+using namespace tracktion_engine;
 
 //==============================================================================
 class PitchAndTimeComponent   : public Component,
@@ -44,7 +47,8 @@ public:
 
         Helpers::addAndMakeVisible (*this,
                                     { &settingsButton, &playPauseButton, &loadFileButton, &thumbnail,
-                                      &rootNoteEditor, &rootTempoEditor, &keySlider, &tempoSlider });
+                                      &rootNoteEditor, &rootTempoEditor, &keySlider, &tempoSlider,
+                                      &pitchShiftLabel, &pitchShiftSlider, &modeButton });
 
         settingsButton.onClick  = [this] { EngineHelpers::showAudioDeviceSettings (engine); };
         playPauseButton.onClick = [this] { EngineHelpers::togglePlay (edit); };
@@ -76,6 +80,33 @@ public:
 
                                               return semitonesText;
                                           };
+
+        // Setup real-time pitch shifting
+        {
+            // Register the PitchShiftPlugin with the engine so it can be found using PluginCache::createNewPlugin
+            engine.getPluginManager().createBuiltInType<PitchShiftPlugin>();
+
+            // Creates new instance of PitchShiftPlugin Plugin and inserts to track 1
+            auto pitchShiftPlugin = edit.getPluginCache().createNewPlugin (PitchShiftPlugin::xmlTypeName, {});
+            auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 0);
+            track->pluginList.insertPlugin (pitchShiftPlugin, 0, nullptr);
+
+            // Setup slider value source
+            auto pitchShiftParam = pitchShiftPlugin->getAutomatableParameterByID ("semitones up");
+            bindSliderToParameter (pitchShiftSlider, *pitchShiftParam);
+            pitchShiftSlider.setSkewFactorFromMidPoint (0.0);
+
+            modeButton.onClick = [this, p = dynamic_cast<te::PitchShiftPlugin*> (pitchShiftPlugin.get())]
+                                 { showModeMenu (*p); };
+        }
+        
+        // Load some example audio to start
+        {
+            defaultTempFile = std::make_unique<TemporaryFile> (".ogg");
+            auto f = defaultTempFile->getFile();
+            f.replaceWithData (PlaybackDemoAudio::guitar_loop_ogg, PlaybackDemoAudio::guitar_loop_oggSize);
+            setFile (f);
+        }
     }
 
     ~PitchAndTimeComponent() override
@@ -86,7 +117,11 @@ public:
     //==============================================================================
     void paint (Graphics& g) override
     {
-        g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+        const auto c = getLookAndFeel().findColour (ResizableWindow::backgroundColourId);
+        g.fillAll (c);
+        
+        g.setColour (c.contrasting (0.2f));
+        g.fillRect (getLocalBounds().reduced (2).withHeight (2).withY (pitchShiftLabel.getY() - 6));
     }
 
     void resized() override
@@ -100,6 +135,13 @@ public:
             loadFileButton.setBounds (topR.reduced (2));
         }
 
+        {
+            auto bottomR = r.removeFromBottom (70).withTrimmedTop (10);
+            pitchShiftLabel.setBounds (bottomR.removeFromTop (30).reduced (2));
+            modeButton.setBounds (bottomR.removeFromRight (80).reduced (2));
+            pitchShiftSlider.setBounds (bottomR.reduced (2));
+        }
+        
         {
             auto bottomR = r.removeFromBottom (60);
             auto left = bottomR.removeFromLeft (bottomR.getWidth() / 2);
@@ -122,12 +164,15 @@ private:
     FileChooser audioFileChooser { "Please select an audio file to load...",
                                    engine.getPropertyStorage().getDefaultLoadSaveDirectory ("pitchAndTimeExample"),
                                    engine.getAudioFileFormatManager().readFormatManager.getWildcardForAllFormats() };
+    std::unique_ptr<TemporaryFile> defaultTempFile;
 
     TextButton settingsButton { "Settings" }, playPauseButton { "Play" }, loadFileButton { "Load file" };
     Thumbnail thumbnail { transport };
     TextEditor rootNoteEditor, rootTempoEditor;
-    Slider keySlider, tempoSlider;
-
+    Slider keySlider, tempoSlider, pitchShiftSlider;
+    TextButton modeButton { "Algorithm" };
+    Label pitchShiftLabel { {}, "Real-time Pitch Shift:" };
+    
     //==============================================================================
     te::WaveAudioClip::Ptr getClip()
     {
@@ -202,6 +247,20 @@ private:
             // Update the thumbnail to show the proxy render progress
             thumbnail.setFile (EngineHelpers::loopAroundClip (*clip)->getPlaybackFile());
         }
+    }
+    
+    void showModeMenu (te::PitchShiftPlugin& plugin)
+    {
+        PopupMenu m;
+        const int currentMode = plugin.mode;
+        
+        for (auto modeName : tracktion_engine::TimeStretcher::getPossibleModes (plugin.engine, true))
+        {
+            const auto mode = static_cast<int> (tracktion_engine::TimeStretcher::getModeFromName (plugin.engine, modeName));
+            m.addItem (PopupMenu::Item (modeName).setTicked (currentMode == mode).setAction ([&plugin, mode] { plugin.mode = mode; }));
+        }
+        
+        m.showMenuAsync ({});
     }
 
     void updatePlayButtonText()

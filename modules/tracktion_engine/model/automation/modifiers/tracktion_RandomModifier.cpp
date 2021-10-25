@@ -21,6 +21,7 @@ struct RandomModifier::RandomModifierTimer    : public ModifierTimer
     void updateStreamTime (double editTime, int numSamples) override
     {
         const double blockLength = numSamples / modifier.getSampleRate();
+        modifier.setEditTime (editTime);
         modifier.updateParameterStreams (editTime);
 
         const auto syncTypeThisBlock = roundToInt (modifier.syncTypeParam->getCurrentValue());
@@ -91,29 +92,6 @@ struct RandomModifier::RandomModifierTimer    : public ModifierTimer
     TempoSequencePosition tempoSequence;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RandomModifierTimer)
-};
-
-//==============================================================================
-struct RandomModifier::ModifierAudioNode    : public SingleInputAudioNode
-{
-    ModifierAudioNode (AudioNode* source, RandomModifier& rm)
-        : SingleInputAudioNode (source),
-          modifier (&rm)
-    {
-    }
-
-    void renderOver (const AudioRenderContext& rc) override
-    {
-        SingleInputAudioNode::renderOver (rc);
-        modifier->applyToBuffer (rc);
-    }
-
-    void renderAdding (const AudioRenderContext& rc) override
-    {
-        callRenderOver (rc);
-    }
-
-    RandomModifier::Ptr modifier;
 };
 
 //==============================================================================
@@ -209,11 +187,6 @@ float RandomModifier::getCurrentPhase() const noexcept
 AutomatableParameter::ModifierAssignment* RandomModifier::createAssignment (const ValueTree& v)
 {
     return new Assignment (v, *this);
-}
-
-AudioNode* RandomModifier::createPreFXAudioNode (AudioNode* an)
-{
-    return new ModifierAudioNode (an, *this);
 }
 
 void RandomModifier::applyToBuffer (const PluginRenderContext& prc)

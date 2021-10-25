@@ -1088,7 +1088,7 @@ void ReWirePlugin::getChannelNames (StringArray* ins, StringArray* outs)
     }
 }
 
-void ReWirePlugin::initialise (const PlaybackInitialisationInfo& info)
+void ReWirePlugin::initialise (const PluginInitialisationInfo& info)
 {
     if (device != nullptr)
     {

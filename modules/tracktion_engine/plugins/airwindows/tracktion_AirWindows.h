@@ -55,7 +55,7 @@ public:
     int getNumOutputChannelsGivenInputs (int numInputChannels) override;
 
     //==============================================================================
-    void initialise (const PlaybackInitialisationInfo&) override;
+    void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;
 

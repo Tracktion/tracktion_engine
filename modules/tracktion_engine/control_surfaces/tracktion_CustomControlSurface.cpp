@@ -437,7 +437,7 @@ void CustomControlSurface::oscMessageReceived (const juce::OSCMessage& m)
                             if (oscSender->send (mo))
                                 packetsOut++;
                         }
-                        catch (OSCException err)
+                        catch ([[maybe_unused]] OSCException& err)
                         {
                             DBG("OSC Error: " + err.description);
                         }
@@ -853,7 +853,7 @@ void CustomControlSurface::sendCommandToControllerForActionID (int actionID, flo
                             if (oscSender->send (m))
                                 packetsOut++;
                         }
-                        catch (OSCException err)
+                        catch ([[maybe_unused]] OSCException& err)
                         {
                             DBG("OSC Error: " + err.description);
                         }
@@ -898,7 +898,7 @@ void CustomControlSurface::sendCommandToControllerForActionID (int actionID, juc
                         if (oscSender->send (m))
                             packetsOut++;
                     }
-                    catch (OSCException err)
+                    catch ([[maybe_unused]] OSCException& err)
                     {
                         DBG("OSC Error: " + err.description);
                     }

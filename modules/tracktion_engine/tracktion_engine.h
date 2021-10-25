@@ -19,13 +19,13 @@
 
   ID:               tracktion_engine
   vendor:           Tracktion Corporation
-  version:          1.0.0
+  version:          1.1.0
   name:             The Tracktion audio engine
   description:      Classes for manipulating and playing Tracktion projects
   website:          http://www.tracktion.com
   license:          Proprietary
 
-  dependencies:     juce_audio_devices juce_audio_utils juce_gui_extra juce_dsp juce_osc
+  dependencies:     juce_audio_devices juce_audio_utils juce_gui_extra juce_dsp juce_osc tracktion_graph
 
  END_JUCE_MODULE_DECLARATION
 
@@ -33,6 +33,10 @@
 
 #pragma once
 #define TRACKTION_ENGINE_H_INCLUDED
+
+#if ! JUCE_MODAL_LOOPS_PERMITTED
+ #error "You must define JUCE_MODAL_LOOPS_PERMITTED=1 to use Tracktion Engine"
+#endif
 
 #if ! JUCE_PROJUCER_LIVE_BUILD
 
@@ -55,9 +59,11 @@
 #if __has_include(<choc/audio/choc_SampleBuffers.h>)
  #include <choc/audio/choc_SampleBuffers.h>
  #include <choc/audio/choc_MIDI.h>
+ #include <choc/containers/choc_SingleReaderSingleWriterFIFO.h>
 #else
  #include "../3rd_party/choc/audio/choc_SampleBuffers.h"
  #include "../3rd_party/choc/audio/choc_MIDI.h"
+ #include "../3rd_party/choc/containers/choc_SingleReaderSingleWriterFIFO.h"
 #endif
 
 #undef __TEXT
@@ -128,6 +134,35 @@
  #define TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE 0
 #endif
 
+/** Config: TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
+    Enables time-stretching with the RubberBand library.
+    You must have RubberBand in your search path if you enable this.
+    @see TRACKTION_BUILD_RUBBERBAND
+    
+    N.B. RubberBand is not owned by Tracktion and is licensed separately.
+    Please make sure you have a suitable licence if building with RubberBand
+    support. You can find more information here: https://breakfastquay.com/rubberband/
+*/
+#ifndef TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
+ #define TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND 0
+#endif
+
+/** Config: TRACKTION_BUILD_RUBBERBAND
+    Builds the RubberBand library from source inside your binary.
+    This can be useful if you don't want to build it as a static library and
+    link it separately on each platform. Note that this may build a slightly
+    less optimised version on some platforms as RubberBand can be configured
+    with IPP on Windows etc.
+    You must have RubberBand in your search path if you enable this.
+    
+    N.B. RubberBand is not owned by Tracktion and is licensed separately.
+    Please make sure you have a suitable licence if building with RubberBand
+    support. You can find more information here: https://breakfastquay.com/rubberband/
+*/
+#ifndef TRACKTION_BUILD_RUBBERBAND
+ #define TRACKTION_BUILD_RUBBERBAND 0
+#endif
+
 /** Config: TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
     Enables time-stretching with the SoundTouch library.
 */
@@ -165,13 +200,6 @@
  #define TRACKTION_AIR_WINDOWS 0
 #endif
 
-/** Config: ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-    Enables the new tracktion_graph features
-*/
-#ifndef ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
- #define ENABLE_EXPERIMENTAL_TRACKTION_GRAPH 0
-#endif
-
 //==============================================================================
 #ifndef TRACKTION_LOG_ENABLED
  #define TRACKTION_LOG_ENABLED 1
@@ -190,12 +218,10 @@
     jassert (juce::MessageManager::getInstance()->currentThreadHasLockedMessageManager());
 
 //==============================================================================
-#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
- namespace tracktion_graph
- {
-     class PlayHead;
- }
-#endif //ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
+namespace tracktion_graph
+{
+    class PlayHead;
+}
 
 //==============================================================================
 namespace tracktion_engine
@@ -208,7 +234,6 @@ namespace tracktion_engine
     class Track;
     class Clip;
     class Plugin;
-    class AudioNode;
     struct AudioRenderContext;
     struct PluginRenderContext;
     class AudioFile;
@@ -349,8 +374,6 @@ namespace tracktion_engine
 
 #include "project/tracktion_ProjectItemID.h"
 
-#include "playback/tracktion_PlayHead.h"
-#include "playback/audionodes/tracktion_AudioNode.h"
 #include "playback/devices/tracktion_WaveDeviceDescription.h"
 
 //==============================================================================
@@ -377,6 +400,13 @@ namespace tracktion_engine
 #include "midi/tracktion_MidiNote.h"
 #include "../tracktion_graph/utilities/tracktion_MidiMessageArray.h"
 #include "midi/tracktion_ActiveNoteList.h"
+
+#include "midi/tracktion_MidiProgramManager.h"
+#include "midi/tracktion_MidiControllerEvent.h"
+#include "midi/tracktion_MidiSysexEvent.h"
+#include "midi/tracktion_MidiExpression.h"
+#include "midi/tracktion_MidiChannel.h"
+#include "midi/tracktion_MidiList.h"
 
 #include "plugins/tracktion_PluginWindowState.h"
 #include "plugins/tracktion_Plugin.h"
@@ -450,12 +480,6 @@ namespace tracktion_engine
 #include "audio_files/formats/tracktion_LAMEManager.h"
 #include "audio_files/formats/tracktion_RexFileFormat.h"
 
-#include "midi/tracktion_MidiProgramManager.h"
-#include "midi/tracktion_MidiControllerEvent.h"
-#include "midi/tracktion_MidiSysexEvent.h"
-#include "midi/tracktion_MidiExpression.h"
-#include "midi/tracktion_MidiChannel.h"
-#include "midi/tracktion_MidiList.h"
 #include "midi/tracktion_SelectedMidiEvents.h"
 
 #include "model/automation/tracktion_AutomationRecordManager.h"
@@ -477,8 +501,6 @@ namespace tracktion_engine
 #include "model/export/tracktion_Renderer.h"
 #include "model/export/tracktion_RenderManager.h"
 
-#include "playback/audionodes/tracktion_WaveAudioNode.h"
-
 #include "model/edit/tracktion_QuantisationType.h"
 
 #include "model/clips/tracktion_WarpTimeManager.h"
@@ -498,9 +520,6 @@ namespace tracktion_engine
 #include "model/edit/tracktion_MarkerManager.h"
 
 #include "model/clips/tracktion_EditClip.h"
-
-#include "playback/audionodes/tracktion_FadeInOutAudioNode.h"
-#include "playback/audionodes/tracktion_TimedMutingAudioNode.h"
 
 #include "model/tracks/tracktion_TrackUtils.h"
 #include "model/tracks/tracktion_ArrangerTrack.h"
@@ -534,18 +553,6 @@ namespace tracktion_engine
 #include "playback/tracktion_EditPlaybackContext.h"
 #include "playback/tracktion_EditInputDevices.h"
 
-#include "playback/audionodes/tracktion_BufferingAudioNode.h"
-#include "playback/audionodes/tracktion_ClickNode.h"
-#include "playback/audionodes/tracktion_ClickMutingNode.h"
-#include "playback/audionodes/tracktion_CombiningAudioNode.h"
-#include "playback/audionodes/tracktion_HissingAudioNode.h"
-#include "playback/audionodes/tracktion_MidiAudioNode.h"
-#include "playback/audionodes/tracktion_MixerAudioNode.h"
-#include "playback/audionodes/tracktion_PlayHeadAudioNode.h"
-#include "playback/audionodes/tracktion_SidechainAudioNode.h"
-#include "playback/audionodes/tracktion_TrackMutingAudioNode.h"
-#include "playback/audionodes/tracktion_SpeedRampAudioNode.h"
-
 #if TRACKTION_AIR_WINDOWS
 #include "plugins/airwindows/tracktion_AirWindows.h"
 #endif
@@ -560,6 +567,7 @@ namespace tracktion_engine
 #include "plugins/effects/tracktion_Delay.h"
 #include "plugins/effects/tracktion_Chorus.h"
 #include "plugins/effects/tracktion_FourOscPlugin.h"
+#include "plugins/effects/tracktion_ImpulseResponsePlugin.h"
 #include "plugins/effects/tracktion_LatencyPlugin.h"
 #include "plugins/effects/tracktion_LowPass.h"
 #include "plugins/effects/tracktion_MidiModifier.h"
@@ -570,6 +578,7 @@ namespace tracktion_engine
 #include "plugins/effects/tracktion_Reverb.h"
 #include "plugins/effects/tracktion_SamplerPlugin.h"
 #include "plugins/effects/tracktion_ToneGenerator.h"
+
 
 #include "plugins/ARA/tracktion_MelodyneFileReader.h"
 

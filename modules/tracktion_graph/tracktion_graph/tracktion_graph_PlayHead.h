@@ -143,6 +143,9 @@ public:
     /** Sets the reference sample count, adjusting the timeline if the play head is playing. */
     void setReferenceSampleRange (juce::Range<int64_t> sampleRange);
 
+    /** Returns the reference sample count. */
+    juce::Range<int64_t> getReferenceSampleRange() const;
+
     /** Returns the playout sync position.
         For syncing a reference position to a timeline position.
     */
@@ -167,7 +170,7 @@ private:
     std::atomic<int> speed { 0 };
     std::atomic<bool> looping { false }, userDragging { false }, rollInToLoop { false };
 
-    std::chrono::system_clock::time_point userInteractionTime;
+    std::atomic<std::chrono::system_clock::time_point> userInteractionTime { std::chrono::system_clock::now() };
 
     //==============================================================================
     SyncPositions getSyncPositions() const              { return syncPositions; }
@@ -347,6 +350,11 @@ inline void PlayHead::setReferenceSampleRange (juce::Range<int64_t> sampleRange)
 
     if (rollInToLoop && getPosition() >= timelinePlayRange.load().getStart())
         rollInToLoop = false;
+}
+
+inline juce::Range<int64_t> PlayHead::getReferenceSampleRange() const
+{
+    return referenceSampleRange;
 }
 
 inline int64_t PlayHead::getPlayoutSyncPosition() const

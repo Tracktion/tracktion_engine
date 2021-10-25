@@ -43,26 +43,13 @@ public:
     //==============================================================================
     // tells the rack type about each instance that will be using it..
     // These are called by the initialise methods of the instances.
-    void registerInstance (RackInstance*, const PlaybackInitialisationInfo&);
-    void initialisePluginsIfNeeded (const PlaybackInitialisationInfo&) const;
+    void registerInstance (RackInstance*, const PluginInitialisationInfo&);
+    void initialisePluginsIfNeeded (const PluginInitialisationInfo&) const;
     void deregisterInstance (RackInstance*);
 
     void updateAutomatableParamPositions (double time);
 
     double getLatencySeconds (double sampleRate, int blockSize);
-
-    void newBlockStarted();
-
-    /** Returns true if the RackType has a valid render context to use or if it is still loading. */
-    bool isReadyToRender() const;
-    void process (const PluginRenderContext&,
-                  int leftInputGoesTo, float leftInputGain1, float leftInputGain2,
-                  int rightInputGoesTo, float rightInputGain1, float rightInputGain2,
-                  int leftOutComesFrom, float leftOutGain1, float leftOutGain2,
-                  int rightOutComesFrom, float rightOutGain1, float rightOutGain2,
-                  float dryGain,
-                  juce::AudioBuffer<float>* delayBuffer,
-                  int& delayPos);
 
     //==============================================================================
     juce::Array<Plugin*> getPlugins() const;
@@ -161,9 +148,6 @@ private:
         juce::ValueTree state;
     };
 
-    juce::CriticalSection renderLock;   // make sure this will be deconstructed after
-                                        // any subclass that may use it
-
     struct RackPluginList;
     std::unique_ptr<RackPluginList> pluginList;
 
@@ -175,27 +159,14 @@ private:
 
     mutable std::unique_ptr<ModifierList> modifierList;
 
-    struct LatencyCalculation;
-    mutable std::unique_ptr<LatencyCalculation> latencyCalculation;
-
     juce::Array<RackInstance*> activeRackInstances;
     int numberOfInstancesInEdit = 0;
-    double sampleRate = 0;
-    int blockSize = 0;
-    bool isFirstCallbackOfBlock;
-    juce::AudioBuffer<float> tempBufferOut, tempBufferIn;
-    MidiMessageArray tempMidiBufferOut, tempMidiBufferIn;
 
-    struct PluginRenderingInfo;
-    struct RenderContext;
-    std::shared_ptr<RenderContext> renderContext;
-    AsyncCaller renderContextBuilder;
     std::atomic<int> numActiveInstances { 0 };
 
     //==============================================================================
     bool arePluginsConnectedIndirectly (EditItemID src, EditItemID dest, int depth = 0) const;
     void countInstancesInEdit();
-    void updateTempBuferSizes();
 
     void removeAllInputsAndOutputs();
     void addDefaultInputs();

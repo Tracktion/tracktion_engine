@@ -26,6 +26,10 @@ public:
     virtual void chooseInsertPoint (juce::ReferenceCountedObjectPtr<Track>&,
                                     double& start, bool pasteAfterSelection, SelectionManager*);
 
+    void chooseInsertPoint (juce::ReferenceCountedObjectPtr<Track>&,
+                            double& start, bool pasteAfterSelection, SelectionManager*,
+                            std::function<bool (Track&)> allowedTrackPredicate);
+
 protected:
     Edit& edit;
     double nextInsertPointTime = 0;

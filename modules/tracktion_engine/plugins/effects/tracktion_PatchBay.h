@@ -47,7 +47,7 @@ public:
     bool canBeDisabled() override                       { return false; }
     bool needsConstantBufferSize() override             { return false; }
 
-    void initialise (const PlaybackInitialisationInfo&) override;
+    void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
 
     void getChannelNames (juce::StringArray*, juce::StringArray*) override;

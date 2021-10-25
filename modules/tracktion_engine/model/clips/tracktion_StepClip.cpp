@@ -434,41 +434,6 @@ void StepClip::generateMidiSequence (MidiMessageSequence& result,
     result.updateMatchedPairs();
 }
 
-AudioNode* StepClip::createAudioNode (const CreateAudioNodeParams& params)
-{
-    CRASH_TRACER
-
-    AudioNode* node = nullptr;
-    if (usesProbability())
-    {
-        std::vector<MidiMessageSequence> sequences;
-
-        for (int i = 0; i < 64; i++)
-        {
-            MidiMessageSequence sequence;
-            generateMidiSequence (sequence);
-
-            sequences.push_back (sequence);
-        }
-
-        node = new MidiAudioNode (std::move (sequences), { 1, 16 }, getEditTimeRange(), level->dbGain, level->mute, *this,
-                                  getClipIfPresentInNode (params.audioNodeToBeReplaced, *this));
-    }
-    else
-    {
-        MidiMessageSequence sequence;
-        generateMidiSequence (sequence);
-
-        node = new MidiAudioNode (std::move (sequence), { 1, 16 }, getEditTimeRange(), level->dbGain, level->mute, *this,
-                                  getClipIfPresentInNode (params.audioNodeToBeReplaced, *this));
-    }
-
-    if (! listeners.isEmpty())
-        node = new LiveMidiOutputAudioNode (*this, node);
-
-    return node;
-}
-
 //==============================================================================
 Colour StepClip::getDefaultColour() const
 {

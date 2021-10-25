@@ -18,14 +18,40 @@ void Renderer::turnOffAllPlugins (Edit& edit)
             f->baseClassDeinitialise();
 }
 
-static void resetFPU() noexcept
+namespace render_utils
 {
-   #if JUCE_WINDOWS
-    resetFP();
-    #if JUCE_32BIT
-     _control87 (_PC_64, _MCW_PC);
-    #endif
-   #endif
+    std::unique_ptr<Renderer::RenderTask> createRenderTask (Renderer::Parameters r, juce::String desc,
+                                                            std::atomic<float>* progressToUpdate,
+                                                            juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* thumbnail)
+    {
+        auto tracksToDo = toTrackArray (*r.edit, r.tracksToDo);
+        
+        // Initialise playhead and continuity
+        auto playHead = std::make_unique<tracktion_graph::PlayHead>();
+        auto playHeadState = std::make_unique<tracktion_graph::PlayHeadState> (*playHead);
+        auto processState = std::make_unique<ProcessState> (*playHeadState);
+
+        CreateNodeParams cnp { *processState };
+        cnp.sampleRate = r.sampleRateForAudio;
+        cnp.blockSize = r.blockSizeForAudio;
+        cnp.allowedClips = r.allowedClips.isEmpty() ? nullptr : &r.allowedClips;
+        cnp.allowedTracks = r.tracksToDo.isZero() ? nullptr : &tracksToDo;
+        cnp.forRendering = true;
+        cnp.includePlugins = r.usePlugins;
+        cnp.includeMasterPlugins = r.useMasterPlugins;
+        cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
+        cnp.includeBypassedPlugins = false;
+
+        std::unique_ptr<tracktion_graph::Node> node;
+        callBlocking ([&r, &node, &cnp] { node = createNodeForEdit (*r.edit, cnp); });
+
+        if (! node)
+            return {};
+        
+        return std::make_unique<Renderer::RenderTask> (desc, r,
+                                                       std::move (node), std::move (playHead), std::move (playHeadState), std::move (processState),
+                                                       progressToUpdate, thumbnail);
+    }
 }
 
 //==============================================================================
@@ -82,86 +108,52 @@ static void addAcidInfo (Edit& edit, Renderer::Parameters& r)
     }
 }
 
-static bool trackLoopsBackInto (const Array<Track*>& allTracks, AudioTrack& t, const BigInteger* tracksToCheck)
-{
-    for (int j = allTracks.size(); --j >= 0;)
-        if (tracksToCheck == nullptr || (*tracksToCheck)[j])
-            if (auto other = dynamic_cast<AudioTrack*> (allTracks.getUnchecked (j)))
-                if (t.getOutput().feedsInto (other))
-                    return true;
-
-    return false;
-}
-
-static Array<Track*> getTracksIncludedInRender (const Array<Track*>& allTracks, const BigInteger* tracksToCheck)
-{
-    if (tracksToCheck == nullptr)
-        return allTracks;
-
-    Array<Track*> tracks;
-
-    for (int i = 0; i < allTracks.size(); ++i)
-        if ((*tracksToCheck)[i])
-            tracks.add (allTracks[i]);
-
-    return tracks;
-}
-
-static bool isTrackIncludedInRender (const Array<Track*>& allTracks, const BigInteger* tracksToCheck, Track& trackToLookFor)
-{
-    return getTracksIncludedInRender (allTracks, tracksToCheck).contains (&trackToLookFor);
-}
-
-static Plugin::Array findAllPlugins (AudioNode& node)
-{
-    Plugin::Array plugins, insideRacks;
-
-    node.visitNodes ([&] (AudioNode& n)
-                      {
-                          if (auto af = n.getPlugin())
-                              plugins.add (af);
-                      });
-
-    for (auto plugin : plugins)
-        if (auto rack = dynamic_cast<RackInstance*> (plugin))
-            if (auto type = rack->type)
-                for (auto p : type->getPlugins())
-                    insideRacks.addIfNotAlreadyThere (p);
-
-    plugins.addArray (insideRacks);
-    return plugins;
-}
-
 //==============================================================================
-Renderer::RenderTask::RenderTask (const String& taskDescription, const Renderer::Parameters& rp, AudioNode* n)
-   : ThreadPoolJobWithProgress (taskDescription),
-     params (rp), node (n), progress (progressInternal)
+Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
+                                  const Renderer::Parameters& r,
+                                  std::atomic<float>* progressToUpdate,
+                                  juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* source)
+    : ThreadPoolJobWithProgress (taskDescription),
+      params (r),
+      progress (progressToUpdate == nullptr ? progressInternal : *progressToUpdate),
+      sourceToUpdate (source)
 {
+    auto tracksToDo = toTrackArray (*r.edit, r.tracksToDo);
+    
+    // Initialise playhead and continuity
+    playHead = std::make_unique<tracktion_graph::PlayHead>();
+    playHeadState = std::make_unique<tracktion_graph::PlayHeadState> (*playHead);
+    processState = std::make_unique<ProcessState> (*playHeadState);
+
+    CreateNodeParams cnp { *processState };
+    cnp.sampleRate = r.sampleRateForAudio;
+    cnp.blockSize = r.blockSizeForAudio;
+    cnp.allowedClips = r.allowedClips.isEmpty() ? nullptr : &r.allowedClips;
+    cnp.allowedTracks = r.tracksToDo.isZero() ? nullptr : &tracksToDo;
+    cnp.forRendering = true;
+    cnp.includePlugins = r.usePlugins;
+    cnp.includeMasterPlugins = r.useMasterPlugins;
+    cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
+    cnp.includeBypassedPlugins = false;
+
+    callBlocking ([this, &r, &cnp] { graphNode = createNodeForEdit (*r.edit, cnp); });
 }
 
-Renderer::RenderTask::RenderTask (const String& taskDescription, const Renderer::Parameters& rp, AudioNode* n,
-                                  std::atomic<float>& progressToUpdate, AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* source)
-   : ThreadPoolJobWithProgress (taskDescription),
-     params (rp), node (n), progress (progressToUpdate), sourceToUpdate (source)
-{
-}
-
-#if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
 Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
                                   const Renderer::Parameters& rp,
                                   std::unique_ptr<tracktion_graph::Node> n,
                                   std::unique_ptr<tracktion_graph::PlayHead> playHead_,
                                   std::unique_ptr<tracktion_graph::PlayHeadState> playHeadState_,
                                   std::unique_ptr<ProcessState> processState_,
-                                  std::atomic<float>& progressToUpdate,
+                                  std::atomic<float>* progressToUpdate,
                                   juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* source)
    : ThreadPoolJobWithProgress (taskDescription),
-     params (rp), isUsingGraphNode (true),
+     params (rp),
      graphNode (std::move (n)), playHead (std::move (playHead_)), playHeadState (std::move (playHeadState_)), processState (std::move (processState_)),
-     progress (progressToUpdate), sourceToUpdate (source)
+     progress (progressToUpdate == nullptr ? progressInternal : *progressToUpdate),
+     sourceToUpdate (source)
 {
 }
-#endif
 
 Renderer::RenderTask::~RenderTask()
 {
@@ -177,353 +169,8 @@ ThreadPoolJob::JobStatus Renderer::RenderTask::runJob()
     else if (! renderAudio (params))
         return jobNeedsRunningAgain;
 
-    context = nullptr;
     return jobHasFinished;
 }
-
-//==============================================================================
-/** Holds the state of an audio render procedure so it can be rendered in blocks. */
-struct Renderer::RenderTask::RendererContext
-{
-    RendererContext (RenderTask& owner_, Renderer::Parameters& p, AudioNode* n,
-                     AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* sourceToUpdate_)
-        : owner (owner_),
-          r (p), originalParams (p),
-          node (n),
-          status (Result::ok()),
-          ditherers (256, r.bitDepth),
-          sourceToUpdate (sourceToUpdate_)
-    {
-        CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
-        jassert (r.engine != nullptr);
-        jassert (r.edit != nullptr);
-        jassert (r.time.getLength() > 0.0);
-
-        if (r.edit->getTransport().isPlayContextActive())
-        {
-            jassertfalse;
-            TRACKTION_LOG_ERROR("Rendering whilst attached to audio device");
-        }
-
-        if (r.shouldNormalise || r.trimSilenceAtEnds || r.shouldNormaliseByRMS)
-        {
-            needsToNormaliseAndTrim = true;
-
-            r.audioFormat = r.engine->getAudioFileFormatManager().getFrozenFileFormat();
-
-            intermediateFile = std::make_unique<TemporaryFile> (r.destFile.withFileExtension (r.audioFormat->getFileExtensions()[0]));
-            r.destFile = intermediateFile->getFile();
-
-            r.shouldNormalise = false;
-            r.trimSilenceAtEnds = false;
-            r.shouldNormaliseByRMS = false;
-        }
-
-        node->purgeSubNodes (true, false);
-
-        numOutputChans = 2;
-
-        {
-            AudioNodeProperties info;
-            node->getAudioNodeProperties (info);
-
-            if (! info.hasAudio)
-            {
-                status = Result::fail (TRANS("Didn't find any audio to render"));
-                return;
-            }
-
-            if (r.mustRenderInMono || (r.canRenderInMono && (info.numberOfChannels < 2)))
-                numOutputChans = 1;
-        }
-
-        AudioFileUtils::addBWAVStartToMetadata (r.metadata, (int64) (r.time.getStart() * r.sampleRateForAudio));
-
-        writer = std::make_unique<AudioFileWriter> (AudioFile (*originalParams.engine, r.destFile),
-                                                    r.audioFormat, numOutputChans, r.sampleRateForAudio,
-                                                    r.bitDepth, r.metadata, r.quality);
-
-        if (r.destFile != File() && ! writer->isOpen())
-        {
-            status = Result::fail (TRANS("Couldn't write to target file"));
-            return;
-        }
-
-        thresholdForStopping = dbToGain (-70.0f);
-
-        renderingBuffer.setSize (numOutputChans, r.blockSizeForAudio + 256);
-        blockLength = r.blockSizeForAudio / r.sampleRateForAudio;
-
-        // number of blank blocks to play before starting, to give pluginss time to warm up
-        numPreRenderBlocks = (int) ((r.sampleRateForAudio / 2) / r.blockSizeForAudio + 1);
-
-        // how long each block must take in real-time
-        realTimePerBlock = (int) (blockLength * 1000.0 + 0.99);
-        lastTime = Time::getMillisecondCounterHiRes();
-        sleepCounter = 10;
-
-        currentTempoPosition = std::make_unique<TempoSequencePosition> (r.edit->tempoSequence);
-
-        peak = 0.0001f;
-        rmsTotal = 0.0;
-        rmsNumSamps = 0;
-        numNonZeroSamps = 0;
-        streamTime = r.time.getStart();
-
-        precount = numPreRenderBlocks;
-        streamTime -= precount * blockLength;
-
-        {
-            AudioNodeProperties info;
-            node->getAudioNodeProperties (info);
-        }
-
-        plugins = findAllPlugins (*node);
-
-        // Set the realtime property before preparing to play
-        setAllPluginsRealtime (plugins, r.realTimeRender);
-
-        {
-            Array<AudioNode*> allNodes;
-            allNodes.add (node);
-
-            PlaybackInitialisationInfo info =
-            {
-                streamTime,
-                r.sampleRateForAudio,
-                r.blockSizeForAudio,
-                &allNodes,
-                localPlayhead
-            };
-
-            node->prepareAudioNodeToPlay (info);
-        }
-
-        flushAllPlugins (plugins, r.sampleRateForAudio, r.blockSizeForAudio);
-
-        samplesTrimmed = 0;
-        hasStartedSavingToFile = ! r.trimSilenceAtEnds;
-
-        localPlayhead.stop();
-        localPlayhead.setPosition (streamTime);
-
-        samplesToWrite = roundToInt ((r.time.getLength() + r.endAllowance) * r.sampleRateForAudio);
-
-        if (sourceToUpdate != nullptr)
-            sourceToUpdate->reset (numOutputChans, r.sampleRateForAudio, samplesToWrite);
-
-        auto channels = AudioChannelSet::canonicalChannelSet (numOutputChans);
-
-        rc.reset (new AudioRenderContext (localPlayhead, {}, &renderingBuffer, channels,
-                                          0, r.blockSizeForAudio, &midiBuffer, 0,
-                                          AudioRenderContext::playheadJumped, true));
-    }
-
-    ~RendererContext()
-    {
-        CRASH_TRACER
-        r.resultMagnitude = owner.params.resultMagnitude = peak;
-        r.resultRMS = owner.params.resultRMS = rmsNumSamps > 0 ? (float) (rmsTotal / rmsNumSamps) : 0.0f;
-        r.resultAudioDuration = owner.params.resultAudioDuration = float (numNonZeroSamps / owner.params.sampleRateForAudio);
-
-        localPlayhead.stop();
-        setAllPluginsRealtime (plugins, true);
-
-        if (writer != nullptr)
-            writer->closeForWriting();
-
-        if (node != nullptr)
-            callBlocking ([this] { node->releaseAudioNodeResources(); });
-
-        if (needsToNormaliseAndTrim)
-            owner.performNormalisingAndTrimming (originalParams, r);
-    }
-
-    RenderTask& owner;
-    Renderer::Parameters r, originalParams;
-    bool needsToNormaliseAndTrim = false;
-    AudioNode* node = nullptr;
-    int numOutputChans = 0;
-    std::unique_ptr<AudioFileWriter> writer;
-    Plugin::Array plugins;
-    Result status;
-
-    PlayHead localPlayhead;
-    Ditherers ditherers;
-    juce::AudioBuffer<float> renderingBuffer;
-    MidiMessageArray midiBuffer;
-    std::unique_ptr<AudioRenderContext> rc;
-
-    float thresholdForStopping = 0;
-    double blockLength = 0;
-    int numPreRenderBlocks = 0;
-    int realTimePerBlock = 0;
-
-    double lastTime = 0;
-    static const int sleepCounterMax = 100;
-    int sleepCounter = 0;
-
-    std::unique_ptr<TempoSequencePosition> currentTempoPosition;
-    float peak = 0;
-    double rmsTotal = 0;
-    int64 rmsNumSamps = 0;
-    int64 numNonZeroSamps = 0;
-    int precount = 0;
-    double streamTime = 0;
-
-    int64 samplesTrimmed = 0;
-    bool hasStartedSavingToFile = 0;
-    int64 samplesToWrite = 0;
-
-    std::unique_ptr<TemporaryFile> intermediateFile;
-    AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* sourceToUpdate;
-
-    /** Returns the opening status of the render.
-        If somthing went wrong during set-up this will contain the error message to display.
-    */
-    const Result& getStatus() const noexcept                { return status; }
-
-    /** Renders the next block of audio. Returns true when finished, false if it needs to run again. */
-    bool renderNextBlock (std::atomic<float>& progressToUpdate)
-    {
-        CRASH_TRACER
-        jassert (! r.edit->getTransport().isPlayContextActive());
-
-        if (--sleepCounter <= 0)
-        {
-            sleepCounter = sleepCounterMax;
-            Thread::sleep (1);
-        }
-
-        if (owner.shouldExit())
-        {
-            node->releaseAudioNodeResources();
-
-            writer->closeForWriting();
-            r.destFile.deleteFile();
-
-            localPlayhead.stop();
-            setAllPluginsRealtime (plugins, true);
-
-            return true;
-        }
-
-        auto blockEnd = streamTime + blockLength;
-
-        if (precount > 0)
-            blockEnd = jmin (r.time.getStart(), blockEnd);
-
-        if (precount > numPreRenderBlocks / 2)
-            localPlayhead.setPosition (streamTime);
-        else if (precount == numPreRenderBlocks / 2)
-            localPlayhead.playLockedToEngine ({ streamTime, Edit::maximumLength });
-
-        if (precount == 0)
-        {
-            streamTime = r.time.getStart();
-            localPlayhead.playLockedToEngine ({ streamTime, Edit::maximumLength });
-        }
-
-        if (r.realTimeRender)
-        {
-            auto timeNow = Time::getMillisecondCounterHiRes();
-            auto timeToWait = (int) (realTimePerBlock - (timeNow - lastTime));
-            lastTime = timeNow;
-
-            if (timeToWait > 0)
-                Thread::sleep (timeToWait);
-        }
-
-        currentTempoPosition->setTime (streamTime);
-
-        midiBuffer.clear();
-        resetFPU();
-
-        rc->streamTime = { streamTime, blockEnd };
-
-        r.edit->updateModifierTimers (localPlayhead.streamTimeToSourceTime (rc->streamTime.getStart()), r.blockSizeForAudio);
-        node->prepareForNextBlock (*rc);
-
-        // wait for any nodes to render their sources or proxies
-        while (! (node->isReadyToRender() || owner.shouldExit()))
-            return false;
-
-        node->renderOver (*rc);
-
-        rc->continuity = AudioRenderContext::contiguous;
-
-        streamTime = blockEnd;
-
-        if (precount <= 0)
-        {
-            CRASH_TRACER
-            int numSamplesDone = (int) jmin (samplesToWrite, (int64) r.blockSizeForAudio);
-            samplesToWrite -= numSamplesDone;
-
-            if (r.ditheringEnabled && r.bitDepth < 32)
-                ditherers.apply (renderingBuffer, r.blockSizeForAudio);
-
-            auto mag = renderingBuffer.getMagnitude (0, numSamplesDone);
-            peak = jmax (peak, mag);
-
-            if (! hasStartedSavingToFile)
-                hasStartedSavingToFile = (mag > 0.0f);
-
-            for (int i = renderingBuffer.getNumChannels(); --i >= 0;)
-            {
-                rmsTotal += renderingBuffer.getRMSLevel (i, 0, numSamplesDone);
-                ++rmsNumSamps;
-            }
-
-            for (int i = numSamplesDone; --i >= 0;)
-                if (renderingBuffer.getMagnitude (i, 1) > 0.0001)
-                    numNonZeroSamps++;
-
-            if (! hasStartedSavingToFile)
-                samplesTrimmed += r.blockSizeForAudio;
-
-            if (sourceToUpdate != nullptr && numSamplesDone > 0)
-            {
-                float* chans[32];
-
-                for (int i = 0; i < numOutputChans; ++i)
-                    chans[i] = renderingBuffer.getWritePointer (i, 0);
-
-                const juce::AudioBuffer<float> buffer (chans, numOutputChans, numSamplesDone);
-                auto samplesDone = int64 ((streamTime - r.time.getStart()) * r.sampleRateForAudio);
-                sourceToUpdate->addBlock (samplesDone, buffer, 0, numSamplesDone);
-            }
-
-            // NB buffer gets trashed by this call
-            if (numSamplesDone > 0 && hasStartedSavingToFile
-                 && writer->isOpen()
-                 && ! writer->appendBuffer (renderingBuffer, numSamplesDone))
-                return true;
-        }
-        else
-        {
-            // for the pre-count blocks, sleep to give things a chance to get going
-            Thread::sleep ((int) (blockLength * 1000));
-        }
-
-        if (streamTime > r.time.getEnd() + r.endAllowance
-            || (streamTime > r.time.getEnd()
-                && renderingBuffer.getMagnitude (0, r.blockSizeForAudio) <= thresholdForStopping))
-            return true;
-
-        auto prog = (float) ((streamTime - r.time.getStart()) / jmax (1.0, r.time.getLength()));
-
-        if (needsToNormaliseAndTrim)
-            prog *= 0.9f;
-
-        jassert (! std::isnan (prog));
-        progressToUpdate = jlimit (0.0f, 1.0f, prog);
-        --precount;
-
-        return false;
-    }
-};
 
 //==============================================================================
 bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parameters& target,
@@ -607,53 +254,28 @@ bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
 {
     CRASH_TRACER
     
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-    if (isUsingGraphNode)
+    if (! nodeRenderContext)
     {
-        if (! nodeRenderContext)
+        callBlocking ([&, this] { nodeRenderContext = std::make_unique<NodeRenderContext> (*this, r,
+                                                                                           std::move (graphNode),
+                                                                                           std::move (playHead),
+                                                                                           std::move (playHeadState),
+                                                                                           std::move (processState),
+                                                                                           sourceToUpdate); });
+
+        if (! nodeRenderContext->getStatus().wasOk())
         {
-            callBlocking ([&, this] { nodeRenderContext = std::make_unique<NodeRenderContext> (*this, r,
-                                                                                               std::move (graphNode),
-                                                                                               std::move (playHead),
-                                                                                               std::move (playHeadState),
-                                                                                               std::move (processState),
-                                                                                               sourceToUpdate); });
-
-            if (! nodeRenderContext->getStatus().wasOk())
-            {
-                errorMessage = nodeRenderContext->getStatus().getErrorMessage();
-                return true;
-            }
-        }
-        
-        if (! nodeRenderContext->renderNextBlock (progress))
-            return false;
-        
-        nodeRenderContext.reset();
-        progress = 1.0f;
-        
-        return true;
-    }
-   #endif
-
-    if (context == nullptr)
-    {
-        callBlocking ([&, this] { context.reset (new RendererContext (*this, r, node.get(), sourceToUpdate)); });
-
-        if (! context->getStatus().wasOk())
-        {
-            errorMessage = context->getStatus().getErrorMessage();
+            errorMessage = nodeRenderContext->getStatus().getErrorMessage();
             return true;
         }
     }
-
-    if (! context->renderNextBlock (progress))
+    
+    if (! nodeRenderContext->renderNextBlock (progress))
         return false;
-
-    context = nullptr;
+    
+    nodeRenderContext.reset();
     progress = 1.0f;
-    Thread::sleep (150); // no idea why this is here..
-
+    
     return true;
 }
 
@@ -709,113 +331,13 @@ void Renderer::RenderTask::setAllPluginsRealtime (const Plugin::Array& plugins, 
 bool Renderer::RenderTask::renderMidi (Renderer::Parameters& r)
 {
     CRASH_TRACER
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-    if (isUsingGraphNode)
-    {
-        errorMessage = NodeRenderContext::renderMidi (*this, r,
-                                                      std::move (graphNode),
-                                                      std::move (playHead),
-                                                      std::move (playHeadState),
-                                                      std::move (processState),
-                                                      progress);
-        return errorMessage.isEmpty();
-    }
-   #endif
-    
-    node->purgeSubNodes (false, true);
-
-    {
-        AudioNodeProperties info;
-        node->getAudioNodeProperties (info);
-
-        if (! info.hasMidi)
-        {
-            errorMessage = TRANS("No MIDI was found within the selected region");
-            return false;
-        }
-    }
-
-    MidiMessageSequence outputSequence;
-    MidiMessageArray midiBuffer;
-
-    const int sampleRate = 44100; // use any old sample rate as this shouldn't matter to the midi nodes
-    const int samplesPerBlock = 256;
-    const double blockLength = samplesPerBlock / (double)sampleRate;
-    double streamTime = r.time.getStart();
-
-    PlayHead localPlayhead;
-
-    {
-        Array<AudioNode*> allNodes;
-        allNodes.add (node.get());
-
-        PlaybackInitialisationInfo info =
-        {
-            streamTime,
-            sampleRate,
-            samplesPerBlock,
-            &allNodes,
-            localPlayhead
-        };
-
-        callBlocking ([this, &info] { node->prepareAudioNodeToPlay (info); });
-    }
-
-    localPlayhead.stop();
-    localPlayhead.setPosition (streamTime);
-    localPlayhead.playLockedToEngine ({ streamTime, Edit::maximumLength });
-
-    {
-        TempoSequencePosition currentTempoPosition (r.edit->tempoSequence);
-
-        AudioRenderContext rc (localPlayhead, {},
-                               nullptr, AudioChannelSet::disabled(), 0, samplesPerBlock,
-                               &midiBuffer, 0,
-                               AudioRenderContext::playheadJumped, true);
-
-        for (;;)
-        {
-            CRASH_TRACER
-
-            if (shouldExit())
-            {
-                callBlocking ([this] { node->releaseAudioNodeResources(); });
-                return false;
-            }
-
-            if (streamTime > r.time.getEnd())
-                break;
-
-            const double blockEnd = streamTime + blockLength;
-
-            currentTempoPosition.setTime (streamTime);
-            resetFPU();
-
-            rc.streamTime = { streamTime, blockEnd };
-
-            node->prepareForNextBlock (rc);
-            node->renderOver (rc);
-
-            rc.continuity = AudioRenderContext::contiguous;
-
-            for (auto& m : midiBuffer)
-            {
-                TempoSequencePosition eventPos (currentTempoPosition);
-                eventPos.setTime (m.getTimeStamp() + streamTime - r.time.getStart());
-
-                outputSequence.addEvent (MidiMessage (m, Edit::ticksPerQuarterNote * eventPos.getPPQTime()));
-            }
-
-            streamTime = blockEnd;
-
-            progress = jlimit (0.0f, 1.0f, (float) ((streamTime - r.time.getStart()) / r.time.getLength()));
-        }
-    }
-
-    callBlocking ([this] { node->releaseAudioNodeResources(); });
-    localPlayhead.stop();
-    
-    return addMidiMetaDataAndWriteToFile (r.destFile, std::move (outputSequence), r.edit->tempoSequence);
+    errorMessage = NodeRenderContext::renderMidi (*this, r,
+                                                  std::move (graphNode),
+                                                  std::move (playHead),
+                                                  std::move (playHeadState),
+                                                  std::move (processState),
+                                                  progress);
+    return errorMessage.isEmpty();
 }
 
 bool Renderer::RenderTask::addMidiMetaDataAndWriteToFile (juce::File destFile, juce::MidiMessageSequence outputSequence, const TempoSequence& tempoSequence)
@@ -866,132 +388,6 @@ bool Renderer::RenderTask::addMidiMetaDataAndWriteToFile (juce::File destFile, j
     return false;
 }
 
-//==============================================================================
-static AudioNode* createRenderingNodeFromEdit (Edit& edit,
-                                               const CreateAudioNodeParams& params,
-                                               bool includeMasterPlugins)
-{
-    CRASH_TRACER
-    MixerAudioNode* mixer = nullptr;
-
-    const auto allTracks = getAllTracks (edit);
-
-    Array<Track*> sidechainSourceTracks;
-    Array<AudioTrack*> tracksToBeRendered;
-
-    jassert (params.forRendering);
-
-    for (int i = 0; i < allTracks.size(); ++i)
-    {
-        if (params.allowedTracks == nullptr || (*params.allowedTracks)[i])
-        {
-            auto track = allTracks.getUnchecked (i);
-
-            if (! track->isProcessing (true))
-                continue;
-
-            // Don't include tracks that will be part of a submix being rendered
-            if (track->isPartOfSubmix() && isTrackIncludedInRender (allTracks, params.allowedTracks, *track->getParentTrack()))
-                continue;
-
-            if (auto at = dynamic_cast<AudioTrack*> (track))
-            {
-                if (! trackLoopsBackInto (allTracks, *at, params.allowedTracks))
-                {
-                    if (mixer == nullptr)
-                        mixer = new MixerAudioNode (true, edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio() > 1);
-
-                    auto trackNode = at->createAudioNode (params);
-
-                    trackNode = new TrackMutingAudioNode (*at, trackNode, false);
-                    mixer->addInput (trackNode);
-
-                    // find an tracks required to feed sidechains
-                    Array<AudioTrack*> todo;
-                    todo.add (at);
-
-                    while (todo.size() > 0)
-                    {
-                        auto first = todo.getFirst();
-                        auto srcTracks = first->findSidechainSourceTracks();
-                        tracksToBeRendered.add (first);
-
-                        for (auto t : srcTracks)
-                            sidechainSourceTracks.addIfNotAlreadyThere (t);
-
-                        for (auto t : first->getInputTracks())
-                            if (auto audioInputTrack = dynamic_cast<AudioTrack*> (t))
-                                todo.add (audioInputTrack);
-                        
-                        todo.remove (0);
-                    }
-                }
-            }
-            else if (auto ft = dynamic_cast<FolderTrack*> (track))
-            {
-                if (auto n = ft->createAudioNode (params))
-                {
-                    if (mixer == nullptr)
-                        mixer = new MixerAudioNode (true, edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio() > 1);
-
-                    mixer->addInput (n);
-
-                    // find an tracks required to feed sidechains
-                    auto subTracks = ft->getAllAudioSubTracks (true);
-                    tracksToBeRendered.addArray (subTracks);
-
-                    for (auto subTrack : subTracks)
-                        for (auto t : subTrack->findSidechainSourceTracks())
-                            sidechainSourceTracks.addIfNotAlreadyThere (t);
-                }
-            }
-        }
-    }
-
-    // create audio nodes for an sidechain source tracks that aren't already being rendered
-    for (auto t : sidechainSourceTracks)
-    {
-        if (auto at = dynamic_cast<AudioTrack*> (t))
-        {
-            if (! tracksToBeRendered.contains (at))
-            {
-                CreateAudioNodeParams p (params);
-                p.allowedTracks = nullptr;
-                p.allowedClips = nullptr;
-
-                if (auto* n = at->createAudioNode (p))
-                {
-                    n = new MuteAudioNode (n);
-                    mixer->addInput (n);
-                }
-            }
-        }
-    }
-
-    AudioNode* finalNode = mixer;
-
-    if (includeMasterPlugins && finalNode != nullptr)
-    {
-        // add any master plugins..
-        finalNode = edit.getMasterPluginList().createAudioNode (finalNode, params.addAntiDenormalisationNoise);
-        finalNode = edit.getMasterVolumePlugin()->createAudioNode (finalNode, false);
-        finalNode = FadeInOutAudioNode::createForEdit (edit, finalNode);
-    }
-
-    return finalNode;
-}
-
-AudioNode* Renderer::createRenderingAudioNode (const Parameters& r)
-{
-    CreateAudioNodeParams cnp;
-    cnp.allowedClips = r.allowedClips.isEmpty() ? nullptr : &r.allowedClips;
-    cnp.allowedTracks = &r.tracksToDo;
-    cnp.forRendering = true;
-    cnp.includePlugins = r.usePlugins;
-    cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
-
-    return createRenderingNodeFromEdit (*r.edit, cnp, r.useMasterPlugins);
-}
 
 //==============================================================================
 bool Renderer::renderToFile (const String& taskDescription,
@@ -1018,37 +414,30 @@ bool Renderer::renderToFile (const String& taskDescription,
 
     if (tracksToDo.countNumberOfSetBits() > 0)
     {
-        CreateAudioNodeParams cnp;
-        cnp.allowedTracks = &tracksToDo;
-        cnp.forRendering = true;
-        cnp.includePlugins = usePlugins;
-        cnp.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (engine);
+        Parameters r (edit);
+        r.destFile = outputFile;
+        r.audioFormat = edit.engine.getAudioFileFormatManager().getDefaultFormat();
+        r.bitDepth = 24;
+        r.sampleRateForAudio = edit.engine.getDeviceManager().getSampleRate();
+        r.blockSizeForAudio  = edit.engine.getDeviceManager().getBlockSize();
+        r.time = range;
+        r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (engine);
+        r.usePlugins = usePlugins;
+        r.useMasterPlugins = usePlugins;
+        r.allowedClips = clips;
+        r.createMidiFile = outputFile.hasFileExtension (".mid");
 
-        if (auto node = createRenderingNodeFromEdit (edit, cnp, usePlugins))
+        addAcidInfo (edit, r);
+        
+        if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))
         {
-            Parameters r (edit);
-            r.destFile = outputFile;
-            r.audioFormat = edit.engine.getAudioFileFormatManager().getDefaultFormat();
-            r.bitDepth = 24;
-            r.sampleRateForAudio = edit.engine.getDeviceManager().getSampleRate();
-            r.blockSizeForAudio  = edit.engine.getDeviceManager().getBlockSize();
-            r.time = range;
-            r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (engine);
-            r.usePlugins = usePlugins;
-            r.allowedClips = clips;
-            r.createMidiFile = outputFile.hasFileExtension (".mid");
-
-            addAcidInfo (edit, r);
-
-            RenderTask task (taskDescription, r, node);
-
             if (useThread)
             {
-                engine.getUIBehaviour().runTaskWithProgressBar (task);
+                engine.getUIBehaviour().runTaskWithProgressBar (*task);
             }
             else
             {
-                while (task.runJob() == ThreadPoolJob::jobNeedsRunningAgain)
+                while (task->runJob() == ThreadPoolJob::jobNeedsRunningAgain)
                 {}
             }
         }
@@ -1076,29 +465,26 @@ juce::File Renderer::renderToFile (const String& taskDescription, const Paramete
          && ! r.destFile.isDirectory())
     {
         auto& ui = r.edit->engine.getUIBehaviour();
-
-        if (auto node = createRenderingAudioNode (r))
+        
+        if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))
         {
-            RenderTask task (taskDescription, r, node);
-
-            ui.runTaskWithProgressBar (task);
-
+            ui.runTaskWithProgressBar (*task);
             turnOffAllPlugins (*r.edit);
 
             if (r.destFile.existsAsFile())
             {
-                if (task.errorMessage.isNotEmpty())
+                if (task->errorMessage.isNotEmpty())
                 {
                     r.destFile.deleteFile();
-                    ui.showWarningMessage (task.errorMessage);
+                    ui.showWarningMessage (task->errorMessage);
                     return {};
                 }
 
                 return r.destFile;
             }
 
-            if (task.getCurrentTaskProgress() >= 0.9f && task.errorMessage.isNotEmpty())
-                ui.showWarningMessage (task.errorMessage);
+            if (task->getCurrentTaskProgress() >= 0.9f && task->errorMessage.isNotEmpty())
+                ui.showWarningMessage (task->errorMessage);
         }
         else
         {
@@ -1168,35 +554,26 @@ Renderer::Statistics Renderer::measureStatistics (const String& taskDescription,
     Statistics result;
 
     const Edit::ScopedRenderStatus srs (edit, true);
-
     TransportControl::stopAllTransports (edit.engine, false, true);
 
     turnOffAllPlugins (edit);
 
     if (tracksToDo.countNumberOfSetBits() > 0)
     {
-        CreateAudioNodeParams cnp;
-        cnp.allowedTracks = &tracksToDo;
-        cnp.forRendering = true;
-        cnp.includePlugins = true;
-        cnp.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (edit.engine);
-
-        if (auto node = createRenderingNodeFromEdit (edit, cnp, true))
+        Parameters r (edit);
+        r.audioFormat = edit.engine.getAudioFileFormatManager().getDefaultFormat();
+        r.blockSizeForAudio = blockSizeForAudio;
+        r.time = range;
+        r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (edit.engine);
+        r.tracksToDo = tracksToDo;
+        
+        if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))
         {
-            Parameters r (edit);
+            edit.engine.getUIBehaviour().runTaskWithProgressBar (*task);
 
-            r.audioFormat = edit.engine.getAudioFileFormatManager().getDefaultFormat();
-            r.blockSizeForAudio = blockSizeForAudio;
-            r.time = range;
-            r.addAntiDenormalisationNoise = cnp.addAntiDenormalisationNoise;
-
-            RenderTask task (taskDescription, r, node);
-
-            edit.engine.getUIBehaviour().runTaskWithProgressBar (task);
-
-            result.peak          = task.params.resultMagnitude;
-            result.average       = task.params.resultRMS;
-            result.audioDuration = task.params.resultAudioDuration;
+            result.peak          = task->params.resultMagnitude;
+            result.average       = task->params.resultRMS;
+            result.audioDuration = task->params.resultAudioDuration;
         }
     }
 

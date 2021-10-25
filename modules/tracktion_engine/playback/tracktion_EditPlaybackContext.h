@@ -48,10 +48,8 @@ public:
 
     Edit& edit;
     TransportControl& transport;
-    PlayHead playhead;
     LevelMeasurer masterLevels;
     MidiNoteDispatcher midiDispatcher;
-    static std::function<AudioNode*(AudioNode*)> insertOptionalLastStageNode;
 
     /** Releases and then optionally reallocates the context's device list safely. */
     struct ScopedDeviceListReleaser
@@ -80,14 +78,14 @@ public:
     };
 
     //==============================================================================
-    /** Enables the new tracktion_graph module for internal processing.
-        N.B. This is for development only and this method will be removed in the future.
-    */
-    static void enableExperimentalGraphProcessing (bool);
-    static bool isExperimentalGraphProcessingEnabled();
+    // These methods deal directly with the playhead so won't have any latency induced by syncing to the messaged thread.
+    bool isPlaying() const;
+    bool isLooping() const;
+    bool isDragging() const;
 
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
-    tracktion_graph::PlayHead* getNodePlayHead() const;
+    double getPosition() const;
+    double getUnloopedPosition() const;
+    EditTimeRange getLoopTimes() const;
     
     /** Returns the overall latency of the currently prepared graph. */
     int getLatencySamples() const;
@@ -96,12 +94,25 @@ public:
     void updateNumCPUs();
     void setSpeedCompensation (double plusOrMinus);
     void postPosition (double);
+    void play();
+    void stop();
+    
+    double globalStreamTimeToEditTime (double) const;
+    double globalStreamTimeToEditTimeUnlooped (double) const;
+    void resyncToGlobalStreamTime (juce::Range<double>);
 
+    /** @internal. Will be removed in a future release. */
+    tracktion_graph::PlayHead* getNodePlayHead() const;
+
+    /** @see tracktion_graph::ThreadPoolStrategy */
     static void setThreadPoolStrategy (int);
+    /** @see tracktion_graph::ThreadPoolStrategy */
     static int getThreadPoolStrategy();
     
+    /** Enables reusing of audio buffers during graph processing
+        which may reduce the memory use at the cost of some additional overhead.
+    */
     static void enablePooledMemory (bool);
-   #endif
 
 private:
     bool isAllocated = false;
@@ -125,13 +136,11 @@ private:
     void releaseDeviceList();
     void rebuildDeviceList();
 
-    void createAudioNodes (double startTime, bool addAntiDenormalisationNoise);
     void prepareOutputDevices (double start);
     void startRecording (double start, double punchIn);
     void startPlaying (double start);
 
     friend class DeviceManager;
-    void fillNextAudioBlock (EditTimeRange streamTime, float** allChannels, int numSamples);
 
     juce::WeakReference<EditPlaybackContext> contextToSyncTo;
     double previousBarTime = 0;
@@ -142,7 +151,6 @@ private:
     struct ContextSyncroniser;
     std::unique_ptr<ContextSyncroniser> contextSyncroniser;
     
-   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
     struct NodePlaybackContext;
     std::unique_ptr<NodePlaybackContext> nodePlaybackContext;
 
@@ -151,7 +159,6 @@ private:
 
     void createNode();
     void fillNextNodeBlock (float** allChannels, int numChannels, int numSamples);
-   #endif
 
     JUCE_DECLARE_WEAK_REFERENCEABLE (EditPlaybackContext)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EditPlaybackContext)

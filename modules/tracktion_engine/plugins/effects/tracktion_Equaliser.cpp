@@ -242,7 +242,7 @@ void EqualiserPlugin::updateIIRFilters()
     }
 }
 
-void EqualiserPlugin::initialise (const PlaybackInitialisationInfo&)
+void EqualiserPlugin::initialise (const PluginInitialisationInfo&)
 {
     for (int i = EQ_CHANS; --i >= 0;)
     {

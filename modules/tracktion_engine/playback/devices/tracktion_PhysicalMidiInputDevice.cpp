@@ -64,7 +64,7 @@ struct MidiTimecodeReader  : private MessageListener,
 
                     correctedTime = lastTime - owner.edit.getTimecodeOffset();
 
-                    const double drift = correctedTime - owner.context.playhead.getPosition();
+                    const double drift = correctedTime - owner.context.getPosition();
 
                     averageDrift = averageDrift * 0.9 + drift * 0.1;
                     ++averageDriftNumSamples;
@@ -73,7 +73,7 @@ struct MidiTimecodeReader  : private MessageListener,
                     {
                         if (std::abs (drift) > 2.0)
                         {
-                            owner.context.playhead.setPosition (correctedTime);
+                            owner.context.postPosition (correctedTime);
                             averageDrift = 0.0;
                             averageDriftNumSamples = 0;
                         }
@@ -86,12 +86,8 @@ struct MidiTimecodeReader  : private MessageListener,
                         }
                     }
 
-                    transport.engine.getDeviceManager().setSpeedCompensation (speedComp);
-                    
-                   #if ENABLE_EXPERIMENTAL_TRACKTION_GRAPH
                     if (auto epc = transport.getCurrentPlaybackContext())
                         epc->setSpeedCompensation (speedComp);
-                   #endif
                         
                     break;
                 }
@@ -313,8 +309,8 @@ private:
 };
 
 //==============================================================================
-PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine& e, const String& name, int deviceIndexToUse)
-   : MidiInputDevice (e, TRANS("MIDI Input"), name),
+PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine& e, const String& deviceName, int deviceIndexToUse)
+   : MidiInputDevice (e, TRANS("MIDI Input"), deviceName),
      deviceIndex (deviceIndexToUse)
 {
     controllerParser.reset (new MidiControllerParser (e));
@@ -342,7 +338,7 @@ String PhysicalMidiInputDevice::openDevice()
     if (inputDevice == nullptr)
     {
         CRASH_TRACER
-        inputDevice = MidiInput::openDevice (deviceIndex, this);
+        inputDevice = MidiInput::openDevice (MidiInput::getAvailableDevices()[deviceIndex].identifier, this);
 
         if (inputDevice != nullptr)
         {
@@ -492,86 +488,6 @@ void PhysicalMidiInputDevice::setAcceptingMMC (bool b)
 void PhysicalMidiInputDevice::setReadingControllerMessages (bool b)
 {
     isTakingControllerMessages = b;
-}
-
-//==============================================================================
-class MidiInputDevice::MidiEventSnifferNode  : public SingleInputAudioNode
-{
-public:
-    MidiEventSnifferNode (AudioNode* source, MidiInputDevice& d)
-        : SingleInputAudioNode (source), owner (d)
-    {
-    }
-
-    ~MidiEventSnifferNode() override
-    {
-        releaseAudioNodeResources();
-    }
-
-    void prepareAudioNodeToPlay (const PlaybackInitialisationInfo& info) override
-    {
-        if (input != nullptr)
-            input->prepareAudioNodeToPlay (info);
-
-        currentBuffer.clear();
-
-        if (info.sampleRate > 0.0)
-            offsetSeconds = info.blockSizeSamples / info.sampleRate;
-    }
-
-    void renderOver (const AudioRenderContext& rc) override
-    {
-        callRenderAdding (rc);
-    }
-
-    void renderAdding (const AudioRenderContext& rc) override
-    {
-        if (rc.bufferForMidiMessages == nullptr)
-            return;
-
-        // Copy the current MIDI (last buffer) to the owner destination
-        for (auto& m : currentBuffer)
-        {
-            rc.bufferForMidiMessages->add (m, m.getTimeStamp() + rc.midiBufferOffset);
-
-            m.setTimeStamp (Time::getMillisecondCounterHiRes() * 0.001 + m.getTimeStamp() + offsetSeconds);
-            owner.handleIncomingMidiMessage (nullptr, m);
-        }
-
-        currentBuffer.clear();
-
-        // Fill the current MIDI buffer from the input ready for next time
-        if (input != nullptr)
-        {
-            AudioRenderContext rc2 (rc);
-            rc2.streamTime = rc2.streamTime + offsetSeconds;
-            rc2.bufferForMidiMessages = &currentBuffer;
-            rc2.midiBufferOffset = 0.0;
-
-            input->renderAdding (rc2);
-        }
-    }
-
-    void releaseAudioNodeResources() override
-    {
-        if (input != nullptr)
-            input->releaseAudioNodeResources();
-
-        currentBuffer.clear();
-        offsetSeconds = 0.0;
-    }
-
-private:
-    MidiInputDevice& owner;
-    MidiMessageArray currentBuffer;
-    double offsetSeconds = 0;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiEventSnifferNode)
-};
-
-AudioNode* MidiInputDevice::createMidiEventSnifferNode (AudioNode* input)
-{
-    return new MidiEventSnifferNode (input, *this);
 }
 
 }

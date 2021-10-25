@@ -46,9 +46,17 @@ void EditInsertPoint::setNextInsertPointAfterSelected()
     nextInsertIsAfterSelected = true;
 }
 
-void EditInsertPoint::chooseInsertPoint (Track::Ptr& track, double& start, bool pasteAfterSelection, SelectionManager* sm)
+void EditInsertPoint::chooseInsertPoint (juce::ReferenceCountedObjectPtr<Track>& track,
+                                         double& start, bool pasteAfterSelection, SelectionManager* sm)
+{
+    return chooseInsertPoint (track, start, pasteAfterSelection, sm, [] (auto& t) { return t.isAudioTrack() || t.isFolderTrack(); });
+}
+
+void EditInsertPoint::chooseInsertPoint (Track::Ptr& track, double& start, bool pasteAfterSelection, SelectionManager* sm,
+                                         std::function<bool(Track&)> allowedTrackPredicate)
 {
     CRASH_TRACER
+    jassert (allowedTrackPredicate);
     track = findTrackForID (edit, nextInsertPointTrack);
     start = nextInsertPointTime;
 
@@ -71,7 +79,7 @@ void EditInsertPoint::chooseInsertPoint (Track::Ptr& track, double& start, bool 
         }
     }
 
-    while (track != nullptr && ! (track->isAudioTrack() || track->isFolderTrack()))
+    while (track != nullptr && ! allowedTrackPredicate (*track))
     {
         if (auto next = track->getSiblingTrack (1, false))
             track = next;

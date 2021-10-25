@@ -48,7 +48,7 @@ ToneGeneratorPlugin::~ToneGeneratorPlugin()
 
 const char* ToneGeneratorPlugin::xmlTypeName = "toneGenerator";
 
-void ToneGeneratorPlugin::initialise (const PlaybackInitialisationInfo& info)
+void ToneGeneratorPlugin::initialise (const PluginInitialisationInfo& info)
 {
     scratch.setSize (1, info.blockSizeSamples);
     auto samplesPerBlock = uint32 (info.blockSizeSamples);
@@ -151,10 +151,10 @@ void ToneGeneratorPlugin::initialiseOscilators()
                 k += 2;
             }
 
-            return float (8.0f / (float_Pi * float_Pi) * sum);
+            return float (8.0f / (juce::MathConstants<float>::pi * juce::MathConstants<float>::pi) * sum);
         }
 
-        return (in < 0 ? in / -float_Pi : in / float_Pi) * 2 - 1;
+        return (in < 0 ? in / -juce::MathConstants<float>::pi : in / juce::MathConstants<float>::pi) * 2 - 1;
     };
 
     auto sawUpFunc = [&] (float in) -> float
@@ -173,10 +173,10 @@ void ToneGeneratorPlugin::initialiseOscilators()
                 k++;
             }
 
-            return float (-2.0f / float_Pi * sum);
+            return float (-2.0f / juce::MathConstants<float>::pi * sum);
         }
 
-        return ((in + float_Pi) / (2 * float_Pi)) * 2 - 1;
+        return ((in + juce::MathConstants<float>::pi) / (2 * juce::MathConstants<float>::pi)) * 2 - 1;
     };
 
     auto sawDownFunc = [&] (float in) -> float
@@ -195,10 +195,10 @@ void ToneGeneratorPlugin::initialiseOscilators()
                 k++;
             }
 
-            return float (2.0f / float_Pi * sum);
+            return float (2.0f / juce::MathConstants<float>::pi * sum);
         }
 
-        return -(((in + float_Pi) / (2 * float_Pi)) * 2 - 1);
+        return -(((in + juce::MathConstants<float>::pi) / (2 * juce::MathConstants<float>::pi)) * 2 - 1);
     };
 
     auto squareFunc = [&] (float in) -> float
@@ -217,7 +217,7 @@ void ToneGeneratorPlugin::initialiseOscilators()
                 i++;
             }
 
-            return float (4.0f / float_Pi * sum);
+            return float (4.0f / juce::MathConstants<float>::pi * sum);
         }
 
         return in < 0 ? -1.0f : 1.0f;

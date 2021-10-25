@@ -21,6 +21,7 @@ struct StepModifier::StepModifierTimer : public ModifierTimer
     void updateStreamTime (double editTime, int numSamples) override
     {
         const double blockLength = numSamples / modifier.getSampleRate();
+        modifier.setEditTime (editTime);
         modifier.updateParameterStreams (editTime);
 
         const auto syncTypeThisBlock = roundToInt (modifier.syncTypeParam->getCurrentValue());
@@ -95,29 +96,6 @@ struct StepModifier::StepModifierTimer : public ModifierTimer
     StepModifier& modifier;
     Ramp ramp;
     TempoSequencePosition tempoSequence;
-};
-
-//==============================================================================
-struct StepModifier::StepModifierAudioNode    : public SingleInputAudioNode
-{
-    StepModifierAudioNode (AudioNode* source, StepModifier& sm)
-        : SingleInputAudioNode (source),
-          modifier (&sm)
-    {
-    }
-
-    void renderOver (const AudioRenderContext& rc) override
-    {
-        SingleInputAudioNode::renderOver (rc);
-        modifier->applyToBuffer (rc);
-    }
-
-    void renderAdding (const AudioRenderContext& rc) override
-    {
-        callRenderOver (rc);
-    }
-
-    StepModifier::Ptr modifier;
 };
 
 //==============================================================================
@@ -221,11 +199,6 @@ int StepModifier::getCurrentStep() const noexcept
 AutomatableParameter::ModifierAssignment* StepModifier::createAssignment (const ValueTree& v)
 {
     return new Assignment (v, *this);
-}
-
-AudioNode* StepModifier::createPreFXAudioNode (AudioNode* an)
-{
-    return new StepModifierAudioNode (an, *this);
 }
 
 void StepModifier::applyToBuffer (const PluginRenderContext& prc)

@@ -95,13 +95,6 @@ public:
     void setWaveOutChannelsEnabled (const std::vector<ChannelIndex>&, bool);
     void setWaveInChannelsEnabled (const std::vector<ChannelIndex>&, bool);
 
-    // set to 1.0 to make it speed up a bit, -1.0 to slow down, 0 for normal.
-    void setSpeedCompensation (double plusOrMinus);
-
-    void setInternalBufferMultiplier (int multiplier);
-    int getInternalBufferMultiplier()                           { return internalBufferMultiplier; }
-    int getInternalBufferSize() const                           { return getBlockSize() * internalBufferMultiplier; }
-
     //==============================================================================
     bool rebuildWaveDeviceListIfNeeded();
     void rescanMidiDeviceList (bool forceRescan);
@@ -197,8 +190,6 @@ private:
 
     std::atomic<double> currentCpuUsage { 0 }, streamTime { 0 }, cpuLimitBeforeMuting { 0.98 };
     double currentLatencyMs = 0, outputLatencyTime = 0, currentSampleRate = 0;
-    double speedCompensation = 0;
-    int internalBufferMultiplier = 1;
     juce::Array<EditPlaybackContext*> contextsToRestart;
 
     juce::StringArray lastMidiOutNames, lastMidiInNames;

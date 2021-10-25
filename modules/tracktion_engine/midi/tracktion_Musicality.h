@@ -96,7 +96,7 @@ public:
         WholeHalf,
     };
 
-    enum Intervals
+    enum class Intervals
     {
         i = 0,
         ii,

@@ -29,8 +29,6 @@ public:
     AudioTrack* getAudioTrack() const;
 
     //==============================================================================
-    AudioNode* createAudioNode (const CreateAudioNodeParams&) override;
-
     MidiList& getSequence() const noexcept;
     MidiList& getSequenceLooped();
     std::unique_ptr<MidiList> createSequenceLooped (MidiList& sourceSequence);

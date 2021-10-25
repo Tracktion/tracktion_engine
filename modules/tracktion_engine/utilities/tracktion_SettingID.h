@@ -56,7 +56,6 @@ enum class SettingID
     hasEnabledMidiDefaultDevs,
     glideLength,
     grooveTemplates,
-    internalBuffer,
     knownPluginList,
     knownPluginList64,
     lameEncoder,

@@ -52,7 +52,7 @@ struct PitchShiftPlugin::Pimpl
 
         latencySeconds = latencySamples / sr;
     }
-
+    
     void applyToBuffer (const PluginRenderContext& fc, float semis)
     {
         SCOPED_REALTIME_CHECK
@@ -67,15 +67,27 @@ struct PitchShiftPlugin::Pimpl
 
             inputFifo.write (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples);
 
-            int needed = timestretcher->getFramesNeeded();
-
             if (! timestretcher->setSpeedAndPitch (1.0f, semis))
                 jassertfalse;
 
-            while (inputFifo.getNumReady() >= needed && outputFifo.getFreeSpace() >= samplesPerBlock)
+            // Loop until output FIFO has enough samples to proceed
             {
-                timestretcher->processData (inputFifo, needed, outputFifo);
-                needed = timestretcher->getFramesNeeded();
+                int needed = timestretcher->getFramesNeeded();
+
+                for (;;)
+                {
+                    if (inputFifo.getNumReady() < needed)
+                        break;
+
+                    if (outputFifo.getFreeSpace() < samplesPerBlock)
+                        break;
+
+                    timestretcher->processData (inputFifo, needed, outputFifo);
+                    needed = timestretcher->getFramesNeeded();
+
+                    if (outputFifo.getNumReady() >= fc.bufferNumSamples)
+                        break;
+                }
             }
 
             if (outputFifo.getNumReady() < fc.bufferNumSamples)
@@ -151,7 +163,7 @@ ValueTree PitchShiftPlugin::create()
 const char* PitchShiftPlugin::xmlTypeName = "pitchShifter";
 
 //==============================================================================
-void PitchShiftPlugin::initialise (const PlaybackInitialisationInfo& info)
+void PitchShiftPlugin::initialise (const PluginInitialisationInfo& info)
 {
     pimpl->initialise (info.sampleRate, semitones->getCurrentValue(),
                        (TimeStretcher::Mode) mode.get(), elastiqueOptions.get());

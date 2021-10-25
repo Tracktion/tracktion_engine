@@ -31,7 +31,7 @@ static float triangle (float phase, float freq, double sampleRate)
         sum += std::pow (-1.0f, (k - 1.0f) / 2.0f) / (k * k) * std::sin (k * (phase * 2 * MathConstants<float>::pi));
         k += 2;
     }
-    return float (8.0f / (float_Pi * float_Pi) * sum);
+    return float (8.0f / (juce::MathConstants<float>::pi * juce::MathConstants<float>::pi) * sum);
 }
 
 static float sawUp (float phase, float freq, double sampleRate)
@@ -43,7 +43,7 @@ static float sawUp (float phase, float freq, double sampleRate)
         sum += oddEven (k) * std::sin (k * (phase * 2 * MathConstants<float>::pi)) / k;
         k++;
     }
-    return float (-2.0f / float_Pi * sum);
+    return float (-2.0f / juce::MathConstants<float>::pi * sum);
 }
 
 static float sawDown (float phase, float freq, double sampleRate)
@@ -55,7 +55,7 @@ static float sawDown (float phase, float freq, double sampleRate)
         sum += oddEven (k) * std::sin (k * (phase * 2 * MathConstants<float>::pi)) / k;
         k++;
     }
-    return float (2.0f / float_Pi * sum);
+    return float (2.0f / juce::MathConstants<float>::pi * sum);
 }
 
 //==============================================================================

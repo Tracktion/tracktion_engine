@@ -129,7 +129,7 @@ public:
         switch (parameters.waveShape)
         {
             case none:      val = 0; break;
-            case sine:      val = std::sin (localPhase * juce::float_Pi * 2); break;
+            case sine:      val = std::sin (localPhase * juce::MathConstants<float>::pi * 2); break;
             case triangle:  val = (localPhase < 0.5f) ? (4.0f * localPhase - 1.0f) : (-4.0f * localPhase + 3.0f); break;
             case sawUp:     val = localPhase * 2.0f - 1.0f; break;
             case sawDown:   val = (1.0f - localPhase) * 2.0f - 1.0f; break;
@@ -182,7 +182,7 @@ public:
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }
 
-    void initialise (const PlaybackInitialisationInfo&) override;
+    void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
 
     void reset() override;

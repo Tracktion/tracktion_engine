@@ -176,7 +176,7 @@ void FreezePointPlugin::initialiseFully()
     updateTrackFreezeStatus();
 }
 
-void FreezePointPlugin::initialise (const PlaybackInitialisationInfo&) {}
+void FreezePointPlugin::initialise (const PluginInitialisationInfo&) {}
 void FreezePointPlugin::deinitialise() {}
 void FreezePointPlugin::applyToBuffer (const PluginRenderContext&) {}
 

@@ -21,6 +21,7 @@ struct LFOModifier::LFOModifierTimer    : public ModifierTimer
     void updateStreamTime (double editTime, int numSamples) override
     {
         const double blockLength = numSamples / modifier.getSampleRate();
+        modifier.setEditTime (editTime);
         modifier.updateParameterStreams (editTime);
 
         const auto syncTypeThisBlock = roundToInt (modifier.syncTypeParam->getCurrentValue());
@@ -147,29 +148,6 @@ struct LFOModifier::LFOModifierTimer    : public ModifierTimer
 };
 
 //==============================================================================
-struct LFOModifier::ModifierAudioNode    : public SingleInputAudioNode
-{
-    ModifierAudioNode (AudioNode* source, LFOModifier& lfo)
-        : SingleInputAudioNode (source),
-          modifier (&lfo)
-    {
-    }
-
-    void renderOver (const AudioRenderContext& rc) override
-    {
-        SingleInputAudioNode::renderOver (rc);
-        modifier->applyToBuffer (rc);
-    }
-
-    void renderAdding (const AudioRenderContext& rc) override
-    {
-        callRenderOver (rc);
-    }
-
-    LFOModifier::Ptr modifier;
-};
-
-//==============================================================================
 LFOModifier::LFOModifier (Edit& e, const ValueTree& v)
     : Modifier (e, v)
 {
@@ -252,11 +230,6 @@ float LFOModifier::getCurrentPhase() const   { return currentPhase.load (std::me
 AutomatableParameter::ModifierAssignment* LFOModifier::createAssignment (const ValueTree& v)
 {
     return new Assignment (v, *this);
-}
-
-AudioNode* LFOModifier::createPreFXAudioNode (AudioNode* an)
-{
-    return new ModifierAudioNode (an, *this);
 }
 
 void LFOModifier::applyToBuffer (const PluginRenderContext& prc)

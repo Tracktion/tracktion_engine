@@ -112,14 +112,7 @@ private:
     void initialisePlugin()
     {
         // N.B. This is deliberately zeroed as it (correctly) assumes the LevelMeterPlugin doesn't need the info during initialisation
-        // This should dissapear once Plugin removes its dependency on tracktion_engine::PlaybackInitialisationInfo
-        tracktion_engine::PlayHead enginePlayHead;
-        tracktion_engine::PlaybackInitialisationInfo teInfo =
-        {
-            0.0, 0.0, 0, {}, enginePlayHead
-        };
-
-        meterPlugin.baseClassInitialise (teInfo);
+        meterPlugin.baseClassInitialise ({ 0.0, 0.0, 0 });
         isInitialised = true;
     }
     

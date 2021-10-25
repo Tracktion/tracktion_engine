@@ -43,7 +43,7 @@ private:
 
     void update() noexcept
     {
-        coefficient = 1.0f - std::exp (-2.0f * float_Pi * 100.0f / sampleRate);
+        coefficient = 1.0f - std::exp (-2.0f * juce::MathConstants<float>::pi * 100.0f / sampleRate);
         state = 0.0f;
     }
 };
@@ -214,39 +214,6 @@ protected:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EnvelopeFollower)
 };
 
-//==============================================================================
-struct EnvelopeFollowerModifier::EnvelopeFollowerModifierAudioNode  : public SingleInputAudioNode
-{
-    EnvelopeFollowerModifierAudioNode (AudioNode* source, EnvelopeFollowerModifier& efm)
-        : SingleInputAudioNode (source),
-          envelopeFollowerModifier (&efm)
-    {
-    }
-
-    bool purgeSubNodes (bool keepAudio, bool keepMidi) override
-    {
-        return keepAudio || SingleInputAudioNode::purgeSubNodes (keepAudio, keepMidi);
-    }
-
-    void prepareAudioNodeToPlay (const PlaybackInitialisationInfo& info) override
-    {
-        SingleInputAudioNode::prepareAudioNodeToPlay (info);
-        envelopeFollowerModifier->baseClassInitialise (info.sampleRate, info.blockSizeSamples);
-    }
-
-    void renderOver (const AudioRenderContext& rc) override
-    {
-        SingleInputAudioNode::renderOver (rc);
-        envelopeFollowerModifier->applyToBuffer (rc);
-    }
-
-    void renderAdding (const AudioRenderContext& rc) override
-    {
-        callRenderOver (rc);
-    }
-
-    EnvelopeFollowerModifier::Ptr envelopeFollowerModifier;
-};
 
 //==============================================================================
 EnvelopeFollowerModifier::EnvelopeFollowerModifier (Edit& e, const ValueTree& v)
@@ -292,8 +259,8 @@ EnvelopeFollowerModifier::EnvelopeFollowerModifier (Edit& e, const ValueTree& v)
     releaseParam            = addParam          ("release",             TRANS("Release"),               { 1.0f, 5000.0f }, 50.0f,           release,            "ms");
     depthParam              = addParam          ("depth",               TRANS("Depth"),                 { -1.0f, 1.0f }, 0.0f,              depth,              {});
     offsetParam             = addParam          ("offset",              TRANS("Offset"),                { 0.0f, 1.0f }, 0.5f,               offset,             {});
-    lowPassEnabledParam     = addDiscreteParam  ("lowPassEnabled",      TRANS("Low-pass Enabled"),      { 0.0f, 1.0f },                     lowPassEnabled,     getEnabledNames());
-    highPassEnabledParam    = addDiscreteParam  ("highPassEnabled",     TRANS("High-pass Enabled"),     { 0.0f, 1.0f },                     highPassEnabled,    getEnabledNames());
+    lowPassEnabledParam     = addDiscreteParam  ("lowPassEnabled",      TRANS("Low-pass Enabled"),      { 0.0f, 1.0f },                     lowPassEnabled,     modifier::getEnabledNames());
+    highPassEnabledParam    = addDiscreteParam  ("highPassEnabled",     TRANS("High-pass Enabled"),     { 0.0f, 1.0f },                     highPassEnabled,    modifier::getEnabledNames());
     lowPassFrequencyParam   = addParam          ("lowPassFrequency",    TRANS("Low-pass Frequency"),    freqRange, 700.0f,                  lowPassFrequency,   "Hz");
     highPassFrequencyParam  = addParam          ("highPassFrequency",   TRANS("High-pass Frequency"),   freqRange, 700.0f,                  highPassFrequency,  "Hz");
 
@@ -335,11 +302,6 @@ StringArray EnvelopeFollowerModifier::getAudioInputNames()
     return { TRANS("Audio input left"), TRANS("Audio input right") };
 }
 
-AudioNode* EnvelopeFollowerModifier::createPostFXAudioNode (AudioNode* an)
-{
-    return new EnvelopeFollowerModifierAudioNode (an, *this);
-}
-
 void EnvelopeFollowerModifier::initialise (double newSampleRate, int)
 {
     prepareToPlay (newSampleRate);
@@ -352,6 +314,8 @@ void EnvelopeFollowerModifier::deinitialise()
 
 void EnvelopeFollowerModifier::applyToBuffer (const PluginRenderContext& pc)
 {
+    setEditTime (pc.editTime);
+    
     if (pc.destBuffer == nullptr)
         return;
 

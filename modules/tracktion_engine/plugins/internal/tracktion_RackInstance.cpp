@@ -285,7 +285,7 @@ void RackInstance::setOutputName (Channel c, const String& outputName)
     }
 }
 
-void RackInstance::initialise (const PlaybackInitialisationInfo& info)
+void RackInstance::initialise (const PluginInitialisationInfo& info)
 {
     if (type != nullptr)
         type->registerInstance (this, info);
@@ -293,32 +293,13 @@ void RackInstance::initialise (const PlaybackInitialisationInfo& info)
     initialiseWithoutStopping (info);
 }
 
-void RackInstance::initialiseWithoutStopping (const PlaybackInitialisationInfo& info)
+void RackInstance::initialiseWithoutStopping (const PluginInitialisationInfo&)
 {
-    auto latencySeconds = getLatencySeconds();
-    
-    if (latencySeconds > 0.0)
-    {
-        delaySize = roundToInt (latencySeconds * sampleRate);
-        delayBuffer.setSize (2, delaySize);
-        delayBuffer.clear();
-    }
-    else
-    {
-        delaySize = 0;
-        delayBuffer.setSize (1, 64);
-    }
-
-    delayPos = 0;
-
     const float wet = wetGain->getCurrentValue();
     lastLeftIn   = dbToGain (leftInDb->getCurrentValue());
     lastRightIn  = dbToGain (linkInputs ? leftInDb->getCurrentValue() : rightInDb->getCurrentValue());
     lastLeftOut  = wet * dbToGain (leftOutDb->getCurrentValue());
     lastRightOut = wet * dbToGain (linkOutputs ? leftOutDb->getCurrentValue() : rightOutDb->getCurrentValue());
-
-    if (type != nullptr)
-        type->initialisePluginsIfNeeded (info);
 }
 
 void RackInstance::deinitialise()
@@ -337,45 +318,15 @@ void RackInstance::updateAutomatableParamPosition (double time)
 
 double RackInstance::getLatencySeconds()
 {
-    if (type != nullptr)
-        return type->getLatencySeconds (sampleRate, blockSizeSamples);
-
     return 0.0;
 }
 
 void RackInstance::prepareForNextBlock (double)
 {
-    if (type != nullptr)
-        type->newBlockStarted();
 }
 
-void RackInstance::applyToBuffer (const PluginRenderContext& fc)
+void RackInstance::applyToBuffer (const PluginRenderContext&)
 {
-    const float wet = wetGain->getCurrentValue();
-
-    if (type != nullptr)
-    {
-        SCOPED_REALTIME_CHECK
-
-        float leftIn   = dbToGain (leftInDb->getCurrentValue());
-        float rightIn  = dbToGain (linkInputs ? leftInDb->getCurrentValue() : rightInDb->getCurrentValue());
-        float leftOut  = wet * dbToGain (leftOutDb->getCurrentValue());
-        float rightOut = wet * dbToGain (linkOutputs ? leftOutDb->getCurrentValue() : rightOutDb->getCurrentValue());
-
-        type->process (fc,
-                       leftInputGoesTo,      lastLeftIn,   leftIn,
-                       rightInputGoesTo,     lastRightIn,  rightIn,
-                       leftOutputComesFrom,  lastLeftOut,  leftOut,
-                       rightOutputComesFrom, lastRightOut, rightOut,
-                       dryGain->getCurrentValue(),
-                       (delaySize > 0) ? &delayBuffer : nullptr,
-                       delayPos);
-
-        lastLeftIn  = leftIn;
-        lastRightIn  = rightIn;
-        lastLeftOut  = leftOut;
-        lastRightOut = rightOut;
-    }
 }
 
 juce::String RackInstance::getSelectableDescription()

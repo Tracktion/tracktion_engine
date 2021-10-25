@@ -224,7 +224,7 @@ void MidiNode::createMessagesForTime (double time, MidiMessageArray& buffer)
             controllerMessagesScratchBuffer.clearQuick();
 
             for (int i = channelNumbers.getStart(); i <= channelNumbers.getEnd(); ++i)
-            ms[currentSequence].createControllerUpdatesForTime (i, time, controllerMessagesScratchBuffer);
+                ms[currentSequence].createControllerUpdatesForTime (i, time, controllerMessagesScratchBuffer);
 
             for (auto& m : controllerMessagesScratchBuffer)
                 buffer.addMidiMessage (m, midiSourceID);

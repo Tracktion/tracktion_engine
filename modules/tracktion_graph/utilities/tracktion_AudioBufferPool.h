@@ -76,6 +76,9 @@ public:
     /** Sets the maximum number of buffers this can store. */
     void setCapacity (size_t);
 
+    /** Returns the current maximum number of buffers this can store. */
+    size_t getCapacity() const                      { return capacity; }
+
     /** Reserves a number of buffers of a given size, preallocating them. */
     void reserve (size_t numBuffers, choc::buffer::Size);
 
@@ -92,8 +95,8 @@ public:
     size_t getAllocatedSize();
 
 private:
-//ddd    moodycamel::ConcurrentQueue<choc::buffer::ChannelArrayBuffer<float>> fifo;
     std::unique_ptr<farbot::fifo<choc::buffer::ChannelArrayBuffer<float>>> fifo;
+    size_t capacity = 0;
 };
 
 
@@ -141,7 +144,13 @@ inline bool AudioBufferPool::release (choc::buffer::ChannelArrayBuffer<float>&& 
 //==============================================================================
 inline void  AudioBufferPool::setCapacity (size_t maxCapacity)
 {
+    maxCapacity = (size_t) juce::nextPowerOfTwo ((int) maxCapacity);
+    
+    if (maxCapacity <= capacity)
+        return;
+    
     fifo = std::make_unique<farbot::fifo<choc::buffer::ChannelArrayBuffer<float>>> ((int) maxCapacity);
+    capacity = maxCapacity;
 }
 
 inline void AudioBufferPool::reserve (size_t numBuffers, choc::buffer::Size size)
@@ -172,7 +181,6 @@ inline void AudioBufferPool::reserve (size_t numBuffers, choc::buffer::Size size
     
     // Reset the fifo storage to hold the new number of buffers
     const int numToAdd = static_cast<int> (numBuffers) - static_cast<int> (buffers.size());
-    assert (numToAdd >= 0);
 
     // Push the temp buffers back
     for (auto& b : buffers)

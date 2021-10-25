@@ -34,8 +34,8 @@ public:
     int getNumOutputChannelsGivenInputs (int numInputChannels) override     { return juce::jmin (numInputChannels, 2); }
 
     juce::String getSelectableDescription() override                        { return TRANS("Level Meter Plugin"); }
-    void initialise (const PlaybackInitialisationInfo&) override;
-    void initialiseWithoutStopping (const PlaybackInitialisationInfo&) override;
+    void initialise (const PluginInitialisationInfo&) override;
+    void initialiseWithoutStopping (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;
     void timerCallback() override;

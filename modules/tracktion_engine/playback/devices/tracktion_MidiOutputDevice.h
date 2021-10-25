@@ -114,8 +114,8 @@ protected:
 class SoftwareMidiOutputDevice  : public MidiOutputDevice
 {
 public:
-    SoftwareMidiOutputDevice (Engine& e, const juce::String& name)
-        : MidiOutputDevice (e, name, -1)
+    SoftwareMidiOutputDevice (Engine& e, const juce::String& deviceName)
+        : MidiOutputDevice (e, deviceName, -1)
     {
         softDevice = true;
     }
@@ -135,12 +135,9 @@ public:
 
     MidiOutputDevice& getMidiOutput() const noexcept     { return static_cast<MidiOutputDevice&> (owner); }
 
-    void renderBlock (PlayHead&, EditTimeRange streamTime, int blockSize);
     void mergeInMidiMessages (const MidiMessageArray&, double editTime);
     void addMidiClockMessagesToCurrentBlock (bool isPlaying, bool isDragging, EditTimeRange streamTime);
     MidiMessageArray& getPendingMessages() { return midiMessages; }
-
-    MidiMessageArray& refillBuffer (PlayHead&, EditTimeRange streamTime, int blockSize);
 
     // For MidiOutputDevices that aren't connected to a physical piece of hardware,
     // they should handle sending midi messages to their logical device now

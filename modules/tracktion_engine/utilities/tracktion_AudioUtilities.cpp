@@ -243,7 +243,7 @@ void getGainsFromVolumeFaderPositionAndPan (float volSliderPos, float pan, const
     }
     else
     {
-        const float halfPi = juce::float_Pi * 0.5f;
+        const float halfPi = juce::MathConstants<float>::pi * 0.5f;
 
         pan = (pan + 1.0f) * 0.5f; // Scale to range (0.0f, 1.0f) from (-1.0f, 1.0f) for simplicity
 

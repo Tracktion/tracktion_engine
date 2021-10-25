@@ -27,6 +27,9 @@ public:
     Engine (std::unique_ptr<PropertyStorage>, std::unique_ptr<UIBehaviour>, std::unique_ptr<EngineBehaviour>);
     ~Engine();
 
+    /** Returns the current version of Tracktion Engine. */
+    static juce::String getVersion();
+
    #if TRACKTION_ENABLE_SINGLETONS
     // Do not use in new projects
     static Engine& getInstance();

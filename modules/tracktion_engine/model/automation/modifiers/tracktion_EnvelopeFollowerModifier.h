@@ -34,7 +34,6 @@ public:
     AutomatableParameter::ModifierAssignment* createAssignment (const juce::ValueTree&) override;
 
     juce::StringArray getAudioInputNames() override;
-    AudioNode* createPostFXAudioNode (AudioNode*) override;
     ProcessingPosition getProcessingPosition() override { return ProcessingPosition::postFX; }
 
     void initialise (double sampleRate, int blockSizeSamples) override;
@@ -64,7 +63,6 @@ public:
 
 private:
     class EnvelopeFollower;
-    struct EnvelopeFollowerModifierAudioNode;
 
     std::atomic<float> envelopeValue;
     std::unique_ptr<EnvelopeFollower> envelopeFollower;

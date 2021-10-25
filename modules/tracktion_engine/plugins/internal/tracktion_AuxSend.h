@@ -27,8 +27,7 @@ public:
     int getBusNumber() const                { return busNumber; }
     juce::String getBusName();
 
-    enum { maxNumBusses = 32 };
-    static juce::StringArray getBusNames (Edit&);
+    static juce::StringArray getBusNames (Edit&, int maxNumBusses);
     static juce::String getDefaultBusName (int busIndex);
 
     //==============================================================================
@@ -40,8 +39,8 @@ public:
     juce::String getPluginType() override           { return xmlTypeName; }
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }
-    void initialise (const PlaybackInitialisationInfo&) override;
-    void initialiseWithoutStopping (const PlaybackInitialisationInfo&) override;
+    void initialise (const PluginInitialisationInfo&) override;
+    void initialiseWithoutStopping (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;
 
@@ -50,7 +49,6 @@ public:
     bool takesAudioInput() override                  { return true; }
     bool canBeAddedToClip() override                 { return false; }
     bool canBeAddedToRack() override                 { return false; }
-    double getLatencySeconds() override              { return latencySeconds; }
     bool needsConstantBufferSize() override          { return true; }
 
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
@@ -63,11 +61,8 @@ public:
 private:
     bool shouldProcess();
     //==============================================================================
-    juce::Array<AuxReturnPlugin*> allAuxReturns;
     juce::CachedValue<float> lastVolumeBeforeMute;
     float lastGain = 1.0f;
-    juce::AudioBuffer<float> delayBuffer { 2, 32 };
-    double latencySeconds = 0.0;
     Track* ownerTrack = nullptr;
 
     //==============================================================================

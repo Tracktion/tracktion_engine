@@ -52,8 +52,8 @@ public:
     juce::String getSelectableDescription() override        { return getName(); }
     bool needsConstantBufferSize() override                 { return false; }
 
-    void initialise (const PlaybackInitialisationInfo&) override;
-    void initialiseWithoutStopping (const PlaybackInitialisationInfo&) override;
+    void initialise (const PluginInitialisationInfo&) override;
+    void initialiseWithoutStopping (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;
     int getNumOutputChannelsGivenInputs (int numInputs) override    { return juce::jmax (2, numInputs); }

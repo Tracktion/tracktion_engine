@@ -497,7 +497,7 @@ bool RecordingClipComponent::getBoundsAndTime (Rectangle<int>& bounds, Range<dou
     bool hasLooped = false;
     auto& edit = track->edit;
     
-    if (auto* playhead = edit.getTransport().getCurrentPlayhead())
+    if (auto epc = edit.getTransport().getCurrentPlaybackContext())
     {
         auto localBounds = getLocalBounds();
         
@@ -507,12 +507,12 @@ bool RecordingClipComponent::getBoundsAndTime (Rectangle<int>& bounds, Range<dou
         auto t1 = timeStarted;
         auto t2 = unloopedPos;
         
-        if (playhead->isLooping() && t2 >= playhead->getLoopTimes().end)
+        if (epc->isLooping() && t2 >= epc->getLoopTimes().end)
         {
             hasLooped = true;
             
-            t1 = jmin (t1, playhead->getLoopTimes().start);
-            t2 = playhead->getPosition();
+            t1 = jmin (t1, epc->getLoopTimes().start);
+            t2 = epc->getPosition();
             
             t1 = jmax (editViewState.viewX1.get(), t1);
             t2 = jmin (editViewState.viewX2.get(), t2);
@@ -529,8 +529,8 @@ bool RecordingClipComponent::getBoundsAndTime (Rectangle<int>& bounds, Range<dou
         bounds = localBounds.withX (jmax (localBounds.getX(), editTimeToX (t1)))
                  .withRight (jmin (localBounds.getRight(), editTimeToX (t2)));
         
-        auto loopRange = playhead->getLoopTimes();
-        const double recordedTime = unloopedPos - playhead->getLoopTimes().start;
+        auto loopRange = epc->getLoopTimes();
+        const double recordedTime = unloopedPos - epc->getLoopTimes().start;
         const int numLoops = (int) (recordedTime / loopRange.getLength());
         
         const Range<double> editTimes (xToEditTime (bounds.getX()),
@@ -551,14 +551,14 @@ void RecordingClipComponent::updatePosition()
 {
     auto& edit = track->edit;
     
-    if (auto playhead = edit.getTransport().getCurrentPlayhead())
+    if (auto epc = edit.getTransport().getCurrentPlaybackContext())
     {
         double t1 = punchInTime >= 0 ? punchInTime : edit.getTransport().getTimeWhenStarted();
-        double t2 = jmax (t1, playhead->getUnloopedPosition());
+        double t2 = jmax (t1, epc->getUnloopedPosition());
         
-        if (playhead->isLooping())
+        if (epc->isLooping())
         {
-            auto loopTimes = playhead->getLoopTimes();
+            auto loopTimes = epc->getLoopTimes();
             
             if (t2 >= loopTimes.end)
             {

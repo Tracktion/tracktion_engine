@@ -11,9 +11,9 @@
 namespace tracktion_engine
 {
 
-/** An AudioNode that mixes a sequence of clips of other nodes.
+/** An Node that mixes a sequence of clips of other nodes.
 
-    This node takes a set of input AudioNodes with associated start + end times,
+    This node takes a set of input Nodes with associated start + end times,
     and mixes together their output.
 
     It initialises and releases its inputs as required according to its current
