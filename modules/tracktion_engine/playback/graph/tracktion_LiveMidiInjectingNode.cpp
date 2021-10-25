@@ -102,7 +102,7 @@ void LiveMidiInjectingNode::injectMessage (MidiMessageArray::MidiMessageWithSour
 //==============================================================================
 void LiveMidiInjectingNode::injectLiveMidiMessage (AudioTrack& at, const MidiMessageArray::MidiMessageWithSource& mm, bool& wasUsed)
 {
-    if (&at != track)
+    if (&at != track.get())
         return;
 
     injectMessage (mm);
