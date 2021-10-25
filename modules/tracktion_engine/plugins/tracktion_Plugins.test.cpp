@@ -52,12 +52,12 @@ public:
                 }
             }
 
-            expectPeak (*edit, { 0.0, 1.0 }, { track1 }, 2.0f);
+            expectPeak (*edit, { 0.0, 1.0 }, { track1, track2 }, 2.0f);
 
             // Set end to 0.5s for volume off
             track1->getClips()[0]->setPosition ({{ 0.0, 0.5 }});
-            expectPeak (*edit, { 0.0, 0.5 }, { track1 }, 2.0f);
-            expectPeak (*edit, { 0.5, 1.0 }, { track1 }, 1.0f);
+            expectPeak (*edit, { 0.0, 0.5 }, { track1, track2 }, 2.0f);
+            expectPeak (*edit, { 0.5, 1.0 }, { track1, track2 }, 1.0f);
 
             engine.getAudioFileManager().releaseAllFiles();
             edit->getTempDirectory (false).deleteRecursively();
