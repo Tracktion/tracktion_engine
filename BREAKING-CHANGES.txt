@@ -6,6 +6,28 @@ Develop
 
 Change
 ------
+The old AudioNode based engine has been replaced by a new tracktion_graph based engine.
+
+Possible Issues
+---------------
+Some classes will no longer be publicly available such as PlayHead, AudioNode nodes etc.
+
+Workaround
+----------
+You'll have to update your code to use the new APIs. In most cases this shouldn't be a
+problem as this is a move to remove the public nature of the engine, the higher level APIs
+that you are using should stay the same. Some arguments to classes such as Plugin have
+changed to remove dependancy on playback specific classed.
+If you really need to use the old engine, see the archive/old_engine branch.
+
+Rationale
+---------
+The move to the new engine greatly improves CPU performance, especially with multiple
+threads and fixes PDC in a lot of obscure cases such as track to track routing and bussing.
+
+
+Change
+------
 The PluginWindowConnection class has been removed to simplify the process of
 creating plugin windows and connecting them to a PluginWindowState.
 
