@@ -86,10 +86,10 @@ Inheritance diagram for tracktion_engine::Renderer::RenderTask:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a126e0a2bd337899944871b6c4465a617"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Renderer_1_1RenderTask.html#a126e0a2bd337899944871b6c4465a617">RenderTask</a> (const juce::String &amp;taskDescription, const <a class="el" href="structtracktion__engine_1_1Renderer_1_1Parameters.html">Renderer::Parameters</a> &amp;, <a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *)</td></tr>
-<tr class="separator:a126e0a2bd337899944871b6c4465a617"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a893093bb0b7324c0aeb7ad1e69cb27f1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Renderer_1_1RenderTask.html#a893093bb0b7324c0aeb7ad1e69cb27f1">RenderTask</a> (const juce::String &amp;taskDescription, const <a class="el" href="structtracktion__engine_1_1Renderer_1_1Parameters.html">Renderer::Parameters</a> &amp;, <a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *, std::atomic&lt; float &gt; &amp;progressToUpdate, juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver *)</td></tr>
-<tr class="separator:a893093bb0b7324c0aeb7ad1e69cb27f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a903f90a47c77b62f4b8b5c4f9a091c86"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Renderer_1_1RenderTask.html#a903f90a47c77b62f4b8b5c4f9a091c86">RenderTask</a> (const juce::String &amp;taskDescription, const <a class="el" href="structtracktion__engine_1_1Renderer_1_1Parameters.html">Renderer::Parameters</a> &amp;, std::atomic&lt; float &gt; *progressToUpdate, juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver *)</td></tr>
+<tr class="separator:a903f90a47c77b62f4b8b5c4f9a091c86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a809ccd8a05c055d4402a6138c513e9e3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Renderer_1_1RenderTask.html#a809ccd8a05c055d4402a6138c513e9e3">RenderTask</a> (const juce::String &amp;taskDescription, const <a class="el" href="structtracktion__engine_1_1Renderer_1_1Parameters.html">Renderer::Parameters</a> &amp;, std::unique_ptr&lt; <a class="el" href="classtracktion__graph_1_1Node.html">tracktion_graph::Node</a> &gt;, std::unique_ptr&lt; <a class="el" href="classtracktion__graph_1_1PlayHead.html">tracktion_graph::PlayHead</a> &gt;, std::unique_ptr&lt; <a class="el" href="classtracktion__graph_1_1PlayHeadState.html">tracktion_graph::PlayHeadState</a> &gt;, std::unique_ptr&lt; <a class="el" href="structtracktion__engine_1_1ProcessState.html">ProcessState</a> &gt;, std::atomic&lt; float &gt; *progressToUpdate, juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver *)</td></tr>
+<tr class="separator:a809ccd8a05c055d4402a6138c513e9e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ef8158c6d58bb6e874cc8fc6cebf4dc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Renderer_1_1RenderTask.html#a6ef8158c6d58bb6e874cc8fc6cebf4dc">~RenderTask</a> () override</td></tr>
 <tr class="separator:a6ef8158c6d58bb6e874cc8fc6cebf4dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a849b40a428b7d8af776926ab54be15ed"><td class="memItemLeft" align="right" valign="top">JobStatus&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Renderer_1_1RenderTask.html#a849b40a428b7d8af776926ab54be15ed">runJob</a> () override</td></tr>
@@ -134,8 +134,8 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><p>Task that actually performs the render operation in blocks. </p>
 <p>You should continually call the runJob method until it returns jobHasFinished. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a126e0a2bd337899944871b6c4465a617"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a126e0a2bd337899944871b6c4465a617">&#9670;&nbsp;</a></span>RenderTask() <span class="overload">[1/2]</span></h2>
+<a id="a903f90a47c77b62f4b8b5c4f9a091c86"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a903f90a47c77b62f4b8b5c4f9a091c86">&#9670;&nbsp;</a></span>RenderTask() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -155,7 +155,13 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *&#160;</td>
+          <td class="paramtype">std::atomic&lt; float &gt; *&#160;</td>
+          <td class="paramname"><em>progressToUpdate</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver *&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -168,8 +174,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a893093bb0b7324c0aeb7ad1e69cb27f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a893093bb0b7324c0aeb7ad1e69cb27f1">&#9670;&nbsp;</a></span>RenderTask() <span class="overload">[2/2]</span></h2>
+<a id="a809ccd8a05c055d4402a6138c513e9e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a809ccd8a05c055d4402a6138c513e9e3">&#9670;&nbsp;</a></span>RenderTask() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -189,13 +195,31 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *&#160;</td>
+          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classtracktion__graph_1_1Node.html">tracktion_graph::Node</a> &gt;&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::atomic&lt; float &gt; &amp;&#160;</td>
+          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classtracktion__graph_1_1PlayHead.html">tracktion_graph::PlayHead</a> &gt;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classtracktion__graph_1_1PlayHeadState.html">tracktion_graph::PlayHeadState</a> &gt;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="structtracktion__engine_1_1ProcessState.html">ProcessState</a> &gt;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::atomic&lt; float &gt; *&#160;</td>
           <td class="paramname"><em>progressToUpdate</em>, </td>
         </tr>
         <tr>
@@ -475,7 +499,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 10 2021 09:52:55 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 25 2021 13:15:30 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

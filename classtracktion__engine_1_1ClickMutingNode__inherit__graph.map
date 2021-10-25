@@ -1,5 +1,0 @@
-<map id="tracktion_engine::ClickMutingNode" name="tracktion_engine::ClickMutingNode">
-<area shape="rect" id="node1" title="An AudioNode mutes an input click audio node within a given range or if disabled in the Edit." alt="" coords="5,169,256,196"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1SingleInputAudioNode.html" title=" " alt="" coords="41,80,220,121"/>
-<area shape="rect" id="node3" href="$classtracktion__engine_1_1AudioNode.html" title="Base class for nodes in an audio playback graph." alt="" coords="25,5,236,32"/>
-</map>

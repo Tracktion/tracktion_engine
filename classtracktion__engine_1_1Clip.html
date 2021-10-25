@@ -99,6 +99,7 @@ Public Types</h2></td></tr>
 <tr class="memitem:acd9203fe7f0840fbb358f85c97c89ef5"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#acd9203fe7f0840fbb358f85c97c89ef5">SyncType</a> { <a class="el" href="classtracktion__engine_1_1Clip.html#acd9203fe7f0840fbb358f85c97c89ef5aec728062fbf735c9023117874216fe04">syncBarsBeats</a> = 0, 
 <a class="el" href="classtracktion__engine_1_1Clip.html#acd9203fe7f0840fbb358f85c97c89ef5abb3731f916226518ed4207527e4af41e">syncAbsolute</a>
  }</td></tr>
+<tr class="memdesc:acd9203fe7f0840fbb358f85c97c89ef5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines the clip sync type.  <a href="classtracktion__engine_1_1Clip.html#acd9203fe7f0840fbb358f85c97c89ef5">More...</a><br /></td></tr>
 <tr class="separator:acd9203fe7f0840fbb358f85c97c89ef5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a290bbefa21e3e334a3f7d5f7724f19af"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a290bbefa21e3e334a3f7d5f7724f19af">Ptr</a> = juce::ReferenceCountedObjectPtr&lt; <a class="el" href="classtracktion__engine_1_1Clip.html">Clip</a> &gt;</td></tr>
 <tr class="separator:a290bbefa21e3e334a3f7d5f7724f19af"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -133,28 +134,37 @@ Public Types</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a1ad0a10562aa4ba58b99964ab8bc1588"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a1ad0a10562aa4ba58b99964ab8bc1588">Clip</a> (const juce::ValueTree &amp;, <a class="el" href="classtracktion__engine_1_1ClipTrack.html">ClipTrack</a> &amp;, <a class="el" href="structtracktion__engine_1_1EditItemID.html">EditItemID</a>, <a class="el" href="classtracktion__engine_1_1TrackItem.html#a3f25eeb14a154b5ca7f8887494fa564f">Type</a>)</td></tr>
+<tr class="memdesc:a1ad0a10562aa4ba58b99964ab8bc1588"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a clip of a given type from a ValueTree state.  <a href="classtracktion__engine_1_1Clip.html#a1ad0a10562aa4ba58b99964ab8bc1588">More...</a><br /></td></tr>
 <tr class="separator:a1ad0a10562aa4ba58b99964ab8bc1588"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d25899dfd5a690bf6a23ffbb77e382a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a0d25899dfd5a690bf6a23ffbb77e382a">~Clip</a> () override</td></tr>
+<tr class="memdesc:a0d25899dfd5a690bf6a23ffbb77e382a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="classtracktion__engine_1_1Clip.html#a0d25899dfd5a690bf6a23ffbb77e382a">More...</a><br /></td></tr>
 <tr class="separator:a0d25899dfd5a690bf6a23ffbb77e382a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6f91ccab3abd995ac741bfc0d488eba"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#aa6f91ccab3abd995ac741bfc0d488eba">initialise</a> ()</td></tr>
+<tr class="memdesc:aa6f91ccab3abd995ac741bfc0d488eba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialises the <a class="el" href="classtracktion__engine_1_1Clip.html" title="A clip in an edit.">Clip</a>.  <a href="classtracktion__engine_1_1Clip.html#aa6f91ccab3abd995ac741bfc0d488eba">More...</a><br /></td></tr>
 <tr class="separator:aa6f91ccab3abd995ac741bfc0d488eba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2f013d4093654e37a962e1dbbf0caeaf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a2f013d4093654e37a962e1dbbf0caeaf">flushStateToValueTree</a> ()</td></tr>
+<tr class="memdesc:a2f013d4093654e37a962e1dbbf0caeaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can be overridden to ensure any state (e.g.  <a href="classtracktion__engine_1_1Clip.html#a2f013d4093654e37a962e1dbbf0caeaf">More...</a><br /></td></tr>
 <tr class="separator:a2f013d4093654e37a962e1dbbf0caeaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ec8f1dea0a7620dc0578b36f9dc5d99"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a9ec8f1dea0a7620dc0578b36f9dc5d99">sourceMediaChanged</a> ()</td></tr>
-<tr class="memdesc:a9ec8f1dea0a7620dc0578b36f9dc5d99"><td class="mdescLeft">&#160;</td><td class="mdescRight">this is called when the source media file reference (attribute "source") has changed - i.e.  <a href="classtracktion__engine_1_1Clip.html#a9ec8f1dea0a7620dc0578b36f9dc5d99">More...</a><br /></td></tr>
+<tr class="memdesc:a9ec8f1dea0a7620dc0578b36f9dc5d99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the source media file reference (attribute "source") has changed - i.e.  <a href="classtracktion__engine_1_1Clip.html#a9ec8f1dea0a7620dc0578b36f9dc5d99">More...</a><br /></td></tr>
 <tr class="separator:a9ec8f1dea0a7620dc0578b36f9dc5d99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af11afbbcfa86baa975cb151b90462b3e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#af11afbbcfa86baa975cb151b90462b3e">pitchTempoTrackChanged</a> ()</td></tr>
+<tr class="memdesc:af11afbbcfa86baa975cb151b90462b3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when there are pitch or tempo changes made which might require clips to adjust timing information.  <a href="classtracktion__engine_1_1Clip.html#af11afbbcfa86baa975cb151b90462b3e">More...</a><br /></td></tr>
 <tr class="separator:af11afbbcfa86baa975cb151b90462b3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c5bc3c145eac2bfc9aa8830be3fb0a7"><td class="memItemLeft" align="right" valign="top">virtual juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a6c5bc3c145eac2bfc9aa8830be3fb0a7">getName</a> () override</td></tr>
+<tr class="memdesc:a6c5bc3c145eac2bfc9aa8830be3fb0a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the name of the clip.  <a href="classtracktion__engine_1_1Clip.html#a6c5bc3c145eac2bfc9aa8830be3fb0a7">More...</a><br /></td></tr>
 <tr class="separator:a6c5bc3c145eac2bfc9aa8830be3fb0a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab820a2ae2763b22304e5cfb17bb558a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ab820a2ae2763b22304e5cfb17bb558a0">setName</a> (const juce::String &amp;newName)</td></tr>
+<tr class="memdesc:ab820a2ae2763b22304e5cfb17bb558a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a new name for a clip.  <a href="classtracktion__engine_1_1Clip.html#ab820a2ae2763b22304e5cfb17bb558a0">More...</a><br /></td></tr>
 <tr class="separator:ab820a2ae2763b22304e5cfb17bb558a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace877f05102b204a3438b14a4a20289d"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ace877f05102b204a3438b14a4a20289d">isMidi</a> () const =0</td></tr>
+<tr class="memdesc:ace877f05102b204a3438b14a4a20289d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this is a <a class="el" href="classtracktion__engine_1_1MidiClip.html">MidiClip</a>.  <a href="classtracktion__engine_1_1Clip.html#ace877f05102b204a3438b14a4a20289d">More...</a><br /></td></tr>
 <tr class="separator:ace877f05102b204a3438b14a4a20289d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf16260347582f366770dc456bc35df7"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#abf16260347582f366770dc456bc35df7">canGoOnTrack</a> (<a class="el" href="classtracktion__engine_1_1Track.html">Track</a> &amp;)=0</td></tr>
+<tr class="memdesc:abf16260347582f366770dc456bc35df7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests whether this clip can go on the given track.  <a href="classtracktion__engine_1_1Clip.html#abf16260347582f366770dc456bc35df7">More...</a><br /></td></tr>
 <tr class="separator:abf16260347582f366770dc456bc35df7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e1942e5c3b768449721e80073a76d2d"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a3e1942e5c3b768449721e80073a76d2d">usesSourceFile</a> ()</td></tr>
-<tr class="memdesc:a3e1942e5c3b768449721e80073a76d2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">true if it references a source file - i.e.  <a href="classtracktion__engine_1_1Clip.html#a3e1942e5c3b768449721e80073a76d2d">More...</a><br /></td></tr>
+<tr class="memdesc:a3e1942e5c3b768449721e80073a76d2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if it references a source file - i.e.  <a href="classtracktion__engine_1_1Clip.html#a3e1942e5c3b768449721e80073a76d2d">More...</a><br /></td></tr>
 <tr class="separator:a3e1942e5c3b768449721e80073a76d2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4567dd7afcc894891c40962b7f1f8f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1SourceFileReference.html">SourceFileReference</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#aa4567dd7afcc894891c40962b7f1f8f5">getSourceFileReference</a> ()</td></tr>
 <tr class="memdesc:aa4567dd7afcc894891c40962b7f1f8f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classtracktion__engine_1_1SourceFileReference.html" title="This class wraps a string that is generally held in a &#39;source&#39; property, and which is a reference to ...">SourceFileReference</a> of the <a class="el" href="classtracktion__engine_1_1Clip.html" title="A clip in an edit.">Clip</a>.  <a href="classtracktion__engine_1_1Clip.html#aa4567dd7afcc894891c40962b7f1f8f5">More...</a><br /></td></tr>
@@ -163,11 +173,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a43767e26a1b4c46f23e18fd400ac46ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current source file, this is different to the <a class="el" href="classtracktion__engine_1_1SourceFileReference.html" title="This class wraps a string that is generally held in a &#39;source&#39; property, and which is a reference to ...">SourceFileReference</a> as it could be a temporary comp file, clipFX, reverse render etc.  <a href="classtracktion__engine_1_1Clip.html#a43767e26a1b4c46f23e18fd400ac46ee">More...</a><br /></td></tr>
 <tr class="separator:a43767e26a1b4c46f23e18fd400ac46ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e75719d9781873de587bfa2ccf96e01"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="structtracktion__engine_1_1Exportable_1_1ReferencedItem.html">ReferencedItem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a4e75719d9781873de587bfa2ccf96e01">getReferencedItems</a> () override</td></tr>
+<tr class="memdesc:a4e75719d9781873de587bfa2ccf96e01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an array of any ReferencedItem[s] e.g.  <a href="classtracktion__engine_1_1Clip.html#a4e75719d9781873de587bfa2ccf96e01">More...</a><br /></td></tr>
 <tr class="separator:a4e75719d9781873de587bfa2ccf96e01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a009f43265ddf313e6aed9c15069dd8cc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a009f43265ddf313e6aed9c15069dd8cc">reassignReferencedItem</a> (const <a class="el" href="structtracktion__engine_1_1Exportable_1_1ReferencedItem.html">ReferencedItem</a> &amp;, <a class="el" href="classtracktion__engine_1_1ProjectItemID.html">ProjectItemID</a>, double) override</td></tr>
+<tr class="memdesc:a009f43265ddf313e6aed9c15069dd8cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should be implemented to change the underlying source to a new <a class="el" href="classtracktion__engine_1_1ProjectItemID.html" title="An ID representing one of the items in a Project.">ProjectItemID</a>.  <a href="classtracktion__engine_1_1Clip.html#a009f43265ddf313e6aed9c15069dd8cc">More...</a><br /></td></tr>
 <tr class="separator:a009f43265ddf313e6aed9c15069dd8cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4aa328b7053fa738e308e4c390eb8ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion__engine_1_1ClipPosition.html">ClipPosition</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#af4aa328b7053fa738e308e4c390eb8ae">getPosition</a> () const override</td></tr>
-<tr class="memdesc:af4aa328b7053fa738e308e4c390eb8ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Must return the position of this item.  <a href="classtracktion__engine_1_1Clip.html#af4aa328b7053fa738e308e4c390eb8ae">More...</a><br /></td></tr>
+<tr class="memdesc:af4aa328b7053fa738e308e4c390eb8ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="structtracktion__engine_1_1ClipPosition.html">ClipPosition</a> on the parent <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>.  <a href="classtracktion__engine_1_1Clip.html#af4aa328b7053fa738e308e4c390eb8ae">More...</a><br /></td></tr>
 <tr class="separator:af4aa328b7053fa738e308e4c390eb8ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61b3d8994e6b9ff30c524691ef3ea193"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a61b3d8994e6b9ff30c524691ef3ea193">getContentBeatAtTime</a> (double time) const</td></tr>
 <tr class="memdesc:a61b3d8994e6b9ff30c524691ef3ea193"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the beat number (with offset) at the given time.  <a href="classtracktion__engine_1_1Clip.html#a61b3d8994e6b9ff30c524691ef3ea193">More...</a><br /></td></tr>
@@ -176,135 +188,184 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:afc07f20fbc97bc298a1f478c1211baa7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns time of a beat number.  <a href="classtracktion__engine_1_1Clip.html#afc07f20fbc97bc298a1f478c1211baa7">More...</a><br /></td></tr>
 <tr class="separator:afc07f20fbc97bc298a1f478c1211baa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91d43f4096a58b4971d608ac66371e91"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a91d43f4096a58b4971d608ac66371e91">getMaximumLength</a> ()</td></tr>
+<tr class="memdesc:a91d43f4096a58b4971d608ac66371e91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the maximum lenght this clip can have.  <a href="classtracktion__engine_1_1Clip.html#a91d43f4096a58b4971d608ac66371e91">More...</a><br /></td></tr>
 <tr class="separator:a91d43f4096a58b4971d608ac66371e91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc6e49fd4ebb0d5e3bb7c467e99b449b"><td class="memItemLeft" align="right" valign="top">virtual juce::Array&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#afc6e49fd4ebb0d5e3bb7c467e99b449b">getInterestingTimes</a> ()</td></tr>
-<tr class="memdesc:afc6e49fd4ebb0d5e3bb7c467e99b449b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns times for snapping to, relative to the edit.  <a href="classtracktion__engine_1_1Clip.html#afc6e49fd4ebb0d5e3bb7c467e99b449b">More...</a><br /></td></tr>
+<tr class="memdesc:afc6e49fd4ebb0d5e3bb7c467e99b449b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns times for snapping to, relative to the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="classtracktion__engine_1_1Clip.html#afc6e49fd4ebb0d5e3bb7c467e99b449b">More...</a><br /></td></tr>
 <tr class="separator:afc6e49fd4ebb0d5e3bb7c467e99b449b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89d0262fd8bf7ab35aba704664138bac"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a89d0262fd8bf7ab35aba704664138bac">getSpottingPoint</a> () const</td></tr>
+<tr class="memdesc:a89d0262fd8bf7ab35aba704664138bac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the first marked time in the source file which can be used for syncronising newly added clips.  <a href="classtracktion__engine_1_1Clip.html#a89d0262fd8bf7ab35aba704664138bac">More...</a><br /></td></tr>
 <tr class="separator:a89d0262fd8bf7ab35aba704664138bac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e826ee09991ea5b690fd366ae4f49df"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a1e826ee09991ea5b690fd366ae4f49df">canLoop</a> () const</td></tr>
+<tr class="memdesc:a1e826ee09991ea5b690fd366ae4f49df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this clip is capable of looping.  <a href="classtracktion__engine_1_1Clip.html#a1e826ee09991ea5b690fd366ae4f49df">More...</a><br /></td></tr>
 <tr class="separator:a1e826ee09991ea5b690fd366ae4f49df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1979952546a6e8ac7da755f20a2e6d7c"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a1979952546a6e8ac7da755f20a2e6d7c">isLooping</a> () const</td></tr>
+<tr class="memdesc:a1979952546a6e8ac7da755f20a2e6d7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this clip is currently looping.  <a href="classtracktion__engine_1_1Clip.html#a1979952546a6e8ac7da755f20a2e6d7c">More...</a><br /></td></tr>
 <tr class="separator:a1979952546a6e8ac7da755f20a2e6d7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5de77f849808d824740f3811b2a1c685"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a5de77f849808d824740f3811b2a1c685">beatBasedLooping</a> () const</td></tr>
+<tr class="memdesc:a5de77f849808d824740f3811b2a1c685"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this clip's looping is based on beats or false if absolute time.  <a href="classtracktion__engine_1_1Clip.html#a5de77f849808d824740f3811b2a1c685">More...</a><br /></td></tr>
 <tr class="separator:a5de77f849808d824740f3811b2a1c685"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4476b2c85a8fe227cc2a0a7f7070c363"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a4476b2c85a8fe227cc2a0a7f7070c363">setNumberOfLoops</a> (int)</td></tr>
+<tr class="memdesc:a4476b2c85a8fe227cc2a0a7f7070c363"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the clip looping a number of times.  <a href="classtracktion__engine_1_1Clip.html#a4476b2c85a8fe227cc2a0a7f7070c363">More...</a><br /></td></tr>
 <tr class="separator:a4476b2c85a8fe227cc2a0a7f7070c363"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7cf83b64d26fc195b4117c7f7c39cef7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a7cf83b64d26fc195b4117c7f7c39cef7">disableLooping</a> ()</td></tr>
+<tr class="memdesc:a7cf83b64d26fc195b4117c7f7c39cef7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disables all looping.  <a href="classtracktion__engine_1_1Clip.html#a7cf83b64d26fc195b4117c7f7c39cef7">More...</a><br /></td></tr>
 <tr class="separator:a7cf83b64d26fc195b4117c7f7c39cef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94c2124a39e6b61ac33ccded83aebf07"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a94c2124a39e6b61ac33ccded83aebf07">getLoopStartBeats</a> () const</td></tr>
+<tr class="memdesc:a94c2124a39e6b61ac33ccded83aebf07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the beat position of the loop start point.  <a href="classtracktion__engine_1_1Clip.html#a94c2124a39e6b61ac33ccded83aebf07">More...</a><br /></td></tr>
 <tr class="separator:a94c2124a39e6b61ac33ccded83aebf07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2916fa4c24af16bf74e413d5c1bf616"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#af2916fa4c24af16bf74e413d5c1bf616">getLoopStart</a> () const</td></tr>
+<tr class="memdesc:af2916fa4c24af16bf74e413d5c1bf616"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the start time of the loop start point.  <a href="classtracktion__engine_1_1Clip.html#af2916fa4c24af16bf74e413d5c1bf616">More...</a><br /></td></tr>
 <tr class="separator:af2916fa4c24af16bf74e413d5c1bf616"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec84b3e2b996948013ef1b99a161e662"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#aec84b3e2b996948013ef1b99a161e662">getLoopLengthBeats</a> () const</td></tr>
+<tr class="memdesc:aec84b3e2b996948013ef1b99a161e662"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the length of loop in beats.  <a href="classtracktion__engine_1_1Clip.html#aec84b3e2b996948013ef1b99a161e662">More...</a><br /></td></tr>
 <tr class="separator:aec84b3e2b996948013ef1b99a161e662"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6524b3e95370175b9f9f1d10ab7d91b8"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a6524b3e95370175b9f9f1d10ab7d91b8">getLoopLength</a> () const</td></tr>
+<tr class="memdesc:a6524b3e95370175b9f9f1d10ab7d91b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the length of loop in seconds.  <a href="classtracktion__engine_1_1Clip.html#a6524b3e95370175b9f9f1d10ab7d91b8">More...</a><br /></td></tr>
 <tr class="separator:a6524b3e95370175b9f9f1d10ab7d91b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae84bdd5549954300d1f341c32a9b3a93"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ae84bdd5549954300d1f341c32a9b3a93">setLoopRange</a> (<a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> newLoopRange)</td></tr>
+<tr class="memdesc:ae84bdd5549954300d1f341c32a9b3a93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the loop range the clip should use in seconds.  <a href="classtracktion__engine_1_1Clip.html#ae84bdd5549954300d1f341c32a9b3a93">More...</a><br /></td></tr>
 <tr class="separator:ae84bdd5549954300d1f341c32a9b3a93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab056297fa0aa11209cc72a853b9bb7ed"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ab056297fa0aa11209cc72a853b9bb7ed">setLoopRangeBeats</a> (juce::Range&lt; double &gt; newBeatRange)</td></tr>
+<tr class="memdesc:ab056297fa0aa11209cc72a853b9bb7ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the loop range the clip should use in beats.  <a href="classtracktion__engine_1_1Clip.html#ab056297fa0aa11209cc72a853b9bb7ed">More...</a><br /></td></tr>
 <tr class="separator:ab056297fa0aa11209cc72a853b9bb7ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33664e44bc118f67a4edab02e0c099b3"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a33664e44bc118f67a4edab02e0c099b3">isMuted</a> () const =0</td></tr>
+<tr class="memdesc:a33664e44bc118f67a4edab02e0c099b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the clip is muted.  <a href="classtracktion__engine_1_1Clip.html#a33664e44bc118f67a4edab02e0c099b3">More...</a><br /></td></tr>
 <tr class="separator:a33664e44bc118f67a4edab02e0c099b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b0f73ca7edd65e8a8a984dbcc500181"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a9b0f73ca7edd65e8a8a984dbcc500181">setMuted</a> (bool)</td></tr>
+<tr class="memdesc:a9b0f73ca7edd65e8a8a984dbcc500181"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mutes or unmutes the clip.  <a href="classtracktion__engine_1_1Clip.html#a9b0f73ca7edd65e8a8a984dbcc500181">More...</a><br /></td></tr>
 <tr class="separator:a9b0f73ca7edd65e8a8a984dbcc500181"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2fe8e33275b0651f7fcb00bb7bcfd2c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ad2fe8e33275b0651f7fcb00bb7bcfd2c">setSyncType</a> (<a class="el" href="classtracktion__engine_1_1Clip.html#acd9203fe7f0840fbb358f85c97c89ef5">SyncType</a> sync)</td></tr>
+<tr class="memdesc:ad2fe8e33275b0651f7fcb00bb7bcfd2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the sync type for the clip.  <a href="classtracktion__engine_1_1Clip.html#ad2fe8e33275b0651f7fcb00bb7bcfd2c">More...</a><br /></td></tr>
 <tr class="separator:ad2fe8e33275b0651f7fcb00bb7bcfd2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d4259358faf0ba80fea1b891503e824"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1Clip.html#acd9203fe7f0840fbb358f85c97c89ef5">SyncType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a8d4259358faf0ba80fea1b891503e824">getSyncType</a> () const</td></tr>
+<tr class="memdesc:a8d4259358faf0ba80fea1b891503e824"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the sync type clip is using.  <a href="classtracktion__engine_1_1Clip.html#a8d4259358faf0ba80fea1b891503e824">More...</a><br /></td></tr>
 <tr class="separator:a8d4259358faf0ba80fea1b891503e824"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f92075ef721851871ba46f09d33fd4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a1f92075ef721851871ba46f09d33fd4c">setPosition</a> (<a class="el" href="structtracktion__engine_1_1ClipPosition.html">ClipPosition</a> newPosition)</td></tr>
+<tr class="memdesc:a1f92075ef721851871ba46f09d33fd4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the position of the clip.  <a href="classtracktion__engine_1_1Clip.html#a1f92075ef721851871ba46f09d33fd4c">More...</a><br /></td></tr>
 <tr class="separator:a1f92075ef721851871ba46f09d33fd4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac9740918ec76049c7cb3e175c93c8fdc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ac9740918ec76049c7cb3e175c93c8fdc">setStart</a> (double newStart, bool preserveSync, bool keepLength)</td></tr>
+<tr class="memdesc:ac9740918ec76049c7cb3e175c93c8fdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the start time of the clip.  <a href="classtracktion__engine_1_1Clip.html#ac9740918ec76049c7cb3e175c93c8fdc">More...</a><br /></td></tr>
 <tr class="separator:ac9740918ec76049c7cb3e175c93c8fdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27545dbbf7c986a3d5ced1bccac513ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a27545dbbf7c986a3d5ced1bccac513ed">setLength</a> (double newLength, bool preserveSync)</td></tr>
+<tr class="memdesc:a27545dbbf7c986a3d5ced1bccac513ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the length of the clip.  <a href="classtracktion__engine_1_1Clip.html#a27545dbbf7c986a3d5ced1bccac513ed">More...</a><br /></td></tr>
 <tr class="separator:a27545dbbf7c986a3d5ced1bccac513ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae0c7cf34cef179392c8b72162fe6e75e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ae0c7cf34cef179392c8b72162fe6e75e">setEnd</a> (double newEnd, bool preserveSync)</td></tr>
+<tr class="memdesc:ae0c7cf34cef179392c8b72162fe6e75e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the end of the clip.  <a href="classtracktion__engine_1_1Clip.html#ae0c7cf34cef179392c8b72162fe6e75e">More...</a><br /></td></tr>
 <tr class="separator:ae0c7cf34cef179392c8b72162fe6e75e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98bfa385fc729ae3e916b4ad87a9b562"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a98bfa385fc729ae3e916b4ad87a9b562">setOffset</a> (double newOffset)</td></tr>
+<tr class="memdesc:a98bfa385fc729ae3e916b4ad87a9b562"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the offset of the clip, i.e.  <a href="classtracktion__engine_1_1Clip.html#a98bfa385fc729ae3e916b4ad87a9b562">More...</a><br /></td></tr>
 <tr class="separator:a98bfa385fc729ae3e916b4ad87a9b562"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae8b335dbaf877610e97cce6f44014f31"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ae8b335dbaf877610e97cce6f44014f31">trimAwayOverlap</a> (<a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> editRangeToTrim)</td></tr>
-<tr class="memdesc:ae8b335dbaf877610e97cce6f44014f31"><td class="mdescLeft">&#160;</td><td class="mdescRight">trims away any part of the clip that overlaps this region.  <a href="classtracktion__engine_1_1Clip.html#ae8b335dbaf877610e97cce6f44014f31">More...</a><br /></td></tr>
+<tr class="memdesc:ae8b335dbaf877610e97cce6f44014f31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trims away any part of the clip that overlaps this region.  <a href="classtracktion__engine_1_1Clip.html#ae8b335dbaf877610e97cce6f44014f31">More...</a><br /></td></tr>
 <tr class="separator:ae8b335dbaf877610e97cce6f44014f31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aead1761b95183db2c8bdc9a8b50c2c81"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#aead1761b95183db2c8bdc9a8b50c2c81">removeFromParentTrack</a> ()</td></tr>
+<tr class="memdesc:aead1761b95183db2c8bdc9a8b50c2c81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes this clip from the parent track.  <a href="classtracktion__engine_1_1Clip.html#aead1761b95183db2c8bdc9a8b50c2c81">More...</a><br /></td></tr>
 <tr class="separator:aead1761b95183db2c8bdc9a8b50c2c81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a051057e8d694fed08a9f3fcee187ca2a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a051057e8d694fed08a9f3fcee187ca2a">moveToTrack</a> (<a class="el" href="classtracktion__engine_1_1Track.html">Track</a> &amp;)</td></tr>
+<tr class="memdesc:a051057e8d694fed08a9f3fcee187ca2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Moves the clip to a new <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> (if possible).  <a href="classtracktion__engine_1_1Clip.html#a051057e8d694fed08a9f3fcee187ca2a">More...</a><br /></td></tr>
 <tr class="separator:a051057e8d694fed08a9f3fcee187ca2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b22e14ca0af712d0f35dcba00b58f80"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a5b22e14ca0af712d0f35dcba00b58f80">getSpeedRatio</a> () const noexcept</td></tr>
+<tr class="memdesc:a5b22e14ca0af712d0f35dcba00b58f80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the speed ratio i.e.  <a href="classtracktion__engine_1_1Clip.html#a5b22e14ca0af712d0f35dcba00b58f80">More...</a><br /></td></tr>
 <tr class="separator:a5b22e14ca0af712d0f35dcba00b58f80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ff1ed960692c5e48f47f3d3610b15e9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a1ff1ed960692c5e48f47f3d3610b15e9">setSpeedRatio</a> (double)</td></tr>
+<tr class="memdesc:a1ff1ed960692c5e48f47f3d3610b15e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a speed ratio i.e.  <a href="classtracktion__engine_1_1Clip.html#a1ff1ed960692c5e48f47f3d3610b15e9">More...</a><br /></td></tr>
 <tr class="separator:a1ff1ed960692c5e48f47f3d3610b15e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a587310e87ddff7ce0181563ecc045292"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a587310e87ddff7ce0181563ecc045292">rescale</a> (double pivotTimeInEdit, double factor)</td></tr>
+<tr class="memdesc:a587310e87ddff7ce0181563ecc045292"><td class="mdescLeft">&#160;</td><td class="mdescRight">stretches and scales this clip relative to a fixed point in the edit.  <a href="classtracktion__engine_1_1Clip.html#a587310e87ddff7ce0181563ecc045292">More...</a><br /></td></tr>
 <tr class="separator:a587310e87ddff7ce0181563ecc045292"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5758fc56f129084d5ec4da9572c9938d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a5758fc56f129084d5ec4da9572c9938d">isGrouped</a> () const override</td></tr>
-<tr class="memdesc:a5758fc56f129084d5ec4da9572c9938d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return true if this clip is part of a group.  <a href="classtracktion__engine_1_1Clip.html#a5758fc56f129084d5ec4da9572c9938d">More...</a><br /></td></tr>
+<tr class="memdesc:a5758fc56f129084d5ec4da9572c9938d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the clip is part of a group.  <a href="classtracktion__engine_1_1Clip.html#a5758fc56f129084d5ec4da9572c9938d">More...</a><br /></td></tr>
 <tr class="separator:a5758fc56f129084d5ec4da9572c9938d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff6c341529078975cc3e0913c9ebd0e0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1TrackItem.html">TrackItem</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#aff6c341529078975cc3e0913c9ebd0e0">getGroupParent</a> () const override</td></tr>
-<tr class="memdesc:aff6c341529078975cc3e0913c9ebd0e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this clip is part of a group, this should return the parent item it belongs to.  <a href="classtracktion__engine_1_1Clip.html#aff6c341529078975cc3e0913c9ebd0e0">More...</a><br /></td></tr>
+<tr class="memdesc:aff6c341529078975cc3e0913c9ebd0e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the parent <a class="el" href="classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g.">TrackItem</a> if part of a group.  <a href="classtracktion__engine_1_1Clip.html#aff6c341529078975cc3e0913c9ebd0e0">More...</a><br /></td></tr>
 <tr class="separator:aff6c341529078975cc3e0913c9ebd0e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acfa6ab37506c431ad332fe52f06b8917"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#acfa6ab37506c431ad332fe52f06b8917">setGroup</a> (<a class="el" href="structtracktion__engine_1_1EditItemID.html">EditItemID</a> newGroupID)</td></tr>
+<tr class="memdesc:acfa6ab37506c431ad332fe52f06b8917"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the clip to be part of a group.  <a href="classtracktion__engine_1_1Clip.html#acfa6ab37506c431ad332fe52f06b8917">More...</a><br /></td></tr>
 <tr class="separator:acfa6ab37506c431ad332fe52f06b8917"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e2cb55ab0fbfd4d496d625f9c46e2b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion__engine_1_1EditItemID.html">EditItemID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a9e2cb55ab0fbfd4d496d625f9c46e2b1">getGroupID</a> () const noexcept</td></tr>
+<tr class="memdesc:a9e2cb55ab0fbfd4d496d625f9c46e2b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the ID of the group.  <a href="classtracktion__engine_1_1Clip.html#a9e2cb55ab0fbfd4d496d625f9c46e2b1">More...</a><br /></td></tr>
 <tr class="separator:a9e2cb55ab0fbfd4d496d625f9c46e2b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61f741af2e05351ded1b89424442380f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1CollectionClip.html">CollectionClip</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a61f741af2e05351ded1b89424442380f">getGroupClip</a> () const</td></tr>
+<tr class="memdesc:a61f741af2e05351ded1b89424442380f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns this as a <a class="el" href="classtracktion__engine_1_1CollectionClip.html">CollectionClip</a> if it is one.  <a href="classtracktion__engine_1_1Clip.html#a61f741af2e05351ded1b89424442380f">More...</a><br /></td></tr>
 <tr class="separator:a61f741af2e05351ded1b89424442380f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa95ddbc6db9927b67b9633de0dc09ca6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#aa95ddbc6db9927b67b9633de0dc09ca6">isLinked</a> () const</td></tr>
+<tr class="memdesc:aa95ddbc6db9927b67b9633de0dc09ca6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this clip is linked with any others.  <a href="classtracktion__engine_1_1Clip.html#aa95ddbc6db9927b67b9633de0dc09ca6">More...</a><br /></td></tr>
 <tr class="separator:aa95ddbc6db9927b67b9633de0dc09ca6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a019c2f408dabdd2c8cc7d9f674e5a900"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a019c2f408dabdd2c8cc7d9f674e5a900">setLinkGroupID</a> (juce::String newLinkID)</td></tr>
+<tr class="memdesc:a019c2f408dabdd2c8cc7d9f674e5a900"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the link ID to link this clip with others.  <a href="classtracktion__engine_1_1Clip.html#a019c2f408dabdd2c8cc7d9f674e5a900">More...</a><br /></td></tr>
 <tr class="separator:a019c2f408dabdd2c8cc7d9f674e5a900"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4611d20e9dee53afee72b04a56241f0b"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a4611d20e9dee53afee72b04a56241f0b">getLinkGroupID</a> () const</td></tr>
+<tr class="memdesc:a4611d20e9dee53afee72b04a56241f0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the link ID of this clip.  <a href="classtracktion__engine_1_1Clip.html#a4611d20e9dee53afee72b04a56241f0b">More...</a><br /></td></tr>
 <tr class="separator:a4611d20e9dee53afee72b04a56241f0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b9fd282d4f13cccc63e2dafec4dacb5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1ClipTrack.html">ClipTrack</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a2b9fd282d4f13cccc63e2dafec4dacb5">getClipTrack</a> () const</td></tr>
+<tr class="memdesc:a2b9fd282d4f13cccc63e2dafec4dacb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the parent <a class="el" href="classtracktion__engine_1_1ClipTrack.html">ClipTrack</a> this clip is on.  <a href="classtracktion__engine_1_1Clip.html#a2b9fd282d4f13cccc63e2dafec4dacb5">More...</a><br /></td></tr>
 <tr class="separator:a2b9fd282d4f13cccc63e2dafec4dacb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a59340a70b29ac41842f5524c2daee2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1Track.html">Track</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a7a59340a70b29ac41842f5524c2daee2">getTrack</a> () const override</td></tr>
-<tr class="memdesc:a7a59340a70b29ac41842f5524c2daee2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Must return the track this item lives on.  <a href="classtracktion__engine_1_1Clip.html#a7a59340a70b29ac41842f5524c2daee2">More...</a><br /></td></tr>
+<tr class="memdesc:a7a59340a70b29ac41842f5524c2daee2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the parent <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> this clip is on.  <a href="classtracktion__engine_1_1Clip.html#a7a59340a70b29ac41842f5524c2daee2">More...</a><br /></td></tr>
 <tr class="separator:a7a59340a70b29ac41842f5524c2daee2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab07a97751de6152d0d0a912c21510715"><td class="memItemLeft" align="right" valign="top">virtual juce::Colour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ab07a97751de6152d0d0a912c21510715">getColour</a> () const</td></tr>
+<tr class="memdesc:ab07a97751de6152d0d0a912c21510715"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the colour property of this clip.  <a href="classtracktion__engine_1_1Clip.html#ab07a97751de6152d0d0a912c21510715">More...</a><br /></td></tr>
 <tr class="separator:ab07a97751de6152d0d0a912c21510715"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf2949a351612577b4aaf96c2123b182"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#acf2949a351612577b4aaf96c2123b182">setColour</a> (juce::Colour col)</td></tr>
+<tr class="memdesc:acf2949a351612577b4aaf96c2123b182"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the colour property of this clip.  <a href="classtracktion__engine_1_1Clip.html#acf2949a351612577b4aaf96c2123b182">More...</a><br /></td></tr>
 <tr class="separator:acf2949a351612577b4aaf96c2123b182"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a0f874441d8fc3191356f472ec75820"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a9a0f874441d8fc3191356f472ec75820">removePlugin</a> (const <a class="el" href="classtracktion__engine_1_1Plugin.html#a97f7d1afcf0045b5f21a027d58b0c072">Plugin::Ptr</a> &amp;)</td></tr>
-<tr class="memdesc:a9a0f874441d8fc3191356f472ec75820"><td class="mdescLeft">&#160;</td><td class="mdescRight">if the clip can contain plugins, it should implement this  <a href="classtracktion__engine_1_1Clip.html#a9a0f874441d8fc3191356f472ec75820">More...</a><br /></td></tr>
+<tr class="memdesc:a9a0f874441d8fc3191356f472ec75820"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the given plugin from the clip if the clip supports plugins.  <a href="classtracktion__engine_1_1Clip.html#a9a0f874441d8fc3191356f472ec75820">More...</a><br /></td></tr>
 <tr class="separator:a9a0f874441d8fc3191356f472ec75820"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49aecee546b2ee6cfbbb5aad0682e38e"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a49aecee546b2ee6cfbbb5aad0682e38e">addClipPlugin</a> (const <a class="el" href="classtracktion__engine_1_1Plugin.html#a97f7d1afcf0045b5f21a027d58b0c072">Plugin::Ptr</a> &amp;, <a class="el" href="classtracktion__engine_1_1SelectionManager.html">SelectionManager</a> &amp;)</td></tr>
-<tr class="memdesc:a49aecee546b2ee6cfbbb5aad0682e38e"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns false if the clip can't do this  <a href="classtracktion__engine_1_1Clip.html#a49aecee546b2ee6cfbbb5aad0682e38e">More...</a><br /></td></tr>
+<tr class="memdesc:a49aecee546b2ee6cfbbb5aad0682e38e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a plugin to the clip.  <a href="classtracktion__engine_1_1Clip.html#a49aecee546b2ee6cfbbb5aad0682e38e">More...</a><br /></td></tr>
 <tr class="separator:a49aecee546b2ee6cfbbb5aad0682e38e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeaa32bb8ca194fdce1783a1fd0bb3cad"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtracktion__engine_1_1Plugin.html#af7cceeba3a734d2accacf3f3a34bf5c9">Plugin::Array</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#aeaa32bb8ca194fdce1783a1fd0bb3cad">getAllPlugins</a> ()</td></tr>
+<tr class="memdesc:aeaa32bb8ca194fdce1783a1fd0bb3cad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns all the plugins on the clip.  <a href="classtracktion__engine_1_1Clip.html#aeaa32bb8ca194fdce1783a1fd0bb3cad">More...</a><br /></td></tr>
 <tr class="separator:aeaa32bb8ca194fdce1783a1fd0bb3cad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5625cde79eb880c6d13d0909b6606a8b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a5625cde79eb880c6d13d0909b6606a8b">sendMirrorUpdateToAllPlugins</a> (<a class="el" href="classtracktion__engine_1_1Plugin.html">Plugin</a> &amp;) const</td></tr>
+<tr class="memdesc:a5625cde79eb880c6d13d0909b6606a8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends an update to all plugins mirroing the one passed in.  <a href="classtracktion__engine_1_1Clip.html#a5625cde79eb880c6d13d0909b6606a8b">More...</a><br /></td></tr>
 <tr class="separator:a5625cde79eb880c6d13d0909b6606a8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3604e8477c7ab188e3fa558fa0f9a045"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtracktion__engine_1_1PluginList.html">PluginList</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a3604e8477c7ab188e3fa558fa0f9a045">getPluginList</a> ()</td></tr>
+<tr class="memdesc:a3604e8477c7ab188e3fa558fa0f9a045"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classtracktion__engine_1_1PluginList.html" title="Holds a sequence of plugins.">PluginList</a> for this clip if it has one.  <a href="classtracktion__engine_1_1Clip.html#a3604e8477c7ab188e3fa558fa0f9a045">More...</a><br /></td></tr>
 <tr class="separator:a3604e8477c7ab188e3fa558fa0f9a045"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0aae113abc53a228d5c7f8636145dc02"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a0aae113abc53a228d5c7f8636145dc02">createAudioNode</a> (const <a class="el" href="structtracktion__engine_1_1CreateAudioNodeParams.html">CreateAudioNodeParams</a> &amp;)=0</td></tr>
-<tr class="separator:a0aae113abc53a228d5c7f8636145dc02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e6353d9bfb3c42c9a45826a3a6497b8"><td class="memItemLeft" align="right" valign="top">virtual juce::Colour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a9e6353d9bfb3c42c9a45826a3a6497b8">getDefaultColour</a> () const =0</td></tr>
+<tr class="memdesc:a9e6353d9bfb3c42c9a45826a3a6497b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the default colour for this clip.  <a href="classtracktion__engine_1_1Clip.html#a9e6353d9bfb3c42c9a45826a3a6497b8">More...</a><br /></td></tr>
 <tr class="separator:a9e6353d9bfb3c42c9a45826a3a6497b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0288c8eab8dff005bcc5df82c4c4211f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a0288c8eab8dff005bcc5df82c4c4211f">clearTakes</a> ()</td></tr>
+<tr class="memdesc:a0288c8eab8dff005bcc5df82c4c4211f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears any takes this clip has.  <a href="classtracktion__engine_1_1Clip.html#a0288c8eab8dff005bcc5df82c4c4211f">More...</a><br /></td></tr>
 <tr class="separator:a0288c8eab8dff005bcc5df82c4c4211f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25362e1176bf91722e999803315e2034"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a25362e1176bf91722e999803315e2034">hasAnyTakes</a> () const</td></tr>
+<tr class="memdesc:a25362e1176bf91722e999803315e2034"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this clip has any takes.  <a href="classtracktion__engine_1_1Clip.html#a25362e1176bf91722e999803315e2034">More...</a><br /></td></tr>
 <tr class="separator:a25362e1176bf91722e999803315e2034"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06b630ffc6b2f59bb00aeefc7be4095f"><td class="memItemLeft" align="right" valign="top">virtual juce::StringArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a06b630ffc6b2f59bb00aeefc7be4095f">getTakeDescriptions</a> () const</td></tr>
+<tr class="memdesc:a06b630ffc6b2f59bb00aeefc7be4095f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the descriptions of any takes.  <a href="classtracktion__engine_1_1Clip.html#a06b630ffc6b2f59bb00aeefc7be4095f">More...</a><br /></td></tr>
 <tr class="separator:a06b630ffc6b2f59bb00aeefc7be4095f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ffac9a7f6547f0100700ab32992f736"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a8ffac9a7f6547f0100700ab32992f736">setCurrentTake</a> (int)</td></tr>
+<tr class="memdesc:a8ffac9a7f6547f0100700ab32992f736"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a given take index to be the current take.  <a href="classtracktion__engine_1_1Clip.html#a8ffac9a7f6547f0100700ab32992f736">More...</a><br /></td></tr>
 <tr class="separator:a8ffac9a7f6547f0100700ab32992f736"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7f1ef20e5a70611c8d8263b2d97655e"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ab7f1ef20e5a70611c8d8263b2d97655e">getCurrentTake</a> () const</td></tr>
+<tr class="memdesc:ab7f1ef20e5a70611c8d8263b2d97655e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current take index.  <a href="classtracktion__engine_1_1Clip.html#ab7f1ef20e5a70611c8d8263b2d97655e">More...</a><br /></td></tr>
 <tr class="separator:ab7f1ef20e5a70611c8d8263b2d97655e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab93503a76e0cded4e745effbbc5c3fe9"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ab93503a76e0cded4e745effbbc5c3fe9">getNumTakes</a> (bool)</td></tr>
+<tr class="memdesc:ab93503a76e0cded4e745effbbc5c3fe9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the total number of takes.  <a href="classtracktion__engine_1_1Clip.html#ab93503a76e0cded4e745effbbc5c3fe9">More...</a><br /></td></tr>
 <tr class="separator:ab93503a76e0cded4e745effbbc5c3fe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad66ada5090f5901c7504b2676e553c79"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ad66ada5090f5901c7504b2676e553c79">isCurrentTakeComp</a> ()</td></tr>
+<tr class="memdesc:ad66ada5090f5901c7504b2676e553c79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the current take is a comp.  <a href="classtracktion__engine_1_1Clip.html#ad66ada5090f5901c7504b2676e553c79">More...</a><br /></td></tr>
 <tr class="separator:ad66ada5090f5901c7504b2676e553c79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f6fcbe822549391d695ffa3ca1d2224"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a9f6fcbe822549391d695ffa3ca1d2224">setShowingTakes</a> (bool shouldShow)</td></tr>
+<tr class="memdesc:a9f6fcbe822549391d695ffa3ca1d2224"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets whether the clip should be showing takes.  <a href="classtracktion__engine_1_1Clip.html#a9f6fcbe822549391d695ffa3ca1d2224">More...</a><br /></td></tr>
 <tr class="separator:a9f6fcbe822549391d695ffa3ca1d2224"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa90fead3f3841f012a4cc38b3a56923"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#afa90fead3f3841f012a4cc38b3a56923">isShowingTakes</a> () const</td></tr>
+<tr class="memdesc:afa90fead3f3841f012a4cc38b3a56923"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the clip is showing takes.  <a href="classtracktion__engine_1_1Clip.html#afa90fead3f3841f012a4cc38b3a56923">More...</a><br /></td></tr>
 <tr class="separator:afa90fead3f3841f012a4cc38b3a56923"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a237bca3dbd7a79d42de49e8f12b6588a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtracktion__engine_1_1Clip.html#a3b47baf2213a5f27c14d6ed1250d3c63">Clip::Array</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a237bca3dbd7a79d42de49e8f12b6588a">unpackTakes</a> (bool)</td></tr>
+<tr class="memdesc:a237bca3dbd7a79d42de49e8f12b6588a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to unpack the takes to new clips.  <a href="classtracktion__engine_1_1Clip.html#a237bca3dbd7a79d42de49e8f12b6588a">More...</a><br /></td></tr>
 <tr class="separator:a237bca3dbd7a79d42de49e8f12b6588a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d8689a95b47ecd42ef2c9c1838e26bc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a0d8689a95b47ecd42ef2c9c1838e26bc">cloneFrom</a> (<a class="el" href="classtracktion__engine_1_1Clip.html">Clip</a> *)</td></tr>
+<tr class="memdesc:a0d8689a95b47ecd42ef2c9c1838e26bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clones the given clip to this clip.  <a href="classtracktion__engine_1_1Clip.html#a0d8689a95b47ecd42ef2c9c1838e26bc">More...</a><br /></td></tr>
 <tr class="separator:a0d8689a95b47ecd42ef2c9c1838e26bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a998874bc5a589039e0ca970de329a082"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a998874bc5a589039e0ca970de329a082">updateLinkedClips</a> ()</td></tr>
+<tr class="memdesc:a998874bc5a589039e0ca970de329a082"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggers a call to cloneFrom for all clips with the same linkID.  <a href="classtracktion__engine_1_1Clip.html#a998874bc5a589039e0ca970de329a082">More...</a><br /></td></tr>
 <tr class="separator:a998874bc5a589039e0ca970de329a082"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41a0f1fa155baebec02ec715a490cc11"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a41a0f1fa155baebec02ec715a490cc11">showLoopMenu</a> ()</td></tr>
-<tr class="separator:a41a0f1fa155baebec02ec715a490cc11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72a151f4d0448c0253f5b06d3f3cf4b0"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtracktion__engine_1_1PatternGenerator.html">PatternGenerator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a72a151f4d0448c0253f5b06d3f3cf4b0">getPatternGenerator</a> ()</td></tr>
+<tr class="memdesc:a72a151f4d0448c0253f5b06d3f3cf4b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classtracktion__engine_1_1PatternGenerator.html">PatternGenerator</a> for this clip if it has one.  <a href="classtracktion__engine_1_1Clip.html#a72a151f4d0448c0253f5b06d3f3cf4b0">More...</a><br /></td></tr>
 <tr class="separator:a72a151f4d0448c0253f5b06d3f3cf4b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a973aafc1e2827ca749504bcffca7e64d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a973aafc1e2827ca749504bcffca7e64d">addListener</a> (<a class="el" href="structtracktion__engine_1_1Clip_1_1Listener.html">Listener</a> *)</td></tr>
 <tr class="memdesc:a973aafc1e2827ca749504bcffca7e64d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a <a class="el" href="structtracktion__engine_1_1Clip_1_1Listener.html" title="Listener interface to be notified of recorded MIDI being sent to the plugins.">Listener</a>.  <a href="classtracktion__engine_1_1Clip.html#a973aafc1e2827ca749504bcffca7e64d">More...</a><br /></td></tr>
@@ -316,9 +377,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a9d5d92d51c176021aa779c6c167c924b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the listener list so Nodes can manually call them.  <a href="classtracktion__engine_1_1Clip.html#a9d5d92d51c176021aa779c6c167c924b">More...</a><br /></td></tr>
 <tr class="separator:a9d5d92d51c176021aa779c6c167c924b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab94043c659770b35b6ef1269fd2d2e19"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ab94043c659770b35b6ef1269fd2d2e19">changed</a> () override</td></tr>
-<tr class="memdesc:ab94043c659770b35b6ef1269fd2d2e19"><td class="mdescLeft">&#160;</td><td class="mdescRight">This should be called to send a change notification to any SelectableListeners that are registered with this object.  <a href="classtracktion__engine_1_1Clip.html#ab94043c659770b35b6ef1269fd2d2e19">More...</a><br /></td></tr>
 <tr class="separator:ab94043c659770b35b6ef1269fd2d2e19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af726023e3fdb7c7d139646ae188ce1aa"><td class="memItemLeft" align="right" valign="top">juce::UndoManager *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#af726023e3fdb7c7d139646ae188ce1aa">getUndoManager</a> () const</td></tr>
+<tr class="memdesc:af726023e3fdb7c7d139646ae188ce1aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the UndoManager.  <a href="classtracktion__engine_1_1Clip.html#af726023e3fdb7c7d139646ae188ce1aa">More...</a><br /></td></tr>
 <tr class="separator:af726023e3fdb7c7d139646ae188ce1aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtracktion__engine_1_1TrackItem"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtracktion__engine_1_1TrackItem')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtracktion__engine_1_1TrackItem.html">tracktion_engine::TrackItem</a></td></tr>
 <tr class="memitem:ae4f639d6bc1574947fedd1cb71755a48 inherit pub_methods_classtracktion__engine_1_1TrackItem"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TrackItem.html#ae4f639d6bc1574947fedd1cb71755a48">TrackItem</a> (<a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;, <a class="el" href="structtracktion__engine_1_1EditItemID.html">EditItemID</a>, <a class="el" href="classtracktion__engine_1_1TrackItem.html#a3f25eeb14a154b5ca7f8887494fa564f">Type</a>)</td></tr>
@@ -441,8 +502,10 @@ Static Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ae3652718f9431b27409be3bb46108d3d"><td class="memItemLeft" align="right" valign="top">juce::ValueTree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ae3652718f9431b27409be3bb46108d3d">state</a></td></tr>
+<tr class="memdesc:ae3652718f9431b27409be3bb46108d3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ValueTree of the <a class="el" href="classtracktion__engine_1_1Clip.html" title="A clip in an edit.">Clip</a> state.  <a href="classtracktion__engine_1_1Clip.html#ae3652718f9431b27409be3bb46108d3d">More...</a><br /></td></tr>
 <tr class="separator:ae3652718f9431b27409be3bb46108d3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68b8adbb4ef55fcd4a9b7840ae86d0be"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; juce::Colour &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a68b8adbb4ef55fcd4a9b7840ae86d0be">colour</a></td></tr>
+<tr class="memdesc:a68b8adbb4ef55fcd4a9b7840ae86d0be"><td class="mdescLeft">&#160;</td><td class="mdescRight">The colour property.  <a href="classtracktion__engine_1_1Clip.html#a68b8adbb4ef55fcd4a9b7840ae86d0be">More...</a><br /></td></tr>
 <tr class="separator:a68b8adbb4ef55fcd4a9b7840ae86d0be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classtracktion__engine_1_1TrackItem"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classtracktion__engine_1_1TrackItem')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classtracktion__engine_1_1TrackItem.html">tracktion_engine::TrackItem</a></td></tr>
 <tr class="memitem:a718d566ce1a885f3302067ca27807931 inherit pub_attribs_classtracktion__engine_1_1TrackItem"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classtracktion__engine_1_1TrackItem.html#a3f25eeb14a154b5ca7f8887494fa564f">Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TrackItem.html#a718d566ce1a885f3302067ca27807931">type</a></td></tr>
@@ -461,12 +524,13 @@ Public Attributes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a56c5dfc20cac948def19906109235ba3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a56c5dfc20cac948def19906109235ba3">setCurrentSourceFile</a> (const juce::File &amp;)</td></tr>
+<tr class="memdesc:a56c5dfc20cac948def19906109235ba3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a new source file for this clip.  <a href="classtracktion__engine_1_1Clip.html#a56c5dfc20cac948def19906109235ba3">More...</a><br /></td></tr>
 <tr class="separator:a56c5dfc20cac948def19906109235ba3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94e25f6065936218e56e427a65e35013"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a94e25f6065936218e56e427a65e35013">setTrack</a> (<a class="el" href="classtracktion__engine_1_1ClipTrack.html">ClipTrack</a> *)</td></tr>
+<tr class="memdesc:a94e25f6065936218e56e427a65e35013"><td class="mdescLeft">&#160;</td><td class="mdescRight">Moves this clip to a new <a class="el" href="classtracktion__engine_1_1ClipTrack.html">ClipTrack</a>.  <a href="classtracktion__engine_1_1Clip.html#a94e25f6065936218e56e427a65e35013">More...</a><br /></td></tr>
 <tr class="separator:a94e25f6065936218e56e427a65e35013"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a765ad9cc17df595ce2022d2255a922d9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a765ad9cc17df595ce2022d2255a922d9">updateParentTrack</a> ()</td></tr>
-<tr class="separator:a765ad9cc17df595ce2022d2255a922d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90840adce467ae01c71402d8547e2012"><td class="memItemLeft" align="right" valign="top">virtual juce::Array&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a90840adce467ae01c71402d8547e2012">getRescaledMarkPoints</a> () const</td></tr>
+<tr class="memdesc:a90840adce467ae01c71402d8547e2012"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the mark points relative to the start of the clip, rescaled to the current speed.  <a href="classtracktion__engine_1_1Clip.html#a90840adce467ae01c71402d8547e2012">More...</a><br /></td></tr>
 <tr class="separator:a90840adce467ae01c71402d8547e2012"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a052339ef698870178932a4380d551558"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a052339ef698870178932a4380d551558">valueTreePropertyChanged</a> (juce::ValueTree &amp;, const juce::Identifier &amp;) override</td></tr>
 <tr class="separator:a052339ef698870178932a4380d551558"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -560,9 +624,13 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Determines the clip sync type. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="acd9203fe7f0840fbb358f85c97c89ef5aec728062fbf735c9023117874216fe04"></a>syncBarsBeats&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="acd9203fe7f0840fbb358f85c97c89ef5abb3731f916226518ed4207527e4af41e"></a>syncAbsolute&#160;</td><td class="fielddoc"></td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="acd9203fe7f0840fbb358f85c97c89ef5aec728062fbf735c9023117874216fe04"></a>syncBarsBeats&#160;</td><td class="fielddoc"><p>Sync to beats. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="acd9203fe7f0840fbb358f85c97c89ef5abb3731f916226518ed4207527e4af41e"></a>syncAbsolute&#160;</td><td class="fielddoc"><p>Sync to abslute time. </p>
+</td></tr>
 </table>
 
 </div>
@@ -606,6 +674,9 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Creates a clip of a given type from a ValueTree state. </p>
+<p><a class="el" href="classtracktion__engine_1_1Clip.html" title="A clip in an edit.">Clip</a>'s have to have a parent <a class="el" href="classtracktion__engine_1_1ClipTrack.html">ClipTrack</a> and unique <a class="el" href="structtracktion__engine_1_1EditItemID.html" title="ID for objects of type EditElement - e.g.">EditItemID</a> </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1Edit.html#a7b425ad70a772d0858dfb33923b0eaf7" title="Returns a new EditItemID to use for a new EditItem.">Edit::createNewItemID</a> You would usually create a clip using <a class="el" href="classtracktion__engine_1_1ClipTrack.html#a0eba4baa7185884aea0e508dea290d54">ClipTrack::insertNewClip</a> </dd></dl>
+
 </div>
 </div>
 <a id="a0d25899dfd5a690bf6a23ffbb77e382a"></a>
@@ -630,6 +701,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Destructor. </p>
 
 </div>
 </div>
@@ -657,7 +730,10 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1MidiClip.html#a6cae30b780f5c0c58688b6272ba2fbcb">tracktion_engine::MidiClip</a>, <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a5129c1ddbba0cc168b5cecce3a996dc9">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1EditClip.html#a75a41f470a1ddda1baa1f91b82f31d47">tracktion_engine::EditClip</a>, <a class="el" href="classtracktion__engine_1_1MarkerClip.html#a8860309573ec3fbe8e4f2e6276bafc60">tracktion_engine::MarkerClip</a>, <a class="el" href="classtracktion__engine_1_1ChordClip.html#ab9d31d507e2d056ad1585cd1598747b9">tracktion_engine::ChordClip</a>, <a class="el" href="classtracktion__engine_1_1ArrangerClip.html#a2b832d38aef2946c7a3e7b7ac1efcdb6">tracktion_engine::ArrangerClip</a>, and <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#aadd8dbb8518649c336ae6e55cd2acb09">tracktion_engine::WaveAudioClip</a>.</p>
+<p>Initialises the <a class="el" href="classtracktion__engine_1_1Clip.html" title="A clip in an edit.">Clip</a>. </p>
+<p>Called once automatically after construction. </p>
+
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a5129c1ddbba0cc168b5cecce3a996dc9">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1MidiClip.html#a6cae30b780f5c0c58688b6272ba2fbcb">tracktion_engine::MidiClip</a>, <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#aadd8dbb8518649c336ae6e55cd2acb09">tracktion_engine::WaveAudioClip</a>, <a class="el" href="classtracktion__engine_1_1EditClip.html#a75a41f470a1ddda1baa1f91b82f31d47">tracktion_engine::EditClip</a>, <a class="el" href="classtracktion__engine_1_1MarkerClip.html#a8860309573ec3fbe8e4f2e6276bafc60">tracktion_engine::MarkerClip</a>, <a class="el" href="classtracktion__engine_1_1ChordClip.html#ab9d31d507e2d056ad1585cd1598747b9">tracktion_engine::ChordClip</a>, and <a class="el" href="classtracktion__engine_1_1ArrangerClip.html#a2b832d38aef2946c7a3e7b7ac1efcdb6">tracktion_engine::ArrangerClip</a>.</p>
 
 </div>
 </div>
@@ -779,6 +855,9 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Can be overridden to ensure any state (e.g. </p>
+<p>clip plugins) is flushed to the ValueTree ready for saving. </p>
+
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a66a62fa0e7a1e8a8450737b17de605d0">tracktion_engine::AudioClipBase</a>.</p>
 
 </div>
@@ -806,10 +885,10 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>this is called when the source media file reference (attribute "source") has changed - i.e. </p>
-<p>when the clip has a new media id assigned, not when the file itself changes. </p>
+<p>Called when the source media file reference (attribute "source") has changed - i.e. </p>
+<p>when the clip has a new <a class="el" href="classtracktion__engine_1_1ProjectItemID.html" title="An ID representing one of the items in a Project.">ProjectItemID</a> assigned, not when the file itself changes. </p>
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1EditClip.html#a48e29d1f1cc4be80c26ccc2d12a927b9">tracktion_engine::EditClip</a>, and <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#ab4a9610324a92a5bbdddff68a42fa0a5">tracktion_engine::WaveAudioClip</a>.</p>
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#ab4a9610324a92a5bbdddff68a42fa0a5">tracktion_engine::WaveAudioClip</a>, and <a class="el" href="classtracktion__engine_1_1EditClip.html#a48e29d1f1cc4be80c26ccc2d12a927b9">tracktion_engine::EditClip</a>.</p>
 
 </div>
 </div>
@@ -835,6 +914,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Called when there are pitch or tempo changes made which might require clips to adjust timing information. </p>
 
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#af00efd08718e1b9c923597b34ec5ff1d">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1MidiClip.html#a6362fd4729428b77a212e32f2a9f9d41">tracktion_engine::MidiClip</a>, and <a class="el" href="classtracktion__engine_1_1ChordClip.html#a342b228d1df664997e9cf77c2e85fa2e">tracktion_engine::ChordClip</a>.</p>
 
@@ -863,6 +944,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns the name of the clip. </p>
+
 <p>Implements <a class="el" href="classtracktion__engine_1_1EditItem.html#a3fe4e7a94fa2b384dfe98bfb7c898634">tracktion_engine::EditItem</a>.</p>
 
 <p class="reference">References <a class="el" href="classtracktion__engine_1_1Clip.html#a09f2502c32036126a1e88f4f45ce2ce9">clipName</a>.</p>
@@ -884,6 +967,8 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets a new name for a clip. </p>
 
 </div>
 </div>
@@ -910,7 +995,9 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classtracktion__engine_1_1StepClip.html#a21bc00806ad3216119fa4ac01c59bd8b">tracktion_engine::StepClip</a>, <a class="el" href="classtracktion__engine_1_1MidiClip.html#a55042e535b53e90ccbd8ebfa10dc4ce7">tracktion_engine::MidiClip</a>, <a class="el" href="classtracktion__engine_1_1EditClip.html#a062f8861117794e46a183786052d7c88">tracktion_engine::EditClip</a>, <a class="el" href="classtracktion__engine_1_1MarkerClip.html#a28ae9a259bb95398cba00fe0d578d607">tracktion_engine::MarkerClip</a>, <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#a113c4feaf31c7bf1ebeec001699e310d">tracktion_engine::WaveAudioClip</a>, <a class="el" href="classtracktion__engine_1_1ChordClip.html#a5ca18468bca3cc31059ced49374e6df0">tracktion_engine::ChordClip</a>, and <a class="el" href="classtracktion__engine_1_1ArrangerClip.html#a17d53287d907a133786427e2f26133f6">tracktion_engine::ArrangerClip</a>.</p>
+<p>Returns true if this is a <a class="el" href="classtracktion__engine_1_1MidiClip.html">MidiClip</a>. </p>
+
+<p>Implemented in <a class="el" href="classtracktion__engine_1_1StepClip.html#a21bc00806ad3216119fa4ac01c59bd8b">tracktion_engine::StepClip</a>, <a class="el" href="classtracktion__engine_1_1MidiClip.html#a55042e535b53e90ccbd8ebfa10dc4ce7">tracktion_engine::MidiClip</a>, <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#a113c4feaf31c7bf1ebeec001699e310d">tracktion_engine::WaveAudioClip</a>, <a class="el" href="classtracktion__engine_1_1EditClip.html#a062f8861117794e46a183786052d7c88">tracktion_engine::EditClip</a>, <a class="el" href="classtracktion__engine_1_1MarkerClip.html#a28ae9a259bb95398cba00fe0d578d607">tracktion_engine::MarkerClip</a>, <a class="el" href="classtracktion__engine_1_1ChordClip.html#a5ca18468bca3cc31059ced49374e6df0">tracktion_engine::ChordClip</a>, and <a class="el" href="classtracktion__engine_1_1ArrangerClip.html#a17d53287d907a133786427e2f26133f6">tracktion_engine::ArrangerClip</a>.</p>
 
 </div>
 </div>
@@ -938,7 +1025,9 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classtracktion__engine_1_1StepClip.html#a18afbaa7ee7503ee492598ebc90cd0a4">tracktion_engine::StepClip</a>, <a class="el" href="classtracktion__engine_1_1MidiClip.html#a4f014bfdb2376abdb4dd206b432cb518">tracktion_engine::MidiClip</a>, <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#aff4196dbce21f54c78b6ff88bd1367ff">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1MarkerClip.html#ac68b2829ea2379a0ca5c99ee0ff3274e">tracktion_engine::MarkerClip</a>, <a class="el" href="classtracktion__engine_1_1ArrangerClip.html#ac0e2cd430840a06d2843b82d8bde86fc">tracktion_engine::ArrangerClip</a>, and <a class="el" href="classtracktion__engine_1_1ChordClip.html#aa6d197a13837d8a320a94b2822971b6e">tracktion_engine::ChordClip</a>.</p>
+<p>Tests whether this clip can go on the given track. </p>
+
+<p>Implemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#aff4196dbce21f54c78b6ff88bd1367ff">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1StepClip.html#a18afbaa7ee7503ee492598ebc90cd0a4">tracktion_engine::StepClip</a>, <a class="el" href="classtracktion__engine_1_1MidiClip.html#a4f014bfdb2376abdb4dd206b432cb518">tracktion_engine::MidiClip</a>, <a class="el" href="classtracktion__engine_1_1MarkerClip.html#ac68b2829ea2379a0ca5c99ee0ff3274e">tracktion_engine::MarkerClip</a>, <a class="el" href="classtracktion__engine_1_1ArrangerClip.html#ac0e2cd430840a06d2843b82d8bde86fc">tracktion_engine::ArrangerClip</a>, and <a class="el" href="classtracktion__engine_1_1ChordClip.html#aa6d197a13837d8a320a94b2822971b6e">tracktion_engine::ChordClip</a>.</p>
 
 </div>
 </div>
@@ -965,10 +1054,10 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>true if it references a source file - i.e. </p>
+<p>True if it references a source file - i.e. </p>
 <p>audio clips do, midi doesn't. </p>
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1EditClip.html#a6058529e13a3719cf3f1880c27679a5c">tracktion_engine::EditClip</a>, and <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#ae06dad9330019ccef6d4efd9cf446358">tracktion_engine::WaveAudioClip</a>.</p>
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#ae06dad9330019ccef6d4efd9cf446358">tracktion_engine::WaveAudioClip</a>, and <a class="el" href="classtracktion__engine_1_1EditClip.html#a6058529e13a3719cf3f1880c27679a5c">tracktion_engine::EditClip</a>.</p>
 
 </div>
 </div>
@@ -1039,6 +1128,9 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns an array of any ReferencedItem[s] e.g. </p>
+<p>audio files. </p>
+
 <p>Implements <a class="el" href="classtracktion__engine_1_1Exportable.html#a243881f563227f28871f5db8de8bf836">tracktion_engine::Exportable</a>.</p>
 
 </div>
@@ -1083,6 +1175,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Should be implemented to change the underlying source to a new <a class="el" href="classtracktion__engine_1_1ProjectItemID.html" title="An ID representing one of the items in a Project.">ProjectItemID</a>. </p>
+
 <p>Implements <a class="el" href="classtracktion__engine_1_1Exportable.html#ac2b41967cab8e5c34de148d63d477d7f">tracktion_engine::Exportable</a>.</p>
 
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#a7447f8e4871f035366e850493ab0d12d">tracktion_engine::WaveAudioClip</a>.</p>
@@ -1112,7 +1206,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Must return the position of this item. </p>
+<p>Returns the <a class="el" href="structtracktion__engine_1_1ClipPosition.html">ClipPosition</a> on the parent <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>. </p>
 
 <p>Implements <a class="el" href="classtracktion__engine_1_1TrackItem.html#ab8501f832b1d3c643597e6d55330a2ba">tracktion_engine::TrackItem</a>.</p>
 
@@ -1181,6 +1275,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns the maximum lenght this clip can have. </p>
+
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#ab3f52e261752a5268391cf9f415b9a27">tracktion_engine::AudioClipBase</a>.</p>
 
 <p class="reference">References <a class="el" href="classtracktion__engine_1_1Edit.html#a526cabb0d77a344a3b549a6a9e19bbfe">tracktion_engine::Edit::maximumLength</a>.</p>
@@ -1210,7 +1306,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns times for snapping to, relative to the edit. </p>
+<p>Returns times for snapping to, relative to the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>. </p>
 <p>Base class adds start and end time. </p>
 
 </div>
@@ -1229,6 +1325,8 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the first marked time in the source file which can be used for syncronising newly added clips. </p>
 
 </div>
 </div>
@@ -1255,7 +1353,9 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1StepClip.html#abb7e2d4e314565ac864ffc12fe333ba7">tracktion_engine::StepClip</a>, <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#ad560da92a6da67e3683ee44cfd6ad21b">tracktion_engine::AudioClipBase</a>, and <a class="el" href="classtracktion__engine_1_1MidiClip.html#acd64adbdb89c79080e152afba1ae85d6">tracktion_engine::MidiClip</a>.</p>
+<p>Returns true if this clip is capable of looping. </p>
+
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#ad560da92a6da67e3683ee44cfd6ad21b">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1StepClip.html#abb7e2d4e314565ac864ffc12fe333ba7">tracktion_engine::StepClip</a>, and <a class="el" href="classtracktion__engine_1_1MidiClip.html#acd64adbdb89c79080e152afba1ae85d6">tracktion_engine::MidiClip</a>.</p>
 
 </div>
 </div>
@@ -1282,7 +1382,9 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1StepClip.html#a2a847029f7ea148dacede9056edc85f8">tracktion_engine::StepClip</a>, <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a891d8c9db955898c3d97ed97041d8f7c">tracktion_engine::AudioClipBase</a>, and <a class="el" href="classtracktion__engine_1_1MidiClip.html#a03dd0d20fbbb646dabf3eca0c4538f7e">tracktion_engine::MidiClip</a>.</p>
+<p>Returns true if this clip is currently looping. </p>
+
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a891d8c9db955898c3d97ed97041d8f7c">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1StepClip.html#a2a847029f7ea148dacede9056edc85f8">tracktion_engine::StepClip</a>, and <a class="el" href="classtracktion__engine_1_1MidiClip.html#a03dd0d20fbbb646dabf3eca0c4538f7e">tracktion_engine::MidiClip</a>.</p>
 
 </div>
 </div>
@@ -1309,7 +1411,9 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1StepClip.html#a7a59eb30343a7359bb53b47ac7c9ed2c">tracktion_engine::StepClip</a>, <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a0fc23caad504dd41c0f27799a25112de">tracktion_engine::AudioClipBase</a>, and <a class="el" href="classtracktion__engine_1_1MidiClip.html#a3c7c04cf585c40a09a8bf1984790367e">tracktion_engine::MidiClip</a>.</p>
+<p>Returns true if this clip's looping is based on beats or false if absolute time. </p>
+
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a0fc23caad504dd41c0f27799a25112de">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1StepClip.html#a7a59eb30343a7359bb53b47ac7c9ed2c">tracktion_engine::StepClip</a>, and <a class="el" href="classtracktion__engine_1_1MidiClip.html#a3c7c04cf585c40a09a8bf1984790367e">tracktion_engine::MidiClip</a>.</p>
 
 </div>
 </div>
@@ -1336,6 +1440,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Sets the clip looping a number of times. </p>
 
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1StepClip.html#ad7ccbb2fe9eb2f5ce3bc880564cbff90">tracktion_engine::StepClip</a>, <a class="el" href="classtracktion__engine_1_1MidiClip.html#acb990d3f611b5179661e70a15a4aee5e">tracktion_engine::MidiClip</a>, and <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a750aba72aa7e1d2f1cf99b2172938db4">tracktion_engine::AudioClipBase</a>.</p>
 
@@ -1364,7 +1470,9 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1StepClip.html#a8c27ade6c9a016e1f1c0cdc086a88f0f">tracktion_engine::StepClip</a>, <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a02cefa6baa0ca04c377060ca6c9d3550">tracktion_engine::AudioClipBase</a>, and <a class="el" href="classtracktion__engine_1_1MidiClip.html#a3ed2da2744549d6ac11029dace880c49">tracktion_engine::MidiClip</a>.</p>
+<p>Disables all looping. </p>
+
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a02cefa6baa0ca04c377060ca6c9d3550">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1StepClip.html#a8c27ade6c9a016e1f1c0cdc086a88f0f">tracktion_engine::StepClip</a>, and <a class="el" href="classtracktion__engine_1_1MidiClip.html#a3ed2da2744549d6ac11029dace880c49">tracktion_engine::MidiClip</a>.</p>
 
 </div>
 </div>
@@ -1391,7 +1499,9 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1StepClip.html#aece77c6b0e694bfd05969b6fb41537e8">tracktion_engine::StepClip</a>, <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a7e15e2776035c4d5b7abdca585faa1a5">tracktion_engine::AudioClipBase</a>, and <a class="el" href="classtracktion__engine_1_1MidiClip.html#a3c64f46c896d833ef36cf87b0861c15e">tracktion_engine::MidiClip</a>.</p>
+<p>Returns the beat position of the loop start point. </p>
+
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a7e15e2776035c4d5b7abdca585faa1a5">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1StepClip.html#aece77c6b0e694bfd05969b6fb41537e8">tracktion_engine::StepClip</a>, and <a class="el" href="classtracktion__engine_1_1MidiClip.html#a3c64f46c896d833ef36cf87b0861c15e">tracktion_engine::MidiClip</a>.</p>
 
 </div>
 </div>
@@ -1418,7 +1528,9 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1StepClip.html#ae17a0de890aa7f2a81fb4e9a017981c0">tracktion_engine::StepClip</a>, <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#af5f47e8836c1e7835209c981d109f3af">tracktion_engine::AudioClipBase</a>, and <a class="el" href="classtracktion__engine_1_1MidiClip.html#a2ad1d2357270257ccb87a90c4a9dc404">tracktion_engine::MidiClip</a>.</p>
+<p>Returns the start time of the loop start point. </p>
+
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#af5f47e8836c1e7835209c981d109f3af">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1StepClip.html#ae17a0de890aa7f2a81fb4e9a017981c0">tracktion_engine::StepClip</a>, and <a class="el" href="classtracktion__engine_1_1MidiClip.html#a2ad1d2357270257ccb87a90c4a9dc404">tracktion_engine::MidiClip</a>.</p>
 
 </div>
 </div>
@@ -1445,7 +1557,9 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1StepClip.html#a3fd98ad829348e73c033f1272b4e1340">tracktion_engine::StepClip</a>, <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a0738e5c93e96cba2f5661cecbccd10dc">tracktion_engine::AudioClipBase</a>, and <a class="el" href="classtracktion__engine_1_1MidiClip.html#ad86c8ec81222e6491a7f27f9883b6cb9">tracktion_engine::MidiClip</a>.</p>
+<p>Returns the length of loop in beats. </p>
+
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a0738e5c93e96cba2f5661cecbccd10dc">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1StepClip.html#a3fd98ad829348e73c033f1272b4e1340">tracktion_engine::StepClip</a>, and <a class="el" href="classtracktion__engine_1_1MidiClip.html#ad86c8ec81222e6491a7f27f9883b6cb9">tracktion_engine::MidiClip</a>.</p>
 
 </div>
 </div>
@@ -1472,7 +1586,9 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1StepClip.html#a583678c1114e23277cc3393c82039572">tracktion_engine::StepClip</a>, <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a714a97f8f58fc00364fac379ba20ab93">tracktion_engine::AudioClipBase</a>, and <a class="el" href="classtracktion__engine_1_1MidiClip.html#a4f5b7a95bbb64631e9fb9bd0d259f58f">tracktion_engine::MidiClip</a>.</p>
+<p>Returns the length of loop in seconds. </p>
+
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a714a97f8f58fc00364fac379ba20ab93">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1StepClip.html#a583678c1114e23277cc3393c82039572">tracktion_engine::StepClip</a>, and <a class="el" href="classtracktion__engine_1_1MidiClip.html#a4f5b7a95bbb64631e9fb9bd0d259f58f">tracktion_engine::MidiClip</a>.</p>
 
 </div>
 </div>
@@ -1499,6 +1615,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Sets the loop range the clip should use in seconds. </p>
 
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a9f7e931da1d751946b6c024323c27822">tracktion_engine::AudioClipBase</a>, and <a class="el" href="classtracktion__engine_1_1MidiClip.html#af4a60387da023d6158893dbfab366ec4">tracktion_engine::MidiClip</a>.</p>
 
@@ -1528,6 +1646,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Sets the loop range the clip should use in beats. </p>
+
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a7a5b425c50e3f57258428117a81ac49a">tracktion_engine::AudioClipBase</a>, and <a class="el" href="classtracktion__engine_1_1MidiClip.html#a01ce85a3e75f30819de6dd82e26febe8">tracktion_engine::MidiClip</a>.</p>
 
 </div>
@@ -1554,6 +1674,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns true if the clip is muted. </p>
 
 <p>Implemented in <a class="el" href="classtracktion__engine_1_1StepClip.html#af4d77fa6b8ede67dc7bd7571145de967">tracktion_engine::StepClip</a>, <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a9ba75fab6608bea1f22d6fb3a7912b93">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1MidiClip.html#a3ea30e31004730609db3ff1af5ac0495">tracktion_engine::MidiClip</a>, <a class="el" href="classtracktion__engine_1_1MarkerClip.html#ae097cfa6bdce0c895c23b81289534398">tracktion_engine::MarkerClip</a>, <a class="el" href="classtracktion__engine_1_1ChordClip.html#a6d5db500a2fd18b110ec233ae434029b">tracktion_engine::ChordClip</a>, and <a class="el" href="classtracktion__engine_1_1ArrangerClip.html#a61384af872c5c5d8b09be1eb6591588d">tracktion_engine::ArrangerClip</a>.</p>
 
@@ -1583,6 +1705,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Mutes or unmutes the clip. </p>
+
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a5ea4d8c1441eaeb2e067ac77e80e3e35">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1StepClip.html#a3fcf95af8b1d4faa54c8b9f49847af69">tracktion_engine::StepClip</a>, and <a class="el" href="classtracktion__engine_1_1MidiClip.html#a6296567bad57c102dd6e4f117c104f2b">tracktion_engine::MidiClip</a>.</p>
 
 </div>
@@ -1611,6 +1735,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Sets the sync type for the clip. </p>
+
 <p class="reference">References <a class="el" href="classtracktion__engine_1_1Clip.html#ae5eacaa32c570b97988e48cde1f1ddee">syncType</a>.</p>
 
 </div>
@@ -1629,6 +1755,8 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the sync type clip is using. </p>
 
 <p class="reference">References <a class="el" href="classtracktion__engine_1_1Clip.html#ae5eacaa32c570b97988e48cde1f1ddee">syncType</a>.</p>
 
@@ -1649,6 +1777,8 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the position of the clip. </p>
 
 </div>
 </div>
@@ -1684,6 +1814,16 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the start time of the clip. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">newStart</td><td>The start time in seconds </td></tr>
+    <tr><td class="paramname">preserveSync</td><td>Whether the source material position should be kept static in relation to the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>'s timeline. </td></tr>
+    <tr><td class="paramname">keepLength</td><td>Whether the end should be moved to keep the same length. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a27545dbbf7c986a3d5ced1bccac513ed"></a>
@@ -1711,6 +1851,15 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the length of the clip. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">newLength</td><td>The length in seconds </td></tr>
+    <tr><td class="paramname">preserveSync</td><td>Whether the source material position should be kept static in relation to the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>'s timeline. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -1740,6 +1889,15 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the end of the clip. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">newEnd</td><td>The end time in seconds </td></tr>
+    <tr><td class="paramname">preserveSync</td><td>Whether the source material position should be kept static in relation to the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>'s timeline. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a98bfa385fc729ae3e916b4ad87a9b562"></a>
@@ -1757,6 +1915,14 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the offset of the clip, i.e. </p>
+<p>how much the clip's content should be shifted within the clip boundary. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">newOffset</td><td>The offset in seconds </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -1776,7 +1942,7 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>trims away any part of the clip that overlaps this region. </p>
+<p>Trims away any part of the clip that overlaps this region. </p>
 
 </div>
 </div>
@@ -1795,6 +1961,8 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Removes this clip from the parent track. </p>
+
 </div>
 </div>
 <a id="a051057e8d694fed08a9f3fcee187ca2a"></a>
@@ -1812,6 +1980,9 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Moves the clip to a new <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> (if possible). </p>
+<dl class="section return"><dt>Returns</dt><dd>true if the clip could be moved. </dd></dl>
 
 </div>
 </div>
@@ -1837,6 +2008,9 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns the speed ratio i.e. </p>
+<p>how quickly the clip plays back. </p>
 
 <p class="reference">References <a class="el" href="classtracktion__engine_1_1Clip.html#a9b9d3bbdf72129762df0c7565e7fb5ec">speedRatio</a>.</p>
 
@@ -1865,6 +2039,9 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Sets a speed ratio i.e. </p>
+<p>how quickly the clip plays back. </p>
 
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#afc2db1decf20044a33f256031451df6a">tracktion_engine::AudioClipBase</a>.</p>
 
@@ -1904,6 +2081,15 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>stretches and scales this clip relative to a fixed point in the edit. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pivotTimeInEdit</td><td>The time to keep fixed </td></tr>
+    <tr><td class="paramname">factor</td><td>The scale factor </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1MidiClip.html#a471c65f11a8f62b63f8a12a494eaef51">tracktion_engine::MidiClip</a>.</p>
 
 </div>
@@ -1931,7 +2117,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Should return true if this clip is part of a group. </p>
+<p>Returns true if the clip is part of a group. </p>
 
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1TrackItem.html#af88bf1ed1dd1b5ae842eba186c39e88d">tracktion_engine::TrackItem</a>.</p>
 
@@ -1962,7 +2148,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>If this clip is part of a group, this should return the parent item it belongs to. </p>
+<p>Returns the parent <a class="el" href="classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g.">TrackItem</a> if part of a group. </p>
 
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1TrackItem.html#a3b4445c9c3de9362d33e9b30c11bbfc6">tracktion_engine::TrackItem</a>.</p>
 
@@ -1983,6 +2169,8 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the clip to be part of a group. </p>
 
 </div>
 </div>
@@ -2009,6 +2197,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns the ID of the group. </p>
+
 <p class="reference">References <a class="el" href="classtracktion__engine_1_1Clip.html#ad3a8c5c1bdb2ccb7bc4201eb3449cf34">groupID</a>.</p>
 
 </div>
@@ -2028,6 +2218,8 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns this as a <a class="el" href="classtracktion__engine_1_1CollectionClip.html">CollectionClip</a> if it is one. </p>
+
 </div>
 </div>
 <a id="aa95ddbc6db9927b67b9633de0dc09ca6"></a>
@@ -2044,6 +2236,8 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns true if this clip is linked with any others. </p>
 
 <p class="reference">References <a class="el" href="classtracktion__engine_1_1Clip.html#a1c237001b1ddc74d9e8483c106487720">linkID</a>.</p>
 
@@ -2065,6 +2259,8 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the link ID to link this clip with others. </p>
+
 <p class="reference">References <a class="el" href="classtracktion__engine_1_1Clip.html#a1c237001b1ddc74d9e8483c106487720">linkID</a>.</p>
 
 </div>
@@ -2084,6 +2280,8 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns the link ID of this clip. </p>
+
 <p class="reference">References <a class="el" href="classtracktion__engine_1_1Clip.html#a1c237001b1ddc74d9e8483c106487720">linkID</a>.</p>
 
 </div>
@@ -2102,6 +2300,8 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the parent <a class="el" href="classtracktion__engine_1_1ClipTrack.html">ClipTrack</a> this clip is on. </p>
 
 <p class="reference">References <a class="el" href="classtracktion__engine_1_1Clip.html#a38c2ce960410ac344bb75c45bb25fbb0">track</a>.</p>
 
@@ -2130,7 +2330,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Must return the track this item lives on. </p>
+<p>Returns the parent <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> this clip is on. </p>
 
 <p>Implements <a class="el" href="classtracktion__engine_1_1TrackItem.html#ac93af4dd4fc312b77587150e2db12967">tracktion_engine::TrackItem</a>.</p>
 
@@ -2159,6 +2359,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns the colour property of this clip. </p>
+
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1MarkerClip.html#ae37ac6acc7debd53dba7527fa5972fb9">tracktion_engine::MarkerClip</a>, and <a class="el" href="classtracktion__engine_1_1ChordClip.html#aac1473864ec016986cea57066dfb0d32">tracktion_engine::ChordClip</a>.</p>
 
 </div>
@@ -2178,6 +2380,8 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the colour property of this clip. </p>
 
 <p class="reference">References <a class="el" href="classtracktion__engine_1_1Clip.html#a68b8adbb4ef55fcd4a9b7840ae86d0be">colour</a>.</p>
 
@@ -2207,7 +2411,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>if the clip can contain plugins, it should implement this </p>
+<p>Removes the given plugin from the clip if the clip supports plugins. </p>
 
 </div>
 </div>
@@ -2245,7 +2449,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>returns false if the clip can't do this </p>
+<p>Adds a plugin to the clip. </p>
+<dl class="section return"><dt>Returns</dt><dd>false if the clip contain plugins. </dd></dl>
 
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#ae2befdc6a23c76bd0af5c0a73f25434d">tracktion_engine::AudioClipBase</a>.</p>
 
@@ -2273,6 +2478,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns all the plugins on the clip. </p>
 
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#aa3d717074472c1e0dc69785bb4c98637">tracktion_engine::AudioClipBase</a>.</p>
 
@@ -2302,6 +2509,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Sends an update to all plugins mirroing the one passed in. </p>
+
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a6429b5f8db7f56ec428d27463a6b43b5">tracktion_engine::AudioClipBase</a>.</p>
 
 </div>
@@ -2329,35 +2538,9 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns the <a class="el" href="classtracktion__engine_1_1PluginList.html" title="Holds a sequence of plugins.">PluginList</a> for this clip if it has one. </p>
+
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#aff0d3414b36b32a1074b0f6f20591dfc">tracktion_engine::AudioClipBase</a>.</p>
-
-</div>
-</div>
-<a id="a0aae113abc53a228d5c7f8636145dc02"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0aae113abc53a228d5c7f8636145dc02">&#9670;&nbsp;</a></span>createAudioNode()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a>* tracktion_engine::Clip::createAudioNode </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtracktion__engine_1_1CreateAudioNodeParams.html">CreateAudioNodeParams</a> &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a913c3305cb25520832810ac7f1af3954">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1StepClip.html#aad1c4166d7a8ee4fd253b2087fc0dbb2">tracktion_engine::StepClip</a>, <a class="el" href="classtracktion__engine_1_1MarkerClip.html#aa0264f9ee9556902ccd6cf5559c46285">tracktion_engine::MarkerClip</a>, <a class="el" href="classtracktion__engine_1_1ChordClip.html#a2e0db3c4d479d4aa194cd2d669d68e8e">tracktion_engine::ChordClip</a>, <a class="el" href="classtracktion__engine_1_1ArrangerClip.html#a78d883cc4478eb676817d4e360dbde93">tracktion_engine::ArrangerClip</a>, and <a class="el" href="classtracktion__engine_1_1MidiClip.html#a2cf2fa19e1e34b2d3f6d73de772d729a">tracktion_engine::MidiClip</a>.</p>
 
 </div>
 </div>
@@ -2384,7 +2567,9 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classtracktion__engine_1_1StepClip.html#a75543a308864bd974964421b409b4920">tracktion_engine::StepClip</a>, <a class="el" href="classtracktion__engine_1_1MidiClip.html#adca037e7f2bcda200c5d60a882aa0818">tracktion_engine::MidiClip</a>, <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a562f13605d0690e01ca635d64b2cb691">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1MarkerClip.html#af820035167e7900184e0a56c219554ae">tracktion_engine::MarkerClip</a>, <a class="el" href="classtracktion__engine_1_1ChordClip.html#a4e324dd66bfec7bbb0a066aa758ce5a4">tracktion_engine::ChordClip</a>, and <a class="el" href="classtracktion__engine_1_1ArrangerClip.html#a11df240efa69ec5ca48a449eb60018f6">tracktion_engine::ArrangerClip</a>.</p>
+<p>Returns the default colour for this clip. </p>
+
+<p>Implemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a562f13605d0690e01ca635d64b2cb691">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1StepClip.html#a75543a308864bd974964421b409b4920">tracktion_engine::StepClip</a>, <a class="el" href="classtracktion__engine_1_1MidiClip.html#adca037e7f2bcda200c5d60a882aa0818">tracktion_engine::MidiClip</a>, <a class="el" href="classtracktion__engine_1_1MarkerClip.html#af820035167e7900184e0a56c219554ae">tracktion_engine::MarkerClip</a>, <a class="el" href="classtracktion__engine_1_1ChordClip.html#a4e324dd66bfec7bbb0a066aa758ce5a4">tracktion_engine::ChordClip</a>, and <a class="el" href="classtracktion__engine_1_1ArrangerClip.html#a11df240efa69ec5ca48a449eb60018f6">tracktion_engine::ArrangerClip</a>.</p>
 
 </div>
 </div>
@@ -2410,6 +2595,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Clears any takes this clip has. </p>
 
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1MidiClip.html#a44327fd7f493b78a08e18259646a220c">tracktion_engine::MidiClip</a>, and <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#adb1145fea79694101be4beb7baec832b">tracktion_engine::WaveAudioClip</a>.</p>
 
@@ -2438,6 +2625,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns true if this clip has any takes. </p>
+
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1MidiClip.html#af58cd5b3273c10a22160dcd59371c504">tracktion_engine::MidiClip</a>, and <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#adee2ad3e328003b881d6927326bef0d6">tracktion_engine::WaveAudioClip</a>.</p>
 
 </div>
@@ -2464,6 +2653,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns the descriptions of any takes. </p>
 
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1MidiClip.html#aa06d637969ab949b4dd52b04c472e8c3">tracktion_engine::MidiClip</a>, and <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#adcb9632b2688c53d1fe0d721a1aaeac0">tracktion_engine::WaveAudioClip</a>.</p>
 
@@ -2493,6 +2684,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Sets a given take index to be the current take. </p>
+
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1MidiClip.html#a129f1e457f0e2ae3a4ae6f4e856793ef">tracktion_engine::MidiClip</a>, and <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#a0316541dfdb753382d4bd39749438a68">tracktion_engine::WaveAudioClip</a>.</p>
 
 </div>
@@ -2519,6 +2712,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns the current take index. </p>
 
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1MidiClip.html#a6fca5e3061ae2c6d864d6c2a437c16f2">tracktion_engine::MidiClip</a>, and <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#ae62c8a9c1c349b8f1e3f45af79e40e79">tracktion_engine::WaveAudioClip</a>.</p>
 
@@ -2550,6 +2745,14 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns the total number of takes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">includeComps</td><td>Whether comps should be included in the count </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1MidiClip.html#a47d8a740063860de58237c6d97c927f6">tracktion_engine::MidiClip</a>, and <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#a1504c0c81331a74e47134c18d9b2953b">tracktion_engine::WaveAudioClip</a>.</p>
 
 </div>
@@ -2576,6 +2779,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns true if the current take is a comp. </p>
 
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1MidiClip.html#a7b69b305195202f6b21d43918497f2f3">tracktion_engine::MidiClip</a>, and <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#af81ad171237282b17318a2d0caeae720">tracktion_engine::WaveAudioClip</a>.</p>
 
@@ -2605,6 +2810,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Sets whether the clip should be showing takes. </p>
+
 <p class="reference">References <a class="el" href="classtracktion__engine_1_1Clip.html#a86dd1b09c0230a7aa5aab2f1eb2e72e0">showingTakes</a>.</p>
 
 </div>
@@ -2631,6 +2838,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns true if the clip is showing takes. </p>
 
 <p class="reference">References <a class="el" href="classtracktion__engine_1_1Clip.html#a86dd1b09c0230a7aa5aab2f1eb2e72e0">showingTakes</a>.</p>
 
@@ -2660,6 +2869,14 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Attempts to unpack the takes to new clips. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">toNewTracks</td><td>If true this will create new tracks for the new clips, otherwise they'll be placed on existing tracks </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1MidiClip.html#aa77e2b3d527570134b0ecd99433be374">tracktion_engine::MidiClip</a>, and <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#a4e54bad011c590f33218b507901c512b">tracktion_engine::WaveAudioClip</a>.</p>
 
 </div>
@@ -2688,7 +2905,9 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a32d93c6e3b7adfe8790cc9d38b6d34f1">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1EditClip.html#ac78e0218f8cb27d015d6be7bf4fe65ea">tracktion_engine::EditClip</a>, <a class="el" href="classtracktion__engine_1_1MidiClip.html#a0cf18b6a0d7f6606fb1afff1d0e645bc">tracktion_engine::MidiClip</a>, <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#aa1512122f2f552087cd78e5a759192c1">tracktion_engine::WaveAudioClip</a>, and <a class="el" href="classtracktion__engine_1_1StepClip.html#a229d623fa1af9c2ec4dd1faca4446f96">tracktion_engine::StepClip</a>.</p>
+<p>Clones the given clip to this clip. </p>
+
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a32d93c6e3b7adfe8790cc9d38b6d34f1">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#aa1512122f2f552087cd78e5a759192c1">tracktion_engine::WaveAudioClip</a>, <a class="el" href="classtracktion__engine_1_1EditClip.html#ac78e0218f8cb27d015d6be7bf4fe65ea">tracktion_engine::EditClip</a>, <a class="el" href="classtracktion__engine_1_1MidiClip.html#a0cf18b6a0d7f6606fb1afff1d0e645bc">tracktion_engine::MidiClip</a>, and <a class="el" href="classtracktion__engine_1_1StepClip.html#a229d623fa1af9c2ec4dd1faca4446f96">tracktion_engine::StepClip</a>.</p>
 
 </div>
 </div>
@@ -2707,22 +2926,8 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="a41a0f1fa155baebec02ec715a490cc11"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41a0f1fa155baebec02ec715a490cc11">&#9670;&nbsp;</a></span>showLoopMenu()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion_engine::Clip::showLoopMenu </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p>Triggers a call to cloneFrom for all clips with the same linkID. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1Clip.html#a019c2f408dabdd2c8cc7d9f674e5a900" title="Sets the link ID to link this clip with others.">setLinkGroupID</a> </dd></dl>
 
 </div>
 </div>
@@ -2749,7 +2954,10 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1MidiClip.html#a6de507e8aa4aff005d617152ce90ba7a">tracktion_engine::MidiClip</a>, <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a2d5633572c846bb8ffa4ede94c74c0d0">tracktion_engine::AudioClipBase</a>, and <a class="el" href="classtracktion__engine_1_1ChordClip.html#acc1c1cf2a88e91e831ab4b777a07794c">tracktion_engine::ChordClip</a>.</p>
+<p>Returns the <a class="el" href="classtracktion__engine_1_1PatternGenerator.html">PatternGenerator</a> for this clip if it has one. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1MidiClip.html">MidiClip</a> </dd></dl>
+
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a2d5633572c846bb8ffa4ede94c74c0d0">tracktion_engine::AudioClipBase</a>, <a class="el" href="classtracktion__engine_1_1MidiClip.html#a6de507e8aa4aff005d617152ce90ba7a">tracktion_engine::MidiClip</a>, and <a class="el" href="classtracktion__engine_1_1ChordClip.html#acc1c1cf2a88e91e831ab4b777a07794c">tracktion_engine::ChordClip</a>.</p>
 
 </div>
 </div>
@@ -2837,8 +3045,6 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>This should be called to send a change notification to any SelectableListeners that are registered with this object. </p>
-
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Selectable.html#a7c23e416b6cadd9fa26a812c6e53ae6e">tracktion_engine::Selectable</a>.</p>
 
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1EditClip.html#ada8e0e13790456f069e0812ba2eb5bd3">tracktion_engine::EditClip</a>.</p>
@@ -2859,6 +3065,9 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the UndoManager. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1Edit.html#a268797aa0d797f11a394719bc6c86501" title="Returns the juce::UndoManager used for this Edit.">Edit::getUndoManager</a>. </dd></dl>
 
 </div>
 </div>
@@ -2886,6 +3095,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Sets a new source file for this clip. </p>
+
 </div>
 </div>
 <a id="a94e25f6065936218e56e427a65e35013"></a>
@@ -2912,32 +3123,9 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Moves this clip to a new <a class="el" href="classtracktion__engine_1_1ClipTrack.html">ClipTrack</a>. </p>
+
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#aaf25bd201a6ea0ad95d5ab77c92f883f">tracktion_engine::AudioClipBase</a>, and <a class="el" href="classtracktion__engine_1_1ChordClip.html#ad7dc82705c5e0db9e6cff2d933162d9e">tracktion_engine::ChordClip</a>.</p>
-
-</div>
-</div>
-<a id="a765ad9cc17df595ce2022d2255a922d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a765ad9cc17df595ce2022d2255a922d9">&#9670;&nbsp;</a></span>updateParentTrack()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion_engine::Clip::updateParentTrack </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
 
 </div>
 </div>
@@ -2963,6 +3151,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns the mark points relative to the start of the clip, rescaled to the current speed. </p>
 
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#afc2bf2fddbcfa0308c6955ec3d60270b">tracktion_engine::AudioClipBase</a>.</p>
 
@@ -3163,6 +3353,8 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>The ValueTree of the <a class="el" href="classtracktion__engine_1_1Clip.html" title="A clip in an edit.">Clip</a> state. </p>
+
 </div>
 </div>
 <a id="a68b8adbb4ef55fcd4a9b7840ae86d0be"></a>
@@ -3176,6 +3368,8 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>The colour property. </p>
 
 <p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1Clip.html#acf2949a351612577b4aaf96c2123b182">setColour()</a>.</p>
 
@@ -3581,7 +3775,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 10 2021 09:52:54 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 25 2021 13:15:29 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

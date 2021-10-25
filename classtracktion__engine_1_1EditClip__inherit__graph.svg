@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="node1" class="node">
 <title>Node1</title>
-<g id="a_node1"><a xlink:title="This is the main source of an Edit clip and is responsible for managing its properties and creating a...">
+<g id="a_node1"><a xlink:title="This is the main source of an Edit clip and is responsible for managing its properties.">
 <polygon fill="#bfbfbf" stroke="black" points="341,-0.5 341,-19.5 483,-19.5 483,-0.5 341,-0.5"/>
 <text text-anchor="middle" x="412" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::EditClip</text>
 </a>

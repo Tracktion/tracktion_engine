@@ -68,7 +68,6 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classtracktion__engine_1_1OutputDeviceInstance-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">tracktion_engine::OutputDeviceInstance Class Reference</div>  </div>
@@ -87,11 +86,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0787bbe3b10380a85b054fc280b0eaae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a169722b051690f0a13f5709611aadf75"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1OutputDeviceInstance.html#a169722b051690f0a13f5709611aadf75">~OutputDeviceInstance</a> ()</td></tr>
 <tr class="separator:a169722b051690f0a13f5709611aadf75"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb5b5cbdf056bb033ca22b8a2a76f3ff"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1OutputDeviceInstance.html#acb5b5cbdf056bb033ca22b8a2a76f3ff">replaceAudioNode</a> (std::unique_ptr&lt; <a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> &gt; newNode)</td></tr>
-<tr class="memdesc:acb5b5cbdf056bb033ca22b8a2a76f3ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces the current node with a new one, and returns the old one.  <a href="classtracktion__engine_1_1OutputDeviceInstance.html#acb5b5cbdf056bb033ca22b8a2a76f3ff">More...</a><br /></td></tr>
-<tr class="separator:acb5b5cbdf056bb033ca22b8a2a76f3ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad802b296638ed7184a965f2d19af958e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1OutputDeviceInstance.html#ad802b296638ed7184a965f2d19af958e">getAudioNode</a> () const</td></tr>
-<tr class="separator:ad802b296638ed7184a965f2d19af958e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -101,13 +95,6 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a52a050aeac31fa687e91a97e284f5665"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c7a81dc78225965c9a069e87831bf0d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1OutputDeviceInstance.html#a5c7a81dc78225965c9a069e87831bf0d">edit</a></td></tr>
 <tr class="separator:a5c7a81dc78225965c9a069e87831bf0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
-<tr class="memitem:af9a8a745f1e2b6f01d4de9df8d99a6f2"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1OutputDeviceInstance.html#af9a8a745f1e2b6f01d4de9df8d99a6f2">audioNode</a></td></tr>
-<tr class="separator:af9a8a745f1e2b6f01d4de9df8d99a6f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae35a89435b27c4adb1881037a37dba1e"><td class="memItemLeft" align="right" valign="top">juce::CriticalSection&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1OutputDeviceInstance.html#ae35a89435b27c4adb1881037a37dba1e">audioNodeLock</a></td></tr>
-<tr class="separator:ae35a89435b27c4adb1881037a37dba1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a0787bbe3b10380a85b054fc280b0eaae"></a>
@@ -163,44 +150,6 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="acb5b5cbdf056bb033ca22b8a2a76f3ff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acb5b5cbdf056bb033ca22b8a2a76f3ff">&#9670;&nbsp;</a></span>replaceAudioNode()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a>* tracktion_engine::OutputDeviceInstance::replaceAudioNode </td>
-          <td>(</td>
-          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> &gt;&#160;</td>
-          <td class="paramname"><em>newNode</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Replaces the current node with a new one, and returns the old one. </p>
-
-</div>
-</div>
-<a id="ad802b296638ed7184a965f2d19af958e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad802b296638ed7184a965f2d19af958e">&#9670;&nbsp;</a></span>getAudioNode()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a>* tracktion_engine::OutputDeviceInstance::getAudioNode </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="a0b550818d9c95f3d2194f45acaa00794"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0b550818d9c95f3d2194f45acaa00794">&#9670;&nbsp;</a></span>owner</h2>
@@ -246,57 +195,13 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="af9a8a745f1e2b6f01d4de9df8d99a6f2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af9a8a745f1e2b6f01d4de9df8d99a6f2">&#9670;&nbsp;</a></span>audioNode</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::unique_ptr&lt;<a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a>&gt; tracktion_engine::OutputDeviceInstance::audioNode</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae35a89435b27c4adb1881037a37dba1e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae35a89435b27c4adb1881037a37dba1e">&#9670;&nbsp;</a></span>audioNodeLock</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">juce::CriticalSection tracktion_engine::OutputDeviceInstance::audioNodeLock</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="tracktion__OutputDevice_8h.html">tracktion_OutputDevice.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 10 2021 09:52:55 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 25 2021 13:15:29 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

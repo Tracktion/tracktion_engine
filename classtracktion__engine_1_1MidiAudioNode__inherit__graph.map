@@ -1,4 +1,0 @@
-<map id="tracktion_engine::MidiAudioNode" name="tracktion_engine::MidiAudioNode">
-<area shape="rect" id="node1" title="An AudioNode that plays MIDI data from a MidiMessageSequence, at a specific MIDI channel." alt="" coords="5,80,244,107"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1AudioNode.html" title="Base class for nodes in an audio playback graph." alt="" coords="19,5,230,32"/>
-</map>

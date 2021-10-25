@@ -1,5 +1,5 @@
 <map id="tracktion_engine::WaveAudioClip" name="tracktion_engine::WaveAudioClip">
-<area shape="rect" id="node1" title=" " alt="" coords="309,319,547,345"/>
+<area shape="rect" id="node1" title="An audio clip that uses an audio file as its source." alt="" coords="309,319,547,345"/>
 <area shape="rect" id="node2" href="$classtracktion__engine_1_1AudioClipBase.html" title="Base class for Clips that produce some kind of audio e.g." alt="" coords="311,244,545,271"/>
 <area shape="rect" id="node3" href="$classtracktion__engine_1_1Clip.html" title="A clip in an edit." alt="" coords="247,162,411,189"/>
 <area shape="rect" id="node4" href="$classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g." alt="" coords="113,80,316,107"/>

@@ -245,7 +245,6 @@ $(function() {
 <li>addInput()
 : <a class="el" href="classtracktion__engine_1_1CombiningAudioNode.html#af4af8b8fb819b736a11708ba56469f8d">tracktion_engine::CombiningAudioNode</a>
 , <a class="el" href="classtracktion__engine_1_1CombiningNode.html#a135067dec21358c2342fcfc391029fe7">tracktion_engine::CombiningNode</a>
-, <a class="el" href="classtracktion__engine_1_1MixerAudioNode.html#aab6d931bcb0af11ba7d6726c8c6ca07c">tracktion_engine::MixerAudioNode</a>
 , <a class="el" href="classtracktion__engine_1_1RackType.html#af8da2f2e77bb78ac8f42d8b1386ee510">tracktion_engine::RackType</a>
 , <a class="el" href="classtracktion__graph_1_1SummingNode.html#ac9e8a063597c78c6df42c21330c71cec">tracktion_graph::SummingNode</a>
 </li>
@@ -327,7 +326,7 @@ $(function() {
 : <a class="el" href="classtracktion__engine_1_1MidiProgramManager.html#a17bb434070c6c321bde4dfa1fe48ca1b">tracktion_engine::MidiProgramManager</a>
 </li>
 <li>addNote()
-: <a class="el" href="classtracktion__engine_1_1MidiList.html#a49a6a55f38a9849f17d3668fe2b056d1">tracktion_engine::MidiList</a>
+: <a class="el" href="classtracktion__engine_1_1MidiList.html#adf8093aaf0d212877e4b33041af442af">tracktion_engine::MidiList</a>
 </li>
 <li>addOutput()
 : <a class="el" href="classtracktion__engine_1_1RackType.html#aa946a973aa2b8b03eed31ca86bbfe528">tracktion_engine::RackType</a>
@@ -580,8 +579,8 @@ $(function() {
 <li>appendBuffer()
 : <a class="el" href="classtracktion__engine_1_1AudioFileWriter.html#a9309654394dc05691714515cfb2fcef6">tracktion_engine::AudioFileWriter</a>
 </li>
-<li>applyAudioFromSend()
-: <a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#ac5030230974ec61967c38c0723847016">tracktion_engine::AuxReturnPlugin</a>
+<li>applyAntiDenormalisationNoise
+: <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#ad097162658c010f837b453080b26068d">tracktion_engine::PluginAudioNode</a>
 </li>
 <li>applyBWAVStartTime()
 : <a class="el" href="structtracktion__engine_1_1AudioFileUtils.html#a5287e89480c756d68cee457c30cf0e6e">tracktion_engine::AudioFileUtils</a>
@@ -632,6 +631,7 @@ $(function() {
 , <a class="el" href="classtracktion__engine_1_1ExternalPlugin.html#aad6629a8b50a92f91ffe89e9d83ff6db">tracktion_engine::ExternalPlugin</a>
 , <a class="el" href="classtracktion__engine_1_1FourOscPlugin.html#a580e4953ee4bcd9601caf8f5f83b1ddd">tracktion_engine::FourOscPlugin</a>
 , <a class="el" href="classtracktion__engine_1_1FreezePointPlugin.html#a12c763160b184fad1a8344c29f6429c2">tracktion_engine::FreezePointPlugin</a>
+, <a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#ad899799fb6c3b3c01f7ba147f2f42cf5">tracktion_engine::ImpulseResponsePlugin</a>
 , <a class="el" href="classtracktion__engine_1_1InsertPlugin.html#af61ff32f21115e3fccc48615a22ab920">tracktion_engine::InsertPlugin</a>
 , <a class="el" href="classtracktion__engine_1_1LatencyPlugin.html#a468728ead73c380c576df8b7c31ac4c2">tracktion_engine::LatencyPlugin</a>
 , <a class="el" href="classtracktion__engine_1_1LevelMeterPlugin.html#a308b499af983fa5674fb1349dd081af8">tracktion_engine::LevelMeterPlugin</a>
@@ -818,7 +818,7 @@ $(function() {
 : <a class="el" href="classtracktion__engine_1_1AutomatableParameter.html#abaccb522346e475b6100a41a5dcd819b">tracktion_engine::AutomatableParameter</a>
 </li>
 <li>attachToCurrentValue()
-: <a class="el" href="classtracktion__engine_1_1AutomatableParameter.html#a0e54b275e99ee4b7cea26ad7cc04bc4f">tracktion_engine::AutomatableParameter</a>
+: <a class="el" href="classtracktion__engine_1_1AutomatableParameter.html#addb6e00c191f5a678edb3c75fc991475">tracktion_engine::AutomatableParameter</a>
 </li>
 <li>attack
 : <a class="el" href="classtracktion__engine_1_1EnvelopeFollowerModifier.html#a76cd2390d54c85fadb4aaa0ade1f9650">tracktion_engine::EnvelopeFollowerModifier</a>
@@ -845,7 +845,7 @@ $(function() {
 : <a class="el" href="classtracktion__engine_1_1MidiOutputDevice.html#a18d08fc40ff36c1e004b63746a77e1ca">tracktion_engine::MidiOutputDevice</a>
 </li>
 <li>AudioBufferPool()
-: <a class="el" href="classtracktion__graph_1_1AudioBufferPool.html#aba18e61e4d72c74f51b05d3c6b9d6389">tracktion_graph::AudioBufferPool</a>
+: <a class="el" href="classtracktion__graph_1_1AudioBufferPool.html#a00684a36c06b35b710362807b9360a56">tracktion_graph::AudioBufferPool</a>
 </li>
 <li>AudioBufferSnapshot()
 : <a class="el" href="classtracktion__engine_1_1AudioBufferSnapshot.html#a22ec1df8ea877e6dc8a4160781a1e59c">tracktion_engine::AudioBufferSnapshot</a>
@@ -870,7 +870,7 @@ $(function() {
 , <a class="el" href="classtracktion__graph_1_1AudioFifo.html#a0ac8067579acf4594fe8f1ff880e6a47">tracktion_graph::AudioFifo</a>
 </li>
 <li>AudioFile()
-: <a class="el" href="classtracktion__engine_1_1AudioFile.html#a758b3d0c70d0a47dc896361840fa3782">tracktion_engine::AudioFile</a>
+: <a class="el" href="classtracktion__engine_1_1AudioFile.html#a906450492288edb9554dae0e2f25d7ab">tracktion_engine::AudioFile</a>
 </li>
 <li>audioFile
 : <a class="el" href="structtracktion__engine_1_1SamplerPlugin_1_1SamplerSound.html#a49f33bb540b8eb216aaafc3f61b2b12b">tracktion_engine::SamplerPlugin::SamplerSound</a>
@@ -907,12 +907,6 @@ $(function() {
 </li>
 <li>AudioNode()
 : <a class="el" href="classtracktion__engine_1_1AudioNode.html#ae06aff291fb45d7839be5a6cd2080206">tracktion_engine::AudioNode</a>
-</li>
-<li>audioNode
-: <a class="el" href="classtracktion__engine_1_1OutputDeviceInstance.html#af9a8a745f1e2b6f01d4de9df8d99a6f2">tracktion_engine::OutputDeviceInstance</a>
-</li>
-<li>audioNodeLock
-: <a class="el" href="classtracktion__engine_1_1OutputDeviceInstance.html#ae35a89435b27c4adb1881037a37dba1e">tracktion_engine::OutputDeviceInstance</a>
 </li>
 <li>audioNodeToBeReplaced
 : <a class="el" href="structtracktion__engine_1_1CreateAudioNodeParams.html#ac226ebbbfa09000f722e7a6c2f9cbe1c">tracktion_engine::CreateAudioNodeParams</a>
@@ -965,7 +959,7 @@ $(function() {
 : <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#ac4e578e62e68f235bed6555ac06f4d69">tracktion_engine::AudioClipBase</a>
 </li>
 <li>autoDetectBeatMarkers()
-: <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#ab272fddbe0fb5c3433ea1c1dbe1deb8a">tracktion_engine::AudioClipBase</a>
+: <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a637f9afa417272c7169049000d41af3d">tracktion_engine::AudioClipBase</a>
 </li>
 <li>autoDetectBeats
 : <a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a338f1c7e3db8db35c9677b8f773ef0da">tracktion_engine::AudioClipBase</a>
@@ -995,7 +989,7 @@ $(function() {
 : <a class="el" href="classtracktion__engine_1_1AutomatableParameterTree.html#a7ab1bd1e3d438108da027dd8e99621aa">tracktion_engine::AutomatableParameterTree</a>
 </li>
 <li>AutomationCurve()
-: <a class="el" href="classtracktion__engine_1_1AutomationCurve.html#a07baf7cc7fd7565084cc0976b0e06f3b">tracktion_engine::AutomationCurve</a>
+: <a class="el" href="classtracktion__engine_1_1AutomationCurve.html#a38112ebad025104f833e41fd75f09015">tracktion_engine::AutomationCurve</a>
 </li>
 <li>automationCurves
 : <a class="el" href="structtracktion__engine_1_1Clipboard_1_1Clips.html#ad34f02e7d6d2aafe3179e24973c859c4">tracktion_engine::Clipboard::Clips</a>
@@ -1014,7 +1008,7 @@ $(function() {
 , <a class="el" href="classtracktion__engine_1_1ExternalControllerManager.html#ad7f260375aba5202adb4d982f2573ebf">tracktion_engine::ExternalControllerManager</a>
 </li>
 <li>AutomationPoint()
-: <a class="el" href="structtracktion__engine_1_1AutomationCurve_1_1AutomationPoint.html#ab3596b08bcb199e71ff23e84b4f63275">tracktion_engine::AutomationCurve::AutomationPoint</a>
+: <a class="el" href="structtracktion__engine_1_1AutomationCurve_1_1AutomationPoint.html#ac862cf128873cb9ac8d33c08c18515c4">tracktion_engine::AutomationCurve::AutomationPoint</a>
 </li>
 <li>AutomationPoints()
 : <a class="el" href="structtracktion__engine_1_1Clipboard_1_1AutomationPoints.html#ab5a41f121290a376c596fbc684ba0e48">tracktion_engine::Clipboard::AutomationPoints</a>
@@ -1121,7 +1115,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 10 2021 09:52:56 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 25 2021 13:15:31 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

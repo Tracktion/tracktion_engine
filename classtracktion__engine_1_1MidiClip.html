@@ -101,6 +101,7 @@ Public Types</h2></td></tr>
 <tr class="memitem:acd9203fe7f0840fbb358f85c97c89ef5 inherit pub_types_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#acd9203fe7f0840fbb358f85c97c89ef5">SyncType</a> { <a class="el" href="classtracktion__engine_1_1Clip.html#acd9203fe7f0840fbb358f85c97c89ef5aec728062fbf735c9023117874216fe04">syncBarsBeats</a> = 0, 
 <a class="el" href="classtracktion__engine_1_1Clip.html#acd9203fe7f0840fbb358f85c97c89ef5abb3731f916226518ed4207527e4af41e">syncAbsolute</a>
  }</td></tr>
+<tr class="memdesc:acd9203fe7f0840fbb358f85c97c89ef5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines the clip sync type.  <a href="classtracktion__engine_1_1Clip.html#acd9203fe7f0840fbb358f85c97c89ef5">More...</a><br /></td></tr>
 <tr class="separator:acd9203fe7f0840fbb358f85c97c89ef5 inherit pub_types_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a290bbefa21e3e334a3f7d5f7724f19af inherit pub_types_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a290bbefa21e3e334a3f7d5f7724f19af">Ptr</a> = juce::ReferenceCountedObjectPtr&lt; <a class="el" href="classtracktion__engine_1_1Clip.html">Clip</a> &gt;</td></tr>
 <tr class="separator:a290bbefa21e3e334a3f7d5f7724f19af inherit pub_types_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -141,11 +142,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9495cda202831e1e42a128d359815b75"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a9495cda202831e1e42a128d359815b75">~MidiClip</a> () override</td></tr>
 <tr class="separator:a9495cda202831e1e42a128d359815b75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0cf18b6a0d7f6606fb1afff1d0e645bc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a0cf18b6a0d7f6606fb1afff1d0e645bc">cloneFrom</a> (<a class="el" href="classtracktion__engine_1_1Clip.html">Clip</a> *) override</td></tr>
+<tr class="memdesc:a0cf18b6a0d7f6606fb1afff1d0e645bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clones the given clip to this clip.  <a href="classtracktion__engine_1_1MidiClip.html#a0cf18b6a0d7f6606fb1afff1d0e645bc">More...</a><br /></td></tr>
 <tr class="separator:a0cf18b6a0d7f6606fb1afff1d0e645bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f94d6d5ca265c6f4636363eec348555"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1AudioTrack.html">AudioTrack</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a0f94d6d5ca265c6f4636363eec348555">getAudioTrack</a> () const</td></tr>
 <tr class="separator:a0f94d6d5ca265c6f4636363eec348555"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cf2fa19e1e34b2d3f6d73de772d729a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a2cf2fa19e1e34b2d3f6d73de772d729a">createAudioNode</a> (const <a class="el" href="structtracktion__engine_1_1CreateAudioNodeParams.html">CreateAudioNodeParams</a> &amp;) override</td></tr>
-<tr class="separator:a2cf2fa19e1e34b2d3f6d73de772d729a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f3b7c6889007fadece05c89afad9df3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1MidiList.html">MidiList</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a0f3b7c6889007fadece05c89afad9df3">getSequence</a> () const noexcept</td></tr>
 <tr class="separator:a0f3b7c6889007fadece05c89afad9df3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26b6a40eeb6516e3bc46454ce8cc2fad"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1MidiList.html">MidiList</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a26b6a40eeb6516e3bc46454ce8cc2fad">getSequenceLooped</a> ()</td></tr>
@@ -205,88 +205,121 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aeb7d935045426b23695145cfda29f220"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#aeb7d935045426b23695145cfda29f220">setSendingBankChanges</a> (bool sendBank)</td></tr>
 <tr class="separator:aeb7d935045426b23695145cfda29f220"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ea30e31004730609db3ff1af5ac0495"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a3ea30e31004730609db3ff1af5ac0495">isMuted</a> () const override</td></tr>
+<tr class="memdesc:a3ea30e31004730609db3ff1af5ac0495"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the clip is muted.  <a href="classtracktion__engine_1_1MidiClip.html#a3ea30e31004730609db3ff1af5ac0495">More...</a><br /></td></tr>
 <tr class="separator:a3ea30e31004730609db3ff1af5ac0495"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6296567bad57c102dd6e4f117c104f2b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a6296567bad57c102dd6e4f117c104f2b">setMuted</a> (bool m) override</td></tr>
+<tr class="memdesc:a6296567bad57c102dd6e4f117c104f2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mutes or unmutes the clip.  <a href="classtracktion__engine_1_1MidiClip.html#a6296567bad57c102dd6e4f117c104f2b">More...</a><br /></td></tr>
 <tr class="separator:a6296567bad57c102dd6e4f117c104f2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99396162f15b02fd60310d9827caa754"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion__engine_1_1LiveClipLevel.html">LiveClipLevel</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a99396162f15b02fd60310d9827caa754">getLiveClipLevel</a> ()</td></tr>
 <tr class="separator:a99396162f15b02fd60310d9827caa754"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cae30b780f5c0c58688b6272ba2fbcb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a6cae30b780f5c0c58688b6272ba2fbcb">initialise</a> () override</td></tr>
+<tr class="memdesc:a6cae30b780f5c0c58688b6272ba2fbcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialises the <a class="el" href="classtracktion__engine_1_1Clip.html" title="A clip in an edit.">Clip</a>.  <a href="classtracktion__engine_1_1MidiClip.html#a6cae30b780f5c0c58688b6272ba2fbcb">More...</a><br /></td></tr>
 <tr class="separator:a6cae30b780f5c0c58688b6272ba2fbcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55042e535b53e90ccbd8ebfa10dc4ce7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a55042e535b53e90ccbd8ebfa10dc4ce7">isMidi</a> () const override</td></tr>
+<tr class="memdesc:a55042e535b53e90ccbd8ebfa10dc4ce7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this is a <a class="el" href="classtracktion__engine_1_1MidiClip.html">MidiClip</a>.  <a href="classtracktion__engine_1_1MidiClip.html#a55042e535b53e90ccbd8ebfa10dc4ce7">More...</a><br /></td></tr>
 <tr class="separator:a55042e535b53e90ccbd8ebfa10dc4ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a471c65f11a8f62b63f8a12a494eaef51"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a471c65f11a8f62b63f8a12a494eaef51">rescale</a> (double pivotTimeInEdit, double factor) override</td></tr>
+<tr class="memdesc:a471c65f11a8f62b63f8a12a494eaef51"><td class="mdescLeft">&#160;</td><td class="mdescRight">stretches and scales this clip relative to a fixed point in the edit.  <a href="classtracktion__engine_1_1MidiClip.html#a471c65f11a8f62b63f8a12a494eaef51">More...</a><br /></td></tr>
 <tr class="separator:a471c65f11a8f62b63f8a12a494eaef51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f014bfdb2376abdb4dd206b432cb518"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a4f014bfdb2376abdb4dd206b432cb518">canGoOnTrack</a> (<a class="el" href="classtracktion__engine_1_1Track.html">Track</a> &amp;) override</td></tr>
+<tr class="memdesc:a4f014bfdb2376abdb4dd206b432cb518"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests whether this clip can go on the given track.  <a href="classtracktion__engine_1_1MidiClip.html#a4f014bfdb2376abdb4dd206b432cb518">More...</a><br /></td></tr>
 <tr class="separator:a4f014bfdb2376abdb4dd206b432cb518"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34721aca4286006b2443329a96f80303"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a34721aca4286006b2443329a96f80303">getSelectableDescription</a> () override</td></tr>
 <tr class="memdesc:a34721aca4286006b2443329a96f80303"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subclasses must return a description of what they are.  <a href="classtracktion__engine_1_1MidiClip.html#a34721aca4286006b2443329a96f80303">More...</a><br /></td></tr>
 <tr class="separator:a34721aca4286006b2443329a96f80303"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adca037e7f2bcda200c5d60a882aa0818"><td class="memItemLeft" align="right" valign="top">juce::Colour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#adca037e7f2bcda200c5d60a882aa0818">getDefaultColour</a> () const override</td></tr>
+<tr class="memdesc:adca037e7f2bcda200c5d60a882aa0818"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the default colour for this clip.  <a href="classtracktion__engine_1_1MidiClip.html#adca037e7f2bcda200c5d60a882aa0818">More...</a><br /></td></tr>
 <tr class="separator:adca037e7f2bcda200c5d60a882aa0818"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44327fd7f493b78a08e18259646a220c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a44327fd7f493b78a08e18259646a220c">clearTakes</a> () override</td></tr>
+<tr class="memdesc:a44327fd7f493b78a08e18259646a220c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears any takes this clip has.  <a href="classtracktion__engine_1_1MidiClip.html#a44327fd7f493b78a08e18259646a220c">More...</a><br /></td></tr>
 <tr class="separator:a44327fd7f493b78a08e18259646a220c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af58cd5b3273c10a22160dcd59371c504"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#af58cd5b3273c10a22160dcd59371c504">hasAnyTakes</a> () const override</td></tr>
+<tr class="memdesc:af58cd5b3273c10a22160dcd59371c504"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this clip has any takes.  <a href="classtracktion__engine_1_1MidiClip.html#af58cd5b3273c10a22160dcd59371c504">More...</a><br /></td></tr>
 <tr class="separator:af58cd5b3273c10a22160dcd59371c504"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a47d8a740063860de58237c6d97c927f6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a47d8a740063860de58237c6d97c927f6">getNumTakes</a> (bool includeComps) override</td></tr>
+<tr class="memdesc:a47d8a740063860de58237c6d97c927f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the total number of takes.  <a href="classtracktion__engine_1_1MidiClip.html#a47d8a740063860de58237c6d97c927f6">More...</a><br /></td></tr>
 <tr class="separator:a47d8a740063860de58237c6d97c927f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa06d637969ab949b4dd52b04c472e8c3"><td class="memItemLeft" align="right" valign="top">juce::StringArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#aa06d637969ab949b4dd52b04c472e8c3">getTakeDescriptions</a> () const override</td></tr>
+<tr class="memdesc:aa06d637969ab949b4dd52b04c472e8c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the descriptions of any takes.  <a href="classtracktion__engine_1_1MidiClip.html#aa06d637969ab949b4dd52b04c472e8c3">More...</a><br /></td></tr>
 <tr class="separator:aa06d637969ab949b4dd52b04c472e8c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a129f1e457f0e2ae3a4ae6f4e856793ef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a129f1e457f0e2ae3a4ae6f4e856793ef">setCurrentTake</a> (int takeIndex) override</td></tr>
+<tr class="memdesc:a129f1e457f0e2ae3a4ae6f4e856793ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a given take index to be the current take.  <a href="classtracktion__engine_1_1MidiClip.html#a129f1e457f0e2ae3a4ae6f4e856793ef">More...</a><br /></td></tr>
 <tr class="separator:a129f1e457f0e2ae3a4ae6f4e856793ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6fca5e3061ae2c6d864d6c2a437c16f2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a6fca5e3061ae2c6d864d6c2a437c16f2">getCurrentTake</a> () const override</td></tr>
+<tr class="memdesc:a6fca5e3061ae2c6d864d6c2a437c16f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current take index.  <a href="classtracktion__engine_1_1MidiClip.html#a6fca5e3061ae2c6d864d6c2a437c16f2">More...</a><br /></td></tr>
 <tr class="separator:a6fca5e3061ae2c6d864d6c2a437c16f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b69b305195202f6b21d43918497f2f3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a7b69b305195202f6b21d43918497f2f3">isCurrentTakeComp</a> () override</td></tr>
+<tr class="memdesc:a7b69b305195202f6b21d43918497f2f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the current take is a comp.  <a href="classtracktion__engine_1_1MidiClip.html#a7b69b305195202f6b21d43918497f2f3">More...</a><br /></td></tr>
 <tr class="separator:a7b69b305195202f6b21d43918497f2f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a019a6671fe0e12bc5d8079643883d1fa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a019a6671fe0e12bc5d8079643883d1fa">deleteAllUnusedTakesConfirmingWithUser</a> ()</td></tr>
 <tr class="separator:a019a6671fe0e12bc5d8079643883d1fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa77e2b3d527570134b0ecd99433be374"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1Clip.html#a3b47baf2213a5f27c14d6ed1250d3c63">Clip::Array</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#aa77e2b3d527570134b0ecd99433be374">unpackTakes</a> (bool toNewTracks) override</td></tr>
+<tr class="memdesc:aa77e2b3d527570134b0ecd99433be374"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to unpack the takes to new clips.  <a href="classtracktion__engine_1_1MidiClip.html#aa77e2b3d527570134b0ecd99433be374">More...</a><br /></td></tr>
 <tr class="separator:aa77e2b3d527570134b0ecd99433be374"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7854cffc91296a512ccc9c900c08f4a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1MidiList.html">MidiList</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#ae7854cffc91296a512ccc9c900c08f4a">getTakeSequence</a> (int takeIndex) const</td></tr>
 <tr class="separator:ae7854cffc91296a512ccc9c900c08f4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd64adbdb89c79080e152afba1ae85d6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#acd64adbdb89c79080e152afba1ae85d6">canLoop</a> () const override</td></tr>
+<tr class="memdesc:acd64adbdb89c79080e152afba1ae85d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this clip is capable of looping.  <a href="classtracktion__engine_1_1MidiClip.html#acd64adbdb89c79080e152afba1ae85d6">More...</a><br /></td></tr>
 <tr class="separator:acd64adbdb89c79080e152afba1ae85d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03dd0d20fbbb646dabf3eca0c4538f7e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a03dd0d20fbbb646dabf3eca0c4538f7e">isLooping</a> () const override</td></tr>
+<tr class="memdesc:a03dd0d20fbbb646dabf3eca0c4538f7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this clip is currently looping.  <a href="classtracktion__engine_1_1MidiClip.html#a03dd0d20fbbb646dabf3eca0c4538f7e">More...</a><br /></td></tr>
 <tr class="separator:a03dd0d20fbbb646dabf3eca0c4538f7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c7c04cf585c40a09a8bf1984790367e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a3c7c04cf585c40a09a8bf1984790367e">beatBasedLooping</a> () const override</td></tr>
+<tr class="memdesc:a3c7c04cf585c40a09a8bf1984790367e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this clip's looping is based on beats or false if absolute time.  <a href="classtracktion__engine_1_1MidiClip.html#a3c7c04cf585c40a09a8bf1984790367e">More...</a><br /></td></tr>
 <tr class="separator:a3c7c04cf585c40a09a8bf1984790367e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb990d3f611b5179661e70a15a4aee5e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#acb990d3f611b5179661e70a15a4aee5e">setNumberOfLoops</a> (int) override</td></tr>
+<tr class="memdesc:acb990d3f611b5179661e70a15a4aee5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the clip looping a number of times.  <a href="classtracktion__engine_1_1MidiClip.html#acb990d3f611b5179661e70a15a4aee5e">More...</a><br /></td></tr>
 <tr class="separator:acb990d3f611b5179661e70a15a4aee5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ed2da2744549d6ac11029dace880c49"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a3ed2da2744549d6ac11029dace880c49">disableLooping</a> () override</td></tr>
+<tr class="memdesc:a3ed2da2744549d6ac11029dace880c49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disables all looping.  <a href="classtracktion__engine_1_1MidiClip.html#a3ed2da2744549d6ac11029dace880c49">More...</a><br /></td></tr>
 <tr class="separator:a3ed2da2744549d6ac11029dace880c49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4a60387da023d6158893dbfab366ec4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#af4a60387da023d6158893dbfab366ec4">setLoopRange</a> (<a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a>) override</td></tr>
+<tr class="memdesc:af4a60387da023d6158893dbfab366ec4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the loop range the clip should use in seconds.  <a href="classtracktion__engine_1_1MidiClip.html#af4a60387da023d6158893dbfab366ec4">More...</a><br /></td></tr>
 <tr class="separator:af4a60387da023d6158893dbfab366ec4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01ce85a3e75f30819de6dd82e26febe8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a01ce85a3e75f30819de6dd82e26febe8">setLoopRangeBeats</a> (juce::Range&lt; double &gt;) override</td></tr>
+<tr class="memdesc:a01ce85a3e75f30819de6dd82e26febe8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the loop range the clip should use in beats.  <a href="classtracktion__engine_1_1MidiClip.html#a01ce85a3e75f30819de6dd82e26febe8">More...</a><br /></td></tr>
 <tr class="separator:a01ce85a3e75f30819de6dd82e26febe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c64f46c896d833ef36cf87b0861c15e"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a3c64f46c896d833ef36cf87b0861c15e">getLoopStartBeats</a> () const override</td></tr>
+<tr class="memdesc:a3c64f46c896d833ef36cf87b0861c15e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the beat position of the loop start point.  <a href="classtracktion__engine_1_1MidiClip.html#a3c64f46c896d833ef36cf87b0861c15e">More...</a><br /></td></tr>
 <tr class="separator:a3c64f46c896d833ef36cf87b0861c15e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad86c8ec81222e6491a7f27f9883b6cb9"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#ad86c8ec81222e6491a7f27f9883b6cb9">getLoopLengthBeats</a> () const override</td></tr>
+<tr class="memdesc:ad86c8ec81222e6491a7f27f9883b6cb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the length of loop in beats.  <a href="classtracktion__engine_1_1MidiClip.html#ad86c8ec81222e6491a7f27f9883b6cb9">More...</a><br /></td></tr>
 <tr class="separator:ad86c8ec81222e6491a7f27f9883b6cb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ad1d2357270257ccb87a90c4a9dc404"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a2ad1d2357270257ccb87a90c4a9dc404">getLoopStart</a> () const override</td></tr>
+<tr class="memdesc:a2ad1d2357270257ccb87a90c4a9dc404"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the start time of the loop start point.  <a href="classtracktion__engine_1_1MidiClip.html#a2ad1d2357270257ccb87a90c4a9dc404">More...</a><br /></td></tr>
 <tr class="separator:a2ad1d2357270257ccb87a90c4a9dc404"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f5b7a95bbb64631e9fb9bd0d259f58f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a4f5b7a95bbb64631e9fb9bd0d259f58f">getLoopLength</a> () const override</td></tr>
+<tr class="memdesc:a4f5b7a95bbb64631e9fb9bd0d259f58f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the length of loop in seconds.  <a href="classtracktion__engine_1_1MidiClip.html#a4f5b7a95bbb64631e9fb9bd0d259f58f">More...</a><br /></td></tr>
 <tr class="separator:a4f5b7a95bbb64631e9fb9bd0d259f58f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab08d88317d72c3d39db00dda1db6b65d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1MidiCompManager.html">MidiCompManager</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#ab08d88317d72c3d39db00dda1db6b65d">getCompManager</a> ()</td></tr>
 <tr class="separator:ab08d88317d72c3d39db00dda1db6b65d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6de507e8aa4aff005d617152ce90ba7a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1PatternGenerator.html">PatternGenerator</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a6de507e8aa4aff005d617152ce90ba7a">getPatternGenerator</a> () override</td></tr>
+<tr class="memdesc:a6de507e8aa4aff005d617152ce90ba7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classtracktion__engine_1_1PatternGenerator.html">PatternGenerator</a> for this clip if it has one.  <a href="classtracktion__engine_1_1MidiClip.html#a6de507e8aa4aff005d617152ce90ba7a">More...</a><br /></td></tr>
 <tr class="separator:a6de507e8aa4aff005d617152ce90ba7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6362fd4729428b77a212e32f2a9f9d41"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiClip.html#a6362fd4729428b77a212e32f2a9f9d41">pitchTempoTrackChanged</a> () override</td></tr>
+<tr class="memdesc:a6362fd4729428b77a212e32f2a9f9d41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when there are pitch or tempo changes made which might require clips to adjust timing information.  <a href="classtracktion__engine_1_1MidiClip.html#a6362fd4729428b77a212e32f2a9f9d41">More...</a><br /></td></tr>
 <tr class="separator:a6362fd4729428b77a212e32f2a9f9d41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtracktion__engine_1_1Clip"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtracktion__engine_1_1Clip')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtracktion__engine_1_1Clip.html">tracktion_engine::Clip</a></td></tr>
 <tr class="memitem:a1ad0a10562aa4ba58b99964ab8bc1588 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a1ad0a10562aa4ba58b99964ab8bc1588">Clip</a> (const juce::ValueTree &amp;, <a class="el" href="classtracktion__engine_1_1ClipTrack.html">ClipTrack</a> &amp;, <a class="el" href="structtracktion__engine_1_1EditItemID.html">EditItemID</a>, <a class="el" href="classtracktion__engine_1_1TrackItem.html#a3f25eeb14a154b5ca7f8887494fa564f">Type</a>)</td></tr>
+<tr class="memdesc:a1ad0a10562aa4ba58b99964ab8bc1588 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a clip of a given type from a ValueTree state.  <a href="classtracktion__engine_1_1Clip.html#a1ad0a10562aa4ba58b99964ab8bc1588">More...</a><br /></td></tr>
 <tr class="separator:a1ad0a10562aa4ba58b99964ab8bc1588 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d25899dfd5a690bf6a23ffbb77e382a inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a0d25899dfd5a690bf6a23ffbb77e382a">~Clip</a> () override</td></tr>
+<tr class="memdesc:a0d25899dfd5a690bf6a23ffbb77e382a inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="classtracktion__engine_1_1Clip.html#a0d25899dfd5a690bf6a23ffbb77e382a">More...</a><br /></td></tr>
 <tr class="separator:a0d25899dfd5a690bf6a23ffbb77e382a inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2f013d4093654e37a962e1dbbf0caeaf inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a2f013d4093654e37a962e1dbbf0caeaf">flushStateToValueTree</a> ()</td></tr>
+<tr class="memdesc:a2f013d4093654e37a962e1dbbf0caeaf inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can be overridden to ensure any state (e.g.  <a href="classtracktion__engine_1_1Clip.html#a2f013d4093654e37a962e1dbbf0caeaf">More...</a><br /></td></tr>
 <tr class="separator:a2f013d4093654e37a962e1dbbf0caeaf inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ec8f1dea0a7620dc0578b36f9dc5d99 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a9ec8f1dea0a7620dc0578b36f9dc5d99">sourceMediaChanged</a> ()</td></tr>
-<tr class="memdesc:a9ec8f1dea0a7620dc0578b36f9dc5d99 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">this is called when the source media file reference (attribute "source") has changed - i.e.  <a href="classtracktion__engine_1_1Clip.html#a9ec8f1dea0a7620dc0578b36f9dc5d99">More...</a><br /></td></tr>
+<tr class="memdesc:a9ec8f1dea0a7620dc0578b36f9dc5d99 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the source media file reference (attribute "source") has changed - i.e.  <a href="classtracktion__engine_1_1Clip.html#a9ec8f1dea0a7620dc0578b36f9dc5d99">More...</a><br /></td></tr>
 <tr class="separator:a9ec8f1dea0a7620dc0578b36f9dc5d99 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c5bc3c145eac2bfc9aa8830be3fb0a7 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a6c5bc3c145eac2bfc9aa8830be3fb0a7">getName</a> () override</td></tr>
+<tr class="memdesc:a6c5bc3c145eac2bfc9aa8830be3fb0a7 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the name of the clip.  <a href="classtracktion__engine_1_1Clip.html#a6c5bc3c145eac2bfc9aa8830be3fb0a7">More...</a><br /></td></tr>
 <tr class="separator:a6c5bc3c145eac2bfc9aa8830be3fb0a7 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab820a2ae2763b22304e5cfb17bb558a0 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ab820a2ae2763b22304e5cfb17bb558a0">setName</a> (const juce::String &amp;newName)</td></tr>
+<tr class="memdesc:ab820a2ae2763b22304e5cfb17bb558a0 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a new name for a clip.  <a href="classtracktion__engine_1_1Clip.html#ab820a2ae2763b22304e5cfb17bb558a0">More...</a><br /></td></tr>
 <tr class="separator:ab820a2ae2763b22304e5cfb17bb558a0 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e1942e5c3b768449721e80073a76d2d inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a3e1942e5c3b768449721e80073a76d2d">usesSourceFile</a> ()</td></tr>
-<tr class="memdesc:a3e1942e5c3b768449721e80073a76d2d inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">true if it references a source file - i.e.  <a href="classtracktion__engine_1_1Clip.html#a3e1942e5c3b768449721e80073a76d2d">More...</a><br /></td></tr>
+<tr class="memdesc:a3e1942e5c3b768449721e80073a76d2d inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if it references a source file - i.e.  <a href="classtracktion__engine_1_1Clip.html#a3e1942e5c3b768449721e80073a76d2d">More...</a><br /></td></tr>
 <tr class="separator:a3e1942e5c3b768449721e80073a76d2d inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4567dd7afcc894891c40962b7f1f8f5 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1SourceFileReference.html">SourceFileReference</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#aa4567dd7afcc894891c40962b7f1f8f5">getSourceFileReference</a> ()</td></tr>
 <tr class="memdesc:aa4567dd7afcc894891c40962b7f1f8f5 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classtracktion__engine_1_1SourceFileReference.html" title="This class wraps a string that is generally held in a &#39;source&#39; property, and which is a reference to ...">SourceFileReference</a> of the <a class="el" href="classtracktion__engine_1_1Clip.html" title="A clip in an edit.">Clip</a>.  <a href="classtracktion__engine_1_1Clip.html#aa4567dd7afcc894891c40962b7f1f8f5">More...</a><br /></td></tr>
@@ -295,11 +328,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a43767e26a1b4c46f23e18fd400ac46ee inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current source file, this is different to the <a class="el" href="classtracktion__engine_1_1SourceFileReference.html" title="This class wraps a string that is generally held in a &#39;source&#39; property, and which is a reference to ...">SourceFileReference</a> as it could be a temporary comp file, clipFX, reverse render etc.  <a href="classtracktion__engine_1_1Clip.html#a43767e26a1b4c46f23e18fd400ac46ee">More...</a><br /></td></tr>
 <tr class="separator:a43767e26a1b4c46f23e18fd400ac46ee inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e75719d9781873de587bfa2ccf96e01 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="structtracktion__engine_1_1Exportable_1_1ReferencedItem.html">ReferencedItem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a4e75719d9781873de587bfa2ccf96e01">getReferencedItems</a> () override</td></tr>
+<tr class="memdesc:a4e75719d9781873de587bfa2ccf96e01 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an array of any ReferencedItem[s] e.g.  <a href="classtracktion__engine_1_1Clip.html#a4e75719d9781873de587bfa2ccf96e01">More...</a><br /></td></tr>
 <tr class="separator:a4e75719d9781873de587bfa2ccf96e01 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a009f43265ddf313e6aed9c15069dd8cc inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a009f43265ddf313e6aed9c15069dd8cc">reassignReferencedItem</a> (const <a class="el" href="structtracktion__engine_1_1Exportable_1_1ReferencedItem.html">ReferencedItem</a> &amp;, <a class="el" href="classtracktion__engine_1_1ProjectItemID.html">ProjectItemID</a>, double) override</td></tr>
+<tr class="memdesc:a009f43265ddf313e6aed9c15069dd8cc inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should be implemented to change the underlying source to a new <a class="el" href="classtracktion__engine_1_1ProjectItemID.html" title="An ID representing one of the items in a Project.">ProjectItemID</a>.  <a href="classtracktion__engine_1_1Clip.html#a009f43265ddf313e6aed9c15069dd8cc">More...</a><br /></td></tr>
 <tr class="separator:a009f43265ddf313e6aed9c15069dd8cc inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4aa328b7053fa738e308e4c390eb8ae inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion__engine_1_1ClipPosition.html">ClipPosition</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#af4aa328b7053fa738e308e4c390eb8ae">getPosition</a> () const override</td></tr>
-<tr class="memdesc:af4aa328b7053fa738e308e4c390eb8ae inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Must return the position of this item.  <a href="classtracktion__engine_1_1Clip.html#af4aa328b7053fa738e308e4c390eb8ae">More...</a><br /></td></tr>
+<tr class="memdesc:af4aa328b7053fa738e308e4c390eb8ae inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="structtracktion__engine_1_1ClipPosition.html">ClipPosition</a> on the parent <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>.  <a href="classtracktion__engine_1_1Clip.html#af4aa328b7053fa738e308e4c390eb8ae">More...</a><br /></td></tr>
 <tr class="separator:af4aa328b7053fa738e308e4c390eb8ae inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61b3d8994e6b9ff30c524691ef3ea193 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a61b3d8994e6b9ff30c524691ef3ea193">getContentBeatAtTime</a> (double time) const</td></tr>
 <tr class="memdesc:a61b3d8994e6b9ff30c524691ef3ea193 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the beat number (with offset) at the given time.  <a href="classtracktion__engine_1_1Clip.html#a61b3d8994e6b9ff30c524691ef3ea193">More...</a><br /></td></tr>
@@ -308,84 +343,110 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:afc07f20fbc97bc298a1f478c1211baa7 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns time of a beat number.  <a href="classtracktion__engine_1_1Clip.html#afc07f20fbc97bc298a1f478c1211baa7">More...</a><br /></td></tr>
 <tr class="separator:afc07f20fbc97bc298a1f478c1211baa7 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91d43f4096a58b4971d608ac66371e91 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a91d43f4096a58b4971d608ac66371e91">getMaximumLength</a> ()</td></tr>
+<tr class="memdesc:a91d43f4096a58b4971d608ac66371e91 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the maximum lenght this clip can have.  <a href="classtracktion__engine_1_1Clip.html#a91d43f4096a58b4971d608ac66371e91">More...</a><br /></td></tr>
 <tr class="separator:a91d43f4096a58b4971d608ac66371e91 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc6e49fd4ebb0d5e3bb7c467e99b449b inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual juce::Array&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#afc6e49fd4ebb0d5e3bb7c467e99b449b">getInterestingTimes</a> ()</td></tr>
-<tr class="memdesc:afc6e49fd4ebb0d5e3bb7c467e99b449b inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns times for snapping to, relative to the edit.  <a href="classtracktion__engine_1_1Clip.html#afc6e49fd4ebb0d5e3bb7c467e99b449b">More...</a><br /></td></tr>
+<tr class="memdesc:afc6e49fd4ebb0d5e3bb7c467e99b449b inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns times for snapping to, relative to the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="classtracktion__engine_1_1Clip.html#afc6e49fd4ebb0d5e3bb7c467e99b449b">More...</a><br /></td></tr>
 <tr class="separator:afc6e49fd4ebb0d5e3bb7c467e99b449b inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89d0262fd8bf7ab35aba704664138bac inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a89d0262fd8bf7ab35aba704664138bac">getSpottingPoint</a> () const</td></tr>
+<tr class="memdesc:a89d0262fd8bf7ab35aba704664138bac inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the first marked time in the source file which can be used for syncronising newly added clips.  <a href="classtracktion__engine_1_1Clip.html#a89d0262fd8bf7ab35aba704664138bac">More...</a><br /></td></tr>
 <tr class="separator:a89d0262fd8bf7ab35aba704664138bac inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2fe8e33275b0651f7fcb00bb7bcfd2c inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ad2fe8e33275b0651f7fcb00bb7bcfd2c">setSyncType</a> (<a class="el" href="classtracktion__engine_1_1Clip.html#acd9203fe7f0840fbb358f85c97c89ef5">SyncType</a> sync)</td></tr>
+<tr class="memdesc:ad2fe8e33275b0651f7fcb00bb7bcfd2c inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the sync type for the clip.  <a href="classtracktion__engine_1_1Clip.html#ad2fe8e33275b0651f7fcb00bb7bcfd2c">More...</a><br /></td></tr>
 <tr class="separator:ad2fe8e33275b0651f7fcb00bb7bcfd2c inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d4259358faf0ba80fea1b891503e824 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1Clip.html#acd9203fe7f0840fbb358f85c97c89ef5">SyncType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a8d4259358faf0ba80fea1b891503e824">getSyncType</a> () const</td></tr>
+<tr class="memdesc:a8d4259358faf0ba80fea1b891503e824 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the sync type clip is using.  <a href="classtracktion__engine_1_1Clip.html#a8d4259358faf0ba80fea1b891503e824">More...</a><br /></td></tr>
 <tr class="separator:a8d4259358faf0ba80fea1b891503e824 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f92075ef721851871ba46f09d33fd4c inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a1f92075ef721851871ba46f09d33fd4c">setPosition</a> (<a class="el" href="structtracktion__engine_1_1ClipPosition.html">ClipPosition</a> newPosition)</td></tr>
+<tr class="memdesc:a1f92075ef721851871ba46f09d33fd4c inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the position of the clip.  <a href="classtracktion__engine_1_1Clip.html#a1f92075ef721851871ba46f09d33fd4c">More...</a><br /></td></tr>
 <tr class="separator:a1f92075ef721851871ba46f09d33fd4c inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac9740918ec76049c7cb3e175c93c8fdc inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ac9740918ec76049c7cb3e175c93c8fdc">setStart</a> (double newStart, bool preserveSync, bool keepLength)</td></tr>
+<tr class="memdesc:ac9740918ec76049c7cb3e175c93c8fdc inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the start time of the clip.  <a href="classtracktion__engine_1_1Clip.html#ac9740918ec76049c7cb3e175c93c8fdc">More...</a><br /></td></tr>
 <tr class="separator:ac9740918ec76049c7cb3e175c93c8fdc inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27545dbbf7c986a3d5ced1bccac513ed inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a27545dbbf7c986a3d5ced1bccac513ed">setLength</a> (double newLength, bool preserveSync)</td></tr>
+<tr class="memdesc:a27545dbbf7c986a3d5ced1bccac513ed inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the length of the clip.  <a href="classtracktion__engine_1_1Clip.html#a27545dbbf7c986a3d5ced1bccac513ed">More...</a><br /></td></tr>
 <tr class="separator:a27545dbbf7c986a3d5ced1bccac513ed inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae0c7cf34cef179392c8b72162fe6e75e inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ae0c7cf34cef179392c8b72162fe6e75e">setEnd</a> (double newEnd, bool preserveSync)</td></tr>
+<tr class="memdesc:ae0c7cf34cef179392c8b72162fe6e75e inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the end of the clip.  <a href="classtracktion__engine_1_1Clip.html#ae0c7cf34cef179392c8b72162fe6e75e">More...</a><br /></td></tr>
 <tr class="separator:ae0c7cf34cef179392c8b72162fe6e75e inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98bfa385fc729ae3e916b4ad87a9b562 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a98bfa385fc729ae3e916b4ad87a9b562">setOffset</a> (double newOffset)</td></tr>
+<tr class="memdesc:a98bfa385fc729ae3e916b4ad87a9b562 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the offset of the clip, i.e.  <a href="classtracktion__engine_1_1Clip.html#a98bfa385fc729ae3e916b4ad87a9b562">More...</a><br /></td></tr>
 <tr class="separator:a98bfa385fc729ae3e916b4ad87a9b562 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae8b335dbaf877610e97cce6f44014f31 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ae8b335dbaf877610e97cce6f44014f31">trimAwayOverlap</a> (<a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> editRangeToTrim)</td></tr>
-<tr class="memdesc:ae8b335dbaf877610e97cce6f44014f31 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">trims away any part of the clip that overlaps this region.  <a href="classtracktion__engine_1_1Clip.html#ae8b335dbaf877610e97cce6f44014f31">More...</a><br /></td></tr>
+<tr class="memdesc:ae8b335dbaf877610e97cce6f44014f31 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trims away any part of the clip that overlaps this region.  <a href="classtracktion__engine_1_1Clip.html#ae8b335dbaf877610e97cce6f44014f31">More...</a><br /></td></tr>
 <tr class="separator:ae8b335dbaf877610e97cce6f44014f31 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aead1761b95183db2c8bdc9a8b50c2c81 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#aead1761b95183db2c8bdc9a8b50c2c81">removeFromParentTrack</a> ()</td></tr>
+<tr class="memdesc:aead1761b95183db2c8bdc9a8b50c2c81 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes this clip from the parent track.  <a href="classtracktion__engine_1_1Clip.html#aead1761b95183db2c8bdc9a8b50c2c81">More...</a><br /></td></tr>
 <tr class="separator:aead1761b95183db2c8bdc9a8b50c2c81 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a051057e8d694fed08a9f3fcee187ca2a inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a051057e8d694fed08a9f3fcee187ca2a">moveToTrack</a> (<a class="el" href="classtracktion__engine_1_1Track.html">Track</a> &amp;)</td></tr>
+<tr class="memdesc:a051057e8d694fed08a9f3fcee187ca2a inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Moves the clip to a new <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> (if possible).  <a href="classtracktion__engine_1_1Clip.html#a051057e8d694fed08a9f3fcee187ca2a">More...</a><br /></td></tr>
 <tr class="separator:a051057e8d694fed08a9f3fcee187ca2a inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b22e14ca0af712d0f35dcba00b58f80 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a5b22e14ca0af712d0f35dcba00b58f80">getSpeedRatio</a> () const noexcept</td></tr>
+<tr class="memdesc:a5b22e14ca0af712d0f35dcba00b58f80 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the speed ratio i.e.  <a href="classtracktion__engine_1_1Clip.html#a5b22e14ca0af712d0f35dcba00b58f80">More...</a><br /></td></tr>
 <tr class="separator:a5b22e14ca0af712d0f35dcba00b58f80 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ff1ed960692c5e48f47f3d3610b15e9 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a1ff1ed960692c5e48f47f3d3610b15e9">setSpeedRatio</a> (double)</td></tr>
+<tr class="memdesc:a1ff1ed960692c5e48f47f3d3610b15e9 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a speed ratio i.e.  <a href="classtracktion__engine_1_1Clip.html#a1ff1ed960692c5e48f47f3d3610b15e9">More...</a><br /></td></tr>
 <tr class="separator:a1ff1ed960692c5e48f47f3d3610b15e9 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5758fc56f129084d5ec4da9572c9938d inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a5758fc56f129084d5ec4da9572c9938d">isGrouped</a> () const override</td></tr>
-<tr class="memdesc:a5758fc56f129084d5ec4da9572c9938d inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return true if this clip is part of a group.  <a href="classtracktion__engine_1_1Clip.html#a5758fc56f129084d5ec4da9572c9938d">More...</a><br /></td></tr>
+<tr class="memdesc:a5758fc56f129084d5ec4da9572c9938d inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the clip is part of a group.  <a href="classtracktion__engine_1_1Clip.html#a5758fc56f129084d5ec4da9572c9938d">More...</a><br /></td></tr>
 <tr class="separator:a5758fc56f129084d5ec4da9572c9938d inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff6c341529078975cc3e0913c9ebd0e0 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1TrackItem.html">TrackItem</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#aff6c341529078975cc3e0913c9ebd0e0">getGroupParent</a> () const override</td></tr>
-<tr class="memdesc:aff6c341529078975cc3e0913c9ebd0e0 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this clip is part of a group, this should return the parent item it belongs to.  <a href="classtracktion__engine_1_1Clip.html#aff6c341529078975cc3e0913c9ebd0e0">More...</a><br /></td></tr>
+<tr class="memdesc:aff6c341529078975cc3e0913c9ebd0e0 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the parent <a class="el" href="classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g.">TrackItem</a> if part of a group.  <a href="classtracktion__engine_1_1Clip.html#aff6c341529078975cc3e0913c9ebd0e0">More...</a><br /></td></tr>
 <tr class="separator:aff6c341529078975cc3e0913c9ebd0e0 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acfa6ab37506c431ad332fe52f06b8917 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#acfa6ab37506c431ad332fe52f06b8917">setGroup</a> (<a class="el" href="structtracktion__engine_1_1EditItemID.html">EditItemID</a> newGroupID)</td></tr>
+<tr class="memdesc:acfa6ab37506c431ad332fe52f06b8917 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the clip to be part of a group.  <a href="classtracktion__engine_1_1Clip.html#acfa6ab37506c431ad332fe52f06b8917">More...</a><br /></td></tr>
 <tr class="separator:acfa6ab37506c431ad332fe52f06b8917 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e2cb55ab0fbfd4d496d625f9c46e2b1 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion__engine_1_1EditItemID.html">EditItemID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a9e2cb55ab0fbfd4d496d625f9c46e2b1">getGroupID</a> () const noexcept</td></tr>
+<tr class="memdesc:a9e2cb55ab0fbfd4d496d625f9c46e2b1 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the ID of the group.  <a href="classtracktion__engine_1_1Clip.html#a9e2cb55ab0fbfd4d496d625f9c46e2b1">More...</a><br /></td></tr>
 <tr class="separator:a9e2cb55ab0fbfd4d496d625f9c46e2b1 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61f741af2e05351ded1b89424442380f inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1CollectionClip.html">CollectionClip</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a61f741af2e05351ded1b89424442380f">getGroupClip</a> () const</td></tr>
+<tr class="memdesc:a61f741af2e05351ded1b89424442380f inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns this as a <a class="el" href="classtracktion__engine_1_1CollectionClip.html">CollectionClip</a> if it is one.  <a href="classtracktion__engine_1_1Clip.html#a61f741af2e05351ded1b89424442380f">More...</a><br /></td></tr>
 <tr class="separator:a61f741af2e05351ded1b89424442380f inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa95ddbc6db9927b67b9633de0dc09ca6 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#aa95ddbc6db9927b67b9633de0dc09ca6">isLinked</a> () const</td></tr>
+<tr class="memdesc:aa95ddbc6db9927b67b9633de0dc09ca6 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this clip is linked with any others.  <a href="classtracktion__engine_1_1Clip.html#aa95ddbc6db9927b67b9633de0dc09ca6">More...</a><br /></td></tr>
 <tr class="separator:aa95ddbc6db9927b67b9633de0dc09ca6 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a019c2f408dabdd2c8cc7d9f674e5a900 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a019c2f408dabdd2c8cc7d9f674e5a900">setLinkGroupID</a> (juce::String newLinkID)</td></tr>
+<tr class="memdesc:a019c2f408dabdd2c8cc7d9f674e5a900 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the link ID to link this clip with others.  <a href="classtracktion__engine_1_1Clip.html#a019c2f408dabdd2c8cc7d9f674e5a900">More...</a><br /></td></tr>
 <tr class="separator:a019c2f408dabdd2c8cc7d9f674e5a900 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4611d20e9dee53afee72b04a56241f0b inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a4611d20e9dee53afee72b04a56241f0b">getLinkGroupID</a> () const</td></tr>
+<tr class="memdesc:a4611d20e9dee53afee72b04a56241f0b inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the link ID of this clip.  <a href="classtracktion__engine_1_1Clip.html#a4611d20e9dee53afee72b04a56241f0b">More...</a><br /></td></tr>
 <tr class="separator:a4611d20e9dee53afee72b04a56241f0b inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b9fd282d4f13cccc63e2dafec4dacb5 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1ClipTrack.html">ClipTrack</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a2b9fd282d4f13cccc63e2dafec4dacb5">getClipTrack</a> () const</td></tr>
+<tr class="memdesc:a2b9fd282d4f13cccc63e2dafec4dacb5 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the parent <a class="el" href="classtracktion__engine_1_1ClipTrack.html">ClipTrack</a> this clip is on.  <a href="classtracktion__engine_1_1Clip.html#a2b9fd282d4f13cccc63e2dafec4dacb5">More...</a><br /></td></tr>
 <tr class="separator:a2b9fd282d4f13cccc63e2dafec4dacb5 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a59340a70b29ac41842f5524c2daee2 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1Track.html">Track</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a7a59340a70b29ac41842f5524c2daee2">getTrack</a> () const override</td></tr>
-<tr class="memdesc:a7a59340a70b29ac41842f5524c2daee2 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Must return the track this item lives on.  <a href="classtracktion__engine_1_1Clip.html#a7a59340a70b29ac41842f5524c2daee2">More...</a><br /></td></tr>
+<tr class="memdesc:a7a59340a70b29ac41842f5524c2daee2 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the parent <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> this clip is on.  <a href="classtracktion__engine_1_1Clip.html#a7a59340a70b29ac41842f5524c2daee2">More...</a><br /></td></tr>
 <tr class="separator:a7a59340a70b29ac41842f5524c2daee2 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab07a97751de6152d0d0a912c21510715 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual juce::Colour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ab07a97751de6152d0d0a912c21510715">getColour</a> () const</td></tr>
+<tr class="memdesc:ab07a97751de6152d0d0a912c21510715 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the colour property of this clip.  <a href="classtracktion__engine_1_1Clip.html#ab07a97751de6152d0d0a912c21510715">More...</a><br /></td></tr>
 <tr class="separator:ab07a97751de6152d0d0a912c21510715 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf2949a351612577b4aaf96c2123b182 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#acf2949a351612577b4aaf96c2123b182">setColour</a> (juce::Colour col)</td></tr>
+<tr class="memdesc:acf2949a351612577b4aaf96c2123b182 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the colour property of this clip.  <a href="classtracktion__engine_1_1Clip.html#acf2949a351612577b4aaf96c2123b182">More...</a><br /></td></tr>
 <tr class="separator:acf2949a351612577b4aaf96c2123b182 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a0f874441d8fc3191356f472ec75820 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a9a0f874441d8fc3191356f472ec75820">removePlugin</a> (const <a class="el" href="classtracktion__engine_1_1Plugin.html#a97f7d1afcf0045b5f21a027d58b0c072">Plugin::Ptr</a> &amp;)</td></tr>
-<tr class="memdesc:a9a0f874441d8fc3191356f472ec75820 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">if the clip can contain plugins, it should implement this  <a href="classtracktion__engine_1_1Clip.html#a9a0f874441d8fc3191356f472ec75820">More...</a><br /></td></tr>
+<tr class="memdesc:a9a0f874441d8fc3191356f472ec75820 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the given plugin from the clip if the clip supports plugins.  <a href="classtracktion__engine_1_1Clip.html#a9a0f874441d8fc3191356f472ec75820">More...</a><br /></td></tr>
 <tr class="separator:a9a0f874441d8fc3191356f472ec75820 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49aecee546b2ee6cfbbb5aad0682e38e inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a49aecee546b2ee6cfbbb5aad0682e38e">addClipPlugin</a> (const <a class="el" href="classtracktion__engine_1_1Plugin.html#a97f7d1afcf0045b5f21a027d58b0c072">Plugin::Ptr</a> &amp;, <a class="el" href="classtracktion__engine_1_1SelectionManager.html">SelectionManager</a> &amp;)</td></tr>
-<tr class="memdesc:a49aecee546b2ee6cfbbb5aad0682e38e inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns false if the clip can't do this  <a href="classtracktion__engine_1_1Clip.html#a49aecee546b2ee6cfbbb5aad0682e38e">More...</a><br /></td></tr>
+<tr class="memdesc:a49aecee546b2ee6cfbbb5aad0682e38e inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a plugin to the clip.  <a href="classtracktion__engine_1_1Clip.html#a49aecee546b2ee6cfbbb5aad0682e38e">More...</a><br /></td></tr>
 <tr class="separator:a49aecee546b2ee6cfbbb5aad0682e38e inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeaa32bb8ca194fdce1783a1fd0bb3cad inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtracktion__engine_1_1Plugin.html#af7cceeba3a734d2accacf3f3a34bf5c9">Plugin::Array</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#aeaa32bb8ca194fdce1783a1fd0bb3cad">getAllPlugins</a> ()</td></tr>
+<tr class="memdesc:aeaa32bb8ca194fdce1783a1fd0bb3cad inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns all the plugins on the clip.  <a href="classtracktion__engine_1_1Clip.html#aeaa32bb8ca194fdce1783a1fd0bb3cad">More...</a><br /></td></tr>
 <tr class="separator:aeaa32bb8ca194fdce1783a1fd0bb3cad inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5625cde79eb880c6d13d0909b6606a8b inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a5625cde79eb880c6d13d0909b6606a8b">sendMirrorUpdateToAllPlugins</a> (<a class="el" href="classtracktion__engine_1_1Plugin.html">Plugin</a> &amp;) const</td></tr>
+<tr class="memdesc:a5625cde79eb880c6d13d0909b6606a8b inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends an update to all plugins mirroing the one passed in.  <a href="classtracktion__engine_1_1Clip.html#a5625cde79eb880c6d13d0909b6606a8b">More...</a><br /></td></tr>
 <tr class="separator:a5625cde79eb880c6d13d0909b6606a8b inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3604e8477c7ab188e3fa558fa0f9a045 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtracktion__engine_1_1PluginList.html">PluginList</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a3604e8477c7ab188e3fa558fa0f9a045">getPluginList</a> ()</td></tr>
+<tr class="memdesc:a3604e8477c7ab188e3fa558fa0f9a045 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classtracktion__engine_1_1PluginList.html" title="Holds a sequence of plugins.">PluginList</a> for this clip if it has one.  <a href="classtracktion__engine_1_1Clip.html#a3604e8477c7ab188e3fa558fa0f9a045">More...</a><br /></td></tr>
 <tr class="separator:a3604e8477c7ab188e3fa558fa0f9a045 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f6fcbe822549391d695ffa3ca1d2224 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a9f6fcbe822549391d695ffa3ca1d2224">setShowingTakes</a> (bool shouldShow)</td></tr>
+<tr class="memdesc:a9f6fcbe822549391d695ffa3ca1d2224 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets whether the clip should be showing takes.  <a href="classtracktion__engine_1_1Clip.html#a9f6fcbe822549391d695ffa3ca1d2224">More...</a><br /></td></tr>
 <tr class="separator:a9f6fcbe822549391d695ffa3ca1d2224 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa90fead3f3841f012a4cc38b3a56923 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#afa90fead3f3841f012a4cc38b3a56923">isShowingTakes</a> () const</td></tr>
+<tr class="memdesc:afa90fead3f3841f012a4cc38b3a56923 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the clip is showing takes.  <a href="classtracktion__engine_1_1Clip.html#afa90fead3f3841f012a4cc38b3a56923">More...</a><br /></td></tr>
 <tr class="separator:afa90fead3f3841f012a4cc38b3a56923 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a998874bc5a589039e0ca970de329a082 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a998874bc5a589039e0ca970de329a082">updateLinkedClips</a> ()</td></tr>
+<tr class="memdesc:a998874bc5a589039e0ca970de329a082 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggers a call to cloneFrom for all clips with the same linkID.  <a href="classtracktion__engine_1_1Clip.html#a998874bc5a589039e0ca970de329a082">More...</a><br /></td></tr>
 <tr class="separator:a998874bc5a589039e0ca970de329a082 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41a0f1fa155baebec02ec715a490cc11 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a41a0f1fa155baebec02ec715a490cc11">showLoopMenu</a> ()</td></tr>
-<tr class="separator:a41a0f1fa155baebec02ec715a490cc11 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a973aafc1e2827ca749504bcffca7e64d inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a973aafc1e2827ca749504bcffca7e64d">addListener</a> (<a class="el" href="structtracktion__engine_1_1Clip_1_1Listener.html">Listener</a> *)</td></tr>
 <tr class="memdesc:a973aafc1e2827ca749504bcffca7e64d inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a <a class="el" href="structtracktion__engine_1_1Clip_1_1Listener.html" title="Listener interface to be notified of recorded MIDI being sent to the plugins.">Listener</a>.  <a href="classtracktion__engine_1_1Clip.html#a973aafc1e2827ca749504bcffca7e64d">More...</a><br /></td></tr>
 <tr class="separator:a973aafc1e2827ca749504bcffca7e64d inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -396,9 +457,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a9d5d92d51c176021aa779c6c167c924b inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the listener list so Nodes can manually call them.  <a href="classtracktion__engine_1_1Clip.html#a9d5d92d51c176021aa779c6c167c924b">More...</a><br /></td></tr>
 <tr class="separator:a9d5d92d51c176021aa779c6c167c924b inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab94043c659770b35b6ef1269fd2d2e19 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ab94043c659770b35b6ef1269fd2d2e19">changed</a> () override</td></tr>
-<tr class="memdesc:ab94043c659770b35b6ef1269fd2d2e19 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">This should be called to send a change notification to any SelectableListeners that are registered with this object.  <a href="classtracktion__engine_1_1Clip.html#ab94043c659770b35b6ef1269fd2d2e19">More...</a><br /></td></tr>
 <tr class="separator:ab94043c659770b35b6ef1269fd2d2e19 inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af726023e3fdb7c7d139646ae188ce1aa inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">juce::UndoManager *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#af726023e3fdb7c7d139646ae188ce1aa">getUndoManager</a> () const</td></tr>
+<tr class="memdesc:af726023e3fdb7c7d139646ae188ce1aa inherit pub_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the UndoManager.  <a href="classtracktion__engine_1_1Clip.html#af726023e3fdb7c7d139646ae188ce1aa">More...</a><br /></td></tr>
 <tr class="separator:af726023e3fdb7c7d139646ae188ce1aa inherit pub_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtracktion__engine_1_1TrackItem"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtracktion__engine_1_1TrackItem')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtracktion__engine_1_1TrackItem.html">tracktion_engine::TrackItem</a></td></tr>
 <tr class="memitem:ae4f639d6bc1574947fedd1cb71755a48 inherit pub_methods_classtracktion__engine_1_1TrackItem"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TrackItem.html#ae4f639d6bc1574947fedd1cb71755a48">TrackItem</a> (<a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;, <a class="el" href="structtracktion__engine_1_1EditItemID.html">EditItemID</a>, <a class="el" href="classtracktion__engine_1_1TrackItem.html#a3f25eeb14a154b5ca7f8887494fa564f">Type</a>)</td></tr>
@@ -475,8 +536,10 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ace7b3f04c5f9d4a7f1f3ea78c336801d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classtracktion__engine_1_1Clip"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classtracktion__engine_1_1Clip')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classtracktion__engine_1_1Clip.html">tracktion_engine::Clip</a></td></tr>
 <tr class="memitem:ae3652718f9431b27409be3bb46108d3d inherit pub_attribs_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">juce::ValueTree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#ae3652718f9431b27409be3bb46108d3d">state</a></td></tr>
+<tr class="memdesc:ae3652718f9431b27409be3bb46108d3d inherit pub_attribs_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ValueTree of the <a class="el" href="classtracktion__engine_1_1Clip.html" title="A clip in an edit.">Clip</a> state.  <a href="classtracktion__engine_1_1Clip.html#ae3652718f9431b27409be3bb46108d3d">More...</a><br /></td></tr>
 <tr class="separator:ae3652718f9431b27409be3bb46108d3d inherit pub_attribs_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68b8adbb4ef55fcd4a9b7840ae86d0be inherit pub_attribs_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; juce::Colour &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a68b8adbb4ef55fcd4a9b7840ae86d0be">colour</a></td></tr>
+<tr class="memdesc:a68b8adbb4ef55fcd4a9b7840ae86d0be inherit pub_attribs_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">The colour property.  <a href="classtracktion__engine_1_1Clip.html#a68b8adbb4ef55fcd4a9b7840ae86d0be">More...</a><br /></td></tr>
 <tr class="separator:a68b8adbb4ef55fcd4a9b7840ae86d0be inherit pub_attribs_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classtracktion__engine_1_1TrackItem"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classtracktion__engine_1_1TrackItem')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classtracktion__engine_1_1TrackItem.html">tracktion_engine::TrackItem</a></td></tr>
 <tr class="memitem:a718d566ce1a885f3302067ca27807931 inherit pub_attribs_classtracktion__engine_1_1TrackItem"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classtracktion__engine_1_1TrackItem.html#a3f25eeb14a154b5ca7f8887494fa564f">Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TrackItem.html#a718d566ce1a885f3302067ca27807931">type</a></td></tr>
@@ -502,12 +565,13 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a559fb22253bf707e2258444f43b641fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classtracktion__engine_1_1Clip"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classtracktion__engine_1_1Clip')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classtracktion__engine_1_1Clip.html">tracktion_engine::Clip</a></td></tr>
 <tr class="memitem:a56c5dfc20cac948def19906109235ba3 inherit pro_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a56c5dfc20cac948def19906109235ba3">setCurrentSourceFile</a> (const juce::File &amp;)</td></tr>
+<tr class="memdesc:a56c5dfc20cac948def19906109235ba3 inherit pro_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a new source file for this clip.  <a href="classtracktion__engine_1_1Clip.html#a56c5dfc20cac948def19906109235ba3">More...</a><br /></td></tr>
 <tr class="separator:a56c5dfc20cac948def19906109235ba3 inherit pro_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94e25f6065936218e56e427a65e35013 inherit pro_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a94e25f6065936218e56e427a65e35013">setTrack</a> (<a class="el" href="classtracktion__engine_1_1ClipTrack.html">ClipTrack</a> *)</td></tr>
+<tr class="memdesc:a94e25f6065936218e56e427a65e35013 inherit pro_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Moves this clip to a new <a class="el" href="classtracktion__engine_1_1ClipTrack.html">ClipTrack</a>.  <a href="classtracktion__engine_1_1Clip.html#a94e25f6065936218e56e427a65e35013">More...</a><br /></td></tr>
 <tr class="separator:a94e25f6065936218e56e427a65e35013 inherit pro_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a765ad9cc17df595ce2022d2255a922d9 inherit pro_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a765ad9cc17df595ce2022d2255a922d9">updateParentTrack</a> ()</td></tr>
-<tr class="separator:a765ad9cc17df595ce2022d2255a922d9 inherit pro_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90840adce467ae01c71402d8547e2012 inherit pro_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual juce::Array&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a90840adce467ae01c71402d8547e2012">getRescaledMarkPoints</a> () const</td></tr>
+<tr class="memdesc:a90840adce467ae01c71402d8547e2012 inherit pro_methods_classtracktion__engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the mark points relative to the start of the clip, rescaled to the current speed.  <a href="classtracktion__engine_1_1Clip.html#a90840adce467ae01c71402d8547e2012">More...</a><br /></td></tr>
 <tr class="separator:a90840adce467ae01c71402d8547e2012 inherit pro_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a052339ef698870178932a4380d551558 inherit pro_methods_classtracktion__engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Clip.html#a052339ef698870178932a4380d551558">valueTreePropertyChanged</a> (juce::ValueTree &amp;, const juce::Identifier &amp;) override</td></tr>
 <tr class="separator:a052339ef698870178932a4380d551558 inherit pro_methods_classtracktion__engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -756,6 +820,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Clones the given clip to this clip. </p>
+
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#a0d8689a95b47ecd42ef2c9c1838e26bc">tracktion_engine::Clip</a>.</p>
 
 </div>
@@ -774,34 +840,6 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="a2cf2fa19e1e34b2d3f6d73de772d729a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2cf2fa19e1e34b2d3f6d73de772d729a">&#9670;&nbsp;</a></span>createAudioNode()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a>* tracktion_engine::MidiClip::createAudioNode </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtracktion__engine_1_1CreateAudioNodeParams.html">CreateAudioNodeParams</a> &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classtracktion__engine_1_1Clip.html#a0aae113abc53a228d5c7f8636145dc02">tracktion_engine::Clip</a>.</p>
 
 </div>
 </div>
@@ -1437,6 +1475,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns true if the clip is muted. </p>
+
 <p>Implements <a class="el" href="classtracktion__engine_1_1Clip.html#a33664e44bc118f67a4edab02e0c099b3">tracktion_engine::Clip</a>.</p>
 
 </div>
@@ -1454,7 +1494,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">void tracktion_engine::MidiClip::setMuted </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>m</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1464,6 +1504,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Mutes or unmutes the clip. </p>
 
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#a9b0f73ca7edd65e8a8a984dbcc500181">tracktion_engine::Clip</a>.</p>
 
@@ -1509,6 +1551,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Initialises the <a class="el" href="classtracktion__engine_1_1Clip.html" title="A clip in an edit.">Clip</a>. </p>
+<p>Called once automatically after construction. </p>
+
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#aa6f91ccab3abd995ac741bfc0d488eba">tracktion_engine::Clip</a>.</p>
 
 </div>
@@ -1535,6 +1580,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns true if this is a <a class="el" href="classtracktion__engine_1_1MidiClip.html">MidiClip</a>. </p>
 
 <p>Implements <a class="el" href="classtracktion__engine_1_1Clip.html#ace877f05102b204a3438b14a4a20289d">tracktion_engine::Clip</a>.</p>
 
@@ -1574,6 +1621,15 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>stretches and scales this clip relative to a fixed point in the edit. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pivotTimeInEdit</td><td>The time to keep fixed </td></tr>
+    <tr><td class="paramname">factor</td><td>The scale factor </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#a587310e87ddff7ce0181563ecc045292">tracktion_engine::Clip</a>.</p>
 
 </div>
@@ -1601,6 +1657,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Tests whether this clip can go on the given track. </p>
 
 <p>Implements <a class="el" href="classtracktion__engine_1_1Clip.html#abf16260347582f366770dc456bc35df7">tracktion_engine::Clip</a>.</p>
 
@@ -1658,6 +1716,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns the default colour for this clip. </p>
+
 <p>Implements <a class="el" href="classtracktion__engine_1_1Clip.html#a9e6353d9bfb3c42c9a45826a3a6497b8">tracktion_engine::Clip</a>.</p>
 
 </div>
@@ -1684,6 +1744,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Clears any takes this clip has. </p>
 
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#a0288c8eab8dff005bcc5df82c4c4211f">tracktion_engine::Clip</a>.</p>
 
@@ -1712,6 +1774,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns true if this clip has any takes. </p>
+
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#a25362e1176bf91722e999803315e2034">tracktion_engine::Clip</a>.</p>
 
 </div>
@@ -1729,7 +1793,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">int tracktion_engine::MidiClip::getNumTakes </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>includeComps</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1739,6 +1803,14 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns the total number of takes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">includeComps</td><td>Whether comps should be included in the count </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#ab93503a76e0cded4e745effbbc5c3fe9">tracktion_engine::Clip</a>.</p>
 
@@ -1767,6 +1839,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns the descriptions of any takes. </p>
+
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#a06b630ffc6b2f59bb00aeefc7be4095f">tracktion_engine::Clip</a>.</p>
 
 </div>
@@ -1784,7 +1858,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">void tracktion_engine::MidiClip::setCurrentTake </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>takeIndex</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1794,6 +1868,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Sets a given take index to be the current take. </p>
 
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#a8ffac9a7f6547f0100700ab32992f736">tracktion_engine::Clip</a>.</p>
 
@@ -1822,6 +1898,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns the current take index. </p>
+
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#ab7f1ef20e5a70611c8d8263b2d97655e">tracktion_engine::Clip</a>.</p>
 
 </div>
@@ -1848,6 +1926,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns true if the current take is a comp. </p>
 
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#ad66ada5090f5901c7504b2676e553c79">tracktion_engine::Clip</a>.</p>
 
@@ -1883,7 +1963,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname"><a class="el" href="classtracktion__engine_1_1Clip.html#a3b47baf2213a5f27c14d6ed1250d3c63">Clip::Array</a> tracktion_engine::MidiClip::unpackTakes </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>toNewTracks</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1893,6 +1973,14 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Attempts to unpack the takes to new clips. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">toNewTracks</td><td>If true this will create new tracks for the new clips, otherwise they'll be placed on existing tracks </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#a237bca3dbd7a79d42de49e8f12b6588a">tracktion_engine::Clip</a>.</p>
 
@@ -1939,6 +2027,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns true if this clip is capable of looping. </p>
+
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#a1e826ee09991ea5b690fd366ae4f49df">tracktion_engine::Clip</a>.</p>
 
 </div>
@@ -1965,6 +2055,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns true if this clip is currently looping. </p>
 
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#a1979952546a6e8ac7da755f20a2e6d7c">tracktion_engine::Clip</a>.</p>
 
@@ -1994,6 +2086,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns true if this clip's looping is based on beats or false if absolute time. </p>
 
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#a5de77f849808d824740f3811b2a1c685">tracktion_engine::Clip</a>.</p>
 
@@ -2025,6 +2119,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Sets the clip looping a number of times. </p>
+
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#a4476b2c85a8fe227cc2a0a7f7070c363">tracktion_engine::Clip</a>.</p>
 
 </div>
@@ -2052,6 +2148,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Disables all looping. </p>
+
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#a7cf83b64d26fc195b4117c7f7c39cef7">tracktion_engine::Clip</a>.</p>
 
 </div>
@@ -2069,7 +2167,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">void tracktion_engine::MidiClip::setLoopRange </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a>&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>newLoopRange</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -2079,6 +2177,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Sets the loop range the clip should use in seconds. </p>
 
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#ae84bdd5549954300d1f341c32a9b3a93">tracktion_engine::Clip</a>.</p>
 
@@ -2097,7 +2197,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">void tracktion_engine::MidiClip::setLoopRangeBeats </td>
           <td>(</td>
           <td class="paramtype">juce::Range&lt; double &gt;&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>newBeatRange</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -2107,6 +2207,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Sets the loop range the clip should use in beats. </p>
 
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#ab056297fa0aa11209cc72a853b9bb7ed">tracktion_engine::Clip</a>.</p>
 
@@ -2135,6 +2237,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns the beat position of the loop start point. </p>
+
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#a94c2124a39e6b61ac33ccded83aebf07">tracktion_engine::Clip</a>.</p>
 
 </div>
@@ -2161,6 +2265,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns the length of loop in beats. </p>
 
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#aec84b3e2b996948013ef1b99a161e662">tracktion_engine::Clip</a>.</p>
 
@@ -2189,6 +2295,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns the start time of the loop start point. </p>
+
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#af2916fa4c24af16bf74e413d5c1bf616">tracktion_engine::Clip</a>.</p>
 
 </div>
@@ -2215,6 +2323,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns the length of loop in seconds. </p>
 
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#a6524b3e95370175b9f9f1d10ab7d91b8">tracktion_engine::Clip</a>.</p>
 
@@ -2260,6 +2370,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns the <a class="el" href="classtracktion__engine_1_1PatternGenerator.html">PatternGenerator</a> for this clip if it has one. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1MidiClip.html">MidiClip</a> </dd></dl>
+
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#a72a151f4d0448c0253f5b06d3f3cf4b0">tracktion_engine::Clip</a>.</p>
 
 </div>
@@ -2286,6 +2399,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Called when there are pitch or tempo changes made which might require clips to adjust timing information. </p>
 
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Clip.html#af11afbbcfa86baa975cb151b90462b3e">tracktion_engine::Clip</a>.</p>
 
@@ -2426,7 +2541,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 10 2021 09:52:55 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 25 2021 13:15:29 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

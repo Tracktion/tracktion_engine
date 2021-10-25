@@ -101,15 +101,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a58172008d52c7a4cb2cb4090a8fc0306"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#a58172008d52c7a4cb2cb4090a8fc0306">getNumOutputChannelsGivenInputs</a> (int numInputChannels) override</td></tr>
 <tr class="memdesc:a58172008d52c7a4cb2cb4090a8fc0306"><td class="mdescLeft">&#160;</td><td class="mdescRight">This must return the number of output channels that the plugin will produce, given a number of input channels.  <a href="classtracktion__engine_1_1AuxReturnPlugin.html#a58172008d52c7a4cb2cb4090a8fc0306">More...</a><br /></td></tr>
 <tr class="separator:a58172008d52c7a4cb2cb4090a8fc0306"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88ac69c9143632dabf03ad308fbfcdb3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#a88ac69c9143632dabf03ad308fbfcdb3">initialise</a> (const <a class="el" href="structtracktion__engine_1_1PlaybackInitialisationInfo.html">PlaybackInitialisationInfo</a> &amp;) override</td></tr>
-<tr class="memdesc:a88ac69c9143632dabf03ad308fbfcdb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the plugin a chance to set itself up before being played.  <a href="classtracktion__engine_1_1AuxReturnPlugin.html#a88ac69c9143632dabf03ad308fbfcdb3">More...</a><br /></td></tr>
-<tr class="separator:a88ac69c9143632dabf03ad308fbfcdb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31ac0b39f6a052d93957a20f89f61913"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#a31ac0b39f6a052d93957a20f89f61913">initialise</a> (const <a class="el" href="structtracktion__engine_1_1PluginInitialisationInfo.html">PluginInitialisationInfo</a> &amp;) override</td></tr>
+<tr class="memdesc:a31ac0b39f6a052d93957a20f89f61913"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the plugin a chance to set itself up before being played.  <a href="classtracktion__engine_1_1AuxReturnPlugin.html#a31ac0b39f6a052d93957a20f89f61913">More...</a><br /></td></tr>
+<tr class="separator:a31ac0b39f6a052d93957a20f89f61913"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5dc0302774a6f0f0fd3b5dbdd097e60"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#aa5dc0302774a6f0f0fd3b5dbdd097e60">deinitialise</a> () override</td></tr>
 <tr class="memdesc:aa5dc0302774a6f0f0fd3b5dbdd097e60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after play stops to release resources.  <a href="classtracktion__engine_1_1AuxReturnPlugin.html#aa5dc0302774a6f0f0fd3b5dbdd097e60">More...</a><br /></td></tr>
 <tr class="separator:aa5dc0302774a6f0f0fd3b5dbdd097e60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a916c6112a7e74b4c067a2b588b49b606"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#a916c6112a7e74b4c067a2b588b49b606">prepareForNextBlock</a> (double editTime) override</td></tr>
-<tr class="memdesc:a916c6112a7e74b4c067a2b588b49b606"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called between successive rendering blocks.  <a href="classtracktion__engine_1_1AuxReturnPlugin.html#a916c6112a7e74b4c067a2b588b49b606">More...</a><br /></td></tr>
-<tr class="separator:a916c6112a7e74b4c067a2b588b49b606"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af605947fea2562e3bdff820f0e4616bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#af605947fea2562e3bdff820f0e4616bf">applyToBuffer</a> (const <a class="el" href="structtracktion__engine_1_1PluginRenderContext.html">PluginRenderContext</a> &amp;) override</td></tr>
 <tr class="memdesc:af605947fea2562e3bdff820f0e4616bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process the next block of data.  <a href="classtracktion__engine_1_1AuxReturnPlugin.html#af605947fea2562e3bdff820f0e4616bf">More...</a><br /></td></tr>
 <tr class="separator:af605947fea2562e3bdff820f0e4616bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -125,10 +122,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae43bc33ef2a3c69ca611b9950a783a8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a755489288f17c983c2fa0420d2826e0a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#a755489288f17c983c2fa0420d2826e0a">needsConstantBufferSize</a> () override</td></tr>
 <tr class="separator:a755489288f17c983c2fa0420d2826e0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5030230974ec61967c38c0723847016"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#ac5030230974ec61967c38c0723847016">applyAudioFromSend</a> (const juce::AudioBuffer&lt; float &gt; &amp;, int startSample, int numSamples, float gain1, float gain2)</td></tr>
-<tr class="separator:ac5030230974ec61967c38c0723847016"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3649164ebc0285755e8eda269f4903ba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#a3649164ebc0285755e8eda269f4903ba">applyAudioFromSend</a> (const juce::AudioBuffer&lt; float &gt; &amp;, int startSample, int numSamples, float gain)</td></tr>
-<tr class="separator:a3649164ebc0285755e8eda269f4903ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46d1c7ec55d25e706cb798547e97782e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AuxReturnPlugin.html#a46d1c7ec55d25e706cb798547e97782e">restorePluginStateFromValueTree</a> (const juce::ValueTree &amp;) override</td></tr>
 <tr class="separator:a46d1c7ec55d25e706cb798547e97782e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtracktion__engine_1_1Plugin"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtracktion__engine_1_1Plugin')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtracktion__engine_1_1Plugin.html">tracktion_engine::Plugin</a></td></tr>
@@ -170,17 +163,17 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a3c35b10b147481ae312fff25351b280d inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acceba65c8a65dd34ff7fbd45d1bc336f inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#acceba65c8a65dd34ff7fbd45d1bc336f">isProcessingEnabled</a> () const noexcept</td></tr>
 <tr class="separator:acceba65c8a65dd34ff7fbd45d1bc336f inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45efa32fd0632fbb0feb3cb1f7df3a95 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a45efa32fd0632fbb0feb3cb1f7df3a95">initialiseWithoutStopping</a> (const <a class="el" href="structtracktion__engine_1_1PlaybackInitialisationInfo.html">PlaybackInitialisationInfo</a> &amp;)</td></tr>
-<tr class="memdesc:a45efa32fd0632fbb0feb3cb1f7df3a95 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tells the plugin that the audio graph has changed but the plugin isn't being re-initialised - i.e.  <a href="classtracktion__engine_1_1Plugin.html#a45efa32fd0632fbb0feb3cb1f7df3a95">More...</a><br /></td></tr>
-<tr class="separator:a45efa32fd0632fbb0feb3cb1f7df3a95 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad36323cb56767514bea5fbfd82c0b9ac inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#ad36323cb56767514bea5fbfd82c0b9ac">initialiseWithoutStopping</a> (const <a class="el" href="structtracktion__engine_1_1PluginInitialisationInfo.html">PluginInitialisationInfo</a> &amp;)</td></tr>
+<tr class="memdesc:ad36323cb56767514bea5fbfd82c0b9ac inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tells the plugin that the audio graph has changed but the plugin isn't being re-initialised - i.e.  <a href="classtracktion__engine_1_1Plugin.html#ad36323cb56767514bea5fbfd82c0b9ac">More...</a><br /></td></tr>
+<tr class="separator:ad36323cb56767514bea5fbfd82c0b9ac inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae205cd44a0bfddeb5ad40bbfa0b7969c inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#ae205cd44a0bfddeb5ad40bbfa0b7969c">reset</a> ()</td></tr>
 <tr class="memdesc:ae205cd44a0bfddeb5ad40bbfa0b7969c inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should reset synth voices, tails, clear delay buffers, etc.  <a href="classtracktion__engine_1_1Plugin.html#ae205cd44a0bfddeb5ad40bbfa0b7969c">More...</a><br /></td></tr>
 <tr class="separator:ae205cd44a0bfddeb5ad40bbfa0b7969c inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd28773b3b7a5d7316f61e4566ffdab0 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#acd28773b3b7a5d7316f61e4566ffdab0">prepareForNextBlock</a> (double)</td></tr>
+<tr class="memdesc:acd28773b3b7a5d7316f61e4566ffdab0 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called between successive rendering blocks.  <a href="classtracktion__engine_1_1Plugin.html#acd28773b3b7a5d7316f61e4566ffdab0">More...</a><br /></td></tr>
+<tr class="separator:acd28773b3b7a5d7316f61e4566ffdab0 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acff9936f7ed124188c0259cce7e0f2bd inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#acff9936f7ed124188c0259cce7e0f2bd">applyToBufferWithAutomation</a> (const <a class="el" href="structtracktion__engine_1_1PluginRenderContext.html">PluginRenderContext</a> &amp;)</td></tr>
 <tr class="separator:acff9936f7ed124188c0259cce7e0f2bd inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f280a342ee069d4ec9d7969cd32c293 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a6f280a342ee069d4ec9d7969cd32c293">createAudioNode</a> (<a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *input, bool applyAntiDenormalisationNoise)</td></tr>
-<tr class="memdesc:a6f280a342ee069d4ec9d7969cd32c293 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new audio node that will render this plugin.  <a href="classtracktion__engine_1_1Plugin.html#a6f280a342ee069d4ec9d7969cd32c293">More...</a><br /></td></tr>
-<tr class="separator:a6f280a342ee069d4ec9d7969cd32c293 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6da73412e032ee34d2e3a11e4a1b955c inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a6da73412e032ee34d2e3a11e4a1b955c">getCpuUsage</a> () const noexcept</td></tr>
 <tr class="separator:a6da73412e032ee34d2e3a11e4a1b955c inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f841e4a64a6283697478187dfe31276 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a9f841e4a64a6283697478187dfe31276">noTail</a> ()</td></tr>
@@ -283,8 +276,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab63df863650b60bd9646eba542c188f6 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9fa7dcbf68b7ebf2805ee3e97e2d4d61 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a9fa7dcbf68b7ebf2805ee3e97e2d4d61">baseClassNeedsInitialising</a> () const noexcept</td></tr>
 <tr class="separator:a9fa7dcbf68b7ebf2805ee3e97e2d4d61 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa094395f74a1adde429affaa9cc7adb0 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#aa094395f74a1adde429affaa9cc7adb0">baseClassInitialise</a> (const <a class="el" href="structtracktion__engine_1_1PlaybackInitialisationInfo.html">PlaybackInitialisationInfo</a> &amp;)</td></tr>
-<tr class="separator:aa094395f74a1adde429affaa9cc7adb0 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bdccb69d92772e4b6f69fad09a81162 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a8bdccb69d92772e4b6f69fad09a81162">baseClassInitialise</a> (const <a class="el" href="structtracktion__engine_1_1PluginInitialisationInfo.html">PluginInitialisationInfo</a> &amp;)</td></tr>
+<tr class="separator:a8bdccb69d92772e4b6f69fad09a81162 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3be7cb46294b445eece2be76d020c9d inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#ae3be7cb46294b445eece2be76d020c9d">baseClassDeinitialise</a> ()</td></tr>
 <tr class="separator:ae3be7cb46294b445eece2be76d020c9d inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab79885c00560979951542c02d3a81c19 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#ab79885c00560979951542c02d3a81c19">setSidechainSourceID</a> (<a class="el" href="structtracktion__engine_1_1EditItemID.html">EditItemID</a> newID)</td></tr>
@@ -745,8 +738,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a88ac69c9143632dabf03ad308fbfcdb3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a88ac69c9143632dabf03ad308fbfcdb3">&#9670;&nbsp;</a></span>initialise()</h2>
+<a id="a31ac0b39f6a052d93957a20f89f61913"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31ac0b39f6a052d93957a20f89f61913">&#9670;&nbsp;</a></span>initialise()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -757,7 +750,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void tracktion_engine::AuxReturnPlugin::initialise </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtracktion__engine_1_1PlaybackInitialisationInfo.html">PlaybackInitialisationInfo</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structtracktion__engine_1_1PluginInitialisationInfo.html">PluginInitialisationInfo</a> &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -771,9 +764,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Gives the plugin a chance to set itself up before being played. </p>
 <p>The sample rate and the average block size - although the blocks won't always be the same, and may be bigger.</p>
-<p>Don't call this directly or the initialise count will become out of sync. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1Plugin.html#aa094395f74a1adde429affaa9cc7adb0">baseClassInitialise</a> </dd></dl>
+<p>Don't call this directly or the initialise count will become out of sync. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1Plugin.html#a8bdccb69d92772e4b6f69fad09a81162">baseClassInitialise</a> </dd></dl>
 
-<p>Implements <a class="el" href="classtracktion__engine_1_1Plugin.html#a9dac47c884a70b708a1addf3cc969968">tracktion_engine::Plugin</a>.</p>
+<p>Implements <a class="el" href="classtracktion__engine_1_1Plugin.html#aaae7318289eec497e2bae41da2135c3f">tracktion_engine::Plugin</a>.</p>
 
 </div>
 </div>
@@ -807,36 +800,6 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a916c6112a7e74b4c067a2b588b49b606"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a916c6112a7e74b4c067a2b588b49b606">&#9670;&nbsp;</a></span>prepareForNextBlock()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion_engine::AuxReturnPlugin::prepareForNextBlock </td>
-          <td>(</td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Called between successive rendering blocks. </p>
-
-<p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Plugin.html#acd28773b3b7a5d7316f61e4566ffdab0">tracktion_engine::Plugin</a>.</p>
-
-</div>
-</div>
 <a id="af605947fea2562e3bdff820f0e4616bf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af605947fea2562e3bdff820f0e4616bf">&#9670;&nbsp;</a></span>applyToBuffer()</h2>
 
@@ -863,8 +826,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Process the next block of data. </p>
 <p>The incoming buffer will have an unknown number of channels, and the plugin has to deal with them however it wants to.</p>
-<p>The buffer should be resized to the number of output channels that the plugin wants to return (which should be the same or less than the number of output channel names it returns from <a class="el" href="classtracktion__engine_1_1Plugin.html#a6d1741e49102e7118e27ab109fb43fb9">getChannelNames()</a> - never more than this).</p>
-<p>Other parameters and principles are similar to AudioNode::readBlock() </p>
+<p>The buffer should be resized to the number of output channels that the plugin wants to return (which should be the same or less than the number of output channel names it returns from <a class="el" href="classtracktion__engine_1_1Plugin.html#a6d1741e49102e7118e27ab109fb43fb9">getChannelNames()</a> - never more than this). </p>
 
 <p>Implements <a class="el" href="classtracktion__engine_1_1Plugin.html#afe5319659f633b941474518f0a21408a">tracktion_engine::Plugin</a>.</p>
 
@@ -1032,92 +994,6 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="ac5030230974ec61967c38c0723847016"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac5030230974ec61967c38c0723847016">&#9670;&nbsp;</a></span>applyAudioFromSend() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion_engine::AuxReturnPlugin::applyAudioFromSend </td>
-          <td>(</td>
-          <td class="paramtype">const juce::AudioBuffer&lt; float &gt; &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>startSample</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>numSamples</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>gain1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>gain2</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a3649164ebc0285755e8eda269f4903ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3649164ebc0285755e8eda269f4903ba">&#9670;&nbsp;</a></span>applyAudioFromSend() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion_engine::AuxReturnPlugin::applyAudioFromSend </td>
-          <td>(</td>
-          <td class="paramtype">const juce::AudioBuffer&lt; float &gt; &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>startSample</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>numSamples</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>gain</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a46d1c7ec55d25e706cb798547e97782e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a46d1c7ec55d25e706cb798547e97782e">&#9670;&nbsp;</a></span>restorePluginStateFromValueTree()</h2>
 
@@ -1191,7 +1067,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 10 2021 09:52:54 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 25 2021 13:15:28 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

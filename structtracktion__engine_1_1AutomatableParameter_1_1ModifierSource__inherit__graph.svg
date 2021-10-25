@@ -36,7 +36,7 @@
 <!-- Node3 -->
 <g id="node3" class="node">
 <title>Node3</title>
-<g id="a_node3"><a xlink:href="structtracktion__engine_1_1Modifier.html" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="structtracktion__engine_1_1Modifier.html" target="_top" xlink:title="Bass class for parameter Modifiers.">
 <polygon fill="none" stroke="black" points="223.5,-115.5 223.5,-134.5 367.5,-134.5 367.5,-115.5 223.5,-115.5"/>
 <text text-anchor="middle" x="295.5" y="-122.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::Modifier</text>
 </a>

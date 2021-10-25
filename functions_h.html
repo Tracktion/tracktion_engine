@@ -84,7 +84,8 @@ $(function() {
 , <a class="el" href="classtracktion__engine_1_1Project.html#ae8c29ed48d14e2b08cc297c67214442d">tracktion_engine::Project</a>
 </li>
 <li>handleIncomingMidiMessage()
-: <a class="el" href="structtracktion__engine_1_1InputDeviceInstance_1_1Consumer.html#a7473d87f549587cc9e2c94093f2b90a9">tracktion_engine::InputDeviceInstance::Consumer</a>
+: <a class="el" href="classtracktion__engine_1_1HostedMidiInputDeviceNode.html#abb1de85ebaa7d64f471f030a9b840c99">tracktion_engine::HostedMidiInputDeviceNode</a>
+, <a class="el" href="structtracktion__engine_1_1InputDeviceInstance_1_1Consumer.html#a7473d87f549587cc9e2c94093f2b90a9">tracktion_engine::InputDeviceInstance::Consumer</a>
 , <a class="el" href="classtracktion__engine_1_1MidiInputDevice.html#a8fa8b58066791fe3c480312df275142c">tracktion_engine::MidiInputDevice</a>
 , <a class="el" href="classtracktion__engine_1_1MidiInputDeviceNode.html#acb4b6dae7b2403b5939d834c4cb728e1">tracktion_engine::MidiInputDeviceNode</a>
 , <a class="el" href="classtracktion__engine_1_1PhysicalMidiInputDevice.html#abc7e935e332bdd6da800a23d1c684ed5">tracktion_engine::PhysicalMidiInputDevice</a>
@@ -126,6 +127,9 @@ $(function() {
 : <a class="el" href="structtracktion__engine_1_1AudioNodeProperties.html#a3a11ee244f41c782b842e83c4cbeccf6">tracktion_engine::AudioNodeProperties</a>
 , <a class="el" href="classtracktion__engine_1_1InsertPlugin.html#a3f8ad7f15b656509059b361982673518">tracktion_engine::InsertPlugin</a>
 , <a class="el" href="structtracktion__graph_1_1NodeProperties.html#aefae14f1d527533374ad9dafd133c7e9">tracktion_graph::NodeProperties</a>
+</li>
+<li>hasAudioInput
+: <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#ab6c6e4e0f40d38c71061e37677a15b72">tracktion_engine::PluginAudioNode</a>
 </li>
 <li>hasAutomationPoints()
 : <a class="el" href="classtracktion__engine_1_1AutomatableParameter.html#a6ca3ef56308f7df592f11db039579f96">tracktion_engine::AutomatableParameter</a>
@@ -169,6 +173,9 @@ $(function() {
 <li>hashCode
 : <a class="el" href="structtracktion__engine_1_1AudioFileInfo.html#a5a8b5b3e1a391f5cf052e6fe2b5ce2f2">tracktion_engine::AudioFileInfo</a>
 </li>
+<li>hasInitialised
+: <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#a267b3510bba6ff839c8be9fe09f75134">tracktion_engine::PluginAudioNode</a>
+</li>
 <li>hasLabels()
 : <a class="el" href="classtracktion__engine_1_1AutomatableParameter.html#aa83ad63379e1a559bae3282bc9e51948">tracktion_engine::AutomatableParameter</a>
 , <a class="el" href="structtracktion__engine_1_1DiscreteLabelledParameter.html#a49e6861860076b5987cc65685cb65b73">tracktion_engine::DiscreteLabelledParameter</a>
@@ -178,6 +185,9 @@ $(function() {
 : <a class="el" href="structtracktion__engine_1_1AudioNodeProperties.html#a6fa88efb451b4218fe58b4aa2740f17a">tracktion_engine::AudioNodeProperties</a>
 , <a class="el" href="classtracktion__engine_1_1InsertPlugin.html#ad1f0df689e3d2454ce8cb9ffdf9a75a6">tracktion_engine::InsertPlugin</a>
 , <a class="el" href="structtracktion__graph_1_1NodeProperties.html#a174cb216b943e810f36621ca61fce372">tracktion_graph::NodeProperties</a>
+</li>
+<li>hasMidiInput
+: <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#a58ac5e9c85348639823332dbb57d12f1">tracktion_engine::PluginAudioNode</a>
 </li>
 <li>hasMidiNoteNames()
 : <a class="el" href="classtracktion__engine_1_1AudioTrack.html#a40985d6489be21fef7e3a71780afe27d">tracktion_engine::AudioTrack</a>
@@ -253,6 +263,12 @@ $(function() {
 <li>high
 : <a class="el" href="structtracktion__engine_1_1VSTXML_1_1Range.html#acce8d706988756356f7582be4763cca2">tracktion_engine::VSTXML::Range</a>
 </li>
+<li>highPassCutoffParam
+: <a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#afc5f071d40648b6b112dd078d2a3cfb2">tracktion_engine::ImpulseResponsePlugin</a>
+</li>
+<li>highPassCutoffValue
+: <a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a11781a66dc4c7fb2f0aa80a0ae5f2eb6">tracktion_engine::ImpulseResponsePlugin</a>
+</li>
 <li>highPassEnabled
 : <a class="el" href="classtracktion__engine_1_1EnvelopeFollowerModifier.html#ac6e57d6172c327230497854d598d7b5e">tracktion_engine::EnvelopeFollowerModifier</a>
 </li>
@@ -273,9 +289,6 @@ $(function() {
 </li>
 <li>hiResTimerCallback()
 : <a class="el" href="classtracktion__engine_1_1MidiNoteDispatcher.html#a85f9e70ab8db5f4ccac42fee4bc07a51">tracktion_engine::MidiNoteDispatcher</a>
-</li>
-<li>HissingAudioNode()
-: <a class="el" href="classtracktion__engine_1_1HissingAudioNode.html#a2efda29fe433cb59378e5a43ffe787cc">tracktion_engine::HissingAudioNode</a>
 </li>
 <li>hitTest()
 : <a class="el" href="classtracktion__engine_1_1CurveEditor.html#a7aa308182713a11868a0920704e50d72">tracktion_engine::CurveEditor</a>
@@ -301,6 +314,9 @@ $(function() {
 <li>HostedAudioDeviceInterface()
 : <a class="el" href="classtracktion__engine_1_1HostedAudioDeviceInterface.html#a3b4d03803b0c7a3da4a5bc30cb68773c">tracktion_engine::HostedAudioDeviceInterface</a>
 </li>
+<li>HostedMidiInputDeviceNode()
+: <a class="el" href="classtracktion__engine_1_1HostedMidiInputDeviceNode.html#ad625a746f8104b620053fb9f71051efb">tracktion_engine::HostedMidiInputDeviceNode</a>
+</li>
 <li>hoverTimerCallback()
 : <a class="el" href="classtracktion__engine_1_1MouseHoverDetector.html#a3a7331eb87c2922e79fce39e748399a6">tracktion_engine::MouseHoverDetector</a>
 </li>
@@ -308,7 +324,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 10 2021 09:52:56 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 25 2021 13:15:31 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

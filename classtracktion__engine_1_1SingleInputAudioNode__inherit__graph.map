@@ -1,17 +1,8 @@
 <map id="tracktion_engine::SingleInputAudioNode" name="tracktion_engine::SingleInputAudioNode">
-<area shape="rect" id="node1" title=" " alt="" coords="264,371,443,412"/>
-<area shape="rect" id="node3" href="$classtracktion__engine_1_1BufferingAudioNode.html" title="AudioNode that buffers its input at a larger buffer size than the calling AudioNode to reduce the amm..." alt="" coords="517,5,715,47"/>
-<area shape="rect" id="node4" href="$classtracktion__engine_1_1ClickMutingNode.html" title="An AudioNode mutes an input click audio node within a given range or if disabled in the Edit." alt="" coords="491,71,741,98"/>
-<area shape="rect" id="node5" href="$classtracktion__engine_1_1FadeInOutAudioNode.html" title="An AudioNode that fades its input node in/out at given times." alt="" coords="525,123,707,164"/>
-<area shape="rect" id="node6" href="$classtracktion__engine_1_1HissingAudioNode.html" title="An AudioNode that adds the &#39;unregistered&#39; hiss noise to the output." alt="" coords="523,188,709,229"/>
-<area shape="rect" id="node7" href="$classtracktion__engine_1_1LevelMeasuringAudioNode.html" title="Applies a SharedLevelMeter to the audio passing through this node." alt="" coords="495,253,737,295"/>
-<area shape="rect" id="node8" href="$structtracktion__engine_1_1MuteAudioNode.html" title=" " alt="" coords="495,319,737,346"/>
-<area shape="rect" id="node9" href="$classtracktion__engine_1_1PlayHeadAudioNode.html" title="An AudioNode that synchronises its input node with the playback position." alt="" coords="515,371,717,412"/>
-<area shape="rect" id="node10" href="$classtracktion__engine_1_1SidechainReceiveAudioNode.html" title=" " alt="" coords="515,436,717,477"/>
-<area shape="rect" id="node11" href="$classtracktion__engine_1_1SidechainReceiveWrapperAudioNode.html" title=" " alt="" coords="515,501,717,543"/>
-<area shape="rect" id="node12" href="$classtracktion__engine_1_1SidechainSendAudioNode.html" title=" " alt="" coords="515,567,717,608"/>
-<area shape="rect" id="node13" href="$classtracktion__engine_1_1SpeedRampAudioNode.html" title="An AudioNode that speeds up and slows down its input node in/out at given times." alt="" coords="507,632,725,673"/>
-<area shape="rect" id="node14" href="$classtracktion__engine_1_1TimedMutingAudioNode.html" title=" " alt="" coords="503,697,729,739"/>
-<area shape="rect" id="node15" href="$classtracktion__engine_1_1TrackMutingAudioNode.html" title="An AudioNode that handles muting/soloing of its input node, according to the audibility of a track." alt="" coords="507,763,725,804"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1AudioNode.html" title="Base class for nodes in an audio playback graph." alt="" coords="5,378,216,405"/>
+<area shape="rect" id="node1" title=" " alt="" coords="264,93,443,135"/>
+<area shape="rect" id="node3" href="$classtracktion__engine_1_1FadeInOutAudioNode.html" title="An AudioNode that fades its input node in/out at given times." alt="" coords="521,5,703,47"/>
+<area shape="rect" id="node4" href="$structtracktion__engine_1_1MuteAudioNode.html" title=" " alt="" coords="491,71,733,98"/>
+<area shape="rect" id="node5" href="$classtracktion__engine_1_1SpeedRampAudioNode.html" title="An AudioNode that speeds up and slows down its input node in/out at given times." alt="" coords="503,123,721,164"/>
+<area shape="rect" id="node6" href="$classtracktion__engine_1_1TimedMutingAudioNode.html" title=" " alt="" coords="499,188,725,229"/>
+<area shape="rect" id="node2" href="$classtracktion__engine_1_1AudioNode.html" title="Base class for nodes in an audio playback graph." alt="" coords="5,101,216,127"/>
 </map>

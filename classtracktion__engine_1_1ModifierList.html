@@ -74,6 +74,9 @@ $(function() {
 <div class="title">tracktion_engine::ModifierList Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Holds a list of Modifiers that have been added to a <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>.  
+ <a href="classtracktion__engine_1_1ModifierList.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for tracktion_engine::ModifierList:</div>
 <div class="dyncontent">
@@ -84,12 +87,16 @@ Inheritance diagram for tracktion_engine::ModifierList:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aa4959bbd98474cc7962175cab1053244"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ModifierList.html#aa4959bbd98474cc7962175cab1053244">ModifierList</a> (<a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;, const juce::ValueTree &amp;)</td></tr>
+<tr class="memdesc:aa4959bbd98474cc7962175cab1053244"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classtracktion__engine_1_1ModifierList.html" title="Holds a list of Modifiers that have been added to a Track.">ModifierList</a> for an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> and given state.  <a href="classtracktion__engine_1_1ModifierList.html#aa4959bbd98474cc7962175cab1053244">More...</a><br /></td></tr>
 <tr class="separator:aa4959bbd98474cc7962175cab1053244"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6151972d0f4c9e71c118b5e46a545bb1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ModifierList.html#a6151972d0f4c9e71c118b5e46a545bb1">~ModifierList</a> () override</td></tr>
+<tr class="memdesc:a6151972d0f4c9e71c118b5e46a545bb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="classtracktion__engine_1_1ModifierList.html#a6151972d0f4c9e71c118b5e46a545bb1">More...</a><br /></td></tr>
 <tr class="separator:a6151972d0f4c9e71c118b5e46a545bb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7fc91a068060ece6d184d2bf7c64861d"><td class="memItemLeft" align="right" valign="top">juce::ReferenceCountedArray&lt; <a class="el" href="structtracktion__engine_1_1Modifier.html">Modifier</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ModifierList.html#a7fc91a068060ece6d184d2bf7c64861d">getModifiers</a> () const</td></tr>
+<tr class="memdesc:a7fc91a068060ece6d184d2bf7c64861d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns all the Modifiers in the list.  <a href="classtracktion__engine_1_1ModifierList.html#a7fc91a068060ece6d184d2bf7c64861d">More...</a><br /></td></tr>
 <tr class="separator:a7fc91a068060ece6d184d2bf7c64861d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b9640a91806ec3c0f323626953293de"><td class="memItemLeft" align="right" valign="top">juce::ReferenceCountedObjectPtr&lt; <a class="el" href="structtracktion__engine_1_1Modifier.html">Modifier</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ModifierList.html#a3b9640a91806ec3c0f323626953293de">insertModifier</a> (juce::ValueTree, int index, <a class="el" href="classtracktion__engine_1_1SelectionManager.html">SelectionManager</a> *)</td></tr>
+<tr class="memdesc:a3b9640a91806ec3c0f323626953293de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a <a class="el" href="structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a> from a state at a given index.  <a href="classtracktion__engine_1_1ModifierList.html#a3b9640a91806ec3c0f323626953293de">More...</a><br /></td></tr>
 <tr class="separator:a3b9640a91806ec3c0f323626953293de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99241e047d13275f833c21655c2492c1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ModifierList.html#a99241e047d13275f833c21655c2492c1">isSuitableType</a> (const juce::ValueTree &amp;) const override</td></tr>
 <tr class="separator:a99241e047d13275f833c21655c2492c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -107,6 +114,7 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a667fe9a54046391ada1c22102de86f0c"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ModifierList.html#a667fe9a54046391ada1c22102de86f0c">isModifier</a> (const juce::Identifier &amp;)</td></tr>
+<tr class="memdesc:a667fe9a54046391ada1c22102de86f0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests whether the Identifier is of a known <a class="el" href="structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a> type.  <a href="classtracktion__engine_1_1ModifierList.html#a667fe9a54046391ada1c22102de86f0c">More...</a><br /></td></tr>
 <tr class="separator:a667fe9a54046391ada1c22102de86f0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -116,7 +124,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a716adbef552d3a41ad5e3ff072b87db8"><td class="memItemLeft" align="right" valign="top">juce::ValueTree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ModifierList.html#a716adbef552d3a41ad5e3ff072b87db8">state</a></td></tr>
 <tr class="separator:a716adbef552d3a41ad5e3ff072b87db8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Holds a list of Modifiers that have been added to a <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aa4959bbd98474cc7962175cab1053244"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa4959bbd98474cc7962175cab1053244">&#9670;&nbsp;</a></span>ModifierList()</h2>
 
@@ -143,6 +153,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Creates a <a class="el" href="classtracktion__engine_1_1ModifierList.html" title="Holds a list of Modifiers that have been added to a Track.">ModifierList</a> for an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> and given state. </p>
+<p>Usually this is created by a <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1Track.html#adc494b561169c2a3da487170aecd9747" title="Returns the ModifierList for this Track.">Track::getModifierList</a>. </dd></dl>
+
 </div>
 </div>
 <a id="a6151972d0f4c9e71c118b5e46a545bb1"></a>
@@ -167,6 +180,8 @@ Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Destructor. </p>
 
 </div>
 </div>
@@ -195,6 +210,8 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Tests whether the Identifier is of a known <a class="el" href="structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a> type. </p>
+
 </div>
 </div>
 <a id="a7fc91a068060ece6d184d2bf7c64861d"></a>
@@ -211,6 +228,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns all the Modifiers in the list. </p>
 
 <p class="reference">Referenced by <a class="el" href="namespacetracktion__engine.html#a98e603ac34b5295a1f841caafbc75ff0">tracktion_engine::getModifiersOfType()</a>.</p>
 
@@ -247,6 +266,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Adds a <a class="el" href="structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a> from a state at a given index. </p>
 
 </div>
 </div>
@@ -452,7 +473,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 10 2021 09:52:55 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 25 2021 13:15:29 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

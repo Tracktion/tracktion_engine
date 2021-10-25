@@ -1,5 +1,0 @@
-<map id="tracktion_engine::TrackMutingAudioNode" name="tracktion_engine::TrackMutingAudioNode">
-<area shape="rect" id="node1" title="An AudioNode that handles muting/soloing of its input node, according to the audibility of a track." alt="" coords="5,169,224,211"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1SingleInputAudioNode.html" title=" " alt="" coords="25,80,204,121"/>
-<area shape="rect" id="node3" href="$classtracktion__engine_1_1AudioNode.html" title="Base class for nodes in an audio playback graph." alt="" coords="9,5,220,32"/>
-</map>

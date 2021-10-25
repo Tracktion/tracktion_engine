@@ -10,6 +10,6 @@
 <area shape="rect" id="node3" href="$classtracktion__engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="11,81,206,108"/>
 <area shape="rect" id="node4" href="$classtracktion__engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,132,212,159"/>
 <area shape="rect" id="node5" href="$classtracktion__engine_1_1Exportable.html" title="An interface for objects within an edit that can be exported." alt="" coords="260,157,469,184"/>
-<area shape="rect" id="node8" href="$classtracktion__engine_1_1EditClip.html" title="This is the main source of an Edit clip and is responsible for managing its properties and creating a..." alt="" coords="1035,31,1224,57"/>
-<area shape="rect" id="node9" href="$classtracktion__engine_1_1WaveAudioClip.html" title=" " alt="" coords="1011,81,1248,108"/>
+<area shape="rect" id="node8" href="$classtracktion__engine_1_1EditClip.html" title="This is the main source of an Edit clip and is responsible for managing its properties." alt="" coords="1035,31,1224,57"/>
+<area shape="rect" id="node9" href="$classtracktion__engine_1_1WaveAudioClip.html" title="An audio clip that uses an audio file as its source." alt="" coords="1011,81,1248,108"/>
 </map>

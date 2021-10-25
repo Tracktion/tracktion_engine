@@ -21,7 +21,7 @@
 <!-- Node2 -->
 <g id="node2" class="node">
 <title>Node2</title>
-<g id="a_node2"><a xlink:href="classtracktion__engine_1_1CombiningNode.html" target="_top" xlink:title="An AudioNode that mixes a sequence of clips of other nodes.">
+<g id="a_node2"><a xlink:href="classtracktion__engine_1_1CombiningNode.html" target="_top" xlink:title="An Node that mixes a sequence of clips of other nodes.">
 <polygon fill="none" stroke="black" points="185,-175.5 185,-194.5 367,-194.5 367,-175.5 185,-175.5"/>
 <text text-anchor="middle" x="276" y="-182.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::CombiningNode</text>
 </a>

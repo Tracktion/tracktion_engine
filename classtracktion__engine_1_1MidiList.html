@@ -204,6 +204,9 @@ Public Member Functions</h2></td></tr>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a246cccb7edf21345bcf97af349d3ecf8"><td class="memItemLeft" align="right" valign="top">static juce::ValueTree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiList.html#a246cccb7edf21345bcf97af349d3ecf8">createMidiList</a> ()</td></tr>
 <tr class="separator:a246cccb7edf21345bcf97af349d3ecf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a9f225ba954ea00096b010da76916e9"><td class="memItemLeft" align="right" valign="top">static juce::MidiMessageSequence&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiList.html#a6a9f225ba954ea00096b010da76916e9">createDefaultPlaybackMidiSequence</a> (const <a class="el" href="classtracktion__engine_1_1MidiList.html">MidiList</a> &amp;, <a class="el" href="classtracktion__engine_1_1MidiClip.html">MidiClip</a> &amp;, bool generateMPE)</td></tr>
+<tr class="memdesc:a6a9f225ba954ea00096b010da76916e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the default MIDI playback sequence.  <a href="classtracktion__engine_1_1MidiList.html#a6a9f225ba954ea00096b010da76916e9">More...</a><br /></td></tr>
+<tr class="separator:a6a9f225ba954ea00096b010da76916e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a948eb56b9502f8a3c358deb82cc90da3"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiList.html#a948eb56b9502f8a3c358deb82cc90da3">looksLikeMPEData</a> (const juce::File &amp;)</td></tr>
 <tr class="separator:a948eb56b9502f8a3c358deb82cc90da3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ba72099a7f68906896ce019ae8afde4"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MidiList.html#a6ba72099a7f68906896ce019ae8afde4">fileHasTempoChanges</a> (const juce::File &amp;)</td></tr>
@@ -1646,6 +1649,52 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a6a9f225ba954ea00096b010da76916e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a9f225ba954ea00096b010da76916e9">&#9670;&nbsp;</a></span>createDefaultPlaybackMidiSequence()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static juce::MidiMessageSequence tracktion_engine::MidiList::createDefaultPlaybackMidiSequence </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion__engine_1_1MidiList.html">MidiList</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1MidiClip.html">MidiClip</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>generateMPE</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Creates the default MIDI playback sequence. </p>
+
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a6259e605d1c0d8a273e6563cacbe0624">tracktion_engine::EngineBehaviour::createPlaybackMidiSequence()</a>.</p>
+
+</div>
+</div>
 <a id="a948eb56b9502f8a3c358deb82cc90da3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a948eb56b9502f8a3c358deb82cc90da3">&#9670;&nbsp;</a></span>looksLikeMPEData()</h2>
 
@@ -1915,7 +1964,7 @@ template&lt;typename Type &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 10 2021 09:52:55 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 25 2021 13:15:29 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

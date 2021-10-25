@@ -1,5 +1,5 @@
 <map id="tracktion_engine::EditClip" name="tracktion_engine::EditClip">
-<area shape="rect" id="node1" title="This is the main source of an Edit clip and is responsible for managing its properties and creating a..." alt="" coords="460,333,649,360"/>
+<area shape="rect" id="node1" title="This is the main source of an Edit clip and is responsible for managing its properties." alt="" coords="460,333,649,360"/>
 <area shape="rect" id="node2" href="$classtracktion__engine_1_1AudioClipBase.html" title="Base class for Clips that produce some kind of audio e.g." alt="" coords="311,251,545,278"/>
 <area shape="rect" id="node3" href="$classtracktion__engine_1_1Clip.html" title="A clip in an edit." alt="" coords="247,162,411,189"/>
 <area shape="rect" id="node4" href="$classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g." alt="" coords="113,80,316,107"/>

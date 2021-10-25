@@ -1,5 +1,5 @@
 <map id="tracktion_engine::Modifier" name="tracktion_engine::Modifier">
-<area shape="rect" id="node1" title=" " alt="" coords="519,166,711,193"/>
+<area shape="rect" id="node1" title="Bass class for parameter Modifiers." alt="" coords="519,166,711,193"/>
 <area shape="rect" id="node6" href="$classtracktion__engine_1_1BreakpointOscillatorModifier.html" title=" " alt="" coords="764,5,975,47"/>
 <area shape="rect" id="node7" href="$classtracktion__engine_1_1EnvelopeFollowerModifier.html" title=" " alt="" coords="770,71,969,112"/>
 <area shape="rect" id="node8" href="$classtracktion__engine_1_1LFOModifier.html" title=" " alt="" coords="761,137,978,163"/>

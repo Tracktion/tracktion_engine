@@ -142,6 +142,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6b28bacc0d1dc730f2df81d953ab8ee7"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a6b28bacc0d1dc730f2df81d953ab8ee7">shouldProcessMutedTracks</a> ()</td></tr>
 <tr class="memdesc:a6b28bacc0d1dc730f2df81d953ab8ee7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should muted tracks processing be disabled to save CPU.  <a href="classtracktion__engine_1_1EngineBehaviour.html#a6b28bacc0d1dc730f2df81d953ab8ee7">More...</a><br /></td></tr>
 <tr class="separator:a6b28bacc0d1dc730f2df81d953ab8ee7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace053bbb7f34491a78e64eba0aad55af"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#ace053bbb7f34491a78e64eba0aad55af">monitorAudioInputsWithoutRecordEnable</a> ()</td></tr>
+<tr class="memdesc:ace053bbb7f34491a78e64eba0aad55af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should audio inputs be audible when monitor-enabled but not record enabled.  <a href="classtracktion__engine_1_1EngineBehaviour.html#ace053bbb7f34491a78e64eba0aad55af">More...</a><br /></td></tr>
+<tr class="separator:ace053bbb7f34491a78e64eba0aad55af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92647732698a6d19d161ff94f9b02cbb"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a92647732698a6d19d161ff94f9b02cbb">areAudioClipsRemappedWhenTempoChanges</a> ()</td></tr>
 <tr class="separator:a92647732698a6d19d161ff94f9b02cbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fb22a484aead305c5bd9c7351b38e83"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a2fb22a484aead305c5bd9c7351b38e83">setAudioClipsRemappedWhenTempoChanges</a> (bool)</td></tr>
@@ -176,6 +179,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a367e30845035def0fae328970aabd521"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a367e30845035def0fae328970aabd521">describeWaveDevices</a> (std::vector&lt; <a class="el" href="structtracktion__engine_1_1WaveDeviceDescription.html">WaveDeviceDescription</a> &gt; &amp;, juce::AudioIODevice &amp;, bool)</td></tr>
 <tr class="memdesc:a367e30845035def0fae328970aabd521"><td class="mdescLeft">&#160;</td><td class="mdescRight">If isDescriptionOfWaveDevicesSupported returns true, this should be implemented to describe the wave devices for a given audio device.  <a href="classtracktion__engine_1_1EngineBehaviour.html#a367e30845035def0fae328970aabd521">More...</a><br /></td></tr>
 <tr class="separator:a367e30845035def0fae328970aabd521"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6259e605d1c0d8a273e6563cacbe0624"><td class="memItemLeft" align="right" valign="top">virtual juce::MidiMessageSequence&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a6259e605d1c0d8a273e6563cacbe0624">createPlaybackMidiSequence</a> (const <a class="el" href="classtracktion__engine_1_1MidiList.html">MidiList</a> &amp;list, <a class="el" href="classtracktion__engine_1_1MidiClip.html">MidiClip</a> &amp;clip, bool generateMPE)</td></tr>
+<tr class="memdesc:a6259e605d1c0d8a273e6563cacbe0624"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by the <a class="el" href="classtracktion__engine_1_1MidiList.html">MidiList</a> to create a MidiMessageSequence for playback.  <a href="classtracktion__engine_1_1EngineBehaviour.html#a6259e605d1c0d8a273e6563cacbe0624">More...</a><br /></td></tr>
+<tr class="separator:a6259e605d1c0d8a273e6563cacbe0624"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3fcd7495806d6373d5b2052ccfaaefbe"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a3fcd7495806d6373d5b2052ccfaaefbe">getDefaultLoopedSequenceType</a> ()</td></tr>
 <tr class="memdesc:a3fcd7495806d6373d5b2052ccfaaefbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Must return the default looped sequence type to use.  <a href="classtracktion__engine_1_1EngineBehaviour.html#a3fcd7495806d6373d5b2052ccfaaefbe">More...</a><br /></td></tr>
 <tr class="separator:a3fcd7495806d6373d5b2052ccfaaefbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -877,6 +883,35 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ace053bbb7f34491a78e64eba0aad55af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace053bbb7f34491a78e64eba0aad55af">&#9670;&nbsp;</a></span>monitorAudioInputsWithoutRecordEnable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion_engine::EngineBehaviour::monitorAudioInputsWithoutRecordEnable </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Should audio inputs be audible when monitor-enabled but not record enabled. </p>
+<p><br  />
+ </p>
+
+</div>
+</div>
 <a id="a92647732698a6d19d161ff94f9b02cbb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a92647732698a6d19d161ff94f9b02cbb">&#9670;&nbsp;</a></span>areAudioClipsRemappedWhenTempoChanges()</h2>
 
@@ -1287,6 +1322,53 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a6259e605d1c0d8a273e6563cacbe0624"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6259e605d1c0d8a273e6563cacbe0624">&#9670;&nbsp;</a></span>createPlaybackMidiSequence()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual juce::MidiMessageSequence tracktion_engine::EngineBehaviour::createPlaybackMidiSequence </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion__engine_1_1MidiList.html">MidiList</a> &amp;&#160;</td>
+          <td class="paramname"><em>list</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1MidiClip.html">MidiClip</a> &amp;&#160;</td>
+          <td class="paramname"><em>clip</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>generateMPE</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called by the <a class="el" href="classtracktion__engine_1_1MidiList.html">MidiList</a> to create a MidiMessageSequence for playback. </p>
+<p>You can override this to add your own messages but should generally follow the procedure in <a class="el" href="classtracktion__engine_1_1MidiList.html#a6a9f225ba954ea00096b010da76916e9" title="Creates the default MIDI playback sequence.">MidiList::createDefaultPlaybackMidiSequence</a>. </p>
+
+<p class="reference">References <a class="el" href="classtracktion__engine_1_1MidiList.html#a6a9f225ba954ea00096b010da76916e9">tracktion_engine::MidiList::createDefaultPlaybackMidiSequence()</a>.</p>
+
+</div>
+</div>
 <a id="a3fcd7495806d6373d5b2052ccfaaefbe"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3fcd7495806d6373d5b2052ccfaaefbe">&#9670;&nbsp;</a></span>getDefaultLoopedSequenceType()</h2>
 
@@ -1321,7 +1403,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 10 2021 09:52:54 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 25 2021 13:15:29 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

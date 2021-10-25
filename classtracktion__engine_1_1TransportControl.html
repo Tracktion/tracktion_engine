@@ -76,44 +76,58 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Controls the transport of an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>'s playback.  
+ <a href="classtracktion__engine_1_1TransportControl.html#details">More...</a></p>
+
 <p>Inherits ChangeBroadcaster, and Timer.</p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TransportControl_1_1Listener.html">Listener</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structtracktion__engine_1_1TransportControl_1_1Listener.html" title="Listener interface to be notified of changes to the transport.">Listener</a> interface to be notified of changes to the transport.  <a href="structtracktion__engine_1_1TransportControl_1_1Listener.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TransportControl_1_1ReallocationInhibitor.html">ReallocationInhibitor</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prevents the nodes being regenerated while one of these exists, e.g.  <a href="structtracktion__engine_1_1TransportControl_1_1ReallocationInhibitor.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TransportControl_1_1ScopedContextAllocator.html">ScopedContextAllocator</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees the playback context and then re-allocates it upon destruction.  <a href="structtracktion__engine_1_1TransportControl_1_1ScopedContextAllocator.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TransportControl_1_1ScopedPlaybackRestarter.html">ScopedPlaybackRestarter</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> is playing back, this resumes playback when destroyed.  <a href="structtracktion__engine_1_1TransportControl_1_1ScopedPlaybackRestarter.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ae159663c7010ec4bd46da26db58062c5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#ae159663c7010ec4bd46da26db58062c5">TransportControl</a> (<a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;, const juce::ValueTree &amp;)</td></tr>
+<tr class="memdesc:ae159663c7010ec4bd46da26db58062c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classtracktion__engine_1_1TransportControl.html" title="Controls the transport of an Edit&#39;s playback.">TransportControl</a> for an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="classtracktion__engine_1_1TransportControl.html#ae159663c7010ec4bd46da26db58062c5">More...</a><br /></td></tr>
 <tr class="separator:ae159663c7010ec4bd46da26db58062c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada1ad96a276a97ede8f72da474393516"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#ada1ad96a276a97ede8f72da474393516">~TransportControl</a> ()</td></tr>
-<tr class="separator:ada1ad96a276a97ede8f72da474393516"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24419ee3f38b0c3a6565169ca2bf128a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1PlayHead.html">PlayHead</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a24419ee3f38b0c3a6565169ca2bf128a">getCurrentPlayhead</a> () const</td></tr>
-<tr class="separator:a24419ee3f38b0c3a6565169ca2bf128a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad92327f3cc3132b4c38c8d268f5df63e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#ad92327f3cc3132b4c38c8d268f5df63e">~TransportControl</a> () override</td></tr>
+<tr class="memdesc:ad92327f3cc3132b4c38c8d268f5df63e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="classtracktion__engine_1_1TransportControl.html#ad92327f3cc3132b4c38c8d268f5df63e">More...</a><br /></td></tr>
+<tr class="separator:ad92327f3cc3132b4c38c8d268f5df63e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a870e8df78bade9605b8168e4e55cff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a7a870e8df78bade9605b8168e4e55cff">play</a> (bool justSendMMCIfEnabled)</td></tr>
+<tr class="memdesc:a7a870e8df78bade9605b8168e4e55cff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts playback of an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="classtracktion__engine_1_1TransportControl.html#a7a870e8df78bade9605b8168e4e55cff">More...</a><br /></td></tr>
 <tr class="separator:a7a870e8df78bade9605b8168e4e55cff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6b42fe5d9ed2d05c43f15da68bce730"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#ad6b42fe5d9ed2d05c43f15da68bce730">playSectionAndReset</a> (<a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> rangeToPlay)</td></tr>
+<tr class="memdesc:ad6b42fe5d9ed2d05c43f15da68bce730"><td class="mdescLeft">&#160;</td><td class="mdescRight">Plays a section of an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> then stops playback, useful for previewing clips.  <a href="classtracktion__engine_1_1TransportControl.html#ad6b42fe5d9ed2d05c43f15da68bce730">More...</a><br /></td></tr>
 <tr class="separator:ad6b42fe5d9ed2d05c43f15da68bce730"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b6dcdd42fa635c5ce5f9c384e4a0033"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a0b6dcdd42fa635c5ce5f9c384e4a0033">record</a> (bool justSendMMCIfEnabled, bool allowRecordingIfNoInputsArmed=false)</td></tr>
+<tr class="memdesc:a0b6dcdd42fa635c5ce5f9c384e4a0033"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts recording.  <a href="classtracktion__engine_1_1TransportControl.html#a0b6dcdd42fa635c5ce5f9c384e4a0033">More...</a><br /></td></tr>
 <tr class="separator:a0b6dcdd42fa635c5ce5f9c384e4a0033"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c3f5713faa4d28f154bf0c67880d89e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a9c3f5713faa4d28f154bf0c67880d89e">stop</a> (bool discardRecordings, bool clearDevices, bool canSendMMCStop=true, bool invertReturnToStartPosSelection=false)</td></tr>
+<tr class="memdesc:a9c3f5713faa4d28f154bf0c67880d89e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops recording, creating clips of newyly recorded files/MIDI data.  <a href="classtracktion__engine_1_1TransportControl.html#a9c3f5713faa4d28f154bf0c67880d89e">More...</a><br /></td></tr>
 <tr class="separator:a9c3f5713faa4d28f154bf0c67880d89e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add8fd7a5f99002b4a671ccfbffd5b3d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#add8fd7a5f99002b4a671ccfbffd5b3d0">stopIfRecording</a> ()</td></tr>
+<tr class="memdesc:add8fd7a5f99002b4a671ccfbffd5b3d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops playback only if recording is currently in progress.  <a href="classtracktion__engine_1_1TransportControl.html#add8fd7a5f99002b4a671ccfbffd5b3d0">More...</a><br /></td></tr>
 <tr class="separator:add8fd7a5f99002b4a671ccfbffd5b3d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4ff5304cec4c7f0daa289bead9ea118"><td class="memItemLeft" align="right" valign="top">juce::Result&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#aa4ff5304cec4c7f0daa289bead9ea118">applyRetrospectiveRecord</a> ()</td></tr>
+<tr class="memdesc:aa4ff5304cec4c7f0daa289bead9ea118"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applys a retrospective record to any assigned input devices, creating clips for any historical input.  <a href="classtracktion__engine_1_1TransportControl.html#aa4ff5304cec4c7f0daa289bead9ea118">More...</a><br /></td></tr>
 <tr class="separator:aa4ff5304cec4c7f0daa289bead9ea118"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5840469197a6ecb3a4bd3d2e06d3a748"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; juce::File &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a5840469197a6ecb3a4bd3d2e06d3a748">getRetrospectiveRecordAsAudioFiles</a> ()</td></tr>
+<tr class="memdesc:a5840469197a6ecb3a4bd3d2e06d3a748"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perfoms a retrospective record operation and returns any new files.  <a href="classtracktion__engine_1_1TransportControl.html#a5840469197a6ecb3a4bd3d2e06d3a748">More...</a><br /></td></tr>
 <tr class="separator:a5840469197a6ecb3a4bd3d2e06d3a748"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44ff7385fd4737c934e5986eed4084ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a44ff7385fd4737c934e5986eed4084ea">syncToEdit</a> (<a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> *editToSyncTo, bool isPreview)</td></tr>
-<tr class="separator:a44ff7385fd4737c934e5986eed4084ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c5155d8b41ba96c3e50c168d25b6cc3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a7c5155d8b41ba96c3e50c168d25b6cc3">syncToEdit</a> (<a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> *editToSyncTo, bool syncToTargetLoopLength)</td></tr>
+<tr class="memdesc:a7c5155d8b41ba96c3e50c168d25b6cc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Syncs this <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>'s playback to another <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="classtracktion__engine_1_1TransportControl.html#a7c5155d8b41ba96c3e50c168d25b6cc3">More...</a><br /></td></tr>
+<tr class="separator:a7c5155d8b41ba96c3e50c168d25b6cc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2789400ce74395c9003a60465856a0c7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a2789400ce74395c9003a60465856a0c7">isPlaying</a> () const</td></tr>
 <tr class="memdesc:a2789400ce74395c9003a60465856a0c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the transport is playing.  <a href="classtracktion__engine_1_1TransportControl.html#a2789400ce74395c9003a60465856a0c7">More...</a><br /></td></tr>
 <tr class="separator:a2789400ce74395c9003a60465856a0c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -130,78 +144,114 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ae57647f221bbe2b777e9e3a9902f697c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the time when the transport was started.  <a href="classtracktion__engine_1_1TransportControl.html#ae57647f221bbe2b777e9e3a9902f697c">More...</a><br /></td></tr>
 <tr class="separator:ae57647f221bbe2b777e9e3a9902f697c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33b6350e76272c7f2367bd0d9a82f1cd"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a33b6350e76272c7f2367bd0d9a82f1cd">getCurrentPosition</a> () const</td></tr>
+<tr class="memdesc:a33b6350e76272c7f2367bd0d9a82f1cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current transport position.  <a href="classtracktion__engine_1_1TransportControl.html#a33b6350e76272c7f2367bd0d9a82f1cd">More...</a><br /></td></tr>
 <tr class="separator:a33b6350e76272c7f2367bd0d9a82f1cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ce90c654d6d730768cff4a4dac517d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a4ce90c654d6d730768cff4a4dac517d7">setCurrentPosition</a> (double time)</td></tr>
+<tr class="memdesc:a4ce90c654d6d730768cff4a4dac517d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a new transport position.  <a href="classtracktion__engine_1_1TransportControl.html#a4ce90c654d6d730768cff4a4dac517d7">More...</a><br /></td></tr>
 <tr class="separator:a4ce90c654d6d730768cff4a4dac517d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76dc0068694459bb6ff3adbaf91cf184"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a76dc0068694459bb6ff3adbaf91cf184">setUserDragging</a> (bool)</td></tr>
+<tr class="memdesc:a76dc0068694459bb6ff3adbaf91cf184"><td class="mdescLeft">&#160;</td><td class="mdescRight">Signifies a scrub-drag operation has started/stopped.  <a href="classtracktion__engine_1_1TransportControl.html#a76dc0068694459bb6ff3adbaf91cf184">More...</a><br /></td></tr>
 <tr class="separator:a76dc0068694459bb6ff3adbaf91cf184"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7165e08005243f1cea5b20a5b902b8f0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a7165e08005243f1cea5b20a5b902b8f0">isUserDragging</a> () const noexcept</td></tr>
+<tr class="memdesc:a7165e08005243f1cea5b20a5b902b8f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if a drag/scrub operation has been enabled.  <a href="classtracktion__engine_1_1TransportControl.html#a7165e08005243f1cea5b20a5b902b8f0">More...</a><br /></td></tr>
 <tr class="separator:a7165e08005243f1cea5b20a5b902b8f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c7a9c4e3116852ca69270bd5936a0f8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a2c7a9c4e3116852ca69270bd5936a0f8">isPositionUpdatingFromPlayhead</a> () const</td></tr>
+<tr class="memdesc:a2c7a9c4e3116852ca69270bd5936a0f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the current position change was triggered from an update directly from the playhead (rather than a call to setCurrentPosition).  <a href="classtracktion__engine_1_1TransportControl.html#a2c7a9c4e3116852ca69270bd5936a0f8">More...</a><br /></td></tr>
 <tr class="separator:a2c7a9c4e3116852ca69270bd5936a0f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e19079c406a3f9b994fdc17857c669a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a5e19079c406a3f9b994fdc17857c669a">setLoopIn</a> (double)</td></tr>
+<tr class="memdesc:a5e19079c406a3f9b994fdc17857c669a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the loop in position.  <a href="classtracktion__engine_1_1TransportControl.html#a5e19079c406a3f9b994fdc17857c669a">More...</a><br /></td></tr>
 <tr class="separator:a5e19079c406a3f9b994fdc17857c669a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ca017c50f3ee004737d356aa84539c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a5ca017c50f3ee004737d356aa84539c2">setLoopOut</a> (double)</td></tr>
+<tr class="memdesc:a5ca017c50f3ee004737d356aa84539c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a loop out position.  <a href="classtracktion__engine_1_1TransportControl.html#a5ca017c50f3ee004737d356aa84539c2">More...</a><br /></td></tr>
 <tr class="separator:a5ca017c50f3ee004737d356aa84539c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a725bf67bb815d3c825fbe45ba24740b7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a725bf67bb815d3c825fbe45ba24740b7">setLoopPoint1</a> (double)</td></tr>
+<tr class="memdesc:a725bf67bb815d3c825fbe45ba24740b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a loop point 1 position.  <a href="classtracktion__engine_1_1TransportControl.html#a725bf67bb815d3c825fbe45ba24740b7">More...</a><br /></td></tr>
 <tr class="separator:a725bf67bb815d3c825fbe45ba24740b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad38958e30b408eb1ff02095dd716bded"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#ad38958e30b408eb1ff02095dd716bded">setLoopPoint2</a> (double)</td></tr>
+<tr class="memdesc:ad38958e30b408eb1ff02095dd716bded"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a loop point 2 position.  <a href="classtracktion__engine_1_1TransportControl.html#ad38958e30b408eb1ff02095dd716bded">More...</a><br /></td></tr>
 <tr class="separator:ad38958e30b408eb1ff02095dd716bded"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae29e0faf47fca8f53ca21b0e03d09995"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#ae29e0faf47fca8f53ca21b0e03d09995">setLoopRange</a> (<a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> range)</td></tr>
+<tr class="memdesc:ae29e0faf47fca8f53ca21b0e03d09995"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the loop points from a given range.  <a href="classtracktion__engine_1_1TransportControl.html#ae29e0faf47fca8f53ca21b0e03d09995">More...</a><br /></td></tr>
 <tr class="separator:ae29e0faf47fca8f53ca21b0e03d09995"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af197db63c76715fdea79658fd5854d8d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#af197db63c76715fdea79658fd5854d8d">getLoopRange</a> () const noexcept</td></tr>
+<tr class="memdesc:af197db63c76715fdea79658fd5854d8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the loop range.  <a href="classtracktion__engine_1_1TransportControl.html#af197db63c76715fdea79658fd5854d8d">More...</a><br /></td></tr>
 <tr class="separator:af197db63c76715fdea79658fd5854d8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afea4a0fb82ede38d94c194b46588f297"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#afea4a0fb82ede38d94c194b46588f297">setSnapType</a> (<a class="el" href="structtracktion__engine_1_1TimecodeSnapType.html">TimecodeSnapType</a>)</td></tr>
+<tr class="memdesc:afea4a0fb82ede38d94c194b46588f297"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a snap type to use.  <a href="classtracktion__engine_1_1TransportControl.html#afea4a0fb82ede38d94c194b46588f297">More...</a><br /></td></tr>
 <tr class="separator:afea4a0fb82ede38d94c194b46588f297"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf0889a7397d9b11735318d014a4fb6c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion__engine_1_1TimecodeSnapType.html">TimecodeSnapType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#abf0889a7397d9b11735318d014a4fb6c">getSnapType</a> () const noexcept</td></tr>
+<tr class="memdesc:abf0889a7397d9b11735318d014a4fb6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current snap type.  <a href="classtracktion__engine_1_1TransportControl.html#abf0889a7397d9b11735318d014a4fb6c">More...</a><br /></td></tr>
 <tr class="separator:abf0889a7397d9b11735318d014a4fb6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ababdc5853a447520fcf0d9da7aa51930"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html">EditPlaybackContext</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#ababdc5853a447520fcf0d9da7aa51930">getCurrentPlaybackContext</a> () const</td></tr>
+<tr class="memdesc:ababdc5853a447520fcf0d9da7aa51930"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the active <a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html">EditPlaybackContext</a> if this <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> is attached to the <a class="el" href="classtracktion__engine_1_1DeviceManager.html">DeviceManager</a> for playback.  <a href="classtracktion__engine_1_1TransportControl.html#ababdc5853a447520fcf0d9da7aa51930">More...</a><br /></td></tr>
 <tr class="separator:ababdc5853a447520fcf0d9da7aa51930"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fb585bcf9e2c4f53f0ab12edde6b0eb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a4fb585bcf9e2c4f53f0ab12edde6b0eb">isPlayContextActive</a> () const</td></tr>
+<tr class="memdesc:a4fb585bcf9e2c4f53f0ab12edde6b0eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> is attached to the <a class="el" href="classtracktion__engine_1_1DeviceManager.html">DeviceManager</a> for playback.  <a href="classtracktion__engine_1_1TransportControl.html#a4fb585bcf9e2c4f53f0ab12edde6b0eb">More...</a><br /></td></tr>
 <tr class="separator:a4fb585bcf9e2c4f53f0ab12edde6b0eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac1d42a020ce0dae7c7207cc8e77e88f3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#ac1d42a020ce0dae7c7207cc8e77e88f3">ensureContextAllocated</a> (bool alwaysReallocate=false)</td></tr>
+<tr class="memdesc:ac1d42a020ce0dae7c7207cc8e77e88f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ensures an active <a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html">EditPlaybackContext</a> has been created so this <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> can be played back.  <a href="classtracktion__engine_1_1TransportControl.html#ac1d42a020ce0dae7c7207cc8e77e88f3">More...</a><br /></td></tr>
 <tr class="separator:ac1d42a020ce0dae7c7207cc8e77e88f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a633f4dbe962fdbe83a473caab7523a59"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a633f4dbe962fdbe83a473caab7523a59">freePlaybackContext</a> ()</td></tr>
+<tr class="memdesc:a633f4dbe962fdbe83a473caab7523a59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detaches the current <a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html">EditPlaybackContext</a>, removing it from the <a class="el" href="classtracktion__engine_1_1DeviceManager.html">DeviceManager</a>.  <a href="classtracktion__engine_1_1TransportControl.html#a633f4dbe962fdbe83a473caab7523a59">More...</a><br /></td></tr>
 <tr class="separator:a633f4dbe962fdbe83a473caab7523a59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a677bb972df7eb34e69dd3018cc508f94"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a677bb972df7eb34e69dd3018cc508f94">triggerClearDevicesOnStop</a> ()</td></tr>
+<tr class="memdesc:a677bb972df7eb34e69dd3018cc508f94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggers a graph rebuild when playback stops.  <a href="classtracktion__engine_1_1TransportControl.html#a677bb972df7eb34e69dd3018cc508f94">More...</a><br /></td></tr>
 <tr class="separator:a677bb972df7eb34e69dd3018cc508f94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d0bd0ef68327210327485561757ca98"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a2d0bd0ef68327210327485561757ca98">forceOrphanFreezeAndProxyFilesPurge</a> ()</td></tr>
+<tr class="memdesc:a2d0bd0ef68327210327485561757ca98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggers a cleanup of any unused freeze and proxy files.  <a href="classtracktion__engine_1_1TransportControl.html#a2d0bd0ef68327210327485561757ca98">More...</a><br /></td></tr>
 <tr class="separator:a2d0bd0ef68327210327485561757ca98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80777c186b3021889f6e3b69373c6e0d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a80777c186b3021889f6e3b69373c6e0d">setRewindButtonDown</a> (bool isDown)</td></tr>
+<tr class="memdesc:a80777c186b3021889f6e3b69373c6e0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts/stops a rewind operation.  <a href="classtracktion__engine_1_1TransportControl.html#a80777c186b3021889f6e3b69373c6e0d">More...</a><br /></td></tr>
 <tr class="separator:a80777c186b3021889f6e3b69373c6e0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4bd9fd4129a9f765345785e287962a93"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a4bd9fd4129a9f765345785e287962a93">setFastForwardButtonDown</a> (bool isDown)</td></tr>
+<tr class="memdesc:a4bd9fd4129a9f765345785e287962a93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts/stops a fast-forward operation.  <a href="classtracktion__engine_1_1TransportControl.html#a4bd9fd4129a9f765345785e287962a93">More...</a><br /></td></tr>
 <tr class="separator:a4bd9fd4129a9f765345785e287962a93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7cad88bc494b88e953a56f59d5264113"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a7cad88bc494b88e953a56f59d5264113">nudgeLeft</a> ()</td></tr>
+<tr class="memdesc:a7cad88bc494b88e953a56f59d5264113"><td class="mdescLeft">&#160;</td><td class="mdescRight">Moves the transport back slightly.  <a href="classtracktion__engine_1_1TransportControl.html#a7cad88bc494b88e953a56f59d5264113">More...</a><br /></td></tr>
 <tr class="separator:a7cad88bc494b88e953a56f59d5264113"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e3408a673f3073e38d73697ef3dc166"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a4e3408a673f3073e38d73697ef3dc166">nudgeRight</a> ()</td></tr>
+<tr class="memdesc:a4e3408a673f3073e38d73697ef3dc166"><td class="mdescLeft">&#160;</td><td class="mdescRight">Moves the transport forwards slightly.  <a href="classtracktion__engine_1_1TransportControl.html#a4e3408a673f3073e38d73697ef3dc166">More...</a><br /></td></tr>
 <tr class="separator:a4e3408a673f3073e38d73697ef3dc166"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5cca7b3af5d955bb0e64ae07c3a59e13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a5cca7b3af5d955bb0e64ae07c3a59e13">editHasChanged</a> ()</td></tr>
+<tr class="memdesc:a5cca7b3af5d955bb0e64ae07c3a59e13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggers a playback graph rebuild.  <a href="classtracktion__engine_1_1TransportControl.html#a5cca7b3af5d955bb0e64ae07c3a59e13">More...</a><br /></td></tr>
 <tr class="separator:a5cca7b3af5d955bb0e64ae07c3a59e13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75f1affc05ce09d51c0af6e436dff0f5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a75f1affc05ce09d51c0af6e436dff0f5">isAllowedToReallocate</a> () const noexcept</td></tr>
-<tr class="separator:a75f1affc05ce09d51c0af6e436dff0f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdcc276d0aaacaf1fc68e3ac841daee4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#acdcc276d0aaacaf1fc68e3ac841daee4">isAllowedToReallocate</a> () const noexcept</td></tr>
+<tr class="memdesc:acdcc276d0aaacaf1fc68e3ac841daee4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if no ReallocationInhibitors currently exist.  <a href="classtracktion__engine_1_1TransportControl.html#acdcc276d0aaacaf1fc68e3ac841daee4">More...</a><br /></td></tr>
+<tr class="separator:acdcc276d0aaacaf1fc68e3ac841daee4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f7e86a5af44b26d64de969ff499a212"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a9f7e86a5af44b26d64de969ff499a212">addListener</a> (<a class="el" href="structtracktion__engine_1_1TransportControl_1_1Listener.html">Listener</a> *l)</td></tr>
+<tr class="memdesc:a9f7e86a5af44b26d64de969ff499a212"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a <a class="el" href="structtracktion__engine_1_1TransportControl_1_1Listener.html" title="Listener interface to be notified of changes to the transport.">Listener</a>.  <a href="classtracktion__engine_1_1TransportControl.html#a9f7e86a5af44b26d64de969ff499a212">More...</a><br /></td></tr>
 <tr class="separator:a9f7e86a5af44b26d64de969ff499a212"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a523181358c6a5718068040c8826a45be"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a523181358c6a5718068040c8826a45be">removeListener</a> (<a class="el" href="structtracktion__engine_1_1TransportControl_1_1Listener.html">Listener</a> *l)</td></tr>
+<tr class="memdesc:a523181358c6a5718068040c8826a45be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a <a class="el" href="structtracktion__engine_1_1TransportControl_1_1Listener.html" title="Listener interface to be notified of changes to the transport.">Listener</a>.  <a href="classtracktion__engine_1_1TransportControl.html#a523181358c6a5718068040c8826a45be">More...</a><br /></td></tr>
 <tr class="separator:a523181358c6a5718068040c8826a45be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71c8be5da4d35074705a6efbb2b95c61"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a71c8be5da4d35074705a6efbb2b95c61">callRecordingFinishedListeners</a> (<a class="el" href="classtracktion__engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> &amp;, juce::ReferenceCountedArray&lt; <a class="el" href="classtracktion__engine_1_1Clip.html">Clip</a> &gt; recordedClips, <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> recordedRange)</td></tr>
+<tr class="separator:a71c8be5da4d35074705a6efbb2b95c61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ae0aa6ca073ca12bb8e305d6b837590ac"><td class="memItemLeft" align="right" valign="top">static juce::Array&lt; <a class="el" href="classtracktion__engine_1_1TransportControl.html">TransportControl</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#ae0aa6ca073ca12bb8e305d6b837590ac">getAllActiveTransports</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;)</td></tr>
+<tr class="memdesc:ae0aa6ca073ca12bb8e305d6b837590ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns all the active <a class="el" href="classtracktion__engine_1_1TransportControl.html" title="Controls the transport of an Edit&#39;s playback.">TransportControl</a>[s] in the <a class="el" href="classtracktion__engine_1_1Engine.html" title="The Engine is the central class for all tracktion sessions.">Engine</a>.  <a href="classtracktion__engine_1_1TransportControl.html#ae0aa6ca073ca12bb8e305d6b837590ac">More...</a><br /></td></tr>
 <tr class="separator:ae0aa6ca073ca12bb8e305d6b837590ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ba563940f3d4bee96940ac138dc0456"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a0ba563940f3d4bee96940ac138dc0456">getNumPlayingTransports</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;)</td></tr>
+<tr class="memdesc:a0ba563940f3d4bee96940ac138dc0456"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of Edits currently playing.  <a href="classtracktion__engine_1_1TransportControl.html#a0ba563940f3d4bee96940ac138dc0456">More...</a><br /></td></tr>
 <tr class="separator:a0ba563940f3d4bee96940ac138dc0456"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6a01300cc381b57cf724d5a3e3fd931"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#ad6a01300cc381b57cf724d5a3e3fd931">stopAllTransports</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;, bool discardRecordings, bool clearDevices)</td></tr>
+<tr class="memdesc:ad6a01300cc381b57cf724d5a3e3fd931"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops all <a class="el" href="classtracktion__engine_1_1TransportControl.html" title="Controls the transport of an Edit&#39;s playback.">TransportControl</a>[s] in the <a class="el" href="classtracktion__engine_1_1Engine.html" title="The Engine is the central class for all tracktion sessions.">Engine</a> playing.  <a href="classtracktion__engine_1_1TransportControl.html#ad6a01300cc381b57cf724d5a3e3fd931">More...</a><br /></td></tr>
 <tr class="separator:ad6a01300cc381b57cf724d5a3e3fd931"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06540294d976cca3d6974cacf71aeaf8"><td class="memItemLeft" align="right" valign="top">static std::vector&lt; std::unique_ptr&lt; <a class="el" href="structtracktion__engine_1_1TransportControl_1_1ScopedContextAllocator.html">ScopedContextAllocator</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a06540294d976cca3d6974cacf71aeaf8">restartAllTransports</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;, bool clearDevices)</td></tr>
+<tr class="memdesc:a06540294d976cca3d6974cacf71aeaf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restarts all <a class="el" href="classtracktion__engine_1_1TransportControl.html" title="Controls the transport of an Edit&#39;s playback.">TransportControl</a>[s] in the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="classtracktion__engine_1_1TransportControl.html#a06540294d976cca3d6974cacf71aeaf8">More...</a><br /></td></tr>
 <tr class="separator:a06540294d976cca3d6974cacf71aeaf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:af62e20ea56b0b134dd3696f9e305858a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#af62e20ea56b0b134dd3696f9e305858a">engine</a></td></tr>
+<tr class="memdesc:af62e20ea56b0b134dd3696f9e305858a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="classtracktion__engine_1_1Engine.html" title="The Engine is the central class for all tracktion sessions.">Engine</a> this <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> belongs to.  <a href="classtracktion__engine_1_1TransportControl.html#af62e20ea56b0b134dd3696f9e305858a">More...</a><br /></td></tr>
 <tr class="separator:af62e20ea56b0b134dd3696f9e305858a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c6d065fba19fea2444f453aeab5c355"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a4c6d065fba19fea2444f453aeab5c355">edit</a></td></tr>
+<tr class="memdesc:a4c6d065fba19fea2444f453aeab5c355"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> this transport belongs to.  <a href="classtracktion__engine_1_1TransportControl.html#a4c6d065fba19fea2444f453aeab5c355">More...</a><br /></td></tr>
 <tr class="separator:a4c6d065fba19fea2444f453aeab5c355"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77a4b7b74e5f0a9b18e2294b1ce351a7"><td class="memItemLeft" align="right" valign="top">juce::ValueTree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a77a4b7b74e5f0a9b18e2294b1ce351a7">state</a></td></tr>
+<tr class="memdesc:a77a4b7b74e5f0a9b18e2294b1ce351a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The state of this transport.  <a href="classtracktion__engine_1_1TransportControl.html#a77a4b7b74e5f0a9b18e2294b1ce351a7">More...</a><br /></td></tr>
 <tr class="separator:a77a4b7b74e5f0a9b18e2294b1ce351a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a673fa9caa61a0e4e259f3aa8132bcc93"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a673fa9caa61a0e4e259f3aa8132bcc93">position</a></td></tr>
 <tr class="separator:a673fa9caa61a0e4e259f3aa8132bcc93"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -216,7 +266,12 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a73bf5ccb0e2a19ebd0c597d2b913554c"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TransportControl.html#a73bf5ccb0e2a19ebd0c597d2b913554c">looping</a></td></tr>
 <tr class="separator:a73bf5ccb0e2a19ebd0c597d2b913554c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Controls the transport of an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>'s playback. </p>
+<p>This is responsible for starting/stopping playback and recording and changing the position etc. It deals with looping/fast forward etc. and is resonsible for managing the <a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html">EditPlaybackContext</a> which attaches the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> to the <a class="el" href="classtracktion__engine_1_1DeviceManager.html">DeviceManager</a>.</p>
+<p>It also has higher level user concepts such as dragging/scrubbing. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html">EditPlaybackContext</a>, <a class="el" href="classtracktion__engine_1_1DeviceManager.html">DeviceManager</a></dd></dl>
+<p>You shouldn't need to directly create one of these, create an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> and then obtain it from there. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1Edit.html#a8d84b05db3a2d6a6783b106de9c45775" title="Returns the TransportControl which is used to stop/stop/position playback and recording.">Edit::getTransport</a> </dd></dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ae159663c7010ec4bd46da26db58062c5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae159663c7010ec4bd46da26db58062c5">&#9670;&nbsp;</a></span>TransportControl()</h2>
 
@@ -243,13 +298,18 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Constructs a <a class="el" href="classtracktion__engine_1_1TransportControl.html" title="Controls the transport of an Edit&#39;s playback.">TransportControl</a> for an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>. </p>
+
 </div>
 </div>
-<a id="ada1ad96a276a97ede8f72da474393516"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ada1ad96a276a97ede8f72da474393516">&#9670;&nbsp;</a></span>~TransportControl()</h2>
+<a id="ad92327f3cc3132b4c38c8d268f5df63e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad92327f3cc3132b4c38c8d268f5df63e">&#9670;&nbsp;</a></span>~TransportControl()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">tracktion_engine::TransportControl::~TransportControl </td>
@@ -258,28 +318,18 @@ Public Attributes</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
+
+<p>Destructor. </p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a24419ee3f38b0c3a6565169ca2bf128a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a24419ee3f38b0c3a6565169ca2bf128a">&#9670;&nbsp;</a></span>getCurrentPlayhead()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classtracktion__engine_1_1PlayHead.html">PlayHead</a>* tracktion_engine::TransportControl::getCurrentPlayhead </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a7a870e8df78bade9605b8168e4e55cff"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7a870e8df78bade9605b8168e4e55cff">&#9670;&nbsp;</a></span>play()</h2>
 
@@ -295,6 +345,14 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Starts playback of an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">justSendMMCIfEnabled</td><td>If this is true, playback isn't actually started, an MMC message is just output and playback will start when the input MIDI device recieves one. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -313,6 +371,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Plays a section of an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> then stops playback, useful for previewing clips. </p>
 
 </div>
 </div>
@@ -341,6 +401,15 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Starts recording. </p>
+<p>This will also start playback if stopped. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">justSendMMCIfEnabled</td><td>If this is true, playback isn't actually started, an MMC message is just output and recording will start when the input MIDI device recieves one. </td></tr>
+    <tr><td class="paramname">allowRecordingIfNoInputsArmed</td><td>If true, no inputs need to actually be armed so you can live-punch on the fly. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -382,6 +451,17 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Stops recording, creating clips of newyly recorded files/MIDI data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">discardRecordings</td><td>If true, recordings will be discarded </td></tr>
+    <tr><td class="paramname">clearDevices</td><td>If true, the playback graph will be cleared </td></tr>
+    <tr><td class="paramname">canSendMMCStop</td><td>If true, an MMC stop message will also be sent </td></tr>
+    <tr><td class="paramname">invertReturnToStartPosSelection</td><td>If true, the return to start behaviour will be inverted </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="add8fd7a5f99002b4a671ccfbffd5b3d0"></a>
@@ -398,6 +478,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Stops playback only if recording is currently in progress. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1TransportControl.html#aa4106d0c769426e78a1d89e92a7cdbfc" title="Returns true if recording is in progress.">isRecording</a> </dd></dl>
 
 </div>
 </div>
@@ -416,6 +499,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Applys a retrospective record to any assigned input devices, creating clips for any historical input. </p>
+
 </div>
 </div>
 <a id="a5840469197a6ecb3a4bd3d2e06d3a748"></a>
@@ -433,10 +518,12 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Perfoms a retrospective record operation and returns any new files. </p>
+
 </div>
 </div>
-<a id="a44ff7385fd4737c934e5986eed4084ea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44ff7385fd4737c934e5986eed4084ea">&#9670;&nbsp;</a></span>syncToEdit()</h2>
+<a id="a7c5155d8b41ba96c3e50c168d25b6cc3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c5155d8b41ba96c3e50c168d25b6cc3">&#9670;&nbsp;</a></span>syncToEdit()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -451,7 +538,7 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>isPreview</em>&#160;</td>
+          <td class="paramname"><em>syncToTargetLoopLength</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -460,6 +547,15 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Syncs this <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>'s playback to another <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">editToSyncTo</td><td>The <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> to sync playback to </td></tr>
+    <tr><td class="paramname">syncToTargetLoopLength</td><td>If true the sync interval will be the source's loop length, if false, it will be one bar </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -575,6 +671,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns the current transport position. </p>
+<p>N.B. This might be different from the actual audible time if the graph introduces latency. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html#aca5c9a6968823cd935cb6d1b2956cb23">EditPlaybackContext::getAudibleTimelineTime</a>, <a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html#a062ff294131170b3217b4462c04fcf9e" title="Returns the overall latency of the currently prepared graph.">EditPlaybackContext::getLatencySamples</a> </dd></dl>
+
 </div>
 </div>
 <a id="a4ce90c654d6d730768cff4a4dac517d7"></a>
@@ -593,6 +692,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets a new transport position. </p>
+
 </div>
 </div>
 <a id="a76dc0068694459bb6ff3adbaf91cf184"></a>
@@ -610,6 +711,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Signifies a scrub-drag operation has started/stopped. </p>
+<p>While dragging, a short section of the play position is looped repeatedly. </p>
 
 </div>
 </div>
@@ -636,6 +740,9 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns true if a drag/scrub operation has been enabled. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1TransportControl.html#a76dc0068694459bb6ff3adbaf91cf184" title="Signifies a scrub-drag operation has started/stopped.">setUserDragging</a> </dd></dl>
+
 </div>
 </div>
 <a id="a2c7a9c4e3116852ca69270bd5936a0f8"></a>
@@ -652,6 +759,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns true if the current position change was triggered from an update directly from the playhead (rather than a call to setCurrentPosition). </p>
 
 </div>
 </div>
@@ -671,6 +780,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the loop in position. </p>
+
 </div>
 </div>
 <a id="a5ca017c50f3ee004737d356aa84539c2"></a>
@@ -688,6 +799,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets a loop out position. </p>
 
 </div>
 </div>
@@ -707,6 +820,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets a loop point 1 position. </p>
+
 </div>
 </div>
 <a id="ad38958e30b408eb1ff02095dd716bded"></a>
@@ -725,6 +840,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets a loop point 2 position. </p>
+
 </div>
 </div>
 <a id="ae29e0faf47fca8f53ca21b0e03d09995"></a>
@@ -742,6 +859,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the loop points from a given range. </p>
 
 </div>
 </div>
@@ -768,6 +887,9 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns the loop range. </p>
+<p>The loop range is between the two loop points. </p>
+
 </div>
 </div>
 <a id="afea4a0fb82ede38d94c194b46588f297"></a>
@@ -785,6 +907,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets a snap type to use. </p>
 
 </div>
 </div>
@@ -811,6 +935,8 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns the current snap type. </p>
+
 </div>
 </div>
 <a id="ababdc5853a447520fcf0d9da7aa51930"></a>
@@ -827,6 +953,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the active <a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html">EditPlaybackContext</a> if this <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> is attached to the <a class="el" href="classtracktion__engine_1_1DeviceManager.html">DeviceManager</a> for playback. </p>
 
 </div>
 </div>
@@ -845,6 +973,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns true if this <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> is attached to the <a class="el" href="classtracktion__engine_1_1DeviceManager.html">DeviceManager</a> for playback. </p>
+
 </div>
 </div>
 <a id="ac1d42a020ce0dae7c7207cc8e77e88f3"></a>
@@ -862,6 +992,14 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Ensures an active <a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html">EditPlaybackContext</a> has been created so this <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> can be played back. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">alwaysReallocate</td><td>If true, this will always create a new playback graph. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="reference">Referenced by <a class="el" href="structtracktion__engine_1_1TransportControl_1_1ScopedContextAllocator.html#a1a468990c9ead78a52b3b186aae04059">tracktion_engine::TransportControl::ScopedContextAllocator::~ScopedContextAllocator()</a>.</p>
 
@@ -882,6 +1020,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Detaches the current <a class="el" href="classtracktion__engine_1_1EditPlaybackContext.html">EditPlaybackContext</a>, removing it from the <a class="el" href="classtracktion__engine_1_1DeviceManager.html">DeviceManager</a>. </p>
+<p>Can be used to free up resources if you have multiple Edits open. </p>
+
 </div>
 </div>
 <a id="a677bb972df7eb34e69dd3018cc508f94"></a>
@@ -899,6 +1040,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Triggers a graph rebuild when playback stops. </p>
+<p>Used internally to adjust latency in response to plugin reported latency changes. </p>
+
 </div>
 </div>
 <a id="a2d0bd0ef68327210327485561757ca98"></a>
@@ -915,6 +1059,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Triggers a cleanup of any unused freeze and proxy files. </p>
 
 </div>
 </div>
@@ -934,6 +1080,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Starts/stops a rewind operation. </p>
+
 </div>
 </div>
 <a id="a4bd9fd4129a9f765345785e287962a93"></a>
@@ -952,6 +1100,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Starts/stops a fast-forward operation. </p>
+
 </div>
 </div>
 <a id="a7cad88bc494b88e953a56f59d5264113"></a>
@@ -968,6 +1118,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Moves the transport back slightly. </p>
 
 </div>
 </div>
@@ -986,6 +1138,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Moves the transport forwards slightly. </p>
+
 </div>
 </div>
 <a id="a5cca7b3af5d955bb0e64ae07c3a59e13"></a>
@@ -1003,10 +1157,13 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Triggers a playback graph rebuild. </p>
+<p>Called internally by <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> objects to rebuild the node graph when things change. </p>
+
 </div>
 </div>
-<a id="a75f1affc05ce09d51c0af6e436dff0f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a75f1affc05ce09d51c0af6e436dff0f5">&#9670;&nbsp;</a></span>isAllowedToReallocate()</h2>
+<a id="acdcc276d0aaacaf1fc68e3ac841daee4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acdcc276d0aaacaf1fc68e3ac841daee4">&#9670;&nbsp;</a></span>isAllowedToReallocate()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1015,7 +1172,7 @@ Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int tracktion_engine::TransportControl::isAllowedToReallocate </td>
+          <td class="memname">bool tracktion_engine::TransportControl::isAllowedToReallocate </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -1027,6 +1184,8 @@ Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns true if no ReallocationInhibitors currently exist. </p>
 
 </div>
 </div>
@@ -1054,6 +1213,8 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns all the active <a class="el" href="classtracktion__engine_1_1TransportControl.html" title="Controls the transport of an Edit&#39;s playback.">TransportControl</a>[s] in the <a class="el" href="classtracktion__engine_1_1Engine.html" title="The Engine is the central class for all tracktion sessions.">Engine</a>. </p>
+
 </div>
 </div>
 <a id="a0ba563940f3d4bee96940ac138dc0456"></a>
@@ -1079,6 +1240,8 @@ Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns the number of Edits currently playing. </p>
 
 </div>
 </div>
@@ -1122,6 +1285,9 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Stops all <a class="el" href="classtracktion__engine_1_1TransportControl.html" title="Controls the transport of an Edit&#39;s playback.">TransportControl</a>[s] in the <a class="el" href="classtracktion__engine_1_1Engine.html" title="The Engine is the central class for all tracktion sessions.">Engine</a> playing. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1TransportControl.html#a9c3f5713faa4d28f154bf0c67880d89e" title="Stops recording, creating clips of newyly recorded files/MIDI data.">stop</a>. </dd></dl>
+
 </div>
 </div>
 <a id="a06540294d976cca3d6974cacf71aeaf8"></a>
@@ -1158,6 +1324,9 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Restarts all <a class="el" href="classtracktion__engine_1_1TransportControl.html" title="Controls the transport of an Edit&#39;s playback.">TransportControl</a>[s] in the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1TransportControl.html#a9c3f5713faa4d28f154bf0c67880d89e" title="Stops recording, creating clips of newyly recorded files/MIDI data.">stop</a>. </dd></dl>
+
 </div>
 </div>
 <a id="a9f7e86a5af44b26d64de969ff499a212"></a>
@@ -1175,6 +1344,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Adds a <a class="el" href="structtracktion__engine_1_1TransportControl_1_1Listener.html" title="Listener interface to be notified of changes to the transport.">Listener</a>. </p>
 
 </div>
 </div>
@@ -1194,6 +1365,42 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Removes a <a class="el" href="structtracktion__engine_1_1TransportControl_1_1Listener.html" title="Listener interface to be notified of changes to the transport.">Listener</a>. </p>
+
+</div>
+</div>
+<a id="a71c8be5da4d35074705a6efbb2b95c61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71c8be5da4d35074705a6efbb2b95c61">&#9670;&nbsp;</a></span>callRecordingFinishedListeners()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion_engine::TransportControl::callRecordingFinishedListeners </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::ReferenceCountedArray&lt; <a class="el" href="classtracktion__engine_1_1Clip.html">Clip</a> &gt;&#160;</td>
+          <td class="paramname"><em>recordedClips</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a>&#160;</td>
+          <td class="paramname"><em>recordedRange</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -1209,6 +1416,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>The <a class="el" href="classtracktion__engine_1_1Engine.html" title="The Engine is the central class for all tracktion sessions.">Engine</a> this <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> belongs to. </p>
+
 </div>
 </div>
 <a id="a4c6d065fba19fea2444f453aeab5c355"></a>
@@ -1222,6 +1431,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>The <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> this transport belongs to. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1Edit.html#a8d84b05db3a2d6a6783b106de9c45775" title="Returns the TransportControl which is used to stop/stop/position playback and recording.">Edit::getTransport</a>. </dd></dl>
 
 </div>
 </div>
@@ -1237,6 +1449,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>The state of this transport. </p>
+
 </div>
 </div>
 <a id="a673fa9caa61a0e4e259f3aa8132bcc93"></a>
@@ -1250,6 +1464,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>. </p>
 
 </div>
 </div>
@@ -1306,6 +1521,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>. </p>
 
 </div>
 </div>
@@ -1329,7 +1545,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 10 2021 09:52:55 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 25 2021 13:15:30 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

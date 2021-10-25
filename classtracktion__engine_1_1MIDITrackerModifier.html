@@ -107,6 +107,7 @@ Public Types</h2></td></tr>
 <a class="el" href="structtracktion__engine_1_1Modifier.html#a0947341de41d4d4d6eb121950a190461a548d312395b2b6402e483c60f136b86e">ProcessingPosition::preFX</a>, 
 <a class="el" href="structtracktion__engine_1_1Modifier.html#a0947341de41d4d4d6eb121950a190461a7e4fcf98449de35fa953cf4fbaf85e37">ProcessingPosition::postFX</a>
  }</td></tr>
+<tr class="memdesc:a0947341de41d4d4d6eb121950a190461"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines the position in the FX chain where the modifier should be processed.  <a href="structtracktion__engine_1_1Modifier.html#a0947341de41d4d4d6eb121950a190461">More...</a><br /></td></tr>
 <tr class="separator:a0947341de41d4d4d6eb121950a190461 inherit pub_types_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b163857373a7eb35df5a75cb5fcb329 inherit pub_types_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#a4b163857373a7eb35df5a75cb5fcb329">Ptr</a> = juce::ReferenceCountedObjectPtr&lt; <a class="el" href="structtracktion__engine_1_1Modifier.html">Modifier</a> &gt;</td></tr>
 <tr class="separator:a4b163857373a7eb35df5a75cb5fcb329 inherit pub_types_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -139,12 +140,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8544dd8cb82c01fb9bd8efd856e0e246"><td class="memItemLeft" align="right" valign="top">juce::StringArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MIDITrackerModifier.html#a8544dd8cb82c01fb9bd8efd856e0e246">getMidiInputNames</a> () override</td></tr>
 <tr class="memdesc:a8544dd8cb82c01fb9bd8efd856e0e246"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can return an array of names represeting MIDI inputs.  <a href="classtracktion__engine_1_1MIDITrackerModifier.html#a8544dd8cb82c01fb9bd8efd856e0e246">More...</a><br /></td></tr>
 <tr class="separator:a8544dd8cb82c01fb9bd8efd856e0e246"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f42108f604a7120121b0b4dee5b3c48"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MIDITrackerModifier.html#a7f42108f604a7120121b0b4dee5b3c48">createPreFXAudioNode</a> (<a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *) override</td></tr>
-<tr class="separator:a7f42108f604a7120121b0b4dee5b3c48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab341023e47258da8faae9563a0a61fb4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion__engine_1_1Modifier.html#a0947341de41d4d4d6eb121950a190461">ProcessingPosition</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MIDITrackerModifier.html#ab341023e47258da8faae9563a0a61fb4">getProcessingPosition</a> () override</td></tr>
-<tr class="memdesc:ab341023e47258da8faae9563a0a61fb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the position in the plugin chain that this <a class="el" href="structtracktion__engine_1_1Modifier.html">Modifier</a> should be processed.  <a href="classtracktion__engine_1_1MIDITrackerModifier.html#ab341023e47258da8faae9563a0a61fb4">More...</a><br /></td></tr>
+<tr class="memdesc:ab341023e47258da8faae9563a0a61fb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the position in the plugin chain that this <a class="el" href="structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a> should be processed.  <a href="classtracktion__engine_1_1MIDITrackerModifier.html#ab341023e47258da8faae9563a0a61fb4">More...</a><br /></td></tr>
 <tr class="separator:ab341023e47258da8faae9563a0a61fb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85c082cd112c1832ac7166cee83a82a5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MIDITrackerModifier.html#a85c082cd112c1832ac7166cee83a82a5">applyToBuffer</a> (const <a class="el" href="structtracktion__engine_1_1PluginRenderContext.html">PluginRenderContext</a> &amp;) override</td></tr>
+<tr class="memdesc:a85c082cd112c1832ac7166cee83a82a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sub classes should implement this to process the <a class="el" href="structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a>.  <a href="classtracktion__engine_1_1MIDITrackerModifier.html#a85c082cd112c1832ac7166cee83a82a5">More...</a><br /></td></tr>
 <tr class="separator:a85c082cd112c1832ac7166cee83a82a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aade88f27fad3ffe6e2f4139f1be54a2b"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MIDITrackerModifier.html#aade88f27fad3ffe6e2f4139f1be54a2b">getSelectableDescription</a> () override</td></tr>
 <tr class="memdesc:aade88f27fad3ffe6e2f4139f1be54a2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subclasses must return a description of what they are.  <a href="classtracktion__engine_1_1MIDITrackerModifier.html#aade88f27fad3ffe6e2f4139f1be54a2b">More...</a><br /></td></tr>
@@ -156,29 +156,51 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a8cbb6b9e8c928b7e90f6514b2e4c5963"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call this once after construction to connect it to the audio graph.  <a href="classtracktion__engine_1_1MIDITrackerModifier.html#a8cbb6b9e8c928b7e90f6514b2e4c5963">More...</a><br /></td></tr>
 <tr class="separator:a8cbb6b9e8c928b7e90f6514b2e4c5963"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f69222f86cc0d476eee665fdf9d5575"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MIDITrackerModifier.html#a1f69222f86cc0d476eee665fdf9d5575">initialise</a> (double, int)</td></tr>
+<tr class="memdesc:a1f69222f86cc0d476eee665fdf9d5575"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sub classes should implement this to initialise the <a class="el" href="structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a>.  <a href="classtracktion__engine_1_1MIDITrackerModifier.html#a1f69222f86cc0d476eee665fdf9d5575">More...</a><br /></td></tr>
 <tr class="separator:a1f69222f86cc0d476eee665fdf9d5575"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_structtracktion__engine_1_1Modifier"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structtracktion__engine_1_1Modifier')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="structtracktion__engine_1_1Modifier.html">tracktion_engine::Modifier</a></td></tr>
 <tr class="memitem:ab67f85dec5337d3d24f28710b28a6b03 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#ab67f85dec5337d3d24f28710b28a6b03">Modifier</a> (<a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;, const juce::ValueTree &amp;)</td></tr>
+<tr class="memdesc:ab67f85dec5337d3d24f28710b28a6b03 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a> for a given state.  <a href="structtracktion__engine_1_1Modifier.html#ab67f85dec5337d3d24f28710b28a6b03">More...</a><br /></td></tr>
 <tr class="separator:ab67f85dec5337d3d24f28710b28a6b03 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f61052f618ed335da50f3ffc0af5a86 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#a6f61052f618ed335da50f3ffc0af5a86">~Modifier</a> ()</td></tr>
+<tr class="memdesc:a6f61052f618ed335da50f3ffc0af5a86 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="structtracktion__engine_1_1Modifier.html#a6f61052f618ed335da50f3ffc0af5a86">More...</a><br /></td></tr>
 <tr class="separator:a6f61052f618ed335da50f3ffc0af5a86 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af579adfd38f262266bc171525d2fe2a6 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#af579adfd38f262266bc171525d2fe2a6">remove</a> ()</td></tr>
+<tr class="memdesc:af579adfd38f262266bc171525d2fe2a6 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes this <a class="el" href="structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a> from its parent <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>.  <a href="structtracktion__engine_1_1Modifier.html#af579adfd38f262266bc171525d2fe2a6">More...</a><br /></td></tr>
 <tr class="separator:af579adfd38f262266bc171525d2fe2a6 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d9efb873f103dc5c7658dd08ff556a8 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">virtual juce::StringArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#a1d9efb873f103dc5c7658dd08ff556a8">getAudioInputNames</a> ()</td></tr>
 <tr class="memdesc:a1d9efb873f103dc5c7658dd08ff556a8 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can return an array of names represeting audio inputs.  <a href="structtracktion__engine_1_1Modifier.html#a1d9efb873f103dc5c7658dd08ff556a8">More...</a><br /></td></tr>
 <tr class="separator:a1d9efb873f103dc5c7658dd08ff556a8 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae215877b4c06bbc9c2e6e4195351d164 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#ae215877b4c06bbc9c2e6e4195351d164">createPostFXAudioNode</a> (<a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *input)</td></tr>
-<tr class="separator:ae215877b4c06bbc9c2e6e4195351d164 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f69222f86cc0d476eee665fdf9d5575 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#a1f69222f86cc0d476eee665fdf9d5575">initialise</a> (double, int)</td></tr>
+<tr class="memdesc:a1f69222f86cc0d476eee665fdf9d5575 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sub classes should implement this to initialise the <a class="el" href="structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a>.  <a href="structtracktion__engine_1_1Modifier.html#a1f69222f86cc0d476eee665fdf9d5575">More...</a><br /></td></tr>
 <tr class="separator:a1f69222f86cc0d476eee665fdf9d5575 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4ef74a7d4967d24dbb94e507c72b70f inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#ae4ef74a7d4967d24dbb94e507c72b70f">deinitialise</a> ()</td></tr>
+<tr class="memdesc:ae4ef74a7d4967d24dbb94e507c72b70f inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sub classes should implement this to deinitialise the <a class="el" href="structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a>.  <a href="structtracktion__engine_1_1Modifier.html#ae4ef74a7d4967d24dbb94e507c72b70f">More...</a><br /></td></tr>
 <tr class="separator:ae4ef74a7d4967d24dbb94e507c72b70f inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a652dc5f39d59c8364bbac92d86d3b3f5 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#a652dc5f39d59c8364bbac92d86d3b3f5">baseClassNeedsInitialising</a> () const noexcept</td></tr>
+<tr class="memdesc:a652dc5f39d59c8364bbac92d86d3b3f5 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the <a class="el" href="structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a> needs initialising.  <a href="structtracktion__engine_1_1Modifier.html#a652dc5f39d59c8364bbac92d86d3b3f5">More...</a><br /></td></tr>
 <tr class="separator:a652dc5f39d59c8364bbac92d86d3b3f5 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad983e7b9e5f7f0026c8a729834ea45ec inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#ad983e7b9e5f7f0026c8a729834ea45ec">baseClassInitialise</a> (double sampleRate, int blockSizeSamples)</td></tr>
+<tr class="memdesc:ad983e7b9e5f7f0026c8a729834ea45ec inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialises the <a class="el" href="structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a>.  <a href="structtracktion__engine_1_1Modifier.html#ad983e7b9e5f7f0026c8a729834ea45ec">More...</a><br /></td></tr>
 <tr class="separator:ad983e7b9e5f7f0026c8a729834ea45ec inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7effc779367de00120416a8c7f8bbdcf inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#a7effc779367de00120416a8c7f8bbdcf">baseClassDeinitialise</a> ()</td></tr>
+<tr class="memdesc:a7effc779367de00120416a8c7f8bbdcf inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deinitialises the <a class="el" href="structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a>.  <a href="structtracktion__engine_1_1Modifier.html#a7effc779367de00120416a8c7f8bbdcf">More...</a><br /></td></tr>
 <tr class="separator:a7effc779367de00120416a8c7f8bbdcf inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad86db028ea7435053669c3dcf6295bc2 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#ad86db028ea7435053669c3dcf6295bc2">baseClassApplyToBuffer</a> (const <a class="el" href="structtracktion__engine_1_1PluginRenderContext.html">PluginRenderContext</a> &amp;)</td></tr>
+<tr class="memdesc:ad86db028ea7435053669c3dcf6295bc2 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates internal value history and calls the subclass's applyToBuffer method.  <a href="structtracktion__engine_1_1Modifier.html#ad86db028ea7435053669c3dcf6295bc2">More...</a><br /></td></tr>
+<tr class="separator:ad86db028ea7435053669c3dcf6295bc2 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e2458caea11d737d91a4c73d12971ec inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#a7e2458caea11d737d91a4c73d12971ec">getCurrentTime</a> () const</td></tr>
+<tr class="memdesc:a7e2458caea11d737d91a4c73d12971ec inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the edit time of the current value.  <a href="structtracktion__engine_1_1Modifier.html#a7e2458caea11d737d91a4c73d12971ec">More...</a><br /></td></tr>
+<tr class="separator:a7e2458caea11d737d91a4c73d12971ec inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d93e22c22f23e5db26f326b882d1766 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#a6d93e22c22f23e5db26f326b882d1766">getValueAt</a> (double numSecondsBeforeNow) const</td></tr>
+<tr class="memdesc:a6d93e22c22f23e5db26f326b882d1766 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the value of the at a given time in the past.  <a href="structtracktion__engine_1_1Modifier.html#a6d93e22c22f23e5db26f326b882d1766">More...</a><br /></td></tr>
+<tr class="separator:a6d93e22c22f23e5db26f326b882d1766 inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1679cf903fcbb2ef9b3f2fefd481d16e inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#a1679cf903fcbb2ef9b3f2fefd481d16e">getValues</a> (double numSecondsBeforeNow) const</td></tr>
+<tr class="memdesc:a1679cf903fcbb2ef9b3f2fefd481d16e inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a vector of previous sample values.  <a href="structtracktion__engine_1_1Modifier.html#a1679cf903fcbb2ef9b3f2fefd481d16e">More...</a><br /></td></tr>
+<tr class="separator:a1679cf903fcbb2ef9b3f2fefd481d16e inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26e66d5389c534c5fe741e8d006d13af inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#a26e66d5389c534c5fe741e8d006d13af">getSampleRate</a> () const</td></tr>
+<tr class="memdesc:a26e66d5389c534c5fe741e8d006d13af inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the sample rate the <a class="el" href="structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a> has been initialised with.  <a href="structtracktion__engine_1_1Modifier.html#a26e66d5389c534c5fe741e8d006d13af">More...</a><br /></td></tr>
+<tr class="separator:a26e66d5389c534c5fe741e8d006d13af inherit pub_methods_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtracktion__engine_1_1AutomatableEditItem"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtracktion__engine_1_1AutomatableEditItem')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtracktion__engine_1_1AutomatableEditItem.html">tracktion_engine::AutomatableEditItem</a></td></tr>
 <tr class="memitem:a9fb62a086b72e40291dea28090c27b5b inherit pub_methods_classtracktion__engine_1_1AutomatableEditItem"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AutomatableEditItem.html#a9fb62a086b72e40291dea28090c27b5b">AutomatableEditItem</a> (<a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;, const juce::ValueTree &amp;)</td></tr>
 <tr class="separator:a9fb62a086b72e40291dea28090c27b5b inherit pub_methods_classtracktion__engine_1_1AutomatableEditItem"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -274,9 +296,6 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a6687c271aa5bb9ace0f44a6b302a03d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2737b6b3f0de8680efb92f3e0398c09f"><td class="memItemLeft" align="right" valign="top">static juce::StringArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MIDITrackerModifier.html#a2737b6b3f0de8680efb92f3e0398c09f">getModeNames</a> ()</td></tr>
 <tr class="separator:a2737b6b3f0de8680efb92f3e0398c09f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_static_methods_structtracktion__engine_1_1Modifier"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_structtracktion__engine_1_1Modifier')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="structtracktion__engine_1_1Modifier.html">tracktion_engine::Modifier</a></td></tr>
-<tr class="memitem:a8a955831bf3ee0d61310230ab189a010 inherit pub_static_methods_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">static juce::StringArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#a8a955831bf3ee0d61310230ab189a010">getEnabledNames</a> ()</td></tr>
-<tr class="separator:a8a955831bf3ee0d61310230ab189a010 inherit pub_static_methods_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_static_methods_classtracktion__engine_1_1Selectable"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classtracktion__engine_1_1Selectable')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classtracktion__engine_1_1Selectable.html">tracktion_engine::Selectable</a></td></tr>
 <tr class="memitem:af14c45320a137f788381bab45aedd731 inherit pub_static_methods_classtracktion__engine_1_1Selectable"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Selectable.html#af14c45320a137f788381bab45aedd731">initialise</a> ()</td></tr>
 <tr class="separator:af14c45320a137f788381bab45aedd731 inherit pub_static_methods_classtracktion__engine_1_1Selectable"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -304,12 +323,16 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a4c2668140028ef223877d536f6e81cdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_structtracktion__engine_1_1Modifier"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_structtracktion__engine_1_1Modifier')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="structtracktion__engine_1_1Modifier.html">tracktion_engine::Modifier</a></td></tr>
 <tr class="memitem:aff1413d9b80184fbe61d1dfb292adb83 inherit pub_attribs_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">juce::ValueTree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#aff1413d9b80184fbe61d1dfb292adb83">state</a></td></tr>
+<tr class="memdesc:aff1413d9b80184fbe61d1dfb292adb83 inherit pub_attribs_structtracktion__engine_1_1Modifier"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a> internal state.  <a href="structtracktion__engine_1_1Modifier.html#aff1413d9b80184fbe61d1dfb292adb83">More...</a><br /></td></tr>
 <tr class="separator:aff1413d9b80184fbe61d1dfb292adb83 inherit pub_attribs_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6fcf7d1a74d538c999396b928e9864a3 inherit pub_attribs_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; juce::Colour &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#a6fcf7d1a74d538c999396b928e9864a3">colour</a></td></tr>
+<tr class="memdesc:a6fcf7d1a74d538c999396b928e9864a3 inherit pub_attribs_structtracktion__engine_1_1Modifier"><td class="mdescLeft">&#160;</td><td class="mdescRight">Colour property.  <a href="structtracktion__engine_1_1Modifier.html#a6fcf7d1a74d538c999396b928e9864a3">More...</a><br /></td></tr>
 <tr class="separator:a6fcf7d1a74d538c999396b928e9864a3 inherit pub_attribs_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a087ccfd296a5a2f24879668f618ca573 inherit pub_attribs_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#a087ccfd296a5a2f24879668f618ca573">enabled</a></td></tr>
+<tr class="memdesc:a087ccfd296a5a2f24879668f618ca573 inherit pub_attribs_structtracktion__engine_1_1Modifier"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enabled property.  <a href="structtracktion__engine_1_1Modifier.html#a087ccfd296a5a2f24879668f618ca573">More...</a><br /></td></tr>
 <tr class="separator:a087ccfd296a5a2f24879668f618ca573 inherit pub_attribs_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af853ff461a8cd38ad5991755805797b0 inherit pub_attribs_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1AutomatableParameter.html#af267e7c7e64bcb7412778976ab54a65e">AutomatableParameter::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#af853ff461a8cd38ad5991755805797b0">enabledParam</a></td></tr>
+<tr class="memdesc:af853ff461a8cd38ad5991755805797b0 inherit pub_attribs_structtracktion__engine_1_1Modifier"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameter to change the enabled state.  <a href="structtracktion__engine_1_1Modifier.html#af853ff461a8cd38ad5991755805797b0">More...</a><br /></td></tr>
 <tr class="separator:af853ff461a8cd38ad5991755805797b0 inherit pub_attribs_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classtracktion__engine_1_1AutomatableEditItem"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classtracktion__engine_1_1AutomatableEditItem')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classtracktion__engine_1_1AutomatableEditItem.html">tracktion_engine::AutomatableEditItem</a></td></tr>
 <tr class="memitem:a65865662ed766279d0afb46eb741b8d3 inherit pub_attribs_classtracktion__engine_1_1AutomatableEditItem"><td class="memItemLeft" align="right" valign="top">juce::ValueTree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AutomatableEditItem.html#a65865662ed766279d0afb46eb741b8d3">elementState</a></td></tr>
@@ -328,9 +351,14 @@ Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_static_attribs_structtracktion__engine_1_1Modifier"><td colspan="2" onclick="javascript:toggleInherit('pub_static_attribs_structtracktion__engine_1_1Modifier')"><img src="closed.png" alt="-"/>&#160;Static Public Attributes inherited from <a class="el" href="structtracktion__engine_1_1Modifier.html">tracktion_engine::Modifier</a></td></tr>
+<tr class="memitem:a8efa6e8f0e8c3c785667dc4a6e148a1f inherit pub_static_attribs_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#a8efa6e8f0e8c3c785667dc4a6e148a1f">maxHistoryTime</a> = 3.0</td></tr>
+<tr class="memdesc:a8efa6e8f0e8c3c785667dc4a6e148a1f inherit pub_static_attribs_structtracktion__engine_1_1Modifier"><td class="mdescLeft">&#160;</td><td class="mdescRight">The max number of seconds of modifier value history that is stored.  <a href="structtracktion__engine_1_1Modifier.html#a8efa6e8f0e8c3c785667dc4a6e148a1f">More...</a><br /></td></tr>
+<tr class="separator:a8efa6e8f0e8c3c785667dc4a6e148a1f inherit pub_static_attribs_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_structtracktion__engine_1_1Modifier"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_structtracktion__engine_1_1Modifier')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="structtracktion__engine_1_1Modifier.html">tracktion_engine::Modifier</a></td></tr>
-<tr class="memitem:a26e66d5389c534c5fe741e8d006d13af inherit pro_methods_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#a26e66d5389c534c5fe741e8d006d13af">getSampleRate</a> () const</td></tr>
-<tr class="separator:a26e66d5389c534c5fe741e8d006d13af inherit pro_methods_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52237addb1dfc754953570578d3b23bc inherit pro_methods_structtracktion__engine_1_1Modifier"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1Modifier.html#a52237addb1dfc754953570578d3b23bc">setEditTime</a> (double newEditTime)</td></tr>
+<tr class="memdesc:a52237addb1dfc754953570578d3b23bc inherit pro_methods_structtracktion__engine_1_1Modifier"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subclasses can call this to update the edit time of the current value.  <a href="structtracktion__engine_1_1Modifier.html#a52237addb1dfc754953570578d3b23bc">More...</a><br /></td></tr>
+<tr class="separator:a52237addb1dfc754953570578d3b23bc inherit pro_methods_structtracktion__engine_1_1Modifier"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classtracktion__engine_1_1AutomatableEditItem"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classtracktion__engine_1_1AutomatableEditItem')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classtracktion__engine_1_1AutomatableEditItem.html">tracktion_engine::AutomatableEditItem</a></td></tr>
 <tr class="memitem:a489e81edaf8f559edf956a93c01a2b1f inherit pro_methods_classtracktion__engine_1_1AutomatableEditItem"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AutomatableEditItem.html#a489e81edaf8f559edf956a93c01a2b1f">buildParameterTree</a> () const</td></tr>
 <tr class="separator:a489e81edaf8f559edf956a93c01a2b1f inherit pro_methods_classtracktion__engine_1_1AutomatableEditItem"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -643,34 +671,6 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a7f42108f604a7120121b0b4dee5b3c48"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f42108f604a7120121b0b4dee5b3c48">&#9670;&nbsp;</a></span>createPreFXAudioNode()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a>* tracktion_engine::MIDITrackerModifier::createPreFXAudioNode </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Reimplemented from <a class="el" href="structtracktion__engine_1_1Modifier.html#a28cabcfd9686c80d47ffeb4342bc7700">tracktion_engine::Modifier</a>.</p>
-
-</div>
-</div>
 <a id="ab341023e47258da8faae9563a0a61fb4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab341023e47258da8faae9563a0a61fb4">&#9670;&nbsp;</a></span>getProcessingPosition()</h2>
 
@@ -694,7 +694,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Should return the position in the plugin chain that this <a class="el" href="structtracktion__engine_1_1Modifier.html">Modifier</a> should be processed. </p>
+<p>Should return the position in the plugin chain that this <a class="el" href="structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a> should be processed. </p>
 
 <p>Reimplemented from <a class="el" href="structtracktion__engine_1_1Modifier.html#a3b362ca158e6a2aa58fecc7dce6a2eb4">tracktion_engine::Modifier</a>.</p>
 
@@ -725,6 +725,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Sub classes should implement this to process the <a class="el" href="structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a>. </p>
 
 <p>Reimplemented from <a class="el" href="structtracktion__engine_1_1Modifier.html#a0fc24875ef0b58169546bdaa5158641a">tracktion_engine::Modifier</a>.</p>
 
@@ -859,6 +861,8 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sub classes should implement this to initialise the <a class="el" href="structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a>. </p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -980,7 +984,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 10 2021 09:52:55 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 25 2021 13:15:29 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

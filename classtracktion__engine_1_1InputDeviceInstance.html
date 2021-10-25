@@ -158,9 +158,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aec6c0bc06596c277ca40debea27bf490"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fab8850c9ed6d75431aedc6e752abe0"><td class="memItemLeft" align="right" valign="top">virtual juce::Array&lt; <a class="el" href="classtracktion__engine_1_1Clip.html">Clip</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1InputDeviceInstance.html#a2fab8850c9ed6d75431aedc6e752abe0">applyRetrospectiveRecord</a> (<a class="el" href="classtracktion__engine_1_1SelectionManager.html">SelectionManager</a> *)=0</td></tr>
 <tr class="separator:a2fab8850c9ed6d75431aedc6e752abe0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44e9b682b44e37c8a7a054ea4a57f95e"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1InputDeviceInstance.html#a44e9b682b44e37c8a7a054ea4a57f95e">createLiveInputNode</a> ()=0</td></tr>
-<tr class="memdesc:a44e9b682b44e37c8a7a054ea4a57f95e"><td class="mdescLeft">&#160;</td><td class="mdescRight">can return a new node which can be used to suck data from this device for end-to-end'ing.  <a href="classtracktion__engine_1_1InputDeviceInstance.html#a44e9b682b44e37c8a7a054ea4a57f95e">More...</a><br /></td></tr>
-<tr class="separator:a44e9b682b44e37c8a7a054ea4a57f95e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab65719b1399751be82a7119d2448b210"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion__engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html">InputDeviceDestination</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1InputDeviceInstance.html#ab65719b1399751be82a7119d2448b210">getDestination</a> (const <a class="el" href="classtracktion__engine_1_1Track.html">Track</a> &amp;track, int index)</td></tr>
 <tr class="separator:ab65719b1399751be82a7119d2448b210"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed097af358d727551b91da56fc4d6a01"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1InputDeviceInstance.html#aed097af358d727551b91da56fc4d6a01">addConsumer</a> (<a class="el" href="structtracktion__engine_1_1InputDeviceInstance_1_1Consumer.html">Consumer</a> *)=0</td></tr>
@@ -991,33 +988,6 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a44e9b682b44e37c8a7a054ea4a57f95e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44e9b682b44e37c8a7a054ea4a57f95e">&#9670;&nbsp;</a></span>createLiveInputNode()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a>* tracktion_engine::InputDeviceInstance::createLiveInputNode </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>can return a new node which can be used to suck data from this device for end-to-end'ing. </p>
-
-</div>
-</div>
 <a id="ab65719b1399751be82a7119d2448b210"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab65719b1399751be82a7119d2448b210">&#9670;&nbsp;</a></span>getDestination()</h2>
 
@@ -1385,7 +1355,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 10 2021 09:52:54 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 25 2021 13:15:29 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

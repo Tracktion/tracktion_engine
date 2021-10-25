@@ -79,9 +79,6 @@ $(function() {
 <li>lastArchiveState
 : <a class="el" href="classARADocument.html#a85e4875b1db1065e38e4df65d2d867d9">ARADocument</a>
 </li>
-<li>lastBlock
-: <a class="el" href="classtracktion__engine_1_1SidechainSendAudioNode.html#a849ca74f93ea1ae40e7ca2aa53f8d9cf">tracktion_engine::SidechainSendAudioNode</a>
-</li>
 <li>lastBlockBeforeLoop
 : <a class="el" href="structtracktion__engine_1_1AudioRenderContext.html#a9afec5cd6a8831e483bad2f49cc64db0a215ea6706105f103251a2a4db7840cb4">tracktion_engine::AudioRenderContext</a>
 </li>
@@ -130,6 +127,9 @@ $(function() {
 </li>
 <li>LatencyProcessor()
 : <a class="el" href="structtracktion__graph_1_1LatencyProcessor.html#a54f7f280311a51fcde254973d1c7e710">tracktion_graph::LatencyProcessor</a>
+</li>
+<li>latencySeconds
+: <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#ac66592ff76b2f57e45d43af7ba0ba7c8">tracktion_engine::PluginAudioNode</a>
 </li>
 <li>latencyTimeSeconds
 : <a class="el" href="classtracktion__engine_1_1LatencyPlugin.html#a86a1de4bafb58909765b19bf6c0f709b">tracktion_engine::LatencyPlugin</a>
@@ -208,9 +208,6 @@ $(function() {
 </li>
 <li>LevelMeasurerProcessingNode()
 : <a class="el" href="classtracktion__engine_1_1LevelMeasurerProcessingNode.html#a50505171e10efb2ab0d19c6383e00106">tracktion_engine::LevelMeasurerProcessingNode</a>
-</li>
-<li>LevelMeasuringAudioNode()
-: <a class="el" href="classtracktion__engine_1_1LevelMeasuringAudioNode.html#a02155e164eefa17d7b4f3cc7d0726579">tracktion_engine::LevelMeasuringAudioNode</a>
 </li>
 <li>LevelMeasuringNode()
 : <a class="el" href="classtracktion__engine_1_1LevelMeasuringNode.html#a9e2be8bcd0a262c80766da632f1c0028">tracktion_engine::LevelMeasuringNode</a>
@@ -306,7 +303,7 @@ $(function() {
 : <a class="el" href="classtracktion__engine_1_1LiveMidiInjectingNode.html#a9525f7af48f299114e82274dba981c04">tracktion_engine::LiveMidiInjectingNode</a>
 </li>
 <li>LiveMidiOutputNode()
-: <a class="el" href="classtracktion__engine_1_1LiveMidiOutputNode.html#a7c69fd6aef723418b2c3bbc992026a12">tracktion_engine::LiveMidiOutputNode</a>
+: <a class="el" href="classtracktion__engine_1_1LiveMidiOutputNode.html#ad32704bafad50556e718559368cb3824">tracktion_engine::LiveMidiOutputNode</a>
 </li>
 <li>livePlayOver
 : <a class="el" href="classtracktion__engine_1_1MidiInputDevice.html#a02e2f61172ecfb2840a718255e2613df">tracktion_engine::MidiInputDevice</a>
@@ -327,6 +324,9 @@ $(function() {
 <li>loadFunctions()
 : <a class="el" href="classtracktion__engine_1_1CustomControlSurface.html#ab77934fcc9982dc372ef4e45c5efe9c0">tracktion_engine::CustomControlSurface</a>
 </li>
+<li>loadImpulseResponse()
+: <a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#acd71c6e27fa1e93ffeda95029e1cefe3">tracktion_engine::ImpulseResponsePlugin</a>
+</li>
 <li>loadList()
 : <a class="el" href="classtracktion__engine_1_1ProjectManager.html#a3f3591739c5d084fc26787f0d69f3030">tracktion_engine::ProjectManager</a>
 </li>
@@ -337,7 +337,7 @@ $(function() {
 : <a class="el" href="classtracktion__engine_1_1AudioTrack.html#a6a20100ebef4826f66a62e6448977f4c">tracktion_engine::AudioTrack</a>
 </li>
 <li>loadProps()
-: <a class="el" href="classtracktion__engine_1_1MidiInputDevice.html#a173dd41f88e99d2f36594b62767cac40">tracktion_engine::MidiInputDevice</a>
+: <a class="el" href="classtracktion__engine_1_1MidiInputDevice.html#a2a15bfeec5e53901fd59d5bba2e1433c">tracktion_engine::MidiInputDevice</a>
 , <a class="el" href="classtracktion__engine_1_1MidiOutputDevice.html#a53ea460962419cd25685bef2cfcb5eba">tracktion_engine::MidiOutputDevice</a>
 , <a class="el" href="classtracktion__engine_1_1PhysicalMidiInputDevice.html#ac80f8182ec8c7a1436b4bfa967e8a862">tracktion_engine::PhysicalMidiInputDevice</a>
 , <a class="el" href="classtracktion__engine_1_1VirtualMidiInputDevice.html#af28570cbaf5b5c3a17d0440e9486abe7">tracktion_engine::VirtualMidiInputDevice</a>
@@ -394,7 +394,7 @@ $(function() {
 , <a class="el" href="structtracktion__engine_1_1AudioFileInfo.html#af3cb9dd2d2e952583b63bc93077db4e9">tracktion_engine::AudioFileInfo</a>
 </li>
 <li>LoopInfo()
-: <a class="el" href="classtracktion__engine_1_1LoopInfo.html#a23aef510300fac23ad48725930e6fb1b">tracktion_engine::LoopInfo</a>
+: <a class="el" href="classtracktion__engine_1_1LoopInfo.html#af9fc00c9a6c32633608b7d1c20b09e80">tracktion_engine::LoopInfo</a>
 </li>
 <li>looping
 : <a class="el" href="classtracktion__engine_1_1TransportControl.html#a73bf5ccb0e2a19ebd0c597d2b913554c">tracktion_engine::TransportControl</a>
@@ -440,6 +440,12 @@ $(function() {
 <li>low
 : <a class="el" href="structtracktion__engine_1_1VSTXML_1_1Range.html#a8220f7f6c65153d33b72a192287e4422">tracktion_engine::VSTXML::Range</a>
 </li>
+<li>lowPassCutoffParam
+: <a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a4e18496769b4d3051349047ec5f0d800">tracktion_engine::ImpulseResponsePlugin</a>
+</li>
+<li>lowPassCutoffValue
+: <a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a170cbd63b8af51ed23f8a96338fa6704">tracktion_engine::ImpulseResponsePlugin</a>
+</li>
 <li>lowPassEnabled
 : <a class="el" href="classtracktion__engine_1_1EnvelopeFollowerModifier.html#a260d0fee711294f50348acdeb45eb632">tracktion_engine::EnvelopeFollowerModifier</a>
 </li>
@@ -462,7 +468,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 10 2021 09:52:56 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 25 2021 13:15:31 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

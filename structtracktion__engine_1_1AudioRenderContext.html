@@ -403,7 +403,7 @@ Public Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structtracktion__engine_1_1AudioRenderContext.html#a9afec5cd6a8831e483bad2f49cc64db0ac9bcee53c142bd4cbf490c4b9740449c">contiguous</a>, and <a class="el" href="structtracktion__engine_1_1AudioRenderContext.html#a64da1879ff6674e19886ccb671e41732">continuity</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1SubSampleWaveAudioNode.html#ac071c240941006d3ae390bf74f92ac45">tracktion_engine::SubSampleWaveAudioNode::renderSection()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#a3e865a1d2a3eac67ddc0b0537e8efe48">tracktion_engine::PluginAudioNode::renderPlugin()</a>, and <a class="el" href="classtracktion__engine_1_1SubSampleWaveAudioNode.html#ac071c240941006d3ae390bf74f92ac45">tracktion_engine::SubSampleWaveAudioNode::renderSection()</a>.</p>
 
 </div>
 </div>
@@ -488,6 +488,8 @@ Public Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structtracktion__engine_1_1AudioRenderContext.html#a64da1879ff6674e19886ccb671e41732">continuity</a>, and <a class="el" href="structtracktion__engine_1_1AudioRenderContext.html#a9afec5cd6a8831e483bad2f49cc64db0ae2fc754f250cdded6b79b4d774f2d486">playheadJumped</a>.</p>
 
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#aaa641c7a45a26c33afa279d70d1dbf19">tracktion_engine::PluginAudioNode::renderAdding()</a>, and <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#aa8648b7ca2490c50a86fa47490cccad2">tracktion_engine::PluginAudioNode::renderOver()</a>.</p>
+
 </div>
 </div>
 <a id="a2112b23579b1862c62e60561677baa30"></a>
@@ -507,7 +509,7 @@ Public Attributes</h2></td></tr>
 
 <p>Returns the section of the edit that needs to be rendered by this block. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1AudioNode.html#a2c27948d7582f770dd5f1f98d7232265">tracktion_engine::AudioNode::invokeSplitRender()</a>, and <a class="el" href="classtracktion__engine_1_1SubSampleWaveAudioNode.html#a40304a502373a4cd417459366185b923">tracktion_engine::SubSampleWaveAudioNode::prepareForNextBlock()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#ad5f5ce9f344fe07996e2a95aaf603818">tracktion_engine::PluginAudioNode::createPluginRenderContext()</a>, <a class="el" href="classtracktion__engine_1_1AudioNode.html#a2c27948d7582f770dd5f1f98d7232265">tracktion_engine::AudioNode::invokeSplitRender()</a>, <a class="el" href="classtracktion__engine_1_1SubSampleWaveAudioNode.html#a40304a502373a4cd417459366185b923">tracktion_engine::SubSampleWaveAudioNode::prepareForNextBlock()</a>, <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#a19594f6798adf692bca94433d158f93b">tracktion_engine::PluginAudioNode::prepareForNextBlock()</a>, and <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#a3e865a1d2a3eac67ddc0b0537e8efe48">tracktion_engine::PluginAudioNode::renderPlugin()</a>.</p>
 
 </div>
 </div>
@@ -536,8 +538,6 @@ Public Attributes</h2></td></tr>
 
 <p>Clears the active section of all channels in the audio buffer. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1TrackMutingAudioNode.html#a22cc860aa770910cb1e0034657f0cc4f">tracktion_engine::TrackMutingAudioNode::renderOver()</a>.</p>
-
 </div>
 </div>
 <a id="adb8ff6b327490165b784e291b4e616dd"></a>
@@ -564,8 +564,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Clears the active section of the MIDI buffer. </p>
-
-<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1TrackMutingAudioNode.html#a22cc860aa770910cb1e0034657f0cc4f">tracktion_engine::TrackMutingAudioNode::renderOver()</a>.</p>
 
 </div>
 </div>
@@ -594,7 +592,7 @@ Public Attributes</h2></td></tr>
 
 <p>Clears the active section of all channels in the audio and MIDI buffers. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1TrackMutingAudioNode.html#a22cc860aa770910cb1e0034657f0cc4f">tracktion_engine::TrackMutingAudioNode::renderOver()</a>, and <a class="el" href="structtracktion__engine_1_1MuteAudioNode.html#a2f211313ad8d8e5073e75f6e4df5c838">tracktion_engine::MuteAudioNode::renderOver()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structtracktion__engine_1_1MuteAudioNode.html#a2f211313ad8d8e5073e75f6e4df5c838">tracktion_engine::MuteAudioNode::renderOver()</a>.</p>
 
 </div>
 </div>
@@ -622,6 +620,8 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Applies low-level noise to the audio buffer. </p>
+
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#a3e865a1d2a3eac67ddc0b0537e8efe48">tracktion_engine::PluginAudioNode::renderPlugin()</a>.</p>
 
 </div>
 </div>
@@ -663,7 +663,7 @@ Public Attributes</h2></td></tr>
 
 <p>The playhead provides information about current time, tempo etc at the block being rendered. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1AudioNode.html#a2c27948d7582f770dd5f1f98d7232265">tracktion_engine::AudioNode::invokeSplitRender()</a>, <a class="el" href="classtracktion__engine_1_1ClickMutingNode.html#a56f6e3323edfe42db9af14c8d9ffb60a">tracktion_engine::ClickMutingNode::renderAdding()</a>, and <a class="el" href="classtracktion__engine_1_1SubSampleWaveAudioNode.html#ac071c240941006d3ae390bf74f92ac45">tracktion_engine::SubSampleWaveAudioNode::renderSection()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#ad5f5ce9f344fe07996e2a95aaf603818">tracktion_engine::PluginAudioNode::createPluginRenderContext()</a>, <a class="el" href="classtracktion__engine_1_1AudioNode.html#a2c27948d7582f770dd5f1f98d7232265">tracktion_engine::AudioNode::invokeSplitRender()</a>, and <a class="el" href="classtracktion__engine_1_1SubSampleWaveAudioNode.html#ac071c240941006d3ae390bf74f92ac45">tracktion_engine::SubSampleWaveAudioNode::renderSection()</a>.</p>
 
 </div>
 </div>
@@ -682,7 +682,7 @@ Public Attributes</h2></td></tr>
 <p>The time window which needs to be rendered into the current block. </p>
 <p>This is a monotonically increasing window, even if playback is paused. To find out what section of the edit needs to be rendered, Playhead provides conversion methods such as Playhead::streamTimeToEditWindow() or <a class="el" href="structtracktion__engine_1_1AudioRenderContext.html#a2112b23579b1862c62e60561677baa30" title="Returns the section of the edit that needs to be rendered by this block.">getEditTime()</a> </p>
 
-<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1AudioNode.html#a2c27948d7582f770dd5f1f98d7232265">tracktion_engine::AudioNode::invokeSplitRender()</a>, and <a class="el" href="classtracktion__engine_1_1SpeedRampAudioNode.html#a7d18fa40cbe2a2a12493c0a1ba591450">tracktion_engine::SpeedRampAudioNode::renderSection()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1AudioNode.html#a2c27948d7582f770dd5f1f98d7232265">tracktion_engine::AudioNode::invokeSplitRender()</a>, <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#aa8648b7ca2490c50a86fa47490cccad2">tracktion_engine::PluginAudioNode::renderOver()</a>, and <a class="el" href="classtracktion__engine_1_1SpeedRampAudioNode.html#a7d18fa40cbe2a2a12493c0a1ba591450">tracktion_engine::SpeedRampAudioNode::renderSection()</a>.</p>
 
 </div>
 </div>
@@ -701,7 +701,7 @@ Public Attributes</h2></td></tr>
 <p>The target audio buffer which needs to be filled. </p>
 <p>This may be nullptr if no audio is being processed. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1SidechainSendAudioNode.html#ae08a090edf6f48b2147c49c529eafc30">tracktion_engine::SidechainSendAudioNode::renderOver()</a>, <a class="el" href="classtracktion__engine_1_1SidechainReceiveAudioNode.html#ab52190d080844e1cc6c96400fbf4dbdc">tracktion_engine::SidechainReceiveAudioNode::renderOver()</a>, <a class="el" href="classtracktion__engine_1_1SidechainReceiveWrapperAudioNode.html#a41ff921834d7ace4ca507b8a4d39d48d">tracktion_engine::SidechainReceiveWrapperAudioNode::renderOver()</a>, <a class="el" href="classtracktion__engine_1_1SubSampleWaveAudioNode.html#ac071c240941006d3ae390bf74f92ac45">tracktion_engine::SubSampleWaveAudioNode::renderSection()</a>, and <a class="el" href="structtracktion__engine_1_1AudioRenderContext.html#ab4eafad8bded6278ccac5eddfd56a8be">sanityCheck()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#ad5f5ce9f344fe07996e2a95aaf603818">tracktion_engine::PluginAudioNode::createPluginRenderContext()</a>, <a class="el" href="classtracktion__engine_1_1SubSampleWaveAudioNode.html#ac071c240941006d3ae390bf74f92ac45">tracktion_engine::SubSampleWaveAudioNode::renderSection()</a>, and <a class="el" href="structtracktion__engine_1_1AudioRenderContext.html#ab4eafad8bded6278ccac5eddfd56a8be">sanityCheck()</a>.</p>
 
 </div>
 </div>
@@ -719,6 +719,8 @@ Public Attributes</h2></td></tr>
 
 <p>A description of the type of channels in each of the channels in destBuffer. </p>
 
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#ad5f5ce9f344fe07996e2a95aaf603818">tracktion_engine::PluginAudioNode::createPluginRenderContext()</a>.</p>
+
 </div>
 </div>
 <a id="a978a5fb11fa2deefb4a0a759a259e4f9"></a>
@@ -735,7 +737,7 @@ Public Attributes</h2></td></tr>
 
 <p>The index of the start point in the audio buffer from which data must be written. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1AudioNode.html#a2c27948d7582f770dd5f1f98d7232265">tracktion_engine::AudioNode::invokeSplitRender()</a>, <a class="el" href="classtracktion__engine_1_1SidechainSendAudioNode.html#a0aad7de582de06d55d27bfaa76cb2866">tracktion_engine::SidechainSendAudioNode::prepareForNextBlock()</a>, <a class="el" href="classtracktion__engine_1_1SidechainSendAudioNode.html#ae08a090edf6f48b2147c49c529eafc30">tracktion_engine::SidechainSendAudioNode::renderOver()</a>, <a class="el" href="classtracktion__engine_1_1SidechainReceiveAudioNode.html#ab52190d080844e1cc6c96400fbf4dbdc">tracktion_engine::SidechainReceiveAudioNode::renderOver()</a>, <a class="el" href="classtracktion__engine_1_1SidechainReceiveWrapperAudioNode.html#a41ff921834d7ace4ca507b8a4d39d48d">tracktion_engine::SidechainReceiveWrapperAudioNode::renderOver()</a>, <a class="el" href="classtracktion__engine_1_1SubSampleWaveAudioNode.html#ac071c240941006d3ae390bf74f92ac45">tracktion_engine::SubSampleWaveAudioNode::renderSection()</a>, <a class="el" href="classtracktion__engine_1_1SpeedRampAudioNode.html#a7d18fa40cbe2a2a12493c0a1ba591450">tracktion_engine::SpeedRampAudioNode::renderSection()</a>, and <a class="el" href="structtracktion__engine_1_1AudioRenderContext.html#ab4eafad8bded6278ccac5eddfd56a8be">sanityCheck()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#ad5f5ce9f344fe07996e2a95aaf603818">tracktion_engine::PluginAudioNode::createPluginRenderContext()</a>, <a class="el" href="classtracktion__engine_1_1AudioNode.html#a2c27948d7582f770dd5f1f98d7232265">tracktion_engine::AudioNode::invokeSplitRender()</a>, <a class="el" href="classtracktion__engine_1_1SubSampleWaveAudioNode.html#ac071c240941006d3ae390bf74f92ac45">tracktion_engine::SubSampleWaveAudioNode::renderSection()</a>, <a class="el" href="classtracktion__engine_1_1SpeedRampAudioNode.html#a7d18fa40cbe2a2a12493c0a1ba591450">tracktion_engine::SpeedRampAudioNode::renderSection()</a>, and <a class="el" href="structtracktion__engine_1_1AudioRenderContext.html#ab4eafad8bded6278ccac5eddfd56a8be">sanityCheck()</a>.</p>
 
 </div>
 </div>
@@ -753,7 +755,7 @@ Public Attributes</h2></td></tr>
 
 <p>The number of samples to write into the audio buffer. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1AudioNode.html#a2c27948d7582f770dd5f1f98d7232265">tracktion_engine::AudioNode::invokeSplitRender()</a>, <a class="el" href="classtracktion__engine_1_1SidechainSendAudioNode.html#ae08a090edf6f48b2147c49c529eafc30">tracktion_engine::SidechainSendAudioNode::renderOver()</a>, <a class="el" href="classtracktion__engine_1_1TimedMutingAudioNode.html#a5caaa70a1fa602e40909fbded8cbabeb">tracktion_engine::TimedMutingAudioNode::renderSection()</a>, <a class="el" href="classtracktion__engine_1_1SubSampleWaveAudioNode.html#ac071c240941006d3ae390bf74f92ac45">tracktion_engine::SubSampleWaveAudioNode::renderSection()</a>, and <a class="el" href="classtracktion__engine_1_1SpeedRampAudioNode.html#a7d18fa40cbe2a2a12493c0a1ba591450">tracktion_engine::SpeedRampAudioNode::renderSection()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#ad5f5ce9f344fe07996e2a95aaf603818">tracktion_engine::PluginAudioNode::createPluginRenderContext()</a>, <a class="el" href="classtracktion__engine_1_1AudioNode.html#a2c27948d7582f770dd5f1f98d7232265">tracktion_engine::AudioNode::invokeSplitRender()</a>, <a class="el" href="classtracktion__engine_1_1TimedMutingAudioNode.html#a5caaa70a1fa602e40909fbded8cbabeb">tracktion_engine::TimedMutingAudioNode::renderSection()</a>, <a class="el" href="classtracktion__engine_1_1SubSampleWaveAudioNode.html#ac071c240941006d3ae390bf74f92ac45">tracktion_engine::SubSampleWaveAudioNode::renderSection()</a>, and <a class="el" href="classtracktion__engine_1_1SpeedRampAudioNode.html#a7d18fa40cbe2a2a12493c0a1ba591450">tracktion_engine::SpeedRampAudioNode::renderSection()</a>.</p>
 
 </div>
 </div>
@@ -772,7 +774,7 @@ Public Attributes</h2></td></tr>
 <p>A buffer of MIDI events to process. </p>
 <p>This may be nullptr if no MIDI is being sent </p>
 
-<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1SidechainSendAudioNode.html#ae08a090edf6f48b2147c49c529eafc30">tracktion_engine::SidechainSendAudioNode::renderOver()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#ad5f5ce9f344fe07996e2a95aaf603818">tracktion_engine::PluginAudioNode::createPluginRenderContext()</a>.</p>
 
 </div>
 </div>
@@ -790,7 +792,7 @@ Public Attributes</h2></td></tr>
 
 <p>A time offset to add to the timestamp of any events in the MIDI buffer. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1AudioNode.html#a2c27948d7582f770dd5f1f98d7232265">tracktion_engine::AudioNode::invokeSplitRender()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#ad5f5ce9f344fe07996e2a95aaf603818">tracktion_engine::PluginAudioNode::createPluginRenderContext()</a>, and <a class="el" href="classtracktion__engine_1_1AudioNode.html#a2c27948d7582f770dd5f1f98d7232265">tracktion_engine::AudioNode::invokeSplitRender()</a>.</p>
 
 </div>
 </div>
@@ -827,7 +829,7 @@ Public Attributes</h2></td></tr>
 
 <p>True if the rendering is happening as part of an offline render rather than live playback. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1SubSampleWaveAudioNode.html#ac071c240941006d3ae390bf74f92ac45">tracktion_engine::SubSampleWaveAudioNode::renderSection()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#ad5f5ce9f344fe07996e2a95aaf603818">tracktion_engine::PluginAudioNode::createPluginRenderContext()</a>, <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#aaa641c7a45a26c33afa279d70d1dbf19">tracktion_engine::PluginAudioNode::renderAdding()</a>, <a class="el" href="classtracktion__engine_1_1PluginAudioNode.html#aa8648b7ca2490c50a86fa47490cccad2">tracktion_engine::PluginAudioNode::renderOver()</a>, and <a class="el" href="classtracktion__engine_1_1SubSampleWaveAudioNode.html#ac071c240941006d3ae390bf74f92ac45">tracktion_engine::SubSampleWaveAudioNode::renderSection()</a>.</p>
 
 </div>
 </div>
@@ -837,7 +839,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 10 2021 09:52:54 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 25 2021 13:15:28 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

@@ -108,12 +108,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a56908fccde1fcf43cd08b02eabbe37c1"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1LevelMeterPlugin.html#a56908fccde1fcf43cd08b02eabbe37c1">getSelectableDescription</a> () override</td></tr>
 <tr class="memdesc:a56908fccde1fcf43cd08b02eabbe37c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subclasses must return a description of what they are.  <a href="classtracktion__engine_1_1LevelMeterPlugin.html#a56908fccde1fcf43cd08b02eabbe37c1">More...</a><br /></td></tr>
 <tr class="separator:a56908fccde1fcf43cd08b02eabbe37c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7c47c3b27eb22ed6bb22b3ba1f901d2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1LevelMeterPlugin.html#aa7c47c3b27eb22ed6bb22b3ba1f901d2">initialise</a> (const <a class="el" href="structtracktion__engine_1_1PlaybackInitialisationInfo.html">PlaybackInitialisationInfo</a> &amp;) override</td></tr>
-<tr class="memdesc:aa7c47c3b27eb22ed6bb22b3ba1f901d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the plugin a chance to set itself up before being played.  <a href="classtracktion__engine_1_1LevelMeterPlugin.html#aa7c47c3b27eb22ed6bb22b3ba1f901d2">More...</a><br /></td></tr>
-<tr class="separator:aa7c47c3b27eb22ed6bb22b3ba1f901d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac35e342a326d48ecea2070450d881f5b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1LevelMeterPlugin.html#ac35e342a326d48ecea2070450d881f5b">initialiseWithoutStopping</a> (const <a class="el" href="structtracktion__engine_1_1PlaybackInitialisationInfo.html">PlaybackInitialisationInfo</a> &amp;) override</td></tr>
-<tr class="memdesc:ac35e342a326d48ecea2070450d881f5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tells the plugin that the audio graph has changed but the plugin isn't being re-initialised - i.e.  <a href="classtracktion__engine_1_1LevelMeterPlugin.html#ac35e342a326d48ecea2070450d881f5b">More...</a><br /></td></tr>
-<tr class="separator:ac35e342a326d48ecea2070450d881f5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11c9f601ba55c1a8d3ba123630cb711f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1LevelMeterPlugin.html#a11c9f601ba55c1a8d3ba123630cb711f">initialise</a> (const <a class="el" href="structtracktion__engine_1_1PluginInitialisationInfo.html">PluginInitialisationInfo</a> &amp;) override</td></tr>
+<tr class="memdesc:a11c9f601ba55c1a8d3ba123630cb711f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the plugin a chance to set itself up before being played.  <a href="classtracktion__engine_1_1LevelMeterPlugin.html#a11c9f601ba55c1a8d3ba123630cb711f">More...</a><br /></td></tr>
+<tr class="separator:a11c9f601ba55c1a8d3ba123630cb711f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d9fc80fd60f362629380f549471feae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1LevelMeterPlugin.html#a4d9fc80fd60f362629380f549471feae">initialiseWithoutStopping</a> (const <a class="el" href="structtracktion__engine_1_1PluginInitialisationInfo.html">PluginInitialisationInfo</a> &amp;) override</td></tr>
+<tr class="memdesc:a4d9fc80fd60f362629380f549471feae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tells the plugin that the audio graph has changed but the plugin isn't being re-initialised - i.e.  <a href="classtracktion__engine_1_1LevelMeterPlugin.html#a4d9fc80fd60f362629380f549471feae">More...</a><br /></td></tr>
+<tr class="separator:a4d9fc80fd60f362629380f549471feae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a711834f5ad26f1e4cc716a23a6f3d17a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1LevelMeterPlugin.html#a711834f5ad26f1e4cc716a23a6f3d17a">deinitialise</a> () override</td></tr>
 <tr class="memdesc:a711834f5ad26f1e4cc716a23a6f3d17a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after play stops to release resources.  <a href="classtracktion__engine_1_1LevelMeterPlugin.html#a711834f5ad26f1e4cc716a23a6f3d17a">More...</a><br /></td></tr>
 <tr class="separator:a711834f5ad26f1e4cc716a23a6f3d17a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -168,9 +168,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:acd28773b3b7a5d7316f61e4566ffdab0 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acff9936f7ed124188c0259cce7e0f2bd inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#acff9936f7ed124188c0259cce7e0f2bd">applyToBufferWithAutomation</a> (const <a class="el" href="structtracktion__engine_1_1PluginRenderContext.html">PluginRenderContext</a> &amp;)</td></tr>
 <tr class="separator:acff9936f7ed124188c0259cce7e0f2bd inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f280a342ee069d4ec9d7969cd32c293 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a6f280a342ee069d4ec9d7969cd32c293">createAudioNode</a> (<a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *input, bool applyAntiDenormalisationNoise)</td></tr>
-<tr class="memdesc:a6f280a342ee069d4ec9d7969cd32c293 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new audio node that will render this plugin.  <a href="classtracktion__engine_1_1Plugin.html#a6f280a342ee069d4ec9d7969cd32c293">More...</a><br /></td></tr>
-<tr class="separator:a6f280a342ee069d4ec9d7969cd32c293 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6da73412e032ee34d2e3a11e4a1b955c inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a6da73412e032ee34d2e3a11e4a1b955c">getCpuUsage</a> () const noexcept</td></tr>
 <tr class="separator:a6da73412e032ee34d2e3a11e4a1b955c inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5314d935383c67c29223dbd9bf795905 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a5314d935383c67c29223dbd9bf795905">producesAudioWhenNoAudioInput</a> ()</td></tr>
@@ -281,8 +278,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab63df863650b60bd9646eba542c188f6 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9fa7dcbf68b7ebf2805ee3e97e2d4d61 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a9fa7dcbf68b7ebf2805ee3e97e2d4d61">baseClassNeedsInitialising</a> () const noexcept</td></tr>
 <tr class="separator:a9fa7dcbf68b7ebf2805ee3e97e2d4d61 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa094395f74a1adde429affaa9cc7adb0 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#aa094395f74a1adde429affaa9cc7adb0">baseClassInitialise</a> (const <a class="el" href="structtracktion__engine_1_1PlaybackInitialisationInfo.html">PlaybackInitialisationInfo</a> &amp;)</td></tr>
-<tr class="separator:aa094395f74a1adde429affaa9cc7adb0 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bdccb69d92772e4b6f69fad09a81162 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a8bdccb69d92772e4b6f69fad09a81162">baseClassInitialise</a> (const <a class="el" href="structtracktion__engine_1_1PluginInitialisationInfo.html">PluginInitialisationInfo</a> &amp;)</td></tr>
+<tr class="separator:a8bdccb69d92772e4b6f69fad09a81162 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3be7cb46294b445eece2be76d020c9d inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#ae3be7cb46294b445eece2be76d020c9d">baseClassDeinitialise</a> ()</td></tr>
 <tr class="separator:ae3be7cb46294b445eece2be76d020c9d inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab79885c00560979951542c02d3a81c19 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#ab79885c00560979951542c02d3a81c19">setSidechainSourceID</a> (<a class="el" href="structtracktion__engine_1_1EditItemID.html">EditItemID</a> newID)</td></tr>
@@ -855,8 +852,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="aa7c47c3b27eb22ed6bb22b3ba1f901d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7c47c3b27eb22ed6bb22b3ba1f901d2">&#9670;&nbsp;</a></span>initialise()</h2>
+<a id="a11c9f601ba55c1a8d3ba123630cb711f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a11c9f601ba55c1a8d3ba123630cb711f">&#9670;&nbsp;</a></span>initialise()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -867,7 +864,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void tracktion_engine::LevelMeterPlugin::initialise </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtracktion__engine_1_1PlaybackInitialisationInfo.html">PlaybackInitialisationInfo</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structtracktion__engine_1_1PluginInitialisationInfo.html">PluginInitialisationInfo</a> &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -881,14 +878,14 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Gives the plugin a chance to set itself up before being played. </p>
 <p>The sample rate and the average block size - although the blocks won't always be the same, and may be bigger.</p>
-<p>Don't call this directly or the initialise count will become out of sync. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1Plugin.html#aa094395f74a1adde429affaa9cc7adb0">baseClassInitialise</a> </dd></dl>
+<p>Don't call this directly or the initialise count will become out of sync. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1Plugin.html#a8bdccb69d92772e4b6f69fad09a81162">baseClassInitialise</a> </dd></dl>
 
-<p>Implements <a class="el" href="classtracktion__engine_1_1Plugin.html#a9dac47c884a70b708a1addf3cc969968">tracktion_engine::Plugin</a>.</p>
+<p>Implements <a class="el" href="classtracktion__engine_1_1Plugin.html#aaae7318289eec497e2bae41da2135c3f">tracktion_engine::Plugin</a>.</p>
 
 </div>
 </div>
-<a id="ac35e342a326d48ecea2070450d881f5b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac35e342a326d48ecea2070450d881f5b">&#9670;&nbsp;</a></span>initialiseWithoutStopping()</h2>
+<a id="a4d9fc80fd60f362629380f549471feae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d9fc80fd60f362629380f549471feae">&#9670;&nbsp;</a></span>initialiseWithoutStopping()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -899,7 +896,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void tracktion_engine::LevelMeterPlugin::initialiseWithoutStopping </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtracktion__engine_1_1PlaybackInitialisationInfo.html">PlaybackInitialisationInfo</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structtracktion__engine_1_1PluginInitialisationInfo.html">PluginInitialisationInfo</a> &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -914,7 +911,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Tells the plugin that the audio graph has changed but the plugin isn't being re-initialised - i.e. </p>
 <p>it's being re-used, maybe by being moved to a different track, etc. </p>
 
-<p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Plugin.html#a45efa32fd0632fbb0feb3cb1f7df3a95">tracktion_engine::Plugin</a>.</p>
+<p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Plugin.html#ad36323cb56767514bea5fbfd82c0b9ac">tracktion_engine::Plugin</a>.</p>
 
 </div>
 </div>
@@ -974,8 +971,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Process the next block of data. </p>
 <p>The incoming buffer will have an unknown number of channels, and the plugin has to deal with them however it wants to.</p>
-<p>The buffer should be resized to the number of output channels that the plugin wants to return (which should be the same or less than the number of output channel names it returns from <a class="el" href="classtracktion__engine_1_1Plugin.html#a6d1741e49102e7118e27ab109fb43fb9">getChannelNames()</a> - never more than this).</p>
-<p>Other parameters and principles are similar to AudioNode::readBlock() </p>
+<p>The buffer should be resized to the number of output channels that the plugin wants to return (which should be the same or less than the number of output channel names it returns from <a class="el" href="classtracktion__engine_1_1Plugin.html#a6d1741e49102e7118e27ab109fb43fb9">getChannelNames()</a> - never more than this). </p>
 
 <p>Implements <a class="el" href="classtracktion__engine_1_1Plugin.html#afe5319659f633b941474518f0a21408a">tracktion_engine::Plugin</a>.</p>
 
@@ -1095,7 +1091,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 10 2021 09:52:54 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 25 2021 13:15:29 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

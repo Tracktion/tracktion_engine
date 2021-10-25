@@ -7,7 +7,7 @@
 <area shape="rect" id="node20" href="$classtracktion__engine_1_1InputDevice.html" title="Represents an input device." alt="" coords="274,966,491,993"/>
 <area shape="rect" id="node23" href="$structtracktion__engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html" title=" " alt="" coords="263,1061,502,1103"/>
 <area shape="rect" id="node27" href="$structtracktion__engine_1_1MakeMonoEffect.html" title=" " alt="" coords="277,1135,488,1176"/>
-<area shape="rect" id="node28" href="$structtracktion__engine_1_1Modifier.html" title=" " alt="" coords="287,1201,479,1227"/>
+<area shape="rect" id="node28" href="$structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers." alt="" coords="287,1201,479,1227"/>
 <area shape="rect" id="node35" href="$structtracktion__engine_1_1NormaliseEffect.html" title=" " alt="" coords="279,1252,486,1293"/>
 <area shape="rect" id="node36" href="$classtracktion__engine_1_1OutputDevice.html" title="Base class for audio or midi output devices, to which a track&#39;s output can be sent." alt="" coords="291,1317,474,1359"/>
 <area shape="rect" id="node38" href="$classtracktion__engine_1_1Plugin.html" title=" " alt="" coords="293,1383,472,1410"/>
