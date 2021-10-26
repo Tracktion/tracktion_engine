@@ -236,7 +236,7 @@ private:
         submix_1, audio_1			= 0dB/NA
         submix_1, submix_2			= 0dB/NA
         submix_1                    = 0dB/NA
-        submix_2					= 0dB/NA
+        submix_2					= -6dB/NA
     */
     void runSubmix (test_utilities::TestSetup ts,
                     double durationInSeconds,
@@ -273,8 +273,8 @@ private:
                 expectPeak (*this, *edit, { 0, durationInSeconds }, { audioTrack }, 0.25f);
                 expectPeak (*this, *edit, { 0, durationInSeconds }, { submixTrack1, audioTrack }, 0.0f);
                 expectPeak (*this, *edit, { 0, durationInSeconds }, { submixTrack1, submixTrack2 }, 0.0f);
-                expectPeak (*this, *edit, { 0, durationInSeconds }, { submixTrack1 }, 0.0f);
-                expectPeak (*this, *edit, { 0, durationInSeconds }, { submixTrack2 }, 0.0f);
+                expectPeak (*this, *edit, { 0, durationInSeconds }, { submixTrack1 }, 1.0f);
+                expectPeak (*this, *edit, { 0, durationInSeconds }, { submixTrack2 }, 0.5f);
             }
         }
     }

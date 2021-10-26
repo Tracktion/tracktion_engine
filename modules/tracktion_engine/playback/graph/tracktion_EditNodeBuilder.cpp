@@ -168,6 +168,56 @@ namespace
         return true;
     }
 
+    Array<Track*> addImplicitSubmixChildTracks (const Array<Track*> originalTracks)
+    {
+        if (originalTracks.isEmpty())
+            return {};
+     
+        auto tracks = originalTracks;
+        
+        // Iterate all original tracks
+        // If any tracks are submix tracks, check if their parents are included or any of their children
+        // If not, add all children recusively
+        // Ensure there are no duplicates
+        for (auto track : originalTracks)
+        {
+            if (auto st = dynamic_cast<FolderTrack*> (track);
+                st != nullptr && st->isSubmixFolder())
+            {
+                bool shouldSkip = false;
+                
+                // First check for parents
+                for (auto potentialParent : originalTracks)
+                {
+                    if (track->isAChildOf (*potentialParent))
+                    {
+                        shouldSkip = true;
+                        break;
+                    }
+                }
+
+                // Then children
+                for (auto potentialChild : originalTracks)
+                {
+                    if (potentialChild->isAChildOf (*track))
+                    {
+                        shouldSkip = true;
+                        break;
+                    }
+                }
+                
+                if (shouldSkip)
+                    continue;
+
+                // Otherwise add all the children
+                for (auto childTrack : st->getAllSubTracks (true))
+                    tracks.addIfNotAlreadyThere (childTrack);
+            }
+        }
+    
+        return tracks;
+    }
+
 //==============================================================================
 //==============================================================================
 std::unique_ptr<tracktion_graph::Node> createNodeForTrack (Track&, const CreateNodeParams&);
@@ -1347,10 +1397,14 @@ std::unique_ptr<tracktion_graph::Node> createNodeForEdit (EditPlaybackContext& e
     return finalNode;
 }
 
-std::unique_ptr<tracktion_graph::Node> createNodeForEdit (Edit& edit, const CreateNodeParams& params)
+std::unique_ptr<tracktion_graph::Node> createNodeForEdit (Edit& edit, const CreateNodeParams& originalParams)
 {
     std::vector<std::unique_ptr<tracktion_graph::Node>> trackNodes;
+    auto params = originalParams;
     auto& playHeadState = params.processState.playHeadState;
+    
+    if (params.implicitlyIncludeSubmixChildTracks && params.allowedTracks != nullptr)
+        *params.allowedTracks = addImplicitSubmixChildTracks (*params.allowedTracks);
 
     for (auto t : getAllTracks (edit))
     {
