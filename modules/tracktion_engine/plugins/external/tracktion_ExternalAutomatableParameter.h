@@ -308,6 +308,9 @@ private:
 
     void parameterGestureChanged (int index, bool gestureIsStarting) override
     {
+        if (! juce::MessageManager::existsAndIsCurrentThread())
+            return;
+        
         if (parameterIndex == index)
         {
             if (gestureIsStarting)
