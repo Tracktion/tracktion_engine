@@ -2345,7 +2345,8 @@ void AudioClipBase::valueTreePropertyChanged (ValueTree& tree, const juce::Ident
     }
     else if (tree.hasType (IDs::LOOPINFO))
     {
-        changed();
+        if (isInitialised)
+            changed();
     }
     else
     {
