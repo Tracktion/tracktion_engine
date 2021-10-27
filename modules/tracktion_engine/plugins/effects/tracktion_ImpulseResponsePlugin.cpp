@@ -17,22 +17,25 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
     : Plugin (info)
 {
     auto um = getUndoManager();
-    preGainValue.referTo (state, "preGain", um, 1.0f);
-    postGainValue.referTo (state, "postGain", um, 1.0f);
-    highPassCutoffValue.referTo (state, "highPassCutoff", um, 0.1f);
-    lowPassCutoffValue.referTo (state, "lowPassCutoff", um, 20000.0f);
+    preGainValue.referTo (state, IDs::preGain, um, 1.0f);
+    postGainValue.referTo (state, IDs::postGain, um, 1.0f);
+    highPassCutoffValue.referTo (state, IDs::highPassFrequency, um, 0.1f);
+    lowPassCutoffValue.referTo (state, IDs::lowPassFrequency, um, 20000.0f);
+
+    normalise.referTo (state, IDs::normalise, um, true);
+    trimSilence.referTo (state, IDs::trimSilence, um, false);
 
     // Initialises parameter and attaches to value
-    preGainParam = addParam ("preGain", TRANS ("Pre Gain"), { 0.1f, 20.0f });
+    preGainParam = addParam (IDs::preGain.toString(), TRANS ("Pre Gain"), { 0.1f, 20.0f });
     preGainParam->attachToCurrentValue (preGainValue);
 
-    postGainParam = addParam ("postGain", TRANS ("Post Gain"), { 0.1f, 20.0f });
+    postGainParam = addParam (IDs::postGain.toString(), TRANS ("Post Gain"), { 0.1f, 20.0f });
     postGainParam->attachToCurrentValue (postGainValue);
 
-    highPassCutoffParam = addParam ("highPassCutoff", TRANS ("High Pass Filter Cutoff"), { 0.1f, 20000.0f });
+    highPassCutoffParam = addParam (IDs::highPassFrequency.toString(), TRANS ("High Cut"), { 0.1f, 20000.0f });
     highPassCutoffParam->attachToCurrentValue (highPassCutoffValue);
 
-    lowPassCutoffParam = addParam ("lowPassCutoff", TRANS ("Low Pass Filter Cutoff"), { 0.1f, 20000.0f });
+    lowPassCutoffParam = addParam (IDs::lowPassFrequency.toString(), TRANS ("Low Cut"), { 0.1f, 20000.0f });
     lowPassCutoffParam->attachToCurrentValue (lowPassCutoffValue);
 
     loadImpulseResponseFromState();
@@ -177,8 +180,8 @@ void ImpulseResponsePlugin::loadImpulseResponseFromState()
             processorChain.get<convolutionIndex>().loadImpulseResponse (std::move (loadIRBuffer),
                                                                         reader->sampleRate,
                                                                         reader->numChannels > 1 ? dsp::Convolution::Stereo::yes : dsp::Convolution::Stereo::no,
-                                                                        dsp::Convolution::Trim::no,
-                                                                        dsp::Convolution::Normalise::no);
+                                                                        trimSilence.get() ? dsp::Convolution::Trim::yes : dsp::Convolution::Trim::no,
+                                                                        normalise.get() ? dsp::Convolution::Normalise::yes : dsp::Convolution::Normalise::no);
         }
     }
 }

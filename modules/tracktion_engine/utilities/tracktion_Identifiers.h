@@ -632,6 +632,10 @@ namespace IDs
     DECLARE_ID (oscType)
     DECLARE_ID (bandLimit)
     DECLARE_ID (irFileData)
+    DECLARE_ID (normalise)
+    DECLARE_ID (trimSilence)
+    DECLARE_ID (preGain)
+    DECLARE_ID (postGain)
 
     #undef DECLARE_ID
 }

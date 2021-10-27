@@ -55,6 +55,9 @@ public:
     juce::CachedValue<float> preGainValue, postGainValue;
     juce::CachedValue<float> highPassCutoffValue, lowPassCutoffValue;
 
+    juce::CachedValue<bool> normalise;              /**< Normalise the IR file when loading from the state. True by default. */
+    juce::CachedValue<bool> trimSilence;            /**< Trim silence from the IR file when loading from the state. False by default. */
+
     AutomatableParameter::Ptr preGainParam;         /**< Parameter for the Gain to apply before the IR */
     AutomatableParameter::Ptr highPassCutoffParam;  /**< Cutoff frequency for the high pass filter to applied after the IR */
     AutomatableParameter::Ptr lowPassCutoffParam;   /**< Cutoff frequency for the low pass filter to applied after the IR */
