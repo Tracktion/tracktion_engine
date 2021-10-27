@@ -2343,6 +2343,10 @@ void AudioClipBase::valueTreePropertyChanged (ValueTree& tree, const juce::Ident
         if (id == IDs::warpTime || id == IDs::sourceTime)
             changed();
     }
+    else if (tree.hasType (IDs::LOOPINFO))
+    {
+        changed();
+    }
     else
     {
         Clip::valueTreePropertyChanged (tree, id);
