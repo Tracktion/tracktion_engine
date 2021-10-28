@@ -12,26 +12,47 @@ namespace tracktion_engine
 {
 
 /**
-    A track to represent the master plugins.
-    This isn't a "real" track, it wraps the master plugin list.
+    A track to represent the "global" items such as tempo, key changes etc.
+    This isn't a "real" track, it wraps the TempoSequence and PitchSequence.
 */
-class MasterTrack   : public Track
+class TempoTrack  : public Track
 {
 public:
-    MasterTrack (Edit&, const juce::ValueTree&);
-    ~MasterTrack() override;
+    /** Create the TempoTrack for an Edit with a given state. */
+    TempoTrack (Edit&, const juce::ValueTree&);
+    
+    /** Destructor. */
+    ~TempoTrack() override;
 
-    using Ptr = juce::ReferenceCountedObjectPtr<MasterTrack>;
+    using Ptr = juce::ReferenceCountedObjectPtr<TempoTrack>;
 
-    void initialise() override;
-    bool isMasterTrack() const override;
+    /** @internal */
+    bool isTempoTrack() const override;
+    /** @internal */
     juce::String getName() override;
+    /** @internal */
     juce::String getSelectableDescription() override;
 
+    /** @internal */
+    int getNumTrackItems() const override;
+    /** @internal */
+    TrackItem* getTrackItem (int idx) const override;
+    /** @internal */
+    int indexOfTrackItem (TrackItem*) const override;
+    /** @internal */
+    int getIndexOfNextTrackItemAt (double time) override;
+    /** @internal */
+    TrackItem* getNextTrackItemAt (double time) override;
+    /** @internal */
     bool canContainPlugin (Plugin*) const override;
 
+    /** @internal */
+    void insertSpaceIntoTrack (double time, double amountOfSpace) override;
+
 private:
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MasterTrack)
+    juce::Array<TrackItem*> buildTrackItemList() const;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TempoTrack)
 };
 
 } // namespace tracktion_engine
