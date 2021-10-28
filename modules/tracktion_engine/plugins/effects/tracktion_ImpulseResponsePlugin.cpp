@@ -28,11 +28,14 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
     normalise.referTo (state, IDs::normalise, um, true);
     trimSilence.referTo (state, IDs::trimSilence, um, false);
 
+    NormalisableRange volumeRange { -12.0f, 6.0f };
+    volumeRange.setSkewForCentre (0.0f);
+
     // Initialises parameter and attaches to value
-    preGainParam = addParam (IDs::preGain.toString(), TRANS ("Pre Gain"), { -12.0f, 12.0f, }, dbToString, dbFromString);
+    preGainParam = addParam (IDs::preGain.toString(), TRANS ("Pre Gain"), volumeRange, dbToString, dbFromString);
     preGainParam->attachToCurrentValue (preGainValue);
 
-    postGainParam = addParam (IDs::postGain.toString(), TRANS ("Post Gain"), { -12.0f, 12.0f }, dbToString, dbFromString);
+    postGainParam = addParam (IDs::postGain.toString(), TRANS ("Post Gain"), volumeRange, dbToString, dbFromString);
     postGainParam->attachToCurrentValue (postGainValue);
 
     highPassCutoffParam = addParam (IDs::highPassFrequency.toString(), TRANS ("High Cut"), { 0.1f, 20000.0f });
