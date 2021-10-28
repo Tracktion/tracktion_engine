@@ -28,14 +28,14 @@ FloatType midiNoteToFrequency (FloatType midiNote)
 {
     return static_cast<FloatType> (440)
         * std::pow (static_cast<FloatType> (2), (midiNote - static_cast<FloatType> (69)) / static_cast<FloatType> (12));
-};
+}
 
 template<typename FloatType>
 FloatType frequencyToMidiNote (FloatType freq)
 {
     return static_cast<FloatType> (12)
         * std::log2 (freq / static_cast<FloatType> (440)) + static_cast<FloatType> (69);
-};
+}
 
 void sanitiseValues (juce::AudioBuffer<float>&,
                      int startSample, int numSamples,
