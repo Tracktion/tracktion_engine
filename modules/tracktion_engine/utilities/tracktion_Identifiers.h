@@ -636,6 +636,8 @@ namespace IDs
     DECLARE_ID (trimSilence)
     DECLARE_ID (preGain)
     DECLARE_ID (postGain)
+    DECLARE_ID (highPassMidiNoteNumber)
+    DECLARE_ID (lowPassMidiNoteNumber)
 
     #undef DECLARE_ID
 }
