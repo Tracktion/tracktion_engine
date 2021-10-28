@@ -109,6 +109,7 @@ private:
                         dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>>,
                         dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>>,
                         dsp::Gain<float>> processorChain;
+    juce::SmoothedValue<float> preGainSmoother, postGainSmoother, lowFreqSmoother, highFreqSmoother;
     
     void loadImpulseResponseFromState();
 
