@@ -12,18 +12,18 @@
 namespace tracktion_engine
 {
 
-static float linearToFreq (float lin)       { return 440.0f * std::pow (2.0f, (lin - 69) / 12.0f); };
-static float freqToLinear (float freq)      { return 12.0f * std::log2 (freq / 440.0f) + 69.0f; };
-
 //==============================================================================
 ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
     : Plugin (info)
 {
     auto um = getUndoManager();
+
+    const NormalisableRange frequencyRange { frequencyToMidiNote (2.0f), frequencyToMidiNote (20'000.0f) };
+
     preGainValue.referTo (state, IDs::preGain, um, 0.0f);
     postGainValue.referTo (state, IDs::postGain, um, 0.0f);
-    highPassCutoffValue.referTo (state, IDs::highPassFrequency, um, freqToLinear (0.1f));
-    lowPassCutoffValue.referTo (state, IDs::lowPassFrequency, um, freqToLinear (20000.0f));
+    highPassCutoffValue.referTo (state, IDs::highPassFrequency, um, frequencyRange.start);
+    lowPassCutoffValue.referTo (state, IDs::lowPassFrequency, um, frequencyRange.end);
 
     normalise.referTo (state, IDs::normalise, um, true);
     trimSilence.referTo (state, IDs::trimSilence, um, false);
@@ -31,34 +31,27 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
     NormalisableRange volumeRange { -12.0f, 6.0f };
     volumeRange.setSkewForCentre (0.0f);
 
-    NormalisableRange frequencyRange { freqToLinear (0.1f), freqToLinear (20000.0f) };
-
     // Initialises parameter and attaches to value
     preGainParam = addParam (IDs::preGain.toString(), TRANS ("Pre Gain"), volumeRange,
-                             [] (float value)       { return String (value, 1) + " dB"; },
+                             [] (float value)       { return juce::Decibels::toString (value); },
                              [] (const String& s)   { return s.getFloatValue(); });
     preGainParam->attachToCurrentValue (preGainValue);
 
     postGainParam = addParam (IDs::postGain.toString(), TRANS ("Post Gain"), volumeRange,                              
-                              [] (float value)       { return String (value, 1) + " dB"; },
+                              [] (float value)       { return juce::Decibels::toString (value); },
                               [] (const String& s)   { return s.getFloatValue(); });
 
     postGainParam->attachToCurrentValue (postGainValue);
 
-    highPassCutoffParam = addParam (IDs::highPassFrequency.toString(), TRANS ("High Cut"), frequencyRange,
-                                    [] (float value)       { return String (linearToFreq (value), 1) + " Hz"; },
-                                    [] (const String& s)   { return freqToLinear (s.getFloatValue()); });
+    highPassCutoffParam = addParam (IDs::highPassMidiNoteNumber.toString(), TRANS ("High Cut"), frequencyRange,
+                                    [] (float value)       { return String (midiNoteToFrequency (value), 1) + " Hz"; },
+                                    [] (const String& s)   { return frequencyToMidiNote (s.getFloatValue()); });
 
     highPassCutoffParam->attachToCurrentValue (highPassCutoffValue);
 
-
-                              
-
-    lowPassCutoffParam =  addParam (IDs::lowPassFrequency.toString(), TRANS ("Low Cut"), frequencyRange,
-                                    [] (float value)       { return String (linearToFreq (value), 1) + " Hz"; },
-                                    [] (const String& s)   { return freqToLinear (s.getFloatValue()); });
-
-
+    lowPassCutoffParam =  addParam (IDs::lowPassMidiNoteNumber.toString(), TRANS ("Low Cut"), frequencyRange,
+                                    [] (float value)       { return String (midiNoteToFrequency (value), 1) + " Hz"; },
+                                    [] (const String& s)   { return frequencyToMidiNote (s.getFloatValue()); });
 
     lowPassCutoffParam->attachToCurrentValue (lowPassCutoffValue);
 
@@ -163,15 +156,15 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
     preGain.setGainLinear (juce::Decibels::decibelsToGain (preGainParam->getCurrentValue()));
 
     auto hpf = processorChain.get<HPFIndex>().state;
-    *hpf = dsp::IIR::ArrayCoefficients<float>::makeHighPass (sampleRate, highPassCutoffParam->getCurrentValue());
+    *hpf = dsp::IIR::ArrayCoefficients<float>::makeHighPass (sampleRate, midiNoteToFrequency (highPassCutoffParam->getCurrentValue()));
 
     auto& lpf = processorChain.get<LPFIndex>().state;
-    *lpf = dsp::IIR::ArrayCoefficients<float>::makeLowPass (sampleRate, lowPassCutoffParam->getCurrentValue());
+    *lpf = dsp::IIR::ArrayCoefficients<float>::makeLowPass (sampleRate, midiNoteToFrequency (lowPassCutoffParam->getCurrentValue()));
 
     auto& postGain = processorChain.get<postGainIndex>();
     postGain.setGainLinear (juce::Decibels::decibelsToGain (postGainParam->getCurrentValue()));
 
-    dsp::AudioBlock <float> inoutBlock (*fc.destBuffer);
+    dsp::AudioBlock<float> inoutBlock (*fc.destBuffer);
     dsp::ProcessContextReplacing <float> context (inoutBlock);
     processorChain.process (context);
 }
@@ -212,10 +205,15 @@ void ImpulseResponsePlugin::loadImpulseResponseFromState()
 
 void ImpulseResponsePlugin::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& id)
 {
-    if (v == state && id == IDs::irFileData)
-        loadImpulseResponseFromState();
+    if (v == state)
+    {
+        if (id == IDs::irFileData || id == IDs::normalise || id == IDs::trimSilence)
+            loadImpulseResponseFromState();
+    }
     else
+    {
         Plugin::valueTreePropertyChanged (v, id);
+    }
 }
 
 }

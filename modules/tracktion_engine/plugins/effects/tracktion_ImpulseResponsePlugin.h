@@ -109,7 +109,7 @@ private:
                         dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>>,
                         dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>>,
                         dsp::Gain<float>> processorChain;
-
+    
     void loadImpulseResponseFromState();
 
     void valueTreePropertyChanged (ValueTree&, const juce::Identifier&) override;
