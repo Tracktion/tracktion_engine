@@ -57,8 +57,8 @@ namespace AppFunctions
     void scrollTracksRight();
 
     void toggleEndToEnd();
-    void saveEdit();
-    void saveEditAs();
+    bool saveEdit();
+    bool saveEditAs();
     void armOrDisarmAllInputs();
     void goToMarkIn();
     void goToMarkOut();
