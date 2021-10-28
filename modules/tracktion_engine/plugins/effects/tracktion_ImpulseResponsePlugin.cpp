@@ -12,13 +12,16 @@
 namespace tracktion_engine
 {
 
+static String dbToString (float value)              { return String (value, 1) + " dB"; }
+static float dbFromString (const String& s)         { return s.getFloatValue(); };
+
 //==============================================================================
 ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
     : Plugin (info)
 {
     auto um = getUndoManager();
-    preGainValue.referTo (state, IDs::preGain, um, 1.0f);
-    postGainValue.referTo (state, IDs::postGain, um, 1.0f);
+    preGainValue.referTo (state, IDs::preGain, um, 0.0f);
+    postGainValue.referTo (state, IDs::postGain, um, 0.0f);
     highPassCutoffValue.referTo (state, IDs::highPassFrequency, um, 0.1f);
     lowPassCutoffValue.referTo (state, IDs::lowPassFrequency, um, 20000.0f);
 
@@ -26,10 +29,10 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
     trimSilence.referTo (state, IDs::trimSilence, um, false);
 
     // Initialises parameter and attaches to value
-    preGainParam = addParam (IDs::preGain.toString(), TRANS ("Pre Gain"), { 0.1f, 20.0f });
+    preGainParam = addParam (IDs::preGain.toString(), TRANS ("Pre Gain"), { -12.0f, 12.0f, }, dbToString, dbFromString);
     preGainParam->attachToCurrentValue (preGainValue);
 
-    postGainParam = addParam (IDs::postGain.toString(), TRANS ("Post Gain"), { 0.1f, 20.0f });
+    postGainParam = addParam (IDs::postGain.toString(), TRANS ("Post Gain"), { -12.0f, 12.0f }, dbToString, dbFromString);
     postGainParam->attachToCurrentValue (postGainValue);
 
     highPassCutoffParam = addParam (IDs::highPassFrequency.toString(), TRANS ("High Cut"), { 0.1f, 20000.0f });
@@ -136,7 +139,7 @@ void ImpulseResponsePlugin::reset()
 void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     auto& preGain = processorChain.get<preGainIndex>();
-    preGain.setGainLinear (preGainParam->getCurrentValue());
+    preGain.setGainLinear (juce::Decibels::decibelsToGain (preGainParam->getCurrentValue()));
 
     auto hpf = processorChain.get<HPFIndex>().state;
     *hpf = dsp::IIR::ArrayCoefficients<float>::makeHighPass (sampleRate, highPassCutoffParam->getCurrentValue());
@@ -145,7 +148,7 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
     *lpf = dsp::IIR::ArrayCoefficients<float>::makeLowPass (sampleRate, lowPassCutoffParam->getCurrentValue());
 
     auto& postGain = processorChain.get<postGainIndex>();
-    postGain.setGainLinear (postGainParam->getCurrentValue());
+    postGain.setGainLinear (juce::Decibels::decibelsToGain (postGainParam->getCurrentValue()));
 
     dsp::AudioBlock <float> inoutBlock (*fc.destBuffer);
     dsp::ProcessContextReplacing <float> context (inoutBlock);
