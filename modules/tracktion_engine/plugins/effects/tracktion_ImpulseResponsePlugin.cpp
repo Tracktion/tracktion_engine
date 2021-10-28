@@ -12,8 +12,8 @@
 namespace tracktion_engine
 {
 
-static String dbToString (float value)              { return String (value, 1) + " dB"; }
-static float dbFromString (const String& s)         { return s.getFloatValue(); };
+static float linearToFreq (float lin)       { return 440.0f * std::pow (2.0f, (lin - 69) / 12.0f); };
+static float freqToLinear (float freq)      { return 12.0f * std::log2 (freq / 440.0f) + 69.0f; };
 
 //==============================================================================
 ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
@@ -22,8 +22,8 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
     auto um = getUndoManager();
     preGainValue.referTo (state, IDs::preGain, um, 0.0f);
     postGainValue.referTo (state, IDs::postGain, um, 0.0f);
-    highPassCutoffValue.referTo (state, IDs::highPassFrequency, um, 0.1f);
-    lowPassCutoffValue.referTo (state, IDs::lowPassFrequency, um, 20000.0f);
+    highPassCutoffValue.referTo (state, IDs::highPassFrequency, um, freqToLinear (0.1f));
+    lowPassCutoffValue.referTo (state, IDs::lowPassFrequency, um, freqToLinear (20000.0f));
 
     normalise.referTo (state, IDs::normalise, um, true);
     trimSilence.referTo (state, IDs::trimSilence, um, false);
@@ -31,17 +31,35 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
     NormalisableRange volumeRange { -12.0f, 6.0f };
     volumeRange.setSkewForCentre (0.0f);
 
+    NormalisableRange frequencyRange { freqToLinear (0.1f), freqToLinear (20000.0f) };
+
     // Initialises parameter and attaches to value
-    preGainParam = addParam (IDs::preGain.toString(), TRANS ("Pre Gain"), volumeRange, dbToString, dbFromString);
+    preGainParam = addParam (IDs::preGain.toString(), TRANS ("Pre Gain"), volumeRange,
+                             [] (float value)       { return String (value, 1) + " dB"; },
+                             [] (const String& s)   { return s.getFloatValue(); });
     preGainParam->attachToCurrentValue (preGainValue);
 
-    postGainParam = addParam (IDs::postGain.toString(), TRANS ("Post Gain"), volumeRange, dbToString, dbFromString);
+    postGainParam = addParam (IDs::postGain.toString(), TRANS ("Post Gain"), volumeRange,                              
+                              [] (float value)       { return String (value, 1) + " dB"; },
+                              [] (const String& s)   { return s.getFloatValue(); });
+
     postGainParam->attachToCurrentValue (postGainValue);
 
-    highPassCutoffParam = addParam (IDs::highPassFrequency.toString(), TRANS ("High Cut"), { 0.1f, 20000.0f });
+    highPassCutoffParam = addParam (IDs::highPassFrequency.toString(), TRANS ("High Cut"), frequencyRange,
+                                    [] (float value)       { return String (linearToFreq (value), 1) + " Hz"; },
+                                    [] (const String& s)   { return freqToLinear (s.getFloatValue()); });
+
     highPassCutoffParam->attachToCurrentValue (highPassCutoffValue);
 
-    lowPassCutoffParam = addParam (IDs::lowPassFrequency.toString(), TRANS ("Low Cut"), { 0.1f, 20000.0f });
+
+                              
+
+    lowPassCutoffParam =  addParam (IDs::lowPassFrequency.toString(), TRANS ("Low Cut"), frequencyRange,
+                                    [] (float value)       { return String (linearToFreq (value), 1) + " Hz"; },
+                                    [] (const String& s)   { return freqToLinear (s.getFloatValue()); });
+
+
+
     lowPassCutoffParam->attachToCurrentValue (lowPassCutoffValue);
 
     loadImpulseResponseFromState();
