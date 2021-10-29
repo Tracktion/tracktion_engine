@@ -20,10 +20,10 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
 
     const NormalisableRange frequencyRange { frequencyToMidiNote (2.0f), frequencyToMidiNote (20'000.0f) };
 
-    preGainValue.referTo (state, IDs::preGain, um, 0.0f);
-    postGainValue.referTo (state, IDs::postGain, um, 0.0f);
     highPassCutoffValue.referTo (state, IDs::highPassFrequency, um, frequencyRange.start);
     lowPassCutoffValue.referTo (state, IDs::lowPassFrequency, um, frequencyRange.end);
+    gainValue.referTo (state, IDs::gain, um, 0.0f);
+    mixValue.referTo (state, IDs::mix, um, 1.0f);
 
     normalise.referTo (state, IDs::normalise, um, true);
     trimSilence.referTo (state, IDs::trimSilence, um, false);
@@ -32,28 +32,25 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
     volumeRange.setSkewForCentre (0.0f);
 
     // Initialises parameter and attaches to value
-    preGainParam = addParam (IDs::preGain.toString(), TRANS ("Pre Gain"), volumeRange,
-                             [] (float value)       { return juce::Decibels::toString (value); },
-                             [] (const String& s)   { return s.getFloatValue(); });
-    preGainParam->attachToCurrentValue (preGainValue);
+    gainParam = addParam (IDs::gain.toString(), TRANS ("Gain"), volumeRange,
+                          [] (float value)       { return juce::Decibels::toString (value); },
+                          [] (const String& s)   { return s.getFloatValue(); });
+    gainParam->attachToCurrentValue (gainValue);
 
-    postGainParam = addParam (IDs::postGain.toString(), TRANS ("Post Gain"), volumeRange,                              
-                              [] (float value)       { return juce::Decibels::toString (value); },
-                              [] (const String& s)   { return s.getFloatValue(); });
-
-    postGainParam->attachToCurrentValue (postGainValue);
-
-    highPassCutoffParam = addParam (IDs::highPassMidiNoteNumber.toString(), TRANS ("High Cut"), frequencyRange,
+    highPassCutoffParam = addParam (IDs::highPassMidiNoteNumber.toString(), TRANS ("Low Cut"), frequencyRange,
                                     [] (float value)       { return String (midiNoteToFrequency (value), 1) + " Hz"; },
                                     [] (const String& s)   { return frequencyToMidiNote (s.getFloatValue()); });
-
     highPassCutoffParam->attachToCurrentValue (highPassCutoffValue);
 
-    lowPassCutoffParam =  addParam (IDs::lowPassMidiNoteNumber.toString(), TRANS ("Low Cut"), frequencyRange,
+    lowPassCutoffParam =  addParam (IDs::lowPassMidiNoteNumber.toString(), TRANS ("High Cut"), frequencyRange,
                                     [] (float value)       { return String (midiNoteToFrequency (value), 1) + " Hz"; },
                                     [] (const String& s)   { return frequencyToMidiNote (s.getFloatValue()); });
-
     lowPassCutoffParam->attachToCurrentValue (lowPassCutoffValue);
+
+    mixParam = addParam (IDs::mix.toString(), TRANS("Mix"), { 0.0f, 1.0f, 0.0f },
+                         [] (float value)       { return String (roundToInt (value * 100.0f)) + "%"; },
+                         [] (const String& s)   { return s.getFloatValue() / 100.0f; });
+    mixParam->attachToCurrentValue (mixValue);
 
     loadImpulseResponseFromState();
 }
@@ -61,10 +58,10 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
 ImpulseResponsePlugin::~ImpulseResponsePlugin()
 {
     notifyListenersOfDeletion();
-    preGainParam->detachFromCurrentValue();
-    postGainParam->detachFromCurrentValue();
+    gainParam->detachFromCurrentValue();
     highPassCutoffParam->detachFromCurrentValue();
     lowPassCutoffParam->detachFromCurrentValue();
+    mixParam->detachFromCurrentValue();
 }
 
 const char* ImpulseResponsePlugin::getPluginName() { return NEEDS_TRANS ("Impulse Response"); }
@@ -142,16 +139,20 @@ void ImpulseResponsePlugin::initialise (const PluginInitialisationInfo& info)
     processorChain.prepare (processSpec);
 
     // Update smoothers
-    preGainSmoother.setTargetValue (preGainParam->getCurrentValue());
-    postGainSmoother.setTargetValue (postGainParam->getCurrentValue());
     lowFreqSmoother.setTargetValue (midiNoteToFrequency (lowPassCutoffParam->getCurrentValue()));
     highFreqSmoother.setTargetValue (midiNoteToFrequency (highPassCutoffParam->getCurrentValue()));
+    gainSmoother.setTargetValue (gainParam->getCurrentValue());
 
+    const auto wetDry = getWetDryLevels (mixParam->getCurrentValue());
+    wetGainSmoother.setTargetValue (wetDry.wet);
+    dryGainSmoother.setTargetValue (wetDry.dry);
+    
     const double smoothTime = 0.01;
-    preGainSmoother.reset (info.sampleRate, smoothTime);
-    postGainSmoother.reset (info.sampleRate, smoothTime);
     lowFreqSmoother.reset (info.sampleRate, smoothTime);
     highFreqSmoother.reset (info.sampleRate, smoothTime);
+    gainSmoother.reset (info.sampleRate, smoothTime);
+    wetGainSmoother.reset (info.sampleRate, smoothTime);
+    dryGainSmoother.reset (info.sampleRate, smoothTime);
 }
 
 void ImpulseResponsePlugin::deinitialise()
@@ -165,21 +166,24 @@ void ImpulseResponsePlugin::reset()
 void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     // Update smoothers
-    preGainSmoother.setTargetValue (preGainParam->getCurrentValue());
-    postGainSmoother.setTargetValue (postGainParam->getCurrentValue());
     lowFreqSmoother.setTargetValue (midiNoteToFrequency (lowPassCutoffParam->getCurrentValue()));
     highFreqSmoother.setTargetValue (midiNoteToFrequency (highPassCutoffParam->getCurrentValue()));
+    gainSmoother.setTargetValue (gainParam->getCurrentValue());
+
+    const auto wetDryGain = getWetDryLevels (mixParam->getCurrentValue());
+    wetGainSmoother.setTargetValue (wetDryGain.wet);
+    dryGainSmoother.setTargetValue (wetDryGain.dry);
 
     // Update gains and filter params
-    auto& preGain = processorChain.get<preGainIndex>();
     auto hpf = processorChain.get<HPFIndex>().state;
     auto& lpf = processorChain.get<LPFIndex>().state;
-    auto& postGain = processorChain.get<postGainIndex>();
-
-    if (preGainSmoother.isSmoothing() || postGainSmoother.isSmoothing()
-        || lowFreqSmoother.isSmoothing() || highFreqSmoother.isSmoothing())
+    auto& gain = processorChain.get<gainIndex>();
+    
+    AudioScratchBuffer dryBuffer (*fc.destBuffer);
+    
+    if (gainSmoother.isSmoothing() || lowFreqSmoother.isSmoothing() || highFreqSmoother.isSmoothing())
     {
-        const int blockSize = 16;
+        const int blockSize = 32;
         int numSamplesLeft = fc.bufferNumSamples;
         int numSamplesDone = 0;
         
@@ -194,10 +198,9 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
             processorChain.process (context);
 
             // Update params
-            preGain.setGainLinear (juce::Decibels::decibelsToGain (preGainSmoother.skip (numThisTime)));
             *hpf = dsp::IIR::ArrayCoefficients<float>::makeHighPass (sampleRate, highFreqSmoother.skip (numThisTime));
             *lpf = dsp::IIR::ArrayCoefficients<float>::makeLowPass (sampleRate, lowFreqSmoother.skip (numThisTime));
-            postGain.setGainLinear (juce::Decibels::decibelsToGain (postGainSmoother.skip (numThisTime)));
+            gain.setGainLinear (juce::Decibels::decibelsToGain (gainSmoother.skip (numThisTime)));
 
             numSamplesDone += numThisTime;
             numSamplesLeft -= blockSize;
@@ -209,20 +212,33 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
     else
     {
         // Update params
-        preGain.setGainLinear (juce::Decibels::decibelsToGain (preGainSmoother.getCurrentValue()));
         *hpf = dsp::IIR::ArrayCoefficients<float>::makeHighPass (sampleRate, highFreqSmoother.getCurrentValue());
         *lpf = dsp::IIR::ArrayCoefficients<float>::makeLowPass (sampleRate, lowFreqSmoother.getCurrentValue());
-        postGain.setGainLinear (juce::Decibels::decibelsToGain (postGainSmoother.getCurrentValue()));
+        gain.setGainLinear (juce::Decibels::decibelsToGain (gainSmoother.getCurrentValue()));
 
         dsp::AudioBlock<float> inOutBlock (*fc.destBuffer);
         dsp::ProcessContextReplacing <float> context (inOutBlock);
         processorChain.process (context);
     }
+    
+    const bool isMixed = wetGainSmoother.getCurrentValue() < 1.0f;
+    jassert (fc.bufferStartSample == 0); // This assumes bufferStartSample is always 0 which should be the case
+    wetGainSmoother.applyGain (*fc.destBuffer, fc.bufferNumSamples);
+    dryGainSmoother.applyGain (dryBuffer.buffer, dryBuffer.buffer.getNumSamples());
+    jassert (fc.bufferNumSamples == dryBuffer.buffer.getNumSamples());
+    jassert (fc.destBuffer->getNumChannels() == dryBuffer.buffer.getNumChannels());
+
+    if (isMixed)
+    {
+        for (int c = 0; c < fc.destBuffer->getNumChannels(); ++c)
+            fc.destBuffer->addFrom (c, fc.bufferStartSample, dryBuffer.buffer,
+                                    c, fc.bufferStartSample, fc.bufferNumSamples);
+    }
 }
 
 void ImpulseResponsePlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    CachedValue <float>* cvsFloat[] = { &preGainValue, &postGainValue, &highPassCutoffValue, &lowPassCutoffValue, nullptr };
+    CachedValue <float>* cvsFloat[] = { &gainValue, &highPassCutoffValue, &lowPassCutoffValue, &mixValue, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     
     if (auto irFileData = v.getProperty (IDs::irFileData).getBinaryData())

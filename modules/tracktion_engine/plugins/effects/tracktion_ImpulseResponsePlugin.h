@@ -52,16 +52,16 @@ public:
                               int bitDepthToStore);
 
     //==============================================================================
-    juce::CachedValue<float> preGainValue, postGainValue;
+    juce::CachedValue<float> gainValue, mixValue;
     juce::CachedValue<float> highPassCutoffValue, lowPassCutoffValue;
 
     juce::CachedValue<bool> normalise;              /**< Normalise the IR file when loading from the state. True by default. */
     juce::CachedValue<bool> trimSilence;            /**< Trim silence from the IR file when loading from the state. False by default. */
 
-    AutomatableParameter::Ptr preGainParam;         /**< Parameter for the Gain to apply before the IR */
     AutomatableParameter::Ptr highPassCutoffParam;  /**< Cutoff frequency for the high pass filter to applied after the IR */
     AutomatableParameter::Ptr lowPassCutoffParam;   /**< Cutoff frequency for the low pass filter to applied after the IR */
-    AutomatableParameter::Ptr postGainParam;        /**< Parameter for the Gain to apply after the IR */
+    AutomatableParameter::Ptr gainParam;            /**< Parameter for the gain to apply */
+    AutomatableParameter::Ptr mixParam;             /**< Parameter for the mix control, 0.0 = dry, 1.0 = wet */
 
     //==============================================================================
     /** @internal */
@@ -77,19 +77,14 @@ public:
 
     /** @internal */
     double getLatencySeconds() override;
-
     /** @internal */
     void initialise (const PluginInitialisationInfo&) override;
-
     /** @internal */
     void deinitialise() override;
-
     /** @internal */
     void reset() override;
-
     /** @internal */
     void applyToBuffer (const PluginRenderContext&) override;
-
     /** @internal */
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 
@@ -97,20 +92,27 @@ private:
     //==============================================================================
     enum
     {
-        preGainIndex,
         convolutionIndex,
         HPFIndex,
         LPFIndex,
-        postGainIndex
+        gainIndex
     };
 
-    dsp::ProcessorChain<dsp::Gain<float>,
-                        dsp::Convolution,
+    dsp::ProcessorChain<dsp::Convolution,
                         dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>>,
                         dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>>,
                         dsp::Gain<float>> processorChain;
-    juce::SmoothedValue<float> preGainSmoother, postGainSmoother, lowFreqSmoother, highFreqSmoother;
-    
+    juce::SmoothedValue<float> highFreqSmoother, lowFreqSmoother, gainSmoother, wetGainSmoother, dryGainSmoother;
+
+    struct WetDryGain { float wet, dry; };    
+    static WetDryGain getWetDryLevels (float mix)
+    {
+        const float dry = 1.0f - (mix * mix);
+        float temp = 1.0f - mix;
+        const float wet = 1.0f - (temp * temp);
+        
+        return { wet, dry };
+    }
     void loadImpulseResponseFromState();
 
     void valueTreePropertyChanged (ValueTree&, const juce::Identifier&) override;
