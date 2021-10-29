@@ -26,6 +26,9 @@ public:
     static const char* getPluginName()                      { return NEEDS_TRANS("Volume and Pan"); }
     static juce::ValueTree create();
 
+    bool isMasterVolAndPan()                                { return isMasterVolume; }
+    bool canBeAddedToRack() override                        { return ! isMasterVolume; }
+
     //==============================================================================
     float getVolumeDb() const;
     float getSliderPos() const                              { return volParam->getCurrentValue(); }
