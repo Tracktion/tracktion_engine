@@ -594,7 +594,8 @@ Clip* ClipTrack::insertClipWithState (juce::ValueTree clipState)
 
             if (auto acb = dynamic_cast<AudioClipBase*> (newClip.get()))
                 if (edit.engine.getEngineBehaviour().autoAddClipEdgeFades())
-                    acb->applyEdgeFades();
+                    if (! (clipState.hasProperty (IDs::fadeIn) && clipState.hasProperty (IDs::fadeOut)))
+                        acb->applyEdgeFades();
         }
 
         return newClip.get();
