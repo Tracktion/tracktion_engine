@@ -178,6 +178,9 @@ public:
         1: loopRangeDefinesSubsequentRepetitions    // The first section is the whole sequence, subsequent repitions are determined by the loop range.
     */
     virtual int getDefaultLoopedSequenceType()                                      { return 0; }
+
+    /** If this returns true, it means that newly inserted clips will automatically have a fade-in and fade-out of 3ms applied. */
+    virtual bool autoAddClipEdgeFades()                                             { return false; }
 };
 
 } // namespace tracktion_engine
