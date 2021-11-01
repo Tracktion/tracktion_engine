@@ -179,7 +179,8 @@ public:
     */
     virtual int getDefaultLoopedSequenceType()                                      { return 0; }
 
-    virtual bool autoAddClipEdgeFades()                                             { return true; }
+    /** If this returns true, it means that newly inserted clips will automatically have a fade-in and fade-out of 3ms applied. */
+    virtual bool autoAddClipEdgeFades()                                             { return false; }
 };
 
 } // namespace tracktion_engine

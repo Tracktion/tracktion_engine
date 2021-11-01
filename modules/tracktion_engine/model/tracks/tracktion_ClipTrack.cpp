@@ -591,6 +591,7 @@ Clip* ClipTrack::insertClipWithState (juce::ValueTree clipState)
                 float hue = ((at->getAudioTrackNumber() - 1) % 9) / 9.0f;
                 newClip->setColour (newClip->getDefaultColour().withHue (hue));
             }
+
             if (auto acb = dynamic_cast<AudioClipBase*> (newClip.get()))
                 if (edit.engine.getEngineBehaviour().autoAddClipEdgeFades())
                     acb->applyEdgeFades();
