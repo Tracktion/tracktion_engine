@@ -8,8 +8,8 @@
 # selectively disable behaviour by setting the following 
 # enviroment variables:
 # 
-# DISABLE_BUILD:    Set to 1 to disable building
-# DISABLE_TOOLS:    Set to 1 to disable Tsan and Asan builds
+# DISABLE_BUILD:    Set to true to disable building
+# DISABLE_TOOLS:    Set to true to disable Tsan and Asan builds
 # 
 #========================================================
 
@@ -54,7 +54,6 @@ echo DISABLE_TOOLS: "$DISABLE_TOOLS"
 function buildExample()
 {
     PROJECT_NAME="$1"
-    RUN_EXAMPLE="$2"
 
     if [ -z "$PROJECT_NAME" ]; then
         echo "ERROR: Must supply a project name!"
@@ -111,8 +110,13 @@ function buildExample()
     echo APP_DIR: "$APP_DIR"
     echo APP_FILE: "$APP_FILE"
     echo CMAKE_BUILD_DIR: "$CMAKE_BUILD_DIR"
-    echo CMAKE_GENERATOR: "$CMAKE_GENERATOR"
+    echo CMAKE_GENERATOR: "$CMAKE_GENERATOR"    
+    
+    # Capture named function arguments
+    local global RUN_EXAMPLE ${@}
+    echo DISABLE_BUILD: "$DISABLE_BUILD"
     echo RUN_EXAMPLE: "$RUN_EXAMPLE"
+    echo DISABLE_TOOLS: "$DISABLE_TOOLS"
 
     #============================================================
     #   Build
@@ -124,16 +128,16 @@ function buildExample()
     # Generate build files
     cmake -B "$CMAKE_BUILD_DIR" -G "$CMAKE_GENERATOR" $CMAKE_PLATFORM_ARGS
 
-    if [ "$DISABLE_BUILD" != "1" ]; then
+    if [ ! $DISABLE_BUILD ]; then
         # Build project
         cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release
     fi
 
-    if [ "$RUN_EXAMPLE" = "1" ]; then
+    if [ $RUN_EXAMPLE ]; then
         echo INFO: Running example: ${APP_FILE}
         ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
 
-        if [ "$DISABLE_TOOLS" != "1" ]; then
+        if [ ! $DISABLE_TOOLS ]; then
             if [ "$PLATFORM" = "mac" ]; then
                 cd "$CMAKE_BUILD_DIR"
 
@@ -156,18 +160,18 @@ function buildExample()
 
 
 # First build and test these examples
-buildExample "TestRunner" "1"
-buildExample "tracktion_graph_TestRunner" "1"
-buildExample "tracktion_graph_PerformanceTests" "1"
+buildExample "TestRunner" RUN_EXAMPLE=true
+buildExample "tracktion_graph_TestRunner" RUN_EXAMPLE=true
+buildExample "tracktion_graph_PerformanceTests" RUN_EXAMPLE=true DISABLE_TOOLS=true
 
-# Then just build these examples
-buildExample "DistortionEffectDemo"
-buildExample "EngineInPluginDemo"
-buildExample "IRPluginDemo"
-buildExample "MidiRecordingDemo"
-buildExample "PatternGeneratorDemo"
-buildExample "PitchAndTimeDemo"
-buildExample "PlaybackDemo"
-buildExample "PluginDemo"
-buildExample "RecordingDemo"
-buildExample "StepSequencerDemo"
+# Then just build these examples (don't build with tooling as they won't be run)
+buildExample "DistortionEffectDemo" DISABLE_TOOLS=true
+buildExample "EngineInPluginDemo" DISABLE_TOOLS=true
+buildExample "IRPluginDemo" DISABLE_TOOLS=true
+buildExample "MidiRecordingDemo" DISABLE_TOOLS=true
+buildExample "PatternGeneratorDemo" DISABLE_TOOLS=true
+buildExample "PitchAndTimeDemo" DISABLE_TOOLS=true
+buildExample "PlaybackDemo" DISABLE_TOOLS=true
+buildExample "PluginDemo" DISABLE_TOOLS=true
+buildExample "RecordingDemo" DISABLE_TOOLS=true
+buildExample "StepSequencerDemo" DISABLE_TOOLS=true
