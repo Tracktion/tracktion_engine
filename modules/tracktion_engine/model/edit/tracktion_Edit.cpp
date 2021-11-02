@@ -1779,6 +1779,8 @@ void Edit::deleteTrack (Track* t)
     if (t != nullptr && containsTrack (*this, *t))
     {
         CRASH_TRACER
+        // You can't delete global tracks, just hide them instead
+        jassert (! (t->isMasterTrack() || t->isMarkerTrack() || t->isTempoTrack() || t->isChordTrack()));
 
         t->deselect();
         t->setFrozen (false, Track::groupFreeze);

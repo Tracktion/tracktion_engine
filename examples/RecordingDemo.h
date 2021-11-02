@@ -145,7 +145,7 @@ private:
             }
             else if (auto track = dynamic_cast<te::Track*> (sel))
             {
-                if (! (track->isMarkerTrack() || track->isTempoTrack() || track->isChordTrack()))
+                if (! (track->isMasterTrack() || track->isMarkerTrack() || track->isTempoTrack() || track->isChordTrack()))
                     edit->deleteTrack (track);
             }
         };

@@ -12,6 +12,7 @@ namespace IDs
 {
     #define DECLARE_ID(name)  const juce::Identifier name (#name);
     DECLARE_ID (EDITVIEWSTATE)
+    DECLARE_ID (showMasterTrack)
     DECLARE_ID (showGlobalTrack)
     DECLARE_ID (showMarkerTrack)
     DECLARE_ID (showChordTrack)
@@ -40,6 +41,7 @@ public:
         
         auto um = &edit.getUndoManager();
         
+        showMasterTrack.referTo (state, IDs::showMasterTrack, um, false);
         showGlobalTrack.referTo (state, IDs::showGlobalTrack, um, false);
         showMarkerTrack.referTo (state, IDs::showMarkerTrack, um, false);
         showChordTrack.referTo (state, IDs::showChordTrack, um, false);
@@ -74,7 +76,7 @@ public:
     te::Edit& edit;
     te::SelectionManager& selectionManager;
     
-    CachedValue<bool> showGlobalTrack, showMarkerTrack, showChordTrack, showArrangerTrack,
+    CachedValue<bool> showMasterTrack, showGlobalTrack, showMarkerTrack, showChordTrack, showArrangerTrack,
                       drawWaveforms, showHeaders, showFooters, showMidiDevices, showWaveDevices;
     
     CachedValue<double> viewX1, viewX2, viewY;
