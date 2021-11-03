@@ -162,7 +162,7 @@ private:
         return {};
     }
 
-    void handleMessageFromSlave (const MemoryBlock& mb) override
+    void handleMessageFromWorker (const MemoryBlock& mb) override
     {
         if (auto xml = std::unique_ptr<XmlElement> (XmlDocument::parse (mb.toString())))
             handleMessage (*xml);
