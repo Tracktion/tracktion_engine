@@ -31,17 +31,20 @@ public:
         ts.sampleRate = 44100.0;
         ts.blockSize = 256;
         
-        runTrackDestinationRendering (ts, 3.0, 2, true);
         runTrackDestinationRendering (ts, 3.0, 2, false);
+        runTrackDestinationRendering (ts, 3.0, 2, true);
 
-        runAuxSend (ts, 3.0, 2, true);
         runAuxSend (ts, 3.0, 2, false);
+        runAuxSend (ts, 3.0, 2, true);
 
-        runRackRendering (ts, 3.0, 2, true);
         runRackRendering (ts, 3.0, 2, false);
+        runRackRendering (ts, 3.0, 2, true);
 
-        runSubmix (ts, 3.0, 2, true);
         runSubmix (ts, 3.0, 2, false);
+        runSubmix (ts, 3.0, 2, true);
+
+        runMuteSolo (ts, 3.0, 2, false);
+        runMuteSolo (ts, 3.0, 2, true);
     }
 
 private:
@@ -278,7 +281,204 @@ private:
             }
         }
     }
-    
+
+    /** Runs tests solo and muting various track configurations. */
+    void runMuteSolo (test_utilities::TestSetup ts,
+                      double durationInSeconds,
+                      int numChannels,
+                      bool isMultiThreaded)
+    {
+        using namespace tracktion_graph;
+        using namespace test_utilities;
+        auto& engine = *tracktion_engine::Engine::getEngines()[0];
+        const auto description = test_utilities::getDescription (ts)
+                                    + juce::String (isMultiThreaded ? ", MT" : ", ST");
+
+        beginTest ("Basic Solo/Mute: " + description);
+        {
+            auto sinFile = getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds, numChannels, 220.0f);
+
+            auto edit = Edit::createSingleTrackEdit (engine);
+            edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
+
+            auto audioTrack1 = getAudioTracks (*edit)[0];
+            audioTrack1->insertWaveClip ({}, sinFile->getFile(), ClipPosition { { 0.0, durationInSeconds } }, false);
+
+            auto audioTrack2 = edit->insertNewAudioTrack ({{}}, nullptr).get();
+
+            // No tracks solo/muted
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
+
+            // Track 1 muted
+            audioTrack1->setMute (true);
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
+            audioTrack1->setMute (false);
+
+            // Track 2 solo
+            audioTrack2->setSolo (true);
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
+            audioTrack2->setSolo (false);
+
+            // Track 1 solo
+            audioTrack1->setSolo (true);
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
+            audioTrack1->setSolo (false);
+
+            // Track 1 & 2 solo
+            audioTrack1->setSolo (true);
+            audioTrack2->setSolo (true);
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
+            audioTrack1->setSolo (false);
+            audioTrack2->setSolo (false);
+        }
+
+        beginTest ("Basic solo isolate: " + description);
+        {
+            auto sinFile = getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds, numChannels, 220.0f);
+
+            auto edit = Edit::createSingleTrackEdit (engine);
+            edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
+
+            auto audioTrack1 = getAudioTracks (*edit)[0];
+            audioTrack1->insertWaveClip ({}, sinFile->getFile(), ClipPosition { { 0.0, durationInSeconds } }, false);
+
+            auto audioTrack2 = edit->insertNewAudioTrack ({{}}, nullptr).get();
+
+            // No tracks solo/muted
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
+
+            // Track 1 solo isolate
+            audioTrack1->setSoloIsolate (true);
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
+
+            // Track 2 solo (track 1 should still be audible)
+            audioTrack2->setSolo (true);
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
+        }
+
+        beginTest ("Track destination solo/mute: " + description);
+        {
+            auto sinFile = getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds, numChannels, 220.0f);
+
+            auto edit = Edit::createSingleTrackEdit (engine);
+            edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
+
+            auto audioTrack1 = getAudioTracks (*edit)[0];
+            audioTrack1->insertWaveClip ({}, sinFile->getFile(), ClipPosition { { 0.0, durationInSeconds } }, false);
+
+            auto audioTrack2 = edit->insertNewAudioTrack ({{}}, nullptr).get();
+
+            // Set track1 to output to track2
+            getTrackOutput (*audioTrack1)->setOutputToTrack (dynamic_cast<AudioTrack*> (audioTrack2));
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
+
+            // Set vol of track 1 to -6dB
+            audioTrack1->getVolumePlugin()->setVolumeDb (-6.0f);
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.5f);
+            audioTrack1->getVolumePlugin()->setVolumeDb (0.0f);
+
+            // Set track 1 volume to -6dB  (output should be -6dB)
+            audioTrack1->getVolumePlugin()->setVolumeDb (-6.0f);
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.5f);
+            audioTrack1->getVolumePlugin()->setVolumeDb (0.0f);
+
+            // Set vol of track 2 to -6dB
+            audioTrack2->getVolumePlugin()->setVolumeDb (-6.0f);
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.5f);
+            audioTrack2->getVolumePlugin()->setVolumeDb (0.0f);
+
+            // Solo track 1 (which implicitly solos track 2)
+            audioTrack1->setSolo (true);
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
+            audioTrack1->setSolo (false);
+
+            // Solo track 2 (which implicitly solos track 1)
+            audioTrack2->setSolo (true);
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
+            audioTrack2->setSolo (false);
+
+            // Solo track 2, mute track 1 (output should be silent)
+            audioTrack2->setSolo (true);
+            audioTrack1->setMute (true);
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
+            audioTrack1->setMute (false);
+            audioTrack2->setSolo (false);
+
+            // Solo track 2, mute track 1 (output should be silent)
+            audioTrack2->setSolo (true);
+            audioTrack1->setMute (true);
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
+            audioTrack1->setMute (false);
+            audioTrack2->setSolo (false);
+
+            // Solo track 1 & 2, mute track 1 (output should be silent)
+            audioTrack2->setSolo (true);
+            audioTrack1->setSolo (true);
+            audioTrack1->setMute (true);
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
+            audioTrack1->setMute (false);
+            audioTrack1->setSolo (false);
+            audioTrack2->setSolo (false);
+
+            // Mute track 2 (output should be silent)
+            audioTrack2->setMute (true);
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
+            audioTrack2->setMute (false);
+
+            // Solo track 2, mute track 2 (output should be silent)
+            audioTrack2->setSolo (true);
+            audioTrack2->setMute (true);
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
+            audioTrack2->setMute (false);
+            audioTrack2->setSolo (false);
+        }
+
+        beginTest ("Submix solo/mute: " + description);
+        {
+            auto sinFile = getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds, numChannels, 220.0f);
+
+            auto edit = Edit::createSingleTrackEdit (engine);
+            edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
+
+            auto submixTop = edit->insertNewFolderTrack ({{}}, nullptr, true).get();
+            auto submixMid = edit->insertNewFolderTrack ({ submixTop, nullptr }, nullptr, true).get();
+
+            auto audioTrack = edit->insertNewAudioTrack ({ submixMid, nullptr }, nullptr).get();
+            audioTrack->insertWaveClip ({}, sinFile->getFile(), ClipPosition { { 0.0, durationInSeconds } }, false);
+
+            // All tracks
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
+
+            // Soloing any should pass audio
+            submixTop->setSolo (true);
+            submixMid->setSolo (true);
+            audioTrack->setSolo (true);
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
+            submixTop->setSolo (false);
+            submixMid->setSolo (false);
+            audioTrack->setSolo (false);
+
+            // Soloing any should stop audio
+            for (auto t : std::array<Track*, 3> { submixTop, submixMid, audioTrack })
+            {
+                t->setMute (true);
+                expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
+                submixTop->setMute (false);
+                submixMid->setSolo (false);
+                audioTrack->setSolo (false);
+            }
+
+            // Soloing and muting any/all should stop audio
+            submixTop->setSolo (true);
+            submixMid->setSolo (true);
+            audioTrack->setSolo (true);
+            submixTop->setMute (true);
+            submixMid->setMute (true);
+            audioTrack->setMute (true);
+            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
+        }
+    }
+
     //==============================================================================
     //==============================================================================
     static std::unique_ptr<tracktion_graph::Node> createNode (Edit& edit, ProcessState& processState,
