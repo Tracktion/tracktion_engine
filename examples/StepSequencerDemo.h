@@ -12,10 +12,11 @@
 
   dependencies:     juce_audio_basics, juce_audio_devices, juce_audio_formats, juce_audio_processors, juce_audio_utils,
                     juce_core, juce_data_structures, juce_dsp, juce_events, juce_graphics,
-                    juce_gui_basics, juce_gui_extra, juce_osc, tracktion_engine
+                    juce_gui_basics, juce_gui_extra, juce_osc, tracktion_engine, tracktion_graph
   exporters:        linux_make, vs2017, xcode_iphone, xcode_mac
 
-  moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1, JUCE_PLUGINHOST_AU=1, JUCE_MODAL_LOOPS_PERMITTED=1
+  moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1, JUCE_PLUGINHOST_AU=1
+  defines:          JUCE_MODAL_LOOPS_PERMITTED=1
 
   type:             Component
   mainClass:        StepSequencerDemo
