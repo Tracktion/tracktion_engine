@@ -106,7 +106,6 @@ private:
     float peak = 0;
     double rmsTotal = 0;
     int64_t rmsNumSamps = 0;
-    int64_t numNonZeroSamps = 0;
     int precount = 0;
     double streamTime = 0;
 
