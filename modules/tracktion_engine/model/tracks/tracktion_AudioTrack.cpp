@@ -368,8 +368,13 @@ bool AudioTrack::isMuted (bool includeMutingByDestination) const
         return true;
 
     if (includeMutingByDestination)
+    {
         if (auto p = getParentFolderTrack())
             return p->isMuted (true);
+        
+        if (auto dest = output->getDestinationTrack())
+            return dest->isMuted (true);
+    }
 
     return false;
 }
