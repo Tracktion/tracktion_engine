@@ -311,25 +311,20 @@ private:
 
             // Track 1 muted
             audioTrack1->setMute (true);
-            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
-            audioTrack1->setMute (false);
+            expectPeakAndResetMuteSolo (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
 
             // Track 2 solo
             audioTrack2->setSolo (true);
-            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
-            audioTrack2->setSolo (false);
+            expectPeakAndResetMuteSolo (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
 
             // Track 1 solo
             audioTrack1->setSolo (true);
-            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
-            audioTrack1->setSolo (false);
+            expectPeakAndResetMuteSolo (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
 
             // Track 1 & 2 solo
             audioTrack1->setSolo (true);
             audioTrack2->setSolo (true);
-            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
-            audioTrack1->setSolo (false);
-            audioTrack2->setSolo (false);
+            expectPeakAndResetMuteSolo (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
         }
 
         beginTest ("Basic solo isolate: " + description);
@@ -384,53 +379,41 @@ private:
 
             // Set vol of track 2 to -6dB
             audioTrack2->getVolumePlugin()->setVolumeDb (-6.0f);
-            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.5f);
+            expectPeakAndResetMuteSolo (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.5f);
             audioTrack2->getVolumePlugin()->setVolumeDb (0.0f);
 
             // Solo track 1 (which implicitly solos track 2)
             audioTrack1->setSolo (true);
-            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
-            audioTrack1->setSolo (false);
+            expectPeakAndResetMuteSolo (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
 
             // Solo track 2 (which implicitly solos track 1)
             audioTrack2->setSolo (true);
-            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
-            audioTrack2->setSolo (false);
+            expectPeakAndResetMuteSolo (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
 
             // Solo track 2, mute track 1 (output should be silent)
             audioTrack2->setSolo (true);
             audioTrack1->setMute (true);
-            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
-            audioTrack1->setMute (false);
-            audioTrack2->setSolo (false);
+            expectPeakAndResetMuteSolo (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
 
             // Solo track 2, mute track 1 (output should be silent)
             audioTrack2->setSolo (true);
             audioTrack1->setMute (true);
-            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
-            audioTrack1->setMute (false);
-            audioTrack2->setSolo (false);
+            expectPeakAndResetMuteSolo (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
 
             // Solo track 1 & 2, mute track 1 (output should be silent)
             audioTrack2->setSolo (true);
             audioTrack1->setSolo (true);
             audioTrack1->setMute (true);
-            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
-            audioTrack1->setMute (false);
-            audioTrack1->setSolo (false);
-            audioTrack2->setSolo (false);
+            expectPeakAndResetMuteSolo (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
 
             // Mute track 2 (output should be silent)
             audioTrack2->setMute (true);
-            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
-            audioTrack2->setMute (false);
+            expectPeakAndResetMuteSolo (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
 
             // Solo track 2, mute track 2 (output should be silent)
             audioTrack2->setSolo (true);
             audioTrack2->setMute (true);
-            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
-            audioTrack2->setMute (false);
-            audioTrack2->setSolo (false);
+            expectPeakAndResetMuteSolo (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
         }
 
         beginTest ("Submix solo/mute: " + description);
@@ -453,19 +436,13 @@ private:
             submixTop->setSolo (true);
             submixMid->setSolo (true);
             audioTrack->setSolo (true);
-            expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
-            submixTop->setSolo (false);
-            submixMid->setSolo (false);
-            audioTrack->setSolo (false);
+            expectPeakAndResetMuteSolo (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
 
             // Soloing any should stop audio
             for (auto t : std::array<Track*, 3> { submixTop, submixMid, audioTrack })
             {
                 t->setMute (true);
-                expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
-                submixTop->setMute (false);
-                submixMid->setSolo (false);
-                audioTrack->setSolo (false);
+                expectPeakAndResetMuteSolo (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 0.0f);
             }
 
             // Soloing and muting any/all should stop audio
@@ -497,6 +474,18 @@ private:
         auto blockSize = edit.engine.getDeviceManager().getBlockSize();
         auto stats = logStats (ut, Renderer::measureStatistics ("", edit, tr, getTracksMask (tracks), blockSize));
         ut.expect (juce::isWithin (stats.peak, expectedPeak, 0.01f), String ("Expected peak: ") + String (expectedPeak, 4));
+    }
+
+    static void expectPeakAndResetMuteSolo (juce::UnitTest& ut, Edit& edit, EditTimeRange tr, Array<Track*> tracks, float expectedPeak)
+    {
+        expectPeak (ut, edit, tr, tracks, expectedPeak);
+        
+        for (auto t : tracks)
+        {
+            t->setMute (false);
+            t->setSolo (false);
+            t->setSoloIsolate (false);
+        }
     }
 
     static Renderer::Statistics logStats (juce::UnitTest& ut, Renderer::Statistics stats)
