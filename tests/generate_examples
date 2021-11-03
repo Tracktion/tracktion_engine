@@ -1,0 +1,6 @@
+#!/bin/bash -e
+
+export DISABLE_BUILD=true
+
+DIR=$(cd "$(dirname "$0")/"; pwd)
+$DIR/build

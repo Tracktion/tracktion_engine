@@ -25,15 +25,18 @@ $ git clone --recurse-submodules https://github.com/Tracktion/tracktion_engine.g
 ```
 
 ## Examples
-Example projects are located in `/examples`. Because these are provided as JUCE PIPs, the `Projucer` needs to be built to generate the projects. This can be easily done with the scripts contained in `/tests`.
+Example projects are located in `/examples`. These are provided as JUCE PIPs, and CMakeLists.txt files to build them using CMake. You will need CMake installed to generate the examples.
+To generate all the examples for the running platform use the script in `/tests`.
 ```
-$ cd tests/mac
+$ cd tests
 $ ./generate_examples
 ```
-`generate_examples` will build the Projucer and generate the project files for you. Alternatively you can run the `build_examples` script to build the examples as well, ready to run.
+`generate_examples` will generate the IDE project files for you. Alternatively you can run the `build` script to build the examples as well, ready to run.
 
-Once the example projects have been generated or built you can find them in `examples/projects`.
+Once the example projects have been generated or built you can find them in `examples/example_name/build`.
 Start with the `PitchAndTimeDemo` or `StepSequencerDemo` to see some basic apps in action.
+
+*If you want to build the Projucer app from JUCE you can load each of the PIP examples directly to generate the IDE files.*
 
 ## Tutorials
 Once you're ready to dive in to the code, open the IDE files and have a read through the tutorials in `/tutorials`. You can view these on GitHub [here](/tutorials) to see the rendered Markdown.

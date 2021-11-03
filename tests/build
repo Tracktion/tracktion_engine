@@ -131,30 +131,32 @@ function buildExample()
     if [ ! $DISABLE_BUILD ]; then
         # Build project
         cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release
-    fi
 
-    if [ $RUN_EXAMPLE ]; then
-        echo INFO: Running example: ${APP_FILE}
-        ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
+        if [ $RUN_EXAMPLE ]; then
+            echo INFO: Running example: ${APP_FILE}
+            ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
 
-        if [ ! $DISABLE_TOOLS ]; then
-            if [ "$PLATFORM" = "mac" ]; then
-                cd "$CMAKE_BUILD_DIR"
+            if [ ! $DISABLE_TOOLS ]; then
+                if [ "$PLATFORM" = "mac" ]; then
+                    cd "$CMAKE_BUILD_DIR"
 
-                echo INFO: Running with Asan: ${APP_FILE}
-                cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableAddressSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
-                ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_asan.xml"
+                    echo INFO: Running with Asan: ${APP_FILE}
+                    cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableAddressSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
+                    ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_asan.xml"
 
-                echo INFO: Running with Tsan: ${APP_FILE}
-                cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableThreadSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
-                ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_tsan.xml"
+                    echo INFO: Running with Tsan: ${APP_FILE}
+                    cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableThreadSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
+                    ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_tsan.xml"
 
-                echo INFO: Running static analyser: ${APP_FILE}
-                xcodebuild analyze -quiet -configuration Release LLVM_LTO=NO
+                    echo INFO: Running static analyser: ${APP_FILE}
+                    xcodebuild analyze -quiet -configuration Release LLVM_LTO=NO
+                fi
             fi
+        else
+            echo INFO: Not running example: ${APP_FILE}
         fi
     else
-        echo INFO: Not running example: ${APP_FILE}
+        echo INFO: Not building example: ${APP_FILE}
     fi
 }
 
