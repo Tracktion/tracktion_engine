@@ -223,7 +223,7 @@ private:
     AudioPluginFormatManager pluginFormatManager;
     OwnedArray<XmlElement, CriticalSection> pendingMessages;
 
-    void handleMessageFromMaster (const MemoryBlock& mb) override
+    void handleMessageFromCoordinator (const MemoryBlock& mb) override
     {
         if (auto xml = std::unique_ptr<XmlElement> (XmlDocument::parse (mb.toString())))
         {
