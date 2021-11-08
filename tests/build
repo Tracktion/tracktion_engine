@@ -114,9 +114,9 @@ function buildExample()
     
     # Capture named function arguments
     local global RUN_EXAMPLE ${@}
-    echo DISABLE_BUILD: "$DISABLE_BUILD"
-    echo RUN_EXAMPLE: "$RUN_EXAMPLE"
-    echo DISABLE_TOOLS: "$DISABLE_TOOLS"
+    echo DISABLE_BUILD: $DISABLE_BUILD
+    echo RUN_EXAMPLE: $RUN_EXAMPLE
+    echo DISABLE_TOOLS: $DISABLE_TOOLS
 
     #============================================================
     #   Build
@@ -150,7 +150,13 @@ function buildExample()
 
                     echo INFO: Running static analyser: ${APP_FILE}
                     xcodebuild analyze -quiet -configuration Release LLVM_LTO=NO
+                else
+                    echo INFO: Platform not mac: ${APP_FILE}
+                    echo PLATFORM: "$PLATFORM"
                 fi
+            else
+                echo INFO: Not building with tools tools: ${APP_FILE}
+                echo DISABLE_TOOLS: $DISABLE_TOOLS
             fi
         else
             echo INFO: Not running example: ${APP_FILE}
