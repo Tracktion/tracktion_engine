@@ -143,7 +143,7 @@ function buildExample()
                 echo DISABLE_TOOLS: $DISABLE_TOOLS
             else
                 if [ "$PLATFORM" = "mac" ]; then
-                    cd "$CMAKE_BUILD_DIR"
+#                     cd "$CMAKE_BUILD_DIR"
 
                     echo INFO: Running with Asan: ${APP_FILE}
 #                     cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableAddressSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
