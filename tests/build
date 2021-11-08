@@ -126,30 +126,30 @@ function buildExample()
     pwd
 
     # Generate build files
-    cmake -B "$CMAKE_BUILD_DIR" -G "$CMAKE_GENERATOR" $CMAKE_PLATFORM_ARGS
+#     cmake -B "$CMAKE_BUILD_DIR" -G "$CMAKE_GENERATOR" $CMAKE_PLATFORM_ARGS
 
     if ! [ $DISABLE_BUILD ]; then
         # Build project
-        cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release
+#         cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release
 
         if [ $RUN_EXAMPLE ]; then
             echo INFO: Running example: ${APP_FILE}
-            ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
+#             ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
 
-            if ! [ $DISABLE_TOOLS ]; then
+            if [ ! ${DISABLE_TOOLS} ]; then
                 if [ "$PLATFORM" = "mac" ]; then
                     cd "$CMAKE_BUILD_DIR"
 
                     echo INFO: Running with Asan: ${APP_FILE}
-                    cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableAddressSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
-                    ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_asan.xml"
+#                     cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableAddressSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
+#                     ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_asan.xml"
 
                     echo INFO: Running with Tsan: ${APP_FILE}
-                    cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableThreadSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
-                    ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_tsan.xml"
+#                     cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableThreadSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
+#                     ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_tsan.xml"
 
                     echo INFO: Running static analyser: ${APP_FILE}
-                    xcodebuild analyze -quiet -configuration Release LLVM_LTO=NO
+#                     xcodebuild analyze -quiet -configuration Release LLVM_LTO=NO
                 else
                     echo INFO: Platform not mac: ${APP_FILE}
                     echo PLATFORM: "$PLATFORM"
