@@ -128,7 +128,7 @@ function buildExample()
     # Generate build files
     cmake -B "$CMAKE_BUILD_DIR" -G "$CMAKE_GENERATOR" $CMAKE_PLATFORM_ARGS
 
-    if [ ! $DISABLE_BUILD ]; then
+    if ! [ $DISABLE_BUILD ]; then
         # Build project
         cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release
 
@@ -136,7 +136,7 @@ function buildExample()
             echo INFO: Running example: ${APP_FILE}
             ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
 
-            if [ ! $DISABLE_TOOLS ]; then
+            if ! [ $DISABLE_TOOLS ]; then
                 if [ "$PLATFORM" = "mac" ]; then
                     cd "$CMAKE_BUILD_DIR"
 
