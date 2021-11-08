@@ -129,14 +129,19 @@ function buildExample()
 #     cmake -B "$CMAKE_BUILD_DIR" -G "$CMAKE_GENERATOR" $CMAKE_PLATFORM_ARGS
 
     if [ "$DISABLE_BUILD" == "1" ]; then
+        echo INFO: Not building example: ${APP_FILE}
+    else
         # Build project
 #         cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release
 
-        if [ "${RUN_EXAMPLE:-0}" == "1" ]; then
+        if [ "$RUN_EXAMPLE" == "1" ]; then
             echo INFO: Running example: ${APP_FILE}
 #             ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
 
-            if [ "${DISABLE_TOOLS:-1}" == "0" ]; then
+            if [ "$DISABLE_TOOLS" == "1" ]; then
+                echo INFO: Not building with tools tools: ${APP_FILE}
+                echo DISABLE_TOOLS: $DISABLE_TOOLS
+            else
                 if [ "$PLATFORM" = "mac" ]; then
                     cd "$CMAKE_BUILD_DIR"
 
@@ -154,15 +159,10 @@ function buildExample()
                     echo INFO: Platform not mac: ${APP_FILE}
                     echo PLATFORM: "$PLATFORM"
                 fi
-            else
-                echo INFO: Not building with tools tools: ${APP_FILE}
-                echo DISABLE_TOOLS: $DISABLE_TOOLS
             fi
         else
             echo INFO: Not running example: ${APP_FILE}
         fi
-    else
-        echo INFO: Not building example: ${APP_FILE}
     fi
 }
 
