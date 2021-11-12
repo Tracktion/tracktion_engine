@@ -8,7 +8,6 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-using namespace juce;
 
 namespace tracktion_engine
 {
