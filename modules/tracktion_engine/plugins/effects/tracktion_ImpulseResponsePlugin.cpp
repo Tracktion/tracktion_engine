@@ -240,11 +240,10 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
 
 void ImpulseResponsePlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    CachedValue<juce::String>* cvsString[] = { &name, nullptr };
-    copyPropertiesToNullTerminatedCachedValues (v, cvsString);
-    
     CachedValue<float>* cvsFloat[] = { &gainValue, &highPassCutoffValue, &lowPassCutoffValue, &mixValue, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+
+    state.setProperty (IDs::name, v[IDs::name], getUndoManager());
     
     if (auto irFileData = v.getProperty (IDs::irFileData).getBinaryData())
         state.setProperty (IDs::irFileData, juce::var (juce::MemoryBlock (*irFileData)), getUndoManager());
