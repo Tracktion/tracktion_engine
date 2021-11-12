@@ -52,9 +52,7 @@ public:
                               int bitDepthToStore);
 
     //==============================================================================
-    juce::CachedValue<float> gainValue, mixValue;
-    juce::CachedValue<float> highPassCutoffValue, lowPassCutoffValue;
-
+    juce::CachedValue<juce::String> name;           /**< A name property. This isn't used by the IR itselt but useful in UI contexts. */
     juce::CachedValue<bool> normalise;              /**< Normalise the IR file when loading from the state. True by default. */
     juce::CachedValue<bool> trimSilence;            /**< Trim silence from the IR file when loading from the state. False by default. */
 
@@ -97,6 +95,9 @@ private:
         LPFIndex,
         gainIndex
     };
+
+    juce::CachedValue<float> gainValue, mixValue;
+    juce::CachedValue<float> highPassCutoffValue, lowPassCutoffValue;
 
     dsp::ProcessorChain<dsp::Convolution,
                         dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>>,

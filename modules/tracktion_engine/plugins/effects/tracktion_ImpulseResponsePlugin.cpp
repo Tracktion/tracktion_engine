@@ -18,6 +18,8 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
 {
     auto um = getUndoManager();
 
+    name.referTo (state, IDs::name, um);
+    
     const NormalisableRange frequencyRange { frequencyToMidiNote (2.0f), frequencyToMidiNote (20'000.0f) };
 
     highPassCutoffValue.referTo (state, IDs::highPassFrequency, um, frequencyRange.start);
@@ -238,7 +240,10 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
 
 void ImpulseResponsePlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    CachedValue <float>* cvsFloat[] = { &gainValue, &highPassCutoffValue, &lowPassCutoffValue, &mixValue, nullptr };
+    CachedValue<juce::String>* cvsString[] = { &name, nullptr };
+    copyPropertiesToNullTerminatedCachedValues (v, cvsString);
+    
+    CachedValue<float>* cvsFloat[] = { &gainValue, &highPassCutoffValue, &lowPassCutoffValue, &mixValue, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     
     if (auto irFileData = v.getProperty (IDs::irFileData).getBinaryData())
