@@ -469,14 +469,14 @@ private:
     }
 
     //==============================================================================
-    static void expectPeak (juce::UnitTest& ut, Edit& edit, EditTimeRange tr, Array<Track*> tracks, float expectedPeak)
+    static void expectPeak (juce::UnitTest& ut, Edit& edit, EditTimeRange tr, juce::Array<Track*> tracks, float expectedPeak)
     {
         auto blockSize = edit.engine.getDeviceManager().getBlockSize();
         auto stats = logStats (ut, Renderer::measureStatistics ("", edit, tr, getTracksMask (tracks), blockSize));
-        ut.expect (juce::isWithin (stats.peak, expectedPeak, 0.01f), String ("Expected peak: ") + String (expectedPeak, 4));
+        ut.expect (juce::isWithin (stats.peak, expectedPeak, 0.01f), juce::String ("Expected peak: ") + juce::String (expectedPeak, 4));
     }
 
-    static void expectPeakAndResetMuteSolo (juce::UnitTest& ut, Edit& edit, EditTimeRange tr, Array<Track*> tracks, float expectedPeak)
+    static void expectPeakAndResetMuteSolo (juce::UnitTest& ut, Edit& edit, EditTimeRange tr, juce::Array<Track*> tracks, float expectedPeak)
     {
         expectPeak (ut, edit, tr, tracks, expectedPeak);
         
@@ -490,13 +490,13 @@ private:
 
     static Renderer::Statistics logStats (juce::UnitTest& ut, Renderer::Statistics stats)
     {
-        ut.logMessage ("Stats: peak " + String (stats.peak) + ", avg " + String (stats.average) + ", duration " + String (stats.audioDuration));
+        ut.logMessage ("Stats: peak " + juce::String (stats.peak) + ", avg " + juce::String (stats.average) + ", duration " + juce::String (stats.audioDuration));
         return stats;
     }
 
-    static BigInteger getTracksMask (const Array<Track*>& tracks)
+    static juce::BigInteger getTracksMask (const juce::Array<Track*>& tracks)
     {
-        BigInteger tracksMask;
+        juce::BigInteger tracksMask;
 
         for (auto t : tracks)
             tracksMask.setBit (t->getIndexInEditTrackList());

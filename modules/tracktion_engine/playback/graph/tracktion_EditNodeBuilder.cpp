@@ -168,7 +168,7 @@ namespace
         return true;
     }
 
-    Array<Track*> addImplicitSubmixChildTracks (const Array<Track*> originalTracks)
+    juce::Array<Track*> addImplicitSubmixChildTracks (const juce::Array<Track*> originalTracks)
     {
         if (originalTracks.isEmpty())
             return {};

@@ -41,12 +41,12 @@ public:
     /** Loads an impulse from a file.
         @see juce::Convolution::loadImpulseResponse
     */
-    bool loadImpulseResponse (const File& fileImpulseResponse);
+    bool loadImpulseResponse (const juce::File& fileImpulseResponse);
 
     /** Loads an impulse from an AudioBuffer<float>.
         @see juce::Convolution::loadImpulseResponse
     */
-    bool loadImpulseResponse (AudioBuffer<float>&& bufferImpulseResponse,
+    bool loadImpulseResponse (juce::AudioBuffer<float>&& bufferImpulseResponse,
                               double sampleRateToStore,
                               int bitDepthToStore);
 
@@ -98,10 +98,10 @@ private:
     juce::CachedValue<float> gainValue, mixValue;
     juce::CachedValue<float> highPassCutoffValue, lowPassCutoffValue;
 
-    dsp::ProcessorChain<dsp::Convolution,
-                        dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>>,
-                        dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>>,
-                        dsp::Gain<float>> processorChain;
+    juce::dsp::ProcessorChain<juce::dsp::Convolution,
+                              juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>>,
+                              juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>>,
+                              juce::dsp::Gain<float>> processorChain;
     juce::SmoothedValue<float> highFreqSmoother, lowFreqSmoother, gainSmoother, wetGainSmoother, dryGainSmoother;
 
     struct WetDryGain { float wet, dry; };    
@@ -115,7 +115,7 @@ private:
     }
     void loadImpulseResponseFromState();
 
-    void valueTreePropertyChanged (ValueTree&, const juce::Identifier&) override;
+    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ImpulseResponsePlugin)
 };
