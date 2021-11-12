@@ -53,9 +53,9 @@ jobs:
           fi
 
           if [[ ${{ github.event_name }} == 'schedule' ]]; then
-            export DISABLE_TOOLS=false
+            export DISABLE_TOOLS=0
           else
-            export DISABLE_TOOLS=true
+            export DISABLE_TOOLS=1
           fi
 
           ./tests/build
