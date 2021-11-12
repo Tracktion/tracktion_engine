@@ -8,8 +8,8 @@
 # selectively disable behaviour by setting the following 
 # enviroment variables:
 # 
-# DISABLE_BUILD:    Set to true to disable building
-# DISABLE_TOOLS:    Set to true to disable Tsan and Asan builds
+# DISABLE_BUILD:    Set to 1 to disable building
+# DISABLE_TOOLS:    Set to 1 to disable Tsan and Asan builds
 # 
 #========================================================
 
@@ -114,9 +114,9 @@ function buildExample()
     
     # Capture named function arguments
     local global RUN_EXAMPLE ${@}
-    echo DISABLE_BUILD: "$DISABLE_BUILD"
-    echo RUN_EXAMPLE: "$RUN_EXAMPLE"
-    echo DISABLE_TOOLS: "$DISABLE_TOOLS"
+    echo DISABLE_BUILD: $DISABLE_BUILD
+    echo RUN_EXAMPLE: $RUN_EXAMPLE
+    echo DISABLE_TOOLS: $DISABLE_TOOLS
 
     #============================================================
     #   Build
@@ -128,50 +128,58 @@ function buildExample()
     # Generate build files
     cmake -B "$CMAKE_BUILD_DIR" -G "$CMAKE_GENERATOR" $CMAKE_PLATFORM_ARGS
 
-    if [ ! $DISABLE_BUILD ]; then
+    if [ "$DISABLE_BUILD" == "1" ]; then
+        echo INFO: Not building example: ${APP_FILE}
+    else
         # Build project
         cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release
-    fi
 
-    if [ $RUN_EXAMPLE ]; then
-        echo INFO: Running example: ${APP_FILE}
-        ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
+        if [ "$RUN_EXAMPLE" == "1" ]; then
+            echo INFO: Running example: ${APP_FILE}
+            ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
 
-        if [ ! $DISABLE_TOOLS ]; then
-            if [ "$PLATFORM" = "mac" ]; then
-                cd "$CMAKE_BUILD_DIR"
+            if [ "$DISABLE_TOOLS" == "1" ]; then
+                echo INFO: Not building with tools tools: ${APP_FILE}
+                echo DISABLE_TOOLS: $DISABLE_TOOLS
+            else
+                if [ "$PLATFORM" = "mac" ]; then
+                    cd "$CMAKE_BUILD_DIR"
 
-                echo INFO: Running with Asan: ${APP_FILE}
-                cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableAddressSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
-                ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_asan.xml"
+                    echo INFO: Running with Asan: ${APP_FILE}
+                    cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableAddressSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
+                    ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_asan.xml"
 
-                echo INFO: Running with Tsan: ${APP_FILE}
-                cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableThreadSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
-                ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_tsan.xml"
+                    echo INFO: Running with Tsan: ${APP_FILE}
+                    cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableThreadSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
+                    ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_tsan.xml"
 
-                echo INFO: Running static analyser: ${APP_FILE}
-                xcodebuild analyze -quiet -configuration Release LLVM_LTO=NO
+                    echo INFO: Running static analyser: ${APP_FILE}
+                    xcodebuild analyze -quiet -configuration Release LLVM_LTO=NO
+                else
+                    echo INFO: Platform not mac: ${APP_FILE}
+                    echo PLATFORM: "$PLATFORM"
+                fi
             fi
+        else
+            echo INFO: Not running example: ${APP_FILE}
         fi
-    else
-        echo INFO: Not running example: ${APP_FILE}
     fi
 }
 
 
 # First build and test these examples
-buildExample "TestRunner" RUN_EXAMPLE=true
-buildExample "tracktion_graph_TestRunner" RUN_EXAMPLE=true
-buildExample "tracktion_graph_PerformanceTests" RUN_EXAMPLE=true DISABLE_TOOLS=true
+buildExample "TestRunner" RUN_EXAMPLE=1
+buildExample "tracktion_graph_TestRunner" RUN_EXAMPLE=1
+buildExample "tracktion_graph_PerformanceTests" RUN_EXAMPLE=1 DISABLE_TOOLS=1
 
 # Then just build these examples (don't build with tooling as they won't be run)
-buildExample "DistortionEffectDemo" DISABLE_TOOLS=true
-buildExample "EngineInPluginDemo" DISABLE_TOOLS=true
-buildExample "IRPluginDemo" DISABLE_TOOLS=true
-buildExample "MidiRecordingDemo" DISABLE_TOOLS=true
-buildExample "PatternGeneratorDemo" DISABLE_TOOLS=true
-buildExample "PitchAndTimeDemo" DISABLE_TOOLS=true
-buildExample "PlaybackDemo" DISABLE_TOOLS=true
-buildExample "PluginDemo" DISABLE_TOOLS=true
-buildExample "RecordingDemo" DISABLE_TOOLS=true
-buildExample "StepSequencerDemo" DISABLE_TOOLS=true
+buildExample "DistortionEffectDemo" DISABLE_TOOLS=1
+buildExample "EngineInPluginDemo" DISABLE_TOOLS=1
+buildExample "IRPluginDemo" DISABLE_TOOLS=1
+buildExample "MidiRecordingDemo" DISABLE_TOOLS=1
+buildExample "PatternGeneratorDemo" DISABLE_TOOLS=1
+buildExample "PitchAndTimeDemo" DISABLE_TOOLS=1
+buildExample "PlaybackDemo" DISABLE_TOOLS=1
+buildExample "PluginDemo" DISABLE_TOOLS=1
+buildExample "RecordingDemo" DISABLE_TOOLS=1
+buildExample "StepSequencerDemo" DISABLE_TOOLS=1
