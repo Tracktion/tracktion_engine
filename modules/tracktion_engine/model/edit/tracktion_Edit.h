@@ -163,11 +163,6 @@ public:
     /** Returns the maximum length an Edit can be. */
     static EditTimeRange getMaximumEditTimeRange()  { return { 0.0, maximumLength }; }
 
-    static const int maxNumTracks = 400;        /**< The maximum number of Track[s] an Edit can contain. */
-    static const int maxClipsInTrack = 1500;    /**< The maximum number of Clip[s] a Track can contain. */
-    static const int maxPluginsOnClip = 5;      /**< The maximum number of Plugin[s] a Clip can contain. */
-    static const int maxPluginsOnTrack = 16;    /**< The maximum number of Plugin[s] a Track can contain. */
-    static const int maxNumMasterPlugins = 4;   /**< The maximum number of master Plugin[s] and Edit can contain. */
     static const int ticksPerQuarterNote = 960; /**< The number of ticks per quarter note. */
 
     //==============================================================================

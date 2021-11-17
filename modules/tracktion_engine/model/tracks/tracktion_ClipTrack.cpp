@@ -469,7 +469,7 @@ void ClipTrack::addClip (const Clip::Ptr& clip)
 
     if (clip != nullptr)
     {
-        if (clipList->objects.size() < Edit::maxClipsInTrack)
+        if (clipList->objects.size() < edit.engine.getEngineBehaviour().getEditLimits().maxClipsInTrack)
         {
             jassert (findClipForID (clip->itemID) == nullptr);
 

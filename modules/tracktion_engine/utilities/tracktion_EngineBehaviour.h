@@ -12,6 +12,19 @@ namespace tracktion_engine
 {
 
 /**
+    Contains the limits of the various elements that can be added to an Edit.
+    @see EngineBehaviour::getEditLimits
+*/
+struct EditLimits
+{
+    int maxNumTracks = 400;        /**< The maximum number of Track[s] an Edit can contain. */
+    int maxClipsInTrack = 1500;    /**< The maximum number of Clip[s] a Track can contain. */
+    int maxPluginsOnClip = 5;      /**< The maximum number of Plugin[s] a Clip can contain. */
+    int maxPluginsOnTrack = 16;    /**< The maximum number of Plugin[s] a Track can contain. */
+    int maxNumMasterPlugins = 4;   /**< The maximum number of master Plugin[s] and Edit can contain. */
+};
+
+/**
     Provides custom handlers to control various aspects of the engine's behaviour.
     Create a subclass of EngineBehaviour to customise how the engine operates
 */
@@ -120,8 +133,8 @@ public:
     virtual bool arePluginsRemappedWhenTempoChanges()                               { return true; }
     virtual void setPluginsRemappedWhenTempoChanges (bool)                          {}
 
-    /** Should return the maximum number of plugins that can be added to the master bus. */
-    virtual int getMaxNumMasterPlugins()                                            { return 4; }
+    /** Should return the maximum number of elements that can be added to an Edit. */
+    virtual EditLimits getEditLimits()                                              { return {}; }
 
     /** If this returns true, it means that the length (in seconds) of one "beat" at
         any point in an edit is considered to be the length of one division in the current

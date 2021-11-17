@@ -445,10 +445,10 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects, 
         return;
 
     auto& ed = clipsToPaste.getFirst()->edit;
-
+    
     auto allTracks = getAllTracks (ed);
 
-    auto firstTrackIndex = Edit::maxNumTracks;
+    auto firstTrackIndex = ed.engine.getEngineBehaviour().getEditLimits().maxNumTracks;
     auto overallStartTime = Edit::maximumLength;
 
     for (auto clip : clipsToPaste)
@@ -522,8 +522,9 @@ void Clipboard::Clips::addAutomation (const juce::Array<TrackSection>& trackSect
     if (range.isEmpty() || trackSections.isEmpty())
         return;
     
-    auto allTracks = getAllTracks (trackSections.getFirst().track->edit);
-    auto firstTrackIndex = Edit::maxNumTracks;
+    auto& edit = trackSections.getFirst().track->edit;
+    auto allTracks = getAllTracks (edit);
+    auto firstTrackIndex = edit.engine.getEngineBehaviour().getEditLimits().maxNumTracks;
     auto overallStartTime = Edit::maximumLength;
 
     for (const auto& trackSection : trackSections)

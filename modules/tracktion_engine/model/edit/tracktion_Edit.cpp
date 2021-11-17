@@ -1640,7 +1640,7 @@ Track::Ptr Edit::insertTrack (TrackInsertPoint insertPoint, juce::ValueTree v, S
 {
     CRASH_TRACER
 
-    if (getAllTracks (*this).size() >= maxNumTracks)
+    if (getAllTracks (*this).size() >= engine.getEngineBehaviour().getEditLimits().maxNumTracks)
         return {};
 
     auto parent = state;

@@ -1520,7 +1520,7 @@ String AudioClipBase::canAddClipPlugin (const Plugin::Ptr& p) const
         if (! p->canBeAddedToClip())
             return TRANS("Can't add this kind of plugin to a clip!");
 
-        if (pluginList.size() >= Edit::maxPluginsOnClip)
+        if (pluginList.size() >= edit.engine.getEngineBehaviour().getEditLimits().maxPluginsOnClip)
             return TRANS("Can't add any more plugins to this clip!");
     }
 
