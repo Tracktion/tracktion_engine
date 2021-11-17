@@ -180,9 +180,10 @@ bool PluginList::needsConstantBufferSize()
 
 bool PluginList::canInsertPlugin()
 {
-    return ! ((ownerClip != nullptr && size() >= Edit::maxPluginsOnClip)
-              || (ownerTrack != nullptr && size() >= Edit::maxPluginsOnTrack)
-              || (isMasterList (*this) && size() >= edit.engine.getEngineBehaviour().getMaxNumMasterPlugins()));
+    const auto limits = edit.engine.getEngineBehaviour().getEditLimits();
+    return ! ((ownerClip != nullptr && size() >= limits.maxPluginsOnClip)
+              || (ownerTrack != nullptr && size() >= limits.maxPluginsOnTrack)
+              || (isMasterList (*this) && size() >= limits.maxNumMasterPlugins));
 }
 
 void PluginList::insertPlugin (const Plugin::Ptr& plugin, int index, SelectionManager* sm)
@@ -231,10 +232,11 @@ Plugin::Ptr PluginList::insertPlugin (const juce::ValueTree& v, int index)
         }
 
         auto numPlugins = size();
+        const auto limits = edit.engine.getEngineBehaviour().getEditLimits();
 
-        if ((ownerClip != nullptr && numPlugins >= Edit::maxPluginsOnClip)
-             || (ownerTrack != nullptr && numPlugins >= Edit::maxPluginsOnTrack)
-             || (isMasterList (*this) && numPlugins >= edit.engine.getEngineBehaviour().getMaxNumMasterPlugins()))
+        if ((ownerClip != nullptr && numPlugins >= limits.maxPluginsOnClip)
+             || (ownerTrack != nullptr && numPlugins >= limits.maxPluginsOnTrack)
+             || (isMasterList (*this) && numPlugins >= limits.maxNumMasterPlugins))
         {
             jassertfalse;
             return {};
