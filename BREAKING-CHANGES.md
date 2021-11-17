@@ -1,8 +1,20 @@
 # Tracktion Engine breaking changes
-=====================
 
 ## Develop
 
+### Change
+Removed EngineBehaviour::getMaxNumMasterPlugins and static Edit constants.
+
+#### Possible Issues
+Code relying on the Edit members or implementing the EngineBehaviour method will no longer compile.
+
+#### Workaround
+Update to implement EngineBehaviour::getEditLimits() and call this instead of the static methods.
+
+#### Rationale
+This enables a single customisation point for these properties and avoids them having static values.
+
+---
 ### Change
 The old AudioNode based engine has been replaced by a new tracktion_graph based engine.
 
