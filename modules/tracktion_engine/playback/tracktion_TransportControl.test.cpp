@@ -93,23 +93,35 @@ public:
             auto audioFiles = getSourceFilesFromClips (clips);
             auto sampleIndicies = getSampleIndiciesOfImpulse (engine, audioFiles);
 
-            expect (tempDir.tempDir.isDirectory(), "Output dir not created");
+            expect (tempDir.tempDir.exists() && tempDir.tempDir.isDirectory(), "Output dir not created");
+            expect (tempDir.tempDir.hasWriteAccess(), "Output dir is read only");
             expectEquals (tempDir.tempDir.getFullPathName(), File::getCurrentWorkingDirectory().getFullPathName(), "Current directory has changed");
             expectEquals (audioFiles.size(), deviceManager.getNumWaveInDevices(), "Audio files not created");
 
             for (const auto& f : audioFiles)
+            {
+                expect (f.existsAsFile(), juce::String ("File doesn't exist FILE").replace ("FILE", f.getFullPathName()));
                 expectGreaterOrEqual (getFileLength (engine, f), 2.0, "File length less then 2 seconds");
+            }
 
             expectEquals ((int) std::count_if (sampleIndicies.begin(), sampleIndicies.end(),
-                                               [] (auto index) { return index != - 1; }),
+                                               [] (auto index) { return index != -1; }),
                           audioFiles.size(), "Some files don't have an impulse in them");
 
+            int fileIndex = 0;
+            
             for (auto index : sampleIndicies)
+            {
+                expectGreaterOrEqual<int64> (index, 0, juce::String ("File doesn't have an impulse in: FILE").replace ("FILE", audioFiles[fileIndex].getFullPathName()));
+                
                 if (index != sampleIndicies[0])
                     expect (false, String ("Mismatch of impulse indicies (FIRST & SECOND samples, difference of DIFF)")
                             .replace ("FIRST", String (index))
                             .replace ("SECOND", String (sampleIndicies[0]))
                             .replace ("DIFF", String (index - sampleIndicies[0])));
+                
+                ++fileIndex;
+            }
         }
     }
 
