@@ -200,6 +200,15 @@
  #define TRACKTION_AIR_WINDOWS 0
 #endif
 
+/** Config: TRACKTION_LOG_DEVICES
+    If enabled, all found devices will be logged (by default to the console).
+    Disable this when running benchmarks etc. to avoid flooding the logs.
+ */
+#ifndef TRACKTION_LOG_DEVICES
+ #define TRACKTION_LOG_DEVICES 1
+#endif
+
+
 //==============================================================================
 #ifndef TRACKTION_LOG_ENABLED
  #define TRACKTION_LOG_ENABLED 1

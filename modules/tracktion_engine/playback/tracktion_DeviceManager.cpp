@@ -13,6 +13,12 @@ juce::AudioDeviceManager* gDeviceManager = nullptr; // TODO
 namespace tracktion_engine
 {
 
+#if TRACKTION_LOG_DEVICES
+ #define TRACKTION_LOG_DEVICE(text) TRACKTION_LOG(text)
+#else
+ #define TRACKTION_LOG_DEVICE(text)
+#endif
+
 static String mergeTwoNames (const String& s1, const String& s2)
 {
     String nm;
@@ -342,7 +348,7 @@ void DeviceManager::initialiseMidi()
 
     for (auto mo : midiOutputs)
     {
-        TRACKTION_LOG ("MIDI output: " + mo->getName() + (mo->isEnabled() ? " (enabled)" : ""));
+        TRACKTION_LOG_DEVICE ("MIDI output: " + mo->getName() + (mo->isEnabled() ? " (enabled)" : ""));
 
         JUCE_TRY
         {
@@ -356,7 +362,7 @@ void DeviceManager::initialiseMidi()
 
     for (auto mi : midiInputs)
     {
-        TRACKTION_LOG ("MIDI input: " + mi->getName() + (mi->isEnabled() ? " (enabled)" : ""));
+        TRACKTION_LOG_DEVICE ("MIDI input: " + mi->getName() + (mi->isEnabled() ? " (enabled)" : ""));
 
         JUCE_TRY
         {
@@ -592,8 +598,8 @@ void DeviceManager::rebuildWaveDeviceList()
         wi->enabled = d.enabled;
         waveInputs.add (wi);
 
-        TRACKTION_LOG ("Wave In: " + wi->getName() + (wi->isEnabled() ? " (enabled): " : ": ")
-                        + createDescriptionOfChannels (wi->deviceChannels));
+        TRACKTION_LOG_DEVICE ("Wave In: " + wi->getName() + (wi->isEnabled() ? " (enabled): " : ": ")
+                              + createDescriptionOfChannels (wi->deviceChannels));
     }
 
     for (auto wi : waveInputs)
@@ -605,8 +611,8 @@ void DeviceManager::rebuildWaveDeviceList()
         wo->enabled = d.enabled;
         waveOutputs.add (wo);
 
-        TRACKTION_LOG ("Wave Out: " + wo->getName() + (wo->isEnabled() ? " (enabled): " : ": ")
-                        + createDescriptionOfChannels (wo->deviceChannels));
+        TRACKTION_LOG_DEVICE ("Wave Out: " + wo->getName() + (wo->isEnabled() ? " (enabled): " : ": ")
+                              + createDescriptionOfChannels (wo->deviceChannels));
     }
 
     activeOutChannels.clear();
