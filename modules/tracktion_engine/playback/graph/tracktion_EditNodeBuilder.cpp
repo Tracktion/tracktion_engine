@@ -228,7 +228,7 @@ std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList&, con
 std::unique_ptr<tracktion_graph::Node> createPluginNodeForTrack (Track&, TrackMuteState&, std::unique_ptr<Node>,
                                                                  tracktion_graph::PlayHeadState&, const CreateNodeParams&);
 
-std::unique_ptr<tracktion_graph::Node> createLiveInputNodeForDevice (InputDeviceInstance&, tracktion_graph::PlayHeadState&);
+std::unique_ptr<tracktion_graph::Node> createLiveInputNodeForDevice (InputDeviceInstance&, tracktion_graph::PlayHeadState&, const CreateNodeParams&);
 
 
 //==============================================================================
@@ -614,13 +614,14 @@ std::unique_ptr<tracktion_graph::Node> createClipsNode (const juce::Array<Clip*>
     return std::make_unique<SummingNode> (std::move (nodes));
 }
 
-std::unique_ptr<tracktion_graph::Node> createLiveInputNodeForDevice (InputDeviceInstance& inputDeviceInstance, tracktion_graph::PlayHeadState& playHeadState)
+std::unique_ptr<tracktion_graph::Node> createLiveInputNodeForDevice (InputDeviceInstance& inputDeviceInstance, tracktion_graph::PlayHeadState& playHeadState,
+                                                                     const CreateNodeParams& params)
 {
     if (auto midiDevice = dynamic_cast<MidiInputDevice*> (&inputDeviceInstance.getInputDevice()))
     {
         if (midiDevice->isTrackDevice())
             if (auto sourceTrack = getTrackContainingTrackDevice (inputDeviceInstance.edit, *midiDevice))
-                return makeNode<TrackMidiInputDeviceNode> (*midiDevice, makeNode<ReturnNode> (getMidiInputDeviceBusID (sourceTrack->itemID)));
+                return makeNode<TrackMidiInputDeviceNode> (*midiDevice, makeNode<ReturnNode> (getMidiInputDeviceBusID (sourceTrack->itemID)), params.processState);
 
         if (HostedAudioDeviceInterface::isHostedMidiInputDevice (*midiDevice))
             return makeNode<HostedMidiInputDeviceNode> (inputDeviceInstance, *midiDevice, midiDevice->getMPESourceID(), playHeadState);
@@ -649,7 +650,7 @@ std::unique_ptr<tracktion_graph::Node> createLiveInputsNode (AudioTrack& track, 
         if (auto context = track.edit.getCurrentPlaybackContext())
             for (auto in : context->getAllInputs())
                 if ((in->isLivePlayEnabled (track) || in->getInputDevice().isTrackDevice()) && in->isOnTargetTrack (track))
-                    if (auto node = createLiveInputNodeForDevice (*in, playHeadState))
+                    if (auto node = createLiveInputNodeForDevice (*in, playHeadState, params))
                         nodes.push_back (std::move (node));
 
     if (nodes.empty())
@@ -1138,7 +1139,8 @@ std::unique_ptr<Node> createRackNode (std::unique_ptr<Node> input, RackTypeList&
 
 //==============================================================================
 std::unique_ptr<Node> createInsertSendNode (InsertPlugin& insert, OutputDevice& device,
-                                            tracktion_graph::PlayHeadState& playHeadState)
+                                            tracktion_graph::PlayHeadState& playHeadState,
+                                            const CreateNodeParams& params)
 {
     if (insert.outputDevice != device.getName())
         return {};
@@ -1150,7 +1152,7 @@ std::unique_ptr<Node> createInsertSendNode (InsertPlugin& insert, OutputDevice& 
         if (insert.getReturnDeviceType() != InsertPlugin::noDevice)
             for (auto i : insert.edit.getAllInputDevices())
                 if (i->owner.getName() == insert.inputDevice)
-                    return makeNode<InsertReturnNode> (insert, createLiveInputNodeForDevice (*i, playHeadState));
+                    return makeNode<InsertReturnNode> (insert, createLiveInputNodeForDevice (*i, playHeadState, params));
 
         return {};
     };
@@ -1355,7 +1357,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForEdit (EditPlaybackContext& e
             if (ins->outputDevice != device->getName())
                 continue;
 
-            if (auto sendNode = createInsertSendNode (*ins, *device, playHeadState))
+            if (auto sendNode = createInsertSendNode (*ins, *device, playHeadState, params))
             {
                 sumNode->addInput (std::move (sendNode));
                 deviceIsBeingUsedAsInsert = true;
