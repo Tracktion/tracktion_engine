@@ -19,7 +19,8 @@ TrackMidiInputDeviceNode::TrackMidiInputDeviceNode (MidiInputDevice& owner, std:
     jassert (midiInputDevice.isTrackDevice());
 
     setOptimisations ({ tracktion_graph::ClearBuffers::yes,
-                        tracktion_graph::AllocateAudioBuffer::no });
+                        copyInputsToOutputs ? tracktion_graph::AllocateAudioBuffer::no
+                                            : tracktion_graph::AllocateAudioBuffer::yes });
 }
 
 std::vector<tracktion_graph::Node*> TrackMidiInputDeviceNode::getDirectInputNodes()
