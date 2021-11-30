@@ -180,9 +180,16 @@ int main (int, char**)
     ScopedJuceInitialiser_GUI init;
     const auto anyFailed = TestRunner::runTests ({}, "benchmarks");
 
-    publishToAirtable (SystemStats::getEnvironmentVariable ("AT_BASE_ID", {}).toStdString(),
-                       SystemStats::getEnvironmentVariable ("AT_API_KEY", {}).toStdString(),
-                       BenchmarkList::getInstance().getResults());
+    if (publishToAirtable (SystemStats::getEnvironmentVariable ("AT_BASE_ID", {}).toStdString(),
+                           SystemStats::getEnvironmentVariable ("AT_API_KEY", {}).toStdString(),
+                           BenchmarkList::getInstance().getResults())
+    {
+        std::cout << "INFO: Published benchmark results\n";
+    }
+    else
+    {
+        std::cout << "INFO: Failed to publish!\n";
+    }
 
     return anyFailed;
 }
