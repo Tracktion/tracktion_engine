@@ -182,7 +182,7 @@ int main (int, char**)
 
     if (publishToAirtable (SystemStats::getEnvironmentVariable ("AT_BASE_ID", {}).toStdString(),
                            SystemStats::getEnvironmentVariable ("AT_API_KEY", {}).toStdString(),
-                           BenchmarkList::getInstance().getResults())
+                           BenchmarkList::getInstance().getResults()))
     {
         std::cout << "INFO: Published benchmark results\n";
     }
