@@ -100,13 +100,13 @@ public:
     }
 
 private:
-    BenchmarkDescription getDescription (std::string name, int64_t seed, int depth)
+    BenchmarkDescription getDescription (std::string bmName, int64_t seed, int depth)
     {
-        const auto category = (getName() + "/" + getCategory()).toStdString();
-        const auto description = "seed: " + std::to_string (seed) + ", depth: " + std::to_string (depth);
+        const auto bmCategory = (getName() + "/" + getCategory()).toStdString();
+        const auto bmDescription = "seed: " + std::to_string (seed) + ", depth: " + std::to_string (depth);
         
-        return { std::hash<std::string>{} (name + category + description),
-                 category, name, description };
+        return { std::hash<std::string>{} (bmName + bmCategory + bmDescription),
+                 bmCategory, bmName, bmDescription };
     }
     
     static String createRandomIdentifier (Random& r)
