@@ -314,8 +314,8 @@ inline bool publishToAirtable (std::string baseID, std::string apiKey,
         fields->setProperty ("Description", juce::String (r.description.description));
         fields->setProperty ("Platform",    juce::String (r.description.platform));
         fields->setProperty ("Duration",    getDuration (r));
-        fields->setProperty ("Ticks",       r.ticksEnd - r.ticksStart);
-        fields->setProperty ("Ticks/s",     r.ticksPerSecond);
+        fields->setProperty ("Ticks",       static_cast<int64> (r.ticksEnd - r.ticksStart));
+        fields->setProperty ("Ticks/s",     static_cast<int64> (r.ticksPerSecond));
         fields->setProperty ("Date",        r.date.toISO8601 (true));
 
         juce::DynamicObject::Ptr record = new juce::DynamicObject();
