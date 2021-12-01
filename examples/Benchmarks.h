@@ -35,7 +35,7 @@ class ValueTreeBenchmarks  : public juce::UnitTest
 {
 public:
     ValueTreeBenchmarks()
-        : UnitTest ("ValueTrees", "benchmarks")
+        : UnitTest ("ValueTrees", "tracktion_benchmarks")
     {}
 
     void runTest() override
@@ -172,13 +172,78 @@ private:
 
 static ValueTreeBenchmarks valueTreeBenchmarks;
 
+//==============================================================================
+//==============================================================================
+/** @internal */
+inline bool publishToAirtable (std::string baseID, std::string apiKey,
+                               std::vector<BenchmarkResult> results)
+{
+    if (baseID.empty() || apiKey.empty())
+    {
+        jassertfalse;
+        return false;
+    }
+    
+    juce::Array<juce::var> records;
+
+    for (auto& r : results)
+    {
+        juce::DynamicObject::Ptr fields = new juce::DynamicObject();
+        fields->setProperty ("Hash",        juce::String (std::to_string (static_cast<uint64_t> (r.description.hash))));
+        fields->setProperty ("Category",    juce::String (r.description.category));
+        fields->setProperty ("Name",        juce::String (r.description.name));
+        fields->setProperty ("Description", juce::String (r.description.description));
+        fields->setProperty ("Platform",    juce::String (r.description.platform));
+        fields->setProperty ("Duration",    getDuration (r));
+        fields->setProperty ("Ticks",       static_cast<int64> (r.ticksEnd - r.ticksStart));
+        fields->setProperty ("Ticks/s",     static_cast<int64> (r.ticksPerSecond));
+        fields->setProperty ("Date",        r.date.toISO8601 (true));
+
+        juce::DynamicObject::Ptr record = new juce::DynamicObject();
+        record->setProperty ("fields", fields.get());
+        records.add (record.get());
+    }
+
+    juce::DynamicObject::Ptr obj = new juce::DynamicObject();
+    obj->setProperty ("records", records);
+    
+    const auto url = juce::URL (juce::String ("https://api.airtable.com/v0/{}/benchmarks").replace ("{}", baseID))
+                        .withPOSTData (juce::JSON::toString (obj.get()));
+
+    juce::StringArray headers;
+    headers.add (juce::String ("Authorization: Bearer {}").replace ("{}", apiKey));
+    headers.add ("Content-Type: application/json");
+
+    for (int numRetries = 2; --numRetries > 0;)
+    {
+        int statusCodeResult = -1;
+        
+        if (auto inputStream = url.createInputStream (URL::InputStreamOptions (URL::ParameterHandling::inPostData)
+                                                           .withExtraHeaders (headers.joinIntoString ("\n"))
+                                                           .withStatusCode (&statusCodeResult)))
+        {
+            inputStream->readEntireStreamAsString();
+            
+            // Success
+            if (statusCodeResult == 200)
+                return true;
+            
+            // Rate limit reached
+            if (statusCodeResult == 429)
+                std::this_thread::sleep_for (std::chrono::seconds (30));
+        }
+    }
+    
+    return false;
+}
+
 
 //==============================================================================
 //==============================================================================
 int main (int, char**)
 {
     ScopedJuceInitialiser_GUI init;
-    const auto anyFailed = TestRunner::runTests ({}, "benchmarks");
+    const auto anyFailed = TestRunner::runTests ({}, "tracktion_benchmarks");
 
     if (publishToAirtable (SystemStats::getEnvironmentVariable ("AT_BASE_ID", {}).toStdString(),
                            SystemStats::getEnvironmentVariable ("AT_API_KEY", {}).toStdString(),
@@ -188,7 +253,7 @@ int main (int, char**)
     }
     else
     {
-        std::cout << "INFO: Failed to publish!\n";
+        std::cout << "ERROR: Failed to publish!\n";
     }
 
     return anyFailed;
