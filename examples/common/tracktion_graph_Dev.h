@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <tracktion_engine/utilities/tracktion_Benchmark.h>
+
 using namespace tracktion_engine;
 
 //==============================================================================
@@ -188,3 +190,4 @@ namespace TestRunner
         return numFailues > 0 ? 1 : 0;
     }
 }
+

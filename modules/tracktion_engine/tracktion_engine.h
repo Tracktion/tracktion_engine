@@ -186,6 +186,14 @@
  #define TRACKTION_UNIT_TESTS 0
 #endif
 
+/** Config: TRACKTION_BENCHMARKS
+    Enables Tracktion benchmarks.
+    If enabled, these will be added the UnitTestRunners under the "tracktion_benchmarks" category.
+*/
+#ifndef TRACKTION_BENCHMARKS
+ #define TRACKTION_BENCHMARKS 0
+#endif
+
 /** Config: TRACKTION_CHECK_FOR_SLOW_RENDERING
     Enabling this adds additional checks to the audio pipeline to help debug performance problems if operations take longer than real time.
 */

@@ -41,6 +41,9 @@ jobs:
       # Build products
       - name: "Build products"
         shell: bash
+        env:
+          AT_API_KEY: ${{ secrets.AT_API_KEY }}
+          AT_BASE_ID: ${{ secrets.AT_BASE_ID }}
         run: |
           if [[ "$OSTYPE" == "linux-gnu" ]]; then
             export DISABLE_VALGRIND=1
