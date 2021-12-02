@@ -1,6 +1,8 @@
 name: Update Docs
 on:
   push:
+    branches:
+      - develop
   workflow_dispatch:
 
 jobs:
@@ -33,7 +35,7 @@ jobs:
           tests/coverage/generate_coverage_report
           rm -rf doxygen/doc/coverage_html
           mkdir -p doxygen/doc/coverage_html
-          cp -r tests/coverage/build_linux/coverage_html doxygen/doc/coverage_html
+          cp -r tests/coverage/build_linux/coverage_html doxygen/doc
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
