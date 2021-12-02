@@ -174,6 +174,10 @@ public:
     */
     virtual void describeWaveDevices (std::vector<WaveDeviceDescription>&, juce::AudioIODevice&, bool /*isInput*/) {}
 
+    /** Allows MIDI messages to be modified on input to be transposed or otherwise modified before reaching the playback engine
+    */
+    virtual bool filterMidiInput (MidiInputDevice&, const juce::MidiMessage&, juce::Array<juce::MidiMessage>&) { return false; }
+
     //==============================================================================
     /** Called by the MidiList to create a MidiMessageSequence for playback.
         You can override this to add your own messages but should generally follow the

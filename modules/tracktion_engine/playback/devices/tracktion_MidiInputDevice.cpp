@@ -195,6 +195,7 @@ MidiInputDevice::MidiInputDevice (Engine& e, const String& deviceType, const Str
     zeromem (keyDownVelocities, sizeof (keyDownVelocities));
 
     keyboardState.addListener (this);
+    filteredMessages.ensureStorageAllocated (128);
 }
 
 MidiInputDevice::~MidiInputDevice()
@@ -392,8 +393,21 @@ void MidiInputDevice::handleNoteOff (MidiKeyboardState*, int /*midiChannel*/, in
 void MidiInputDevice::handleIncomingMidiMessage (MidiInput*, const MidiMessage& m)
 {
     const ScopedValueSetter<bool> svs (eventReceivedFromDevice, true, false);
-    handleIncomingMidiMessage (m);
-    keyboardState.processNextMidiEvent (m);
+
+    filteredMessages.clearQuick();
+    if (engine.getEngineBehaviour().filterMidiInput (*this, m, filteredMessages))
+    {
+        for (const auto& fm : filteredMessages)
+        {
+            handleIncomingMidiMessage (fm);
+            keyboardState.processNextMidiEvent (fm);
+        }
+    }
+    else
+    {
+        handleIncomingMidiMessage (m);
+        keyboardState.processNextMidiEvent (m);
+    }
 }
 
 void MidiInputDevice::updateRetrospectiveBufferLength (double length)
@@ -442,6 +456,7 @@ void MidiInputDevice::sendNoteOnToMidiKeyListeners (MidiMessage& message)
         {
             juce::ScopedLock sl (noteLock);
             keysDown[noteNum] = true;
+            keysUp[noteNum] = false;
             keyDownVelocities[noteNum] = message.getVelocity();
         }
 
@@ -454,6 +469,7 @@ void MidiInputDevice::sendNoteOnToMidiKeyListeners (MidiMessage& message)
         {
             juce::ScopedLock sl (noteLock);
             keysUp[noteNum] = true;
+            keysDown[noteNum] = false;
         }
 
         startTimer (25);

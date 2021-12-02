@@ -122,6 +122,7 @@ protected:
     bool keysDown[128], keysUp[128];
     juce::uint8 keyDownVelocities[128];
     juce::SharedResourcePointer<MidiKeyChangeDispatcher> midiKeyChangeDispatcher;
+    juce::Array<juce::MidiMessage> filteredMessages;
 
     juce::CriticalSection instanceLock;
     juce::Array<MidiInputDeviceInstanceBase*> instances;
