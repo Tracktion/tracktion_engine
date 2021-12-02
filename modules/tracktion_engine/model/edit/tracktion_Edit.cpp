@@ -1118,20 +1118,29 @@ Edit::UndoTransactionInhibitor::~UndoTransactionInhibitor()                     
 //==============================================================================
 EditItemID Edit::createNewItemID (const std::vector<EditItemID>& idsToAvoid) const
 {
-    // TODO: This *may* be slow under heavy load - keep an eye open for this
-    // in case a smarter caching system is needed
-    auto existingIDs = EditItemID::findAllIDs (state);
+    if (nextID == 0)
+    {
+        auto existingIDs = EditItemID::findAllIDs (state);
 
-    existingIDs.insert (existingIDs.end(), idsToAvoid.begin(), idsToAvoid.end());
-    existingIDs.insert (existingIDs.end(), usedIDs.begin(), usedIDs.end());
+        existingIDs.insert (existingIDs.end(), idsToAvoid.begin(), idsToAvoid.end());
 
-    trackCache.visitItems ([&] (auto i)  { existingIDs.push_back (i->itemID); });
-    clipCache.visitItems ([&] (auto i)   { existingIDs.push_back (i->itemID); });
+        trackCache.visitItems ([&] (auto i)  { existingIDs.push_back (i->itemID); });
+        clipCache.visitItems ([&] (auto i)   { existingIDs.push_back (i->itemID); });
 
-    std::sort (existingIDs.begin(), existingIDs.end());
-    auto newID = EditItemID::findFirstIDNotIn (existingIDs);
+        std::sort (existingIDs.begin(), existingIDs.end());
+        nextID = existingIDs.empty() ? 1001 : (existingIDs.back().getRawID() + 1);
+
+       #if JUCE_DEBUG
+        usedIDs.insert (existingIDs.begin(), existingIDs.end());
+       #endif
+    }
+
+    auto newID = EditItemID::fromRawID (nextID++);
+
+   #if JUCE_DEBUG
     jassert (usedIDs.find (newID) == usedIDs.end());
     usedIDs.insert (newID);
+   #endif
 
     return newID;
 }
