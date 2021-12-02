@@ -101,10 +101,16 @@ int main (int, char**)
 {
     ScopedJuceInitialiser_GUI init;
     const auto anyFailed = TestRunner::runTests ({}, "tracktion_benchmarks");
+    auto results = BenchmarkList::getInstance().getResults();
+    
+    for (const auto& r : results)
+        std::cout << r.description.name << ", " << r.description.category
+                  << "\n\t" << r.description.description
+                  << "\n\t" << getDuration (r) << "\n";
 
     if (publishToAirtable (SystemStats::getEnvironmentVariable ("AT_BASE_ID", {}).toStdString(),
                            SystemStats::getEnvironmentVariable ("AT_API_KEY", {}).toStdString(),
-                           BenchmarkList::getInstance().getResults()))
+                           std::move (results)))
     {
         std::cout << "INFO: Published benchmark results\n";
     }
