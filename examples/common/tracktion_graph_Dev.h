@@ -152,7 +152,7 @@ namespace JUnit
 //==============================================================================
 namespace TestRunner
 {
-    int runTests (const File& junitResultsFile, StringRef category)
+    int runTests (const File& junitResultsFile, std::vector<juce::String> categories)
     {
         CoutLogger logger;
         Logger::setCurrentLogger (&logger);
@@ -162,8 +162,11 @@ namespace TestRunner
         UnitTestRunner testRunner;
         testRunner.setAssertOnFailure (false);
 
-        auto tests = UnitTest::getTestsInCategory (category);
-        
+        Array<UnitTest*> tests;
+
+        for (auto& category : categories)
+            tests.addArray (UnitTest::getTestsInCategory (category));
+
         const auto startTime = Time::getCurrentTime();
         testRunner.runTests (tests);
         const auto endTime = Time::getCurrentTime();
@@ -188,6 +191,11 @@ namespace TestRunner
         Logger::setCurrentLogger (nullptr);
 
         return numFailues > 0 ? 1 : 0;
+    }
+
+    int runTests (const File& junitResultsFile, juce::String category)
+    {
+        return runTests (junitResultsFile, std::vector<juce::String> { category });
     }
 }
 

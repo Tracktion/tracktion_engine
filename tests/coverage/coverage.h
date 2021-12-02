@@ -29,5 +29,17 @@
 
 using namespace tracktion_engine;
 
-#include "../../examples/TestRunner.h"
-// Includes a main function
+#include "../../examples/common/tracktion_graph_Dev.h"
+
+//==============================================================================
+//==============================================================================
+int main (int, char**)
+{
+    ScopedJuceInitialiser_GUI init;
+    return TestRunner::runTests ({},
+                                 { "Tracktion",
+                                   "Tracktion:Longer",
+                                   "tracktion_benchmarks",
+                                   "tracktion_graph",
+                                   "tracktion_graph_performance" });
+}
