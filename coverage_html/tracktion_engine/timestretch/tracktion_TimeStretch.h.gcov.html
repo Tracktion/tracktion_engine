@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-02 19:45:46</td>
+            <td class="headerValue">2021-12-02 23:28:15</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -126,7 +126,7 @@
 <a name="64"><span class="lineNum">      64 </span>            :     struct ElastiqueProOptions</a>
 <a name="65"><span class="lineNum">      65 </span>            :     {</a>
 <a name="66"><span class="lineNum">      66 </span>            :         /** Create a default set of options. */</a>
-<a name="67"><span class="lineNum">      67 </span><span class="lineCov">         71 :         ElastiqueProOptions() = default;</span></a>
+<a name="67"><span class="lineNum">      67 </span><span class="lineCov">       3449 :         ElastiqueProOptions() = default;</span></a>
 <a name="68"><span class="lineNum">      68 </span>            :         /** Create a set of options from a saved string @see toString. */</a>
 <a name="69"><span class="lineNum">      69 </span>            :         ElastiqueProOptions (const juce::String&amp; string);</a>
 <a name="70"><span class="lineNum">      70 </span>            : </a>
@@ -244,8 +244,8 @@
 <a name="182"><span class="lineNum">     182 </span>            :     template &lt;&gt;</a>
 <a name="183"><span class="lineNum">     183 </span>            :     struct VariantConverter&lt;tracktion_engine::TimeStretcher::Mode&gt;</a>
 <a name="184"><span class="lineNum">     184 </span>            :     {</a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineCov">         67 :         static tracktion_engine::TimeStretcher::Mode fromVar (const var&amp; v)   { return (tracktion_engine::TimeStretcher::Mode) static_cast&lt;int&gt; (v); }</span></a>
-<a name="186"><span class="lineNum">     186 </span><span class="lineCov">         67 :         static var toVar (tracktion_engine::TimeStretcher::Mode v)            { return static_cast&lt;int&gt; (v); }</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">       3445 :         static tracktion_engine::TimeStretcher::Mode fromVar (const var&amp; v)   { return (tracktion_engine::TimeStretcher::Mode) static_cast&lt;int&gt; (v); }</span></a>
+<a name="186"><span class="lineNum">     186 </span><span class="lineCov">       3445 :         static var toVar (tracktion_engine::TimeStretcher::Mode v)            { return static_cast&lt;int&gt; (v); }</span></a>
 <a name="187"><span class="lineNum">     187 </span>            :     };</a>
 <a name="188"><span class="lineNum">     188 </span>            : </a>
 <a name="189"><span class="lineNum">     189 </span>            :     template &lt;&gt;</a>

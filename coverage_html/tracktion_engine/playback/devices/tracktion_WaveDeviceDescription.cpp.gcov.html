@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-02 19:45:46</td>
+            <td class="headerValue">2021-12-02 23:28:15</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">7</td>
@@ -76,10 +76,10 @@
 <a name="14"><span class="lineNum">      14 </span>            : //==============================================================================</a>
 <a name="15"><span class="lineNum">      15 </span><span class="lineNoCov">          0 : ChannelIndex::ChannelIndex() {}</span></a>
 <a name="16"><span class="lineNum">      16 </span>            : </a>
-<a name="17"><span class="lineNum">      17 </span><span class="lineCov">       3184 : ChannelIndex::ChannelIndex (int index, juce::AudioChannelSet::ChannelType c)</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">       4300 : ChannelIndex::ChannelIndex (int index, juce::AudioChannelSet::ChannelType c)</span></a>
 <a name="18"><span class="lineNum">      18 </span><span class="lineCov">       3024 :     : indexInDevice (index), channel (c)</span></a>
 <a name="19"><span class="lineNum">      19 </span>            : {</a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        160 : }</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">       1276 : }</span></a>
 <a name="21"><span class="lineNum">      21 </span>            : </a>
 <a name="22"><span class="lineNum">      22 </span><span class="lineCov">       1548 : bool ChannelIndex::operator== (const ChannelIndex&amp; other) const  { return indexInDevice == other.indexInDevice &amp;&amp; channel == other.channel; }</span></a>
 <a name="23"><span class="lineNum">      23 </span><span class="lineNoCov">          0 : bool ChannelIndex::operator!= (const ChannelIndex&amp; other) const  { return ! operator== (other); }</span></a>
@@ -102,17 +102,17 @@
 <a name="40"><span class="lineNum">      40 </span><span class="lineNoCov">          0 :     return desc.toString();</span></a>
 <a name="41"><span class="lineNum">      41 </span>            : }</a>
 <a name="42"><span class="lineNum">      42 </span>            : </a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">       1474 : juce::AudioChannelSet createChannelSet (const std::vector&lt;ChannelIndex&gt;&amp; channels)</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">       2032 : juce::AudioChannelSet createChannelSet (const std::vector&lt;ChannelIndex&gt;&amp; channels)</span></a>
 <a name="44"><span class="lineNum">      44 </span>            : {</a>
 <a name="45"><span class="lineNum">      45 </span>            :     juce::AudioChannelSet channelSet;</a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
-<a name="47"><span class="lineNum">      47 </span><span class="lineCov">       3110 :     for (const auto&amp; ci : channels)</span></a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineCov">       1636 :         channelSet.addChannel (ci.channel);</span></a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineCov">       4784 :     for (const auto&amp; ci : channels)</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">       2752 :         channelSet.addChannel (ci.channel);</span></a>
 <a name="49"><span class="lineNum">      49 </span>            : </a>
-<a name="50"><span class="lineNum">      50 </span><span class="lineCov">       1474 :     return channelSet;</span></a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">       2032 :     return channelSet;</span></a>
 <a name="51"><span class="lineNum">      51 </span>            : }</a>
 <a name="52"><span class="lineNum">      52 </span>            : </a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">        134 : juce::AudioChannelSet::ChannelType channelTypeFromAbbreviatedName (const juce::String&amp; abbreviatedName)</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">       6890 : juce::AudioChannelSet::ChannelType channelTypeFromAbbreviatedName (const juce::String&amp; abbreviatedName)</span></a>
 <a name="54"><span class="lineNum">      54 </span>            : {</a>
 <a name="55"><span class="lineNum">      55 </span>            :     struct NamedChannelTypeCache</a>
 <a name="56"><span class="lineNum">      56 </span>            :     {</a>
@@ -131,28 +131,28 @@
 <a name="69"><span class="lineNum">      69 </span>            :         std::map&lt;String, AudioChannelSet::ChannelType&gt; map;</a>
 <a name="70"><span class="lineNum">      70 </span>            :     };</a>
 <a name="71"><span class="lineNum">      71 </span>            : </a>
-<a name="72"><span class="lineNum">      72 </span><span class="lineCov">        134 :     static NamedChannelTypeCache cache;</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineCov">       6890 :     static NamedChannelTypeCache cache;</span></a>
 <a name="73"><span class="lineNum">      73 </span>            :     const auto result = cache.map.find (abbreviatedName);</a>
 <a name="74"><span class="lineNum">      74 </span>            : </a>
-<a name="75"><span class="lineNum">      75 </span><span class="lineCov">        134 :     if (result != cache.map.end())</span></a>
-<a name="76"><span class="lineNum">      76 </span><span class="lineCov">        134 :         return result-&gt;second;</span></a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineCov">       6890 :     if (result != cache.map.end())</span></a>
+<a name="76"><span class="lineNum">      76 </span><span class="lineCov">       6890 :         return result-&gt;second;</span></a>
 <a name="77"><span class="lineNum">      77 </span>            : </a>
 <a name="78"><span class="lineNum">      78 </span>            :     return juce::AudioChannelSet::unknown;</a>
 <a name="79"><span class="lineNum">      79 </span>            : }</a>
 <a name="80"><span class="lineNum">      80 </span>            : </a>
-<a name="81"><span class="lineNum">      81 </span><span class="lineCov">         67 : juce::AudioChannelSet channelSetFromSpeakerArrangmentString (const juce::String&amp; arrangement)</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineCov">       3445 : juce::AudioChannelSet channelSetFromSpeakerArrangmentString (const juce::String&amp; arrangement)</span></a>
 <a name="82"><span class="lineNum">      82 </span>            : {</a>
 <a name="83"><span class="lineNum">      83 </span>            :     AudioChannelSet cs;</a>
 <a name="84"><span class="lineNum">      84 </span>            : </a>
-<a name="85"><span class="lineNum">      85 </span><span class="lineCov">        201 :     for (auto&amp; channel : StringArray::fromTokens (arrangement, false))</span></a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineCov">      10335 :     for (auto&amp; channel : StringArray::fromTokens (arrangement, false))</span></a>
 <a name="86"><span class="lineNum">      86 </span>            :     {</a>
-<a name="87"><span class="lineNum">      87 </span><span class="lineCov">        134 :         const auto ct = channelTypeFromAbbreviatedName (channel);</span></a>
+<a name="87"><span class="lineNum">      87 </span><span class="lineCov">       6890 :         const auto ct = channelTypeFromAbbreviatedName (channel);</span></a>
 <a name="88"><span class="lineNum">      88 </span>            : </a>
-<a name="89"><span class="lineNum">      89 </span><span class="lineCov">        134 :         if (ct != AudioChannelSet::unknown)</span></a>
-<a name="90"><span class="lineNum">      90 </span><span class="lineCov">        134 :             cs.addChannel (ct);</span></a>
+<a name="89"><span class="lineNum">      89 </span><span class="lineCov">       6890 :         if (ct != AudioChannelSet::unknown)</span></a>
+<a name="90"><span class="lineNum">      90 </span><span class="lineCov">       6890 :             cs.addChannel (ct);</span></a>
 <a name="91"><span class="lineNum">      91 </span>            :     }</a>
 <a name="92"><span class="lineNum">      92 </span>            : </a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineCov">         67 :     return cs;</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineCov">       3445 :     return cs;</span></a>
 <a name="94"><span class="lineNum">      94 </span>            : }</a>
 <a name="95"><span class="lineNum">      95 </span>            : </a>
 <a name="96"><span class="lineNum">      96 </span>            : //==============================================================================</a>

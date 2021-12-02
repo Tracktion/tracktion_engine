@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-02 19:45:46</td>
+            <td class="headerValue">2021-12-02 23:28:15</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -593,9 +593,9 @@
 <a name="531"><span class="lineNum">     531 </span><span class="lineNoCov">          0 : static juce::String getRubberBandMelodic()    { return &quot;RubberBand (&quot; + TRANS(&quot;Melodic&quot;) + &quot;)&quot;; }</span></a>
 <a name="532"><span class="lineNum">     532 </span><span class="lineNoCov">          0 : static juce::String getRubberBandPercussive() { return &quot;RubberBand (&quot; + TRANS(&quot;Percussive&quot;) + &quot;)&quot;; }</span></a>
 <a name="533"><span class="lineNum">     533 </span>            : </a>
-<a name="534"><span class="lineNum">     534 </span><span class="lineCov">         67 : TimeStretcher::Mode TimeStretcher::checkModeIsAvailable (Mode m)</span></a>
+<a name="534"><span class="lineNum">     534 </span><span class="lineCov">       3445 : TimeStretcher::Mode TimeStretcher::checkModeIsAvailable (Mode m)</span></a>
 <a name="535"><span class="lineNum">     535 </span>            : {</a>
-<a name="536"><span class="lineNum">     536 </span><span class="lineCov">         67 :     switch (m)</span></a>
+<a name="536"><span class="lineNum">     536 </span><span class="lineCov">       3445 :     switch (m)</span></a>
 <a name="537"><span class="lineNum">     537 </span>            :     {</a>
 <a name="538"><span class="lineNum">     538 </span>            :         case elastiqueTransient:</a>
 <a name="539"><span class="lineNum">     539 </span>            :         case elastiqueTonal:</a>
@@ -631,10 +631,10 @@
 <a name="569"><span class="lineNum">     569 </span>            :         case rubberbandPercussive:</a>
 <a name="570"><span class="lineNum">     570 </span>            :             return m;</a>
 <a name="571"><span class="lineNum">     571 </span>            :        #endif</a>
-<a name="572"><span class="lineNum">     572 </span><span class="lineCov">         67 :         case disabled:</span></a>
+<a name="572"><span class="lineNum">     572 </span><span class="lineCov">       3445 :         case disabled:</span></a>
 <a name="573"><span class="lineNum">     573 </span>            :         case melodyne:</a>
 <a name="574"><span class="lineNum">     574 </span>            :         default:</a>
-<a name="575"><span class="lineNum">     575 </span><span class="lineCov">         67 :             return m;</span></a>
+<a name="575"><span class="lineNum">     575 </span><span class="lineCov">       3445 :             return m;</span></a>
 <a name="576"><span class="lineNum">     576 </span>            :     }</a>
 <a name="577"><span class="lineNum">     577 </span>            : }</a>
 <a name="578"><span class="lineNum">     578 </span>            : </a>
@@ -718,13 +718,13 @@
 <a name="656"><span class="lineNum">     656 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="657"><span class="lineNum">     657 </span>            : }</a>
 <a name="658"><span class="lineNum">     658 </span>            : </a>
-<a name="659"><span class="lineNum">     659 </span><span class="lineCov">        170 : bool TimeStretcher::isMelodyne (Mode mode)</span></a>
+<a name="659"><span class="lineNum">     659 </span><span class="lineCov">      17381 : bool TimeStretcher::isMelodyne (Mode mode)</span></a>
 <a name="660"><span class="lineNum">     660 </span>            : {</a>
 <a name="661"><span class="lineNum">     661 </span>            :    #if TRACKTION_ENABLE_ARA</a>
 <a name="662"><span class="lineNum">     662 </span>            :     return mode == melodyne;</a>
 <a name="663"><span class="lineNum">     663 </span>            :    #else</a>
 <a name="664"><span class="lineNum">     664 </span>            :     juce::ignoreUnused (mode);</a>
-<a name="665"><span class="lineNum">     665 </span><span class="lineCov">        170 :     return false;</span></a>
+<a name="665"><span class="lineNum">     665 </span><span class="lineCov">      17381 :     return false;</span></a>
 <a name="666"><span class="lineNum">     666 </span>            :    #endif</a>
 <a name="667"><span class="lineNum">     667 </span>            : }</a>
 <a name="668"><span class="lineNum">     668 </span>            : </a>

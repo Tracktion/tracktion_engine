@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-02 19:45:46</td>
+            <td class="headerValue">2021-12-02 23:28:15</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -99,8 +99,8 @@
 <a name="37"><span class="lineNum">      37 </span>            : </a>
 <a name="38"><span class="lineNum">      38 </span>            :     double getLengthInSeconds() const noexcept</a>
 <a name="39"><span class="lineNum">      39 </span>            :     {</a>
-<a name="40"><span class="lineNum">      40 </span><span class="lineCov">        138 :         if (sampleRate &gt; 0)</span></a>
-<a name="41"><span class="lineNum">      41 </span><span class="lineCov">        137 :             return lengthInSamples / sampleRate;</span></a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineCov">       3516 :         if (sampleRate &gt; 0)</span></a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineCov">       3515 :             return lengthInSamples / sampleRate;</span></a>
 <a name="42"><span class="lineNum">      42 </span>            : </a>
 <a name="43"><span class="lineNum">      43 </span>            :         return 0.0;</a>
 <a name="44"><span class="lineNum">      44 </span>            :     }</a>
@@ -115,13 +115,13 @@
 <a name="53"><span class="lineNum">      53 </span>            : {</a>
 <a name="54"><span class="lineNum">      54 </span>            : public:</a>
 <a name="55"><span class="lineNum">      55 </span>            :     AudioFile() = delete;</a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineCov">        134 :     inline AudioFile (Engine&amp; e) noexcept : engine (&amp;e) {}</span></a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">       3512 :     inline AudioFile (Engine&amp; e) noexcept : engine (&amp;e) {}</span></a>
 <a name="57"><span class="lineNum">      57 </span>            :     explicit AudioFile (Engine&amp;, const juce::File&amp;) noexcept;</a>
 <a name="58"><span class="lineNum">      58 </span>            :     AudioFile (const AudioFile&amp;) noexcept;</a>
 <a name="59"><span class="lineNum">      59 </span>            :     AudioFile&amp; operator= (const AudioFile&amp;) noexcept;</a>
 <a name="60"><span class="lineNum">      60 </span>            :     ~AudioFile();</a>
 <a name="61"><span class="lineNum">      61 </span>            : </a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">        351 :     const juce::File&amp; getFile() const noexcept  { return file; }</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">       8996 :     const juce::File&amp; getFile() const noexcept  { return file; }</span></a>
 <a name="63"><span class="lineNum">      63 </span>            :     juce::int64 getHash() const noexcept        { return hash; }</a>
 <a name="64"><span class="lineNum">      64 </span>            :     juce::String getHashString() const          { return juce::String::toHexString (hash); }</a>
 <a name="65"><span class="lineNum">      65 </span>            : </a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-02 19:45:46</td>
+            <td class="headerValue">2021-12-02 23:28:15</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">6</td>
@@ -293,20 +293,20 @@
 <a name="231"><span class="lineNum">     231 </span>            : //==============================================================================</a>
 <a name="232"><span class="lineNum">     232 </span>            : /** @internal */</a>
 <a name="233"><span class="lineNum">     233 </span>            : template&lt;typename TrackType&gt;</a>
-<a name="234"><span class="lineNum">     234 </span><span class="lineCov">        557 : inline juce::Array&lt;TrackType*&gt; getTracksOfType (const Edit&amp; edit, bool recursive)</span></a>
+<a name="234"><span class="lineNum">     234 </span><span class="lineCov">      21765 : inline juce::Array&lt;TrackType*&gt; getTracksOfType (const Edit&amp; edit, bool recursive)</span></a>
 <a name="235"><span class="lineNum">     235 </span>            : {</a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">        557 :     juce::Array&lt;TrackType*&gt; result;</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">      21765 :     juce::Array&lt;TrackType*&gt; result;</span></a>
 <a name="237"><span class="lineNum">     237 </span>            :     result.ensureStorageAllocated (32);</a>
 <a name="238"><span class="lineNum">     238 </span>            : </a>
-<a name="239"><span class="lineNum">     239 </span><span class="lineCov">       5047 :     edit.visitAllTracks ([&amp;] (Track&amp; t)</span></a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineCov">    1138321 :     edit.visitAllTracks ([&amp;] (Track&amp; t)</span></a>
 <a name="240"><span class="lineNum">     240 </span>            :                          {</a>
-<a name="241"><span class="lineNum">     241 </span><span class="lineCov">       6873 :                              if (auto type = dynamic_cast&lt;TrackType*&gt; (&amp;t))</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">    1530259 :                              if (auto type = dynamic_cast&lt;TrackType*&gt; (&amp;t))</span></a>
 <a name="242"><span class="lineNum">     242 </span>            :                                  result.add (type);</a>
 <a name="243"><span class="lineNum">     243 </span>            : </a>
-<a name="244"><span class="lineNum">     244 </span><span class="lineCov">       6873 :                              return true;</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineCov">    1530259 :                              return true;</span></a>
 <a name="245"><span class="lineNum">     245 </span>            :                          }, recursive);</a>
 <a name="246"><span class="lineNum">     246 </span>            : </a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineCov">        557 :     return result;</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">      21765 :     return result;</span></a>
 <a name="248"><span class="lineNum">     248 </span>            : }</a>
 <a name="249"><span class="lineNum">     249 </span>            : </a>
 <a name="250"><span class="lineNum">     250 </span>            : /** @internal */</a>

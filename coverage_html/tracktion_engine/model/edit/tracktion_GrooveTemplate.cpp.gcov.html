@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">62</td>
             <td class="headerCovTableEntry">179</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">34.6 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-02 19:45:46</td>
+            <td class="headerValue">2021-12-02 23:28:15</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">10</td>
             <td class="headerCovTableEntry">30</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">33.3 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -75,28 +75,28 @@
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : const char* GrooveTemplate::grooveXmlTag = &quot;GROOVETEMPLATE&quot;;</a>
 <a name="15"><span class="lineNum">      15 </span>            : </a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineNoCov">          0 : GrooveTemplate::GrooveTemplate()</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">        199 : GrooveTemplate::GrooveTemplate()</span></a>
 <a name="17"><span class="lineNum">      17 </span>            :     : numNotes (16),</a>
 <a name="18"><span class="lineNum">      18 </span>            :       notesPerBeat (2),</a>
 <a name="19"><span class="lineNum">      19 </span>            :       name (TRANS(&quot;Unnamed&quot;)),</a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineNoCov">          0 :       parameterized (false)</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        199 :       parameterized (false)</span></a>
 <a name="21"><span class="lineNum">      21 </span>            : {</a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">        199 : }</span></a>
 <a name="23"><span class="lineNum">      23 </span>            : </a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineNoCov">          0 : GrooveTemplate::GrooveTemplate (const juce::XmlElement* node)</span></a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 :     : GrooveTemplate()</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">        199 : GrooveTemplate::GrooveTemplate (const juce::XmlElement* node)</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">        199 :     : GrooveTemplate()</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : {</a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineNoCov">          0 :     if (node != nullptr &amp;&amp; node-&gt;hasTagName (grooveXmlTag))</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">        199 :     if (node != nullptr &amp;&amp; node-&gt;hasTagName (grooveXmlTag))</span></a>
 <a name="28"><span class="lineNum">      28 </span>            :     {</a>
-<a name="29"><span class="lineNum">      29 </span><span class="lineNoCov">          0 :         numNotes = node-&gt;getIntAttribute (&quot;numberOfNotes&quot;, 16);</span></a>
-<a name="30"><span class="lineNum">      30 </span><span class="lineNoCov">          0 :         notesPerBeat = node-&gt;getIntAttribute (&quot;notesPerBeat&quot;, 2);</span></a>
-<a name="31"><span class="lineNum">      31 </span><span class="lineNoCov">          0 :         name = node-&gt;getStringAttribute (&quot;name&quot;, TRANS(&quot;Unnamed&quot;));</span></a>
-<a name="32"><span class="lineNum">      32 </span><span class="lineNoCov">          0 :         parameterized = node-&gt;getBoolAttribute (&quot;parameterized&quot;, false);</span></a>
+<a name="29"><span class="lineNum">      29 </span><span class="lineCov">        199 :         numNotes = node-&gt;getIntAttribute (&quot;numberOfNotes&quot;, 16);</span></a>
+<a name="30"><span class="lineNum">      30 </span><span class="lineCov">        199 :         notesPerBeat = node-&gt;getIntAttribute (&quot;notesPerBeat&quot;, 2);</span></a>
+<a name="31"><span class="lineNum">      31 </span><span class="lineCov">        199 :         name = node-&gt;getStringAttribute (&quot;name&quot;, TRANS(&quot;Unnamed&quot;));</span></a>
+<a name="32"><span class="lineNum">      32 </span><span class="lineCov">        199 :         parameterized = node-&gt;getBoolAttribute (&quot;parameterized&quot;, false);</span></a>
 <a name="33"><span class="lineNum">      33 </span>            : </a>
-<a name="34"><span class="lineNum">      34 </span><span class="lineNoCov">          0 :         for (auto n : node-&gt;getChildWithTagNameIterator (&quot;SHIFT&quot;))</span></a>
-<a name="35"><span class="lineNum">      35 </span><span class="lineNoCov">          0 :             latenesses.add ((float) n-&gt;getDoubleAttribute (&quot;delta&quot;, 0.0));</span></a>
+<a name="34"><span class="lineNum">      34 </span><span class="lineCov">       1777 :         for (auto n : node-&gt;getChildWithTagNameIterator (&quot;SHIFT&quot;))</span></a>
+<a name="35"><span class="lineNum">      35 </span><span class="lineCov">       1180 :             latenesses.add ((float) n-&gt;getDoubleAttribute (&quot;delta&quot;, 0.0));</span></a>
 <a name="36"><span class="lineNum">      36 </span>            :     }</a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">        199 : }</span></a>
 <a name="38"><span class="lineNum">      38 </span>            : </a>
 <a name="39"><span class="lineNum">      39 </span><span class="lineNoCov">          0 : GrooveTemplate::GrooveTemplate (const GrooveTemplate&amp; other)</span></a>
 <a name="40"><span class="lineNum">      40 </span>            : {</a>
@@ -106,13 +106,13 @@
 <a name="44"><span class="lineNum">      44 </span><span class="lineNoCov">          0 :     name = other.name;</span></a>
 <a name="45"><span class="lineNum">      45 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
-<a name="47"><span class="lineNum">      47 </span><span class="lineNoCov">          0 : GrooveTemplate::~GrooveTemplate()</span></a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineCov">        199 : GrooveTemplate::~GrooveTemplate()</span></a>
 <a name="48"><span class="lineNum">      48 </span>            : {</a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">        199 : }</span></a>
 <a name="50"><span class="lineNum">      50 </span>            : </a>
 <a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 : bool GrooveTemplate::isParameterized() const</span></a>
 <a name="52"><span class="lineNum">      52 </span>            : {</a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 :     return parameterized;</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">        352 :     return parameterized;</span></a>
 <a name="54"><span class="lineNum">      54 </span>            : }</a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
 <a name="56"><span class="lineNum">      56 </span><span class="lineNoCov">          0 : const GrooveTemplate&amp; GrooveTemplate::operator= (const GrooveTemplate&amp; other)</span></a>
@@ -224,92 +224,92 @@
 <a name="162"><span class="lineNum">     162 </span>            : const char* basic16SwingXML = &quot;&lt;GROOVETEMPLATE name=\&quot;Basic 16th Swing\&quot; numberOfNotes=\&quot;2\&quot; notesPerBeat=\&quot;4\&quot; parameterized=\&quot;1\&quot;&gt;&lt;SHIFT delta=\&quot;0.0\&quot;/&gt;&lt;SHIFT delta=\&quot;0.66\&quot;/&gt;&lt;/GROOVETEMPLATE&gt;&quot;;</a>
 <a name="163"><span class="lineNum">     163 </span>            : </a>
 <a name="164"><span class="lineNum">     164 </span>            : //==============================================================================</a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 : GrooveTemplateManager::GrooveTemplateManager (Engine&amp; e)</span></a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineNoCov">          0 :     : engine (e)</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">          1 : GrooveTemplateManager::GrooveTemplateManager (Engine&amp; e)</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineCov">          1 :     : engine (e)</span></a>
 <a name="167"><span class="lineNum">     167 </span>            : {</a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :     reload();</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineCov">          1 :     reload();</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : </a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :     if (knownGrooves.isEmpty())</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">          1 :     if (knownGrooves.isEmpty())</span></a>
 <a name="171"><span class="lineNum">     171 </span>            :     {</a>
 <a name="172"><span class="lineNum">     172 </span>            :         // load the defaults..</a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :         std::unique_ptr&lt;XmlElement&gt; defSettings (XmlDocument::parse (TracktionBinaryData::groove_templates_xml));</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineCov">          2 :         std::unique_ptr&lt;XmlElement&gt; defSettings (XmlDocument::parse (TracktionBinaryData::groove_templates_xml));</span></a>
 <a name="174"><span class="lineNum">     174 </span>            : </a>
-<a name="175"><span class="lineNum">     175 </span><span class="lineNoCov">          0 :         if (defSettings &amp;&amp; defSettings-&gt;getTagName() == &quot;GROOVETEMPLATES&quot;)</span></a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 :             reload (defSettings.get());</span></a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineCov">          1 :         if (defSettings &amp;&amp; defSettings-&gt;getTagName() == &quot;GROOVETEMPLATES&quot;)</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">          1 :             reload (defSettings.get());</span></a>
 <a name="177"><span class="lineNum">     177 </span>            :     }</a>
 <a name="178"><span class="lineNum">     178 </span>            : </a>
 <a name="179"><span class="lineNum">     179 </span>            :     bool anyParameterized = false;</a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :     for (auto g : knownGrooves)</span></a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 :         if (g-&gt;isParameterized())</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineCov">        177 :     for (auto g : knownGrooves)</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineCov">        176 :         if (g-&gt;isParameterized())</span></a>
 <a name="182"><span class="lineNum">     182 </span>            :             anyParameterized = true;</a>
 <a name="183"><span class="lineNum">     183 </span>            : </a>
 <a name="184"><span class="lineNum">     184 </span>            :     // load the new defaults..</a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :     if (! anyParameterized)</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">          1 :     if (! anyParameterized)</span></a>
 <a name="186"><span class="lineNum">     186 </span>            :     {</a>
-<a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 :         std::unique_ptr&lt;XmlElement&gt; defSettings (XmlDocument::parse (TracktionBinaryData::groove_templates_2_xml));</span></a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineCov">          2 :         std::unique_ptr&lt;XmlElement&gt; defSettings (XmlDocument::parse (TracktionBinaryData::groove_templates_2_xml));</span></a>
 <a name="188"><span class="lineNum">     188 </span>            : </a>
-<a name="189"><span class="lineNum">     189 </span><span class="lineNoCov">          0 :         if (defSettings != nullptr &amp;&amp; defSettings-&gt;hasTagName (&quot;GROOVETEMPLATES&quot;))</span></a>
-<a name="190"><span class="lineNum">     190 </span><span class="lineNoCov">          0 :             for (auto n : defSettings-&gt;getChildWithTagNameIterator (GrooveTemplate::grooveXmlTag))</span></a>
-<a name="191"><span class="lineNum">     191 </span><span class="lineNoCov">          0 :                 knownGrooves.add (new GrooveTemplate (n));</span></a>
+<a name="189"><span class="lineNum">     189 </span><span class="lineCov">          1 :         if (defSettings != nullptr &amp;&amp; defSettings-&gt;hasTagName (&quot;GROOVETEMPLATES&quot;))</span></a>
+<a name="190"><span class="lineNum">     190 </span><span class="lineCov">         24 :             for (auto n : defSettings-&gt;getChildWithTagNameIterator (GrooveTemplate::grooveXmlTag))</span></a>
+<a name="191"><span class="lineNum">     191 </span><span class="lineCov">         42 :                 knownGrooves.add (new GrooveTemplate (n));</span></a>
 <a name="192"><span class="lineNum">     192 </span>            :     }</a>
 <a name="193"><span class="lineNum">     193 </span>            : </a>
 <a name="194"><span class="lineNum">     194 </span>            :     // Load even newer presets</a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineNoCov">          0 :     auto hasGroove = [this] (const GrooveTemplate&amp; gt)</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">          2 :     auto hasGroove = [this] (const GrooveTemplate&amp; gt)</span></a>
 <a name="196"><span class="lineNum">     196 </span>            :     {</a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineNoCov">          0 :         for (auto g : knownGrooves)</span></a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 :             if (g-&gt;getName() == gt.getName())</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">        397 :         for (auto g : knownGrooves)</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">        395 :             if (g-&gt;getName() == gt.getName())</span></a>
 <a name="199"><span class="lineNum">     199 </span>            :                 return true;</a>
 <a name="200"><span class="lineNum">     200 </span>            : </a>
 <a name="201"><span class="lineNum">     201 </span>            :         return false;</a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineNoCov">          0 :     };</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">          1 :     };</span></a>
 <a name="203"><span class="lineNum">     203 </span>            : </a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 :     auto addGrooveIfNotExists = [this, &amp;hasGroove] (String xmlString)</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineCov">          4 :     auto addGrooveIfNotExists = [this, &amp;hasGroove] (String xmlString)</span></a>
 <a name="205"><span class="lineNum">     205 </span>            :     {</a>
-<a name="206"><span class="lineNum">     206 </span><span class="lineNoCov">          0 :         auto xml = XmlDocument::parse (xmlString);</span></a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :         auto gt = std::make_unique&lt;GrooveTemplate&gt; (xml.get());</span></a>
-<a name="208"><span class="lineNum">     208 </span><span class="lineNoCov">          0 :         if (! hasGroove (*gt))</span></a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :             knownGrooves.add (gt.release());</span></a>
-<a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 :     };</span></a>
+<a name="206"><span class="lineNum">     206 </span><span class="lineCov">          2 :         auto xml = XmlDocument::parse (xmlString);</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineCov">          2 :         auto gt = std::make_unique&lt;GrooveTemplate&gt; (xml.get());</span></a>
+<a name="208"><span class="lineNum">     208 </span><span class="lineCov">          2 :         if (! hasGroove (*gt))</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineCov">          2 :             knownGrooves.add (gt.release());</span></a>
+<a name="210"><span class="lineNum">     210 </span><span class="lineCov">          2 :     };</span></a>
 <a name="211"><span class="lineNum">     211 </span>            : </a>
-<a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 :     addGrooveIfNotExists (basic8SwingXML);</span></a>
-<a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 :     addGrooveIfNotExists (basic16SwingXML);</span></a>
-<a name="214"><span class="lineNum">     214 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="212"><span class="lineNum">     212 </span><span class="lineCov">          1 :     addGrooveIfNotExists (basic8SwingXML);</span></a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineCov">          1 :     addGrooveIfNotExists (basic16SwingXML);</span></a>
+<a name="214"><span class="lineNum">     214 </span><span class="lineCov">          1 : }</span></a>
 <a name="215"><span class="lineNum">     215 </span>            : </a>
 <a name="216"><span class="lineNum">     216 </span>            : //==============================================================================</a>
-<a name="217"><span class="lineNum">     217 </span><span class="lineNoCov">          0 : void GrooveTemplateManager::useParameterizedGrooves (bool use)</span></a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineCov">          1 : void GrooveTemplateManager::useParameterizedGrooves (bool use)</span></a>
 <a name="218"><span class="lineNum">     218 </span>            : {</a>
 <a name="219"><span class="lineNum">     219 </span>            :     activeGrooves.clear();</a>
 <a name="220"><span class="lineNum">     220 </span>            : </a>
-<a name="221"><span class="lineNum">     221 </span><span class="lineNoCov">          0 :     useParameterized = use;</span></a>
-<a name="222"><span class="lineNum">     222 </span><span class="lineNoCov">          0 :     if (useParameterized)</span></a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineCov">          1 :     useParameterized = use;</span></a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineCov">          1 :     if (useParameterized)</span></a>
 <a name="223"><span class="lineNum">     223 </span>            :     {</a>
 <a name="224"><span class="lineNum">     224 </span><span class="lineNoCov">          0 :         for (auto g : knownGrooves)</span></a>
 <a name="225"><span class="lineNum">     225 </span>            :             activeGrooves.add (g);</a>
 <a name="226"><span class="lineNum">     226 </span>            :     }</a>
 <a name="227"><span class="lineNum">     227 </span>            :     else</a>
 <a name="228"><span class="lineNum">     228 </span>            :     {</a>
-<a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 :         for (auto g : knownGrooves)</span></a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineNoCov">          0 :             if (! g-&gt;isParameterized())</span></a>
+<a name="229"><span class="lineNum">     229 </span><span class="lineCov">        177 :         for (auto g : knownGrooves)</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineCov">        176 :             if (! g-&gt;isParameterized())</span></a>
 <a name="231"><span class="lineNum">     231 </span>            :                 activeGrooves.add (g);</a>
 <a name="232"><span class="lineNum">     232 </span>            :     }</a>
-<a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineCov">          1 : }</span></a>
 <a name="234"><span class="lineNum">     234 </span>            : </a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineNoCov">          0 : void GrooveTemplateManager::reload()</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">          1 : void GrooveTemplateManager::reload()</span></a>
 <a name="236"><span class="lineNum">     236 </span>            : {</a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineNoCov">          0 :     if (auto xml = engine.getPropertyStorage().getXmlProperty (SettingID::grooveTemplates))</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineCov">          1 :     if (auto xml = engine.getPropertyStorage().getXmlProperty (SettingID::grooveTemplates))</span></a>
 <a name="238"><span class="lineNum">     238 </span><span class="lineNoCov">          0 :         reload (xml.get());</span></a>
-<a name="239"><span class="lineNum">     239 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineCov">          1 : }</span></a>
 <a name="240"><span class="lineNum">     240 </span>            : </a>
-<a name="241"><span class="lineNum">     241 </span><span class="lineNoCov">          0 : void GrooveTemplateManager::reload (const juce::XmlElement* grooves)</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">          1 : void GrooveTemplateManager::reload (const juce::XmlElement* grooves)</span></a>
 <a name="242"><span class="lineNum">     242 </span>            : {</a>
-<a name="243"><span class="lineNum">     243 </span><span class="lineNoCov">          0 :     knownGrooves.clearQuick (true);</span></a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineCov">          1 :     knownGrooves.clearQuick (true);</span></a>
 <a name="244"><span class="lineNum">     244 </span>            : </a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 :     if (grooves != nullptr &amp;&amp; grooves-&gt;hasTagName (&quot;GROOVETEMPLATES&quot;))</span></a>
-<a name="246"><span class="lineNum">     246 </span><span class="lineNoCov">          0 :         for (auto n : grooves-&gt;getChildWithTagNameIterator (GrooveTemplate::grooveXmlTag))</span></a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineNoCov">          0 :             knownGrooves.add (new GrooveTemplate (n));</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">          1 :     if (grooves != nullptr &amp;&amp; grooves-&gt;hasTagName (&quot;GROOVETEMPLATES&quot;))</span></a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineCov">        179 :         for (auto n : grooves-&gt;getChildWithTagNameIterator (GrooveTemplate::grooveXmlTag))</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">        352 :             knownGrooves.add (new GrooveTemplate (n));</span></a>
 <a name="248"><span class="lineNum">     248 </span>            : </a>
-<a name="249"><span class="lineNum">     249 </span><span class="lineNoCov">          0 :     useParameterizedGrooves (useParameterized);</span></a>
-<a name="250"><span class="lineNum">     250 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="249"><span class="lineNum">     249 </span><span class="lineCov">          1 :     useParameterizedGrooves (useParameterized);</span></a>
+<a name="250"><span class="lineNum">     250 </span><span class="lineCov">          1 : }</span></a>
 <a name="251"><span class="lineNum">     251 </span>            : </a>
 <a name="252"><span class="lineNum">     252 </span><span class="lineNoCov">          0 : void GrooveTemplateManager::save()</span></a>
 <a name="253"><span class="lineNum">     253 </span>            : {</a>
@@ -341,10 +341,10 @@
 <a name="279"><span class="lineNum">     279 </span><span class="lineNoCov">          0 :     return activeGrooves[index];</span></a>
 <a name="280"><span class="lineNum">     280 </span>            : }</a>
 <a name="281"><span class="lineNum">     281 </span>            : </a>
-<a name="282"><span class="lineNum">     282 </span><span class="lineNoCov">          0 : const GrooveTemplate* GrooveTemplateManager::getTemplateByName (const String&amp; name)</span></a>
+<a name="282"><span class="lineNum">     282 </span><span class="lineCov">        176 : const GrooveTemplate* GrooveTemplateManager::getTemplateByName (const String&amp; name)</span></a>
 <a name="283"><span class="lineNum">     283 </span>            : {</a>
-<a name="284"><span class="lineNum">     284 </span><span class="lineNoCov">          0 :     for (auto gt : activeGrooves)</span></a>
-<a name="285"><span class="lineNum">     285 </span><span class="lineNoCov">          0 :         if (gt-&gt;getName() == name)</span></a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineCov">      31152 :     for (auto gt : activeGrooves)</span></a>
+<a name="285"><span class="lineNum">     285 </span><span class="lineCov">      30976 :         if (gt-&gt;getName() == name)</span></a>
 <a name="286"><span class="lineNum">     286 </span><span class="lineNoCov">          0 :             return gt;</span></a>
 <a name="287"><span class="lineNum">     287 </span>            : </a>
 <a name="288"><span class="lineNum">     288 </span>            :     return {};</a>

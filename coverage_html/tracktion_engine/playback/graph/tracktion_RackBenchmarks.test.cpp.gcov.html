@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">3</td>
             <td class="headerCovTableEntry">32</td>
-            <td class="headerCovTableEntryLo">9.4 %</td>
+            <td class="headerCovTableEntry">32</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-02 19:45:46</td>
+            <td class="headerValue">2021-12-02 23:28:15</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">1</td>
             <td class="headerCovTableEntry">3</td>
-            <td class="headerCovTableEntryLo">33.3 %</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -93,20 +93,20 @@
 <a name="31"><span class="lineNum">      31 </span>            :     {</a>
 <a name="32"><span class="lineNum">      32 </span><span class="lineCov">          1 :     }</span></a>
 <a name="33"><span class="lineNum">      33 </span>            :     </a>
-<a name="34"><span class="lineNum">      34 </span><span class="lineNoCov">          0 :     void runTest() override</span></a>
+<a name="34"><span class="lineNum">      34 </span><span class="lineCov">          1 :     void runTest() override</span></a>
 <a name="35"><span class="lineNum">      35 </span>            :     {</a>
 <a name="36"><span class="lineNum">      36 </span>            :         using namespace benchmark_utilities;</a>
 <a name="37"><span class="lineNum">      37 </span>            :         using namespace tracktion_graph;</a>
 <a name="38"><span class="lineNum">      38 </span>            :         test_utilities::TestSetup ts;</a>
-<a name="39"><span class="lineNum">      39 </span><span class="lineNoCov">          0 :         ts.sampleRate = 96000.0;</span></a>
-<a name="40"><span class="lineNum">      40 </span><span class="lineNoCov">          0 :         ts.blockSize = 128;</span></a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineCov">          1 :         ts.sampleRate = 96000.0;</span></a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineCov">          1 :         ts.blockSize = 128;</span></a>
 <a name="41"><span class="lineNum">      41 </span>            : </a>
-<a name="42"><span class="lineNum">      42 </span><span class="lineNoCov">          0 :         auto&amp; engine = *tracktion_engine::Engine::getEngines()[0];</span></a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineCov">          1 :         auto&amp; engine = *tracktion_engine::Engine::getEngines()[0];</span></a>
 <a name="43"><span class="lineNum">      43 </span>            : </a>
-<a name="44"><span class="lineNum">      44 </span><span class="lineNoCov">          0 :         runRackMixBusTest (engine, ts);</span></a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="44"><span class="lineNum">      44 </span><span class="lineCov">          2 :         runRackMixBusTest (engine, ts);</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">          1 :     }</span></a>
 <a name="46"><span class="lineNum">      46 </span>            :     </a>
-<a name="47"><span class="lineNum">      47 </span><span class="lineNoCov">          0 :     void runRackMixBusTest (Engine&amp; engine, test_utilities::TestSetup ts)</span></a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineCov">          1 :     void runRackMixBusTest (Engine&amp; engine, test_utilities::TestSetup ts)</span></a>
 <a name="48"><span class="lineNum">      48 </span>            :     {</a>
 <a name="49"><span class="lineNum">      49 </span>            :         using namespace benchmark_utilities;</a>
 <a name="50"><span class="lineNum">      50 </span>            :         using namespace tracktion_graph;</a>
@@ -244,39 +244,39 @@
 <a name="182"><span class="lineNum">     182 </span>            :         67,73,105,178,129,141,129,60,41,87,57,39,175,26,3,89,180,173,198,64,198,157,197,225,201,220,198,0,33,243,100,67,168,52,217,220,199,224,255,1,148,170,60,43,0,0 };</a>
 <a name="183"><span class="lineNum">     183 </span>            : </a>
 <a name="184"><span class="lineNum">     184 </span>            :         const auto editName = &quot;RackMixBus&quot;;</a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :         auto edit = openEditFromZipData (engine, RackMixBus_zip, sizeof (RackMixBus_zip));</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">          1 :         auto edit = openEditFromZipData (engine, RackMixBus_zip, sizeof (RackMixBus_zip));</span></a>
 <a name="186"><span class="lineNum">     186 </span>            :         const double fileLength = 20.0;</a>
-<a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 :         auto sinFile = test_utilities::getSinFile&lt;juce::WavAudioFormat&gt; (ts.sampleRate, fileLength, 2);</span></a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineCov">          1 :         auto sinFile = test_utilities::getSinFile&lt;juce::WavAudioFormat&gt; (ts.sampleRate, fileLength, 2);</span></a>
 <a name="188"><span class="lineNum">     188 </span>            :         </a>
-<a name="189"><span class="lineNum">     189 </span><span class="lineNoCov">          0 :         beginTest (&quot;Load Edit&quot;);</span></a>
+<a name="189"><span class="lineNum">     189 </span><span class="lineCov">          1 :         beginTest (&quot;Load Edit&quot;);</span></a>
 <a name="190"><span class="lineNum">     190 </span>            :         {</a>
-<a name="191"><span class="lineNum">     191 </span><span class="lineNoCov">          0 :             expect (edit != nullptr);</span></a>
+<a name="191"><span class="lineNum">     191 </span><span class="lineCov">          1 :             expect (edit != nullptr);</span></a>
 <a name="192"><span class="lineNum">     192 </span>            : </a>
 <a name="193"><span class="lineNum">     193 </span>            :             // Put the content on the first 8 audio tracks</a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 :             auto audioTracks = getAudioTracks (*edit);</span></a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineNoCov">          0 :             expectGreaterOrEqual (audioTracks.size(), 8);</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineCov">          1 :             auto audioTracks = getAudioTracks (*edit);</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">          1 :             expectGreaterOrEqual (audioTracks.size(), 8);</span></a>
 <a name="196"><span class="lineNum">     196 </span>            :             </a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineNoCov">          0 :             for (int i = 0; i &lt; 8; ++i)</span></a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 :                 audioTracks[i]-&gt;insertMIDIClip (EditTimeRange::withStartAndLength (0.0, fileLength), nullptr);</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">          9 :             for (int i = 0; i &lt; 8; ++i)</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">         16 :                 audioTracks[i]-&gt;insertMIDIClip (EditTimeRange::withStartAndLength (0.0, fileLength), nullptr);</span></a>
 <a name="199"><span class="lineNum">     199 </span>            : </a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :             expectEquals (edit-&gt;getLength(), fileLength);</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineCov">          1 :             expectEquals (edit-&gt;getLength(), fileLength);</span></a>
 <a name="201"><span class="lineNum">     201 </span>            :         }</a>
 <a name="202"><span class="lineNum">     202 </span>            : </a>
 <a name="203"><span class="lineNum">     203 </span>            :         // Render single threaded first</a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 :         renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::no, LockFree::no, ThreadPoolStrategy::conditionVariable });</span></a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 :         renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::no, LockFree::yes, ThreadPoolStrategy::conditionVariable });</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineCov">          2 :         renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::no, LockFree::no, ThreadPoolStrategy::conditionVariable });</span></a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineCov">          2 :         renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::no, LockFree::yes, ThreadPoolStrategy::conditionVariable });</span></a>
 <a name="206"><span class="lineNum">     206 </span>            : </a>
 <a name="207"><span class="lineNum">     207 </span>            :         // Then multi threaded with different strategies</a>
-<a name="208"><span class="lineNum">     208 </span><span class="lineNoCov">          0 :         renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::no, ThreadPoolStrategy::lightweightSemaphore });</span></a>
+<a name="208"><span class="lineNum">     208 </span><span class="lineCov">          1 :         renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::no, ThreadPoolStrategy::lightweightSemaphore });</span></a>
 <a name="209"><span class="lineNum">     209 </span>            : </a>
-<a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 :         for (auto strategy : test_utilities::getThreadPoolStrategies())</span></a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 :             renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, strategy });</span></a>
+<a name="210"><span class="lineNum">     210 </span><span class="lineCov">          8 :         for (auto strategy : test_utilities::getThreadPoolStrategies())</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">         12 :             renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, strategy });</span></a>
 <a name="212"><span class="lineNum">     212 </span>            : </a>
 <a name="213"><span class="lineNum">     213 </span>            :         // Directly compare not-pooled</a>
 <a name="214"><span class="lineNum">     214 </span>            :         {</a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 :             renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::semaphore, PoolMemoryAllocations::no });</span></a>
-<a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 :             renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::no });</span></a>
-<a name="217"><span class="lineNum">     217 </span><span class="lineNoCov">          0 :             renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemHybrid, PoolMemoryAllocations::no });</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineCov">          2 :             renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::semaphore, PoolMemoryAllocations::no });</span></a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineCov">          2 :             renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::no });</span></a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineCov">          2 :             renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemHybrid, PoolMemoryAllocations::no });</span></a>
 <a name="218"><span class="lineNum">     218 </span>            :         }</a>
 <a name="219"><span class="lineNum">     219 </span>            : </a>
 <a name="220"><span class="lineNum">     220 </span>            :        #if TRACKTION_GRAPH_ADVANCED_PERFORMANCE_TESTS</a>
@@ -290,14 +290,14 @@
 <a name="228"><span class="lineNum">     228 </span>            : </a>
 <a name="229"><span class="lineNum">     229 </span>            :         // Lightweight semaphore seems to have the best performance so compare this over different buffer sizes</a>
 <a name="230"><span class="lineNum">     230 </span>            :         {</a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineNoCov">          0 :             for (int blockSize : { 128, 256, 512, 1024, 2048 })</span></a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineCov">          6 :             for (int blockSize : { 128, 256, 512, 1024, 2048 })</span></a>
 <a name="232"><span class="lineNum">     232 </span>            :             {</a>
-<a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 :                 ts.blockSize = blockSize;</span></a>
-<a name="234"><span class="lineNum">     234 </span><span class="lineNoCov">          0 :                 renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::no });</span></a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineNoCov">          0 :                 renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::yes });</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineCov">          5 :                 ts.blockSize = blockSize;</span></a>
+<a name="234"><span class="lineNum">     234 </span><span class="lineCov">         10 :                 renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::no });</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">         10 :                 renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::yes });</span></a>
 <a name="236"><span class="lineNum">     236 </span>            :             }</a>
 <a name="237"><span class="lineNum">     237 </span>            :         }</a>
-<a name="238"><span class="lineNum">     238 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineCov">          1 :     }</span></a>
 <a name="239"><span class="lineNum">     239 </span>            : };</a>
 <a name="240"><span class="lineNum">     240 </span>            : </a>
 <a name="241"><span class="lineNum">     241 </span>            : static RackBenchmarks rackBenchmarks;</a>

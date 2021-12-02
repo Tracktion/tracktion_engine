@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">218</td>
+            <td class="headerCovTableEntry">319</td>
             <td class="headerCovTableEntry">492</td>
-            <td class="headerCovTableEntryLo">44.3 %</td>
+            <td class="headerCovTableEntryLo">64.8 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-02 19:45:46</td>
+            <td class="headerValue">2021-12-02 23:28:15</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">24</td>
+            <td class="headerCovTableEntry">31</td>
             <td class="headerCovTableEntry">40</td>
-            <td class="headerCovTableEntryLo">60.0 %</td>
+            <td class="headerCovTableEntryMed">77.5 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -78,19 +78,19 @@
 <a name="16"><span class="lineNum">      16 </span>            : namespace</a>
 <a name="17"><span class="lineNum">      17 </span>            : {</a>
 <a name="18"><span class="lineNum">      18 </span>            :     template&lt;typename PluginType&gt;</a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">          8 :     juce::Array&lt;PluginType*&gt; getAllPluginsOfType (Edit&amp; edit)</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">        254 :     juce::Array&lt;PluginType*&gt; getAllPluginsOfType (Edit&amp; edit)</span></a>
 <a name="20"><span class="lineNum">      20 </span>            :     {</a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">          8 :         juce::Array&lt;PluginType*&gt; plugins;</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">        254 :         juce::Array&lt;PluginType*&gt; plugins;</span></a>
 <a name="22"><span class="lineNum">      22 </span>            :         </a>
 <a name="23"><span class="lineNum">      23 </span>            :         // N.B. There is a bit of a hack here checking if the plugin is actually still in the Edit</a>
 <a name="24"><span class="lineNum">      24 </span>            :         // as they are removed from the PluginCache async and we don't want to flush it every time</a>
 <a name="25"><span class="lineNum">      25 </span>            :         // we call this method. This should probably be moved to an EditItemCache like Clips and Tracks</a>
-<a name="26"><span class="lineNum">      26 </span><span class="lineCov">         40 :         for (auto p : edit.getPluginCache().getPlugins())</span></a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineCov">         24 :             if (auto pt = dynamic_cast&lt;PluginType*&gt; (p))</span></a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineNoCov">          0 :                 if (pt-&gt;state.getParent().isValid() &amp;&amp; pt-&gt;state.getRoot() == edit.state)</span></a>
+<a name="26"><span class="lineNum">      26 </span><span class="lineCov">      33304 :         for (auto p : edit.getPluginCache().getPlugins())</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">      32796 :             if (auto pt = dynamic_cast&lt;PluginType*&gt; (p))</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineCov">      12676 :                 if (pt-&gt;state.getParent().isValid() &amp;&amp; pt-&gt;state.getRoot() == edit.state)</span></a>
 <a name="29"><span class="lineNum">      29 </span>            :                     plugins.add (pt);</a>
 <a name="30"><span class="lineNum">      30 </span>            :         </a>
-<a name="31"><span class="lineNum">      31 </span><span class="lineCov">          8 :         return plugins;</span></a>
+<a name="31"><span class="lineNum">      31 </span><span class="lineCov">        254 :         return plugins;</span></a>
 <a name="32"><span class="lineNum">      32 </span>            :     }</a>
 <a name="33"><span class="lineNum">      33 </span>            : </a>
 <a name="34"><span class="lineNum">      34 </span>            :     using namespace tracktion_graph;</a>
@@ -104,13 +104,13 @@
 <a name="42"><span class="lineNum">      42 </span>            :     int getRackInputBusID (EditItemID rackID)</a>
 <a name="43"><span class="lineNum">      43 </span>            :     {</a>
 <a name="44"><span class="lineNum">      44 </span>            :         constexpr size_t rackInputMagicNum = 0x7261636b496e;</a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineNoCov">          0 :         return static_cast&lt;int&gt; (tracktion_graph::hash (rackInputMagicNum, rackID.getRawID()));</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">       1768 :         return static_cast&lt;int&gt; (tracktion_graph::hash (rackInputMagicNum, rackID.getRawID()));</span></a>
 <a name="46"><span class="lineNum">      46 </span>            :     }</a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
 <a name="48"><span class="lineNum">      48 </span>            :     int getRackOutputBusID (EditItemID rackID)</a>
 <a name="49"><span class="lineNum">      49 </span>            :     {</a>
 <a name="50"><span class="lineNum">      50 </span>            :         constexpr size_t rackOutputMagicNum = 0x7261636b4f7574;</a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :         return static_cast&lt;int&gt; (tracktion_graph::hash (rackOutputMagicNum, rackID.getRawID()));</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">       1768 :         return static_cast&lt;int&gt; (tracktion_graph::hash (rackOutputMagicNum, rackID.getRawID()));</span></a>
 <a name="52"><span class="lineNum">      52 </span>            :     }</a>
 <a name="53"><span class="lineNum">      53 </span>            : </a>
 <a name="54"><span class="lineNum">      54 </span>            :     int getWaveInputDeviceBusID (EditItemID trackItemID)</a>
@@ -125,15 +125,15 @@
 <a name="63"><span class="lineNum">      63 </span><span class="lineNoCov">          0 :         return static_cast&lt;int&gt; (tracktion_graph::hash (midiMagicNum, trackItemID.getRawID()));</span></a>
 <a name="64"><span class="lineNum">      64 </span>            :     }</a>
 <a name="65"><span class="lineNum">      65 </span>            : </a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineCov">          7 :     bool isSidechainSource (Track&amp; t)</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineCov">       2123 :     bool isSidechainSource (Track&amp; t)</span></a>
 <a name="67"><span class="lineNum">      67 </span>            :     {</a>
-<a name="68"><span class="lineNum">      68 </span><span class="lineCov">          7 :         const auto itemID = t.itemID;</span></a>
+<a name="68"><span class="lineNum">      68 </span><span class="lineCov">       2123 :         const auto itemID = t.itemID;</span></a>
 <a name="69"><span class="lineNum">      69 </span>            : </a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineCov">         42 :         for (auto p : t.edit.getPluginCache().getPlugins())</span></a>
-<a name="71"><span class="lineNum">      71 </span><span class="lineCov">         28 :             if (p-&gt;getSidechainSourceID() == itemID)</span></a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineCov">     335770 :         for (auto p : t.edit.getPluginCache().getPlugins())</span></a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">     331524 :             if (p-&gt;getSidechainSourceID() == itemID)</span></a>
 <a name="72"><span class="lineNum">      72 </span>            :                 return true;</a>
 <a name="73"><span class="lineNum">      73 </span>            : </a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineCov">          7 :         return false;</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">       2123 :         return false;</span></a>
 <a name="75"><span class="lineNum">      75 </span>            :     }</a>
 <a name="76"><span class="lineNum">      76 </span>            : </a>
 <a name="77"><span class="lineNum">      77 </span>            :     constexpr int getTrackNumChannels()</a>
@@ -190,21 +190,21 @@
 <a name="128"><span class="lineNum">     128 </span>            :         return 0;</a>
 <a name="129"><span class="lineNum">     129 </span>            :     }</a>
 <a name="130"><span class="lineNum">     130 </span>            : </a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineNoCov">          0 :     juce::Array&lt;RackInstance*&gt; getInstancesForRack (RackType&amp; type)</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineCov">        180 :     juce::Array&lt;RackInstance*&gt; getInstancesForRack (RackType&amp; type)</span></a>
 <a name="132"><span class="lineNum">     132 </span>            :     {</a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineNoCov">          0 :         juce::Array&lt;RackInstance*&gt; instances;</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineCov">        180 :         juce::Array&lt;RackInstance*&gt; instances;</span></a>
 <a name="134"><span class="lineNum">     134 </span>            : </a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :         for (auto ri : getAllPluginsOfType&lt;RackInstance&gt; (type.edit))</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :             if (ri-&gt;type.get() == &amp;type)</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">      13036 :         for (auto ri : getAllPluginsOfType&lt;RackInstance&gt; (type.edit))</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">      12676 :             if (ri-&gt;type.get() == &amp;type)</span></a>
 <a name="137"><span class="lineNum">     137 </span>            :                 instances.add (ri);</a>
 <a name="138"><span class="lineNum">     138 </span>            :         </a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineNoCov">          0 :         return instances;</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">        180 :         return instances;</span></a>
 <a name="140"><span class="lineNum">     140 </span>            :     }</a>
 <a name="141"><span class="lineNum">     141 </span>            : </a>
 <a name="142"><span class="lineNum">     142 </span>            :     juce::Array&lt;RackInstance*&gt; getEnabledInstancesForRack (RackType&amp; type)</a>
 <a name="143"><span class="lineNum">     143 </span>            :     {</a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 :         auto instances = getInstancesForRack (type);</span></a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :         instances.removeIf ([] (auto instance) { return ! instance-&gt;isEnabled(); });</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">        180 :         auto instances = getInstancesForRack (type);</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">        180 :         instances.removeIf ([] (auto instance) { return ! instance-&gt;isEnabled(); });</span></a>
 <a name="146"><span class="lineNum">     146 </span>            :         </a>
 <a name="147"><span class="lineNum">     147 </span>            :         return instances;</a>
 <a name="148"><span class="lineNum">     148 </span>            :     }</a>
@@ -230,9 +230,9 @@
 <a name="168"><span class="lineNum">     168 </span>            :         return true;</a>
 <a name="169"><span class="lineNum">     169 </span>            :     }</a>
 <a name="170"><span class="lineNum">     170 </span>            : </a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineCov">          4 :     juce::Array&lt;Track*&gt; addImplicitSubmixChildTracks (const juce::Array&lt;Track*&gt; originalTracks)</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">         70 :     juce::Array&lt;Track*&gt; addImplicitSubmixChildTracks (const juce::Array&lt;Track*&gt; originalTracks)</span></a>
 <a name="172"><span class="lineNum">     172 </span>            :     {</a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineCov">          4 :         if (originalTracks.isEmpty())</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineCov">         70 :         if (originalTracks.isEmpty())</span></a>
 <a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 :             return {};</span></a>
 <a name="175"><span class="lineNum">     175 </span>            :      </a>
 <a name="176"><span class="lineNum">     176 </span>            :         auto tracks = originalTracks;</a>
@@ -241,17 +241,17 @@
 <a name="179"><span class="lineNum">     179 </span>            :         // If any tracks are submix tracks, check if their parents are included or any of their children</a>
 <a name="180"><span class="lineNum">     180 </span>            :         // If not, add all children recusively</a>
 <a name="181"><span class="lineNum">     181 </span>            :         // Ensure there are no duplicates</a>
-<a name="182"><span class="lineNum">     182 </span><span class="lineCov">         11 :         for (auto track : originalTracks)</span></a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineCov">        493 :         for (auto track : originalTracks)</span></a>
 <a name="183"><span class="lineNum">     183 </span>            :         {</a>
-<a name="184"><span class="lineNum">     184 </span><span class="lineCov">          7 :             if (auto st = dynamic_cast&lt;FolderTrack*&gt; (track);</span></a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineCov">          7 :                 st != nullptr &amp;&amp; st-&gt;isSubmixFolder())</span></a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineCov">        423 :             if (auto st = dynamic_cast&lt;FolderTrack*&gt; (track);</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">        423 :                 st != nullptr &amp;&amp; st-&gt;isSubmixFolder())</span></a>
 <a name="186"><span class="lineNum">     186 </span>            :             {</a>
 <a name="187"><span class="lineNum">     187 </span>            :                 bool shouldSkip = false;</a>
 <a name="188"><span class="lineNum">     188 </span>            :                 </a>
 <a name="189"><span class="lineNum">     189 </span>            :                 // First check for parents</a>
-<a name="190"><span class="lineNum">     190 </span><span class="lineNoCov">          0 :                 for (auto potentialParent : originalTracks)</span></a>
+<a name="190"><span class="lineNum">     190 </span><span class="lineCov">        242 :                 for (auto potentialParent : originalTracks)</span></a>
 <a name="191"><span class="lineNum">     191 </span>            :                 {</a>
-<a name="192"><span class="lineNum">     192 </span><span class="lineNoCov">          0 :                     if (track-&gt;isAChildOf (*potentialParent))</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineCov">        216 :                     if (track-&gt;isAChildOf (*potentialParent))</span></a>
 <a name="193"><span class="lineNum">     193 </span>            :                     {</a>
 <a name="194"><span class="lineNum">     194 </span>            :                         shouldSkip = true;</a>
 <a name="195"><span class="lineNum">     195 </span>            :                         break;</a>
@@ -259,21 +259,21 @@
 <a name="197"><span class="lineNum">     197 </span>            :                 }</a>
 <a name="198"><span class="lineNum">     198 </span>            : </a>
 <a name="199"><span class="lineNum">     199 </span>            :                 // Then children</a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :                 for (auto potentialChild : originalTracks)</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineCov">        206 :                 for (auto potentialChild : originalTracks)</span></a>
 <a name="201"><span class="lineNum">     201 </span>            :                 {</a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineNoCov">          0 :                     if (potentialChild-&gt;isAChildOf (*track))</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">        200 :                     if (potentialChild-&gt;isAChildOf (*track))</span></a>
 <a name="203"><span class="lineNum">     203 </span>            :                     {</a>
 <a name="204"><span class="lineNum">     204 </span>            :                         shouldSkip = true;</a>
 <a name="205"><span class="lineNum">     205 </span>            :                         break;</a>
 <a name="206"><span class="lineNum">     206 </span>            :                     }</a>
 <a name="207"><span class="lineNum">     207 </span>            :                 }</a>
 <a name="208"><span class="lineNum">     208 </span>            :                 </a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :                 if (shouldSkip)</span></a>
-<a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 :                     continue;</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineCov">         44 :                 if (shouldSkip)</span></a>
+<a name="210"><span class="lineNum">     210 </span><span class="lineCov">         40 :                     continue;</span></a>
 <a name="211"><span class="lineNum">     211 </span>            : </a>
 <a name="212"><span class="lineNum">     212 </span>            :                 // Otherwise add all the children</a>
-<a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 :                 for (auto childTrack : st-&gt;getAllSubTracks (true))</span></a>
-<a name="214"><span class="lineNum">     214 </span><span class="lineNoCov">          0 :                     tracks.addIfNotAlreadyThere (childTrack);</span></a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineCov">         14 :                 for (auto childTrack : st-&gt;getAllSubTracks (true))</span></a>
+<a name="214"><span class="lineNum">     214 </span><span class="lineCov">          6 :                     tracks.addIfNotAlreadyThere (childTrack);</span></a>
 <a name="215"><span class="lineNum">     215 </span>            :             }</a>
 <a name="216"><span class="lineNum">     216 </span>            :         }</a>
 <a name="217"><span class="lineNum">     217 </span>            :     </a>
@@ -295,12 +295,12 @@
 <a name="233"><span class="lineNum">     233 </span>            : </a>
 <a name="234"><span class="lineNum">     234 </span>            : //==============================================================================</a>
 <a name="235"><span class="lineNum">     235 </span>            : //==============================================================================</a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">          7 : std::unique_ptr&lt;tracktion_graph::Node&gt; createFadeNodeForClip (AudioClipBase&amp; clip, PlayHeadState&amp; playHeadState, std::unique_ptr&lt;Node&gt; node)</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">       3439 : std::unique_ptr&lt;tracktion_graph::Node&gt; createFadeNodeForClip (AudioClipBase&amp; clip, PlayHeadState&amp; playHeadState, std::unique_ptr&lt;Node&gt; node)</span></a>
 <a name="237"><span class="lineNum">     237 </span>            : {</a>
-<a name="238"><span class="lineNum">     238 </span><span class="lineCov">          7 :     auto fIn = clip.getFadeIn();</span></a>
-<a name="239"><span class="lineNum">     239 </span><span class="lineCov">          7 :     auto fOut = clip.getFadeOut();</span></a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineCov">       3439 :     auto fIn = clip.getFadeIn();</span></a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineCov">       3439 :     auto fOut = clip.getFadeOut();</span></a>
 <a name="240"><span class="lineNum">     240 </span>            : </a>
-<a name="241"><span class="lineNum">     241 </span><span class="lineCov">          7 :     if (fIn &gt; 0.0 || fOut &gt; 0.0)</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">       3439 :     if (fIn &gt; 0.0 || fOut &gt; 0.0)</span></a>
 <a name="242"><span class="lineNum">     242 </span>            :     {</a>
 <a name="243"><span class="lineNum">     243 </span><span class="lineNoCov">          0 :         const bool speedIn = clip.getFadeInBehaviour() == AudioClipBase::speedRamp &amp;&amp; fIn &gt; 0.0;</span></a>
 <a name="244"><span class="lineNum">     244 </span><span class="lineNoCov">          0 :         const bool speedOut = clip.getFadeOutBehaviour() == AudioClipBase::speedRamp &amp;&amp; fOut &gt; 0.0;</span></a>
@@ -315,20 +315,20 @@
 <a name="253"><span class="lineNum">     253 </span><span class="lineNoCov">          0 :                                         true);</span></a>
 <a name="254"><span class="lineNum">     254 </span>            :     }</a>
 <a name="255"><span class="lineNum">     255 </span>            :     </a>
-<a name="256"><span class="lineNum">     256 </span><span class="lineCov">          7 :     return node;</span></a>
+<a name="256"><span class="lineNum">     256 </span><span class="lineCov">       3439 :     return node;</span></a>
 <a name="257"><span class="lineNum">     257 </span>            : }</a>
 <a name="258"><span class="lineNum">     258 </span>            : </a>
 <a name="259"><span class="lineNum">     259 </span>            : //==============================================================================</a>
-<a name="260"><span class="lineNum">     260 </span><span class="lineCov">          7 : std::unique_ptr&lt;tracktion_graph::Node&gt; createNodeForAudioClip (AudioClipBase&amp; clip, bool includeMelodyne, const CreateNodeParams&amp; params)</span></a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineCov">       3439 : std::unique_ptr&lt;tracktion_graph::Node&gt; createNodeForAudioClip (AudioClipBase&amp; clip, bool includeMelodyne, const CreateNodeParams&amp; params)</span></a>
 <a name="261"><span class="lineNum">     261 </span>            : {</a>
-<a name="262"><span class="lineNum">     262 </span><span class="lineCov">          7 :     auto&amp; playHeadState = params.processState.playHeadState;</span></a>
-<a name="263"><span class="lineNum">     263 </span><span class="lineCov">         14 :     const AudioFile playFile (clip.getPlaybackFile());</span></a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineCov">       3439 :     auto&amp; playHeadState = params.processState.playHeadState;</span></a>
+<a name="263"><span class="lineNum">     263 </span><span class="lineCov">       6878 :     const AudioFile playFile (clip.getPlaybackFile());</span></a>
 <a name="264"><span class="lineNum">     264 </span>            : </a>
-<a name="265"><span class="lineNum">     265 </span><span class="lineCov">          7 :     if (playFile.isNull())</span></a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineCov">       3439 :     if (playFile.isNull())</span></a>
 <a name="266"><span class="lineNum">     266 </span>            :         return {};</a>
 <a name="267"><span class="lineNum">     267 </span>            : </a>
 <a name="268"><span class="lineNum">     268 </span>            :     // Check if ARA should be used</a>
-<a name="269"><span class="lineNum">     269 </span><span class="lineCov">          7 :     if (clip.setupARA (false))</span></a>
+<a name="269"><span class="lineNum">     269 </span><span class="lineCov">       3439 :     if (clip.setupARA (false))</span></a>
 <a name="270"><span class="lineNum">     270 </span>            :     {</a>
 <a name="271"><span class="lineNum">     271 </span>            :         jassert (clip.melodyneProxy != nullptr);</a>
 <a name="272"><span class="lineNum">     272 </span>            : </a>
@@ -341,23 +341,23 @@
 <a name="279"><span class="lineNum">     279 </span>            :     clip.melodyneProxy = nullptr;</a>
 <a name="280"><span class="lineNum">     280 </span>            : </a>
 <a name="281"><span class="lineNum">     281 </span>            :     // Otherwise use audio file</a>
-<a name="282"><span class="lineNum">     282 </span><span class="lineCov">         14 :     auto original = clip.getAudioFile();</span></a>
+<a name="282"><span class="lineNum">     282 </span><span class="lineCov">       6878 :     auto original = clip.getAudioFile();</span></a>
 <a name="283"><span class="lineNum">     283 </span>            : </a>
-<a name="284"><span class="lineNum">     284 </span><span class="lineCov">          7 :     double nodeOffset = 0.0, speed = 1.0;</span></a>
-<a name="285"><span class="lineNum">     285 </span><span class="lineCov">          7 :     EditTimeRange loopRange;</span></a>
-<a name="286"><span class="lineNum">     286 </span><span class="lineCov">          7 :     const bool usesTimestretchedProxy = clip.usesTimeStretchedProxy();</span></a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineCov">       3439 :     double nodeOffset = 0.0, speed = 1.0;</span></a>
+<a name="285"><span class="lineNum">     285 </span><span class="lineCov">       3439 :     EditTimeRange loopRange;</span></a>
+<a name="286"><span class="lineNum">     286 </span><span class="lineCov">       3439 :     const bool usesTimestretchedProxy = clip.usesTimeStretchedProxy();</span></a>
 <a name="287"><span class="lineNum">     287 </span>            : </a>
 <a name="288"><span class="lineNum">     288 </span>            :     // Trigger proxy render if it needs it</a>
-<a name="289"><span class="lineNum">     289 </span><span class="lineCov">          7 :     clip.beginRenderingNewProxyIfNeeded();</span></a>
+<a name="289"><span class="lineNum">     289 </span><span class="lineCov">       3439 :     clip.beginRenderingNewProxyIfNeeded();</span></a>
 <a name="290"><span class="lineNum">     290 </span>            : </a>
-<a name="291"><span class="lineNum">     291 </span><span class="lineCov">          7 :     if (! usesTimestretchedProxy)</span></a>
+<a name="291"><span class="lineNum">     291 </span><span class="lineCov">       3439 :     if (! usesTimestretchedProxy)</span></a>
 <a name="292"><span class="lineNum">     292 </span>            :     {</a>
-<a name="293"><span class="lineNum">     293 </span><span class="lineCov">          7 :         nodeOffset = clip.getPosition().getOffset();</span></a>
-<a name="294"><span class="lineNum">     294 </span><span class="lineCov">          7 :         loopRange = clip.getLoopRange();</span></a>
-<a name="295"><span class="lineNum">     295 </span><span class="lineCov">          7 :         speed = clip.getSpeedRatio();</span></a>
+<a name="293"><span class="lineNum">     293 </span><span class="lineCov">       3439 :         nodeOffset = clip.getPosition().getOffset();</span></a>
+<a name="294"><span class="lineNum">     294 </span><span class="lineCov">       3439 :         loopRange = clip.getLoopRange();</span></a>
+<a name="295"><span class="lineNum">     295 </span><span class="lineCov">       3439 :         speed = clip.getSpeedRatio();</span></a>
 <a name="296"><span class="lineNum">     296 </span>            :     }</a>
 <a name="297"><span class="lineNum">     297 </span>            : </a>
-<a name="298"><span class="lineNum">     298 </span><span class="lineCov">          7 :     if (clip.usesTimestretchedPreview())</span></a>
+<a name="298"><span class="lineNum">     298 </span><span class="lineCov">       3439 :     if (clip.usesTimestretchedPreview())</span></a>
 <a name="299"><span class="lineNum">     299 </span>            :     {</a>
 <a name="300"><span class="lineNum">     300 </span>            :         auto&amp; li = clip.getLoopInfo();</a>
 <a name="301"><span class="lineNum">     301 </span>            : </a>
@@ -380,7 +380,7 @@
 <a name="318"><span class="lineNum">     318 </span>            :     std::unique_ptr&lt;Node&gt; node;</a>
 <a name="319"><span class="lineNum">     319 </span>            :     </a>
 <a name="320"><span class="lineNum">     320 </span>            :     if (clip.getFadeInBehaviour() == AudioClipBase::speedRamp</a>
-<a name="321"><span class="lineNum">     321 </span><span class="lineCov">          7 :         || clip.getFadeOutBehaviour() == AudioClipBase::speedRamp)</span></a>
+<a name="321"><span class="lineNum">     321 </span><span class="lineCov">       3439 :         || clip.getFadeOutBehaviour() == AudioClipBase::speedRamp)</span></a>
 <a name="322"><span class="lineNum">     322 </span>            :     {</a>
 <a name="323"><span class="lineNum">     323 </span>            :         SpeedFadeDescription desc;</a>
 <a name="324"><span class="lineNum">     324 </span><span class="lineNoCov">          0 :         const auto clipPos = clip.getPosition();</span></a>
@@ -420,33 +420,33 @@
 <a name="358"><span class="lineNum">     358 </span>            :     }</a>
 <a name="359"><span class="lineNum">     359 </span>            :     else</a>
 <a name="360"><span class="lineNum">     360 </span>            :     {</a>
-<a name="361"><span class="lineNum">     361 </span><span class="lineCov">          7 :         node = tracktion_graph::makeNode&lt;WaveNode&gt; (playFile,</span></a>
-<a name="362"><span class="lineNum">     362 </span><span class="lineCov">          7 :                                                     clip.getEditTimeRange(),</span></a>
+<a name="361"><span class="lineNum">     361 </span><span class="lineCov">       3439 :         node = tracktion_graph::makeNode&lt;WaveNode&gt; (playFile,</span></a>
+<a name="362"><span class="lineNum">     362 </span><span class="lineCov">       3439 :                                                     clip.getEditTimeRange(),</span></a>
 <a name="363"><span class="lineNum">     363 </span>            :                                                     nodeOffset,</a>
 <a name="364"><span class="lineNum">     364 </span>            :                                                     loopRange,</a>
-<a name="365"><span class="lineNum">     365 </span><span class="lineCov">         14 :                                                     clip.getLiveClipLevel(),</span></a>
+<a name="365"><span class="lineNum">     365 </span><span class="lineCov">       6878 :                                                     clip.getLiveClipLevel(),</span></a>
 <a name="366"><span class="lineNum">     366 </span>            :                                                     speed,</a>
-<a name="367"><span class="lineNum">     367 </span><span class="lineCov">          7 :                                                     clip.getActiveChannels(),</span></a>
-<a name="368"><span class="lineNum">     368 </span><span class="lineCov">         14 :                                                     juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),</span></a>
+<a name="367"><span class="lineNum">     367 </span><span class="lineCov">       3439 :                                                     clip.getActiveChannels(),</span></a>
+<a name="368"><span class="lineNum">     368 </span><span class="lineCov">       6878 :                                                     juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),</span></a>
 <a name="369"><span class="lineNum">     369 </span>            :                                                     params.processState,</a>
-<a name="370"><span class="lineNum">     370 </span><span class="lineCov">          7 :                                                     clip.itemID,</span></a>
-<a name="371"><span class="lineNum">     371 </span><span class="lineCov">          7 :                                                     params.forRendering);</span></a>
+<a name="370"><span class="lineNum">     370 </span><span class="lineCov">       3439 :                                                     clip.itemID,</span></a>
+<a name="371"><span class="lineNum">     371 </span><span class="lineCov">       3439 :                                                     params.forRendering);</span></a>
 <a name="372"><span class="lineNum">     372 </span>            :     }</a>
 <a name="373"><span class="lineNum">     373 </span>            :     </a>
 <a name="374"><span class="lineNum">     374 </span>            :     // Plugins</a>
-<a name="375"><span class="lineNum">     375 </span><span class="lineCov">          7 :     if (params.includePlugins)</span></a>
+<a name="375"><span class="lineNum">     375 </span><span class="lineCov">       3439 :     if (params.includePlugins)</span></a>
 <a name="376"><span class="lineNum">     376 </span>            :     {</a>
-<a name="377"><span class="lineNum">     377 </span><span class="lineCov">          7 :         if (auto pluginList = clip.getPluginList())</span></a>
+<a name="377"><span class="lineNum">     377 </span><span class="lineCov">       3439 :         if (auto pluginList = clip.getPluginList())</span></a>
 <a name="378"><span class="lineNum">     378 </span>            :         {</a>
-<a name="379"><span class="lineNum">     379 </span><span class="lineCov">         14 :             for (auto p : *pluginList)</span></a>
+<a name="379"><span class="lineNum">     379 </span><span class="lineCov">       6878 :             for (auto p : *pluginList)</span></a>
 <a name="380"><span class="lineNum">     380 </span><span class="lineNoCov">          0 :                 p-&gt;initialiseFully();</span></a>
 <a name="381"><span class="lineNum">     381 </span>            : </a>
-<a name="382"><span class="lineNum">     382 </span><span class="lineCov">          7 :             node = createPluginNodeForList (*pluginList, nullptr, std::move (node), playHeadState, params);</span></a>
+<a name="382"><span class="lineNum">     382 </span><span class="lineCov">       3439 :             node = createPluginNodeForList (*pluginList, nullptr, std::move (node), playHeadState, params);</span></a>
 <a name="383"><span class="lineNum">     383 </span>            :         }</a>
 <a name="384"><span class="lineNum">     384 </span>            :     }</a>
 <a name="385"><span class="lineNum">     385 </span>            : </a>
 <a name="386"><span class="lineNum">     386 </span>            :     // Create FadeInOutNode</a>
-<a name="387"><span class="lineNum">     387 </span><span class="lineCov">          7 :     node = createFadeNodeForClip (clip, playHeadState, std::move (node));</span></a>
+<a name="387"><span class="lineNum">     387 </span><span class="lineCov">       3439 :     node = createFadeNodeForClip (clip, playHeadState, std::move (node));</span></a>
 <a name="388"><span class="lineNum">     388 </span>            :     </a>
 <a name="389"><span class="lineNum">     389 </span>            :     return node;</a>
 <a name="390"><span class="lineNum">     390 </span>            : }</a>
@@ -469,7 +469,7 @@
 <a name="407"><span class="lineNum">     407 </span>            :                                                 clip.getLiveClipLevel(),</a>
 <a name="408"><span class="lineNum">     408 </span>            :                                                 params.processState,</a>
 <a name="409"><span class="lineNum">     409 </span>            :                                                 clip.itemID,</a>
-<a name="410"><span class="lineNum">     410 </span><span class="lineNoCov">          0 :                                                 [&amp;trackMuteState]</span></a>
+<a name="410"><span class="lineNum">     410 </span><span class="lineCov">    1904910 :                                                 [&amp;trackMuteState]</span></a>
 <a name="411"><span class="lineNum">     411 </span>            :                                                 {</a>
 <a name="412"><span class="lineNum">     412 </span>            :                                                     if (! trackMuteState.shouldTrackBeAudible())</a>
 <a name="413"><span class="lineNum">     413 </span><span class="lineNoCov">          0 :                                                         return ! trackMuteState.shouldTrackMidiBeProcessed();</span></a>
@@ -538,13 +538,13 @@
 <a name="476"><span class="lineNum">     476 </span>            :     return node;</a>
 <a name="477"><span class="lineNum">     477 </span>            : }</a>
 <a name="478"><span class="lineNum">     478 </span>            : </a>
-<a name="479"><span class="lineNum">     479 </span><span class="lineCov">          7 : std::unique_ptr&lt;tracktion_graph::Node&gt; createNodeForClip (Clip&amp; clip, const TrackMuteState&amp; trackMuteState, const CreateNodeParams&amp; params)</span></a>
+<a name="479"><span class="lineNum">     479 </span><span class="lineCov">       3615 : std::unique_ptr&lt;tracktion_graph::Node&gt; createNodeForClip (Clip&amp; clip, const TrackMuteState&amp; trackMuteState, const CreateNodeParams&amp; params)</span></a>
 <a name="480"><span class="lineNum">     480 </span>            : {</a>
-<a name="481"><span class="lineNum">     481 </span><span class="lineCov">          7 :     if (auto audioClip = dynamic_cast&lt;AudioClipBase*&gt; (&amp;clip))</span></a>
-<a name="482"><span class="lineNum">     482 </span><span class="lineCov">          7 :         return createNodeForAudioClip (*audioClip, false, params);</span></a>
+<a name="481"><span class="lineNum">     481 </span><span class="lineCov">       3615 :     if (auto audioClip = dynamic_cast&lt;AudioClipBase*&gt; (&amp;clip))</span></a>
+<a name="482"><span class="lineNum">     482 </span><span class="lineCov">       3439 :         return createNodeForAudioClip (*audioClip, false, params);</span></a>
 <a name="483"><span class="lineNum">     483 </span>            : </a>
-<a name="484"><span class="lineNum">     484 </span><span class="lineNoCov">          0 :     if (auto midiClip = dynamic_cast&lt;MidiClip*&gt; (&amp;clip))</span></a>
-<a name="485"><span class="lineNum">     485 </span><span class="lineNoCov">          0 :         return createNodeForMidiClip (*midiClip, trackMuteState, params);</span></a>
+<a name="484"><span class="lineNum">     484 </span><span class="lineCov">        176 :     if (auto midiClip = dynamic_cast&lt;MidiClip*&gt; (&amp;clip))</span></a>
+<a name="485"><span class="lineNum">     485 </span><span class="lineCov">        176 :         return createNodeForMidiClip (*midiClip, trackMuteState, params);</span></a>
 <a name="486"><span class="lineNum">     486 </span>            : </a>
 <a name="487"><span class="lineNum">     487 </span><span class="lineNoCov">          0 :     if (auto stepClip = dynamic_cast&lt;StepClip*&gt; (&amp;clip))</span></a>
 <a name="488"><span class="lineNum">     488 </span><span class="lineNoCov">          0 :         return createNodeForStepClip (*stepClip, trackMuteState, params);</span></a>
@@ -552,36 +552,36 @@
 <a name="490"><span class="lineNum">     490 </span>            :     return {};</a>
 <a name="491"><span class="lineNum">     491 </span>            : }</a>
 <a name="492"><span class="lineNum">     492 </span>            : </a>
-<a name="493"><span class="lineNum">     493 </span><span class="lineCov">         11 : std::unique_ptr&lt;tracktion_graph::Node&gt; createNodeForClips (const juce::Array&lt;Clip*&gt;&amp; clips, const TrackMuteState&amp; trackMuteState, const CreateNodeParams&amp; params)</span></a>
+<a name="493"><span class="lineNum">     493 </span><span class="lineCov">       2311 : std::unique_ptr&lt;tracktion_graph::Node&gt; createNodeForClips (const juce::Array&lt;Clip*&gt;&amp; clips, const TrackMuteState&amp; trackMuteState, const CreateNodeParams&amp; params)</span></a>
 <a name="494"><span class="lineNum">     494 </span>            : {</a>
-<a name="495"><span class="lineNum">     495 </span><span class="lineCov">         11 :     if (clips.size() == 0)</span></a>
+<a name="495"><span class="lineNum">     495 </span><span class="lineCov">       2311 :     if (clips.size() == 0)</span></a>
 <a name="496"><span class="lineNum">     496 </span>            :         return {};</a>
 <a name="497"><span class="lineNum">     497 </span>            : </a>
-<a name="498"><span class="lineNum">     498 </span><span class="lineCov">          7 :     if (clips.size() == 1)</span></a>
+<a name="498"><span class="lineNum">     498 </span><span class="lineCov">        535 :     if (clips.size() == 1)</span></a>
 <a name="499"><span class="lineNum">     499 </span>            :     {</a>
 <a name="500"><span class="lineNum">     500 </span>            :         auto clip = clips.getFirst();</a>
 <a name="501"><span class="lineNum">     501 </span>            : </a>
-<a name="502"><span class="lineNum">     502 </span><span class="lineCov">          7 :         if (params.allowedClips == nullptr || params.allowedClips-&gt;contains (clip))</span></a>
-<a name="503"><span class="lineNum">     503 </span><span class="lineCov">          7 :             return createNodeForClip (*clip, trackMuteState, params);</span></a>
+<a name="502"><span class="lineNum">     502 </span><span class="lineCov">        255 :         if (params.allowedClips == nullptr || params.allowedClips-&gt;contains (clip))</span></a>
+<a name="503"><span class="lineNum">     503 </span><span class="lineCov">        255 :             return createNodeForClip (*clip, trackMuteState, params);</span></a>
 <a name="504"><span class="lineNum">     504 </span>            :     }</a>
 <a name="505"><span class="lineNum">     505 </span>            :     </a>
-<a name="506"><span class="lineNum">     506 </span><span class="lineNoCov">          0 :     const bool clipsHaveLatency = [&amp;]</span></a>
+<a name="506"><span class="lineNum">     506 </span><span class="lineCov">        280 :     const bool clipsHaveLatency = [&amp;]</span></a>
 <a name="507"><span class="lineNum">     507 </span>            :     {</a>
-<a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 :         if (params.includePlugins)</span></a>
-<a name="509"><span class="lineNum">     509 </span><span class="lineNoCov">          0 :             for (auto clip : clips)</span></a>
-<a name="510"><span class="lineNum">     510 </span><span class="lineNoCov">          0 :                 if (params.allowedClips == nullptr || params.allowedClips-&gt;contains (clip))</span></a>
-<a name="511"><span class="lineNum">     511 </span><span class="lineNoCov">          0 :                     if (auto pluginList = clip-&gt;getPluginList())</span></a>
-<a name="512"><span class="lineNum">     512 </span><span class="lineNoCov">          0 :                         for (auto p : *pluginList)</span></a>
+<a name="508"><span class="lineNum">     508 </span><span class="lineCov">        280 :         if (params.includePlugins)</span></a>
+<a name="509"><span class="lineNum">     509 </span><span class="lineCov">       3640 :             for (auto clip : clips)</span></a>
+<a name="510"><span class="lineNum">     510 </span><span class="lineCov">       3360 :                 if (params.allowedClips == nullptr || params.allowedClips-&gt;contains (clip))</span></a>
+<a name="511"><span class="lineNum">     511 </span><span class="lineCov">       3360 :                     if (auto pluginList = clip-&gt;getPluginList())</span></a>
+<a name="512"><span class="lineNum">     512 </span><span class="lineCov">       3360 :                         for (auto p : *pluginList)</span></a>
 <a name="513"><span class="lineNum">     513 </span><span class="lineNoCov">          0 :                             if (p-&gt;getLatencySeconds() &gt; 0.0)</span></a>
 <a name="514"><span class="lineNum">     514 </span>            :                                 return true;</a>
 <a name="515"><span class="lineNum">     515 </span>            : </a>
 <a name="516"><span class="lineNum">     516 </span>            :         return false;</a>
-<a name="517"><span class="lineNum">     517 </span><span class="lineNoCov">          0 :     }();</span></a>
+<a name="517"><span class="lineNum">     517 </span><span class="lineCov">        280 :     }();</span></a>
 <a name="518"><span class="lineNum">     518 </span>            :     </a>
 <a name="519"><span class="lineNum">     519 </span>            :     // If any of the clips have latency, it's impossible to use a CombiningNode as it doesn't</a>
 <a name="520"><span class="lineNum">     520 </span>            :     // continuously process Nodes which means the latency FIFO doesn't get flushed. So just</a>
 <a name="521"><span class="lineNum">     521 </span>            :     // use a normal SummingNode instead</a>
-<a name="522"><span class="lineNum">     522 </span><span class="lineNoCov">          0 :     if (clipsHaveLatency)</span></a>
+<a name="522"><span class="lineNum">     522 </span><span class="lineCov">        280 :     if (clipsHaveLatency)</span></a>
 <a name="523"><span class="lineNum">     523 </span>            :     {</a>
 <a name="524"><span class="lineNum">     524 </span><span class="lineNoCov">          0 :         auto combiner = std::make_unique&lt;SummingNode&gt;();</span></a>
 <a name="525"><span class="lineNum">     525 </span>            :         </a>
@@ -593,12 +593,12 @@
 <a name="531"><span class="lineNum">     531 </span>            :         return combiner;</a>
 <a name="532"><span class="lineNum">     532 </span>            :     }</a>
 <a name="533"><span class="lineNum">     533 </span>            : </a>
-<a name="534"><span class="lineNum">     534 </span><span class="lineNoCov">          0 :     auto combiner = std::make_unique&lt;CombiningNode&gt; (params.processState);</span></a>
+<a name="534"><span class="lineNum">     534 </span><span class="lineCov">        280 :     auto combiner = std::make_unique&lt;CombiningNode&gt; (params.processState);</span></a>
 <a name="535"><span class="lineNum">     535 </span>            :     </a>
-<a name="536"><span class="lineNum">     536 </span><span class="lineNoCov">          0 :     for (auto clip : clips)</span></a>
-<a name="537"><span class="lineNum">     537 </span><span class="lineNoCov">          0 :         if (params.allowedClips == nullptr || params.allowedClips-&gt;contains (clip))</span></a>
-<a name="538"><span class="lineNum">     538 </span><span class="lineNoCov">          0 :             if (auto clipNode = createNodeForClip (*clip, trackMuteState, params))</span></a>
-<a name="539"><span class="lineNum">     539 </span><span class="lineNoCov">          0 :                 combiner-&gt;addInput (std::move (clipNode), clip-&gt;getPosition().time);</span></a>
+<a name="536"><span class="lineNum">     536 </span><span class="lineCov">       3640 :     for (auto clip : clips)</span></a>
+<a name="537"><span class="lineNum">     537 </span><span class="lineCov">       3360 :         if (params.allowedClips == nullptr || params.allowedClips-&gt;contains (clip))</span></a>
+<a name="538"><span class="lineNum">     538 </span><span class="lineCov">       3360 :             if (auto clipNode = createNodeForClip (*clip, trackMuteState, params))</span></a>
+<a name="539"><span class="lineNum">     539 </span><span class="lineCov">       6720 :                 combiner-&gt;addInput (std::move (clipNode), clip-&gt;getPosition().time);</span></a>
 <a name="540"><span class="lineNum">     540 </span>            :         </a>
 <a name="541"><span class="lineNum">     541 </span>            :     return combiner;</a>
 <a name="542"><span class="lineNum">     542 </span>            : }</a>
@@ -656,21 +656,21 @@
 <a name="594"><span class="lineNum">     594 </span>            :     return std::make_unique&lt;SummingNode&gt; (std::move (nodes));</a>
 <a name="595"><span class="lineNum">     595 </span>            : }</a>
 <a name="596"><span class="lineNum">     596 </span>            : </a>
-<a name="597"><span class="lineNum">     597 </span><span class="lineCov">         11 : std::unique_ptr&lt;tracktion_graph::Node&gt; createClipsNode (const juce::Array&lt;Clip*&gt;&amp; clips, const TrackMuteState&amp; trackMuteState,</span></a>
+<a name="597"><span class="lineNum">     597 </span><span class="lineCov">       2311 : std::unique_ptr&lt;tracktion_graph::Node&gt; createClipsNode (const juce::Array&lt;Clip*&gt;&amp; clips, const TrackMuteState&amp; trackMuteState,</span></a>
 <a name="598"><span class="lineNum">     598 </span>            :                                                         const CreateNodeParams&amp; params)</a>
 <a name="599"><span class="lineNum">     599 </span>            : {</a>
-<a name="600"><span class="lineNum">     600 </span><span class="lineCov">         11 :     std::vector&lt;std::unique_ptr&lt;Node&gt;&gt; nodes;</span></a>
+<a name="600"><span class="lineNum">     600 </span><span class="lineCov">       2311 :     std::vector&lt;std::unique_ptr&lt;Node&gt;&gt; nodes;</span></a>
 <a name="601"><span class="lineNum">     601 </span>            : </a>
-<a name="602"><span class="lineNum">     602 </span><span class="lineCov">         11 :     if (auto clipsNode = createNodeForClips (clips, trackMuteState, params))</span></a>
+<a name="602"><span class="lineNum">     602 </span><span class="lineCov">       2311 :     if (auto clipsNode = createNodeForClips (clips, trackMuteState, params))</span></a>
 <a name="603"><span class="lineNum">     603 </span>            :         nodes.push_back (std::move (clipsNode));</a>
 <a name="604"><span class="lineNum">     604 </span>            :     </a>
-<a name="605"><span class="lineNum">     605 </span><span class="lineCov">         11 :     if (auto araNode = createARAClipsNode (clips, trackMuteState, params.processState.playHeadState, params))</span></a>
+<a name="605"><span class="lineNum">     605 </span><span class="lineCov">       2311 :     if (auto araNode = createARAClipsNode (clips, trackMuteState, params.processState.playHeadState, params))</span></a>
 <a name="606"><span class="lineNum">     606 </span>            :         nodes.push_back (std::move (araNode));</a>
 <a name="607"><span class="lineNum">     607 </span>            :     </a>
-<a name="608"><span class="lineNum">     608 </span><span class="lineCov">         11 :     if (nodes.empty())</span></a>
+<a name="608"><span class="lineNum">     608 </span><span class="lineCov">       2311 :     if (nodes.empty())</span></a>
 <a name="609"><span class="lineNum">     609 </span>            :         return {};</a>
 <a name="610"><span class="lineNum">     610 </span>            :     </a>
-<a name="611"><span class="lineNum">     611 </span><span class="lineCov">          7 :     if (nodes.size() == 1)</span></a>
+<a name="611"><span class="lineNum">     611 </span><span class="lineCov">        535 :     if (nodes.size() == 1)</span></a>
 <a name="612"><span class="lineNum">     612 </span>            :         return std::move (nodes.front());</a>
 <a name="613"><span class="lineNum">     613 </span>            :     </a>
 <a name="614"><span class="lineNum">     614 </span><span class="lineNoCov">          0 :     return std::make_unique&lt;SummingNode&gt; (std::move (nodes));</span></a>
@@ -704,18 +704,18 @@
 <a name="642"><span class="lineNum">     642 </span>            :     return {};</a>
 <a name="643"><span class="lineNum">     643 </span>            : }</a>
 <a name="644"><span class="lineNum">     644 </span>            : </a>
-<a name="645"><span class="lineNum">     645 </span><span class="lineCov">         11 : std::unique_ptr&lt;tracktion_graph::Node&gt; createLiveInputsNode (AudioTrack&amp; track, tracktion_graph::PlayHeadState&amp; playHeadState, const CreateNodeParams&amp; params)</span></a>
+<a name="645"><span class="lineNum">     645 </span><span class="lineCov">       2311 : std::unique_ptr&lt;tracktion_graph::Node&gt; createLiveInputsNode (AudioTrack&amp; track, tracktion_graph::PlayHeadState&amp; playHeadState, const CreateNodeParams&amp; params)</span></a>
 <a name="646"><span class="lineNum">     646 </span>            : {</a>
-<a name="647"><span class="lineNum">     647 </span><span class="lineCov">         11 :     std::vector&lt;std::unique_ptr&lt;tracktion_graph::Node&gt;&gt; nodes;</span></a>
+<a name="647"><span class="lineNum">     647 </span><span class="lineCov">       2311 :     std::vector&lt;std::unique_ptr&lt;tracktion_graph::Node&gt;&gt; nodes;</span></a>
 <a name="648"><span class="lineNum">     648 </span>            : </a>
-<a name="649"><span class="lineNum">     649 </span><span class="lineCov">         11 :     if (! params.forRendering)</span></a>
+<a name="649"><span class="lineNum">     649 </span><span class="lineCov">       2311 :     if (! params.forRendering)</span></a>
 <a name="650"><span class="lineNum">     650 </span><span class="lineCov">          4 :         if (auto context = track.edit.getCurrentPlaybackContext())</span></a>
 <a name="651"><span class="lineNum">     651 </span><span class="lineCov">         69 :             for (auto in : context-&gt;getAllInputs())</span></a>
 <a name="652"><span class="lineNum">     652 </span><span class="lineCov">         65 :                 if ((in-&gt;isLivePlayEnabled (track) || in-&gt;getInputDevice().isTrackDevice()) &amp;&amp; in-&gt;isOnTargetTrack (track))</span></a>
 <a name="653"><span class="lineNum">     653 </span><span class="lineNoCov">          0 :                     if (auto node = createLiveInputNodeForDevice (*in, playHeadState, params))</span></a>
 <a name="654"><span class="lineNum">     654 </span>            :                         nodes.push_back (std::move (node));</a>
 <a name="655"><span class="lineNum">     655 </span>            : </a>
-<a name="656"><span class="lineNum">     656 </span><span class="lineCov">         11 :     if (nodes.empty())</span></a>
+<a name="656"><span class="lineNum">     656 </span><span class="lineCov">       2311 :     if (nodes.empty())</span></a>
 <a name="657"><span class="lineNum">     657 </span>            :         return {};</a>
 <a name="658"><span class="lineNum">     658 </span>            : </a>
 <a name="659"><span class="lineNum">     659 </span><span class="lineNoCov">          0 :     if (nodes.size() == 1)</span></a>
@@ -724,10 +724,10 @@
 <a name="662"><span class="lineNum">     662 </span><span class="lineNoCov">          0 :     return std::make_unique&lt;SummingNode&gt; (std::move (nodes));</span></a>
 <a name="663"><span class="lineNum">     663 </span>            : }</a>
 <a name="664"><span class="lineNum">     664 </span>            : </a>
-<a name="665"><span class="lineNum">     665 </span><span class="lineCov">         11 : std::unique_ptr&lt;tracktion_graph::Node&gt; createSidechainInputNodeForPlugin (Plugin&amp; plugin, std::unique_ptr&lt;Node&gt; node)</span></a>
+<a name="665"><span class="lineNum">     665 </span><span class="lineCov">        645 : std::unique_ptr&lt;tracktion_graph::Node&gt; createSidechainInputNodeForPlugin (Plugin&amp; plugin, std::unique_ptr&lt;Node&gt; node)</span></a>
 <a name="666"><span class="lineNum">     666 </span>            : {</a>
 <a name="667"><span class="lineNum">     667 </span>            :     const auto sidechainSourceID = plugin.getSidechainSourceID();</a>
-<a name="668"><span class="lineNum">     668 </span><span class="lineCov">         11 :     const bool usesSidechain = ! plugin.isMissing() &amp;&amp; sidechainSourceID.isValid();</span></a>
+<a name="668"><span class="lineNum">     668 </span><span class="lineCov">        645 :     const bool usesSidechain = ! plugin.isMissing() &amp;&amp; sidechainSourceID.isValid();</span></a>
 <a name="669"><span class="lineNum">     669 </span>            : </a>
 <a name="670"><span class="lineNum">     670 </span>            :     if (! usesSidechain)</a>
 <a name="671"><span class="lineNum">     671 </span>            :         return node;</a>
@@ -770,115 +770,115 @@
 <a name="708"><span class="lineNum">     708 </span>            :     return sumNode;</a>
 <a name="709"><span class="lineNum">     709 </span>            : }</a>
 <a name="710"><span class="lineNum">     710 </span>            : </a>
-<a name="711"><span class="lineNum">     711 </span><span class="lineCov">         11 : std::unique_ptr&lt;tracktion_graph::Node&gt; createNodeForPlugin (Plugin&amp; plugin, const TrackMuteState* trackMuteState, std::unique_ptr&lt;Node&gt; node,</span></a>
+<a name="711"><span class="lineNum">     711 </span><span class="lineCov">        645 : std::unique_ptr&lt;tracktion_graph::Node&gt; createNodeForPlugin (Plugin&amp; plugin, const TrackMuteState* trackMuteState, std::unique_ptr&lt;Node&gt; node,</span></a>
 <a name="712"><span class="lineNum">     712 </span>            :                                                             tracktion_graph::PlayHeadState&amp; playHeadState, const CreateNodeParams&amp; params)</a>
 <a name="713"><span class="lineNum">     713 </span>            : {</a>
 <a name="714"><span class="lineNum">     714 </span>            :     jassert (node != nullptr);</a>
 <a name="715"><span class="lineNum">     715 </span>            : </a>
-<a name="716"><span class="lineNum">     716 </span><span class="lineCov">         11 :     if (plugin.isDisabled())</span></a>
+<a name="716"><span class="lineNum">     716 </span><span class="lineCov">        645 :     if (plugin.isDisabled())</span></a>
 <a name="717"><span class="lineNum">     717 </span>            :         return node;</a>
 <a name="718"><span class="lineNum">     718 </span>            :     </a>
-<a name="719"><span class="lineNum">     719 </span><span class="lineCov">         11 :     if (! plugin.isEnabled() &amp;&amp; ! params.includeBypassedPlugins)</span></a>
+<a name="719"><span class="lineNum">     719 </span><span class="lineCov">        645 :     if (! plugin.isEnabled() &amp;&amp; ! params.includeBypassedPlugins)</span></a>
 <a name="720"><span class="lineNum">     720 </span>            :         return node;</a>
 <a name="721"><span class="lineNum">     721 </span>            : </a>
-<a name="722"><span class="lineNum">     722 </span><span class="lineCov">         11 :     int maxNumChannels = -1;</span></a>
+<a name="722"><span class="lineNum">     722 </span><span class="lineCov">        645 :     int maxNumChannels = -1;</span></a>
 <a name="723"><span class="lineNum">     723 </span>            :     </a>
 <a name="724"><span class="lineNum">     724 </span>            :     // If this plugin is on a track or clip and doesn't have a sidechain input we can limit the number of channels it uses</a>
-<a name="725"><span class="lineNum">     725 </span><span class="lineCov">         11 :     if (plugin.getOwnerTrack() != nullptr || plugin.getOwnerClip() != nullptr)</span></a>
-<a name="726"><span class="lineNum">     726 </span><span class="lineCov">          7 :         if (! plugin.getSidechainSourceID().isValid())</span></a>
-<a name="727"><span class="lineNum">     727 </span><span class="lineCov">          7 :             maxNumChannels = 2;</span></a>
+<a name="725"><span class="lineNum">     725 </span><span class="lineCov">        645 :     if (plugin.getOwnerTrack() != nullptr || plugin.getOwnerClip() != nullptr)</span></a>
+<a name="726"><span class="lineNum">     726 </span><span class="lineCov">        597 :         if (! plugin.getSidechainSourceID().isValid())</span></a>
+<a name="727"><span class="lineNum">     727 </span><span class="lineCov">        597 :             maxNumChannels = 2;</span></a>
 <a name="728"><span class="lineNum">     728 </span>            :     </a>
-<a name="729"><span class="lineNum">     729 </span><span class="lineCov">         22 :     node = createSidechainInputNodeForPlugin (plugin, std::move (node));</span></a>
+<a name="729"><span class="lineNum">     729 </span><span class="lineCov">       1290 :     node = createSidechainInputNodeForPlugin (plugin, std::move (node));</span></a>
 <a name="730"><span class="lineNum">     730 </span>            :     node = tracktion_graph::makeNode&lt;PluginNode&gt; (std::move (node),</a>
 <a name="731"><span class="lineNum">     731 </span>            :                                                   plugin,</a>
-<a name="732"><span class="lineNum">     732 </span><span class="lineCov">         11 :                                                   params.sampleRate, params.blockSize,</span></a>
+<a name="732"><span class="lineNum">     732 </span><span class="lineCov">        645 :                                                   params.sampleRate, params.blockSize,</span></a>
 <a name="733"><span class="lineNum">     733 </span>            :                                                   trackMuteState, playHeadState,</a>
-<a name="734"><span class="lineNum">     734 </span><span class="lineCov">         11 :                                                   params.forRendering, params.includeBypassedPlugins,</span></a>
+<a name="734"><span class="lineNum">     734 </span><span class="lineCov">        645 :                                                   params.forRendering, params.includeBypassedPlugins,</span></a>
 <a name="735"><span class="lineNum">     735 </span>            :                                                   maxNumChannels);</a>
 <a name="736"><span class="lineNum">     736 </span>            : </a>
 <a name="737"><span class="lineNum">     737 </span>            :     return node;</a>
 <a name="738"><span class="lineNum">     738 </span>            : }</a>
 <a name="739"><span class="lineNum">     739 </span>            : </a>
-<a name="740"><span class="lineNum">     740 </span><span class="lineNoCov">          0 : std::unique_ptr&lt;tracktion_graph::Node&gt; createNodeForRackInstance (RackInstance&amp; rackInstance, std::unique_ptr&lt;Node&gt; node)</span></a>
+<a name="740"><span class="lineNum">     740 </span><span class="lineCov">       1588 : std::unique_ptr&lt;tracktion_graph::Node&gt; createNodeForRackInstance (RackInstance&amp; rackInstance, std::unique_ptr&lt;Node&gt; node)</span></a>
 <a name="741"><span class="lineNum">     741 </span>            : {</a>
 <a name="742"><span class="lineNum">     742 </span>            :     jassert (node != nullptr);</a>
 <a name="743"><span class="lineNum">     743 </span>            : </a>
-<a name="744"><span class="lineNum">     744 </span><span class="lineNoCov">          0 :     if (! rackInstance.isEnabled())</span></a>
+<a name="744"><span class="lineNum">     744 </span><span class="lineCov">       1588 :     if (! rackInstance.isEnabled())</span></a>
 <a name="745"><span class="lineNum">     745 </span>            :         return node;</a>
 <a name="746"><span class="lineNum">     746 </span>            : </a>
-<a name="747"><span class="lineNum">     747 </span><span class="lineNoCov">          0 :     const auto rackInputID = getRackInputBusID (rackInstance.rackTypeID);</span></a>
-<a name="748"><span class="lineNum">     748 </span><span class="lineNoCov">          0 :     const auto rackOutputID = getRackOutputBusID (rackInstance.rackTypeID);</span></a>
+<a name="747"><span class="lineNum">     747 </span><span class="lineCov">       1588 :     const auto rackInputID = getRackInputBusID (rackInstance.rackTypeID);</span></a>
+<a name="748"><span class="lineNum">     748 </span><span class="lineCov">       1588 :     const auto rackOutputID = getRackOutputBusID (rackInstance.rackTypeID);</span></a>
 <a name="749"><span class="lineNum">     749 </span>            :     </a>
 <a name="750"><span class="lineNum">     750 </span>            :     // The input to the instance is referenced by the dry signal path</a>
-<a name="751"><span class="lineNum">     751 </span><span class="lineNoCov">          0 :     auto* inputNode = node.get();</span></a>
+<a name="751"><span class="lineNum">     751 </span><span class="lineCov">       1588 :     auto* inputNode = node.get();</span></a>
 <a name="752"><span class="lineNum">     752 </span>            :     </a>
 <a name="753"><span class="lineNum">     753 </span>            :     // Send</a>
 <a name="754"><span class="lineNum">     754 </span>            :     // N.B. the channel indicies from the RackInstance start a 1 so we need to subtract this to get a 0-indexed channel</a>
-<a name="755"><span class="lineNum">     755 </span><span class="lineNoCov">          0 :     RackInstanceNode::ChannelMap sendChannelMap;</span></a>
-<a name="756"><span class="lineNum">     756 </span><span class="lineNoCov">          0 :     sendChannelMap[0] = { 0, rackInstance.leftInputGoesTo - 1, rackInstance.leftInDb };</span></a>
-<a name="757"><span class="lineNum">     757 </span><span class="lineNoCov">          0 :     sendChannelMap[1] = { 1, rackInstance.rightInputGoesTo - 1, rackInstance.rightInDb };</span></a>
+<a name="755"><span class="lineNum">     755 </span><span class="lineCov">       1588 :     RackInstanceNode::ChannelMap sendChannelMap;</span></a>
+<a name="756"><span class="lineNum">     756 </span><span class="lineCov">       1588 :     sendChannelMap[0] = { 0, rackInstance.leftInputGoesTo - 1, rackInstance.leftInDb };</span></a>
+<a name="757"><span class="lineNum">     757 </span><span class="lineCov">       1588 :     sendChannelMap[1] = { 1, rackInstance.rightInputGoesTo - 1, rackInstance.rightInDb };</span></a>
 <a name="758"><span class="lineNum">     758 </span>            :     node = makeNode&lt;RackInstanceNode&gt; (std::move (node), std::move (sendChannelMap));</a>
 <a name="759"><span class="lineNum">     759 </span>            :     node = makeNode&lt;SendNode&gt; (std::move (node), rackInputID);</a>
 <a name="760"><span class="lineNum">     760 </span><span class="lineNoCov">          0 :     node = makeNode&lt;ReturnNode&gt; (makeNode&lt;SinkNode&gt; (std::move (node)), rackOutputID);</span></a>
 <a name="761"><span class="lineNum">     761 </span>            : </a>
 <a name="762"><span class="lineNum">     762 </span>            :     // Return</a>
-<a name="763"><span class="lineNum">     763 </span><span class="lineNoCov">          0 :     RackInstanceNode::ChannelMap returnChannelMap;</span></a>
-<a name="764"><span class="lineNum">     764 </span><span class="lineNoCov">          0 :     returnChannelMap[0] = { rackInstance.leftOutputComesFrom - 1, 0, rackInstance.leftOutDb };</span></a>
-<a name="765"><span class="lineNum">     765 </span><span class="lineNoCov">          0 :     returnChannelMap[1] = { rackInstance.rightOutputComesFrom - 1, 1, rackInstance.rightOutDb };</span></a>
+<a name="763"><span class="lineNum">     763 </span><span class="lineCov">       1588 :     RackInstanceNode::ChannelMap returnChannelMap;</span></a>
+<a name="764"><span class="lineNum">     764 </span><span class="lineCov">       1588 :     returnChannelMap[0] = { rackInstance.leftOutputComesFrom - 1, 0, rackInstance.leftOutDb };</span></a>
+<a name="765"><span class="lineNum">     765 </span><span class="lineCov">       1588 :     returnChannelMap[1] = { rackInstance.rightOutputComesFrom - 1, 1, rackInstance.rightOutDb };</span></a>
 <a name="766"><span class="lineNum">     766 </span>            :     node = makeNode&lt;RackInstanceNode&gt; (std::move (node), std::move (returnChannelMap));</a>
 <a name="767"><span class="lineNum">     767 </span>            : </a>
 <a name="768"><span class="lineNum">     768 </span>            :     return makeNode&lt;RackReturnNode&gt; (std::move (node),</a>
-<a name="769"><span class="lineNum">     769 </span><span class="lineNoCov">          0 :                                      [wetGain = rackInstance.wetGain] { return wetGain-&gt;getCurrentValue(); },</span></a>
+<a name="769"><span class="lineNum">     769 </span><span class="lineCov">   17067900 :                                      [wetGain = rackInstance.wetGain] { return wetGain-&gt;getCurrentValue(); },</span></a>
 <a name="770"><span class="lineNum">     770 </span>            :                                      inputNode,</a>
-<a name="771"><span class="lineNum">     771 </span><span class="lineNoCov">          0 :                                      [dryGain = rackInstance.dryGain] { return dryGain-&gt;getCurrentValue(); });</span></a>
+<a name="771"><span class="lineNum">     771 </span><span class="lineCov">       1588 :                                      [dryGain = rackInstance.dryGain] { return dryGain-&gt;getCurrentValue(); });</span></a>
 <a name="772"><span class="lineNum">     772 </span>            : }</a>
 <a name="773"><span class="lineNum">     773 </span>            : </a>
-<a name="774"><span class="lineNum">     774 </span><span class="lineCov">         18 : std::unique_ptr&lt;tracktion_graph::Node&gt; createPluginNodeForList (PluginList&amp; list, const TrackMuteState* trackMuteState, std::unique_ptr&lt;Node&gt; node,</span></a>
+<a name="774"><span class="lineNum">     774 </span><span class="lineCov">       5650 : std::unique_ptr&lt;tracktion_graph::Node&gt; createPluginNodeForList (PluginList&amp; list, const TrackMuteState* trackMuteState, std::unique_ptr&lt;Node&gt; node,</span></a>
 <a name="775"><span class="lineNum">     775 </span>            :                                                                 tracktion_graph::PlayHeadState&amp; playHeadState, const CreateNodeParams&amp; params)</a>
 <a name="776"><span class="lineNum">     776 </span>            : {</a>
-<a name="777"><span class="lineNum">     777 </span><span class="lineCov">         32 :     for (auto p : list)</span></a>
+<a name="777"><span class="lineNum">     777 </span><span class="lineCov">       8594 :     for (auto p : list)</span></a>
 <a name="778"><span class="lineNum">     778 </span>            :     {</a>
-<a name="779"><span class="lineNum">     779 </span><span class="lineCov">         14 :         if (! params.forRendering &amp;&amp; p-&gt;isFrozen())</span></a>
+<a name="779"><span class="lineNum">     779 </span><span class="lineCov">       2944 :         if (! params.forRendering &amp;&amp; p-&gt;isFrozen())</span></a>
 <a name="780"><span class="lineNum">     780 </span><span class="lineNoCov">          0 :             continue;</span></a>
 <a name="781"><span class="lineNum">     781 </span>            :         </a>
-<a name="782"><span class="lineNum">     782 </span><span class="lineCov">         14 :         if (auto meterPlugin = dynamic_cast&lt;LevelMeterPlugin*&gt; (p))</span></a>
+<a name="782"><span class="lineNum">     782 </span><span class="lineCov">       2944 :         if (auto meterPlugin = dynamic_cast&lt;LevelMeterPlugin*&gt; (p))</span></a>
 <a name="783"><span class="lineNum">     783 </span>            :         {</a>
 <a name="784"><span class="lineNum">     784 </span>            :             node = makeNode&lt;LevelMeasurerProcessingNode&gt; (std::move (node), *meterPlugin);</a>
 <a name="785"><span class="lineNum">     785 </span>            :         }</a>
-<a name="786"><span class="lineNum">     786 </span><span class="lineCov">          7 :         else if (auto sendPlugin = dynamic_cast&lt;AuxSendPlugin*&gt; (p))</span></a>
+<a name="786"><span class="lineNum">     786 </span><span class="lineCov">       2189 :         else if (auto sendPlugin = dynamic_cast&lt;AuxSendPlugin*&gt; (p))</span></a>
 <a name="787"><span class="lineNum">     787 </span>            :         {</a>
-<a name="788"><span class="lineNum">     788 </span><span class="lineNoCov">          0 :             if (sendPlugin-&gt;isEnabled())</span></a>
-<a name="789"><span class="lineNum">     789 </span><span class="lineNoCov">          0 :                 node = makeNode&lt;AuxSendNode&gt; (std::move (node), sendPlugin-&gt;busNumber, *sendPlugin,</span></a>
+<a name="788"><span class="lineNum">     788 </span><span class="lineCov">          2 :             if (sendPlugin-&gt;isEnabled())</span></a>
+<a name="789"><span class="lineNum">     789 </span><span class="lineCov">          2 :                 node = makeNode&lt;AuxSendNode&gt; (std::move (node), sendPlugin-&gt;busNumber, *sendPlugin,</span></a>
 <a name="790"><span class="lineNum">     790 </span>            :                                               playHeadState, trackMuteState);</a>
 <a name="791"><span class="lineNum">     791 </span>            :         }</a>
-<a name="792"><span class="lineNum">     792 </span><span class="lineCov">          7 :         else if (auto returnPlugin = dynamic_cast&lt;AuxReturnPlugin*&gt; (p))</span></a>
+<a name="792"><span class="lineNum">     792 </span><span class="lineCov">       2187 :         else if (auto returnPlugin = dynamic_cast&lt;AuxReturnPlugin*&gt; (p))</span></a>
 <a name="793"><span class="lineNum">     793 </span>            :         {</a>
-<a name="794"><span class="lineNum">     794 </span><span class="lineNoCov">          0 :             if (returnPlugin-&gt;isEnabled())</span></a>
-<a name="795"><span class="lineNum">     795 </span><span class="lineNoCov">          0 :                 node = makeNode&lt;ReturnNode&gt; (std::move (node), returnPlugin-&gt;busNumber);</span></a>
+<a name="794"><span class="lineNum">     794 </span><span class="lineCov">          2 :             if (returnPlugin-&gt;isEnabled())</span></a>
+<a name="795"><span class="lineNum">     795 </span><span class="lineCov">          2 :                 node = makeNode&lt;ReturnNode&gt; (std::move (node), returnPlugin-&gt;busNumber);</span></a>
 <a name="796"><span class="lineNum">     796 </span>            :         }</a>
-<a name="797"><span class="lineNum">     797 </span><span class="lineCov">          7 :         else if (auto rackInstance = dynamic_cast&lt;RackInstance*&gt; (p))</span></a>
+<a name="797"><span class="lineNum">     797 </span><span class="lineCov">       2185 :         else if (auto rackInstance = dynamic_cast&lt;RackInstance*&gt; (p))</span></a>
 <a name="798"><span class="lineNum">     798 </span>            :         {</a>
-<a name="799"><span class="lineNum">     799 </span><span class="lineNoCov">          0 :             node = createNodeForRackInstance (*rackInstance, std::move (node));</span></a>
+<a name="799"><span class="lineNum">     799 </span><span class="lineCov">       3176 :             node = createNodeForRackInstance (*rackInstance, std::move (node));</span></a>
 <a name="800"><span class="lineNum">     800 </span>            :         }</a>
-<a name="801"><span class="lineNum">     801 </span><span class="lineCov">          7 :         else if (auto insertPlugin = dynamic_cast&lt;InsertPlugin*&gt; (p))</span></a>
+<a name="801"><span class="lineNum">     801 </span><span class="lineCov">        597 :         else if (auto insertPlugin = dynamic_cast&lt;InsertPlugin*&gt; (p))</span></a>
 <a name="802"><span class="lineNum">     802 </span>            :         {</a>
 <a name="803"><span class="lineNum">     803 </span>            :             node = makeNode&lt;InsertSendReturnDependencyNode&gt; (std::move (node), *insertPlugin);</a>
 <a name="804"><span class="lineNum">     804 </span><span class="lineNoCov">          0 :             node = createNodeForPlugin (*p, trackMuteState, std::move (node), playHeadState, params);</span></a>
 <a name="805"><span class="lineNum">     805 </span>            :         }</a>
 <a name="806"><span class="lineNum">     806 </span>            :         else</a>
 <a name="807"><span class="lineNum">     807 </span>            :         {</a>
-<a name="808"><span class="lineNum">     808 </span><span class="lineCov">         14 :             node = createNodeForPlugin (*p, trackMuteState, std::move (node), playHeadState, params);</span></a>
+<a name="808"><span class="lineNum">     808 </span><span class="lineCov">       1194 :             node = createNodeForPlugin (*p, trackMuteState, std::move (node), playHeadState, params);</span></a>
 <a name="809"><span class="lineNum">     809 </span>            :         }</a>
 <a name="810"><span class="lineNum">     810 </span>            :     }</a>
 <a name="811"><span class="lineNum">     811 </span>            : </a>
-<a name="812"><span class="lineNum">     812 </span><span class="lineCov">         18 :     return node;</span></a>
+<a name="812"><span class="lineNum">     812 </span><span class="lineCov">       5650 :     return node;</span></a>
 <a name="813"><span class="lineNum">     813 </span>            : }</a>
 <a name="814"><span class="lineNum">     814 </span>            : </a>
-<a name="815"><span class="lineNum">     815 </span><span class="lineCov">         30 : std::unique_ptr&lt;tracktion_graph::Node&gt; createModifierNodeForList (ModifierList&amp; list, Modifier::ProcessingPosition position, TrackMuteState* trackMuteState,</span></a>
+<a name="815"><span class="lineNum">     815 </span><span class="lineCov">       4518 : std::unique_ptr&lt;tracktion_graph::Node&gt; createModifierNodeForList (ModifierList&amp; list, Modifier::ProcessingPosition position, TrackMuteState* trackMuteState,</span></a>
 <a name="816"><span class="lineNum">     816 </span>            :                                                                   std::unique_ptr&lt;Node&gt; node,</a>
 <a name="817"><span class="lineNum">     817 </span>            :                                                                   tracktion_graph::PlayHeadState&amp; playHeadState, const CreateNodeParams&amp; params)</a>
 <a name="818"><span class="lineNum">     818 </span>            : {</a>
-<a name="819"><span class="lineNum">     819 </span><span class="lineCov">         60 :     for (auto&amp; modifier : list.getModifiers())</span></a>
+<a name="819"><span class="lineNum">     819 </span><span class="lineCov">       9036 :     for (auto&amp; modifier : list.getModifiers())</span></a>
 <a name="820"><span class="lineNum">     820 </span>            :     {</a>
 <a name="821"><span class="lineNum">     821 </span><span class="lineNoCov">          0 :         if (modifier-&gt;getProcessingPosition() != position)</span></a>
 <a name="822"><span class="lineNum">     822 </span><span class="lineNoCov">          0 :             continue;</span></a>
@@ -887,42 +887,42 @@
 <a name="825"><span class="lineNum">     825 </span><span class="lineNoCov">          0 :                                        trackMuteState, playHeadState, params.forRendering);</span></a>
 <a name="826"><span class="lineNum">     826 </span>            :     }</a>
 <a name="827"><span class="lineNum">     827 </span>            :     </a>
-<a name="828"><span class="lineNum">     828 </span><span class="lineCov">         30 :     return node;</span></a>
+<a name="828"><span class="lineNum">     828 </span><span class="lineCov">       4518 :     return node;</span></a>
 <a name="829"><span class="lineNum">     829 </span>            : }</a>
 <a name="830"><span class="lineNum">     830 </span>            : </a>
-<a name="831"><span class="lineNum">     831 </span><span class="lineCov">          7 : std::unique_ptr&lt;tracktion_graph::Node&gt; createPluginNodeForTrack (Track&amp; t, TrackMuteState&amp; trackMuteState, std::unique_ptr&lt;Node&gt; node,</span></a>
+<a name="831"><span class="lineNum">     831 </span><span class="lineCov">       2163 : std::unique_ptr&lt;tracktion_graph::Node&gt; createPluginNodeForTrack (Track&amp; t, TrackMuteState&amp; trackMuteState, std::unique_ptr&lt;Node&gt; node,</span></a>
 <a name="832"><span class="lineNum">     832 </span>            :                                                                  tracktion_graph::PlayHeadState&amp; playHeadState, const CreateNodeParams&amp; params)</a>
 <a name="833"><span class="lineNum">     833 </span>            : {</a>
-<a name="834"><span class="lineNum">     834 </span><span class="lineCov">         14 :     node = createModifierNodeForList (t.getModifierList(), Modifier::ProcessingPosition::preFX,</span></a>
+<a name="834"><span class="lineNum">     834 </span><span class="lineCov">       4326 :     node = createModifierNodeForList (t.getModifierList(), Modifier::ProcessingPosition::preFX,</span></a>
 <a name="835"><span class="lineNum">     835 </span>            :                                       &amp;trackMuteState, std::move (node), playHeadState, params);</a>
 <a name="836"><span class="lineNum">     836 </span>            :     </a>
-<a name="837"><span class="lineNum">     837 </span><span class="lineCov">          7 :     if (params.includePlugins)</span></a>
-<a name="838"><span class="lineNum">     838 </span><span class="lineCov">         14 :         node = createPluginNodeForList (t.pluginList, &amp;trackMuteState, std::move (node), playHeadState, params);</span></a>
+<a name="837"><span class="lineNum">     837 </span><span class="lineCov">       2163 :     if (params.includePlugins)</span></a>
+<a name="838"><span class="lineNum">     838 </span><span class="lineCov">       4326 :         node = createPluginNodeForList (t.pluginList, &amp;trackMuteState, std::move (node), playHeadState, params);</span></a>
 <a name="839"><span class="lineNum">     839 </span>            :     </a>
-<a name="840"><span class="lineNum">     840 </span><span class="lineCov">         14 :     node = createModifierNodeForList (t.getModifierList(), Modifier::ProcessingPosition::postFX,</span></a>
+<a name="840"><span class="lineNum">     840 </span><span class="lineCov">       4326 :     node = createModifierNodeForList (t.getModifierList(), Modifier::ProcessingPosition::postFX,</span></a>
 <a name="841"><span class="lineNum">     841 </span>            :                                       &amp;trackMuteState, std::move (node), playHeadState, params);</a>
 <a name="842"><span class="lineNum">     842 </span>            : </a>
-<a name="843"><span class="lineNum">     843 </span><span class="lineCov">          7 :     return node;</span></a>
+<a name="843"><span class="lineNum">     843 </span><span class="lineCov">       2163 :     return node;</span></a>
 <a name="844"><span class="lineNum">     844 </span>            : }</a>
 <a name="845"><span class="lineNum">     845 </span>            : </a>
-<a name="846"><span class="lineNum">     846 </span><span class="lineCov">         11 : juce::Array&lt;Track*&gt; getDirectInputTracks (AudioTrack&amp; at)</span></a>
+<a name="846"><span class="lineNum">     846 </span><span class="lineCov">       2311 : juce::Array&lt;Track*&gt; getDirectInputTracks (AudioTrack&amp; at)</span></a>
 <a name="847"><span class="lineNum">     847 </span>            : {</a>
-<a name="848"><span class="lineNum">     848 </span><span class="lineCov">         11 :     juce::Array&lt;Track*&gt; inputTracks;</span></a>
+<a name="848"><span class="lineNum">     848 </span><span class="lineCov">       2311 :     juce::Array&lt;Track*&gt; inputTracks;</span></a>
 <a name="849"><span class="lineNum">     849 </span>            : </a>
-<a name="850"><span class="lineNum">     850 </span><span class="lineCov">         40 :     for (auto track : getAudioTracks (at.edit))</span></a>
-<a name="851"><span class="lineNum">     851 </span><span class="lineCov">         18 :         if (! track-&gt;isPartOfSubmix() &amp;&amp; track != &amp;at &amp;&amp; track-&gt;getOutput().outputsToDestTrack (at))</span></a>
-<a name="852"><span class="lineNum">     852 </span><span class="lineNoCov">          0 :             inputTracks.add (track);</span></a>
+<a name="850"><span class="lineNum">     850 </span><span class="lineCov">     173210 :     for (auto track : getAudioTracks (at.edit))</span></a>
+<a name="851"><span class="lineNum">     851 </span><span class="lineCov">     168588 :         if (! track-&gt;isPartOfSubmix() &amp;&amp; track != &amp;at &amp;&amp; track-&gt;getOutput().outputsToDestTrack (at))</span></a>
+<a name="852"><span class="lineNum">     852 </span><span class="lineCov">       1434 :             inputTracks.add (track);</span></a>
 <a name="853"><span class="lineNum">     853 </span>            : </a>
-<a name="854"><span class="lineNum">     854 </span><span class="lineCov">         22 :     for (auto track : getTracksOfType&lt;FolderTrack&gt; (at.edit, true))</span></a>
-<a name="855"><span class="lineNum">     855 </span><span class="lineNoCov">          0 :         if (! track-&gt;isPartOfSubmix() &amp;&amp; track-&gt;getOutput() != nullptr &amp;&amp; track-&gt;getOutput()-&gt;outputsToDestTrack (at))</span></a>
+<a name="854"><span class="lineNum">     854 </span><span class="lineCov">      27402 :     for (auto track : getTracksOfType&lt;FolderTrack&gt; (at.edit, true))</span></a>
+<a name="855"><span class="lineNum">     855 </span><span class="lineCov">      22780 :         if (! track-&gt;isPartOfSubmix() &amp;&amp; track-&gt;getOutput() != nullptr &amp;&amp; track-&gt;getOutput()-&gt;outputsToDestTrack (at))</span></a>
 <a name="856"><span class="lineNum">     856 </span><span class="lineNoCov">          0 :             inputTracks.add (track);</span></a>
 <a name="857"><span class="lineNum">     857 </span>            : </a>
-<a name="858"><span class="lineNum">     858 </span><span class="lineCov">         11 :     return inputTracks;</span></a>
+<a name="858"><span class="lineNum">     858 </span><span class="lineCov">       2311 :     return inputTracks;</span></a>
 <a name="859"><span class="lineNum">     859 </span>            : }</a>
 <a name="860"><span class="lineNum">     860 </span>            : </a>
-<a name="861"><span class="lineNum">     861 </span><span class="lineCov">          7 : std::unique_ptr&lt;tracktion_graph::Node&gt; createTrackCompNode (AudioTrack&amp; at, tracktion_graph::PlayHeadState&amp; playHeadState, std::unique_ptr&lt;tracktion_graph::Node&gt; node)</span></a>
+<a name="861"><span class="lineNum">     861 </span><span class="lineCov">        535 : std::unique_ptr&lt;tracktion_graph::Node&gt; createTrackCompNode (AudioTrack&amp; at, tracktion_graph::PlayHeadState&amp; playHeadState, std::unique_ptr&lt;tracktion_graph::Node&gt; node)</span></a>
 <a name="862"><span class="lineNum">     862 </span>            : {</a>
-<a name="863"><span class="lineNum">     863 </span><span class="lineCov">          7 :     if (at.getCompGroup() == -1)</span></a>
+<a name="863"><span class="lineNum">     863 </span><span class="lineCov">        535 :     if (at.getCompGroup() == -1)</span></a>
 <a name="864"><span class="lineNum">     864 </span>            :         return node;</a>
 <a name="865"><span class="lineNum">     865 </span>            :     </a>
 <a name="866"><span class="lineNum">     866 </span><span class="lineNoCov">          0 :     if (auto tc = at.edit.getTrackCompManager().getTrackComp (&amp;at))</span></a>
@@ -955,56 +955,56 @@
 <a name="893"><span class="lineNum">     893 </span>            :     return node;</a>
 <a name="894"><span class="lineNum">     894 </span>            : }</a>
 <a name="895"><span class="lineNum">     895 </span>            : </a>
-<a name="896"><span class="lineNum">     896 </span><span class="lineCov">         11 : std::unique_ptr&lt;tracktion_graph::Node&gt; createNodeForAudioTrack (AudioTrack&amp; at, const CreateNodeParams&amp; params)</span></a>
+<a name="896"><span class="lineNum">     896 </span><span class="lineCov">       2311 : std::unique_ptr&lt;tracktion_graph::Node&gt; createNodeForAudioTrack (AudioTrack&amp; at, const CreateNodeParams&amp; params)</span></a>
 <a name="897"><span class="lineNum">     897 </span>            : {</a>
-<a name="898"><span class="lineNum">     898 </span><span class="lineCov">         22 :     CRASH_TRACER</span></a>
+<a name="898"><span class="lineNum">     898 </span><span class="lineCov">       4622 :     CRASH_TRACER</span></a>
 <a name="899"><span class="lineNum">     899 </span>            :     jassert (at.isProcessing (false));</a>
-<a name="900"><span class="lineNum">     900 </span><span class="lineCov">         11 :     auto&amp; playHeadState = params.processState.playHeadState;</span></a>
+<a name="900"><span class="lineNum">     900 </span><span class="lineCov">       2311 :     auto&amp; playHeadState = params.processState.playHeadState;</span></a>
 <a name="901"><span class="lineNum">     901 </span>            : </a>
-<a name="902"><span class="lineNum">     902 </span><span class="lineCov">         11 :     if (! params.forRendering &amp;&amp; at.isFrozen (AudioTrack::individualFreeze))</span></a>
+<a name="902"><span class="lineNum">     902 </span><span class="lineCov">       2311 :     if (! params.forRendering &amp;&amp; at.isFrozen (AudioTrack::individualFreeze))</span></a>
 <a name="903"><span class="lineNum">     903 </span><span class="lineNoCov">          0 :         return createNodeForFrozenAudioTrack (at, playHeadState, params);</span></a>
 <a name="904"><span class="lineNum">     904 </span>            : </a>
-<a name="905"><span class="lineNum">     905 </span><span class="lineCov">         11 :     auto inputTracks = getDirectInputTracks (at);</span></a>
-<a name="906"><span class="lineNum">     906 </span><span class="lineCov">         11 :     const bool processMidiWhenMuted = at.state.getProperty (IDs::processMidiWhenMuted, false);</span></a>
-<a name="907"><span class="lineNum">     907 </span><span class="lineCov">         11 :     auto clipsMuteState = std::make_unique&lt;TrackMuteState&gt; (at, true, processMidiWhenMuted);</span></a>
-<a name="908"><span class="lineNum">     908 </span><span class="lineCov">         11 :     auto trackMuteState = std::make_unique&lt;TrackMuteState&gt; (at, false, processMidiWhenMuted);</span></a>
+<a name="905"><span class="lineNum">     905 </span><span class="lineCov">       2311 :     auto inputTracks = getDirectInputTracks (at);</span></a>
+<a name="906"><span class="lineNum">     906 </span><span class="lineCov">       2311 :     const bool processMidiWhenMuted = at.state.getProperty (IDs::processMidiWhenMuted, false);</span></a>
+<a name="907"><span class="lineNum">     907 </span><span class="lineCov">       2311 :     auto clipsMuteState = std::make_unique&lt;TrackMuteState&gt; (at, true, processMidiWhenMuted);</span></a>
+<a name="908"><span class="lineNum">     908 </span><span class="lineCov">       2311 :     auto trackMuteState = std::make_unique&lt;TrackMuteState&gt; (at, false, processMidiWhenMuted);</span></a>
 <a name="909"><span class="lineNum">     909 </span>            : </a>
-<a name="910"><span class="lineNum">     910 </span><span class="lineCov">         11 :     const auto&amp; clips = at.getClips();</span></a>
-<a name="911"><span class="lineNum">     911 </span><span class="lineCov">         11 :     std::unique_ptr&lt;Node&gt; node = createClipsNode (clips, *clipsMuteState, params);</span></a>
+<a name="910"><span class="lineNum">     910 </span><span class="lineCov">       2311 :     const auto&amp; clips = at.getClips();</span></a>
+<a name="911"><span class="lineNum">     911 </span><span class="lineCov">       2311 :     std::unique_ptr&lt;Node&gt; node = createClipsNode (clips, *clipsMuteState, params);</span></a>
 <a name="912"><span class="lineNum">     912 </span>            :     </a>
-<a name="913"><span class="lineNum">     913 </span><span class="lineCov">         11 :     if (node)</span></a>
+<a name="913"><span class="lineNum">     913 </span><span class="lineCov">       2311 :     if (node)</span></a>
 <a name="914"><span class="lineNum">     914 </span>            :     {</a>
 <a name="915"><span class="lineNum">     915 </span>            :         // When recording, clips should be muted but the plugin should still be audible so use two muting Nodes</a>
-<a name="916"><span class="lineNum">     916 </span><span class="lineCov">         14 :         node = makeNode&lt;TrackMutingNode&gt; (std::move (clipsMuteState), std::move (node), true);</span></a>
+<a name="916"><span class="lineNum">     916 </span><span class="lineCov">       1070 :         node = makeNode&lt;TrackMutingNode&gt; (std::move (clipsMuteState), std::move (node), true);</span></a>
 <a name="917"><span class="lineNum">     917 </span>            :         </a>
-<a name="918"><span class="lineNum">     918 </span><span class="lineCov">         14 :         node = createTrackCompNode (at, playHeadState, std::move (node));</span></a>
+<a name="918"><span class="lineNum">     918 </span><span class="lineCov">       1070 :         node = createTrackCompNode (at, playHeadState, std::move (node));</span></a>
 <a name="919"><span class="lineNum">     919 </span>            :     }</a>
 <a name="920"><span class="lineNum">     920 </span>            :     </a>
-<a name="921"><span class="lineNum">     921 </span><span class="lineCov">         11 :     auto liveInputNode = createLiveInputsNode (at, playHeadState, params);</span></a>
+<a name="921"><span class="lineNum">     921 </span><span class="lineCov">       2311 :     auto liveInputNode = createLiveInputsNode (at, playHeadState, params);</span></a>
 <a name="922"><span class="lineNum">     922 </span>            :     </a>
-<a name="923"><span class="lineNum">     923 </span><span class="lineCov">         11 :     if (node &amp;&amp; ! at.getListeners().isEmpty())</span></a>
+<a name="923"><span class="lineNum">     923 </span><span class="lineCov">       2311 :     if (node &amp;&amp; ! at.getListeners().isEmpty())</span></a>
 <a name="924"><span class="lineNum">     924 </span>            :         node = makeNode&lt;LiveMidiOutputNode&gt; (at, std::move (node));</a>
 <a name="925"><span class="lineNum">     925 </span>            :     </a>
-<a name="926"><span class="lineNum">     926 </span><span class="lineCov">         11 :     if (node)</span></a>
+<a name="926"><span class="lineNum">     926 </span><span class="lineCov">       2311 :     if (node)</span></a>
 <a name="927"><span class="lineNum">     927 </span>            :         node = makeNode&lt;LiveMidiInjectingNode&gt; (at, std::move (node));</a>
 <a name="928"><span class="lineNum">     928 </span>            : </a>
-<a name="929"><span class="lineNum">     929 </span><span class="lineCov">         11 :     if (node == nullptr &amp;&amp; inputTracks.isEmpty() &amp;&amp; liveInputNode == nullptr)</span></a>
+<a name="929"><span class="lineNum">     929 </span><span class="lineCov">       2311 :     if (node == nullptr &amp;&amp; inputTracks.isEmpty() &amp;&amp; liveInputNode == nullptr)</span></a>
 <a name="930"><span class="lineNum">     930 </span>            :     {</a>
 <a name="931"><span class="lineNum">     931 </span>            :         // If there are synths on the track, create a stub Node to feed them</a>
-<a name="932"><span class="lineNum">     932 </span><span class="lineCov">         16 :         for (auto plugin : at.pluginList)</span></a>
+<a name="932"><span class="lineNum">     932 </span><span class="lineCov">       3506 :         for (auto plugin : at.pluginList)</span></a>
 <a name="933"><span class="lineNum">     933 </span>            :         {</a>
-<a name="934"><span class="lineNum">     934 </span><span class="lineCov">          8 :             if (plugin-&gt;producesAudioWhenNoAudioInput())</span></a>
+<a name="934"><span class="lineNum">     934 </span><span class="lineCov">       1742 :             if (plugin-&gt;producesAudioWhenNoAudioInput())</span></a>
 <a name="935"><span class="lineNum">     935 </span>            :             {</a>
 <a name="936"><span class="lineNum">     936 </span>            :                 node = makeNode&lt;SilentNode&gt; (2);</a>
 <a name="937"><span class="lineNum">     937 </span>            :                 break;</a>
 <a name="938"><span class="lineNum">     938 </span>            :             }</a>
 <a name="939"><span class="lineNum">     939 </span>            :         }</a>
 <a name="940"><span class="lineNum">     940 </span>            :         </a>
-<a name="941"><span class="lineNum">     941 </span><span class="lineCov">          4 :         if (! node)</span></a>
+<a name="941"><span class="lineNum">     941 </span><span class="lineCov">       1576 :         if (! node)</span></a>
 <a name="942"><span class="lineNum">     942 </span>            :             return {};</a>
 <a name="943"><span class="lineNum">     943 </span>            :     }</a>
 <a name="944"><span class="lineNum">     944 </span>            :     </a>
-<a name="945"><span class="lineNum">     945 </span><span class="lineCov">          7 :     if (liveInputNode)</span></a>
+<a name="945"><span class="lineNum">     945 </span><span class="lineCov">       2123 :     if (liveInputNode)</span></a>
 <a name="946"><span class="lineNum">     946 </span>            :     {</a>
 <a name="947"><span class="lineNum">     947 </span><span class="lineNoCov">          0 :         if (node)</span></a>
 <a name="948"><span class="lineNum">     948 </span>            :         {</a>
@@ -1019,28 +1019,28 @@
 <a name="957"><span class="lineNum">     957 </span>            :         }</a>
 <a name="958"><span class="lineNum">     958 </span>            :     }</a>
 <a name="959"><span class="lineNum">     959 </span>            :     </a>
-<a name="960"><span class="lineNum">     960 </span><span class="lineCov">          7 :     if (! inputTracks.isEmpty())</span></a>
+<a name="960"><span class="lineNum">     960 </span><span class="lineCov">       2123 :     if (! inputTracks.isEmpty())</span></a>
 <a name="961"><span class="lineNum">     961 </span>            :     {</a>
-<a name="962"><span class="lineNum">     962 </span><span class="lineNoCov">          0 :         auto sumNode = std::make_unique&lt;SummingNode&gt;();</span></a>
+<a name="962"><span class="lineNum">     962 </span><span class="lineCov">        200 :         auto sumNode = std::make_unique&lt;SummingNode&gt;();</span></a>
 <a name="963"><span class="lineNum">     963 </span>            :         </a>
-<a name="964"><span class="lineNum">     964 </span><span class="lineNoCov">          0 :         if (node)</span></a>
+<a name="964"><span class="lineNum">     964 </span><span class="lineCov">        200 :         if (node)</span></a>
 <a name="965"><span class="lineNum">     965 </span><span class="lineNoCov">          0 :             sumNode-&gt;addInput (std::move (node));</span></a>
 <a name="966"><span class="lineNum">     966 </span>            : </a>
-<a name="967"><span class="lineNum">     967 </span><span class="lineNoCov">          0 :         for (auto inputTrack : inputTracks)</span></a>
-<a name="968"><span class="lineNum">     968 </span><span class="lineNoCov">          0 :             if (auto n = createNodeForTrack (*inputTrack, params))</span></a>
-<a name="969"><span class="lineNum">     969 </span><span class="lineNoCov">          0 :                 sumNode-&gt;addInput (std::move (n));</span></a>
+<a name="967"><span class="lineNum">     967 </span><span class="lineCov">       1634 :         for (auto inputTrack : inputTracks)</span></a>
+<a name="968"><span class="lineNum">     968 </span><span class="lineCov">       1434 :             if (auto n = createNodeForTrack (*inputTrack, params))</span></a>
+<a name="969"><span class="lineNum">     969 </span><span class="lineCov">       2868 :                 sumNode-&gt;addInput (std::move (n));</span></a>
 <a name="970"><span class="lineNum">     970 </span>            :         </a>
 <a name="971"><span class="lineNum">     971 </span>            :         node = std::move (sumNode);</a>
 <a name="972"><span class="lineNum">     972 </span>            :     }</a>
 <a name="973"><span class="lineNum">     973 </span>            :     </a>
-<a name="974"><span class="lineNum">     974 </span><span class="lineCov">         14 :     node = createPluginNodeForTrack (at, *trackMuteState, std::move (node), playHeadState, params);</span></a>
+<a name="974"><span class="lineNum">     974 </span><span class="lineCov">       4246 :     node = createPluginNodeForTrack (at, *trackMuteState, std::move (node), playHeadState, params);</span></a>
 <a name="975"><span class="lineNum">     975 </span>            : </a>
-<a name="976"><span class="lineNum">     976 </span><span class="lineCov">          7 :     if (isSidechainSource (at))</span></a>
+<a name="976"><span class="lineNum">     976 </span><span class="lineCov">       2123 :     if (isSidechainSource (at))</span></a>
 <a name="977"><span class="lineNum">     977 </span><span class="lineNoCov">          0 :         node = makeNode&lt;SendNode&gt; (std::move (node), getSidechainBusID (at.itemID));</span></a>
 <a name="978"><span class="lineNum">     978 </span>            : </a>
-<a name="979"><span class="lineNum">     979 </span><span class="lineCov">          7 :     node = makeNode&lt;TrackMutingNode&gt; (std::move (trackMuteState), std::move (node), false);</span></a>
+<a name="979"><span class="lineNum">     979 </span><span class="lineCov">       2123 :     node = makeNode&lt;TrackMutingNode&gt; (std::move (trackMuteState), std::move (node), false);</span></a>
 <a name="980"><span class="lineNum">     980 </span>            : </a>
-<a name="981"><span class="lineNum">     981 </span><span class="lineCov">          7 :     if (! params.forRendering)</span></a>
+<a name="981"><span class="lineNum">     981 </span><span class="lineCov">       2123 :     if (! params.forRendering)</span></a>
 <a name="982"><span class="lineNum">     982 </span>            :     {</a>
 <a name="983"><span class="lineNum">     983 </span><span class="lineNoCov">          0 :         if (at.getWaveInputDevice().isEnabled())</span></a>
 <a name="984"><span class="lineNum">     984 </span><span class="lineNoCov">          0 :             node = makeNode&lt;SendNode&gt; (std::move (node), getWaveInputDeviceBusID (at.itemID));</span></a>
@@ -1053,42 +1053,42 @@
 <a name="991"><span class="lineNum">     991 </span>            : }</a>
 <a name="992"><span class="lineNum">     992 </span>            : </a>
 <a name="993"><span class="lineNum">     993 </span>            : //==============================================================================</a>
-<a name="994"><span class="lineNum">     994 </span><span class="lineNoCov">          0 : std::unique_ptr&lt;tracktion_graph::Node&gt; createNodeForSubmixTrack (FolderTrack&amp; submixTrack, const CreateNodeParams&amp; params)</span></a>
+<a name="994"><span class="lineNum">     994 </span><span class="lineCov">         46 : std::unique_ptr&lt;tracktion_graph::Node&gt; createNodeForSubmixTrack (FolderTrack&amp; submixTrack, const CreateNodeParams&amp; params)</span></a>
 <a name="995"><span class="lineNum">     995 </span>            : {</a>
-<a name="996"><span class="lineNum">     996 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
+<a name="996"><span class="lineNum">     996 </span><span class="lineCov">         92 :     CRASH_TRACER</span></a>
 <a name="997"><span class="lineNum">     997 </span>            :     jassert (submixTrack.isSubmixFolder());</a>
 <a name="998"><span class="lineNum">     998 </span>            : </a>
-<a name="999"><span class="lineNum">     999 </span><span class="lineNoCov">          0 :     juce::Array&lt;AudioTrack*&gt; subAudioTracks;</span></a>
-<a name="1000"><span class="lineNum">    1000 </span><span class="lineNoCov">          0 :     juce::Array&lt;FolderTrack*&gt; subFolderTracks;</span></a>
+<a name="999"><span class="lineNum">     999 </span><span class="lineCov">         46 :     juce::Array&lt;AudioTrack*&gt; subAudioTracks;</span></a>
+<a name="1000"><span class="lineNum">    1000 </span><span class="lineCov">         46 :     juce::Array&lt;FolderTrack*&gt; subFolderTracks;</span></a>
 <a name="1001"><span class="lineNum">    1001 </span>            : </a>
-<a name="1002"><span class="lineNum">    1002 </span><span class="lineNoCov">          0 :     for (auto t : submixTrack.getAllSubTracks (false))</span></a>
+<a name="1002"><span class="lineNum">    1002 </span><span class="lineCov">        138 :     for (auto t : submixTrack.getAllSubTracks (false))</span></a>
 <a name="1003"><span class="lineNum">    1003 </span>            :     {</a>
-<a name="1004"><span class="lineNum">    1004 </span><span class="lineNoCov">          0 :         if (auto ft = dynamic_cast&lt;AudioTrack*&gt; (t))</span></a>
+<a name="1004"><span class="lineNum">    1004 </span><span class="lineCov">         46 :         if (auto ft = dynamic_cast&lt;AudioTrack*&gt; (t))</span></a>
 <a name="1005"><span class="lineNum">    1005 </span>            :             subAudioTracks.add (ft);</a>
 <a name="1006"><span class="lineNum">    1006 </span>            :         </a>
-<a name="1007"><span class="lineNum">    1007 </span><span class="lineNoCov">          0 :         if (auto ft = dynamic_cast&lt;FolderTrack*&gt; (t))</span></a>
+<a name="1007"><span class="lineNum">    1007 </span><span class="lineCov">         46 :         if (auto ft = dynamic_cast&lt;FolderTrack*&gt; (t))</span></a>
 <a name="1008"><span class="lineNum">    1008 </span>            :             subFolderTracks.add (ft);</a>
 <a name="1009"><span class="lineNum">    1009 </span>            :     }</a>
 <a name="1010"><span class="lineNum">    1010 </span>            : </a>
-<a name="1011"><span class="lineNum">    1011 </span><span class="lineNoCov">          0 :     if (subAudioTracks.isEmpty() &amp;&amp; subFolderTracks.isEmpty())</span></a>
+<a name="1011"><span class="lineNum">    1011 </span><span class="lineCov">         46 :     if (subAudioTracks.isEmpty() &amp;&amp; subFolderTracks.isEmpty())</span></a>
 <a name="1012"><span class="lineNum">    1012 </span>            :         return {};</a>
 <a name="1013"><span class="lineNum">    1013 </span>            :     </a>
-<a name="1014"><span class="lineNum">    1014 </span><span class="lineNoCov">          0 :     auto sumNode = std::make_unique&lt;tracktion_graph::SummingNode&gt;();</span></a>
-<a name="1015"><span class="lineNum">    1015 </span><span class="lineNoCov">          0 :     sumNode-&gt;setDoubleProcessingPrecision (submixTrack.edit.engine.getPropertyStorage().getProperty (SettingID::use64Bit, false));</span></a>
+<a name="1014"><span class="lineNum">    1014 </span><span class="lineCov">         46 :     auto sumNode = std::make_unique&lt;tracktion_graph::SummingNode&gt;();</span></a>
+<a name="1015"><span class="lineNum">    1015 </span><span class="lineCov">         46 :     sumNode-&gt;setDoubleProcessingPrecision (submixTrack.edit.engine.getPropertyStorage().getProperty (SettingID::use64Bit, false));</span></a>
 <a name="1016"><span class="lineNum">    1016 </span>            : </a>
 <a name="1017"><span class="lineNum">    1017 </span>            :     // Create nodes for any submix tracks</a>
-<a name="1018"><span class="lineNum">    1018 </span><span class="lineNoCov">          0 :     for (auto ft : subFolderTracks)</span></a>
+<a name="1018"><span class="lineNum">    1018 </span><span class="lineCov">         68 :     for (auto ft : subFolderTracks)</span></a>
 <a name="1019"><span class="lineNum">    1019 </span>            :     {</a>
-<a name="1020"><span class="lineNum">    1020 </span><span class="lineNoCov">          0 :         if (params.allowedTracks != nullptr &amp;&amp; ! params.allowedTracks-&gt;contains (ft))</span></a>
-<a name="1021"><span class="lineNum">    1021 </span><span class="lineNoCov">          0 :             continue;</span></a>
+<a name="1020"><span class="lineNum">    1020 </span><span class="lineCov">         44 :         if (params.allowedTracks != nullptr &amp;&amp; ! params.allowedTracks-&gt;contains (ft))</span></a>
+<a name="1021"><span class="lineNum">    1021 </span><span class="lineCov">          2 :             continue;</span></a>
 <a name="1022"><span class="lineNum">    1022 </span>            : </a>
-<a name="1023"><span class="lineNum">    1023 </span><span class="lineNoCov">          0 :         if (! ft-&gt;isProcessing (true))</span></a>
+<a name="1023"><span class="lineNum">    1023 </span><span class="lineCov">         20 :         if (! ft-&gt;isProcessing (true))</span></a>
 <a name="1024"><span class="lineNum">    1024 </span><span class="lineNoCov">          0 :             continue;</span></a>
 <a name="1025"><span class="lineNum">    1025 </span>            : </a>
-<a name="1026"><span class="lineNum">    1026 </span><span class="lineNoCov">          0 :         if (ft-&gt;isSubmixFolder())</span></a>
+<a name="1026"><span class="lineNum">    1026 </span><span class="lineCov">         20 :         if (ft-&gt;isSubmixFolder())</span></a>
 <a name="1027"><span class="lineNum">    1027 </span>            :         {</a>
-<a name="1028"><span class="lineNum">    1028 </span><span class="lineNoCov">          0 :             if (auto node = createNodeForSubmixTrack (*ft, params))</span></a>
-<a name="1029"><span class="lineNum">    1029 </span><span class="lineNoCov">          0 :                 sumNode-&gt;addInput (std::move (node));</span></a>
+<a name="1028"><span class="lineNum">    1028 </span><span class="lineCov">         20 :             if (auto node = createNodeForSubmixTrack (*ft, params))</span></a>
+<a name="1029"><span class="lineNum">    1029 </span><span class="lineCov">         36 :                 sumNode-&gt;addInput (std::move (node));</span></a>
 <a name="1030"><span class="lineNum">    1030 </span>            :         }</a>
 <a name="1031"><span class="lineNum">    1031 </span>            :         else</a>
 <a name="1032"><span class="lineNum">    1032 </span>            :         {</a>
@@ -1100,100 +1100,100 @@
 <a name="1038"><span class="lineNum">    1038 </span>            :     }</a>
 <a name="1039"><span class="lineNum">    1039 </span>            : </a>
 <a name="1040"><span class="lineNum">    1040 </span>            :     // Then add any audio tracks</a>
-<a name="1041"><span class="lineNum">    1041 </span><span class="lineNoCov">          0 :     for (auto at : subAudioTracks)</span></a>
-<a name="1042"><span class="lineNum">    1042 </span><span class="lineNoCov">          0 :         if (params.allowedTracks == nullptr || params.allowedTracks-&gt;contains (at))</span></a>
-<a name="1043"><span class="lineNum">    1043 </span><span class="lineNoCov">          0 :             if (at-&gt;isProcessing (true))</span></a>
-<a name="1044"><span class="lineNum">    1044 </span><span class="lineNoCov">          0 :                 if (auto node = createNodeForAudioTrack (*at, params))</span></a>
-<a name="1045"><span class="lineNum">    1045 </span><span class="lineNoCov">          0 :                     sumNode-&gt;addInput (std::move (node));</span></a>
+<a name="1041"><span class="lineNum">    1041 </span><span class="lineCov">         70 :     for (auto at : subAudioTracks)</span></a>
+<a name="1042"><span class="lineNum">    1042 </span><span class="lineCov">         48 :         if (params.allowedTracks == nullptr || params.allowedTracks-&gt;contains (at))</span></a>
+<a name="1043"><span class="lineNum">    1043 </span><span class="lineCov">         22 :             if (at-&gt;isProcessing (true))</span></a>
+<a name="1044"><span class="lineNum">    1044 </span><span class="lineCov">         22 :                 if (auto node = createNodeForAudioTrack (*at, params))</span></a>
+<a name="1045"><span class="lineNum">    1045 </span><span class="lineCov">         44 :                     sumNode-&gt;addInput (std::move (node));</span></a>
 <a name="1046"><span class="lineNum">    1046 </span>            : </a>
-<a name="1047"><span class="lineNum">    1047 </span><span class="lineNoCov">          0 :     if (sumNode-&gt;getDirectInputNodes().empty())</span></a>
+<a name="1047"><span class="lineNum">    1047 </span><span class="lineCov">         92 :     if (sumNode-&gt;getDirectInputNodes().empty())</span></a>
 <a name="1048"><span class="lineNum">    1048 </span>            :         return {};</a>
 <a name="1049"><span class="lineNum">    1049 </span>            :     </a>
 <a name="1050"><span class="lineNum">    1050 </span>            :     // Finally the effects</a>
 <a name="1051"><span class="lineNum">    1051 </span>            :     std::unique_ptr&lt;Node&gt; node = std::move (sumNode);</a>
-<a name="1052"><span class="lineNum">    1052 </span><span class="lineNoCov">          0 :     auto trackMuteState = std::make_unique&lt;TrackMuteState&gt; (submixTrack, false, false);</span></a>
+<a name="1052"><span class="lineNum">    1052 </span><span class="lineCov">         40 :     auto trackMuteState = std::make_unique&lt;TrackMuteState&gt; (submixTrack, false, false);</span></a>
 <a name="1053"><span class="lineNum">    1053 </span>            : </a>
-<a name="1054"><span class="lineNum">    1054 </span><span class="lineNoCov">          0 :     node = createPluginNodeForTrack (submixTrack, *trackMuteState, std::move (node), params.processState.playHeadState, params);</span></a>
+<a name="1054"><span class="lineNum">    1054 </span><span class="lineCov">         80 :     node = createPluginNodeForTrack (submixTrack, *trackMuteState, std::move (node), params.processState.playHeadState, params);</span></a>
 <a name="1055"><span class="lineNum">    1055 </span>            : </a>
-<a name="1056"><span class="lineNum">    1056 </span><span class="lineNoCov">          0 :     node = makeNode&lt;TrackMutingNode&gt; (std::move (trackMuteState), std::move (node), false);</span></a>
+<a name="1056"><span class="lineNum">    1056 </span><span class="lineCov">         80 :     node = makeNode&lt;TrackMutingNode&gt; (std::move (trackMuteState), std::move (node), false);</span></a>
 <a name="1057"><span class="lineNum">    1057 </span>            : </a>
 <a name="1058"><span class="lineNum">    1058 </span>            :     return node;</a>
 <a name="1059"><span class="lineNum">    1059 </span>            : }</a>
 <a name="1060"><span class="lineNum">    1060 </span>            : </a>
 <a name="1061"><span class="lineNum">    1061 </span>            : //==============================================================================</a>
-<a name="1062"><span class="lineNum">    1062 </span><span class="lineCov">         11 : std::unique_ptr&lt;tracktion_graph::Node&gt; createNodeForTrack (Track&amp; track, const CreateNodeParams&amp; params)</span></a>
+<a name="1062"><span class="lineNum">    1062 </span><span class="lineCov">       2359 : std::unique_ptr&lt;tracktion_graph::Node&gt; createNodeForTrack (Track&amp; track, const CreateNodeParams&amp; params)</span></a>
 <a name="1063"><span class="lineNum">    1063 </span>            : {</a>
-<a name="1064"><span class="lineNum">    1064 </span><span class="lineCov">         11 :     if (auto t = dynamic_cast&lt;AudioTrack*&gt; (&amp;track))</span></a>
+<a name="1064"><span class="lineNum">    1064 </span><span class="lineCov">       2359 :     if (auto t = dynamic_cast&lt;AudioTrack*&gt; (&amp;track))</span></a>
 <a name="1065"><span class="lineNum">    1065 </span>            :     {</a>
-<a name="1066"><span class="lineNum">    1066 </span><span class="lineCov">         11 :         if (! t-&gt;isProcessing (true))</span></a>
+<a name="1066"><span class="lineNum">    1066 </span><span class="lineCov">       2313 :         if (! t-&gt;isProcessing (true))</span></a>
 <a name="1067"><span class="lineNum">    1067 </span>            :             return {};</a>
 <a name="1068"><span class="lineNum">    1068 </span>            : </a>
-<a name="1069"><span class="lineNum">    1069 </span><span class="lineCov">         11 :         if (! t-&gt;createsOutput())</span></a>
+<a name="1069"><span class="lineNum">    1069 </span><span class="lineCov">       2313 :         if (! t-&gt;createsOutput())</span></a>
 <a name="1070"><span class="lineNum">    1070 </span>            :             return {};</a>
 <a name="1071"><span class="lineNum">    1071 </span>            : </a>
-<a name="1072"><span class="lineNum">    1072 </span><span class="lineCov">         11 :         if (t-&gt;isPartOfSubmix() &amp;&amp; ! shouldRenderTrackInSubmix (*t, params))</span></a>
+<a name="1072"><span class="lineNum">    1072 </span><span class="lineCov">       2313 :         if (t-&gt;isPartOfSubmix() &amp;&amp; ! shouldRenderTrackInSubmix (*t, params))</span></a>
 <a name="1073"><span class="lineNum">    1073 </span>            :             return {};</a>
 <a name="1074"><span class="lineNum">    1074 </span>            : </a>
-<a name="1075"><span class="lineNum">    1075 </span><span class="lineCov">         11 :         if (t-&gt;isFrozen (Track::groupFreeze))</span></a>
+<a name="1075"><span class="lineNum">    1075 </span><span class="lineCov">       2289 :         if (t-&gt;isFrozen (Track::groupFreeze))</span></a>
 <a name="1076"><span class="lineNum">    1076 </span>            :             return {};</a>
 <a name="1077"><span class="lineNum">    1077 </span>            : </a>
-<a name="1078"><span class="lineNum">    1078 </span><span class="lineCov">         11 :         return createNodeForAudioTrack (*t, params);</span></a>
+<a name="1078"><span class="lineNum">    1078 </span><span class="lineCov">       2289 :         return createNodeForAudioTrack (*t, params);</span></a>
 <a name="1079"><span class="lineNum">    1079 </span>            :     }</a>
 <a name="1080"><span class="lineNum">    1080 </span>            : </a>
-<a name="1081"><span class="lineNum">    1081 </span><span class="lineNoCov">          0 :     if (auto t = dynamic_cast&lt;FolderTrack*&gt; (&amp;track))</span></a>
+<a name="1081"><span class="lineNum">    1081 </span><span class="lineCov">         46 :     if (auto t = dynamic_cast&lt;FolderTrack*&gt; (&amp;track))</span></a>
 <a name="1082"><span class="lineNum">    1082 </span>            :     {</a>
-<a name="1083"><span class="lineNum">    1083 </span><span class="lineNoCov">          0 :         if (! t-&gt;isSubmixFolder())</span></a>
+<a name="1083"><span class="lineNum">    1083 </span><span class="lineCov">         46 :         if (! t-&gt;isSubmixFolder())</span></a>
 <a name="1084"><span class="lineNum">    1084 </span>            :             return {};</a>
 <a name="1085"><span class="lineNum">    1085 </span>            : </a>
-<a name="1086"><span class="lineNum">    1086 </span><span class="lineNoCov">          0 :         if (t-&gt;isPartOfSubmix() &amp;&amp; ! shouldRenderTrackInSubmix (*t, params))</span></a>
+<a name="1086"><span class="lineNum">    1086 </span><span class="lineCov">         46 :         if (t-&gt;isPartOfSubmix() &amp;&amp; ! shouldRenderTrackInSubmix (*t, params))</span></a>
 <a name="1087"><span class="lineNum">    1087 </span>            :             return {};</a>
 <a name="1088"><span class="lineNum">    1088 </span>            : </a>
-<a name="1089"><span class="lineNum">    1089 </span><span class="lineNoCov">          0 :         if (t-&gt;getOutput() == nullptr)</span></a>
+<a name="1089"><span class="lineNum">    1089 </span><span class="lineCov">         26 :         if (t-&gt;getOutput() == nullptr)</span></a>
 <a name="1090"><span class="lineNum">    1090 </span>            :             return {};</a>
 <a name="1091"><span class="lineNum">    1091 </span>            : </a>
-<a name="1092"><span class="lineNum">    1092 </span><span class="lineNoCov">          0 :         return createNodeForSubmixTrack (*t, params);</span></a>
+<a name="1092"><span class="lineNum">    1092 </span><span class="lineCov">         26 :         return createNodeForSubmixTrack (*t, params);</span></a>
 <a name="1093"><span class="lineNum">    1093 </span>            :     }</a>
 <a name="1094"><span class="lineNum">    1094 </span>            : </a>
 <a name="1095"><span class="lineNum">    1095 </span>            :     return {};</a>
 <a name="1096"><span class="lineNum">    1096 </span>            : }</a>
 <a name="1097"><span class="lineNum">    1097 </span>            : </a>
 <a name="1098"><span class="lineNum">    1098 </span>            : //==============================================================================</a>
-<a name="1099"><span class="lineNum">    1099 </span><span class="lineNoCov">          0 : std::unique_ptr&lt;Node&gt; createNodeForRackType (RackType&amp; rackType, const CreateNodeParams&amp; params)</span></a>
+<a name="1099"><span class="lineNum">    1099 </span><span class="lineCov">        180 : std::unique_ptr&lt;Node&gt; createNodeForRackType (RackType&amp; rackType, const CreateNodeParams&amp; params)</span></a>
 <a name="1100"><span class="lineNum">    1100 </span>            : {</a>
 <a name="1101"><span class="lineNum">    1101 </span>            :     const auto rackInputID = getRackInputBusID (rackType.rackID);</a>
-<a name="1102"><span class="lineNum">    1102 </span><span class="lineNoCov">          0 :     const auto rackOutputID = getRackOutputBusID (rackType.rackID);</span></a>
+<a name="1102"><span class="lineNum">    1102 </span><span class="lineCov">        180 :     const auto rackOutputID = getRackOutputBusID (rackType.rackID);</span></a>
 <a name="1103"><span class="lineNum">    1103 </span>            :     </a>
 <a name="1104"><span class="lineNum">    1104 </span>            :     auto rackInputNode = makeNode&lt;ReturnNode&gt; (rackInputID);</a>
 <a name="1105"><span class="lineNum">    1105 </span>            :     auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode,</a>
-<a name="1106"><span class="lineNum">    1106 </span><span class="lineNoCov">          0 :                                                      rackType, params.sampleRate, params.blockSize, std::move (rackInputNode),</span></a>
-<a name="1107"><span class="lineNum">    1107 </span><span class="lineNoCov">          0 :                                                      params.processState.playHeadState, params.forRendering);</span></a>
+<a name="1106"><span class="lineNum">    1106 </span><span class="lineCov">        180 :                                                      rackType, params.sampleRate, params.blockSize, std::move (rackInputNode),</span></a>
+<a name="1107"><span class="lineNum">    1107 </span><span class="lineCov">        360 :                                                      params.processState.playHeadState, params.forRendering);</span></a>
 <a name="1108"><span class="lineNum">    1108 </span>            :     auto rackOutputNode = makeNode&lt;SendNode&gt; (std::move (rackNode), rackOutputID);</a>
 <a name="1109"><span class="lineNum">    1109 </span>            : </a>
-<a name="1110"><span class="lineNum">    1110 </span><span class="lineNoCov">          0 :     return makeNode&lt;SinkNode&gt; (std::move (rackOutputNode));</span></a>
+<a name="1110"><span class="lineNum">    1110 </span><span class="lineCov">        180 :     return makeNode&lt;SinkNode&gt; (std::move (rackOutputNode));</span></a>
 <a name="1111"><span class="lineNum">    1111 </span>            : }</a>
 <a name="1112"><span class="lineNum">    1112 </span>            : </a>
-<a name="1113"><span class="lineNum">    1113 </span><span class="lineCov">         12 : std::vector&lt;std::unique_ptr&lt;Node&gt;&gt; createNodesForRacks (RackTypeList&amp; rackTypeList, const CreateNodeParams&amp; params)</span></a>
+<a name="1113"><span class="lineNum">    1113 </span><span class="lineCov">        188 : std::vector&lt;std::unique_ptr&lt;Node&gt;&gt; createNodesForRacks (RackTypeList&amp; rackTypeList, const CreateNodeParams&amp; params)</span></a>
 <a name="1114"><span class="lineNum">    1114 </span>            : {</a>
 <a name="1115"><span class="lineNum">    1115 </span>            :     std::vector&lt;std::unique_ptr&lt;Node&gt;&gt; nodes;</a>
 <a name="1116"><span class="lineNum">    1116 </span>            :     </a>
-<a name="1117"><span class="lineNum">    1117 </span><span class="lineCov">         24 :     for (auto rackType : rackTypeList.getTypes())</span></a>
-<a name="1118"><span class="lineNum">    1118 </span><span class="lineNoCov">          0 :         if (getEnabledInstancesForRack (*rackType).size() &gt; 0)</span></a>
-<a name="1119"><span class="lineNum">    1119 </span><span class="lineNoCov">          0 :             if (auto rackNode = createNodeForRackType (*rackType, params))</span></a>
+<a name="1117"><span class="lineNum">    1117 </span><span class="lineCov">        556 :     for (auto rackType : rackTypeList.getTypes())</span></a>
+<a name="1118"><span class="lineNum">    1118 </span><span class="lineCov">        180 :         if (getEnabledInstancesForRack (*rackType).size() &gt; 0)</span></a>
+<a name="1119"><span class="lineNum">    1119 </span><span class="lineCov">        180 :             if (auto rackNode = createNodeForRackType (*rackType, params))</span></a>
 <a name="1120"><span class="lineNum">    1120 </span>            :                 nodes.push_back (std::move (rackNode));</a>
 <a name="1121"><span class="lineNum">    1121 </span>            :     </a>
-<a name="1122"><span class="lineNum">    1122 </span><span class="lineCov">         12 :     return nodes;</span></a>
+<a name="1122"><span class="lineNum">    1122 </span><span class="lineCov">        188 :     return nodes;</span></a>
 <a name="1123"><span class="lineNum">    1123 </span>            : }</a>
 <a name="1124"><span class="lineNum">    1124 </span>            : </a>
-<a name="1125"><span class="lineNum">    1125 </span><span class="lineCov">         12 : std::unique_ptr&lt;Node&gt; createRackNode (std::unique_ptr&lt;Node&gt; input, RackTypeList&amp; rackTypeList, const CreateNodeParams&amp; params)</span></a>
+<a name="1125"><span class="lineNum">    1125 </span><span class="lineCov">        188 : std::unique_ptr&lt;Node&gt; createRackNode (std::unique_ptr&lt;Node&gt; input, RackTypeList&amp; rackTypeList, const CreateNodeParams&amp; params)</span></a>
 <a name="1126"><span class="lineNum">    1126 </span>            : {</a>
 <a name="1127"><span class="lineNum">    1127 </span>            :     // Finally add the RackType Nodes</a>
-<a name="1128"><span class="lineNum">    1128 </span><span class="lineCov">         24 :     auto rackNodes = createNodesForRacks (rackTypeList, params);</span></a>
+<a name="1128"><span class="lineNum">    1128 </span><span class="lineCov">        376 :     auto rackNodes = createNodesForRacks (rackTypeList, params);</span></a>
 <a name="1129"><span class="lineNum">    1129 </span>            :     </a>
-<a name="1130"><span class="lineNum">    1130 </span><span class="lineCov">         12 :     if (rackNodes.empty())</span></a>
+<a name="1130"><span class="lineNum">    1130 </span><span class="lineCov">        188 :     if (rackNodes.empty())</span></a>
 <a name="1131"><span class="lineNum">    1131 </span>            :         return input;</a>
 <a name="1132"><span class="lineNum">    1132 </span>            :     </a>
-<a name="1133"><span class="lineNum">    1133 </span><span class="lineNoCov">          0 :     auto sumNode = std::make_unique&lt;SummingNode&gt; (std::move (rackNodes));</span></a>
-<a name="1134"><span class="lineNum">    1134 </span><span class="lineNoCov">          0 :     sumNode-&gt;addInput (std::move (input));</span></a>
+<a name="1133"><span class="lineNum">    1133 </span><span class="lineCov">         26 :     auto sumNode = std::make_unique&lt;SummingNode&gt; (std::move (rackNodes));</span></a>
+<a name="1134"><span class="lineNum">    1134 </span><span class="lineCov">         52 :     sumNode-&gt;addInput (std::move (input));</span></a>
 <a name="1135"><span class="lineNum">    1135 </span>            :     input = std::move (sumNode);</a>
 <a name="1136"><span class="lineNum">    1136 </span>            :     </a>
 <a name="1137"><span class="lineNum">    1137 </span>            :     return input;</a>
@@ -1279,27 +1279,27 @@
 <a name="1217"><span class="lineNum">    1217 </span>            :     return {};</a>
 <a name="1218"><span class="lineNum">    1218 </span>            : }</a>
 <a name="1219"><span class="lineNum">    1219 </span>            : </a>
-<a name="1220"><span class="lineNum">    1220 </span><span class="lineCov">          8 : std::unique_ptr&lt;tracktion_graph::Node&gt; createMasterPluginsNode (Edit&amp; edit, tracktion_graph::PlayHeadState&amp; playHeadState, std::unique_ptr&lt;Node&gt; node, const CreateNodeParams&amp; params)</span></a>
+<a name="1220"><span class="lineNum">    1220 </span><span class="lineCov">        118 : std::unique_ptr&lt;tracktion_graph::Node&gt; createMasterPluginsNode (Edit&amp; edit, tracktion_graph::PlayHeadState&amp; playHeadState, std::unique_ptr&lt;Node&gt; node, const CreateNodeParams&amp; params)</span></a>
 <a name="1221"><span class="lineNum">    1221 </span>            : {</a>
-<a name="1222"><span class="lineNum">    1222 </span><span class="lineCov">          8 :     if (! params.includeMasterPlugins)</span></a>
+<a name="1222"><span class="lineNum">    1222 </span><span class="lineCov">        118 :     if (! params.includeMasterPlugins)</span></a>
 <a name="1223"><span class="lineNum">    1223 </span>            :         return node;</a>
 <a name="1224"><span class="lineNum">    1224 </span>            : </a>
-<a name="1225"><span class="lineNum">    1225 </span><span class="lineCov">          4 :     auto&amp; tempoModList = edit.getTempoTrack()-&gt;getModifierList();</span></a>
-<a name="1226"><span class="lineNum">    1226 </span><span class="lineCov">          4 :     auto&amp; masterModList = edit.getMasterTrack()-&gt;getModifierList();</span></a>
-<a name="1227"><span class="lineNum">    1227 </span><span class="lineCov">          8 :     node = createModifierNodeForList (tempoModList, Modifier::ProcessingPosition::preFX,</span></a>
+<a name="1225"><span class="lineNum">    1225 </span><span class="lineCov">         48 :     auto&amp; tempoModList = edit.getTempoTrack()-&gt;getModifierList();</span></a>
+<a name="1226"><span class="lineNum">    1226 </span><span class="lineCov">         48 :     auto&amp; masterModList = edit.getMasterTrack()-&gt;getModifierList();</span></a>
+<a name="1227"><span class="lineNum">    1227 </span><span class="lineCov">         96 :     node = createModifierNodeForList (tempoModList, Modifier::ProcessingPosition::preFX,</span></a>
 <a name="1228"><span class="lineNum">    1228 </span>            :                                       nullptr, std::move (node), playHeadState, params);</a>
-<a name="1229"><span class="lineNum">    1229 </span><span class="lineCov">          8 :     node = createModifierNodeForList (masterModList, Modifier::ProcessingPosition::preFX,</span></a>
+<a name="1229"><span class="lineNum">    1229 </span><span class="lineCov">         96 :     node = createModifierNodeForList (masterModList, Modifier::ProcessingPosition::preFX,</span></a>
 <a name="1230"><span class="lineNum">    1230 </span>            :                                       nullptr, std::move (node), playHeadState, params);</a>
 <a name="1231"><span class="lineNum">    1231 </span>            : </a>
-<a name="1232"><span class="lineNum">    1232 </span><span class="lineCov">          8 :     node = createPluginNodeForList (edit.getMasterPluginList(), nullptr, std::move (node), playHeadState, params);</span></a>
+<a name="1232"><span class="lineNum">    1232 </span><span class="lineCov">         96 :     node = createPluginNodeForList (edit.getMasterPluginList(), nullptr, std::move (node), playHeadState, params);</span></a>
 <a name="1233"><span class="lineNum">    1233 </span>            : </a>
-<a name="1234"><span class="lineNum">    1234 </span><span class="lineCov">          8 :     node = createModifierNodeForList (tempoModList, Modifier::ProcessingPosition::postFX,</span></a>
+<a name="1234"><span class="lineNum">    1234 </span><span class="lineCov">         96 :     node = createModifierNodeForList (tempoModList, Modifier::ProcessingPosition::postFX,</span></a>
 <a name="1235"><span class="lineNum">    1235 </span>            :                                       nullptr, std::move (node), playHeadState, params);</a>
-<a name="1236"><span class="lineNum">    1236 </span><span class="lineCov">          8 :     node = createModifierNodeForList (masterModList, Modifier::ProcessingPosition::postFX,</span></a>
+<a name="1236"><span class="lineNum">    1236 </span><span class="lineCov">         96 :     node = createModifierNodeForList (masterModList, Modifier::ProcessingPosition::postFX,</span></a>
 <a name="1237"><span class="lineNum">    1237 </span>            :                                       nullptr, std::move (node), playHeadState, params);</a>
 <a name="1238"><span class="lineNum">    1238 </span>            : </a>
-<a name="1239"><span class="lineNum">    1239 </span><span class="lineCov">          4 :     if (auto masterVolPlugin = edit.getMasterVolumePlugin())</span></a>
-<a name="1240"><span class="lineNum">    1240 </span><span class="lineCov">          8 :         node = createNodeForPlugin (*masterVolPlugin, nullptr, std::move (node), playHeadState, params);</span></a>
+<a name="1239"><span class="lineNum">    1239 </span><span class="lineCov">         48 :     if (auto masterVolPlugin = edit.getMasterVolumePlugin())</span></a>
+<a name="1240"><span class="lineNum">    1240 </span><span class="lineCov">         96 :         node = createNodeForPlugin (*masterVolPlugin, nullptr, std::move (node), playHeadState, params);</span></a>
 <a name="1241"><span class="lineNum">    1241 </span>            :     </a>
 <a name="1242"><span class="lineNum">    1242 </span>            :     return node;</a>
 <a name="1243"><span class="lineNum">    1243 </span>            : }</a>
@@ -1326,24 +1326,24 @@
 <a name="1264"><span class="lineNum">    1264 </span>            : }</a>
 <a name="1265"><span class="lineNum">    1265 </span>            : </a>
 <a name="1266"><span class="lineNum">    1266 </span>            : //==============================================================================</a>
-<a name="1267"><span class="lineNum">    1267 </span><span class="lineCov">          8 : std::unique_ptr&lt;tracktion_graph::Node&gt; createNodeForEdit (EditPlaybackContext&amp; epc, std::atomic&lt;double&gt;&amp; audibleTimeToUpdate, const CreateNodeParams&amp; params)</span></a>
+<a name="1267"><span class="lineNum">    1267 </span><span class="lineCov">         74 : std::unique_ptr&lt;tracktion_graph::Node&gt; createNodeForEdit (EditPlaybackContext&amp; epc, std::atomic&lt;double&gt;&amp; audibleTimeToUpdate, const CreateNodeParams&amp; params)</span></a>
 <a name="1268"><span class="lineNum">    1268 </span>            : {</a>
-<a name="1269"><span class="lineNum">    1269 </span><span class="lineCov">          8 :     Edit&amp; edit = epc.edit;</span></a>
-<a name="1270"><span class="lineNum">    1270 </span><span class="lineCov">          8 :     auto&amp; playHeadState = params.processState.playHeadState;</span></a>
-<a name="1271"><span class="lineNum">    1271 </span><span class="lineCov">          8 :     auto insertPlugins = getAllPluginsOfType&lt;InsertPlugin&gt; (edit);</span></a>
+<a name="1269"><span class="lineNum">    1269 </span><span class="lineCov">         74 :     Edit&amp; edit = epc.edit;</span></a>
+<a name="1270"><span class="lineNum">    1270 </span><span class="lineCov">         74 :     auto&amp; playHeadState = params.processState.playHeadState;</span></a>
+<a name="1271"><span class="lineNum">    1271 </span><span class="lineCov">         74 :     auto insertPlugins = getAllPluginsOfType&lt;InsertPlugin&gt; (edit);</span></a>
 <a name="1272"><span class="lineNum">    1272 </span>            :     </a>
 <a name="1273"><span class="lineNum">    1273 </span>            :     using TrackNodeVector = std::vector&lt;std::unique_ptr&lt;tracktion_graph::Node&gt;&gt;;</a>
 <a name="1274"><span class="lineNum">    1274 </span>            :     std::map&lt;OutputDevice*, TrackNodeVector&gt; deviceNodes;</a>
 <a name="1275"><span class="lineNum">    1275 </span>            :     std::vector&lt;OutputDevice*&gt; devicesWithFrozenNodes;</a>
 <a name="1276"><span class="lineNum">    1276 </span>            : </a>
-<a name="1277"><span class="lineNum">    1277 </span><span class="lineCov">         68 :     for (auto t : getAllTracks (edit))</span></a>
+<a name="1277"><span class="lineNum">    1277 </span><span class="lineCov">        718 :     for (auto t : getAllTracks (edit))</span></a>
 <a name="1278"><span class="lineNum">    1278 </span>            :     {</a>
-<a name="1279"><span class="lineNum">    1279 </span><span class="lineCov">         52 :         if (params.allowedTracks != nullptr &amp;&amp; ! params.allowedTracks-&gt;contains (t))</span></a>
+<a name="1279"><span class="lineNum">    1279 </span><span class="lineCov">        570 :         if (params.allowedTracks != nullptr &amp;&amp; ! params.allowedTracks-&gt;contains (t))</span></a>
 <a name="1280"><span class="lineNum">    1280 </span><span class="lineNoCov">          0 :             continue;</span></a>
 <a name="1281"><span class="lineNum">    1281 </span>            : </a>
-<a name="1282"><span class="lineNum">    1282 </span><span class="lineCov">         52 :         if (auto output = getTrackOutput (*t))</span></a>
+<a name="1282"><span class="lineNum">    1282 </span><span class="lineCov">        570 :         if (auto output = getTrackOutput (*t))</span></a>
 <a name="1283"><span class="lineNum">    1283 </span>            :         {</a>
-<a name="1284"><span class="lineNum">    1284 </span><span class="lineCov">         12 :             if (auto device = output-&gt;getOutputDevice (false))</span></a>
+<a name="1284"><span class="lineNum">    1284 </span><span class="lineCov">        200 :             if (auto device = output-&gt;getOutputDevice (false))</span></a>
 <a name="1285"><span class="lineNum">    1285 </span>            :             {</a>
 <a name="1286"><span class="lineNum">    1286 </span><span class="lineCov">          4 :                 if (! device-&gt;isEnabled())</span></a>
 <a name="1287"><span class="lineNum">    1287 </span><span class="lineNoCov">          0 :                     continue;</span></a>
@@ -1369,7 +1369,7 @@
 <a name="1307"><span class="lineNum">    1307 </span>            :     }</a>
 <a name="1308"><span class="lineNum">    1308 </span>            : </a>
 <a name="1309"><span class="lineNum">    1309 </span>            :     // Add deviceNodes for any devices only being used by InsertPlugins</a>
-<a name="1310"><span class="lineNum">    1310 </span><span class="lineCov">          8 :     for (auto ins : insertPlugins)</span></a>
+<a name="1310"><span class="lineNum">    1310 </span><span class="lineCov">         74 :     for (auto ins : insertPlugins)</span></a>
 <a name="1311"><span class="lineNum">    1311 </span>            :     {</a>
 <a name="1312"><span class="lineNum">    1312 </span><span class="lineNoCov">          0 :         if (ins-&gt;getSendDeviceType() != InsertPlugin::noDevice)</span></a>
 <a name="1313"><span class="lineNum">    1313 </span>            :         {</a>
@@ -1383,7 +1383,7 @@
 <a name="1321"><span class="lineNum">    1321 </span>            :     }</a>
 <a name="1322"><span class="lineNum">    1322 </span>            : </a>
 <a name="1323"><span class="lineNum">    1323 </span>            :     // Add deviceNodes for any devices only being used by the click track</a>
-<a name="1324"><span class="lineNum">    1324 </span><span class="lineCov">         24 :     for (int i = edit.engine.getDeviceManager().getNumOutputDevices(); --i &gt;= 0;)</span></a>
+<a name="1324"><span class="lineNum">    1324 </span><span class="lineCov">        156 :     for (int i = edit.engine.getDeviceManager().getNumOutputDevices(); --i &gt;= 0;)</span></a>
 <a name="1325"><span class="lineNum">    1325 </span>            :     {</a>
 <a name="1326"><span class="lineNum">    1326 </span><span class="lineCov">         16 :         if (auto device = edit.engine.getDeviceManager().getOutputDeviceAt (i))</span></a>
 <a name="1327"><span class="lineNum">    1327 </span>            :         {</a>
@@ -1397,9 +1397,9 @@
 <a name="1335"><span class="lineNum">    1335 </span>            :     }</a>
 <a name="1336"><span class="lineNum">    1336 </span>            : </a>
 <a name="1337"><span class="lineNum">    1337 </span>            : </a>
-<a name="1338"><span class="lineNum">    1338 </span><span class="lineCov">          8 :     auto outputNode = std::make_unique&lt;tracktion_graph::SummingNode&gt;();</span></a>
+<a name="1338"><span class="lineNum">    1338 </span><span class="lineCov">         74 :     auto outputNode = std::make_unique&lt;tracktion_graph::SummingNode&gt;();</span></a>
 <a name="1339"><span class="lineNum">    1339 </span>            :         </a>
-<a name="1340"><span class="lineNum">    1340 </span><span class="lineCov">         12 :     for (auto&amp; deviceAndTrackNode : deviceNodes)</span></a>
+<a name="1340"><span class="lineNum">    1340 </span><span class="lineCov">         78 :     for (auto&amp; deviceAndTrackNode : deviceNodes)</span></a>
 <a name="1341"><span class="lineNum">    1341 </span>            :     {</a>
 <a name="1342"><span class="lineNum">    1342 </span><span class="lineCov">          4 :         auto device = deviceAndTrackNode.first;</span></a>
 <a name="1343"><span class="lineNum">    1343 </span>            :         jassert (device != nullptr);</a>
@@ -1454,51 +1454,51 @@
 <a name="1392"><span class="lineNum">    1392 </span>            :     }</a>
 <a name="1393"><span class="lineNum">    1393 </span>            :     </a>
 <a name="1394"><span class="lineNum">    1394 </span>            :     std::unique_ptr&lt;Node&gt; finalNode (std::move (outputNode));</a>
-<a name="1395"><span class="lineNum">    1395 </span><span class="lineCov">          8 :     finalNode = makeNode&lt;LevelMeasuringNode&gt; (std::move (finalNode), epc.masterLevels);</span></a>
-<a name="1396"><span class="lineNum">    1396 </span><span class="lineCov">         16 :     finalNode = createRackNode (std::move (finalNode), edit.getRackList(), params);</span></a>
-<a name="1397"><span class="lineNum">    1397 </span><span class="lineCov">          8 :     finalNode = makeNode&lt;PlayHeadPositionNode&gt; (params.processState, std::move (finalNode), audibleTimeToUpdate);</span></a>
+<a name="1395"><span class="lineNum">    1395 </span><span class="lineCov">         74 :     finalNode = makeNode&lt;LevelMeasuringNode&gt; (std::move (finalNode), epc.masterLevels);</span></a>
+<a name="1396"><span class="lineNum">    1396 </span><span class="lineCov">        148 :     finalNode = createRackNode (std::move (finalNode), edit.getRackList(), params);</span></a>
+<a name="1397"><span class="lineNum">    1397 </span><span class="lineCov">         74 :     finalNode = makeNode&lt;PlayHeadPositionNode&gt; (params.processState, std::move (finalNode), audibleTimeToUpdate);</span></a>
 <a name="1398"><span class="lineNum">    1398 </span>            :     </a>
-<a name="1399"><span class="lineNum">    1399 </span><span class="lineCov">          8 :     return finalNode;</span></a>
+<a name="1399"><span class="lineNum">    1399 </span><span class="lineCov">         74 :     return finalNode;</span></a>
 <a name="1400"><span class="lineNum">    1400 </span>            : }</a>
 <a name="1401"><span class="lineNum">    1401 </span>            : </a>
-<a name="1402"><span class="lineNum">    1402 </span><span class="lineCov">          4 : std::unique_ptr&lt;tracktion_graph::Node&gt; createNodeForEdit (Edit&amp; edit, const CreateNodeParams&amp; originalParams)</span></a>
+<a name="1402"><span class="lineNum">    1402 </span><span class="lineCov">        114 : std::unique_ptr&lt;tracktion_graph::Node&gt; createNodeForEdit (Edit&amp; edit, const CreateNodeParams&amp; originalParams)</span></a>
 <a name="1403"><span class="lineNum">    1403 </span>            : {</a>
-<a name="1404"><span class="lineNum">    1404 </span><span class="lineCov">          4 :     std::vector&lt;std::unique_ptr&lt;tracktion_graph::Node&gt;&gt; trackNodes;</span></a>
-<a name="1405"><span class="lineNum">    1405 </span><span class="lineCov">          4 :     auto params = originalParams;</span></a>
-<a name="1406"><span class="lineNum">    1406 </span><span class="lineCov">          4 :     auto&amp; playHeadState = params.processState.playHeadState;</span></a>
+<a name="1404"><span class="lineNum">    1404 </span><span class="lineCov">        114 :     std::vector&lt;std::unique_ptr&lt;tracktion_graph::Node&gt;&gt; trackNodes;</span></a>
+<a name="1405"><span class="lineNum">    1405 </span><span class="lineCov">        114 :     auto params = originalParams;</span></a>
+<a name="1406"><span class="lineNum">    1406 </span><span class="lineCov">        114 :     auto&amp; playHeadState = params.processState.playHeadState;</span></a>
 <a name="1407"><span class="lineNum">    1407 </span>            :     </a>
-<a name="1408"><span class="lineNum">    1408 </span><span class="lineCov">          4 :     if (params.implicitlyIncludeSubmixChildTracks &amp;&amp; params.allowedTracks != nullptr)</span></a>
-<a name="1409"><span class="lineNum">    1409 </span><span class="lineCov">          8 :         *params.allowedTracks = addImplicitSubmixChildTracks (*params.allowedTracks);</span></a>
+<a name="1408"><span class="lineNum">    1408 </span><span class="lineCov">        114 :     if (params.implicitlyIncludeSubmixChildTracks &amp;&amp; params.allowedTracks != nullptr)</span></a>
+<a name="1409"><span class="lineNum">    1409 </span><span class="lineCov">        140 :         *params.allowedTracks = addImplicitSubmixChildTracks (*params.allowedTracks);</span></a>
 <a name="1410"><span class="lineNum">    1410 </span>            : </a>
-<a name="1411"><span class="lineNum">    1411 </span><span class="lineCov">         36 :     for (auto t : getAllTracks (edit))</span></a>
+<a name="1411"><span class="lineNum">    1411 </span><span class="lineCov">       3444 :     for (auto t : getAllTracks (edit))</span></a>
 <a name="1412"><span class="lineNum">    1412 </span>            :     {</a>
-<a name="1413"><span class="lineNum">    1413 </span><span class="lineCov">         56 :         if (params.allowedTracks != nullptr &amp;&amp; ! params.allowedTracks-&gt;contains (t))</span></a>
-<a name="1414"><span class="lineNum">    1414 </span><span class="lineCov">         21 :             continue;</span></a>
+<a name="1413"><span class="lineNum">    1413 </span><span class="lineCov">       3762 :         if (params.allowedTracks != nullptr &amp;&amp; ! params.allowedTracks-&gt;contains (t))</span></a>
+<a name="1414"><span class="lineNum">    1414 </span><span class="lineCov">        117 :             continue;</span></a>
 <a name="1415"><span class="lineNum">    1415 </span>            : </a>
 <a name="1416"><span class="lineNum">    1416 </span>            :         // Skip tracks that don't output to a device or feed in to other tracks</a>
-<a name="1417"><span class="lineNum">    1417 </span><span class="lineCov">          7 :         if (auto output = getTrackOutput (*t))</span></a>
+<a name="1417"><span class="lineNum">    1417 </span><span class="lineCov">       3099 :         if (auto output = getTrackOutput (*t))</span></a>
 <a name="1418"><span class="lineNum">    1418 </span>            :         {</a>
-<a name="1419"><span class="lineNum">    1419 </span><span class="lineCov">          7 :             if (output-&gt;getDestinationTrack() != nullptr)</span></a>
-<a name="1420"><span class="lineNum">    1420 </span><span class="lineNoCov">          0 :                 continue;</span></a>
+<a name="1419"><span class="lineNum">    1419 </span><span class="lineCov">       2355 :             if (output-&gt;getDestinationTrack() != nullptr)</span></a>
+<a name="1420"><span class="lineNum">    1420 </span><span class="lineCov">       1434 :                 continue;</span></a>
 <a name="1421"><span class="lineNum">    1421 </span>            :         }</a>
 <a name="1422"><span class="lineNum">    1422 </span>            :         else</a>
 <a name="1423"><span class="lineNum">    1423 </span>            :         {</a>
-<a name="1424"><span class="lineNum">    1424 </span><span class="lineNoCov">          0 :             continue;</span></a>
+<a name="1424"><span class="lineNum">    1424 </span><span class="lineCov">        744 :             continue;</span></a>
 <a name="1425"><span class="lineNum">    1425 </span>            :         }</a>
 <a name="1426"><span class="lineNum">    1426 </span>            : </a>
-<a name="1427"><span class="lineNum">    1427 </span><span class="lineCov">          7 :         if (auto node = createNodeForTrack (*t, params))</span></a>
+<a name="1427"><span class="lineNum">    1427 </span><span class="lineCov">        921 :         if (auto node = createNodeForTrack (*t, params))</span></a>
 <a name="1428"><span class="lineNum">    1428 </span>            :             trackNodes.push_back (std::move (node));</a>
 <a name="1429"><span class="lineNum">    1429 </span>            :     }</a>
 <a name="1430"><span class="lineNum">    1430 </span>            : </a>
-<a name="1431"><span class="lineNum">    1431 </span><span class="lineCov">          4 :     auto sumNode = std::make_unique&lt;SummingNode&gt; (std::move (trackNodes));</span></a>
-<a name="1432"><span class="lineNum">    1432 </span><span class="lineCov">          4 :     sumNode-&gt;setDoubleProcessingPrecision (edit.engine.getPropertyStorage().getProperty (SettingID::use64Bit, false));</span></a>
+<a name="1431"><span class="lineNum">    1431 </span><span class="lineCov">        114 :     auto sumNode = std::make_unique&lt;SummingNode&gt; (std::move (trackNodes));</span></a>
+<a name="1432"><span class="lineNum">    1432 </span><span class="lineCov">        114 :     sumNode-&gt;setDoubleProcessingPrecision (edit.engine.getPropertyStorage().getProperty (SettingID::use64Bit, false));</span></a>
 <a name="1433"><span class="lineNum">    1433 </span>            : </a>
 <a name="1434"><span class="lineNum">    1434 </span>            :     auto node = std::unique_ptr&lt;Node&gt; (std::move (sumNode));</a>
-<a name="1435"><span class="lineNum">    1435 </span><span class="lineCov">          8 :     node = createMasterPluginsNode (edit, playHeadState, std::move (node), params);</span></a>
-<a name="1436"><span class="lineNum">    1436 </span><span class="lineCov">          8 :     node = createMasterFadeInOutNode (edit, playHeadState, std::move (node), params);</span></a>
-<a name="1437"><span class="lineNum">    1437 </span><span class="lineCov">          8 :     node = createRackNode (std::move (node), edit.getRackList(), params);</span></a>
+<a name="1435"><span class="lineNum">    1435 </span><span class="lineCov">        228 :     node = createMasterPluginsNode (edit, playHeadState, std::move (node), params);</span></a>
+<a name="1436"><span class="lineNum">    1436 </span><span class="lineCov">        228 :     node = createMasterFadeInOutNode (edit, playHeadState, std::move (node), params);</span></a>
+<a name="1437"><span class="lineNum">    1437 </span><span class="lineCov">        228 :     node = createRackNode (std::move (node), edit.getRackList(), params);</span></a>
 <a name="1438"><span class="lineNum">    1438 </span>            : </a>
-<a name="1439"><span class="lineNum">    1439 </span><span class="lineCov">          4 :     return node;</span></a>
+<a name="1439"><span class="lineNum">    1439 </span><span class="lineCov">        114 :     return node;</span></a>
 <a name="1440"><span class="lineNum">    1440 </span>            : }</a>
 <a name="1441"><span class="lineNum">    1441 </span>            : </a>
 <a name="1442"><span class="lineNum">    1442 </span>            : std::function&lt;std::unique_ptr&lt;tracktion_graph::Node&gt; (std::unique_ptr&lt;tracktion_graph::Node&gt;)&gt; EditNodeBuilder::insertOptionalLastStageNode</a>
