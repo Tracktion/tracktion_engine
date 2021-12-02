@@ -161,9 +161,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a299927f6737fdee15ae40041f5b89544"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa362dfbbc7a480f1dc07759414515928"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#aa362dfbbc7a480f1dc07759414515928">setPluginsRemappedWhenTempoChanges</a> (bool)</td></tr>
 <tr class="separator:aa362dfbbc7a480f1dc07759414515928"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9afd31d20912074d1958e801e3a2b71e"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a9afd31d20912074d1958e801e3a2b71e">getMaxNumMasterPlugins</a> ()</td></tr>
-<tr class="memdesc:a9afd31d20912074d1958e801e3a2b71e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the maximum number of plugins that can be added to the master bus.  <a href="classtracktion__engine_1_1EngineBehaviour.html#a9afd31d20912074d1958e801e3a2b71e">More...</a><br /></td></tr>
-<tr class="separator:a9afd31d20912074d1958e801e3a2b71e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84fb0c7d3b014333bea194d74dc86164"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structtracktion__engine_1_1EditLimits.html">EditLimits</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a84fb0c7d3b014333bea194d74dc86164">getEditLimits</a> ()</td></tr>
+<tr class="memdesc:a84fb0c7d3b014333bea194d74dc86164"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the maximum number of elements that can be added to an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="classtracktion__engine_1_1EngineBehaviour.html#a84fb0c7d3b014333bea194d74dc86164">More...</a><br /></td></tr>
+<tr class="separator:a84fb0c7d3b014333bea194d74dc86164"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f38b64d05ab5af9d4fb2f9f9c169415"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a4f38b64d05ab5af9d4fb2f9f9c169415">lengthOfOneBeatDependsOnTimeSignature</a> ()</td></tr>
 <tr class="memdesc:a4f38b64d05ab5af9d4fb2f9f9c169415"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this returns true, it means that the length (in seconds) of one "beat" at any point in an edit is considered to be the length of one division in the current bar's time signature.  <a href="classtracktion__engine_1_1EngineBehaviour.html#a4f38b64d05ab5af9d4fb2f9f9c169415">More...</a><br /></td></tr>
 <tr class="separator:a4f38b64d05ab5af9d4fb2f9f9c169415"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -185,6 +185,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3fcd7495806d6373d5b2052ccfaaefbe"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a3fcd7495806d6373d5b2052ccfaaefbe">getDefaultLoopedSequenceType</a> ()</td></tr>
 <tr class="memdesc:a3fcd7495806d6373d5b2052ccfaaefbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Must return the default looped sequence type to use.  <a href="classtracktion__engine_1_1EngineBehaviour.html#a3fcd7495806d6373d5b2052ccfaaefbe">More...</a><br /></td></tr>
 <tr class="separator:a3fcd7495806d6373d5b2052ccfaaefbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfada92e19fc3f8885df20a599fa0539"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#abfada92e19fc3f8885df20a599fa0539">autoAddClipEdgeFades</a> ()</td></tr>
+<tr class="memdesc:abfada92e19fc3f8885df20a599fa0539"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this returns true, it means that newly inserted clips will automatically have a fade-in and fade-out of 3ms applied.  <a href="classtracktion__engine_1_1EngineBehaviour.html#abfada92e19fc3f8885df20a599fa0539">More...</a><br /></td></tr>
+<tr class="separator:abfada92e19fc3f8885df20a599fa0539"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Provides custom handlers to control various aspects of the engine's behaviour. </p>
@@ -1116,8 +1119,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a9afd31d20912074d1958e801e3a2b71e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9afd31d20912074d1958e801e3a2b71e">&#9670;&nbsp;</a></span>getMaxNumMasterPlugins()</h2>
+<a id="a84fb0c7d3b014333bea194d74dc86164"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84fb0c7d3b014333bea194d74dc86164">&#9670;&nbsp;</a></span>getEditLimits()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1126,7 +1129,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual int tracktion_engine::EngineBehaviour::getMaxNumMasterPlugins </td>
+          <td class="memname">virtual <a class="el" href="structtracktion__engine_1_1EditLimits.html">EditLimits</a> tracktion_engine::EngineBehaviour::getEditLimits </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1139,7 +1142,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Should return the maximum number of plugins that can be added to the master bus. </p>
+<p>Should return the maximum number of elements that can be added to an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>. </p>
 
 </div>
 </div>
@@ -1397,13 +1400,40 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="abfada92e19fc3f8885df20a599fa0539"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abfada92e19fc3f8885df20a599fa0539">&#9670;&nbsp;</a></span>autoAddClipEdgeFades()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion_engine::EngineBehaviour::autoAddClipEdgeFades </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>If this returns true, it means that newly inserted clips will automatically have a fade-in and fade-out of 3ms applied. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="tracktion__EngineBehaviour_8h.html">tracktion_EngineBehaviour.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 12 2021 14:19:25 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 2 2021 18:36:50 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

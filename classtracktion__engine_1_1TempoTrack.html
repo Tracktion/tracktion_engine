@@ -73,6 +73,9 @@ $(function() {
 <div class="title">tracktion_engine::TempoTrack Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>A track to represent the "global" items such as tempo, key changes etc.  
+ <a href="classtracktion__engine_1_1TempoTrack.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for tracktion_engine::TempoTrack:</div>
 <div class="dyncontent">
@@ -113,37 +116,30 @@ Public Types</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a57e52ce192ef111ddf14ce0e0e2535ee"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TempoTrack.html#a57e52ce192ef111ddf14ce0e0e2535ee">TempoTrack</a> (<a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;, const juce::ValueTree &amp;)</td></tr>
+<tr class="memdesc:a57e52ce192ef111ddf14ce0e0e2535ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the <a class="el" href="classtracktion__engine_1_1TempoTrack.html" title="A track to represent the &quot;global&quot; items such as tempo, key changes etc.">TempoTrack</a> for an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> with a given state.  <a href="classtracktion__engine_1_1TempoTrack.html#a57e52ce192ef111ddf14ce0e0e2535ee">More...</a><br /></td></tr>
 <tr class="separator:a57e52ce192ef111ddf14ce0e0e2535ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91449f0636fa58e7c14f887c15ed963e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TempoTrack.html#a91449f0636fa58e7c14f887c15ed963e">~TempoTrack</a> () override</td></tr>
+<tr class="memdesc:a91449f0636fa58e7c14f887c15ed963e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="classtracktion__engine_1_1TempoTrack.html#a91449f0636fa58e7c14f887c15ed963e">More...</a><br /></td></tr>
 <tr class="separator:a91449f0636fa58e7c14f887c15ed963e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa2127f461358057a3273d16f3841f7c1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TempoTrack.html#aa2127f461358057a3273d16f3841f7c1">isTempoTrack</a> () const override</td></tr>
-<tr class="memdesc:aa2127f461358057a3273d16f3841f7c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this is a <a class="el" href="classtracktion__engine_1_1TempoTrack.html">TempoTrack</a>.  <a href="classtracktion__engine_1_1TempoTrack.html#aa2127f461358057a3273d16f3841f7c1">More...</a><br /></td></tr>
 <tr class="separator:aa2127f461358057a3273d16f3841f7c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a236daf9c29197e4797005d6abcd0138f"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TempoTrack.html#a236daf9c29197e4797005d6abcd0138f">getName</a> () override</td></tr>
 <tr class="separator:a236daf9c29197e4797005d6abcd0138f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d416062682caf3111a0f0d4bf2f4edf"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TempoTrack.html#a1d416062682caf3111a0f0d4bf2f4edf">getSelectableDescription</a> () override</td></tr>
-<tr class="memdesc:a1d416062682caf3111a0f0d4bf2f4edf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subclasses must return a description of what they are.  <a href="classtracktion__engine_1_1TempoTrack.html#a1d416062682caf3111a0f0d4bf2f4edf">More...</a><br /></td></tr>
 <tr class="separator:a1d416062682caf3111a0f0d4bf2f4edf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9518ab9c9329419057daa239dc31fd6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TempoTrack.html#aa9518ab9c9329419057daa239dc31fd6">getNumTrackItems</a> () const override</td></tr>
-<tr class="memdesc:aa9518ab9c9329419057daa239dc31fd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the number of <a class="el" href="classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g.">TrackItem</a>[s] on this <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>.  <a href="classtracktion__engine_1_1TempoTrack.html#aa9518ab9c9329419057daa239dc31fd6">More...</a><br /></td></tr>
 <tr class="separator:aa9518ab9c9329419057daa239dc31fd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7692ee97ed4c259f945e146e1cf51fe3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1TrackItem.html">TrackItem</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TempoTrack.html#a7692ee97ed4c259f945e146e1cf51fe3">getTrackItem</a> (int idx) const override</td></tr>
-<tr class="memdesc:a7692ee97ed4c259f945e146e1cf51fe3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the <a class="el" href="classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g.">TrackItem</a> at the given index.  <a href="classtracktion__engine_1_1TempoTrack.html#a7692ee97ed4c259f945e146e1cf51fe3">More...</a><br /></td></tr>
 <tr class="separator:a7692ee97ed4c259f945e146e1cf51fe3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27758c3897c1eae47b24a382e878f23a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TempoTrack.html#a27758c3897c1eae47b24a382e878f23a">indexOfTrackItem</a> (<a class="el" href="classtracktion__engine_1_1TrackItem.html">TrackItem</a> *) const override</td></tr>
-<tr class="memdesc:a27758c3897c1eae47b24a382e878f23a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the index of the given <a class="el" href="classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g.">TrackItem</a>.  <a href="classtracktion__engine_1_1TempoTrack.html#a27758c3897c1eae47b24a382e878f23a">More...</a><br /></td></tr>
 <tr class="separator:a27758c3897c1eae47b24a382e878f23a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cc57623ad6b76150cb616ff56191da6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TempoTrack.html#a6cc57623ad6b76150cb616ff56191da6">getIndexOfNextTrackItemAt</a> (double time) override</td></tr>
-<tr class="memdesc:a6cc57623ad6b76150cb616ff56191da6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the index of the <a class="el" href="classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g.">TrackItem</a> after this time.  <a href="classtracktion__engine_1_1TempoTrack.html#a6cc57623ad6b76150cb616ff56191da6">More...</a><br /></td></tr>
 <tr class="separator:a6cc57623ad6b76150cb616ff56191da6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a089b92b76171bc8a6f8cbc3638dc30df"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1TrackItem.html">TrackItem</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TempoTrack.html#a089b92b76171bc8a6f8cbc3638dc30df">getNextTrackItemAt</a> (double time) override</td></tr>
-<tr class="memdesc:a089b92b76171bc8a6f8cbc3638dc30df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the <a class="el" href="classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g.">TrackItem</a> after this time.  <a href="classtracktion__engine_1_1TempoTrack.html#a089b92b76171bc8a6f8cbc3638dc30df">More...</a><br /></td></tr>
 <tr class="separator:a089b92b76171bc8a6f8cbc3638dc30df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb7c84311b5e0bd3233ff70a0f557beb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TempoTrack.html#acb7c84311b5e0bd3233ff70a0f557beb">canContainPlugin</a> (<a class="el" href="classtracktion__engine_1_1Plugin.html">Plugin</a> *) const override</td></tr>
-<tr class="memdesc:acb7c84311b5e0bd3233ff70a0f557beb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this track can contain a specific <a class="el" href="classtracktion__engine_1_1Plugin.html">Plugin</a>.  <a href="classtracktion__engine_1_1TempoTrack.html#acb7c84311b5e0bd3233ff70a0f557beb">More...</a><br /></td></tr>
 <tr class="separator:acb7c84311b5e0bd3233ff70a0f557beb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a65c6b786f4ebfbb207a170d3e86cf86d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1TempoTrack.html#a65c6b786f4ebfbb207a170d3e86cf86d">insertSpaceIntoTrack</a> (double time, double amountOfSpace) override</td></tr>
-<tr class="memdesc:a65c6b786f4ebfbb207a170d3e86cf86d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should insert empty space in to the track, shuffling down any items after the time.  <a href="classtracktion__engine_1_1TempoTrack.html#a65c6b786f4ebfbb207a170d3e86cf86d">More...</a><br /></td></tr>
 <tr class="separator:a65c6b786f4ebfbb207a170d3e86cf86d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtracktion__engine_1_1Track"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtracktion__engine_1_1Track')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtracktion__engine_1_1Track.html">tracktion_engine::Track</a></td></tr>
 <tr class="memitem:a02fcc02ca567dd105b763dc449c10388 inherit pub_methods_classtracktion__engine_1_1Track"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Track.html#a02fcc02ca567dd105b763dc449c10388">Track</a> (<a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;, const juce::ValueTree &amp;, double <a class="el" href="classtracktion__engine_1_1Track.html#a9e04e0b12f2effee8a51acb9fbfbffe9">defaultTrackHeight</a>, double <a class="el" href="classtracktion__engine_1_1Track.html#a7ac28d264bf757972e2d3a725cc41b0f">minTrackHeight</a>, double <a class="el" href="classtracktion__engine_1_1Track.html#ae3b8a5a0d04b9a5f7afb4f3235d37710">maxTrackHeight</a>)</td></tr>
@@ -480,7 +476,10 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memdesc:abbb569a138935374527443aa03ba3e6e inherit pro_methods_classtracktion__engine_1_1Track"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether this <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> should be audible.  <a href="classtracktion__engine_1_1Track.html#abbb569a138935374527443aa03ba3e6e">More...</a><br /></td></tr>
 <tr class="separator:abbb569a138935374527443aa03ba3e6e inherit pro_methods_classtracktion__engine_1_1Track"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Typedef Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A track to represent the "global" items such as tempo, key changes etc. </p>
+<p>This isn't a "real" track, it wraps the <a class="el" href="classtracktion__engine_1_1TempoSequence.html" title="Holds a list of TempoSetting objects, to form a sequence of tempo changes.">TempoSequence</a> and <a class="el" href="classtracktion__engine_1_1PitchSequence.html">PitchSequence</a>. </p>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a2d5e96320ccc71d9bda9e55caeff1022"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2d5e96320ccc71d9bda9e55caeff1022">&#9670;&nbsp;</a></span>Ptr</h2>
 
@@ -522,6 +521,8 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Create the <a class="el" href="classtracktion__engine_1_1TempoTrack.html" title="A track to represent the &quot;global&quot; items such as tempo, key changes etc.">TempoTrack</a> for an <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> with a given state. </p>
+
 </div>
 </div>
 <a id="a91449f0636fa58e7c14f887c15ed963e"></a>
@@ -546,6 +547,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Destructor. </p>
 
 </div>
 </div>
@@ -572,8 +575,6 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Returns true if this is a <a class="el" href="classtracktion__engine_1_1TempoTrack.html">TempoTrack</a>. </p>
 
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Track.html#a80876998cceeee5d9500c3c3f6e7f566">tracktion_engine::Track</a>.</p>
 
@@ -629,8 +630,6 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Subclasses must return a description of what they are. </p>
-
 <p>Implements <a class="el" href="classtracktion__engine_1_1Selectable.html#ab341ce1abaeaeba59718a5645a8a30ce">tracktion_engine::Selectable</a>.</p>
 
 </div>
@@ -658,8 +657,6 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Should return the number of <a class="el" href="classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g.">TrackItem</a>[s] on this <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>. </p>
-
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Track.html#a37566b1b7f8fbcf913336d1f41349faf">tracktion_engine::Track</a>.</p>
 
 </div>
@@ -677,7 +674,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname"><a class="el" href="classtracktion__engine_1_1TrackItem.html">TrackItem</a>* tracktion_engine::TempoTrack::getTrackItem </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>idx</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -687,8 +684,6 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Should return the <a class="el" href="classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g.">TrackItem</a> at the given index. </p>
 
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Track.html#aee3b8daeff6a3320c515648755b58f8f">tracktion_engine::Track</a>.</p>
 
@@ -718,8 +713,6 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Should return the index of the given <a class="el" href="classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g.">TrackItem</a>. </p>
-
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Track.html#a9048eb085867ac81b09a1ddcf32aada8">tracktion_engine::Track</a>.</p>
 
 </div>
@@ -737,7 +730,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">int tracktion_engine::TempoTrack::getIndexOfNextTrackItemAt </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>time</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -747,8 +740,6 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Should return the index of the <a class="el" href="classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g.">TrackItem</a> after this time. </p>
 
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Track.html#a81e6ccd30a6f97437f9082944c9f7354">tracktion_engine::Track</a>.</p>
 
@@ -767,7 +758,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname"><a class="el" href="classtracktion__engine_1_1TrackItem.html">TrackItem</a>* tracktion_engine::TempoTrack::getNextTrackItemAt </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>time</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -777,8 +768,6 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Should return the <a class="el" href="classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g.">TrackItem</a> after this time. </p>
 
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Track.html#a1e3373f9d0c5c8dcb69ddc671b0e8fdb">tracktion_engine::Track</a>.</p>
 
@@ -807,9 +796,6 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Returns true if this track can contain a specific <a class="el" href="classtracktion__engine_1_1Plugin.html">Plugin</a>. </p>
-<p>Subclasses can override this to avoid specific plugins such as <a class="el" href="classtracktion__engine_1_1VCAPlugin.html" title="The VCA plugin sits on a folder track to control the overall level of all the volume/pan plugins in i...">VCAPlugin</a>[s] on <a class="el" href="classtracktion__engine_1_1AudioTrack.html">AudioTrack</a>[s]. </p>
 
 <p>Implements <a class="el" href="classtracktion__engine_1_1Track.html#a4d7e4bbb74ffade2225b2a856a01fb65">tracktion_engine::Track</a>.</p>
 
@@ -849,26 +835,17 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Should insert empty space in to the track, shuffling down any items after the time. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">time</td><td>The time point in seconds to insert at </td></tr>
-    <tr><td class="paramname">amountOfSpace</td><td>The duration of time to insert </td></tr>
-  </table>
-  </dd>
-</dl>
-
 <p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Track.html#a916b4f9d3f178bb60010a64fa5365a22">tracktion_engine::Track</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li><a class="el" href="tracktion__MasterTrack_8h.html">tracktion_MasterTrack.h</a></li>
+<li><a class="el" href="tracktion__TempoTrack_8h.html">tracktion_TempoTrack.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 12 2021 14:19:26 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 2 2021 18:36:51 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

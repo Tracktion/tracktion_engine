@@ -90,9 +90,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a85e52ee2aafffae7b234e5272a30c90a"><td class="memItemLeft" align="right" valign="top">const juce::Array&lt; <a class="el" href="classtracktion__engine_1_1Clip.html">Clip</a> * &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1CreateNodeParams.html#a85e52ee2aafffae7b234e5272a30c90a">allowedClips</a> = nullptr</td></tr>
 <tr class="memdesc:a85e52ee2aafffae7b234e5272a30c90a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The clips to include.  <a href="structtracktion__engine_1_1CreateNodeParams.html#a85e52ee2aafffae7b234e5272a30c90a">More...</a><br /></td></tr>
 <tr class="separator:a85e52ee2aafffae7b234e5272a30c90a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca4bbdadf1531e1f1b9b125c4c96fc63"><td class="memItemLeft" align="right" valign="top">const juce::Array&lt; <a class="el" href="classtracktion__engine_1_1Track.html">Track</a> * &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1CreateNodeParams.html#aca4bbdadf1531e1f1b9b125c4c96fc63">allowedTracks</a> = nullptr</td></tr>
-<tr class="memdesc:aca4bbdadf1531e1f1b9b125c4c96fc63"><td class="mdescLeft">&#160;</td><td class="mdescRight">The tracks to include.  <a href="structtracktion__engine_1_1CreateNodeParams.html#aca4bbdadf1531e1f1b9b125c4c96fc63">More...</a><br /></td></tr>
-<tr class="separator:aca4bbdadf1531e1f1b9b125c4c96fc63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5e144ae14cdfa8f88f530a4784f1de2"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="classtracktion__engine_1_1Track.html">Track</a> * &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1CreateNodeParams.html#aa5e144ae14cdfa8f88f530a4784f1de2">allowedTracks</a> = nullptr</td></tr>
+<tr class="memdesc:aa5e144ae14cdfa8f88f530a4784f1de2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The tracks to include.  <a href="structtracktion__engine_1_1CreateNodeParams.html#aa5e144ae14cdfa8f88f530a4784f1de2">More...</a><br /></td></tr>
+<tr class="separator:aa5e144ae14cdfa8f88f530a4784f1de2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5074f3cbf988f2684776d53f3bd76288"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1CreateNodeParams.html#a5074f3cbf988f2684776d53f3bd76288">forRendering</a> = false</td></tr>
 <tr class="memdesc:a5074f3cbf988f2684776d53f3bd76288"><td class="mdescLeft">&#160;</td><td class="mdescRight">If the node is for rendering or not.  <a href="structtracktion__engine_1_1CreateNodeParams.html#a5074f3cbf988f2684776d53f3bd76288">More...</a><br /></td></tr>
 <tr class="separator:a5074f3cbf988f2684776d53f3bd76288"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -108,6 +108,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a7dbe7134f72ffa8fc864b6b354e1e03f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1CreateNodeParams.html#a7dbe7134f72ffa8fc864b6b354e1e03f">includeBypassedPlugins</a> = true</td></tr>
 <tr class="memdesc:a7dbe7134f72ffa8fc864b6b354e1e03f"><td class="mdescLeft">&#160;</td><td class="mdescRight">If false, bypassed plugins will be completely ommited from the graph.  <a href="structtracktion__engine_1_1CreateNodeParams.html#a7dbe7134f72ffa8fc864b6b354e1e03f">More...</a><br /></td></tr>
 <tr class="separator:a7dbe7134f72ffa8fc864b6b354e1e03f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a737f587472de0c7245b7fe5e722d2028"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1CreateNodeParams.html#a737f587472de0c7245b7fe5e722d2028">implicitlyIncludeSubmixChildTracks</a> = true</td></tr>
+<tr class="memdesc:a737f587472de0c7245b7fe5e722d2028"><td class="mdescLeft">&#160;</td><td class="mdescRight">If true, chid track in submixes will be included regardless of the allowedTracks param.  <a href="structtracktion__engine_1_1CreateNodeParams.html#a737f587472de0c7245b7fe5e722d2028">More...</a><br /></td></tr>
+<tr class="separator:a737f587472de0c7245b7fe5e722d2028"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Contains options for <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> Node content creation. </p>
@@ -177,14 +180,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aca4bbdadf1531e1f1b9b125c4c96fc63"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aca4bbdadf1531e1f1b9b125c4c96fc63">&#9670;&nbsp;</a></span>allowedTracks</h2>
+<a id="aa5e144ae14cdfa8f88f530a4784f1de2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5e144ae14cdfa8f88f530a4784f1de2">&#9670;&nbsp;</a></span>allowedTracks</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const juce::Array&lt;<a class="el" href="classtracktion__engine_1_1Track.html">Track</a>*&gt;* tracktion_engine::CreateNodeParams::allowedTracks = nullptr</td>
+          <td class="memname">juce::Array&lt;<a class="el" href="classtracktion__engine_1_1Track.html">Track</a>*&gt;* tracktion_engine::CreateNodeParams::allowedTracks = nullptr</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -275,13 +278,30 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a737f587472de0c7245b7fe5e722d2028"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a737f587472de0c7245b7fe5e722d2028">&#9670;&nbsp;</a></span>implicitlyIncludeSubmixChildTracks</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion_engine::CreateNodeParams::implicitlyIncludeSubmixChildTracks = true</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>If true, chid track in submixes will be included regardless of the allowedTracks param. </p>
+<p>Only relevent when forRendering is also true. </p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="tracktion__EditNodeBuilder_8h.html">tracktion_EditNodeBuilder.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 12 2021 14:19:25 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 2 2021 18:36:50 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

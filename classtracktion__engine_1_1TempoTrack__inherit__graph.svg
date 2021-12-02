@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="node1" class="node">
 <title>Node1</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="A track to represent the &quot;global&quot; items such as tempo, key changes etc.">
 <polygon fill="#bfbfbf" stroke="black" points="387,-50 387,-69 549,-69 549,-50 387,-50"/>
 <text text-anchor="middle" x="468" y="-57" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::TempoTrack</text>
 </a>

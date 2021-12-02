@@ -83,7 +83,7 @@
 <!-- Node13 -->
 <g id="node13" class="node">
 <title>Node13</title>
-<g id="a_node13"><a xlink:href="classtracktion__engine_1_1TempoTrack.html" target="_top" xlink:title=" ">
+<g id="a_node13"><a xlink:href="classtracktion__engine_1_1TempoTrack.html" target="_top" xlink:title="A track to represent the &quot;global&quot; items such as tempo, key changes etc.">
 <polygon fill="none" stroke="black" points="387,-0.5 387,-19.5 549,-19.5 549,-0.5 387,-0.5"/>
 <text text-anchor="middle" x="468" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::TempoTrack</text>
 </a>

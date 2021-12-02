@@ -155,7 +155,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ac1688c951a0ed757e3f8e80228482636"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this is a <a class="el" href="classtracktion__engine_1_1MarkerTrack.html">MarkerTrack</a>.  <a href="classtracktion__engine_1_1Track.html#ac1688c951a0ed757e3f8e80228482636">More...</a><br /></td></tr>
 <tr class="separator:ac1688c951a0ed757e3f8e80228482636"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80876998cceeee5d9500c3c3f6e7f566"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Track.html#a80876998cceeee5d9500c3c3f6e7f566">isTempoTrack</a> () const</td></tr>
-<tr class="memdesc:a80876998cceeee5d9500c3c3f6e7f566"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this is a <a class="el" href="classtracktion__engine_1_1TempoTrack.html">TempoTrack</a>.  <a href="classtracktion__engine_1_1Track.html#a80876998cceeee5d9500c3c3f6e7f566">More...</a><br /></td></tr>
+<tr class="memdesc:a80876998cceeee5d9500c3c3f6e7f566"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this is a <a class="el" href="classtracktion__engine_1_1TempoTrack.html" title="A track to represent the &quot;global&quot; items such as tempo, key changes etc.">TempoTrack</a>.  <a href="classtracktion__engine_1_1Track.html#a80876998cceeee5d9500c3c3f6e7f566">More...</a><br /></td></tr>
 <tr class="separator:a80876998cceeee5d9500c3c3f6e7f566"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e885dcc7ca3aaece56f8ad85a975ed9"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Track.html#a1e885dcc7ca3aaece56f8ad85a975ed9">isChordTrack</a> () const</td></tr>
 <tr class="memdesc:a1e885dcc7ca3aaece56f8ad85a975ed9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this is a <a class="el" href="classtracktion__engine_1_1ChordTrack.html">ChordTrack</a>.  <a href="classtracktion__engine_1_1Track.html#a1e885dcc7ca3aaece56f8ad85a975ed9">More...</a><br /></td></tr>
@@ -484,7 +484,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base class for tracks which contain clips and plugins and can be added to <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>[s]. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1AudioTrack.html">AudioTrack</a>, <a class="el" href="classtracktion__engine_1_1FolderTrack.html">FolderTrack</a>, <a class="el" href="classtracktion__engine_1_1AutomationTrack.html">AutomationTrack</a>, <a class="el" href="classtracktion__engine_1_1MarkerTrack.html">MarkerTrack</a>, <a class="el" href="classtracktion__engine_1_1TempoTrack.html">TempoTrack</a>, <a class="el" href="classtracktion__engine_1_1ChordTrack.html">ChordTrack</a>, <a class="el" href="classtracktion__engine_1_1ArrangerTrack.html" title="A track similar to the MarkerTrack but can be used to move sections of an Edit around.">ArrangerTrack</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1AudioTrack.html">AudioTrack</a>, <a class="el" href="classtracktion__engine_1_1FolderTrack.html">FolderTrack</a>, <a class="el" href="classtracktion__engine_1_1AutomationTrack.html">AutomationTrack</a>, <a class="el" href="classtracktion__engine_1_1MarkerTrack.html">MarkerTrack</a>, <a class="el" href="classtracktion__engine_1_1TempoTrack.html" title="A track to represent the &quot;global&quot; items such as tempo, key changes etc.">TempoTrack</a>, <a class="el" href="classtracktion__engine_1_1ChordTrack.html">ChordTrack</a>, <a class="el" href="classtracktion__engine_1_1ArrangerTrack.html" title="A track similar to the MarkerTrack but can be used to move sections of an Edit around.">ArrangerTrack</a> </dd></dl>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="afdc1ed18e1cb9375af9052cc3937f37a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afdc1ed18e1cb9375af9052cc3937f37a">&#9670;&nbsp;</a></span>Ptr</h2>
@@ -670,7 +670,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Initialises the <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>. </p>
 <p>You shouldn't need to call this directly, it will be called by the track creation methods. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1Edit.html#aeaac3ca16feef42cbb073dccca65b09a" title="Inserts a new Track with the given state in the Edit.">Edit::insertTrack</a> </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1FolderTrack.html#afdcea06fcd5f2f58928ec5eb0a0cdf9d">tracktion_engine::FolderTrack</a>, <a class="el" href="classtracktion__engine_1_1MasterTrack.html#ad16b5459701f97828c701e161efd95ac">tracktion_engine::MasterTrack</a>, and <a class="el" href="classtracktion__engine_1_1AudioTrack.html#a31eee9210a09faa749abacedea989636">tracktion_engine::AudioTrack</a>.</p>
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1MasterTrack.html#ad16b5459701f97828c701e161efd95ac">tracktion_engine::MasterTrack</a>, <a class="el" href="classtracktion__engine_1_1FolderTrack.html#afdcea06fcd5f2f58928ec5eb0a0cdf9d">tracktion_engine::FolderTrack</a>, and <a class="el" href="classtracktion__engine_1_1AudioTrack.html#a31eee9210a09faa749abacedea989636">tracktion_engine::AudioTrack</a>.</p>
 
 </div>
 </div>
@@ -967,7 +967,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns true if this is a <a class="el" href="classtracktion__engine_1_1TempoTrack.html">TempoTrack</a>. </p>
+<p>Returns true if this is a <a class="el" href="classtracktion__engine_1_1TempoTrack.html" title="A track to represent the &quot;global&quot; items such as tempo, key changes etc.">TempoTrack</a>. </p>
 
 <p>Reimplemented in <a class="el" href="classtracktion__engine_1_1TempoTrack.html#aa2127f461358057a3273d16f3841f7c1">tracktion_engine::TempoTrack</a>.</p>
 
@@ -1209,7 +1209,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns true if this a global <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> and should be on top of others. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1MarkerTrack.html">MarkerTrack</a>, <a class="el" href="classtracktion__engine_1_1TempoTrack.html">TempoTrack</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion__engine_1_1MarkerTrack.html">MarkerTrack</a>, <a class="el" href="classtracktion__engine_1_1TempoTrack.html" title="A track to represent the &quot;global&quot; items such as tempo, key changes etc.">TempoTrack</a> </dd></dl>
 
 </div>
 </div>
@@ -1306,7 +1306,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Returns true if this track can contain a specific <a class="el" href="classtracktion__engine_1_1Plugin.html">Plugin</a>. </p>
 <p>Subclasses can override this to avoid specific plugins such as <a class="el" href="classtracktion__engine_1_1VCAPlugin.html" title="The VCA plugin sits on a folder track to control the overall level of all the volume/pan plugins in i...">VCAPlugin</a>[s] on <a class="el" href="classtracktion__engine_1_1AudioTrack.html">AudioTrack</a>[s]. </p>
 
-<p>Implemented in <a class="el" href="classtracktion__engine_1_1FolderTrack.html#a04e30bccb8e814a685eab90a91e2b7b3">tracktion_engine::FolderTrack</a>, <a class="el" href="classtracktion__engine_1_1AudioTrack.html#a13658813a16cefd5a490428bb998011a">tracktion_engine::AudioTrack</a>, <a class="el" href="classtracktion__engine_1_1TempoTrack.html#acb7c84311b5e0bd3233ff70a0f557beb">tracktion_engine::TempoTrack</a>, <a class="el" href="classtracktion__engine_1_1MasterTrack.html#a6430d66af89e5393cf80aed1364ee91e">tracktion_engine::MasterTrack</a>, <a class="el" href="classtracktion__engine_1_1ArrangerTrack.html#af57ff8e5261e10756d677965686f1cec">tracktion_engine::ArrangerTrack</a>, <a class="el" href="classtracktion__engine_1_1AutomationTrack.html#a00647152e39a24cbeded861074f95d50">tracktion_engine::AutomationTrack</a>, <a class="el" href="classtracktion__engine_1_1MarkerTrack.html#ae2a3e4b3c28e7c9b48aab7b440e4a947">tracktion_engine::MarkerTrack</a>, and <a class="el" href="classtracktion__engine_1_1ChordTrack.html#a6477f26c76a8c157814c6f3e9fdf2726">tracktion_engine::ChordTrack</a>.</p>
+<p>Implemented in <a class="el" href="classtracktion__engine_1_1FolderTrack.html#a04e30bccb8e814a685eab90a91e2b7b3">tracktion_engine::FolderTrack</a>, <a class="el" href="classtracktion__engine_1_1TempoTrack.html#acb7c84311b5e0bd3233ff70a0f557beb">tracktion_engine::TempoTrack</a>, <a class="el" href="classtracktion__engine_1_1MasterTrack.html#a6430d66af89e5393cf80aed1364ee91e">tracktion_engine::MasterTrack</a>, <a class="el" href="classtracktion__engine_1_1AudioTrack.html#a13658813a16cefd5a490428bb998011a">tracktion_engine::AudioTrack</a>, <a class="el" href="classtracktion__engine_1_1ArrangerTrack.html#af57ff8e5261e10756d677965686f1cec">tracktion_engine::ArrangerTrack</a>, <a class="el" href="classtracktion__engine_1_1AutomationTrack.html#a00647152e39a24cbeded861074f95d50">tracktion_engine::AutomationTrack</a>, <a class="el" href="classtracktion__engine_1_1MarkerTrack.html#ae2a3e4b3c28e7c9b48aab7b440e4a947">tracktion_engine::MarkerTrack</a>, and <a class="el" href="classtracktion__engine_1_1ChordTrack.html#a6477f26c76a8c157814c6f3e9fdf2726">tracktion_engine::ChordTrack</a>.</p>
 
 </div>
 </div>
@@ -1821,7 +1821,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Should return the <a class="el" href="classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g.">TrackItem</a> after this time. </p>
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1FolderTrack.html#a5edd2a233c90d962ca7e2da3ff97fc71">tracktion_engine::FolderTrack</a>, <a class="el" href="classtracktion__engine_1_1ClipTrack.html#a7c0b2f332477535f94377b3c4098070b">tracktion_engine::ClipTrack</a>, and <a class="el" href="classtracktion__engine_1_1TempoTrack.html#a089b92b76171bc8a6f8cbc3638dc30df">tracktion_engine::TempoTrack</a>.</p>
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1FolderTrack.html#a5edd2a233c90d962ca7e2da3ff97fc71">tracktion_engine::FolderTrack</a>, <a class="el" href="classtracktion__engine_1_1TempoTrack.html#a089b92b76171bc8a6f8cbc3638dc30df">tracktion_engine::TempoTrack</a>, and <a class="el" href="classtracktion__engine_1_1ClipTrack.html#a7c0b2f332477535f94377b3c4098070b">tracktion_engine::ClipTrack</a>.</p>
 
 </div>
 </div>
@@ -1868,7 +1868,7 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1ClipTrack.html#a6b3b95ba8a98d0819b4f76a8fb9e93a4">tracktion_engine::ClipTrack</a>, and <a class="el" href="classtracktion__engine_1_1TempoTrack.html#a65c6b786f4ebfbb207a170d3e86cf86d">tracktion_engine::TempoTrack</a>.</p>
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1TempoTrack.html#a65c6b786f4ebfbb207a170d3e86cf86d">tracktion_engine::TempoTrack</a>, and <a class="el" href="classtracktion__engine_1_1ClipTrack.html#a6b3b95ba8a98d0819b4f76a8fb9e93a4">tracktion_engine::ClipTrack</a>.</p>
 
 </div>
 </div>
@@ -3096,7 +3096,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 12 2021 14:19:26 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 2 2021 18:36:51 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

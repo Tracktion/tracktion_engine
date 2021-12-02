@@ -696,7 +696,7 @@
 <!-- Node48 -->
 <g id="node44" class="node">
 <title>Node48</title>
-<g id="a_node44"><a xlink:href="classtracktion__engine_1_1TempoTrack.html" target="_top" xlink:title=" ">
+<g id="a_node44"><a xlink:href="classtracktion__engine_1_1TempoTrack.html" target="_top" xlink:title="A track to represent the &quot;global&quot; items such as tempo, key changes etc.">
 <polygon fill="none" stroke="black" points="405,-437 405,-456 567,-456 567,-437 405,-437"/>
 <text text-anchor="middle" x="486" y="-444" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::TempoTrack</text>
 </a>

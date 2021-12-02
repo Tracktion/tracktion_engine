@@ -96,12 +96,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acd71c6e27fa1e93ffeda95029e1cefe3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#acd71c6e27fa1e93ffeda95029e1cefe3">loadImpulseResponse</a> (const void *sourceData, size_t sourceDataSize)</td></tr>
 <tr class="memdesc:acd71c6e27fa1e93ffeda95029e1cefe3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads an impulse from binary audio file data i.e.  <a href="classtracktion__engine_1_1ImpulseResponsePlugin.html#acd71c6e27fa1e93ffeda95029e1cefe3">More...</a><br /></td></tr>
 <tr class="separator:acd71c6e27fa1e93ffeda95029e1cefe3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65bdd1dc1dc3c58d79c93a4bbf68b3cd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a65bdd1dc1dc3c58d79c93a4bbf68b3cd">loadImpulseResponse</a> (const File &amp;fileImpulseResponse)</td></tr>
-<tr class="memdesc:a65bdd1dc1dc3c58d79c93a4bbf68b3cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads an impulse from a file.  <a href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a65bdd1dc1dc3c58d79c93a4bbf68b3cd">More...</a><br /></td></tr>
-<tr class="separator:a65bdd1dc1dc3c58d79c93a4bbf68b3cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a59bc3a5e9987198b35015a8978902e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a9a59bc3a5e9987198b35015a8978902e">loadImpulseResponse</a> (AudioBuffer&lt; float &gt; &amp;&amp;bufferImpulseResponse, double sampleRateToStore, int bitDepthToStore)</td></tr>
-<tr class="memdesc:a9a59bc3a5e9987198b35015a8978902e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads an impulse from an AudioBuffer&lt;float&gt;.  <a href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a9a59bc3a5e9987198b35015a8978902e">More...</a><br /></td></tr>
-<tr class="separator:a9a59bc3a5e9987198b35015a8978902e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48cd82da523002d4761d092a3540b8df"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a48cd82da523002d4761d092a3540b8df">loadImpulseResponse</a> (const juce::File &amp;fileImpulseResponse)</td></tr>
+<tr class="memdesc:a48cd82da523002d4761d092a3540b8df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads an impulse from a file.  <a href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a48cd82da523002d4761d092a3540b8df">More...</a><br /></td></tr>
+<tr class="separator:a48cd82da523002d4761d092a3540b8df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3269ccc9bd9bd3f2bf8c05cc9e9c943"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#ac3269ccc9bd9bd3f2bf8c05cc9e9c943">loadImpulseResponse</a> (juce::AudioBuffer&lt; float &gt; &amp;&amp;bufferImpulseResponse, double sampleRateToStore, int bitDepthToStore)</td></tr>
+<tr class="memdesc:ac3269ccc9bd9bd3f2bf8c05cc9e9c943"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads an impulse from an AudioBuffer&lt;float&gt;.  <a href="classtracktion__engine_1_1ImpulseResponsePlugin.html#ac3269ccc9bd9bd3f2bf8c05cc9e9c943">More...</a><br /></td></tr>
+<tr class="separator:ac3269ccc9bd9bd3f2bf8c05cc9e9c943"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73edd3aa0b73c3098a517544b37a1c1e"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a73edd3aa0b73c3098a517544b37a1c1e">getName</a> () override</td></tr>
 <tr class="separator:a73edd3aa0b73c3098a517544b37a1c1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1a918352a695db79606294723c89672"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#ab1a918352a695db79606294723c89672">getShortName</a> (int) override</td></tr>
@@ -411,26 +411,27 @@ Static Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a0725255821735ded801cf7ff61cf5c52"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a0725255821735ded801cf7ff61cf5c52">preGainValue</a></td></tr>
-<tr class="separator:a0725255821735ded801cf7ff61cf5c52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aecb9a068d7a756873a0a1d14d7a28f7b"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#aecb9a068d7a756873a0a1d14d7a28f7b">postGainValue</a></td></tr>
-<tr class="separator:aecb9a068d7a756873a0a1d14d7a28f7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11781a66dc4c7fb2f0aa80a0ae5f2eb6"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a11781a66dc4c7fb2f0aa80a0ae5f2eb6">highPassCutoffValue</a></td></tr>
-<tr class="separator:a11781a66dc4c7fb2f0aa80a0ae5f2eb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a170cbd63b8af51ed23f8a96338fa6704"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a170cbd63b8af51ed23f8a96338fa6704">lowPassCutoffValue</a></td></tr>
-<tr class="separator:a170cbd63b8af51ed23f8a96338fa6704"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf494c8ea51f57541831ac0f7e71b192"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1AutomatableParameter.html#af267e7c7e64bcb7412778976ab54a65e">AutomatableParameter::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#adf494c8ea51f57541831ac0f7e71b192">preGainParam</a></td></tr>
-<tr class="memdesc:adf494c8ea51f57541831ac0f7e71b192"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameter for the Gain to apply before the IR.  <a href="classtracktion__engine_1_1ImpulseResponsePlugin.html#adf494c8ea51f57541831ac0f7e71b192">More...</a><br /></td></tr>
-<tr class="separator:adf494c8ea51f57541831ac0f7e71b192"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4c19ec5c837e30c736b717baef7672b"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; juce::String &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#ad4c19ec5c837e30c736b717baef7672b">name</a></td></tr>
+<tr class="memdesc:ad4c19ec5c837e30c736b717baef7672b"><td class="mdescLeft">&#160;</td><td class="mdescRight">A name property.  <a href="classtracktion__engine_1_1ImpulseResponsePlugin.html#ad4c19ec5c837e30c736b717baef7672b">More...</a><br /></td></tr>
+<tr class="separator:ad4c19ec5c837e30c736b717baef7672b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f12087d874479cb950a9677368772fe"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a2f12087d874479cb950a9677368772fe">normalise</a></td></tr>
+<tr class="memdesc:a2f12087d874479cb950a9677368772fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Normalise the IR file when loading from the state.  <a href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a2f12087d874479cb950a9677368772fe">More...</a><br /></td></tr>
+<tr class="separator:a2f12087d874479cb950a9677368772fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58c8feb4d1d18eb4ba0d281e823083f8"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a58c8feb4d1d18eb4ba0d281e823083f8">trimSilence</a></td></tr>
+<tr class="memdesc:a58c8feb4d1d18eb4ba0d281e823083f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trim silence from the IR file when loading from the state.  <a href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a58c8feb4d1d18eb4ba0d281e823083f8">More...</a><br /></td></tr>
+<tr class="separator:a58c8feb4d1d18eb4ba0d281e823083f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc5f071d40648b6b112dd078d2a3cfb2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1AutomatableParameter.html#af267e7c7e64bcb7412778976ab54a65e">AutomatableParameter::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#afc5f071d40648b6b112dd078d2a3cfb2">highPassCutoffParam</a></td></tr>
 <tr class="memdesc:afc5f071d40648b6b112dd078d2a3cfb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cutoff frequency for the high pass filter to applied after the IR.  <a href="classtracktion__engine_1_1ImpulseResponsePlugin.html#afc5f071d40648b6b112dd078d2a3cfb2">More...</a><br /></td></tr>
 <tr class="separator:afc5f071d40648b6b112dd078d2a3cfb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e18496769b4d3051349047ec5f0d800"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1AutomatableParameter.html#af267e7c7e64bcb7412778976ab54a65e">AutomatableParameter::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a4e18496769b4d3051349047ec5f0d800">lowPassCutoffParam</a></td></tr>
 <tr class="memdesc:a4e18496769b4d3051349047ec5f0d800"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cutoff frequency for the low pass filter to applied after the IR.  <a href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a4e18496769b4d3051349047ec5f0d800">More...</a><br /></td></tr>
 <tr class="separator:a4e18496769b4d3051349047ec5f0d800"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6717cfa6349297dea8ffd4cd9fb2efc6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1AutomatableParameter.html#af267e7c7e64bcb7412778976ab54a65e">AutomatableParameter::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a6717cfa6349297dea8ffd4cd9fb2efc6">postGainParam</a></td></tr>
-<tr class="memdesc:a6717cfa6349297dea8ffd4cd9fb2efc6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameter for the Gain to apply after the IR.  <a href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a6717cfa6349297dea8ffd4cd9fb2efc6">More...</a><br /></td></tr>
-<tr class="separator:a6717cfa6349297dea8ffd4cd9fb2efc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a516949c7b5255cfa0d2a0d74a744d679"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1AutomatableParameter.html#af267e7c7e64bcb7412778976ab54a65e">AutomatableParameter::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a516949c7b5255cfa0d2a0d74a744d679">gainParam</a></td></tr>
+<tr class="memdesc:a516949c7b5255cfa0d2a0d74a744d679"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameter for the gain to apply.  <a href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a516949c7b5255cfa0d2a0d74a744d679">More...</a><br /></td></tr>
+<tr class="separator:a516949c7b5255cfa0d2a0d74a744d679"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee6a1b53d206b35a1dabc2434c999ed1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1AutomatableParameter.html#af267e7c7e64bcb7412778976ab54a65e">AutomatableParameter::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#aee6a1b53d206b35a1dabc2434c999ed1">mixParam</a></td></tr>
+<tr class="memdesc:aee6a1b53d206b35a1dabc2434c999ed1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameter for the mix control, 0.0 = dry, 1.0 = wet.  <a href="classtracktion__engine_1_1ImpulseResponsePlugin.html#aee6a1b53d206b35a1dabc2434c999ed1">More...</a><br /></td></tr>
+<tr class="separator:aee6a1b53d206b35a1dabc2434c999ed1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classtracktion__engine_1_1Plugin"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classtracktion__engine_1_1Plugin')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classtracktion__engine_1_1Plugin.html">tracktion_engine::Plugin</a></td></tr>
 <tr class="memitem:aead28aeeb44c200b4b153ed589cfd86e inherit pub_attribs_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="structtracktion__engine_1_1Plugin_1_1WindowState.html">WindowState</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#aead28aeeb44c200b4b153ed589cfd86e">windowState</a></td></tr>
 <tr class="separator:aead28aeeb44c200b4b153ed589cfd86e inherit pub_attribs_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -655,8 +656,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a65bdd1dc1dc3c58d79c93a4bbf68b3cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a65bdd1dc1dc3c58d79c93a4bbf68b3cd">&#9670;&nbsp;</a></span>loadImpulseResponse() <span class="overload">[2/3]</span></h2>
+<a id="a48cd82da523002d4761d092a3540b8df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48cd82da523002d4761d092a3540b8df">&#9670;&nbsp;</a></span>loadImpulseResponse() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -664,7 +665,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">bool tracktion_engine::ImpulseResponsePlugin::loadImpulseResponse </td>
           <td>(</td>
-          <td class="paramtype">const File &amp;&#160;</td>
+          <td class="paramtype">const juce::File &amp;&#160;</td>
           <td class="paramname"><em>fileImpulseResponse</em></td><td>)</td>
           <td></td>
         </tr>
@@ -676,8 +677,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a9a59bc3a5e9987198b35015a8978902e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9a59bc3a5e9987198b35015a8978902e">&#9670;&nbsp;</a></span>loadImpulseResponse() <span class="overload">[3/3]</span></h2>
+<a id="ac3269ccc9bd9bd3f2bf8c05cc9e9c943"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3269ccc9bd9bd3f2bf8c05cc9e9c943">&#9670;&nbsp;</a></span>loadImpulseResponse() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -685,7 +686,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">bool tracktion_engine::ImpulseResponsePlugin::loadImpulseResponse </td>
           <td>(</td>
-          <td class="paramtype">AudioBuffer&lt; float &gt; &amp;&amp;&#160;</td>
+          <td class="paramtype">juce::AudioBuffer&lt; float &gt; &amp;&amp;&#160;</td>
           <td class="paramname"><em>bufferImpulseResponse</em>, </td>
         </tr>
         <tr>
@@ -1037,75 +1038,54 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a0725255821735ded801cf7ff61cf5c52"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0725255821735ded801cf7ff61cf5c52">&#9670;&nbsp;</a></span>preGainValue</h2>
+<a id="ad4c19ec5c837e30c736b717baef7672b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4c19ec5c837e30c736b717baef7672b">&#9670;&nbsp;</a></span>name</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">juce::CachedValue&lt;float&gt; tracktion_engine::ImpulseResponsePlugin::preGainValue</td>
+          <td class="memname">juce::CachedValue&lt;juce::String&gt; tracktion_engine::ImpulseResponsePlugin::name</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p>A name property. </p>
+<p>This isn't used by the IR itselt but useful in UI contexts. </p>
+
 </div>
 </div>
-<a id="aecb9a068d7a756873a0a1d14d7a28f7b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aecb9a068d7a756873a0a1d14d7a28f7b">&#9670;&nbsp;</a></span>postGainValue</h2>
+<a id="a2f12087d874479cb950a9677368772fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f12087d874479cb950a9677368772fe">&#9670;&nbsp;</a></span>normalise</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">juce::CachedValue&lt;float&gt; tracktion_engine::ImpulseResponsePlugin::postGainValue</td>
+          <td class="memname">juce::CachedValue&lt;bool&gt; tracktion_engine::ImpulseResponsePlugin::normalise</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p>Normalise the IR file when loading from the state. </p>
+<p>True by default. </p>
+
 </div>
 </div>
-<a id="a11781a66dc4c7fb2f0aa80a0ae5f2eb6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a11781a66dc4c7fb2f0aa80a0ae5f2eb6">&#9670;&nbsp;</a></span>highPassCutoffValue</h2>
+<a id="a58c8feb4d1d18eb4ba0d281e823083f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58c8feb4d1d18eb4ba0d281e823083f8">&#9670;&nbsp;</a></span>trimSilence</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">juce::CachedValue&lt;float&gt; tracktion_engine::ImpulseResponsePlugin::highPassCutoffValue</td>
+          <td class="memname">juce::CachedValue&lt;bool&gt; tracktion_engine::ImpulseResponsePlugin::trimSilence</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="a170cbd63b8af51ed23f8a96338fa6704"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a170cbd63b8af51ed23f8a96338fa6704">&#9670;&nbsp;</a></span>lowPassCutoffValue</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">juce::CachedValue&lt;float&gt; tracktion_engine::ImpulseResponsePlugin::lowPassCutoffValue</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="adf494c8ea51f57541831ac0f7e71b192"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adf494c8ea51f57541831ac0f7e71b192">&#9670;&nbsp;</a></span>preGainParam</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classtracktion__engine_1_1AutomatableParameter.html#af267e7c7e64bcb7412778976ab54a65e">AutomatableParameter::Ptr</a> tracktion_engine::ImpulseResponsePlugin::preGainParam</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Parameter for the Gain to apply before the IR. </p>
+<p>Trim silence from the IR file when loading from the state. </p>
+<p>False by default. </p>
 
 </div>
 </div>
@@ -1141,19 +1121,35 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a6717cfa6349297dea8ffd4cd9fb2efc6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6717cfa6349297dea8ffd4cd9fb2efc6">&#9670;&nbsp;</a></span>postGainParam</h2>
+<a id="a516949c7b5255cfa0d2a0d74a744d679"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a516949c7b5255cfa0d2a0d74a744d679">&#9670;&nbsp;</a></span>gainParam</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classtracktion__engine_1_1AutomatableParameter.html#af267e7c7e64bcb7412778976ab54a65e">AutomatableParameter::Ptr</a> tracktion_engine::ImpulseResponsePlugin::postGainParam</td>
+          <td class="memname"><a class="el" href="classtracktion__engine_1_1AutomatableParameter.html#af267e7c7e64bcb7412778976ab54a65e">AutomatableParameter::Ptr</a> tracktion_engine::ImpulseResponsePlugin::gainParam</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Parameter for the Gain to apply after the IR. </p>
+<p>Parameter for the gain to apply. </p>
+
+</div>
+</div>
+<a id="aee6a1b53d206b35a1dabc2434c999ed1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee6a1b53d206b35a1dabc2434c999ed1">&#9670;&nbsp;</a></span>mixParam</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion__engine_1_1AutomatableParameter.html#af267e7c7e64bcb7412778976ab54a65e">AutomatableParameter::Ptr</a> tracktion_engine::ImpulseResponsePlugin::mixParam</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Parameter for the mix control, 0.0 = dry, 1.0 = wet. </p>
 
 </div>
 </div>
@@ -1163,7 +1159,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 12 2021 14:19:25 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 2 2021 18:36:50 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

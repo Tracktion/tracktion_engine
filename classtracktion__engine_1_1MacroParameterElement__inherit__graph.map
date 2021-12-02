@@ -35,7 +35,7 @@
 <area shape="rect" id="node34" href="$classtracktion__engine_1_1ClipTrack.html" title=" " alt="" coords="567,1782,766,1809"/>
 <area shape="rect" id="node39" href="$classtracktion__engine_1_1FolderTrack.html" title=" " alt="" coords="577,1833,756,1875"/>
 <area shape="rect" id="node40" href="$classtracktion__engine_1_1MasterTrack.html" title="A track to represent the master plugins." alt="" coords="575,1899,759,1940"/>
-<area shape="rect" id="node41" href="$classtracktion__engine_1_1TempoTrack.html" title=" " alt="" coords="559,1965,775,1991"/>
+<area shape="rect" id="node41" href="$classtracktion__engine_1_1TempoTrack.html" title="A track to represent the &quot;global&quot; items such as tempo, key changes etc." alt="" coords="559,1965,775,1991"/>
 <area shape="rect" id="node35" href="$classtracktion__engine_1_1ArrangerTrack.html" title="A track similar to the MarkerTrack but can be used to move sections of an Edit around." alt="" coords="840,1691,1035,1732"/>
 <area shape="rect" id="node36" href="$classtracktion__engine_1_1AudioTrack.html" title=" " alt="" coords="832,1757,1043,1783"/>
 <area shape="rect" id="node37" href="$classtracktion__engine_1_1ChordTrack.html" title=" " alt="" coords="832,1807,1043,1834"/>

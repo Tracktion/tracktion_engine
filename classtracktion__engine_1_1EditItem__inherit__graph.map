@@ -43,7 +43,7 @@
 <area shape="rect" id="node41" href="$classtracktion__engine_1_1ClipTrack.html" title=" " alt="" coords="554,1266,753,1293"/>
 <area shape="rect" id="node42" href="$classtracktion__engine_1_1FolderTrack.html" title=" " alt="" coords="564,1317,743,1359"/>
 <area shape="rect" id="node43" href="$classtracktion__engine_1_1MasterTrack.html" title="A track to represent the master plugins." alt="" coords="561,1383,745,1424"/>
-<area shape="rect" id="node44" href="$classtracktion__engine_1_1TempoTrack.html" title=" " alt="" coords="545,1449,761,1475"/>
+<area shape="rect" id="node44" href="$classtracktion__engine_1_1TempoTrack.html" title="A track to represent the &quot;global&quot; items such as tempo, key changes etc." alt="" coords="545,1449,761,1475"/>
 <area shape="rect" id="node46" href="$classtracktion__engine_1_1Clip.html" title="A clip in an edit." alt="" coords="571,1499,735,1526"/>
 <area shape="rect" id="node47" href="$classtracktion__engine_1_1CollectionClip.html" title=" " alt="" coords="539,1550,768,1577"/>
 <area shape="rect" id="node48" href="$classtracktion__engine_1_1PitchSetting.html" title=" " alt="" coords="545,1601,762,1627"/>
