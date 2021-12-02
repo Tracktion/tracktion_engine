@@ -22,4 +22,4 @@ jobs:
           sudo apt-get install lcov
           tests/coverage/generate_coverage_report
           rm -rf doxygen/doc/coverage_html
-          cp tests/coverage/build_linux/coverage_html doxygen/doc/coverage_html
+          cp -r tests/coverage/build_linux/coverage_html doxygen/doc/coverage_html
