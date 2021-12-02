@@ -1,0 +1,17 @@
+name: Generate coverage
+on:
+  push:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2 
+
+      - name: Generate coverage report
+        run: |
+          sudo apt-get install lcov
+          tests/coverage/generate_coverage_report
+          rm -rf tests/coverage/build_linux/coverage_html
+          mv tests/coverage/build_linux/coverage_html doxygen/doc/coverage_html
