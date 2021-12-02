@@ -21,5 +21,5 @@ jobs:
         run: |
           sudo apt-get install lcov
           tests/coverage/generate_coverage_report
-          rm -rf tests/coverage/build_linux/coverage_html
-          mv tests/coverage/build_linux/coverage_html doxygen/doc/coverage_html
+          rm -rf doxygen/doc/coverage_html
+          cp tests/coverage/build_linux/coverage_html doxygen/doc/coverage_html
