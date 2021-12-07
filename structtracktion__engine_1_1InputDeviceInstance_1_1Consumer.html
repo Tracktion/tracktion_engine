@@ -93,6 +93,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7473d87f549587cc9e2c94093f2b90a9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1InputDeviceInstance_1_1Consumer.html#a7473d87f549587cc9e2c94093f2b90a9">handleIncomingMidiMessage</a> (const juce::MidiMessage &amp;)</td></tr>
 <tr class="memdesc:a7473d87f549587cc9e2c94093f2b90a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Override this to receive MIDI input from the device if it has any.  <a href="structtracktion__engine_1_1InputDeviceInstance_1_1Consumer.html#a7473d87f549587cc9e2c94093f2b90a9">More...</a><br /></td></tr>
 <tr class="separator:a7473d87f549587cc9e2c94093f2b90a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a927618459c9ab2f21a1b9095eb2ffe52"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1InputDeviceInstance_1_1Consumer.html#a927618459c9ab2f21a1b9095eb2ffe52">discardRecordings</a> ()</td></tr>
+<tr class="memdesc:a927618459c9ab2f21a1b9095eb2ffe52"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is called when a recording is aborted so listeners should trash their temp data.  <a href="structtracktion__engine_1_1InputDeviceInstance_1_1Consumer.html#a927618459c9ab2f21a1b9095eb2ffe52">More...</a><br /></td></tr>
+<tr class="separator:a927618459c9ab2f21a1b9095eb2ffe52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base class for classes that want to listen to an <a class="el" href="classtracktion__engine_1_1InputDevice.html" title="Represents an input device.">InputDevice</a> and get a callback for each block of input. </p>
@@ -186,13 +189,42 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a927618459c9ab2f21a1b9095eb2ffe52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a927618459c9ab2f21a1b9095eb2ffe52">&#9670;&nbsp;</a></span>discardRecordings()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion_engine::InputDeviceInstance::Consumer::discardRecordings </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>This is called when a recording is aborted so listeners should trash their temp data. </p>
+
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1MidiInputDeviceNode.html#a6d30702dc5a1166f612a160a99021e40">tracktion_engine::MidiInputDeviceNode</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="tracktion__InputDevice_8h.html">tracktion_InputDevice.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 2 2021 23:12:17 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Dec 7 2021 17:19:17 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

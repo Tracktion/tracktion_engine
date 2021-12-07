@@ -32,16 +32,16 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">97</td>
+            <td class="headerCovTableEntry">100</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-02 23:28:15</td>
+            <td class="headerValue">2021-12-07 17:37:48</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">11</td>
+            <td class="headerCovTableEntry">12</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -264,7 +264,13 @@
 <a name="202"><span class="lineNum">     202 </span><span class="lineNoCov">          0 :     return instance.isRecording() &amp;&amp; instance.context.transport.looping;</span></a>
 <a name="203"><span class="lineNum">     203 </span>            : }</a>
 <a name="204"><span class="lineNum">     204 </span>            : </a>
-<a name="205"><span class="lineNum">     205 </span>            : }</a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 : void MidiInputDeviceNode::discardRecordings()</span></a>
+<a name="206"><span class="lineNum">     206 </span>            : {</a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :     const juce::ScopedLock sl (liveInputLock);</span></a>
+<a name="208"><span class="lineNum">     208 </span>            :     liveRecordedMessages.clear();</a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="210"><span class="lineNum">     210 </span>            : </a>
+<a name="211"><span class="lineNum">     211 </span>            : }</a>
 </pre>
       </td>
     </tr>

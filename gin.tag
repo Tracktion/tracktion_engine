@@ -19904,6 +19904,13 @@
       <anchor>a7473d87f549587cc9e2c94093f2b90a9</anchor>
       <arglist>(const juce::MidiMessage &amp;)</arglist>
     </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>discardRecordings</name>
+      <anchorfile>structtracktion__engine_1_1InputDeviceInstance_1_1Consumer.html</anchorfile>
+      <anchor>a927618459c9ab2f21a1b9095eb2ffe52</anchor>
+      <arglist>()</arglist>
+    </member>
   </compound>
   <compound kind="struct">
     <name>tracktion_engine::Clipboard::ContentType</name>
@@ -42523,6 +42530,13 @@
       <anchorfile>classtracktion__engine_1_1MidiInputDeviceNode.html</anchorfile>
       <anchor>acb4b6dae7b2403b5939d834c4cb728e1</anchor>
       <arglist>(const juce::MidiMessage &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>discardRecordings</name>
+      <anchorfile>classtracktion__engine_1_1MidiInputDeviceNode.html</anchorfile>
+      <anchor>a6d30702dc5a1166f612a160a99021e40</anchor>
+      <arglist>() override</arglist>
     </member>
   </compound>
   <compound kind="struct">
