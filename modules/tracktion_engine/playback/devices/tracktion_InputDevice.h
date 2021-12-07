@@ -262,6 +262,8 @@ public:
 
         /** Override this to receive MIDI input from the device if it has any. */
         virtual void handleIncomingMidiMessage (const juce::MidiMessage&) {}
+
+        virtual void discardRecordings() {}
     };
 
     /** Base classes should override this to add any Consumers internally. */

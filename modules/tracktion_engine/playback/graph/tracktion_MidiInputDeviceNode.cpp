@@ -202,4 +202,9 @@ bool MidiInputDeviceNode::isLivePlayOverActive()
     return instance.isRecording() && instance.context.transport.looping;
 }
 
+void MidiInputDeviceNode::discardRecordings()
+{
+    liveRecordedMessages.clear();
+}
+
 }
