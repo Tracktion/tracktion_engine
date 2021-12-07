@@ -204,6 +204,7 @@ bool MidiInputDeviceNode::isLivePlayOverActive()
 
 void MidiInputDeviceNode::discardRecordings()
 {
+    const juce::ScopedLock sl (liveInputLock);
     liveRecordedMessages.clear();
 }
 

@@ -50,7 +50,7 @@ private:
     //==============================================================================
     void processSection (ProcessContext&, juce::Range<int64_t> timelineRange);
     void createProgramChanges (MidiMessageArray&);
-    bool isLivePlayOverActive(); 
+    bool isLivePlayOverActive();
 };
 
 } // namespace tracktion_engine

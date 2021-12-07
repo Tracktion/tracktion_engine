@@ -720,6 +720,7 @@ public:
         { 
             for (auto c : consumers)
                 c->discardRecordings();
+
             recorded.clear();
         }
 
