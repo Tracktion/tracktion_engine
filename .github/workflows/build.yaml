@@ -74,8 +74,8 @@ jobs:
           DATABASE_SQL_PASS: ${{ secrets.DATABASE_SQL_PASS }}
           DATABASE_SQL_DATABASE: ${{ secrets.DATABASE_SQL_DATABASE }}
         run: |
-          pip install mysql-connector-python
-          pip install sshtunnel
+          pip3 install mysql-connector-python
+          pip3 install sshtunnel
           ./tests/benchmarks/publish_benchmark_results
 
       # Upload test results
