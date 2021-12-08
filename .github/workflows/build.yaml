@@ -63,6 +63,19 @@ jobs:
 
           ./tests/build
 
+      # Publish benchmarks
+      - name: "Publish benchmarks"
+        shell: bash
+        env:
+          DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+          DATABASE_SSH_USER: ${{ secrets.DATABASE_SSH_USER }}
+          DATABASE_SSH_PASS: ${{ secrets.DATABASE_SSH_PASS }}
+          DATABASE_SQL_USER: ${{ secrets.DATABASE_SQL_USER }}
+          DATABASE_SQL_PASS: ${{ secrets.DATABASE_SQL_PASS }}
+          DATABASE_SQL_DATABASE: ${{ secrets.DATABASE_SQL_DATABASE }}
+        run: |
+          ./tests/buildbenchmarks/publish_benchmark_results
+
       # Upload test results
       - uses: actions/upload-artifact@v2
         if: always()

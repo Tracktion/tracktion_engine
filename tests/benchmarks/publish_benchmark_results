@@ -1,0 +1,9 @@
+#!/bin/bash
+
+DIR=$(cd "$(dirname "$0")/"; pwd)
+echo DIR: $DIR
+cd $DIR
+
+QUERY_FILE=$DIR"/../../bin/benchmarks/publish_benchmarks_query.txt"
+python3 publish_benchmarks_from_file.py "$QUERY_FILE"
+

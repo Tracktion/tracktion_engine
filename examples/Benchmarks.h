@@ -94,10 +94,51 @@ inline bool publishToAirtable (std::string baseID, std::string apiKey,
     return false;
 }
 
+//==============================================================================
+/** @internal */
+inline juce::String createSQLQueryString (std::vector<BenchmarkResult> results)
+{
+    if (results.empty())
+        return {};
+        
+    juce::String result;
+    result << "INSERT INTO benchmarks (benchmark_hash, benchmark_category, benchmark_name, benchmark_description, benchmark_platform, benchmark_ticks, benchmark_ticks_per_s, benchmark_duration, benchmark_time)\n";
+
+    juce::StringArray values;
+
+    for (auto& r : results)
+    {
+        juce::String valueContent ("(");
+        valueContent
+        << juce::String (std::to_string (static_cast<uint64_t> (r.description.hash))) << ","
+        << juce::String (r.description.category).quoted ('\'') << ","
+        << juce::String (r.description.name).quoted ('\'') << ","
+        << juce::String (r.description.description).quoted ('\'') << ","
+        << juce::String (r.description.platform).quoted ('\'') << ","
+        << static_cast<int64> (r.ticksEnd - r.ticksStart) << ","
+        << static_cast<int64> (r.ticksPerSecond) << ","
+        << getDuration (r) << ","
+        << r.date.toISO8601 (true).trimCharactersAtEnd ("Z").quoted ('\'')
+        << ")";
+        
+        values.add (valueContent);
+    }
+    
+    for (int i = 0; i < values.size() - 1; ++i)
+        values.getReference (i) << ",";
+    
+    values.getReference (0) = "VALUES " + values.getReference (0);
+    values.getReference (values.size() - 1) << ";";
+    
+    result << values.joinIntoString ("\n");
+    
+    return result;
+}
+
 
 //==============================================================================
 //==============================================================================
-int main (int, char**)
+int main (int argv, char** argc)
 {
     ScopedJuceInitialiser_GUI init;
     const auto anyFailed = TestRunner::runTests ({}, "tracktion_benchmarks");
@@ -107,16 +148,28 @@ int main (int, char**)
         std::cout << r.description.name << ", " << r.description.category
                   << "\n\t" << r.description.description
                   << "\n\t" << getDuration (r) << "\n";
-
-    if (publishToAirtable (SystemStats::getEnvironmentVariable ("AT_BASE_ID", {}).toStdString(),
-                           SystemStats::getEnvironmentVariable ("AT_API_KEY", {}).toStdString(),
-                           std::move (results)))
+    
+    if (argv > 1)
     {
-        std::cout << "INFO: Published benchmark results\n";
-    }
-    else
-    {
-        std::cout << "ERROR: Failed to publish!\n";
+        if (auto query = createSQLQueryString (std::move (results));
+            query.isNotEmpty())
+        {
+            if (const juce::File destFile (argc[1]);
+                destFile != juce::File()
+                && destFile.getParentDirectory().createDirectory()
+                && destFile.replaceWithText (query))
+            {
+                std::cout << "INFO: Wrote query to: " << destFile.getFullPathName() << " \n";
+            }
+            else
+            {
+                std::cout << juce::String ("ERROR: Unable to write query string at {}!\n").replace ("{}", destFile.getFullPathName());
+            }
+        }
+        else
+        {
+            std::cout << "ERROR: Failed to create query string!\n";
+        }
     }
 
     return anyFailed;
