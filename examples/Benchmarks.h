@@ -94,51 +94,60 @@ inline bool publishToAirtable (std::string baseID, std::string apiKey,
     return false;
 }
 
+
+//==============================================================================
 //==============================================================================
 /** @internal */
-inline juce::String createSQLQueryString (std::vector<BenchmarkResult> results)
+inline bool publishToBenchmarkAPI (juce::String apiKey, std::vector<BenchmarkResult> results)
 {
-    if (results.empty())
-        return {};
-        
-    juce::String result;
-    result << "INSERT INTO benchmarks (benchmark_hash, benchmark_category, benchmark_name, benchmark_description, benchmark_platform, benchmark_ticks, benchmark_ticks_per_s, benchmark_duration, benchmark_time)\n";
-
-    juce::StringArray values;
+    if (apiKey.isEmpty())
+    {
+        jassertfalse;
+        return false;
+    }
+    
+    juce::Array<juce::var> records;
 
     for (auto& r : results)
     {
-        juce::String valueContent ("(");
-        valueContent
-        << juce::String (std::to_string (static_cast<uint64_t> (r.description.hash))) << ","
-        << juce::String (r.description.category).quoted ('\'') << ","
-        << juce::String (r.description.name).quoted ('\'') << ","
-        << juce::String (r.description.description).quoted ('\'') << ","
-        << juce::String (r.description.platform).quoted ('\'') << ","
-        << static_cast<int64> (r.ticksEnd - r.ticksStart) << ","
-        << static_cast<int64> (r.ticksPerSecond) << ","
-        << getDuration (r) << ","
-        << r.date.toISO8601 (true).trimCharactersAtEnd ("Z").quoted ('\'')
-        << ")";
-        
-        values.add (valueContent);
+        juce::DynamicObject::Ptr fields = new juce::DynamicObject();
+        fields->setProperty ("benchmark_hash",        juce::String (static_cast<uint64> (r.description.hash)));
+        fields->setProperty ("benchmark_category",    juce::String (r.description.category).quoted ('\''));
+        fields->setProperty ("benchmark_name",        juce::String (r.description.name).quoted ('\''));
+        fields->setProperty ("benchmark_description", juce::String (r.description.description).quoted ('\''));
+        fields->setProperty ("benchmark_platform",    juce::String (r.description.platform).quoted ('\''));
+        fields->setProperty ("benchmark_ticks",       static_cast<int64> (r.ticksEnd - r.ticksStart));
+        fields->setProperty ("benchmark_ticks_per_s", static_cast<int64> (r.ticksPerSecond));
+        fields->setProperty ("benchmark_duration",    getDuration (r));
+        fields->setProperty ("benchmark_time",        r.date.toISO8601 (true).trimCharactersAtEnd ("Z").quoted ('\''));
+
+        records.add (fields.get());
+    }
+
+    juce::var valuesToAdd (std::move (records));
+    auto jsonString = juce::JSON::toString (valuesToAdd, false);
+
+    const auto url = juce::URL ("https://appstats.tracktion.com/benchmarkapi.php")
+                        .withParameter ("api_key", apiKey)
+                        .withParameter ("request", "push_results")
+                        .withParameter ("content", jsonString);
+
+    if (auto inputStream = url.createInputStream (URL::InputStreamOptions (URL::ParameterHandling::inPostData)))
+    {
+        const auto returnVal = inputStream->readEntireStreamAsString();
+        std::cout << returnVal << "\n";
+
+        if (returnVal.isEmpty())
+            return true;
     }
     
-    for (int i = 0; i < values.size() - 1; ++i)
-        values.getReference (i) << ",";
-    
-    values.getReference (0) = "VALUES " + values.getReference (0);
-    values.getReference (values.size() - 1) << ";";
-    
-    result << values.joinIntoString ("\n");
-    
-    return result;
+    return false;
 }
 
 
 //==============================================================================
 //==============================================================================
-int main (int argv, char** argc)
+int main (int, char**)
 {
     ScopedJuceInitialiser_GUI init;
     const auto anyFailed = TestRunner::runTests ({}, "tracktion_benchmarks");
@@ -149,28 +158,15 @@ int main (int argv, char** argc)
                   << "\n\t" << r.description.description
                   << "\n\t" << getDuration (r) << "\n";
     
-    if (argv > 1)
+    if (publishToBenchmarkAPI (SystemStats::getEnvironmentVariable ("BM_API_KEY", {}),
+                               std::move (results)))
     {
-        if (auto query = createSQLQueryString (std::move (results));
-            query.isNotEmpty())
-        {
-            if (const juce::File destFile (argc[1]);
-                destFile != juce::File()
-                && destFile.getParentDirectory().createDirectory()
-                && destFile.replaceWithText (query))
-            {
-                std::cout << "INFO: Wrote query to: " << destFile.getFullPathName() << " \n";
-            }
-            else
-            {
-                std::cout << juce::String ("ERROR: Unable to write query string at {}!\n").replace ("{}", destFile.getFullPathName());
-            }
-        }
-        else
-        {
-            std::cout << "ERROR: Failed to create query string!\n";
-        }
+        std::cout << "INFO: Published benchmark results\n";
     }
-
+    else
+    {
+        std::cout << "ERROR: Failed to publish!\n";
+    }
+    
     return anyFailed;
 }

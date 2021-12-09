@@ -42,8 +42,7 @@ jobs:
       - name: "Build products"
         shell: bash
         env:
-          AT_API_KEY: ${{ secrets.AT_API_KEY }}
-          AT_BASE_ID: ${{ secrets.AT_BASE_ID }}
+          BM_API_KEY: ${{ secrets.BM_API_KEY }}
         run: |
           if [[ "$OSTYPE" == "linux-gnu" ]]; then
             export DISABLE_VALGRIND=1
@@ -62,21 +61,6 @@ jobs:
           fi
 
           ./tests/build
-
-      # Publish benchmarks
-      - name: "Publish benchmarks"
-        shell: bash
-        env:
-          DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
-          DATABASE_SSH_USER: ${{ secrets.DATABASE_SSH_USER }}
-          DATABASE_SSH_PASS: ${{ secrets.DATABASE_SSH_PASS }}
-          DATABASE_SQL_USER: ${{ secrets.DATABASE_SQL_USER }}
-          DATABASE_SQL_PASS: ${{ secrets.DATABASE_SQL_PASS }}
-          DATABASE_SQL_DATABASE: ${{ secrets.DATABASE_SQL_DATABASE }}
-        run: |
-          pip3 install mysql-connector-python
-          pip3 install sshtunnel
-          ./tests/benchmarks/publish_benchmark_results
 
       # Upload test results
       - uses: actions/upload-artifact@v2
