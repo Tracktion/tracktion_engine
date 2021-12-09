@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">80</td>
-            <td class="headerCovTableEntry">300</td>
-            <td class="headerCovTableEntryLo">26.7 %</td>
+            <td class="headerCovTableEntry">305</td>
+            <td class="headerCovTableEntryLo">26.2 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-09 18:27:34</td>
+            <td class="headerValue">2021-12-09 19:01:43</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">12</td>
@@ -221,15 +221,15 @@
 <a name="159"><span class="lineNum">     159 </span>            : {</a>
 <a name="160"><span class="lineNum">     160 </span><span class="lineCov">        140 : }</span></a>
 <a name="161"><span class="lineNum">     161 </span>            : </a>
-<a name="162"><span class="lineNum">     162 </span><span class="lineCov">     666343 : ThreadPoolJob::JobStatus Renderer::RenderTask::runJob()</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineCov">     663343 : ThreadPoolJob::JobStatus Renderer::RenderTask::runJob()</span></a>
 <a name="163"><span class="lineNum">     163 </span>            : {</a>
-<a name="164"><span class="lineNum">     164 </span><span class="lineCov">    1332690 :     CRASH_TRACER</span></a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">     666343 :     FloatVectorOperations::disableDenormalisedNumberSupport();</span></a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineCov">    1326690 :     CRASH_TRACER</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">     663343 :     FloatVectorOperations::disableDenormalisedNumberSupport();</span></a>
 <a name="166"><span class="lineNum">     166 </span>            : </a>
-<a name="167"><span class="lineNum">     167 </span><span class="lineCov">     666343 :     if (params.createMidiFile)</span></a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineCov">     663343 :     if (params.createMidiFile)</span></a>
 <a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :         renderMidi (params);</span></a>
-<a name="169"><span class="lineNum">     169 </span><span class="lineCov">     666343 :     else if (! renderAudio (params))</span></a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">     666273 :         return jobNeedsRunningAgain;</span></a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineCov">     663343 :     else if (! renderAudio (params))</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">     663273 :         return jobNeedsRunningAgain;</span></a>
 <a name="171"><span class="lineNum">     171 </span>            : </a>
 <a name="172"><span class="lineNum">     172 </span>            :     return jobHasFinished;</a>
 <a name="173"><span class="lineNum">     173 </span>            : }</a>
@@ -312,11 +312,11 @@
 <a name="250"><span class="lineNum">     250 </span>            : }</a>
 <a name="251"><span class="lineNum">     251 </span>            : </a>
 <a name="252"><span class="lineNum">     252 </span>            : //==============================================================================</a>
-<a name="253"><span class="lineNum">     253 </span><span class="lineCov">     666343 : bool Renderer::RenderTask::renderAudio (Renderer::Parameters&amp; r)</span></a>
+<a name="253"><span class="lineNum">     253 </span><span class="lineCov">     663343 : bool Renderer::RenderTask::renderAudio (Renderer::Parameters&amp; r)</span></a>
 <a name="254"><span class="lineNum">     254 </span>            : {</a>
-<a name="255"><span class="lineNum">     255 </span><span class="lineCov">    1332690 :     CRASH_TRACER</span></a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineCov">    1326690 :     CRASH_TRACER</span></a>
 <a name="256"><span class="lineNum">     256 </span>            :     </a>
-<a name="257"><span class="lineNum">     257 </span><span class="lineCov">     666343 :     if (! nodeRenderContext)</span></a>
+<a name="257"><span class="lineNum">     257 </span><span class="lineCov">     663343 :     if (! nodeRenderContext)</span></a>
 <a name="258"><span class="lineNum">     258 </span>            :     {</a>
 <a name="259"><span class="lineNum">     259 </span><span class="lineCov">        280 :         callBlocking ([&amp;, this] { nodeRenderContext = std::make_unique&lt;NodeRenderContext&gt; (*this, r,</span></a>
 <a name="260"><span class="lineNum">     260 </span><span class="lineCov">         70 :                                                                                            std::move (graphNode),</span></a>
@@ -332,7 +332,7 @@
 <a name="270"><span class="lineNum">     270 </span>            :         }</a>
 <a name="271"><span class="lineNum">     271 </span>            :     }</a>
 <a name="272"><span class="lineNum">     272 </span>            :     </a>
-<a name="273"><span class="lineNum">     273 </span><span class="lineCov">     666339 :     if (! nodeRenderContext-&gt;renderNextBlock (progress))</span></a>
+<a name="273"><span class="lineNum">     273 </span><span class="lineCov">     663339 :     if (! nodeRenderContext-&gt;renderNextBlock (progress))</span></a>
 <a name="274"><span class="lineNum">     274 </span>            :         return false;</a>
 <a name="275"><span class="lineNum">     275 </span>            :     </a>
 <a name="276"><span class="lineNum">     276 </span>            :     nodeRenderContext.reset();</a>
@@ -437,251 +437,258 @@
 <a name="375"><span class="lineNum">     375 </span><span class="lineNoCov">          0 :             midiTempoSequence.addEvent (m);</span></a>
 <a name="376"><span class="lineNum">     376 </span>            :         }</a>
 <a name="377"><span class="lineNum">     377 </span>            : </a>
-<a name="378"><span class="lineNum">     378 </span><span class="lineNoCov">          0 :         MidiFile mf;</span></a>
-<a name="379"><span class="lineNum">     379 </span><span class="lineNoCov">          0 :         mf.addTrack (midiTempoSequence);</span></a>
-<a name="380"><span class="lineNum">     380 </span><span class="lineNoCov">          0 :         mf.addTrack (outputSequence);</span></a>
+<a name="378"><span class="lineNum">     378 </span><span class="lineNoCov">          0 :         auto name = destFile.getFileNameWithoutExtension();</span></a>
+<a name="379"><span class="lineNum">     379 </span><span class="lineNoCov">          0 :         if (name.startsWith (&quot;.&quot;))</span></a>
+<a name="380"><span class="lineNum">     380 </span><span class="lineNoCov">          0 :             name = name.fromFirstOccurrenceOf (&quot;.&quot;, false, false).upToLastOccurrenceOf (&quot;_temp&quot;, false, false);</span></a>
 <a name="381"><span class="lineNum">     381 </span>            : </a>
-<a name="382"><span class="lineNum">     382 </span><span class="lineNoCov">          0 :         mf.setTicksPerQuarterNote (Edit::ticksPerQuarterNote);</span></a>
-<a name="383"><span class="lineNum">     383 </span><span class="lineNoCov">          0 :         mf.writeTo (out);</span></a>
+<a name="382"><span class="lineNum">     382 </span><span class="lineNoCov">          0 :         midiTempoSequence.addEvent (juce::MidiMessage::textMetaEvent (3, name));</span></a>
+<a name="383"><span class="lineNum">     383 </span><span class="lineNoCov">          0 :         outputSequence.addEvent (juce::MidiMessage::textMetaEvent (3, name));</span></a>
 <a name="384"><span class="lineNum">     384 </span>            : </a>
-<a name="385"><span class="lineNum">     385 </span>            :         return true;</a>
-<a name="386"><span class="lineNum">     386 </span>            :     }</a>
-<a name="387"><span class="lineNum">     387 </span>            : </a>
-<a name="388"><span class="lineNum">     388 </span>            :     return false;</a>
-<a name="389"><span class="lineNum">     389 </span>            : }</a>
-<a name="390"><span class="lineNum">     390 </span>            : </a>
+<a name="385"><span class="lineNum">     385 </span><span class="lineNoCov">          0 :         MidiFile mf;</span></a>
+<a name="386"><span class="lineNum">     386 </span><span class="lineNoCov">          0 :         mf.addTrack (midiTempoSequence);</span></a>
+<a name="387"><span class="lineNum">     387 </span><span class="lineNoCov">          0 :         mf.addTrack (outputSequence);</span></a>
+<a name="388"><span class="lineNum">     388 </span>            : </a>
+<a name="389"><span class="lineNum">     389 </span><span class="lineNoCov">          0 :         mf.setTicksPerQuarterNote (Edit::ticksPerQuarterNote);</span></a>
+<a name="390"><span class="lineNum">     390 </span><span class="lineNoCov">          0 :         mf.writeTo (out);</span></a>
 <a name="391"><span class="lineNum">     391 </span>            : </a>
-<a name="392"><span class="lineNum">     392 </span>            : //==============================================================================</a>
-<a name="393"><span class="lineNum">     393 </span><span class="lineNoCov">          0 : bool Renderer::renderToFile (const String&amp; taskDescription,</span></a>
-<a name="394"><span class="lineNum">     394 </span>            :                              const juce::File&amp; outputFile,</a>
-<a name="395"><span class="lineNum">     395 </span>            :                              Edit&amp; edit,</a>
-<a name="396"><span class="lineNum">     396 </span>            :                              EditTimeRange range,</a>
-<a name="397"><span class="lineNum">     397 </span>            :                              const BigInteger&amp; tracksToDo,</a>
-<a name="398"><span class="lineNum">     398 </span>            :                              bool usePlugins,</a>
-<a name="399"><span class="lineNum">     399 </span>            :                              Array&lt;Clip*&gt; clips,</a>
-<a name="400"><span class="lineNum">     400 </span>            :                              bool useThread)</a>
-<a name="401"><span class="lineNum">     401 </span>            : {</a>
-<a name="402"><span class="lineNum">     402 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
-<a name="403"><span class="lineNum">     403 </span><span class="lineNoCov">          0 :     auto&amp; engine = edit.engine;</span></a>
-<a name="404"><span class="lineNum">     404 </span><span class="lineNoCov">          0 :     const Edit::ScopedRenderStatus srs (edit, true);</span></a>
-<a name="405"><span class="lineNum">     405 </span><span class="lineNoCov">          0 :     Track::Array tracks;</span></a>
-<a name="406"><span class="lineNum">     406 </span>            : </a>
-<a name="407"><span class="lineNum">     407 </span><span class="lineNoCov">          0 :     for (auto bit = tracksToDo.findNextSetBit (0); bit != -1; bit = tracksToDo.findNextSetBit (bit + 1))</span></a>
-<a name="408"><span class="lineNum">     408 </span><span class="lineNoCov">          0 :         tracks.add (getAllTracks (edit)[bit]);</span></a>
-<a name="409"><span class="lineNum">     409 </span>            : </a>
-<a name="410"><span class="lineNum">     410 </span><span class="lineNoCov">          0 :     const FreezePointPlugin::ScopedTrackSoloIsolator isolator (edit, tracks);</span></a>
-<a name="411"><span class="lineNum">     411 </span>            : </a>
-<a name="412"><span class="lineNum">     412 </span><span class="lineNoCov">          0 :     TransportControl::stopAllTransports (engine, false, true);</span></a>
-<a name="413"><span class="lineNum">     413 </span><span class="lineNoCov">          0 :     turnOffAllPlugins (edit);</span></a>
-<a name="414"><span class="lineNum">     414 </span>            : </a>
-<a name="415"><span class="lineNum">     415 </span><span class="lineNoCov">          0 :     if (tracksToDo.countNumberOfSetBits() &gt; 0)</span></a>
-<a name="416"><span class="lineNum">     416 </span>            :     {</a>
-<a name="417"><span class="lineNum">     417 </span><span class="lineNoCov">          0 :         Parameters r (edit);</span></a>
-<a name="418"><span class="lineNum">     418 </span><span class="lineNoCov">          0 :         r.destFile = outputFile;</span></a>
-<a name="419"><span class="lineNum">     419 </span><span class="lineNoCov">          0 :         r.audioFormat = edit.engine.getAudioFileFormatManager().getDefaultFormat();</span></a>
-<a name="420"><span class="lineNum">     420 </span><span class="lineNoCov">          0 :         r.bitDepth = 24;</span></a>
-<a name="421"><span class="lineNum">     421 </span><span class="lineNoCov">          0 :         r.sampleRateForAudio = edit.engine.getDeviceManager().getSampleRate();</span></a>
-<a name="422"><span class="lineNum">     422 </span><span class="lineNoCov">          0 :         r.blockSizeForAudio  = edit.engine.getDeviceManager().getBlockSize();</span></a>
-<a name="423"><span class="lineNum">     423 </span><span class="lineNoCov">          0 :         r.time = range;</span></a>
-<a name="424"><span class="lineNum">     424 </span><span class="lineNoCov">          0 :         r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (engine);</span></a>
-<a name="425"><span class="lineNum">     425 </span><span class="lineNoCov">          0 :         r.usePlugins = usePlugins;</span></a>
-<a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 :         r.useMasterPlugins = usePlugins;</span></a>
-<a name="427"><span class="lineNum">     427 </span><span class="lineNoCov">          0 :         r.allowedClips = clips;</span></a>
-<a name="428"><span class="lineNum">     428 </span><span class="lineNoCov">          0 :         r.createMidiFile = outputFile.hasFileExtension (&quot;.mid&quot;);</span></a>
-<a name="429"><span class="lineNum">     429 </span>            : </a>
-<a name="430"><span class="lineNum">     430 </span><span class="lineNoCov">          0 :         addAcidInfo (edit, r);</span></a>
-<a name="431"><span class="lineNum">     431 </span>            :         </a>
-<a name="432"><span class="lineNum">     432 </span><span class="lineNoCov">          0 :         if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))</span></a>
-<a name="433"><span class="lineNum">     433 </span>            :         {</a>
-<a name="434"><span class="lineNum">     434 </span><span class="lineNoCov">          0 :             if (useThread)</span></a>
-<a name="435"><span class="lineNum">     435 </span>            :             {</a>
-<a name="436"><span class="lineNum">     436 </span><span class="lineNoCov">          0 :                 engine.getUIBehaviour().runTaskWithProgressBar (*task);</span></a>
-<a name="437"><span class="lineNum">     437 </span>            :             }</a>
-<a name="438"><span class="lineNum">     438 </span>            :             else</a>
-<a name="439"><span class="lineNum">     439 </span>            :             {</a>
-<a name="440"><span class="lineNum">     440 </span><span class="lineNoCov">          0 :                 while (task-&gt;runJob() == ThreadPoolJob::jobNeedsRunningAgain)</span></a>
-<a name="441"><span class="lineNum">     441 </span>            :                 {}</a>
-<a name="442"><span class="lineNum">     442 </span>            :             }</a>
-<a name="443"><span class="lineNum">     443 </span>            :         }</a>
-<a name="444"><span class="lineNum">     444 </span>            :     }</a>
-<a name="445"><span class="lineNum">     445 </span>            : </a>
-<a name="446"><span class="lineNum">     446 </span><span class="lineNoCov">          0 :     turnOffAllPlugins (edit);</span></a>
-<a name="447"><span class="lineNum">     447 </span>            : </a>
-<a name="448"><span class="lineNum">     448 </span><span class="lineNoCov">          0 :     return outputFile.existsAsFile();</span></a>
-<a name="449"><span class="lineNum">     449 </span>            : }</a>
-<a name="450"><span class="lineNum">     450 </span>            : </a>
-<a name="451"><span class="lineNum">     451 </span><span class="lineNoCov">          0 : juce::File Renderer::renderToFile (const String&amp; taskDescription, const Parameters&amp; r)</span></a>
-<a name="452"><span class="lineNum">     452 </span>            : {</a>
-<a name="453"><span class="lineNum">     453 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
+<a name="392"><span class="lineNum">     392 </span>            :         return true;</a>
+<a name="393"><span class="lineNum">     393 </span>            :     }</a>
+<a name="394"><span class="lineNum">     394 </span>            : </a>
+<a name="395"><span class="lineNum">     395 </span>            :     return false;</a>
+<a name="396"><span class="lineNum">     396 </span>            : }</a>
+<a name="397"><span class="lineNum">     397 </span>            : </a>
+<a name="398"><span class="lineNum">     398 </span>            : </a>
+<a name="399"><span class="lineNum">     399 </span>            : //==============================================================================</a>
+<a name="400"><span class="lineNum">     400 </span><span class="lineNoCov">          0 : bool Renderer::renderToFile (const String&amp; taskDescription,</span></a>
+<a name="401"><span class="lineNum">     401 </span>            :                              const juce::File&amp; outputFile,</a>
+<a name="402"><span class="lineNum">     402 </span>            :                              Edit&amp; edit,</a>
+<a name="403"><span class="lineNum">     403 </span>            :                              EditTimeRange range,</a>
+<a name="404"><span class="lineNum">     404 </span>            :                              const BigInteger&amp; tracksToDo,</a>
+<a name="405"><span class="lineNum">     405 </span>            :                              bool usePlugins,</a>
+<a name="406"><span class="lineNum">     406 </span>            :                              Array&lt;Clip*&gt; clips,</a>
+<a name="407"><span class="lineNum">     407 </span>            :                              bool useThread)</a>
+<a name="408"><span class="lineNum">     408 </span>            : {</a>
+<a name="409"><span class="lineNum">     409 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
+<a name="410"><span class="lineNum">     410 </span><span class="lineNoCov">          0 :     auto&amp; engine = edit.engine;</span></a>
+<a name="411"><span class="lineNum">     411 </span><span class="lineNoCov">          0 :     const Edit::ScopedRenderStatus srs (edit, true);</span></a>
+<a name="412"><span class="lineNum">     412 </span><span class="lineNoCov">          0 :     Track::Array tracks;</span></a>
+<a name="413"><span class="lineNum">     413 </span>            : </a>
+<a name="414"><span class="lineNum">     414 </span><span class="lineNoCov">          0 :     for (auto bit = tracksToDo.findNextSetBit (0); bit != -1; bit = tracksToDo.findNextSetBit (bit + 1))</span></a>
+<a name="415"><span class="lineNum">     415 </span><span class="lineNoCov">          0 :         tracks.add (getAllTracks (edit)[bit]);</span></a>
+<a name="416"><span class="lineNum">     416 </span>            : </a>
+<a name="417"><span class="lineNum">     417 </span><span class="lineNoCov">          0 :     const FreezePointPlugin::ScopedTrackSoloIsolator isolator (edit, tracks);</span></a>
+<a name="418"><span class="lineNum">     418 </span>            : </a>
+<a name="419"><span class="lineNum">     419 </span><span class="lineNoCov">          0 :     TransportControl::stopAllTransports (engine, false, true);</span></a>
+<a name="420"><span class="lineNum">     420 </span><span class="lineNoCov">          0 :     turnOffAllPlugins (edit);</span></a>
+<a name="421"><span class="lineNum">     421 </span>            : </a>
+<a name="422"><span class="lineNum">     422 </span><span class="lineNoCov">          0 :     if (tracksToDo.countNumberOfSetBits() &gt; 0)</span></a>
+<a name="423"><span class="lineNum">     423 </span>            :     {</a>
+<a name="424"><span class="lineNum">     424 </span><span class="lineNoCov">          0 :         Parameters r (edit);</span></a>
+<a name="425"><span class="lineNum">     425 </span><span class="lineNoCov">          0 :         r.destFile = outputFile;</span></a>
+<a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 :         r.audioFormat = edit.engine.getAudioFileFormatManager().getDefaultFormat();</span></a>
+<a name="427"><span class="lineNum">     427 </span><span class="lineNoCov">          0 :         r.bitDepth = 24;</span></a>
+<a name="428"><span class="lineNum">     428 </span><span class="lineNoCov">          0 :         r.sampleRateForAudio = edit.engine.getDeviceManager().getSampleRate();</span></a>
+<a name="429"><span class="lineNum">     429 </span><span class="lineNoCov">          0 :         r.blockSizeForAudio  = edit.engine.getDeviceManager().getBlockSize();</span></a>
+<a name="430"><span class="lineNum">     430 </span><span class="lineNoCov">          0 :         r.time = range;</span></a>
+<a name="431"><span class="lineNum">     431 </span><span class="lineNoCov">          0 :         r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (engine);</span></a>
+<a name="432"><span class="lineNum">     432 </span><span class="lineNoCov">          0 :         r.usePlugins = usePlugins;</span></a>
+<a name="433"><span class="lineNum">     433 </span><span class="lineNoCov">          0 :         r.useMasterPlugins = usePlugins;</span></a>
+<a name="434"><span class="lineNum">     434 </span><span class="lineNoCov">          0 :         r.allowedClips = clips;</span></a>
+<a name="435"><span class="lineNum">     435 </span><span class="lineNoCov">          0 :         r.createMidiFile = outputFile.hasFileExtension (&quot;.mid&quot;);</span></a>
+<a name="436"><span class="lineNum">     436 </span>            : </a>
+<a name="437"><span class="lineNum">     437 </span><span class="lineNoCov">          0 :         addAcidInfo (edit, r);</span></a>
+<a name="438"><span class="lineNum">     438 </span>            :         </a>
+<a name="439"><span class="lineNum">     439 </span><span class="lineNoCov">          0 :         if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))</span></a>
+<a name="440"><span class="lineNum">     440 </span>            :         {</a>
+<a name="441"><span class="lineNum">     441 </span><span class="lineNoCov">          0 :             if (useThread)</span></a>
+<a name="442"><span class="lineNum">     442 </span>            :             {</a>
+<a name="443"><span class="lineNum">     443 </span><span class="lineNoCov">          0 :                 engine.getUIBehaviour().runTaskWithProgressBar (*task);</span></a>
+<a name="444"><span class="lineNum">     444 </span>            :             }</a>
+<a name="445"><span class="lineNum">     445 </span>            :             else</a>
+<a name="446"><span class="lineNum">     446 </span>            :             {</a>
+<a name="447"><span class="lineNum">     447 </span><span class="lineNoCov">          0 :                 while (task-&gt;runJob() == ThreadPoolJob::jobNeedsRunningAgain)</span></a>
+<a name="448"><span class="lineNum">     448 </span>            :                 {}</a>
+<a name="449"><span class="lineNum">     449 </span>            :             }</a>
+<a name="450"><span class="lineNum">     450 </span>            :         }</a>
+<a name="451"><span class="lineNum">     451 </span>            :     }</a>
+<a name="452"><span class="lineNum">     452 </span>            : </a>
+<a name="453"><span class="lineNum">     453 </span><span class="lineNoCov">          0 :     turnOffAllPlugins (edit);</span></a>
 <a name="454"><span class="lineNum">     454 </span>            : </a>
-<a name="455"><span class="lineNum">     455 </span>            :     jassert (r.sampleRateForAudio &gt; 7000);</a>
-<a name="456"><span class="lineNum">     456 </span>            :     jassert (r.edit != nullptr);</a>
-<a name="457"><span class="lineNum">     457 </span>            :     jassert (r.engine != nullptr);</a>
-<a name="458"><span class="lineNum">     458 </span>            : </a>
-<a name="459"><span class="lineNum">     459 </span><span class="lineNoCov">          0 :     TransportControl::stopAllTransports (*r.engine, false, true);</span></a>
-<a name="460"><span class="lineNum">     460 </span>            : </a>
-<a name="461"><span class="lineNum">     461 </span><span class="lineNoCov">          0 :     turnOffAllPlugins (*r.edit);</span></a>
-<a name="462"><span class="lineNum">     462 </span>            : </a>
-<a name="463"><span class="lineNum">     463 </span><span class="lineNoCov">          0 :     if (r.tracksToDo.countNumberOfSetBits() &gt; 0</span></a>
-<a name="464"><span class="lineNum">     464 </span><span class="lineNoCov">          0 :          &amp;&amp; r.destFile.hasWriteAccess()</span></a>
-<a name="465"><span class="lineNum">     465 </span><span class="lineNoCov">          0 :          &amp;&amp; ! r.destFile.isDirectory())</span></a>
-<a name="466"><span class="lineNum">     466 </span>            :     {</a>
-<a name="467"><span class="lineNum">     467 </span><span class="lineNoCov">          0 :         auto&amp; ui = r.edit-&gt;engine.getUIBehaviour();</span></a>
-<a name="468"><span class="lineNum">     468 </span>            :         </a>
-<a name="469"><span class="lineNum">     469 </span><span class="lineNoCov">          0 :         if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))</span></a>
-<a name="470"><span class="lineNum">     470 </span>            :         {</a>
-<a name="471"><span class="lineNum">     471 </span><span class="lineNoCov">          0 :             ui.runTaskWithProgressBar (*task);</span></a>
-<a name="472"><span class="lineNum">     472 </span><span class="lineNoCov">          0 :             turnOffAllPlugins (*r.edit);</span></a>
-<a name="473"><span class="lineNum">     473 </span>            : </a>
-<a name="474"><span class="lineNum">     474 </span><span class="lineNoCov">          0 :             if (r.destFile.existsAsFile())</span></a>
-<a name="475"><span class="lineNum">     475 </span>            :             {</a>
-<a name="476"><span class="lineNum">     476 </span><span class="lineNoCov">          0 :                 if (task-&gt;errorMessage.isNotEmpty())</span></a>
-<a name="477"><span class="lineNum">     477 </span>            :                 {</a>
-<a name="478"><span class="lineNum">     478 </span><span class="lineNoCov">          0 :                     r.destFile.deleteFile();</span></a>
-<a name="479"><span class="lineNum">     479 </span><span class="lineNoCov">          0 :                     ui.showWarningMessage (task-&gt;errorMessage);</span></a>
-<a name="480"><span class="lineNum">     480 </span><span class="lineNoCov">          0 :                     return {};</span></a>
-<a name="481"><span class="lineNum">     481 </span>            :                 }</a>
-<a name="482"><span class="lineNum">     482 </span>            : </a>
-<a name="483"><span class="lineNum">     483 </span><span class="lineNoCov">          0 :                 return r.destFile;</span></a>
-<a name="484"><span class="lineNum">     484 </span>            :             }</a>
-<a name="485"><span class="lineNum">     485 </span>            : </a>
-<a name="486"><span class="lineNum">     486 </span><span class="lineNoCov">          0 :             if (task-&gt;getCurrentTaskProgress() &gt;= 0.9f &amp;&amp; task-&gt;errorMessage.isNotEmpty())</span></a>
-<a name="487"><span class="lineNum">     487 </span><span class="lineNoCov">          0 :                 ui.showWarningMessage (task-&gt;errorMessage);</span></a>
-<a name="488"><span class="lineNum">     488 </span>            :         }</a>
-<a name="489"><span class="lineNum">     489 </span>            :         else</a>
-<a name="490"><span class="lineNum">     490 </span>            :         {</a>
-<a name="491"><span class="lineNum">     491 </span><span class="lineNoCov">          0 :             ui.showWarningMessage (TRANS(&quot;Couldn't render, as the selected region was empty&quot;));</span></a>
-<a name="492"><span class="lineNum">     492 </span>            :         }</a>
-<a name="493"><span class="lineNum">     493 </span>            :     }</a>
-<a name="494"><span class="lineNum">     494 </span>            : </a>
-<a name="495"><span class="lineNum">     495 </span><span class="lineNoCov">          0 :     return {};</span></a>
-<a name="496"><span class="lineNum">     496 </span>            : }</a>
-<a name="497"><span class="lineNum">     497 </span>            : </a>
-<a name="498"><span class="lineNum">     498 </span><span class="lineNoCov">          0 : ProjectItem::Ptr Renderer::renderToProjectItem (const String&amp; taskDescription, const Parameters&amp; r)</span></a>
-<a name="499"><span class="lineNum">     499 </span>            : {</a>
-<a name="500"><span class="lineNum">     500 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
+<a name="455"><span class="lineNum">     455 </span><span class="lineNoCov">          0 :     return outputFile.existsAsFile();</span></a>
+<a name="456"><span class="lineNum">     456 </span>            : }</a>
+<a name="457"><span class="lineNum">     457 </span>            : </a>
+<a name="458"><span class="lineNum">     458 </span><span class="lineNoCov">          0 : juce::File Renderer::renderToFile (const String&amp; taskDescription, const Parameters&amp; r)</span></a>
+<a name="459"><span class="lineNum">     459 </span>            : {</a>
+<a name="460"><span class="lineNum">     460 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
+<a name="461"><span class="lineNum">     461 </span>            : </a>
+<a name="462"><span class="lineNum">     462 </span>            :     jassert (r.sampleRateForAudio &gt; 7000);</a>
+<a name="463"><span class="lineNum">     463 </span>            :     jassert (r.edit != nullptr);</a>
+<a name="464"><span class="lineNum">     464 </span>            :     jassert (r.engine != nullptr);</a>
+<a name="465"><span class="lineNum">     465 </span>            : </a>
+<a name="466"><span class="lineNum">     466 </span><span class="lineNoCov">          0 :     TransportControl::stopAllTransports (*r.engine, false, true);</span></a>
+<a name="467"><span class="lineNum">     467 </span>            : </a>
+<a name="468"><span class="lineNum">     468 </span><span class="lineNoCov">          0 :     turnOffAllPlugins (*r.edit);</span></a>
+<a name="469"><span class="lineNum">     469 </span>            : </a>
+<a name="470"><span class="lineNum">     470 </span><span class="lineNoCov">          0 :     if (r.tracksToDo.countNumberOfSetBits() &gt; 0</span></a>
+<a name="471"><span class="lineNum">     471 </span><span class="lineNoCov">          0 :          &amp;&amp; r.destFile.hasWriteAccess()</span></a>
+<a name="472"><span class="lineNum">     472 </span><span class="lineNoCov">          0 :          &amp;&amp; ! r.destFile.isDirectory())</span></a>
+<a name="473"><span class="lineNum">     473 </span>            :     {</a>
+<a name="474"><span class="lineNum">     474 </span><span class="lineNoCov">          0 :         auto&amp; ui = r.edit-&gt;engine.getUIBehaviour();</span></a>
+<a name="475"><span class="lineNum">     475 </span>            :         </a>
+<a name="476"><span class="lineNum">     476 </span><span class="lineNoCov">          0 :         if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))</span></a>
+<a name="477"><span class="lineNum">     477 </span>            :         {</a>
+<a name="478"><span class="lineNum">     478 </span><span class="lineNoCov">          0 :             ui.runTaskWithProgressBar (*task);</span></a>
+<a name="479"><span class="lineNum">     479 </span><span class="lineNoCov">          0 :             turnOffAllPlugins (*r.edit);</span></a>
+<a name="480"><span class="lineNum">     480 </span>            : </a>
+<a name="481"><span class="lineNum">     481 </span><span class="lineNoCov">          0 :             if (r.destFile.existsAsFile())</span></a>
+<a name="482"><span class="lineNum">     482 </span>            :             {</a>
+<a name="483"><span class="lineNum">     483 </span><span class="lineNoCov">          0 :                 if (task-&gt;errorMessage.isNotEmpty())</span></a>
+<a name="484"><span class="lineNum">     484 </span>            :                 {</a>
+<a name="485"><span class="lineNum">     485 </span><span class="lineNoCov">          0 :                     r.destFile.deleteFile();</span></a>
+<a name="486"><span class="lineNum">     486 </span><span class="lineNoCov">          0 :                     ui.showWarningMessage (task-&gt;errorMessage);</span></a>
+<a name="487"><span class="lineNum">     487 </span><span class="lineNoCov">          0 :                     return {};</span></a>
+<a name="488"><span class="lineNum">     488 </span>            :                 }</a>
+<a name="489"><span class="lineNum">     489 </span>            : </a>
+<a name="490"><span class="lineNum">     490 </span><span class="lineNoCov">          0 :                 return r.destFile;</span></a>
+<a name="491"><span class="lineNum">     491 </span>            :             }</a>
+<a name="492"><span class="lineNum">     492 </span>            : </a>
+<a name="493"><span class="lineNum">     493 </span><span class="lineNoCov">          0 :             if (task-&gt;getCurrentTaskProgress() &gt;= 0.9f &amp;&amp; task-&gt;errorMessage.isNotEmpty())</span></a>
+<a name="494"><span class="lineNum">     494 </span><span class="lineNoCov">          0 :                 ui.showWarningMessage (task-&gt;errorMessage);</span></a>
+<a name="495"><span class="lineNum">     495 </span>            :         }</a>
+<a name="496"><span class="lineNum">     496 </span>            :         else</a>
+<a name="497"><span class="lineNum">     497 </span>            :         {</a>
+<a name="498"><span class="lineNum">     498 </span><span class="lineNoCov">          0 :             ui.showWarningMessage (TRANS(&quot;Couldn't render, as the selected region was empty&quot;));</span></a>
+<a name="499"><span class="lineNum">     499 </span>            :         }</a>
+<a name="500"><span class="lineNum">     500 </span>            :     }</a>
 <a name="501"><span class="lineNum">     501 </span>            : </a>
-<a name="502"><span class="lineNum">     502 </span><span class="lineNoCov">          0 :     auto proj = r.engine-&gt;getProjectManager().getProject (*r.edit);</span></a>
-<a name="503"><span class="lineNum">     503 </span>            : </a>
-<a name="504"><span class="lineNum">     504 </span><span class="lineNoCov">          0 :     if (proj == nullptr)</span></a>
-<a name="505"><span class="lineNum">     505 </span>            :     {</a>
-<a name="506"><span class="lineNum">     506 </span>            :         jassertfalse;  // can't use this option if the edit isn't a member of a project</a>
-<a name="507"><span class="lineNum">     507 </span><span class="lineNoCov">          0 :         return {};</span></a>
-<a name="508"><span class="lineNum">     508 </span>            :     }</a>
-<a name="509"><span class="lineNum">     509 </span>            : </a>
-<a name="510"><span class="lineNum">     510 </span><span class="lineNoCov">          0 :     auto&amp; ui = r.edit-&gt;engine.getUIBehaviour();</span></a>
-<a name="511"><span class="lineNum">     511 </span>            : </a>
-<a name="512"><span class="lineNum">     512 </span><span class="lineNoCov">          0 :     if (proj-&gt;isReadOnly())</span></a>
-<a name="513"><span class="lineNum">     513 </span>            :     {</a>
-<a name="514"><span class="lineNum">     514 </span><span class="lineNoCov">          0 :         ui.showWarningMessage (TRANS(&quot;Couldn't add the new file to the project (because this project is read-only)&quot;));</span></a>
-<a name="515"><span class="lineNum">     515 </span><span class="lineNoCov">          0 :         return {};</span></a>
-<a name="516"><span class="lineNum">     516 </span>            :     }</a>
-<a name="517"><span class="lineNum">     517 </span>            : </a>
-<a name="518"><span class="lineNum">     518 </span><span class="lineNoCov">          0 :     if (r.category == ProjectItem::Category::none)</span></a>
-<a name="519"><span class="lineNum">     519 </span>            :     {</a>
-<a name="520"><span class="lineNum">     520 </span>            :         // This test comes from some very old code which leaks the file and doesn't add the project item</a>
-<a name="521"><span class="lineNum">     521 </span>            :         // if the category is 'none'... I've left the check in here but think it may be redundant - if you</a>
-<a name="522"><span class="lineNum">     522 </span>            :         // hit this assertion, please figure out why it's happening and refactor; otherwise, if you see this</a>
-<a name="523"><span class="lineNum">     523 </span>            :         // comment in a couple of years and the assertion never failed, please remove this whole check.</a>
-<a name="524"><span class="lineNum">     524 </span>            :         jassertfalse;</a>
-<a name="525"><span class="lineNum">     525 </span><span class="lineNoCov">          0 :         return {};</span></a>
-<a name="526"><span class="lineNum">     526 </span>            :     }</a>
-<a name="527"><span class="lineNum">     527 </span>            : </a>
-<a name="528"><span class="lineNum">     528 </span><span class="lineNoCov">          0 :     auto renderedFile = renderToFile (taskDescription, r);</span></a>
-<a name="529"><span class="lineNum">     529 </span>            : </a>
-<a name="530"><span class="lineNum">     530 </span><span class="lineNoCov">          0 :     if (renderedFile.existsAsFile())</span></a>
-<a name="531"><span class="lineNum">     531 </span>            :     {</a>
-<a name="532"><span class="lineNum">     532 </span><span class="lineNoCov">          0 :         String desc;</span></a>
-<a name="533"><span class="lineNum">     533 </span><span class="lineNoCov">          0 :         desc &lt;&lt; TRANS(&quot;Rendered from edit&quot;) &lt;&lt; r.edit-&gt;getName().quoted() &lt;&lt; &quot; &quot;</span></a>
-<a name="534"><span class="lineNum">     534 </span><span class="lineNoCov">          0 :              &lt;&lt; TRANS(&quot;On&quot;) &lt;&lt; &quot; &quot; &lt;&lt; Time::getCurrentTime().toString (true, true);</span></a>
-<a name="535"><span class="lineNum">     535 </span>            : </a>
-<a name="536"><span class="lineNum">     536 </span>            :         return proj-&gt;createNewItem (renderedFile,</a>
-<a name="537"><span class="lineNum">     537 </span><span class="lineNoCov">          0 :                                     r.createMidiFile ? ProjectItem::midiItemType()</span></a>
-<a name="538"><span class="lineNum">     538 </span>            :                                                      : ProjectItem::waveItemType(),</a>
-<a name="539"><span class="lineNum">     539 </span><span class="lineNoCov">          0 :                                     renderedFile.getFileNameWithoutExtension().trim(),</span></a>
-<a name="540"><span class="lineNum">     540 </span>            :                                     desc,</a>
-<a name="541"><span class="lineNum">     541 </span><span class="lineNoCov">          0 :                                     r.category,</span></a>
-<a name="542"><span class="lineNum">     542 </span><span class="lineNoCov">          0 :                                     true);</span></a>
-<a name="543"><span class="lineNum">     543 </span>            :     }</a>
-<a name="544"><span class="lineNum">     544 </span>            : </a>
-<a name="545"><span class="lineNum">     545 </span><span class="lineNoCov">          0 :     return {};</span></a>
-<a name="546"><span class="lineNum">     546 </span>            : }</a>
-<a name="547"><span class="lineNum">     547 </span>            : </a>
-<a name="548"><span class="lineNum">     548 </span>            : //==============================================================================</a>
-<a name="549"><span class="lineNum">     549 </span><span class="lineCov">         70 : Renderer::Statistics Renderer::measureStatistics (const String&amp; taskDescription, Edit&amp; edit,</span></a>
-<a name="550"><span class="lineNum">     550 </span>            :                                                   EditTimeRange range, const BigInteger&amp; tracksToDo,</a>
-<a name="551"><span class="lineNum">     551 </span>            :                                                   int blockSizeForAudio)</a>
-<a name="552"><span class="lineNum">     552 </span>            : {</a>
-<a name="553"><span class="lineNum">     553 </span><span class="lineCov">        140 :     CRASH_TRACER</span></a>
-<a name="554"><span class="lineNum">     554 </span>            :     Statistics result;</a>
-<a name="555"><span class="lineNum">     555 </span>            : </a>
-<a name="556"><span class="lineNum">     556 </span><span class="lineCov">         70 :     const Edit::ScopedRenderStatus srs (edit, true);</span></a>
-<a name="557"><span class="lineNum">     557 </span><span class="lineCov">         70 :     TransportControl::stopAllTransports (edit.engine, false, true);</span></a>
-<a name="558"><span class="lineNum">     558 </span>            : </a>
-<a name="559"><span class="lineNum">     559 </span><span class="lineCov">         70 :     turnOffAllPlugins (edit);</span></a>
-<a name="560"><span class="lineNum">     560 </span>            : </a>
-<a name="561"><span class="lineNum">     561 </span><span class="lineCov">         70 :     if (tracksToDo.countNumberOfSetBits() &gt; 0)</span></a>
-<a name="562"><span class="lineNum">     562 </span>            :     {</a>
-<a name="563"><span class="lineNum">     563 </span><span class="lineCov">        140 :         Parameters r (edit);</span></a>
-<a name="564"><span class="lineNum">     564 </span><span class="lineCov">         70 :         r.audioFormat = edit.engine.getAudioFileFormatManager().getDefaultFormat();</span></a>
-<a name="565"><span class="lineNum">     565 </span><span class="lineCov">         70 :         r.blockSizeForAudio = blockSizeForAudio;</span></a>
-<a name="566"><span class="lineNum">     566 </span><span class="lineCov">         70 :         r.time = range;</span></a>
-<a name="567"><span class="lineNum">     567 </span><span class="lineCov">         70 :         r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (edit.engine);</span></a>
-<a name="568"><span class="lineNum">     568 </span><span class="lineCov">         70 :         r.tracksToDo = tracksToDo;</span></a>
-<a name="569"><span class="lineNum">     569 </span>            :         </a>
-<a name="570"><span class="lineNum">     570 </span><span class="lineCov">        140 :         if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))</span></a>
-<a name="571"><span class="lineNum">     571 </span>            :         {</a>
-<a name="572"><span class="lineNum">     572 </span><span class="lineCov">         70 :             edit.engine.getUIBehaviour().runTaskWithProgressBar (*task);</span></a>
-<a name="573"><span class="lineNum">     573 </span>            : </a>
-<a name="574"><span class="lineNum">     574 </span><span class="lineCov">         70 :             result.peak          = task-&gt;params.resultMagnitude;</span></a>
-<a name="575"><span class="lineNum">     575 </span><span class="lineCov">         70 :             result.average       = task-&gt;params.resultRMS;</span></a>
-<a name="576"><span class="lineNum">     576 </span><span class="lineCov">         70 :             result.audioDuration = task-&gt;params.resultAudioDuration;</span></a>
-<a name="577"><span class="lineNum">     577 </span>            :         }</a>
-<a name="578"><span class="lineNum">     578 </span>            :     }</a>
-<a name="579"><span class="lineNum">     579 </span>            : </a>
-<a name="580"><span class="lineNum">     580 </span><span class="lineCov">         70 :     turnOffAllPlugins (edit);</span></a>
-<a name="581"><span class="lineNum">     581 </span>            : </a>
-<a name="582"><span class="lineNum">     582 </span><span class="lineCov">        140 :     return result;</span></a>
-<a name="583"><span class="lineNum">     583 </span>            : }</a>
-<a name="584"><span class="lineNum">     584 </span>            : </a>
-<a name="585"><span class="lineNum">     585 </span><span class="lineNoCov">          0 : bool Renderer::checkTargetFile (Engine&amp; e, const File&amp; file)</span></a>
-<a name="586"><span class="lineNum">     586 </span>            : {</a>
-<a name="587"><span class="lineNum">     587 </span><span class="lineNoCov">          0 :     auto&amp; ui = e.getUIBehaviour();</span></a>
+<a name="502"><span class="lineNum">     502 </span><span class="lineNoCov">          0 :     return {};</span></a>
+<a name="503"><span class="lineNum">     503 </span>            : }</a>
+<a name="504"><span class="lineNum">     504 </span>            : </a>
+<a name="505"><span class="lineNum">     505 </span><span class="lineNoCov">          0 : ProjectItem::Ptr Renderer::renderToProjectItem (const String&amp; taskDescription, const Parameters&amp; r)</span></a>
+<a name="506"><span class="lineNum">     506 </span>            : {</a>
+<a name="507"><span class="lineNum">     507 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
+<a name="508"><span class="lineNum">     508 </span>            : </a>
+<a name="509"><span class="lineNum">     509 </span><span class="lineNoCov">          0 :     auto proj = r.engine-&gt;getProjectManager().getProject (*r.edit);</span></a>
+<a name="510"><span class="lineNum">     510 </span>            : </a>
+<a name="511"><span class="lineNum">     511 </span><span class="lineNoCov">          0 :     if (proj == nullptr)</span></a>
+<a name="512"><span class="lineNum">     512 </span>            :     {</a>
+<a name="513"><span class="lineNum">     513 </span>            :         jassertfalse;  // can't use this option if the edit isn't a member of a project</a>
+<a name="514"><span class="lineNum">     514 </span><span class="lineNoCov">          0 :         return {};</span></a>
+<a name="515"><span class="lineNum">     515 </span>            :     }</a>
+<a name="516"><span class="lineNum">     516 </span>            : </a>
+<a name="517"><span class="lineNum">     517 </span><span class="lineNoCov">          0 :     auto&amp; ui = r.edit-&gt;engine.getUIBehaviour();</span></a>
+<a name="518"><span class="lineNum">     518 </span>            : </a>
+<a name="519"><span class="lineNum">     519 </span><span class="lineNoCov">          0 :     if (proj-&gt;isReadOnly())</span></a>
+<a name="520"><span class="lineNum">     520 </span>            :     {</a>
+<a name="521"><span class="lineNum">     521 </span><span class="lineNoCov">          0 :         ui.showWarningMessage (TRANS(&quot;Couldn't add the new file to the project (because this project is read-only)&quot;));</span></a>
+<a name="522"><span class="lineNum">     522 </span><span class="lineNoCov">          0 :         return {};</span></a>
+<a name="523"><span class="lineNum">     523 </span>            :     }</a>
+<a name="524"><span class="lineNum">     524 </span>            : </a>
+<a name="525"><span class="lineNum">     525 </span><span class="lineNoCov">          0 :     if (r.category == ProjectItem::Category::none)</span></a>
+<a name="526"><span class="lineNum">     526 </span>            :     {</a>
+<a name="527"><span class="lineNum">     527 </span>            :         // This test comes from some very old code which leaks the file and doesn't add the project item</a>
+<a name="528"><span class="lineNum">     528 </span>            :         // if the category is 'none'... I've left the check in here but think it may be redundant - if you</a>
+<a name="529"><span class="lineNum">     529 </span>            :         // hit this assertion, please figure out why it's happening and refactor; otherwise, if you see this</a>
+<a name="530"><span class="lineNum">     530 </span>            :         // comment in a couple of years and the assertion never failed, please remove this whole check.</a>
+<a name="531"><span class="lineNum">     531 </span>            :         jassertfalse;</a>
+<a name="532"><span class="lineNum">     532 </span><span class="lineNoCov">          0 :         return {};</span></a>
+<a name="533"><span class="lineNum">     533 </span>            :     }</a>
+<a name="534"><span class="lineNum">     534 </span>            : </a>
+<a name="535"><span class="lineNum">     535 </span><span class="lineNoCov">          0 :     auto renderedFile = renderToFile (taskDescription, r);</span></a>
+<a name="536"><span class="lineNum">     536 </span>            : </a>
+<a name="537"><span class="lineNum">     537 </span><span class="lineNoCov">          0 :     if (renderedFile.existsAsFile())</span></a>
+<a name="538"><span class="lineNum">     538 </span>            :     {</a>
+<a name="539"><span class="lineNum">     539 </span><span class="lineNoCov">          0 :         String desc;</span></a>
+<a name="540"><span class="lineNum">     540 </span><span class="lineNoCov">          0 :         desc &lt;&lt; TRANS(&quot;Rendered from edit&quot;) &lt;&lt; r.edit-&gt;getName().quoted() &lt;&lt; &quot; &quot;</span></a>
+<a name="541"><span class="lineNum">     541 </span><span class="lineNoCov">          0 :              &lt;&lt; TRANS(&quot;On&quot;) &lt;&lt; &quot; &quot; &lt;&lt; Time::getCurrentTime().toString (true, true);</span></a>
+<a name="542"><span class="lineNum">     542 </span>            : </a>
+<a name="543"><span class="lineNum">     543 </span>            :         return proj-&gt;createNewItem (renderedFile,</a>
+<a name="544"><span class="lineNum">     544 </span><span class="lineNoCov">          0 :                                     r.createMidiFile ? ProjectItem::midiItemType()</span></a>
+<a name="545"><span class="lineNum">     545 </span>            :                                                      : ProjectItem::waveItemType(),</a>
+<a name="546"><span class="lineNum">     546 </span><span class="lineNoCov">          0 :                                     renderedFile.getFileNameWithoutExtension().trim(),</span></a>
+<a name="547"><span class="lineNum">     547 </span>            :                                     desc,</a>
+<a name="548"><span class="lineNum">     548 </span><span class="lineNoCov">          0 :                                     r.category,</span></a>
+<a name="549"><span class="lineNum">     549 </span><span class="lineNoCov">          0 :                                     true);</span></a>
+<a name="550"><span class="lineNum">     550 </span>            :     }</a>
+<a name="551"><span class="lineNum">     551 </span>            : </a>
+<a name="552"><span class="lineNum">     552 </span><span class="lineNoCov">          0 :     return {};</span></a>
+<a name="553"><span class="lineNum">     553 </span>            : }</a>
+<a name="554"><span class="lineNum">     554 </span>            : </a>
+<a name="555"><span class="lineNum">     555 </span>            : //==============================================================================</a>
+<a name="556"><span class="lineNum">     556 </span><span class="lineCov">         70 : Renderer::Statistics Renderer::measureStatistics (const String&amp; taskDescription, Edit&amp; edit,</span></a>
+<a name="557"><span class="lineNum">     557 </span>            :                                                   EditTimeRange range, const BigInteger&amp; tracksToDo,</a>
+<a name="558"><span class="lineNum">     558 </span>            :                                                   int blockSizeForAudio)</a>
+<a name="559"><span class="lineNum">     559 </span>            : {</a>
+<a name="560"><span class="lineNum">     560 </span><span class="lineCov">        140 :     CRASH_TRACER</span></a>
+<a name="561"><span class="lineNum">     561 </span>            :     Statistics result;</a>
+<a name="562"><span class="lineNum">     562 </span>            : </a>
+<a name="563"><span class="lineNum">     563 </span><span class="lineCov">         70 :     const Edit::ScopedRenderStatus srs (edit, true);</span></a>
+<a name="564"><span class="lineNum">     564 </span><span class="lineCov">         70 :     TransportControl::stopAllTransports (edit.engine, false, true);</span></a>
+<a name="565"><span class="lineNum">     565 </span>            : </a>
+<a name="566"><span class="lineNum">     566 </span><span class="lineCov">         70 :     turnOffAllPlugins (edit);</span></a>
+<a name="567"><span class="lineNum">     567 </span>            : </a>
+<a name="568"><span class="lineNum">     568 </span><span class="lineCov">         70 :     if (tracksToDo.countNumberOfSetBits() &gt; 0)</span></a>
+<a name="569"><span class="lineNum">     569 </span>            :     {</a>
+<a name="570"><span class="lineNum">     570 </span><span class="lineCov">        140 :         Parameters r (edit);</span></a>
+<a name="571"><span class="lineNum">     571 </span><span class="lineCov">         70 :         r.audioFormat = edit.engine.getAudioFileFormatManager().getDefaultFormat();</span></a>
+<a name="572"><span class="lineNum">     572 </span><span class="lineCov">         70 :         r.blockSizeForAudio = blockSizeForAudio;</span></a>
+<a name="573"><span class="lineNum">     573 </span><span class="lineCov">         70 :         r.time = range;</span></a>
+<a name="574"><span class="lineNum">     574 </span><span class="lineCov">         70 :         r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (edit.engine);</span></a>
+<a name="575"><span class="lineNum">     575 </span><span class="lineCov">         70 :         r.tracksToDo = tracksToDo;</span></a>
+<a name="576"><span class="lineNum">     576 </span>            :         </a>
+<a name="577"><span class="lineNum">     577 </span><span class="lineCov">        140 :         if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))</span></a>
+<a name="578"><span class="lineNum">     578 </span>            :         {</a>
+<a name="579"><span class="lineNum">     579 </span><span class="lineCov">         70 :             edit.engine.getUIBehaviour().runTaskWithProgressBar (*task);</span></a>
+<a name="580"><span class="lineNum">     580 </span>            : </a>
+<a name="581"><span class="lineNum">     581 </span><span class="lineCov">         70 :             result.peak          = task-&gt;params.resultMagnitude;</span></a>
+<a name="582"><span class="lineNum">     582 </span><span class="lineCov">         70 :             result.average       = task-&gt;params.resultRMS;</span></a>
+<a name="583"><span class="lineNum">     583 </span><span class="lineCov">         70 :             result.audioDuration = task-&gt;params.resultAudioDuration;</span></a>
+<a name="584"><span class="lineNum">     584 </span>            :         }</a>
+<a name="585"><span class="lineNum">     585 </span>            :     }</a>
+<a name="586"><span class="lineNum">     586 </span>            : </a>
+<a name="587"><span class="lineNum">     587 </span><span class="lineCov">         70 :     turnOffAllPlugins (edit);</span></a>
 <a name="588"><span class="lineNum">     588 </span>            : </a>
-<a name="589"><span class="lineNum">     589 </span><span class="lineNoCov">          0 :     if (file.isDirectory() || ! file.hasWriteAccess())</span></a>
-<a name="590"><span class="lineNum">     590 </span>            :     {</a>
-<a name="591"><span class="lineNum">     591 </span><span class="lineNoCov">          0 :         ui.showWarningAlert (TRANS(&quot;Couldn't render&quot;),</span></a>
-<a name="592"><span class="lineNum">     592 </span><span class="lineNoCov">          0 :                              TRANS(&quot;Couldn't write to this file - check that it's not read-only and that you have permission to access it&quot;));</span></a>
-<a name="593"><span class="lineNum">     593 </span><span class="lineNoCov">          0 :         return false;</span></a>
-<a name="594"><span class="lineNum">     594 </span>            :     }</a>
+<a name="589"><span class="lineNum">     589 </span><span class="lineCov">        140 :     return result;</span></a>
+<a name="590"><span class="lineNum">     590 </span>            : }</a>
+<a name="591"><span class="lineNum">     591 </span>            : </a>
+<a name="592"><span class="lineNum">     592 </span><span class="lineNoCov">          0 : bool Renderer::checkTargetFile (Engine&amp; e, const File&amp; file)</span></a>
+<a name="593"><span class="lineNum">     593 </span>            : {</a>
+<a name="594"><span class="lineNum">     594 </span><span class="lineNoCov">          0 :     auto&amp; ui = e.getUIBehaviour();</span></a>
 <a name="595"><span class="lineNum">     595 </span>            : </a>
-<a name="596"><span class="lineNum">     596 </span><span class="lineNoCov">          0 :     if (! file.getParentDirectory().createDirectory())</span></a>
+<a name="596"><span class="lineNum">     596 </span><span class="lineNoCov">          0 :     if (file.isDirectory() || ! file.hasWriteAccess())</span></a>
 <a name="597"><span class="lineNum">     597 </span>            :     {</a>
-<a name="598"><span class="lineNum">     598 </span><span class="lineNoCov">          0 :         ui.showWarningAlert (TRANS(&quot;Rendering&quot;),</span></a>
-<a name="599"><span class="lineNum">     599 </span><span class="lineNoCov">          0 :                              TRANS(&quot;Couldn't render - couldn't create the directory specified&quot;));</span></a>
+<a name="598"><span class="lineNum">     598 </span><span class="lineNoCov">          0 :         ui.showWarningAlert (TRANS(&quot;Couldn't render&quot;),</span></a>
+<a name="599"><span class="lineNum">     599 </span><span class="lineNoCov">          0 :                              TRANS(&quot;Couldn't write to this file - check that it's not read-only and that you have permission to access it&quot;));</span></a>
 <a name="600"><span class="lineNum">     600 </span><span class="lineNoCov">          0 :         return false;</span></a>
 <a name="601"><span class="lineNum">     601 </span>            :     }</a>
 <a name="602"><span class="lineNum">     602 </span>            : </a>
-<a name="603"><span class="lineNum">     603 </span><span class="lineNoCov">          0 :     if (file.exists())</span></a>
+<a name="603"><span class="lineNum">     603 </span><span class="lineNoCov">          0 :     if (! file.getParentDirectory().createDirectory())</span></a>
 <a name="604"><span class="lineNum">     604 </span>            :     {</a>
-<a name="605"><span class="lineNum">     605 </span><span class="lineNoCov">          0 :         if (! ui.showOkCancelAlertBox (TRANS(&quot;Rendering&quot;),</span></a>
-<a name="606"><span class="lineNum">     606 </span><span class="lineNoCov">          0 :                                        TRANS(&quot;The file\n\nXZZX\n\nalready exists - are you sure you want to overwrite it?&quot;)</span></a>
-<a name="607"><span class="lineNum">     607 </span><span class="lineNoCov">          0 :                                           .replace (&quot;XZZX&quot;, file.getFullPathName()),</span></a>
-<a name="608"><span class="lineNum">     608 </span><span class="lineNoCov">          0 :                                        TRANS(&quot;Overwrite&quot;)))</span></a>
-<a name="609"><span class="lineNum">     609 </span>            :             return false;</a>
-<a name="610"><span class="lineNum">     610 </span>            :     }</a>
-<a name="611"><span class="lineNum">     611 </span>            : </a>
-<a name="612"><span class="lineNum">     612 </span><span class="lineNoCov">          0 :     if (! (file.deleteFile() &amp;&amp; file.hasWriteAccess()))</span></a>
-<a name="613"><span class="lineNum">     613 </span>            :     {</a>
-<a name="614"><span class="lineNum">     614 </span><span class="lineNoCov">          0 :         ui.showWarningAlert (TRANS(&quot;Rendering&quot;),</span></a>
-<a name="615"><span class="lineNum">     615 </span><span class="lineNoCov">          0 :                              TRANS(&quot;Couldn't render - the file chosen didn't have write permission&quot;));</span></a>
-<a name="616"><span class="lineNum">     616 </span><span class="lineNoCov">          0 :         return false;</span></a>
+<a name="605"><span class="lineNum">     605 </span><span class="lineNoCov">          0 :         ui.showWarningAlert (TRANS(&quot;Rendering&quot;),</span></a>
+<a name="606"><span class="lineNum">     606 </span><span class="lineNoCov">          0 :                              TRANS(&quot;Couldn't render - couldn't create the directory specified&quot;));</span></a>
+<a name="607"><span class="lineNum">     607 </span><span class="lineNoCov">          0 :         return false;</span></a>
+<a name="608"><span class="lineNum">     608 </span>            :     }</a>
+<a name="609"><span class="lineNum">     609 </span>            : </a>
+<a name="610"><span class="lineNum">     610 </span><span class="lineNoCov">          0 :     if (file.exists())</span></a>
+<a name="611"><span class="lineNum">     611 </span>            :     {</a>
+<a name="612"><span class="lineNum">     612 </span><span class="lineNoCov">          0 :         if (! ui.showOkCancelAlertBox (TRANS(&quot;Rendering&quot;),</span></a>
+<a name="613"><span class="lineNum">     613 </span><span class="lineNoCov">          0 :                                        TRANS(&quot;The file\n\nXZZX\n\nalready exists - are you sure you want to overwrite it?&quot;)</span></a>
+<a name="614"><span class="lineNum">     614 </span><span class="lineNoCov">          0 :                                           .replace (&quot;XZZX&quot;, file.getFullPathName()),</span></a>
+<a name="615"><span class="lineNum">     615 </span><span class="lineNoCov">          0 :                                        TRANS(&quot;Overwrite&quot;)))</span></a>
+<a name="616"><span class="lineNum">     616 </span>            :             return false;</a>
 <a name="617"><span class="lineNum">     617 </span>            :     }</a>
 <a name="618"><span class="lineNum">     618 </span>            : </a>
-<a name="619"><span class="lineNum">     619 </span>            :     return true;</a>
-<a name="620"><span class="lineNum">     620 </span>            : }</a>
-<a name="621"><span class="lineNum">     621 </span>            : </a>
-<a name="622"><span class="lineNum">     622 </span>            : }</a>
+<a name="619"><span class="lineNum">     619 </span><span class="lineNoCov">          0 :     if (! (file.deleteFile() &amp;&amp; file.hasWriteAccess()))</span></a>
+<a name="620"><span class="lineNum">     620 </span>            :     {</a>
+<a name="621"><span class="lineNum">     621 </span><span class="lineNoCov">          0 :         ui.showWarningAlert (TRANS(&quot;Rendering&quot;),</span></a>
+<a name="622"><span class="lineNum">     622 </span><span class="lineNoCov">          0 :                              TRANS(&quot;Couldn't render - the file chosen didn't have write permission&quot;));</span></a>
+<a name="623"><span class="lineNum">     623 </span><span class="lineNoCov">          0 :         return false;</span></a>
+<a name="624"><span class="lineNum">     624 </span>            :     }</a>
+<a name="625"><span class="lineNum">     625 </span>            : </a>
+<a name="626"><span class="lineNum">     626 </span>            :     return true;</a>
+<a name="627"><span class="lineNum">     627 </span>            : }</a>
+<a name="628"><span class="lineNum">     628 </span>            : </a>
+<a name="629"><span class="lineNum">     629 </span>            : }</a>
 </pre>
       </td>
     </tr>
