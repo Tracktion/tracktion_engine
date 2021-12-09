@@ -375,6 +375,13 @@ bool Renderer::RenderTask::addMidiMetaDataAndWriteToFile (juce::File destFile, j
             midiTempoSequence.addEvent (m);
         }
 
+        auto name = destFile.getFileNameWithoutExtension();
+        if (name.startsWith ("."))
+            name = name.fromFirstOccurrenceOf (".", false, false).upToLastOccurrenceOf ("_temp", false, false);
+
+        midiTempoSequence.addEvent (juce::MidiMessage::textMetaEvent (3, name));
+        outputSequence.addEvent (juce::MidiMessage::textMetaEvent (3, name));
+
         MidiFile mf;
         mf.addTrack (midiTempoSequence);
         mf.addTrack (outputSequence);
