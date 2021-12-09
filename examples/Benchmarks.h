@@ -97,6 +97,56 @@ inline bool publishToAirtable (std::string baseID, std::string apiKey,
 
 //==============================================================================
 //==============================================================================
+/** @internal */
+inline bool publishToBenchmarkAPI (juce::String apiKey, std::vector<BenchmarkResult> results)
+{
+    if (apiKey.isEmpty())
+    {
+        jassertfalse;
+        return false;
+    }
+    
+    juce::Array<juce::var> records;
+
+    for (auto& r : results)
+    {
+        juce::DynamicObject::Ptr fields = new juce::DynamicObject();
+        fields->setProperty ("benchmark_hash",        juce::String (static_cast<uint64> (r.description.hash)));
+        fields->setProperty ("benchmark_category",    juce::String (r.description.category).quoted ('\''));
+        fields->setProperty ("benchmark_name",        juce::String (r.description.name).quoted ('\''));
+        fields->setProperty ("benchmark_description", juce::String (r.description.description).quoted ('\''));
+        fields->setProperty ("benchmark_platform",    juce::String (r.description.platform).quoted ('\''));
+        fields->setProperty ("benchmark_ticks",       static_cast<int64> (r.ticksEnd - r.ticksStart));
+        fields->setProperty ("benchmark_ticks_per_s", static_cast<int64> (r.ticksPerSecond));
+        fields->setProperty ("benchmark_duration",    getDuration (r));
+        fields->setProperty ("benchmark_time",        r.date.toISO8601 (true).trimCharactersAtEnd ("Z").quoted ('\''));
+
+        records.add (fields.get());
+    }
+
+    juce::var valuesToAdd (std::move (records));
+    auto jsonString = juce::JSON::toString (valuesToAdd, false);
+
+    const auto url = juce::URL ("https://appstats.tracktion.com/benchmarkapi.php")
+                        .withParameter ("api_key", apiKey)
+                        .withParameter ("request", "push_results")
+                        .withParameter ("content", jsonString);
+
+    if (auto inputStream = url.createInputStream (URL::InputStreamOptions (URL::ParameterHandling::inPostData)))
+    {
+        const auto returnVal = inputStream->readEntireStreamAsString();
+        std::cout << returnVal << "\n";
+
+        if (returnVal.isEmpty())
+            return true;
+    }
+    
+    return false;
+}
+
+
+//==============================================================================
+//==============================================================================
 int main (int, char**)
 {
     ScopedJuceInitialiser_GUI init;
@@ -107,10 +157,9 @@ int main (int, char**)
         std::cout << r.description.name << ", " << r.description.category
                   << "\n\t" << r.description.description
                   << "\n\t" << getDuration (r) << "\n";
-
-    if (publishToAirtable (SystemStats::getEnvironmentVariable ("AT_BASE_ID", {}).toStdString(),
-                           SystemStats::getEnvironmentVariable ("AT_API_KEY", {}).toStdString(),
-                           std::move (results)))
+    
+    if (publishToBenchmarkAPI (SystemStats::getEnvironmentVariable ("BM_API_KEY", {}),
+                               std::move (results)))
     {
         std::cout << "INFO: Published benchmark results\n";
     }
@@ -118,6 +167,6 @@ int main (int, char**)
     {
         std::cout << "ERROR: Failed to publish!\n";
     }
-
+    
     return anyFailed;
 }
