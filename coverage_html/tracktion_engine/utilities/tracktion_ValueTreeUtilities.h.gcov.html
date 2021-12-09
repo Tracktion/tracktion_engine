@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-09 19:18:52</td>
+            <td class="headerValue">2021-12-09 22:32:49</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">122</td>
@@ -88,7 +88,7 @@
 <a name="26"><span class="lineNum">      26 </span>            : template &lt;typename T&gt;</a>
 <a name="27"><span class="lineNum">      27 </span>            : static bool setIfDifferent (T&amp; val, T newVal) noexcept</a>
 <a name="28"><span class="lineNum">      28 </span>            : {</a>
-<a name="29"><span class="lineNum">      29 </span><span class="lineCov">      76807 :     if (val == newVal)</span></a>
+<a name="29"><span class="lineNum">      29 </span><span class="lineCov">      76833 :     if (val == newVal)</span></a>
 <a name="30"><span class="lineNum">      30 </span>            :         return false;</a>
 <a name="31"><span class="lineNum">      31 </span>            : </a>
 <a name="32"><span class="lineNum">      32 </span><span class="lineCov">        189 :     val = newVal;</span></a>
@@ -226,7 +226,7 @@
 <a name="164"><span class="lineNum">     164 </span>            :         }</a>
 <a name="165"><span class="lineNum">     165 </span><span class="lineCov">       4146 :     }</span></a>
 <a name="166"><span class="lineNum">     166 </span>            : </a>
-<a name="167"><span class="lineNum">     167 </span><span class="lineCov">      34236 :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override {}</span></a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineCov">      34238 :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override {}</span></a>
 <a name="168"><span class="lineNum">     168 </span><span class="lineCov">      10449 :     void valueTreeParentChanged (juce::ValueTree&amp;) override {}</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : </a>
 <a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :     void valueTreeRedirected (juce::ValueTree&amp;) override { jassertfalse; } // may need to add handling if this is hit</span></a>
@@ -520,19 +520,19 @@
 <a name="458"><span class="lineNum">     458 </span>            :     return false;</a>
 <a name="459"><span class="lineNum">     459 </span>            : }</a>
 <a name="460"><span class="lineNum">     460 </span>            : </a>
-<a name="461"><span class="lineNum">     461 </span><span class="lineCov">      56288 : static inline void setPropertyIfMissing (juce::ValueTree&amp; v, const juce::Identifier&amp; id,</span></a>
+<a name="461"><span class="lineNum">     461 </span><span class="lineCov">      56280 : static inline void setPropertyIfMissing (juce::ValueTree&amp; v, const juce::Identifier&amp; id,</span></a>
 <a name="462"><span class="lineNum">     462 </span>            :                                          const juce::var&amp; value, juce::UndoManager* um)</a>
 <a name="463"><span class="lineNum">     463 </span>            : {</a>
-<a name="464"><span class="lineNum">     464 </span><span class="lineCov">      56288 :     if (! v.hasProperty (id))</span></a>
-<a name="465"><span class="lineNum">     465 </span><span class="lineCov">       7194 :         v.setProperty (id, value, um);</span></a>
-<a name="466"><span class="lineNum">     466 </span><span class="lineCov">      56288 : }</span></a>
+<a name="464"><span class="lineNum">     464 </span><span class="lineCov">      56280 :     if (! v.hasProperty (id))</span></a>
+<a name="465"><span class="lineNum">     465 </span><span class="lineCov">       7192 :         v.setProperty (id, value, um);</span></a>
+<a name="466"><span class="lineNum">     466 </span><span class="lineCov">      56280 : }</span></a>
 <a name="467"><span class="lineNum">     467 </span>            : </a>
 <a name="468"><span class="lineNum">     468 </span>            : /** Creates a deep copy of another ValueTree in an undoable way, maintaining the destination's parent. */</a>
-<a name="469"><span class="lineNum">     469 </span><span class="lineCov">      21002 : static inline juce::ValueTree copyValueTree (juce::ValueTree&amp; dest, const juce::ValueTree&amp; src, juce::UndoManager* um)</span></a>
+<a name="469"><span class="lineNum">     469 </span><span class="lineCov">      21001 : static inline juce::ValueTree copyValueTree (juce::ValueTree&amp; dest, const juce::ValueTree&amp; src, juce::UndoManager* um)</span></a>
 <a name="470"><span class="lineNum">     470 </span>            : {</a>
-<a name="471"><span class="lineNum">     471 </span><span class="lineCov">      21002 :     if (! dest.getParent().isValid())</span></a>
+<a name="471"><span class="lineNum">     471 </span><span class="lineCov">      21001 :     if (! dest.getParent().isValid())</span></a>
 <a name="472"><span class="lineNum">     472 </span>            :     {</a>
-<a name="473"><span class="lineNum">     473 </span><span class="lineCov">      21002 :         dest = src.createCopy();</span></a>
+<a name="473"><span class="lineNum">     473 </span><span class="lineCov">      21001 :         dest = src.createCopy();</span></a>
 <a name="474"><span class="lineNum">     474 </span>            :     }</a>
 <a name="475"><span class="lineNum">     475 </span>            :     else</a>
 <a name="476"><span class="lineNum">     476 </span>            :     {</a>
@@ -543,7 +543,7 @@
 <a name="481"><span class="lineNum">     481 </span><span class="lineNoCov">          0 :             dest.addChild (src.getChild (i).createCopy(), i, um);</span></a>
 <a name="482"><span class="lineNum">     482 </span>            :     }</a>
 <a name="483"><span class="lineNum">     483 </span>            : </a>
-<a name="484"><span class="lineNum">     484 </span><span class="lineCov">      21002 :     return dest;</span></a>
+<a name="484"><span class="lineNum">     484 </span><span class="lineCov">      21001 :     return dest;</span></a>
 <a name="485"><span class="lineNum">     485 </span>            : }</a>
 <a name="486"><span class="lineNum">     486 </span>            : </a>
 <a name="487"><span class="lineNum">     487 </span>            : template &lt;typename Predicate&gt;</a>

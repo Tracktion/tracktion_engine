@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-09 19:18:52</td>
+            <td class="headerValue">2021-12-09 22:32:49</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -77,7 +77,7 @@
 <a name="15"><span class="lineNum">      15 </span>            : /** Creates a juce::AudioBuffer from a choc::buffer::BufferView. */</a>
 <a name="16"><span class="lineNum">      16 </span>            : inline juce::AudioBuffer&lt;float&gt; toAudioBuffer (choc::buffer::ChannelArrayView&lt;float&gt; view)</a>
 <a name="17"><span class="lineNum">      17 </span>            : {</a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineCov">   26044000 :     return juce::AudioBuffer&lt;float&gt; (view.data.channels, (int) view.getNumChannels(), (int) view.data.offset, (int) view.getNumFrames());</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">   26244960 :     return juce::AudioBuffer&lt;float&gt; (view.data.channels, (int) view.getNumChannels(), (int) view.data.offset, (int) view.getNumFrames());</span></a>
 <a name="19"><span class="lineNum">      19 </span>            : }</a>
 <a name="20"><span class="lineNum">      20 </span>            : </a>
 <a name="21"><span class="lineNum">      21 </span>            : /** Converts a juce::AudioBuffer&lt;SampleType&gt; to a choc::buffer::BufferView. */</a>
@@ -116,7 +116,7 @@
 <a name="54"><span class="lineNum">      54 </span>            : /** Returns a FrameRange with a start and length. */</a>
 <a name="55"><span class="lineNum">      55 </span>            : inline choc::buffer::FrameRange frameRangeWithStartAndLength (choc::buffer::FrameCount start, choc::buffer::FrameCount length)</a>
 <a name="56"><span class="lineNum">      56 </span>            : {</a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">   23658400 :     return { start, start + length };</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">   23858600 :     return { start, start + length };</span></a>
 <a name="58"><span class="lineNum">      58 </span>            : }</a>
 <a name="59"><span class="lineNum">      59 </span>            : </a>
 <a name="60"><span class="lineNum">      60 </span>            : /** Returns a ChannelRange with a start and length. */</a>
@@ -131,33 +131,33 @@
 <a name="69"><span class="lineNum">      69 </span>            : template &lt;typename SampleType, template&lt;typename&gt; typename LayoutType&gt;</a>
 <a name="70"><span class="lineNum">      70 </span>            : void sanityCheckView (const choc::buffer::BufferView&lt;SampleType, LayoutType&gt;&amp; view)</a>
 <a name="71"><span class="lineNum">      71 </span>            : {</a>
-<a name="72"><span class="lineNum">      72 </span><span class="lineCov">    1135340 :     if (view.getNumFrames() == 0)</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineCov">    1135710 :     if (view.getNumFrames() == 0)</span></a>
 <a name="73"><span class="lineNum">      73 </span>            :         return;</a>
 <a name="74"><span class="lineNum">      74 </span>            :     </a>
-<a name="75"><span class="lineNum">      75 </span><span class="lineCov">    3381240 :     for (choc::buffer::ChannelCount channel = 0; channel &lt; view.getNumChannels(); ++channel)</span></a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineCov">    3382300 :     for (choc::buffer::ChannelCount channel = 0; channel &lt; view.getNumChannels(); ++channel)</span></a>
 <a name="76"><span class="lineNum">      76 </span>            :         jassert (view.getIterator (channel).sample != nullptr);</a>
 <a name="77"><span class="lineNum">      77 </span>            : }</a>
 <a name="78"><span class="lineNum">      78 </span>            : </a>
 <a name="79"><span class="lineNum">      79 </span>            : /** Adds two buffers applying a gain. */</a>
 <a name="80"><span class="lineNum">      80 </span>            : template &lt;typename DestBuffer, typename SourceBuffer, typename GainType&gt;</a>
-<a name="81"><span class="lineNum">      81 </span><span class="lineCov">   15200200 : static void add (DestBuffer&amp;&amp; dest, const SourceBuffer&amp; source, GainType gain)</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineCov">   15235500 : static void add (DestBuffer&amp;&amp; dest, const SourceBuffer&amp; source, GainType gain)</span></a>
 <a name="82"><span class="lineNum">      82 </span>            : {</a>
 <a name="83"><span class="lineNum">      83 </span>            :     auto size = source.getSize();</a>
 <a name="84"><span class="lineNum">      84 </span>            :     CHOC_ASSERT (size == dest.getSize());</a>
 <a name="85"><span class="lineNum">      85 </span>            : </a>
-<a name="86"><span class="lineNum">      86 </span><span class="lineCov">   45467200 :     for (decltype (size.numChannels) chan = 0; chan &lt; size.numChannels; ++chan)</span></a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineCov">   45588100 :     for (decltype (size.numChannels) chan = 0; chan &lt; size.numChannels; ++chan)</span></a>
 <a name="87"><span class="lineNum">      87 </span>            :     {</a>
 <a name="88"><span class="lineNum">      88 </span>            :         auto src = source.getIterator (chan);</a>
 <a name="89"><span class="lineNum">      89 </span>            :         auto dst = dest.getIterator (chan);</a>
 <a name="90"><span class="lineNum">      90 </span>            : </a>
-<a name="91"><span class="lineNum">      91 </span><span class="lineCov"> 5386820000 :         for (decltype (size.numFrames) i = 0; i &lt; size.numFrames; ++i)</span></a>
+<a name="91"><span class="lineNum">      91 </span><span class="lineCov"> 5408810000 :         for (decltype (size.numFrames) i = 0; i &lt; size.numFrames; ++i)</span></a>
 <a name="92"><span class="lineNum">      92 </span>            :         {</a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineCov"> 5356550000 :             *dst += static_cast&lt;decltype (dst.get())&gt; (src.get() * gain);</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineCov"> 5378460000 :             *dst += static_cast&lt;decltype (dst.get())&gt; (src.get() * gain);</span></a>
 <a name="94"><span class="lineNum">      94 </span>            :             ++dst;</a>
 <a name="95"><span class="lineNum">      95 </span>            :             ++src;</a>
 <a name="96"><span class="lineNum">      96 </span>            :         }</a>
 <a name="97"><span class="lineNum">      97 </span>            :     }</a>
-<a name="98"><span class="lineNum">      98 </span><span class="lineCov">   15200200 : }</span></a>
+<a name="98"><span class="lineNum">      98 </span><span class="lineCov">   15235500 : }</span></a>
 <a name="99"><span class="lineNum">      99 </span>            : </a>
 <a name="100"><span class="lineNum">     100 </span>            : /** Adds two buffers applying a smoothed gain. */</a>
 <a name="101"><span class="lineNum">     101 </span>            : template &lt;typename DestBuffer, typename SourceBuffer, typename GainType&gt;</a>
@@ -189,28 +189,28 @@
 <a name="127"><span class="lineNum">     127 </span>            :     This will assert if the two views do not have exactly the same size.</a>
 <a name="128"><span class="lineNum">     128 </span>            : */</a>
 <a name="129"><span class="lineNum">     129 </span>            : template &lt;typename DestBuffer, typename SourceBuffer&gt;</a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineCov">   21873900 : static void copyIfNotAliased (DestBuffer&amp;&amp; dest, const SourceBuffer&amp; source)</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">   21982400 : static void copyIfNotAliased (DestBuffer&amp;&amp; dest, const SourceBuffer&amp; source)</span></a>
 <a name="131"><span class="lineNum">     131 </span>            : {</a>
 <a name="132"><span class="lineNum">     132 </span>            :     auto size = source.getSize();</a>
 <a name="133"><span class="lineNum">     133 </span>            :     CHOC_ASSERT (size == dest.getSize());</a>
 <a name="134"><span class="lineNum">     134 </span>            : </a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">   64962900 :     for (decltype (size.numChannels) chan = 0; chan &lt; size.numChannels; ++chan)</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">   65488700 :     for (decltype (size.numChannels) chan = 0; chan &lt; size.numChannels; ++chan)</span></a>
 <a name="136"><span class="lineNum">     136 </span>            :     {</a>
 <a name="137"><span class="lineNum">     137 </span>            :         auto src = source.getIterator (chan);</a>
 <a name="138"><span class="lineNum">     138 </span>            :         auto dst = dest.getIterator (chan);</a>
 <a name="139"><span class="lineNum">     139 </span>            :         </a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">   43089000 :         if (src.sample == dst.sample)</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">   43506300 :         if (src.sample == dst.sample)</span></a>
 <a name="141"><span class="lineNum">     141 </span>            :             continue;</a>
 <a name="142"><span class="lineNum">     142 </span>            : </a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov"> 6681740000 :         for (decltype (size.numFrames) i = 0; i &lt; size.numFrames; ++i)</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov"> 6737880000 :         for (decltype (size.numFrames) i = 0; i &lt; size.numFrames; ++i)</span></a>
 <a name="144"><span class="lineNum">     144 </span>            :         {</a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov"> 6638650000 :             *dst = static_cast&lt;decltype (dst.get())&gt; (src.get());</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov"> 6694380000 :             *dst = static_cast&lt;decltype (dst.get())&gt; (src.get());</span></a>
 <a name="146"><span class="lineNum">     146 </span>            :             ++dst;</a>
 <a name="147"><span class="lineNum">     147 </span>            :             ++src;</a>
 <a name="148"><span class="lineNum">     148 </span>            :         }</a>
 <a name="149"><span class="lineNum">     149 </span>            :     }</a>
 <a name="150"><span class="lineNum">     150 </span>            : </a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineCov">   21873900 : }</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">   21982400 : }</span></a>
 <a name="152"><span class="lineNum">     152 </span>            : </a>
 <a name="153"><span class="lineNum">     153 </span>            : } // namespace tracktion_graph</a>
 </pre>
