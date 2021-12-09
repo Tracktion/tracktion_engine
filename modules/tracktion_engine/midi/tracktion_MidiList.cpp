@@ -1649,7 +1649,7 @@ bool MidiList::readSeparateTracksFromFile (const juce::File& f,
                         channelSequence.sort();
                         channelSequence.updateMatchedPairs();
 
-                        songLength = std::max (songLength, channelSequence.getStartTime() + channelSequence.getEndTime());
+                        songLength = std::max (songLength, channelSequence.getEndTime());
 
                         std::unique_ptr<MidiList> midiList (new MidiList());
                         midiList->setMidiChannel (midiChannel);
