@@ -1,8 +1,9 @@
 name: Update Docs
 on:
-  # push:
-  #   branches:
-  #     - develop
+  push:
+    branches:
+      - develop
+      - feature/codecov
   workflow_dispatch:
 
 jobs:
