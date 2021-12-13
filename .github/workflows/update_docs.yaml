@@ -36,6 +36,10 @@ jobs:
           rm -rf doxygen/doc/coverage_html
           mkdir -p doxygen/doc/coverage_html
           cp -r tests/coverage/build_linux/coverage_html doxygen/doc
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          files: ./tests/coverage/build_linux/coverage.info
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
