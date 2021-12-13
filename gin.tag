@@ -80780,6 +80780,11 @@
     </member>
   </compound>
   <compound kind="group">
+    <name>tracktion_engine-utilities</name>
+    <title>utilities</title>
+    <filename>group__tracktion__engine-utilities.html</filename>
+  </compound>
+  <compound kind="group">
     <name>tracktion_graph-utilities</name>
     <title>utilities</title>
     <filename>group__tracktion__graph-utilities.html</filename>
@@ -80846,10 +80851,5 @@
       <anchor>gabf37325a823c6b56e87e497113a6f2e5</anchor>
       <arglist>()</arglist>
     </member>
-  </compound>
-  <compound kind="group">
-    <name>tracktion_engine-utilities</name>
-    <title>utilities</title>
-    <filename>group__tracktion__engine-utilities.html</filename>
   </compound>
 </tagfile>
