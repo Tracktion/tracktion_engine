@@ -954,7 +954,6 @@ void EditPlaybackContext::enablePooledMemory (bool enable)
 }
 
 //==============================================================================
-#if JUCE_WINDOWS
 static int numHighPriorityPlayers = 0, numRealtimeDefeaters = 0;
 
 void updateProcessPriority (Engine& engine)
@@ -971,14 +970,6 @@ EditPlaybackContext::ProcessPriorityBooster::ProcessPriorityBooster (Engine& e) 
 EditPlaybackContext::ProcessPriorityBooster::~ProcessPriorityBooster()                              { --numHighPriorityPlayers; updateProcessPriority (engine); }
 EditPlaybackContext::RealtimePriorityDisabler::RealtimePriorityDisabler (Engine& e) : engine (e)    { ++numRealtimeDefeaters; updateProcessPriority (engine); }
 EditPlaybackContext::RealtimePriorityDisabler::~RealtimePriorityDisabler()                          { --numRealtimeDefeaters; updateProcessPriority (engine); }
-
-#else
-
-EditPlaybackContext::ProcessPriorityBooster::ProcessPriorityBooster (Engine& e) : engine (e)        {}
-EditPlaybackContext::ProcessPriorityBooster::~ProcessPriorityBooster()                              {}
-EditPlaybackContext::RealtimePriorityDisabler::RealtimePriorityDisabler (Engine& e) : engine (e)    {}
-EditPlaybackContext::RealtimePriorityDisabler::~RealtimePriorityDisabler()                          {}
-
 #endif
 
 }
