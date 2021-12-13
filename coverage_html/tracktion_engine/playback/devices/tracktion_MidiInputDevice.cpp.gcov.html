@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-13 16:31:46</td>
+            <td class="headerValue">2021-12-13 17:03:16</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">16</td>
@@ -1127,18 +1127,18 @@
 <a name="1065"><span class="lineNum">    1065 </span>            :         return clips;</a>
 <a name="1066"><span class="lineNum">    1066 </span>            :     }</a>
 <a name="1067"><span class="lineNum">    1067 </span>            : </a>
-<a name="1068"><span class="lineNum">    1068 </span><span class="lineCov">        389 :     void masterTimeUpdate (double time)</span></a>
+<a name="1068"><span class="lineNum">    1068 </span><span class="lineCov">        388 :     void masterTimeUpdate (double time)</span></a>
 <a name="1069"><span class="lineNum">    1069 </span>            :     {</a>
-<a name="1070"><span class="lineNum">    1070 </span><span class="lineCov">        389 :         if (context.isPlaying())</span></a>
+<a name="1070"><span class="lineNum">    1070 </span><span class="lineCov">        388 :         if (context.isPlaying())</span></a>
 <a name="1071"><span class="lineNum">    1071 </span>            :         {</a>
 <a name="1072"><span class="lineNum">    1072 </span><span class="lineCov">        380 :             pausedTime = 0;</span></a>
 <a name="1073"><span class="lineNum">    1073 </span><span class="lineCov">        380 :             lastEditTime = context.globalStreamTimeToEditTime (time);</span></a>
 <a name="1074"><span class="lineNum">    1074 </span>            :         }</a>
 <a name="1075"><span class="lineNum">    1075 </span>            :         else</a>
 <a name="1076"><span class="lineNum">    1076 </span>            :         {</a>
-<a name="1077"><span class="lineNum">    1077 </span><span class="lineCov">          9 :             pausedTime += edit.engine.getDeviceManager().getBlockSizeMs() / 1000.0;</span></a>
+<a name="1077"><span class="lineNum">    1077 </span><span class="lineCov">          8 :             pausedTime += edit.engine.getDeviceManager().getBlockSizeMs() / 1000.0;</span></a>
 <a name="1078"><span class="lineNum">    1078 </span>            :         }</a>
-<a name="1079"><span class="lineNum">    1079 </span><span class="lineCov">        389 :     }</span></a>
+<a name="1079"><span class="lineNum">    1079 </span><span class="lineCov">        388 :     }</span></a>
 <a name="1080"><span class="lineNum">    1080 </span>            : </a>
 <a name="1081"><span class="lineNum">    1081 </span><span class="lineCov">          1 :     bool isLivePlayEnabled (const Track&amp; t) const override</span></a>
 <a name="1082"><span class="lineNum">    1082 </span>            :     {</a>
@@ -1166,15 +1166,15 @@
 <a name="1104"><span class="lineNum">    1104 </span>            : </a>
 <a name="1105"><span class="lineNum">    1105 </span>            : </a>
 <a name="1106"><span class="lineNum">    1106 </span>            : //==============================================================================</a>
-<a name="1107"><span class="lineNum">    1107 </span><span class="lineCov">        389 : void MidiInputDevice::masterTimeUpdate (double time)</span></a>
+<a name="1107"><span class="lineNum">    1107 </span><span class="lineCov">        388 : void MidiInputDevice::masterTimeUpdate (double time)</span></a>
 <a name="1108"><span class="lineNum">    1108 </span>            : {</a>
-<a name="1109"><span class="lineNum">    1109 </span><span class="lineCov">        389 :     adjustSecs = time - Time::getMillisecondCounterHiRes() * 0.001;</span></a>
+<a name="1109"><span class="lineNum">    1109 </span><span class="lineCov">        388 :     adjustSecs = time - Time::getMillisecondCounterHiRes() * 0.001;</span></a>
 <a name="1110"><span class="lineNum">    1110 </span>            : </a>
-<a name="1111"><span class="lineNum">    1111 </span><span class="lineCov">        389 :     const ScopedLock sl (instanceLock);</span></a>
+<a name="1111"><span class="lineNum">    1111 </span><span class="lineCov">        388 :     const ScopedLock sl (instanceLock);</span></a>
 <a name="1112"><span class="lineNum">    1112 </span>            : </a>
-<a name="1113"><span class="lineNum">    1113 </span><span class="lineCov">        778 :     for (auto instance : instances)</span></a>
-<a name="1114"><span class="lineNum">    1114 </span><span class="lineCov">        389 :         instance-&gt;masterTimeUpdate (time);</span></a>
-<a name="1115"><span class="lineNum">    1115 </span><span class="lineCov">        389 : }</span></a>
+<a name="1113"><span class="lineNum">    1113 </span><span class="lineCov">        776 :     for (auto instance : instances)</span></a>
+<a name="1114"><span class="lineNum">    1114 </span><span class="lineCov">        388 :         instance-&gt;masterTimeUpdate (time);</span></a>
+<a name="1115"><span class="lineNum">    1115 </span><span class="lineCov">        388 : }</span></a>
 <a name="1116"><span class="lineNum">    1116 </span>            : </a>
 <a name="1117"><span class="lineNum">    1117 </span><span class="lineNoCov">          0 : void MidiInputDevice::sendMessageToInstances (const MidiMessage&amp; message)</span></a>
 <a name="1118"><span class="lineNum">    1118 </span>            : {</a>

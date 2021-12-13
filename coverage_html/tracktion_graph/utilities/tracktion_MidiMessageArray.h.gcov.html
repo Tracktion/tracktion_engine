@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-13 16:31:46</td>
+            <td class="headerValue">2021-12-13 17:03:16</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -75,7 +75,7 @@
 <a name="13"><span class="lineNum">      13 </span>            : namespace tracktion_engine</a>
 <a name="14"><span class="lineNum">      14 </span>            : {</a>
 <a name="15"><span class="lineNum">      15 </span>            : </a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineCov">     589763 : struct MidiMessageArray</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">     589355 : struct MidiMessageArray</span></a>
 <a name="17"><span class="lineNum">      17 </span>            : {</a>
 <a name="18"><span class="lineNum">      18 </span>            :     using MPESourceID = juce::uint32;</a>
 <a name="19"><span class="lineNum">      19 </span>            : </a>
@@ -118,13 +118,13 @@
 <a name="56"><span class="lineNum">      56 </span>            :     {</a>
 <a name="57"><span class="lineNum">      57 </span>            :         std::swap (isAllNotesOff, other.isAllNotesOff);</a>
 <a name="58"><span class="lineNum">      58 </span>            :         messages.swapWith (other.messages);</a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">   23727300 :     }</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">   23748600 :     }</span></a>
 <a name="60"><span class="lineNum">      60 </span>            : </a>
 <a name="61"><span class="lineNum">      61 </span>            :     void clear() noexcept</a>
 <a name="62"><span class="lineNum">      62 </span>            :     {</a>
-<a name="63"><span class="lineNum">      63 </span><span class="lineCov">  202423154 :         isAllNotesOff = false;</span></a>
+<a name="63"><span class="lineNum">      63 </span><span class="lineCov">  202352542 :         isAllNotesOff = false;</span></a>
 <a name="64"><span class="lineNum">      64 </span>            :         messages.clearQuick();</a>
-<a name="65"><span class="lineNum">      65 </span><span class="lineCov">  156492800 :     }</span></a>
+<a name="65"><span class="lineNum">      65 </span><span class="lineCov">  156080500 :     }</span></a>
 <a name="66"><span class="lineNum">      66 </span>            : </a>
 <a name="67"><span class="lineNum">      67 </span><span class="lineNoCov">          0 :     void addMidiMessage (const juce::MidiMessage&amp; m, MPESourceID mpeSourceID)</span></a>
 <a name="68"><span class="lineNum">      68 </span>            :     {</a>
@@ -170,17 +170,17 @@
 <a name="108"><span class="lineNum">     108 </span>            :         messages.getReference (messages.size() - 1).setTimeStamp (time);</a>
 <a name="109"><span class="lineNum">     109 </span>            :     }</a>
 <a name="110"><span class="lineNum">     110 </span>            : </a>
-<a name="111"><span class="lineNum">     111 </span><span class="lineCov">  129578000 :     void copyFrom (const MidiMessageArray&amp; source)</span></a>
+<a name="111"><span class="lineNum">     111 </span><span class="lineCov">  129206000 :     void copyFrom (const MidiMessageArray&amp; source)</span></a>
 <a name="112"><span class="lineNum">     112 </span>            :     {</a>
 <a name="113"><span class="lineNum">     113 </span>            :         clear();</a>
-<a name="114"><span class="lineNum">     114 </span><span class="lineCov">  129575000 :         mergeFrom (source);</span></a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineCov">  128770000 :     }</span></a>
+<a name="114"><span class="lineNum">     114 </span><span class="lineCov">  129205000 :         mergeFrom (source);</span></a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineCov">  128443000 :     }</span></a>
 <a name="116"><span class="lineNum">     116 </span>            : </a>
-<a name="117"><span class="lineNum">     117 </span><span class="lineCov">  242840696 :     void mergeFrom (const MidiMessageArray&amp; source)</span></a>
+<a name="117"><span class="lineNum">     117 </span><span class="lineCov">  242047288 :     void mergeFrom (const MidiMessageArray&amp; source)</span></a>
 <a name="118"><span class="lineNum">     118 </span>            :     {</a>
-<a name="119"><span class="lineNum">     119 </span><span class="lineCov">  485377992 :         isAllNotesOff = isAllNotesOff || source.isAllNotesOff;</span></a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineCov">  483738576 :         isAllNotesOff = isAllNotesOff || source.isAllNotesOff;</span></a>
 <a name="120"><span class="lineNum">     120 </span>            : </a>
-<a name="121"><span class="lineNum">     121 </span><span class="lineCov">  242840696 :         if (source.isEmpty())</span></a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineCov">  242047288 :         if (source.isEmpty())</span></a>
 <a name="122"><span class="lineNum">     122 </span>            :             return;</a>
 <a name="123"><span class="lineNum">     123 </span>            : </a>
 <a name="124"><span class="lineNum">     124 </span><span class="lineCov">       1728 :         messages.ensureStorageAllocated (messages.size() + source.size());</span></a>
@@ -189,11 +189,11 @@
 <a name="127"><span class="lineNum">     127 </span>            :             messages.add (m);</a>
 <a name="128"><span class="lineNum">     128 </span>            :     }</a>
 <a name="129"><span class="lineNum">     129 </span>            :     </a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineCov">     938358 :     void mergeFromWithOffset (const MidiMessageArray&amp; source, double delta)</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">     937560 :     void mergeFromWithOffset (const MidiMessageArray&amp; source, double delta)</span></a>
 <a name="131"><span class="lineNum">     131 </span>            :     {</a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineCov">    1876718 :         isAllNotesOff = isAllNotesOff || source.isAllNotesOff;</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">    1875116 :         isAllNotesOff = isAllNotesOff || source.isAllNotesOff;</span></a>
 <a name="133"><span class="lineNum">     133 </span>            : </a>
-<a name="134"><span class="lineNum">     134 </span><span class="lineCov">     938358 :         if (source.isEmpty())</span></a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineCov">     937560 :         if (source.isEmpty())</span></a>
 <a name="135"><span class="lineNum">     135 </span>            :             return;</a>
 <a name="136"><span class="lineNum">     136 </span>            : </a>
 <a name="137"><span class="lineNum">     137 </span><span class="lineCov">        192 :         messages.ensureStorageAllocated (messages.size() + source.size());</span></a>
@@ -223,9 +223,9 @@
 <a name="161"><span class="lineNum">     161 </span>            :         }</a>
 <a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="163"><span class="lineNum">     163 </span>            : </a>
-<a name="164"><span class="lineNum">     164 </span><span class="lineCov">       3882 :     void mergeFromAndClearWithOffset (MidiMessageArray&amp; source, double delta)</span></a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineCov">       3877 :     void mergeFromAndClearWithOffset (MidiMessageArray&amp; source, double delta)</span></a>
 <a name="165"><span class="lineNum">     165 </span>            :     {</a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineCov">       3882 :         if (isEmpty())</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineCov">       3877 :         if (isEmpty())</span></a>
 <a name="167"><span class="lineNum">     167 </span>            :         {</a>
 <a name="168"><span class="lineNum">     168 </span>            :             swapWith (source);</a>
 <a name="169"><span class="lineNum">     169 </span>            :             addToTimestamps (delta);</a>
@@ -243,7 +243,7 @@
 <a name="181"><span class="lineNum">     181 </span>            : </a>
 <a name="182"><span class="lineNum">     182 </span>            :             source.clear();</a>
 <a name="183"><span class="lineNum">     183 </span>            :         }</a>
-<a name="184"><span class="lineNum">     184 </span><span class="lineCov">       3882 :     }</span></a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineCov">       3877 :     }</span></a>
 <a name="185"><span class="lineNum">     185 </span>            : </a>
 <a name="186"><span class="lineNum">     186 </span>            :     void mergeFromAndClearWithOffsetAndLimit (MidiMessageArray&amp; source, double delta, int numItemsToTake)</a>
 <a name="187"><span class="lineNum">     187 </span>            :     {</a>
@@ -281,7 +281,7 @@
 <a name="219"><span class="lineNum">     219 </span>            : </a>
 <a name="220"><span class="lineNum">     220 </span>            :     void addToTimestamps (double delta) noexcept</a>
 <a name="221"><span class="lineNum">     221 </span>            :     {</a>
-<a name="222"><span class="lineNum">     222 </span><span class="lineCov">     942420 :         for (auto&amp; m : messages)</span></a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineCov">     941637 :         for (auto&amp; m : messages)</span></a>
 <a name="223"><span class="lineNum">     223 </span>            :             m.addToTimeStamp (delta);</a>
 <a name="224"><span class="lineNum">     224 </span>            :     }</a>
 <a name="225"><span class="lineNum">     225 </span>            : </a>
