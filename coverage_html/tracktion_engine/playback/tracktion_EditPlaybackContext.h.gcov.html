@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-13 11:58:48</td>
+            <td class="headerValue">2021-12-13 16:31:46</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -130,103 +130,106 @@
 <a name="68"><span class="lineNum">      68 </span>            :     static void setAddAntiDenormalisationNoise (Engine&amp;, bool);</a>
 <a name="69"><span class="lineNum">      69 </span>            : </a>
 <a name="70"><span class="lineNum">      70 </span>            :     //==============================================================================</a>
-<a name="71"><span class="lineNum">      71 </span>            :     // Only implemented on Windows</a>
-<a name="72"><span class="lineNum">      72 </span>            :     struct RealtimePriorityDisabler</a>
-<a name="73"><span class="lineNum">      73 </span>            :     {</a>
-<a name="74"><span class="lineNum">      74 </span>            :         RealtimePriorityDisabler (Engine&amp; engine);</a>
-<a name="75"><span class="lineNum">      75 </span>            :         ~RealtimePriorityDisabler();</a>
-<a name="76"><span class="lineNum">      76 </span>            : </a>
-<a name="77"><span class="lineNum">      77 </span>            :         Engine&amp; engine;</a>
-<a name="78"><span class="lineNum">      78 </span>            :     };</a>
+<a name="71"><span class="lineNum">      71 </span>            :     /**</a>
+<a name="72"><span class="lineNum">      72 </span>            :         Used to temporarily reduce the process priority if a long operation like a file save is taking place.</a>
+<a name="73"><span class="lineNum">      73 </span>            :         You shouldn't need to use this in normal use.</a>
+<a name="74"><span class="lineNum">      74 </span>            :     */</a>
+<a name="75"><span class="lineNum">      75 </span>            :     struct RealtimePriorityDisabler</a>
+<a name="76"><span class="lineNum">      76 </span>            :     {</a>
+<a name="77"><span class="lineNum">      77 </span>            :         RealtimePriorityDisabler (Engine&amp;);</a>
+<a name="78"><span class="lineNum">      78 </span>            :         ~RealtimePriorityDisabler();</a>
 <a name="79"><span class="lineNum">      79 </span>            : </a>
-<a name="80"><span class="lineNum">      80 </span>            :     //==============================================================================</a>
-<a name="81"><span class="lineNum">      81 </span>            :     // These methods deal directly with the playhead so won't have any latency induced by syncing to the messaged thread.</a>
-<a name="82"><span class="lineNum">      82 </span>            :     bool isPlaying() const;</a>
-<a name="83"><span class="lineNum">      83 </span>            :     bool isLooping() const;</a>
-<a name="84"><span class="lineNum">      84 </span>            :     bool isDragging() const;</a>
-<a name="85"><span class="lineNum">      85 </span>            : </a>
-<a name="86"><span class="lineNum">      86 </span>            :     double getPosition() const;</a>
-<a name="87"><span class="lineNum">      87 </span>            :     double getUnloopedPosition() const;</a>
-<a name="88"><span class="lineNum">      88 </span>            :     EditTimeRange getLoopTimes() const;</a>
-<a name="89"><span class="lineNum">      89 </span>            :     </a>
-<a name="90"><span class="lineNum">      90 </span>            :     /** Returns the overall latency of the currently prepared graph. */</a>
-<a name="91"><span class="lineNum">      91 </span>            :     int getLatencySamples() const;</a>
-<a name="92"><span class="lineNum">      92 </span>            :     double getAudibleTimelineTime();</a>
-<a name="93"><span class="lineNum">      93 </span>            :     double getSampleRate() const;</a>
-<a name="94"><span class="lineNum">      94 </span>            :     void updateNumCPUs();</a>
-<a name="95"><span class="lineNum">      95 </span>            :     void setSpeedCompensation (double plusOrMinus);</a>
-<a name="96"><span class="lineNum">      96 </span>            :     void postPosition (double);</a>
-<a name="97"><span class="lineNum">      97 </span>            :     void play();</a>
-<a name="98"><span class="lineNum">      98 </span>            :     void stop();</a>
-<a name="99"><span class="lineNum">      99 </span>            :     </a>
-<a name="100"><span class="lineNum">     100 </span>            :     double globalStreamTimeToEditTime (double) const;</a>
-<a name="101"><span class="lineNum">     101 </span>            :     double globalStreamTimeToEditTimeUnlooped (double) const;</a>
-<a name="102"><span class="lineNum">     102 </span>            :     void resyncToGlobalStreamTime (juce::Range&lt;double&gt;);</a>
-<a name="103"><span class="lineNum">     103 </span>            : </a>
-<a name="104"><span class="lineNum">     104 </span>            :     /** @internal. Will be removed in a future release. */</a>
-<a name="105"><span class="lineNum">     105 </span>            :     tracktion_graph::PlayHead* getNodePlayHead() const;</a>
+<a name="80"><span class="lineNum">      80 </span>            :         Engine&amp; engine;</a>
+<a name="81"><span class="lineNum">      81 </span>            :     };</a>
+<a name="82"><span class="lineNum">      82 </span>            : </a>
+<a name="83"><span class="lineNum">      83 </span>            :     //==============================================================================</a>
+<a name="84"><span class="lineNum">      84 </span>            :     // These methods deal directly with the playhead so won't have any latency induced by syncing to the messaged thread.</a>
+<a name="85"><span class="lineNum">      85 </span>            :     bool isPlaying() const;</a>
+<a name="86"><span class="lineNum">      86 </span>            :     bool isLooping() const;</a>
+<a name="87"><span class="lineNum">      87 </span>            :     bool isDragging() const;</a>
+<a name="88"><span class="lineNum">      88 </span>            : </a>
+<a name="89"><span class="lineNum">      89 </span>            :     double getPosition() const;</a>
+<a name="90"><span class="lineNum">      90 </span>            :     double getUnloopedPosition() const;</a>
+<a name="91"><span class="lineNum">      91 </span>            :     EditTimeRange getLoopTimes() const;</a>
+<a name="92"><span class="lineNum">      92 </span>            :     </a>
+<a name="93"><span class="lineNum">      93 </span>            :     /** Returns the overall latency of the currently prepared graph. */</a>
+<a name="94"><span class="lineNum">      94 </span>            :     int getLatencySamples() const;</a>
+<a name="95"><span class="lineNum">      95 </span>            :     double getAudibleTimelineTime();</a>
+<a name="96"><span class="lineNum">      96 </span>            :     double getSampleRate() const;</a>
+<a name="97"><span class="lineNum">      97 </span>            :     void updateNumCPUs();</a>
+<a name="98"><span class="lineNum">      98 </span>            :     void setSpeedCompensation (double plusOrMinus);</a>
+<a name="99"><span class="lineNum">      99 </span>            :     void postPosition (double);</a>
+<a name="100"><span class="lineNum">     100 </span>            :     void play();</a>
+<a name="101"><span class="lineNum">     101 </span>            :     void stop();</a>
+<a name="102"><span class="lineNum">     102 </span>            :     </a>
+<a name="103"><span class="lineNum">     103 </span>            :     double globalStreamTimeToEditTime (double) const;</a>
+<a name="104"><span class="lineNum">     104 </span>            :     double globalStreamTimeToEditTimeUnlooped (double) const;</a>
+<a name="105"><span class="lineNum">     105 </span>            :     void resyncToGlobalStreamTime (juce::Range&lt;double&gt;);</a>
 <a name="106"><span class="lineNum">     106 </span>            : </a>
-<a name="107"><span class="lineNum">     107 </span>            :     /** @see tracktion_graph::ThreadPoolStrategy */</a>
-<a name="108"><span class="lineNum">     108 </span>            :     static void setThreadPoolStrategy (int);</a>
-<a name="109"><span class="lineNum">     109 </span>            :     /** @see tracktion_graph::ThreadPoolStrategy */</a>
-<a name="110"><span class="lineNum">     110 </span>            :     static int getThreadPoolStrategy();</a>
-<a name="111"><span class="lineNum">     111 </span>            :     </a>
-<a name="112"><span class="lineNum">     112 </span>            :     /** Enables reusing of audio buffers during graph processing</a>
-<a name="113"><span class="lineNum">     113 </span>            :         which may reduce the memory use at the cost of some additional overhead.</a>
-<a name="114"><span class="lineNum">     114 </span>            :     */</a>
-<a name="115"><span class="lineNum">     115 </span>            :     static void enablePooledMemory (bool);</a>
-<a name="116"><span class="lineNum">     116 </span>            : </a>
-<a name="117"><span class="lineNum">     117 </span>            : private:</a>
-<a name="118"><span class="lineNum">     118 </span>            :     bool isAllocated = false;</a>
+<a name="107"><span class="lineNum">     107 </span>            :     /** @internal. Will be removed in a future release. */</a>
+<a name="108"><span class="lineNum">     108 </span>            :     tracktion_graph::PlayHead* getNodePlayHead() const;</a>
+<a name="109"><span class="lineNum">     109 </span>            : </a>
+<a name="110"><span class="lineNum">     110 </span>            :     /** @see tracktion_graph::ThreadPoolStrategy */</a>
+<a name="111"><span class="lineNum">     111 </span>            :     static void setThreadPoolStrategy (int);</a>
+<a name="112"><span class="lineNum">     112 </span>            :     /** @see tracktion_graph::ThreadPoolStrategy */</a>
+<a name="113"><span class="lineNum">     113 </span>            :     static int getThreadPoolStrategy();</a>
+<a name="114"><span class="lineNum">     114 </span>            :     </a>
+<a name="115"><span class="lineNum">     115 </span>            :     /** Enables reusing of audio buffers during graph processing</a>
+<a name="116"><span class="lineNum">     116 </span>            :         which may reduce the memory use at the cost of some additional overhead.</a>
+<a name="117"><span class="lineNum">     117 </span>            :     */</a>
+<a name="118"><span class="lineNum">     118 </span>            :     static void enablePooledMemory (bool);</a>
 <a name="119"><span class="lineNum">     119 </span>            : </a>
-<a name="120"><span class="lineNum">     120 </span>            :     struct ProcessPriorityBooster</a>
-<a name="121"><span class="lineNum">     121 </span>            :     {</a>
-<a name="122"><span class="lineNum">     122 </span>            :         ProcessPriorityBooster (Engine&amp; engine);</a>
-<a name="123"><span class="lineNum">     123 </span>            :         ~ProcessPriorityBooster();</a>
-<a name="124"><span class="lineNum">     124 </span>            : </a>
-<a name="125"><span class="lineNum">     125 </span>            :         Engine&amp; engine;</a>
-<a name="126"><span class="lineNum">     126 </span>            :     };</a>
+<a name="120"><span class="lineNum">     120 </span>            : private:</a>
+<a name="121"><span class="lineNum">     121 </span>            :     bool isAllocated = false;</a>
+<a name="122"><span class="lineNum">     122 </span>            : </a>
+<a name="123"><span class="lineNum">     123 </span>            :     struct ProcessPriorityBooster</a>
+<a name="124"><span class="lineNum">     124 </span>            :     {</a>
+<a name="125"><span class="lineNum">     125 </span>            :         ProcessPriorityBooster (Engine&amp; engine);</a>
+<a name="126"><span class="lineNum">     126 </span>            :         ~ProcessPriorityBooster();</a>
 <a name="127"><span class="lineNum">     127 </span>            : </a>
-<a name="128"><span class="lineNum">     128 </span>            :     std::unique_ptr&lt;ProcessPriorityBooster&gt; priorityBooster;</a>
-<a name="129"><span class="lineNum">     129 </span>            : </a>
-<a name="130"><span class="lineNum">     130 </span>            :     juce::OwnedArray&lt;InputDeviceInstance&gt; waveInputs, midiInputs;</a>
-<a name="131"><span class="lineNum">     131 </span>            :     juce::OwnedArray&lt;WaveOutputDeviceInstance&gt; waveOutputs;</a>
-<a name="132"><span class="lineNum">     132 </span>            :     juce::OwnedArray&lt;MidiOutputDeviceInstance&gt; midiOutputs;</a>
-<a name="133"><span class="lineNum">     133 </span>            : </a>
-<a name="134"><span class="lineNum">     134 </span>            :     TempoSequence::TempoSections lastTempoSections;</a>
-<a name="135"><span class="lineNum">     135 </span>            : </a>
-<a name="136"><span class="lineNum">     136 </span>            :     void releaseDeviceList();</a>
-<a name="137"><span class="lineNum">     137 </span>            :     void rebuildDeviceList();</a>
+<a name="128"><span class="lineNum">     128 </span>            :         Engine&amp; engine;</a>
+<a name="129"><span class="lineNum">     129 </span>            :     };</a>
+<a name="130"><span class="lineNum">     130 </span>            : </a>
+<a name="131"><span class="lineNum">     131 </span>            :     std::unique_ptr&lt;ProcessPriorityBooster&gt; priorityBooster;</a>
+<a name="132"><span class="lineNum">     132 </span>            : </a>
+<a name="133"><span class="lineNum">     133 </span>            :     juce::OwnedArray&lt;InputDeviceInstance&gt; waveInputs, midiInputs;</a>
+<a name="134"><span class="lineNum">     134 </span>            :     juce::OwnedArray&lt;WaveOutputDeviceInstance&gt; waveOutputs;</a>
+<a name="135"><span class="lineNum">     135 </span>            :     juce::OwnedArray&lt;MidiOutputDeviceInstance&gt; midiOutputs;</a>
+<a name="136"><span class="lineNum">     136 </span>            : </a>
+<a name="137"><span class="lineNum">     137 </span>            :     TempoSequence::TempoSections lastTempoSections;</a>
 <a name="138"><span class="lineNum">     138 </span>            : </a>
-<a name="139"><span class="lineNum">     139 </span>            :     void prepareOutputDevices (double start);</a>
-<a name="140"><span class="lineNum">     140 </span>            :     void startRecording (double start, double punchIn);</a>
-<a name="141"><span class="lineNum">     141 </span>            :     void startPlaying (double start);</a>
-<a name="142"><span class="lineNum">     142 </span>            : </a>
-<a name="143"><span class="lineNum">     143 </span>            :     friend class DeviceManager;</a>
-<a name="144"><span class="lineNum">     144 </span>            : </a>
-<a name="145"><span class="lineNum">     145 </span>            :     juce::WeakReference&lt;EditPlaybackContext&gt; contextToSyncTo;</a>
-<a name="146"><span class="lineNum">     146 </span>            :     double previousBarTime = 0;</a>
-<a name="147"><span class="lineNum">     147 </span>            :     double syncInterval = 0;</a>
-<a name="148"><span class="lineNum">     148 </span>            :     bool hasSynced = false;</a>
-<a name="149"><span class="lineNum">     149 </span>            :     double lastStreamPos = 0;</a>
-<a name="150"><span class="lineNum">     150 </span>            :     </a>
-<a name="151"><span class="lineNum">     151 </span>            :     struct ContextSyncroniser;</a>
-<a name="152"><span class="lineNum">     152 </span>            :     std::unique_ptr&lt;ContextSyncroniser&gt; contextSyncroniser;</a>
+<a name="139"><span class="lineNum">     139 </span>            :     void releaseDeviceList();</a>
+<a name="140"><span class="lineNum">     140 </span>            :     void rebuildDeviceList();</a>
+<a name="141"><span class="lineNum">     141 </span>            : </a>
+<a name="142"><span class="lineNum">     142 </span>            :     void prepareOutputDevices (double start);</a>
+<a name="143"><span class="lineNum">     143 </span>            :     void startRecording (double start, double punchIn);</a>
+<a name="144"><span class="lineNum">     144 </span>            :     void startPlaying (double start);</a>
+<a name="145"><span class="lineNum">     145 </span>            : </a>
+<a name="146"><span class="lineNum">     146 </span>            :     friend class DeviceManager;</a>
+<a name="147"><span class="lineNum">     147 </span>            : </a>
+<a name="148"><span class="lineNum">     148 </span>            :     juce::WeakReference&lt;EditPlaybackContext&gt; contextToSyncTo;</a>
+<a name="149"><span class="lineNum">     149 </span>            :     double previousBarTime = 0;</a>
+<a name="150"><span class="lineNum">     150 </span>            :     double syncInterval = 0;</a>
+<a name="151"><span class="lineNum">     151 </span>            :     bool hasSynced = false;</a>
+<a name="152"><span class="lineNum">     152 </span>            :     double lastStreamPos = 0;</a>
 <a name="153"><span class="lineNum">     153 </span>            :     </a>
-<a name="154"><span class="lineNum">     154 </span>            :     struct NodePlaybackContext;</a>
-<a name="155"><span class="lineNum">     155 </span>            :     std::unique_ptr&lt;NodePlaybackContext&gt; nodePlaybackContext;</a>
-<a name="156"><span class="lineNum">     156 </span>            : </a>
-<a name="157"><span class="lineNum">     157 </span>            :     juce::WeakReference&lt;EditPlaybackContext&gt; nodeContextToSyncTo;</a>
-<a name="158"><span class="lineNum">     158 </span>            :     std::atomic&lt;double&gt; audiblePlaybackTime { 0.0 };</a>
+<a name="154"><span class="lineNum">     154 </span>            :     struct ContextSyncroniser;</a>
+<a name="155"><span class="lineNum">     155 </span>            :     std::unique_ptr&lt;ContextSyncroniser&gt; contextSyncroniser;</a>
+<a name="156"><span class="lineNum">     156 </span>            :     </a>
+<a name="157"><span class="lineNum">     157 </span>            :     struct NodePlaybackContext;</a>
+<a name="158"><span class="lineNum">     158 </span>            :     std::unique_ptr&lt;NodePlaybackContext&gt; nodePlaybackContext;</a>
 <a name="159"><span class="lineNum">     159 </span>            : </a>
-<a name="160"><span class="lineNum">     160 </span>            :     void createNode();</a>
-<a name="161"><span class="lineNum">     161 </span>            :     void fillNextNodeBlock (float** allChannels, int numChannels, int numSamples);</a>
+<a name="160"><span class="lineNum">     160 </span>            :     juce::WeakReference&lt;EditPlaybackContext&gt; nodeContextToSyncTo;</a>
+<a name="161"><span class="lineNum">     161 </span>            :     std::atomic&lt;double&gt; audiblePlaybackTime { 0.0 };</a>
 <a name="162"><span class="lineNum">     162 </span>            : </a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineCov">         74 :     JUCE_DECLARE_WEAK_REFERENCEABLE (EditPlaybackContext)</span></a>
-<a name="164"><span class="lineNum">     164 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EditPlaybackContext)</a>
-<a name="165"><span class="lineNum">     165 </span>            : };</a>
-<a name="166"><span class="lineNum">     166 </span>            : </a>
-<a name="167"><span class="lineNum">     167 </span>            : } // namespace tracktion_engine</a>
+<a name="163"><span class="lineNum">     163 </span>            :     void createNode();</a>
+<a name="164"><span class="lineNum">     164 </span>            :     void fillNextNodeBlock (float** allChannels, int numChannels, int numSamples);</a>
+<a name="165"><span class="lineNum">     165 </span>            : </a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineCov">         74 :     JUCE_DECLARE_WEAK_REFERENCEABLE (EditPlaybackContext)</span></a>
+<a name="167"><span class="lineNum">     167 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EditPlaybackContext)</a>
+<a name="168"><span class="lineNum">     168 </span>            : };</a>
+<a name="169"><span class="lineNum">     169 </span>            : </a>
+<a name="170"><span class="lineNum">     170 </span>            : } // namespace tracktion_engine</a>
 </pre>
       </td>
     </tr>

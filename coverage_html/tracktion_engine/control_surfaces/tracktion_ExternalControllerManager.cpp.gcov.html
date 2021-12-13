@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-13 11:58:48</td>
+            <td class="headerValue">2021-12-13 16:31:46</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">11</td>
@@ -252,9 +252,9 @@
 <a name="190"><span class="lineNum">     190 </span><span class="lineCov">        800 :     return currentEdit != nullptr &amp;&amp; currentEdit == ed;</span></a>
 <a name="191"><span class="lineNum">     191 </span>            : }</a>
 <a name="192"><span class="lineNum">     192 </span>            : </a>
-<a name="193"><span class="lineNum">     193 </span><span class="lineCov">       1681 : bool ExternalControllerManager::isAttachedToEdit (const Edit&amp; e) const noexcept</span></a>
+<a name="193"><span class="lineNum">     193 </span><span class="lineCov">       1772 : bool ExternalControllerManager::isAttachedToEdit (const Edit&amp; e) const noexcept</span></a>
 <a name="194"><span class="lineNum">     194 </span>            : {</a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineCov">       1681 :     return isAttachedToEdit (&amp;e);</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">       1772 :     return isAttachedToEdit (&amp;e);</span></a>
 <a name="196"><span class="lineNum">     196 </span>            : }</a>
 <a name="197"><span class="lineNum">     197 </span>            : </a>
 <a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 : SelectionManager* ExternalControllerManager::getSelectionManager() const noexcept</span></a>
@@ -418,20 +418,20 @@
 <a name="356"><span class="lineNum">     356 </span><span class="lineCov">          1 :     startTimer (750);</span></a>
 <a name="357"><span class="lineNum">     357 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="358"><span class="lineNum">     358 </span>            : </a>
-<a name="359"><span class="lineNum">     359 </span><span class="lineCov">         40 : void ExternalControllerManager::BlinkTimer::timerCallback()</span></a>
+<a name="359"><span class="lineNum">     359 </span><span class="lineCov">         43 : void ExternalControllerManager::BlinkTimer::timerCallback()</span></a>
 <a name="360"><span class="lineNum">     360 </span>            : {</a>
-<a name="361"><span class="lineNum">     361 </span><span class="lineCov">         40 :     isBright = ! isBright;</span></a>
-<a name="362"><span class="lineNum">     362 </span><span class="lineCov">         40 :     ecm.blinkNow();</span></a>
-<a name="363"><span class="lineNum">     363 </span><span class="lineCov">         40 : }</span></a>
+<a name="361"><span class="lineNum">     361 </span><span class="lineCov">         43 :     isBright = ! isBright;</span></a>
+<a name="362"><span class="lineNum">     362 </span><span class="lineCov">         43 :     ecm.blinkNow();</span></a>
+<a name="363"><span class="lineNum">     363 </span><span class="lineCov">         43 : }</span></a>
 <a name="364"><span class="lineNum">     364 </span>            : </a>
 <a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 : void ExternalControllerManager::blinkNow()</span></a>
 <a name="366"><span class="lineNum">     366 </span>            : {</a>
-<a name="367"><span class="lineNum">     367 </span><span class="lineCov">         40 :     updateMuteSoloLights (true);</span></a>
+<a name="367"><span class="lineNum">     367 </span><span class="lineCov">         43 :     updateMuteSoloLights (true);</span></a>
 <a name="368"><span class="lineNum">     368 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="369"><span class="lineNum">     369 </span>            : </a>
-<a name="370"><span class="lineNum">     370 </span><span class="lineCov">         40 : void ExternalControllerManager::updateMuteSoloLights (bool onlyUpdateFlashingLights)</span></a>
+<a name="370"><span class="lineNum">     370 </span><span class="lineCov">         43 : void ExternalControllerManager::updateMuteSoloLights (bool onlyUpdateFlashingLights)</span></a>
 <a name="371"><span class="lineNum">     371 </span>            : {</a>
-<a name="372"><span class="lineNum">     372 </span><span class="lineCov">         40 :     if (currentEdit != nullptr)</span></a>
+<a name="372"><span class="lineNum">     372 </span><span class="lineCov">         43 :     if (currentEdit != nullptr)</span></a>
 <a name="373"><span class="lineNum">     373 </span>            :     {</a>
 <a name="374"><span class="lineNum">     374 </span><span class="lineNoCov">          0 :         int i = 0;</span></a>
 <a name="375"><span class="lineNum">     375 </span><span class="lineNoCov">          0 :         const bool isBright = blinkTimer-&gt;isBright;</span></a>
@@ -461,7 +461,7 @@
 <a name="399"><span class="lineNum">     399 </span>            : </a>
 <a name="400"><span class="lineNum">     400 </span><span class="lineNoCov">          0 :         FOR_EACH_DEVICE (soloCountChanged (blinkTimer-&gt;isBright &amp;&amp; anySolo));</span></a>
 <a name="401"><span class="lineNum">     401 </span>            :     }</a>
-<a name="402"><span class="lineNum">     402 </span><span class="lineCov">         40 : }</span></a>
+<a name="402"><span class="lineNum">     402 </span><span class="lineCov">         43 : }</span></a>
 <a name="403"><span class="lineNum">     403 </span>            : </a>
 <a name="404"><span class="lineNum">     404 </span>            : //==============================================================================</a>
 <a name="405"><span class="lineNum">     405 </span><span class="lineNoCov">          0 : void ExternalControllerManager::moveFader (int channelNum, float newSliderPos)</span></a>

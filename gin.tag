@@ -56771,8 +56771,8 @@
       <type></type>
       <name>RealtimePriorityDisabler</name>
       <anchorfile>structtracktion__engine_1_1EditPlaybackContext_1_1RealtimePriorityDisabler.html</anchorfile>
-      <anchor>a319bc6a4f597a8633e69fa11f6d198b3</anchor>
-      <arglist>(Engine &amp;engine)</arglist>
+      <anchor>af76bae06430050efa2eb3aeca246f5f0</anchor>
+      <arglist>(Engine &amp;)</arglist>
     </member>
     <member kind="function">
       <type></type>

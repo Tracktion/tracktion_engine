@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">14</td>
+            <td class="headerCovTableEntry">15</td>
             <td class="headerCovTableEntry">43</td>
-            <td class="headerCovTableEntryLo">32.6 %</td>
+            <td class="headerCovTableEntryLo">34.9 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-13 11:58:48</td>
+            <td class="headerValue">2021-12-13 16:31:46</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntry">14</td>
             <td class="headerCovTableEntry">42</td>
-            <td class="headerCovTableEntryLo">31.0 %</td>
+            <td class="headerCovTableEntryLo">33.3 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -224,12 +224,12 @@
 <a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 :     virtual void setLevelMeterSettings (LevelMeterSettings)                         {}</span></a>
 <a name="163"><span class="lineNum">     163 </span>            : </a>
 <a name="164"><span class="lineNum">     164 </span>            :     // 0 = normal, 1 = high, 2 = realtime</a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 :     virtual void setProcessPriority (int /*level*/)                                 {}</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">        148 :     virtual void setProcessPriority (int /*level*/)                                 {}</span></a>
 <a name="166"><span class="lineNum">     166 </span>            : </a>
 <a name="167"><span class="lineNum">     167 </span>            :     /** If this returns true, you must implement describeWaveDevices to determine the wave devices for a given device.</a>
 <a name="168"><span class="lineNum">     168 </span>            :         If it's false, a standard, stereo pair layout will be automatically generated.</a>
 <a name="169"><span class="lineNum">     169 </span>            :     */</a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">    5057255 :     virtual bool isDescriptionOfWaveDevicesSupported()                              { return false; }</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">    5059425 :     virtual bool isDescriptionOfWaveDevicesSupported()                              { return false; }</span></a>
 <a name="171"><span class="lineNum">     171 </span>            : </a>
 <a name="172"><span class="lineNum">     172 </span>            :     /** If isDescriptionOfWaveDevicesSupported returns true, this should be implemented to describe the wave devices</a>
 <a name="173"><span class="lineNum">     173 </span>            :         for a given audio device.</a>

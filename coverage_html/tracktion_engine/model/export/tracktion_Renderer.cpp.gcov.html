@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-13 11:58:48</td>
+            <td class="headerValue">2021-12-13 16:31:46</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">12</td>
@@ -221,15 +221,15 @@
 <a name="159"><span class="lineNum">     159 </span>            : {</a>
 <a name="160"><span class="lineNum">     160 </span><span class="lineCov">        140 : }</span></a>
 <a name="161"><span class="lineNum">     161 </span>            : </a>
-<a name="162"><span class="lineNum">     162 </span><span class="lineCov">     662443 : ThreadPoolJob::JobStatus Renderer::RenderTask::runJob()</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineCov">     663143 : ThreadPoolJob::JobStatus Renderer::RenderTask::runJob()</span></a>
 <a name="163"><span class="lineNum">     163 </span>            : {</a>
-<a name="164"><span class="lineNum">     164 </span><span class="lineCov">    1324890 :     CRASH_TRACER</span></a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">     662443 :     FloatVectorOperations::disableDenormalisedNumberSupport();</span></a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineCov">    1326290 :     CRASH_TRACER</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">     663143 :     FloatVectorOperations::disableDenormalisedNumberSupport();</span></a>
 <a name="166"><span class="lineNum">     166 </span>            : </a>
-<a name="167"><span class="lineNum">     167 </span><span class="lineCov">     662443 :     if (params.createMidiFile)</span></a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineCov">     663143 :     if (params.createMidiFile)</span></a>
 <a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :         renderMidi (params);</span></a>
-<a name="169"><span class="lineNum">     169 </span><span class="lineCov">     662443 :     else if (! renderAudio (params))</span></a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">     662373 :         return jobNeedsRunningAgain;</span></a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineCov">     663143 :     else if (! renderAudio (params))</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">     663073 :         return jobNeedsRunningAgain;</span></a>
 <a name="171"><span class="lineNum">     171 </span>            : </a>
 <a name="172"><span class="lineNum">     172 </span>            :     return jobHasFinished;</a>
 <a name="173"><span class="lineNum">     173 </span>            : }</a>
@@ -312,11 +312,11 @@
 <a name="250"><span class="lineNum">     250 </span>            : }</a>
 <a name="251"><span class="lineNum">     251 </span>            : </a>
 <a name="252"><span class="lineNum">     252 </span>            : //==============================================================================</a>
-<a name="253"><span class="lineNum">     253 </span><span class="lineCov">     662443 : bool Renderer::RenderTask::renderAudio (Renderer::Parameters&amp; r)</span></a>
+<a name="253"><span class="lineNum">     253 </span><span class="lineCov">     663143 : bool Renderer::RenderTask::renderAudio (Renderer::Parameters&amp; r)</span></a>
 <a name="254"><span class="lineNum">     254 </span>            : {</a>
-<a name="255"><span class="lineNum">     255 </span><span class="lineCov">    1324890 :     CRASH_TRACER</span></a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineCov">    1326290 :     CRASH_TRACER</span></a>
 <a name="256"><span class="lineNum">     256 </span>            :     </a>
-<a name="257"><span class="lineNum">     257 </span><span class="lineCov">     662443 :     if (! nodeRenderContext)</span></a>
+<a name="257"><span class="lineNum">     257 </span><span class="lineCov">     663143 :     if (! nodeRenderContext)</span></a>
 <a name="258"><span class="lineNum">     258 </span>            :     {</a>
 <a name="259"><span class="lineNum">     259 </span><span class="lineCov">        280 :         callBlocking ([&amp;, this] { nodeRenderContext = std::make_unique&lt;NodeRenderContext&gt; (*this, r,</span></a>
 <a name="260"><span class="lineNum">     260 </span><span class="lineCov">         70 :                                                                                            std::move (graphNode),</span></a>
@@ -332,7 +332,7 @@
 <a name="270"><span class="lineNum">     270 </span>            :         }</a>
 <a name="271"><span class="lineNum">     271 </span>            :     }</a>
 <a name="272"><span class="lineNum">     272 </span>            :     </a>
-<a name="273"><span class="lineNum">     273 </span><span class="lineCov">     662439 :     if (! nodeRenderContext-&gt;renderNextBlock (progress))</span></a>
+<a name="273"><span class="lineNum">     273 </span><span class="lineCov">     663139 :     if (! nodeRenderContext-&gt;renderNextBlock (progress))</span></a>
 <a name="274"><span class="lineNum">     274 </span>            :         return false;</a>
 <a name="275"><span class="lineNum">     275 </span>            :     </a>
 <a name="276"><span class="lineNum">     276 </span>            :     nodeRenderContext.reset();</a>
