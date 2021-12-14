@@ -86,6 +86,8 @@ public:
     /** @internal */
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 
+    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
+
 private:
     //==============================================================================
     enum
@@ -117,7 +119,7 @@ private:
     }
     void loadImpulseResponseFromState();
 
-    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ImpulseResponsePlugin)
 };
