@@ -69,7 +69,8 @@ inline bool publishToBenchmarkAPI (juce::String apiKey, std::vector<BenchmarkRes
                         .withParameter ("request", "push_results")
                         .withParameter ("content", jsonString);
 
-    if (auto inputStream = url.createInputStream (URL::InputStreamOptions (URL::ParameterHandling::inPostData)))
+    if (auto inputStream = url.createInputStream (URL::InputStreamOptions (URL::ParameterHandling::inPostData)
+                                                                        .withExtraHeaders ("User-Agent: Mozilla/2.2")))
     {
         const auto returnVal = inputStream->readEntireStreamAsString();
         std::cout << returnVal << "\n";
