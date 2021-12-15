@@ -59,7 +59,7 @@ public:
     AutomatableParameter::Ptr lowPassCutoffParam;   /**< Cutoff frequency for the low pass filter to applied after the IR */
     AutomatableParameter::Ptr gainParam;            /**< Parameter for the gain to apply */
     AutomatableParameter::Ptr mixParam;             /**< Parameter for the mix control, 0.0 = dry, 1.0 = wet */
-    AutomatableParameter::Ptr presenceParam;        /**< Parameter for the Q factor of the high pass and low pass filters */
+    AutomatableParameter::Ptr filterQParam;         /**< Parameter for the Q factor of the high pass and low pass filters */
 
     //==============================================================================
     /** @internal */
@@ -86,8 +86,6 @@ public:
     /** @internal */
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 
-    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
-
 private:
     //==============================================================================
     enum
@@ -100,13 +98,13 @@ private:
 
     juce::CachedValue<float> gainValue, mixValue;
     juce::CachedValue<float> highPassCutoffValue, lowPassCutoffValue;
-    juce::CachedValue<float> QValue;
+    juce::CachedValue<float> qValue;
 
     juce::dsp::ProcessorChain<juce::dsp::Convolution,
                               juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>>,
                               juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>>,
                               juce::dsp::Gain<float>> processorChain;
-    juce::SmoothedValue<float> highFreqSmoother, lowFreqSmoother, gainSmoother, wetGainSmoother, dryGainSmoother, QSmoother;
+    juce::SmoothedValue<float> highFreqSmoother, lowFreqSmoother, gainSmoother, wetGainSmoother, dryGainSmoother, qSmoother;
 
     struct WetDryGain { float wet, dry; };    
     static WetDryGain getWetDryLevels (float mix)
@@ -119,7 +117,7 @@ private:
     }
     void loadImpulseResponseFromState();
 
-
+    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ImpulseResponsePlugin)
 };
