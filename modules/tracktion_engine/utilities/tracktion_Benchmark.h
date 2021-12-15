@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#include "../../tracktion_graph/utilities/tracktion_PerformanceMeasurement.h"
+
 namespace tracktion_engine
 {
 
@@ -30,15 +32,10 @@ struct BenchmarkDescription
 struct BenchmarkResult
 {
     BenchmarkDescription description;   /**< The BenchmarkDescription. */
-    int64_t ticksStart = 0, ticksEnd = 0, ticksPerSecond = 0;
+    double duration = 0.0, min = 0.0, max = 0.0, variance = 0.0;
+    int64_t ticksPerSecond = 0;
     juce::Time date { juce::Time::getCurrentTime() };
 };
-
-/** Returns the duration in seconds of a BenchmarkResult. */
-inline double getDuration (const BenchmarkResult& r)
-{
-    return (r.ticksEnd - r.ticksStart) / static_cast<double> (r.ticksPerSecond);
-}
 
 //==============================================================================
 /**
@@ -61,24 +58,27 @@ public:
     /** Starts timing the benchmark. */
     void start()
     {
-        ticksStart = Time::getHighResolutionTicks();
+        measurement.start();
     }
     
     /** Stops timing the benchmark. */
     void stop()
     {
-        ticksEnd = Time::getHighResolutionTicks();
+        measurement.stop();
     }
     
     /** Returns the timing results. */
     BenchmarkResult getResult() const
     {
-        return { description, ticksStart, ticksEnd, ticksPerSecond };
+        const auto stats = measurement.getStatistics();
+        return { description,
+                 stats.totalSeconds, stats.minimumSeconds, stats.maximumSeconds,
+                 stats.getVariance(), ticksPerSecond };
     }
     
 private:
     BenchmarkDescription description;
-    int64 ticksStart = 0, ticksEnd = 0;
+    tracktion_graph::PerformanceMeasurement measurement { {}, -1, false };
     const int64 ticksPerSecond { Time::getHighResolutionTicksPerSecond() };
 };
 
