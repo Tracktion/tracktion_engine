@@ -2482,19 +2482,13 @@
     <name>tracktion_Benchmark.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
     <filename>tracktion__Benchmark_8h.html</filename>
+    <includes id="tracktion__PerformanceMeasurement_8h" name="tracktion_PerformanceMeasurement.h" local="yes" imported="no">../../tracktion_graph/utilities/tracktion_PerformanceMeasurement.h</includes>
     <class kind="struct">tracktion_engine::BenchmarkDescription</class>
     <class kind="struct">tracktion_engine::BenchmarkResult</class>
     <class kind="class">tracktion_engine::Benchmark</class>
     <class kind="class">tracktion_engine::BenchmarkList</class>
     <class kind="struct">tracktion_engine::ScopedBenchmark</class>
     <namespace>tracktion_engine</namespace>
-    <member kind="function">
-      <type>double</type>
-      <name>getDuration</name>
-      <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>a6a8424cb7d2ca32662979eb9940f4db9</anchor>
-      <arglist>(const BenchmarkResult &amp;r)</arglist>
-    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_BenchmarkUtilities.h</name>
@@ -5159,10 +5153,11 @@
     <name>tracktion_PerformanceMeasurement.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_graph/utilities/</path>
     <filename>tracktion__PerformanceMeasurement_8h.html</filename>
-    <class kind="struct">ScopedSignpost</class>
-    <class kind="class">PerformanceMeasurement</class>
-    <class kind="struct">PerformanceMeasurement::Statistics</class>
-    <class kind="class">ScopedPerformanceMeasurement</class>
+    <class kind="struct">tracktion_graph::ScopedSignpost</class>
+    <class kind="class">tracktion_graph::PerformanceMeasurement</class>
+    <class kind="struct">tracktion_graph::PerformanceMeasurement::Statistics</class>
+    <class kind="class">tracktion_graph::ScopedPerformanceMeasurement</class>
+    <namespace>tracktion_graph</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_Phaser.h</name>
@@ -14604,17 +14599,31 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>int64_t</type>
-      <name>ticksStart</name>
+      <type>double</type>
+      <name>duration</name>
       <anchorfile>structtracktion__engine_1_1BenchmarkResult.html</anchorfile>
-      <anchor>a24d234e8137fc47363f71f4463bdd10e</anchor>
+      <anchor>af723955a91377c8ed69a955730ff84b6</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>int64_t</type>
-      <name>ticksEnd</name>
+      <type>double</type>
+      <name>min</name>
       <anchorfile>structtracktion__engine_1_1BenchmarkResult.html</anchorfile>
-      <anchor>ac0a4018fb81e1df5e3ec5fd5e896f304</anchor>
+      <anchor>a92d05e2bb5158fce8215ee96a9567442</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>double</type>
+      <name>max</name>
+      <anchorfile>structtracktion__engine_1_1BenchmarkResult.html</anchorfile>
+      <anchor>a9a2ac2eebc681496269d53a9b23bff80</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>double</type>
+      <name>variance</name>
+      <anchorfile>structtracktion__engine_1_1BenchmarkResult.html</anchorfile>
+      <anchor>a84773b6b9f8a12bb6da9e83a2187184a</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -49528,49 +49537,56 @@
     </member>
   </compound>
   <compound kind="class">
-    <name>PerformanceMeasurement</name>
-    <filename>classPerformanceMeasurement.html</filename>
-    <class kind="struct">PerformanceMeasurement::Statistics</class>
+    <name>tracktion_graph::PerformanceMeasurement</name>
+    <filename>classtracktion__graph_1_1PerformanceMeasurement.html</filename>
+    <class kind="struct">tracktion_graph::PerformanceMeasurement::Statistics</class>
     <member kind="function">
       <type></type>
       <name>PerformanceMeasurement</name>
-      <anchorfile>group__tracktion__graph-utilities.html</anchorfile>
-      <anchor>ga0d9a9112e68f73a433afd4e426146a99</anchor>
-      <arglist>(const std::string &amp;counterName, int runsPerPrintout=100)</arglist>
+      <anchorfile>classtracktion__graph_1_1PerformanceMeasurement.html</anchorfile>
+      <anchor>a443b90df8e9026d595a4588fea52ed7b</anchor>
+      <arglist>(const std::string &amp;counterName, int runsPerPrintout=100, bool printOnDestruction=true)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>~PerformanceMeasurement</name>
-      <anchorfile>group__tracktion__graph-utilities.html</anchorfile>
-      <anchor>ga6a7c3dc161e9bc7a5adad171852a0302</anchor>
+      <anchorfile>classtracktion__graph_1_1PerformanceMeasurement.html</anchorfile>
+      <anchor>a257bfcea76edeaa9f20bf3608bf339ea</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>start</name>
-      <anchorfile>group__tracktion__graph-utilities.html</anchorfile>
-      <anchor>ga264d80c2dcf41289b1d5fe9ed8d83693</anchor>
+      <anchorfile>classtracktion__graph_1_1PerformanceMeasurement.html</anchorfile>
+      <anchor>af002841ef4727d6283645675bd495b98</anchor>
       <arglist>() noexcept</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>stop</name>
-      <anchorfile>group__tracktion__graph-utilities.html</anchorfile>
-      <anchor>ga477df74965167cc748f58fba2b7d1576</anchor>
+      <anchorfile>classtracktion__graph_1_1PerformanceMeasurement.html</anchorfile>
+      <anchor>a8b8921bb752b649cb1a0c12822467f34</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>printStatistics</name>
-      <anchorfile>group__tracktion__graph-utilities.html</anchorfile>
-      <anchor>ga8fb394f5030d0ad63a44974992a480a3</anchor>
+      <anchorfile>classtracktion__graph_1_1PerformanceMeasurement.html</anchorfile>
+      <anchor>abcbac8aaf14b162d819f1cb156c87c81</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>Statistics</type>
+      <name>getStatistics</name>
+      <anchorfile>classtracktion__graph_1_1PerformanceMeasurement.html</anchorfile>
+      <anchor>abce246eb58b517e2cb2439926f4a5d64</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>Statistics</type>
       <name>getStatisticsAndReset</name>
-      <anchorfile>group__tracktion__graph-utilities.html</anchorfile>
-      <anchor>gabf37325a823c6b56e87e497113a6f2e5</anchor>
+      <anchorfile>classtracktion__graph_1_1PerformanceMeasurement.html</anchorfile>
+      <anchor>a305ab455f107943cb398bcfa7e70baeb</anchor>
       <arglist>()</arglist>
     </member>
   </compound>
@@ -59787,27 +59803,27 @@
     </member>
   </compound>
   <compound kind="class">
-    <name>ScopedPerformanceMeasurement</name>
-    <filename>classScopedPerformanceMeasurement.html</filename>
+    <name>tracktion_graph::ScopedPerformanceMeasurement</name>
+    <filename>classtracktion__graph_1_1ScopedPerformanceMeasurement.html</filename>
     <member kind="function">
       <type></type>
       <name>ScopedPerformanceMeasurement</name>
-      <anchorfile>classScopedPerformanceMeasurement.html</anchorfile>
-      <anchor>a034ae45143aa646b337bba084b0c4bc3</anchor>
+      <anchorfile>classtracktion__graph_1_1ScopedPerformanceMeasurement.html</anchorfile>
+      <anchor>ad3669a967633bddf56452e946c2d7c01</anchor>
       <arglist>(PerformanceMeasurement &amp;pm)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>~ScopedPerformanceMeasurement</name>
-      <anchorfile>classScopedPerformanceMeasurement.html</anchorfile>
-      <anchor>aab1085c6b90c5d542c0681022fd35b6d</anchor>
+      <anchorfile>classtracktion__graph_1_1ScopedPerformanceMeasurement.html</anchorfile>
+      <anchor>af575f569036417e4b8d219f2aec173de</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="variable">
       <type>PerformanceMeasurement &amp;</type>
       <name>performanceMeasurement</name>
-      <anchorfile>classScopedPerformanceMeasurement.html</anchorfile>
-      <anchor>af7fec993b69edb6aec1aee042e83d778</anchor>
+      <anchorfile>classtracktion__graph_1_1ScopedPerformanceMeasurement.html</anchorfile>
+      <anchor>abae71069b17d9aa8e773c7ddbaa442a4</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -59923,20 +59939,20 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>ScopedSignpost</name>
-    <filename>structScopedSignpost.html</filename>
+    <name>tracktion_graph::ScopedSignpost</name>
+    <filename>structtracktion__graph_1_1ScopedSignpost.html</filename>
     <member kind="function">
       <type></type>
       <name>ScopedSignpost</name>
-      <anchorfile>structScopedSignpost.html</anchorfile>
-      <anchor>a09491c88b8b71334f094c316e08f7a5a</anchor>
+      <anchorfile>structtracktion__graph_1_1ScopedSignpost.html</anchorfile>
+      <anchor>a6697a372410d2a7d5c325bf3d71c28e5</anchor>
       <arglist>(uint32_t signpostIndex)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>~ScopedSignpost</name>
-      <anchorfile>structScopedSignpost.html</anchorfile>
-      <anchor>ab9d55118d9241de0fd6e89ee4709921b</anchor>
+      <anchorfile>structtracktion__graph_1_1ScopedSignpost.html</anchorfile>
+      <anchor>a598d5efd783b7e196896e726a671a5c8</anchor>
       <arglist>()</arglist>
     </member>
   </compound>
@@ -62738,83 +62754,90 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>PerformanceMeasurement::Statistics</name>
-    <filename>structPerformanceMeasurement_1_1Statistics.html</filename>
+    <name>tracktion_graph::PerformanceMeasurement::Statistics</name>
+    <filename>structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html</filename>
     <member kind="function">
       <type></type>
       <name>Statistics</name>
-      <anchorfile>structPerformanceMeasurement_1_1Statistics.html</anchorfile>
-      <anchor>ab6ba74e40b338bfb2d05e3f434a20e4b</anchor>
+      <anchorfile>structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
+      <anchor>a2dcc32cfc31d877b0555f9e6a9120fe7</anchor>
       <arglist>() noexcept=default</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>clear</name>
-      <anchorfile>group__tracktion__graph-utilities.html</anchorfile>
-      <anchor>ga416f7fc2ec852963d02928a4223475ba</anchor>
+      <anchorfile>structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
+      <anchor>a9924db5591dbebb731da40ed00896d0d</anchor>
       <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>double</type>
+      <name>getVariance</name>
+      <anchorfile>structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
+      <anchor>a018c50d584eb2c9fdf20b595196da6b1</anchor>
+      <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>std::string</type>
       <name>toString</name>
-      <anchorfile>group__tracktion__graph-utilities.html</anchorfile>
-      <anchor>ga109c503c3694dbe23af19e4b36c41b8a</anchor>
+      <anchorfile>structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
+      <anchor>ad3a726c03bf1aaf75af90c84f7490d5f</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>addResult</name>
-      <anchorfile>group__tracktion__graph-utilities.html</anchorfile>
-      <anchor>gaf9dfa5defc16d0d211dfb1136d4e2186</anchor>
+      <anchorfile>structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
+      <anchor>ac2f80a6f2e4b7b644a50a5ed33b5e056</anchor>
       <arglist>(double elapsed) noexcept</arglist>
     </member>
     <member kind="variable">
       <type>std::string</type>
       <name>name</name>
-      <anchorfile>structPerformanceMeasurement_1_1Statistics.html</anchorfile>
-      <anchor>a0ca2a2861a13c28bcf3ed723381457da</anchor>
+      <anchorfile>structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
+      <anchor>a4e10c15f2661330ac580f3a8d941e28d</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>double</type>
       <name>meanSeconds</name>
-      <anchorfile>structPerformanceMeasurement_1_1Statistics.html</anchorfile>
-      <anchor>ac98e4c173cb08ce89c1cb1ad8f3e5c87</anchor>
+      <anchorfile>structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
+      <anchor>a7d4279b28f9b06064c559008709cf796</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>double</type>
       <name>m2</name>
-      <anchorfile>structPerformanceMeasurement_1_1Statistics.html</anchorfile>
-      <anchor>ac497255417bce09497e37bff2d9466e4</anchor>
+      <anchorfile>structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
+      <anchor>a1c0d000f27ada422129aae6c8faa33c7</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>double</type>
       <name>maximumSeconds</name>
-      <anchorfile>structPerformanceMeasurement_1_1Statistics.html</anchorfile>
-      <anchor>a9106d56bffe788eff7bee8363e7c8abc</anchor>
+      <anchorfile>structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
+      <anchor>a1cdf07beb7970938db05f3be7b0925b5</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>double</type>
       <name>minimumSeconds</name>
-      <anchorfile>structPerformanceMeasurement_1_1Statistics.html</anchorfile>
-      <anchor>a32134d280e1ca96248a5ce02ff959876</anchor>
+      <anchorfile>structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
+      <anchor>a1506159bfb84f32e4d091b293ffcdede</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>double</type>
       <name>totalSeconds</name>
-      <anchorfile>structPerformanceMeasurement_1_1Statistics.html</anchorfile>
-      <anchor>a0c15f1927543a0c8270e830dfdf47429</anchor>
+      <anchorfile>structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
+      <anchor>aabef2530210c40166b3b2bccb64aba73</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>int64_t</type>
       <name>numRuns</name>
-      <anchorfile>structPerformanceMeasurement_1_1Statistics.html</anchorfile>
-      <anchor>a03e3afe70835da6e66e06ff2a9975cb1</anchor>
+      <anchorfile>structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
+      <anchor>af739074eccffada098e3683667734961</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -79057,13 +79080,6 @@
       <arglist>(juce::AudioSampleBuffer &amp;buffer, int startChannel, int endChannel=-1, int startSample=0, int endSample=-1)</arglist>
     </member>
     <member kind="function">
-      <type>double</type>
-      <name>getDuration</name>
-      <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>a6a8424cb7d2ca32662979eb9940f4db9</anchor>
-      <arglist>(const BenchmarkResult &amp;r)</arglist>
-    </member>
-    <member kind="function">
       <type>juce::PropertiesFile *</type>
       <name>getApplicationSettings</name>
       <anchorfile>namespacetracktion__engine.html</anchorfile>
@@ -80340,11 +80356,14 @@
     <class kind="struct">tracktion_graph::NodeOptimisations</class>
     <class kind="class">tracktion_graph::NodePlayer</class>
     <class kind="struct">tracktion_graph::NodeProperties</class>
+    <class kind="class">tracktion_graph::PerformanceMeasurement</class>
     <class kind="struct">tracktion_graph::PlaybackInitialisationInfo</class>
     <class kind="class">tracktion_graph::PlayHead</class>
     <class kind="class">tracktion_graph::PlayHeadState</class>
     <class kind="class">tracktion_graph::RealTimeSpinLock</class>
     <class kind="class">tracktion_graph::ReturnNode</class>
+    <class kind="class">tracktion_graph::ScopedPerformanceMeasurement</class>
+    <class kind="struct">tracktion_graph::ScopedSignpost</class>
     <class kind="class">tracktion_graph::Semaphore</class>
     <class kind="class">tracktion_graph::SendNode</class>
     <class kind="class">tracktion_graph::SilentNode</class>
@@ -80788,68 +80807,5 @@
     <name>tracktion_graph-utilities</name>
     <title>utilities</title>
     <filename>group__tracktion__graph-utilities.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>PerformanceMeasurement</name>
-      <anchorfile>group__tracktion__graph-utilities.html</anchorfile>
-      <anchor>ga0d9a9112e68f73a433afd4e426146a99</anchor>
-      <arglist>(const std::string &amp;counterName, int runsPerPrintout=100)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>~PerformanceMeasurement</name>
-      <anchorfile>group__tracktion__graph-utilities.html</anchorfile>
-      <anchor>ga6a7c3dc161e9bc7a5adad171852a0302</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clear</name>
-      <anchorfile>group__tracktion__graph-utilities.html</anchorfile>
-      <anchor>ga416f7fc2ec852963d02928a4223475ba</anchor>
-      <arglist>() noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>addResult</name>
-      <anchorfile>group__tracktion__graph-utilities.html</anchorfile>
-      <anchor>gaf9dfa5defc16d0d211dfb1136d4e2186</anchor>
-      <arglist>(double elapsed) noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>std::string</type>
-      <name>toString</name>
-      <anchorfile>group__tracktion__graph-utilities.html</anchorfile>
-      <anchor>ga109c503c3694dbe23af19e4b36c41b8a</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>start</name>
-      <anchorfile>group__tracktion__graph-utilities.html</anchorfile>
-      <anchor>ga264d80c2dcf41289b1d5fe9ed8d83693</anchor>
-      <arglist>() noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>stop</name>
-      <anchorfile>group__tracktion__graph-utilities.html</anchorfile>
-      <anchor>ga477df74965167cc748f58fba2b7d1576</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>printStatistics</name>
-      <anchorfile>group__tracktion__graph-utilities.html</anchorfile>
-      <anchor>ga8fb394f5030d0ad63a44974992a480a3</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>Statistics</type>
-      <name>getStatisticsAndReset</name>
-      <anchorfile>group__tracktion__graph-utilities.html</anchorfile>
-      <anchor>gabf37325a823c6b56e87e497113a6f2e5</anchor>
-      <arglist>()</arglist>
-    </member>
   </compound>
 </tagfile>

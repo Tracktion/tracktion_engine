@@ -81,10 +81,14 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a8d2bd48d80b5d8d42f6a4865fb56742e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion__engine_1_1BenchmarkDescription.html">BenchmarkDescription</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1BenchmarkResult.html#a8d2bd48d80b5d8d42f6a4865fb56742e">description</a></td></tr>
 <tr class="memdesc:a8d2bd48d80b5d8d42f6a4865fb56742e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="structtracktion__engine_1_1BenchmarkDescription.html" title="Describes a benchmark.">BenchmarkDescription</a>.  <a href="structtracktion__engine_1_1BenchmarkResult.html#a8d2bd48d80b5d8d42f6a4865fb56742e">More...</a><br /></td></tr>
 <tr class="separator:a8d2bd48d80b5d8d42f6a4865fb56742e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24d234e8137fc47363f71f4463bdd10e"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1BenchmarkResult.html#a24d234e8137fc47363f71f4463bdd10e">ticksStart</a> = 0</td></tr>
-<tr class="separator:a24d234e8137fc47363f71f4463bdd10e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0a4018fb81e1df5e3ec5fd5e896f304"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1BenchmarkResult.html#ac0a4018fb81e1df5e3ec5fd5e896f304">ticksEnd</a> = 0</td></tr>
-<tr class="separator:ac0a4018fb81e1df5e3ec5fd5e896f304"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af723955a91377c8ed69a955730ff84b6"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1BenchmarkResult.html#af723955a91377c8ed69a955730ff84b6">duration</a> = 0.0</td></tr>
+<tr class="separator:af723955a91377c8ed69a955730ff84b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92d05e2bb5158fce8215ee96a9567442"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1BenchmarkResult.html#a92d05e2bb5158fce8215ee96a9567442">min</a> = 0.0</td></tr>
+<tr class="separator:a92d05e2bb5158fce8215ee96a9567442"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a2ac2eebc681496269d53a9b23bff80"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1BenchmarkResult.html#a9a2ac2eebc681496269d53a9b23bff80">max</a> = 0.0</td></tr>
+<tr class="separator:a9a2ac2eebc681496269d53a9b23bff80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84773b6b9f8a12bb6da9e83a2187184a"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1BenchmarkResult.html#a84773b6b9f8a12bb6da9e83a2187184a">variance</a> = 0.0</td></tr>
+<tr class="separator:a84773b6b9f8a12bb6da9e83a2187184a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a406e744d8bab7308caf27fa4dd319e1e"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1BenchmarkResult.html#a406e744d8bab7308caf27fa4dd319e1e">ticksPerSecond</a> = 0</td></tr>
 <tr class="separator:a406e744d8bab7308caf27fa4dd319e1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2aaca688c14761b4438750e1be5db99a"><td class="memItemLeft" align="right" valign="top">juce::Time&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1BenchmarkResult.html#a2aaca688c14761b4438750e1be5db99a">date</a> { juce::Time::getCurrentTime() }</td></tr>
@@ -109,35 +113,59 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a24d234e8137fc47363f71f4463bdd10e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a24d234e8137fc47363f71f4463bdd10e">&#9670;&nbsp;</a></span>ticksStart</h2>
+<a id="af723955a91377c8ed69a955730ff84b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af723955a91377c8ed69a955730ff84b6">&#9670;&nbsp;</a></span>duration</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int64_t tracktion_engine::BenchmarkResult::ticksStart = 0</td>
+          <td class="memname">double tracktion_engine::BenchmarkResult::duration = 0.0</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="namespacetracktion__engine.html#a6a8424cb7d2ca32662979eb9940f4db9">tracktion_engine::getDuration()</a>.</p>
-
 </div>
 </div>
-<a id="ac0a4018fb81e1df5e3ec5fd5e896f304"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac0a4018fb81e1df5e3ec5fd5e896f304">&#9670;&nbsp;</a></span>ticksEnd</h2>
+<a id="a92d05e2bb5158fce8215ee96a9567442"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92d05e2bb5158fce8215ee96a9567442">&#9670;&nbsp;</a></span>min</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int64_t tracktion_engine::BenchmarkResult::ticksEnd = 0</td>
+          <td class="memname">double tracktion_engine::BenchmarkResult::min = 0.0</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="namespacetracktion__engine.html#a6a8424cb7d2ca32662979eb9940f4db9">tracktion_engine::getDuration()</a>.</p>
+</div>
+</div>
+<a id="a9a2ac2eebc681496269d53a9b23bff80"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a2ac2eebc681496269d53a9b23bff80">&#9670;&nbsp;</a></span>max</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double tracktion_engine::BenchmarkResult::max = 0.0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a84773b6b9f8a12bb6da9e83a2187184a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84773b6b9f8a12bb6da9e83a2187184a">&#9670;&nbsp;</a></span>variance</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double tracktion_engine::BenchmarkResult::variance = 0.0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -152,8 +180,6 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="namespacetracktion__engine.html#a6a8424cb7d2ca32662979eb9940f4db9">tracktion_engine::getDuration()</a>.</p>
 
 </div>
 </div>
@@ -177,7 +203,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 14 2021 16:43:57 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Dec 15 2021 23:48:13 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

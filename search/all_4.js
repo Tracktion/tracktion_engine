@@ -164,6 +164,7 @@ var searchData=
   ['dump_966',['dump',['../structtracktion__engine_1_1CrashStackTracer.html#a9c5d742cbfabc90a39f513989c1dc8b2',1,'tracktion_engine::CrashStackTracer::dump()'],['../structtracktion__engine_1_1CrashStackTracer.html#abd5df5b08a26f05764efc2a6bd377600',1,'tracktion_engine::CrashStackTracer::dump(juce::OutputStream &amp;)'],['../structtracktion__engine_1_1CrashStackTracer.html#ad4ce1947499c55a89429faf0d5bad883',1,'tracktion_engine::CrashStackTracer::dump(juce::OutputStream &amp;, juce::Thread::ThreadID)']]],
   ['duplicatechordinprogression_967',['duplicateChordInProgression',['../classtracktion__engine_1_1PatternGenerator.html#a63dda985101cd0552f015b2d9fffecf7',1,'tracktion_engine::PatternGenerator']]],
   ['duplicateclip_968',['duplicateClip',['../namespacetracktion__engine.html#aee5976171d65806059b5f5b72b442142',1,'tracktion_engine']]],
-  ['dynamics_969',['dynamics',['../classtracktion__engine_1_1AirWindowsPlugin.html#a22dc62d9680045e5f07a5e829f39ffd8a354cdd7f3cd56b929a08bfb040e98c26',1,'tracktion_engine::AirWindowsPlugin']]],
-  ['docs_970',['docs',['../group__tracktion__graph-docs.html',1,'']]]
+  ['duration_969',['duration',['../structtracktion__engine_1_1BenchmarkResult.html#af723955a91377c8ed69a955730ff84b6',1,'tracktion_engine::BenchmarkResult']]],
+  ['dynamics_970',['dynamics',['../classtracktion__engine_1_1AirWindowsPlugin.html#a22dc62d9680045e5f07a5e829f39ffd8a354cdd7f3cd56b929a08bfb040e98c26',1,'tracktion_engine::AirWindowsPlugin']]],
+  ['docs_971',['docs',['../group__tracktion__graph-docs.html',1,'']]]
 ];
