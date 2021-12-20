@@ -4,11 +4,11 @@
 
  BEGIN_JUCE_PIP_METADATA
 
-  name:             tracktion_graph_PerformanceTests
+  name:             Benchmarks
   version:          0.0.1
   vendor:           Tracktion
   website:          www.tracktion.com
-  description:      Used for development of the new tracktion_graph.
+  description:      Runs the benchmarks for the engine.
 
   dependencies:     juce_audio_basics, juce_audio_devices, juce_audio_formats, juce_audio_processors, juce_audio_utils,
                     juce_core, juce_data_structures, juce_dsp, juce_events, juce_graphics,
@@ -16,10 +16,10 @@
   exporters:        linux_make, vs2017, xcode_iphone, xcode_mac
 
   moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1, JUCE_PLUGINHOST_AU=1, JUCE_PLUGINHOST_VST3=1
-  defines:          ENABLE_EXPERIMENTAL_TRACKTION_GRAPH=1, TRACKTION_GRAPH_PERFORMANCE_TESTS=1, JUCE_MODAL_LOOPS_PERMITTED=1
+  defines:          TRACKTION_BENCHMARKS=1, JUCE_MODAL_LOOPS_PERMITTED=1
 
   type:             Console
-  mainClass:        tracktion_graph_PerformanceTests
+  mainClass:        Benchmarks
 
  END_JUCE_PIP_METADATA
 

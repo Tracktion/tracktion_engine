@@ -27,15 +27,31 @@ struct BenchmarkDescription
     std::string platform { juce::SystemStats::getOperatingSystemName().toStdString() }; /**< A platform string. */
 };
 
+/** Creates a description by hashing the name and description fields. */
+inline BenchmarkDescription createBenchmarkDescription (std::string category, std::string name, std::string description)
+{
+    return { std::hash<std::string>{} (name + description),
+             category, name, description };
+}
+
 //==============================================================================
 /** Holds the duration a benchmark took to run. */
 struct BenchmarkResult
 {
     BenchmarkDescription description;   /**< The BenchmarkDescription. */
     double duration = 0.0, min = 0.0, max = 0.0, variance = 0.0;
-    int64_t ticksPerSecond = 0;
+    int64_t ticksPerSecond = (int64_t) juce::Time::getHighResolutionTicksPerSecond();
     juce::Time date { juce::Time::getCurrentTime() };
 };
+
+/** Creates a BenchmarkResult from a set of Statistics. */
+inline BenchmarkResult createBenchmarkResult (BenchmarkDescription description,
+                                              const tracktion_graph::PerformanceMeasurement::Statistics& stats)
+{
+    return { description,
+             stats.totalSeconds, stats.minimumSeconds, stats.maximumSeconds,
+             stats.getVariance(), (int64_t) juce::Time::getHighResolutionTicksPerSecond() };
+}
 
 //==============================================================================
 /**
@@ -70,16 +86,13 @@ public:
     /** Returns the timing results. */
     BenchmarkResult getResult() const
     {
-        const auto stats = measurement.getStatistics();
-        return { description,
-                 stats.totalSeconds, stats.minimumSeconds, stats.maximumSeconds,
-                 stats.getVariance(), ticksPerSecond };
+        return createBenchmarkResult (description, measurement.getStatistics());
     }
     
 private:
     BenchmarkDescription description;
     tracktion_graph::PerformanceMeasurement measurement { {}, -1, false };
-    const int64 ticksPerSecond { Time::getHighResolutionTicksPerSecond() };
+    const int64_t ticksPerSecond { (int64_t) juce::Time::getHighResolutionTicksPerSecond() };
 };
 
 //==============================================================================

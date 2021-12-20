@@ -356,9 +356,9 @@ namespace test_utilities
     struct TestProcess
     {
         TestProcess (std::unique_ptr<NodePlayerType> playerToUse, TestSetup ts,
-                     const int numChannelsToUse, const double durationInSeconds,
+                     const int numChannelsToUse, const double duration,
                      bool writeToBuffer)
-            : testSetup (ts), numChannels (numChannelsToUse)
+            : testSetup (ts), numChannels (numChannelsToUse), durationInSeconds (duration)
         {
             context = std::make_shared<TestContext>();
 
@@ -379,6 +379,14 @@ namespace test_utilities
             }
             
             setPlayer (std::move (playerToUse));
+        }
+
+        /** Returns a description of the number of channels and length of rendering. */
+        std::string getDescription() const
+        {
+            return juce::String ("{numChannels} channels, {durationInSeconds}s")
+                    .replace ("{numChannels}", juce::String (numChannels))
+                    .replace ("{durationInSeconds}", juce::String (durationInSeconds)).toStdString();
         }
         
         PerformanceMeasurement::Statistics getStatisticsAndReset()
@@ -493,6 +501,7 @@ namespace test_utilities
         std::unique_ptr<NodePlayerType> player;
         TestSetup testSetup;
         const int numChannels;
+        const double durationInSeconds;
         tracktion_graph::PlayHead* playHead = nullptr;
 
         std::shared_ptr<TestContext> context;
