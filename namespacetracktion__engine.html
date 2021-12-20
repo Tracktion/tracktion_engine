@@ -1893,6 +1893,12 @@ Functions</h2></td></tr>
 <tr class="separator:a70006fc24f494e9a22ce619a4099b02a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b15a31e942884075fbc90f57a3514b4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#a6b15a31e942884075fbc90f57a3514b4">clearChannels</a> (juce::AudioSampleBuffer &amp;buffer, int startChannel, int endChannel=-1, int startSample=0, int endSample=-1)</td></tr>
 <tr class="separator:a6b15a31e942884075fbc90f57a3514b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5016b50a11a4abfddbc7af1e38e6b96"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion__engine_1_1BenchmarkDescription.html">BenchmarkDescription</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#af5016b50a11a4abfddbc7af1e38e6b96">createBenchmarkDescription</a> (std::string category, std::string name, std::string description)</td></tr>
+<tr class="memdesc:af5016b50a11a4abfddbc7af1e38e6b96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a description by hashing the name and description fields.  <a href="namespacetracktion__engine.html#af5016b50a11a4abfddbc7af1e38e6b96">More...</a><br /></td></tr>
+<tr class="separator:af5016b50a11a4abfddbc7af1e38e6b96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6ccf735e781f881a9b99d92f562c5a9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion__engine_1_1BenchmarkResult.html">BenchmarkResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#ad6ccf735e781f881a9b99d92f562c5a9">createBenchmarkResult</a> (<a class="el" href="structtracktion__engine_1_1BenchmarkDescription.html">BenchmarkDescription</a> description, const <a class="el" href="structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html">tracktion_graph::PerformanceMeasurement::Statistics</a> &amp;stats)</td></tr>
+<tr class="memdesc:ad6ccf735e781f881a9b99d92f562c5a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="structtracktion__engine_1_1BenchmarkResult.html" title="Holds the duration a benchmark took to run.">BenchmarkResult</a> from a set of Statistics.  <a href="namespacetracktion__engine.html#ad6ccf735e781f881a9b99d92f562c5a9">More...</a><br /></td></tr>
+<tr class="separator:ad6ccf735e781f881a9b99d92f562c5a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f5f5c62e1a76f90a34824b155b07431"><td class="memItemLeft" align="right" valign="top">juce::PropertiesFile *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#a3f5f5c62e1a76f90a34824b155b07431">getApplicationSettings</a> ()</td></tr>
 <tr class="separator:a3f5f5c62e1a76f90a34824b155b07431"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22d08eb9a1ef454631e2c7b7b819013b"><td class="memItemLeft" align="right" valign="top">juce::AudioPlayHead::CurrentPositionInfo&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#a22d08eb9a1ef454631e2c7b7b819013b">getCurrentPositionInfo</a> (<a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;)</td></tr>
@@ -10772,6 +10778,78 @@ template&lt;typename SampleType &gt; </div>
 
 </div>
 </div>
+<a id="af5016b50a11a4abfddbc7af1e38e6b96"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5016b50a11a4abfddbc7af1e38e6b96">&#9670;&nbsp;</a></span>createBenchmarkDescription()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtracktion__engine_1_1BenchmarkDescription.html">BenchmarkDescription</a> tracktion_engine::createBenchmarkDescription </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>category</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>description</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a description by hashing the name and description fields. </p>
+
+<p class="reference">Referenced by <a class="el" href="namespacetracktion__engine_1_1benchmark__utilities.html#ac4c432535481e420e46cc12b86124f61">tracktion_engine::benchmark_utilities::prepareRenderAndDestroy()</a>, and <a class="el" href="namespacetracktion__engine_1_1benchmark__utilities.html#a2332c73042ad7aa49efabb8053d510e4">tracktion_engine::benchmark_utilities::renderEdit()</a>.</p>
+
+</div>
+</div>
+<a id="ad6ccf735e781f881a9b99d92f562c5a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6ccf735e781f881a9b99d92f562c5a9">&#9670;&nbsp;</a></span>createBenchmarkResult()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtracktion__engine_1_1BenchmarkResult.html">BenchmarkResult</a> tracktion_engine::createBenchmarkResult </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtracktion__engine_1_1BenchmarkDescription.html">BenchmarkDescription</a>&#160;</td>
+          <td class="paramname"><em>description</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html">tracktion_graph::PerformanceMeasurement::Statistics</a> &amp;&#160;</td>
+          <td class="paramname"><em>stats</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a <a class="el" href="structtracktion__engine_1_1BenchmarkResult.html" title="Holds the duration a benchmark took to run.">BenchmarkResult</a> from a set of Statistics. </p>
+
+<p class="reference">References <a class="el" href="structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html#a018c50d584eb2c9fdf20b595196da6b1">tracktion_graph::PerformanceMeasurement::Statistics::getVariance()</a>, <a class="el" href="structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html#a1cdf07beb7970938db05f3be7b0925b5">tracktion_graph::PerformanceMeasurement::Statistics::maximumSeconds</a>, <a class="el" href="structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html#a1506159bfb84f32e4d091b293ffcdede">tracktion_graph::PerformanceMeasurement::Statistics::minimumSeconds</a>, and <a class="el" href="structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html#aabef2530210c40166b3b2bccb64aba73">tracktion_graph::PerformanceMeasurement::Statistics::totalSeconds</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1Benchmark.html#a69cbd8f930c69861be908f7418a9341c">tracktion_engine::Benchmark::getResult()</a>, and <a class="el" href="namespacetracktion__engine_1_1benchmark__utilities.html#ac4c432535481e420e46cc12b86124f61">tracktion_engine::benchmark_utilities::prepareRenderAndDestroy()</a>.</p>
+
+</div>
+</div>
 <a id="a3f5f5c62e1a76f90a34824b155b07431"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3f5f5c62e1a76f90a34824b155b07431">&#9670;&nbsp;</a></span>getApplicationSettings()</h2>
 
@@ -11620,7 +11698,7 @@ template&lt;typename Type , typename UnaryFunction &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 15 2021 23:59:52 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Dec 20 2021 11:09:57 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

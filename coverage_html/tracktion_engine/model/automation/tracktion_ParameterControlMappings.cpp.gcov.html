@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-16 00:14:57</td>
+            <td class="headerValue">2021-12-20 11:23:32</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -111,15 +111,15 @@
 <a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="50"><span class="lineNum">      50 </span>            : </a>
 <a name="51"><span class="lineNum">      51 </span>            : //==============================================================================</a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineCov">        209 : ParameterControlMappings::ParameterControlMappings (Edit&amp; ed)</span></a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">        209 :     : edit (ed)</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineCov">        194 : ParameterControlMappings::ParameterControlMappings (Edit&amp; ed)</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">        194 :     : edit (ed)</span></a>
 <a name="54"><span class="lineNum">      54 </span>            : {</a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">        209 :     loadFrom (ValueTree());</span></a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineCov">        209 : }</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">        194 :     loadFrom (ValueTree());</span></a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">        194 : }</span></a>
 <a name="57"><span class="lineNum">      57 </span>            : </a>
-<a name="58"><span class="lineNum">      58 </span><span class="lineCov">        418 : ParameterControlMappings::~ParameterControlMappings()</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">        388 : ParameterControlMappings::~ParameterControlMappings()</span></a>
 <a name="59"><span class="lineNum">      59 </span>            : {</a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">        418 : }</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">        388 : }</span></a>
 <a name="61"><span class="lineNum">      61 </span>            : </a>
 <a name="62"><span class="lineNum">      62 </span><span class="lineNoCov">          0 : ParameterControlMappings* ParameterControlMappings::getCurrentlyFocusedMappings (Engine&amp; engine)</span></a>
 <a name="63"><span class="lineNum">      63 </span>            : {</a>
@@ -295,20 +295,20 @@
 <a name="233"><span class="lineNum">     233 </span><span class="lineCov">         69 : }</span></a>
 <a name="234"><span class="lineNum">     234 </span>            : </a>
 <a name="235"><span class="lineNum">     235 </span>            : //==============================================================================</a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">        418 : void ParameterControlMappings::loadFrom (const ValueTree&amp; state)</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">        388 : void ParameterControlMappings::loadFrom (const ValueTree&amp; state)</span></a>
 <a name="237"><span class="lineNum">     237 </span>            : {</a>
-<a name="238"><span class="lineNum">     238 </span><span class="lineCov">        418 :     const ScopedLock sl (lock);</span></a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineCov">        388 :     const ScopedLock sl (lock);</span></a>
 <a name="239"><span class="lineNum">     239 </span>            : </a>
 <a name="240"><span class="lineNum">     240 </span>            :     controllerIDs.clear();</a>
 <a name="241"><span class="lineNum">     241 </span>            :     channelIDs.clear();</a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineCov">        418 :     parameters.clear();</span></a>
-<a name="243"><span class="lineNum">     243 </span><span class="lineCov">        418 :     parameterFullNames.clear();</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">        388 :     parameters.clear();</span></a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineCov">        388 :     parameterFullNames.clear();</span></a>
 <a name="244"><span class="lineNum">     244 </span>            : </a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineCov">        418 :     if (state.hasType (IDs::CONTROLLERMAPPINGS))</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">        388 :     if (state.hasType (IDs::CONTROLLERMAPPINGS))</span></a>
 <a name="246"><span class="lineNum">     246 </span>            :     {</a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineCov">        209 :         auto allParams = edit.getAllAutomatableParams (true);</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">        194 :         auto allParams = edit.getAllAutomatableParams (true);</span></a>
 <a name="248"><span class="lineNum">     248 </span>            : </a>
-<a name="249"><span class="lineNum">     249 </span><span class="lineCov">        209 :         for (int j = 0; j &lt; state.getNumChildren(); ++j)</span></a>
+<a name="249"><span class="lineNum">     249 </span><span class="lineCov">        194 :         for (int j = 0; j &lt; state.getNumChildren(); ++j)</span></a>
 <a name="250"><span class="lineNum">     250 </span>            :         {</a>
 <a name="251"><span class="lineNum">     251 </span><span class="lineNoCov">          0 :             auto map = state.getChild(j);</span></a>
 <a name="252"><span class="lineNum">     252 </span>            : </a>
@@ -345,7 +345,7 @@
 <a name="283"><span class="lineNum">     283 </span>            :             }</a>
 <a name="284"><span class="lineNum">     284 </span>            :         }</a>
 <a name="285"><span class="lineNum">     285 </span>            :     }</a>
-<a name="286"><span class="lineNum">     286 </span><span class="lineCov">        418 : }</span></a>
+<a name="286"><span class="lineNum">     286 </span><span class="lineCov">        388 : }</span></a>
 <a name="287"><span class="lineNum">     287 </span>            : </a>
 <a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 : void ParameterControlMappings::saveTo (ValueTree&amp; state)</span></a>
 <a name="289"><span class="lineNum">     289 </span>            : {</a>

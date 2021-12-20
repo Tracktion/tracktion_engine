@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-16 00:14:57</td>
+            <td class="headerValue">2021-12-20 11:23:32</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -84,7 +84,7 @@
 <a name="22"><span class="lineNum">      22 </span>            :     using Ptr = juce::ReferenceCountedObjectPtr&lt;AudioTrack&gt;;</a>
 <a name="23"><span class="lineNum">      23 </span>            : </a>
 <a name="24"><span class="lineNum">      24 </span>            :     void initialise() override;</a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">       4437 :     bool isAudioTrack() const override                      { return true; }</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">       1333 :     bool isAudioTrack() const override                      { return true; }</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : </a>
 <a name="27"><span class="lineNum">      27 </span>            :     //==============================================================================</a>
 <a name="28"><span class="lineNum">      28 </span><span class="lineNoCov">          0 :     juce::String getSelectableDescription() override        { return TRANS(&quot;Track&quot;) + &quot; - \&quot;&quot; + getName() + &quot;\&quot;&quot;; }</span></a>
@@ -98,7 +98,7 @@
 <a name="36"><span class="lineNum">      36 </span>            :     juce::String getName() override;</a>
 <a name="37"><span class="lineNum">      37 </span>            : </a>
 <a name="38"><span class="lineNum">      38 </span>            :     bool canContainPlugin (Plugin*) const override;</a>
-<a name="39"><span class="lineNum">      39 </span><span class="lineCov">       4622 :     bool processAudioNodesWhileMuted() const override       { return edit.engine.getEngineBehaviour().shouldProcessMutedTracks() || isSidechainSource(); }</span></a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineCov">        278 :     bool processAudioNodesWhileMuted() const override       { return edit.engine.getEngineBehaviour().shouldProcessMutedTracks() || isSidechainSource(); }</span></a>
 <a name="40"><span class="lineNum">      40 </span>            : </a>
 <a name="41"><span class="lineNum">      41 </span>            :     //==============================================================================</a>
 <a name="42"><span class="lineNum">      42 </span>            :     /** returns a warning message about this track not being playable, or &quot;&quot; if it's ok */</a>
@@ -164,8 +164,8 @@
 <a name="102"><span class="lineNum">     102 </span>            : </a>
 <a name="103"><span class="lineNum">     103 </span>            :     //==============================================================================</a>
 <a name="104"><span class="lineNum">     104 </span>            :     /** vertical scales for displaying the midi note editor */</a>
-<a name="105"><span class="lineNum">     105 </span><span class="lineCov">        638 :     double getMidiVisibleProportion() const                         { return midiVisibleProportion; }</span></a>
-<a name="106"><span class="lineNum">     106 </span><span class="lineCov">        638 :     double getMidiVerticalOffset() const                            { return midiVerticalOffset; }</span></a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineCov">        272 :     double getMidiVisibleProportion() const                         { return midiVisibleProportion; }</span></a>
+<a name="106"><span class="lineNum">     106 </span><span class="lineCov">        272 :     double getMidiVerticalOffset() const                            { return midiVerticalOffset; }</span></a>
 <a name="107"><span class="lineNum">     107 </span>            :     void setMidiVerticalPos (double visibleProp, double offset);</a>
 <a name="108"><span class="lineNum">     108 </span>            :     void scaleVerticallyToFitMidi();</a>
 <a name="109"><span class="lineNum">     109 </span>            :     void setVerticalScaleToDefault();</a>
@@ -174,7 +174,7 @@
 <a name="112"><span class="lineNum">     112 </span>            :     void clearGhostTracks()                                         { ghostTracks.resetToDefault(); }</a>
 <a name="113"><span class="lineNum">     113 </span>            :     juce::Array&lt;AudioTrack*&gt; getGhostTracks() const;</a>
 <a name="114"><span class="lineNum">     114 </span>            : </a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineCov">        535 :     int getCompGroup() const noexcept                               { return compGroup.get(); }</span></a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineCov">         79 :     int getCompGroup() const noexcept                               { return compGroup.get(); }</span></a>
 <a name="116"><span class="lineNum">     116 </span><span class="lineNoCov">          0 :     void setCompGroup (int groupIndex)                              { compGroup = groupIndex; }</span></a>
 <a name="117"><span class="lineNum">     117 </span>            : </a>
 <a name="118"><span class="lineNum">     118 </span>            :     //==============================================================================</a>
@@ -214,7 +214,7 @@
 <a name="152"><span class="lineNum">     152 </span>            :     struct Listener</a>
 <a name="153"><span class="lineNum">     153 </span>            :     {</a>
 <a name="154"><span class="lineNum">     154 </span>            :         /* Destructor */</a>
-<a name="155"><span class="lineNum">     155 </span><span class="lineCov">        535 :         virtual ~Listener() = default;</span></a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineCov">         79 :         virtual ~Listener() = default;</span></a>
 <a name="156"><span class="lineNum">     156 </span>            : </a>
 <a name="157"><span class="lineNum">     157 </span>            :         /** Called when a MidiMessage (i.e. from a soft-keyboard) should be injected in to the playback graph.</a>
 <a name="158"><span class="lineNum">     158 </span>            :             If the message was used, the listener should set the wasUsed argument to true or a</a>

@@ -1,18 +1,18 @@
 var searchData=
 [
-  ['backgroundjobmanager_6352',['BackgroundJobManager',['../classtracktion__engine_1_1BackgroundJobManager.html',1,'tracktion_engine']]],
-  ['bandlimitedwavelookuptables_6353',['BandlimitedWaveLookupTables',['../classtracktion__engine_1_1BandlimitedWaveLookupTables.html',1,'tracktion_engine']]],
-  ['barsandbeats_6354',['BarsAndBeats',['../structtracktion__engine_1_1TempoSequence_1_1BarsAndBeats.html',1,'tracktion_engine::TempoSequence']]],
-  ['base_6355',['Base',['../structtracktion__engine_1_1VSTXML_1_1Base.html',1,'tracktion_engine::VSTXML']]],
-  ['basicsummingnode_6356',['BasicSummingNode',['../classtracktion__graph_1_1BasicSummingNode.html',1,'tracktion_graph']]],
-  ['beatdetect_6357',['BeatDetect',['../structtracktion__engine_1_1BeatDetect.html',1,'tracktion_engine']]],
-  ['benchmark_6358',['Benchmark',['../classtracktion__engine_1_1Benchmark.html',1,'tracktion_engine']]],
-  ['benchmarkdescription_6359',['BenchmarkDescription',['../structtracktion__engine_1_1BenchmarkDescription.html',1,'tracktion_engine']]],
-  ['benchmarklist_6360',['BenchmarkList',['../classtracktion__engine_1_1BenchmarkList.html',1,'tracktion_engine']]],
-  ['benchmarkoptions_6361',['BenchmarkOptions',['../structtracktion__engine_1_1benchmark__utilities_1_1BenchmarkOptions.html',1,'tracktion_engine::benchmark_utilities']]],
-  ['benchmarkresult_6362',['BenchmarkResult',['../structtracktion__engine_1_1BenchmarkResult.html',1,'tracktion_engine']]],
-  ['blockingfunction_6363',['BlockingFunction',['../structtracktion__engine_1_1BlockingFunction.html',1,'tracktion_engine']]],
-  ['breakpointoscillatormodifier_6364',['BreakpointOscillatorModifier',['../classtracktion__engine_1_1BreakpointOscillatorModifier.html',1,'tracktion_engine']]],
-  ['builtintype_6365',['BuiltInType',['../structtracktion__engine_1_1PluginManager_1_1BuiltInType.html',1,'tracktion_engine::PluginManager']]],
-  ['builtintypebase_6366',['BuiltInTypeBase',['../structtracktion__engine_1_1PluginManager_1_1BuiltInTypeBase.html',1,'tracktion_engine::PluginManager']]]
+  ['backgroundjobmanager_6354',['BackgroundJobManager',['../classtracktion__engine_1_1BackgroundJobManager.html',1,'tracktion_engine']]],
+  ['bandlimitedwavelookuptables_6355',['BandlimitedWaveLookupTables',['../classtracktion__engine_1_1BandlimitedWaveLookupTables.html',1,'tracktion_engine']]],
+  ['barsandbeats_6356',['BarsAndBeats',['../structtracktion__engine_1_1TempoSequence_1_1BarsAndBeats.html',1,'tracktion_engine::TempoSequence']]],
+  ['base_6357',['Base',['../structtracktion__engine_1_1VSTXML_1_1Base.html',1,'tracktion_engine::VSTXML']]],
+  ['basicsummingnode_6358',['BasicSummingNode',['../classtracktion__graph_1_1BasicSummingNode.html',1,'tracktion_graph']]],
+  ['beatdetect_6359',['BeatDetect',['../structtracktion__engine_1_1BeatDetect.html',1,'tracktion_engine']]],
+  ['benchmark_6360',['Benchmark',['../classtracktion__engine_1_1Benchmark.html',1,'tracktion_engine']]],
+  ['benchmarkdescription_6361',['BenchmarkDescription',['../structtracktion__engine_1_1BenchmarkDescription.html',1,'tracktion_engine']]],
+  ['benchmarklist_6362',['BenchmarkList',['../classtracktion__engine_1_1BenchmarkList.html',1,'tracktion_engine']]],
+  ['benchmarkoptions_6363',['BenchmarkOptions',['../structtracktion__engine_1_1benchmark__utilities_1_1BenchmarkOptions.html',1,'tracktion_engine::benchmark_utilities']]],
+  ['benchmarkresult_6364',['BenchmarkResult',['../structtracktion__engine_1_1BenchmarkResult.html',1,'tracktion_engine']]],
+  ['blockingfunction_6365',['BlockingFunction',['../structtracktion__engine_1_1BlockingFunction.html',1,'tracktion_engine']]],
+  ['breakpointoscillatormodifier_6366',['BreakpointOscillatorModifier',['../classtracktion__engine_1_1BreakpointOscillatorModifier.html',1,'tracktion_engine']]],
+  ['builtintype_6367',['BuiltInType',['../structtracktion__engine_1_1PluginManager_1_1BuiltInType.html',1,'tracktion_engine::PluginManager']]],
+  ['builtintypebase_6368',['BuiltInTypeBase',['../structtracktion__engine_1_1PluginManager_1_1BuiltInTypeBase.html',1,'tracktion_engine::PluginManager']]]
 ];

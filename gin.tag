@@ -2489,12 +2489,27 @@
     <class kind="class">tracktion_engine::BenchmarkList</class>
     <class kind="struct">tracktion_engine::ScopedBenchmark</class>
     <namespace>tracktion_engine</namespace>
+    <member kind="function">
+      <type>BenchmarkDescription</type>
+      <name>createBenchmarkDescription</name>
+      <anchorfile>namespacetracktion__engine.html</anchorfile>
+      <anchor>af5016b50a11a4abfddbc7af1e38e6b96</anchor>
+      <arglist>(std::string category, std::string name, std::string description)</arglist>
+    </member>
+    <member kind="function">
+      <type>BenchmarkResult</type>
+      <name>createBenchmarkResult</name>
+      <anchorfile>namespacetracktion__engine.html</anchorfile>
+      <anchor>ad6ccf735e781f881a9b99d92f562c5a9</anchor>
+      <arglist>(BenchmarkDescription description, const tracktion_graph::PerformanceMeasurement::Statistics &amp;stats)</arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_BenchmarkUtilities.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/graph/</path>
     <filename>tracktion__BenchmarkUtilities_8h.html</filename>
     <includes id="tracktion__EditNodeBuilder_8h" name="tracktion_EditNodeBuilder.h" local="yes" imported="no">tracktion_EditNodeBuilder.h</includes>
+    <includes id="tracktion__Benchmark_8h" name="tracktion_Benchmark.h" local="yes" imported="no">../../utilities/tracktion_Benchmark.h</includes>
     <class kind="struct">tracktion_engine::benchmark_utilities::BenchmarkOptions</class>
     <namespace>tracktion_engine</namespace>
     <namespace>tracktion_engine::benchmark_utilities</namespace>
@@ -65105,8 +65120,15 @@
       <type></type>
       <name>TestProcess</name>
       <anchorfile>structtracktion__graph_1_1test__utilities_1_1TestProcess.html</anchorfile>
-      <anchor>a58c04713fcc9b9213dea21de7c947af5</anchor>
-      <arglist>(std::unique_ptr&lt; NodePlayerType &gt; playerToUse, TestSetup ts, const int numChannelsToUse, const double durationInSeconds, bool writeToBuffer)</arglist>
+      <anchor>a22e1a58d6519ce0829e52dd33b67d285</anchor>
+      <arglist>(std::unique_ptr&lt; NodePlayerType &gt; playerToUse, TestSetup ts, const int numChannelsToUse, const double duration, bool writeToBuffer)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::string</type>
+      <name>getDescription</name>
+      <anchorfile>structtracktion__graph_1_1test__utilities_1_1TestProcess.html</anchorfile>
+      <anchor>a90b9b96a0401567126cfde7164512edb</anchor>
+      <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>PerformanceMeasurement::Statistics</type>
@@ -79078,6 +79100,20 @@
       <anchorfile>namespacetracktion__engine.html</anchorfile>
       <anchor>a6b15a31e942884075fbc90f57a3514b4</anchor>
       <arglist>(juce::AudioSampleBuffer &amp;buffer, int startChannel, int endChannel=-1, int startSample=0, int endSample=-1)</arglist>
+    </member>
+    <member kind="function">
+      <type>BenchmarkDescription</type>
+      <name>createBenchmarkDescription</name>
+      <anchorfile>namespacetracktion__engine.html</anchorfile>
+      <anchor>af5016b50a11a4abfddbc7af1e38e6b96</anchor>
+      <arglist>(std::string category, std::string name, std::string description)</arglist>
+    </member>
+    <member kind="function">
+      <type>BenchmarkResult</type>
+      <name>createBenchmarkResult</name>
+      <anchorfile>namespacetracktion__engine.html</anchorfile>
+      <anchor>ad6ccf735e781f881a9b99d92f562c5a9</anchor>
+      <arglist>(BenchmarkDescription description, const tracktion_graph::PerformanceMeasurement::Statistics &amp;stats)</arglist>
     </member>
     <member kind="function">
       <type>juce::PropertiesFile *</type>

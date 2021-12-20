@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntry">16</td>
             <td class="headerCovTableEntry">22</td>
-            <td class="headerCovTableEntryMed">77.3 %</td>
+            <td class="headerCovTableEntryLo">72.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-16 00:14:57</td>
+            <td class="headerValue">2021-12-20 11:23:32</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -207,13 +207,13 @@
 <a name="145"><span class="lineNum">     145 </span>            :     EditRole getEditRole() const noexcept   { return editRole; }</a>
 <a name="146"><span class="lineNum">     146 </span>            :     </a>
 <a name="147"><span class="lineNum">     147 </span>            :     /** Returns true if this Edit should be played back (or false if it was just opened for inspection). */</a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">        717 :     bool shouldPlay() const noexcept        { return (editRole &amp; playDisabled) == 0; }</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">        687 :     bool shouldPlay() const noexcept        { return (editRole &amp; playDisabled) == 0; }</span></a>
 <a name="149"><span class="lineNum">     149 </span>            : </a>
 <a name="150"><span class="lineNum">     150 </span>            :     /** Returns true if this Edit can render proxy files. */</a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineCov">      44247 :     bool canRenderProxies() const noexcept  { return (editRole &amp; proxiesDisabled) == 0; }</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">       1071 :     bool canRenderProxies() const noexcept  { return (editRole &amp; proxiesDisabled) == 0; }</span></a>
 <a name="152"><span class="lineNum">     152 </span>            : </a>
 <a name="153"><span class="lineNum">     153 </span>            :     /** Returns true if this Edit can load Plugin[s]. */</a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineCov">        400 :     bool shouldLoadPlugins() const noexcept { return (editRole &amp; pluginsDisabled) == 0; }</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 :     bool shouldLoadPlugins() const noexcept { return (editRole &amp; pluginsDisabled) == 0; }</span></a>
 <a name="155"><span class="lineNum">     155 </span>            : </a>
 <a name="156"><span class="lineNum">     156 </span>            :     /** Returns true if this Edit is a temporary Edit for previewing files/clips etc. */</a>
 <a name="157"><span class="lineNum">     157 </span>            :     bool getIsPreviewEdit() const noexcept  { return isPreviewEdit; }</a>
@@ -346,7 +346,7 @@
 <a name="284"><span class="lineNum">     284 </span>            : </a>
 <a name="285"><span class="lineNum">     285 </span>            :     //==============================================================================</a>
 <a name="286"><span class="lineNum">     286 </span>            :     /** Returns the juce::UndoManager used for this Edit. */</a>
-<a name="287"><span class="lineNum">     287 </span><span class="lineCov">      49015 :     juce::UndoManager&amp; getUndoManager() noexcept                { return undoManager; }</span></a>
+<a name="287"><span class="lineNum">     287 </span><span class="lineCov">      22399 :     juce::UndoManager&amp; getUndoManager() noexcept                { return undoManager; }</span></a>
 <a name="288"><span class="lineNum">     288 </span>            : </a>
 <a name="289"><span class="lineNum">     289 </span>            :     /** Undoes the most recent changes made. */</a>
 <a name="290"><span class="lineNum">     290 </span>            :     void undo();</a>
@@ -593,10 +593,10 @@
 <a name="531"><span class="lineNum">     531 </span>            :     /** Returns the master volume AutomatableParameter.</a>
 <a name="532"><span class="lineNum">     532 </span>            :         N.B. this is in slider position, not dB</a>
 <a name="533"><span class="lineNum">     533 </span>            :     */</a>
-<a name="534"><span class="lineNum">     534 </span><span class="lineCov">        418 :     AutomatableParameter::Ptr getMasterSliderPosParameter() const       { jassert (masterVolumePlugin != nullptr); return masterVolumePlugin-&gt;volParam; }</span></a>
+<a name="534"><span class="lineNum">     534 </span><span class="lineCov">        388 :     AutomatableParameter::Ptr getMasterSliderPosParameter() const       { jassert (masterVolumePlugin != nullptr); return masterVolumePlugin-&gt;volParam; }</span></a>
 <a name="535"><span class="lineNum">     535 </span>            : </a>
 <a name="536"><span class="lineNum">     536 </span>            :     /** Returns the master pan AutomatableParameter. */</a>
-<a name="537"><span class="lineNum">     537 </span><span class="lineCov">        418 :     AutomatableParameter::Ptr getMasterPanParameter() const             { jassert (masterVolumePlugin != nullptr); return masterVolumePlugin-&gt;panParam; }</span></a>
+<a name="537"><span class="lineNum">     537 </span><span class="lineCov">        388 :     AutomatableParameter::Ptr getMasterPanParameter() const             { jassert (masterVolumePlugin != nullptr); return masterVolumePlugin-&gt;panParam; }</span></a>
 <a name="538"><span class="lineNum">     538 </span>            : </a>
 <a name="539"><span class="lineNum">     539 </span>            :     /** Sets the master volume level.</a>
 <a name="540"><span class="lineNum">     540 </span>            :         N.B. this is in slider position, not dB</a>
@@ -731,7 +731,7 @@
 <a name="669"><span class="lineNum">     669 </span>            :     /** Invalidates the stored length so the next call to getLength will update form the Edit contents.</a>
 <a name="670"><span class="lineNum">     670 </span>            :         You shouldn't normally need to call this as it will happen automatically as clips are added/removed.</a>
 <a name="671"><span class="lineNum">     671 </span>            :     */</a>
-<a name="672"><span class="lineNum">     672 </span><span class="lineCov">       5288 :     void invalidateStoredLength() noexcept              { totalEditLength = -1.0; }</span></a>
+<a name="672"><span class="lineNum">     672 </span><span class="lineCov">       1555 :     void invalidateStoredLength() noexcept              { totalEditLength = -1.0; }</span></a>
 <a name="673"><span class="lineNum">     673 </span>            : </a>
 <a name="674"><span class="lineNum">     674 </span>            :     /** If there's a change to send out to the listeners, do it now rather than</a>
 <a name="675"><span class="lineNum">     675 </span>            :         waiting for the next timer message.</a>
@@ -780,10 +780,10 @@
 <a name="718"><span class="lineNum">     718 </span>            :     template&lt;typename OwnerType&gt;</a>
 <a name="719"><span class="lineNum">     719 </span>            :     struct LoadFinishedCallback   : public Timer</a>
 <a name="720"><span class="lineNum">     720 </span>            :     {</a>
-<a name="721"><span class="lineNum">     721 </span><span class="lineCov">       1265 :         LoadFinishedCallback (OwnerType&amp; o, Edit&amp; e)</span></a>
-<a name="722"><span class="lineNum">     722 </span><span class="lineCov">       1265 :             : owner (o), edit (e)</span></a>
+<a name="721"><span class="lineNum">     721 </span><span class="lineCov">        854 :         LoadFinishedCallback (OwnerType&amp; o, Edit&amp; e)</span></a>
+<a name="722"><span class="lineNum">     722 </span><span class="lineCov">        854 :             : owner (o), edit (e)</span></a>
 <a name="723"><span class="lineNum">     723 </span>            :         {</a>
-<a name="724"><span class="lineNum">     724 </span><span class="lineCov">       1265 :             startTimer (10);</span></a>
+<a name="724"><span class="lineNum">     724 </span><span class="lineCov">        854 :             startTimer (10);</span></a>
 <a name="725"><span class="lineNum">     725 </span>            :         }</a>
 <a name="726"><span class="lineNum">     726 </span>            : </a>
 <a name="727"><span class="lineNum">     727 </span><span class="lineCov">         60 :         void timerCallback() override</span></a>

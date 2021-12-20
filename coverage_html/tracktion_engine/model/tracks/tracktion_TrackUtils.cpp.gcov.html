@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-16 00:14:57</td>
+            <td class="headerValue">2021-12-20 11:23:32</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">20</td>
@@ -75,9 +75,9 @@
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : TrackInsertPoint::TrackInsertPoint (Track* parent, Track* preceding)</span></a>
 <a name="15"><span class="lineNum">      15 </span>            :     : parentTrackID (parent != nullptr ? parent-&gt;itemID : EditItemID()),</a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineCov">        552 :       precedingTrackID (preceding != nullptr ? preceding-&gt;itemID : EditItemID())</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">        272 :       precedingTrackID (preceding != nullptr ? preceding-&gt;itemID : EditItemID())</span></a>
 <a name="17"><span class="lineNum">      17 </span>            : {</a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineCov">        552 : }</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">        272 : }</span></a>
 <a name="19"><span class="lineNum">      19 </span>            : </a>
 <a name="20"><span class="lineNum">      20 </span><span class="lineNoCov">          0 : TrackInsertPoint::TrackInsertPoint (EditItemID parent, EditItemID preceding)</span></a>
 <a name="21"><span class="lineNum">      21 </span>            :     : parentTrackID (parent),</a>
@@ -130,17 +130,17 @@
 <a name="68"><span class="lineNum">      68 </span><span class="lineCov">          8 : }</span></a>
 <a name="69"><span class="lineNum">      69 </span>            : </a>
 <a name="70"><span class="lineNum">      70 </span>            : //==============================================================================</a>
-<a name="71"><span class="lineNum">      71 </span><span class="lineCov">        229 : TrackList::TrackList (Edit&amp; e, const juce::ValueTree&amp; parentTree)</span></a>
-<a name="72"><span class="lineNum">      72 </span><span class="lineCov">        229 :     : ValueTreeObjectList&lt;Track&gt; (parentTree), edit (e)</span></a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">        202 : TrackList::TrackList (Edit&amp; e, const juce::ValueTree&amp; parentTree)</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineCov">        202 :     : ValueTreeObjectList&lt;Track&gt; (parentTree), edit (e)</span></a>
 <a name="73"><span class="lineNum">      73 </span>            : {</a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineCov">        229 :     rebuildObjects();</span></a>
-<a name="75"><span class="lineNum">      75 </span><span class="lineCov">        229 :     rebuilding = false;</span></a>
-<a name="76"><span class="lineNum">      76 </span><span class="lineCov">        229 : }</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">        202 :     rebuildObjects();</span></a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineCov">        202 :     rebuilding = false;</span></a>
+<a name="76"><span class="lineNum">      76 </span><span class="lineCov">        202 : }</span></a>
 <a name="77"><span class="lineNum">      77 </span>            : </a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineCov">        458 : TrackList::~TrackList()</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">        404 : TrackList::~TrackList()</span></a>
 <a name="79"><span class="lineNum">      79 </span>            : {</a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">        229 :     freeObjects();</span></a>
-<a name="81"><span class="lineNum">      81 </span><span class="lineCov">        458 : }</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">        202 :     freeObjects();</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineCov">        404 : }</span></a>
 <a name="82"><span class="lineNum">      82 </span>            : </a>
 <a name="83"><span class="lineNum">      83 </span><span class="lineNoCov">          0 : Track* TrackList::getTrackFor (const juce::ValueTree&amp; v) const</span></a>
 <a name="84"><span class="lineNum">      84 </span>            : {</a>
@@ -151,54 +151,54 @@
 <a name="89"><span class="lineNum">      89 </span>            :     return {};</a>
 <a name="90"><span class="lineNum">      90 </span>            : }</a>
 <a name="91"><span class="lineNum">      91 </span>            : </a>
-<a name="92"><span class="lineNum">      92 </span><span class="lineCov">     257111 : bool TrackList::visitAllRecursive (const std::function&lt;bool(Track&amp;)&gt;&amp; f) const</span></a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineCov">      17614 : bool TrackList::visitAllRecursive (const std::function&lt;bool(Track&amp;)&gt;&amp; f) const</span></a>
 <a name="93"><span class="lineNum">      93 </span>            : {</a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineCov">    2295970 :     for (auto t : objects)</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineCov">     101766 :     for (auto t : objects)</span></a>
 <a name="95"><span class="lineNum">      95 </span>            :     {</a>
-<a name="96"><span class="lineNum">      96 </span><span class="lineCov">    2059090 :         if (! f (*t))</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineCov">      88090 :         if (! f (*t))</span></a>
 <a name="97"><span class="lineNum">      97 </span>            :             return false;</a>
 <a name="98"><span class="lineNum">      98 </span>            : </a>
-<a name="99"><span class="lineNum">      99 </span><span class="lineCov">    2046320 :         if (auto subList = t-&gt;getSubTrackList())</span></a>
-<a name="100"><span class="lineNum">     100 </span><span class="lineCov">     212044 :             if (! subList-&gt;visitAllRecursive (f))</span></a>
+<a name="99"><span class="lineNum">      99 </span><span class="lineCov">      84674 :         if (auto subList = t-&gt;getSubTrackList())</span></a>
+<a name="100"><span class="lineNum">     100 </span><span class="lineCov">       2068 :             if (! subList-&gt;visitAllRecursive (f))</span></a>
 <a name="101"><span class="lineNum">     101 </span>            :                 return false;</a>
 <a name="102"><span class="lineNum">     102 </span>            :     }</a>
 <a name="103"><span class="lineNum">     103 </span>            : </a>
 <a name="104"><span class="lineNum">     104 </span>            :     return true;</a>
 <a name="105"><span class="lineNum">     105 </span>            : }</a>
 <a name="106"><span class="lineNum">     106 </span>            : </a>
-<a name="107"><span class="lineNum">     107 </span><span class="lineCov">        588 : void TrackList::visitAllTopLevel (const std::function&lt;bool(Track&amp;)&gt;&amp; f) const</span></a>
+<a name="107"><span class="lineNum">     107 </span><span class="lineCov">        308 : void TrackList::visitAllTopLevel (const std::function&lt;bool(Track&amp;)&gt;&amp; f) const</span></a>
 <a name="108"><span class="lineNum">     108 </span>            : {</a>
-<a name="109"><span class="lineNum">     109 </span><span class="lineCov">       5662 :     for (auto t : objects)</span></a>
-<a name="110"><span class="lineNum">     110 </span><span class="lineCov">       5074 :         if (! f (*t))</span></a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineCov">       1378 :     for (auto t : objects)</span></a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">       1070 :         if (! f (*t))</span></a>
 <a name="111"><span class="lineNum">     111 </span>            :             break;</a>
-<a name="112"><span class="lineNum">     112 </span><span class="lineCov">        588 : }</span></a>
+<a name="112"><span class="lineNum">     112 </span><span class="lineCov">        308 : }</span></a>
 <a name="113"><span class="lineNum">     113 </span>            : </a>
-<a name="114"><span class="lineNum">     114 </span><span class="lineCov">      24411 : void TrackList::visitAllTracks (const std::function&lt;bool(Track&amp;)&gt;&amp; f, bool recursive) const</span></a>
+<a name="114"><span class="lineNum">     114 </span><span class="lineCov">       5716 : void TrackList::visitAllTracks (const std::function&lt;bool(Track&amp;)&gt;&amp; f, bool recursive) const</span></a>
 <a name="115"><span class="lineNum">     115 </span>            : {</a>
-<a name="116"><span class="lineNum">     116 </span><span class="lineCov">      24871 :     if (recursive)</span></a>
-<a name="117"><span class="lineNum">     117 </span><span class="lineCov">      24283 :         visitAllRecursive (f);</span></a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">       6152 :     if (recursive)</span></a>
+<a name="117"><span class="lineNum">     117 </span><span class="lineCov">       5844 :         visitAllRecursive (f);</span></a>
 <a name="118"><span class="lineNum">     118 </span>            :     else</a>
-<a name="119"><span class="lineNum">     119 </span><span class="lineCov">        588 :         visitAllTopLevel (f);</span></a>
-<a name="120"><span class="lineNum">     120 </span><span class="lineCov">      24411 : }</span></a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineCov">        308 :         visitAllTopLevel (f);</span></a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineCov">       5716 : }</span></a>
 <a name="121"><span class="lineNum">     121 </span>            : </a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineCov">     171925 : bool TrackList::isMovableTrack (const juce::ValueTree&amp; v) noexcept</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">      81834 : bool TrackList::isMovableTrack (const juce::ValueTree&amp; v) noexcept</span></a>
 <a name="123"><span class="lineNum">     123 </span>            : {</a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">     171925 :     return v.hasType (IDs::TRACK) || v.hasType (IDs::FOLDERTRACK) || v.hasType (IDs::AUTOMATIONTRACK);</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">      81834 :     return v.hasType (IDs::TRACK) || v.hasType (IDs::FOLDERTRACK) || v.hasType (IDs::AUTOMATIONTRACK);</span></a>
 <a name="125"><span class="lineNum">     125 </span>            : }</a>
 <a name="126"><span class="lineNum">     126 </span>            : </a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineCov">     150044 : bool TrackList::isArrangerTrack (const juce::ValueTree&amp; v) noexcept { return v.hasType (IDs::ARRANGERTRACK); }</span></a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">     156299 : bool TrackList::isChordTrack (const juce::ValueTree&amp; v) noexcept    { return v.hasType (IDs::CHORDTRACK); }</span></a>
-<a name="129"><span class="lineNum">     129 </span><span class="lineCov">      45400 : bool TrackList::isMarkerTrack (const juce::ValueTree&amp; v) noexcept   { return v.hasType (IDs::MARKERTRACK); }</span></a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineCov">     152405 : bool TrackList::isTempoTrack (const juce::ValueTree&amp; v) noexcept    { return v.hasType (IDs::TEMPOTRACK); }</span></a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineCov">     156012 : bool TrackList::isMasterTrack (const juce::ValueTree&amp; v) noexcept   { return v.hasType (IDs::MASTERTRACK); }</span></a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineCov">      67579 : bool TrackList::isArrangerTrack (const juce::ValueTree&amp; v) noexcept { return v.hasType (IDs::ARRANGERTRACK); }</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">      73375 : bool TrackList::isChordTrack (const juce::ValueTree&amp; v) noexcept    { return v.hasType (IDs::CHORDTRACK); }</span></a>
+<a name="129"><span class="lineNum">     129 </span><span class="lineCov">      42148 : bool TrackList::isMarkerTrack (const juce::ValueTree&amp; v) noexcept   { return v.hasType (IDs::MARKERTRACK); }</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">      69773 : bool TrackList::isTempoTrack (const juce::ValueTree&amp; v) noexcept    { return v.hasType (IDs::TEMPOTRACK); }</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineCov">      73095 : bool TrackList::isMasterTrack (const juce::ValueTree&amp; v) noexcept   { return v.hasType (IDs::MASTERTRACK); }</span></a>
 <a name="132"><span class="lineNum">     132 </span>            : </a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineCov">     110819 : bool TrackList::isFixedTrack (const juce::ValueTree&amp; v) noexcept</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineCov">      31177 : bool TrackList::isFixedTrack (const juce::ValueTree&amp; v) noexcept</span></a>
 <a name="134"><span class="lineNum">     134 </span>            : {</a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">     437026 :     return isMarkerTrack (v) || isTempoTrack (v) || isChordTrack (v) || isArrangerTrack (v) || isMasterTrack (v)</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">     221013 :         || (v.hasType (IDs::AUTOMATIONTRACK) &amp;&amp; isMasterTrack (v.getParent()));</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">     118888 :     return isMarkerTrack (v) || isTempoTrack (v) || isChordTrack (v) || isArrangerTrack (v) || isMasterTrack (v)</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">      61772 :         || (v.hasType (IDs::AUTOMATIONTRACK) &amp;&amp; isMasterTrack (v.getParent()));</span></a>
 <a name="137"><span class="lineNum">     137 </span>            : }</a>
 <a name="138"><span class="lineNum">     138 </span>            : </a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineCov">     117511 : bool TrackList::isTrack (const juce::ValueTree&amp; v) noexcept         { return isMovableTrack (v) || isFixedTrack (v); }</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">      32832 : bool TrackList::isTrack (const juce::ValueTree&amp; v) noexcept         { return isMovableTrack (v) || isFixedTrack (v); }</span></a>
 <a name="140"><span class="lineNum">     140 </span>            : </a>
 <a name="141"><span class="lineNum">     141 </span><span class="lineNoCov">          0 : bool TrackList::isTrack (const juce::Identifier&amp; i) noexcept</span></a>
 <a name="142"><span class="lineNum">     142 </span>            : {</a>
@@ -207,96 +207,96 @@
 <a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :         || i == IDs::ARRANGERTRACK || i == IDs::MASTERTRACK;</span></a>
 <a name="146"><span class="lineNum">     146 </span>            : }</a>
 <a name="147"><span class="lineNum">     147 </span>            : </a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">       2005 : bool TrackList::hasAnySubTracks (const juce::ValueTree&amp; v)</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">       1452 : bool TrackList::hasAnySubTracks (const juce::ValueTree&amp; v)</span></a>
 <a name="149"><span class="lineNum">     149 </span>            : {</a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineCov">       7595 :     for (int i = v.getNumChildren(); --i &gt;= 0;)</span></a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineCov">       5610 :         if (isMovableTrack (v.getChild (i)))</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineCov">       5226 :     for (int i = v.getNumChildren(); --i &gt;= 0;)</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">       3782 :         if (isMovableTrack (v.getChild (i)))</span></a>
 <a name="152"><span class="lineNum">     152 </span>            :             return true;</a>
 <a name="153"><span class="lineNum">     153 </span>            : </a>
 <a name="154"><span class="lineNum">     154 </span>            :     return false;</a>
 <a name="155"><span class="lineNum">     155 </span>            : }</a>
 <a name="156"><span class="lineNum">     156 </span>            : </a>
-<a name="157"><span class="lineNum">     157 </span><span class="lineCov">      28266 : bool TrackList::isSuitableType (const juce::ValueTree&amp; v) const</span></a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">      12176 : bool TrackList::isSuitableType (const juce::ValueTree&amp; v) const</span></a>
 <a name="158"><span class="lineNum">     158 </span>            : {</a>
-<a name="159"><span class="lineNum">     159 </span><span class="lineCov">      28266 :     return isTrack (v);</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">      12176 :     return isTrack (v);</span></a>
 <a name="160"><span class="lineNum">     160 </span>            : }</a>
 <a name="161"><span class="lineNum">     161 </span>            : </a>
-<a name="162"><span class="lineNum">     162 </span><span class="lineCov">       1703 : Track* TrackList::createNewObject (const juce::ValueTree&amp; v)</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineCov">       1250 : Track* TrackList::createNewObject (const juce::ValueTree&amp; v)</span></a>
 <a name="163"><span class="lineNum">     163 </span>            : {</a>
-<a name="164"><span class="lineNum">     164 </span><span class="lineCov">       3406 :     juce::ValueTree vt (v);</span></a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">       1703 :     Track::Ptr t;</span></a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineCov">       2500 :     juce::ValueTree vt (v);</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">       1250 :     Track::Ptr t;</span></a>
 <a name="166"><span class="lineNum">     166 </span>            : </a>
-<a name="167"><span class="lineNum">     167 </span><span class="lineCov">       1703 :     if (rebuilding)</span></a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineCov">       1250 :     if (rebuilding)</span></a>
 <a name="168"><span class="lineNum">     168 </span>            :     {</a>
 <a name="169"><span class="lineNum">     169 </span>            :         // This logic avoids creating new tracks when they are sub-foldered</a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">        318 :         if (! edit.isLoading())</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">        202 :         if (! edit.isLoading())</span></a>
 <a name="171"><span class="lineNum">     171 </span><span class="lineCov">          8 :             if (auto trk = dynamic_cast&lt;Track*&gt; (edit.trackCache.findItem (EditItemID::fromID (v))))</span></a>
 <a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 :                 t = trk;</span></a>
 <a name="173"><span class="lineNum">     173 </span>            : </a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">        318 :         if (t == nullptr)</span></a>
-<a name="175"><span class="lineNum">     175 </span><span class="lineCov">        636 :             t = edit.loadTrackFrom (vt);</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">        202 :         if (t == nullptr)</span></a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineCov">        404 :             t = edit.loadTrackFrom (vt);</span></a>
 <a name="176"><span class="lineNum">     176 </span>            :     }</a>
 <a name="177"><span class="lineNum">     177 </span>            :     else</a>
 <a name="178"><span class="lineNum">     178 </span>            :     {</a>
-<a name="179"><span class="lineNum">     179 </span><span class="lineCov">       1385 :         if (auto trk = dynamic_cast&lt;Track*&gt; (edit.trackCache.findItem (EditItemID::fromID (v))))</span></a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineCov">       1048 :         if (auto trk = dynamic_cast&lt;Track*&gt; (edit.trackCache.findItem (EditItemID::fromID (v))))</span></a>
 <a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :             t = trk;</span></a>
 <a name="181"><span class="lineNum">     181 </span>            :         else</a>
-<a name="182"><span class="lineNum">     182 </span><span class="lineCov">       2770 :             t = edit.createTrack (v);</span></a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineCov">       2096 :             t = edit.createTrack (v);</span></a>
 <a name="183"><span class="lineNum">     183 </span>            :     }</a>
 <a name="184"><span class="lineNum">     184 </span>            : </a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineCov">       1703 :     if (t != nullptr)</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">       1250 :     if (t != nullptr)</span></a>
 <a name="186"><span class="lineNum">     186 </span>            :     {</a>
 <a name="187"><span class="lineNum">     187 </span>            :         t-&gt;incReferenceCount();</a>
-<a name="188"><span class="lineNum">     188 </span><span class="lineCov">       1703 :         edit.updateTrackStatusesAsync();</span></a>
-<a name="189"><span class="lineNum">     189 </span><span class="lineCov">       1703 :         return t.get();</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineCov">       1250 :         edit.updateTrackStatusesAsync();</span></a>
+<a name="189"><span class="lineNum">     189 </span><span class="lineCov">       1250 :         return t.get();</span></a>
 <a name="190"><span class="lineNum">     190 </span>            :     }</a>
 <a name="191"><span class="lineNum">     191 </span>            : </a>
 <a name="192"><span class="lineNum">     192 </span>            :     jassertfalse;</a>
 <a name="193"><span class="lineNum">     193 </span>            :     return {};</a>
 <a name="194"><span class="lineNum">     194 </span>            : }</a>
 <a name="195"><span class="lineNum">     195 </span>            : </a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineCov">       1703 : void TrackList::deleteObject (Track* t)</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">       1250 : void TrackList::deleteObject (Track* t)</span></a>
 <a name="197"><span class="lineNum">     197 </span>            : {</a>
 <a name="198"><span class="lineNum">     198 </span>            :     jassert (t != nullptr);</a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineCov">       1703 :     t-&gt;decReferenceCount();</span></a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineCov">       1703 :     edit.updateTrackStatusesAsync();</span></a>
-<a name="201"><span class="lineNum">     201 </span><span class="lineCov">       1703 : }</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineCov">       1250 :     t-&gt;decReferenceCount();</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineCov">       1250 :     edit.updateTrackStatusesAsync();</span></a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineCov">       1250 : }</span></a>
 <a name="202"><span class="lineNum">     202 </span>            : </a>
-<a name="203"><span class="lineNum">     203 </span><span class="lineCov">       1385 : void TrackList::newObjectAdded (Track* t)</span></a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineCov">       1048 : void TrackList::newObjectAdded (Track* t)</span></a>
 <a name="204"><span class="lineNum">     204 </span>            : {</a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineCov">       1385 :     if (! edit.isLoading())</span></a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineCov">       1048 :     if (! edit.isLoading())</span></a>
 <a name="206"><span class="lineNum">     206 </span>            :     {</a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineCov">        344 :         triggerAsyncUpdate();</span></a>
-<a name="208"><span class="lineNum">     208 </span><span class="lineCov">        344 :         t-&gt;refreshCurrentAutoParam();</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineCov">         78 :         triggerAsyncUpdate();</span></a>
+<a name="208"><span class="lineNum">     208 </span><span class="lineCov">         78 :         t-&gt;refreshCurrentAutoParam();</span></a>
 <a name="209"><span class="lineNum">     209 </span>            : </a>
-<a name="210"><span class="lineNum">     210 </span><span class="lineCov">        344 :         if (auto tl = t-&gt;getSubTrackList())</span></a>
+<a name="210"><span class="lineNum">     210 </span><span class="lineCov">         78 :         if (auto tl = t-&gt;getSubTrackList())</span></a>
 <a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 :             tl-&gt;visitAllRecursive ([] (Track&amp; track)</span></a>
 <a name="212"><span class="lineNum">     212 </span>            :                                    {</a>
 <a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 :                                        track.refreshCurrentAutoParam();</span></a>
 <a name="214"><span class="lineNum">     214 </span>            :                                        return true;</a>
 <a name="215"><span class="lineNum">     215 </span>            :                                    });</a>
 <a name="216"><span class="lineNum">     216 </span>            :     }</a>
-<a name="217"><span class="lineNum">     217 </span><span class="lineCov">       1385 : }</span></a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineCov">       1048 : }</span></a>
 <a name="218"><span class="lineNum">     218 </span>            : </a>
 <a name="219"><span class="lineNum">     219 </span><span class="lineNoCov">          0 : void TrackList::objectRemoved (Track*) {}</span></a>
 <a name="220"><span class="lineNum">     220 </span>            : </a>
-<a name="221"><span class="lineNum">     221 </span><span class="lineCov">       3981 : void TrackList::objectOrderChanged()</span></a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineCov">       3706 : void TrackList::objectOrderChanged()</span></a>
 <a name="222"><span class="lineNum">     222 </span>            : {</a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">       3981 :     edit.updateTrackStatusesAsync();</span></a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineCov">       3981 : }</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineCov">       3706 :     edit.updateTrackStatusesAsync();</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">       3706 : }</span></a>
 <a name="225"><span class="lineNum">     225 </span>            : </a>
-<a name="226"><span class="lineNum">     226 </span><span class="lineCov">        418 : void TrackList::sortTracksByType (ValueTree&amp; editState, UndoManager* um)</span></a>
+<a name="226"><span class="lineNum">     226 </span><span class="lineCov">        388 : void TrackList::sortTracksByType (ValueTree&amp; editState, UndoManager* um)</span></a>
 <a name="227"><span class="lineNum">     227 </span>            : {</a>
 <a name="228"><span class="lineNum">     228 </span>            :     struct TrackTypeSorter</a>
 <a name="229"><span class="lineNum">     229 </span>            :     {</a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineCov">      48804 :         static int getPriority (const juce::ValueTree&amp; v) noexcept</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineCov">      45220 :         static int getPriority (const juce::ValueTree&amp; v) noexcept</span></a>
 <a name="231"><span class="lineNum">     231 </span>            :         {</a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineCov">      48804 :             if (isMovableTrack (v))     return 6;</span></a>
-<a name="233"><span class="lineNum">     233 </span><span class="lineCov">      47693 :             if (isMasterTrack (v))      return 5;</span></a>
-<a name="234"><span class="lineNum">     234 </span><span class="lineCov">      46730 :             if (isChordTrack (v))       return 4;</span></a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineCov">      45400 :             if (isMarkerTrack (v))      return 3;</span></a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">      42211 :             if (isTempoTrack (v))       return 2;</span></a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineCov">      41100 :             if (isArrangerTrack (v))    return 1;</span></a>
+<a name="232"><span class="lineNum">     232 </span><span class="lineCov">      45220 :             if (isMovableTrack (v))     return 6;</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineCov">      44246 :             if (isMasterTrack (v))      return 5;</span></a>
+<a name="234"><span class="lineNum">     234 </span><span class="lineCov">      43362 :             if (isChordTrack (v))       return 4;</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">      42148 :             if (isMarkerTrack (v))      return 3;</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">      39178 :             if (isTempoTrack (v))       return 2;</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineCov">      38148 :             if (isArrangerTrack (v))    return 1;</span></a>
 <a name="238"><span class="lineNum">     238 </span>            :             return 0;</a>
 <a name="239"><span class="lineNum">     239 </span>            :         }</a>
 <a name="240"><span class="lineNum">     240 </span>            : </a>
@@ -307,7 +307,7 @@
 <a name="245"><span class="lineNum">     245 </span>            :     };</a>
 <a name="246"><span class="lineNum">     246 </span>            : </a>
 <a name="247"><span class="lineNum">     247 </span>            :     TrackTypeSorter sorter;</a>
-<a name="248"><span class="lineNum">     248 </span><span class="lineCov">        430 :     editState.sort (sorter, um, true);</span></a>
+<a name="248"><span class="lineNum">     248 </span><span class="lineCov">        400 :     editState.sort (sorter, um, true);</span></a>
 <a name="249"><span class="lineNum">     249 </span><span class="lineCov">         12 : }</span></a>
 <a name="250"><span class="lineNum">     250 </span>            : </a>
 <a name="251"><span class="lineNum">     251 </span><span class="lineCov">         12 : void TrackList::handleAsyncUpdate()</span></a>

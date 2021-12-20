@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntry">15</td>
             <td class="headerCovTableEntry">17</td>
-            <td class="headerCovTableEntryHi">94.1 %</td>
+            <td class="headerCovTableEntryMed">88.2 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-16 00:14:57</td>
+            <td class="headerValue">2021-12-20 11:23:32</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -79,11 +79,11 @@
 <a name="17"><span class="lineNum">      17 </span>            : */</a>
 <a name="18"><span class="lineNum">      18 </span>            : struct EditItemID</a>
 <a name="19"><span class="lineNum">      19 </span>            : {</a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">       4717 :     EditItemID() = default;</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        703 :     EditItemID() = default;</span></a>
 <a name="21"><span class="lineNum">      21 </span>            :     EditItemID (const EditItemID&amp;) = default;</a>
 <a name="22"><span class="lineNum">      22 </span>            :     EditItemID&amp; operator= (const EditItemID&amp;) = default;</a>
 <a name="23"><span class="lineNum">      23 </span>            : </a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">       4778 :     bool isValid() const noexcept       { return itemID != 0; }</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">        116 :     bool isValid() const noexcept       { return itemID != 0; }</span></a>
 <a name="25"><span class="lineNum">      25 </span>            :     bool isInvalid() const noexcept     { return itemID == 0; }</a>
 <a name="26"><span class="lineNum">      26 </span>            : </a>
 <a name="27"><span class="lineNum">      27 </span>            :     static EditItemID fromID (const juce::ValueTree&amp;);</a>
@@ -108,7 +108,7 @@
 <a name="46"><span class="lineNum">      46 </span>            :     juce::uint64 getRawID() const noexcept              { return itemID; }</a>
 <a name="47"><span class="lineNum">      47 </span>            :     static EditItemID fromRawID (juce::uint64);</a>
 <a name="48"><span class="lineNum">      48 </span>            : </a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineCov">     166333 :     bool operator== (EditItemID other) const noexcept   { return itemID == other.itemID; }</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">        193 :     bool operator== (EditItemID other) const noexcept   { return itemID == other.itemID; }</span></a>
 <a name="50"><span class="lineNum">      50 </span>            :     bool operator!= (EditItemID other) const noexcept   { return itemID != other.itemID; }</a>
 <a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :     bool operator&lt;  (EditItemID other) const noexcept   { return itemID &lt;  other.itemID; }</span></a>
 <a name="52"><span class="lineNum">      52 </span>            : </a>
@@ -168,37 +168,37 @@
 <a name="106"><span class="lineNum">     106 </span>            : struct EditItemCache</a>
 <a name="107"><span class="lineNum">     107 </span>            : {</a>
 <a name="108"><span class="lineNum">     108 </span>            :     EditItemCache() = default;</a>
-<a name="109"><span class="lineNum">     109 </span><span class="lineCov">        209 :     ~EditItemCache() { jassert (knownEditItems.empty()); }</span></a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineCov">        194 :     ~EditItemCache() { jassert (knownEditItems.empty()); }</span></a>
 <a name="110"><span class="lineNum">     110 </span>            : </a>
 <a name="111"><span class="lineNum">     111 </span>            :     EditItemType* findItem (EditItemID id) const</a>
 <a name="112"><span class="lineNum">     112 </span>            :     {</a>
 <a name="113"><span class="lineNum">     113 </span>            :         auto o = knownEditItems.find (id);</a>
 <a name="114"><span class="lineNum">     114 </span>            : </a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineCov">       5033 :         if (o != knownEditItems.cend())</span></a>
-<a name="116"><span class="lineNum">     116 </span><span class="lineCov">        187 :             return o-&gt;second;</span></a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineCov">       1157 :         if (o != knownEditItems.cend())</span></a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">         16 :             return o-&gt;second;</span></a>
 <a name="117"><span class="lineNum">     117 </span>            : </a>
 <a name="118"><span class="lineNum">     118 </span>            :         return {};</a>
 <a name="119"><span class="lineNum">     119 </span>            :     }</a>
 <a name="120"><span class="lineNum">     120 </span>            : </a>
 <a name="121"><span class="lineNum">     121 </span>            :     template&lt;typename Visitor&gt;</a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineCov">        418 :     void visitItems (Visitor&amp;&amp; visitor) const</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">        388 :     void visitItems (Visitor&amp;&amp; visitor) const</span></a>
 <a name="123"><span class="lineNum">     123 </span>            :     {</a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">        520 :         for (auto iter : knownEditItems)</span></a>
-<a name="125"><span class="lineNum">     125 </span><span class="lineCov">        102 :             std::forward&lt;Visitor&gt; (visitor)(iter.second);</span></a>
-<a name="126"><span class="lineNum">     126 </span><span class="lineCov">        418 :     }</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">        388 :         for (auto iter : knownEditItems)</span></a>
+<a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 :             std::forward&lt;Visitor&gt; (visitor)(iter.second);</span></a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineCov">        388 :     }</span></a>
 <a name="127"><span class="lineNum">     127 </span>            : </a>
 <a name="128"><span class="lineNum">     128 </span>            :     void addItem (EditItemType&amp; item)</a>
 <a name="129"><span class="lineNum">     129 </span>            :     {</a>
 <a name="130"><span class="lineNum">     130 </span>            :         jassert (knownEditItems.find (item.itemID) == knownEditItems.end());</a>
 <a name="131"><span class="lineNum">     131 </span>            : </a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineCov">       5156 :         if (item.itemID.isValid())</span></a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineCov">       5156 :             knownEditItems[item.itemID] = &amp;item;</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">       1335 :         if (item.itemID.isValid())</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineCov">       1335 :             knownEditItems[item.itemID] = &amp;item;</span></a>
 <a name="134"><span class="lineNum">     134 </span>            :     }</a>
 <a name="135"><span class="lineNum">     135 </span>            : </a>
 <a name="136"><span class="lineNum">     136 </span>            :     void removeItem (EditItemType&amp; item)</a>
 <a name="137"><span class="lineNum">     137 </span>            :     {</a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineCov">       5156 :         if (item.itemID.isValid())</span></a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineCov">       5156 :             knownEditItems.erase (item.itemID);</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">       1335 :         if (item.itemID.isValid())</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">       1335 :             knownEditItems.erase (item.itemID);</span></a>
 <a name="140"><span class="lineNum">     140 </span>            :     }</a>
 <a name="141"><span class="lineNum">     141 </span>            : </a>
 <a name="142"><span class="lineNum">     142 </span>            : private:</a>
@@ -214,7 +214,7 @@
 <a name="152"><span class="lineNum">     152 </span>            :     template &lt;&gt;</a>
 <a name="153"><span class="lineNum">     153 </span>            :     struct VariantConverter&lt;tracktion_engine::EditItemID&gt;</a>
 <a name="154"><span class="lineNum">     154 </span>            :     {</a>
-<a name="155"><span class="lineNum">     155 </span><span class="lineCov">       3004 :         static tracktion_engine::EditItemID fromVar (const var&amp; v)   { return tracktion_engine::EditItemID::fromVar (v); }</span></a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineCov">       2200 :         static tracktion_engine::EditItemID fromVar (const var&amp; v)   { return tracktion_engine::EditItemID::fromVar (v); }</span></a>
 <a name="156"><span class="lineNum">     156 </span><span class="lineCov">         64 :         static var toVar (const tracktion_engine::EditItemID&amp; v)     { return var ((int64) v.getRawID()); }</span></a>
 <a name="157"><span class="lineNum">     157 </span>            :     };</a>
 <a name="158"><span class="lineNum">     158 </span>            : }</a>

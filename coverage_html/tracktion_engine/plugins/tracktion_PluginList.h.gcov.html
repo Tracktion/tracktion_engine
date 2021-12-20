@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-16 00:14:57</td>
+            <td class="headerValue">2021-12-20 11:23:32</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -114,11 +114,11 @@
 <a name="52"><span class="lineNum">      52 </span>            :     void addPluginsFrom (const juce::ValueTree&amp;, bool clearFirst, bool atStart);</a>
 <a name="53"><span class="lineNum">      53 </span>            : </a>
 <a name="54"><span class="lineNum">      54 </span>            :     template &lt;typename PluginType&gt;</a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">       1196 :     PluginType* findFirstPluginOfType() const</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">        612 :     PluginType* findFirstPluginOfType() const</span></a>
 <a name="56"><span class="lineNum">      56 </span>            :     {</a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">       2360 :         for (auto af : *this)</span></a>
-<a name="58"><span class="lineNum">      58 </span><span class="lineCov">       1756 :             if (auto f = dynamic_cast&lt;PluginType*&gt; (af))</span></a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">        592 :                 return f;</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">       1204 :         for (auto af : *this)</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">        892 :             if (auto f = dynamic_cast&lt;PluginType*&gt; (af))</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">        300 :                 return f;</span></a>
 <a name="60"><span class="lineNum">      60 </span>            : </a>
 <a name="61"><span class="lineNum">      61 </span>            :         return {};</a>
 <a name="62"><span class="lineNum">      62 </span>            :     }</a>

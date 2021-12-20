@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-16 00:14:57</td>
+            <td class="headerValue">2021-12-20 11:23:32</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -73,12 +73,12 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">       1938 : PluginWindowState::PluginWindowState (Edit&amp; e)</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">       1163 : PluginWindowState::PluginWindowState (Edit&amp; e)</span></a>
 <a name="15"><span class="lineNum">      15 </span>            :    : edit (e),</a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineCov">       1938 :      engine (e.engine),</span></a>
-<a name="17"><span class="lineNum">      17 </span><span class="lineCov">       1938 :      windowLocked (engine.getPluginManager().areGUIsLockedByDefault())</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">       1163 :      engine (e.engine),</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">       1163 :      windowLocked (engine.getPluginManager().areGUIsLockedByDefault())</span></a>
 <a name="18"><span class="lineNum">      18 </span>            : {</a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">       1938 : }</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">       1163 : }</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : </a>
 <a name="21"><span class="lineNum">      21 </span><span class="lineNoCov">          0 : void PluginWindowState::deleteWindow()</span></a>
 <a name="22"><span class="lineNum">      22 </span>            : {</a>
@@ -130,11 +130,11 @@
 <a name="68"><span class="lineNum">      68 </span><span class="lineNoCov">          0 :     startTimer (100);</span></a>
 <a name="69"><span class="lineNum">      69 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="70"><span class="lineNum">      70 </span>            : </a>
-<a name="71"><span class="lineNum">      71 </span><span class="lineCov">       5665 : void PluginWindowState::hideWindowForShutdown()</span></a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">       3554 : void PluginWindowState::hideWindowForShutdown()</span></a>
 <a name="72"><span class="lineNum">      72 </span>            : {</a>
 <a name="73"><span class="lineNum">      73 </span>            :     deleteWindow();</a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineCov">       5665 :     stopTimer();</span></a>
-<a name="75"><span class="lineNum">      75 </span><span class="lineCov">       5665 : }</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">       3554 :     stopTimer();</span></a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineCov">       3554 : }</span></a>
 <a name="76"><span class="lineNum">      76 </span>            : </a>
 <a name="77"><span class="lineNum">      77 </span><span class="lineNoCov">          0 : void PluginWindowState::pickDefaultWindowBounds()</span></a>
 <a name="78"><span class="lineNum">      78 </span>            : {</a>
