@@ -20,7 +20,7 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
 
     name.referTo (state, IDs::name, um);
     
-    const NormalisableRange frequencyRange { frequencyToMidiNote (2.0f), frequencyToMidiNote (20'000.0f) };
+    const NormalisableRange frequencyRange { frequencyToMidiNote (10.0f), frequencyToMidiNote (20'000.0f) };
 
     highPassCutoffValue.referTo (state, IDs::highPassFrequency, um, frequencyRange.start);
     lowPassCutoffValue.referTo (state, IDs::lowPassFrequency, um, frequencyRange.end);
@@ -55,7 +55,7 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
                          [] (const String& s)   { return s.getFloatValue() / 100.0f; });
     mixParam->attachToCurrentValue (mixValue);
 
-    filterQParam = addParam (IDs::filterQ.toString(), TRANS("Filter Q"), { 0.1f, 20.0f, 0.0f },
+    filterQParam = addParam (IDs::filterQ.toString(), TRANS("Filter Q"), { 0.1f, 14.0f, 0.0f },
                              [] (float value)       { return String (value); },
                              [] (const String& s)   { return s.getFloatValue(); });
     filterQParam->attachToCurrentValue (qValue);
