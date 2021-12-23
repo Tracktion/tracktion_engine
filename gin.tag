@@ -14622,6 +14622,13 @@
     </member>
     <member kind="variable">
       <type>double</type>
+      <name>mean</name>
+      <anchorfile>structtracktion__engine_1_1BenchmarkResult.html</anchorfile>
+      <anchor>a9d931c05950bb9fce05f49006e164d84</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>double</type>
       <name>min</name>
       <anchorfile>structtracktion__engine_1_1BenchmarkResult.html</anchorfile>
       <anchor>a92d05e2bb5158fce8215ee96a9567442</anchor>

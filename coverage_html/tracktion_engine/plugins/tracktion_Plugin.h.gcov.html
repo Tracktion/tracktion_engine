@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-20 11:23:32</td>
+            <td class="headerValue">2021-12-23 18:27:33</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">10</td>
@@ -116,8 +116,8 @@
 <a name="54"><span class="lineNum">      54 </span>            :                          bool allowBypassedProcessing) noexcept;</a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
 <a name="56"><span class="lineNum">      56 </span>            :     /** Creates a copy of another PluginRenderContext. */</a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">    1164770 :     PluginRenderContext (const PluginRenderContext&amp;) = default;</span></a>
-<a name="58"><span class="lineNum">      58 </span><span class="lineCov">    1164770 :     PluginRenderContext (PluginRenderContext&amp;&amp;) = default;</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">    1161930 :     PluginRenderContext (const PluginRenderContext&amp;) = default;</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">    1161930 :     PluginRenderContext (PluginRenderContext&amp;&amp;) = default;</span></a>
 <a name="59"><span class="lineNum">      59 </span>            : </a>
 <a name="60"><span class="lineNum">      60 </span>            :     /** Deleted assignment operators. */</a>
 <a name="61"><span class="lineNum">      61 </span>            :     PluginRenderContext&amp; operator= (const PluginRenderContext&amp;) = delete;</a>
@@ -211,7 +211,7 @@
 <a name="149"><span class="lineNum">     149 </span>            :     //==============================================================================</a>
 <a name="150"><span class="lineNum">     150 </span>            :     /** Enable/disable the plugin.  */</a>
 <a name="151"><span class="lineNum">     151 </span>            :     virtual void setEnabled (bool);</a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineCov">    3379940 :     bool isEnabled() const noexcept                         { return enabled; }</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">    3376920 :     bool isEnabled() const noexcept                         { return enabled; }</span></a>
 <a name="153"><span class="lineNum">     153 </span>            : </a>
 <a name="154"><span class="lineNum">     154 </span>            :     /** This is a bit different to being enabled as when frozen a plugin can't be interacted with. */</a>
 <a name="155"><span class="lineNum">     155 </span>            :     void setFrozen (bool shouldBeFrozen);</a>
@@ -261,7 +261,7 @@
 <a name="199"><span class="lineNum">     199 </span>            :     virtual void applyToBuffer (const PluginRenderContext&amp;) = 0;</a>
 <a name="200"><span class="lineNum">     200 </span>            : </a>
 <a name="201"><span class="lineNum">     201 </span>            :     /** Called between successive rendering blocks. */</a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineCov">    3463410 :     virtual void prepareForNextBlock (double /*editTime*/) {}</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">    3460960 :     virtual void prepareForNextBlock (double /*editTime*/) {}</span></a>
 <a name="203"><span class="lineNum">     203 </span>            : </a>
 <a name="204"><span class="lineNum">     204 </span>            :     // wrapper on applyTobuffer, called by the node</a>
 <a name="205"><span class="lineNum">     205 </span>            :     void applyToBufferWithAutomation (const PluginRenderContext&amp;);</a>
@@ -394,7 +394,7 @@
 <a name="332"><span class="lineNum">     332 </span>            :     //==============================================================================</a>
 <a name="333"><span class="lineNum">     333 </span>            :     // setting a master plugin whose settings will be mirrored</a>
 <a name="334"><span class="lineNum">     334 </span>            :     bool setPluginToMirror (const Plugin::Ptr&amp;); // fails if type is wrong</a>
-<a name="335"><span class="lineNum">     335 </span><span class="lineCov">        260 :     virtual void updateFromMirroredPluginIfNeeded (Plugin&amp;) {}</span></a>
+<a name="335"><span class="lineNum">     335 </span><span class="lineCov">        256 :     virtual void updateFromMirroredPluginIfNeeded (Plugin&amp;) {}</span></a>
 <a name="336"><span class="lineNum">     336 </span>            :     Plugin::Ptr getMirroredPlugin() const;</a>
 <a name="337"><span class="lineNum">     337 </span>            : </a>
 <a name="338"><span class="lineNum">     338 </span>            :     //==============================================================================</a>
