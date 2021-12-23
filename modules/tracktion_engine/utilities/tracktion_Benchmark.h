@@ -39,7 +39,7 @@ inline BenchmarkDescription createBenchmarkDescription (std::string category, st
 struct BenchmarkResult
 {
     BenchmarkDescription description;   /**< The BenchmarkDescription. */
-    double duration = 0.0, min = 0.0, max = 0.0, variance = 0.0;
+    double duration = 0.0, mean = 0.0, min = 0.0, max = 0.0, variance = 0.0;
     int64_t ticksPerSecond = (int64_t) juce::Time::getHighResolutionTicksPerSecond();
     juce::Time date { juce::Time::getCurrentTime() };
 };
@@ -49,7 +49,7 @@ inline BenchmarkResult createBenchmarkResult (BenchmarkDescription description,
                                               const tracktion_graph::PerformanceMeasurement::Statistics& stats)
 {
     return { description,
-             stats.totalSeconds, stats.minimumSeconds, stats.maximumSeconds,
+             stats.totalSeconds, stats.meanSeconds, stats.minimumSeconds, stats.maximumSeconds,
              stats.getVariance(), (int64_t) juce::Time::getHighResolutionTicksPerSecond() };
 }
 

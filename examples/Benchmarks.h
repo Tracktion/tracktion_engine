@@ -46,17 +46,18 @@ inline bool publishToBenchmarkAPI (juce::String apiKey, std::vector<BenchmarkRes
     for (auto& r : results)
     {
         juce::DynamicObject::Ptr fields = new juce::DynamicObject();
-        fields->setProperty ("benchmark_hash",        juce::String (static_cast<uint64> (r.description.hash)));
-        fields->setProperty ("benchmark_category",    juce::String (r.description.category).quoted ('\''));
-        fields->setProperty ("benchmark_name",        juce::String (r.description.name).quoted ('\''));
-        fields->setProperty ("benchmark_description", juce::String (r.description.description).quoted ('\''));
-        fields->setProperty ("benchmark_platform",    juce::String (r.description.platform).quoted ('\''));
-        fields->setProperty ("benchmark_ticks_per_s", static_cast<int64> (r.ticksPerSecond));
-        fields->setProperty ("benchmark_duration",    r.duration);
-        fields->setProperty ("benchmark_duration_min",r.min);
-        fields->setProperty ("benchmark_duration_max",r.max);
+        fields->setProperty ("benchmark_hash",              juce::String (static_cast<uint64> (r.description.hash)));
+        fields->setProperty ("benchmark_category",          juce::String (r.description.category).quoted ('\''));
+        fields->setProperty ("benchmark_name",              juce::String (r.description.name).quoted ('\''));
+        fields->setProperty ("benchmark_description",       juce::String (r.description.description).quoted ('\''));
+        fields->setProperty ("benchmark_platform",          juce::String (r.description.platform).quoted ('\''));
+        fields->setProperty ("benchmark_ticks_per_s",       static_cast<int64> (r.ticksPerSecond));
+        fields->setProperty ("benchmark_duration",          r.duration);
+        fields->setProperty ("benchmark_duration_min",      r.min);
+        fields->setProperty ("benchmark_duration_max",      r.max);
+        fields->setProperty ("benchmark_duration_mean",     r.mean);
         fields->setProperty ("benchmark_duration_variance", r.variance);
-        fields->setProperty ("benchmark_time",        r.date.toISO8601 (true).trimCharactersAtEnd ("Z").quoted ('\''));
+        fields->setProperty ("benchmark_time",              r.date.toISO8601 (true).trimCharactersAtEnd ("Z").quoted ('\''));
 
         records.add (fields.get());
     }
@@ -94,7 +95,7 @@ int main (int, char**)
     for (const auto& r : results)
         std::cout << r.description.name << ", " << r.description.category
                   << "\n\t" << r.description.description
-                  << "\n\t" << r.duration << "\t(min:" << r.min << ", max: " << r.max << ", var: " << r.variance << ")\n";
+                  << "\n\t" << r.duration << "\t(min:" << r.min << ", max: " << r.max  << ", mean: " << r.mean << ", var: " << r.variance << ")\n";
 
     if (publishToBenchmarkAPI (SystemStats::getEnvironmentVariable ("BM_API_KEY", {}),
                                std::move (results)))
