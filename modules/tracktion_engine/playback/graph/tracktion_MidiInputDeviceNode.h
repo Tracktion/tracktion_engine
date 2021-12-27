@@ -29,6 +29,7 @@ public:
     void process (ProcessContext&) override;
 
     void handleIncomingMidiMessage (const juce::MidiMessage&) override;
+    void discardRecordings() override;
 
 private:
     //==============================================================================

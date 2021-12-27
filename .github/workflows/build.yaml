@@ -41,6 +41,8 @@ jobs:
       # Build products
       - name: "Build products"
         shell: bash
+        env:
+          BM_API_KEY: ${{ secrets.BM_API_KEY }}
         run: |
           if [[ "$OSTYPE" == "linux-gnu" ]]; then
             export DISABLE_VALGRIND=1

@@ -113,10 +113,11 @@ function buildExample()
     echo CMAKE_GENERATOR: "$CMAKE_GENERATOR"    
     
     # Capture named function arguments
-    local global RUN_EXAMPLE ${@}
+    local global RUN_EXAMPLE RUN_ARGS ${@}
     echo DISABLE_BUILD: $DISABLE_BUILD
     echo RUN_EXAMPLE: $RUN_EXAMPLE
     echo DISABLE_TOOLS: $DISABLE_TOOLS
+    echo RUN_ARGS: $RUN_ARGS
 
     #============================================================
     #   Build
@@ -136,7 +137,7 @@ function buildExample()
 
         if [ "$RUN_EXAMPLE" == "1" ]; then
             echo INFO: Running example: ${APP_FILE}
-            ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
+            ${APP_FILE} ${RUN_ARGS} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
 
             if [ "$DISABLE_TOOLS" == "1" ]; then
                 echo INFO: Not building with tools tools: ${APP_FILE}
@@ -170,7 +171,7 @@ function buildExample()
 # First build and test these examples
 buildExample "TestRunner" RUN_EXAMPLE=1
 buildExample "tracktion_graph_TestRunner" RUN_EXAMPLE=1
-buildExample "tracktion_graph_PerformanceTests" RUN_EXAMPLE=1 DISABLE_TOOLS=1
+buildExample "Benchmarks" RUN_EXAMPLE=1 DISABLE_TOOLS=1
 
 # Then just build these examples (don't build with tooling as they won't be run)
 buildExample "DistortionEffectDemo" DISABLE_TOOLS=1

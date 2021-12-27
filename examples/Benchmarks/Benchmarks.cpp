@@ -9,4 +9,4 @@
 */
 
 #include <JuceHeader.h>
-#include "../tracktion_graph_PerformanceTests.h"
+#include "../Benchmarks.h"

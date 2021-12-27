@@ -202,4 +202,10 @@ bool MidiInputDeviceNode::isLivePlayOverActive()
     return instance.isRecording() && instance.context.transport.looping;
 }
 
+void MidiInputDeviceNode::discardRecordings()
+{
+    const juce::ScopedLock sl (liveInputLock);
+    liveRecordedMessages.clear();
+}
+
 }

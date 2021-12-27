@@ -717,7 +717,12 @@ public:
         CRASH_TRACER
 
         if (discardRecordings)
+        { 
+            for (auto c : consumers)
+                c->discardRecordings();
+
             recorded.clear();
+        }
 
         if (recorded.getNumEvents() == 0)
             return {};

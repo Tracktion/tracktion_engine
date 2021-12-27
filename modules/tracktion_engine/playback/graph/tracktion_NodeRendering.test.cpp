@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-#if TRACKTION_GRAPH_PERFORMANCE_TESTS
+#if TRACKTION_BENCHMARKS
 
 using namespace tracktion_graph;
 
@@ -21,7 +21,7 @@ class PerformanceTests : public juce::UnitTest
 {
 public:
     PerformanceTests()
-        : juce::UnitTest ("Performance Tests", "tracktion_graph_performance")
+        : juce::UnitTest ("Node Benchmarks", "tracktion_benchmarks")
     {
     }
     

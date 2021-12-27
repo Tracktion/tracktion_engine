@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(TestRunner VERSION 1.0.0)
+project(Benchmarks VERSION 1.0.0)
 
 # If we are using MSVC we want static runtime linkage
 if (MSVC)
@@ -19,6 +19,16 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /WX")
+endif()
+
+# If we are compiling for Linux specify the arch to enable sse and avx instructions
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=sandybridge")
+
+    # Default to release for this benchmarking project
+    if(NOT CMAKE_BUILD_TYPE)
+      set(CMAKE_BUILD_TYPE Release)
+    endif()
 endif()
 
 
@@ -47,6 +57,7 @@ set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
     CXX_VISIBILITY_PRESET hidden)
 
 set(SourceFiles
+    ../${CMAKE_PROJECT_NAME}.h
     ${CMAKE_PROJECT_NAME}.cpp)
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${SourceFiles})
@@ -61,15 +72,15 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     JUCE_PLUGINHOST_AU=1
     JUCE_PLUGINHOST_LADSPA=1
     JUCE_PLUGINHOST_VST3=1
-    JUCE_USE_CURL=0
+    JUCE_USE_CURL=1
+    JUCE_LOAD_CURL_SYMBOLS_LAZILY=1
     JUCE_WEB_BROWSER=0
     JUCER_ENABLE_GPL_MODE=1
     JUCE_DISPLAY_SPLASH_SCREEN=0
     JUCE_REPORT_APP_USAGE=0
     JUCE_STRICT_REFCOUNTEDPOINTER=1
     JUCE_MODAL_LOOPS_PERMITTED=1
-    TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH=1
-    TRACKTION_UNIT_TESTS=1
+    TRACKTION_BENCHMARKS=1
     TRACKTION_LOG_DEVICES=0)
 
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
