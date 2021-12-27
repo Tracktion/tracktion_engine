@@ -820,7 +820,10 @@ public:
             tempFile.moveFileTo (recordedFile.getFile());
             filesCreated.add (recordedFile.getFile());
             afm.forceFileUpdate (recordedFile);
-            projectItem->verifyLength();
+            if (projectItem != nullptr)
+            {
+                projectItem->verifyLength();
+            }
             return true;
         }
 
