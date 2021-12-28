@@ -147,7 +147,7 @@ int TracktionArchiveFile::getNumFiles() const
     return entries.size();
 }
 
-String TracktionArchiveFile::getOriginalFileName (int index) const
+juce::String TracktionArchiveFile::getOriginalFileName (int index) const
 {
     if (auto i = entries[index])
         return i->originalName.fromLastOccurrenceOf ("/", false, false);
@@ -155,7 +155,7 @@ String TracktionArchiveFile::getOriginalFileName (int index) const
     return {};
 }
 
-int TracktionArchiveFile::indexOfFile (const String& name) const
+int TracktionArchiveFile::indexOfFile (const juce::String& name) const
 {
     for (int i = entries.size(); --i >= 0;)
         if (getOriginalFileName(i).equalsIgnoreCase (name))
@@ -344,7 +344,7 @@ bool TracktionArchiveFile::addFile (const File& f, const File& rootDirectory, Co
     return addFile (f, name, compression);
 }
 
-bool TracktionArchiveFile::addFile (const File& f, const String& filenameToUse, CompressionType compression)
+bool TracktionArchiveFile::addFile (const File& f, const juce::String& filenameToUse, CompressionType compression)
 {
     // don't risk using ogg or flac on small audio files
     if (compression != CompressionType::none && f.getSize() <= 16 * 1024)
@@ -505,7 +505,9 @@ bool TracktionArchiveFile::addFile (const File& f, const String& filenameToUse, 
     return ok;
 }
 
-void TracktionArchiveFile::addFileInfo (const String& filename, const String& itemName, const String& itemValue)
+void TracktionArchiveFile::addFileInfo (const juce::String& filename,
+                                        const juce::String& itemName,
+                                        const juce::String& itemValue)
 {
     auto i = indexOfFile (filename);
 

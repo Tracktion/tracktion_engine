@@ -261,13 +261,13 @@ SelectableClass* SelectableClass::findClassFor (const Selectable* s)
 }
 
 //==============================================================================
-String SelectableClass::getDescriptionOfSelectedGroup (const SelectableList& selectedObjects)
+juce::String SelectableClass::getDescriptionOfSelectedGroup (const SelectableList& selectedObjects)
 {
     if (selectedObjects.size() == 1)
         if (auto s = selectedObjects.getFirst())
             return s->getSelectableDescription();
 
-    StringArray names;
+    juce::StringArray names;
 
     for (auto o : selectedObjects)
         if (o != nullptr)

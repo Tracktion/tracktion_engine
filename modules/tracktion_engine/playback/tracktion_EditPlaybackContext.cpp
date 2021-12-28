@@ -530,7 +530,7 @@ void EditPlaybackContext::startRecording (double start, double punchIn)
     auto sampleRate = dm.getSampleRate();
     auto blockSize  = dm.getBlockSize();
 
-    String error;
+    juce::String error;
 
     for (int i = waveInputs.size(); --i >= 0 && error.isEmpty();)
         if (auto wi = waveInputs.getUnchecked (i))

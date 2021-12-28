@@ -14,7 +14,7 @@ namespace tracktion_engine
 class VcaAutomatableParameter : public AutomatableParameter
 {
 public:
-    VcaAutomatableParameter (const String& xmlTag, const String& name,
+    VcaAutomatableParameter (const juce::String& xmlTag, const juce::String& name,
                              Plugin& owner, Range<float> valueRangeToUse)
         : AutomatableParameter (xmlTag, name, owner, valueRangeToUse)
     {
@@ -25,12 +25,12 @@ public:
         notifyListenersOfDeletion();
     }
 
-    String valueToString (float value) override
+    juce::String valueToString (float value) override
     {
         return Decibels::toString (volumeFaderPositionToDB (value) + 0.001);
     }
 
-    float stringToValue (const String& str) override
+    float stringToValue (const juce::String& str) override
     {
         return decibelsToVolumeFaderPosition (dbStringToDb (str));
     }
@@ -52,7 +52,7 @@ VCAPlugin::~VCAPlugin()
     volParam->detachFromCurrentValue();
 }
 
-ValueTree VCAPlugin::create()
+juce::ValueTree VCAPlugin::create()
 {
     ValueTree v (IDs::PLUGIN);
     v.setProperty (IDs::type, xmlTypeName, nullptr);

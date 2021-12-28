@@ -208,7 +208,7 @@ static juce::String getCompPrefix()                     { return "comp_"; }
 
 static AudioFile getCachedEditFile (Edit& edit, const juce::String& prefix, juce::int64 hash)
 {
-    return AudioFile (edit.engine, edit.getTempDirectory (true).getChildFile (prefix + String::toHexString (hash) + ".wav"));
+    return AudioFile (edit.engine, edit.getTempDirectory (true).getChildFile (prefix + juce::String::toHexString (hash) + ".wav"));
 }
 
 static AudioFile getCachedClipFileWithPrefix (const AudioClipBase& clip, const juce::String& prefix, juce::int64 hash)

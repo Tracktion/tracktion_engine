@@ -13,7 +13,7 @@ namespace tracktion_engine
 
 static String controllerIDToString (int id, int channelid)
 {
-    const String channel (" [" + String (channelid) + "]");
+    auto channel = " [" + juce::String (channelid) + "]";
 
     if (id >= 0x40000) return TRANS("Channel Pressure Controller") + "# " + channel;
     if (id >= 0x30000) return "RPN #"  + String (id & 0x7fff) + channel;
@@ -233,7 +233,7 @@ void ParameterControlMappings::checkForDeletedParams()
 }
 
 //==============================================================================
-void ParameterControlMappings::loadFrom (const ValueTree& state)
+void ParameterControlMappings::loadFrom (const juce::ValueTree& state)
 {
     const ScopedLock sl (lock);
 
@@ -365,7 +365,7 @@ PopupMenu ParameterControlMappings::buildMenu (Array<ParameterAndIndex>& allPara
 {
     CRASH_TRACER
 
-    StringArray presets (getPresets());
+    juce::StringArray presets (getPresets());
 
     PopupMenu loadPresets, deletePresets;
     addSortedListToMenu (loadPresets, presets, 60000);
@@ -382,7 +382,7 @@ PopupMenu ParameterControlMappings::buildMenu (Array<ParameterAndIndex>& allPara
             if (auto p = param->getPlugin())
                 plugins.addIfNotAlreadyThere (p);
 
-    StringArray pluginNames;
+    juce::StringArray pluginNames;
 
     for (auto f : plugins)
     {
@@ -662,7 +662,7 @@ void ParameterControlMappings::savePreset (int index)
             if (auto p = param->getPlugin())
                 plugins.addIfNotAlreadyThere (p);
 
-    StringArray pluginNames;
+    juce::StringArray pluginNames;
 
     for (int i = 0; i < plugins.size(); ++i)
     {
@@ -809,9 +809,9 @@ void ParameterControlMappings::loadPreset (int index)
     }
 }
 
-StringArray ParameterControlMappings::getPresets() const
+juce::StringArray ParameterControlMappings::getPresets() const
 {
-    StringArray result;
+    juce::StringArray result;
 
     if (auto xml = edit.engine.getPropertyStorage().getXmlProperty (SettingID::filterControlMappingPresets))
         for (auto e : xml->getChildIterator())

@@ -19,8 +19,8 @@ AuxSendPlugin::AuxSendPlugin (PluginCreationInfo info) : Plugin (info)
     lastVolumeBeforeMute.referTo (state, IDs::lastVolumeBeforeMuteDb, um, 0.0f);
 
     gain = addParam ("send level", TRANS("Send level"), { 0.0f, 1.0f },
-                     [] (float value)       { return Decibels::toString (volumeFaderPositionToDB (value)); },
-                     [] (const String& s)   { return decibelsToVolumeFaderPosition (dbStringToDb (s)); });
+                     [] (float value)             { return Decibels::toString (volumeFaderPositionToDB (value)); },
+                     [] (const juce::String& s)   { return decibelsToVolumeFaderPosition (dbStringToDb (s)); });
 
     gain->attachToCurrentValue (gainLevel);
 
@@ -50,24 +50,24 @@ bool AuxSendPlugin::shouldProcess()
 
 const char* AuxSendPlugin::xmlTypeName = "auxsend";
 
-String AuxSendPlugin::getName()
+juce::String AuxSendPlugin::getName()
 {
-    String nm (edit.getAuxBusName (busNumber));
+    juce::String nm (edit.getAuxBusName (busNumber));
 
     if (nm.isNotEmpty())
         return "S:" + nm;
 
-    return TRANS("Aux Send") + " #" + String (busNumber + 1);
+    return TRANS("Aux Send") + " #" + juce::String (busNumber + 1);
 }
 
-String AuxSendPlugin::getShortName (int)
+juce::String AuxSendPlugin::getShortName (int)
 {
     auto nm = edit.getAuxBusName (busNumber);
 
     if (nm.isNotEmpty())
         return "S:" + nm;
 
-    return TRANS("Send") + ":" + String (busNumber + 1);
+    return TRANS("Send") + ":" + juce::String (busNumber + 1);
 }
 
 void AuxSendPlugin::initialise (const PluginInitialisationInfo& info)
@@ -90,7 +90,7 @@ void AuxSendPlugin::applyToBuffer (const PluginRenderContext&)
 {
 }
 
-String AuxSendPlugin::getBusName()
+juce::String AuxSendPlugin::getBusName()
 {
     auto busName = edit.getAuxBusName (busNumber);
 
@@ -134,14 +134,14 @@ bool AuxSendPlugin::isMute()
     return getGainDb() <= -90.0f;
 }
 
-String AuxSendPlugin::getDefaultBusName (int index)
+juce::String AuxSendPlugin::getDefaultBusName (int index)
 {
-    return "Bus #" + String (index + 1);
+    return "Bus #" + juce::String (index + 1);
 }
 
-StringArray AuxSendPlugin::getBusNames (Edit& ed, int maxNumBusses)
+juce::StringArray AuxSendPlugin::getBusNames (Edit& ed, int maxNumBusses)
 {
-    StringArray buses;
+    juce::StringArray buses;
 
     for (int i = 0; i < maxNumBusses; ++i)
     {

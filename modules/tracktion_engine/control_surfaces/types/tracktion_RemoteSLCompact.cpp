@@ -50,7 +50,7 @@ void RemoteSLCompact::playStateChanged (bool) {}
 void RemoteSLCompact::recordStateChanged (bool) {}
 void RemoteSLCompact::automationReadModeChanged (bool) {}
 void RemoteSLCompact::automationWriteModeChanged (bool) {}
-void RemoteSLCompact::faderBankChanged (int, const StringArray&) {}
+void RemoteSLCompact::faderBankChanged (int, const juce::StringArray&) {}
 void RemoteSLCompact::channelLevelChanged (int, float) {}
 void RemoteSLCompact::trackSelectionChanged (int, bool) {}
 void RemoteSLCompact::trackRecordEnabled (int, bool) {}

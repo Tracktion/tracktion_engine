@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-FolderTrack::FolderTrack (Edit& ed, const ValueTree& v)
+FolderTrack::FolderTrack (Edit& ed, const juce::ValueTree& v)
     : Track (ed, v, 50, 13, 2000)
 {
     soloed.referTo (state, IDs::solo, nullptr);
@@ -44,9 +44,9 @@ bool FolderTrack::isFolderTrack() const
 
 void FolderTrack::sanityCheckName()
 {
-    const String n = Track::getName();
+    auto n = Track::getName();
 
-    auto checkName = [&n] (const String& type)
+    auto checkName = [&n] (const juce::String& type)
     {
         return ((n.startsWithIgnoreCase ("Folder ")
                  || n.startsWithIgnoreCase (TRANS(type) + " "))
@@ -60,7 +60,7 @@ void FolderTrack::sanityCheckName()
     }
 }
 
-String FolderTrack::getName()
+juce::String FolderTrack::getName()
 {
     auto n = Track::getName();
 

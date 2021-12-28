@@ -99,7 +99,7 @@ struct StepModifier::StepModifierTimer : public ModifierTimer
 };
 
 //==============================================================================
-StepModifier::StepModifier (Edit& e, const ValueTree& v)
+StepModifier::StepModifier (Edit& e, const juce::ValueTree& v)
     : Modifier (e, v)
 {
     auto um = &edit.getUndoManager();
@@ -112,8 +112,9 @@ StepModifier::StepModifier (Edit& e, const ValueTree& v)
     rateType.referTo (state, IDs::rateType, um, float (ModifierCommon::bar));
     depth.referTo (state, IDs::depth, um, 1.0f);
 
-    auto addDiscreteParam = [this] (const String& paramID, const String& name, Range<float> valueRange, CachedValue<float>& val,
-                                    const StringArray& labels) -> AutomatableParameter*
+    auto addDiscreteParam = [this] (const juce::String& paramID, const juce::String& name,
+                                    juce::Range<float> valueRange, CachedValue<float>& val,
+                                    const juce::StringArray& labels) -> AutomatableParameter*
     {
         auto* p = new DiscreteLabelledParameter (paramID, name, *this, valueRange, labels.size(), labels);
         addAutomatableParameter (p);
@@ -122,7 +123,9 @@ StepModifier::StepModifier (Edit& e, const ValueTree& v)
         return p;
     };
 
-    auto addParam = [this] (const String& paramID, const String& name, NormalisableRange<float> valueRange, float centreVal, CachedValue<float>& val, const String& suffix) -> AutomatableParameter*
+    auto addParam = [this] (const juce::String& paramID, const juce::String& name,
+                            NormalisableRange<float> valueRange, float centreVal,
+                            CachedValue<float>& val, const juce::String& suffix) -> AutomatableParameter*
     {
         valueRange.setSkewForCentre (centreVal);
         auto* p = new SuffixedParameter (paramID, name, *this, valueRange, suffix);
@@ -196,7 +199,7 @@ int StepModifier::getCurrentStep() const noexcept
     return currentStep.load (std::memory_order_acquire);
 }
 
-AutomatableParameter::ModifierAssignment* StepModifier::createAssignment (const ValueTree& v)
+AutomatableParameter::ModifierAssignment* StepModifier::createAssignment (const juce::ValueTree& v)
 {
     return new Assignment (v, *this);
 }
@@ -235,7 +238,7 @@ StepModifier::Ptr StepModifier::Assignment::getStepModifier() const
 }
 
 //==============================================================================
-String StepModifier::getSelectableDescription()
+juce::String StepModifier::getSelectableDescription()
 {
     return TRANS("Step Modifier");
 }

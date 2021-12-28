@@ -14,7 +14,7 @@ namespace tracktion_engine
 MackieXT::MackieXT (ExternalControllerManager& ecm, MackieMCU& m, int id)
     : ControlSurface (ecm), mcu (m)
 {
-    deviceDescription = "Mackie Control Universal XT #" + String (id + 1);
+    deviceDescription = "Mackie Control Universal XT #" + juce::String (id + 1);
 
     needsMidiChannel = true;
     needsMidiBackChannel = true;
@@ -71,7 +71,7 @@ void MackieXT::playStateChanged (bool) {}
 void MackieXT::recordStateChanged (bool) {}
 void MackieXT::automationReadModeChanged (bool) {}
 void MackieXT::automationWriteModeChanged (bool) {}
-void MackieXT::faderBankChanged (int, const StringArray&) {}
+void MackieXT::faderBankChanged (int, const juce::StringArray&) {}
 void MackieXT::channelLevelChanged (int, float) {}
 void MackieXT::trackSelectionChanged (int, bool) {}
 void MackieXT::trackRecordEnabled (int, bool) {}

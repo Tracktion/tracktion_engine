@@ -2774,7 +2774,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
 
     if (isMidi)
     {
-        if (auto fin = std::unique_ptr<juce::FileInputStream> (file.createInputStream()))
+        if (auto fin = file.createInputStream())
         {
             juce::MidiFile mf;
             mf.readFrom (*fin);
@@ -2788,12 +2788,15 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
             sequence.updateMatchedPairs();
 
             int ch10Count = 0, allCount = 0;
+
             for (auto m : sequence)
             {
                 auto msg = m->message;
+
                 if (msg.isNoteOn())
                 {
                     allCount++;
+
                     if (msg.getChannel() == 10)
                         ch10Count++;
                 }

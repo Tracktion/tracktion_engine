@@ -397,13 +397,13 @@ bool Renderer::RenderTask::addMidiMetaDataAndWriteToFile (juce::File destFile, j
 
 
 //==============================================================================
-bool Renderer::renderToFile (const String& taskDescription,
+bool Renderer::renderToFile (const juce::String& taskDescription,
                              const juce::File& outputFile,
                              Edit& edit,
                              EditTimeRange range,
-                             const BigInteger& tracksToDo,
+                             const juce::BigInteger& tracksToDo,
                              bool usePlugins,
-                             Array<Clip*> clips,
+                             juce::Array<Clip*> clips,
                              bool useThread)
 {
     CRASH_TRACER
@@ -455,7 +455,7 @@ bool Renderer::renderToFile (const String& taskDescription,
     return outputFile.existsAsFile();
 }
 
-juce::File Renderer::renderToFile (const String& taskDescription, const Parameters& r)
+juce::File Renderer::renderToFile (const juce::String& taskDescription, const Parameters& r)
 {
     CRASH_TRACER
 
@@ -502,7 +502,7 @@ juce::File Renderer::renderToFile (const String& taskDescription, const Paramete
     return {};
 }
 
-ProjectItem::Ptr Renderer::renderToProjectItem (const String& taskDescription, const Parameters& r)
+ProjectItem::Ptr Renderer::renderToProjectItem (const juce::String& taskDescription, const Parameters& r)
 {
     CRASH_TRACER
 
@@ -553,8 +553,8 @@ ProjectItem::Ptr Renderer::renderToProjectItem (const String& taskDescription, c
 }
 
 //==============================================================================
-Renderer::Statistics Renderer::measureStatistics (const String& taskDescription, Edit& edit,
-                                                  EditTimeRange range, const BigInteger& tracksToDo,
+Renderer::Statistics Renderer::measureStatistics (const juce::String& taskDescription, Edit& edit,
+                                                  EditTimeRange range, const juce::BigInteger& tracksToDo,
                                                   int blockSizeForAudio)
 {
     CRASH_TRACER

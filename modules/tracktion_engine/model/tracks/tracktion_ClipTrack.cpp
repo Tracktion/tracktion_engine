@@ -14,7 +14,7 @@ namespace tracktion_engine
 struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
                               private AsyncUpdater
 {
-    ClipList (ClipTrack& ct, const ValueTree& parentTree)
+    ClipList (ClipTrack& ct, const juce::ValueTree& parentTree)
         : ValueTreeObjectList<Clip> (parentTree),
           clipTrack (ct)
     {
@@ -32,7 +32,7 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
         freeObjects();
     }
 
-    Clip::Ptr getClipForTree (const ValueTree& v) const
+    Clip::Ptr getClipForTree (const juce::ValueTree& v) const
     {
         for (auto c : objects)
             if (c->state == v)
@@ -41,12 +41,12 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
         return {};
     }
 
-    bool isSuitableType (const ValueTree& v) const override
+    bool isSuitableType (const juce::ValueTree& v) const override
     {
         return Clip::isClipState (v);
     }
 
-    Clip* createNewObject (const ValueTree& v) override
+    Clip* createNewObject (const juce::ValueTree& v) override
     {
         if (auto newClip = Clip::createClipForState (v, clipTrack))
         {
@@ -308,7 +308,7 @@ struct ClipTrack::CollectionClipList  : public ValueTree::Listener
 };
 
 //==============================================================================
-ClipTrack::ClipTrack (Edit& ed, const ValueTree& v, double defaultHeight, double minHeight, double maxHeight)
+ClipTrack::ClipTrack (Edit& ed, const juce::ValueTree& v, double defaultHeight, double minHeight, double maxHeight)
     : Track (ed, v, defaultHeight, minHeight, maxHeight)
 {
     ClipList::sortClips (state, &edit.getUndoManager());
@@ -504,7 +504,7 @@ void ClipTrack::removeCollectionClip (CollectionClip* cc)
 }
 
 //==============================================================================
-static void updateClipState (ValueTree& state, const String& name, EditItemID itemID, ClipPosition position)
+static void updateClipState (ValueTree& state, const juce::String& name, EditItemID itemID, ClipPosition position)
 {
     state.setProperty (IDs::name, name, nullptr);
     state.setProperty (IDs::start, position.getStart(), nullptr);
@@ -513,7 +513,7 @@ static void updateClipState (ValueTree& state, const String& name, EditItemID it
     itemID.writeID (state, nullptr);
 }
 
-static ValueTree createNewClipState (const String& name, TrackItem::Type type, EditItemID itemID, ClipPosition position)
+static ValueTree createNewClipState (const juce::String& name, TrackItem::Type type, EditItemID itemID, ClipPosition position)
 {
     ValueTree state (TrackItem::clipTypeToXMLType (type));
     updateClipState (state, name, itemID, position);
@@ -605,7 +605,7 @@ Clip* ClipTrack::insertClipWithState (juce::ValueTree clipState)
     return {};
 }
 
-Clip* ClipTrack::insertClipWithState (const ValueTree& stateToUse, const juce::String& name, TrackItem::Type type,
+Clip* ClipTrack::insertClipWithState (const juce::ValueTree& stateToUse, const juce::String& name, TrackItem::Type type,
                                       ClipPosition position, bool deleteExistingClips, bool allowSpottingAdjustment)
 {
     CRASH_TRACER
@@ -827,7 +827,7 @@ bool ClipTrack::containsAnyMIDIClips() const
     return false;
 }
 
-inline String incrementLastDigit (const String& in)
+inline juce::String incrementLastDigit (const juce::String& in)
 {
     int digitCount = 0;
 

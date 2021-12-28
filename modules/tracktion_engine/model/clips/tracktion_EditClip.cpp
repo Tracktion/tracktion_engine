@@ -69,12 +69,12 @@ void EditClip::cloneFrom (Clip* c)
 }
 
 //==============================================================================
-String EditClip::getSelectableDescription()
+juce::String EditClip::getSelectableDescription()
 {
     return TRANS("Edit Clip") + " - \"" + getName() + "\"";
 }
 
-File EditClip::getOriginalFile() const
+juce::File EditClip::getOriginalFile() const
 {
     jassert (editSnapshot == nullptr || editSnapshot->getFile() == sourceFileReference.getFile());
     return editSnapshot != nullptr ? editSnapshot->getFile() : File();
@@ -123,7 +123,7 @@ void EditClip::renderComplete()
     AudioClipBase::renderComplete();
 }
 
-String EditClip::getRenderMessage()
+juce::String EditClip::getRenderMessage()
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
 
@@ -147,7 +147,7 @@ String EditClip::getRenderMessage()
     return TRANS("Rendering Edit: ") + String (roundToInt (progress * 100.0f)) + "%";
 }
 
-String EditClip::getClipMessage()
+juce::String EditClip::getClipMessage()
 {
     if (! sourceFileReference.getSourceProjectItemID().isValid())
         return TRANS("No source set");

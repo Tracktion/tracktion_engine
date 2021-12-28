@@ -135,7 +135,7 @@ private:
 
     void getFactoryForPlugin()
     {
-        String type (plugin->getPluginDescription().pluginFormatName);
+        auto type = plugin->getPluginDescription().pluginFormatName;
 
         if (type == "VST3")
             factory = getFactoryVST3();
@@ -152,7 +152,7 @@ private:
         if (dcRef == nullptr)
             return false;
 
-        String type (plugin->getPluginDescription().pluginFormatName);
+        auto type = plugin->getPluginDescription().pluginFormatName;
 
         if (type == "VST3")
             return setExtensionInstanceVST3 (w, dcRef);
@@ -224,7 +224,7 @@ private:
 
     static void ARA_CALL assertCallback (ARAAssertCategory category, const void* problematicArgument, const char* diagnosis)
     {
-        String categoryName;
+        juce::String categoryName;
 
         switch ((int) category)
         {
@@ -235,7 +235,8 @@ private:
             default:                        categoryName = "(Unknown)"; break;
         };
 
-        TRACKTION_LOG_ERROR ("ARA assertion -> \"" + categoryName + "\": " + String::fromUTF8 (diagnosis) + ": " + String (pointer_sized_int (problematicArgument)));
+        TRACKTION_LOG_ERROR ("ARA assertion -> \"" + categoryName + "\": " + String::fromUTF8 (diagnosis)
+                              + ": " + juce::String (pointer_sized_int (problematicArgument)));
         jassertfalse;
     }
 
@@ -249,12 +250,12 @@ static std::unique_ptr<AudioPluginInstance> createMelodynePlugin (Engine& engine
 {
     CRASH_TRACER
 
-    String error;
+    juce::String error;
     auto& pfm = engine.getPluginManager().pluginFormatManager;
 
     for (auto pd : araDescs)
         if (pd.pluginFormatName == formatToTry)
-            if (auto p = std::unique_ptr<AudioPluginInstance> (pfm.createPluginInstance (pd, 44100.0, 512, error)))
+            if (auto p = pfm.createPluginInstance (pd, 44100.0, 512, error))
                 return p;
 
     return {};

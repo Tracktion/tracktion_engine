@@ -25,7 +25,7 @@ MidiPatchBayPlugin::~MidiPatchBayPlugin()
     notifyListenersOfDeletion();
 }
 
-ValueTree MidiPatchBayPlugin::create()
+juce::ValueTree MidiPatchBayPlugin::create()
 {
     ValueTree v (IDs::PLUGIN);
     v.setProperty (IDs::type, xmlTypeName, nullptr);
@@ -96,7 +96,7 @@ MidiPatchBayPlugin::Mappings MidiPatchBayPlugin::getMappings() const
     Mappings m;
     zeromem (m.map, sizeof (m.map));
 
-    auto saved = StringArray::fromTokens (state[IDs::mappings].toString(), false);
+    auto saved = juce::StringArray::fromTokens (state[IDs::mappings].toString(), false);
 
     for (int i = 0; i < saved.size(); ++i)
         m.map[i + 1] = (char) saved[i].getIntValue();
@@ -106,7 +106,7 @@ MidiPatchBayPlugin::Mappings MidiPatchBayPlugin::getMappings() const
 
 void MidiPatchBayPlugin::setMappings (const Mappings& newMappings)
 {
-    String m;
+    juce::String m;
     m.preallocateBytes (64);
 
     for (int i = 1; i < numElementsInArray (newMappings.map); ++i)

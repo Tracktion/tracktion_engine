@@ -401,7 +401,7 @@ private:
 
         playbackRegionAndSource = std::make_unique<PlaybackRegionAndSource> (*getDocument(), clip, *melodyneInstance->factory,
                                                                              *melodyneInstance->extensionInstance,
-                                                                             String::toHexString (currentHashCode),
+                                                                             juce::String::toHexString (currentHashCode),
                                                                              clipToClone != nullptr ? clipToClone->playbackRegionAndSource.get() : nullptr);
 
         if (oldTrack != nullptr)

@@ -26,7 +26,7 @@ TextPlugin::~TextPlugin()
     notifyListenersOfDeletion();
 }
 
-ValueTree TextPlugin::create()
+juce::ValueTree TextPlugin::create()
 {
     ValueTree v (IDs::PLUGIN);
     v.setProperty (IDs::type, xmlTypeName, nullptr);

@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-WaveAudioClip::WaveAudioClip (const ValueTree& v, EditItemID clipID, ClipTrack& ct)
+WaveAudioClip::WaveAudioClip (const juce::ValueTree& v, EditItemID clipID, ClipTrack& ct)
     : AudioClipBase (v, clipID, Type::wave, ct)
 {
 }
@@ -47,7 +47,7 @@ void WaveAudioClip::cloneFrom (Clip* c)
 }
 
 //==============================================================================
-String WaveAudioClip::getSelectableDescription()
+juce::String WaveAudioClip::getSelectableDescription()
 {
     return TRANS("Audio Clip") + " - \"" + getName() + "\"";
 }
@@ -82,7 +82,7 @@ void WaveAudioClip::sourceMediaChanged()
         updateSourceFile();
 }
 
-File WaveAudioClip::getOriginalFile() const
+juce::File WaveAudioClip::getOriginalFile() const
 {
     if (hasAnyTakes() && compManager != nullptr && compManager->isCurrentTakeComp())
         return compManager->getCurrentCompFile();
@@ -167,7 +167,7 @@ void WaveAudioClip::addTake (ProjectItemID id)
     auto um = getUndoManager();
     auto takesTree = state.getOrCreateChildWithName (IDs::TAKES, um);
 
-    ValueTree take (IDs::TAKE);
+    juce::ValueTree take (IDs::TAKE);
     take.setProperty (IDs::source, id.toString(), um);
     takesTree.addChild (take, -1, um);
 }
@@ -177,7 +177,7 @@ void WaveAudioClip::addTake (const juce::File& f)
     auto um = getUndoManager();
     auto takesTree = state.getOrCreateChildWithName (IDs::TAKES, um);
 
-    ValueTree take (IDs::TAKE);
+    juce::ValueTree take (IDs::TAKE);
 
     {
         SourceFileReference sfr (edit, take, IDs::source);
@@ -245,7 +245,7 @@ void WaveAudioClip::invalidateCurrentTake() noexcept
     currentTakeIndex = takeIndexNeedsUpdating;
 }
 
-void WaveAudioClip::invalidateCurrentTake (const ValueTree& parent) noexcept
+void WaveAudioClip::invalidateCurrentTake (const juce::ValueTree& parent) noexcept
 {
     if (parent.hasType (IDs::TAKES))
         invalidateCurrentTake();
@@ -308,11 +308,11 @@ bool WaveAudioClip::isCurrentTakeComp()
     return false;
 }
 
-StringArray WaveAudioClip::getTakeDescriptions() const
+juce::StringArray WaveAudioClip::getTakeDescriptions() const
 {
     CRASH_TRACER
     auto takes = getTakes();
-    StringArray s;
+    juce::StringArray s;
     int numTakes = 0;
 
     for (int i = 0; i < takes.size(); ++i)
@@ -320,15 +320,15 @@ StringArray WaveAudioClip::getTakeDescriptions() const
         if (compManager == nullptr || ! compManager->isTakeComp (i))
         {
             if (auto projectItem = edit.engine.getProjectManager().getProjectItem (takes.getReference (i)))
-                s.add (String (i + 1) + ". " + projectItem->getName());
+                s.add (juce::String (i + 1) + ". " + projectItem->getName());
             else
-                s.add (String (i + 1) + ". <" + TRANS("Deleted") + ">");
+                s.add (juce::String (i + 1) + ". <" + TRANS("Deleted") + ">");
 
             ++numTakes;
         }
         else
         {
-            s.add (String (i + 1) + ". " + TRANS("Comp") + " #" + String (i + 1 - numTakes));
+            s.add (juce::String (i + 1) + ". " + TRANS("Comp") + " #" + juce::String (i + 1 - numTakes));
         }
     }
 
@@ -340,7 +340,7 @@ void WaveAudioClip::deleteAllUnusedTakesConfirmingWithUser (bool deleteSourceFil
     CRASH_TRACER
 
    #if JUCE_MODAL_LOOPS_PERMITTED
-    auto showWarning = [] (const String& title, const String& message, bool& delFiles) -> int
+    auto showWarning = [] (const juce::String& title, const juce::String& message, bool& delFiles) -> int
     {
         const std::unique_ptr<AlertWindow> w (LookAndFeel::getDefaultLookAndFeel()
                                                 .createAlertWindow (title, message,
@@ -554,7 +554,7 @@ RenderManager::Job::Ptr WaveAudioClip::getRenderJob (const AudioFile& destFile)
     return {};
 }
 
-String WaveAudioClip::getRenderMessage()
+juce::String WaveAudioClip::getRenderMessage()
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
 
@@ -562,7 +562,7 @@ String WaveAudioClip::getRenderMessage()
         return {};
 
     const float progress = renderJob == nullptr ? 1.0f : renderJob->getCurrentTaskProgress();
-    const String m (clipEffects != nullptr ? TRANS("Rendering effects")
+    juce::String m (clipEffects != nullptr ? TRANS("Rendering effects")
                                            : (getWarpTime() ? TRANS("Warping") : TRANS("Reversing")));
 
     if (progress < 0.0f)

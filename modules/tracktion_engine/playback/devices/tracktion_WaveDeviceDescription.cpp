@@ -82,7 +82,7 @@ juce::AudioChannelSet channelSetFromSpeakerArrangmentString (const juce::String&
 {
     AudioChannelSet cs;
 
-    for (auto& channel : StringArray::fromTokens (arrangement, false))
+    for (auto& channel : juce::StringArray::fromTokens (arrangement, false))
     {
         const auto ct = channelTypeFromAbbreviatedName (channel);
 

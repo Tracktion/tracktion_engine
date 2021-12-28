@@ -20,7 +20,7 @@ ExportJob::ExportJob (Edit* edit_,
                       bool keepEntireFiles_,
                       TracktionArchiveFile::CompressionType compressionType_,
                       Array<File>& filesForDeletion_,
-                      StringArray& failedFiles_,
+                      juce::StringArray& failedFiles_,
                       bool includeLibraryFiles_,
                       bool includeClips_)
     : ThreadPoolJobWithProgress (TRANS("Exporting") + "..."),

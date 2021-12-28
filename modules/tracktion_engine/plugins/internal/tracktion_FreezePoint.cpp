@@ -163,7 +163,7 @@ FreezePointPlugin::~FreezePointPlugin()
     notifyListenersOfDeletion();
 }
 
-ValueTree FreezePointPlugin::create()
+juce::ValueTree FreezePointPlugin::create()
 {
     ValueTree v (IDs::PLUGIN);
     v.setProperty (IDs::type, xmlTypeName, nullptr);

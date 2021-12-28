@@ -179,7 +179,7 @@ struct BreakpointOscillatorModifier::BreakpointOscillatorModifierTimer    : publ
 
 
 //==============================================================================
-BreakpointOscillatorModifier::BreakpointOscillatorModifier (Edit& e, const ValueTree& v)
+BreakpointOscillatorModifier::BreakpointOscillatorModifier (Edit& e, const juce::ValueTree& v)
     : Modifier (e, v)
 {
     auto um = &edit.getUndoManager();
@@ -204,8 +204,9 @@ BreakpointOscillatorModifier::BreakpointOscillatorModifier (Edit& e, const Value
     stageFourTime.referTo (state, IDs::stageFourTime, um, 1.0f);
     stageFourCurve.referTo (state, IDs::stageFourCurve, um, 0.0f);
 
-    auto addDiscreteParam = [this] (const String& paramID, const String& name, Range<float> valueRange, CachedValue<float>& val,
-                                    const StringArray& labels) -> AutomatableParameter*
+    auto addDiscreteParam = [this] (const juce::String& paramID, const juce::String& name,
+                                    juce::Range<float> valueRange, CachedValue<float>& val,
+                                    const juce::StringArray& labels) -> AutomatableParameter*
     {
         auto* p = new DiscreteLabelledParameter (paramID, name, *this, valueRange, labels.size(), labels);
         addAutomatableParameter (p);
@@ -214,7 +215,9 @@ BreakpointOscillatorModifier::BreakpointOscillatorModifier (Edit& e, const Value
         return p;
     };
 
-    auto addParam = [this] (const String& paramID, const String& name, NormalisableRange<float> valueRange, float centreVal, CachedValue<float>& val, const String& suffix) -> AutomatableParameter*
+    auto addParam = [this] (const juce::String& paramID, const juce::String& name,
+                            NormalisableRange<float> valueRange, float centreVal,
+                            CachedValue<float>& val, const juce::String& suffix) -> AutomatableParameter*
     {
         valueRange.setSkewForCentre (centreVal);
         auto* p = new SuffixedParameter (paramID, name, *this, valueRange, suffix);
@@ -298,7 +301,7 @@ float BreakpointOscillatorModifier::getTotalTime() const
     return 1.0f;
 }
 
-AutomatableParameter::ModifierAssignment* BreakpointOscillatorModifier::createAssignment (const ValueTree& v)
+AutomatableParameter::ModifierAssignment* BreakpointOscillatorModifier::createAssignment (const juce::ValueTree& v)
 {
     return new Assignment (v, *this);
 }

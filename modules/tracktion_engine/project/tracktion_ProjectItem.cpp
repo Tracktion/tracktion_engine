@@ -31,7 +31,7 @@ struct StringMap
     }
 
     //==============================================================================
-    void set (const String& key, const String& value)
+    void set (const juce::String& key, const juce::String& value)
     {
         if (value.isEmpty())
         {
@@ -53,7 +53,7 @@ struct StringMap
         }
     }
 
-    void remove (const String& key)
+    void remove (const juce::String& key)
     {
         const int index = keys.indexOf (key);
 
@@ -70,7 +70,7 @@ struct StringMap
         values.clear();
     }
 
-    String get (const String& key) const
+    juce::String get (const juce::String& key) const
     {
         return values [keys.indexOf (key)];
     }
@@ -80,12 +80,12 @@ struct StringMap
         return keys.size();
     }
 
-    String getKeyAt (int index) const
+    juce::String getKeyAt (int index) const
     {
         return keys[index];
     }
 
-    String getValueAt (int index) const
+    juce::String getValueAt (int index) const
     {
         return values[index];
     }
@@ -96,24 +96,24 @@ struct StringMap
         values.remove (index);
     }
 
-    bool containsKey (const String& key) const
+    bool containsKey (const juce::String& key) const
     {
         return keys.contains (key);
     }
 
-    bool containsValue (const String& value) const
+    bool containsValue (const juce::String& value) const
     {
         return values.contains (value);
     }
 
-    String getKeyForValue (const String& value) const
+    juce::String getKeyForValue (const juce::String& value) const
     {
         return keys [values.indexOf (value)];
     }
 
-    StringArray getKeysForValue (const String& value) const
+    juce::StringArray getKeysForValue (const juce::String& value) const
     {
-        StringArray s;
+        juce::StringArray s;
 
         for (int i = values.size(); --i >= 0;)
             if (values[i] == value)
@@ -128,9 +128,9 @@ struct StringMap
     }
 
     //==============================================================================
-    String toString() const
+    juce::String toString() const
     {
-        String s;
+        juce::String s;
 
         for (int i = 0; i < keys.size(); ++i)
         {
@@ -145,7 +145,7 @@ struct StringMap
         return s;
     }
 
-    static StringMap recreateFromString (const String& stringVersion)
+    static StringMap recreateFromString (const juce::String& stringVersion)
     {
         StringMap sm;
         auto n = stringVersion.getCharPointer();
@@ -168,7 +168,7 @@ struct StringMap
             if (c == 0)
                 break;
 
-            String key (n, (size_t) len);
+            juce::String key (n, (size_t) len);
             n += len + 1;
             len = 0;
 
@@ -184,7 +184,7 @@ struct StringMap
             if (key.contains (slashEscapeSeq))
                 key = key.replace (slashEscapeSeq, "|");
 
-            String val (n, (size_t) len);
+            juce::String val (n, (size_t) len);
 
             if (val.contains (slashEscapeSeq))
                 val = val.replace (slashEscapeSeq, "|");
@@ -200,7 +200,7 @@ struct StringMap
         return sm;
     }
 
-    StringArray keys, values;
+    juce::StringArray keys, values;
 
     JUCE_LEAK_DETECTOR (StringMap)
 };
@@ -208,8 +208,8 @@ struct StringMap
 
 //==============================================================================
 ProjectItem::ProjectItem (Engine& e,
-                          const String& name_, const String& type_,
-                          const String& desc_, const String& file_,
+                          const juce::String& name_, const juce::String& type_,
+                          const juce::String& desc_, const juce::String& file_,
                           ProjectItem::Category category_,
                           double length_, ProjectItemID id)
    : Selectable(),
@@ -225,7 +225,7 @@ ProjectItem::ProjectItem (Engine& e,
     setCategory (category_);
 }
 
-static String readStringAutoDetectingUTF (InputStream& in)
+static juce::String readStringAutoDetectingUTF (InputStream& in)
 {
     MemoryOutputStream mo;
 
@@ -267,7 +267,7 @@ void ProjectItem::sendChange()
         pp->changed();
 }
 
-String ProjectItem::getSelectableDescription()
+juce::String ProjectItem::getSelectableDescription()
 {
     if (isEdit())               return TRANS ("Edit");
     if (isWave() || isMidi())   return TRANS ("Audio File");
@@ -283,11 +283,11 @@ void ProjectItem::selectionStatusChanged (bool isNowSelected)
 }
 
 //==============================================================================
-File ProjectItem::getRelativeFile (const String& name) const
+juce::File ProjectItem::getRelativeFile (const juce::String& name) const
 {
     if (auto pp = getProject())
     {
-        String localName = name;
+        auto localName = name;
 
        #if JUCE_WINDOWS
         if (localName.containsChar ('/'))
@@ -310,7 +310,7 @@ File ProjectItem::getRelativeFile (const String& name) const
     return {};
 }
 
-File ProjectItem::getSourceFile()
+juce::File ProjectItem::getSourceFile()
 {
     if (sourceFile == File())
     {
@@ -374,7 +374,7 @@ void ProjectItem::handleAsyncUpdate()
             edit->sendSourceFileUpdate();
 }
 
-String ProjectItem::getFileName() const
+juce::String ProjectItem::getFileName() const
 {
     if (auto pp = getProject())
         return pp->getDefaultDirectory().getChildFile (file).getFileName();
@@ -382,7 +382,7 @@ String ProjectItem::getFileName() const
     return {};
 }
 
-File ProjectItem::getEditPreviewFile() const
+juce::File ProjectItem::getEditPreviewFile() const
 {
     jassert (isEdit());
 
@@ -426,12 +426,12 @@ bool ProjectItem::hasBeenDeleted() const
     return true;
 }
 
-const String& ProjectItem::getName() const
+const juce::String& ProjectItem::getName() const
 {
     return objectName;
 }
 
-void ProjectItem::setName (const String& n, SetNameMode mode)
+void ProjectItem::setName (const juce::String& n, SetNameMode mode)
 {
     if (objectName != n)
     {
@@ -506,21 +506,21 @@ ProjectItem::Category ProjectItem::getCategory() const
 
 void ProjectItem::setCategory (ProjectItem::Category cat)
 {
-    setNamedProperty ("MediaObjectCategory", String ((int) cat));
+    setNamedProperty ("MediaObjectCategory", juce::String ((int) cat));
     sendChange();
 }
 
-const String& ProjectItem::getType() const
+const juce::String& ProjectItem::getType() const
 {
     return type;
 }
 
-String ProjectItem::getDescription() const
+juce::String ProjectItem::getDescription() const
 {
     return description.upToFirstOccurrenceOf ("|", false, false);
 }
 
-void ProjectItem::setDescription (const String& newDesc)
+void ProjectItem::setDescription (const juce::String& newDesc)
 {
     if (newDesc != getDescription())
     {
@@ -540,7 +540,7 @@ void ProjectItem::copyAllPropertiesFrom (const ProjectItem& other)
     description = other.description;
 }
 
-String ProjectItem::getNamedProperty (const String& name) const
+juce::String ProjectItem::getNamedProperty (const juce::String& name) const
 {
     if (description.containsChar ('|'))
     {
@@ -552,7 +552,7 @@ String ProjectItem::getNamedProperty (const String& name) const
     return {};
 }
 
-void ProjectItem::setNamedProperty (const String& name, const String& value)
+void ProjectItem::setNamedProperty (const juce::String& name, const juce::String& value)
 {
     if (auto pp = getProject())
     {
@@ -576,11 +576,11 @@ void ProjectItem::setNamedProperty (const String& name, const String& value)
 Array<double> ProjectItem::getMarkedPoints() const
 {
     juce::Array<double> marks;
-    const String m (getNamedProperty ("marks"));
+    auto m = getNamedProperty ("marks");
 
     if (m.isNotEmpty())
     {
-        StringArray toks;
+        juce::StringArray toks;
         toks.addTokens (m, true);
 
         for (auto& t : toks)
@@ -596,7 +596,7 @@ void ProjectItem::setMarkedPoints (const juce::Array<double>& points)
     {
         if (! pp->isReadOnly())
         {
-            String m;
+            juce::String m;
 
             for (auto& p : points)
                 m << p << " ";
@@ -620,7 +620,7 @@ bool ProjectItem::convertEditFile()
 
     if (newFile.existsAsFile())
     {
-        String m (TRANS("There appears to already be a converted Edit in the project folder."));
+        juce::String m (TRANS("There appears to already be a converted Edit in the project folder."));
         m << newLine << TRANS("Do you want to use this, or create a new conversion?");
 
         if (engine.getUIBehaviour().showOkCancelAlertBox (TRANS("Converted Edit Already Exists"), m,
@@ -665,7 +665,7 @@ void ProjectItem::setLength (double l)
     }
 }
 
-String ProjectItem::getProjectName() const
+juce::String ProjectItem::getProjectName() const
 {
     if (auto p = getProject())
         return p->getName();
@@ -816,7 +816,7 @@ ProjectItem::Ptr ProjectItem::createCopy()
              && newName.retainCharacters ("0123456789()").length() > 0)
         {
             while (newName.length() > 1
-                    && String ("0123456789()").containsChar (newName.getLastCharacter()))
+                    && juce::String ("0123456789()").containsChar (newName.getLastCharacter()))
                 newName = newName.dropLastCharacters (1);
         }
 
@@ -840,7 +840,7 @@ ProjectItem::Ptr ProjectItem::createCopy()
             }
 
             if (alreadyThere)
-                newName = nameStem + "(" + String (index++) + ")";
+                newName = nameStem + "(" + juce::String (index++) + ")";
             else
                 break;
         }
@@ -870,7 +870,7 @@ ProjectItem::Ptr ProjectItem::createCopy()
 }
 
 //==============================================================================
-static void tokenise (const String& s, StringArray& toks)
+static void tokenise (const juce::String& s, juce::StringArray& toks)
 {
     auto t = s.getCharPointer();
     auto start = t;
@@ -880,7 +880,7 @@ static void tokenise (const String& s, StringArray& toks)
         if (! (t.isLetterOrDigit()))
         {
             if (t > start + 1)
-                toks.add (String (start, t));
+                toks.add (juce::String (start, t));
 
             start = t;
         }
@@ -889,12 +889,12 @@ static void tokenise (const String& s, StringArray& toks)
     }
 
     if (t.getAddress() > start.getAddress() + 1)
-        toks.add (String (start, t));
+        toks.add (juce::String (start, t));
 }
 
-StringArray ProjectItem::getSearchTokens() const
+juce::StringArray ProjectItem::getSearchTokens() const
 {
-    StringArray toks;
+    juce::StringArray toks;
     tokenise (objectName, toks);
     tokenise (getDescription(), toks);
     return toks;

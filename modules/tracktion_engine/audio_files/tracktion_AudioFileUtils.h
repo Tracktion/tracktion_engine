@@ -80,7 +80,7 @@ struct AudioFileUtils
             // may leave the position set elsewhere.
             juce::TemporaryFile tempFile;
 
-            if (auto out = std::unique_ptr<juce::FileOutputStream> (tempFile.getFile().createOutputStream()))
+            if (auto out = tempFile.getFile().createOutputStream())
             {
                 TargetFormat format;
 

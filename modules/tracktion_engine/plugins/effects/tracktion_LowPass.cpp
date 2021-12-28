@@ -19,8 +19,8 @@ LowPassPlugin::LowPassPlugin (PluginCreationInfo info) : Plugin (info)
     mode.referTo (state, IDs::mode, um, "lowpass");
 
     frequency = addParam ("frequency", TRANS("Frequency"), { 10.0f, 22000.0f },
-                          [] (float value)        { return String (roundToInt (value)) + " Hz"; },
-                          [] (const String& s)    { return s.getFloatValue(); });
+                          [] (float value)              { return juce::String (roundToInt (value)) + " Hz"; },
+                          [] (const juce::String& s)    { return s.getFloatValue(); });
 
     frequency->attachToCurrentValue (frequencyValue);
 }

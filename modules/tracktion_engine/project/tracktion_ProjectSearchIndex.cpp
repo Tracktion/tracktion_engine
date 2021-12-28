@@ -24,7 +24,7 @@ struct IndexedWord
         in.read (ids, (int) sizeof (int) * numIDs);
     }
 
-    IndexedWord (const String& w, int mid) : word (w), numIDs (1)
+    IndexedWord (const juce::String& w, int mid) : word (w), numIDs (1)
     {
         ids.malloc (1);
         *ids = mid;
@@ -61,7 +61,7 @@ ProjectSearchIndex::ProjectSearchIndex (Project& p) : project (p)
 {
 }
 
-static bool isNoiseWord (const String& word)
+static bool isNoiseWord (const juce::String& word)
 {
     return     word == "a"
             || word == "the"
@@ -134,7 +134,7 @@ void ProjectSearchIndex::readFromStream (InputStream& in)
         index.add (new IndexedWord (in));
 }
 
-IndexedWord* ProjectSearchIndex::findWordMatch (const String& word) const
+IndexedWord* ProjectSearchIndex::findWordMatch (const juce::String& word) const
 {
     int start = 0;
     int end = index.size();
@@ -182,7 +182,7 @@ SearchOperation::~SearchOperation()
 //==============================================================================
 struct WordMatchOperation : public SearchOperation
 {
-    WordMatchOperation (const String& w) : word (w.toLowerCase().trim()) {}
+    WordMatchOperation (const juce::String& w) : word (w.toLowerCase().trim()) {}
 
     Array<int> getMatches (ProjectSearchIndex& psi) override
     {
@@ -265,7 +265,7 @@ struct FalseOperation  : public SearchOperation
 };
 
 //==============================================================================
-SearchOperation* createPluralOptions (String s)
+SearchOperation* createPluralOptions (juce::String s)
 {
     SearchOperation* c = new WordMatchOperation (s);
 
@@ -334,9 +334,9 @@ SearchOperation* createPluralOptions (String s)
     return c;
 }
 
-SearchOperation* multipleWordMatch (const String& s)
+SearchOperation* multipleWordMatch (const juce::String& s)
 {
-    StringArray a;
+    juce::StringArray a;
     a.addTokens (s, false);
 
     SearchOperation* c = nullptr;
@@ -352,7 +352,7 @@ SearchOperation* multipleWordMatch (const String& s)
     return c;
 }
 
-SearchOperation* createCondition (const StringArray& words, int start, int length)
+SearchOperation* createCondition (const juce::StringArray& words, int start, int length)
 {
     if (length == 0)
         return {};
@@ -392,15 +392,15 @@ SearchOperation* createCondition (const StringArray& words, int start, int lengt
 }
 
 
-SearchOperation* createSearchForKeywords (const String& keywords)
+SearchOperation* createSearchForKeywords (const juce::String& keywords)
 {
-    const String k (keywords.toLowerCase()
-                            .replace ("-", " " + TRANS("Not") + " ")
-                            .replace ("+", " " + TRANS("And") + " ")
-                            .retainCharacters (CharPointer_UTF8 ("abcdefghijklmnopqrstuvwxyz0123456789\xc3\xa0\xc3\xa1\xc3\xa2\xc3\xa3\xc3\xa4\xc3\xa5\xc3\xa6\xc3\xa7\xc3\xa8\xc3\xa9\xc3\xaa\xc3\xab\xc3\xac\xc3\xad\xc3\xae\xc3\xaf\xc3\xb0\xc3\xb1\xc3\xb2\xc3\xb3\xc3\xb4\xc3\xb5\xc3\xb6\xc3\xb8\xc3\xb9\xc3\xba\xc3\xbb\xc3\xbc\xc3\xbd\xc3\xbf\xc3\x9f"))
-                            .trim());
+    auto k = keywords.toLowerCase()
+                .replace ("-", " " + TRANS("Not") + " ")
+                .replace ("+", " " + TRANS("And") + " ")
+                .retainCharacters (CharPointer_UTF8 ("abcdefghijklmnopqrstuvwxyz0123456789\xc3\xa0\xc3\xa1\xc3\xa2\xc3\xa3\xc3\xa4\xc3\xa5\xc3\xa6\xc3\xa7\xc3\xa8\xc3\xa9\xc3\xaa\xc3\xab\xc3\xac\xc3\xad\xc3\xae\xc3\xaf\xc3\xb0\xc3\xb1\xc3\xb2\xc3\xb3\xc3\xb4\xc3\xb5\xc3\xb6\xc3\xb8\xc3\xb9\xc3\xba\xc3\xbb\xc3\xbc\xc3\xbd\xc3\xbf\xc3\x9f"))
+                .trim();
 
-    StringArray words;
+    juce::StringArray words;
     words.addTokens (k, false);
     words.trim();
     words.removeEmptyStrings();

@@ -45,7 +45,7 @@ struct VirtualMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
 Array<VirtualMidiInputDevice*, CriticalSection> virtualMidiDevices;
 
 //==============================================================================
-VirtualMidiInputDevice::VirtualMidiInputDevice (Engine& e, const String& deviceName, DeviceType devType)
+VirtualMidiInputDevice::VirtualMidiInputDevice (Engine& e, const juce::String& deviceName, DeviceType devType)
     : MidiInputDevice (e, devType == trackMidiDevice ? TRANS("Track MIDI Input")
                                                      : TRANS("Virtual MIDI Input"), deviceName),
       deviceType (devType)
@@ -74,7 +74,7 @@ InputDeviceInstance* VirtualMidiInputDevice::createInstance (EditPlaybackContext
     return new VirtualMidiInputDeviceInstance (*this, c);
 }
 
-String VirtualMidiInputDevice::openDevice()
+juce::String VirtualMidiInputDevice::openDevice()
 {
     return {};
 }
@@ -93,7 +93,7 @@ void VirtualMidiInputDevice::setEnabled (bool b)
 
 void VirtualMidiInputDevice::loadProps()
 {
-    const String propName = isTrackDevice() ? "TRACKTION_TRACK_DEVICE" : getName();
+    juce::String propName = isTrackDevice() ? "TRACKTION_TRACK_DEVICE" : getName();
 
     auto n = engine.getPropertyStorage().getXmlPropertyItem (SettingID::virtualmidiin, propName);
 
@@ -110,7 +110,7 @@ void VirtualMidiInputDevice::saveProps()
     n.setAttribute ("inputDevices", inputDevices.joinIntoString (";"));
     MidiInputDevice::saveProps (n);
 
-    const String propName = isTrackDevice() ? "TRACKTION_TRACK_DEVICE" : getName();
+    juce::String propName = isTrackDevice() ? "TRACKTION_TRACK_DEVICE" : getName();
 
     engine.getPropertyStorage().setXmlPropertyItem (SettingID::virtualmidiin, propName, n);
 }
@@ -149,7 +149,7 @@ void VirtualMidiInputDevice::broadcastMessageToAllVirtualDevices (MidiInputDevic
 
 void VirtualMidiInputDevice::refreshDeviceNames (Engine& e)
 {
-    String names;
+    juce::String names;
 
     for (auto d : virtualMidiDevices)
         names += d->getName() + ";";
@@ -157,7 +157,7 @@ void VirtualMidiInputDevice::refreshDeviceNames (Engine& e)
     e.getPropertyStorage().setProperty (SettingID::virtualmididevices, names);
 }
 
-String VirtualMidiInputDevice::getSelectableDescription()
+juce::String VirtualMidiInputDevice::getSelectableDescription()
 {
     if (getDeviceType() == trackMidiDevice)
         return getAlias() + " (" + getType() + ")";

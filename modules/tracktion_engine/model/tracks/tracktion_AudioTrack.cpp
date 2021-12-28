@@ -91,7 +91,7 @@ private:
 };
 
 //==============================================================================
-AudioTrack::AudioTrack (Edit& ed, const ValueTree& v)
+AudioTrack::AudioTrack (Edit& ed, const juce::ValueTree& v)
     : ClipTrack (ed, v, 50, 13, 2000)
 {
     soloed.referTo (state, IDs::solo, nullptr);
@@ -175,7 +175,7 @@ void AudioTrack::initialise()
 
 void AudioTrack::sanityCheckName()
 {
-    const String n = ClipTrack::getName();
+    auto n = ClipTrack::getName();
 
     if ((n.startsWithIgnoreCase ("Track ")
           || n.startsWithIgnoreCase (TRANS("Track") + " "))
@@ -188,12 +188,13 @@ void AudioTrack::sanityCheckName()
 
     // We need to update the alias here as it's the first time the name will be returned correctly upon track creation
     // We also won't get a property change if the track order etc. changes as it will just be empty
-    const String devName (getName());
+    auto devName = getName();
+
     if (waveInputDevice != nullptr) waveInputDevice->setAlias (devName);
     if (midiInputDevice != nullptr) midiInputDevice->setAlias (devName);
 }
 
-String AudioTrack::getName()
+juce::String AudioTrack::getName()
 {
     String n = ClipTrack::getName();
 
@@ -223,7 +224,7 @@ AuxSendPlugin* AudioTrack::getAuxSendPlugin (int bus) const
 }
 
 //==============================================================================
-String AudioTrack::getNameForMidiNoteNumber (int note, int midiChannel, bool preferSharp) const
+juce::String AudioTrack::getNameForMidiNoteNumber (int note, int midiChannel, bool preferSharp) const
 {
     jassert (midiChannel > 0);
     String s;
@@ -265,7 +266,7 @@ void AudioTrack::updateMidiNoteMapCache()
 
     auto m = midiNoteMap.get();
 
-    auto lines = StringArray::fromLines (m);
+    auto lines = juce::StringArray::fromLines (m);
     for (auto l : lines)
     {
         if (l.startsWith ("//"))
@@ -302,7 +303,7 @@ bool AudioTrack::areMidiPatchesZeroBased() const
     return false;
 }
 
-String AudioTrack::getNameForBank (int bank) const
+juce::String AudioTrack::getNameForBank (int bank) const
 {
     String s;
 
@@ -335,7 +336,7 @@ int AudioTrack::getIdForBank (int bank) const
     return bank;
 }
 
-String AudioTrack::getNameForProgramNumber (int programNumber, int bank) const
+juce::String AudioTrack::getNameForProgramNumber (int programNumber, int bank) const
 {
     String s;
 
@@ -437,7 +438,7 @@ bool AudioTrack::isTrackAudible (bool areAnyTracksSolo) const
 }
 
 //==============================================================================
-String AudioTrack::getTrackPlayabilityWarning() const
+juce::String AudioTrack::getTrackPlayabilityWarning() const
 {
     bool hasMidi = false, hasWave = false;
 
@@ -664,7 +665,8 @@ void AudioTrack::valueTreePropertyChanged (ValueTree& v, const juce::Identifier&
         }
         else if (i == IDs::name)
         {
-            const String devName (getName());
+            auto devName = getName();
+            
             waveInputDevice->setAlias (devName);
             midiInputDevice->setAlias (devName);
         }
@@ -877,7 +879,7 @@ void AudioTrack::freezeTrack()
     setMute (false);
     const FreezePointPlugin::ScopedTrackUnsoloer stu (edit);
 
-    BigInteger trackNum;
+    juce::BigInteger trackNum;
     trackNum.setBit (getIndexInEditTrackList());
     auto freezeFile = getFreezeFile();
     freezeFile.deleteFile();

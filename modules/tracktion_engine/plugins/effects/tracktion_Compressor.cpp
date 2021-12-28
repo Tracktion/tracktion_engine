@@ -14,29 +14,29 @@ namespace tracktion_engine
 CompressorPlugin::CompressorPlugin (PluginCreationInfo info)  : Plugin (info)
 {
     thresholdGain   = addParam ("threshold", TRANS("Threshold"), { 0.01f, 1.0f },
-                                [] (float value)       { return gainToDbString (value); },
-                                [] (const String& s)   { return dbStringToGain (s); });
+                                [] (float value)             { return gainToDbString (value); },
+                                [] (const juce::String& s)   { return dbStringToGain (s); });
 
     ratio           = addParam ("ratio", TRANS("Ratio"), { 0.0f, 0.95f },
-                                [] (float value)        { return (value > 0.001f ? String (1.0f / value, 2)
-                                                                                 : String ("INF")) + " : 1"; },
-                                [] (const String& s)    { return s.getFloatValue(); });
+                                [] (float value)              { return (value > 0.001f ? juce::String (1.0f / value, 2)
+                                                                                       : juce::String ("INF")) + " : 1"; },
+                                [] (const juce::String& s)    { return s.getFloatValue(); });
 
     attackMs        = addParam ("attack", TRANS("Attack"), { 0.3f, 200.0f },
-                                [] (float value)       { return String (value, 1) + " ms"; },
-                                [] (const String& s)   { return s.getFloatValue(); });
+                                [] (float value)             { return juce::String (value, 1) + " ms"; },
+                                [] (const juce::String& s)   { return s.getFloatValue(); });
 
     releaseMs       = addParam ("release", TRANS("Release"), { 10.0f, 300.0f },
-                                [] (float value)       { return String (value, 1) + " ms"; },
-                                [] (const String& s)   { return s.getFloatValue(); });
+                                [] (float value)             { return juce::String (value, 1) + " ms"; },
+                                [] (const juce::String& s)   { return s.getFloatValue(); });
 
     outputDb        = addParam ("output gain", TRANS("Output gain"), { -10.0f, 24.0f },
-                                [] (float value)       { return Decibels::toString (value); },
-                                [] (const String& s)   { return dbStringToDb (s); });
+                                [] (float value)             { return juce::Decibels::toString (value); },
+                                [] (const juce::String& s)   { return dbStringToDb (s); });
 
     sidechainDb     = addParam ("input gain", TRANS("Sidechain gain"), { -24.0f, 24.0f },
-                                [] (float value)       { return Decibels::toString (value); },
-                                [] (const String& s)   { return dbStringToDb (s); });
+                                [] (float value)             { return juce::Decibels::toString (value); },
+                                [] (const juce::String& s)   { return dbStringToDb (s); });
 
     auto um = getUndoManager();
 
@@ -75,7 +75,8 @@ CompressorPlugin::~CompressorPlugin()
 
 const char* CompressorPlugin::xmlTypeName = "compressor";
 
-void CompressorPlugin::getChannelNames (StringArray* ins, StringArray* outs)
+void CompressorPlugin::getChannelNames (juce::StringArray* ins,
+                                        juce::StringArray* outs)
 {
     Plugin::getChannelNames (ins, outs);
 

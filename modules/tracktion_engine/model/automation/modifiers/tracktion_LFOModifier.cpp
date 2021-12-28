@@ -148,7 +148,7 @@ struct LFOModifier::LFOModifierTimer    : public ModifierTimer
 };
 
 //==============================================================================
-LFOModifier::LFOModifier (Edit& e, const ValueTree& v)
+LFOModifier::LFOModifier (Edit& e, const juce::ValueTree& v)
     : Modifier (e, v)
 {
     auto um = &edit.getUndoManager();
@@ -162,8 +162,9 @@ LFOModifier::LFOModifier (Edit& e, const ValueTree& v)
     phase.referTo (state, IDs::phase, um);
     offset.referTo (state, IDs::offset, um);
 
-    auto addDiscreteParam = [this] (const String& paramID, const String& name, Range<float> valueRange, CachedValue<float>& val,
-                                    const StringArray& labels) -> AutomatableParameter*
+    auto addDiscreteParam = [this] (const juce::String& paramID, const juce::String& name,
+                                    juce::Range<float> valueRange, CachedValue<float>& val,
+                                    const juce::StringArray& labels) -> AutomatableParameter*
     {
         auto* p = new DiscreteLabelledParameter (paramID, name, *this, valueRange, labels.size(), labels);
         addAutomatableParameter (p);
@@ -172,7 +173,11 @@ LFOModifier::LFOModifier (Edit& e, const ValueTree& v)
         return p;
     };
 
-    auto addParam = [this] (const String& paramID, const String& name, NormalisableRange<float> valueRange, float centreVal, CachedValue<float>& val, const String& suffix) -> AutomatableParameter*
+    auto addParam = [this] (const juce::String& paramID,
+                            const juce::String& name,
+                            NormalisableRange<float> valueRange,
+                            float centreVal, CachedValue<float>& val,
+                            const juce::String& suffix) -> AutomatableParameter*
     {
         valueRange.setSkewForCentre (centreVal);
         auto* p = new SuffixedParameter (paramID, name, *this, valueRange, suffix);
@@ -227,7 +232,7 @@ void LFOModifier::initialise()
 float LFOModifier::getCurrentValue()         { return currentValue.load (std::memory_order_acquire); }
 float LFOModifier::getCurrentPhase() const   { return currentPhase.load (std::memory_order_acquire); }
 
-AutomatableParameter::ModifierAssignment* LFOModifier::createAssignment (const ValueTree& v)
+AutomatableParameter::ModifierAssignment* LFOModifier::createAssignment (const juce::ValueTree& v)
 {
     return new Assignment (v, *this);
 }
@@ -266,7 +271,7 @@ LFOModifier::Ptr LFOModifier::Assignment::getLFOModifier() const
 }
 
 //==============================================================================
-StringArray LFOModifier::getWaveNames()
+juce::StringArray LFOModifier::getWaveNames()
 {
     return
     {

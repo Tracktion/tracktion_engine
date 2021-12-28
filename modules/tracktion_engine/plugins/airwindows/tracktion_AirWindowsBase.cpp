@@ -33,13 +33,13 @@ void float2string (float f, char* text, int len)
     else
         decimals = 3;
 
-    String str (f, decimals);
+    juce::String str (f, decimals);
     str.copyToUTF8 (text, (size_t)len);
 }
 
 void int2string (float i, char* text, int len)
 {
-    String str (i);
+    juce::String str (i);
     str.copyToUTF8 (text, (size_t)len);
 }
 

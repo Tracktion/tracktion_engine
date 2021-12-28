@@ -129,7 +129,7 @@ const StepClip::PatternInstance::Ptr StepClip::getPatternInstance (int i, bool r
 
 void StepClip::updatePatternList()
 {
-    auto newSequence = StringArray::fromTokens (state[IDs::sequence].toString(), ",", {});
+    auto newSequence = juce::StringArray::fromTokens (state[IDs::sequence].toString(), ",", {});
 
     PatternArray newArray (patternInstanceList);
     newArray.removeRange (newSequence.size(), newArray.size());
@@ -202,7 +202,7 @@ bool StepClip::canGoOnTrack (Track& t)
     return t.canContainMIDI();
 }
 
-String StepClip::getSelectableDescription()
+juce::String StepClip::getSelectableDescription()
 {
     return TRANS("Step Clip") + " - \"" + getName() + "\"";
 }
@@ -517,10 +517,10 @@ StepClip::PatternArray StepClip::getPatternSequence() const
 
 void StepClip::setPatternSequence (const StepClip::PatternArray& newSequence)
 {
-    StringArray s;
+    juce::StringArray s;
 
     for (auto* p : newSequence)
-        s.add (String (p->patternIndex));
+        s.add (juce::String (p->patternIndex));
 
     state.setProperty (IDs::sequence, s.joinIntoString (","), getUndoManager());
 }
@@ -630,14 +630,14 @@ void StepClip::removeUnusedPatterns()
         if (! usedPatterns.contains (i))
             patterns.removeChild (i, um);
 
-    StringArray newSequence;
+    juce::StringArray newSequence;
 
     for (int i = 0; i < sequence.size(); ++i)
     {
         const int index = patterns.indexOf (sequence.getUnchecked (i));
 
         if (index != -1)
-            newSequence.add (String (index));
+            newSequence.add (juce::String (index));
     }
 
     state.setProperty (IDs::sequence, newSequence.joinIntoString (","), um);

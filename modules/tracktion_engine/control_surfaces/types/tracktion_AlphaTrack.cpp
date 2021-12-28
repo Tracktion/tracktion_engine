@@ -575,13 +575,13 @@ void AlphaTrackControlSurface::automationWriteModeChanged (bool isWriting_)
         updateDisplay();
 }
 
-void AlphaTrackControlSurface::faderBankChanged (int newStartChannelNumber, const StringArray& trackNames)
+void AlphaTrackControlSurface::faderBankChanged (int newStartChannelNumber, const juce::StringArray& trackNames)
 {
     currentTrack = newStartChannelNumber;
     trackName = trackNames[0];
 
     if ((newStartChannelNumber + 1) == trackName.getIntValue() && trackName.containsOnly("0123456789"))
-        trackName = TRANS("Track") + " " + String (newStartChannelNumber + 1);
+        trackName = TRANS("Track") + " " + juce::String (newStartChannelNumber + 1);
 
     trackName = trackName.retainCharacters ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 ()! \"#$%&\'*+,-./:;<=>?@^_`{|}");
 
@@ -678,12 +678,12 @@ void AlphaTrackControlSurface::setLed (int led, bool state)
     sendMidiArray (data);
 }
 
-static String dbToString (double db, int chars)
+static juce::String dbToString (double db, int chars)
 {
     if (db >= -96.0f)
         return String::formatted ("%+.1f", db).substring (0, chars);
 
-    return String ("-INF").substring (0, chars);
+    return juce::String ("-INF").substring (0, chars);
 }
 
 void AlphaTrackControlSurface::handleAsyncUpdate()
@@ -721,7 +721,7 @@ void AlphaTrackControlSurface::handleAsyncUpdate()
                     name = edit->getAuxBusName (bus);
 
                     if (name.isEmpty())
-                        name = "Send #" + String (bus + 1);
+                        name = "Send #" + juce::String (bus + 1);
                 }
 
                 if (dynamic_cast<VolumeAndPanPlugin*> (param->getPlugin()) != nullptr
@@ -760,13 +760,15 @@ void AlphaTrackControlSurface::handleAsyncUpdate()
                     if (auto send = dynamic_cast<AuxSendPlugin*> (f))
                     {
                         int bus = send->getBusNumber();
-                        String name = edit->getAuxBusName(bus);
+
+                        auto name = edit->getAuxBusName(bus);
+
                         if (name.isEmpty())
-                            name = "snd" + String (bus + 1);
+                            name = "snd" + juce::String (bus + 1);
 
                         name = ExternalController::shortenName (name, sendCnt == 2 ? 4 : 5);
 
-                        String val = dbToString (send->getGainDb(), sendCnt == 2 ? 4 : 5);
+                        auto val = dbToString (send->getGainDb(), sendCnt == 2 ? 4 : 5);
 
                         if (sendCnt == 2)
                         {
@@ -831,8 +833,8 @@ void AlphaTrackControlSurface::handleAsyncUpdate()
 
                         if (auto p = params[i + offset])
                         {
-                            String name = ExternalController::shortenName (p->getParameterShortName (i == 2 ? 4 : 5), i == 2 ? 4 : 5);
-                            String val  = p->getLabelForValue (p->getCurrentValue()).substring(0, i == 2 ? 4 : 5);
+                            auto name = ExternalController::shortenName (p->getParameterShortName (i == 2 ? 4 : 5), i == 2 ? 4 : 5);
+                            auto val  = p->getLabelForValue (p->getCurrentValue()).substring(0, i == 2 ? 4 : 5);
 
                             if (val.isEmpty())
                                 val = p->getCurrentValueAsString().substring(0, i == 2 ? 4 : 5);

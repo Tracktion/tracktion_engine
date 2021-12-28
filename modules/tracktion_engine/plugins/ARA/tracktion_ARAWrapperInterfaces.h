@@ -701,7 +701,10 @@ private:
                 for (auto s : scale.getSteps())
                     item.intervals[s] = ARA::kARAKeySignatureIntervalUsed;
 
-                String scaleName = juce::MidiMessage::getMidiNoteName (pitchSetting->getPitch(), pitchSetting->accidentalsSharp, false, 0) + " " + scale.getName();
+                auto scaleName = juce::MidiMessage::getMidiNoteName (pitchSetting->getPitch(),
+                                                                     pitchSetting->accidentalsSharp, false, 0)
+                                    + " " + scale.getName();
+
                 item.name = scaleNames.insert (scaleName).first->toRawUTF8();
 
                 item.position = pitchSetting->getStartBeatNumber();
@@ -860,8 +863,8 @@ private:
         name = clip.getAudioFile ().getFile ().getFileName ();
     }
 
-    const String itemID;
-    String name;
+    const juce::String itemID;
+    juce::String name;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioSourceWrapper)
 };
@@ -872,7 +875,7 @@ class AudioModificationWrapper
 public:
     AudioModificationWrapper (ARADocument& d,
                               AudioSourceWrapper& source,
-                              const String& itemID,
+                              const juce::String& itemID,
                               AudioModificationWrapper* instanceToClone)
       : doc (d),
         audioSource (source),
@@ -912,7 +915,7 @@ public:
 private:
     void updateAudioModificationProperties () {}
 
-    const String persistentID;
+    const juce::String persistentID;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioModificationWrapper)
 };
@@ -963,7 +966,7 @@ private:
     }
 
     int orderIndex;
-    String name;
+    juce::String name;
     ARAColor colour;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RegionSequenceWrapper)
@@ -1055,7 +1058,7 @@ private:
         colour = { clipColour.getFloatRed(), clipColour.getFloatGreen(), clipColour.getFloatBlue() };
     }
 
-    String name;
+    juce::String name;
     ARAColor colour;
     const ARAPlaybackTransformationFlags flags;
 
@@ -1070,7 +1073,7 @@ public:
                              AudioClipBase& audioClip,
                              const ARAFactory& f,
                              const ARAPlugInExtensionInstance& pluginExtensionInstance,
-                             const String& itemID,
+                             const juce::String& itemID,
                              PlaybackRegionAndSource* instanceToClone)
         : pluginInstance (pluginExtensionInstance)
     {

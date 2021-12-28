@@ -326,7 +326,7 @@ BandlimitedWaveLookupTables::Ptr BandlimitedWaveLookupTables::getLookupTables (d
 
 BandlimitedWaveLookupTables::BandlimitedWaveLookupTables (double sr, int tableSize)
     : sampleRate (sr),
-    sineFunction ([] (float in) { return sine (in); }, 0.0f, 1.0f, (size_t) tableSize)
+      sineFunction ([] (float in) { return sine (in); }, 0.0f, 1.0f, (size_t) tableSize)
 {
     auto getMidiNoteInHertz = [](float noteNumber)
     {
@@ -350,7 +350,7 @@ BandlimitedWaveLookupTables::BandlimitedWaveLookupTables (double sr, int tableSi
     }
 
     RelativeTime elapsed (Time::getCurrentTime() - start);
-    DBG ("Generating waves: " + String (elapsed.inMilliseconds()) + "ms");
+    DBG ("Generating waves: " + juce::String (elapsed.inMilliseconds()) + "ms");
 
     tableCache.add (this);
 }

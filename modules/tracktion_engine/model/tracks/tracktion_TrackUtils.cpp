@@ -48,7 +48,7 @@ TrackInsertPoint::TrackInsertPoint (Track& t, bool insertBefore)
         precedingTrackID = siblingTracks.getUnchecked (index - (insertBefore ? 1 : 0))->itemID;
 }
 
-TrackInsertPoint::TrackInsertPoint (const ValueTree& v)
+TrackInsertPoint::TrackInsertPoint (const juce::ValueTree& v)
 {
     {
         auto p = v.getParent();

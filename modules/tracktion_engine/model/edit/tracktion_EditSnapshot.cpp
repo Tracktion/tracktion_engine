@@ -237,7 +237,7 @@ void EditSnapshot::refreshFromState()
     auto editLength = length;
     clear();
 
-    if (auto xml = std::unique_ptr<XmlElement> (state.createXml()))
+    if (auto xml = state.createXml())
         refreshFromXml (*xml, editName, editLength);
 }
 

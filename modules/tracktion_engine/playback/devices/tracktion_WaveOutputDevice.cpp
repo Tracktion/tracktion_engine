@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-WaveOutputDevice::WaveOutputDevice (Engine& e, const String& deviceName, const std::vector<ChannelIndex>& channels)
+WaveOutputDevice::WaveOutputDevice (Engine& e, const juce::String& deviceName, const std::vector<ChannelIndex>& channels)
     : OutputDevice (e, TRANS("Wave Audio Output"), deviceName),
       deviceChannels (channels),
       channelSet (createChannelSet (channels)),
@@ -44,7 +44,7 @@ void WaveOutputDevice::setEnabled (bool b)
     }
 }
 
-String WaveOutputDevice::openDevice()
+juce::String WaveOutputDevice::openDevice()
 {
     return {};
 }

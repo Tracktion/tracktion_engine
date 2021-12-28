@@ -29,8 +29,8 @@ public:
         : AutomatableParameter (getParamId (p, idx), getParamName (p, idx), p, {0, 1}),
         plugin (p), index (idx)
     {
-        valueToStringFunction = [] (float v)  { return String (v); };
-        stringToValueFunction = [] (String v) { return v.getFloatValue(); };
+        valueToStringFunction = [] (float v)         { return juce::String (v); };
+        stringToValueFunction = [] (juce::String v)  { return v.getFloatValue(); };
 
         defaultValue = plugin.impl->getParameter (idx);
 
@@ -75,7 +75,7 @@ public:
     {
         conversionRange = range;
 
-        stringToValueFunction = [this] (String v) { return conversionRange.convertTo0to1 (v.getFloatValue()); };
+        stringToValueFunction = [this] (juce::String v) { return conversionRange.convertTo0to1 (v.getFloatValue()); };
     }
 
     void parameterChanged (float newValue, bool byAutomation) override
@@ -89,15 +89,15 @@ public:
         }
     }
 
-    String getCurrentValueAsString() override
+    juce::String getCurrentValueAsString() override
     {
         char paramText[kVstMaxParamStrLen];
         plugin.impl->getParameterDisplay (index, paramText);
-        auto t1 = String (paramText);
+        auto t1 = juce::String (paramText);
 
         char labelText[kVstMaxParamStrLen];
         plugin.impl->getParameterLabel (index, labelText);
-        auto t2 = String (labelText);
+        auto t2 = juce::String (labelText);
 
         if (t2.isNotEmpty())
             return t1 + " " + t2;
@@ -109,16 +109,16 @@ public:
         getEdit().pluginChanged (plugin);
     }
 
-    static String getParamId (AirWindowsPlugin& p, int idx)
+    static juce::String getParamId (AirWindowsPlugin& p, int idx)
     {
         return getParamName (p, idx).toLowerCase().retainCharacters ("abcdefghijklmnopqrstuvwxyz");
     }
 
-    static String getParamName (AirWindowsPlugin& p, int idx)
+    static juce::String getParamName (AirWindowsPlugin& p, int idx)
     {
         char paramName[kVstMaxParamStrLen];
         p.impl->getParameterName (idx, paramName);
-        return String (paramName);
+        return juce::String (paramName);
     }
 
     AirWindowsPlugin& plugin;

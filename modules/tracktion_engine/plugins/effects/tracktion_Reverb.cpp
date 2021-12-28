@@ -19,28 +19,28 @@ static constexpr float freezemode = 0.5f;
 ReverbPlugin::ReverbPlugin (PluginCreationInfo info) : Plugin (info)
 {
     roomSizeParam = addParam ("room size", TRANS("Room Size"), { 0.0f, 1.0f },
-                              [] (float value)     { return String (1 + (int) (10.0f * value)); },
-                              [] (const String& s) { return s.getFloatValue(); });
+                              [] (float value)           { return juce::String (1 + (int) (10.0f * value)); },
+                              [] (const juce::String& s) { return s.getFloatValue(); });
 
     dampParam     = addParam ("damping", TRANS("Damping"), { 0.0f, 1.0f },
-                              [] (float value)     { return String ((int) (100.0f * value)) + "%"; },
-                              [] (const String& s) { return s.getFloatValue(); });
+                              [] (float value)           { return juce::String ((int) (100.0f * value)) + "%"; },
+                              [] (const juce::String& s) { return s.getFloatValue(); });
 
     wetParam      = addParam ("wet level", TRANS("Wet Level"), { 0.0f, 1.0f },
-                              [] (float value)     { return gainToDbString (scalewet * value); },
-                              [] (const String& s) { return s.getFloatValue(); });
+                              [] (float value)           { return gainToDbString (scalewet * value); },
+                              [] (const juce::String& s) { return s.getFloatValue(); });
 
     dryParam      = addParam ("dry level", TRANS("Dry Level"), { 0.0f, 1.0f },
-                              [] (float value)     { return gainToDbString (scaledry * value); },
-                              [] (const String& s) { return s.getFloatValue(); });
+                              [] (float value)           { return gainToDbString (scaledry * value); },
+                              [] (const juce::String& s) { return s.getFloatValue(); });
 
     widthParam    = addParam ("width", TRANS("Width"), { 0.0f, 1.0f },
-                              [] (float value)     { return String ((int) (100.0f * value)) + "%"; },
-                              [] (const String& s) { return s.getFloatValue(); });
+                              [] (float value)           { return juce::String ((int) (100.0f * value)) + "%"; },
+                              [] (const juce::String& s) { return s.getFloatValue(); });
 
     modeParam     = addParam ("mode", TRANS("Freeze"), { 0.0f, 1.0f },
-                              [] (float value)     { return value >= freezemode ? TRANS("On") : TRANS("Off"); },
-                              [] (const String& s) { return s.getFloatValue(); });
+                              [] (float value)           { return value >= freezemode ? TRANS("On") : TRANS("Off"); },
+                              [] (const juce::String& s) { return s.getFloatValue(); });
 
     auto um = getUndoManager();
 

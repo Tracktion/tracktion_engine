@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-TempoSetting::TempoSetting (TempoSequence& ts, const ValueTree& v)
+TempoSetting::TempoSetting (TempoSequence& ts, const juce::ValueTree& v)
     : ReferenceCountedObject(),
       ownerSequence (ts), state (v)
 {
@@ -26,7 +26,7 @@ TempoSetting::~TempoSetting()
 {
 }
 
-ValueTree TempoSetting::create (double beat, double newBPM, float curveVal)
+juce::ValueTree TempoSetting::create (double beat, double newBPM, float curveVal)
 {
     ValueTree v (IDs::TEMPO);
     v.setProperty (IDs::startBeat, beat, nullptr);
@@ -41,7 +41,7 @@ Edit& TempoSetting::getEdit() const
 }
 
 //==============================================================================
-String TempoSetting::getSelectableDescription()
+juce::String TempoSetting::getSelectableDescription()
 {
     return TRANS("Tempo");
 }

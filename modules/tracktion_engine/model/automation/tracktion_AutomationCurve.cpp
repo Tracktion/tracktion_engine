@@ -15,7 +15,7 @@ AutomationCurve::AutomationCurve()  : state (IDs::AUTOMATIONCURVE)
 {
 }
 
-AutomationCurve::AutomationCurve (const ValueTree& p, const ValueTree& v)
+AutomationCurve::AutomationCurve (const juce::ValueTree& p, const juce::ValueTree& v)
     : parentState (p), state (v)
 {
     if (! state.isValid())
@@ -39,14 +39,14 @@ AutomationCurve& AutomationCurve::operator= (const AutomationCurve& other)
     return *this;
 }
 
-void AutomationCurve::setState (const ValueTree& v)
+void AutomationCurve::setState (const juce::ValueTree& v)
 {
     state = v;
     jassert (state.hasType (IDs::AUTOMATIONCURVE));
     jassert (state.getParent() == parentState);
 }
 
-void AutomationCurve::setParentState (const ValueTree& v)
+void AutomationCurve::setParentState (const juce::ValueTree& v)
 {
     parentState = v;
 }
@@ -815,7 +815,7 @@ void AutomationCurve::getBezierEnds (int index, double& x1out, float& y1out, dou
     }
 }
 
-void AutomationCurve::removeAllAutomationCurvesRecursively (const ValueTree& v)
+void AutomationCurve::removeAllAutomationCurvesRecursively (const juce::ValueTree& v)
 {
     for (int i = v.getNumChildren(); --i >= 0;)
     {

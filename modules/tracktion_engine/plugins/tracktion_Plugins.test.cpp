@@ -32,7 +32,7 @@ public:
         
         beginTest ("No latency");
         {
-            expectEquals (sinFile->getFile().getFileExtension(), String (".wav"));
+            expectEquals (sinFile->getFile().getFileExtension(), juce::String (".wav"));
             auto edit = createTestEdit (engine);
             auto track1 = getAudioTracks (*edit)[0];
             auto track2 = getAudioTracks (*edit)[1];
@@ -66,7 +66,7 @@ public:
         beginTest ("Source file with different sample rate");
         {
             auto sinFile96Ogg = getSinFile<OggVorbisAudioFormat> (96000.0);
-            expectEquals (sinFile96Ogg->getFile().getFileExtension(), String (".ogg"));
+            expectEquals (sinFile96Ogg->getFile().getFileExtension(), juce::String (".ogg"));
             auto edit = createTestEdit (engine);
             auto track1 = getAudioTracks (*edit)[0];
 
@@ -95,18 +95,19 @@ public:
     {
         auto blockSize = edit.engine.getDeviceManager().getBlockSize();
         auto stats = logStats (Renderer::measureStatistics ("PDC Tests", edit, tr, getTracksMask (tracks), blockSize));
-        expect (juce::isWithin (stats.peak, expectedPeak, 0.001f), String ("Expected peak: ") + String (expectedPeak, 4));
+        expect (juce::isWithin (stats.peak, expectedPeak, 0.001f), juce::String ("Expected peak: ") + juce::String (expectedPeak, 4));
     }
 
     Renderer::Statistics logStats (Renderer::Statistics stats)
     {
-        logMessage ("Stats: peak " + String (stats.peak) + ", avg " + String (stats.average) + ", duration " + String (stats.audioDuration));
+        logMessage ("Stats: peak " + juce::String (stats.peak) + ", avg " + juce::String (stats.average)
+                     + ", duration " + juce::String (stats.audioDuration));
         return stats;
     }
 
-    static BigInteger getTracksMask (const Array<Track*>& tracks)
+    static juce::BigInteger getTracksMask (const Array<Track*>& tracks)
     {
-        BigInteger tracksMask;
+        juce::BigInteger tracksMask;
 
         for (auto t : tracks)
             tracksMask.setBit (t->getIndexInEditTrackList());

@@ -220,7 +220,7 @@ std::vector<float> Modifier::getValues (double numSecondsBeforeNow) const
 }
 
 //==============================================================================
-ModifierList::ModifierList (Edit& e, const ValueTree& parentTree)
+ModifierList::ModifierList (Edit& e, const juce::ValueTree& parentTree)
     : ValueTreeObjectList<Modifier> (parentTree),
       edit (e), state (parent)
 {
@@ -290,7 +290,7 @@ bool ModifierList::isSuitableType (const juce::ValueTree& v) const
     return isModifier (v.getType());
 }
 
-Modifier* ModifierList::createNewObject (const ValueTree& v)
+Modifier* ModifierList::createNewObject (const juce::ValueTree& v)
 {
     CRASH_TRACER
     auto m = findModifierForID (edit, EditItemID::readOrCreateNewID (edit, v));

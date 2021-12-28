@@ -14,7 +14,7 @@ namespace tracktion_engine
 class EqualiserPlugin::EQAutomatableParameter : public AutomatableParameter
 {
 public:
-    EQAutomatableParameter (EqualiserPlugin& p, const String& xmlTag, const String& name,
+    EQAutomatableParameter (EqualiserPlugin& p, const juce::String& xmlTag, const juce::String& name,
                             Plugin& owner, Range<float> valueRangeToUse, int paramNumberToUse,
                             bool isGain_, bool isFreq_, bool isQ_)
         : AutomatableParameter (xmlTag, name, owner, valueRangeToUse),
@@ -28,18 +28,18 @@ public:
         notifyListenersOfDeletion();
     }
 
-    String valueToString (float value) override
+    juce::String valueToString (float value) override
     {
         if (isFreq)
-            return String (roundToInt (value)) + " Hz";
+            return juce::String (roundToInt (value)) + " Hz";
 
         if (isGain)
             return Decibels::toString (value);
 
-        return String (value, 3);
+        return juce::String (value, 3);
     }
 
-    float stringToValue (const String& str) override
+    float stringToValue (const juce::String& str) override
     {
         if (isFreq)
             return str.retainCharacters ("0123456789").getFloatValue();
@@ -142,7 +142,7 @@ EqualiserPlugin::~EqualiserPlugin()
     hiQ->detachFromCurrentValue();
 }
 
-String EqualiserPlugin::getTooltip()
+juce::String EqualiserPlugin::getTooltip()
 {
     return getName() + "$equaliserplugin";
 }

@@ -416,7 +416,7 @@ static inline juce::ValueTree loadValueTree (const juce::File& file, bool asXml)
 {
     if (asXml)
     {
-        if (auto xml = std::unique_ptr<juce::XmlElement> (juce::XmlDocument::parse (file)))
+        if (auto xml = juce::parseXML (file))
             return juce::ValueTree::fromXml (*xml);
     }
     else

@@ -89,7 +89,7 @@ private:
         const Identifier valueProperty;
     };
 
-    void testPreset (const String& pluginName, std::initializer_list<ParamTest> params)
+    void testPreset (const juce::String& pluginName, std::initializer_list<ParamTest> params)
     {
         beginTest ("Testing plugin parameters: " + pluginName);
 

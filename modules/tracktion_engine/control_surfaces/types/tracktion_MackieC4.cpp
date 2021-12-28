@@ -56,7 +56,7 @@ namespace
         nullptr
     };
 
-    void performNamedFunction (const String& f)
+    void performNamedFunction (const juce::String& f)
     {
         if (f == "Proj.")               AppFunctions::showProjectScreen();
         else if (f == "Sett.")          AppFunctions::showSettingsScreen();
@@ -183,10 +183,10 @@ void MackieC4::updateMiscLights()
     lightUpButton (C4SwitchNumberSpotErase,    mode == PluginMode3 && bypass);
 }
 
-void MackieC4::setDisplayText (int potNumber, int row, String text)
+void MackieC4::setDisplayText (int potNumber, int row, juce::String text)
 {
     text = text.substring (0, 7);
-    text = (String::repeatedString (" ", (7 - text.length()) / 2) + text).paddedRight (' ', 7);
+    text = (juce::String::repeatedString (" ", (7 - text.length()) / 2) + text).paddedRight (' ', 7);
 
     text.copyToUTF8 (newText + 128 * (potNumber / 8) + (potNumber & 7) * 7 + row * 64, 7);
     triggerAsyncUpdate();
@@ -291,7 +291,7 @@ void MackieC4::updateDisplayAndPots()
         {
             for (int i = 0; i < 32; ++i)
             {
-                const String s1 (functionNames[i]);
+                const juce::String s1 (functionNames[i]);
 
                 setDisplayText (i, 0, s1.upToFirstOccurrenceOf ("/", false, false));
                 setDisplayText (i, 1, s1.fromFirstOccurrenceOf ("/", false, false));
@@ -737,7 +737,7 @@ void MackieC4::acceptMidiMessage (const MidiMessage& m)
 
                 if (mode == ButtonMode)
                 {
-                    const String command (functionNames[potNum]);
+                    const juce::String command (functionNames[potNum]);
 
                     //xxx is this the same thing as before?
                     if (auto tc = getTransport())
@@ -895,7 +895,7 @@ void MackieC4::movePanPot (int channelNum, float newPan)
     }
 }
 
-void MackieC4::faderBankChanged (int, const StringArray& trackNames)
+void MackieC4::faderBankChanged (int, const juce::StringArray& trackNames)
 {
     if (mode == MixerMode)
     {
@@ -929,7 +929,7 @@ void MackieC4::faderBankChanged (int, const StringArray& trackNames)
                 auto busName = edit->getAuxBusName (i);
 
                 if (busName.isEmpty())
-                    busName = (TRANS("Bus") + " #" + String (i + 1));
+                    busName = (TRANS("Bus") + " #" + juce::String (i + 1));
 
                 setDisplayText (i, 0, busName);
                 setDisplayText (i, 1, {});

@@ -25,13 +25,15 @@ public:
             onDestroy (this);
     }
 
-    StringArray getOutputChannelNames() override            { return audioIf.getOutputChannelNames();   }
-    StringArray getInputChannelNames() override             { return audioIf.getInputChannelNames();    }
+    juce::StringArray getOutputChannelNames() override      { return audioIf.getOutputChannelNames();   }
+    juce::StringArray getInputChannelNames() override       { return audioIf.getInputChannelNames();    }
     Array<double> getAvailableSampleRates() override        { return { audioIf.parameters.sampleRate }; }
     Array<int> getAvailableBufferSizes() override           { return { audioIf.parameters.blockSize };  }
     int getDefaultBufferSize() override                     { return audioIf.parameters.blockSize;      }
 
-    String open (const BigInteger& inputChannels, const BigInteger& outputChannels, double sampleRate, int bufferSizeSamples) override
+    String open (const juce::BigInteger& inputChannels,
+                 const juce::BigInteger& outputChannels,
+                 double sampleRate, int bufferSizeSamples) override
     {
         ignoreUnused (inputChannels, outputChannels, sampleRate, bufferSizeSamples);
         return {};
@@ -64,14 +66,14 @@ public:
 
     juce::BigInteger getActiveOutputChannels() const override
     {
-        BigInteger res;
+        juce::BigInteger res;
         res.setRange (0, audioIf.parameters.outputChannels, true);
         return res;
     }
 
     juce::BigInteger getActiveInputChannels() const override
     {
-        BigInteger res;
+        juce::BigInteger res;
         res.setRange (0, audioIf.parameters.inputChannels, true);
         return res;
     }
@@ -113,11 +115,12 @@ public:
     }
 
     void scanForDevices() override                                          {                                           }
-    StringArray getDeviceNames (bool = false) const override                { return { "Hosted Device" };               }
+    juce::StringArray getDeviceNames (bool = false) const override          { return { "Hosted Device" };               }
     int getDefaultDeviceIndex (bool) const override                         { return 0;                                 }
     int getIndexOfDevice (AudioIODevice*, bool) const override              { return 0;                                 }
     bool hasSeparateInputsAndOutputs() const override                       { return false;                             }
-    AudioIODevice* createDevice (const String&, const String&) override
+
+    AudioIODevice* createDevice (const juce::String&, const juce::String&) override
     {
         auto device = new HostedAudioDevice (audioIf, [ptr = WeakReference<HostedAudioDeviceType> (this)] (HostedAudioDevice* d)
                                                       {
@@ -426,6 +429,7 @@ bool HostedAudioDeviceInterface::isHostedMidiInputDevice (const MidiInputDevice&
 juce::StringArray HostedAudioDeviceInterface::getInputChannelNames()
 {
     juce::StringArray res;
+
     for (int i = 0; i < parameters.inputChannels; i++)
     {
         if (i < parameters.inputNames.size())
@@ -433,12 +437,14 @@ juce::StringArray HostedAudioDeviceInterface::getInputChannelNames()
         else
             res.add (juce::String (i + 1));
     }
+
     return res;
 }
 
 juce::StringArray HostedAudioDeviceInterface::getOutputChannelNames()
 {
     juce::StringArray res;
+
     for (int i = 0; i < parameters.outputChannels; i++)
     {
         if (i < parameters.outputNames.size())
@@ -446,6 +452,7 @@ juce::StringArray HostedAudioDeviceInterface::getOutputChannelNames()
         else
             res.add (juce::String (i + 1));
     }
+
     return res;
 }
 

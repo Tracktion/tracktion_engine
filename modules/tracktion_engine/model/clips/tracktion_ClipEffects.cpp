@@ -18,7 +18,7 @@
 namespace tracktion_engine
 {
 
-static inline juce::int64 hashValueTree (juce::int64 startHash, const ValueTree& v)
+static inline juce::int64 hashValueTree (juce::int64 startHash, const juce::ValueTree& v)
 {
     startHash ^= v.getType().toString().hashCode64() * (v.getParent().indexOf (v) + 1);
 
@@ -31,7 +31,7 @@ static inline juce::int64 hashValueTree (juce::int64 startHash, const ValueTree&
     return startHash;
 }
 
-static inline juce::int64 hashPlugin (const ValueTree& effectState, Plugin& plugin)
+static inline juce::int64 hashPlugin (const juce::ValueTree& effectState, Plugin& plugin)
 {
     CRASH_TRACER
     juce::int64 h = String (effectState.getParent().indexOf (effectState) + 1).hashCode64();
@@ -44,15 +44,15 @@ static inline juce::int64 hashPlugin (const ValueTree& effectState, Plugin& plug
 
             if (ac.getNumPoints() == 0)
             {
-                h = (String (h) + String (ap->getCurrentValue())).hashCode64();
+                h = (juce::String (h) + juce::String (ap->getCurrentValue())).hashCode64();
             }
             else
             {
                 for (int i = 0; i < ac.getNumPoints(); ++i)
                 {
                     const auto p = ac.getPoint (i);
-                    auto pointH = String (p.time) + String (p.value) + String (p.curve);
-                    h = (String (h) + pointH).hashCode64();
+                    auto pointH = juce::String (p.time) + String (p.value) + String (p.curve);
+                    h = (juce::String (h) + pointH).hashCode64();
                 }
             }
         }
@@ -111,7 +111,7 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ClipPropertyWatcher)
 };
 
-ClipEffects::ClipEffects (const ValueTree& v, AudioClipBase& c)
+ClipEffects::ClipEffects (const juce::ValueTree& v, AudioClipBase& c)
     : ValueTreeObjectList<ClipEffect> (v), clip (c), state (v)
 {
     rebuildObjects();
@@ -213,13 +213,13 @@ struct ClipEffect::ClipEffectRenderJob  : public ReferenceCountedObject
 };
 
 //==============================================================================
-ClipEffect::ClipEffect (const ValueTree& v, ClipEffects& o)
+ClipEffect::ClipEffect (const juce::ValueTree& v, ClipEffects& o)
     : edit (o.clip.edit), state (v), clipEffects (o), destinationFile (edit.engine)
 {
     state.addListener (this);
 }
 
-ValueTree ClipEffect::create (EffectType t)
+juce::ValueTree ClipEffect::create (EffectType t)
 {
     ValueTree v (IDs::EFFECT);
     v.setProperty (IDs::type, VariantConverter<ClipEffect::EffectType>::toVar (t), nullptr);
@@ -264,7 +264,7 @@ void ClipEffect::createEffectAndAddToValueTree (Edit& edit, ValueTree parent, Cl
     }
 }
 
-String ClipEffect::getTypeDisplayName (EffectType t)
+juce::String ClipEffect::getTypeDisplayName (EffectType t)
 {
     switch (t)
     {
@@ -286,7 +286,7 @@ String ClipEffect::getTypeDisplayName (EffectType t)
 
 void ClipEffect::addEffectsToMenu (PopupMenu& m)
 {
-    auto addItems = [&m] (StringRef heading, Array<EffectType> t)
+    auto addItems = [&m] (juce::StringRef heading, Array<EffectType> t)
     {
         m.addSectionHeader (heading);
 
@@ -425,7 +425,8 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
             auto sourceInfo = source.getInfo();
             jassert (sourceInfo.numChannels > 0 && sourceInfo.sampleRate > 0.0 && sourceInfo.bitsPerSample > 0);
 
-            AudioFile tempFile (*destination.engine, destination.getFile().getSiblingFile ("temp_effect_" + String::toHexString (Random::getSystemRandom().nextInt64()))
+            AudioFile tempFile (*destination.engine,
+                                destination.getFile().getSiblingFile ("temp_effect_" + juce::String::toHexString (Random::getSystemRandom().nextInt64()))
                                 .withFileExtension (destination.getFile().getFileExtension()));
 
             // need to strip AIFF metadata to write to wav files
@@ -658,7 +659,7 @@ private:
 };
 
 //==============================================================================
-VolumeEffect::VolumeEffect (const ValueTree& v, ClipEffects& o)
+VolumeEffect::VolumeEffect (const juce::ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
     auto volState = state.getChildWithName (IDs::PLUGIN);
@@ -730,7 +731,7 @@ void VolumeEffect::timerCallback()
 }
 
 //==============================================================================
-FadeInOutEffect::FadeInOutEffect (const ValueTree& v, ClipEffects& o)
+FadeInOutEffect::FadeInOutEffect (const juce::ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
     auto um = &getUndoManager();
@@ -842,7 +843,7 @@ juce::int64 FadeInOutEffect::getIndividualHash() const
 }
 
 //==============================================================================
-StepVolumeEffect::StepVolumeEffect (const ValueTree& v, ClipEffects& o)
+StepVolumeEffect::StepVolumeEffect (const juce::ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
     CRASH_TRACER
@@ -966,7 +967,7 @@ void StepVolumeEffect::propertiesButtonPressed (SelectionManager& sm)
 }
 
 //==============================================================================
-String StepVolumeEffect::getSelectableDescription()
+juce::String StepVolumeEffect::getSelectableDescription()
 {
     return TRANS("Step Volume Effect Editor");
 }
@@ -1006,21 +1007,21 @@ void StepVolumeEffect::Pattern::setNote (int index, bool value)
     }
 }
 
-BigInteger StepVolumeEffect::Pattern::getPattern() const noexcept
+juce::BigInteger StepVolumeEffect::Pattern::getPattern() const noexcept
 {
-    BigInteger b;
+    juce::BigInteger b;
     b.parseString (state[IDs::pattern].toString(), 2);
     return b;
 }
 
-void StepVolumeEffect::Pattern::setPattern (const BigInteger& b) noexcept
+void StepVolumeEffect::Pattern::setPattern (const juce::BigInteger& b) noexcept
 {
     state.setProperty (IDs::pattern, b.toString (2), &effect.getUndoManager());
 }
 
 void StepVolumeEffect::Pattern::clear()
 {
-    setPattern (BigInteger());
+    setPattern ({});
 }
 
 int StepVolumeEffect::Pattern::getNumNotes() const
@@ -1030,7 +1031,7 @@ int StepVolumeEffect::Pattern::getNumNotes() const
 
 void StepVolumeEffect::Pattern::shiftChannel (bool toTheRight)
 {
-    BigInteger c (getPattern());
+    auto c = getPattern();
 
     // NB: Notes are added in reverse order
     if (toTheRight)
@@ -1043,7 +1044,7 @@ void StepVolumeEffect::Pattern::shiftChannel (bool toTheRight)
 
 void StepVolumeEffect::Pattern::toggleAtInterval (int interval)
 {
-    BigInteger c (getPattern());
+    auto c = getPattern();
 
     for (int i = effect.getMaxNumNotes(); --i >= 0;)
         c.setBit (i, (i % interval) == 0);
@@ -1062,7 +1063,7 @@ void StepVolumeEffect::Pattern::randomiseChannel()
 }
 
 //==============================================================================
-PitchShiftEffect::PitchShiftEffect (const ValueTree& v, ClipEffects& o)
+PitchShiftEffect::PitchShiftEffect (const juce::ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
     CRASH_TRACER
@@ -1144,7 +1145,7 @@ void PitchShiftEffect::timerCallback()
 }
 
 //==============================================================================
-WarpTimeEffect::WarpTimeEffect (const ValueTree& v, ClipEffects& o)
+WarpTimeEffect::WarpTimeEffect (const juce::ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
     CRASH_TRACER
@@ -1249,7 +1250,7 @@ ScopedPluginUnloadInhibitor::ScopedPluginUnloadInhibitor (PluginUnloadInhibitor&
 ScopedPluginUnloadInhibitor::~ScopedPluginUnloadInhibitor()                                      { owner.decrease(); }
 
 //==============================================================================
-PluginEffect::PluginEffect (const ValueTree& v, ClipEffects& o)
+PluginEffect::PluginEffect (const juce::ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
     CRASH_TRACER
@@ -1434,7 +1435,7 @@ struct NormaliseEffect::NormaliseRenderJob : public BlockBasedRenderJob
     float gainFactor = 0.0f;
 };
 
-NormaliseEffect::NormaliseEffect (const ValueTree& v, ClipEffects& o)
+NormaliseEffect::NormaliseEffect (const juce::ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
     auto um = &getUndoManager();
@@ -1464,7 +1465,7 @@ void NormaliseEffect::propertiesButtonPressed (SelectionManager& sm)
     sm.selectOnly (this);
 }
 
-String NormaliseEffect::getSelectableDescription()
+juce::String NormaliseEffect::getSelectableDescription()
 {
     return TRANS("Normalise Effect Editor");
 }
@@ -1546,7 +1547,7 @@ struct MakeMonoEffect::MakeMonoRenderJob : public BlockBasedRenderJob
     const SrcChannels srcChannels;
 };
 
-MakeMonoEffect::MakeMonoEffect (const ValueTree& v, ClipEffects& o)
+MakeMonoEffect::MakeMonoEffect (const juce::ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
     auto um = &getUndoManager();
@@ -1575,7 +1576,7 @@ void MakeMonoEffect::propertiesButtonPressed (SelectionManager& sm)
     sm.selectOnly (this);
 }
 
-String MakeMonoEffect::getSelectableDescription()
+juce::String MakeMonoEffect::getSelectableDescription()
 {
     return TRANS("Make Mono Editor");
 }
@@ -1606,7 +1607,7 @@ struct ReverseEffect::ReverseRenderJob  : public BlockBasedRenderJob
     }
 };
 
-ReverseEffect::ReverseEffect (const ValueTree& v, ClipEffects& o)
+ReverseEffect::ReverseEffect (const juce::ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
 }
@@ -1644,7 +1645,7 @@ struct InvertEffect::InvertRenderJob : public BlockBasedRenderJob
     }
 };
 
-InvertEffect::InvertEffect (const ValueTree& v, ClipEffects& o)
+InvertEffect::InvertEffect (const juce::ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
 }
@@ -1656,7 +1657,7 @@ ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> InvertEffect::createR
 }
 
 //==============================================================================
-ClipEffect* ClipEffect::create (const ValueTree& v, ClipEffects& ce)
+ClipEffect* ClipEffect::create (const juce::ValueTree& v, ClipEffects& ce)
 {
     switch (VariantConverter<ClipEffect::EffectType>::fromVar (v[IDs::type]))
     {

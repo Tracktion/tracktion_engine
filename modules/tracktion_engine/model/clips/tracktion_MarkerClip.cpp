@@ -36,12 +36,12 @@ void MarkerClip::initialise()
     speedRatio = 1.0; // not used
 }
 
-String MarkerClip::getSelectableDescription()
+juce::String MarkerClip::getSelectableDescription()
 {
     return TRANS("Marker Clip") + " - \"" + getName() + "\"";
 }
 
-Colour MarkerClip::getDefaultColour() const
+juce::Colour MarkerClip::getDefaultColour() const
 {
     return Colours::red.withHue (1.0f / 9.0f);
 }
@@ -79,7 +79,7 @@ void MarkerClip::valueTreePropertyChanged (ValueTree& v, const juce::Identifier&
     Clip::valueTreePropertyChanged (v, i);
 }
 
-Colour MarkerClip::getColour() const
+juce::Colour MarkerClip::getColour() const
 {
     if (Clip::getColour() == getDefaultColour())
     {

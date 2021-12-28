@@ -99,9 +99,9 @@ struct CrashStackTracer::CrashTraceThreads
         }
     }
 
-    StringArray getCrashedPlugins() const
+    juce::StringArray getCrashedPlugins() const
     {
-        StringArray plugins;
+        juce::StringArray plugins;
 
         for (auto s : entries)
             if (s->pluginName != nullptr)
@@ -158,7 +158,7 @@ CrashStackTracer::~CrashStackTracer()
     crashStack.pop (this);
 }
 
-StringArray CrashStackTracer::getCrashedPlugins()
+juce::StringArray CrashStackTracer::getCrashedPlugins()
 {
     return crashStack.getCrashedPlugins();
 }
@@ -182,18 +182,18 @@ void CrashStackTracer::dump (juce::OutputStream& os, juce::Thread::ThreadID thre
     crashStack.dump (os, threadID);
 }
 
-String CrashStackTracer::getCrashedPlugin (juce::Thread::ThreadID threadID)
+juce::String CrashStackTracer::getCrashedPlugin (juce::Thread::ThreadID threadID)
 {
     return crashStack.getCrashedPlugin (threadID);
 }
 
-String CrashStackTracer::getCrashLocation (Thread::ThreadID threadID)
+juce::String CrashStackTracer::getCrashLocation (Thread::ThreadID threadID)
 {
     return crashStack.getCrashLocation (threadID);
 }
 
 //==============================================================================
-DeadMansPedalMessage::DeadMansPedalMessage (PropertyStorage& ps, const String& message)
+DeadMansPedalMessage::DeadMansPedalMessage (PropertyStorage& ps, const juce::String& message)
     : file (getDeadMansPedalFile (ps))
 {
     file.replaceWithText (message);
@@ -206,7 +206,7 @@ DeadMansPedalMessage::~DeadMansPedalMessage()
     jassert (success);
 }
 
-String DeadMansPedalMessage::getAndClearLastMessage (PropertyStorage& propertyStorage)
+juce::String DeadMansPedalMessage::getAndClearLastMessage (PropertyStorage& propertyStorage)
 {
     auto file = getDeadMansPedalFile (propertyStorage);
     auto s = file.loadFileAsString();

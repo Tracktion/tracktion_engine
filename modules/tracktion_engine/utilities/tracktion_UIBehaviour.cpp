@@ -29,12 +29,13 @@ bool UIBehaviour::paste (const Clipboard& clipboard)
 }
 
 //==============================================================================
-void UIBehaviour::showWarningAlert (const String& title, const String& message)
+void UIBehaviour::showWarningAlert (const juce::String& title, const juce::String& message)
 {
     AlertWindow::showMessageBoxAsync (AlertWindow::WarningIcon, title, message);
 }
 
-bool UIBehaviour::showOkCancelAlertBox (const String& title, const String& message, const String& ok, const String& cancel)
+bool UIBehaviour::showOkCancelAlertBox (const juce::String& title, const juce::String& message,
+                                        const juce::String& ok, const juce::String& cancel)
 {
    #if JUCE_MODAL_LOOPS_PERMITTED
     return AlertWindow::showOkCancelBox (AlertWindow::QuestionIcon, title, message, ok, cancel);
@@ -44,8 +45,8 @@ bool UIBehaviour::showOkCancelAlertBox (const String& title, const String& messa
    #endif
 }
 
-int UIBehaviour::showYesNoCancelAlertBox (const String& title, const String& message,
-                                          const String& yes, const String& no, const String& cancel)
+int UIBehaviour::showYesNoCancelAlertBox (const juce::String& title, const juce::String& message,
+                                          const juce::String& yes, const juce::String& no, const juce::String& cancel)
 {
    #if JUCE_MODAL_LOOPS_PERMITTED
     return AlertWindow::showYesNoCancelBox (AlertWindow::QuestionIcon, title, message, yes, no, cancel);
@@ -55,7 +56,7 @@ int UIBehaviour::showYesNoCancelAlertBox (const String& title, const String& mes
    #endif
 }
 
-void UIBehaviour::showInfoMessage (const String& message)
+void UIBehaviour::showInfoMessage (const juce::String& message)
 {
     if (auto c = Desktop::getInstance().getMainMouseSource().getComponentUnderMouse())
     {
@@ -65,13 +66,13 @@ void UIBehaviour::showInfoMessage (const String& message)
     }
 }
 
-void UIBehaviour::showWarningMessage (const String& message)
+void UIBehaviour::showWarningMessage (const juce::String& message)
 {
     showInfoMessage (message);
 }
 
 //==============================================================================
-void UIBehaviour::nudgeSelectedClips (TimecodeSnapType snapType, const String& commandDesc,
+void UIBehaviour::nudgeSelectedClips (TimecodeSnapType snapType, const juce::String& commandDesc,
                                       SelectionManager& sm, const Array<Clip*>& clips, bool automationLocked)
 {
     jassert (clips.size() > 0);
@@ -172,7 +173,7 @@ void UIBehaviour::nudgeSelectedClips (TimecodeSnapType snapType, const String& c
     }
 }
 
-void UIBehaviour::nudgeSelected (TimecodeSnapType snapType, const String& commandDesc, bool automationLocked)
+void UIBehaviour::nudgeSelected (TimecodeSnapType snapType, const juce::String& commandDesc, bool automationLocked)
 {
     if (auto sm = getCurrentlyFocusedSelectionManager())
     {
@@ -204,7 +205,7 @@ void UIBehaviour::nudgeSelected (TimecodeSnapType snapType, const String& comman
     }
 }
 
-void UIBehaviour::nudgeSelected (const String& commandDesc)
+void UIBehaviour::nudgeSelected (const juce::String& commandDesc)
 {
     if (auto edit = getCurrentlyFocusedEdit())
         nudgeSelected (edit->getTransport().getSnapType(), commandDesc, false);

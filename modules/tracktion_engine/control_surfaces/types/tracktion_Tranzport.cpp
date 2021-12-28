@@ -421,7 +421,7 @@ void TranzportControlSurface::automationWriteModeChanged (bool)
 {
 }
 
-void TranzportControlSurface::faderBankChanged (int newStartChannelNumber, const StringArray& trackNames)
+void TranzportControlSurface::faderBankChanged (int newStartChannelNumber, const juce::StringArray& trackNames)
 {
     if (init && currentTrack != newStartChannelNumber)
     {
@@ -429,7 +429,7 @@ void TranzportControlSurface::faderBankChanged (int newStartChannelNumber, const
         trackName = trackNames[0];
 
         if ((newStartChannelNumber + 1) == trackName.getIntValue() && trackName.containsOnly ("0123456789"))
-            trackName = TRANS("Track") + " " + String (newStartChannelNumber + 1);
+            trackName = TRANS("Track") + " " + juce::String (newStartChannelNumber + 1);
 
         trackName = trackName.retainCharacters ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 ()! \"#$%&\'*+,-./:;<=>?@^_`{|}");
 

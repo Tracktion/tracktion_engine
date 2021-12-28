@@ -309,7 +309,7 @@ private:
 };
 
 //==============================================================================
-PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine& e, const String& deviceName, int deviceIndexToUse)
+PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine& e, const juce::String& deviceName, int deviceIndexToUse)
    : MidiInputDevice (e, TRANS("MIDI Input"), deviceName),
      deviceIndex (deviceIndexToUse)
 {
@@ -330,7 +330,7 @@ InputDeviceInstance* PhysicalMidiInputDevice::createInstance (EditPlaybackContex
     return new PhysicalMidiInputDeviceInstance (*this, c);
 }
 
-String PhysicalMidiInputDevice::openDevice()
+juce::String PhysicalMidiInputDevice::openDevice()
 {
     zeromem (keysDown, sizeof (keysDown));
     zeromem (keyDownVelocities, sizeof (keyDownVelocities));

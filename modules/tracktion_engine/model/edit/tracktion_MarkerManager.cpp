@@ -150,7 +150,7 @@ MarkerClip::Ptr MarkerManager::createMarker (int number, double pos, double leng
     return createMarker (number, pos, length, getNewMarkerMode(), sm);
 }
 
-void MarkerManager::valueTreeChanged (const ValueTree& v)
+void MarkerManager::valueTreeChanged (const juce::ValueTree& v)
 {
     if (v.hasType (IDs::MARKERTRACK) || v.getParent().hasType (IDs::MARKERTRACK))
         sendChangeMessage();

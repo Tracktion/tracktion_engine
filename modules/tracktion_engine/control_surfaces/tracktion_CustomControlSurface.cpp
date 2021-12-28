@@ -32,7 +32,8 @@ void CustomControlSurface::CustomControlSurfaceManager::saveAllSettings (Engine&
 }
 
 //==============================================================================
-CustomControlSurface::CustomControlSurface (ExternalControllerManager& ecm, const String& name,
+CustomControlSurface::CustomControlSurface (ExternalControllerManager& ecm,
+                                            const juce::String& name,
                                             ExternalControllerManager::Protocol protocol_)
     : ControlSurface (ecm),
     protocol (protocol_)
@@ -256,9 +257,7 @@ void CustomControlSurface::importSettings (const juce::String& xmlText)
     bool ok = false;
     mappings.clearQuick (true);
 
-    std::unique_ptr<XmlElement> xml (XmlDocument::parse (xmlText));
-
-    if (xml != nullptr)
+    if (auto xml = juce::parseXML (xmlText))
     {
         loadFromXml (*xml);
         loadFunctions();
@@ -720,9 +719,10 @@ void CustomControlSurface::automationWriteModeChanged (bool isWriting)
     sendCommandToControllerForActionID (automationRecordId, isWriting);
 }
 
-void CustomControlSurface::faderBankChanged (int newStartChannelNumber, const StringArray& trackNames)
+void CustomControlSurface::faderBankChanged (int newStartChannelNumber, const juce::StringArray& trackNames)
 {
     int idx = 0;
+
     for (auto name : trackNames)
     {
         sendCommandToControllerForActionID (nameTrackId + idx, name);
@@ -1314,7 +1314,7 @@ void CustomControlSurface::addAllCommandItem (PopupMenu& menu)
 }
 
 void CustomControlSurface::addFunction (PopupMenu& menu, SortedSet<int>& commandSet,
-                                        const String& group, const String& name,
+                                        const juce::String& group, const juce::String& name,
                                         ActionID aid, ActionFunction actionFunc)
 {
     if (isTextAction (aid) && ! needsOSCSocket)
@@ -1336,7 +1336,7 @@ void CustomControlSurface::addFunction (PopupMenu& menu, SortedSet<int>& command
 }
 
 void CustomControlSurface::addPluginFunction (PopupMenu& menu,
-                                              const String& group, const String& name,
+                                              const juce::String& group, const juce::String& name,
                                               ActionID aid, ActionFunction actionFunc)
 {
     if (isTextAction (aid) && ! needsOSCSocket)
@@ -1369,7 +1369,7 @@ void CustomControlSurface::addPluginFunction (PopupMenu& menu,
 }
 
 void CustomControlSurface::addTrackFunction (PopupMenu& menu,
-                                             const String& group, const String& name,
+                                             const juce::String& group, const juce::String& name,
                                              ActionID aid, ActionFunction actionFunc)
 {
     if (isTextAction (aid) && ! needsOSCSocket)

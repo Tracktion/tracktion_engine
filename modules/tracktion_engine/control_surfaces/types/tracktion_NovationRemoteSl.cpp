@@ -471,7 +471,7 @@ void NovationRemoteSl::recordStateChanged (bool isRecording)
 void NovationRemoteSl::automationReadModeChanged (bool) {}
 void NovationRemoteSl::automationWriteModeChanged (bool) {}
 
-void NovationRemoteSl::faderBankChanged (int, const StringArray& newNames)
+void NovationRemoteSl::faderBankChanged (int, const juce::StringArray& newNames)
 {
     for (int i = 0; i < 8; ++i)
         trackNames[i] = newNames[i];
@@ -644,7 +644,7 @@ void NovationRemoteSl::handleAsyncUpdate()
     {
         if (leftTopDirty)
         {
-            String s;
+            juce::String s;
 
             if (leftMode == lmTracks)
             {
@@ -680,13 +680,13 @@ void NovationRemoteSl::handleAsyncUpdate()
             if (leftMode == lmParam1)
             {
                 for (int i = 0; i < 8; ++i)
-                    s += padAndLimit (String::fromUTF8 (param[i].label), 9);
+                    s += padAndLimit (juce::String::fromUTF8 (param[i].label), 9);
             }
 
             if (leftMode == lmParam2)
             {
                 for (int i = 0; i < 8; ++i)
-                    s += padAndLimit (String::fromUTF8 (param[i + 8].label), 9);
+                    s += padAndLimit (juce::String::fromUTF8 (param[i + 8].label), 9);
             }
 
             drawString(s, 1);
@@ -694,18 +694,18 @@ void NovationRemoteSl::handleAsyncUpdate()
 
         if (leftBottomDirty)
         {
-            String s;
+            juce::String s;
 
             if (leftMode == lmParam1)
             {
                 for (int i = 0; i < 8; ++i)
-                    s += padAndLimit (String::fromUTF8 (param[i].valueDescription), 9);
+                    s += padAndLimit (juce::String::fromUTF8 (param[i].valueDescription), 9);
             }
 
             if (leftMode == lmParam2)
             {
                 for (int i = 0; i < 8; ++i)
-                    s += padAndLimit (String::fromUTF8 (param[i + 8].valueDescription), 9);
+                    s += padAndLimit (juce::String::fromUTF8 (param[i + 8].valueDescription), 9);
             }
 
             if (leftMode == lmTracks || leftMode == lmPlugins)
@@ -716,7 +716,7 @@ void NovationRemoteSl::handleAsyncUpdate()
 
         if (rightTopDirty)
         {
-            String s;
+            juce::String s;
 
             for (int i = 0; i < 8; ++i)
                 s += padAndLimit (trackNames[i], 9);
@@ -726,7 +726,7 @@ void NovationRemoteSl::handleAsyncUpdate()
 
         if (rightBottomDirty)
         {
-            String s;
+            juce::String s;
 
             for (int i = 0; i < 8; ++i)
             {
@@ -773,7 +773,7 @@ void NovationRemoteSl::handleAsyncUpdate()
     rightBottomDirty  = false;
 }
 
-void NovationRemoteSl::drawString (const String& s, int panel)
+void NovationRemoteSl::drawString (const juce::String& s, int panel)
 {
     jassert (s.length() == 9 * 8);
 
@@ -819,7 +819,7 @@ void NovationRemoteSl::drawString (const String& s, int panel)
     screenContents[panel - 1] = s;
 }
 
-juce::String NovationRemoteSl::padAndLimit (const String& s, int max)
+juce::String NovationRemoteSl::padAndLimit (const juce::String& s, int max)
 {
     if (s.length() == max)
         return s;

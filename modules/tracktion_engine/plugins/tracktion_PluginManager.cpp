@@ -49,7 +49,7 @@ struct PluginScanMasterProcess  : private ChildProcessCoordinator
         return launched;
     }
 
-    bool sendScanRequest (AudioPluginFormat& format, const String& fileOrIdentifier, int requestID)
+    bool sendScanRequest (AudioPluginFormat& format, const juce::String& fileOrIdentifier, int requestID)
     {
         juce::XmlElement m ("SCAN");
         m.setAttribute ("id", requestID);
@@ -59,7 +59,7 @@ struct PluginScanMasterProcess  : private ChildProcessCoordinator
         return sendMessageToWorker (createScanMessage (m));
     }
 
-    bool waitForReply (int requestID, const String& fileOrIdentifier,
+    bool waitForReply (int requestID, const juce::String& fileOrIdentifier,
                        OwnedArray<PluginDescription>& result, KnownPluginList::CustomScanner& scanner)
     {
       #if ! TRACKTION_LOG_ENABLED
@@ -164,7 +164,7 @@ private:
 
     void handleMessageFromWorker (const MemoryBlock& mb) override
     {
-        if (auto xml = std::unique_ptr<XmlElement> (XmlDocument::parse (mb.toString())))
+        if (auto xml = juce::parseXML (mb.toString()))
             handleMessage (*xml);
     }
 
@@ -187,7 +187,7 @@ struct PluginScanSlaveProcess  : public ChildProcessWorker,
         std::exit (0);
     }
 
-    void handleScanMessage (int requestID, const String& formatName, const String& fileOrIdentifier)
+    void handleScanMessage (int requestID, const juce::String& formatName, const juce::String& fileOrIdentifier)
     {
         juce::XmlElement result ("FOUND");
         result.setAttribute ("id", requestID);
@@ -225,12 +225,13 @@ private:
 
     void handleMessageFromCoordinator (const MemoryBlock& mb) override
     {
-        if (auto xml = std::unique_ptr<XmlElement> (XmlDocument::parse (mb.toString())))
+        if (auto xml = juce::parseXML (mb.toString()))
         {
             pendingMessages.add (xml.release());
             triggerAsyncUpdate();
         }
     }
+
     void handleMessageSafely (const juce::XmlElement& m)
     {
        #if JUCE_WINDOWS
@@ -279,7 +280,7 @@ static void setupSignalHandling()
 }
 #endif
 
-bool PluginManager::startChildProcessPluginScan (const String& commandLine)
+bool PluginManager::startChildProcessPluginScan (const juce::String& commandLine)
 {
     auto slave = std::make_unique<PluginScanSlaveProcess>();
 
@@ -303,7 +304,7 @@ struct CustomScanner  : public KnownPluginList::CustomScanner
 
     bool findPluginTypesFor (AudioPluginFormat& format,
                              OwnedArray<PluginDescription>& result,
-                             const String& fileOrIdentifier) override
+                             const juce::String& fileOrIdentifier) override
     {
         CRASH_TRACER
 
@@ -394,7 +395,7 @@ PluginManager::BuiltInType::~BuiltInType() {}
 PluginManager::PluginManager (Engine& e)
     : engine (e)
 {
-    createPluginInstance = [this] (const PluginDescription& description, double rate, int blockSize, String& errorMessage)
+    createPluginInstance = [this] (const juce::PluginDescription& description, double rate, int blockSize, juce::String& errorMessage)
                            {
                                return std::unique_ptr<AudioPluginInstance> (pluginFormatManager.createPluginInstance (description, rate, blockSize, errorMessage));
                            };
@@ -654,7 +655,7 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::ValueTree& v)
     return createPlugin (ed, v, true);
 }
 
-Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const String& type, const juce::PluginDescription& desc)
+Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, const juce::PluginDescription& desc)
 {
     jassert (initialised); // must call PluginManager::initialise() before this!
     jassert ((type == ExternalPlugin::xmlTypeName) == type.equalsIgnoreCase (ExternalPlugin::xmlTypeName));
@@ -690,7 +691,7 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const String& type, const 
     {
         if (builtIn->type == type)
         {
-            ValueTree v (IDs::PLUGIN);
+            juce::ValueTree v (IDs::PLUGIN);
             v.setProperty (IDs::type, type, nullptr);
 
             if (ed.engine.getPluginManager().areGUIsLockedByDefault())

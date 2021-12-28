@@ -216,7 +216,7 @@ protected:
 
 
 //==============================================================================
-EnvelopeFollowerModifier::EnvelopeFollowerModifier (Edit& e, const ValueTree& v)
+EnvelopeFollowerModifier::EnvelopeFollowerModifier (Edit& e, const juce::ValueTree& v)
     : Modifier (e, v)
 {
     auto um = &edit.getUndoManager();
@@ -232,8 +232,9 @@ EnvelopeFollowerModifier::EnvelopeFollowerModifier (Edit& e, const ValueTree& v)
     lowPassFrequency.referTo (state, IDs::lowPassFrequency, um, 2000.0f);
     highPassFrequency.referTo (state, IDs::highPassFrequency, um, 500.0f);
 
-    auto addDiscreteParam = [this] (const String& paramID, const String& name,
-                                    Range<float> valueRange, CachedValue<float>& val, const StringArray& labels) -> AutomatableParameter*
+    auto addDiscreteParam = [this] (const juce::String& paramID, const juce::String& name,
+                                    juce::Range<float> valueRange, CachedValue<float>& val,
+                                    const juce::StringArray& labels) -> AutomatableParameter*
     {
         auto* p = new DiscreteLabelledParameter (paramID, name, *this, valueRange, labels.size(), labels);
         addAutomatableParameter (p);
@@ -242,7 +243,9 @@ EnvelopeFollowerModifier::EnvelopeFollowerModifier (Edit& e, const ValueTree& v)
         return p;
     };
 
-    auto addParam = [this] (const String& paramID, const String& name, NormalisableRange<float> valueRange, float centreVal, CachedValue<float>& val, const String& suffix) -> AutomatableParameter*
+    auto addParam = [this] (const juce::String& paramID, const juce::String& name,
+                            NormalisableRange<float> valueRange, float centreVal,
+                            CachedValue<float>& val, const juce::String& suffix) -> AutomatableParameter*
     {
         valueRange.setSkewForCentre (centreVal);
         auto* p = new SuffixedParameter (paramID, name, *this, valueRange, suffix);
@@ -292,14 +295,15 @@ float EnvelopeFollowerModifier::getCurrentValue()
     return (getEnvelopeValue() * depthParam->getCurrentValue()) + offsetParam->getCurrentValue();
 }
 
-AutomatableParameter::ModifierAssignment* EnvelopeFollowerModifier::createAssignment (const ValueTree& v)
+AutomatableParameter::ModifierAssignment* EnvelopeFollowerModifier::createAssignment (const juce::ValueTree& v)
 {
     return new Assignment (v, *this);
 }
 
-StringArray EnvelopeFollowerModifier::getAudioInputNames()
+juce::StringArray EnvelopeFollowerModifier::getAudioInputNames()
 {
-    return { TRANS("Audio input left"), TRANS("Audio input right") };
+    return { TRANS("Audio input left"),
+             TRANS("Audio input right") };
 }
 
 void EnvelopeFollowerModifier::initialise (double newSampleRate, int)
@@ -411,7 +415,6 @@ void EnvelopeFollowerModifier::reset()
     envelopeFollower->reset();
 }
 
-//==============================================================================
 void EnvelopeFollowerModifier::valueTreeChanged()
 {
     if (! changedTimer.isTimerRunning())

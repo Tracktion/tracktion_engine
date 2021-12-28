@@ -155,12 +155,12 @@ float gainToVolumeFaderPosition (float gain) noexcept
     return (gain > 0.0f) ? std::exp (((20.0f * std::log10 (gain)) - 6.0f) * (1.0f / volScaleFactor)) : 0.0f;
 }
 
-String gainToDbString (float gain, float infLevel, int decPlaces)
+juce::String gainToDbString (float gain, float infLevel, int decPlaces)
 {
     return Decibels::toString (gainToDb (gain), decPlaces, infLevel);
 }
 
-float dbStringToDb (const String& dbStr)
+float dbStringToDb (const juce::String& dbStr)
 {
     if (dbStr.contains ("INF"))
         return -100.0f;
@@ -168,7 +168,7 @@ float dbStringToDb (const String& dbStr)
     return dbStr.retainCharacters ("0123456789.-").getFloatValue();
 }
 
-float dbStringToGain (const String& dbStr)
+float dbStringToGain (const juce::String& dbStr)
 {
     if (dbStr.contains ("INF"))
         return 0.0f;
@@ -176,12 +176,12 @@ float dbStringToGain (const String& dbStr)
     return dbToGain (dbStringToDb (dbStr));
 }
 
-String getPanString (float pan)
+juce::String getPanString (float pan)
 {
     if (std::abs (pan) < 0.001f)
         return TRANS("Centre");
 
-    const String s (pan, 3);
+    const juce::String s (pan, 3);
 
     if (pan < 0.0f)
         return s + " " + TRANS("Left");
@@ -189,9 +189,9 @@ String getPanString (float pan)
     return "+" + s + " " + TRANS("Right");
 }
 
-String getSemitonesAsString (double semitones)
+juce::String getSemitonesAsString (double semitones)
 {
-    String t;
+    juce::String t;
 
     if (semitones > 0)
         t << "+";
@@ -199,7 +199,7 @@ String getSemitonesAsString (double semitones)
     if (std::abs (semitones - (int) semitones) < 0.01)
         t << (int) semitones;
     else
-        t << String (semitones, 2);
+        t << juce::String (semitones, 2);
 
     if (std::abs (semitones) != 1)
         return TRANS("33 semitones").replace ("33", t);
@@ -286,9 +286,9 @@ void setDefaultPanLaw (const PanLaw panLaw)
     defaultPanLaw = panLaw;
 }
 
-StringArray getPanLawChoices (bool includeDefault) noexcept
+juce::StringArray getPanLawChoices (bool includeDefault) noexcept
 {
-    StringArray s;
+    juce::StringArray s;
 
     if (includeDefault)
         s.add ("(" + TRANS("Use Default") + ")");

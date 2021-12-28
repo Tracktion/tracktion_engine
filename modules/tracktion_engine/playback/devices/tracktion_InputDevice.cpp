@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-InputDevice::InputDevice (Engine& e, const String& t, const String& n)
+InputDevice::InputDevice (Engine& e, const juce::String& t, const juce::String& n)
    : engine (e), type (t), name (n)
 {
     alias = e.getPropertyStorage().getPropertyItem (SettingID::invalid, getGlobalPropertyName());
@@ -22,7 +22,7 @@ InputDevice::~InputDevice()
 {
 }
 
-String InputDevice::getGlobalPropertyName() const
+juce::String InputDevice::getGlobalPropertyName() const
 {
     return type + "in_" + name + "_alias";
 }
@@ -33,7 +33,9 @@ bool InputDevice::isTrackDevice() const
             || getDeviceType() == trackMidiDevice;
 }
 
-static String findDefaultAliasNameNotClashingWithInputDevices (Engine& engine, bool isMIDI, const String& originalName, String defaultAlias)
+static juce::String findDefaultAliasNameNotClashingWithInputDevices (Engine& engine, bool isMIDI,
+                                                                     const juce::String& originalName,
+                                                                     juce::String defaultAlias)
 {
     int maxLength = 20;
 
@@ -90,7 +92,7 @@ void InputDevice::initialiseDefaultAlias()
     defaultAlias = findDefaultAliasNameNotClashingWithInputDevices (engine, isMidi(), getName(), defaultAlias);
 }
 
-String InputDevice::getAlias() const
+juce::String InputDevice::getAlias() const
 {
     if (alias.trim().isNotEmpty())
         return alias;
@@ -98,7 +100,7 @@ String InputDevice::getAlias() const
     return defaultAlias;
 }
 
-void InputDevice::setAlias (const String& a)
+void InputDevice::setAlias (const juce::String& a)
 {
     if (alias != a)
     {
@@ -114,7 +116,7 @@ bool InputDevice::isEnabled() const
     return enabled;
 }
 
-String InputDevice::getSelectableDescription()
+juce::String InputDevice::getSelectableDescription()
 {
     return name + " (" + type + ")";
 }
@@ -368,7 +370,7 @@ void InputDeviceInstance::prepareAndPunchRecord()
         const double sampleRate = dm.getSampleRate();
         const int blockSize = dm.getBlockSize();
 
-        const String error (prepareToRecord (start, start, sampleRate, blockSize, true));
+        auto error = prepareToRecord (start, start, sampleRate, blockSize, true);
 
         if (error.isNotEmpty())
             edit.engine.getUIBehaviour().showWarningMessage (error);

@@ -12,7 +12,7 @@ namespace tracktion_engine
 {
 
 //==============================================================================
-StringArray ToneGeneratorPlugin::getOscTypeNames()
+juce::StringArray ToneGeneratorPlugin::getOscTypeNames()
 {
     return { "Sin", "Triangle", "Saw Up", "Saw Down", "Square", "Noise" };
 }

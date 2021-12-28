@@ -128,7 +128,7 @@ juce::String ExternalController::getMidiInputDevice() const
     return {};
 }
 
-void ExternalController::setMidiInputDevice (const String& nameOfMidiInput)
+void ExternalController::setMidiInputDevice (const juce::String& nameOfMidiInput)
 {
     CRASH_TRACER
 
@@ -247,7 +247,7 @@ void ExternalController::oscSettingsChanged()
     changeParamBank (0);
 }
 
-void ExternalController::setBackChannelDevice (const String& nameOfMidiOutput)
+void ExternalController::setBackChannelDevice (const juce::String& nameOfMidiOutput)
 {
     CRASH_TRACER
 
@@ -881,7 +881,7 @@ void ExternalController::updateDeviceState()
                 moveMasterFaders (gainToVolumeFaderPosition (l),
                                   gainToVolumeFaderPosition (r));
 
-                StringArray trackNames;
+                juce::StringArray trackNames;
 
                 for (int i = 0; i < getNumFaderChannels(); ++i)
                 {
@@ -1032,10 +1032,10 @@ juce::String ExternalController::getNoDeviceSelectedMessage()
     return "<" + TRANS("No Device Selected") + ">";
 }
 
-StringArray ExternalController::getMidiInputPorts() const
+juce::StringArray ExternalController::getMidiInputPorts() const
 {
     CRASH_TRACER
-    StringArray inputNames;
+    juce::StringArray inputNames;
     inputNames.add (getNoDeviceSelectedMessage());
 
     auto& dm = engine.getDeviceManager();
@@ -1048,10 +1048,10 @@ StringArray ExternalController::getMidiInputPorts() const
     return inputNames;
 }
 
-StringArray ExternalController::getMidiOutputPorts() const
+juce::StringArray ExternalController::getMidiOutputPorts() const
 {
     CRASH_TRACER
-    StringArray outputNames;
+    juce::StringArray outputNames;
     outputNames.add (getNoDeviceSelectedMessage());
     auto& dm = engine.getDeviceManager();
 
@@ -1190,7 +1190,7 @@ void ExternalController::changeAuxBank (int delta)
     }
 }
 
-juce::String ExternalController::shortenName (String s, int maxLen)
+juce::String ExternalController::shortenName (juce::String s, int maxLen)
 {
     if (s.length() < maxLen)
         return s;

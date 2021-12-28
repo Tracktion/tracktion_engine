@@ -64,7 +64,7 @@ const GrooveTemplate& GrooveTemplate::operator= (const GrooveTemplate& other)
     return *this;
 }
 
-void GrooveTemplate::setName (const String& n)
+void GrooveTemplate::setName (const juce::String& n)
 {
     name = n;
 }
@@ -170,10 +170,9 @@ GrooveTemplateManager::GrooveTemplateManager (Engine& e)
     if (knownGrooves.isEmpty())
     {
         // load the defaults..
-        std::unique_ptr<XmlElement> defSettings (XmlDocument::parse (TracktionBinaryData::groove_templates_xml));
-
-        if (defSettings && defSettings->getTagName() == "GROOVETEMPLATES")
-            reload (defSettings.get());
+        if (auto defSettings = juce::parseXML (TracktionBinaryData::groove_templates_xml))
+            if (defSettings->getTagName() == "GROOVETEMPLATES")
+                reload (defSettings.get());
     }
 
     bool anyParameterized = false;
@@ -184,11 +183,10 @@ GrooveTemplateManager::GrooveTemplateManager (Engine& e)
     // load the new defaults..
     if (! anyParameterized)
     {
-        std::unique_ptr<XmlElement> defSettings (XmlDocument::parse (TracktionBinaryData::groove_templates_2_xml));
-
-        if (defSettings != nullptr && defSettings->hasTagName ("GROOVETEMPLATES"))
-            for (auto n : defSettings->getChildWithTagNameIterator (GrooveTemplate::grooveXmlTag))
-                knownGrooves.add (new GrooveTemplate (n));
+        if (auto defSettings = juce::parseXML (TracktionBinaryData::groove_templates_2_xml))
+            if (defSettings->hasTagName ("GROOVETEMPLATES"))
+                for (auto n : defSettings->getChildWithTagNameIterator (GrooveTemplate::grooveXmlTag))
+                    knownGrooves.add (new GrooveTemplate (n));
     }
 
     // Load even newer presets
@@ -201,10 +199,11 @@ GrooveTemplateManager::GrooveTemplateManager (Engine& e)
         return false;
     };
 
-    auto addGrooveIfNotExists = [this, &hasGroove] (String xmlString)
+    auto addGrooveIfNotExists = [this, &hasGroove] (juce::String xmlString)
     {
-        auto xml = XmlDocument::parse (xmlString);
+        auto xml = juce::parseXML (xmlString);
         auto gt = std::make_unique<GrooveTemplate> (xml.get());
+
         if (! hasGroove (*gt))
             knownGrooves.add (gt.release());
     };
@@ -266,7 +265,7 @@ int GrooveTemplateManager::getNumTemplates() const
     return activeGrooves.size();
 }
 
-String GrooveTemplateManager::getTemplateName (int index) const
+juce::String GrooveTemplateManager::getTemplateName (int index) const
 {
     if (auto gt = activeGrooves[index])
         return gt->getName();
@@ -279,7 +278,7 @@ const GrooveTemplate* GrooveTemplateManager::getTemplate (int index)
     return activeGrooves[index];
 }
 
-const GrooveTemplate* GrooveTemplateManager::getTemplateByName (const String& name)
+const GrooveTemplate* GrooveTemplateManager::getTemplateByName (const juce::String& name)
 {
     for (auto gt : activeGrooves)
         if (gt->getName() == name)
@@ -288,9 +287,9 @@ const GrooveTemplate* GrooveTemplateManager::getTemplateByName (const String& na
     return {};
 }
 
-StringArray GrooveTemplateManager::getTemplateNames() const
+juce::StringArray GrooveTemplateManager::getTemplateNames() const
 {
-    StringArray names;
+    juce::StringArray names;
 
     for (auto gt : activeGrooves)
         names.add (gt->getName());

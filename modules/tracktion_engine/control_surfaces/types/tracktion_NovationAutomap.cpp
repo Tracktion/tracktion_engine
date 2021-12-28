@@ -51,7 +51,7 @@ public:
     virtual void playChanged (bool) = 0;
     virtual void recordChanged (bool) = 0;
     virtual void timeChanged() = 0;
-    virtual void faderBankChanged (const StringArray& trackNames) = 0;
+    virtual void faderBankChanged (const juce::StringArray& trackNames) = 0;
     virtual void armChanged (int ch) = 0;
     virtual void updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState, bool isBright) = 0;
     virtual void select() = 0;
@@ -106,12 +106,13 @@ static bool fillInParamInfo (Automap::ParamInfo& data, int min, int max, int ste
     data.stepInteger = step;
 
     if (trackNum != -1)
-        String (String (folderPrefix ? "fldr" : String()) + String (trackNum) + ": " + name).copyToUTF8 (data.name, AUTOMAP_NAME_LENGTH);
+        (juce::String (folderPrefix ? "fldr" : juce::String()) + juce::String (trackNum) + ": " + name)
+            .copyToUTF8 (data.name, AUTOMAP_NAME_LENGTH);
 
     return true;
 }
 
-static bool fillInTrackParamInfo (Track* t, StringRef name, Automap::ParamInfo& data, int min, int max, int step, bool folderPrefix = false)
+static bool fillInTrackParamInfo (Track* t, juce::StringRef name, Automap::ParamInfo& data, int min, int max, int step, bool folderPrefix = false)
 {
     if (auto at = dynamic_cast<AudioTrack*> (t))
         return fillInParamInfo (data, min, max, step, name, at->getAudioTrackNumber());
@@ -440,7 +441,7 @@ public:
         }
     }
 
-    void faderBankChanged (const StringArray&) override
+    void faderBankChanged (const juce::StringArray&) override
     {
         CRASH_TRACER
 
@@ -825,10 +826,10 @@ public:
     }
 
     void updateSoloAndMute (int, Track::MuteAndSoloLightState, bool) override {}
-    void faderBankChanged (const StringArray&) override     {}
-    void armChanged (int) override                          {}
-    void select() override                                  { connection->SetAutoFocus(); }
-    Selectable* getSelectableObject() override              { return plugin.get(); }
+    void faderBankChanged (const juce::StringArray&) override   {}
+    void armChanged (int) override                              {}
+    void select() override                                      { connection->SetAutoFocus(); }
+    Selectable* getSelectableObject() override                  { return plugin.get(); }
 
 private:
     const Plugin::Ptr plugin;
@@ -861,7 +862,7 @@ NovationAutomap::NovationAutomap (ExternalControllerManager& ecm)  : ControlSurf
     mapPlugin = engine.getPropertyStorage().getProperty (SettingID::automapVst, false);
     mapNative = engine.getPropertyStorage().getProperty (SettingID::automapNative, false);
 
-    StringArray keys, values;
+    juce::StringArray keys, values;
 
     keys.addTokens (engine.getPropertyStorage().getProperty (SettingID::automapGuids1).toString(), ";", {});
     values.addTokens (engine.getPropertyStorage().getProperty (SettingID::automapGuids2).toString(), ";", {});
@@ -1101,7 +1102,7 @@ void NovationAutomap::recordStateChanged (bool isRecording)
 void NovationAutomap::automationReadModeChanged (bool)          {}
 void NovationAutomap::automationWriteModeChanged (bool)         {}
 
-void NovationAutomap::faderBankChanged (int, const StringArray& trackNames)
+void NovationAutomap::faderBankChanged (int, const juce::StringArray& trackNames)
 {
     if (hostAutomap != nullptr)
         hostAutomap->faderBankChanged (trackNames);

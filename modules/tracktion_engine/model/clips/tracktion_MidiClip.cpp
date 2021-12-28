@@ -168,7 +168,7 @@ void MidiClip::initialise()
 
         if (g == nullptr && grooveTree.getNumChildren() > 0)
         {
-            auto grooveXml = std::unique_ptr<XmlElement> (grooveTree.getChild (0).createXml());
+            auto grooveXml = grooveTree.getChild (0).createXml();
 
             GrooveTemplate gt (grooveXml.get());
 
@@ -221,7 +221,7 @@ void MidiClip::cloneFrom (Clip* c)
 }
 
 //==============================================================================
-String MidiClip::getSelectableDescription()
+juce::String MidiClip::getSelectableDescription()
 {
     return TRANS("MIDI Clip") + " - \"" + getName() + "\"";
 }
@@ -512,9 +512,9 @@ int MidiClip::getNumTakes (bool includeComps)
     return hasAnyTakes() ? getCompManager().getNumTakes() : 0;
 }
 
-StringArray MidiClip::getTakeDescriptions() const
+juce::StringArray MidiClip::getTakeDescriptions() const
 {
-    StringArray s;
+    juce::StringArray s;
     int numTakes = 0;
 
     if (midiCompManager != nullptr)
@@ -523,12 +523,12 @@ StringArray MidiClip::getTakeDescriptions() const
         {
             if (! midiCompManager->isTakeComp (i))
             {
-                s.add (String (i + 1) + ". " + TRANS("Take") + " #" + String (i + 1));
+                s.add (juce::String (i + 1) + ". " + TRANS("Take") + " #" + juce::String (i + 1));
                 ++numTakes;
             }
             else
             {
-                s.add (String (i + 1) + ". " + TRANS("Comp") + " #" + String (i + 1 - numTakes));
+                s.add (juce::String (i + 1) + ". " + TRANS("Comp") + " #" + juce::String (i + 1 - numTakes));
             }
         }
     }

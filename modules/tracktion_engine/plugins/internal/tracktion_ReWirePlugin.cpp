@@ -24,7 +24,7 @@ namespace tracktion_engine
 using namespace ReWire;
 
 //==============================================================================
-static String getReWireErrorMessage (ReWireError err)
+static juce::String getReWireErrorMessage (ReWireError err)
 {
     const char* e = "Unknown error";
 
@@ -81,7 +81,7 @@ const uint32 inputEventBufferSize = 200;
 class ReWireSystem::Device  : private Timer
 {
 public:
-    Device (Engine& e, TRWMDeviceHandle h, const String& name, int index)
+    Device (Engine& e, TRWMDeviceHandle h, const juce::String& name, int index)
       : engine (e),
         handle (h),
         deviceName (name),
@@ -535,9 +535,9 @@ public:
 
             if (containerEdit != nullptr && containerEdit->tempoSequence.getNumTempos() == 1)
             {
-                containerEdit->tempoSequence.getTimeSig(0)->setStringTimeSig (String (requestedTimeSigNum)
+                containerEdit->tempoSequence.getTimeSig(0)->setStringTimeSig (juce::String (requestedTimeSigNum)
                                                                                + "/"
-                                                                               + String (requestedTimeSigDenom));
+                                                                               + juce::String (requestedTimeSigDenom));
             }
 
             timeSigRequest = false;
@@ -720,8 +720,8 @@ public:
 
     Engine& engine;
     TRWMDeviceHandle handle;
-    String deviceName;
-    StringArray channelNames;
+    juce::String deviceName;
+    juce::StringArray channelNames;
 
 private:
     const int deviceIndex;
@@ -735,7 +735,7 @@ private:
     uint32 lastDriveAudioTime = 0;
     juce::AudioBuffer<float> buffer;
     short reWireToLocalChanMap[kReWireAudioChannelCount];
-    BigInteger bufferSourceChannels;
+    juce::BigInteger bufferSourceChannels;
 
     OwnedArray<ReWireMIDIEvent> storedMessages;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
@@ -919,7 +919,7 @@ bool ReWireSystem::closeSystem()
     return false;
 }
 
-ReWireSystem::Device* ReWireSystem::openDevice (const String& devName, String& error)
+ReWireSystem::Device* ReWireSystem::openDevice (const juce::String& devName, juce::String& error)
 {
     CRASH_TRACER
     jassert (isOpen);
@@ -952,7 +952,7 @@ ReWireSystem::Device* ReWireSystem::openDevice (const String& devName, String& e
     return {};
 }
 
-ReWireSystem::Device* ReWireSystem::createDevice (int index, const String& devName, String& error)
+ReWireSystem::Device* ReWireSystem::createDevice (int index, const juce::String& devName, juce::String& error)
 {
     CRASH_TRACER
     TRWMDeviceHandle handle = nullptr;
@@ -1077,7 +1077,8 @@ juce::String ReWirePlugin::getName()
     return TRANS("ReWire Device");
 }
 
-void ReWirePlugin::getChannelNames (StringArray* ins, StringArray* outs)
+void ReWirePlugin::getChannelNames (juce::StringArray* ins,
+                                    juce::StringArray* outs)
 {
     getLeftRightChannelNames (ins);
 
@@ -1132,7 +1133,7 @@ void ReWirePlugin::applyToBuffer (const PluginRenderContext& fc)
 }
 
 //==============================================================================
-juce::String ReWirePlugin::openDevice (const String& newDev)
+juce::String ReWirePlugin::openDevice (const juce::String& newDev)
 {
     CRASH_TRACER
     auto error = TRANS("ReWire is disabled");
@@ -1183,7 +1184,7 @@ juce::String ReWirePlugin::openDevice (const String& newDev)
 
 bool ReWirePlugin::updateBusesAndChannels()
 {
-    StringArray newBuses, newChannels;
+    juce::StringArray newBuses, newChannels;
     bool hasChanged = false;
 
     if (device != nullptr)
@@ -1211,12 +1212,12 @@ bool ReWirePlugin::updateBusesAndChannels()
 
                     if (err == kReWireError_NoError)
                     {
-                        String busName (CharPointer_UTF8 (eventBusInfo.fBusName));
+                        juce::String busName (CharPointer_UTF8 (eventBusInfo.fBusName));
 
                         if (busName.trim().isEmpty())
                             busName = "(" + TRANS("Unnamed") + ")";
 
-                        newBuses.add (String (i + 1) + ". " + busName);
+                        newBuses.add (juce::String (i + 1) + ". " + busName);
                     }
                 }
             }
@@ -1249,8 +1250,8 @@ bool ReWirePlugin::updateBusesAndChannels()
 
                     if (err == kReWireError_NoError)
                     {
-                        const String chanName (CharPointer_UTF8 (eventChannelInfo.fChannelName));
-                        newChannels.add (String (j + 1) + ". " + chanName);
+                        juce::String chanName (CharPointer_UTF8 (eventChannelInfo.fChannelName));
+                        newChannels.add (juce::String (j + 1) + ". " + chanName);
                     }
                 }
             }
@@ -1290,7 +1291,7 @@ void ReWirePlugin::openExternalUI()
     }
 }
 
-void ReWirePlugin::setLeftChannel (const String& channelName)
+void ReWirePlugin::setLeftChannel (const juce::String& channelName)
 {
     if (currentChannelNameL == channelName)
         return;
@@ -1301,7 +1302,7 @@ void ReWirePlugin::setLeftChannel (const String& channelName)
     TransportControl::restartAllTransports (engine, true);
 }
 
-void ReWirePlugin::setRightChannel (const String& channelName)
+void ReWirePlugin::setRightChannel (const juce::String& channelName)
 {
     if (currentChannelNameR == channelName)
         return;
@@ -1336,7 +1337,7 @@ void ReWirePlugin::setMidiChannel (int channel)
     }
 }
 
-bool ReWirePlugin::hasNameForMidiNoteNumber (int note, int midiChannel, String& name)
+bool ReWirePlugin::hasNameForMidiNoteNumber (int note, int midiChannel, juce::String& name)
 {
     if (device != nullptr)
     {
@@ -1365,7 +1366,7 @@ void ReWirePlugin::timerCallback()
         propertiesChanged();
 }
 
-StringArray ReWirePlugin::getDeviceChannelNames() const
+juce::StringArray ReWirePlugin::getDeviceChannelNames() const
 {
     return device->channelNames;
 }

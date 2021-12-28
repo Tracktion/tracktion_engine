@@ -14,12 +14,12 @@ namespace tracktion_engine
 DelayPlugin::DelayPlugin (PluginCreationInfo info) : Plugin (info)
 {
     feedbackDb    = addParam ("feedback", TRANS("Feedback"), { getMinDelayFeedbackDb(), 0.0f },
-                              [] (float value)       { return Decibels::toString (value); },
-                              [] (const String& s)   { return dbStringToDb (s); });
+                              [] (float value)              { return juce::Decibels::toString (value); },
+                              [] (const juce::String& s)    { return dbStringToDb (s); });
 
     mixProportion = addParam ("mix proportion", TRANS("Mix proportion"), { 0.0f, 1.0f },
-                              [] (float value)       { return String (roundToInt (value * 100.0f)) + "% wet"; },
-                              [] (const String& s)   { return s.getFloatValue() / 100.0f; });
+                              [] (float value)              { return juce::String (roundToInt (value * 100.0f)) + "% wet"; },
+                              [] (const juce::String& s)    { return s.getFloatValue() / 100.0f; });
 
     auto um = getUndoManager();
 

@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-ChordTrack::ChordTrack (Edit& ed, const ValueTree& v)  : ClipTrack (ed, v, 20, 13, 60)
+ChordTrack::ChordTrack (Edit& ed, const juce::ValueTree& v)  : ClipTrack (ed, v, 20, 13, 60)
 {
 }
 
@@ -20,7 +20,7 @@ ChordTrack::~ChordTrack()
     notifyListenersOfDeletion();
 }
 
-String ChordTrack::getTrackWarning() const
+juce::String ChordTrack::getTrackWarning() const
 {
     auto& clips = getClips();
 

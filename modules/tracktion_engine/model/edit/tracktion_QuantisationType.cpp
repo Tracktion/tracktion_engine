@@ -43,7 +43,7 @@ QuantisationType::QuantisationType()  : state (IDs::QUANTISATION)
     initialiseCachedValues (nullptr);
 }
 
-QuantisationType::QuantisationType (const ValueTree& vt, UndoManager* um)  : state (vt)
+QuantisationType::QuantisationType (const juce::ValueTree& vt, UndoManager* um)  : state (vt)
 {
     initialiseCachedValues (um);
 }
@@ -84,10 +84,10 @@ void QuantisationType::initialiseCachedValues (UndoManager* um)
 
 void QuantisationType::updateType()
 {
-    auto typeNameToIndex = [] (const String& newTypeName) -> int
+    auto typeNameToIndex = [] (const juce::String& newTypeName) -> int
     {
         int newType = 0;
-        const String targetFraction (newTypeName.retainCharacters ("0123456789/"));
+        auto targetFraction = newTypeName.retainCharacters ("0123456789/");
 
         for (int i = numElementsInArray (quantisationTypes); --i >= 0;)
             if (targetFraction == String (quantisationTypes[i].name).retainCharacters ("0123456789/"))
@@ -108,7 +108,7 @@ void QuantisationType::updateFraction()
         fractionOfBeat = 0.0;
 }
 
-String QuantisationType::getType (bool translated) const
+juce::String QuantisationType::getType (bool translated) const
 {
     if (typeIndex >= 0 && typeIndex < numElementsInArray (quantisationTypes))
         return translated ? TRANS(quantisationTypes[typeIndex].name)
@@ -194,9 +194,9 @@ double QuantisationType::roundTo (double time, double adjustment, const Edit& ed
                              : time + proportion * (s.beatsToTime (beats) - time);
 }
 
-StringArray QuantisationType::getAvailableQuantiseTypes (bool translated)
+juce::StringArray QuantisationType::getAvailableQuantiseTypes (bool translated)
 {
-    StringArray s;
+    juce::StringArray s;
 
     for (int i = 0; i < numElementsInArray (quantisationTypes); ++i)
         s.add (translated ? TRANS(quantisationTypes[i].name)
@@ -205,7 +205,7 @@ StringArray QuantisationType::getAvailableQuantiseTypes (bool translated)
     return s;
 }
 
-String QuantisationType::getDefaultType (bool translated)
+juce::String QuantisationType::getDefaultType (bool translated)
 {
     return translated ? TRANS(quantisationTypes[0].name)
                       : quantisationTypes[0].name;

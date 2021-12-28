@@ -26,7 +26,7 @@ void ArrangerClip::initialise()
     Clip::initialise();
 }
 
-String ArrangerClip::getSelectableDescription()
+juce::String ArrangerClip::getSelectableDescription()
 {
     return TRANS("Arranger Clip") + " - \"" + getName() + "\"";
 }

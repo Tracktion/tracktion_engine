@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-TimeSigSetting::TimeSigSetting (TempoSequence& ts, const ValueTree& v)
+TimeSigSetting::TimeSigSetting (TempoSequence& ts, const juce::ValueTree& v)
     : TrackItem (ts.edit, {}, Type::timeSig),
       state (v), ownerSequence (ts)
 {
@@ -32,17 +32,17 @@ TimeSigSetting::~TimeSigSetting()
     notifyListenersOfDeletion();
 }
 
-String TimeSigSetting::getSelectableDescription()
+juce::String TimeSigSetting::getSelectableDescription()
 {
     return TRANS("Time Signature");
 }
 
-String TimeSigSetting::getStringTimeSig() const
+juce::String TimeSigSetting::getStringTimeSig() const
 {
-    return String (numerator) + "/" + String (denominator);
+    return juce::String (numerator) + "/" + juce::String (denominator);
 }
 
-void TimeSigSetting::setStringTimeSig (const String& s)
+void TimeSigSetting::setStringTimeSig (const juce::String& s)
 {
     if (s.containsChar ('/'))
     {
@@ -73,7 +73,7 @@ ClipPosition TimeSigSetting::getPosition() const
     return { { s, s + 1.0 }, 0 };
 }
 
-String TimeSigSetting::getName()
+juce::String TimeSigSetting::getName()
 {
     return getStringTimeSig();
 }

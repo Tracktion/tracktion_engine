@@ -44,12 +44,12 @@ void ChordClip::initialise()
     speedRatio = 1.0; // not used
 }
 
-String ChordClip::getSelectableDescription()
+juce::String ChordClip::getSelectableDescription()
 {
     return TRANS("Chord Clip");
 }
 
-Colour ChordClip::getDefaultColour() const
+juce::Colour ChordClip::getDefaultColour() const
 {
     return Colours::red.withHue (1.0f / 9.0f);
 }

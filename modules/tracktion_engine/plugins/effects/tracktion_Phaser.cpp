@@ -110,7 +110,7 @@ void PhaserPlugin::applyToBuffer (const PluginRenderContext& fc)
     sweepFactor = swpFactor;
 }
 
-String PhaserPlugin::getSelectableDescription()
+juce::String PhaserPlugin::getSelectableDescription()
 {
     return TRANS("Phaser Plugin");
 }

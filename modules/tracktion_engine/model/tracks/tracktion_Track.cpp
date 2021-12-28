@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-Track::Track (Edit& ed, const ValueTree& v, double defaultHeight, double minHeight, double maxHeight)
+Track::Track (Edit& ed, const juce::ValueTree& v, double defaultHeight, double minHeight, double maxHeight)
     : EditItem (EditItemID::readOrCreateNewID (ed, v), ed),
       MacroParameterElement (ed, v), // TODO: @Dave - this dumps an XML element in every track, including tempo, marker, etc - is that needed?
       defaultTrackHeight (defaultHeight),
@@ -68,7 +68,7 @@ void Track::initialise()
             imageChanged = true;
     }
 
-    tagsArray = StringArray::fromTokens (tags.get().replace ("_", " "), "|", "\"");
+    tagsArray = juce::StringArray::fromTokens (tags.get().replace ("_", " "), "|", "\"");
 
     pluginList.setTrackAndClip (this, nullptr);
 
@@ -79,7 +79,7 @@ void Track::initialise()
     updateCachedParent();
 }
 
-void Track::setName (const String& n)
+void Track::setName (const juce::String& n)
 {
     auto newName = n.substring (0, 64);
 
@@ -333,7 +333,7 @@ Array<AutomatableParameter*> Track::getAllAutomatableParams() const
     return params;
 }
 
-static AutomatableParameter::Ptr findAutomatableParam (Edit& edit, EditItemID pluginID, const String& paramID)
+static AutomatableParameter::Ptr findAutomatableParam (Edit& edit, EditItemID pluginID, const juce::String& paramID)
 {
     if (pluginID.isValid() && paramID.isNotEmpty())
     {
@@ -410,7 +410,7 @@ void Track::hideAutomatableParametersForSource (EditItemID pluginOrParameterID)
     }
 }
 
-ValueTree Track::getParentTrackTree() const
+juce::ValueTree Track::getParentTrackTree() const
 {
     auto parent = state.getParent();
 
@@ -511,7 +511,7 @@ bool Track::canShowImage() const
     return isAudioTrack() || isFolderTrack();
 }
 
-void Track::setTrackImage (const String& idOrData)
+void Track::setTrackImage (const juce::String& idOrData)
 {
     if (canShowImage())
         imageIdOrData = idOrData;
@@ -523,7 +523,7 @@ bool Track::imageHasChanged()
     return imageChanged;
 }
 
-void Track::setTags (const StringArray& s)
+void Track::setTags (const juce::StringArray& s)
 {
     tags = s.joinIntoString ("|").replace (" ", "_");
 }
@@ -535,7 +535,7 @@ void Track::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
         if (i == IDs::tags)
         {
             tags.forceUpdateOfCachedValue();
-            tagsArray = StringArray::fromTokens (tags.get().replace ("_", " "), "|", "\"");
+            tagsArray = juce::StringArray::fromTokens (tags.get().replace ("_", " "), "|", "\"");
             changed();
         }
         else if (i == IDs::name)

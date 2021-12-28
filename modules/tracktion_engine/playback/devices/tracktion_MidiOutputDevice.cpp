@@ -258,7 +258,7 @@ private:
 };
 
 //==============================================================================
-MidiOutputDevice::MidiOutputDevice (Engine& e, const String& deviceName, int index)
+MidiOutputDevice::MidiOutputDevice (Engine& e, const juce::String& deviceName, int index)
     : OutputDevice (e, TRANS("MIDI Output"), deviceName),
       deviceIndex (index)
 {
@@ -315,7 +315,7 @@ void MidiOutputDevice::setEnabled (bool b)
     }
 }
 
-String MidiOutputDevice::prepareToPlay (Edit* edit, double)
+juce::String MidiOutputDevice::prepareToPlay (Edit* edit, double)
 {
     if (outputDevice == nullptr)
         return TRANS("Couldn't open the MIDI port");
@@ -366,7 +366,7 @@ bool MidiOutputDevice::getControllerOffMessagesSent (Engine& e)
     return e.getPropertyStorage().getProperty (SettingID::sendControllerOffMessages, true);
 }
 
-String MidiOutputDevice::getNameForMidiNoteNumber (int note, int midiChannel, bool useSharp) const
+juce::String MidiOutputDevice::getNameForMidiNoteNumber (int note, int midiChannel, bool useSharp) const
 {
     return midiChannel == 10 ? TRANS(MidiMessage::getRhythmInstrumentName (note))
                              : MidiMessage::getMidiNoteName (note, useSharp, true,
@@ -427,7 +427,7 @@ void MidiOutputDevice::saveProps()
     engine.getPropertyStorage().setXmlPropertyItem (SettingID::midiout, getName(), n);
 }
 
-String MidiOutputDevice::openDevice()
+juce::String MidiOutputDevice::openDevice()
 {
     if (isEnabled())
     {
@@ -571,7 +571,7 @@ void MidiOutputDevice::flipSendingTimecode()
     saveProps();
 }
 
-StringArray MidiOutputDevice::getProgramSets() const
+juce::StringArray MidiOutputDevice::getProgramSets() const
 {
     return getMidiProgramManager().getMidiProgramSetNames();
 }
@@ -581,7 +581,7 @@ int MidiOutputDevice::getCurrentSetIndex() const
     return getMidiProgramManager().getSetIndex (programNameSet);
 }
 
-void MidiOutputDevice::setCurrentProgramSet (const String& newSet)
+void MidiOutputDevice::setCurrentProgramSet (const juce::String& newSet)
 {
     if (programNameSet != newSet)
     {
@@ -591,7 +591,7 @@ void MidiOutputDevice::setCurrentProgramSet (const String& newSet)
     }
 }
 
-String MidiOutputDevice::getProgramName (int programNumber, int bank)
+juce::String MidiOutputDevice::getProgramName (int programNumber, int bank)
 {
     return getMidiProgramManager().getProgramName (getCurrentSetIndex(), bank, programNumber);
 }
@@ -606,7 +606,7 @@ bool MidiOutputDevice::canDeleteProgramSet (int index) const
     return getMidiProgramManager().canDeleteProgramSet (index);
 }
 
-String MidiOutputDevice::getBankName (int bank)
+juce::String MidiOutputDevice::getBankName (int bank)
 {
     return getMidiProgramManager().getBankName (getCurrentSetIndex(), bank);
 }
@@ -638,7 +638,7 @@ MidiOutputDeviceInstance::~MidiOutputDeviceInstance()
 {
 }
 
-String MidiOutputDeviceInstance::prepareToPlay (double, bool shouldSendMidiTC)
+juce::String MidiOutputDeviceInstance::prepareToPlay (double, bool shouldSendMidiTC)
 {
     if (getMidiOutput().outputDevice == nullptr)
         return TRANS("Couldn't open the MIDI port");

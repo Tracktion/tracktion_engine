@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-MacroParameter::Assignment::Assignment (const ValueTree& v, const MacroParameter& mp)
+MacroParameter::Assignment::Assignment (const juce::ValueTree& v, const MacroParameter& mp)
     : AutomatableParameter::ModifierAssignment (mp.edit, v),
       macroParamID (EditItemID::fromVar (mp.paramID))
 {
@@ -27,7 +27,7 @@ bool MacroParameter::Assignment::isForModifierSource (const AutomatableParameter
 }
 
 //==============================================================================
-MacroParameter::MacroParameter (AutomatableEditItem& automatable, Edit& e, const ValueTree& v)
+MacroParameter::MacroParameter (AutomatableEditItem& automatable, Edit& e, const juce::ValueTree& v)
     : AutomatableParameter (EditItemID::fromID (v).toString(),
                             EditItemID::fromID (v).toString(),
                             automatable, { 0.0f, 1.0f }),
@@ -78,7 +78,7 @@ MacroParameter::Ptr getMacroParameterForID (Edit& e, EditItemID pid)
 //==============================================================================
 struct MacroParameterList::List : public ValueTreeObjectList<MacroParameter>
 {
-    List (MacroParameterList& mpl, const ValueTree& v)
+    List (MacroParameterList& mpl, const juce::ValueTree& v)
         : ValueTreeObjectList<MacroParameter> (v),
           macroParameterList (mpl), edit (mpl.edit)
     {
@@ -159,7 +159,7 @@ private:
 };
 
 //==============================================================================
-MacroParameterList::MacroParameterList (Edit& e, const ValueTree& v)
+MacroParameterList::MacroParameterList (Edit& e, const juce::ValueTree& v)
     : AutomatableEditItem (e, v),
       state (v)
 {
@@ -261,7 +261,7 @@ Plugin::Ptr getOwnerPlugin (MacroParameterList* mpl)
 }
 
 //==============================================================================
-MacroParameterElement::MacroParameterElement (Edit& e, const ValueTree& v)
+MacroParameterElement::MacroParameterElement (Edit& e, const juce::ValueTree& v)
     : macroParameterList (e, ValueTree (v).getOrCreateChildWithName (IDs::MACROPARAMETERS, &e.getUndoManager()))
 {
 }

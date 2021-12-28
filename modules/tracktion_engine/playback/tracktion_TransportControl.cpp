@@ -861,7 +861,7 @@ Array<File> TransportControl::getRetrospectiveRecordAsAudioFiles()
 
                     auto f = dir.getNonexistentChildFile (File::createLegalFileName (mc->getName()), ".wav");
 
-                    BigInteger tracksToDo;
+                    juce::BigInteger tracksToDo;
                     int idx = 0;
                     for (auto t : getAllTracks (edit))
                     {

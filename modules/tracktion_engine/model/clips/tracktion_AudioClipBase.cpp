@@ -118,7 +118,7 @@ private:
     {
         CRASH_TRACER
 
-        AudioFile tempFile (engine, proxy.getFile().getSiblingFile ("temp_proxy_" + String::toHexString (Random().nextInt64()))
+        AudioFile tempFile (engine, proxy.getFile().getSiblingFile ("temp_proxy_" + juce::String::toHexString (Random().nextInt64()))
                             .withFileExtension (proxy.getFile().getFileExtension()));
 
         bool ok = render (tempFile);
@@ -340,7 +340,7 @@ void AudioClipBase::cloneFrom (Clip* c)
 
 void AudioClipBase::updateLeftRightChannelActivenessFlags()
 {
-    const String channelMask = channels;
+    juce::String channelMask = channels;
 
     if (channelMask.isEmpty())
         activeChannels = AudioChannelSet::disabled();
@@ -1227,9 +1227,9 @@ bool AudioClipBase::performTempoDetect()
     return true;
 }
 
-StringArray AudioClipBase::getRootNoteChoices (Engine& e)
+juce::StringArray AudioClipBase::getRootNoteChoices (Engine& e)
 {
-    StringArray s;
+    juce::StringArray s;
     s.add ("<" + TRANS("None") + ">");
 
     for (int i = 0; i < 12; ++i)
@@ -1238,9 +1238,9 @@ StringArray AudioClipBase::getRootNoteChoices (Engine& e)
     return s;
 }
 
-StringArray AudioClipBase::getPitchChoices()
+juce::StringArray AudioClipBase::getPitchChoices()
 {
-    StringArray s;
+    juce::StringArray s;
 
     const int numSemitones = isUsingMelodyne() ? 12 : 24;
 
@@ -1418,7 +1418,7 @@ bool AudioClipBase::canSnapToOriginalBWavTime()
 void AudioClipBase::snapToOriginalBWavTime()
 {
     auto f = getAudioFile();
-    const String bwavTime (f.getMetadata()[WavAudioFormat::bwavTimeReference]);
+    juce::String bwavTime (f.getMetadata()[WavAudioFormat::bwavTimeReference]);
 
     if (bwavTime.isNotEmpty())
     {
@@ -1513,7 +1513,7 @@ juce::Array<ProjectItemID> AudioClipBase::getTakes() const
 }
 
 //==============================================================================
-String AudioClipBase::canAddClipPlugin (const Plugin::Ptr& p) const
+juce::String AudioClipBase::canAddClipPlugin (const Plugin::Ptr& p) const
 {
     if (p != nullptr)
     {

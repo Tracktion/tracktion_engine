@@ -26,7 +26,7 @@ File getNonExistentSiblingWithIncrementedNumberSuffix (const File& file, bool ad
     {
         if (name[i] == '#' && foundDigit)
             foundHash = true;
-        else if (String ("0123456789").containsChar (name[i]))
+        else if (juce::String ("0123456789").containsChar (name[i]))
             foundDigit = true;
         else
             break;

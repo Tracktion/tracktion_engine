@@ -57,13 +57,13 @@ int StepClip::Channel::getIndex() const
     return state.getParent().indexOf (state);
 }
 
-String StepClip::Channel::getDisplayName() const
+juce::String StepClip::Channel::getDisplayName() const
 {
-    return name.get().isEmpty() ? String (getIndex() + 1) : name;
+    return name.get().isEmpty() ? juce::String (getIndex() + 1) : name;
 }
 
 //==============================================================================
-String StepClip::Channel::getSelectableDescription()
+juce::String StepClip::Channel::getSelectableDescription()
 {
     jassertfalse;
     return {};

@@ -21,8 +21,8 @@ StepClip::Pattern::Pattern (const Pattern& other) noexcept
 {
 }
 
-String StepClip::Pattern::getName() const               { return state[IDs::name]; }
-void StepClip::Pattern::setName (const String& name)    { state.setProperty (IDs::name, name, clip.getUndoManager()); }
+juce::String StepClip::Pattern::getName() const               { return state[IDs::name]; }
+void StepClip::Pattern::setName (const juce::String& name)    { state.setProperty (IDs::name, name, clip.getUndoManager()); }
 
 int StepClip::Pattern::getNumNotes() const              { return state[IDs::numNotes]; }
 void StepClip::Pattern::setNumNotes (int n)             { state.setProperty (IDs::numNotes, n, clip.getUndoManager()); }
@@ -30,14 +30,14 @@ void StepClip::Pattern::setNumNotes (int n)             { state.setProperty (IDs
 double StepClip::Pattern::getNoteLength() const         { return state[IDs::noteLength]; }
 void StepClip::Pattern::setNoteLength (double n)        { state.setProperty (IDs::noteLength, n, clip.getUndoManager()); }
 
-BigInteger StepClip::Pattern::getChannel (int channel) const
+juce::BigInteger StepClip::Pattern::getChannel (int channel) const
 {
-    BigInteger b;
+    juce::BigInteger b;
     b.parseString (state.getChild (channel)[IDs::pattern].toString(), 2);
     return b;
 }
 
-void StepClip::Pattern::setChannel (int channel, const BigInteger& c)
+void StepClip::Pattern::setChannel (int channel, const juce::BigInteger& c)
 {
     while (channel >= state.getNumChildren())
     {
@@ -53,7 +53,7 @@ void StepClip::Pattern::setChannel (int channel, const BigInteger& c)
 juce::Array<int> StepClip::Pattern::getVelocities (int channel) const
 {
     juce::Array<int> v;
-    auto sa = StringArray::fromTokens (state.getChild (channel)[IDs::velocities].toString(), false);
+    auto sa = juce::StringArray::fromTokens (state.getChild (channel)[IDs::velocities].toString(), false);
     v.ensureStorageAllocated (sa.size());
 
     for (auto& s : sa)
@@ -70,16 +70,16 @@ void StepClip::Pattern::setVelocities (int channel, const juce::Array<int>& va)
         return;
     }
 
-    StringArray sa;
+    juce::StringArray sa;
     sa.ensureStorageAllocated (va.size());
 
     for (int v : va)
-        sa.add (String (v));
+        sa.add (juce::String (v));
 
     state.getChild (channel).setProperty (IDs::velocities, sa.joinIntoString (" "), clip.getUndoManager());
 }
 
-static double parseFraction (const String& s)
+static double parseFraction (const juce::String& s)
 {
     const int splitIndex = s.indexOfChar ('/');
     const double num    = s.substring (0, splitIndex).getDoubleValue();
@@ -94,7 +94,7 @@ static double parseFraction (const String& s)
 juce::Array<double> StepClip::Pattern::getGates (int channel) const
 {
     juce::Array<double> v;
-    auto sa = StringArray::fromTokens (state.getChild (channel)[IDs::gates].toString(), false);
+    auto sa = juce::StringArray::fromTokens (state.getChild (channel)[IDs::gates].toString(), false);
     v.ensureStorageAllocated (sa.size());
 
     for (auto& s : sa)
@@ -116,11 +116,11 @@ void StepClip::Pattern::setGates (int channel, const juce::Array<double>& ga)
         return;
     }
 
-    StringArray sa;
+    juce::StringArray sa;
     sa.ensureStorageAllocated (ga.size());
 
     for (double g : ga)
-        sa.add (String (g));
+        sa.add (juce::String (g));
 
     state.getChild (channel).setProperty (IDs::gates, sa.joinIntoString (" "), clip.getUndoManager());
 }
@@ -128,11 +128,11 @@ void StepClip::Pattern::setGates (int channel, const juce::Array<double>& ga)
 juce::Array<float> StepClip::Pattern::getProbabilities (int channel) const
 {
     juce::Array<float> v;
-    auto pa = StringArray::fromTokens (state.getChild (channel)[IDs::probabilities].toString(), false);
+    auto pa = juce::StringArray::fromTokens (state.getChild (channel)[IDs::probabilities].toString(), false);
     v.ensureStorageAllocated (pa.size());
 
     for (auto& p : pa)
-            v.add (p.getFloatValue());
+        v.add (p.getFloatValue());
 
     return v;
 }
@@ -145,11 +145,11 @@ void StepClip::Pattern::setProbabilities (int channel, const juce::Array<float>&
         return;
     }
 
-    StringArray sa;
+    juce::StringArray sa;
     sa.ensureStorageAllocated (pa.size());
 
     for (double p : pa)
-        sa.add (String (p));
+        sa.add (juce::String (p));
 
     state.getChild (channel).setProperty (IDs::probabilities, sa.joinIntoString (" "), clip.getUndoManager());
 }
@@ -165,7 +165,7 @@ void StepClip::Pattern::setNote (int channel, int index, bool value)
           && isPositiveAndBelow (index, getNumNotes())
           && isPositiveAndBelow (channel, (int) maxNumChannels))
     {
-        BigInteger b (getChannel (channel));
+        juce::BigInteger b (getChannel (channel));
         b.setBit (index, value);
         setChannel (channel, b);
 
@@ -280,7 +280,7 @@ void StepClip::Pattern::clear()
 
 void StepClip::Pattern::clearChannel (int channel)
 {
-    setChannel (channel, BigInteger());
+    setChannel (channel, juce::BigInteger());
 }
 
 void StepClip::Pattern::insertChannel (int channel)
@@ -309,7 +309,7 @@ void StepClip::Pattern::randomiseSteps()
     const int numSteps = getNumNotes();
 
     juce::Array<BigInteger> chans;
-    chans.insertMultiple (0, BigInteger(), numChannels);
+    chans.insertMultiple (0, juce::BigInteger(), numChannels);
 
     for (int i = 0; i < numSteps; ++i)
         chans.getReference (r.nextInt (numChannels)).setBit (i);
@@ -320,7 +320,7 @@ void StepClip::Pattern::randomiseSteps()
 
 void StepClip::Pattern::shiftChannel (int channel, bool toTheRight)
 {
-    BigInteger c (getChannel (channel));
+    juce::BigInteger c (getChannel (channel));
 
     // NB: Notes are added in reverse order
     if (toTheRight)
@@ -333,7 +333,7 @@ void StepClip::Pattern::shiftChannel (int channel, bool toTheRight)
 
 void StepClip::Pattern::toggleAtInterval (int channel, int interval)
 {
-    BigInteger c = getChannel (channel);
+    juce::BigInteger c = getChannel (channel);
 
     for (int i = 0; i < getNumNotes(); ++i)
         c.setBit (i, (i % interval) == 0);
@@ -398,7 +398,7 @@ int StepClip::PatternInstance::getSequenceIndex() const
     return clip.getPatternSequence().indexOf (this);
 }
 
-String StepClip::PatternInstance::getSelectableDescription()
+juce::String StepClip::PatternInstance::getSelectableDescription()
 {
     return clip.getName() + "  -  "
          + TRANS("Variation 123").replace ("123", String (getSequenceIndex() + 1)) + " ("

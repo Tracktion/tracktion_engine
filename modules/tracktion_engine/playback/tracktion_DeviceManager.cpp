@@ -19,15 +19,15 @@ namespace tracktion_engine
  #define TRACKTION_LOG_DEVICE(text)
 #endif
 
-static String mergeTwoNames (const String& s1, const String& s2)
+static String mergeTwoNames (const juce::String& s1, const juce::String& s2)
 {
     String nm;
 
-    const String bracketed1 (s1.fromLastOccurrenceOf ("(", false, false)
-                               .upToFirstOccurrenceOf (")", false, false).trim());
+    auto bracketed1 = s1.fromLastOccurrenceOf ("(", false, false)
+                        .upToFirstOccurrenceOf (")", false, false).trim();
 
-    const String bracketed2 (s2.fromLastOccurrenceOf ("(", false, false)
-                               .upToFirstOccurrenceOf (")", false, false).trim());
+    auto bracketed2 = s2.fromLastOccurrenceOf ("(", false, false)
+                        .upToFirstOccurrenceOf (")", false, false).trim();
 
     if ((! (bracketed1.isEmpty() || bracketed2.isEmpty()))
         && s1.endsWithChar (')') && s2.endsWithChar (')')
@@ -69,9 +69,9 @@ static String mergeTwoNames (const String& s1, const String& s2)
     return nm;
 }
 
-static StringArray getMidiDeviceNames (juce::Array<juce::MidiDeviceInfo> devices)
+static juce::StringArray getMidiDeviceNames (juce::Array<juce::MidiDeviceInfo> devices)
 {
-    StringArray deviceNames;
+    juce::StringArray deviceNames;
 
     for (auto& d : devices)
         deviceNames.add (d.name);
@@ -105,11 +105,11 @@ struct DeviceManager::WaveDeviceList
 
     void describeStandardDevices (std::vector<WaveDeviceDescription>& descriptions, juce::AudioIODevice& device, bool isInput)
     {
-        StringArray channelNames (isInput ? device.getInputChannelNames() : device.getOutputChannelNames());
+        juce::StringArray channelNames (isInput ? device.getInputChannelNames() : device.getOutputChannelNames());
 
         if (channelNames.size() == 2)
         {
-            const String name (isInput ? TRANS("Input 123") : TRANS("Output 123"));
+            juce::String name (isInput ? TRANS("Input 123") : TRANS("Output 123"));
             channelNames.set (0, name.replace ("123", "1"));
             channelNames.set (1, name.replace ("123", "2"));
         }
@@ -239,25 +239,25 @@ void DeviceManager::removeHostedAudioDeviceInterface()
     hostedAudioDeviceInterface.reset();
 }
 
-String DeviceManager::getDefaultAudioOutDeviceName (bool translated)
+juce::String DeviceManager::getDefaultAudioOutDeviceName (bool translated)
 {
     return translated ? ("(" + TRANS("Default audio output") + ")")
                       : "(default audio output)";
 }
 
-String DeviceManager::getDefaultMidiOutDeviceName (bool translated)
+juce::String DeviceManager::getDefaultMidiOutDeviceName (bool translated)
 {
     return translated ? ("(" + TRANS("Default MIDI output") + ")")
                       : "(default MIDI output)";
 }
 
-String DeviceManager::getDefaultAudioInDeviceName (bool translated)
+juce::String DeviceManager::getDefaultAudioInDeviceName (bool translated)
 {
     return translated ? ("(" + TRANS("Default audio input") + ")")
                       : "(default audio input)";
 }
 
-String DeviceManager::getDefaultMidiInDeviceName (bool translated)
+juce::String DeviceManager::getDefaultMidiInDeviceName (bool translated)
 {
     return translated ? ("(" + TRANS("Default MIDI input") + ")")
                       : "(default MIDI input)";
@@ -339,7 +339,7 @@ void DeviceManager::initialiseMidi()
         midiOutputs.add (new SoftwareMidiOutputDevice (engine, "Tracktion MIDI Device"));
    #endif
 
-    StringArray virtualDevices;
+    juce::StringArray virtualDevices;
     virtualDevices.addTokens (storage.getProperty (SettingID::virtualmididevices).toString(), ";", {});
     virtualDevices.removeEmptyStrings();
 
@@ -486,13 +486,13 @@ void DeviceManager::resetToDefaults (bool deviceSettings, bool resetInputDevices
     SelectionManager::refreshAllPropertyPanels();
 }
 
-Result DeviceManager::createVirtualMidiDevice (const String& name)
+Result DeviceManager::createVirtualMidiDevice (const juce::String& name)
 {
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
 
     {
-        StringArray virtualDevices;
+        juce::StringArray virtualDevices;
         virtualDevices.addTokens (engine.getPropertyStorage().getProperty (SettingID::virtualmididevices).toString(), ";", {});
         virtualDevices.removeEmptyStrings();
 
@@ -703,7 +703,7 @@ void DeviceManager::saveSettings()
 {
     auto& storage = engine.getPropertyStorage();
 
-    if (auto audioXml = std::unique_ptr<XmlElement> (deviceManager.createStateXml()))
+    if (auto audioXml = deviceManager.createStateXml())
         storage.setXmlProperty (SettingID::audio_device_setup, *audioXml);
 
     if (! engine.getEngineBehaviour().isDescriptionOfWaveDevicesSupported())
@@ -1007,7 +1007,7 @@ OutputDevice* DeviceManager::getOutputDeviceAt (int index) const
     return getWaveOutDevice (index);
 }
 
-OutputDevice* DeviceManager::findOutputDeviceForID (const String& id) const
+OutputDevice* DeviceManager::findOutputDeviceForID (const juce::String& id) const
 {
     for (auto d : waveOutputs)
         if (d->getDeviceID() == id)
@@ -1020,7 +1020,7 @@ OutputDevice* DeviceManager::findOutputDeviceForID (const String& id) const
     return {};
 }
 
-OutputDevice* DeviceManager::findOutputDeviceWithName (const String& name) const
+OutputDevice* DeviceManager::findOutputDeviceWithName (const juce::String& name) const
 {
     if (name == getDefaultAudioOutDeviceName (false))     return getDefaultWaveOutDevice();
     if (name == getDefaultMidiOutDeviceName (false))      return getDefaultMidiOutDevice();

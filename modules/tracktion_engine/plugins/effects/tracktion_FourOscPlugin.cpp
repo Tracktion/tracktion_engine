@@ -757,7 +757,7 @@ FourOscPlugin::OscParams::OscParams (FourOscPlugin& plugin, int oscNum)
 
     auto oscID = [] (Identifier i, int num)
     {
-        return Identifier (i.toString() + String (num));
+        return Identifier (i.toString() + juce::String (num));
     };
 
     waveShapeValue.referTo (plugin.state, oscID (IDs::waveShape, oscNum), um, oscNum == 1 ? 1 : 0);
@@ -772,16 +772,16 @@ FourOscPlugin::OscParams::OscParams (FourOscPlugin& plugin, int oscNum)
 
     auto paramID = [] (Identifier i, int num)
     {
-        return Identifier (i.toString() + String (num)).toString();
+        return Identifier (i.toString() + juce::String (num)).toString();
     };
 
-    tune        = plugin.addParam (paramID (IDs::tune, oscNum), TRANS("Tune") + " " + String (oscNum), {-36.0f, 36.0f, 1.0f}, "st");
-    fineTune    = plugin.addParam (paramID (IDs::fineTune, oscNum), TRANS("Fine Tune") + " " + String (oscNum), {-100.0f, 100.0f});
-    level       = plugin.addParam (paramID (IDs::level, oscNum), TRANS("Level") + " " + String (oscNum), {-100.0f, 0.0f, 0.0f, 4.0f}, "dB");
-    pulseWidth  = plugin.addParam (paramID (IDs::pulseWidth, oscNum), TRANS("Pulse Width") + " " + String (oscNum), {0.01f, 0.99f});
-    detune      = plugin.addParam (paramID (IDs::detune, oscNum), TRANS("Detune") + " " + String (oscNum), {0.0f, 0.5f});
-    spread      = plugin.addParam (paramID (IDs::spread, oscNum), TRANS("Spread") + " " + String (oscNum), {-100.0f, 100.0f}, "%");
-    pan         = plugin.addParam (paramID (IDs::pan, oscNum), TRANS("Pan") + " " + String (oscNum), {-1.0f, 1.0f});
+    tune        = plugin.addParam (paramID (IDs::tune, oscNum), TRANS("Tune") + " " + juce::String (oscNum), {-36.0f, 36.0f, 1.0f}, "st");
+    fineTune    = plugin.addParam (paramID (IDs::fineTune, oscNum), TRANS("Fine Tune") + " " + juce::String (oscNum), {-100.0f, 100.0f});
+    level       = plugin.addParam (paramID (IDs::level, oscNum), TRANS("Level") + " " + juce::String (oscNum), {-100.0f, 0.0f, 0.0f, 4.0f}, "dB");
+    pulseWidth  = plugin.addParam (paramID (IDs::pulseWidth, oscNum), TRANS("Pulse Width") + " " + juce::String (oscNum), {0.01f, 0.99f});
+    detune      = plugin.addParam (paramID (IDs::detune, oscNum), TRANS("Detune") + " " + juce::String (oscNum), {0.0f, 0.5f});
+    spread      = plugin.addParam (paramID (IDs::spread, oscNum), TRANS("Spread") + " " + juce::String (oscNum), {-100.0f, 100.0f}, "%");
+    pan         = plugin.addParam (paramID (IDs::pan, oscNum), TRANS("Pan") + " " + juce::String (oscNum), {-1.0f, 1.0f});
 }
 
 void FourOscPlugin::OscParams::attach()
@@ -813,7 +813,7 @@ FourOscPlugin::LFOParams::LFOParams (FourOscPlugin& plugin, int lfoNum)
 
     auto lfoID = [] (Identifier i, int num)
     {
-        return Identifier (i.toString() + String (num));
+        return Identifier (i.toString() + juce::String (num));
     };
 
     waveShapeValue.referTo (plugin.state, lfoID (IDs::lfoWaveShape, lfoNum), um, lfoNum == 1 ? 1 : 0);
@@ -824,11 +824,11 @@ FourOscPlugin::LFOParams::LFOParams (FourOscPlugin& plugin, int lfoNum)
 
     auto paramID = [] (Identifier i, int num)
     {
-        return Identifier (i.toString() + String (num)).toString();
+        return Identifier (i.toString() + juce::String (num)).toString();
     };
 
-    rate        = plugin.addParam (paramID (IDs::lfoRate, lfoNum),  TRANS("Rate") + " " + String (lfoNum), {0.0f, 500.0f, 0.0f, 0.3f}, "Hz");
-    depth       = plugin.addParam (paramID (IDs::lfoDepth, lfoNum), TRANS("Depth") + " " + String (lfoNum), {0.0f, 1.0f});
+    rate        = plugin.addParam (paramID (IDs::lfoRate, lfoNum),  TRANS("Rate") + " " + juce::String (lfoNum), {0.0f, 500.0f, 0.0f, 0.3f}, "Hz");
+    depth       = plugin.addParam (paramID (IDs::lfoDepth, lfoNum), TRANS("Depth") + " " + juce::String (lfoNum), {0.0f, 1.0f});
 }
 
 void FourOscPlugin::LFOParams::attach()
@@ -850,7 +850,7 @@ FourOscPlugin::MODEnvParams::MODEnvParams (FourOscPlugin& plugin, int modNum)
 
     auto modID = [] (Identifier i, int num)
     {
-        return Identifier (i.toString() + String (num));
+        return Identifier (i.toString() + juce::String (num));
     };
 
     modAttackValue.referTo (plugin.state, modID (IDs::modAttack, modNum), um, 0.1f);
@@ -860,13 +860,13 @@ FourOscPlugin::MODEnvParams::MODEnvParams (FourOscPlugin& plugin, int modNum)
 
     auto paramID = [] (Identifier i, int num)
     {
-        return Identifier (i.toString() + String (num)).toString();
+        return Identifier (i.toString() + juce::String (num)).toString();
     };
 
-    modAttack   = plugin.addParam (paramID (IDs::modAttack, modNum),  TRANS("Mod Attack") + " " + String (modNum),  {0.0f, 60.0f, 0.0f, 0.2f});
-    modDecay    = plugin.addParam (paramID (IDs::modDecay, modNum),   TRANS("Mod Decay") + " " + String (modNum),   {0.0f, 60.0f, 0.0f, 0.2f});
-    modSustain  = plugin.addParam (paramID (IDs::modSustain, modNum), TRANS("Mod Sustain") + " " + String (modNum), {0.0f,   100.0f}, "%");
-    modRelease  = plugin.addParam (paramID (IDs::modRelease, modNum), TRANS("Mod Release") + " " + String (modNum), {0.001f, 60.0f, 0.0f, 0.2f});
+    modAttack   = plugin.addParam (paramID (IDs::modAttack, modNum),  TRANS("Mod Attack")  + " " + juce::String (modNum), {0.0f, 60.0f, 0.0f, 0.2f});
+    modDecay    = plugin.addParam (paramID (IDs::modDecay, modNum),   TRANS("Mod Decay")   + " " + juce::String (modNum), {0.0f, 60.0f, 0.0f, 0.2f});
+    modSustain  = plugin.addParam (paramID (IDs::modSustain, modNum), TRANS("Mod Sustain") + " " + juce::String (modNum), {0.0f, 100.0f}, "%");
+    modRelease  = plugin.addParam (paramID (IDs::modRelease, modNum), TRANS("Mod Release") + " " + juce::String (modNum), {0.001f, 60.0f, 0.0f, 0.2f});
 }
 
 void FourOscPlugin::MODEnvParams::attach()
@@ -1182,7 +1182,7 @@ void FourOscPlugin::setupTextFunctions()
     auto freqValueToTextFunction = [] (float value)
     {
         float freq = 440.0f * std::pow (2.0f, (value - 69) / 12.0f);
-        return String (roundToInt (freq)) + "Hz";
+        return juce::String (roundToInt (freq)) + "Hz";
     };
 
     auto textToFreqValueFunction = [] (juce::String text)
@@ -1575,7 +1575,7 @@ void FourOscPlugin::updateParams (AudioSampleBuffer& buffer)
 }
 
 //==============================================================================
-void FourOscPlugin::restorePluginStateFromValueTree (const ValueTree& v)
+void FourOscPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
     juce::CachedValue<float>* cvsFloat[]  = { &ampAttackValue, &ampDecayValue, &ampSustainValue, &ampReleaseValue, &ampVelocityValue,
         &filterAttackValue, &filterDecayValue, &filterSustainValue, &filterReleaseValue, &filterFreqValue, &filterResonanceValue,
@@ -1607,6 +1607,7 @@ void FourOscPlugin::restorePluginStateFromValueTree (const ValueTree& v)
         state.removeChild (mm, um);
 
     mm = v.getChildWithName (IDs::MODMATRIX);
+    
     if (mm.isValid())
         state.addChild (mm.createCopy(), -1, um);
 
@@ -1636,10 +1637,12 @@ juce::String FourOscPlugin::modulationSourceToName (ModSource src)
         {
             if (src >= ccBankSelect && src <= ccPolyMode)
             {
-                auto prefix = String ("CC#") + String ((int)(src - ccBankSelect));
-                auto name = String (juce::MidiMessage::getControllerName (src - ccBankSelect));
+                auto prefix = juce::String ("CC#") + juce::String ((int)(src - ccBankSelect));
+                auto name = juce::String (juce::MidiMessage::getControllerName (src - ccBankSelect));
+
                 if (name.isEmpty())
                     return prefix;
+
                 return prefix + " " + name;
             }
 

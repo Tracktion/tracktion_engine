@@ -64,7 +64,7 @@ static const char* datePattern     = "%date%";
 static const char* timePattern     = "%time%";
 static const char* takePattern     = "%take%";
 
-static String expandPatterns (Edit& ed, const String& s, Track* track, int take)
+static String expandPatterns (Edit& ed, const juce::String& s, Track* track, int take)
 {
     String editName (TRANS("Unknown"));
     String trackName (TRANS("Unknown"));
@@ -1167,9 +1167,9 @@ WaveInputDevice::~WaveInputDevice()
     closeDevice();
 }
 
-StringArray WaveInputDevice::getMergeModes()
+juce::StringArray WaveInputDevice::getMergeModes()
 {
-    StringArray s;
+    juce::StringArray s;
     s.add (TRANS("Overlay newly recorded clips onto edit"));
     s.add (TRANS("Replace old clips in edit with new ones"));
     s.add (TRANS("Don't make recordings from this device"));
@@ -1177,9 +1177,9 @@ StringArray WaveInputDevice::getMergeModes()
     return s;
 }
 
-StringArray WaveInputDevice::getRecordFormatNames()
+juce::StringArray WaveInputDevice::getRecordFormatNames()
 {
-    StringArray s;
+    juce::StringArray s;
 
     auto& afm = engine.getAudioFileFormatManager();
     s.add (afm.getWavFormat()->getFormatName());
@@ -1200,7 +1200,7 @@ InputDeviceInstance* WaveInputDevice::createInstance (EditPlaybackContext& ed)
 
 void WaveInputDevice::resetToDefault()
 {
-    const String propName = isTrackDevice() ? "TRACKTION_TRACK_DEVICE" : getName();
+    juce::String propName = isTrackDevice() ? "TRACKTION_TRACK_DEVICE" : getName();
     engine.getPropertyStorage().removePropertyItem (SettingID::wavein, propName);
     loadProps();
 }
@@ -1225,7 +1225,7 @@ void WaveInputDevice::setEnabled (bool b)
     }
 }
 
-String WaveInputDevice::openDevice()
+juce::String WaveInputDevice::openDevice()
 {
     return {};
 }
@@ -1247,7 +1247,7 @@ void WaveInputDevice::loadProps()
     bitDepth = 24;
     recordAdjustMs = 0;
 
-    const String propName = isTrackDevice() ? "TRACKTION_TRACK_DEVICE" : getName();
+    juce::String propName = isTrackDevice() ? "TRACKTION_TRACK_DEVICE" : getName();
 
     if (auto n = engine.getPropertyStorage().getXmlPropertyItem (SettingID::wavein, propName))
     {
@@ -1284,13 +1284,13 @@ void WaveInputDevice::saveProps()
     n.setAttribute ("mode", mergeMode);
     n.setAttribute ("adjustMs", recordAdjustMs);
 
-    const String propName = isTrackDevice() ? "TRACKTION_TRACK_DEVICE" : getName();
+    juce::String propName = isTrackDevice() ? "TRACKTION_TRACK_DEVICE" : getName();
 
     engine.getPropertyStorage().setXmlPropertyItem (SettingID::wavein, propName, n);
 }
 
 //==============================================================================
-String WaveInputDevice::getSelectableDescription()
+juce::String WaveInputDevice::getSelectableDescription()
 {
     if (getDeviceType() == trackWaveDevice)
         return getAlias() + " (" + getType() + ")";
@@ -1362,7 +1362,7 @@ void WaveInputDevice::setRecordTriggerDb (float newDB)
     }
 }
 
-String WaveInputDevice::getDefaultMask()
+juce::String WaveInputDevice::getDefaultMask()
 {
     String defaultFile;
     defaultFile << projDirPattern << File::getSeparatorChar() << editPattern << '_'
@@ -1371,7 +1371,7 @@ String WaveInputDevice::getDefaultMask()
     return defaultFile;
 }
 
-void WaveInputDevice::setFilenameMask (const String& newMask)
+void WaveInputDevice::setFilenameMask (const juce::String& newMask)
 {
     if (filenameMask != newMask)
     {
@@ -1414,7 +1414,7 @@ AudioFormat* WaveInputDevice::getFormatToUse() const
     return engine.getAudioFileFormatManager().getNamedFormat (outputFormat);
 }
 
-void WaveInputDevice::setOutputFormat (const String& newFormat)
+void WaveInputDevice::setOutputFormat (const juce::String& newFormat)
 {
     if (outputFormat != newFormat)
     {
@@ -1425,12 +1425,12 @@ void WaveInputDevice::setOutputFormat (const String& newFormat)
     }
 }
 
-String WaveInputDevice::getMergeMode() const
+juce::String WaveInputDevice::getMergeMode() const
 {
     return getMergeModes() [mergeMode];
 }
 
-void WaveInputDevice::setMergeMode (const String& newMode)
+void WaveInputDevice::setMergeMode (const juce::String& newMode)
 {
     int newIndex = getMergeModes().indexOf (newMode);
 

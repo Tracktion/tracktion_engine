@@ -79,7 +79,7 @@ public:
         If you want to support scanning out of process, the allowing should be added
         to you JUCEApplication::initialise() function:
 
-        void initialise (const String& commandLine) override
+        void initialise (const juce::String& commandLine) override
         {
             if (PluginManager::startChildProcessPluginScan (commandLine))
                 return;

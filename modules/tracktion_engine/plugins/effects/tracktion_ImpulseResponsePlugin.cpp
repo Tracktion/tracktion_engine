@@ -35,23 +35,23 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
 
     // Initialises parameter and attaches to value
     gainParam = addParam (IDs::gain.toString(), TRANS ("Gain"), volumeRange,
-                          [] (float value)       { return juce::Decibels::toString (value); },
-                          [] (const String& s)   { return s.getFloatValue(); });
+                          [] (float value)             { return juce::Decibels::toString (value); },
+                          [] (const juce::String& s)   { return s.getFloatValue(); });
     gainParam->attachToCurrentValue (gainValue);
 
     highPassCutoffParam = addParam (IDs::highPassMidiNoteNumber.toString(), TRANS ("Low Cut"), frequencyRange,
-                                    [] (float value)       { return String (midiNoteToFrequency (value), 1) + " Hz"; },
-                                    [] (const String& s)   { return frequencyToMidiNote (s.getFloatValue()); });
+                                    [] (float value)             { return juce::String (midiNoteToFrequency (value), 1) + " Hz"; },
+                                    [] (const juce::String& s)   { return frequencyToMidiNote (s.getFloatValue()); });
     highPassCutoffParam->attachToCurrentValue (highPassCutoffValue);
 
     lowPassCutoffParam =  addParam (IDs::lowPassMidiNoteNumber.toString(), TRANS ("High Cut"), frequencyRange,
-                                    [] (float value)       { return String (midiNoteToFrequency (value), 1) + " Hz"; },
-                                    [] (const String& s)   { return frequencyToMidiNote (s.getFloatValue()); });
+                                    [] (float value)             { return juce::String (midiNoteToFrequency (value), 1) + " Hz"; },
+                                    [] (const juce::String& s)   { return frequencyToMidiNote (s.getFloatValue()); });
     lowPassCutoffParam->attachToCurrentValue (lowPassCutoffValue);
 
     mixParam = addParam (IDs::mix.toString(), TRANS("Mix"), { 0.0f, 1.0f, 0.0f },
-                         [] (float value)       { return String (roundToInt (value * 100.0f)) + "%"; },
-                         [] (const String& s)   { return s.getFloatValue() / 100.0f; });
+                         [] (float value)             { return juce::String (roundToInt (value * 100.0f)) + "%"; },
+                         [] (const juce::String& s)   { return s.getFloatValue() / 100.0f; });
     mixParam->attachToCurrentValue (mixValue);
 
     loadImpulseResponseFromState();

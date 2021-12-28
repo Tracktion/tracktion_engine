@@ -62,7 +62,7 @@ void MackieMCU::indicesChanged()
 }
 
 //==============================================================================
-void MackieMCU::setDisplay (int devIdx, const String& text, int pos)
+void MackieMCU::setDisplay (int devIdx, const juce::String& text, int pos)
 {
     CRASH_TRACER
 
@@ -90,13 +90,13 @@ void MackieMCU::clearDisplaySegment (int devIdx, int column, int row)
     setDisplaySegment (devIdx, column, row, "      ");
 }
 
-void MackieMCU::setDisplaySegment (int devIdx, int column, int row, const String& text)
+void MackieMCU::setDisplaySegment (int devIdx, int column, int row, const juce::String& text)
 {
     CRASH_TRACER
     setDisplay (devIdx, text.substring (0, 6).paddedRight (' ', 6), column * 7 + row * 56);
 }
 
-void MackieMCU::centreDisplaySegment (int devIdx, int column, int row, const String& text)
+void MackieMCU::centreDisplaySegment (int devIdx, int column, int row, const juce::String& text)
 {
     setDisplaySegment (devIdx, column, row, String::repeatedString (" ", (6 - text.length()) / 2) + text);
 }
@@ -279,7 +279,7 @@ void MackieMCU::cpuTimerCallback()
     if (cpuVisible)
     {
         auto cpuPercent = roundToInt (engine.getDeviceManager().getCpuUsage() * 100.0f);
-        setAssignmentText (String (jlimit (0, 99, cpuPercent)).paddedLeft ('0', 2));
+        setAssignmentText (juce::String (jlimit (0, 99, cpuPercent)).paddedLeft ('0', 2));
     }
 }
 
@@ -951,7 +951,7 @@ static uint8 convertCharToMCUCode (juce_wchar c) noexcept
     return 0x20;
 }
 
-void MackieMCU::setAssignmentText (const String& text)
+void MackieMCU::setAssignmentText (const juce::String& text)
 {
     sendMidiCommandToController (deviceIdx, 0xb0, 0x4b, convertCharToMCUCode (text[0]));
     sendMidiCommandToController (deviceIdx, 0xb0, 0x4a, convertCharToMCUCode (text[1]));
@@ -1244,7 +1244,7 @@ void MackieMCU::clearParameter (int parameterNumber_)
     }
 }
 
-void MackieMCU::faderBankChanged (int newStartChannelNumber, const StringArray& trackNames)
+void MackieMCU::faderBankChanged (int newStartChannelNumber, const juce::StringArray& trackNames)
 {
     if (assignmentMode == PanMode || assignmentMode == AuxMode)
     {

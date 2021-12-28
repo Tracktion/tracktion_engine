@@ -69,7 +69,8 @@ const char* PatchBayPlugin::xmlTypeName = "patchbay";
 int PatchBayPlugin::getNumWires() const                           { return list->objects.size(); }
 PatchBayPlugin::Wire* PatchBayPlugin::getWire (int index) const   { return list->objects[index]; }
 
-void PatchBayPlugin::getChannelNames (StringArray* ins, StringArray* outs)
+void PatchBayPlugin::getChannelNames (juce::StringArray* ins,
+                                      juce::StringArray* outs)
 {
     if (ins != nullptr)
     {
@@ -77,7 +78,7 @@ void PatchBayPlugin::getChannelNames (StringArray* ins, StringArray* outs)
 
         if (inputPlugin != nullptr && ! recursionCheck)
         {
-            StringArray out;
+            juce::StringArray out;
             recursionCheck = true;
             inputPlugin->getChannelNames (nullptr, &out);
             recursionCheck = false;
@@ -95,7 +96,7 @@ void PatchBayPlugin::getChannelNames (StringArray* ins, StringArray* outs)
 
         if (outputPlugin != nullptr && ! recursionCheck)
         {
-            StringArray in;
+            juce::StringArray in;
             recursionCheck = true;
             outputPlugin->getChannelNames (&in, nullptr);
             recursionCheck = false;

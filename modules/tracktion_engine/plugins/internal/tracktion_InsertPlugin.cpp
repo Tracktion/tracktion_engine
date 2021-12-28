@@ -12,9 +12,9 @@ namespace tracktion_engine
 {
 
 static void getPossibleInputDeviceNames (Engine& e,
-                                         StringArray& s, StringArray& a,
-                                         BigInteger& hasAudio,
-                                         BigInteger& hasMidi)
+                                         juce::StringArray& s, juce::StringArray& a,
+                                         juce::BigInteger& hasAudio,
+                                         juce::BigInteger& hasMidi)
 {
     auto& dm = e.getDeviceManager();
 
@@ -37,9 +37,9 @@ static void getPossibleInputDeviceNames (Engine& e,
 }
 
 static void getPossibleOutputDeviceNames (Engine& e,
-                                          StringArray& s, StringArray& a,
-                                          BigInteger& hasAudio,
-                                          BigInteger& hasMidi)
+                                          juce::StringArray& s, juce::StringArray& a,
+                                          juce::BigInteger& hasAudio,
+                                          juce::BigInteger& hasMidi)
 {
     auto& dm = e.getDeviceManager();
 
@@ -89,11 +89,11 @@ InsertPlugin::~InsertPlugin()
 //==============================================================================
 const char* InsertPlugin::xmlTypeName ("insert");
 
-String InsertPlugin::getName()                                               { return name.get().isNotEmpty() ? name : TRANS("Insert Plugin"); }
-String InsertPlugin::getPluginType()                                         { return xmlTypeName; }
-String InsertPlugin::getShortName (int)                                      { return TRANS("Insert"); }
+juce::String InsertPlugin::getName()                                         { return name.get().isNotEmpty() ? name : TRANS("Insert Plugin"); }
+juce::String InsertPlugin::getPluginType()                                   { return xmlTypeName; }
+juce::String InsertPlugin::getShortName (int)                                { return TRANS("Insert"); }
 double InsertPlugin::getLatencySeconds()                                     { return latencySeconds; }
-void InsertPlugin::getChannelNames (StringArray*, StringArray*)              {}
+void InsertPlugin::getChannelNames (juce::StringArray*, juce::StringArray*)  {}
 bool InsertPlugin::takesAudioInput()                                         { return true; }
 bool InsertPlugin::takesMidiInput()                                          { return true; }
 bool InsertPlugin::canBeAddedToClip()                                        { return false; }
@@ -170,7 +170,7 @@ void InsertPlugin::applyToBuffer (const PluginRenderContext& fc)
     }
 }
 
-String InsertPlugin::getSelectableDescription()
+juce::String InsertPlugin::getSelectableDescription()
 {
     return TRANS("Insert Plugin");
 }
@@ -195,10 +195,10 @@ void InsertPlugin::updateDeviceTypes()
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
 
-    StringArray devices, aliases;
-    BigInteger hasAudio, hasMidi;
+    juce::StringArray devices, aliases;
+    juce::BigInteger hasAudio, hasMidi;
 
-    auto setDeviceType = [] (DeviceType& deviceType, BigInteger& audio, BigInteger& midi, int index)
+    auto setDeviceType = [] (DeviceType& deviceType, juce::BigInteger& audio, juce::BigInteger& midi, int index)
     {
         if (audio[index])       deviceType = audioDevice;
         else if (midi[index])   deviceType = midiDevice;
@@ -216,9 +216,9 @@ void InsertPlugin::updateDeviceTypes()
 }
 
 void InsertPlugin::getPossibleDeviceNames (Engine& e,
-                                           StringArray& s, StringArray& a,
-                                           BigInteger& hasAudio,
-                                           BigInteger& hasMidi,
+                                           juce::StringArray& s, juce::StringArray& a,
+                                           juce::BigInteger& hasAudio,
+                                           juce::BigInteger& hasMidi,
                                            bool forInput)
 {
     if (forInput)

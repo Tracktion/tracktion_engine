@@ -148,10 +148,10 @@ static double pasteMIDIFileIntoEdit (Edit& edit, const File& midiFile, int& targ
                 auto& origTimeSig = tempoSequence.getTimeSigAt (insertTime);
 
                 if (origTimeSig.denominator != denominators.getUnchecked (i)
-                    || origTimeSig.numerator != numerators.getUnchecked (i))
+                     || origTimeSig.numerator != numerators.getUnchecked (i))
                 {
                     if (auto timeSig = tempoSequence.insertTimeSig (insertTime))
-                        timeSig->setStringTimeSig (String (numerators.getUnchecked (i)) + "/" + String (denominators.getUnchecked (i)));
+                        timeSig->setStringTimeSig (juce::String (numerators.getUnchecked (i)) + "/" + juce::String (denominators.getUnchecked (i)));
                 }
             }
         }
@@ -419,7 +419,7 @@ bool Clipboard::ProjectItems::pasteIntoProject (Project& project) const
 Clipboard::Clips::Clips() {}
 Clipboard::Clips::~Clips() {}
 
-void Clipboard::Clips::addClip (int trackOffset, const ValueTree& state)
+void Clipboard::Clips::addClip (int trackOffset, const juce::ValueTree& state)
 {
     ClipInfo ci;
     ci.trackOffset = trackOffset;

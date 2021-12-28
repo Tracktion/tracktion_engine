@@ -95,7 +95,7 @@ struct RandomModifier::RandomModifierTimer    : public ModifierTimer
 };
 
 //==============================================================================
-RandomModifier::RandomModifier (Edit& e, const ValueTree& v)
+RandomModifier::RandomModifier (Edit& e, const juce::ValueTree& v)
     : Modifier (e, v)
 {
     auto um = &edit.getUndoManager();
@@ -110,8 +110,9 @@ RandomModifier::RandomModifier (Edit& e, const ValueTree& v)
     smooth.referTo (state, IDs::smooth, um);
     bipolar.referTo (state, IDs::bipolar, um);
 
-    auto addDiscreteParam = [this] (const String& paramID, const String& name, Range<float> valueRange, CachedValue<float>& val,
-                                    const StringArray& labels) -> AutomatableParameter*
+    auto addDiscreteParam = [this] (const juce::String& paramID, const juce::String& name,
+                                    juce::Range<float> valueRange, CachedValue<float>& val,
+                                    const juce::StringArray& labels) -> AutomatableParameter*
     {
         auto* p = new DiscreteLabelledParameter (paramID, name, *this, valueRange, labels.size(), labels);
         addAutomatableParameter (p);
@@ -120,8 +121,8 @@ RandomModifier::RandomModifier (Edit& e, const ValueTree& v)
         return p;
     };
 
-    auto addParam = [this] (const String& paramID, const String& name, NormalisableRange<float> valueRange,
-                            float centreVal, CachedValue<float>& val, const String& suffix) -> AutomatableParameter*
+    auto addParam = [this] (const juce::String& paramID, const juce::String& name, NormalisableRange<float> valueRange,
+                            float centreVal, CachedValue<float>& val, const juce::String& suffix) -> AutomatableParameter*
     {
         valueRange.setSkewForCentre (centreVal);
         auto* p = new SuffixedParameter (paramID, name, *this, valueRange, suffix);
@@ -184,7 +185,7 @@ float RandomModifier::getCurrentPhase() const noexcept
     return currentPhase.load (std::memory_order_acquire);
 }
 
-AutomatableParameter::ModifierAssignment* RandomModifier::createAssignment (const ValueTree& v)
+AutomatableParameter::ModifierAssignment* RandomModifier::createAssignment (const juce::ValueTree& v)
 {
     return new Assignment (v, *this);
 }
@@ -223,7 +224,7 @@ RandomModifier::Ptr RandomModifier::Assignment::getRandomModifier() const
 }
 
 //==============================================================================
-StringArray RandomModifier::getTypeNames()
+juce::StringArray RandomModifier::getTypeNames()
 {
     return { NEEDS_TRANS("Random"),
              NEEDS_TRANS("Noise") };

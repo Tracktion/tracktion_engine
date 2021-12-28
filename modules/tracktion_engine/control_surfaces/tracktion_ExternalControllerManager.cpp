@@ -212,7 +212,7 @@ void ExternalControllerManager::detachFromSelectionManager (SelectionManager* sm
         setCurrentEdit (currentEdit, nullptr);
 }
 
-bool ExternalControllerManager::createCustomController (const String& name, Protocol protocol)
+bool ExternalControllerManager::createCustomController (const juce::String& name, Protocol protocol)
 {
     CRASH_TRACER
 
@@ -260,9 +260,9 @@ void ExternalControllerManager::deleteController (ExternalController* c)
     }
 }
 
-StringArray ExternalControllerManager::getAllControllerNames()
+juce::StringArray ExternalControllerManager::getAllControllerNames()
 {
-    StringArray s;
+    juce::StringArray s;
 
     for (auto ec : devices)
         s.add (ec->getName());
@@ -886,12 +886,12 @@ void ExternalControllerManager::refreshXTOrder()
     {
         if (auto mcu = first->getControlSurfaceIfType<MackieMCU>())
         {
-            MackieXT* xt [MackieMCU::maxNumSurfaces + 1] = {};
+            MackieXT* xt[MackieMCU::maxNumSurfaces + 1] = {};
 
             for (int i = 1; i < MackieMCU::maxNumSurfaces; ++i)
                 xt[i - 1] = devices[i] ? devices[i]->getControlSurfaceIfType<MackieXT>() : nullptr;
 
-            StringArray indices;
+            juce::StringArray indices;
             indices.addTokens (engine.getPropertyStorage().getProperty (SettingID::xtIndices, "0 1 2 3").toString(), false);
 
             for (int i = indices.size(); --i >= 0;)

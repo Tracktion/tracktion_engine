@@ -121,7 +121,7 @@ static TimeAndName getMinSecDivisions (int level) noexcept
     return minSecDivisions [jmin (13, level)];
 }
 
-String TimecodeSnapType::getDescription (const TempoSetting& tempo, bool isTripletOverride) const
+juce::String TimecodeSnapType::getDescription (const TempoSetting& tempo, bool isTripletOverride) const
 {
     if (type == TimecodeType::barsBeats)
     {
@@ -195,7 +195,7 @@ double TimecodeSnapType::getIntervalNonBarsBeats() const
     return getMinSecDivisions (level + 2).time;
 }
 
-String TimecodeSnapType::getTimecodeString (double time, const TempoSequence& sequence, bool useStartLabelIfZero) const
+juce::String TimecodeSnapType::getTimecodeString (double time, const TempoSequence& sequence, bool useStartLabelIfZero) const
 {
     if (type == TimecodeType::barsBeats)
     {
@@ -362,7 +362,7 @@ int TimecodeDisplayFormat::getFPS() const
     }
 }
 
-String TimecodeDisplayFormat::getRoundingDescription() const
+juce::String TimecodeDisplayFormat::getRoundingDescription() const
 {
     switch (type)
     {
@@ -382,7 +382,7 @@ int TimecodeDisplayFormat::getSubSecondDivisions() const
     return subSecDivisionsForType[static_cast<int> (type)];
 }
 
-String TimecodeDisplayFormat::getString (const TempoSequence& tempo, const double time, bool isRelative) const
+juce::String TimecodeDisplayFormat::getString (const TempoSequence& tempo, const double time, bool isRelative) const
 {
     if (type == TimecodeType::barsBeats)
     {
@@ -424,7 +424,7 @@ int TimecodeDisplayFormat::getNumParts() const
     return type == TimecodeType::barsBeats ? 3 : 4;
 }
 
-String TimecodeDisplayFormat::getSeparator (int part) const
+juce::String TimecodeDisplayFormat::getSeparator (int part) const
 {
     return (type == TimecodeType::barsBeats) ? ","
                                              : ((part == 0 && type == TimecodeType::millisecs) ? "." : ":");
@@ -645,7 +645,7 @@ TimecodeDuration TimecodeDisplayFormat::getNewTimeWithPartValue (TimecodeDuratio
 }
 
 //==============================================================================
-String TimecodeDisplayFormat::toFullTimecode (double seconds, int subSecondDivisions, bool showHours)
+juce::String TimecodeDisplayFormat::toFullTimecode (double seconds, int subSecondDivisions, bool showHours)
 {
     auto absSecs = std::abs (seconds);
     String sign = (seconds < 0) ? "-" : "";
@@ -726,7 +726,7 @@ double TimecodeDisplayIterator::next()
     return time;
 }
 
-String TimecodeDisplayIterator::getTimecodeAsString() const
+juce::String TimecodeDisplayIterator::getTimecodeAsString() const
 {
     return currentSnapType.getTimecodeString (time, sequence, true);
 }

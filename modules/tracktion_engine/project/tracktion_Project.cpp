@@ -190,7 +190,7 @@ bool Project::save()
 
         auto tempFile = file.getParentDirectory().getNonexistentChildFile ("temp", ".tmp");
 
-        if (auto out = std::unique_ptr<FileOutputStream> (tempFile.createOutputStream()))
+        if (auto out = tempFile.createOutputStream())
         {
             saveTo (*out);
             out.reset();
@@ -214,7 +214,7 @@ bool Project::save()
                 bool b = tempFile.deleteFile();
                 jassert (b); juce::ignoreUnused (b);
 
-                DBG (String ("!!couldn't save ") + file.getFullPathName());
+                DBG ("!!couldn't save " + file.getFullPathName());
             }
 
             lockFile();
@@ -300,30 +300,30 @@ int Project::getProjectID() const
     return projectId;
 }
 
-String Project::getProjectProperty (const String& name) const
+juce::String Project::getProjectProperty (const juce::String& name) const
 {
     const ScopedLock sl (propertyLock);
     return properties [name];
 }
 
-void Project::setProjectProperty (const String& name, const String& value)
+void Project::setProjectProperty (const juce::String& name, const juce::String& value)
 {
     const ScopedLock sl (propertyLock);
     properties.set (name, value);
     changed();
 }
 
-String Project::getName() const
+juce::String Project::getName() const
 {
     return getProjectProperty ("name");
 }
 
-String Project::getDescription() const
+juce::String Project::getDescription() const
 {
     return getProjectProperty ("description");
 }
 
-void Project::setName (const String& newName)
+void Project::setName (const juce::String& newName)
 {
     if (getName() != newName)
     {
@@ -345,7 +345,7 @@ void Project::setName (const String& newName)
     }
 }
 
-void Project::setDescription (const String& newDesc)
+void Project::setDescription (const juce::String& newDesc)
 {
     setProjectProperty ("description", String (newDesc).substring (0, 512));
 }
@@ -534,9 +534,9 @@ void Project::moveProjectItem (int indexToMoveFrom, int indexToMoveTo)
 }
 
 ProjectItem::Ptr Project::createNewItem (const File& fileToReference,
-                                         const String& type,
-                                         const String& name,
-                                         const String& description,
+                                         const juce::String& type,
+                                         const juce::String& name,
+                                         const juce::String& description,
                                          const ProjectItem::Category cat,
                                          bool atTopOfList)
 {
@@ -573,10 +573,10 @@ ProjectItem::Ptr Project::createNewItem (const File& fileToReference,
     return {};
 }
 
-ProjectItem::Ptr Project::quickAddProjectItem (const String& relPathName,
-                                               const String& type,
-                                               const String& name,
-                                               const String& description,
+ProjectItem::Ptr Project::quickAddProjectItem (const juce::String& relPathName,
+                                               const juce::String& type,
+                                               const juce::String& name,
+                                               const juce::String& description,
                                                const ProjectItem::Category cat,
                                                ProjectItemID newID)
 {
@@ -669,7 +669,7 @@ ProjectItem::Ptr Project::createNewEdit()
         {
             if (p->isEdit())
             {
-                const String nm (p->getName());
+                auto nm = p->getName();
 
                 if (nm.startsWithIgnoreCase (getName() + " Edit "))
                     maxSuffix = jmax (maxSuffix, nm.getTrailingIntValue());
@@ -806,7 +806,7 @@ Array<ProjectItemID> Project::findOrphanItems()
     return unreffed;
 }
 
-String Project::getSelectableDescription()
+juce::String Project::getSelectableDescription()
 {
     return isReadOnly() ? TRANS("Read-Only Project")
                         : TRANS("Project");

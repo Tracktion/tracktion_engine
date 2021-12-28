@@ -14,7 +14,7 @@ namespace tracktion_engine
 struct PitchSequence::PitchList  : public ValueTreeObjectList<PitchSetting>,
                                    private AsyncUpdater
 {
-    PitchList (PitchSequence& s, const ValueTree& parentTree)
+    PitchList (PitchSequence& s, const juce::ValueTree& parentTree)
         : ValueTreeObjectList<PitchSetting> (parentTree), pitchSequence (s)
     {
         rebuildObjects();
@@ -25,12 +25,12 @@ struct PitchSequence::PitchList  : public ValueTreeObjectList<PitchSetting>,
         freeObjects();
     }
 
-    bool isSuitableType (const ValueTree& v) const override
+    bool isSuitableType (const juce::ValueTree& v) const override
     {
         return v.hasType (IDs::PITCH);
     }
 
-    PitchSetting* createNewObject (const ValueTree& v) override
+    PitchSetting* createNewObject (const juce::ValueTree& v) override
     {
         auto t = new PitchSetting (pitchSequence.getEdit(), v);
         t->incReferenceCount();
@@ -91,7 +91,7 @@ void PitchSequence::clear()
     }
 }
 
-void PitchSequence::initialise (Edit& ed, const ValueTree& v)
+void PitchSequence::initialise (Edit& ed, const juce::ValueTree& v)
 {
     edit = &ed;
     state = v;
@@ -229,7 +229,7 @@ void PitchSequence::sortEvents()
 {
     struct PitchSorter
     {
-        static int compareElements (const ValueTree& p1, const ValueTree& p2) noexcept
+        static int compareElements (const juce::ValueTree& p1, const juce::ValueTree& p2) noexcept
         {
             const double beat1 = p1[IDs::startBeat];
             const double beat2 = p2[IDs::startBeat];

@@ -52,7 +52,7 @@ void ProjectManager::initialise()
 static void ensureAllItemsHaveIDs (const juce::ValueTree& folder)
 {
     if (folder[IDs::uid].toString().isEmpty())
-        ValueTree (folder).setProperty (IDs::uid, String::toHexString (Random().nextInt()), nullptr);
+        ValueTree (folder).setProperty (IDs::uid, juce::String::toHexString (Random().nextInt()), nullptr);
 
     for (int i = 0; i < folder.getNumChildren(); ++i)
         ensureAllItemsHaveIDs (folder.getChild(i));
@@ -154,8 +154,8 @@ ReferenceCountedArray<Project> ProjectManager::getAllProjects (const juce::Value
     return list;
 }
 
-ValueTree ProjectManager::getActiveProjectsFolder()     { return folders.getChildWithName (IDs::ACTIVE); }
-ValueTree ProjectManager::getLibraryProjectsFolder()    { return folders.getChildWithName (IDs::LIBRARY); }
+juce::ValueTree ProjectManager::getActiveProjectsFolder()     { return folders.getChildWithName (IDs::ACTIVE); }
+juce::ValueTree ProjectManager::getLibraryProjectsFolder()    { return folders.getChildWithName (IDs::LIBRARY); }
 
 //==============================================================================
 Project::Ptr ProjectManager::findProjectWithId (const juce::ValueTree& folder, int pid)
@@ -349,7 +349,7 @@ static bool getValueTreeFor (const juce::ValueTree& folder, const Project* proj,
     return false;
 }
 
-ValueTree ProjectManager::findFolderContaining (const Project& p) const
+juce::ValueTree ProjectManager::findFolderContaining (const Project& p) const
 {
     ValueTree result;
 
@@ -359,7 +359,7 @@ ValueTree ProjectManager::findFolderContaining (const Project& p) const
     return result;
 }
 
-ValueTree ProjectManager::getFolderItemFor (const Project& p) const
+juce::ValueTree ProjectManager::getFolderItemFor (const Project& p) const
 {
     ValueTree result;
 
@@ -464,7 +464,7 @@ Project::Ptr ProjectManager::createNewProject (const File& projectFile, ValueTre
     return newProj;
 }
 
-Project::Ptr ProjectManager::createNewProjectFromTemplate (const String& name, const File& lastPath,
+Project::Ptr ProjectManager::createNewProjectFromTemplate (const juce::String& name, const File& lastPath,
                                                            const File& archiveFile, ValueTree folder)
 {
     auto extractPath = lastPath.getNonexistentChildFile (File::createLegalFileName (name), {});
@@ -536,7 +536,7 @@ Project::Ptr ProjectManager::createNewProjectFromTemplate (const String& name, c
     return proj;
 }
 
-Project::Ptr ProjectManager::createNewProjectInteractively (const String& name, const File& lastPath, ValueTree folderToAddTo)
+Project::Ptr ProjectManager::createNewProjectInteractively (const juce::String& name, const File& lastPath, ValueTree folderToAddTo)
 {
     if (name.isNotEmpty())
     {
@@ -705,9 +705,9 @@ void ProjectManager::unpackArchiveAndAddToList (const File& archiveFile, ValueTr
     }
 }
 
-StringArray ProjectManager::getRecentProjects (bool printableFormat)
+juce::StringArray ProjectManager::getRecentProjects (bool printableFormat)
 {
-    StringArray files;
+    juce::StringArray files;
     files.addTokens (engine.getPropertyStorage().getProperty (SettingID::recentProjects).toString(), ";", {});
     files.trim();
     files.removeEmptyStrings();
@@ -740,7 +740,7 @@ StringArray ProjectManager::getRecentProjects (bool printableFormat)
 
 void ProjectManager::addFileToRecentProjectsList (const File& f)
 {
-    StringArray files (getRecentProjects (false));
+    auto files = getRecentProjects (false);
 
     for (auto& file : files)
         if (File (file) == f)
@@ -755,7 +755,7 @@ void ProjectManager::addFileToRecentProjectsList (const File& f)
     engine.getPropertyStorage().setProperty (SettingID::recentProjects, files.joinIntoString (";"));
 }
 
-void ProjectManager::createNewProjectFolder (ValueTree parent, const String& name)
+void ProjectManager::createNewProjectFolder (ValueTree parent, const juce::String& name)
 {
     ValueTree v (IDs::FOLDER);
     v.setProperty (IDs::name, name, nullptr);

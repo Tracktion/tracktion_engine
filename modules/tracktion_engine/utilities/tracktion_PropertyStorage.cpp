@@ -42,7 +42,7 @@ PropertiesFile* getApplicationSettings()
 JUCE_IMPLEMENT_SINGLETON (ApplicationSettings)
 
 //==============================================================================
-String PropertyStorage::settingToString (SettingID setting)
+juce::String PropertyStorage::settingToString (SettingID setting)
 {
     switch (setting)
     {
@@ -170,7 +170,7 @@ File PropertyStorage::getAppCacheFolder()
     return getAppPrefsFolder();
 }
 
-File PropertyStorage::getAppPrefsFolder()
+juce::File PropertyStorage::getAppPrefsFolder()
 {
     auto f = File::getSpecialLocation (File::userApplicationDataDirectory).getChildFile (getApplicationName());
 
@@ -180,12 +180,12 @@ File PropertyStorage::getAppPrefsFolder()
     return f;
 }
 
-String PropertyStorage::getUserName()
+juce::String PropertyStorage::getUserName()
 {
     return SystemStats::getFullUserName();
 }
 
-String PropertyStorage::getApplicationVersion()
+juce::String PropertyStorage::getApplicationVersion()
 {
     return "Unknown";
 }

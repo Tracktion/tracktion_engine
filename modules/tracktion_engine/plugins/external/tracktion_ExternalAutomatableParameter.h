@@ -147,7 +147,7 @@ public:
                 return name;
         }
 
-        return TRANS("Unnamed") + " " + String (parameterIndex + 1);
+        return TRANS("Unnamed") + " " + juce::String (parameterIndex + 1);
     }
 
     int getParameterIndex() const noexcept

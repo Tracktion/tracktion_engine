@@ -13,7 +13,7 @@ namespace tracktion_engine
 
 struct VolAutomatableParameter : public AutomatableParameter
 {
-    VolAutomatableParameter (const String& xmlTag, const String& name, Plugin& owner, Range<float> r)
+    VolAutomatableParameter (const juce::String& xmlTag, const juce::String& name, Plugin& owner, Range<float> r)
         : AutomatableParameter (xmlTag, name, owner, r)
     {
     }
@@ -23,12 +23,12 @@ struct VolAutomatableParameter : public AutomatableParameter
         notifyListenersOfDeletion();
     }
 
-    String valueToString (float value) override
+    juce::String valueToString (float value) override
     {
         return Decibels::toString (volumeFaderPositionToDB (value) + 0.001);
     }
 
-    float stringToValue (const String& str) override
+    float stringToValue (const juce::String& str) override
     {
         return decibelsToVolumeFaderPosition (dbStringToDb (str));
     }
@@ -37,7 +37,7 @@ struct VolAutomatableParameter : public AutomatableParameter
 //==============================================================================
 struct PanAutomatableParameter : public AutomatableParameter
 {
-    PanAutomatableParameter (const String& xmlTag, const String& name, Plugin& owner, Range<float> r)
+    PanAutomatableParameter (const juce::String& xmlTag, const juce::String& name, Plugin& owner, Range<float> r)
         : AutomatableParameter (xmlTag, name, owner, r)
     {
     }
@@ -47,12 +47,12 @@ struct PanAutomatableParameter : public AutomatableParameter
         notifyListenersOfDeletion();
     }
 
-    String valueToString (float value) override
+    juce::String valueToString (float value) override
     {
         return getPanString (value);
     }
 
-    float stringToValue (const String& str) override
+    float stringToValue (const juce::String& str) override
     {
         const float v = str.retainCharacters ("0123456789.-").getFloatValue();
         return str.contains (TRANS("Left")) ? -v : v;
@@ -62,7 +62,7 @@ struct PanAutomatableParameter : public AutomatableParameter
 //==============================================================================
 struct MasterVolParameter  : public VolAutomatableParameter
 {
-    MasterVolParameter (const String& xmlTag, const String& name, Plugin& owner, Range<float> r)
+    MasterVolParameter (const juce::String& xmlTag, const juce::String& name, Plugin& owner, Range<float> r)
         : VolAutomatableParameter (xmlTag, name, owner, r)
     {
     }
@@ -72,14 +72,14 @@ struct MasterVolParameter  : public VolAutomatableParameter
         notifyListenersOfDeletion();
     }
 
-    String getPluginAndParamName() const override        { return getParameterName(); }
-    String getFullName() const override                  { return getParameterName(); }
+    juce::String getPluginAndParamName() const override        { return getParameterName(); }
+    juce::String getFullName() const override                  { return getParameterName(); }
 };
 
 //==============================================================================
 struct MasterPanParameter  : public PanAutomatableParameter
 {
-    MasterPanParameter (const String& xmlTag, const String& name, Plugin& owner, Range<float> r)
+    MasterPanParameter (const juce::String& xmlTag, const juce::String& name, Plugin& owner, Range<float> r)
         : PanAutomatableParameter (xmlTag, name, owner, r)
     {
     }
@@ -89,8 +89,8 @@ struct MasterPanParameter  : public PanAutomatableParameter
         notifyListenersOfDeletion();
     }
 
-    String getPluginAndParamName() const override        { return getParameterName(); }
-    String getFullName() const override                  { return getParameterName(); }
+    juce::String getPluginAndParamName() const override        { return getParameterName(); }
+    juce::String getFullName() const override                  { return getParameterName(); }
 };
 
 //==============================================================================
@@ -135,7 +135,7 @@ VolumeAndPanPlugin::~VolumeAndPanPlugin()
     panParam->detachFromCurrentValue();
 }
 
-ValueTree VolumeAndPanPlugin::create()
+juce::ValueTree VolumeAndPanPlugin::create()
 {
     ValueTree v (IDs::PLUGIN);
     v.setProperty (IDs::type, xmlTypeName, nullptr);

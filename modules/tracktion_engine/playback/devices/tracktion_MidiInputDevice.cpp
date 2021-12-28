@@ -184,7 +184,7 @@ struct RetrospectiveMidiBuffer
 };
 
 //==============================================================================
-MidiInputDevice::MidiInputDevice (Engine& e, const String& deviceType, const String& deviceName)
+MidiInputDevice::MidiInputDevice (Engine& e, const juce::String& deviceType, const juce::String& deviceName)
    : InputDevice (e, deviceType, deviceName)
 {
     levelMeasurer.setShowMidi (true);
@@ -508,7 +508,7 @@ void MidiInputDevice::flipEndToEnd()
     saveProps();
 }
 
-static bool trackContainsClipWithName (const AudioTrack& track, const String& name)
+static bool trackContainsClipWithName (const AudioTrack& track, const juce::String& name)
 {
     for (auto& c : track.getClips())
         if (c->getName().equalsIgnoreCase (name))

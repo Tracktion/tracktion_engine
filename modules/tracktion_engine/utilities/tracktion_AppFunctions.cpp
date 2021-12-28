@@ -62,7 +62,7 @@ namespace AppFunctions
         return false;
     }
 
-    void nudgeSelected (const String& commandDesc)
+    void nudgeSelected (const juce::String& commandDesc)
     {
         getCurrentUIBehaviour().nudgeSelected (commandDesc);
     }
