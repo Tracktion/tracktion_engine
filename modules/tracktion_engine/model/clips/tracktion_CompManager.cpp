@@ -188,7 +188,7 @@ double CompManager::getSpeedRatio() const
     return 1.0 / effectiveTimeMultiplier;
 }
 
-juce::int64 CompManager::getTakeHash (int takeIndex) const
+HashCode CompManager::getTakeHash (int takeIndex) const
 {
     auto takeTree = takesTree.getChild (takeIndex);
 
@@ -204,7 +204,10 @@ juce::int64 CompManager::getTakeHash (int takeIndex) const
         auto end = static_cast<double> (segment.getProperty (IDs::endTime));
         auto take = static_cast<int> (segment.getProperty (IDs::takeIndex));
 
-        hash = hash ^ (int64) take ^ (int64) ((end - lastTime) * 1000.0);
+        hash = hash
+                ^ static_cast<HashCode> (take)
+                ^ static_cast<HashCode> ((end - lastTime) * 1000.0);
+
         lastTime = end;
     }
 
@@ -1336,11 +1339,11 @@ MidiList* MidiCompManager::getSequenceLooped (int index)
 }
 
 //==============================================================================
-juce::int64 MidiCompManager::getBaseTakeHash (int takeIndex) const
+HashCode MidiCompManager::getBaseTakeHash (int takeIndex) const
 {
     return takeIndex
-            ^ (int64) (clip.getLoopLengthBeats() * 153.0)
-            ^ (int64) (clip.getLoopStartBeats() * 264.0);
+             ^ static_cast<HashCode> (clip.getLoopLengthBeats() * 153.0)
+             ^ static_cast<HashCode> (clip.getLoopStartBeats() * 264.0);
 }
 
 double MidiCompManager::getTakeLength (int takeIndex) const

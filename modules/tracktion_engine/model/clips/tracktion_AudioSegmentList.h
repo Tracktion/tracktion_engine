@@ -39,7 +39,7 @@ public:
         bool hasFadeOut() const;
 
         bool isFollowedBySilence() const;
-        juce::int64 getHashCode() const;
+        HashCode getHashCode() const;
 
         bool operator== (const Segment&) const;
         bool operator!= (const Segment&) const;

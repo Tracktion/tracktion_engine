@@ -18,7 +18,7 @@
 namespace tracktion_engine
 {
 
-static inline juce::int64 hashValueTree (juce::int64 startHash, const juce::ValueTree& v)
+static inline HashCode hashValueTree (HashCode startHash, const juce::ValueTree& v)
 {
     startHash ^= v.getType().toString().hashCode64() * (v.getParent().indexOf (v) + 1);
 
@@ -31,10 +31,10 @@ static inline juce::int64 hashValueTree (juce::int64 startHash, const juce::Valu
     return startHash;
 }
 
-static inline juce::int64 hashPlugin (const juce::ValueTree& effectState, Plugin& plugin)
+static inline HashCode hashPlugin (const juce::ValueTree& effectState, Plugin& plugin)
 {
     CRASH_TRACER
-    juce::int64 h = String (effectState.getParent().indexOf (effectState) + 1).hashCode64();
+    HashCode h = String (effectState.getParent().indexOf (effectState) + 1).hashCode64();
 
     for (int param = plugin.getNumAutomatableParameters(); --param >= 0;)
     {
@@ -304,16 +304,16 @@ ClipEffect::EffectType ClipEffect::getType() const
     return VariantConverter<ClipEffect::EffectType>::fromVar (state[IDs::type]);
 }
 
-juce::int64 ClipEffect::getIndividualHash() const
+HashCode ClipEffect::getIndividualHash() const
 {
     return hashValueTree (0, state);
 }
 
-juce::int64 ClipEffect::getHash() const
+HashCode ClipEffect::getHash() const
 {
     auto parent = state.getParent();
     auto index = parent.indexOf (state);
-    juce::int64 hash = index ^ (juce::int64) clipEffects.clip.itemID.getRawID();
+    HashCode hash = index ^ static_cast<HashCode> (clipEffects.clip.itemID.getRawID());
 
     for (int i = 0; i <= index; ++i)
         if (auto ce = clipEffects.getClipEffect (parent.getChild (i)))
@@ -696,7 +696,7 @@ void VolumeEffect::propertiesButtonPressed (SelectionManager& sm)
         sm.selectOnly (*plugin);
 }
 
-juce::int64 VolumeEffect::getIndividualHash() const
+HashCode VolumeEffect::getIndividualHash() const
 {
     return plugin != nullptr ? hashPlugin (state, *plugin) : 0;
 }
@@ -831,14 +831,14 @@ ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> FadeInOutEffect::crea
     return new AudioNodeRenderJob (edit.engine, n, destFile, sourceFile, blockSize);
 }
 
-juce::int64 FadeInOutEffect::getIndividualHash() const
+HashCode FadeInOutEffect::getIndividualHash() const
 {
     auto effectRange = clipEffects.getEffectsRange();
 
     return ClipEffect::getIndividualHash()
-        ^ (juce::int64) (clipEffects.getSpeedRatioEstimate() * 6345.2)
-        ^ (juce::int64) (effectRange.getStart() * 3526.9)
-        ^ (juce::int64) (effectRange.getEnd() * 53625.3);
+             ^ static_cast<HashCode> (clipEffects.getSpeedRatioEstimate() * 6345.2)
+             ^ static_cast<HashCode> (effectRange.getStart() * 3526.9)
+             ^ static_cast<HashCode> (effectRange.getEnd() * 53625.3);
 }
 
 //==============================================================================
@@ -971,14 +971,14 @@ juce::String StepVolumeEffect::getSelectableDescription()
     return TRANS("Step Volume Effect Editor");
 }
 
-juce::int64 StepVolumeEffect::getIndividualHash() const
+HashCode StepVolumeEffect::getIndividualHash() const
 {
     auto effectRange = clipEffects.getEffectsRange();
 
     return ClipEffect::getIndividualHash()
-        ^ (juce::int64) (clipEffects.getSpeedRatioEstimate() * 6345.2)
-        ^ (juce::int64) (effectRange.getStart() * 3526.9)
-        ^ (juce::int64) (effectRange.getEnd() * 53625.3);
+            ^ static_cast<HashCode> (clipEffects.getSpeedRatioEstimate() * 6345.2)
+            ^ static_cast<HashCode> (effectRange.getStart() * 3526.9)
+            ^ static_cast<HashCode> (effectRange.getEnd() * 53625.3);
 }
 
 //==============================================================================
@@ -1109,7 +1109,7 @@ void PitchShiftEffect::propertiesButtonPressed (SelectionManager& sm)
         sm.selectOnly (*plugin);
 }
 
-juce::int64 PitchShiftEffect::getIndividualHash() const
+HashCode PitchShiftEffect::getIndividualHash() const
 {
     return hashPlugin (state, *plugin);
 }
@@ -1159,7 +1159,7 @@ ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> WarpTimeEffect::creat
                                         sourceLength, *warpTimeManager, getClip());
 }
 
-juce::int64 WarpTimeEffect::getIndividualHash() const
+HashCode WarpTimeEffect::getIndividualHash() const
 {
     return warpTimeManager->getHash();
 }
@@ -1338,7 +1338,7 @@ void PluginEffect::propertiesButtonPressed (SelectionManager& sm)
     }
 }
 
-juce::int64 PluginEffect::getIndividualHash() const
+HashCode PluginEffect::getIndividualHash() const
 {
     jassert (plugin != nullptr);
 

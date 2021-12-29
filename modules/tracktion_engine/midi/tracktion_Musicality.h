@@ -252,7 +252,7 @@ public:
     juce::CachedValue<float> arpPatternLength, melodyNoteLength, velocity, gate;
     juce::CachedValue<juce::String> arpStyle;
     juce::CachedValue<int> scaleRoot, arpSteps, octave;
-    juce::CachedValue<juce::int64> patternHash;
+    juce::CachedValue<HashCode> patternHash;
 
     juce::ValueTree getChordPattern();
     juce::ValueTree getBassPattern();
@@ -295,7 +295,7 @@ private:
 
     void updateHash();
     void clearHash();
-    juce::int64 hashNotes (MidiList& sequence, int version);
+    HashCode hashNotes (MidiList&, int version);
 
     MidiClip* getMidiClip() const;
 

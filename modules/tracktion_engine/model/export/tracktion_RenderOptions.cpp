@@ -913,12 +913,12 @@ void RenderOptions::setTrackIDs (const juce::Array<EditItemID>& trackIDs)
         tracksProperty = EditItemID::listToString (trackIDs);
 }
 
-int64 RenderOptions::getTracksHash() const
+HashCode RenderOptions::getTracksHash() const
 {
-    int64 tracksHash = 0;
+    HashCode tracksHash = 0;
 
     for (auto& t : tracks)
-        tracksHash ^= static_cast<int64> (t.getRawID()); // TODO: this will probably be buggy if the IDs are all low sequential integers!
+        tracksHash ^= static_cast<HashCode> (t.getRawID()); // TODO: this will probably be buggy if the IDs are all low sequential integers!
 
     return tracksHash;
 }

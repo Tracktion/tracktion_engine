@@ -276,21 +276,21 @@ void EditClip::updateWaveInfo()
     updateLoopInfoBasedOnSource (false);
 }
 
-int64 EditClip::generateHash()
+HashCode EditClip::generateHash()
 {
     CRASH_TRACER
 
     // Because edit clips can contain edit clips recursively we can't just rely
     // on the source edit time as a hash, we need to drill down retrieving any
     // nested EditClips and xor their source hash's.
-    juce::int64 editClipHash = 0;
+    HashCode editClipHash = 0;
 
     for (auto snapshot : referencedEdits)
         editClipHash ^= snapshot->getHash();
 
-    const juce::int64 newHash = editClipHash
-                                  ^ renderOptions->getHash()
-                                  ^ (int64) (getIsReversed() * 768);
+    HashCode newHash = editClipHash
+                         ^ renderOptions->getHash()
+                         ^ static_cast<HashCode> (getIsReversed() * 768);
 
     if (hash != newHash)
     {

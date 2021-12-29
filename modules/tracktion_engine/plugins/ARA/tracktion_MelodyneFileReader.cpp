@@ -351,7 +351,7 @@ private:
 
     std::unique_ptr<MelodyneInstance> melodyneInstance;
     std::unique_ptr<PlaybackRegionAndSource> playbackRegionAndSource;
-    int64 currentHashCode = 0;
+    HashCode currentHashCode = 0;
 
     //==============================================================================
     struct ScopedDocumentEditor
@@ -423,9 +423,9 @@ private:
             contentAnalyserChecker = nullptr;
             modelUpdater = nullptr; // Can't be editing the document in any way while restoring
 
-            juce::int64 newHashCode = file.getHash()
-                                       ^ file.getFile().getLastModificationTime().toMilliseconds()
-                                       ^ (juce::int64) clip.itemID.getRawID();
+            HashCode newHashCode = file.getHash()
+                                    ^ file.getFile().getLastModificationTime().toMilliseconds()
+                                    ^ static_cast<HashCode> (clip.itemID.getRawID());
 
             if (currentHashCode != newHashCode)
             {

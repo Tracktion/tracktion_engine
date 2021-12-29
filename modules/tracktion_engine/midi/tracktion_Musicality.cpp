@@ -2090,20 +2090,20 @@ void PatternGenerator::clearHash()
     patternHash = 0;
 }
 
-juce::int64 PatternGenerator::hashNotes (MidiList& sequence, int version)
+HashCode PatternGenerator::hashNotes (MidiList& sequence, int version)
 {
     // Version 1 of this hash had a bug where just changing mute would
     // generate hash collisions
-    juce::int64 hash = sequence.getNumNotes() + 1;
+    HashCode hash = sequence.getNumNotes() + 1;
 
     for (auto note : sequence.getNotes())
     {
-        hash ^= juce::int64 (note->getNoteNumber() * 31)
-              ^ juce::int64 (note->getStartBeat()  * 73)
-              ^ juce::int64 (note->getLengthBeats() * 233)
-              ^ juce::int64 (note->getColour() * 467)
-              ^ juce::int64 (note->isMute() ? 877 : 947)
-              ^ juce::int64 (note->getVelocity() * 3083);
+        hash ^= static_cast<HashCode> (note->getNoteNumber() * 31)
+              ^ static_cast<HashCode> (note->getStartBeat()  * 73)
+              ^ static_cast<HashCode> (note->getLengthBeats() * 233)
+              ^ static_cast<HashCode> (note->getColour() * 467)
+              ^ static_cast<HashCode> (note->isMute() ? 877 : 947)
+              ^ static_cast<HashCode> (note->getVelocity() * 3083);
 
         if (version > 1)
             hash *= 7;

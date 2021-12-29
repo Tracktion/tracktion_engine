@@ -42,13 +42,13 @@ bool AudioSegmentList::Segment::hasFadeOut() const                             {
 
 bool AudioSegmentList::Segment::isFollowedBySilence() const                    { return followedBySilence; }
 
-juce::int64 AudioSegmentList::Segment::getHashCode() const
+HashCode AudioSegmentList::Segment::getHashCode() const
 {
     return startSample
              ^ (lengthSample * 127)
              ^ (followedBySilence ? 1234 : 5432)
-             ^ ((juce::int64) (stretchRatio * 1003.0f))
-             ^ ((juce::int64) (transpose * 117.0f));
+             ^ static_cast<HashCode> (stretchRatio * 1003.0f)
+             ^ static_cast<HashCode> (transpose * 117.0f);
 }
 
 bool AudioSegmentList::Segment::operator== (const Segment& other) const

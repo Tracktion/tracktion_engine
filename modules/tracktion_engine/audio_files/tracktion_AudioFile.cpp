@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-static inline juce::int64 getAudioFileHash (const juce::File& file) noexcept
+static inline HashCode getAudioFileHash (const juce::File& file) noexcept
 {
     return file.getFullPathName().hashCode64();
 }
@@ -392,7 +392,7 @@ public:
     {
     }
 
-    void saveNewlyFinishedThumbnail (const juce::AudioThumbnailBase& thumb, juce::int64 hash) override
+    void saveNewlyFinishedThumbnail (const juce::AudioThumbnailBase& thumb, HashCode hash) override
     {
         CRASH_TRACER
         auto st = dynamic_cast<const SmartThumbnail*> (&thumb);
@@ -411,7 +411,7 @@ public:
         }
     }
 
-    bool loadNewThumb (juce::AudioThumbnailBase& thumb, juce::int64 hash) override
+    bool loadNewThumb (juce::AudioThumbnailBase& thumb, HashCode hash) override
     {
         CRASH_TRACER
         auto st = dynamic_cast<const SmartThumbnail*> (&thumb);
@@ -440,7 +440,7 @@ private:
         return engine.getTemporaryFileManager().getThumbnailsFolder();
     }
 
-    juce::File getThumbFile (const SmartThumbnail* st, juce::int64 hash) const
+    juce::File getThumbFile (const SmartThumbnail* st, HashCode hash) const
     {
         auto thumbFolder = getThumbFolder (st != nullptr ? st->edit : nullptr);
 
@@ -632,7 +632,7 @@ void AudioFileManager::clearFiles()
     knownFiles.clear();
 }
 
-void AudioFileManager::removeFile (juce::int64 hash)
+void AudioFileManager::removeFile (HashCode hash)
 {
     const juce::ScopedLock sl (knownFilesLock);
 

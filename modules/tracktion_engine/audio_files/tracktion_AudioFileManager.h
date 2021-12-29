@@ -44,7 +44,7 @@ private:
     juce::CriticalSection knownFilesLock;
 
     KnownFile& findOrCreateKnown (const AudioFile&);
-    void removeFile (juce::int64 hash);
+    void removeFile (HashCode);
     void clearFiles();
 
     juce::Array<AudioFile> filesToCheck;

@@ -2129,21 +2129,21 @@ AudioFileInfo AudioClipBase::getWaveInfo()
     return getAudioFile().getInfo();
 }
 
-int64 AudioClipBase::getProxyHash()
+HashCode AudioClipBase::getProxyHash()
 {
     jassert (usesTimeStretchedProxy());
 
     auto clipPos = getPosition();
 
-    int64 hash = getHash()
-                    ^ (int) timeStretchMode
-                    ^ elastiqueProOptions->toString().hashCode64()
-                    ^ (7342847 * (int64) (pitchChange * 199.0))
-                    ^ ((int64) (clipPos.getLength() * 10005.0))
-                    ^ ((int64) (clipPos.getOffset() * 9997.0))
-                    ^ ((int64) (getLoopStart() * 8971.0))
-                    ^ ((int64) (getLoopLength() * 7733.0))
-                    ^ ((int64) (getSpeedRatio() * 877.0));
+    HashCode hash = getHash()
+                     ^ static_cast<HashCode> (timeStretchMode.get())
+                     ^ elastiqueProOptions->toString().hashCode64()
+                     ^ (7342847 * static_cast<HashCode> (pitchChange * 199.0))
+                     ^ static_cast<HashCode> (clipPos.getLength() * 10005.0)
+                     ^ static_cast<HashCode> (clipPos.getOffset() * 9997.0)
+                     ^ static_cast<HashCode> (getLoopStart() * 8971.0)
+                     ^ static_cast<HashCode> (getLoopLength() * 7733.0)
+                     ^ static_cast<HashCode> (getSpeedRatio() * 877.0);
 
     auto needsPlainStretch = [&]() { return std::abs (getSpeedRatio() - 1.0) > 0.00001 || (getPitchChange() != 0.0f); };
 
@@ -2154,7 +2154,7 @@ int64 AudioClipBase::getProxyHash()
             int i = 0;
 
             for (auto& segment : segmentList->getSegments())
-                hash ^= (int64) (segment.getHashCode() * (i++ + 0.1));
+                hash ^= static_cast<HashCode> (segment.getHashCode() * (i++ + 0.1));
         }
     }
 

@@ -63,7 +63,7 @@ public:
 
     //==============================================================================
     /** Returns a hash representing the current set of render options. */
-    juce::int64 getHash() const noexcept                        { return hash; }
+    HashCode getHash() const noexcept                        { return hash; }
 
     /** Returns a set of renderer parameters which can be used to describe a render operation. */
     Renderer::Parameters getRenderParameters (Edit&, SelectionManager*, EditTimeRange markedRegion);
@@ -116,7 +116,7 @@ public:
 
     juce::Array<EditItemID> getTrackIDs() const                 { return tracks; }
     void setTrackIDs (const juce::Array<EditItemID>&);
-    juce::int64 getTracksHash() const;
+    HashCode getTracksHash() const;
 
     void setSampleRate (int);
     void setBitDepth (int depth)                                { bitDepth = depth; }
@@ -195,7 +195,7 @@ private:
     juce::File destFile;
     juce::Array<Clip*> allowedClips;
     double endAllowance = 0;
-    juce::int64 hash = 0;
+    HashCode hash = 0;
     bool uiNeedsRefresh = true;
 
     static void updateLastUsedRenderPath (RenderOptions&, const juce::String& itemID);

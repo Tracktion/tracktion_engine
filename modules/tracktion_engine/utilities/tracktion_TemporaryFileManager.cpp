@@ -206,27 +206,27 @@ static juce::String getDeviceFreezePrefix (Edit& edit)  { return "freeze_" + edi
 static juce::String getTrackFreezePrefix()              { return "trackFreeze_"; }
 static juce::String getCompPrefix()                     { return "comp_"; }
 
-static AudioFile getCachedEditFile (Edit& edit, const juce::String& prefix, juce::int64 hash)
+static AudioFile getCachedEditFile (Edit& edit, const juce::String& prefix, HashCode hash)
 {
     return AudioFile (edit.engine, edit.getTempDirectory (true).getChildFile (prefix + juce::String::toHexString (hash) + ".wav"));
 }
 
-static AudioFile getCachedClipFileWithPrefix (const AudioClipBase& clip, const juce::String& prefix, juce::int64 hash)
+static AudioFile getCachedClipFileWithPrefix (const AudioClipBase& clip, const juce::String& prefix, HashCode hash)
 {
     return getCachedEditFile (clip.edit, prefix + "0_" + clip.itemID.toString() + "_", hash);
 }
 
-AudioFile TemporaryFileManager::getFileForCachedClipRender (const AudioClipBase& clip, juce::int64 hash)
+AudioFile TemporaryFileManager::getFileForCachedClipRender (const AudioClipBase& clip, HashCode hash)
 {
     return getCachedClipFileWithPrefix (clip, getClipProxyPrefix(), hash);
 }
 
-AudioFile TemporaryFileManager::getFileForCachedCompRender (const AudioClipBase& clip, juce::int64 takeHash)
+AudioFile TemporaryFileManager::getFileForCachedCompRender (const AudioClipBase& clip, HashCode takeHash)
 {
     return getCachedClipFileWithPrefix (clip, getCompPrefix(), takeHash);
 }
 
-AudioFile TemporaryFileManager::getFileForCachedFileRender (Edit& edit, juce::int64 hash)
+AudioFile TemporaryFileManager::getFileForCachedFileRender (Edit& edit, HashCode hash)
 {
     return getCachedEditFile (edit, getFileProxyPrefix(), hash);
 }

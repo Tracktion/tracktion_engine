@@ -51,7 +51,7 @@ private:
 class TracktionThumbnail::LevelDataSource   : public juce::TimeSliceClient
 {
 public:
-    LevelDataSource (TracktionThumbnail& thumb, juce::AudioFormatReader* newReader, juce::int64 hash)
+    LevelDataSource (TracktionThumbnail& thumb, juce::AudioFormatReader* newReader, HashCode hash)
         : hashCode (hash), owner (thumb), reader (newReader)
     {
     }
@@ -172,7 +172,7 @@ public:
     juce::int64 lengthInSamples = 0, numSamplesFinished = 0;
     double sampleRate = 0;
     unsigned int numChannels = 0;
-    juce::int64 hashCode = 0;
+    HashCode hashCode = 0;
 
 private:
     TracktionThumbnail& owner;
@@ -700,7 +700,7 @@ bool TracktionThumbnail::setSource (juce::InputSource* newSource)
     return newSource != nullptr && setDataSource (new LevelDataSource (*this, newSource));
 }
 
-void TracktionThumbnail::setReader (juce::AudioFormatReader* newReader, juce::int64 hash)
+void TracktionThumbnail::setReader (juce::AudioFormatReader* newReader, HashCode hash)
 {
     clear();
 
@@ -716,7 +716,7 @@ void TracktionThumbnail::releaseResources()
         source->releaseResources();
 }
 
-juce::int64 TracktionThumbnail::getHashCode() const
+HashCode TracktionThumbnail::getHashCode() const
 {
     const juce::ScopedLock sl (sourceLock);
     return source == nullptr ? 0 : source->hashCode;

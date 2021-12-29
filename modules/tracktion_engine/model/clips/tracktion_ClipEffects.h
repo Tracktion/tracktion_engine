@@ -69,7 +69,7 @@ public:
         N.B. as effects are serial their hash will change if any preceeding effects change.
        @see getIndividualHash
     */
-    juce::int64 getHash() const;
+    HashCode getHash() const;
 
     AudioFile getSourceFile() const;
     AudioFile getDestinationFile() const;
@@ -86,7 +86,7 @@ public:
     ClipEffects& clipEffects;
 
 protected:
-    virtual juce::int64 getIndividualHash() const;
+    virtual HashCode getIndividualHash() const;
     void valueTreeChanged() override;
 
 private:
@@ -130,7 +130,7 @@ public:
     }
 
     /** Returns the hash for this set of effects. */
-    juce::int64 getHash() const
+    HashCode getHash() const
     {
         if (cachedHash == hashNeedsRecaching)
             if (auto ce = objects.getLast())
@@ -285,7 +285,7 @@ private:
     juce::ListenerList<Listener> listeners;
     std::unique_ptr<ClipPropertyWatcher> clipPropertyWatcher;
     mutable std::unique_ptr<CachedClipProperties> cachedClipProperties;
-    mutable juce::int64 cachedHash = hashNeedsRecaching;
+    mutable HashCode cachedHash = hashNeedsRecaching;
 
     int renderInhibitors = 0;
 
@@ -355,7 +355,7 @@ struct VolumeEffect : public ClipEffect,
 
     bool hasProperties() override;
     void propertiesButtonPressed (SelectionManager&) override;
-    juce::int64 getIndividualHash() const override;
+    HashCode getIndividualHash() const override;
 
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
     void valueTreeChanged() override;
@@ -383,7 +383,7 @@ struct FadeInOutEffect  : public ClipEffect
     juce::CachedValue<AudioFadeCurve::Type> fadeInType, fadeOutType;
 
 protected:
-    juce::int64 getIndividualHash() const override;
+    HashCode getIndividualHash() const override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FadeInOutEffect)
 };
@@ -437,7 +437,7 @@ struct StepVolumeEffect  : public ClipEffect,
     juce::CachedValue<juce::String> pattern;
 
 protected:
-    juce::int64 getIndividualHash() const override;
+    HashCode getIndividualHash() const override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StepVolumeEffect)
 };
@@ -456,7 +456,7 @@ struct PitchShiftEffect  : public ClipEffect,
 
     bool hasProperties() override;
     void propertiesButtonPressed (SelectionManager&) override;
-    juce::int64 getIndividualHash() const override;
+    HashCode getIndividualHash() const override;
 
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
     void valueTreeChanged() override;
@@ -477,7 +477,7 @@ struct WarpTimeEffect   : public ClipEffect
 
     juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile&, double sourceLength) override;
 
-    juce::int64 getIndividualHash() const override;
+    HashCode getIndividualHash() const override;
     void sourceChanged() override;
 
     WarpTimeManager::Ptr warpTimeManager;
@@ -509,7 +509,7 @@ struct PluginEffect  : public ClipEffect,
     void flushStateToValueTree() override;
     bool hasProperties() override;
     void propertiesButtonPressed (SelectionManager&) override;
-    juce::int64 getIndividualHash() const override;
+    HashCode getIndividualHash() const override;
 
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
     void valueTreeChanged() override;
@@ -521,7 +521,7 @@ struct PluginEffect  : public ClipEffect,
     std::unique_ptr<ClipEffects::RenderInhibitor> inhibitor;
     std::unique_ptr<PluginUnloadInhibitor> pluginUnloadInhibitor;
     juce::CachedValue<int> currentCurve;
-    mutable juce::CachedValue<juce::int64> lastHash;
+    mutable juce::CachedValue<HashCode> lastHash;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginEffect)
 };

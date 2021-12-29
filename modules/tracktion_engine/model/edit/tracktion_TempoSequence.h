@@ -63,7 +63,7 @@ public:
     int indexOfTempo (const TempoSetting*) const;
 
     int countTemposInRegion (EditTimeRange range) const;
-    juce::int64 createHashForTemposInRange (EditTimeRange) const;
+    HashCode createHashForTemposInRange (EditTimeRange) const;
 
     /** inserts a tempo break that can be edited later. */
     TempoSetting::Ptr insertTempo (double time);

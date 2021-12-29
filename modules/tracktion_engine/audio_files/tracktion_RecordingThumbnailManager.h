@@ -21,7 +21,7 @@ public:
         Engine& engine;
         TracktionThumbnail thumb;
         juce::File file;
-        const juce::int64 hash;
+        const HashCode hash;
         double punchInTime = 0;
 
         ~Thumbnail()

@@ -96,7 +96,7 @@ public:
     /** Returns the time signature at this tempo's time in the sequence. */
     TimeSigSetting& getMatchingTimeSig() const;
 
-    juce::int64 getHash() const noexcept;
+    HashCode getHash() const noexcept;
 
     TempoSequence& ownerSequence;
     juce::ValueTree state;

@@ -27,8 +27,7 @@ struct WarpMarker
         : sourceTime (s), warpTime (w) {}
 
     /** Loads a WarpMarker from a saved state. */
-    WarpMarker (const juce::ValueTree& v)
-        : state (v)
+    WarpMarker (const juce::ValueTree& v)  : state (v)
     {
         updateFrom (v, IDs::sourceTime);
         updateFrom (v, IDs::warpTime);
@@ -44,7 +43,7 @@ struct WarpMarker
     }
 
     /** Returns a hash for this marker. */
-    juce::int64 getHash() const noexcept;
+    HashCode getHash() const noexcept;
 
     juce::ValueTree state;
     double sourceTime = 0, warpTime = 0;
@@ -145,7 +144,7 @@ public:
     double getWarpEndMarkerTime() const;
 
     /** Returns a hash representing this warp list. */
-    juce::int64 getHash() const;
+    HashCode getHash() const;
 
     /** @internal */
     void editFinishedLoading();

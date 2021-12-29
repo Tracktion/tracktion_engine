@@ -11,16 +11,15 @@
 namespace tracktion_engine
 {
 
-inline int64 hashDouble (double d) noexcept
+inline HashCode hashDouble (double d) noexcept
 {
-    static_assert (sizeof (double) == sizeof (int64), "double and int64 different sizes");
-    union Val { double asDouble; int64 asInt; } v;
+    static_assert (sizeof (double) == sizeof (int64_t), "double and int64 different sizes");
+    union Val { double asDouble; int64_t asInt; } v;
     v.asDouble = d;
-
     return v.asInt;
 }
 
-int64 WarpMarker::getHash() const noexcept    { return hashDouble (sourceTime) ^ hashDouble (warpTime); }
+HashCode WarpMarker::getHash() const noexcept    { return hashDouble (sourceTime) ^ hashDouble (warpTime); }
 
 template <typename FloatingPointType>
 struct Differentiator
@@ -528,9 +527,9 @@ double WarpTimeManager::getWarpedEnd() const
     return markers->objects.getLast()->warpTime;
 }
 
-int64 WarpTimeManager::getHash() const
+HashCode WarpTimeManager::getHash() const
 {
-    int64 h = 0;
+    HashCode h = 0;
 
     for (auto wm : markers->objects)
         h ^= wm->getHash();

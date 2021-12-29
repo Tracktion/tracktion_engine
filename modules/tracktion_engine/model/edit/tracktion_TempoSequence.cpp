@@ -938,9 +938,9 @@ int TempoSequence::countTemposInRegion (EditTimeRange range) const
     return count;
 }
 
-int64 TempoSequence::createHashForTemposInRange (EditTimeRange range) const
+HashCode TempoSequence::createHashForTemposInRange (EditTimeRange range) const
 {
-    int64 hash = 0;
+    HashCode hash = 0;
 
     for (auto t : tempos->objects)
         if (range.contains (t->getStartTime()))

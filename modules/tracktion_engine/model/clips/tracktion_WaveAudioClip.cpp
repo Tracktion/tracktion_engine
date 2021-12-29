@@ -97,12 +97,12 @@ bool WaveAudioClip::needsRender() const
         && AudioFile (edit.engine, getOriginalFile()).isValid();
 }
 
-int64 WaveAudioClip::getHash() const
+HashCode WaveAudioClip::getHash() const
 {
     return AudioFile (edit.engine, getOriginalFile()).getHash()
-         ^ (int64) (getWarpTime() ? getWarpTimeManager().getHash() : 0)
-         ^ (int64) (getIsReversed() * 768)
-         ^ (int64) ((clipEffects == nullptr || ! canHaveEffects())  ? 0 : clipEffects->getHash());
+             ^ static_cast<HashCode> (getWarpTime() ? getWarpTimeManager().getHash() : 0)
+             ^ static_cast<HashCode> (getIsReversed() * 768)
+             ^ static_cast<HashCode> ((clipEffects == nullptr || ! canHaveEffects())  ? 0 : clipEffects->getHash());
 }
 
 void WaveAudioClip::renderComplete()
