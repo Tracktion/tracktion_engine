@@ -107,8 +107,8 @@ bool WaveAudioNode::updateFileSampleRate()
         if (audioFileSampleRate > 0)
         {
             if (! loopSection.isEmpty())
-                reader->setLoopRange (Range<int64> ((int64) (loopSection.getStart() * audioFileSampleRate),
-                                                    (int64) (loopSection.getEnd()   * audioFileSampleRate)));
+                reader->setLoopRange (SampleRange ((SampleCount) (loopSection.getStart() * audioFileSampleRate),
+                                                   (SampleCount) (loopSection.getEnd()   * audioFileSampleRate)));
 
             return true;
         }

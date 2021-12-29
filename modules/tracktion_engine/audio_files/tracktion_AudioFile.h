@@ -26,7 +26,7 @@ struct AudioFileInfo
     HashCode hashCode = 0;
     juce::AudioFormat* format = nullptr;
     double sampleRate = 0;
-    juce::int64 lengthInSamples = 0;
+    SampleCount lengthInSamples = 0;
     int numChannels = 0;
     int bitsPerSample = 0;
     bool isFloatingPoint = false;
@@ -75,7 +75,7 @@ public:
 
     AudioFileInfo getInfo() const;
 
-    juce::int64 getLengthInSamples() const;
+    int64_t getLengthInSamples() const;
     double getLength() const;
     int getNumChannels() const;
     double getSampleRate() const;

@@ -128,11 +128,11 @@ int LoopInfo::getRootNote() const                  { return getProp<int> (IDs::r
 void LoopInfo::setRootNote (int note)              { setProp<int> (IDs::rootNote, note); }
 
 //==============================================================================
-juce::int64 LoopInfo::getInMarker() const          { return getProp<juce::int64> (IDs::inMarker); }
-juce::int64 LoopInfo::getOutMarker() const         { return getProp<juce::int64> (IDs::outMarker); }
+SampleCount LoopInfo::getInMarker() const          { return getProp<SampleCount> (IDs::inMarker); }
+SampleCount LoopInfo::getOutMarker() const         { return getProp<SampleCount> (IDs::outMarker); }
 
-void LoopInfo::setInMarker (juce::int64 in)        { setProp<juce::int64> (IDs::inMarker, in); }
-void LoopInfo::setOutMarker (juce::int64 out)      { setProp<juce::int64> (IDs::outMarker, out); }
+void LoopInfo::setInMarker (SampleCount in)        { setProp<SampleCount> (IDs::inMarker, in); }
+void LoopInfo::setOutMarker (SampleCount out)      { setProp<SampleCount> (IDs::outMarker, out); }
 
 //==============================================================================
 int LoopInfo::getNumLoopPoints() const
@@ -153,7 +153,7 @@ LoopInfo::LoopPoint LoopInfo::getLoopPoint (int idx) const
     return {};
 }
 
-void LoopInfo::addLoopPoint (juce::int64 pos, LoopPointType type)
+void LoopInfo::addLoopPoint (SampleCount pos, LoopPointType type)
 {
     const juce::ScopedLock sl (lock);
     duplicateIfShared();
@@ -165,7 +165,7 @@ void LoopInfo::addLoopPoint (juce::int64 pos, LoopPointType type)
     getOrCreateLoopPoints().addChild (t, -1, nullptr);
 }
 
-void LoopInfo::changeLoopPoint (int idx, juce::int64 pos, LoopPointType type)
+void LoopInfo::changeLoopPoint (int idx, SampleCount pos, LoopPointType type)
 {
     const juce::ScopedLock sl (lock);
     duplicateIfShared();

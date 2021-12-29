@@ -47,7 +47,7 @@ ProjectItemID::ProjectItemID (const juce::String& asString) noexcept
 }
 
 ProjectItemID::ProjectItemID (int itemID, int projectID) noexcept
-   : combinedID ((((juce::int64) projectID) << 32) | itemID)
+   : combinedID ((((int64_t) projectID) << 32) | itemID)
 {
 }
 

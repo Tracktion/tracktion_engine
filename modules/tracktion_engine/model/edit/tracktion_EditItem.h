@@ -34,7 +34,8 @@ struct EditItemID
     static EditItemID fromXML (const juce::XmlElement&, const char* attributeName);
     static EditItemID fromXML (const juce::XmlElement&, const juce::Identifier&);
 
-    static EditItemID findFirstIDNotIn (const std::vector<EditItemID>& existingIDsSorted, juce::uint64 startFrom = 1001);
+    static EditItemID findFirstIDNotIn (const std::vector<EditItemID>& existingIDsSorted,
+                                        uint64_t startFrom = 1001);
 
     void setProperty (juce::ValueTree&, const juce::Identifier&, juce::UndoManager*) const;
     void setXML (juce::XmlElement&, const juce::Identifier& attributeName) const;
@@ -44,8 +45,8 @@ struct EditItemID
     juce::var toVar() const;
     juce::String toString() const;
 
-    juce::uint64 getRawID() const noexcept              { return itemID; }
-    static EditItemID fromRawID (juce::uint64);
+    uint64_t getRawID() const noexcept                  { return itemID; }
+    static EditItemID fromRawID (uint64_t);
 
     bool operator== (EditItemID other) const noexcept   { return itemID == other.itemID; }
     bool operator!= (EditItemID other) const noexcept   { return itemID != other.itemID; }
@@ -75,7 +76,7 @@ struct EditItemID
                                const std::map<juce::String, EditItemID>&)> applyNewIDsToExternalXML;
 
 private:
-    juce::uint64 itemID = 0;
+    uint64_t itemID = 0;
 };
 
 //==============================================================================

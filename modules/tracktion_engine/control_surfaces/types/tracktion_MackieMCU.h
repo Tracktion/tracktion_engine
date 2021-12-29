@@ -88,7 +88,7 @@ public:
     //==============================================================================
     void registerXT (MackieXT*);
     void unregisterXT (MackieXT*);
-    void sendMidiCommandToController (int devIdx, juce::uint8 byte1, juce::uint8 byte2, juce::uint8 byte3);
+    void sendMidiCommandToController (int devIdx, uint8_t byte1, uint8_t byte2, uint8_t byte3);
     void sendMidiCommandToController (int devIdx, const unsigned char* midiData, int numBytes);
     void setDeviceIndex (int idx)           { deviceIdx = idx; }
 
@@ -108,14 +108,14 @@ private:
     float panPos[maxNumChannels];
     char timecodeDigits[9];
     bool lastSmpteBeatsSetting = false, isZooming = false, marker = false, nudge = false;
-    juce::uint8 lastChannelLevels[maxNumChannels];
+    uint8_t lastChannelLevels[maxNumChannels];
     bool recLight[maxNumChannels];
     bool isRecButtonDown = false, flipped = false, editFlip = false, cpuVisible = false, oneTouchRecord = false;
     int shiftKeysDown = 0;
     char currentDisplayChars[maxNumSurfaces][maxCharsOnDisplay];
     char newDisplayChars[maxNumSurfaces][maxCharsOnDisplay];
-    juce::uint32 lastRewindPress = 0;
-    juce::uint32 lastFaderPos[maxNumSurfaces][9];
+    uint32_t lastRewindPress = 0;
+    uint32_t lastFaderPos[maxNumSurfaces][9];
     float auxLevels[maxNumChannels];
     char auxBusNames[maxNumChannels][7];
     int lastStartChan = 0;

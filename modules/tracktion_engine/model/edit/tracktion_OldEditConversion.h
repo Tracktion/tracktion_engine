@@ -649,7 +649,7 @@ private:
     {
         renameLegacyIDs (xml);
 
-        juce::uint64 nextID = 1001;
+        uint64_t nextID = 1001;
         EditItemID::remapIDs (xml, [&] { return EditItemID::fromRawID (nextID++); });
 
         recurseDoingLegacyConversions (xml);

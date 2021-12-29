@@ -382,7 +382,7 @@ void StepClip::generateMidiSequenceForChannels (MidiMessageSequence& result,
                         jassert (c.channel.get().isValid());
                         auto chan = c.channel.get().getChannelNumber();
                         result.addEvent (MidiMessage::noteOn  (chan, c.noteNumber, vel * channelVelScale), start);
-                        result.addEvent (MidiMessage::noteOff (chan, c.noteNumber, (uint8) jlimit (0, 127, c.noteValue.get())), end);
+                        result.addEvent (MidiMessage::noteOff (chan, c.noteNumber, (uint8_t) jlimit (0, 127, c.noteValue.get())), end);
                     }
                 }
             }

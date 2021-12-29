@@ -66,18 +66,18 @@ public:
     {
         jassert ((int) reader.numChannels == numChannels);
 
-        const int blockSize = 65536;
+        const SampleCount blockSize = 65536;
         const bool useRightChan = numChannels > 1;
 
         // can't use an AudioScratchBuffer yet
         juce::AudioBuffer<float> buffer (numChannels, blockSize);
 
-        juce::int64 numLeft = reader.lengthInSamples;
+        SampleCount numLeft = reader.lengthInSamples;
         int startSample = 0;
 
         while (numLeft > 0)
         {
-            const int numThisTime = (int) juce::jmin (numLeft, (juce::int64) blockSize);
+            auto numThisTime = (int) std::min (numLeft, blockSize);
             reader.read (&buffer, 0, numThisTime, startSample, true, useRightChan);
             processSection (buffer, numThisTime);
 

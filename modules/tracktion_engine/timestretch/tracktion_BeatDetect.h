@@ -43,17 +43,17 @@ struct BeatDetect
         pushEnergy (blockEnergy);
     }
 
-    int getBlockSize()                      { return blockSize; }
-    int getNumBeats()                       { return beatBlocks.size(); }
-    juce::int64 getBeat (int idx) const     { return beatBlocks[idx] * static_cast<juce::int64> (blockSize); }
+    SampleCount getBlockSize() const                    { return blockSize; }
+    int getNumBeats()                                   { return beatBlocks.size(); }
+    SampleCount getSampleOfBeat (int beatIndex) const   { return beatBlocks[beatIndex] * blockSize; }
 
 private:
     enum { historyLength = 43 };
     double energy[historyLength] = {};
     int curBlock = 0;
     int lastBlock = -2;
-    int blockSize = 0;
-    juce::Array<int> beatBlocks;
+    SampleCount blockSize = 0;
+    juce::Array<SampleCount> beatBlocks;
     double sensitivity = 0;
 
     void pushEnergy (double e)

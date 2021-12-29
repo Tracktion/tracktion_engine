@@ -68,7 +68,7 @@ static void logRewireError (ReWireError res)
         TRACKTION_LOG_ERROR (getReWireErrorMessage (res));
 }
 
-const uint32 inputEventBufferSize = 200;
+const uint32_t inputEventBufferSize = 200;
 
 //==============================================================================
 /**
@@ -116,7 +116,7 @@ public:
 
         ReWireClearBitField (in.fRequestedChannelsBitField, kReWireAudioChannelCount);
 
-        outputEventBufferSize = (uint32) jmax (32, (int) devInfo.fMaxEventOutputBufferSize);
+        outputEventBufferSize = (uint32_t) jmax (32, (int) devInfo.fMaxEventOutputBufferSize);
         outputFromDeviceBuffer.calloc (outputEventBufferSize);
 
         ReWirePrepareDriveAudioOutputParams (&out, (ReWire_uint32_t) outputEventBufferSize, outputFromDeviceBuffer);
@@ -229,7 +229,7 @@ public:
             }
 
             // setup the output fields
-            outputEventBufferSize = (uint32) jmax (32, (int) devInfo.fMaxEventOutputBufferSize);
+            outputEventBufferSize = (uint32_t) jmax (32, (int) devInfo.fMaxEventOutputBufferSize);
             outputFromDeviceBuffer.calloc (outputEventBufferSize);
 
             ReWirePrepareDriveAudioOutputParams (&out, (ReWire_uint32_t) outputEventBufferSize, outputFromDeviceBuffer);
@@ -729,10 +729,10 @@ private:
     ReWireDriveAudioOutputParams outputFromDeviceParams;
     ReWireEvent inputToDeviceBuffer [inputEventBufferSize];
     HeapBlock<ReWireEvent> outputFromDeviceBuffer;
-    uint32 outputEventBufferSize;
+    uint32_t outputEventBufferSize = 0;
     ReWireEventTarget eventTarget;
 
-    uint32 lastDriveAudioTime = 0;
+    uint32_t lastDriveAudioTime = 0;
     juce::AudioBuffer<float> buffer;
     short reWireToLocalChanMap[kReWireAudioChannelCount];
     juce::BigInteger bufferSourceChannels;

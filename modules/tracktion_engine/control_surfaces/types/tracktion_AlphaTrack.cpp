@@ -13,10 +13,10 @@ namespace tracktion_engine
 
 namespace AlphaTrack
 {
-    static uint8 cmdInitNativeMode[] = { 0xf0, 0x00, 0x01, 0x40, 0x20, 0x01, 0x00, 0xf7 };
-    static uint8 cmdInquiry[]        = { 0xf0, 0x7e, 0x00, 0x06, 0x01, 0xf7 };
-    static uint8 rspInitAck[]        = { 0xf0, 0x7e, 0x00, 0x06, 0x02, 0x00, 0x01, 0x40, 0x20, 0x00, 0x01, 0x00 };
-    static uint8 cmdWrite[]          = { 0xf0, 0x00, 0x01, 0x40, 0x20, 0x00 };
+    static uint8_t cmdInitNativeMode[] = { 0xf0, 0x00, 0x01, 0x40, 0x20, 0x01, 0x00, 0xf7 };
+    static uint8_t cmdInquiry[]        = { 0xf0, 0x7e, 0x00, 0x06, 0x01, 0xf7 };
+    static uint8_t rspInitAck[]        = { 0xf0, 0x7e, 0x00, 0x06, 0x02, 0x00, 0x01, 0x40, 0x20, 0x00, 0x01, 0x00 };
+    static uint8_t cmdWrite[]          = { 0xf0, 0x00, 0x01, 0x40, 0x20, 0x00 };
 
     enum { TOUCH = 1, PARAM = 2 };
 }
@@ -505,11 +505,11 @@ void AlphaTrackControlSurface::moveFaderInt (float newSliderPos)
 
     if (newPos != physicalFaderPos)
     {
-        uint8 data[3];
+        uint8_t data[3];
 
         data[0] = 0xe0;
-        data[1] = (uint8) (((unsigned int) newPos & 3) << 4);
-        data[2] = (uint8) (((unsigned int) newPos & 0x3F8) >> 3);
+        data[1] = (uint8_t) (((unsigned int) newPos & 3) << 4);
+        data[2] = (uint8_t) (((unsigned int) newPos & 0x3F8) >> 3);
 
         sendMidiArray (data);
         physicalFaderPos = newPos;
@@ -660,9 +660,9 @@ void AlphaTrackControlSurface::currentSelectionChanged (juce::String)
 void AlphaTrackControlSurface::displayPrint (int line, int x, const char* const text)
 {
     const size_t len = strlen (text);
-    HeapBlock<uint8> buffer (len + 8);
+    HeapBlock<uint8_t> buffer (len + 8);
     memcpy (buffer, AlphaTrack::cmdWrite, sizeof (AlphaTrack::cmdWrite));
-    buffer [sizeof (AlphaTrack::cmdWrite)] = (uint8) (x + line * 16);
+    buffer [sizeof (AlphaTrack::cmdWrite)] = (uint8_t) (x + line * 16);
     memcpy (buffer + sizeof (AlphaTrack::cmdWrite) + 1, text, len);
     buffer [len + 8 - 1] = 0xf7;
     sendMidiCommandToController (buffer, (int) len + 8);
@@ -670,9 +670,9 @@ void AlphaTrackControlSurface::displayPrint (int line, int x, const char* const 
 
 void AlphaTrackControlSurface::setLed (int led, bool state)
 {
-    uint8 data[3];
+    uint8_t data[3];
     data[0] = 0x90;
-    data[1] = (uint8) led;
+    data[1] = (uint8_t) led;
     data[2] = state ? 0x7f : 0x00;
 
     sendMidiArray (data);

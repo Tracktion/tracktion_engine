@@ -561,7 +561,7 @@ void AudioTrack::playGuideNote (int note, MidiChannel midiChannel, int velocity,
         if (! currentlyPlayingGuideNotes.contains (pitch))
         {
             currentlyPlayingGuideNotes.add (pitch);
-            injectLiveMidiMessage (MidiMessage::noteOn (midiChannel.getChannelNumber(), pitch, (uint8) velocity),
+            injectLiveMidiMessage (MidiMessage::noteOn (midiChannel.getChannelNumber(), pitch, (uint8_t) velocity),
                                    MidiMessageArray::notMPE);
         }
 
@@ -587,7 +587,7 @@ void AudioTrack::playGuideNotes (const juce::Array<int>& notes, MidiChannel midi
             if (! currentlyPlayingGuideNotes.contains (pitch))
             {
                 currentlyPlayingGuideNotes.add (pitch);
-                injectLiveMidiMessage (MidiMessage::noteOn (midiChannel.getChannelNumber(), pitch, (uint8) vels.getUnchecked (i)),
+                injectLiveMidiMessage (MidiMessage::noteOn (midiChannel.getChannelNumber(), pitch, (uint8_t) vels.getUnchecked (i)),
                                        MidiMessageArray::notMPE);
             }
         }

@@ -29,10 +29,8 @@ void dumpSegments (const Array<AudioSegmentList::Segment>& segments)
 }
 
 //==============================================================================
-AudioSegmentList::Segment::Segment() = default;
-
 EditTimeRange AudioSegmentList::Segment::getRange() const                      { return { start, start + length }; }
-juce::Range<juce::int64> AudioSegmentList::Segment::getSampleRange() const     { return { startSample, startSample + lengthSample }; }
+SampleRange AudioSegmentList::Segment::getSampleRange() const                  { return { startSample, startSample + lengthSample }; }
 
 float AudioSegmentList::Segment::getStretchRatio() const                       { return stretchRatio; }
 float AudioSegmentList::Segment::getTranspose() const                          { return transpose; }
@@ -405,15 +403,15 @@ void AudioSegmentList::chopSegmentsForChords()
     }
 }
 
-static juce::Array<int64> findSyncSamples (const LoopInfo& loopInfo, juce::Range<juce::int64> range)
+static juce::Array<SampleCount> findSyncSamples (const LoopInfo& loopInfo, SampleRange range)
 {
-    juce::Array<int64> syncSamples;
+    juce::Array<SampleCount> syncSamples;
     auto numLoopPoints = loopInfo.getNumLoopPoints();
 
     if (numLoopPoints == 0)
     {
         for (int i = 0; i < loopInfo.getNumBeats(); ++i)
-            syncSamples.add ((juce::int64) (range.getLength() / (double) loopInfo.getNumBeats() * i + range.getStart() + 0.5));
+            syncSamples.add ((SampleCount) (range.getLength() / (double) loopInfo.getNumBeats() * i + range.getStart() + 0.5));
     }
     else
     {
@@ -433,9 +431,9 @@ static juce::Array<int64> findSyncSamples (const LoopInfo& loopInfo, juce::Range
     return syncSamples;
 }
 
-static juce::Array<juce::int64> trimInitialSyncSamples (const juce::Array<juce::int64>& samples, juce::int64 start)
+static juce::Array<SampleCount> trimInitialSyncSamples (const juce::Array<SampleCount>& samples, SampleCount start)
 {
-    juce::Array<juce::int64> result;
+    juce::Array<SampleCount> result;
     result.add (start);
 
     for (auto& s : samples)
@@ -544,9 +542,9 @@ void AudioSegmentList::buildAutoTempo (bool crossfade)
     auto wi = clip.getWaveInfo();
     auto& li = clip.getLoopInfo();
 
-    juce::Range<juce::int64> range (li.getInMarker(),
-                                    li.getOutMarker() == -1 ? wi.lengthInSamples
-                                                            : li.getOutMarker());
+    SampleRange range (li.getInMarker(),
+                       li.getOutMarker() == -1 ? wi.lengthInSamples
+                                               : li.getOutMarker());
 
     if (range.isEmpty())
         return;

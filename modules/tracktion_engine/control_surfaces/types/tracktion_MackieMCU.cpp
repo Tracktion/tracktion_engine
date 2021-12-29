@@ -149,13 +149,13 @@ void MackieMCU::handleAsyncUpdate()
 
         if (end > start)
         {
-            uint8 d[256] = { 0 };
-            d[0] = (uint8) 0xf0;
-            d[3] = (uint8) 0x66;
-            d[4] = (uint8) (i == deviceIdx ? 0x14 : 0x15);
-            d[5] = (uint8) 0x12;
-            d[6] = (uint8) start;
-            d[7 + end - start] = (uint8) 0xf7;
+            uint8_t d[256] = { 0 };
+            d[0] = (uint8_t) 0xf0;
+            d[3] = (uint8_t) 0x66;
+            d[4] = (uint8_t) (i == deviceIdx ? 0x14 : 0x15);
+            d[5] = (uint8_t) 0x12;
+            d[6] = (uint8_t) start;
+            d[7 + end - start] = (uint8_t) 0xf7;
 
             memcpy (d + 7, newChars + start, (size_t) (end - start));
 
@@ -173,14 +173,14 @@ void MackieMCU::setSignalMetersEnabled (int dev, bool b)
     // enable signal level meters..
     for (int j = 0; j < 8; ++j)
     {
-        uint8 d[10];
+        uint8_t d[10];
         d[0] = 0xf0;
         d[1] = 0x00;
         d[2] = 0x00;
         d[3] = 0x66;
         d[4] = (dev == deviceIdx) ? 0x14 : 0x15; // xxx or 15 for extender
         d[5] = 0x20;
-        d[6] = (uint8) j;
+        d[6] = (uint8_t) j;
         d[7] = b ? 3 : 0;  // 1 for just led
         d[8] = 0xf7;
 
@@ -195,7 +195,7 @@ void MackieMCU::setSignalMetersEnabled (int dev, bool b)
             sendMidiCommandToController (dev, d, 8);
 
             d[0] = 0xd0;
-            d[1] = (uint8) ((j << 4) | 0x0f);
+            d[1] = (uint8_t) ((j << 4) | 0x0f);
 
             sendMidiCommandToController (dev, d, 2);
         }
@@ -253,7 +253,7 @@ void MackieMCU::shutDownDevice()
     cpuMeterTimer->stopTimer();
 
     // send a reset message:
-    uint8 d[8] = { 0xf0, 0x00, 0x00, 0x66, 0x14, 0x08, 0x00, 0xf7 };
+    uint8_t d[8] = { 0xf0, 0x00, 0x00, 0x66, 0x14, 0x08, 0x00, 0xf7 };
     sendMidiCommandToController (deviceIdx, d, 8);
 }
 
@@ -409,7 +409,7 @@ void MackieMCU::acceptMidiMessage (int deviceIndex, const MidiMessage& m)
             {
                 if (d[2] != 0)
                 {
-                    const uint32 now = Time::getMillisecondCounter();
+                    auto now = Time::getMillisecondCounter();
 
                     if (now < lastRewindPress + 300)
                     {
@@ -937,16 +937,16 @@ void MackieMCU::flip()
     updateDeviceState();
 }
 
-static uint8 convertCharToMCUCode (juce_wchar c) noexcept
+static uint8_t convertCharToMCUCode (juce_wchar c) noexcept
 {
     if (c >= 'a' && c <= 'z')
-        return (uint8) ((c - 'a') + 1);
+        return (uint8_t) ((c - 'a') + 1);
 
     if (c >= 'A' && c <= 'Z')
-        return (uint8) ((c - 'A') + 1);
+        return (uint8_t) ((c - 'A') + 1);
 
     if (c >= '0' && c <= '9')
-        return (uint8) ((c - '0') + 0x30);
+        return (uint8_t) ((c - '0') + 0x30);
 
     return 0x20;
 }
@@ -1043,12 +1043,12 @@ void MackieMCU::moveFaderInt (int dev, int channelNum, float newSliderPos)
 
     if (std::abs ((int) lastFaderPos[dev][channelNum] - faderPos) > 2)
     {
-        lastFaderPos[dev][channelNum] = (uint32) faderPos;
+        lastFaderPos[dev][channelNum] = (uint32_t) faderPos;
 
         sendMidiCommandToController (dev,
-                                     (uint8) (0xe0 + channelNum),
-                                     (uint8) (faderPos & 0x7f),
-                                     (uint8) (faderPos >> 7));
+                                     (uint8_t) (0xe0 + channelNum),
+                                     (uint8_t) (faderPos & 0x7f),
+                                     (uint8_t) (faderPos >> 7));
     }
 }
 
@@ -1076,8 +1076,8 @@ void MackieMCU::movePanPotInt (int dev, int channelNum, float newPan)
     jassert (channelNum <= 7);
     panPos [dev * 8 + channelNum] = newPan;
 
-    sendMidiCommandToController (dev, 0xb0, (uint8) (0x30 + channelNum),
-                                 (uint8) jlimit (0x01, 0x0b, 6 + roundToInt (5 * newPan)));
+    sendMidiCommandToController (dev, 0xb0, (uint8_t) (0x30 + channelNum),
+                                 (uint8_t) jlimit (0x01, 0x0b, 6 + roundToInt (5 * newPan)));
 }
 
 void MackieMCU::movePanPot (int channelNum_, float newPan)
@@ -1141,7 +1141,7 @@ void MackieMCU::clearAux (int channel_)
 void MackieMCU::lightUpButton (int dev, int buttonNum, bool on)
 {
     CRASH_TRACER
-    sendMidiCommandToController (dev, 0x90, (uint8) buttonNum, on ? (uint8) 0x7f : (uint8) 0);
+    sendMidiCommandToController (dev, 0x90, (uint8_t) buttonNum, on ? (uint8_t) 0x7f : (uint8_t) 0);
 }
 
 void MackieMCU::updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState state, bool isBright)
@@ -1254,8 +1254,8 @@ void MackieMCU::faderBankChanged (int newStartChannelNumber, const juce::StringA
 
             ++newStartChannelNumber;
 
-            sendMidiCommandToController (deviceIdx, 0xb0, 0x4a, (uint8) (0x30 + newStartChannelNumber % 10));
-            sendMidiCommandToController (deviceIdx, 0xb0, 0x4b, (uint8) (0x30 + newStartChannelNumber / 10));
+            sendMidiCommandToController (deviceIdx, 0xb0, 0x4a, (uint8_t) (0x30 + newStartChannelNumber % 10));
+            sendMidiCommandToController (deviceIdx, 0xb0, 0x4b, (uint8_t) (0x30 + newStartChannelNumber / 10));
         }
 
         clearAllDisplays();
@@ -1281,7 +1281,7 @@ void MackieMCU::channelLevelChanged (int channelNum_, float level)
 
     if (assignmentMode == PanMode)
     {
-        const uint8 newValue = (uint8) jlimit (0, 13, roundToInt (13.0f * level));
+        const uint8_t newValue = (uint8_t) jlimit (0, 13, roundToInt (13.0f * level));
 
         if (lastChannelLevels[channelNum_] != newValue)
         {
@@ -1289,7 +1289,7 @@ void MackieMCU::channelLevelChanged (int channelNum_, float level)
 
             unsigned char d[4];
             d[0] = 0xd0;
-            d[1] = (uint8) ((channel << 4) | newValue);
+            d[1] = (uint8_t) ((channel << 4) | newValue);
 
             sendMidiCommandToController (dev, d, 2);
         }
@@ -1309,7 +1309,7 @@ void MackieMCU::updateTCDisplay (const char* newDigits)
         if (timecodeDigits[i] != c)
         {
             timecodeDigits[i] = c;
-            sendMidiCommandToController (deviceIdx, (uint8) 0xb0, (uint8) (0x49 - i), convertCharToMCUCode (c));
+            sendMidiCommandToController (deviceIdx, (uint8_t) 0xb0, (uint8_t) (0x49 - i), convertCharToMCUCode (c));
         }
     }
 }
@@ -1380,9 +1380,9 @@ void MackieMCU::unregisterXT (MackieXT* xt)
     numParameterControls  = 8 * (extenders.size() + 1);
 }
 
-void MackieMCU::sendMidiCommandToController (int devIdx, uint8 byte1, uint8 byte2, uint8 byte3)
+void MackieMCU::sendMidiCommandToController (int devIdx, uint8_t byte1, uint8_t byte2, uint8_t byte3)
 {
-    uint8 bytes[] = { byte1, byte2, byte3 };
+    uint8_t bytes[] = { byte1, byte2, byte3 };
     sendMidiCommandToController (devIdx, bytes, 3);
 }
 

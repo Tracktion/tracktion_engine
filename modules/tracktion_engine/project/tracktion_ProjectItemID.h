@@ -46,7 +46,7 @@ public:
     int getItemID() const;
 
     /** Returns a combined ID as an integer, useful for creating hashes */
-    juce::int64 getRawID() const noexcept               { return combinedID; }
+    int64_t getRawID() const noexcept                   { return combinedID; }
 
     //==============================================================================
     bool isValid() const noexcept                       { return combinedID != 0; }
@@ -62,7 +62,7 @@ public:
     bool operator<  (ProjectItemID other) const         { return combinedID <  other.combinedID; }
 
 private:
-    juce::int64 combinedID = 0;
+    int64_t combinedID = 0;
 
     // (NB: this is disallowed because it's ambiguous whether a string or int64 format is intended)
     ProjectItemID (const juce::var&) = delete;

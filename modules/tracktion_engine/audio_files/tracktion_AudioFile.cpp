@@ -88,7 +88,7 @@ juce::String AudioFileInfo::getLongDescription() const
 }
 
 bool AudioFile::isValid() const                         { return hash != 0 && getSampleRate() > 0; }
-juce::int64 AudioFile::getLengthInSamples() const       { return getInfo().lengthInSamples; }
+SampleCount AudioFile::getLengthInSamples() const       { return getInfo().lengthInSamples; }
 double AudioFile::getLength() const                     { return getInfo().getLengthInSeconds(); }
 int AudioFile::getNumChannels() const                   { return getInfo().numChannels; }
 double AudioFile::getSampleRate() const                 { return getInfo().sampleRate; }
@@ -202,8 +202,8 @@ bool AudioFileWriter::appendBuffer (const int** buffer, int num)
 }
 
 bool AudioFileWriter::writeFromAudioReader (juce::AudioFormatReader& reader,
-                                            juce::int64 startSample,
-                                            juce::int64 numSamples)
+                                            SampleCount startSample,
+                                            SampleCount numSamples)
 {
     const juce::ScopedLock sl (writerLock);
     return writer != nullptr && writer->writeFromAudioReader (reader, startSample, numSamples);
@@ -626,8 +626,8 @@ void AudioFileManager::clearFiles()
     CRASH_TRACER
     const juce::ScopedLock sl (knownFilesLock);
 
-    for (juce::HashMap<juce::int64, KnownFile*>::Iterator i (knownFiles); i.next();)
-        delete i.getValue();
+    for (auto f : knownFiles)
+        delete f;
 
     knownFiles.clear();
 }
@@ -695,10 +695,9 @@ void AudioFileManager::checkFilesForChanges()
     {
         const juce::ScopedLock sl (knownFilesLock);
 
-        for (juce::HashMap<juce::int64, KnownFile*>::Iterator i (knownFiles); i.next();)
-            if (auto f = i.getValue())
-                if (checkFileTime (*f))
-                    changedFiles.add (f->file);
+        for (auto f : knownFiles)
+            if (checkFileTime (*f))
+                changedFiles.add (f->file);
     }
 
     for (auto& f : changedFiles)

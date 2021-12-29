@@ -38,7 +38,7 @@ public:
     }
 
     bool readSamples (int** destSamples, int numDestChannels, int startOffsetInDestBuffer,
-                      juce::int64 startSampleInFile, int numSamples)
+                      int64_t startSampleInFile, int numSamples)
     {
         clearSamplesBeyondAvailableLength (destSamples, numDestChannels, startOffsetInDestBuffer,
                                            startSampleInFile, numSamples, lengthInSamples);
@@ -164,7 +164,7 @@ public:
     }
 
     bool readSamples (int** destSamples, int numDestChannels, int startOffsetInDestBuffer,
-                      juce::int64 startSampleInFile, int numSamples) override
+                      int64_t startSampleInFile, int numSamples) override
     {
         clearSamplesBeyondAvailableLength (destSamples, numDestChannels, startOffsetInDestBuffer,
                                            startSampleInFile, numSamples, lengthInSamples);
@@ -185,7 +185,7 @@ public:
         return true;
     }
 
-    void getSample (juce::int64 sample, float* result) const noexcept override
+    void getSample (int64_t sample, float* result) const noexcept override
     {
         if (map == nullptr || ! mappedSection.contains (sample))
         {
@@ -206,7 +206,8 @@ public:
     }
 
     using juce::MemoryMappedAudioFormatReader::readMaxLevels;
-    void readMaxLevels (juce::int64 startSampleInFile, juce::int64 numSamples, juce::Range<float>* results, int numChannelsToRead) override
+
+    void readMaxLevels (int64_t startSampleInFile, int64_t numSamples, juce::Range<float>* results, int numChannelsToRead) override
     {
         if (numSamples <= 0)
         {
@@ -245,7 +246,7 @@ private:
     const bool bigEndian;
 
     template <typename SampleType>
-    void scanMinAndMax (juce::int64 startSampleInFile, juce::int64 numSamples, juce::Range<float>* results, int numChannelsToRead) const
+    void scanMinAndMax (int64_t startSampleInFile, int64_t numSamples, juce::Range<float>* results, int numChannelsToRead) const
     {
         typedef juce::AudioData::Pointer<SampleType, juce::AudioData::LittleEndian, juce::AudioData::Interleaved, juce::AudioData::Const> SourceType;
 

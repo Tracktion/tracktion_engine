@@ -44,7 +44,7 @@ public:
 
     private:
         friend class RecordingThumbnailManager;
-        std::atomic<juce::int64> nextSampleNum { 0 };
+        std::atomic<int64_t> nextSampleNum { 0 };
 
         Thumbnail (Engine& e, const juce::File& f)
             : engine (e),

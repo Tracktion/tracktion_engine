@@ -464,7 +464,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
         {
             CRASH_TRACER
             auto blockLength = blockSize / writer->getSampleRate();
-            juce::int64 samplesToWrite = roundToInt ((streamRange.getEnd() - streamTime) * writer->getSampleRate());
+            SampleCount samplesToWrite = roundToInt ((streamRange.getEnd() - streamTime) * writer->getSampleRate());
             auto blockEnd = jmin (streamTime + blockLength, streamRange.getEnd());
             rc->streamTime = { streamTime, blockEnd };
 
@@ -480,7 +480,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
                 return ThreadPoolJob::jobNeedsRunningAgain;
             }
 
-            const int numSamplesDone = (int) jmin (samplesToWrite, (juce::int64) blockSize);
+            auto numSamplesDone = (int) jmin (samplesToWrite, static_cast<SampleCount> (blockSize));
             rc->bufferNumSamples = numSamplesDone;
 
             if (numSamplesDone > 0)
@@ -581,7 +581,7 @@ struct BlockBasedRenderJob : public ClipEffect::ClipEffectRenderJob
         if (reader == nullptr || reader->lengthInSamples == 0)
             return false;
 
-        sourceLengthSamples = (juce::int64) (sourceLengthSeconds * reader->sampleRate);
+        sourceLengthSamples = static_cast<SampleCount> (sourceLengthSeconds * reader->sampleRate);
 
         writer.reset (new AudioFileWriter (destination, engine.getAudioFileFormatManager().getWavFormat(),
                                            sourceInfo.numChannels, sourceInfo.sampleRate,
@@ -605,8 +605,7 @@ protected:
     std::unique_ptr<AudioFileWriter> writer;
 
     double sourceLengthSeconds = 0;
-    juce::int64 position = 0;
-    juce::int64 sourceLengthSamples = 0;
+    SampleCount position = 0, sourceLengthSamples = 0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BlockBasedRenderJob)
 };
@@ -1490,7 +1489,7 @@ struct MakeMonoEffect::MakeMonoRenderJob : public BlockBasedRenderJob
         if (reader == nullptr || reader->lengthInSamples == 0)
             return false;
 
-        sourceLengthSamples = (juce::int64) (sourceLengthSeconds * reader->sampleRate);
+        sourceLengthSamples = static_cast<SampleCount> (sourceLengthSeconds * reader->sampleRate);
 
         writer.reset (new AudioFileWriter (destination, engine.getAudioFileFormatManager().getWavFormat(),
                                            1, sourceInfo.sampleRate,

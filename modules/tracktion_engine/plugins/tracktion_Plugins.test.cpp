@@ -137,7 +137,7 @@ public:
         AudioBuffer<float> buffer (1, (int) sampleRate);
         juce::dsp::Oscillator<float> osc ([] (float in) { return std::sin (in); });
         osc.setFrequency (220.0);
-        osc.prepare ({ double (sampleRate), uint32 (sampleRate), 1 });
+        osc.prepare ({ double (sampleRate), uint32_t (sampleRate), 1 });
 
         float* samples = buffer.getWritePointer (0);
         int numSamples = buffer.getNumSamples();

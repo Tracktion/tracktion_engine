@@ -40,7 +40,7 @@ public:
 
 private:
     struct KnownFile;
-    juce::HashMap<juce::int64, KnownFile*> knownFiles;
+    juce::HashMap<HashCode, KnownFile*> knownFiles;
     juce::CriticalSection knownFilesLock;
 
     KnownFile& findOrCreateKnown (const AudioFile&);

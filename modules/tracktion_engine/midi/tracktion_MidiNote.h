@@ -80,7 +80,7 @@ private:
     friend struct NoteChannelAssigner;
 
     double startBeat, lengthInBeats;
-    juce::uint8 noteNumber, velocity, colour, mute;
+    uint8_t noteNumber, velocity, colour, mute;
 
     void updatePropertiesFromState();
 

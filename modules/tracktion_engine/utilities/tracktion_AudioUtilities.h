@@ -11,6 +11,9 @@
 namespace tracktion_engine
 {
 
+using SampleCount = int64_t;
+using SampleRange = juce::Range<SampleCount>;
+
 float dbToGain (float db) noexcept;
 float gainToDb (float gain) noexcept;
 

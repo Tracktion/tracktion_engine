@@ -91,10 +91,10 @@ bool TemporaryFileManager::isDiskSpaceDangerouslyLow() const
     return freeMb < 80;
 }
 
-juce::int64 TemporaryFileManager::getMaxSpaceAllowedForTempFiles() const
+int64_t TemporaryFileManager::getMaxSpaceAllowedForTempFiles() const
 {
-    juce::int64 minAbsoluteSize = 1024 * 1024 * 750;
-    juce::int64 minProportionOfDisk = tempDir.getBytesFreeOnVolume() / 4;
+    int64_t minAbsoluteSize = 1024 * 1024 * 750;
+    int64_t minProportionOfDisk = tempDir.getBytesFreeOnVolume() / 4;
 
     return std::min (minProportionOfDisk, minAbsoluteSize);
 }
@@ -152,7 +152,7 @@ void TemporaryFileManager::cleanUp()
 
     deleteEditPreviewsNotInUse (engine, tempFiles);
 
-    juce::int64 totalBytes = 0;
+    int64_t totalBytes = 0;
 
     for (auto& f : tempFiles)
         totalBytes += f.getSize();

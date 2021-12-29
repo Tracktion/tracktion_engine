@@ -96,7 +96,7 @@ private:
 
     mutable bool parameterTreeBuilt = false;
     std::atomic<bool> automationActive { false };
-    juce::uint32 systemTimeOfLastPlayedBlock = 0;
+    uint32_t systemTimeOfLastPlayedBlock = 0;
     double lastTime = 0.0;
 
     struct ParameterChangeListeners  : public juce::AsyncUpdater

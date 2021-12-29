@@ -53,7 +53,7 @@ private:
         {
             auto info = audioFile.getInfo();
             expectEquals (info.sampleRate, 0.0);
-            expectEquals<juce::int64> (info.lengthInSamples, 0);
+            expectEquals<SampleCount> (info.lengthInSamples, 0);
             expectEquals (info.getLengthInSeconds(), 0.0);
         }
 
@@ -76,7 +76,7 @@ private:
         {
             auto info = audioFile.getInfo();
             expectEquals (info.sampleRate, sampleRate);
-            expectEquals (info.lengthInSamples, static_cast<juce::int64> (sampleRate));
+            expectEquals (info.lengthInSamples, static_cast<SampleCount> (sampleRate));
             expectEquals (info.getLengthInSeconds(), 1.0);
         }
     }

@@ -122,7 +122,7 @@ void TempoSequence::TempoSections::swapWith (juce::Array<SectionDetails>& newTem
     tempos.swapWith (newTempos);
 }
 
-juce::uint32 TempoSequence::TempoSections::getChangeCount() const
+uint32_t TempoSequence::TempoSections::getChangeCount() const
 {
     return changeCounter;
 }

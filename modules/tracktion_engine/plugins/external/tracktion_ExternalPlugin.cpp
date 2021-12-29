@@ -1022,7 +1022,7 @@ struct ExternalPlugin::MPEChannelRemapper
         if (channel < lowChannel || channel > highChannel)
             return;
 
-        auto sourceAndChannelID = (((uint32) m.mpeSourceID << 5) | (uint32) (channel - 1));
+        auto sourceAndChannelID = (((uint32_t) m.mpeSourceID << 5) | (uint32_t) (channel - 1));
 
         if ((*m.getRawData() & 0xf0) != 0xf0)
         {
@@ -1049,9 +1049,9 @@ struct ExternalPlugin::MPEChannelRemapper
         }
     }
 
-    uint32 sourceAndChannel[17] = {};
-    uint32 lastUsed[17] = {};
-    uint32 counter = 0;
+    uint32_t sourceAndChannel[17] = {};
+    uint32_t lastUsed[17] = {};
+    uint32_t counter = 0;
 
     int getBestChanToReuse() const noexcept
     {
@@ -1074,7 +1074,7 @@ struct ExternalPlugin::MPEChannelRemapper
         return bestChan;
     }
 
-    bool applyRemapIfExisting (int channel, uint32 sourceAndChannelID, MidiMessageArray::MidiMessageWithSource& m) noexcept
+    bool applyRemapIfExisting (int channel, uint32_t sourceAndChannelID, MidiMessageArray::MidiMessageWithSource& m) noexcept
     {
         if (sourceAndChannel[channel] == sourceAndChannelID)
         {
@@ -1186,7 +1186,7 @@ void ExternalPlugin::prepareIncomingMidiMessages (MidiMessageArray& incoming, in
 {
     if (incoming.isAllNotesOff)
     {
-        uint32 eventsSentOnChannel = 0;
+        uint32_t eventsSentOnChannel = 0;
 
         activeNotes.iterate ([&eventsSentOnChannel, this, isPlaying] (int chan, int noteNumber)
         {
@@ -1259,7 +1259,7 @@ void ExternalPlugin::prepareIncomingMidiMessages (MidiMessageArray& incoming, in
    #if 0
     if (! incoming.isEmpty())
     {
-        const uint8* midiData;
+        const uint8_t* midiData;
         int numBytes, midiEventPos;
 
         DBG ("----------");

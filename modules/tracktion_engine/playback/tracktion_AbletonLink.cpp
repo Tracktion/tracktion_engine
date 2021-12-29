@@ -168,7 +168,7 @@ struct AbletonLink::ImplBase  : public Timer
     ListenerList<Listener> listeners;
     bool isConnected = false;
     int customOffsetMs = 0;
-    juce::uint32 inhibitTimer = 0;
+    uint32_t inhibitTimer = 0;
 
     juce::Range<double> allowedTempos { 0.0, 999.0 };
 };

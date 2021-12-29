@@ -1171,13 +1171,14 @@ LoopInfo AudioClipBase::autoDetectBeatMarkers (const LoopInfo& current, bool aut
             detect.setSensitivity (sens);
             detect.setSampleRate (reader->sampleRate);
 
-            int chans     = (int) reader->numChannels;
-            int blockSize = detect.getBlockSize();
+            auto chans     = (int) reader->numChannels;
+            auto blockSize = detect.getBlockSize();
 
             HeapBlock<float*> buffers;
             buffers.calloc ((size_t) chans + 2);
 
             HeapBlock<float> buffer ((size_t) (blockSize * chans));
+
             for (int i = 0; i < chans; ++i)
                 buffers[i] = buffer + i * blockSize;
 
@@ -1185,9 +1186,9 @@ LoopInfo AudioClipBase::autoDetectBeatMarkers (const LoopInfo& current, bool aut
 
             if (len / reader->sampleRate >= 1)
             {
-                int blocks = int (len / blockSize);
+                auto numBlocks = int (len / blockSize);
 
-                for (int i = 0; i < blocks; ++i)
+                for (int i = 0; i < numBlocks; ++i)
                 {
                     if (! reader->readSamples ((int**) buffers.getData(), chans, 0, in + i * blockSize, blockSize))
                         break;
@@ -1204,7 +1205,8 @@ LoopInfo AudioClipBase::autoDetectBeatMarkers (const LoopInfo& current, bool aut
                 }
 
                 for (int i = 0; i < detect.getNumBeats(); ++i)
-                    res.addLoopPoint (detect.getBeat(i) + in, LoopInfo::LoopPointType::automatic);
+                    res.addLoopPoint (detect.getSampleOfBeat(i) + in,
+                                      LoopInfo::LoopPointType::automatic);
             }
         }
     }
@@ -1903,14 +1905,14 @@ struct StretchSegment
 
         if (loopRange.getStart() > editTime.getStart())
         {
-            int skip = jlimit (0, numSamples, (int) (numSamples * (loopRange.getStart() - editTime.getStart()) / editTime.getLength()));
+            auto skip = jlimit (0, numSamples, (int) (numSamples * (loopRange.getStart() - editTime.getStart()) / editTime.getLength()));
             start += skip;
             numSamples -= skip;
         }
 
         while (numSamples > 0)
         {
-            const int numReady = jmin (numSamples, readySamplesEnd - readySamplesStart);
+            auto numReady = jmin (numSamples, readySamplesEnd - readySamplesStart);
 
             if (numReady > 0)
             {
@@ -1923,7 +1925,7 @@ struct StretchSegment
             }
             else
             {
-                const int blockSize = fillNextBlock();
+                auto blockSize = fillNextBlock();
                 renderFades (blockSize);
 
                 readySampleOutputPos += blockSize;

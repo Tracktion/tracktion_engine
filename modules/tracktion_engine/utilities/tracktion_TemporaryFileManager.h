@@ -38,7 +38,7 @@ public:
     bool isDiskSpaceDangerouslyLow() const;
 
     /** */
-    juce::int64 getMaxSpaceAllowedForTempFiles() const;
+    int64_t getMaxSpaceAllowedForTempFiles() const;
 
     /** */
     int getMaxNumTempFiles() const;

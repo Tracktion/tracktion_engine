@@ -23,7 +23,7 @@ public:
     void clear() override;
     void clearChannelData();
 
-    void reset (int newNumChannels, double newSampleRate, juce::int64 totalSamplesInSource = 0) override;
+    void reset (int newNumChannels, double newSampleRate, SampleCount totalSamplesInSource = 0) override;
     void createChannels (int length);
 
     //==============================================================================
@@ -38,7 +38,7 @@ public:
 
     HashCode getHashCode() const override;
 
-    void addBlock (juce::int64 startSample, const juce::AudioBuffer<float>& incoming,
+    void addBlock (SampleCount startSample, const juce::AudioBuffer<float>& incoming,
                    int startOffsetInBuffer, int numSamples) override;
 
     //==============================================================================
@@ -46,7 +46,7 @@ public:
     double getTotalLength() const noexcept override;
     bool isFullyLoaded() const noexcept override;
     double getProportionComplete() const noexcept;
-    juce::int64 getNumSamplesFinished() const noexcept override;
+    SampleCount getNumSamplesFinished() const noexcept override;
     float getApproximatePeak() const override;
     void getApproximateMinMax (double startTime, double endTime, int channelIndex,
                                float& minValue, float& maxValue) const noexcept override;
@@ -71,9 +71,9 @@ private:
     std::unique_ptr<CachedWindow> window;
     juce::OwnedArray<ThumbData> channels;
 
-    juce::int32 samplesPerThumbSample = 0;
-    juce::int64 totalSamples = 0, numSamplesFinished = 0;
-    juce::int32 numChannels = 0;
+    SampleCount totalSamples = 0, numSamplesFinished = 0;
+    int samplesPerThumbSample = 0;
+    int numChannels = 0;
     double sampleRate = 0;
     juce::CriticalSection lock, sourceLock;
 

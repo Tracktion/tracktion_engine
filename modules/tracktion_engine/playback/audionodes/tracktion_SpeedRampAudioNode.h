@@ -98,7 +98,7 @@ public:
 
         // keep a local copy, because releaseAudioNodeResources may remove the reader halfway through..
         if (const auto localReader = reader)
-            localReader->setReadPosition ((juce::int64) (editTimeToFileSample (rc.getEditTime().editRange1.getStart()) + 0.5) - 5);
+            localReader->setReadPosition (static_cast<SampleCount> (editTimeToFileSample (rc.getEditTime().editRange1.getStart()) + 0.5) - 5);
     }
 
     void renderSection (const AudioRenderContext& rc, EditTimeRange editTime)
@@ -119,12 +119,12 @@ public:
         if (audioFileSampleRate == 0.0 && ! updateFileSampleRate())
             return;
 
-        const double fileStart = editTimeToFileSample (editTime.getStart());
-        const double fileEnd   = editTimeToFileSample (editTime.getEnd());
+        auto fileStart = editTimeToFileSample (editTime.getStart());
+        auto fileEnd   = editTimeToFileSample (editTime.getEnd());
 
         int preRead            = 5;
-        auto fileReadStart     = juce::int64 (std::ceil (fileStart)) - preRead;
-        auto fileReadEnd       = juce::int64 (std::ceil (fileEnd));
+        auto fileReadStart     = static_cast<SampleCount> (std::ceil (fileStart)) - preRead;
+        auto fileReadEnd       = static_cast<SampleCount> (std::ceil (fileEnd));
         auto numSamplesToRead  = (int) (fileReadEnd - fileReadStart);
 
         AudioScratchBuffer scratchBuffer (juce::jmin (2, rc.destBuffer->getNumChannels()), numSamplesToRead + 2);
@@ -239,8 +239,8 @@ private:
             if (audioFileSampleRate > 0)
             {
                 if (! loopSection.isEmpty())
-                    reader->setLoopRange (juce::Range<juce::int64> ((juce::int64) (loopSection.getStart() * audioFileSampleRate),
-                                                                    (juce::int64) (loopSection.getEnd()   * audioFileSampleRate)));
+                    reader->setLoopRange (SampleRange ((SampleCount) (loopSection.getStart() * audioFileSampleRate),
+                                                       (SampleCount) (loopSection.getEnd()   * audioFileSampleRate)));
 
                 return true;
             }

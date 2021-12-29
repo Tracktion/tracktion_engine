@@ -141,7 +141,7 @@ public:
 private:
     bool playing = false, scrubbing = false;
     double lastTime = 0, offset = 0, timeBetweenMessages = 0;
-    uint32 lastMessageSent = 0;
+    uint32_t lastMessageSent = 0;
     int framesPerSecond = 0;
     bool isDropFrame = false;
     MidiMessage::SmpteTimecodeType midiTCType = MidiMessage::fps24;

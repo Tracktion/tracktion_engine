@@ -467,7 +467,7 @@ void MidiInputDevice::timerCallback()
     Array<int> down, vels, up;
 
     bool keysDownCopy[128], keysUpCopy[128];
-    juce::uint8 keyDownVelocitiesCopy[128];
+    uint8_t keyDownVelocitiesCopy[128];
 
     {
         juce::ScopedLock sl (noteLock);

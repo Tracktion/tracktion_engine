@@ -128,10 +128,10 @@ public:
         void swapWith (juce::Array<SectionDetails>& newTempos);
 
         /** Compare to cheaply determine if any changes have been made. */
-        juce::uint32 getChangeCount() const;
+        uint32_t getChangeCount() const;
 
     private:
-        juce::uint32 changeCounter = 0;
+        uint32_t changeCounter = 0;
         juce::Array<SectionDetails> tempos;
     };
 

@@ -80,7 +80,7 @@ std::unique_ptr<juce::XmlElement> convertMidnamToXml (const juce::File& src)
         juce::MemoryBlock mb;
         src.loadFileAsData (mb);
 
-        for (juce::uint32 i = 0; i < mb.getSize(); ++i)
+        for (size_t i = 0; i < mb.getSize(); ++i)
             if (mb[i] == 0)
                 mb[i] = 32;
 
