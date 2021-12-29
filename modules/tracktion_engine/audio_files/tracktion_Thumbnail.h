@@ -23,7 +23,7 @@ public:
     void clear() override;
     void clearChannelData();
 
-    void reset (int newNumChannels, double newSampleRate, SampleCount totalSamplesInSource = 0) override;
+    void reset (int newNumChannels, double newSampleRate, juce::int64 totalSamplesInSource = 0) override;
     void createChannels (int length);
 
     //==============================================================================
@@ -32,13 +32,13 @@ public:
 
     //==============================================================================
     bool setSource (juce::InputSource*) override;
-    void setReader (juce::AudioFormatReader*, HashCode) override;
+    void setReader (juce::AudioFormatReader*, juce::int64) override;
 
     void releaseResources();
 
-    HashCode getHashCode() const override;
+    juce::int64 getHashCode() const override;
 
-    void addBlock (SampleCount startSample, const juce::AudioBuffer<float>& incoming,
+    void addBlock (juce::int64 startSample, const juce::AudioBuffer<float>& incoming,
                    int startOffsetInBuffer, int numSamples) override;
 
     //==============================================================================
@@ -46,7 +46,7 @@ public:
     double getTotalLength() const noexcept override;
     bool isFullyLoaded() const noexcept override;
     double getProportionComplete() const noexcept;
-    SampleCount getNumSamplesFinished() const noexcept override;
+    juce::int64 getNumSamplesFinished() const noexcept override;
     float getApproximatePeak() const override;
     void getApproximateMinMax (double startTime, double endTime, int channelIndex,
                                float& minValue, float& maxValue) const noexcept override;

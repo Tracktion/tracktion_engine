@@ -701,7 +701,7 @@ bool TracktionThumbnail::setSource (juce::InputSource* newSource)
     return newSource != nullptr && setDataSource (new LevelDataSource (*this, newSource));
 }
 
-void TracktionThumbnail::setReader (juce::AudioFormatReader* newReader, HashCode hash)
+void TracktionThumbnail::setReader (juce::AudioFormatReader* newReader, juce::int64 hash)
 {
     clear();
 
@@ -717,13 +717,13 @@ void TracktionThumbnail::releaseResources()
         source->releaseResources();
 }
 
-HashCode TracktionThumbnail::getHashCode() const
+juce::int64 TracktionThumbnail::getHashCode() const
 {
     const juce::ScopedLock sl (sourceLock);
     return source == nullptr ? 0 : source->hashCode;
 }
 
-void TracktionThumbnail::addBlock (SampleCount startSample, const juce::AudioBuffer<float>& incoming,
+void TracktionThumbnail::addBlock (juce::int64 startSample, const juce::AudioBuffer<float>& incoming,
                                    int startOffsetInBuffer, int numSamples)
 {
     jassert (startSample >= 0);
@@ -800,7 +800,7 @@ double TracktionThumbnail::getProportionComplete() const noexcept
     return juce::jlimit (0.0, 1.0, numSamplesFinished / (double) std::max ((SampleCount) 1, totalSamples));
 }
 
-SampleCount TracktionThumbnail::getNumSamplesFinished() const noexcept
+juce::int64 TracktionThumbnail::getNumSamplesFinished() const noexcept
 {
     const juce::ScopedLock sl (lock);
     return numSamplesFinished;
