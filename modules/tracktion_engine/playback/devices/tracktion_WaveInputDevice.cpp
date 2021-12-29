@@ -330,7 +330,7 @@ public:
             rc->sampleRate = sr;
 
             StringPairArray metadata;
-            AudioFileUtils::addBWAVStartToMetadata (metadata, (int64) (playStart * sr));
+            AudioFileUtils::addBWAVStartToMetadata (metadata, (SampleCount) (playStart * sr));
             auto& wi = getWaveInput();
 
             rc->fileWriter.reset (new AudioFileWriter (AudioFile (edit.engine, recordedFile), format,
@@ -738,7 +738,7 @@ public:
 
         for (auto& f : filesCreated)
         {
-            AudioFileUtils::applyBWAVStartTime (f, (int64) (newClip->getPosition().getStartOfSource() * rc.sampleRate));
+            AudioFileUtils::applyBWAVStartTime (f, (SampleCount) (newClip->getPosition().getStartOfSource() * rc.sampleRate));
             afm.forceFileUpdate (AudioFile (edit.engine, f));
         }
 
@@ -961,7 +961,9 @@ public:
 
             CRASH_TRACER
 
-            AudioFileUtils::applyBWAVStartTime (recordedFile, (int64) (newClip->getPosition().getStartOfSource() * recordBuffer->sampleRate));
+            AudioFileUtils::applyBWAVStartTime (recordedFile, (SampleCount) (newClip->getPosition().getStartOfSource()
+                                                                              * recordBuffer->sampleRate));
+
             edit.engine.getAudioFileManager().forceFileUpdate (AudioFile (dstTrack->edit.engine, recordedFile));
 
             if (selectionManager != nullptr)

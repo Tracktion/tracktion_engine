@@ -234,10 +234,10 @@ struct ExtraVSTCallbacks  : public juce::VSTPluginFormat::ExtraFunctions
 {
     ExtraVSTCallbacks (Edit& ed) : edit (ed) {}
 
-    int64 getTempoAt (int64 samplePos) override
+    int64_t getTempoAt (SampleCount samplePos) override
     {
         auto sampleRate = edit.engine.getDeviceManager().getSampleRate();
-        return (int64) (10000.0 * edit.tempoSequence.getTempoAt (samplePos / sampleRate).getBpm());
+        return (int64_t) (10000.0 * edit.tempoSequence.getTempoAt (samplePos / sampleRate).getBpm());
     }
 
     // returns 0: not supported, 1: off, 2:read, 3:write, 4:read/write
@@ -314,7 +314,7 @@ public:
             result.ppqLoopEnd = loopEnd->getPPQTime();
         }
 
-        result.timeInSamples    = (int64) (localTime * plugin.sampleRate);
+        result.timeInSamples    = (int64_t) (localTime * plugin.sampleRate);
         result.timeInSeconds    = localTime;
 
         currentPos->setTime (localTime);

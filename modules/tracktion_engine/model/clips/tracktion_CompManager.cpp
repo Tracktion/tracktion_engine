@@ -1102,14 +1102,14 @@ bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& w
     // now perform the render
     auto streamTime = takeRange.getStart();
     auto blockLength = blockSize / writer.getSampleRate();
-    int64 samplesToWrite = roundToInt (takeRange.getLength() * writer.getSampleRate());
+    SampleCount samplesToWrite = roundToInt (takeRange.getLength() * writer.getSampleRate());
 
     for (;;)
     {
         auto blockEnd = jmin (streamTime + blockLength, takeRange.getEnd());
         rc.streamTime = { streamTime, blockEnd };
 
-        auto numSamplesDone = (int) jmin (samplesToWrite, (int64) blockSize);
+        auto numSamplesDone = (int) jmin (samplesToWrite, (SampleCount) blockSize);
         samplesToWrite -= numSamplesDone;
 
         rc.bufferNumSamples = numSamplesDone;

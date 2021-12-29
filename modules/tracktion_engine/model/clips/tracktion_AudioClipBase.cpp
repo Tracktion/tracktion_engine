@@ -56,15 +56,15 @@ public:
             // can't use an AudioScratchBuffer yet
             AudioBuffer<float> buffer (numChannels, blockSize);
 
-            int64 numLeft = numSamples;
-            int64 startSample = 0;
+            auto numLeft = numSamples;
+            SampleCount startSample = 0;
 
             while (numLeft > 0)
             {
                 if (shouldExit())
                     return jobHasFinished;
 
-                const int numThisTime = (int) jmin (numLeft, (int64) blockSize);
+                auto numThisTime = (int) jmin (numLeft, (SampleCount) blockSize);
                 reader->read (&buffer, 0, numThisTime, startSample, true, useRightChan);
                 detector.processSection (buffer, numThisTime);
 
@@ -165,12 +165,12 @@ private:
         if (reader == nullptr)
             return false;
 
-        int64 sourceSample = 0;
-        int64 samplesToDo = reader->lengthInSamples;
+        SampleCount sourceSample = 0;
+        auto samplesToDo = reader->lengthInSamples;
 
         while (! shouldExit())
         {
-            const int numThisTime = (int) jmin (samplesToDo, (int64) 65536);
+            const int numThisTime = (int) jmin (samplesToDo, (SampleCount) 65536);
 
             if (numThisTime <= 0)
                 return true;
@@ -644,8 +644,8 @@ void AudioClipBase::reverseLoopPoints()
     }
 
     // red in/out markers
-    const int64 newIn = loopInfo.getOutMarker() > -1 ? (wi.lengthInSamples - loopInfo.getOutMarker()) : 0;
-    const int64 newOut = loopInfo.getInMarker() == 0 ? -1 : (wi.lengthInSamples - loopInfo.getInMarker());
+    const SampleCount newIn = loopInfo.getOutMarker() > -1 ? (wi.lengthInSamples - loopInfo.getOutMarker()) : 0;
+    const SampleCount newOut = loopInfo.getInMarker() == 0 ? -1 : (wi.lengthInSamples - loopInfo.getInMarker());
 
     loopInfo.setInMarker (newIn);
     loopInfo.setOutMarker (newOut);
@@ -1163,50 +1163,34 @@ LoopInfo AudioClipBase::autoDetectBeatMarkers (const LoopInfo& current, bool aut
     {
         if (auto reader = std::unique_ptr<AudioFormatReader> (AudioFileUtils::createReaderFor (edit.engine, getCurrentSourceFile())))
         {
-            int64 out = (loopInfo.getOutMarker() == -1) ? reader->lengthInSamples
-                                                        : loopInfo.getOutMarker();
-            int64 in = loopInfo.getInMarker();
+            const auto start = loopInfo.getInMarker();
+            const auto end = (loopInfo.getOutMarker() == -1) ? reader->lengthInSamples
+                                                             : loopInfo.getOutMarker();
 
             BeatDetect detect;
             detect.setSensitivity (sens);
             detect.setSampleRate (reader->sampleRate);
 
-            auto chans     = (int) reader->numChannels;
-            auto blockSize = detect.getBlockSize();
-
-            HeapBlock<float*> buffers;
-            buffers.calloc ((size_t) chans + 2);
-
-            HeapBlock<float> buffer ((size_t) (blockSize * chans));
-
-            for (int i = 0; i < chans; ++i)
-                buffers[i] = buffer + i * blockSize;
-
-            int64 len = out - in;
-
-            if (len / reader->sampleRate >= 1)
+            if ((end - start) > reader->sampleRate)
             {
-                auto numBlocks = int (len / blockSize);
+                auto blockLength = detect.getBlockSize();
+                auto blockSize = choc::buffer::Size::create (reader->numChannels, blockLength);
+                auto pos = start;
 
-                for (int i = 0; i < numBlocks; ++i)
+                choc::buffer::ChannelArrayBuffer<float> buffer (blockSize);
+
+                while (pos + blockLength < end)
                 {
-                    if (! reader->readSamples ((int**) buffers.getData(), chans, 0, in + i * blockSize, blockSize))
+                    if (! reader->read (buffer.getView().data.channels,
+                                        (int) reader->numChannels, pos, (int) blockLength))
                         break;
 
-                    if (! reader->usesFloatingPointData)
-                    {
-                        FloatVectorOperations::convertFixedToFloat (buffers[0], (const int*) buffers[0], 1.0f / 0x7fffffff, blockSize);
-
-                        if (chans > 1)
-                            FloatVectorOperations::convertFixedToFloat (buffers[1], (const int*) buffers[1], 1.0f / 0x7fffffff, blockSize);
-                    }
-
-                    detect.audioProcess (const_cast<const float**> (buffers.getData()), chans);
+                    detect.audioProcess (buffer);
+                    pos += blockLength;
                 }
 
-                for (int i = 0; i < detect.getNumBeats(); ++i)
-                    res.addLoopPoint (detect.getSampleOfBeat(i) + in,
-                                      LoopInfo::LoopPointType::automatic);
+                for (auto beat : detect.getBeats())
+                    res.addLoopPoint (start + beat, LoopInfo::LoopPointType::automatic);
             }
         }
     }
@@ -1990,14 +1974,14 @@ struct StretchSegment
 
         if (segment.hasFadeOut())
         {
-            auto fadeOutStart = (int64) (segment.getSampleRange().getLength() / segment.getStretchRatio()) - crossfadeSamples;
+            auto fadeOutStart = (SampleCount) (segment.getSampleRange().getLength() / segment.getStretchRatio()) - crossfadeSamples;
 
             if (renderedEnd > fadeOutStart)
                 renderFade (fadeOutStart, fadeOutStart + crossfadeSamples + 2, true, numSamples);
         }
     }
 
-    void renderFade (int64 start, int64 end, bool isFadeOut, int numSamples)
+    void renderFade (SampleCount start, SampleCount end, bool isFadeOut, int numSamples)
     {
         float alpha1 = 0.0f, alpha2 = 1.0f;
         auto renderedEnd = readySampleOutputPos + numSamples;
@@ -2037,7 +2021,7 @@ struct StretchSegment
 
     const int outputBufferSize = 1024;
     int readySamplesStart = 0, readySamplesEnd = 0;
-    int64 readySampleOutputPos = 0;
+    SampleCount readySampleOutputPos = 0;
     const int crossfadeSamples, numChannelsToUse;
     juce::AudioBuffer<float> fifo { numChannelsToUse, outputBufferSize };
 

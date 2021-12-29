@@ -192,7 +192,7 @@ bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parame
         }
 
         AudioFileUtils::applyBWAVStartTime (intermediate.destFile,
-                                            (int64) (intermediate.time.getStart() * intermediate.sampleRateForAudio)
+                                            (SampleCount) (intermediate.time.getStart() * intermediate.sampleRateForAudio)
                                                + doneRange.getStart());
     }
 
@@ -230,7 +230,7 @@ bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parame
     const int blockSize = 16384;
     juce::AudioBuffer<float> tempBuffer ((int) reader->numChannels, blockSize + 256);
 
-    for (int64 pos = 0; pos < reader->lengthInSamples;)
+    for (SampleCount pos = 0; pos < reader->lengthInSamples;)
     {
         auto numLeft = static_cast<int> (reader->lengthInSamples - pos);
         auto samps = jmin (tempBuffer.getNumSamples(), blockSize, numLeft);

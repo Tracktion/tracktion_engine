@@ -113,7 +113,7 @@ void ExportJob::copyProjectFilesToTempDir()
 
                 auto bytesFree = dest.getBytesFreeOnVolume();
                 auto bytesNeeded = jmax (2 * srcObject->getSourceFile().getSize(),
-                                         (int64) (1024 * 1024 * 50));
+                                         (int64_t) (1024 * 1024 * 50));
 
                 if (bytesFree > 0
                      && bytesFree < bytesNeeded

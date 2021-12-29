@@ -45,7 +45,7 @@ struct ArchivingFunctions
     {
         CRASH_TRACER
         if (auto m = (MemoryOutputStream*) ref)
-            if (m->setPosition ((int64) position) && m->write (buffer, length))
+            if (m->setPosition ((int64_t) position) && m->write (buffer, length))
                 return kARATrue;
 
         return kARAFalse;

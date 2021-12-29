@@ -112,7 +112,7 @@ public:
             
             for (auto index : sampleIndicies)
             {
-                expectGreaterOrEqual<int64> (index, 0, juce::String ("File doesn't have an impulse in: FILE").replace ("FILE", audioFiles[fileIndex].getFullPathName()));
+                expectGreaterOrEqual<int64_t> (index, 0, juce::String ("File doesn't have an impulse in: FILE").replace ("FILE", audioFiles[fileIndex].getFullPathName()));
                 
                 if (index != sampleIndicies[0])
                     expect (false, String ("Mismatch of impulse indicies (FIRST & SECOND samples, difference of DIFF)")

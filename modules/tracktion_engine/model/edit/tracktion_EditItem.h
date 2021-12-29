@@ -155,7 +155,7 @@ namespace juce
     struct VariantConverter<tracktion_engine::EditItemID>
     {
         static tracktion_engine::EditItemID fromVar (const var& v)   { return tracktion_engine::EditItemID::fromVar (v); }
-        static var toVar (const tracktion_engine::EditItemID& v)     { return var ((int64) v.getRawID()); }
+        static var toVar (const tracktion_engine::EditItemID& v)     { return var ((int64_t) v.getRawID()); }
     };
 }
 

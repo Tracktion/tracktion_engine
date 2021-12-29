@@ -41,7 +41,7 @@ juce::AudioPlayHead::CurrentPositionInfo getCurrentPositionInfo (Edit& edit)
     if (auto epc = transport.getCurrentPlaybackContext())
         info.isPlaying = epc->isPlaying();
 
-    info.timeInSamples = (int64) std::floor ((info.timeInSeconds * edit.engine.getDeviceManager().getSampleRate()) + 0.5);
+    info.timeInSamples = (int64_t) std::floor ((info.timeInSeconds * edit.engine.getDeviceManager().getSampleRate()) + 0.5);
 
     const auto loopRange = transport.getLoopRange();
     position.setTime (loopRange.getStart());

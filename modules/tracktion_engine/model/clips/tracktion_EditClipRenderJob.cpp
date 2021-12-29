@@ -412,9 +412,9 @@ bool EditRenderJob::generateSilence (const File& fileToWriteTo)
         return false;
 
     os.release();
-    auto numToDo = (int64) (params.time.getLength() * params.sampleRateForAudio);
+    auto numToDo = (SampleCount) (params.time.getLength() * params.sampleRateForAudio);
     auto blockSize = jmin (32758, (int) numToDo);
-    int64 numDone = 0;
+    SampleCount numDone = 0;
 
     // should probably use an AudioScratchBuffer here
     juce::AudioBuffer<float> buffer (numChans, blockSize);

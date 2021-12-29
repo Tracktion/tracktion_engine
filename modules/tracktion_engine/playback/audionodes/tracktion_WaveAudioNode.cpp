@@ -50,10 +50,10 @@ void WaveAudioNode::visitNodes (const VisitorFn& v)
     v (*this);
 }
 
-int64 WaveAudioNode::editTimeToFileSample (double editTime) const noexcept
+SampleCount WaveAudioNode::editTimeToFileSample (double editTime) const noexcept
 {
-    return (int64) ((editTime - (editPosition.getStart() - offset))
-                      * originalSpeedRatio * audioFileSampleRate + 0.5);
+    return static_cast<SampleCount> ((editTime - (editPosition.getStart() - offset))
+                                       * originalSpeedRatio * audioFileSampleRate + 0.5);
 }
 
 struct WaveAudioNode::PerChannelState

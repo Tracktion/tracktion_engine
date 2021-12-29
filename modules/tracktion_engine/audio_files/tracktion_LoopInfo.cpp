@@ -94,8 +94,8 @@ double LoopInfo::getBeatsPerSecond (const AudioFileInfo& wi) const
     if (wi.sampleRate == 0.0)
         return 2.0;
 
-    int64 in  = getInMarker();
-    int64 out = getOutMarker();
+    auto in  = getInMarker();
+    auto out = getOutMarker();
 
     if (out == -1 || out > wi.lengthInSamples)
         out = wi.lengthInSamples;
@@ -103,7 +103,7 @@ double LoopInfo::getBeatsPerSecond (const AudioFileInfo& wi) const
     if (out <= 0)
         return 2.0;
 
-    const double length = (out - in) / wi.sampleRate;
+    auto length = (out - in) / wi.sampleRate;
 
     if (length <= 0)
         return 2.0;

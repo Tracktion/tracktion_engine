@@ -101,8 +101,8 @@ protected:
     bool renderNextBlock() override
     {
         CRASH_TRACER
-        const int64 numLeft = totalNumSamples - numSamplesRead;
-        const int numToDo = (int) jmin ((int64) 32768, numLeft);
+        auto numLeft = totalNumSamples - numSamplesRead;
+        auto numToDo = (int) jmin ((SampleCount) 32768, numLeft);
 
         AudioScratchBuffer scratch (numChannels, numToDo);
         AudioChannelSet schannels = AudioChannelSet::canonicalChannelSet(numChannels);
@@ -133,7 +133,7 @@ private:
     AudioFile file;
     Config config;
 
-    int64 numSamplesRead = 0, totalNumSamples;
+    SampleCount numSamplesRead = 0, totalNumSamples;
     int numChannels;
     double sampleRate = 0;
     AudioFileCache::Reader::Ptr reader;
@@ -214,7 +214,7 @@ private:
         }
     }
 
-    double sampleToSeconds (int64 sample) const
+    double sampleToSeconds (SampleCount sample) const
     {
         return sampleRate > 0.0 ? sample / sampleRate : 0.0;
     }
