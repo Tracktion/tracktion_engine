@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -388,7 +388,7 @@
 <a name="326"><span class="lineNum">     326 </span>            : </a>
 <a name="327"><span class="lineNum">     327 </span><span class="lineNoCov">          0 : BandlimitedWaveLookupTables::BandlimitedWaveLookupTables (double sr, int tableSize)</span></a>
 <a name="328"><span class="lineNum">     328 </span>            :     : sampleRate (sr),</a>
-<a name="329"><span class="lineNum">     329 </span><span class="lineNoCov">          0 :     sineFunction ([] (float in) { return sine (in); }, 0.0f, 1.0f, (size_t) tableSize)</span></a>
+<a name="329"><span class="lineNum">     329 </span><span class="lineNoCov">          0 :       sineFunction ([] (float in) { return sine (in); }, 0.0f, 1.0f, (size_t) tableSize)</span></a>
 <a name="330"><span class="lineNum">     330 </span>            : {</a>
 <a name="331"><span class="lineNum">     331 </span>            :     auto getMidiNoteInHertz = [](float noteNumber)</a>
 <a name="332"><span class="lineNum">     332 </span>            :     {</a>
@@ -412,7 +412,7 @@
 <a name="350"><span class="lineNum">     350 </span>            :     }</a>
 <a name="351"><span class="lineNum">     351 </span>            : </a>
 <a name="352"><span class="lineNum">     352 </span><span class="lineNoCov">          0 :     RelativeTime elapsed (Time::getCurrentTime() - start);</span></a>
-<a name="353"><span class="lineNum">     353 </span>            :     DBG (&quot;Generating waves: &quot; + String (elapsed.inMilliseconds()) + &quot;ms&quot;);</a>
+<a name="353"><span class="lineNum">     353 </span>            :     DBG (&quot;Generating waves: &quot; + juce::String (elapsed.inMilliseconds()) + &quot;ms&quot;);</a>
 <a name="354"><span class="lineNum">     354 </span>            : </a>
 <a name="355"><span class="lineNum">     355 </span><span class="lineNoCov">          0 :     tableCache.add (this);</span></a>
 <a name="356"><span class="lineNum">     356 </span><span class="lineNoCov">          0 : }</span></a>

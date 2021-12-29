@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -209,7 +209,7 @@
 <a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 :     return entries.size();</span></a>
 <a name="148"><span class="lineNum">     148 </span>            : }</a>
 <a name="149"><span class="lineNum">     149 </span>            : </a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 : String TracktionArchiveFile::getOriginalFileName (int index) const</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 : juce::String TracktionArchiveFile::getOriginalFileName (int index) const</span></a>
 <a name="151"><span class="lineNum">     151 </span>            : {</a>
 <a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 :     if (auto i = entries[index])</span></a>
 <a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :         return i-&gt;originalName.fromLastOccurrenceOf (&quot;/&quot;, false, false);</span></a>
@@ -217,7 +217,7 @@
 <a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="156"><span class="lineNum">     156 </span>            : }</a>
 <a name="157"><span class="lineNum">     157 </span>            : </a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 : int TracktionArchiveFile::indexOfFile (const String&amp; name) const</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 : int TracktionArchiveFile::indexOfFile (const juce::String&amp; name) const</span></a>
 <a name="159"><span class="lineNum">     159 </span>            : {</a>
 <a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 :     for (int i = entries.size(); --i &gt;= 0;)</span></a>
 <a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 :         if (getOriginalFileName(i).equalsIgnoreCase (name))</span></a>
@@ -406,7 +406,7 @@
 <a name="344"><span class="lineNum">     344 </span><span class="lineNoCov">          0 :     return addFile (f, name, compression);</span></a>
 <a name="345"><span class="lineNum">     345 </span>            : }</a>
 <a name="346"><span class="lineNum">     346 </span>            : </a>
-<a name="347"><span class="lineNum">     347 </span><span class="lineNoCov">          0 : bool TracktionArchiveFile::addFile (const File&amp; f, const String&amp; filenameToUse, CompressionType compression)</span></a>
+<a name="347"><span class="lineNum">     347 </span><span class="lineNoCov">          0 : bool TracktionArchiveFile::addFile (const File&amp; f, const juce::String&amp; filenameToUse, CompressionType compression)</span></a>
 <a name="348"><span class="lineNum">     348 </span>            : {</a>
 <a name="349"><span class="lineNum">     349 </span>            :     // don't risk using ogg or flac on small audio files</a>
 <a name="350"><span class="lineNum">     350 </span><span class="lineNoCov">          0 :     if (compression != CompressionType::none &amp;&amp; f.getSize() &lt;= 16 * 1024)</span></a>
@@ -567,29 +567,31 @@
 <a name="505"><span class="lineNum">     505 </span>            :     return ok;</a>
 <a name="506"><span class="lineNum">     506 </span>            : }</a>
 <a name="507"><span class="lineNum">     507 </span>            : </a>
-<a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 : void TracktionArchiveFile::addFileInfo (const String&amp; filename, const String&amp; itemName, const String&amp; itemValue)</span></a>
-<a name="509"><span class="lineNum">     509 </span>            : {</a>
-<a name="510"><span class="lineNum">     510 </span><span class="lineNoCov">          0 :     auto i = indexOfFile (filename);</span></a>
-<a name="511"><span class="lineNum">     511 </span>            : </a>
-<a name="512"><span class="lineNum">     512 </span><span class="lineNoCov">          0 :     if (auto entry = entries[i])</span></a>
-<a name="513"><span class="lineNum">     513 </span>            :     {</a>
-<a name="514"><span class="lineNum">     514 </span><span class="lineNoCov">          0 :         entry-&gt;extraNames.add (itemName);</span></a>
-<a name="515"><span class="lineNum">     515 </span><span class="lineNoCov">          0 :         entry-&gt;extraValues.add (itemValue);</span></a>
-<a name="516"><span class="lineNum">     516 </span><span class="lineNoCov">          0 :         needToWriteIndex = true;</span></a>
-<a name="517"><span class="lineNum">     517 </span>            :     }</a>
-<a name="518"><span class="lineNum">     518 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="519"><span class="lineNum">     519 </span>            : </a>
-<a name="520"><span class="lineNum">     520 </span><span class="lineNoCov">          0 : int TracktionArchiveFile::getOggQuality (CompressionType c)</span></a>
-<a name="521"><span class="lineNum">     521 </span>            : {</a>
-<a name="522"><span class="lineNum">     522 </span><span class="lineNoCov">          0 :     auto numOptions = OggVorbisAudioFormat().getQualityOptions().size();</span></a>
-<a name="523"><span class="lineNum">     523 </span>            : </a>
-<a name="524"><span class="lineNum">     524 </span><span class="lineNoCov">          0 :     if (c == CompressionType::lossyGoodQuality)     return numOptions - 1;</span></a>
-<a name="525"><span class="lineNum">     525 </span><span class="lineNoCov">          0 :     if (c == CompressionType::lossyMediumQuality)   return numOptions / 2;</span></a>
-<a name="526"><span class="lineNum">     526 </span>            : </a>
-<a name="527"><span class="lineNum">     527 </span><span class="lineNoCov">          0 :     return numOptions / 5;</span></a>
-<a name="528"><span class="lineNum">     528 </span>            : }</a>
-<a name="529"><span class="lineNum">     529 </span>            : </a>
+<a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 : void TracktionArchiveFile::addFileInfo (const juce::String&amp; filename,</span></a>
+<a name="509"><span class="lineNum">     509 </span>            :                                         const juce::String&amp; itemName,</a>
+<a name="510"><span class="lineNum">     510 </span>            :                                         const juce::String&amp; itemValue)</a>
+<a name="511"><span class="lineNum">     511 </span>            : {</a>
+<a name="512"><span class="lineNum">     512 </span><span class="lineNoCov">          0 :     auto i = indexOfFile (filename);</span></a>
+<a name="513"><span class="lineNum">     513 </span>            : </a>
+<a name="514"><span class="lineNum">     514 </span><span class="lineNoCov">          0 :     if (auto entry = entries[i])</span></a>
+<a name="515"><span class="lineNum">     515 </span>            :     {</a>
+<a name="516"><span class="lineNum">     516 </span><span class="lineNoCov">          0 :         entry-&gt;extraNames.add (itemName);</span></a>
+<a name="517"><span class="lineNum">     517 </span><span class="lineNoCov">          0 :         entry-&gt;extraValues.add (itemValue);</span></a>
+<a name="518"><span class="lineNum">     518 </span><span class="lineNoCov">          0 :         needToWriteIndex = true;</span></a>
+<a name="519"><span class="lineNum">     519 </span>            :     }</a>
+<a name="520"><span class="lineNum">     520 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="521"><span class="lineNum">     521 </span>            : </a>
+<a name="522"><span class="lineNum">     522 </span><span class="lineNoCov">          0 : int TracktionArchiveFile::getOggQuality (CompressionType c)</span></a>
+<a name="523"><span class="lineNum">     523 </span>            : {</a>
+<a name="524"><span class="lineNum">     524 </span><span class="lineNoCov">          0 :     auto numOptions = OggVorbisAudioFormat().getQualityOptions().size();</span></a>
+<a name="525"><span class="lineNum">     525 </span>            : </a>
+<a name="526"><span class="lineNum">     526 </span><span class="lineNoCov">          0 :     if (c == CompressionType::lossyGoodQuality)     return numOptions - 1;</span></a>
+<a name="527"><span class="lineNum">     527 </span><span class="lineNoCov">          0 :     if (c == CompressionType::lossyMediumQuality)   return numOptions / 2;</span></a>
+<a name="528"><span class="lineNum">     528 </span>            : </a>
+<a name="529"><span class="lineNum">     529 </span><span class="lineNoCov">          0 :     return numOptions / 5;</span></a>
 <a name="530"><span class="lineNum">     530 </span>            : }</a>
+<a name="531"><span class="lineNum">     531 </span>            : </a>
+<a name="532"><span class="lineNum">     532 </span>            : }</a>
 </pre>
       </td>
     </tr>

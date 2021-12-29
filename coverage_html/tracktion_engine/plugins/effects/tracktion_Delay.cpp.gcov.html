@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">48</td>
+            <td class="headerCovTableEntry">47</td>
             <td class="headerCovTableEntry">81</td>
-            <td class="headerCovTableEntryLo">59.3 %</td>
+            <td class="headerCovTableEntryLo">58.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">7</td>
@@ -76,12 +76,12 @@
 <a name="14"><span class="lineNum">      14 </span><span class="lineCov">         12 : DelayPlugin::DelayPlugin (PluginCreationInfo info) : Plugin (info)</span></a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
 <a name="16"><span class="lineNum">      16 </span><span class="lineCov">          3 :     feedbackDb    = addParam (&quot;feedback&quot;, TRANS(&quot;Feedback&quot;), { getMinDelayFeedbackDb(), 0.0f },</span></a>
-<a name="17"><span class="lineNum">      17 </span><span class="lineNoCov">          0 :                               [] (float value)       { return Decibels::toString (value); },</span></a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineCov">          9 :                               [] (const String&amp; s)   { return dbStringToDb (s); });</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineNoCov">          0 :                               [] (float value)              { return juce::Decibels::toString (value); },</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">          9 :                               [] (const juce::String&amp; s)    { return dbStringToDb (s); });</span></a>
 <a name="19"><span class="lineNum">      19 </span>            : </a>
 <a name="20"><span class="lineNum">      20 </span><span class="lineCov">          3 :     mixProportion = addParam (&quot;mix proportion&quot;, TRANS(&quot;Mix proportion&quot;), { 0.0f, 1.0f },</span></a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineNoCov">          0 :                               [] (float value)       { return String (roundToInt (value * 100.0f)) + &quot;% wet&quot;; },</span></a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">          9 :                               [] (const String&amp; s)   { return s.getFloatValue() / 100.0f; });</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineNoCov">          0 :                               [] (float value)              { return juce::String (roundToInt (value * 100.0f)) + &quot;% wet&quot;; },</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">          9 :                               [] (const juce::String&amp; s)    { return s.getFloatValue() / 100.0f; });</span></a>
 <a name="23"><span class="lineNum">      23 </span>            : </a>
 <a name="24"><span class="lineNum">      24 </span>            :     auto um = getUndoManager();</a>
 <a name="25"><span class="lineNum">      25 </span>            : </a>
@@ -205,11 +205,11 @@
 <a name="143"><span class="lineNum">     143 </span><span class="lineCov">          1 :             auto delay = dynamic_cast&lt;DelayPlugin*&gt; (pluginPtr.get());</span></a>
 <a name="144"><span class="lineNum">     144 </span><span class="lineCov">          1 :             expect (delay != nullptr);</span></a>
 <a name="145"><span class="lineNum">     145 </span>            : </a>
-<a name="146"><span class="lineNum">     146 </span>            :             float desiredValue = -30.0f;</a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineCov">          1 :             float desiredValue = -30.0f;</span></a>
 <a name="147"><span class="lineNum">     147 </span>            : </a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">          2 :             ValueTree preset (IDs::PLUGIN);</span></a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">          1 :             preset.setProperty (IDs::type, delay-&gt;getPluginName(), nullptr);</span></a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineCov">          1 :             preset.setProperty (IDs::feedback, desiredValue, nullptr);</span></a>
+<a name="148"><span class="lineNum">     148 </span>            :             auto preset = createValueTree (IDs::PLUGIN,</a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineNoCov">          0 :                                            IDs::type, delay-&gt;getPluginName(),</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineCov">          2 :                                            IDs::feedback, desiredValue);</span></a>
 <a name="151"><span class="lineNum">     151 </span>            : </a>
 <a name="152"><span class="lineNum">     152 </span><span class="lineCov">          1 :             pluginPtr-&gt;restorePluginStateFromValueTree (preset);</span></a>
 <a name="153"><span class="lineNum">     153 </span><span class="lineCov">          1 :             pluginPtr-&gt;flushPluginStateToValueTree();</span></a>

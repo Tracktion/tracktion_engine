@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">11</td>
@@ -73,7 +73,7 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span>            : struct ExternalControllerManager::EditTreeWatcher   : private ValueTree::Listener,</a>
+<a name="14"><span class="lineNum">      14 </span>            : struct ExternalControllerManager::EditTreeWatcher   : private juce::ValueTree::Listener,</a>
 <a name="15"><span class="lineNum">      15 </span>            :                                                       private Timer</a>
 <a name="16"><span class="lineNum">      16 </span>            : {</a>
 <a name="17"><span class="lineNum">      17 </span><span class="lineNoCov">          0 :     EditTreeWatcher (ExternalControllerManager&amp; o, Edit&amp; e) : owner (o), edit (e)</span></a>
@@ -252,9 +252,9 @@
 <a name="190"><span class="lineNum">     190 </span><span class="lineCov">        756 :     return currentEdit != nullptr &amp;&amp; currentEdit == ed;</span></a>
 <a name="191"><span class="lineNum">     191 </span>            : }</a>
 <a name="192"><span class="lineNum">     192 </span>            : </a>
-<a name="193"><span class="lineNum">     193 </span><span class="lineCov">       1626 : bool ExternalControllerManager::isAttachedToEdit (const Edit&amp; e) const noexcept</span></a>
+<a name="193"><span class="lineNum">     193 </span><span class="lineCov">       1716 : bool ExternalControllerManager::isAttachedToEdit (const Edit&amp; e) const noexcept</span></a>
 <a name="194"><span class="lineNum">     194 </span>            : {</a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineCov">       1626 :     return isAttachedToEdit (&amp;e);</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">       1716 :     return isAttachedToEdit (&amp;e);</span></a>
 <a name="196"><span class="lineNum">     196 </span>            : }</a>
 <a name="197"><span class="lineNum">     197 </span>            : </a>
 <a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 : SelectionManager* ExternalControllerManager::getSelectionManager() const noexcept</span></a>
@@ -274,7 +274,7 @@
 <a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 :         setCurrentEdit (currentEdit, nullptr);</span></a>
 <a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="214"><span class="lineNum">     214 </span>            : </a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 : bool ExternalControllerManager::createCustomController (const String&amp; name, Protocol protocol)</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 : bool ExternalControllerManager::createCustomController (const juce::String&amp; name, Protocol protocol)</span></a>
 <a name="216"><span class="lineNum">     216 </span>            : {</a>
 <a name="217"><span class="lineNum">     217 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="218"><span class="lineNum">     218 </span>            : </a>
@@ -322,9 +322,9 @@
 <a name="260"><span class="lineNum">     260 </span>            :     }</a>
 <a name="261"><span class="lineNum">     261 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="262"><span class="lineNum">     262 </span>            : </a>
-<a name="263"><span class="lineNum">     263 </span><span class="lineNoCov">          0 : StringArray ExternalControllerManager::getAllControllerNames()</span></a>
+<a name="263"><span class="lineNum">     263 </span><span class="lineNoCov">          0 : juce::StringArray ExternalControllerManager::getAllControllerNames()</span></a>
 <a name="264"><span class="lineNum">     264 </span>            : {</a>
-<a name="265"><span class="lineNum">     265 </span><span class="lineNoCov">          0 :     StringArray s;</span></a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineNoCov">          0 :     juce::StringArray s;</span></a>
 <a name="266"><span class="lineNum">     266 </span>            : </a>
 <a name="267"><span class="lineNum">     267 </span><span class="lineNoCov">          0 :     for (auto ec : devices)</span></a>
 <a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 :         s.add (ec-&gt;getName());</span></a>
@@ -418,20 +418,20 @@
 <a name="356"><span class="lineNum">     356 </span><span class="lineCov">          1 :     startTimer (750);</span></a>
 <a name="357"><span class="lineNum">     357 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="358"><span class="lineNum">     358 </span>            : </a>
-<a name="359"><span class="lineNum">     359 </span><span class="lineCov">         39 : void ExternalControllerManager::BlinkTimer::timerCallback()</span></a>
+<a name="359"><span class="lineNum">     359 </span><span class="lineCov">         41 : void ExternalControllerManager::BlinkTimer::timerCallback()</span></a>
 <a name="360"><span class="lineNum">     360 </span>            : {</a>
-<a name="361"><span class="lineNum">     361 </span><span class="lineCov">         39 :     isBright = ! isBright;</span></a>
-<a name="362"><span class="lineNum">     362 </span><span class="lineCov">         39 :     ecm.blinkNow();</span></a>
-<a name="363"><span class="lineNum">     363 </span><span class="lineCov">         39 : }</span></a>
+<a name="361"><span class="lineNum">     361 </span><span class="lineCov">         41 :     isBright = ! isBright;</span></a>
+<a name="362"><span class="lineNum">     362 </span><span class="lineCov">         41 :     ecm.blinkNow();</span></a>
+<a name="363"><span class="lineNum">     363 </span><span class="lineCov">         41 : }</span></a>
 <a name="364"><span class="lineNum">     364 </span>            : </a>
 <a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 : void ExternalControllerManager::blinkNow()</span></a>
 <a name="366"><span class="lineNum">     366 </span>            : {</a>
-<a name="367"><span class="lineNum">     367 </span><span class="lineCov">         39 :     updateMuteSoloLights (true);</span></a>
+<a name="367"><span class="lineNum">     367 </span><span class="lineCov">         41 :     updateMuteSoloLights (true);</span></a>
 <a name="368"><span class="lineNum">     368 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="369"><span class="lineNum">     369 </span>            : </a>
-<a name="370"><span class="lineNum">     370 </span><span class="lineCov">         39 : void ExternalControllerManager::updateMuteSoloLights (bool onlyUpdateFlashingLights)</span></a>
+<a name="370"><span class="lineNum">     370 </span><span class="lineCov">         41 : void ExternalControllerManager::updateMuteSoloLights (bool onlyUpdateFlashingLights)</span></a>
 <a name="371"><span class="lineNum">     371 </span>            : {</a>
-<a name="372"><span class="lineNum">     372 </span><span class="lineCov">         39 :     if (currentEdit != nullptr)</span></a>
+<a name="372"><span class="lineNum">     372 </span><span class="lineCov">         41 :     if (currentEdit != nullptr)</span></a>
 <a name="373"><span class="lineNum">     373 </span>            :     {</a>
 <a name="374"><span class="lineNum">     374 </span><span class="lineNoCov">          0 :         int i = 0;</span></a>
 <a name="375"><span class="lineNum">     375 </span><span class="lineNoCov">          0 :         const bool isBright = blinkTimer-&gt;isBright;</span></a>
@@ -461,7 +461,7 @@
 <a name="399"><span class="lineNum">     399 </span>            : </a>
 <a name="400"><span class="lineNum">     400 </span><span class="lineNoCov">          0 :         FOR_EACH_DEVICE (soloCountChanged (blinkTimer-&gt;isBright &amp;&amp; anySolo));</span></a>
 <a name="401"><span class="lineNum">     401 </span>            :     }</a>
-<a name="402"><span class="lineNum">     402 </span><span class="lineCov">         39 : }</span></a>
+<a name="402"><span class="lineNum">     402 </span><span class="lineCov">         41 : }</span></a>
 <a name="403"><span class="lineNum">     403 </span>            : </a>
 <a name="404"><span class="lineNum">     404 </span>            : //==============================================================================</a>
 <a name="405"><span class="lineNum">     405 </span><span class="lineNoCov">          0 : void ExternalControllerManager::moveFader (int channelNum, float newSliderPos)</span></a>
@@ -948,12 +948,12 @@
 <a name="886"><span class="lineNum">     886 </span>            :     {</a>
 <a name="887"><span class="lineNum">     887 </span>            :         if (auto mcu = first-&gt;getControlSurfaceIfType&lt;MackieMCU&gt;())</a>
 <a name="888"><span class="lineNum">     888 </span>            :         {</a>
-<a name="889"><span class="lineNum">     889 </span>            :             MackieXT* xt [MackieMCU::maxNumSurfaces + 1] = {};</a>
+<a name="889"><span class="lineNum">     889 </span>            :             MackieXT* xt[MackieMCU::maxNumSurfaces + 1] = {};</a>
 <a name="890"><span class="lineNum">     890 </span>            : </a>
 <a name="891"><span class="lineNum">     891 </span>            :             for (int i = 1; i &lt; MackieMCU::maxNumSurfaces; ++i)</a>
 <a name="892"><span class="lineNum">     892 </span>            :                 xt[i - 1] = devices[i] ? devices[i]-&gt;getControlSurfaceIfType&lt;MackieXT&gt;() : nullptr;</a>
 <a name="893"><span class="lineNum">     893 </span>            : </a>
-<a name="894"><span class="lineNum">     894 </span>            :             StringArray indices;</a>
+<a name="894"><span class="lineNum">     894 </span>            :             juce::StringArray indices;</a>
 <a name="895"><span class="lineNum">     895 </span>            :             indices.addTokens (engine.getPropertyStorage().getProperty (SettingID::xtIndices, &quot;0 1 2 3&quot;).toString(), false);</a>
 <a name="896"><span class="lineNum">     896 </span>            : </a>
 <a name="897"><span class="lineNum">     897 </span>            :             for (int i = indices.size(); --i &gt;= 0;)</a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -131,12 +131,12 @@
 <a name="69"><span class="lineNum">      69 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="70"><span class="lineNum">      70 </span>            : </a>
 <a name="71"><span class="lineNum">      71 </span>            : //==============================================================================</a>
-<a name="72"><span class="lineNum">      72 </span><span class="lineNoCov">          0 : String EditClip::getSelectableDescription()</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineNoCov">          0 : juce::String EditClip::getSelectableDescription()</span></a>
 <a name="73"><span class="lineNum">      73 </span>            : {</a>
 <a name="74"><span class="lineNum">      74 </span><span class="lineNoCov">          0 :     return TRANS(&quot;Edit Clip&quot;) + &quot; - \&quot;&quot; + getName() + &quot;\&quot;&quot;;</span></a>
 <a name="75"><span class="lineNum">      75 </span>            : }</a>
 <a name="76"><span class="lineNum">      76 </span>            : </a>
-<a name="77"><span class="lineNum">      77 </span><span class="lineNoCov">          0 : File EditClip::getOriginalFile() const</span></a>
+<a name="77"><span class="lineNum">      77 </span><span class="lineNoCov">          0 : juce::File EditClip::getOriginalFile() const</span></a>
 <a name="78"><span class="lineNum">      78 </span>            : {</a>
 <a name="79"><span class="lineNum">      79 </span>            :     jassert (editSnapshot == nullptr || editSnapshot-&gt;getFile() == sourceFileReference.getFile());</a>
 <a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 :     return editSnapshot != nullptr ? editSnapshot-&gt;getFile() : File();</span></a>
@@ -185,7 +185,7 @@
 <a name="123"><span class="lineNum">     123 </span><span class="lineNoCov">          0 :     AudioClipBase::renderComplete();</span></a>
 <a name="124"><span class="lineNum">     124 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="125"><span class="lineNum">     125 </span>            : </a>
-<a name="126"><span class="lineNum">     126 </span><span class="lineNoCov">          0 : String EditClip::getRenderMessage()</span></a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineNoCov">          0 : juce::String EditClip::getRenderMessage()</span></a>
 <a name="127"><span class="lineNum">     127 </span>            : {</a>
 <a name="128"><span class="lineNum">     128 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
 <a name="129"><span class="lineNum">     129 </span>            : </a>
@@ -209,7 +209,7 @@
 <a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 :     return TRANS(&quot;Rendering Edit: &quot;) + String (roundToInt (progress * 100.0f)) + &quot;%&quot;;</span></a>
 <a name="148"><span class="lineNum">     148 </span>            : }</a>
 <a name="149"><span class="lineNum">     149 </span>            : </a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 : String EditClip::getClipMessage()</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 : juce::String EditClip::getClipMessage()</span></a>
 <a name="151"><span class="lineNum">     151 </span>            : {</a>
 <a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 :     if (! sourceFileReference.getSourceProjectItemID().isValid())</span></a>
 <a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :         return TRANS(&quot;No source set&quot;);</span></a>

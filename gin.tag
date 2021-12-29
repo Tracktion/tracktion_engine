@@ -5021,10 +5021,10 @@
     <namespace>tracktion_engine::PredefinedWavetable</namespace>
     <namespace>tracktion_engine::modifier</namespace>
     <member kind="function">
-      <type>StringArray</type>
+      <type>juce::StringArray</type>
       <name>getEnabledNames</name>
       <anchorfile>namespacetracktion__engine_1_1modifier.html</anchorfile>
-      <anchor>a1a17d02c23c3561c43b1f8e64b87c901</anchor>
+      <anchor>a399368eca27461bd32302c89897c222f</anchor>
       <arglist>()</arglist>
     </member>
   </compound>
@@ -6150,6 +6150,20 @@
       <anchorfile>namespacetracktion__engine.html</anchorfile>
       <anchor>a8a4248d69aa8f9522309589a788c0e92</anchor>
       <arglist>(const juce::Array&lt; Type * &gt; &amp;items, const UnaryFunction &amp;fn)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>addValueTreeProperties</name>
+      <anchorfile>namespacetracktion__engine.html</anchorfile>
+      <anchor>a6153a647eb9f98533e8d7bdac0ace58e</anchor>
+      <arglist>(juce::ValueTree &amp;v, const juce::Identifier &amp;name, const juce::var &amp;value, Others &amp;&amp;... others)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ValueTree</type>
+      <name>createValueTree</name>
+      <anchorfile>namespacetracktion__engine.html</anchorfile>
+      <anchor>a15e6767b73449f729b81f97897cfadf8</anchor>
+      <arglist>(const juce::Identifier &amp;name, Properties &amp;&amp;... properties)</arglist>
     </member>
     <member kind="function">
       <type>juce::Array&lt; juce::ValueTree &gt; &amp;</type>
@@ -10843,8 +10857,8 @@
       <type></type>
       <name>AudioModificationWrapper</name>
       <anchorfile>classAudioModificationWrapper.html</anchorfile>
-      <anchor>a0de6f28abff9f9b165d141376392fd25</anchor>
-      <arglist>(ARADocument &amp;d, AudioSourceWrapper &amp;source, const String &amp;itemID, AudioModificationWrapper *instanceToClone)</arglist>
+      <anchor>ab8e025764ef18f2e0e5bc04a544cb821</anchor>
+      <arglist>(ARADocument &amp;d, AudioSourceWrapper &amp;source, const juce::String &amp;itemID, AudioModificationWrapper *instanceToClone)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -27292,6 +27306,13 @@
       <anchorfile>structtracktion__engine_1_1EditItemID.html</anchorfile>
       <anchor>aa66ae2b61c4b8ae806d8b329096048e4</anchor>
       <arglist>(juce::XmlElement &amp;, const char *attributeName) const</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>operator juce::var</name>
+      <anchorfile>structtracktion__engine_1_1EditItemID.html</anchorfile>
+      <anchor>ad84d730d7bde1b762c998423962b18d2</anchor>
+      <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>juce::var</type>
@@ -50590,8 +50611,8 @@
       <type></type>
       <name>PlaybackRegionAndSource</name>
       <anchorfile>classPlaybackRegionAndSource.html</anchorfile>
-      <anchor>a0e68f9978a492dc4e11fe29d5b7d367f</anchor>
-      <arglist>(ARADocument &amp;doc, AudioClipBase &amp;audioClip, const ARAFactory &amp;f, const ARAPlugInExtensionInstance &amp;pluginExtensionInstance, const String &amp;itemID, PlaybackRegionAndSource *instanceToClone)</arglist>
+      <anchor>afe5381d185bbae3579622d8781b83987</anchor>
+      <arglist>(ARADocument &amp;doc, AudioClipBase &amp;audioClip, const ARAFactory &amp;f, const ARAPlugInExtensionInstance &amp;pluginExtensionInstance, const juce::String &amp;itemID, PlaybackRegionAndSource *instanceToClone)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -79249,6 +79270,20 @@
       <arglist>(const juce::Array&lt; Type * &gt; &amp;items, const UnaryFunction &amp;fn)</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>addValueTreeProperties</name>
+      <anchorfile>namespacetracktion__engine.html</anchorfile>
+      <anchor>a6153a647eb9f98533e8d7bdac0ace58e</anchor>
+      <arglist>(juce::ValueTree &amp;v, const juce::Identifier &amp;name, const juce::var &amp;value, Others &amp;&amp;... others)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ValueTree</type>
+      <name>createValueTree</name>
+      <anchorfile>namespacetracktion__engine.html</anchorfile>
+      <anchor>a15e6767b73449f729b81f97897cfadf8</anchor>
+      <arglist>(const juce::Identifier &amp;name, Properties &amp;&amp;... properties)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::Array&lt; juce::ValueTree &gt; &amp;</type>
       <name>removeInvalidValueTrees</name>
       <anchorfile>namespacetracktion__engine.html</anchorfile>
@@ -80050,10 +80085,10 @@
     <name>tracktion_engine::modifier</name>
     <filename>namespacetracktion__engine_1_1modifier.html</filename>
     <member kind="function">
-      <type>StringArray</type>
+      <type>juce::StringArray</type>
       <name>getEnabledNames</name>
       <anchorfile>namespacetracktion__engine_1_1modifier.html</anchorfile>
-      <anchor>a1a17d02c23c3561c43b1f8e64b87c901</anchor>
+      <anchor>a399368eca27461bd32302c89897c222f</anchor>
       <arglist>()</arglist>
     </member>
   </compound>

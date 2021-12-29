@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">6</td>
@@ -82,7 +82,7 @@
 <a name="20"><span class="lineNum">      20 </span>            : </a>
 <a name="21"><span class="lineNum">      21 </span>            :     inline void push (CrashStackTracer* c)</a>
 <a name="22"><span class="lineNum">      22 </span>            :     {</a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">    2627220 :         entries.add (c);</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">    2624040 :         entries.add (c);</span></a>
 <a name="24"><span class="lineNum">      24 </span>            :     }</a>
 <a name="25"><span class="lineNum">      25 </span>            : </a>
 <a name="26"><span class="lineNum">      26 </span>            :     inline void pop (CrashStackTracer* c)</a>
@@ -161,9 +161,9 @@
 <a name="99"><span class="lineNum">      99 </span>            :         }</a>
 <a name="100"><span class="lineNum">     100 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="101"><span class="lineNum">     101 </span>            : </a>
-<a name="102"><span class="lineNum">     102 </span><span class="lineNoCov">          0 :     StringArray getCrashedPlugins() const</span></a>
+<a name="102"><span class="lineNum">     102 </span><span class="lineNoCov">          0 :     juce::StringArray getCrashedPlugins() const</span></a>
 <a name="103"><span class="lineNum">     103 </span>            :     {</a>
-<a name="104"><span class="lineNum">     104 </span><span class="lineNoCov">          0 :         StringArray plugins;</span></a>
+<a name="104"><span class="lineNum">     104 </span><span class="lineNoCov">          0 :         juce::StringArray plugins;</span></a>
 <a name="105"><span class="lineNum">     105 </span>            : </a>
 <a name="106"><span class="lineNum">     106 </span><span class="lineNoCov">          0 :         for (auto s : entries)</span></a>
 <a name="107"><span class="lineNum">     107 </span><span class="lineNoCov">          0 :             if (s-&gt;pluginName != nullptr)</span></a>
@@ -205,22 +205,22 @@
 <a name="143"><span class="lineNum">     143 </span>            : </a>
 <a name="144"><span class="lineNum">     144 </span>            : static CrashStackTracer::CrashTraceThreads crashStack;</a>
 <a name="145"><span class="lineNum">     145 </span>            : </a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineCov">    2627220 : CrashStackTracer::CrashStackTracer (const char* f, const char* fn, int l, const char* plugin)</span></a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">    2627220 :     : file (f), function (fn), pluginName (plugin), line (l), threadID (Thread::getCurrentThreadId())</span></a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineCov">    2624040 : CrashStackTracer::CrashStackTracer (const char* f, const char* fn, int l, const char* plugin)</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">    2624040 :     : file (f), function (fn), pluginName (plugin), line (l), threadID (Thread::getCurrentThreadId())</span></a>
 <a name="148"><span class="lineNum">     148 </span>            : {</a>
 <a name="149"><span class="lineNum">     149 </span><span class="lineCov">        195 :     crashStack.push (this);</span></a>
 <a name="150"><span class="lineNum">     150 </span>            : </a>
 <a name="151"><span class="lineNum">     151 </span>            :    #if ! TRACKTION_LOG_ENABLED</a>
 <a name="152"><span class="lineNum">     152 </span>            :     juce::ignoreUnused (file, function, pluginName, line);</a>
 <a name="153"><span class="lineNum">     153 </span>            :    #endif</a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineCov">    2627020 : }</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">    2623840 : }</span></a>
 <a name="155"><span class="lineNum">     155 </span>            : </a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineCov">    2627020 : CrashStackTracer::~CrashStackTracer()</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">    2623840 : CrashStackTracer::~CrashStackTracer()</span></a>
 <a name="157"><span class="lineNum">     157 </span>            : {</a>
 <a name="158"><span class="lineNum">     158 </span>            :     crashStack.pop (this);</a>
-<a name="159"><span class="lineNum">     159 </span><span class="lineCov">    2627020 : }</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">    2623840 : }</span></a>
 <a name="160"><span class="lineNum">     160 </span>            : </a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 : StringArray CrashStackTracer::getCrashedPlugins()</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 : juce::StringArray CrashStackTracer::getCrashedPlugins()</span></a>
 <a name="162"><span class="lineNum">     162 </span>            : {</a>
 <a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 :     return crashStack.getCrashedPlugins();</span></a>
 <a name="164"><span class="lineNum">     164 </span>            : }</a>
@@ -244,18 +244,18 @@
 <a name="182"><span class="lineNum">     182 </span><span class="lineNoCov">          0 :     crashStack.dump (os, threadID);</span></a>
 <a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="184"><span class="lineNum">     184 </span>            : </a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 : String CrashStackTracer::getCrashedPlugin (juce::Thread::ThreadID threadID)</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 : juce::String CrashStackTracer::getCrashedPlugin (juce::Thread::ThreadID threadID)</span></a>
 <a name="186"><span class="lineNum">     186 </span>            : {</a>
 <a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 :     return crashStack.getCrashedPlugin (threadID);</span></a>
 <a name="188"><span class="lineNum">     188 </span>            : }</a>
 <a name="189"><span class="lineNum">     189 </span>            : </a>
-<a name="190"><span class="lineNum">     190 </span><span class="lineNoCov">          0 : String CrashStackTracer::getCrashLocation (Thread::ThreadID threadID)</span></a>
+<a name="190"><span class="lineNum">     190 </span><span class="lineNoCov">          0 : juce::String CrashStackTracer::getCrashLocation (Thread::ThreadID threadID)</span></a>
 <a name="191"><span class="lineNum">     191 </span>            : {</a>
 <a name="192"><span class="lineNum">     192 </span><span class="lineNoCov">          0 :     return crashStack.getCrashLocation (threadID);</span></a>
 <a name="193"><span class="lineNum">     193 </span>            : }</a>
 <a name="194"><span class="lineNum">     194 </span>            : </a>
 <a name="195"><span class="lineNum">     195 </span>            : //==============================================================================</a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineCov">          5 : DeadMansPedalMessage::DeadMansPedalMessage (PropertyStorage&amp; ps, const String&amp; message)</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">          5 : DeadMansPedalMessage::DeadMansPedalMessage (PropertyStorage&amp; ps, const juce::String&amp; message)</span></a>
 <a name="197"><span class="lineNum">     197 </span><span class="lineCov">          5 :     : file (getDeadMansPedalFile (ps))</span></a>
 <a name="198"><span class="lineNum">     198 </span>            : {</a>
 <a name="199"><span class="lineNum">     199 </span><span class="lineCov">          5 :     file.replaceWithText (message);</span></a>
@@ -268,7 +268,7 @@
 <a name="206"><span class="lineNum">     206 </span>            :     jassert (success);</a>
 <a name="207"><span class="lineNum">     207 </span><span class="lineCov">          5 : }</span></a>
 <a name="208"><span class="lineNum">     208 </span>            : </a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 : String DeadMansPedalMessage::getAndClearLastMessage (PropertyStorage&amp; propertyStorage)</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 : juce::String DeadMansPedalMessage::getAndClearLastMessage (PropertyStorage&amp; propertyStorage)</span></a>
 <a name="210"><span class="lineNum">     210 </span>            : {</a>
 <a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 :     auto file = getDeadMansPedalFile (propertyStorage);</span></a>
 <a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 :     auto s = file.loadFileAsString();</span></a>

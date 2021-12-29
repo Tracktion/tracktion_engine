@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">35</td>
@@ -180,7 +180,7 @@
 <a name="118"><span class="lineNum">     118 </span>            :     {</a>
 <a name="119"><span class="lineNum">     119 </span><span class="lineCov">          2 :         CRASH_TRACER</span></a>
 <a name="120"><span class="lineNum">     120 </span>            : </a>
-<a name="121"><span class="lineNum">     121 </span><span class="lineCov">          3 :         AudioFile tempFile (engine, proxy.getFile().getSiblingFile (&quot;temp_proxy_&quot; + String::toHexString (Random().nextInt64()))</span></a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineCov">          3 :         AudioFile tempFile (engine, proxy.getFile().getSiblingFile (&quot;temp_proxy_&quot; + juce::String::toHexString (Random().nextInt64()))</span></a>
 <a name="122"><span class="lineNum">     122 </span><span class="lineCov">          3 :                             .withFileExtension (proxy.getFile().getFileExtension()));</span></a>
 <a name="123"><span class="lineNum">     123 </span>            : </a>
 <a name="124"><span class="lineNum">     124 </span><span class="lineCov">          1 :         bool ok = render (tempFile);</span></a>
@@ -402,7 +402,7 @@
 <a name="340"><span class="lineNum">     340 </span>            : </a>
 <a name="341"><span class="lineNum">     341 </span><span class="lineCov">         85 : void AudioClipBase::updateLeftRightChannelActivenessFlags()</span></a>
 <a name="342"><span class="lineNum">     342 </span>            : {</a>
-<a name="343"><span class="lineNum">     343 </span><span class="lineCov">         85 :     const String channelMask = channels;</span></a>
+<a name="343"><span class="lineNum">     343 </span><span class="lineCov">         85 :     juce::String channelMask = channels;</span></a>
 <a name="344"><span class="lineNum">     344 </span>            : </a>
 <a name="345"><span class="lineNum">     345 </span><span class="lineCov">         85 :     if (channelMask.isEmpty())</span></a>
 <a name="346"><span class="lineNum">     346 </span><span class="lineNoCov">          0 :         activeChannels = AudioChannelSet::disabled();</span></a>
@@ -1135,12 +1135,12 @@
 <a name="1073"><span class="lineNum">    1073 </span>            :         {</a>
 <a name="1074"><span class="lineNum">    1074 </span>            :             UndoManager* um = nullptr;</a>
 <a name="1075"><span class="lineNum">    1075 </span>            : </a>
-<a name="1076"><span class="lineNum">    1076 </span><span class="lineNoCov">          0 :             ValueTree midiClip (IDs::MIDICLIP);</span></a>
+<a name="1076"><span class="lineNum">    1076 </span><span class="lineNoCov">          0 :             juce::ValueTree midiClip (IDs::MIDICLIP);</span></a>
 <a name="1077"><span class="lineNum">    1077 </span><span class="lineNoCov">          0 :             midiClip.setProperty (IDs::name, getName(), um);</span></a>
 <a name="1078"><span class="lineNum">    1078 </span><span class="lineNoCov">          0 :             midiClip.setProperty (IDs::start, getPosition().getStart(), um);</span></a>
 <a name="1079"><span class="lineNum">    1079 </span><span class="lineNoCov">          0 :             midiClip.setProperty (IDs::length, getPosition().getLength(), um);</span></a>
 <a name="1080"><span class="lineNum">    1080 </span>            : </a>
-<a name="1081"><span class="lineNum">    1081 </span><span class="lineNoCov">          0 :             ValueTree ms (IDs::SEQUENCE);</span></a>
+<a name="1081"><span class="lineNum">    1081 </span><span class="lineNoCov">          0 :             juce::ValueTree ms (IDs::SEQUENCE);</span></a>
 <a name="1082"><span class="lineNum">    1082 </span><span class="lineNoCov">          0 :             ms.setProperty (IDs::ver, 1, um);</span></a>
 <a name="1083"><span class="lineNum">    1083 </span><span class="lineNoCov">          0 :             ms.setProperty (IDs::channelNumber, 1, um);</span></a>
 <a name="1084"><span class="lineNum">    1084 </span>            : </a>
@@ -1154,7 +1154,7 @@
 <a name="1092"><span class="lineNum">    1092 </span>            : </a>
 <a name="1093"><span class="lineNum">    1093 </span><span class="lineNoCov">          0 :                 if (e.noteOffObject != nullptr)</span></a>
 <a name="1094"><span class="lineNum">    1094 </span>            :                 {</a>
-<a name="1095"><span class="lineNum">    1095 </span><span class="lineNoCov">          0 :                     ValueTree note (IDs::NOTE);</span></a>
+<a name="1095"><span class="lineNum">    1095 </span><span class="lineNoCov">          0 :                     juce::ValueTree note (IDs::NOTE);</span></a>
 <a name="1096"><span class="lineNum">    1096 </span><span class="lineNoCov">          0 :                     note.setProperty (&quot;p&quot;, e.message.getNoteNumber(), um);</span></a>
 <a name="1097"><span class="lineNum">    1097 </span><span class="lineNoCov">          0 :                     note.setProperty (&quot;v&quot;, e.message.getVelocity(), um);</span></a>
 <a name="1098"><span class="lineNum">    1098 </span><span class="lineNoCov">          0 :                     note.setProperty (&quot;b&quot;, ts.timeToBeats (e.message.getTimeStamp()), um);</span></a>
@@ -1289,9 +1289,9 @@
 <a name="1227"><span class="lineNum">    1227 </span>            :     return true;</a>
 <a name="1228"><span class="lineNum">    1228 </span>            : }</a>
 <a name="1229"><span class="lineNum">    1229 </span>            : </a>
-<a name="1230"><span class="lineNum">    1230 </span><span class="lineNoCov">          0 : StringArray AudioClipBase::getRootNoteChoices (Engine&amp; e)</span></a>
+<a name="1230"><span class="lineNum">    1230 </span><span class="lineNoCov">          0 : juce::StringArray AudioClipBase::getRootNoteChoices (Engine&amp; e)</span></a>
 <a name="1231"><span class="lineNum">    1231 </span>            : {</a>
-<a name="1232"><span class="lineNum">    1232 </span><span class="lineNoCov">          0 :     StringArray s;</span></a>
+<a name="1232"><span class="lineNum">    1232 </span><span class="lineNoCov">          0 :     juce::StringArray s;</span></a>
 <a name="1233"><span class="lineNum">    1233 </span><span class="lineNoCov">          0 :     s.add (&quot;&lt;&quot; + TRANS(&quot;None&quot;) + &quot;&gt;&quot;);</span></a>
 <a name="1234"><span class="lineNum">    1234 </span>            : </a>
 <a name="1235"><span class="lineNum">    1235 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; 12; ++i)</span></a>
@@ -1300,9 +1300,9 @@
 <a name="1238"><span class="lineNum">    1238 </span><span class="lineNoCov">          0 :     return s;</span></a>
 <a name="1239"><span class="lineNum">    1239 </span>            : }</a>
 <a name="1240"><span class="lineNum">    1240 </span>            : </a>
-<a name="1241"><span class="lineNum">    1241 </span><span class="lineNoCov">          0 : StringArray AudioClipBase::getPitchChoices()</span></a>
+<a name="1241"><span class="lineNum">    1241 </span><span class="lineNoCov">          0 : juce::StringArray AudioClipBase::getPitchChoices()</span></a>
 <a name="1242"><span class="lineNum">    1242 </span>            : {</a>
-<a name="1243"><span class="lineNum">    1243 </span><span class="lineNoCov">          0 :     StringArray s;</span></a>
+<a name="1243"><span class="lineNum">    1243 </span><span class="lineNoCov">          0 :     juce::StringArray s;</span></a>
 <a name="1244"><span class="lineNum">    1244 </span>            : </a>
 <a name="1245"><span class="lineNum">    1245 </span><span class="lineNoCov">          0 :     const int numSemitones = isUsingMelodyne() ? 12 : 24;</span></a>
 <a name="1246"><span class="lineNum">    1246 </span>            : </a>
@@ -1480,7 +1480,7 @@
 <a name="1418"><span class="lineNum">    1418 </span><span class="lineNoCov">          0 : void AudioClipBase::snapToOriginalBWavTime()</span></a>
 <a name="1419"><span class="lineNum">    1419 </span>            : {</a>
 <a name="1420"><span class="lineNum">    1420 </span><span class="lineNoCov">          0 :     auto f = getAudioFile();</span></a>
-<a name="1421"><span class="lineNum">    1421 </span><span class="lineNoCov">          0 :     const String bwavTime (f.getMetadata()[WavAudioFormat::bwavTimeReference]);</span></a>
+<a name="1421"><span class="lineNum">    1421 </span><span class="lineNoCov">          0 :     juce::String bwavTime (f.getMetadata()[WavAudioFormat::bwavTimeReference]);</span></a>
 <a name="1422"><span class="lineNum">    1422 </span>            : </a>
 <a name="1423"><span class="lineNum">    1423 </span><span class="lineNoCov">          0 :     if (bwavTime.isNotEmpty())</span></a>
 <a name="1424"><span class="lineNum">    1424 </span>            :     {</a>
@@ -1575,7 +1575,7 @@
 <a name="1513"><span class="lineNum">    1513 </span>            : }</a>
 <a name="1514"><span class="lineNum">    1514 </span>            : </a>
 <a name="1515"><span class="lineNum">    1515 </span>            : //==============================================================================</a>
-<a name="1516"><span class="lineNum">    1516 </span><span class="lineNoCov">          0 : String AudioClipBase::canAddClipPlugin (const Plugin::Ptr&amp; p) const</span></a>
+<a name="1516"><span class="lineNum">    1516 </span><span class="lineNoCov">          0 : juce::String AudioClipBase::canAddClipPlugin (const Plugin::Ptr&amp; p) const</span></a>
 <a name="1517"><span class="lineNum">    1517 </span>            : {</a>
 <a name="1518"><span class="lineNum">    1518 </span><span class="lineNoCov">          0 :     if (p != nullptr)</span></a>
 <a name="1519"><span class="lineNum">    1519 </span>            :     {</a>

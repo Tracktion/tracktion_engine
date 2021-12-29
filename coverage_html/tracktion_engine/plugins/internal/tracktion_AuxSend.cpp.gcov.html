@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -81,8 +81,8 @@
 <a name="19"><span class="lineNum">      19 </span><span class="lineCov">          4 :     lastVolumeBeforeMute.referTo (state, IDs::lastVolumeBeforeMuteDb, um, 0.0f);</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : </a>
 <a name="21"><span class="lineNum">      21 </span><span class="lineCov">          2 :     gain = addParam (&quot;send level&quot;, TRANS(&quot;Send level&quot;), { 0.0f, 1.0f },</span></a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 :                      [] (float value)       { return Decibels::toString (volumeFaderPositionToDB (value)); },</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">          4 :                      [] (const String&amp; s)   { return decibelsToVolumeFaderPosition (dbStringToDb (s)); });</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 :                      [] (float value)             { return Decibels::toString (volumeFaderPositionToDB (value)); },</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">          4 :                      [] (const juce::String&amp; s)   { return decibelsToVolumeFaderPosition (dbStringToDb (s)); });</span></a>
 <a name="24"><span class="lineNum">      24 </span>            : </a>
 <a name="25"><span class="lineNum">      25 </span><span class="lineCov">          2 :     gain-&gt;attachToCurrentValue (gainLevel);</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : </a>
@@ -112,24 +112,24 @@
 <a name="50"><span class="lineNum">      50 </span>            : </a>
 <a name="51"><span class="lineNum">      51 </span>            : const char* AuxSendPlugin::xmlTypeName = &quot;auxsend&quot;;</a>
 <a name="52"><span class="lineNum">      52 </span>            : </a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 : String AuxSendPlugin::getName()</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 : juce::String AuxSendPlugin::getName()</span></a>
 <a name="54"><span class="lineNum">      54 </span>            : {</a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 :     String nm (edit.getAuxBusName (busNumber));</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 :     juce::String nm (edit.getAuxBusName (busNumber));</span></a>
 <a name="56"><span class="lineNum">      56 </span>            : </a>
 <a name="57"><span class="lineNum">      57 </span><span class="lineNoCov">          0 :     if (nm.isNotEmpty())</span></a>
 <a name="58"><span class="lineNum">      58 </span><span class="lineNoCov">          0 :         return &quot;S:&quot; + nm;</span></a>
 <a name="59"><span class="lineNum">      59 </span>            : </a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineNoCov">          0 :     return TRANS(&quot;Aux Send&quot;) + &quot; #&quot; + String (busNumber + 1);</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineNoCov">          0 :     return TRANS(&quot;Aux Send&quot;) + &quot; #&quot; + juce::String (busNumber + 1);</span></a>
 <a name="61"><span class="lineNum">      61 </span>            : }</a>
 <a name="62"><span class="lineNum">      62 </span>            : </a>
-<a name="63"><span class="lineNum">      63 </span><span class="lineNoCov">          0 : String AuxSendPlugin::getShortName (int)</span></a>
+<a name="63"><span class="lineNum">      63 </span><span class="lineNoCov">          0 : juce::String AuxSendPlugin::getShortName (int)</span></a>
 <a name="64"><span class="lineNum">      64 </span>            : {</a>
 <a name="65"><span class="lineNum">      65 </span><span class="lineNoCov">          0 :     auto nm = edit.getAuxBusName (busNumber);</span></a>
 <a name="66"><span class="lineNum">      66 </span>            : </a>
 <a name="67"><span class="lineNum">      67 </span><span class="lineNoCov">          0 :     if (nm.isNotEmpty())</span></a>
 <a name="68"><span class="lineNum">      68 </span><span class="lineNoCov">          0 :         return &quot;S:&quot; + nm;</span></a>
 <a name="69"><span class="lineNum">      69 </span>            : </a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineNoCov">          0 :     return TRANS(&quot;Send&quot;) + &quot;:&quot; + String (busNumber + 1);</span></a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineNoCov">          0 :     return TRANS(&quot;Send&quot;) + &quot;:&quot; + juce::String (busNumber + 1);</span></a>
 <a name="71"><span class="lineNum">      71 </span>            : }</a>
 <a name="72"><span class="lineNum">      72 </span>            : </a>
 <a name="73"><span class="lineNum">      73 </span><span class="lineNoCov">          0 : void AuxSendPlugin::initialise (const PluginInitialisationInfo&amp; info)</span></a>
@@ -152,7 +152,7 @@
 <a name="90"><span class="lineNum">      90 </span>            : {</a>
 <a name="91"><span class="lineNum">      91 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="92"><span class="lineNum">      92 </span>            : </a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineNoCov">          0 : String AuxSendPlugin::getBusName()</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineNoCov">          0 : juce::String AuxSendPlugin::getBusName()</span></a>
 <a name="94"><span class="lineNum">      94 </span>            : {</a>
 <a name="95"><span class="lineNum">      95 </span><span class="lineNoCov">          0 :     auto busName = edit.getAuxBusName (busNumber);</span></a>
 <a name="96"><span class="lineNum">      96 </span>            : </a>
@@ -196,14 +196,14 @@
 <a name="134"><span class="lineNum">     134 </span><span class="lineNoCov">          0 :     return getGainDb() &lt;= -90.0f;</span></a>
 <a name="135"><span class="lineNum">     135 </span>            : }</a>
 <a name="136"><span class="lineNum">     136 </span>            : </a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 : String AuxSendPlugin::getDefaultBusName (int index)</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 : juce::String AuxSendPlugin::getDefaultBusName (int index)</span></a>
 <a name="138"><span class="lineNum">     138 </span>            : {</a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineNoCov">          0 :     return &quot;Bus #&quot; + String (index + 1);</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineNoCov">          0 :     return &quot;Bus #&quot; + juce::String (index + 1);</span></a>
 <a name="140"><span class="lineNum">     140 </span>            : }</a>
 <a name="141"><span class="lineNum">     141 </span>            : </a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineNoCov">          0 : StringArray AuxSendPlugin::getBusNames (Edit&amp; ed, int maxNumBusses)</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineNoCov">          0 : juce::StringArray AuxSendPlugin::getBusNames (Edit&amp; ed, int maxNumBusses)</span></a>
 <a name="143"><span class="lineNum">     143 </span>            : {</a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 :     StringArray buses;</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 :     juce::StringArray buses;</span></a>
 <a name="145"><span class="lineNum">     145 </span>            : </a>
 <a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; maxNumBusses; ++i)</span></a>
 <a name="147"><span class="lineNum">     147 </span>            :     {</a>

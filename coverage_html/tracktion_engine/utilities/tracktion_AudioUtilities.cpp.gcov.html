@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">17</td>
@@ -105,7 +105,7 @@
 <a name="43"><span class="lineNum">      43 </span>            :     }</a>
 <a name="44"><span class="lineNum">      44 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="45"><span class="lineNum">      45 </span>            : </a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineCov">     666939 : void resetFP() noexcept</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">     665839 : void resetFP() noexcept</span></a>
 <a name="47"><span class="lineNum">      47 </span>            : {</a>
 <a name="48"><span class="lineNum">      48 </span>            :    #if JUCE_WINDOWS</a>
 <a name="49"><span class="lineNum">      49 </span>            :     _fpreset();</a>
@@ -114,7 +114,7 @@
 <a name="52"><span class="lineNum">      52 </span>            :    #if JUCE_MAC &amp;&amp; JUCE_INTEL</a>
 <a name="53"><span class="lineNum">      53 </span>            :     feclearexcept (FE_ALL_EXCEPT);</a>
 <a name="54"><span class="lineNum">      54 </span>            :    #endif</a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">     666939 : }</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">     665839 : }</span></a>
 <a name="56"><span class="lineNum">      56 </span>            : </a>
 <a name="57"><span class="lineNum">      57 </span>            : static unsigned short getFPStatus() noexcept</a>
 <a name="58"><span class="lineNum">      58 </span>            : {</a>
@@ -185,7 +185,7 @@
 <a name="123"><span class="lineNum">     123 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="124"><span class="lineNum">     124 </span>            : </a>
 <a name="125"><span class="lineNum">     125 </span>            : //==============================================================================</a>
-<a name="126"><span class="lineNum">     126 </span><span class="lineCov">     539371 : float dbToGain (float db) noexcept</span></a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineCov">     539370 : float dbToGain (float db) noexcept</span></a>
 <a name="127"><span class="lineNum">     127 </span>            : {</a>
 <a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 :     return std::pow (10.0f, db * (1.0f / 20.0f));</span></a>
 <a name="129"><span class="lineNum">     129 </span>            : }</a>
@@ -197,19 +197,19 @@
 <a name="135"><span class="lineNum">     135 </span>            : </a>
 <a name="136"><span class="lineNum">     136 </span>            : static const float volScaleFactor = 20.0f;</a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineCov">    2437780 : float decibelsToVolumeFaderPosition (float db) noexcept</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">    2437810 : float decibelsToVolumeFaderPosition (float db) noexcept</span></a>
 <a name="139"><span class="lineNum">     139 </span>            : {</a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">    2437780 :     return (db &gt; -100.0f) ? std::exp ((db - 6.0f) * (1.0f / volScaleFactor)) : 0.0f;</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">    2437810 :     return (db &gt; -100.0f) ? std::exp ((db - 6.0f) * (1.0f / volScaleFactor)) : 0.0f;</span></a>
 <a name="141"><span class="lineNum">     141 </span>            : }</a>
 <a name="142"><span class="lineNum">     142 </span>            : </a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov">     606525 : float volumeFaderPositionToDB (float pos) noexcept</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">     606523 : float volumeFaderPositionToDB (float pos) noexcept</span></a>
 <a name="144"><span class="lineNum">     144 </span>            : {</a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">     606525 :     return (pos &gt; 0.0f) ? (volScaleFactor * std::log (pos)) + 6.0f : -100.0f;</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">     606523 :     return (pos &gt; 0.0f) ? (volScaleFactor * std::log (pos)) + 6.0f : -100.0f;</span></a>
 <a name="146"><span class="lineNum">     146 </span>            : }</a>
 <a name="147"><span class="lineNum">     147 </span>            : </a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">    1136170 : float volumeFaderPositionToGain (float pos) noexcept</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">    1136950 : float volumeFaderPositionToGain (float pos) noexcept</span></a>
 <a name="149"><span class="lineNum">     149 </span>            : {</a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineCov">    1136170 :     return (pos &gt; 0.0f) ? std::pow (10.0f, ((volScaleFactor * logf (pos)) + 6.0f) * (1.0f / 20.0f)) : 0.0f;</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineCov">    1136950 :     return (pos &gt; 0.0f) ? std::pow (10.0f, ((volScaleFactor * logf (pos)) + 6.0f) * (1.0f / 20.0f)) : 0.0f;</span></a>
 <a name="151"><span class="lineNum">     151 </span>            : }</a>
 <a name="152"><span class="lineNum">     152 </span>            : </a>
 <a name="153"><span class="lineNum">     153 </span><span class="lineCov">         25 : float gainToVolumeFaderPosition (float gain) noexcept</span></a>
@@ -217,12 +217,12 @@
 <a name="155"><span class="lineNum">     155 </span><span class="lineCov">         25 :     return (gain &gt; 0.0f) ? std::exp (((20.0f * std::log10 (gain)) - 6.0f) * (1.0f / volScaleFactor)) : 0.0f;</span></a>
 <a name="156"><span class="lineNum">     156 </span>            : }</a>
 <a name="157"><span class="lineNum">     157 </span>            : </a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 : String gainToDbString (float gain, float infLevel, int decPlaces)</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 : juce::String gainToDbString (float gain, float infLevel, int decPlaces)</span></a>
 <a name="159"><span class="lineNum">     159 </span>            : {</a>
 <a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 :     return Decibels::toString (gainToDb (gain), decPlaces, infLevel);</span></a>
 <a name="161"><span class="lineNum">     161 </span>            : }</a>
 <a name="162"><span class="lineNum">     162 </span>            : </a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 : float dbStringToDb (const String&amp; dbStr)</span></a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 : float dbStringToDb (const juce::String&amp; dbStr)</span></a>
 <a name="164"><span class="lineNum">     164 </span>            : {</a>
 <a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 :     if (dbStr.contains (&quot;INF&quot;))</span></a>
 <a name="166"><span class="lineNum">     166 </span>            :         return -100.0f;</a>
@@ -230,7 +230,7 @@
 <a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :     return dbStr.retainCharacters (&quot;0123456789.-&quot;).getFloatValue();</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : }</a>
 <a name="170"><span class="lineNum">     170 </span>            : </a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 : float dbStringToGain (const String&amp; dbStr)</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 : float dbStringToGain (const juce::String&amp; dbStr)</span></a>
 <a name="172"><span class="lineNum">     172 </span>            : {</a>
 <a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :     if (dbStr.contains (&quot;INF&quot;))</span></a>
 <a name="174"><span class="lineNum">     174 </span>            :         return 0.0f;</a>
@@ -238,12 +238,12 @@
 <a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 :     return dbToGain (dbStringToDb (dbStr));</span></a>
 <a name="177"><span class="lineNum">     177 </span>            : }</a>
 <a name="178"><span class="lineNum">     178 </span>            : </a>
-<a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 : String getPanString (float pan)</span></a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 : juce::String getPanString (float pan)</span></a>
 <a name="180"><span class="lineNum">     180 </span>            : {</a>
 <a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 :     if (std::abs (pan) &lt; 0.001f)</span></a>
 <a name="182"><span class="lineNum">     182 </span><span class="lineNoCov">          0 :         return TRANS(&quot;Centre&quot;);</span></a>
 <a name="183"><span class="lineNum">     183 </span>            : </a>
-<a name="184"><span class="lineNum">     184 </span><span class="lineNoCov">          0 :     const String s (pan, 3);</span></a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineNoCov">          0 :     const juce::String s (pan, 3);</span></a>
 <a name="185"><span class="lineNum">     185 </span>            : </a>
 <a name="186"><span class="lineNum">     186 </span><span class="lineNoCov">          0 :     if (pan &lt; 0.0f)</span></a>
 <a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 :         return s + &quot; &quot; + TRANS(&quot;Left&quot;);</span></a>
@@ -251,9 +251,9 @@
 <a name="189"><span class="lineNum">     189 </span><span class="lineNoCov">          0 :     return &quot;+&quot; + s + &quot; &quot; + TRANS(&quot;Right&quot;);</span></a>
 <a name="190"><span class="lineNum">     190 </span>            : }</a>
 <a name="191"><span class="lineNum">     191 </span>            : </a>
-<a name="192"><span class="lineNum">     192 </span><span class="lineNoCov">          0 : String getSemitonesAsString (double semitones)</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineNoCov">          0 : juce::String getSemitonesAsString (double semitones)</span></a>
 <a name="193"><span class="lineNum">     193 </span>            : {</a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 :     String t;</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 :     juce::String t;</span></a>
 <a name="195"><span class="lineNum">     195 </span>            : </a>
 <a name="196"><span class="lineNum">     196 </span><span class="lineNoCov">          0 :     if (semitones &gt; 0)</span></a>
 <a name="197"><span class="lineNum">     197 </span><span class="lineNoCov">          0 :         t &lt;&lt; &quot;+&quot;;</span></a>
@@ -261,7 +261,7 @@
 <a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 :     if (std::abs (semitones - (int) semitones) &lt; 0.01)</span></a>
 <a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :         t &lt;&lt; (int) semitones;</span></a>
 <a name="201"><span class="lineNum">     201 </span>            :     else</a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineNoCov">          0 :         t &lt;&lt; String (semitones, 2);</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineNoCov">          0 :         t &lt;&lt; juce::String (semitones, 2);</span></a>
 <a name="203"><span class="lineNum">     203 </span>            : </a>
 <a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 :     if (std::abs (semitones) != 1)</span></a>
 <a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 :         return TRANS(&quot;33 semitones&quot;).replace (&quot;33&quot;, t);</span></a>
@@ -291,17 +291,17 @@
 <a name="229"><span class="lineNum">     229 </span>            : }</a>
 <a name="230"><span class="lineNum">     230 </span>            : </a>
 <a name="231"><span class="lineNum">     231 </span>            : //==============================================================================</a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineCov">    1135960 : void getGainsFromVolumeFaderPositionAndPan (float volSliderPos, float pan, const PanLaw panLaw,</span></a>
+<a name="232"><span class="lineNum">     232 </span><span class="lineCov">    1136740 : void getGainsFromVolumeFaderPositionAndPan (float volSliderPos, float pan, const PanLaw panLaw,</span></a>
 <a name="233"><span class="lineNum">     233 </span>            :                                             float&amp; leftGain, float&amp; rightGain) noexcept</a>
 <a name="234"><span class="lineNum">     234 </span>            : {</a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineCov">    1135960 :     const float gain = volumeFaderPositionToGain (volSliderPos);</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">    1136740 :     const float gain = volumeFaderPositionToGain (volSliderPos);</span></a>
 <a name="236"><span class="lineNum">     236 </span>            : </a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineCov">    1135960 :     if (panLaw == PanLawLinear)</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineCov">    1136740 :     if (panLaw == PanLawLinear)</span></a>
 <a name="238"><span class="lineNum">     238 </span>            :     {</a>
-<a name="239"><span class="lineNum">     239 </span><span class="lineCov">    1135940 :         const float pv = pan * gain;</span></a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineCov">    1136730 :         const float pv = pan * gain;</span></a>
 <a name="240"><span class="lineNum">     240 </span>            : </a>
-<a name="241"><span class="lineNum">     241 </span><span class="lineCov">    1135940 :         leftGain  = gain - pv;</span></a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineCov">    1135940 :         rightGain = gain + pv;</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">    1136730 :         leftGain  = gain - pv;</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">    1136730 :         rightGain = gain + pv;</span></a>
 <a name="243"><span class="lineNum">     243 </span>            :     }</a>
 <a name="244"><span class="lineNum">     244 </span>            :     else</a>
 <a name="245"><span class="lineNum">     245 </span>            :     {</a>
@@ -334,7 +334,7 @@
 <a name="272"><span class="lineNum">     272 </span><span class="lineCov">         16 :         leftGain  = std::pow (leftGain,  ratio) * gain;</span></a>
 <a name="273"><span class="lineNum">     273 </span><span class="lineCov">         16 :         rightGain = std::pow (rightGain, ratio) * gain;</span></a>
 <a name="274"><span class="lineNum">     274 </span>            :     }</a>
-<a name="275"><span class="lineNum">     275 </span><span class="lineCov">    1135960 : }</span></a>
+<a name="275"><span class="lineNum">     275 </span><span class="lineCov">    1136740 : }</span></a>
 <a name="276"><span class="lineNum">     276 </span>            : </a>
 <a name="277"><span class="lineNum">     277 </span>            : static PanLaw defaultPanLaw = PanLawLinear;</a>
 <a name="278"><span class="lineNum">     278 </span>            : </a>
@@ -348,9 +348,9 @@
 <a name="286"><span class="lineNum">     286 </span><span class="lineNoCov">          0 :     defaultPanLaw = panLaw;</span></a>
 <a name="287"><span class="lineNum">     287 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="288"><span class="lineNum">     288 </span>            : </a>
-<a name="289"><span class="lineNum">     289 </span><span class="lineNoCov">          0 : StringArray getPanLawChoices (bool includeDefault) noexcept</span></a>
+<a name="289"><span class="lineNum">     289 </span><span class="lineNoCov">          0 : juce::StringArray getPanLawChoices (bool includeDefault) noexcept</span></a>
 <a name="290"><span class="lineNum">     290 </span>            : {</a>
-<a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :     StringArray s;</span></a>
+<a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :     juce::StringArray s;</span></a>
 <a name="292"><span class="lineNum">     292 </span>            : </a>
 <a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">          0 :     if (includeDefault)</span></a>
 <a name="294"><span class="lineNum">     294 </span><span class="lineNoCov">          0 :         s.add (&quot;(&quot; + TRANS(&quot;Use Default&quot;) + &quot;)&quot;);</span></a>
@@ -545,14 +545,14 @@
 <a name="483"><span class="lineNum">     483 </span>            : </a>
 <a name="484"><span class="lineNum">     484 </span><span class="lineCov">          1 :     JUCE_DECLARE_SINGLETON (BufferList, false)</span></a>
 <a name="485"><span class="lineNum">     485 </span>            : </a>
-<a name="486"><span class="lineNum">     486 </span><span class="lineCov">     931226 :     Buffer* get()</span></a>
+<a name="486"><span class="lineNum">     486 </span><span class="lineCov">     932616 :     Buffer* get()</span></a>
 <a name="487"><span class="lineNum">     487 </span>            :     {</a>
 <a name="488"><span class="lineNum">     488 </span>            :         {</a>
-<a name="489"><span class="lineNum">     489 </span><span class="lineCov">     931226 :             const ScopedLock sl (lock);</span></a>
+<a name="489"><span class="lineNum">     489 </span><span class="lineCov">     932616 :             const ScopedLock sl (lock);</span></a>
 <a name="490"><span class="lineNum">     490 </span>            : </a>
-<a name="491"><span class="lineNum">     491 </span><span class="lineCov">     933093 :             for (auto b : buffers)</span></a>
+<a name="491"><span class="lineNum">     491 </span><span class="lineCov">     937134 :             for (auto b : buffers)</span></a>
 <a name="492"><span class="lineNum">     492 </span>            :             {</a>
-<a name="493"><span class="lineNum">     493 </span><span class="lineCov">     933093 :                 if (b-&gt;isFree)</span></a>
+<a name="493"><span class="lineNum">     493 </span><span class="lineCov">     937134 :                 if (b-&gt;isFree)</span></a>
 <a name="494"><span class="lineNum">     494 </span>            :                 {</a>
 <a name="495"><span class="lineNum">     495 </span>            :                     b-&gt;isFree = false;</a>
 <a name="496"><span class="lineNum">     496 </span>            :                     return b;</a>
@@ -576,12 +576,12 @@
 <a name="514"><span class="lineNum">     514 </span>            : </a>
 <a name="515"><span class="lineNum">     515 </span>            : JUCE_IMPLEMENT_SINGLETON (AudioScratchBuffer::BufferList)</a>
 <a name="516"><span class="lineNum">     516 </span>            : </a>
-<a name="517"><span class="lineNum">     517 </span><span class="lineCov">     931230 : AudioScratchBuffer::AudioScratchBuffer (int numChans, int numSamples)</span></a>
-<a name="518"><span class="lineNum">     518 </span><span class="lineCov">     931230 :     : allocatedBuffer (BufferList::getInstance()-&gt;get()),</span></a>
-<a name="519"><span class="lineNum">     519 </span><span class="lineCov">     931268 :       buffer (allocatedBuffer-&gt;buffer)</span></a>
+<a name="517"><span class="lineNum">     517 </span><span class="lineCov">     932634 : AudioScratchBuffer::AudioScratchBuffer (int numChans, int numSamples)</span></a>
+<a name="518"><span class="lineNum">     518 </span><span class="lineCov">     932629 :     : allocatedBuffer (BufferList::getInstance()-&gt;get()),</span></a>
+<a name="519"><span class="lineNum">     519 </span><span class="lineCov">     932805 :       buffer (allocatedBuffer-&gt;buffer)</span></a>
 <a name="520"><span class="lineNum">     520 </span>            : {</a>
-<a name="521"><span class="lineNum">     521 </span><span class="lineCov">     931268 :     buffer.setSize (numChans, numSamples, false, false, true);</span></a>
-<a name="522"><span class="lineNum">     522 </span><span class="lineCov">     931268 : }</span></a>
+<a name="521"><span class="lineNum">     521 </span><span class="lineCov">     932805 :     buffer.setSize (numChans, numSamples, false, false, true);</span></a>
+<a name="522"><span class="lineNum">     522 </span><span class="lineCov">     932805 : }</span></a>
 <a name="523"><span class="lineNum">     523 </span>            : </a>
 <a name="524"><span class="lineNum">     524 </span><span class="lineNoCov">          0 : AudioScratchBuffer::AudioScratchBuffer (const juce::AudioBuffer&lt;float&gt;&amp; srcBuffer)</span></a>
 <a name="525"><span class="lineNum">     525 </span><span class="lineNoCov">          0 :   : allocatedBuffer (BufferList::getInstance()-&gt;get()),</span></a>
@@ -596,10 +596,10 @@
 <a name="534"><span class="lineNum">     534 </span><span class="lineNoCov">          0 :         buffer.copyFrom (i, 0, srcBuffer.getReadPointer (i), samps);</span></a>
 <a name="535"><span class="lineNum">     535 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="536"><span class="lineNum">     536 </span>            : </a>
-<a name="537"><span class="lineNum">     537 </span><span class="lineCov">     931252 : AudioScratchBuffer::~AudioScratchBuffer() noexcept</span></a>
+<a name="537"><span class="lineNum">     537 </span><span class="lineCov">     932785 : AudioScratchBuffer::~AudioScratchBuffer() noexcept</span></a>
 <a name="538"><span class="lineNum">     538 </span>            : {</a>
-<a name="539"><span class="lineNum">     539 </span><span class="lineCov">     931252 :     allocatedBuffer-&gt;isFree = true;</span></a>
-<a name="540"><span class="lineNum">     540 </span><span class="lineCov">     931252 : }</span></a>
+<a name="539"><span class="lineNum">     539 </span><span class="lineCov">     932785 :     allocatedBuffer-&gt;isFree = true;</span></a>
+<a name="540"><span class="lineNum">     540 </span><span class="lineCov">     932785 : }</span></a>
 <a name="541"><span class="lineNum">     541 </span>            : </a>
 <a name="542"><span class="lineNum">     542 </span><span class="lineNoCov">          0 : void AudioScratchBuffer::initialise()</span></a>
 <a name="543"><span class="lineNum">     543 </span>            : {</a>

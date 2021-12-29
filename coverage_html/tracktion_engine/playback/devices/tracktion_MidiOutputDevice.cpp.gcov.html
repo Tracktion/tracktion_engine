@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">17</td>
@@ -320,7 +320,7 @@
 <a name="258"><span class="lineNum">     258 </span>            : };</a>
 <a name="259"><span class="lineNum">     259 </span>            : </a>
 <a name="260"><span class="lineNum">     260 </span>            : //==============================================================================</a>
-<a name="261"><span class="lineNum">     261 </span><span class="lineCov">          4 : MidiOutputDevice::MidiOutputDevice (Engine&amp; e, const String&amp; deviceName, int index)</span></a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineCov">          4 : MidiOutputDevice::MidiOutputDevice (Engine&amp; e, const juce::String&amp; deviceName, int index)</span></a>
 <a name="262"><span class="lineNum">     262 </span><span class="lineCov">          4 :     : OutputDevice (e, TRANS(&quot;MIDI Output&quot;), deviceName),</span></a>
 <a name="263"><span class="lineNum">     263 </span><span class="lineCov">          8 :       deviceIndex (index)</span></a>
 <a name="264"><span class="lineNum">     264 </span>            : {</a>
@@ -377,7 +377,7 @@
 <a name="315"><span class="lineNum">     315 </span>            :     }</a>
 <a name="316"><span class="lineNum">     316 </span><span class="lineCov">          5 : }</span></a>
 <a name="317"><span class="lineNum">     317 </span>            : </a>
-<a name="318"><span class="lineNum">     318 </span><span class="lineNoCov">          0 : String MidiOutputDevice::prepareToPlay (Edit* edit, double)</span></a>
+<a name="318"><span class="lineNum">     318 </span><span class="lineNoCov">          0 : juce::String MidiOutputDevice::prepareToPlay (Edit* edit, double)</span></a>
 <a name="319"><span class="lineNum">     319 </span>            : {</a>
 <a name="320"><span class="lineNum">     320 </span><span class="lineNoCov">          0 :     if (outputDevice == nullptr)</span></a>
 <a name="321"><span class="lineNum">     321 </span><span class="lineNoCov">          0 :         return TRANS(&quot;Couldn't open the MIDI port&quot;);</span></a>
@@ -428,7 +428,7 @@
 <a name="366"><span class="lineNum">     366 </span><span class="lineCov">          4 :     return e.getPropertyStorage().getProperty (SettingID::sendControllerOffMessages, true);</span></a>
 <a name="367"><span class="lineNum">     367 </span>            : }</a>
 <a name="368"><span class="lineNum">     368 </span>            : </a>
-<a name="369"><span class="lineNum">     369 </span><span class="lineNoCov">          0 : String MidiOutputDevice::getNameForMidiNoteNumber (int note, int midiChannel, bool useSharp) const</span></a>
+<a name="369"><span class="lineNum">     369 </span><span class="lineNoCov">          0 : juce::String MidiOutputDevice::getNameForMidiNoteNumber (int note, int midiChannel, bool useSharp) const</span></a>
 <a name="370"><span class="lineNum">     370 </span>            : {</a>
 <a name="371"><span class="lineNum">     371 </span>            :     return midiChannel == 10 ? TRANS(MidiMessage::getRhythmInstrumentName (note))</a>
 <a name="372"><span class="lineNum">     372 </span>            :                              : MidiMessage::getMidiNoteName (note, useSharp, true,</a>
@@ -489,7 +489,7 @@
 <a name="427"><span class="lineNum">     427 </span><span class="lineCov">         14 :     engine.getPropertyStorage().setXmlPropertyItem (SettingID::midiout, getName(), n);</span></a>
 <a name="428"><span class="lineNum">     428 </span><span class="lineCov">         14 : }</span></a>
 <a name="429"><span class="lineNum">     429 </span>            : </a>
-<a name="430"><span class="lineNum">     430 </span><span class="lineCov">          4 : String MidiOutputDevice::openDevice()</span></a>
+<a name="430"><span class="lineNum">     430 </span><span class="lineCov">          4 : juce::String MidiOutputDevice::openDevice()</span></a>
 <a name="431"><span class="lineNum">     431 </span>            : {</a>
 <a name="432"><span class="lineNum">     432 </span><span class="lineCov">          4 :     if (isEnabled())</span></a>
 <a name="433"><span class="lineNum">     433 </span>            :     {</a>
@@ -602,7 +602,7 @@
 <a name="540"><span class="lineNum">     540 </span>            : </a>
 <a name="541"><span class="lineNum">     541 </span><span class="lineNoCov">          0 : double MidiOutputDevice::getDeviceDelay() const noexcept</span></a>
 <a name="542"><span class="lineNum">     542 </span>            : {</a>
-<a name="543"><span class="lineNum">     543 </span><span class="lineCov">       7776 :     return (preDelayMillisecs + audioAdjustmentDelay) * 0.001;</span></a>
+<a name="543"><span class="lineNum">     543 </span><span class="lineCov">       7786 :     return (preDelayMillisecs + audioAdjustmentDelay) * 0.001;</span></a>
 <a name="544"><span class="lineNum">     544 </span>            : }</a>
 <a name="545"><span class="lineNum">     545 </span>            : </a>
 <a name="546"><span class="lineNum">     546 </span><span class="lineNoCov">          0 : void MidiOutputDevice::setPreDelayMs (int ms)</span></a>
@@ -633,7 +633,7 @@
 <a name="571"><span class="lineNum">     571 </span><span class="lineNoCov">          0 :     saveProps();</span></a>
 <a name="572"><span class="lineNum">     572 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="573"><span class="lineNum">     573 </span>            : </a>
-<a name="574"><span class="lineNum">     574 </span><span class="lineNoCov">          0 : StringArray MidiOutputDevice::getProgramSets() const</span></a>
+<a name="574"><span class="lineNum">     574 </span><span class="lineNoCov">          0 : juce::StringArray MidiOutputDevice::getProgramSets() const</span></a>
 <a name="575"><span class="lineNum">     575 </span>            : {</a>
 <a name="576"><span class="lineNum">     576 </span><span class="lineNoCov">          0 :     return getMidiProgramManager().getMidiProgramSetNames();</span></a>
 <a name="577"><span class="lineNum">     577 </span>            : }</a>
@@ -643,7 +643,7 @@
 <a name="581"><span class="lineNum">     581 </span><span class="lineNoCov">          0 :     return getMidiProgramManager().getSetIndex (programNameSet);</span></a>
 <a name="582"><span class="lineNum">     582 </span>            : }</a>
 <a name="583"><span class="lineNum">     583 </span>            : </a>
-<a name="584"><span class="lineNum">     584 </span><span class="lineNoCov">          0 : void MidiOutputDevice::setCurrentProgramSet (const String&amp; newSet)</span></a>
+<a name="584"><span class="lineNum">     584 </span><span class="lineNoCov">          0 : void MidiOutputDevice::setCurrentProgramSet (const juce::String&amp; newSet)</span></a>
 <a name="585"><span class="lineNum">     585 </span>            : {</a>
 <a name="586"><span class="lineNum">     586 </span><span class="lineNoCov">          0 :     if (programNameSet != newSet)</span></a>
 <a name="587"><span class="lineNum">     587 </span>            :     {</a>
@@ -653,7 +653,7 @@
 <a name="591"><span class="lineNum">     591 </span>            :     }</a>
 <a name="592"><span class="lineNum">     592 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="593"><span class="lineNum">     593 </span>            : </a>
-<a name="594"><span class="lineNum">     594 </span><span class="lineNoCov">          0 : String MidiOutputDevice::getProgramName (int programNumber, int bank)</span></a>
+<a name="594"><span class="lineNum">     594 </span><span class="lineNoCov">          0 : juce::String MidiOutputDevice::getProgramName (int programNumber, int bank)</span></a>
 <a name="595"><span class="lineNum">     595 </span>            : {</a>
 <a name="596"><span class="lineNum">     596 </span><span class="lineNoCov">          0 :     return getMidiProgramManager().getProgramName (getCurrentSetIndex(), bank, programNumber);</span></a>
 <a name="597"><span class="lineNum">     597 </span>            : }</a>
@@ -668,7 +668,7 @@
 <a name="606"><span class="lineNum">     606 </span><span class="lineNoCov">          0 :     return getMidiProgramManager().canDeleteProgramSet (index);</span></a>
 <a name="607"><span class="lineNum">     607 </span>            : }</a>
 <a name="608"><span class="lineNum">     608 </span>            : </a>
-<a name="609"><span class="lineNum">     609 </span><span class="lineNoCov">          0 : String MidiOutputDevice::getBankName (int bank)</span></a>
+<a name="609"><span class="lineNum">     609 </span><span class="lineNoCov">          0 : juce::String MidiOutputDevice::getBankName (int bank)</span></a>
 <a name="610"><span class="lineNum">     610 </span>            : {</a>
 <a name="611"><span class="lineNum">     611 </span><span class="lineNoCov">          0 :     return getMidiProgramManager().getBankName (getCurrentSetIndex(), bank);</span></a>
 <a name="612"><span class="lineNum">     612 </span>            : }</a>
@@ -700,7 +700,7 @@
 <a name="638"><span class="lineNum">     638 </span>            : {</a>
 <a name="639"><span class="lineNum">     639 </span><span class="lineCov">          4 : }</span></a>
 <a name="640"><span class="lineNum">     640 </span>            : </a>
-<a name="641"><span class="lineNum">     641 </span><span class="lineCov">          8 : String MidiOutputDeviceInstance::prepareToPlay (double, bool shouldSendMidiTC)</span></a>
+<a name="641"><span class="lineNum">     641 </span><span class="lineCov">          8 : juce::String MidiOutputDeviceInstance::prepareToPlay (double, bool shouldSendMidiTC)</span></a>
 <a name="642"><span class="lineNum">     642 </span>            : {</a>
 <a name="643"><span class="lineNum">     643 </span><span class="lineCov">          8 :     if (getMidiOutput().outputDevice == nullptr)</span></a>
 <a name="644"><span class="lineNum">     644 </span><span class="lineCov">          8 :         return TRANS(&quot;Couldn't open the MIDI port&quot;);</span></a>

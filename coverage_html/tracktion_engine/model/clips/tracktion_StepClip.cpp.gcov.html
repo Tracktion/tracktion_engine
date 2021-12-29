@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">299</td>
+            <td class="headerCovTableEntry">298</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -191,7 +191,7 @@
 <a name="129"><span class="lineNum">     129 </span>            : </a>
 <a name="130"><span class="lineNum">     130 </span><span class="lineNoCov">          0 : void StepClip::updatePatternList()</span></a>
 <a name="131"><span class="lineNum">     131 </span>            : {</a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :     auto newSequence = StringArray::fromTokens (state[IDs::sequence].toString(), &quot;,&quot;, {});</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :     auto newSequence = juce::StringArray::fromTokens (state[IDs::sequence].toString(), &quot;,&quot;, {});</span></a>
 <a name="133"><span class="lineNum">     133 </span>            : </a>
 <a name="134"><span class="lineNum">     134 </span><span class="lineNoCov">          0 :     PatternArray newArray (patternInstanceList);</span></a>
 <a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :     newArray.removeRange (newSequence.size(), newArray.size());</span></a>
@@ -264,7 +264,7 @@
 <a name="202"><span class="lineNum">     202 </span><span class="lineNoCov">          0 :     return t.canContainMIDI();</span></a>
 <a name="203"><span class="lineNum">     203 </span>            : }</a>
 <a name="204"><span class="lineNum">     204 </span>            : </a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 : String StepClip::getSelectableDescription()</span></a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 : juce::String StepClip::getSelectableDescription()</span></a>
 <a name="206"><span class="lineNum">     206 </span>            : {</a>
 <a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :     return TRANS(&quot;Step Clip&quot;) + &quot; - \&quot;&quot; + getName() + &quot;\&quot;&quot;;</span></a>
 <a name="208"><span class="lineNum">     208 </span>            : }</a>
@@ -544,187 +544,188 @@
 <a name="482"><span class="lineNum">     482 </span>            :     {</a>
 <a name="483"><span class="lineNum">     483 </span>            :         auto* um = getUndoManager();</a>
 <a name="484"><span class="lineNum">     484 </span>            : </a>
-<a name="485"><span class="lineNum">     485 </span><span class="lineNoCov">          0 :         ValueTree v (IDs::CHANNEL);</span></a>
-<a name="486"><span class="lineNum">     486 </span><span class="lineNoCov">          0 :         v.setProperty (IDs::channel, defaultMidiChannel, nullptr);</span></a>
-<a name="487"><span class="lineNum">     487 </span><span class="lineNoCov">          0 :         v.setProperty (IDs::note, defaultNoteNumber, nullptr);</span></a>
-<a name="488"><span class="lineNum">     488 </span><span class="lineNoCov">          0 :         v.setProperty (IDs::velocity, defaultNoteValue, nullptr);</span></a>
+<a name="485"><span class="lineNum">     485 </span>            :         auto v = createValueTree (IDs::CHANNEL,</a>
+<a name="486"><span class="lineNum">     486 </span><span class="lineNoCov">          0 :                                   IDs::channel, defaultMidiChannel,</span></a>
+<a name="487"><span class="lineNum">     487 </span><span class="lineNoCov">          0 :                                   IDs::note, defaultNoteNumber,</span></a>
+<a name="488"><span class="lineNum">     488 </span><span class="lineNoCov">          0 :                                   IDs::velocity, defaultNoteValue);</span></a>
 <a name="489"><span class="lineNum">     489 </span>            : </a>
-<a name="490"><span class="lineNum">     490 </span><span class="lineNoCov">          0 :         state.getOrCreateChildWithName (IDs::CHANNELS, getUndoManager()).addChild (v, index, um);</span></a>
-<a name="491"><span class="lineNum">     491 </span>            : </a>
-<a name="492"><span class="lineNum">     492 </span><span class="lineNoCov">          0 :         for (auto&amp; p : getPatterns())</span></a>
-<a name="493"><span class="lineNum">     493 </span><span class="lineNoCov">          0 :             p.insertChannel (index);</span></a>
-<a name="494"><span class="lineNum">     494 </span>            :     }</a>
-<a name="495"><span class="lineNum">     495 </span>            :     else</a>
-<a name="496"><span class="lineNum">     496 </span>            :     {</a>
-<a name="497"><span class="lineNum">     497 </span><span class="lineNoCov">          0 :         edit.engine.getUIBehaviour().showWarningMessage (TRANS(&quot;This clip already contains the maximum number of channels!&quot;));</span></a>
-<a name="498"><span class="lineNum">     498 </span>            :     }</a>
-<a name="499"><span class="lineNum">     499 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="500"><span class="lineNum">     500 </span>            : </a>
-<a name="501"><span class="lineNum">     501 </span><span class="lineNoCov">          0 : void StepClip::removeChannel (int index)</span></a>
-<a name="502"><span class="lineNum">     502 </span>            : {</a>
-<a name="503"><span class="lineNum">     503 </span><span class="lineNoCov">          0 :     if (auto* c = getChannels()[index])</span></a>
-<a name="504"><span class="lineNum">     504 </span>            :     {</a>
-<a name="505"><span class="lineNum">     505 </span><span class="lineNoCov">          0 :         state.getChildWithName (IDs::CHANNELS)</span></a>
-<a name="506"><span class="lineNum">     506 </span><span class="lineNoCov">          0 :              .removeChild (c-&gt;state, getUndoManager());</span></a>
-<a name="507"><span class="lineNum">     507 </span>            : </a>
-<a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 :         for (auto&amp; p : getPatterns())</span></a>
-<a name="509"><span class="lineNum">     509 </span>            :             p.removeChannel (index);</a>
-<a name="510"><span class="lineNum">     510 </span>            :     }</a>
-<a name="511"><span class="lineNum">     511 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="512"><span class="lineNum">     512 </span>            : </a>
-<a name="513"><span class="lineNum">     513 </span><span class="lineNoCov">          0 : StepClip::PatternArray StepClip::getPatternSequence() const</span></a>
-<a name="514"><span class="lineNum">     514 </span>            : {</a>
-<a name="515"><span class="lineNum">     515 </span><span class="lineNoCov">          0 :     return patternInstanceList;</span></a>
-<a name="516"><span class="lineNum">     516 </span>            : }</a>
-<a name="517"><span class="lineNum">     517 </span>            : </a>
-<a name="518"><span class="lineNum">     518 </span><span class="lineNoCov">          0 : void StepClip::setPatternSequence (const StepClip::PatternArray&amp; newSequence)</span></a>
-<a name="519"><span class="lineNum">     519 </span>            : {</a>
-<a name="520"><span class="lineNum">     520 </span><span class="lineNoCov">          0 :     StringArray s;</span></a>
-<a name="521"><span class="lineNum">     521 </span>            : </a>
-<a name="522"><span class="lineNum">     522 </span><span class="lineNoCov">          0 :     for (auto* p : newSequence)</span></a>
-<a name="523"><span class="lineNum">     523 </span><span class="lineNoCov">          0 :         s.add (String (p-&gt;patternIndex));</span></a>
-<a name="524"><span class="lineNum">     524 </span>            : </a>
-<a name="525"><span class="lineNum">     525 </span><span class="lineNoCov">          0 :     state.setProperty (IDs::sequence, s.joinIntoString (&quot;,&quot;), getUndoManager());</span></a>
-<a name="526"><span class="lineNum">     526 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="527"><span class="lineNum">     527 </span>            : </a>
-<a name="528"><span class="lineNum">     528 </span>            : //==============================================================================</a>
-<a name="529"><span class="lineNum">     529 </span><span class="lineNoCov">          0 : void StepClip::insertVariation (int patternIndex, int insertIndex)</span></a>
-<a name="530"><span class="lineNum">     530 </span>            : {</a>
-<a name="531"><span class="lineNum">     531 </span><span class="lineNoCov">          0 :     PatternArray s (patternInstanceList);</span></a>
-<a name="532"><span class="lineNum">     532 </span><span class="lineNoCov">          0 :     s.insert (insertIndex, new PatternInstance (*this, jlimit (0, getPatterns().size() - 1, patternIndex)));</span></a>
-<a name="533"><span class="lineNum">     533 </span><span class="lineNoCov">          0 :     setPatternSequence (s);</span></a>
-<a name="534"><span class="lineNum">     534 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="535"><span class="lineNum">     535 </span>            : </a>
-<a name="536"><span class="lineNum">     536 </span><span class="lineNoCov">          0 : void StepClip::removeVariation (int variationIndex)</span></a>
-<a name="537"><span class="lineNum">     537 </span>            : {</a>
-<a name="538"><span class="lineNum">     538 </span>            :     jassert (isPositiveAndBelow (variationIndex, patternInstanceList.size()));</a>
-<a name="539"><span class="lineNum">     539 </span>            : </a>
-<a name="540"><span class="lineNum">     540 </span><span class="lineNoCov">          0 :     PatternArray s (patternInstanceList);</span></a>
-<a name="541"><span class="lineNum">     541 </span><span class="lineNoCov">          0 :     s.remove (variationIndex);</span></a>
-<a name="542"><span class="lineNum">     542 </span><span class="lineNoCov">          0 :     setPatternSequence (s);</span></a>
-<a name="543"><span class="lineNum">     543 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="544"><span class="lineNum">     544 </span>            : </a>
-<a name="545"><span class="lineNum">     545 </span><span class="lineNoCov">          0 : void StepClip::removeAllVariations()</span></a>
-<a name="546"><span class="lineNum">     546 </span>            : {</a>
-<a name="547"><span class="lineNum">     547 </span><span class="lineNoCov">          0 :     state.setProperty (IDs::sequence, String(), getUndoManager());</span></a>
-<a name="548"><span class="lineNum">     548 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="549"><span class="lineNum">     549 </span>            : </a>
-<a name="550"><span class="lineNum">     550 </span><span class="lineNoCov">          0 : void StepClip::createDefaultPatternIfEmpty()</span></a>
-<a name="551"><span class="lineNum">     551 </span>            : {</a>
-<a name="552"><span class="lineNum">     552 </span><span class="lineNoCov">          0 :     while (getChannels().size() &lt; minNumChannels)</span></a>
-<a name="553"><span class="lineNum">     553 </span><span class="lineNoCov">          0 :         insertNewChannel (getChannels().size());</span></a>
-<a name="554"><span class="lineNum">     554 </span>            : </a>
-<a name="555"><span class="lineNum">     555 </span><span class="lineNoCov">          0 :     if (! state.getChildWithName (IDs::PATTERNS).isValid())</span></a>
-<a name="556"><span class="lineNum">     556 </span><span class="lineNoCov">          0 :         insertNewPattern (-1);</span></a>
-<a name="557"><span class="lineNum">     557 </span>            : </a>
-<a name="558"><span class="lineNum">     558 </span><span class="lineNoCov">          0 :     if (! state.hasProperty (IDs::sequence))</span></a>
-<a name="559"><span class="lineNum">     559 </span><span class="lineNoCov">          0 :         insertVariation (0, -1);</span></a>
-<a name="560"><span class="lineNum">     560 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="561"><span class="lineNum">     561 </span>            : </a>
-<a name="562"><span class="lineNum">     562 </span><span class="lineNoCov">          0 : void StepClip::setPatternForVariation (int variationIndex, int newPatternIndex)</span></a>
-<a name="563"><span class="lineNum">     563 </span>            : {</a>
-<a name="564"><span class="lineNum">     564 </span>            :     jassert (isPositiveAndBelow (variationIndex, patternInstanceList.size()));</a>
-<a name="565"><span class="lineNum">     565 </span>            :     jassert (isPositiveAndBelow (newPatternIndex, getPatterns().size()));</a>
-<a name="566"><span class="lineNum">     566 </span>            : </a>
-<a name="567"><span class="lineNum">     567 </span><span class="lineNoCov">          0 :     PatternArray s (patternInstanceList);</span></a>
-<a name="568"><span class="lineNum">     568 </span><span class="lineNoCov">          0 :     s.set (variationIndex, new PatternInstance (*this, jlimit (0, getPatterns().size() - 1, newPatternIndex)));</span></a>
-<a name="569"><span class="lineNum">     569 </span><span class="lineNoCov">          0 :     setPatternSequence (s);</span></a>
-<a name="570"><span class="lineNum">     570 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="571"><span class="lineNum">     571 </span>            : </a>
-<a name="572"><span class="lineNum">     572 </span>            : //==============================================================================</a>
-<a name="573"><span class="lineNum">     573 </span><span class="lineNoCov">          0 : juce::Array&lt;StepClip::Pattern&gt; StepClip::getPatterns()</span></a>
-<a name="574"><span class="lineNum">     574 </span>            : {</a>
-<a name="575"><span class="lineNum">     575 </span><span class="lineNoCov">          0 :     juce::Array&lt;Pattern&gt; p;</span></a>
-<a name="576"><span class="lineNum">     576 </span><span class="lineNoCov">          0 :     auto patterns = state.getChildWithName (IDs::PATTERNS);</span></a>
-<a name="577"><span class="lineNum">     577 </span>            : </a>
-<a name="578"><span class="lineNum">     578 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; patterns.getNumChildren(); ++i)</span></a>
-<a name="579"><span class="lineNum">     579 </span>            :     {</a>
-<a name="580"><span class="lineNum">     580 </span><span class="lineNoCov">          0 :         auto v = patterns.getChild (i);</span></a>
-<a name="581"><span class="lineNum">     581 </span>            : </a>
-<a name="582"><span class="lineNum">     582 </span><span class="lineNoCov">          0 :         if (v.hasType (IDs::PATTERN))</span></a>
-<a name="583"><span class="lineNum">     583 </span><span class="lineNoCov">          0 :             p.add (Pattern (*this, v));</span></a>
-<a name="584"><span class="lineNum">     584 </span>            :     }</a>
-<a name="585"><span class="lineNum">     585 </span>            : </a>
-<a name="586"><span class="lineNum">     586 </span><span class="lineNoCov">          0 :     return p;</span></a>
-<a name="587"><span class="lineNum">     587 </span>            : }</a>
-<a name="588"><span class="lineNum">     588 </span>            : </a>
-<a name="589"><span class="lineNum">     589 </span><span class="lineNoCov">          0 : StepClip::Pattern StepClip::getPattern (int index)</span></a>
-<a name="590"><span class="lineNum">     590 </span>            : {</a>
-<a name="591"><span class="lineNum">     591 </span><span class="lineNoCov">          0 :     return Pattern (*this, state.getChildWithName (IDs::PATTERNS).getChild (index));</span></a>
-<a name="592"><span class="lineNum">     592 </span>            : }</a>
-<a name="593"><span class="lineNum">     593 </span>            : </a>
-<a name="594"><span class="lineNum">     594 </span><span class="lineNoCov">          0 : int StepClip::insertPattern (const Pattern&amp; p, int index)</span></a>
-<a name="595"><span class="lineNum">     595 </span>            : {</a>
-<a name="596"><span class="lineNum">     596 </span><span class="lineNoCov">          0 :     state.getOrCreateChildWithName (IDs::PATTERNS, getUndoManager())</span></a>
-<a name="597"><span class="lineNum">     597 </span><span class="lineNoCov">          0 :          .addChild (p.state.createCopy(), index, getUndoManager());</span></a>
-<a name="598"><span class="lineNum">     598 </span>            : </a>
-<a name="599"><span class="lineNum">     599 </span><span class="lineNoCov">          0 :     return index &lt; 0 ? getPatterns().size() : index;</span></a>
-<a name="600"><span class="lineNum">     600 </span>            : }</a>
-<a name="601"><span class="lineNum">     601 </span>            : </a>
-<a name="602"><span class="lineNum">     602 </span><span class="lineNoCov">          0 : int StepClip::insertNewPattern (int index)</span></a>
-<a name="603"><span class="lineNum">     603 </span>            : {</a>
-<a name="604"><span class="lineNum">     604 </span><span class="lineNoCov">          0 :     ValueTree v (IDs::PATTERN);</span></a>
-<a name="605"><span class="lineNum">     605 </span><span class="lineNoCov">          0 :     v.setProperty (IDs::numNotes, getBeatsPerBar() * 4, nullptr);</span></a>
-<a name="606"><span class="lineNum">     606 </span><span class="lineNoCov">          0 :     v.setProperty (IDs::noteLength, 0.25, nullptr);</span></a>
-<a name="607"><span class="lineNum">     607 </span>            : </a>
-<a name="608"><span class="lineNum">     608 </span><span class="lineNoCov">          0 :     state.getOrCreateChildWithName (IDs::PATTERNS, getUndoManager())</span></a>
-<a name="609"><span class="lineNum">     609 </span><span class="lineNoCov">          0 :          .addChild (v, index, getUndoManager());</span></a>
-<a name="610"><span class="lineNum">     610 </span>            : </a>
-<a name="611"><span class="lineNum">     611 </span><span class="lineNoCov">          0 :     return index &lt; 0 ? getPatterns().size() : index;</span></a>
-<a name="612"><span class="lineNum">     612 </span>            : }</a>
-<a name="613"><span class="lineNum">     613 </span>            : </a>
-<a name="614"><span class="lineNum">     614 </span><span class="lineNoCov">          0 : void StepClip::removeUnusedPatterns()</span></a>
-<a name="615"><span class="lineNum">     615 </span>            : {</a>
-<a name="616"><span class="lineNum">     616 </span><span class="lineNoCov">          0 :     auto patterns = state.getChildWithName (IDs::PATTERNS);</span></a>
-<a name="617"><span class="lineNum">     617 </span><span class="lineNoCov">          0 :     juce::Array&lt;int&gt; usedPatterns;</span></a>
-<a name="618"><span class="lineNum">     618 </span><span class="lineNoCov">          0 :     juce::Array&lt;ValueTree&gt; sequence;</span></a>
-<a name="619"><span class="lineNum">     619 </span>            : </a>
-<a name="620"><span class="lineNum">     620 </span><span class="lineNoCov">          0 :     for (auto* p : patternInstanceList)</span></a>
-<a name="621"><span class="lineNum">     621 </span>            :     {</a>
-<a name="622"><span class="lineNum">     622 </span><span class="lineNoCov">          0 :         const int index = p-&gt;patternIndex;</span></a>
-<a name="623"><span class="lineNum">     623 </span><span class="lineNoCov">          0 :         usedPatterns.addIfNotAlreadyThere (index);</span></a>
-<a name="624"><span class="lineNum">     624 </span><span class="lineNoCov">          0 :         sequence.add (patterns.getChild (index));</span></a>
-<a name="625"><span class="lineNum">     625 </span>            :     }</a>
-<a name="626"><span class="lineNum">     626 </span>            : </a>
-<a name="627"><span class="lineNum">     627 </span>            :     auto um = getUndoManager();</a>
-<a name="628"><span class="lineNum">     628 </span>            : </a>
-<a name="629"><span class="lineNum">     629 </span><span class="lineNoCov">          0 :     for (int i = patterns.getNumChildren(); --i &gt;= 0;)</span></a>
-<a name="630"><span class="lineNum">     630 </span><span class="lineNoCov">          0 :         if (! usedPatterns.contains (i))</span></a>
-<a name="631"><span class="lineNum">     631 </span><span class="lineNoCov">          0 :             patterns.removeChild (i, um);</span></a>
-<a name="632"><span class="lineNum">     632 </span>            : </a>
-<a name="633"><span class="lineNum">     633 </span><span class="lineNoCov">          0 :     StringArray newSequence;</span></a>
-<a name="634"><span class="lineNum">     634 </span>            : </a>
-<a name="635"><span class="lineNum">     635 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; sequence.size(); ++i)</span></a>
-<a name="636"><span class="lineNum">     636 </span>            :     {</a>
-<a name="637"><span class="lineNum">     637 </span><span class="lineNoCov">          0 :         const int index = patterns.indexOf (sequence.getUnchecked (i));</span></a>
-<a name="638"><span class="lineNum">     638 </span>            : </a>
-<a name="639"><span class="lineNum">     639 </span><span class="lineNoCov">          0 :         if (index != -1)</span></a>
-<a name="640"><span class="lineNum">     640 </span><span class="lineNoCov">          0 :             newSequence.add (String (index));</span></a>
-<a name="641"><span class="lineNum">     641 </span>            :     }</a>
-<a name="642"><span class="lineNum">     642 </span>            : </a>
-<a name="643"><span class="lineNum">     643 </span><span class="lineNoCov">          0 :     state.setProperty (IDs::sequence, newSequence.joinIntoString (&quot;,&quot;), um);</span></a>
-<a name="644"><span class="lineNum">     644 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="645"><span class="lineNum">     645 </span>            : </a>
-<a name="646"><span class="lineNum">     646 </span>            : //==============================================================================</a>
-<a name="647"><span class="lineNum">     647 </span><span class="lineNoCov">          0 : bool StepClip::getCell (int patternIndex, int channelIndex, int noteIndex)</span></a>
-<a name="648"><span class="lineNum">     648 </span>            : {</a>
-<a name="649"><span class="lineNum">     649 </span><span class="lineNoCov">          0 :     return getPattern (patternIndex).getNote (channelIndex, noteIndex);</span></a>
-<a name="650"><span class="lineNum">     650 </span>            : }</a>
-<a name="651"><span class="lineNum">     651 </span>            : </a>
-<a name="652"><span class="lineNum">     652 </span><span class="lineNoCov">          0 : void StepClip::setCell (int patternIndex, int channelIndex,</span></a>
-<a name="653"><span class="lineNum">     653 </span>            :                         int noteIndex, bool value)</a>
-<a name="654"><span class="lineNum">     654 </span>            : {</a>
-<a name="655"><span class="lineNum">     655 </span><span class="lineNoCov">          0 :     if (getCell (patternIndex, channelIndex, noteIndex) != value</span></a>
-<a name="656"><span class="lineNum">     656 </span><span class="lineNoCov">          0 :           &amp;&amp; isPositiveAndBelow (channelIndex, getChannels().size()))</span></a>
-<a name="657"><span class="lineNum">     657 </span>            :     {</a>
-<a name="658"><span class="lineNum">     658 </span><span class="lineNoCov">          0 :         Pattern p (getPattern (patternIndex));</span></a>
-<a name="659"><span class="lineNum">     659 </span>            : </a>
-<a name="660"><span class="lineNum">     660 </span><span class="lineNoCov">          0 :         if (isPositiveAndBelow (noteIndex, p.getNumNotes()))</span></a>
-<a name="661"><span class="lineNum">     661 </span><span class="lineNoCov">          0 :             p.setNote (channelIndex, noteIndex, value);</span></a>
-<a name="662"><span class="lineNum">     662 </span>            :     }</a>
-<a name="663"><span class="lineNum">     663 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="664"><span class="lineNum">     664 </span>            : </a>
-<a name="665"><span class="lineNum">     665 </span>            : }</a>
+<a name="490"><span class="lineNum">     490 </span><span class="lineNoCov">          0 :         state.getOrCreateChildWithName (IDs::CHANNELS, um)</span></a>
+<a name="491"><span class="lineNum">     491 </span><span class="lineNoCov">          0 :              .addChild (v, index, um);</span></a>
+<a name="492"><span class="lineNum">     492 </span>            : </a>
+<a name="493"><span class="lineNum">     493 </span><span class="lineNoCov">          0 :         for (auto&amp; p : getPatterns())</span></a>
+<a name="494"><span class="lineNum">     494 </span><span class="lineNoCov">          0 :             p.insertChannel (index);</span></a>
+<a name="495"><span class="lineNum">     495 </span>            :     }</a>
+<a name="496"><span class="lineNum">     496 </span>            :     else</a>
+<a name="497"><span class="lineNum">     497 </span>            :     {</a>
+<a name="498"><span class="lineNum">     498 </span><span class="lineNoCov">          0 :         edit.engine.getUIBehaviour().showWarningMessage (TRANS(&quot;This clip already contains the maximum number of channels!&quot;));</span></a>
+<a name="499"><span class="lineNum">     499 </span>            :     }</a>
+<a name="500"><span class="lineNum">     500 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="501"><span class="lineNum">     501 </span>            : </a>
+<a name="502"><span class="lineNum">     502 </span><span class="lineNoCov">          0 : void StepClip::removeChannel (int index)</span></a>
+<a name="503"><span class="lineNum">     503 </span>            : {</a>
+<a name="504"><span class="lineNum">     504 </span><span class="lineNoCov">          0 :     if (auto* c = getChannels()[index])</span></a>
+<a name="505"><span class="lineNum">     505 </span>            :     {</a>
+<a name="506"><span class="lineNum">     506 </span><span class="lineNoCov">          0 :         state.getChildWithName (IDs::CHANNELS)</span></a>
+<a name="507"><span class="lineNum">     507 </span><span class="lineNoCov">          0 :              .removeChild (c-&gt;state, getUndoManager());</span></a>
+<a name="508"><span class="lineNum">     508 </span>            : </a>
+<a name="509"><span class="lineNum">     509 </span><span class="lineNoCov">          0 :         for (auto&amp; p : getPatterns())</span></a>
+<a name="510"><span class="lineNum">     510 </span>            :             p.removeChannel (index);</a>
+<a name="511"><span class="lineNum">     511 </span>            :     }</a>
+<a name="512"><span class="lineNum">     512 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="513"><span class="lineNum">     513 </span>            : </a>
+<a name="514"><span class="lineNum">     514 </span><span class="lineNoCov">          0 : StepClip::PatternArray StepClip::getPatternSequence() const</span></a>
+<a name="515"><span class="lineNum">     515 </span>            : {</a>
+<a name="516"><span class="lineNum">     516 </span><span class="lineNoCov">          0 :     return patternInstanceList;</span></a>
+<a name="517"><span class="lineNum">     517 </span>            : }</a>
+<a name="518"><span class="lineNum">     518 </span>            : </a>
+<a name="519"><span class="lineNum">     519 </span><span class="lineNoCov">          0 : void StepClip::setPatternSequence (const StepClip::PatternArray&amp; newSequence)</span></a>
+<a name="520"><span class="lineNum">     520 </span>            : {</a>
+<a name="521"><span class="lineNum">     521 </span><span class="lineNoCov">          0 :     juce::StringArray s;</span></a>
+<a name="522"><span class="lineNum">     522 </span>            : </a>
+<a name="523"><span class="lineNum">     523 </span><span class="lineNoCov">          0 :     for (auto* p : newSequence)</span></a>
+<a name="524"><span class="lineNum">     524 </span><span class="lineNoCov">          0 :         s.add (juce::String (p-&gt;patternIndex));</span></a>
+<a name="525"><span class="lineNum">     525 </span>            : </a>
+<a name="526"><span class="lineNum">     526 </span><span class="lineNoCov">          0 :     state.setProperty (IDs::sequence, s.joinIntoString (&quot;,&quot;), getUndoManager());</span></a>
+<a name="527"><span class="lineNum">     527 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="528"><span class="lineNum">     528 </span>            : </a>
+<a name="529"><span class="lineNum">     529 </span>            : //==============================================================================</a>
+<a name="530"><span class="lineNum">     530 </span><span class="lineNoCov">          0 : void StepClip::insertVariation (int patternIndex, int insertIndex)</span></a>
+<a name="531"><span class="lineNum">     531 </span>            : {</a>
+<a name="532"><span class="lineNum">     532 </span><span class="lineNoCov">          0 :     PatternArray s (patternInstanceList);</span></a>
+<a name="533"><span class="lineNum">     533 </span><span class="lineNoCov">          0 :     s.insert (insertIndex, new PatternInstance (*this, jlimit (0, getPatterns().size() - 1, patternIndex)));</span></a>
+<a name="534"><span class="lineNum">     534 </span><span class="lineNoCov">          0 :     setPatternSequence (s);</span></a>
+<a name="535"><span class="lineNum">     535 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="536"><span class="lineNum">     536 </span>            : </a>
+<a name="537"><span class="lineNum">     537 </span><span class="lineNoCov">          0 : void StepClip::removeVariation (int variationIndex)</span></a>
+<a name="538"><span class="lineNum">     538 </span>            : {</a>
+<a name="539"><span class="lineNum">     539 </span>            :     jassert (isPositiveAndBelow (variationIndex, patternInstanceList.size()));</a>
+<a name="540"><span class="lineNum">     540 </span>            : </a>
+<a name="541"><span class="lineNum">     541 </span><span class="lineNoCov">          0 :     PatternArray s (patternInstanceList);</span></a>
+<a name="542"><span class="lineNum">     542 </span><span class="lineNoCov">          0 :     s.remove (variationIndex);</span></a>
+<a name="543"><span class="lineNum">     543 </span><span class="lineNoCov">          0 :     setPatternSequence (s);</span></a>
+<a name="544"><span class="lineNum">     544 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="545"><span class="lineNum">     545 </span>            : </a>
+<a name="546"><span class="lineNum">     546 </span><span class="lineNoCov">          0 : void StepClip::removeAllVariations()</span></a>
+<a name="547"><span class="lineNum">     547 </span>            : {</a>
+<a name="548"><span class="lineNum">     548 </span><span class="lineNoCov">          0 :     state.setProperty (IDs::sequence, String(), getUndoManager());</span></a>
+<a name="549"><span class="lineNum">     549 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="550"><span class="lineNum">     550 </span>            : </a>
+<a name="551"><span class="lineNum">     551 </span><span class="lineNoCov">          0 : void StepClip::createDefaultPatternIfEmpty()</span></a>
+<a name="552"><span class="lineNum">     552 </span>            : {</a>
+<a name="553"><span class="lineNum">     553 </span><span class="lineNoCov">          0 :     while (getChannels().size() &lt; minNumChannels)</span></a>
+<a name="554"><span class="lineNum">     554 </span><span class="lineNoCov">          0 :         insertNewChannel (getChannels().size());</span></a>
+<a name="555"><span class="lineNum">     555 </span>            : </a>
+<a name="556"><span class="lineNum">     556 </span><span class="lineNoCov">          0 :     if (! state.getChildWithName (IDs::PATTERNS).isValid())</span></a>
+<a name="557"><span class="lineNum">     557 </span><span class="lineNoCov">          0 :         insertNewPattern (-1);</span></a>
+<a name="558"><span class="lineNum">     558 </span>            : </a>
+<a name="559"><span class="lineNum">     559 </span><span class="lineNoCov">          0 :     if (! state.hasProperty (IDs::sequence))</span></a>
+<a name="560"><span class="lineNum">     560 </span><span class="lineNoCov">          0 :         insertVariation (0, -1);</span></a>
+<a name="561"><span class="lineNum">     561 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="562"><span class="lineNum">     562 </span>            : </a>
+<a name="563"><span class="lineNum">     563 </span><span class="lineNoCov">          0 : void StepClip::setPatternForVariation (int variationIndex, int newPatternIndex)</span></a>
+<a name="564"><span class="lineNum">     564 </span>            : {</a>
+<a name="565"><span class="lineNum">     565 </span>            :     jassert (isPositiveAndBelow (variationIndex, patternInstanceList.size()));</a>
+<a name="566"><span class="lineNum">     566 </span>            :     jassert (isPositiveAndBelow (newPatternIndex, getPatterns().size()));</a>
+<a name="567"><span class="lineNum">     567 </span>            : </a>
+<a name="568"><span class="lineNum">     568 </span><span class="lineNoCov">          0 :     PatternArray s (patternInstanceList);</span></a>
+<a name="569"><span class="lineNum">     569 </span><span class="lineNoCov">          0 :     s.set (variationIndex, new PatternInstance (*this, jlimit (0, getPatterns().size() - 1, newPatternIndex)));</span></a>
+<a name="570"><span class="lineNum">     570 </span><span class="lineNoCov">          0 :     setPatternSequence (s);</span></a>
+<a name="571"><span class="lineNum">     571 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="572"><span class="lineNum">     572 </span>            : </a>
+<a name="573"><span class="lineNum">     573 </span>            : //==============================================================================</a>
+<a name="574"><span class="lineNum">     574 </span><span class="lineNoCov">          0 : juce::Array&lt;StepClip::Pattern&gt; StepClip::getPatterns()</span></a>
+<a name="575"><span class="lineNum">     575 </span>            : {</a>
+<a name="576"><span class="lineNum">     576 </span><span class="lineNoCov">          0 :     juce::Array&lt;Pattern&gt; p;</span></a>
+<a name="577"><span class="lineNum">     577 </span><span class="lineNoCov">          0 :     auto patterns = state.getChildWithName (IDs::PATTERNS);</span></a>
+<a name="578"><span class="lineNum">     578 </span>            : </a>
+<a name="579"><span class="lineNum">     579 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; patterns.getNumChildren(); ++i)</span></a>
+<a name="580"><span class="lineNum">     580 </span>            :     {</a>
+<a name="581"><span class="lineNum">     581 </span><span class="lineNoCov">          0 :         auto v = patterns.getChild (i);</span></a>
+<a name="582"><span class="lineNum">     582 </span>            : </a>
+<a name="583"><span class="lineNum">     583 </span><span class="lineNoCov">          0 :         if (v.hasType (IDs::PATTERN))</span></a>
+<a name="584"><span class="lineNum">     584 </span><span class="lineNoCov">          0 :             p.add (Pattern (*this, v));</span></a>
+<a name="585"><span class="lineNum">     585 </span>            :     }</a>
+<a name="586"><span class="lineNum">     586 </span>            : </a>
+<a name="587"><span class="lineNum">     587 </span><span class="lineNoCov">          0 :     return p;</span></a>
+<a name="588"><span class="lineNum">     588 </span>            : }</a>
+<a name="589"><span class="lineNum">     589 </span>            : </a>
+<a name="590"><span class="lineNum">     590 </span><span class="lineNoCov">          0 : StepClip::Pattern StepClip::getPattern (int index)</span></a>
+<a name="591"><span class="lineNum">     591 </span>            : {</a>
+<a name="592"><span class="lineNum">     592 </span><span class="lineNoCov">          0 :     return Pattern (*this, state.getChildWithName (IDs::PATTERNS).getChild (index));</span></a>
+<a name="593"><span class="lineNum">     593 </span>            : }</a>
+<a name="594"><span class="lineNum">     594 </span>            : </a>
+<a name="595"><span class="lineNum">     595 </span><span class="lineNoCov">          0 : int StepClip::insertPattern (const Pattern&amp; p, int index)</span></a>
+<a name="596"><span class="lineNum">     596 </span>            : {</a>
+<a name="597"><span class="lineNum">     597 </span><span class="lineNoCov">          0 :     state.getOrCreateChildWithName (IDs::PATTERNS, getUndoManager())</span></a>
+<a name="598"><span class="lineNum">     598 </span><span class="lineNoCov">          0 :          .addChild (p.state.createCopy(), index, getUndoManager());</span></a>
+<a name="599"><span class="lineNum">     599 </span>            : </a>
+<a name="600"><span class="lineNum">     600 </span><span class="lineNoCov">          0 :     return index &lt; 0 ? getPatterns().size() : index;</span></a>
+<a name="601"><span class="lineNum">     601 </span>            : }</a>
+<a name="602"><span class="lineNum">     602 </span>            : </a>
+<a name="603"><span class="lineNum">     603 </span><span class="lineNoCov">          0 : int StepClip::insertNewPattern (int index)</span></a>
+<a name="604"><span class="lineNum">     604 </span>            : {</a>
+<a name="605"><span class="lineNum">     605 </span>            :     auto v = createValueTree (IDs::PATTERN,</a>
+<a name="606"><span class="lineNum">     606 </span><span class="lineNoCov">          0 :                               IDs::numNotes, getBeatsPerBar() * 4,</span></a>
+<a name="607"><span class="lineNum">     607 </span><span class="lineNoCov">          0 :                               IDs::noteLength, 0.25);</span></a>
+<a name="608"><span class="lineNum">     608 </span>            : </a>
+<a name="609"><span class="lineNum">     609 </span><span class="lineNoCov">          0 :     state.getOrCreateChildWithName (IDs::PATTERNS, getUndoManager())</span></a>
+<a name="610"><span class="lineNum">     610 </span><span class="lineNoCov">          0 :          .addChild (v, index, getUndoManager());</span></a>
+<a name="611"><span class="lineNum">     611 </span>            : </a>
+<a name="612"><span class="lineNum">     612 </span><span class="lineNoCov">          0 :     return index &lt; 0 ? getPatterns().size() : index;</span></a>
+<a name="613"><span class="lineNum">     613 </span>            : }</a>
+<a name="614"><span class="lineNum">     614 </span>            : </a>
+<a name="615"><span class="lineNum">     615 </span><span class="lineNoCov">          0 : void StepClip::removeUnusedPatterns()</span></a>
+<a name="616"><span class="lineNum">     616 </span>            : {</a>
+<a name="617"><span class="lineNum">     617 </span><span class="lineNoCov">          0 :     auto patterns = state.getChildWithName (IDs::PATTERNS);</span></a>
+<a name="618"><span class="lineNum">     618 </span><span class="lineNoCov">          0 :     juce::Array&lt;int&gt; usedPatterns;</span></a>
+<a name="619"><span class="lineNum">     619 </span><span class="lineNoCov">          0 :     juce::Array&lt;ValueTree&gt; sequence;</span></a>
+<a name="620"><span class="lineNum">     620 </span>            : </a>
+<a name="621"><span class="lineNum">     621 </span><span class="lineNoCov">          0 :     for (auto* p : patternInstanceList)</span></a>
+<a name="622"><span class="lineNum">     622 </span>            :     {</a>
+<a name="623"><span class="lineNum">     623 </span><span class="lineNoCov">          0 :         const int index = p-&gt;patternIndex;</span></a>
+<a name="624"><span class="lineNum">     624 </span><span class="lineNoCov">          0 :         usedPatterns.addIfNotAlreadyThere (index);</span></a>
+<a name="625"><span class="lineNum">     625 </span><span class="lineNoCov">          0 :         sequence.add (patterns.getChild (index));</span></a>
+<a name="626"><span class="lineNum">     626 </span>            :     }</a>
+<a name="627"><span class="lineNum">     627 </span>            : </a>
+<a name="628"><span class="lineNum">     628 </span>            :     auto um = getUndoManager();</a>
+<a name="629"><span class="lineNum">     629 </span>            : </a>
+<a name="630"><span class="lineNum">     630 </span><span class="lineNoCov">          0 :     for (int i = patterns.getNumChildren(); --i &gt;= 0;)</span></a>
+<a name="631"><span class="lineNum">     631 </span><span class="lineNoCov">          0 :         if (! usedPatterns.contains (i))</span></a>
+<a name="632"><span class="lineNum">     632 </span><span class="lineNoCov">          0 :             patterns.removeChild (i, um);</span></a>
+<a name="633"><span class="lineNum">     633 </span>            : </a>
+<a name="634"><span class="lineNum">     634 </span><span class="lineNoCov">          0 :     juce::StringArray newSequence;</span></a>
+<a name="635"><span class="lineNum">     635 </span>            : </a>
+<a name="636"><span class="lineNum">     636 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; sequence.size(); ++i)</span></a>
+<a name="637"><span class="lineNum">     637 </span>            :     {</a>
+<a name="638"><span class="lineNum">     638 </span><span class="lineNoCov">          0 :         const int index = patterns.indexOf (sequence.getUnchecked (i));</span></a>
+<a name="639"><span class="lineNum">     639 </span>            : </a>
+<a name="640"><span class="lineNum">     640 </span><span class="lineNoCov">          0 :         if (index != -1)</span></a>
+<a name="641"><span class="lineNum">     641 </span><span class="lineNoCov">          0 :             newSequence.add (juce::String (index));</span></a>
+<a name="642"><span class="lineNum">     642 </span>            :     }</a>
+<a name="643"><span class="lineNum">     643 </span>            : </a>
+<a name="644"><span class="lineNum">     644 </span><span class="lineNoCov">          0 :     state.setProperty (IDs::sequence, newSequence.joinIntoString (&quot;,&quot;), um);</span></a>
+<a name="645"><span class="lineNum">     645 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="646"><span class="lineNum">     646 </span>            : </a>
+<a name="647"><span class="lineNum">     647 </span>            : //==============================================================================</a>
+<a name="648"><span class="lineNum">     648 </span><span class="lineNoCov">          0 : bool StepClip::getCell (int patternIndex, int channelIndex, int noteIndex)</span></a>
+<a name="649"><span class="lineNum">     649 </span>            : {</a>
+<a name="650"><span class="lineNum">     650 </span><span class="lineNoCov">          0 :     return getPattern (patternIndex).getNote (channelIndex, noteIndex);</span></a>
+<a name="651"><span class="lineNum">     651 </span>            : }</a>
+<a name="652"><span class="lineNum">     652 </span>            : </a>
+<a name="653"><span class="lineNum">     653 </span><span class="lineNoCov">          0 : void StepClip::setCell (int patternIndex, int channelIndex,</span></a>
+<a name="654"><span class="lineNum">     654 </span>            :                         int noteIndex, bool value)</a>
+<a name="655"><span class="lineNum">     655 </span>            : {</a>
+<a name="656"><span class="lineNum">     656 </span><span class="lineNoCov">          0 :     if (getCell (patternIndex, channelIndex, noteIndex) != value</span></a>
+<a name="657"><span class="lineNum">     657 </span><span class="lineNoCov">          0 :           &amp;&amp; isPositiveAndBelow (channelIndex, getChannels().size()))</span></a>
+<a name="658"><span class="lineNum">     658 </span>            :     {</a>
+<a name="659"><span class="lineNum">     659 </span><span class="lineNoCov">          0 :         Pattern p (getPattern (patternIndex));</span></a>
+<a name="660"><span class="lineNum">     660 </span>            : </a>
+<a name="661"><span class="lineNum">     661 </span><span class="lineNoCov">          0 :         if (isPositiveAndBelow (noteIndex, p.getNumNotes()))</span></a>
+<a name="662"><span class="lineNum">     662 </span><span class="lineNoCov">          0 :             p.setNote (channelIndex, noteIndex, value);</span></a>
+<a name="663"><span class="lineNum">     663 </span>            :     }</a>
+<a name="664"><span class="lineNum">     664 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="665"><span class="lineNum">     665 </span>            : </a>
+<a name="666"><span class="lineNum">     666 </span>            : }</a>
 </pre>
       </td>
     </tr>

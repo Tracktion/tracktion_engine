@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">104</td>
+            <td class="headerCovTableEntry">102</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -225,65 +225,64 @@
 <a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 :     notifyListenersOfDeletion();</span></a>
 <a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="165"><span class="lineNum">     165 </span>            : </a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineNoCov">          0 : ValueTree FreezePointPlugin::create()</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineNoCov">          0 : juce::ValueTree FreezePointPlugin::create()</span></a>
 <a name="167"><span class="lineNum">     167 </span>            : {</a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :     ValueTree v (IDs::PLUGIN);</span></a>
-<a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 :     v.setProperty (IDs::type, xmlTypeName, nullptr);</span></a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :     return v;</span></a>
-<a name="171"><span class="lineNum">     171 </span>            : }</a>
-<a name="172"><span class="lineNum">     172 </span>            : </a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 : void FreezePointPlugin::initialiseFully()</span></a>
-<a name="174"><span class="lineNum">     174 </span>            : {</a>
-<a name="175"><span class="lineNum">     175 </span>            :     Plugin::initialiseFully();</a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 :     updateTrackFreezeStatus();</span></a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="178"><span class="lineNum">     178 </span>            : </a>
-<a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 : void FreezePointPlugin::initialise (const PluginInitialisationInfo&amp;) {}</span></a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 : void FreezePointPlugin::deinitialise() {}</span></a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 : void FreezePointPlugin::applyToBuffer (const PluginRenderContext&amp;) {}</span></a>
-<a name="182"><span class="lineNum">     182 </span>            : </a>
-<a name="183"><span class="lineNum">     183 </span>            : //==============================================================================</a>
-<a name="184"><span class="lineNum">     184 </span><span class="lineNoCov">          0 : void FreezePointPlugin::updateTrackFreezeStatus()</span></a>
-<a name="185"><span class="lineNum">     185 </span>            : {</a>
-<a name="186"><span class="lineNum">     186 </span><span class="lineNoCov">          0 :     if (auto at = dynamic_cast&lt;AudioTrack*&gt; (getOwnerTrack()))</span></a>
-<a name="187"><span class="lineNum">     187 </span>            :     {</a>
-<a name="188"><span class="lineNum">     188 </span>            :         auto newIndex = at-&gt;pluginList.indexOf (this);</a>
-<a name="189"><span class="lineNum">     189 </span>            : </a>
-<a name="190"><span class="lineNum">     190 </span><span class="lineNoCov">          0 :         if (lastFreezeIndex != newIndex)</span></a>
-<a name="191"><span class="lineNum">     191 </span>            :         {</a>
-<a name="192"><span class="lineNum">     192 </span>            :             if (lastFreezeIndex != -1</a>
-<a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 :                  &amp;&amp; isTrackFrozen()</span></a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 :                  &amp;&amp; ! at-&gt;pluginList.getEdit().isLoading())</span></a>
-<a name="195"><span class="lineNum">     195 </span>            :             {</a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineNoCov">          0 :                 freezeTrack (false);</span></a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineNoCov">          0 :                 at-&gt;freezeTrackAsync();</span></a>
-<a name="198"><span class="lineNum">     198 </span>            :             }</a>
-<a name="199"><span class="lineNum">     199 </span>            : </a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :             lastFreezeIndex = newIndex;</span></a>
-<a name="201"><span class="lineNum">     201 </span>            :         }</a>
-<a name="202"><span class="lineNum">     202 </span>            :     }</a>
-<a name="203"><span class="lineNum">     203 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="204"><span class="lineNum">     204 </span>            : </a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 : bool FreezePointPlugin::isTrackFrozen() const</span></a>
-<a name="206"><span class="lineNum">     206 </span>            : {</a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :     if (auto at = dynamic_cast&lt;AudioTrack*&gt; (getOwnerTrack()))</span></a>
-<a name="208"><span class="lineNum">     208 </span><span class="lineNoCov">          0 :         return at-&gt;isFrozen (Track::individualFreeze);</span></a>
-<a name="209"><span class="lineNum">     209 </span>            : </a>
-<a name="210"><span class="lineNum">     210 </span>            :     return false;</a>
-<a name="211"><span class="lineNum">     211 </span>            : }</a>
-<a name="212"><span class="lineNum">     212 </span>            : </a>
-<a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 : void FreezePointPlugin::freezeTrack (bool shouldBeFrozen)</span></a>
-<a name="214"><span class="lineNum">     214 </span>            : {</a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 :     if (auto at = dynamic_cast&lt;AudioTrack*&gt; (getOwnerTrack()))</span></a>
-<a name="216"><span class="lineNum">     216 </span>            :     {</a>
-<a name="217"><span class="lineNum">     217 </span><span class="lineNoCov">          0 :         const AudioTrack::FreezePointRemovalInhibitor inhibitor (*at);</span></a>
-<a name="218"><span class="lineNum">     218 </span><span class="lineNoCov">          0 :         at-&gt;setFrozen (shouldBeFrozen, Track::individualFreeze);</span></a>
-<a name="219"><span class="lineNum">     219 </span>            :     }</a>
-<a name="220"><span class="lineNum">     220 </span>            : </a>
-<a name="221"><span class="lineNum">     221 </span><span class="lineNoCov">          0 :     changed();</span></a>
-<a name="222"><span class="lineNum">     222 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="223"><span class="lineNum">     223 </span>            : </a>
-<a name="224"><span class="lineNum">     224 </span>            : }</a>
+<a name="168"><span class="lineNum">     168 </span>            :     return createValueTree (IDs::PLUGIN,</a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 :                             IDs::type, xmlTypeName);</span></a>
+<a name="170"><span class="lineNum">     170 </span>            : }</a>
+<a name="171"><span class="lineNum">     171 </span>            : </a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 : void FreezePointPlugin::initialiseFully()</span></a>
+<a name="173"><span class="lineNum">     173 </span>            : {</a>
+<a name="174"><span class="lineNum">     174 </span>            :     Plugin::initialiseFully();</a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineNoCov">          0 :     updateTrackFreezeStatus();</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="177"><span class="lineNum">     177 </span>            : </a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineNoCov">          0 : void FreezePointPlugin::initialise (const PluginInitialisationInfo&amp;) {}</span></a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 : void FreezePointPlugin::deinitialise() {}</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 : void FreezePointPlugin::applyToBuffer (const PluginRenderContext&amp;) {}</span></a>
+<a name="181"><span class="lineNum">     181 </span>            : </a>
+<a name="182"><span class="lineNum">     182 </span>            : //==============================================================================</a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 : void FreezePointPlugin::updateTrackFreezeStatus()</span></a>
+<a name="184"><span class="lineNum">     184 </span>            : {</a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :     if (auto at = dynamic_cast&lt;AudioTrack*&gt; (getOwnerTrack()))</span></a>
+<a name="186"><span class="lineNum">     186 </span>            :     {</a>
+<a name="187"><span class="lineNum">     187 </span>            :         auto newIndex = at-&gt;pluginList.indexOf (this);</a>
+<a name="188"><span class="lineNum">     188 </span>            : </a>
+<a name="189"><span class="lineNum">     189 </span><span class="lineNoCov">          0 :         if (lastFreezeIndex != newIndex)</span></a>
+<a name="190"><span class="lineNum">     190 </span>            :         {</a>
+<a name="191"><span class="lineNum">     191 </span>            :             if (lastFreezeIndex != -1</a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineNoCov">          0 :                  &amp;&amp; isTrackFrozen()</span></a>
+<a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 :                  &amp;&amp; ! at-&gt;pluginList.getEdit().isLoading())</span></a>
+<a name="194"><span class="lineNum">     194 </span>            :             {</a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineNoCov">          0 :                 freezeTrack (false);</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineNoCov">          0 :                 at-&gt;freezeTrackAsync();</span></a>
+<a name="197"><span class="lineNum">     197 </span>            :             }</a>
+<a name="198"><span class="lineNum">     198 </span>            : </a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 :             lastFreezeIndex = newIndex;</span></a>
+<a name="200"><span class="lineNum">     200 </span>            :         }</a>
+<a name="201"><span class="lineNum">     201 </span>            :     }</a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="203"><span class="lineNum">     203 </span>            : </a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 : bool FreezePointPlugin::isTrackFrozen() const</span></a>
+<a name="205"><span class="lineNum">     205 </span>            : {</a>
+<a name="206"><span class="lineNum">     206 </span><span class="lineNoCov">          0 :     if (auto at = dynamic_cast&lt;AudioTrack*&gt; (getOwnerTrack()))</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :         return at-&gt;isFrozen (Track::individualFreeze);</span></a>
+<a name="208"><span class="lineNum">     208 </span>            : </a>
+<a name="209"><span class="lineNum">     209 </span>            :     return false;</a>
+<a name="210"><span class="lineNum">     210 </span>            : }</a>
+<a name="211"><span class="lineNum">     211 </span>            : </a>
+<a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 : void FreezePointPlugin::freezeTrack (bool shouldBeFrozen)</span></a>
+<a name="213"><span class="lineNum">     213 </span>            : {</a>
+<a name="214"><span class="lineNum">     214 </span><span class="lineNoCov">          0 :     if (auto at = dynamic_cast&lt;AudioTrack*&gt; (getOwnerTrack()))</span></a>
+<a name="215"><span class="lineNum">     215 </span>            :     {</a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 :         const AudioTrack::FreezePointRemovalInhibitor inhibitor (*at);</span></a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineNoCov">          0 :         at-&gt;setFrozen (shouldBeFrozen, Track::individualFreeze);</span></a>
+<a name="218"><span class="lineNum">     218 </span>            :     }</a>
+<a name="219"><span class="lineNum">     219 </span>            : </a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 :     changed();</span></a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="222"><span class="lineNum">     222 </span>            : </a>
+<a name="223"><span class="lineNum">     223 </span>            : }</a>
 </pre>
       </td>
     </tr>

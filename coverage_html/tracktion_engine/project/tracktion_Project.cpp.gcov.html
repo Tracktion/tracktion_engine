@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -252,7 +252,7 @@
 <a name="190"><span class="lineNum">     190 </span>            : </a>
 <a name="191"><span class="lineNum">     191 </span><span class="lineNoCov">          0 :         auto tempFile = file.getParentDirectory().getNonexistentChildFile (&quot;temp&quot;, &quot;.tmp&quot;);</span></a>
 <a name="192"><span class="lineNum">     192 </span>            : </a>
-<a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 :         if (auto out = std::unique_ptr&lt;FileOutputStream&gt; (tempFile.createOutputStream()))</span></a>
+<a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 :         if (auto out = tempFile.createOutputStream())</span></a>
 <a name="194"><span class="lineNum">     194 </span>            :         {</a>
 <a name="195"><span class="lineNum">     195 </span><span class="lineNoCov">          0 :             saveTo (*out);</span></a>
 <a name="196"><span class="lineNum">     196 </span>            :             out.reset();</a>
@@ -276,7 +276,7 @@
 <a name="214"><span class="lineNum">     214 </span><span class="lineNoCov">          0 :                 bool b = tempFile.deleteFile();</span></a>
 <a name="215"><span class="lineNum">     215 </span>            :                 jassert (b); juce::ignoreUnused (b);</a>
 <a name="216"><span class="lineNum">     216 </span>            : </a>
-<a name="217"><span class="lineNum">     217 </span>            :                 DBG (String (&quot;!!couldn't save &quot;) + file.getFullPathName());</a>
+<a name="217"><span class="lineNum">     217 </span>            :                 DBG (&quot;!!couldn't save &quot; + file.getFullPathName());</a>
 <a name="218"><span class="lineNum">     218 </span>            :             }</a>
 <a name="219"><span class="lineNum">     219 </span>            : </a>
 <a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 :             lockFile();</span></a>
@@ -362,30 +362,30 @@
 <a name="300"><span class="lineNum">     300 </span><span class="lineNoCov">          0 :     return projectId;</span></a>
 <a name="301"><span class="lineNum">     301 </span>            : }</a>
 <a name="302"><span class="lineNum">     302 </span>            : </a>
-<a name="303"><span class="lineNum">     303 </span><span class="lineNoCov">          0 : String Project::getProjectProperty (const String&amp; name) const</span></a>
+<a name="303"><span class="lineNum">     303 </span><span class="lineNoCov">          0 : juce::String Project::getProjectProperty (const juce::String&amp; name) const</span></a>
 <a name="304"><span class="lineNum">     304 </span>            : {</a>
 <a name="305"><span class="lineNum">     305 </span><span class="lineNoCov">          0 :     const ScopedLock sl (propertyLock);</span></a>
 <a name="306"><span class="lineNum">     306 </span><span class="lineNoCov">          0 :     return properties [name];</span></a>
 <a name="307"><span class="lineNum">     307 </span>            : }</a>
 <a name="308"><span class="lineNum">     308 </span>            : </a>
-<a name="309"><span class="lineNum">     309 </span><span class="lineNoCov">          0 : void Project::setProjectProperty (const String&amp; name, const String&amp; value)</span></a>
+<a name="309"><span class="lineNum">     309 </span><span class="lineNoCov">          0 : void Project::setProjectProperty (const juce::String&amp; name, const juce::String&amp; value)</span></a>
 <a name="310"><span class="lineNum">     310 </span>            : {</a>
 <a name="311"><span class="lineNum">     311 </span><span class="lineNoCov">          0 :     const ScopedLock sl (propertyLock);</span></a>
 <a name="312"><span class="lineNum">     312 </span><span class="lineNoCov">          0 :     properties.set (name, value);</span></a>
 <a name="313"><span class="lineNum">     313 </span><span class="lineNoCov">          0 :     changed();</span></a>
 <a name="314"><span class="lineNum">     314 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="315"><span class="lineNum">     315 </span>            : </a>
-<a name="316"><span class="lineNum">     316 </span><span class="lineNoCov">          0 : String Project::getName() const</span></a>
+<a name="316"><span class="lineNum">     316 </span><span class="lineNoCov">          0 : juce::String Project::getName() const</span></a>
 <a name="317"><span class="lineNum">     317 </span>            : {</a>
 <a name="318"><span class="lineNum">     318 </span><span class="lineNoCov">          0 :     return getProjectProperty (&quot;name&quot;);</span></a>
 <a name="319"><span class="lineNum">     319 </span>            : }</a>
 <a name="320"><span class="lineNum">     320 </span>            : </a>
-<a name="321"><span class="lineNum">     321 </span><span class="lineNoCov">          0 : String Project::getDescription() const</span></a>
+<a name="321"><span class="lineNum">     321 </span><span class="lineNoCov">          0 : juce::String Project::getDescription() const</span></a>
 <a name="322"><span class="lineNum">     322 </span>            : {</a>
 <a name="323"><span class="lineNum">     323 </span><span class="lineNoCov">          0 :     return getProjectProperty (&quot;description&quot;);</span></a>
 <a name="324"><span class="lineNum">     324 </span>            : }</a>
 <a name="325"><span class="lineNum">     325 </span>            : </a>
-<a name="326"><span class="lineNum">     326 </span><span class="lineNoCov">          0 : void Project::setName (const String&amp; newName)</span></a>
+<a name="326"><span class="lineNum">     326 </span><span class="lineNoCov">          0 : void Project::setName (const juce::String&amp; newName)</span></a>
 <a name="327"><span class="lineNum">     327 </span>            : {</a>
 <a name="328"><span class="lineNum">     328 </span><span class="lineNoCov">          0 :     if (getName() != newName)</span></a>
 <a name="329"><span class="lineNum">     329 </span>            :     {</a>
@@ -407,7 +407,7 @@
 <a name="345"><span class="lineNum">     345 </span>            :     }</a>
 <a name="346"><span class="lineNum">     346 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="347"><span class="lineNum">     347 </span>            : </a>
-<a name="348"><span class="lineNum">     348 </span><span class="lineNoCov">          0 : void Project::setDescription (const String&amp; newDesc)</span></a>
+<a name="348"><span class="lineNum">     348 </span><span class="lineNoCov">          0 : void Project::setDescription (const juce::String&amp; newDesc)</span></a>
 <a name="349"><span class="lineNum">     349 </span>            : {</a>
 <a name="350"><span class="lineNum">     350 </span><span class="lineNoCov">          0 :     setProjectProperty (&quot;description&quot;, String (newDesc).substring (0, 512));</span></a>
 <a name="351"><span class="lineNum">     351 </span><span class="lineNoCov">          0 : }</span></a>
@@ -596,9 +596,9 @@
 <a name="534"><span class="lineNum">     534 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="535"><span class="lineNum">     535 </span>            : </a>
 <a name="536"><span class="lineNum">     536 </span><span class="lineNoCov">          0 : ProjectItem::Ptr Project::createNewItem (const File&amp; fileToReference,</span></a>
-<a name="537"><span class="lineNum">     537 </span>            :                                          const String&amp; type,</a>
-<a name="538"><span class="lineNum">     538 </span>            :                                          const String&amp; name,</a>
-<a name="539"><span class="lineNum">     539 </span>            :                                          const String&amp; description,</a>
+<a name="537"><span class="lineNum">     537 </span>            :                                          const juce::String&amp; type,</a>
+<a name="538"><span class="lineNum">     538 </span>            :                                          const juce::String&amp; name,</a>
+<a name="539"><span class="lineNum">     539 </span>            :                                          const juce::String&amp; description,</a>
 <a name="540"><span class="lineNum">     540 </span>            :                                          const ProjectItem::Category cat,</a>
 <a name="541"><span class="lineNum">     541 </span>            :                                          bool atTopOfList)</a>
 <a name="542"><span class="lineNum">     542 </span>            : {</a>
@@ -635,10 +635,10 @@
 <a name="573"><span class="lineNum">     573 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="574"><span class="lineNum">     574 </span>            : }</a>
 <a name="575"><span class="lineNum">     575 </span>            : </a>
-<a name="576"><span class="lineNum">     576 </span><span class="lineNoCov">          0 : ProjectItem::Ptr Project::quickAddProjectItem (const String&amp; relPathName,</span></a>
-<a name="577"><span class="lineNum">     577 </span>            :                                                const String&amp; type,</a>
-<a name="578"><span class="lineNum">     578 </span>            :                                                const String&amp; name,</a>
-<a name="579"><span class="lineNum">     579 </span>            :                                                const String&amp; description,</a>
+<a name="576"><span class="lineNum">     576 </span><span class="lineNoCov">          0 : ProjectItem::Ptr Project::quickAddProjectItem (const juce::String&amp; relPathName,</span></a>
+<a name="577"><span class="lineNum">     577 </span>            :                                                const juce::String&amp; type,</a>
+<a name="578"><span class="lineNum">     578 </span>            :                                                const juce::String&amp; name,</a>
+<a name="579"><span class="lineNum">     579 </span>            :                                                const juce::String&amp; description,</a>
 <a name="580"><span class="lineNum">     580 </span>            :                                                const ProjectItem::Category cat,</a>
 <a name="581"><span class="lineNum">     581 </span>            :                                                ProjectItemID newID)</a>
 <a name="582"><span class="lineNum">     582 </span>            : {</a>
@@ -731,7 +731,7 @@
 <a name="669"><span class="lineNum">     669 </span>            :         {</a>
 <a name="670"><span class="lineNum">     670 </span><span class="lineNoCov">          0 :             if (p-&gt;isEdit())</span></a>
 <a name="671"><span class="lineNum">     671 </span>            :             {</a>
-<a name="672"><span class="lineNum">     672 </span><span class="lineNoCov">          0 :                 const String nm (p-&gt;getName());</span></a>
+<a name="672"><span class="lineNum">     672 </span><span class="lineNoCov">          0 :                 auto nm = p-&gt;getName();</span></a>
 <a name="673"><span class="lineNum">     673 </span>            : </a>
 <a name="674"><span class="lineNum">     674 </span><span class="lineNoCov">          0 :                 if (nm.startsWithIgnoreCase (getName() + &quot; Edit &quot;))</span></a>
 <a name="675"><span class="lineNum">     675 </span><span class="lineNoCov">          0 :                     maxSuffix = jmax (maxSuffix, nm.getTrailingIntValue());</span></a>
@@ -868,7 +868,7 @@
 <a name="806"><span class="lineNum">     806 </span><span class="lineNoCov">          0 :     return unreffed;</span></a>
 <a name="807"><span class="lineNum">     807 </span>            : }</a>
 <a name="808"><span class="lineNum">     808 </span>            : </a>
-<a name="809"><span class="lineNum">     809 </span><span class="lineNoCov">          0 : String Project::getSelectableDescription()</span></a>
+<a name="809"><span class="lineNum">     809 </span><span class="lineNoCov">          0 : juce::String Project::getSelectableDescription()</span></a>
 <a name="810"><span class="lineNum">     810 </span>            : {</a>
 <a name="811"><span class="lineNum">     811 </span>            :     return isReadOnly() ? TRANS(&quot;Read-Only Project&quot;)</a>
 <a name="812"><span class="lineNum">     812 </span><span class="lineNoCov">          0 :                         : TRANS(&quot;Project&quot;);</span></a>

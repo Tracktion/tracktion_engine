@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">11</td>
@@ -73,7 +73,7 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">         85 : WaveAudioClip::WaveAudioClip (const ValueTree&amp; v, EditItemID clipID, ClipTrack&amp; ct)</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">         85 : WaveAudioClip::WaveAudioClip (const juce::ValueTree&amp; v, EditItemID clipID, ClipTrack&amp; ct)</span></a>
 <a name="15"><span class="lineNum">      15 </span><span class="lineCov">         85 :     : AudioClipBase (v, clipID, Type::wave, ct)</span></a>
 <a name="16"><span class="lineNum">      16 </span>            : {</a>
 <a name="17"><span class="lineNum">      17 </span><span class="lineNoCov">          0 : }</span></a>
@@ -109,7 +109,7 @@
 <a name="47"><span class="lineNum">      47 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="48"><span class="lineNum">      48 </span>            : </a>
 <a name="49"><span class="lineNum">      49 </span>            : //==============================================================================</a>
-<a name="50"><span class="lineNum">      50 </span><span class="lineNoCov">          0 : String WaveAudioClip::getSelectableDescription()</span></a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineNoCov">          0 : juce::String WaveAudioClip::getSelectableDescription()</span></a>
 <a name="51"><span class="lineNum">      51 </span>            : {</a>
 <a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 :     return TRANS(&quot;Audio Clip&quot;) + &quot; - \&quot;&quot; + getName() + &quot;\&quot;&quot;;</span></a>
 <a name="53"><span class="lineNum">      53 </span>            : }</a>
@@ -144,7 +144,7 @@
 <a name="82"><span class="lineNum">      82 </span><span class="lineNoCov">          0 :         updateSourceFile();</span></a>
 <a name="83"><span class="lineNum">      83 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="84"><span class="lineNum">      84 </span>            : </a>
-<a name="85"><span class="lineNum">      85 </span><span class="lineCov">          3 : File WaveAudioClip::getOriginalFile() const</span></a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineCov">          3 : juce::File WaveAudioClip::getOriginalFile() const</span></a>
 <a name="86"><span class="lineNum">      86 </span>            : {</a>
 <a name="87"><span class="lineNum">      87 </span><span class="lineCov">          3 :     if (hasAnyTakes() &amp;&amp; compManager != nullptr &amp;&amp; compManager-&gt;isCurrentTakeComp())</span></a>
 <a name="88"><span class="lineNum">      88 </span><span class="lineNoCov">          0 :         return compManager-&gt;getCurrentCompFile();</span></a>
@@ -229,7 +229,7 @@
 <a name="167"><span class="lineNum">     167 </span>            :     auto um = getUndoManager();</a>
 <a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :     auto takesTree = state.getOrCreateChildWithName (IDs::TAKES, um);</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : </a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :     ValueTree take (IDs::TAKE);</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :     juce::ValueTree take (IDs::TAKE);</span></a>
 <a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 :     take.setProperty (IDs::source, id.toString(), um);</span></a>
 <a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 :     takesTree.addChild (take, -1, um);</span></a>
 <a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 : }</span></a>
@@ -239,7 +239,7 @@
 <a name="177"><span class="lineNum">     177 </span>            :     auto um = getUndoManager();</a>
 <a name="178"><span class="lineNum">     178 </span><span class="lineNoCov">          0 :     auto takesTree = state.getOrCreateChildWithName (IDs::TAKES, um);</span></a>
 <a name="179"><span class="lineNum">     179 </span>            : </a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :     ValueTree take (IDs::TAKE);</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :     juce::ValueTree take (IDs::TAKE);</span></a>
 <a name="181"><span class="lineNum">     181 </span>            : </a>
 <a name="182"><span class="lineNum">     182 </span>            :     {</a>
 <a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 :         SourceFileReference sfr (edit, take, IDs::source);</span></a>
@@ -307,7 +307,7 @@
 <a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 :     currentTakeIndex = takeIndexNeedsUpdating;</span></a>
 <a name="246"><span class="lineNum">     246 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="247"><span class="lineNum">     247 </span>            : </a>
-<a name="248"><span class="lineNum">     248 </span><span class="lineNoCov">          0 : void WaveAudioClip::invalidateCurrentTake (const ValueTree&amp; parent) noexcept</span></a>
+<a name="248"><span class="lineNum">     248 </span><span class="lineNoCov">          0 : void WaveAudioClip::invalidateCurrentTake (const juce::ValueTree&amp; parent) noexcept</span></a>
 <a name="249"><span class="lineNum">     249 </span>            : {</a>
 <a name="250"><span class="lineNum">     250 </span><span class="lineCov">        510 :     if (parent.hasType (IDs::TAKES))</span></a>
 <a name="251"><span class="lineNum">     251 </span>            :         invalidateCurrentTake();</a>
@@ -321,13 +321,13 @@
 <a name="259"><span class="lineNum">     259 </span>            :         invalidateCurrentTake();</a>
 <a name="260"><span class="lineNum">     260 </span><span class="lineCov">        400 : }</span></a>
 <a name="261"><span class="lineNum">     261 </span>            : </a>
-<a name="262"><span class="lineNum">     262 </span><span class="lineCov">        255 : void WaveAudioClip::valueTreeChildAdded (ValueTree&amp; p, ValueTree&amp; c)</span></a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineCov">        255 : void WaveAudioClip::valueTreeChildAdded (ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
 <a name="263"><span class="lineNum">     263 </span>            : {</a>
 <a name="264"><span class="lineNum">     264 </span><span class="lineCov">        255 :     AudioClipBase::valueTreeChildAdded (p, c);</span></a>
 <a name="265"><span class="lineNum">     265 </span>            :     invalidateCurrentTake (p);</a>
 <a name="266"><span class="lineNum">     266 </span><span class="lineCov">        255 : }</span></a>
 <a name="267"><span class="lineNum">     267 </span>            : </a>
-<a name="268"><span class="lineNum">     268 </span><span class="lineCov">        255 : void WaveAudioClip::valueTreeChildRemoved (ValueTree&amp; p, ValueTree&amp; c, int oldIndex)</span></a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineCov">        255 : void WaveAudioClip::valueTreeChildRemoved (ValueTree&amp; p, juce::ValueTree&amp; c, int oldIndex)</span></a>
 <a name="269"><span class="lineNum">     269 </span>            : {</a>
 <a name="270"><span class="lineNum">     270 </span><span class="lineCov">        255 :     AudioClipBase::valueTreeChildRemoved (p, c, oldIndex);</span></a>
 <a name="271"><span class="lineNum">     271 </span>            :     invalidateCurrentTake (p);</a>
@@ -370,11 +370,11 @@
 <a name="308"><span class="lineNum">     308 </span>            :     return false;</a>
 <a name="309"><span class="lineNum">     309 </span>            : }</a>
 <a name="310"><span class="lineNum">     310 </span>            : </a>
-<a name="311"><span class="lineNum">     311 </span><span class="lineNoCov">          0 : StringArray WaveAudioClip::getTakeDescriptions() const</span></a>
+<a name="311"><span class="lineNum">     311 </span><span class="lineNoCov">          0 : juce::StringArray WaveAudioClip::getTakeDescriptions() const</span></a>
 <a name="312"><span class="lineNum">     312 </span>            : {</a>
 <a name="313"><span class="lineNum">     313 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="314"><span class="lineNum">     314 </span><span class="lineNoCov">          0 :     auto takes = getTakes();</span></a>
-<a name="315"><span class="lineNum">     315 </span><span class="lineNoCov">          0 :     StringArray s;</span></a>
+<a name="315"><span class="lineNum">     315 </span><span class="lineNoCov">          0 :     juce::StringArray s;</span></a>
 <a name="316"><span class="lineNum">     316 </span>            :     int numTakes = 0;</a>
 <a name="317"><span class="lineNum">     317 </span>            : </a>
 <a name="318"><span class="lineNum">     318 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; takes.size(); ++i)</span></a>
@@ -382,15 +382,15 @@
 <a name="320"><span class="lineNum">     320 </span><span class="lineNoCov">          0 :         if (compManager == nullptr || ! compManager-&gt;isTakeComp (i))</span></a>
 <a name="321"><span class="lineNum">     321 </span>            :         {</a>
 <a name="322"><span class="lineNum">     322 </span><span class="lineNoCov">          0 :             if (auto projectItem = edit.engine.getProjectManager().getProjectItem (takes.getReference (i)))</span></a>
-<a name="323"><span class="lineNum">     323 </span><span class="lineNoCov">          0 :                 s.add (String (i + 1) + &quot;. &quot; + projectItem-&gt;getName());</span></a>
+<a name="323"><span class="lineNum">     323 </span><span class="lineNoCov">          0 :                 s.add (juce::String (i + 1) + &quot;. &quot; + projectItem-&gt;getName());</span></a>
 <a name="324"><span class="lineNum">     324 </span>            :             else</a>
-<a name="325"><span class="lineNum">     325 </span><span class="lineNoCov">          0 :                 s.add (String (i + 1) + &quot;. &lt;&quot; + TRANS(&quot;Deleted&quot;) + &quot;&gt;&quot;);</span></a>
+<a name="325"><span class="lineNum">     325 </span><span class="lineNoCov">          0 :                 s.add (juce::String (i + 1) + &quot;. &lt;&quot; + TRANS(&quot;Deleted&quot;) + &quot;&gt;&quot;);</span></a>
 <a name="326"><span class="lineNum">     326 </span>            : </a>
 <a name="327"><span class="lineNum">     327 </span><span class="lineNoCov">          0 :             ++numTakes;</span></a>
 <a name="328"><span class="lineNum">     328 </span>            :         }</a>
 <a name="329"><span class="lineNum">     329 </span>            :         else</a>
 <a name="330"><span class="lineNum">     330 </span>            :         {</a>
-<a name="331"><span class="lineNum">     331 </span><span class="lineNoCov">          0 :             s.add (String (i + 1) + &quot;. &quot; + TRANS(&quot;Comp&quot;) + &quot; #&quot; + String (i + 1 - numTakes));</span></a>
+<a name="331"><span class="lineNum">     331 </span><span class="lineNoCov">          0 :             s.add (juce::String (i + 1) + &quot;. &quot; + TRANS(&quot;Comp&quot;) + &quot; #&quot; + juce::String (i + 1 - numTakes));</span></a>
 <a name="332"><span class="lineNum">     332 </span>            :         }</a>
 <a name="333"><span class="lineNum">     333 </span>            :     }</a>
 <a name="334"><span class="lineNum">     334 </span>            : </a>
@@ -402,7 +402,7 @@
 <a name="340"><span class="lineNum">     340 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="341"><span class="lineNum">     341 </span>            : </a>
 <a name="342"><span class="lineNum">     342 </span>            :    #if JUCE_MODAL_LOOPS_PERMITTED</a>
-<a name="343"><span class="lineNum">     343 </span><span class="lineNoCov">          0 :     auto showWarning = [] (const String&amp; title, const String&amp; message, bool&amp; delFiles) -&gt; int</span></a>
+<a name="343"><span class="lineNum">     343 </span><span class="lineNoCov">          0 :     auto showWarning = [] (const juce::String&amp; title, const juce::String&amp; message, bool&amp; delFiles) -&gt; int</span></a>
 <a name="344"><span class="lineNum">     344 </span>            :     {</a>
 <a name="345"><span class="lineNum">     345 </span><span class="lineNoCov">          0 :         const std::unique_ptr&lt;AlertWindow&gt; w (LookAndFeel::getDefaultLookAndFeel()</span></a>
 <a name="346"><span class="lineNum">     346 </span>            :                                                 .createAlertWindow (title, message,</a>
@@ -616,7 +616,7 @@
 <a name="554"><span class="lineNum">     554 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="555"><span class="lineNum">     555 </span>            : }</a>
 <a name="556"><span class="lineNum">     556 </span>            : </a>
-<a name="557"><span class="lineNum">     557 </span><span class="lineNoCov">          0 : String WaveAudioClip::getRenderMessage()</span></a>
+<a name="557"><span class="lineNum">     557 </span><span class="lineNoCov">          0 : juce::String WaveAudioClip::getRenderMessage()</span></a>
 <a name="558"><span class="lineNum">     558 </span>            : {</a>
 <a name="559"><span class="lineNum">     559 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
 <a name="560"><span class="lineNum">     560 </span>            : </a>
@@ -624,7 +624,7 @@
 <a name="562"><span class="lineNum">     562 </span><span class="lineNoCov">          0 :         return {};</span></a>
 <a name="563"><span class="lineNum">     563 </span>            : </a>
 <a name="564"><span class="lineNum">     564 </span><span class="lineNoCov">          0 :     const float progress = renderJob == nullptr ? 1.0f : renderJob-&gt;getCurrentTaskProgress();</span></a>
-<a name="565"><span class="lineNum">     565 </span>            :     const String m (clipEffects != nullptr ? TRANS(&quot;Rendering effects&quot;)</a>
+<a name="565"><span class="lineNum">     565 </span>            :     juce::String m (clipEffects != nullptr ? TRANS(&quot;Rendering effects&quot;)</a>
 <a name="566"><span class="lineNum">     566 </span><span class="lineNoCov">          0 :                                            : (getWarpTime() ? TRANS(&quot;Warping&quot;) : TRANS(&quot;Reversing&quot;)));</span></a>
 <a name="567"><span class="lineNum">     567 </span>            : </a>
 <a name="568"><span class="lineNum">     568 </span><span class="lineNoCov">          0 :     if (progress &lt; 0.0f)</span></a>

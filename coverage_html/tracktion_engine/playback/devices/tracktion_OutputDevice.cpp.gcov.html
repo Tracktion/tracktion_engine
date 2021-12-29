@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -73,7 +73,7 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">         86 : OutputDevice::OutputDevice (Engine&amp; e, const String&amp; t, const String&amp; n)</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">         86 : OutputDevice::OutputDevice (Engine&amp; e, const juce::String&amp; t, const juce::String&amp; n)</span></a>
 <a name="15"><span class="lineNum">      15 </span><span class="lineCov">         86 :    : engine (e), type (t), name (n)</span></a>
 <a name="16"><span class="lineNum">      16 </span>            : {</a>
 <a name="17"><span class="lineNum">      17 </span><span class="lineCov">         86 :     alias = engine.getPropertyStorage().getPropertyItem (SettingID::invalid, getAliasPropName());</span></a>
@@ -84,7 +84,7 @@
 <a name="22"><span class="lineNum">      22 </span>            : {</a>
 <a name="23"><span class="lineNum">      23 </span><span class="lineCov">         86 : }</span></a>
 <a name="24"><span class="lineNum">      24 </span>            : </a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">         86 : String OutputDevice::getAliasPropName() const</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">         86 : juce::String OutputDevice::getAliasPropName() const</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : {</a>
 <a name="27"><span class="lineNum">      27 </span><span class="lineCov">         86 :     return type + &quot;out_&quot; + name + &quot;_alias&quot;;</span></a>
 <a name="28"><span class="lineNum">      28 </span>            : }</a>
@@ -102,12 +102,12 @@
 <a name="40"><span class="lineNum">      40 </span><span class="lineNoCov">          0 :     defaultAlias = findDefaultAliasNameNotClashingWithInputDevices (engine, isMidi(), getName(), defaultAlias);</span></a>
 <a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="42"><span class="lineNum">      42 </span>            : </a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">        385 : String OutputDevice::getName() const</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">        385 : juce::String OutputDevice::getName() const</span></a>
 <a name="44"><span class="lineNum">      44 </span>            : {</a>
 <a name="45"><span class="lineNum">      45 </span><span class="lineCov">        385 :     return name;</span></a>
 <a name="46"><span class="lineNum">      46 </span>            : }</a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineNoCov">          0 : String OutputDevice::getAlias() const</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineNoCov">          0 : juce::String OutputDevice::getAlias() const</span></a>
 <a name="49"><span class="lineNum">      49 </span>            : {</a>
 <a name="50"><span class="lineNum">      50 </span><span class="lineNoCov">          0 :     if (alias.isNotEmpty())</span></a>
 <a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :         return alias;</span></a>
@@ -115,7 +115,7 @@
 <a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 :     return defaultAlias;</span></a>
 <a name="54"><span class="lineNum">      54 </span>            : }</a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineNoCov">          0 : void OutputDevice::setAlias (const String&amp; a)</span></a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineNoCov">          0 : void OutputDevice::setAlias (const juce::String&amp; a)</span></a>
 <a name="57"><span class="lineNum">      57 </span>            : {</a>
 <a name="58"><span class="lineNum">      58 </span><span class="lineNoCov">          0 :     if (alias != a)</span></a>
 <a name="59"><span class="lineNum">      59 </span>            :     {</a>
@@ -134,12 +134,12 @@
 <a name="72"><span class="lineNum">      72 </span>            :     }</a>
 <a name="73"><span class="lineNum">      73 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="74"><span class="lineNum">      74 </span>            : </a>
-<a name="75"><span class="lineNum">      75 </span><span class="lineNoCov">          0 : String OutputDevice::getSelectableDescription()</span></a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineNoCov">          0 : juce::String OutputDevice::getSelectableDescription()</span></a>
 <a name="76"><span class="lineNum">      76 </span>            : {</a>
 <a name="77"><span class="lineNum">      77 </span><span class="lineNoCov">          0 :     return name + &quot; (&quot; + type + &quot;)&quot;;</span></a>
 <a name="78"><span class="lineNum">      78 </span>            : }</a>
 <a name="79"><span class="lineNum">      79 </span>            : </a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 : String OutputDevice::getDeviceID() const</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 : juce::String OutputDevice::getDeviceID() const</span></a>
 <a name="81"><span class="lineNum">      81 </span>            : {</a>
 <a name="82"><span class="lineNum">      82 </span><span class="lineNoCov">          0 :     auto n = getName();</span></a>
 <a name="83"><span class="lineNum">      83 </span>            : </a>

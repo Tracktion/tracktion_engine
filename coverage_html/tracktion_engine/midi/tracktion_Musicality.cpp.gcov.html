@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">1110</td>
+            <td class="headerCovTableEntry">1108</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -1478,9 +1478,9 @@
 <a name="1416"><span class="lineNum">    1416 </span><span class="lineNoCov">          0 :         if (isRoman (chordName))</span></a>
 <a name="1417"><span class="lineNum">    1417 </span><span class="lineNoCov">          0 :             chordName = chordName.toLowerCase().retainCharacters (&quot;iv7&quot;);</span></a>
 <a name="1418"><span class="lineNum">    1418 </span>            : </a>
-<a name="1419"><span class="lineNum">    1419 </span><span class="lineNoCov">          0 :         juce::ValueTree item (IDs::PROGRESSIONITEM);</span></a>
-<a name="1420"><span class="lineNum">    1420 </span><span class="lineNoCov">          0 :         item.setProperty (IDs::name, chordName, nullptr);</span></a>
-<a name="1421"><span class="lineNum">    1421 </span><span class="lineNoCov">          0 :         item.setProperty (IDs::pitches, pitches, nullptr);</span></a>
+<a name="1419"><span class="lineNum">    1419 </span>            :         auto item = createValueTree (IDs::PROGRESSIONITEM,</a>
+<a name="1420"><span class="lineNum">    1420 </span>            :                                      IDs::name,    chordName,</a>
+<a name="1421"><span class="lineNum">    1421 </span><span class="lineNoCov">          0 :                                      IDs::pitches, pitches);</span></a>
 <a name="1422"><span class="lineNum">    1422 </span>            : </a>
 <a name="1423"><span class="lineNum">    1423 </span><span class="lineNoCov">          0 :         progression.addChild (item, idx, &amp;um);</span></a>
 <a name="1424"><span class="lineNum">    1424 </span>            :     }</a>

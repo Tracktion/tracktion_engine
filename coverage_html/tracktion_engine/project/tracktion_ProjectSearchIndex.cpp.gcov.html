@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -86,7 +86,7 @@
 <a name="24"><span class="lineNum">      24 </span><span class="lineNoCov">          0 :         in.read (ids, (int) sizeof (int) * numIDs);</span></a>
 <a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : </a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineNoCov">          0 :     IndexedWord (const String&amp; w, int mid) : word (w), numIDs (1)</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineNoCov">          0 :     IndexedWord (const juce::String&amp; w, int mid) : word (w), numIDs (1)</span></a>
 <a name="28"><span class="lineNum">      28 </span>            :     {</a>
 <a name="29"><span class="lineNum">      29 </span>            :         ids.malloc (1);</a>
 <a name="30"><span class="lineNum">      30 </span><span class="lineNoCov">          0 :         *ids = mid;</span></a>
@@ -123,7 +123,7 @@
 <a name="61"><span class="lineNum">      61 </span>            : {</a>
 <a name="62"><span class="lineNum">      62 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
-<a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 : static bool isNoiseWord (const String&amp; word)</span></a>
+<a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 : static bool isNoiseWord (const juce::String&amp; word)</span></a>
 <a name="65"><span class="lineNum">      65 </span>            : {</a>
 <a name="66"><span class="lineNum">      66 </span><span class="lineNoCov">          0 :     return     word == &quot;a&quot;</span></a>
 <a name="67"><span class="lineNum">      67 </span><span class="lineNoCov">          0 :             || word == &quot;the&quot;</span></a>
@@ -196,7 +196,7 @@
 <a name="134"><span class="lineNum">     134 </span><span class="lineNoCov">          0 :         index.add (new IndexedWord (in));</span></a>
 <a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="136"><span class="lineNum">     136 </span>            : </a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 : IndexedWord* ProjectSearchIndex::findWordMatch (const String&amp; word) const</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 : IndexedWord* ProjectSearchIndex::findWordMatch (const juce::String&amp; word) const</span></a>
 <a name="138"><span class="lineNum">     138 </span>            : {</a>
 <a name="139"><span class="lineNum">     139 </span>            :     int start = 0;</a>
 <a name="140"><span class="lineNum">     140 </span>            :     int end = index.size();</a>
@@ -244,7 +244,7 @@
 <a name="182"><span class="lineNum">     182 </span>            : //==============================================================================</a>
 <a name="183"><span class="lineNum">     183 </span>            : struct WordMatchOperation : public SearchOperation</a>
 <a name="184"><span class="lineNum">     184 </span>            : {</a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :     WordMatchOperation (const String&amp; w) : word (w.toLowerCase().trim()) {}</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :     WordMatchOperation (const juce::String&amp; w) : word (w.toLowerCase().trim()) {}</span></a>
 <a name="186"><span class="lineNum">     186 </span>            : </a>
 <a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 :     Array&lt;int&gt; getMatches (ProjectSearchIndex&amp; psi) override</span></a>
 <a name="188"><span class="lineNum">     188 </span>            :     {</a>
@@ -327,7 +327,7 @@
 <a name="265"><span class="lineNum">     265 </span>            : };</a>
 <a name="266"><span class="lineNum">     266 </span>            : </a>
 <a name="267"><span class="lineNum">     267 </span>            : //==============================================================================</a>
-<a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 : SearchOperation* createPluralOptions (String s)</span></a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 : SearchOperation* createPluralOptions (juce::String s)</span></a>
 <a name="269"><span class="lineNum">     269 </span>            : {</a>
 <a name="270"><span class="lineNum">     270 </span><span class="lineNoCov">          0 :     SearchOperation* c = new WordMatchOperation (s);</span></a>
 <a name="271"><span class="lineNum">     271 </span>            : </a>
@@ -396,9 +396,9 @@
 <a name="334"><span class="lineNum">     334 </span>            :     return c;</a>
 <a name="335"><span class="lineNum">     335 </span>            : }</a>
 <a name="336"><span class="lineNum">     336 </span>            : </a>
-<a name="337"><span class="lineNum">     337 </span><span class="lineNoCov">          0 : SearchOperation* multipleWordMatch (const String&amp; s)</span></a>
+<a name="337"><span class="lineNum">     337 </span><span class="lineNoCov">          0 : SearchOperation* multipleWordMatch (const juce::String&amp; s)</span></a>
 <a name="338"><span class="lineNum">     338 </span>            : {</a>
-<a name="339"><span class="lineNum">     339 </span><span class="lineNoCov">          0 :     StringArray a;</span></a>
+<a name="339"><span class="lineNum">     339 </span><span class="lineNoCov">          0 :     juce::StringArray a;</span></a>
 <a name="340"><span class="lineNum">     340 </span><span class="lineNoCov">          0 :     a.addTokens (s, false);</span></a>
 <a name="341"><span class="lineNum">     341 </span>            : </a>
 <a name="342"><span class="lineNum">     342 </span>            :     SearchOperation* c = nullptr;</a>
@@ -414,7 +414,7 @@
 <a name="352"><span class="lineNum">     352 </span><span class="lineNoCov">          0 :     return c;</span></a>
 <a name="353"><span class="lineNum">     353 </span>            : }</a>
 <a name="354"><span class="lineNum">     354 </span>            : </a>
-<a name="355"><span class="lineNum">     355 </span><span class="lineNoCov">          0 : SearchOperation* createCondition (const StringArray&amp; words, int start, int length)</span></a>
+<a name="355"><span class="lineNum">     355 </span><span class="lineNoCov">          0 : SearchOperation* createCondition (const juce::StringArray&amp; words, int start, int length)</span></a>
 <a name="356"><span class="lineNum">     356 </span>            : {</a>
 <a name="357"><span class="lineNum">     357 </span><span class="lineNoCov">          0 :     if (length == 0)</span></a>
 <a name="358"><span class="lineNum">     358 </span>            :         return {};</a>
@@ -454,15 +454,15 @@
 <a name="392"><span class="lineNum">     392 </span>            : }</a>
 <a name="393"><span class="lineNum">     393 </span>            : </a>
 <a name="394"><span class="lineNum">     394 </span>            : </a>
-<a name="395"><span class="lineNum">     395 </span><span class="lineNoCov">          0 : SearchOperation* createSearchForKeywords (const String&amp; keywords)</span></a>
+<a name="395"><span class="lineNum">     395 </span><span class="lineNoCov">          0 : SearchOperation* createSearchForKeywords (const juce::String&amp; keywords)</span></a>
 <a name="396"><span class="lineNum">     396 </span>            : {</a>
-<a name="397"><span class="lineNum">     397 </span><span class="lineNoCov">          0 :     const String k (keywords.toLowerCase()</span></a>
-<a name="398"><span class="lineNum">     398 </span><span class="lineNoCov">          0 :                             .replace (&quot;-&quot;, &quot; &quot; + TRANS(&quot;Not&quot;) + &quot; &quot;)</span></a>
-<a name="399"><span class="lineNum">     399 </span><span class="lineNoCov">          0 :                             .replace (&quot;+&quot;, &quot; &quot; + TRANS(&quot;And&quot;) + &quot; &quot;)</span></a>
-<a name="400"><span class="lineNum">     400 </span><span class="lineNoCov">          0 :                             .retainCharacters (CharPointer_UTF8 (&quot;abcdefghijklmnopqrstuvwxyz0123456789\xc3\xa0\xc3\xa1\xc3\xa2\xc3\xa3\xc3\xa4\xc3\xa5\xc3\xa6\xc3\xa7\xc3\xa8\xc3\xa9\xc3\xaa\xc3\xab\xc3\xac\xc3\xad\xc3\xae\xc3\xaf\xc3\xb0\xc3\xb1\xc3\xb2\xc3\xb3\xc3\xb4\xc3\xb5\xc3\xb6\xc3\xb8\xc3\xb9\xc3\xba\xc3\xbb\xc3\xbc\xc3\xbd\xc3\xbf\xc3\x9f&quot;))</span></a>
-<a name="401"><span class="lineNum">     401 </span><span class="lineNoCov">          0 :                             .trim());</span></a>
+<a name="397"><span class="lineNum">     397 </span><span class="lineNoCov">          0 :     auto k = keywords.toLowerCase()</span></a>
+<a name="398"><span class="lineNum">     398 </span><span class="lineNoCov">          0 :                 .replace (&quot;-&quot;, &quot; &quot; + TRANS(&quot;Not&quot;) + &quot; &quot;)</span></a>
+<a name="399"><span class="lineNum">     399 </span><span class="lineNoCov">          0 :                 .replace (&quot;+&quot;, &quot; &quot; + TRANS(&quot;And&quot;) + &quot; &quot;)</span></a>
+<a name="400"><span class="lineNum">     400 </span><span class="lineNoCov">          0 :                 .retainCharacters (CharPointer_UTF8 (&quot;abcdefghijklmnopqrstuvwxyz0123456789\xc3\xa0\xc3\xa1\xc3\xa2\xc3\xa3\xc3\xa4\xc3\xa5\xc3\xa6\xc3\xa7\xc3\xa8\xc3\xa9\xc3\xaa\xc3\xab\xc3\xac\xc3\xad\xc3\xae\xc3\xaf\xc3\xb0\xc3\xb1\xc3\xb2\xc3\xb3\xc3\xb4\xc3\xb5\xc3\xb6\xc3\xb8\xc3\xb9\xc3\xba\xc3\xbb\xc3\xbc\xc3\xbd\xc3\xbf\xc3\x9f&quot;))</span></a>
+<a name="401"><span class="lineNum">     401 </span><span class="lineNoCov">          0 :                 .trim();</span></a>
 <a name="402"><span class="lineNum">     402 </span>            : </a>
-<a name="403"><span class="lineNum">     403 </span><span class="lineNoCov">          0 :     StringArray words;</span></a>
+<a name="403"><span class="lineNum">     403 </span><span class="lineNoCov">          0 :     juce::StringArray words;</span></a>
 <a name="404"><span class="lineNum">     404 </span><span class="lineNoCov">          0 :     words.addTokens (k, false);</span></a>
 <a name="405"><span class="lineNum">     405 </span><span class="lineNoCov">          0 :     words.trim();</span></a>
 <a name="406"><span class="lineNum">     406 </span><span class="lineNoCov">          0 :     words.removeEmptyStrings();</span></a>

@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">13</td>
-            <td class="headerCovTableEntry">283</td>
+            <td class="headerCovTableEntry">280</td>
             <td class="headerCovTableEntryLo">4.6 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">6</td>
@@ -73,7 +73,7 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : TrackCompManager::CompSection::CompSection (const ValueTree&amp; v) : state (v)</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : TrackCompManager::CompSection::CompSection (const juce::ValueTree&amp; v) : state (v)</span></a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
 <a name="16"><span class="lineNum">      16 </span>            :     updateTrack();</a>
 <a name="17"><span class="lineNum">      17 </span><span class="lineNoCov">          0 :     updateEnd();</span></a>
@@ -83,7 +83,7 @@
 <a name="21"><span class="lineNum">      21 </span>            : {</a>
 <a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="23"><span class="lineNum">      23 </span>            : </a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineNoCov">          0 : TrackCompManager::CompSection* TrackCompManager::CompSection::createAndIncRefCount (const ValueTree&amp; v)</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineNoCov">          0 : TrackCompManager::CompSection* TrackCompManager::CompSection::createAndIncRefCount (const juce::ValueTree&amp; v)</span></a>
 <a name="25"><span class="lineNum">      25 </span>            : {</a>
 <a name="26"><span class="lineNum">      26 </span><span class="lineNoCov">          0 :     auto cs = new CompSection (v);</span></a>
 <a name="27"><span class="lineNum">      27 </span>            :     cs-&gt;incReferenceCount();</a>
@@ -107,14 +107,14 @@
 <a name="45"><span class="lineNum">      45 </span><span class="lineNoCov">          0 : void TrackCompManager::CompSection::updateEnd()        { end = static_cast&lt;double&gt; (state[IDs::end]); }</span></a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
 <a name="47"><span class="lineNum">      47 </span>            : //==============================================================================</a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineNoCov">          0 : TrackCompManager::TrackComp* TrackCompManager::TrackComp::createAndIncRefCount (Edit&amp; edit, const ValueTree&amp; v)</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineNoCov">          0 : TrackCompManager::TrackComp* TrackCompManager::TrackComp::createAndIncRefCount (Edit&amp; edit, const juce::ValueTree&amp; v)</span></a>
 <a name="49"><span class="lineNum">      49 </span>            : {</a>
 <a name="50"><span class="lineNum">      50 </span><span class="lineNoCov">          0 :     auto tc = new TrackComp (edit, v);</span></a>
 <a name="51"><span class="lineNum">      51 </span>            :     tc-&gt;incReferenceCount();</a>
 <a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 :     return tc;</span></a>
 <a name="53"><span class="lineNum">      53 </span>            : }</a>
 <a name="54"><span class="lineNum">      54 </span>            : </a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 : TrackCompManager::TrackComp::TrackComp (Edit&amp; e, const ValueTree&amp; v)</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 : TrackCompManager::TrackComp::TrackComp (Edit&amp; e, const juce::ValueTree&amp; v)</span></a>
 <a name="56"><span class="lineNum">      56 </span><span class="lineNoCov">          0 :    : ValueTreeObjectList&lt;CompSection&gt; (v), state (v), edit (e)</span></a>
 <a name="57"><span class="lineNum">      57 </span>            : {</a>
 <a name="58"><span class="lineNum">      58 </span><span class="lineNoCov">          0 :     auto um = &amp;edit.getUndoManager();</span></a>
@@ -133,7 +133,7 @@
 <a name="71"><span class="lineNum">      71 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="72"><span class="lineNum">      72 </span>            : </a>
 <a name="73"><span class="lineNum">      73 </span>            : </a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineNoCov">          0 : String TrackCompManager::TrackComp::getSelectableDescription()   { return TRANS(&quot;Track Comp Group&quot;); }</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineNoCov">          0 : juce::String TrackCompManager::TrackComp::getSelectableDescription()   { return TRANS(&quot;Track Comp Group&quot;); }</span></a>
 <a name="75"><span class="lineNum">      75 </span>            : </a>
 <a name="76"><span class="lineNum">      76 </span><span class="lineNoCov">          0 : void TrackCompManager::TrackComp::setTimeFormat (TimeFormat t)</span></a>
 <a name="77"><span class="lineNum">      77 </span>            : {</a>
@@ -243,19 +243,19 @@
 <a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 :     return time;</span></a>
 <a name="182"><span class="lineNum">     182 </span>            : }</a>
 <a name="183"><span class="lineNum">     183 </span>            : </a>
-<a name="184"><span class="lineNum">     184 </span><span class="lineNoCov">          0 : void TrackCompManager::TrackComp::setName (const String&amp; n)</span></a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineNoCov">          0 : void TrackCompManager::TrackComp::setName (const juce::String&amp; n)</span></a>
 <a name="185"><span class="lineNum">     185 </span>            : {</a>
 <a name="186"><span class="lineNum">     186 </span><span class="lineNoCov">          0 :     name = n;</span></a>
 <a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="188"><span class="lineNum">     188 </span>            : </a>
-<a name="189"><span class="lineNum">     189 </span><span class="lineNoCov">          0 : EditItemID TrackCompManager::TrackComp::getSourceTrackID (const ValueTree&amp; v)</span></a>
+<a name="189"><span class="lineNum">     189 </span><span class="lineNoCov">          0 : EditItemID TrackCompManager::TrackComp::getSourceTrackID (const juce::ValueTree&amp; v)</span></a>
 <a name="190"><span class="lineNum">     190 </span>            : {</a>
 <a name="191"><span class="lineNum">     191 </span><span class="lineNoCov">          0 :     return EditItemID::fromProperty (v, IDs::track);</span></a>
 <a name="192"><span class="lineNum">     192 </span>            : }</a>
 <a name="193"><span class="lineNum">     193 </span>            : </a>
 <a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 : void TrackCompManager::TrackComp::setSourceTrackID (ValueTree&amp; v, EditItemID newID, UndoManager* um)</span></a>
 <a name="195"><span class="lineNum">     195 </span>            : {</a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineNoCov">          0 :     newID.setProperty (v, IDs::track, um);</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineNoCov">          0 :     v.setProperty (IDs::track, newID, um);</span></a>
 <a name="197"><span class="lineNum">     197 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="198"><span class="lineNum">     198 </span>            : </a>
 <a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 : void TrackCompManager::TrackComp::setSectionTrack (CompSection&amp; cs, const Track::Ptr&amp; t)</span></a>
@@ -401,17 +401,17 @@
 <a name="339"><span class="lineNum">     339 </span>            : </a>
 <a name="340"><span class="lineNum">     340 </span>            : struct SectionSorter</a>
 <a name="341"><span class="lineNum">     341 </span>            : {</a>
-<a name="342"><span class="lineNum">     342 </span><span class="lineNoCov">          0 :     static int compareElements (const ValueTree&amp; f, const ValueTree&amp; s) noexcept</span></a>
+<a name="342"><span class="lineNum">     342 </span><span class="lineNoCov">          0 :     static int compareElements (const juce::ValueTree&amp; f, const juce::ValueTree&amp; s) noexcept</span></a>
 <a name="343"><span class="lineNum">     343 </span>            :     {</a>
 <a name="344"><span class="lineNum">     344 </span><span class="lineNoCov">          0 :         return double (f[IDs::end]) &lt; double (s[IDs::end]) ? -1 : 1;</span></a>
 <a name="345"><span class="lineNum">     345 </span>            :     }</a>
 <a name="346"><span class="lineNum">     346 </span>            : };</a>
 <a name="347"><span class="lineNum">     347 </span>            : </a>
-<a name="348"><span class="lineNum">     348 </span><span class="lineNoCov">          0 : ValueTree TrackCompManager::TrackComp::addSection (EditItemID trackID, double endTime, UndoManager* um)</span></a>
+<a name="348"><span class="lineNum">     348 </span><span class="lineNoCov">          0 : juce::ValueTree TrackCompManager::TrackComp::addSection (EditItemID trackID, double endTime, UndoManager* um)</span></a>
 <a name="349"><span class="lineNum">     349 </span>            : {</a>
-<a name="350"><span class="lineNum">     350 </span><span class="lineNoCov">          0 :     ValueTree newSection (IDs::COMPSECTION);</span></a>
-<a name="351"><span class="lineNum">     351 </span><span class="lineNoCov">          0 :     trackID.setProperty (newSection, IDs::track, um);</span></a>
-<a name="352"><span class="lineNum">     352 </span><span class="lineNoCov">          0 :     newSection.setProperty (IDs::end, endTime, um);</span></a>
+<a name="350"><span class="lineNum">     350 </span>            :     auto newSection = createValueTree (IDs::COMPSECTION,</a>
+<a name="351"><span class="lineNum">     351 </span>            :                                        IDs::track, trackID,</a>
+<a name="352"><span class="lineNum">     352 </span><span class="lineNoCov">          0 :                                        IDs::end, endTime);</span></a>
 <a name="353"><span class="lineNum">     353 </span>            : </a>
 <a name="354"><span class="lineNum">     354 </span>            :     int insertIndex = 0;</a>
 <a name="355"><span class="lineNum">     355 </span><span class="lineNoCov">          0 :     const int numSections = state.getNumChildren();</span></a>
@@ -509,16 +509,16 @@
 <a name="447"><span class="lineNum">     447 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="448"><span class="lineNum">     448 </span>            : }</a>
 <a name="449"><span class="lineNum">     449 </span>            : </a>
-<a name="450"><span class="lineNum">     450 </span><span class="lineNoCov">          0 : TrackCompManager::CompSection* TrackCompManager::TrackComp::createNewObject (const ValueTree&amp; v)</span></a>
+<a name="450"><span class="lineNum">     450 </span><span class="lineNoCov">          0 : TrackCompManager::CompSection* TrackCompManager::TrackComp::createNewObject (const juce::ValueTree&amp; v)</span></a>
 <a name="451"><span class="lineNum">     451 </span>            : {</a>
 <a name="452"><span class="lineNum">     452 </span><span class="lineNoCov">          0 :     return CompSection::createAndIncRefCount (v);</span></a>
 <a name="453"><span class="lineNum">     453 </span>            : }</a>
 <a name="454"><span class="lineNum">     454 </span>            : </a>
-<a name="455"><span class="lineNum">     455 </span><span class="lineNoCov">          0 : bool TrackCompManager::TrackComp::isSuitableType (const ValueTree&amp; v) const     { return v.hasType (IDs::COMPSECTION); }</span></a>
-<a name="456"><span class="lineNum">     456 </span><span class="lineNoCov">          0 : void TrackCompManager::TrackComp::deleteObject (CompSection* cs)                { cs-&gt;decReferenceCount(); }</span></a>
-<a name="457"><span class="lineNum">     457 </span><span class="lineNoCov">          0 : void TrackCompManager::TrackComp::newObjectAdded (CompSection*)                 {}</span></a>
-<a name="458"><span class="lineNum">     458 </span><span class="lineNoCov">          0 : void TrackCompManager::TrackComp::objectRemoved (CompSection*)                  {}</span></a>
-<a name="459"><span class="lineNum">     459 </span><span class="lineNoCov">          0 : void TrackCompManager::TrackComp::objectOrderChanged()                          {}</span></a>
+<a name="455"><span class="lineNum">     455 </span><span class="lineNoCov">          0 : bool TrackCompManager::TrackComp::isSuitableType (const juce::ValueTree&amp; v) const   { return v.hasType (IDs::COMPSECTION); }</span></a>
+<a name="456"><span class="lineNum">     456 </span><span class="lineNoCov">          0 : void TrackCompManager::TrackComp::deleteObject (CompSection* cs)                    { cs-&gt;decReferenceCount(); }</span></a>
+<a name="457"><span class="lineNum">     457 </span><span class="lineNoCov">          0 : void TrackCompManager::TrackComp::newObjectAdded (CompSection*)                     {}</span></a>
+<a name="458"><span class="lineNum">     458 </span><span class="lineNoCov">          0 : void TrackCompManager::TrackComp::objectRemoved (CompSection*)                      {}</span></a>
+<a name="459"><span class="lineNum">     459 </span><span class="lineNoCov">          0 : void TrackCompManager::TrackComp::objectOrderChanged()                              {}</span></a>
 <a name="460"><span class="lineNum">     460 </span>            : </a>
 <a name="461"><span class="lineNum">     461 </span><span class="lineNoCov">          0 : void TrackCompManager::TrackComp::valueTreePropertyChanged (ValueTree&amp; v, const juce::Identifier&amp; i)</span></a>
 <a name="462"><span class="lineNum">     462 </span>            : {</a>
@@ -527,7 +527,7 @@
 <a name="465"><span class="lineNum">     465 </span><span class="lineNoCov">          0 :             cs-&gt;updateFrom (v, i);</span></a>
 <a name="466"><span class="lineNum">     466 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="467"><span class="lineNum">     467 </span>            : </a>
-<a name="468"><span class="lineNum">     468 </span><span class="lineNoCov">          0 : TrackCompManager::CompSection* TrackCompManager::TrackComp::getCompSectionFor (const ValueTree&amp; v)</span></a>
+<a name="468"><span class="lineNum">     468 </span><span class="lineNoCov">          0 : TrackCompManager::CompSection* TrackCompManager::TrackComp::getCompSectionFor (const juce::ValueTree&amp; v)</span></a>
 <a name="469"><span class="lineNum">     469 </span>            : {</a>
 <a name="470"><span class="lineNum">     470 </span>            :     jassert (v.hasType (IDs::COMPSECTION));</a>
 <a name="471"><span class="lineNum">     471 </span>            : </a>
@@ -583,7 +583,7 @@
 <a name="521"><span class="lineNum">     521 </span>            : //==============================================================================</a>
 <a name="522"><span class="lineNum">     522 </span>            : struct TrackCompManager::TrackCompList   : public ValueTreeObjectList&lt;TrackComp&gt;</a>
 <a name="523"><span class="lineNum">     523 </span>            : {</a>
-<a name="524"><span class="lineNum">     524 </span><span class="lineCov">        194 :     TrackCompList (Edit&amp; e, const ValueTree&amp; v) : ValueTreeObjectList&lt;TrackComp&gt; (v), edit (e)</span></a>
+<a name="524"><span class="lineNum">     524 </span><span class="lineCov">        194 :     TrackCompList (Edit&amp; e, const juce::ValueTree&amp; v) : ValueTreeObjectList&lt;TrackComp&gt; (v), edit (e)</span></a>
 <a name="525"><span class="lineNum">     525 </span>            :     {</a>
 <a name="526"><span class="lineNum">     526 </span><span class="lineCov">        194 :         rebuildObjects();</span></a>
 <a name="527"><span class="lineNum">     527 </span><span class="lineCov">        194 :     }</span></a>
@@ -593,12 +593,12 @@
 <a name="531"><span class="lineNum">     531 </span><span class="lineCov">        194 :         freeObjects();</span></a>
 <a name="532"><span class="lineNum">     532 </span><span class="lineCov">        388 :     }</span></a>
 <a name="533"><span class="lineNum">     533 </span>            : </a>
-<a name="534"><span class="lineNum">     534 </span><span class="lineNoCov">          0 :     bool isSuitableType (const ValueTree&amp; v) const override     { return v.hasType (IDs::TRACKCOMP); }</span></a>
-<a name="535"><span class="lineNum">     535 </span><span class="lineNoCov">          0 :     TrackComp* createNewObject (const ValueTree&amp; v) override    { return TrackComp::createAndIncRefCount (edit, v); }</span></a>
-<a name="536"><span class="lineNum">     536 </span><span class="lineNoCov">          0 :     void deleteObject (TrackComp* tc) override                  { tc-&gt;decReferenceCount(); }</span></a>
-<a name="537"><span class="lineNum">     537 </span><span class="lineNoCov">          0 :     void newObjectAdded (TrackComp*) override                   {}</span></a>
-<a name="538"><span class="lineNum">     538 </span><span class="lineNoCov">          0 :     void objectRemoved (TrackComp*) override                    {}</span></a>
-<a name="539"><span class="lineNum">     539 </span><span class="lineNoCov">          0 :     void objectOrderChanged() override                          {}</span></a>
+<a name="534"><span class="lineNum">     534 </span><span class="lineNoCov">          0 :     bool isSuitableType (const juce::ValueTree&amp; v) const override     { return v.hasType (IDs::TRACKCOMP); }</span></a>
+<a name="535"><span class="lineNum">     535 </span><span class="lineNoCov">          0 :     TrackComp* createNewObject (const juce::ValueTree&amp; v) override    { return TrackComp::createAndIncRefCount (edit, v); }</span></a>
+<a name="536"><span class="lineNum">     536 </span><span class="lineNoCov">          0 :     void deleteObject (TrackComp* tc) override                        { tc-&gt;decReferenceCount(); }</span></a>
+<a name="537"><span class="lineNum">     537 </span><span class="lineNoCov">          0 :     void newObjectAdded (TrackComp*) override                         {}</span></a>
+<a name="538"><span class="lineNum">     538 </span><span class="lineNoCov">          0 :     void objectRemoved (TrackComp*) override                          {}</span></a>
+<a name="539"><span class="lineNum">     539 </span><span class="lineNoCov">          0 :     void objectOrderChanged() override                                {}</span></a>
 <a name="540"><span class="lineNum">     540 </span>            : </a>
 <a name="541"><span class="lineNum">     541 </span>            : private:</a>
 <a name="542"><span class="lineNum">     542 </span>            :     Edit&amp; edit;</a>
@@ -610,7 +610,7 @@
 <a name="548"><span class="lineNum">     548 </span><span class="lineCov">        194 : TrackCompManager::TrackCompManager (Edit&amp; e) : edit (e) {}</span></a>
 <a name="549"><span class="lineNum">     549 </span><span class="lineCov">        388 : TrackCompManager::~TrackCompManager() {}</span></a>
 <a name="550"><span class="lineNum">     550 </span>            : </a>
-<a name="551"><span class="lineNum">     551 </span><span class="lineCov">        194 : void TrackCompManager::initialise (const ValueTree&amp; v)</span></a>
+<a name="551"><span class="lineNum">     551 </span><span class="lineCov">        194 : void TrackCompManager::initialise (const juce::ValueTree&amp; v)</span></a>
 <a name="552"><span class="lineNum">     552 </span>            : {</a>
 <a name="553"><span class="lineNum">     553 </span>            :     jassert (v.hasType (IDs::TRACKCOMPS));</a>
 <a name="554"><span class="lineNum">     554 </span><span class="lineCov">        194 :     state = v;</span></a>
@@ -622,9 +622,9 @@
 <a name="560"><span class="lineNum">     560 </span><span class="lineNoCov">          0 :     return state.getNumChildren();</span></a>
 <a name="561"><span class="lineNum">     561 </span>            : }</a>
 <a name="562"><span class="lineNum">     562 </span>            : </a>
-<a name="563"><span class="lineNum">     563 </span><span class="lineNoCov">          0 : StringArray TrackCompManager::getCompNames() const</span></a>
+<a name="563"><span class="lineNum">     563 </span><span class="lineNoCov">          0 : juce::StringArray TrackCompManager::getCompNames() const</span></a>
 <a name="564"><span class="lineNum">     564 </span>            : {</a>
-<a name="565"><span class="lineNum">     565 </span><span class="lineNoCov">          0 :     StringArray names;</span></a>
+<a name="565"><span class="lineNum">     565 </span><span class="lineNoCov">          0 :     juce::StringArray names;</span></a>
 <a name="566"><span class="lineNum">     566 </span><span class="lineNoCov">          0 :     auto numComps = state.getNumChildren();</span></a>
 <a name="567"><span class="lineNum">     567 </span>            : </a>
 <a name="568"><span class="lineNum">     568 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; numComps; ++i)</span></a>
@@ -643,7 +643,7 @@
 <a name="581"><span class="lineNum">     581 </span><span class="lineNoCov">          0 :     return names;</span></a>
 <a name="582"><span class="lineNum">     582 </span>            : }</a>
 <a name="583"><span class="lineNum">     583 </span>            : </a>
-<a name="584"><span class="lineNum">     584 </span><span class="lineNoCov">          0 : String TrackCompManager::getCompName (int index)</span></a>
+<a name="584"><span class="lineNum">     584 </span><span class="lineNoCov">          0 : juce::String TrackCompManager::getCompName (int index)</span></a>
 <a name="585"><span class="lineNum">     585 </span>            : {</a>
 <a name="586"><span class="lineNum">     586 </span><span class="lineNoCov">          0 :     if (index == -1)</span></a>
 <a name="587"><span class="lineNum">     587 </span><span class="lineNoCov">          0 :         return &quot;&lt;&quot; + TRANS(&quot;None&quot;) + &quot;&gt;&quot;;</span></a>
@@ -657,7 +657,7 @@
 <a name="595"><span class="lineNum">     595 </span><span class="lineNoCov">          0 :     return TRANS(&quot;Comp Group&quot;) + &quot; &quot; + String (index);</span></a>
 <a name="596"><span class="lineNum">     596 </span>            : }</a>
 <a name="597"><span class="lineNum">     597 </span>            : </a>
-<a name="598"><span class="lineNum">     598 </span><span class="lineNoCov">          0 : void TrackCompManager::setCompName (int index, const String&amp; name)</span></a>
+<a name="598"><span class="lineNum">     598 </span><span class="lineNoCov">          0 : void TrackCompManager::setCompName (int index, const juce::String&amp; name)</span></a>
 <a name="599"><span class="lineNum">     599 </span>            : {</a>
 <a name="600"><span class="lineNum">     600 </span>            :     jassert (isPositiveAndBelow (index, getNumGroups()));</a>
 <a name="601"><span class="lineNum">     601 </span>            : </a>
@@ -667,41 +667,42 @@
 <a name="605"><span class="lineNum">     605 </span><span class="lineNoCov">          0 :         v.setProperty (IDs::name, name, &amp;edit.getUndoManager());</span></a>
 <a name="606"><span class="lineNum">     606 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="607"><span class="lineNum">     607 </span>            : </a>
-<a name="608"><span class="lineNum">     608 </span><span class="lineNoCov">          0 : int TrackCompManager::addGroup (const String&amp; name)</span></a>
+<a name="608"><span class="lineNum">     608 </span><span class="lineNoCov">          0 : int TrackCompManager::addGroup (const juce::String&amp; name)</span></a>
 <a name="609"><span class="lineNum">     609 </span>            : {</a>
-<a name="610"><span class="lineNum">     610 </span><span class="lineNoCov">          0 :     ValueTree v (IDs::TRACKCOMP);</span></a>
-<a name="611"><span class="lineNum">     611 </span><span class="lineNoCov">          0 :     v.setProperty (IDs::name, name, nullptr);</span></a>
-<a name="612"><span class="lineNum">     612 </span><span class="lineNoCov">          0 :     state.addChild (v, -1, &amp;edit.getUndoManager());</span></a>
-<a name="613"><span class="lineNum">     613 </span>            : </a>
-<a name="614"><span class="lineNum">     614 </span><span class="lineNoCov">          0 :     return getNumGroups() - 1;</span></a>
-<a name="615"><span class="lineNum">     615 </span>            : }</a>
-<a name="616"><span class="lineNum">     616 </span>            : </a>
-<a name="617"><span class="lineNum">     617 </span><span class="lineNoCov">          0 : void TrackCompManager::removeGroup (int index)</span></a>
-<a name="618"><span class="lineNum">     618 </span>            : {</a>
-<a name="619"><span class="lineNum">     619 </span><span class="lineNoCov">          0 :     for (auto at : getAudioTracks (edit))</span></a>
-<a name="620"><span class="lineNum">     620 </span><span class="lineNoCov">          0 :         if (at-&gt;getCompGroup() == index)</span></a>
-<a name="621"><span class="lineNum">     621 </span><span class="lineNoCov">          0 :             at-&gt;setCompGroup (-1);</span></a>
-<a name="622"><span class="lineNum">     622 </span>            : </a>
-<a name="623"><span class="lineNum">     623 </span><span class="lineNoCov">          0 :     state.removeChild (index, &amp;edit.getUndoManager());</span></a>
-<a name="624"><span class="lineNum">     624 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="625"><span class="lineNum">     625 </span>            : </a>
-<a name="626"><span class="lineNum">     626 </span><span class="lineNoCov">          0 : Array&lt;Track*&gt; TrackCompManager::getTracksInComp (int index)</span></a>
-<a name="627"><span class="lineNum">     627 </span>            : {</a>
-<a name="628"><span class="lineNum">     628 </span><span class="lineNoCov">          0 :     Array&lt;Track*&gt; tracks;</span></a>
-<a name="629"><span class="lineNum">     629 </span>            : </a>
-<a name="630"><span class="lineNum">     630 </span><span class="lineNoCov">          0 :     for (auto at : getAudioTracks (edit))</span></a>
-<a name="631"><span class="lineNum">     631 </span><span class="lineNoCov">          0 :         if (at-&gt;getCompGroup() == index)</span></a>
-<a name="632"><span class="lineNum">     632 </span><span class="lineNoCov">          0 :             tracks.add (at);</span></a>
-<a name="633"><span class="lineNum">     633 </span>            : </a>
-<a name="634"><span class="lineNum">     634 </span><span class="lineNoCov">          0 :     return tracks;</span></a>
-<a name="635"><span class="lineNum">     635 </span>            : }</a>
-<a name="636"><span class="lineNum">     636 </span>            : </a>
-<a name="637"><span class="lineNum">     637 </span><span class="lineNoCov">          0 : TrackCompManager::TrackComp::Ptr TrackCompManager::getTrackComp (AudioTrack* at)</span></a>
-<a name="638"><span class="lineNum">     638 </span>            : {</a>
-<a name="639"><span class="lineNum">     639 </span><span class="lineNoCov">          0 :     return at == nullptr ? nullptr : trackCompList-&gt;objects[at-&gt;getCompGroup()];</span></a>
-<a name="640"><span class="lineNum">     640 </span>            : }</a>
-<a name="641"><span class="lineNum">     641 </span>            : </a>
-<a name="642"><span class="lineNum">     642 </span>            : }</a>
+<a name="610"><span class="lineNum">     610 </span>            :     auto v = createValueTree (IDs::TRACKCOMP,</a>
+<a name="611"><span class="lineNum">     611 </span><span class="lineNoCov">          0 :                               IDs::name, name);</span></a>
+<a name="612"><span class="lineNum">     612 </span>            : </a>
+<a name="613"><span class="lineNum">     613 </span><span class="lineNoCov">          0 :     state.addChild (v, -1, &amp;edit.getUndoManager());</span></a>
+<a name="614"><span class="lineNum">     614 </span>            : </a>
+<a name="615"><span class="lineNum">     615 </span><span class="lineNoCov">          0 :     return getNumGroups() - 1;</span></a>
+<a name="616"><span class="lineNum">     616 </span>            : }</a>
+<a name="617"><span class="lineNum">     617 </span>            : </a>
+<a name="618"><span class="lineNum">     618 </span><span class="lineNoCov">          0 : void TrackCompManager::removeGroup (int index)</span></a>
+<a name="619"><span class="lineNum">     619 </span>            : {</a>
+<a name="620"><span class="lineNum">     620 </span><span class="lineNoCov">          0 :     for (auto at : getAudioTracks (edit))</span></a>
+<a name="621"><span class="lineNum">     621 </span><span class="lineNoCov">          0 :         if (at-&gt;getCompGroup() == index)</span></a>
+<a name="622"><span class="lineNum">     622 </span><span class="lineNoCov">          0 :             at-&gt;setCompGroup (-1);</span></a>
+<a name="623"><span class="lineNum">     623 </span>            : </a>
+<a name="624"><span class="lineNum">     624 </span><span class="lineNoCov">          0 :     state.removeChild (index, &amp;edit.getUndoManager());</span></a>
+<a name="625"><span class="lineNum">     625 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="626"><span class="lineNum">     626 </span>            : </a>
+<a name="627"><span class="lineNum">     627 </span><span class="lineNoCov">          0 : Array&lt;Track*&gt; TrackCompManager::getTracksInComp (int index)</span></a>
+<a name="628"><span class="lineNum">     628 </span>            : {</a>
+<a name="629"><span class="lineNum">     629 </span><span class="lineNoCov">          0 :     Array&lt;Track*&gt; tracks;</span></a>
+<a name="630"><span class="lineNum">     630 </span>            : </a>
+<a name="631"><span class="lineNum">     631 </span><span class="lineNoCov">          0 :     for (auto at : getAudioTracks (edit))</span></a>
+<a name="632"><span class="lineNum">     632 </span><span class="lineNoCov">          0 :         if (at-&gt;getCompGroup() == index)</span></a>
+<a name="633"><span class="lineNum">     633 </span><span class="lineNoCov">          0 :             tracks.add (at);</span></a>
+<a name="634"><span class="lineNum">     634 </span>            : </a>
+<a name="635"><span class="lineNum">     635 </span><span class="lineNoCov">          0 :     return tracks;</span></a>
+<a name="636"><span class="lineNum">     636 </span>            : }</a>
+<a name="637"><span class="lineNum">     637 </span>            : </a>
+<a name="638"><span class="lineNum">     638 </span><span class="lineNoCov">          0 : TrackCompManager::TrackComp::Ptr TrackCompManager::getTrackComp (AudioTrack* at)</span></a>
+<a name="639"><span class="lineNum">     639 </span>            : {</a>
+<a name="640"><span class="lineNum">     640 </span><span class="lineNoCov">          0 :     return at == nullptr ? nullptr : trackCompList-&gt;objects[at-&gt;getCompGroup()];</span></a>
+<a name="641"><span class="lineNum">     641 </span>            : }</a>
+<a name="642"><span class="lineNum">     642 </span>            : </a>
+<a name="643"><span class="lineNum">     643 </span>            : }</a>
 </pre>
       </td>
     </tr>

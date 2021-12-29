@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">13</td>
@@ -270,7 +270,7 @@
 <a name="208"><span class="lineNum">     208 </span>            : </a>
 <a name="209"><span class="lineNum">     209 </span><span class="lineCov">          3 : static AudioFile getCachedEditFile (Edit&amp; edit, const juce::String&amp; prefix, juce::int64 hash)</span></a>
 <a name="210"><span class="lineNum">     210 </span>            : {</a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">          9 :     return AudioFile (edit.engine, edit.getTempDirectory (true).getChildFile (prefix + String::toHexString (hash) + &quot;.wav&quot;));</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">          9 :     return AudioFile (edit.engine, edit.getTempDirectory (true).getChildFile (prefix + juce::String::toHexString (hash) + &quot;.wav&quot;));</span></a>
 <a name="212"><span class="lineNum">     212 </span>            : }</a>
 <a name="213"><span class="lineNum">     213 </span>            : </a>
 <a name="214"><span class="lineNum">     214 </span><span class="lineNoCov">          0 : static AudioFile getCachedClipFileWithPrefix (const AudioClipBase&amp; clip, const juce::String&amp; prefix, juce::int64 hash)</span></a>

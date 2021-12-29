@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">78</td>
-            <td class="headerCovTableEntry">78</td>
+            <td class="headerCovTableEntry">79</td>
+            <td class="headerCovTableEntry">79</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">8</td>
@@ -94,7 +94,7 @@
 <a name="32"><span class="lineNum">      32 </span>            :         </a>
 <a name="33"><span class="lineNum">      33 </span><span class="lineCov">          1 :         beginTest (&quot;No latency&quot;);</span></a>
 <a name="34"><span class="lineNum">      34 </span>            :         {</a>
-<a name="35"><span class="lineNum">      35 </span><span class="lineCov">          1 :             expectEquals (sinFile-&gt;getFile().getFileExtension(), String (&quot;.wav&quot;));</span></a>
+<a name="35"><span class="lineNum">      35 </span><span class="lineCov">          1 :             expectEquals (sinFile-&gt;getFile().getFileExtension(), juce::String (&quot;.wav&quot;));</span></a>
 <a name="36"><span class="lineNum">      36 </span><span class="lineCov">          1 :             auto edit = createTestEdit (engine);</span></a>
 <a name="37"><span class="lineNum">      37 </span><span class="lineCov">          2 :             auto track1 = getAudioTracks (*edit)[0];</span></a>
 <a name="38"><span class="lineNum">      38 </span><span class="lineCov">          1 :             auto track2 = getAudioTracks (*edit)[1];</span></a>
@@ -128,7 +128,7 @@
 <a name="66"><span class="lineNum">      66 </span><span class="lineCov">          1 :         beginTest (&quot;Source file with different sample rate&quot;);</span></a>
 <a name="67"><span class="lineNum">      67 </span>            :         {</a>
 <a name="68"><span class="lineNum">      68 </span><span class="lineCov">          1 :             auto sinFile96Ogg = getSinFile&lt;OggVorbisAudioFormat&gt; (96000.0);</span></a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineCov">          1 :             expectEquals (sinFile96Ogg-&gt;getFile().getFileExtension(), String (&quot;.ogg&quot;));</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineCov">          1 :             expectEquals (sinFile96Ogg-&gt;getFile().getFileExtension(), juce::String (&quot;.ogg&quot;));</span></a>
 <a name="70"><span class="lineNum">      70 </span><span class="lineCov">          1 :             auto edit = createTestEdit (engine);</span></a>
 <a name="71"><span class="lineNum">      71 </span><span class="lineCov">          2 :             auto track1 = getAudioTracks (*edit)[0];</span></a>
 <a name="72"><span class="lineNum">      72 </span>            : </a>
@@ -157,81 +157,82 @@
 <a name="95"><span class="lineNum">      95 </span>            :     {</a>
 <a name="96"><span class="lineNum">      96 </span><span class="lineCov">          4 :         auto blockSize = edit.engine.getDeviceManager().getBlockSize();</span></a>
 <a name="97"><span class="lineNum">      97 </span><span class="lineCov">          4 :         auto stats = logStats (Renderer::measureStatistics (&quot;PDC Tests&quot;, edit, tr, getTracksMask (tracks), blockSize));</span></a>
-<a name="98"><span class="lineNum">      98 </span><span class="lineCov">          4 :         expect (juce::isWithin (stats.peak, expectedPeak, 0.001f), String (&quot;Expected peak: &quot;) + String (expectedPeak, 4));</span></a>
+<a name="98"><span class="lineNum">      98 </span><span class="lineCov">          4 :         expect (juce::isWithin (stats.peak, expectedPeak, 0.001f), juce::String (&quot;Expected peak: &quot;) + juce::String (expectedPeak, 4));</span></a>
 <a name="99"><span class="lineNum">      99 </span><span class="lineCov">          4 :     }</span></a>
 <a name="100"><span class="lineNum">     100 </span>            : </a>
 <a name="101"><span class="lineNum">     101 </span><span class="lineCov">          4 :     Renderer::Statistics logStats (Renderer::Statistics stats)</span></a>
 <a name="102"><span class="lineNum">     102 </span>            :     {</a>
-<a name="103"><span class="lineNum">     103 </span><span class="lineCov">          4 :         logMessage (&quot;Stats: peak &quot; + String (stats.peak) + &quot;, avg &quot; + String (stats.average) + &quot;, duration &quot; + String (stats.audioDuration));</span></a>
-<a name="104"><span class="lineNum">     104 </span><span class="lineCov">          4 :         return stats;</span></a>
-<a name="105"><span class="lineNum">     105 </span>            :     }</a>
-<a name="106"><span class="lineNum">     106 </span>            : </a>
-<a name="107"><span class="lineNum">     107 </span><span class="lineCov">          4 :     static BigInteger getTracksMask (const Array&lt;Track*&gt;&amp; tracks)</span></a>
-<a name="108"><span class="lineNum">     108 </span>            :     {</a>
-<a name="109"><span class="lineNum">     109 </span><span class="lineCov">          4 :         BigInteger tracksMask;</span></a>
-<a name="110"><span class="lineNum">     110 </span>            : </a>
-<a name="111"><span class="lineNum">     111 </span><span class="lineCov">         11 :         for (auto t : tracks)</span></a>
-<a name="112"><span class="lineNum">     112 </span><span class="lineCov">          7 :             tracksMask.setBit (t-&gt;getIndexInEditTrackList());</span></a>
-<a name="113"><span class="lineNum">     113 </span>            : </a>
-<a name="114"><span class="lineNum">     114 </span>            :         jassert (tracksMask.countNumberOfSetBits() == tracks.size());</a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineCov">          4 :         return tracksMask;</span></a>
-<a name="116"><span class="lineNum">     116 </span>            :     }</a>
-<a name="117"><span class="lineNum">     117 </span>            : </a>
-<a name="118"><span class="lineNum">     118 </span>            :     //==============================================================================</a>
-<a name="119"><span class="lineNum">     119 </span><span class="lineCov">          2 :     static std::unique_ptr&lt;Edit&gt; createTestEdit (Engine&amp; engine)</span></a>
-<a name="120"><span class="lineNum">     120 </span>            :     {</a>
-<a name="121"><span class="lineNum">     121 </span>            :         // Make tempo 60bpm and 0dB master vol for easy calculations</a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineCov">          2 :         auto edit = Edit::createSingleTrackEdit (engine);</span></a>
-<a name="123"><span class="lineNum">     123 </span><span class="lineCov">          2 :         edit-&gt;tempoSequence.getTempo (0)-&gt;setBpm (60.0);</span></a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">          2 :         edit-&gt;getMasterVolumePlugin()-&gt;setVolumeDb (0.0);</span></a>
-<a name="125"><span class="lineNum">     125 </span>            : </a>
-<a name="126"><span class="lineNum">     126 </span>            :         // Create two AudioTracks</a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineCov">          2 :         edit-&gt;ensureNumberOfAudioTracks (2);</span></a>
-<a name="128"><span class="lineNum">     128 </span>            : </a>
-<a name="129"><span class="lineNum">     129 </span><span class="lineCov">          2 :         return edit;</span></a>
-<a name="130"><span class="lineNum">     130 </span>            :     }</a>
-<a name="131"><span class="lineNum">     131 </span>            : </a>
-<a name="132"><span class="lineNum">     132 </span>            :     template&lt;typename AudioFormatType&gt;</a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineCov">          2 :     std::unique_ptr&lt;TemporaryFile&gt; getSinFile (double sampleRate)</span></a>
-<a name="134"><span class="lineNum">     134 </span>            :     {</a>
-<a name="135"><span class="lineNum">     135 </span>            :         // Create a 1s sin buffer</a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">          2 :         AudioBuffer&lt;float&gt; buffer (1, (int) sampleRate);</span></a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineCov">          6 :         juce::dsp::Oscillator&lt;float&gt; osc ([] (float in) { return std::sin (in); });</span></a>
-<a name="138"><span class="lineNum">     138 </span>            :         osc.setFrequency (220.0);</a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineCov">          2 :         osc.prepare ({ double (sampleRate), uint32 (sampleRate), 1 });</span></a>
-<a name="140"><span class="lineNum">     140 </span>            : </a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">          2 :         float* samples = buffer.getWritePointer (0);</span></a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">          2 :         int numSamples = buffer.getNumSamples();</span></a>
-<a name="143"><span class="lineNum">     143 </span>            : </a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineCov">     140102 :         for (int i = 0; i &lt; numSamples; ++i)</span></a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">     140100 :             samples[i] = osc.processSample (0.0);</span></a>
-<a name="146"><span class="lineNum">     146 </span>            : </a>
-<a name="147"><span class="lineNum">     147 </span>            :         // Then write it to a temp file</a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">          4 :         AudioFormatType format;</span></a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">          4 :         auto f = std::make_unique&lt;TemporaryFile&gt; (format.getFileExtensions()[0]);</span></a>
-<a name="150"><span class="lineNum">     150 </span>            :         </a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineCov">          2 :         if (auto fileStream = f-&gt;getFile().createOutputStream())</span></a>
-<a name="152"><span class="lineNum">     152 </span>            :         {</a>
-<a name="153"><span class="lineNum">     153 </span><span class="lineCov">          2 :             const int numQualityOptions = format.getQualityOptions().size();</span></a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineCov">          2 :             const int qualityOptionIndex = numQualityOptions == 0 ? 0 : (numQualityOptions / 2);</span></a>
-<a name="155"><span class="lineNum">     155 </span><span class="lineCov">          4 :             const int bitDepth = format.getPossibleBitDepths().contains (16) ? 16 : 32;</span></a>
-<a name="156"><span class="lineNum">     156 </span>            :             </a>
-<a name="157"><span class="lineNum">     157 </span><span class="lineCov">          4 :             if (auto writer = std::unique_ptr&lt;AudioFormatWriter&gt; (AudioFormatType().createWriterFor (fileStream.get(), sampleRate, 1, bitDepth, {}, qualityOptionIndex)))</span></a>
-<a name="158"><span class="lineNum">     158 </span>            :             {</a>
-<a name="159"><span class="lineNum">     159 </span>            :                 fileStream.release();</a>
-<a name="160"><span class="lineNum">     160 </span><span class="lineCov">          2 :                 writer-&gt;writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());</span></a>
-<a name="161"><span class="lineNum">     161 </span>            :             }</a>
-<a name="162"><span class="lineNum">     162 </span>            :         }</a>
-<a name="163"><span class="lineNum">     163 </span>            : </a>
-<a name="164"><span class="lineNum">     164 </span><span class="lineCov">          2 :         return f;</span></a>
-<a name="165"><span class="lineNum">     165 </span>            :     }</a>
-<a name="166"><span class="lineNum">     166 </span>            : };</a>
-<a name="167"><span class="lineNum">     167 </span>            : </a>
-<a name="168"><span class="lineNum">     168 </span>            : static PDCTests pdcTests;</a>
-<a name="169"><span class="lineNum">     169 </span>            : </a>
-<a name="170"><span class="lineNum">     170 </span>            : #endif</a>
-<a name="171"><span class="lineNum">     171 </span>            : </a>
-<a name="172"><span class="lineNum">     172 </span>            : } // namespace tracktion_engine</a>
+<a name="103"><span class="lineNum">     103 </span><span class="lineCov">         12 :         logMessage (&quot;Stats: peak &quot; + juce::String (stats.peak) + &quot;, avg &quot; + juce::String (stats.average)</span></a>
+<a name="104"><span class="lineNum">     104 </span><span class="lineCov">         16 :                      + &quot;, duration &quot; + juce::String (stats.audioDuration));</span></a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineCov">          4 :         return stats;</span></a>
+<a name="106"><span class="lineNum">     106 </span>            :     }</a>
+<a name="107"><span class="lineNum">     107 </span>            : </a>
+<a name="108"><span class="lineNum">     108 </span><span class="lineCov">          4 :     static juce::BigInteger getTracksMask (const Array&lt;Track*&gt;&amp; tracks)</span></a>
+<a name="109"><span class="lineNum">     109 </span>            :     {</a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">          4 :         juce::BigInteger tracksMask;</span></a>
+<a name="111"><span class="lineNum">     111 </span>            : </a>
+<a name="112"><span class="lineNum">     112 </span><span class="lineCov">         11 :         for (auto t : tracks)</span></a>
+<a name="113"><span class="lineNum">     113 </span><span class="lineCov">          7 :             tracksMask.setBit (t-&gt;getIndexInEditTrackList());</span></a>
+<a name="114"><span class="lineNum">     114 </span>            : </a>
+<a name="115"><span class="lineNum">     115 </span>            :         jassert (tracksMask.countNumberOfSetBits() == tracks.size());</a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">          4 :         return tracksMask;</span></a>
+<a name="117"><span class="lineNum">     117 </span>            :     }</a>
+<a name="118"><span class="lineNum">     118 </span>            : </a>
+<a name="119"><span class="lineNum">     119 </span>            :     //==============================================================================</a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineCov">          2 :     static std::unique_ptr&lt;Edit&gt; createTestEdit (Engine&amp; engine)</span></a>
+<a name="121"><span class="lineNum">     121 </span>            :     {</a>
+<a name="122"><span class="lineNum">     122 </span>            :         // Make tempo 60bpm and 0dB master vol for easy calculations</a>
+<a name="123"><span class="lineNum">     123 </span><span class="lineCov">          2 :         auto edit = Edit::createSingleTrackEdit (engine);</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">          2 :         edit-&gt;tempoSequence.getTempo (0)-&gt;setBpm (60.0);</span></a>
+<a name="125"><span class="lineNum">     125 </span><span class="lineCov">          2 :         edit-&gt;getMasterVolumePlugin()-&gt;setVolumeDb (0.0);</span></a>
+<a name="126"><span class="lineNum">     126 </span>            : </a>
+<a name="127"><span class="lineNum">     127 </span>            :         // Create two AudioTracks</a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">          2 :         edit-&gt;ensureNumberOfAudioTracks (2);</span></a>
+<a name="129"><span class="lineNum">     129 </span>            : </a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">          2 :         return edit;</span></a>
+<a name="131"><span class="lineNum">     131 </span>            :     }</a>
+<a name="132"><span class="lineNum">     132 </span>            : </a>
+<a name="133"><span class="lineNum">     133 </span>            :     template&lt;typename AudioFormatType&gt;</a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineCov">          2 :     std::unique_ptr&lt;TemporaryFile&gt; getSinFile (double sampleRate)</span></a>
+<a name="135"><span class="lineNum">     135 </span>            :     {</a>
+<a name="136"><span class="lineNum">     136 </span>            :         // Create a 1s sin buffer</a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">          2 :         AudioBuffer&lt;float&gt; buffer (1, (int) sampleRate);</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">          6 :         juce::dsp::Oscillator&lt;float&gt; osc ([] (float in) { return std::sin (in); });</span></a>
+<a name="139"><span class="lineNum">     139 </span>            :         osc.setFrequency (220.0);</a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">          2 :         osc.prepare ({ double (sampleRate), uint32 (sampleRate), 1 });</span></a>
+<a name="141"><span class="lineNum">     141 </span>            : </a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">          2 :         float* samples = buffer.getWritePointer (0);</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">          2 :         int numSamples = buffer.getNumSamples();</span></a>
+<a name="144"><span class="lineNum">     144 </span>            : </a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">     140102 :         for (int i = 0; i &lt; numSamples; ++i)</span></a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineCov">     140100 :             samples[i] = osc.processSample (0.0);</span></a>
+<a name="147"><span class="lineNum">     147 </span>            : </a>
+<a name="148"><span class="lineNum">     148 </span>            :         // Then write it to a temp file</a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">          4 :         AudioFormatType format;</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineCov">          4 :         auto f = std::make_unique&lt;TemporaryFile&gt; (format.getFileExtensions()[0]);</span></a>
+<a name="151"><span class="lineNum">     151 </span>            :         </a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">          2 :         if (auto fileStream = f-&gt;getFile().createOutputStream())</span></a>
+<a name="153"><span class="lineNum">     153 </span>            :         {</a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">          2 :             const int numQualityOptions = format.getQualityOptions().size();</span></a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineCov">          2 :             const int qualityOptionIndex = numQualityOptions == 0 ? 0 : (numQualityOptions / 2);</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">          4 :             const int bitDepth = format.getPossibleBitDepths().contains (16) ? 16 : 32;</span></a>
+<a name="157"><span class="lineNum">     157 </span>            :             </a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineCov">          4 :             if (auto writer = std::unique_ptr&lt;AudioFormatWriter&gt; (AudioFormatType().createWriterFor (fileStream.get(), sampleRate, 1, bitDepth, {}, qualityOptionIndex)))</span></a>
+<a name="159"><span class="lineNum">     159 </span>            :             {</a>
+<a name="160"><span class="lineNum">     160 </span>            :                 fileStream.release();</a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineCov">          2 :                 writer-&gt;writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());</span></a>
+<a name="162"><span class="lineNum">     162 </span>            :             }</a>
+<a name="163"><span class="lineNum">     163 </span>            :         }</a>
+<a name="164"><span class="lineNum">     164 </span>            : </a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">          2 :         return f;</span></a>
+<a name="166"><span class="lineNum">     166 </span>            :     }</a>
+<a name="167"><span class="lineNum">     167 </span>            : };</a>
+<a name="168"><span class="lineNum">     168 </span>            : </a>
+<a name="169"><span class="lineNum">     169 </span>            : static PDCTests pdcTests;</a>
+<a name="170"><span class="lineNum">     170 </span>            : </a>
+<a name="171"><span class="lineNum">     171 </span>            : #endif</a>
+<a name="172"><span class="lineNum">     172 </span>            : </a>
+<a name="173"><span class="lineNum">     173 </span>            : } // namespace tracktion_engine</a>
 </pre>
       </td>
     </tr>

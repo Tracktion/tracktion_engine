@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">196</td>
+            <td class="headerCovTableEntry">197</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -241,7 +241,7 @@
 <a name="179"><span class="lineNum">     179 </span>            : </a>
 <a name="180"><span class="lineNum">     180 </span>            : </a>
 <a name="181"><span class="lineNum">     181 </span>            : //==============================================================================</a>
-<a name="182"><span class="lineNum">     182 </span><span class="lineNoCov">          0 : BreakpointOscillatorModifier::BreakpointOscillatorModifier (Edit&amp; e, const ValueTree&amp; v)</span></a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineNoCov">          0 : BreakpointOscillatorModifier::BreakpointOscillatorModifier (Edit&amp; e, const juce::ValueTree&amp; v)</span></a>
 <a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 :     : Modifier (e, v)</span></a>
 <a name="184"><span class="lineNum">     184 </span>            : {</a>
 <a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :     auto um = &amp;edit.getUndoManager();</span></a>
@@ -266,244 +266,247 @@
 <a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 :     stageFourTime.referTo (state, IDs::stageFourTime, um, 1.0f);</span></a>
 <a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 :     stageFourCurve.referTo (state, IDs::stageFourCurve, um, 0.0f);</span></a>
 <a name="206"><span class="lineNum">     206 </span>            : </a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :     auto addDiscreteParam = [this] (const String&amp; paramID, const String&amp; name, Range&lt;float&gt; valueRange, CachedValue&lt;float&gt;&amp; val,</span></a>
-<a name="208"><span class="lineNum">     208 </span><span class="lineNoCov">          0 :                                     const StringArray&amp; labels) -&gt; AutomatableParameter*</span></a>
-<a name="209"><span class="lineNum">     209 </span>            :     {</a>
-<a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 :         auto* p = new DiscreteLabelledParameter (paramID, name, *this, valueRange, labels.size(), labels);</span></a>
-<a name="211"><span class="lineNum">     211 </span>            :         addAutomatableParameter (p);</a>
-<a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 :         p-&gt;attachToCurrentValue (val);</span></a>
-<a name="213"><span class="lineNum">     213 </span>            : </a>
-<a name="214"><span class="lineNum">     214 </span><span class="lineNoCov">          0 :         return p;</span></a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 :     };</span></a>
-<a name="216"><span class="lineNum">     216 </span>            : </a>
-<a name="217"><span class="lineNum">     217 </span><span class="lineNoCov">          0 :     auto addParam = [this] (const String&amp; paramID, const String&amp; name, NormalisableRange&lt;float&gt; valueRange, float centreVal, CachedValue&lt;float&gt;&amp; val, const String&amp; suffix) -&gt; AutomatableParameter*</span></a>
-<a name="218"><span class="lineNum">     218 </span>            :     {</a>
-<a name="219"><span class="lineNum">     219 </span>            :         valueRange.setSkewForCentre (centreVal);</a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 :         auto* p = new SuffixedParameter (paramID, name, *this, valueRange, suffix);</span></a>
-<a name="221"><span class="lineNum">     221 </span>            :         addAutomatableParameter (p);</a>
-<a name="222"><span class="lineNum">     222 </span><span class="lineNoCov">          0 :         p-&gt;attachToCurrentValue (val);</span></a>
-<a name="223"><span class="lineNum">     223 </span>            : </a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineNoCov">          0 :         return p;</span></a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :     };</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :     auto addDiscreteParam = [this] (const juce::String&amp; paramID, const juce::String&amp; name,</span></a>
+<a name="208"><span class="lineNum">     208 </span>            :                                     juce::Range&lt;float&gt; valueRange, CachedValue&lt;float&gt;&amp; val,</a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :                                     const juce::StringArray&amp; labels) -&gt; AutomatableParameter*</span></a>
+<a name="210"><span class="lineNum">     210 </span>            :     {</a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 :         auto* p = new DiscreteLabelledParameter (paramID, name, *this, valueRange, labels.size(), labels);</span></a>
+<a name="212"><span class="lineNum">     212 </span>            :         addAutomatableParameter (p);</a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 :         p-&gt;attachToCurrentValue (val);</span></a>
+<a name="214"><span class="lineNum">     214 </span>            : </a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 :         return p;</span></a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 :     };</span></a>
+<a name="217"><span class="lineNum">     217 </span>            : </a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineNoCov">          0 :     auto addParam = [this] (const juce::String&amp; paramID, const juce::String&amp; name,</span></a>
+<a name="219"><span class="lineNum">     219 </span>            :                             NormalisableRange&lt;float&gt; valueRange, float centreVal,</a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 :                             CachedValue&lt;float&gt;&amp; val, const juce::String&amp; suffix) -&gt; AutomatableParameter*</span></a>
+<a name="221"><span class="lineNum">     221 </span>            :     {</a>
+<a name="222"><span class="lineNum">     222 </span>            :         valueRange.setSkewForCentre (centreVal);</a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :         auto* p = new SuffixedParameter (paramID, name, *this, valueRange, suffix);</span></a>
+<a name="224"><span class="lineNum">     224 </span>            :         addAutomatableParameter (p);</a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :         p-&gt;attachToCurrentValue (val);</span></a>
 <a name="226"><span class="lineNum">     226 </span>            : </a>
-<a name="227"><span class="lineNum">     227 </span>            :     using namespace ModifierCommon;</a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineNoCov">          0 :     numActivePointsParam    = addParam (&quot;numActivePoints&quot;,  TRANS(&quot;Num points&quot;),{ 1.0f, 4.0f, 1.0f }, 2.5f,                             numActivePoints,    {});</span></a>
-<a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 :     syncTypeParam           = addDiscreteParam (&quot;syncType&quot;, TRANS(&quot;Sync type&quot;), { 0.0f, (float)  getSyncTypeChoices().size() - 1 },     syncType,           getSyncTypeChoices());</span></a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineNoCov">          0 :     rateParam               = addParam (&quot;rate&quot;,             TRANS(&quot;Rate&quot;),      { 0.01f, 50.0f }, 1.0f,                                 rate,               {});</span></a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineNoCov">          0 :     rateTypeParam           = addDiscreteParam (&quot;rateType&quot;, TRANS(&quot;Rate Type&quot;), { 0.0f, (float) getRateTypeChoices().size() - 1 },      rateType,           getRateTypeChoices());</span></a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineNoCov">          0 :     depthParam              = addParam (&quot;depth&quot;,            TRANS(&quot;Depth&quot;),     { 0.0f, 1.0f }, 0.5f,                                   depth,              {});</span></a>
-<a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 :     bipolarParam            = addDiscreteParam (&quot;biopolar&quot;, TRANS(&quot;Bipoloar&quot;),  { 0.0f, 1.0f },                                         bipolar,            { NEEDS_TRANS(&quot;Uni-polar&quot;), NEEDS_TRANS(&quot;Bi-polar&quot;) });</span></a>
-<a name="234"><span class="lineNum">     234 </span>            : </a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineNoCov">          0 :     stageZeroValueParam     = addParam (&quot;stageZeroValue&quot;,   TRANS(&quot;Stage zero value&quot;),   { 0.0f, 1.0f }, 0.5f,      stageZeroValue,  {});</span></a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineNoCov">          0 :     stageOneValueParam      = addParam (&quot;stageOneValue&quot;,    TRANS(&quot;Stage one value&quot;),    { 0.0f, 1.0f }, 0.5f,      stageOneValue,   {});</span></a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineNoCov">          0 :     stageOneTimeParam       = addParam (&quot;stageOneTime&quot;,     TRANS(&quot;Stage one time&quot;),     { 0.0f, 1.0f }, 0.5f,      stageOneTime,    {});</span></a>
-<a name="238"><span class="lineNum">     238 </span><span class="lineNoCov">          0 :     stageOneCurveParam      = addParam (&quot;stageOneCurve&quot;,    TRANS(&quot;Stage one curve&quot;),    { -0.5f, 0.5f }, 0.0f,     stageOneCurve,   {});</span></a>
-<a name="239"><span class="lineNum">     239 </span><span class="lineNoCov">          0 :     stageTwoValueParam      = addParam (&quot;stageTwoValue&quot;,    TRANS(&quot;Stage two value&quot;),    { 0.0f, 1.0f }, 0.5f,      stageTwoValue,   {});</span></a>
-<a name="240"><span class="lineNum">     240 </span><span class="lineNoCov">          0 :     stageTwoTimeParam       = addParam (&quot;stageTwoTime&quot;,     TRANS(&quot;Stage two time&quot;),     { 0.0f, 1.0f }, 0.5f,      stageTwoTime,    {});</span></a>
-<a name="241"><span class="lineNum">     241 </span><span class="lineNoCov">          0 :     stageTwoCurveParam      = addParam (&quot;stageTwoCurve&quot;,    TRANS(&quot;Stage two curve&quot;),    { -0.5f, 0.5f }, 0.0f,     stageTwoCurve,   {});</span></a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineNoCov">          0 :     stageThreeValueParam    = addParam (&quot;stageThreeValue&quot;,  TRANS(&quot;Stage three value&quot;),  { 0.0f, 1.0f }, 0.5f,      stageThreeValue, {});</span></a>
-<a name="243"><span class="lineNum">     243 </span><span class="lineNoCov">          0 :     stageThreeTimeParam     = addParam (&quot;stageThreeTime&quot;,   TRANS(&quot;Stage three time&quot;),   { 0.0f, 1.0f }, 0.5f,      stageThreeTime,  {});</span></a>
-<a name="244"><span class="lineNum">     244 </span><span class="lineNoCov">          0 :     stageThreeCurveParam    = addParam (&quot;stageThreeCurve&quot;,  TRANS(&quot;Stage three curve&quot;),  { -0.5f, 0.5f }, 0.0f,     stageThreeCurve, {});</span></a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 :     stageFourValueParam     = addParam (&quot;stageFourValue&quot;,   TRANS(&quot;Stage four value&quot;),   { 0.0f, 1.0f }, 0.5f,      stageFourValue,  {});</span></a>
-<a name="246"><span class="lineNum">     246 </span><span class="lineNoCov">          0 :     stageFourTimeParam      = addParam (&quot;stageFourTime&quot;,    TRANS(&quot;Stage four time&quot;),    { 0.0f, 1.0f }, 0.5f,      stageFourTime,   {});</span></a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineNoCov">          0 :     stageFourCurveParam     = addParam (&quot;stageFourCurve&quot;,   TRANS(&quot;Stage four curve&quot;),   { -0.5f, 0.5f }, 0.0f,     stageFourCurve,  {});</span></a>
-<a name="248"><span class="lineNum">     248 </span>            : </a>
-<a name="249"><span class="lineNum">     249 </span><span class="lineNoCov">          0 :     changedTimer.setCallback ([this]</span></a>
-<a name="250"><span class="lineNum">     250 </span>            :                               {</a>
-<a name="251"><span class="lineNum">     251 </span><span class="lineNoCov">          0 :                                   changedTimer.stopTimer();</span></a>
-<a name="252"><span class="lineNum">     252 </span><span class="lineNoCov">          0 :                                   changed();</span></a>
-<a name="253"><span class="lineNum">     253 </span>            :                               });</a>
-<a name="254"><span class="lineNum">     254 </span>            : </a>
-<a name="255"><span class="lineNum">     255 </span><span class="lineNoCov">          0 :     state.addListener (this);</span></a>
-<a name="256"><span class="lineNum">     256 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :         return p;</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineNoCov">          0 :     };</span></a>
+<a name="229"><span class="lineNum">     229 </span>            : </a>
+<a name="230"><span class="lineNum">     230 </span>            :     using namespace ModifierCommon;</a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineNoCov">          0 :     numActivePointsParam    = addParam (&quot;numActivePoints&quot;,  TRANS(&quot;Num points&quot;),{ 1.0f, 4.0f, 1.0f }, 2.5f,                             numActivePoints,    {});</span></a>
+<a name="232"><span class="lineNum">     232 </span><span class="lineNoCov">          0 :     syncTypeParam           = addDiscreteParam (&quot;syncType&quot;, TRANS(&quot;Sync type&quot;), { 0.0f, (float)  getSyncTypeChoices().size() - 1 },     syncType,           getSyncTypeChoices());</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 :     rateParam               = addParam (&quot;rate&quot;,             TRANS(&quot;Rate&quot;),      { 0.01f, 50.0f }, 1.0f,                                 rate,               {});</span></a>
+<a name="234"><span class="lineNum">     234 </span><span class="lineNoCov">          0 :     rateTypeParam           = addDiscreteParam (&quot;rateType&quot;, TRANS(&quot;Rate Type&quot;), { 0.0f, (float) getRateTypeChoices().size() - 1 },      rateType,           getRateTypeChoices());</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineNoCov">          0 :     depthParam              = addParam (&quot;depth&quot;,            TRANS(&quot;Depth&quot;),     { 0.0f, 1.0f }, 0.5f,                                   depth,              {});</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineNoCov">          0 :     bipolarParam            = addDiscreteParam (&quot;biopolar&quot;, TRANS(&quot;Bipoloar&quot;),  { 0.0f, 1.0f },                                         bipolar,            { NEEDS_TRANS(&quot;Uni-polar&quot;), NEEDS_TRANS(&quot;Bi-polar&quot;) });</span></a>
+<a name="237"><span class="lineNum">     237 </span>            : </a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineNoCov">          0 :     stageZeroValueParam     = addParam (&quot;stageZeroValue&quot;,   TRANS(&quot;Stage zero value&quot;),   { 0.0f, 1.0f }, 0.5f,      stageZeroValue,  {});</span></a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineNoCov">          0 :     stageOneValueParam      = addParam (&quot;stageOneValue&quot;,    TRANS(&quot;Stage one value&quot;),    { 0.0f, 1.0f }, 0.5f,      stageOneValue,   {});</span></a>
+<a name="240"><span class="lineNum">     240 </span><span class="lineNoCov">          0 :     stageOneTimeParam       = addParam (&quot;stageOneTime&quot;,     TRANS(&quot;Stage one time&quot;),     { 0.0f, 1.0f }, 0.5f,      stageOneTime,    {});</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineNoCov">          0 :     stageOneCurveParam      = addParam (&quot;stageOneCurve&quot;,    TRANS(&quot;Stage one curve&quot;),    { -0.5f, 0.5f }, 0.0f,     stageOneCurve,   {});</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineNoCov">          0 :     stageTwoValueParam      = addParam (&quot;stageTwoValue&quot;,    TRANS(&quot;Stage two value&quot;),    { 0.0f, 1.0f }, 0.5f,      stageTwoValue,   {});</span></a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineNoCov">          0 :     stageTwoTimeParam       = addParam (&quot;stageTwoTime&quot;,     TRANS(&quot;Stage two time&quot;),     { 0.0f, 1.0f }, 0.5f,      stageTwoTime,    {});</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineNoCov">          0 :     stageTwoCurveParam      = addParam (&quot;stageTwoCurve&quot;,    TRANS(&quot;Stage two curve&quot;),    { -0.5f, 0.5f }, 0.0f,     stageTwoCurve,   {});</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 :     stageThreeValueParam    = addParam (&quot;stageThreeValue&quot;,  TRANS(&quot;Stage three value&quot;),  { 0.0f, 1.0f }, 0.5f,      stageThreeValue, {});</span></a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineNoCov">          0 :     stageThreeTimeParam     = addParam (&quot;stageThreeTime&quot;,   TRANS(&quot;Stage three time&quot;),   { 0.0f, 1.0f }, 0.5f,      stageThreeTime,  {});</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineNoCov">          0 :     stageThreeCurveParam    = addParam (&quot;stageThreeCurve&quot;,  TRANS(&quot;Stage three curve&quot;),  { -0.5f, 0.5f }, 0.0f,     stageThreeCurve, {});</span></a>
+<a name="248"><span class="lineNum">     248 </span><span class="lineNoCov">          0 :     stageFourValueParam     = addParam (&quot;stageFourValue&quot;,   TRANS(&quot;Stage four value&quot;),   { 0.0f, 1.0f }, 0.5f,      stageFourValue,  {});</span></a>
+<a name="249"><span class="lineNum">     249 </span><span class="lineNoCov">          0 :     stageFourTimeParam      = addParam (&quot;stageFourTime&quot;,    TRANS(&quot;Stage four time&quot;),    { 0.0f, 1.0f }, 0.5f,      stageFourTime,   {});</span></a>
+<a name="250"><span class="lineNum">     250 </span><span class="lineNoCov">          0 :     stageFourCurveParam     = addParam (&quot;stageFourCurve&quot;,   TRANS(&quot;Stage four curve&quot;),   { -0.5f, 0.5f }, 0.0f,     stageFourCurve,  {});</span></a>
+<a name="251"><span class="lineNum">     251 </span>            : </a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineNoCov">          0 :     changedTimer.setCallback ([this]</span></a>
+<a name="253"><span class="lineNum">     253 </span>            :                               {</a>
+<a name="254"><span class="lineNum">     254 </span><span class="lineNoCov">          0 :                                   changedTimer.stopTimer();</span></a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineNoCov">          0 :                                   changed();</span></a>
+<a name="256"><span class="lineNum">     256 </span>            :                               });</a>
 <a name="257"><span class="lineNum">     257 </span>            : </a>
-<a name="258"><span class="lineNum">     258 </span><span class="lineNoCov">          0 : BreakpointOscillatorModifier::~BreakpointOscillatorModifier()</span></a>
-<a name="259"><span class="lineNum">     259 </span>            : {</a>
-<a name="260"><span class="lineNum">     260 </span><span class="lineNoCov">          0 :     state.removeListener (this);</span></a>
-<a name="261"><span class="lineNum">     261 </span><span class="lineNoCov">          0 :     notifyListenersOfDeletion();</span></a>
-<a name="262"><span class="lineNum">     262 </span>            : </a>
-<a name="263"><span class="lineNum">     263 </span><span class="lineNoCov">          0 :     edit.removeModifierTimer (*modifierTimer);</span></a>
-<a name="264"><span class="lineNum">     264 </span>            : </a>
-<a name="265"><span class="lineNum">     265 </span><span class="lineNoCov">          0 :     for (auto p : getAutomatableParameters())</span></a>
-<a name="266"><span class="lineNum">     266 </span><span class="lineNoCov">          0 :         p-&gt;detachFromCurrentValue();</span></a>
+<a name="258"><span class="lineNum">     258 </span><span class="lineNoCov">          0 :     state.addListener (this);</span></a>
+<a name="259"><span class="lineNum">     259 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="260"><span class="lineNum">     260 </span>            : </a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineNoCov">          0 : BreakpointOscillatorModifier::~BreakpointOscillatorModifier()</span></a>
+<a name="262"><span class="lineNum">     262 </span>            : {</a>
+<a name="263"><span class="lineNum">     263 </span><span class="lineNoCov">          0 :     state.removeListener (this);</span></a>
+<a name="264"><span class="lineNum">     264 </span><span class="lineNoCov">          0 :     notifyListenersOfDeletion();</span></a>
+<a name="265"><span class="lineNum">     265 </span>            : </a>
+<a name="266"><span class="lineNum">     266 </span><span class="lineNoCov">          0 :     edit.removeModifierTimer (*modifierTimer);</span></a>
 <a name="267"><span class="lineNum">     267 </span>            : </a>
-<a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 :     deleteAutomatableParameters();</span></a>
-<a name="269"><span class="lineNum">     269 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 :     for (auto p : getAutomatableParameters())</span></a>
+<a name="269"><span class="lineNum">     269 </span><span class="lineNoCov">          0 :         p-&gt;detachFromCurrentValue();</span></a>
 <a name="270"><span class="lineNum">     270 </span>            : </a>
-<a name="271"><span class="lineNum">     271 </span><span class="lineNoCov">          0 : void BreakpointOscillatorModifier::initialise()</span></a>
-<a name="272"><span class="lineNum">     272 </span>            : {</a>
-<a name="273"><span class="lineNum">     273 </span>            :     // Do this here in case the audio code starts using the parameters before the constructor has finished</a>
-<a name="274"><span class="lineNum">     274 </span><span class="lineNoCov">          0 :     modifierTimer = std::make_unique&lt;BreakpointOscillatorModifierTimer&gt; (*this);</span></a>
-<a name="275"><span class="lineNum">     275 </span><span class="lineNoCov">          0 :     edit.addModifierTimer (*modifierTimer);</span></a>
-<a name="276"><span class="lineNum">     276 </span>            : </a>
-<a name="277"><span class="lineNum">     277 </span><span class="lineNoCov">          0 :     restoreChangedParametersFromState();</span></a>
-<a name="278"><span class="lineNum">     278 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="271"><span class="lineNum">     271 </span><span class="lineNoCov">          0 :     deleteAutomatableParameters();</span></a>
+<a name="272"><span class="lineNum">     272 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="273"><span class="lineNum">     273 </span>            : </a>
+<a name="274"><span class="lineNum">     274 </span><span class="lineNoCov">          0 : void BreakpointOscillatorModifier::initialise()</span></a>
+<a name="275"><span class="lineNum">     275 </span>            : {</a>
+<a name="276"><span class="lineNum">     276 </span>            :     // Do this here in case the audio code starts using the parameters before the constructor has finished</a>
+<a name="277"><span class="lineNum">     277 </span><span class="lineNoCov">          0 :     modifierTimer = std::make_unique&lt;BreakpointOscillatorModifierTimer&gt; (*this);</span></a>
+<a name="278"><span class="lineNum">     278 </span><span class="lineNoCov">          0 :     edit.addModifierTimer (*modifierTimer);</span></a>
 <a name="279"><span class="lineNum">     279 </span>            : </a>
-<a name="280"><span class="lineNum">     280 </span>            : //==============================================================================</a>
-<a name="281"><span class="lineNum">     281 </span><span class="lineNoCov">          0 : float BreakpointOscillatorModifier::getCurrentValue()</span></a>
-<a name="282"><span class="lineNum">     282 </span>            : {</a>
-<a name="283"><span class="lineNum">     283 </span><span class="lineNoCov">          0 :     return currentValue.load (std::memory_order_acquire);</span></a>
-<a name="284"><span class="lineNum">     284 </span>            : }</a>
-<a name="285"><span class="lineNum">     285 </span>            : </a>
-<a name="286"><span class="lineNum">     286 </span><span class="lineNoCov">          0 : float BreakpointOscillatorModifier::getCurrentEnvelopeValue() const noexcept</span></a>
-<a name="287"><span class="lineNum">     287 </span>            : {</a>
-<a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 :     return currentEnvelopeValue.load (std::memory_order_acquire);</span></a>
-<a name="289"><span class="lineNum">     289 </span>            : }</a>
-<a name="290"><span class="lineNum">     290 </span>            : </a>
-<a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 : float BreakpointOscillatorModifier::getCurrentPhase() const noexcept</span></a>
-<a name="292"><span class="lineNum">     292 </span>            : {</a>
-<a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">          0 :     return currentPhase.load (std::memory_order_acquire);</span></a>
-<a name="294"><span class="lineNum">     294 </span>            : }</a>
-<a name="295"><span class="lineNum">     295 </span>            : </a>
-<a name="296"><span class="lineNum">     296 </span><span class="lineNoCov">          0 : float BreakpointOscillatorModifier::getTotalTime() const</span></a>
-<a name="297"><span class="lineNum">     297 </span>            : {</a>
-<a name="298"><span class="lineNum">     298 </span><span class="lineNoCov">          0 :     return 1.0f;</span></a>
-<a name="299"><span class="lineNum">     299 </span>            : }</a>
-<a name="300"><span class="lineNum">     300 </span>            : </a>
-<a name="301"><span class="lineNum">     301 </span><span class="lineNoCov">          0 : AutomatableParameter::ModifierAssignment* BreakpointOscillatorModifier::createAssignment (const ValueTree&amp; v)</span></a>
-<a name="302"><span class="lineNum">     302 </span>            : {</a>
-<a name="303"><span class="lineNum">     303 </span><span class="lineNoCov">          0 :     return new Assignment (v, *this);</span></a>
-<a name="304"><span class="lineNum">     304 </span>            : }</a>
-<a name="305"><span class="lineNum">     305 </span>            : </a>
-<a name="306"><span class="lineNum">     306 </span><span class="lineNoCov">          0 : void BreakpointOscillatorModifier::applyToBuffer (const PluginRenderContext&amp; prc)</span></a>
-<a name="307"><span class="lineNum">     307 </span>            : {</a>
-<a name="308"><span class="lineNum">     308 </span><span class="lineNoCov">          0 :     if (prc.bufferForMidiMessages == nullptr)</span></a>
-<a name="309"><span class="lineNum">     309 </span>            :         return;</a>
-<a name="310"><span class="lineNum">     310 </span>            :     </a>
-<a name="311"><span class="lineNum">     311 </span><span class="lineNoCov">          0 :     for (auto&amp; m : *prc.bufferForMidiMessages)</span></a>
-<a name="312"><span class="lineNum">     312 </span><span class="lineNoCov">          0 :         if (m.isNoteOn())</span></a>
-<a name="313"><span class="lineNum">     313 </span><span class="lineNoCov">          0 :             modifierTimer-&gt;resync (prc.bufferNumSamples / getSampleRate());</span></a>
-<a name="314"><span class="lineNum">     314 </span>            : }</a>
-<a name="315"><span class="lineNum">     315 </span>            : </a>
-<a name="316"><span class="lineNum">     316 </span>            : //==============================================================================</a>
-<a name="317"><span class="lineNum">     317 </span><span class="lineNoCov">          0 : BreakpointOscillatorModifier::Assignment::Assignment (const juce::ValueTree&amp; v, const BreakpointOscillatorModifier&amp; bom)</span></a>
-<a name="318"><span class="lineNum">     318 </span>            :     : AutomatableParameter::ModifierAssignment (bom.edit, v),</a>
-<a name="319"><span class="lineNum">     319 </span><span class="lineNoCov">          0 :       breakpointOscillatorModifierID (bom.itemID)</span></a>
-<a name="320"><span class="lineNum">     320 </span>            : {</a>
-<a name="321"><span class="lineNum">     321 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="322"><span class="lineNum">     322 </span>            : </a>
-<a name="323"><span class="lineNum">     323 </span><span class="lineNoCov">          0 : bool BreakpointOscillatorModifier::Assignment::isForModifierSource (const ModifierSource&amp; source) const</span></a>
-<a name="324"><span class="lineNum">     324 </span>            : {</a>
-<a name="325"><span class="lineNum">     325 </span><span class="lineNoCov">          0 :     if (auto* mod = dynamic_cast&lt;const BreakpointOscillatorModifier*&gt; (&amp;source))</span></a>
-<a name="326"><span class="lineNum">     326 </span><span class="lineNoCov">          0 :         return mod-&gt;itemID == breakpointOscillatorModifierID;</span></a>
-<a name="327"><span class="lineNum">     327 </span>            : </a>
-<a name="328"><span class="lineNum">     328 </span>            :     return false;</a>
-<a name="329"><span class="lineNum">     329 </span>            : }</a>
+<a name="280"><span class="lineNum">     280 </span><span class="lineNoCov">          0 :     restoreChangedParametersFromState();</span></a>
+<a name="281"><span class="lineNum">     281 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="282"><span class="lineNum">     282 </span>            : </a>
+<a name="283"><span class="lineNum">     283 </span>            : //==============================================================================</a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineNoCov">          0 : float BreakpointOscillatorModifier::getCurrentValue()</span></a>
+<a name="285"><span class="lineNum">     285 </span>            : {</a>
+<a name="286"><span class="lineNum">     286 </span><span class="lineNoCov">          0 :     return currentValue.load (std::memory_order_acquire);</span></a>
+<a name="287"><span class="lineNum">     287 </span>            : }</a>
+<a name="288"><span class="lineNum">     288 </span>            : </a>
+<a name="289"><span class="lineNum">     289 </span><span class="lineNoCov">          0 : float BreakpointOscillatorModifier::getCurrentEnvelopeValue() const noexcept</span></a>
+<a name="290"><span class="lineNum">     290 </span>            : {</a>
+<a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :     return currentEnvelopeValue.load (std::memory_order_acquire);</span></a>
+<a name="292"><span class="lineNum">     292 </span>            : }</a>
+<a name="293"><span class="lineNum">     293 </span>            : </a>
+<a name="294"><span class="lineNum">     294 </span><span class="lineNoCov">          0 : float BreakpointOscillatorModifier::getCurrentPhase() const noexcept</span></a>
+<a name="295"><span class="lineNum">     295 </span>            : {</a>
+<a name="296"><span class="lineNum">     296 </span><span class="lineNoCov">          0 :     return currentPhase.load (std::memory_order_acquire);</span></a>
+<a name="297"><span class="lineNum">     297 </span>            : }</a>
+<a name="298"><span class="lineNum">     298 </span>            : </a>
+<a name="299"><span class="lineNum">     299 </span><span class="lineNoCov">          0 : float BreakpointOscillatorModifier::getTotalTime() const</span></a>
+<a name="300"><span class="lineNum">     300 </span>            : {</a>
+<a name="301"><span class="lineNum">     301 </span><span class="lineNoCov">          0 :     return 1.0f;</span></a>
+<a name="302"><span class="lineNum">     302 </span>            : }</a>
+<a name="303"><span class="lineNum">     303 </span>            : </a>
+<a name="304"><span class="lineNum">     304 </span><span class="lineNoCov">          0 : AutomatableParameter::ModifierAssignment* BreakpointOscillatorModifier::createAssignment (const juce::ValueTree&amp; v)</span></a>
+<a name="305"><span class="lineNum">     305 </span>            : {</a>
+<a name="306"><span class="lineNum">     306 </span><span class="lineNoCov">          0 :     return new Assignment (v, *this);</span></a>
+<a name="307"><span class="lineNum">     307 </span>            : }</a>
+<a name="308"><span class="lineNum">     308 </span>            : </a>
+<a name="309"><span class="lineNum">     309 </span><span class="lineNoCov">          0 : void BreakpointOscillatorModifier::applyToBuffer (const PluginRenderContext&amp; prc)</span></a>
+<a name="310"><span class="lineNum">     310 </span>            : {</a>
+<a name="311"><span class="lineNum">     311 </span><span class="lineNoCov">          0 :     if (prc.bufferForMidiMessages == nullptr)</span></a>
+<a name="312"><span class="lineNum">     312 </span>            :         return;</a>
+<a name="313"><span class="lineNum">     313 </span>            :     </a>
+<a name="314"><span class="lineNum">     314 </span><span class="lineNoCov">          0 :     for (auto&amp; m : *prc.bufferForMidiMessages)</span></a>
+<a name="315"><span class="lineNum">     315 </span><span class="lineNoCov">          0 :         if (m.isNoteOn())</span></a>
+<a name="316"><span class="lineNum">     316 </span><span class="lineNoCov">          0 :             modifierTimer-&gt;resync (prc.bufferNumSamples / getSampleRate());</span></a>
+<a name="317"><span class="lineNum">     317 </span>            : }</a>
+<a name="318"><span class="lineNum">     318 </span>            : </a>
+<a name="319"><span class="lineNum">     319 </span>            : //==============================================================================</a>
+<a name="320"><span class="lineNum">     320 </span><span class="lineNoCov">          0 : BreakpointOscillatorModifier::Assignment::Assignment (const juce::ValueTree&amp; v, const BreakpointOscillatorModifier&amp; bom)</span></a>
+<a name="321"><span class="lineNum">     321 </span>            :     : AutomatableParameter::ModifierAssignment (bom.edit, v),</a>
+<a name="322"><span class="lineNum">     322 </span><span class="lineNoCov">          0 :       breakpointOscillatorModifierID (bom.itemID)</span></a>
+<a name="323"><span class="lineNum">     323 </span>            : {</a>
+<a name="324"><span class="lineNum">     324 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="325"><span class="lineNum">     325 </span>            : </a>
+<a name="326"><span class="lineNum">     326 </span><span class="lineNoCov">          0 : bool BreakpointOscillatorModifier::Assignment::isForModifierSource (const ModifierSource&amp; source) const</span></a>
+<a name="327"><span class="lineNum">     327 </span>            : {</a>
+<a name="328"><span class="lineNum">     328 </span><span class="lineNoCov">          0 :     if (auto* mod = dynamic_cast&lt;const BreakpointOscillatorModifier*&gt; (&amp;source))</span></a>
+<a name="329"><span class="lineNum">     329 </span><span class="lineNoCov">          0 :         return mod-&gt;itemID == breakpointOscillatorModifierID;</span></a>
 <a name="330"><span class="lineNum">     330 </span>            : </a>
-<a name="331"><span class="lineNum">     331 </span><span class="lineNoCov">          0 : BreakpointOscillatorModifier::Ptr BreakpointOscillatorModifier::Assignment::getModifier() const</span></a>
-<a name="332"><span class="lineNum">     332 </span>            : {</a>
-<a name="333"><span class="lineNum">     333 </span><span class="lineNoCov">          0 :     if (auto mod = findModifierTypeForID&lt;BreakpointOscillatorModifier&gt; (edit, breakpointOscillatorModifierID))</span></a>
-<a name="334"><span class="lineNum">     334 </span>            :         return mod;</a>
-<a name="335"><span class="lineNum">     335 </span>            : </a>
-<a name="336"><span class="lineNum">     336 </span><span class="lineNoCov">          0 :     return {};</span></a>
-<a name="337"><span class="lineNum">     337 </span>            : }</a>
+<a name="331"><span class="lineNum">     331 </span>            :     return false;</a>
+<a name="332"><span class="lineNum">     332 </span>            : }</a>
+<a name="333"><span class="lineNum">     333 </span>            : </a>
+<a name="334"><span class="lineNum">     334 </span><span class="lineNoCov">          0 : BreakpointOscillatorModifier::Ptr BreakpointOscillatorModifier::Assignment::getModifier() const</span></a>
+<a name="335"><span class="lineNum">     335 </span>            : {</a>
+<a name="336"><span class="lineNum">     336 </span><span class="lineNoCov">          0 :     if (auto mod = findModifierTypeForID&lt;BreakpointOscillatorModifier&gt; (edit, breakpointOscillatorModifierID))</span></a>
+<a name="337"><span class="lineNum">     337 </span>            :         return mod;</a>
 <a name="338"><span class="lineNum">     338 </span>            : </a>
-<a name="339"><span class="lineNum">     339 </span>            : //==============================================================================</a>
-<a name="340"><span class="lineNum">     340 </span><span class="lineNoCov">          0 : BreakpointOscillatorModifier::Stage BreakpointOscillatorModifier::getStage (int index) const</span></a>
-<a name="341"><span class="lineNum">     341 </span>            : {</a>
-<a name="342"><span class="lineNum">     342 </span>            :     jassert (isPositiveAndNotGreaterThan (index, 4));</a>
-<a name="343"><span class="lineNum">     343 </span><span class="lineNoCov">          0 :     switch (index)</span></a>
-<a name="344"><span class="lineNum">     344 </span>            :     {</a>
-<a name="345"><span class="lineNum">     345 </span><span class="lineNoCov">          0 :         case 0: return { stageZeroValueParam.get() };</span></a>
-<a name="346"><span class="lineNum">     346 </span><span class="lineNoCov">          0 :         case 1: return { stageOneValueParam.get(),      stageOneTimeParam.get(),    stageOneCurveParam.get() };</span></a>
-<a name="347"><span class="lineNum">     347 </span><span class="lineNoCov">          0 :         case 2: return { stageTwoValueParam.get(),      stageTwoTimeParam.get(),    stageTwoCurveParam.get() };</span></a>
-<a name="348"><span class="lineNum">     348 </span><span class="lineNoCov">          0 :         case 3: return { stageThreeValueParam.get(),    stageThreeTimeParam.get(),  stageThreeCurveParam.get() };</span></a>
-<a name="349"><span class="lineNum">     349 </span><span class="lineNoCov">          0 :         case 4: return { stageFourValueParam.get(),     stageFourTimeParam.get(),   stageFourCurveParam.get() };</span></a>
-<a name="350"><span class="lineNum">     350 </span><span class="lineNoCov">          0 :         default: jassertfalse; return {};</span></a>
-<a name="351"><span class="lineNum">     351 </span>            :     };</a>
-<a name="352"><span class="lineNum">     352 </span>            : }</a>
-<a name="353"><span class="lineNum">     353 </span>            : </a>
-<a name="354"><span class="lineNum">     354 </span><span class="lineNoCov">          0 : std::array&lt;BreakpointOscillatorModifier::Section, 5&gt; BreakpointOscillatorModifier::getAllSections() const</span></a>
-<a name="355"><span class="lineNum">     355 </span>            : {</a>
-<a name="356"><span class="lineNum">     356 </span><span class="lineNoCov">          0 :     auto getVal = [] (auto&amp; p) -&gt; float { return p-&gt;getCurrentValue(); };</span></a>
-<a name="357"><span class="lineNum">     357 </span>            : </a>
-<a name="358"><span class="lineNum">     358 </span>            :     return {{</a>
-<a name="359"><span class="lineNum">     359 </span>            :         { getVal (stageZeroValueParam),  0.0f,                            0.0f },</a>
-<a name="360"><span class="lineNum">     360 </span>            :         { getVal (stageOneValueParam),   getVal (stageOneTimeParam),      getVal (stageOneCurveParam) },</a>
-<a name="361"><span class="lineNum">     361 </span>            :         { getVal (stageTwoValueParam),   getVal (stageTwoTimeParam),      getVal (stageTwoCurveParam) },</a>
-<a name="362"><span class="lineNum">     362 </span>            :         { getVal (stageThreeValueParam), getVal (stageThreeTimeParam),    getVal (stageThreeCurveParam) },</a>
-<a name="363"><span class="lineNum">     363 </span>            :         { getVal (stageFourValueParam),  getVal (stageFourTimeParam),     getVal (stageFourCurveParam) }</a>
-<a name="364"><span class="lineNum">     364 </span><span class="lineNoCov">          0 :     }};</span></a>
-<a name="365"><span class="lineNum">     365 </span>            : }</a>
-<a name="366"><span class="lineNum">     366 </span>            : </a>
-<a name="367"><span class="lineNum">     367 </span><span class="lineNoCov">          0 : std::pair&lt;BreakpointOscillatorModifier::Section, BreakpointOscillatorModifier::Section&gt; BreakpointOscillatorModifier::getSectionsSurrounding (float time) const</span></a>
-<a name="368"><span class="lineNum">     368 </span>            : {</a>
-<a name="369"><span class="lineNum">     369 </span><span class="lineNoCov">          0 :     const auto sections = getAllSections();</span></a>
-<a name="370"><span class="lineNum">     370 </span><span class="lineNoCov">          0 :     const size_t numPoints = (size_t) getIntParamValue (*numActivePointsParam);</span></a>
-<a name="371"><span class="lineNum">     371 </span>            :     jassert (numPoints &lt; sections.size());</a>
-<a name="372"><span class="lineNum">     372 </span>            : </a>
-<a name="373"><span class="lineNum">     373 </span><span class="lineNoCov">          0 :     for (size_t i = 1; i &lt;= numPoints; ++i)</span></a>
-<a name="374"><span class="lineNum">     374 </span><span class="lineNoCov">          0 :         if (sections[i].time &gt; time)</span></a>
-<a name="375"><span class="lineNum">     375 </span><span class="lineNoCov">          0 :             return std::make_pair (sections[i - 1], sections[i]);</span></a>
-<a name="376"><span class="lineNum">     376 </span>            : </a>
-<a name="377"><span class="lineNum">     377 </span><span class="lineNoCov">          0 :     auto dummyEndSection = sections[numPoints];</span></a>
-<a name="378"><span class="lineNum">     378 </span>            :     dummyEndSection.time = 1.0f;</a>
+<a name="339"><span class="lineNum">     339 </span><span class="lineNoCov">          0 :     return {};</span></a>
+<a name="340"><span class="lineNum">     340 </span>            : }</a>
+<a name="341"><span class="lineNum">     341 </span>            : </a>
+<a name="342"><span class="lineNum">     342 </span>            : //==============================================================================</a>
+<a name="343"><span class="lineNum">     343 </span><span class="lineNoCov">          0 : BreakpointOscillatorModifier::Stage BreakpointOscillatorModifier::getStage (int index) const</span></a>
+<a name="344"><span class="lineNum">     344 </span>            : {</a>
+<a name="345"><span class="lineNum">     345 </span>            :     jassert (isPositiveAndNotGreaterThan (index, 4));</a>
+<a name="346"><span class="lineNum">     346 </span><span class="lineNoCov">          0 :     switch (index)</span></a>
+<a name="347"><span class="lineNum">     347 </span>            :     {</a>
+<a name="348"><span class="lineNum">     348 </span><span class="lineNoCov">          0 :         case 0: return { stageZeroValueParam.get() };</span></a>
+<a name="349"><span class="lineNum">     349 </span><span class="lineNoCov">          0 :         case 1: return { stageOneValueParam.get(),      stageOneTimeParam.get(),    stageOneCurveParam.get() };</span></a>
+<a name="350"><span class="lineNum">     350 </span><span class="lineNoCov">          0 :         case 2: return { stageTwoValueParam.get(),      stageTwoTimeParam.get(),    stageTwoCurveParam.get() };</span></a>
+<a name="351"><span class="lineNum">     351 </span><span class="lineNoCov">          0 :         case 3: return { stageThreeValueParam.get(),    stageThreeTimeParam.get(),  stageThreeCurveParam.get() };</span></a>
+<a name="352"><span class="lineNum">     352 </span><span class="lineNoCov">          0 :         case 4: return { stageFourValueParam.get(),     stageFourTimeParam.get(),   stageFourCurveParam.get() };</span></a>
+<a name="353"><span class="lineNum">     353 </span><span class="lineNoCov">          0 :         default: jassertfalse; return {};</span></a>
+<a name="354"><span class="lineNum">     354 </span>            :     };</a>
+<a name="355"><span class="lineNum">     355 </span>            : }</a>
+<a name="356"><span class="lineNum">     356 </span>            : </a>
+<a name="357"><span class="lineNum">     357 </span><span class="lineNoCov">          0 : std::array&lt;BreakpointOscillatorModifier::Section, 5&gt; BreakpointOscillatorModifier::getAllSections() const</span></a>
+<a name="358"><span class="lineNum">     358 </span>            : {</a>
+<a name="359"><span class="lineNum">     359 </span><span class="lineNoCov">          0 :     auto getVal = [] (auto&amp; p) -&gt; float { return p-&gt;getCurrentValue(); };</span></a>
+<a name="360"><span class="lineNum">     360 </span>            : </a>
+<a name="361"><span class="lineNum">     361 </span>            :     return {{</a>
+<a name="362"><span class="lineNum">     362 </span>            :         { getVal (stageZeroValueParam),  0.0f,                            0.0f },</a>
+<a name="363"><span class="lineNum">     363 </span>            :         { getVal (stageOneValueParam),   getVal (stageOneTimeParam),      getVal (stageOneCurveParam) },</a>
+<a name="364"><span class="lineNum">     364 </span>            :         { getVal (stageTwoValueParam),   getVal (stageTwoTimeParam),      getVal (stageTwoCurveParam) },</a>
+<a name="365"><span class="lineNum">     365 </span>            :         { getVal (stageThreeValueParam), getVal (stageThreeTimeParam),    getVal (stageThreeCurveParam) },</a>
+<a name="366"><span class="lineNum">     366 </span>            :         { getVal (stageFourValueParam),  getVal (stageFourTimeParam),     getVal (stageFourCurveParam) }</a>
+<a name="367"><span class="lineNum">     367 </span><span class="lineNoCov">          0 :     }};</span></a>
+<a name="368"><span class="lineNum">     368 </span>            : }</a>
+<a name="369"><span class="lineNum">     369 </span>            : </a>
+<a name="370"><span class="lineNum">     370 </span><span class="lineNoCov">          0 : std::pair&lt;BreakpointOscillatorModifier::Section, BreakpointOscillatorModifier::Section&gt; BreakpointOscillatorModifier::getSectionsSurrounding (float time) const</span></a>
+<a name="371"><span class="lineNum">     371 </span>            : {</a>
+<a name="372"><span class="lineNum">     372 </span><span class="lineNoCov">          0 :     const auto sections = getAllSections();</span></a>
+<a name="373"><span class="lineNum">     373 </span><span class="lineNoCov">          0 :     const size_t numPoints = (size_t) getIntParamValue (*numActivePointsParam);</span></a>
+<a name="374"><span class="lineNum">     374 </span>            :     jassert (numPoints &lt; sections.size());</a>
+<a name="375"><span class="lineNum">     375 </span>            : </a>
+<a name="376"><span class="lineNum">     376 </span><span class="lineNoCov">          0 :     for (size_t i = 1; i &lt;= numPoints; ++i)</span></a>
+<a name="377"><span class="lineNum">     377 </span><span class="lineNoCov">          0 :         if (sections[i].time &gt; time)</span></a>
+<a name="378"><span class="lineNum">     378 </span><span class="lineNoCov">          0 :             return std::make_pair (sections[i - 1], sections[i]);</span></a>
 <a name="379"><span class="lineNum">     379 </span>            : </a>
-<a name="380"><span class="lineNum">     380 </span>            :     return std::make_pair (sections[numPoints], dummyEndSection);</a>
-<a name="381"><span class="lineNum">     381 </span>            : }</a>
+<a name="380"><span class="lineNum">     380 </span><span class="lineNoCov">          0 :     auto dummyEndSection = sections[numPoints];</span></a>
+<a name="381"><span class="lineNum">     381 </span>            :     dummyEndSection.time = 1.0f;</a>
 <a name="382"><span class="lineNum">     382 </span>            : </a>
-<a name="383"><span class="lineNum">     383 </span>            : namespace BreakpointInterpolation</a>
-<a name="384"><span class="lineNum">     384 </span>            : {</a>
-<a name="385"><span class="lineNum">     385 </span>            :     constexpr float linearInterpolate (float x1, float y1, float x2, float y2, float x)</a>
-<a name="386"><span class="lineNum">     386 </span>            :     {</a>
-<a name="387"><span class="lineNum">     387 </span><span class="lineNoCov">          0 :         return (y1 * (x2 - x) + y2 * (x - x1)) / (x2 - x1);</span></a>
-<a name="388"><span class="lineNum">     388 </span>            :     }</a>
-<a name="389"><span class="lineNum">     389 </span>            : </a>
-<a name="390"><span class="lineNum">     390 </span>            :     template&lt;typename Type&gt;</a>
-<a name="391"><span class="lineNum">     391 </span><span class="lineNoCov">          0 :     static Type quadraticInterpolate (Type x, Point&lt;Type&gt; startPoint, Point&lt;Type&gt; endPoint, Type curve)</span></a>
-<a name="392"><span class="lineNum">     392 </span>            :     {</a>
-<a name="393"><span class="lineNum">     393 </span><span class="lineNoCov">          0 :         auto cp = BezierHelpers::getQuadraticControlPoint (startPoint, endPoint, curve);</span></a>
-<a name="394"><span class="lineNum">     394 </span><span class="lineNoCov">          0 :         return BezierHelpers::getQuadraticYFromX (x, startPoint, cp, endPoint);</span></a>
-<a name="395"><span class="lineNum">     395 </span>            :     }</a>
-<a name="396"><span class="lineNum">     396 </span>            : }</a>
-<a name="397"><span class="lineNum">     397 </span>            : </a>
-<a name="398"><span class="lineNum">     398 </span><span class="lineNoCov">          0 : void BreakpointOscillatorModifier::setPhase (float newPhase)</span></a>
-<a name="399"><span class="lineNum">     399 </span>            : {</a>
-<a name="400"><span class="lineNum">     400 </span>            :     // Calculate the total time</a>
-<a name="401"><span class="lineNum">     401 </span>            :     // Find the time for that phase</a>
-<a name="402"><span class="lineNum">     402 </span>            :     // Find the sections before and after that time</a>
-<a name="403"><span class="lineNum">     403 </span>            :     // Skew the time based on the curve</a>
-<a name="404"><span class="lineNum">     404 </span>            :     // Interpolate the value between those two</a>
-<a name="405"><span class="lineNum">     405 </span>            :     // Multiply by depth</a>
-<a name="406"><span class="lineNum">     406 </span>            :     // If bipolar, scale and shift</a>
-<a name="407"><span class="lineNum">     407 </span>            : </a>
-<a name="408"><span class="lineNum">     408 </span>            :     using namespace BreakpointInterpolation;</a>
-<a name="409"><span class="lineNum">     409 </span>            :     jassert (isPositiveAndBelow (newPhase, 1.0f));</a>
-<a name="410"><span class="lineNum">     410 </span>            :     currentPhase.store (newPhase, std::memory_order_release);</a>
-<a name="411"><span class="lineNum">     411 </span>            : </a>
-<a name="412"><span class="lineNum">     412 </span>            :     const float totalTime = getTotalTime();</a>
-<a name="413"><span class="lineNum">     413 </span>            :     float timeForPhase = totalTime * newPhase;</a>
+<a name="383"><span class="lineNum">     383 </span>            :     return std::make_pair (sections[numPoints], dummyEndSection);</a>
+<a name="384"><span class="lineNum">     384 </span>            : }</a>
+<a name="385"><span class="lineNum">     385 </span>            : </a>
+<a name="386"><span class="lineNum">     386 </span>            : namespace BreakpointInterpolation</a>
+<a name="387"><span class="lineNum">     387 </span>            : {</a>
+<a name="388"><span class="lineNum">     388 </span>            :     constexpr float linearInterpolate (float x1, float y1, float x2, float y2, float x)</a>
+<a name="389"><span class="lineNum">     389 </span>            :     {</a>
+<a name="390"><span class="lineNum">     390 </span><span class="lineNoCov">          0 :         return (y1 * (x2 - x) + y2 * (x - x1)) / (x2 - x1);</span></a>
+<a name="391"><span class="lineNum">     391 </span>            :     }</a>
+<a name="392"><span class="lineNum">     392 </span>            : </a>
+<a name="393"><span class="lineNum">     393 </span>            :     template&lt;typename Type&gt;</a>
+<a name="394"><span class="lineNum">     394 </span><span class="lineNoCov">          0 :     static Type quadraticInterpolate (Type x, Point&lt;Type&gt; startPoint, Point&lt;Type&gt; endPoint, Type curve)</span></a>
+<a name="395"><span class="lineNum">     395 </span>            :     {</a>
+<a name="396"><span class="lineNum">     396 </span><span class="lineNoCov">          0 :         auto cp = BezierHelpers::getQuadraticControlPoint (startPoint, endPoint, curve);</span></a>
+<a name="397"><span class="lineNum">     397 </span><span class="lineNoCov">          0 :         return BezierHelpers::getQuadraticYFromX (x, startPoint, cp, endPoint);</span></a>
+<a name="398"><span class="lineNum">     398 </span>            :     }</a>
+<a name="399"><span class="lineNum">     399 </span>            : }</a>
+<a name="400"><span class="lineNum">     400 </span>            : </a>
+<a name="401"><span class="lineNum">     401 </span><span class="lineNoCov">          0 : void BreakpointOscillatorModifier::setPhase (float newPhase)</span></a>
+<a name="402"><span class="lineNum">     402 </span>            : {</a>
+<a name="403"><span class="lineNum">     403 </span>            :     // Calculate the total time</a>
+<a name="404"><span class="lineNum">     404 </span>            :     // Find the time for that phase</a>
+<a name="405"><span class="lineNum">     405 </span>            :     // Find the sections before and after that time</a>
+<a name="406"><span class="lineNum">     406 </span>            :     // Skew the time based on the curve</a>
+<a name="407"><span class="lineNum">     407 </span>            :     // Interpolate the value between those two</a>
+<a name="408"><span class="lineNum">     408 </span>            :     // Multiply by depth</a>
+<a name="409"><span class="lineNum">     409 </span>            :     // If bipolar, scale and shift</a>
+<a name="410"><span class="lineNum">     410 </span>            : </a>
+<a name="411"><span class="lineNum">     411 </span>            :     using namespace BreakpointInterpolation;</a>
+<a name="412"><span class="lineNum">     412 </span>            :     jassert (isPositiveAndBelow (newPhase, 1.0f));</a>
+<a name="413"><span class="lineNum">     413 </span>            :     currentPhase.store (newPhase, std::memory_order_release);</a>
 <a name="414"><span class="lineNum">     414 </span>            : </a>
-<a name="415"><span class="lineNum">     415 </span><span class="lineNoCov">          0 :     auto surroundingSections = getSectionsSurrounding (timeForPhase);</span></a>
-<a name="416"><span class="lineNum">     416 </span>            :     auto&amp; s1 = surroundingSections.first;</a>
-<a name="417"><span class="lineNum">     417 </span>            :     auto&amp; s2 = surroundingSections.second;</a>
-<a name="418"><span class="lineNum">     418 </span><span class="lineNoCov">          0 :     const float curve = s2.curve;</span></a>
-<a name="419"><span class="lineNum">     419 </span>            : </a>
-<a name="420"><span class="lineNum">     420 </span>            :     float newValue = 0.0f;</a>
-<a name="421"><span class="lineNum">     421 </span>            : </a>
-<a name="422"><span class="lineNum">     422 </span><span class="lineNoCov">          0 :     if (curve == 0.0f)</span></a>
-<a name="423"><span class="lineNum">     423 </span>            :         newValue = linearInterpolate (s1.time, s1.value, s2.time, s2.value, timeForPhase);</a>
-<a name="424"><span class="lineNum">     424 </span>            :     else</a>
-<a name="425"><span class="lineNum">     425 </span><span class="lineNoCov">          0 :         newValue = quadraticInterpolate (timeForPhase, { s1.time, s1.value }, { s2.time, s2.value }, curve);</span></a>
-<a name="426"><span class="lineNum">     426 </span>            : </a>
-<a name="427"><span class="lineNum">     427 </span>            :     currentEnvelopeValue.store (newValue, std::memory_order_release);</a>
-<a name="428"><span class="lineNum">     428 </span>            : </a>
-<a name="429"><span class="lineNum">     429 </span><span class="lineNoCov">          0 :     newValue = newValue * depthParam-&gt;getCurrentValue();</span></a>
-<a name="430"><span class="lineNum">     430 </span>            : </a>
-<a name="431"><span class="lineNum">     431 </span><span class="lineNoCov">          0 :     if (getBoolParamValue (*bipolarParam))</span></a>
-<a name="432"><span class="lineNum">     432 </span><span class="lineNoCov">          0 :         newValue = (newValue * 2.0f) - 1.0f;</span></a>
+<a name="415"><span class="lineNum">     415 </span>            :     const float totalTime = getTotalTime();</a>
+<a name="416"><span class="lineNum">     416 </span>            :     float timeForPhase = totalTime * newPhase;</a>
+<a name="417"><span class="lineNum">     417 </span>            : </a>
+<a name="418"><span class="lineNum">     418 </span><span class="lineNoCov">          0 :     auto surroundingSections = getSectionsSurrounding (timeForPhase);</span></a>
+<a name="419"><span class="lineNum">     419 </span>            :     auto&amp; s1 = surroundingSections.first;</a>
+<a name="420"><span class="lineNum">     420 </span>            :     auto&amp; s2 = surroundingSections.second;</a>
+<a name="421"><span class="lineNum">     421 </span><span class="lineNoCov">          0 :     const float curve = s2.curve;</span></a>
+<a name="422"><span class="lineNum">     422 </span>            : </a>
+<a name="423"><span class="lineNum">     423 </span>            :     float newValue = 0.0f;</a>
+<a name="424"><span class="lineNum">     424 </span>            : </a>
+<a name="425"><span class="lineNum">     425 </span><span class="lineNoCov">          0 :     if (curve == 0.0f)</span></a>
+<a name="426"><span class="lineNum">     426 </span>            :         newValue = linearInterpolate (s1.time, s1.value, s2.time, s2.value, timeForPhase);</a>
+<a name="427"><span class="lineNum">     427 </span>            :     else</a>
+<a name="428"><span class="lineNum">     428 </span><span class="lineNoCov">          0 :         newValue = quadraticInterpolate (timeForPhase, { s1.time, s1.value }, { s2.time, s2.value }, curve);</span></a>
+<a name="429"><span class="lineNum">     429 </span>            : </a>
+<a name="430"><span class="lineNum">     430 </span>            :     currentEnvelopeValue.store (newValue, std::memory_order_release);</a>
+<a name="431"><span class="lineNum">     431 </span>            : </a>
+<a name="432"><span class="lineNum">     432 </span><span class="lineNoCov">          0 :     newValue = newValue * depthParam-&gt;getCurrentValue();</span></a>
 <a name="433"><span class="lineNum">     433 </span>            : </a>
-<a name="434"><span class="lineNum">     434 </span>            :     jassert (! std::isnan (newValue));</a>
-<a name="435"><span class="lineNum">     435 </span>            :     currentValue.store (newValue, std::memory_order_release);</a>
-<a name="436"><span class="lineNum">     436 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="437"><span class="lineNum">     437 </span>            : </a>
-<a name="438"><span class="lineNum">     438 </span><span class="lineNoCov">          0 : void BreakpointOscillatorModifier::valueTreeChanged()</span></a>
-<a name="439"><span class="lineNum">     439 </span>            : {</a>
-<a name="440"><span class="lineNum">     440 </span><span class="lineNoCov">          0 :     if (! changedTimer.isTimerRunning())</span></a>
-<a name="441"><span class="lineNum">     441 </span><span class="lineNoCov">          0 :         changedTimer.startTimerHz (30);</span></a>
-<a name="442"><span class="lineNum">     442 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="443"><span class="lineNum">     443 </span>            : </a>
-<a name="444"><span class="lineNum">     444 </span>            : }</a>
+<a name="434"><span class="lineNum">     434 </span><span class="lineNoCov">          0 :     if (getBoolParamValue (*bipolarParam))</span></a>
+<a name="435"><span class="lineNum">     435 </span><span class="lineNoCov">          0 :         newValue = (newValue * 2.0f) - 1.0f;</span></a>
+<a name="436"><span class="lineNum">     436 </span>            : </a>
+<a name="437"><span class="lineNum">     437 </span>            :     jassert (! std::isnan (newValue));</a>
+<a name="438"><span class="lineNum">     438 </span>            :     currentValue.store (newValue, std::memory_order_release);</a>
+<a name="439"><span class="lineNum">     439 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="440"><span class="lineNum">     440 </span>            : </a>
+<a name="441"><span class="lineNum">     441 </span><span class="lineNoCov">          0 : void BreakpointOscillatorModifier::valueTreeChanged()</span></a>
+<a name="442"><span class="lineNum">     442 </span>            : {</a>
+<a name="443"><span class="lineNum">     443 </span><span class="lineNoCov">          0 :     if (! changedTimer.isTimerRunning())</span></a>
+<a name="444"><span class="lineNum">     444 </span><span class="lineNoCov">          0 :         changedTimer.startTimerHz (30);</span></a>
+<a name="445"><span class="lineNum">     445 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="446"><span class="lineNum">     446 </span>            : </a>
+<a name="447"><span class="lineNum">     447 </span>            : }</a>
 </pre>
       </td>
     </tr>

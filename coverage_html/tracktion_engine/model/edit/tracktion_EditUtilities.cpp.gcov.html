@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">20</td>
@@ -281,7 +281,7 @@
 <a name="219"><span class="lineNum">     219 </span>            : </a>
 <a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 :     if (auto t = c.getClipTrack())</span></a>
 <a name="221"><span class="lineNum">     221 </span>            :     {</a>
-<a name="222"><span class="lineNum">     222 </span>            :         jassert (! t-&gt;state.getChildWithProperty (IDs::id, newClipID.toVar()).isValid());</a>
+<a name="222"><span class="lineNum">     222 </span>            :         jassert (! t-&gt;state.getChildWithProperty (IDs::id, newClipID).isValid());</a>
 <a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :         t-&gt;state.appendChild (n, c.getUndoManager());</span></a>
 <a name="224"><span class="lineNum">     224 </span>            : </a>
 <a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :         if (auto newClip = t-&gt;findClipForID (newClipID))</span></a>
@@ -830,8 +830,8 @@
 <a name="768"><span class="lineNum">     768 </span><span class="lineNoCov">          0 :         list.addIfNotAlreadyThere (p);</span></a>
 <a name="769"><span class="lineNum">     769 </span>            : </a>
 <a name="770"><span class="lineNum">     770 </span><span class="lineCov">       7862 :     for (auto r : edit.getRackList().getTypes())</span></a>
-<a name="771"><span class="lineNum">     771 </span><span class="lineCov">       7331 :         for (auto p : r-&gt;getPlugins())</span></a>
-<a name="772"><span class="lineNum">     772 </span><span class="lineCov">       2287 :             list.add (p);</span></a>
+<a name="771"><span class="lineNum">     771 </span><span class="lineCov">       7262 :         for (auto p : r-&gt;getPlugins())</span></a>
+<a name="772"><span class="lineNum">     772 </span><span class="lineCov">       2218 :             list.add (p);</span></a>
 <a name="773"><span class="lineNum">     773 </span>            : </a>
 <a name="774"><span class="lineNum">     774 </span><span class="lineCov">       2670 :     if (includeMasterVolume)</span></a>
 <a name="775"><span class="lineNum">     775 </span><span class="lineCov">        148 :         list.add (edit.getMasterVolumePlugin().get());</span></a>

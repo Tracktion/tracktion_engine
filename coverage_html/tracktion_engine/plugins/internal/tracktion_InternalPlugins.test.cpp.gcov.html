@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -151,7 +151,7 @@
 <a name="89"><span class="lineNum">      89 </span>            :         const Identifier valueProperty;</a>
 <a name="90"><span class="lineNum">      90 </span>            :     };</a>
 <a name="91"><span class="lineNum">      91 </span>            : </a>
-<a name="92"><span class="lineNum">      92 </span><span class="lineCov">          7 :     void testPreset (const String&amp; pluginName, std::initializer_list&lt;ParamTest&gt; params)</span></a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineCov">          7 :     void testPreset (const juce::String&amp; pluginName, std::initializer_list&lt;ParamTest&gt; params)</span></a>
 <a name="93"><span class="lineNum">      93 </span>            :     {</a>
 <a name="94"><span class="lineNum">      94 </span><span class="lineCov">          7 :         beginTest (&quot;Testing plugin parameters: &quot; + pluginName);</span></a>
 <a name="95"><span class="lineNum">      95 </span>            : </a>
@@ -162,7 +162,7 @@
 <a name="100"><span class="lineNum">     100 </span><span class="lineCov">          7 :         expect (pluginPtr != nullptr);</span></a>
 <a name="101"><span class="lineNum">     101 </span>            : </a>
 <a name="102"><span class="lineNum">     102 </span>            :         // Create a state for restoration</a>
-<a name="103"><span class="lineNum">     103 </span><span class="lineCov">         14 :         ValueTree preset (IDs::PLUGIN);</span></a>
+<a name="103"><span class="lineNum">     103 </span><span class="lineCov">         14 :         juce::ValueTree preset (IDs::PLUGIN);</span></a>
 <a name="104"><span class="lineNum">     104 </span><span class="lineCov">          7 :         preset.setProperty (IDs::type, pluginName, nullptr);</span></a>
 <a name="105"><span class="lineNum">     105 </span>            : </a>
 <a name="106"><span class="lineNum">     106 </span><span class="lineCov">         37 :         for (auto param : params)</span></a>

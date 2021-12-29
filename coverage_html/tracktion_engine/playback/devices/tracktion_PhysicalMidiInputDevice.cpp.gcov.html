@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -371,7 +371,7 @@
 <a name="309"><span class="lineNum">     309 </span>            : };</a>
 <a name="310"><span class="lineNum">     310 </span>            : </a>
 <a name="311"><span class="lineNum">     311 </span>            : //==============================================================================</a>
-<a name="312"><span class="lineNum">     312 </span><span class="lineNoCov">          0 : PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine&amp; e, const String&amp; deviceName, int deviceIndexToUse)</span></a>
+<a name="312"><span class="lineNum">     312 </span><span class="lineNoCov">          0 : PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine&amp; e, const juce::String&amp; deviceName, int deviceIndexToUse)</span></a>
 <a name="313"><span class="lineNum">     313 </span><span class="lineNoCov">          0 :    : MidiInputDevice (e, TRANS(&quot;MIDI Input&quot;), deviceName),</span></a>
 <a name="314"><span class="lineNum">     314 </span><span class="lineNoCov">          0 :      deviceIndex (deviceIndexToUse)</span></a>
 <a name="315"><span class="lineNum">     315 </span>            : {</a>
@@ -392,7 +392,7 @@
 <a name="330"><span class="lineNum">     330 </span><span class="lineNoCov">          0 :     return new PhysicalMidiInputDeviceInstance (*this, c);</span></a>
 <a name="331"><span class="lineNum">     331 </span>            : }</a>
 <a name="332"><span class="lineNum">     332 </span>            : </a>
-<a name="333"><span class="lineNum">     333 </span><span class="lineNoCov">          0 : String PhysicalMidiInputDevice::openDevice()</span></a>
+<a name="333"><span class="lineNum">     333 </span><span class="lineNoCov">          0 : juce::String PhysicalMidiInputDevice::openDevice()</span></a>
 <a name="334"><span class="lineNum">     334 </span>            : {</a>
 <a name="335"><span class="lineNum">     335 </span><span class="lineNoCov">          0 :     zeromem (keysDown, sizeof (keysDown));</span></a>
 <a name="336"><span class="lineNum">     336 </span><span class="lineNoCov">          0 :     zeromem (keyDownVelocities, sizeof (keyDownVelocities));</span></a>

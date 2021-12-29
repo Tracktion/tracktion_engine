@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -74,9 +74,9 @@
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : static void getPossibleInputDeviceNames (Engine&amp; e,</span></a>
-<a name="15"><span class="lineNum">      15 </span>            :                                          StringArray&amp; s, StringArray&amp; a,</a>
-<a name="16"><span class="lineNum">      16 </span>            :                                          BigInteger&amp; hasAudio,</a>
-<a name="17"><span class="lineNum">      17 </span>            :                                          BigInteger&amp; hasMidi)</a>
+<a name="15"><span class="lineNum">      15 </span>            :                                          juce::StringArray&amp; s, juce::StringArray&amp; a,</a>
+<a name="16"><span class="lineNum">      16 </span>            :                                          juce::BigInteger&amp; hasAudio,</a>
+<a name="17"><span class="lineNum">      17 </span>            :                                          juce::BigInteger&amp; hasMidi)</a>
 <a name="18"><span class="lineNum">      18 </span>            : {</a>
 <a name="19"><span class="lineNum">      19 </span><span class="lineNoCov">          0 :     auto&amp; dm = e.getDeviceManager();</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : </a>
@@ -99,9 +99,9 @@
 <a name="37"><span class="lineNum">      37 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="38"><span class="lineNum">      38 </span>            : </a>
 <a name="39"><span class="lineNum">      39 </span><span class="lineNoCov">          0 : static void getPossibleOutputDeviceNames (Engine&amp; e,</span></a>
-<a name="40"><span class="lineNum">      40 </span>            :                                           StringArray&amp; s, StringArray&amp; a,</a>
-<a name="41"><span class="lineNum">      41 </span>            :                                           BigInteger&amp; hasAudio,</a>
-<a name="42"><span class="lineNum">      42 </span>            :                                           BigInteger&amp; hasMidi)</a>
+<a name="40"><span class="lineNum">      40 </span>            :                                           juce::StringArray&amp; s, juce::StringArray&amp; a,</a>
+<a name="41"><span class="lineNum">      41 </span>            :                                           juce::BigInteger&amp; hasAudio,</a>
+<a name="42"><span class="lineNum">      42 </span>            :                                           juce::BigInteger&amp; hasMidi)</a>
 <a name="43"><span class="lineNum">      43 </span>            : {</a>
 <a name="44"><span class="lineNum">      44 </span><span class="lineNoCov">          0 :     auto&amp; dm = e.getDeviceManager();</span></a>
 <a name="45"><span class="lineNum">      45 </span>            : </a>
@@ -151,11 +151,11 @@
 <a name="89"><span class="lineNum">      89 </span>            : //==============================================================================</a>
 <a name="90"><span class="lineNum">      90 </span>            : const char* InsertPlugin::xmlTypeName (&quot;insert&quot;);</a>
 <a name="91"><span class="lineNum">      91 </span>            : </a>
-<a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 : String InsertPlugin::getName()                                               { return name.get().isNotEmpty() ? name : TRANS(&quot;Insert Plugin&quot;); }</span></a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineNoCov">          0 : String InsertPlugin::getPluginType()                                         { return xmlTypeName; }</span></a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineNoCov">          0 : String InsertPlugin::getShortName (int)                                      { return TRANS(&quot;Insert&quot;); }</span></a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 : juce::String InsertPlugin::getName()                                         { return name.get().isNotEmpty() ? name : TRANS(&quot;Insert Plugin&quot;); }</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineNoCov">          0 : juce::String InsertPlugin::getPluginType()                                   { return xmlTypeName; }</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineNoCov">          0 : juce::String InsertPlugin::getShortName (int)                                { return TRANS(&quot;Insert&quot;); }</span></a>
 <a name="95"><span class="lineNum">      95 </span><span class="lineNoCov">          0 : double InsertPlugin::getLatencySeconds()                                     { return latencySeconds; }</span></a>
-<a name="96"><span class="lineNum">      96 </span><span class="lineNoCov">          0 : void InsertPlugin::getChannelNames (StringArray*, StringArray*)              {}</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineNoCov">          0 : void InsertPlugin::getChannelNames (juce::StringArray*, juce::StringArray*)  {}</span></a>
 <a name="97"><span class="lineNum">      97 </span><span class="lineNoCov">          0 : bool InsertPlugin::takesAudioInput()                                         { return true; }</span></a>
 <a name="98"><span class="lineNum">      98 </span><span class="lineNoCov">          0 : bool InsertPlugin::takesMidiInput()                                          { return true; }</span></a>
 <a name="99"><span class="lineNum">      99 </span><span class="lineNoCov">          0 : bool InsertPlugin::canBeAddedToClip()                                        { return false; }</span></a>
@@ -232,7 +232,7 @@
 <a name="170"><span class="lineNum">     170 </span>            :     }</a>
 <a name="171"><span class="lineNum">     171 </span>            : }</a>
 <a name="172"><span class="lineNum">     172 </span>            : </a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 : String InsertPlugin::getSelectableDescription()</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 : juce::String InsertPlugin::getSelectableDescription()</span></a>
 <a name="174"><span class="lineNum">     174 </span>            : {</a>
 <a name="175"><span class="lineNum">     175 </span><span class="lineNoCov">          0 :     return TRANS(&quot;Insert Plugin&quot;);</span></a>
 <a name="176"><span class="lineNum">     176 </span>            : }</a>
@@ -257,10 +257,10 @@
 <a name="195"><span class="lineNum">     195 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="196"><span class="lineNum">     196 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
 <a name="197"><span class="lineNum">     197 </span>            : </a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 :     StringArray devices, aliases;</span></a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 :     BigInteger hasAudio, hasMidi;</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 :     juce::StringArray devices, aliases;</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 :     juce::BigInteger hasAudio, hasMidi;</span></a>
 <a name="200"><span class="lineNum">     200 </span>            : </a>
-<a name="201"><span class="lineNum">     201 </span><span class="lineNoCov">          0 :     auto setDeviceType = [] (DeviceType&amp; deviceType, BigInteger&amp; audio, BigInteger&amp; midi, int index)</span></a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineNoCov">          0 :     auto setDeviceType = [] (DeviceType&amp; deviceType, juce::BigInteger&amp; audio, juce::BigInteger&amp; midi, int index)</span></a>
 <a name="202"><span class="lineNum">     202 </span>            :     {</a>
 <a name="203"><span class="lineNum">     203 </span><span class="lineNoCov">          0 :         if (audio[index])       deviceType = audioDevice;</span></a>
 <a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 :         else if (midi[index])   deviceType = midiDevice;</span></a>
@@ -278,9 +278,9 @@
 <a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="217"><span class="lineNum">     217 </span>            : </a>
 <a name="218"><span class="lineNum">     218 </span><span class="lineNoCov">          0 : void InsertPlugin::getPossibleDeviceNames (Engine&amp; e,</span></a>
-<a name="219"><span class="lineNum">     219 </span>            :                                            StringArray&amp; s, StringArray&amp; a,</a>
-<a name="220"><span class="lineNum">     220 </span>            :                                            BigInteger&amp; hasAudio,</a>
-<a name="221"><span class="lineNum">     221 </span>            :                                            BigInteger&amp; hasMidi,</a>
+<a name="219"><span class="lineNum">     219 </span>            :                                            juce::StringArray&amp; s, juce::StringArray&amp; a,</a>
+<a name="220"><span class="lineNum">     220 </span>            :                                            juce::BigInteger&amp; hasAudio,</a>
+<a name="221"><span class="lineNum">     221 </span>            :                                            juce::BigInteger&amp; hasMidi,</a>
 <a name="222"><span class="lineNum">     222 </span>            :                                            bool forInput)</a>
 <a name="223"><span class="lineNum">     223 </span>            : {</a>
 <a name="224"><span class="lineNum">     224 </span><span class="lineNoCov">          0 :     if (forInput)</span></a>

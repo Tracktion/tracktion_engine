@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -120,9 +120,9 @@
 <a name="58"><span class="lineNum">      58 </span>            :     return false;</a>
 <a name="59"><span class="lineNum">      59 </span>            : }</a>
 <a name="60"><span class="lineNum">      60 </span>            : </a>
-<a name="61"><span class="lineNum">      61 </span><span class="lineNoCov">          0 : static BigInteger getSelectedTracks (Edit&amp; edit, SelectionManager&amp; sm)</span></a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineNoCov">          0 : static juce::BigInteger getSelectedTracks (Edit&amp; edit, SelectionManager&amp; sm)</span></a>
 <a name="62"><span class="lineNum">      62 </span>            : {</a>
-<a name="63"><span class="lineNum">      63 </span><span class="lineNoCov">          0 :     BigInteger b;</span></a>
+<a name="63"><span class="lineNum">      63 </span><span class="lineNoCov">          0 :     juce::BigInteger b;</span></a>
 <a name="64"><span class="lineNum">      64 </span>            :     int i = 0;</a>
 <a name="65"><span class="lineNum">      65 </span>            : </a>
 <a name="66"><span class="lineNum">      66 </span><span class="lineNoCov">          0 :     for (auto t : getAllTracks (edit))</span></a>
@@ -766,7 +766,7 @@
 <a name="704"><span class="lineNum">     704 </span><span class="lineNoCov">          0 :     addMetadata              = false;</span></a>
 <a name="705"><span class="lineNum">     705 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="706"><span class="lineNum">     706 </span>            : </a>
-<a name="707"><span class="lineNum">     707 </span><span class="lineNoCov">          0 : void RenderOptions::updateLastUsedRenderPath (RenderOptions&amp; renderOptions, const String&amp; itemID)</span></a>
+<a name="707"><span class="lineNum">     707 </span><span class="lineNoCov">          0 : void RenderOptions::updateLastUsedRenderPath (RenderOptions&amp; renderOptions, const juce::String&amp; itemID)</span></a>
 <a name="708"><span class="lineNum">     708 </span>            : {</a>
 <a name="709"><span class="lineNum">     709 </span><span class="lineNoCov">          0 :     auto&amp; storage = renderOptions.engine.getPropertyStorage();</span></a>
 <a name="710"><span class="lineNum">     710 </span><span class="lineNoCov">          0 :     auto lastEditID = storage.getProperty (SettingID::lastEditRender).toString();</span></a>
@@ -882,11 +882,11 @@
 <a name="820"><span class="lineNum">     820 </span>            : </a>
 <a name="821"><span class="lineNum">     821 </span>            : //==============================================================================</a>
 <a name="822"><span class="lineNum">     822 </span><span class="lineNoCov">          0 : RenderOptions::RenderOptions (Engine&amp; e)</span></a>
-<a name="823"><span class="lineNum">     823 </span><span class="lineNoCov">          0 :     : RenderOptions (e, ValueTree (IDs::RENDER), nullptr)</span></a>
+<a name="823"><span class="lineNum">     823 </span><span class="lineNoCov">          0 :     : RenderOptions (e, juce::ValueTree (IDs::RENDER), nullptr)</span></a>
 <a name="824"><span class="lineNum">     824 </span>            : {</a>
 <a name="825"><span class="lineNum">     825 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="826"><span class="lineNum">     826 </span>            : </a>
-<a name="827"><span class="lineNum">     827 </span><span class="lineNoCov">          0 : RenderOptions::RenderOptions (Engine&amp; e, const ValueTree&amp; s, UndoManager* um)</span></a>
+<a name="827"><span class="lineNum">     827 </span><span class="lineNoCov">          0 : RenderOptions::RenderOptions (Engine&amp; e, const juce::ValueTree&amp; s, UndoManager* um)</span></a>
 <a name="828"><span class="lineNum">     828 </span><span class="lineNoCov">          0 :     : engine (e), state (s)</span></a>
 <a name="829"><span class="lineNum">     829 </span>            : {</a>
 <a name="830"><span class="lineNum">     830 </span><span class="lineNoCov">          0 :     state.addListener (this);</span></a>
@@ -937,7 +937,7 @@
 <a name="875"><span class="lineNum">     875 </span><span class="lineNoCov">          0 :     return format;</span></a>
 <a name="876"><span class="lineNum">     876 </span>            : }</a>
 <a name="877"><span class="lineNum">     877 </span>            : </a>
-<a name="878"><span class="lineNum">     878 </span><span class="lineNoCov">          0 : void RenderOptions::setFormatType (const String&amp; typeString)</span></a>
+<a name="878"><span class="lineNum">     878 </span><span class="lineNoCov">          0 : void RenderOptions::setFormatType (const juce::String&amp; typeString)</span></a>
 <a name="879"><span class="lineNum">     879 </span>            : {</a>
 <a name="880"><span class="lineNum">     880 </span><span class="lineNoCov">          0 :     auto&amp; am = engine.getAudioFileFormatManager();</span></a>
 <a name="881"><span class="lineNum">     881 </span>            : </a>
@@ -950,7 +950,7 @@
 <a name="888"><span class="lineNum">     888 </span><span class="lineNoCov">          0 :     else                                                           setFormat (wav);</span></a>
 <a name="889"><span class="lineNum">     889 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="890"><span class="lineNum">     890 </span>            : </a>
-<a name="891"><span class="lineNum">     891 </span><span class="lineNoCov">          0 : String RenderOptions::getFormatTypeName (TargetFileFormat fmt)</span></a>
+<a name="891"><span class="lineNum">     891 </span><span class="lineNoCov">          0 : juce::String RenderOptions::getFormatTypeName (TargetFileFormat fmt)</span></a>
 <a name="892"><span class="lineNum">     892 </span>            : {</a>
 <a name="893"><span class="lineNum">     893 </span><span class="lineNoCov">          0 :     auto&amp; am = engine.getAudioFileFormatManager();</span></a>
 <a name="894"><span class="lineNum">     894 </span>            : </a>
@@ -998,9 +998,9 @@
 <a name="936"><span class="lineNum">     936 </span>            :     }</a>
 <a name="937"><span class="lineNum">     937 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="938"><span class="lineNum">     938 </span>            : </a>
-<a name="939"><span class="lineNum">     939 </span><span class="lineNoCov">          0 : BigInteger RenderOptions::getTrackIndexes (const Edit&amp; ed) const</span></a>
+<a name="939"><span class="lineNum">     939 </span><span class="lineNoCov">          0 : juce::BigInteger RenderOptions::getTrackIndexes (const Edit&amp; ed) const</span></a>
 <a name="940"><span class="lineNum">     940 </span>            : {</a>
-<a name="941"><span class="lineNum">     941 </span><span class="lineNoCov">          0 :     BigInteger res;</span></a>
+<a name="941"><span class="lineNum">     941 </span><span class="lineNoCov">          0 :     juce::BigInteger res;</span></a>
 <a name="942"><span class="lineNum">     942 </span>            : </a>
 <a name="943"><span class="lineNum">     943 </span><span class="lineNoCov">          0 :     auto trks = getAllTracks (ed);</span></a>
 <a name="944"><span class="lineNum">     944 </span>            : </a>
@@ -1017,7 +1017,7 @@
 <a name="955"><span class="lineNum">     955 </span><span class="lineNoCov">          0 :     selectedClips = onlySelectedTrackAndClips;</span></a>
 <a name="956"><span class="lineNum">     956 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="957"><span class="lineNum">     957 </span>            : </a>
-<a name="958"><span class="lineNum">     958 </span><span class="lineNoCov">          0 : void RenderOptions::setFilename (String value, bool canPromptToOverwriteExisting)</span></a>
+<a name="958"><span class="lineNum">     958 </span><span class="lineNoCov">          0 : void RenderOptions::setFilename (juce::String value, bool canPromptToOverwriteExisting)</span></a>
 <a name="959"><span class="lineNum">     959 </span>            : {</a>
 <a name="960"><span class="lineNum">     960 </span><span class="lineNoCov">          0 :     RecentlyOpenedFilesList recent;</span></a>
 <a name="961"><span class="lineNum">     961 </span><span class="lineNoCov">          0 :     auto recentList = engine.getPropertyStorage().getProperty (SettingID::renderRecentFilesList).toString();</span></a>
@@ -1043,7 +1043,7 @@
 <a name="981"><span class="lineNum">     981 </span>            : </a>
 <a name="982"><span class="lineNum">     982 </span>            :         int i = recentOffset;</a>
 <a name="983"><span class="lineNum">     983 </span>            : </a>
-<a name="984"><span class="lineNum">     984 </span><span class="lineNoCov">          0 :         for (const String&amp; s : recent.getAllFilenames())</span></a>
+<a name="984"><span class="lineNum">     984 </span><span class="lineNoCov">          0 :         for (auto&amp; s : recent.getAllFilenames())</span></a>
 <a name="985"><span class="lineNum">     985 </span><span class="lineNoCov">          0 :             m2.addItem (i++, s);</span></a>
 <a name="986"><span class="lineNum">     986 </span>            : </a>
 <a name="987"><span class="lineNum">     987 </span><span class="lineNoCov">          0 :         if (recent.getNumFiles() &gt; 0)</span></a>
@@ -1110,11 +1110,11 @@
 <a name="1048"><span class="lineNum">    1048 </span>            : }</a>
 <a name="1049"><span class="lineNum">    1049 </span>            : </a>
 <a name="1050"><span class="lineNum">    1050 </span>            : //==============================================================================</a>
-<a name="1051"><span class="lineNum">    1051 </span><span class="lineNoCov">          0 : StringArray RenderOptions::getFormatTypes()</span></a>
+<a name="1051"><span class="lineNum">    1051 </span><span class="lineNoCov">          0 : juce::StringArray RenderOptions::getFormatTypes()</span></a>
 <a name="1052"><span class="lineNum">    1052 </span>            : {</a>
 <a name="1053"><span class="lineNum">    1053 </span><span class="lineNoCov">          0 :     auto&amp; am = engine.getAudioFileFormatManager();</span></a>
 <a name="1054"><span class="lineNum">    1054 </span>            : </a>
-<a name="1055"><span class="lineNum">    1055 </span><span class="lineNoCov">          0 :     StringArray formats;</span></a>
+<a name="1055"><span class="lineNum">    1055 </span><span class="lineNoCov">          0 :     juce::StringArray formats;</span></a>
 <a name="1056"><span class="lineNum">    1056 </span><span class="lineNoCov">          0 :     formats.add (am.getWavFormat()-&gt;getFormatName());</span></a>
 <a name="1057"><span class="lineNum">    1057 </span><span class="lineNoCov">          0 :     formats.add (am.getAiffFormat()-&gt;getFormatName());</span></a>
 <a name="1058"><span class="lineNum">    1058 </span>            : </a>
@@ -1137,7 +1137,7 @@
 <a name="1075"><span class="lineNum">    1075 </span><span class="lineNoCov">          0 :     return formats;</span></a>
 <a name="1076"><span class="lineNum">    1076 </span>            : }</a>
 <a name="1077"><span class="lineNum">    1077 </span>            : </a>
-<a name="1078"><span class="lineNum">    1078 </span><span class="lineNoCov">          0 : StringArray RenderOptions::getAddRenderOptionText()</span></a>
+<a name="1078"><span class="lineNum">    1078 </span><span class="lineNoCov">          0 : juce::StringArray RenderOptions::getAddRenderOptionText()</span></a>
 <a name="1079"><span class="lineNum">    1079 </span>            : {</a>
 <a name="1080"><span class="lineNum">    1080 </span>            :     static const char* renderOptionsText[] = { NEEDS_TRANS(&quot;Replace Rendered Tracks&quot;),</a>
 <a name="1081"><span class="lineNum">    1081 </span>            :                                                NEEDS_TRANS(&quot;Add Rendered Tracks&quot;),</a>
@@ -1146,7 +1146,7 @@
 <a name="1084"><span class="lineNum">    1084 </span>            :                                                NEEDS_TRANS(&quot;Replace Clips&quot;),</a>
 <a name="1085"><span class="lineNum">    1085 </span>            :                                                NEEDS_TRANS(&quot;None&quot;) };</a>
 <a name="1086"><span class="lineNum">    1086 </span>            : </a>
-<a name="1087"><span class="lineNum">    1087 </span><span class="lineNoCov">          0 :     StringArray renderOptions;</span></a>
+<a name="1087"><span class="lineNum">    1087 </span><span class="lineNoCov">          0 :     juce::StringArray renderOptions;</span></a>
 <a name="1088"><span class="lineNum">    1088 </span>            : </a>
 <a name="1089"><span class="lineNum">    1089 </span><span class="lineNoCov">          0 :     renderOptions.add (TRANS(renderOptionsText[replaceTrack]));</span></a>
 <a name="1090"><span class="lineNum">    1090 </span><span class="lineNoCov">          0 :     renderOptions.add (TRANS(renderOptionsText[addTrack]));</span></a>
@@ -1168,7 +1168,7 @@
 <a name="1106"><span class="lineNum">    1106 </span><span class="lineNoCov">          0 :     return region.getLength() &gt; 0.05;</span></a>
 <a name="1107"><span class="lineNum">    1107 </span>            : }</a>
 <a name="1108"><span class="lineNum">    1108 </span>            : </a>
-<a name="1109"><span class="lineNum">    1109 </span><span class="lineNoCov">          0 : StringArray RenderOptions::getQualitiesList() const</span></a>
+<a name="1109"><span class="lineNum">    1109 </span><span class="lineNoCov">          0 : juce::StringArray RenderOptions::getQualitiesList() const</span></a>
 <a name="1110"><span class="lineNum">    1110 </span>            : {</a>
 <a name="1111"><span class="lineNum">    1111 </span><span class="lineNoCov">          0 :     auto&amp; af = engine.getAudioFileFormatManager();</span></a>
 <a name="1112"><span class="lineNum">    1112 </span>            : </a>
@@ -1229,10 +1229,10 @@
 <a name="1167"><span class="lineNum">    1167 </span>            :     {</a>
 <a name="1168"><span class="lineNum">    1168 </span>            :         // sample rate</a>
 <a name="1169"><span class="lineNum">    1169 </span><span class="lineNoCov">          0 :         auto rates = af-&gt;getPossibleSampleRates();</span></a>
-<a name="1170"><span class="lineNum">    1170 </span><span class="lineNoCov">          0 :         StringArray r;</span></a>
+<a name="1170"><span class="lineNum">    1170 </span><span class="lineNoCov">          0 :         juce::StringArray r;</span></a>
 <a name="1171"><span class="lineNum">    1171 </span>            : </a>
 <a name="1172"><span class="lineNum">    1172 </span><span class="lineNoCov">          0 :         for (auto rate : rates)</span></a>
-<a name="1173"><span class="lineNum">    1173 </span><span class="lineNoCov">          0 :             r.add (String (rate));</span></a>
+<a name="1173"><span class="lineNum">    1173 </span><span class="lineNoCov">          0 :             r.add (juce::String (rate));</span></a>
 <a name="1174"><span class="lineNum">    1174 </span>            : </a>
 <a name="1175"><span class="lineNum">    1175 </span><span class="lineNoCov">          0 :         if (! rates.contains ((int) sampleRate))</span></a>
 <a name="1176"><span class="lineNum">    1176 </span><span class="lineNoCov">          0 :             sampleRate = 44100;</span></a>
@@ -1245,7 +1245,7 @@
 <a name="1183"><span class="lineNum">    1183 </span><span class="lineNoCov">          0 :         auto depths = af-&gt;getPossibleBitDepths();</span></a>
 <a name="1184"><span class="lineNum">    1184 </span>            : </a>
 <a name="1185"><span class="lineNum">    1185 </span><span class="lineNoCov">          0 :         for (auto depth : depths)</span></a>
-<a name="1186"><span class="lineNum">    1186 </span><span class="lineNoCov">          0 :             r.add (TRANS(&quot;32-bit&quot;).replace (&quot;32&quot;, String (depth)));</span></a>
+<a name="1186"><span class="lineNum">    1186 </span><span class="lineNoCov">          0 :             r.add (TRANS(&quot;32-bit&quot;).replace (&quot;32&quot;, juce::String (depth)));</span></a>
 <a name="1187"><span class="lineNum">    1187 </span>            : </a>
 <a name="1188"><span class="lineNum">    1188 </span><span class="lineNoCov">          0 :         if (! depths.contains (bitDepth))</span></a>
 <a name="1189"><span class="lineNum">    1189 </span><span class="lineNoCov">          0 :             bitDepth = 16;</span></a>
@@ -1313,7 +1313,7 @@
 <a name="1251"><span class="lineNum">    1251 </span>            :     }</a>
 <a name="1252"><span class="lineNum">    1252 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1253"><span class="lineNum">    1253 </span>            : </a>
-<a name="1254"><span class="lineNum">    1254 </span><span class="lineNoCov">          0 : String RenderOptions::getCurrentFileExtension()</span></a>
+<a name="1254"><span class="lineNum">    1254 </span><span class="lineNoCov">          0 : juce::String RenderOptions::getCurrentFileExtension()</span></a>
 <a name="1255"><span class="lineNum">    1255 </span>            : {</a>
 <a name="1256"><span class="lineNum">    1256 </span><span class="lineNoCov">          0 :     if (format == midi)</span></a>
 <a name="1257"><span class="lineNum">    1257 </span><span class="lineNoCov">          0 :         return &quot;.mid&quot;;</span></a>

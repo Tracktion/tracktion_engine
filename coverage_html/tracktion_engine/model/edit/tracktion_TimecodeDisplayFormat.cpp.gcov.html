@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -183,7 +183,7 @@
 <a name="121"><span class="lineNum">     121 </span><span class="lineNoCov">          0 :     return minSecDivisions [jmin (13, level)];</span></a>
 <a name="122"><span class="lineNum">     122 </span>            : }</a>
 <a name="123"><span class="lineNum">     123 </span>            : </a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineNoCov">          0 : String TimecodeSnapType::getDescription (const TempoSetting&amp; tempo, bool isTripletOverride) const</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineNoCov">          0 : juce::String TimecodeSnapType::getDescription (const TempoSetting&amp; tempo, bool isTripletOverride) const</span></a>
 <a name="125"><span class="lineNum">     125 </span>            : {</a>
 <a name="126"><span class="lineNum">     126 </span><span class="lineNoCov">          0 :     if (type == TimecodeType::barsBeats)</span></a>
 <a name="127"><span class="lineNum">     127 </span>            :     {</a>
@@ -257,7 +257,7 @@
 <a name="195"><span class="lineNum">     195 </span><span class="lineNoCov">          0 :     return getMinSecDivisions (level + 2).time;</span></a>
 <a name="196"><span class="lineNum">     196 </span>            : }</a>
 <a name="197"><span class="lineNum">     197 </span>            : </a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 : String TimecodeSnapType::getTimecodeString (double time, const TempoSequence&amp; sequence, bool useStartLabelIfZero) const</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 : juce::String TimecodeSnapType::getTimecodeString (double time, const TempoSequence&amp; sequence, bool useStartLabelIfZero) const</span></a>
 <a name="199"><span class="lineNum">     199 </span>            : {</a>
 <a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :     if (type == TimecodeType::barsBeats)</span></a>
 <a name="201"><span class="lineNum">     201 </span>            :     {</a>
@@ -424,7 +424,7 @@
 <a name="362"><span class="lineNum">     362 </span>            :     }</a>
 <a name="363"><span class="lineNum">     363 </span>            : }</a>
 <a name="364"><span class="lineNum">     364 </span>            : </a>
-<a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 : String TimecodeDisplayFormat::getRoundingDescription() const</span></a>
+<a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 : juce::String TimecodeDisplayFormat::getRoundingDescription() const</span></a>
 <a name="366"><span class="lineNum">     366 </span>            : {</a>
 <a name="367"><span class="lineNum">     367 </span><span class="lineNoCov">          0 :     switch (type)</span></a>
 <a name="368"><span class="lineNum">     368 </span>            :     {</a>
@@ -444,7 +444,7 @@
 <a name="382"><span class="lineNum">     382 </span><span class="lineNoCov">          0 :     return subSecDivisionsForType[static_cast&lt;int&gt; (type)];</span></a>
 <a name="383"><span class="lineNum">     383 </span>            : }</a>
 <a name="384"><span class="lineNum">     384 </span>            : </a>
-<a name="385"><span class="lineNum">     385 </span><span class="lineNoCov">          0 : String TimecodeDisplayFormat::getString (const TempoSequence&amp; tempo, const double time, bool isRelative) const</span></a>
+<a name="385"><span class="lineNum">     385 </span><span class="lineNoCov">          0 : juce::String TimecodeDisplayFormat::getString (const TempoSequence&amp; tempo, const double time, bool isRelative) const</span></a>
 <a name="386"><span class="lineNum">     386 </span>            : {</a>
 <a name="387"><span class="lineNum">     387 </span><span class="lineNoCov">          0 :     if (type == TimecodeType::barsBeats)</span></a>
 <a name="388"><span class="lineNum">     388 </span>            :     {</a>
@@ -486,7 +486,7 @@
 <a name="424"><span class="lineNum">     424 </span><span class="lineNoCov">          0 :     return type == TimecodeType::barsBeats ? 3 : 4;</span></a>
 <a name="425"><span class="lineNum">     425 </span>            : }</a>
 <a name="426"><span class="lineNum">     426 </span>            : </a>
-<a name="427"><span class="lineNum">     427 </span><span class="lineNoCov">          0 : String TimecodeDisplayFormat::getSeparator (int part) const</span></a>
+<a name="427"><span class="lineNum">     427 </span><span class="lineNoCov">          0 : juce::String TimecodeDisplayFormat::getSeparator (int part) const</span></a>
 <a name="428"><span class="lineNum">     428 </span>            : {</a>
 <a name="429"><span class="lineNum">     429 </span><span class="lineNoCov">          0 :     return (type == TimecodeType::barsBeats) ? &quot;,&quot;</span></a>
 <a name="430"><span class="lineNum">     430 </span><span class="lineNoCov">          0 :                                              : ((part == 0 &amp;&amp; type == TimecodeType::millisecs) ? &quot;.&quot; : &quot;:&quot;);</span></a>
@@ -707,7 +707,7 @@
 <a name="645"><span class="lineNum">     645 </span>            : }</a>
 <a name="646"><span class="lineNum">     646 </span>            : </a>
 <a name="647"><span class="lineNum">     647 </span>            : //==============================================================================</a>
-<a name="648"><span class="lineNum">     648 </span><span class="lineNoCov">          0 : String TimecodeDisplayFormat::toFullTimecode (double seconds, int subSecondDivisions, bool showHours)</span></a>
+<a name="648"><span class="lineNum">     648 </span><span class="lineNoCov">          0 : juce::String TimecodeDisplayFormat::toFullTimecode (double seconds, int subSecondDivisions, bool showHours)</span></a>
 <a name="649"><span class="lineNum">     649 </span>            : {</a>
 <a name="650"><span class="lineNum">     650 </span>            :     auto absSecs = std::abs (seconds);</a>
 <a name="651"><span class="lineNum">     651 </span><span class="lineNoCov">          0 :     String sign = (seconds &lt; 0) ? &quot;-&quot; : &quot;&quot;;</span></a>
@@ -788,7 +788,7 @@
 <a name="726"><span class="lineNum">     726 </span><span class="lineNoCov">          0 :     return time;</span></a>
 <a name="727"><span class="lineNum">     727 </span>            : }</a>
 <a name="728"><span class="lineNum">     728 </span>            : </a>
-<a name="729"><span class="lineNum">     729 </span><span class="lineNoCov">          0 : String TimecodeDisplayIterator::getTimecodeAsString() const</span></a>
+<a name="729"><span class="lineNum">     729 </span><span class="lineNoCov">          0 : juce::String TimecodeDisplayIterator::getTimecodeAsString() const</span></a>
 <a name="730"><span class="lineNum">     730 </span>            : {</a>
 <a name="731"><span class="lineNum">     731 </span><span class="lineNoCov">          0 :     return currentSnapType.getTimecodeString (time, sequence, true);</span></a>
 <a name="732"><span class="lineNum">     732 </span>            : }</a>

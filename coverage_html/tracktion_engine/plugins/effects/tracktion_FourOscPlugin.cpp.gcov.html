@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -819,7 +819,7 @@
 <a name="757"><span class="lineNum">     757 </span>            : </a>
 <a name="758"><span class="lineNum">     758 </span><span class="lineNoCov">          0 :     auto oscID = [] (Identifier i, int num)</span></a>
 <a name="759"><span class="lineNum">     759 </span>            :     {</a>
-<a name="760"><span class="lineNum">     760 </span><span class="lineNoCov">          0 :         return Identifier (i.toString() + String (num));</span></a>
+<a name="760"><span class="lineNum">     760 </span><span class="lineNoCov">          0 :         return Identifier (i.toString() + juce::String (num));</span></a>
 <a name="761"><span class="lineNum">     761 </span>            :     };</a>
 <a name="762"><span class="lineNum">     762 </span>            : </a>
 <a name="763"><span class="lineNum">     763 </span><span class="lineNoCov">          0 :     waveShapeValue.referTo (plugin.state, oscID (IDs::waveShape, oscNum), um, oscNum == 1 ? 1 : 0);</span></a>
@@ -834,16 +834,16 @@
 <a name="772"><span class="lineNum">     772 </span>            : </a>
 <a name="773"><span class="lineNum">     773 </span><span class="lineNoCov">          0 :     auto paramID = [] (Identifier i, int num)</span></a>
 <a name="774"><span class="lineNum">     774 </span>            :     {</a>
-<a name="775"><span class="lineNum">     775 </span><span class="lineNoCov">          0 :         return Identifier (i.toString() + String (num)).toString();</span></a>
+<a name="775"><span class="lineNum">     775 </span><span class="lineNoCov">          0 :         return Identifier (i.toString() + juce::String (num)).toString();</span></a>
 <a name="776"><span class="lineNum">     776 </span>            :     };</a>
 <a name="777"><span class="lineNum">     777 </span>            : </a>
-<a name="778"><span class="lineNum">     778 </span><span class="lineNoCov">          0 :     tune        = plugin.addParam (paramID (IDs::tune, oscNum), TRANS(&quot;Tune&quot;) + &quot; &quot; + String (oscNum), {-36.0f, 36.0f, 1.0f}, &quot;st&quot;);</span></a>
-<a name="779"><span class="lineNum">     779 </span><span class="lineNoCov">          0 :     fineTune    = plugin.addParam (paramID (IDs::fineTune, oscNum), TRANS(&quot;Fine Tune&quot;) + &quot; &quot; + String (oscNum), {-100.0f, 100.0f});</span></a>
-<a name="780"><span class="lineNum">     780 </span><span class="lineNoCov">          0 :     level       = plugin.addParam (paramID (IDs::level, oscNum), TRANS(&quot;Level&quot;) + &quot; &quot; + String (oscNum), {-100.0f, 0.0f, 0.0f, 4.0f}, &quot;dB&quot;);</span></a>
-<a name="781"><span class="lineNum">     781 </span><span class="lineNoCov">          0 :     pulseWidth  = plugin.addParam (paramID (IDs::pulseWidth, oscNum), TRANS(&quot;Pulse Width&quot;) + &quot; &quot; + String (oscNum), {0.01f, 0.99f});</span></a>
-<a name="782"><span class="lineNum">     782 </span><span class="lineNoCov">          0 :     detune      = plugin.addParam (paramID (IDs::detune, oscNum), TRANS(&quot;Detune&quot;) + &quot; &quot; + String (oscNum), {0.0f, 0.5f});</span></a>
-<a name="783"><span class="lineNum">     783 </span><span class="lineNoCov">          0 :     spread      = plugin.addParam (paramID (IDs::spread, oscNum), TRANS(&quot;Spread&quot;) + &quot; &quot; + String (oscNum), {-100.0f, 100.0f}, &quot;%&quot;);</span></a>
-<a name="784"><span class="lineNum">     784 </span><span class="lineNoCov">          0 :     pan         = plugin.addParam (paramID (IDs::pan, oscNum), TRANS(&quot;Pan&quot;) + &quot; &quot; + String (oscNum), {-1.0f, 1.0f});</span></a>
+<a name="778"><span class="lineNum">     778 </span><span class="lineNoCov">          0 :     tune        = plugin.addParam (paramID (IDs::tune, oscNum), TRANS(&quot;Tune&quot;) + &quot; &quot; + juce::String (oscNum), {-36.0f, 36.0f, 1.0f}, &quot;st&quot;);</span></a>
+<a name="779"><span class="lineNum">     779 </span><span class="lineNoCov">          0 :     fineTune    = plugin.addParam (paramID (IDs::fineTune, oscNum), TRANS(&quot;Fine Tune&quot;) + &quot; &quot; + juce::String (oscNum), {-100.0f, 100.0f});</span></a>
+<a name="780"><span class="lineNum">     780 </span><span class="lineNoCov">          0 :     level       = plugin.addParam (paramID (IDs::level, oscNum), TRANS(&quot;Level&quot;) + &quot; &quot; + juce::String (oscNum), {-100.0f, 0.0f, 0.0f, 4.0f}, &quot;dB&quot;);</span></a>
+<a name="781"><span class="lineNum">     781 </span><span class="lineNoCov">          0 :     pulseWidth  = plugin.addParam (paramID (IDs::pulseWidth, oscNum), TRANS(&quot;Pulse Width&quot;) + &quot; &quot; + juce::String (oscNum), {0.01f, 0.99f});</span></a>
+<a name="782"><span class="lineNum">     782 </span><span class="lineNoCov">          0 :     detune      = plugin.addParam (paramID (IDs::detune, oscNum), TRANS(&quot;Detune&quot;) + &quot; &quot; + juce::String (oscNum), {0.0f, 0.5f});</span></a>
+<a name="783"><span class="lineNum">     783 </span><span class="lineNoCov">          0 :     spread      = plugin.addParam (paramID (IDs::spread, oscNum), TRANS(&quot;Spread&quot;) + &quot; &quot; + juce::String (oscNum), {-100.0f, 100.0f}, &quot;%&quot;);</span></a>
+<a name="784"><span class="lineNum">     784 </span><span class="lineNoCov">          0 :     pan         = plugin.addParam (paramID (IDs::pan, oscNum), TRANS(&quot;Pan&quot;) + &quot; &quot; + juce::String (oscNum), {-1.0f, 1.0f});</span></a>
 <a name="785"><span class="lineNum">     785 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="786"><span class="lineNum">     786 </span>            : </a>
 <a name="787"><span class="lineNum">     787 </span><span class="lineNoCov">          0 : void FourOscPlugin::OscParams::attach()</span></a>
@@ -875,7 +875,7 @@
 <a name="813"><span class="lineNum">     813 </span>            : </a>
 <a name="814"><span class="lineNum">     814 </span><span class="lineNoCov">          0 :     auto lfoID = [] (Identifier i, int num)</span></a>
 <a name="815"><span class="lineNum">     815 </span>            :     {</a>
-<a name="816"><span class="lineNum">     816 </span><span class="lineNoCov">          0 :         return Identifier (i.toString() + String (num));</span></a>
+<a name="816"><span class="lineNum">     816 </span><span class="lineNoCov">          0 :         return Identifier (i.toString() + juce::String (num));</span></a>
 <a name="817"><span class="lineNum">     817 </span>            :     };</a>
 <a name="818"><span class="lineNum">     818 </span>            : </a>
 <a name="819"><span class="lineNum">     819 </span><span class="lineNoCov">          0 :     waveShapeValue.referTo (plugin.state, lfoID (IDs::lfoWaveShape, lfoNum), um, lfoNum == 1 ? 1 : 0);</span></a>
@@ -886,11 +886,11 @@
 <a name="824"><span class="lineNum">     824 </span>            : </a>
 <a name="825"><span class="lineNum">     825 </span><span class="lineNoCov">          0 :     auto paramID = [] (Identifier i, int num)</span></a>
 <a name="826"><span class="lineNum">     826 </span>            :     {</a>
-<a name="827"><span class="lineNum">     827 </span><span class="lineNoCov">          0 :         return Identifier (i.toString() + String (num)).toString();</span></a>
+<a name="827"><span class="lineNum">     827 </span><span class="lineNoCov">          0 :         return Identifier (i.toString() + juce::String (num)).toString();</span></a>
 <a name="828"><span class="lineNum">     828 </span>            :     };</a>
 <a name="829"><span class="lineNum">     829 </span>            : </a>
-<a name="830"><span class="lineNum">     830 </span><span class="lineNoCov">          0 :     rate        = plugin.addParam (paramID (IDs::lfoRate, lfoNum),  TRANS(&quot;Rate&quot;) + &quot; &quot; + String (lfoNum), {0.0f, 500.0f, 0.0f, 0.3f}, &quot;Hz&quot;);</span></a>
-<a name="831"><span class="lineNum">     831 </span><span class="lineNoCov">          0 :     depth       = plugin.addParam (paramID (IDs::lfoDepth, lfoNum), TRANS(&quot;Depth&quot;) + &quot; &quot; + String (lfoNum), {0.0f, 1.0f});</span></a>
+<a name="830"><span class="lineNum">     830 </span><span class="lineNoCov">          0 :     rate        = plugin.addParam (paramID (IDs::lfoRate, lfoNum),  TRANS(&quot;Rate&quot;) + &quot; &quot; + juce::String (lfoNum), {0.0f, 500.0f, 0.0f, 0.3f}, &quot;Hz&quot;);</span></a>
+<a name="831"><span class="lineNum">     831 </span><span class="lineNoCov">          0 :     depth       = plugin.addParam (paramID (IDs::lfoDepth, lfoNum), TRANS(&quot;Depth&quot;) + &quot; &quot; + juce::String (lfoNum), {0.0f, 1.0f});</span></a>
 <a name="832"><span class="lineNum">     832 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="833"><span class="lineNum">     833 </span>            : </a>
 <a name="834"><span class="lineNum">     834 </span><span class="lineNoCov">          0 : void FourOscPlugin::LFOParams::attach()</span></a>
@@ -912,7 +912,7 @@
 <a name="850"><span class="lineNum">     850 </span>            : </a>
 <a name="851"><span class="lineNum">     851 </span><span class="lineNoCov">          0 :     auto modID = [] (Identifier i, int num)</span></a>
 <a name="852"><span class="lineNum">     852 </span>            :     {</a>
-<a name="853"><span class="lineNum">     853 </span><span class="lineNoCov">          0 :         return Identifier (i.toString() + String (num));</span></a>
+<a name="853"><span class="lineNum">     853 </span><span class="lineNoCov">          0 :         return Identifier (i.toString() + juce::String (num));</span></a>
 <a name="854"><span class="lineNum">     854 </span>            :     };</a>
 <a name="855"><span class="lineNum">     855 </span>            : </a>
 <a name="856"><span class="lineNum">     856 </span><span class="lineNoCov">          0 :     modAttackValue.referTo (plugin.state, modID (IDs::modAttack, modNum), um, 0.1f);</span></a>
@@ -922,13 +922,13 @@
 <a name="860"><span class="lineNum">     860 </span>            : </a>
 <a name="861"><span class="lineNum">     861 </span><span class="lineNoCov">          0 :     auto paramID = [] (Identifier i, int num)</span></a>
 <a name="862"><span class="lineNum">     862 </span>            :     {</a>
-<a name="863"><span class="lineNum">     863 </span><span class="lineNoCov">          0 :         return Identifier (i.toString() + String (num)).toString();</span></a>
+<a name="863"><span class="lineNum">     863 </span><span class="lineNoCov">          0 :         return Identifier (i.toString() + juce::String (num)).toString();</span></a>
 <a name="864"><span class="lineNum">     864 </span>            :     };</a>
 <a name="865"><span class="lineNum">     865 </span>            : </a>
-<a name="866"><span class="lineNum">     866 </span><span class="lineNoCov">          0 :     modAttack   = plugin.addParam (paramID (IDs::modAttack, modNum),  TRANS(&quot;Mod Attack&quot;) + &quot; &quot; + String (modNum),  {0.0f, 60.0f, 0.0f, 0.2f});</span></a>
-<a name="867"><span class="lineNum">     867 </span><span class="lineNoCov">          0 :     modDecay    = plugin.addParam (paramID (IDs::modDecay, modNum),   TRANS(&quot;Mod Decay&quot;) + &quot; &quot; + String (modNum),   {0.0f, 60.0f, 0.0f, 0.2f});</span></a>
-<a name="868"><span class="lineNum">     868 </span><span class="lineNoCov">          0 :     modSustain  = plugin.addParam (paramID (IDs::modSustain, modNum), TRANS(&quot;Mod Sustain&quot;) + &quot; &quot; + String (modNum), {0.0f,   100.0f}, &quot;%&quot;);</span></a>
-<a name="869"><span class="lineNum">     869 </span><span class="lineNoCov">          0 :     modRelease  = plugin.addParam (paramID (IDs::modRelease, modNum), TRANS(&quot;Mod Release&quot;) + &quot; &quot; + String (modNum), {0.001f, 60.0f, 0.0f, 0.2f});</span></a>
+<a name="866"><span class="lineNum">     866 </span><span class="lineNoCov">          0 :     modAttack   = plugin.addParam (paramID (IDs::modAttack, modNum),  TRANS(&quot;Mod Attack&quot;)  + &quot; &quot; + juce::String (modNum), {0.0f, 60.0f, 0.0f, 0.2f});</span></a>
+<a name="867"><span class="lineNum">     867 </span><span class="lineNoCov">          0 :     modDecay    = plugin.addParam (paramID (IDs::modDecay, modNum),   TRANS(&quot;Mod Decay&quot;)   + &quot; &quot; + juce::String (modNum), {0.0f, 60.0f, 0.0f, 0.2f});</span></a>
+<a name="868"><span class="lineNum">     868 </span><span class="lineNoCov">          0 :     modSustain  = plugin.addParam (paramID (IDs::modSustain, modNum), TRANS(&quot;Mod Sustain&quot;) + &quot; &quot; + juce::String (modNum), {0.0f, 100.0f}, &quot;%&quot;);</span></a>
+<a name="869"><span class="lineNum">     869 </span><span class="lineNoCov">          0 :     modRelease  = plugin.addParam (paramID (IDs::modRelease, modNum), TRANS(&quot;Mod Release&quot;) + &quot; &quot; + juce::String (modNum), {0.001f, 60.0f, 0.0f, 0.2f});</span></a>
 <a name="870"><span class="lineNum">     870 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="871"><span class="lineNum">     871 </span>            : </a>
 <a name="872"><span class="lineNum">     872 </span><span class="lineNoCov">          0 : void FourOscPlugin::MODEnvParams::attach()</span></a>
@@ -1244,7 +1244,7 @@
 <a name="1182"><span class="lineNum">    1182 </span><span class="lineNoCov">          0 :     auto freqValueToTextFunction = [] (float value)</span></a>
 <a name="1183"><span class="lineNum">    1183 </span>            :     {</a>
 <a name="1184"><span class="lineNum">    1184 </span><span class="lineNoCov">          0 :         float freq = 440.0f * std::pow (2.0f, (value - 69) / 12.0f);</span></a>
-<a name="1185"><span class="lineNum">    1185 </span><span class="lineNoCov">          0 :         return String (roundToInt (freq)) + &quot;Hz&quot;;</span></a>
+<a name="1185"><span class="lineNum">    1185 </span><span class="lineNoCov">          0 :         return juce::String (roundToInt (freq)) + &quot;Hz&quot;;</span></a>
 <a name="1186"><span class="lineNum">    1186 </span>            :     };</a>
 <a name="1187"><span class="lineNum">    1187 </span>            : </a>
 <a name="1188"><span class="lineNum">    1188 </span><span class="lineNoCov">          0 :     auto textToFreqValueFunction = [] (juce::String text)</span></a>
@@ -1454,7 +1454,7 @@
 <a name="1392"><span class="lineNum">    1392 </span><span class="lineNoCov">          0 :     if (vt.isValid())</span></a>
 <a name="1393"><span class="lineNum">    1393 </span><span class="lineNoCov">          0 :         state.removeChild (vt, um);</span></a>
 <a name="1394"><span class="lineNum">    1394 </span>            : </a>
-<a name="1395"><span class="lineNum">    1395 </span><span class="lineNoCov">          0 :     auto mm = ValueTree (IDs::MODMATRIX);</span></a>
+<a name="1395"><span class="lineNum">    1395 </span><span class="lineNoCov">          0 :     auto mm = juce::ValueTree (IDs::MODMATRIX);</span></a>
 <a name="1396"><span class="lineNum">    1396 </span>            : </a>
 <a name="1397"><span class="lineNum">    1397 </span><span class="lineNoCov">          0 :     for (const auto&amp; itr : modMatrix)</span></a>
 <a name="1398"><span class="lineNum">    1398 </span>            :     {</a>
@@ -1462,7 +1462,7 @@
 <a name="1400"><span class="lineNum">    1400 </span>            :         {</a>
 <a name="1401"><span class="lineNum">    1401 </span><span class="lineNoCov">          0 :             if (itr.second.depths[s] &gt;= -1.0f)</span></a>
 <a name="1402"><span class="lineNum">    1402 </span>            :             {</a>
-<a name="1403"><span class="lineNum">    1403 </span><span class="lineNoCov">          0 :                 auto mmi = ValueTree (IDs::MODMATRIXITEM);</span></a>
+<a name="1403"><span class="lineNum">    1403 </span><span class="lineNoCov">          0 :                 auto mmi = juce::ValueTree (IDs::MODMATRIXITEM);</span></a>
 <a name="1404"><span class="lineNum">    1404 </span><span class="lineNoCov">          0 :                 mmi.setProperty (IDs::modParam, itr.first-&gt;paramID, um);</span></a>
 <a name="1405"><span class="lineNum">    1405 </span><span class="lineNoCov">          0 :                 mmi.setProperty (IDs::modItem, modulationSourceToID ((ModSource)s), um);</span></a>
 <a name="1406"><span class="lineNum">    1406 </span><span class="lineNoCov">          0 :                 mmi.setProperty (IDs::modDepth, itr.second.depths[s], um);</span></a>
@@ -1637,7 +1637,7 @@
 <a name="1575"><span class="lineNum">    1575 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1576"><span class="lineNum">    1576 </span>            : </a>
 <a name="1577"><span class="lineNum">    1577 </span>            : //==============================================================================</a>
-<a name="1578"><span class="lineNum">    1578 </span><span class="lineNoCov">          0 : void FourOscPlugin::restorePluginStateFromValueTree (const ValueTree&amp; v)</span></a>
+<a name="1578"><span class="lineNum">    1578 </span><span class="lineNoCov">          0 : void FourOscPlugin::restorePluginStateFromValueTree (const juce::ValueTree&amp; v)</span></a>
 <a name="1579"><span class="lineNum">    1579 </span>            : {</a>
 <a name="1580"><span class="lineNum">    1580 </span><span class="lineNoCov">          0 :     juce::CachedValue&lt;float&gt;* cvsFloat[]  = { &amp;ampAttackValue, &amp;ampDecayValue, &amp;ampSustainValue, &amp;ampReleaseValue, &amp;ampVelocityValue,</span></a>
 <a name="1581"><span class="lineNum">    1581 </span><span class="lineNoCov">          0 :         &amp;filterAttackValue, &amp;filterDecayValue, &amp;filterSustainValue, &amp;filterReleaseValue, &amp;filterFreqValue, &amp;filterResonanceValue,</span></a>
@@ -1669,196 +1669,199 @@
 <a name="1607"><span class="lineNum">    1607 </span><span class="lineNoCov">          0 :         state.removeChild (mm, um);</span></a>
 <a name="1608"><span class="lineNum">    1608 </span>            : </a>
 <a name="1609"><span class="lineNum">    1609 </span><span class="lineNoCov">          0 :     mm = v.getChildWithName (IDs::MODMATRIX);</span></a>
-<a name="1610"><span class="lineNum">    1610 </span><span class="lineNoCov">          0 :     if (mm.isValid())</span></a>
-<a name="1611"><span class="lineNum">    1611 </span><span class="lineNoCov">          0 :         state.addChild (mm.createCopy(), -1, um);</span></a>
-<a name="1612"><span class="lineNum">    1612 </span>            : </a>
-<a name="1613"><span class="lineNum">    1613 </span><span class="lineNoCov">          0 :     valueTreePropertyChanged (state, IDs::voiceMode);</span></a>
-<a name="1614"><span class="lineNum">    1614 </span>            : </a>
-<a name="1615"><span class="lineNum">    1615 </span><span class="lineNoCov">          0 :     for (auto p : getAutomatableParameters())</span></a>
-<a name="1616"><span class="lineNum">    1616 </span><span class="lineNoCov">          0 :         p-&gt;updateFromAttachedValue();</span></a>
-<a name="1617"><span class="lineNum">    1617 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1618"><span class="lineNum">    1618 </span>            : </a>
-<a name="1619"><span class="lineNum">    1619 </span><span class="lineNoCov">          0 : juce::String FourOscPlugin::modulationSourceToName (ModSource src)</span></a>
-<a name="1620"><span class="lineNum">    1620 </span>            : {</a>
-<a name="1621"><span class="lineNum">    1621 </span><span class="lineNoCov">          0 :     switch (src)</span></a>
-<a name="1622"><span class="lineNum">    1622 </span>            :     {</a>
-<a name="1623"><span class="lineNum">    1623 </span><span class="lineNoCov">          0 :         case lfo1:          return TRANS(&quot;LFO 1&quot;);</span></a>
-<a name="1624"><span class="lineNum">    1624 </span><span class="lineNoCov">          0 :         case lfo2:          return TRANS(&quot;LFO 2&quot;);</span></a>
-<a name="1625"><span class="lineNum">    1625 </span><span class="lineNoCov">          0 :         case env1:          return TRANS(&quot;Envelope 1&quot;);</span></a>
-<a name="1626"><span class="lineNum">    1626 </span><span class="lineNoCov">          0 :         case env2:          return TRANS(&quot;Envelope 2&quot;);</span></a>
-<a name="1627"><span class="lineNum">    1627 </span><span class="lineNoCov">          0 :         case mpePressure:   return TRANS(&quot;MPE Pressure&quot;);</span></a>
-<a name="1628"><span class="lineNum">    1628 </span><span class="lineNoCov">          0 :         case mpeTimbre:     return TRANS(&quot;MPE Timbre&quot;);</span></a>
-<a name="1629"><span class="lineNum">    1629 </span><span class="lineNoCov">          0 :         case midiNoteNum:   return TRANS(&quot;MIDI Note Number&quot;);</span></a>
-<a name="1630"><span class="lineNum">    1630 </span><span class="lineNoCov">          0 :         case midiVelocity:  return TRANS(&quot;MIDI Velocity&quot;);</span></a>
-<a name="1631"><span class="lineNum">    1631 </span><span class="lineNoCov">          0 :         case none:</span></a>
-<a name="1632"><span class="lineNum">    1632 </span>            :         case ccBankSelect:</a>
-<a name="1633"><span class="lineNum">    1633 </span>            :         case ccPolyMode:</a>
-<a name="1634"><span class="lineNum">    1634 </span>            :         case numModSources:</a>
-<a name="1635"><span class="lineNum">    1635 </span>            :         default:</a>
-<a name="1636"><span class="lineNum">    1636 </span>            :         {</a>
-<a name="1637"><span class="lineNum">    1637 </span><span class="lineNoCov">          0 :             if (src &gt;= ccBankSelect &amp;&amp; src &lt;= ccPolyMode)</span></a>
-<a name="1638"><span class="lineNum">    1638 </span>            :             {</a>
-<a name="1639"><span class="lineNum">    1639 </span><span class="lineNoCov">          0 :                 auto prefix = String (&quot;CC#&quot;) + String ((int)(src - ccBankSelect));</span></a>
-<a name="1640"><span class="lineNum">    1640 </span><span class="lineNoCov">          0 :                 auto name = String (juce::MidiMessage::getControllerName (src - ccBankSelect));</span></a>
-<a name="1641"><span class="lineNum">    1641 </span><span class="lineNoCov">          0 :                 if (name.isEmpty())</span></a>
-<a name="1642"><span class="lineNum">    1642 </span><span class="lineNoCov">          0 :                     return prefix;</span></a>
-<a name="1643"><span class="lineNum">    1643 </span><span class="lineNoCov">          0 :                 return prefix + &quot; &quot; + name;</span></a>
-<a name="1644"><span class="lineNum">    1644 </span>            :             }</a>
+<a name="1610"><span class="lineNum">    1610 </span>            :     </a>
+<a name="1611"><span class="lineNum">    1611 </span><span class="lineNoCov">          0 :     if (mm.isValid())</span></a>
+<a name="1612"><span class="lineNum">    1612 </span><span class="lineNoCov">          0 :         state.addChild (mm.createCopy(), -1, um);</span></a>
+<a name="1613"><span class="lineNum">    1613 </span>            : </a>
+<a name="1614"><span class="lineNum">    1614 </span><span class="lineNoCov">          0 :     valueTreePropertyChanged (state, IDs::voiceMode);</span></a>
+<a name="1615"><span class="lineNum">    1615 </span>            : </a>
+<a name="1616"><span class="lineNum">    1616 </span><span class="lineNoCov">          0 :     for (auto p : getAutomatableParameters())</span></a>
+<a name="1617"><span class="lineNum">    1617 </span><span class="lineNoCov">          0 :         p-&gt;updateFromAttachedValue();</span></a>
+<a name="1618"><span class="lineNum">    1618 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1619"><span class="lineNum">    1619 </span>            : </a>
+<a name="1620"><span class="lineNum">    1620 </span><span class="lineNoCov">          0 : juce::String FourOscPlugin::modulationSourceToName (ModSource src)</span></a>
+<a name="1621"><span class="lineNum">    1621 </span>            : {</a>
+<a name="1622"><span class="lineNum">    1622 </span><span class="lineNoCov">          0 :     switch (src)</span></a>
+<a name="1623"><span class="lineNum">    1623 </span>            :     {</a>
+<a name="1624"><span class="lineNum">    1624 </span><span class="lineNoCov">          0 :         case lfo1:          return TRANS(&quot;LFO 1&quot;);</span></a>
+<a name="1625"><span class="lineNum">    1625 </span><span class="lineNoCov">          0 :         case lfo2:          return TRANS(&quot;LFO 2&quot;);</span></a>
+<a name="1626"><span class="lineNum">    1626 </span><span class="lineNoCov">          0 :         case env1:          return TRANS(&quot;Envelope 1&quot;);</span></a>
+<a name="1627"><span class="lineNum">    1627 </span><span class="lineNoCov">          0 :         case env2:          return TRANS(&quot;Envelope 2&quot;);</span></a>
+<a name="1628"><span class="lineNum">    1628 </span><span class="lineNoCov">          0 :         case mpePressure:   return TRANS(&quot;MPE Pressure&quot;);</span></a>
+<a name="1629"><span class="lineNum">    1629 </span><span class="lineNoCov">          0 :         case mpeTimbre:     return TRANS(&quot;MPE Timbre&quot;);</span></a>
+<a name="1630"><span class="lineNum">    1630 </span><span class="lineNoCov">          0 :         case midiNoteNum:   return TRANS(&quot;MIDI Note Number&quot;);</span></a>
+<a name="1631"><span class="lineNum">    1631 </span><span class="lineNoCov">          0 :         case midiVelocity:  return TRANS(&quot;MIDI Velocity&quot;);</span></a>
+<a name="1632"><span class="lineNum">    1632 </span><span class="lineNoCov">          0 :         case none:</span></a>
+<a name="1633"><span class="lineNum">    1633 </span>            :         case ccBankSelect:</a>
+<a name="1634"><span class="lineNum">    1634 </span>            :         case ccPolyMode:</a>
+<a name="1635"><span class="lineNum">    1635 </span>            :         case numModSources:</a>
+<a name="1636"><span class="lineNum">    1636 </span>            :         default:</a>
+<a name="1637"><span class="lineNum">    1637 </span>            :         {</a>
+<a name="1638"><span class="lineNum">    1638 </span><span class="lineNoCov">          0 :             if (src &gt;= ccBankSelect &amp;&amp; src &lt;= ccPolyMode)</span></a>
+<a name="1639"><span class="lineNum">    1639 </span>            :             {</a>
+<a name="1640"><span class="lineNum">    1640 </span><span class="lineNoCov">          0 :                 auto prefix = juce::String (&quot;CC#&quot;) + juce::String ((int)(src - ccBankSelect));</span></a>
+<a name="1641"><span class="lineNum">    1641 </span><span class="lineNoCov">          0 :                 auto name = juce::String (juce::MidiMessage::getControllerName (src - ccBankSelect));</span></a>
+<a name="1642"><span class="lineNum">    1642 </span>            : </a>
+<a name="1643"><span class="lineNum">    1643 </span><span class="lineNoCov">          0 :                 if (name.isEmpty())</span></a>
+<a name="1644"><span class="lineNum">    1644 </span><span class="lineNoCov">          0 :                     return prefix;</span></a>
 <a name="1645"><span class="lineNum">    1645 </span>            : </a>
-<a name="1646"><span class="lineNum">    1646 </span>            :             jassertfalse;</a>
-<a name="1647"><span class="lineNum">    1647 </span><span class="lineNoCov">          0 :             return {};</span></a>
-<a name="1648"><span class="lineNum">    1648 </span>            :         }</a>
-<a name="1649"><span class="lineNum">    1649 </span>            :     }</a>
-<a name="1650"><span class="lineNum">    1650 </span>            : }</a>
-<a name="1651"><span class="lineNum">    1651 </span>            : </a>
-<a name="1652"><span class="lineNum">    1652 </span><span class="lineNoCov">          0 : juce::String FourOscPlugin::modulationSourceToID (FourOscPlugin::ModSource src)</span></a>
-<a name="1653"><span class="lineNum">    1653 </span>            : {</a>
-<a name="1654"><span class="lineNum">    1654 </span><span class="lineNoCov">          0 :     switch (src)</span></a>
-<a name="1655"><span class="lineNum">    1655 </span>            :     {</a>
-<a name="1656"><span class="lineNum">    1656 </span><span class="lineNoCov">          0 :         case lfo1:          return &quot;lfo1&quot;;</span></a>
-<a name="1657"><span class="lineNum">    1657 </span><span class="lineNoCov">          0 :         case lfo2:          return &quot;lfo2&quot;;</span></a>
-<a name="1658"><span class="lineNum">    1658 </span><span class="lineNoCov">          0 :         case env1:          return &quot;env1&quot;;</span></a>
-<a name="1659"><span class="lineNum">    1659 </span><span class="lineNoCov">          0 :         case env2:          return &quot;env2&quot;;</span></a>
-<a name="1660"><span class="lineNum">    1660 </span><span class="lineNoCov">          0 :         case mpePressure:   return &quot;mpePressure&quot;;</span></a>
-<a name="1661"><span class="lineNum">    1661 </span><span class="lineNoCov">          0 :         case mpeTimbre:     return &quot;mpeTimbre&quot;;</span></a>
-<a name="1662"><span class="lineNum">    1662 </span><span class="lineNoCov">          0 :         case midiNoteNum:   return &quot;midiNote&quot;;</span></a>
-<a name="1663"><span class="lineNum">    1663 </span><span class="lineNoCov">          0 :         case midiVelocity:  return &quot;midiVelocity&quot;;</span></a>
-<a name="1664"><span class="lineNum">    1664 </span><span class="lineNoCov">          0 :         case none:</span></a>
-<a name="1665"><span class="lineNum">    1665 </span>            :         case ccBankSelect:</a>
-<a name="1666"><span class="lineNum">    1666 </span>            :         case ccPolyMode:</a>
-<a name="1667"><span class="lineNum">    1667 </span>            :         case numModSources:</a>
-<a name="1668"><span class="lineNum">    1668 </span>            :         default:</a>
-<a name="1669"><span class="lineNum">    1669 </span>            :         {</a>
-<a name="1670"><span class="lineNum">    1670 </span><span class="lineNoCov">          0 :             if (src &gt;= ccBankSelect &amp;&amp; src &lt;= ccPolyMode)</span></a>
-<a name="1671"><span class="lineNum">    1671 </span><span class="lineNoCov">          0 :                 return &quot;cc&quot; + juce::String (int (src - ccBankSelect));</span></a>
-<a name="1672"><span class="lineNum">    1672 </span>            : </a>
-<a name="1673"><span class="lineNum">    1673 </span>            :             jassertfalse;</a>
-<a name="1674"><span class="lineNum">    1674 </span><span class="lineNoCov">          0 :             return {};</span></a>
-<a name="1675"><span class="lineNum">    1675 </span>            :         }</a>
-<a name="1676"><span class="lineNum">    1676 </span>            :     }</a>
-<a name="1677"><span class="lineNum">    1677 </span>            : }</a>
-<a name="1678"><span class="lineNum">    1678 </span>            : </a>
-<a name="1679"><span class="lineNum">    1679 </span><span class="lineNoCov">          0 : FourOscPlugin::ModSource FourOscPlugin::idToModulationSource (juce::String idStr)</span></a>
-<a name="1680"><span class="lineNum">    1680 </span>            : {</a>
-<a name="1681"><span class="lineNum">    1681 </span><span class="lineNoCov">          0 :     if (idStr == &quot;lfo1&quot;)            return lfo1;</span></a>
-<a name="1682"><span class="lineNum">    1682 </span><span class="lineNoCov">          0 :     if (idStr == &quot;lfo2&quot;)            return lfo2;</span></a>
-<a name="1683"><span class="lineNum">    1683 </span><span class="lineNoCov">          0 :     if (idStr == &quot;env1&quot;)            return env1;</span></a>
-<a name="1684"><span class="lineNum">    1684 </span><span class="lineNoCov">          0 :     if (idStr == &quot;env2&quot;)            return env2;</span></a>
-<a name="1685"><span class="lineNum">    1685 </span><span class="lineNoCov">          0 :     if (idStr == &quot;mpePressure&quot;)     return mpePressure;</span></a>
-<a name="1686"><span class="lineNum">    1686 </span><span class="lineNoCov">          0 :     if (idStr == &quot;mpeTimbre&quot;)       return mpeTimbre;</span></a>
-<a name="1687"><span class="lineNum">    1687 </span><span class="lineNoCov">          0 :     if (idStr == &quot;midiNote&quot;)        return midiNoteNum;</span></a>
-<a name="1688"><span class="lineNum">    1688 </span><span class="lineNoCov">          0 :     if (idStr == &quot;midiVelocity&quot;)    return midiVelocity;</span></a>
-<a name="1689"><span class="lineNum">    1689 </span>            : </a>
-<a name="1690"><span class="lineNum">    1690 </span><span class="lineNoCov">          0 :     if (idStr.startsWith (&quot;cc&quot;))</span></a>
-<a name="1691"><span class="lineNum">    1691 </span><span class="lineNoCov">          0 :         return ModSource (ccBankSelect + idStr.getTrailingIntValue());</span></a>
+<a name="1646"><span class="lineNum">    1646 </span><span class="lineNoCov">          0 :                 return prefix + &quot; &quot; + name;</span></a>
+<a name="1647"><span class="lineNum">    1647 </span>            :             }</a>
+<a name="1648"><span class="lineNum">    1648 </span>            : </a>
+<a name="1649"><span class="lineNum">    1649 </span>            :             jassertfalse;</a>
+<a name="1650"><span class="lineNum">    1650 </span><span class="lineNoCov">          0 :             return {};</span></a>
+<a name="1651"><span class="lineNum">    1651 </span>            :         }</a>
+<a name="1652"><span class="lineNum">    1652 </span>            :     }</a>
+<a name="1653"><span class="lineNum">    1653 </span>            : }</a>
+<a name="1654"><span class="lineNum">    1654 </span>            : </a>
+<a name="1655"><span class="lineNum">    1655 </span><span class="lineNoCov">          0 : juce::String FourOscPlugin::modulationSourceToID (FourOscPlugin::ModSource src)</span></a>
+<a name="1656"><span class="lineNum">    1656 </span>            : {</a>
+<a name="1657"><span class="lineNum">    1657 </span><span class="lineNoCov">          0 :     switch (src)</span></a>
+<a name="1658"><span class="lineNum">    1658 </span>            :     {</a>
+<a name="1659"><span class="lineNum">    1659 </span><span class="lineNoCov">          0 :         case lfo1:          return &quot;lfo1&quot;;</span></a>
+<a name="1660"><span class="lineNum">    1660 </span><span class="lineNoCov">          0 :         case lfo2:          return &quot;lfo2&quot;;</span></a>
+<a name="1661"><span class="lineNum">    1661 </span><span class="lineNoCov">          0 :         case env1:          return &quot;env1&quot;;</span></a>
+<a name="1662"><span class="lineNum">    1662 </span><span class="lineNoCov">          0 :         case env2:          return &quot;env2&quot;;</span></a>
+<a name="1663"><span class="lineNum">    1663 </span><span class="lineNoCov">          0 :         case mpePressure:   return &quot;mpePressure&quot;;</span></a>
+<a name="1664"><span class="lineNum">    1664 </span><span class="lineNoCov">          0 :         case mpeTimbre:     return &quot;mpeTimbre&quot;;</span></a>
+<a name="1665"><span class="lineNum">    1665 </span><span class="lineNoCov">          0 :         case midiNoteNum:   return &quot;midiNote&quot;;</span></a>
+<a name="1666"><span class="lineNum">    1666 </span><span class="lineNoCov">          0 :         case midiVelocity:  return &quot;midiVelocity&quot;;</span></a>
+<a name="1667"><span class="lineNum">    1667 </span><span class="lineNoCov">          0 :         case none:</span></a>
+<a name="1668"><span class="lineNum">    1668 </span>            :         case ccBankSelect:</a>
+<a name="1669"><span class="lineNum">    1669 </span>            :         case ccPolyMode:</a>
+<a name="1670"><span class="lineNum">    1670 </span>            :         case numModSources:</a>
+<a name="1671"><span class="lineNum">    1671 </span>            :         default:</a>
+<a name="1672"><span class="lineNum">    1672 </span>            :         {</a>
+<a name="1673"><span class="lineNum">    1673 </span><span class="lineNoCov">          0 :             if (src &gt;= ccBankSelect &amp;&amp; src &lt;= ccPolyMode)</span></a>
+<a name="1674"><span class="lineNum">    1674 </span><span class="lineNoCov">          0 :                 return &quot;cc&quot; + juce::String (int (src - ccBankSelect));</span></a>
+<a name="1675"><span class="lineNum">    1675 </span>            : </a>
+<a name="1676"><span class="lineNum">    1676 </span>            :             jassertfalse;</a>
+<a name="1677"><span class="lineNum">    1677 </span><span class="lineNoCov">          0 :             return {};</span></a>
+<a name="1678"><span class="lineNum">    1678 </span>            :         }</a>
+<a name="1679"><span class="lineNum">    1679 </span>            :     }</a>
+<a name="1680"><span class="lineNum">    1680 </span>            : }</a>
+<a name="1681"><span class="lineNum">    1681 </span>            : </a>
+<a name="1682"><span class="lineNum">    1682 </span><span class="lineNoCov">          0 : FourOscPlugin::ModSource FourOscPlugin::idToModulationSource (juce::String idStr)</span></a>
+<a name="1683"><span class="lineNum">    1683 </span>            : {</a>
+<a name="1684"><span class="lineNum">    1684 </span><span class="lineNoCov">          0 :     if (idStr == &quot;lfo1&quot;)            return lfo1;</span></a>
+<a name="1685"><span class="lineNum">    1685 </span><span class="lineNoCov">          0 :     if (idStr == &quot;lfo2&quot;)            return lfo2;</span></a>
+<a name="1686"><span class="lineNum">    1686 </span><span class="lineNoCov">          0 :     if (idStr == &quot;env1&quot;)            return env1;</span></a>
+<a name="1687"><span class="lineNum">    1687 </span><span class="lineNoCov">          0 :     if (idStr == &quot;env2&quot;)            return env2;</span></a>
+<a name="1688"><span class="lineNum">    1688 </span><span class="lineNoCov">          0 :     if (idStr == &quot;mpePressure&quot;)     return mpePressure;</span></a>
+<a name="1689"><span class="lineNum">    1689 </span><span class="lineNoCov">          0 :     if (idStr == &quot;mpeTimbre&quot;)       return mpeTimbre;</span></a>
+<a name="1690"><span class="lineNum">    1690 </span><span class="lineNoCov">          0 :     if (idStr == &quot;midiNote&quot;)        return midiNoteNum;</span></a>
+<a name="1691"><span class="lineNum">    1691 </span><span class="lineNoCov">          0 :     if (idStr == &quot;midiVelocity&quot;)    return midiVelocity;</span></a>
 <a name="1692"><span class="lineNum">    1692 </span>            : </a>
-<a name="1693"><span class="lineNum">    1693 </span>            :     return none;</a>
-<a name="1694"><span class="lineNum">    1694 </span>            : }</a>
+<a name="1693"><span class="lineNum">    1693 </span><span class="lineNoCov">          0 :     if (idStr.startsWith (&quot;cc&quot;))</span></a>
+<a name="1694"><span class="lineNum">    1694 </span><span class="lineNoCov">          0 :         return ModSource (ccBankSelect + idStr.getTrailingIntValue());</span></a>
 <a name="1695"><span class="lineNum">    1695 </span>            : </a>
-<a name="1696"><span class="lineNum">    1696 </span><span class="lineNoCov">          0 : juce::Array&lt;float&gt; FourOscPlugin::getLiveModulationPositions (AutomatableParameter::Ptr param)</span></a>
-<a name="1697"><span class="lineNum">    1697 </span>            : {</a>
-<a name="1698"><span class="lineNum">    1698 </span><span class="lineNoCov">          0 :     juce::Array&lt;float&gt; positions;</span></a>
-<a name="1699"><span class="lineNum">    1699 </span>            : </a>
-<a name="1700"><span class="lineNum">    1700 </span>            :     // Filter frequency is a special case, not only do we want to show modulation,</a>
-<a name="1701"><span class="lineNum">    1701 </span>            :     // also want to show effect of key tracking and filter envelope</a>
-<a name="1702"><span class="lineNum">    1702 </span><span class="lineNoCov">          0 :     if (param-&gt;paramID == &quot;filterFreq&quot; &amp;&amp; isModulated (param))</span></a>
-<a name="1703"><span class="lineNum">    1703 </span>            :     {</a>
-<a name="1704"><span class="lineNum">    1704 </span><span class="lineNoCov">          0 :         for (int i = 0; i &lt; getNumVoices(); i++)</span></a>
-<a name="1705"><span class="lineNum">    1705 </span><span class="lineNoCov">          0 :             if (auto fov = dynamic_cast&lt;FourOscVoice*&gt; (getVoice (i)))</span></a>
-<a name="1706"><span class="lineNum">    1706 </span><span class="lineNoCov">          0 :                 fov-&gt;getLiveFilterFrequency (positions);</span></a>
-<a name="1707"><span class="lineNum">    1707 </span>            :     }</a>
-<a name="1708"><span class="lineNum">    1708 </span><span class="lineNoCov">          0 :     else if (isModulated (param))</span></a>
-<a name="1709"><span class="lineNum">    1709 </span>            :     {</a>
-<a name="1710"><span class="lineNum">    1710 </span><span class="lineNoCov">          0 :         for (int i = 0; i &lt; getNumVoices(); i++)</span></a>
-<a name="1711"><span class="lineNum">    1711 </span><span class="lineNoCov">          0 :             if (auto fov = dynamic_cast&lt;FourOscVoice*&gt; (getVoice (i)))</span></a>
-<a name="1712"><span class="lineNum">    1712 </span><span class="lineNoCov">          0 :                 fov-&gt;getLiveModulationPositions (param, positions);</span></a>
-<a name="1713"><span class="lineNum">    1713 </span>            :     }</a>
-<a name="1714"><span class="lineNum">    1714 </span><span class="lineNoCov">          0 :     return positions;</span></a>
-<a name="1715"><span class="lineNum">    1715 </span>            : }</a>
-<a name="1716"><span class="lineNum">    1716 </span>            : </a>
-<a name="1717"><span class="lineNum">    1717 </span><span class="lineNoCov">          0 : bool FourOscPlugin::isModulated (AutomatableParameter::Ptr param)</span></a>
-<a name="1718"><span class="lineNum">    1718 </span>            : {</a>
-<a name="1719"><span class="lineNum">    1719 </span><span class="lineNoCov">          0 :     if (param-&gt;paramID == &quot;filterFreq&quot; &amp;&amp; (filterKeyValue.get() != 0 || filterAmountValue.get() != 0 ))</span></a>
-<a name="1720"><span class="lineNum">    1720 </span>            :         return true;</a>
-<a name="1721"><span class="lineNum">    1721 </span>            : </a>
-<a name="1722"><span class="lineNum">    1722 </span><span class="lineNoCov">          0 :     auto itr = modMatrix.find (param.get());</span></a>
-<a name="1723"><span class="lineNum">    1723 </span><span class="lineNoCov">          0 :     if (itr != modMatrix.end())</span></a>
-<a name="1724"><span class="lineNum">    1724 </span>            :     {</a>
-<a name="1725"><span class="lineNum">    1725 </span><span class="lineNoCov">          0 :         for (auto d : itr-&gt;second.depths)</span></a>
-<a name="1726"><span class="lineNum">    1726 </span><span class="lineNoCov">          0 :             if (d &gt;= -1.0f)</span></a>
-<a name="1727"><span class="lineNum">    1727 </span>            :                 return true;</a>
-<a name="1728"><span class="lineNum">    1728 </span>            : </a>
-<a name="1729"><span class="lineNum">    1729 </span>            :         return false;</a>
-<a name="1730"><span class="lineNum">    1730 </span>            :     }</a>
-<a name="1731"><span class="lineNum">    1731 </span>            :     jassertfalse;</a>
-<a name="1732"><span class="lineNum">    1732 </span>            :     return false;</a>
-<a name="1733"><span class="lineNum">    1733 </span>            : }</a>
-<a name="1734"><span class="lineNum">    1734 </span>            : </a>
-<a name="1735"><span class="lineNum">    1735 </span><span class="lineNoCov">          0 : juce::Array&lt;FourOscPlugin::ModSource&gt; FourOscPlugin::getModulationSources (AutomatableParameter::Ptr param)</span></a>
-<a name="1736"><span class="lineNum">    1736 </span>            : {</a>
-<a name="1737"><span class="lineNum">    1737 </span><span class="lineNoCov">          0 :     auto itr = modMatrix.find (param.get());</span></a>
-<a name="1738"><span class="lineNum">    1738 </span><span class="lineNoCov">          0 :     if (itr != modMatrix.end())</span></a>
-<a name="1739"><span class="lineNum">    1739 </span>            :     {</a>
-<a name="1740"><span class="lineNum">    1740 </span><span class="lineNoCov">          0 :         juce::Array&lt;ModSource&gt; res;</span></a>
-<a name="1741"><span class="lineNum">    1741 </span><span class="lineNoCov">          0 :         for (int s = lfo1; s &lt; numModSources; s++)</span></a>
-<a name="1742"><span class="lineNum">    1742 </span><span class="lineNoCov">          0 :             if (itr-&gt;second.depths[s] &gt;= -1.0f)</span></a>
-<a name="1743"><span class="lineNum">    1743 </span><span class="lineNoCov">          0 :                 res.add ((ModSource) s);</span></a>
-<a name="1744"><span class="lineNum">    1744 </span>            : </a>
-<a name="1745"><span class="lineNum">    1745 </span>            :         return res;</a>
-<a name="1746"><span class="lineNum">    1746 </span>            :     }</a>
-<a name="1747"><span class="lineNum">    1747 </span>            :     jassertfalse;</a>
-<a name="1748"><span class="lineNum">    1748 </span><span class="lineNoCov">          0 :     return {};</span></a>
-<a name="1749"><span class="lineNum">    1749 </span>            : }</a>
-<a name="1750"><span class="lineNum">    1750 </span>            : </a>
-<a name="1751"><span class="lineNum">    1751 </span><span class="lineNoCov">          0 : float FourOscPlugin::getModulationDepth (FourOscPlugin::ModSource src, AutomatableParameter::Ptr param)</span></a>
-<a name="1752"><span class="lineNum">    1752 </span>            : {</a>
-<a name="1753"><span class="lineNum">    1753 </span><span class="lineNoCov">          0 :     auto itr = modMatrix.find (param.get());</span></a>
-<a name="1754"><span class="lineNum">    1754 </span><span class="lineNoCov">          0 :     if (itr != modMatrix.end())</span></a>
-<a name="1755"><span class="lineNum">    1755 </span><span class="lineNoCov">          0 :         return itr-&gt;second.depths[src];</span></a>
-<a name="1756"><span class="lineNum">    1756 </span>            :     jassertfalse;</a>
-<a name="1757"><span class="lineNum">    1757 </span>            :     return -1000;</a>
-<a name="1758"><span class="lineNum">    1758 </span>            : }</a>
-<a name="1759"><span class="lineNum">    1759 </span>            : </a>
-<a name="1760"><span class="lineNum">    1760 </span><span class="lineNoCov">          0 : void FourOscPlugin::setModulationDepth (FourOscPlugin::ModSource src, AutomatableParameter::Ptr param, float depth)</span></a>
-<a name="1761"><span class="lineNum">    1761 </span>            : {</a>
-<a name="1762"><span class="lineNum">    1762 </span><span class="lineNoCov">          0 :     auto itr = modMatrix.find (param.get());</span></a>
-<a name="1763"><span class="lineNum">    1763 </span><span class="lineNoCov">          0 :     if (itr != modMatrix.end())</span></a>
-<a name="1764"><span class="lineNum">    1764 </span>            :     {</a>
-<a name="1765"><span class="lineNum">    1765 </span><span class="lineNoCov">          0 :         itr-&gt;second.depths[src] = depth;</span></a>
-<a name="1766"><span class="lineNum">    1766 </span>            :         itr-&gt;second.updateCachedInfo();</a>
-<a name="1767"><span class="lineNum">    1767 </span>            :         return;</a>
-<a name="1768"><span class="lineNum">    1768 </span>            :     }</a>
-<a name="1769"><span class="lineNum">    1769 </span>            :     jassertfalse;</a>
-<a name="1770"><span class="lineNum">    1770 </span>            : }</a>
-<a name="1771"><span class="lineNum">    1771 </span>            : </a>
-<a name="1772"><span class="lineNum">    1772 </span><span class="lineNoCov">          0 : void FourOscPlugin::clearModulation (ModSource src, AutomatableParameter::Ptr param)</span></a>
-<a name="1773"><span class="lineNum">    1773 </span>            : {</a>
-<a name="1774"><span class="lineNum">    1774 </span><span class="lineNoCov">          0 :     auto itr = modMatrix.find (param.get());</span></a>
-<a name="1775"><span class="lineNum">    1775 </span><span class="lineNoCov">          0 :     if (itr != modMatrix.end())</span></a>
-<a name="1776"><span class="lineNum">    1776 </span>            :     {</a>
-<a name="1777"><span class="lineNum">    1777 </span><span class="lineNoCov">          0 :         itr-&gt;second.depths[src] = -1000.0f;</span></a>
-<a name="1778"><span class="lineNum">    1778 </span>            :         itr-&gt;second.updateCachedInfo();</a>
-<a name="1779"><span class="lineNum">    1779 </span>            :         return;</a>
-<a name="1780"><span class="lineNum">    1780 </span>            :     }</a>
-<a name="1781"><span class="lineNum">    1781 </span>            :     jassertfalse;</a>
-<a name="1782"><span class="lineNum">    1782 </span>            : }</a>
-<a name="1783"><span class="lineNum">    1783 </span>            : </a>
-<a name="1784"><span class="lineNum">    1784 </span><span class="lineNoCov">          0 : float FourOscPlugin::paramValue (AutomatableParameter::Ptr param)</span></a>
-<a name="1785"><span class="lineNum">    1785 </span>            : {</a>
-<a name="1786"><span class="lineNum">    1786 </span>            :     jassert (param != nullptr);</a>
-<a name="1787"><span class="lineNum">    1787 </span><span class="lineNoCov">          0 :     if (param == nullptr)</span></a>
-<a name="1788"><span class="lineNum">    1788 </span>            :         return 0.0f;</a>
-<a name="1789"><span class="lineNum">    1789 </span>            : </a>
-<a name="1790"><span class="lineNum">    1790 </span><span class="lineNoCov">          0 :     auto smoothItr = smoothers.find (param.get());</span></a>
-<a name="1791"><span class="lineNum">    1791 </span><span class="lineNoCov">          0 :     if (smoothItr == smoothers.end())</span></a>
-<a name="1792"><span class="lineNum">    1792 </span><span class="lineNoCov">          0 :         return param-&gt;getCurrentValue();</span></a>
-<a name="1793"><span class="lineNum">    1793 </span>            : </a>
-<a name="1794"><span class="lineNum">    1794 </span><span class="lineNoCov">          0 :     float val = param-&gt;getCurrentNormalisedValue();</span></a>
-<a name="1795"><span class="lineNum">    1795 </span>            :     smoothItr-&gt;second.setValue (val);</a>
-<a name="1796"><span class="lineNum">    1796 </span><span class="lineNoCov">          0 :     return param-&gt;valueRange.convertFrom0to1 (smoothItr-&gt;second.getCurrentValue());</span></a>
-<a name="1797"><span class="lineNum">    1797 </span>            : }</a>
-<a name="1798"><span class="lineNum">    1798 </span>            : </a>
-<a name="1799"><span class="lineNum">    1799 </span>            : }</a>
+<a name="1696"><span class="lineNum">    1696 </span>            :     return none;</a>
+<a name="1697"><span class="lineNum">    1697 </span>            : }</a>
+<a name="1698"><span class="lineNum">    1698 </span>            : </a>
+<a name="1699"><span class="lineNum">    1699 </span><span class="lineNoCov">          0 : juce::Array&lt;float&gt; FourOscPlugin::getLiveModulationPositions (AutomatableParameter::Ptr param)</span></a>
+<a name="1700"><span class="lineNum">    1700 </span>            : {</a>
+<a name="1701"><span class="lineNum">    1701 </span><span class="lineNoCov">          0 :     juce::Array&lt;float&gt; positions;</span></a>
+<a name="1702"><span class="lineNum">    1702 </span>            : </a>
+<a name="1703"><span class="lineNum">    1703 </span>            :     // Filter frequency is a special case, not only do we want to show modulation,</a>
+<a name="1704"><span class="lineNum">    1704 </span>            :     // also want to show effect of key tracking and filter envelope</a>
+<a name="1705"><span class="lineNum">    1705 </span><span class="lineNoCov">          0 :     if (param-&gt;paramID == &quot;filterFreq&quot; &amp;&amp; isModulated (param))</span></a>
+<a name="1706"><span class="lineNum">    1706 </span>            :     {</a>
+<a name="1707"><span class="lineNum">    1707 </span><span class="lineNoCov">          0 :         for (int i = 0; i &lt; getNumVoices(); i++)</span></a>
+<a name="1708"><span class="lineNum">    1708 </span><span class="lineNoCov">          0 :             if (auto fov = dynamic_cast&lt;FourOscVoice*&gt; (getVoice (i)))</span></a>
+<a name="1709"><span class="lineNum">    1709 </span><span class="lineNoCov">          0 :                 fov-&gt;getLiveFilterFrequency (positions);</span></a>
+<a name="1710"><span class="lineNum">    1710 </span>            :     }</a>
+<a name="1711"><span class="lineNum">    1711 </span><span class="lineNoCov">          0 :     else if (isModulated (param))</span></a>
+<a name="1712"><span class="lineNum">    1712 </span>            :     {</a>
+<a name="1713"><span class="lineNum">    1713 </span><span class="lineNoCov">          0 :         for (int i = 0; i &lt; getNumVoices(); i++)</span></a>
+<a name="1714"><span class="lineNum">    1714 </span><span class="lineNoCov">          0 :             if (auto fov = dynamic_cast&lt;FourOscVoice*&gt; (getVoice (i)))</span></a>
+<a name="1715"><span class="lineNum">    1715 </span><span class="lineNoCov">          0 :                 fov-&gt;getLiveModulationPositions (param, positions);</span></a>
+<a name="1716"><span class="lineNum">    1716 </span>            :     }</a>
+<a name="1717"><span class="lineNum">    1717 </span><span class="lineNoCov">          0 :     return positions;</span></a>
+<a name="1718"><span class="lineNum">    1718 </span>            : }</a>
+<a name="1719"><span class="lineNum">    1719 </span>            : </a>
+<a name="1720"><span class="lineNum">    1720 </span><span class="lineNoCov">          0 : bool FourOscPlugin::isModulated (AutomatableParameter::Ptr param)</span></a>
+<a name="1721"><span class="lineNum">    1721 </span>            : {</a>
+<a name="1722"><span class="lineNum">    1722 </span><span class="lineNoCov">          0 :     if (param-&gt;paramID == &quot;filterFreq&quot; &amp;&amp; (filterKeyValue.get() != 0 || filterAmountValue.get() != 0 ))</span></a>
+<a name="1723"><span class="lineNum">    1723 </span>            :         return true;</a>
+<a name="1724"><span class="lineNum">    1724 </span>            : </a>
+<a name="1725"><span class="lineNum">    1725 </span><span class="lineNoCov">          0 :     auto itr = modMatrix.find (param.get());</span></a>
+<a name="1726"><span class="lineNum">    1726 </span><span class="lineNoCov">          0 :     if (itr != modMatrix.end())</span></a>
+<a name="1727"><span class="lineNum">    1727 </span>            :     {</a>
+<a name="1728"><span class="lineNum">    1728 </span><span class="lineNoCov">          0 :         for (auto d : itr-&gt;second.depths)</span></a>
+<a name="1729"><span class="lineNum">    1729 </span><span class="lineNoCov">          0 :             if (d &gt;= -1.0f)</span></a>
+<a name="1730"><span class="lineNum">    1730 </span>            :                 return true;</a>
+<a name="1731"><span class="lineNum">    1731 </span>            : </a>
+<a name="1732"><span class="lineNum">    1732 </span>            :         return false;</a>
+<a name="1733"><span class="lineNum">    1733 </span>            :     }</a>
+<a name="1734"><span class="lineNum">    1734 </span>            :     jassertfalse;</a>
+<a name="1735"><span class="lineNum">    1735 </span>            :     return false;</a>
+<a name="1736"><span class="lineNum">    1736 </span>            : }</a>
+<a name="1737"><span class="lineNum">    1737 </span>            : </a>
+<a name="1738"><span class="lineNum">    1738 </span><span class="lineNoCov">          0 : juce::Array&lt;FourOscPlugin::ModSource&gt; FourOscPlugin::getModulationSources (AutomatableParameter::Ptr param)</span></a>
+<a name="1739"><span class="lineNum">    1739 </span>            : {</a>
+<a name="1740"><span class="lineNum">    1740 </span><span class="lineNoCov">          0 :     auto itr = modMatrix.find (param.get());</span></a>
+<a name="1741"><span class="lineNum">    1741 </span><span class="lineNoCov">          0 :     if (itr != modMatrix.end())</span></a>
+<a name="1742"><span class="lineNum">    1742 </span>            :     {</a>
+<a name="1743"><span class="lineNum">    1743 </span><span class="lineNoCov">          0 :         juce::Array&lt;ModSource&gt; res;</span></a>
+<a name="1744"><span class="lineNum">    1744 </span><span class="lineNoCov">          0 :         for (int s = lfo1; s &lt; numModSources; s++)</span></a>
+<a name="1745"><span class="lineNum">    1745 </span><span class="lineNoCov">          0 :             if (itr-&gt;second.depths[s] &gt;= -1.0f)</span></a>
+<a name="1746"><span class="lineNum">    1746 </span><span class="lineNoCov">          0 :                 res.add ((ModSource) s);</span></a>
+<a name="1747"><span class="lineNum">    1747 </span>            : </a>
+<a name="1748"><span class="lineNum">    1748 </span>            :         return res;</a>
+<a name="1749"><span class="lineNum">    1749 </span>            :     }</a>
+<a name="1750"><span class="lineNum">    1750 </span>            :     jassertfalse;</a>
+<a name="1751"><span class="lineNum">    1751 </span><span class="lineNoCov">          0 :     return {};</span></a>
+<a name="1752"><span class="lineNum">    1752 </span>            : }</a>
+<a name="1753"><span class="lineNum">    1753 </span>            : </a>
+<a name="1754"><span class="lineNum">    1754 </span><span class="lineNoCov">          0 : float FourOscPlugin::getModulationDepth (FourOscPlugin::ModSource src, AutomatableParameter::Ptr param)</span></a>
+<a name="1755"><span class="lineNum">    1755 </span>            : {</a>
+<a name="1756"><span class="lineNum">    1756 </span><span class="lineNoCov">          0 :     auto itr = modMatrix.find (param.get());</span></a>
+<a name="1757"><span class="lineNum">    1757 </span><span class="lineNoCov">          0 :     if (itr != modMatrix.end())</span></a>
+<a name="1758"><span class="lineNum">    1758 </span><span class="lineNoCov">          0 :         return itr-&gt;second.depths[src];</span></a>
+<a name="1759"><span class="lineNum">    1759 </span>            :     jassertfalse;</a>
+<a name="1760"><span class="lineNum">    1760 </span>            :     return -1000;</a>
+<a name="1761"><span class="lineNum">    1761 </span>            : }</a>
+<a name="1762"><span class="lineNum">    1762 </span>            : </a>
+<a name="1763"><span class="lineNum">    1763 </span><span class="lineNoCov">          0 : void FourOscPlugin::setModulationDepth (FourOscPlugin::ModSource src, AutomatableParameter::Ptr param, float depth)</span></a>
+<a name="1764"><span class="lineNum">    1764 </span>            : {</a>
+<a name="1765"><span class="lineNum">    1765 </span><span class="lineNoCov">          0 :     auto itr = modMatrix.find (param.get());</span></a>
+<a name="1766"><span class="lineNum">    1766 </span><span class="lineNoCov">          0 :     if (itr != modMatrix.end())</span></a>
+<a name="1767"><span class="lineNum">    1767 </span>            :     {</a>
+<a name="1768"><span class="lineNum">    1768 </span><span class="lineNoCov">          0 :         itr-&gt;second.depths[src] = depth;</span></a>
+<a name="1769"><span class="lineNum">    1769 </span>            :         itr-&gt;second.updateCachedInfo();</a>
+<a name="1770"><span class="lineNum">    1770 </span>            :         return;</a>
+<a name="1771"><span class="lineNum">    1771 </span>            :     }</a>
+<a name="1772"><span class="lineNum">    1772 </span>            :     jassertfalse;</a>
+<a name="1773"><span class="lineNum">    1773 </span>            : }</a>
+<a name="1774"><span class="lineNum">    1774 </span>            : </a>
+<a name="1775"><span class="lineNum">    1775 </span><span class="lineNoCov">          0 : void FourOscPlugin::clearModulation (ModSource src, AutomatableParameter::Ptr param)</span></a>
+<a name="1776"><span class="lineNum">    1776 </span>            : {</a>
+<a name="1777"><span class="lineNum">    1777 </span><span class="lineNoCov">          0 :     auto itr = modMatrix.find (param.get());</span></a>
+<a name="1778"><span class="lineNum">    1778 </span><span class="lineNoCov">          0 :     if (itr != modMatrix.end())</span></a>
+<a name="1779"><span class="lineNum">    1779 </span>            :     {</a>
+<a name="1780"><span class="lineNum">    1780 </span><span class="lineNoCov">          0 :         itr-&gt;second.depths[src] = -1000.0f;</span></a>
+<a name="1781"><span class="lineNum">    1781 </span>            :         itr-&gt;second.updateCachedInfo();</a>
+<a name="1782"><span class="lineNum">    1782 </span>            :         return;</a>
+<a name="1783"><span class="lineNum">    1783 </span>            :     }</a>
+<a name="1784"><span class="lineNum">    1784 </span>            :     jassertfalse;</a>
+<a name="1785"><span class="lineNum">    1785 </span>            : }</a>
+<a name="1786"><span class="lineNum">    1786 </span>            : </a>
+<a name="1787"><span class="lineNum">    1787 </span><span class="lineNoCov">          0 : float FourOscPlugin::paramValue (AutomatableParameter::Ptr param)</span></a>
+<a name="1788"><span class="lineNum">    1788 </span>            : {</a>
+<a name="1789"><span class="lineNum">    1789 </span>            :     jassert (param != nullptr);</a>
+<a name="1790"><span class="lineNum">    1790 </span><span class="lineNoCov">          0 :     if (param == nullptr)</span></a>
+<a name="1791"><span class="lineNum">    1791 </span>            :         return 0.0f;</a>
+<a name="1792"><span class="lineNum">    1792 </span>            : </a>
+<a name="1793"><span class="lineNum">    1793 </span><span class="lineNoCov">          0 :     auto smoothItr = smoothers.find (param.get());</span></a>
+<a name="1794"><span class="lineNum">    1794 </span><span class="lineNoCov">          0 :     if (smoothItr == smoothers.end())</span></a>
+<a name="1795"><span class="lineNum">    1795 </span><span class="lineNoCov">          0 :         return param-&gt;getCurrentValue();</span></a>
+<a name="1796"><span class="lineNum">    1796 </span>            : </a>
+<a name="1797"><span class="lineNum">    1797 </span><span class="lineNoCov">          0 :     float val = param-&gt;getCurrentNormalisedValue();</span></a>
+<a name="1798"><span class="lineNum">    1798 </span>            :     smoothItr-&gt;second.setValue (val);</a>
+<a name="1799"><span class="lineNum">    1799 </span><span class="lineNoCov">          0 :     return param-&gt;valueRange.convertFrom0to1 (smoothItr-&gt;second.getCurrentValue());</span></a>
+<a name="1800"><span class="lineNum">    1800 </span>            : }</a>
+<a name="1801"><span class="lineNum">    1801 </span>            : </a>
+<a name="1802"><span class="lineNum">    1802 </span>            : }</a>
 </pre>
       </td>
     </tr>

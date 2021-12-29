@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -258,7 +258,7 @@
 <a name="196"><span class="lineNum">     196 </span><span class="lineNoCov">          0 :             if (editSnapshot != nullptr)</span></a>
 <a name="197"><span class="lineNum">     197 </span><span class="lineNoCov">          0 :                 editSnapshot-&gt;setState (edit.state, edit.getLength());</span></a>
 <a name="198"><span class="lineNum">     198 </span>            : </a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 :             if (auto xml = std::unique_ptr&lt;XmlElement&gt; (edit.state.createXml()))</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 :             if (auto xml = edit.state.createXml())</span></a>
 <a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :                 ok = xml-&gt;writeTo (file);</span></a>
 <a name="201"><span class="lineNum">     201 </span>            : </a>
 <a name="202"><span class="lineNum">     202 </span>            :             jassert (ok);</a>
@@ -483,7 +483,7 @@
 <a name="421"><span class="lineNum">     421 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="422"><span class="lineNum">     422 </span>            : </a>
 <a name="423"><span class="lineNum">     423 </span>            : //==============================================================================</a>
-<a name="424"><span class="lineNum">     424 </span><span class="lineNoCov">          0 : ValueTree loadEditFromProjectManager (ProjectManager&amp; pm, ProjectItemID itemID)</span></a>
+<a name="424"><span class="lineNum">     424 </span><span class="lineNoCov">          0 : juce::ValueTree loadEditFromProjectManager (ProjectManager&amp; pm, ProjectItemID itemID)</span></a>
 <a name="425"><span class="lineNum">     425 </span>            : {</a>
 <a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 :     if (auto item = pm.getProjectItem (itemID))</span></a>
 <a name="427"><span class="lineNum">     427 </span><span class="lineNoCov">          0 :         return loadEditFromFile (pm.engine, item-&gt;getSourceFile(), itemID);</span></a>
@@ -491,22 +491,22 @@
 <a name="429"><span class="lineNum">     429 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="430"><span class="lineNum">     430 </span>            : }</a>
 <a name="431"><span class="lineNum">     431 </span>            : </a>
-<a name="432"><span class="lineNum">     432 </span><span class="lineCov">        194 : ValueTree loadEditFromFile (Engine&amp; e, const File&amp; f, ProjectItemID itemID)</span></a>
+<a name="432"><span class="lineNum">     432 </span><span class="lineCov">        194 : juce::ValueTree loadEditFromFile (Engine&amp; e, const File&amp; f, ProjectItemID itemID)</span></a>
 <a name="433"><span class="lineNum">     433 </span>            : {</a>
 <a name="434"><span class="lineNum">     434 </span><span class="lineCov">        388 :     CRASH_TRACER</span></a>
-<a name="435"><span class="lineNum">     435 </span><span class="lineCov">        388 :     ValueTree state;</span></a>
+<a name="435"><span class="lineNum">     435 </span><span class="lineCov">        388 :     juce::ValueTree state;</span></a>
 <a name="436"><span class="lineNum">     436 </span>            : </a>
-<a name="437"><span class="lineNum">     437 </span><span class="lineCov">        194 :     if (auto xml = std::unique_ptr&lt;XmlElement&gt; (XmlDocument::parse (f)))</span></a>
+<a name="437"><span class="lineNum">     437 </span><span class="lineCov">        194 :     if (auto xml = juce::parseXML (f))</span></a>
 <a name="438"><span class="lineNum">     438 </span>            :     {</a>
 <a name="439"><span class="lineNum">     439 </span><span class="lineNoCov">          0 :         updateLegacyEdit (*xml);</span></a>
-<a name="440"><span class="lineNum">     440 </span><span class="lineNoCov">          0 :         state = ValueTree::fromXml (*xml);</span></a>
+<a name="440"><span class="lineNum">     440 </span><span class="lineNoCov">          0 :         state = juce::ValueTree::fromXml (*xml);</span></a>
 <a name="441"><span class="lineNum">     441 </span>            :     }</a>
 <a name="442"><span class="lineNum">     442 </span>            : </a>
 <a name="443"><span class="lineNum">     443 </span><span class="lineCov">        194 :     if (! state.isValid())</span></a>
 <a name="444"><span class="lineNum">     444 </span>            :     {</a>
-<a name="445"><span class="lineNum">     445 </span><span class="lineCov">        388 :         if (FileInputStream is (f); is.openedOk())</span></a>
+<a name="445"><span class="lineNum">     445 </span><span class="lineCov">        388 :         if (juce::FileInputStream is (f); is.openedOk())</span></a>
 <a name="446"><span class="lineNum">     446 </span>            :         {</a>
-<a name="447"><span class="lineNum">     447 </span><span class="lineNoCov">          0 :             if (state = ValueTree::readFromStream (is); state.hasType (IDs::EDIT))</span></a>
+<a name="447"><span class="lineNum">     447 </span><span class="lineNoCov">          0 :             if (state = juce::ValueTree::readFromStream (is); state.hasType (IDs::EDIT))</span></a>
 <a name="448"><span class="lineNum">     448 </span><span class="lineNoCov">          0 :                 state = updateLegacyEdit (state);</span></a>
 <a name="449"><span class="lineNum">     449 </span>            :             else</a>
 <a name="450"><span class="lineNum">     450 </span><span class="lineNoCov">          0 :                 state = {};</span></a>
@@ -519,7 +519,7 @@
 <a name="457"><span class="lineNum">     457 </span><span class="lineCov">        194 :         if (f.existsAsFile() &amp;&amp; f.getSize() &gt; 0)</span></a>
 <a name="458"><span class="lineNum">     458 </span><span class="lineNoCov">          0 :             return {};</span></a>
 <a name="459"><span class="lineNum">     459 </span>            :         </a>
-<a name="460"><span class="lineNum">     460 </span><span class="lineCov">        194 :         state = ValueTree (IDs::EDIT);</span></a>
+<a name="460"><span class="lineNum">     460 </span><span class="lineCov">        194 :         state = juce::ValueTree (IDs::EDIT);</span></a>
 <a name="461"><span class="lineNum">     461 </span><span class="lineCov">        194 :         state.setProperty (IDs::appVersion, e.getPropertyStorage().getApplicationVersion(), nullptr);</span></a>
 <a name="462"><span class="lineNum">     462 </span>            :     }</a>
 <a name="463"><span class="lineNum">     463 </span>            : </a>
@@ -573,7 +573,7 @@
 <a name="511"><span class="lineNum">     511 </span><span class="lineNoCov">          0 :     return std::make_unique&lt;Edit&gt; (options);</span></a>
 <a name="512"><span class="lineNum">     512 </span>            : }</a>
 <a name="513"><span class="lineNum">     513 </span>            : </a>
-<a name="514"><span class="lineNum">     514 </span><span class="lineCov">        194 : ValueTree createEmptyEdit (Engine&amp; e)</span></a>
+<a name="514"><span class="lineNum">     514 </span><span class="lineCov">        194 : juce::ValueTree createEmptyEdit (Engine&amp; e)</span></a>
 <a name="515"><span class="lineNum">     515 </span>            : {</a>
 <a name="516"><span class="lineNum">     516 </span><span class="lineCov">        388 :     return loadEditFromFile (e, {}, ProjectItemID::createNewID (0));</span></a>
 <a name="517"><span class="lineNum">     517 </span>            : }</a>

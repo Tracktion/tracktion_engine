@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">8</td>
@@ -85,9 +85,9 @@
 <a name="23"><span class="lineNum">      23 </span><span class="lineCov">        280 :     notifyListenersOfDeletion();</span></a>
 <a name="24"><span class="lineNum">      24 </span><span class="lineCov">        560 : }</span></a>
 <a name="25"><span class="lineNum">      25 </span>            : </a>
-<a name="26"><span class="lineNum">      26 </span><span class="lineCov">        280 : ValueTree LevelMeterPlugin::create()</span></a>
+<a name="26"><span class="lineNum">      26 </span><span class="lineCov">        280 : juce::ValueTree LevelMeterPlugin::create()</span></a>
 <a name="27"><span class="lineNum">      27 </span>            : {</a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineCov">        280 :     ValueTree v (IDs::PLUGIN);</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineCov">        280 :     juce::ValueTree v (IDs::PLUGIN);</span></a>
 <a name="29"><span class="lineNum">      29 </span><span class="lineCov">        280 :     v.setProperty (IDs::type, xmlTypeName, nullptr);</span></a>
 <a name="30"><span class="lineNum">      30 </span><span class="lineCov">        280 :     return v;</span></a>
 <a name="31"><span class="lineNum">      31 </span>            : }</a>
@@ -133,16 +133,16 @@
 <a name="71"><span class="lineNum">      71 </span>            :     }</a>
 <a name="72"><span class="lineNum">      72 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="73"><span class="lineNum">      73 </span>            : </a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineCov">       1626 : void LevelMeterPlugin::timerCallback()</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">       1716 : void LevelMeterPlugin::timerCallback()</span></a>
 <a name="75"><span class="lineNum">      75 </span>            : {</a>
-<a name="76"><span class="lineNum">      76 </span><span class="lineCov">       1626 :     if (controllerTrack &gt;= 0)</span></a>
+<a name="76"><span class="lineNum">      76 </span><span class="lineCov">       1716 :     if (controllerTrack &gt;= 0)</span></a>
 <a name="77"><span class="lineNum">      77 </span>            :     {</a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineCov">       1626 :         auto&amp; ecm = engine.getExternalControllerManager();</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">       1716 :         auto&amp; ecm = engine.getExternalControllerManager();</span></a>
 <a name="79"><span class="lineNum">      79 </span>            : </a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">       1626 :         if (ecm.isAttachedToEdit (edit))</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">       1716 :         if (ecm.isAttachedToEdit (edit))</span></a>
 <a name="81"><span class="lineNum">      81 </span><span class="lineNoCov">          0 :             ecm.channelLevelChanged (controllerTrack, dbToGain (measurer.getLevelCache()));</span></a>
 <a name="82"><span class="lineNum">      82 </span>            :     }</a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineCov">       1626 : }</span></a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">       1716 : }</span></a>
 <a name="84"><span class="lineNum">      84 </span>            : </a>
 <a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 : void LevelMeterPlugin::restorePluginStateFromValueTree (const juce::ValueTree&amp; v)</span></a>
 <a name="86"><span class="lineNum">      86 </span>            : {</a>

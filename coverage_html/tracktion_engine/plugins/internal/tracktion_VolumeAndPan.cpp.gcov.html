@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">21</td>
@@ -75,7 +75,7 @@
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : struct VolAutomatableParameter : public AutomatableParameter</a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineCov">        523 :     VolAutomatableParameter (const String&amp; xmlTag, const String&amp; name, Plugin&amp; owner, Range&lt;float&gt; r)</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">        523 :     VolAutomatableParameter (const juce::String&amp; xmlTag, const juce::String&amp; name, Plugin&amp; owner, Range&lt;float&gt; r)</span></a>
 <a name="17"><span class="lineNum">      17 </span><span class="lineCov">        523 :         : AutomatableParameter (xmlTag, name, owner, r)</span></a>
 <a name="18"><span class="lineNum">      18 </span>            :     {</a>
 <a name="19"><span class="lineNum">      19 </span><span class="lineCov">        523 :     }</span></a>
@@ -85,12 +85,12 @@
 <a name="23"><span class="lineNum">      23 </span><span class="lineCov">        523 :         notifyListenersOfDeletion();</span></a>
 <a name="24"><span class="lineNum">      24 </span><span class="lineCov">        329 :     }</span></a>
 <a name="25"><span class="lineNum">      25 </span>            : </a>
-<a name="26"><span class="lineNum">      26 </span><span class="lineNoCov">          0 :     String valueToString (float value) override</span></a>
+<a name="26"><span class="lineNum">      26 </span><span class="lineNoCov">          0 :     juce::String valueToString (float value) override</span></a>
 <a name="27"><span class="lineNum">      27 </span>            :     {</a>
 <a name="28"><span class="lineNum">      28 </span><span class="lineNoCov">          0 :         return Decibels::toString (volumeFaderPositionToDB (value) + 0.001);</span></a>
 <a name="29"><span class="lineNum">      29 </span>            :     }</a>
 <a name="30"><span class="lineNum">      30 </span>            : </a>
-<a name="31"><span class="lineNum">      31 </span><span class="lineNoCov">          0 :     float stringToValue (const String&amp; str) override</span></a>
+<a name="31"><span class="lineNum">      31 </span><span class="lineNoCov">          0 :     float stringToValue (const juce::String&amp; str) override</span></a>
 <a name="32"><span class="lineNum">      32 </span>            :     {</a>
 <a name="33"><span class="lineNum">      33 </span><span class="lineNoCov">          0 :         return decibelsToVolumeFaderPosition (dbStringToDb (str));</span></a>
 <a name="34"><span class="lineNum">      34 </span>            :     }</a>
@@ -99,7 +99,7 @@
 <a name="37"><span class="lineNum">      37 </span>            : //==============================================================================</a>
 <a name="38"><span class="lineNum">      38 </span>            : struct PanAutomatableParameter : public AutomatableParameter</a>
 <a name="39"><span class="lineNum">      39 </span>            : {</a>
-<a name="40"><span class="lineNum">      40 </span><span class="lineCov">        523 :     PanAutomatableParameter (const String&amp; xmlTag, const String&amp; name, Plugin&amp; owner, Range&lt;float&gt; r)</span></a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineCov">        523 :     PanAutomatableParameter (const juce::String&amp; xmlTag, const juce::String&amp; name, Plugin&amp; owner, Range&lt;float&gt; r)</span></a>
 <a name="41"><span class="lineNum">      41 </span><span class="lineCov">        523 :         : AutomatableParameter (xmlTag, name, owner, r)</span></a>
 <a name="42"><span class="lineNum">      42 </span>            :     {</a>
 <a name="43"><span class="lineNum">      43 </span><span class="lineCov">        523 :     }</span></a>
@@ -109,12 +109,12 @@
 <a name="47"><span class="lineNum">      47 </span><span class="lineCov">        523 :         notifyListenersOfDeletion();</span></a>
 <a name="48"><span class="lineNum">      48 </span><span class="lineCov">        329 :     }</span></a>
 <a name="49"><span class="lineNum">      49 </span>            : </a>
-<a name="50"><span class="lineNum">      50 </span><span class="lineNoCov">          0 :     String valueToString (float value) override</span></a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineNoCov">          0 :     juce::String valueToString (float value) override</span></a>
 <a name="51"><span class="lineNum">      51 </span>            :     {</a>
 <a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 :         return getPanString (value);</span></a>
 <a name="53"><span class="lineNum">      53 </span>            :     }</a>
 <a name="54"><span class="lineNum">      54 </span>            : </a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 :     float stringToValue (const String&amp; str) override</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 :     float stringToValue (const juce::String&amp; str) override</span></a>
 <a name="56"><span class="lineNum">      56 </span>            :     {</a>
 <a name="57"><span class="lineNum">      57 </span><span class="lineNoCov">          0 :         const float v = str.retainCharacters (&quot;0123456789.-&quot;).getFloatValue();</span></a>
 <a name="58"><span class="lineNum">      58 </span><span class="lineNoCov">          0 :         return str.contains (TRANS(&quot;Left&quot;)) ? -v : v;</span></a>
@@ -124,7 +124,7 @@
 <a name="62"><span class="lineNum">      62 </span>            : //==============================================================================</a>
 <a name="63"><span class="lineNum">      63 </span>            : struct MasterVolParameter  : public VolAutomatableParameter</a>
 <a name="64"><span class="lineNum">      64 </span>            : {</a>
-<a name="65"><span class="lineNum">      65 </span>            :     MasterVolParameter (const String&amp; xmlTag, const String&amp; name, Plugin&amp; owner, Range&lt;float&gt; r)</a>
+<a name="65"><span class="lineNum">      65 </span>            :     MasterVolParameter (const juce::String&amp; xmlTag, const juce::String&amp; name, Plugin&amp; owner, Range&lt;float&gt; r)</a>
 <a name="66"><span class="lineNum">      66 </span><span class="lineCov">        194 :         : VolAutomatableParameter (xmlTag, name, owner, r)</span></a>
 <a name="67"><span class="lineNum">      67 </span>            :     {</a>
 <a name="68"><span class="lineNum">      68 </span>            :     }</a>
@@ -134,14 +134,14 @@
 <a name="72"><span class="lineNum">      72 </span><span class="lineCov">        194 :         notifyListenersOfDeletion();</span></a>
 <a name="73"><span class="lineNum">      73 </span><span class="lineCov">        388 :     }</span></a>
 <a name="74"><span class="lineNum">      74 </span>            : </a>
-<a name="75"><span class="lineNum">      75 </span><span class="lineNoCov">          0 :     String getPluginAndParamName() const override        { return getParameterName(); }</span></a>
-<a name="76"><span class="lineNum">      76 </span><span class="lineNoCov">          0 :     String getFullName() const override                  { return getParameterName(); }</span></a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineNoCov">          0 :     juce::String getPluginAndParamName() const override        { return getParameterName(); }</span></a>
+<a name="76"><span class="lineNum">      76 </span><span class="lineNoCov">          0 :     juce::String getFullName() const override                  { return getParameterName(); }</span></a>
 <a name="77"><span class="lineNum">      77 </span>            : };</a>
 <a name="78"><span class="lineNum">      78 </span>            : </a>
 <a name="79"><span class="lineNum">      79 </span>            : //==============================================================================</a>
 <a name="80"><span class="lineNum">      80 </span>            : struct MasterPanParameter  : public PanAutomatableParameter</a>
 <a name="81"><span class="lineNum">      81 </span>            : {</a>
-<a name="82"><span class="lineNum">      82 </span>            :     MasterPanParameter (const String&amp; xmlTag, const String&amp; name, Plugin&amp; owner, Range&lt;float&gt; r)</a>
+<a name="82"><span class="lineNum">      82 </span>            :     MasterPanParameter (const juce::String&amp; xmlTag, const juce::String&amp; name, Plugin&amp; owner, Range&lt;float&gt; r)</a>
 <a name="83"><span class="lineNum">      83 </span><span class="lineCov">        194 :         : PanAutomatableParameter (xmlTag, name, owner, r)</span></a>
 <a name="84"><span class="lineNum">      84 </span>            :     {</a>
 <a name="85"><span class="lineNum">      85 </span>            :     }</a>
@@ -151,8 +151,8 @@
 <a name="89"><span class="lineNum">      89 </span><span class="lineCov">        194 :         notifyListenersOfDeletion();</span></a>
 <a name="90"><span class="lineNum">      90 </span><span class="lineCov">        388 :     }</span></a>
 <a name="91"><span class="lineNum">      91 </span>            : </a>
-<a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 :     String getPluginAndParamName() const override        { return getParameterName(); }</span></a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineNoCov">          0 :     String getFullName() const override                  { return getParameterName(); }</span></a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 :     juce::String getPluginAndParamName() const override        { return getParameterName(); }</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineNoCov">          0 :     juce::String getFullName() const override                  { return getParameterName(); }</span></a>
 <a name="94"><span class="lineNum">      94 </span>            : };</a>
 <a name="95"><span class="lineNum">      95 </span>            : </a>
 <a name="96"><span class="lineNum">      96 </span>            : //==============================================================================</a>
@@ -197,9 +197,9 @@
 <a name="135"><span class="lineNum">     135 </span><span class="lineCov">        523 :     panParam-&gt;detachFromCurrentValue();</span></a>
 <a name="136"><span class="lineNum">     136 </span><span class="lineCov">       1046 : }</span></a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineCov">        474 : ValueTree VolumeAndPanPlugin::create()</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">        474 : juce::ValueTree VolumeAndPanPlugin::create()</span></a>
 <a name="139"><span class="lineNum">     139 </span>            : {</a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">        474 :     ValueTree v (IDs::PLUGIN);</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">        474 :     juce::ValueTree v (IDs::PLUGIN);</span></a>
 <a name="141"><span class="lineNum">     141 </span><span class="lineCov">        474 :     v.setProperty (IDs::type, xmlTypeName, nullptr);</span></a>
 <a name="142"><span class="lineNum">     142 </span><span class="lineCov">        474 :     return v;</span></a>
 <a name="143"><span class="lineNum">     143 </span>            : }</a>
@@ -226,11 +226,11 @@
 <a name="164"><span class="lineNum">     164 </span><span class="lineCov">        205 : }</span></a>
 <a name="165"><span class="lineNum">     165 </span>            : </a>
 <a name="166"><span class="lineNum">     166 </span>            : //==============================================================================</a>
-<a name="167"><span class="lineNum">     167 </span><span class="lineCov">     606515 : static float getParentVcaDb (Track&amp; track, double time)</span></a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineCov">     606511 : static float getParentVcaDb (Track&amp; track, double time)</span></a>
 <a name="168"><span class="lineNum">     168 </span>            : {</a>
 <a name="169"><span class="lineNum">     169 </span>            :     float posOffset = 0.0f;</a>
 <a name="170"><span class="lineNum">     170 </span>            : </a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineCov">     915283 :     for (FolderTrack::Ptr p = track.getParentFolderTrack(); p != nullptr; p = p-&gt;getParentFolderTrack())</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">     915279 :     for (FolderTrack::Ptr p = track.getParentFolderTrack(); p != nullptr; p = p-&gt;getParentFolderTrack())</span></a>
 <a name="172"><span class="lineNum">     172 </span>            :     {</a>
 <a name="173"><span class="lineNum">     173 </span><span class="lineCov">     308768 :         float db = p-&gt;getVcaDb (time);</span></a>
 <a name="174"><span class="lineNum">     174 </span>            : </a>
@@ -241,38 +241,38 @@
 <a name="179"><span class="lineNum">     179 </span><span class="lineCov">     308768 :                        - decibelsToVolumeFaderPosition (0.0f);</span></a>
 <a name="180"><span class="lineNum">     180 </span>            :     }</a>
 <a name="181"><span class="lineNum">     181 </span>            : </a>
-<a name="182"><span class="lineNum">     182 </span><span class="lineCov">     606514 :     return volumeFaderPositionToDB (decibelsToVolumeFaderPosition (0) + posOffset);</span></a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineCov">     606511 :     return volumeFaderPositionToDB (decibelsToVolumeFaderPosition (0) + posOffset);</span></a>
 <a name="183"><span class="lineNum">     183 </span>            : }</a>
 <a name="184"><span class="lineNum">     184 </span>            : </a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineCov">    1135750 : void VolumeAndPanPlugin::applyToBuffer (const PluginRenderContext&amp; fc)</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">    1136520 : void VolumeAndPanPlugin::applyToBuffer (const PluginRenderContext&amp; fc)</span></a>
 <a name="186"><span class="lineNum">     186 </span>            : {</a>
-<a name="187"><span class="lineNum">     187 </span><span class="lineCov">    1135750 :     if (isEnabled())</span></a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineCov">    1136520 :     if (isEnabled())</span></a>
 <a name="188"><span class="lineNum">     188 </span>            :     {</a>
 <a name="189"><span class="lineNum">     189 </span>            :         SCOPED_REALTIME_CHECK</a>
 <a name="190"><span class="lineNum">     190 </span>            : </a>
-<a name="191"><span class="lineNum">     191 </span><span class="lineCov">    1135750 :         if (fc.destBuffer != nullptr)</span></a>
+<a name="191"><span class="lineNum">     191 </span><span class="lineCov">    1136520 :         if (fc.destBuffer != nullptr)</span></a>
 <a name="192"><span class="lineNum">     192 </span>            :         {</a>
-<a name="193"><span class="lineNum">     193 </span><span class="lineCov">    1135750 :             const int numChansIn = fc.destBuffer-&gt;getNumChannels();</span></a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineCov">    1135750 :             const float vcaPosDelta = vcaTrack != nullptr</span></a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineCov">    1742240 :                                     ? decibelsToVolumeFaderPosition (getParentVcaDb (*vcaTrack, fc.editTime))</span></a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineCov">     606501 :                                         - decibelsToVolumeFaderPosition (0.0f)</span></a>
+<a name="193"><span class="lineNum">     193 </span><span class="lineCov">    1136520 :             const int numChansIn = fc.destBuffer-&gt;getNumChannels();</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineCov">    1136520 :             const float vcaPosDelta = vcaTrack != nullptr</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">    1743020 :                                     ? decibelsToVolumeFaderPosition (getParentVcaDb (*vcaTrack, fc.editTime))</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">     606505 :                                         - decibelsToVolumeFaderPosition (0.0f)</span></a>
 <a name="197"><span class="lineNum">     197 </span>            :                                     : 0.0f;</a>
 <a name="198"><span class="lineNum">     198 </span>            : </a>
 <a name="199"><span class="lineNum">     199 </span>            :             float lgain, rgain;</a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineCov">    1135730 :             getGainsFromVolumeFaderPositionAndPan (getSliderPos() + vcaPosDelta, getPan(), getPanLaw(), lgain, rgain);</span></a>
-<a name="201"><span class="lineNum">     201 </span><span class="lineCov">    1135730 :             lgain *= (polarity ? -1 : 1);</span></a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineCov">    1135730 :             rgain *= (polarity ? -1 : 1);</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineCov">    1136510 :             getGainsFromVolumeFaderPositionAndPan (getSliderPos() + vcaPosDelta, getPan(), getPanLaw(), lgain, rgain);</span></a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineCov">    1136510 :             lgain *= (polarity ? -1 : 1);</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">    1136510 :             rgain *= (polarity ? -1 : 1);</span></a>
 <a name="203"><span class="lineNum">     203 </span>            : </a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineCov">    1135730 :             fc.destBuffer-&gt;applyGainRamp (0, fc.bufferStartSample, fc.bufferNumSamples, lastGainL, lgain);</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineCov">    1136510 :             fc.destBuffer-&gt;applyGainRamp (0, fc.bufferStartSample, fc.bufferNumSamples, lastGainL, lgain);</span></a>
 <a name="205"><span class="lineNum">     205 </span>            : </a>
-<a name="206"><span class="lineNum">     206 </span><span class="lineCov">    1135730 :             if (numChansIn &gt; 1)</span></a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineCov">    1135730 :                 fc.destBuffer-&gt;applyGainRamp (1, fc.bufferStartSample, fc.bufferNumSamples, lastGainR, rgain);</span></a>
+<a name="206"><span class="lineNum">     206 </span><span class="lineCov">    1136520 :             if (numChansIn &gt; 1)</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineCov">    1136520 :                 fc.destBuffer-&gt;applyGainRamp (1, fc.bufferStartSample, fc.bufferNumSamples, lastGainR, rgain);</span></a>
 <a name="208"><span class="lineNum">     208 </span>            : </a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineCov">    1135720 :             lastGainL = lgain;</span></a>
-<a name="210"><span class="lineNum">     210 </span><span class="lineCov">    1135720 :             lastGainR = rgain;</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineCov">    1136510 :             lastGainL = lgain;</span></a>
+<a name="210"><span class="lineNum">     210 </span><span class="lineCov">    1136510 :             lastGainR = rgain;</span></a>
 <a name="211"><span class="lineNum">     211 </span>            : </a>
 <a name="212"><span class="lineNum">     212 </span>            :             // If the number of channels is greater than two, just apply volume</a>
-<a name="213"><span class="lineNum">     213 </span><span class="lineCov">    1135720 :             if (numChansIn &gt; 2)</span></a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineCov">    1136510 :             if (numChansIn &gt; 2)</span></a>
 <a name="214"><span class="lineNum">     214 </span>            :             {</a>
 <a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 :                 const float gain = volumeFaderPositionToGain (getSliderPos() + vcaPosDelta) * (polarity ? -1 : 1);</span></a>
 <a name="216"><span class="lineNum">     216 </span>            : </a>
@@ -283,10 +283,10 @@
 <a name="221"><span class="lineNum">     221 </span>            :             }</a>
 <a name="222"><span class="lineNum">     222 </span>            :         }</a>
 <a name="223"><span class="lineNum">     223 </span>            : </a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineCov">    1135720 :         if (applyToMidi &amp;&amp; fc.bufferForMidiMessages != nullptr)</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">    1136510 :         if (applyToMidi &amp;&amp; fc.bufferForMidiMessages != nullptr)</span></a>
 <a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :             fc.bufferForMidiMessages-&gt;multiplyVelocities (volumeFaderPositionToGain (getSliderPos()));</span></a>
 <a name="226"><span class="lineNum">     226 </span>            :     }</a>
-<a name="227"><span class="lineNum">     227 </span><span class="lineCov">    1135720 : }</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineCov">    1136510 : }</span></a>
 <a name="228"><span class="lineNum">     228 </span>            : </a>
 <a name="229"><span class="lineNum">     229 </span><span class="lineCov">        205 : void VolumeAndPanPlugin::refreshVCATrack()</span></a>
 <a name="230"><span class="lineNum">     230 </span>            : {</a>
@@ -318,8 +318,8 @@
 <a name="256"><span class="lineNum">     256 </span>            : </a>
 <a name="257"><span class="lineNum">     257 </span><span class="lineNoCov">          0 : PanLaw VolumeAndPanPlugin::getPanLaw() const noexcept</span></a>
 <a name="258"><span class="lineNum">     258 </span>            : {</a>
-<a name="259"><span class="lineNum">     259 </span><span class="lineCov">    1135940 :     PanLaw p = (PanLaw) panLaw.get();</span></a>
-<a name="260"><span class="lineNum">     260 </span><span class="lineCov">    1135940 :     return p == PanLawDefault ? getDefaultPanLaw() : p;</span></a>
+<a name="259"><span class="lineNum">     259 </span><span class="lineCov">    1136720 :     PanLaw p = (PanLaw) panLaw.get();</span></a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineCov">    1136720 :     return p == PanLawDefault ? getDefaultPanLaw() : p;</span></a>
 <a name="261"><span class="lineNum">     261 </span>            : }</a>
 <a name="262"><span class="lineNum">     262 </span>            : </a>
 <a name="263"><span class="lineNum">     263 </span>            : //==============================================================================</a>

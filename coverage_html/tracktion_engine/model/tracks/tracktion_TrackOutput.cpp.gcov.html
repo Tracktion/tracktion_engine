@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">57</td>
-            <td class="headerCovTableEntry">162</td>
-            <td class="headerCovTableEntryLo">35.2 %</td>
+            <td class="headerCovTableEntry">161</td>
+            <td class="headerCovTableEntryLo">35.4 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">12</td>
@@ -141,7 +141,7 @@
 <a name="79"><span class="lineNum">      79 </span>            : }</a>
 <a name="80"><span class="lineNum">      80 </span>            : </a>
 <a name="81"><span class="lineNum">      81 </span>            : //==============================================================================</a>
-<a name="82"><span class="lineNum">      82 </span><span class="lineNoCov">          0 : bool TrackOutput::outputsToDevice (const String&amp; deviceName, bool compareDefaultDevices) const</span></a>
+<a name="82"><span class="lineNum">      82 </span><span class="lineNoCov">          0 : bool TrackOutput::outputsToDevice (const juce::String&amp; deviceName, bool compareDefaultDevices) const</span></a>
 <a name="83"><span class="lineNum">      83 </span>            : {</a>
 <a name="84"><span class="lineNum">      84 </span><span class="lineNoCov">          0 :     if (auto destTrack = getDestinationTrack())</span></a>
 <a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 :         return deviceName.startsWithIgnoreCase (TRANS(&quot;Track&quot;) + &quot; &quot;)</span></a>
@@ -246,7 +246,7 @@
 <a name="184"><span class="lineNum">     184 </span>            :     return outputDevice;</a>
 <a name="185"><span class="lineNum">     185 </span>            : }</a>
 <a name="186"><span class="lineNum">     186 </span>            : </a>
-<a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 : void TrackOutput::setOutputByName (const String&amp; name)</span></a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 : void TrackOutput::setOutputByName (const juce::String&amp; name)</span></a>
 <a name="188"><span class="lineNum">     188 </span>            : {</a>
 <a name="189"><span class="lineNum">     189 </span><span class="lineNoCov">          0 :     if (name.startsWith (TRANS(&quot;Track&quot;) + &quot; &quot;))</span></a>
 <a name="190"><span class="lineNum">     190 </span><span class="lineNoCov">          0 :         outputDevice = String (&quot;track &quot;) + String (name.upToFirstOccurrenceOf (&quot;(&quot;, false, false).trim().getTrailingIntValue());</span></a>
@@ -305,9 +305,9 @@
 <a name="243"><span class="lineNum">     243 </span>            : }</a>
 <a name="244"><span class="lineNum">     244 </span>            : </a>
 <a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 : void TrackOutput::getPossibleOutputDeviceNames (const Array&lt;AudioTrack*&gt;&amp; tracks,</span></a>
-<a name="246"><span class="lineNum">     246 </span>            :                                                 StringArray&amp; s, StringArray&amp; a,</a>
-<a name="247"><span class="lineNum">     247 </span>            :                                                 BigInteger&amp; hasAudio,</a>
-<a name="248"><span class="lineNum">     248 </span>            :                                                 BigInteger&amp; hasMidi)</a>
+<a name="246"><span class="lineNum">     246 </span>            :                                                 juce::StringArray&amp; s, juce::StringArray&amp; a,</a>
+<a name="247"><span class="lineNum">     247 </span>            :                                                 juce::BigInteger&amp; hasAudio,</a>
+<a name="248"><span class="lineNum">     248 </span>            :                                                 juce::BigInteger&amp; hasMidi)</a>
 <a name="249"><span class="lineNum">     249 </span>            : {</a>
 <a name="250"><span class="lineNum">     250 </span><span class="lineNoCov">          0 :     if (tracks.isEmpty())</span></a>
 <a name="251"><span class="lineNum">     251 </span>            :         return;</a>
@@ -348,9 +348,9 @@
 <a name="286"><span class="lineNum">     286 </span>            : }</a>
 <a name="287"><span class="lineNum">     287 </span>            : </a>
 <a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 : void TrackOutput::getPossibleOutputNames (const Array&lt;AudioTrack*&gt;&amp; tracks,</span></a>
-<a name="289"><span class="lineNum">     289 </span>            :                                           StringArray&amp; s, StringArray&amp; a,</a>
-<a name="290"><span class="lineNum">     290 </span>            :                                           BigInteger&amp; hasAudio,</a>
-<a name="291"><span class="lineNum">     291 </span>            :                                           BigInteger&amp; hasMidi)</a>
+<a name="289"><span class="lineNum">     289 </span>            :                                           juce::StringArray&amp; s, juce::StringArray&amp; a,</a>
+<a name="290"><span class="lineNum">     290 </span>            :                                           juce::BigInteger&amp; hasAudio,</a>
+<a name="291"><span class="lineNum">     291 </span>            :                                           juce::BigInteger&amp; hasMidi)</a>
 <a name="292"><span class="lineNum">     292 </span>            : {</a>
 <a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">          0 :     if (tracks.isEmpty())</span></a>
 <a name="294"><span class="lineNum">     294 </span>            :         return;</a>
@@ -363,62 +363,61 @@
 <a name="301"><span class="lineNum">     301 </span>            :     {</a>
 <a name="302"><span class="lineNum">     302 </span><span class="lineNoCov">          0 :         if (t-&gt;createsOutput() &amp;&amp; ! feedsIntoAnyOf (t, tracks))</span></a>
 <a name="303"><span class="lineNum">     303 </span>            :         {</a>
-<a name="304"><span class="lineNum">     304 </span><span class="lineNoCov">          0 :             String trackName;</span></a>
-<a name="305"><span class="lineNum">     305 </span><span class="lineNoCov">          0 :             const String trackNum (t-&gt;getAudioTrackNumber());</span></a>
-<a name="306"><span class="lineNum">     306 </span>            : </a>
-<a name="307"><span class="lineNum">     307 </span><span class="lineNoCov">          0 :             if (! t-&gt;getName().startsWithIgnoreCase (TRANS(&quot;Track&quot;) + &quot; &quot;))</span></a>
-<a name="308"><span class="lineNum">     308 </span><span class="lineNoCov">          0 :                 trackName = (TRANS(&quot;Track&quot;) + &quot; &quot; + trackNum + &quot; (&quot; + t-&gt;getName() + &quot;)&quot;);</span></a>
-<a name="309"><span class="lineNum">     309 </span>            :             else</a>
-<a name="310"><span class="lineNum">     310 </span><span class="lineNoCov">          0 :                 trackName = (TRANS(&quot;Track&quot;) + &quot; &quot; + trackNum);</span></a>
-<a name="311"><span class="lineNum">     311 </span>            : </a>
-<a name="312"><span class="lineNum">     312 </span><span class="lineNoCov">          0 :             s.add (trackName);</span></a>
-<a name="313"><span class="lineNum">     313 </span><span class="lineNoCov">          0 :             a.add (trackName);</span></a>
-<a name="314"><span class="lineNum">     314 </span>            :         }</a>
-<a name="315"><span class="lineNum">     315 </span>            :     }</a>
-<a name="316"><span class="lineNum">     316 </span>            : }</a>
-<a name="317"><span class="lineNum">     317 </span>            : </a>
-<a name="318"><span class="lineNum">     318 </span><span class="lineCov">        182 : bool TrackOutput::feedsInto (const Track* dest) const</span></a>
-<a name="319"><span class="lineNum">     319 </span>            : {</a>
-<a name="320"><span class="lineNum">     320 </span><span class="lineCov">        182 :     if (auto t = getDestinationTrack())</span></a>
-<a name="321"><span class="lineNum">     321 </span><span class="lineCov">         28 :         return t == dest || t-&gt;getOutput().feedsInto (dest);</span></a>
-<a name="322"><span class="lineNum">     322 </span>            : </a>
-<a name="323"><span class="lineNum">     323 </span>            :     return false;</a>
-<a name="324"><span class="lineNum">     324 </span>            : }</a>
-<a name="325"><span class="lineNum">     325 </span>            : </a>
-<a name="326"><span class="lineNum">     326 </span><span class="lineNoCov">          0 : bool TrackOutput::injectLiveMidiMessage (const MidiMessage&amp; message)</span></a>
-<a name="327"><span class="lineNum">     327 </span>            : {</a>
-<a name="328"><span class="lineNum">     328 </span><span class="lineNoCov">          0 :     auto dev = owner.edit.engine.getDeviceManager().findOutputDeviceWithName (outputDevice);</span></a>
-<a name="329"><span class="lineNum">     329 </span>            : </a>
-<a name="330"><span class="lineNum">     330 </span><span class="lineNoCov">          0 :     if (dev != nullptr &amp;&amp; dev-&gt;isMidi() &amp;&amp; dev-&gt;isEnabled())</span></a>
-<a name="331"><span class="lineNum">     331 </span>            :     {</a>
-<a name="332"><span class="lineNum">     332 </span><span class="lineNoCov">          0 :         if (auto midiDev = dynamic_cast&lt;MidiOutputDevice*&gt; (dev))</span></a>
-<a name="333"><span class="lineNum">     333 </span>            :         {</a>
-<a name="334"><span class="lineNum">     334 </span><span class="lineNoCov">          0 :             midiDev-&gt;fireMessage (message);</span></a>
-<a name="335"><span class="lineNum">     335 </span><span class="lineNoCov">          0 :             return true;</span></a>
-<a name="336"><span class="lineNum">     336 </span>            :         }</a>
-<a name="337"><span class="lineNum">     337 </span>            :     }</a>
-<a name="338"><span class="lineNum">     338 </span>            :     else</a>
-<a name="339"><span class="lineNum">     339 </span>            :     {</a>
-<a name="340"><span class="lineNum">     340 </span><span class="lineNoCov">          0 :         if (auto t = getDestinationTrack())</span></a>
-<a name="341"><span class="lineNum">     341 </span>            :         {</a>
-<a name="342"><span class="lineNum">     342 </span><span class="lineNoCov">          0 :             t-&gt;getOutput().injectLiveMidiMessage (message);</span></a>
-<a name="343"><span class="lineNum">     343 </span><span class="lineNoCov">          0 :             return true;</span></a>
-<a name="344"><span class="lineNum">     344 </span>            :         }</a>
-<a name="345"><span class="lineNum">     345 </span>            :     }</a>
-<a name="346"><span class="lineNum">     346 </span>            : </a>
-<a name="347"><span class="lineNum">     347 </span>            :     return false;</a>
-<a name="348"><span class="lineNum">     348 </span>            : }</a>
-<a name="349"><span class="lineNum">     349 </span>            : </a>
-<a name="350"><span class="lineNum">     350 </span><span class="lineCov">        278 : void TrackOutput::valueTreePropertyChanged (ValueTree&amp; v, const juce::Identifier&amp; ident)</span></a>
-<a name="351"><span class="lineNum">     351 </span>            : {</a>
-<a name="352"><span class="lineNum">     352 </span><span class="lineCov">        278 :     if (v.hasType (IDs::DEVICE) &amp;&amp; ident == IDs::name)</span></a>
-<a name="353"><span class="lineNum">     353 </span>            :     {</a>
-<a name="354"><span class="lineNum">     354 </span><span class="lineCov">        278 :         outputDevice.forceUpdateOfCachedValue();</span></a>
-<a name="355"><span class="lineNum">     355 </span><span class="lineCov">        278 :         updateOutput();</span></a>
-<a name="356"><span class="lineNum">     356 </span>            :     }</a>
-<a name="357"><span class="lineNum">     357 </span><span class="lineCov">        278 : }</span></a>
-<a name="358"><span class="lineNum">     358 </span>            : </a>
-<a name="359"><span class="lineNum">     359 </span>            : }</a>
+<a name="304"><span class="lineNum">     304 </span><span class="lineNoCov">          0 :             juce::String trackName, trackNum (t-&gt;getAudioTrackNumber());</span></a>
+<a name="305"><span class="lineNum">     305 </span>            : </a>
+<a name="306"><span class="lineNum">     306 </span><span class="lineNoCov">          0 :             if (! t-&gt;getName().startsWithIgnoreCase (TRANS(&quot;Track&quot;) + &quot; &quot;))</span></a>
+<a name="307"><span class="lineNum">     307 </span><span class="lineNoCov">          0 :                 trackName = (TRANS(&quot;Track&quot;) + &quot; &quot; + trackNum + &quot; (&quot; + t-&gt;getName() + &quot;)&quot;);</span></a>
+<a name="308"><span class="lineNum">     308 </span>            :             else</a>
+<a name="309"><span class="lineNum">     309 </span><span class="lineNoCov">          0 :                 trackName = (TRANS(&quot;Track&quot;) + &quot; &quot; + trackNum);</span></a>
+<a name="310"><span class="lineNum">     310 </span>            : </a>
+<a name="311"><span class="lineNum">     311 </span><span class="lineNoCov">          0 :             s.add (trackName);</span></a>
+<a name="312"><span class="lineNum">     312 </span><span class="lineNoCov">          0 :             a.add (trackName);</span></a>
+<a name="313"><span class="lineNum">     313 </span>            :         }</a>
+<a name="314"><span class="lineNum">     314 </span>            :     }</a>
+<a name="315"><span class="lineNum">     315 </span>            : }</a>
+<a name="316"><span class="lineNum">     316 </span>            : </a>
+<a name="317"><span class="lineNum">     317 </span><span class="lineCov">        182 : bool TrackOutput::feedsInto (const Track* dest) const</span></a>
+<a name="318"><span class="lineNum">     318 </span>            : {</a>
+<a name="319"><span class="lineNum">     319 </span><span class="lineCov">        182 :     if (auto t = getDestinationTrack())</span></a>
+<a name="320"><span class="lineNum">     320 </span><span class="lineCov">         28 :         return t == dest || t-&gt;getOutput().feedsInto (dest);</span></a>
+<a name="321"><span class="lineNum">     321 </span>            : </a>
+<a name="322"><span class="lineNum">     322 </span>            :     return false;</a>
+<a name="323"><span class="lineNum">     323 </span>            : }</a>
+<a name="324"><span class="lineNum">     324 </span>            : </a>
+<a name="325"><span class="lineNum">     325 </span><span class="lineNoCov">          0 : bool TrackOutput::injectLiveMidiMessage (const MidiMessage&amp; message)</span></a>
+<a name="326"><span class="lineNum">     326 </span>            : {</a>
+<a name="327"><span class="lineNum">     327 </span><span class="lineNoCov">          0 :     auto dev = owner.edit.engine.getDeviceManager().findOutputDeviceWithName (outputDevice);</span></a>
+<a name="328"><span class="lineNum">     328 </span>            : </a>
+<a name="329"><span class="lineNum">     329 </span><span class="lineNoCov">          0 :     if (dev != nullptr &amp;&amp; dev-&gt;isMidi() &amp;&amp; dev-&gt;isEnabled())</span></a>
+<a name="330"><span class="lineNum">     330 </span>            :     {</a>
+<a name="331"><span class="lineNum">     331 </span><span class="lineNoCov">          0 :         if (auto midiDev = dynamic_cast&lt;MidiOutputDevice*&gt; (dev))</span></a>
+<a name="332"><span class="lineNum">     332 </span>            :         {</a>
+<a name="333"><span class="lineNum">     333 </span><span class="lineNoCov">          0 :             midiDev-&gt;fireMessage (message);</span></a>
+<a name="334"><span class="lineNum">     334 </span><span class="lineNoCov">          0 :             return true;</span></a>
+<a name="335"><span class="lineNum">     335 </span>            :         }</a>
+<a name="336"><span class="lineNum">     336 </span>            :     }</a>
+<a name="337"><span class="lineNum">     337 </span>            :     else</a>
+<a name="338"><span class="lineNum">     338 </span>            :     {</a>
+<a name="339"><span class="lineNum">     339 </span><span class="lineNoCov">          0 :         if (auto t = getDestinationTrack())</span></a>
+<a name="340"><span class="lineNum">     340 </span>            :         {</a>
+<a name="341"><span class="lineNum">     341 </span><span class="lineNoCov">          0 :             t-&gt;getOutput().injectLiveMidiMessage (message);</span></a>
+<a name="342"><span class="lineNum">     342 </span><span class="lineNoCov">          0 :             return true;</span></a>
+<a name="343"><span class="lineNum">     343 </span>            :         }</a>
+<a name="344"><span class="lineNum">     344 </span>            :     }</a>
+<a name="345"><span class="lineNum">     345 </span>            : </a>
+<a name="346"><span class="lineNum">     346 </span>            :     return false;</a>
+<a name="347"><span class="lineNum">     347 </span>            : }</a>
+<a name="348"><span class="lineNum">     348 </span>            : </a>
+<a name="349"><span class="lineNum">     349 </span><span class="lineCov">        278 : void TrackOutput::valueTreePropertyChanged (ValueTree&amp; v, const juce::Identifier&amp; ident)</span></a>
+<a name="350"><span class="lineNum">     350 </span>            : {</a>
+<a name="351"><span class="lineNum">     351 </span><span class="lineCov">        278 :     if (v.hasType (IDs::DEVICE) &amp;&amp; ident == IDs::name)</span></a>
+<a name="352"><span class="lineNum">     352 </span>            :     {</a>
+<a name="353"><span class="lineNum">     353 </span><span class="lineCov">        278 :         outputDevice.forceUpdateOfCachedValue();</span></a>
+<a name="354"><span class="lineNum">     354 </span><span class="lineCov">        278 :         updateOutput();</span></a>
+<a name="355"><span class="lineNum">     355 </span>            :     }</a>
+<a name="356"><span class="lineNum">     356 </span><span class="lineCov">        278 : }</span></a>
+<a name="357"><span class="lineNum">     357 </span>            : </a>
+<a name="358"><span class="lineNum">     358 </span>            : }</a>
 </pre>
       </td>
     </tr>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">15</td>
@@ -104,7 +104,7 @@
 <a name="42"><span class="lineNum">      42 </span>            : JUCE_IMPLEMENT_SINGLETON (ApplicationSettings)</a>
 <a name="43"><span class="lineNum">      43 </span>            : </a>
 <a name="44"><span class="lineNum">      44 </span>            : //==============================================================================</a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineCov">       8228 : String PropertyStorage::settingToString (SettingID setting)</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">       8228 : juce::String PropertyStorage::settingToString (SettingID setting)</span></a>
 <a name="46"><span class="lineNum">      46 </span>            : {</a>
 <a name="47"><span class="lineNum">      47 </span><span class="lineCov">       8228 :     switch (setting)</span></a>
 <a name="48"><span class="lineNum">      48 </span>            :     {</a>
@@ -232,7 +232,7 @@
 <a name="170"><span class="lineNum">     170 </span><span class="lineCov">          2 :     return getAppPrefsFolder();</span></a>
 <a name="171"><span class="lineNum">     171 </span>            : }</a>
 <a name="172"><span class="lineNum">     172 </span>            : </a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineCov">          8 : File PropertyStorage::getAppPrefsFolder()</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineCov">          8 : juce::File PropertyStorage::getAppPrefsFolder()</span></a>
 <a name="174"><span class="lineNum">     174 </span>            : {</a>
 <a name="175"><span class="lineNum">     175 </span><span class="lineCov">          8 :     auto f = File::getSpecialLocation (File::userApplicationDataDirectory).getChildFile (getApplicationName());</span></a>
 <a name="176"><span class="lineNum">     176 </span>            : </a>
@@ -242,12 +242,12 @@
 <a name="180"><span class="lineNum">     180 </span><span class="lineCov">          8 :     return f;</span></a>
 <a name="181"><span class="lineNum">     181 </span>            : }</a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 : String PropertyStorage::getUserName()</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 : juce::String PropertyStorage::getUserName()</span></a>
 <a name="184"><span class="lineNum">     184 </span>            : {</a>
 <a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :     return SystemStats::getFullUserName();</span></a>
 <a name="186"><span class="lineNum">     186 </span>            : }</a>
 <a name="187"><span class="lineNum">     187 </span>            : </a>
-<a name="188"><span class="lineNum">     188 </span><span class="lineCov">        194 : String PropertyStorage::getApplicationVersion()</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineCov">        194 : juce::String PropertyStorage::getApplicationVersion()</span></a>
 <a name="189"><span class="lineNum">     189 </span>            : {</a>
 <a name="190"><span class="lineNum">     190 </span><span class="lineCov">        194 :     return &quot;Unknown&quot;;</span></a>
 <a name="191"><span class="lineNum">     191 </span>            : }</a>

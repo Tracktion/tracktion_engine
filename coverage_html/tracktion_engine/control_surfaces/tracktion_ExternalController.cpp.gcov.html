@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -190,7 +190,7 @@
 <a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="129"><span class="lineNum">     129 </span>            : }</a>
 <a name="130"><span class="lineNum">     130 </span>            : </a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineNoCov">          0 : void ExternalController::setMidiInputDevice (const String&amp; nameOfMidiInput)</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineNoCov">          0 : void ExternalController::setMidiInputDevice (const juce::String&amp; nameOfMidiInput)</span></a>
 <a name="132"><span class="lineNum">     132 </span>            : {</a>
 <a name="133"><span class="lineNum">     133 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="134"><span class="lineNum">     134 </span>            : </a>
@@ -309,7 +309,7 @@
 <a name="247"><span class="lineNum">     247 </span><span class="lineNoCov">          0 :     changeParamBank (0);</span></a>
 <a name="248"><span class="lineNum">     248 </span>            : }</a>
 <a name="249"><span class="lineNum">     249 </span>            : </a>
-<a name="250"><span class="lineNum">     250 </span><span class="lineNoCov">          0 : void ExternalController::setBackChannelDevice (const String&amp; nameOfMidiOutput)</span></a>
+<a name="250"><span class="lineNum">     250 </span><span class="lineNoCov">          0 : void ExternalController::setBackChannelDevice (const juce::String&amp; nameOfMidiOutput)</span></a>
 <a name="251"><span class="lineNum">     251 </span>            : {</a>
 <a name="252"><span class="lineNum">     252 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="253"><span class="lineNum">     253 </span>            : </a>
@@ -943,7 +943,7 @@
 <a name="881"><span class="lineNum">     881 </span><span class="lineNoCov">          0 :                 moveMasterFaders (gainToVolumeFaderPosition (l),</span></a>
 <a name="882"><span class="lineNum">     882 </span>            :                                   gainToVolumeFaderPosition (r));</a>
 <a name="883"><span class="lineNum">     883 </span>            : </a>
-<a name="884"><span class="lineNum">     884 </span><span class="lineNoCov">          0 :                 StringArray trackNames;</span></a>
+<a name="884"><span class="lineNum">     884 </span><span class="lineNoCov">          0 :                 juce::StringArray trackNames;</span></a>
 <a name="885"><span class="lineNum">     885 </span>            : </a>
 <a name="886"><span class="lineNum">     886 </span><span class="lineNoCov">          0 :                 for (int i = 0; i &lt; getNumFaderChannels(); ++i)</span></a>
 <a name="887"><span class="lineNum">     887 </span>            :                 {</a>
@@ -1094,10 +1094,10 @@
 <a name="1032"><span class="lineNum">    1032 </span><span class="lineNoCov">          0 :     return &quot;&lt;&quot; + TRANS(&quot;No Device Selected&quot;) + &quot;&gt;&quot;;</span></a>
 <a name="1033"><span class="lineNum">    1033 </span>            : }</a>
 <a name="1034"><span class="lineNum">    1034 </span>            : </a>
-<a name="1035"><span class="lineNum">    1035 </span><span class="lineNoCov">          0 : StringArray ExternalController::getMidiInputPorts() const</span></a>
+<a name="1035"><span class="lineNum">    1035 </span><span class="lineNoCov">          0 : juce::StringArray ExternalController::getMidiInputPorts() const</span></a>
 <a name="1036"><span class="lineNum">    1036 </span>            : {</a>
 <a name="1037"><span class="lineNum">    1037 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
-<a name="1038"><span class="lineNum">    1038 </span><span class="lineNoCov">          0 :     StringArray inputNames;</span></a>
+<a name="1038"><span class="lineNum">    1038 </span><span class="lineNoCov">          0 :     juce::StringArray inputNames;</span></a>
 <a name="1039"><span class="lineNum">    1039 </span><span class="lineNoCov">          0 :     inputNames.add (getNoDeviceSelectedMessage());</span></a>
 <a name="1040"><span class="lineNum">    1040 </span>            : </a>
 <a name="1041"><span class="lineNum">    1041 </span><span class="lineNoCov">          0 :     auto&amp; dm = engine.getDeviceManager();</span></a>
@@ -1110,10 +1110,10 @@
 <a name="1048"><span class="lineNum">    1048 </span><span class="lineNoCov">          0 :     return inputNames;</span></a>
 <a name="1049"><span class="lineNum">    1049 </span>            : }</a>
 <a name="1050"><span class="lineNum">    1050 </span>            : </a>
-<a name="1051"><span class="lineNum">    1051 </span><span class="lineNoCov">          0 : StringArray ExternalController::getMidiOutputPorts() const</span></a>
+<a name="1051"><span class="lineNum">    1051 </span><span class="lineNoCov">          0 : juce::StringArray ExternalController::getMidiOutputPorts() const</span></a>
 <a name="1052"><span class="lineNum">    1052 </span>            : {</a>
 <a name="1053"><span class="lineNum">    1053 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
-<a name="1054"><span class="lineNum">    1054 </span><span class="lineNoCov">          0 :     StringArray outputNames;</span></a>
+<a name="1054"><span class="lineNum">    1054 </span><span class="lineNoCov">          0 :     juce::StringArray outputNames;</span></a>
 <a name="1055"><span class="lineNum">    1055 </span><span class="lineNoCov">          0 :     outputNames.add (getNoDeviceSelectedMessage());</span></a>
 <a name="1056"><span class="lineNum">    1056 </span><span class="lineNoCov">          0 :     auto&amp; dm = engine.getDeviceManager();</span></a>
 <a name="1057"><span class="lineNum">    1057 </span>            : </a>
@@ -1252,7 +1252,7 @@
 <a name="1190"><span class="lineNum">    1190 </span>            :     }</a>
 <a name="1191"><span class="lineNum">    1191 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1192"><span class="lineNum">    1192 </span>            : </a>
-<a name="1193"><span class="lineNum">    1193 </span><span class="lineNoCov">          0 : juce::String ExternalController::shortenName (String s, int maxLen)</span></a>
+<a name="1193"><span class="lineNum">    1193 </span><span class="lineNoCov">          0 : juce::String ExternalController::shortenName (juce::String s, int maxLen)</span></a>
 <a name="1194"><span class="lineNum">    1194 </span>            : {</a>
 <a name="1195"><span class="lineNum">    1195 </span><span class="lineNoCov">          0 :     if (s.length() &lt; maxLen)</span></a>
 <a name="1196"><span class="lineNum">    1196 </span><span class="lineNoCov">          0 :         return s;</span></a>

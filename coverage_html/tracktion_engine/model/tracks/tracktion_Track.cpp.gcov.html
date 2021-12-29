@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">28</td>
@@ -73,7 +73,7 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">       1250 : Track::Track (Edit&amp; ed, const ValueTree&amp; v, double defaultHeight, double minHeight, double maxHeight)</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">       1250 : Track::Track (Edit&amp; ed, const juce::ValueTree&amp; v, double defaultHeight, double minHeight, double maxHeight)</span></a>
 <a name="15"><span class="lineNum">      15 </span>            :     : EditItem (EditItemID::readOrCreateNewID (ed, v), ed),</a>
 <a name="16"><span class="lineNum">      16 </span>            :       MacroParameterElement (ed, v), // TODO: @Dave - this dumps an XML element in every track, including tempo, marker, etc - is that needed?</a>
 <a name="17"><span class="lineNum">      17 </span>            :       defaultTrackHeight (defaultHeight),</a>
@@ -130,7 +130,7 @@
 <a name="68"><span class="lineNum">      68 </span><span class="lineNoCov">          0 :             imageChanged = true;</span></a>
 <a name="69"><span class="lineNum">      69 </span>            :     }</a>
 <a name="70"><span class="lineNum">      70 </span>            : </a>
-<a name="71"><span class="lineNum">      71 </span><span class="lineCov">       2888 :     tagsArray = StringArray::fromTokens (tags.get().replace (&quot;_&quot;, &quot; &quot;), &quot;|&quot;, &quot;\&quot;&quot;);</span></a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">       2888 :     tagsArray = juce::StringArray::fromTokens (tags.get().replace (&quot;_&quot;, &quot; &quot;), &quot;|&quot;, &quot;\&quot;&quot;);</span></a>
 <a name="72"><span class="lineNum">      72 </span>            : </a>
 <a name="73"><span class="lineNum">      73 </span><span class="lineCov">       1444 :     pluginList.setTrackAndClip (this, nullptr);</span></a>
 <a name="74"><span class="lineNum">      74 </span>            : </a>
@@ -141,7 +141,7 @@
 <a name="79"><span class="lineNum">      79 </span><span class="lineCov">       1444 :     updateCachedParent();</span></a>
 <a name="80"><span class="lineNum">      80 </span><span class="lineCov">       1444 : }</span></a>
 <a name="81"><span class="lineNum">      81 </span>            : </a>
-<a name="82"><span class="lineNum">      82 </span><span class="lineCov">        194 : void Track::setName (const String&amp; n)</span></a>
+<a name="82"><span class="lineNum">      82 </span><span class="lineCov">        194 : void Track::setName (const juce::String&amp; n)</span></a>
 <a name="83"><span class="lineNum">      83 </span>            : {</a>
 <a name="84"><span class="lineNum">      84 </span><span class="lineCov">        388 :     auto newName = n.substring (0, 64);</span></a>
 <a name="85"><span class="lineNum">      85 </span>            : </a>
@@ -395,7 +395,7 @@
 <a name="333"><span class="lineNum">     333 </span><span class="lineCov">       1940 :     return params;</span></a>
 <a name="334"><span class="lineNum">     334 </span>            : }</a>
 <a name="335"><span class="lineNum">     335 </span>            : </a>
-<a name="336"><span class="lineNum">     336 </span><span class="lineCov">       1242 : static AutomatableParameter::Ptr findAutomatableParam (Edit&amp; edit, EditItemID pluginID, const String&amp; paramID)</span></a>
+<a name="336"><span class="lineNum">     336 </span><span class="lineCov">       1242 : static AutomatableParameter::Ptr findAutomatableParam (Edit&amp; edit, EditItemID pluginID, const juce::String&amp; paramID)</span></a>
 <a name="337"><span class="lineNum">     337 </span>            : {</a>
 <a name="338"><span class="lineNum">     338 </span><span class="lineCov">       1242 :     if (pluginID.isValid() &amp;&amp; paramID.isNotEmpty())</span></a>
 <a name="339"><span class="lineNum">     339 </span>            :     {</a>
@@ -472,7 +472,7 @@
 <a name="410"><span class="lineNum">     410 </span>            :     }</a>
 <a name="411"><span class="lineNum">     411 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="412"><span class="lineNum">     412 </span>            : </a>
-<a name="413"><span class="lineNum">     413 </span><span class="lineCov">       2500 : ValueTree Track::getParentTrackTree() const</span></a>
+<a name="413"><span class="lineNum">     413 </span><span class="lineCov">       2500 : juce::ValueTree Track::getParentTrackTree() const</span></a>
 <a name="414"><span class="lineNum">     414 </span>            : {</a>
 <a name="415"><span class="lineNum">     415 </span><span class="lineCov">       5000 :     auto parent = state.getParent();</span></a>
 <a name="416"><span class="lineNum">     416 </span>            : </a>
@@ -573,7 +573,7 @@
 <a name="511"><span class="lineNum">     511 </span><span class="lineCov">       1444 :     return isAudioTrack() || isFolderTrack();</span></a>
 <a name="512"><span class="lineNum">     512 </span>            : }</a>
 <a name="513"><span class="lineNum">     513 </span>            : </a>
-<a name="514"><span class="lineNum">     514 </span><span class="lineNoCov">          0 : void Track::setTrackImage (const String&amp; idOrData)</span></a>
+<a name="514"><span class="lineNum">     514 </span><span class="lineNoCov">          0 : void Track::setTrackImage (const juce::String&amp; idOrData)</span></a>
 <a name="515"><span class="lineNum">     515 </span>            : {</a>
 <a name="516"><span class="lineNum">     516 </span>            :     if (canShowImage())</a>
 <a name="517"><span class="lineNum">     517 </span><span class="lineNoCov">          0 :         imageIdOrData = idOrData;</span></a>
@@ -585,7 +585,7 @@
 <a name="523"><span class="lineNum">     523 </span><span class="lineNoCov">          0 :     return imageChanged;</span></a>
 <a name="524"><span class="lineNum">     524 </span>            : }</a>
 <a name="525"><span class="lineNum">     525 </span>            : </a>
-<a name="526"><span class="lineNum">     526 </span><span class="lineNoCov">          0 : void Track::setTags (const StringArray&amp; s)</span></a>
+<a name="526"><span class="lineNum">     526 </span><span class="lineNoCov">          0 : void Track::setTags (const juce::StringArray&amp; s)</span></a>
 <a name="527"><span class="lineNum">     527 </span>            : {</a>
 <a name="528"><span class="lineNum">     528 </span><span class="lineNoCov">          0 :     tags = s.joinIntoString (&quot;|&quot;).replace (&quot; &quot;, &quot;_&quot;);</span></a>
 <a name="529"><span class="lineNum">     529 </span><span class="lineNoCov">          0 : }</span></a>
@@ -597,7 +597,7 @@
 <a name="535"><span class="lineNum">     535 </span><span class="lineCov">        888 :         if (i == IDs::tags)</span></a>
 <a name="536"><span class="lineNum">     536 </span>            :         {</a>
 <a name="537"><span class="lineNum">     537 </span><span class="lineNoCov">          0 :             tags.forceUpdateOfCachedValue();</span></a>
-<a name="538"><span class="lineNum">     538 </span><span class="lineNoCov">          0 :             tagsArray = StringArray::fromTokens (tags.get().replace (&quot;_&quot;, &quot; &quot;), &quot;|&quot;, &quot;\&quot;&quot;);</span></a>
+<a name="538"><span class="lineNum">     538 </span><span class="lineNoCov">          0 :             tagsArray = juce::StringArray::fromTokens (tags.get().replace (&quot;_&quot;, &quot; &quot;), &quot;|&quot;, &quot;\&quot;&quot;);</span></a>
 <a name="539"><span class="lineNum">     539 </span><span class="lineNoCov">          0 :             changed();</span></a>
 <a name="540"><span class="lineNum">     540 </span>            :         }</a>
 <a name="541"><span class="lineNum">     541 </span><span class="lineCov">        888 :         else if (i == IDs::name)</span></a>
@@ -641,14 +641,14 @@
 <a name="579"><span class="lineNum">     579 </span>            :     }</a>
 <a name="580"><span class="lineNum">     580 </span><span class="lineCov">       2236 : }</span></a>
 <a name="581"><span class="lineNum">     581 </span>            : </a>
-<a name="582"><span class="lineNum">     582 </span><span class="lineCov">       1670 : void Track::valueTreeChildAdded (ValueTree&amp; p, ValueTree&amp; c)</span></a>
+<a name="582"><span class="lineNum">     582 </span><span class="lineCov">       1670 : void Track::valueTreeChildAdded (ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
 <a name="583"><span class="lineNum">     583 </span>            : {</a>
 <a name="584"><span class="lineNum">     584 </span><span class="lineCov">       1670 :     if (p == state)</span></a>
 <a name="585"><span class="lineNum">     585 </span><span class="lineCov">       1043 :         if (TrackList::isTrack (c))</span></a>
 <a name="586"><span class="lineNum">     586 </span><span class="lineCov">          8 :             updateTrackList();</span></a>
 <a name="587"><span class="lineNum">     587 </span><span class="lineCov">       1670 : }</span></a>
 <a name="588"><span class="lineNum">     588 </span>            : </a>
-<a name="589"><span class="lineNum">     589 </span><span class="lineCov">        393 : void Track::valueTreeChildRemoved (ValueTree&amp; p, ValueTree&amp; c, int)</span></a>
+<a name="589"><span class="lineNum">     589 </span><span class="lineCov">        393 : void Track::valueTreeChildRemoved (ValueTree&amp; p, juce::ValueTree&amp; c, int)</span></a>
 <a name="590"><span class="lineNum">     590 </span>            : {</a>
 <a name="591"><span class="lineNum">     591 </span><span class="lineCov">        393 :     if (p == state)</span></a>
 <a name="592"><span class="lineNum">     592 </span><span class="lineCov">        114 :         if (TrackList::isTrack (c))</span></a>

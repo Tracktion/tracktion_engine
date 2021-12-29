@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">17</td>
-            <td class="headerCovTableEntry">407</td>
+            <td class="headerCovTableEntry">406</td>
             <td class="headerCovTableEntryLo">4.2 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -75,7 +75,7 @@
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : static String controllerIDToString (int id, int channelid)</span></a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineNoCov">          0 :     const String channel (&quot; [&quot; + String (channelid) + &quot;]&quot;);</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineNoCov">          0 :     auto channel = &quot; [&quot; + juce::String (channelid) + &quot;]&quot;;</span></a>
 <a name="17"><span class="lineNum">      17 </span>            : </a>
 <a name="18"><span class="lineNum">      18 </span><span class="lineNoCov">          0 :     if (id &gt;= 0x40000) return TRANS(&quot;Channel Pressure Controller&quot;) + &quot;# &quot; + channel;</span></a>
 <a name="19"><span class="lineNum">      19 </span><span class="lineNoCov">          0 :     if (id &gt;= 0x30000) return &quot;RPN #&quot;  + String (id &amp; 0x7fff) + channel;</span></a>
@@ -295,7 +295,7 @@
 <a name="233"><span class="lineNum">     233 </span><span class="lineCov">         69 : }</span></a>
 <a name="234"><span class="lineNum">     234 </span>            : </a>
 <a name="235"><span class="lineNum">     235 </span>            : //==============================================================================</a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">        388 : void ParameterControlMappings::loadFrom (const ValueTree&amp; state)</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">        388 : void ParameterControlMappings::loadFrom (const juce::ValueTree&amp; state)</span></a>
 <a name="237"><span class="lineNum">     237 </span>            : {</a>
 <a name="238"><span class="lineNum">     238 </span><span class="lineCov">        388 :     const ScopedLock sl (lock);</span></a>
 <a name="239"><span class="lineNum">     239 </span>            : </a>
@@ -363,11 +363,11 @@
 <a name="301"><span class="lineNum">     301 </span>            :     {</a>
 <a name="302"><span class="lineNum">     302 </span><span class="lineNoCov">          0 :         if (parameters[i] != nullptr &amp;&amp; controllerIDs[i] != 0)</span></a>
 <a name="303"><span class="lineNum">     303 </span>            :         {</a>
-<a name="304"><span class="lineNum">     304 </span><span class="lineNoCov">          0 :             ValueTree e (IDs::MAP);</span></a>
-<a name="305"><span class="lineNum">     305 </span><span class="lineNoCov">          0 :             e.setProperty (IDs::id, controllerIDs[i], nullptr);</span></a>
-<a name="306"><span class="lineNum">     306 </span><span class="lineNoCov">          0 :             e.setProperty (IDs::channel, channelIDs[i], nullptr);</span></a>
-<a name="307"><span class="lineNum">     307 </span><span class="lineNoCov">          0 :             e.setProperty (IDs::param, parameters[i]-&gt;getFullName(), nullptr);</span></a>
-<a name="308"><span class="lineNum">     308 </span><span class="lineNoCov">          0 :             parameters[i]-&gt;getOwnerID().setProperty (e, IDs::pluginID, nullptr);</span></a>
+<a name="304"><span class="lineNum">     304 </span>            :             auto e = createValueTree (IDs::MAP,</a>
+<a name="305"><span class="lineNum">     305 </span><span class="lineNoCov">          0 :                                       IDs::id, controllerIDs[i],</span></a>
+<a name="306"><span class="lineNum">     306 </span><span class="lineNoCov">          0 :                                       IDs::channel, channelIDs[i],</span></a>
+<a name="307"><span class="lineNum">     307 </span><span class="lineNoCov">          0 :                                       IDs::param, parameters[i]-&gt;getFullName(),</span></a>
+<a name="308"><span class="lineNum">     308 </span><span class="lineNoCov">          0 :                                       IDs::pluginID, parameters[i]-&gt;getOwnerID());</span></a>
 <a name="309"><span class="lineNum">     309 </span>            : </a>
 <a name="310"><span class="lineNum">     310 </span><span class="lineNoCov">          0 :             state.addChild (e, -1, nullptr);</span></a>
 <a name="311"><span class="lineNum">     311 </span>            :         }</a>
@@ -427,7 +427,7 @@
 <a name="365"><span class="lineNum">     365 </span>            : {</a>
 <a name="366"><span class="lineNum">     366 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="367"><span class="lineNum">     367 </span>            : </a>
-<a name="368"><span class="lineNum">     368 </span><span class="lineNoCov">          0 :     StringArray presets (getPresets());</span></a>
+<a name="368"><span class="lineNum">     368 </span><span class="lineNoCov">          0 :     juce::StringArray presets (getPresets());</span></a>
 <a name="369"><span class="lineNum">     369 </span>            : </a>
 <a name="370"><span class="lineNum">     370 </span><span class="lineNoCov">          0 :     PopupMenu loadPresets, deletePresets;</span></a>
 <a name="371"><span class="lineNum">     371 </span><span class="lineNoCov">          0 :     addSortedListToMenu (loadPresets, presets, 60000);</span></a>
@@ -444,7 +444,7 @@
 <a name="382"><span class="lineNum">     382 </span><span class="lineNoCov">          0 :             if (auto p = param-&gt;getPlugin())</span></a>
 <a name="383"><span class="lineNum">     383 </span><span class="lineNoCov">          0 :                 plugins.addIfNotAlreadyThere (p);</span></a>
 <a name="384"><span class="lineNum">     384 </span>            : </a>
-<a name="385"><span class="lineNum">     385 </span><span class="lineNoCov">          0 :     StringArray pluginNames;</span></a>
+<a name="385"><span class="lineNum">     385 </span><span class="lineNoCov">          0 :     juce::StringArray pluginNames;</span></a>
 <a name="386"><span class="lineNum">     386 </span>            : </a>
 <a name="387"><span class="lineNum">     387 </span><span class="lineNoCov">          0 :     for (auto f : plugins)</span></a>
 <a name="388"><span class="lineNum">     388 </span>            :     {</a>
@@ -724,7 +724,7 @@
 <a name="662"><span class="lineNum">     662 </span><span class="lineNoCov">          0 :             if (auto p = param-&gt;getPlugin())</span></a>
 <a name="663"><span class="lineNum">     663 </span><span class="lineNoCov">          0 :                 plugins.addIfNotAlreadyThere (p);</span></a>
 <a name="664"><span class="lineNum">     664 </span>            : </a>
-<a name="665"><span class="lineNum">     665 </span><span class="lineNoCov">          0 :     StringArray pluginNames;</span></a>
+<a name="665"><span class="lineNum">     665 </span><span class="lineNoCov">          0 :     juce::StringArray pluginNames;</span></a>
 <a name="666"><span class="lineNum">     666 </span>            : </a>
 <a name="667"><span class="lineNum">     667 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; plugins.size(); ++i)</span></a>
 <a name="668"><span class="lineNum">     668 </span>            :     {</a>
@@ -871,9 +871,9 @@
 <a name="809"><span class="lineNum">     809 </span>            :     }</a>
 <a name="810"><span class="lineNum">     810 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="811"><span class="lineNum">     811 </span>            : </a>
-<a name="812"><span class="lineNum">     812 </span><span class="lineNoCov">          0 : StringArray ParameterControlMappings::getPresets() const</span></a>
+<a name="812"><span class="lineNum">     812 </span><span class="lineNoCov">          0 : juce::StringArray ParameterControlMappings::getPresets() const</span></a>
 <a name="813"><span class="lineNum">     813 </span>            : {</a>
-<a name="814"><span class="lineNum">     814 </span><span class="lineNoCov">          0 :     StringArray result;</span></a>
+<a name="814"><span class="lineNum">     814 </span><span class="lineNoCov">          0 :     juce::StringArray result;</span></a>
 <a name="815"><span class="lineNum">     815 </span>            : </a>
 <a name="816"><span class="lineNum">     816 </span><span class="lineNoCov">          0 :     if (auto xml = edit.engine.getPropertyStorage().getXmlProperty (SettingID::filterControlMappingPresets))</span></a>
 <a name="817"><span class="lineNum">     817 </span><span class="lineNoCov">          0 :         for (auto e : xml-&gt;getChildIterator())</span></a>

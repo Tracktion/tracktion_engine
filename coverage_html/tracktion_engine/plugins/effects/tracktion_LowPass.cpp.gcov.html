@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -81,8 +81,8 @@
 <a name="19"><span class="lineNum">      19 </span><span class="lineNoCov">          0 :     mode.referTo (state, IDs::mode, um, &quot;lowpass&quot;);</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : </a>
 <a name="21"><span class="lineNum">      21 </span><span class="lineNoCov">          0 :     frequency = addParam (&quot;frequency&quot;, TRANS(&quot;Frequency&quot;), { 10.0f, 22000.0f },</span></a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 :                           [] (float value)        { return String (roundToInt (value)) + &quot; Hz&quot;; },</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineNoCov">          0 :                           [] (const String&amp; s)    { return s.getFloatValue(); });</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 :                           [] (float value)              { return juce::String (roundToInt (value)) + &quot; Hz&quot;; },</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineNoCov">          0 :                           [] (const juce::String&amp; s)    { return s.getFloatValue(); });</span></a>
 <a name="24"><span class="lineNum">      24 </span>            : </a>
 <a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 :     frequency-&gt;attachToCurrentValue (frequencyValue);</span></a>
 <a name="26"><span class="lineNum">      26 </span><span class="lineNoCov">          0 : }</span></a>

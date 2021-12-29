@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">95</td>
-            <td class="headerCovTableEntry">135</td>
-            <td class="headerCovTableEntryLo">70.4 %</td>
+            <td class="headerCovTableEntry">96</td>
+            <td class="headerCovTableEntry">136</td>
+            <td class="headerCovTableEntryLo">70.6 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">16</td>
@@ -210,7 +210,7 @@
 <a name="148"><span class="lineNum">     148 </span>            : };</a>
 <a name="149"><span class="lineNum">     149 </span>            : </a>
 <a name="150"><span class="lineNum">     150 </span>            : //==============================================================================</a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineCov">         16 : LFOModifier::LFOModifier (Edit&amp; e, const ValueTree&amp; v)</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">         16 : LFOModifier::LFOModifier (Edit&amp; e, const juce::ValueTree&amp; v)</span></a>
 <a name="152"><span class="lineNum">     152 </span><span class="lineCov">        144 :     : Modifier (e, v)</span></a>
 <a name="153"><span class="lineNum">     153 </span>            : {</a>
 <a name="154"><span class="lineNum">     154 </span><span class="lineCov">         16 :     auto um = &amp;edit.getUndoManager();</span></a>
@@ -224,136 +224,141 @@
 <a name="162"><span class="lineNum">     162 </span>            :     phase.referTo (state, IDs::phase, um);</a>
 <a name="163"><span class="lineNum">     163 </span>            :     offset.referTo (state, IDs::offset, um);</a>
 <a name="164"><span class="lineNum">     164 </span>            : </a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">         64 :     auto addDiscreteParam = [this] (const String&amp; paramID, const String&amp; name, Range&lt;float&gt; valueRange, CachedValue&lt;float&gt;&amp; val,</span></a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineCov">        128 :                                     const StringArray&amp; labels) -&gt; AutomatableParameter*</span></a>
-<a name="167"><span class="lineNum">     167 </span>            :     {</a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineCov">         64 :         auto* p = new DiscreteLabelledParameter (paramID, name, *this, valueRange, labels.size(), labels);</span></a>
-<a name="169"><span class="lineNum">     169 </span>            :         addAutomatableParameter (p);</a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">         64 :         p-&gt;attachToCurrentValue (val);</span></a>
-<a name="171"><span class="lineNum">     171 </span>            : </a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineCov">         64 :         return p;</span></a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineCov">         16 :     };</span></a>
-<a name="174"><span class="lineNum">     174 </span>            : </a>
-<a name="175"><span class="lineNum">     175 </span><span class="lineCov">         64 :     auto addParam = [this] (const String&amp; paramID, const String&amp; name, NormalisableRange&lt;float&gt; valueRange, float centreVal, CachedValue&lt;float&gt;&amp; val, const String&amp; suffix) -&gt; AutomatableParameter*</span></a>
-<a name="176"><span class="lineNum">     176 </span>            :     {</a>
-<a name="177"><span class="lineNum">     177 </span>            :         valueRange.setSkewForCentre (centreVal);</a>
-<a name="178"><span class="lineNum">     178 </span><span class="lineCov">         64 :         auto* p = new SuffixedParameter (paramID, name, *this, valueRange, suffix);</span></a>
-<a name="179"><span class="lineNum">     179 </span>            :         addAutomatableParameter (p);</a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineCov">         64 :         p-&gt;attachToCurrentValue (val);</span></a>
-<a name="181"><span class="lineNum">     181 </span>            : </a>
-<a name="182"><span class="lineNum">     182 </span><span class="lineCov">         64 :         return p;</span></a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineCov">         16 :     };</span></a>
-<a name="184"><span class="lineNum">     184 </span>            : </a>
-<a name="185"><span class="lineNum">     185 </span>            :     using namespace ModifierCommon;</a>
-<a name="186"><span class="lineNum">     186 </span><span class="lineCov">         16 :     waveParam       = addDiscreteParam (&quot;wave&quot;,     TRANS(&quot;Wave&quot;),      { 0.0f, (float)  getWaveNames().size() - 1 },           wave,       getWaveNames());</span></a>
-<a name="187"><span class="lineNum">     187 </span><span class="lineCov">         16 :     syncTypeParam   = addDiscreteParam (&quot;syncType&quot;, TRANS(&quot;Sync type&quot;), { 0.0f, (float)  getSyncTypeChoices().size() - 1 },     syncType,   getSyncTypeChoices());</span></a>
-<a name="188"><span class="lineNum">     188 </span><span class="lineCov">         16 :     rateParam       = addParam (&quot;rate&quot;,             TRANS(&quot;Rate&quot;),      { 0.01f, 50.0f }, 1.0f,                                 rate,       {});</span></a>
-<a name="189"><span class="lineNum">     189 </span><span class="lineCov">         16 :     rateTypeParam   = addDiscreteParam (&quot;rateType&quot;, TRANS(&quot;Rate Type&quot;), { 0.0f, (float) getRateTypeChoices().size() - 1 },      rateType,   getRateTypeChoices());</span></a>
-<a name="190"><span class="lineNum">     190 </span><span class="lineCov">         16 :     depthParam      = addParam (&quot;depth&quot;,            TRANS(&quot;Depth&quot;),     { 0.0f, 1.0f }, 0.5f,                                   depth,      {});</span></a>
-<a name="191"><span class="lineNum">     191 </span><span class="lineCov">         16 :     bipolarParam    = addDiscreteParam (&quot;biopolar&quot;, TRANS(&quot;Bipoloar&quot;),  { 0.0f, 1.0f },                                         bipolar,    { NEEDS_TRANS(&quot;Uni-polar&quot;), NEEDS_TRANS(&quot;Bi-polar&quot;) });</span></a>
-<a name="192"><span class="lineNum">     192 </span><span class="lineCov">         16 :     phaseParam      = addParam (&quot;phase&quot;,            TRANS(&quot;Phase&quot;),     { 0.0f, 1.0f }, 0.5f,                                   phase,      {});</span></a>
-<a name="193"><span class="lineNum">     193 </span><span class="lineCov">         16 :     offsetParam     = addParam (&quot;offset&quot;,           TRANS(&quot;Offset&quot;),    { 0.0f, 1.0f }, 0.5f,                                   offset,     {});</span></a>
-<a name="194"><span class="lineNum">     194 </span>            : </a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineCov">         16 :     changedTimer.setCallback ([this]</span></a>
-<a name="196"><span class="lineNum">     196 </span>            :                               {</a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineNoCov">          0 :                                   changedTimer.stopTimer();</span></a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 :                                   changed();</span></a>
-<a name="199"><span class="lineNum">     199 </span>            :                               });</a>
-<a name="200"><span class="lineNum">     200 </span>            : </a>
-<a name="201"><span class="lineNum">     201 </span><span class="lineCov">         16 :     state.addListener (this);</span></a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineCov">         16 : }</span></a>
-<a name="203"><span class="lineNum">     203 </span>            : </a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineCov">         48 : LFOModifier::~LFOModifier()</span></a>
-<a name="205"><span class="lineNum">     205 </span>            : {</a>
-<a name="206"><span class="lineNum">     206 </span><span class="lineCov">         16 :     state.removeListener (this);</span></a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineCov">         16 :     notifyListenersOfDeletion();</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">         64 :     auto addDiscreteParam = [this] (const juce::String&amp; paramID, const juce::String&amp; name,</span></a>
+<a name="166"><span class="lineNum">     166 </span>            :                                     juce::Range&lt;float&gt; valueRange, CachedValue&lt;float&gt;&amp; val,</a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineCov">        128 :                                     const juce::StringArray&amp; labels) -&gt; AutomatableParameter*</span></a>
+<a name="168"><span class="lineNum">     168 </span>            :     {</a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineCov">         64 :         auto* p = new DiscreteLabelledParameter (paramID, name, *this, valueRange, labels.size(), labels);</span></a>
+<a name="170"><span class="lineNum">     170 </span>            :         addAutomatableParameter (p);</a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">         64 :         p-&gt;attachToCurrentValue (val);</span></a>
+<a name="172"><span class="lineNum">     172 </span>            : </a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineCov">         64 :         return p;</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">         16 :     };</span></a>
+<a name="175"><span class="lineNum">     175 </span>            : </a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">         64 :     auto addParam = [this] (const juce::String&amp; paramID,</span></a>
+<a name="177"><span class="lineNum">     177 </span>            :                             const juce::String&amp; name,</a>
+<a name="178"><span class="lineNum">     178 </span>            :                             NormalisableRange&lt;float&gt; valueRange,</a>
+<a name="179"><span class="lineNum">     179 </span>            :                             float centreVal, CachedValue&lt;float&gt;&amp; val,</a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineCov">        128 :                             const juce::String&amp; suffix) -&gt; AutomatableParameter*</span></a>
+<a name="181"><span class="lineNum">     181 </span>            :     {</a>
+<a name="182"><span class="lineNum">     182 </span>            :         valueRange.setSkewForCentre (centreVal);</a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineCov">         64 :         auto* p = new SuffixedParameter (paramID, name, *this, valueRange, suffix);</span></a>
+<a name="184"><span class="lineNum">     184 </span>            :         addAutomatableParameter (p);</a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">         64 :         p-&gt;attachToCurrentValue (val);</span></a>
+<a name="186"><span class="lineNum">     186 </span>            : </a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineCov">         64 :         return p;</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineCov">         16 :     };</span></a>
+<a name="189"><span class="lineNum">     189 </span>            : </a>
+<a name="190"><span class="lineNum">     190 </span>            :     using namespace ModifierCommon;</a>
+<a name="191"><span class="lineNum">     191 </span><span class="lineCov">         16 :     waveParam       = addDiscreteParam (&quot;wave&quot;,     TRANS(&quot;Wave&quot;),      { 0.0f, (float)  getWaveNames().size() - 1 },           wave,       getWaveNames());</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineCov">         16 :     syncTypeParam   = addDiscreteParam (&quot;syncType&quot;, TRANS(&quot;Sync type&quot;), { 0.0f, (float)  getSyncTypeChoices().size() - 1 },     syncType,   getSyncTypeChoices());</span></a>
+<a name="193"><span class="lineNum">     193 </span><span class="lineCov">         16 :     rateParam       = addParam (&quot;rate&quot;,             TRANS(&quot;Rate&quot;),      { 0.01f, 50.0f }, 1.0f,                                 rate,       {});</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineCov">         16 :     rateTypeParam   = addDiscreteParam (&quot;rateType&quot;, TRANS(&quot;Rate Type&quot;), { 0.0f, (float) getRateTypeChoices().size() - 1 },      rateType,   getRateTypeChoices());</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">         16 :     depthParam      = addParam (&quot;depth&quot;,            TRANS(&quot;Depth&quot;),     { 0.0f, 1.0f }, 0.5f,                                   depth,      {});</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">         16 :     bipolarParam    = addDiscreteParam (&quot;biopolar&quot;, TRANS(&quot;Bipoloar&quot;),  { 0.0f, 1.0f },                                         bipolar,    { NEEDS_TRANS(&quot;Uni-polar&quot;), NEEDS_TRANS(&quot;Bi-polar&quot;) });</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">         16 :     phaseParam      = addParam (&quot;phase&quot;,            TRANS(&quot;Phase&quot;),     { 0.0f, 1.0f }, 0.5f,                                   phase,      {});</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">         16 :     offsetParam     = addParam (&quot;offset&quot;,           TRANS(&quot;Offset&quot;),    { 0.0f, 1.0f }, 0.5f,                                   offset,     {});</span></a>
+<a name="199"><span class="lineNum">     199 </span>            : </a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineCov">         16 :     changedTimer.setCallback ([this]</span></a>
+<a name="201"><span class="lineNum">     201 </span>            :                               {</a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineNoCov">          0 :                                   changedTimer.stopTimer();</span></a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineNoCov">          0 :                                   changed();</span></a>
+<a name="204"><span class="lineNum">     204 </span>            :                               });</a>
+<a name="205"><span class="lineNum">     205 </span>            : </a>
+<a name="206"><span class="lineNum">     206 </span><span class="lineCov">         16 :     state.addListener (this);</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineCov">         16 : }</span></a>
 <a name="208"><span class="lineNum">     208 </span>            : </a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineCov">         16 :     edit.removeModifierTimer (*modifierTimer);</span></a>
-<a name="210"><span class="lineNum">     210 </span>            : </a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">        160 :     for (auto p : getAutomatableParameters())</span></a>
-<a name="212"><span class="lineNum">     212 </span><span class="lineCov">        144 :         p-&gt;detachFromCurrentValue();</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineCov">         48 : LFOModifier::~LFOModifier()</span></a>
+<a name="210"><span class="lineNum">     210 </span>            : {</a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">         16 :     state.removeListener (this);</span></a>
+<a name="212"><span class="lineNum">     212 </span><span class="lineCov">         16 :     notifyListenersOfDeletion();</span></a>
 <a name="213"><span class="lineNum">     213 </span>            : </a>
-<a name="214"><span class="lineNum">     214 </span><span class="lineCov">         16 :     deleteAutomatableParameters();</span></a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineCov">         32 : }</span></a>
-<a name="216"><span class="lineNum">     216 </span>            : </a>
-<a name="217"><span class="lineNum">     217 </span><span class="lineCov">         16 : void LFOModifier::initialise()</span></a>
-<a name="218"><span class="lineNum">     218 </span>            : {</a>
-<a name="219"><span class="lineNum">     219 </span>            :     // Do this here in case the audio code starts using the parameters before the constructor has finished</a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">         16 :     modifierTimer = std::make_unique&lt;LFOModifierTimer&gt; (*this);</span></a>
-<a name="221"><span class="lineNum">     221 </span><span class="lineCov">         16 :     edit.addModifierTimer (*modifierTimer);</span></a>
-<a name="222"><span class="lineNum">     222 </span>            : </a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">         16 :     restoreChangedParametersFromState();</span></a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineCov">         16 : }</span></a>
-<a name="225"><span class="lineNum">     225 </span>            : </a>
-<a name="226"><span class="lineNum">     226 </span>            : //==============================================================================</a>
-<a name="227"><span class="lineNum">     227 </span><span class="lineCov">     147200 : float LFOModifier::getCurrentValue()         { return currentValue.load (std::memory_order_acquire); }</span></a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineNoCov">          0 : float LFOModifier::getCurrentPhase() const   { return currentPhase.load (std::memory_order_acquire); }</span></a>
-<a name="229"><span class="lineNum">     229 </span>            : </a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineCov">         16 : AutomatableParameter::ModifierAssignment* LFOModifier::createAssignment (const ValueTree&amp; v)</span></a>
-<a name="231"><span class="lineNum">     231 </span>            : {</a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineCov">         16 :     return new Assignment (v, *this);</span></a>
-<a name="233"><span class="lineNum">     233 </span>            : }</a>
+<a name="214"><span class="lineNum">     214 </span><span class="lineCov">         16 :     edit.removeModifierTimer (*modifierTimer);</span></a>
+<a name="215"><span class="lineNum">     215 </span>            : </a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineCov">        160 :     for (auto p : getAutomatableParameters())</span></a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineCov">        144 :         p-&gt;detachFromCurrentValue();</span></a>
+<a name="218"><span class="lineNum">     218 </span>            : </a>
+<a name="219"><span class="lineNum">     219 </span><span class="lineCov">         16 :     deleteAutomatableParameters();</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">         32 : }</span></a>
+<a name="221"><span class="lineNum">     221 </span>            : </a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineCov">         16 : void LFOModifier::initialise()</span></a>
+<a name="223"><span class="lineNum">     223 </span>            : {</a>
+<a name="224"><span class="lineNum">     224 </span>            :     // Do this here in case the audio code starts using the parameters before the constructor has finished</a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">         16 :     modifierTimer = std::make_unique&lt;LFOModifierTimer&gt; (*this);</span></a>
+<a name="226"><span class="lineNum">     226 </span><span class="lineCov">         16 :     edit.addModifierTimer (*modifierTimer);</span></a>
+<a name="227"><span class="lineNum">     227 </span>            : </a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineCov">         16 :     restoreChangedParametersFromState();</span></a>
+<a name="229"><span class="lineNum">     229 </span><span class="lineCov">         16 : }</span></a>
+<a name="230"><span class="lineNum">     230 </span>            : </a>
+<a name="231"><span class="lineNum">     231 </span>            : //==============================================================================</a>
+<a name="232"><span class="lineNum">     232 </span><span class="lineCov">     147716 : float LFOModifier::getCurrentValue()         { return currentValue.load (std::memory_order_acquire); }</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 : float LFOModifier::getCurrentPhase() const   { return currentPhase.load (std::memory_order_acquire); }</span></a>
 <a name="234"><span class="lineNum">     234 </span>            : </a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineCov">      73584 : void LFOModifier::applyToBuffer (const PluginRenderContext&amp; prc)</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">         16 : AutomatableParameter::ModifierAssignment* LFOModifier::createAssignment (const juce::ValueTree&amp; v)</span></a>
 <a name="236"><span class="lineNum">     236 </span>            : {</a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineCov">      73584 :     if (prc.bufferForMidiMessages == nullptr)</span></a>
-<a name="238"><span class="lineNum">     238 </span>            :         return;</a>
-<a name="239"><span class="lineNum">     239 </span>            :     </a>
-<a name="240"><span class="lineNum">     240 </span><span class="lineCov">      73584 :     for (auto&amp; m : *prc.bufferForMidiMessages)</span></a>
-<a name="241"><span class="lineNum">     241 </span><span class="lineNoCov">          0 :         if (m.isNoteOn())</span></a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineNoCov">          0 :             modifierTimer-&gt;resync (prc.bufferNumSamples / getSampleRate());</span></a>
-<a name="243"><span class="lineNum">     243 </span>            : }</a>
-<a name="244"><span class="lineNum">     244 </span>            : </a>
-<a name="245"><span class="lineNum">     245 </span>            : //==============================================================================</a>
-<a name="246"><span class="lineNum">     246 </span><span class="lineCov">         16 : LFOModifier::Assignment::Assignment (const juce::ValueTree&amp; v, const LFOModifier&amp; lfo)</span></a>
-<a name="247"><span class="lineNum">     247 </span>            :     : AutomatableParameter::ModifierAssignment (lfo.edit, v),</a>
-<a name="248"><span class="lineNum">     248 </span><span class="lineCov">         16 :       lfoModifierID (lfo.itemID)</span></a>
-<a name="249"><span class="lineNum">     249 </span>            : {</a>
-<a name="250"><span class="lineNum">     250 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="251"><span class="lineNum">     251 </span>            : </a>
-<a name="252"><span class="lineNum">     252 </span><span class="lineCov">         16 : bool LFOModifier::Assignment::isForModifierSource (const ModifierSource&amp; source) const</span></a>
-<a name="253"><span class="lineNum">     253 </span>            : {</a>
-<a name="254"><span class="lineNum">     254 </span><span class="lineCov">         16 :     if (auto* mod = dynamic_cast&lt;const LFOModifier*&gt; (&amp;source))</span></a>
-<a name="255"><span class="lineNum">     255 </span><span class="lineCov">         16 :         return mod-&gt;itemID == lfoModifierID;</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineCov">         16 :     return new Assignment (v, *this);</span></a>
+<a name="238"><span class="lineNum">     238 </span>            : }</a>
+<a name="239"><span class="lineNum">     239 </span>            : </a>
+<a name="240"><span class="lineNum">     240 </span><span class="lineCov">      73842 : void LFOModifier::applyToBuffer (const PluginRenderContext&amp; prc)</span></a>
+<a name="241"><span class="lineNum">     241 </span>            : {</a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">      73842 :     if (prc.bufferForMidiMessages == nullptr)</span></a>
+<a name="243"><span class="lineNum">     243 </span>            :         return;</a>
+<a name="244"><span class="lineNum">     244 </span>            :     </a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">      73842 :     for (auto&amp; m : *prc.bufferForMidiMessages)</span></a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineNoCov">          0 :         if (m.isNoteOn())</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineNoCov">          0 :             modifierTimer-&gt;resync (prc.bufferNumSamples / getSampleRate());</span></a>
+<a name="248"><span class="lineNum">     248 </span>            : }</a>
+<a name="249"><span class="lineNum">     249 </span>            : </a>
+<a name="250"><span class="lineNum">     250 </span>            : //==============================================================================</a>
+<a name="251"><span class="lineNum">     251 </span><span class="lineCov">         16 : LFOModifier::Assignment::Assignment (const juce::ValueTree&amp; v, const LFOModifier&amp; lfo)</span></a>
+<a name="252"><span class="lineNum">     252 </span>            :     : AutomatableParameter::ModifierAssignment (lfo.edit, v),</a>
+<a name="253"><span class="lineNum">     253 </span><span class="lineCov">         16 :       lfoModifierID (lfo.itemID)</span></a>
+<a name="254"><span class="lineNum">     254 </span>            : {</a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="256"><span class="lineNum">     256 </span>            : </a>
-<a name="257"><span class="lineNum">     257 </span>            :     return false;</a>
-<a name="258"><span class="lineNum">     258 </span>            : }</a>
-<a name="259"><span class="lineNum">     259 </span>            : </a>
-<a name="260"><span class="lineNum">     260 </span><span class="lineNoCov">          0 : LFOModifier::Ptr LFOModifier::Assignment::getLFOModifier() const</span></a>
-<a name="261"><span class="lineNum">     261 </span>            : {</a>
-<a name="262"><span class="lineNum">     262 </span><span class="lineNoCov">          0 :     if (auto mod = findModifierTypeForID&lt;LFOModifier&gt; (edit, lfoModifierID))</span></a>
-<a name="263"><span class="lineNum">     263 </span>            :         return mod;</a>
+<a name="257"><span class="lineNum">     257 </span><span class="lineCov">         16 : bool LFOModifier::Assignment::isForModifierSource (const ModifierSource&amp; source) const</span></a>
+<a name="258"><span class="lineNum">     258 </span>            : {</a>
+<a name="259"><span class="lineNum">     259 </span><span class="lineCov">         16 :     if (auto* mod = dynamic_cast&lt;const LFOModifier*&gt; (&amp;source))</span></a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineCov">         16 :         return mod-&gt;itemID == lfoModifierID;</span></a>
+<a name="261"><span class="lineNum">     261 </span>            : </a>
+<a name="262"><span class="lineNum">     262 </span>            :     return false;</a>
+<a name="263"><span class="lineNum">     263 </span>            : }</a>
 <a name="264"><span class="lineNum">     264 </span>            : </a>
-<a name="265"><span class="lineNum">     265 </span><span class="lineNoCov">          0 :     return {};</span></a>
-<a name="266"><span class="lineNum">     266 </span>            : }</a>
-<a name="267"><span class="lineNum">     267 </span>            : </a>
-<a name="268"><span class="lineNum">     268 </span>            : //==============================================================================</a>
-<a name="269"><span class="lineNum">     269 </span><span class="lineCov">         32 : StringArray LFOModifier::getWaveNames()</span></a>
-<a name="270"><span class="lineNum">     270 </span>            : {</a>
-<a name="271"><span class="lineNum">     271 </span>            :     return</a>
-<a name="272"><span class="lineNum">     272 </span>            :     {</a>
-<a name="273"><span class="lineNum">     273 </span>            :         NEEDS_TRANS(&quot;Sine&quot;),</a>
-<a name="274"><span class="lineNum">     274 </span>            :         NEEDS_TRANS(&quot;Triangle&quot;),</a>
-<a name="275"><span class="lineNum">     275 </span>            :         NEEDS_TRANS(&quot;Saw Up&quot;),</a>
-<a name="276"><span class="lineNum">     276 </span>            :         NEEDS_TRANS(&quot;Saw Down&quot;),</a>
-<a name="277"><span class="lineNum">     277 </span>            :         NEEDS_TRANS(&quot;Square&quot;),</a>
-<a name="278"><span class="lineNum">     278 </span>            :         NEEDS_TRANS(&quot;4 Steps Up&quot;),</a>
-<a name="279"><span class="lineNum">     279 </span>            :         NEEDS_TRANS(&quot;4 Steps Down&quot;),</a>
-<a name="280"><span class="lineNum">     280 </span>            :         NEEDS_TRANS(&quot;8 Steps Up&quot;),</a>
-<a name="281"><span class="lineNum">     281 </span>            :         NEEDS_TRANS(&quot;8 Steps Down&quot;),</a>
-<a name="282"><span class="lineNum">     282 </span>            :         NEEDS_TRANS(&quot;Random&quot;),</a>
-<a name="283"><span class="lineNum">     283 </span>            :         NEEDS_TRANS(&quot;Noise&quot;)</a>
-<a name="284"><span class="lineNum">     284 </span><span class="lineCov">         32 :     };</span></a>
-<a name="285"><span class="lineNum">     285 </span>            : }</a>
-<a name="286"><span class="lineNum">     286 </span>            : </a>
-<a name="287"><span class="lineNum">     287 </span>            : //==============================================================================</a>
-<a name="288"><span class="lineNum">     288 </span><span class="lineCov">         48 : void LFOModifier::valueTreeChanged()</span></a>
-<a name="289"><span class="lineNum">     289 </span>            : {</a>
-<a name="290"><span class="lineNum">     290 </span><span class="lineCov">         48 :     if (! changedTimer.isTimerRunning())</span></a>
-<a name="291"><span class="lineNum">     291 </span><span class="lineCov">         16 :         changedTimer.startTimerHz (30);</span></a>
-<a name="292"><span class="lineNum">     292 </span><span class="lineCov">         48 : }</span></a>
-<a name="293"><span class="lineNum">     293 </span>            : </a>
-<a name="294"><span class="lineNum">     294 </span>            : }</a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineNoCov">          0 : LFOModifier::Ptr LFOModifier::Assignment::getLFOModifier() const</span></a>
+<a name="266"><span class="lineNum">     266 </span>            : {</a>
+<a name="267"><span class="lineNum">     267 </span><span class="lineNoCov">          0 :     if (auto mod = findModifierTypeForID&lt;LFOModifier&gt; (edit, lfoModifierID))</span></a>
+<a name="268"><span class="lineNum">     268 </span>            :         return mod;</a>
+<a name="269"><span class="lineNum">     269 </span>            : </a>
+<a name="270"><span class="lineNum">     270 </span><span class="lineNoCov">          0 :     return {};</span></a>
+<a name="271"><span class="lineNum">     271 </span>            : }</a>
+<a name="272"><span class="lineNum">     272 </span>            : </a>
+<a name="273"><span class="lineNum">     273 </span>            : //==============================================================================</a>
+<a name="274"><span class="lineNum">     274 </span><span class="lineCov">         32 : juce::StringArray LFOModifier::getWaveNames()</span></a>
+<a name="275"><span class="lineNum">     275 </span>            : {</a>
+<a name="276"><span class="lineNum">     276 </span>            :     return</a>
+<a name="277"><span class="lineNum">     277 </span>            :     {</a>
+<a name="278"><span class="lineNum">     278 </span>            :         NEEDS_TRANS(&quot;Sine&quot;),</a>
+<a name="279"><span class="lineNum">     279 </span>            :         NEEDS_TRANS(&quot;Triangle&quot;),</a>
+<a name="280"><span class="lineNum">     280 </span>            :         NEEDS_TRANS(&quot;Saw Up&quot;),</a>
+<a name="281"><span class="lineNum">     281 </span>            :         NEEDS_TRANS(&quot;Saw Down&quot;),</a>
+<a name="282"><span class="lineNum">     282 </span>            :         NEEDS_TRANS(&quot;Square&quot;),</a>
+<a name="283"><span class="lineNum">     283 </span>            :         NEEDS_TRANS(&quot;4 Steps Up&quot;),</a>
+<a name="284"><span class="lineNum">     284 </span>            :         NEEDS_TRANS(&quot;4 Steps Down&quot;),</a>
+<a name="285"><span class="lineNum">     285 </span>            :         NEEDS_TRANS(&quot;8 Steps Up&quot;),</a>
+<a name="286"><span class="lineNum">     286 </span>            :         NEEDS_TRANS(&quot;8 Steps Down&quot;),</a>
+<a name="287"><span class="lineNum">     287 </span>            :         NEEDS_TRANS(&quot;Random&quot;),</a>
+<a name="288"><span class="lineNum">     288 </span>            :         NEEDS_TRANS(&quot;Noise&quot;)</a>
+<a name="289"><span class="lineNum">     289 </span><span class="lineCov">         32 :     };</span></a>
+<a name="290"><span class="lineNum">     290 </span>            : }</a>
+<a name="291"><span class="lineNum">     291 </span>            : </a>
+<a name="292"><span class="lineNum">     292 </span>            : //==============================================================================</a>
+<a name="293"><span class="lineNum">     293 </span><span class="lineCov">         48 : void LFOModifier::valueTreeChanged()</span></a>
+<a name="294"><span class="lineNum">     294 </span>            : {</a>
+<a name="295"><span class="lineNum">     295 </span><span class="lineCov">         48 :     if (! changedTimer.isTimerRunning())</span></a>
+<a name="296"><span class="lineNum">     296 </span><span class="lineCov">         16 :         changedTimer.startTimerHz (30);</span></a>
+<a name="297"><span class="lineNum">     297 </span><span class="lineCov">         48 : }</span></a>
+<a name="298"><span class="lineNum">     298 </span>            : </a>
+<a name="299"><span class="lineNum">     299 </span>            : }</a>
 </pre>
       </td>
     </tr>

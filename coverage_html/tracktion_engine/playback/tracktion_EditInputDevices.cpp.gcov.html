@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-23 18:27:33</td>
+            <td class="headerValue">2021-12-29 12:24:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">12</td>
@@ -170,16 +170,16 @@
 <a name="108"><span class="lineNum">     108 </span><span class="lineCov">        496 :         if (isForDevice (v, d))</span></a>
 <a name="109"><span class="lineNum">     109 </span><span class="lineNoCov">          0 :             return v;</span></a>
 <a name="110"><span class="lineNum">     110 </span>            : </a>
-<a name="111"><span class="lineNum">     111 </span><span class="lineCov">        130 :     ValueTree v (IDs::INPUTDEVICE);</span></a>
+<a name="111"><span class="lineNum">     111 </span><span class="lineCov">        130 :     juce::ValueTree v (IDs::INPUTDEVICE);</span></a>
 <a name="112"><span class="lineNum">     112 </span>            : </a>
 <a name="113"><span class="lineNum">     113 </span><span class="lineCov">         65 :     if (d.getDeviceType() == InputDevice::DeviceType::trackWaveDevice)</span></a>
 <a name="114"><span class="lineNum">     114 </span>            :     {</a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineNoCov">          0 :         EditItemID::fromString (d.getName()).setProperty (v, IDs::sourceTrack, nullptr);</span></a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineNoCov">          0 :         v.setProperty (IDs::sourceTrack, EditItemID::fromString (d.getName()), nullptr);</span></a>
 <a name="116"><span class="lineNum">     116 </span><span class="lineNoCov">          0 :         v.setProperty (IDs::type, &quot;audio&quot;, nullptr);</span></a>
 <a name="117"><span class="lineNum">     117 </span>            :     }</a>
 <a name="118"><span class="lineNum">     118 </span><span class="lineCov">         65 :     else if (d.getDeviceType() == InputDevice::DeviceType::trackMidiDevice)</span></a>
 <a name="119"><span class="lineNum">     119 </span>            :     {</a>
-<a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 :         EditItemID::fromString (d.getName()).setProperty (v, IDs::sourceTrack, nullptr);</span></a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 :         v.setProperty (IDs::sourceTrack, EditItemID::fromString (d.getName()), nullptr);</span></a>
 <a name="121"><span class="lineNum">     121 </span><span class="lineNoCov">          0 :         v.setProperty (IDs::type, &quot;MIDI&quot;, nullptr);</span></a>
 <a name="122"><span class="lineNum">     122 </span>            :     }</a>
 <a name="123"><span class="lineNum">     123 </span>            :     else</a>
