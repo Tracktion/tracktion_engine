@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-struct ExternalControllerManager::EditTreeWatcher   : private ValueTree::Listener,
+struct ExternalControllerManager::EditTreeWatcher   : private juce::ValueTree::Listener,
                                                       private Timer
 {
     EditTreeWatcher (ExternalControllerManager& o, Edit& e) : owner (o), edit (e)

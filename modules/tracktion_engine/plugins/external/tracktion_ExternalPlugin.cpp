@@ -408,7 +408,7 @@ namespace
 
         if (auto* mb = layout.getBinaryData())
         {
-            auto v = ValueTree::readFromData (mb->getData(), mb->getSize());
+            auto v = juce::ValueTree::readFromData (mb->getData(), mb->getSize());
             readBusLayout (busesLayout, v, plugin, true);
             readBusLayout (busesLayout, v, plugin, false);
         }
@@ -416,28 +416,28 @@ namespace
         return busesLayout;
     }
 
-    ValueTree createBusLayout (const AudioProcessor::BusesLayout& layout, bool isInput)
+    juce::ValueTree createBusLayout (const AudioProcessor::BusesLayout& layout, bool isInput)
     {
         auto& buses = (isInput ? layout.inputBuses : layout.outputBuses);
 
-        ValueTree v (isInput ? IDs::INPUTS : IDs::OUTPUTS);
+        juce::ValueTree v (isInput ? IDs::INPUTS : IDs::OUTPUTS);
 
         for (int busIdx = 0; busIdx < buses.size(); ++busIdx)
         {
-            ValueTree bus (IDs::BUS);
-            bus.setProperty (IDs::index, busIdx, nullptr);
+            auto& set = buses.getReference (busIdx);
+            juce::String layoutName = set.isDisabled() ? "disabled" : set.getSpeakerArrangementAsString();
 
-            const AudioChannelSet& set = buses.getReference (busIdx);
-            const juce::String layoutName = set.isDisabled() ? "disabled" : set.getSpeakerArrangementAsString();
-            bus.setProperty (IDs::layout, layoutName, nullptr);
+            auto bus = createValueTree (IDs::BUS,
+                                        IDs::index, busIdx,
+                                        IDs::layout, layoutName);
 
             v.addChild (bus, -1, nullptr);
         }
 
-        return v.getNumChildren() > 0 ? v : ValueTree();
+        return v.getNumChildren() > 0 ? v : juce::ValueTree();
     }
 
-    ValueTree createBusesLayout (const AudioProcessor::BusesLayout& layout)
+    juce::ValueTree createBusesLayout (const AudioProcessor::BusesLayout& layout)
     {
         auto inputs = createBusLayout (layout, true);
         auto outputs = createBusLayout (layout, false);
@@ -445,7 +445,7 @@ namespace
         if (inputs.getNumChildren() == 0 && outputs.getNumChildren() == 0)
             return {};
 
-        ValueTree v (IDs::LAYOUT);
+        juce::ValueTree v (IDs::LAYOUT);
         v.addChild (inputs, -1, nullptr);
         v.addChild (outputs, -1, nullptr);
 
@@ -546,13 +546,13 @@ ExternalPlugin::ExternalPlugin (PluginCreationInfo info)  : Plugin (info)
 
 juce::ValueTree ExternalPlugin::create (Engine& e, const PluginDescription& desc)
 {
-    ValueTree v (IDs::PLUGIN);
-    v.setProperty (IDs::type, xmlTypeName, nullptr);
-    v.setProperty (IDs::uniqueId, juce::String::toHexString (desc.uniqueId), nullptr);
-    v.setProperty (IDs::uid, juce::String::toHexString (desc.deprecatedUid), nullptr);
-    v.setProperty (IDs::filename, desc.fileOrIdentifier, nullptr);
-    v.setProperty (IDs::name, desc.name, nullptr);
-    v.setProperty (IDs::manufacturer, desc.manufacturerName, nullptr);
+    auto v = createValueTree (IDs::PLUGIN,
+                              IDs::type, xmlTypeName,
+                              IDs::uniqueId, juce::String::toHexString (desc.uniqueId),
+                              IDs::uid, juce::String::toHexString (desc.deprecatedUid),
+                              IDs::filename, desc.fileOrIdentifier,
+                              IDs::name, desc.name,
+                              IDs::manufacturer, desc.manufacturerName);
 
     if (e.getPluginManager().areGUIsLockedByDefault())
         v.setProperty (IDs::windowLocked, true, nullptr);

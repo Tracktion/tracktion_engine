@@ -246,7 +246,7 @@ WarpTimeManager::WarpTimeManager (AudioClipBase& c)
     edit.engine.getWarpTimeFactory().addWarpTimeManager (*this);
 }
 
-WarpTimeManager::WarpTimeManager (Edit& e, const AudioFile& f, ValueTree parentTree)
+WarpTimeManager::WarpTimeManager (Edit& e, const AudioFile& f, juce::ValueTree parentTree)
     : edit (e), sourceFile (f), endMarkerEnabled (false), endMarkersLimited (true)
 {
     state = parentTree.getOrCreateChildWithName (IDs::WARPTIME, &edit.getUndoManager());
@@ -304,9 +304,10 @@ int WarpTimeManager::insertMarker (WarpMarker marker)
     while (index < markers->objects.size() && markers->objects.getUnchecked (index)->warpTime < marker.warpTime)
         index++;
 
-    ValueTree v (IDs::WARPMARKER);
-    v.setProperty (IDs::sourceTime, marker.sourceTime, nullptr);
-    v.setProperty (IDs::warpTime, marker.warpTime, nullptr);
+    auto v = createValueTree (IDs::WARPMARKER,
+                              IDs::sourceTime, marker.sourceTime,
+                              IDs::warpTime, marker.warpTime);
+
     markers->state.addChild (v, index, getUndoManager());
 
     return index;

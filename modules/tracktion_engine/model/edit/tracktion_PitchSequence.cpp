@@ -186,9 +186,9 @@ PitchSetting::Ptr PitchSequence::insertPitch (double beatNum, int pitch)
         newIndex = indexOfPitch (&prev) + 1;
     }
 
-    ValueTree v (IDs::PITCH);
-    v.setProperty (IDs::startBeat, beatNum, nullptr);
-    v.setProperty (IDs::pitch, pitch, nullptr);
+    auto v = createValueTree (IDs::PITCH,
+                              IDs::startBeat, beatNum,
+                              IDs::pitch, pitch);
 
     if (newIndex < 0)
         newIndex = list->objects.size();

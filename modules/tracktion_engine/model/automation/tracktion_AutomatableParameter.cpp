@@ -680,13 +680,13 @@ AutomatableParameter::ModifierAssignment::Ptr AutomatableParameter::addModifier 
 
     if (auto mod = dynamic_cast<Modifier*> (&source))
     {
-        v = juce::ValueTree (mod->state.getType());
-        mod->itemID.setProperty (v, IDs::source, nullptr);
+        v = createValueTree (mod->state.getType(),
+                             IDs::source, mod->itemID);
     }
     else if (auto macro = dynamic_cast<MacroParameter*> (&source))
     {
-        v = juce::ValueTree (IDs::MACRO);
-        v.setProperty (IDs::source, macro->paramID, nullptr);
+        v = createValueTree (IDs::MACRO,
+                             IDs::source, macro->paramID);
     }
     else
     {

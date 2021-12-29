@@ -108,16 +108,16 @@ juce::ValueTree EditInputDevices::getInstanceStateForInputDevice (const InputDev
         if (isForDevice (v, d))
             return v;
 
-    ValueTree v (IDs::INPUTDEVICE);
+    juce::ValueTree v (IDs::INPUTDEVICE);
 
     if (d.getDeviceType() == InputDevice::DeviceType::trackWaveDevice)
     {
-        EditItemID::fromString (d.getName()).setProperty (v, IDs::sourceTrack, nullptr);
+        v.setProperty (IDs::sourceTrack, EditItemID::fromString (d.getName()), nullptr);
         v.setProperty (IDs::type, "audio", nullptr);
     }
     else if (d.getDeviceType() == InputDevice::DeviceType::trackMidiDevice)
     {
-        EditItemID::fromString (d.getName()).setProperty (v, IDs::sourceTrack, nullptr);
+        v.setProperty (IDs::sourceTrack, EditItemID::fromString (d.getName()), nullptr);
         v.setProperty (IDs::type, "MIDI", nullptr);
     }
     else

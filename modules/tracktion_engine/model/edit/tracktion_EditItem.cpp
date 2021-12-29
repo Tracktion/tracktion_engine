@@ -34,7 +34,7 @@ EditItemID EditItemID::fromID (const juce::ValueTree& v)
 
 void EditItemID::writeID (juce::ValueTree& v, juce::UndoManager* um) const
 {
-    setProperty (v, IDs::id, um);
+    v.setProperty (IDs::id, *this, um);
 }
 
 EditItemID EditItemID::fromRawID (juce::uint64 raw)
@@ -294,7 +294,7 @@ struct IDRemapping
 
                     if (newID != newIDsToApply.end())
                     {
-                        newID->second.setProperty (v, propName, um);
+                        v.setProperty (propName, newID->second, um);
                     }
                     else
                     {

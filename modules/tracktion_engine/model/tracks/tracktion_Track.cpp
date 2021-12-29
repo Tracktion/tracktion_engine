@@ -579,14 +579,14 @@ void Track::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
     }
 }
 
-void Track::valueTreeChildAdded (ValueTree& p, ValueTree& c)
+void Track::valueTreeChildAdded (ValueTree& p, juce::ValueTree& c)
 {
     if (p == state)
         if (TrackList::isTrack (c))
             updateTrackList();
 }
 
-void Track::valueTreeChildRemoved (ValueTree& p, ValueTree& c, int)
+void Track::valueTreeChildRemoved (ValueTree& p, juce::ValueTree& c, int)
 {
     if (p == state)
         if (TrackList::isTrack (c))

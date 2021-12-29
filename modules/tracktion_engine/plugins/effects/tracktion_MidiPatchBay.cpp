@@ -27,9 +27,8 @@ MidiPatchBayPlugin::~MidiPatchBayPlugin()
 
 juce::ValueTree MidiPatchBayPlugin::create()
 {
-    ValueTree v (IDs::PLUGIN);
-    v.setProperty (IDs::type, xmlTypeName, nullptr);
-    return v;
+    return createValueTree (IDs::PLUGIN,
+                            IDs::type, xmlTypeName);
 }
 
 const char* MidiPatchBayPlugin::xmlTypeName = "midipatchbay";

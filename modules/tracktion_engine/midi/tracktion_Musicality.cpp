@@ -1416,9 +1416,9 @@ void PatternGenerator::insertChordIntoProgression (int idx, juce::String chordNa
         if (isRoman (chordName))
             chordName = chordName.toLowerCase().retainCharacters ("iv7");
 
-        juce::ValueTree item (IDs::PROGRESSIONITEM);
-        item.setProperty (IDs::name, chordName, nullptr);
-        item.setProperty (IDs::pitches, pitches, nullptr);
+        auto item = createValueTree (IDs::PROGRESSIONITEM,
+                                     IDs::name,    chordName,
+                                     IDs::pitches, pitches);
 
         progression.addChild (item, idx, &um);
     }

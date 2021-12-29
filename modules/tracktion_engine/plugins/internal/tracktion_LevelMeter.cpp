@@ -25,7 +25,7 @@ LevelMeterPlugin::~LevelMeterPlugin()
 
 juce::ValueTree LevelMeterPlugin::create()
 {
-    ValueTree v (IDs::PLUGIN);
+    juce::ValueTree v (IDs::PLUGIN);
     v.setProperty (IDs::type, xmlTypeName, nullptr);
     return v;
 }

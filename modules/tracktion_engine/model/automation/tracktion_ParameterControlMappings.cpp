@@ -301,11 +301,11 @@ void ParameterControlMappings::saveTo (ValueTree& state)
     {
         if (parameters[i] != nullptr && controllerIDs[i] != 0)
         {
-            ValueTree e (IDs::MAP);
-            e.setProperty (IDs::id, controllerIDs[i], nullptr);
-            e.setProperty (IDs::channel, channelIDs[i], nullptr);
-            e.setProperty (IDs::param, parameters[i]->getFullName(), nullptr);
-            parameters[i]->getOwnerID().setProperty (e, IDs::pluginID, nullptr);
+            auto e = createValueTree (IDs::MAP,
+                                      IDs::id, controllerIDs[i],
+                                      IDs::channel, channelIDs[i],
+                                      IDs::param, parameters[i]->getFullName(),
+                                      IDs::pluginID, parameters[i]->getOwnerID());
 
             state.addChild (e, -1, nullptr);
         }

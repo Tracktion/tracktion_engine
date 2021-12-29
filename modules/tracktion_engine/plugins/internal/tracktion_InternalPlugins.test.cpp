@@ -100,7 +100,7 @@ private:
         expect (pluginPtr != nullptr);
 
         // Create a state for restoration
-        ValueTree preset (IDs::PLUGIN);
+        juce::ValueTree preset (IDs::PLUGIN);
         preset.setProperty (IDs::type, pluginName, nullptr);
 
         for (auto param : params)

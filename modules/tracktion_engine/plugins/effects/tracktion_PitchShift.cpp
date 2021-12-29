@@ -155,9 +155,8 @@ PitchShiftPlugin::~PitchShiftPlugin()
 
 juce::ValueTree PitchShiftPlugin::create()
 {
-    ValueTree v (IDs::PLUGIN);
-    v.setProperty (IDs::type, xmlTypeName, nullptr);
-    return v;
+    return createValueTree (IDs::PLUGIN,
+                            IDs::type, xmlTypeName);
 }
 
 const char* PitchShiftPlugin::xmlTypeName = "pitchShifter";

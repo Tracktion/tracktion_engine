@@ -157,10 +157,10 @@ void PatchBayPlugin::makeConnection (int inputChannel, int outputChannel, float 
         if (w->sourceChannelIndex == inputChannel && w->destChannelIndex == outputChannel)
             return;
 
-    ValueTree w (IDs::CONNECTION);
-    w.setProperty (IDs::srcChan, inputChannel, nullptr);
-    w.setProperty (IDs::dstChan, outputChannel, nullptr);
-    w.setProperty (IDs::gainDb, gainDb, nullptr);
+    auto w = createValueTree (IDs::CONNECTION,
+                              IDs::srcChan, inputChannel,
+                              IDs::dstChan, outputChannel,
+                              IDs::gainDb, gainDb);
 
     state.addChild (w, -1, um);
 }

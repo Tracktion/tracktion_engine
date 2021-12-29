@@ -192,8 +192,8 @@ RackType::RackType (const juce::ValueTree& v, Edit& owner)
 
     if (! windowState.isValid())
     {
-        ValueTree ws (IDs::WINDOWSTATE);
-        ws.setProperty (IDs::windowPos, state[IDs::windowPos], nullptr);
+        auto ws = createValueTree (IDs::WINDOWSTATE,
+                                   IDs::windowPos, state[IDs::windowPos]);
 
         if (state.hasProperty (IDs::windowLocked))
             ws.setProperty (IDs::windowLocked, state[IDs::windowLocked], nullptr);
@@ -234,11 +234,10 @@ RackType::~RackType()
     windowStateList.reset();
 }
 
-static ValueTree createInOrOut (const juce::Identifier& type, const juce::String& name)
+static juce::ValueTree createInOrOut (const juce::Identifier& type, const juce::String& name)
 {
-    ValueTree v (type);
-    v.setProperty (IDs::name, name, nullptr);
-    return v;
+    return createValueTree (type,
+                            IDs::name, name);
 }
 
 void RackType::removeAllInputsAndOutputs()
@@ -494,9 +493,9 @@ void RackType::addPlugin (const Plugin::Ptr& p, Point<float> pos, bool canAutoCo
 
             p->removeFromParent();
 
-            ValueTree v (IDs::PLUGININSTANCE);
-            v.setProperty (IDs::x, jlimit (0.0f, 1.0f, pos.x), nullptr);
-            v.setProperty (IDs::y, jlimit (0.0f, 1.0f, pos.y), nullptr);
+            auto v = createValueTree (IDs::PLUGININSTANCE,
+                                      IDs::x, jlimit (0.0f, 1.0f, pos.x),
+                                      IDs::y, jlimit (0.0f, 1.0f, pos.y));
             v.addChild (p->state, -1, getUndoManager());
 
             state.addChild (v, -1, getUndoManager());
@@ -636,11 +635,11 @@ void RackType::addConnection (EditItemID srcId, int sourcePin,
                   && rc->sourceID == srcId && rc->sourcePin == sourcePin)
                 return;
 
-        ValueTree v (IDs::CONNECTION);
-        srcId.setProperty (v, IDs::src, nullptr);
-        dstId.setProperty (v, IDs::dst, nullptr);
-        v.setProperty (IDs::srcPin, sourcePin, nullptr);
-        v.setProperty (IDs::dstPin, destPin, nullptr);
+        auto v = createValueTree (IDs::CONNECTION,
+                                  IDs::src, srcId,
+                                  IDs::dst, dstId,
+                                  IDs::srcPin, sourcePin,
+                                  IDs::dstPin, destPin);
 
         state.addChild (v, -1, getUndoManager());
     }
@@ -1316,7 +1315,7 @@ RackType::Ptr RackTypeList::addNewRack()
 {
     auto newID = edit.createNewItemID();
 
-    ValueTree v (IDs::RACK);
+    juce::ValueTree v (IDs::RACK);
     newID.writeID (v, nullptr);
     state.addChild (v, -1, &edit.getUndoManager());
 

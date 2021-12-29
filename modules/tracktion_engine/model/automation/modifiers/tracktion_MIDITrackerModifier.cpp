@@ -173,7 +173,7 @@ void MIDITrackerModifier::updateMapFromTree()
 
         if (! v.isValid())
         {
-            v = ValueTree (IDs::NODE);
+            v = juce::ValueTree (IDs::NODE);
             v.setProperty (IDs::midi, jmap (i, 0, 4, 0, 127), nullptr);
             v.setProperty (IDs::value, jmap ((float) i, 0.0f, 4.0f, -1.0f, 1.0f), nullptr);
             nodeState.addChild (v, -1, nullptr);

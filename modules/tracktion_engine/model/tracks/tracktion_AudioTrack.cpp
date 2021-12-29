@@ -51,7 +51,7 @@ struct AudioTrack::FreezeUpdater : private ValueTreeAllEventListener,
     }
 
     AudioTrack& owner;
-    ValueTree state;
+    juce::ValueTree state;
 
 private:
     bool triggerFreeze, updateFreeze;

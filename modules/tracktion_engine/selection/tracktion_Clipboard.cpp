@@ -169,7 +169,7 @@ static double pasteMIDIFileIntoEdit (Edit& edit, const File& midiFile, int& targ
 
             lastTrackEndTime = listBeatEnd;
 
-            ValueTree clipState (IDs::MIDICLIP);
+            juce::ValueTree clipState (IDs::MIDICLIP);
             clipState.setProperty (IDs::channel, list->getMidiChannel(), nullptr);
 
             if (list->state.isValid())
@@ -471,9 +471,10 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects, 
             clip->flushStateToValueTree();
             info.state = clip->state.createCopy();
 
-            info.state.setProperty (IDs::start, clippedStart - overallStartTime, nullptr);
-            info.state.setProperty (IDs::length, clippedEnd - clippedStart, nullptr);
-            info.state.setProperty (IDs::offset, clippedOffset, nullptr);
+            addValueTreeProperties (info.state,
+                                    IDs::start, clippedStart - overallStartTime,
+                                    IDs::length, clippedEnd - clippedStart,
+                                    IDs::offset, clippedOffset);
 
             auto acb = dynamic_cast<AudioClipBase*> (clip);
 
@@ -483,8 +484,9 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects, 
                 // we need to flush the fade in/out so pasted clips don't get default edge fades
                 if (range == Edit::getMaximumEditTimeRange())
                 {
-                    info.state.setProperty (IDs::fadeIn,  acb->getFadeIn(), nullptr);
-                    info.state.setProperty (IDs::fadeOut, acb->getFadeOut(), nullptr);
+                    addValueTreeProperties (info.state,
+                                            IDs::fadeIn,  acb->getFadeIn(),
+                                            IDs::fadeOut, acb->getFadeOut());
                 }
                 else
                 {
@@ -492,8 +494,9 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects, 
                     EditTimeRange fadeIn (clipPos.getStart(), clipPos.getStart() + acb->getFadeIn());
                     EditTimeRange fadeOut (clipPos.getEnd() - acb->getFadeOut(), clipPos.getEnd());
 
-                    info.state.setProperty (IDs::fadeIn,  fadeIn.overlaps (inOutPoints)  ? fadeIn.getIntersectionWith (inOutPoints).getLength() : 0.0, nullptr);
-                    info.state.setProperty (IDs::fadeOut, fadeOut.overlaps (inOutPoints) ? fadeOut.getIntersectionWith (inOutPoints).getLength() : 0.0, nullptr);
+                    addValueTreeProperties (info.state,
+                                            IDs::fadeIn,  fadeIn.overlaps (inOutPoints)  ? fadeIn.getIntersectionWith (inOutPoints).getLength() : 0.0,
+                                            IDs::fadeOut, fadeOut.overlaps (inOutPoints) ? fadeOut.getIntersectionWith (inOutPoints).getLength() : 0.0);
                 }
             }
 
@@ -928,7 +931,7 @@ bool Clipboard::Tracks::pasteIntoEdit (const EditPastingOptions& options) const
 
                 if (newID.isValid())
                 {
-                    newID.setProperty (ass->state, IDs::source, nullptr);
+                    ass->state.setProperty (IDs::source, newID, nullptr);
                 }
                 else
                 {
@@ -1612,7 +1615,7 @@ bool Clipboard::Plugins::pasteIntoEdit (const EditPastingOptions& options) const
             auto remappedRackID = rackIDMap[oldRackID];
             
             if (remappedRackID.isValid())
-                remappedRackID.setProperty (stateCopy, IDs::rackType, nullptr);
+                stateCopy.setProperty (IDs::rackType, remappedRackID, nullptr);
         }
 
         if (auto newPlugin = options.edit.getPluginCache().getOrCreatePluginFor (stateCopy))

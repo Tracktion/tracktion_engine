@@ -19,7 +19,7 @@ AutomationCurve::AutomationCurve (const juce::ValueTree& p, const juce::ValueTre
     : parentState (p), state (v)
 {
     if (! state.isValid())
-        state = ValueTree (IDs::AUTOMATIONCURVE);
+        state = juce::ValueTree (IDs::AUTOMATIONCURVE);
 }
 
 AutomationCurve::AutomationCurve (const AutomationCurve& other)
@@ -273,11 +273,10 @@ int AutomationCurve::getNearestPoint (double& t, float& v, double xToYRatio) con
 //==============================================================================
 juce::ValueTree AutomationCurve::AutomationPoint::toValueTree() const
 {
-    juce::ValueTree v (IDs::POINT);
-    v.setProperty (IDs::t, time, nullptr);
-    v.setProperty (IDs::v, value, nullptr);
-    v.setProperty (IDs::c, curve, nullptr);
-    return v;
+    return createValueTree (IDs::POINT,
+                            IDs::t, time,
+                            IDs::v, value,
+                            IDs::c, curve);
 }
 
 int AutomationCurve::addPoint (double time, float value, float curve)
@@ -820,7 +819,7 @@ void AutomationCurve::removeAllAutomationCurvesRecursively (const juce::ValueTre
     for (int i = v.getNumChildren(); --i >= 0;)
     {
         if (v.getChild (i).hasType (IDs::AUTOMATIONCURVE))
-            ValueTree (v).removeChild (i, nullptr);
+            juce::ValueTree (v).removeChild (i, nullptr);
         else
             removeAllAutomationCurvesRecursively (v.getChild (i));
     }

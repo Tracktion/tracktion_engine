@@ -53,6 +53,29 @@ inline void forEachItem (const juce::Array<Type*>& items, const UnaryFunction& f
 }
 
 //==============================================================================
+template <typename... Others>
+void addValueTreeProperties (juce::ValueTree& v, const juce::Identifier& name, const juce::var& value, Others&&... others)
+{
+    static_assert ((sizeof...(others) & 1) == 0, "The property list must be a sequence of name, value pairs");
+
+    v.setProperty (name, value, nullptr);
+
+    if constexpr (sizeof...(others) != 0)
+        addValueTreeProperties (v, std::forward<Others> (others)...);
+}
+
+template <typename... Properties>
+juce::ValueTree createValueTree (const juce::Identifier& name, Properties&&... properties)
+{
+    static_assert ((sizeof...(properties) & 1) == 0, "The property list must be a sequence of name, value pairs");
+
+    juce::ValueTree v (name);
+    addValueTreeProperties (v, std::forward<Properties> (properties)...);
+    return v;
+}
+
+
+//==============================================================================
 template<typename ObjectType, typename CriticalSectionType = juce::DummyCriticalSection>
 class ValueTreeObjectList   : public juce::ValueTree::Listener
 {

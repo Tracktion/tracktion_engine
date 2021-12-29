@@ -259,13 +259,13 @@ void WaveAudioClip::valueTreePropertyChanged (ValueTree& treeWhosePropertyHasCha
         invalidateCurrentTake();
 }
 
-void WaveAudioClip::valueTreeChildAdded (ValueTree& p, ValueTree& c)
+void WaveAudioClip::valueTreeChildAdded (ValueTree& p, juce::ValueTree& c)
 {
     AudioClipBase::valueTreeChildAdded (p, c);
     invalidateCurrentTake (p);
 }
 
-void WaveAudioClip::valueTreeChildRemoved (ValueTree& p, ValueTree& c, int oldIndex)
+void WaveAudioClip::valueTreeChildRemoved (ValueTree& p, juce::ValueTree& c, int oldIndex)
 {
     AudioClipBase::valueTreeChildRemoved (p, c, oldIndex);
     invalidateCurrentTake (p);

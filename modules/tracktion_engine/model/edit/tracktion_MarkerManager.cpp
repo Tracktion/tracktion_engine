@@ -156,9 +156,9 @@ void MarkerManager::valueTreeChanged (const juce::ValueTree& v)
         sendChangeMessage();
 }
 
-void MarkerManager::valueTreePropertyChanged (ValueTree& v, const juce::Identifier&)  { valueTreeChanged (v); }
-void MarkerManager::valueTreeChildAdded (ValueTree& p, ValueTree&)                    { valueTreeChanged (p); }
-void MarkerManager::valueTreeChildRemoved (ValueTree& p, ValueTree&, int)             { valueTreeChanged (p); }
-void MarkerManager::valueTreeParentChanged (ValueTree& v)                             { valueTreeChanged (v); }
+void MarkerManager::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier&)  { valueTreeChanged (v); }
+void MarkerManager::valueTreeChildAdded (juce::ValueTree& p, juce::ValueTree&)              { valueTreeChanged (p); }
+void MarkerManager::valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree&, int)       { valueTreeChanged (p); }
+void MarkerManager::valueTreeParentChanged (juce::ValueTree& v)                             { valueTreeChanged (v); }
 
 }

@@ -165,9 +165,8 @@ FreezePointPlugin::~FreezePointPlugin()
 
 juce::ValueTree FreezePointPlugin::create()
 {
-    ValueTree v (IDs::PLUGIN);
-    v.setProperty (IDs::type, xmlTypeName, nullptr);
-    return v;
+    return createValueTree (IDs::PLUGIN,
+                            IDs::type, xmlTypeName);
 }
 
 void FreezePointPlugin::initialiseFully()

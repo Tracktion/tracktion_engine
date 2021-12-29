@@ -820,7 +820,7 @@ std::unique_ptr<RenderOptions> RenderOptions::forEditClip (Clip& clip)
 
 //==============================================================================
 RenderOptions::RenderOptions (Engine& e)
-    : RenderOptions (e, ValueTree (IDs::RENDER), nullptr)
+    : RenderOptions (e, juce::ValueTree (IDs::RENDER), nullptr)
 {
 }
 

@@ -62,7 +62,7 @@ static inline juce::int64 hashPlugin (const juce::ValueTree& effectState, Plugin
 }
 
 //==============================================================================
-struct ClipEffects::ClipPropertyWatcher  : private ValueTree::Listener,
+struct ClipEffects::ClipPropertyWatcher  : private juce::ValueTree::Listener,
                                            private AsyncUpdater
 {
     ClipPropertyWatcher (ClipEffects& o) : clipEffects (o), clipState (o.clip.state)
@@ -72,7 +72,7 @@ struct ClipEffects::ClipPropertyWatcher  : private ValueTree::Listener,
 
 private:
     ClipEffects& clipEffects;
-    ValueTree clipState;
+    juce::ValueTree clipState;
 
     void invalidateCache()
     {
@@ -98,10 +98,10 @@ private:
         }
     }
 
-    void valueTreeChildAdded (ValueTree&, ValueTree&) override              {}
-    void valueTreeChildRemoved (ValueTree&, ValueTree&, int) override       {}
-    void valueTreeChildOrderChanged (ValueTree&, int, int) override         {}
-    void valueTreeParentChanged (ValueTree&) override                       {}
+    void valueTreeChildAdded (ValueTree&, juce::ValueTree&) override              {}
+    void valueTreeChildRemoved (ValueTree&, juce::ValueTree&, int) override       {}
+    void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override         {}
+    void valueTreeParentChanged (juce::ValueTree&) override                       {}
 
     void handleAsyncUpdate() override
     {
@@ -221,13 +221,11 @@ ClipEffect::ClipEffect (const juce::ValueTree& v, ClipEffects& o)
 
 juce::ValueTree ClipEffect::create (EffectType t)
 {
-    ValueTree v (IDs::EFFECT);
-    v.setProperty (IDs::type, VariantConverter<ClipEffect::EffectType>::toVar (t), nullptr);
-
-    return v;
+    return createValueTree (IDs::EFFECT,
+                            IDs::type, VariantConverter<ClipEffect::EffectType>::toVar (t));
 }
 
-void ClipEffect::createEffectAndAddToValueTree (Edit& edit, ValueTree parent, ClipEffect::EffectType effectType, int index)
+void ClipEffect::createEffectAndAddToValueTree (Edit& edit, juce::ValueTree parent, ClipEffect::EffectType effectType, int index)
 {
     auto& undoManager = edit.getUndoManager();
 
@@ -239,8 +237,9 @@ void ClipEffect::createEffectAndAddToValueTree (Edit& edit, ValueTree parent, Cl
             af->setProcessingEnabled (false);
             af->flushPluginStateToValueTree();
 
-            ValueTree v (IDs::EFFECT);
-            v.setProperty (IDs::type, VariantConverter<ClipEffect::EffectType>::toVar (EffectType::filter), nullptr);
+            auto v = createValueTree (IDs::EFFECT,
+                                      IDs::type, VariantConverter<ClipEffect::EffectType>::toVar (EffectType::filter));
+
             v.addChild (af->state, -1, nullptr);
 
             if (parent.isValid())

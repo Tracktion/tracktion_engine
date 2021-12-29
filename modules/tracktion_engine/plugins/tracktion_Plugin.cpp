@@ -168,7 +168,7 @@ juce::ValueTree Plugin::getConnectionsTree()
     if (p.isValid())
         return p;
 
-    p = ValueTree (IDs::SIDECHAINCONNECTIONS);
+    p = juce::ValueTree (IDs::SIDECHAINCONNECTIONS);
     state.addChild (p, -2, getUndoManager());
     return p;
 }
@@ -180,13 +180,11 @@ void Plugin::makeConnection (int srcChannel, int dstChannel, UndoManager* um)
             if (w->sourceChannelIndex == srcChannel && w->destChannelIndex == dstChannel)
                 return;
 
-    ValueTree w (IDs::SIDECHAINCONNECTION);
-    w.setProperty (IDs::srcChan, srcChannel, nullptr);
-    w.setProperty (IDs::dstChan, dstChannel, nullptr);
+    auto w = createValueTree (IDs::SIDECHAINCONNECTION,
+                              IDs::srcChan, srcChannel,
+                              IDs::dstChan, dstChannel);
 
-    auto p = getConnectionsTree();
-
-    p.addChild (w, -1, um);
+    getConnectionsTree().addChild (w, -1, um);
 }
 
 void Plugin::breakConnection (int srcChannel, int dstChannel)
@@ -785,8 +783,8 @@ static Plugin::Array getRackablePlugins (SelectionManager& selectionManager)
 {
     Plugin::Array result;
 
-    SortedSet<SelectedPluginIndex> pluginIndex;
-    ValueTree lastList;
+    juce::SortedSet<SelectedPluginIndex> pluginIndex;
+    juce::ValueTree lastList;
 
     for (auto plugin : selectionManager.getItemsOfType<Plugin>())
     {

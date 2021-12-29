@@ -54,7 +54,7 @@ public:
                 jassert (findClipForID (c->edit, newClipID) == nullptr);
                 jassert (edit->clipCache.findItem (newClipID) == nullptr);
 
-                jassert (! t1->state.getChildWithProperty (IDs::id, newClipID.toVar()).isValid());
+                jassert (! t1->state.getChildWithProperty (IDs::id, newClipID).isValid());
                #endif
 
                 t1->state.appendChild (clipState, c->getUndoManager());
@@ -83,7 +83,7 @@ public:
                 jassert (findTrackForID (*edit, newTrackID) == nullptr);
                 jassert (edit->trackCache.findItem (newTrackID) == nullptr);
 
-                jassert (! t1->state.getChildWithProperty (IDs::id, newTrackID.toVar()).isValid());
+                jassert (! t1->state.getChildWithProperty (IDs::id, newTrackID).isValid());
                #endif
 
                 edit->insertTrack (trackState, {}, preceeding, nullptr);

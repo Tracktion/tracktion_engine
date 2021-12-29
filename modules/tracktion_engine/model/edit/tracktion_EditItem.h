@@ -40,6 +40,7 @@ struct EditItemID
     void setXML (juce::XmlElement&, const juce::Identifier& attributeName) const;
     void setXML (juce::XmlElement&, const char* attributeName) const;
 
+    operator juce::var() const                          { return toVar(); }
     juce::var toVar() const;
     juce::String toString() const;
 

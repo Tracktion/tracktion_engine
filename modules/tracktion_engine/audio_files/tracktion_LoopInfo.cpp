@@ -158,9 +158,10 @@ void LoopInfo::addLoopPoint (juce::int64 pos, LoopPointType type)
     const juce::ScopedLock sl (lock);
     duplicateIfShared();
 
-    juce::ValueTree t (IDs::LOOPPOINT);
-    t.setProperty (IDs::value, pos, nullptr);
-    t.setProperty (IDs::type, (int) type, nullptr);
+    auto t = createValueTree (IDs::LOOPPOINT,
+                              IDs::value, pos,
+                              IDs::type, (int) type);
+
     getOrCreateLoopPoints().addChild (t, -1, nullptr);
 }
 

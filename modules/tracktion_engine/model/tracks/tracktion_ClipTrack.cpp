@@ -163,9 +163,9 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
 };
 
 //==============================================================================
-struct ClipTrack::CollectionClipList  : public ValueTree::Listener
+struct ClipTrack::CollectionClipList  : public juce::ValueTree::Listener
 {
-    CollectionClipList (ClipTrack& t, ValueTree& v) : ct (t), state (v)
+    CollectionClipList (ClipTrack& t, juce::ValueTree& v) : ct (t), state (v)
     {
         state.addListener (this);
     }
@@ -226,7 +226,7 @@ struct ClipTrack::CollectionClipList  : public ValueTree::Listener
         }
     }
 
-    void valueTreeChildAdded (ValueTree&, ValueTree& child) override
+    void valueTreeChildAdded (ValueTree&, juce::ValueTree& child) override
     {
         if (Clip::isClipState (child))
         {
@@ -243,7 +243,7 @@ struct ClipTrack::CollectionClipList  : public ValueTree::Listener
         }
     }
 
-    void valueTreeChildRemoved (ValueTree&, ValueTree& child, int) override
+    void valueTreeChildRemoved (ValueTree&, juce::ValueTree& child, int) override
     {
         if (Clip::isClipState (child))
         {
@@ -300,7 +300,7 @@ struct ClipTrack::CollectionClipList  : public ValueTree::Listener
     void valueTreeParentChanged (ValueTree&) override {}
 
     ClipTrack& ct;
-    ValueTree& state;
+    juce::ValueTree& state;
 
     ReferenceCountedArray<CollectionClip> collectionClips;
 
@@ -506,16 +506,18 @@ void ClipTrack::removeCollectionClip (CollectionClip* cc)
 //==============================================================================
 static void updateClipState (ValueTree& state, const juce::String& name, EditItemID itemID, ClipPosition position)
 {
-    state.setProperty (IDs::name, name, nullptr);
-    state.setProperty (IDs::start, position.getStart(), nullptr);
-    state.setProperty (IDs::length, position.getLength(), nullptr);
-    state.setProperty (IDs::offset, position.getOffset(), nullptr);
+    addValueTreeProperties (state,
+                            IDs::name, name,
+                            IDs::start, position.getStart(),
+                            IDs::length, position.getLength(),
+                            IDs::offset, position.getOffset());
+
     itemID.writeID (state, nullptr);
 }
 
-static ValueTree createNewClipState (const juce::String& name, TrackItem::Type type, EditItemID itemID, ClipPosition position)
+static juce::ValueTree createNewClipState (const juce::String& name, TrackItem::Type type, EditItemID itemID, ClipPosition position)
 {
-    ValueTree state (TrackItem::clipTypeToXMLType (type));
+    juce::ValueTree state (TrackItem::clipTypeToXMLType (type));
     updateClipState (state, name, itemID, position);
     return state;
 }
@@ -570,9 +572,11 @@ Clip* ClipTrack::insertClipWithState (juce::ValueTree clipState)
         if (! clipState.hasProperty (IDs::sync))
         {
             if (clipState.getProperty (IDs::autoTempo))
-                clipState.setProperty (IDs::sync, (int) edit.engine.getEngineBehaviour().areAutoTempoClipsRemappedWhenTempoChanges() ? Clip::syncBarsBeats : Clip::syncAbsolute, nullptr);
+                clipState.setProperty (IDs::sync, (int) edit.engine.getEngineBehaviour().areAutoTempoClipsRemappedWhenTempoChanges()
+                                                           ? Clip::syncBarsBeats : Clip::syncAbsolute, nullptr);
             else
-                clipState.setProperty (IDs::sync, (int) edit.engine.getEngineBehaviour().areAudioClipsRemappedWhenTempoChanges() ? Clip::syncBarsBeats : Clip::syncAbsolute, nullptr);
+                clipState.setProperty (IDs::sync, (int) edit.engine.getEngineBehaviour().areAudioClipsRemappedWhenTempoChanges()
+                                                           ? Clip::syncBarsBeats : Clip::syncAbsolute, nullptr);
         }
 
         if (! clipState.hasProperty (IDs::autoCrossfade))
@@ -623,7 +627,7 @@ Clip* ClipTrack::insertClipWithState (const juce::ValueTree& stateToUse, const j
 
     auto newClipID = edit.createNewItemID();
 
-    ValueTree newState;
+    juce::ValueTree newState;
 
     if (stateToUse.isValid())
     {

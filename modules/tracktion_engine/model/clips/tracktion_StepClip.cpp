@@ -482,12 +482,13 @@ void StepClip::insertNewChannel (int index)
     {
         auto* um = getUndoManager();
 
-        ValueTree v (IDs::CHANNEL);
-        v.setProperty (IDs::channel, defaultMidiChannel, nullptr);
-        v.setProperty (IDs::note, defaultNoteNumber, nullptr);
-        v.setProperty (IDs::velocity, defaultNoteValue, nullptr);
+        auto v = createValueTree (IDs::CHANNEL,
+                                  IDs::channel, defaultMidiChannel,
+                                  IDs::note, defaultNoteNumber,
+                                  IDs::velocity, defaultNoteValue);
 
-        state.getOrCreateChildWithName (IDs::CHANNELS, getUndoManager()).addChild (v, index, um);
+        state.getOrCreateChildWithName (IDs::CHANNELS, um)
+             .addChild (v, index, um);
 
         for (auto& p : getPatterns())
             p.insertChannel (index);
@@ -601,9 +602,9 @@ int StepClip::insertPattern (const Pattern& p, int index)
 
 int StepClip::insertNewPattern (int index)
 {
-    ValueTree v (IDs::PATTERN);
-    v.setProperty (IDs::numNotes, getBeatsPerBar() * 4, nullptr);
-    v.setProperty (IDs::noteLength, 0.25, nullptr);
+    auto v = createValueTree (IDs::PATTERN,
+                              IDs::numNotes, getBeatsPerBar() * 4,
+                              IDs::noteLength, 0.25);
 
     state.getOrCreateChildWithName (IDs::PATTERNS, getUndoManager())
          .addChild (v, index, getUndoManager());

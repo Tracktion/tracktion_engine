@@ -207,7 +207,7 @@ void InputDeviceInstance::setTargetTrack (AudioTrack& track, int index, bool mov
         removeTargetTrack (track);
     }
 
-    auto v = ValueTree (IDs::INPUTDEVICEDESTINATION);
+    auto v = juce::ValueTree (IDs::INPUTDEVICEDESTINATION);
     state.addChild (v, -1, &edit.getUndoManager());
     
     auto& dest = *destTracks[destTracks.size() - 1];

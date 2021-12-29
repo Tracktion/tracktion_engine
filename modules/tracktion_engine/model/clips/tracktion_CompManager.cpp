@@ -345,7 +345,7 @@ juce::ValueTree CompManager::addSection (int takeIndex, double endTime)
     }
 
     auto* um = getUndoManager();
-    ValueTree newSection (IDs::COMPSECTION);
+    juce::ValueTree newSection (IDs::COMPSECTION);
     newSection.setProperty (IDs::takeIndex, takeIndex, um);
     newSection.setProperty (IDs::endTime, endTime, um);
     activeTake.addChild (newSection, insertIndex, um);
@@ -468,12 +468,13 @@ void CompManager::keepSectionsSortedAndInRange()
 
 juce::ValueTree CompManager::getNewCompTree() const
 {
-    ValueTree newTake (IDs::TAKE);
+    juce::ValueTree newTake (IDs::TAKE);
 
     // Need to give the comp a blank section to draw onto
-    ValueTree newSection (IDs::COMPSECTION);
-    newSection.setProperty (IDs::takeIndex, -1, nullptr);
-    newSection.setProperty (IDs::endTime, getMaxCompLength(), nullptr);
+    auto newSection = createValueTree (IDs::COMPSECTION,
+                                       IDs::takeIndex, -1,
+                                       IDs::endTime, getMaxCompLength());
+
     newTake.addChild (newSection, -1, nullptr);
 
     return newTake;
@@ -1301,7 +1302,7 @@ void MidiCompManager::initialise()
         {
             if (auto ml = clip.getTakeSequence (i))
             {
-                ValueTree newTake (IDs::TAKE);
+                juce::ValueTree newTake (IDs::TAKE);
                 newTake.setProperty (IDs::isComp, ml->isCompList(), um);
                 takesTree.addChild (newTake, takeIndex, um);
             }

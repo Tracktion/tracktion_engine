@@ -276,9 +276,9 @@ TimeSigSetting::Ptr TempoSequence::insertTimeSig (double time, juce::UndoManager
     double beatNum = 0.0;
     int index = -1;
 
-    ValueTree newTree (IDs::TIMESIG);
-    newTree.setProperty (IDs::numerator, 4, nullptr);
-    newTree.setProperty (IDs::denominator, 4, nullptr);
+    auto newTree = createValueTree (IDs::TIMESIG,
+                                    IDs::numerator, 4,
+                                    IDs::denominator, 4);
 
     if (getNumTimeSigs() > 0)
     {

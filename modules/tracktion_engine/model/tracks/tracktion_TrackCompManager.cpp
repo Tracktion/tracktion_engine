@@ -193,7 +193,7 @@ EditItemID TrackCompManager::TrackComp::getSourceTrackID (const juce::ValueTree&
 
 void TrackCompManager::TrackComp::setSourceTrackID (ValueTree& v, EditItemID newID, UndoManager* um)
 {
-    newID.setProperty (v, IDs::track, um);
+    v.setProperty (IDs::track, newID, um);
 }
 
 void TrackCompManager::TrackComp::setSectionTrack (CompSection& cs, const Track::Ptr& t)
@@ -347,9 +347,9 @@ struct SectionSorter
 
 juce::ValueTree TrackCompManager::TrackComp::addSection (EditItemID trackID, double endTime, UndoManager* um)
 {
-    ValueTree newSection (IDs::COMPSECTION);
-    trackID.setProperty (newSection, IDs::track, um);
-    newSection.setProperty (IDs::end, endTime, um);
+    auto newSection = createValueTree (IDs::COMPSECTION,
+                                       IDs::track, trackID,
+                                       IDs::end, endTime);
 
     int insertIndex = 0;
     const int numSections = state.getNumChildren();
@@ -607,8 +607,9 @@ void TrackCompManager::setCompName (int index, const juce::String& name)
 
 int TrackCompManager::addGroup (const juce::String& name)
 {
-    ValueTree v (IDs::TRACKCOMP);
-    v.setProperty (IDs::name, name, nullptr);
+    auto v = createValueTree (IDs::TRACKCOMP,
+                              IDs::name, name);
+
     state.addChild (v, -1, &edit.getUndoManager());
 
     return getNumGroups() - 1;

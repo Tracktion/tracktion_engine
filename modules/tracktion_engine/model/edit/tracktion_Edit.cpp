@@ -999,9 +999,10 @@ void Edit::flushState()
 
     jassert (state.getProperty (IDs::appVersion).toString().isNotEmpty());
 
-    state.setProperty (IDs::appVersion, engine.getPropertyStorage().getApplicationVersion(), nullptr);
-    state.setProperty (IDs::modifiedBy, engine.getPropertyStorage().getUserName(), nullptr);
-    state.setProperty (IDs::projectID, editProjectItemID.load().toString(), nullptr);
+    addValueTreeProperties (state,
+                            IDs::appVersion, engine.getPropertyStorage().getApplicationVersion(),
+                            IDs::modifiedBy, engine.getPropertyStorage().getUserName(),
+                            IDs::projectID, editProjectItemID.load().toString());
 
     for (auto p : getAllPlugins (*this, true))
         p->flushPluginStateToValueTree();
@@ -1573,9 +1574,9 @@ void Edit::setAuxBusName (int bus, const juce::String& nm)
         {
             if (! b.isValid())
             {
-                b = juce::ValueTree (IDs::NAME);
+                b = createValueTree (IDs::NAME,
+                                     IDs::bus, bus);
                 auxBusses.addChild (b, -1, nullptr);
-                b.setProperty (IDs::bus, bus, nullptr);
             }
 
             b.setProperty (IDs::name, name, nullptr);
@@ -1658,7 +1659,7 @@ Track::Ptr Edit::insertTrack (TrackInsertPoint insertPoint, juce::ValueTree v, S
         if (auto t = findTrackForID (*this, insertPoint.parentTrackID))
             parent = t->state;
 
-    auto preceeding = parent.getChildWithProperty (IDs::id, insertPoint.precedingTrackID.toVar());
+    auto preceeding = parent.getChildWithProperty (IDs::id, insertPoint.precedingTrackID);
 
     return insertTrack (v, parent, preceeding, sm);
 }
@@ -1881,8 +1882,9 @@ void Edit::ensureArrangerTrack()
 {
     if (getArrangerTrack() == nullptr)
     {
-        juce::ValueTree v (IDs::ARRANGERTRACK);
-        v.setProperty (IDs::name, TRANS("Arranger"), nullptr);
+        auto v = createValueTree (IDs::ARRANGERTRACK,
+                                  IDs::name, TRANS("Arranger"));
+
         state.addChild (v, 0, &getUndoManager());
     }
 }
@@ -1891,8 +1893,9 @@ void Edit::ensureTempoTrack()
 {
     if (getTempoTrack() == nullptr)
     {
-        juce::ValueTree v (IDs::TEMPOTRACK);
-        v.setProperty (IDs::name, TRANS("Global"), nullptr);
+        auto v = createValueTree (IDs::TEMPOTRACK,
+                                  IDs::name, TRANS("Global"));
+
         state.addChild (v, 0, &getUndoManager());
     }
 }
@@ -1905,8 +1908,9 @@ void Edit::ensureMarkerTrack()
     }
     else
     {
-        juce::ValueTree v (IDs::MARKERTRACK);
-        v.setProperty (IDs::name, TRANS("Marker"), nullptr);
+        auto v = createValueTree (IDs::MARKERTRACK,
+                                  IDs::name, TRANS("Marker"));
+
         state.addChild (v, 0, &getUndoManager());
     }
 }
@@ -1919,8 +1923,9 @@ void Edit::ensureChordTrack()
     }
     else
     {
-        juce::ValueTree v (IDs::CHORDTRACK);
-        v.setProperty (IDs::name, TRANS("Chord"), nullptr);
+        auto v = createValueTree (IDs::CHORDTRACK,
+                                  IDs::name, TRANS("Chord"));
+
         state.addChild (v, 0, &getUndoManager());
     }
 }
@@ -1933,8 +1938,9 @@ void Edit::ensureMasterTrack()
     }
     else
     {
-        juce::ValueTree v (IDs::MASTERTRACK);
-        v.setProperty (IDs::name, TRANS("Master"), nullptr);
+        auto v = createValueTree (IDs::MASTERTRACK,
+                                  IDs::name, TRANS("Master"));
+
         state.addChild (v, 0, &getUndoManager());
     }
 }
@@ -2531,13 +2537,14 @@ void Edit::setEditMetadata (Metadata metadata)
 {
     auto meta = state.getChildWithName (IDs::ID3VORBISMETADATA);
 
-    meta.setProperty (IDs::album, metadata.album, nullptr);
-    meta.setProperty (IDs::artist, metadata.artist, nullptr);
-    meta.setProperty (IDs::comment, metadata.comment, nullptr);
-    meta.setProperty (IDs::date, metadata.date, nullptr);
-    meta.setProperty (IDs::genre, metadata.genre, nullptr);
-    meta.setProperty (IDs::title, metadata.title, nullptr);
-    meta.setProperty (IDs::trackNumber, metadata.trackNumber, nullptr);
+    addValueTreeProperties (meta,
+                            IDs::album, metadata.album,
+                            IDs::artist, metadata.artist,
+                            IDs::comment, metadata.comment,
+                            IDs::date, metadata.date,
+                            IDs::genre, metadata.genre,
+                            IDs::title, metadata.title,
+                            IDs::trackNumber, metadata.trackNumber);
 }
 
 //==============================================================================
@@ -2547,6 +2554,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
 {
     CRASH_TRACER
     std::unique_ptr<Edit> edit;
+
     if (editToUpdate != nullptr)
         edit.reset (editToUpdate);
     else
@@ -2573,6 +2581,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
     }
 
     auto& master = edit->getMasterPluginList();
+
     while (master.size() > 0)
         master[0]->removeFromParent();
 
@@ -2614,6 +2623,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
     }
 
     auto track = midiTrack;
+
     if (isDrums)
     {
         track = drumTrack;

@@ -565,13 +565,12 @@ private:
 //==============================================================================
 static juce::ValueTree createNoteValueTree (int pitch, double beat, double length, int vel, int col)
 {
-    juce::ValueTree v (IDs::NOTE);
-    v.setProperty (IDs::p, pitch, nullptr);
-    v.setProperty (IDs::b, beat, nullptr);
-    v.setProperty (IDs::l, std::max (0.0, length), nullptr);
-    v.setProperty (IDs::v, vel, nullptr);
-    v.setProperty (IDs::c, col, nullptr);
-    return v;
+    return createValueTree (IDs::NOTE,
+                            IDs::p, pitch,
+                            IDs::b, beat,
+                            IDs::l, std::max (0.0, length),
+                            IDs::v, vel,
+                            IDs::c, col);
 }
 
 juce::ValueTree MidiNote::createNote (const MidiNote& n, double newStart, double newLength)
@@ -775,11 +774,10 @@ juce::ValueTree MidiControllerEvent::createControllerEvent (const MidiController
 
 juce::ValueTree MidiControllerEvent::createControllerEvent (double time, int controllerType, int controllerValue)
 {
-    juce::ValueTree v (IDs::CONTROL);
-    v.setProperty (IDs::b, time, nullptr);
-    v.setProperty (IDs::type, controllerType, nullptr);
-    v.setProperty (IDs::val, controllerValue, nullptr);
-    return v;
+    return createValueTree (IDs::CONTROL,
+                            IDs::b,     time,
+                            IDs::type,  controllerType,
+                            IDs::val,   controllerValue);
 }
 
 juce::ValueTree MidiControllerEvent::createControllerEvent (double time, int controllerType, int controllerValue, int metadata)
@@ -974,10 +972,9 @@ juce::ValueTree MidiSysexEvent::createSysexEvent (const MidiSysexEvent& e, doubl
 
 juce::ValueTree MidiSysexEvent::createSysexEvent (const juce::MidiMessage& m, double time)
 {
-    juce::ValueTree v (IDs::SYSEX);
-    v.setProperty (IDs::time, time, nullptr);
-    v.setProperty (IDs::data, midiToHex (m), nullptr);
-    return v;
+    return createValueTree (IDs::SYSEX,
+                            IDs::time, time,
+                            IDs::data, midiToHex (m));
 }
 
 MidiSysexEvent::MidiSysexEvent (const juce::ValueTree& v)  : state (v)
@@ -1051,15 +1048,12 @@ void MidiSysexEvent::setBeatPosition (double newBeatNumber, juce::UndoManager* u
 //==============================================================================
 juce::ValueTree MidiList::createMidiList()
 {
-    juce::ValueTree v (IDs::SEQUENCE);
-    v.setProperty (IDs::ver, 1, nullptr);
-    v.setProperty (IDs::channelNumber, MidiChannel (1), nullptr);
-
-    return v;
+    return createValueTree (IDs::SEQUENCE,
+                            IDs::ver, 1,
+                            IDs::channelNumber, MidiChannel (1));
 }
 
-MidiList::MidiList()
-    : state (IDs::SEQUENCE)
+MidiList::MidiList()  : state (IDs::SEQUENCE)
 {
     state.setProperty (IDs::ver, 1, nullptr);
     initialise (nullptr);

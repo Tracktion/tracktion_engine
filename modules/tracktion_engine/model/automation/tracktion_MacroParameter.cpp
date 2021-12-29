@@ -180,7 +180,7 @@ MacroParameter* MacroParameterList::createMacroParameter()
     TRACKTION_ASSERT_MESSAGE_THREAD
     auto* um = &edit.getUndoManager();
 
-    ValueTree v (IDs::MACROPARAMETER);
+    juce::ValueTree v (IDs::MACROPARAMETER);
     edit.createNewItemID().writeID (v, nullptr);
     state.addChild (v, -1, um);
 
@@ -262,7 +262,7 @@ Plugin::Ptr getOwnerPlugin (MacroParameterList* mpl)
 
 //==============================================================================
 MacroParameterElement::MacroParameterElement (Edit& e, const juce::ValueTree& v)
-    : macroParameterList (e, ValueTree (v).getOrCreateChildWithName (IDs::MACROPARAMETERS, &e.getUndoManager()))
+    : macroParameterList (e, juce::ValueTree (v).getOrCreateChildWithName (IDs::MACROPARAMETERS, &e.getUndoManager()))
 {
 }
 

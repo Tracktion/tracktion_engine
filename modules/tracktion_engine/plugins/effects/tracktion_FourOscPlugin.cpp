@@ -1392,7 +1392,7 @@ void FourOscPlugin::flushPluginStateToValueTree()
     if (vt.isValid())
         state.removeChild (vt, um);
 
-    auto mm = ValueTree (IDs::MODMATRIX);
+    auto mm = juce::ValueTree (IDs::MODMATRIX);
 
     for (const auto& itr : modMatrix)
     {
@@ -1400,7 +1400,7 @@ void FourOscPlugin::flushPluginStateToValueTree()
         {
             if (itr.second.depths[s] >= -1.0f)
             {
-                auto mmi = ValueTree (IDs::MODMATRIXITEM);
+                auto mmi = juce::ValueTree (IDs::MODMATRIXITEM);
                 mmi.setProperty (IDs::modParam, itr.first->paramID, um);
                 mmi.setProperty (IDs::modItem, modulationSourceToID ((ModSource)s), um);
                 mmi.setProperty (IDs::modDepth, itr.second.depths[s], um);

@@ -219,7 +219,7 @@ Clip::Ptr duplicateClip (const Clip& c)
 
     if (auto t = c.getClipTrack())
     {
-        jassert (! t->state.getChildWithProperty (IDs::id, newClipID.toVar()).isValid());
+        jassert (! t->state.getChildWithProperty (IDs::id, newClipID).isValid());
         t->state.appendChild (n, c.getUndoManager());
 
         if (auto newClip = t->findClipForID (newClipID))

@@ -468,16 +468,16 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
     if (getNumSounds() >= maxNumSamples)
         return TRANS("Can't load any more samples");
 
-    ValueTree v (IDs::SOUND);
-    v.setProperty (IDs::source, source, nullptr);
-    v.setProperty (IDs::name, name, nullptr);
-    v.setProperty (IDs::startTime, startTime, nullptr);
-    v.setProperty (IDs::length, length, nullptr);
-    v.setProperty (IDs::keyNote, 72, nullptr);
-    v.setProperty (IDs::minNote, 72 - 24, nullptr);
-    v.setProperty (IDs::maxNote, 72 + 24, nullptr);
-    v.setProperty (IDs::gainDb, gainDb, nullptr);
-    v.setProperty (IDs::pan, (double) 0, nullptr);
+    auto v = createValueTree (IDs::SOUND,
+                              IDs::source, source,
+                              IDs::name, name,
+                              IDs::startTime, startTime,
+                              IDs::length, length,
+                              IDs::keyNote, 72,
+                              IDs::minNote, 72 - 24,
+                              IDs::maxNote, 72 + 24,
+                              IDs::gainDb, gainDb,
+                              IDs::pan, (double) 0);
 
     state.addChild (v, -1, getUndoManager());
     return {};

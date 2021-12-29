@@ -145,9 +145,9 @@ private:
 
             float desiredValue = -30.0f;
 
-            ValueTree preset (IDs::PLUGIN);
-            preset.setProperty (IDs::type, delay->getPluginName(), nullptr);
-            preset.setProperty (IDs::feedback, desiredValue, nullptr);
+            auto preset = createValueTree (IDs::PLUGIN,
+                                           IDs::type, delay->getPluginName(),
+                                           IDs::feedback, desiredValue);
 
             pluginPtr->restorePluginStateFromValueTree (preset);
             pluginPtr->flushPluginStateToValueTree();

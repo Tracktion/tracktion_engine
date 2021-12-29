@@ -1073,12 +1073,12 @@ void AudioClipBase::melodyneConvertToMIDI()
         {
             UndoManager* um = nullptr;
 
-            ValueTree midiClip (IDs::MIDICLIP);
+            juce::ValueTree midiClip (IDs::MIDICLIP);
             midiClip.setProperty (IDs::name, getName(), um);
             midiClip.setProperty (IDs::start, getPosition().getStart(), um);
             midiClip.setProperty (IDs::length, getPosition().getLength(), um);
 
-            ValueTree ms (IDs::SEQUENCE);
+            juce::ValueTree ms (IDs::SEQUENCE);
             ms.setProperty (IDs::ver, 1, um);
             ms.setProperty (IDs::channelNumber, 1, um);
 
@@ -1092,7 +1092,7 @@ void AudioClipBase::melodyneConvertToMIDI()
 
                 if (e.noteOffObject != nullptr)
                 {
-                    ValueTree note (IDs::NOTE);
+                    juce::ValueTree note (IDs::NOTE);
                     note.setProperty ("p", e.message.getNoteNumber(), um);
                     note.setProperty ("v", e.message.getVelocity(), um);
                     note.setProperty ("b", ts.timeToBeats (e.message.getTimeStamp()), um);

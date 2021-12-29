@@ -432,19 +432,19 @@ juce::ValueTree loadEditFromProjectManager (ProjectManager& pm, ProjectItemID it
 juce::ValueTree loadEditFromFile (Engine& e, const File& f, ProjectItemID itemID)
 {
     CRASH_TRACER
-    ValueTree state;
+    juce::ValueTree state;
 
     if (auto xml = juce::parseXML (f))
     {
         updateLegacyEdit (*xml);
-        state = ValueTree::fromXml (*xml);
+        state = juce::ValueTree::fromXml (*xml);
     }
 
     if (! state.isValid())
     {
-        if (FileInputStream is (f); is.openedOk())
+        if (juce::FileInputStream is (f); is.openedOk())
         {
-            if (state = ValueTree::readFromStream (is); state.hasType (IDs::EDIT))
+            if (state = juce::ValueTree::readFromStream (is); state.hasType (IDs::EDIT))
                 state = updateLegacyEdit (state);
             else
                 state = {};
@@ -457,7 +457,7 @@ juce::ValueTree loadEditFromFile (Engine& e, const File& f, ProjectItemID itemID
         if (f.existsAsFile() && f.getSize() > 0)
             return {};
         
-        state = ValueTree (IDs::EDIT);
+        state = juce::ValueTree (IDs::EDIT);
         state.setProperty (IDs::appVersion, e.getPropertyStorage().getApplicationVersion(), nullptr);
     }
 

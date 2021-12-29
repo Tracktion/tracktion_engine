@@ -28,11 +28,10 @@ TempoSetting::~TempoSetting()
 
 juce::ValueTree TempoSetting::create (double beat, double newBPM, float curveVal)
 {
-    ValueTree v (IDs::TEMPO);
-    v.setProperty (IDs::startBeat, beat, nullptr);
-    v.setProperty (IDs::bpm, newBPM, nullptr);
-    v.setProperty (IDs::curve, curveVal, nullptr);
-    return v;
+    return createValueTree (IDs::TEMPO,
+                            IDs::startBeat, beat,
+                            IDs::bpm, newBPM,
+                            IDs::curve, curveVal);
 }
 
 Edit& TempoSetting::getEdit() const
