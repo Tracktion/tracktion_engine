@@ -57,6 +57,8 @@ Tracktion Engine is covered by a [GPL](https://www.gnu.org/licenses/gpl-3.0.en.h
 There are multiple commercial licensing tiers for Tracktion Engine, with different terms for each.
 For prices, see the [Tracktion Developers Page](https://www.tracktion.com/develop/tracktion-engine).
 
+**N.B.** *Although Tracktion Engine utilises JUCE, it is not part of JUCE nor owned by the same company. As such it is licensed separately and you must make sure you have an appropriate JUCE licence from [juce.com](juce.com) when distributing Tracktion Engine based products. Similarly, Tracktion Engine is not included in a JUCE licence and you must get the above mentioned Tracktion Engine licence to distribute products.*
+
 ___
 The Tracktion Graph module (also used by Tracktion Engine) includes the MIT licensed [farbot library](/modules/tracktion_graph/3rd_party/farbot) which requires the following notice to be included as part of the software:
 
