@@ -613,22 +613,20 @@ AudioFileManager::~AudioFileManager()
 
 AudioFileManager::KnownFile& AudioFileManager::findOrCreateKnown (const AudioFile& f)
 {
-    if (auto kf = knownFiles[f.getHash()])
-        return *kf;
+    auto hash = f.getHash();
+    auto kf = knownFiles.find (hash);
 
-    auto kf = new KnownFile (f);
-    knownFiles.set (f.getHash(), kf);
-    return *kf;
+    if (kf != knownFiles.end())
+        return *kf->second.get();
+
+    knownFiles[hash] = std::make_unique<KnownFile> (f);
+    return *knownFiles[hash].get();
 }
 
 void AudioFileManager::clearFiles()
 {
     CRASH_TRACER
     const juce::ScopedLock sl (knownFilesLock);
-
-    for (auto f : knownFiles)
-        delete f;
-
     knownFiles.clear();
 }
 
@@ -636,11 +634,10 @@ void AudioFileManager::removeFile (HashCode hash)
 {
     const juce::ScopedLock sl (knownFilesLock);
 
-    if (auto f = knownFiles[hash])
-    {
-        delete f;
-        knownFiles.remove (hash);
-    }
+    auto f = knownFiles.find (hash);
+
+    if (f != knownFiles.end())
+        knownFiles.erase (f);
 }
 
 AudioFile AudioFileManager::getAudioFile (ProjectItemID sourceID)
@@ -675,8 +672,10 @@ void AudioFileManager::checkFileForChanges (const AudioFile& file)
     {
         const juce::ScopedLock sl (knownFilesLock);
 
-        if (auto f = knownFiles[file.getHash()])
-            changed = checkFileTime (*f);
+        auto f = knownFiles.find (file.getHash());
+
+        if (f != knownFiles.end())
+            changed = checkFileTime (*f->second);
     }
 
     if (changed)
@@ -695,9 +694,9 @@ void AudioFileManager::checkFilesForChanges()
     {
         const juce::ScopedLock sl (knownFilesLock);
 
-        for (auto f : knownFiles)
-            if (checkFileTime (*f))
-                changedFiles.add (f->file);
+        for (auto& f : knownFiles)
+            if (checkFileTime (*f.second))
+                changedFiles.add (f.second->file);
     }
 
     for (auto& f : changedFiles)
@@ -762,9 +761,11 @@ void AudioFileManager::forceFileUpdate (const AudioFile& file)
     // this doesn't check for file time and is used when files are changed rapidly such as when recording
     const juce::ScopedLock sl (knownFilesLock);
 
-    if (auto f = knownFiles[file.getHash()])
+    auto f = knownFiles.find (file.getHash());
+
+    if (f != knownFiles.end())
     {
-        f->info = AudioFileInfo::parse (f->file);
+        f->second->info = AudioFileInfo::parse (f->second->file);
         releaseFile (file);
         callListeners (file);
     }

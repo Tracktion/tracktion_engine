@@ -75,7 +75,8 @@ public:
         {
             if (r != nullptr)
             {
-                range = range.getIntersectionWith (SampleRange (r->getMappedSection()));
+                auto section = r->getMappedSection();
+                range = range.getIntersectionWith (SampleRange (section.getStart(), section.getEnd()));
 
                 for (auto i = range.getStart(); i < range.getEnd(); i += 64)
                     r->touchSample (i);
@@ -238,7 +239,7 @@ public:
         std::unique_ptr<juce::MemoryMappedAudioFormatReader> r (AudioFileUtils::createMemoryMappedReader (cache.engine, file.getFile(), af));
 
         if (r != nullptr
-             && (range != nullptr ? r->mapSectionOfFile (juce::Range<juce::int64> (*range))
+             && (range != nullptr ? r->mapSectionOfFile (juce::Range<juce::int64> (range->getStart(), range->getEnd()))
                                   : r->mapEntireFile())
              && ! r->getMappedSection().isEmpty())
         {
