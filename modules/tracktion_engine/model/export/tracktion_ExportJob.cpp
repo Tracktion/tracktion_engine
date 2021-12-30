@@ -112,8 +112,8 @@ void ExportJob::copyProjectFilesToTempDir()
                                    .getNonexistentSibling (true);
 
                 auto bytesFree = dest.getBytesFreeOnVolume();
-                auto bytesNeeded = jmax (2 * srcObject->getSourceFile().getSize(),
-                                         (int64_t) (1024 * 1024 * 50));
+                auto bytesNeeded = std::max (2 * srcObject->getSourceFile().getSize(),
+                                             (juce::int64) (1024 * 1024 * 50));
 
                 if (bytesFree > 0
                      && bytesFree < bytesNeeded

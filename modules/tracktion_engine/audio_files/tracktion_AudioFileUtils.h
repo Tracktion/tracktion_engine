@@ -116,11 +116,11 @@ struct AudioFileUtils
         {
             ForwardingInputStream (juce::InputStream& s)  : stream (s) {}
 
-            SampleCount getTotalLength() override    { return stream.getTotalLength(); }
-            bool isExhausted() override              { return stream.isExhausted(); }
-            int read (void* d, int sz) override      { return stream.read (d, sz); }
-            int64_t getPosition() override           { return stream.getPosition(); }
-            bool setPosition (int64_t pos) override  { return stream.setPosition (pos); }
+            juce::int64 getTotalLength() override        { return stream.getTotalLength(); }
+            bool isExhausted() override                  { return stream.isExhausted(); }
+            int read (void* d, int sz) override          { return stream.read (d, sz); }
+            juce::int64 getPosition() override           { return stream.getPosition(); }
+            bool setPosition (juce::int64 pos) override  { return stream.setPosition (pos); }
 
             InputStream& stream;
         };

@@ -181,8 +181,13 @@ struct ClipEffect::ClipEffectRenderJob  : public ReferenceCountedObject
 {
     using Ptr = ReferenceCountedObjectPtr<ClipEffectRenderJob>;
 
-    ClipEffectRenderJob (Engine& e, const AudioFile& dest, const AudioFile& src)
-        : engine (e), destination (dest), source (src)
+    static constexpr SampleCount defaultBlockSize = 1024;
+
+    ClipEffectRenderJob (Engine& e,
+                         const AudioFile& dest, const AudioFile& src,
+                         SampleCount blockSizeToUse)
+        : engine (e), destination (dest),
+          source (src), blockSize (blockSizeToUse)
     {
     }
 
@@ -207,6 +212,7 @@ struct ClipEffect::ClipEffectRenderJob  : public ReferenceCountedObject
 
     Engine& engine;
     const AudioFile destination, source;
+    const SampleCount blockSize;
     std::atomic<float> progress { 0.0f };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ClipEffectRenderJob)
@@ -371,9 +377,10 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
 {
     AudioNodeRenderJob (Engine& e, AudioNode* n,
                         const AudioFile& dest, const AudioFile& src,
-                        int blockSizeToUse = 32768, double prerollTimeSeconds = 0)
-        : ClipEffectRenderJob (e, dest, src), node (n),
-          blockSize (blockSizeToUse), prerollTime (prerollTimeSeconds)
+                        SampleCount blockSizeToUse = defaultBlockSize,
+                        double prerollTimeSeconds = 0)
+        : ClipEffectRenderJob (e, dest, src, blockSizeToUse),
+          node (n), prerollTime (prerollTimeSeconds)
     {
         jassert (node != nullptr);
     }
@@ -388,7 +395,6 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
     bool renderNextBlock() override
     {
         CRASH_TRACER
-
         return renderContext->render (*node, progress) == ThreadPoolJob::jobHasFinished;
     }
 
@@ -413,7 +419,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
     struct RenderContext
     {
         RenderContext (const AudioFile& destination, const AudioFile& source,
-                       int blockSizeToUse = 32768, double prerollTimeS = 0)
+                       SampleCount blockSizeToUse, double prerollTimeS)
             : blockSize (blockSizeToUse)
         {
             CRASH_TRACER
@@ -437,13 +443,13 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
                                                jmax (16, sourceInfo.bitsPerSample),
                                                sourceInfo.metadata, 0));
 
-            renderingBuffer.reset (new juce::AudioBuffer<float> (writer->getNumChannels(), blockSize + 256));
+            renderingBuffer = std::make_unique<juce::AudioBuffer<float>> (writer->getNumChannels(), (int) blockSize + 256);
             auto renderingBufferChannels = AudioChannelSet::canonicalChannelSet (renderingBuffer->getNumChannels());
 
             // now prepare the render context
             rc.reset (new AudioRenderContext (localPlayhead, streamRange,
                                               renderingBuffer.get(),
-                                              renderingBufferChannels, 0, blockSize,
+                                              renderingBufferChannels, 0, (int) blockSize,
                                               nullptr, 0.0,
                                               AudioRenderContext::playheadJumped, true));
 
@@ -465,7 +471,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
             CRASH_TRACER
             auto blockLength = blockSize / writer->getSampleRate();
             SampleCount samplesToWrite = roundToInt ((streamRange.getEnd() - streamTime) * writer->getSampleRate());
-            auto blockEnd = jmin (streamTime + blockLength, streamRange.getEnd());
+            auto blockEnd = std::min (streamTime + blockLength, streamRange.getEnd());
             rc->streamTime = { streamTime, blockEnd };
 
             // run blocks through the engine and discard
@@ -480,7 +486,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
                 return ThreadPoolJob::jobNeedsRunningAgain;
             }
 
-            auto numSamplesDone = (int) jmin (samplesToWrite, static_cast<SampleCount> (blockSize));
+            auto numSamplesDone = (int) std::min (samplesToWrite, blockSize);
             rc->bufferNumSamples = numSamplesDone;
 
             if (numSamplesDone > 0)
@@ -512,7 +518,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
             return ThreadPoolJob::jobNeedsRunningAgain;
         }
 
-        const int blockSize;
+        const SampleCount blockSize;
         int numPreBlocks = 0;
         std::unique_ptr<AudioFileWriter> writer;
         PlayHead localPlayhead;
@@ -525,9 +531,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
 
     std::unique_ptr<AudioNode> node;
     std::unique_ptr<RenderContext> renderContext;
-    const int blockSize = 32768;
     const double prerollTime = 0;
-
 
     void createAndPrepareRenderContext()
     {
@@ -546,7 +550,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
             {
                 0.0,
                 renderContext->writer->getSampleRate(),
-                renderContext->blockSize,
+                (int) renderContext->blockSize,
                 &allNodes,
                 renderContext->rc->playhead
             };
@@ -562,7 +566,8 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
 struct BlockBasedRenderJob : public ClipEffect::ClipEffectRenderJob
 {
     BlockBasedRenderJob (Engine& e, const AudioFile& dest, const AudioFile& src, double sourceLength)
-        : ClipEffect::ClipEffectRenderJob (e, dest, src), sourceLengthSeconds (sourceLength)
+        : ClipEffect::ClipEffectRenderJob (e, dest, src, defaultBlockSize),
+          sourceLengthSeconds (sourceLength)
     {
     }
 
@@ -606,6 +611,11 @@ protected:
 
     double sourceLengthSeconds = 0;
     SampleCount position = 0, sourceLengthSamples = 0;
+
+    SampleCount getNumSamplesForCurrentBlock() const
+    {
+        return std::min (blockSize, sourceLengthSamples - position);
+    }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BlockBasedRenderJob)
 };
@@ -782,7 +792,7 @@ ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> FadeInOutEffect::crea
     jassert (! timeRange.isEmpty());
 
     AudioNode* n = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {}, 1.0, AudioChannelSet::stereo());
-    int blockSize = 32768;
+    auto blockSize = AudioNodeRenderJob::defaultBlockSize;
 
     auto speedRatio = clipEffects.getSpeedRatioEstimate();
     auto effectRange = clipEffects.getEffectsRange();
@@ -907,7 +917,7 @@ ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> StepVolumeEffect::cre
 
         auto startBeat = ts.timeToBeats (pos.getStart() + effectRange.getStart());
         auto endBeat = ts.timeToBeats (pos.getEnd());
-        auto numNotes = jmin (p.getNumNotes(), (int) std::ceil ((endBeat - startBeat) / length));
+        auto numNotes = std::min (p.getNumNotes(), (int) std::ceil ((endBeat - startBeat) / length));
 
         auto beat = startBeat;
 
@@ -1346,7 +1356,7 @@ HashCode PluginEffect::getIndividualHash() const
     if (plugin != nullptr && (plugin->isProcessingEnabled() || lastHash == 0))
     {
         const ScopedPluginUnloadInhibitor lock (*pluginUnloadInhibitor);
-        lastHash = hashPlugin (state, *plugin);
+        lastHash = (juce::int64) hashPlugin (state, *plugin);
     }
 
     return lastHash;
@@ -1411,7 +1421,7 @@ struct NormaliseEffect::NormaliseRenderJob : public BlockBasedRenderJob
             gainFactor = dbToGain (float (maxGain)) / maxLevel;
         }
 
-        auto todo = (int) jmin (32768ll, sourceLengthSamples - position);
+        auto todo = (int) getNumSamplesForCurrentBlock();
 
         AudioScratchBuffer scratch ((int) reader->numChannels, todo);
 
@@ -1502,7 +1512,7 @@ struct MakeMonoEffect::MakeMonoRenderJob : public BlockBasedRenderJob
     bool renderNextBlock() override
     {
         CRASH_TRACER
-        auto todo = (int) jmin (32768ll, sourceLengthSamples - position);
+        auto todo = (int) getNumSamplesForCurrentBlock();
 
         AudioScratchBuffer input ((int) reader->numChannels, todo);
         reader->read (&input.buffer, 0, todo, position, true, true);
@@ -1588,7 +1598,7 @@ struct ReverseEffect::ReverseRenderJob  : public BlockBasedRenderJob
     bool renderNextBlock() override
     {
         CRASH_TRACER
-        auto todo = (int) jmin (32768ll, sourceLengthSamples - position);
+        auto todo = (int) getNumSamplesForCurrentBlock();
 
         AudioScratchBuffer scratch ((int) reader->numChannels, todo);
 
@@ -1626,7 +1636,7 @@ struct InvertEffect::InvertRenderJob : public BlockBasedRenderJob
     bool renderNextBlock() override
     {
         CRASH_TRACER
-        auto todo = (int) jmin (32768ll, sourceLengthSamples - position);
+        auto todo = (int) getNumSamplesForCurrentBlock();
 
         AudioScratchBuffer scratch ((int) reader->numChannels, todo);
 

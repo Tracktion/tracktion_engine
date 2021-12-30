@@ -521,7 +521,7 @@ struct PluginEffect  : public ClipEffect,
     std::unique_ptr<ClipEffects::RenderInhibitor> inhibitor;
     std::unique_ptr<PluginUnloadInhibitor> pluginUnloadInhibitor;
     juce::CachedValue<int> currentCurve;
-    mutable juce::CachedValue<HashCode> lastHash;
+    mutable juce::CachedValue<juce::int64> lastHash;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginEffect)
 };

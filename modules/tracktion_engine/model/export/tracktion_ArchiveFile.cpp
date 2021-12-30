@@ -482,7 +482,7 @@ bool TracktionArchiveFile::addFile (const File& f, const juce::String& filenameT
 
             jassert (out.getPosition() > indexOffset);
 
-            entry->length = jmax (int64_t (0), out.getPosition() - indexOffset);
+            entry->length = std::max (juce::int64(), out.getPosition() - indexOffset);
 
             jassert (indexOffset + entry->length < 2147483648);
 

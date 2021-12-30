@@ -64,7 +64,7 @@ public:
                 if (shouldExit())
                     return jobHasFinished;
 
-                auto numThisTime = (int) jmin (numLeft, (SampleCount) blockSize);
+                auto numThisTime = (int) std::min ((SampleCount) numLeft, (SampleCount) blockSize);
                 reader->read (&buffer, 0, numThisTime, startSample, true, useRightChan);
                 detector.processSection (buffer, numThisTime);
 
@@ -166,11 +166,11 @@ private:
             return false;
 
         SampleCount sourceSample = 0;
-        auto samplesToDo = reader->lengthInSamples;
+        auto samplesToDo = (SampleCount) reader->lengthInSamples;
 
         while (! shouldExit())
         {
-            const int numThisTime = (int) jmin (samplesToDo, (SampleCount) 65536);
+            auto numThisTime = (int) std::min (samplesToDo, (SampleCount) 65536);
 
             if (numThisTime <= 0)
                 return true;

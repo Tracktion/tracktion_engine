@@ -128,11 +128,11 @@ int LoopInfo::getRootNote() const                  { return getProp<int> (IDs::r
 void LoopInfo::setRootNote (int note)              { setProp<int> (IDs::rootNote, note); }
 
 //==============================================================================
-SampleCount LoopInfo::getInMarker() const          { return getProp<SampleCount> (IDs::inMarker); }
-SampleCount LoopInfo::getOutMarker() const         { return getProp<SampleCount> (IDs::outMarker); }
+SampleCount LoopInfo::getInMarker() const          { return getProp<juce::int64> (IDs::inMarker); }
+SampleCount LoopInfo::getOutMarker() const         { return getProp<juce::int64> (IDs::outMarker); }
 
-void LoopInfo::setInMarker (SampleCount in)        { setProp<SampleCount> (IDs::inMarker, in); }
-void LoopInfo::setOutMarker (SampleCount out)      { setProp<SampleCount> (IDs::outMarker, out); }
+void LoopInfo::setInMarker (SampleCount in)        { setProp<juce::int64> (IDs::inMarker, in); }
+void LoopInfo::setOutMarker (SampleCount out)      { setProp<juce::int64> (IDs::outMarker, out); }
 
 //==============================================================================
 int LoopInfo::getNumLoopPoints() const
@@ -147,7 +147,7 @@ LoopInfo::LoopPoint LoopInfo::getLoopPoint (int idx) const
     auto lp = getLoopPoints().getChild (idx);
 
     if (lp.isValid())
-        return { lp.getProperty (IDs::value),
+        return { static_cast<juce::int64> (lp.getProperty (IDs::value)),
                  (LoopPointType) static_cast<int> (lp.getProperty (IDs::type)) };
 
     return {};
@@ -159,7 +159,7 @@ void LoopInfo::addLoopPoint (SampleCount pos, LoopPointType type)
     duplicateIfShared();
 
     auto t = createValueTree (IDs::LOOPPOINT,
-                              IDs::value, pos,
+                              IDs::value, (juce::int64) pos,
                               IDs::type, (int) type);
 
     getOrCreateLoopPoints().addChild (t, -1, nullptr);
@@ -171,7 +171,7 @@ void LoopInfo::changeLoopPoint (int idx, SampleCount pos, LoopPointType type)
     duplicateIfShared();
 
     auto lp = getLoopPoints().getChild (idx);
-    lp.setProperty (IDs::value, pos, um);
+    lp.setProperty (IDs::value, (juce::int64) pos, um);
     lp.setProperty (IDs::type, (int) type, um);
 }
 

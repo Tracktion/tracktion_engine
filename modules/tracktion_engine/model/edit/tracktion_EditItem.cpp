@@ -19,7 +19,7 @@ EditItem::EditItem (EditItemID id, Edit& ed)
 //==============================================================================
 EditItemID EditItemID::fromVar (const juce::var& v)
 {
-    return fromRawID ((uint64_t) static_cast<int64_t> (v));
+    return fromRawID ((uint64_t) static_cast<juce::int64> (v));
 }
 
 EditItemID EditItemID::fromString (const juce::String& s)
@@ -110,7 +110,7 @@ void EditItemID::setXML (juce::XmlElement& xml, const char* attributeName) const
 
 juce::var EditItemID::toVar() const
 {
-    return juce::var (static_cast<int64_t> (itemID));
+    return juce::var (static_cast<juce::int64> (itemID));
 }
 
 juce::String EditItemID::toString() const
