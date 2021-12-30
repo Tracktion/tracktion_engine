@@ -392,7 +392,7 @@ public:
     {
     }
 
-    void saveNewlyFinishedThumbnail (const juce::AudioThumbnailBase& thumb, HashCode hash) override
+    void saveNewlyFinishedThumbnail (const juce::AudioThumbnailBase& thumb, juce::int64 hash) override
     {
         CRASH_TRACER
         auto st = dynamic_cast<const SmartThumbnail*> (&thumb);
@@ -411,7 +411,7 @@ public:
         }
     }
 
-    bool loadNewThumb (juce::AudioThumbnailBase& thumb, HashCode hash) override
+    bool loadNewThumb (juce::AudioThumbnailBase& thumb, juce::int64 hash) override
     {
         CRASH_TRACER
         auto st = dynamic_cast<const SmartThumbnail*> (&thumb);

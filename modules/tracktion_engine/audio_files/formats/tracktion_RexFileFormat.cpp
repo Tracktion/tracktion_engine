@@ -160,7 +160,7 @@ public:
     }
 
     bool readSamples (int** destSamples, int numDestChannels, int startOffsetInDestBuffer,
-                      int64_t startSampleInFile, int numSamples) override
+                      juce::int64 startSampleInFile, int numSamples) override
     {
         CRASH_TRACER
         clearSamplesBeyondAvailableLength (destSamples, numDestChannels, startOffsetInDestBuffer,

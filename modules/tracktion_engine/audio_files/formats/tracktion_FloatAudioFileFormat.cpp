@@ -38,7 +38,7 @@ public:
     }
 
     bool readSamples (int** destSamples, int numDestChannels, int startOffsetInDestBuffer,
-                      int64_t startSampleInFile, int numSamples)
+                      juce::int64 startSampleInFile, int numSamples)
     {
         clearSamplesBeyondAvailableLength (destSamples, numDestChannels, startOffsetInDestBuffer,
                                            startSampleInFile, numSamples, lengthInSamples);
@@ -164,7 +164,7 @@ public:
     }
 
     bool readSamples (int** destSamples, int numDestChannels, int startOffsetInDestBuffer,
-                      int64_t startSampleInFile, int numSamples) override
+                      juce::int64 startSampleInFile, int numSamples) override
     {
         clearSamplesBeyondAvailableLength (destSamples, numDestChannels, startOffsetInDestBuffer,
                                            startSampleInFile, numSamples, lengthInSamples);
@@ -185,7 +185,7 @@ public:
         return true;
     }
 
-    void getSample (int64_t sample, float* result) const noexcept override
+    void getSample (juce::int64 sample, float* result) const noexcept override
     {
         if (map == nullptr || ! mappedSection.contains (sample))
         {
@@ -207,7 +207,8 @@ public:
 
     using juce::MemoryMappedAudioFormatReader::readMaxLevels;
 
-    void readMaxLevels (int64_t startSampleInFile, int64_t numSamples, juce::Range<float>* results, int numChannelsToRead) override
+    void readMaxLevels (juce::int64 startSampleInFile, juce::int64 numSamples,
+                        juce::Range<float>* results, int numChannelsToRead) override
     {
         if (numSamples <= 0)
         {

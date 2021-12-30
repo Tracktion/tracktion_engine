@@ -75,7 +75,7 @@ public:
         {
             if (r != nullptr)
             {
-                range = range.getIntersectionWith (r->getMappedSection());
+                range = range.getIntersectionWith (SampleRange (r->getMappedSection()));
 
                 for (auto i = range.getStart(); i < range.getEnd(); i += 64)
                     r->touchSample (i);
@@ -238,7 +238,7 @@ public:
         std::unique_ptr<juce::MemoryMappedAudioFormatReader> r (AudioFileUtils::createMemoryMappedReader (cache.engine, file.getFile(), af));
 
         if (r != nullptr
-             && (range != nullptr ? r->mapSectionOfFile (*range)
+             && (range != nullptr ? r->mapSectionOfFile (juce::Range<juce::int64> (*range))
                                   : r->mapEntireFile())
              && ! r->getMappedSection().isEmpty())
         {
@@ -553,7 +553,7 @@ AudioFileCache::AudioFileCache (Engine& e)  : engine (e)
     const int defaultSize = 6 * 48000;
 
     // TODO: when we drop 32-bit support, delete the cache size and related code
-    setCacheSizeSamples (engine.getPropertyStorage().getProperty (SettingID::cacheSizeSamples, defaultSize));
+    setCacheSizeSamples (static_cast<juce::int64> (engine.getPropertyStorage().getProperty (SettingID::cacheSizeSamples, defaultSize)));
 }
 
 AudioFileCache::~AudioFileCache()
@@ -1022,7 +1022,8 @@ struct CacheAudioFormatReader  :  public juce::AudioFormatReader
     }
 
     using juce::AudioFormatReader::readMaxLevels;
-    void readMaxLevels (SampleCount startSample, SampleCount numSamples,
+
+    void readMaxLevels (juce::int64 startSample, juce::int64 numSamples,
                         float& lowestLeft, float& highestLeft,
                         float& lowestRight, float& highestRight) override
     {
@@ -1031,7 +1032,7 @@ struct CacheAudioFormatReader  :  public juce::AudioFormatReader
     }
 
     bool readSamples (int** destSamples, int numDestChannels,
-                      int startOffsetInDestBuffer, SampleCount startSampleInFile,
+                      int startOffsetInDestBuffer, juce::int64 startSampleInFile,
                       int numSamples) override
     {
         reader->setReadPosition (startSampleInFile);

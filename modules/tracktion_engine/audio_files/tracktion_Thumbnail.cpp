@@ -592,7 +592,7 @@ void TracktionThumbnail::clearChannelData()
 }
 
 void TracktionThumbnail::reset (int newNumChannels, double newSampleRate,
-                                SampleCount totalSamplesInSource)
+                                juce::int64 totalSamplesInSource)
 {
     clear();
 
