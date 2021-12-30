@@ -1061,6 +1061,44 @@ void DeviceManager::audioDeviceIOCallback (const float** inputChannelData, int n
                                            float** outputChannelData, int totalNumOutputChannels,
                                            int numSamples)
 {
+    // Some interfaces ask for blocks larger than the current buffer size so in
+    // these cases we need to render the buffer in chunks
+    if (numSamples <= maxBlockSize)
+    {
+        audioDeviceIOCallbackInternal (inputChannelData, numInputChannels,
+                                       outputChannelData, totalNumOutputChannels,
+                                       numSamples);
+        return;
+    }
+
+    for (int sampleStartIndex = 0;;)
+    {
+        const auto numThisTime = std::min (numSamples, maxBlockSize);
+
+        for (int i = 0; i < numInputChannels; ++i)
+            inputChannelsScratch[i] = inputChannelData[i] + sampleStartIndex;
+
+        for (int i = 0; i < totalNumOutputChannels; ++i)
+            outputChannelsScratch[i] = outputChannelData[i] + sampleStartIndex;
+
+        audioDeviceIOCallbackInternal (inputChannelsScratch, numInputChannels,
+                                       outputChannelsScratch, totalNumOutputChannels,
+                                       numThisTime);
+
+        numSamples -= numThisTime;
+        sampleStartIndex += numThisTime;
+
+        if (numSamples == 0)
+            break;
+    }
+}
+
+void DeviceManager::audioDeviceIOCallbackInternal (const float** inputChannelData, int numInputChannels,
+                                                   float** outputChannelData, int totalNumOutputChannels,
+                                                   int numSamples)
+{
+    jassert (numSamples <= maxBlockSize);
+
     CRASH_TRACER
     FloatVectorOperations::disableDenormalisedNumberSupport();
 
@@ -1156,11 +1194,15 @@ void DeviceManager::audioDeviceAboutToStart (AudioIODevice* device)
 
     streamTime = 0;
     currentCpuUsage = 0.0f;
+    maxBlockSize = device->getCurrentBufferSizeSamples();
     currentSampleRate = device->getCurrentSampleRate();
-    currentLatencyMs  = device->getCurrentBufferSizeSamples() * 1000.0f / currentSampleRate;
+    currentLatencyMs  = maxBlockSize * 1000.0f / currentSampleRate;
     outputLatencyTime = device->getOutputLatencyInSamples() / currentSampleRate;
     defaultWaveOutIndex = engine.getPropertyStorage().getPropertyItem (SettingID::defaultWaveOutDevice, device->getTypeName(), 0);
     defaultWaveInIndex = engine.getPropertyStorage().getPropertyItem (SettingID::defaultWaveInDevice, device->getTypeName(), 0);
+
+    inputChannelsScratch.realloc (device->getInputChannelNames().size());
+    outputChannelsScratch.realloc (device->getOutputChannelNames().size());
 
     if (waveDeviceListNeedsRebuilding())
         rebuildWaveDeviceList();
