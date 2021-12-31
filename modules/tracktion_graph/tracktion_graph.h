@@ -51,7 +51,7 @@
 /** Config: GRAPH_UNIT_TESTS_QUICK_VALIDATE
 
     If this is enabled, only a minimal set of buffer sizes will be tested.
-    This gives a good idea if the module works correctly but also optomises CI
+    This gives a good idea if the module works correctly but also optimises CI
     completion speed.
 */
 #ifndef GRAPH_UNIT_TESTS_QUICK_VALIDATE

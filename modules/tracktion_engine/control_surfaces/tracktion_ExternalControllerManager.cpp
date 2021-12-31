@@ -30,10 +30,10 @@ private:
     ExternalControllerManager& owner;
     Edit& edit;
 
-    Array<ValueTree, CriticalSection> pluginsToUpdate;
-    Atomic<int> updateAux;
+    juce::Array<juce::ValueTree, juce::CriticalSection> pluginsToUpdate;
+    juce::Atomic<int> updateAux;
 
-    void valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i) override
+    void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i) override
     {
         if (v.hasType (IDs::PLUGIN))
         {
@@ -44,15 +44,15 @@ private:
         }
     }
 
-    void valueTreeChildAdded (ValueTree&, juce::ValueTree&) override        {}
-    void valueTreeChildRemoved (ValueTree&, juce::ValueTree&, int) override {}
-    void valueTreeChildOrderChanged (ValueTree&, int, int) override   {}
-    void valueTreeParentChanged (ValueTree&) override                 {}
+    void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override        {}
+    void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override {}
+    void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override   {}
+    void valueTreeParentChanged (juce::ValueTree&) override                 {}
 
     void timerCallback() override
     {
         {
-            Array<ValueTree, CriticalSection> plugins;
+            juce::Array<juce::ValueTree, juce::CriticalSection> plugins;
             plugins.swapWith (pluginsToUpdate);
 
             for (int i = plugins.size(); --i >= 0;)
@@ -224,8 +224,8 @@ bool ExternalControllerManager::createCustomController (const juce::String& name
         {
             if (device->needsOSCSocket())
             {
-                outPort = jmax (outPort, device->getOSCOutputPort() + 1);
-                inPort  = jmax (inPort, device->getOSCInputPort() + 1);
+                outPort = std::max (outPort, device->getOSCOutputPort() + 1);
+                inPort  = std::max (inPort,  device->getOSCInputPort() + 1);
             }
         }
     }
@@ -321,7 +321,7 @@ void ExternalControllerManager::updateAllDevices()
 {
     if (! isTimerRunning())
     {
-        auto now = Time::getMillisecondCounter();
+        auto now = juce::Time::getMillisecondCounter();
 
         if (now - lastUpdate > 250)
         {
@@ -343,7 +343,7 @@ void ExternalControllerManager::timerCallback()
     CRASH_TRACER
     stopTimer();
 
-    lastUpdate = Time::getMillisecondCounter();
+    lastUpdate = juce::Time::getMillisecondCounter();
 
     updateDeviceState();
     updateParameters();
@@ -537,7 +537,7 @@ void ExternalControllerManager::editPositionChanged (Edit* ed, double newCursorP
     if (ed != nullptr)
     {
         CRASH_TRACER
-        String parts[4];
+        juce::String parts[4];
         ed->getTimecodeFormat().getPartStrings (TimecodeDuration::fromSecondsOnly (newCursorPosition),
                                                 ed->tempoSequence,
                                                 false, parts);
@@ -799,9 +799,9 @@ bool ExternalControllerManager::shouldTrackBeColoured (int channelNum)
     return false;
 }
 
-Colour ExternalControllerManager::getTrackColour (int channelNum)
+juce::Colour ExternalControllerManager::getTrackColour (int channelNum)
 {
-    Colour c;
+    juce::Colour c;
 
     if (! devices.isEmpty())
     {
@@ -827,9 +827,9 @@ bool ExternalControllerManager::shouldPluginBeColoured (Plugin* plugin)
     return false;
 }
 
-Colour ExternalControllerManager::getPluginColour (Plugin* plugin)
+juce::Colour ExternalControllerManager::getPluginColour (Plugin* plugin)
 {
-    Colour c;
+    juce::Colour c;
     FOR_EACH_DEVICE (getPluginColour (plugin, c));
     return c;
 }

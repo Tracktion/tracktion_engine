@@ -14,8 +14,6 @@
 #include "../../modules/tracktion_graph/tracktion_graph.h"
 #include "tracktion_engine.h"
 
-using namespace juce;
-
 #include "timestretch/tracktion_TempoDetect.h"
 #include "model/automation/modifiers/tracktion_ModifierInternal.h"
 #include "utilities/tracktion_Benchmark.h"

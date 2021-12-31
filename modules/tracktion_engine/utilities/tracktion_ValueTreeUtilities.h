@@ -194,7 +194,7 @@ public:
 
     juce::Array<ObjectType*> objects;
     CriticalSectionType arrayLock;
-    typedef typename CriticalSectionType::ScopedLockType ScopedLockType;
+    using ScopedLockType = typename CriticalSectionType::ScopedLockType;
 
 protected:
     juce::ValueTree parent;

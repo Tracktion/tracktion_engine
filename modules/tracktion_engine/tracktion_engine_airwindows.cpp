@@ -19,8 +19,6 @@
 
 #if TRACKTION_AIR_WINDOWS
 
-using namespace juce;
-
 #include "plugins/airwindows/tracktion_AirWindowsBase.cpp"
 
 #if JUCE_CLANG

@@ -153,7 +153,7 @@ struct StringMap
         for (;;)
         {
             int len = 0;
-            juce_wchar c = 0;
+            juce::juce_wchar c = 0;
 
             for (;;)
             {
@@ -225,9 +225,9 @@ ProjectItem::ProjectItem (Engine& e,
     setCategory (category_);
 }
 
-static juce::String readStringAutoDetectingUTF (InputStream& in)
+static juce::String readStringAutoDetectingUTF (juce::InputStream& in)
 {
-    MemoryOutputStream mo;
+    juce::MemoryOutputStream mo;
 
     while (char byte = in.readByte())
         mo << byte;
@@ -235,7 +235,7 @@ static juce::String readStringAutoDetectingUTF (InputStream& in)
     return mo.toString();
 }
 
-ProjectItem::ProjectItem (Engine& e, ProjectItemID id, InputStream* in)
+ProjectItem::ProjectItem (Engine& e, ProjectItemID id, juce::InputStream* in)
    : engine (e), itemID (id)
 {
     objectName  = readStringAutoDetectingUTF (*in);
@@ -250,7 +250,7 @@ ProjectItem::~ProjectItem()
     notifyListenersOfDeletion();
 }
 
-void ProjectItem::writeToStream (OutputStream& out) const
+void ProjectItem::writeToStream (juce::OutputStream& out) const
 {
     out.writeString (objectName);
     out.writeString (type);
@@ -312,7 +312,7 @@ juce::File ProjectItem::getRelativeFile (const juce::String& name) const
 
 juce::File ProjectItem::getSourceFile()
 {
-    if (sourceFile == File())
+    if (sourceFile == juce::File())
     {
         auto f = getRelativeFile (file);
 
@@ -336,15 +336,15 @@ juce::File ProjectItem::getSourceFile()
     return sourceFile;
 }
 
-bool ProjectItem::isForFile (const File& f)
+bool ProjectItem::isForFile (const juce::File& f)
 {
-    if (sourceFile != File())
+    if (sourceFile != juce::File())
         return f == sourceFile;
 
     return file.endsWithIgnoreCase (f.getFileName()) && getSourceFile() == f;
 }
 
-void ProjectItem::setSourceFile (const File& f)
+void ProjectItem::setSourceFile (const juce::File& f)
 {
     if (auto pp = getProject())
     {
@@ -355,7 +355,7 @@ void ProjectItem::setSourceFile (const File& f)
         else
             file = f.getFullPathName();
 
-        sourceFile = File();
+        sourceFile = juce::File();
 
         changed();
         pp->changed();
@@ -454,7 +454,7 @@ void ProjectItem::setName (const juce::String& n, SetNameMode mode)
 
             if (shouldRename)
             {
-                newDstFile = src.getParentDirectory().getChildFile (File::createLegalFileName (n))
+                newDstFile = src.getParentDirectory().getChildFile (juce::File::createLegalFileName (n))
                                                      .withFileExtension (src.getFileExtension());
 
                 startTimer (1);
@@ -573,7 +573,7 @@ void ProjectItem::setNamedProperty (const juce::String& name, const juce::String
     }
 }
 
-Array<double> ProjectItem::getMarkedPoints() const
+juce::Array<double> ProjectItem::getMarkedPoints() const
 {
     juce::Array<double> marks;
     auto m = getNamedProperty ("marks");
@@ -621,7 +621,7 @@ bool ProjectItem::convertEditFile()
     if (newFile.existsAsFile())
     {
         juce::String m (TRANS("There appears to already be a converted Edit in the project folder."));
-        m << newLine << TRANS("Do you want to use this, or create a new conversion?");
+        m << juce::newLine << TRANS("Do you want to use this, or create a new conversion?");
 
         if (engine.getUIBehaviour().showOkCancelAlertBox (TRANS("Converted Edit Already Exists"), m,
                                                           TRANS("Use Existing"),
@@ -640,7 +640,7 @@ bool ProjectItem::convertEditFile()
         {
             engine.getUIBehaviour().showWarningAlert (TRANS("Unable to Open Edit"),
                                                       TRANS("The selected Edit file could not be converted to the current project format.")
-                                                        + newLine + newLine
+                                                        + juce::newLine + juce::newLine
                                                         + TRANS("Please ensure you can write to the Edit directory and try again."));
             return false;
         }
@@ -684,11 +684,11 @@ void ProjectItem::verifyLength()
     }
     else if (isMidi())
     {
-        FileInputStream in (getSourceFile());
+        juce::FileInputStream in (getSourceFile());
 
         if (in.openedOk())
         {
-            MidiFile mf;
+            juce::MidiFile mf;
             mf.readFrom (in);
             mf.convertTimestampTicksToSeconds();
 
@@ -707,8 +707,8 @@ void ProjectItem::verifyLength()
 }
 
 //==============================================================================
-bool ProjectItem::copySectionToNewFile (const File& destFile,
-                                        File& actualFileCreated,
+bool ProjectItem::copySectionToNewFile (const juce::File& destFile,
+                                        juce::File& actualFileCreated,
                                         double startTime, double lengthToCopy)
 {
     actualFileCreated = destFile;
@@ -748,14 +748,15 @@ bool ProjectItem::deleteSourceFile()
             if (ok)
                 break;
 
-            Thread::sleep (800);
+            juce::Thread::sleep (800);
         }
 
         afm.checkFileForChangesAsync (af);
 
         if (! ok)
         {
-            auto info = f.getFullPathName() + "  " + File::descriptionOfSizeInBytes (f.getSize());
+            auto info = f.getFullPathName() + "  "
+                         + juce::File::descriptionOfSizeInBytes (f.getSize());
 
             if (! f.hasWriteAccess())
                 info << "  (read only)";

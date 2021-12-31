@@ -91,14 +91,14 @@ struct MacroParameterList::List : public ValueTreeObjectList<MacroParameter>
         freeObjects();
     }
 
-    ReferenceCountedArray<MacroParameter> getMacroParameters() const
+    juce::ReferenceCountedArray<MacroParameter> getMacroParameters() const
     {
-        ReferenceCountedArray<MacroParameter> params;
+        juce::ReferenceCountedArray<MacroParameter> params;
         
         // This is verbose but directly returning macroParameters causes a
-        // crash in optomised gcc Linux builds, could be a compiler bug
+        // crash in optimised gcc Linux builds, could be a compiler bug
         {
-            const ScopedLock sl (macroParameters.getLock());
+            const juce::ScopedLock sl (macroParameters.getLock());
             params.ensureStorageAllocated (macroParameters.size());
             
             for (auto& p : macroParameters)
@@ -112,7 +112,7 @@ struct MacroParameterList::List : public ValueTreeObjectList<MacroParameter>
     Edit& edit;
 
 private:
-    ReferenceCountedArray<MacroParameter, CriticalSection> macroParameters;
+    juce::ReferenceCountedArray<MacroParameter, juce::CriticalSection> macroParameters;
 
     bool isSuitableType (const juce::ValueTree& v) const override
     {
@@ -149,7 +149,7 @@ private:
 
     void objectOrderChanged() override              { macroParameterList.sendChangeMessage(); }
 
-    void valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i) override
+    void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i) override
     {
         if (v.hasType (IDs::MACROPARAMETER) && i == IDs::name)
             macroParameterList.rebuildParameterTree();
@@ -185,7 +185,7 @@ MacroParameter* MacroParameterList::createMacroParameter()
     state.addChild (v, -1, um);
 
     auto* mp = list->objects.getLast();
-    mp->macroName = TRANS("Macro") + " " + String (list->objects.size());
+    mp->macroName = TRANS("Macro") + " " + juce::String (list->objects.size());
     jassert (mp != nullptr);
     jassert (mp->state == v);
     sendChangeMessage();
@@ -232,7 +232,7 @@ void MacroParameterList::hideMacroParametersFromTracks() const
     }
 }
 
-ReferenceCountedArray<MacroParameter> MacroParameterList::getMacroParameters() const
+juce::ReferenceCountedArray<MacroParameter> MacroParameterList::getMacroParameters() const
 {
     return list->getMacroParameters();
 }

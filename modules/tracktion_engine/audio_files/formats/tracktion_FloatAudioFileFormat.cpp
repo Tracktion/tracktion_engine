@@ -60,7 +60,7 @@ public:
             if (bytesRead < numThisTime * bytesPerFrame)
             {
                 jassert (bytesRead >= 0);
-                juce::zeromem (tempBuffer + bytesRead, (size_t) (numThisTime * bytesPerFrame - bytesRead));
+                std::memset (tempBuffer + bytesRead, 0, (size_t) (numThisTime * bytesPerFrame - bytesRead));
             }
 
             if (bigEndian)
@@ -191,7 +191,7 @@ public:
         {
             jassertfalse; // you must make sure that the window contains all the samples you're going to attempt to read.
 
-            juce::zeromem (result, sizeof (float) * numChannels);
+            std::memset (result, 0, sizeof (float) * numChannels);
             return;
         }
 

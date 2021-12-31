@@ -251,7 +251,8 @@ void WaveAudioClip::invalidateCurrentTake (const juce::ValueTree& parent) noexce
         invalidateCurrentTake();
 }
 
-void WaveAudioClip::valueTreePropertyChanged (ValueTree& treeWhosePropertyHasChanged, const juce::Identifier& property)
+void WaveAudioClip::valueTreePropertyChanged (juce::ValueTree& treeWhosePropertyHasChanged,
+                                              const juce::Identifier& property)
 {
     AudioClipBase::valueTreePropertyChanged (treeWhosePropertyHasChanged, property);
 
@@ -259,19 +260,19 @@ void WaveAudioClip::valueTreePropertyChanged (ValueTree& treeWhosePropertyHasCha
         invalidateCurrentTake();
 }
 
-void WaveAudioClip::valueTreeChildAdded (ValueTree& p, juce::ValueTree& c)
+void WaveAudioClip::valueTreeChildAdded (juce::ValueTree& p, juce::ValueTree& c)
 {
     AudioClipBase::valueTreeChildAdded (p, c);
     invalidateCurrentTake (p);
 }
 
-void WaveAudioClip::valueTreeChildRemoved (ValueTree& p, juce::ValueTree& c, int oldIndex)
+void WaveAudioClip::valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree& c, int oldIndex)
 {
     AudioClipBase::valueTreeChildRemoved (p, c, oldIndex);
     invalidateCurrentTake (p);
 }
 
-void WaveAudioClip::valueTreeChildOrderChanged (ValueTree& p, int oldIndex, int newIndex)
+void WaveAudioClip::valueTreeChildOrderChanged (juce::ValueTree& p, int oldIndex, int newIndex)
 {
     AudioClipBase::valueTreeChildOrderChanged (p, oldIndex, newIndex);
     invalidateCurrentTake (p);
@@ -282,8 +283,8 @@ void WaveAudioClip::setCurrentTake (int takeIndex)
     CRASH_TRACER
     auto takesTree = getTakesTree();
     auto numTakes = takesTree.getNumChildren();
-    jassert (isPositiveAndBelow (takeIndex, numTakes));
-    takeIndex = jlimit (0, numTakes - 1, takeIndex);
+    jassert (juce::isPositiveAndBelow (takeIndex, numTakes));
+    takeIndex = juce::jlimit (0, numTakes - 1, takeIndex);
 
     auto take = takesTree.getChild (takeIndex);
     jassert (take.isValid());
@@ -342,18 +343,18 @@ void WaveAudioClip::deleteAllUnusedTakesConfirmingWithUser (bool deleteSourceFil
    #if JUCE_MODAL_LOOPS_PERMITTED
     auto showWarning = [] (const juce::String& title, const juce::String& message, bool& delFiles) -> int
     {
-        const std::unique_ptr<AlertWindow> w (LookAndFeel::getDefaultLookAndFeel()
-                                                .createAlertWindow (title, message,
-                                                                    {}, {}, {},
-                                                                    AlertWindow::QuestionIcon, 0, nullptr));
+        const std::unique_ptr<juce::AlertWindow> w (juce::LookAndFeel::getDefaultLookAndFeel()
+                                                        .createAlertWindow (title, message,
+                                                                            {}, {}, {},
+                                                                            juce::AlertWindow::QuestionIcon, 0, nullptr));
 
-        ToggleButton delFilesButton (TRANS("Delete Source Files?"));
+        juce::ToggleButton delFilesButton (TRANS("Delete Source Files?"));
         delFilesButton.setSize (400, 20);
         delFilesButton.setName ({});
         w->addCustomComponent (&delFilesButton);
         w->addTextBlock (TRANS("(This will also delete these from any other Edits in this project)"));
-        w->addButton (TRANS("OK"), 1, KeyPress (KeyPress::returnKey));
-        w->addButton (TRANS("Cancel"), 2, KeyPress (KeyPress::escapeKey));
+        w->addButton (TRANS("OK"), 1, juce::KeyPress (juce::KeyPress::returnKey));
+        w->addButton (TRANS("Cancel"), 2, juce::KeyPress (juce::KeyPress::escapeKey));
 
         const int res = w->runModalLoop();
         delFiles = delFilesButton.getToggleState();
@@ -568,7 +569,7 @@ juce::String WaveAudioClip::getRenderMessage()
     if (progress < 0.0f)
         return m + "...";
 
-    return m + ": " + String (roundToInt (progress * 100.0f)) + "%";
+    return m + ": " + juce::String (juce::roundToInt (progress * 100.0f)) + "%";
 }
 
 bool WaveAudioClip::isUsingFile (const AudioFile& af)

@@ -63,7 +63,7 @@ struct PluginList::ObjectList  : public ValueTreeObjectList<Plugin>
     void newObjectAdded (Plugin*) override {}
     void objectRemoved (Plugin*) override {}
     void objectOrderChanged() override {}
-    void valueTreePropertyChanged (ValueTree&, const juce::Identifier&) override  {}
+    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override  {}
 
     PluginList& list;
 
@@ -100,7 +100,7 @@ void PluginList::releaseObjects()
     list.reset();
 }
 
-UndoManager* PluginList::getUndoManager() const
+juce::UndoManager* PluginList::getUndoManager() const
 {
     return &edit.getUndoManager();
 }

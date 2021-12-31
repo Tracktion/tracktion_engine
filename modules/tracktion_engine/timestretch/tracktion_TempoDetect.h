@@ -122,7 +122,7 @@ public:
         AudioScratchBuffer scratch (1, numChannels * numSamples);
         float* interleaved = scratch.buffer.getWritePointer (0);
 
-        using Format = juce::AudioData::Format<AudioData::Float32, AudioData::NativeEndian>;
+        using Format = juce::AudioData::Format<juce::AudioData::Float32, juce::AudioData::NativeEndian>;
         juce::AudioData::interleaveSamples (juce::AudioData::NonInterleavedSource<Format> { inputSamples,   numChannels },
                                             juce::AudioData::InterleavedDest<Format>      { interleaved,    numChannels },
                                             numSamples);

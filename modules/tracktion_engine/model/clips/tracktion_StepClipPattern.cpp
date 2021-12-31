@@ -162,8 +162,8 @@ bool StepClip::Pattern::getNote (int channel, int index) const noexcept
 void StepClip::Pattern::setNote (int channel, int index, bool value)
 {
     if (getNote (channel, index) != value
-          && isPositiveAndBelow (index, getNumNotes())
-          && isPositiveAndBelow (channel, (int) maxNumChannels))
+          && juce::isPositiveAndBelow (index, getNumNotes())
+          && juce::isPositiveAndBelow (channel, (int) maxNumChannels))
     {
         juce::BigInteger b (getChannel (channel));
         b.setBit (index, value);
@@ -187,7 +187,7 @@ int StepClip::Pattern::getVelocity (int channel, int index) const
 
     auto velocities = getVelocities (channel);
 
-    if (isPositiveAndBelow (index, velocities.size()))
+    if (juce::isPositiveAndBelow (index, velocities.size()))
         return velocities[index];
 
     if (clip.getChannels()[channel] != nullptr)
@@ -198,7 +198,7 @@ int StepClip::Pattern::getVelocity (int channel, int index) const
 
 void StepClip::Pattern::setVelocity (int channel, int index, int value)
 {
-    if (! isPositiveAndBelow (channel, (int) maxNumChannels))
+    if (! juce::isPositiveAndBelow (channel, (int) maxNumChannels))
         return;
 
     setNote (channel, index, true);
@@ -206,7 +206,7 @@ void StepClip::Pattern::setVelocity (int channel, int index, int value)
     auto velocities = getVelocities (channel);
     const int size = velocities.size();
 
-    if (! isPositiveAndNotGreaterThan (index, size))
+    if (! juce::isPositiveAndNotGreaterThan (index, size))
         velocities.insertMultiple (size, 127, index - size);
 
     velocities.set (index, value);
@@ -220,7 +220,7 @@ double StepClip::Pattern::getGate (int channel, int index) const
 
     auto gates = getGates (channel);
 
-    if (isPositiveAndBelow (index, gates.size()))
+    if (juce::isPositiveAndBelow (index, gates.size()))
         return gates[index];
 
     return 1.0;
@@ -233,7 +233,7 @@ float StepClip::Pattern::getProbability (int channel, int index) const
 
     auto p = getProbabilities (channel);
 
-    if (isPositiveAndBelow (index, p.size()))
+    if (juce::isPositiveAndBelow (index, p.size()))
         return p[index];
 
     return 1.0;
@@ -241,7 +241,7 @@ float StepClip::Pattern::getProbability (int channel, int index) const
 
 void StepClip::Pattern::setGate (int channel, int index, double value)
 {
-    if (! isPositiveAndBelow (channel, (int) maxNumChannels))
+    if (! juce::isPositiveAndBelow (channel, (int) maxNumChannels))
         return;
 
     setNote (channel, index, value != 0.0);
@@ -249,7 +249,7 @@ void StepClip::Pattern::setGate (int channel, int index, double value)
     auto gates = getGates (channel);
     const int size = gates.size();
 
-    if (! isPositiveAndNotGreaterThan (index, size))
+    if (! juce::isPositiveAndNotGreaterThan (index, size))
         gates.insertMultiple (size, 1.0, index - size);
 
     gates.set (index, value);
@@ -258,7 +258,7 @@ void StepClip::Pattern::setGate (int channel, int index, double value)
 
 void StepClip::Pattern::setProbability (int channel, int index, float value)
 {
-    if (! isPositiveAndBelow (channel, (int) maxNumChannels))
+    if (! juce::isPositiveAndBelow (channel, (int) maxNumChannels))
         return;
 
     setNote (channel, index, value != 0.0);
@@ -266,7 +266,7 @@ void StepClip::Pattern::setProbability (int channel, int index, float value)
     auto p = getProbabilities (channel);
     const int size = p.size();
 
-    if (! isPositiveAndNotGreaterThan (index, size))
+    if (! juce::isPositiveAndNotGreaterThan (index, size))
         p.insertMultiple (size, 1.0f, index - size);
 
     p.set (index, value);
@@ -285,7 +285,7 @@ void StepClip::Pattern::clearChannel (int channel)
 
 void StepClip::Pattern::insertChannel (int channel)
 {
-    state.addChild (ValueTree (IDs::CHANNEL), channel, clip.getUndoManager());
+    state.addChild (juce::ValueTree (IDs::CHANNEL), channel, clip.getUndoManager());
 }
 
 void StepClip::Pattern::removeChannel (int channel)
@@ -297,18 +297,18 @@ void StepClip::Pattern::randomiseChannel (int channel)
 {
     clearChannel (channel);
 
-    Random r;
+    juce::Random r;
     for (int i = 0; i < getNumNotes(); ++i)
         setNote (channel, i, r.nextBool());
 }
 
 void StepClip::Pattern::randomiseSteps()
 {
-    Random r;
+    juce::Random r;
     const int numChannels = clip.getChannels().size();
     const int numSteps = getNumNotes();
 
-    juce::Array<BigInteger> chans;
+    juce::Array<juce::BigInteger> chans;
     chans.insertMultiple (0, juce::BigInteger(), numChannels);
 
     for (int i = 0; i < numSteps; ++i)
@@ -359,7 +359,7 @@ int StepClip::Pattern::CachedPattern::getVelocity (int index) const noexcept
     if (! getNote (index))
         return -1;
 
-    if (isPositiveAndBelow (index, velocities.size()))
+    if (juce::isPositiveAndBelow (index, velocities.size()))
         return velocities[index];
 
     return 127;
@@ -370,7 +370,7 @@ double StepClip::Pattern::CachedPattern::getGate (int index) const noexcept
     if (! getNote (index))
         return 0.0;
 
-    if (isPositiveAndBelow (index, gates.size()))
+    if (juce::isPositiveAndBelow (index, gates.size()))
         return gates[index];
 
     return 1.0;
@@ -381,7 +381,7 @@ float StepClip::Pattern::CachedPattern::getProbability (int index) const noexcep
     if (! getNote (index))
         return 0.0;
 
-    if (isPositiveAndBelow (index, probabilities.size()))
+    if (juce::isPositiveAndBelow (index, probabilities.size()))
         return probabilities[index];
 
     return 1.0;
@@ -401,8 +401,8 @@ int StepClip::PatternInstance::getSequenceIndex() const
 juce::String StepClip::PatternInstance::getSelectableDescription()
 {
     return clip.getName() + "  -  "
-         + TRANS("Variation 123").replace ("123", String (getSequenceIndex() + 1)) + " ("
-         + TRANS("Variation 123").replace ("123", String (patternIndex + 1)) + ")";
+         + TRANS("Variation 123").replace ("123", juce::String (getSequenceIndex() + 1)) + " ("
+         + TRANS("Variation 123").replace ("123", juce::String (patternIndex + 1)) + ")";
 }
 
 }

@@ -34,7 +34,7 @@ public:
 
         defaultValue = plugin.impl->getParameter (idx);
 
-        setParameter (defaultValue, sendNotification);
+        setParameter (defaultValue, juce::sendNotification);
 
         autodetectRange();
     }
@@ -46,7 +46,7 @@ public:
 
     void resetToDefault()
     {
-        setParameter (defaultValue, sendNotificationSync);
+        setParameter (defaultValue, juce::sendNotificationSync);
     }
 
     void autodetectRange()
@@ -176,8 +176,8 @@ void AirWindowsPlugin::resetToDefault()
         if (auto awp = dynamic_cast<AirWindowsAutomatableParameter*> (p))
             awp->resetToDefault();
 
-    dryGain->setParameter (0.0f, sendNotificationSync);
-    wetGain->setParameter (1.0f, sendNotificationSync);
+    dryGain->setParameter (0.0f, juce::sendNotificationSync);
+    wetGain->setParameter (1.0f, juce::sendNotificationSync);
 }
 
 int AirWindowsPlugin::getNumOutputChannelsGivenInputs (int)
@@ -245,9 +245,9 @@ void AirWindowsPlugin::applyToBuffer (const PluginRenderContext& fc)
 
 void AirWindowsPlugin::processBlock (juce::AudioBuffer<float>& buffer)
 {
-    const int numChans    = buffer.getNumChannels();
-    const int samps       = buffer.getNumSamples();
-    const int pluginChans = jmax (impl->getNumOutputs(), impl->getNumInputs());
+    auto numChans    = buffer.getNumChannels();
+    auto samps       = buffer.getNumSamples();
+    auto pluginChans = std::max (impl->getNumOutputs(), impl->getNumInputs());
 
     if (pluginChans > numChans)
     {
@@ -285,17 +285,17 @@ void AirWindowsPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v
 
     if (v.hasProperty (IDs::state))
     {
-        MemoryBlock data;
+        juce::MemoryBlock data;
 
         {
-            MemoryOutputStream os (data, false);
-            Base64::convertFromBase64 (os, v[IDs::state].toString());
+            juce::MemoryOutputStream os (data, false);
+            juce::Base64::convertFromBase64 (os, v[IDs::state].toString());
         }
 
         impl->setChunk (data.getData(), int (data.getSize()), false);
     }
 
-    CachedValue<float>* cvsFloat[]  = { &wetValue, &dryValue, nullptr };
+    juce::CachedValue<float>* cvsFloat[]  = { &wetValue, &dryValue, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
 
     for (auto p : parameters)
@@ -314,7 +314,7 @@ void AirWindowsPlugin::flushPluginStateToValueTree()
 
     if (data != nullptr)
     {
-        state.setProperty (IDs::state, Base64::toBase64 (data, size_t (size)), um);
+        state.setProperty (IDs::state, juce::Base64::toBase64 (data, size_t (size)), um);
 
         free (data);
     }

@@ -225,7 +225,7 @@ private:
     int getIndexOfFreezePoint();
     void freezePlugins (juce::Range<int> pluginsToFreeze);
     void unFreezeTrack();
-    juce::File getFreezeFile() const noexcept;
+    juce::File getFreezeFile() const;
 
     void updateTracksToGhost();
     bool isSidechainSource() const;

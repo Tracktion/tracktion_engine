@@ -12,7 +12,7 @@ namespace tracktion_engine
 {
 
 struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
-                              private AsyncUpdater
+                              private juce::AsyncUpdater
 {
     ClipList (ClipTrack& ct, const juce::ValueTree& parentTree)
         : ValueTreeObjectList<Clip> (parentTree),
@@ -94,7 +94,7 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
     ClipTrack& clipTrack;
     std::unique_ptr<Edit::LoadFinishedCallback<ClipList>> editLoadedCallback;
 
-    void valueTreePropertyChanged (ValueTree& v, const juce::Identifier& id) override
+    void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& id) override
     {
         if (Clip::isClipState (v))
         {
@@ -111,7 +111,7 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
         sortClips (clipTrack.state, &clipTrack.edit.getUndoManager());
     }
 
-    static void sortClips (ValueTree& state, UndoManager* um)
+    static void sortClips (juce::ValueTree& state, juce::UndoManager* um)
     {
         struct Sorter
         {
@@ -175,7 +175,7 @@ struct ClipTrack::CollectionClipList  : public juce::ValueTree::Listener
         state.removeListener (this);
     }
 
-    void valueTreePropertyChanged (ValueTree& v, const juce::Identifier& id) override
+    void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& id) override
     {
         if (id == IDs::groupID)
         {
@@ -226,7 +226,7 @@ struct ClipTrack::CollectionClipList  : public juce::ValueTree::Listener
         }
     }
 
-    void valueTreeChildAdded (ValueTree&, juce::ValueTree& child) override
+    void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree& child) override
     {
         if (Clip::isClipState (child))
         {
@@ -243,7 +243,7 @@ struct ClipTrack::CollectionClipList  : public juce::ValueTree::Listener
         }
     }
 
-    void valueTreeChildRemoved (ValueTree&, juce::ValueTree& child, int) override
+    void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree& child, int) override
     {
         if (Clip::isClipState (child))
         {
@@ -296,13 +296,13 @@ struct ClipTrack::CollectionClipList  : public juce::ValueTree::Listener
         ct.trackItemsDirty = true;
     }
 
-    void valueTreeChildOrderChanged (ValueTree&, int, int) override {}
-    void valueTreeParentChanged (ValueTree&) override {}
+    void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override {}
+    void valueTreeParentChanged (juce::ValueTree&) override {}
 
     ClipTrack& ct;
     juce::ValueTree& state;
 
-    ReferenceCountedArray<CollectionClip> collectionClips;
+    juce::ReferenceCountedArray<CollectionClip> collectionClips;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CollectionClipList)
 };
@@ -453,7 +453,7 @@ double ClipTrack::getLengthIncludingInputTracks() const
 
     for (auto t : getAudioTracks (edit))
         if (t != this && t->getOutput().getDestinationTrack() == this)
-            l = jmax (l, t->getLengthIncludingInputTracks());
+            l = std::max (l, t->getLengthIncludingInputTracks());
 
     return l;
 }
@@ -504,7 +504,8 @@ void ClipTrack::removeCollectionClip (CollectionClip* cc)
 }
 
 //==============================================================================
-static void updateClipState (ValueTree& state, const juce::String& name, EditItemID itemID, ClipPosition position)
+static void updateClipState (juce::ValueTree& state, const juce::String& name,
+                             EditItemID itemID, ClipPosition position)
 {
     addValueTreeProperties (state,
                             IDs::name, name,
@@ -515,7 +516,8 @@ static void updateClipState (ValueTree& state, const juce::String& name, EditIte
     itemID.writeID (state, nullptr);
 }
 
-static juce::ValueTree createNewClipState (const juce::String& name, TrackItem::Type type, EditItemID itemID, ClipPosition position)
+static juce::ValueTree createNewClipState (const juce::String& name, TrackItem::Type type,
+                                           EditItemID itemID, ClipPosition position)
 {
     juce::ValueTree state (TrackItem::clipTypeToXMLType (type));
     updateClipState (state, name, itemID, position);
@@ -643,7 +645,7 @@ Clip* ClipTrack::insertClipWithState (const juce::ValueTree& stateToUse, const j
     if (auto newClip = insertClipWithState (newState))
     {
         if (allowSpottingAdjustment)
-            newClip->setStart (jmax (0.0, newClip->getPosition().getStart() - newClip->getSpottingPoint()), false, false);
+            newClip->setStart (std::max (0.0, newClip->getPosition().getStart() - newClip->getSpottingPoint()), false, false);
 
         return newClip;
     }
@@ -837,7 +839,7 @@ inline juce::String incrementLastDigit (const juce::String& in)
 
     for (int i = in.length(); --i >= 0;)
     {
-        if (CharacterFunctions::isDigit (in[i]))
+        if (juce::CharacterFunctions::isDigit (in[i]))
             digitCount++;
         else
             break;
@@ -846,7 +848,8 @@ inline juce::String incrementLastDigit (const juce::String& in)
     if (digitCount == 0)
         return in + " 2";
 
-    return in.dropLastCharacters (digitCount) + String (in.getTrailingIntValue() + 1);
+    return in.dropLastCharacters (digitCount)
+            + juce::String (in.getTrailingIntValue() + 1);
 }
 
 Clip* ClipTrack::splitClip (Clip& clip, const double time)
@@ -884,8 +887,8 @@ Clip* ClipTrack::splitClip (Clip& clip, const double time)
                     auto id = edit.getMarkerManager().getNextUniqueID (mc1->getMarkerID());
                     mc2->setMarkerID (id);
 
-                    if (mc1->getName() == (TRANS("Marker") + " " + String (mc1->getMarkerID())))
-                        mc2->setName (TRANS("Marker") + " " + String (id));
+                    if (mc1->getName() == (TRANS("Marker") + " " + juce::String (mc1->getMarkerID())))
+                        mc2->setName (TRANS("Marker") + " " + juce::String (id));
                     else
                         mc2->setName (incrementLastDigit (mc1->getName()));
                 }
@@ -894,7 +897,8 @@ Clip* ClipTrack::splitClip (Clip& clip, const double time)
             // fiddle with offsets for looped clips
             if (newClip->getLoopLengthBeats() > 0)
             {
-                auto extra = roundToInt (std::floor (newClip->getOffsetInBeats() / newClip->getLoopLengthBeats() + 0.00001));
+                auto extra = juce::roundToInt (std::floor (newClip->getOffsetInBeats()
+                                                            / newClip->getLoopLengthBeats() + 0.00001));
 
                 if (extra != 0)
                 {

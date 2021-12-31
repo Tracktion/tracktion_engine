@@ -26,17 +26,17 @@ PluginRenderContext::PluginRenderContext (juce::AudioBuffer<float>* buffer,
 {}
 
 //==============================================================================
-Plugin::Wire::Wire (const juce::ValueTree& v, UndoManager* um)  : state (v)
+Plugin::Wire::Wire (const juce::ValueTree& v, juce::UndoManager* um)  : state (v)
 {
     sourceChannelIndex.referTo (state, IDs::srcChan, um);
     destChannelIndex.referTo (state, IDs::dstChan, um);
 }
 
-struct Plugin::WireList : public ValueTreeObjectList<Plugin::Wire, CriticalSection>,
-                          private AsyncUpdater
+struct Plugin::WireList : public ValueTreeObjectList<Plugin::Wire, juce::CriticalSection>,
+                          private juce::AsyncUpdater
 {
     WireList (Plugin& p, const juce::ValueTree& parentTree)
-       : ValueTreeObjectList<Wire, CriticalSection> (parentTree), plugin (p)
+       : ValueTreeObjectList<Wire, juce::CriticalSection> (parentTree), plugin (p)
     {
         rebuildObjects();
     }
@@ -53,7 +53,7 @@ struct Plugin::WireList : public ValueTreeObjectList<Plugin::Wire, CriticalSecti
     void newObjectAdded (Wire*) override                    { triggerAsyncUpdate(); }
     void objectRemoved (Wire*) override                     { triggerAsyncUpdate(); }
     void objectOrderChanged() override                      {}
-    void valueTreePropertyChanged (ValueTree&, const juce::Identifier&) override  { triggerAsyncUpdate(); }
+    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override  { triggerAsyncUpdate(); }
 
     void handleAsyncUpdate() override                       { plugin.changed(); }
 
@@ -102,7 +102,7 @@ Plugin::Plugin (PluginCreationInfo info)
         Plugin::WeakRef ref (this);
         auto& e = engine;
 
-        MessageManager::callAsync ([=, &e]() mutable
+        juce::MessageManager::callAsync ([=, &e]() mutable
         {
             if (auto plugin = dynamic_cast<Plugin*> (ref.get()))
                 if (auto na = e.getExternalControllerManager().getAutomap())
@@ -114,8 +114,8 @@ Plugin::Plugin (PluginCreationInfo info)
     windowState->windowLocked = state [IDs::windowLocked];
 
     if (state.hasProperty (IDs::windowX))
-        windowState->lastWindowBounds = Rectangle<int> (state[IDs::windowX],
-                                                        state[IDs::windowY], 1, 1);
+        windowState->lastWindowBounds = juce::Rectangle<int> (state[IDs::windowX],
+                                                              state[IDs::windowY], 1, 1);
 }
 
 Plugin::~Plugin()
@@ -173,7 +173,7 @@ juce::ValueTree Plugin::getConnectionsTree()
     return p;
 }
 
-void Plugin::makeConnection (int srcChannel, int dstChannel, UndoManager* um)
+void Plugin::makeConnection (int srcChannel, int dstChannel, juce::UndoManager* um)
 {
     if (sidechainWireList != nullptr)
         for (auto w : sidechainWireList->objects)
@@ -324,7 +324,7 @@ juce::StringArray Plugin::getInputChannelNames()
     return ins;
 }
 
-UndoManager* Plugin::getUndoManager() const noexcept
+juce::UndoManager* Plugin::getUndoManager() const noexcept
 {
     return &edit.getUndoManager();
 }
@@ -373,7 +373,7 @@ bool Plugin::isClipEffectPlugin() const
     return isClipEffect;
 }
 
-void Plugin::valueTreePropertyChanged (ValueTree&, const juce::Identifier& i)
+void Plugin::valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier& i)
 {
     if (i == IDs::process)
         processingChanged();
@@ -386,7 +386,7 @@ void Plugin::valueTreeChanged()
     changed();
 }
 
-void Plugin::valueTreeChildAdded (ValueTree&, juce::ValueTree& c)
+void Plugin::valueTreeChildAdded (juce::ValueTree&, juce::ValueTree& c)
 {
     if (c.getType() == IDs::SIDECHAINCONNECTIONS)
         sidechainWireList.reset (new WireList (*this, c));
@@ -394,7 +394,7 @@ void Plugin::valueTreeChildAdded (ValueTree&, juce::ValueTree& c)
     valueTreeChanged();
 }
 
-void Plugin::valueTreeChildRemoved (ValueTree&, juce::ValueTree& c, int)
+void Plugin::valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree& c, int)
 {
     if (c.getType() == IDs::SIDECHAINCONNECTIONS)
         sidechainWireList = nullptr;
@@ -460,7 +460,7 @@ void Plugin::baseClassInitialise (const PluginInitialisationInfo& info)
 
     {
         auto& dm = engine.getDeviceManager();
-        const ScopedLock sl (dm.deviceManager.getAudioCallbackLock());
+        const juce::ScopedLock sl (dm.deviceManager.getAudioCallbackLock());
 
         if (initialiseCount++ == 0 || sampleRateOrBlockSizeChanged)
         {
@@ -580,7 +580,7 @@ AutomatableParameter* Plugin::addParam (const juce::String& paramID, const juce:
 
 AutomatableParameter* Plugin::addParam (const juce::String& paramID, const juce::String& name,
                                         juce::NormalisableRange<float> valueRange,
-                                        std::function<String(float)> valueToStringFn,
+                                        std::function<juce::String(float)> valueToStringFn,
                                         std::function<float(const juce::String&)> stringToValueFn)
 {
     auto p = addParam (paramID, name, valueRange);

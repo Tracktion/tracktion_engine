@@ -42,7 +42,7 @@ namespace tracktion_engine
 {
 
 //=============================================================================
-class AutoMap   : private AsyncUpdater
+class AutoMap   : private juce::AsyncUpdater
 {
 public:
     AutoMap (NovationAutomap& n) : novationAutomap (n) {}
@@ -62,7 +62,7 @@ public:
         if (! inSetParamValue)
         {
             {
-                const ScopedLock sl (dirtyParamLock);
+                const juce::ScopedLock sl (dirtyParamLock);
                 dirtyParams.add (param);
             }
 
@@ -73,15 +73,15 @@ public:
     void handleAsyncUpdate()
     {
         CRASH_TRACER
-        Array<AutomatableParameter*> params;
+        juce::Array<AutomatableParameter*> params;
 
         {
-            const ScopedLock sl (dirtyParamLock);
+            const juce::ScopedLock sl (dirtyParamLock);
             params.swapWith (dirtyParams);
         }
 
-        for (int i = 0; i < params.size(); ++i)
-            paramChanged (params.getUnchecked (i));
+        for (auto* p : params)
+            paramChanged (p);
     }
 
     Automap::Connection* getConnection()
@@ -92,14 +92,15 @@ public:
     NovationAutomap& novationAutomap;
     Automap::Connection* connection = nullptr;
 
-    CriticalSection dirtyParamLock;
-    Array<AutomatableParameter*> dirtyParams;
+    juce::CriticalSection dirtyParamLock;
+    juce::Array<AutomatableParameter*> dirtyParams;
 
     bool inSetParamValue = false;
 };
 
 //=============================================================================
-static bool fillInParamInfo (Automap::ParamInfo& data, int min, int max, int step, const char* name, int trackNum = -1, bool folderPrefix = false)
+static bool fillInParamInfo (Automap::ParamInfo& data, int min, int max, int step,
+                             const char* name, int trackNum = -1, bool folderPrefix = false)
 {
     data.minInteger = min;
     data.maxInteger = max;
@@ -112,7 +113,8 @@ static bool fillInParamInfo (Automap::ParamInfo& data, int min, int max, int ste
     return true;
 }
 
-static bool fillInTrackParamInfo (Track* t, juce::StringRef name, Automap::ParamInfo& data, int min, int max, int step, bool folderPrefix = false)
+static bool fillInTrackParamInfo (Track* t, juce::StringRef name, Automap::ParamInfo& data,
+                                  int min, int max, int step, bool folderPrefix = false)
 {
     if (auto at = dynamic_cast<AudioTrack*> (t))
         return fillInParamInfo (data, min, max, step, name, at->getAudioTrackNumber());
@@ -126,7 +128,7 @@ static bool fillInTrackParamInfo (Track* t, juce::StringRef name, Automap::Param
 //=============================================================================
 class HostAutoMap : public AutoMap,
                     public Automap::Client,
-                    public MultiTimer
+                    public juce::MultiTimer
 {
 public:
     HostAutoMap (NovationAutomap& n) : AutoMap (n)
@@ -162,12 +164,12 @@ public:
         stopTimer (1);
     }
 
-    void GetMfr (char* mfr) const override                  { String ("Tracktion Software Corporation Inc.").copyToUTF8 (mfr, AUTOMAP_NAME_LENGTH); }
-    void GetName (char* name) const override                { String ("Tracktion").copyToUTF8 (name, AUTOMAP_NAME_LENGTH); }
-    void GetType (char* type) const override                { String ("Mixer").copyToUTF8 (type, AUTOMAP_NAME_LENGTH); }
+    void GetMfr (char* mfr) const override                  { juce::String ("Tracktion Software Corporation Inc.").copyToUTF8 (mfr, AUTOMAP_NAME_LENGTH); }
+    void GetName (char* name) const override                { juce::String ("Tracktion").copyToUTF8 (name, AUTOMAP_NAME_LENGTH); }
+    void GetType (char* type) const override                { juce::String ("Mixer").copyToUTF8 (type, AUTOMAP_NAME_LENGTH); }
     Automap::GUID GetGUID() const override                  { return Automap::GUID ("{850A73BE-CF55-4C4E-95CF-698F0D789280}"); }
-    void GetSaveName (char* name) const override            { String ("Tracktion").copyToUTF8 (name, AUTOMAP_NAME_LENGTH); }
-    void GetInstanceName (char* name) const override        { String ("Tracktion").copyToUTF8 (name, AUTOMAP_NAME_LENGTH); }
+    void GetSaveName (char* name) const override            { juce::String ("Tracktion").copyToUTF8 (name, AUTOMAP_NAME_LENGTH); }
+    void GetInstanceName (char* name) const override        { juce::String ("Tracktion").copyToUTF8 (name, AUTOMAP_NAME_LENGTH); }
     void SaveInstanceName (const char*) override            {}
     int GetNumParams() const override                       { return params.size(); }
 
@@ -281,7 +283,7 @@ public:
     void SetParamValue (int idx, float value) override
     {
         CRASH_TRACER
-        ScopedValueSetter<bool> sv (inSetParamValue, true, false);
+        juce::ScopedValueSetter<bool> sv (inSetParamValue, true, false);
 
         if (auto p = params[idx])
         {
@@ -602,7 +604,7 @@ private:
 //=============================================================================
 class PluginAutoMap : public AutoMap,
                       public Automap::Client,
-                      private Timer
+                      private juce::Timer
 {
 public:
     PluginAutoMap (NovationAutomap& na, Plugin& p)
@@ -646,14 +648,14 @@ public:
     void GetType (char* type) const override
     {
         if (auto ep = dynamic_cast<ExternalPlugin*> (plugin.get()))
-            String (ep->isSynth() ? "VSTi" : "VST").copyToUTF8 (type, AUTOMAP_NAME_LENGTH);
+            juce::String (ep->isSynth() ? "VSTi" : "VST").copyToUTF8 (type, AUTOMAP_NAME_LENGTH);
         else
-            String ("Native").copyToUTF8 (type, AUTOMAP_NAME_LENGTH);
+            juce::String ("Native").copyToUTF8 (type, AUTOMAP_NAME_LENGTH);
     }
 
     Automap::GUID GetGUID() const override
     {
-        String guid = novationAutomap.guids[getPluginString()];
+        juce::String guid = novationAutomap.guids[getPluginString()];
 
         if (guid.isNotEmpty())
             return Automap::GUID (guid.toUTF8());
@@ -671,19 +673,19 @@ public:
         return g;
     }
 
-    String getPluginString() const
+    juce::String getPluginString() const
     {
         if (auto ep = dynamic_cast<ExternalPlugin*> (plugin.get()))
             return ep->getFile().getFileNameWithoutExtension();
 
         auto* f = plugin.get();
-        return String (typeid (*f).name());
+        return juce::String (typeid (*f).name());
     }
 
     void GetSaveName (char* name) const override
     {
         if (auto t = plugin->getOwnerTrack())
-            String (plugin->getName() + " [" + t->getName() + "]").copyToUTF8 (name, AUTOMAP_NAME_LENGTH);
+            juce::String (plugin->getName() + " [" + t->getName() + "]").copyToUTF8 (name, AUTOMAP_NAME_LENGTH);
         else
             plugin->getName().copyToUTF8 (name, AUTOMAP_NAME_LENGTH);
     }
@@ -691,7 +693,7 @@ public:
     void GetInstanceName (char* name) const override
     {
         if (auto t = plugin->getOwnerTrack())
-            String (plugin->getName() + " [" + t->getName() + "]").copyToUTF8 (name, AUTOMAP_NAME_LENGTH);
+            juce::String (plugin->getName() + " [" + t->getName() + "]").copyToUTF8 (name, AUTOMAP_NAME_LENGTH);
         else
             plugin->getName().copyToUTF8 (name, AUTOMAP_NAME_LENGTH);
     }
@@ -731,7 +733,7 @@ public:
     {
         CRASH_TRACER
 
-        ScopedValueSetter<bool> sv (inSetParamValue, true, false);
+        juce::ScopedValueSetter<bool> sv (inSetParamValue, true, false);
 
         if (auto p = plugin->getAutomatableParameter (idx))
             p->midiControllerMoved (value);
@@ -867,7 +869,7 @@ NovationAutomap::NovationAutomap (ExternalControllerManager& ecm)  : ControlSurf
     keys.addTokens (engine.getPropertyStorage().getProperty (SettingID::automapGuids1).toString(), ";", {});
     values.addTokens (engine.getPropertyStorage().getProperty (SettingID::automapGuids2).toString(), ";", {});
 
-    for (int i = 0; i < jmin (keys.size(), values.size()); ++i)
+    for (int i = 0; i < std::min (keys.size(), values.size()); ++i)
         guids.set (keys[i], values[i]);
 }
 
@@ -966,7 +968,7 @@ void NovationAutomap::createAllPluginAutomaps()
     }
 }
 
-void NovationAutomap::changeListenerCallback (ChangeBroadcaster*)
+void NovationAutomap::changeListenerCallback (juce::ChangeBroadcaster*)
 {
     if (enabled)
     {
@@ -1052,7 +1054,7 @@ void NovationAutomap::save (Edit& edit)
         char buf[128] = { 0 };
         instanceGuid.ToString(buf);
 
-        state.setProperty (IDs::guid, String (buf), nullptr);
+        state.setProperty (IDs::guid, juce::String (buf), nullptr);
 
         hostAutomap->getConnection()->SaveInstanceGUID (instanceGuid);
     }
@@ -1071,15 +1073,15 @@ void NovationAutomap::load (Edit& edit)
         hostAutomap->getConnection()->LoadInstanceGUID (getGUID (edit));
 }
 
-void NovationAutomap::shutDownDevice()                          {}
-void NovationAutomap::updateMiscFeatures()                      {}
-void NovationAutomap::acceptMidiMessage (const MidiMessage&)    {}
-void NovationAutomap::moveFader (int, float)                    {}
-void NovationAutomap::moveMasterLevelFader (float, float)       {}
-void NovationAutomap::movePanPot (int, float)                   {}
-void NovationAutomap::moveAux (int, const char*, float)         {}
-void NovationAutomap::clearAux (int)                            {}
-void NovationAutomap::soloCountChanged (bool)                   {}
+void NovationAutomap::shutDownDevice()                             {}
+void NovationAutomap::updateMiscFeatures()                         {}
+void NovationAutomap::acceptMidiMessage (const juce::MidiMessage&) {}
+void NovationAutomap::moveFader (int, float)                       {}
+void NovationAutomap::moveMasterLevelFader (float, float)          {}
+void NovationAutomap::movePanPot (int, float)                      {}
+void NovationAutomap::moveAux (int, const char*, float)            {}
+void NovationAutomap::clearAux (int)                               {}
+void NovationAutomap::soloCountChanged (bool)                      {}
 
 void NovationAutomap::updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState state, bool isBright)
 {
@@ -1136,7 +1138,7 @@ void NovationAutomap::clearParameter (int)                      {}
 void NovationAutomap::markerChanged (int, const MarkerSetting&) {}
 void NovationAutomap::clearMarker (int)                         {}
 void NovationAutomap::auxBankChanged (int)                      {}
-bool NovationAutomap::wantsMessage (const MidiMessage&)         { return false; }
+bool NovationAutomap::wantsMessage (const juce::MidiMessage&)   { return false; }
 bool NovationAutomap::eatsAllMessages()                         { return false; }
 bool NovationAutomap::canSetEatsAllMessages()                   { return false; }
 void NovationAutomap::setEatsAllMessages (bool)                 {}

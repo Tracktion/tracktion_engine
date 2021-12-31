@@ -97,9 +97,9 @@ Track* findTrackForID (const Edit& edit, EditItemID id)
     return findTrackForPredicate (edit, [id] (Track& t) { return t.itemID == id; });
 }
 
-Array<Track*> findTracksForIDs (const Edit& edit, Array<EditItemID> ids)
+juce::Array<Track*> findTracksForIDs (const Edit& edit, const juce::Array<EditItemID>& ids)
 {
-    Array<Track*> tracks;
+    juce::Array<Track*> tracks;
 
     edit.visitAllTracksRecursive ([&] (Track& t)
                                   {
@@ -138,7 +138,7 @@ TrackOutput* getTrackOutput (Track& track)
     return {};
 }
 
-juce::BigInteger toBitSet (const Array<Track*>& tracks)
+juce::BigInteger toBitSet (const juce::Array<Track*>& tracks)
 {
     juce::BigInteger bitset;
     
@@ -156,7 +156,7 @@ juce::BigInteger toBitSet (const Array<Track*>& tracks)
 
 juce::Array<Track*> toTrackArray (Edit& edit, const juce::BigInteger& tracksToAdd)
 {
-    Array<Track*> tracks;
+    juce::Array<Track*> tracks;
 
     auto allTracks = getAllTracks (edit);
 
@@ -411,7 +411,7 @@ void deleteRegionOfTracks (Edit& edit, EditTimeRange rangeToDelete, bool onlySel
             t->deleteRegion (rangeToDelete, selectionManager);
 
             // Remove any tiny clips that might be left over
-            Array<Clip*> clipsToRemove;
+            juce::Array<Clip*> clipsToRemove;
 
             for (auto& c : t->getClips())
                 if (c->getPosition().getLength() < 0.0001)
@@ -802,7 +802,7 @@ bool areAnyPluginsMissing (const Edit& edit)
 
 juce::Array<RackInstance*> getRackInstancesInEditForType (const RackType& rt)
 {
-    Array<RackInstance*> instances;
+    juce::Array<RackInstance*> instances;
 
     for (auto p : getAllPlugins (rt.edit, false))
         if (auto ri = dynamic_cast<RackInstance*> (p))

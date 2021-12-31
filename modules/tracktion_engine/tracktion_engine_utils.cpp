@@ -54,8 +54,6 @@ extern "C" char MacGetMacFSRefForREXDLL (FSRef* fsRef)
 #endif
 
 //==============================================================================
-using namespace juce;
-
 #include "selection/tracktion_Clipboard.cpp"
 #include "selection/tracktion_SelectionManager.cpp"
 

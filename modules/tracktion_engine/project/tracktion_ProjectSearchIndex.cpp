@@ -13,44 +13,38 @@ namespace tracktion_engine
 
 struct IndexedWord
 {
-    String word;
-    int numIDs;
-    HeapBlock<int> ids;
+    juce::String word;
+    std::vector<int> ids;
 
-    IndexedWord (InputStream& in)  : word (in.readString())
+    IndexedWord (juce::InputStream& in)  : word (in.readString())
     {
-        numIDs = in.readShort();
-        ids.malloc ((size_t) numIDs);
-        in.read (ids, (int) sizeof (int) * numIDs);
+        auto numIDs = in.readShort();
+        ids.resize ((size_t) numIDs);
+        in.read (ids.data(), (int) sizeof (int) * numIDs);
     }
 
-    IndexedWord (const juce::String& w, int mid) : word (w), numIDs (1)
+    IndexedWord (const juce::String& w, int id) : word (w)
     {
-        ids.malloc (1);
-        *ids = mid;
+        ids.push_back (id);
     }
 
-    void writeToStream (OutputStream& out)
+    void writeToStream (juce::OutputStream& out)
     {
         out.writeString (word);
-        out.writeShort ((short) numIDs);
-        out.write (ids, (size_t) numIDs * sizeof (int));
+        out.writeShort ((short) ids.size());
+        out.write (ids.data(), ids.size() * sizeof (int));
     }
 
-    void addMediaId (int mid)
+    void addID (int id)
     {
-        for (int i = numIDs; --i >= 0;)
-            if (ids[i] == mid)
+        for (auto i : ids)
+            if (i == id)
                 return;
 
-        if (numIDs > 32766)
-        {
-            jassertfalse;
+        if (ids.size() > 32766)
             return;
-        }
 
-        ids.realloc ((size_t) ++numIDs);
-        ids[numIDs - 1] = mid;
+        ids.push_back (id);
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (IndexedWord)
@@ -104,7 +98,7 @@ void ProjectSearchIndex::addClip (const ProjectItem::Ptr& item)
             {
                 if (auto w = findWordMatch (word))
                 {
-                    w->addMediaId (item->getID().getItemID());
+                    w->addID (item->getID().getItemID());
                 }
                 else
                 {
@@ -118,7 +112,7 @@ void ProjectSearchIndex::addClip (const ProjectItem::Ptr& item)
     }
 }
 
-void ProjectSearchIndex::writeToStream (OutputStream& out)
+void ProjectSearchIndex::writeToStream (juce::OutputStream& out)
 {
     out.writeInt (index.size());
 
@@ -126,7 +120,7 @@ void ProjectSearchIndex::writeToStream (OutputStream& out)
         i->writeToStream (out);
 }
 
-void ProjectSearchIndex::readFromStream (InputStream& in)
+void ProjectSearchIndex::readFromStream (juce::InputStream& in)
 {
     index.clear();
 
@@ -163,7 +157,7 @@ IndexedWord* ProjectSearchIndex::findWordMatch (const juce::String& word) const
     return {};
 }
 
-void ProjectSearchIndex::findMatches (SearchOperation& search, Array<ProjectItemID>& results)
+void ProjectSearchIndex::findMatches (SearchOperation& search, juce::Array<ProjectItemID>& results)
 {
     for (auto& res : search.getMatches (*this))
         results.add (ProjectItemID (res, project.getProjectID()));
@@ -184,25 +178,25 @@ struct WordMatchOperation : public SearchOperation
 {
     WordMatchOperation (const juce::String& w) : word (w.toLowerCase().trim()) {}
 
-    Array<int> getMatches (ProjectSearchIndex& psi) override
+    juce::Array<int> getMatches (ProjectSearchIndex& psi) override
     {
-        Array<int> found;
+        juce::Array<int> found;
 
         if (auto w = psi.findWordMatch (word))
-            for (int j = 0; j < w->numIDs; ++j)
-                found.add (w->ids[j]);
+            for (auto id : w->ids)
+                found.add (id);
 
         return found;
     }
 
-    String word;
+    juce::String word;
 };
 
 struct OrOperation : public SearchOperation
 {
     OrOperation (SearchOperation* a, SearchOperation* b)  : SearchOperation (a, b) {}
 
-    Array<int> getMatches (ProjectSearchIndex& psi) override
+    juce::Array<int> getMatches (ProjectSearchIndex& psi) override
     {
         auto i1 = in1->getMatches (psi);
         auto i2 = in2->getMatches (psi);
@@ -224,7 +218,7 @@ struct AndOperation : public SearchOperation
 {
     AndOperation (SearchOperation* a, SearchOperation* b) : SearchOperation (a, b) {}
 
-    Array<int> getMatches (ProjectSearchIndex& psi) override
+    juce::Array<int> getMatches (ProjectSearchIndex& psi) override
     {
         auto i1 = in1->getMatches (psi);
 
@@ -245,9 +239,9 @@ struct NotOperation : public SearchOperation
 {
     NotOperation (SearchOperation* in) : SearchOperation (in, nullptr) {}
 
-    Array<int> getMatches (ProjectSearchIndex& psi)
+    juce::Array<int> getMatches (ProjectSearchIndex& psi)
     {
-        Array<int> i1;
+        juce::Array<int> i1;
 
         i1 = psi.project.getAllItemIDs();
         i1.removeValuesIn (in1->getMatches (psi));
@@ -258,7 +252,7 @@ struct NotOperation : public SearchOperation
 
 struct FalseOperation  : public SearchOperation
 {
-    Array<int> getMatches (ProjectSearchIndex&) override
+    juce::Array<int> getMatches (ProjectSearchIndex&) override
     {
         return {};
     }
@@ -397,7 +391,7 @@ SearchOperation* createSearchForKeywords (const juce::String& keywords)
     auto k = keywords.toLowerCase()
                 .replace ("-", " " + TRANS("Not") + " ")
                 .replace ("+", " " + TRANS("And") + " ")
-                .retainCharacters (CharPointer_UTF8 ("abcdefghijklmnopqrstuvwxyz0123456789\xc3\xa0\xc3\xa1\xc3\xa2\xc3\xa3\xc3\xa4\xc3\xa5\xc3\xa6\xc3\xa7\xc3\xa8\xc3\xa9\xc3\xaa\xc3\xab\xc3\xac\xc3\xad\xc3\xae\xc3\xaf\xc3\xb0\xc3\xb1\xc3\xb2\xc3\xb3\xc3\xb4\xc3\xb5\xc3\xb6\xc3\xb8\xc3\xb9\xc3\xba\xc3\xbb\xc3\xbc\xc3\xbd\xc3\xbf\xc3\x9f"))
+                .retainCharacters (juce::CharPointer_UTF8 ("abcdefghijklmnopqrstuvwxyz0123456789\xc3\xa0\xc3\xa1\xc3\xa2\xc3\xa3\xc3\xa4\xc3\xa5\xc3\xa6\xc3\xa7\xc3\xa8\xc3\xa9\xc3\xaa\xc3\xab\xc3\xac\xc3\xad\xc3\xae\xc3\xaf\xc3\xb0\xc3\xb1\xc3\xb2\xc3\xb3\xc3\xb4\xc3\xb5\xc3\xb6\xc3\xb8\xc3\xb9\xc3\xba\xc3\xbb\xc3\xbc\xc3\xbd\xc3\xbf\xc3\x9f"))
                 .trim();
 
     juce::StringArray words;

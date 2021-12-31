@@ -31,8 +31,8 @@ const char* ChorusPlugin::xmlTypeName = "chorus";
 void ChorusPlugin::initialise (const PluginInitialisationInfo& info)
 {
     const float delayMs = 20.0f;
-    const int maxLengthMs = 1 + roundToInt (delayMs + depthMs);
-    int bufferSizeSamples = roundToInt ((maxLengthMs * info.sampleRate) / 1000.0);
+    auto maxLengthMs = 1 + juce::roundToInt (delayMs + depthMs);
+    auto bufferSizeSamples = juce::roundToInt ((maxLengthMs * info.sampleRate) / 1000.0);
     delayBuffer.ensureMaxBufferSize (bufferSizeSamples);
     delayBuffer.clearBuffer();
     phase = 0.0f;
@@ -57,8 +57,8 @@ void ChorusPlugin::applyToBuffer (const PluginRenderContext& fc)
     const float minSweepSamples = (float) ((delayMs * sampleRate) / 1000.0);
     const float maxSweepSamples = (float) (((delayMs + depthMs) * sampleRate) / 1000.0);
     const float speed = (float)((juce::MathConstants<double>::pi * 2.0) / (sampleRate / speedHz));
-    const int maxLengthMs = 1 + roundToInt (delayMs + depthMs);
-    const int lengthInSamples = roundToInt ((maxLengthMs * sampleRate) / 1000.0);
+    const int maxLengthMs = 1 + juce::roundToInt (delayMs + depthMs);
+    const int lengthInSamples = juce::roundToInt ((maxLengthMs * sampleRate) / 1000.0);
 
     delayBuffer.ensureMaxBufferSize (lengthInSamples);
 
@@ -70,7 +70,7 @@ void ChorusPlugin::applyToBuffer (const PluginRenderContext& fc)
 
     clearChannels (*fc.destBuffer, 2, -1, fc.bufferStartSample, fc.bufferNumSamples);
 
-    for (int chan = jmin (2, fc.destBuffer->getNumChannels()); --chan >= 0;)
+    for (int chan = std::min (2, fc.destBuffer->getNumChannels()); --chan >= 0;)
     {
         float* const d = fc.destBuffer->getWritePointer (chan, fc.bufferStartSample);
         float* const buf = (float*) delayBuffer.buffers[chan].getData();
@@ -88,7 +88,7 @@ void ChorusPlugin::applyToBuffer (const PluginRenderContext& fc)
             const float sweep = lfoOffset + lfoFactor * sinf (ph);
             ph += speed;
 
-            int intSweepPos = roundToInt (sweep);
+            int intSweepPos = juce::roundToInt (sweep);
             const float interp = sweep - intSweepPos;
             intSweepPos = bufPos + lengthInSamples - intSweepPos;
 
@@ -111,15 +111,15 @@ void ChorusPlugin::applyToBuffer (const PluginRenderContext& fc)
     zeroDenormalisedValuesIfNeeded (*fc.destBuffer);
 
     phase = ph;
-    if (phase >= MathConstants<float>::pi * 2)
-        phase -= MathConstants<float>::pi * 2;
+    if (phase >= juce::MathConstants<float>::pi * 2)
+        phase -= juce::MathConstants<float>::pi * 2;
 
     delayBuffer.bufferPos = bufPos;
 }
 
 void ChorusPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    CachedValue<float>* cvsFloat[] = { &depthMs, &width, &mixProportion, &speedHz, nullptr };
+    juce::CachedValue<float>* cvsFloat[] = { &depthMs, &width, &mixProportion, &speedHz, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
 
     for (auto p : getAutomatableParameters())

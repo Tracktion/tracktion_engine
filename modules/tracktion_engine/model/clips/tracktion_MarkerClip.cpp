@@ -31,7 +31,7 @@ void MarkerClip::initialise()
         markerID = edit.getMarkerManager().getNextUniqueID();
 
     if (clipName == TRANS("New Marker"))
-        clipName = TRANS("Marker") + " " + String (markerID);
+        clipName = TRANS("Marker") + " " + juce::String (markerID);
 
     speedRatio = 1.0; // not used
 }
@@ -43,13 +43,13 @@ juce::String MarkerClip::getSelectableDescription()
 
 juce::Colour MarkerClip::getDefaultColour() const
 {
-    return Colours::red.withHue (1.0f / 9.0f);
+    return juce::Colours::red.withHue (1.0f / 9.0f);
 }
 
 void MarkerClip::setMarkerID (int newID)
 {
-    if (getName() == (TRANS("Marker") + " " + String (markerID)))
-        setName (TRANS("Marker") + " " + String (newID));
+    if (getName() == (TRANS("Marker") + " " + juce::String (markerID)))
+        setName (TRANS("Marker") + " " + juce::String (newID));
 
     markerID = newID;
 }
@@ -60,7 +60,7 @@ bool MarkerClip::canGoOnTrack (Track& t)
     return t.isMarkerTrack();
 }
 
-void MarkerClip::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
+void MarkerClip::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)
 {
     if (v == state)
     {
@@ -83,8 +83,8 @@ juce::Colour MarkerClip::getColour() const
 {
     if (Clip::getColour() == getDefaultColour())
     {
-        if (isSyncAbsolute())   return Colours::red.withHue (0.0f);
-        if (isSyncBarsBeats())  return Colours::red.withHue (1.0f / 9.0f);
+        if (isSyncAbsolute())   return juce::Colours::red.withHue (0.0f);
+        if (isSyncBarsBeats())  return juce::Colours::red.withHue (1.0f / 9.0f);
     }
 
     return Clip::getColour();

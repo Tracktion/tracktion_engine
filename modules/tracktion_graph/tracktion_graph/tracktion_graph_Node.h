@@ -46,7 +46,7 @@
     - This might look like the following steps:
         - visitAcyclic (Visitor) [only visit nodes that it was constructed with, used to create the flat list]
         - initialise (const PlaybackInitialisationInfo&) [used to add extra connections and balance latency etc.]
-        - visitDFS (Visitor) [used to get list of nodes to process and can be called multiple times to optomise graph etc.]
+        - visitDFS (Visitor) [used to get list of nodes to process and can be called multiple times to optimise graph etc.]
  
     Avoiding incontinuities when latency changes:
     - One of the bg problems with this latency balancing approach is when the graph is rebuilt, any stateful buffers will be lost.

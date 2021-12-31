@@ -42,14 +42,14 @@ static juce::String findDefaultAliasNameNotClashingWithInputDevices (Engine& eng
     if (defaultAlias.length() <= maxLength)
         return defaultAlias;
 
-    String bracketed;
+    juce::String bracketed;
 
     if (defaultAlias.containsChar ('(') && defaultAlias.trim().endsWithChar (')'))
         bracketed = defaultAlias.fromLastOccurrenceOf ("(", false, false)
                                 .upToFirstOccurrenceOf (")", false, false)
                                 .trim();
 
-    defaultAlias = defaultAlias.substring (0, jmax (10, maxLength - bracketed.length())).trim();
+    defaultAlias = defaultAlias.substring (0, std::max (10, maxLength - bracketed.length())).trim();
     defaultAlias = defaultAlias.upToLastOccurrenceOf (" ", false, false).trim();
 
     if (bracketed.isNotEmpty())
@@ -121,9 +121,9 @@ juce::String InputDevice::getSelectableDescription()
     return name + " (" + type + ")";
 }
 
-void InputDevice::setRetrospectiveLock (Engine& e, const Array<InputDeviceInstance*>& devices, bool lock)
+void InputDevice::setRetrospectiveLock (Engine& e, const juce::Array<InputDeviceInstance*>& devices, bool lock)
 {
-    const ScopedLock sl (e.getDeviceManager().deviceManager.getAudioCallbackLock());
+    const juce::ScopedLock sl (e.getDeviceManager().deviceManager.getAudioCallbackLock());
 
     for (auto* idi : devices)
         idi->getInputDevice().retrospectiveRecordLock = lock;
@@ -156,7 +156,7 @@ InputDeviceInstance::~InputDeviceInstance()
 
 juce::Array<AudioTrack*> InputDeviceInstance::getTargetTracks() const
 {
-    WeakReference<InputDeviceInstance> ref (const_cast<InputDeviceInstance*> (this));
+    juce::WeakReference<InputDeviceInstance> ref (const_cast<InputDeviceInstance*> (this));
     trackDeviceEnabler.handleUpdateNowIfNeeded();
 
     if (ref.wasObjectDeleted())
@@ -174,13 +174,13 @@ juce::Array<AudioTrack*> InputDeviceInstance::getTargetTracks() const
 
 juce::Array<int> InputDeviceInstance::getTargetIndexes() const
 {
-    WeakReference<InputDeviceInstance> ref (const_cast<InputDeviceInstance*> (this));
+    juce::WeakReference<InputDeviceInstance> ref (const_cast<InputDeviceInstance*> (this));
     trackDeviceEnabler.handleUpdateNowIfNeeded();
 
     if (ref.wasObjectDeleted())
         return {};
     
-    Array<int> indexes;
+    juce::Array<int> indexes;
     
     if (owner.isEnabled())
         for (auto dest : destTracks)

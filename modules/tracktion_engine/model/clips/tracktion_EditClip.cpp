@@ -77,7 +77,7 @@ juce::String EditClip::getSelectableDescription()
 juce::File EditClip::getOriginalFile() const
 {
     jassert (editSnapshot == nullptr || editSnapshot->getFile() == sourceFileReference.getFile());
-    return editSnapshot != nullptr ? editSnapshot->getFile() : File();
+    return editSnapshot != nullptr ? editSnapshot->getFile() : juce::File();
 }
 
 void EditClip::setLoopDefaults()
@@ -131,10 +131,10 @@ juce::String EditClip::getRenderMessage()
         return {};
 
     auto numRenderingJobs = edit.engine.getRenderManager().getNumJobs();
-    String remainderMessage;
+    juce::String remainderMessage;
 
     if (numRenderingJobs > 0)
-        remainderMessage << " (" << String (numRenderingJobs) << " " << TRANS("remaining") << ")";
+        remainderMessage << " (" << juce::String (numRenderingJobs) << " " << TRANS("remaining") << ")";
 
     if (renderJob == nullptr)
         return TRANS("Rendering referenced Edits") + "..." + remainderMessage;
@@ -144,7 +144,7 @@ juce::String EditClip::getRenderMessage()
     if (progress <= 0.0f)
         return TRANS("Rendering referenced Edits") + "..." + remainderMessage;
 
-    return TRANS("Rendering Edit: ") + String (roundToInt (progress * 100.0f)) + "%";
+    return TRANS("Rendering Edit: ") + juce::String (juce::roundToInt (progress * 100.0f)) + "%";
 }
 
 juce::String EditClip::getClipMessage()
@@ -167,7 +167,7 @@ void EditClip::sourceMediaChanged()
     if (sourceMediaReEntrancyCheck)
         return;
 
-    const ScopedValueSetter<bool> svs (sourceMediaReEntrancyCheck, true);
+    const juce::ScopedValueSetter<bool> svs (sourceMediaReEntrancyCheck, true);
 
     auto newID = sourceFileReference.getSourceProjectItemID();
 
@@ -232,7 +232,7 @@ bool EditClip::isUsingFile (const AudioFile& af)
     return false;
 }
 
-void EditClip::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
+void EditClip::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)
 {
     if (v == state && i == IDs::renderEnabled)
     {
@@ -314,7 +314,7 @@ void EditClip::updateReferencedEdits()
 {
     CRASH_TRACER
 
-    ReferenceCountedArray<EditSnapshot> current, added, removed;
+    juce::ReferenceCountedArray<EditSnapshot> current, added, removed;
 
     if (editSnapshot != nullptr)
         current = editSnapshot->getNestedEditObjects();

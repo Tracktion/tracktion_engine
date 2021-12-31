@@ -22,8 +22,6 @@
 #include "playback/graph/tracktion_NodeRenderContext.h"
 #include "playback/graph/tracktion_EditNodeBuilder.h"
 
-using namespace juce;
-
 #include "model/tracks/tracktion_TrackUtils.cpp"
 #include "model/tracks/tracktion_Track.cpp"
 #include "model/tracks/tracktion_FolderTrack.cpp"

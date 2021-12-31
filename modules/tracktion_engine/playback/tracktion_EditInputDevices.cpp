@@ -91,9 +91,9 @@ InputDeviceInstance* EditInputDevices::getInputInstance (const AudioTrack& at, i
     return {};
 }
 
-Array<InputDeviceInstance*> EditInputDevices::getDevicesForTargetTrack (const AudioTrack& at) const
+juce::Array<InputDeviceInstance*> EditInputDevices::getDevicesForTargetTrack (const AudioTrack& at) const
 {
-    Array<InputDeviceInstance*> devices;
+    juce::Array<InputDeviceInstance*> devices;
 
     for (auto* idi : edit.getAllInputDevices())
         if (idi->isOnTargetTrack (at))
@@ -133,7 +133,7 @@ juce::ValueTree EditInputDevices::getInstanceStateForInputDevice (const InputDev
 void EditInputDevices::removeNonExistantInputDeviceStates()
 {
     auto& dm = edit.engine.getDeviceManager();
-    Array<InputDevice*> devices;
+    juce::Array<InputDevice*> devices;
     devices.addArray (dm.midiInputs);
     devices.addArray (dm.waveInputs);
 
@@ -204,7 +204,7 @@ InputDevice* EditInputDevices::getTrackDeviceForState (const juce::ValueTree& v)
     return {};
 }
 
-void EditInputDevices::changeListenerCallback (ChangeBroadcaster*)
+void EditInputDevices::changeListenerCallback (juce::ChangeBroadcaster*)
 {
     removeNonExistantInputDeviceStates();
 }

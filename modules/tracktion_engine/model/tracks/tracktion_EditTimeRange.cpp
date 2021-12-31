@@ -30,7 +30,7 @@ EditTimeRange EditTimeRange::between (double time1, double time2)
 EditTimeRange EditTimeRange::withStartAndLength (double startValue, double length)
 {
     jassert (length >= 0.0);
-    return Range<double>::withStartAndLength (startValue, length);
+    return juce::Range<double>::withStartAndLength (startValue, length);
 }
 
 EditTimeRange EditTimeRange::emptyRange (double start)
@@ -56,7 +56,8 @@ EditTimeRange EditTimeRange::constrainRange (EditTimeRange rangeToConstrain) con
 
     return getLength() <= otherLen
             ? *this
-            : rangeToConstrain.movedToStartAt (jlimit (start, end - otherLen, rangeToConstrain.getStart()));
+            : rangeToConstrain.movedToStartAt (juce::jlimit (start, end - otherLen,
+                                                             rangeToConstrain.getStart()));
 }
 
 EditTimeRange EditTimeRange::rescaled (double anchorTime, double factor) const

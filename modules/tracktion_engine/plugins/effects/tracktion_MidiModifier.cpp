@@ -17,9 +17,9 @@ MidiModifierPlugin::MidiModifierPlugin (PluginCreationInfo info) : Plugin (info)
                           { -getMaximumSemitones(), getMaximumSemitones() },
                           [] (float value)            { return std::abs (value) < 0.01f ? "(" + TRANS("Original pitch") + ")"
                                                                                         : getSemitonesAsString (value); },
-                          [] (const juce::String& s)  { return jlimit (-MidiModifierPlugin::getMaximumSemitones(),
-                                                                 MidiModifierPlugin::getMaximumSemitones(),
-                                                                 s.getFloatValue()); });
+                          [] (const juce::String& s)  { return juce::jlimit (-MidiModifierPlugin::getMaximumSemitones(),
+                                                                             MidiModifierPlugin::getMaximumSemitones(),
+                                                                             s.getFloatValue()); });
 
     semitonesValue.referTo (state, IDs::semitonesUp, getUndoManager());
     semitones->attachToCurrentValue (semitonesValue);
@@ -49,7 +49,7 @@ bool MidiModifierPlugin::needsConstantBufferSize()                              
 void MidiModifierPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     if (fc.bufferForMidiMessages != nullptr)
-        fc.bufferForMidiMessages->addToNoteNumbers (roundToInt (semitones->getCurrentValue()));
+        fc.bufferForMidiMessages->addToNoteNumbers (juce::roundToInt (semitones->getCurrentValue()));
 }
 
 juce::String MidiModifierPlugin::getSelectableDescription()
@@ -57,10 +57,9 @@ juce::String MidiModifierPlugin::getSelectableDescription()
     return TRANS("MIDI Modifier Plugin");
 }
 
-
 void MidiModifierPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    CachedValue<float>* cvsFloat[]  = { &semitonesValue, nullptr };
+    juce::CachedValue<float>* cvsFloat[]  = { &semitonesValue, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
 
     for (auto p : getAutomatableParameters())

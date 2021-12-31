@@ -384,9 +384,9 @@ private:
     void setupTextFunctions();
     AutomatableParameter* addParam (const juce::String& paramID, const juce::String& name, juce::NormalisableRange<float> valueRange, juce::String label = {});
 
-    void applyToBuffer (juce::AudioSampleBuffer& buffer, juce::MidiBuffer& midi);
-    void updateParams (juce::AudioSampleBuffer& buffer);
-    void applyEffects (juce::AudioSampleBuffer& buffer);
+    void applyToBuffer (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midi);
+    void updateParams (juce::AudioBuffer<float>& buffer);
+    void applyEffects (juce::AudioBuffer<float>& buffer);
     float paramValue (AutomatableParameter::Ptr param);
 
     TempoSequencePosition currentPos {edit.tempoSequence};

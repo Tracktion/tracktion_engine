@@ -34,7 +34,7 @@ void ParameterChangeHandler::parameterChanged (AutomatableParameter& parameter, 
          && ! fromAutomation
          && (edit.engine.getMidiLearnState().isActive() || parameterLearnActive))
     {
-        const ScopedLock sl (eventLock);
+        const juce::ScopedLock sl (eventLock);
         pendingActionId = -1;
         pendingParam = &parameter;
         sendChangeMessage();
@@ -43,13 +43,13 @@ void ParameterChangeHandler::parameterChanged (AutomatableParameter& parameter, 
 
 bool ParameterChangeHandler::isParameterPending() const noexcept
 {
-    const ScopedLock sl (eventLock);
+    const juce::ScopedLock sl (eventLock);
     return pendingParam != nullptr;
 }
 
 AutomatableParameter::Ptr ParameterChangeHandler::getPendingParam (bool consumeEvent) noexcept
 {
-    const ScopedLock sl (eventLock);
+    const juce::ScopedLock sl (eventLock);
     AutomatableParameter::Ptr paramToReturn (pendingParam);
 
     if (consumeEvent)
@@ -61,7 +61,7 @@ AutomatableParameter::Ptr ParameterChangeHandler::getPendingParam (bool consumeE
 //==============================================================================
 void ParameterChangeHandler::actionFunctionTriggered (int externalControllerID)
 {
-    const ScopedLock sl (eventLock);
+    const juce::ScopedLock sl (eventLock);
     pendingParam = nullptr;
     pendingActionId = externalControllerID;
     sendChangeMessage();
@@ -69,15 +69,15 @@ void ParameterChangeHandler::actionFunctionTriggered (int externalControllerID)
 
 bool ParameterChangeHandler::isActionFunctionPending() const noexcept
 {
-    const ScopedLock sl (eventLock);
+    const juce::ScopedLock sl (eventLock);
     return pendingActionId != -1;
 }
 
 int ParameterChangeHandler::getPendingActionFunctionId (bool consumeEvent) noexcept
 {
-    const ScopedLock sl (eventLock);
-    const ScopedValueSetter<int> actionResetter (pendingActionId, pendingActionId,
-                                                 consumeEvent ? -1 : pendingActionId);
+    const juce::ScopedLock sl (eventLock);
+    const juce::ScopedValueSetter<int> actionResetter (pendingActionId, pendingActionId,
+                                                       consumeEvent ? -1 : pendingActionId);
 
     if (consumeEvent)
         sendChangeMessage();

@@ -37,7 +37,8 @@ void WaveAudioNode::getAudioNodeProperties (AudioNodeProperties& info)
 {
     info.hasAudio = true;
     info.hasMidi = false;
-    info.numberOfChannels = jlimit (1, std::max (channelsToUse.size(), 1), audioFile.getNumChannels());
+    info.numberOfChannels = juce::jlimit (1, std::max (channelsToUse.size(), 1),
+                                          audioFile.getNumChannels());
 }
 
 bool WaveAudioNode::purgeSubNodes (bool keepAudio, bool)

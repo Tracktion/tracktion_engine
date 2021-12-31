@@ -494,7 +494,7 @@ void FolderTrack::updatePlugins()
     volumePlugin = pluginList.findFirstPluginOfType<VolumeAndPanPlugin>();
 }
 
-void FolderTrack::valueTreeChildAdded (ValueTree& p, juce::ValueTree& c)
+void FolderTrack::valueTreeChildAdded (juce::ValueTree& p, juce::ValueTree& c)
 {
     if (c.hasType (IDs::PLUGIN))
         pluginUpdater.triggerAsyncUpdate();
@@ -502,7 +502,7 @@ void FolderTrack::valueTreeChildAdded (ValueTree& p, juce::ValueTree& c)
     Track::valueTreeChildAdded (p, c);
 }
 
-void FolderTrack::valueTreeChildRemoved (ValueTree& p, juce::ValueTree& c, int index)
+void FolderTrack::valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree& c, int index)
 {
     if (c.hasType (IDs::PLUGIN))
         pluginUpdater.triggerAsyncUpdate();
@@ -510,7 +510,7 @@ void FolderTrack::valueTreeChildRemoved (ValueTree& p, juce::ValueTree& c, int i
     Track::valueTreeChildRemoved (p, c, index);
 }
 
-void FolderTrack::valueTreeChildOrderChanged (ValueTree& p, int oldIndex, int newIndex)
+void FolderTrack::valueTreeChildOrderChanged (juce::ValueTree& p, int oldIndex, int newIndex)
 {
     if (p.getChild (oldIndex).hasType (IDs::PLUGIN) || p.getChild (newIndex).hasType (IDs::PLUGIN))
         pluginUpdater.triggerAsyncUpdate();

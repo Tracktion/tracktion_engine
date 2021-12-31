@@ -30,7 +30,7 @@ const juce::File& TemporaryFileManager::getTempDirectory() const
     return tempDir;
 }
 
-bool TemporaryFileManager::setTempDirectory (const File& newFile)
+bool TemporaryFileManager::setTempDirectory (const juce::File& newFile)
 {
     auto defaultDir = getDefaultTempFolder (engine);
 
@@ -104,7 +104,7 @@ int TemporaryFileManager::getMaxNumTempFiles() const
     return 1000;
 }
 
-static bool shouldDeleteTempFile (const File& f, bool spaceIsShort)
+static bool shouldDeleteTempFile (const juce::File& f, bool spaceIsShort)
 {
     auto fileName = f.getFileName();
 
@@ -114,7 +114,7 @@ static bool shouldDeleteTempFile (const File& f, bool spaceIsShort)
     if (fileName.startsWith ("temp_"))
         return true;
 
-    auto daysOld = (Time::getCurrentTime() - f.getLastAccessTime()).inDays();
+    auto daysOld = (juce::Time::getCurrentTime() - f.getLastAccessTime()).inDays();
 
     return daysOld > 60.0 || (spaceIsShort && daysOld > 1.0);
 }
@@ -147,8 +147,7 @@ void TemporaryFileManager::cleanUp()
     CRASH_TRACER
     TRACKTION_LOG ("Cleaning up temp files..");
 
-    juce::Array<juce::File> tempFiles;
-    tempDir.findChildFiles (tempFiles, File::findFiles, true);
+    auto tempFiles = tempDir.findChildFiles (juce::File::findFiles, true);
 
     deleteEditPreviewsNotInUse (engine, tempFiles);
 
@@ -189,7 +188,7 @@ juce::File TemporaryFileManager::getTempFile (const juce::String& filename) cons
 
 juce::File TemporaryFileManager::getUniqueTempFile (const juce::String& prefix, const juce::String& ext) const
 {
-    return tempDir.getChildFile (prefix + juce::String::toHexString (Random::getSystemRandom().nextInt64()))
+    return tempDir.getChildFile (prefix + juce::String::toHexString (juce::Random::getSystemRandom().nextInt64()))
                   .withFileExtension (ext)
                   .getNonexistentSibling();
 }
@@ -234,10 +233,10 @@ AudioFile TemporaryFileManager::getFileForCachedFileRender (Edit& edit, HashCode
 juce::File TemporaryFileManager::getFreezeFileForDevice (Edit& edit, OutputDevice& device)
 {
     return edit.getTempDirectory (true)
-             .getChildFile (getDeviceFreezePrefix (edit) + String (device.getDeviceID()) + ".freeze");
+             .getChildFile (getDeviceFreezePrefix (edit) + juce::String (device.getDeviceID()) + ".freeze");
 }
 
-juce::String TemporaryFileManager::getDeviceIDFromFreezeFile (Edit& edit, const File& deviceFreezeFile)
+juce::String TemporaryFileManager::getDeviceIDFromFreezeFile (Edit& edit, const juce::File& deviceFreezeFile)
 {
     const auto fileName = deviceFreezeFile.getFileName();
     jassert (fileName.startsWith (getDeviceFreezePrefix (edit)));
@@ -256,7 +255,7 @@ juce::File TemporaryFileManager::getFreezeFileForTrack (const AudioTrack& track)
 juce::Array<juce::File> TemporaryFileManager::getFrozenTrackFiles (Edit& edit)
 {
     return edit.getTempDirectory (false)
-             .findChildFiles (File::findFiles, false, getDeviceFreezePrefix (edit) + "*");
+             .findChildFiles (juce::File::findFiles, false, getDeviceFreezePrefix (edit) + "*");
 }
 
 static ProjectItemID getProjectItemIDFromFilename (const juce::String& name)

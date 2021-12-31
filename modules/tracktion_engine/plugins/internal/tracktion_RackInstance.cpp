@@ -13,7 +13,8 @@ namespace tracktion_engine
 
 struct RackInputAutomatableParameter   : public AutomatableParameter
 {
-    RackInputAutomatableParameter (const juce::String& xmlTag, const juce::String& name, Plugin& owner, Range<float> valueRangeToUse)
+    RackInputAutomatableParameter (const juce::String& xmlTag, const juce::String& name,
+                                   Plugin& owner, juce::Range<float> valueRangeToUse)
         : AutomatableParameter (xmlTag, name, owner, valueRangeToUse)
     {
     }
@@ -34,7 +35,8 @@ struct RackInputAutomatableParameter   : public AutomatableParameter
 
 struct RackOutputAutomatableParameter   : public AutomatableParameter
 {
-    RackOutputAutomatableParameter (const juce::String& xmlTag, const juce::String& name, Plugin& owner, Range<float> valueRangeToUse)
+    RackOutputAutomatableParameter (const juce::String& xmlTag, const juce::String& name,
+                                    Plugin& owner, juce::Range<float> valueRangeToUse)
         : AutomatableParameter (xmlTag, name, owner, valueRangeToUse)
     {
     }
@@ -55,7 +57,8 @@ struct RackOutputAutomatableParameter   : public AutomatableParameter
 
 struct RackWetDryAutomatableParam  : public AutomatableParameter
 {
-    RackWetDryAutomatableParam (const juce::String& xmlTag, const juce::String& name, RackInstance& owner, Range<float> valueRangeToUse)
+    RackWetDryAutomatableParam (const juce::String& xmlTag, const juce::String& name,
+                                RackInstance& owner, juce::Range<float> valueRangeToUse)
         : AutomatableParameter (xmlTag, name, owner, valueRangeToUse)
     {
     }
@@ -65,7 +68,7 @@ struct RackWetDryAutomatableParam  : public AutomatableParameter
         notifyListenersOfDeletion();
     }
 
-    juce::String valueToString (float value) override        { return Decibels::toString (Decibels::gainToDecibels (value), 1); }
+    juce::String valueToString (float value) override        { return juce::Decibels::toString (juce::Decibels::gainToDecibels (value), 1); }
     float stringToValue (const juce::String& s) override     { return dbStringToDb (s); }
 };
 
@@ -337,12 +340,12 @@ void RackInstance::setInputLevel (Channel c, float v)
 {
     const auto& param = c == left ? leftInDb : rightInDb;
 
-    param->setParameter (v, sendNotification);
+    param->setParameter (v, juce::sendNotification);
 
     if (linkInputs)
     {
         const auto& linkedParam = c == left ? rightInDb : leftInDb;
-        linkedParam->setParameter (v, sendNotification);
+        linkedParam->setParameter (v, juce::sendNotification);
     }
 }
 
@@ -350,12 +353,12 @@ void RackInstance::setOutputLevel (Channel c, float v)
 {
     const auto& param = c == left ? leftOutDb : rightOutDb;
 
-    param->setParameter (v, sendNotification);
+    param->setParameter (v, juce::sendNotification);
 
     if (linkOutputs)
     {
         const auto& linkedParam = c == left ? rightOutDb : leftOutDb;
-        linkedParam->setParameter (v, sendNotification);
+        linkedParam->setParameter (v, juce::sendNotification);
     }
 }
 

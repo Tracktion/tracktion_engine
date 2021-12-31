@@ -13,7 +13,8 @@ namespace tracktion_engine
 
 struct VolAutomatableParameter : public AutomatableParameter
 {
-    VolAutomatableParameter (const juce::String& xmlTag, const juce::String& name, Plugin& owner, Range<float> r)
+    VolAutomatableParameter (const juce::String& xmlTag, const juce::String& name,
+                             Plugin& owner, juce::Range<float> r)
         : AutomatableParameter (xmlTag, name, owner, r)
     {
     }
@@ -25,7 +26,7 @@ struct VolAutomatableParameter : public AutomatableParameter
 
     juce::String valueToString (float value) override
     {
-        return Decibels::toString (volumeFaderPositionToDB (value) + 0.001);
+        return juce::Decibels::toString (volumeFaderPositionToDB (value) + 0.001);
     }
 
     float stringToValue (const juce::String& str) override
@@ -37,7 +38,8 @@ struct VolAutomatableParameter : public AutomatableParameter
 //==============================================================================
 struct PanAutomatableParameter : public AutomatableParameter
 {
-    PanAutomatableParameter (const juce::String& xmlTag, const juce::String& name, Plugin& owner, Range<float> r)
+    PanAutomatableParameter (const juce::String& xmlTag, const juce::String& name,
+                             Plugin& owner, juce::Range<float> r)
         : AutomatableParameter (xmlTag, name, owner, r)
     {
     }
@@ -62,7 +64,8 @@ struct PanAutomatableParameter : public AutomatableParameter
 //==============================================================================
 struct MasterVolParameter  : public VolAutomatableParameter
 {
-    MasterVolParameter (const juce::String& xmlTag, const juce::String& name, Plugin& owner, Range<float> r)
+    MasterVolParameter (const juce::String& xmlTag, const juce::String& name,
+                        Plugin& owner, juce::Range<float> r)
         : VolAutomatableParameter (xmlTag, name, owner, r)
     {
     }
@@ -79,7 +82,8 @@ struct MasterVolParameter  : public VolAutomatableParameter
 //==============================================================================
 struct MasterPanParameter  : public PanAutomatableParameter
 {
-    MasterPanParameter (const juce::String& xmlTag, const juce::String& name, Plugin& owner, Range<float> r)
+    MasterPanParameter (const juce::String& xmlTag, const juce::String& name,
+                        Plugin& owner, juce::Range<float> r)
         : PanAutomatableParameter (xmlTag, name, owner, r)
     {
     }
@@ -243,7 +247,7 @@ void VolumeAndPanPlugin::setVolumeDb (float vol)
 
 void VolumeAndPanPlugin::setSliderPos (float newV)
 {
-    volParam->setParameter (jlimit (0.0f, 1.0f, newV), sendNotification);
+    volParam->setParameter (juce::jlimit (0.0f, 1.0f, newV), juce::sendNotification);
 }
 
 void VolumeAndPanPlugin::setPan (float p)
@@ -251,7 +255,7 @@ void VolumeAndPanPlugin::setPan (float p)
     if (p >= -0.005f && p <= 0.005f)
         p = 0.0f;
 
-    panParam->setParameter (jlimit (-1.0f, 1.0f, p), sendNotification);
+    panParam->setParameter (juce::jlimit (-1.0f, 1.0f, p), juce::sendNotification);
 }
 
 PanLaw VolumeAndPanPlugin::getPanLaw() const noexcept
@@ -290,9 +294,9 @@ void VolumeAndPanPlugin::muteOrUnmute()
 
 void VolumeAndPanPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    CachedValue<float>* cvsFloat[]  = { &volume, &pan, nullptr };
-    CachedValue<int>* cvsInt[]      = { &panLaw, nullptr };
-    CachedValue<bool>* cvsBool[]    = { &applyToMidi, &ignoreVca, &polarity, nullptr };
+    juce::CachedValue<float>* cvsFloat[]  = { &volume, &pan, nullptr };
+    juce::CachedValue<int>* cvsInt[]      = { &panLaw, nullptr };
+    juce::CachedValue<bool>* cvsBool[]    = { &applyToMidi, &ignoreVca, &polarity, nullptr };
 
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);

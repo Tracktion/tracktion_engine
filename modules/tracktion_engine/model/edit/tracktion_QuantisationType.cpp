@@ -43,7 +43,7 @@ QuantisationType::QuantisationType()  : state (IDs::QUANTISATION)
     initialiseCachedValues (nullptr);
 }
 
-QuantisationType::QuantisationType (const juce::ValueTree& vt, UndoManager* um)  : state (vt)
+QuantisationType::QuantisationType (const juce::ValueTree& vt, juce::UndoManager* um)  : state (vt)
 {
     initialiseCachedValues (um);
 }
@@ -71,7 +71,7 @@ QuantisationType& QuantisationType::operator= (const QuantisationType& other)
     return *this;
 }
 
-void QuantisationType::initialiseCachedValues (UndoManager* um)
+void QuantisationType::initialiseCachedValues (juce::UndoManager* um)
 {
     state.addListener (this);
 
@@ -89,8 +89,8 @@ void QuantisationType::updateType()
         int newType = 0;
         auto targetFraction = newTypeName.retainCharacters ("0123456789/");
 
-        for (int i = numElementsInArray (quantisationTypes); --i >= 0;)
-            if (targetFraction == String (quantisationTypes[i].name).retainCharacters ("0123456789/"))
+        for (int i = juce::numElementsInArray (quantisationTypes); --i >= 0;)
+            if (targetFraction == juce::String (quantisationTypes[i].name).retainCharacters ("0123456789/"))
                 return i;
 
         return newType;
@@ -102,7 +102,7 @@ void QuantisationType::updateType()
 
 void QuantisationType::updateFraction()
 {
-    if (typeIndex >= 0 && typeIndex < numElementsInArray (quantisationTypes))
+    if (typeIndex >= 0 && typeIndex < juce::numElementsInArray (quantisationTypes))
         fractionOfBeat = quantisationTypes[typeIndex].beatFraction;
     else
         fractionOfBeat = 0.0;
@@ -110,7 +110,7 @@ void QuantisationType::updateFraction()
 
 juce::String QuantisationType::getType (bool translated) const
 {
-    if (typeIndex >= 0 && typeIndex < numElementsInArray (quantisationTypes))
+    if (typeIndex >= 0 && typeIndex < juce::numElementsInArray (quantisationTypes))
         return translated ? TRANS(quantisationTypes[typeIndex].name)
                           : quantisationTypes[typeIndex].name;
 
@@ -120,7 +120,7 @@ juce::String QuantisationType::getType (bool translated) const
 
 int QuantisationType::getTimecodeSnapTypeLevel (bool& isTriplet) const noexcept
 {
-    if (! isPositiveAndBelow (typeIndex, numElementsInArray (quantisationTypes)))
+    if (! juce::isPositiveAndBelow (typeIndex, juce::numElementsInArray (quantisationTypes)))
     {
         jassertfalse;
         isTriplet = false;
@@ -139,7 +139,7 @@ bool QuantisationType::isEnabled() const
 
 void QuantisationType::setProportion (float prop)
 {
-    proportion = jlimit (0.0f, 1.0f, prop);
+    proportion = juce::jlimit (0.0f, 1.0f, prop);
 }
 
 double QuantisationType::roundToNearest (double time, const Edit& edit) const
@@ -198,7 +198,7 @@ juce::StringArray QuantisationType::getAvailableQuantiseTypes (bool translated)
 {
     juce::StringArray s;
 
-    for (int i = 0; i < numElementsInArray (quantisationTypes); ++i)
+    for (int i = 0; i < juce::numElementsInArray (quantisationTypes); ++i)
         s.add (translated ? TRANS(quantisationTypes[i].name)
                           : quantisationTypes[i].name);
 
@@ -211,7 +211,7 @@ juce::String QuantisationType::getDefaultType (bool translated)
                       : quantisationTypes[0].name;
 }
 
-void QuantisationType::valueTreePropertyChanged (ValueTree& vt, const juce::Identifier& i)
+void QuantisationType::valueTreePropertyChanged (juce::ValueTree& vt, const juce::Identifier& i)
 {
     if (vt == state)
     {

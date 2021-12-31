@@ -19,7 +19,7 @@ AuxSendPlugin::AuxSendPlugin (PluginCreationInfo info) : Plugin (info)
     lastVolumeBeforeMute.referTo (state, IDs::lastVolumeBeforeMuteDb, um, 0.0f);
 
     gain = addParam ("send level", TRANS("Send level"), { 0.0f, 1.0f },
-                     [] (float value)             { return Decibels::toString (volumeFaderPositionToDB (value)); },
+                     [] (float value)             { return juce::Decibels::toString (volumeFaderPositionToDB (value)); },
                      [] (const juce::String& s)   { return decibelsToVolumeFaderPosition (dbStringToDb (s)); });
 
     gain->attachToCurrentValue (gainLevel);
@@ -106,7 +106,7 @@ void AuxSendPlugin::setGainDb (float newDb)
 
     if (gain->getCurrentValue() != newPos)
     {
-        gain->setParameter (newPos, sendNotification);
+        gain->setParameter (newPos, juce::sendNotification);
         changed();
     }
 }
@@ -158,8 +158,8 @@ juce::StringArray AuxSendPlugin::getBusNames (Edit& ed, int maxNumBusses)
 
 void AuxSendPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    CachedValue<float>* cvsFloat[]  = { &gainLevel, nullptr };
-    CachedValue<int>* cvsInt[]      = { &busNumber, nullptr };
+    juce::CachedValue<float>* cvsFloat[]  = { &gainLevel, nullptr };
+    juce::CachedValue<int>* cvsInt[]      = { &busNumber, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
 

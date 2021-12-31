@@ -11,17 +11,17 @@
 namespace tracktion_engine
 {
 
-void dumpSegments (const Array<AudioSegmentList::Segment>& segments)
+void dumpSegments (const juce::Array<AudioSegmentList::Segment>& segments)
 {
 
     DBG ("******************************************");
     for (auto& s : segments)
     {
-        String text;
+        juce::String text;
 
-        text += "Start: " + String (s.start) + "(" + String (s.startSample) + ")\n";
-        text += "Length: " + String (s.length) + "(" + String (s.lengthSample) + ")\n";
-        text += "Transpose: " + String (s.transpose) + "\n";
+        text += "Start: " + juce::String (s.start) + "(" + juce::String (s.startSample) + ")\n";
+        text += "Length: " + juce::String (s.length) + "(" + juce::String (s.lengthSample) + ")\n";
+        text += "Transpose: " + juce::String (s.transpose) + "\n";
         text += "===============================================";
 
         DBG(text);
@@ -90,7 +90,7 @@ AudioSegmentList::AudioSegmentList (AudioClipBase& acb, bool relTime, bool shoul
 
    #if JUCE_DEBUG
     auto f = pm.findSourceFile (clip.getSourceFileReference().getSourceProjectItemID());
-    jassert (f == File() || f == clip.getSourceFileReference().getFile());
+    jassert (f == juce::File() || f == clip.getSourceFileReference().getFile());
    #endif
 
     if (clip.getCurrentSourceFile().existsAsFile() || anyTakesValid())
@@ -134,9 +134,10 @@ std::unique_ptr<AudioSegmentList> AudioSegmentList::create (AudioClipBase& acb, 
 
     if (in <= out)
     {
-        EditTimeRange region (jmax (0.0, wtm.getWarpedStart()), wtm.getWarpEndMarkerTime());
+        EditTimeRange region (std::max (0.0, wtm.getWarpedStart()),
+                              wtm.getWarpEndMarkerTime());
 
-        Array<EditTimeRange> warpTimeRegions;
+        juce::Array<EditTimeRange> warpTimeRegions;
         callBlocking ([&] { warpTimeRegions = wtm.getWarpTimeRegions (region); });
         double position = warpTimeRegions.size() > 0 ? warpTimeRegions.getUnchecked (0).getStart() : 0.0;
 
@@ -215,7 +216,7 @@ void AudioSegmentList::chopSegment (Segment& seg, double at, int insertPos)
     newSeg.fadeIn  = true;
     newSeg.fadeOut = seg.fadeOut;
 
-    newSeg.lengthSample = roundToInt (seg.lengthSample * newSeg.length / seg.length);
+    newSeg.lengthSample = juce::roundToInt (seg.lengthSample * newSeg.length / seg.length);
     newSeg.startSample  = seg.getSampleRange().getEnd() - newSeg.lengthSample;
 
     seg.length = seg.length - newSeg.length;
@@ -248,8 +249,8 @@ void AudioSegmentList::buildNormal (bool crossfade)
         if (clipLoopLen <= 0)
             return;
 
-        auto startSamp  = jmax ((SampleCount) 0, (SampleCount) (rate * clip.getLoopStart()));
-        auto lengthSamp = jmax ((SampleCount) 0, (SampleCount) (rate * clipLoopLen));
+        auto startSamp  = std::max ((SampleCount) 0, (SampleCount) (rate * clip.getLoopStart()));
+        auto lengthSamp = std::max ((SampleCount) 0, (SampleCount) (rate * clipLoopLen));
 
         for (int i = 0; ; ++i)
         {
@@ -322,8 +323,8 @@ void AudioSegmentList::buildNormal (bool crossfade)
         seg.start        = clipPos.getStart();
         seg.length       = clipPos.getLength();
 
-        seg.startSample  = jlimit ((SampleCount) 0, wi.lengthInSamples, (SampleCount) (clipPos.getOffset() * rate));
-        seg.lengthSample = jlimit ((SampleCount) 0, wi.lengthInSamples, (SampleCount) (clipPos.getLength() * rate));
+        seg.startSample  = juce::jlimit ((SampleCount) 0, wi.lengthInSamples, (SampleCount) (clipPos.getOffset() * rate));
+        seg.lengthSample = juce::jlimit ((SampleCount) 0, wi.lengthInSamples, (SampleCount) (clipPos.getLength() * rate));
 
         seg.transpose    = getPitchAt (clipPos.getStart() + 0.0001);
         seg.stretchRatio = (float) clip.getSpeedRatio();

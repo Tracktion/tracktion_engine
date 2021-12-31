@@ -112,8 +112,8 @@ MackieC4::MackieC4 (ExternalControllerManager& ecm)
     wantsAuxBanks = true;
     needsMidiChannel = true;
 
-    zeromem (currentText, sizeof (currentText));
-    zeromem (newText, sizeof (newText));
+    std::memset (currentText, 0, sizeof (currentText));
+    std::memset (newText, 0, sizeof (newText));
 }
 
 MackieC4::~MackieC4()
@@ -134,8 +134,8 @@ void MackieC4::initialiseDevice (bool)
     if (c4->C4LEDAllOffTxString (midi, &midiLen))
         sendMidiCommandToController (midi, midiLen);
 
-    zeromem (currentText, sizeof (currentText));
-    zeromem (newText, sizeof (newText));
+    std::memset (currentText, 0, sizeof (currentText));
+    std::memset (newText, 0, sizeof (newText));
     triggerAsyncUpdate();
 
     mode = PluginMode1;
@@ -194,7 +194,7 @@ void MackieC4::setDisplayText (int potNumber, int row, juce::String text)
 
 void MackieC4::setDisplayDirty (int potNumber, int row)
 {
-    zeromem (currentText + 128 * (potNumber / 8) + (potNumber & 7) * 7 + row * 64, 7);
+    std::memset (currentText + 128 * (potNumber / 8) + (potNumber & 7) * 7 + row * 64, 0, 7);
     triggerAsyncUpdate();
 }
 
@@ -230,7 +230,7 @@ void MackieC4::handleAsyncUpdate()
             }
 
             int firstDiff = 0;
-            int lastDiff = jmax ((int) strlen (newOne), (int) strlen (oldOne));
+            int lastDiff = std::max ((int) strlen (newOne), (int) strlen (oldOne));
 
             while (newOne[firstDiff] == oldOne[firstDiff] && firstDiff < 8 * 7)
                 ++firstDiff;
@@ -396,7 +396,7 @@ void MackieC4::lightUpButton (int buttonNum, bool on)
 void MackieC4::setPotPosition (int potNumber, float value)
 {
     const int panPos = (value < 0.0f) ? 0
-                                      : jlimit (1, 11, roundToInt (value * 10.0f + 1.0f));
+                                      : juce::jlimit (1, 11, juce::roundToInt (value * 10.0f + 1.0f));
 
     if (panPos != currentPanPotPos[potNumber])
     {
@@ -440,7 +440,7 @@ void MackieC4::timerCallback()
     }
 }
 
-void MackieC4::acceptMidiMessage (const MidiMessage& m)
+void MackieC4::acceptMidiMessage (const juce::MidiMessage& m)
 {
     CRASH_TRACER
 
@@ -535,7 +535,8 @@ void MackieC4::acceptMidiMessage (const MidiMessage& m)
             {
                 if (mode == PluginMode1)
                 {
-                    trackViewOffset = jmax (0, jmin (externalControllerManager.getNumChannelTracks() - 32, trackViewOffset - 1));
+                    trackViewOffset = std::max (0, std::min (externalControllerManager.getNumChannelTracks() - 32,
+                                                             trackViewOffset - 1));
                     updateDisplayAndPots();
                 }
                 else if (mode == PluginMode3)
@@ -551,7 +552,8 @@ void MackieC4::acceptMidiMessage (const MidiMessage& m)
             {
                 if (mode == PluginMode1)
                 {
-                    trackViewOffset = jmax (0, jmin (externalControllerManager.getNumChannelTracks() - 32, trackViewOffset + 1));
+                    trackViewOffset = std::max (0, std::min (externalControllerManager.getNumChannelTracks() - 32,
+                                                             trackViewOffset + 1));
                     updateDisplayAndPots();
                 }
                 else if (mode == PluginMode3)
@@ -804,7 +806,7 @@ void MackieC4::acceptMidiMessage (const MidiMessage& m)
         else if (result.theType == C4RxTypeVPot)
         {
             // pot turned
-            currentPotPos[result.theExt1] = jlimit (0.0f, 1.0f, currentPotPos[result.theExt1]  + result.theExt2 * panPotSpeed);
+            currentPotPos[result.theExt1] = juce::jlimit (0.0f, 1.0f, currentPotPos[result.theExt1]  + result.theExt2 * panPotSpeed);
 
             if (mode == PluginMode3)
             {
@@ -854,8 +856,8 @@ void MackieC4::parameterChanged (int parameterNumber, const ParameterSetting& ne
         currentPotPos[parameterNumber] = newValue.value;
         setPotPosition (parameterNumber, newValue.value);
 
-        setDisplayText (parameterNumber, 0, String::fromUTF8 (newValue.label));
-        setDisplayText (parameterNumber, 1, String::fromUTF8 (newValue.valueDescription));
+        setDisplayText (parameterNumber, 0, juce::String::fromUTF8 (newValue.label));
+        setDisplayText (parameterNumber, 1, juce::String::fromUTF8 (newValue.valueDescription));
     }
 }
 
@@ -957,7 +959,7 @@ void MackieC4::moveAux (int channelNum, const char*, float newPos)
     if (mode == AuxMode)
     {
         currentPotPos[channelNum + 8] = newPos;
-        setDisplayText (channelNum + 8, 1, Decibels::toString (volumeFaderPositionToDB (newPos), 1, -96.0f));
+        setDisplayText (channelNum + 8, 1, juce::Decibels::toString (volumeFaderPositionToDB (newPos), 1, -96.0f));
         setPotPosition (channelNum + 8, newPos);
     }
 }
@@ -981,7 +983,7 @@ void MackieC4::channelLevelChanged (int channel, float level)
         int midiLen = 0;
 
         if (c4->C4LCDSetMeterLevelTxString (midi, &midiLen, channel * 2 + 1,
-                                            jlimit (0, 12, (roundToInt (12.0f * level)))))
+                                            juce::jlimit (0, 12, (juce::roundToInt (12.0f * level)))))
             sendMidiCommandToController (midi, midiLen);
     }
 }

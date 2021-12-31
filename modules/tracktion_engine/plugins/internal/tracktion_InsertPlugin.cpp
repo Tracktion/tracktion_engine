@@ -102,7 +102,7 @@ bool InsertPlugin::needsConstantBufferSize()                                 { r
 void InsertPlugin::initialise (const PluginInitialisationInfo& info)
 {
     {
-        const ScopedLock sl (bufferLock);
+        const juce::ScopedLock sl (bufferLock);
         sendBuffer.resize ({ 2u, (choc::buffer::FrameCount) info.blockSizeSamples });
         sendBuffer.clear();
 
@@ -121,7 +121,7 @@ void InsertPlugin::initialiseWithoutStopping (const PluginInitialisationInfo& in
 
 void InsertPlugin::deinitialise()
 {
-    const ScopedLock sl (bufferLock);
+    const juce::ScopedLock sl (bufferLock);
 
     sendBuffer = {};
     returnBuffer = {};
@@ -133,7 +133,7 @@ void InsertPlugin::deinitialise()
 void InsertPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     CRASH_TRACER
-    const ScopedLock sl (bufferLock);
+    const juce::ScopedLock sl (bufferLock);
 
     // Fill send buffer with data
     if (sendDeviceType == audioDevice && fc.destBuffer != nullptr)
@@ -233,7 +233,7 @@ bool InsertPlugin::hasMidi() const        { return sendDeviceType == midiDevice 
 void InsertPlugin::fillSendBuffer (choc::buffer::ChannelArrayView<float>* destAudio, MidiMessageArray* destMidi)
 {
     CRASH_TRACER
-    const ScopedLock sl (bufferLock);
+    const juce::ScopedLock sl (bufferLock);
     
     if (sendDeviceType == audioDevice)
     {
@@ -250,7 +250,7 @@ void InsertPlugin::fillSendBuffer (choc::buffer::ChannelArrayView<float>* destAu
 void InsertPlugin::fillReturnBuffer (choc::buffer::ChannelArrayView<float>* srcAudio, MidiMessageArray* srcMidi)
 {
     CRASH_TRACER
-    const ScopedLock sl (bufferLock);
+    const juce::ScopedLock sl (bufferLock);
     
     if (returnDeviceType == audioDevice)
     {
@@ -264,11 +264,11 @@ void InsertPlugin::fillReturnBuffer (choc::buffer::ChannelArrayView<float>* srcA
     }
 }
 
-void InsertPlugin::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
+void InsertPlugin::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)
 {
     if (v == state)
     {
-        auto update = [&i] (CachedValue<String>& deviceName) -> bool
+        auto update = [&i] (juce::CachedValue<juce::String>& deviceName) -> bool
         {
             if (i != deviceName.getPropertyID())
                 return false;

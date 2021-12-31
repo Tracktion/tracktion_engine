@@ -15,12 +15,12 @@
 
 //==============================================================================
 //==============================================================================
-class TimeStretcherTests  : public UnitTest
+class TimeStretcherTests  : public juce::UnitTest
 {
 public:
     //==============================================================================
     TimeStretcherTests()
-        : UnitTest ("TimeStretcherTests", "Tracktion")
+        : juce::UnitTest ("TimeStretcherTests", "Tracktion")
     {
     }
 
@@ -128,7 +128,7 @@ private:
     //==============================================================================
     static juce::AudioBuffer<float> createSinBuffer (double sampleRate, int numChannels, float pitch)
     {
-        AudioBuffer<float> sinBuffer (numChannels, (int) sampleRate);
+        juce::AudioBuffer<float> sinBuffer (numChannels, (int) sampleRate);
 
         double currentAngle = 0.0, angleDelta = 0.0;
         float originalPitch = pitch; //A4
@@ -223,7 +223,7 @@ private:
         return pitchInHertz;
     }
 
-    static int getNumZeroCrossings (const AudioBuffer<float>& buffer, int numSamplesToUse)
+    static int getNumZeroCrossings (const juce::AudioBuffer<float>& buffer, int numSamplesToUse)
     {
         jassert (numSamplesToUse <= buffer.getNumSamples());
         auto dest = buffer.getReadPointer (0);

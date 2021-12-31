@@ -72,7 +72,7 @@ private:
     // of the plugin is kept hanging around until shutdown, forcing the DLL to
     // remain in memory until we're sure all other instances have gone away. Not
     // pretty, but not sure how else we could handle this.
-    std::unique_ptr<AudioPluginInstance> plugin;
+    std::unique_ptr<juce::AudioPluginInstance> plugin;
 
     MelodyneInstanceFactory (Engine& engine)
     {
@@ -97,7 +97,7 @@ private:
 
                     const SizedStruct<ARA_MEMBER_PTR_ARGS (ARAInterfaceConfiguration, assertFunctionAddress)> interfaceConfig =
                     {
-                        jmin<ARAAPIGeneration> (factory->highestSupportedApiGeneration, kARAAPIGeneration_2_0_Draft),
+                        std::min<ARAAPIGeneration> (factory->highestSupportedApiGeneration, kARAAPIGeneration_2_0_Draft),
                         assertFuncPtr
                     };
 
@@ -161,11 +161,11 @@ private:
     }
 
     template<typename entrypoint_t>
-    Steinberg::IPtr<entrypoint_t> getVST3EntryPoint (AudioPluginInstance& p)
+    Steinberg::IPtr<entrypoint_t> getVST3EntryPoint (juce::AudioPluginInstance& p)
     {
         entrypoint_t* ep = nullptr;
         
-        auto getIComponent = [] (AudioPluginInstance& p) -> Steinberg::Vst::IComponent*
+        auto getIComponent = [] (juce::AudioPluginInstance& p) -> Steinberg::Vst::IComponent*
         {
             struct VST3Visitor : public juce::ExtensionsVisitor
             {
@@ -235,8 +235,8 @@ private:
             default:                        categoryName = "(Unknown)"; break;
         };
 
-        TRACKTION_LOG_ERROR ("ARA assertion -> \"" + categoryName + "\": " + String::fromUTF8 (diagnosis)
-                              + ": " + juce::String (pointer_sized_int (problematicArgument)));
+        TRACKTION_LOG_ERROR ("ARA assertion -> \"" + categoryName + "\": " + juce::String::fromUTF8 (diagnosis)
+                              + ": " + juce::String (juce::pointer_sized_int (problematicArgument)));
         jassertfalse;
     }
 
@@ -244,9 +244,9 @@ private:
 };
 
 //==============================================================================
-static std::unique_ptr<AudioPluginInstance> createMelodynePlugin (Engine& engine,
-                                                                  const char* formatToTry,
-                                                                  const Array<PluginDescription>& araDescs)
+static std::unique_ptr<juce::AudioPluginInstance> createMelodynePlugin (Engine& engine,
+                                                                        const char* formatToTry,
+                                                                        const juce::Array<juce::PluginDescription>& araDescs)
 {
     CRASH_TRACER
 
@@ -261,7 +261,7 @@ static std::unique_ptr<AudioPluginInstance> createMelodynePlugin (Engine& engine
     return {};
 }
 
-static std::unique_ptr<AudioPluginInstance> createMelodynePlugin (Engine& engine)
+static std::unique_ptr<juce::AudioPluginInstance> createMelodynePlugin (Engine& engine)
 {
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD

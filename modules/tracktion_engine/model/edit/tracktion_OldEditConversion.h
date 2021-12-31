@@ -544,7 +544,8 @@ private:
         }
     }
 
-    static void addNodeRecursively (juce::Array<juce::XmlElement*>& plugins, juce::XmlElement& xml, const Identifier& tagName)
+    static void addNodeRecursively (juce::Array<juce::XmlElement*>& plugins,
+                                    juce::XmlElement& xml, const juce::Identifier& tagName)
     {
         if (xml.hasTagName (tagName))
             plugins.add (&xml);

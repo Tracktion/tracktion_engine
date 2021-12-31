@@ -59,7 +59,7 @@ void AutomationCurve::setOwnerParameter (AutomatableParameter* p)
         state.setProperty (IDs::paramID, p->paramID, nullptr);
 }
 
-UndoManager* AutomationCurve::getUndoManager() const
+juce::UndoManager* AutomationCurve::getUndoManager() const
 {
     return ownerParam != nullptr ? &ownerParam->getEdit().getUndoManager() : nullptr;
 }
@@ -183,7 +183,7 @@ static double getDistanceFromLine (double& x, double& y,
     auto dy = y2 - y1;
     auto length = hypot (dx, dy);
 
-    auto alongLine = (length > 0) ? jlimit (0.0, 1.0, ((x - x1) * dx + (y - y1) * dy) / (length * length))
+    auto alongLine = (length > 0) ? juce::jlimit (0.0, 1.0, ((x - x1) * dx + (y - y1) * dy) / (length * length))
                                   : ((x < x1) ? 0.0 : 1.0);
 
     auto nearX = x1 + (x2 - x1) * alongLine;
@@ -324,15 +324,15 @@ void AutomationCurve::setCurveValue (int index, float newCurve)  { state.getChil
 
 int AutomationCurve::movePoint (int index, double newTime, float newValue, bool removeInterveningPoints)
 {
-    if (isPositiveAndBelow (index, getNumPoints()))
+    if (juce::isPositiveAndBelow (index, getNumPoints()))
     {
         if (removeInterveningPoints)
         {
             auto oldTime = getPointTime (index);
             const bool movingPointBack = newTime < oldTime;
 
-            auto t1 = jmin (newTime, oldTime) - 0.00001;
-            auto t2 = jmax (newTime, oldTime) + 0.00001;
+            auto t1 = std::min (newTime, oldTime) - 0.00001;
+            auto t2 = std::max (newTime, oldTime) + 0.00001;
 
             for (int i = getNumPoints(); --i >= 0;)
             {
@@ -367,12 +367,12 @@ int AutomationCurve::movePoint (int index, double newTime, float newValue, bool 
         }
 
         if (index > 0)
-            newTime = jmax (getPointTime (index - 1), newTime);
+            newTime = std::max (getPointTime (index - 1), newTime);
         else
-            newTime = jmax (0.0, newTime);
+            newTime = std::max (0.0, newTime);
 
         if (index < getNumPoints() - 1)
-            newTime = jmin (newTime, getPointTime (index + 1));
+            newTime = std::min (newTime, getPointTime (index + 1));
 
         if (ownerParam != nullptr)
             newValue = ownerParam->getValueRange().clipValue (ownerParam->snapToState (newValue));
@@ -606,7 +606,7 @@ void AutomationCurve::simplify (EditTimeRange range, double minTimeDifference, f
                  && std::abs (getPointValue (i - 1) - getPointValue (i)) < minValueDifference)
             {
                 removePoint (i);
-                i = jmax (i - 3, 1);
+                i = std::max (i - 3, 1);
             }
             else
             {
@@ -622,7 +622,7 @@ void AutomationCurve::simplify (EditTimeRange range, double minTimeDifference, f
                     if (dist < minDist)
                     {
                         removePoint (i);
-                        i = jmax (i - 3, 1);
+                        i = std::max (i - 3, 1);
                     }
                 }
             }
@@ -651,7 +651,7 @@ void AutomationCurve::rescaleValues (float factor, EditTimeRange range)
     if (factor != 1.0f)
         for (int i = getNumPoints(); --i >= 0;)
             if (range.contains (getPointTime (i)))
-                setPointValue (i, jlimit (limits.getStart(), limits.getEnd(), getPointValue(i) * factor));
+                setPointValue (i, juce::jlimit (limits.getStart(), limits.getEnd(), getPointValue(i) * factor));
 }
 
 void AutomationCurve::addToValues (float valueDelta, EditTimeRange range)
@@ -661,7 +661,7 @@ void AutomationCurve::addToValues (float valueDelta, EditTimeRange range)
     if (valueDelta != 0)
         for (int i = getNumPoints(); --i >= 0;)
             if (range.contains (getPointTime (i)))
-                setPointValue (i, jlimit (limits.getStart(), limits.getEnd(), getPointValue(i) + valueDelta));
+                setPointValue (i, juce::jlimit (limits.getStart(), limits.getEnd(), getPointValue(i) + valueDelta));
 }
 
 CurvePoint AutomationCurve::getBezierPoint (int index) const noexcept
@@ -670,7 +670,7 @@ CurvePoint AutomationCurve::getBezierPoint (int index) const noexcept
     auto y1 = getPointValue (index);
     auto x2 = getPointTime  (index + 1);
     auto y2 = getPointValue (index + 1);
-    auto c  = jlimit (-1.0f, 1.0f, getPointCurve (index) * 2.0f);
+    auto c  = juce::jlimit (-1.0f, 1.0f, getPointCurve (index) * 2.0f);
 
     if (y2 > y1)
     {
@@ -825,7 +825,7 @@ void AutomationCurve::removeAllAutomationCurvesRecursively (const juce::ValueTre
     }
 }
 
-Range<float> AutomationCurve::getValueLimits() const
+juce::Range<float> AutomationCurve::getValueLimits() const
 {
     if (ownerParam != nullptr)
         return ownerParam->getValueRange();
@@ -836,7 +836,7 @@ Range<float> AutomationCurve::getValueLimits() const
 //==============================================================================
 int simplify (AutomationCurve& curve, int strength, EditTimeRange time)
 {
-    jassert (isPositiveAndNotGreaterThan (strength, 2));
+    jassert (juce::isPositiveAndNotGreaterThan (strength, 2));
 
     double td = 0.08;
     float vd = 0.06f;

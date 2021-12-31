@@ -60,15 +60,15 @@ public:
     void setGain (float g)          { gain = g;         }
     void setPulseWidth (float p)    { pulseWidth = p;   }
 
-    void process (juce::AudioSampleBuffer& buffer, int startSample, int numSamples);
+    void process (juce::AudioBuffer<float>& buffer, int startSample, int numSamples);
 
 private:
     //==============================================================================
-    void processSine (juce::AudioSampleBuffer& buffer, int startSample, int numSamples);
-    void processSquare (juce::AudioSampleBuffer& buffer, int startSample, int numSamples);
-    void processNoise (juce::AudioSampleBuffer& buffer, int startSample, int numSamples);
+    void processSine (juce::AudioBuffer<float>& buffer, int startSample, int numSamples);
+    void processSquare (juce::AudioBuffer<float>& buffer, int startSample, int numSamples);
+    void processNoise (juce::AudioBuffer<float>& buffer, int startSample, int numSamples);
 
-    void processLookup (juce::AudioSampleBuffer& buffer, int startSample, int numSamples,
+    void processLookup (juce::AudioBuffer<float>& buffer, int startSample, int numSamples,
                         const juce::OwnedArray<juce::dsp::LookupTableTransform<float>>& tableSet);
 
     //==============================================================================
@@ -100,7 +100,7 @@ public:
     void setDetune (float d);
     void setSpread (float s);
 
-    void process (juce::AudioSampleBuffer& buffer, int startSample, int numSamples);
+    void process (juce::AudioBuffer<float>& buffer, int startSample, int numSamples);
 
 private:
     juce::OwnedArray<Oscillator> oscillators;

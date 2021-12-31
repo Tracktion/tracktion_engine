@@ -42,7 +42,7 @@ struct VirtualMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VirtualMidiInputDeviceInstance)
 };
 
-Array<VirtualMidiInputDevice*, CriticalSection> virtualMidiDevices;
+juce::Array<VirtualMidiInputDevice*, juce::CriticalSection> virtualMidiDevices;
 
 //==============================================================================
 VirtualMidiInputDevice::VirtualMidiInputDevice (Engine& e, const juce::String& deviceName, DeviceType devType)
@@ -115,14 +115,14 @@ void VirtualMidiInputDevice::saveProps()
     engine.getPropertyStorage().setXmlPropertyItem (SettingID::virtualmidiin, propName, n);
 }
 
-void VirtualMidiInputDevice::handleIncomingMidiMessage (const MidiMessage& m)
+void VirtualMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage& m)
 {
     if (! (m.isActiveSense() || disallowedChannels [m.getChannel() - 1]))
     {
-        MidiMessage message (m);
+        juce::MidiMessage message (m);
 
         if (m.getTimeStamp() == 0 || ! engine.getEngineBehaviour().isMidiDriverUsedForIncommingMessageTiming())
-            message.setTimeStamp (Time::getMillisecondCounterHiRes() * 0.001);
+            message.setTimeStamp (juce::Time::getMillisecondCounterHiRes() * 0.001);
 
         message.addToTimeStamp (adjustSecs);
 
@@ -135,7 +135,7 @@ void VirtualMidiInputDevice::handleIncomingMidiMessage (const MidiMessage& m)
     }
 }
 
-void VirtualMidiInputDevice::handleMessageFromPhysicalDevice (MidiInputDevice* dev, const MidiMessage& m)
+void VirtualMidiInputDevice::handleMessageFromPhysicalDevice (MidiInputDevice* dev, const juce::MidiMessage& m)
 {
     if (inputDevices.contains (dev->getName()))
         handleIncomingMidiMessage (m);

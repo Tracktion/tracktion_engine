@@ -17,8 +17,10 @@
 namespace tracktion_engine
 {
 
-inline AudioNode* createTrackCompAudioNode (AudioNode* input, const Array<EditTimeRange>& muteTimes,
-                                            const Array<EditTimeRange>& nonMuteTimes, double crossfadeTime)
+inline AudioNode* createTrackCompAudioNode (AudioNode* input,
+                                            const juce::Array<EditTimeRange>& muteTimes,
+                                            const juce::Array<EditTimeRange>& nonMuteTimes,
+                                            double crossfadeTime)
 {
     if (muteTimes.isEmpty())
         return input;

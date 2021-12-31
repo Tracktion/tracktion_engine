@@ -17,8 +17,6 @@
  #include "elastique_pro/incl/elastiqueProV3API.h"
 #endif
 
-using namespace juce;
-
 #ifdef __clang__
  #pragma clang diagnostic push
  #pragma clang diagnostic ignored "-Wsign-conversion"

@@ -25,7 +25,7 @@ MIDITrackerModifier::MIDITrackerModifier (Edit& e, const juce::ValueTree& v)
     relativeSpread.referTo (state, IDs::spread, um, 12);
 
     auto addDiscreteParam = [this] (const juce::String& paramID, const juce::String& name,
-                                    juce::Range<float> valueRange, CachedValue<float>& val,
+                                    juce::Range<float> valueRange, juce::CachedValue<float>& val,
                                     const juce::StringArray& labels) -> AutomatableParameter*
     {
         auto* p = new DiscreteLabelledParameter (paramID, name, *this, valueRange, labels.size(), labels);
@@ -36,8 +36,8 @@ MIDITrackerModifier::MIDITrackerModifier (Edit& e, const juce::ValueTree& v)
     };
 
     auto addParam = [this] (const juce::String& paramID, const juce::String& name,
-                            NormalisableRange<float> valueRange, float centreVal,
-                            CachedValue<float>& val, const juce::String& suffix) -> AutomatableParameter*
+                            juce::NormalisableRange<float> valueRange, float centreVal,
+                            juce::CachedValue<float>& val, const juce::String& suffix) -> AutomatableParameter*
     {
         valueRange.setSkewForCentre (centreVal);
         auto* p = new SuffixedParameter (paramID, name, *this, valueRange, suffix);
@@ -174,8 +174,8 @@ void MIDITrackerModifier::updateMapFromTree()
         if (! v.isValid())
         {
             v = juce::ValueTree (IDs::NODE);
-            v.setProperty (IDs::midi, jmap (i, 0, 4, 0, 127), nullptr);
-            v.setProperty (IDs::value, jmap ((float) i, 0.0f, 4.0f, -1.0f, 1.0f), nullptr);
+            v.setProperty (IDs::midi, juce::jmap (i, 0, 4, 0, 127), nullptr);
+            v.setProperty (IDs::value, juce::jmap ((float) i, 0.0f, 4.0f, -1.0f, 1.0f), nullptr);
             nodeState.addChild (v, -1, nullptr);
         }
 
@@ -183,7 +183,7 @@ void MIDITrackerModifier::updateMapFromTree()
     }
 
     {
-        const SpinLock::ScopedLockType sl (mapLock);
+        const juce::SpinLock::ScopedLockType sl (mapLock);
         currentMap = newMap;
     }
 
@@ -192,7 +192,7 @@ void MIDITrackerModifier::updateMapFromTree()
 
 void MIDITrackerModifier::updateValueFromMap (int midiVal)
 {
-    jassert (isPositiveAndBelow (midiVal, 128));
+    jassert (juce::isPositiveAndBelow (midiVal, 128));
     auto linearInterpolate = [] (float x1, float y1, float x2, float y2, float x)
     {
         return (y1 * (x2 - x) + y2 * (x - x1)) / (x2 - x1);
@@ -213,7 +213,7 @@ void MIDITrackerModifier::updateValueFromMap (int midiVal)
         Map map;
 
         {
-            const SpinLock::ScopedLockType sl (mapLock);
+            const juce::SpinLock::ScopedLockType sl (mapLock);
             map = currentMap;
         }
 
@@ -242,7 +242,7 @@ void MIDITrackerModifier::updateValueFromMap (int midiVal)
     jassertfalse;
 }
 
-void MIDITrackerModifier::midiEvent (const MidiMessage& m)
+void MIDITrackerModifier::midiEvent (const juce::MidiMessage& m)
 {
     if (! m.isNoteOn())
         return;

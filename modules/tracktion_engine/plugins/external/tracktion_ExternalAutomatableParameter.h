@@ -132,7 +132,7 @@ public:
     void valueChangedByPlugin()
     {
         if (auto p = getParam())
-            setParameter (p->getValue(), sendNotification);
+            setParameter (p->getValue(), juce::sendNotification);
     }
 
     juce::String getParameterName() const override
@@ -279,7 +279,7 @@ private:
     const VSTXML::Param* param = nullptr;
     const VSTXML::ValueType* valueType = nullptr;
 
-    AudioPluginInstance* getPlugin() const noexcept
+    juce::AudioPluginInstance* getPlugin() const noexcept
     {
         jassert (plugin != nullptr);
         return static_cast<ExternalPlugin&> (*plugin).getAudioPluginInstance();

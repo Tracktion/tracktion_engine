@@ -118,7 +118,7 @@ SampleRange AudioFileUtils::scanForNonZeroSamples (Engine& engine, const juce::F
     while (n < reader->lengthInSamples)
     {
         for (int j = numChans; --j >= 0;)
-            juce::zeromem (chans[j], sizeof (int) * sampsPerBlock);
+            std::memset (chans[j], 0, sizeof (int) * sampsPerBlock);
 
         reader->read (chans, numChans, n, sampsPerBlock, false);
 

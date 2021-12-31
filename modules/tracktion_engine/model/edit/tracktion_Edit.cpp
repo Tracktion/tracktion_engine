@@ -415,7 +415,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
     }
 
     bool linkedClipsMapDirty = true;
-    std::map<String, juce::Array<Clip*>> linkedClipsMap;
+    std::map<juce::String, juce::Array<Clip*>> linkedClipsMap;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TreeWatcher)
 };

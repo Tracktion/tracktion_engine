@@ -112,7 +112,7 @@ void ToneGeneratorPlugin::applyToBuffer (const PluginRenderContext& fc)
 
 void ToneGeneratorPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    CachedValue<float>* cvsFloat[] = { &oscType, &bandLimit, &frequency, &level, nullptr };
+    juce::CachedValue<float>* cvsFloat[] = { &oscType, &bandLimit, &frequency, &level, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
 
     for (auto p : getAutomatableParameters())

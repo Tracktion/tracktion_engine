@@ -33,8 +33,6 @@
 
 #include "tracktion_engine.h"
 
-using namespace juce;
-
 #include "playback/graph/tracktion_PluginNode.h"
 #include "playback/graph/tracktion_TrackMutingNode.h"
 #include "playback/graph/tracktion_RackNode.h"

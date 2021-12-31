@@ -195,7 +195,9 @@ float CompressorPlugin::getThreshold() const
 
 void CompressorPlugin::setThreshold (float t)
 {
-    thresholdGain->setParameter (jlimit (getMinThreshold(), getMaxThreshold(), t), sendNotification);
+    thresholdGain->setParameter (juce::jlimit (getMinThreshold(),
+                                               getMaxThreshold(), t),
+                                 juce::sendNotification);
 }
 
 float CompressorPlugin::getRatio() const
@@ -205,13 +207,14 @@ float CompressorPlugin::getRatio() const
 
 void CompressorPlugin::setRatio (float r)
 {
-    ratio->setParameter (jlimit (0.05f, 1.0f, r), sendNotification);
+    ratio->setParameter (juce::jlimit (0.05f, 1.0f, r),
+                         juce::sendNotification);
 }
 
 void CompressorPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    CachedValue<float>* cvsFloat[]  = { &thresholdValue, &ratioValue, &attackValue, &releaseValue, &outputValue, &sidechainValue, nullptr };
-    CachedValue<bool>* cvsBool[]    = { &useSidechainTrigger, nullptr };
+    juce::CachedValue<float>* cvsFloat[]  = { &thresholdValue, &ratioValue, &attackValue, &releaseValue, &outputValue, &sidechainValue, nullptr };
+    juce::CachedValue<bool>* cvsBool[]    = { &useSidechainTrigger, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     copyPropertiesToNullTerminatedCachedValues (v, cvsBool);
 
@@ -219,7 +222,7 @@ void CompressorPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v
         p->updateFromAttachedValue();
 }
 
-void CompressorPlugin::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& id)
+void CompressorPlugin::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& id)
 {
     if (v == state && id == IDs::sidechainTrigger)
         propertiesChanged();

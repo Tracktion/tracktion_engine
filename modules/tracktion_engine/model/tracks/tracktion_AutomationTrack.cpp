@@ -25,7 +25,7 @@ AutomationTrack::~AutomationTrack()
 juce::String AutomationTrack::getSelectableDescription()
 {
     auto n = getName();
-    return TRANS("Automation") + (n.isEmpty() ? String() : " - \"" + getName() + "\"");
+    return TRANS("Automation") + (n.isEmpty() ? juce::String() : " - \"" + getName() + "\"");
 }
 
 juce::String AutomationTrack::getName()

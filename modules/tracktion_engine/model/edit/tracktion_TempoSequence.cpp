@@ -13,17 +13,17 @@ namespace tracktion_engine
 
 template<typename ObjectType>
 struct TempoAndTimeSigListBase  : public ValueTreeObjectList<ObjectType>,
-                                  public AsyncUpdater
+                                  public juce::AsyncUpdater
 {
     TempoAndTimeSigListBase (TempoSequence& ts, const juce::ValueTree& parentTree)
         : ValueTreeObjectList<ObjectType> (parentTree), sequence (ts)
     {
     }
 
-    void newObjectAdded (ObjectType*) override                                    { sendChange(); }
-    void objectRemoved (ObjectType*) override                                     { sendChange(); }
-    void objectOrderChanged() override                                            { sendChange(); }
-    void valueTreePropertyChanged (ValueTree&, const juce::Identifier&) override  { sendChange(); }
+    void newObjectAdded (ObjectType*) override                                          { sendChange(); }
+    void objectRemoved (ObjectType*) override                                           { sendChange(); }
+    void objectOrderChanged() override                                                  { sendChange(); }
+    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override  { sendChange(); }
 
     void sendChange()
     {
@@ -166,7 +166,7 @@ TempoSequence::~TempoSequence()
     notifyListenersOfDeletion();
 }
 
-UndoManager* TempoSequence::getUndoManager() const noexcept
+juce::UndoManager* TempoSequence::getUndoManager() const noexcept
 {
     return &edit.getUndoManager();
 }
@@ -196,12 +196,12 @@ void TempoSequence::setState (const juce::ValueTree& v, bool remapEdit)
     timeSigs->objects.getFirst()->startBeatNumber = 0.0;
 
     for (int i = 1; i < getNumTempos(); ++i)
-        getTempo (i)->startBeatNumber = jmax (getTempo (i)->startBeatNumber.get(),
-                                              getTempo (i - 1)->startBeatNumber.get());
+        getTempo (i)->startBeatNumber = std::max (getTempo (i)->startBeatNumber.get(),
+                                                  getTempo (i - 1)->startBeatNumber.get());
 
     for (int i = 1; i < getNumTimeSigs(); ++i)
-        getTimeSig (i)->startBeatNumber = jmax (getTimeSig (i)->startBeatNumber.get(),
-                                                getTimeSig (i - 1)->startBeatNumber.get() + 1);
+        getTimeSig (i)->startBeatNumber = std::max (getTimeSig (i)->startBeatNumber.get(),
+                                                    getTimeSig (i - 1)->startBeatNumber.get() + 1);
 
     updateTempoData();
 
@@ -211,7 +211,7 @@ void TempoSequence::setState (const juce::ValueTree& v, bool remapEdit)
 
 void TempoSequence::createEmptyState()
 {
-    setState (ValueTree (IDs::TEMPOSEQUENCE), false);
+    setState (juce::ValueTree (IDs::TEMPOSEQUENCE), false);
 }
 
 void TempoSequence::copyFrom (const TempoSequence& other)
@@ -225,13 +225,13 @@ void TempoSequence::freeResources()
     timeSigs.reset();
 }
 
-const Array<TimeSigSetting*>& TempoSequence::getTimeSigs() const   { return timeSigs->objects; }
-int TempoSequence::getNumTimeSigs() const                          { return timeSigs->objects.size(); }
-TimeSigSetting* TempoSequence::getTimeSig (int index) const        { return timeSigs->objects[index]; }
+const juce::Array<TimeSigSetting*>& TempoSequence::getTimeSigs() const   { return timeSigs->objects; }
+int TempoSequence::getNumTimeSigs() const                                { return timeSigs->objects.size(); }
+TimeSigSetting* TempoSequence::getTimeSig (int index) const              { return timeSigs->objects[index]; }
 
-const Array<TempoSetting*>& TempoSequence::getTempos() const       { return tempos->objects; }
-int TempoSequence::getNumTempos() const                            { return tempos->objects.size(); }
-TempoSetting* TempoSequence::getTempo (int index) const            { return tempos->objects[index]; }
+const juce::Array<TempoSetting*>& TempoSequence::getTempos() const  { return tempos->objects; }
+int TempoSequence::getNumTempos() const                             { return tempos->objects.size(); }
+TempoSetting* TempoSequence::getTempo (int index) const             { return tempos->objects[index]; }
 
 TempoSetting::Ptr TempoSequence::insertTempo (double time)
 {
@@ -249,7 +249,7 @@ TempoSetting::Ptr TempoSequence::insertTempo (double time, juce::UndoManager* um
     float defaultCurve = 1.0f;
 
     if (getNumTempos() > 0)
-        return insertTempo (roundToInt (timeToBeats (time)), bpm, defaultCurve, um);
+        return insertTempo (juce::roundToInt (timeToBeats (time)), bpm, defaultCurve, um);
 
     return insertTempo (0, bpm, defaultCurve, um);
 }
@@ -282,7 +282,7 @@ TimeSigSetting::Ptr TempoSequence::insertTimeSig (double time, juce::UndoManager
 
     if (getNumTimeSigs() > 0)
     {
-        beatNum = roundToInt (timeToBeats (time));
+        beatNum = juce::roundToInt (timeToBeats (time));
         auto& prev = getTimeSigAtBeat (beatNum);
 
         index = state.indexOf (prev.state) + 1;
@@ -371,8 +371,9 @@ void TempoSequence::moveTempoStart (int index, double deltaBeats, bool snapToBea
             const double prevBeat = (prev != nullptr) ? prev->startBeatNumber : 0;
             const double nextBeat = (next != nullptr) ? next->startBeatNumber : 0x7ffffff;
 
-            const double newStart = jlimit (prevBeat, nextBeat, t->startBeatNumber + deltaBeats);
-            t->set (snapToBeat ? roundToInt (newStart) : newStart, t->bpm, t->curve, false);
+            const double newStart = juce::jlimit (prevBeat, nextBeat, t->startBeatNumber + deltaBeats);
+            t->set (snapToBeat ? juce::roundToInt (newStart) : newStart,
+                    t->bpm, t->curve, false);
         }
     }
 }
@@ -394,7 +395,8 @@ void TempoSequence::moveTimeSigStart (int index, double deltaBeats, bool snapToB
 
             t->startBeatNumber.forceUpdateOfCachedValue();
             const double newBeat = t->startBeatNumber + deltaBeats;
-            t->startBeatNumber = jlimit (prevBeat + 1, nextBeat - 1, snapToBeat ? roundToInt (newBeat) : newBeat);
+            t->startBeatNumber = juce::jlimit (prevBeat + 1, nextBeat - 1,
+                                               snapToBeat ? juce::roundToInt (newBeat) : newBeat);
         }
     }
 }
@@ -777,7 +779,7 @@ void TempoSequence::updateTempoData()
     tempos->cancelPendingUpdate();
     jassert (getNumTempos() > 0 && getNumTimeSigs() > 0);
 
-    SortedSet<double> beatsWithObjects;
+    juce::SortedSet<double> beatsWithObjects;
 
     for (auto tempo : tempos->objects)
         beatsWithObjects.add (tempo->startBeatNumber);
@@ -802,7 +804,7 @@ void TempoSequence::updateTempoData()
 
     const bool useDenominator = edit.engine.getEngineBehaviour().lengthOfOneBeatDependsOnTimeSignature();
 
-    Array<SectionDetails> newSections;
+    juce::Array<SectionDetails> newSections;
 
     for (int i = 0; i < beatsWithObjects.size(); ++i)
     {
@@ -831,7 +833,7 @@ void TempoSequence::updateTempoData()
         int numSubdivisions = 1;
 
         if (nextTempo != nullptr && (currTempo->getCurve() != -1.0f && currTempo->getCurve() != 1.0f))
-            numSubdivisions = int (jlimit (1.0, 100.0, 4.0 * (nextTempo->startBeatNumber - currentBeat)));
+            numSubdivisions = static_cast<int> (juce::jlimit (1.0, 100.0, 4.0 * (nextTempo->startBeatNumber - currentBeat)));
 
         const double numBeats = (i < beatsWithObjects.size() - 1)
                                     ? ((beatsWithObjects[i + 1] - currentBeat) / (double) numSubdivisions)
@@ -871,7 +873,7 @@ void TempoSequence::updateTempoData()
 
                 it.barNumberOfFirstBar = prevSection.barNumberOfFirstBar + barsSincePrevBar;
 
-                auto beatNumInEditOfNextBar = roundToInt (prevSection.startBeatInEdit + prevSection.beatsUntilFirstBar)
+                auto beatNumInEditOfNextBar = juce::roundToInt (prevSection.startBeatInEdit + prevSection.beatsUntilFirstBar)
                                                  + (barsSincePrevBar * prevSection.numerator);
 
                 it.beatsUntilFirstBar = beatNumInEditOfNextBar - it.startBeatInEdit;
@@ -902,7 +904,7 @@ void TempoSequence::updateTempoData()
     triggerAsyncUpdate();
 
     {
-        ScopedLock sl (edit.engine.getDeviceManager().deviceManager.getAudioCallbackLock());
+        juce::ScopedLock sl (edit.engine.getDeviceManager().deviceManager.getAudioCallbackLock());
         internalTempos.swapWith (newSections);
     }
 }
@@ -1077,7 +1079,7 @@ void TempoSequencePosition::addSeconds (double seconds)
 const TempoSequence::SectionDetails& TempoSequencePosition::getCurrentTempo() const
 {
     // this index might go off the end when tempos are deleted..
-    return sequence.internalTempos.getReference (jlimit (0, sequence.internalTempos.size() - 1, index));
+    return sequence.internalTempos.getReference (juce::jlimit (0, sequence.internalTempos.size() - 1, index));
 }
 
 double TempoSequencePosition::getPPQTime() const noexcept
@@ -1227,10 +1229,10 @@ void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
 
 //==============================================================================
 //==============================================================================
-class TempoSequenceTests : public UnitTest
+class TempoSequenceTests : public juce::UnitTest
 {
 public:
-    TempoSequenceTests() : UnitTest ("TempoSequence", "Tracktion") {}
+    TempoSequenceTests() : juce::UnitTest ("TempoSequence", "Tracktion") {}
 
     //==============================================================================
     void runTest() override

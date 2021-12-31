@@ -12,7 +12,7 @@ namespace tracktion_engine
 {
 
 struct PitchSequence::PitchList  : public ValueTreeObjectList<PitchSetting>,
-                                   private AsyncUpdater
+                                   private juce::AsyncUpdater
 {
     PitchList (PitchSequence& s, const juce::ValueTree& parentTree)
         : ValueTreeObjectList<PitchSetting> (parentTree), pitchSequence (s)
@@ -46,7 +46,7 @@ struct PitchSequence::PitchList  : public ValueTreeObjectList<PitchSetting>,
     void newObjectAdded (PitchSetting*) override    { sendChange(); }
     void objectRemoved (PitchSetting*) override     { sendChange(); }
     void objectOrderChanged() override              { sendChange(); }
-    void valueTreePropertyChanged (ValueTree&, const juce::Identifier&) override  { sendChange(); }
+    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override  { sendChange(); }
 
     void sendChange()
     {
@@ -72,7 +72,7 @@ Edit& PitchSequence::getEdit() const
     return *edit;
 }
 
-UndoManager* PitchSequence::getUndoManager() const
+juce::UndoManager* PitchSequence::getUndoManager() const
 {
     return &getEdit().getUndoManager();
 }
@@ -209,7 +209,8 @@ void PitchSequence::movePitchStart (PitchSetting& p, double deltaBeats, bool sna
         {
             t->startBeat.forceUpdateOfCachedValue();
             auto newBeat = t->getStartBeat() + deltaBeats;
-            t->setStartBeat (jlimit (0.0, 1e10, snapToBeat ? roundToInt (newBeat) : newBeat));
+            t->setStartBeat (juce::jlimit (0.0, 1e10, snapToBeat ? juce::roundToInt (newBeat)
+                                                                 : newBeat));
         }
     }
 }

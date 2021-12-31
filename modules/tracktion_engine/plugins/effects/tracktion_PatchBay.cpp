@@ -11,18 +11,18 @@
 namespace tracktion_engine
 {
 
-PatchBayPlugin::Wire::Wire (const juce::ValueTree& v, UndoManager* um)  : state (v)
+PatchBayPlugin::Wire::Wire (const juce::ValueTree& v, juce::UndoManager* um)  : state (v)
 {
     sourceChannelIndex.referTo (state, IDs::srcChan, um);
     destChannelIndex.referTo (state, IDs::dstChan, um);
     gainDb.referTo (state, IDs::gainDb, um);
 }
 
-struct PatchBayPlugin::WireList  : public ValueTreeObjectList<PatchBayPlugin::Wire, CriticalSection>,
-                                   private AsyncUpdater
+struct PatchBayPlugin::WireList  : public ValueTreeObjectList<PatchBayPlugin::Wire, juce::CriticalSection>,
+                                   private juce::AsyncUpdater
 {
     WireList (PatchBayPlugin& pb, const juce::ValueTree& parentTree)
-        : ValueTreeObjectList<Wire, CriticalSection> (parentTree), patchbay (pb)
+        : ValueTreeObjectList<Wire, juce::CriticalSection> (parentTree), patchbay (pb)
     {
         rebuildObjects();
     }
@@ -39,7 +39,7 @@ struct PatchBayPlugin::WireList  : public ValueTreeObjectList<PatchBayPlugin::Wi
     void newObjectAdded (Wire*) override                    { triggerAsyncUpdate(); }
     void objectRemoved (Wire*) override                     { triggerAsyncUpdate(); }
     void objectOrderChanged() override                      {}
-    void valueTreePropertyChanged (ValueTree&, const juce::Identifier&) override  { triggerAsyncUpdate(); }
+    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override  { triggerAsyncUpdate(); }
 
     void handleAsyncUpdate() override
     {
@@ -129,11 +129,11 @@ void PatchBayPlugin::applyToBuffer (const PluginRenderContext& fc)
         outputBuffer.clear();
 
         {
-            const ScopedLock sl (list->arrayLock);
+            const juce::ScopedLock sl (list->arrayLock);
 
             for (auto w : list->objects)
             {
-                maxOutputChan = jmax (w->destChannelIndex.get(), maxOutputChan);
+                maxOutputChan = std::max (w->destChannelIndex.get(), maxOutputChan);
 
                 if (w->destChannelIndex < 2 && w->sourceChannelIndex < fc.destBuffer->getNumChannels())
                     outputBuffer.addFrom (w->destChannelIndex, 0,
@@ -143,7 +143,7 @@ void PatchBayPlugin::applyToBuffer (const PluginRenderContext& fc)
             }
         }
 
-        maxOutputChan = jmin (2, maxOutputChan + 1);
+        maxOutputChan = std::min (2, maxOutputChan + 1);
         fc.destBuffer->setSize (maxOutputChan, fc.destBuffer->getNumSamples(), false);
 
         for (int i = maxOutputChan; --i >= 0;)
@@ -151,7 +151,8 @@ void PatchBayPlugin::applyToBuffer (const PluginRenderContext& fc)
     }
 }
 
-void PatchBayPlugin::makeConnection (int inputChannel, int outputChannel, float gainDb, UndoManager* um)
+void PatchBayPlugin::makeConnection (int inputChannel, int outputChannel,
+                                     float gainDb, juce::UndoManager* um)
 {
     for (auto w : list->objects)
         if (w->sourceChannelIndex == inputChannel && w->destChannelIndex == outputChannel)

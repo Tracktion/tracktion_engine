@@ -24,7 +24,7 @@ Track::Track (Edit& ed, const juce::ValueTree& v, double defaultHeight, double m
     auto um = &edit.getUndoManager();
 
     trackName.referTo (state, IDs::name, um, {});
-    colour.referTo (state, IDs::colour, um, Colour());
+    colour.referTo (state, IDs::colour, um, juce::Colour());
     tags.referTo (state, IDs::tags, um);
     hidden.referTo (state, IDs::hidden, um);
     processing.referTo (state, IDs::process, um, true);
@@ -315,7 +315,7 @@ void Track::flipAllPluginsEnablement()
 }
 
 //==============================================================================
-Array<AutomatableParameter*> Track::getAllAutomatableParams() const
+juce::Array<AutomatableParameter*> Track::getAllAutomatableParams() const
 {
     juce::Array<AutomatableParameter*> params;
 
@@ -394,8 +394,8 @@ AutomatableParameter* Track::getCurrentlyShownAutoParam() const noexcept
 
 void Track::setCurrentlyShownAutoParam (const AutomatableParameter::Ptr& param)
 {
-    currentAutoParamPlugin  = param == nullptr ? EditItemID() : param->getOwnerID();
-    currentAutoParamID      = param == nullptr ? String()     : param->paramID;
+    currentAutoParamPlugin  = param == nullptr ? EditItemID()   : param->getOwnerID();
+    currentAutoParamID      = param == nullptr ? juce::String() : param->paramID;
 }
 
 void Track::hideAutomatableParametersForSource (EditItemID pluginOrParameterID)
@@ -447,10 +447,10 @@ void Track::insertSpaceIntoTrack (double time, double amountOfSpace)
                                          curve.getPointTime (k) + amountOfSpace,
                                          curve.getPointValue (k), false);
 
-                if (! approximatelyEqual (valueAtInsertionTime, curve.getValueAt (time)))
+                if (! juce::approximatelyEqual (valueAtInsertionTime, curve.getValueAt (time)))
                     curve.addPoint (time, valueAtInsertionTime, 0.0f);
 
-                if (! approximatelyEqual (valueAtInsertionTime, curve.getValueAt (time + amountOfSpace)))
+                if (! juce::approximatelyEqual (valueAtInsertionTime, curve.getValueAt (time + amountOfSpace)))
                     curve.addPoint (time + amountOfSpace, valueAtInsertionTime, 0.0f);
             }
         }
@@ -519,7 +519,7 @@ void Track::setTrackImage (const juce::String& idOrData)
 
 bool Track::imageHasChanged()
 {
-    const ScopedValueSetter<bool> svs (imageChanged, imageChanged, false);
+    const juce::ScopedValueSetter<bool> svs (imageChanged, imageChanged, false);
     return imageChanged;
 }
 
@@ -528,7 +528,7 @@ void Track::setTags (const juce::StringArray& s)
     tags = s.joinIntoString ("|").replace (" ", "_");
 }
 
-void Track::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
+void Track::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)
 {
     if (v == state)
     {
@@ -543,11 +543,11 @@ void Track::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
             changed();
             
             if (! edit.isLoading())
-                MessageManager::callAsync ([trackRef = getWeakRef()]
-                                           {
-                                                if (trackRef != nullptr)
-                                                    SelectionManager::refreshAllPropertyPanelsShowing (*trackRef);
-                                           });
+                juce::MessageManager::callAsync ([trackRef = getWeakRef()]
+                                                 {
+                                                     if (trackRef != nullptr)
+                                                         SelectionManager::refreshAllPropertyPanelsShowing (*trackRef);
+                                                 });
         }
         else if (i == IDs::colour)
         {
@@ -579,21 +579,21 @@ void Track::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
     }
 }
 
-void Track::valueTreeChildAdded (ValueTree& p, juce::ValueTree& c)
+void Track::valueTreeChildAdded (juce::ValueTree& p, juce::ValueTree& c)
 {
     if (p == state)
         if (TrackList::isTrack (c))
             updateTrackList();
 }
 
-void Track::valueTreeChildRemoved (ValueTree& p, juce::ValueTree& c, int)
+void Track::valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree& c, int)
 {
     if (p == state)
         if (TrackList::isTrack (c))
             updateTrackList();
 }
 
-void Track::valueTreeParentChanged (ValueTree& v)
+void Track::valueTreeParentChanged (juce::ValueTree& v)
 {
     if (v == state)
         updateCachedParent();

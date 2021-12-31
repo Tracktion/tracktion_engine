@@ -147,7 +147,7 @@ void CompManager::setActiveTakeIndex (int index)
 {
     jassert (index < takesTree.getNumChildren());
 
-    if (! isPositiveAndBelow (index, takesTree.getNumChildren()))
+    if (! juce::isPositiveAndBelow (index, takesTree.getNumChildren()))
         return;
 
     if (getActiveTakeIndex() != index)
@@ -277,7 +277,7 @@ void CompManager::removeSectionIndexAtTime (double time, int takeIndex)
 }
 
 //==============================================================================
-void CompManager::moveSectionEndTime (ValueTree& section, double newTime)
+void CompManager::moveSectionEndTime (juce::ValueTree& section, double newTime)
 {
     jassert (section.hasType (IDs::COMPSECTION));
 
@@ -297,7 +297,7 @@ void CompManager::moveSection (juce::ValueTree& section, double timeDelta)
     moveSectionToEndAt (section, currentEndTime + timeDelta);
 }
 
-void CompManager::moveSectionToEndAt (ValueTree& section, double newEndTime)
+void CompManager::moveSectionToEndAt (juce::ValueTree& section, double newEndTime)
 {
     jassert (section.hasType (IDs::COMPSECTION));
     newEndTime = getCompRange().clipValue (newEndTime);
@@ -412,7 +412,7 @@ juce::ValueTree CompManager::splitSectionAtTime (double time)
 }
 
 //==============================================================================
-UndoManager* CompManager::getUndoManager() const
+juce::UndoManager* CompManager::getUndoManager() const
 {
     return &clip.edit.getUndoManager();
 }
@@ -499,7 +499,7 @@ void CompManager::refreshCachedTakeLengths()
     double maxSourceLength = 0.0;
 
     for (int i = getNumTakes(); --i >= 0;)
-        maxSourceLength = jmax (maxSourceLength, getTakeLength (i));
+        maxSourceLength = std::max (maxSourceLength, getTakeLength (i));
 
     if (autoTempo)
     {
@@ -516,7 +516,7 @@ void CompManager::refreshCachedTakeLengths()
     }
     else
     {
-        speedRatio = jmax (0.001, clip.getSpeedRatio());
+        speedRatio = std::max (0.001, clip.getSpeedRatio());
     }
 
     effectiveTimeMultiplier = 1.0 / speedRatio;
@@ -535,7 +535,7 @@ void CompManager::updateOffsetAndRatioFromSource()
     const double offsetDiff = lastOffset - newOffset;
 
     const int numTakes = getNumTakes();
-    const Range<int> compRange (numTakes, numTakes + getNumComps());
+    const juce::Range<int> compRange (numTakes, numTakes + getNumComps());
 
     for (int i = compRange.getStart(); i < compRange.getEnd(); ++i)
     {
@@ -567,7 +567,7 @@ void CompManager::addOrRemoveListenerIfNeeded()
         clip.state.addListener (this);
 }
 
-void CompManager::valueTreePropertyChanged (ValueTree& tree, const juce::Identifier& id)
+void CompManager::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifier& id)
 {
     if (tree != clip.state)
         return;
@@ -594,7 +594,7 @@ void CompManager::valueTreePropertyChanged (ValueTree& tree, const juce::Identif
 CompManager::Ptr CompFactory::getCompManager (Clip& clip)
 {
     {
-        const ScopedLock sl (compLock);
+        const juce::ScopedLock sl (compLock);
 
         for (auto c : comps)
             if (&c->getClip() == &clip && c->getTakesTree().getParent() == clip.state)
@@ -613,14 +613,14 @@ CompManager::Ptr CompFactory::getCompManager (Clip& clip)
 
 void CompFactory::addComp (CompManager& cm)
 {
-    const ScopedLock sl (compLock);
+    const juce::ScopedLock sl (compLock);
     jassert (! comps.contains (&cm));
     comps.addIfNotAlreadyThere (&cm);
 }
 
 void CompFactory::removeComp (CompManager& cm)
 {
-    const ScopedLock sl (compLock);
+    const juce::ScopedLock sl (compLock);
     jassert (comps.contains (&cm));
     comps.removeAllInstancesOf (&cm);
 }
@@ -738,7 +738,8 @@ WaveCompManager::WaveCompManager (WaveAudioClip& owner)
 
 WaveCompManager::~WaveCompManager() {}
 
-void WaveCompManager::updateThumbnails (Component& comp, OwnedArray<SmartThumbnail>& thumbnails) const
+void WaveCompManager::updateThumbnails (juce::Component& comp,
+                                        juce::OwnedArray<SmartThumbnail>& thumbnails) const
 {
     const int numTakes = getNumTakes();
 
@@ -763,7 +764,7 @@ void WaveCompManager::updateThumbnails (Component& comp, OwnedArray<SmartThumbna
     }
 }
 
-File WaveCompManager::getCurrentCompFile() const
+juce::File WaveCompManager::getCurrentCompFile() const
 {
     if (lastHash != 0)
         return TemporaryFileManager::getFileForCachedCompRender (clip, lastHash).getFile();
@@ -789,7 +790,7 @@ double WaveCompManager::getSourceTempo()
 
 juce::String WaveCompManager::getWarning()
 {
-    String message;
+    juce::String message;
     const bool warnAboutReverse = clip.getIsReversed();
 
     if (shouldDisplayWarning() || warnAboutReverse)
@@ -842,7 +843,7 @@ void WaveCompManager::flattenTake (int takeIndex, bool deleteSourceFiles)
 
     if (auto item = getOrCreateProjectItemForTake (takeTree))
     {
-        const File destCompFile (getDefaultTakeFile (takeIndex));
+        auto destCompFile = getDefaultTakeFile (takeIndex);
 
         if (! destCompFile.existsAsFile() || item->getSourceFile() != destCompFile)
         {
@@ -926,7 +927,7 @@ AudioFile WaveCompManager::getSourceFileForTake (int takeIndex) const
     return AudioFile (e, e.getProjectManager().findSourceFile (getProjectItemIDForTake (takeIndex)));
 }
 
-File WaveCompManager::getDefaultTakeFile (int takeIndex) const
+juce::File WaveCompManager::getDefaultTakeFile (int takeIndex) const
 {
     if (auto project = clip.edit.engine.getProjectManager().getProject (clip.edit))
     {
@@ -940,7 +941,7 @@ File WaveCompManager::getDefaultTakeFile (int takeIndex) const
         if (auto ct = clip.getClipTrack())
             clipNum = ct->getClips().indexOf (&clip) + 1;
 
-        String compName;
+        juce::String compName;
         compName << "_clip_" << clipNum << "_comp_" << (takeIndex - getNumTakes() + 2);
 
         auto firstTakeFile = firstTakeItem->getSourceFile();
@@ -957,7 +958,7 @@ File WaveCompManager::getDefaultTakeFile (int takeIndex) const
     return {};
 }
 
-ProjectItem::Ptr WaveCompManager::getOrCreateProjectItemForTake (ValueTree& takeTree)
+ProjectItem::Ptr WaveCompManager::getOrCreateProjectItemForTake (juce::ValueTree& takeTree)
 {
     if (auto project = clip.edit.engine.getProjectManager().getProject (clip.edit))
     {
@@ -1006,7 +1007,7 @@ WaveCompManager::CompRenderContext* WaveCompManager::createRenderContext() const
 }
 
 bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& writer,
-                                  ThreadPoolJob& job, std::atomic<float>& progress)
+                                  juce::ThreadPoolJob& job, std::atomic<float>& progress)
 {
     CRASH_TRACER
 
@@ -1031,14 +1032,14 @@ bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& w
         auto takeIndex = (int) compSegment.getProperty (IDs::takeIndex);
         auto endTime = double (compSegment.getProperty (IDs::endTime)) / timeRatio;
 
-        if (isPositiveAndBelow (takeIndex, context.takesIDs.size()))
+        if (juce::isPositiveAndBelow (takeIndex, context.takesIDs.size()))
         {
             const ProjectItemID takeID (context.takesIDs[takeIndex]);
             jassert (takeID.isValid());
 
             const AudioFile takeFile (context.engine, context.engine.getProjectManager().findSourceFile (takeID));
             AudioNode* node = new WaveAudioNode (takeFile, takeRange, 0.0, {}, {},
-                                                 1.0, AudioChannelSet::stereo());
+                                                 1.0, juce::AudioChannelSet::stereo());
 
             auto segmentTimes = EditTimeRange (startTime, endTime).expanded (halfCrossfade) + offset;
             EditTimeRange fadeIn, fadeOut;
@@ -1052,7 +1053,9 @@ bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& w
             if (! (fadeIn.isEmpty() && fadeOut.isEmpty()))
                 node = new FadeInOutAudioNode (node, fadeIn, fadeOut, AudioFadeCurve::convex, AudioFadeCurve::convex);
 
-            compNode.addInput ({ jmax (0.0, segmentTimes.getStart()), jmin (segmentTimes.getEnd(), context.maxLength) }, node);
+            compNode.addInput ({ std::max (0.0, segmentTimes.getStart()),
+                                 std::min (segmentTimes.getEnd(), context.maxLength) },
+                               node);
         }
 
         startTime = endTime;
@@ -1069,7 +1072,7 @@ bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& w
     PlayHead localPlayhead;
 
     {
-        Array<AudioNode*> allNodes;
+        juce::Array<AudioNode*> allNodes;
         allNodes.add (&compNode);
 
         PlaybackInitialisationInfo info =
@@ -1086,7 +1089,7 @@ bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& w
 
     // now prepare the render context
     juce::AudioBuffer<float> renderingBuffer (writer.getNumChannels(), blockSize + 256);
-    auto renderingBufferChannels = AudioChannelSet::canonicalChannelSet (renderingBuffer.getNumChannels());
+    auto renderingBufferChannels = juce::AudioChannelSet::canonicalChannelSet (renderingBuffer.getNumChannels());
 
     AudioRenderContext rc (localPlayhead, takeRange,
                            &renderingBuffer, renderingBufferChannels, 0, blockSize,
@@ -1102,14 +1105,14 @@ bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& w
     // now perform the render
     auto streamTime = takeRange.getStart();
     auto blockLength = blockSize / writer.getSampleRate();
-    SampleCount samplesToWrite = roundToInt (takeRange.getLength() * writer.getSampleRate());
+    SampleCount samplesToWrite = juce::roundToInt (takeRange.getLength() * writer.getSampleRate());
 
     for (;;)
     {
-        auto blockEnd = jmin (streamTime + blockLength, takeRange.getEnd());
+        auto blockEnd = std::min (streamTime + blockLength, takeRange.getEnd());
         rc.streamTime = { streamTime, blockEnd };
 
-        auto numSamplesDone = (int) jmin (samplesToWrite, (SampleCount) blockSize);
+        auto numSamplesDone = (int) std::min (samplesToWrite, (SampleCount) blockSize);
         samplesToWrite -= numSamplesDone;
 
         rc.bufferNumSamples = numSamplesDone;
@@ -1124,7 +1127,7 @@ bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& w
         streamTime = blockEnd;
 
         auto prog = (float) ((streamTime - takeRange.getStart()) / takeRange.getLength()) * 0.9f;
-        progress = jlimit (0.0f, 0.9f, prog);
+        progress = juce::jlimit (0.0f, 0.9f, prog);
 
         if (job.shouldExit())
             return false;
@@ -1165,7 +1168,7 @@ private:
     {
         CRASH_TRACER
         AudioFile tempFile (*proxy.engine,
-                            proxy.getFile().getSiblingFile ("temp_comp_" + juce::String::toHexString (Random::getSystemRandom().nextInt64()))
+                            proxy.getFile().getSiblingFile ("temp_comp_" + juce::String::toHexString (juce::Random::getSystemRandom().nextInt64()))
                             .withFileExtension (proxy.getFile().getFileExtension()));
 
         bool ok = render (tempFile);
@@ -1190,7 +1193,7 @@ private:
         CRASH_TRACER
 
         // just use the first existing take as the basis for the comp render
-        File takeFile;
+        juce::File takeFile;
 
         for (auto& takeID : context->takesIDs)
         {
@@ -1212,10 +1215,12 @@ private:
 
         AudioFileWriter writer (tempFile, engine.getAudioFileFormatManager().getWavFormat(),
                                 sourceInfo.numChannels, sourceInfo.sampleRate,
-                                jmax (16, sourceInfo.bitsPerSample),
+                                std::max (16, sourceInfo.bitsPerSample),
                                 sourceInfo.metadata, 0);
 
-        return writer.isOpen() && context != nullptr && WaveCompManager::renderTake (*context, writer, *this, progress);
+        return writer.isOpen()
+                && context != nullptr
+                && WaveCompManager::renderTake (*context, writer, *this, progress);
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CompGeneratorJob)
@@ -1413,7 +1418,7 @@ juce::ValueTree MidiCompManager::addNewComp()
     newTake.setProperty (IDs::isComp, true, nullptr);
 
     // Now add the take to to the clip list
-    MidiMessageSequence blankSeq;
+    juce::MidiMessageSequence blankSeq;
     clip.addTake (blankSeq, MidiList::NoteAutomationType::none);
 
     if (auto ml = clip.getTakeSequence (clip.getNumTakes (true) - 1))
@@ -1454,11 +1459,11 @@ void MidiCompManager::createComp (const juce::ValueTree& takeTree)
             const auto takeIndex = static_cast<int> (compSegment.getProperty (IDs::takeIndex));
             const auto endBeat = static_cast<double> (compSegment.getProperty (IDs::endTime));
 
-            if (isPositiveAndBelow (takeIndex, numTakes))
+            if (juce::isPositiveAndBelow (takeIndex, numTakes))
             {
                 if (auto src = getSequenceLooped (takeIndex))
                 {
-                    const Range<double> beats (startBeat, endBeat);
+                    const juce::Range<double> beats (startBeat, endBeat);
 
                     for (auto n : src->getNotes())
                     {

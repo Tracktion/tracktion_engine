@@ -11,7 +11,9 @@
 namespace tracktion_engine
 {
 
-double RenderOptions::findEndAllowance (Edit& edit, Array<EditItemID>* tracks, Array<Clip*>* clips)
+double RenderOptions::findEndAllowance (Edit& edit,
+                                        juce::Array<EditItemID>* tracks,
+                                        juce::Array<Clip*>* clips)
 {
     auto allTracks = getAllTracks (edit);
     Plugin::Array plugins;
@@ -37,13 +39,13 @@ double RenderOptions::findEndAllowance (Edit& edit, Array<EditItemID>* tracks, A
         if (tailLength == std::numeric_limits<double>::infinity())
             tailLength = 0.0;
 
-        allowance = jmax (allowance, tailLength);
+        allowance = std::max (allowance, tailLength);
     }
 
     return allowance;
 }
 
-static EditTimeRange findTimeFromClips (const Array<Clip*>& clips, double endAllowance) noexcept
+static EditTimeRange findTimeFromClips (const juce::Array<Clip*>& clips, double endAllowance) noexcept
 {
     auto time = findUnionOfEditTimeRanges (clips);
     time.end += endAllowance;
@@ -218,7 +220,7 @@ RenderManager::Job::Ptr RenderOptions::performBackgroundRender (Edit& edit, Sele
                 : nullptr;
 }
 
-void RenderOptions::relinkCachedValues (UndoManager* um)
+void RenderOptions::relinkCachedValues (juce::UndoManager* um)
 {
     type.referTo (state, IDs::renderType, um, RenderType::allExport);
     tracksProperty.referTo (state, IDs::renderTracks, um, {});
@@ -254,7 +256,7 @@ void RenderOptions::relinkCachedValues (UndoManager* um)
     updateHash();
 }
 
-void RenderOptions::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
+void RenderOptions::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)
 {
     if (v == state && i == IDs::renderTracks)
     {
@@ -264,9 +266,9 @@ void RenderOptions::valueTreePropertyChanged (ValueTree& v, const juce::Identifi
 }
 
 //==============================================================================
-static StringPairArray getMetadata (Edit& edit)
+static juce::StringPairArray getMetadata (Edit& edit)
 {
-    StringPairArray metadataList;
+    juce::StringPairArray metadataList;
     auto metadata = edit.getEditMetadata();
 
     if (metadata.album.isNotEmpty())          metadataList.set ("id3album", metadata.album);
@@ -448,7 +450,7 @@ Renderer::Parameters RenderOptions::getRenderParameters (MidiClip& clip)
     return params;
 }
 
-AudioFormat* RenderOptions::getAudioFormat()
+juce::AudioFormat* RenderOptions::getAudioFormat()
 {
     auto& afm = engine.getAudioFileFormatManager();
 
@@ -596,7 +598,7 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
             // and check the metadata
             AudioFile af (edit.engine, ac->getOriginalFile());
             auto metadata = af.getInfo().metadata;
-            if (metadata[WavAudioFormat::acidBeats].getIntValue() > 0)
+            if (metadata[juce::WavAudioFormat::acidBeats].getIntValue() > 0)
                 ac->setAutoTempo (allowAutoTempo);
 
             // Only enable auto pitch, if we have pitch information
@@ -645,11 +647,13 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
     {
         if (auto* mc = dynamic_cast<MidiClip*> (newClip.get()))
         {
-            OwnedArray<MidiList> lists;
+            juce::OwnedArray<MidiList> lists;
             double length = 0.0;
-            Array<double> tempoChangeBeatNumbers, bpms;
-            Array<int> numerators, denominators;
-            MidiList::readSeparateTracksFromFile (projectItem->getSourceFile(), lists, tempoChangeBeatNumbers, bpms, numerators, denominators, length, false);
+            juce::Array<double> tempoChangeBeatNumbers, bpms;
+            juce::Array<int> numerators, denominators;
+
+            MidiList::readSeparateTracksFromFile (projectItem->getSourceFile(), lists, tempoChangeBeatNumbers,
+                                                  bpms, numerators, denominators, length, false);
 
             if (auto list = lists.getFirst())
                 mc->getSequence().copyFrom (*list, nullptr);
@@ -732,7 +736,8 @@ std::unique_ptr<RenderOptions> RenderOptions::forGeneralExporter (Edit& edit)
     return ro;
 }
 
-std::unique_ptr<RenderOptions> RenderOptions::forTrackRender (Array<Track*>& tracks, AddRenderOptions addOption)
+std::unique_ptr<RenderOptions> RenderOptions::forTrackRender (juce::Array<Track*>& tracks,
+                                                              AddRenderOptions addOption)
 {
     if (auto first = tracks.getFirst())
     {
@@ -756,7 +761,7 @@ std::unique_ptr<RenderOptions> RenderOptions::forTrackRender (Array<Track*>& tra
     return {};
 }
 
-std::unique_ptr<RenderOptions> RenderOptions::forClipRender (Array<Clip*>& clips, bool midiNotes)
+std::unique_ptr<RenderOptions> RenderOptions::forClipRender (juce::Array<Clip*>& clips, bool midiNotes)
 {
     if (auto first = clips.getFirst())
     {
@@ -824,14 +829,14 @@ RenderOptions::RenderOptions (Engine& e)
 {
 }
 
-RenderOptions::RenderOptions (Engine& e, const juce::ValueTree& s, UndoManager* um)
+RenderOptions::RenderOptions (Engine& e, const juce::ValueTree& s, juce::UndoManager* um)
     : engine (e), state (s)
 {
     state.addListener (this);
     relinkCachedValues (um);
 }
 
-RenderOptions::RenderOptions (const RenderOptions& other, UndoManager* um)
+RenderOptions::RenderOptions (const RenderOptions& other, juce::UndoManager* um)
     : RenderOptions (other.engine, other.state.createCopy(), um)
 {
 }
@@ -898,7 +903,7 @@ juce::String RenderOptions::getFormatTypeName (TargetFileFormat fmt)
         case aiff:          return am.getAiffFormat()->getFormatName();
         case flac:          return am.getFlacFormat()->getFormatName();
         case ogg:           return am.getOggFormat()->getFormatName();
-        case mp3:           return am.getLameFormat() == nullptr ? String() : am.getLameFormat()->getFormatName();
+        case mp3:           return am.getLameFormat() == nullptr ? juce::String() : am.getLameFormat()->getFormatName();
         case midi:          return "MIDI file";
         case numFormats:    return "MIDI file";
         default:            return {};
@@ -957,7 +962,7 @@ void RenderOptions::setSelected (bool onlySelectedTrackAndClips)
 
 void RenderOptions::setFilename (juce::String value, bool canPromptToOverwriteExisting)
 {
-    RecentlyOpenedFilesList recent;
+    juce::RecentlyOpenedFilesList recent;
     auto recentList = engine.getPropertyStorage().getProperty (SettingID::renderRecentFilesList).toString();
     recent.restoreFromString (recentList);
 
@@ -974,7 +979,7 @@ void RenderOptions::setFilename (juce::String value, bool canPromptToOverwriteEx
             recentOffset
         };
 
-        PopupMenu m, m2;
+        juce::PopupMenu m, m2;
 
         m.addItem (browse, TRANS("Browse") + "...");
         m.addItem (projectDefault, TRANS("Set to project default"));
@@ -994,7 +999,7 @@ void RenderOptions::setFilename (juce::String value, bool canPromptToOverwriteEx
 
         if (res == browse)
         {
-            FileChooser chooser (TRANS("Select the file to use"), destFile, "*" + getCurrentFileExtension());
+            juce::FileChooser chooser (TRANS("Select the file to use"), destFile, "*" + getCurrentFileExtension());
 
             if (! chooser.browseForFileToSave (false))
                 return;
@@ -1021,9 +1026,9 @@ void RenderOptions::setFilename (juce::String value, bool canPromptToOverwriteEx
           && canPromptToOverwriteExisting
           && engine.getUIBehaviour().showOkCancelAlertBox (TRANS("File Already Exists"),
                                                            TRANS("The file you have chosen already exists, do you want to delete it?")
-                                                             + newLine + newLine
+                                                             + juce::newLine + juce::newLine
                                                              + TRANS("If you choose to cancel, a non existent file name will be chosen automatically.")
-                                                             + newLine
+                                                             + juce::newLine
                                                              + "(" + TRANS("This operation can't be undone") + ")")
          #endif
         )
@@ -1037,7 +1042,7 @@ void RenderOptions::setFilename (juce::String value, bool canPromptToOverwriteEx
     destFile = f.getFullPathName();
     updateDefaultFilename (nullptr);
 
-    if (destFile != File())
+    if (destFile != juce::File())
     {
         recent.addFile (destFile);
         auto newRecentList = recent.toString();
@@ -1155,7 +1160,7 @@ void RenderOptions::updateFileName()
     else if (auto af = getAudioFormat())
         destFile = destFile.withFileExtension (af->getFileExtensions()[0]);
     else
-        destFile = File();
+        destFile = juce::File();
 
     setFilename (destFile.getFullPathName(), false);
     updateHash();
@@ -1194,23 +1199,23 @@ void RenderOptions::updateOptionsForFormat()
         // quality
         auto qualities = af->getQualityOptions();
 
-        if (! isPositiveAndBelow (qualityIndex.get(), qualities.size()))
+        if (! juce::isPositiveAndBelow (qualityIndex.get(), qualities.size()))
             qualityIndex = (int) std::ceil (qualities.size() / 2.0);
 
-        if (! isPositiveAndBelow (qualityIndex.get(), qualities.size()))
+        if (! juce::isPositiveAndBelow (qualityIndex.get(), qualities.size()))
             qualityIndex = 0;
     }
 }
 
 void RenderOptions::updateDefaultFilename (Edit* edit)
 {
-    if (destFile == File()
+    if (destFile == juce::File()
         || destFile.existsAsFile()
         || destFile.getFileExtension() != getCurrentFileExtension())
     {
         const ProjectItem::Category category = isRender() ? ProjectItem::Category::rendered
                                                           : ProjectItem::Category::exports;
-        String nameStem;
+        juce::String nameStem;
 
         if (selectedTracks || selectedClips)
         {
@@ -1245,7 +1250,8 @@ void RenderOptions::updateDefaultFilename (Edit* edit)
         const auto dir = destFile.existsAsFile() ? destFile.getParentDirectory()
                                                  : engine.getPropertyStorage().getDefaultLoadSaveDirectory (category);
 
-        destFile = dir.getChildFile (File::createLegalFileName (nameStem) + getCurrentFileExtension());
+        destFile = dir.getChildFile (juce::File::createLegalFileName (nameStem)
+                                       + getCurrentFileExtension());
 
         destFile = getNonExistentSiblingWithIncrementedNumberSuffix (destFile, false);
     }

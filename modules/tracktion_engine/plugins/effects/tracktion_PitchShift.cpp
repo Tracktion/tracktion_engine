@@ -101,7 +101,7 @@ struct PitchShiftPlugin::Pimpl
             }
 
             if (fc.bufferForMidiMessages != nullptr)
-                fc.bufferForMidiMessages->addToNoteNumbers (roundToInt (semis));
+                fc.bufferForMidiMessages->addToNoteNumbers (juce::roundToInt (semis));
         }
     }
 
@@ -130,9 +130,9 @@ PitchShiftPlugin::PitchShiftPlugin (PluginCreationInfo info) : Plugin (info)
                           { -PitchShiftPlugin::getMaximumSemitones(), PitchShiftPlugin::getMaximumSemitones() },
                           [] (float value)            { return std::abs (value) < 0.01f ? "(" + TRANS("Original pitch") + ")"
                                                                                         : getSemitonesAsString (value); },
-                          [] (const juce::String& s)  { return jlimit (-PitchShiftPlugin::getMaximumSemitones(),
-                                                                       PitchShiftPlugin::getMaximumSemitones(),
-                                                                       s.getFloatValue()); });
+                          [] (const juce::String& s)  { return juce::jlimit (-PitchShiftPlugin::getMaximumSemitones(),
+                                                                             PitchShiftPlugin::getMaximumSemitones(),
+                                                                             s.getFloatValue()); });
 
     semitonesValue.referTo (state, IDs::semitonesUp, um);
     mode.referTo (state, IDs::mode, um, (int) TimeStretcher::defaultMode);
@@ -191,8 +191,8 @@ juce::String PitchShiftPlugin::getSelectableDescription()
 
 void PitchShiftPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    CachedValue<float>* cvsFloat[]  = { &semitonesValue, nullptr };
-    CachedValue<int>* cvsInt[]      = { &mode, nullptr };
+    juce::CachedValue<float>* cvsFloat[]  = { &semitonesValue, nullptr };
+    juce::CachedValue<int>* cvsInt[]      = { &mode, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
 

@@ -58,8 +58,8 @@ void TempoSetting::set (double newStartBeat, double newBPM, float newCurve, bool
     bpm.forceUpdateOfCachedValue();
     curve.forceUpdateOfCachedValue();
 
-    newBPM = jlimit (minBPM, maxBPM, newBPM);
-    newCurve = jlimit (-1.0f, 1.0f, newCurve);
+    newBPM   = juce::jlimit (minBPM, maxBPM, newBPM);
+    newCurve = juce::jlimit (-1.0f, 1.0f, newCurve);
 
     if (newBPM != bpm || startBeatNumber != newStartBeat || curve != newCurve)
     {

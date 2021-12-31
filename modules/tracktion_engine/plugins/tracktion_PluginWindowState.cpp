@@ -90,9 +90,9 @@ void PluginWindowState::showWindow()
         // Ensure at least 40px of the window is on screen
         const auto displayRects = []
         {
-            RectangleList<int> trimmedDisplays;
+            juce::RectangleList<int> trimmedDisplays;
             
-            for (auto rect : Desktop::getInstance().getDisplays().getRectangleList (true))
+            for (auto rect : juce::Desktop::getInstance().getDisplays().getRectangleList (true))
                 trimmedDisplays.addWithoutMerging (rect.withTrimmedLeft (100).withTrimmedRight (100).withTrimmedBottom (100));
             
             return trimmedDisplays;
@@ -103,7 +103,7 @@ void PluginWindowState::showWindow()
         if (lastWindowBounds.isEmpty() || ! windowBoundsIsOnScreen)
             pickDefaultWindowBounds();
 
-        WeakReference<Component> oldFocus (Component::getCurrentlyFocusedComponent());
+        juce::WeakReference<juce::Component> oldFocus (juce::Component::getCurrentlyFocusedComponent());
         pluginWindow = engine.getUIBehaviour().createPluginWindow (*this);
 
         if (oldFocus != nullptr)
@@ -112,19 +112,19 @@ void PluginWindowState::showWindow()
 
     if (pluginWindow)
     {
-        windowOpenTime = Time::getCurrentTime();
+        windowOpenTime = juce::Time::getCurrentTime();
         pluginWindow->setVisible (true);
         pluginWindow->toFront (false);
     }
 }
 
-void PluginWindowState::pluginClicked (const MouseEvent& e)
+void PluginWindowState::pluginClicked (const juce::MouseEvent& e)
 {
     bool isShowing = isWindowShowing();
 
     if (e.getNumberOfClicks() >= 2)
     {
-        if ((Time::getCurrentTime() - windowOpenTime).inMilliseconds() < 300)
+        if ((juce::Time::getCurrentTime() - windowOpenTime).inMilliseconds() < 300)
             return;
 
         if (isShowing)

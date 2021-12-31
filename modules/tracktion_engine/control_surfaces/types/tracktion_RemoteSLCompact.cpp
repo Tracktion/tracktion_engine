@@ -38,7 +38,7 @@ RemoteSLCompact::~RemoteSLCompact()
 void RemoteSLCompact::initialiseDevice (bool) {}
 void RemoteSLCompact::shutDownDevice() {}
 void RemoteSLCompact::updateMiscFeatures() {}
-void RemoteSLCompact::acceptMidiMessage (const MidiMessage&) {}
+void RemoteSLCompact::acceptMidiMessage (const juce::MidiMessage&) {}
 void RemoteSLCompact::moveFader (int, float) {}
 void RemoteSLCompact::moveMasterLevelFader (float, float) {}
 void RemoteSLCompact::movePanPot (int, float) {}
@@ -67,21 +67,16 @@ void RemoteSLCompact::clearParameter (int) {}
 void RemoteSLCompact::markerChanged (int, const MarkerSetting&) {}
 void RemoteSLCompact::clearMarker (int) {}
 void RemoteSLCompact::auxBankChanged (int) {}
-
-bool RemoteSLCompact::eatsAllMessages()                 { return false; }
-bool RemoteSLCompact::canSetEatsAllMessages()           { return false; }
-void RemoteSLCompact::setEatsAllMessages (bool)         {}
-bool RemoteSLCompact::canChangeSelectedPlugin()         { return true; }
-void RemoteSLCompact::currentSelectionChanged (juce::String) {}
-bool RemoteSLCompact::showingPluginParams()             { return true; }
-bool RemoteSLCompact::showingMarkers()                  { return false; }
-bool RemoteSLCompact::showingTracks()                   { return false; }
-void RemoteSLCompact::pluginBypass (bool)               {}
-bool RemoteSLCompact::isPluginSelected (Plugin*)        { return false; }
-
-bool RemoteSLCompact::wantsMessage (const MidiMessage& m)
-{
-    return m.isController();
-}
+bool RemoteSLCompact::eatsAllMessages()                             { return false; }
+bool RemoteSLCompact::canSetEatsAllMessages()                       { return false; }
+void RemoteSLCompact::setEatsAllMessages (bool)                     {}
+bool RemoteSLCompact::canChangeSelectedPlugin()                     { return true; }
+void RemoteSLCompact::currentSelectionChanged (juce::String)        {}
+bool RemoteSLCompact::showingPluginParams()                         { return true; }
+bool RemoteSLCompact::showingMarkers()                              { return false; }
+bool RemoteSLCompact::showingTracks()                               { return false; }
+void RemoteSLCompact::pluginBypass (bool)                           {}
+bool RemoteSLCompact::isPluginSelected (Plugin*)                    { return false; }
+bool RemoteSLCompact::wantsMessage (const juce::MidiMessage& m)     { return m.isController(); }
 
 }

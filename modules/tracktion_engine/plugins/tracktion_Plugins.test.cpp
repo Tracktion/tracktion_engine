@@ -15,17 +15,17 @@ namespace tracktion_engine
 
 //==============================================================================
 //==============================================================================
-class PDCTests  : public UnitTest
+class PDCTests  : public juce::UnitTest
 {
 public:
     PDCTests()
-        : UnitTest ("PDC", "Tracktion:Longer")
+        : juce::UnitTest ("PDC", "Tracktion:Longer")
     {
     }
 
     void runTest() override
     {
-        auto sinFile = getSinFile<WavAudioFormat> (44100.0);
+        auto sinFile = getSinFile<juce::WavAudioFormat> (44100.0);
 
         auto& engine = *Engine::getEngines()[0];
         engine.getPluginManager().createBuiltInType<LatencyPlugin>();
@@ -65,7 +65,7 @@ public:
         
         beginTest ("Source file with different sample rate");
         {
-            auto sinFile96Ogg = getSinFile<OggVorbisAudioFormat> (96000.0);
+            auto sinFile96Ogg = getSinFile<juce::OggVorbisAudioFormat> (96000.0);
             expectEquals (sinFile96Ogg->getFile().getFileExtension(), juce::String (".ogg"));
             auto edit = createTestEdit (engine);
             auto track1 = getAudioTracks (*edit)[0];
@@ -91,7 +91,7 @@ public:
         }
     }
 
-    void expectPeak (Edit& edit, EditTimeRange tr, Array<Track*> tracks, float expectedPeak)
+    void expectPeak (Edit& edit, EditTimeRange tr, juce::Array<Track*> tracks, float expectedPeak)
     {
         auto blockSize = edit.engine.getDeviceManager().getBlockSize();
         auto stats = logStats (Renderer::measureStatistics ("PDC Tests", edit, tr, getTracksMask (tracks), blockSize));
@@ -105,7 +105,7 @@ public:
         return stats;
     }
 
-    static juce::BigInteger getTracksMask (const Array<Track*>& tracks)
+    static juce::BigInteger getTracksMask (const juce::Array<Track*>& tracks)
     {
         juce::BigInteger tracksMask;
 
@@ -131,10 +131,10 @@ public:
     }
 
     template<typename AudioFormatType>
-    std::unique_ptr<TemporaryFile> getSinFile (double sampleRate)
+    std::unique_ptr<juce::TemporaryFile> getSinFile (double sampleRate)
     {
         // Create a 1s sin buffer
-        AudioBuffer<float> buffer (1, (int) sampleRate);
+        juce::AudioBuffer<float> buffer (1, (int) sampleRate);
         juce::dsp::Oscillator<float> osc ([] (float in) { return std::sin (in); });
         osc.setFrequency (220.0);
         osc.prepare ({ double (sampleRate), uint32_t (sampleRate), 1 });
@@ -147,7 +147,7 @@ public:
 
         // Then write it to a temp file
         AudioFormatType format;
-        auto f = std::make_unique<TemporaryFile> (format.getFileExtensions()[0]);
+        auto f = std::make_unique<juce::TemporaryFile> (format.getFileExtensions()[0]);
         
         if (auto fileStream = f->getFile().createOutputStream())
         {
@@ -155,7 +155,9 @@ public:
             const int qualityOptionIndex = numQualityOptions == 0 ? 0 : (numQualityOptions / 2);
             const int bitDepth = format.getPossibleBitDepths().contains (16) ? 16 : 32;
             
-            if (auto writer = std::unique_ptr<AudioFormatWriter> (AudioFormatType().createWriterFor (fileStream.get(), sampleRate, 1, bitDepth, {}, qualityOptionIndex)))
+            if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (AudioFormatType().createWriterFor (fileStream.get(),
+                                                                                                           sampleRate, 1, bitDepth,
+                                                                                                           {}, qualityOptionIndex)))
             {
                 fileStream.release();
                 writer->writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());

@@ -18,7 +18,7 @@ DelayPlugin::DelayPlugin (PluginCreationInfo info) : Plugin (info)
                               [] (const juce::String& s)    { return dbStringToDb (s); });
 
     mixProportion = addParam ("mix proportion", TRANS("Mix proportion"), { 0.0f, 1.0f },
-                              [] (float value)              { return juce::String (roundToInt (value * 100.0f)) + "% wet"; },
+                              [] (float value)              { return juce::String (juce::roundToInt (value * 100.0f)) + "% wet"; },
                               [] (const juce::String& s)    { return s.getFloatValue() / 100.0f; });
 
     auto um = getUndoManager();
@@ -77,7 +77,7 @@ void DelayPlugin::applyToBuffer (const PluginRenderContext& fc)
 
     clearChannels (*fc.destBuffer, 2, -1, fc.bufferStartSample, fc.bufferNumSamples);
 
-    for (int chan = jmin (2, fc.destBuffer->getNumChannels()); --chan >= 0;)
+    for (int chan = std::min (2, fc.destBuffer->getNumChannels()); --chan >= 0;)
     {
         float* const d = fc.destBuffer->getWritePointer (chan, fc.bufferStartSample);
         float* const buf = (float*) delayBuffer.buffers[chan].getData();
@@ -101,8 +101,8 @@ void DelayPlugin::applyToBuffer (const PluginRenderContext& fc)
 
 void DelayPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    CachedValue<float>* cvsFloat[]  = { &feedbackValue, &mixValue, nullptr };
-    CachedValue<int>* cvsInt[]      = { &lengthMs, nullptr };
+    juce::CachedValue<float>* cvsFloat[]  = { &feedbackValue, &mixValue, nullptr };
+    juce::CachedValue<int>* cvsInt[]      = { &lengthMs, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
 
@@ -114,10 +114,10 @@ void DelayPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 
 //==============================================================================
 //==============================================================================
-class DelayPluginTests : public UnitTest
+class DelayPluginTests : public juce::UnitTest
 {
 public:
-    DelayPluginTests() : UnitTest ("DelayPlugin", "Tracktion") {}
+    DelayPluginTests() : juce::UnitTest ("DelayPlugin", "Tracktion") {}
 
     //==============================================================================
     void runTest() override

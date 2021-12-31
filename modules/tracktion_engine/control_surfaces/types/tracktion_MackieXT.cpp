@@ -55,7 +55,7 @@ void MackieXT::shutDownDevice()
     sendMidiArray (d);
 }
 
-void MackieXT::acceptMidiMessage (const MidiMessage& m)
+void MackieXT::acceptMidiMessage (const juce::MidiMessage& m)
 {
     mcu.acceptMidiMessage (deviceIdx, m);
 }

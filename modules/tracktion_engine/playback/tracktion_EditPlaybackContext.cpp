@@ -109,7 +109,7 @@ private:
         
         if (! sourceIsPlaying || std::abs (lastSourceTimelineTime - sourceTimelineTime) > 0.2)
         {
-            const RelativeTime rt = Time::getCurrentTime() - sourceLastInteractionTime;
+            auto rt = juce::Time::getCurrentTime() - sourceLastInteractionTime;
 
             if (! sourceIsPlaying || rt.inSeconds() < 0.2)
             {
@@ -189,7 +189,7 @@ private:
 
      void setSpeedCompensation (double plusOrMinus)
      {
-         speedCompensation = jlimit (-10.0, 10.0, plusOrMinus);
+         speedCompensation = juce::jlimit (-10.0, 10.0, plusOrMinus);
      }
      
      void updateReferenceSampleRange (int numSamples)
@@ -269,7 +269,7 @@ private:
      ProcessState processState { playHeadState };
      
  private:
-     AudioBuffer<float> scratchAudioBuffer;
+     juce::AudioBuffer<float> scratchAudioBuffer;
      MidiMessageArray scratchMidiBuffer;
      TracktionNodePlayer player;
      const size_t maxNumThreads;
@@ -334,7 +334,7 @@ EditPlaybackContext::~EditPlaybackContext()
     edit.engine.getDeviceManager().removeContext (this);
 
     clearNodes();
-    midiDispatcher.setMidiDeviceList (OwnedArray<MidiOutputDeviceInstance>());
+    midiDispatcher.setMidiDeviceList (juce::OwnedArray<MidiOutputDeviceInstance>());
 }
 
 void EditPlaybackContext::releaseDeviceList()
@@ -342,9 +342,9 @@ void EditPlaybackContext::releaseDeviceList()
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
 
-    const ScopedValueSetter<bool> alocateSetter (isAllocated, isAllocated);
+    const juce::ScopedValueSetter<bool> alocateSetter (isAllocated, isAllocated);
     clearNodes();
-    midiDispatcher.setMidiDeviceList (OwnedArray<MidiOutputDeviceInstance>());
+    midiDispatcher.setMidiDeviceList (juce::OwnedArray<MidiOutputDeviceInstance>());
 
     // Clear the outputs before the inputs as the midi inputs will be referenced by the MidiDeviceInstanceBase::Consumer
     waveOutputs.clear();
@@ -639,7 +639,7 @@ Clip::Array EditPlaybackContext::recordingFinished (EditTimeRange recordedRange,
     return clips;
 }
 
-Result EditPlaybackContext::applyRetrospectiveRecord (Array<Clip*>* clips)
+juce::Result EditPlaybackContext::applyRetrospectiveRecord (juce::Array<Clip*>* clips)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
@@ -656,7 +656,7 @@ Result EditPlaybackContext::applyRetrospectiveRecord (Array<Clip*>* clips)
     }
 
     if (! inputAssigned)
-        return Result::fail (TRANS("Unable to perform retrospective record, no inputs are assigned to a track"));
+        return juce::Result::fail (TRANS("Unable to perform retrospective record, no inputs are assigned to a track"));
 
     InputDevice::setRetrospectiveLock (edit.engine, getAllInputs(), true);
 
@@ -676,14 +676,14 @@ Result EditPlaybackContext::applyRetrospectiveRecord (Array<Clip*>* clips)
     InputDevice::setRetrospectiveLock (edit.engine, getAllInputs(), false);
 
     if (! clipCreated)
-        return Result::fail (TRANS("Unable to perform retrospective record, all input buffers are empty"));
+        return juce::Result::fail (TRANS("Unable to perform retrospective record, all input buffers are empty"));
 
-    return Result::ok();
+    return juce::Result::ok();
 }
 
-Array<InputDeviceInstance*> EditPlaybackContext::getAllInputs()
+juce::Array<InputDeviceInstance*> EditPlaybackContext::getAllInputs()
 {
-    Array<InputDeviceInstance*> allInputs;
+    juce::Array<InputDeviceInstance*> allInputs;
     allInputs.addArray (waveInputs);
     allInputs.addArray (midiInputs);
 
@@ -933,17 +933,18 @@ void EditPlaybackContext::resyncToGlobalStreamTime (juce::Range<double> globalSt
 
 void EditPlaybackContext::setThreadPoolStrategy (int type)
 {
-    type = jlimit (static_cast<int> (tracktion_graph::ThreadPoolStrategy::conditionVariable),
-                   static_cast<int> (tracktion_graph::ThreadPoolStrategy::lightweightSemHybrid),
-                   type);
+    type = juce::jlimit (static_cast<int> (tracktion_graph::ThreadPoolStrategy::conditionVariable),
+                         static_cast<int> (tracktion_graph::ThreadPoolStrategy::lightweightSemHybrid),
+                         type);
+
     EditPlaybackContextInternal::getThreadPoolStrategyType() = type;
 }
 
 int EditPlaybackContext::getThreadPoolStrategy()
 {
-    const int type = jlimit (static_cast<int> (tracktion_graph::ThreadPoolStrategy::conditionVariable),
-                             static_cast<int> (tracktion_graph::ThreadPoolStrategy::lightweightSemHybrid),
-                             EditPlaybackContextInternal::getThreadPoolStrategyType());
+    const int type = juce::jlimit (static_cast<int> (tracktion_graph::ThreadPoolStrategy::conditionVariable),
+                                   static_cast<int> (tracktion_graph::ThreadPoolStrategy::lightweightSemHybrid),
+                                   EditPlaybackContextInternal::getThreadPoolStrategyType());
     
     return type;
 }

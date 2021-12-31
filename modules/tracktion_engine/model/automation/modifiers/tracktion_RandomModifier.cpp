@@ -24,7 +24,7 @@ struct RandomModifier::RandomModifierTimer    : public ModifierTimer
         modifier.setEditTime (editTime);
         modifier.updateParameterStreams (editTime);
 
-        const auto syncTypeThisBlock = roundToInt (modifier.syncTypeParam->getCurrentValue());
+        const auto syncTypeThisBlock = juce::roundToInt (modifier.syncTypeParam->getCurrentValue());
         const auto rateTypeThisBlock = getTypedParamValue<ModifierCommon::RateType> (*modifier.rateTypeParam);
 
         const float rateThisBlock = modifier.rateParam->getCurrentValue();
@@ -77,7 +77,7 @@ struct RandomModifier::RandomModifierTimer    : public ModifierTimer
 
     void resync (double duration)
     {
-        if (roundToInt (modifier.syncTypeParam->getCurrentValue()) == ModifierCommon::note)
+        if (juce::roundToInt (modifier.syncTypeParam->getCurrentValue()) == ModifierCommon::note)
         {
             ramp.setPosition (0.0f);
             modifier.setPhase (0.0f);
@@ -111,7 +111,7 @@ RandomModifier::RandomModifier (Edit& e, const juce::ValueTree& v)
     bipolar.referTo (state, IDs::bipolar, um);
 
     auto addDiscreteParam = [this] (const juce::String& paramID, const juce::String& name,
-                                    juce::Range<float> valueRange, CachedValue<float>& val,
+                                    juce::Range<float> valueRange, juce::CachedValue<float>& val,
                                     const juce::StringArray& labels) -> AutomatableParameter*
     {
         auto* p = new DiscreteLabelledParameter (paramID, name, *this, valueRange, labels.size(), labels);
@@ -121,8 +121,10 @@ RandomModifier::RandomModifier (Edit& e, const juce::ValueTree& v)
         return p;
     };
 
-    auto addParam = [this] (const juce::String& paramID, const juce::String& name, NormalisableRange<float> valueRange,
-                            float centreVal, CachedValue<float>& val, const juce::String& suffix) -> AutomatableParameter*
+    auto addParam = [this] (const juce::String& paramID, const juce::String& name,
+                            juce::NormalisableRange<float> valueRange,
+                            float centreVal, juce::CachedValue<float>& val,
+                            const juce::String& suffix) -> AutomatableParameter*
     {
         valueRange.setSkewForCentre (centreVal);
         auto* p = new SuffixedParameter (paramID, name, *this, valueRange, suffix);
@@ -245,14 +247,15 @@ void RandomModifier::setPhase (float newPhase)
 
         const bool bp = getBoolParamValue (*bipolarParam);
         const float sd = stepDepthParam->getCurrentValue() * (bp ? 1.0f : 0.5f);
-        const auto randomRange = Range<float> (currentRandom - sd, currentRandom + sd).getIntersectionWith ({ bp ? -1.0f : 0.0f, 1.0f });
+        const auto randomRange = juce::Range<float> (currentRandom - sd, currentRandom + sd)
+                                    .getIntersectionWith ({ bp ? -1.0f : 0.0f, 1.0f });
 
-        currentRandom = jmap (rand.nextFloat(), randomRange.getStart(), randomRange.getEnd());
+        currentRandom = juce::jmap (rand.nextFloat(), randomRange.getStart(), randomRange.getEnd());
         jassert (randomRange.contains (currentRandom));
         randomDifference = currentRandom - previousRandom;
     }
 
-    jassert (isPositiveAndBelow (newPhase, 1.0f));
+    jassert (juce::isPositiveAndBelow (newPhase, 1.0f));
     currentPhase.store (newPhase, std::memory_order_release);
 
     auto newValue = [this, newPhase, s = shapeParam->getCurrentValue()]

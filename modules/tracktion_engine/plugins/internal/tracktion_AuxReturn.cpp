@@ -57,7 +57,7 @@ void AuxReturnPlugin::applyToBuffer (const PluginRenderContext&)
 
 void AuxReturnPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    CachedValue<int>* cvsInt[] = { &busNumber, nullptr };
+    juce::CachedValue<int>* cvsInt[] = { &busNumber, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
 
     for (auto p : getAutomatableParameters())

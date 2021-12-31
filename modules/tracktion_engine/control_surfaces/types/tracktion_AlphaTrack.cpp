@@ -53,7 +53,7 @@ AlphaTrackControlSurface::AlphaTrackControlSurface (ExternalControllerManager& e
     isLoopOn                        = false;
     physicalFaderPos                = -1;
 
-    zeromem (displayBuffer, sizeof (displayBuffer));
+    std::memset (displayBuffer, 0, sizeof (displayBuffer));
     memset (displayBuffer, '=', sizeof (displayBuffer) - 1);
 }
 
@@ -101,7 +101,7 @@ bool AlphaTrackControlSurface::isOnEditScreen() const
     return getEditIfOnEditScreen() != nullptr;
 }
 
-void AlphaTrackControlSurface::acceptMidiMessage (const MidiMessage& m)
+void AlphaTrackControlSurface::acceptMidiMessage (const juce::MidiMessage& m)
 {
     auto data = m.getRawData();
     auto datasize = m.getRawDataSize();
@@ -190,7 +190,7 @@ void AlphaTrackControlSurface::acceptMidiMessage (const MidiMessage& m)
                     if (shift)
                     {
                         if (! doKeyPress (alphaTrackF5, ! isOnEditScreen()))
-                            doKeyPress (KeyPress::F5Key);
+                            doKeyPress (juce::KeyPress::F5Key);
                     }
                     else
                     {
@@ -202,7 +202,7 @@ void AlphaTrackControlSurface::acceptMidiMessage (const MidiMessage& m)
                     if (shift)
                     {
                         if (! doKeyPress(alphaTrackF6, ! isOnEditScreen()))
-                            doKeyPress(KeyPress::F6Key);
+                            doKeyPress (juce::KeyPress::F6Key);
                     }
                     else
                     {
@@ -214,7 +214,7 @@ void AlphaTrackControlSurface::acceptMidiMessage (const MidiMessage& m)
                     if (shift)
                     {
                         if (! doKeyPress(alphaTrackF7, ! isOnEditScreen()))
-                            doKeyPress(KeyPress::F7Key);
+                            doKeyPress (juce::KeyPress::F7Key);
                     }
                     else
                     {
@@ -226,7 +226,7 @@ void AlphaTrackControlSurface::acceptMidiMessage (const MidiMessage& m)
                     if (shift)
                     {
                         if (! doKeyPress(alphaTrackF8, ! isOnEditScreen()))
-                            doKeyPress(KeyPress::F8Key);
+                            doKeyPress (juce::KeyPress::F8Key);
                     }
                     else
                     {
@@ -273,13 +273,10 @@ void AlphaTrackControlSurface::acceptMidiMessage (const MidiMessage& m)
                         userPressedRecEnable(0, false);
                     break;
                 case 0x67: // footswitch
-                {
-                    KeyPress key (alphaTrackFoot);
+                    if (auto focused = juce::Component::getCurrentlyFocusedComponent())
+                        focused->keyPressed (juce::KeyPress (alphaTrackFoot));
 
-                    if (auto focused = Component::getCurrentlyFocusedComponent())
-                        focused->keyPressed (key);
                     break;
-                }
                 case 0x78: // left encoder touch
                     touchParam(0);
                     break;
@@ -454,7 +451,7 @@ void AlphaTrackControlSurface::acceptMidiMessage (const MidiMessage& m)
 
             if (param)
             {
-                pos = jlimit (0.0f, 1.0f, float(fpos) / 0x3FF);
+                pos = juce::jlimit (0.0f, 1.0f, float(fpos) / 0x3FF);
                 param->midiControllerMoved (pos);
                 updateDisplay();
                 updateFlip();
@@ -501,7 +498,7 @@ void AlphaTrackControlSurface::moveFader(int channelNum, float newSliderPos)
 
 void AlphaTrackControlSurface::moveFaderInt (float newSliderPos)
 {
-    int newPos = roundToInt (newSliderPos * 0x3FF);
+    int newPos = juce::roundToInt (newSliderPos * 0x3FF);
 
     if (newPos != physicalFaderPos)
     {
@@ -660,7 +657,7 @@ void AlphaTrackControlSurface::currentSelectionChanged (juce::String)
 void AlphaTrackControlSurface::displayPrint (int line, int x, const char* const text)
 {
     const size_t len = strlen (text);
-    HeapBlock<uint8_t> buffer (len + 8);
+    juce::HeapBlock<uint8_t> buffer (len + 8);
     memcpy (buffer, AlphaTrack::cmdWrite, sizeof (AlphaTrack::cmdWrite));
     buffer [sizeof (AlphaTrack::cmdWrite)] = (uint8_t) (x + line * 16);
     memcpy (buffer + sizeof (AlphaTrack::cmdWrite) + 1, text, len);
@@ -681,7 +678,7 @@ void AlphaTrackControlSurface::setLed (int led, bool state)
 static juce::String dbToString (double db, int chars)
 {
     if (db >= -96.0f)
-        return String::formatted ("%+.1f", db).substring (0, chars);
+        return juce::String::formatted ("%+.1f", db).substring (0, chars);
 
     return juce::String ("-INF").substring (0, chars);
 }
@@ -1083,7 +1080,7 @@ void AlphaTrackControlSurface::turnParam (int paramIdx, int delta)
 
     if (param)
     {
-        pos = jlimit (0.0f, 1.0f, pos + delta / 75.0f);
+        pos = juce::jlimit (0.0f, 1.0f, pos + delta / 75.0f);
         param->midiControllerMoved (pos);
         updateDisplay();
     }
@@ -1137,11 +1134,11 @@ bool AlphaTrackControlSurface::isPluginSelected (Plugin* p)
 
 bool AlphaTrackControlSurface::doKeyPress (int key, bool force)
 {
-    KeyPress keyPress (key);
+    juce::KeyPress keyPress (key);
 
     if (auto acm = engine.getUIBehaviour().getApplicationCommandManager())
     {
-        const CommandID id = acm->getKeyMappings()->findCommandForKeyPress (keyPress);
+        auto id = acm->getKeyMappings()->findCommandForKeyPress (keyPress);
 
         if (id != 0)
         {
@@ -1152,7 +1149,7 @@ bool AlphaTrackControlSurface::doKeyPress (int key, bool force)
 
     if (force)
     {
-        if (auto focused = Component::getCurrentlyFocusedComponent())
+        if (auto focused = juce::Component::getCurrentlyFocusedComponent())
             focused->keyPressed (keyPress);
 
         return true;

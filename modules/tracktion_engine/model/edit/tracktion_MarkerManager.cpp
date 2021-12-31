@@ -22,10 +22,10 @@ MarkerManager::~MarkerManager()
     state.removeListener (this);
 }
 
-ReferenceCountedArray<MarkerClip> MarkerManager::getMarkers() const
+juce::ReferenceCountedArray<MarkerClip> MarkerManager::getMarkers() const
 {
     CRASH_TRACER
-    ReferenceCountedArray<MarkerClip> results;
+    juce::ReferenceCountedArray<MarkerClip> results;
 
     if (auto mt = edit.getMarkerTrack())
         for (auto clip : mt->getClips())
@@ -38,7 +38,7 @@ ReferenceCountedArray<MarkerClip> MarkerManager::getMarkers() const
 
 int MarkerManager::getNextUniqueID (int start)
 {
-    SortedSet<int> uniqueIDs;
+    juce::SortedSet<int> uniqueIDs;
 
     for (auto m : getMarkers())
         uniqueIDs.add (m->getMarkerID());

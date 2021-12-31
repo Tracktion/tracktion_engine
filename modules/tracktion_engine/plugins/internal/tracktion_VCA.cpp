@@ -15,7 +15,7 @@ class VcaAutomatableParameter : public AutomatableParameter
 {
 public:
     VcaAutomatableParameter (const juce::String& xmlTag, const juce::String& name,
-                             Plugin& owner, Range<float> valueRangeToUse)
+                             Plugin& owner, juce::Range<float> valueRangeToUse)
         : AutomatableParameter (xmlTag, name, owner, valueRangeToUse)
     {
     }
@@ -27,7 +27,7 @@ public:
 
     juce::String valueToString (float value) override
     {
-        return Decibels::toString (volumeFaderPositionToDB (value) + 0.001);
+        return juce::Decibels::toString (volumeFaderPositionToDB (value) + 0.001);
     }
 
     float stringToValue (const juce::String& str) override
@@ -82,7 +82,7 @@ float VCAPlugin::getVolumeDb() const
 
 void VCAPlugin::setSliderPos (float newV)
 {
-    volParam->setParameter (jlimit (0.0f, 1.0f, newV), sendNotification);
+    volParam->setParameter (juce::jlimit (0.0f, 1.0f, newV), juce::sendNotification);
 }
 
 void VCAPlugin::muteOrUnmute()
@@ -124,7 +124,7 @@ bool VCAPlugin::canBeMoved()
 
 void VCAPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    CachedValue<float>* cvsFloat[]  = { &volumeValue, nullptr };
+    juce::CachedValue<float>* cvsFloat[]  = { &volumeValue, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
 
     for (auto p : getAutomatableParameters())

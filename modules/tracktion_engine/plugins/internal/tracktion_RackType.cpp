@@ -30,7 +30,7 @@ static juce::String getDefaultOutputName (int i)
 }
 
 //==============================================================================
-RackConnection::RackConnection (const juce::ValueTree& v, UndoManager* um)
+RackConnection::RackConnection (const juce::ValueTree& v, juce::UndoManager* um)
     : state (v)
 {
     sourceID.referTo (state, IDs::src, um);
@@ -74,10 +74,10 @@ struct RackType::RackPluginList  : public ValueTreeObjectList<RackType::PluginIn
         delete p;
     }
 
-    void newObjectAdded (PluginInfo*) override                                    { sendChange(); }
-    void objectRemoved (PluginInfo*) override                                     { sendChange(); }
-    void objectOrderChanged() override                                            { sendChange(); }
-    void valueTreePropertyChanged (ValueTree&, const juce::Identifier&) override  { sendChange(); }
+    void newObjectAdded (PluginInfo*) override                                          { sendChange(); }
+    void objectRemoved (PluginInfo*) override                                           { sendChange(); }
+    void objectOrderChanged() override                                                  { sendChange(); }
+    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override  { sendChange(); }
 
     void sendChange()
     {
@@ -123,10 +123,10 @@ struct RackType::ConnectionList  : public ValueTreeObjectList<RackConnection>
         delete t;
     }
 
-    void newObjectAdded (RackConnection*) override                                { sendChange(); }
-    void objectRemoved (RackConnection*) override                                 { sendChange(); }
-    void objectOrderChanged() override                                            { sendChange(); }
-    void valueTreePropertyChanged (ValueTree&, const juce::Identifier&) override  { sendChange(); }
+    void newObjectAdded (RackConnection*) override                                      { sendChange(); }
+    void objectRemoved (RackConnection*) override                                       { sendChange(); }
+    void objectOrderChanged() override                                                  { sendChange(); }
+    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override  { sendChange(); }
 
     void sendChange()
     {
@@ -170,10 +170,10 @@ struct RackType::WindowStateList  : public ValueTreeObjectList<WindowState>
         delete t;
     }
 
-    void newObjectAdded (WindowState*) override                                   {}
-    void objectRemoved (WindowState*) override                                    {}
-    void objectOrderChanged() override                                            {}
-    void valueTreePropertyChanged (ValueTree&, const juce::Identifier&) override  {}
+    void newObjectAdded (WindowState*) override                                         {}
+    void objectRemoved (WindowState*) override                                          {}
+    void objectOrderChanged() override                                                  {}
+    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override  {}
 
     RackType& type;
 
@@ -280,11 +280,11 @@ namespace
     }
 }
 
-Result RackType::restoreStateFromValueTree (const juce::ValueTree& vt)
+juce::Result RackType::restoreStateFromValueTree (const juce::ValueTree& vt)
 {
     // First check to see if the incoming state has any modifier assignments
     if (hasAnyModifierAssignmentsRecursive (vt))
-        return Result::fail (TRANS("Unable to apply preset due to Macro or Modifier connections, please create a new Rack from the preset"));
+        return juce::Result::fail (TRANS("Unable to apply preset due to Macro or Modifier connections, please create a new Rack from the preset"));
 
     auto v = vt.createCopy();
 
@@ -292,7 +292,7 @@ Result RackType::restoreStateFromValueTree (const juce::ValueTree& vt)
         v = v.getChildWithName (IDs::RACK);
 
     if (! v.hasType (IDs::RACK))
-        return Result::fail (TRANS("Invalid or corrupted preset"));
+        return juce::Result::fail (TRANS("Invalid or corrupted preset"));
 
     rackID.writeID (v, nullptr);
 
@@ -328,7 +328,7 @@ Result RackType::restoreStateFromValueTree (const juce::ValueTree& vt)
     propertiesChanged();
     changed();
 
-    return Result::ok();
+    return juce::Result::ok();
 }
 
 juce::ValueTree RackType::createStateCopy (bool includeAutomation)
@@ -346,7 +346,7 @@ juce::ValueTree RackType::createStateCopy (bool includeAutomation)
     return v;
 }
 
-Array<RackType::WindowState*> RackType::getWindowStates() const
+juce::Array<RackType::WindowState*> RackType::getWindowStates() const
 {
     return windowStateList->objects;
 }
@@ -356,7 +356,7 @@ void RackType::loadWindowPosition()
     for (auto* ws : getWindowStates())
     {
         if (ws->state.hasProperty (IDs::windowPos))
-            ws->lastWindowBounds = Rectangle<int>::fromString (ws->state[IDs::windowPos].toString());
+            ws->lastWindowBounds = juce::Rectangle<int>::fromString (ws->state[IDs::windowPos].toString());
 
         if (ws->state.hasProperty (IDs::windowLocked))
             ws->windowLocked = ws->state[IDs::windowLocked];
@@ -368,7 +368,7 @@ void RackType::saveWindowPosition()
     for (auto* ws : getWindowStates())
     {
         auto windowState = ws->lastWindowBounds.toString();
-        ws->state.setProperty (IDs::windowPos, windowState.isEmpty() ? var() : var (windowState), nullptr);
+        ws->state.setProperty (IDs::windowPos, windowState.isEmpty() ? juce::var() : juce::var (windowState), nullptr);
         ws->state.setProperty (IDs::windowLocked, ws->windowLocked, nullptr);
     }
 }
@@ -391,14 +391,14 @@ RackType::Ptr RackType::createTypeToWrapPlugins (const Plugin::Array& plugins, E
 
     for (int i = 0; i < plugins.size(); ++i)
         if (auto f = plugins[i])
-            rack->addPlugin (f, Point<float> (1.0f / (plugins.size() + 1) * (i + 1), 0.5f), false);
+            rack->addPlugin (f, juce::Point<float> (1.0f / (plugins.size() + 1) * (i + 1), 0.5f), false);
 
     juce::StringArray ins, outs;
     plugins.getFirst()->getChannelNames (&ins, nullptr);
     plugins.getLast()->getChannelNames (nullptr, &outs);
 
     // connect the left side to the first plugin
-    for (int i = 0; i < jmin (maxRackAudioChans, ins.size()); ++i)
+    for (int i = 0; i < std::min (maxRackAudioChans, ins.size()); ++i)
     {
         auto name = ins[i];
 
@@ -410,7 +410,7 @@ RackType::Ptr RackType::createTypeToWrapPlugins (const Plugin::Array& plugins, E
     }
 
     // connect the right side to the last plugin
-    for (int i = 0; i < jmin (maxRackAudioChans, outs.size()); ++i)
+    for (int i = 0; i < std::min (maxRackAudioChans, outs.size()); ++i)
     {
         auto name = outs[i];
 
@@ -436,7 +436,7 @@ RackType::Ptr RackType::createTypeToWrapPlugins (const Plugin::Array& plugins, E
 
         rack->addConnection (fsrc->itemID, 0, fdst->itemID, 0);
 
-        for (int j = 0; j < jmin (srcOuts.size(), dstIns.size()); ++j)
+        for (int j = 0; j < std::min (srcOuts.size(), dstIns.size()); ++j)
             rack->addConnection (fsrc->itemID, j + 1, fdst->itemID, j + 1);
     }
 
@@ -467,7 +467,7 @@ juce::StringArray RackType::getOutputNames() const
 
 juce::Array<Plugin*> RackType::getPlugins() const
 {
-    Array<Plugin*> list;
+    juce::Array<Plugin*> list;
 
     for (auto i : pluginList->objects)
         if (i->plugin != nullptr)
@@ -481,7 +481,7 @@ bool RackType::isPluginAllowed (const Plugin::Ptr& p)
     return p != nullptr && p->canBeAddedToRack();
 }
 
-void RackType::addPlugin (const Plugin::Ptr& p, Point<float> pos, bool canAutoConnect)
+void RackType::addPlugin (const Plugin::Ptr& p, juce::Point<float> pos, bool canAutoConnect)
 {
     if (isPluginAllowed (p))
     {
@@ -494,8 +494,8 @@ void RackType::addPlugin (const Plugin::Ptr& p, Point<float> pos, bool canAutoCo
             p->removeFromParent();
 
             auto v = createValueTree (IDs::PLUGININSTANCE,
-                                      IDs::x, jlimit (0.0f, 1.0f, pos.x),
-                                      IDs::y, jlimit (0.0f, 1.0f, pos.y));
+                                      IDs::x, juce::jlimit (0.0f, 1.0f, pos.x),
+                                      IDs::y, juce::jlimit (0.0f, 1.0f, pos.y));
             v.addChild (p->state, -1, getUndoManager());
 
             state.addChild (v, -1, getUndoManager());
@@ -520,7 +520,7 @@ void RackType::addPlugin (const Plugin::Ptr& p, Point<float> pos, bool canAutoCo
     }
 }
 
-Point<float> RackType::getPluginPosition (const Plugin::Ptr& p) const
+juce::Point<float> RackType::getPluginPosition (const Plugin::Ptr& p) const
 {
     for (auto info : pluginList->objects)
         if (info->plugin == p)
@@ -530,7 +530,7 @@ Point<float> RackType::getPluginPosition (const Plugin::Ptr& p) const
     return {};
 }
 
-Point<float> RackType::getPluginPosition (int index) const
+juce::Point<float> RackType::getPluginPosition (int index) const
 {
     if (auto info = pluginList->objects[index])
         return { info->state[IDs::x],
@@ -539,19 +539,19 @@ Point<float> RackType::getPluginPosition (int index) const
     return {};
 }
 
-void RackType::setPluginPosition (int index, Point<float> pos)
+void RackType::setPluginPosition (int index, juce::Point<float> pos)
 {
     if (auto info = pluginList->objects[index])
     {
-        info->state.setProperty (IDs::x, jlimit (0.0f, 1.0f, pos.x), getUndoManager());
-        info->state.setProperty (IDs::y, jlimit (0.0f, 1.0f, pos.y), getUndoManager());
+        info->state.setProperty (IDs::x, juce::jlimit (0.0f, 1.0f, pos.x), getUndoManager());
+        info->state.setProperty (IDs::y, juce::jlimit (0.0f, 1.0f, pos.y), getUndoManager());
     }
 }
 
 //==============================================================================
-Array<EditItemID> RackType::getPluginsWhichTakeInputFrom (EditItemID sourceId) const
+juce::Array<EditItemID> RackType::getPluginsWhichTakeInputFrom (EditItemID sourceId) const
 {
-    Array<EditItemID> results;
+    juce::Array<EditItemID> results;
 
     if (sourceId.isValid())
         for (auto rc : connectionList->objects)
@@ -713,9 +713,9 @@ void RackType::checkConnections()
     }
 }
 
-Array<const RackConnection*> RackType::getConnections() const noexcept
+juce::Array<const RackConnection*> RackType::getConnections() const noexcept
 {
-    Array<const RackConnection*> list;
+    juce::Array<const RackConnection*> list;
 
     for (auto rc : connectionList->objects)
         list.add (rc);
@@ -724,7 +724,7 @@ Array<const RackConnection*> RackType::getConnections() const noexcept
 }
 
 //==============================================================================
-static bool findModifierWithID (ValueTree& modifiers, EditItemID itemID)
+static bool findModifierWithID (juce::ValueTree& modifiers, EditItemID itemID)
 {
     for (auto m : modifiers)
         if (EditItemID::fromID (m) == itemID)
@@ -733,7 +733,7 @@ static bool findModifierWithID (ValueTree& modifiers, EditItemID itemID)
     return false;
 }
 
-static bool findPluginOrModifierWithID (ValueTree& rack, EditItemID itemID)
+static bool findPluginOrModifierWithID (juce::ValueTree& rack, EditItemID itemID)
 {
     for (int i = rack.getNumChildren(); --i >= 0;)
     {
@@ -751,7 +751,7 @@ static bool findPluginOrModifierWithID (ValueTree& rack, EditItemID itemID)
     return false;
 }
 
-static int countNumConnections (ValueTree& rack, const juce::Identifier& type)
+static int countNumConnections (juce::ValueTree& rack, const juce::Identifier& type)
 {
     int count = 0;
 
@@ -762,7 +762,8 @@ static int countNumConnections (ValueTree& rack, const juce::Identifier& type)
     return count;
 }
 
-static bool connectionIsValid (ValueTree& rack, EditItemID srcID, int srcPin, EditItemID dstID, int dstPin)
+static bool connectionIsValid (juce::ValueTree& rack, EditItemID srcID,
+                               int srcPin, EditItemID dstID, int dstPin)
 {
     if (srcID.isInvalid())
     {
@@ -787,7 +788,7 @@ static bool connectionIsValid (ValueTree& rack, EditItemID srcID, int srcPin, Ed
     return true;
 }
 
-void RackType::removeBrokenConnections (ValueTree& rack, UndoManager* um)
+void RackType::removeBrokenConnections (juce::ValueTree& rack, juce::UndoManager* um)
 {
     for (int i = rack.getNumChildren(); --i >= 0;)
     {
@@ -871,8 +872,8 @@ void RackType::createInstanceForSideChain (Track& at, const juce::BigInteger& ch
                                connectLeft ? pinIndex + 1 : pinIndex);
         }
 
-        rack->wetGain->setParameter (0.0f, dontSendNotification);
-        rack->dryGain->setParameter (1.0f, dontSendNotification);
+        rack->wetGain->setParameter (0.0f, juce::dontSendNotification);
+        rack->dryGain->setParameter (1.0f, juce::dontSendNotification);
 
         SelectionManager::refreshAllPropertyPanelsShowing (*rack);
     }
@@ -890,7 +891,7 @@ juce::String RackType::getSelectableDescription()
 }
 
 //==============================================================================
-static int findIndexOfNthInstanceOf (ValueTree& parent, const juce::Identifier& type, int index)
+static int findIndexOfNthInstanceOf (juce::ValueTree& parent, const juce::Identifier& type, int index)
 {
     int count = 0;
 
@@ -1016,7 +1017,7 @@ void RackType::renameOutput (int index, const juce::String& name)
 }
 
 //==============================================================================
-UndoManager* RackType::getUndoManager() const
+juce::UndoManager* RackType::getUndoManager() const
 {
     return &edit.getUndoManager();
 }
@@ -1146,7 +1147,7 @@ bool RackType::pasteClipboard()
 
                     if (selectedRack != nullptr)
                     {
-                        Point<float> pos (0.1f, 0.1f);
+                        juce::Point<float> pos (0.1f, 0.1f);
 
                         if (selectedPlugin != nullptr && selectedRack.get() == this)
                             pos = getPluginPosition (*selectedPlugin).translated (0.1f, 0.1f);
@@ -1207,10 +1208,10 @@ struct RackTypeList::ValueTreeList  : public ValueTreeObjectList<RackType>
         t->decReferenceCount();
     }
 
-    void newObjectAdded (RackType*) override                                      { sendChange(); }
-    void objectRemoved (RackType*) override                                       { sendChange(); }
-    void objectOrderChanged() override                                            { sendChange(); }
-    void valueTreePropertyChanged (ValueTree&, const juce::Identifier&) override  { sendChange(); }
+    void newObjectAdded (RackType*) override                                            { sendChange(); }
+    void objectRemoved (RackType*) override                                             { sendChange(); }
+    void objectOrderChanged() override                                                  { sendChange(); }
+    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override  { sendChange(); }
 
     void sendChange()
     {
@@ -1246,7 +1247,7 @@ RackTypeList::~RackTypeList()
     list = nullptr;
 }
 
-const Array<RackType*>& RackTypeList::getTypes() const noexcept
+const juce::Array<RackType*>& RackTypeList::getTypes() const noexcept
 {
     return list->objects;
 }
@@ -1350,13 +1351,13 @@ RackType::Ptr RackTypeList::addRackTypeFrom (const juce::ValueTree& rackType)
     return type;
 }
 
-void RackTypeList::importRackFiles (const Array<File>& files)
+void RackTypeList::importRackFiles (const juce::Array<juce::File>& files)
 {
     int oldNumRacks = size();
 
     for (auto& f : files)
         if (auto xml = juce::parseXML (f))
-            addRackTypeFrom (ValueTree::fromXml (*xml));
+            addRackTypeFrom (juce::ValueTree::fromXml (*xml));
 
     if (oldNumRacks < size())
         edit.engine.getUIBehaviour().showWarningMessage (TRANS("Rack types added!"));
@@ -1382,20 +1383,20 @@ void RackType::updateRenderContext()
 }
 
 //==============================================================================
-void RackType::valueTreeChildAdded (ValueTree&, juce::ValueTree&)
+void RackType::valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&)
 {
     triggerUpdate();
 }
 
-void RackType::valueTreeChildRemoved (ValueTree&, juce::ValueTree&, int)
+void RackType::valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int)
 {
     triggerUpdate();
 }
 
-void RackType::valueTreeChildOrderChanged (ValueTree&, int, int)   {}
-void RackType::valueTreeRedirected (ValueTree&)                    { triggerUpdate(); }
+void RackType::valueTreeChildOrderChanged (juce::ValueTree&, int, int)   {}
+void RackType::valueTreeRedirected (juce::ValueTree&)                    { triggerUpdate(); }
 
-void RackType::valueTreeParentChanged (ValueTree&)
+void RackType::valueTreeParentChanged (juce::ValueTree&)
 {
     if (! state.getParent().isValid())
         hideWindowForShutdown();
@@ -1403,7 +1404,7 @@ void RackType::valueTreeParentChanged (ValueTree&)
     triggerUpdate();
 }
 
-void RackType::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& ident)
+void RackType::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& ident)
 {
     if (v.hasType (IDs::PLUGININSTANCE) || v.hasType (IDs::CONNECTION))
         if (ident != IDs::x && ident != IDs::y && ident != IDs::windowLocked && ident != IDs::windowPos)

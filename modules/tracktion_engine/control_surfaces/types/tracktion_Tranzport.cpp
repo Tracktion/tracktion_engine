@@ -78,7 +78,7 @@ static const uint8_t rspButtonFootDown[]    = { 0x90, 0x67, 0x7f };
 //static const uint8_t rspButtonFootUp[]      = { 0x90, 0x67, 0x00 };
 
 template <int size>
-static inline bool matchesMessage (const MidiMessage& m, const uint8_t (&data)[size])
+static inline bool matchesMessage (const juce::MidiMessage& m, const uint8_t (&data)[size])
 {
     return size == m.getRawDataSize() && memcmp (m.getRawData(), data, (size_t) size) == 0;
 }
@@ -139,7 +139,7 @@ void TranzportControlSurface::updateMiscFeatures()
 {
 }
 
-void TranzportControlSurface::acceptMidiMessage (const MidiMessage& m)
+void TranzportControlSurface::acceptMidiMessage (const juce::MidiMessage& m)
 {
     CRASH_TRACER
 
@@ -615,8 +615,8 @@ void TranzportControlSurface::updateTCDisplay (const char* text)
 
 void TranzportControlSurface::displayPrint (int pos, const char* text)
 {
-    const size_t len = strlen (text);
-    HeapBlock<uint8_t> buffer (len + 8);
+    auto len = strlen (text);
+    juce::HeapBlock<uint8_t> buffer (len + 8);
     memcpy (buffer, cmdWrite, sizeof (cmdWrite));
     buffer[sizeof(cmdWrite)] = (uint8_t) pos;
     memcpy (buffer + sizeof (cmdWrite) + 1, text, len);

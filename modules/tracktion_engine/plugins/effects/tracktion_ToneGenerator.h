@@ -53,7 +53,7 @@ public:
 
 private:
     //==============================================================================
-    juce::AudioSampleBuffer scratch;
+    juce::AudioBuffer<float> scratch;
     std::atomic<bool> bandLimitOsc { false };
 
     juce::dsp::Oscillator<float> sine;

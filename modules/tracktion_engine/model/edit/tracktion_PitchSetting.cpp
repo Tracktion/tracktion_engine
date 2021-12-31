@@ -33,7 +33,8 @@ PitchSetting::~PitchSetting()
 
 juce::String PitchSetting::getName()
 {
-    return MidiMessage::getMidiNoteName (pitch, accidentalsSharp, false, edit.engine.getEngineBehaviour().getMiddleCOctave());
+    return juce::MidiMessage::getMidiNoteName (pitch, accidentalsSharp, false,
+                                               edit.engine.getEngineBehaviour().getMiddleCOctave());
 }
 
 juce::String PitchSetting::getSelectableDescription()
@@ -66,7 +67,7 @@ void PitchSetting::setStartBeat (double beat)
 
 void PitchSetting::setPitch (int p)
 {
-    pitch = jlimit (0, 127, p);
+    pitch = juce::jlimit (0, 127, p);
 }
 
 void PitchSetting::setScaleID (Scale::ScaleType st)

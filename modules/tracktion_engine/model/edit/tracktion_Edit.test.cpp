@@ -19,7 +19,7 @@ class EditItemIDBenchmarks  : public juce::UnitTest
 {
 public:
     EditItemIDBenchmarks()
-        : UnitTest ("EditItemID", "tracktion_benchmarks")
+        : juce::UnitTest ("EditItemID", "tracktion_benchmarks")
     {}
 
     void runTest() override

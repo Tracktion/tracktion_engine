@@ -86,7 +86,7 @@ juce::String OutputDevice::getDeviceID() const
     else
         n += engine.getDeviceManager().deviceManager.getCurrentAudioDeviceType();
 
-    return String::toHexString (n.hashCode());
+    return juce::String::toHexString (n.hashCode());
 }
 
 bool OutputDevice::isEnabled() const
